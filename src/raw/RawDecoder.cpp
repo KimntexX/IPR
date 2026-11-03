@@ -413,7 +413,7 @@ ColorPipeline::WorkingImage decodeCameraDng(const QString &fileName, const Optio
     if (!CameraDng::read(fileName, content, error))
         return {};
     CameraProfileEngine::Selection profiles = CameraProfileEngine::findProfiles(
-        content.cameraMake, content.cameraModel, {}, {}, options.profileDirectories);
+        content.cameraMake, content.cameraModel, content.lensMake, content.lensModel, options.profileDirectories);
     if (options.preferCameraNeutral)
         preferCameraNeutral(profiles, content.cameraMake, content.cameraModel, options.profileDirectories);
     const QString defaultProfile = profiles.dcpPath;
@@ -445,6 +445,12 @@ ColorPipeline::WorkingImage decodeCameraDng(const QString &fileName, const Optio
         metadata->cameraRaw = true;
         metadata->cameraMake = content.cameraMake;
         metadata->cameraModel = content.cameraModel;
+        metadata->lensMake = content.lensMake;
+        metadata->lensModel = content.lensModel;
+        metadata->iso = content.iso;
+        metadata->exposureSeconds = content.exposureSeconds;
+        metadata->focalLengthMm = content.focalLengthMm;
+        metadata->captureDate = content.captureDate;
         metadata->dcpProfile = QFileInfo(profiles.dcpPath).completeBaseName();
         metadata->rawNormalizationApplied = render.cameraBaselineExposureEv != 0.0 || render.profileExposureCompensationEv != 0.0;
         metadata->normalizationBaselineExposureEv = render.cameraBaselineExposureEv;

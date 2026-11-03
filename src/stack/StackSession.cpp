@@ -245,6 +245,12 @@ StackSession::Export StackSession::writeResult(const Result &result, const QStri
         content.cameraRgb = result.cameraRgb;
         content.cameraMake = result.metadata.cameraMake;
         content.cameraModel = result.metadata.cameraModel;
+        content.lensMake = result.metadata.lensMake;
+        content.lensModel = result.metadata.lensModel;
+        content.iso = result.metadata.iso;
+        content.exposureSeconds = result.metadata.exposureSeconds;
+        content.focalLengthMm = result.metadata.focalLengthMm;
+        content.captureDate = result.metadata.captureDate;
         content.cameraNeutral = result.context->cameraNeutral;
         content.whiteBalanceKelvin = result.context->sourceKelvin;
         content.renderOptions = result.context->options;

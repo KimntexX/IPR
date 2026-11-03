@@ -3,6 +3,7 @@
 
 #include "CameraProfileEngine.h"
 
+#include <QDateTime>
 #include <QString>
 #include <opencv2/core.hpp>
 
@@ -21,6 +22,14 @@ struct Content
     cv::Mat cameraRgb;      // CV_32FC3, as a decoder's signal: white balance applied, white 1, signed
     QString cameraMake;
     QString cameraModel;
+    // Kept for IPR alone, in the file's description: another reader must not take the lens
+    // for one still to correct.
+    QString lensMake;
+    QString lensModel;
+    int iso = 0;
+    double exposureSeconds = 0.0;
+    double focalLengthMm = 0.0;
+    QDateTime captureDate;
     cv::Vec3d cameraNeutral{1.0, 1.0, 1.0}; // inverse of the applied gains, G = 1
     double whiteBalanceKelvin = 5500.0;
     CameraProfileEngine::DcpRenderOptions renderOptions;

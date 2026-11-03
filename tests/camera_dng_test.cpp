@@ -35,6 +35,12 @@ CameraDng::Content sample()
     random.fill(content.cameraRgb, cv::RNG::UNIFORM, cv::Scalar::all(-0.005), cv::Scalar::all(0.95));
     content.cameraMake = QStringLiteral("Canon");
     content.cameraModel = QStringLiteral("EOS R6 Mark III");
+    content.lensMake = QStringLiteral("Sigma");
+    content.lensModel = QStringLiteral("70-200mm F2.8");
+    content.iso = 1600;
+    content.exposureSeconds = 0.005;
+    content.focalLengthMm = 200.0;
+    content.captureDate = QDateTime(QDate(2026, 10, 30), QTime(22, 44, 40), Qt::UTC);
     content.cameraNeutral = cv::Vec3d(0.5, 1.0, 0.7);
     content.whiteBalanceKelvin = 4321.0;
     content.renderOptions.cameraBaselineExposureEv = 0.25;
@@ -79,6 +85,8 @@ void roundTrip(const QDir &folder)
     check(read.renderOptions.cameraBaselineExposureEv == 0.25 && read.renderOptions.profileExposureCompensationEv == -0.1 &&
               read.renderOptions.preserveToneCurveHue, "the same calibration");
     check(read.provenance == written.provenance, "the same provenance");
+    check(read.lensModel == written.lensModel && read.iso == 1600 && read.exposureSeconds == 0.005 &&
+              read.focalLengthMm == 200.0 && read.captureDate == written.captureDate, "the same capture");
 
     // A signal above white keeps its range, and tells it through the baseline exposure.
     CameraDng::Content bright = sample();
@@ -177,6 +185,8 @@ void decoding(const QDir &folder)
     check(!opened.isNull(), "IPR opens its own DNG");
     check(metadata.decoderId == QStringLiteral("ipr-camera-dng"), "by its own reader");
     check(metadata.rawNormalizationApplied && metadata.normalizationBaselineExposureEv == 0.25, "with its calibration");
+    check(metadata.lensModel == written.lensModel && metadata.iso == 1600 && metadata.captureDate == written.captureDate,
+          "and its capture in the panel");
     if (!opened.isNull()) {
         CameraSignal::Source signal;
         signal.rgb = written.cameraRgb.clone();

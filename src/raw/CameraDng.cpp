@@ -74,6 +74,12 @@ QJsonObject description(const Content &content, double headroom)
         {QStringLiteral("profile_compensation_ev"), options.profileExposureCompensationEv},
         {QStringLiteral("preserve_tone_curve_hue"), options.preserveToneCurveHue},
         {QStringLiteral("provenance"), content.provenance},
+        {QStringLiteral("lens_make"), content.lensMake},
+        {QStringLiteral("lens_model"), content.lensModel},
+        {QStringLiteral("iso"), content.iso},
+        {QStringLiteral("exposure_s"), content.exposureSeconds},
+        {QStringLiteral("focal_mm"), content.focalLengthMm},
+        {QStringLiteral("capture_date"), content.captureDate.toString(Qt::ISODate)},
     };
 }
 
@@ -214,6 +220,12 @@ bool read(const QString &fileName, Content &content, QString *error)
     content.renderOptions.profileExposureCompensationEv = object.value(QStringLiteral("profile_compensation_ev")).toDouble();
     content.renderOptions.preserveToneCurveHue = object.value(QStringLiteral("preserve_tone_curve_hue")).toBool();
     content.provenance = object.value(QStringLiteral("provenance")).toString();
+    content.lensMake = object.value(QStringLiteral("lens_make")).toString();
+    content.lensModel = object.value(QStringLiteral("lens_model")).toString();
+    content.iso = object.value(QStringLiteral("iso")).toInt();
+    content.exposureSeconds = object.value(QStringLiteral("exposure_s")).toDouble();
+    content.focalLengthMm = object.value(QStringLiteral("focal_mm")).toDouble();
+    content.captureDate = QDateTime::fromString(object.value(QStringLiteral("capture_date")).toString(), Qt::ISODate);
 
     const double scale = neutralScale(neutral);
     const std::array<float, 3> fromCode{float(scale / neutral[0] * headroom / (whiteCode - blackCode)),

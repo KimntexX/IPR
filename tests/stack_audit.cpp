@@ -1,6 +1,7 @@
 // Manual measurement of the noise-reduction stack on a real series: noise against the
 // reference, what the fusion keeps of the detail, registration, time and resources.
 // Reads the sources only; everything it writes goes to --out and --cache.
+#include "CameraDng.h"
 #include "CameraProfileEngine.h"
 #include "CameraSignal.h"
 #include "ColorPipeline.h"
@@ -537,6 +538,65 @@ int main(int argc, char **argv)
         }
     }
 
+    // The result as a file: reopened through the decoder, it must render as the signal does.
+    QJsonObject dngRoundTrip;
+    if (!referenceSource->cameraRgb.empty()) {
+        CameraDng::Content content;
+        const CameraProfileEngine::DcpCameraData camera = CameraProfileEngine::dcpCameraData(referenceSource->workingContext->profilePath);
+        content.cameraRgb = whole.cameraRgb;
+        content.cameraMake = referenceSource->metadata.cameraMake;
+        content.cameraModel = referenceSource->metadata.cameraModel;
+        content.lensMake = referenceSource->metadata.lensMake;
+        content.lensModel = referenceSource->metadata.lensModel;
+        content.iso = referenceSource->metadata.iso;
+        content.exposureSeconds = referenceSource->metadata.exposureSeconds;
+        content.focalLengthMm = referenceSource->metadata.focalLengthMm;
+        content.captureDate = referenceSource->metadata.captureDate;
+        content.cameraNeutral = referenceSource->workingContext->cameraNeutral;
+        content.whiteBalanceKelvin = referenceSource->workingContext->sourceKelvin;
+        content.renderOptions = referenceSource->workingContext->options;
+        content.colorMatrix = camera.colorMatrix;
+        content.illuminant = camera.illuminant;
+        content.provenance = QStringLiteral("IPR stack of %1 frames, reference %2").arg(whole.usedFrames).arg(names[referenceIndex]);
+        const QString dngPath = out.filePath(QStringLiteral("stack.dng"));
+        QString dngError;
+        watch.restart();
+        const bool written = CameraDng::write(content, dngPath, &dngError);
+        const double writeSeconds = double(watch.elapsed()) / 1000.0;
+        watch.restart();
+        ImageMetadata reopenedMetadata;
+        RawDecoder::Options reopenOptions;
+        reopenOptions.useNormalizationEnvironment = false;
+        reopenOptions.preferCameraNeutral = true;
+        const ColorPipeline::WorkingImage reopened = written ? RawDecoder::decode(dngPath, reopenOptions, &reopenedMetadata, &dngError) : ColorPipeline::WorkingImage{};
+        const double readSeconds = double(watch.elapsed()) / 1000.0;
+        CameraSignal::Source signal;
+        signal.rgb = whole.cameraRgb.clone();
+        signal.cameraMake = content.cameraMake;
+        signal.cameraModel = content.cameraModel;
+        signal.whiteBalanceKelvin = content.whiteBalanceKelvin;
+        signal.whiteBalanceApplied = true;
+        signal.cameraNeutral = content.cameraNeutral;
+        const ColorPipeline::WorkingImage direct = CameraSignal::render(std::move(signal), referenceSource->workingContext->profilePath, content.renderOptions, &dngError);
+        double worst = -1.0, mean = -1.0;
+        if (!reopened.isNull() && !direct.isNull() && reopened.linearRgba.size() == direct.linearRgba.size()) {
+            cv::Mat difference;
+            cv::absdiff(reopened.linearRgba, direct.linearRgba, difference);
+            cv::minMaxLoc(difference.reshape(1), nullptr, &worst);
+            mean = cv::mean(difference)[0];
+        }
+        dngRoundTrip = QJsonObject{{QStringLiteral("written"), written},
+                                   {QStringLiteral("reopened"), !reopened.isNull()},
+                                   {QStringLiteral("decoder"), reopenedMetadata.decoderId},
+                                   {QStringLiteral("error"), dngError},
+                                   {QStringLiteral("bytes"), double(QFileInfo(dngPath).size())},
+                                   {QStringLiteral("seconds_write"), writeSeconds},
+                                   {QStringLiteral("seconds_read"), readSeconds},
+                                   {QStringLiteral("render_worst_difference"), worst},
+                                   {QStringLiteral("render_mean_difference"), mean}};
+        std::cout << "dng " << QJsonDocument(dngRoundTrip).toJson(QJsonDocument::Compact).toStdString() << std::endl;
+    }
+
     QJsonArray frames;
     for (int i = 0; i < count; ++i)
         frames.append(frameJson(whole.frames[size_t(i)], names[i]));
@@ -581,6 +641,7 @@ int main(int argc, char **argv)
         {QStringLiteral("ideal_ratio_whole"), 1.0 / std::sqrt(double(whole.usedFrames))},
         {QStringLiteral("growth"), growth},
         {QStringLiteral("detail"), detail},
+        {QStringLiteral("dng_round_trip"), dngRoundTrip},
     };
     const QString target = QDir(evidence.isEmpty() ? out.path() : evidence).filePath(root.value(QStringLiteral("campaign_id")).toString() + QStringLiteral(".json"));
     QFile file(target);
