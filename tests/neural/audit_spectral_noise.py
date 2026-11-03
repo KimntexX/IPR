@@ -16,6 +16,7 @@ from joint_bayer_unet import sample_rgb
 from local_moment_unet import LocalMomentUNet
 from memory_budget import MemoryGuard, BudgetExceeded
 from noisy_moment_unet import FORWARD_TOOLS
+from neural_inference_contract import check_inference
 from prepare_closed_inference import prepare_inference
 from run_noisy_moment_pilot import NOISE, runtime_versions
 from run_synthetic_joint_pilot import tensor_hash
@@ -83,8 +84,7 @@ def run(root, proof_path, output):
     plan = source_contract(root, proof)
     if plan['kind'] != 'protected' or plan['data']['runtime'] != runtime_versions():
         raise ValueError('Current protected model and pinned runtime required')
-    if any(digest(Path(__file__).with_name(n)) != h for n, h in plan['tools'].items()):
-        raise ValueError('Qualified inference changed')
+    check_inference(plan['data'], plan['tools'])
     refs = plan['models']
     if len(refs) != 2 or {r['seed'] for r in refs} != {71, 73}:
         raise ValueError('Both model seeds required')
@@ -97,7 +97,8 @@ def run(root, proof_path, output):
         orientations=['horizontal', 'vertical', 'diagonal45'], families=['achromatic', 'opponent'],
         noise_replicates={0: 1, 1: 2, 2: 2}, side=192, border=64, scale=2,
         tools={n: digest(Path(__file__).with_name(n)) for n in tuple(dict.fromkeys(
-            FORWARD_TOOLS+('edge_protected_noise.py', 'audit_spectral_noise.py', 'prepare_closed_inference.py')))},
+            FORWARD_TOOLS+('edge_protected_noise.py', 'audit_spectral_noise.py', 'prepare_closed_inference.py',
+                'neural_inference_contract.py')))},
         limits=['Extrapolation diagnosis, not model selection, fitting or a replacement qualification protocol.',
             'Procedural periodic structure only; no physical sensor or photographic noise truth.',
             'Both seeds and all channels reported; two positive noise draws are paired across models.',
@@ -146,11 +147,20 @@ def run(root, proof_path, output):
                                             base = predict(parent, observed/2, torch.zeros_like(sigma), tags, True, True)*2
                                             if level == 0 and not torch.equal(full, base):
                                                 raise ValueError('Noise-free parent changed')
+                                            # Reconstruction copies corrected CFA sites exactly;
+                                            # inspect them separately from interpolated RGB.
+                                            corrected = sample_rgb(full, tags)
+                                            sensor = lambda v: (v-clean)[:, :, 32:-32, 32:-32]
+                                            before, after = sensor(observed), sensor(corrected)
                                             result['records'].append(dict(seed=ref['seed'], case_index=index,
                                                 frequency=frequency, amplitude=amplitude, orientation=orientation,
                                                 chromatic=chromatic, phase=phase, noise_index=level, replicate=replicate,
                                                 noise_seed=seed, target_sha256=tensor_hash(truth),
                                                 observation_sha256=tensor_hash(observed), sigma_sha256=tensor_hash(sigma),
+                                                sensor=dict(noisy_mse=float(before.square().mean()),
+                                                    corrected_mse=float(after.square().mean()),
+                                                    corrected_bias_by_physical_position=after.mean(dim=(0, 2, 3)).tolist(),
+                                                    pattern=list(pattern)),
                                                 full=response(full, truth, wave, cosine),
                                                 parent=response(base, truth, wave, cosine)))
                                 index += 1

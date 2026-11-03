@@ -10,7 +10,8 @@ import time
 import torch
 
 from audit_bayer_symmetries import OPERATIONS, transform, transform_observation, difference, aggregate_differences
-from bayer_canonical import predict
+from bayer_canonical import predict, canonicalize
+from clean_cfa_loss import clean_cfa_loss
 from compare_reconstruction_objectives import freeze_cases, confined
 from confirm_local_route import MODEL_TOOLS, summarize
 from diagnose_train_learnability import digest, save
@@ -38,7 +39,8 @@ TOOLS = tuple(dict.fromkeys(MODEL_TOOLS+FORWARD_TOOLS+('run_noisy_moment_pilot.p
     'memory_budget.py', 'prepare_closed_inference.py', 'reconstruction_loss.py',
     'compare_reconstruction_objectives.py', 'confirm_local_route.py',
     'run_synthetic_joint_pilot.py', 'reconstruction_gates.py', 'audit_bayer_symmetries.py',
-    'training_resume.py', 'noisy_training_policy.py', 'noise_conditioning.py', 'fine_texture_training.py')))
+    'training_resume.py', 'noisy_training_policy.py', 'noise_conditioning.py', 'fine_texture_training.py',
+    'clean_cfa_loss.py')))
 
 
 def observation(truth, tags, noise_index, seed):
@@ -115,6 +117,9 @@ def prepare(root, source, priors, parents, output, training_scope='cfa_front'):
         runtime=runtime_versions(),
         conditioning='Zero-initialized equivariant4to8 branch on observed centre-minus5x5quadratic-fit residual, correct centre covariance in variance, standardized and bounded to8 feature units. No signal clipping.',
         texture_augmentation=dict(policy=TEXTURE_POLICY, events=texture_events),
+        clean_fixed_point=dict(weight=1., scope='Every positive-noise training exposure; clean CFA with the same observed-sigma field.',
+            target='Zero CFA correction on clean signal, no RGB interpolation compensation.',
+            normalization='Same noisy RGB reference energy and tempered floor as the data term.'),
         tools={n: digest(Path(__file__).with_name(n)) for n in TOOLS},
         noise_gate_policy='Each positive level: RGB MSE full/parent<=.98, opponent full/parent<=1, full/without_correction RGB<=1; weak/edge gradient>=.95 parent. Zero noise retains original12gates, new mixed and historical20/80.',
         training_policy='Final2048 only, both pretrained seeds, same ID/phase schedule; replace wave slots by frozen broadband two-wave textures, other slots unchanged. Noise level=(4*(step-1)+position)%3, seed74000000+4*(step-1)+position, paired realizations across models. Adam scope='+training_scope+'; no early stopping.',
@@ -180,6 +185,13 @@ def train(model, source, config, guard, checkpoint_path, context, progress, inte
             image = predict(model, packed/config['scale'], sigma/config['scale'], tags, False, True)
             reference = bilinear(packed/config['scale'], tags)
             loss = energy_balanced_loss(image, truth/config['scale'], reference, config['scale'], objective='tempered')/4
+            if level != 0:
+                clean_values, deviations, labels, _ = canonicalize(sample_rgb(truth, tags)/config['scale'],
+                    sigma/config['scale'], tags)
+                anchored = model.correct_observations(clean_values, deviations, labels)
+                loss = loss+clean_cfa_loss(anchored, clean_values, reference,
+                    truth/config['scale'], config['scale'])/4
+                del clean_values, deviations, labels, anchored
             if not torch.isfinite(loss):
                 raise ValueError('Nonfinite loss')
             if loss.requires_grad:
@@ -341,6 +353,8 @@ def run(root, plan_path, seed, output, resume=None):
         raise ValueError('Python or Torch runtime differs from qualification plan')
     if plan['texture_augmentation']['policy'] != TEXTURE_POLICY:
         raise ValueError('Declared training texture policy changed')
+    if plan['clean_fixed_point']['weight'] != 1.:
+        raise ValueError('Current fixed-point regularizer must be declared')
     tools = plan['tools']
     if any(digest(Path(__file__).with_name(n)) != h for n, h in tools.items()):
         raise ValueError('Frozen implementation changed')

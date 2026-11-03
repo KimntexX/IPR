@@ -4761,3 +4761,73 @@ pour ?viter de confondre enrichissement et budget d'apprentissage accru.
 Les contr?les d?j? vus restent des contr?les de d?veloppement. Toute
 confirmation ult?rieure utilisera encore d'autres contenus, avec les
 m?mes crit?res. Le test spectral d?j? consult? ne sera plus nomm? r?serv?.
+
+
+### Enrichissement mesur? ? am?lioration partielle du d?tail fin
+
+3282 expositions d'ondes sont remplac?es, sans ajout d'?tapes. Les deux
+graines atteignent2048 ;71 en une tentative,73 avec reprises1408 puis1984.
+Preuves : [campagne](../raw/neural-campaign-v001-20261103T144208Z.json),
+[71](../raw/neural-noisy-moment-v001-20261103T144225Z.json),
+[73](../raw/neural-noisy-moment-v001-20261103T144951Z.json).
+La protection inchang?e fait passer le premier protocole pour les deux :
+RGB/parent tous cas0,91470/0,91634 au faible bruit,0,72391/0,71543 au fort.
+Preuve : [protection](../raw/neural-edge-protection-v001-20261103T145219Z.json).
+
+L'extension spectrale compl?te, apr?s six interruptions m?moire conserv?es,
+mesure toujours2880 cas sans s?lection de r?alisation. ?16cycles au faible
+bruit, les erreurs RGB/parent passent de1,616/1,353 ?1,280/1,103 pour71/73 ;
+les gains sinuso?daux moyens montent de0,606/0,613 ?0,706/0,709. ?24cycles,
+les gains passent de0,412/0,424 ?0,486/0,488 ; l'erreur RGB reste sup?rieure
+au parent :1,329/1,045. C'est un progr?s partiel, pas un mod?le stable pour
+le d?tail fin. Preuve : [spectre complet](../raw/neural-spectral-noise-v001-20261103T170241Z.json).
+
+L'audit distingue d?sormais les ?chantillons CFA corrig?s du RGB interpol?.
+?24cycles et faible bruit, l'erreur CFA corrig?e vaut1,427/1,432 fois celle
+des observations bruit?es : la perte de signal existe donc d?j? avant
+l'interpolation. ?4cycles, ces rapports sont0,199/0,198. L'erreur RGB ne
+suffit pas, car l'interpolateur peut compenser ou masquer un d?faut amont.
+Les faibles et forts contrastes restent s?parables dans les JSON ; une
+moyenne sur les amplitudes ne repr?sente pas chaque texture.
+
+### Planches photographiques exploratoires ? 18h05
+
+54 planches couvrent27ROI des trois sources CFA d?j? qualifi?es, pour les
+deux graines. Ordre des quatre panneaux : RCD/m?diane, U-Net sigma0,
+sigma0,01 et sigma0,03. C'est le **canal vert du RGB cam?ra balanc?**, avec
+le m?me ?cr?tage au blanc avant d?matri?age que le t?moin RCD ; aucun
+LCP/DCP, aucune conversion couleur d'?cran ni fausse calibration ISO.
+Le contraste d'affichage est partag? par ROI, fix? sur le t?moin RCD,
+avec gamma2,2. Le JSON conserve la fen?tre et les fractions coup?es ?
+l'affichage ; le calcul du r?seau reste sign? et non ?cr?t?.
+Preuve : [planches](../raw/neural-camera-visual-v001-20261103T170454Z.json).
+
+L'index local est dans `build-patch_neural_restoration/broadband-camera-preview-v001/index.html`.
+Les PNG sont des artefacts locaux, pas des r?f?rences propres. Deux
+planches ont ?t? inspect?es : le lissage est visible, avec perte possible
+de fibres/d?tails ? forte valeur sigma ; cela ne mesure pas un gain de
+bruit r?el. Les sigma fournis sont des sc?narios, pas des estimations.
+La r?f?rence RCD est le processus actuel, pas une v?rit? photographique.
+Quatre tests couvrent fen?tre partag?e, signal sign?, PNG valide/non-?cras?
+et lecture RGB avec d?calage/troncature, sans ajouter de d?pendance logicielle.
+
+### Prochaine exp?rience ? ancrage du signal propre
+
+L'architecture et la distribution enrichie restent inchang?es. Pour
+chaque exposition ? bruit positif, un second calcul passe le CFA propre
+avec **le m?me champ sigma estim? sur l'observation bruit?e**. On p?nalise
+l'?cart entre CFA corrig? et CFA propre, avant toute interpolation, poids1.
+La normalisation est la m?me ?nergie RGB bruit?e temp?r?e que pour le
+terme de donn?es ; ce n'est pas une contrainte de copie du bruit r?el.
+On conserve2048 ?tapes, les deux graines fra?ches et tous les crit?res.
+L'objectif cherche ? emp?cher la correction syst?matique d'une structure
+propre lorsqu'elle est confondue avec du bruit. Le r?sultat n'est pas garanti.
+
+Deux tests v?rifient invariance d'?chelle physique, gradients et rejet des
+entr?es invalides du nouveau terme. Les reprises g?n?rique et enrichie
+restent bit-exactes (six tests) ; les quatre tests de p?rim?tre passent.
+Les outils distinguent d?sormais empreinte de l'apprentissage archiv? et
+empreintes du calcul d'inf?rence courant : modifier seulement la perte ne
+rend pas d'anciens poids illisibles, mais changer le calcul, le runtime ou
+la convention de bruit est toujours refus?. Un test couvre cette fronti?re.
+Il ne s'agit pas d'ex?cuter un ancien moteur en production.
