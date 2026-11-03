@@ -4217,3 +4217,33 @@ modifier le plan, les poids initiaux, les graines ou les limites. Elle
 recommence depuis l'initialisation déclarée, pas depuis un checkpoint
 choisi. Aucun processus tiers n'est fermé. Un nouvel arrêt ne déclenchera
 pas une boucle de relances sous pression mémoire.
+
+### Second arrêt et état courant — 3 novembre2026
+
+La reprise71 dépasse1024 étapes, puis s'arrête à143,19s lorsque la
+mémoire physique machine atteint82,98 %. Le pic propre du processus
+est307,40Mio résidents et966,17Mio engagés, toujours sous ses plafonds.
+La hausse globale a franchi le seuil entre deux observations : le
+moniteur coopératif échantillonné n'est pas un plafond OS pour toute
+la machine. Il arrête le pilote au prochain contrôle ; il ne peut
+limiter les allocations des autres processus.
+
+Preuve conservée : [reprise interrompue](../raw/neural-noisy-moment-v001-20261103T113520Z.json).
+Il n'y a ni checkpoint final ni évaluation complète, et la graine73
+n'a pas démarré. Les sorties partielles ne permettent pas de conclure
+à un gain ou un échec du débruitage. Les poids initiaux et les images
+sources sont intacts. Le plan et les tests ne sont pas modifiés pour
+contourner la limite.
+
+**Conclusion actuelle : contrat bruité prêt et testé, apprentissages
+non achevés pour cause de mémoire globale.** Les9 tests ciblés passent
+et la validation propre/bruitée est figée. Aucun bénéfice de débruitage
+n'est revendiqué. Les deux tentatives interrompues restent archivées ;
+aucune boucle de relances supplémentaire. Après libération de mémoire,
+la campagne peut reprendre depuis les parents déclarés dans de nouveaux
+dossiers, avec les mêmes graines et critères. Il n'y a pas de checkpoint
+intermédiaire de reprise dans cette version du banc.
+
+Aucun calcul actif, changement moteur/IHM, export photo, installation
+GPU, processus tiers fermé, publication, fusion ou tag. La prochaine
+action dépend de la mémoire disponible, pas de nouvelles photos.

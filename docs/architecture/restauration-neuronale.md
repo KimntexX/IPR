@@ -2,7 +2,16 @@
 
 # B4 — étude de préparation de la restauration neuronale locale
 
-## État du 2 novembre 2026
+## État du 3 novembre2026
+
+Le premier contrat bruité (§17) est implémenté et couvert par9 tests
+ciblés, sans intégration en production. Les deux tentatives de premier
+apprentissage sont interrompues par le seuil de mémoire physique globale,
+alors que le processus reste autour de307Mio résidents. Aucun checkpoint
+final ou gain de débruitage n'est qualifié. Le plan propre/bruité reste
+figé pour reprise lorsque la mémoire disponible le permettra.
+
+## État historique du 2 novembre 2026
 
 **Structure Bayer expérimentale fiabilisée sur signaux synthétiques,
 pas de débruiteur photographique intégré.** La base de poursuite est
@@ -805,3 +814,11 @@ deux initialisations sans sélection, témoins parent/ablation et critères
 structurels sont décrits dans le rapport unique. Les quotas du§14 restent
 applicables. Contrat testé, apprentissage à qualifier ; aucune intégration
 en production ou promesse de qualité photographique à ce stade.
+
+La préparation a figé624 cas par modèle avant entraînement. Les tentatives
+71 initiale puis reprise sont interrompues à cause de la RAM globale ;73
+n'a pas démarré. Les preuves d'arrêt et ressources figurent dans le rapport
+et les JSON. Les limites restent inchangées, aucune relance en boucle et
+aucune conclusion photographique tirée des calculs partiels. Ce banc ne
+dispose pas encore d'une sauvegarde d'entraînement pour reprise au point
+interrompu ; les parents figés restent intacts.
