@@ -15,8 +15,9 @@ sans modifier données, modèles ou critères photographiques.
 
 La relance à92 % est également interrompue par un pic global95,08 %,
 avec environ307Mio résidents propres. Aucun résultat final disponible,
-aucun calcul actif lors de la dernière vérification. Une reprise technique
-testée est recommandée pour éviter de perdre les étapes déjà calculées.
+aucun résultat de débruitage qualifié. La reprise technique est ensuite
+implémentée et testée (§18). Le lanceur et le plan sont préparés, en
+attente du signal explicite de l'utilisateur pour son absence13h30–17h30.
 
 ## État historique du 2 novembre 2026
 
@@ -826,12 +827,33 @@ La préparation a figé624 cas par modèle avant entraînement. Les tentatives
 71 initiale puis reprise sont interrompues à cause de la RAM globale ;73
 n'a pas démarré. Les preuves d'arrêt et ressources figurent dans le rapport
 et les JSON. Les limites restent inchangées, aucune relance en boucle et
-aucune conclusion photographique tirée des calculs partiels. Ce banc ne
-dispose pas encore d'une sauvegarde d'entraînement pour reprise au point
-interrompu ; les parents figés restent intacts.
+aucune conclusion photographique tirée des calculs partiels. Cette version
+ne disposait pas d'une sauvegarde de reprise ; les parents figés sont intacts.
+La version suivante ajoute cette sauvegarde technique (§18).
 
 À la demande explicite de l'utilisateur, le pilote bruité porte désormais
 son seuil physique global à92 %, déclaré dans le plan (schéma2). Les
 plafonds2Gio engagés et1,25Gio privés/résidents restent inchangés. Cette
 autorisation ne modifie pas le garde générique des autres bancs ni les
 preuves historiques à80 %. Les modèles, données et critères sont conservés.
+
+## 18. Reprise et campagne préparée — 3 novembre2026
+
+Le banc sauvegarde atomiquement un unique état technique courant toutes
+les64 étapes complètes et au terme2048 : modèle, Adam, étape, pertes,
+expositions et RNG CPU. La reprise doit correspondre au même plan, parent
+et graine. Elle ne choisit pas un état selon un score de validation.
+Le test sur le vrai cadenceur confirme l'identité au bit près entre calcul
+continu et reprise après une accumulation partielle interrompue.
+
+Le lanceur séquentiel attend une marge mémoire, exécute71 puis73, reprend
+seulement après arrêt mémoire, borne les tentatives et arrête sur erreur
+de calcul. Il ne sélectionne pas la meilleure graine et ne modifie pas les
+modèles. Le seuil physique global92 % et les plafonds propres sont conservés.
+Le plan schéma3 fige également la politique de checkpoint.
+
+La [procédure de lancement](../validation/tools/pilote-unet-bruite.md) décrit
+les limites horaires et les étapes de qualification. Onze tests ciblés
+passent sur le périmètre reprise/lanceur/protocole ; pas de campagne
+lancée avant le signal utilisateur. Les contrôles photographiques et la
+validation sur images réelles restent à faire, sans intégration moteur/IHM.

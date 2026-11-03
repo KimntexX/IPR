@@ -4282,10 +4282,66 @@ est conservée. Une lecture après clôture trouve59,22 % de mémoire globale
 utilisée : le pic n'est plus actif. Cela ne permet pas d'attribuer ce pic
 à une application particulière ni de conclure sur le modèle de bruit.
 
-**État courant : aucun calcul actif, résultats de débruitage toujours
+**État de cette vérification : aucun calcul actif, résultats de débruitage toujours
 non qualifiés.** Pas de nouvelle relance lors de cette vérification.
 La prochaine amélioration recommandée est un checkpoint technique de
 reprise (poids, optimiseur, étape, compteurs et état aléatoire), avec
 vérification qu'un calcul repris reproduit le calcul continu. Il doit
 conserver l'évaluation au checkpoint final fixé, sans permettre une
 sélection du meilleur état. Cette reprise n'est pas encore implémentée.
+
+### 3 novembre2026 — préparation avec reprise, attente du signal utilisateur
+
+L'utilisateur sera absent de13h30 à17h30, heure de Paris, et donnera
+le signal de lancement. La préparation est autorisée ; aucune campagne
+d'apprentissage ne démarre automatiquement à13h30. Les seuls calculs
+exécutés ici sont les tests courts et le gel des données du nouveau plan.
+
+La reprise technique est désormais implémentée, sans modifier le modèle,
+le bruit simulé, le calendrier, l'objectif tempéré, les graines ou les
+critères. Un checkpoint atomique conserve poids, état d'Adam, étape
+complète, pertes, compteurs d'exposition et RNG Torch CPU. Il est écrit
+au départ, puis toutes les64 étapes et à2048, après une mise à jour
+complète. Une accumulation partielle est abandonnée et recalculée depuis
+le dernier fichier valide. Le calendrier et le bruit sont déterministes
+par indice ; le cache ne porte pas d'état aléatoire à restaurer.
+
+Le contexte du checkpoint lie plan, graine, configuration, parent et
+source. Un fichier étranger ou des compteurs incohérents sont refusés.
+Une écriture temporaire fermée puis remplacée atomiquement conserve le
+checkpoint précédent en cas d'erreur. Le JSON rapporte désormais l'étape
+complète atteinte et le dernier fichier valide, même sur interruption.
+Un checkpoint final2048 peut servir à rejouer une évaluation interrompue,
+sans devenir un choix du meilleur modèle selon son score.
+
+**11 tests ciblés passent** :3 de reprise,5 du lanceur et3 de protocole.
+Le test de reprise utilise le vrai cadenceur, un petit modèle et quatre
+étapes synthétiques : une interruption au milieu de l'accumulation de
+l'étape3 est suivie d'une reprise depuis2. Poids, moments d'Adam, pertes,
+expositions et RNG final coïncident au bit près avec le calcul continu.
+Les tests vérifient aussi erreurs d'écriture/remplacement, refus de
+contexte incorrect, limites de reprise/délai, fermeture des journaux et
+maintien de l'évaluation73 malgré un échec qualitatif71. Ce n'est pas un
+nouvel apprentissage de qualification ou un résultat photographique.
+
+Le lanceur attend deux relevés de mémoire globale inférieure à90 % avant
+chaque essai, sans charger PyTorch pendant cette attente. Il conserve
+l'arrêt autorisé92 % et les plafonds2Gio/1,25Gio. Après arrêt mémoire,
+seul le dernier checkpoint technique vérifié est repris, dans un nouveau
+dossier. Huit tentatives au plus par graine, arrêt sur autre erreur et
+délai technique30minutes par processus. Une heure limite interdit de
+démarrer un nouvel essai ; l'essai actif peut finir normalement.
+
+La [procédure du pilote](../tools/pilote-unet-bruite.md) contient le lancement
+préparé, les états à lire et les étapes d'analyse. L'ordre prévu reste :
+finir71 et73, comparer bruit/couleur/structures à tous les témoins, puis
+préparer une confirmation distincte si les critères passent. Un échec
+sera diagnostiqué avant toute nouvelle variante, sans élargir les seuils.
+
+**État courant : reprise et lanceur prêts, attente du signal explicite.**
+Les anciens essais sans checkpoint ne sont pas récupérables ; le prochain
+départ recommencera depuis les parents, puis sera sauvegardé. Le nouveau
+plan schéma3 est préparé avant calcul et comparé au précédent pour vérifier
+les identités numériques. Aucun calcul de campagne actif, mise en veille,
+modification moteur/IHM, publication, fusion ou tag. Aucune nouvelle photo
+nécessaire pour cette première qualification synthétique.
