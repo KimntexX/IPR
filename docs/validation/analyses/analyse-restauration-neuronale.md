@@ -4920,3 +4920,51 @@ tous contrastes est0,426/0,411 contre0,361/0,345 : un peu moins de lissage.
 ajust? apr?s ce choix. Les contr?les encore r?serv?s seront ouverts une
 seule fois sur cette recette. Les faibles d?tails noy?s dans le bruit,
 les capteurs r?els et les saturations restent des limites ? qualifier.
+
+
+### Confirmations r?serv?es ? ?checs ? fort bruit conserv?s
+
+La nouvelle cohorte classique donne six groupes n?gatifs. Tous les
+contr?les sans bruit, les faibles ondes, la couleur et les gains d'erreur
+passent ; le seul crit?re en ?chec est le gradient des quatre contours
+mixtes ? fort bruit :92,47?94,09% du parent pour71,92,88?94,40% pour73,
+sous95%. Le contour d'indice11 est le plus touch?. Le d?faut n'est donc
+pas imput? au reconstructeur sans bruit. Preuve :
+[cohorte classique](../raw/neural-noisy-confirmation-v001-20261103T173122Z.json).
+
+La confirmation fine mesure4032 observations. L'erreur RGB globale baisse
+?0,748/0,784 du parent au faible bruit,0,525/0,488 au fort. Mais20 des48
+groupes forts ?chouent au transfert d'au moins un canal, tous au fort bruit.
+?26cycles, la couleur oppos?e conserve parfois seulement62,6?68,1% dans
+R/B ;71 augmente aussi l'erreur RGB de5,23% dans ce groupe. Tous les groupes
+forts ? faible bruit passent. **Le candidat n'est pas d?clar? stable** :
+une baisse d'erreur moyenne ne compense pas la perte de d?tail/coloration.
+Preuve : [cohorte fine](../raw/neural-fine-confirmation-v001-20261103T173344Z.json).
+Les observations faibles restent disponibles ; leurs d?tails ne sont pas
+pr?sent?s comme valid?s. Aucune donn?e n'est retir?e pour changer le verdict.
+
+La coh?rence des tuiles passe encore, et les54planches sont r?g?n?r?es sur
+le candidat ? protection compl?te :
+[tuiles](../raw/neural-tiling-audit-v001-20261103T173515Z.json),
+[planches](../raw/neural-camera-visual-v001-20261103T173529Z.json).
+Index local : `build-patch_neural_restoration/fixed-point-hessian-camera-v001/index.html`.
+Cela ne transforme pas l'?chec photographique potentiel en r?ussite.
+
+### Derni?re comparaison cibl?e ? capacit? de correction
+
+Le correcteur pr?c?dent comprime ses36descripteurs en8canaux internes,
+alors que le U-Net de reconstruction est fig?. La prochaine exp?rience
+porte ces canaux ?32, sans agrandir le support spatial, changer les donn?es,
+l'ancrage, les parents,2048?tapes ou les deux graines. L'architecture de
+reconstruction reste ?8canaux. Le nouveau nombre de param?tres sera mesur? ;
+la limite m?moire reste inchang?e. Dix tests cibl?s du mod?le, de la reprise
+enrichie et de la protection passent. Les anciens poids exigent leur r?vision
+de calcul ; aucun ancien moteur n'est conserv? dans le code courant.
+
+Les deux cohortes pr?c?dentes sont d?sormais consult?es. Si le d?veloppement
+passe, la confirmation suivante utilisera les blocs352/3800000 pour le
+classique et la cohorte fine2 (fr?quences7?27, angles/phase et bruits nouveaux),
+sans modification des crit?res. Les empreintes de toutes les cohortes
+pr?c?dentes et des textures d'apprentissage seront exclues pour emp?cher
+un r?emploi accidentel comme donn?es r?serv?es. Aucune att?nuation artificielle
+de la force n'est ajout?e pour faire passer un seuil.

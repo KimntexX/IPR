@@ -50,8 +50,10 @@ def observation(truth, tags, field):
     return clean, observed, (a*observed.clamp_min(0)+b).sqrt()
 
 
-def prepare(root, proof_path, output):
-    confined(root, [proof_path, output])
+def prepare(root, proof_path, output, cohort=1, priors=()):
+    confined(root, [proof_path, output]+list(priors))
+    if isinstance(cohort, bool) or not isinstance(cohort, int) or not 1 <= cohort <= 8:
+        raise ValueError('Declared cohort index1..8 required')
     proof = json.loads(proof_path.read_text(encoding='utf-8'))
     if proof.get('pilot_gates_passed') is not True:
         raise ValueError('Successful two-seed source required before opening new fine contents')
@@ -63,14 +65,14 @@ def prepare(root, proof_path, output):
     guard = MemoryGuard(**source['data']['memory_policy'])
     with guard:
         torch.set_num_threads(4)
-        for frequency in (6, 10, 14, 18, 22, 26):
+        for frequency in tuple(f+(cohort-1)%2 for f in (6, 10, 14, 18, 22, 26)):
             for amplitude in (.008, .06):
                 for angle in (.17, .63, 1.07):
                     for chromatic in (False, True):
                         guard.check()
                         index = len(cases)
-                        case = dict(frequency=frequency, amplitude=amplitude, angle=angle,
-                            chromatic=chromatic, phase=1.17)
+                        case = dict(frequency=frequency, amplitude=amplitude, angle=angle+.11*(cohort-1),
+                            chromatic=chromatic, phase=1.17+.73*(cohort-1))
                         truth, _, _ = fine_signal(case)
                         case['target_sha256'] = tensor_hash(truth)
                         cases.append(case)
@@ -79,13 +81,19 @@ def prepare(root, proof_path, output):
                             for level in range(3):
                                 for replicate in range(1 if level == 0 else 3):
                                     field = dict(case_index=index, phase_index=phase, noise_index=level,
-                                        replicate=replicate, noise_seed=130000000+index*1000+phase*100+level*10+replicate)
+                                        replicate=replicate, noise_seed=130000000+(cohort-1)*10000000+index*1000+phase*100+level*10+replicate)
                                     _, observed, sigma = observation(truth, tags, field)
                                     fields.append(dict(field, observation_sha256=tensor_hash(observed), sigma_sha256=tensor_hash(sigma)))
     if len({c['target_sha256'] for c in cases}) != 72:
         raise ValueError('Distinct72fine signals required')
+    seen = {c['target_sha256'] for path in priors
+        for c in json.loads(path.read_text(encoding='utf-8'))['cases']}
+    seen.update(c['target_sha256'] for c in source['data'].get('texture_augmentation', {}).get('events', []))
+    if seen.intersection(c['target_sha256'] for c in cases):
+        raise ValueError('Fine targets collide with earlier cohorts or training')
     output.mkdir(parents=True, exist_ok=False)
     plan = dict(schema_version=1, frozen_at_utc=datetime.now(timezone.utc).isoformat(), source=source,
+        cohort=cohort, prior_plan_sha256=[digest(p) for p in priors],
         source_proof_path=str(proof_path.resolve()), source_proof_sha256=digest(proof_path), cases=cases, fields=fields,
         tools={n: digest(Path(__file__).with_name(n)) for n in TOOLS}, preparation_memory=guard.stats(),
         criteria=dict(strong_amplitude=.06, strong_minimum_channel_gain_over_parent=.95,
@@ -216,7 +224,7 @@ def run(root, plan_path, output, reuse=None):
                     ratio = sum(r['full']['rgb_mse'] for r in selected)/sum(r['parent']['rgb_mse'] for r in selected)
                     result.setdefault('overall', []).append(dict(seed=seed, noise_index=level,
                         rgb_over_parent=ratio, passed=ratio <= plan['criteria']['overall_rgb_maximum_ratio']))
-                    for frequency in (6, 10, 14, 18, 22, 26):
+                    for frequency in sorted({c['frequency'] for c in plan['cases']}):
                         for amplitude in (.008, .06):
                             for chromatic in (False, True):
                                 group = [r for r in selected if all(plan['cases'][r['case_index']][n] == v for n, v in
@@ -248,6 +256,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--prepare', action='store_true')
     parser.add_argument('--proof', type=Path)
+    parser.add_argument('--cohort', type=int, default=1)
+    parser.add_argument('--prior', nargs='*', type=Path, default=[])
     parser.add_argument('--plan', type=Path)
     parser.add_argument('--reuse', type=Path)
     parser.add_argument('--output', type=Path, required=True)
@@ -256,7 +266,7 @@ if __name__ == '__main__':
     if args.prepare:
         if args.proof is None:
             parser.error('Eligible frozen source proof required')
-        prepare(root, args.proof, args.output)
+        prepare(root, args.proof, args.output, args.cohort, args.prior)
     elif args.plan is None:
         parser.error('Frozen fine confirmation plan required')
     else:

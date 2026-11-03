@@ -26,13 +26,14 @@ class NoisyMomentUNet(LocalMomentUNet):
         physical = (0, 2, 1, 3)
         inputs = tuple(4*j+i for j in range(5) for i in physical)
         inputs += tuple(20+i for i in LOCAL_PERMUTATION)
-        self.noise_features = equivariant_block(inputs, paired_permutation(width))
-        self.noise_head = TransposeConv(paired_permutation(width), physical, 1)
+        noise_width = 4*width
+        self.noise_features = equivariant_block(inputs, paired_permutation(noise_width))
+        self.noise_head = TransposeConv(paired_permutation(noise_width), physical, 1)
         nn.init.zeros_(self.noise_head.weight)
         nn.init.zeros_(self.noise_head.bias)
         # Keep all common random initializations and the caller's RNG unchanged.
         with torch.random.fork_rng(devices=[]):
-            self.noise_residual = TransposeConv(physical, paired_permutation(width))
+            self.noise_residual = TransposeConv(physical, paired_permutation(noise_width))
             nn.init.zeros_(self.noise_residual.weight)
             nn.init.zeros_(self.noise_residual.bias)
 
