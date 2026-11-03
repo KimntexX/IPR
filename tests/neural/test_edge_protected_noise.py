@@ -30,6 +30,9 @@ class EdgeProtectionTests(unittest.TestCase):
         spike[:, :, 16, 20] += .08
         self.assertGreater(float(edge_confidence(spike, sigma)[0, 0, 16, 20]), .99)
         self.assertTrue(torch.equal(confidence, edge_confidence(step/2, sigma/2)))
+        y, x = torch.meshgrid(torch.linspace(-1, 1, 32), torch.linspace(-1, 1, 40), indexing='ij')
+        ramp = (x*.3-y*.2)[None, None].expand(1, 4, -1, -1).contiguous()
+        self.assertTrue((edge_confidence(ramp, sigma)[:, :, 4:-4, 4:-4] == 1).all())
 
     def test_zero_noise_parent_identity_and_prepared_noisy_covariance(self):
         torch.manual_seed(901)

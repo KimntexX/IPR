@@ -1,17 +1,23 @@
 """One fixed observation-only protection probe, not a calibrated edge detector."""
+import math
 import torch
 from torch.nn import functional as F
 
 from joint_bayer_unet import validate
 from noisy_moment_unet import NoisyMomentUNet
 
+HALO_RADIUS = 3
+COMPARISON_COUNT = 4*2*(2*HALO_RADIUS+1)**2
+NOMINAL_FAMILY_ALPHA = .01
+SCORE_ONSET = math.sqrt(2*math.log(2*COMPARISON_COUNT/NOMINAL_FAMILY_ALPHA))
+
 
 def edge_confidence(packed, sigma):
-    """Attenuate correction near coherent contrast above an estimated noise scale.
+    """Attenuate correction near non-affine contrast above estimated noise.
 
-    Row/column differences exclude the central sample, reducing sensitivity to
-    isolated noise there. Four physical planes share a conservative confidence.
-    Three-sigma onset is a fixed heuristic, not a calibrated false-positive rate.
+    Second-order row/column contrasts exclude the central sample and vanish on
+    affine interiors. Four planes share confidence. A nominal Gaussian union
+    bound accounts for comparisons; estimated sigma prevents a probability claim.
     The three-cell halo protects interpolation support and local features.
     """
     if (packed.ndim != 4 or packed.shape[1] != 4 or sigma.shape != packed.shape
@@ -31,13 +37,17 @@ def edge_confidence(packed, sigma):
         for y in (0, 1, 2) for x in (0, 2))
     vertical = sum(variance[:, :, y:y+packed.shape[-2], x:x+packed.shape[-1]]
         for y in (0, 2) for x in (0, 1, 2))
-    zh = (right-left).abs()/horizontal.clamp_min(1e-24).sqrt()
-    zv = (down-up).abs()/vertical.clamp_min(1e-24).sqrt()
+    horizontal += 9*(variance[:, :, :-2, 1:-1]+variance[:, :, 2:, 1:-1])
+    vertical += 9*(variance[:, :, 1:-1, :-2]+variance[:, :, 1:-1, 2:])
+    horizontal_curvature = left+right-3*(values[:, :, :-2, 1:-1]+values[:, :, 2:, 1:-1])
+    vertical_curvature = up+down-3*(values[:, :, 1:-1, :-2]+values[:, :, 1:-1, 2:])
+    zh = horizontal_curvature.abs()/horizontal.clamp_min(1e-24).sqrt()
+    zv = vertical_curvature.abs()/vertical.clamp_min(1e-24).sqrt()
     score = torch.maximum(zh, zv).amax(dim=1, keepdim=True)
     if not torch.isfinite(score).all():
         raise ValueError('Nonfinite contrast/noise score')
-    score = F.max_pool2d(score, 7, stride=1, padding=3)
-    return (-.5*(score-3).clamp(0, 20).square()).exp()
+    score = F.max_pool2d(score, 2*HALO_RADIUS+1, stride=1, padding=HALO_RADIUS)
+    return (-.5*(score-SCORE_ONSET).clamp(0, 20).square()).exp()
 
 
 class EdgeProtectedNoisyUNet(NoisyMomentUNet):

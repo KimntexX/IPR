@@ -10,7 +10,7 @@ import torch
 
 from compare_reconstruction_objectives import confined
 from diagnose_train_learnability import digest, save
-from edge_protected_noise import EdgeProtectedNoisyUNet
+from edge_protected_noise import EdgeProtectedNoisyUNet, SCORE_ONSET, NOMINAL_FAMILY_ALPHA, COMPARISON_COUNT, HALO_RADIUS
 from local_moment_unet import LocalMomentUNet
 from memory_budget import MemoryGuard, BudgetExceeded
 from run_noisy_moment_pilot import TOOLS, evaluate, variant_summary
@@ -39,7 +39,9 @@ def prepare(root, data_plan, folders, output):
     plan = dict(schema_version=1, frozen_at_utc=datetime.now(timezone.utc).isoformat(),
         data_plan_path=str(data_plan.resolve()), data_plan_sha256=digest(data_plan), models=references,
         memory_policy=source['memory_policy'],
-        policy='Fixed 3-sigma onset, row/column contrast excluding centre, max across physical planes, radius3 packed-cell halo. No learned weight changed or threshold sweep.',
+        policy='Fixed second-order contrast excluding centre, correct variance weights, nominal Gaussian union bound across local tests; no fitted score threshold or learned-weight change.',
+        protection=dict(score_onset=SCORE_ONSET, nominal_family_alpha=NOMINAL_FAMILY_ALPHA,
+            comparison_count=COMPARISON_COUNT, halo_radius=HALO_RADIUS),
         limits=['Consulted development controls; independent noisy confirmation remains required.',
             'Estimated Gaussian contrast scale is a heuristic, not a calibrated edge probability.',
             'Protection may reduce denoising and fail on weak structures; all original gates retained.'],
