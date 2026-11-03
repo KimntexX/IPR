@@ -13,6 +13,7 @@
 #include "PerceptualColour.h"
 #include "RenderStageCache.h"
 #include "RawDecoder.h"
+#include "StackSession.h"
 #include "TaskRunner.h"
 
 #include <QAbstractListModel>
@@ -80,6 +81,7 @@ class ImageEditor final : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QAbstractItemModel *imageModel READ imageModel CONSTANT)
+    Q_PROPERTY(QObject *stacking READ stacking CONSTANT)
     Q_PROPERTY(QUrl folder READ folder NOTIFY folderChanged)
     Q_PROPERTY(QString imageSource READ imageSource NOTIFY previewChanged)
     Q_PROPERTY(bool embeddedPreview READ embeddedPreview NOTIFY previewChanged)
@@ -181,6 +183,7 @@ public:
     ~ImageEditor() override;
 
     QAbstractItemModel *imageModel();
+    QObject *stacking() { return m_stacking.get(); }
     QUrl folder() const;
     QString imageSource() const;
     QString originalImageSource() const;
@@ -489,6 +492,7 @@ private:
         RenderStageCache stages;
     };
     std::shared_ptr<TaskResources> m_taskResources;
+    std::unique_ptr<StackSession> m_stacking;
     ImageCacheController &m_decodedImageCache;
     // Preview only; cleared with the image it belongs to.
     RenderStageCache &m_renderStageCache;

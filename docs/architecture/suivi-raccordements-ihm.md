@@ -42,6 +42,16 @@ recompilé localement. Les traductions restent sur le chantier documentaire déd
 
 | IHM-CONN-013 | Raccordé et validé par l'utilisateur, intégré à `dev` | Panneau Géométrie : voir ci-dessous |
 
+| IHM-CONN-014 | Raccordé et validé par l'utilisateur | Panneau Assembler : voir ci-dessous |
+
+#### IHM-CONN-014 — panneau Assembler (B7)
+
+Le moteur expose `editor.stacking` (`StackSession`) : `running`, `exporting`, `hasResult`,
+`progress`, `status`, `preview`, `exportedFile`, `start(urls, référence)`, `cancel()`,
+`exportResult(cible, format)`, `suggestedExport(format)`, `discard()`. Le panneau lit la
+sélection du ruban (`selectedImageUrls`) et ne calcule rien : il ouvre le résultat exporté
+par `editor.loadImage`.
+
 #### IHM-CONN-013 — panneau Géométrie (B1)
 
 Le moteur expose sur `editor` : `geometry` (valeurs, taille du cadre, `hasCrop`,
