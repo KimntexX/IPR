@@ -157,6 +157,13 @@ int main(int argc, char **argv)
     if (!check(panel->property("tool").toString() == QStringLiteral("radial"), "with its tool")) return 1;
     if (!check(named(panel, QStringLiteral("maskFeather"))->isVisible() && !named(panel, QStringLiteral("maskBrushSize"))->isVisible(), "and the fields of its kind")) return 1;
 
+    // The colour sliders show their colours, as in the Settings tab; the others do not.
+    for (const QString &name : {QStringLiteral("temperature"), QStringLiteral("tint"), QStringLiteral("vibrance"), QStringLiteral("saturation")}) {
+        auto *coloured = named(panel, QStringLiteral("maskValue_") + name);
+        if (!check(coloured && coloured->property("hasColorTrack").toBool(), "a colour slider has its colours")) return 1;
+    }
+    if (!check(!named(panel, QStringLiteral("maskValue_contrast"))->property("hasColorTrack").toBool(), "a tone slider has none")) return 1;
+
     // A value slider reaches the engine, and shows what the engine holds.
     QQuickItem *exposure = named(panel, QStringLiteral("maskValue_exposure"));
     if (!check(exposure != nullptr, "the exposure control exists")) return 1;

@@ -46,10 +46,14 @@ Item {
             { key: "whites", label: qsTr("Blancs"), low: -100, high: 100, step: 1, digits: 0 },
             { key: "blacks", label: qsTr("Noirs"), low: -100, high: 100, step: 1, digits: 0 } ] },
         { title: qsTr("Couleur"), settings: [
-            { key: "temperature", label: qsTr("Température"), low: -3000, high: 3000, step: 10, digits: 0 },
-            { key: "tint", label: qsTr("Nuance"), low: -150, high: 150, step: 1, digits: 0 },
-            { key: "vibrance", label: qsTr("Vibrance"), low: -100, high: 100, step: 1, digits: 0 },
-            { key: "saturation", label: qsTr("Saturation"), low: -100, high: 100, step: 1, digits: 0 } ] },
+            { key: "temperature", label: qsTr("Température"), low: -3000, high: 3000, step: 10, digits: 0,
+              track: ["#477dda", "#c4c6c4", "#e8ae4e"] },
+            { key: "tint", label: qsTr("Nuance"), low: -150, high: 150, step: 1, digits: 0,
+              track: ["#63b777", "#c4c6c4", "#c46eb5"] },
+            { key: "vibrance", label: qsTr("Vibrance"), low: -100, high: 100, step: 1, digits: 0,
+              track: ["#78828b", "#719e9e", "#b4b93c", "#dc6845"] },
+            { key: "saturation", label: qsTr("Saturation"), low: -100, high: 100, step: 1, digits: 0,
+              track: ["#78828b", "#78a5a4", "#5cae6c", "#d2c247", "#db6559"] } ] },
         { title: qsTr("Effets"), settings: [
             { key: "texture", label: qsTr("Texture"), low: -100, high: 100, step: 1, digits: 0 },
             { key: "clarity", label: qsTr("Clarté"), low: -100, high: 100, step: 1, digits: 0 },
@@ -532,6 +536,8 @@ Item {
                                 minimumValue: modelData.low
                                 maximumValue: modelData.high
                                 increment: modelData.step
+                                // The same colours as the Settings tab's sliders.
+                                trackColors: modelData.track || []
                                 adjustmentEnabled: root.currentMask !== null
                                 onValueEdited: if (!root.syncing) root.editor.setLocalMaskValue(root.selectedMask, modelData.key, value)
                             }

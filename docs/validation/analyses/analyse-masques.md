@@ -7,9 +7,10 @@ partielles : [issue #24](https://github.com/KimntexX/IPR/issues/24).
 
 État au 3 novembre 2026 : moteur et panneau sur `patch_ui_layers`, non fusionnés. **Dégradés
 linéaire et radial, et pinceau, validés à l'usage par l'utilisateur** (« ça fait le travail
-attendu »), qui précise ne pas être expert de ces outils. **Le design du panneau ne lui convient
-pas** : pas de cible définie pour l'instant, le sujet est reporté. La plage de tons et la
-réactivité avec plusieurs masques restent à essayer.
+attendu »), avec la réserve que ces outils ne sont pas sa spécialité. Deux dégradés se superposent
+comme attendu, sans latence notable à l'usage. **Le design du panneau ne convient pas à
+l'utilisateur** : pas de cible définie pour l'instant, le sujet est reporté. La plage de tons reste
+à essayer : la zone sur laquelle elle agit n'était pas évidente à l'usage.
 
 ## Le modèle
 
