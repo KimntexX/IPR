@@ -595,6 +595,36 @@ void commands(const QDir &folder)
     editor.pasteAdjustments();
     check(settled() && editor.localMasks().size() == 2 && editor.adjustmentValue(QStringLiteral("contrast")) == 25, "a paste keeps the target's masks");
 
+    // Its zone can be shown in the preview: colour inside, grey outside; it is never kept.
+    const int shown = editor.addLocalMask(QStringLiteral("radial"));
+    editor.setLocalMaskValue(shown, QStringLiteral("saturation"), 1.0);
+    check(settled(), "a mask to show");
+    const QImage plainView = provider.image();
+    editor.setLocalMaskOverlay(shown);
+    check(editor.localMaskOverlay() == shown, "its zone is asked for");
+    check(settled(), "the overlay renders");
+    const QImage overlaid = provider.image();
+    const auto greyAt = [&](int x, int y) {
+        const QRgb pixel = overlaid.pixel(x, y);
+        return qAbs(qRed(pixel) - qGreen(pixel)) <= 2 && qAbs(qGreen(pixel) - qBlue(pixel)) <= 2;
+    };
+    // Beside the middle: the chart is a neutral grey at its very centre.
+    check(!greyAt(72, 40), "colour inside the zone");
+    check(greyAt(2, 2), "grey outside it");
+    editor.saveCurrentAdjustments();
+    check(Sidecar::read(photo) && !QCborValue(RecipeCodec::encodeSettings(Sidecar::read(photo)->settings)).toCbor().contains("overlay"), "nothing of it is saved");
+    const QString exported = folder.filePath(QStringLiteral("overlay.png"));
+    editor.exportImage(QUrl::fromLocalFile(exported), QStringLiteral("PNG"), 100);
+    check(waitFor([&] { return QFile::exists(exported) && !editor.busy(); }), "an export runs");
+    const QImage written(exported);
+    check(!written.isNull() && qAbs(qBlue(written.pixel(2, 2)) - qRed(written.pixel(2, 2))) > 20, "and an export shows no overlay");
+    editor.setLocalMaskOverlay(99);
+    check(settled() && provider.image() == plainView, "an index out of range shows nothing");
+    editor.setLocalMaskOverlay(-1);
+    check(settled() && provider.image() == plainView, "removing it brings the image back");
+    editor.removeLocalMask(shown);
+    check(settled(), "the mask goes");
+
     // The general reset removes them, like the other edits.
     editor.resetAdjustments();
     check(settled() && editor.localMasks().isEmpty(), "a reset clears them");

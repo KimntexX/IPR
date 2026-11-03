@@ -122,6 +122,8 @@ class ImageEditor final : public QObject
     // its source), hue, saturation, luminance, variance, range}.
     Q_PROPERTY(QVariantMap geometry READ geometry NOTIFY geometryChanged)
     Q_PROPERTY(QVariantList localMasks READ localMasks NOTIFY localMasksChanged)
+    // The zone of one mask in the preview (-1: none); never saved nor exported.
+    Q_PROPERTY(int localMaskOverlay READ localMaskOverlay WRITE setLocalMaskOverlay NOTIFY localMaskOverlayChanged)
     Q_PROPERTY(bool cropEditing READ cropEditing WRITE setCropEditing NOTIFY cropEditingChanged)
     Q_PROPERTY(QVariantList pointColors READ pointColors NOTIFY pointColorsChanged)
     // Range overlay of one point in the preview (-1: none); never saved nor exported.
@@ -346,6 +348,8 @@ public:
     // The masks' panel. Coordinates: the normalized canvas (LocalAdjustments). Kinds: linear,
     // radial, brush. Combinations: add, subtract, intersect. A bad index does nothing.
     QVariantList localMasks() const;
+    int localMaskOverlay() const { return m_localMaskOverlay; }
+    void setLocalMaskOverlay(int mask);
     // The index of the new mask, -1 when it could not be added.
     Q_INVOKABLE int addLocalMask(const QString &kind);
     Q_INVOKABLE void removeLocalMask(int mask);
@@ -383,6 +387,7 @@ signals:
     void pointColorsChanged();
     void geometryChanged();
     void localMasksChanged();
+    void localMaskOverlayChanged();
     void cropEditingChanged();
     void pointColorOverlayChanged();
 
@@ -435,7 +440,7 @@ private:
                                       bool includeOriginal,
                                       double pixelScale = 1.0,
                                       RenderStageCache *cache = nullptr,
-                                      int overlayPoint = -1,
+                                      int overlayPoint = -1, int overlayMask = -1,
                                       bool wholeCanvas = false);
     static ColorPipeline::WorkingImage buildEditProxy(
         const ColorPipeline::WorkingImage &source);
@@ -515,6 +520,7 @@ private:
     };
     std::shared_ptr<TaskResources> m_taskResources;
     std::unique_ptr<StackSession> m_stacking;
+    int m_localMaskOverlay = -1;
     ImageCacheController &m_decodedImageCache;
     // Preview only; cleared with the image it belongs to.
     RenderStageCache &m_renderStageCache;

@@ -56,6 +56,17 @@ namespace {
 RenderStageCache::Keys stageKeys(const EditRecipe::Settings &s);
 Geometry::Quality geometryQuality(double pixelScale);
 
+// What a luminance range reads: the image as it is before any edit, on the canvas. Empty when
+// no mask has a range.
+cv::Mat rangeLuminanceOf(const ColorPipeline::WorkingImage &source, const EditRecipe::Settings &settings, double pixelScale)
+{
+    if (!LocalAdjustments::usesLuminance(settings.localMasks))
+        return {};
+    cv::Mat rgb;
+    cv::cvtColor(source.linearRgba, rgb, cv::COLOR_RGBA2RGB);
+    return LocalAdjustments::rangeLuminance(Geometry::warpRgb(rgb, settings.geometry, geometryQuality(pixelScale)));
+}
+
 // What the masks add on the canvas; a range reads the image as it is before any edit.
 LocalValues::Maps maskValues(const ColorPipeline::WorkingImage &source, const EditRecipe::Settings &settings, double pixelScale,
                              RenderStageCache *cache = nullptr)
@@ -74,13 +85,7 @@ LocalValues::Maps maskValues(const ColorPipeline::WorkingImage &source, const Ed
             return kept;
     }
     const cv::Size canvas = Geometry::canvasSize(settings.geometry, source.linearRgba.size());
-    cv::Mat luminance;
-    if (LocalAdjustments::usesLuminance(settings.localMasks)) {
-        cv::Mat rgb;
-        cv::cvtColor(source.linearRgba, rgb, cv::COLOR_RGBA2RGB);
-        luminance = LocalAdjustments::rangeLuminance(Geometry::warpRgb(rgb, settings.geometry, geometryQuality(pixelScale)));
-    }
-    const LocalValues::Maps maps = LocalAdjustments::valueMaps(settings.localMasks, canvas, luminance);
+    const LocalValues::Maps maps = LocalAdjustments::valueMaps(settings.localMasks, canvas, rangeLuminanceOf(source, settings, pixelScale));
     if (cache)
         cache->storeMaskMaps(source.linearRgba, pixelScale, key, maps);
     return maps;
@@ -2001,6 +2006,16 @@ void ImageEditor::commitGeometry(Geometry::Settings next)
     scheduleRender();
 }
 
+void ImageEditor::setLocalMaskOverlay(int mask)
+{
+    if (mask == m_localMaskOverlay)
+        return;
+    m_localMaskOverlay = mask;
+    emit localMaskOverlayChanged();
+    if (!m_original.isNull())
+        scheduleRender();
+}
+
 QVariantList ImageEditor::localMasks() const
 {
     return LocalAdjustments::describe(m_settings.localMasks);
@@ -2541,7 +2556,7 @@ bool ImageEditor::renderTones(const ColorPipeline::WorkingImage &source, const S
 
 ImageEditor::RenderResult ImageEditor::renderPreview(
     const ColorPipeline::WorkingImage &source, const Settings &settings,
-    bool includeOriginal, double pixelScale, RenderStageCache *cache, int overlayPoint, bool wholeCanvas)
+    bool includeOriginal, double pixelScale, RenderStageCache *cache, int overlayPoint, int overlayMask, bool wholeCanvas)
 {
     RenderResult result;
     if (includeOriginal) {
@@ -2580,6 +2595,13 @@ ImageEditor::RenderResult ImageEditor::renderPreview(
             rendered.linearRgba = rendered.linearRgba.clone();
             ColorAdjustments::showWeights(rendered.linearRgba, weights);
         }
+    }
+    if (overlayMask >= 0 && overlayMask < int(settings.localMasks.size())) {
+        const cv::Mat weights = LocalAdjustments::coverage(settings.localMasks[size_t(overlayMask)], rendered.linearRgba.size(),
+                                                           rangeLuminanceOf(source, settings, pixelScale));
+        // A neutral pipeline hands back the source buffer itself: overlay a copy.
+        rendered.linearRgba = rendered.linearRgba.clone();
+        ColorAdjustments::showWeights(rendered.linearRgba, weights);
     }
 
     QString error;
@@ -3167,12 +3189,13 @@ void ImageEditor::startRender()
     setBusy(true);
     m_renderWatcher.setFuture(m_tasks.submit<RenderResult>(
         QStringLiteral("render"), Tasks::Priority::Interactive,
-        [sourceCopy, settings, includeOriginal, pixelScale, resources = m_taskResources, overlay, wholeCanvas](Tasks::Context &) {
+        [sourceCopy, settings, includeOriginal, pixelScale, resources = m_taskResources, overlay,
+         maskOverlay = m_localMaskOverlay, wholeCanvas](Tasks::Context &) {
             ImageCacheController *controller = &resources->cache;
             const auto admission = controller->acquire({}, SystemMemory::estimateProcessingPeak(sourceCopy.linearRgba.total()), false).result();
             if (!admission.reservation) { RenderResult result; result.error = admission.error; return result; }
             const auto release = qScopeGuard([&] { controller->release(admission.reservation); });
-            return renderPreview(sourceCopy, settings, includeOriginal, pixelScale, &resources->stages, overlay, wholeCanvas);
+            return renderPreview(sourceCopy, settings, includeOriginal, pixelScale, &resources->stages, overlay, maskOverlay, wholeCanvas);
         }).future);
 }
 
