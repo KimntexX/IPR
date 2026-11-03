@@ -73,6 +73,7 @@ QJsonObject description(const Content &content, double headroom)
         {QStringLiteral("baseline_ev"), options.cameraBaselineExposureEv},
         {QStringLiteral("profile_compensation_ev"), options.profileExposureCompensationEv},
         {QStringLiteral("preserve_tone_curve_hue"), options.preserveToneCurveHue},
+        {QStringLiteral("calibrated_white"), int(content.calibratedWhite)},
         {QStringLiteral("provenance"), content.provenance},
         {QStringLiteral("lens_make"), content.lensMake},
         {QStringLiteral("lens_model"), content.lensModel},
@@ -219,6 +220,7 @@ bool read(const QString &fileName, Content &content, QString *error)
     content.renderOptions.cameraBaselineExposureEv = object.value(QStringLiteral("baseline_ev")).toDouble();
     content.renderOptions.profileExposureCompensationEv = object.value(QStringLiteral("profile_compensation_ev")).toDouble();
     content.renderOptions.preserveToneCurveHue = object.value(QStringLiteral("preserve_tone_curve_hue")).toBool();
+    content.calibratedWhite = unsigned(std::max(0, object.value(QStringLiteral("calibrated_white")).toInt()));
     content.provenance = object.value(QStringLiteral("provenance")).toString();
     content.lensMake = object.value(QStringLiteral("lens_make")).toString();
     content.lensModel = object.value(QStringLiteral("lens_model")).toString();
