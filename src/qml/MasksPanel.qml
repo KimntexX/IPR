@@ -141,11 +141,13 @@ Item {
     onSelectedShapeChanged: Qt.callLater(reload)
     Component.onCompleted: reload()
 
-    // The zone shows only while this tab is open.
+    // The zone shows only while this tab is open, on demand or while a range slider is held:
+    // what those sliders select is hard to judge from the edit alone.
+    readonly property bool rangeSliderHeld: rangeLowControl.pressed || rangeHighControl.pressed || rangeFeatherControl.pressed
     Binding {
         target: root.editor
         property: "localMaskOverlay"
-        value: root.visible && zoneCheck.checked ? root.selectedMask : -1
+        value: root.visible && (zoneCheck.checked || root.rangeSliderHeld) ? root.selectedMask : -1
     }
 
     Label {

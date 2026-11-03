@@ -236,6 +236,30 @@ int main(int argc, char **argv)
     named(panel, QStringLiteral("maskRangeHigh"))->setProperty("value", 40);
     if (!check(std::abs(shapeAt(editor, 2, 0).value(QStringLiteral("rangeHigh")).toDouble() - 0.4) < 1e-6, "they reach the engine")) return 1;
 
+    // Holding a range slider shows the zone, and letting go gives back what the box asks.
+    const auto hold = [&](const QString &control, bool held) {
+        named(named(panel, control), QStringLiteral("adjustmentSlider"))->setProperty("pressed", held);
+        settle();
+    };
+    for (const QString &control : {QStringLiteral("maskRangeLow"), QStringLiteral("maskRangeHigh"), QStringLiteral("maskRangeFeather")}) {
+        hold(control, true);
+        if (!check(editor.localMaskOverlay() == 2, "a held range slider shows the zone")) return 1;
+        hold(control, false);
+        if (!check(editor.localMaskOverlay() == -1, "letting go hides it")) return 1;
+    }
+    hold(QStringLiteral("maskOpacity"), true);
+    if (!check(editor.localMaskOverlay() == -1, "another slider does not show it")) return 1;
+    hold(QStringLiteral("maskOpacity"), false);
+    click(zone);
+    settle();
+    hold(QStringLiteral("maskRangeLow"), true);
+    hold(QStringLiteral("maskRangeLow"), false);
+    if (!check(editor.localMaskOverlay() == 2, "letting go keeps the zone when the box asks for it")) return 1;
+    click(zone);
+    settle();
+    if (!check(editor.localMaskOverlay() == -1, "the box still hides it")) return 1;
+    if (!check(waitFor([&] { return !editor.busy(); }), "the preview settles after holding")) return 1;
+
     // Undo can take away the mask in hand.
     if (!check(waitFor([&] { return !editor.busy(); }), "the preview settles before undoing")) return 1;
     click(named(panel, QStringLiteral("maskDuplicate_2")));

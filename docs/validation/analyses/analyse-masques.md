@@ -5,12 +5,14 @@ Rapport évolutif du moteur des masques (lot B2,
 `docs/validation/raw/` font autorité ; ce rapport les interprète. Suivi des validations
 partielles : [issue #24](https://github.com/KimntexX/IPR/issues/24).
 
-État au 3 novembre 2026 : moteur et panneau sur `patch_ui_layers`, non fusionnés. **Dégradés
+État au 3 novembre 2026 : moteur et panneau intégrés à `dev` (`v0.5.110-beta`). **Dégradés
 linéaire et radial, et pinceau, validés à l'usage par l'utilisateur** (« ça fait le travail
 attendu »), avec la réserve que ces outils ne sont pas sa spécialité. Deux dégradés se superposent
-comme attendu, sans latence notable à l'usage. **Le design du panneau ne convient pas à
-l'utilisateur** : pas de cible définie pour l'instant, le sujet est reporté. La plage de tons reste
-à essayer : la zone sur laquelle elle agit n'était pas évidente à l'usage.
+comme attendu, sans latence notable à l'usage. **Plage de tons essayée par l'utilisateur** sur
+`6V1A0064.CR3`, avec quatre masques (« plutôt content du résultat ») ; comme sa zone d'action
+n'était pas évidente à première vue, elle s'affiche maintenant tant qu'un de ses curseurs est tenu.
+**Le design du panneau ne convient pas à l'utilisateur** : pas de cible définie pour l'instant, le
+sujet est reporté.
 
 ## Le modèle
 
@@ -89,8 +91,6 @@ poignées recréées à chaque mouvement, qui perdaient le geste au relâchement
 
 ## Limites
 
-- Le rendu n'a été regardé à l'œil que par l'agent, sur une seule photo : dégradés, pinceau et
-  affichage de la zone.
 - Le panneau ne dessine pas de poignée d'angle pour le dégradé radial : l'angle se règle au curseur.
 - La réduction du bruit de luminance locale agit après le profil, même en développement signé.
 - La plage de luminance n'a pas de variante de couleur ; pas de masque issu d'un modèle.
