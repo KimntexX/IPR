@@ -656,6 +656,21 @@ public:
 
     QString profileName;
 
+    DcpCameraData cameraData() const
+    {
+        DcpCameraData data;
+        const bool first = colorMatrix1.size() == 9;
+        const QVector<double> &matrix = first ? colorMatrix1 : colorMatrix2;
+        if (matrix.size() != 9)
+            return data;
+        for (int i = 0; i < 9; ++i)
+            data.colorMatrix[size_t(i)] = matrix[i];
+        const double illuminant = first ? illuminant1 : illuminant2;
+        if (illuminant > 0.0)
+            data.illuminant = int(illuminant);
+        return data;
+    }
+
     bool whiteBalanceGains(double sourceKelvin, const cv::Vec3d &neutral,
                             int temperature, int tint, cv::Vec3d &gains,
                             QString *error) const
@@ -1713,6 +1728,12 @@ QStringList defaultProfileDirectories()
         roots.append(adobeRoot);
     roots.removeDuplicates();
     return roots;
+}
+
+DcpCameraData dcpCameraData(const QString &path)
+{
+    const auto profile = preparedDcp(path, nullptr);
+    return profile ? profile->cameraData() : DcpCameraData{};
 }
 
 bool dcpMatchesCamera(const QString &path, const QString &make, const QString &model)

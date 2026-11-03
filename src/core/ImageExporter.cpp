@@ -248,7 +248,7 @@ Result publish(const QString &stagedPath, const QString &normalizedTarget, const
         if (completed.rename(finalPath))
             return {true, normalized == QStringLiteral("DNG")
                 ? tr("Image exportée (DNG linéaire) : %1").arg(finalPath)
-                : tr("Image exportée : %1").arg(finalPath)};
+                : tr("Image exportée : %1").arg(finalPath), finalPath};
         const QFileInfo collision(finalPath);
         if (!collision.exists() && !collision.isSymLink())
             return {false, tr("Échec de l'export (publication de %1) : %2")
@@ -259,6 +259,30 @@ Result publish(const QString &stagedPath, const QString &normalizedTarget, const
 }
 
 bool supports(const QString &format) { return !suffix(normalizedFormat(format)).isEmpty(); }
+
+Result publishEncoded(const QString &target, const QString &format,
+                      const std::function<bool(const QString &staged, QString *error)> &encode)
+{
+    const QString normalized = normalizedFormat(format);
+    const QString normalizedTarget = normalizedPath(target, normalized);
+    QString stagedPath;
+    {
+        QTemporaryFile reservation(QFileInfo(normalizedTarget).dir().filePath(QStringLiteral(".ipr-export-XXXXXX")));
+        if (!reservation.open())
+            return {false, tr("Échec de l'export (création du temporaire) : %1").arg(reservation.errorString())};
+        stagedPath = reservation.fileName();
+        reservation.setAutoRemove(false);
+        // Destroyed here: its open handle would lock the path on Windows.
+    }
+    auto cleanup = qScopeGuard([&] { QFile::remove(stagedPath); });
+    QString error;
+    if (!encode(stagedPath, &error))
+        return {false, tr("Échec de l'export %1 : %2").arg(normalized, error)};
+    Result published = publish(stagedPath, normalizedTarget, normalized);
+    if (published.success)
+        cleanup.dismiss();
+    return published;
+}
 
 Result write(const ColorPipeline::WorkingImage &rendered, const QString &target,
              const QString &format, int quality)

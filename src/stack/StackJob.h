@@ -65,6 +65,7 @@ struct Result
     QString error;
     cv::Mat cameraRgb;                                // merged common area, CV_32FC3
     cv::Rect commonArea;                              // of the reference's frame
+    cv::Size frameSize;
     std::vector<FrameReport> frames;
     int usedFrames = 0;
     StackMerge::Statistics merge;

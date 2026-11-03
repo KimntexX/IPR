@@ -204,6 +204,7 @@ Result run(const Request &request)
         return result;
     }
     const cv::Size size = reference.cameraRgb.size();
+    result.frameSize = size;
 
     const QString root = request.scratchRoot.isEmpty() ? QDir::tempPath() : request.scratchRoot;
     const QStorageInfo storage(root);

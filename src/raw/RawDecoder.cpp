@@ -1,4 +1,6 @@
 #include "RawDecoder.h"
+
+#include "CameraDng.h"
 #include "CameraProfileEngine.h"
 #include "Demosaic.h"
 #include "LibRawInput.h"
@@ -392,6 +394,79 @@ std::optional<double> estimateWhiteBalanceKelvin(const LibRaw &raw)
     return kelvin;
 }
 
+void preferCameraNeutral(CameraProfileEngine::Selection &profiles, const QString &make, const QString &model,
+                         const QStringList &directories)
+{
+    for (const auto &path : CameraProfileEngine::availableDcpProfiles(make, model, directories)) {
+        if (QFileInfo(path).completeBaseName().endsWith(" Camera Neutral", Qt::CaseInsensitive)) {
+            profiles.dcpPath = path;
+            return;
+        }
+    }
+}
+
+// A camera signal IPR wrote: already demosaicked, corrected and calibrated.
+ColorPipeline::WorkingImage decodeCameraDng(const QString &fileName, const Options &options,
+                                            ImageMetadata *metadata, QString *error)
+{
+    CameraDng::Content content;
+    if (!CameraDng::read(fileName, content, error))
+        return {};
+    CameraProfileEngine::Selection profiles = CameraProfileEngine::findProfiles(
+        content.cameraMake, content.cameraModel, {}, {}, options.profileDirectories);
+    if (options.preferCameraNeutral)
+        preferCameraNeutral(profiles, content.cameraMake, content.cameraModel, options.profileDirectories);
+    const QString defaultProfile = profiles.dcpPath;
+    if (!options.dcpProfileOverride.isEmpty() &&
+        CameraProfileEngine::dcpMatchesCamera(options.dcpProfileOverride, content.cameraMake, content.cameraModel))
+        profiles.dcpPath = options.dcpProfileOverride;
+    if (profiles.dcpPath.isEmpty()) {
+        if (error)
+            *error = QStringLiteral("Aucun profil de couleur pour %1 : ce fichier a besoin de celui de son boîtier.")
+                         .arg(content.cameraModel);
+        return {};
+    }
+    CameraSignal::Source signal;
+    signal.rgb = std::move(content.cameraRgb);
+    signal.cameraMake = content.cameraMake;
+    signal.cameraModel = content.cameraModel;
+    signal.whiteBalanceKelvin = content.whiteBalanceKelvin;
+    signal.whiteBalanceApplied = true;
+    signal.cameraNeutral = content.cameraNeutral;
+    ColorPipeline::WorkingImage image = CameraSignal::render(std::move(signal), profiles.dcpPath, content.renderOptions, error);
+    if (image.isNull())
+        return {};
+    image.sourceProfile = QStringLiteral("DCP %1 → Rec.2020 linéaire").arg(QFileInfo(profiles.dcpPath).completeBaseName());
+    image.referenceWhiteBalanceKelvin = content.whiteBalanceKelvin;
+    const CameraProfileEngine::DcpRenderOptions &render = content.renderOptions;
+    if (metadata) {
+        metadata->decoderId = QStringLiteral("ipr-camera-dng");
+        metadata->decoderVersion = QStringLiteral("1");
+        metadata->cameraRaw = true;
+        metadata->cameraMake = content.cameraMake;
+        metadata->cameraModel = content.cameraModel;
+        metadata->dcpProfile = QFileInfo(profiles.dcpPath).completeBaseName();
+        metadata->rawNormalizationApplied = render.cameraBaselineExposureEv != 0.0 || render.profileExposureCompensationEv != 0.0;
+        metadata->normalizationBaselineExposureEv = render.cameraBaselineExposureEv;
+        metadata->profileExposureCompensationEv = render.profileExposureCompensationEv;
+        metadata->normalizationReason = content.provenance;
+        if (options.listDcpProfiles)
+            metadata->availableDcpProfiles = CameraProfileEngine::availableDcpProfiles(
+                content.cameraMake, content.cameraModel, options.profileDirectories);
+    }
+    if (options.retainedDcpSource && image.dcpContext && options.normalizationManifest.isEmpty() &&
+        !options.useNormalizationEnvironment && !(metadata && metadata->rawNormalizationApplied)) {
+        options.retainedDcpSource->cameraRgb = image.dcpContext->cameraRgb;
+        options.retainedDcpSource->workingContext = image.dcpContext;
+        options.retainedDcpSource->whiteBalanceKelvin = content.whiteBalanceKelvin;
+        options.retainedDcpSource->defaultProfile = defaultProfile;
+        options.retainedDcpSource->automaticWhiteBalance = false;
+        if (metadata)
+            options.retainedDcpSource->metadata = *metadata;
+    }
+    return image;
+}
+
 ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
                                              const Options &options,
                                              ImageMetadata *metadata,
@@ -439,16 +514,8 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
             sourceMetadata.cameraMake, sourceMetadata.cameraModel,
             sourceMetadata.lensMake, sourceMetadata.lensModel,
             options.profileDirectories);
-    if (options.preferCameraNeutral) {
-        const auto available = CameraProfileEngine::availableDcpProfiles(
-            sourceMetadata.cameraMake, sourceMetadata.cameraModel, options.profileDirectories);
-        for (const auto &path : available) {
-            if (QFileInfo(path).completeBaseName().endsWith(" Camera Neutral", Qt::CaseInsensitive)) {
-                profiles.dcpPath = path;
-                break;
-            }
-        }
-    }
+    if (options.preferCameraNeutral)
+        preferCameraNeutral(profiles, sourceMetadata.cameraMake, sourceMetadata.cameraModel, options.profileDirectories);
     const QString defaultProfile = profiles.dcpPath;
     if (!options.automaticLcpSelection)
         profiles.lcpPath.clear();
@@ -881,7 +948,11 @@ void registerBuiltInHandlers()
         }, developThumbnailWithLibRaw};
     if (!addFormatHandler({QStringLiteral("cr2")}, decodeCr2, &error, format) ||
         !addFormatHandler({QStringLiteral("cr3")}, decodeCr3, &error, format) ||
-        !addFormatHandler({QStringLiteral("dng")}, decodeWithLibRaw, &error, format))
+        !addFormatHandler({QStringLiteral("dng")},
+                          [](const QString &file, const Options &options, ImageMetadata *metadata, QString *message) {
+                              return CameraDng::isCameraDng(file) ? decodeCameraDng(file, options, metadata, message)
+                                                                  : decodeWithLibRaw(file, options, metadata, message);
+                          }, &error, format))
         qFatal("Failed to register built-in LibRaw handlers: %s",
                qPrintable(error));
 #endif
@@ -1032,10 +1103,13 @@ ColorPipeline::WorkingImage decode(const QString &fileName,
                          .arg(extension);
         return {};
     }
-    auto result = decoder(fileName, options, metadata, error);
+    // A handler that reads several kinds of file may name the one it used.
     if (metadata) {
         metadata->decoderId = format.decoderId;
         metadata->decoderVersion = format.decoderVersion;
+    }
+    auto result = decoder(fileName, options, metadata, error);
+    if (metadata) {
         metadata->cameraRaw = true;
     }
     if (!result.isNull() && (result.colorSpace != ColorPipeline::workingColorSpace() ||

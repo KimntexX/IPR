@@ -82,6 +82,14 @@ void configurePreparedProfileCache(quint64 budgetBytes, int entryLimit = 16);
 void clearPreparedProfileCache();
 QStringList availableDcpProfiles(const QString &cameraMake, const QString &cameraModel,
                                  const QStringList &profileDirectories = {});
+// What a DNG of this camera needs to tell other software about its colours.
+struct DcpCameraData
+{
+    std::array<double, 9> colorMatrix{}; // XYZ to camera; all zero when the profile has none
+    int illuminant = 21;                 // EXIF light source of the matrix
+};
+DcpCameraData dcpCameraData(const QString &path);
+
 bool dcpMatchesCamera(const QString &path, const QString &cameraMake,
                        const QString &cameraModel);
 bool lcpMatchesLens(const QString &path, const QString &cameraMake,

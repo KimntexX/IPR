@@ -95,6 +95,10 @@ set(IPR_ENGINE_SOURCES
     src/stack/StackMerge.cpp
     src/stack/StackJob.h
     src/stack/StackJob.cpp
+    src/stack/StackSession.h
+    src/stack/StackSession.cpp
+    src/raw/CameraDng.h
+    src/raw/CameraDng.cpp
     src/core/PerceptualColour.h
     src/core/PerceptualColour.cpp
     src/core/Contrast.h
@@ -373,6 +377,10 @@ if(BUILD_TESTING)
     if(WIN32)
         target_link_libraries(iprStackAudit PRIVATE psapi)
     endif()
+    ipr_add_test(cameraDngTests tests/camera_dng_test.cpp)
+    set_tests_properties(cameraDngTests PROPERTIES LABELS "unit;stack;export" TIMEOUT 60)
+    ipr_add_test(stackSessionTests tests/stack_session_test.cpp)
+    set_tests_properties(stackSessionTests PROPERTIES LABELS "unit;stack" TIMEOUT 180)
     ipr_add_test(stackTests tests/stack_test.cpp)
     set_tests_properties(stackTests PROPERTIES LABELS "unit;stack" TIMEOUT 180)
     ipr_add_test(geometryTests tests/geometry_test.cpp)
