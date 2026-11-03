@@ -51,14 +51,36 @@ def response(image, truth, wave, quadrature, border=64):
         dc_error=(coefficients[0]-ideal[0]).tolist())
 
 
-def run(root, confirmation_path, output):
-    confined(root, [confirmation_path, output])
-    proof = json.loads(confirmation_path.read_text(encoding='utf-8'))
-    if (proof['status'] != 'completed_independent_noisy_confirmation_not_photographic_qualification'
-            or proof.get('pilot_gates_passed') is not True or len(proof['groups']) != 6
-            or not all(g['evaluation']['pilot_gates_passed'] for g in proof['groups'])):
-        raise ValueError('All six independent confirmation groups must pass')
-    plan = proof['plan']
+def source_contract(root, proof):
+    if proof['status'] == 'completed_independent_noisy_confirmation_not_photographic_qualification':
+        if (proof.get('pilot_gates_passed') is not True or len(proof['groups']) != 6
+                or not all(g['evaluation']['pilot_gates_passed'] for g in proof['groups'])):
+            raise ValueError('All six independent confirmation groups must pass')
+        return proof['plan']
+    if proof['status'] == 'completed_fixed_edge_protection_probe_not_photographic_qualification':
+        # A diagnosis may inspect a fully measured failed candidate, without
+        # opening a new reserved confirmation set or calling it qualified.
+        path = Path(proof['plan']['data_plan_path'])
+        confined(root, [path])
+        if digest(path) != proof['plan']['data_plan_sha256']:
+            raise ValueError('Development source plan changed')
+        refs = proof['plan']['models']
+        if len(proof['models']) != 2:
+            raise ValueError('Complete two-seed probe required')
+        for ref in refs:
+            rows = [r for r in proof['models'] if r['seed'] == ref['seed']]
+            if (len(rows) != 1 or rows[0]['learned_weights_sha256'] != ref['weights_sha256']
+                    or rows[0]['source_result_sha256'] != ref['result_sha256']):
+                raise ValueError('Development weights differ')
+        return dict(data=json.loads(path.read_text(encoding='utf-8')), models=refs,
+            tools=proof['plan']['tools'], kind='protected')
+    raise ValueError('Completed protected probe or successful independent confirmation required')
+
+
+def run(root, proof_path, output):
+    confined(root, [proof_path, output])
+    proof = json.loads(proof_path.read_text(encoding='utf-8'))
+    plan = source_contract(root, proof)
     if plan['kind'] != 'protected' or plan['data']['runtime'] != runtime_versions():
         raise ValueError('Current protected model and pinned runtime required')
     if any(digest(Path(__file__).with_name(n)) != h for n, h in plan['tools'].items()):
@@ -69,7 +91,8 @@ def run(root, confirmation_path, output):
     now = datetime.now(timezone.utc)
     campaign = 'neural-spectral-noise-v001-'+now.strftime('%Y%m%dT%H%M%SZ')
     output.mkdir(parents=True, exist_ok=False)
-    freeze = dict(confirmation_sha256=digest(confirmation_path), models=refs,
+    freeze = dict(source_proof_sha256=digest(proof_path), source_proof_status=proof['status'],
+        source_quality_passed=proof['pilot_gates_passed'], models=refs,
         frequencies_cycles_per_128=[4, 8, 16, 24], amplitudes=[.005, .02, .08],
         orientations=['horizontal', 'vertical', 'diagonal45'], families=['achromatic', 'opponent'],
         noise_replicates={0: 1, 1: 2, 2: 2}, side=192, border=64, scale=2,
@@ -158,7 +181,7 @@ def run(root, confirmation_path, output):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--confirmation', type=Path, required=True)
+    parser.add_argument('--proof', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
-    run(Path(__file__).resolve().parents[2], args.confirmation, args.output)
+    run(Path(__file__).resolve().parents[2], args.proof, args.output)

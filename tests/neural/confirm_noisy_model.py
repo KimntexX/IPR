@@ -96,6 +96,7 @@ def prepare(root, data_plan, accepted, kind, folders, priors, output, edge_start
         torch.set_num_threads(4)
         previous = [cohort_contents(json.loads(p.read_text(encoding='utf-8'))) for p in priors]+[source_data]
         seen = {key: [r for p in previous for r in p[key]] for key in ('edges', 'mixed')}
+        seen['mixed'] += source_data.get('texture_augmentation', {}).get('events', [])
         edges, mixed = freeze_cases(source, seen, edge_start, mixed_seed)
         replicas = []
         for replicate in range(3):
