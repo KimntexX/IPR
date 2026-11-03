@@ -4474,3 +4474,44 @@ préparation exacte et D4), un d'appariement (régression de contours
 distincts conservée même si l'ensemble progresse, observations identiques).
 Même624 cas consultés et critères ; nouvelle confirmation indépendante
 requise si les deux graines passent. Aucune modification de production.
+
+### Première protection — contours conservés, gain insuffisant
+
+L'épreuve sans réentraînement se termine en44,99s. Les deux graines
+conservent les contours forts : leurs gradients rejoignent ceux des
+parents. Les contrôles sans bruit restent exacts. Mais les deux échouent
+au gain RGB faible bruit du groupe complet : rapports0,99192/0,98902,
+au lieu d'au plus0,98. Les groupes mixtes et le niveau fort passent.
+Le bruit ne doit pas être laissé partout pour protéger les contours.
+Preuve : [protection par gradient observé](../raw/neural-edge-protection-v001-20261103T125508Z.json).
+
+Un audit des confiances sur le même cœur confirme la cause : à faible
+bruit, confiance moyenne0,144 sur les rampes et pratiquement0 sur les
+ondes chromatiques lisses. Le maximum sur plans/directions et son halo
+atténuent aussi59,99 % des cellules d'aplats constants, bien que leur
+confiance moyenne reste0,957. Ces cellules sont corrélées : ne pas les
+traiter comme autant de mesures indépendantes. Il ne s'agit pas d'un
+échec des poids appris mais d'une protection trop large et mal adaptée
+aux variations lisses. Preuve : [audit du détecteur de confiance](../raw/neural-confidence-audit-v001-20261103T130345Z.json).
+
+### Correction du détecteur — courbure et comparaisons multiples
+
+Une nouvelle formule est fixée avant la mesure suivante, sans modifier
+poids, critères ni seuils de qualification. Au lieu de l'amplitude du
+gradient, utiliser des contrastes d'ordre2, nuls sur un signal affine.
+Ils comparent les deux colonnes voisines à trois fois les deux voisins
+centraux haut/bas, et réciproquement les lignes aux voisins gauche/droite.
+Le centre est toujours exclu. La variance prend les carrés de ces poids
+(1 et9), plutôt que la variance d'une différence de colonnes.
+
+Le maximum porte nominalement sur4plans×2axes×49positions du halo.
+Un objectif nominal de1 % pour la famille locale conduit au seuil
+`sqrt(2×log(2×392/0,01))`, par borne de queue gaussienne et union des
+comparaisons. Les dépendances entre comparaisons ne rendent pas la borne
+d'union invalide, mais le sigma estimé depuis les données et le modèle
+de bruit imparfait empêchent d'en faire une garantie de faux positifs.
+Le seuil est donc explicitement nominal, à auditer, pas ajusté sur les
+scores RGB. Le halo et la décroissance exponentielle sont conservés.
+Un test affine supplémentaire vérifie l'absence de protection du cœur
+sur une rampe propre à sigma positif. Les sorties mesurées antérieures
+restent historiques ; aucune preuve n'est écrasée.
