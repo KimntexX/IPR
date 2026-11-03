@@ -4338,10 +4338,82 @@ finir71 et73, comparer bruit/couleur/structures à tous les témoins, puis
 préparer une confirmation distincte si les critères passent. Un échec
 sera diagnostiqué avant toute nouvelle variante, sans élargir les seuils.
 
-**État courant : reprise et lanceur prêts, attente du signal explicite.**
+**État de cette préparation : reprise et lanceur prêts, attente du signal explicite.**
 Les anciens essais sans checkpoint ne sont pas récupérables ; le prochain
 départ recommencera depuis les parents, puis sera sauvegardé. Le nouveau
 plan schéma3 est préparé avant calcul et comparé au précédent pour vérifier
 les identités numériques. Aucun calcul de campagne actif, mise en veille,
 modification moteur/IHM, publication, fusion ou tag. Aucune nouvelle photo
 nécessaire pour cette première qualification synthétique.
+
+### 3 novembre2026,12:23 UTC — campagne autonome autorisée
+
+Le signal explicite de l'utilisateur est reçu. Le lanceur démarre sur
+le planv003 inchangé, dans `noisy-afternoon-v001`, avec dernière admission
+à17h30 heure de Paris. Les deux graines sont conservées, y compris en
+cas d'échec des critères de71. Aucun choix de checkpoint intermédiaire.
+Les outils gelés ne sont pas modifiés pendant le calcul ; les arrêts
+mémoire éventuels utilisent désormais la reprise technique validée.
+
+L'objectif de cette session est d'aller aussi loin que les résultats le
+permettent vers une base fiable, sans confondre validation synthétique,
+qualité photographique et intégration. Les prochaines décisions reposent
+sur les groupes et témoins déclarés ; les preuves négatives restent
+conservées. Aucune publication, fusion, création de tag ou intervention
+dans les travaux des autres agents n'est autorisée par cette autonomie.
+
+### Première campagne bruitée complète — résultats négatifs conservés
+
+Les deux apprentissages conjoints atteignent2048 étapes en225,51/222,48s,
+sans arrêt mémoire ni reprise nécessaire.624 cas nouveaux par modèle et
+80 historiques sans bruit sont évalués. Les1248 sorties préparées sont
+exactes au bit près ;64 contrôles D4 ont un écart maximal2,98e-7.
+Les checkpoints techniques finaux pèsent518697octets chacun.
+
+| Rapport MSE RGB complet / parent figé | Faible71 | Faible73 | Fort71 | Fort73 |
+| --- | ---: | ---: | ---: | ---: |
+| Mixtes | 0,74003 | 0,75690 | 0,62628 | 0,54908 |
+| Tous les cas, contours distincts inclus | 0,78852 | 0,87212 | 0,70919 | 0,71025 |
+| Mixtes, complet / correction contournée | 0,96651 | 0,96328 | 0,86723 | 0,80902 |
+
+L'erreur bruitée baisse, et la correction contribue. Mais les deux modèles
+échouent au critère de gradient des contours à bruit fort, dans les mixtes
+et le groupe complet. Le gradient projeté des contours mixtes est0,87537
+contre0,95783 pour le parent71 ;0,81388 contre0,94884 pour73. Le lissage
+réduit aussi une partie du signal. Il ne suffit pas de présenter la MSE.
+
+Les nouveaux contrôles sans bruit passent12/12 pour les deux graines,
+mais la fidélité des ondes chromatiques historiques échoue pour71 sur
+20et80 et pour73 sur20. L'affinage du tronc dégrade donc une propriété
+déjà validée, malgré les ancres sans bruit. La petite ablation de correction
+ne permet pas d'attribuer tout le gain à celle-ci : le tronc est aussi affiné.
+Les parents ont un budget d'apprentissage plus court, limite maintenue.
+
+Pics71/73 :311,12/310,52Mio résidents,958,98/958,82Mio engagés du job,
+70,93/67,77 % de mémoire machine. Les compteurs finaux sont2048, aucun
+seuil modifié. Les deux verdicts photographiques sont négatifs, même si
+les processus se terminent normalement. Preuves canoniques :
+
+- [Campagne et filiation des tentatives](../raw/neural-campaign-v001-20261103T122254Z.json).
+- [Modèle conjoint71](../raw/neural-noisy-moment-v001-20261103T122311Z.json).
+- [Modèle conjoint73](../raw/neural-noisy-moment-v001-20261103T122714Z.json).
+
+### Comparaison ciblée suivante — reconstruction gelée
+
+Hypothèse fixée avant calcul : geler les33368 paramètres de reconstruction
+et n'entraîner que les3220 de correction CFA. Cela garantit à sigma0 le
+rendu du parent, plutôt que compter sur le seul poids des ancres. Les
+gradients traversent toujours le tronc fixe pour entraîner la correction ;
+le calcul n'est pas placé sous `no_grad`. Les ancres sigma0 sont mesurées
+et comptées, mais ne portent plus de gradient entraînable. Un état bruité
+sans gradient attendu reste une erreur. Aucune architecture supplémentaire.
+
+Même budget2048, parents71/73, initialisation de correction, observations,
+bruit, Adam et critères. Ce groupe de validation est maintenant consulté :
+c'est une comparaison de développement, pas une nouvelle confirmation.
+La baisse de gradient à bruit fort reste une réserve à corriger ou mesurer,
+pas un critère assoupli. Une autre cohorte est requise après choix du
+candidat. Six tests ciblés passent : trois de politique/gel/gradient et
+trois de reprise. La politique d'entraînement est explicite dans le plan
+et les checkpoints ; il n'est pas possible de reprendre un état conjoint
+comme s'il provenait de l'autre politique.

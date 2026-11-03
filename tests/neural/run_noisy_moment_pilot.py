@@ -17,6 +17,7 @@ from joint_bayer_unet import sample_rgb, bilinear
 from local_moment_unet import LocalMomentUNet
 from memory_budget import MemoryGuard, BudgetExceeded
 from noisy_moment_unet import NoisyMomentUNet, load_reconstruction
+from noisy_training_policy import configure_trainable
 from prepare_closed_inference import prepare_inference
 from reconstruction_loss import energy_balanced_loss
 from run_balanced_moment_pilot import balanced_schedule
@@ -34,7 +35,8 @@ MEMORY_POLICY = dict(hard_bytes=2*1024**3, soft_bytes=1280*1024**2,
 TOOLS = tuple(dict.fromkeys(MODEL_TOOLS+('run_noisy_moment_pilot.py', 'noisy_moment_unet.py',
     'memory_budget.py', 'prepare_closed_inference.py', 'reconstruction_loss.py',
     'compare_reconstruction_objectives.py', 'confirm_local_route.py',
-    'run_synthetic_joint_pilot.py', 'reconstruction_gates.py', 'audit_bayer_symmetries.py', 'training_resume.py')))
+    'run_synthetic_joint_pilot.py', 'reconstruction_gates.py', 'audit_bayer_symmetries.py',
+    'training_resume.py', 'noisy_training_policy.py')))
 
 
 def observation(truth, tags, noise_index, seed):
@@ -42,7 +44,9 @@ def observation(truth, tags, noise_index, seed):
     return noisy_observation(truth, tags, a, b, torch.Generator().manual_seed(seed))
 
 
-def prepare(root, source, priors, parents, output):
+def prepare(root, source, priors, parents, output, training_scope='joint'):
+    if training_scope not in ('joint', 'cfa_front'):
+        raise ValueError('Declared training scope required')
     confined(root, [source, output]+priors+parents)
     proof = json.loads((source/'result.json').read_text(encoding='utf-8'))
     if proof['status'] != 'completed_diverse_contour_reconstruction_not_photographic_qualification':
@@ -88,18 +92,19 @@ def prepare(root, source, priors, parents, output):
         source=str(source.resolve()), source_result_sha256=digest(source/'result.json'), parents=references,
         prior_plan_sha256=[digest(p) for p in priors], edges=edges, mixed=mixed, observations=observed,
         noise_levels=[dict(a=a, b=b) for a, b in NOISE],
-        config=dict(steps=2048, microbatch=1, accumulation=4, learning_rate=.001, scale=2., width=8, side=128),
+        config=dict(steps=2048, microbatch=1, accumulation=4, learning_rate=.001, scale=2., width=8,
+            side=128, training_scope=training_scope),
         gates=proof['freeze']['gates'], memory_policy=MEMORY_POLICY,
         tools={n: digest(Path(__file__).with_name(n)) for n in TOOLS},
         noise_gate_policy='Each positive level: RGB MSE full/parent<=.98, opponent full/parent<=1, full/without_correction RGB<=1; weak/edge gradient>=.95 parent. Zero noise retains original12gates, new mixed and historical20/80.',
-        training_policy='Final2048 only, both pretrained seeds, same ID/phase schedule; noise level=(4*(step-1)+position)%3, seed74000000+4*(step-1)+position, same realizations across models. Adam all parameters; no early stopping.',
+        training_policy='Final2048 only, both pretrained seeds, same ID/phase schedule; noise level=(4*(step-1)+position)%3, seed74000000+4*(step-1)+position, same realizations across models. Adam scope='+training_scope+'; no early stopping.',
         checkpoint_policy=dict(interval_steps=64, boundary='After completed Adam step only; restart partial microbatch from last committed checkpoint.',
             selection='One atomic latest checkpoint, no validation scores or best-checkpoint selection.',
             state='CPU model, Adam, completed step, losses, exposure counts, torch CPU RNG; data/noise draws derive deterministically from step.'),
         limits=['Independent Gaussian CFA noise with variance a*max(clean signal,0)+b, before demosaicing; not a sensor calibration.',
             'Sigma estimated from observed signal and known simulation coefficients, not from clean truth.',
             'Noisy bilinear reference in tempered loss; its energy includes noise as well as content.',
-            'Three-sigma bounded front correction; joint fine tuning can alter the reconstruction trunk.',
+            'Three-sigma bounded front correction; joint fine tuning can alter the trunk, cfa_front freezes it and skips gradient-free zero-noise anchors.',
             'Frozen parent has fewer training steps; disabling correction in the trained model isolates the front-end contribution but is not an independently optimized witness.',
             'Same procedural families and fixed4phase generator, not photographic validation.'], preparation_memory=guard.stats())
     output.mkdir(parents=True, exist_ok=False)
@@ -139,7 +144,10 @@ def train(model, source, config, guard, checkpoint_path, context, progress, inte
             loss = energy_balanced_loss(image, truth/config['scale'], reference, config['scale'], objective='tempered')/4
             if not torch.isfinite(loss):
                 raise ValueError('Nonfinite loss')
-            loss.backward()
+            if loss.requires_grad:
+                loss.backward()
+            elif level != 0:
+                raise ValueError('No trainable gradient for noisy observation')
             total += float(loss.detach())
             family = source['freeze']['train_slots'][index]['family']
             key = f'{family}/phase{phase}/noise{level}'
@@ -233,6 +241,8 @@ def evaluate(model, parent, plan, source, guard):
                         above_one_output_fraction=float((image > 1).float().mean()), metrics=measured)
                     if level == 0 and (not torch.equal(image, disabled) or not torch.equal(sites, packed)):
                         raise ValueError('Zero-noise observation contract broken')
+                    if level == 0 and plan['config']['training_scope'] == 'cfa_front' and not torch.equal(image, witness):
+                        raise ValueError('Frozen reconstruction no longer matches parent')
                     if tensor_hash(packed) != source_hash:
                         raise ValueError('Input changed')
                     rows.append(row)
@@ -253,6 +263,10 @@ def evaluate(model, parent, plan, source, guard):
                 tags = torch.tensor([values])
                 packed = sample_rgb(truth, tags)
                 output = predict(prepared, packed/scale, torch.zeros_like(packed), tags, False, True)*scale
+                if plan['config']['training_scope'] == 'cfa_front':
+                    witness = predict(parent, packed/scale, torch.zeros_like(packed), tags, True, True)*scale
+                    if not torch.equal(output, witness):
+                        raise ValueError('Frozen historical reconstruction differs from parent')
                 historical.append(dict(family=case['family'], seed=case['seed'], phase_index=phase,
                     original_phase=list(values) == case['pattern'], target_sha256=tensor_hash(truth),
                     packed_sha256=tensor_hash(packed), output_sha256=tensor_hash(output),
@@ -321,6 +335,7 @@ def run(root, plan_path, seed, output, resume=None):
                 raise ValueError('Parent checkpoint provenance differs')
             model = NoisyMomentUNet(plan['config']['width'])
             load_reconstruction(model, checkpoint['state_dict'])
+            result['training_scope'] = configure_trainable(model, plan['config']['training_scope'])
             result['parameter_count'] = sum(p.numel() for p in model.parameters())
             result['losses'], result['training_exposure_counts'] = train(model, source, plan['config'], guard,
                 output/'training-latest.pt', context, progress, plan['checkpoint_policy']['interval_steps'], resume)
@@ -361,13 +376,14 @@ if __name__ == '__main__':
     parser.add_argument('--plan', type=Path)
     parser.add_argument('--seed', type=int, choices=(71, 73))
     parser.add_argument('--resume', type=Path)
+    parser.add_argument('--training-scope', choices=('joint', 'cfa_front'), default='joint')
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[2]
     if args.prepare:
         if args.source is None or not args.prior or not args.parents:
             parser.error('Preparation requires source, prior plans and both parents')
-        prepare(root, args.source, args.prior, args.parents, args.output)
+        prepare(root, args.source, args.prior, args.parents, args.output, args.training_scope)
     elif args.plan is None or args.seed is None:
         parser.error('Training requires frozen plan and declared seed')
     else:
