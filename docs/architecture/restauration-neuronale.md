@@ -862,8 +862,10 @@ validation sur images réelles restent à faire, sans intégration moteur/IHM.
 
 Le pilote courant conserve le reconstructeur U-Net local appris, avec
 ses 33 368 paramètres figés, et apprend seulement une correction des
-quatre plans CFA physiques. La dernière expérience élargit cette correction
-à 32 canaux internes et 20 964 paramètres, soit 54 332 au total. Ce choix
+quatre plans CFA physiques : 8 canaux internes, 3 516 paramètres entraînés,
+soit 36 884 au total. L'essai à 32 canaux a été écarté après échec des
+régressions connues ; les preuves sont conservées, son chemin est retiré.
+Ce choix
 maintient exactement le parent lorsque sigma vaut zéro. Il ne constitue
 pas un grand réseau photographique entièrement entraîné de bout en bout.
 
@@ -878,9 +880,9 @@ d'union nominale porte sur 588 comparaisons, alpha 0,01.
 Ce facteur est une heuristique de protection, pas une probabilité calibrée.
 
 Le petit correcteur a passé le développement mais échoué sur des
-confirmations à fort bruit, malgré une erreur moyenne réduite. L'élargissement
-reste une expérience ; il doit passer aussi les cas connus avant d'ouvrir
-de nouveaux contrôles. Une confirmation distincte reste nécessaire ;
+confirmations à fort bruit, malgré une erreur moyenne réduite. Il reste
+expérimental. Les cas connus doivent passer avant d'ouvrir de nouveaux
+contrôles. Une confirmation distincte reste nécessaire ;
 aucune valeur de sigma simulée n'est assimilée à une calibration ISO réelle.
 Les empreintes des fonctions de calcul, des poids et des entrées sont liées
 au protocole. Changer le conditionnement sans entraîner de nouveaux poids
@@ -906,3 +908,64 @@ renommée confirmation indépendante. Aucun réglage par boîtier, niveau ISO
 réel, saturation ou défaut de capteur n'est déclaré qualifié par les
 simulations gaussiennes. Le protocole et les preuves sont dans le
 [rapport évolutif](../validation/analyses/analyse-restauration-neuronale.md).
+
+<a id="contexte-multiechelle"></a>
+
+## 20. Prochaine étape — contexte appris à plusieurs échelles
+
+La correction actuelle est un CNN local en amont du U-Net de reconstruction
+figé. Ses descripteurs et convolutions voient au plus 7×7 cellules par
+plan CFA, soit environ 14×14 pixels capteur. La confiance analytique peut
+protéger une structure détectée ; elle ne fournit pas au correcteur un
+contexte appris plus large. L'élargissement des canaux garde ce même support.
+Son échec ne prouve pas que le contexte soit l'unique cause, mais justifie
+de tester cette variable séparément de nouvelles règles de protection.
+
+```mermaid
+flowchart LR
+    A[CFA signé + sigma + phase Bayer] --> B[Encodeur à pleine résolution CFA]
+    B --> C[Échelle 1 sur 2]
+    C --> D[Échelle 1 sur 4]
+    D --> E[Décodeur avec connexions de saut]
+    C --> E
+    B --> E
+    E --> F[Correction CFA bornée à 3 sigma]
+    F --> G[Reconstruction caméra qualifiée séparément]
+    G --> H[Profil puis espace de travail]
+```
+
+Le prochain prototype remplacera la seule décision locale de correction
+par un petit encodeur/décodeur à deux réductions, avec connexions de saut.
+Préserver les positions CFA, la covariance D4, le signal signé, le parent
+exact à sigma nul et les interfaces courtes. Ne pas modifier le développement
+de production ou les profils pour préparer cette expérience.
+
+Avant l'entraînement, calculer le champ réceptif composé correction puis
+reconstruction. Prévoir initialement des fenêtres de 256 pixels et un
+centre mesuré de 64 pixels ; la marge définitive devra être démontrée par
+comparaison à une vue plus grande. Les anciennes fenêtres 128 ne suffisent
+pas automatiquement. Étendre analytiquement les scènes simulées, en
+conservant exactement leurs centres, labels et champs de bruit connus ;
+générer indépendamment le bruit du halo. Ne pas fabriquer ce contexte en
+redimensionnant les centres ni le présenter comme une nouvelle référence.
+
+Étapes de qualification :
+
+1. Vérifier par empreinte les centres hérités et par calcul les marges,
+   puis tester préparation des poids, finitude et symétries.
+2. Mesurer huit étapes représentatives sous les mêmes plafonds : microbatch1,
+   accumulation4, cache4,4threads,1,25Gio souple et2Gio engagés maximum.
+   Le seuil physique global92% reste coopératif ; il n'empêche pas un autre
+   programme de le dépasser. Aucun repli silencieux hors quota.
+3. Comparer les deux graines sous un budget préalablement figé, avec une
+   seule variation de contexte et une mémoire des entrées par empreinte.
+4. Rejouer toutes les régressions connues avant les cohortes encore réservées
+   classique352/3800000 et fine2. Elles n'ont pas été ouvertes après l'échec
+   de l'élargissement.
+5. Qualifier ensuite les paires CFA photographiques, la calibration sigma
+   réelle, les saturations et les défauts de capteur avant toute intégration.
+
+L'inférence GPU pourra être étudiée si le prétest CPU justifie ce besoin,
+avec sa propre qualification numérique. Le temps, la mémoire et le transfert
+des détails restent trois résultats séparés. Une réussite de l'un ne vaut
+pas validation des autres.

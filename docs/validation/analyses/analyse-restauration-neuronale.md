@@ -1,5 +1,11 @@
 # Restauration neuronale — qualification du corpus
 
+**État au 3 novembre 2026, 19 h 15 :** exécution, mémoire, symétries et
+tuiles vérifiées. Le débruitage reste non qualifié à fort bruit ;
+l'élargissement n'a pas levé les régressions de contours et de couleur.
+Retour au correcteur compact et préparation d'un contexte multi-échelle.
+Aucun moteur de production modifié ni nouvelle cohorte réservée ouverte.
+
 ## 1er novembre 2026 — scène pilote 6V1A0133
 
 **Conclusion : composition retenue pour poursuivre les acquisitions ; pas
@@ -4683,306 +4689,221 @@ Trois tests vérifient alignement, rejet des phases de pooling incompatibles,
 finitude et présence des neuf ROI qualifiées pour chacune des trois sources.
 
 
-### Confirmation ind?pendante et tuiles ? r?sultats positifs limit?s
+### Confirmation indépendante et tuiles — premier succès limité
 
-Les six groupes (deux graines ? trois r?alisations de bruit) passent tous
-les crit?res sans r?entra?nement. Les rapports RGB complets/parent tous
-cas sont 0,89005?0,89111 et 0,89730?0,89812 au faible bruit pour71/73 ;
-0,68087?0,68206 et 0,68375?0,68463 au fort. Les52 nouveaux contenus sont
-communs aux graines ; les1248 champs ? bruit positif distincts sont
-r?p?t?s ? poids diff?rents, pas2496 sc?nes ind?pendantes.
-La mesure compl?te dure158,61s et atteint242,02Mio r?sidents. Un arr?t
-m?moire ant?rieur est conserv?.
-Preuves : [arr?t](../raw/neural-noisy-confirmation-v001-20261103T142620Z.json),
+Les six groupes (deux graines × trois réalisations de bruit) passent sans
+réentraînement. Rapports RGB complets/parent tous cas : 0,89005–0,89111
+et 0,89730–0,89812 au faible bruit pour 71/73 ; 0,68087–0,68206 et
+0,68375–0,68463 au fort. Les 52 contenus sont communs aux graines ;
+les 1 248 champs positifs distincts ne sont pas 2 496 scènes indépendantes.
+Durée 158,61 s, pic résident 242,02 Mio. Preuves :
+[arrêt mémoire conservé](../raw/neural-noisy-confirmation-v001-20261103T142620Z.json),
 [confirmation](../raw/neural-noisy-confirmation-v001-20261103T142750Z.json).
 
-L'audit technique des tuiles passe ses558 comparaisons : maximum
-1,49?10?? pour le halo48, 2,98?10?? pour64 et80, sous2?10??.
-Dur?e13,22s, pic r?sident282,52Mio. On conserve64 comme marge fixe
-pr?vue ; r?ussir48 sur ces cas ne prouve pas une borne universelle.
-Preuve : [audit tuiles](../raw/neural-tiling-audit-v001-20261103T143103Z.json).
-Ces r?sultats qualifient une coh?rence num?rique et des v?rit?s
-proc?durales ; ils ne constituent pas une validation photographique.
+Les 558 comparaisons de tuiles passent : maximum 1,49×10⁻⁷ pour le halo
+48, 2,98×10⁻⁸ pour 64/80, sous 2×10⁻⁶. Durée 13,22 s, pic 282,52 Mio.
+La marge prévue reste 64 ; réussir 48 ici n'est pas une borne universelle.
+Preuve : [tuiles](../raw/neural-tiling-audit-v001-20261103T143103Z.json).
+Ces résultats ne constituent pas une validation photographique.
 
-### Extension spectrale ? limite importante du premier protocole
+### Extension spectrale — limite du premier protocole
 
-Une ?preuve suppl?mentaire fig?e, sans apprentissage, utilise72 signaux :
-4/8/16/24 cycles par128pixels, amplitudes0,005/0,02/0,08, trois orientations,
-ondes achromatiques ou oppos?es entre canaux. Les quatre phases Bayer,
-les trois niveaux de bruit (deux r?alisations par niveau positif) et les
-deux graines donnent2880 observations. Fen?tre192, centre64 et halo64.
-L'amplitude et la composante en quadrature sont ajust?es s?par?ment pour
-R/G/B, au lieu de ne suivre que le gradient vert. Deux tests v?rifient
-la r?cup?ration d'une att?nuation connue, d'un d?calage et les entr?es
-invalides. La qualit? n'est pas ramen?e ? un nouveau seuil choisi apr?s coup.
-Preuve : [extension spectrale](../raw/neural-spectral-noise-v001-20261103T143313Z.json).
+L'épreuve suivante, sans apprentissage, utilise 72 signaux : 4/8/16/24
+cycles par 128 pixels, amplitudes 0,005/0,02/0,08, trois orientations,
+ondes achromatiques ou opposées. Quatre phases Bayer, trois bruits et
+deux réalisations par bruit positif donnent 2 880 observations pour les
+deux modèles. Fenêtre 192, centre 64, halo 64. L'amplitude et la quadrature
+sont ajustées pour chaque canal ; deux tests vérifient ce calcul.
+Preuve : [spectre initial](../raw/neural-spectral-noise-v001-20261103T143313Z.json).
 
-Le r?seau conserve bien les ondes ?4cycles, mais att?nue trop les plus
-fines. Pour71, au faible bruit, le rapport RGB/parent passe de0,197 ?4cycles
-?1,616 ?16cycles et1,406 ?24cycles. Pour73 :0,189,1,353 et1,085.
-Les gains sinuso?daux moyens R/G/B sont proches de0,61 ?16cycles contre
-0,95?0,96 pour le parent ; ?24cycles,0,41?0,42 contre0,81?0,82.
-Le bruit fort peut encore baisser l'erreur globale malgr? une perte de
-signal : l'erreur RGB seule est donc insuffisante. Cette extension ne
-r?fute pas les chiffres pr?c?dents ; elle r?v?le leur couverture limit?e.
+À faible bruit, RGB/parent vaut 1,616/1,353 à 16 cycles et 1,406/1,085
+à 24 cycles pour 71/73. Le transfert moyen tombe à environ 0,61 contre
+0,95–0,96 pour le parent à 16 cycles ; 0,41–0,42 contre 0,81–0,82 à
+24 cycles. Une erreur moyenne réduite peut masquer une perte de signal.
+Ces contenus deviennent consultés, pas réservés pour la suite.
 
-**Conclusion courante : pilote reproductible sur le premier protocole,
-mais pas encore stable pour le d?tail fin photographique.** La prochaine
-exp?rience enrichit les donn?es d'apprentissage en textures faibles de
-fr?quences vari?es, avec les m?mes parents, budgets et graines. Les cas
-de cette extension deviennent consult?s et ne seront pas pr?sent?s comme
-r?serv?s dans une prochaine comparaison. Aucun moteur de production modifi?.
+### Enrichissement d'apprentissage — protocole puis résultats
 
+L'expérience conserve parents, architecture, 2 048 étapes, Adam 0,001,
+microbatch 1 × accumulation 4 et les deux graines. Les deux familles
+d'ondes sont remplacées par deux ondes planes mélangées : fréquences
+log-uniformes 2–28 cycles/128, amplitudes 0,003–0,12, angles/phases
+continus, moyenne −0,02–0,6. Poids secondaire 0,35, normalisation 1,35,
+poids chromatiques variables, aucun écrêtage. Ce changement de distribution
+est plus large qu'un ajout de fréquences : attribution causale limitée.
+Chaque exposition est figée par identifiant, phase, paramètres et empreinte.
+Le RNG local ne modifie pas le RNG global ; cache limité à quatre images.
+Trois tests d'enrichissement et trois de reprise générique passent, dont
+une vraie interruption d'accumulation reprise au bit près.
 
-### Apprentissage enrichi ? protocole fix? avant le calcul
-
-La prochaine exp?rience conserve le moteur math?matique, les parents
-propres, 2048 ?tapes, Adam0,001, microbatch1?4, les graines71/73 et
-la protection de courbure. Elle remplace uniquement les expositions des
-deux familles d'ondes par deux ondes planes m?lang?es, g?n?r?es ? la
-vol?e : fr?quences log-uniformes2?28cycles/128, amplitudes0,003?0,12,
-angles/phases continus et niveau moyen?0,02?0,6. L'onde secondaire p?se0,35,
-avec normalisation par1,35 ; les plans achromatiques restent identiques,
-les pond?rations chromatiques varient. Aucun ?cr?tage. Les autres familles
-et leur calendrier restent inchang?s. Ce changement de distribution est
-plus large qu'un simple ajout de fr?quences, ce qui limite l'attribution
-causale des ?ventuels gains.
-
-Chaque exposition est fig?e par num?ro de micro-lot, famille, phase Bayer,
-param?tres et empreinte du signal. Le train valide la couverture exacte.
-Le g?n?rateur local ne modifie pas le RNG global ; il conserve au plus
-une image et le cache de quatre ?chantillons historiques. Trois tests
-cibl?s v?rifient d?terminisme, contrats, vari?t? et reprise effective
-au bit pr?s apr?s interruption d'une accumulation sur les nouvelles
-textures. Trois tests de reprise g?n?rique restent positifs. La sauvegarde
-technique est li?e au nouveau plan ; aucun ancien poids bruit? n'est repris
-pour ?viter de confondre enrichissement et budget d'apprentissage accru.
-
-Les contr?les d?j? vus restent des contr?les de d?veloppement. Toute
-confirmation ult?rieure utilisera encore d'autres contenus, avec les
-m?mes crit?res. Le test spectral d?j? consult? ne sera plus nomm? r?serv?.
-
-
-### Enrichissement mesur? ? am?lioration partielle du d?tail fin
-
-3282 expositions d'ondes sont remplac?es, sans ajout d'?tapes. Les deux
-graines atteignent2048 ;71 en une tentative,73 avec reprises1408 puis1984.
+3 282 expositions sont remplacées. Les deux modèles atteignent 2 048
+étapes : 71 en une tentative, 73 avec reprises 1 408 puis 1 984.
 Preuves : [campagne](../raw/neural-campaign-v001-20261103T144208Z.json),
 [71](../raw/neural-noisy-moment-v001-20261103T144225Z.json),
 [73](../raw/neural-noisy-moment-v001-20261103T144951Z.json).
-La protection inchang?e fait passer le premier protocole pour les deux :
-RGB/parent tous cas0,91470/0,91634 au faible bruit,0,72391/0,71543 au fort.
+Le développement passe après protection, RGB/parent 0,91470/0,91634
+au faible bruit et 0,72391/0,71543 au fort.
 Preuve : [protection](../raw/neural-edge-protection-v001-20261103T145219Z.json).
 
-L'extension spectrale compl?te, apr?s six interruptions m?moire conserv?es,
-mesure toujours2880 cas sans s?lection de r?alisation. ?16cycles au faible
-bruit, les erreurs RGB/parent passent de1,616/1,353 ?1,280/1,103 pour71/73 ;
-les gains sinuso?daux moyens montent de0,606/0,613 ?0,706/0,709. ?24cycles,
-les gains passent de0,412/0,424 ?0,486/0,488 ; l'erreur RGB reste sup?rieure
-au parent :1,329/1,045. C'est un progr?s partiel, pas un mod?le stable pour
-le d?tail fin. Preuve : [spectre complet](../raw/neural-spectral-noise-v001-20261103T170241Z.json).
+Le spectre complet, après six arrêts mémoire conservés, reste négatif :
+à 16 cycles/faible bruit, RGB/parent 1,280/1,103, transfert 0,706/0,709 ;
+à 24 cycles, RGB/parent 1,329/1,045, transfert 0,486/0,488. L'erreur
+CFA corrigée à 24 cycles vaut 1,427/1,432 fois celle des observations :
+le défaut précède l'interpolation. Preuve :
+[spectre enrichi](../raw/neural-spectral-noise-v001-20261103T170241Z.json).
 
-L'audit distingue d?sormais les ?chantillons CFA corrig?s du RGB interpol?.
-?24cycles et faible bruit, l'erreur CFA corrig?e vaut1,427/1,432 fois celle
-des observations bruit?es : la perte de signal existe donc d?j? avant
-l'interpolation. ?4cycles, ces rapports sont0,199/0,198. L'erreur RGB ne
-suffit pas, car l'interpolateur peut compenser ou masquer un d?faut amont.
-Les faibles et forts contrastes restent s?parables dans les JSON ; une
-moyenne sur les amplitudes ne repr?sente pas chaque texture.
-
-### Planches photographiques exploratoires ? 18h05
-
-54 planches couvrent27ROI des trois sources CFA d?j? qualifi?es, pour les
-deux graines. Ordre des quatre panneaux : RCD/m?diane, U-Net sigma0,
-sigma0,01 et sigma0,03. C'est le **canal vert du RGB cam?ra balanc?**, avec
-le m?me ?cr?tage au blanc avant d?matri?age que le t?moin RCD ; aucun
-LCP/DCP, aucune conversion couleur d'?cran ni fausse calibration ISO.
-Le contraste d'affichage est partag? par ROI, fix? sur le t?moin RCD,
-avec gamma2,2. Le JSON conserve la fen?tre et les fractions coup?es ?
-l'affichage ; le calcul du r?seau reste sign? et non ?cr?t?.
+54 planches exploratoires couvrent 27 ROI réelles pour les deux graines :
+RCD/médiane, sigma 0, sigma 0,01, sigma 0,03. Canal vert caméra balancé,
+contraste partagé par ROI fixé sur RCD, gamma 2,2 ; pas de LCP/DCP ni
+rendu couleur d'écran. Les sigma sont fournis, pas calibrés par ISO.
+Le JSON conserve fenêtre et fractions coupées à l'affichage. RCD n'est
+pas une vérité propre. Deux planches inspectées montrent du lissage et
+une perte possible de fibres à sigma fort. Quatre tests couvrent fenêtre,
+signal signé, PNG valide/non écrasé et lecture RGB avec troncature.
 Preuve : [planches](../raw/neural-camera-visual-v001-20261103T170454Z.json).
 
-L'index local est dans `build-patch_neural_restoration/broadband-camera-preview-v001/index.html`.
-Les PNG sont des artefacts locaux, pas des r?f?rences propres. Deux
-planches ont ?t? inspect?es : le lissage est visible, avec perte possible
-de fibres/d?tails ? forte valeur sigma ; cela ne mesure pas un gain de
-bruit r?el. Les sigma fournis sont des sc?narios, pas des estimations.
-La r?f?rence RCD est le processus actuel, pas une v?rit? photographique.
-Quatre tests couvrent fen?tre partag?e, signal sign?, PNG valide/non-?cras?
-et lecture RGB avec d?calage/troncature, sans ajouter de d?pendance logicielle.
+### Ancrage du signal propre et protection diagonale
 
-### Prochaine exp?rience ? ancrage du signal propre
+Pour chaque exposition positive, le CFA propre est aussi passé avec
+le sigma estimé sur l'observation. Sa correction doit rester près de zéro,
+avant interpolation, poids 1 et même énergie RGB bruitée tempérée que
+le terme de données. Architecture, données et budget restent identiques.
+Deux tests de perte, six de reprise et quatre de périmètre passent.
+La provenance distingue entraînement archivé et inférence courante ;
+calcul, runtime et convention de bruit restent strictement vérifiés.
 
-L'architecture et la distribution enrichie restent inchang?es. Pour
-chaque exposition ? bruit positif, un second calcul passe le CFA propre
-avec **le m?me champ sigma estim? sur l'observation bruit?e**. On p?nalise
-l'?cart entre CFA corrig? et CFA propre, avant toute interpolation, poids1.
-La normalisation est la m?me ?nergie RGB bruit?e temp?r?e que pour le
-terme de donn?es ; ce n'est pas une contrainte de copie du bruit r?el.
-On conserve2048 ?tapes, les deux graines fra?ches et tous les crit?res.
-L'objectif cherche ? emp?cher la correction syst?matique d'une structure
-propre lorsqu'elle est confondue avec du bruit. Le r?sultat n'est pas garanti.
+Les deux graines terminent sans arrêt mémoire. Le développement passe :
+RGB/parent 0,92424/0,92524 au faible bruit, 0,75751/0,74632 au fort.
+Le transfert à 16 cycles monte à 0,791/0,801, mais reste à 0,564/0,566
+à 24 cycles. Preuves : [campagne](../raw/neural-campaign-v001-20261103T171051Z.json),
+[protection](../raw/neural-edge-protection-v001-20261103T171828Z.json),
+[spectre](../raw/neural-spectral-noise-v001-20261103T172047Z.json).
 
-Deux tests v?rifient invariance d'?chelle physique, gradients et rejet des
-entr?es invalides du nouveau terme. Les reprises g?n?rique et enrichie
-restent bit-exactes (six tests) ; les quatre tests de p?rim?tre passent.
-Les outils distinguent d?sormais empreinte de l'apprentissage archiv? et
-empreintes du calcul d'inf?rence courant : modifier seulement la perte ne
-rend pas d'anciens poids illisibles, mais changer le calcul, le runtime ou
-la convention de bruit est toujours refus?. Un test couvre cette fronti?re.
-Il ne s'agit pas d'ex?cuter un ancien moteur en production.
+Le diagnostic par orientation révèle une zone aveugle exacte. Les réponses
+H/V sont `2cx(1+2cy)-6cy` et `2cy(1+2cx)-6cx` : elles s'annulent pour
+`cx=cy=0`. Le motif diagonal `[1,0,-1,0][(x+y) modulo 4]` reproduit le
+défaut, avec un test d'abord en échec. La composante ajoutée
+`TL+BR-TR-BL`, variance somme des quatre coins, répond
+`−4sin(kx)sin(ky)` et lève cette annulation. Les trois réponses ne
+s'annulent ensemble qu'en DC modulo 2π. Cela ne garantit pas la détection
+de toute texture faible. Le compte passe de 392 à 588 comparaisons,
+avec le même alpha nominal 0,01 ; aucun seuil ajusté aux scores.
+Quatre tests passent, dont confiance intermédiaire D4, rampes/aplats,
+point isolé, identité et préparation. Aucun réentraînement.
 
+Après correction, les motifs forts à 16/24 cycles retrouvent le transfert
+du parent ; RGB/parent tous contrastes vaut 0,678/0,715 et 0,917/0,940.
+Preuves : [Hessienne et ancrage](../raw/neural-edge-protection-v001-20261103T172259Z.json),
+[spectre](../raw/neural-spectral-noise-v001-20261103T172516Z.json).
+Sans ancrage, la même protection conserve aussi ces détails :
+[mesure](../raw/neural-edge-protection-v001-20261103T172631Z.json),
+[spectre](../raw/neural-spectral-noise-v001-20261103T172726Z.json).
+À 8 cycles, l'ancrage conserve 98,76/98,56 % du transfert fort contre
+97,45/97,34 % sans, avec moins de lissage. Cette recette et les deux
+graines sont figées avant les nouvelles confirmations.
 
-### Ancrage propre mesur?, puis diagnostic de la protection diagonale
+### Confirmations réservées — critères puis échecs conservés
 
-Les deux graines terminent2048 ?tapes sans arr?t m?moire et passent le
-premier protocole apr?s protection. Rapports RGB/parent tous cas :
-0,92424/0,92524 au faible bruit,0,75751/0,74632 au fort.
-Preuve : [protection et ancrage](../raw/neural-edge-protection-v001-20261103T171828Z.json).
-Le gain bruit baisse un peu par rapport au candidat enrichi sans ancrage.
-Sur le spectre ? faible bruit, les gains moyens ?16cycles montent encore
-?0,791/0,801, mais restent insuffisants ?24cycles (0,564/0,566).
-Preuve : [ancrage seul](../raw/neural-spectral-noise-v001-20261103T172047Z.json).
+La cohorte classique utilise les blocs 320/3700000, en excluant les
+anciennes vérités et l'apprentissage. La cohorte fine utilise
+6/10/14/18/22/26 cycles/128, amplitudes 0,008/0,06, trois nouveaux angles
+et une phase nouvelle, trois réalisations par bruit positif et quatre
+phases Bayer. Avant mesure, chaque groupe fort graine/fréquence/famille/
+bruit doit conserver 95 % du transfert du parent dans chaque canal,
+sans augmenter l'erreur RGB/CFA (tolérance relative 10⁻⁶). Le gain
+global doit atteindre 2 % par bruit positif. Le transfert faible est
+rapporté sans exiger une absence de biais à faible SNR.
 
-La s?paration par orientation r?v?le un d?faut distinct : dans le candidat
-enrichi sans ancrage, ? amplitude0,08/faible bruit, les directions H/V sont
-strictement ?gales au parent ; la diagonale donne gain0,602 contre0,951
-?16cycles,0,464 contre0,842 ?24cycles. La protection est donc aveugle ?
-certaines structures diagonales. Sur le r?seau CFA, les r?ponses H/V ?
-une onde plane sont `H=2cx(1+2cy)-6cy`, `V=2cy(1+2cx)-6cx`, avec
-`cx=cos(kx)`, `cy=cos(ky)`. Elles s'annulent ensemble pourcx=cy=0,
-pas seulement pour un signal constant. Le motif exact diagonal
-`[1,0,-1,0][(x+y) modulo4]` reproduit ce d?faut : confiance1 au lieu d'une
-protection, test de r?gression d'abord en ?chec.
+La cohorte classique échoue dans les six groupes : seul le gradient des
+contours mixtes au bruit fort est sous 95 %, à 92,47–94,09 % pour 71,
+92,88–94,40 % pour 73. Le contour 11 est le plus touché. Le sans-bruit,
+les faibles ondes, la couleur et les gains d'erreur passent. Preuve :
+[classique](../raw/neural-noisy-confirmation-v001-20261103T173122Z.json).
+Sur 4 032 observations fines, RGB/parent global vaut 0,748/0,784 au
+faible bruit, 0,525/0,488 au fort. Mais 20 des 48 groupes forts échouent,
+tous au fort bruit ; R/B conservent parfois seulement 62,6–68,1 % à
+26 cycles. Pour 71, l'erreur RGB de ce groupe augmente aussi de 5,23 %.
+Tous les groupes forts à faible bruit passent. Preuve :
+[fine](../raw/neural-fine-confirmation-v001-20261103T173344Z.json).
 
-La nouvelle protection ajoute la diff?rence crois?e `TL+BR-TR-BL`, de
-variance ?gale ? la somme des quatre variances des coins. Son module est
-covariant par D4, nul sur les rampes, sans utilisation de la valeur centrale.
-Sa r?ponse vaut `?4sin(kx)sin(ky)` : elle n'est pas nulle sur la diagonale
-aveugle. Les trois r?ponses ne s'annulent ensemble, sur la grille Fourier,
-qu'en DC modulo2?. Cela supprime une zone aveugle exacte ; cela ne garantit
-pas la d?tection de tout signal faible noy? dans le bruit.
-
-Le budget de comparaisons passe de392 ?588 ; le seuil est recalcul? avec
-la m?me borne d'union et le m?me alpha nominal0,01, sans seuil ajust? aux
-scores. L'hypoth?se gaussienne ? variance estim?e reste une heuristique.
-Les quatre tests passent : motif aveugle corrig?, confiance interm?diaire
-covariante, rampe/aplat/point isol? et identit?/pr?paration/sym?tries du r?seau.
-Aucun poids n'est r?entra?n? pour cette correction. Les deux recettes
-avec/sans ancrage seront compar?es avec cette m?me protection compl?te.
-
-### Prochaine confirmation r?serv?e ? crit?res avant ouverture
-
-Apr?s comparaison sur les contr?les d?j? consult?s, figer une seule recette
-(et toujours les deux graines) avant toute nouvelle cohorte. La confirmation
-classique utilisera les blocs de graines320/3700000 et exclura toutes les
-v?rit?s d'apprentissage et anciennes cohortes. Les crit?res classiques
-restent inchang?s.
-
-Une confirmation fine compl?mentaire utilisera6/10/14/18/22/26cycles128,
-deux amplitudes0,008 et0,06, trois nouveaux angles, ondes achromatiques ou
-oppos?es et une nouvelle phase. Trois r?alisations par bruit positif,
-quatre phases Bayer, les deux graines, sans apprentissage apr?s ouverture.
-Les contr?les faibles seront int?gralement rapport?s, sans pr?tendre
-qu'une texture noy?e dans le bruit soit reconstructible sans erreur.
-Pour les signaux forts, chaque groupe graine/fr?quence/famille/bruit
-conservera au moins95% du transfert du parent dans chacun des trois canaux,
-et n'augmentera ni l'erreur RGB ni l'erreur CFA (tol?rance relative10??).
-L'erreur globale devra aussi baisser d'au moins2% pour chaque bruit positif.
-Ces crit?res sont fix?s avant les mesures de cette cohorte ; aucun r?sultat
-n?gatif ne sera supprim? et elle ne servira pas ? s?lectionner une graine.
-La r?ussite resterait une qualification proc?durale, pas photographique.
-
-
-### Protection diagonale mesur?e ? recette fig?e avant confirmation
-
-Les deux graines avec ancrage passent le protocole classique apr?s ajout
-de la composante crois?e, sans r?entra?nement. Preuve :
-[Hessienne et ancrage](../raw/neural-edge-protection-v001-20261103T172259Z.json).
-L'audit spectral montre que les motifs forts ?16 et24cycles retrouvent
-exactement le transfert du parent pour les deux graines ; les rapports
-d'erreur RGB tous contrastes/parent ? faible bruit deviennent0,678/0,715
-?16cycles et0,917/0,940 ?24cycles. Preuve :
-[spectre complet](../raw/neural-spectral-noise-v001-20261103T172516Z.json).
-
-La m?me protection est aussi rejou?e sur les poids sans ancrage, pour
-isoler les deux contributions. Ce candidat passe lui aussi le premier
-protocole ; les forts d?tails ?16/24cycles sont conserv?s, ce qui attribue
-la suppression de la zone aveugle ? la protection, pas au nouvel apprentissage.
-Preuves : [sans ancrage](../raw/neural-edge-protection-v001-20261103T172631Z.json),
-[spectre sans ancrage](../raw/neural-spectral-noise-v001-20261103T172726Z.json).
-
-?8cycles, le transfert des forts d?tails avec ancrage vaut98,76/98,56%
-du parent, contre97,45/97,34% sans. En ?change, le rapport d'erreur RGB
-tous contrastes est0,426/0,411 contre0,361/0,345 : un peu moins de lissage.
-**Choix sur le d?veloppement : conserver l'ancrage propre et la protection
-? trois contrastes pour les deux graines.** Ni graine s?lectionn?e ni poids
-ajust? apr?s ce choix. Les contr?les encore r?serv?s seront ouverts une
-seule fois sur cette recette. Les faibles d?tails noy?s dans le bruit,
-les capteurs r?els et les saturations restent des limites ? qualifier.
-
-
-### Confirmations r?serv?es ? ?checs ? fort bruit conserv?s
-
-La nouvelle cohorte classique donne six groupes n?gatifs. Tous les
-contr?les sans bruit, les faibles ondes, la couleur et les gains d'erreur
-passent ; le seul crit?re en ?chec est le gradient des quatre contours
-mixtes ? fort bruit :92,47?94,09% du parent pour71,92,88?94,40% pour73,
-sous95%. Le contour d'indice11 est le plus touch?. Le d?faut n'est donc
-pas imput? au reconstructeur sans bruit. Preuve :
-[cohorte classique](../raw/neural-noisy-confirmation-v001-20261103T173122Z.json).
-
-La confirmation fine mesure4032 observations. L'erreur RGB globale baisse
-?0,748/0,784 du parent au faible bruit,0,525/0,488 au fort. Mais20 des48
-groupes forts ?chouent au transfert d'au moins un canal, tous au fort bruit.
-?26cycles, la couleur oppos?e conserve parfois seulement62,6?68,1% dans
-R/B ;71 augmente aussi l'erreur RGB de5,23% dans ce groupe. Tous les groupes
-forts ? faible bruit passent. **Le candidat n'est pas d?clar? stable** :
-une baisse d'erreur moyenne ne compense pas la perte de d?tail/coloration.
-Preuve : [cohorte fine](../raw/neural-fine-confirmation-v001-20261103T173344Z.json).
-Les observations faibles restent disponibles ; leurs d?tails ne sont pas
-pr?sent?s comme valid?s. Aucune donn?e n'est retir?e pour changer le verdict.
-
-La coh?rence des tuiles passe encore, et les54planches sont r?g?n?r?es sur
-le candidat ? protection compl?te :
+Les tuiles passent et les 54 planches sont régénérées :
 [tuiles](../raw/neural-tiling-audit-v001-20261103T173515Z.json),
 [planches](../raw/neural-camera-visual-v001-20261103T173529Z.json).
 Index local : `build-patch_neural_restoration/fixed-point-hessian-camera-v001/index.html`.
-Ces contr?les techniques ne valident pas le d?bruitage photographique.
+Ces contrôles techniques ne valident pas le débruitage photographique.
 
-### Derni?re comparaison cibl?e ? capacit? de correction
+### Capacité élargie — expérience écartée
 
-Le correcteur pr?c?dent comprime ses36descripteurs en8canaux internes,
-alors que le U-Net de reconstruction est fig?. La prochaine exp?rience
-porte ces canaux ?32, sans agrandir le support spatial, changer les donn?es,
-l'ancrage, les parents,2048?tapes ou les deux graines. L'architecture de
-reconstruction reste ?8canaux. Le nouveau nombre de param?tres sera mesur? ;
-la limite m?moire reste inchang?e. Dix tests cibl?s du mod?le, de la reprise
-enrichie et de la protection passent. Les anciens poids exigent leur r?vision
-de calcul ; aucun ancien moteur n'est conserv? dans le code courant.
+Le correcteur passe de 8 à 32 canaux internes, sans changement du support,
+des parents, données, pertes ou étapes. Le prétest mesure 54 332 paramètres,
+dont 20 964 entraînables, 303,60 Mio résidents et 972,94 Mio privés ;
+ses poids sont jetés. Dix tests ciblés passent. Preuve :
+[prétest](../raw/neural-wide-preflight-v001-20261103T174100Z.json).
+Les deux entraînements atteignent 2 048 étapes, pics 324,08/322,66 Mio.
+La perte des 256 dernières étapes baisse de 7,123/7,599 à 6,966/7,299,
+sans que cela vaille validation. Preuves :
+[campagne](../raw/neural-campaign-v001-20261103T174116Z.json),
+[71](../raw/neural-noisy-moment-v001-20261103T174133Z.json),
+[73](../raw/neural-noisy-moment-v001-20261103T174537Z.json),
+[développement](../raw/neural-edge-protection-v001-20261103T174938Z.json),
+[spectre](../raw/neural-spectral-noise-v001-20261103T175029Z.json).
 
-Les deux cohortes pr?c?dentes sont d?sormais consult?es. Si le d?veloppement
-passe, la confirmation suivante utilisera les blocs352/3800000 pour le
-classique et la cohorte fine2 (fr?quences7?27, angles/phase et bruits nouveaux),
-sans modification des crit?res. Les empreintes de toutes les cohortes
-pr?c?dentes et des textures d'apprentissage seront exclues pour emp?cher
-un r?emploi accidentel comme donn?es r?serv?es. Aucune att?nuation artificielle
-de la force n'est ajout?e pour faire passer un seuil.
+Avant de nouveaux contenus, les données et critères des anciennes cohortes
+sont rejoués avec les poids courants. Ces régressions gardent tous les
+échecs ; deux tests vérifient qu'elles ne sont pas renommées indépendantes.
+Le premier rejeu passe, le second échoue encore dans six groupes :
+92,58–94,13 % du gradient parent pour 71, 92,75–94,24 % pour 73.
+Le rejeu fin échoue dans 23 des 48 groupes forts, contre 20 pour le compact.
+Preuves : [premier rejeu](../raw/neural-noisy-regression-v001-20261103T175145Z.json),
+[second rejeu](../raw/neural-noisy-regression-v001-20261103T175416Z.json),
+[rejeu fin](../raw/neural-fine-regression-v001-20261103T175647Z.json).
+La chaîne s'arrête avant de préparer les blocs 352/3800000 et la cohorte
+fine 2 : ces contrôles restent réservés. Retour au correcteur 8 canaux,
+dont le fichier retrouve exactement le SHA-256 lié à ses poids. Aucun
+mode large n'est maintenu ; les preuves restent dans l'historique.
 
+### Couverture et décomposition de la reconstruction
 
-Le pr?test de la correction ?largie mesure54332param?tres, dont20964
-entra?nables et33368fig?s. Quatre ?tapes Adam repr?sentatives utilisent
-303,60Mio r?sidents et972,94Mio priv?s ?chantillonn?s, sous les plafonds.
-Les poids de pr?test sont jet?s ; les deux vrais mod?les repartent des
-parents propres. Les donn?es, niveaux de bruit, ancrage et budgets restent
-appari?s ; seuls les canaux de correction passent de8?32.
+Le contour 11, seed 3700203, a des contrastes R/G/B de
+0,0495/0,2125/0,2598. Le rapport contraste/bruit de deux échantillons vaut
+1,28/5,27/6,78 au bruit fort. Sur 548 expositions de contours à ce bruit,
+330 recettes distinctes, 108 ont un maximum R/G/B au plus égal et 203
+un rapport vert au plus égal. Cela ne prouve pas la couverture jointe des
+angles/couleurs ; l'audit est exploratoire, après sélection du contrôle
+en échec. Preuve : [couverture](../raw/neural-edge-coverage-v001-20261103T175937Z.json).
 
-Avant d'ouvrir les nouvelles cohortes, rejouer aussi les anciennes donn?es
-de confirmation avec les poids courants : premi?re cohorte classique pass?e,
-seconde classique ?chou?e et cohorte fine ?chou?e. Les outils nomment ces
-campagnes **r?gressions**, conservent toutes les observations et crit?res,
-et ne les pr?sentent jamais comme ind?pendantes. Deux tests v?rifient
-la conservation des donn?es/crit?res n?gatifs et le remplacement des seuls
-poids/contrats de calcul. Il n'y a pas d'ex?cution d'un ancien moteur.
-Cela ?vite de d?clarer stable un candidat qui r?ussirait un nouveau tirage
-mais ?chouerait encore sur un probl?me d?j? observ?.
+Une trace sépare données corrigées à coefficients d'origine, coefficients
+corrigés sur données d'origine, puis les deux. Les 96 reconstitutions du
+calcul courant sont identiques au bit près. Le transfert vaut
+93,23/93,61 % du parent ; figer les coefficients donne 94,05/94,06 % ;
+changer seulement les coefficients donne 99,16/99,56 %. Le recalcul
+explique une petite fraction de la perte : la correction CFA reste
+majoritaire. Cette hypothèse ne justifie donc pas un garde RGB qui
+masquerait le défaut. Preuve :
+[trace](../raw/neural-reconstruction-trace-v001-20261103T180516Z.json).
+
+### Conclusion courante — 3 novembre, 19 h 15
+
+Signal signé, sigma nul exact, symétries, tuiles, reprises et quotas sont
+vérifiés. La composante croisée corrige une vraie zone aveugle et l'ancrage
+améliore le transfert. Le correcteur local reste non qualifié à fort bruit.
+Aucun modèle n'est annoncé prêt pour la production.
+
+La prochaine variable est le contexte appris : le correcteur voit environ
+14×14 pixels capteur, puis le U-Net intervient en reconstruction. Le plan
+multi-échelle, avec fenêtres plus grandes et conservation exacte des
+anciens centres, est dans l'
+[architecture, §20](../../architecture/restauration-neuronale.md#contexte-multiechelle).
+Pas de nouvelles photos nécessaires au prochain contrôle simulé ; les
+références photographiques restent indispensables avant validation réelle.
+Les planches locales restent exploratoires. Aucun push, fusion, tag ou
+moteur de production modifié.
+
+Vérification de clôture : 40 tests ciblés passent sur le code compact
+restauré (modèle, protection, pertes, reprises, provenance, régressions,
+confirmations, tuiles et prévisualisation). Contrôle documentaire : zéro
+erreur et zéro avertissement de lien de fichier ; ce contrôle ne compile
+pas LaTeX et ne vérifie pas les liens externes. Les derniers ajouts du
+rapport ont été remis en UTF-8 et consolidés après détection d'une
+conversion ASCII du lanceur PowerShell. Les JSON numériques restent
+immuables ; aucun processus de calcul de cette campagne ne reste actif.

@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "data_version": 1,
+  "campaign_id": "neural-campaign-v001-20261103T174116Z",
+  "started_at_utc": "2026-11-03T17:41:16.632235+00:00",
+  "until_latest_start": "2026-11-03T19:30:00+01:00",
+  "status": "completed_both_seeds",
+  "plan_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-wide-plan-v001\\plan.json",
+  "plan_sha256": "b2d6407112745a0a0a99158b3694f08c1e4336acf94411805dd5e8bdb62872d3",
+  "launcher_sha256": "50aa7a79ff595170fc365943e2536d47eec9da42f429aa1b85d3aff42bc47802",
+  "admission_fraction": 0.9,
+  "poll_seconds": 15,
+  "max_attempts_per_seed": 8,
+  "attempt_timeout_seconds": 1800,
+  "attempts": [
+    {
+      "seed": 71,
+      "number": 1,
+      "output": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-wide-campaign-v001\\seed71-attempt01",
+      "admission_memory": {
+        "system_total_bytes": 16933507072,
+        "system_available_bytes": 8293552128,
+        "system_used_fraction": 0.5102283246620773,
+        "process_rss_bytes": 26738688,
+        "process_private_bytes": 19009536,
+        "process_peak_rss_bytes": 29802496,
+        "process_peak_pagefile_bytes": 22183936
+      },
+      "resumed_from": null,
+      "returncode": 0,
+      "result_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-wide-campaign-v001\\seed71-attempt01\\result.json",
+      "result_sha256": "0101b4a06bece15506e071ae593f0dc8ff08cc69dd103e528db82f0222df2309",
+      "status": "completed_synthetic_noise_pilot_not_photographic_qualification",
+      "pilot_gates_passed": false,
+      "training_progress": {
+        "completed_optimizer_steps": 2048,
+        "checkpoint": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-wide-campaign-v001\\seed71-attempt01\\training-latest.pt",
+          "sha256": "323c41c691e55ebd5016cbeb4fca00642ffff98c979846be70ba6fd99da59975",
+          "bytes": 446528,
+          "completed_step": 2048
+        }
+      },
+      "campaign_id": "neural-noisy-moment-v001-20261103T174133Z"
+    },
+    {
+      "seed": 73,
+      "number": 1,
+      "output": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-wide-campaign-v001\\seed73-attempt01",
+      "admission_memory": {
+        "system_total_bytes": 16933507072,
+        "system_available_bytes": 8405504000,
+        "system_used_fraction": 0.5036170614710569,
+        "process_rss_bytes": 33972224,
+        "process_private_bytes": 25325568,
+        "process_peak_rss_bytes": 40779776,
+        "process_peak_pagefile_bytes": 32968704
+      },
+      "resumed_from": null,
+      "returncode": 0,
+      "result_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-wide-campaign-v001\\seed73-attempt01\\result.json",
+      "result_sha256": "708ac1f01dbfb1aea2f8b50a460829c55048024296458d95d1c499e57b82d130",
+      "status": "completed_synthetic_noise_pilot_not_photographic_qualification",
+      "pilot_gates_passed": false,
+      "training_progress": {
+        "completed_optimizer_steps": 2048,
+        "checkpoint": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-wide-campaign-v001\\seed73-attempt01\\training-latest.pt",
+          "sha256": "ff49647c9d58e1e808621efec6650d9efd3b09f3943044ec484f689f7c5f3cfd",
+          "bytes": 446528,
+          "completed_step": 2048
+        }
+      },
+      "campaign_id": "neural-noisy-moment-v001-20261103T174537Z"
+    }
+  ],
+  "policy": "Both seeds evaluated even after quality failure. Retry only memory stops; latest technical checkpoint, no score selection. No new attempt after deadline; active attempt may finish normally.",
+  "pilot_gates_passed": false,
+  "finished_at_utc": "2026-11-03T17:49:20.978108+00:00"
+}
