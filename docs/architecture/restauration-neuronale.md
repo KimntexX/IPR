@@ -1015,3 +1015,10 @@ La supervision simple a réduit les échecs fins de 24 à 19/48, sans validation
 globale. La version à deux projections est un nouvel essai, pas un résultat
 qualifié. Détails et limites dans le
 [rapport unique](../validation/analyses/analyse-restauration-neuronale.md).
+
+Résultat de cet essai : la graine 71 passe le développement, la graine 73
+reste presque à l'identité et échoue au gain minimal. Les gradients sont
+actifs ; la qualification s'arrête avant les nouveaux rejeux. Le code de
+supervision à deux projections reste un outil d'étude, sans validation ni
+raccordement en production. Les poids à supervision simple conservent le
+statut de référence expérimentale, avec leurs 19/48 échecs fins.

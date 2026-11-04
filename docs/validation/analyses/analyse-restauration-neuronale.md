@@ -3,8 +3,9 @@
 **État au 4 novembre 2026, matin :** les gradients limités stabilisent les
 deux entraînements et les deux corpus classiques passent. Une supervision
 de structure réduit les échecs fins de 24 à 19/48 groupes forts, sans les
-résoudre. Son diagnostic motive un essai à deux projections complémentaires,
-prétesté mais sans résultat d'entraînement à ce stade. Aucune qualité
+résoudre. L'essai à deux projections échoue sur la stabilité à deux graines :
+la graine 73 reste presque à l'identité. La supervision simple reste la
+référence expérimentale. Aucune qualité
 photographique validée, aucun moteur de production modifié ni nouveau jeu
 réservé ouvert.
 
@@ -5283,3 +5284,42 @@ limitation des gradients et critères. La comparaison se fera cette fois
 contre la supervision simple, pas seulement contre l'ancien modèle moins bon.
 L'inférence et la production restent inchangées ; les nouvelles confirmations
 ne seront ouvertes que si développement et tous les rejeux connus passent.
+
+### Bilan de l'essai à deux projections et diagnostic d'optimisation
+
+Les deux entraînements terminent les 2 048 étapes sans erreur technique.
+La graine 71 passe le développement protégé, avec des erreurs RGB relatives
+au parent de 0,9426 et 0,8220 aux deux bruits positifs. La graine 73 échoue
+au gain RGB minimal : rapports 0,999997 et 0,999976, donc correction presque
+nulle. La chaîne s'arrête conformément au protocole avant les trois rejeux
+et avant tout jeu réservé. On ne connaît donc pas le verdict fin de cette
+variante et on ne peut pas annoncer une amélioration des 19/48 échecs.
+Preuves : [graine 71](../raw/neural-noisy-moment-v001-20261104T083402Z.json),
+[graine 73](../raw/neural-noisy-moment-v001-20261104T084339Z.json),
+[développement protégé](../raw/neural-edge-protection-v001-20261104T085248Z.json),
+[qualification arrêtée](../raw/neural-stability-qualification-v001-20261104T085446Z.json).
+
+Le diagnostic complémentaire montre des gradients internes non nuls sur
+les dix sondes de la graine 73. Sur l'aplat au premier bruit, la correction
+vaut seulement 0,0061 sigma ; les activations précédant la dernière SiLU
+restent entre environ −0,060 et 0,090. Ce n'est donc pas la saturation
+négative ni l'annulation des gradients constatée sur le premier essai
+multi-échelle. La cause du faible apprentissage reste à identifier.
+
+Une sonde sépare ensuite les gradients des termes RGB, ancrage propre et
+structure, aux états initiaux et finaux des deux graines. Elle conserve les
+poids, retire ses hooks et n'exécute aucune mise à jour. Sur les dix cas
+consultés, le terme de structure ne domine pas systématiquement le gradient
+RGB de la graine 73 ; leurs directions peuvent être opposées sur certains
+contenus. Cette observation locale ne suffit pas à expliquer la trajectoire
+des 2 048 étapes et ne justifie pas, seule, de changer arbitrairement le poids.
+Preuve : [équilibre des gradients](../raw/neural-gradient-balance-v001-20261104T114415Z.json).
+
+La variante à deux projections n'est pas retenue comme candidate qualifiée.
+La référence expérimentale reste la supervision simple : deux graines et
+deux corpus classiques positifs, 19/48 groupes forts fins encore négatifs.
+La prochaine piste est de vérifier une introduction progressive de la nouvelle
+contrainte depuis un correcteur qui débruite déjà, avec un contrôle au même
+budget supplémentaire, plutôt que relancer des graines jusqu'à obtenir une
+réussite. Ce protocole de transition reste à préparer ; aucun nouvel
+entraînement n'a été lancé à la clôture de ce diagnostic.

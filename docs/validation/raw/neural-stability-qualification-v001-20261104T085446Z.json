@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "started_at_utc": "2026-11-04T08:33:45.754181+00:00",
+  "status": "stopped_on_development_failure",
+  "tools_sha256": "8ec378cad38871d8c705b17cd920ed8b3b4b7f0bda991a855396add4c4cc1fe3",
+  "campaign": "build-patch_neural_restoration\\noisy-rank2-campaign-v001",
+  "data_plan": "build-patch_neural_restoration\\noisy-rank2-plan-v001\\plan.json",
+  "prefix": "rank2",
+  "policy": "Both seeds, fixed gates, sequential jobs. All three known regressions reported including failures. Reserved cohorts remain unopened.",
+  "stages": [
+    {
+      "name": "prepare_development",
+      "started_at_utc": "2026-11-04T08:52:45.805790+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\run_edge_protected_probe.py",
+        "--prepare",
+        "--data-plan",
+        "build-patch_neural_restoration\\noisy-rank2-plan-v001\\plan.json",
+        "--models",
+        "build-patch_neural_restoration\\noisy-rank2-campaign-v001\\seed71-attempt01",
+        "build-patch_neural_restoration\\noisy-rank2-campaign-v001\\seed73-attempt01",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\rank2-protected-plan-v001"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-04T08:52:47.449136+00:00"
+    },
+    {
+      "name": "development",
+      "started_at_utc": "2026-11-04T08:52:47.450726+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\run_edge_protected_probe.py",
+        "--plan",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\rank2-protected-plan-v001\\plan.json",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\rank2-protected-v001"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-04T08:54:46.898970+00:00"
+    }
+  ],
+  "development_passed": false,
+  "finished_at_utc": "2026-11-04T08:54:46.934948+00:00"
+}
