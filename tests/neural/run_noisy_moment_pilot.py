@@ -13,6 +13,8 @@ from audit_bayer_symmetries import OPERATIONS, transform, transform_observation,
 from bayer_canonical import predict, canonicalize
 from clean_cfa_loss import clean_cfa_loss
 from cfa_structure_loss import structure_loss
+from continuation_policy import secondary_weight
+from continuation_initialization import initialize_continuation
 from compare_reconstruction_objectives import freeze_cases, confined
 from confirm_local_route import MODEL_TOOLS, summarize
 from diagnose_train_learnability import digest, save
@@ -43,7 +45,7 @@ TOOLS = tuple(dict.fromkeys(MODEL_TOOLS+FORWARD_TOOLS+('run_noisy_moment_pilot.p
     'compare_reconstruction_objectives.py', 'confirm_local_route.py',
     'run_synthetic_joint_pilot.py', 'reconstruction_gates.py', 'audit_bayer_symmetries.py',
     'training_resume.py', 'noisy_training_policy.py', 'noise_conditioning.py', 'fine_texture_training.py',
-    'clean_cfa_loss.py', 'cfa_structure_loss.py', 'context_data.py')))
+    'clean_cfa_loss.py', 'cfa_structure_loss.py', 'continuation_policy.py', 'continuation_initialization.py', 'context_data.py')))
 
 
 def observation(truth, tags, noise_index, seed):
@@ -227,8 +229,9 @@ def train(model, source, config, guard, checkpoint_path, context, progress, inte
                     truth/config['scale'], config['scale'], border=config.get('loss_border', 48))/4
                 noisy_values, _, _, _ = canonicalize(packed/config['scale'], sigma/config['scale'], tags)
                 corrected = model.correct_observations(noisy_values, deviations, labels)
+                weight = secondary_weight(config, step)
                 loss = loss+structure_loss(corrected, clean_values, deviations,
-                    config.get('loss_border', 48)//2)/4
+                    config.get('loss_border', 48)//2, weight)/4
                 del noisy_values, corrected
                 del clean_values, deviations, labels, anchored
             if not torch.isfinite(loss):
@@ -450,15 +453,24 @@ def run(root, plan_path, seed, output, resume=None):
             if model.noise_head.in_channels != plan['config']['noise_hidden_width']:
                 raise ValueError('Declared correction hidden width differs')
             load_reconstruction(model, checkpoint['state_dict'])
+            if 'warm_start' in plan:
+                warm = plan['warm_start']
+                refs = [r for r in warm['models'] if r['seed'] == seed]
+                if len(refs) != 1 or warm['completed_optimizer_steps'] != 2048 or plan['config']['steps'] != 512:
+                    raise ValueError('Declared2048+512 continuation required')
+                ref = refs[0]
+                initialize_continuation(root, model, checkpoint['state_dict'], ref)
+                result['warm_start'] = ref
             result['training_scope'] = configure_trainable(model, plan['config']['training_scope'])
             result['parameter_count'] = sum(p.numel() for p in model.parameters())
             result['losses'], result['training_exposure_counts'] = train(model, source, plan['config'], guard,
                 output/'training-latest.pt', context, progress, plan['checkpoint_policy']['interval_steps'], resume,
                 plan['texture_augmentation']['events'])
+            progress['total_optimizer_steps'] = progress['completed_optimizer_steps']+plan.get('warm_start', {}).get('completed_optimizer_steps', 0)
             parent = LocalMomentUNet(plan['config']['width']).eval().requires_grad_(False)
             parent.load_state_dict(checkpoint['state_dict'], strict=True)
             result.update(evaluate(model, parent, plan, source, guard))
-            if any(not torch.equal(v, parent.state_dict()[n]) for n, v in checkpoint['state_dict'].items()):
+            if any(not torch.equal(v, model.state_dict()[n]) for n, v in checkpoint['state_dict'].items()):
                 raise ValueError('Frozen parent changed')
             torch.save(dict(state_dict=model.state_dict(), config=plan['config'], seed=seed,
                 plan_sha256=result['plan_sha256']), output/'weights.pt')

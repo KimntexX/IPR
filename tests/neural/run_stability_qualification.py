@@ -29,7 +29,7 @@ def run(root, output, campaign, plan, prefix):
     state = dict(schema_version=1, started_at_utc=datetime.now(timezone.utc).isoformat(),
         status='waiting_training', tools_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         campaign=str(campaign), data_plan=str(plan), prefix=prefix,
-        policy='Both seeds, fixed gates, sequential jobs. All three known regressions reported including failures. Reserved cohorts remain unopened.', stages=[])
+        policy='Both seeds, fixed gates, sequential jobs. Fine regression first; failure skips classics and forbids overall qualification. Reserved cohorts remain unopened.', stages=[])
     def command(name, script, *arguments):
         entry = dict(name=name, started_at_utc=datetime.now(timezone.utc).isoformat(),
             command=[sys.executable, str(root/'tests/neural'/script), *map(str, arguments)])
@@ -67,9 +67,9 @@ def run(root, output, campaign, plan, prefix):
             state['status'] = 'stopped_on_development_failure'
             return state
         regressions = (
+            ('fine', 'fine', 'fixed-point-fine-v001'),
             ('classic_first', 'classic', 'noisy-confirmation-attempt02-v001'),
-            ('classic_second', 'classic', 'fixed-point-independent-v001'),
-            ('fine', 'fine', 'fixed-point-fine-v001'))
+            ('classic_second', 'classic', 'fixed-point-independent-v001'))
         state['regressions'] = []
         for name, kind, historical in regressions:
             data = base/(prefix+'-'+name+'-plan-v001')
@@ -81,6 +81,9 @@ def run(root, output, campaign, plan, prefix):
             result = json.loads((destination/'result.json').read_text(encoding='utf-8'))
             state['regressions'].append(dict(name=name, passed=eligible(result), result=str(destination/'result.json'),
                 sha256=hashlib.sha256((destination/'result.json').read_bytes()).hexdigest()))
+            if kind == 'fine' and not eligible(result):
+                state['skipped_classic_regressions'] = 'Fine prerequisite failed; no overall qualification claim.'
+                break
         state['status'] = ('completed_known_regressions_passed' if all(r['passed'] for r in state['regressions'])
             else 'completed_known_regressions_failed_reserved_unopened')
         return state

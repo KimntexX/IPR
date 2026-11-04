@@ -1022,3 +1022,13 @@ actifs ; la qualification s'arrête avant les nouveaux rejeux. Le code de
 supervision à deux projections reste un outil d'étude, sans validation ni
 raccordement en production. Les poids à supervision simple conservent le
 statut de référence expérimentale, avec leurs 19/48 échecs fins.
+
+La transition suivante est appariée : initialisation depuis cette référence,
+512 étapes supplémentaires avec Adam remis à zéro dans les deux bras,
+taux 0,00025 et données identiques. Le contrôle conserve la projection simple ;
+l'autre bras passe continûment vers deux projections en 256 étapes, puis
+continue jusqu'à 512. Le plan distingue les pas de stage des 2 560 pas cumulés.
+La même fonction de perte fournit cette combinaison convexe ; aucun autre
+chemin d'inférence n'est introduit. Une reprise restaure aussi la position
+dans la rampe. Les textures fines sont désormais le premier rejeu après le
+développement protégé ; leur échec interdit une qualification globale.

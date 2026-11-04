@@ -9,6 +9,7 @@ import time
 import torch
 
 from compare_reconstruction_objectives import confined
+from continuation_policy import completed_training
 from diagnose_train_learnability import digest, save
 from edge_protected_noise import EdgeProtectedNoisyUNet, SCORE_ONSET, NOMINAL_FAMILY_ALPHA, COMPARISON_COUNT, HALO_RADIUS
 from local_moment_unet import LocalMomentUNet
@@ -30,7 +31,7 @@ def prepare(root, data_plan, folders, output):
         proof = json.loads((folder/'result.json').read_text(encoding='utf-8'))
         if (proof['status'] != 'completed_synthetic_noise_pilot_not_photographic_qualification'
                 or proof['plan_sha256'] != digest(data_plan)
-                or proof['training_progress']['completed_optimizer_steps'] != 2048
+                or not completed_training(proof)
                 or digest(folder/'weights.pt') != proof['weights_sha256']):
             raise ValueError('Final complete frozen-trunk witness required, without score selection')
         if any(proof['plan']['tools'].get(n) != digest(Path(__file__).with_name(n)) for n in FORWARD_TOOLS):

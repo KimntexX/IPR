@@ -8,6 +8,8 @@ import torch
 
 from bayer_canonical import canonicalize
 from clean_cfa_loss import clean_cfa_loss
+from continuation_policy import secondary_weight
+from continuation_initialization import initialize_continuation
 from cfa_structure_loss import structure_loss
 from context_data import extend_case, extend_observation, crop_centre
 from diagnose_train_learnability import digest, save
@@ -29,7 +31,7 @@ def statistics(value):
         fraction_abs_above3=float((value.abs() > 3).float().mean()))
 
 
-def probe(model, values, sigma, labels, truth, border):
+def probe(model, values, sigma, labels, truth, border, weight=1.):
     activations, handles = {}, []
     def hook(name):
         def record(module, inputs, output):
@@ -49,7 +51,7 @@ def probe(model, values, sigma, labels, truth, border):
         anchored = model.correct_observations(clean, sigma, labels)
         anchor = clean_cfa_loss(anchored, clean, reference, truth, 2., border)
         noisy_corrected = model.correct_observations(values, sigma, labels)
-        structure = structure_loss(noisy_corrected, clean, sigma, border//2)
+        structure = structure_loss(noisy_corrected, clean, sigma, border//2, weight)
         parameters = [p for p in model.parameters() if p.requires_grad]
         components = {}
         for name, term in (('rgb', rgb), ('anchor', anchor), ('structure', structure)):
@@ -120,11 +122,16 @@ def run(root, output, plan_path, campaign):
                 model = NoisyMomentUNet(8)
                 if stage == 'initial':
                     load_reconstruction(model, torch.load(parent_path, weights_only=True)['state_dict'])
+                    if 'warm_start' in plan:
+                        ref = next(r for r in plan['warm_start']['models'] if r['seed'] == seed)
+                        initialize_continuation(root, model, torch.load(parent_path, weights_only=True)['state_dict'], ref)
                 else:
                     model.load_state_dict(torch.load(folder/'weights.pt', weights_only=True)['state_dict'], strict=True)
                 configure_trainable(model, 'cfa_front')
                 model.eval()
+                weight = secondary_weight(plan['config'], 1 if stage == 'initial' else plan['config']['steps'])
                 measured = dict(seed=seed, stage=stage, weights_sha256=digest(folder/'weights.pt'),
+                    secondary_weight=weight,
                     weights={n: statistics(p) for n, p in model.named_parameters() if p.requires_grad}, rows=[])
                 for index, case in cases:
                     expanded = extend_case(case, 320)
@@ -144,7 +151,7 @@ def run(root, output, plan_path, campaign):
                         # Phase zero is canonical; target therefore has no reflection.
                         if flags.any():
                             raise ValueError('Expected canonical phase')
-                        row = probe(model, values, sigma, labels, expanded/2, 144)
+                        row = probe(model, values, sigma, labels, expanded/2, 144, weight)
                         row.update(case_index=index, family=case['family'], noise_index=level,
                             noisy_sha256=frozen['noisy_sha256'], target_sha256=case['target_sha256'])
                         measured['rows'].append(row)

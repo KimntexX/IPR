@@ -6,12 +6,15 @@ Independent zero-mean noise with fixed correct variance has expected normalized
 squared projection1. Observed-signal sigma makes this only an approximate scale.
 This is a proposed supervision term, not an unbiasedness guarantee for inference.
 """
+import math
 import torch
 from torch.nn import functional as F
 
 
-def structure_loss(corrected, clean, sigma, border):
-    if (corrected.ndim != 4 or corrected.shape[0] == 0 or corrected.shape[1] != 4
+def structure_loss(corrected, clean, sigma, border, secondary_weight=1.):
+    if (not isinstance(secondary_weight, (int, float)) or isinstance(secondary_weight, bool)
+            or not math.isfinite(secondary_weight) or not 0 <= secondary_weight <= 1
+            or corrected.ndim != 4 or corrected.shape[0] == 0 or corrected.shape[1] != 4
             or clean.shape != corrected.shape or sigma.shape != corrected.shape
             or not isinstance(border, int) or isinstance(border, bool) or border < 0
             or min(corrected.shape[-2:]) < 2
@@ -45,4 +48,6 @@ def structure_loss(corrected, clean, sigma, border):
         denominator = torch.where(supported, energy, torch.ones_like(energy))
         terms.append(torch.where(supported, numerator/denominator, torch.zeros_like(numerator)))
     count = first.to(corrected.dtype)+second.to(corrected.dtype)
-    return ((terms[0]+terms[1])/count.clamp_min(1)).mean()
+    single = terms[0]
+    dual = (terms[0]+terms[1])/count.clamp_min(1)
+    return ((1-secondary_weight)*single+secondary_weight*dual).mean()

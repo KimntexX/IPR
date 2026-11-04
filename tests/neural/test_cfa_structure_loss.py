@@ -6,6 +6,24 @@ from cfa_structure_loss import structure_loss
 
 
 class CfaStructureLossTests(unittest.TestCase):
+    def test_continuous_transition_matches_single_projection_and_dual_endpoint(self):
+        torch.manual_seed(751)
+        clean = torch.rand(1, 4, 16, 16)
+        sigma = torch.full_like(clean, .02)
+        corrected = clean*.95
+        a = structure_loss(corrected, clean, sigma, 2, 0.)
+        b = structure_loss(corrected, clean, sigma, 2, 1.)
+        halfway = structure_loss(corrected, clean, sigma, 2, .5)
+        target = clean[:, :, 2:-2, 2:-2]
+        detail = target-target[:, :, :1, :1]
+        detail = detail-detail.mean(dim=(-2, -1), keepdim=True)
+        expected = (((corrected[:, :, 2:-2, 2:-2]-target)*detail).sum(dim=(-2, -1)).square()
+            /(detail.square()*sigma[:, :, 2:-2, 2:-2].square()).sum(dim=(-2, -1))).mean()
+        self.assertAlmostEqual(float(a), float(expected), places=4)
+        self.assertAlmostEqual(float(halfway), float((a+b)/2), places=4)
+        with self.assertRaises(ValueError):
+            structure_loss(corrected, clean, sigma, 2, -1)
+
     def test_two_noise_orthogonal_projections_keep_unit_noise_scale(self):
         torch.manual_seed(743)
         x = torch.arange(32, dtype=torch.float32)*(2*torch.pi/32)

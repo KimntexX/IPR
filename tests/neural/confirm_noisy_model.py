@@ -10,6 +10,7 @@ import time
 import torch
 
 from compare_reconstruction_objectives import confined, freeze_cases
+from continuation_policy import completed_training
 from diagnose_train_learnability import digest, save
 from edge_protected_noise import EdgeProtectedNoisyUNet
 from local_moment_unet import LocalMomentUNet
@@ -77,7 +78,7 @@ def prepare(root, data_plan, accepted, kind, folders, priors, output, edge_start
         if (proof['status'] != 'completed_synthetic_noise_pilot_not_photographic_qualification'
                 or proof['plan_sha256'] != digest(data_plan)
                 or digest(folder/'weights.pt') != proof['weights_sha256']
-                or proof['training_progress']['completed_optimizer_steps'] != 2048
+                or not completed_training(proof)
                 or any(proof['plan']['tools'].get(n) != digest(Path(__file__).with_name(n)) for n in FORWARD_TOOLS)):
             raise ValueError('Final fixed weights with current model required')
         refs.append(dict(seed=proof['seed'], folder=str(folder.resolve()),

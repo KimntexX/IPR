@@ -5,7 +5,8 @@ deux entraînements et les deux corpus classiques passent. Une supervision
 de structure réduit les échecs fins de 24 à 19/48 groupes forts, sans les
 résoudre. L'essai à deux projections échoue sur la stabilité à deux graines :
 la graine 73 reste presque à l'identité. La supervision simple reste la
-référence expérimentale. Aucune qualité
+référence expérimentale. Un essai de continuation appariée est prétesté :
+512 étapes de contrôle contre 512 étapes d'introduction progressive. Aucune qualité
 photographique validée, aucun moteur de production modifié ni nouveau jeu
 réservé ouvert.
 
@@ -5323,3 +5324,58 @@ contrainte depuis un correcteur qui débruite déjà, avec un contrôle au même
 budget supplémentaire, plutôt que relancer des graines jusqu'à obtenir une
 réussite. Ce protocole de transition reste à préparer ; aucun nouvel
 entraînement n'a été lancé à la clôture de ce diagnostic.
+
+### Continuation appariée depuis les modèles apprenants
+
+À la demande de l'utilisateur, le protocole suivant repart des deux modèles
+à supervision simple, qui débruitent déjà et gardent leur limite de 19/48
+groupes fins en échec. Les initialisations sont figées avant les nouveaux
+résultats : mêmes poids par graine dans les deux bras, références SHA-256,
+contrôle du plan d'origine et égalité du reconstructeur figé. Un mauvais
+tronc est refusé avant chargement. Aucun modèle n'est choisi après comparaison.
+
+| Élément | Contrôle | Introduction progressive |
+| --- | --- | --- |
+| Initialisation | Modèle à projection simple après 2 048 étapes | Strictement la même pour chaque graine |
+| Étapes supplémentaires | 512 | 512 |
+| Poids secondaire | 0 tout au long du stage | 0 à l'étape 1, progression linéaire jusqu'à 1 à l'étape 256, puis 1 |
+| Adam | Moments neufs, taux 0,00025 | Même réinitialisation et même taux |
+| Données | Rejeu exact des 512 premiers pas d'entraînement | Mêmes motifs, phases, centres, halos et bruits |
+| Autres termes et contraintes | Perte RGB, point fixe, poids structure 1, norme globale des gradients limitée à 1 | Identiques |
+
+Le terme de structure est une combinaison convexe continue entre sa
+projection simple et la moyenne à deux projections. Une seule implémentation
+est utilisée ; le poids est un paramètre de ce protocole d'apprentissage,
+pas un mode de compatibilité ni une option de production. Le contrôle permet
+de distinguer la nouvelle contrainte des effets d'un budget supplémentaire,
+du redémarrage d'Adam et d'un taux réduit. Il ne teste pas une continuation
+avec les anciens moments Adam.
+
+Le source dérivé conserve les contrôles historiques, indique son origine
+et ne remplace pas la mémoire initiale. Le stage compte 512 étapes et
+2 048 expositions ; la lignée du correcteur de bruit compte 2 560 étapes
+d'optimisation, hors préentraînement distinct du reconstructeur figé.
+Les validateurs exigent les deux compteurs et les références d'initialisation.
+Les points de reprise restent des checkpoints techniques tous les 64 pas,
+sans choix par score. La progression de poids dépend du pas restauré, pas
+du temps écoulé.
+
+Les deux bras sont entraînés avant d'examiner leurs résultats. La qualification
+connue passe désormais par les textures fines immédiatement après le
+développement protégé. Un échec fin consigne ce résultat et marque les corpus
+classiques comme non exécutés ; il ne les déclare pas positifs. Cette économie
+de calcul vise la limitation actuelle, sans modifier un seuil. La comparaison
+principale porte sur progressif contre contrôle au même budget, avec les mêmes
+4 032 observations fines. Une absence de résultat fin du contrôle rend cette
+comparaison incomplète et empêche le relais de confirmer sur du réservé.
+
+Les 34 tests ciblés passent : identité des données de préfixe, initialisation
+et tronc figé, poids de transition, budget cumulé, reprise exacte en cours
+de transition, ordre des bras avant évaluation et arrêt sur échec fin. Le
+prétest couvre huit étapes pour chaque paire graine/bras, avec une rampe
+comprimée à quatre étapes pour exercer ses deux extrémités ; ses poids sont
+jetés. Pic résident 407,27 Mio, privé échantillonné 1 083,57 Mio, sous les
+mêmes quotas de 1,25/2 Gio et seuil physique coopératif de 92 %.
+Preuve : [prétest de continuation](../raw/neural-warm-preflight-v001-20261104T120114Z.json).
+Les plans sont figés dans `paired-warm-plan-v002`. Aucun résultat de qualité
+de cette continuation n'est disponible au stade de cette préparation.

@@ -45,7 +45,8 @@ class ContextTrainingTests(unittest.TestCase):
         source = dict(freeze=dict(train_slots=slots, train_edge_events=edges, config=dict(side=128),
             phase_schedule_sha256=tensor_hash(torch.tensor([[*e['ids'], *e['phases']] for e in schedule]))))
         config = dict(steps=4, side=256, source_side=128, loss_border=112,
-            scale=2., accumulation=4, learning_rate=.001)
+            scale=2., accumulation=4, learning_rate=.001,
+            structure_schedule=dict(start=0., end=1., ramp_steps=3))
         context = dict(plan_sha256='fixed-context-plan', config=config, seed=71,
             parent_weights_sha256='parent', source_result_sha256='source')
         def model():
