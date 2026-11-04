@@ -215,6 +215,40 @@ void panoramas(const QDir &folder, const std::shared_ptr<CameraProfileEngine::Dc
     }
     check(waitFor([&] { return cache->statistics().reservedBytes == 0; }), "a panorama gives its memory back");
 
+    // Memory under pressure, the usual state of a busy machine: the cache admits nothing while
+    // another reservation is held, so a job that kept its own would wait for itself.
+    {
+        const auto pressured = [] {
+            SystemMemory::Snapshot memory = controlledMemory();
+            memory.availableBytes = 6ULL * 1024 * 1024 * 1024;
+            return memory;
+        };
+        auto busy = std::make_shared<ImageCacheController>(nullptr, pressured);
+        {
+            StackSession assembling(decoder, busy);
+            assembling.startPanorama(frames(folder, 3));
+            check(waitFor([&] { return !assembling.running(); }), "under pressure a panorama does not wait for itself");
+            check(assembling.hasResult(), "and reaches its result");
+        }
+        check(waitFor([&] { return busy->statistics().reservedBytes == 0; }), "and gives its memory back");
+
+        // Memory that never comes: the job gives up in time and says so, and holds nothing.
+        const auto starved = [] {
+            SystemMemory::Snapshot memory = controlledMemory();
+            memory.availableBytes = 1024ULL * 1024;
+            return memory;
+        };
+        auto empty = std::make_shared<ImageCacheController>(nullptr, starved);
+        {
+            StackSession assembling(decoder, empty);
+            assembling.setReservationPatience(300);
+            assembling.startPanorama(frames(folder, 3));
+            check(waitFor([&] { return !assembling.running(); }, 20000), "without memory a panorama does not wait for ever");
+            check(!assembling.hasResult() && assembling.status().contains(QStringLiteral("Mémoire")), "and says why");
+        }
+        check(waitFor([&] { return empty->statistics().reservedBytes == 0 && empty->statistics().waitingRequests == 0; }), "and leaves nothing behind");
+    }
+
     // No profile for this camera: no context, so no panorama, and the reason reaches the panel.
     StackSession noProfile([world](const QString &file, const std::function<bool()> &) {
         const int index = QFileInfo(file).baseName().remove(QStringLiteral("frame")).toInt();
