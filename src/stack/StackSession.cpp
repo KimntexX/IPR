@@ -9,6 +9,7 @@
 #include "SystemMemory.h"
 
 #include <QDir>
+#include <QElapsedTimer>
 #include <QFileInfo>
 #include <QScopeGuard>
 #include <QThread>
@@ -37,19 +38,26 @@ ColorPipeline::WorkingImage rendered(const cv::Mat &cameraRgb, const CameraProfi
 }
 
 // Memory set aside against the editor's images, until it is released. 0 with a reason when
-// refused or cancelled.
-quint64 reserve(ImageCacheController &cache, quint64 bytes, Tasks::Context &context, QString *refusal)
+// refused, cancelled or when the memory does not come in time: a job never waits for ever.
+quint64 reserve(ImageCacheController &cache, quint64 bytes, Tasks::Context &context, int patienceMs, QString *refusal)
 {
     auto cancelToken = std::make_shared<std::atomic_bool>(false);
     QFuture<ImageCacheController::Admission> waiting = cache.acquire(QString(), bytes, false, cancelToken);
+    QElapsedTimer waited;
+    waited.start();
+    bool tooLong = false;
     while (!waiting.isFinished()) {
         if (context.cancelled())
             cancelToken->store(true);
+        if (!tooLong && waited.elapsed() > patienceMs) {
+            tooLong = true;
+            cancelToken->store(true);
+        }
         QThread::msleep(20);
     }
     const ImageCacheController::Admission admission = waiting.result();
     if (!admission.reservation && refusal)
-        *refusal = admission.error;
+        *refusal = tooLong ? StackSession::tr("Mémoire insuffisante pour le moment : fermez d'autres applications, puis recommencez.") : admission.error;
     return admission.reservation;
 }
 
@@ -123,8 +131,8 @@ void StackSession::start(const QStringList &urls, const QString &reference)
     setStatus(tr("Empilement de %1 photos…").arg(files.size()));
     m_watcher.setFuture(m_tasks.submit<Outcome>(
         QStringLiteral("stack"), Tasks::Priority::Foreground,
-        [files, referenceIndex, decoder = m_decoder, cache = m_cache](Tasks::Context &context) {
-            return compute(context, files, referenceIndex, decoder, cache);
+        [files, referenceIndex, decoder = m_decoder, cache = m_cache, patience = m_reservationPatienceMs](Tasks::Context &context) {
+            return compute(context, files, referenceIndex, decoder, cache, patience);
         }).future);
 }
 
@@ -149,38 +157,39 @@ void StackSession::startPanorama(const QStringList &urls, const QString &project
     setStatus(tr("Assemblage de %1 photos en panorama…").arg(files.size()));
     m_watcher.setFuture(m_tasks.submit<Outcome>(
         QStringLiteral("stack"), Tasks::Priority::Foreground,
-        [files, chosen, keepEdges, decoder = m_decoder, cache = m_cache](Tasks::Context &context) {
-            return computePanorama(context, files, chosen, keepEdges, decoder, cache);
+        [files, chosen, keepEdges, decoder = m_decoder, cache = m_cache, patience = m_reservationPatienceMs](Tasks::Context &context) {
+            return computePanorama(context, files, chosen, keepEdges, decoder, cache, patience);
         }).future);
 }
 
 StackSession::Outcome StackSession::computePanorama(Tasks::Context &context, const QStringList &files, PanoramaGeometry::Projection projection, bool keepEdges,
-                                                    const Decoder &decoder, const std::shared_ptr<ImageCacheController> &cache)
+                                                    const Decoder &decoder, const std::shared_ptr<ImageCacheController> &cache, int patienceMs)
 {
     Outcome outcome;
     const auto stopped = [&context] { return context.cancelled(); };
-    std::vector<quint64> reservations;
+    quint64 reservation = 0;
     const auto release = qScopeGuard([&] {
-        if (cache)
-            for (const quint64 reservation : reservations)
-                cache->release(reservation);
+        if (cache && reservation)
+            cache->release(reservation);
     });
     PanoramaJob::Request request;
     if (cache) {
         QString refusal;
-        const quint64 reservation = reserve(*cache, SystemMemory::estimateDecodePeak(files.first()) + request.memoryBudgetBytes, context, &refusal);
+        reservation = reserve(*cache, SystemMemory::estimateDecodePeak(files.first()) + request.memoryBudgetBytes, context, patienceMs, &refusal);
         if (!reservation) {
             outcome.cancelled = context.cancelled();
             outcome.error = refusal.isEmpty() ? tr("Mémoire insuffisante pour le panorama.") : refusal;
             return outcome;
         }
-        reservations.push_back(reservation);
-        request.reserveCanvas = [&](quint64 bytes) {
+        // The decoding is over: its share gives way to the canvas's, in one reservation. Under
+        // pressure the cache admits nothing while another is held, this job's own included.
+        const quint64 bands = request.memoryBudgetBytes;
+        request.reserveCanvas = [&, bands](quint64 bytes) {
+            cache->release(reservation);
             QString canvasRefusal;
-            const quint64 canvas = reserve(*cache, bytes, context, &canvasRefusal);
-            if (!canvas)
+            reservation = reserve(*cache, bytes + bands, context, patienceMs, &canvasRefusal);
+            if (!reservation)
                 return canvasRefusal.isEmpty() ? tr("Mémoire insuffisante pour un panorama de cette taille.") : canvasRefusal;
-            reservations.push_back(canvas);
             return QString();
         };
     }
@@ -233,7 +242,7 @@ StackSession::Outcome StackSession::computePanorama(Tasks::Context &context, con
 }
 
 StackSession::Outcome StackSession::compute(Tasks::Context &context, const QStringList &files, int referenceIndex,
-                                            const Decoder &decoder, const std::shared_ptr<ImageCacheController> &cache)
+                                            const Decoder &decoder, const std::shared_ptr<ImageCacheController> &cache, int patienceMs)
 {
     Outcome outcome;
     const auto stopped = [&context] { return context.cancelled(); };
@@ -244,7 +253,7 @@ StackSession::Outcome StackSession::compute(Tasks::Context &context, const QStri
     });
     if (cache) {
         QString refusal;
-        reservation = reserve(*cache, SystemMemory::estimateDecodePeak(files.first()) + mergeBytes(), context, &refusal);
+        reservation = reserve(*cache, SystemMemory::estimateDecodePeak(files.first()) + mergeBytes(), context, patienceMs, &refusal);
         if (!reservation) {
             outcome.cancelled = context.cancelled();
             outcome.error = refusal.isEmpty() ? tr("Mémoire insuffisante pour l'empilement.") : refusal;

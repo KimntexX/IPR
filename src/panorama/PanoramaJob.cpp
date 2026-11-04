@@ -104,7 +104,8 @@ Result run(const Request &request)
         return result;
 
     int done = 0;
-    int total = request.frameCount * 2 + 2;
+    // Frames, pairs, the geometry, frames on the canvas, the seams, the first band.
+    int total = request.frameCount * 2 + request.frameCount * (request.frameCount - 1) / 2 + 3;
     const auto advance = [&] {
         if (request.progress)
             request.progress(++done, total);
@@ -194,6 +195,7 @@ Result run(const Request &request)
         for (int b = a + 1; b < request.frameCount; ++b) {
             if (stopped())
                 return result;
+            advance();
             if (features[size_t(a)].empty() || features[size_t(b)].empty())
                 continue;
             PanoramaGeometry::Pair pair;
@@ -333,6 +335,7 @@ Result run(const Request &request)
         result.error = QStringLiteral("Calcul des raccords impossible.");
         return result;
     }
+    advance();
     std::vector<PanoramaBlend::Layer> layers;
     const double narrowSigma = std::max(0.7, narrowSigmaPixels / cell), wideSigma = std::max(1.5, wideSigmaPixels / cell);
     for (size_t m = 0; m < views.size(); ++m)

@@ -67,6 +67,8 @@ public:
     Q_INVOKABLE void exportResult(const QUrl &target, const QString &format);
     Q_INVOKABLE QUrl suggestedExport(const QString &format) const;
     Q_INVOKABLE void discard();
+    // How long a job waits for its memory before it gives up and says so.
+    void setReservationPatience(int milliseconds) { m_reservationPatienceMs = milliseconds; }
 
 signals:
     void stateChanged();
@@ -102,9 +104,9 @@ private:
     };
 
     static Outcome compute(Tasks::Context &context, const QStringList &files, int referenceIndex, const Decoder &decoder,
-                           const std::shared_ptr<ImageCacheController> &cache);
+                           const std::shared_ptr<ImageCacheController> &cache, int patienceMs);
     static Outcome computePanorama(Tasks::Context &context, const QStringList &files, PanoramaGeometry::Projection projection, bool keepEdges,
-                                   const Decoder &decoder, const std::shared_ptr<ImageCacheController> &cache);
+                                   const Decoder &decoder, const std::shared_ptr<ImageCacheController> &cache, int patienceMs);
     static Export writeResult(const Result &result, const QString &target, const QString &format);
     void finished();
     void exportFinished();
@@ -125,6 +127,7 @@ private:
     double m_progress = 0.0;
     bool m_running = false;
     bool m_exporting = false;
+    int m_reservationPatienceMs = 120000;
 };
 
 #endif // IPR_STACK_STACKSESSION_H
