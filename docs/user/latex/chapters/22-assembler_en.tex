@@ -1,4 +1,4 @@
-% translation-source: docs/user/latex/chapters/22-assembler.tex; sha256: 62ef157b4554e0ab280e7e8872a1dc0f884d1e44a7ef2c5088b36261a7966a6c
+% translation-source: docs/user/latex/chapters/22-assembler.tex; sha256: e38ba4948ef049a0aa74ebaac1aeed7ad71ec8b03e81e2f13e266b42f8d92904
 \chapter{Assembling several photos}
 The \emph{Assemble} tab, at the top of the right panel, makes a new image from the
 photos ticked in the ribbon. The original photos do not change. The work runs in the
@@ -32,6 +32,27 @@ everywhere.
 \end{itemize}
 An existing file is never replaced: the name receives a number.
 
+\section{Assembling a panorama}
+Choose \emph{Panorama} at the top of the tab. Photos taken from the same place make one wide
+view, on one row, horizontal or vertical, or on several rows. Tick them in the ribbon, in any
+order, then click \emph{Assemble}.
+
+Let neighbouring photos overlap by a quarter to a third, and keep the same shooting settings.
+A photo that overlaps no other, or taken at another focal length, is left out, and the message
+says so.
+
+\begin{itemize}
+\item \emph{The bottom of the view} is what the panorama leans on: it stays level, and the
+crop rather takes from the top.
+\item \emph{Projection}: \emph{Automatic} chooses from the field covered. \emph{Flat} keeps
+lines straight over a narrow field, \emph{Cylindrical} suits a long sweep, \emph{Spherical} a
+field wide in both directions.
+\item \emph{Keep the whole surface} keeps the empty corners, to crop later in the Geometry
+tab. Otherwise the panorama is cropped to a full rectangle.
+\end{itemize}
+Hand-held, a close foreground moves from one photo to the next: the seams run where it shows
+least as far as they can, but turn around the camera rather than around yourself.
+
 \section{Photographing the Moon}
 A small subject on an empty background, like the Moon, gets one more treatment. The
 deformations of the atmosphere are corrected on the subject, and only the sharpest half
@@ -44,6 +65,8 @@ views brings most of the gain: the longer the series, the more good views to cho
 \item The capture settings must stay the same: stacking is not HDR.
 \item A near object shot hand-held may keep a slightly soft edge: it does not move like
 the background.
-\item The work needs about 400~MB of temporary disk per 32~Mpx photo.
+\item The work needs about 400~MB of temporary disk per 32~Mpx photo for a stack, and twice
+that for a panorama.
+\item A panorama does not warp its edges to fill the frame.
 \item A colour profile for the camera is required.
 \end{itemize}

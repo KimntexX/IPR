@@ -28,13 +28,29 @@ Item {
           note: qsTr("Lisible partout, avec le profil de la photo de référence appliqué.") }
     ]
     readonly property string format: formats[formatSelector.currentIndex].value
+    readonly property var modes: [
+        { label: qsTr("Empilement"), value: "stack",
+          note: qsTr("Réduit le bruit d'une série de la même scène, à la même exposition (lune, ciel nocturne, intérieur sombre).") },
+        { label: qsTr("Panorama"), value: "panorama",
+          note: qsTr("Assemble des photos prises du même endroit en une seule vue large : une rangée, horizontale ou verticale, ou plusieurs. Le bas de la vue reste de niveau.") }
+    ]
+    readonly property string mode: modes[modeSelector.currentIndex].value
+    readonly property var projections: [
+        { label: qsTr("Automatique"), value: "automatic" },
+        { label: qsTr("Cylindrique"), value: "cylindrical" },
+        { label: qsTr("Sphérique"), value: "spherical" },
+        { label: qsTr("Plane"), value: "rectilinear" }
+    ]
 
     function fileName(url) {
         return decodeURIComponent(String(url).split("/").pop())
     }
 
     function assemble() {
-        session.start(photos, photos[referenceSelector.currentIndex] || "")
+        if (mode === "panorama")
+            session.startPanorama(photos, projections[projectionSelector.currentIndex].value, keepEdgesCheck.checked)
+        else
+            session.start(photos, photos[referenceSelector.currentIndex] || "")
     }
 
     function exportTo(target) {
@@ -94,16 +110,17 @@ Item {
             SectionNote {
                 text: qsTr("Crée une nouvelle image à partir des photos sélectionnées dans le ruban. Calcul long, en tâche de fond ; les photos d'origine ne changent pas.")
             }
-            Label {
+            PreferenceComboBox {
+                id: modeSelector
+                objectName: "assembleModeSelector"
                 Layout.fillWidth: true
-                text: qsTr("Empilement")
-                font.bold: true
-                color: root.secondaryTextColor
-                padding: 0
-                background: Item { }
+                enabled: !root.busy
+                model: root.modes
+                textRole: "label"
             }
             SectionNote {
-                text: qsTr("Réduit le bruit d'une série de la même scène, à la même exposition (lune, ciel nocturne, intérieur sombre).")
+                objectName: "assembleModeNote"
+                text: root.modes[modeSelector.currentIndex].note
             }
             Label {
                 objectName: "assembleSelectionCount"
@@ -117,7 +134,7 @@ Item {
             }
             RowLayout {
                 Layout.fillWidth: true
-                visible: root.photos.length >= 2
+                visible: root.mode === "stack" && root.photos.length >= 2
                 Label {
                     text: qsTr("Référence")
                     color: root.secondaryTextColor
@@ -129,6 +146,31 @@ Item {
                     enabled: !root.busy
                     model: root.photos.map(root.fileName)
                 }
+            }
+            RowLayout {
+                Layout.fillWidth: true
+                visible: root.mode === "panorama"
+                Label {
+                    text: qsTr("Projection")
+                    color: root.secondaryTextColor
+                }
+                PreferenceComboBox {
+                    id: projectionSelector
+                    objectName: "assembleProjectionSelector"
+                    Layout.fillWidth: true
+                    enabled: !root.busy
+                    model: root.projections
+                    textRole: "label"
+                }
+            }
+            PreferenceCheckBox {
+                id: keepEdgesCheck
+                objectName: "assembleKeepEdges"
+                Layout.fillWidth: true
+                visible: root.mode === "panorama"
+                enabled: !root.busy
+                text: qsTr("Garder toute la surface (bords vides à recadrer)")
+                textColor: root.textColor
             }
             PreferenceButton {
                 objectName: "assembleStartButton"
@@ -210,7 +252,7 @@ Item {
     FileDialog {
         id: exportDialog
         objectName: "assembleExportDialog"
-        title: qsTr("Exporter l'empilement")
+        title: qsTr("Exporter l'image assemblée")
         fileMode: FileDialog.SaveFile
         // Existing names are numbered by the exporter, never replaced.
         options: FileDialog.DontConfirmOverwrite
