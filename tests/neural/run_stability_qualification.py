@@ -8,6 +8,7 @@ import re
 import subprocess
 import sys
 import time
+from campaign_artifacts import campaign_models
 
 
 def eligible(proof):
@@ -52,10 +53,8 @@ def run(root, output, campaign, plan, prefix):
         trained = json.loads((campaign/'campaign.json').read_text(encoding='utf-8'))
         if trained.get('status') != 'completed_both_seeds':
             raise RuntimeError('Training campaign incomplete: '+trained.get('status', 'missing'))
-        models = [campaign/f'seed{seed}-attempt01' for seed in (71, 73)]
-        # This explicit first-attempt contract refuses accidental score-based retry selection.
-        if any(not (p/'weights.pt').exists() for p in models):
-            raise RuntimeError('Expected first-attempt final checkpoints missing')
+        models = campaign_models(campaign)
+        state['resolved_model_folders'] = [str(p) for p in models]
         protected = base/(prefix+'-protected-v001')
         command('prepare_development', 'run_edge_protected_probe.py', '--prepare', '--data-plan', plan,
             '--models', *models, '--output', base/(prefix+'-protected-plan-v001'))

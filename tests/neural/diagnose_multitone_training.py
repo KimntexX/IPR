@@ -10,6 +10,7 @@ import torch
 from torch.nn import functional as F
 
 from bayer_canonical import canonicalize
+from campaign_artifacts import campaign_models
 from context_data import extend_texture, extend_observation
 from diagnose_train_learnability import digest, save
 from edge_protected_noise import EdgeProtectedNoisyUNet, edge_confidence
@@ -72,8 +73,9 @@ def run(root, output, plan_path, previous_campaign, campaign):
             torch.set_num_interop_threads(1)
             torch.use_deterministic_algorithms(True)
             for variant, model_campaign in (('previous', previous_campaign), ('current', campaign)):
+                folders = dict(zip((71, 73), campaign_models(model_campaign)))
                 for seed in (71, 73):
-                    folder = model_campaign/f'seed{seed}-attempt01'
+                    folder = folders[seed]
                     proof = json.loads((folder/'result.json').read_text(encoding='utf-8'))
                     weights = folder/'weights.pt'
                     if digest(weights) != proof['weights_sha256']:

@@ -11,6 +11,7 @@ import sys
 import time
 
 from run_stability_qualification import write
+from campaign_artifacts import campaign_models
 
 
 def next_action(progress):
@@ -105,7 +106,7 @@ def run(root, output, qualification, data_plan, campaign, prefix, previous_fine,
             state['status'] = 'completed_known_failure_diagnosis_reserved_unopened'
             return state
         # Inputs, thresholds and both final weights remain frozen before opening this cohort.
-        models = [campaign/f'seed{seed}-attempt01' for seed in (71, 73)]
+        models = campaign_models(campaign)
         classic_plan = base/(prefix+'-independent-plan-v001')
         classic = base/(prefix+'-independent-v001')
         command('prepare_independent_classic', 'confirm_noisy_model.py', '--prepare', '--data-plan', data_plan,

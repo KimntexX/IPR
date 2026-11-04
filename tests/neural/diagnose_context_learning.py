@@ -11,6 +11,7 @@ from clean_cfa_loss import clean_cfa_loss
 from continuation_policy import secondary_weight
 from continuation_initialization import initialize_continuation
 from cfa_structure_loss import structure_loss
+from campaign_artifacts import campaign_models
 from context_data import extend_case, extend_observation, crop_centre
 from diagnose_train_learnability import digest, save
 from joint_bayer_unet import sample_rgb, bilinear
@@ -99,6 +100,7 @@ def run(root, output, plan_path, campaign):
         diagnostic_sha256=digest(Path(__file__)),
         protocol='Both initial/final seeds; first consulted example per mixed family, phase 0, two positive noises; no updates or reserved data.', models=[])
     lookup = {(r['case_index'], r['phase'], r['noise_index']): r for r in plan['observations']}
+    folders = dict(zip((71, 73), campaign_models(campaign)))
     cases, families = [], set()
     for index, case in enumerate(plan['mixed']):
         if case['family'] not in families:
@@ -109,7 +111,7 @@ def run(root, output, plan_path, campaign):
         torch.set_num_interop_threads(1)
         torch.use_deterministic_algorithms(True)
         for seed in (71, 73):
-            folder = campaign/f'seed{seed}-attempt01'
+            folder = folders[seed]
             proof = json.loads((folder/'result.json').read_text(encoding='utf-8'))
             if proof['plan_sha256'] != digest(plan_path) or proof['weights_sha256'] != digest(folder/'weights.pt'):
                 raise ValueError('Checkpoint provenance differs')

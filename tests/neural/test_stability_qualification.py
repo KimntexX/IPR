@@ -32,7 +32,7 @@ class StabilityQualificationTests(unittest.TestCase):
                     folder.mkdir()
                     (folder/'result.json').write_text(json.dumps(dict(status='completed_fine', pilot_gates_passed=False)))
                 return mock.Mock(returncode=0)
-            with mock.patch('run_stability_qualification.subprocess.run', side_effect=execute):
+            with mock.patch('run_stability_qualification.campaign_models', return_value=[campaign/f'seed{s}-attempt01' for s in (71, 73)]), mock.patch('run_stability_qualification.subprocess.run', side_effect=execute):
                 result = run(root, base/'output', campaign, base/'plan.json', 'candidate')
             self.assertEqual(result['status'], 'completed_known_regressions_failed_reserved_unopened')
             self.assertEqual([r['name'] for r in result['regressions']], ['fine'])
@@ -60,7 +60,7 @@ class StabilityQualificationTests(unittest.TestCase):
                         status='completed_fixed_edge_protection_probe_not_photographic_qualification',
                         pilot_gates_passed=False)))
                 return mock.Mock(returncode=0)
-            with mock.patch('run_stability_qualification.subprocess.run', side_effect=execute):
+            with mock.patch('run_stability_qualification.campaign_models', return_value=[campaign/f'seed{s}-attempt01' for s in (71, 73)]), mock.patch('run_stability_qualification.subprocess.run', side_effect=execute):
                 result = run(root, base/'test-output', campaign, base/'plan.json', 'stability')
             self.assertEqual(result['status'], 'stopped_on_development_failure')
             self.assertEqual(len(calls), 2)

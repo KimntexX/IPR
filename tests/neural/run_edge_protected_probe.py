@@ -18,7 +18,7 @@ from memory_budget import MemoryGuard, BudgetExceeded
 from run_noisy_moment_pilot import TOOLS, evaluate, variant_summary, runtime_versions
 
 
-PROBE_TOOLS = tuple(dict.fromkeys(TOOLS+('run_edge_protected_probe.py', 'edge_protected_noise.py')))
+PROBE_TOOLS = tuple(dict.fromkeys(TOOLS+('run_edge_protected_probe.py', 'edge_protected_noise.py', 'campaign_artifacts.py')))
 
 
 def prepare(root, data_plan, folders, output):

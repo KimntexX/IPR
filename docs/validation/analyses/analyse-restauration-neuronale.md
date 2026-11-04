@@ -5379,3 +5379,35 @@ mêmes quotas de 1,25/2 Gio et seuil physique coopératif de 92 %.
 Preuve : [prétest de continuation](../raw/neural-warm-preflight-v001-20261104T120114Z.json).
 Les plans sont figés dans `paired-warm-plan-v002`. Aucun résultat de qualité
 de cette continuation n'est disponible au stade de cette préparation.
+
+### Arrêt technique du contrôleur et reprise de l'évaluation
+
+Les quatre entraînements terminent leurs stages de 512 étapes et passent
+le développement non protégé. Le contrôle est mesuré sur les textures fines :
+il garde 19/48 groupes forts en échec. La comparaison avec le bras progressif
+n'est toutefois pas encore complète à ce point.
+
+La graine 73 progressive a été interrompue par le seuil physique de mémoire
+de 92 %. Le contrôleur d'entraînement a conservé son checkpoint au pas 192,
+puis repris le même stage jusqu'à 512 dans un second dossier technique.
+Le contrôleur de qualification ne cherchait que les dossiers `attempt01` :
+il a refusé cette reprise pourtant terminée. Cet arrêt est un défaut
+d'orchestration, pas un verdict négatif sur le modèle progressif.
+
+Le résolveur partagé `campaign_artifacts.py` suit désormais la lignée
+déclarée dans `campaign.json`. Chaque arrêt précédant la fin doit être un
+arrêt mémoire ; les empreintes des résultats, du checkpoint repris et des
+poids finaux sont contrôlées, ainsi que le plan, le pas restauré, les budgets
+et le confinement des chemins. Un redémarrage après un résultat complet
+est refusé, quel que soit son score. Le résolveur ne sélectionne jamais
+selon la qualité, et accepte donc aussi un résultat final négatif à évaluer.
+La qualification et les diagnostics utilisent tous ce même contrat.
+
+La correction est couverte par 15 tests ciblés, dont corruption de checkpoint,
+mauvaise référence de reprise, poids modifiés, tentative de reprise après
+un résultat complet et absence de réentraînement pendant la récupération.
+`recover_continuation_evaluation.py` reprend seulement les mesures, avec les
+poids scellés et les mêmes critères. L'échec du contrôleur initial et ses
+JSON restent conservés ; les sorties récupérées utilisent un nouveau préfixe.
+L'admission attend moins de 85 % de RAM utilisée avant le chargement du
+processus, tandis que le seuil physique d'exécution reste à 92 %.
