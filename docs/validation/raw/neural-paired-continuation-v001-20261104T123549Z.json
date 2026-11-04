@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "started_at_utc": "2026-11-04T12:05:47.839934+00:00",
+  "script_sha256": "bc20abec05249329704b178c1f3ffb65d8788b8014f62f034b7766c54197dbed",
+  "status": "stopped_on_error",
+  "stages": [
+    {
+      "name": "train_control",
+      "started_at_utc": "2026-11-04T12:05:47.842362+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\run_noisy_campaign.py",
+        "--plan",
+        "build-patch_neural_restoration\\paired-warm-plan-v002\\control\\plan.json",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\continuation-control-campaign-v001",
+        "--until",
+        "2026-11-04T14:05:47.840855+00:00"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-04T12:14:57.159906+00:00"
+    },
+    {
+      "name": "train_progressive",
+      "started_at_utc": "2026-11-04T12:14:57.170763+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\run_noisy_campaign.py",
+        "--plan",
+        "build-patch_neural_restoration\\paired-warm-plan-v002\\progressive\\plan.json",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\continuation-progressive-campaign-v001",
+        "--until",
+        "2026-11-04T14:05:47.840855+00:00"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-04T12:25:15.877791+00:00"
+    },
+    {
+      "name": "qualify_control",
+      "started_at_utc": "2026-11-04T12:25:15.886530+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\run_stability_qualification.py",
+        "--campaign",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\continuation-control-campaign-v001",
+        "--data-plan",
+        "build-patch_neural_restoration\\paired-warm-plan-v002\\control\\plan.json",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\continuation-control-qualification-v001",
+        "--prefix",
+        "continuation-control"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-04T12:35:49.271647+00:00"
+    },
+    {
+      "name": "qualify_progressive",
+      "started_at_utc": "2026-11-04T12:35:49.280448+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\run_stability_qualification.py",
+        "--campaign",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\continuation-progressive-campaign-v001",
+        "--data-plan",
+        "build-patch_neural_restoration\\paired-warm-plan-v002\\progressive\\plan.json",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\continuation-progressive-qualification-v001",
+        "--prefix",
+        "continuation-progressive"
+      ],
+      "returncode": 1,
+      "finished_at_utc": "2026-11-04T12:35:49.379114+00:00"
+    }
+  ],
+  "policy": "Both arms and seeds predeclared, both trainings before evaluation.512additional steps, same data, no selection. Fine-first qualification; control failure remains visible.",
+  "plans_sha256": {
+    "control": "ecbdc7870d23cfdec309408f8541d2733b5be7d8b06ca08d63473ec40903799a",
+    "progressive": "08fa05a4ea8b95182099c82ceda20fe8d8acb9c625845681c643f4f48d4e5ec8"
+  },
+  "qualification": {
+    "control": {
+      "status": "completed_known_regressions_failed_reserved_unopened",
+      "regressions": [
+        {
+          "name": "fine",
+          "passed": false,
+          "result": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\continuation-control-fine-v001\\result.json",
+          "sha256": "1f90384dd90e90bb64c5d346a6ef3b6ada5e34ebe2f6c66d233349915343166c"
+        }
+      ]
+    }
+  },
+  "error": "Failed execution: qualify_progressive",
+  "finished_at_utc": "2026-11-04T12:35:49.380198+00:00"
+}

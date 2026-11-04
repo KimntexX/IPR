@@ -1,12 +1,15 @@
 # Restauration neuronale — qualification du corpus
 
-**État au 4 novembre 2026, matin :** les gradients limités stabilisent les
+**État au 4 novembre 2026, soir :** les gradients limités stabilisent les
 deux entraînements et les deux corpus classiques passent. Une supervision
 de structure réduit les échecs fins de 24 à 19/48 groupes forts, sans les
 résoudre. L'essai à deux projections échoue sur la stabilité à deux graines :
 la graine 73 reste presque à l'identité. La supervision simple reste la
-référence expérimentale. Un essai de continuation appariée est prétesté :
-512 étapes de contrôle contre 512 étapes d'introduction progressive. Aucune qualité
+référence expérimentale. Un essai de continuation appariée a été mesuré :
+512 étapes de contrôle contre 512 étapes d'introduction progressive. Le progressif
+termine à 17/48 échecs contre 19/48 pour le contrôle, avec un pire transfert
+encore insuffisant. Une sonde de corrélation CFA apporte une piste d'entrée
+statistique, sans nouvel entraînement à ce stade. Aucune qualité
 photographique validée, aucun moteur de production modifié ni nouveau jeu
 réservé ouvert.
 
@@ -5411,3 +5414,65 @@ poids scellés et les mêmes critères. L'échec du contrôleur initial et ses
 JSON restent conservés ; les sorties récupérées utilisent un nouveau préfixe.
 L'admission attend moins de 85 % de RAM utilisée avant le chargement du
 processus, tandis que le seuil physique d'exécution reste à 92 %.
+
+### Verdict de la continuation et changement de piste
+
+La récupération de l'évaluation est terminée. Les deux graines progressives
+passent le développement protégé : le démarrage depuis des poids qui
+débruitent déjà évite ici le résultat presque identitaire du démarrage à
+froid. Le verdict fin reste négatif : **17/48 groupes forts en échec contre
+19/48 pour le contrôle au même budget**. Les deux groupes gagnés concernent
+la graine 71 à bruit fort (neuf échecs deviennent sept). La graine 73 garde
+neuf échecs à bruit fort. Le pire transfert vaut 0,553 pour le progressif,
+contre 0,568 pour le contrôle et 0,653 pour la référence initiale à
+supervision simple.
+
+L'erreur RGB fine progressif/contrôle vaut environ 1,0011 et 1,0050 pour
+la graine 71 aux deux bruits, puis 1,0011 et 1,0128 pour la graine 73.
+Ce gain de deux groupes n'est donc ni une résolution de la limite ni un
+progrès uniforme entre graines. Les corpus classiques suivants sont
+explicitement non exécutés après l'échec fin ; aucun jeu réservé n'est ouvert.
+La poursuite ne multipliera pas les durées de rampe pour chercher un score
+favorable. Preuves : [contrôle fin](../raw/neural-fine-regression-v001-20261104T122915Z.json),
+[progressif fin](../raw/neural-fine-regression-v001-20261104T125258Z.json),
+[récupération et comparaison appariée](../raw/neural-continuation-recovery-v001-20261104T125827Z.json),
+[décomposition des sorties](../raw/neural-fine-trace-v001-20261104T125756Z.json).
+
+### Sonde observationnelle de corrélation CFA
+
+La piste suivante évalue l'information disponible pour distinguer motif et
+bruit avant de modifier le réseau. Pour chaque plan physique, on calcule
+des différences centrales horizontales et verticales. Leurs produits à
+décalages un et deux sont moyennés sur des fenêtres de 9 et 17 cellules.
+Au décalage deux, les deux différences partagent le pixel central avec
+signes opposés : on ajoute sa variance estimée pour compenser la covariance
+du bruit indépendant. Les produits sont normalisés par la variance locale
+des différences. Le calcul ne lit que l'observation et son sigma estimé.
+Les sorties ne sont pas des probabilités ni un détecteur calibré.
+
+La sonde reprend les 1 728 observations fines positives déjà connues, une
+seule fois chacune, sans duplication par graine de modèle. Chaque motif est
+comparé à un placebo constant par plan, de même moyenne, avec les mêmes
+tirages gaussiens et la même loi de variance. La cible propre ne sert qu'à
+construire les étiquettes et le placebo de l'audit. Trente-deux champs plats
+historiques ajoutent un contrôle des niveaux sombres. Aucun réseau n'est
+entraîné et aucun seuil n'est ajusté sur ces observations.
+
+Sur les groupes forts, l'aire sous la courbe ROC atteint 1 avec le support
+17 dans ce banc procédural. À bruit fort, les très faibles motifs bleus
+chromatiques restent peu séparables (AUC 0,537), tandis que les motifs
+achromatiques faibles rouges/bleus atteignent environ 0,758/0,759. La
+protection locale actuelle est proche de 0,502 sur ces groupes faibles.
+Ces valeurs caractérisent la séparation des motifs périodiques et de leurs
+placebos, pas la détection générale de texture naturelle ni le débruitage.
+Les répétitions de contenu et les corrélations spatiales interdisent d'en
+déduire ici un intervalle de confiance indépendant.
+
+La mesure dure environ 60 secondes sous quatre threads, avec un pic résident
+de 230,3 Mio. Les tests vérifient notamment la compensation de covariance
+sous bruit indépendant hétéroscédastique, les valeurs analytiques d'une
+rampe, la transposition, l'échelle et les ex æquo de l'AUC. Preuve :
+[sonde de corrélation CFA](../raw/neural-correlation-cue-v001-20261104T215824Z.json).
+La prochaine expérience envisagée fournit ces mesures au réseau ; leur
+séparation statistique ne prouve pas encore qu'il saura mieux restaurer
+les motifs. Aucun nouvel entraînement n'a été lancé lors de ce bilan.
