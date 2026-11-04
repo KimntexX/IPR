@@ -169,6 +169,73 @@ void failing(const QDir &folder)
     check(!broken.hasResult() && broken.status().contains(QStringLiteral("illisible")), "with the decoder's reason");
 }
 
+void panoramas(const QDir &folder, const std::shared_ptr<CameraProfileEngine::DcpWorkingContext> &context)
+{
+    // Views along one scene, a third of each shared with the next.
+    const cv::Mat world = StackFixture::scene(cv::Size(1500, 420));
+    const auto decoder = [world, context](const QString &file, const std::function<bool()> &) {
+        const int index = QFileInfo(file).baseName().remove(QStringLiteral("frame")).toInt();
+        StackSession::Decoded decoded;
+        decoded.cameraRgb = world(cv::Rect(index * 430, 0, 640, 420)).clone();
+        decoded.context = context;
+        decoded.metadata.cameraMake = QStringLiteral("Canon");
+        decoded.metadata.cameraModel = QStringLiteral("EOS R6 Mark III");
+        return decoded;
+    };
+    auto cache = std::make_shared<ImageCacheController>(nullptr, controlledMemory);
+    {
+        StackSession assembling(decoder, cache);
+        assembling.startPanorama({});
+        check(!assembling.running() && !assembling.hasResult() && assembling.status().contains(QStringLiteral("deux")), "a panorama asks for two photos");
+        assembling.startPanorama(frames(folder, 3), QStringLiteral("cylindrical"));
+        check(assembling.running(), "a panorama starts");
+        check(waitFor([&] { return !assembling.running(); }), "a panorama ends");
+        check(assembling.hasResult(), "with a result");
+        check(assembling.status().contains(QStringLiteral("Panorama de 3 photos")) && assembling.status().contains(QStringLiteral("cylindrique")), "and says what it made");
+        check(assembling.preview().isLocalFile(), "with a preview");
+        const QUrl suggested = assembling.suggestedExport(QStringLiteral("DNG"));
+        check(suggested.toLocalFile().contains(QStringLiteral("-panorama.")), "named as a panorama");
+
+        const QUrl dng = QUrl::fromLocalFile(folder.filePath(QStringLiteral("panorama.dng")));
+        assembling.exportResult(dng, QStringLiteral("DNG"));
+        check(waitFor([&] { return !assembling.exporting(); }), "its export ends");
+        check(QFile::exists(dng.toLocalFile()) && assembling.exportedFile() == dng, "the DNG is written");
+        CameraDng::Content read;
+        QString error;
+        check(CameraDng::read(dng.toLocalFile(), read, &error) && read.provenance.contains(QStringLiteral("panorama")), "and tells its origin");
+        const int cropped = read.cameraRgb.cols;
+
+        assembling.startPanorama(frames(folder, 3), QStringLiteral("automatic"), true);
+        check(waitFor([&] { return !assembling.running(); }), "a panorama with its edges ends");
+        check(assembling.hasResult(), "with a result too");
+        const QUrl whole = QUrl::fromLocalFile(folder.filePath(QStringLiteral("whole.dng")));
+        assembling.exportResult(whole, QStringLiteral("DNG"));
+        check(waitFor([&] { return !assembling.exporting(); }), "its export ends too");
+        check(CameraDng::read(whole.toLocalFile(), read, &error) && read.cameraRgb.cols >= cropped, "keeping the edges keeps at least as much");
+    }
+    check(waitFor([&] { return cache->statistics().reservedBytes == 0; }), "a panorama gives its memory back");
+
+    // No profile for this camera: no context, so no panorama, and the reason reaches the panel.
+    StackSession noProfile([world](const QString &file, const std::function<bool()> &) {
+        const int index = QFileInfo(file).baseName().remove(QStringLiteral("frame")).toInt();
+        StackSession::Decoded decoded;
+        decoded.cameraRgb = world(cv::Rect(index * 430, 0, 640, 420)).clone();
+        return decoded;
+    });
+    noProfile.startPanorama(frames(folder, 3));
+    check(waitFor([&] { return !noProfile.running(); }), "a panorama without a profile ends");
+    check(!noProfile.hasResult() && !noProfile.status().isEmpty(), "and says why");
+
+    // Cancelled at once: no result, and the session stays usable.
+    StackSession cancelled(decoder);
+    cancelled.startPanorama(frames(folder, 3));
+    cancelled.cancel();
+    check(waitFor([&] { return !cancelled.running(); }), "a cancelled panorama ends");
+    cancelled.startPanorama(frames(folder, 3));
+    check(waitFor([&] { return !cancelled.running(); }), "and another can follow");
+    check(cancelled.hasResult(), "to its end");
+}
+
 void reserving(const QDir &folder, const std::shared_ptr<CameraProfileEngine::DcpWorkingContext> &context)
 {
     // The memory is reserved during the job, and given back on every path.
@@ -205,6 +272,7 @@ int main(int argc, char **argv)
     cancelling(folder, context);
     failing(folder);
     reserving(folder, context);
+    panoramas(folder, context);
     if (passed)
         std::cout << "stack session: ok\n";
     return passed ? 0 : 1;

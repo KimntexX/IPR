@@ -3,6 +3,7 @@
 
 #include "CameraProfileEngine.h"
 #include "ImageMetadata.h"
+#include "PanoramaGeometry.h"
 #include "StackJob.h"
 #include "TaskRunner.h"
 
@@ -18,8 +19,9 @@
 
 class ImageCacheController;
 
-// One stack at a time for the panel: runs it in the background, shows its result and
-// exports it on request. The result stays in memory until it is replaced or discarded.
+// One assembly at a time for the panel, a stack or a panorama: runs it in the background,
+// shows its result and exports it on request. The result stays in memory until it is
+// replaced or discarded.
 class StackSession final : public QObject
 {
     Q_OBJECT
@@ -56,6 +58,10 @@ public:
 
     // urls: the frames, at least two; reference: one of them, the middle one when empty.
     Q_INVOKABLE void start(const QStringList &urls, const QString &reference = {});
+    // urls: the frames, at least two, in any order. projection: "automatic", "cylindrical",
+    // "spherical" or "rectilinear". keepEdges: the whole canvas, empty corners included,
+    // instead of a rectangle full of pixels.
+    Q_INVOKABLE void startPanorama(const QStringList &urls, const QString &projection = {}, bool keepEdges = false);
     Q_INVOKABLE void cancel();
     // format: "DNG" (the camera signal, editable) or "TIFF" (rendered by the profile).
     Q_INVOKABLE void exportResult(const QUrl &target, const QString &format);
@@ -77,6 +83,9 @@ private:
         int leftOut = 0;
         double areaKept = 0.0;
         int sharpestViews = 0;   // of the turbulence pass, 0 when none ran
+        bool panorama = false;
+        int rows = 0;            // of a panorama
+        QString projection;      // of a panorama, as shown to the user
     };
     struct Outcome
     {
@@ -94,10 +103,13 @@ private:
 
     static Outcome compute(Tasks::Context &context, const QStringList &files, int referenceIndex, const Decoder &decoder,
                            const std::shared_ptr<ImageCacheController> &cache);
+    static Outcome computePanorama(Tasks::Context &context, const QStringList &files, PanoramaGeometry::Projection projection, bool keepEdges,
+                                   const Decoder &decoder, const std::shared_ptr<ImageCacheController> &cache);
     static Export writeResult(const Result &result, const QString &target, const QString &format);
     void finished();
     void exportFinished();
     void setStatus(const QString &status);
+    QStringList localFiles(const QStringList &urls) const;
 
     Decoder m_decoder;
     std::shared_ptr<ImageCacheController> m_cache;

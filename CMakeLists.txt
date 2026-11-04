@@ -34,6 +34,7 @@ set(IPR_INCLUDE_DIRECTORIES
     "${IPR_SOURCE_ROOT}/providers"
     "${IPR_SOURCE_ROOT}/raw"
     "${IPR_SOURCE_ROOT}/stack"
+    "${IPR_SOURCE_ROOT}/panorama"
     "${IPR_SOURCE_ROOT}/tasks"
 )
 
@@ -91,6 +92,16 @@ set(IPR_ENGINE_SOURCES
     src/core/ColorAdjustments.cpp
     src/core/ColorGrading.h
     src/core/ColorGrading.cpp
+    src/stack/FrameSpool.h
+    src/stack/FrameSpool.cpp
+    src/panorama/PanoramaFeatures.h
+    src/panorama/PanoramaFeatures.cpp
+    src/panorama/PanoramaGeometry.h
+    src/panorama/PanoramaGeometry.cpp
+    src/panorama/PanoramaBlend.h
+    src/panorama/PanoramaBlend.cpp
+    src/panorama/PanoramaJob.h
+    src/panorama/PanoramaJob.cpp
     src/stack/StackAlignment.h
     src/stack/StackAlignment.cpp
     src/stack/StackMerge.h
@@ -386,6 +397,13 @@ if(BUILD_TESTING)
     endif()
     ipr_add_test(cameraDngTests tests/camera_dng_test.cpp)
     set_tests_properties(cameraDngTests PROPERTIES LABELS "unit;stack;export" TIMEOUT 60)
+    add_executable(iprPanoramaAudit tests/panorama_audit.cpp)
+    target_link_libraries(iprPanoramaAudit PRIVATE iprEngine)
+    if(WIN32)
+        target_link_libraries(iprPanoramaAudit PRIVATE psapi)
+    endif()
+    ipr_add_test(panoramaTests tests/panorama_test.cpp)
+    set_tests_properties(panoramaTests PROPERTIES LABELS "unit;panorama" TIMEOUT 180)
     ipr_add_test(stackSessionTests tests/stack_session_test.cpp)
     set_tests_properties(stackSessionTests PROPERTIES LABELS "unit;stack" TIMEOUT 180)
     ipr_add_test(stackTests tests/stack_test.cpp)
