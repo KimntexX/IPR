@@ -59,9 +59,9 @@ public:
     // urls: the frames, at least two; reference: one of them, the middle one when empty.
     Q_INVOKABLE void start(const QStringList &urls, const QString &reference = {});
     // urls: the frames, at least two, in any order. projection: "automatic", "cylindrical",
-    // "spherical" or "rectilinear". keepEdges: the whole canvas, empty corners included,
-    // instead of a rectangle full of pixels.
-    Q_INVOKABLE void startPanorama(const QStringList &urls, const QString &projection = {}, bool keepEdges = false);
+    // "spherical" or "rectilinear". edges: "crop" to a rectangle full of real pixels, "keep"
+    // the whole canvas with its empty corners, or "fill" them with invented pixels.
+    Q_INVOKABLE void startPanorama(const QStringList &urls, const QString &projection = {}, const QString &edges = {});
     Q_INVOKABLE void cancel();
     // format: "DNG" (the camera signal, editable) or "TIFF" (rendered by the profile).
     Q_INVOKABLE void exportResult(const QUrl &target, const QString &format);
@@ -88,6 +88,7 @@ private:
         bool panorama = false;
         int rows = 0;            // of a panorama
         QString projection;      // of a panorama, as shown to the user
+        double filledShare = 0.0; // of a panorama, the invented part
     };
     struct Outcome
     {
@@ -105,7 +106,7 @@ private:
 
     static Outcome compute(Tasks::Context &context, const QStringList &files, int referenceIndex, const Decoder &decoder,
                            const std::shared_ptr<ImageCacheController> &cache, int patienceMs);
-    static Outcome computePanorama(Tasks::Context &context, const QStringList &files, PanoramaGeometry::Projection projection, bool keepEdges,
+    static Outcome computePanorama(Tasks::Context &context, const QStringList &files, PanoramaGeometry::Projection projection, const QString &edges,
                                    const Decoder &decoder, const std::shared_ptr<ImageCacheController> &cache, int patienceMs);
     static Export writeResult(const Result &result, const QString &target, const QString &format);
     void finished();

@@ -25,13 +25,20 @@ struct Frame
     QString error;
 };
 
+// What becomes of the canvas's empty corners.
+enum class Edges {
+    Crop,  // a rectangle full of real pixels, low in the view
+    Keep,  // the whole canvas, its corners empty
+    Fill   // the whole canvas, its corners invented from the rest of the image
+};
+
 struct Request
 {
     int frameCount = 0;
     // Called once per index, one at a time, on the job's thread.
     std::function<Frame(int index)> frame;
     PanoramaGeometry::Projection projection = PanoramaGeometry::Projection::Automatic;
-    bool cropToCovered = true;              // a rectangle full of pixels, low in the view; else the whole canvas
+    Edges edges = Edges::Crop;
     QString scratchRoot;                    // the system's temporary folder when empty
     quint64 memoryBudgetBytes = quint64(1) << 30; // of the bands held at once
     quint64 minimumFreeDiskBytes = quint64(2) << 30;
@@ -70,6 +77,7 @@ struct Result
     cv::Size canvas;
     cv::Rect kept;                         // of the canvas
     double coveredShare = 0.0;             // of the canvas that holds pixels
+    double filledShare = 0.0;              // of the result that is invented
     std::vector<FrameReport> frames;
     std::vector<PairReport> pairs;
     int usedFrames = 0;

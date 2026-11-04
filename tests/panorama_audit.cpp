@@ -4,6 +4,7 @@
 #include "CameraProfileEngine.h"
 #include "CameraSignal.h"
 #include "ColorPipeline.h"
+#include "PanoramaFill.h"
 #include "PanoramaJob.h"
 #include "RawDecoder.h"
 
@@ -19,6 +20,7 @@
 #include <QJsonObject>
 #include <QProcess>
 #include <QUuid>
+#include <opencv2/imgproc.hpp>
 
 #include <iostream>
 #include <vector>
@@ -131,6 +133,7 @@ int main(int argc, char **argv)
     const QString projection = value(QStringLiteral("--projection"), QStringLiteral("automatic"));
     const bool freeLens = arguments.contains(QStringLiteral("--free-lens"));
     const bool noProfile = arguments.contains(QStringLiteral("--no-lens-profile"));
+    const QString edges = value(QStringLiteral("--edges"), QStringLiteral("crop"));
     if (outPath.isEmpty() || cachePath.isEmpty() || !folder.exists() || names.size() < 2) {
         std::cerr << "usage: iprPanoramaAudit --folder <dir> --names a.CR2,b.CR2,... --out <dir> --cache <dir> [--evidence <dir>] [--label name] [--projection automatic|cylindrical|spherical|rectilinear] [--full]\n";
         return 2;
@@ -179,6 +182,8 @@ int main(int argc, char **argv)
         : projection == QStringLiteral("spherical") ? PanoramaGeometry::Projection::Spherical
         : projection == QStringLiteral("rectilinear") ? PanoramaGeometry::Projection::Rectilinear
                                                       : PanoramaGeometry::Projection::Automatic;
+    request.edges = edges == QStringLiteral("fill") ? PanoramaJob::Edges::Fill
+        : edges == QStringLiteral("keep") ? PanoramaJob::Edges::Keep : PanoramaJob::Edges::Crop;
     request.frame = [&](int index) {
         PanoramaJob::Frame frame;
         frame.cameraRgb = readCache(cache.filePath(QFileInfo(names[index]).completeBaseName() + QStringLiteral(".float")));
@@ -221,6 +226,8 @@ int main(int argc, char **argv)
     report[QStringLiteral("span_across_degrees")] = job.shape.spanAcross * 180.0 / CV_PI;
     report[QStringLiteral("canvas_width")] = job.canvas.width;
     report[QStringLiteral("canvas_height")] = job.canvas.height;
+    report[QStringLiteral("edges")] = edges;
+    report[QStringLiteral("filled_share")] = job.filledShare;
     report[QStringLiteral("free_lens")] = freeLens;
     report[QStringLiteral("no_lens_profile")] = noProfile;
     report[QStringLiteral("kept_x")] = job.kept.x;
@@ -257,6 +264,52 @@ int main(int argc, char **argv)
         pairs.append(entry);
     }
     report[QStringLiteral("pairs")] = pairs;
+
+    // What a fill is worth where the truth is known: a real corner of the cropped panorama is
+    // hidden, filled, and compared with what was there.
+    if (job.success && arguments.contains(QStringLiteral("--holdout"))) {
+        QJsonArray corners;
+        const int depth = job.cameraRgb.rows / 4, length = job.cameraRgb.cols / 6;
+        const QVector<QPair<QString, cv::Point>> tips{{QStringLiteral("top_left"), cv::Point(0, 0)}, {QStringLiteral("top_right"), cv::Point(1, 0)},
+                                                      {QStringLiteral("bottom_left"), cv::Point(0, 1)}, {QStringLiteral("bottom_right"), cv::Point(1, 1)}};
+        for (const auto &tip : tips) {
+            cv::Mat known(job.cameraRgb.size(), CV_8UC1, cv::Scalar(255));
+            for (int y = 0; y < depth; ++y) {
+                const int row = tip.second.y == 0 ? y : known.rows - 1 - y;
+                const int span = length * (depth - y) / depth;
+                known(cv::Rect(tip.second.x == 0 ? 0 : known.cols - span, row, span, 1)).setTo(0);
+            }
+            cv::Mat filled = job.cameraRgb.clone();
+            QElapsedTimer fillWatch;
+            fillWatch.start();
+            const PanoramaFill::Report filling = PanoramaFill::fill(filled, known);
+            const double seconds = fillWatch.elapsed() / 1000.0;
+            cv::Mat truthRoot, filledRoot;
+            cv::sqrt(cv::max(job.cameraRgb, 0.0), truthRoot);
+            cv::sqrt(cv::max(filled, 0.0), filledRoot);
+            cv::Mat hidden;
+            cv::bitwise_not(known, hidden);
+            cv::Mat difference;
+            cv::absdiff(truthRoot, filledRoot, difference);
+            const cv::Scalar error = cv::mean(difference, hidden);
+            const auto detailOf = [&](const cv::Mat &image) {
+                cv::Mat grey, smooth, fine;
+                cv::extractChannel(image, grey, 1);
+                cv::GaussianBlur(grey, smooth, cv::Size(), 4.0);
+                cv::absdiff(grey, smooth, fine);
+                return cv::mean(fine, hidden)[0];
+            };
+            QJsonObject corner;
+            corner[QStringLiteral("corner")] = tip.first;
+            corner[QStringLiteral("hidden_share")] = filling.filledShare;
+            corner[QStringLiteral("mean_error_sqrt")] = (error[0] + error[1] + error[2]) / 3.0;
+            corner[QStringLiteral("detail_truth")] = detailOf(truthRoot);
+            corner[QStringLiteral("detail_filled")] = detailOf(filledRoot);
+            corner[QStringLiteral("seconds")] = seconds;
+            corners.append(corner);
+        }
+        report[QStringLiteral("holdout")] = corners;
+    }
 
     if (job.success && context) {
         CameraSignal::Source signal;

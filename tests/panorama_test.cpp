@@ -2,6 +2,7 @@
 // viewpoint on a textured world, so that what the engine finds can be compared to the truth.
 #include "PanoramaBlend.h"
 #include "PanoramaFeatures.h"
+#include "PanoramaFill.h"
 #include "PanoramaGeometry.h"
 #include "PanoramaJob.h"
 
@@ -417,6 +418,116 @@ int entriesIn(const QString &path)
     return int(QDir(path).entryList(QDir::AllEntries | QDir::NoDotAndDotDot).size());
 }
 
+void fillInventsOnlyWhatIsMissing()
+{
+    const cv::Size size(600, 300);
+    // A smooth sky with a little grain, and a corner hidden.
+    cv::Mat sky(size, CV_32FC3);
+    cv::RNG random{uint64_t(31)};
+    for (int y = 0; y < size.height; ++y) {
+        for (int x = 0; x < size.width; ++x) {
+            const float level = 0.5f + 0.25f * float(y) / float(size.height) + 0.1f * float(x) / float(size.width);
+            const float grain = float(random.gaussian(0.004));
+            sky.at<cv::Vec3f>(y, x) = cv::Vec3f(level * 0.8f + grain, level + grain, level * 0.6f + grain);
+        }
+    }
+    cv::Mat known(size, CV_8UC1, cv::Scalar(255));
+    for (int y = 0; y < 90; ++y)
+        known(cv::Rect(0, y, 180 - 2 * y, 1)).setTo(0);
+    const double hiddenCount = double(known.total()) - cv::countNonZero(known);
+
+    cv::Mat filled = sky.clone();
+    filled.setTo(cv::Scalar::all(0), known == 0);
+    const PanoramaFill::Report report = PanoramaFill::fill(filled, known);
+    check(report.outcome == PanoramaFill::Outcome::Filled, "a corner is filled");
+    check(std::abs(report.filledShare - hiddenCount / double(known.total())) < 1e-9, "and its share is told");
+    cv::Mat changes;
+    cv::absdiff(filled, sky, changes);
+    cv::Mat knownChanges = changes.clone();
+    knownChanges.setTo(cv::Scalar::all(0), known == 0);
+    check(cv::norm(knownChanges, cv::NORM_INF) == 0.0, "a real pixel is never changed");
+    const cv::Scalar error = cv::mean(changes, known == 0);
+    check(error[1] < 0.03, "a smooth sky is continued at its own level");
+    cv::Mat channels[3];
+    cv::split(filled, channels);
+    cv::Mat hidden = known == 0;
+    check(cv::countNonZero(channels[1] > 0.0f & hidden) == cv::countNonZero(hidden), "no pixel of the corner stays empty");
+
+    // The same on any number of threads, and twice.
+    cv::Mat again = sky.clone();
+    again.setTo(cv::Scalar::all(0), known == 0);
+    const int threads = cv::getNumThreads();
+    cv::setNumThreads(1);
+    PanoramaFill::fill(again, known);
+    cv::setNumThreads(threads);
+    check(cv::norm(again, filled, cv::NORM_INF) == 0.0, "the threads change no pixel");
+
+    // Reduced below whole resolution, the grain comes back from the real pixels.
+    PanoramaFill::Options smaller;
+    smaller.workingSide = 200;
+    cv::Mat reduced = sky.clone();
+    reduced.setTo(cv::Scalar::all(0), known == 0);
+    const PanoramaFill::Report reducedReport = PanoramaFill::fill(reduced, known, smaller);
+    check(reducedReport.outcome == PanoramaFill::Outcome::Filled, "a fill works on a reduced image");
+    const auto grainOf = [&](const cv::Mat &image) {
+        cv::Mat green, smooth, fine;
+        cv::extractChannel(image, green, 1);
+        cv::GaussianBlur(green, smooth, cv::Size(), 3.0);
+        cv::absdiff(green, smooth, fine);
+        return cv::mean(fine, hidden)[0];
+    };
+    const double truth = grainOf(sky), kept = grainOf(reduced);
+    check(kept > 0.5 * truth && kept < 1.5 * truth, "the grain comes back at whole resolution");
+    cv::Mat reducedChanges;
+    cv::absdiff(reduced, sky, reducedChanges);
+    reducedChanges.setTo(cv::Scalar::all(0), known == 0);
+    check(cv::norm(reducedChanges, cv::NORM_INF) == 0.0, "a real pixel stays real there too");
+
+    // A strong structure stays one: not a grey average of what the patches propose.
+    cv::Mat stripes(size, CV_32FC3);
+    for (int y = 0; y < size.height; ++y)
+        stripes.row(y).setTo(cv::Scalar::all(y / 20 % 2 ? 0.8 : 0.2));
+    cv::Mat striped = stripes.clone();
+    striped.setTo(cv::Scalar::all(0), known == 0);
+    PanoramaFill::fill(striped, known);
+    cv::Mat stripeGreen, stripeContrast;
+    cv::extractChannel(striped, stripeGreen, 1);
+    cv::absdiff(stripeGreen, cv::Scalar(0.5), stripeContrast);
+    check(cv::mean(stripeContrast, known == 0)[0] > 0.2, "a strong structure keeps its contrast");
+
+    // Nothing to do, too little to do it with, wrong inputs, and a cancel.
+    cv::Mat whole = sky.clone();
+    const PanoramaFill::Report nothing = PanoramaFill::fill(whole, cv::Mat(size, CV_8UC1, cv::Scalar(255)));
+    check(nothing.outcome == PanoramaFill::Outcome::NothingToFill && nothing.filledShare == 0.0, "a full image needs no fill");
+    check(cv::norm(whole, sky, cv::NORM_INF) == 0.0, "and stays as it is");
+    cv::Mat littleKnown = cv::Mat::zeros(size, CV_8UC1);
+    littleKnown(cv::Rect(0, 0, 40, 40)).setTo(255);
+    cv::Mat attempt = sky.clone();
+    check(PanoramaFill::fill(attempt, littleKnown).outcome == PanoramaFill::Outcome::TooLittleKnown, "too little known is refused");
+    cv::Mat noMask;
+    check(PanoramaFill::fill(attempt, noMask).outcome == PanoramaFill::Outcome::NothingToFill, "without a mask nothing happens");
+    cv::Mat stopped = sky.clone();
+    check(PanoramaFill::fill(stopped, known, {}, [] { return true; }).outcome == PanoramaFill::Outcome::Cancelled, "a cancel stops it");
+
+    // Through the job: the whole canvas, and what is invented is said.
+    QTemporaryDir folder;
+    std::vector<cv::Mat> frames;
+    for (const double yaw : {-24.0, 0.0, 24.0})
+        frames.push_back(render(sharedWorld(), camera(yaw * degree, -5 * degree)));
+    PanoramaJob::Request request = requestFor(frames);
+    request.scratchRoot = folder.path();
+    request.edges = PanoramaJob::Edges::Fill;
+    const PanoramaJob::Result result = PanoramaJob::run(request);
+    if (check(result.success, "the job fills its edges")) {
+        check(result.cameraRgb.size() == result.canvas, "over the whole canvas");
+        check(result.filledShare > 0.0 && std::abs(result.filledShare - (1.0 - result.coveredShare)) < 0.03, "and says what it invented");
+        cv::Mat green;
+        cv::extractChannel(result.cameraRgb, green, 1);
+        check(cv::countNonZero(green) == result.canvas.area(), "no pixel stays empty");
+    }
+    check(entriesIn(folder.path()) == 0, "and nothing stays in the scratch folder");
+}
+
 void jobMakesAPanorama()
 {
     QTemporaryDir folder;
@@ -463,7 +574,7 @@ void jobMakesAPanorama()
 
     PanoramaJob::Request uncropped = requestFor(frames);
     uncropped.scratchRoot = folder.path();
-    uncropped.cropToCovered = false;
+    uncropped.edges = PanoramaJob::Edges::Keep;
     const PanoramaJob::Result whole = PanoramaJob::run(uncropped);
     check(whole.success && whole.cameraRgb.size() == whole.canvas, "uncropped, the whole canvas comes out");
     check(whole.coveredShare > 0.5 && whole.coveredShare < 1.0, "and says how much of it is covered");
@@ -597,6 +708,7 @@ int main(int argc, char **argv)
     lowRectangleStaysOnTheBottom();
     blendKeepsADetailAndHidesASlowStep();
     jobMakesAPanorama();
+    fillInventsOnlyWhatIsMissing();
     jobFailsWithItsReason();
     jobStopsWhenCancelled();
     if (failures == 0)

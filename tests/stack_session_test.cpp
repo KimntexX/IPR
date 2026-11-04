@@ -205,7 +205,7 @@ void panoramas(const QDir &folder, const std::shared_ptr<CameraProfileEngine::Dc
         check(CameraDng::read(dng.toLocalFile(), read, &error) && read.provenance.contains(QStringLiteral("panorama")), "and tells its origin");
         const int cropped = read.cameraRgb.cols;
 
-        assembling.startPanorama(frames(folder, 3), QStringLiteral("automatic"), true);
+        assembling.startPanorama(frames(folder, 3), QStringLiteral("automatic"), QStringLiteral("keep"));
         check(waitFor([&] { return !assembling.running(); }), "a panorama with its edges ends");
         check(assembling.hasResult(), "with a result too");
         const QUrl whole = QUrl::fromLocalFile(folder.filePath(QStringLiteral("whole.dng")));
