@@ -20,6 +20,18 @@ constexpr int randomTries = 8;
 // sky, and the light of a part of it from that part.
 constexpr float rowPull = 0.02f;
 constexpr float columnPull = 0.02f;
+// What stands out from its surroundings is an object, not a texture: a house is not to be
+// found twice. Perceptual difference of a cell's luminance with the mean around it.
+constexpr float standingOut = 0.25f;
+constexpr double standingOutRadius = 1.0 / 40.0;   // of the long side
+constexpr double largestObject = 0.01;             // of the known cells: beyond it, the texture of a slope or a cliff
+constexpr double smallestObject = 0.0005;          // and below it, a stone among others, with its patch's reach
+constexpr double fewestSourcesKept = 0.2;          // of the known cells, or the ban is lifted
+// The real texture is mirrored across the limit only where it resembles what was found there:
+// an object cut by the limit must not meet its own reflection. Perceptual difference, from
+// which the mirror starts to fade, and at which it is gone.
+constexpr float mirrorLikeFrom = 0.05f;
+constexpr float mirrorLikeTo = 0.14f;
 
 inline float encoded(float value) { return value >= 0.0f ? std::sqrt(value) : -std::sqrt(-value); }
 inline float decoded(float value) { return value * std::abs(value); }
@@ -44,10 +56,72 @@ struct Level
     std::vector<cv::Point> field;   // per hole: the centre of its source patch
 };
 
-void describe(Level &level)
+// Known cells that stand out from what surrounds them, widened by what a patch reaches.
+cv::Mat objectsOf(const Level &level)
+{
+    cv::Mat luminance(level.colour.size(), CV_32FC1), weight;
+    level.known.convertTo(weight, CV_32FC1, 1.0 / 255.0);
+    for (int y = 0; y < luminance.rows; ++y) {
+        const cv::Vec3f *in = level.colour.ptr<cv::Vec3f>(y);
+        const float *present = weight.ptr<float>(y);
+        float *out = luminance.ptr<float>(y);
+        for (int x = 0; x < luminance.cols; ++x)
+            out[x] = (0.25f * in[x][0] + 0.5f * in[x][1] + 0.25f * in[x][2]) * present[x];
+    }
+    const int side = std::max(3, int(std::max(level.colour.cols, level.colour.rows) * standingOutRadius)) | 1;
+    cv::Mat sum, count;
+    cv::blur(luminance, sum, cv::Size(side, side), cv::Point(-1, -1), cv::BORDER_REPLICATE);
+    cv::blur(weight, count, cv::Size(side, side), cv::Point(-1, -1), cv::BORDER_REPLICATE);
+    cv::Mat objects = cv::Mat::zeros(level.colour.size(), CV_8UC1);
+    for (int y = 0; y < objects.rows; ++y) {
+        const float *value = luminance.ptr<float>(y), *around = sum.ptr<float>(y), *amount = count.ptr<float>(y), *present = weight.ptr<float>(y);
+        uchar *out = objects.ptr<uchar>(y);
+        for (int x = 0; x < objects.cols; ++x)
+            if (present[x] > 0.0f && amount[x] > 1e-3f && std::abs(value[x] - around[x] / amount[x]) > standingOut)
+                out[x] = 255;
+    }
+    const cv::Mat reach = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(4 * patchHalf + 1, 4 * patchHalf + 1));
+    cv::dilate(objects, objects, reach);
+    // An object stands alone. Details close enough to join up are the texture of a slope, and
+    // without them it could only be continued by what is left, such as a plain patch of earth.
+    const int largest = int(largestObject * double(cv::countNonZero(level.known)));
+    const int smallest = int(smallestObject * double(cv::countNonZero(level.known)));
+    cv::Mat seen = cv::Mat::zeros(objects.size(), CV_8UC1);
+    std::vector<cv::Point> stack, group;
+    for (int y = 0; y < objects.rows; ++y) {
+        for (int x = 0; x < objects.cols; ++x) {
+            if (!objects.at<uchar>(y, x) || seen.at<uchar>(y, x))
+                continue;
+            group.clear();
+            stack.assign(1, cv::Point(x, y));
+            seen.at<uchar>(y, x) = 255;
+            while (!stack.empty()) {
+                const cv::Point p = stack.back();
+                stack.pop_back();
+                group.push_back(p);
+                for (const cv::Point &step : {cv::Point(1, 0), cv::Point(-1, 0), cv::Point(0, 1), cv::Point(0, -1)}) {
+                    const cv::Point q = p + step;
+                    if (q.x >= 0 && q.y >= 0 && q.x < objects.cols && q.y < objects.rows && objects.at<uchar>(q) && !seen.at<uchar>(q)) {
+                        seen.at<uchar>(q) = 255;
+                        stack.push_back(q);
+                    }
+                }
+            }
+            if (int(group.size()) > largest || int(group.size()) < smallest)
+                for (const cv::Point &p : group)
+                    objects.at<uchar>(p) = 0;
+        }
+    }
+    return objects;
+}
+
+// banned: cells no patch may be centred on, of this level's size, or empty.
+void describe(Level &level, const cv::Mat &banned)
 {
     const cv::Mat kernel = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(2 * patchHalf + 1, 2 * patchHalf + 1));
     cv::erode(level.known, level.usable, kernel, cv::Point(-1, -1), 1, cv::BORDER_CONSTANT, cv::Scalar(0));
+    if (!banned.empty())
+        level.usable.setTo(cv::Scalar(0), banned);
     level.holeIndex.create(level.known.size(), CV_32SC1);
     level.holes.clear();
     level.sources.clear();
@@ -352,9 +426,33 @@ Report fill(cv::Mat &image, const cv::Mat &known, const Options &options, const 
         reduced(levels.back().colour, levels.back().known, 2, next.colour, next.known);
         levels.push_back(std::move(next));
     }
+    // What stands out is no source, as long as that leaves enough to take from.
+    cv::Mat banned = objectsOf(levels.front());
+    {
+        const double knownCells = double(cv::countNonZero(levels.front().known));
+        cv::Mat allowed;
+        cv::bitwise_not(banned, allowed);
+        cv::bitwise_and(allowed, levels.front().known, allowed);
+        if (double(cv::countNonZero(allowed)) < fewestSourcesKept * knownCells)
+            banned.release();
+    }
+    const cv::Mat objectCells = banned.clone();
     // A level without a patch to take cannot search: the pyramid stops above it.
-    for (Level &level : levels)
-        describe(level);
+    for (Level &level : levels) {
+        describe(level, banned);
+        // What a coarser cell holds of a banned one bans it too.
+        if (!banned.empty()) {
+            cv::Mat coarser = cv::Mat::zeros((banned.rows + 1) / 2, (banned.cols + 1) / 2, CV_8UC1);
+            for (int y = 0; y < banned.rows; ++y) {
+                const uchar *in = banned.ptr<uchar>(y);
+                uchar *out = coarser.ptr<uchar>(y / 2);
+                for (int x = 0; x < banned.cols; ++x)
+                    if (in[x])
+                        out[x / 2] = 255;
+            }
+            banned = coarser;
+        }
+    }
     while (levels.size() > 1 && levels.back().sources.empty())
         levels.pop_back();
     if (levels.back().sources.empty()) {
@@ -477,10 +575,18 @@ Report fill(cv::Mat &image, const cv::Mat &known, const Options &options, const 
                 if (distance < transition) {
                     const cv::Vec2f fold = smoothWays.at<cv::Vec2f>(y / waysDivisor, x / waysDivisor) * float(waysDivisor);
                     const int mirrorX = x + int(std::lround(2.0f * fold[0])), mirrorY = y + int(std::lround(2.0f * fold[1]));
-                    if (mirrorX >= 0 && mirrorY >= 0 && mirrorX < image.cols && mirrorY < image.rows && known.at<uchar>(mirrorY, mirrorX)) {
+                    const bool onObject = !objectCells.empty() && mirrorX >= 0 && mirrorY >= 0 && mirrorX < image.cols && mirrorY < image.rows &&
+                                          objectCells.at<uchar>(mirrorY / factor, mirrorX / factor);
+                    if (!onObject && mirrorX >= 0 && mirrorY >= 0 && mirrorX < image.cols && mirrorY < image.rows && known.at<uchar>(mirrorY, mirrorX)) {
                         const float t = distance / transition;
                         const float invented = t * t * (3.0f - 2.0f * t);
-                        value = value * invented + image.at<cv::Vec3f>(mirrorY, mirrorX) * (1.0f - invented);
+                        // Measured on the slow variations of both places.
+                        const cv::Vec3f here = bilinearAt(working.colour, cellX, cellY);
+                        const cv::Vec3f there = bilinearAt(working.colour, (float(mirrorX) + 0.5f) * toCell - 0.5f, (float(mirrorY) + 0.5f) * toCell - 0.5f);
+                        const cv::Vec3f gap = here - there;
+                        const float unlike = std::clamp((std::sqrt(gap.dot(gap) / 3.0f) - mirrorLikeFrom) / (mirrorLikeTo - mirrorLikeFrom), 0.0f, 1.0f);
+                        const float mirrored = (1.0f - invented) * (1.0f - unlike * unlike * (3.0f - 2.0f * unlike));
+                        value = value * (1.0f - mirrored) + image.at<cv::Vec3f>(mirrorY, mirrorX) * mirrored;
                     }
                 }
                 out[x] = value;
