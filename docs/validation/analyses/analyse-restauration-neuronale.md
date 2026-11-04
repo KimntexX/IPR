@@ -5130,3 +5130,22 @@ gradients à 1 et critères. Seul le terme décrit ci-dessus est ajouté.
 Les deux graines seront mesurées même si l'une échoue. Le développement
 protégé conditionne les trois rejeux connus, qui conservent tous leurs
 échecs. Aucun nouveau jeu réservé n'est ouvert par cette chaîne.
+
+### Règles de décision pour la poursuite autonome
+
+L'utilisateur autorise la poursuite sans attendre de confirmation, avec
+traçabilité des choix. Les résultats seront comparés à l'essai précédent
+sur les observations appariées : mêmes identités, centres, bruits, parents
+et critères. Le comparateur refuse les entrées dépareillées, les observations
+manquantes ou dupliquées et un changement de référence. Il rapporte séparément
+l'erreur RGB, les échecs de structure et le pire transfert par canal ; une
+moyenne favorable ne remplace pas le verdict des critères. Ses deux tests
+ciblés passent, dont le cas d'une erreur RGB améliorée avec structure dégradée.
+
+Si les trois rejeux connus passent, les poids sont figés avant toute
+confirmation sur des contenus encore réservés. Si l'un échoue, le diagnostic
+reste sur les cas connus et précède tout autre entraînement. Une atténuation
+réduite avec perte du gain de débruitage sera consignée comme compromis
+insuffisant ; elle ne permettra pas de relâcher les seuils. Aucun échec ni
+aucune graine n'est retiré du bilan. Les modifications restent expérimentales,
+hors production et sans push, fusion ou tag.
