@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 import hashlib
 import json
 from pathlib import Path
+import re
 import subprocess
 import sys
 import time
@@ -19,13 +20,15 @@ def write(path, data):
     temporary.replace(path)
 
 
-def run(root, output):
-    output.mkdir(parents=True, exist_ok=False)
+def run(root, output, campaign, plan, prefix):
     base = root/'build-patch_neural_restoration'
-    campaign = base/'noisy-stability-campaign-v001'
-    plan = base/'noisy-stability-plan-v001/plan.json'
+    if (not re.fullmatch(r'[a-z][a-z0-9_-]*', prefix)
+            or not all(p.resolve().is_relative_to(base.resolve()) for p in (output, campaign, plan))):
+        raise ValueError('Dedicated neural build paths and simple output prefix required')
+    output.mkdir(parents=True, exist_ok=False)
     state = dict(schema_version=1, started_at_utc=datetime.now(timezone.utc).isoformat(),
         status='waiting_training', tools_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+        campaign=str(campaign), data_plan=str(plan), prefix=prefix,
         policy='Both seeds, fixed gates, sequential jobs. All three known regressions reported including failures. Reserved cohorts remain unopened.', stages=[])
     def command(name, script, *arguments):
         entry = dict(name=name, started_at_utc=datetime.now(timezone.utc).isoformat(),
@@ -53,11 +56,11 @@ def run(root, output):
         # This explicit first-attempt contract refuses accidental score-based retry selection.
         if any(not (p/'weights.pt').exists() for p in models):
             raise RuntimeError('Expected first-attempt final checkpoints missing')
-        protected = base/'stability-protected-v001'
+        protected = base/(prefix+'-protected-v001')
         command('prepare_development', 'run_edge_protected_probe.py', '--prepare', '--data-plan', plan,
-            '--models', *models, '--output', base/'stability-protected-plan-v001')
+            '--models', *models, '--output', base/(prefix+'-protected-plan-v001'))
         command('development', 'run_edge_protected_probe.py', '--plan',
-            base/'stability-protected-plan-v001/plan.json', '--output', protected)
+            base/(prefix+'-protected-plan-v001/plan.json'), '--output', protected)
         proof = json.loads((protected/'result.json').read_text(encoding='utf-8'))
         state['development_passed'] = eligible(proof)
         if not eligible(proof):
@@ -69,8 +72,8 @@ def run(root, output):
             ('fine', 'fine', 'fixed-point-fine-v001'))
         state['regressions'] = []
         for name, kind, historical in regressions:
-            data = base/('stability-'+name+'-plan-v001')
-            destination = base/('stability-'+name+'-v001')
+            data = base/(prefix+'-'+name+'-plan-v001')
+            destination = base/(prefix+'-'+name+'-v001')
             command('prepare_'+name, 'prepare_neural_regression.py', '--source', protected/'result.json',
                 '--historical', base/historical/'result.json', '--kind', kind, '--output', data)
             command(name, 'confirm_noisy_model.py' if kind == 'classic' else 'confirm_fine_noise.py',
@@ -98,5 +101,8 @@ def run(root, output):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--campaign', type=Path, required=True)
+    parser.add_argument('--data-plan', type=Path, required=True)
+    parser.add_argument('--prefix', required=True)
     args = parser.parse_args()
-    run(Path(__file__).resolve().parents[2], args.output)
+    run(Path(__file__).resolve().parents[2], args.output, args.campaign, args.data_plan, args.prefix)

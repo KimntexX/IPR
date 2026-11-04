@@ -1,10 +1,11 @@
 # Restauration neuronale — qualification du corpus
 
-**État au 3 novembre 2026, 19 h 45 :** correction multi-échelle implémentée,
-centres historiques conservés exactement, prétest mémoire/symétries/marges
-positif et 50 tests ciblés réussis. L'apprentissage comparatif reste à
-mesurer ; aucune qualité photographique validée, aucun moteur de production
-modifié ni nouvelle cohorte réservée ouverte.
+**État au 4 novembre 2026, matin :** les gradients limités stabilisent les
+deux entraînements et les deux corpus classiques passent. Les textures
+fines restent en échec (24/48 groupes forts). Leur diagnostic localise
+l'atténuation principalement dans la correction CFA. Un terme de supervision
+de structure est prêt pour essai comparatif ; aucune qualité photographique
+validée, aucun moteur de production modifié ni nouveau jeu réservé ouvert.
 
 ## 1er novembre 2026 — scène pilote 6V1A0133
 
@@ -5071,3 +5072,61 @@ Preuves : [développement protégé](../raw/neural-edge-protection-v001-20261103
 La prochaine investigation doit isoler l'atténuation des textures chromatiques
 dans le correcteur CFA, sur ces mêmes cas connus, avant tout nouvel entraînement
 ou ouverture d'un jeu réservé. Aucun changement en production.
+
+## 4 novembre 2026 — préservation des structures CFA
+
+### Décomposition de l'atténuation sur les cas fins connus
+
+Le diagnostic reprend toutes les 36 textures à amplitude forte, les deux
+bruits positifs, les deux graines, avec phase Bayer zéro et première
+réalisation : 144 sondes. Les 192 pixels centraux, le bruit, les sigma et
+le prolongement à 384 sont identiques à la campagne précédente. Un miroir
+des coefficients de reconstruction doit reproduire le forward complet au
+bit près ; la réponse sinusoïdale doit aussi retrouver la mesure historique.
+
+À bruit fort, la médiane du transfert par canal relatif au parent vaut
+0,918 sur les textures achromatiques et 0,857 sur les textures chromatiques.
+En gelant les coefficients d'interpolation à ceux de l'entrée bruitée, ces
+valeurs deviennent 0,917 et 0,856 : l'atténuation persiste. En ne changeant
+que ces coefficients, elles valent 1,001 et 1,002. La correction des valeurs
+CFA est donc le mécanisme dominant dans ces sondes. Retirer la protection
+des contours aggrave encore les médianes, à 0,866 et 0,755 : cette protection
+est utile, mais insuffisante. Ces médianes de sondes individuelles ne sont
+pas les groupes agrégés sur quatre phases et trois bruits du verdict précédent.
+Preuve : [trace des textures fines](../raw/neural-fine-trace-v001-20261104T073219Z.json).
+
+### Expérience de supervision de structure
+
+On ajoute un seul terme d'apprentissage, sans modifier l'architecture ni
+le calcul d'inférence. Pour chacun des quatre plans physiques et le centre
+scoré, on note `d` la cible CFA propre dont on a retranché la moyenne, `e`
+l'erreur corrigé moins propre et `sigma` le bruit estimé de l'observation.
+La pénalité est `(somme(e*d))² / somme(d²*sigma²)`, moyennée sur les plans,
+avec contribution exactement nulle pour une cible constante ou une variance
+nulle. La soustraction préalable d'un échantillon évite qu'une constante
+devienne artificiellement non constante par arrondi de sa moyenne.
+
+Ce terme pénalise l'erreur cohérente avec les variations propres ; il
+complète l'erreur RGB et le point fixe CFA propre. Il n'utilise ni fréquence
+ni phase connues de la sinusoïde. Son espérance sous bruit seul vaut un
+uniquement pour une variance indépendante correcte et fixée ; le sigma
+estimé depuis l'observation rend cette échelle approximative. Il ne garantit
+pas un estimateur sans biais et ne constitue pas une mesure photographique.
+Le poids 1 est déclaré avant le nouvel entraînement ; il n'a pas été optimisé
+sur les contrôles de validation. La supervision exploite une cible propre
+disponible seulement à l'entraînement synthétique.
+
+Les 17 tests ciblés passent : cible constante, identité, bruit orthogonal,
+bruit indépendant, réduction cohérente, changement d'échelle, permutation des
+plans, cibles détachées, entrées invalides, reprise bit à bit et orchestration.
+Le prétest de huit mises à jour conserve les contrôles d'identité, D4 et
+fenêtres ; pic résident 385,13 Mio, privé échantillonné 1 076,95 Mio, sous
+les quotas. Ses poids sont jetés. Preuve :
+[prétest de supervision](../raw/neural-context-preflight-v001-20261104T073525Z.json).
+
+Le plan `noisy-structure-plan-v001` conserve parents, graines 71/73, 2 048
+étapes, observations, contextes, pertes précédentes, limitation L2 des
+gradients à 1 et critères. Seul le terme décrit ci-dessus est ajouté.
+Les deux graines seront mesurées même si l'une échoue. Le développement
+protégé conditionne les trois rejeux connus, qui conservent tous leurs
+échecs. Aucun nouveau jeu réservé n'est ouvert par cette chaîne.

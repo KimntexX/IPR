@@ -12,6 +12,7 @@ import torch
 from audit_bayer_symmetries import OPERATIONS, transform, transform_observation, difference, aggregate_differences
 from bayer_canonical import predict, canonicalize
 from clean_cfa_loss import clean_cfa_loss
+from cfa_structure_loss import structure_loss
 from compare_reconstruction_objectives import freeze_cases, confined
 from confirm_local_route import MODEL_TOOLS, summarize
 from diagnose_train_learnability import digest, save
@@ -42,7 +43,7 @@ TOOLS = tuple(dict.fromkeys(MODEL_TOOLS+FORWARD_TOOLS+('run_noisy_moment_pilot.p
     'compare_reconstruction_objectives.py', 'confirm_local_route.py',
     'run_synthetic_joint_pilot.py', 'reconstruction_gates.py', 'audit_bayer_symmetries.py',
     'training_resume.py', 'noisy_training_policy.py', 'noise_conditioning.py', 'fine_texture_training.py',
-    'clean_cfa_loss.py', 'context_data.py')))
+    'clean_cfa_loss.py', 'cfa_structure_loss.py', 'context_data.py')))
 
 
 def observation(truth, tags, noise_index, seed):
@@ -138,6 +139,8 @@ def prepare(root, source, priors, parents, output, training_scope='cfa_front', p
         clean_fixed_point=dict(weight=1., scope='Every positive-noise training exposure; clean CFA with the same observed-sigma field.',
             target='Zero CFA correction on clean signal, no RGB interpolation compensation.',
             normalization='Same noisy RGB reference energy and tempered floor as the data term.'),
+        structure_preservation=dict(weight=1., scope='Positive-noise CFA core, four physical planes.',
+            policy='Squared projection of CFA error onto centred clean target, divided by estimated independent-noise projection variance; constant targets give exactly zero.'),
         tools={n: digest(Path(__file__).with_name(n)) for n in TOOLS},
         noise_gate_policy='Each positive level: RGB MSE full/parent<=.98, opponent full/parent<=1, full/without_correction RGB<=1; weak/edge gradient>=.95 parent. Zero noise retains original12gates, new mixed and historical20/80.',
         training_policy='Final2048 only, both pretrained seeds, same ID/phase schedule; replace wave slots by frozen broadband two-wave textures, other slots unchanged. Noise level=(4*(step-1)+position)%3, seed74000000+4*(step-1)+position, paired realizations across models. Accumulated global gradient L2 norm clipped to1 before Adam; no early stopping. Adam scope='+training_scope,
@@ -222,6 +225,11 @@ def train(model, source, config, guard, checkpoint_path, context, progress, inte
                 anchored = model.correct_observations(clean_values, deviations, labels)
                 loss = loss+clean_cfa_loss(anchored, clean_values, reference,
                     truth/config['scale'], config['scale'], border=config.get('loss_border', 48))/4
+                noisy_values, _, _, _ = canonicalize(packed/config['scale'], sigma/config['scale'], tags)
+                corrected = model.correct_observations(noisy_values, deviations, labels)
+                loss = loss+structure_loss(corrected, clean_values, deviations,
+                    config.get('loss_border', 48)//2)/4
+                del noisy_values, corrected
                 del clean_values, deviations, labels, anchored
             if not torch.isfinite(loss):
                 raise ValueError('Nonfinite loss')

@@ -31,7 +31,7 @@ class StabilityQualificationTests(unittest.TestCase):
                         pilot_gates_passed=False)))
                 return mock.Mock(returncode=0)
             with mock.patch('run_stability_qualification.subprocess.run', side_effect=execute):
-                result = run(root, base/'test-output')
+                result = run(root, base/'test-output', campaign, base/'plan.json', 'stability')
             self.assertEqual(result['status'], 'stopped_on_development_failure')
             self.assertEqual(len(calls), 2)
             self.assertFalse(any('prepare_neural_regression.py' in str(c) for c in calls))
@@ -47,7 +47,7 @@ class StabilityQualificationTests(unittest.TestCase):
             (campaign/'campaign.json').write_text(json.dumps(dict(status='stopped_on_calculation_error')))
             with mock.patch('run_stability_qualification.subprocess.run') as execute:
                 with self.assertRaisesRegex(RuntimeError, 'Training campaign incomplete'):
-                    run(root, base/'test-output')
+                    run(root, base/'test-output', campaign, base/'plan.json', 'stability')
             execute.assert_not_called()
             state = json.loads((base/'test-output/progress.json').read_text())
             self.assertEqual(state['status'], 'stopped_on_error')

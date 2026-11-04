@@ -10,6 +10,7 @@ import torch
 from audit_bayer_symmetries import OPERATIONS, transform, transform_observation
 from bayer_canonical import predict, canonicalize
 from clean_cfa_loss import clean_cfa_loss
+from cfa_structure_loss import structure_loss
 from compare_reconstruction_objectives import confined
 from context_data import extend_texture, extend_observation, crop_centre
 from diagnose_train_learnability import digest, save
@@ -73,6 +74,10 @@ def run(root, parent, output):
                         clean, dev, labels, _ = canonicalize(sample_rgb(truth, tags)/2, sigma/2, tags)
                         anchor = model.correct_observations(clean, dev, labels)
                         loss = loss+clean_cfa_loss(anchor, clean, reference, truth/2, 2., border=112)/4
+                        noisy, _, _, _ = canonicalize(values/2, sigma/2, tags)
+                        corrected = model.correct_observations(noisy, dev, labels)
+                        loss = loss+structure_loss(corrected, clean, dev, 56)/4
+                        del noisy, corrected
                         del clean, dev, labels, anchor
                     if not torch.isfinite(loss):
                         raise ValueError('Nonfinite context preflight loss')
@@ -81,6 +86,7 @@ def run(root, parent, output):
                     del image, reference, loss, truth, values, sigma, old_values, old_sigma, centre
                 if any(p.grad is not None and not torch.isfinite(p.grad).all() for p in model.parameters()):
                     raise ValueError('Nonfinite context preflight gradient')
+                torch.nn.utils.clip_grad_norm_(model.parameters(), 1., error_if_nonfinite=True)
                 optimizer.step()
                 result['completed_steps'] = step+1
                 print('ENGINEERING STEP '+str(step+1)+'/8', flush=True)
