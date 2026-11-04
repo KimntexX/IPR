@@ -474,6 +474,25 @@ ColorPipeline::WorkingImage decodeCameraDng(const QString &fileName, const Optio
     return image;
 }
 
+// The long side of the sensor from what the file tells of its format. Canon's APS-C is smaller
+// than the others'.
+double sensorWidthOf(const LibRaw &raw)
+{
+    const double equivalent = raw.imgdata.lens.FocalLengthIn35mmFormat;
+    const double focal = raw.imgdata.other.focal_len;
+    if (equivalent > 0.0 && focal > 0.0)
+        return 36.0 * focal / equivalent;
+    switch (raw.imgdata.lens.makernotes.CameraFormat) {
+    case LIBRAW_FORMAT_FF: return 36.0;
+    case LIBRAW_FORMAT_APSH: return 28.7;
+    case LIBRAW_FORMAT_APSC:
+        return QString::fromLocal8Bit(raw.imgdata.idata.make).startsWith(QStringLiteral("Canon"), Qt::CaseInsensitive) ? 22.3 : 23.6;
+    case LIBRAW_FORMAT_FT: return 17.3;
+    case LIBRAW_FORMAT_1INCH: return 13.2;
+    default: return 0.0;
+    }
+}
+
 ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
                                              const Options &options,
                                              ImageMetadata *metadata,
@@ -503,6 +522,7 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
         metadata->lensModel = QString::fromLocal8Bit(raw.imgdata.lens.Lens).trimmed();
         metadata->iso = static_cast<int>(std::lround(raw.imgdata.other.iso_speed));
         metadata->focalLengthMm = raw.imgdata.other.focal_len;
+        metadata->sensorWidthMm = sensorWidthOf(raw);
         metadata->exposureSeconds = raw.imgdata.other.shutter;
         if (raw.imgdata.other.timestamp > 0)
             metadata->captureDate = QDateTime::fromSecsSinceEpoch(
@@ -562,6 +582,7 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
     }
     CameraProfileEngine::CaptureSettings capture;
     capture.focalLengthMm = raw.imgdata.other.focal_len;
+    capture.sensorWidthMm = sensorWidthOf(raw);
     capture.aperture = raw.imgdata.other.aperture;
     if (metadata) {
         metadata->dcpProfile = profiles.dcpPath.isEmpty()

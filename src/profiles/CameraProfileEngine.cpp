@@ -1169,6 +1169,7 @@ struct LcpData
         std::array<double, 5> redGreen{};
         std::array<double, 5> blueGreen{};
         double geometryScale = 1.0;
+        double focalLengthX = 0.0;   // of the image's long side, 0 when the profile leaves it out
         double geometryCenterX = 0.5;
         double geometryCenterY = 0.5;
         double vignetteCenterX = 0.5;
@@ -1231,6 +1232,9 @@ bool parseLcp(const QByteArray &bytes, LcpData *profile, QString *error)
                     model.blueCenterY = value;
                 else
                     model.geometryCenterY = value;
+            } else if (key == QStringLiteral("focallengthx") &&
+                       section == ModelSection::Geometry) {
+                model.focalLengthX = value;
             } else if (key == QStringLiteral("scalefactor") &&
                        section == ModelSection::Geometry)
                 model.geometryScale = value;
@@ -1378,6 +1382,9 @@ bool parseLcp(const QByteArray &bytes, LcpData *profile, QString *error)
                         current.blueCenterY = value;
                     else
                         current.geometryCenterY = value;
+                } else if (key == QStringLiteral("focallengthx") &&
+                           textSection == ModelSection::Geometry) {
+                    current.focalLengthX = value;
                 } else if (key == QStringLiteral("scalefactor"))
                     current.geometryScale = value;
                 else if (textSection == ModelSection::Geometry) {
@@ -1615,6 +1622,8 @@ LcpData::Model selectLcpModel(const LcpData &profile,
         blend(selected.geometry, other.geometry);
         selected.geometryScale =
             selected.geometryScale * (1.0 - weight) + other.geometryScale * weight;
+        selected.focalLengthX =
+            selected.focalLengthX * (1.0 - weight) + other.focalLengthX * weight;
         selected.geometryCenterX =
             selected.geometryCenterX * (1.0 - weight) + other.geometryCenterX * weight;
         selected.geometryCenterY =
@@ -1991,7 +2000,14 @@ bool applyLcp(const QString &fileName, cv::Mat &linearRgb,
     }
 
     const LcpData::Model model = selectLcpModel(*profile, capture);
-    const double scale = double(std::max(linearRgb.cols, linearRgb.rows));
+    // The profile's models work in units of the focal length, in pixels: from the profile
+    // when it gives it, else from the lens's 35 mm equivalent, as the format defines it. The
+    // same parameters then fit whatever sensor the lens is on.
+    const double longSide = double(std::max(linearRgb.cols, linearRgb.rows));
+    const double capturedFocal = capture.focalLengthMm > 0.0 ? capture.focalLengthMm : model.focalLength;
+    const double equivalentFocal = capture.sensorWidthMm > 0.0 ? capturedFocal * 36.0 / capture.sensorWidthMm : capturedFocal;
+    const double scale = model.focalLengthX > 0.0 ? model.focalLengthX * longSide
+                       : equivalentFocal > 0.0 ? equivalentFocal / 35.0 * longSide : longSide;
     const double cx = model.geometryCenterX * linearRgb.cols;
     const double cy = model.geometryCenterY * linearRgb.rows;
     cv::Mat mapX(linearRgb.size(), CV_32FC1);
@@ -2076,18 +2092,13 @@ bool applyLcp(const QString &fileName, cv::Mat &linearRgb,
     if (options.lensCorrection && model.hasVignetting) {
         const double vignetteCx = model.vignetteCenterX * linearRgb.cols;
         const double vignetteCy = model.vignetteCenterY * linearRgb.rows;
-        const double focalLength = capture.focalLengthMm > 0.0
-                                       ? capture.focalLengthMm
-                                       : model.focalLength;
-        const double focalScale =
-            focalLength > 0.0 ? focalLength / 35.0 * scale : scale;
         cv::parallel_for_(cv::Range(0, geometryCorrected.rows),
                           [&](const cv::Range &rows) {
             for (int y = rows.start; y < rows.end; ++y) {
                 cv::Vec3f *row = geometryCorrected.ptr<cv::Vec3f>(y);
                 for (int x = 0; x < geometryCorrected.cols; ++x) {
-                    const double dx = (x - vignetteCx) / focalScale;
-                const double dy = (y - vignetteCy) / focalScale;
+                    const double dx = (x - vignetteCx) / scale;
+                const double dy = (y - vignetteCy) / scale;
                 const double r2 = dx * dx + dy * dy;
                 const double opticalAttenuation =
                     1.0 + r2 *

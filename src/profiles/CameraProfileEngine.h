@@ -19,6 +19,7 @@ struct CaptureSettings
 {
     double whiteBalanceKelvin = 5500.0;
     double focalLengthMm = 0.0;
+    double sensorWidthMm = 0.0;     // long side; 0 when unknown, taken as a full frame
     double focusDistanceM = 0.0;
     double aperture = 0.0;
 };
