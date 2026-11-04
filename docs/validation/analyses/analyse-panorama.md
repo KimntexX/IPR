@@ -145,7 +145,7 @@ pixel réel n'est modifié** (vérifié au bit près), et le résultat ne dépen
 La part inventée figure dans le message de fin et dans le DNG.
 
 Sur la série à deux rangées, le recadrage perd 26 % des pixels réels. Remplir garde tout le canevas,
-18 847 × 5 094 pixels  dont 13,3 % inventés, la crête entière, pour 5 s de plus ([JSON](../raw/b8-panorama-audit-v001-remplissage-20261104T125442Z.json)).
+18 847 × 5 094 pixels  dont 13,3 % inventés, la crête entière, pour 5 s de plus ([JSON](../raw/b8-panorama-audit-v001-remplissage-20261104T222419Z.json)).
 
 Mesure où la vérité est connue : un coin réel du panorama recadré, 2 % de l'image, est caché puis
 rempli (erreur moyenne sur la racine de la luminance, ramenée à une image où 1 est le blanc ;
@@ -153,10 +153,10 @@ détail : écart moyen au flou, réel puis inventé).
 
 | Coin caché | Erreur | Détail réel | Détail inventé |
 | --- | --- | --- | --- |
-| Haut gauche (ciel) | 0,032 | 0,0022 | 0,0021 |
-| Haut droit (ciel) | 0,032 | 0,0022 | 0,0020 |
-| Bas gauche (végétation) | 0,058 | 0,0154 | 0,0143 |
-| Bas droit (sol) | 0,118 | 0,0194 | 0,0082 |
+| Haut gauche (ciel) | 0,024 | 0,0022 | 0,0018 |
+| Haut droit (ciel) | 0,029 | 0,0022 | 0,0020 |
+| Bas gauche (végétation) | 0,060 | 0,0154 | 0,0151 |
+| Bas droit (sol) | 0,109 | 0,0185 | 0,0068 |
 
 **Vu à l'œil par l'agent, à 100 %** :
 
@@ -167,8 +167,34 @@ détail : écart moyen au flou, réel puis inventé).
   (un buisson clair dans la forêt, une pente qui change de nature), et la transition en miroir laisse
   de légères ondulations et parfois un trait fin.
 
+### La coquille du toit
+
+Sur la série de l'utilisateur, `_MG_7596` à `_MG_7601`, la rangée du haut seule : 15,2 % à inventer
+([avant](../raw/b8-panorama-audit-v001-coquille-avant-20261104T221703Z.json), [après](../raw/b8-panorama-audit-v001-coquille-apres-20261104T222327Z.json)). Ces photos coupent la maison à leur limite. Le
+toit se reflétait en dessous, en losange. Lightroom a aussi un toit dédoublé sur son panorama.
+
+Trois règles sont ajoutées, sans changer un pixel réel :
+
+- La texture réelle n'est prolongée en miroir que là où elle ressemble à ce qui a été trouvé.
+- Un **objet isolé**, qui tranche avec ses alentours, n'est plus une source et n'est jamais reflété :
+  une maison ne se trouve pas deux fois. Taille retenue : de 0,05 % à 1 % de l'image.
+- Ces deux bornes comptent. Sans le plancher, chaque pierre d'une pente comptait comme objet et
+  privait la pente de sources : une large tache brune apparaissait. Au-delà du plafond, c'est la
+  texture d'une falaise.
+
+Vu à 100 % par l'agent : le toit est coupé net, comme derrière les arbres ; la pente de droite est
+sans couture. **Reste** un fin trait le long de la limite, le léger reflet d'un petit arbre, et deux
+antennes recopiées dans la zone inventée. La limite est décidée par la luminance : un objet discret,
+ou très fin, passe à travers.
+
+### L'avertissement
+
+Au-delà de 25 % de pixels inventés, le message de fin commence par « Attention » et propose de recadrer
+ou de retirer les photos les plus décalées. Il ne bloque rien. Il ne peut pas venir avant le calcul :
+cette part n'est connue qu'une fois la géométrie trouvée.
+
 Ce n'est pas une génération « intelligente » : rien ici ne sait ce qu'est une maison ou un arbre.
-Remplir un coin de premier plan important relève d'un modèle génératif, non prévu à ce stade.
+Un modèle génératif reste un besoin futur, tracé par l'[issue #27](https://github.com/KimntexX/IPR/issues/27).
 
 ## Limites
 
