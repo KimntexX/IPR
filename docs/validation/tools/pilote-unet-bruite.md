@@ -1,6 +1,6 @@
 # Pilote U-Net bruité — lancement et reprise
 
-Préparation du3 novembre2026 sur `patch_neural_restoration`, dans le
+Préparation du 4 novembre 2026 sur `patch_neural_restoration`, dans le
 worktree `.worktrees/patch_neural_restoration`. Le
 [rapport unique](../analyses/analyse-restauration-neuronale.md) porte les
 résultats scientifiques ; ce document décrit l'exploitation du banc.
@@ -8,18 +8,24 @@ Les JSON horodatés restent la mémoire canonique.
 
 ## Lancement de la campagne courante
 
-Le lancement courant est autorisé par la demande de poursuivre l'étape
-multi-échelle. Un horaire seul ne vaut pas autorisation. Le plan schéma4
+Le lancement courant est autorisé par la demande de poursuivre en autonomie.
+Un horaire seul ne vaut pas autorisation. Le plan schéma4
 exige un prétest réussi du calcul courant avant l'apprentissage long.
 Les anciens plans du correcteur local sont des preuves historiques.
 
-Après ce signal, depuis le worktree, commande préparée :
+Depuis le worktree, la préparation exige le prétest courant :
 
 ```powershell
-& .venv-neural/Scripts/python.exe tests/neural/run_noisy_campaign.py --plan build-patch_neural_restoration/noisy-context-plan-v001/plan.json --output build-patch_neural_restoration/noisy-context-campaign-v001 --until "2026-11-03T22:00:00+01:00"
+& .venv-neural/Scripts/python.exe tests/neural/prepare_warm_continuation.py --output build-patch_neural_restoration/paired-correlation-plan-v002 --engineering build-patch_neural_restoration/correlation-engineering-v001/result.json
+& .venv-neural/Scripts/python.exe tests/neural/run_paired_continuation.py --prepared build-patch_neural_restoration/paired-correlation-plan-v002 --output build-patch_neural_restoration/paired-correlation-campaign-v001 --prefix input-cues --candidate correlation
 ```
 
-Le dossier de sortie doit être nouveau. `--until` interdit **un nouveau
+Le plan indiqué est déjà préparé : ne pas relancer sa première commande
+dans le même dossier. Pour une nouvelle préparation, choisir de nouveaux
+noms de plan, sortie et préfixe. Le pilote apparié entraîne le contrôle et
+le candidat avant leurs évaluations ; sa fenêtre de départ est de deux heures.
+Le dossier de sortie doit être nouveau. En lancement direct d'une campagne,
+`run_noisy_campaign.py --until` interdit **un nouveau
 départ d'essai** après l'heure indiquée ; un essai déjà actif termine normalement,
 avec une limite technique de30minutes par processus. Il ne s'agit pas
 d'une extinction ou mise en veille du PC. Si le départ est décalé à une
@@ -31,18 +37,19 @@ autre journée, modifier explicitement la date et le fuseau de cet argument.
    deux relevés de RAM globale inférieure à90 %, espacés de15secondes,
    avant de charger PyTorch. Cette marge d'admission conserve l'arrêt
    autorisé à92 %, les plafonds2Gio engagés et1,25Gio privés/résidents.
-2. Entraîner la graine71 jusqu'aux2048 étapes finales fixées, puis évaluer
-   les624 observations et les contrôles historiques. Aucun choix du
-   meilleur checkpoint selon ses résultats.
-3. Faire de même avec73, même si les critères photographiques de71
-   échouent : les deux initialisations doivent être rapportées.
-4. Comparer bruit/couleur/structures, famille par famille, avec le parent
-   figé et la correction désactivée. Conserver les échecs, biais et limites.
-5. Si les deux graines passent les critères, préparer une confirmation
-   bruitée distincte avant toute revue photographique ou intégration.
-   Sinon diagnostiquer le critère en défaut avant de proposer un nouveau
-   candidat ; ne pas ajuster les seuils ou entraîner plus longtemps à
-   l'aveugle sur les mêmes contrôles.
+2. Reprendre les poids à 2 048 étapes, puis effectuer 512 mises à jour
+   par graine (71/73) et par bras : contrôle à projection statistique
+   figée nulle, candidat à projection apprise. Adam est neuf à 0,00025,
+   les exemples et la supervision simple sont identiques. Les nouveaux
+   paramètres ne reçoivent que 512 étapes ; les anciens en cumulent 2 560.
+3. Terminer les deux bras et graines avant de les évaluer. Retenir leurs
+   derniers poids, sans sélection selon un score.
+4. Rejouer le développement puis les textures fines. Comparer bruit,
+   couleur et structures par famille ; garder les échecs et les biais.
+5. Ne poursuivre vers les cohortes réservées que si tous les critères
+   précédents passent. Sinon diagnostiquer sans modifier les seuils.
+   Les empreintes exclues couvrent toute l'ascendance, pas seulement
+   les exemples du préfixe rejoué. Aucun rejeu connu n'est un jeu réservé.
 
 Le lanceur automatise l'exécution et les reprises des points1à3. L'analyse
 scientifique des points4et5 reste une étape de l'agent, à consigner dans
@@ -51,7 +58,7 @@ le rapport ; le lanceur ne modifie pas les modèles ni leurs critères.
 ## Sauvegarde et reprise technique
 
 - Un fichier `training-latest.pt` est enregistré au départ, puis toutes
-  les64 étapes d'Adam complètes et au terme2048. Un arrêt peut imposer
+  les64 étapes d'Adam complètes et au terme du stage512. Un arrêt peut imposer
   de recalculer jusqu'à64 étapes depuis le dernier fichier valide,
   notamment si l'écriture suivante échoue.
 - Il contient poids, Adam, étape, pertes, compteurs d'exposition et état
@@ -74,12 +81,15 @@ Une reprise manuelle reste possible, avec le **même plan** et un nouveau
 dossier de sortie :
 
 ```powershell
-& .venv-neural/Scripts/python.exe tests/neural/run_noisy_moment_pilot.py --plan build-patch_neural_restoration/noisy-context-plan-v001/plan.json --seed 71 --resume build-patch_neural_restoration/noisy-context-campaign-v001/seed71-attempt01/training-latest.pt --output build-patch_neural_restoration/noisy-context-manual-resume-v001
+& .venv-neural/Scripts/python.exe tests/neural/run_noisy_moment_pilot.py --plan build-patch_neural_restoration/paired-correlation-plan-v002/control/plan.json --seed 71 --resume build-patch_neural_restoration/input-cues-control-campaign-v001/seed71-attempt01/training-latest.pt --output build-patch_neural_restoration/input-cues-control-manual-resume-v001
 ```
 
 Ce chemin est un exemple : lire le checkpoint réel dans
 `training_progress.checkpoint` du JSON de la tentative. La reprise n'est
 pas une option de sélection photographique ou un ancien moteur à conserver.
+Les lecteurs utilisent `campaign_artifacts.campaign_models` pour résoudre
+la dernière tentative complète avec continuité des empreintes et du
+checkpoint, jamais un chemin `attempt01` fixé pour toute la campagne.
 
 Le correcteur utilise désormais un contexte U-Net à deux réductions.
 Les fenêtres d'apprentissage sont256pixels, mais la perte garde le même
@@ -88,7 +98,8 @@ la taille source128 ; les anciens centres RGB/CFA/sigma sont copiés
 exactement dans un halo analytique à bruit indépendant. La qualification
 classique mesure ces centres128après calcul sur320 ; les contrôles fins
 gardent leurs centres192après calcul sur384. La marge minimale vérifiée
-est96pixels. Ne pas utiliser les anciennes petites fenêtres comme si
+est112pixels (128 est aussi exigé dans l'audit ; 96 est trop court pour
+les statistiques ajoutées). Ne pas utiliser les anciennes petites fenêtres comme si
 elles apportaient tout ce contexte.
 
 ## Preuves et limites

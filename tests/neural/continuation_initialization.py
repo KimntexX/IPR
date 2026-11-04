@@ -25,4 +25,17 @@ def initialize_continuation(root, model, clean_state, ref):
         raise ValueError('Warm checkpoint plan differs')
     if any(n not in state or not torch.equal(state[n], value) for n, value in clean_state.items()):
         raise ValueError('Warm initialization changed frozen reconstruction')
+    if ref.get('initializer_embedding') == 'zero_correlation_projection_v1':
+        current = model.state_dict()
+        extra = {n for n in current if n.startswith('noise_features.statistics.')}
+        if (set(current)-set(state) != extra or set(state)-set(current)
+                or set(extra) != {'noise_features.statistics.'+n for n in
+                    ('weight', 'bias', 'input_permutation', 'output_permutation')}
+                or torch.count_nonzero(current['noise_features.statistics.weight'])
+                or torch.count_nonzero(current['noise_features.statistics.bias'])):
+            raise ValueError('Explicit zero-projection initializer embedding differs')
+        current.update(state)
+        state = current
+    elif 'initializer_embedding' in ref:
+        raise ValueError('Unknown initializer embedding')
     model.load_state_dict(state, strict=True)

@@ -19,6 +19,7 @@ class PairedContinuationTests(unittest.TestCase):
         self.assertEqual(prefix['freeze']['evaluation_cases'], source['freeze']['evaluation_cases'])
         self.assertEqual(source['freeze']['config']['steps'], 2048)
         self.assertEqual(len(source['freeze']['train_edge_events']), 2)
+        self.assertEqual(sum(sum(row) for row in prefix['freeze']['phase_counts_by_slot']), 16)
 
     def test_both_arms_train_before_evaluation_and_missing_control_blocks_confirmation(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -26,7 +27,7 @@ class PairedContinuationTests(unittest.TestCase):
             base = root/'build-patch_neural_restoration'
             prepared = base/'prepared'
             (root/'docs/validation/raw').mkdir(parents=True)
-            for arm in ('control', 'progressive'):
+            for arm in ('control', 'correlation'):
                 (prepared/arm).mkdir(parents=True)
                 (prepared/arm/'plan.json').write_text('{}')
             commands = []
@@ -40,7 +41,7 @@ class PairedContinuationTests(unittest.TestCase):
                     (output/name).write_text(json.dumps(value))
                 return 0
             with mock.patch('run_paired_continuation.execute', side_effect=fake):
-                result = run(root, prepared, base/'output')
+                result = run(root, prepared, base/'output', 'statistics', 'correlation')
             self.assertEqual(result['status'], 'inconclusive_control_development_failed_reserved_unopened')
             self.assertTrue(all(c[1].endswith('run_noisy_campaign.py') for c in commands[:2]))
             self.assertTrue(all(c[1].endswith('run_stability_qualification.py') for c in commands[2:4]))

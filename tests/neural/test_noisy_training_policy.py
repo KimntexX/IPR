@@ -78,10 +78,20 @@ class NoisyTrainingPolicyTests(unittest.TestCase):
         before = entry.detach().clone()
         self.assertGreater(float(entry.grad[:, 36:].abs().sum()), 0)
         self.assertGreater(float(model.noise_features.middle[0].weight.grad.abs().sum()), 0)
+        self.assertGreater(float(model.noise_features.statistics.weight.grad.abs().sum()), 0)
         self.assertTrue(torch.isfinite(entry.grad).all())
         optimizer = torch.optim.Adam(model.parameters(), lr=.001)
         optimizer.step()
         self.assertFalse(torch.equal(entry, before))
+
+    def test_statistical_control_freezes_only_the_zero_projection(self):
+        model = NoisyMomentUNet(4)
+        configure_trainable(model, 'cfa_front', statistics_trainable=False)
+        self.assertTrue(all(not p.requires_grad for p in model.noise_features.statistics.parameters()))
+        self.assertTrue(model.noise_features.enc1[0].weight.requires_grad)
+        self.assertEqual(int(torch.count_nonzero(model.noise_features.statistics.weight)), 0)
+        configure_trainable(model, 'cfa_front', statistics_trainable=True)
+        self.assertTrue(all(p.requires_grad for p in model.noise_features.statistics.parameters()))
 
     def test_actual_frozen_training_accepts_zero_noise_anchors(self):
         model = NoisyMomentUNet(4)

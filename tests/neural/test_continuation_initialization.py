@@ -12,6 +12,35 @@ from noisy_moment_unet import NoisyMomentUNet, load_reconstruction
 
 
 class ContinuationInitializationTests(unittest.TestCase):
+    def test_old_initializer_requires_explicit_zero_projection_embedding(self):
+        clean = LocalMomentUNet(4).state_dict()
+        learned = NoisyMomentUNet(4)
+        load_reconstruction(learned, clean)
+        with torch.no_grad():
+            learned.noise_head.weight.fill_(.02)
+        old_state = {n:v for n,v in learned.state_dict().items() if not n.startswith('noise_features.statistics.')}
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            folder = root/'build-patch_neural_restoration/warm'
+            folder.mkdir(parents=True)
+            weights = folder/'weights.pt'
+            torch.save(dict(state_dict=old_state, plan_sha256='old-plan'), weights)
+            proof = dict(status='completed_synthetic_noise_pilot_not_photographic_qualification',
+                seed=71, pilot_gates_passed=True, training_progress=dict(completed_optimizer_steps=2048),
+                weights_sha256=digest(weights), plan_sha256='old-plan')
+            path = folder/'result.json'
+            path.write_text(json.dumps(proof))
+            ref = dict(seed=71, folder=str(folder), weights_sha256=digest(weights), result_sha256=digest(path),
+                initializer_embedding='zero_correlation_projection_v1')
+            model = NoisyMomentUNet(4)
+            initialize_continuation(root, model, clean, ref)
+            self.assertTrue(all(torch.equal(v, model.state_dict()[n]) for n,v in old_state.items()))
+            self.assertEqual(int(torch.count_nonzero(model.noise_features.statistics.weight)), 0)
+            with torch.no_grad():
+                model.noise_features.statistics.weight.fill_(.1)
+            with self.assertRaises(ValueError):
+                initialize_continuation(root, model, clean, ref)
+
     def test_learned_front_is_loaded_and_wrong_frozen_trunk_is_rejected_before_mutation(self):
         torch.manual_seed(750)
         clean = LocalMomentUNet(4).state_dict()

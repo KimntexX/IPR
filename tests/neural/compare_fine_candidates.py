@@ -81,12 +81,27 @@ def compare(previous, current):
                 and g['amplitude'] == strong] for r in (previous, current)]
             if any(len(group) != 12 for group in groups):
                 raise ValueError('Missing strong-texture group')
+            strong_pairs = [pair for pair in pairs if previous['plan']['cases'][pair[0]['case_index']]['amplitude'] == strong]
+            def strong_ratio(side, category):
+                if category == 'rgb':
+                    numerator = sum(pair[side]['full']['rgb_mse'] for pair in strong_pairs)
+                    denominator = sum(pair[side]['parent']['rgb_mse'] for pair in strong_pairs)
+                else:
+                    numerator = sum(pair[side]['sensor']['corrected_mse'] for pair in strong_pairs)
+                    denominator = sum(pair[side]['sensor']['noisy_mse'] for pair in strong_pairs)
+                if denominator <= 0:
+                    raise ValueError('Positive strong-noise reference required')
+                return numerator/denominator
             result['comparisons'].append(dict(seed=seed, noise_index=level,
                 current_over_previous_rgb_mse=summed(1)/summed(0),
                 previous_strong_failed=sum(not g['strong_passed'] for g in groups[0]),
                 current_strong_failed=sum(not g['strong_passed'] for g in groups[1]),
                 previous_minimum_transfer=min(min(g['gain_over_parent']) for g in groups[0]),
-                current_minimum_transfer=min(min(g['gain_over_parent']) for g in groups[1])))
+                current_minimum_transfer=min(min(g['gain_over_parent']) for g in groups[1]),
+                previous_strong_rgb_over_parent=strong_ratio(0, 'rgb'),
+                current_strong_rgb_over_parent=strong_ratio(1, 'rgb'),
+                previous_strong_sensor_over_noisy=strong_ratio(0, 'sensor'),
+                current_strong_sensor_over_noisy=strong_ratio(1, 'sensor')))
     return result
 
 

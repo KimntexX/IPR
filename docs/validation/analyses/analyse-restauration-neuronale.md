@@ -5476,3 +5476,46 @@ rampe, la transposition, l'échelle et les ex æquo de l'AUC. Preuve :
 La prochaine expérience envisagée fournit ces mesures au réseau ; leur
 séparation statistique ne prouve pas encore qu'il saura mieux restaurer
 les motifs. Aucun nouvel entraînement n'a été lancé lors de ce bilan.
+
+### Entrées de corrélation — préparation du 4 novembre 2026
+
+L'essai suivant conserve la supervision simple et reprend les poids à
+2 048 étapes des deux graines. Il compare 512 mises à jour supplémentaires
+avec Adam neuf à 0,00025 : projection statistique figée à zéro dans le
+contrôle, apprise dans le candidat. Les données, tirages, pertes et norme
+maximale des gradients sont identiques. La projection ajoute 264 paramètres,
+soit 66 084 au total ; les nouveaux paramètres ne reçoivent que 512 mises
+à jour, contrairement aux poids hérités qui en cumulent 2 560.
+
+Les 32 mesures dérivées de l'observation et de son sigma sont comprimées
+par `asinh`, puis projetées après le premier encodeur. Aucun pixel propre
+n'entre dans ces mesures. La projection démarre à zéro : les 80 sorties
+initiales contrôlées reproduisent exactement leurs empreintes archivées.
+Les huit mises à jour techniques par graine et par bras sont jetées après
+vérification. Le prétest complet passe, avec environ 418 Mio résidents et
+1 096 Mio privés sous les limites mémoire conservées.
+
+Le rayon composé passe à 51 cellules CFA, avec une marge conservatrice
+de 104 pixels. Le contrôle des fenêtres utilise désormais une marge de
+112 pixels ; 96 reste un témoin volontairement trop court. Les fenêtres
+d'apprentissage 256 et leur centre de perte 32 restent compatibles.
+La qualification conserve ses centres, critères et tolérance RGB.
+
+La préparation exclut 3 792 empreintes propres de l'ascendance complète
+avant toute future cohorte réservée. Un préfixe d'entraînement de 512 pas
+ne doit pas faire oublier les données des poids initiaux. Ses compteurs de
+phases sont recalculés sur ce préfixe ; les preuves historiques restent
+intactes. Aucun jeu réservé supplémentaire n'a été ouvert.
+
+Preuves : [prétest de contexte](../raw/neural-context-preflight-v001-20261104T221215Z.json),
+[initialisation et exclusions](../raw/neural-statistics-warm-preflight-v001-20261104T222912Z.json).
+La convolution de boîte séparable réduit le temps de la sonde de 60 à
+36 secondes. Les AUC sont identiques, avec un écart maximal d'arrondi de
+1,53 × 10⁻⁵ sur ses résumés internes ; cela ne modifie aucune tolérance
+de restitution RGB. [Sonde optimisée](../raw/neural-correlation-cue-v001-20261104T221955Z.json).
+
+Décision : lancer les deux bras et graines avant de lire leurs résultats,
+puis rejouer les textures fines en premier. Un échec arrête l'ouverture
+des cohortes réservées. La séparation observée entre motifs procéduraux
+et placebos ne constitue ni une garantie de restauration ni une validation
+photographique. Aucun changement de production n'est engagé.

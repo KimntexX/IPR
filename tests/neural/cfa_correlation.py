@@ -2,12 +2,15 @@
 import torch
 from torch.nn import functional as F
 
+WINDOWS = (9, 17)
+PACKED_RADIUS = 2+max(WINDOWS)//2
+
 
 def correlation_features(values, sigma, window):
     if (values.ndim != 4 or values.shape[0] == 0 or values.shape[1] != 4 or sigma.shape != values.shape
             or values.dtype != torch.float32 or sigma.dtype != values.dtype or sigma.device != values.device
             or isinstance(window, bool) or not isinstance(window, int) or window < 3 or window % 2 != 1
-            or min(values.shape[-2:]) <= max(2, window//2)
+            or min(values.shape[-2:]) <= 2
             or not torch.isfinite(values).all() or not torch.isfinite(sigma).all() or (sigma < 0).any()):
         raise ValueError('Finite float32 CFA/sigma and supported odd correlation window required')
     if (sigma == 0).all():
@@ -32,8 +35,10 @@ def correlation_features(values, sigma, window):
     normalizer = torch.stack((hvar, hvar, vvar, vvar), dim=2)
     radius = window//2
     def smooth(array):
-        return F.avg_pool2d(F.pad(array.reshape(len(values), 16, height, width),
-            (radius, radius, radius, radius), mode='reflect'), window, stride=1)
+        rows = F.avg_pool2d(F.pad(array.reshape(len(values), 16, height, width),
+            (radius, radius, 0, 0), mode='replicate'), (1, window), stride=1)
+        return F.avg_pool2d(F.pad(rows, (0, 0, radius, radius), mode='replicate'),
+            (window, 1), stride=1)
     numerator, denominator = smooth(raw), smooth(normalizer)
     result = torch.where(denominator > 0, numerator/denominator.clamp_min(1e-24), torch.zeros_like(numerator))
     if not torch.isfinite(result).all():

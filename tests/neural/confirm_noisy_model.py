@@ -11,6 +11,7 @@ import torch
 
 from compare_reconstruction_objectives import confined, freeze_cases
 from continuation_policy import completed_training
+from training_exclusions import training_truth_hashes
 from diagnose_train_learnability import digest, save
 from edge_protected_noise import EdgeProtectedNoisyUNet
 from local_moment_unet import LocalMomentUNet
@@ -23,7 +24,7 @@ from run_synthetic_joint_pilot import tensor_hash
 from synthetic_bayer_data import PATTERNS, signal
 
 
-TOOLS = tuple(dict.fromkeys(PROBE_TOOLS+('confirm_noisy_model.py',)))
+TOOLS = tuple(dict.fromkeys(PROBE_TOOLS+('confirm_noisy_model.py', 'training_exclusions.py')))
 
 
 def eligibility(kind, proof, refs):
@@ -97,7 +98,7 @@ def prepare(root, data_plan, accepted, kind, folders, priors, output, edge_start
         torch.set_num_threads(4)
         previous = [cohort_contents(json.loads(p.read_text(encoding='utf-8'))) for p in priors]+[source_data]
         seen = {key: [r for p in previous for r in p[key]] for key in ('edges', 'mixed')}
-        seen['mixed'] += source_data.get('texture_augmentation', {}).get('events', [])
+        seen['mixed'] += [dict(target_sha256=h) for h in sorted(training_truth_hashes(source_data))]
         edges, mixed = freeze_cases(source, seen, edge_start, mixed_seed)
         replicas = []
         for replicate in range(3):

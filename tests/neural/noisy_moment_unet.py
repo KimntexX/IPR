@@ -12,7 +12,7 @@ from multiscale_correction import CfaContextFeatures
 FORWARD_TOOLS = ('noisy_moment_unet.py', 'noise_conditioning.py', 'polynomial_residual.py',
     'local_moment_unet.py', 'closed_moment_unet.py', 'closed_moment_operator.py',
     'moment_bayer_unet.py', 'joint_bayer_unet.py', 'camera_unet.py', 'bayer_canonical.py',
-    'multiscale_correction.py')
+    'multiscale_correction.py', 'cfa_correlation.py')
 
 
 class NoisyMomentUNet(LocalMomentUNet):

@@ -106,10 +106,10 @@ def run(root, parent, output):
                     same = predict(model, packed/2, sigma/2, tags, False, True)*2
                     if not torch.equal(full, same):
                         raise ValueError('Prepared multiscale output differs')
-                    part = predict(prepared, packed[:, :, 32:-32, 32:-32]/2,
-                        sigma[:, :, 32:-32, 32:-32]/2, tags, False, True)*2
-                    delta = float((full[:, :, 160:224, 160:224]-part[:, :, 96:160, 96:160]).abs().max())
-                    result['window_checks'].append(dict(phase_index=phase, halo=96, max_abs=delta))
+                    part = predict(prepared, packed[:, :, 24:-24, 24:-24]/2,
+                        sigma[:, :, 24:-24, 24:-24]/2, tags, False, True)*2
+                    delta = float((full[:, :, 160:224, 160:224]-part[:, :, 112:176, 112:176]).abs().max())
+                    result['window_checks'].append(dict(phase_index=phase, halo=112, max_abs=delta))
                     if delta > 2e-6:
                         raise ValueError('Context support margin insufficient')
                     zero = torch.zeros_like(packed)

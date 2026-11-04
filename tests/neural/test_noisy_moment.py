@@ -63,6 +63,7 @@ class NoisyMomentTests(unittest.TestCase):
             load_reconstruction(self.model, {})
 
     def test_prepared_bit_identity_and_noisy_d4_covariance(self):
+        torch.nn.init.uniform_(self.model.noise_features.statistics.weight, -.05, .05)
         torch.nn.init.uniform_(self.model.noise_head.weight, -.5, .5)
         torch.nn.init.uniform_(self.model.noise_head.bias, -.5, .5)
         prepared = prepare_inference(self.model)

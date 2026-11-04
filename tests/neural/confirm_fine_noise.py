@@ -22,11 +22,12 @@ from run_noisy_moment_pilot import NOISE
 from run_synthetic_joint_pilot import tensor_hash
 from synthetic_bayer_data import PATTERNS
 from context_data import extend_observation, crop_centre
+from training_exclusions import training_truth_hashes
 
 
 TOOLS = tuple(dict.fromkeys(INFERENCE_TOOLS+('confirm_fine_noise.py', 'audit_spectral_noise.py',
     'neural_inference_contract.py', 'synthetic_bayer_data.py', 'run_synthetic_joint_pilot.py',
-    'joint_bayer_unet.py', 'memory_budget.py', 'context_data.py')))
+    'joint_bayer_unet.py', 'memory_budget.py', 'context_data.py', 'training_exclusions.py')))
 
 
 def fine_signal(case, side=192, origin=0):
@@ -89,7 +90,7 @@ def prepare(root, proof_path, output, cohort=1, priors=()):
         raise ValueError('Distinct72fine signals required')
     seen = {c['target_sha256'] for path in priors
         for c in json.loads(path.read_text(encoding='utf-8'))['cases']}
-    seen.update(c['target_sha256'] for c in source['data'].get('texture_augmentation', {}).get('events', []))
+    seen.update(training_truth_hashes(source['data']))
     if seen.intersection(c['target_sha256'] for c in cases):
         raise ValueError('Fine targets collide with earlier cohorts or training')
     output.mkdir(parents=True, exist_ok=False)

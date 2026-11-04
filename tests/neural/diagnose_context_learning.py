@@ -129,7 +129,7 @@ def run(root, output, plan_path, campaign):
                         initialize_continuation(root, model, torch.load(parent_path, weights_only=True)['state_dict'], ref)
                 else:
                     model.load_state_dict(torch.load(folder/'weights.pt', weights_only=True)['state_dict'], strict=True)
-                configure_trainable(model, 'cfa_front')
+                configure_trainable(model, 'cfa_front', plan['config'].get('statistics_trainable', True))
                 model.eval()
                 weight = secondary_weight(plan['config'], 1 if stage == 'initial' else plan['config']['steps'])
                 measured = dict(seed=seed, stage=stage, weights_sha256=digest(folder/'weights.pt'),

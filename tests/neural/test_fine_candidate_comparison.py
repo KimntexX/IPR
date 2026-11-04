@@ -10,7 +10,8 @@ def proof():
         for replicate in range(1 if level == 0 else 3)]
     rows = [dict(field, seed=seed, target_sha256='target'+str(field['case_index']),
         observation_sha256=str(field), sigma_sha256='sigma'+str(field),
-        parent=dict(rgb_mse=1.), full=dict(rgb_mse=.8, sine_gain=[1., 1., 1.], quadrature_gain=[0., 0., 0.]))
+        parent=dict(rgb_mse=1.), full=dict(rgb_mse=.8, sine_gain=[1., 1., 1.], quadrature_gain=[0., 0., 0.]),
+        sensor=dict(noisy_mse=1., corrected_mse=.8))
         for seed in (71, 73) for field in fields]
     groups = [dict(seed=seed, noise_index=level, amplitude=.06, strong_passed=True,
         gain_over_parent=[1., 1., 1.]) for seed in (71, 73) for level in (1, 2) for _ in range(12)]
@@ -41,6 +42,8 @@ class FineCandidateComparisonTests(unittest.TestCase):
         self.assertEqual(result['comparisons'][0]['current_strong_failed'], 1)
         self.assertAlmostEqual(result['comparisons'][0]['current_over_previous_rgb_mse'], .5)
         self.assertEqual(result['comparisons'][0]['current_minimum_transfer'], .8)
+        self.assertAlmostEqual(result['comparisons'][0]['current_strong_rgb_over_parent'], .4)
+        self.assertAlmostEqual(result['comparisons'][0]['current_strong_sensor_over_noisy'], .8)
 
     def test_rejects_unpaired_or_incomplete_measurements(self):
         old = proof()

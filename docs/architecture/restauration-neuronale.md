@@ -1032,3 +1032,30 @@ La même fonction de perte fournit cette combinaison convexe ; aucun autre
 chemin d'inférence n'est introduit. Une reprise restaure aussi la position
 dans la rampe. Les textures fines sont désormais le premier rejeu après le
 développement protégé ; leur échec interdit une qualification globale.
+
+### Entrées statistiques observées — 4 novembre 2026
+
+La transition progressive précédente reste insuffisante : 17/48 échecs
+fins forts contre 19/48 au contrôle, sans amélioration sur les deux graines.
+Le candidat courant conserve la supervision simple et ajoute aux 40 entrées
+de base 32 corrélations calculées dans le réseau, sur quatre plans physiques,
+deux axes, deux décalages et deux supports (9 et 17 cellules CFA).
+Ces statistiques utilisent uniquement le signal observé et son sigma.
+Après compression `asinh`, une projection 1×1 rejoint le premier encodeur.
+
+Cette projection ajoute 264 paramètres : 66 084 au total, dont 32 716
+entraînables dans le candidat et 33 368 figés dans le reconstructeur.
+Le contrôle fige aussi les 264 paramètres nouveaux à zéro. Les deux bras
+exécutent le même graphe ; il n'existe pas de chemin ancien d'inférence.
+L'importation explicite des poids archivés exige ces seules nouvelles clés
+et une projection nulle. Quatre-vingts empreintes de sorties initiales ont
+été vérifiées identiques avant entraînement.
+
+Le rayon composé atteint 51 cellules CFA, soit une marge conservatrice
+de 104 pixels. Les tests comparent un centre 64 entre vues 384 et 288,
+avec une marge de 112 ; l'audit exige 112 et 128, tandis que 96 est un
+témoin trop court. Le centre de perte 32 dans 256 reste inchangé.
+Les nouvelles cohortes excluent toutes les empreintes de l'ascendance,
+pas seulement celles du préfixe de données rejoué. La campagne appariée
+garde les graines 71/73, Adam neuf et 512 étapes par bras ; aucun résultat
+de ce candidat n'est encore qualifié.

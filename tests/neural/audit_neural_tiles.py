@@ -84,13 +84,13 @@ def run(root, data_path, folders, capture_path, kind, output):
     output.mkdir(parents=True, exist_ok=False)
     freeze = dict(data_plan_sha256=digest(data_path), captures_sha256=digest(capture_path), models=references,
         kind=kind, sources=sources, tolerance=2e-6, full_side=384, core_side=64,
-        tile_sides=[256, 288, 320], declared_required_halos=[96, 112, 128], sigma_scenarios=[0., .01, .03],
+        tile_sides=[256, 288, 320], declared_required_halos=[112, 128], sigma_scenarios=[0., .01, .03],
         runtime=runtime_versions(), tools={n: digest(Path(__file__).with_name(n)) for n in
             FORWARD_TOOLS+('audit_neural_tiles.py', 'edge_protected_noise.py', 'mosaic_data.py')},
         limits=['Engineering crop/whole-view comparison, no clean photographic target or denoising quality claim.',
             'Constant supplied sigma is a stress scenario, not a noise estimate for these cameras/ISO.',
             'Three cached R6III sources, nine ROIs each; no new RAW decode or source modification.',
-            'Halos96,112,128 must agree with the full384 view for every case.'])
+            'Halos112,128 must agree with full384; halo96 is a descriptive undersized control.'])
     save(output/'freeze.json', freeze)
     result = dict(schema_version=1, data_version=1, campaign_id=campaign, measured_at_utc=now.isoformat(),
         freeze=freeze, freeze_sha256=digest(output/'freeze.json'), status='incomplete', records=[])

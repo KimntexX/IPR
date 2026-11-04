@@ -461,7 +461,8 @@ def run(root, plan_path, seed, output, resume=None):
                 ref = refs[0]
                 initialize_continuation(root, model, checkpoint['state_dict'], ref)
                 result['warm_start'] = ref
-            result['training_scope'] = configure_trainable(model, plan['config']['training_scope'])
+            result['training_scope'] = configure_trainable(model, plan['config']['training_scope'],
+                plan['config'].get('statistics_trainable', True))
             result['parameter_count'] = sum(p.numel() for p in model.parameters())
             result['losses'], result['training_exposure_counts'] = train(model, source, plan['config'], guard,
                 output/'training-latest.pt', context, progress, plan['checkpoint_policy']['interval_steps'], resume,
