@@ -249,6 +249,30 @@ void panoramas(const QDir &folder, const std::shared_ptr<CameraProfileEngine::Dc
         check(waitFor([&] { return empty->statistics().reservedBytes == 0 && empty->statistics().waitingRequests == 0; }), "and leaves nothing behind");
     }
 
+    // Frames far apart leave much of the canvas to invent: the message warns, and still delivers.
+    {
+        const cv::Mat tall = StackFixture::scene(cv::Size(1500, 1000));
+        StackSession assembling([tall, context](const QString &file, const std::function<bool()> &) {
+            const int index = QFileInfo(file).baseName().remove(QStringLiteral("frame")).toInt();
+            StackSession::Decoded decoded;
+            decoded.cameraRgb = tall(cv::Rect(index * 430, index * 280, 640, 420)).clone();
+            decoded.context = context;
+            decoded.metadata.cameraMake = QStringLiteral("Canon");
+            decoded.metadata.cameraModel = QStringLiteral("EOS R6 Mark III");
+            return decoded;
+        });
+        assembling.startPanorama(frames(folder, 3), QStringLiteral("cylindrical"), QStringLiteral("fill"));
+        check(waitFor([&] { return !assembling.running(); }), "a much invented panorama ends");
+        check(assembling.hasResult(), "with a result: the warning does not block");
+        check(assembling.status().contains(QStringLiteral("Attention")) && assembling.status().contains(QStringLiteral("inventés")), "and warns of what it invented");
+
+        // Close frames invent little, and only say so.
+        StackSession close(decoder);
+        close.startPanorama(frames(folder, 3), QStringLiteral("cylindrical"), QStringLiteral("fill"));
+        check(waitFor([&] { return !close.running(); }), "a little invented panorama ends");
+        check(close.hasResult() && !close.status().contains(QStringLiteral("Attention")), "without alarm");
+    }
+
     // No profile for this camera: no context, so no panorama, and the reason reaches the panel.
     StackSession noProfile([world](const QString &file, const std::function<bool()> &) {
         const int index = QFileInfo(file).baseName().remove(QStringLiteral("frame")).toInt();

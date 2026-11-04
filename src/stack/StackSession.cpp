@@ -21,6 +21,7 @@
 namespace {
 
 constexpr int previewSide = 1600;
+constexpr double inventedWarning = 0.25;  // of a filled panorama, beyond which the message warns
 // The bands held while merging, on top of what a decode needs.
 quint64 mergeBytes() { return StackJob::Request{}.memoryBudgetBytes; }
 
@@ -334,6 +335,10 @@ void StackSession::finished()
                       .arg(m_result->cameraRgb.cols).arg(m_result->cameraRgb.rows)
                       .arg((m_result->leftOut > 0 ? tr(", %1 écartée(s)").arg(m_result->leftOut) : QString())
                            + (m_result->filledShare > 0.0 ? tr(", dont %1 % de pixels inventés").arg(m_result->filledShare * 100.0, 0, 'f', 1) : QString())));
+        if (m_result->filledShare > inventedWarning) {
+            setStatus(tr("Attention : %1 % de cette image sont inventés, ce qui se verra probablement. Recadrez, ou retirez les photos les plus décalées.\n%2")
+                          .arg(m_result->filledShare * 100.0, 0, 'f', 1).arg(m_status));
+        }
         return;
     }
     setStatus(tr("%1 photos empilées, %2 % de la surface conservée%3. Choisissez un format pour exporter.")

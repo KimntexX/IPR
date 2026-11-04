@@ -495,6 +495,41 @@ void fillInventsOnlyWhatIsMissing()
     cv::absdiff(stripeGreen, cv::Scalar(0.5), stripeContrast);
     check(cv::mean(stripeContrast, known == 0)[0] > 0.2, "a strong structure keeps its contrast");
 
+    // A bright object next to the hole, in a plain texture: it is cut by the limit, as the
+    // house of a real series. It must not be reflected across the limit, nor found again.
+    {
+        const cv::Size field(1000, 500);
+        cv::Mat scene(field, CV_32FC3);
+        cv::RNG grainy{uint64_t(77)};
+        for (int y = 0; y < field.height; ++y)
+            for (int x = 0; x < field.width; ++x) {
+                const float value = 0.09f + float(grainy.gaussian(0.012));
+                scene.at<cv::Vec3f>(y, x) = cv::Vec3f(value, value, value);
+            }
+        const int limit = 380;
+        const cv::Rect object(400, limit - 30, 90, 60); // astride the limit: half of it is real
+        scene(object).setTo(cv::Scalar::all(0.8));
+        cv::Mat seen(field, CV_8UC1, cv::Scalar(255));
+        seen(cv::Rect(0, limit, field.width, field.height - limit)).setTo(0);
+        cv::Mat filledScene = scene.clone();
+        filledScene.setTo(cv::Scalar::all(0), seen == 0);
+        const cv::Mat real = filledScene.clone();
+        check(PanoramaFill::fill(filledScene, seen).outcome == PanoramaFill::Outcome::Filled, "a scene with an object is filled");
+        cv::Mat green;
+        cv::extractChannel(filledScene, green, 1);
+        // Below the limit, right under the object: what a reflection would make bright.
+        const cv::Mat reflection = green(cv::Rect(object.x + 10, limit + 4, object.width - 20, 20));
+        check(cv::mean(reflection)[0] < 0.3, "an object cut by the limit is not reflected across it");
+        // Anywhere else in what was invented: another copy of it.
+        cv::Mat elsewhere = green(cv::Rect(0, limit + 40, field.width, field.height - limit - 40)).clone();
+        double brightest = 0.0;
+        cv::minMaxLoc(elsewhere, nullptr, &brightest);
+        check(brightest < 0.4, "an object is not found a second time");
+        cv::Mat realChanges;
+        cv::absdiff(filledScene(cv::Rect(0, 0, field.width, limit)), real(cv::Rect(0, 0, field.width, limit)), realChanges);
+        check(cv::norm(realChanges, cv::NORM_INF) == 0.0, "and the object itself stays as it was");
+    }
+
     // Nothing to do, too little to do it with, wrong inputs, and a cancel.
     cv::Mat whole = sky.clone();
     const PanoramaFill::Report nothing = PanoramaFill::fill(whole, cv::Mat(size, CV_8UC1, cv::Scalar(255)));
