@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "started_at_utc": "2026-11-04T07:38:36.456812+00:00",
+  "status": "completed_known_regressions_failed_reserved_unopened",
+  "tools_sha256": "8ec378cad38871d8c705b17cd920ed8b3b4b7f0bda991a855396add4c4cc1fe3",
+  "campaign": "build-patch_neural_restoration\\noisy-structure-campaign-v001",
+  "data_plan": "build-patch_neural_restoration\\noisy-structure-plan-v001\\plan.json",
+  "prefix": "structure",
+  "policy": "Both seeds, fixed gates, sequential jobs. All three known regressions reported including failures. Reserved cohorts remain unopened.",
+  "stages": [
+    {
+      "name": "prepare_development",
+      "started_at_utc": "2026-11-04T07:58:36.522982+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\run_edge_protected_probe.py",
+        "--prepare",
+        "--data-plan",
+        "build-patch_neural_restoration\\noisy-structure-plan-v001\\plan.json",
+        "--models",
+        "build-patch_neural_restoration\\noisy-structure-campaign-v001\\seed71-attempt01",
+        "build-patch_neural_restoration\\noisy-structure-campaign-v001\\seed73-attempt01",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\structure-protected-plan-v001"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-04T07:58:38.648723+00:00"
+    },
+    {
+      "name": "development",
+      "started_at_utc": "2026-11-04T07:58:38.650316+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\run_edge_protected_probe.py",
+        "--plan",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\structure-protected-plan-v001\\plan.json",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\structure-protected-v001"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-04T08:00:59.681605+00:00"
+    },
+    {
+      "name": "prepare_classic_first",
+      "started_at_utc": "2026-11-04T08:00:59.717141+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\prepare_neural_regression.py",
+        "--source",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\structure-protected-v001\\result.json",
+        "--historical",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-confirmation-attempt02-v001\\result.json",
+        "--kind",
+        "classic",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\structure-classic_first-plan-v001"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-04T08:01:01.903930+00:00"
+    },
+    {
+      "name": "classic_first",
+      "started_at_utc": "2026-11-04T08:01:01.905078+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\confirm_noisy_model.py",
+        "--plan",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\structure-classic_first-plan-v001\\plan.json",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\structure-classic_first-v001"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-04T08:07:43.492305+00:00"
+    },
+    {
+      "name": "prepare_classic_second",
+      "started_at_utc": "2026-11-04T08:07:43.624549+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\prepare_neural_regression.py",
+        "--source",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\structure-protected-v001\\result.json",
+        "--historical",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\fixed-point-independent-v001\\result.json",
+        "--kind",
+        "classic",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\structure-classic_second-plan-v001"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-04T08:07:45.662428+00:00"
+    },
+    {
+      "name": "classic_second",
+      "started_at_utc": "2026-11-04T08:07:45.663710+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\confirm_noisy_model.py",
+        "--plan",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\structure-classic_second-plan-v001\\plan.json",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\structure-classic_second-v001"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-04T08:14:11.789339+00:00"
+    },
+    {
+      "name": "prepare_fine",
+      "started_at_utc": "2026-11-04T08:14:11.914651+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\prepare_neural_regression.py",
+        "--source",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\structure-protected-v001\\result.json",
+        "--historical",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\fixed-point-fine-v001\\result.json",
+        "--kind",
+        "fine",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\structure-fine-plan-v001"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-04T08:14:13.782566+00:00"
+    },
+    {
+      "name": "fine",
+      "started_at_utc": "2026-11-04T08:14:13.783896+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\confirm_fine_noise.py",
+        "--plan",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\structure-fine-plan-v001\\plan.json",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\structure-fine-v001"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-04T08:18:52.951865+00:00"
+    }
+  ],
+  "development_passed": true,
+  "regressions": [
+    {
+      "name": "classic_first",
+      "passed": true,
+      "result": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\structure-classic_first-v001\\result.json",
+      "sha256": "95cdf6ca7bbd09dcaf5f54cc5e12e491cf51d15f2a7d7a7488a8cc1402cd5b22"
+    },
+    {
+      "name": "classic_second",
+      "passed": true,
+      "result": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\structure-classic_second-v001\\result.json",
+      "sha256": "b25932b7d64890753dfc62dc9a42afd0ffbaec5fab293fcbd43890ef05a95bc4"
+    },
+    {
+      "name": "fine",
+      "passed": false,
+      "result": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\structure-fine-v001\\result.json",
+      "sha256": "35eac7fee7aa067186376f89e26127e4ba1919b9d29f219ad523cc01a01718a5"
+    }
+  ],
+  "finished_at_utc": "2026-11-04T08:18:53.033640+00:00"
+}

@@ -140,7 +140,7 @@ def prepare(root, source, priors, parents, output, training_scope='cfa_front', p
             target='Zero CFA correction on clean signal, no RGB interpolation compensation.',
             normalization='Same noisy RGB reference energy and tempered floor as the data term.'),
         structure_preservation=dict(weight=1., scope='Positive-noise CFA core, four physical planes.',
-            policy='Squared projection of CFA error onto centred clean target, divided by estimated independent-noise projection variance; constant targets give exactly zero.'),
+            policy='Average squared CFA error projections onto centred clean target and noise-orthogonal target curvature; independent-noise variance normalization, relative rank guards1e-8/1e-4; constants zero.'),
         tools={n: digest(Path(__file__).with_name(n)) for n in TOOLS},
         noise_gate_policy='Each positive level: RGB MSE full/parent<=.98, opponent full/parent<=1, full/without_correction RGB<=1; weak/edge gradient>=.95 parent. Zero noise retains original12gates, new mixed and historical20/80.',
         training_policy='Final2048 only, both pretrained seeds, same ID/phase schedule; replace wave slots by frozen broadband two-wave textures, other slots unchanged. Noise level=(4*(step-1)+position)%3, seed74000000+4*(step-1)+position, paired realizations across models. Accumulated global gradient L2 norm clipped to1 before Adam; no early stopping. Adam scope='+training_scope,

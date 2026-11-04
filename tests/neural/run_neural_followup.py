@@ -43,15 +43,17 @@ def execute(command, log):
             raise
 
 
-def run(root, output, qualification, data_plan, campaign, prefix):
+def run(root, output, qualification, data_plan, campaign, prefix, previous_fine, previous_campaign):
     base = root/'build-patch_neural_restoration'
     if (not re.fullmatch('[a-z][a-z0-9_-]*', prefix)
-            or not all(p.resolve().is_relative_to(base.resolve()) for p in (output, qualification, data_plan, campaign))):
+            or not all(p.resolve().is_relative_to(base.resolve())
+                for p in (output, qualification, data_plan, campaign, previous_fine, previous_campaign))):
         raise ValueError('Dedicated build paths and simple prefix required')
     output.mkdir(parents=True, exist_ok=False)
     state = dict(schema_version=1, started_at_utc=datetime.now(timezone.utc).isoformat(),
         status='waiting_known_qualification', qualification=str(qualification), data_plan=str(data_plan),
         campaign=str(campaign), prefix=prefix, script_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+        previous_fine=str(previous_fine), previous_campaign=str(previous_campaign),
         policy='No retraining or tuning. Known failure -> paired diagnostic only. All known pass -> frozen new classic cohort then fine cohort2; failure stops opening further reserved data.', stages=[])
     write(output/'progress.json', state)
     def command(name, script, *arguments):
@@ -88,12 +90,15 @@ def run(root, output, qualification, data_plan, campaign, prefix):
         fine = base/(prefix+'-fine-v001/result.json')
         if fine.exists():
             command('paired_fine_comparison', 'compare_fine_candidates.py',
-                '--previous', base/'stability-fine-v001/result.json', '--current', fine,
+                '--previous', previous_fine, '--current', fine,
                 '--output', output/'paired-fine.json')
         if action == 'diagnose':
             if fine.exists():
                 command('fine_diagnosis', 'trace_fine_attenuation.py', '--proof', protected,
                     '--historical', fine, '--output', base/(prefix+'-fine-trace-v001'))
+                command('multitone_diagnosis', 'diagnose_multitone_training.py', '--data-plan', data_plan,
+                    '--previous-campaign', previous_campaign, '--campaign', campaign,
+                    '--output', base/(prefix+'-multitone-diagnostic-v001'))
             else:
                 command('learning_diagnosis', 'diagnose_context_learning.py', '--data-plan', data_plan,
                     '--campaign', campaign, '--output', base/(prefix+'-learning-diagnostic-v001/result.json'))
@@ -147,8 +152,9 @@ def run(root, output, qualification, data_plan, campaign, prefix):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    for name in ('output', 'qualification', 'data-plan', 'campaign'):
+    for name in ('output', 'qualification', 'data-plan', 'campaign', 'previous-fine', 'previous-campaign'):
         parser.add_argument('--'+name, type=Path, required=True)
     parser.add_argument('--prefix', required=True)
     args = parser.parse_args()
-    run(Path(__file__).resolve().parents[2], args.output, args.qualification, args.data_plan, args.campaign, args.prefix)
+    run(Path(__file__).resolve().parents[2], args.output, args.qualification, args.data_plan,
+        args.campaign, args.prefix, args.previous_fine, args.previous_campaign)

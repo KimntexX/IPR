@@ -994,3 +994,24 @@ pas conservées dans le code courant. Prétest : huit mises à jour sans
 conservation des poids, quatre contrôles sigma nul exacts, 32 symétries,
 quatre comparaisons de fenêtres et pont vers le centre du parent.
 Il ne valide ni le débruitage ni les photographies.
+
+### Supervision de structure — 4 novembre 2026
+
+L'architecture d'inférence conserve 65 820 paramètres et le reconstructeur
+figé. L'apprentissage limite à 1 la norme L2 des gradients accumulés avant
+chaque étape Adam. À l'erreur RGB tempérée et au point fixe CFA propre
+s'ajoute une supervision des variations de la cible CFA. Le code courant
+utilise au plus deux projections : détail centré et courbure des quatre
+voisins orthogonalisée dans le produit scalaire pondéré par la variance
+estimée. Les carrés d'erreur projetée sont normalisés par cette variance,
+puis moyennés sur les directions actives et les plans.
+
+Les gardes relatives 10⁻⁸/10⁻⁴ évitent de traiter l'arrondi comme une
+direction indépendante. Aucun changement de signal, profil, table ou filtre
+n'est ajouté à l'inférence ; ces cibles propres ne servent qu'à entraîner
+les poids. Les coefficients, plans et preuves d'entraînement figent le
+terme utilisé, y compris pour les modèles précédents conservés en preuves.
+La supervision simple a réduit les échecs fins de 24 à 19/48, sans validation
+globale. La version à deux projections est un nouvel essai, pas un résultat
+qualifié. Détails et limites dans le
+[rapport unique](../validation/analyses/analyse-restauration-neuronale.md).

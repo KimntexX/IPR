@@ -38,11 +38,13 @@ class NeuralFollowupTests(unittest.TestCase):
                 commands.append(command)
                 return 0
             with mock.patch('run_neural_followup.execute', side_effect=fake_execute):
-                result = run(root, base/'output', qualification, base/'data.json', base/'training', 'candidate')
+                result = run(root, base/'output', qualification, base/'data.json', base/'training', 'candidate',
+                    base/'previous-fine.json', base/'previous-training')
             self.assertEqual(result['status'], 'completed_known_failure_diagnosis_reserved_unopened')
-            self.assertEqual(len(commands), 2)
+            self.assertEqual(len(commands), 3)
             self.assertTrue(commands[0][1].endswith('compare_fine_candidates.py'))
             self.assertTrue(commands[1][1].endswith('trace_fine_attenuation.py'))
+            self.assertTrue(commands[2][1].endswith('diagnose_multitone_training.py'))
             self.assertFalse(any('confirm_noisy_model.py' in str(c) or 'confirm_fine_noise.py' in str(c) for c in commands))
 
     def test_timeout_terminates_owned_windows_process_tree_and_reaps_child(self):

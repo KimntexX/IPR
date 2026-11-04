@@ -1,11 +1,12 @@
 # Restauration neuronale — qualification du corpus
 
 **État au 4 novembre 2026, matin :** les gradients limités stabilisent les
-deux entraînements et les deux corpus classiques passent. Les textures
-fines restent en échec (24/48 groupes forts). Leur diagnostic localise
-l'atténuation principalement dans la correction CFA. Un terme de supervision
-de structure est prêt pour essai comparatif ; aucune qualité photographique
-validée, aucun moteur de production modifié ni nouveau jeu réservé ouvert.
+deux entraînements et les deux corpus classiques passent. Une supervision
+de structure réduit les échecs fins de 24 à 19/48 groupes forts, sans les
+résoudre. Son diagnostic motive un essai à deux projections complémentaires,
+prétesté mais sans résultat d'entraînement à ce stade. Aucune qualité
+photographique validée, aucun moteur de production modifié ni nouveau jeu
+réservé ouvert.
 
 ## 1er novembre 2026 — scène pilote 6V1A0133
 
@@ -5208,3 +5209,77 @@ Trois observations par série donnent une forte incertitude individuelle ;
 les moyennes de groupes restent descriptives et ne créent aucun nouveau
 seuil de validation. Un test contrôle notamment la correction de taille finie
 et la conservation d'une estimation négative.
+
+### Résultat de la supervision simple et diagnostic complémentaire
+
+Les deux entraînements et le développement protégé passent. Les deux
+corpus classiques passent chacun leurs six groupes. La cohorte fine reste
+négative : **19/48 groupes forts échouent**, contre 24/48 sans la supervision
+de structure. Dix-huit échecs concernent le transfert et un l'erreur RGB.
+Le minimum de transfert passe de 0,468 à 0,653 pour la graine 73 à bruit fort,
+et de 0,683 à 0,719 pour la graine 71. Le progrès est réel sur ces contrôles
+connus, mais insuffisant au regard du minimum requis de 0,95.
+
+L'erreur RGB fine de la graine 71 varie de +0,05 % au premier bruit et
+−0,52 % au second par rapport au précédent modèle ; celle de la graine 73
+varie de +1,02 % et +3,57 %. Sur les textures chromatiques fortes à bruit
+fort, l'estimation descriptive du biais quadratique des coefficients baisse
+de 0,0400 à 0,0210 pour la graine 71 et de 0,0594 à 0,0319 pour la graine 73,
+sans hausse marquante de leur variance entre les trois tirages. Cela appuie
+l'intérêt du contrôle de structure, sans qualifier son intensité ni garantir
+une amélioration sur une photo. Preuves :
+[développement protégé](../raw/neural-edge-protection-v001-20261104T075840Z.json),
+[premier corpus](../raw/neural-noisy-regression-v001-20261104T080103Z.json),
+[second corpus](../raw/neural-noisy-regression-v001-20261104T080747Z.json),
+[textures fines](../raw/neural-fine-regression-v001-20261104T081415Z.json),
+[comparaison appariée](../raw/neural-fine-comparison-v001-20261104T082947Z.json).
+Le relais s'est arrêté après le diagnostic prévu ; aucun jeu réservé n'a été ouvert.
+
+Une nouvelle sonde porte sur les contenus d'entraînement à deux ondes.
+On prend les deux premiers événements par famille et intervalle de fréquence
+`[2,6[`, `[6,12[`, `[12,20[`, `[20,29[`, d'amplitude au moins 0,04 : 16 motifs
+fixés par leurs données, pas par leur sortie. Trois nouveaux bruits simulés
+forts sont identiques pour les deux candidats et les deux graines. Les
+composantes sont ajustées sur le même centre CFA ; les plans de couleur
+d'amplitude relative inférieure à 0,25 ne servent pas aux rapports, et un
+conditionnement supérieur à 10⁴ est signalé. C'est un diagnostic de contenus
+d'entraînement, pas une confirmation indépendante.
+
+Sur les 110 séries de plans retenues pour chaque candidat, le biais absolu
+médian du transfert global passe de 0,0617 à 0,0427, mais la médiane de la
+pire erreur de composante reste à 0,0922. Dans l'événement 13, graine 73,
+plan vert, le transfert global moyen atteint 0,9758 tandis que les deux
+composantes atteignent 0,9979 et 0,7695. La projection unique peut donc
+sous-pondérer la composante secondaire, même quand la conservation globale
+semble bonne. Ce constat ne prouve pas que ce mécanisme explique tous les
+échecs fins. Preuve :
+[sonde à deux ondes](../raw/neural-multitone-diagnostic-v001-20261104T082228Z.json).
+
+### Essai suivant : deux projections de structure orthogonales au bruit
+
+La seule modification suivante remplace la projection unique par au plus
+deux directions : détail propre centré et courbure propre centrée, obtenue
+par différences avec les quatre voisins. La seconde est orthogonalisée
+par Gram–Schmidt avec le produit scalaire pondéré par `sigma²`. Chaque
+projection conserve sa normalisation de variance et les contributions
+actives sont **moyennées**, à poids global 1 inchangé : on ne double pas
+simplement l'intensité du terme précédent. Les fréquences et phases des
+ondes ne sont pas fournies à cette perte.
+
+Les gardes relatives sont déclarées avant l'entraînement : énergie de
+courbure supérieure à 10⁻⁸ de celle du détail et énergie orthogonale
+supérieure à 10⁻⁴ de l'énergie de courbure. Elles écartent l'arrondi et
+les directions presque colinéaires. Une constante donne zéro ; une rampe
+intérieure conserve la projection unique. Un contre-exemple à deux ondes,
+dont les erreurs se compensent dans la projection globale, est détecté par
+la seconde. Le bruit indépendant à variance fixe garde une échelle unitaire
+en moyenne, y compris à variance spatiale variable. Les 23 tests ciblés passent.
+
+Le prétest de huit mises à jour passe sous quotas : 386,15 Mio résidents,
+1 076,82 Mio privés échantillonnés. Ses poids sont jetés. Preuve :
+[prétest à deux projections](../raw/neural-context-preflight-v001-20261104T082741Z.json).
+Le plan `noisy-rank2-plan-v001` conserve données, parents, graines, 2 048 étapes,
+limitation des gradients et critères. La comparaison se fera cette fois
+contre la supervision simple, pas seulement contre l'ancien modèle moins bon.
+L'inférence et la production restent inchangées ; les nouvelles confirmations
+ne seront ouvertes que si développement et tous les rejeux connus passent.

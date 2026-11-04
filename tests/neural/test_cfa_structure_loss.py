@@ -6,6 +6,29 @@ from cfa_structure_loss import structure_loss
 
 
 class CfaStructureLossTests(unittest.TestCase):
+    def test_two_noise_orthogonal_projections_keep_unit_noise_scale(self):
+        torch.manual_seed(743)
+        x = torch.arange(32, dtype=torch.float32)*(2*torch.pi/32)
+        clean = (.2+.04*x.sin()+.02*(5*x).sin()).view(1, 1, 1, 32).expand(256, 4, 32, 32).clone()
+        sigma = (.01+.01*x.cos().square()).view(1, 1, 1, 32).expand_as(clean).clone()
+        corrected = clean+torch.randn_like(clean)*sigma
+        loss = structure_loss(corrected, clean, sigma, 2)
+        self.assertLess(abs(float(loss)-1.), .1)
+        transposed = structure_loss(corrected.transpose(-2, -1), clean.transpose(-2, -1), sigma.transpose(-2, -1), 2)
+        self.assertAlmostEqual(float(loss), float(transposed), places=5)
+
+    def test_two_components_cannot_hide_behind_single_global_projection(self):
+        x = torch.arange(32, dtype=torch.float32)*(2*torch.pi/32)
+        low, high = .04*x.sin(), .04*(5*x).sin()
+        clean = (.2+low+high).view(1, 1, 1, 32).expand(1, 4, 32, 32).clone()
+        corrected = clean+(.2*low-.2*high).view(1, 1, 1, 32)
+        sigma = torch.full_like(clean, .02)
+        detail = clean-clean.mean(dim=(-2, -1), keepdim=True)
+        single = (((corrected-clean)*detail).sum(dim=(-2, -1)).square()
+            /(detail.square()*sigma.square()).sum(dim=(-2, -1))).mean()
+        self.assertLess(float(single), 1e-8)
+        self.assertGreater(float(structure_loss(corrected, clean, sigma, 0)), 10.)
+
     def test_identity_and_constant_targets_have_zero_loss_and_gradient(self):
         for clean in (torch.full((1, 4, 16, 16), .2), torch.rand(1, 4, 16, 16)):
             corrected = clean.clone().requires_grad_(True)
@@ -18,12 +41,17 @@ class CfaStructureLossTests(unittest.TestCase):
         clean = torch.linspace(-.1, .1, 16).view(1, 1, 1, 16).expand(1, 4, 16, 16).clone()
         sigma = torch.full_like(clean, .02)
         corrected = (clean*.8).requires_grad_(True)
-        loss = structure_loss(corrected, clean, sigma, 0)
+        loss = structure_loss(corrected, clean, sigma, 2)
         loss.backward()
-        self.assertGreater(float(loss.detach()), 50.)
+        detail = clean[:, :, 2:-2, 2:-2]
+        detail = detail-detail.mean(dim=(-2, -1), keepdim=True)
+        expected = (((corrected.detach()-clean)[:, :, 2:-2, 2:-2]*detail).sum(dim=(-2, -1)).square()
+            /(detail.square()*sigma[:, :, 2:-2, 2:-2].square()).sum(dim=(-2, -1))).mean()
+        self.assertGreater(float(loss.detach()), 0.)
+        self.assertAlmostEqual(float(loss.detach()), float(expected), places=3)
         self.assertLess(float((corrected.grad*clean).sum()), 0.)
         noise = torch.tensor([1., -1.]).repeat(8).view(1, 1, 16, 1)*.02
-        self.assertLess(float(structure_loss(clean+noise, clean, sigma, 0)), 1e-10)
+        self.assertLess(float(structure_loss(clean+noise, clean, sigma, 2)), 1e-10)
 
     def test_scale_and_channel_permutation_invariant_and_targets_detached(self):
         torch.manual_seed(741)
