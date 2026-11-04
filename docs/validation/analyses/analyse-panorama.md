@@ -133,6 +133,43 @@ minutes avec sa raison, pour l'empilement aussi. `stackSessionTests` le reprodui
 simulée, et échoue si l'on rétablit l'ancien comportement. La progression avance aussi pendant la
 comparaison des paires et le calcul des raccords.
 
+## Remplir les bords
+
+À la demande de l'utilisateur, les coins vides peuvent être complétés : l'onglet propose **Recadrer**
+(par défaut, rien d'inventé), **Remplir** et **Laisser vides**. `PanoramaFill` ne s'appuie sur aucun
+modèle appris. Chaque pixel manquant cherche, sur une pyramide, un carré de l'image réelle qui
+ressemble à ses alentours, en préférant la même hauteur et le voisinage, puis reçoit la moyenne de
+ce que proposent ces carrés. Le détail fin revient ensuite en pleine résolution depuis ces mêmes
+endroits, et la texture réelle se prolonge en miroir sur 64 pixels au-delà de sa limite. **Aucun
+pixel réel n'est modifié** (vérifié au bit près), et le résultat ne dépend pas du nombre de threads.
+La part inventée figure dans le message de fin et dans le DNG.
+
+Sur la série à deux rangées, le recadrage perd 26 % des pixels réels. Remplir garde tout le canevas,
+18 847 × 5 094 pixels  dont 13,3 % inventés, la crête entière, pour 5 s de plus ([JSON](../raw/b8-panorama-audit-v001-remplissage-20261104T125442Z.json)).
+
+Mesure où la vérité est connue : un coin réel du panorama recadré, 2 % de l'image, est caché puis
+rempli (erreur moyenne sur la racine de la luminance, ramenée à une image où 1 est le blanc ;
+détail : écart moyen au flou, réel puis inventé).
+
+| Coin caché | Erreur | Détail réel | Détail inventé |
+| --- | --- | --- | --- |
+| Haut gauche (ciel) | 0,032 | 0,0022 | 0,0021 |
+| Haut droit (ciel) | 0,032 | 0,0022 | 0,0020 |
+| Bas gauche (végétation) | 0,058 | 0,0154 | 0,0143 |
+| Bas droit (sol) | 0,118 | 0,0194 | 0,0082 |
+
+**Vu à l'œil par l'agent, à 100 %** :
+
+- **Ciel : convaincant.** Aucune limite visible, même à 100 %. Des nuages peuvent apparaître là où
+  il n'y en avait pas : ils sont inventés, pas retrouvés.
+- **Végétation et sol : à vérifier image par image.** Les lignes droites du premier essai ont disparu
+  et la limite ne se voit plus à l'échelle de l'image, mais à 100 % des blocs restent mal placés
+  (un buisson clair dans la forêt, une pente qui change de nature), et la transition en miroir laisse
+  de légères ondulations et parfois un trait fin.
+
+Ce n'est pas une génération « intelligente » : rien ici ne sait ce qu'est une maison ou un arbre.
+Remplir un coin de premier plan important relève d'un modèle génératif, non prévu à ce stade.
+
 ## Limites
 
 - Aucune vraie série verticale ni plein format n'a été mesurée : le vertical repose sur le synthétique.
@@ -141,3 +178,5 @@ comparaison des paires et le calcul des raccords.
 - Un tour complet de 360° n'est pas traité comme une boucle.
 - Le DNG reste à ouvrir dans Lightroom, Photoshop et DxO, comme pour l'empilement ([issue #23](https://github.com/KimntexX/IPR/issues/23)).
 - Pas de recette de régénération : le panorama est une nouvelle image.
+- Le remplissage invente : ses pixels ne sont pas distingués des pixels réels dans le fichier, seule
+  leur part est indiquée. Il ne convient pas à un usage documentaire.

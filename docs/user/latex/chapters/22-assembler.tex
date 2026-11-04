@@ -48,9 +48,15 @@ par le haut.
 \item \emph{Projection} : \emph{Automatique} choisit selon le champ couvert. \emph{Plane}
 garde les lignes droites sur un champ étroit, \emph{Cylindrique} convient à un long balayage,
 \emph{Sphérique} à un champ large dans les deux sens.
-\item \emph{Garder toute la surface} conserve les coins vides, à recadrer ensuite dans
-l’onglet Géométrie. Sinon, le panorama est recadré sur un rectangle plein.
+\item \emph{Bords} : un panorama a rarement des bords droits. \emph{Recadrer} garde le plus
+grand rectangle de pixels réels ; c’est le choix par défaut, rien n’est inventé. \emph{Remplir}
+garde toute la surface et complète les coins avec des pixels inventés à partir du reste de
+l’image. \emph{Laisser vides} garde les coins vides, à recadrer ensuite dans l’onglet Géométrie.
 \end{itemize}
+Le remplissage est convaincant sur le ciel. Sur la roche ou la végétation, regardez le résultat
+à 100~\% : des blocs peuvent être mal placés. Le message de fin indique la part de pixels
+inventés.
+
 À main levée, un premier plan proche se déplace d’une photo à l’autre : les raccords passent
 autant que possible là où cela ne se voit pas, mais tournez plutôt autour de l’appareil que
 de vous-même.

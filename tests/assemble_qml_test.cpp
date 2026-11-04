@@ -171,16 +171,18 @@ int main(int argc, char **argv)
     auto *mode = named(panel, QStringLiteral("assembleModeSelector"));
     auto *note = named(panel, QStringLiteral("assembleModeNote"));
     auto *projection = named(panel, QStringLiteral("assembleProjectionSelector"));
-    auto *keepEdges = named(panel, QStringLiteral("assembleKeepEdges"));
-    if (!check(mode && note && projection && keepEdges, "the panel offers the panorama")) return 1;
-    if (!check(!projection->isVisible() && !keepEdges->isVisible(), "a stack does not ask for a projection")) return 1;
+    auto *edges = named(panel, QStringLiteral("assembleEdgesSelector"));
+    auto *edgesNote = named(panel, QStringLiteral("assembleEdgesNote"));
+    if (!check(mode && note && projection && edges && edgesNote, "the panel offers the panorama")) return 1;
+    if (!check(!projection->isVisible() && !edges->isVisible(), "a stack does not ask for a projection")) return 1;
     if (!check(reference->isVisible(), "but for a reference")) return 1;
     const QString stackNote = note->property("text").toString();
     mode->setProperty("currentIndex", 1);
     settle();
     if (!check(panel->property("mode").toString() == QStringLiteral("panorama"), "the panorama can be chosen")) return 1;
     if (!check(note->property("text").toString() != stackNote, "and explains itself")) return 1;
-    if (!check(projection->isVisible() && keepEdges->isVisible(), "with its projection and its edges")) return 1;
+    if (!check(projection->isVisible() && edges->isVisible(), "with its projection and its edges")) return 1;
+    if (!check(edges->property("currentText").toString() == QStringLiteral("Recadrer"), "cropping comes first: nothing is invented unless asked")) return 1;
     if (!check(!reference->isVisible(), "without a reference")) return 1;
     if (!check(projection->property("currentText").toString() == QStringLiteral("Automatique"), "the automatic projection comes first")) return 1;
     if (!check(projection->property("count").toInt() == 4, "and three others")) return 1;
@@ -193,6 +195,16 @@ int main(int argc, char **argv)
     if (!check(session.status().contains(QStringLiteral("Panorama de")), "and says what it made")) return 1;
     if (!check(session.suggestedExport(QStringLiteral("TIFF")).toLocalFile().contains(QStringLiteral("-panorama.")), "as a panorama")) return 1;
     if (!check(exporter->isVisible() && exporter->isEnabled(), "ready for its export")) return 1;
+
+    // Filling says what it invents, before and after.
+    edges->setProperty("currentIndex", 1);
+    settle();
+    if (!check(edgesNote->property("text").toString().contains(QStringLiteral("inventés")), "filling warns that it invents")) return 1;
+    click(start);
+    settle();
+    if (!check(waitFor([&] { return !session.running(); }), "the fill ends")) return 1;
+    settle();
+    if (!check(session.hasResult() && session.status().contains(QStringLiteral("Panorama de")), "with a result")) return 1;
 
     std::cout << "assemble panel: ok\n";
     return 0;

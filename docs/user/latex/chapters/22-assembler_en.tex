@@ -1,4 +1,4 @@
-% translation-source: docs/user/latex/chapters/22-assembler.tex; sha256: e38ba4948ef049a0aa74ebaac1aeed7ad71ec8b03e81e2f13e266b42f8d92904
+% translation-source: docs/user/latex/chapters/22-assembler.tex; sha256: b74ee6fa2877dd8f8dcd907849cbcae38b55ff53588a797353fc5bd1438bdafe
 \chapter{Assembling several photos}
 The \emph{Assemble} tab, at the top of the right panel, makes a new image from the
 photos ticked in the ribbon. The original photos do not change. The work runs in the
@@ -47,9 +47,14 @@ crop rather takes from the top.
 \item \emph{Projection}: \emph{Automatic} chooses from the field covered. \emph{Flat} keeps
 lines straight over a narrow field, \emph{Cylindrical} suits a long sweep, \emph{Spherical} a
 field wide in both directions.
-\item \emph{Keep the whole surface} keeps the empty corners, to crop later in the Geometry
-tab. Otherwise the panorama is cropped to a full rectangle.
+\item \emph{Edges}: a panorama seldom has straight edges. \emph{Crop} keeps the largest
+rectangle of real pixels; it is the default, and nothing is invented. \emph{Fill} keeps the
+whole surface and completes the corners with pixels invented from the rest of the image.
+\emph{Leave empty} keeps the empty corners, to crop later in the Geometry tab.
 \end{itemize}
+Filling is convincing on a sky. On rock or vegetation, look at the result at 100~\%: some blocks
+may be out of place. The final message tells the share of invented pixels.
+
 Hand-held, a close foreground moves from one photo to the next: the seams run where it shows
 least as far as they can, but turn around the camera rather than around yourself.
 

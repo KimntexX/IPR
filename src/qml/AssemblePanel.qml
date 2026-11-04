@@ -41,6 +41,14 @@ Item {
         { label: qsTr("Sphérique"), value: "spherical" },
         { label: qsTr("Plane"), value: "rectilinear" }
     ]
+    readonly property var edgeChoices: [
+        { label: qsTr("Recadrer"), value: "crop",
+          note: qsTr("Garde le plus grand rectangle de pixels réels, sans inventer. Coupe plutôt par le haut.") },
+        { label: qsTr("Remplir"), value: "fill",
+          note: qsTr("Garde toute la surface et complète les coins avec des pixels inventés à partir du reste de l'image. Convaincant sur le ciel, à vérifier sur la roche ou la végétation.") },
+        { label: qsTr("Laisser vides"), value: "keep",
+          note: qsTr("Garde toute la surface, avec ses coins vides, à recadrer ensuite.") }
+    ]
 
     function fileName(url) {
         return decodeURIComponent(String(url).split("/").pop())
@@ -48,7 +56,7 @@ Item {
 
     function assemble() {
         if (mode === "panorama")
-            session.startPanorama(photos, projections[projectionSelector.currentIndex].value, keepEdgesCheck.checked)
+            session.startPanorama(photos, projections[projectionSelector.currentIndex].value, edgeChoices[edgesSelector.currentIndex].value)
         else
             session.start(photos, photos[referenceSelector.currentIndex] || "")
     }
@@ -163,14 +171,26 @@ Item {
                     textRole: "label"
                 }
             }
-            PreferenceCheckBox {
-                id: keepEdgesCheck
-                objectName: "assembleKeepEdges"
+            RowLayout {
                 Layout.fillWidth: true
                 visible: root.mode === "panorama"
-                enabled: !root.busy
-                text: qsTr("Garder toute la surface (bords vides à recadrer)")
-                textColor: root.textColor
+                Label {
+                    text: qsTr("Bords")
+                    color: root.secondaryTextColor
+                }
+                PreferenceComboBox {
+                    id: edgesSelector
+                    objectName: "assembleEdgesSelector"
+                    Layout.fillWidth: true
+                    enabled: !root.busy
+                    model: root.edgeChoices
+                    textRole: "label"
+                }
+            }
+            SectionNote {
+                objectName: "assembleEdgesNote"
+                visible: root.mode === "panorama"
+                text: root.edgeChoices[edgesSelector.currentIndex].note
             }
             PreferenceButton {
                 objectName: "assembleStartButton"
