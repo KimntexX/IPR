@@ -100,6 +100,8 @@ set(IPR_ENGINE_SOURCES
     src/panorama/PanoramaGeometry.cpp
     src/panorama/PanoramaBlend.h
     src/panorama/PanoramaBlend.cpp
+    src/panorama/PanoramaFill.h
+    src/panorama/PanoramaFill.cpp
     src/panorama/PanoramaJob.h
     src/panorama/PanoramaJob.cpp
     src/stack/StackAlignment.h

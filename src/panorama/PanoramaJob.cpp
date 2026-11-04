@@ -2,6 +2,7 @@
 
 #include "FrameSpool.h"
 #include "PanoramaBlend.h"
+#include "PanoramaFill.h"
 
 #include <QDir>
 #include <QStorageInfo>
@@ -267,7 +268,10 @@ Result run(const Request &request)
         return result;
     }
     if (request.reserveCanvas) {
-        const QString refusal = request.reserveCanvas(quint64(result.canvas.width) * quint64(result.canvas.height) * quint64(3 * sizeof(float)));
+        // A fill holds a mask, a perceptual copy and a small pyramid on top of the canvas.
+        const quint64 pixels = quint64(result.canvas.width) * quint64(result.canvas.height);
+        const quint64 perPixel = request.edges == Edges::Fill ? 2u * 3u * sizeof(float) + 2u : 3u * sizeof(float);
+        const QString refusal = request.reserveCanvas(pixels * perPixel);
         if (!refusal.isEmpty()) {
             result.error = refusal;
             return result;
@@ -350,7 +354,7 @@ Result run(const Request &request)
     }
     result.coveredShare = double(cv::countNonZero(covered)) / std::max(1.0, double(reducedCanvas.area()));
     views.clear();
-    if (request.cropToCovered) {
+    if (request.edges == Edges::Crop) {
         const cv::Rect best = PanoramaBlend::lowRectangle(covered);
         if (best.empty()) {
             result.error = QStringLiteral("Aucun rectangle plein dans ce panorama.");
@@ -371,6 +375,10 @@ Result run(const Request &request)
     const int bands = (result.kept.height + bandRows - 1) / bandRows;
     total = done + bands;
     result.cameraRgb.create(result.kept.size(), CV_32FC3);
+    // Pixel by pixel, what the frames really cover: only a fill needs it.
+    cv::Mat real;
+    if (request.edges == Edges::Fill)
+        real = cv::Mat::zeros(result.kept.size(), CV_8UC1);
     std::vector<cv::Mat> colourBands(areas.size()), validBands(areas.size());
     for (int band = 0; band < bands; ++band) {
         if (stopped()) {
@@ -397,11 +405,40 @@ Result run(const Request &request)
             entry.colour = colourBands[m];
             entry.valid = validBands[m];
             pixels.push_back(entry);
+            if (!real.empty()) {
+                const cv::Rect inBand(part.x - areas[m].x, 0, part.width, part.height);
+                cv::Mat seat = real(part - result.kept.tl());
+                cv::bitwise_or(seat, validBands[m](inBand), seat);
+            }
         }
         cv::Mat blended;
         PanoramaBlend::blendBand(pixels, cell, region, blended);
         blended.copyTo(result.cameraRgb(cv::Rect(0, band * bandRows, region.width, region.height)));
         advance();
+    }
+    for (const std::unique_ptr<FrameSpool> &spool : warpedColour)
+        spool->remove();
+    for (const std::unique_ptr<FrameSpool> &spool : warpedValid)
+        spool->remove();
+    if (request.edges == Edges::Fill) {
+        int base = done;
+        const PanoramaFill::Report filling = PanoramaFill::fill(result.cameraRgb, real, {}, request.cancelled, [&](int stepDone, int stepTotal) {
+            done = base + stepDone;
+            if (request.progress)
+                request.progress(done, base + stepTotal);
+        });
+        if (filling.outcome == PanoramaFill::Outcome::Cancelled || stopped()) {
+            result.cancelled = true;
+            result.error = QStringLiteral("Annulé.");
+            result.cameraRgb.release();
+            return result;
+        }
+        if (filling.outcome == PanoramaFill::Outcome::TooLittleKnown) {
+            result.cameraRgb.release();
+            result.error = QStringLiteral("Trop peu d'image réelle pour remplir les bords : recadrez plutôt.");
+            return result;
+        }
+        result.filledShare = filling.filledShare;
     }
     result.success = true;
     return result;

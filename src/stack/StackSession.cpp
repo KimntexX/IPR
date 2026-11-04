@@ -136,7 +136,7 @@ void StackSession::start(const QStringList &urls, const QString &reference)
         }).future);
 }
 
-void StackSession::startPanorama(const QStringList &urls, const QString &projection, bool keepEdges)
+void StackSession::startPanorama(const QStringList &urls, const QString &projection, const QString &edges)
 {
     if (m_running || m_exporting)
         return;
@@ -157,12 +157,12 @@ void StackSession::startPanorama(const QStringList &urls, const QString &project
     setStatus(tr("Assemblage de %1 photos en panorama…").arg(files.size()));
     m_watcher.setFuture(m_tasks.submit<Outcome>(
         QStringLiteral("stack"), Tasks::Priority::Foreground,
-        [files, chosen, keepEdges, decoder = m_decoder, cache = m_cache, patience = m_reservationPatienceMs](Tasks::Context &context) {
-            return computePanorama(context, files, chosen, keepEdges, decoder, cache, patience);
+        [files, chosen, edges, decoder = m_decoder, cache = m_cache, patience = m_reservationPatienceMs](Tasks::Context &context) {
+            return computePanorama(context, files, chosen, edges, decoder, cache, patience);
         }).future);
 }
 
-StackSession::Outcome StackSession::computePanorama(Tasks::Context &context, const QStringList &files, PanoramaGeometry::Projection projection, bool keepEdges,
+StackSession::Outcome StackSession::computePanorama(Tasks::Context &context, const QStringList &files, PanoramaGeometry::Projection projection, const QString &edges,
                                                     const Decoder &decoder, const std::shared_ptr<ImageCacheController> &cache, int patienceMs)
 {
     Outcome outcome;
@@ -200,7 +200,8 @@ StackSession::Outcome StackSession::computePanorama(Tasks::Context &context, con
     const int middle = int(files.size()) / 2;
     request.frameCount = int(files.size());
     request.projection = projection;
-    request.cropToCovered = !keepEdges;
+    request.edges = edges == QStringLiteral("fill") ? PanoramaJob::Edges::Fill
+        : edges == QStringLiteral("keep") ? PanoramaJob::Edges::Keep : PanoramaJob::Edges::Crop;
     request.cancelled = stopped;
     request.progress = [&context](int done, int total) { context.progress(done, total); };
     request.frame = [&](int index) {
@@ -233,6 +234,7 @@ StackSession::Outcome StackSession::computePanorama(Tasks::Context &context, con
     result->leftOut = int(files.size()) - job.usedFrames;
     result->areaKept = job.canvas.area() > 0 ? double(job.kept.area()) / double(job.canvas.area()) : 0.0;
     result->rows = job.shape.rows;
+    result->filledShare = job.filledShare;
     result->projection = job.shape.projection == PanoramaGeometry::Projection::Rectilinear ? tr("plane")
         : job.shape.projection == PanoramaGeometry::Projection::Spherical ? tr("sphérique") : tr("cylindrique");
     result->cameraRgb = std::move(job.cameraRgb);
@@ -330,7 +332,8 @@ void StackSession::finished()
         setStatus(tr("Panorama de %1 photos, %2 rangée(s), projection %3 : %4 × %5 pixels%6. Choisissez un format pour exporter.")
                       .arg(m_result->usedFrames).arg(m_result->rows).arg(m_result->projection)
                       .arg(m_result->cameraRgb.cols).arg(m_result->cameraRgb.rows)
-                      .arg(m_result->leftOut > 0 ? tr(", %1 écartée(s)").arg(m_result->leftOut) : QString()));
+                      .arg((m_result->leftOut > 0 ? tr(", %1 écartée(s)").arg(m_result->leftOut) : QString())
+                           + (m_result->filledShare > 0.0 ? tr(", dont %1 % de pixels inventés").arg(m_result->filledShare * 100.0, 0, 'f', 1) : QString())));
         return;
     }
     setStatus(tr("%1 photos empilées, %2 % de la surface conservée%3. Choisissez un format pour exporter.")
@@ -402,6 +405,8 @@ StackSession::Export StackSession::writeResult(const Result &result, const QStri
         content.provenance = (result.panorama ? QStringLiteral("IPR panorama of %1 frames, middle %2")
                                               : QStringLiteral("IPR stack of %1 frames, reference %2"))
                                  .arg(result.usedFrames).arg(QFileInfo(result.referenceFile).fileName());
+        if (result.filledShare > 0.0)
+            content.provenance += QStringLiteral(", %1 % of the pixels invented to fill the edges").arg(result.filledShare * 100.0, 0, 'f', 1);
         outcome = ImageExporter::publishEncoded(target, format, [&](const QString &staged, QString *error) {
             return CameraDng::write(content, staged, error);
         });
