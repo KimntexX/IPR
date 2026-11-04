@@ -120,6 +120,19 @@ canevas refusé ou trop grand, disque insuffisant, annulation à cinq moments, d
 dans tous les cas. `stackSessionTests` et `assembleQmlTests` couvrent la session et le panneau.
 `cameraProfileEngineTests` vérifie la correction d'objectif sur une rampe.
 
+## Blocage trouvé par l'utilisateur
+
+Au premier essai de l'utilisateur, sur sept photos, la progression s'est figée : processeur à zéro
+pendant plusieurs minutes, 4 Go de mémoire libres sur 16. La tâche gardait sa première réservation en
+demandant celle du canevas, et le contrôleur mémoire n'admet rien de plus quand il n'y a pas de place
+et qu'une réservation existe : elle s'attendait elle-même. Nos essais précédents avaient de la marge
+et ne pouvaient pas le voir.
+
+Il n'y a plus qu'une réservation, qui change de taille, et une attente de mémoire s'arrête après deux
+minutes avec sa raison, pour l'empilement aussi. `stackSessionTests` le reproduit sous pression
+simulée, et échoue si l'on rétablit l'ancien comportement. La progression avance aussi pendant la
+comparaison des paires et le calcul des raccords.
+
 ## Limites
 
 - Aucune vraie série verticale ni plein format n'a été mesurée : le vertical repose sur le synthétique.
