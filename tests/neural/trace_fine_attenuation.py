@@ -11,6 +11,7 @@ from audit_spectral_noise import source_contract, response
 from bayer_canonical import canonicalize, spatial_reflect
 from closed_moment_operator import interpolate_closed
 from confirm_fine_noise import fine_signal, observation
+from compare_reconstruction_objectives import confined
 from context_data import extend_observation, crop_centre
 from diagnose_train_learnability import digest, save
 from edge_protected_noise import EdgeProtectedNoisyUNet, edge_confidence
@@ -23,10 +24,8 @@ from synthetic_bayer_data import PATTERNS
 from trace_noise_reconstruction import coefficients
 
 
-def run(root, output):
-    base = root/'build-patch_neural_restoration'
-    proof_path = base/'stability-protected-v001/result.json'
-    history_path = base/'stability-fine-v001/result.json'
+def run(root, output, proof_path, history_path):
+    confined(root, [output, proof_path, history_path])
     proof = json.loads(proof_path.read_text(encoding='utf-8'))
     source = source_contract(root, proof)
     check_inference(source['data'], source['tools'])
@@ -109,5 +108,7 @@ def run(root, output):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--proof', type=Path, required=True)
+    parser.add_argument('--historical', type=Path, required=True)
     args = parser.parse_args()
-    run(Path(__file__).resolve().parents[2], args.output)
+    run(Path(__file__).resolve().parents[2], args.output, args.proof, args.historical)

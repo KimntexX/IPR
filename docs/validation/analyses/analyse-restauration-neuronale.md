@@ -5149,3 +5149,36 @@ réduite avec perte du gain de débruitage sera consignée comme compromis
 insuffisant ; elle ne permettra pas de relâcher les seuils. Aucun échec ni
 aucune graine n'est retiré du bilan. Les modifications restent expérimentales,
 hors production et sans push, fusion ou tag.
+
+`run_neural_followup.py` prend désormais le relais de la qualification
+connue. Il attend sa clôture sans charger PyTorch, avec un délai maximal
+de deux heures. En cas d'échec, il exécute la comparaison fine appariée puis
+la décomposition CFA/interpolation sur les seuls cas déjà consultés ; un
+échec précoce du développement déclenche plutôt le diagnostic d'apprentissage.
+Ce dernier inclut maintenant les trois termes de la perte courante. Aucun
+réentraînement ni réglage automatique de seuil n'est effectué par le relais.
+
+Si développement et trois rejeux connus passent intégralement, le relais
+fige les deux poids et prépare la cohorte classique nouvelle (départ contours
+352, graines mixtes 3 800 000), en excluant les anciens contenus par empreinte.
+Si elle passe, il ouvre la cohorte fine 2, aux fréquences, angles, phases et
+tirages de bruit distincts de la première. Un échec empêche d'ouvrir le jeu
+suivant. Deux confirmations positives sont suivies des contrôles de tuiles
+et d'une planche exploratoire sur les captures caméra déjà mises en cache.
+Cette dernière n'a pas de vérité photographique propre et ne vaudra pas
+validation visuelle. Les identités et verdicts restent dans les JSON.
+
+Les tests du relais couvrent le refus d'un verdict contradictoire, l'absence
+d'ouverture de nouvelles données après un échec et la terminaison de l'arbre
+du sous-processus propre au relais en cas de dépassement de délai sous Windows.
+Les processus restent séquentiels ; le relais léger ne consomme pas de mémoire
+de modèle pendant l'entraînement ou les qualifications en amont.
+
+Premier résultat disponible : la graine 71 termine les 2 048 étapes en
+environ 550 secondes et passe le développement non protégé. Son erreur RGB
+relative au parent vaut 0,9304 au premier bruit et 0,7591 au second, contre
+0,9275 et 0,7454 sans le terme de structure. Le débruitage est donc légèrement
+plus faible sur ce développement ; il reste à établir si ce coût améliore
+la conservation des textures. La seconde graine et les rejeux restent en
+cours ou en attente, sans sélection de ce premier résultat. Preuve :
+[graine 71, supervision de structure](../raw/neural-noisy-moment-v001-20261104T073835Z.json).

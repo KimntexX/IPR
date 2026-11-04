@@ -8,6 +8,7 @@ import torch
 
 from bayer_canonical import canonicalize
 from clean_cfa_loss import clean_cfa_loss
+from cfa_structure_loss import structure_loss
 from context_data import extend_case, extend_observation, crop_centre
 from diagnose_train_learnability import digest, save
 from joint_bayer_unet import sample_rgb, bilinear
@@ -47,7 +48,9 @@ def probe(model, values, sigma, labels, truth, border):
         clean = sample_rgb(truth, labels)
         anchored = model.correct_observations(clean, sigma, labels)
         anchor = clean_cfa_loss(anchored, clean, reference, truth, 2., border)
-        (rgb+anchor).backward()
+        noisy_corrected = model.correct_observations(values, sigma, labels)
+        structure = structure_loss(noisy_corrected, clean, sigma, border//2)
+        (rgb+anchor+structure).backward()
         gradients = {n: statistics(p.grad) for n, p in model.named_parameters()
             if p.requires_grad and p.grad is not None}
         with torch.no_grad():
@@ -59,7 +62,7 @@ def probe(model, values, sigma, labels, truth, border):
             measures = dict(correction_over_sigma=float(delta.square().mean().sqrt()/deviation.square().mean().sqrt()),
                 cfa_mse_ratio=float((delta+error).square().mean()/error.square().mean()),
                 correction_noise_inner_product=float((delta*error).mean()),
-                rgb_loss=float(rgb), clean_anchor_loss=float(anchor))
+                rgb_loss=float(rgb), clean_anchor_loss=float(anchor), structure_loss=float(structure))
         if any(not torch.equal(p, baseline[n]) for n, p in model.named_parameters()):
             raise ValueError('Diagnostic mutated weights')
         return dict(measures=measures, activations=noisy_activations, gradients=gradients)
