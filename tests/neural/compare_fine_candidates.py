@@ -3,7 +3,40 @@ import argparse
 from datetime import datetime, timezone
 import hashlib
 import json
+import math
 from pathlib import Path
+import statistics
+
+
+def moment_estimates(values, target):
+    if len(values) != 3 or not all(math.isfinite(v) for v in values):
+        raise ValueError('Three finite paired realizations required')
+    variance = statistics.variance(values)
+    squared_mean_error = (statistics.mean(values)-target)**2
+    # Finite-sample correction can legitimately be negative; do not clip it.
+    return dict(sample_variance=variance, bias_squared_estimate=squared_mean_error-variance/3,
+        mean_squared_error=statistics.mean((v-target)**2 for v in values))
+
+
+def coherent_decomposition(proof):
+    streams = {}
+    for row in proof['records']:
+        if row['noise_index'] == 0:
+            continue
+        key = tuple(row[k] for k in ('seed', 'case_index', 'phase_index', 'noise_index'))
+        streams.setdefault(key, []).append(row)
+    groups = {}
+    for (seed, index, phase, level), rows in streams.items():
+        case = proof['plan']['cases'][index]
+        group = (seed, level, case['amplitude'], case['chromatic'])
+        accum = groups.setdefault(group, [])
+        for channel in range(3):
+            for component, target in (('sine_gain', 1.), ('quadrature_gain', 0.)):
+                accum.append(moment_estimates([r['full'][component][channel] for r in rows], target))
+    return [dict(seed=k[0], noise_index=k[1], amplitude=k[2], chromatic=k[3],
+        coefficient_series=len(rows), **{name: statistics.mean(r[name] for r in rows)
+            for name in ('sample_variance', 'bias_squared_estimate', 'mean_squared_error')})
+        for k, rows in sorted(groups.items())]
 
 
 def sha256(path):
@@ -35,7 +68,9 @@ def compare(previous, current):
             raise ValueError('Frozen reconstruction reference differs')
     strong = previous['plan']['criteria']['strong_amplitude']
     result = dict(previous_passed=previous['pilot_gates_passed'], current_passed=current['pilot_gates_passed'],
-        observation_count=len(old), comparisons=[])
+        observation_count=len(old), comparisons=[], coherent_error_decomposition=dict(
+            previous=coherent_decomposition(previous), current=coherent_decomposition(current),
+            limits='Sine/quadrature coefficient error, not total pixel noise. Three realizations per conditional series; high uncertainty individually. Finite-sample corrected squared-bias estimates are not clipped, may be negative. Descriptive, not a new gate.'))
     for seed in (71, 73):
         for level in (1, 2):
             pairs = [(old[k], new[k]) for k in sorted(old) if k[0] == seed and k[3] == level]

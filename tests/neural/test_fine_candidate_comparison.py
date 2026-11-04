@@ -1,7 +1,7 @@
 import copy
 import unittest
 
-from compare_fine_candidates import compare
+from compare_fine_candidates import compare, moment_estimates
 
 
 def proof():
@@ -10,15 +10,25 @@ def proof():
         for replicate in range(1 if level == 0 else 3)]
     rows = [dict(field, seed=seed, target_sha256='target'+str(field['case_index']),
         observation_sha256=str(field), sigma_sha256='sigma'+str(field),
-        parent=dict(rgb_mse=1.), full=dict(rgb_mse=.8)) for seed in (71, 73) for field in fields]
+        parent=dict(rgb_mse=1.), full=dict(rgb_mse=.8, sine_gain=[1., 1., 1.], quadrature_gain=[0., 0., 0.]))
+        for seed in (71, 73) for field in fields]
     groups = [dict(seed=seed, noise_index=level, amplitude=.06, strong_passed=True,
         gain_over_parent=[1., 1., 1.]) for seed in (71, 73) for level in (1, 2) for _ in range(12)]
     return dict(status='completed_fine_signal_regression_not_photographic_qualification',
-        plan=dict(cases=list(range(72)), fields=fields, criteria=dict(strong_amplitude=.06)),
+        plan=dict(cases=[dict(amplitude=.06, chromatic=bool(i%2)) for i in range(72)],
+            fields=fields, criteria=dict(strong_amplitude=.06)),
         records=rows, groups=groups, pilot_gates_passed=True)
 
 
 class FineCandidateComparisonTests(unittest.TestCase):
+    def test_finite_sample_bias_correction_is_not_clipped_and_decomposition_closes(self):
+        moments = moment_estimates([-1., 0., 1.], 0.)
+        self.assertAlmostEqual(moments['bias_squared_estimate'], -1/3)
+        self.assertAlmostEqual(moments['mean_squared_error'],
+            moments['sample_variance']+moments['bias_squared_estimate'])
+        with self.assertRaises(ValueError):
+            moment_estimates([0., 1.], 0.)
+
     def test_reports_quality_tradeoff_without_overriding_gate(self):
         old = proof()
         new = copy.deepcopy(old)

@@ -5182,3 +5182,29 @@ plus faible sur ce développement ; il reste à établir si ce coût améliore
 la conservation des textures. La seconde graine et les rejeux restent en
 cours ou en attente, sans sélection de ce premier résultat. Preuve :
 [graine 71, supervision de structure](../raw/neural-noisy-moment-v001-20261104T073835Z.json).
+
+### Lecture complémentaire et diagnostic biais–variance
+
+Pendant les calculs, deux références sont consultées le 4 novembre : le
+[poster des auteurs, Nagare et al., ICASSP 2021](https://madhurinagare.github.io/assets/pdf/BR_poster.pdf)
+présente une pondération distincte du biais et de la variance en débruitage
+CT, avec un compromis texture/bruit ;
+[Tivnan et al., 2022](https://pubmed.ncbi.nlm.nih.gov/35656120/)
+étudient une perte de covariance et biais pondérés, incluant des préférences
+fréquentielles. Leur domaine est la reconstruction CT : leurs résultats ne
+qualifient pas un débruiteur CFA photographique. La supervision de projection
+IPR, définie avant cette lecture, reste l'expérience courante ; aucun autre
+terme d'apprentissage n'est ajouté pendant l'entraînement.
+
+Cette lecture motive un complément descriptif au comparateur : pour chaque
+texture, phase, graine et bruit, les trois réalisations donnent une moyenne
+et une variance échantillonnée des coefficients sinus et quadrature de
+chaque canal. La cible est respectivement 1 et 0. L'estimateur de biais
+quadratique est `(moyenne−cible)² − variance/3` ; il peut être négatif et
+n'est pas tronqué. Il vérifie l'identité entre erreur quadratique empirique,
+variance échantillonnée et biais quadratique ainsi corrigé. Ces statistiques
+concernent une projection fréquentielle, pas tout le bruit des pixels.
+Trois observations par série donnent une forte incertitude individuelle ;
+les moyennes de groupes restent descriptives et ne créent aucun nouveau
+seuil de validation. Un test contrôle notamment la correction de taille finie
+et la conservation d'une estimation négative.
