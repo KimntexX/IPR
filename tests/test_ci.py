@@ -87,6 +87,13 @@ class DeploymentTests(unittest.TestCase):
             # A library the bundle does not carry is left for the portability check to refuse.
             self.assertEqual(len(calls), 3)
 
+    def test_opencv_ships_without_debug_builds_nor_video_plugins(self):
+        for dropped in ('opencv_world500d.dll', 'opencv_videoio_ffmpeg500_64.dll', 'opencv_videoio_msmf500_64.dll',
+                        'opencv_videoio_msmf500_64d.dll', 'OPENCV_WORLD500D.DLL', 'opencv_core4d.dll'):
+            self.assertFalse(ci.shipped_runtime_dll(dropped), dropped)
+        for kept in ('opencv_world500.dll', 'opencv_core4.dll', 'opencv_imgproc4.dll', 'libraw.dll', 'tiffd.dll', 'Qt6Core.dll', 'zlibd1.dll'):
+            self.assertTrue(ci.shipped_runtime_dll(kept), kept)
+
     def test_offscreen_runtime(self):
         env = ci.runtime_environment()
         self.assertEqual(env['QT_QPA_PLATFORM'], 'offscreen')

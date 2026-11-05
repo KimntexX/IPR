@@ -21,7 +21,7 @@ option(IPR_BUILD_TOOLS "Build the analysis tools of src/tools" ON)
 
 find_package(Qt6 6.8 REQUIRED COMPONENTS Core Gui Quick Concurrent)
 find_package(TIFF REQUIRED)
-find_package(OpenCV REQUIRED COMPONENTS core imgproc imgcodecs)
+find_package(OpenCV REQUIRED COMPONENTS core imgproc)
 qt_standard_project_setup()
 
 set(IPR_SOURCE_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/src")
