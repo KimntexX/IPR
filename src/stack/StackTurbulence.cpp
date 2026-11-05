@@ -88,9 +88,7 @@ Report refine(cv::Mat &merged, const cv::Rect &subject, const cv::Point &origin,
         }
         const cv::Matx33d frameToPixels(1, 0, -double(view.origin.x), 0, 1, -double(view.origin.y), 0, 0, 1);
         const cv::Matx33d subjectToPixels = frameToPixels * view.referenceToFrame * subjectToReference;
-        cv::Mat roughly;
-        cv::warpPerspective(rootLuminance(view.pixels), roughly, subjectToPixels, size,
-                            cv::INTER_LINEAR | cv::WARP_INVERSE_MAP, cv::BORDER_REPLICATE);
+        const cv::Mat roughly = ipr::warpedPerspective(rootLuminance(view.pixels), subjectToPixels, size, ipr::Resampling::Linear, ipr::Outside::LastPixel);
         const StackAlignment::LocalField field = StackAlignment::localField(reference, roughly, options.local);
         if (field.displacements.empty()) {
             report.sharpness.push_back(0.0);
@@ -110,8 +108,7 @@ Report refine(cv::Mat &merged, const cv::Rect &subject, const cv::Point &origin,
                 outY[x] = float((subjectToPixels(1, 0) * px + subjectToPixels(1, 1) * py + subjectToPixels(1, 2)) / w);
             }
         }
-        cv::Mat output;
-        cv::remap(view.pixels, output, mapX, mapY, cv::INTER_LANCZOS4, cv::BORDER_REPLICATE);
+        const cv::Mat output = ipr::remapped(view.pixels, mapX, mapY, ipr::Resampling::Lanczos4, ipr::Outside::LastPixel);
         cv::multiply(output, cv::Scalar(view.gains[0], view.gains[1], view.gains[2]), output);
         report.sharpness.push_back(sharpnessOf(rootLuminance(output)));
         registered[i] = std::move(output);

@@ -99,11 +99,8 @@ cv::Mat resampled(const cv::Mat &image, const Settings &s, Quality quality, int 
     const Matrix fromPixels(1.0 / image.cols, 0, 0.5 / image.cols, 0, 1.0 / image.rows, 0.5 / image.rows, 0, 0, 1);
     const Matrix toPixels(canvas.width, 0, -0.5, 0, canvas.height, -0.5, 0, 0, 1);
     const Matrix forward = toPixels * homography(s, image.size()) * fromPixels;
-    cv::Mat result;
-    cv::warpPerspective(image, result, forward.inv(), canvas,
-                        (quality == Quality::Export ? cv::INTER_LANCZOS4 : cv::INTER_CUBIC) | cv::WARP_INVERSE_MAP,
-                        border, cv::Scalar::all(0));
-    return result;
+    return ipr::warpedPerspective(image, forward.inv(), canvas, quality == Quality::Export ? ipr::Resampling::Lanczos4 : ipr::Resampling::Cubic,
+                                  border == cv::BORDER_CONSTANT ? ipr::Outside::Zero : ipr::Outside::LastPixel);
 }
 
 std::optional<cv::Point2d> mapped(const Matrix &matrix, const cv::Point2d &point)

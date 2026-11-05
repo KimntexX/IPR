@@ -111,6 +111,27 @@ cv::Mat resizedBy(const cv::Mat &mat, double scaleX, double scaleY, Interpolatio
     return out;
 }
 
+cv::Mat remapped(const cv::Mat &mat, const cv::Mat &mapX, const cv::Mat &mapY, Resampling resampling, Outside outside)
+{
+    if (mat.empty() || mapX.empty())
+        return {};
+    cv::Mat out(mapX.size(), mat.type());
+    Image target = fromMutableMat(out);
+    remapInto(fromMat(mat), target, fromMat(mapX), fromMat(mapY), resampling, outside);
+    return out;
+}
+
+cv::Mat warpedPerspective(const cv::Mat &mat, const cv::Matx33d &outToImage, cv::Size size, Resampling resampling,
+                          Outside outside)
+{
+    if (mat.empty() || size.empty())
+        return {};
+    cv::Mat out(size, mat.type());
+    Image target = fromMutableMat(out);
+    warpPerspectiveInto(fromMat(mat), target, fromCv(outToImage), resampling, outside);
+    return out;
+}
+
 cv::Matx33d toCv(const Matrix33d &matrix)
 {
     cv::Matx33d out;

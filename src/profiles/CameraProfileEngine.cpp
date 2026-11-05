@@ -2,6 +2,8 @@
 #include "LocalValues.h"
 #include "WorkingColorSpace.h"
 
+#include "OpenCvBridge.h"
+
 #include <QDir>
 #include <QCoreApplication>
 #include <QDirIterator>
@@ -2040,8 +2042,7 @@ bool applyLcp(const QString &fileName, cv::Mat &linearRgb,
 
     cv::Mat geometryCorrected = linearRgb;
     if (options.lensCorrection && model.hasGeometry) {
-        cv::remap(linearRgb, geometryCorrected, mapX, mapY, cv::INTER_LINEAR,
-                  cv::BORDER_REPLICATE);
+        geometryCorrected = ipr::remapped(linearRgb, mapX, mapY, ipr::Resampling::Linear, ipr::Outside::LastPixel);
     }
 
     if (options.chromaticAberration && (model.hasRedGreen || model.hasBlueGreen)) {
@@ -2075,9 +2076,7 @@ bool applyLcp(const QString &fileName, cv::Mat &linearRgb,
                     }
                 }
             });
-            cv::Mat corrected;
-            cv::remap(geometryCorrected, corrected, caX, caY, cv::INTER_LINEAR,
-                      cv::BORDER_REPLICATE);
+            const cv::Mat corrected = ipr::remapped(geometryCorrected, caX, caY, ipr::Resampling::Linear, ipr::Outside::LastPixel);
             cv::extractChannel(corrected, channels[channel], channel);
         };
         if (model.hasRedGreen)
