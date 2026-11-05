@@ -38,6 +38,18 @@ class RenderServerParity(unittest.TestCase):
         other = lambda source, feature, value: (self.pixels, dict(profile="q"))
         self.assertFalse(audit.compare_state(STATE, renders(self.pixels), other)["identical"])
 
+    def test_the_time_and_the_build_of_a_render_do_not_count(self):
+        first = lambda source, feature, value: (self.pixels, dict(declaration=dict(
+            created_at_utc="10:00", executable_sha256="a", dcp_profile="p")))
+        second = lambda source, feature, value: (self.pixels, dict(declaration=dict(
+            created_at_utc="11:00", executable_sha256="b", dcp_profile="p")))
+        self.assertTrue(audit.compare_state(STATE, first, second)["identical"])
+
+    def test_the_rest_of_the_declaration_counts(self):
+        first = lambda source, feature, value: (self.pixels, dict(declaration=dict(dcp_profile="p")))
+        second = lambda source, feature, value: (self.pixels, dict(declaration=dict(dcp_profile="q")))
+        self.assertFalse(audit.compare_state(STATE, first, second)["identical"])
+
     def test_a_failure_on_either_side_differs(self):
         self.assertFalse(audit.compare_state(STATE, fails, renders(self.pixels))["identical"])
         self.assertFalse(audit.compare_state(STATE, renders(self.pixels), fails)["identical"])

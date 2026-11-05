@@ -16,13 +16,20 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from analysis.render import RenderServer  # noqa: E402
 
 RENDER_TIMEOUT_SECONDS = 600
+BUILD_OR_TIME_FIELDS = ("created_at_utc", "executable_sha256")
+
+
+def comparable(metadata):
+    """The metadata without what says when and by which build a render was made, and differs on purpose."""
+    declaration = {key: value for key, value in metadata.get("declaration", {}).items() if key not in BUILD_OR_TIME_FIELDS}
+    return {**metadata, "declaration": declaration}
 
 
 def digest(rendered):
     pixels, metadata = rendered
     return dict(shape=list(pixels.shape), dtype=str(pixels.dtype),
                 sha256=hashlib.sha256(pixels.tobytes()).hexdigest(),
-                metadata_sha256=hashlib.sha256(json.dumps(metadata, sort_keys=True, default=str).encode()).hexdigest())
+                metadata_sha256=hashlib.sha256(json.dumps(comparable(metadata), sort_keys=True, default=str).encode()).hexdigest())
 
 
 def compare_state(state, reference_render, candidate_render):
