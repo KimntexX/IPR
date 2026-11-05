@@ -54,6 +54,35 @@ Three rowsAround(const Image &image, int y)
             image.row<float>(beyondEdge(y + 1, height, BlurBorder::Mirror))};
 }
 
+// Loops on distinct pointers, out of the callers: the compiler checks once that they do not overlap,
+// then vectorizes them; inlined into the callers, it gave up for fear of an overlap.
+void compareSwap(float *low, float *high, int count)
+{
+    for (int x = 0; x < count; ++x) {
+        const float l = low[x], h = high[x];
+        low[x] = l < h ? l : h;
+        high[x] = l < h ? h : l;
+    }
+}
+
+void difference(float *out, const float *after, const float *before, int count)
+{
+    for (int v = 0; v < count; ++v)
+        out[v] = after[v] - before[v];
+}
+
+void oneTwoOne(float *out, const float *before, const float *here, const float *after, int count)
+{
+    for (int v = 0; v < count; ++v)
+        out[v] = before[v] + here[v] * 2 + after[v];
+}
+
+void scaledOneTwoOne(float *out, const float *before, const float *here, const float *after, float centre, float near, int count)
+{
+    for (int v = 0; v < count; ++v)
+        out[v] = here[v] * centre + (before[v] + after[v]) * near;
+}
+
 } // namespace
 
 // As OpenCV's separable Sobel: the derivative [-1 0 1] unscaled and the smoothing [1 2 1] carrying
@@ -83,16 +112,16 @@ void sobelInto(const Image &image, Image &out, bool alongX, double scale, int th
                     }
                 };
                 one(0);
-                const int insideEnd = (width - 1) * channels;
-                if (alongX) {
-                    for (int v = channels; v < insideEnd; ++v)
-                        row[v] = s[v + channels] - s[v - channels];
-                } else if (unit) {
-                    for (int v = channels; v < insideEnd; ++v)
-                        row[v] = s[v - channels] + s[v] * 2 + s[v + channels];
-                } else {
-                    for (int v = channels; v < insideEnd; ++v)
-                        row[v] = s[v] * centre + (s[v - channels] + s[v + channels]) * near;
+                const int inside = (width - 2) * channels;
+                if (inside > 0) {
+                    float *o = row + channels;
+                    const float *here = s + channels;
+                    if (alongX)
+                        difference(o, here + channels, here - channels, inside);
+                    else if (unit)
+                        oneTwoOne(o, here - channels, here, here + channels, inside);
+                    else
+                        scaledOneTwoOne(o, here - channels, here, here + channels, centre, near, inside);
                 }
                 if (width > 1)
                     one(width - 1);
@@ -220,15 +249,8 @@ void medianInto(const Image &image, Image &out, int side, int threads)
                         for (int x = std::max(inEnd, 0); x < width; ++x)
                             lane[x] = in[std::clamp(x + shift, 0, width - 1) * channels];
                     }
-                for (const auto &[a, b] : network) {
-                    float *low = values.data() + size_t(a) * size_t(width);
-                    float *high = values.data() + size_t(b) * size_t(width);
-                    for (int x = 0; x < width; ++x) {
-                        const float l = low[x], h = high[x];
-                        low[x] = l < h ? l : h;
-                        high[x] = l < h ? h : l;
-                    }
-                }
+                for (const auto &[a, b] : network)
+                    compareSwap(values.data() + size_t(a) * size_t(width), values.data() + size_t(b) * size_t(width), width);
                 const float *median = values.data() + size_t(middle) * size_t(width);
                 for (int x = 0; x < width; ++x)
                     row[x * channels + c] = median[x];
@@ -316,92 +338,86 @@ T padding(Beyond beyond)
         return Largest ? std::numeric_limits<T>::lowest() : std::numeric_limits<T>::max();
 }
 
-// The extreme of every window of `window` lines, the lines `stride` values apart and padded already:
-// line i of the result, its `values` values from `first`, is the extreme of lines i to
-// i + window - 1. Doubling: extremes over 2, 4, 8 lines, each from the last, then two overlapping
-// ones cover the window. Each step is one loop that reads ahead of what it writes.
+// out[v] is the extreme of a[v] and b[v]. Separate arrays, read and written in one direction, so
+// that the compiler makes it a vector loop.
 template <typename T, bool Largest>
-void slidingExtreme(T *lines, int count, size_t stride, size_t first, size_t values, int window)
+void pairwise(T *out, const T *a, const T *b, size_t count)
 {
-    const auto better = [](T a, T b) { return Largest ? (a < b ? b : a) : (b < a ? b : a); };
-    int span = 1;
-    int reach = count;
-    while (span * 2 <= window) {
-        reach -= span;
-        const size_t offset = size_t(span) * stride;
-        for (int i = 0; i < reach; ++i) {
-            T *line = lines + size_t(i) * stride + first;
-            for (size_t v = 0; v < values; ++v)
-                line[v] = better(line[v], line[v + offset]);
-        }
-        span *= 2;
-    }
-    if (span < window) {
-        const size_t offset = size_t(window - span) * stride;
-        for (int i = 0; i + window <= count; ++i) {
-            T *line = lines + size_t(i) * stride + first;
-            for (size_t v = 0; v < values; ++v)
-                line[v] = better(line[v], line[v + offset]);
-        }
+    for (size_t v = 0; v < count; ++v) {
+        const T x = a[v], y = b[v];
+        out[v] = Largest ? (x < y ? y : x) : (y < x ? y : x);
     }
 }
 
-// Along one padded row, pixels as lines: each step is a single run along the row.
+// Along one padded run of `count` pixels: line[x] becomes the extreme of pixels x to x + window - 1,
+// for x < count - window + 1. Doubling between two buffers: extremes over 2, 4, 8 pixels, each from
+// the last, then two overlapping ones cover the window.
 template <typename T, bool Largest>
-void slidingAlongRow(T *row, int count, int channels, int window)
+void slidingAlongRow(std::vector<T> &line, std::vector<T> &spare, int count, int channels, int window)
 {
-    const auto better = [](T a, T b) { return Largest ? (a < b ? b : a) : (b < a ? b : a); };
-    const size_t total = size_t(count) * size_t(channels);
+    size_t length = size_t(count) * size_t(channels);
     int span = 1;
-    size_t reach = total;
     while (span * 2 <= window) {
         const size_t offset = size_t(span) * size_t(channels);
-        reach -= offset;
-        for (size_t v = 0; v < reach; ++v)
-            row[v] = better(row[v], row[v + offset]);
+        length -= offset;
+        pairwise<T, Largest>(spare.data(), line.data(), line.data() + offset, length);
+        line.swap(spare);
         span *= 2;
     }
     if (span < window) {
         const size_t offset = size_t(window - span) * size_t(channels);
         const size_t kept = size_t(count - window + 1) * size_t(channels);
-        for (size_t v = 0; v < kept; ++v)
-            row[v] = better(row[v], row[v + offset]);
+        pairwise<T, Largest>(spare.data(), line.data(), line.data() + offset, kept);
+        line.swap(spare);
     }
 }
 
+// As OpenCV does it: bands of columns walked down the image, the row extremes of the window kept
+// in a ring that stays in the cache, and the column extreme taken over the ring for each row.
 template <typename T, bool Largest>
 void extremeInto(const Image &image, Image &out, int width, int height, Beyond beyond, int threads)
 {
     const int columns = image.width(), rows = image.height(), channels = image.channels();
     const int left = width / 2, top = height / 2;
-    const size_t values = size_t(columns) * size_t(channels);
     const T pad = padding<T, Largest>(beyond);
-    // Rows padded above and below for the second pass; the first fills the rows in between.
-    const int extendedRows = rows + height - 1;
-    std::vector<T> across(values * size_t(extendedRows), pad);
-    const int extendedColumns = columns + width - 1;
-    parallelRows(rows, [&](int first, int last) {
-        std::vector<T> line(size_t(extendedColumns) * size_t(channels));
-        for (int y = first; y < last; ++y) {
-            const T *in = image.row<T>(y);
-            std::fill(line.begin(), line.begin() + std::ptrdiff_t(left) * channels, pad);
-            std::copy(in, in + values, line.begin() + std::ptrdiff_t(left) * channels);
-            std::fill(line.begin() + std::ptrdiff_t(left) * channels + std::ptrdiff_t(values), line.end(), pad);
-            slidingAlongRow<T, Largest>(line.data(), extendedColumns, channels, width);
-            std::copy(line.begin(), line.begin() + std::ptrdiff_t(values), across.begin() + std::ptrdiff_t(values) * (y + top));
-        }
-    }, threads);
-    // Down the columns, in place, spread over threads by runs of columns.
-    const int chunks = int((values + 1023) / 1024);
-    parallelRows(chunks, [&](int first, int last) {
-        const size_t begin = size_t(first) * 1024, end = std::min(values, size_t(last) * 1024);
-        slidingExtreme<T, Largest>(across.data(), extendedRows, values, begin, end - begin, height);
-    }, threads);
+    constexpr int bandColumns = 512;
+    const int bands = (columns + bandColumns - 1) / bandColumns;
     Image &target = out;
-    parallelRows(rows, [&](int first, int last) {
-        for (int y = first; y < last; ++y)
-            std::copy(across.begin() + std::ptrdiff_t(values) * y, across.begin() + std::ptrdiff_t(values) * (y + 1),
-                      target.mutableRow<T>(y));
+    parallelRows(bands, [&](int firstBand, int lastBand) {
+        for (int band = firstBand; band < lastBand; ++band) {
+            const int x0 = band * bandColumns, x1 = std::min(columns, x0 + bandColumns), bandWidth = x1 - x0;
+            const size_t bandValues = size_t(bandWidth) * size_t(channels);
+            const int extended = bandWidth + width - 1;
+            // The pixels of the band's window that lie in the image, and where they go in the line.
+            const int from = std::max(0, x0 - left), to = std::min(columns, x0 - left + extended);
+            const size_t at = size_t(from - (x0 - left)) * size_t(channels);
+            std::vector<T> line(size_t(extended) * size_t(channels)), spare(line.size());
+            std::vector<T> ring(bandValues * size_t(height));
+            std::vector<T> result(bandValues), next(bandValues);
+            const auto rowExtreme = [&](int y, T *into) {
+                if (y < 0 || y >= rows) {
+                    std::fill(into, into + bandValues, pad);
+                    return;
+                }
+                std::fill(line.begin(), line.end(), pad);
+                const T *in = image.row<T>(y) + size_t(from) * size_t(channels);
+                std::copy(in, in + size_t(to - from) * size_t(channels), line.begin() + std::ptrdiff_t(at));
+                slidingAlongRow<T, Largest>(line, spare, extended, channels, width);
+                std::copy(line.begin(), line.begin() + std::ptrdiff_t(bandValues), into);
+            };
+            for (int k = 0; k < height - 1; ++k)
+                rowExtreme(k - top, ring.data() + bandValues * size_t(k));
+            for (int y = 0; y < rows; ++y) {
+                rowExtreme(y + height - 1 - top, ring.data() + bandValues * size_t((y + height - 1) % height));
+                const T *first = ring.data() + bandValues * size_t(y % height);
+                std::copy(first, first + bandValues, result.begin());
+                for (int k = 1; k < height; ++k) {
+                    pairwise<T, Largest>(next.data(), result.data(), ring.data() + bandValues * size_t((y + k) % height), bandValues);
+                    result.swap(next);
+                }
+                std::copy(result.begin(), result.end(), target.mutableRow<T>(y) + size_t(x0) * size_t(channels));
+            }
+        }
     }, threads);
 }
 
