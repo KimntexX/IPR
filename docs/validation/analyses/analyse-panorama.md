@@ -102,9 +102,10 @@ de 0,85 %, ce qui correspond à la mesure. Le vignettage ignorait par ailleurs l
 | Sans profil | 16 024 | -0,74 % | 1 973 | [JSON](../raw/b8-panorama-audit-v001-lcp-none-20261104T081713Z.json) |
 | Après la correction | 16 157 | +0,05 % | 1 976 | [JSON](../raw/b8-panorama-audit-v001-lcp-after-20261104T081701Z.json) |
 
-**Ce changement touche le rendu de toutes les photos corrigées**, pas seulement les panoramas. Il
-n'existe pas encore d'export Lightroom avec profil d'objectif pour comparer, ni de mesure sur un
-boîtier plein format : l'issue #26 le suit.
+**Ce changement touche le rendu de toutes les photos corrigées**, pas seulement les panoramas.
+L'utilisateur l'a vérifié et il lui convient (5 novembre 2026). Il n'existe pas encore d'export
+Lightroom avec profil d'objectif pour comparer, ni de mesure sur un boîtier plein format : l'issue
+#26 le suit.
 
 Le même constat a donné une règle du moteur : ce que les fichiers savent de l'objectif n'est pas
 laissé à l'ajustement. La focale reste à 7 % de la valeur EXIF, et aucune distorsion n'est cherchée
