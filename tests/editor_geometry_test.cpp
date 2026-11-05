@@ -248,6 +248,12 @@ int main(int argc, char **argv)
     if (!check(editor.geometry().value("scale").toInt() == 110, "the rest of the geometry stays")) return 1;
     if (!check(editor.statusMessage().contains(QStringLiteral("Redressement proposé")), "and it says what happened")) return 1;
     if (!check(bytesOf(horizon) == horizonBytes, "the horizon is never written")) return 1;
+    for (const char *mode : {"vertical", "full"}) {
+        editor.resetGeometry();
+        if (!check(settled(editor), "reset before a mode")) return 1;
+        editor.proposeStraightening(QString::fromLatin1(mode));
+        if (!check(settled(editor) && std::abs(editor.geometry().value("rotation").toDouble() + 3.0) < 0.1, mode)) return 1;
+    }
     editor.resetGeometry();
     if (!check(settled(editor), "reset")) return 1;
 

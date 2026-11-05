@@ -1,4 +1,4 @@
-% translation-source: docs/user/latex/chapters/17-recadrage-geometrie.tex; sha256: 3f2ca88fcc658f35d15b25bca8814080113bd940538c8e65c4be0a038cc078c3
+% translation-source: docs/user/latex/chapters/17-recadrage-geometrie.tex; sha256: a9bef5902d58c0549db65d188fcbec345b088640f627ed3d15618abe16e4f829
 \chapter{Cropping and geometric effects}
 The \emph{Geometry} tab, at the top of the right panel, gathers orientation, cropping
 and manual transformations. Nothing is written into the photo: the geometry is saved
@@ -9,6 +9,17 @@ preview shows the whole frame, with the crop as a rectangle; going back to the
 \section{Orientation}
 \emph{Rotate 90° right}, \emph{Horizontal mirror} and \emph{Vertical mirror} degrade
 no pixel. The crop and the transformations follow the image.
+
+\section{Straighten from lines}
+IPR reads the straight lines of the photo and proposes a correction, which the
+\emph{Transformations} sliders then show and which is undone like any other step.
+\emph{Niveau} (Level) proposes a rotation; \emph{Verticales} (Verticals) also makes the
+verticals parallel, if the photo has enough of them; \emph{Complet} (Full) does the same
+with the horizontals. The proposal is mostly useful for a horizon or a building. Without
+lines that are long enough or that agree, IPR proposes nothing and says so.
+
+\attention{IPR does not know the scene: two power lines across a landscape look like a
+horizon to it. Look at the result before keeping it.}
 
 \section{Cropping}
 Move the rectangle or one of its eight handles. The image is recomputed only on
