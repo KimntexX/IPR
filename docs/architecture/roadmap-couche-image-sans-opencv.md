@@ -2,7 +2,8 @@
 
 **Décision :** [ADR-0018](../decisions/ADR-0018-independance-decodage-raw-et-couche-image.md),
 20 octobre 2026, et volonté réaffirmée par l'utilisateur le 5 novembre 2026 : être le plus indépendant
-possible. **État :** O0 commencé, O1 et O2 faits le 5 novembre 2026, sur une branche locale, aucun module migré.
+possible. **État :** O0 commencé, O1 et O2 faits, O3 commencé par le flou gaussien, le 5 novembre 2026, sur une branche locale,
+aucun module migré. **Une décision attend l'utilisateur** : §7, point 1.
 Suivi : [issue 29](https://github.com/KimntexX/IPR/issues/29).
 Chantier distinct des [décodeurs RAW](roadmap-decodeurs-raw.md), sur sa propre branche durable,
 `patch_image_core`, après le palier E1 de la [refonte d'`ImageEditor`](plan-imageeditor-orchestrateur.md).
@@ -116,7 +117,34 @@ erreurs relevées en O1, au lieu de les documenter :**
 **Mesuré :** tests C++ sous MSVC, puis g++ 13 sous WSL avec ASan et UBSan, et TSan, tous verts. La passerelle ne copie aucun pixel
 dans les deux sens, et un flou gaussien d'OpenCV donne le même résultat au bit près à travers elle, y compris écrit dans nos
 pixels. **Limite :** ni ASan ni TSan n'ont tourné sur la passerelle, qui dépend d'OpenCV sous Windows, et aucun module n'est
-encore migré, si bien que le coût réel à l'usage reste à mesurer. L'estimation promise en §6 attend le premier noyau d'O3.
+encore migré, si bien que le coût réel à l'usage reste à mesurer.
+
+### Premier noyau d'O3 : le flou gaussien, le plus sensible
+
+[Preuve](../validation/raw/image-kernel-gaussian-v001-20261105.json), révision `b026746`, tolérance fixée dans l'outil avant toute
+mesure : 1e-5, sous un pas de 16 bits. Médiane de trois essais à 8 threads, 3 canaux, sur un i7-12700K occupé par ailleurs ;
+image de synthèse, sans module réel derrière.
+
+| Taille | Sigma | OpenCV | IPR | Rapport | IPR seul sur 1 thread | Plus grand écart |
+| --- | --- | --- | --- | --- | --- | --- |
+| Aperçu, 2 048 × 1 365 | 1 | 3,1 ms | 7,7 ms | ×2,5 | 19 ms | 2,4e-7 |
+| | 3 | 4,0 ms | 8,8 ms | ×2,2 | 32 ms | 3,0e-7 |
+| | 10 | 13,8 ms | 19,9 ms | ×1,4 | 114 ms | 3,0e-7 |
+| | 30 | 79,4 ms | 87,5 ms | ×1,1 | 529 ms | 3,0e-7 |
+| Maître, 6 960 × 4 640 | 1 | 32 ms | 75 ms | ×2,3 | 225 ms | 3,0e-7 |
+| | 3 | 47 ms | 102 ms | ×2,2 | 386 ms | 3,0e-7 |
+| | 10 | 137 ms | 435 ms | ×3,2 | 1 071 ms | 3,6e-7 |
+| | 30 | 796 ms | 1 930 ms | ×2,4 | 4 432 ms | 3,6e-7 |
+
+- **Précision : acquise,** près de 30 fois sous la tolérance, y compris sur les bords et les très petites images.
+- **Vitesse : le critère d'O3, « au moins égale », n'est pas tenu.** Sur l'aperçu, le flou reste loin de la cible de 250 ms ; sur le
+  maître, à l'export, il coûte deux à trois fois plus. Multiplié par les flous d'une recette, ce n'est pas négligeable à l'export.
+- **Ce n'est pas une question d'instructions vectorielles.** Le même fichier compilé en `/arch:AVX2`, drapeau vérifié dans le journal
+  de compilation, ne gagne que 0 à 10 %. Traiter la ligne par blocs tenant dans le cache a gagné bien plus, jusqu'à un facteur 2.
+- **Sur le maître, 8 threads ne donnent que 2,3 à 3,8 fois un seul thread.** La cause n'est pas établie : le débit mémoire est mon
+  hypothèse, non mesurée. L'optimisation peut donc continuer sans intrinsèques.
+- **Estimation du chantier :** toujours pas de chiffre sérieux. Ce noyau a pris peu de temps grâce à la spécification d'OpenCV et à
+  son rôle d'oracle, mais un seul noyau, sans migration, ne dit rien des 90 fichiers.
 
 ## 5. Principes de conception
 
@@ -145,11 +173,9 @@ refaite après O2, sur la vitesse réellement mesurée, plutôt qu'annoncée mai
 
 ## 7. Décisions à prendre
 
-1. **Instructions vectorielles.** AGENTS.md demande du C++ standard, sans extension de compilateur. Sans intrinsèques, on
-   dépend de la vectorisation automatique. **Je propose de garder le C++ standard au départ**, de mesurer sur les flous et le
-   rééchantillonnage, et de ne revenir sur cette règle que si l'écart est sensible, avec ton accord.
-2. **Algèbre linéaire.** Écrire les petits solveurs nécessaires, ou prendre une bibliothèque en en-têtes, comme Eigen. **Je
-   propose d'écrire** ce qu'il faut : les tailles sont petites et connues, et c'est ton objectif d'indépendance.
-3. **Scripts d'analyse Python.** Ils utilisent `cv2` hors du produit. **Je propose de les laisser** : ce n'est pas une
-   dépendance d'IPR. À migrer vers NumPy et Pillow seulement au fil de l'eau.
-4. **Quand lancer O0.** Il ne dépend de rien. **Je propose tout de suite**, sur accord.
+1. **Le critère de vitesse d'O3.** C++ standard confirmé par l'utilisateur et, pour le flou, par la mesure : AVX2 n'y change presque
+   rien. Mais le flou reste deux à trois fois plus lent qu'OpenCV sur une photo entière. **Je propose de garder « au moins égale »
+   comme objectif, d'accepter ×2 à l'export tant que l'aperçu reste sous 250 ms, et de ne juger qu'après une mesure sur un vrai
+   export, module migré.** À toi de trancher : c'est le prix de l'indépendance, et il sera visible.
+2. **Algèbre linéaire.** Écrire les petits solveurs nécessaires, sans bibliothèque : **accepté le 5 novembre 2026.**
+3. **Scripts d'analyse Python.** Ils gardent `cv2`, hors du produit : **accepté le 5 novembre 2026.**
