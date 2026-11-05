@@ -137,6 +137,16 @@ minutes avec sa raison, pour l'empilement aussi. `stackSessionTests` le reprodui
 simulée, et échoue si l'on rétablit l'ancien comportement. La progression avance aussi pendant la
 comparaison des paires et le calcul des raccords.
 
+## Images presque superposées
+
+Une rafale sélectionnée par erreur est le pire cas des raccords : tout se recouvre et chaque endroit
+coûte à peu près pareil. La CI l'a révélé par un dépassement de temps sur `assembleQmlTests` : sur
+six images de 500 × 340 pixels, les raccords prenaient 24 s sur les 27 de la tâche. La coupe travaille
+maintenant sur moins de niveaux de coût, et une image ne dépasse plus 120 000 cellules : 1,2 s pour le
+même cas, et 8,6 s au lieu de 57 s pour tout le test. Sur la série réelle à deux rangées, le résultat
+garde sa taille, et les six recouvrements regardés à 100 % restent sans dédoublement. `panoramaTests`
+borne ce temps. Mesures faites au chronomètre pendant cette correction, sans JSON dédié.
+
 ## Remplir les bords
 
 À la demande de l'utilisateur, les coins vides peuvent être complétés : l'onglet propose **Recadrer**
