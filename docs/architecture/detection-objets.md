@@ -25,8 +25,8 @@ corrige, et le résultat est un masque ordinaire, éditable et enregistré dans 
 
 | Palier | Contenu | Critère de passage |
 | --- | --- | --- |
-| D0 | Corpus, annotations, plans gelés, licences lues à la source | Manifeste figé, droits écrits |
-| D1 | Lignes par méthode classique, sans réseau | Erreur d'angle mesurée sur horizons et verticales connus ; proposition utile sur le corpus |
+| D0 | Corpus, annotations, plans gelés, licences lues à la source | Manifeste figé, droits écrits. **Licences de code lues, poids en partie** |
+| D1 | Lignes par méthode classique, sans réseau | Erreur d'angle mesurée sur horizons et verticales connus ; proposition utile sur le corpus. **Moteur fait, [résultats](../validation/analyses/analyse-detection.md) ; pas encore raccordé** |
 | D2 | Banc Python : segmentation au clic, modèles existants, hors IPR | IoU et qualité de bord par classe de difficulté ; temps sur 8 threads |
 | D3 | Moteur C++ : exécution, cache de l'analyse, coordonnées | Parité auteur/ONNX, coordonnées exactes après géométrie, annulation, mémoire bornée |
 | D4 | Masque issu d'un modèle dans la recette et l'interface | Enregistrement et réouverture sans modèle, correction manuelle au pinceau |
@@ -41,15 +41,14 @@ points de fuite s'écrivent avec les noyaux déjà nécessaires.
 
 | Candidat | Rôle | Taille annoncée | Licence annoncée |
 | --- | --- | --- | --- |
-| MobileSAM | Segmentation au clic, léger | environ 40 Mo | Apache-2.0 |
-| SAM 2.1 tiny | Même usage, plus lourd | environ 78 Mo | à lire à la source |
-| EfficientSAM | Autre compromis | à relever | à lire à la source |
+| MobileSAM | Segmentation au clic, léger | environ 40 Mo | Code Apache-2.0, poids non établis |
+| SAM 2.1 tiny | Même usage, plus lourd | environ 78 Mo | Code et poids Apache-2.0 |
+| EfficientSAM | Autre compromis | à relever | Code Apache-2.0, poids non établis |
 
-Tailles relevées dans un [tableau comparatif d'Ultralytics](https://docs.ultralytics.com/models/mobile-sam) ;
-licence de MobileSAM relevée sur un [paquet ONNX communautaire](https://huggingface.co/Heliosoph/sam-onnx), qui
-annonce aussi un fonctionnement quasi temps réel sur CPU : **à mesurer chez nous**. Ces chiffres sont de
-seconde main. **D0 lit chaque fichier de licence à la source**, pour le code et séparément pour les poids,
-avant tout téléchargement.
+Tailles relevées dans un [tableau comparatif d'Ultralytics](https://docs.ultralytics.com/models/mobile-sam), de
+seconde main. Un [paquet ONNX communautaire](https://huggingface.co/Heliosoph/sam-onnx) annonce un fonctionnement
+quasi temps réel sur CPU : **à mesurer chez nous**. Licences [lues à la source](../validation/analyses/analyse-detection.md#d0--licences-lues-à-la-source)
+le 5 novembre 2026, sans téléchargement de poids.
 
 Pour la détection reportée : les modèles YOLO d'Ultralytics sont annoncés sous AGPL-3.0, celle d'IPR, ce qui
 ne les exclut pas ; RT-DETR est annoncé sous Apache-2.0. Une éventuelle extension des conditions aux poids
@@ -104,6 +103,7 @@ Gardée séparée de la qualité de reconstruction de B3, comme le demande la fe
 
 ## 7. Ce qu'il me faut de l'utilisateur
 
-1. **Accord sur le périmètre** : clic et lignes d'abord, détection avec classes reportée.
+1. **Accord sur le périmètre** : clic et lignes d'abord, détection avec classes reportée. **Donné le 5 novembre 2026.**
 2. **Annotation :** une séance pour peindre une centaine d'objets, quand un outil sera prêt. Pas tout de suite.
-3. **Arbitrage sur l'ordre :** D1 peut démarrer tout de suite, indépendamment du reste.
+3. **Pour finir D1 :** des photos de bâtiments, façades et intérieurs, prises en contre-plongée, et un avis sur les
+   propositions une fois raccordées à l'interface.

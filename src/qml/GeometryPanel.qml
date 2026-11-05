@@ -164,6 +164,48 @@ Item {
             }
 
             Group {
+                objectName: "geometryStraightenSection"
+                title: qsTr("Redresser d'après les lignes")
+
+                RowLayout {
+                    Layout.fillWidth: true
+                    PreferenceButton {
+                        objectName: "geometryStraightenLevelButton"
+                        text: qsTr("Niveau")
+                        ToolTip.text: qsTr("Une rotation, d'après l'horizon ou les lignes de la photo.")
+                        ToolTip.visible: hovered
+                        ToolTip.delay: 500
+                        Layout.fillWidth: true
+                        Layout.preferredWidth: 1
+                        enabled: root.editor.hasImage
+                        onClicked: root.editor.proposeStraightening("level")
+                    }
+                    PreferenceButton {
+                        objectName: "geometryStraightenVerticalButton"
+                        text: qsTr("Verticales")
+                        ToolTip.text: qsTr("Et les verticales rendues parallèles, si la photo en a assez.")
+                        ToolTip.visible: hovered
+                        ToolTip.delay: 500
+                        Layout.fillWidth: true
+                        Layout.preferredWidth: 1
+                        enabled: root.editor.hasImage
+                        onClicked: root.editor.proposeStraightening("vertical")
+                    }
+                    PreferenceButton {
+                        objectName: "geometryStraightenFullButton"
+                        text: qsTr("Complet")
+                        ToolTip.text: qsTr("Et les horizontales aussi.")
+                        ToolTip.visible: hovered
+                        ToolTip.delay: 500
+                        Layout.fillWidth: true
+                        Layout.preferredWidth: 1
+                        enabled: root.editor.hasImage
+                        onClicked: root.editor.proposeStraightening("full")
+                    }
+                }
+            }
+
+            Group {
                 objectName: "geometryCropSection"
                 title: qsTr("Recadrage")
 

@@ -480,12 +480,24 @@ ApplicationWindow {
         verticalAlignment: Text.AlignVCenter
         elide: Text.ElideRight
         color: uiPreferences.theme.secondaryText
+        font.pointSize: 12
         text: imageEditor.statusMessage + (imageEditor.memoryCacheStatus && imageEditor.memoryCacheStatus.available
             ? qsTr(" | Cache : %1 image(s), %2 Mio%3")
                 .arg(imageEditor.decodedImageCacheEntryCount)
                 .arg(Math.round(imageEditor.decodedImageCacheSizeBytes / 1048576))
                 .arg(imageEditor.memoryCacheStatus.pressure ? qsTr(" — pression mémoire") : "") : "")
         background: Rectangle { color: uiPreferences.theme.panel }
+    }
+
+    function commandButtonReleased(button) {
+        commandError.noteRelease(button)
+    }
+
+    CommandErrorPopup {
+        id: commandError
+        parent: Overlay.overlay
+        editor: imageEditor
+        restingGap: applicationFooter.height + 8
     }
 
     PreferencesDialog {
