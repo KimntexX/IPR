@@ -184,9 +184,8 @@ cv::Mat flatWeight(const cv::Mat &luma)
     if (!(sigma > 0.f)) return cv::Mat(luma.size(), CV_32F, cv::Scalar(1.f));
     cv::Mat smooth, gx, gy, gradient;
     smooth = ipr::gaussianBlurred(luma, 1.0, ipr::BlurBorder::MirrorEdge);
-    const cv::Mat dx = (cv::Mat_<float>(1, 3) << -0.5f, 0.f, 0.5f), dy = dx.t();
-    cv::filter2D(smooth, gx, CV_32F, dx, cv::Point(-1, -1), 0, cv::BORDER_REFLECT);
-    cv::filter2D(smooth, gy, CV_32F, dy, cv::Point(-1, -1), 0, cv::BORDER_REFLECT);
+    gx = ipr::centralDifference(smooth, true);
+    gy = ipr::centralDifference(smooth, false);
     cv::magnitude(gx, gy, gradient);
     cv::Mat weight = (DetailGradient * sigma - gradient) / ((DetailGradient - FlatGradient) * sigma);
     return cv::min(cv::max(weight, 0.f), 1.f);
@@ -201,8 +200,7 @@ void flatChromaMedian(cv::Mat &rgb, float floor)
     const cv::Mat weight = flatWeight(0.25f * (c[0] + 2.f * c[1] + c[2]));
     for (int k : {0, 2}) {
         const cv::Mat diff = c[size_t(k)] - c[1];
-        cv::Mat median;
-        cv::medianBlur(diff, median, 3);   // not in place
+        const cv::Mat median = ipr::median(diff, 3);
         c[size_t(k)] = cv::max(median.mul(weight) + diff.mul(1.f - weight) + c[1], floor);
     }
     cv::merge(c, rgb);

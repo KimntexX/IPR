@@ -33,8 +33,8 @@ inline float bilinear(const cv::Mat &image, float x, float y)
 std::vector<cv::Point2f> cornersOf(const cv::Mat &level, int wanted)
 {
     cv::Mat gradientX, gradientY;
-    cv::Sobel(level, gradientX, CV_32F, 1, 0);
-    cv::Sobel(level, gradientY, CV_32F, 0, 1);
+    gradientX = ipr::sobel(level, true);
+    gradientY = ipr::sobel(level, false);
     cv::Mat xx, yy, xy;
     cv::multiply(gradientX, gradientX, xx);
     cv::multiply(gradientY, gradientY, yy);
@@ -102,8 +102,8 @@ void detectOnLevel(const cv::Mat &level, float toImage, const Options &options, 
     cv::Mat sampled, smooth, gradientX, gradientY;
     sampled = ipr::gaussianBlurred(level, sampleBlur, ipr::BlurBorder::Mirror);
     smooth = ipr::gaussianBlurred(level, orientationBlur, ipr::BlurBorder::Mirror);
-    cv::Sobel(smooth, gradientX, CV_32F, 1, 0);
-    cv::Sobel(smooth, gradientY, CV_32F, 0, 1);
+    gradientX = ipr::sobel(smooth, true);
+    gradientY = ipr::sobel(smooth, false);
 
     // The patch can turn in any direction: its corners stay inside with this margin.
     const float reach = spacing * float(grid) * 0.5f * std::sqrt(2.0f) + 2.0f;

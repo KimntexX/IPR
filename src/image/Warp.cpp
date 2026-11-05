@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <array>
 #include <climits>
+#include <cstddef>
 #include <cmath>
 #include <cstdint>
 #include <stdexcept>
@@ -97,38 +98,61 @@ int roundedToInt(double value)
     return int(std::lrint(value));
 }
 
+// All the taps inside, added as OpenCV adds them there: the four of linear in one run, the others
+// row by row. Taps and channels known at compile time; each channel in the same order as alone.
+template <int Taps, int Channels>
+void sumInside(const float *first, std::ptrdiff_t stepBytes, const float *w, float *out)
+{
+    float sum[Channels];
+    for (int ky = 0; ky < Taps; ++ky) {
+        const float *row = reinterpret_cast<const float *>(reinterpret_cast<const unsigned char *>(first) + ky * stepBytes);
+        const float *rowWeights = w + ky * Taps;
+        if constexpr (Taps == 2) {
+            for (int c = 0; c < Channels; ++c) {
+                sum[c] = ky == 0 ? row[c] * rowWeights[0] : sum[c] + row[c] * rowWeights[0];
+                sum[c] += row[Channels + c] * rowWeights[1];
+            }
+        } else {
+            float rowSum[Channels];
+            for (int c = 0; c < Channels; ++c)
+                rowSum[c] = row[c] * rowWeights[0];
+            for (int kx = 1; kx < Taps; ++kx) {
+                const float weight = rowWeights[kx];
+                for (int c = 0; c < Channels; ++c)
+                    rowSum[c] += row[kx * Channels + c] * weight;
+            }
+            for (int c = 0; c < Channels; ++c)
+                sum[c] = ky == 0 ? rowSum[c] : sum[c] + rowSum[c];
+        }
+    }
+    for (int c = 0; c < Channels; ++c)
+        out[c] = sum[c];
+}
+
+template <int Taps>
+bool sumInside(int channels, const float *first, std::ptrdiff_t stepBytes, const float *w, float *out)
+{
+    switch (channels) {
+    case 1: sumInside<Taps, 1>(first, stepBytes, w, out); return true;
+    case 2: sumInside<Taps, 2>(first, stepBytes, w, out); return true;
+    case 3: sumInside<Taps, 3>(first, stepBytes, w, out); return true;
+    case 4: sumInside<Taps, 4>(first, stepBytes, w, out); return true;
+    default: return false;
+    }
+}
+
 // One output pixel from the taps x taps pixels from (sx, sy), with these weights, rows first.
 void readTaps(const Image &image, int taps, int sx, int sy, const float *w, Outside outside, float *out)
 {
     const int channels = image.channels(), width = image.width(), height = image.height();
-    if (sx >= 0 && sy >= 0 && sx + taps <= width && sy + taps <= height && channels <= 4) {
-        // All the taps inside, added as OpenCV adds them there: the four of linear in one run, the
-        // others row by row. The channels side by side, each in the same order as alone.
-        float sum[4] = {}, rowSum[4] = {};
-        for (int ky = 0; ky < taps; ++ky) {
-            const float *row = image.row<float>(sy + ky) + sx * channels;
-            const float *rowWeights = w + ky * taps;
-            if (taps == 2) {
-                for (int c = 0; c < channels; ++c) {
-                    sum[c] = ky == 0 ? row[c] * rowWeights[0] : sum[c] + row[c] * rowWeights[0];
-                    sum[c] += row[channels + c] * rowWeights[1];
-                }
-                continue;
-            }
-            for (int c = 0; c < channels; ++c)
-                rowSum[c] = row[c] * rowWeights[0];
-            for (int kx = 1; kx < taps; ++kx) {
-                const float weight = rowWeights[kx];
-                const float *pixel = row + kx * channels;
-                for (int c = 0; c < channels; ++c)
-                    rowSum[c] += pixel[c] * weight;
-            }
-            for (int c = 0; c < channels; ++c)
-                sum[c] = ky == 0 ? rowSum[c] : sum[c] + rowSum[c];
-        }
-        for (int c = 0; c < channels; ++c)
-            out[c] = sum[c];
-        return;
+    if (sx >= 0 && sy >= 0 && sx + taps <= width && sy + taps <= height) {
+        const float *first = image.row<float>(sy) + sx * channels;
+        const std::ptrdiff_t step = image.stepBytes();
+        const bool done = taps == 2   ? sumInside<2>(channels, first, step, w, out)
+                          : taps == 4 ? sumInside<4>(channels, first, step, w, out)
+                                      : sumInside<8>(channels, first, step, w, out);
+        if (done)
+            return;
     }
     // Some taps beyond: each tap alone, outside read as the last pixel or as zero.
     const bool zero = outside == Outside::Zero;

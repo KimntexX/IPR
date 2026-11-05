@@ -4,6 +4,7 @@
 #include "Arrange.h"
 #include "Filters.h"
 #include "Image.h"
+#include "Neighbourhood.h"
 #include "Resize.h"
 #include "Warp.h"
 
@@ -45,6 +46,14 @@ cv::Mat padded(const cv::Mat &mat, int top, int bottom, int left, int right);
 // A region of the Mat with margins, its own pixels where they exist, as copyMakeBorder on a region.
 cv::Mat paddedRegion(const cv::Mat &whole, cv::Rect region, int top, int bottom, int left, int right);
 cv::Mat pyramidDown(const cv::Mat &mat);
+// New Mats filtered as Neighbourhood.h does: CV_32F, and CV_8U too for the minimum and maximum.
+cv::Mat sobel(const cv::Mat &mat, bool alongX, double scale = 1.0);
+cv::Mat laplacian(const cv::Mat &mat);
+cv::Mat centralDifference(const cv::Mat &mat, bool alongX);
+cv::Mat median(const cv::Mat &mat, int side);
+cv::Mat boxMean(const cv::Mat &mat, cv::Size window, BlurBorder border);
+cv::Mat minimum(const cv::Mat &mat, cv::Size window, Beyond beyond);
+cv::Mat maximum(const cv::Mat &mat, cv::Size window, Beyond beyond);
 
 inline cv::Size toCv(const Size &size) { return {size.width, size.height}; }
 inline Size fromCv(const cv::Size &size) { return {size.width, size.height}; }

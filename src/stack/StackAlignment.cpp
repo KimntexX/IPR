@@ -364,8 +364,7 @@ LocalField localField(const cv::Mat &reference, const cv::Mat &registered, const
     std::vector<cv::Mat> axes;
     cv::split(measured, axes);
     for (cv::Mat &axis : axes) {
-        cv::Mat filtered;
-        cv::medianBlur(axis, filtered, 3);
+        const cv::Mat filtered = ipr::median(axis, 3);
         filtered.copyTo(axis, weight > 0.f);
     }
     cv::Mat smoothWeight;

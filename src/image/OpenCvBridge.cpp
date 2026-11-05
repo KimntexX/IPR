@@ -192,6 +192,76 @@ cv::Mat pyramidDown(const cv::Mat &mat)
     return out;
 }
 
+cv::Mat sobel(const cv::Mat &mat, bool alongX, double scale)
+{
+    if (mat.empty())
+        return {};
+    cv::Mat out(mat.size(), mat.type());
+    Image target = fromMutableMat(out);
+    sobelInto(fromMat(mat), target, alongX, scale);
+    return out;
+}
+
+cv::Mat laplacian(const cv::Mat &mat)
+{
+    if (mat.empty())
+        return {};
+    cv::Mat out(mat.size(), mat.type());
+    Image target = fromMutableMat(out);
+    laplacianInto(fromMat(mat), target);
+    return out;
+}
+
+cv::Mat centralDifference(const cv::Mat &mat, bool alongX)
+{
+    if (mat.empty())
+        return {};
+    cv::Mat out(mat.size(), mat.type());
+    Image target = fromMutableMat(out);
+    centralDifferenceInto(fromMat(mat), target, alongX);
+    return out;
+}
+
+cv::Mat median(const cv::Mat &mat, int side)
+{
+    if (mat.empty())
+        return {};
+    cv::Mat out(mat.size(), mat.type());
+    Image target = fromMutableMat(out);
+    medianInto(fromMat(mat), target, side);
+    return out;
+}
+
+cv::Mat boxMean(const cv::Mat &mat, cv::Size window, BlurBorder border)
+{
+    if (mat.empty())
+        return {};
+    cv::Mat out(mat.size(), mat.type());
+    Image target = fromMutableMat(out);
+    boxMeanInto(fromMat(mat), target, window.width, window.height, border);
+    return out;
+}
+
+cv::Mat minimum(const cv::Mat &mat, cv::Size window, Beyond beyond)
+{
+    if (mat.empty())
+        return {};
+    cv::Mat out(mat.size(), mat.type());
+    Image target = fromMutableMat(out);
+    minimumInto(fromMat(mat), target, window.width, window.height, beyond);
+    return out;
+}
+
+cv::Mat maximum(const cv::Mat &mat, cv::Size window, Beyond beyond)
+{
+    if (mat.empty())
+        return {};
+    cv::Mat out(mat.size(), mat.type());
+    Image target = fromMutableMat(out);
+    maximumInto(fromMat(mat), target, window.width, window.height, beyond);
+    return out;
+}
+
 cv::Matx33d toCv(const Matrix33d &matrix)
 {
     cv::Matx33d out;
