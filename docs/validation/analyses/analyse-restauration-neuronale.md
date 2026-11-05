@@ -10,7 +10,7 @@ Ce bénéfice n'est pas démontré pour le correcteur CFA actuel.
 | Ce qui fonctionne | Contrats, signal signé, limites de ressources, reprise et mesures synthétiques traçables. Ce ne sont pas des preuves de qualité photo. |
 | Ce qui bloque | Bénéfice photo instable selon la graine ; loi de bruit encore expérimentale ; absence de confirmation photographique indépendante. |
 | Derniers résultats | Réplication close : 10 et 12 échecs forts sur 48, après les 12 et 16 précédents. Sur les photos, sensibilité aux graines et motifs directionnels : bénéfice non validé. |
-| Calcul engagé | Premier essai arrêté à 619 mises à jour par la garde RAM globale 92 %. Checkpoint 576 vérifié, graine 73 non démarrée. Reprise préparée sans changer le calcul, les poids initiaux ni les limites ; aucun résultat final disponible. |
+| Calcul engagé | Premier essai arrêté à 619 mises à jour par la garde RAM 92 %. Reprise depuis 576 confirmée à 18 h 54 UTC, puis +704 constaté ; graine 73 ensuite. Calcul, poids initiaux et limites inchangés ; aucun résultat final disponible. |
 | Prochaine preuve utile | Lire la courbe bornée et toutes les planches après la campagne. Carte sigma physiquement mieux motivée, mais bénéfice photo non établi ; pas de nouveau balayage des forces et classique couleur encore à compléter. |
 | GPU | CUDA qualifié ; prémesure définitive avec lecture et bruit : environ 0,32–0,33 s/mise à jour. Projection d'environ 23 min d'entraînement pour les deux graines, hors rendus ; plafond de campagne 90 min. |
 | Données | 349 RAW inventoriés, 105 paires étudiées. Température, bruit fixe et propagation restent à qualifier ; pas de nouvelles prises demandées pour cette expérience. |
@@ -6659,3 +6659,9 @@ initiaux, indépendamment du checkpoint de reprise.
 Lors du contrôle de reprise, la RAM globale est redescendue à environ
 57,8 % et la VRAM utilisée à 815 Mio. La limite 92 % n'est pas relevée
 et aucun processus d'un autre agent n'est arrêté.
+
+La reprise est confirmée à **18 h 54 min 21 s UTC**, superviseur
+PID 17192. Les checkpoints +640 puis +704 sont constatés : le calcul
+a bien repris après 576, sans repartir de zéro. La suite automatique
+reste celle du plan initial. Les contrôles documentaires donnent zéro
+erreur et zéro avertissement de lien.
