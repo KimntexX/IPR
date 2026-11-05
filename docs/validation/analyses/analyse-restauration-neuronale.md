@@ -10,8 +10,8 @@ Ce bénéfice n'est pas démontré pour le correcteur CFA actuel.
 | Ce qui fonctionne | Contrats, signal signé, limites de ressources, reprise et mesures synthétiques traçables. Ce ne sont pas des preuves de qualité photo. |
 | Ce qui bloque | Bénéfice photo instable selon la graine ; loi de bruit encore expérimentale ; absence de confirmation photographique indépendante. |
 | Derniers résultats | Réplication close : 10 et 12 échecs forts sur 48, après les 12 et 16 précédents. Sur les photos, sensibilité aux graines et motifs directionnels : bénéfice non validé. |
-| Calcul engagé | Premier essai arrêté à 619 mises à jour par la garde RAM 92 %. Reprise depuis 576 confirmée à 18 h 54 UTC, puis +704 constaté ; graine 73 ensuite. Calcul, poids initiaux et limites inchangés ; aucun résultat final disponible. |
-| Prochaine preuve utile | Lire la courbe bornée et toutes les planches après la campagne. Carte sigma physiquement mieux motivée, mais bénéfice photo non établi ; pas de nouveau balayage des forces et classique couleur encore à compléter. |
+| Calcul engagé | Campagne achevée à 19 h 16 UTC : deux graines à +2048, tous les jalons et rendus terminés. Reprise mémoire fidèle, reconstructeurs gelés vérifiés. Aucun calcul actif. |
+| Prochaine preuve utile | Rejouer les contrôles de développement connus et leurs critères sur les poids finaux avant davantage d'apprentissage. Convergence chroma descriptive, mais bénéfice photo robuste non établi ; classique couleur encore à compléter. |
 | GPU | CUDA qualifié ; prémesure définitive avec lecture et bruit : environ 0,32–0,33 s/mise à jour. Projection d'environ 23 min d'entraînement pour les deux graines, hors rendus ; plafond de campagne 90 min. |
 | Données | 349 RAW inventoriés, 105 paires étudiées. Température, bruit fixe et propagation restent à qualifier ; pas de nouvelles prises demandées pour cette expérience. |
 | Critère d'arrêt | Pas de nouvelle série de variantes synthétiques pour améliorer les mêmes seuils. Après une courbe longue figée et un bruit caractérisé, absence de gain visible face au classique : abandon ou changement de taille/architecture, décision documentée. |
@@ -6665,3 +6665,94 @@ PID 17192. Les checkpoints +640 puis +704 sont constatés : le calcul
 a bien repris après 576, sans repartir de zéro. La suite automatique
 reste celle du plan initial. Les contrôles documentaires donnent zéro
 erreur et zéro avertissement de lien.
+
+### Clôture après reprise — 19 h 16 min 28 s UTC
+
+La campagne se termine avec le statut principal
+`completed_bounded_sensor_curve_known_only`. Les deux graines ont reçu
+les **2 048 mises à jour supplémentaires** prévues. Les jalons
+0/256/1024/2048 sont tous conservés ; les trois jalons positifs ont
+chacun leurs six rendus entiers, puis leurs neuf régions par photo.
+La synthèse et les planches sont produites. L'arrêt initial reste dans
+l'historique `prior_attempt` ; il ne s'agit pas d'un nouvel échec de
+la tentative achevée.
+
+Les pertes ci-dessous portent sur la même fin du cycle de cibles
+(64 dernières mises à jour de chaque cycle de 512). Le bruit est frais
+à chaque passage ; ces valeurs restent des **pertes d'entraînement**,
+pas une mesure indépendante de généralisation :
+
+| Mises à jour supplémentaires | Graine 71 | Graine 73 |
+| --- | ---: | ---: |
+| 512 | 9,6131 | 9,4818 |
+| 1024 | 9,4574 | 9,0912 |
+| 1536 | 9,0682 | 8,9110 |
+| 2048 | 8,9577 | 8,9523 |
+
+La perte descend et les valeurs finales se rapprochent. Pour la graine
+73, la dernière fin de cycle remonte légèrement par rapport à 1536 ;
+il n'y a pas de sélection du checkpoint 1536, qui ne faisait pas partie
+des jalons photographiques prévus. Aucune extrapolation à 100 000 pas
+ni promesse de gain continu n'est déduite de cette courbe.
+
+![Courbe bornée : pertes et contenu fin sur photos connues](../figures/neural-sensor-learning-curve-v001.svg)
+
+Sur les 27 régions fixes, les rapports médians de contenu fin au neutre
+sont les suivants. Ils contiennent **texture et bruit** ; plus bas ne
+signifie pas meilleur :
+
+| Jalon | Luma 71 | Luma 73 | Chroma 71 | Chroma 73 |
+| --- | ---: | ---: | ---: | ---: |
+| Initial | 0,9424 | 0,7644 | 0,8562 | 0,6819 |
+| +256 | 0,8976 | 0,6963 | 0,7035 | 0,5732 |
+| +1024 | 0,8865 | 0,7240 | 0,7622 | 0,6477 |
+| +2048 | 0,8703 | 0,7925 | 0,7620 | 0,7639 |
+
+Les médianes de chroma se rapprochent nettement au dernier jalon ; les
+deux rendus ne sont pas pour autant identiques. L'écart RGB absolu moyen
+entre graines, en médiane par région, évolue de **0,00771** au départ
+à 0,01062 / 0,00796 / **0,00703** aux trois jalons. L'amélioration
+finale est modeste et non monotone. La différence de luma fine persiste.
+Deux graines et trois scènes de développement ne mesurent pas la
+stabilité sur d'autres boîtiers ou d'autres contenus.
+
+La lecture des régions du vêtement orange retrouve encore du grain et
+une texture directionnelle, avec des différences entre graines. Faute
+de référence propre, cela ne permet ni d'attribuer chaque motif au
+réseau ni de déclarer une meilleure préservation des détails. Le retour
+visuel de l'utilisateur n'est pas supposé. La page locale présente
+tous les jalons et le classique luminance 60, sans en isoler un comme
+vainqueur :
+`build-patch_neural_restoration/sensor-learning-campaign-v001/comparison.html`.
+
+**Décision : la continuation apporte un signal de convergence, pas un
+modèle validé.** Ne pas relancer immédiatement davantage de mises à jour
+ou ajuster la force sur ces photos. Rejouer d'abord les contrôles de
+développement connus avec leurs données et critères inchangés, puis
+les régressions autorisées par ces contrôles. Aucun accès à une réserve
+nouvelle ne sera justifié par la seule baisse de la perte. Le comparateur
+couleur après les tons reste à compléter.
+
+La reprise et la suite ont pris environ **22 min 07 s**, auxquelles
+s'ajoutent les 3 min 06 s actives du premier essai interrompu : environ
+25 min 13 s actives au total, rendus compris, hors attente entre les
+tentatives. Les entraînements repris mesurent environ 0,286–0,287 s
+par mise à jour et restent sous 67,7 % de RAM globale échantillonnée.
+Le pic résident est de 1,62 Gio et l'allocation CUDA d'environ 69,7 Mio
+pour le graphe d'entraînement. Les plafonds n'ont pas été relevés.
+Les comparaisons de reconstructeur gelé aux initialisateurs originaux
+ont passé à tous les jalons exportés. Les processus sont terminés et
+le GPU est libéré ; aucune fusion, publication ou intégration n'a lieu.
+
+Preuves de clôture :
+
+- [Supervision achevée, historique inclus](../raw/neural-sensor-curve-campaign-v001-20261105T191628Z.json).
+- [Graine 71 après reprise](../raw/neural-sensor-curve-v001-71-20261105T190138Z.json)
+  et [graine 73](../raw/neural-sensor-curve-v001-73-20261105T191139Z.json).
+- [Tous les jalons photographiques et pertes](../raw/neural-sensor-curve-assessment-v001-20261105T191628Z.json).
+- [Relecture par région, entre graines et recettes figées](../raw/neural-sensor-curve-review-v001-20261105T194102Z.json).
+
+Cette dernière preuve conserve aussi le plan scellé, les recettes du
+jeu d'apprentissage connu et leurs identités. Les JSON restent la mémoire
+des mesures ; ils ne sauvegardent pas les poids, tenseurs ni pixels.
+Ces fichiers sont conservés localement pour le rejeu exact.

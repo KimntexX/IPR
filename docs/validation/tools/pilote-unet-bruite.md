@@ -381,3 +381,12 @@ pas automatiquement une étape photo partiellement produite. Les journaux
 de chaque tentative sont distincts, les résultats d'arrêt sont conservés
 et le temps actif déjà consommé est déduit du budget initial. Ne pas
 relever une garde mémoire pour contourner un arrêt.
+
+Après le statut principal `completed_bounded_sensor_curve_known_only`,
+`review_sensor_curve.py`, avec le Python Pillow/NumPy existant, contrôle
+les empreintes des planches et produit une relecture entre graines ainsi
+que les pertes sur les mêmes fins de cycle. Il conserve aussi les recettes
+et le plan scellé pour la mémoire canonique. Il n'entraîne, ne sélectionne
+ni ne qualifie un modèle. La planche complète est dans
+`sensor-learning-campaign-v001/comparison.html` ; les poids et caches
+restent nécessaires pour un rejeu exact.

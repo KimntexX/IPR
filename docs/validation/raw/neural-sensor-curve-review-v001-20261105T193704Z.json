@@ -1,0 +1,683 @@
+{
+  "schema_version": 1,
+  "status": "completed_read_only_curve_review_not_qualification",
+  "measured_at_utc": "2026-11-05T19:37:03.238626+00:00",
+  "assessment_sha256": "12659d92d5421f20f8884e4b53b0331101c39c653ab5f94712226b51cec2b2de",
+  "progress_sha256": "8404e9becdf11f4a4a4ddc398d43734e893cb2d2f7871e7823c59e152fc293cf",
+  "script_sha256": "0591360c27dd90d8a42f1c641ef764502864a93ad65fbe209f4c32b7e3fbc471",
+  "seed_difference": [
+    {
+      "step": 0,
+      "regions": [
+        {
+          "scene": "6V1A0181",
+          "roi": 0,
+          "rgb_mae": 0.013866921551606752
+        },
+        {
+          "scene": "6V1A0181",
+          "roi": 1,
+          "rgb_mae": 0.009912960409858387
+        },
+        {
+          "scene": "6V1A0181",
+          "roi": 2,
+          "rgb_mae": 0.010196452532112384
+        },
+        {
+          "scene": "6V1A0181",
+          "roi": 3,
+          "rgb_mae": 0.018545051303218048
+        },
+        {
+          "scene": "6V1A0181",
+          "roi": 4,
+          "rgb_mae": 0.015543256328862564
+        },
+        {
+          "scene": "6V1A0181",
+          "roi": 5,
+          "rgb_mae": 0.016131746933437725
+        },
+        {
+          "scene": "6V1A0181",
+          "roi": 6,
+          "rgb_mae": 0.01424047266476035
+        },
+        {
+          "scene": "6V1A0181",
+          "roi": 7,
+          "rgb_mae": 0.013306692396287218
+        },
+        {
+          "scene": "6V1A0181",
+          "roi": 8,
+          "rgb_mae": 0.014785950549201161
+        },
+        {
+          "scene": "6V1A0263",
+          "roi": 0,
+          "rgb_mae": 0.006117690674360021
+        },
+        {
+          "scene": "6V1A0263",
+          "roi": 1,
+          "rgb_mae": 0.007555735691267247
+        },
+        {
+          "scene": "6V1A0263",
+          "roi": 2,
+          "rgb_mae": 0.00162796762947077
+        },
+        {
+          "scene": "6V1A0263",
+          "roi": 3,
+          "rgb_mae": 0.001011295360157952
+        },
+        {
+          "scene": "6V1A0263",
+          "roi": 4,
+          "rgb_mae": 0.00032522829010076253
+        },
+        {
+          "scene": "6V1A0263",
+          "roi": 5,
+          "rgb_mae": 0.0007116513054874727
+        },
+        {
+          "scene": "6V1A0263",
+          "roi": 6,
+          "rgb_mae": 0.0012076095991058462
+        },
+        {
+          "scene": "6V1A0263",
+          "roi": 7,
+          "rgb_mae": 0.0007540878041031227
+        },
+        {
+          "scene": "6V1A0263",
+          "roi": 8,
+          "rgb_mae": 0.0006313260257806826
+        },
+        {
+          "scene": "6V1A9819",
+          "roi": 0,
+          "rgb_mae": 0.003718898221904503
+        },
+        {
+          "scene": "6V1A9819",
+          "roi": 1,
+          "rgb_mae": 0.007746429554171206
+        },
+        {
+          "scene": "6V1A9819",
+          "roi": 2,
+          "rgb_mae": 0.00826513530035857
+        },
+        {
+          "scene": "6V1A9819",
+          "roi": 3,
+          "rgb_mae": 0.0032886469113108207
+        },
+        {
+          "scene": "6V1A9819",
+          "roi": 4,
+          "rgb_mae": 0.008190882508964234
+        },
+        {
+          "scene": "6V1A9819",
+          "roi": 5,
+          "rgb_mae": 0.008799461082175926
+        },
+        {
+          "scene": "6V1A9819",
+          "roi": 6,
+          "rgb_mae": 0.007198309915690814
+        },
+        {
+          "scene": "6V1A9819",
+          "roi": 7,
+          "rgb_mae": 0.007551852844725854
+        },
+        {
+          "scene": "6V1A9819",
+          "roi": 8,
+          "rgb_mae": 0.007710429006672114
+        }
+      ],
+      "median_rgb_mae": 0.007710429006672114,
+      "summary": [
+        {
+          "seed": 71,
+          "regions": 27,
+          "median_fine_luma_std_ratio": 0.9423756503999703,
+          "median_fine_chroma_std_ratio": 0.8561591305788407,
+          "max_absolute_mean_luma_delta": 0.0009289945023148149
+        },
+        {
+          "seed": 73,
+          "regions": 27,
+          "median_fine_luma_std_ratio": 0.7644418811821996,
+          "median_fine_chroma_std_ratio": 0.681937930066169,
+          "max_absolute_mean_luma_delta": 0.002924422296262255
+        }
+      ]
+    },
+    {
+      "step": 256,
+      "regions": [
+        {
+          "scene": "6V1A0181",
+          "roi": 0,
+          "rgb_mae": 0.014903872066766521
+        },
+        {
+          "scene": "6V1A0181",
+          "roi": 1,
+          "rgb_mae": 0.010138546701956245
+        },
+        {
+          "scene": "6V1A0181",
+          "roi": 2,
+          "rgb_mae": 0.012138921866489653
+        },
+        {
+          "scene": "6V1A0181",
+          "roi": 3,
+          "rgb_mae": 0.021388669038217137
+        },
+        {
+          "scene": "6V1A0181",
+          "roi": 4,
+          "rgb_mae": 0.0185808302270561
+        },
+        {
+          "scene": "6V1A0181",
+          "roi": 5,
+          "rgb_mae": 0.019343658868350582
+        },
+        {
+          "scene": "6V1A0181",
+          "roi": 6,
+          "rgb_mae": 0.01638703079611474
+        },
+        {
+          "scene": "6V1A0181",
+          "roi": 7,
+          "rgb_mae": 0.014399695967796841
+        },
+        {
+          "scene": "6V1A0181",
+          "roi": 8,
+          "rgb_mae": 0.0162039164624183
+        },
+        {
+          "scene": "6V1A0263",
+          "roi": 0,
+          "rgb_mae": 0.00808491093920207
+        },
+        {
+          "scene": "6V1A0263",
+          "roi": 1,
+          "rgb_mae": 0.009884397552423747
+        },
+        {
+          "scene": "6V1A0263",
+          "roi": 2,
+          "rgb_mae": 0.002053573708129085
+        },
+        {
+          "scene": "6V1A0263",
+          "roi": 3,
+          "rgb_mae": 0.0022198801033723676
+        },
+        {
+          "scene": "6V1A0263",
+          "roi": 4,
+          "rgb_mae": 0.0005798295519017792
+        },
+        {
+          "scene": "6V1A0263",
+          "roi": 5,
+          "rgb_mae": 0.0013806888134304648
+        },
+        {
+          "scene": "6V1A0263",
+          "roi": 6,
+          "rgb_mae": 0.0019715995483841685
+        },
+        {
+          "scene": "6V1A0263",
+          "roi": 7,
+          "rgb_mae": 0.0014564752405591865
+        },
+        {
+          "scene": "6V1A0263",
+          "roi": 8,
+          "rgb_mae": 0.0009481592116013073
+        },
+        {
+          "scene": "6V1A9819",
+          "roi": 0,
+          "rgb_mae": 0.004705221027936638
+        },
+        {
+          "scene": "6V1A9819",
+          "roi": 1,
+          "rgb_mae": 0.009721264808006535
+        },
+        {
+          "scene": "6V1A9819",
+          "roi": 2,
+          "rgb_mae": 0.010623920249523421
+        },
+        {
+          "scene": "6V1A9819",
+          "roi": 3,
+          "rgb_mae": 0.004043115908110929
+        },
+        {
+          "scene": "6V1A9819",
+          "roi": 4,
+          "rgb_mae": 0.011256088445216049
+        },
+        {
+          "scene": "6V1A9819",
+          "roi": 5,
+          "rgb_mae": 0.011763083597154141
+        },
+        {
+          "scene": "6V1A9819",
+          "roi": 6,
+          "rgb_mae": 0.01111783960546024
+        },
+        {
+          "scene": "6V1A9819",
+          "roi": 7,
+          "rgb_mae": 0.011325731464460784
+        },
+        {
+          "scene": "6V1A9819",
+          "roi": 8,
+          "rgb_mae": 0.012351414632693356
+        }
+      ],
+      "median_rgb_mae": 0.010623920249523421,
+      "summary": [
+        {
+          "seed": 71,
+          "regions": 27,
+          "median_fine_luma_std_ratio": 0.8976095830781341,
+          "median_fine_chroma_std_ratio": 0.7034889735935842,
+          "max_absolute_mean_luma_delta": 0.002631735802610975
+        },
+        {
+          "seed": 73,
+          "regions": 27,
+          "median_fine_luma_std_ratio": 0.6963468364411678,
+          "median_fine_chroma_std_ratio": 0.5732013528161529,
+          "max_absolute_mean_luma_delta": 0.003980546194172114
+        }
+      ]
+    },
+    {
+      "step": 1024,
+      "regions": [
+        {
+          "scene": "6V1A0181",
+          "roi": 0,
+          "rgb_mae": 0.01348197898227578
+        },
+        {
+          "scene": "6V1A0181",
+          "roi": 1,
+          "rgb_mae": 0.009260464891975307
+        },
+        {
+          "scene": "6V1A0181",
+          "roi": 2,
+          "rgb_mae": 0.01078951744905138
+        },
+        {
+          "scene": "6V1A0181",
+          "roi": 3,
+          "rgb_mae": 0.01872006307586692
+        },
+        {
+          "scene": "6V1A0181",
+          "roi": 4,
+          "rgb_mae": 0.01600686643291576
+        },
+        {
+          "scene": "6V1A0181",
+          "roi": 5,
+          "rgb_mae": 0.017063674428104574
+        },
+        {
+          "scene": "6V1A0181",
+          "roi": 6,
+          "rgb_mae": 0.014456316380718955
+        },
+        {
+          "scene": "6V1A0181",
+          "roi": 7,
+          "rgb_mae": 0.013481340706131988
+        },
+        {
+          "scene": "6V1A0181",
+          "roi": 8,
+          "rgb_mae": 0.014900671821101124
+        },
+        {
+          "scene": "6V1A0263",
+          "roi": 0,
+          "rgb_mae": 0.007734444146582244
+        },
+        {
+          "scene": "6V1A0263",
+          "roi": 1,
+          "rgb_mae": 0.009040082323438635
+        },
+        {
+          "scene": "6V1A0263",
+          "roi": 2,
+          "rgb_mae": 0.002037900482820443
+        },
+        {
+          "scene": "6V1A0263",
+          "roi": 3,
+          "rgb_mae": 0.0010073593239379086
+        },
+        {
+          "scene": "6V1A0263",
+          "roi": 4,
+          "rgb_mae": 0.00030649665826978944
+        },
+        {
+          "scene": "6V1A0263",
+          "roi": 5,
+          "rgb_mae": 0.0006825565512663398
+        },
+        {
+          "scene": "6V1A0263",
+          "roi": 6,
+          "rgb_mae": 0.0012598418635393971
+        },
+        {
+          "scene": "6V1A0263",
+          "roi": 7,
+          "rgb_mae": 0.0007551693275689907
+        },
+        {
+          "scene": "6V1A0263",
+          "roi": 8,
+          "rgb_mae": 0.0005856449567674291
+        },
+        {
+          "scene": "6V1A9819",
+          "roi": 0,
+          "rgb_mae": 0.0033498859613289764
+        },
+        {
+          "scene": "6V1A9819",
+          "roi": 1,
+          "rgb_mae": 0.007957964906159222
+        },
+        {
+          "scene": "6V1A9819",
+          "roi": 2,
+          "rgb_mae": 0.008514648082902141
+        },
+        {
+          "scene": "6V1A9819",
+          "roi": 3,
+          "rgb_mae": 0.0028406125181554102
+        },
+        {
+          "scene": "6V1A9819",
+          "roi": 4,
+          "rgb_mae": 0.00842751452432825
+        },
+        {
+          "scene": "6V1A9819",
+          "roi": 5,
+          "rgb_mae": 0.009073068789147605
+        },
+        {
+          "scene": "6V1A9819",
+          "roi": 6,
+          "rgb_mae": 0.006089402630265069
+        },
+        {
+          "scene": "6V1A9819",
+          "roi": 7,
+          "rgb_mae": 0.007237209300676289
+        },
+        {
+          "scene": "6V1A9819",
+          "roi": 8,
+          "rgb_mae": 0.0069502953090958604
+        }
+      ],
+      "median_rgb_mae": 0.007957964906159222,
+      "summary": [
+        {
+          "seed": 71,
+          "regions": 27,
+          "median_fine_luma_std_ratio": 0.8865200527436221,
+          "median_fine_chroma_std_ratio": 0.7622195209123678,
+          "max_absolute_mean_luma_delta": 0.0015650661785981755
+        },
+        {
+          "seed": 73,
+          "regions": 27,
+          "median_fine_luma_std_ratio": 0.7239542227861534,
+          "median_fine_chroma_std_ratio": 0.647657193202411,
+          "max_absolute_mean_luma_delta": 0.0028995545683551203
+        }
+      ]
+    },
+    {
+      "step": 2048,
+      "regions": [
+        {
+          "scene": "6V1A0181",
+          "roi": 0,
+          "rgb_mae": 0.01136894807836329
+        },
+        {
+          "scene": "6V1A0181",
+          "roi": 1,
+          "rgb_mae": 0.00796819505435276
+        },
+        {
+          "scene": "6V1A0181",
+          "roi": 2,
+          "rgb_mae": 0.009045489940767974
+        },
+        {
+          "scene": "6V1A0181",
+          "roi": 3,
+          "rgb_mae": 0.01514576099537037
+        },
+        {
+          "scene": "6V1A0181",
+          "roi": 4,
+          "rgb_mae": 0.012999522002087871
+        },
+        {
+          "scene": "6V1A0181",
+          "roi": 5,
+          "rgb_mae": 0.013940225793731845
+        },
+        {
+          "scene": "6V1A0181",
+          "roi": 6,
+          "rgb_mae": 0.011976719941448801
+        },
+        {
+          "scene": "6V1A0181",
+          "roi": 7,
+          "rgb_mae": 0.011468891484545206
+        },
+        {
+          "scene": "6V1A0181",
+          "roi": 8,
+          "rgb_mae": 0.012523483243123638
+        },
+        {
+          "scene": "6V1A0263",
+          "roi": 0,
+          "rgb_mae": 0.006094960951683914
+        },
+        {
+          "scene": "6V1A0263",
+          "roi": 1,
+          "rgb_mae": 0.0072315445999001455
+        },
+        {
+          "scene": "6V1A0263",
+          "roi": 2,
+          "rgb_mae": 0.001805505911855483
+        },
+        {
+          "scene": "6V1A0263",
+          "roi": 3,
+          "rgb_mae": 0.001162362912468228
+        },
+        {
+          "scene": "6V1A0263",
+          "roi": 4,
+          "rgb_mae": 0.00033549389808006536
+        },
+        {
+          "scene": "6V1A0263",
+          "roi": 5,
+          "rgb_mae": 0.000631299430941358
+        },
+        {
+          "scene": "6V1A0263",
+          "roi": 6,
+          "rgb_mae": 0.0013840574930782498
+        },
+        {
+          "scene": "6V1A0263",
+          "roi": 7,
+          "rgb_mae": 0.000716420646673021
+        },
+        {
+          "scene": "6V1A0263",
+          "roi": 8,
+          "rgb_mae": 0.0005495734896968046
+        },
+        {
+          "scene": "6V1A9819",
+          "roi": 0,
+          "rgb_mae": 0.00279160709422658
+        },
+        {
+          "scene": "6V1A9819",
+          "roi": 1,
+          "rgb_mae": 0.007028209323370552
+        },
+        {
+          "scene": "6V1A9819",
+          "roi": 2,
+          "rgb_mae": 0.007697096127224038
+        },
+        {
+          "scene": "6V1A9819",
+          "roi": 3,
+          "rgb_mae": 0.0021528522433278867
+        },
+        {
+          "scene": "6V1A9819",
+          "roi": 4,
+          "rgb_mae": 0.007043847088893428
+        },
+        {
+          "scene": "6V1A9819",
+          "roi": 5,
+          "rgb_mae": 0.008154403254357298
+        },
+        {
+          "scene": "6V1A9819",
+          "roi": 6,
+          "rgb_mae": 0.004504979617715141
+        },
+        {
+          "scene": "6V1A9819",
+          "roi": 7,
+          "rgb_mae": 0.006177635442197713
+        },
+        {
+          "scene": "6V1A9819",
+          "roi": 8,
+          "rgb_mae": 0.0061526451581790115
+        }
+      ],
+      "median_rgb_mae": 0.007028209323370552,
+      "summary": [
+        {
+          "seed": 71,
+          "regions": 27,
+          "median_fine_luma_std_ratio": 0.870326984334888,
+          "median_fine_chroma_std_ratio": 0.7619542335518573,
+          "max_absolute_mean_luma_delta": 0.0009881347017973855
+        },
+        {
+          "seed": 73,
+          "regions": 27,
+          "median_fine_luma_std_ratio": 0.7925322178735839,
+          "median_fine_chroma_std_ratio": 0.7638861051031155,
+          "max_absolute_mean_luma_delta": 0.002647143591920275
+        }
+      ]
+    }
+  ],
+  "loss_epoch_tails": {
+    "71": [
+      {
+        "step": 512,
+        "mean_last64": 9.61306038773024
+      },
+      {
+        "step": 1024,
+        "mean_last64": 9.457442303135632
+      },
+      {
+        "step": 1536,
+        "mean_last64": 9.068162713147341
+      },
+      {
+        "step": 2048,
+        "mean_last64": 8.95774605259636
+      }
+    ],
+    "73": [
+      {
+        "step": 512,
+        "mean_last64": 9.481792766871632
+      },
+      {
+        "step": 1024,
+        "mean_last64": 9.091166877458573
+      },
+      {
+        "step": 1536,
+        "mean_last64": 8.911027236646742
+      },
+      {
+        "step": 2048,
+        "mean_last64": 8.95234366347152
+      }
+    ]
+  },
+  "limits": [
+    "All known development photos, no clean reference or independent confirmation.",
+    "Luma/chroma fine descriptors contain texture and noise; lower is not a quality verdict.",
+    "Noise law and continuation both change, no attribution to duration alone.",
+    "Known fine/classical regression gates have not been replayed for these checkpoints; no reserve may open.",
+    "All milestones retained, no best score or seed selection."
+  ]
+}

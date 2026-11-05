@@ -46,6 +46,15 @@ et reprise exacte sont vérifiés. Projection environ 23 minutes de
 calcul plus rendu, plafond global 90 minutes et garde mémoire 92 %.
 Tous les jalons doivent être présentés, sans sélection sur les photos
 de développement et sans déclarer les anciennes régressions satisfaites.
+
+La courbe est achevée à 19 h 16 UTC, après une reprise depuis 576
+interrompue par la garde mémoire globale. Deux graines à +2048 et tous
+les jalons photo sont disponibles. Les médianes de chroma se rapprochent,
+mais l'écart RGB entre graines ne baisse que modestement et la luma
+diffère encore. Aucun bénéfice photographique robuste n'est validé.
+Avant de prolonger, rejouer les contrôles de développement connus puis
+les régressions qu'ils autorisent ; pas de nouvel accès à une réserve
+sur la seule baisse de la perte. Les calculs sont terminés.
 Pas de nouvelle acquisition avant examen des noirs/aplats/rafales existants,
 pas de nouvelle micro-variante procédurale sur les mêmes seuils. Le
 [rapport unique](../validation/analyses/analyse-restauration-neuronale.md)
