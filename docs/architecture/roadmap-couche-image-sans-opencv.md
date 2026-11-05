@@ -2,9 +2,9 @@
 
 **Décision :** [ADR-0018](../decisions/ADR-0018-independance-decodage-raw-et-couche-image.md),
 20 octobre 2026, et volonté réaffirmée par l'utilisateur le 5 novembre 2026 : être le plus indépendant
-possible. **État :** O0 commencé, O1 et O2 faits, O3 commencé par le flou gaussien, le 5 novembre 2026, sur une branche locale.
-**Plus aucun module n'appelle `cv::GaussianBlur`** : le flou de la couche image sert tous ceux qui floutaient, sur une branche
-locale. Le reste d'OpenCV demeure.
+possible. **État :** O0 commencé, O1 et O2 faits, O3 commencé par le flou gaussien, le 5 novembre 2026, intégré à `dev`.
+**Plus aucun module n'appelle `cv::GaussianBlur`** : le flou de la couche image sert tous ceux qui floutaient. Le reste d'OpenCV
+demeure.
 Suivi : [issue 29](https://github.com/KimntexX/IPR/issues/29).
 Chantier distinct des [décodeurs RAW](roadmap-decodeurs-raw.md), sur sa propre branche durable,
 `patch_image_core`, après le palier E1 de la [refonte d'`ImageEditor`](plan-imageeditor-orchestrateur.md).
