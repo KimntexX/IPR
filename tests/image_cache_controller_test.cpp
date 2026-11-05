@@ -85,7 +85,7 @@ int main(int argc, char **argv)
     if (!check(!denied.reservation, "foreground, even waiting, takes priority over preload")) return 4;
     controller.release(token.reservation);
     token = queued.result();
-    if (!check(token.reservation && !controller.statistics().waitingRequests,
+    if (!check(token.reservation && waitStats([](const auto &s) { return !s.waitingRequests; }),
         "finished work returns its reservation and wakes the waiting request")) return 4;
     controller.release(token.reservation);
     // Leaving image A for B while A waits: the stale wait ends without a reservation.
