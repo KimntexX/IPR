@@ -6,8 +6,9 @@ font autorité ; ce rapport les interprète. Suivi des validations partielles :
 [issue #28](https://github.com/KimntexX/IPR/issues/28).
 
 État au 5 novembre 2026 : moteur sur `patch_object_removal`, panneau sur `patch_ui_object_removal`,
-non fusionnés. Parcours vérifié par l'agent dans la vraie fenêtre, hors écran, sur un CR2. **Validation
-de l'utilisateur attendue.**
+non fusionnés. Parcours vérifié par l'agent dans la vraie fenêtre, hors écran, sur un CR2. **Version
+acceptée par l'utilisateur dans l'application le 5 novembre 2026** ; la grille de cas de la feuille de
+route, l'écart entre aperçu et export et la latence propre restent ouverts dans l'issue.
 
 ## Ce qui existe
 
