@@ -19,7 +19,8 @@ namespace {
 constexpr int detectionSide = 1600;       // long side the corners are looked for on, pixels
 constexpr int refinementSide = 3000;      // long side the matches are measured again on
 constexpr int reducedCanvasSide = 2400;   // long side of the canvas seams are decided on
-constexpr double reducedCanvasCells = 600000.0; // and its size: frames that nearly coincide must stay cheap
+constexpr double reducedCanvasCells = 600000.0; // and its size
+constexpr double reducedFrameCells = 120000.0;  // and a frame's: frames that nearly coincide must stay cheap
 constexpr double narrowSigmaPixels = 8.0; // transition of the detail at a seam, canvas pixels
 constexpr double wideSigmaPixels = 120.0; // transition of the slow variations
 constexpr int interpolationMargin = 4;    // half the support of the resampling kernel, pixels
@@ -280,7 +281,8 @@ Result run(const Request &request)
 
     // Each frame on the canvas, to disk, with a reduced copy kept in memory.
     const int cell = std::max({1, int(std::ceil(double(std::max(result.canvas.width, result.canvas.height)) / reducedCanvasSide)),
-                               int(std::ceil(std::sqrt(double(result.canvas.width) * result.canvas.height / reducedCanvasCells)))});
+                               int(std::ceil(std::sqrt(double(result.canvas.width) * result.canvas.height / reducedCanvasCells))),
+                               int(std::ceil(std::sqrt(double(size.area()) / reducedFrameCells)))});
     result.seamCellPixels = cell;
     const cv::Size reducedCanvas((result.canvas.width + cell - 1) / cell, (result.canvas.height + cell - 1) / cell);
     std::vector<PanoramaBlend::View> views;
