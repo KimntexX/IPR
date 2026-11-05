@@ -205,6 +205,8 @@ message explicite, source et édition préservées, aucun téléchargement silen
 
 ## 8. B5 — réseaux de détection des formes et des objets
 
+Préparation détaillée : [détection de formes et d'objets](detection-objets.md).
+
 Prévoir une même couche d'assistance, mais des tâches et sorties distinctes :
 
 | Tâche | Sortie attendue | Utilisation |
@@ -325,6 +327,8 @@ de socle depuis `dev` à jour et isoler son worktree ; ne pas coder le moteur su
 démarrage de ce lot, sans dupliquer une branche existante.
 
 ## 12. B7/B8/B9 — empilement, panorama et HDR
+
+Préparation détaillée du HDR : [fusion HDR](fusion-hdr.md).
 
 Ajout demandé le 31 octobre 2026. Reprendre le
 [plan d'empilement et panorama](empilement-et-panorama.md) comme référence
