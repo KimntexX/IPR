@@ -489,6 +489,17 @@ ApplicationWindow {
         background: Rectangle { color: uiPreferences.theme.panel }
     }
 
+    function commandButtonReleased(button) {
+        commandError.noteRelease(button)
+    }
+
+    CommandErrorPopup {
+        id: commandError
+        parent: Overlay.overlay
+        editor: imageEditor
+        restingGap: applicationFooter.height + 8
+    }
+
     PreferencesDialog {
         id: preferencesDialog
         objectName: "preferencesDialog"

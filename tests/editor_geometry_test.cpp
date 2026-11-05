@@ -232,23 +232,39 @@ int main(int argc, char **argv)
     editor.setGeometryValue(QStringLiteral("scale"), 100);
     if (!check(settled(editor), "the scale is back")) return 1;
     const QVariantMap before = editor.geometry();
-    if (!check(!editor.proposeStraightening(QStringLiteral("level")), "a ramp has no line: refused")) return 1;
+    QString lastError;
+    int errors = 0;
+    QObject::connect(&editor, &ImageEditor::errorReported, &editor, [&](const QString &message) {
+        ++errors;
+        lastError = message;
+    });
+    editor.proposeStraightening(QStringLiteral("level"));
+    if (!check(errors == 1 && lastError == editor.statusMessage(), "a ramp has no line: refused, and reported")) return 1;
     if (!check(editor.geometry() == before, "a refusal changes nothing")) return 1;
+    editor.proposeStraightening(QStringLiteral("level"));
+    if (!check(errors == 2, "each refused click is reported")) return 1;
     if (!check(editor.statusMessage().contains(QStringLiteral("aucune proposition")), "and it says so")) return 1;
-    if (!check(!editor.proposeStraightening(QStringLiteral("nothing")), "an unknown mode is refused")) return 1;
+    editor.proposeStraightening(QStringLiteral("nothing"));
     if (!check(editor.geometry() == before, "an unknown mode does nothing")) return 1;
     {
         ImageProvider emptyProvider;
         ImageEditor empty(&emptyProvider, nullptr, nullptr, controlledMemory);
-        if (!check(!empty.proposeStraightening(QStringLiteral("level")), "without a photo: refused")) return 1;
+        int emptyErrors = 0;
+        QObject::connect(&empty, &ImageEditor::errorReported, &empty, [&] { ++emptyErrors; });
+        empty.proposeStraightening(QStringLiteral("level"));
+        if (!check(emptyErrors == 1, "without a photo: reported")) return 1;
         if (!check(empty.statusMessage().contains(QStringLiteral("aucune proposition")), "and it says so")) return 1;
+        empty.exportImage(QUrl::fromLocalFile(QStringLiteral("x.png")), QStringLiteral("PNG"), 90);
+        if (!check(emptyErrors == 2, "an export without a photo is reported")) return 1;
     }
 
     const QString horizon = writeHorizon(directory.path(), QStringLiteral("horizon.png"), 3.0);
     const QByteArray horizonBytes = bytesOf(horizon);
     if (!check(!horizon.isEmpty() && awaitLoad(editor, horizon), "the horizon loads")) return 1;
     editor.setGeometryValue(QStringLiteral("scale"), 110);
-    if (!check(editor.proposeStraightening(QStringLiteral("level")), "a horizon gets a proposal")) return 1;
+    const int errorsBefore = errors;
+    editor.proposeStraightening(QStringLiteral("level"));
+    if (!check(errors == errorsBefore, "a horizon gets a proposal, not an error")) return 1;
     if (!check(settled(editor), "the proposal renders")) return 1;
     if (!check(std::abs(editor.geometry().value("rotation").toDouble() + 3.0) < 0.1, "the proposal levels it")) return 1;
     if (!check(editor.geometry().value("scale").toInt() == 110, "the rest of the geometry stays")) return 1;
@@ -257,7 +273,7 @@ int main(int argc, char **argv)
     for (const char *mode : {"vertical", "full"}) {
         editor.resetGeometry();
         if (!check(settled(editor), "reset before a mode")) return 1;
-        if (!check(editor.proposeStraightening(QString::fromLatin1(mode)), mode)) return 1;
+        editor.proposeStraightening(QString::fromLatin1(mode));
         if (!check(settled(editor) && std::abs(editor.geometry().value("rotation").toDouble() + 3.0) < 0.1, mode)) return 1;
     }
     editor.resetGeometry();

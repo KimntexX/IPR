@@ -194,7 +194,7 @@ set(IPR_QML_FILES
     src/qml/RawCalibrationModule.qml
     src/qml/PreferencesDialog.qml
     src/qml/PreferenceButton.qml
-    src/qml/RefusableButton.qml
+    src/qml/CommandErrorPopup.qml
     src/qml/PreferenceCheckBox.qml
     src/qml/PreferenceSpinBox.qml
     src/qml/PreferenceComboBox.qml
