@@ -3,8 +3,9 @@
 **Décision :** [ADR-0018](../decisions/ADR-0018-independance-decodage-raw-et-couche-image.md),
 20 octobre 2026, et volonté réaffirmée par l'utilisateur le 5 novembre 2026 : être le plus indépendant
 possible. **État :** O0 commencé, O1 et O2 faits, O3 commencé par le flou gaussien, le 5 novembre 2026, intégré à `dev`.
-**Plus aucun module n'appelle le flou, le redimensionnement, les déformations, les rotations, les symétries, les bordures ni la
-pyramide d'OpenCV** : la couche image les fournit. Le reste d'OpenCV demeure.
+**Plus aucun module n'appelle le flou, le redimensionnement, les déformations, les rotations, les symétries, les bordures, la
+pyramide ni les petits filtres d'OpenCV** : la couche image les fournit. Restent l'arithmétique et la couleur, l'analyse
+(corrélations, valeurs propres, systèmes), le parallélisme et le type `cv::Mat` lui-même.
 Suivi : [issue 29](https://github.com/KimntexX/IPR/issues/29).
 Chantier distinct des [décodeurs RAW](roadmap-decodeurs-raw.md), sur sa propre branche durable,
 `patch_image_core`, après le palier E1 de la [refonte d'`ImageEditor`](plan-imageeditor-orchestrateur.md).
@@ -259,6 +260,19 @@ travaille désormais sur des copies neuves.
 - **Une erreur trouvée par la mesure** : la bordure d'une région se faisait en miroir au bord de la tuile, quand OpenCV lit
   l'image autour ; chaque jointure de tuile du dématriçage était fausse. Corrigée avant le commit ; l'oracle compare désormais une
   région aussi.
+- **Suivi** : le choix des positions exactes et sa validation à revoir sont tracés dans l'[issue 31](https://github.com/KimntexX/IPR/issues/31).
+
+### Petits filtres : Sobel, Laplacien, médian, moyenne en boîte, minimum et maximum
+
+[Noyaux](../validation/raw/image-kernel-neighbourhood-v001-20261105.json), [modules](../validation/raw/image-layer-neighbourhood-v001-20261105.json).
+
+- **Sobel à 5e-7 ; tous les autres identiques au bit près.** Le médian passe par des réseaux de sélection (19 comparaisons pour
+  9 valeurs, 99 pour 25), vérifiés contre un tri complet, égalités comprises ; minimum et maximum lisent aussi les octets.
+- **Sur les modules** : exports à un niveau sur 65 535 au plus, exports neutres identiques, empilement identique au bit près ;
+  le panorama garde son cadre, son alignement bouge d'une fraction de pixel par les gradients de ses points.
+- **La vitesse, mesurée sur l'export avant de conclure.** D'abord 29 % plus lent sur le débruitage de la couleur, les autres réglages
+  inchangés. Après réécriture : 9 %. La moyenne en boîte va désormais plus vite qu'OpenCV ; restent le médian 5 x 5, 2,5 à 4,5 fois
+  plus lent, et minimum et maximum, limités par la mémoire.
 
 ## 5. Principes de conception
 
