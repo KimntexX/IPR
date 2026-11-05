@@ -3,8 +3,8 @@
 **Décision :** [ADR-0018](../decisions/ADR-0018-independance-decodage-raw-et-couche-image.md),
 20 octobre 2026, et volonté réaffirmée par l'utilisateur le 5 novembre 2026 : être le plus indépendant
 possible. **État :** O0 commencé, O1 et O2 faits, O3 commencé par le flou gaussien, le 5 novembre 2026, sur une branche locale.
-Deux modules utilisent le nouveau flou : le contraste local et le curseur « Flou gaussien » du menu Effets. **Une décision attend
-l'utilisateur** : §7, point 1.
+Le nouveau flou sert le contraste local, le curseur « Flou gaussien », le voile, le grain, le détail, le bruit et la retouche.
+Il reste le dématriçage, le panorama, l'empilement et la géométrie.
 Suivi : [issue 29](https://github.com/KimntexX/IPR/issues/29).
 Chantier distinct des [décodeurs RAW](roadmap-decodeurs-raw.md), sur sa propre branche durable,
 `patch_image_core`, après le palier E1 de la [refonte d'`ImageEditor`](plan-imageeditor-orchestrateur.md).
@@ -183,6 +183,21 @@ curseur au maximum, soit un sigma de 10 pixels, TIFF 16 bits, médiane de trois.
 - **L'aperçu reste sous 250 ms,** mesuré du changement à la nouvelle image, tout le rendu compris.
 - **Les pixels ne bougent pas à l'œil :** un niveau sur 65 535 au plus.
 
+### Modules de rendu : voile, grain, détail, bruit, retouche
+
+La couche image gagne le troisième bord, le dernier pixel répété. **Une erreur de ma part est corrigée au passage :** pour des sigmas
+fractionnaires, le rayon pouvait différer d'un pixel de celui d'OpenCV, sans effet visible ; il suit maintenant sa règle exacte, et
+[le noyau reste dans la tolérance](../validation/raw/image-kernel-gaussian-v003-20261105.json).
+[Preuve](../validation/raw/image-layer-render-modules-v001-20261105.json) : voile 40, grain 30, accentuation 60, bruit 40 et 40, médiane de trois.
+
+| Photo | Export avec OpenCV | Avec la couche image | Aperçu avec OpenCV | Avec la couche image | Plus grand écart, sur 65 535 | Valeurs qui diffèrent |
+| --- | --- | --- | --- | --- | --- | --- |
+| `6V1A0007.CR3` | 5 349 ms | 5 738 ms | 785 ms | 825 ms | 1 | 0,27 % |
+| `IMG_6858.CR2` | 3 099 ms | 3 149 ms | 610 ms | 611 ms | 1 | 0,18 % |
+
+Ces réglages cumulés dépassent déjà 250 ms à l'aperçu avec OpenCV, comme l'utilisateur l'a accepté pour le voile et le bruit de couleur.
+La retouche n'est tenue que par ses propres tests, pas par cet export.
+
 ## 5. Principes de conception
 
 - **Noyaux sans Qt.** `src/image/` ne dépend que du C++ standard, pour ne pas remplacer une dépendance lourde par une autre,
@@ -210,10 +225,7 @@ refaite après O2, sur la vitesse réellement mesurée, plutôt qu'annoncée mai
 
 ## 7. Décisions à prendre
 
-1. **Le critère de vitesse d'O3.** C++ standard confirmé par l'utilisateur et, pour le flou, par la mesure : AVX2 n'y change presque
-   rien. Mais le flou reste deux à trois fois plus lent qu'OpenCV sur une photo entière. **Je propose de garder « au moins égale »
-   comme objectif, d'accepter ×2 à l'export tant que l'aperçu reste sous 250 ms, et de ne juger qu'après une mesure sur un vrai
-   export, module migré.** Première mesure faite : invisible sur le contraste local, ci-dessus. L'utilisateur a accepté le 5 novembre
-   2026 de migrer ce module pour juger ; **sa décision attend son essai du paquet.**
+1. **Le critère de vitesse d'O3 : tranché par l'utilisateur le 5 novembre 2026,** après essai de Texture, Clarté et du curseur de flou :
+   le coût lui convient, et la migration continue module par module, chacun mesuré. « Au moins égale » reste l'objectif.
 2. **Algèbre linéaire.** Écrire les petits solveurs nécessaires, sans bibliothèque : **accepté le 5 novembre 2026.**
 3. **Scripts d'analyse Python.** Ils gardent `cv2`, hors du produit : **accepté le 5 novembre 2026.**
