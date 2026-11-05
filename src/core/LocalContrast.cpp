@@ -83,9 +83,8 @@ cv::Mat blurSigma(const cv::Mat &plane, double sigma)
     if (factor == 1)
         return ipr::gaussianBlurred(plane, sigma, ipr::BlurBorder::MirrorEdge);
     cv::Mat result, small;
-    cv::resize(plane, small, cv::Size(std::max(1, plane.cols / factor), std::max(1, plane.rows / factor)), 0, 0,
-               cv::INTER_AREA);
-    cv::resize(ipr::gaussianBlurred(small, sigma / factor, ipr::BlurBorder::MirrorEdge), result, plane.size(), 0, 0, cv::INTER_LINEAR);
+    small = ipr::resized(plane, cv::Size(std::max(1, plane.cols / factor), std::max(1, plane.rows / factor)), ipr::Interpolation::Area);
+    result = ipr::resized(ipr::gaussianBlurred(small, sigma / factor, ipr::BlurBorder::MirrorEdge), plane.size(), ipr::Interpolation::Linear);
     return result;
 }
 

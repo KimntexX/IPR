@@ -385,7 +385,7 @@ LocalField localField(const cv::Mat &reference, const cv::Mat &registered, const
     }
     cv::Mat coarse;
     cv::merge(axes, coarse);
-    cv::resize(coarse, field.displacements, reference.size(), 0, 0, cv::INTER_LINEAR);
+    field.displacements = ipr::resized(coarse, reference.size(), ipr::Interpolation::Linear);
     double largest = 0.0;
     for (const cv::Mat &axis : axes) {
         double low = 0.0, high = 0.0;

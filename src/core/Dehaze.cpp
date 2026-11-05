@@ -285,8 +285,8 @@ void apply(cv::Mat &linearRgb, int amount, double pixelScale, const cv::Mat &loc
     const int reduction = std::max(1, int(std::lround(FittedReduction * pixelScale)));
     const double scale = pixelScale / reduction;   // pixels of the reduced image per full-image pixel
     cv::Mat small;
-    cv::resize(linearRgb, small, cv::Size(std::max(1, linearRgb.cols / reduction), std::max(1, linearRgb.rows / reduction)),
-               0, 0, cv::INTER_AREA);
+    small = ipr::resized(linearRgb, cv::Size(std::max(1, linearRgb.cols / reduction), std::max(1, linearRgb.rows / reduction)),
+                         ipr::Interpolation::Area);
     cv::Mat dark(small.size(), CV_32F);
     for (int y = 0; y < small.rows; ++y) {
         auto *row = small.ptr<cv::Vec3f>(y);
@@ -339,7 +339,7 @@ void apply(cv::Mat &linearRgb, int amount, double pixelScale, const cv::Mat &loc
     if (hasLocal) {
         // The tone change at the values the map needs, mixed per reduced pixel.
         cv::Mat reducedValues;
-        cv::resize(localValues, reducedValues, small.size(), 0, 0, cv::INTER_AREA);
+        reducedValues = ipr::resized(localValues, small.size(), ipr::Interpolation::Area);
         const std::vector<float> lattice = LocalValues::latticeOf(float(amount), reducedValues, -100.f, 100.f, 5.f, 8);
         std::vector<cv::Mat> shifts;
         for (float value : lattice)
@@ -359,10 +359,10 @@ void apply(cv::Mat &linearRgb, int amount, double pixelScale, const cv::Mat &loc
         shift = shiftAt(lawAt(float(amount)));
     }
     cv::Mat haze, base, toneShift, localTone;
-    cv::resize(dark, haze, linearRgb.size(), 0, 0, cv::INTER_LINEAR);
-    cv::resize(tone, localTone, linearRgb.size(), 0, 0, cv::INTER_LINEAR);
-    cv::resize(before, base, linearRgb.size(), 0, 0, cv::INTER_LINEAR);
-    cv::resize(shift, toneShift, linearRgb.size(), 0, 0, cv::INTER_LINEAR);
+    haze = ipr::resized(dark, linearRgb.size(), ipr::Interpolation::Linear);
+    localTone = ipr::resized(tone, linearRgb.size(), ipr::Interpolation::Linear);
+    base = ipr::resized(before, linearRgb.size(), ipr::Interpolation::Linear);
+    toneShift = ipr::resized(shift, linearRgb.size(), ipr::Interpolation::Linear);
     // Per half slider unit when local: whole values read the global law exactly.
     const PixelLaw globalLaw = hasLocal ? PixelLaw{} : pixelLawAt(float(amount));
     std::vector<PixelLaw> pixelLaws;
