@@ -6,8 +6,9 @@ Suivi de la validation partielle : [issue 30](https://github.com/KimntexX/IPR/is
 ## Point de décision, 5 novembre 2026
 
 **Le redressement d'après les lignes fonctionne sur les horizons, sans réseau ni OpenCV, en 30 ms.** Il refuse souvent, et c'est
-voulu. **Il n'est pas raccordé à l'interface, et la perspective n'est pas validée sur de vraies photos.** La suite dépend de
-photos de bâtiments et du jugement de l'utilisateur, car une mesure ne dit pas seule si une proposition est la bonne.
+voulu. **Il est raccordé au panneau Géométrie, sur une branche locale.** Sur 470 photos de bâtiments que le réglage n'avait jamais
+vues, il corrige la perspective de 134 d'entre elles, et ce que j'ai regardé paraît juste à une exception près. **Mais sa lecture y
+est bien moins stable que sur les corpus du réglage**, et seul l'avis de l'utilisateur dira si ces propositions sont les bonnes.
 
 ## D1 : lignes et proposition de redressement
 
@@ -67,12 +68,35 @@ la cible de 250 ms, sans cache ni tâche de fond.
 troncs d'arbres), la longueur de vote (vagues) et la jonction derrière un obstacle. **Ces corpus ne sont donc plus indépendants** :
 les taux ci-dessus décrivent un comportement sans prédire celui d'un nouveau corpus. Un corpus neuf reste à mesurer.
 
+### Corpus neuf : bâtiments de Wikimedia Commons
+
+470 photos sous licence libre, téléchargées le 5 novembre 2026 en aperçus de 1 920 pixels, **hors du dépôt** ;
+[liste, licences et auteurs](../raw/line-straightening-commons-corpus-v001-20261105.json). Sont écartées 46 images trop petites, non
+JPEG ou sans licence libre. **Aucun seuil n'a été retouché** : la révision mesurée est celle du panneau.
+
+| Catégorie | Photos | Niveau refusé | Perspective proposée | Écart de lecture médian | 95e centile | Pire | Preuve |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Perspective à corriger | 169 | 77 | 45 | 0,062° | 4,38° | 17,4° | [JSON](../raw/line-straightening-commons-perspective-v001-20261105.json) |
+| Contre-plongées de bâtiments | 301 | 131 | 89 | 0,046° | 2,80° | 19,4° | [JSON](../raw/line-straightening-commons-lowangle-v001-20261105.json) |
+
+- **La perspective est enfin mesurée :** 134 propositions, contre une seule, fausse, sur les 114 photos précédentes.
+- **À l'œil, sur 31 planches :** 16 tirées au hasard (graine fixe, 8 par catégorie) et 16 parmi les plus fortes, une étant commune.
+  Les façades redressées paraissent justes. **Une proposition tirée au hasard paraît fausse** : `86437728`, une tour, tournée
+  d'après la diagonale d'un toit au premier plan. Les petites corrections ne se jugent pas à cette taille, et je suis seul à avoir
+  regardé.
+- **La lecture est instable.** L'écart médian entre l'angle appliqué et l'angle relu passe de 0,01° à environ 0,05°, et le
+  95e centile atteint 4,38°. Une même façade, légèrement tournée, peut donc recevoir une autre proposition. La cause n'est pas
+  établie ; ces photos ont beaucoup de lignes concurrentes, ce qui reste une hypothèse.
+- **12 corrections butent sur la borne du curseur,** à ±100 : la photo reste alors sous-corrigée, ou la lecture est excessive.
+- **Ce corpus n'est pas fait que de bâtiments :** on y trouve des tableaux, un billet et un train. Il ne contient que des JPEG déjà
+  développés, parfois retouchés, et personne n'y a annoté la bonne correction.
+
 ### Ce qui reste à vérifier
 
-1. **Perspective sur de vraies photos :** 114 photos, une seule proposition, et fausse. Il faut des photos de bâtiments, façades
-   et intérieurs, prises en contre-plongée.
-2. **Jugement de l'utilisateur** sur les propositions, dans l'application, une fois le panneau raccordé.
-3. **Corpus neuf,** non vu pendant le réglage.
+1. **Jugement de l'utilisateur** sur les propositions, dans l'application.
+2. **Stabilité de la lecture** sur les façades : comprendre l'écart du corpus neuf avant tout nouveau réglage, et garder un corpus
+   de contrôle, ce corpus-ci servant désormais lui aussi de référence.
+3. Les **intérieurs** : ni le corpus ni les photos précédentes ne les isolent.
 4. Le taux de refus : est-il acceptable à l'usage ? 97 photos sur 114 ne reçoivent aucune proposition, dont 84 faute de lignes
    assez longues. Ces corpus comptent toutefois peu de lignes droites : rochers, végétation, personnes.
 
