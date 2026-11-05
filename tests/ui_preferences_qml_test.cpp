@@ -202,6 +202,9 @@ int main(int argc, char **argv)
                    !histogram->property("visible").toBool() &&
                    root->property("color").value<QColor>() == QColor("#112233"),
                    "Main should restore the window, theme and hidden panels")) return 1;
+        auto *footer = root->property("footer").value<QObject *>();
+        if (!check(footer && footer->property("font").value<QFont>().pointSize() == 12,
+                   "the message area is written at 12 points")) return 1;
         preferences.setValue("layout/showImageInfo", true);
         preferences.setValue("layout/showHistogram", true);
         preferences.setValue("layout/showFilmstrip", true);

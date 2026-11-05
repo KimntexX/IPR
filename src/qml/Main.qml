@@ -473,6 +473,7 @@ ApplicationWindow {
         verticalAlignment: Text.AlignVCenter
         elide: Text.ElideRight
         color: uiPreferences.theme.secondaryText
+        font.pointSize: 12
         text: imageEditor.statusMessage + (imageEditor.memoryCacheStatus && imageEditor.memoryCacheStatus.available
             ? qsTr(" | Cache : %1 image(s), %2 Mio%3")
                 .arg(imageEditor.decodedImageCacheEntryCount)

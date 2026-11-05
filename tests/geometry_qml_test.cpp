@@ -195,12 +195,33 @@ int main(int argc, char **argv)
     click(visualItemNamed(panel, QStringLiteral("geometryStraightenLevelButton")));
     if (!check(editor.statusMessage().contains(QStringLiteral("aucune proposition")), "the level button asks the engine")) return 1;
     if (!check(editor.geometry().value("identity").toBool(), "a refusal changes nothing")) return 1;
+    // The refusal shows on the button that was clicked: larger, red, with a message under it.
+    QQuickItem *levelButton = visualItemNamed(panel, QStringLiteral("geometryStraightenLevelButton"));
+    auto *levelPopup = levelButton->findChild<QObject *>(QStringLiteral("refusalPopup"));
+    if (!check(levelPopup != nullptr, "the button has its message")) return 1;
+    if (!check(waitFor([&] { return levelPopup->property("opened").toBool(); }, 2000), "the message opens")) return 1;
+    if (!check(levelButton->property("errorShown").toBool(), "the edge turns red")) return 1;
+    if (!check(waitFor([&] { return levelButton->scale() > 1.05; }, 2000), "the button grows")) return 1;
+    if (!check(levelButton->property("errorDetail").toString() == editor.statusMessage(), "the message gives the reason")) return 1;
+    if (!check(waitFor([&] { return !levelPopup->property("visible").toBool() && !levelButton->property("errorShown").toBool(); }, 6000),
+               "the message leaves by itself")) return 1;
+    if (!check(waitFor([&] { return levelButton->scale() == 1.0; }, 2000), "the button returns to its size")) return 1;
     for (const char *name : {"geometryStraightenVerticalButton", "geometryStraightenFullButton"}) {
         QQuickItem *button = visualItemNamed(panel, QString::fromLatin1(name));
         if (!check(button != nullptr && button->isEnabled(), name)) return 1;
         click(button);
         if (!check(editor.geometry().value("identity").toBool(), "a refusal changes nothing")) return 1;
+        if (!check(button->property("errorShown").toBool(), "each button shows its refusal")) return 1;
+        // A real press elsewhere takes the message away at once, and still reaches what is there.
+        unsigned long pressTime = 1000;
+        mouse(window, QEvent::MouseButtonPress, centreOf(levelButton), pressTime);
+        if (!check(!button->property("errorShown").toBool(), "a press elsewhere clears it")) return 1;
+        mouse(window, QEvent::MouseButtonRelease, centreOf(levelButton), pressTime);
+        if (!check(levelButton->property("errorShown").toBool(), "and the press reaches the other button")) return 1;
     }
+    QMetaObject::invokeMethod(levelButton, "clearError");
+    if (!check(!levelButton->property("errorShown").toBool(), "clearing takes it away")) return 1;
+
 
     // A slider follows the engine, and the engine follows it.
     QObject *rotation = controlWithLabel(panelObject.data(), QStringLiteral("Rotation"));
@@ -342,6 +363,21 @@ int main(int argc, char **argv)
     if (!check(frame->x() >= -1 && frame->y() >= -1 && frame->x() + frame->width() <= 601 &&
                frame->y() + frame->height() <= 401, "the frame stays on the canvas")) return 1;
     mouse(window, QEvent::MouseButtonRelease, rightAt + QPointF(600, 0), timestamp);
+
+    // What the engine accepts shows no error.
+    QImage horizon(1200, 800, QImage::Format_RGBA8888);
+    const double slope = std::tan(3.0 * 3.14159265358979323846 / 180.0);
+    for (int y = 0; y < horizon.height(); ++y)
+        for (int x = 0; x < horizon.width(); ++x)
+            horizon.setPixelColor(x, y, y > 400.0 + (x - 600.0) * slope ? QColor(40, 60, 90) : QColor(210, 220, 235));
+    const QString horizonPath = QDir(directory.path()).filePath(QStringLiteral("horizon.png"));
+    if (!check(horizon.save(horizonPath, "PNG"), "the horizon is written")) return 1;
+    const QString sourceBefore = editor.imageSource();
+    editor.loadImage(QUrl::fromLocalFile(QFileInfo(horizonPath).canonicalFilePath()));
+    if (!check(waitFor([&] { return editor.imageSource() != sourceBefore && editor.hasImage() && !editor.busy(); }), "the horizon loads")) return 1;
+    click(levelButton);
+    if (!check(!levelButton->property("errorShown").toBool(), "a proposal shows no error")) return 1;
+    if (!check(std::abs(editor.geometry().value("rotation").toDouble() + 3.0) < 0.1, "and it is applied")) return 1;
 
     std::cout << "geometry panel: ok\n";
     return 0;

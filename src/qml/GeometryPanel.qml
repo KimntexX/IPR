@@ -12,6 +12,13 @@ Item {
     property var preferences: null
     readonly property color textColor: preferences ? preferences.theme.text : "#edf2f8"
     readonly property color secondaryTextColor: preferences ? preferences.theme.secondaryText : "#d7dee8"
+
+    function straighten(button, mode) {
+        if (root.editor.proposeStraightening(mode))
+            button.clearError()
+        else
+            button.showError(root.editor.statusMessage)
+    }
     // The alignment grid over the image, always or while a transform moves; a viewing
     // aid, not part of the recipe.
     readonly property bool transforming: rotationControl.pressed || verticalControl.pressed
@@ -169,7 +176,7 @@ Item {
 
                 RowLayout {
                     Layout.fillWidth: true
-                    PreferenceButton {
+                    RefusableButton {
                         objectName: "geometryStraightenLevelButton"
                         text: qsTr("Niveau")
                         ToolTip.text: qsTr("Une rotation, d'après l'horizon ou les lignes de la photo.")
@@ -178,9 +185,9 @@ Item {
                         Layout.fillWidth: true
                         Layout.preferredWidth: 1
                         enabled: root.editor.hasImage
-                        onClicked: root.editor.proposeStraightening("level")
+                        onClicked: root.straighten(this, "level")
                     }
-                    PreferenceButton {
+                    RefusableButton {
                         objectName: "geometryStraightenVerticalButton"
                         text: qsTr("Verticales")
                         ToolTip.text: qsTr("Et les verticales rendues parallèles, si la photo en a assez.")
@@ -189,9 +196,9 @@ Item {
                         Layout.fillWidth: true
                         Layout.preferredWidth: 1
                         enabled: root.editor.hasImage
-                        onClicked: root.editor.proposeStraightening("vertical")
+                        onClicked: root.straighten(this, "vertical")
                     }
-                    PreferenceButton {
+                    RefusableButton {
                         objectName: "geometryStraightenFullButton"
                         text: qsTr("Complet")
                         ToolTip.text: qsTr("Et les horizontales aussi.")
@@ -200,7 +207,7 @@ Item {
                         Layout.fillWidth: true
                         Layout.preferredWidth: 1
                         enabled: root.editor.hasImage
-                        onClicked: root.editor.proposeStraightening("full")
+                        onClicked: root.straighten(this, "full")
                     }
                 }
             }
