@@ -36,6 +36,16 @@ Prochaine preuve : courbe d'apprentissage bornée avec bruit caractérisé,
 budget GPU et points de contrôle déclarés ; compléter aussi le classique
 couleur après les tons. Les 349 RAW inventoriés ne sont pas automatiquement
 admis à l'apprentissage.
+
+Cette courbe est préparée le 5 novembre : continuation des deux poids
+courants, reconstructeur gelé, Adam neuf, +2 048 mises à jour par graine,
+contrôles à 0/256/1024/2048. Même jeu de cibles connu, bruit gaussien
+conditionnel issu de la loi expérimentale ; durée et bruit changent
+ensemble, sans attribution causale à la durée seule. Les prévols CUDA
+et reprise exacte sont vérifiés. Projection environ 23 minutes de
+calcul plus rendu, plafond global 90 minutes et garde mémoire 92 %.
+Tous les jalons doivent être présentés, sans sélection sur les photos
+de développement et sans déclarer les anciennes régressions satisfaites.
 Pas de nouvelle acquisition avant examen des noirs/aplats/rafales existants,
 pas de nouvelle micro-variante procédurale sur les mêmes seuils. Le
 [rapport unique](../validation/analyses/analyse-restauration-neuronale.md)

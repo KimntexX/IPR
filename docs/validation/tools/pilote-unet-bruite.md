@@ -345,3 +345,31 @@ explicites et les dossiers de calcul ne sont pas réutilisables. L'extension
 des descripteurs chroma est conservée dans `descriptors-v002.json`, avec
 la première preuve luma intacte. Ces descripteurs mélangent toujours
 texture et bruit et ne remplacent pas une revue visuelle.
+
+## Courbe de continuation CUDA bornée
+
+`prepare_sensor_learning_curve.py`, avec le Python CPU neuronal, scelle
+les cibles déjà utilisées, les scénarios de bruit, les poids initiaux
+et les points de contrôle. Les centres et empreintes sont vérifiés,
+les contextes sont stockés dans le build et lus séquentiellement.
+
+`train_sensor_curve.py --seed 71|73 --output <dossier neuf> --preflight`
+effectue huit mises à jour jetables et vérifie une reprise CUDA exacte.
+Sans `--preflight`, il exécute les 2 048 mises à jour supplémentaires
+prévues. `--resume` reprend uniquement le checkpoint technique du même
+dossier et du même contexte. Les jalons sont conservés indépendamment
+de la perte ; ils ne signifient pas que le modèle est qualifié.
+
+`run_sensor_curve.py` lance les deux entraînements successifs après
+vérification des prévols et de la projection de durée. Il utilise
+ensuite `prepare_curve_photos.py`, puis les mêmes outils d'inférence et
+d'affichage, désormais avec `--plan`/`--output` et `--source`/`--output`
+explicites. Un changement volontaire des poids ne doit pas être comparé
+à l'ancienne empreinte de sortie comme s'il était une régression du
+raccordement ; les contrôles carte constante et CPU/GPU restent actifs.
+
+`summarize_sensor_curve.py` présente tous les points de contrôle sur les
+photos connues et conserve les pertes d'entraînement, luma/chroma et
+limites. Suivre `sensor-learning-campaign-v001/progress.json` et les
+journaux par étape. L'attente entre processus est faite par le superviseur,
+sans boucle d'analyse du modèle ni interrogation répétée du chat.

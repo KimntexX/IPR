@@ -8,12 +8,12 @@ Ce bénéfice n'est pas démontré pour le correcteur CFA actuel.
 | Question | État et décision actuelle |
 | --- | --- |
 | Ce qui fonctionne | Contrats, signal signé, limites de ressources, reprise et mesures synthétiques traçables. Ce ne sont pas des preuves de qualité photo. |
-| Ce qui bloque | Débruitage réel non calibré ; reconstructeur appris différent de RCD ; comparateur neuronal éprouvé manquant ; budget d'entraînement court. |
+| Ce qui bloque | Bénéfice photo instable selon la graine ; loi de bruit encore expérimentale ; absence de confirmation photographique indépendante. |
 | Derniers résultats | Réplication close : 10 et 12 échecs forts sur 48, après les 12 et 16 précédents. Sur les photos, sensibilité aux graines et motifs directionnels : bénéfice non validé. |
-| Calcul engagé | Comparatif réel terminé : trois scènes, neuf régions chacune, deux graines fixées avant lecture des résultats ; DRUNet officiel ajouté. Pas de nouvel ajustement procédural ni d'apprentissage long. |
+| Calcul engagé | Courbe de continuation préparée : mêmes cibles connues, deux graines, reconstructeur gelé, bruit mesuré expérimental ; contrôles à +0/+256/+1024/+2048. Prémesures et reprise CUDA vérifiées, résultat de campagne à venir. |
 | Prochaine preuve utile | Carte sigma locale testée à poids constants : entrée physiquement mieux motivée, mais sensibilité aux graines persistante et bénéfice photo non établi. Arrêter les balayages de sigma ; préparer une courbe d'apprentissage bornée avec le bruit caractérisé, et compléter le classique couleur. |
-| GPU | CUDA qualifié sur le calcul courant : erreur CPU/GPU maximale 7,45 × 10⁻⁸ ; essai d'apprentissage jetable à 0,327 s/mise à jour. Environ 9,1 h pour 100 000 mises à jour par graine, hors génération/évaluation. |
-| Données | Auditer rafales, noirs et aplats existants avant de demander de nouvelles prises. Une demi-pile RGB rééchantillonnée n'est pas une vérité CFA. |
+| GPU | CUDA qualifié ; prémesure définitive avec lecture et bruit : environ 0,32–0,33 s/mise à jour. Projection d'environ 23 min d'entraînement pour les deux graines, hors rendus ; plafond de campagne 90 min. |
+| Données | 349 RAW inventoriés, 105 paires étudiées. Température, bruit fixe et propagation restent à qualifier ; pas de nouvelles prises demandées pour cette expérience. |
 | Critère d'arrêt | Pas de nouvelle série de variantes synthétiques pour améliorer les mêmes seuils. Après une courbe longue figée et un bruit caractérisé, absence de gain visible face au classique : abandon ou changement de taille/architecture, décision documentée. |
 
 Les détails et limites de cette réorientation sont consignés en fin de
@@ -6530,3 +6530,92 @@ de carte, décodage, RCD et affichage. Pic résident échantillonné environ
 1,97 Gio, mémoire engagée 3,21 Gio, pic physique global échantillonné
 78,6 %, sous l'arrêt à 92 %. Les calculs sont terminés, le GPU est
 libéré. Aucune nouvelle photo n'est nécessaire pour préparer cette suite.
+
+## 5 novembre 2026 — préparation de la courbe CUDA bornée avec bruit expérimental
+
+### Question et plan scellé
+
+La question pratique est de savoir si les poids courants peuvent encore
+progresser avec davantage de mises à jour et un bruit mieux renseigné.
+Il s'agit d'une **continuation**, pas d'un apprentissage à zéro. Le
+changement du bruit et la durée supplémentaire sont conjoints ; un
+éventuel gain ne pourra pas être attribué à la seule durée.
+
+Les deux poids déjà fixés, graines 71 et 73, servent de départ. Le
+reconstructeur reste gelé ; la correction CFA et sa branche statistique
+restent entraînables. Adam repart sans ses anciens moments, au même
+taux 0,00025. Architecture, pertes, normalisation par deux, micro-lot 1,
+accumulation de quatre et contexte 256/scoré central 32 restent fixés.
+Le poids de structure reste nul, comme dans les initialisateurs courants ;
+on ne réintroduit pas une nouvelle pénalité pendant cette courbe.
+
+Les **2 048 mises à jour supplémentaires par graine** ont les points
+de contrôle **0, 256, 1 024 et 2 048**, tous conservés. Un état technique
+reprenable est sauvé tous les 64 pas. Les résultats ne seront pas
+présentés en choisissant la meilleure graine ou le meilleur jalon.
+
+Les 2 048 contextes de cibles connus du bras naturel déjà retenu sont
+rejoués dans leur ordre d'origine, quatre fois avec un bruit frais
+déterministe. Le centre de chaque contexte est vérifié contre l'ancien
+et les empreintes des textures sont contrôlées. Il n'y a pas de nouvelle
+famille procédurale, réglage de fréquence ou tri sur les résultats.
+Ce fichier de cibles est lu séquentiellement par micro-lots ; il n'est
+pas chargé en entier en RAM.
+
+Le bruit est une approximation gaussienne indépendante conditionnée
+par les trois scénarios ISO/gains/diviseurs utilisés dans l'essai photo.
+Les quatre sites Bayer conservent leurs paramètres distincts. Le passage
+de `variance_DN = a_DN × signal_DN + b_DN` aux unités équilibrées utilise
+`a_caméra = a_DN × gain/diviseur` et
+`b_caméra = b_DN × (gain/diviseur)²`. L'écart-type fourni au modèle est
+estimé à partir de l'observation bruitée, et non de la vérité propre.
+Un scénario sans bruit alterne avec les trois scénarios positifs.
+L'image synthétique n'est pas bornée : cela conserve le contrat signé,
+sans reproduire toutes les bornes de l'ouverture réelle.
+
+La loi reste expérimentale et ne reproduit pas le bruit fixe, les
+points chauds ni toutes les corrélations de compression. Les pixels
+des photos ne servent pas de cibles d'apprentissage ; leurs conditions
+de signal ont servi au paramétrage du bruit. Aucun nouveau jeu réservé
+n'est ouvert.
+
+### Prévols, budget et suite automatique
+
+Deux prévols jetables de huit mises à jour vérifient le graphe complet,
+avec lecture des cibles, génération CPU du bruit et transferts GPU.
+Une reprise après quatre mises à jour retrouve **exactement les mêmes
+poids à huit**, pour chaque graine. Le reconstructeur gelé reste identique
+au bit près. La nouvelle loi est également testée sur les canaux,
+la répétition déterministe du bruit et le cas sans bruit.
+
+Les prévols définitifs mesurent **0,323 et 0,334 s/mise à jour** en médiane
+après chauffe : environ 23 minutes pour les deux entraînements, avant
+les rendus. Les
+[preuves graine 71](../raw/neural-sensor-curve-v001-71-20261105T183000Z.json)
+et [graine 73](../raw/neural-sensor-curve-v001-73-20261105T183009Z.json)
+sont conservées. Les prévols intermédiaires sont aussi conservés ; la
+paire finale inclut le libellé de configuration de prévol corrigé et
+les gardes de micro-lot/canaux invalides, sans entraînement retenu.
+
+Le superviseur refuse le démarrage si la projection d'entraînement
+dépasse une heure. Il limite l'ensemble à **90 minutes**, les processus
+d'entraînement à 45 minutes chacun, la mémoire engagée à 6 Gio avec
+4,5 Gio souples, l'allocateur à 50 % de VRAM et l'arrêt physique global
+à 92 %. Il s'arrête si les ressources deviennent insuffisantes, garde
+les checkpoints et termine son seul arbre de processus en cas d'erreur
+ou de dépassement de délai. Aucun nouveau paquet n'est installé.
+
+Après les deux courbes, les trois jalons positifs sont automatiquement
+exportés, puis comparés sur les mêmes trois photos, mêmes cartes sigma,
+RCD et affichage communs. Le jalon zéro réutilise les rendus déjà
+vérifiés. Les 27 régions restent toutes visibles, pour les deux graines.
+Le superviseur prépare ensuite une planche et les descripteurs complets ;
+il ne fusionne, publie, tague ni met la machine en veille.
+
+Chemin de suivi :
+`build-patch_neural_restoration/sensor-learning-campaign-v001/progress.json`.
+Les étapes et journaux sont séparés des JSON canoniques de mesure.
+Cette étape prépare une lecture de la courbe et des photos, **pas une
+qualification complète** : les régressions fines/classiques connues
+restent à rejouer si une direction utile se dégage. Elles ne sont ni
+relâchées ni déclarées satisfaites par la baisse d'une perte d'entraînement.

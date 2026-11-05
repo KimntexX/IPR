@@ -1,5 +1,6 @@
 """Frozen-weight real CFA exploration with local sensor-derived deviations."""
 from datetime import datetime,timezone
+import argparse
 import json
 import os
 from pathlib import Path
@@ -9,11 +10,14 @@ from campaign_artifacts import sha256
 from memory_budget import MemoryGuard
 
 
-def run():
+def run(plan_path=None,output=None):
     root=Path(__file__).resolve().parents[2];build=root/'build-patch_neural_restoration'
-    plan_path=build/'local-sigma-plan-v001/plan.json';plan=json.loads(plan_path.read_text(encoding='utf-8'))
+    plan_path=plan_path or build/'local-sigma-plan-v001/plan.json'
+    output=output or build/'local-sigma-inference-v001'
+    if not all(p.resolve().is_relative_to(build.resolve()) for p in (plan_path,output)):raise ValueError('Dedicated inference paths required')
+    plan=json.loads(plan_path.read_text(encoding='utf-8'))
     if plan['status']!='sealed_local_sigma_photo_exploration':raise ValueError('Sealed plan required')
-    output=build/'local-sigma-inference-v001';output.mkdir(exist_ok=False)
+    output.mkdir(exist_ok=False)
     result=dict(schema_version=1,status='started',started_at_utc=datetime.now(timezone.utc).isoformat(),
         plan=plan,plan_sha256=sha256(plan_path),records=[],engineering=[],
         tools={n:sha256(Path(__file__).with_name(n)) for n in ('infer_sensor_sigma.py','photo_cfa_tiling.py','camera_noise_sigma.py')})
@@ -34,6 +38,7 @@ def run():
             torch.cuda.set_per_process_memory_fraction(.5)
             result['torch_version']=str(torch.__version__)
             old=json.loads((build/'real-photo-neural-v001/result.json').read_text(encoding='utf-8'))
+            originals=json.loads((build/'real-photo-baselines-v001/plan.json').read_text(encoding='utf-8'))['models']
             for ref in plan['models']:
                 if sha256(Path(ref['path']))!=ref['weights_sha256']:raise ValueError('Weights changed')
                 state=torch.load(ref['path'],map_location='cpu',weights_only=True)['state_dict']
@@ -54,12 +59,17 @@ def run():
                             constant_map=correct_window(model,windows,scene['pattern'],np.full_like(windows,.01),'cuda')
                         error=float(np.max(np.abs(a-b)))
                         if error>2e-6 or not np.array_equal(constant,constant_map):raise ValueError('Map arithmetic bridge failed')
-                        target=output/'constant-bridge.f32';out=np.memmap(target,dtype='<f4',mode='w+',shape=(h,w))
-                        tiled_correct(model,source,scene['pattern'],.01,out,'cuda',check=guard.check);out.flush();del out
-                        expected=next(r for r in old['records'] if r['scene']==scene['name'] and r['seed']==ref['seed'] and r['sigma']==.01)
-                        if sha256(target)!=expected['sha256']:raise ValueError('Whole constant output changed')
-                        result['engineering'].append(dict(cpu_gpu_map_max_error=error,constant_map_window_bit_exact=True,
-                            constant_whole_output_bit_exact=True,expected_sha256=expected['sha256']))
+                        engineering=dict(cpu_gpu_map_max_error=error,constant_map_window_bit_exact=True)
+                        original=next(r for r in originals if r['seed']==ref['seed'])
+                        if original['weights_sha256']==ref['weights_sha256']:
+                            target=output/'constant-bridge.f32';out=np.memmap(target,dtype='<f4',mode='w+',shape=(h,w))
+                            tiled_correct(model,source,scene['pattern'],.01,out,'cuda',check=guard.check);out.flush();del out
+                            expected=next(r for r in old['records'] if r['scene']==scene['name'] and r['seed']==ref['seed'] and r['sigma']==.01)
+                            if sha256(target)!=expected['sha256']:raise ValueError('Whole constant output changed')
+                            engineering.update(constant_whole_output_bit_exact=True,expected_sha256=expected['sha256'])
+                        else:
+                            engineering['historical_whole_bridge']='Not applicable: weights intentionally changed; original bridge preserved in prior proof.'
+                        result['engineering'].append(engineering)
                         del cpu,a,b,constant,constant_map
                     target=output/f"{scene['name']}-seed{ref['seed']}-local.f32"
                     destination=np.memmap(target,dtype='<f4',mode='w+',shape=(h,w))
@@ -82,4 +92,6 @@ def run():
         with (root/'docs/validation/raw'/f'neural-local-sigma-inference-v001-{stamp}.json').open('x',encoding='utf-8') as stream:json.dump(result,stream,indent=2)
 
 
-if __name__=='__main__':run()
+if __name__=='__main__':
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--plan',type=Path);parser.add_argument('--output',type=Path)
+    args=parser.parse_args();run(args.plan,args.output)

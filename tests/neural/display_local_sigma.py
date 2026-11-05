@@ -1,5 +1,6 @@
 """Apply unchanged sensor-frame RCD and common DCP display to local-sigma outputs."""
 from datetime import datetime,timezone
+import argparse
 import json
 from pathlib import Path
 import shutil
@@ -8,14 +9,17 @@ import sys
 from prepare_photo_comparison import digest,orient_buffer
 
 
-def run():
+def run(source=None,output=None):
     root=Path(__file__).resolve().parents[2];build=root/'build-patch_neural_restoration'
-    source=build/'local-sigma-inference-v001/result.json';proof=json.loads(source.read_text(encoding='utf-8'))
+    source=source or build/'local-sigma-inference-v001/result.json'
+    output=output or build/'local-sigma-display-v001'
+    if not all(p.resolve().is_relative_to(build.resolve()) for p in (source,output)):raise ValueError('Dedicated display paths required')
+    proof=json.loads(source.read_text(encoding='utf-8'))
     if proof['status']!='completed_local_sigma_inference_not_qualification':raise ValueError('Complete inference required')
     if shutil.disk_usage(build).free<8*1024**3:raise RuntimeError('Insufficient space for owned comparison buffers')
     plan=proof['plan'];native=plan['native']['path'];renderer=build/'native/Release/iprNeuralDisplayCapture.exe'
     if digest(native)!=plan['native']['sha256']:raise ValueError('RCD comparator changed')
-    output=build/'local-sigma-display-v001';output.mkdir(exist_ok=False)
+    output.mkdir(exist_ok=False)
     result=dict(schema_version=1,status='started',inference_sha256=digest(source),renderer_sha256=digest(renderer),records=[],
         scope='Same whole sensor RCD, orientation and frozen shared CameraNeutral/DCP display. Known photos, no clean truth or full-current-production claim.')
     def execute(job,command):
@@ -48,4 +52,6 @@ def run():
         with (root/'docs/validation/raw'/f'neural-local-sigma-display-v001-{stamp}.json').open('x',encoding='utf-8') as stream:json.dump(result,stream,indent=2)
 
 
-if __name__=='__main__':run()
+if __name__=='__main__':
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--source',type=Path);parser.add_argument('--output',type=Path)
+    args=parser.parse_args();run(args.source,args.output)
