@@ -427,7 +427,7 @@ ImageEditor::ImageEditor(ImageProvider *provider,
         try { rendered = Tasks::takeResult(m_renderWatcher.future()); }
         catch (...) { rendered.error = tr("Échec du rendu : ressources insuffisantes ou traitement interrompu."); }
         if (!rendered.error.isEmpty() && m_activeRevision == m_requestedRevision)
-            setStatusMessage(rendered.error);
+            reportNewError(rendered.error);
         if (m_activeRevision == m_requestedRevision &&
             !rendered.preview.isNull()) {
             // Publish the pair together. The neutral baseline is encoded only
@@ -447,7 +447,7 @@ ImageEditor::ImageEditor(ImageProvider *provider,
             emit previewChanged();
             emit histogramChanged();
             if (rendered.retouchesNotDone > 0)
-                setStatusMessage(tr("%n retouche(s) laissée(s) sans effet : la zone est trop grande pour être reconstruite, ou sa source sort de l'image.", nullptr, rendered.retouchesNotDone));
+                reportNewError(tr("%n retouche(s) laissée(s) sans effet : la zone est trop grande pour être reconstruite, ou sa source sort de l'image.", nullptr, rendered.retouchesNotDone));
         }
 
         if (m_renderPending) {
@@ -489,7 +489,10 @@ ImageEditor::ImageEditor(ImageProvider *provider,
         ExportResult result;
         try { result = Tasks::takeResult(m_exportWatcher.future()); }
         catch (...) { result = {false, tr("Échec de l'export : ressources insuffisantes ou traitement interrompu.")}; }
-        setStatusMessage(result.message);
+        if (result.success)
+            setStatusMessage(result.message);
+        else
+            reportError(result.message);
         refreshBusyState();
         if (!busy()) schedulePrefetch();
     });
@@ -872,7 +875,7 @@ void ImageEditor::setRawNormalizationManifest(const QUrl &file)
         return;
     const QFileInfo info(file.toLocalFile());
     if (!info.isFile() || info.size() > 1024 * 1024) {
-        setStatusMessage(tr("Manifeste invalide ou supérieur à 1 Mio."));
+        reportError(tr("Manifeste invalide ou supérieur à 1 Mio."));
         return;
     }
     m_normalizationManifest = info.absoluteFilePath();
@@ -988,7 +991,7 @@ void ImageEditor::resetToneCurves()
 void ImageEditor::openFolder(const QUrl &folder)
 {
     if (!folder.isLocalFile()) {
-        setStatusMessage(tr("Le dossier sélectionné n'est pas un dossier local."));
+        reportError(tr("Le dossier sélectionné n'est pas un dossier local."));
         return;
     }
 
@@ -1004,13 +1007,13 @@ void ImageEditor::openFolder(const QUrl &folder)
 void ImageEditor::openImage(const QUrl &fileUrl)
 {
     if (!fileUrl.isLocalFile()) {
-        setStatusMessage(tr("Le fichier sélectionné n'est pas local."));
+        reportError(tr("Le fichier sélectionné n'est pas local."));
         return;
     }
 
     const QFileInfo fileInfo(fileUrl.toLocalFile());
     if (!fileInfo.exists() || !fileInfo.isFile()) {
-        setStatusMessage(tr("Le fichier sélectionné est introuvable."));
+        reportError(tr("Le fichier sélectionné est introuvable."));
         return;
     }
 
@@ -1192,7 +1195,7 @@ void ImageEditor::finishBatch(const BatchResult &result, const QString &done)
     }
     QStringList shown = result.failed.mid(0, 3);
     if (result.failed.size() > 3) shown.append(QStringLiteral("…"));
-    setStatusMessage(done + QLatin1Char(' ') +
+    reportError(done + QLatin1Char(' ') +
                      tr("Échec pour %n image(s) : %1", nullptr, int(result.failed.size())).arg(shown.join(QStringLiteral(", "))));
 }
 
@@ -1200,15 +1203,15 @@ void ImageEditor::exportSelection(const QUrl &folder, const QString &format, int
 {
     const QString folderPath = ImageExporter::localPath(folder);
     if (m_selectedImageKeys.isEmpty() || folderPath.isEmpty() || !QFileInfo(folderPath).isDir()) {
-        setStatusMessage(tr("Choisissez un dossier local pour l'export par lot."));
+        reportError(tr("Choisissez un dossier local pour l'export par lot."));
         return;
     }
     if (!ImageExporter::supports(format)) {
-        setStatusMessage(tr("Format d'export non pris en charge : %1").arg(format));
+        reportError(tr("Format d'export non pris en charge : %1").arg(format));
         return;
     }
     if (batchExporting() || batchApplying() || m_exportWatcher.isRunning()) {
-        setStatusMessage(tr("Un export est déjà en cours."));
+        reportError(tr("Un export est déjà en cours."));
         return;
     }
     // Each image is exported with its saved recipe: the open one's must be on disk.
@@ -1446,7 +1449,7 @@ double ImageEditor::adjustmentValue(const QString &name) const
 void ImageEditor::loadImage(const QUrl &fileUrl)
 {
     if (!fileUrl.isLocalFile()) {
-        setStatusMessage(tr("Le fichier sélectionné n'est pas local."));
+        reportError(tr("Le fichier sélectionné n'est pas local."));
         return;
     }
 
@@ -2330,16 +2333,16 @@ void ImageEditor::resetGeometryCrop()
     commitGeometry(next);
 }
 
-bool ImageEditor::proposeStraightening(const QString &mode)
+void ImageEditor::proposeStraightening(const QString &mode)
 {
     Straightening::Mode chosen = Straightening::Mode::Level;
     if (mode == QStringLiteral("vertical")) chosen = Straightening::Mode::Vertical;
     else if (mode == QStringLiteral("full")) chosen = Straightening::Mode::Full;
-    else if (mode != QStringLiteral("level")) return false;
+    else if (mode != QStringLiteral("level")) return;
     const ColorPipeline::WorkingImage &source = previewSource();
     if (source.isNull()) {
-        setStatusMessage(tr("L'image n'est pas prête : aucune proposition."));
-        return false;
+        reportError(tr("L'image n'est pas prête : aucune proposition."));
+        return;
     }
     const Straightening::Proposal proposal = Straightening::propose(
         Straightening::linesOf(source.linearRgba), source.linearRgba.size(), m_settings.geometry, chosen);
@@ -2347,20 +2350,19 @@ bool ImageEditor::proposeStraightening(const QString &mode)
     case Straightening::Refusal::None:
         break;
     case Straightening::Refusal::NotEnoughEvidence:
-        setStatusMessage(tr("Trop peu de lignes pour une correction aussi grande : aucune proposition."));
-        return false;
+        reportError(tr("Trop peu de lignes pour une correction aussi grande : aucune proposition."));
+        return;
     case Straightening::Refusal::NoAgreement:
-        setStatusMessage(tr("Les lignes de cette photo ne s'accordent pas : aucune proposition."));
-        return false;
+        reportError(tr("Les lignes de cette photo ne s'accordent pas : aucune proposition."));
+        return;
     case Straightening::Refusal::NotEnoughLines:
     case Straightening::Refusal::InvalidInput:
-        setStatusMessage(tr("Pas assez de lignes droites dans cette photo : aucune proposition."));
-        return false;
+        reportError(tr("Pas assez de lignes droites dans cette photo : aucune proposition."));
+        return;
     }
     commitGeometry(Straightening::applied(m_settings.geometry, proposal));
     setStatusMessage(tr("Redressement proposé d'après %n ligne(s) : à vérifier, il ne connaît pas la scène.", nullptr,
                         proposal.supportingLines));
-    return true;
 }
 
 void ImageEditor::resetGeometry()
@@ -2391,20 +2393,20 @@ void ImageEditor::resetAdjustments()
 void ImageEditor::exportImage(const QUrl &target, const QString &format, int quality)
 {
     if (m_loadWatcher.isRunning()) {
-        setStatusMessage(tr("Attendez la fin du développement RAW avant l'export."));
+        reportError(tr("Attendez la fin du développement RAW avant l'export."));
         return;
     }
     if (m_original.isNull()) {
-        setStatusMessage(tr("Ouvrez une image avant de l'exporter."));
+        reportError(tr("Ouvrez une image avant de l'exporter."));
         return;
     }
     const QString targetPath = ImageExporter::localPath(target);
     if (targetPath.isEmpty()) {
-        setStatusMessage(tr("La destination d'export doit être un fichier local."));
+        reportError(tr("La destination d'export doit être un fichier local."));
         return;
     }
     if (m_exportWatcher.isRunning() || batchExporting()) {
-        setStatusMessage(tr("Un export est déjà en cours."));
+        reportError(tr("Un export est déjà en cours."));
         return;
     }
 
@@ -3156,7 +3158,7 @@ void ImageEditor::applyLoadedImage(LoadResult loaded)
     emit retouchesChanged();
             if (!m_pendingLoadIsFreshOpen) scheduleRender();
         }
-        setStatusMessage(tr("Échec du développement de « %1 » : %2")
+        reportError(tr("Échec du développement de « %1 » : %2")
                              .arg(failedName,
                                   loaded.error));
         emit hasImageChanged();
@@ -3311,14 +3313,14 @@ bool ImageEditor::saveCurrentSidecar()
     if (m_currentFile != m_displayedFile) return false;
     if (m_loadWatcher.isRunning()) return false;
     if (m_sidecarReadOnly) {
-        setStatusMessage(tr("Réglages enregistrés par une version plus récente d'IPR : "
+        reportNewError(tr("Réglages enregistrés par une version plus récente d'IPR : "
                             "ouverts en lecture seule, non sauvegardés."));
         return false;
     }
     if (!Sidecar::write(m_currentFile.toLocalFile(),
                         {m_settings, m_userImageMetadata.value(currentFileKey()), rawDevelopmentRecipe(), m_history}))
     {
-        setStatusMessage(tr("Échec de sauvegarde des réglages .ipr : vérifiez les permissions du dossier."));
+        reportNewError(tr("Échec de sauvegarde des réglages .ipr : vérifiez les permissions du dossier."));
         return false;
     }
     return true;
@@ -3507,4 +3509,16 @@ void ImageEditor::setStatusMessage(const QString &message)
         return;
     m_statusMessage = message;
     emit statusMessageChanged();
+}
+
+void ImageEditor::reportError(const QString &message)
+{
+    setStatusMessage(message);
+    emit errorReported(message);
+}
+
+void ImageEditor::reportNewError(const QString &message)
+{
+    if (m_statusMessage != message)
+        reportError(message);
 }

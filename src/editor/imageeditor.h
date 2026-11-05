@@ -349,8 +349,7 @@ public:
     // Proposes a rotation, and perspectives if the lines allow them, from the photo's straight
     // lines: "level", "vertical" or "full". The result goes in the geometry, where it can be
     // changed or undone; a refusal changes nothing and says why in the status.
-    // True when a proposal was applied; otherwise statusMessage says why not.
-    Q_INVOKABLE bool proposeStraightening(const QString &mode);
+    Q_INVOKABLE void proposeStraightening(const QString &mode);
 
     // The masks' panel. Coordinates: the normalized canvas (LocalAdjustments). Kinds: linear,
     // radial, brush. Combinations: add, subtract, intersect. A bad index does nothing.
@@ -390,6 +389,8 @@ signals:
     void folderChanged();
     void previewChanged();
     void statusMessageChanged();
+    // A command failed or was refused: the interface shows it where the user just acted.
+    void errorReported(const QString &message);
     void hasImageChanged();
     void busyChanged();
     void imageInfoChanged();
@@ -497,6 +498,9 @@ private:
     void setBusy(bool busy);
     void refreshBusyState();
     void setStatusMessage(const QString &message);
+    void reportError(const QString &message);
+    // For what comes back at every render or save: once, until the message changes.
+    void reportNewError(const QString &message);
     QString currentFileKey() const;
 
     ImageProvider *m_provider;
