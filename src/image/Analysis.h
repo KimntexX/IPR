@@ -24,8 +24,6 @@ bool solveCholesky(const std::vector<double> &a, const std::vector<double> &b, i
 // the matrix, where the eigenvectors of its square would lose half the digits. False when not finite.
 bool singularValues(const std::vector<double> &a, int rows, int cols, std::vector<double> &w, std::vector<double> &vt);
 
-double determinant(const Matrix33d &m);
-
 // The rotation nearest to m, u * vt of its singular value decomposition, turned so that its
 // determinant is one.
 Matrix33d nearestRotation(const Matrix33d &m);

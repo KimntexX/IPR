@@ -167,12 +167,6 @@ bool singularValues(const std::vector<double> &a, int rows, int cols, std::vecto
     return true;
 }
 
-double determinant(const Matrix33d &m)
-{
-    return m(0, 0) * (m(1, 1) * m(2, 2) - m(1, 2) * m(2, 1)) - m(0, 1) * (m(1, 0) * m(2, 2) - m(1, 2) * m(2, 0)) +
-           m(0, 2) * (m(1, 0) * m(2, 1) - m(1, 1) * m(2, 0));
-}
-
 Matrix33d nearestRotation(const Matrix33d &m)
 {
     // m = u s vt: v from the eigenvectors of mt m, u from m v / s.

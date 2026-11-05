@@ -300,13 +300,13 @@ void smallValues()
 
     const Recti r{1, 2, 3, 4};
     check(r.right() == 4 && r.bottom() == 6, "rectangle sides");
-    check(r.contains({1, 2}) && !r.contains({4, 2}) && !r.contains({1, 6}), "contains, its far sides out");
-    check(intersection(r, Recti{2, 3, 10, 1}) == Recti{2, 3, 2, 1}, "common part");
-    check(intersection(r, Recti{4, 2, 1, 1}).empty(), "touching rectangles have nothing in common");
+    check(r.contains(Point2i{1, 2}) && !r.contains(Point2i{4, 2}) && !r.contains(Point2i{1, 6}), "contains, its far sides out");
+    check((r & Recti{2, 3, 10, 1}) == Recti{2, 3, 2, 1}, "common part");
+    check((r & Recti{4, 2, 1, 1}).empty(), "touching rectangles have nothing in common");
     check(Rectd{0, 0, 1, 0}.empty(), "empty rectangle");
 
     const Vec3d a{{1, 2, 3}}, b{{4, 5, 6}};
-    check(dot(a, b) == 32.0, "dot");
+    check(a.dot(b) == 32.0, "dot");
     check(a + b == Vec3d{{5, 7, 9}} && b - a == Vec3d{{3, 3, 3}} && a * 2.0 == Vec3d{{2, 4, 6}}, "vector arithmetic");
 
     Matrix33d m = Matrix33d::identity();
