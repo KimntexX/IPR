@@ -11,6 +11,10 @@ namespace ipr {
 // is about four sigmas, the same as OpenCV takes for floats. Empty when sigma is not above zero.
 std::vector<float> gaussianHalfKernel(double sigma);
 
+// The normalized gaussian of `size` taps, as OpenCV's getGaussianKernel gives it in floats for a
+// sigma above zero: each tap rounded to float, the sum taken in double, then each tap scaled.
+std::vector<float> gaussianKernel(int size, double sigma);
+
 // What lies beyond the borders: the image mirrored without repeating its edge (dcb|abcd|cba),
 // mirrored repeating it (dcba|abcd|dcba), or its last pixel again (aaa|abcd|ddd).
 enum class BlurBorder { Mirror, MirrorEdge, LastPixel };

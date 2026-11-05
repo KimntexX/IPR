@@ -1,6 +1,7 @@
 #ifndef IPR_IMAGE_OPENCVBRIDGE_H
 #define IPR_IMAGE_OPENCVBRIDGE_H
 
+#include "Analysis.h"
 #include "Arrange.h"
 #include "Filters.h"
 #include "Image.h"
@@ -88,6 +89,21 @@ struct MatExtremes
 MatExtremes extremesOf(const cv::Mat &mat);
 std::vector<double> meanOf(const cv::Mat &mat);
 void meanAndDeviationOf(const cv::Mat &mat, std::vector<double> &mean, std::vector<double> &deviation);
+// Analysis as Analysis.h gives it, on Mats of doubles for the linear algebra.
+cv::Mat matchedTemplate(const cv::Mat &image, const cv::Mat &templ);
+cv::Mat hannWindow(cv::Size size);
+cv::Point2d phaseCorrelation(const cv::Mat &a, const cv::Mat &b, const cv::Mat &window);
+bool symmetricEigen(const cv::Mat &matrix, cv::Mat &values, cv::Mat &vectors);
+bool solveCholesky(const cv::Mat &a, const cv::Mat &b, cv::Mat &x);
+// w: one singular value per column, largest first, as a column; vt: the right singular vectors as rows.
+bool singularValues(const cv::Mat &a, cv::Mat &w, cv::Mat &vt);
+double determinant(const cv::Matx33d &m);
+cv::Matx33d nearestRotation(const cv::Matx33d &m);
+// Small vectors, until OpenCV's types go: their length, the unit vector along them, all finite.
+double length(const cv::Vec2d &v);
+double length(const cv::Point2d &p);
+cv::Vec3d unit(const cv::Vec3d &v);
+bool allFinite(const cv::Vec3d &v);
 
 inline cv::Size toCv(const Size &size) { return {size.width, size.height}; }
 inline Size fromCv(const cv::Size &size) { return {size.width, size.height}; }

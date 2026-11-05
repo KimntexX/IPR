@@ -173,7 +173,7 @@ void levelGains(std::vector<View> &views)
             }
         }
         cv::Mat solved;
-        if (!cv::solve(normal, right, solved, cv::DECOMP_CHOLESKY))
+        if (!ipr::solveCholesky(normal, right, solved))
             continue;
         for (int k = 0; k < count; ++k)
             views[size_t(k)].gains[channel] = std::exp(solved.at<double>(k));

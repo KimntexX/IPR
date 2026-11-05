@@ -46,7 +46,7 @@ bool fitHomography(const std::vector<cv::Point2d> &a, const std::vector<cv::Poin
         mean *= 1.0 / double(points.size());
         double spread = 0.0;
         for (const cv::Point2d &p : points)
-            spread += cv::norm(p - mean);
+            spread += ipr::length(p - mean);
         spread = std::max(1e-9, spread / double(points.size()));
         const double s = std::sqrt(2.0) / spread;
         return cv::Matx33d(s, 0, -s * mean.x, 0, s, -s * mean.y, 0, 0, 1);
@@ -62,7 +62,7 @@ bool fitHomography(const std::vector<cv::Point2d> &a, const std::vector<cv::Poin
         std::copy(rowV, rowV + 9, v);
     }
     cv::Mat normal = system.t() * system, values, vectors;
-    if (!cv::eigen(normal, values, vectors))
+    if (!ipr::symmetricEigen(normal, values, vectors))
         return false;
     const double *h = vectors.ptr<double>(8);
     const cv::Matx33d fitted(h[0], h[1], h[2], h[3], h[4], h[5], h[6], h[7], h[8]);
@@ -75,16 +75,7 @@ bool fitHomography(const std::vector<cv::Point2d> &a, const std::vector<cv::Poin
 
 cv::Matx33d nearestRotation(const cv::Matx33d &m)
 {
-    cv::Matx33d u, vt;
-    cv::Matx31d w;
-    cv::SVD::compute(m, w, u, vt);
-    cv::Matx33d r = u * vt;
-    if (cv::determinant(r) < 0.0) {
-        for (int i = 0; i < 3; ++i)
-            u(i, 2) = -u(i, 2);
-        r = u * vt;
-    }
-    return r;
+    return ipr::nearestRotation(m);
 }
 
 cv::Matx33d exponential(double x, double y, double z)
@@ -241,7 +232,7 @@ double adjust(const std::vector<Pair> &pairs, const std::vector<int> &members, i
             for (int k = 0; k < bundle.unknowns; ++k)
                 damped.at<double>(k, k) += damping * std::max(normal.at<double>(k, k), 1e-9);
             cv::Mat change;
-            if (!cv::solve(damped, -gradient, change, cv::DECOMP_CHOLESKY)) {
+            if (!ipr::solveCholesky(damped, cv::Mat(-gradient), change)) {
                 damping *= 10.0;
                 continue;
             }
@@ -561,7 +552,7 @@ void refine(Solution &solution, const std::vector<cv::Mat> &images, double image
                 if (!inside)
                     continue;
                 search = ipr::remapped(imageB, mapX, mapY, ipr::Resampling::Cubic, ipr::Outside::LastPixel);
-                cv::matchTemplate(search, tile, response, cv::TM_CCOEFF_NORMED);
+                response = ipr::matchedTemplate(search, tile);
                 double score = 0.0;
                 cv::Point peak;
                 const ipr::MatExtremes responsePeak = ipr::extremesOf(response);
@@ -618,7 +609,7 @@ Shape straighten(Solution &solution, const cv::Size &frame, Projection requested
         cv::Vec3d sum(0, 0, 0);
         for (const int m : solution.members)
             sum += axisOf(m, row);
-        return cv::normalize(sum);
+        return ipr::unit(sum);
     };
 
     const cv::Vec3d meanX = meanAxis(0), meanY = meanAxis(1), meanZ = meanAxis(2);
@@ -641,18 +632,18 @@ Shape straighten(Solution &solution, const cv::Size &frame, Projection requested
         spread += column * column.t();
     }
     cv::Mat values, vectors;
-    cv::eigen(spread, values, vectors);
+    ipr::symmetricEigen(spread, values, vectors);
     cv::Vec3d axisY = meanY;
     if (values.at<double>(1) > 1e-4 * values.at<double>(0))
         axisY = cv::Vec3d(vectors.at<double>(2, 0), vectors.at<double>(2, 1), vectors.at<double>(2, 2));
     if (axisY.dot(meanY) < 0.0)
         axisY = -axisY;
     if (shape.layout == Layout::Horizontal) {
-        axisY = cv::normalize(axisY);
-        const cv::Vec3d axisZ = cv::normalize(meanZ - axisY * meanZ.dot(axisY));
+        axisY = ipr::unit(axisY);
+        const cv::Vec3d axisZ = ipr::unit(meanZ - axisY * meanZ.dot(axisY));
         turnWorld(axisY.cross(axisZ), axisY, axisZ);
     } else {
-        const cv::Vec3d axisZ = cv::normalize(meanZ - meanX * meanZ.dot(meanX));
+        const cv::Vec3d axisZ = ipr::unit(meanZ - meanX * meanZ.dot(meanX));
         turnWorld(meanX, axisZ.cross(meanX), axisZ);
     }
 
@@ -723,7 +714,7 @@ Shape straighten(Solution &solution, const cv::Size &frame, Projection requested
             }
         }
         const cv::Vec3d x = axisOf(foot, 0);
-        const cv::Vec3d z = cv::normalize(cv::Vec3d(0, 0, 1) - x * x[2]);
+        const cv::Vec3d z = ipr::unit(cv::Vec3d(0, 0, 1) - x * x[2]);
         turnWorld(x, z.cross(x), z);
     }
     measure(along, across);

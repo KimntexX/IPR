@@ -90,6 +90,24 @@ std::vector<float> gaussianHalfKernel(double sigma)
     return half;
 }
 
+std::vector<float> gaussianKernel(int size, double sigma)
+{
+    if (size < 1 || !(sigma > 0.0) || !std::isfinite(sigma))
+        return {};
+    const double scale2 = -0.5 / (sigma * sigma);
+    std::vector<float> taps(static_cast<size_t>(size));
+    double sum = 0.0;
+    for (int i = 0; i < size; ++i) {
+        const double x = i - (size - 1) * 0.5;
+        taps[size_t(i)] = float(std::exp(scale2 * x * x));
+        sum += taps[size_t(i)];
+    }
+    sum = 1.0 / sum;
+    for (float &tap : taps)
+        tap = float(tap * sum);
+    return taps;
+}
+
 Image gaussianBlur(const Image &image, double sigma, int threads, BlurBorder border)
 {
     if (!image.empty() && image.depth() != Depth::F32)

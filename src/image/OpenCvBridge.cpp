@@ -1,5 +1,6 @@
 #include "OpenCvBridge.h"
 
+#include <cmath>
 #include <memory>
 #include <stdexcept>
 
@@ -493,6 +494,108 @@ std::vector<double> meanOf(const cv::Mat &mat)
 void meanAndDeviationOf(const cv::Mat &mat, std::vector<double> &mean, std::vector<double> &deviation)
 {
     meanAndDeviationOf(fromMat(mat), mean, deviation);
+}
+
+cv::Mat matchedTemplate(const cv::Mat &image, const cv::Mat &templ)
+{
+    if (image.empty() || templ.empty())
+        return {};
+    cv::Mat out(image.rows - templ.rows + 1, image.cols - templ.cols + 1, CV_32F);
+    Image target = fromMutableMat(out);
+    matchTemplateInto(fromMat(image), fromMat(templ), target);
+    return out;
+}
+
+cv::Mat hannWindow(cv::Size size)
+{
+    cv::Mat out(size, CV_32F);
+    Image target = fromMutableMat(out);
+    hannWindowInto(target);
+    return out;
+}
+
+cv::Point2d phaseCorrelation(const cv::Mat &a, const cv::Mat &b, const cv::Mat &window)
+{
+    const Point<double> shift = phaseCorrelation(fromMat(a), fromMat(b), window.empty() ? Image() : fromMat(window));
+    return {shift.x, shift.y};
+}
+
+namespace {
+
+std::vector<double> doublesOf(const cv::Mat &mat)
+{
+    cv::Mat values;
+    mat.convertTo(values, CV_64F);
+    return std::vector<double>(values.begin<double>(), values.end<double>());
+}
+
+} // namespace
+
+bool symmetricEigen(const cv::Mat &matrix, cv::Mat &values, cv::Mat &vectors)
+{
+    if (matrix.empty() || matrix.rows != matrix.cols || matrix.channels() != 1)
+        return false;
+    std::vector<double> foundValues, foundVectors;
+    if (!symmetricEigen(doublesOf(matrix), matrix.rows, foundValues, foundVectors))
+        return false;
+    values = cv::Mat(int(foundValues.size()), 1, CV_64F, foundValues.data()).clone();
+    vectors = cv::Mat(matrix.rows, matrix.rows, CV_64F, foundVectors.data()).clone();
+    return true;
+}
+
+bool solveCholesky(const cv::Mat &a, const cv::Mat &b, cv::Mat &x)
+{
+    if (a.empty() || a.rows != a.cols || int(b.total()) != a.rows)
+        return false;
+    std::vector<double> solved;
+    if (!solveCholesky(doublesOf(a), doublesOf(b), a.rows, solved))
+        return false;
+    x = cv::Mat(a.rows, 1, CV_64F, solved.data()).clone();
+    return true;
+}
+
+bool singularValues(const cv::Mat &a, cv::Mat &w, cv::Mat &vt)
+{
+    if (a.empty() || a.channels() != 1)
+        return false;
+    std::vector<double> values, vectors;
+    if (!singularValues(doublesOf(a), a.rows, a.cols, values, vectors))
+        return false;
+    w = cv::Mat(a.cols, 1, CV_64F, values.data()).clone();
+    vt = cv::Mat(a.cols, a.cols, CV_64F, vectors.data()).clone();
+    return true;
+}
+
+double determinant(const cv::Matx33d &m)
+{
+    return determinant(fromCv(m));
+}
+
+cv::Matx33d nearestRotation(const cv::Matx33d &m)
+{
+    return toCv(nearestRotation(fromCv(m)));
+}
+
+double length(const cv::Vec2d &v)
+{
+    return std::sqrt(v[0] * v[0] + v[1] * v[1]);
+}
+
+double length(const cv::Point2d &p)
+{
+    return std::sqrt(p.x * p.x + p.y * p.y);
+}
+
+cv::Vec3d unit(const cv::Vec3d &v)
+{
+    // As OpenCV's normalize of a Vec: a zero vector stays zero.
+    const double norm = std::sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+    return v * (norm != 0.0 ? 1.0 / norm : 0.0);
+}
+
+bool allFinite(const cv::Vec3d &v)
+{
+    return std::isfinite(v[0]) && std::isfinite(v[1]) && std::isfinite(v[2]);
 }
 
 cv::Matx33d toCv(const Matrix33d &matrix)

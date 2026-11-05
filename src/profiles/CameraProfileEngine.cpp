@@ -689,7 +689,7 @@ public:
             return true;
         const QVector<double> &a = colorMatrix1.size() == 9 ? colorMatrix1 : colorMatrix2;
         const QVector<double> &b = colorMatrix2.size() == 9 ? colorMatrix2 : a;
-        if (a.size() != 9 || !cv::checkRange(neutral) ||
+        if (a.size() != 9 || !ipr::allFinite(neutral) ||
             neutral[0] <= 0 || neutral[1] <= 0 || neutral[2] <= 0)
             return fail();
         const auto matrix = [&](double kelvin) {
@@ -708,7 +708,7 @@ public:
                     (1 - 2.89741816e-5*kelvin + 1.61456053e-7*t2));
         };
         const cv::Matx33d sourceMatrix = matrix(sourceKelvin);
-        if (std::abs(cv::determinant(sourceMatrix)) < 1e-10) return fail();
+        if (std::abs(ipr::determinant(sourceMatrix)) < 1e-10) return fail();
         const cv::Vec3d white = sourceMatrix.inv() * neutral;
         const double d = white[0] + 15*white[1] + 3*white[2];
         if (!std::isfinite(d) || d <= 0 || white[1] <= 0) return fail();
@@ -716,7 +716,7 @@ public:
         const cv::Vec2d offset = cv::Vec2d(4*white[0]/d, 6*white[1]/d) - planckUv(sourceKelvin);
         cv::Vec2d target = planckUv(temperature) + offset;
         const cv::Vec2d tangent = planckUv(temperature + 1.0) - planckUv(temperature - 1.0);
-        const double length = cv::norm(tangent);
+        const double length = ipr::length(tangent);
         if (length <= 0) return fail();
         // Normal to the locus, Adobe DNG's tint distance convention (-3000).
         // This is a continuous-locus approximation, not Lightroom's private model.
@@ -730,7 +730,7 @@ public:
             gains[c] = neutral[c] / targetNeutral[c];
         }
         gains /= gains[1]; // Green anchor: no arbitrary exposure/profile-name weight.
-        return cv::checkRange(gains);
+        return ipr::allFinite(gains);
     }
 
 private:

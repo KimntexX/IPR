@@ -67,9 +67,8 @@ bool fitHomography(const std::vector<Match> &matches, cv::Matx33d &h)
         r1[3] = p.x; r1[4] = p.y; r1[5] = 1;
         r1[6] = -q.y * p.x; r1[7] = -q.y * p.y; r1[8] = -q.y;
     }
-    cv::Mat w, u, vt;
-    cv::SVD::compute(system, w, u, vt, cv::SVD::FULL_UV);
-    if (vt.rows < 9 || w.rows < 8 || w.at<double>(7) < 1e-9 * w.at<double>(0))
+    cv::Mat w, vt;
+    if (!ipr::singularValues(system, w, vt) || vt.rows < 9 || w.rows < 8 || w.at<double>(7) < 1e-9 * w.at<double>(0))
         return false;
     cv::Matx33d conditioned;
     for (int i = 0; i < 9; ++i)
@@ -267,7 +266,7 @@ std::vector<Match> matchBlocks(const cv::Mat &reference, const cv::Mat &frame, c
                                       2 * (half + radius) + 1, 2 * (half + radius) + 1);
             if ((searchArea & cv::Rect(0, 0, frame.cols, frame.rows)) != searchArea)
                 continue;
-            cv::matchTemplate(frame(searchArea), block, scores, cv::TM_CCOEFF_NORMED);
+            scores = ipr::matchedTemplate(frame(searchArea), block);
             cv::Point2d place;
             double score = 0.0;
             if (!peak(scores, place, score) || score < options.minimumScore)
@@ -302,7 +301,7 @@ double supportOf(const std::vector<Match> &inliers, const cv::Size &size)
 // and one that flips it is no transform of a same scene.
 bool plausible(const cv::Matx33d &h, const cv::Size &size)
 {
-    const double determinant = cv::determinant(h);
+    const double determinant = ipr::determinant(h);
     if (!(determinant > 0.0) || !std::isfinite(determinant))
         return false;
     const double reach = 0.5 * std::max(size.width, size.height);
@@ -345,8 +344,7 @@ LocalField localField(const cv::Mat &reference, const cv::Mat &registered, const
                 const cv::Mat block = reference(cv::Rect(site.x - half, site.y - half, 2 * half + 1, 2 * half + 1));
                 if (!hasCorners(block))
                     continue;
-                cv::matchTemplate(registered(cv::Rect(site.x - reach, site.y - reach, 2 * reach + 1, 2 * reach + 1)),
-                                  block, scores, cv::TM_CCOEFF_NORMED);
+                scores = ipr::matchedTemplate(registered(cv::Rect(site.x - reach, site.y - reach, 2 * reach + 1, 2 * reach + 1)), block);
                 cv::Point2d place;
                 double score = 0.0;
                 if (!peak(scores, place, score) || score < options.minimumScore)
@@ -428,9 +426,8 @@ Result estimate(const Pyramid &reference, const Pyramid &frame, const Options &o
     const int coarsest = int(reference.size()) - 1;
 
     // A hand's shift can exceed the block search; the coarsest level recovers it whole.
-    cv::Mat window;
-    cv::createHanningWindow(window, reference[size_t(coarsest)].size(), CV_32F);
-    const cv::Point2d shift = cv::phaseCorrelate(reference[size_t(coarsest)], frame[size_t(coarsest)], window);
+    const cv::Mat window = ipr::hannWindow(reference[size_t(coarsest)].size());
+    const cv::Point2d shift = ipr::phaseCorrelation(reference[size_t(coarsest)], frame[size_t(coarsest)], window);
     cv::Matx33d guess(1, 0, std::isfinite(shift.x) ? shift.x : 0.0,
                       0, 1, std::isfinite(shift.y) ? shift.y : 0.0,
                       0, 0, 1);

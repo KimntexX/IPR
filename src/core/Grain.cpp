@@ -70,8 +70,10 @@ void apply(cv::Mat &linearRgb, int amount, double pixelScale)
     if (pixelScale >= 1.0) {
         noise = ipr::gaussianBlurred(noise, Sigma, ipr::BlurBorder::MirrorEdge);
         // The blur lowers the deviation of unit white noise to the norm of its kernel.
-        const cv::Mat kernel = cv::getGaussianKernel(2 * int(std::ceil(4 * Sigma)) + 1, Sigma, CV_32F);
-        deviation /= float(kernel.dot(kernel));
+        double norm = 0.0;
+        for (const float tap : ipr::gaussianKernel(2 * int(std::ceil(4 * Sigma)) + 1, Sigma))
+            norm += double(tap) * double(tap);
+        deviation /= float(norm);
     } else {
         deviation *= float(reducedDeviation(1.0 / pixelScale));
     }

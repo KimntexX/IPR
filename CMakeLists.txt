@@ -245,7 +245,8 @@ find_package(Threads REQUIRED)
 add_library(iprImage STATIC src/image/Types.h src/image/Image.h src/image/Image.cpp
     src/image/Parallel.h src/image/Parallel.cpp src/image/Filters.h src/image/Filters.cpp
     src/image/Resize.h src/image/Resize.cpp src/image/Warp.h src/image/Warp.cpp src/image/Arrange.h src/image/Arrange.cpp
-    src/image/Neighbourhood.h src/image/Neighbourhood.cpp src/image/Pixels.h src/image/Pixels.cpp)
+    src/image/Neighbourhood.h src/image/Neighbourhood.cpp src/image/Pixels.h src/image/Pixels.cpp
+    src/image/Analysis.h src/image/Analysis.cpp)
 target_include_directories(iprImage PUBLIC src/image)
 target_link_libraries(iprImage PUBLIC Threads::Threads)
 set_target_properties(iprImage PROPERTIES AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)
@@ -446,6 +447,13 @@ if(BUILD_TESTING)
     target_link_libraries(imagePixelsTests PRIVATE iprImage)
     add_test(NAME imagePixelsTests COMMAND imagePixelsTests)
     set_tests_properties(imagePixelsTests PROPERTIES LABELS "unit;image")
+    add_executable(imageAnalysisTests tests/image_analysis_test.cpp)
+    target_link_libraries(imageAnalysisTests PRIVATE iprImage)
+    add_test(NAME imageAnalysisTests COMMAND imageAnalysisTests)
+    set_tests_properties(imageAnalysisTests PROPERTIES LABELS "unit;image")
+    add_executable(iprImageAnalysisOracle tests/image_analysis_oracle.cpp src/image/OpenCvBridge.h src/image/OpenCvBridge.cpp)
+    target_link_libraries(iprImageAnalysisOracle PRIVATE iprImage ${OpenCV_LIBS})
+    target_include_directories(iprImageAnalysisOracle PRIVATE ${OpenCV_INCLUDE_DIRS})
     add_executable(iprImagePixelsOracle tests/image_pixels_oracle.cpp src/image/OpenCvBridge.h src/image/OpenCvBridge.cpp)
     target_link_libraries(iprImagePixelsOracle PRIVATE iprImage ${OpenCV_LIBS})
     target_include_directories(iprImagePixelsOracle PRIVATE ${OpenCV_INCLUDE_DIRS})
