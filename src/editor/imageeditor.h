@@ -124,6 +124,8 @@ class ImageEditor final : public QObject
     Q_PROPERTY(QVariantList localMasks READ localMasks NOTIFY localMasksChanged)
     // The zone of one mask in the preview (-1: none); never saved nor exported.
     Q_PROPERTY(int localMaskOverlay READ localMaskOverlay WRITE setLocalMaskOverlay NOTIFY localMaskOverlayChanged)
+    Q_PROPERTY(QVariantList retouches READ retouches NOTIFY retouchesChanged)
+    Q_PROPERTY(int retouchOverlay READ retouchOverlay WRITE setRetouchOverlay NOTIFY retouchOverlayChanged)
     Q_PROPERTY(bool cropEditing READ cropEditing WRITE setCropEditing NOTIFY cropEditingChanged)
     Q_PROPERTY(QVariantList pointColors READ pointColors NOTIFY pointColorsChanged)
     // Range overlay of one point in the preview (-1: none); never saved nor exported.
@@ -347,13 +349,24 @@ public:
     // Proposes a rotation, and perspectives if the lines allow them, from the photo's straight
     // lines: "level", "vertical" or "full". The result goes in the geometry, where it can be
     // changed or undone; a refusal changes nothing and says why in the status.
-    // True when a proposal was applied; otherwise statusMessage says why not.
-    Q_INVOKABLE bool proposeStraightening(const QString &mode);
+    Q_INVOKABLE void proposeStraightening(const QString &mode);
 
     // The masks' panel. Coordinates: the normalized canvas (LocalAdjustments). Kinds: linear,
     // radial, brush. Combinations: add, subtract, intersect. A bad index does nothing.
     QVariantList localMasks() const;
     int localMaskOverlay() const { return m_localMaskOverlay; }
+    QVariantList retouches() const;
+    int retouchOverlay() const { return m_retouchOverlay; }
+    void setRetouchOverlay(int retouch);
+    // kind: "remove", "heal" or "clone". Returns its index, -1 when refused.
+    Q_INVOKABLE int addRetouch(const QString &kind);
+    Q_INVOKABLE void removeRetouch(int retouch);
+    Q_INVOKABLE void setRetouchVisible(int retouch, bool visible);
+    Q_INVOKABLE void setRetouchOpacity(int retouch, double opacity);
+    // From a zone's pixel to its source, shares of the canvas's sides.
+    Q_INVOKABLE void setRetouchSource(int retouch, double shiftX, double shiftY);
+    // points: u, v, u, v..., on the normalized canvas.
+    Q_INVOKABLE void addRetouchStroke(int retouch, const QVariantList &points, double size, double feather);
     void setLocalMaskOverlay(int mask);
     // The index of the new mask, -1 when it could not be added.
     Q_INVOKABLE int addLocalMask(const QString &kind);
@@ -376,6 +389,8 @@ signals:
     void folderChanged();
     void previewChanged();
     void statusMessageChanged();
+    // A command failed or was refused: the interface shows it where the user just acted.
+    void errorReported(const QString &message);
     void hasImageChanged();
     void busyChanged();
     void imageInfoChanged();
@@ -393,6 +408,8 @@ signals:
     void geometryChanged();
     void localMasksChanged();
     void localMaskOverlayChanged();
+    void retouchesChanged();
+    void retouchOverlayChanged();
     void cropEditingChanged();
     void pointColorOverlayChanged();
 
@@ -412,6 +429,7 @@ private:
         bool originalWholeCanvas = false;
         QVariantList histogram;
         QString error;
+        int retouchesNotDone = -1;             // -1: the render did not reach them, a cache had them
     };
 
     using UserImageMetadata = EditRecipe::UserImageMetadata;
@@ -422,6 +440,7 @@ private:
     DecodedImageCache::Entry retainedCurrentEntry() const;
     void commitGeometry(Geometry::Settings next);
     bool commitLocalMasks(LocalAdjustments::Masks next);
+    bool commitRetouches(Retouch::Operations next);
     bool originalFramingStale() const;
     RawDecoder::Options developmentOptions() const;
     // pixelScale: pixels of source per pixel of the full image (below 1 for the
@@ -429,7 +448,7 @@ private:
     // preview), the render resumes from the stages it kept; same pixels as without.
     static ColorPipeline::WorkingImage renderWorkingImage(
         const ColorPipeline::WorkingImage &source, const Settings &settings,
-        double pixelScale = 1.0, RenderStageCache *cache = nullptr);
+        double pixelScale = 1.0, RenderStageCache *cache = nullptr, int *retouchesNotDone = nullptr);
     // local: what the masks add, on the canvas (LocalAdjustments::valueMaps).
     static bool renderTones(const ColorPipeline::WorkingImage &source, const Settings &settings,
                             int referenceTemperature, double pixelScale, cv::Mat &adjusted,
@@ -446,7 +465,7 @@ private:
                                       double pixelScale = 1.0,
                                       RenderStageCache *cache = nullptr,
                                       int overlayPoint = -1, int overlayMask = -1,
-                                      bool wholeCanvas = false);
+                                      bool wholeCanvas = false, int overlayRetouch = -1);
     static ColorPipeline::WorkingImage buildEditProxy(
         const ColorPipeline::WorkingImage &source);
     static QString cacheKeyForFile(const QString &fileName,
@@ -479,6 +498,9 @@ private:
     void setBusy(bool busy);
     void refreshBusyState();
     void setStatusMessage(const QString &message);
+    void reportError(const QString &message);
+    // For what comes back at every render or save: once, until the message changes.
+    void reportNewError(const QString &message);
     QString currentFileKey() const;
 
     ImageProvider *m_provider;
@@ -526,6 +548,7 @@ private:
     std::shared_ptr<TaskResources> m_taskResources;
     std::unique_ptr<StackSession> m_stacking;
     int m_localMaskOverlay = -1;
+    int m_retouchOverlay = -1;
     ImageCacheController &m_decodedImageCache;
     // Preview only; cleared with the image it belongs to.
     RenderStageCache &m_renderStageCache;

@@ -188,7 +188,8 @@ Item {
 
     Repeater {
         // The handles depend on the kind alone: moving one must not recreate it under the hand.
-        model: root.kind === "linear" ? ["start", "end"] : root.kind === "radial" ? ["center", "radiusX", "radiusY"] : []
+        model: root.kind === "linear" ? ["start", "end"] : root.kind === "radial" ? ["center", "radiusX", "radiusY"]
+            : root.kind === "point" ? ["center"] : []
         Rectangle {
             id: handle
             required property string modelData

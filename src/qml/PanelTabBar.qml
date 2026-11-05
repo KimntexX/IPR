@@ -33,6 +33,11 @@ Row {
             rings: []
         },
         {
+            name: qsTr("Retouche"), key: "panelTabRetouch",
+            lines: [[4, 16, 12, 6, 20, 12, 13, 21, 8, 21, 4, 16], [9, 10, 16, 17]],
+            rings: []
+        },
+        {
             name: qsTr("Assembler"), key: "panelTabAssemble",
             lines: [[7, 3, 21, 3, 21, 14, 7, 14, 7, 3], [4, 7, 4, 18, 18, 18], [1, 10, 1, 21, 15, 21]],
             rings: []

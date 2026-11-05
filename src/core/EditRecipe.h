@@ -4,6 +4,7 @@
 #include "ColorMixer.h"
 #include "Geometry.h"
 #include "LocalAdjustments.h"
+#include "Retouch.h"
 #include "PointColor.h"
 #include "ToneCurve.h"
 
@@ -56,6 +57,7 @@ struct Settings
     ToneCurve::Curves toneCurves;
     Geometry::Settings geometry;
     LocalAdjustments::Masks localMasks;
+    Retouch::Operations retouches;
 };
 
 struct RawDevelopment

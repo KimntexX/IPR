@@ -427,7 +427,7 @@ ImageEditor::ImageEditor(ImageProvider *provider,
         try { rendered = Tasks::takeResult(m_renderWatcher.future()); }
         catch (...) { rendered.error = tr("Échec du rendu : ressources insuffisantes ou traitement interrompu."); }
         if (!rendered.error.isEmpty() && m_activeRevision == m_requestedRevision)
-            setStatusMessage(rendered.error);
+            reportNewError(rendered.error);
         if (m_activeRevision == m_requestedRevision &&
             !rendered.preview.isNull()) {
             // Publish the pair together. The neutral baseline is encoded only
@@ -446,6 +446,8 @@ ImageEditor::ImageEditor(ImageProvider *provider,
             m_histogram = rendered.histogram;
             emit previewChanged();
             emit histogramChanged();
+            if (rendered.retouchesNotDone > 0)
+                reportNewError(tr("%n retouche(s) laissée(s) sans effet : la zone est trop grande pour être reconstruite, ou sa source sort de l'image.", nullptr, rendered.retouchesNotDone));
         }
 
         if (m_renderPending) {
@@ -487,7 +489,10 @@ ImageEditor::ImageEditor(ImageProvider *provider,
         ExportResult result;
         try { result = Tasks::takeResult(m_exportWatcher.future()); }
         catch (...) { result = {false, tr("Échec de l'export : ressources insuffisantes ou traitement interrompu.")}; }
-        setStatusMessage(result.message);
+        if (result.success)
+            setStatusMessage(result.message);
+        else
+            reportError(result.message);
         refreshBusyState();
         if (!busy()) schedulePrefetch();
     });
@@ -870,7 +875,7 @@ void ImageEditor::setRawNormalizationManifest(const QUrl &file)
         return;
     const QFileInfo info(file.toLocalFile());
     if (!info.isFile() || info.size() > 1024 * 1024) {
-        setStatusMessage(tr("Manifeste invalide ou supérieur à 1 Mio."));
+        reportError(tr("Manifeste invalide ou supérieur à 1 Mio."));
         return;
     }
     m_normalizationManifest = info.absoluteFilePath();
@@ -986,7 +991,7 @@ void ImageEditor::resetToneCurves()
 void ImageEditor::openFolder(const QUrl &folder)
 {
     if (!folder.isLocalFile()) {
-        setStatusMessage(tr("Le dossier sélectionné n'est pas un dossier local."));
+        reportError(tr("Le dossier sélectionné n'est pas un dossier local."));
         return;
     }
 
@@ -1002,13 +1007,13 @@ void ImageEditor::openFolder(const QUrl &folder)
 void ImageEditor::openImage(const QUrl &fileUrl)
 {
     if (!fileUrl.isLocalFile()) {
-        setStatusMessage(tr("Le fichier sélectionné n'est pas local."));
+        reportError(tr("Le fichier sélectionné n'est pas local."));
         return;
     }
 
     const QFileInfo fileInfo(fileUrl.toLocalFile());
     if (!fileInfo.exists() || !fileInfo.isFile()) {
-        setStatusMessage(tr("Le fichier sélectionné est introuvable."));
+        reportError(tr("Le fichier sélectionné est introuvable."));
         return;
     }
 
@@ -1162,6 +1167,7 @@ ImageEditor::BatchResult ImageEditor::applyToFiles(const QStringList &files, con
         Settings copied = settings;
         copied.geometry = target.settings.geometry;   // the framing belongs to each photo
         copied.localMasks = target.settings.localMasks;   // and so do zones drawn on it
+        copied.retouches = target.settings.retouches;
         copied.automaticWhiteBalance = target.settings.automaticWhiteBalance;
         if (target.settings.automaticWhiteBalance) {
             copied.temperature = target.settings.temperature;
@@ -1189,7 +1195,7 @@ void ImageEditor::finishBatch(const BatchResult &result, const QString &done)
     }
     QStringList shown = result.failed.mid(0, 3);
     if (result.failed.size() > 3) shown.append(QStringLiteral("…"));
-    setStatusMessage(done + QLatin1Char(' ') +
+    reportError(done + QLatin1Char(' ') +
                      tr("Échec pour %n image(s) : %1", nullptr, int(result.failed.size())).arg(shown.join(QStringLiteral(", "))));
 }
 
@@ -1197,15 +1203,15 @@ void ImageEditor::exportSelection(const QUrl &folder, const QString &format, int
 {
     const QString folderPath = ImageExporter::localPath(folder);
     if (m_selectedImageKeys.isEmpty() || folderPath.isEmpty() || !QFileInfo(folderPath).isDir()) {
-        setStatusMessage(tr("Choisissez un dossier local pour l'export par lot."));
+        reportError(tr("Choisissez un dossier local pour l'export par lot."));
         return;
     }
     if (!ImageExporter::supports(format)) {
-        setStatusMessage(tr("Format d'export non pris en charge : %1").arg(format));
+        reportError(tr("Format d'export non pris en charge : %1").arg(format));
         return;
     }
     if (batchExporting() || batchApplying() || m_exportWatcher.isRunning()) {
-        setStatusMessage(tr("Un export est déjà en cours."));
+        reportError(tr("Un export est déjà en cours."));
         return;
     }
     // Each image is exported with its saved recipe: the open one's must be on disk.
@@ -1443,7 +1449,7 @@ double ImageEditor::adjustmentValue(const QString &name) const
 void ImageEditor::loadImage(const QUrl &fileUrl)
 {
     if (!fileUrl.isLocalFile()) {
-        setStatusMessage(tr("Le fichier sélectionné n'est pas local."));
+        reportError(tr("Le fichier sélectionné n'est pas local."));
         return;
     }
 
@@ -1739,6 +1745,7 @@ void ImageEditor::setAutomaticWhiteBalance(bool enabled)
     emit pointColorsChanged();
     emit geometryChanged();
     emit localMasksChanged();
+    emit retouchesChanged();
     scheduleSidecarSave();
 
     if (m_original.isNull() || !m_currentFile.isLocalFile())
@@ -1769,9 +1776,11 @@ void ImageEditor::pasteAdjustments()
     const bool automaticWhiteBalance = m_settings.automaticWhiteBalance;
     const Geometry::Settings geometry = m_settings.geometry;   // the framing belongs to each photo
     const LocalAdjustments::Masks masks = m_settings.localMasks;   // and so do zones drawn on it
+    const Retouch::Operations retouches = m_settings.retouches;
     m_settings = m_copiedAdjustments;
     m_settings.geometry = geometry;
     m_settings.localMasks = masks;
+    m_settings.retouches = retouches;
     m_settings.automaticWhiteBalance = automaticWhiteBalance;
     m_settings.denoiseBeforeProfile = m_denoiseBeforeProfile;
     if (m_copiedAsShot) {   // the target's own as-shot white balance
@@ -1785,6 +1794,7 @@ void ImageEditor::pasteAdjustments()
     emit pointColorsChanged();
     emit geometryChanged();
     emit localMasksChanged();
+    emit retouchesChanged();
     scheduleRender();
 }
 
@@ -1877,6 +1887,7 @@ void ImageEditor::restoreRecipe(const std::optional<QCborMap> &recipe)
     emit pointColorsChanged();
     emit geometryChanged();
     emit localMasksChanged();
+    emit retouchesChanged();
     emit rawDevelopmentChanged();
     emit historyChanged();
     const QString fileName = m_currentFile.toLocalFile();
@@ -2156,6 +2167,107 @@ void ImageEditor::addLocalMaskStroke(int mask, int shape, const QVariantList &po
     commitLocalMasks(std::move(next));
 }
 
+QVariantList ImageEditor::retouches() const
+{
+    return Retouch::describe(m_settings.retouches);
+}
+
+void ImageEditor::setRetouchOverlay(int retouch)
+{
+    if (retouch == m_retouchOverlay)
+        return;
+    m_retouchOverlay = retouch;
+    emit retouchOverlayChanged();
+    if (!m_original.isNull())
+        scheduleRender();
+}
+
+bool ImageEditor::commitRetouches(Retouch::Operations next)
+{
+    if (m_original.isNull() || !Retouch::bound(next))
+        return false;
+    if (next == m_settings.retouches)
+        return true;
+    m_settings.retouches = std::move(next);
+    emit retouchesChanged();
+    scheduleRender();
+    return true;
+}
+
+int ImageEditor::addRetouch(const QString &kind)
+{
+    Retouch::Operation operation;
+    if (!Retouch::kindNamed(kind, operation.kind) || m_original.isNull())
+        return -1;
+    Retouch::Operations next = m_settings.retouches;
+    next.push_back(operation);
+    return commitRetouches(std::move(next)) ? int(m_settings.retouches.size()) - 1 : -1;
+}
+
+void ImageEditor::removeRetouch(int retouch)
+{
+    if (retouch < 0 || retouch >= int(m_settings.retouches.size()))
+        return;
+    Retouch::Operations next = m_settings.retouches;
+    next.erase(next.begin() + retouch);
+    if (m_retouchOverlay >= int(next.size()))
+        setRetouchOverlay(-1);
+    commitRetouches(std::move(next));
+}
+
+void ImageEditor::setRetouchVisible(int retouch, bool visible)
+{
+    if (retouch < 0 || retouch >= int(m_settings.retouches.size()))
+        return;
+    Retouch::Operations next = m_settings.retouches;
+    next[size_t(retouch)].visible = visible;
+    commitRetouches(std::move(next));
+}
+
+void ImageEditor::setRetouchOpacity(int retouch, double opacity)
+{
+    if (retouch < 0 || retouch >= int(m_settings.retouches.size()) || !std::isfinite(opacity))
+        return;
+    Retouch::Operations next = m_settings.retouches;
+    next[size_t(retouch)].opacity = float(opacity);
+    commitRetouches(std::move(next));
+}
+
+void ImageEditor::setRetouchSource(int retouch, double shiftX, double shiftY)
+{
+    if (retouch < 0 || retouch >= int(m_settings.retouches.size()) || !std::isfinite(shiftX) || !std::isfinite(shiftY))
+        return;
+    Retouch::Operations next = m_settings.retouches;
+    next[size_t(retouch)].source = cv::Point2f(float(shiftX), float(shiftY));
+    commitRetouches(std::move(next));
+}
+
+void ImageEditor::addRetouchStroke(int retouch, const QVariantList &points, double size, double feather)
+{
+    if (retouch < 0 || retouch >= int(m_settings.retouches.size()) || points.isEmpty() || points.size() % 2 != 0)
+        return;
+    LocalAdjustments::BrushStroke stroke;
+    stroke.size = float(size);
+    stroke.feather = float(feather);
+    for (qsizetype i = 0; i + 1 < points.size(); i += 2)
+        stroke.points.emplace_back(points.at(i).toFloat(), points.at(i + 1).toFloat());
+    Retouch::Operations next = m_settings.retouches;
+    Retouch::Operation &target = next[size_t(retouch)];
+    const bool first = target.strokes.empty();
+    target.strokes.push_back(std::move(stroke));
+    // A first stroke of a heal or a clone comes with a source; the user can move it.
+    if (first && target.kind != Retouch::Kind::Remove) {
+        const ColorPipeline::WorkingImage &source = previewSource();
+        if (!source.isNull()) {
+            cv::Mat rgb;
+            cv::cvtColor(source.linearRgba, rgb, cv::COLOR_RGBA2RGB);
+            rgb = Geometry::warpRgb(rgb, m_settings.geometry, geometryQuality(previewPixelScale()));
+            target.source = Retouch::suggestSource(rgb, target);
+        }
+    }
+    commitRetouches(std::move(next));
+}
+
 void ImageEditor::setGeometryValue(const QString &name, double value)
 {
     if (!std::isfinite(value))
@@ -2221,16 +2333,16 @@ void ImageEditor::resetGeometryCrop()
     commitGeometry(next);
 }
 
-bool ImageEditor::proposeStraightening(const QString &mode)
+void ImageEditor::proposeStraightening(const QString &mode)
 {
     Straightening::Mode chosen = Straightening::Mode::Level;
     if (mode == QStringLiteral("vertical")) chosen = Straightening::Mode::Vertical;
     else if (mode == QStringLiteral("full")) chosen = Straightening::Mode::Full;
-    else if (mode != QStringLiteral("level")) return false;
+    else if (mode != QStringLiteral("level")) return;
     const ColorPipeline::WorkingImage &source = previewSource();
     if (source.isNull()) {
-        setStatusMessage(tr("L'image n'est pas prête : aucune proposition."));
-        return false;
+        reportError(tr("L'image n'est pas prête : aucune proposition."));
+        return;
     }
     const Straightening::Proposal proposal = Straightening::propose(
         Straightening::linesOf(source.linearRgba), source.linearRgba.size(), m_settings.geometry, chosen);
@@ -2238,20 +2350,19 @@ bool ImageEditor::proposeStraightening(const QString &mode)
     case Straightening::Refusal::None:
         break;
     case Straightening::Refusal::NotEnoughEvidence:
-        setStatusMessage(tr("Trop peu de lignes pour une correction aussi grande : aucune proposition."));
-        return false;
+        reportError(tr("Trop peu de lignes pour une correction aussi grande : aucune proposition."));
+        return;
     case Straightening::Refusal::NoAgreement:
-        setStatusMessage(tr("Les lignes de cette photo ne s'accordent pas : aucune proposition."));
-        return false;
+        reportError(tr("Les lignes de cette photo ne s'accordent pas : aucune proposition."));
+        return;
     case Straightening::Refusal::NotEnoughLines:
     case Straightening::Refusal::InvalidInput:
-        setStatusMessage(tr("Pas assez de lignes droites dans cette photo : aucune proposition."));
-        return false;
+        reportError(tr("Pas assez de lignes droites dans cette photo : aucune proposition."));
+        return;
     }
     commitGeometry(Straightening::applied(m_settings.geometry, proposal));
     setStatusMessage(tr("Redressement proposé d'après %n ligne(s) : à vérifier, il ne connaît pas la scène.", nullptr,
                         proposal.supportingLines));
-    return true;
 }
 
 void ImageEditor::resetGeometry()
@@ -2274,6 +2385,7 @@ void ImageEditor::resetAdjustments()
     emit pointColorsChanged();
     emit geometryChanged();
     emit localMasksChanged();
+    emit retouchesChanged();
     emit rawDevelopmentChanged();
     scheduleRender();
 }
@@ -2281,20 +2393,20 @@ void ImageEditor::resetAdjustments()
 void ImageEditor::exportImage(const QUrl &target, const QString &format, int quality)
 {
     if (m_loadWatcher.isRunning()) {
-        setStatusMessage(tr("Attendez la fin du développement RAW avant l'export."));
+        reportError(tr("Attendez la fin du développement RAW avant l'export."));
         return;
     }
     if (m_original.isNull()) {
-        setStatusMessage(tr("Ouvrez une image avant de l'exporter."));
+        reportError(tr("Ouvrez une image avant de l'exporter."));
         return;
     }
     const QString targetPath = ImageExporter::localPath(target);
     if (targetPath.isEmpty()) {
-        setStatusMessage(tr("La destination d'export doit être un fichier local."));
+        reportError(tr("La destination d'export doit être un fichier local."));
         return;
     }
     if (m_exportWatcher.isRunning() || batchExporting()) {
-        setStatusMessage(tr("Un export est déjà en cours."));
+        reportError(tr("Un export est déjà en cours."));
         return;
     }
 
@@ -2351,6 +2463,7 @@ RenderStageCache::Keys stageKeys(const EditRecipe::Settings &s)
     QDataStream stream(&key, QIODevice::WriteOnly);
     const auto ints = [&stream](const auto &values) { for (int value : values) stream << qint32(value); };
     LocalAdjustments::appendKey(stream, s.localMasks);   // adds nothing without a mask
+    Retouch::appendKey(stream, s.retouches);             // nor without a retouch
     stream << s.grayscale << s.brightness << qint32(s.contrast) << qint32(s.temperature) << qint32(s.tint)
            << qint32(s.shadows) << qint32(s.blacks) << qint32(s.highlights) << qint32(s.whites);
     const Geometry::Settings &g = s.geometry;   // the crop comes after every stage
@@ -2382,7 +2495,7 @@ RenderStageCache::Keys stageKeys(const EditRecipe::Settings &s)
 
 ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
     const ColorPipeline::WorkingImage &source, const Settings &settings, double pixelScale,
-    RenderStageCache *cache)
+    RenderStageCache *cache, int *retouchesNotDone)
 {
     if (source.isNull() || source.colorSpace != ColorPipeline::workingColorSpace() ||
         source.linearRgba.type() != CV_32FC4 || !cv::checkRange(source.linearRgba, true))
@@ -2412,7 +2525,7 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
         std::all_of(settings.gradingLuminance.cbegin(), settings.gradingLuminance.cend(),
                     [](int value) { return value == 0; }) && !PointColor::active(settings.pointColor) &&
         !hasToneCurves && !Geometry::transformsPixels(settings.geometry) &&
-        !LocalAdjustments::active(settings.localMasks))
+        !LocalAdjustments::active(settings.localMasks) && !Retouch::active(settings.retouches))
         return source;
 
     // What the masks add per setting; every map stays empty without any.
@@ -2428,6 +2541,10 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
     if (runs(0)) {
         cv::cvtColor(source.linearRgba, adjusted, cv::COLOR_RGBA2RGB);
         if (!renderTones(source, settings, referenceTemperature, pixelScale, adjusted, local)) return {};
+        // On the canvas, once the tones are set; what follows treats the zone as the rest.
+        const int notDone = Retouch::apply(adjusted, settings.retouches);
+        if (retouchesNotDone)
+            *retouchesNotDone = notDone;
         reached(0, adjusted);
     }
     if (runs(1)) {
@@ -2592,7 +2709,7 @@ bool ImageEditor::renderTones(const ColorPipeline::WorkingImage &source, const S
 
 ImageEditor::RenderResult ImageEditor::renderPreview(
     const ColorPipeline::WorkingImage &source, const Settings &settings,
-    bool includeOriginal, double pixelScale, RenderStageCache *cache, int overlayPoint, int overlayMask, bool wholeCanvas)
+    bool includeOriginal, double pixelScale, RenderStageCache *cache, int overlayPoint, int overlayMask, bool wholeCanvas, int overlayRetouch)
 {
     RenderResult result;
     if (includeOriginal) {
@@ -2612,7 +2729,7 @@ ImageEditor::RenderResult ImageEditor::renderPreview(
             qWarning() << "Échec du rendu de l'origine :" << error;
     }
     ColorPipeline::WorkingImage rendered =
-        renderWorkingImage(source, settings, pixelScale, cache);
+        renderWorkingImage(source, settings, pixelScale, cache, &result.retouchesNotDone);
     if (rendered.isNull())
         return result;
     if (overlayPoint >= 0) {
@@ -2636,6 +2753,12 @@ ImageEditor::RenderResult ImageEditor::renderPreview(
         const cv::Mat weights = LocalAdjustments::coverage(settings.localMasks[size_t(overlayMask)], rendered.linearRgba.size(),
                                                            rangeLuminanceOf(source, settings, pixelScale));
         // A neutral pipeline hands back the source buffer itself: overlay a copy.
+        rendered.linearRgba = rendered.linearRgba.clone();
+        ColorAdjustments::showWeights(rendered.linearRgba, weights);
+    }
+
+    if (overlayRetouch >= 0 && overlayRetouch < int(settings.retouches.size())) {
+        const cv::Mat weights = Retouch::coverage(settings.retouches[size_t(overlayRetouch)], rendered.linearRgba.size());
         rendered.linearRgba = rendered.linearRgba.clone();
         ColorAdjustments::showWeights(rendered.linearRgba, weights);
     }
@@ -3032,9 +3155,10 @@ void ImageEditor::applyLoadedImage(LoadResult loaded)
             emit pointColorsChanged();
             emit geometryChanged();
             emit localMasksChanged();
+    emit retouchesChanged();
             if (!m_pendingLoadIsFreshOpen) scheduleRender();
         }
-        setStatusMessage(tr("Échec du développement de « %1 » : %2")
+        reportError(tr("Échec du développement de « %1 » : %2")
                              .arg(failedName,
                                   loaded.error));
         emit hasImageChanged();
@@ -3102,6 +3226,7 @@ void ImageEditor::applyLoadedImage(LoadResult loaded)
         emit pointColorsChanged();
         emit geometryChanged();
         emit localMasksChanged();
+    emit retouchesChanged();
     }
     if (m_pendingLoadIsFreshOpen) emit hasImageChanged();
     // Freeze only after restoring the incoming image's settings (not old WB).
@@ -3188,14 +3313,14 @@ bool ImageEditor::saveCurrentSidecar()
     if (m_currentFile != m_displayedFile) return false;
     if (m_loadWatcher.isRunning()) return false;
     if (m_sidecarReadOnly) {
-        setStatusMessage(tr("Réglages enregistrés par une version plus récente d'IPR : "
+        reportNewError(tr("Réglages enregistrés par une version plus récente d'IPR : "
                             "ouverts en lecture seule, non sauvegardés."));
         return false;
     }
     if (!Sidecar::write(m_currentFile.toLocalFile(),
                         {m_settings, m_userImageMetadata.value(currentFileKey()), rawDevelopmentRecipe(), m_history}))
     {
-        setStatusMessage(tr("Échec de sauvegarde des réglages .ipr : vérifiez les permissions du dossier."));
+        reportNewError(tr("Échec de sauvegarde des réglages .ipr : vérifiez les permissions du dossier."));
         return false;
     }
     return true;
@@ -3228,12 +3353,12 @@ void ImageEditor::startRender()
     m_renderWatcher.setFuture(m_tasks.submit<RenderResult>(
         QStringLiteral("render"), Tasks::Priority::Interactive,
         [sourceCopy, settings, includeOriginal, pixelScale, resources = m_taskResources, overlay,
-         maskOverlay = m_localMaskOverlay, wholeCanvas](Tasks::Context &) {
+         maskOverlay = m_localMaskOverlay, retouchOverlay = m_retouchOverlay, wholeCanvas](Tasks::Context &) {
             ImageCacheController *controller = &resources->cache;
             const auto admission = controller->acquire({}, SystemMemory::estimateProcessingPeak(sourceCopy.linearRgba.total()), false).result();
             if (!admission.reservation) { RenderResult result; result.error = admission.error; return result; }
             const auto release = qScopeGuard([&] { controller->release(admission.reservation); });
-            return renderPreview(sourceCopy, settings, includeOriginal, pixelScale, &resources->stages, overlay, maskOverlay, wholeCanvas);
+            return renderPreview(sourceCopy, settings, includeOriginal, pixelScale, &resources->stages, overlay, maskOverlay, wholeCanvas, retouchOverlay);
         }).future);
 }
 
@@ -3384,4 +3509,16 @@ void ImageEditor::setStatusMessage(const QString &message)
         return;
     m_statusMessage = message;
     emit statusMessageChanged();
+}
+
+void ImageEditor::reportError(const QString &message)
+{
+    setStatusMessage(message);
+    emit errorReported(message);
+}
+
+void ImageEditor::reportNewError(const QString &message)
+{
+    if (m_statusMessage != message)
+        reportError(message);
 }
