@@ -4,11 +4,18 @@
 
 #include <algorithm>
 #include <cmath>
+#include <cstdint>
 #include <stdexcept>
 
 namespace ipr {
 
 namespace {
+
+// Values taken at once by the loops over the taps: they stay in the first level of the cache,
+// instead of going over a whole row once per tap.
+constexpr int chunkValues = 1024;
+// Under this many values, starting threads costs more than they give.
+constexpr std::int64_t aloneValues = 1 << 16;
 
 // Where a position beyond [0, length) reads, mirrored without repeating the edge.
 int mirrored(int position, int length)
@@ -40,14 +47,18 @@ void blurRow(const float *in, float *out, int width, int channels, const std::ve
     for (int x = 0; x < interiorFirst; ++x)
         bordered(x);
     const int firstValue = interiorFirst * channels, lastValue = interiorLast * channels;
-    for (int v = firstValue; v < lastValue; ++v)
-        out[v] = half[0] * in[v];
-    for (int k = 1; k <= radius; ++k) {
-        const float weight = half[size_t(k)];
-        const int offset = k * channels;
-        const float *before = in - offset, *after = in + offset;
-        for (int v = firstValue; v < lastValue; ++v)
-            out[v] += weight * (before[v] + after[v]);
+    for (int chunk = firstValue; chunk < lastValue; chunk += chunkValues) {
+        const int chunkEnd = std::min(chunk + chunkValues, lastValue);
+        const float centre = half[0];
+        for (int v = chunk; v < chunkEnd; ++v)
+            out[v] = centre * in[v];
+        for (int k = 1; k <= radius; ++k) {
+            const float weight = half[size_t(k)];
+            const int offset = k * channels;
+            const float *before = in - offset, *after = in + offset;
+            for (int v = chunk; v < chunkEnd; ++v)
+                out[v] += weight * (before[v] + after[v]);
+        }
     }
     for (int x = std::max(interiorLast, interiorFirst); x < width; ++x)
         bordered(x);
@@ -82,6 +93,8 @@ Image gaussianBlur(const Image &image, double sigma, int threads)
 
     const int width = image.width(), height = image.height(), channels = image.channels();
     const int radius = int(half.size()) - 1;
+    if (std::int64_t(width) * height * channels < aloneValues)
+        threads = 1;
     Image across = Image::create(image.size(), Depth::F32, channels);
     Image out = Image::create(image.size(), Depth::F32, channels);
     Image &acrossRef = across;
@@ -93,17 +106,25 @@ Image gaussianBlur(const Image &image, double sigma, int threads)
     Image &outRef = out;
     const size_t values = size_t(width) * size_t(channels);
     parallelRows(height, [&](int first, int last) {
+        std::vector<const float *> rows(size_t(radius) * 2 + 1);
         for (int y = first; y < last; ++y) {
             float *target = outRef.mutableRow<float>(y);
             const float *centre = across.row<float>(y);
-            for (size_t v = 0; v < values; ++v)
-                target[v] = half[0] * centre[v];
-            for (int k = 1; k <= radius; ++k) {
-                const float *above = across.row<float>(mirrored(y - k, height));
-                const float *below = across.row<float>(mirrored(y + k, height));
-                const float weight = half[size_t(k)];
-                for (size_t v = 0; v < values; ++v)
-                    target[v] += weight * (above[v] + below[v]);
+            // Asked once per row: the check of row() has no place in the loops over a chunk.
+            for (int k = -radius; k <= radius; ++k)
+                rows[size_t(k + radius)] = across.row<float>(mirrored(y + k, height));
+            for (size_t chunk = 0; chunk < values; chunk += size_t(chunkValues)) {
+                const size_t chunkEnd = std::min(chunk + size_t(chunkValues), values);
+                const float middle = half[0];
+                for (size_t v = chunk; v < chunkEnd; ++v)
+                    target[v] = middle * centre[v];
+                for (int k = 1; k <= radius; ++k) {
+                    const float *above = rows[size_t(radius - k)];
+                    const float *below = rows[size_t(radius + k)];
+                    const float weight = half[size_t(k)];
+                    for (size_t v = chunk; v < chunkEnd; ++v)
+                        target[v] += weight * (above[v] + below[v]);
+                }
             }
         }
     }, threads);
