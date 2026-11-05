@@ -8,6 +8,28 @@ from photo_cfa_tiling import tiled_correct,correct_window,orient_image
 
 
 class PhotoCfaTilingTests(unittest.TestCase):
+    def test_constant_map_matches_scalar_and_varying_map_preserves_context(self):
+        torch.set_num_threads(2);torch.manual_seed(71)
+        model=EdgeProtectedNoisyUNet(4).eval()
+        with torch.no_grad():model.noise_head.weight.normal_(0.,.03)
+        source=np.random.default_rng(42).normal(.2,.01,(67,71)).astype(np.float32)
+        a=np.empty_like(source);b=np.empty_like(source)
+        sigma=np.full_like(source,.01)
+        tiled_correct(model,source,[2,3,1,0],.01,a,core=64,batch=1)
+        tiled_correct(model,source,[2,3,1,0],sigma,b,core=64,batch=1)
+        self.assertTrue(np.array_equal(a,b))
+        sigma*=np.linspace(.5,2,len(source),dtype=np.float32)[:,None]
+        tiled_correct(model,source,[2,3,1,0],sigma,b,core=64,batch=1)
+        pad=((128,189),(128,185))
+        with torch.inference_mode():
+            whole=correct_window(model,np.pad(source,pad,mode='reflect')[None],[2,3,1,0],np.pad(sigma,pad,mode='reflect')[None],'cpu')[0]
+        self.assertLessEqual(float(np.max(np.abs(b-whole[128:195,128:199]))),2e-6)
+        with self.assertRaises(ValueError):
+            tiled_correct(model,source,[2,3,1,0],sigma[:-1],b,core=64)
+        for invalid in (-1.,float('nan')):
+            with self.assertRaises(ValueError):
+                tiled_correct(model,source,[2,3,1,0],np.full_like(sigma,invalid),b,core=64)
+
     def test_odd_extent_zero_noise_and_colour_phase_preserved(self):
         torch.set_num_threads(2)
         model=EdgeProtectedNoisyUNet(4).eval()

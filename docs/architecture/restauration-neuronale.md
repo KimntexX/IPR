@@ -26,9 +26,16 @@ coefficients expérimentaux ; pas de calibration ni de nouveaux poids livrés.
 Le pont rawpy/natif retrouve exactement 27 régions DN connues, avec une
 couverture limitée aux cas contrôlés.
 
-Prochaine preuve : carte sigma locale à poids constants, puis compléter
-le comparateur par la couleur courante après les tons. Les 349 RAW
-inventoriés ne sont pas automatiquement admis à l'apprentissage.
+La carte sigma locale a ensuite été comparée aux deux constantes, avec
+les mêmes poids et RCD. Le raccordement est vérifié (carte constante
+identique au scalaire, image entière rejouée au bit près), mais la
+sensibilité aux graines persiste et aucun bénéfice photo robuste n'est
+établi. Pas de balayage supplémentaire de force sur ces scènes.
+
+Prochaine preuve : courbe d'apprentissage bornée avec bruit caractérisé,
+budget GPU et points de contrôle déclarés ; compléter aussi le classique
+couleur après les tons. Les 349 RAW inventoriés ne sont pas automatiquement
+admis à l'apprentissage.
 Pas de nouvelle acquisition avant examen des noirs/aplats/rafales existants,
 pas de nouvelle micro-variante procédurale sur les mêmes seuils. Le
 [rapport unique](../validation/analyses/analyse-restauration-neuronale.md)

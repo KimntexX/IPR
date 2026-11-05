@@ -11,7 +11,7 @@ Ce bénéfice n'est pas démontré pour le correcteur CFA actuel.
 | Ce qui bloque | Débruitage réel non calibré ; reconstructeur appris différent de RCD ; comparateur neuronal éprouvé manquant ; budget d'entraînement court. |
 | Derniers résultats | Réplication close : 10 et 12 échecs forts sur 48, après les 12 et 16 précédents. Sur les photos, sensibilité aux graines et motifs directionnels : bénéfice non validé. |
 | Calcul engagé | Comparatif réel terminé : trois scènes, neuf régions chacune, deux graines fixées avant lecture des résultats ; DRUNet officiel ajouté. Pas de nouvel ajustement procédural ni d'apprentissage long. |
-| Prochaine preuve utile | Loi de bruit capteur exploratoire mesurée sur 105 paires : nettement plus juste qu'un sigma constant. Tester une carte sigma locale, sans réapprendre ni modifier le moteur ; compléter encore le classique par la couleur après les tons. |
+| Prochaine preuve utile | Carte sigma locale testée à poids constants : entrée physiquement mieux motivée, mais sensibilité aux graines persistante et bénéfice photo non établi. Arrêter les balayages de sigma ; préparer une courbe d'apprentissage bornée avec le bruit caractérisé, et compléter le classique couleur. |
 | GPU | CUDA qualifié sur le calcul courant : erreur CPU/GPU maximale 7,45 × 10⁻⁸ ; essai d'apprentissage jetable à 0,327 s/mise à jour. Environ 9,1 h pour 100 000 mises à jour par graine, hors génération/évaluation. |
 | Données | Auditer rafales, noirs et aplats existants avant de demander de nouvelles prises. Une demi-pile RGB rééchantillonnée n'est pas une vérité CFA. |
 | Critère d'arrêt | Pas de nouvelle série de variantes synthétiques pour améliorer les mêmes seuils. Après une courbe longue figée et un bruit caractérisé, absence de gain visible face au classique : abandon ou changement de taille/architecture, décision documentée. |
@@ -6424,3 +6424,109 @@ La mesure a pris 35,1 secondes ; pic résident échantillonné 122 Mio,
 mémoire physique globale échantillonnée au plus 69,4 %, sous l'arrêt
 à 92 %. Les six tests dédiés couvrent appariement, bruit connu, composante
 fixe, dérive d'éclairage, absence de support et saturation sous le blanc.
+
+## 5 novembre 2026 — carte sigma locale à poids et RCD constants
+
+### Expérience et contrôles de raccordement
+
+La carte locale issue de la loi capteur expérimentale est maintenant
+testée sur les trois photos et les deux graines déjà fixées. Aucun
+apprentissage, changement de poids, réglage de force ou ouverture d'une
+nouvelle réserve. Chaque site Bayer utilise son coefficient de variance,
+son gain réel de balance des blancs et le diviseur de la capture native.
+Les ISO interpolés, la température non caractérisée et les limites des
+paires restent ceux de la campagne précédente.
+
+L'estimation du signal utilise directement les DN décompressés, moins
+le noir effectif de la capture native, ramenés à zéro seulement dans
+le calcul de variance. Aucune moyenne spatiale ni borne arbitraire de
+sigma n'est ajoutée. Les pixels source signés restent inchangés. Les
+cartes suivent la même phase Bayer, réflexion aux bords et tuilage
+256/128 que les mosaïques. L'entrée du modèle est normalisée par deux
+pour les pixels **et** leurs écarts-types, comme dans l'apprentissage.
+
+L'extension scalaire/carte est contrôlée avant l'essai :
+
+- carte constante et scalaire donnent les mêmes valeurs au bit près ;
+- le rejeu complet `0181 / graine 71 / sigma 0,01` retrouve exactement
+  l'empreinte de la précédente image CFA corrigée ;
+- une carte variable sur dimensions impaires retrouve le calcul avec
+  contexte entier à la tolérance inchangée de 2 × 10⁻⁶ ;
+- sur fenêtre réelle, erreur CPU/GPU maximale **4,47 × 10⁻⁸** ;
+- contrôles de carte invalide et d'interpolation hors support : arrêt,
+  sans extrapolation silencieuse.
+
+Les six sorties CFA passent ensuite par le même RCD entier, la même
+orientation et le même profil/affichage gelés. Les anciennes variantes
+constantes et le classique luminance sont réutilisés avec leurs preuves,
+sans nouveau calcul ni sélection. Le classique couleur après les tons
+reste absent ; les planches l'indiquent toujours.
+
+### Résultats descriptifs sur les 27 régions fixes
+
+Le tableau mesure le rapport au neutre du contenu fin affiché, pas
+la précision de débruitage. Pour la chroma, on retire le même flou
+gaussien sigma 1 aux oppositions `R − B` et `G − (R + B)/2`, puis on
+prend la racine de la moyenne de leurs variances, hors bord de huit
+pixels. Il s'agit du sRGB encodé ; bruit et texture restent mêlés.
+
+| Variante | Rapport médian luma fine | Rapport médian chroma fine |
+| --- | ---: | ---: |
+| Neutre RCD | 1,000 | 1,000 |
+| Classique luminance 60, couleur exclue | 0,734 | 0,975 |
+| Graine 71, sigma 0,01 | 0,988 | 0,980 |
+| Graine 71, sigma 0,03 | 0,911 | 0,718 |
+| Graine 71, carte locale | 0,942 | 0,856 |
+| Graine 73, sigma 0,01 | 0,967 | 0,980 |
+| Graine 73, sigma 0,03 | 0,695 | 0,554 |
+| Graine 73, carte locale | 0,764 | 0,682 |
+
+La carte fournit ici un effet global intermédiaire entre les deux
+constantes. La différence RGB médiane entre graines passe de 0,01659
+avec sigma 0,03 à 0,00771 avec la carte, mais reste supérieure aux
+0,00128 de sigma 0,01. **Ces forces ne sont pas équivalentes** : la
+diminution de cet écart ne prouve pas une stabilité acquise. Le bénéfice
+photographique du modèle demeure non établi.
+
+Le comportement varie aussi selon la scène. Sur la végétation 0263,
+les rapports de luma fine sont 0,999 et 0,994 avec la carte, contre
+0,954 et 0,901 avec sigma 0,03. Au niveau CFA, la médiane par région
+de correction RMS divisée par le sigma fourni vaut 0,081 et 0,115,
+contre 0,452 et 0,613 sur 0181. Cela documente une correction plus
+limitée dans cette végétation ; cela ne démontre pas que les détails
+sont mieux préservés, ni que la carte estime parfaitement le bruit.
+
+Sur les régions du vêtement orange, le grain et la texture directionnelle
+restent visibles et les graines diffèrent. Sans référence propre,
+l'origine de chaque motif ne peut pas être attribuée au réseau avec
+certitude. La lecture du banc ne remplace pas le retour visuel utilisateur.
+Les mesures par scène/région et les deltas CFA sont conservés dans la
+[preuve descriptive étendue](../raw/neural-local-sigma-descriptors-v001-20261105T180106Z.json).
+La première version, limitée à la luminance, est conservée ; l'ajout
+de la chroma n'a ni modifié les rendus ni relancé l'inférence.
+
+### Décision et suite
+
+La carte sigma locale est une entrée mieux motivée que les deux seules
+constantes utilisées pour l'exploration photo ; **elle ne suffit pas
+à rendre les poids actuels fiables**. Pas d'intégration en production
+et pas de nouvelle grille de multiplicateurs de sigma sur ces mêmes
+photos. L'étape utile suivante est une courbe d'apprentissage bornée
+avec la loi de bruit caractérisée, initialisations et points de contrôle
+fixés avant lancement, en conservant les régressions connues. Le budget
+GPU devra tenir compte des validations graphiques de l'utilisateur ;
+aucun apprentissage long n'est lancé dans cette étape.
+
+Planche locale :
+`build-patch_neural_restoration/local-sigma-display-v001/comparison.html`.
+Elle présente les deux graines et toutes les régions à 100 %.
+La [preuve d'inférence](../raw/neural-local-sigma-inference-v001-20261105T175732Z.json)
+conserve le plan, les paramètres et empreintes des cartes ainsi que les
+ponts numériques ; la [preuve d'affichage](../raw/neural-local-sigma-display-v001-20261105T175827Z.json)
+décrit le RCD et les PNG communs.
+
+Les six corrections prennent **5,06 à 5,11 s chacune**, hors génération
+de carte, décodage, RCD et affichage. Pic résident échantillonné environ
+1,97 Gio, mémoire engagée 3,21 Gio, pic physique global échantillonné
+78,6 %, sous l'arrêt à 92 %. Les calculs sont terminés, le GPU est
+libéré. Aucune nouvelle photo n'est nécessaire pour préparer cette suite.

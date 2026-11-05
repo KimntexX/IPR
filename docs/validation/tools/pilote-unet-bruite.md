@@ -317,3 +317,31 @@ ne sont pas installés dans l'application ni injectés automatiquement dans
 un modèle. Les tests `test_sensor_noise_math.py` protègent dérive moyenne,
 bruit connu, composante fixe, appariement, manque de support et saturation.
 Les six tests n'attestent pas la qualité physique des acquisitions.
+
+## Comparaison de la carte sigma locale
+
+L'essai conserve les poids et le RCD existants. Avec le Python rawpy
+existant, lancer `prepare_sensor_sigma.py` : le plan et les trois cartes
+sont créés dans `local-sigma-plan-v001`. La loi est expérimentale,
+les ISO interpolés sont déclarés, et aucune force n'est ajustée.
+
+Avec le Python CUDA séparé, `infer_sensor_sigma.py` vérifie la carte
+constante contre le scalaire, CPU contre GPU, puis une image entière
+contre son empreinte précédente, avant les six corrections locales.
+Le tuilage transporte la carte sigma avec les mêmes phases, reflets et
+contextes que la mosaïque. Une carte absente, mal dimensionnée, négative
+ou non finie est refusée.
+
+Avec `.venv-neural/Scripts/python.exe`, `display_local_sigma.py` passe
+les sorties dans le RCD entier et l'affichage commun, sous garde mémoire.
+Il exige au moins 8 Gio libres pour ses buffers. Avec le Python
+Pillow/OpenCV existant, `summarize_local_sigma.py` prépare les planches
+dans `local-sigma-display-v001/comparison.html`, les mesures luma/chroma
+et les corrections CFA normalisées par le sigma fourni. Les PNG et
+poids restent dans le build ; les JSON canoniques sont versionnés.
+
+Comme les autres outils de cette campagne, les chemins internes sont
+explicites et les dossiers de calcul ne sont pas réutilisables. L'extension
+des descripteurs chroma est conservée dans `descriptors-v002.json`, avec
+la première preuve luma intacte. Ces descripteurs mélangent toujours
+texture et bruit et ne remplacent pas une revue visuelle.
