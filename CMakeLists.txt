@@ -94,6 +94,8 @@ set(IPR_ENGINE_SOURCES
     src/core/ColorGrading.cpp
     src/stack/FrameSpool.h
     src/stack/FrameSpool.cpp
+    src/core/Retouch.h
+    src/core/Retouch.cpp
     src/panorama/PanoramaFeatures.h
     src/panorama/PanoramaFeatures.cpp
     src/panorama/PanoramaGeometry.h
@@ -201,6 +203,7 @@ set(IPR_QML_FILES
     src/qml/HistoryModule.qml
     src/qml/GeometryPanel.qml
     src/qml/AssemblePanel.qml
+    src/qml/RetouchPanel.qml
     src/qml/MasksPanel.qml
     src/qml/MaskOverlay.qml
     src/qml/CropOverlay.qml
@@ -404,6 +407,10 @@ if(BUILD_TESTING)
     if(WIN32)
         target_link_libraries(iprPanoramaAudit PRIVATE psapi)
     endif()
+    ipr_add_test(retouchTests tests/retouch_test.cpp)
+    set_tests_properties(retouchTests PROPERTIES LABELS "unit;retouch" TIMEOUT 120)
+    ipr_add_test(editorRetouchTests tests/editor_retouch_test.cpp)
+    set_tests_properties(editorRetouchTests PROPERTIES LABELS "unit;retouch" TIMEOUT 180)
     ipr_add_test(panoramaTests tests/panorama_test.cpp)
     set_tests_properties(panoramaTests PROPERTIES LABELS "unit;panorama" TIMEOUT 180)
     ipr_add_test(stackSessionTests tests/stack_session_test.cpp)
@@ -483,6 +490,12 @@ if(BUILD_TESTING)
         IPR_QML_DIRECTORY="${IPR_SOURCE_ROOT}/qml")
     set_tests_properties(assembleQmlTests PROPERTIES
         LABELS "unit;stack;qml" TIMEOUT 120
+        ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Basic")
+    ipr_add_test(retouchQmlTests tests/retouch_qml_test.cpp)
+    target_compile_definitions(retouchQmlTests PRIVATE
+        IPR_QML_DIRECTORY="${IPR_SOURCE_ROOT}/qml")
+    set_tests_properties(retouchQmlTests PROPERTIES
+        LABELS "unit;retouch;qml" TIMEOUT 120
         ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Basic")
     ipr_add_test(masksQmlTests tests/masks_qml_test.cpp)
     target_compile_definitions(masksQmlTests PRIVATE

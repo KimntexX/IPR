@@ -37,6 +37,27 @@ sur le même objet après une rotation ou un recadrage.
 Les masques appartiennent à leur photo : coller des réglages ou les appliquer à une sélection ne
 les transmet pas. \emph{Réinitialiser les réglages} les retire aussi.
 
+\section{Retirer un objet}
+L’onglet \emph{Retouche} retire ce qui ne doit pas être dans la photo. Ce qui remplace la zone est
+reconstruit, pas retrouvé. La photo d’origine ne change pas : chaque retouche s’enregistre dans son
+compagnon, peut être masquée, modifiée ou retirée, et s’annule comme les autres étapes.
+
+Choisissez une action, réglez la taille du pinceau, puis peignez sur l’image :
+\begin{itemize}
+\item \emph{Effacer} invente la zone à partir de ce qui l’entoure. C’est convaincant sur un ciel ou
+une texture régulière ; regardez le résultat à 100~\% ailleurs.
+\item \emph{Corriger} prend la texture d’un autre endroit, à la lumière des alentours de la zone.
+C’est l’outil d’une poussière ou d’un petit défaut.
+\item \emph{Tampon} copie un autre endroit tel quel.
+\end{itemize}
+Pour \emph{Corriger} et \emph{Tampon}, une source est proposée au premier coup de pinceau ;
+\emph{Déplacer la source} montre une poignée pour en choisir une autre. Si une zone est trop grande
+pour être reconstruite, ou si sa source sort de l’image, l’image reste telle quelle et le message
+l’indique.
+
+Faites le redressement d’abord : comme celle d’un masque, la zone ne suit pas l’image si la géométrie
+change ensuite.
+
 \section{Limites}
 \begin{itemize}
 \item Le bruit de luminance d’un masque est traité après le profil, même en développement signé.

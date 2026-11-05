@@ -43,6 +43,15 @@ recompilé localement. Les traductions restent sur le chantier documentaire déd
 | IHM-CONN-014 | Raccordé et validé par l'utilisateur | Panneau Assembler : voir ci-dessous |
 | IHM-CONN-015 | Raccordé (`v0.5.110-beta`) ; fonctions validées par l'utilisateur, design à revoir | Panneau Masques : voir ci-dessous |
 | IHM-CONN-016 | Raccordé et assemblage validé par l'utilisateur | Mode Panorama de l'onglet Assembler : voir ci-dessous |
+| IHM-CONN-017 | Raccordé sur `patch_ui_object_removal`, à valider | Onglet Retouche : voir ci-dessous |
+
+#### IHM-CONN-017 — onglet Retouche (B3)
+
+Le moteur expose sur `editor` : `retouches` (genre, visibilité, opacité, nombre de coups, source,
+centre), `addRetouch(genre)`, `removeRetouch`, `setRetouchVisible`, `setRetouchOpacity`,
+`setRetouchSource(retouche, décalageX, décalageY)`, `addRetouchStroke(retouche, points, taille,
+contour)`, `retouchOverlay`. `MaskOverlay` reçoit un genre `point` pour la poignée de la source.
+Une retouche sans effet est signalée par `statusMessage`.
 
 #### IHM-CONN-016 — mode Panorama de l'onglet Assembler (B8)
 

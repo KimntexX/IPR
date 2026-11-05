@@ -1,0 +1,30 @@
+{
+  "schema": "ipr-retouch-audit-v001",
+  "created_utc": "2026-11-05T11:30:28.604185+00:00",
+  "commit": "1fe177cd707f371fe5ca440223cfa37564216ec8",
+  "tool": "temporary end-to-end run of the real window, off screen, not kept in the repository",
+  "source": {
+    "name": "_MG_7607.CR2",
+    "sha256": "76be0b48cce0c6a1952dd369362d40cc92f379c25cf12b1a3785e8af422ef474",
+    "width": 5202,
+    "height": 3464
+  },
+  "preview_side": 2048,
+  "memory": "controlled sampler, not this machine's",
+  "milliseconds_until_settled": {
+    "remove_large_zone": 403,
+    "remove_small_spot": 419,
+    "contrast_after": 731,
+    "contrast_back": 404,
+    "saturation_after": 425,
+    "saturation_back": 206,
+    "heal": 437,
+    "clone": 460,
+    "export_tiff_four_retouches": 1404
+  },
+  "preview_against_export_mean_abs_of_255": {
+    "in_the_zone": 11.87,
+    "elsewhere": 1.0
+  },
+  "note": "Times include the gesture debounce and the whole preview render; the retouch's own share is not isolated."
+}
