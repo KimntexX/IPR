@@ -3,8 +3,8 @@
 **Décision :** [ADR-0018](../decisions/ADR-0018-independance-decodage-raw-et-couche-image.md),
 20 octobre 2026, et volonté réaffirmée par l'utilisateur le 5 novembre 2026 : être le plus indépendant
 possible. **État :** O0 commencé, O1 et O2 faits, O3 commencé par le flou gaussien, le 5 novembre 2026, sur une branche locale.
-Le nouveau flou sert le contraste local, le curseur « Flou gaussien », le voile, le grain, le détail, le bruit et la retouche.
-Il reste le dématriçage, le panorama, l'empilement et la géométrie.
+**Plus aucun module n'appelle `cv::GaussianBlur`** : le flou de la couche image sert tous ceux qui floutaient, sur une branche
+locale. Le reste d'OpenCV demeure.
 Suivi : [issue 29](https://github.com/KimntexX/IPR/issues/29).
 Chantier distinct des [décodeurs RAW](roadmap-decodeurs-raw.md), sur sa propre branche durable,
 `patch_image_core`, après le palier E1 de la [refonte d'`ImageEditor`](plan-imageeditor-orchestrateur.md).
@@ -197,6 +197,29 @@ fractionnaires, le rayon pouvait différer d'un pixel de celui d'OpenCV, sans ef
 
 Ces réglages cumulés dépassent déjà 250 ms à l'aperçu avec OpenCV, comme l'utilisateur l'a accepté pour le voile et le bruit de couleur.
 La retouche n'est tenue que par ses propres tests, pas par cet export.
+
+### Derniers flous : dématriçage, géométrie, empilement, panorama
+
+La couche image gagne un sigma par axe, pour l'anticrénelage de la géométrie.
+[Preuve](../validation/raw/image-layer-remaining-modules-v001-20261105.json).
+
+| Mesure | Avec OpenCV | Avec la couche image |
+| --- | --- | --- |
+| Empilement, 8 vues : recalage, écart résiduel de la 1re vue | 175 points, 0,45630 px | 175 points, 0,45631 px |
+| Empilement : bruit restant, vert | 0,350394 | 0,350392 |
+| Empilement : fusion | 16,2 s | 16,9 s |
+| Panorama, 6 vues : écart moyen, pire paire | 1,8459 px, 3,7795 px | identiques au millionième |
+| Panorama : assemblage | 8,1 s | 7,4 s |
+| Export avec échelle 70 et aspect −40 | 1 864 et 984 ms | 1 651 et 924 ms |
+
+- **Le recalage et l'assemblage ne changent pas :** mêmes points, mêmes écarts au millionième près, même cadre.
+- **Les pixels presque pas :** l'export avec géométrie s'écarte de 6 niveaux sur 65 535 au plus, sur moins de 0,07 % des valeurs.
+- **Le dématriçage bouge un peu plus :** jusqu'à 20 niveaux sur 65 535, sur 0,006 % des valeurs au plus. Son poids de zone plate
+  amplifie de minuscules écarts du flou, ce qui reste une hypothèse.
+- **L'empilement aussi, sur de rares pixels :** jusqu'à 213 niveaux dans un extrait éclairci de deux diaphragmes, soit environ 53 à
+  l'exposition réelle, sur 0,06 % des pixels au plus. Le rejet des pixels en mouvement, par seuil, bascule sur quelques pixels. Un
+  extrait de comparaison change de place, car l'outil choisit lui-même les zones les plus texturées.
+- **Une seule mesure de durée par outil :** les écarts de temps ne départagent pas les deux versions.
 
 ## 5. Principes de conception
 
