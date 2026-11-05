@@ -892,6 +892,48 @@ int main(int argc, char **argv)
                     {true, false}, &applied) && !applied.chromaticAberration &&
                     applied.geometry && applied.vignetting,
                "lens toggle applies geometry/vignette independently from CA")) return 1;
+    {
+        // A profile's model works in units of the focal length: the same lens moves a pixel
+        // by what its focal length says, on any sensor. On a ramp, a pixel reads where it comes from.
+        const auto profileWith = [&](const QByteArray &focal) {
+            return QByteArrayLiteral("<rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" "
+                                     "xmlns:crs=\"http://ns.adobe.com/camera-raw-settings/1.0/\">"
+                                     "<rdf:Description crs:Lens=\"Ramp\"><crs:PerspectiveModel crs:FocalLength=\"70\">"
+                                     "<crs:GeometryModel crs:RadialDistortParam1=\"0.35\"") + focal +
+                   QByteArrayLiteral("/></crs:PerspectiveModel></rdf:Description></rdf:RDF>");
+        };
+        cv::Mat ramp(600, 1000, CV_32FC3);
+        for (int y = 0; y < ramp.rows; ++y)
+            for (int x = 0; x < ramp.cols; ++x)
+                ramp.at<cv::Vec3f>(y, x) = cv::Vec3f(float(x) / 1000.0f, 0.5f, 0.5f);
+        const auto movedTo = [&](const QString &path, double focal, double sensor) {
+            CameraProfileEngine::CaptureSettings settings;
+            settings.focalLengthMm = focal;
+            settings.sensorWidthMm = sensor;
+            cv::Mat image = ramp.clone();
+            QString failure;
+            if (!CameraProfileEngine::applyLcp(path, image, settings, &failure, {true, false}))
+                return -1.0;
+            return double(image.at<cv::Vec3f>(300, 900)[0]) * 1000.0;
+        };
+        const auto expected = [](double unit) {
+            const double dx = 400.0 / unit, r2 = dx * dx;
+            return 500.0 + (1.0 + 0.35 * r2) * dx * unit;
+        };
+        const QString rampPath = QDir(lcpDirectory).filePath("ramp.lcp");
+        const QString givenPath = QDir(lcpDirectory).filePath("ramp-given.lcp");
+        if (!check(writeFile(rampPath, profileWith({})) && writeFile(givenPath, profileWith(" crs:FocalLengthX=\"1.5\"")),
+                   "the ramp's profiles should be written"))
+            return 1;
+        if (!check(std::abs(movedTo(rampPath, 70.0, 36.0) - expected(70.0 / 35.0 * 1000.0)) < 0.02,
+                   "a full frame works in units of its focal length")) return 1;
+        if (!check(std::abs(movedTo(rampPath, 70.0, 22.3) - expected(70.0 * 36.0 / 22.3 / 35.0 * 1000.0)) < 0.02,
+                   "a smaller sensor works in units of the equivalent focal length")) return 1;
+        if (!check(std::abs(movedTo(rampPath, 70.0, 0.0) - expected(70.0 / 35.0 * 1000.0)) < 0.02,
+                   "an unknown sensor is taken as a full frame")) return 1;
+        if (!check(std::abs(movedTo(givenPath, 70.0, 22.3) - expected(1.5 * 1000.0)) < 0.02,
+                   "a focal length given by the profile comes first")) return 1;
+    }
     if (!check(CameraProfileEngine::lcpMatchesLens(lcpPath, "Canon", "EOS R6 Mark III", "Canon", "RF 24-70mm F2.8 L IS USM") &&
                     !CameraProfileEngine::lcpMatchesLens(lcpPath, "Other", "Other camera", "Other", "Unknown lens"),
                "saved LCP must remain compatible with camera and lens")) return 1;

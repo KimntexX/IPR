@@ -3,8 +3,10 @@
 État : **plan de préparation**, approuvé comme base par l'utilisateur le
 29 octobre 2026. Chantier distinct du prototype de débruitage d'une image.
 M1, le tampon disque, l'onglet Assembler et le fichier résultat existent
-([analyse](../validation/analyses/analyse-empilement.md)) ; l'ancre de
-M2, le panorama, le HDR et la recette multi-source ne sont pas implémentés.
+([analyse](../validation/analyses/analyse-empilement.md)). M3 et M4, le panorama sur une rangée ou
+plusieurs, existent aussi, validés par l'utilisateur à l'usage ([analyse](../validation/analyses/analyse-panorama.md)) ; ils
+s'alignent sur le bas de la vue. L'ancre de M2, le HDR et la recette multi-source ne sont pas
+implémentés.
 
 ## 1. Périmètre et ordre de réalisation
 

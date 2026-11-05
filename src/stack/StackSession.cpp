@@ -5,19 +5,23 @@
 #include "ColorPipeline.h"
 #include "ImageCacheController.h"
 #include "ImageExporter.h"
+#include "PanoramaJob.h"
 #include "SystemMemory.h"
 
 #include <QDir>
+#include <QElapsedTimer>
 #include <QFileInfo>
 #include <QScopeGuard>
 #include <QThread>
 #include <opencv2/imgproc.hpp>
 
 #include <algorithm>
+#include <vector>
 
 namespace {
 
 constexpr int previewSide = 1600;
+constexpr double inventedWarning = 0.25;  // of a filled panorama, beyond which the message warns
 // The bands held while merging, on top of what a decode needs.
 quint64 mergeBytes() { return StackJob::Request{}.memoryBudgetBytes; }
 
@@ -32,6 +36,30 @@ ColorPipeline::WorkingImage rendered(const cv::Mat &cameraRgb, const CameraProfi
     signal.whiteBalanceApplied = true;
     signal.cameraNeutral = context.cameraNeutral;
     return CameraSignal::render(std::move(signal), context.profilePath, context.options, error);
+}
+
+// Memory set aside against the editor's images, until it is released. 0 with a reason when
+// refused, cancelled or when the memory does not come in time: a job never waits for ever.
+quint64 reserve(ImageCacheController &cache, quint64 bytes, Tasks::Context &context, int patienceMs, QString *refusal)
+{
+    auto cancelToken = std::make_shared<std::atomic_bool>(false);
+    QFuture<ImageCacheController::Admission> waiting = cache.acquire(QString(), bytes, false, cancelToken);
+    QElapsedTimer waited;
+    waited.start();
+    bool tooLong = false;
+    while (!waiting.isFinished()) {
+        if (context.cancelled())
+            cancelToken->store(true);
+        if (!tooLong && waited.elapsed() > patienceMs) {
+            tooLong = true;
+            cancelToken->store(true);
+        }
+        QThread::msleep(20);
+    }
+    const ImageCacheController::Admission admission = waiting.result();
+    if (!admission.reservation && refusal)
+        *refusal = tooLong ? StackSession::tr("Mémoire insuffisante pour le moment : fermez d'autres applications, puis recommencez.") : admission.error;
+    return admission.reservation;
 }
 
 QImage previewOf(const cv::Mat &cameraRgb, const CameraProfileEngine::DcpWorkingContext &context, const ImageMetadata &metadata)
@@ -71,10 +99,8 @@ void StackSession::setStatus(const QString &status)
     emit stateChanged();
 }
 
-void StackSession::start(const QStringList &urls, const QString &reference)
+QStringList StackSession::localFiles(const QStringList &urls) const
 {
-    if (m_running || m_exporting)
-        return;
     QStringList files;
     for (const QString &url : urls) {
         const QString file = ImageExporter::localPath(QUrl(url));
@@ -83,6 +109,14 @@ void StackSession::start(const QStringList &urls, const QString &reference)
     }
     files.removeDuplicates();
     files.sort(Qt::CaseInsensitive);
+    return files;
+}
+
+void StackSession::start(const QStringList &urls, const QString &reference)
+{
+    if (m_running || m_exporting)
+        return;
+    const QStringList files = localFiles(urls);
     if (files.size() < 2 || !m_decoder) {
         setStatus(tr("Sélectionnez au moins deux photos dans le ruban."));
         return;
@@ -98,13 +132,120 @@ void StackSession::start(const QStringList &urls, const QString &reference)
     setStatus(tr("Empilement de %1 photos…").arg(files.size()));
     m_watcher.setFuture(m_tasks.submit<Outcome>(
         QStringLiteral("stack"), Tasks::Priority::Foreground,
-        [files, referenceIndex, decoder = m_decoder, cache = m_cache](Tasks::Context &context) {
-            return compute(context, files, referenceIndex, decoder, cache);
+        [files, referenceIndex, decoder = m_decoder, cache = m_cache, patience = m_reservationPatienceMs](Tasks::Context &context) {
+            return compute(context, files, referenceIndex, decoder, cache, patience);
         }).future);
 }
 
+void StackSession::startPanorama(const QStringList &urls, const QString &projection, const QString &edges)
+{
+    if (m_running || m_exporting)
+        return;
+    const QStringList files = localFiles(urls);
+    if (files.size() < 2 || !m_decoder) {
+        setStatus(tr("Sélectionnez au moins deux photos dans le ruban."));
+        return;
+    }
+    const PanoramaGeometry::Projection chosen =
+        projection == QStringLiteral("cylindrical") ? PanoramaGeometry::Projection::Cylindrical
+        : projection == QStringLiteral("spherical") ? PanoramaGeometry::Projection::Spherical
+        : projection == QStringLiteral("rectilinear") ? PanoramaGeometry::Projection::Rectilinear
+                                                      : PanoramaGeometry::Projection::Automatic;
+    m_running = true;
+    m_progress = 0.0;
+    m_exportedFile = QUrl();
+    emit progressChanged();
+    setStatus(tr("Assemblage de %1 photos en panorama…").arg(files.size()));
+    m_watcher.setFuture(m_tasks.submit<Outcome>(
+        QStringLiteral("stack"), Tasks::Priority::Foreground,
+        [files, chosen, edges, decoder = m_decoder, cache = m_cache, patience = m_reservationPatienceMs](Tasks::Context &context) {
+            return computePanorama(context, files, chosen, edges, decoder, cache, patience);
+        }).future);
+}
+
+StackSession::Outcome StackSession::computePanorama(Tasks::Context &context, const QStringList &files, PanoramaGeometry::Projection projection, const QString &edges,
+                                                    const Decoder &decoder, const std::shared_ptr<ImageCacheController> &cache, int patienceMs)
+{
+    Outcome outcome;
+    const auto stopped = [&context] { return context.cancelled(); };
+    quint64 reservation = 0;
+    const auto release = qScopeGuard([&] {
+        if (cache && reservation)
+            cache->release(reservation);
+    });
+    PanoramaJob::Request request;
+    if (cache) {
+        QString refusal;
+        reservation = reserve(*cache, SystemMemory::estimateDecodePeak(files.first()) + request.memoryBudgetBytes, context, patienceMs, &refusal);
+        if (!reservation) {
+            outcome.cancelled = context.cancelled();
+            outcome.error = refusal.isEmpty() ? tr("Mémoire insuffisante pour le panorama.") : refusal;
+            return outcome;
+        }
+        // The decoding is over: its share gives way to the canvas's, in one reservation. Under
+        // pressure the cache admits nothing while another is held, this job's own included.
+        const quint64 bands = request.memoryBudgetBytes;
+        request.reserveCanvas = [&, bands](quint64 bytes) {
+            cache->release(reservation);
+            QString canvasRefusal;
+            reservation = reserve(*cache, bytes + bands, context, patienceMs, &canvasRefusal);
+            if (!reservation)
+                return canvasRefusal.isEmpty() ? tr("Mémoire insuffisante pour un panorama de cette taille.") : canvasRefusal;
+            return QString();
+        };
+    }
+
+    auto result = std::make_shared<Result>();
+    result->panorama = true;
+    // The photo in the middle of the series speaks for it: profile, balance, metadata.
+    const int middle = int(files.size()) / 2;
+    request.frameCount = int(files.size());
+    request.projection = projection;
+    request.edges = edges == QStringLiteral("fill") ? PanoramaJob::Edges::Fill
+        : edges == QStringLiteral("keep") ? PanoramaJob::Edges::Keep : PanoramaJob::Edges::Crop;
+    request.cancelled = stopped;
+    request.progress = [&context](int done, int total) { context.progress(done, total); };
+    request.frame = [&](int index) {
+        PanoramaJob::Frame frame;
+        Decoded decoded = decoder(files[index], stopped);
+        frame.error = decoded.error;
+        if (!decoded.context) {
+            if (frame.error.isEmpty())
+                frame.error = tr("Aucun profil de couleur pour ce boîtier : le panorama a besoin de son signal.");
+            return frame;
+        }
+        if (index == middle || !result->context) {
+            result->context = decoded.context;
+            result->metadata = decoded.metadata;
+            result->referenceFile = files[index];
+        }
+        frame.focalMm = decoded.metadata.focalLengthMm;
+        frame.sensorWidthMm = decoded.metadata.sensorWidthMm;
+        frame.lensGeometryCorrected = decoded.metadata.lensGeometryApplied;
+        frame.cameraRgb = std::move(decoded.cameraRgb);
+        return frame;
+    };
+    PanoramaJob::Result job = PanoramaJob::run(request);
+    outcome.cancelled = job.cancelled;
+    if (!job.success) {
+        outcome.error = job.error;
+        return outcome;
+    }
+    result->usedFrames = job.usedFrames;
+    result->leftOut = int(files.size()) - job.usedFrames;
+    result->areaKept = job.canvas.area() > 0 ? double(job.kept.area()) / double(job.canvas.area()) : 0.0;
+    result->rows = job.shape.rows;
+    result->filledShare = job.filledShare;
+    result->projection = job.shape.projection == PanoramaGeometry::Projection::Rectilinear ? tr("plane")
+        : job.shape.projection == PanoramaGeometry::Projection::Spherical ? tr("sphérique") : tr("cylindrique");
+    result->cameraRgb = std::move(job.cameraRgb);
+    outcome.preview = previewOf(result->cameraRgb, *result->context, result->metadata);
+    outcome.result = std::move(result);
+    return outcome;
+}
+
 StackSession::Outcome StackSession::compute(Tasks::Context &context, const QStringList &files, int referenceIndex,
-                                            const Decoder &decoder, const std::shared_ptr<ImageCacheController> &cache)
+                                            const Decoder &decoder, const std::shared_ptr<ImageCacheController> &cache, int patienceMs)
 {
     Outcome outcome;
     const auto stopped = [&context] { return context.cancelled(); };
@@ -114,21 +255,13 @@ StackSession::Outcome StackSession::compute(Tasks::Context &context, const QStri
             cache->release(reservation);
     });
     if (cache) {
-        auto cancelToken = std::make_shared<std::atomic_bool>(false);
-        QFuture<ImageCacheController::Admission> waiting =
-            cache->acquire(QString(), SystemMemory::estimateDecodePeak(files.first()) + mergeBytes(), false, cancelToken);
-        while (!waiting.isFinished()) {
-            if (context.cancelled())
-                cancelToken->store(true);
-            QThread::msleep(20);
-        }
-        const ImageCacheController::Admission admission = waiting.result();
-        if (!admission.reservation) {
+        QString refusal;
+        reservation = reserve(*cache, SystemMemory::estimateDecodePeak(files.first()) + mergeBytes(), context, patienceMs, &refusal);
+        if (!reservation) {
             outcome.cancelled = context.cancelled();
-            outcome.error = admission.error.isEmpty() ? tr("Mémoire insuffisante pour l'empilement.") : admission.error;
+            outcome.error = refusal.isEmpty() ? tr("Mémoire insuffisante pour l'empilement.") : refusal;
             return outcome;
         }
-        reservation = admission.reservation;
     }
 
     auto result = std::make_shared<Result>();
@@ -182,8 +315,8 @@ void StackSession::finished()
         outcome.error = QString::fromLocal8Bit(exception.what());
     }
     if (!outcome.result) {
-        setStatus(outcome.error.isEmpty() || outcome.cancelled ? tr("Empilement annulé.")
-                                                               : tr("Échec de l'empilement : %1").arg(outcome.error));
+        setStatus(outcome.error.isEmpty() || outcome.cancelled ? tr("Assemblage annulé.")
+                                                               : tr("Échec de l'assemblage : %1").arg(outcome.error));
         return;
     }
     m_result = outcome.result;
@@ -196,6 +329,18 @@ void StackSession::finished()
     }
     m_progress = 1.0;
     emit progressChanged();
+    if (m_result->panorama) {
+        setStatus(tr("Panorama de %1 photos, %2 rangée(s), projection %3 : %4 × %5 pixels%6. Choisissez un format pour exporter.")
+                      .arg(m_result->usedFrames).arg(m_result->rows).arg(m_result->projection)
+                      .arg(m_result->cameraRgb.cols).arg(m_result->cameraRgb.rows)
+                      .arg((m_result->leftOut > 0 ? tr(", %1 écartée(s)").arg(m_result->leftOut) : QString())
+                           + (m_result->filledShare > 0.0 ? tr(", dont %1 % de pixels inventés").arg(m_result->filledShare * 100.0, 0, 'f', 1) : QString())));
+        if (m_result->filledShare > inventedWarning) {
+            setStatus(tr("Attention : %1 % de cette image sont inventés, ce qui se verra probablement. Recadrez, ou retirez les photos les plus décalées.\n%2")
+                          .arg(m_result->filledShare * 100.0, 0, 'f', 1).arg(m_status));
+        }
+        return;
+    }
     setStatus(tr("%1 photos empilées, %2 % de la surface conservée%3. Choisissez un format pour exporter.")
                   .arg(m_result->usedFrames).arg(qRound(m_result->areaKept * 100.0))
                   .arg((m_result->leftOut > 0 ? tr(", %1 écartée(s)").arg(m_result->leftOut) : QString())
@@ -218,7 +363,8 @@ QUrl StackSession::suggestedExport(const QString &format) const
         return {};
     const QFileInfo info(m_result->referenceFile);
     const QString normalized = ImageExporter::normalizedFormat(format);
-    const QString name = info.completeBaseName() + QStringLiteral("-empilement.") + ImageExporter::suffix(normalized);
+    const QString name = info.completeBaseName() + (m_result->panorama ? QStringLiteral("-panorama.") : QStringLiteral("-empilement."))
+        + ImageExporter::suffix(normalized);
     return QUrl::fromLocalFile(ImageExporter::availablePath(info.dir().filePath(name)));
 }
 
@@ -261,8 +407,11 @@ StackSession::Export StackSession::writeResult(const Result &result, const QStri
         content.calibratedWhite = result.metadata.normalizationWhiteLevel;
         content.colorMatrix = camera.colorMatrix;
         content.illuminant = camera.illuminant;
-        content.provenance = QStringLiteral("IPR stack of %1 frames, reference %2")
+        content.provenance = (result.panorama ? QStringLiteral("IPR panorama of %1 frames, middle %2")
+                                              : QStringLiteral("IPR stack of %1 frames, reference %2"))
                                  .arg(result.usedFrames).arg(QFileInfo(result.referenceFile).fileName());
+        if (result.filledShare > 0.0)
+            content.provenance += QStringLiteral(", %1 % of the pixels invented to fill the edges").arg(result.filledShare * 100.0, 0, 'f', 1);
         outcome = ImageExporter::publishEncoded(target, format, [&](const QString &staged, QString *error) {
             return CameraDng::write(content, staged, error);
         });

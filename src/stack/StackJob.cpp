@@ -1,7 +1,8 @@
 #include "StackJob.h"
 
+#include "FrameSpool.h"
+
 #include <QDir>
-#include <QFile>
 #include <QStorageInfo>
 #include <QTemporaryDir>
 #include <opencv2/imgproc.hpp>
@@ -51,42 +52,6 @@ StackTurbulence::View subjectView(const cv::Mat &frame, const cv::Rect &subject,
         view.pixels = frame(area).clone();
     return view;
 }
-
-// One registered frame on disk, row after row.
-class SpooledFrame
-{
-public:
-    explicit SpooledFrame(const QString &path) : m_file(path) {}
-
-    bool write(const cv::Mat &image, quint64 &written)
-    {
-        if (!m_file.open(QIODevice::WriteOnly | QIODevice::Truncate))
-            return false;
-        const qint64 rowBytes = qint64(image.cols) * qint64(image.elemSize());
-        for (int y = 0; y < image.rows; ++y) {
-            if (m_file.write(reinterpret_cast<const char *>(image.ptr(y)), rowBytes) != rowBytes)
-                return false; // a full disk shows here
-            written += quint64(rowBytes);
-        }
-        m_file.close();
-        return m_file.error() == QFile::NoError && m_file.open(QIODevice::ReadOnly);
-    }
-
-    bool read(const cv::Size &size, int row, int rows, cv::Mat &band)
-    {
-        band.create(rows, size.width, CV_32FC3);
-        const qint64 rowBytes = qint64(size.width) * qint64(band.elemSize());
-        if (!m_file.seek(qint64(row) * rowBytes))
-            return false;
-        for (int y = 0; y < rows; ++y)
-            if (m_file.read(reinterpret_cast<char *>(band.ptr(y)), rowBytes) != rowBytes)
-                return false;
-        return true;
-    }
-
-private:
-    QFile m_file;
-};
 
 cv::Mat proxyOf(const cv::Mat &image)
 {
@@ -252,7 +217,7 @@ Result run(const Request &request)
         result.error = QStringLiteral("Impossible de créer le dossier tampon dans %1.").arg(root);
         return result;
     }
-    std::vector<std::unique_ptr<SpooledFrame>> spool;
+    std::vector<std::unique_ptr<FrameSpool>> spool;
 
     std::vector<cv::Vec2i> spans(size_t(size.height), cv::Vec2i(0, size.width));
     cv::Rect subject;
@@ -265,7 +230,7 @@ Result run(const Request &request)
     const cv::Mat referenceProxy = proxyOf(reference.cameraRgb);
 
     const auto spoolFrame = [&](const cv::Mat &image) {
-        auto file = std::make_unique<SpooledFrame>(scratch.filePath(QStringLiteral("%1.frame").arg(spool.size())));
+        auto file = std::make_unique<FrameSpool>(scratch.filePath(QStringLiteral("%1.frame").arg(spool.size())));
         if (!file->write(image, result.scratchBytes))
             return false;
         spool.push_back(std::move(file));
@@ -406,7 +371,7 @@ Result run(const Request &request)
                               result.commonArea.width + 2 * context, height + 2 * context);
         const cv::Rect readable = wanted & cv::Rect(0, 0, size.width, size.height);
         for (size_t i = 0; i < spool.size(); ++i) {
-            if (!spool[i]->read(size, readable.y, readable.height, rows[i])) {
+            if (!spool[i]->read(size, CV_32FC3, readable.y, readable.height, rows[i])) {
                 result.cameraRgb.release();
                 result.error = QStringLiteral("Lecture impossible dans le dossier tampon.");
                 return result;

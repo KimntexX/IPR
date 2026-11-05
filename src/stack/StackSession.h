@@ -3,6 +3,7 @@
 
 #include "CameraProfileEngine.h"
 #include "ImageMetadata.h"
+#include "PanoramaGeometry.h"
 #include "StackJob.h"
 #include "TaskRunner.h"
 
@@ -18,8 +19,9 @@
 
 class ImageCacheController;
 
-// One stack at a time for the panel: runs it in the background, shows its result and
-// exports it on request. The result stays in memory until it is replaced or discarded.
+// One assembly at a time for the panel, a stack or a panorama: runs it in the background,
+// shows its result and exports it on request. The result stays in memory until it is
+// replaced or discarded.
 class StackSession final : public QObject
 {
     Q_OBJECT
@@ -56,11 +58,17 @@ public:
 
     // urls: the frames, at least two; reference: one of them, the middle one when empty.
     Q_INVOKABLE void start(const QStringList &urls, const QString &reference = {});
+    // urls: the frames, at least two, in any order. projection: "automatic", "cylindrical",
+    // "spherical" or "rectilinear". edges: "crop" to a rectangle full of real pixels, "keep"
+    // the whole canvas with its empty corners, or "fill" them with invented pixels.
+    Q_INVOKABLE void startPanorama(const QStringList &urls, const QString &projection = {}, const QString &edges = {});
     Q_INVOKABLE void cancel();
     // format: "DNG" (the camera signal, editable) or "TIFF" (rendered by the profile).
     Q_INVOKABLE void exportResult(const QUrl &target, const QString &format);
     Q_INVOKABLE QUrl suggestedExport(const QString &format) const;
     Q_INVOKABLE void discard();
+    // How long a job waits for its memory before it gives up and says so.
+    void setReservationPatience(int milliseconds) { m_reservationPatienceMs = milliseconds; }
 
 signals:
     void stateChanged();
@@ -77,6 +85,10 @@ private:
         int leftOut = 0;
         double areaKept = 0.0;
         int sharpestViews = 0;   // of the turbulence pass, 0 when none ran
+        bool panorama = false;
+        int rows = 0;            // of a panorama
+        QString projection;      // of a panorama, as shown to the user
+        double filledShare = 0.0; // of a panorama, the invented part
     };
     struct Outcome
     {
@@ -93,11 +105,14 @@ private:
     };
 
     static Outcome compute(Tasks::Context &context, const QStringList &files, int referenceIndex, const Decoder &decoder,
-                           const std::shared_ptr<ImageCacheController> &cache);
+                           const std::shared_ptr<ImageCacheController> &cache, int patienceMs);
+    static Outcome computePanorama(Tasks::Context &context, const QStringList &files, PanoramaGeometry::Projection projection, const QString &edges,
+                                   const Decoder &decoder, const std::shared_ptr<ImageCacheController> &cache, int patienceMs);
     static Export writeResult(const Result &result, const QString &target, const QString &format);
     void finished();
     void exportFinished();
     void setStatus(const QString &status);
+    QStringList localFiles(const QStringList &urls) const;
 
     Decoder m_decoder;
     std::shared_ptr<ImageCacheController> m_cache;
@@ -113,6 +128,7 @@ private:
     double m_progress = 0.0;
     bool m_running = false;
     bool m_exporting = false;
+    int m_reservationPatienceMs = 120000;
 };
 
 #endif // IPR_STACK_STACKSESSION_H

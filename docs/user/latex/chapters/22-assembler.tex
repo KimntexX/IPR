@@ -33,6 +33,34 @@ partout.
 \end{itemize}
 Un fichier existant n’est jamais remplacé : le nom reçoit un numéro.
 
+\section{Assembler un panorama}
+Choisissez \emph{Panorama} en haut de l’onglet. Les photos prises du même endroit forment
+une seule vue large, sur une rangée, horizontale ou verticale, ou sur plusieurs rangées.
+Cochez-les dans le ruban, dans n’importe quel ordre, puis cliquez sur \emph{Assembler}.
+
+Faites se recouvrir les photos voisines d’un quart à un tiers, et gardez les mêmes réglages
+de prise. Une photo qui ne recouvre aucune autre, ou prise à une autre focale, est écartée, et
+le message le signale.
+
+\begin{itemize}
+\item \emph{Le bas de la vue} sert d’appui : il reste de niveau, et le recadrage coupe plutôt
+par le haut.
+\item \emph{Projection} : \emph{Automatique} choisit selon le champ couvert. \emph{Plane}
+garde les lignes droites sur un champ étroit, \emph{Cylindrique} convient à un long balayage,
+\emph{Sphérique} à un champ large dans les deux sens.
+\item \emph{Bords} : un panorama a rarement des bords droits. \emph{Recadrer} garde le plus
+grand rectangle de pixels réels ; c’est le choix par défaut, rien n’est inventé. \emph{Remplir}
+garde toute la surface et complète les coins avec des pixels inventés à partir du reste de
+l’image. \emph{Laisser vides} garde les coins vides, à recadrer ensuite dans l’onglet Géométrie.
+\end{itemize}
+Le remplissage est convaincant sur le ciel. Sur la roche ou la végétation, regardez le résultat
+à 100~\% : des blocs peuvent être mal placés. Le message de fin indique la part de pixels
+inventés.
+
+À main levée, un premier plan proche se déplace d’une photo à l’autre : les raccords passent
+autant que possible là où cela ne se voit pas, mais tournez plutôt autour de l’appareil que
+de vous-même.
+
 \section{Photographier la Lune}
 Un petit sujet sur un fond vide, comme la Lune, reçoit un traitement de plus. Les
 déformations de l’atmosphère sont corrigées sur le sujet, et seule la moitié la plus
@@ -46,6 +74,8 @@ vues parmi lesquelles choisir.
 \item Les réglages de prise doivent rester les mêmes : l’empilement ne fait pas de HDR.
 \item Un objet proche, photographié à main levée, peut garder un bord un peu mou : il
 ne se déplace pas comme le fond.
-\item Le calcul demande environ 400~Mo de disque temporaire par photo de 32~Mpx.
+\item Le calcul demande environ 400~Mo de disque temporaire par photo de 32~Mpx pour un
+empilement, et le double pour un panorama.
+\item Un panorama ne déforme pas ses bords pour remplir le cadre.
 \item Un profil de couleur pour le boîtier est nécessaire.
 \end{itemize}
