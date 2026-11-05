@@ -193,6 +193,22 @@ int main(int argc, char **argv)
     if (!check(editor.geometry().value("identity").toBool(), "the reset button clears")) return 1;
     if (!check(waitFor([&] { return !editor.busy(); }), "the preview settles")) return 1;
 
+    // The straightening buttons reach the engine; a ramp has no line, and it says so.
+    if (!check(!editor.statusMessage().contains(QStringLiteral("aucune proposition")), "no refusal yet")) return 1;
+    int errors = 0;
+    QObject::connect(&editor, &ImageEditor::errorReported, &editor, [&] { ++errors; });
+    click(visualItemNamed(panel, QStringLiteral("geometryStraightenLevelButton")));
+    if (!check(editor.statusMessage().contains(QStringLiteral("aucune proposition")), "the level button asks the engine")) return 1;
+    if (!check(errors == 1, "a refusal is reported as an error")) return 1;
+    if (!check(editor.geometry().value("identity").toBool(), "a refusal changes nothing")) return 1;
+    for (const char *name : {"geometryStraightenVerticalButton", "geometryStraightenFullButton"}) {
+        QQuickItem *button = visualItemNamed(panel, QString::fromLatin1(name));
+        if (!check(button != nullptr && button->isEnabled(), name)) return 1;
+        click(button);
+        if (!check(editor.geometry().value("identity").toBool(), "a refusal changes nothing")) return 1;
+    }
+    if (!check(errors == 3, "each button reports its refusal")) return 1;
+
     // A slider follows the engine, and the engine follows it.
     QObject *rotation = controlWithLabel(panelObject.data(), QStringLiteral("Rotation"));
     if (!check(rotation != nullptr, "the rotation control exists")) return 1;

@@ -28,6 +28,9 @@ Cette zone contient les documents de référence qui décrivent les composants, 
 - [Réseau Git vertical local](graphe-git-local.md) : `scripts/git_network.py`, page HTML/SVG des branches, fusions et tags, en lecture seule.
 - [Réduction de bruit et netteté](denoising-sharpening.md) : algorithmes, ordre de pipeline, limites IA/GPU et validation attendue.
 - [Préparation B4 neuronale](restauration-neuronale.md) : modèles locaux, contrats RGB/RAW, inventaire matériel et banc proposé ; aucune inférence qualifiée.
+- [Préparation B5 : détection](detection-objets.md) : clic sur un objet, lignes, modèles à évaluer, contrats et validation ; aucun code.
+- [Préparation B9 : fusion HDR](fusion-hdr.md) : fusion radiométrique, DNG flottant, paliers et prises à faire ; aucun code.
+- [`ImageEditor` en orchestrateur](plan-imageeditor-orchestrateur.md) : état mesuré, cible et paliers de la refonte ; aucun code.
 - [Empilement et panorama](empilement-et-panorama.md) : plan multi-images, ancre utilisateur, alignement ciel/sol, recadrage automatique et dossier tampon disque ; non implémenté.
 - [Arborescence des sources](../../src/README.md) : domaines C++/QML et bibliothèque interne `iprEngine`.
 - [Préférences de l’interface](ui-preferences.md) : INI utilisateur, géométrie, sections, couleurs et schéma extensible.

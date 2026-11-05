@@ -11,6 +11,8 @@
 #include <QImage>
 #include <QImageReader>
 #include <QTemporaryDir>
+
+#include <cmath>
 #include <QTimer>
 
 #include <functional>
@@ -56,6 +58,20 @@ QString writeImage(const QString &directory, const QString &name, int width, int
     for (int y = 0; y < height; ++y)
         for (int x = 0; x < width; ++x)
             image.setPixelColor(x, y, QColor(40 + 180 * x / width, 40 + 180 * y / height, 120, 255));
+    const QString path = QDir(directory).filePath(name);
+    return image.save(path, "PNG") ? QFileInfo(path).canonicalFilePath() : QString();
+}
+
+// A horizon leaning by this many degrees, clockwise.
+QString writeHorizon(const QString &directory, const QString &name, double degrees)
+{
+    QImage image(1200, 800, QImage::Format_RGBA8888);
+    const double slope = std::tan(degrees * 3.14159265358979323846 / 180.0);
+    for (int y = 0; y < image.height(); ++y)
+        for (int x = 0; x < image.width(); ++x) {
+            const bool below = y > 400.0 + (x - 600.0) * slope;
+            image.setPixelColor(x, y, below ? QColor(40, 60, 90, 255) : QColor(210, 220, 235, 255));
+        }
     const QString path = QDir(directory).filePath(name);
     return image.save(path, "PNG") ? QFileInfo(path).canonicalFilePath() : QString();
 }
@@ -211,6 +227,57 @@ int main(int argc, char **argv)
     if (!check(editor.geometry().value("identity").toBool(), "invalid commands change nothing")) return 1;
     editor.setGeometryValue(QStringLiteral("scale"), 1000);
     if (!check(editor.geometry().value("scale").toInt() == 150, "values are bounded")) return 1;
+
+    // Straightening proposes from the photo's lines, and says why when it does not.
+    editor.setGeometryValue(QStringLiteral("scale"), 100);
+    if (!check(settled(editor), "the scale is back")) return 1;
+    const QVariantMap before = editor.geometry();
+    QString lastError;
+    int errors = 0;
+    QObject::connect(&editor, &ImageEditor::errorReported, &editor, [&](const QString &message) {
+        ++errors;
+        lastError = message;
+    });
+    editor.proposeStraightening(QStringLiteral("level"));
+    if (!check(errors == 1 && lastError == editor.statusMessage(), "a ramp has no line: refused, and reported")) return 1;
+    if (!check(editor.geometry() == before, "a refusal changes nothing")) return 1;
+    editor.proposeStraightening(QStringLiteral("level"));
+    if (!check(errors == 2, "each refused click is reported")) return 1;
+    if (!check(editor.statusMessage().contains(QStringLiteral("aucune proposition")), "and it says so")) return 1;
+    editor.proposeStraightening(QStringLiteral("nothing"));
+    if (!check(editor.geometry() == before, "an unknown mode does nothing")) return 1;
+    {
+        ImageProvider emptyProvider;
+        ImageEditor empty(&emptyProvider, nullptr, nullptr, controlledMemory);
+        int emptyErrors = 0;
+        QObject::connect(&empty, &ImageEditor::errorReported, &empty, [&] { ++emptyErrors; });
+        empty.proposeStraightening(QStringLiteral("level"));
+        if (!check(emptyErrors == 1, "without a photo: reported")) return 1;
+        if (!check(empty.statusMessage().contains(QStringLiteral("aucune proposition")), "and it says so")) return 1;
+        empty.exportImage(QUrl::fromLocalFile(QStringLiteral("x.png")), QStringLiteral("PNG"), 90);
+        if (!check(emptyErrors == 2, "an export without a photo is reported")) return 1;
+    }
+
+    const QString horizon = writeHorizon(directory.path(), QStringLiteral("horizon.png"), 3.0);
+    const QByteArray horizonBytes = bytesOf(horizon);
+    if (!check(!horizon.isEmpty() && awaitLoad(editor, horizon), "the horizon loads")) return 1;
+    editor.setGeometryValue(QStringLiteral("scale"), 110);
+    const int errorsBefore = errors;
+    editor.proposeStraightening(QStringLiteral("level"));
+    if (!check(errors == errorsBefore, "a horizon gets a proposal, not an error")) return 1;
+    if (!check(settled(editor), "the proposal renders")) return 1;
+    if (!check(std::abs(editor.geometry().value("rotation").toDouble() + 3.0) < 0.1, "the proposal levels it")) return 1;
+    if (!check(editor.geometry().value("scale").toInt() == 110, "the rest of the geometry stays")) return 1;
+    if (!check(editor.statusMessage().contains(QStringLiteral("Redressement proposé")), "and it says what happened")) return 1;
+    if (!check(bytesOf(horizon) == horizonBytes, "the horizon is never written")) return 1;
+    for (const char *mode : {"vertical", "full"}) {
+        editor.resetGeometry();
+        if (!check(settled(editor), "reset before a mode")) return 1;
+        editor.proposeStraightening(QString::fromLatin1(mode));
+        if (!check(settled(editor) && std::abs(editor.geometry().value("rotation").toDouble() + 3.0) < 0.1, mode)) return 1;
+    }
+    editor.resetGeometry();
+    if (!check(settled(editor), "reset")) return 1;
 
     if (!check(bytesOf(photo) == photoBytes, "the photo is never written")) return 1;
     std::cout << "editor geometry: ok\n";

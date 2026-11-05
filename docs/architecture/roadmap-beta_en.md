@@ -1,4 +1,4 @@
-<!-- translation-source: docs/architecture/roadmap-beta.md; sha256: d83f9dc6836a6ba4758fe5006a055b86efdb014e3b625821505d4d3519363656 -->
+<!-- translation-source: docs/architecture/roadmap-beta.md; sha256: 85d3193cc2b1a3e104c0002e68922ca9f38b1ed07b86c70aa063eb1085052dcf -->
 *[Français](roadmap-beta.md) | [English](roadmap-beta_en.md)*
 
 # Beta action plan — editing panels and neural processing
@@ -201,6 +201,8 @@ explicit message, preserved source/edits and no silent download.
 
 ## 8. B5 — Shape and object detection networks
 
+Detailed preparation, in French: [shape and object detection](detection-objets.md).
+
 Provide a shared assistance layer, but distinct tasks and outputs:
 
 | Task | Expected output | Use |
@@ -318,6 +320,8 @@ in parallel. For initial development, create the foundation branch from current
 starts, without duplicating an existing branch.
 
 ## 12. B7/B8/B9 — stacking, panorama and HDR
+
+Detailed preparation of HDR, in French: [HDR merge](fusion-hdr.md).
 
 Added at the user's request on 31 October 2026. Reuse the
 [stacking and panorama plan (French)](empilement-et-panorama.md) as the detailed

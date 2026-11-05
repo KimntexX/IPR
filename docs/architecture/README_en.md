@@ -1,4 +1,4 @@
-<!-- translation-source: docs/architecture/README.md; sha256: 03430aedbf1f92bf62352c4a683f5ebccd1072d27af8a6e32a18d9a7598e6bec -->
+<!-- translation-source: docs/architecture/README.md; sha256: 9643183a07df62f4c760debc4b38974ded4013151608616f3e783c86619c5335 -->
 *[Français](README.md) | [English](README_en.md)*
 
 # Architecture
@@ -28,6 +28,9 @@ This area contains reference documents that describe components, data contracts,
 - [CI and Multiplatform Build](ci-et-build-multiplateforme.md): Windows/macOS/Linux matrix, prerequisites, packaging, and GitHub roadmap.
 - [Denoising and Sharpening](denoising-sharpening_en.md): algorithms, pipeline order, AI/GPU limits, and expected validation.
 - [Neural B4 preparation](restauration-neuronale_en.md): local models, RGB/RAW contracts, host inventory and proposed bench; no qualified inference.
+- [B5 preparation: detection](detection-objets.md): clicking on an object, lines, models to assess, contracts and validation; no code.
+- [B9 preparation: HDR merge](fusion-hdr.md): radiometric merge, floating-point DNG, steps and shots to make; no code.
+- [`ImageEditor` as an orchestrator](plan-imageeditor-orchestrateur.md): measured state, target and steps of the refactoring; no code.
 - [Stacking and panorama](empilement-et-panorama.md): multi-image plan, user anchor, sky/ground alignment, automatic crop and disk scratch directory; not implemented.
 - [Source Tree](../../src/README.md): C++/QML domains and internal `iprEngine` library.
 - [UI Preferences](ui-preferences.md): user INI, geometry, sections, colors, and extensible schema.
