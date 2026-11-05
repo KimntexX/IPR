@@ -315,7 +315,7 @@ int main(int argc,char **argv)
         if (!check(settle(fast) && fastDecodes == 1 && fast.selectedCameraProfile() == neutral,
                    "automatic Camera Neutral is frozen into recipe")) return 1;
         const QImage baseline = fastProvider.originalImage();
-        fast.setBrightness(.75f);
+        fast.setAdjustment(QStringLiteral("brightness"), .75f);
         fast.setColorMixer(1, 12, 13, 14);
         if (!settle(fast)) return 1;
         bool lostImage = false;
@@ -383,7 +383,7 @@ int main(int argc,char **argv)
         optics.loadImage(QUrl::fromLocalFile(opticRaw));
         if (!check(settle(optics) && optics.opticalDevelopmentStatus().contains("test-lens"),
                    "automatic LCP discovered and frozen on first open")) return 1;
-        optics.setBrightness(.5f);
+        optics.setAdjustment(QStringLiteral("brightness"), .5f);
         if (!settle(optics)) return 1;
         const QImage beforeOptics = p.image();
         optics.setLensCorrectionEnabled(false);

@@ -140,7 +140,8 @@ int main(int argc, char **argv)
     if (!check(session.hasResult(), "with a result")) return 1;
     if (!check(session.suggestedExport(QStringLiteral("DNG")).toLocalFile().contains(QStringLiteral("frame5-")), "from the chosen reference")) return 1;
     if (!check(waitFor([&] { return preview->property("status").toInt() == 1; }), "the preview is shown")) return 1;
-    if (!check(preview->isVisible() && preview->height() > 50, "with room for it")) return 1;
+    // The layout follows the loaded image, a turn of the event loop later.
+    if (!check(waitFor([&] { return preview->isVisible() && preview->height() > 50; }), "with room for it")) return 1;
     if (!check(exporter->isVisible() && exporter->isEnabled(), "the export button is ready at the end")) return 1;
     if (!check(exporter->mapToScene(QPointF(0, 0)).y() < preview->mapToScene(QPointF(0, 0)).y(), "above the preview, in view")) return 1;
     if (!check(!opener->isVisible(), "nothing to open yet")) return 1;

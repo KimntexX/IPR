@@ -94,7 +94,7 @@ int main(int argc, char **argv)
     editor.loadImage(QUrl::fromLocalFile(b));
     if (!waitFor(ready) || bCalls != 1) return 4;
     // Changing image resets edits, and returning restores that image's .ipr.
-    editor.setBrightness(.5f);
+    editor.setAdjustment(QStringLiteral("brightness"), .5f);
     if (!waitFor(ready)) return 5;
     editor.loadImage(QUrl::fromLocalFile(a));
     if (!waitFor(ready) || editor.adjustmentValue("brightness") != 0) return 5;

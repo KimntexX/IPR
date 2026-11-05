@@ -79,7 +79,7 @@ int main(int argc, char **argv)
         ImageEditor editor(&provider, nullptr, nullptr, controlledMemory);
         editor.loadImage(url);
         if (!check(waitFor([&] { return editor.hasImage() && !editor.busy(); }), "photo loads")) return 1;
-        editor.setClarity(40);
+        editor.setAdjustment(QStringLiteral("clarity"), 40);
         waitFor([&] { return editor.busy(); }, 1000);
     }
     const auto closedDuringRender = Sidecar::read(photo);

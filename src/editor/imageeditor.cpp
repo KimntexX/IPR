@@ -1,4 +1,5 @@
 #include "imageeditor.h"
+#include "AdjustmentTable.h"
 #include "DetailProcessing.h"
 #include "ColorGrading.h"
 #include "ImageExporter.h"
@@ -1340,25 +1341,17 @@ int ImageEditor::colorGradingValue(int zone, int component) const
          : component == 1 ? m_settings.gradingSaturation[index] : m_settings.gradingLuminance[index];
 }
 
+void ImageEditor::setAdjustment(const QString &name, double value)
+{
+    if (AdjustmentTable::write(m_settings, name, value) == AdjustmentTable::Written::Changed)
+        scheduleRender();
+}
+
 double ImageEditor::adjustmentValue(const QString &name) const
 {
-    if (name == QStringLiteral("brightness")) return m_settings.brightness;
-    if (name == QStringLiteral("contrast")) return m_settings.contrast;
-    if (name == QStringLiteral("blur")) return m_settings.blur;
-    if (name == QStringLiteral("shadows")) return m_settings.shadows;
-    if (name == QStringLiteral("blacks")) return m_settings.blacks;
-    if (name == QStringLiteral("highlights")) return m_settings.highlights;
-    if (name == QStringLiteral("whites")) return m_settings.whites;
-    if (name == QStringLiteral("temperature")) return m_settings.temperature;
-    if (name == QStringLiteral("tint")) return m_settings.tint;
-    if (name == QStringLiteral("vibrance")) return m_settings.vibrance;
-    if (name == QStringLiteral("saturation")) return m_settings.saturation;
-    if (name == QStringLiteral("texture")) return m_settings.texture;
-    if (name == QStringLiteral("clarity")) return m_settings.clarity;
-    if (name == QStringLiteral("dehaze")) return m_settings.dehaze;
-    if (name == QStringLiteral("grain")) return m_settings.grain;
-    if (name == QStringLiteral("denoiseLuminance")) return m_settings.denoiseLuminance;
-    if (name == QStringLiteral("denoiseChrominance")) return m_settings.denoiseChrominance;
+    double value = 0.0;
+    if (AdjustmentTable::read(m_settings, name, value))
+        return value;
     if (name == QStringLiteral("denoiseAmount")) {
         // -1: a custom pair from the advanced controls, not reachable by one amount.
         DetailProcessing::DenoiseSettings law;
@@ -1367,10 +1360,6 @@ double ImageEditor::adjustmentValue(const QString &name) const
                    ? m_settings.denoiseLuminance : -1.0;
     }
     if (name == QStringLiteral("denoiseBeforeProfile")) return m_settings.denoiseBeforeProfile ? 1.0 : 0.0;
-    if (name == QStringLiteral("sharpeningAmount")) return m_settings.sharpeningAmount;
-    if (name == QStringLiteral("sharpeningRadius")) return m_settings.sharpeningRadius;
-    if (name == QStringLiteral("sharpeningMasking")) return m_settings.sharpeningMasking;
-    if (name == QStringLiteral("grayscale")) return m_settings.grayscale ? 1.0 : 0.0;
     if (name == QStringLiteral("automaticWhiteBalance"))
         return m_settings.automaticWhiteBalance ? 1.0 : 0.0;
     return 0.0;
@@ -1404,151 +1393,6 @@ void ImageEditor::setDecodedImageCacheBudgetBytes(qulonglong budgetBytes)
 }
 
 
-void ImageEditor::setBrightness(float value)
-{
-    value = qBound(-5.00, value, 5.00);
-    if (m_settings.brightness == value)
-        return;
-    m_settings.brightness = value;
-    scheduleRender();
-}
-
-void ImageEditor::setContrast(int value)
-{
-    value = qBound(-100, value, 100);
-    if (m_settings.contrast == value)
-        return;
-    m_settings.contrast = value;
-    scheduleRender();
-}
-
-void ImageEditor::setBlur(int value)
-{
-    value = qBound(0, value, 20);
-    if (m_settings.blur == value)
-        return;
-    m_settings.blur = value;
-    scheduleRender();
-}
-
-void ImageEditor::setGrayscale(bool enabled)
-{
-    if (m_settings.grayscale == enabled)
-        return;
-    m_settings.grayscale = enabled;
-    scheduleRender();
-}
-
-void ImageEditor::setShadows(int value) {
-    value = qBound(-100, value, 100);
-    if (m_settings.shadows == value)
-        return;
-    m_settings.shadows = value;
-    scheduleRender();
-}
-void ImageEditor::setBlacks(int value) {
-    value = qBound(-100, value, 100);
-    if (m_settings.blacks == value)
-        return;
-    m_settings.blacks = value;
-    scheduleRender();
-}
-void ImageEditor::setHighlights(int value) {
-    value = qBound(-100, value, 100);
-    if (m_settings.highlights == value)
-        return;
-    m_settings.highlights = value;
-    scheduleRender();
-}
-void ImageEditor::setWhites(int value) {
-    value = qBound(-100, value, 100);
-    if (m_settings.whites == value)
-        return;
-    m_settings.whites = value;
-    scheduleRender();
-}
-void ImageEditor::setTemperature(int value)
-{
-    value = qBound(2000, value, 50000);
-    if (m_settings.temperature == value)
-        return;
-    m_settings.temperature = value;
-    scheduleRender();
-}
-void ImageEditor::setTint(int value) {
-    value = qBound(-150, value, 150);
-    if (m_settings.tint == value)
-        return;
-    m_settings.tint = value;
-    scheduleRender();
-}
-void ImageEditor::setVibrance(int value)
-{
-    value = qBound(-100, value, 100);
-    if (m_settings.vibrance == value)
-        return;
-    m_settings.vibrance = value;
-    scheduleRender();
-}
-void ImageEditor::setSaturation(int value)
-{
-    value = qBound(-100, value, 100);
-    if (m_settings.saturation == value)
-        return;
-    m_settings.saturation = value;
-    scheduleRender();
-}
-void ImageEditor::setTexture(int value)
-{
-    value = qBound(-100, value, 100);
-    if (m_settings.texture == value)
-        return;
-    m_settings.texture = value;
-    scheduleRender();
-}
-void ImageEditor::setClarity(int value)
-{
-    value = qBound(-100, value, 100);
-    if (m_settings.clarity == value)
-        return;
-    m_settings.clarity = value;
-    scheduleRender();
-}
-void ImageEditor::setDehaze(int value)
-{
-    value = qBound(-100, value, 100);
-    if (m_settings.dehaze == value)
-        return;
-    m_settings.dehaze = value;
-    scheduleRender();
-}
-void ImageEditor::setGrain(int value)
-{
-    value = qBound(0, value, 100);
-    if (m_settings.grain == value)
-        return;
-    m_settings.grain = value;
-    scheduleRender();
-}
-
-void ImageEditor::setDenoiseLuminance(int value)
-{
-    value = qBound(0, value, 100);
-    if (m_settings.denoiseLuminance == value)
-        return;
-    m_settings.denoiseLuminance = value;
-    scheduleRender();
-}
-
-void ImageEditor::setDenoiseChrominance(int value)
-{
-    value = qBound(0, value, 100);
-    if (m_settings.denoiseChrominance == value)
-        return;
-    m_settings.denoiseChrominance = value;
-    scheduleRender();
-}
-
 void ImageEditor::setDenoiseAmount(int value)
 {
     DetailProcessing::DenoiseSettings strengths;
@@ -1574,33 +1418,6 @@ void ImageEditor::setDenoiseBeforeProfile(bool enabled)
         reloadRawDevelopment();
     else
         scheduleRender();
-}
-
-void ImageEditor::setSharpeningAmount(int value)
-{
-    value = qBound(0, value, 200);
-    if (m_settings.sharpeningAmount == value)
-        return;
-    m_settings.sharpeningAmount = value;
-    scheduleRender();
-}
-
-void ImageEditor::setSharpeningRadius(float value)
-{
-    value = qBound(0.3f, value, 3.0f);
-    if (std::abs(m_settings.sharpeningRadius - value) < 0.0001f)
-        return;
-    m_settings.sharpeningRadius = value;
-    scheduleRender();
-}
-
-void ImageEditor::setSharpeningMasking(int value)
-{
-    value = qBound(0, value, 100);
-    if (m_settings.sharpeningMasking == value)
-        return;
-    m_settings.sharpeningMasking = value;
-    scheduleRender();
 }
 
 void ImageEditor::setColorMixer(int band, int hue, int saturation, int luminance)

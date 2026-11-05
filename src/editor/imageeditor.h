@@ -294,34 +294,16 @@ public:
     Q_INVOKABLE void removePointColor(int index);
     int pointColorOverlay() const { return m_pointColorOverlay; }
     void setPointColorOverlay(int index);
+    // A plain adjustment of the recipe, by its name in AdjustmentTable; bounded there.
+    Q_INVOKABLE void setAdjustment(const QString &name, double value);
     Q_INVOKABLE double adjustmentValue(const QString &name) const;
     Q_INVOKABLE void setImageRating(int rating);
     Q_INVOKABLE void setImageColorLabel(const QString &colorLabel);
     Q_INVOKABLE void setImageFlagged(bool flagged);
     Q_INVOKABLE void setDecodedImageCacheBudgetBytes(qulonglong budgetBytes);
-    Q_INVOKABLE void setBrightness(float value);
-    Q_INVOKABLE void setContrast(int value);
-    Q_INVOKABLE void setBlur(int value);
-    Q_INVOKABLE void setShadows(int value);
-    Q_INVOKABLE void setBlacks(int value);
-    Q_INVOKABLE void setHighlights(int value);
-    Q_INVOKABLE void setWhites(int value);
-    Q_INVOKABLE void setTemperature(int value);
-    Q_INVOKABLE void setTint(int value);
-    Q_INVOKABLE void setVibrance(int value);
-    Q_INVOKABLE void setSaturation(int value);
-    Q_INVOKABLE void setTexture(int value);
-    Q_INVOKABLE void setClarity(int value);
-    Q_INVOKABLE void setDehaze(int value);
-    Q_INVOKABLE void setGrain(int value);
-    Q_INVOKABLE void setDenoiseLuminance(int value);
-    Q_INVOKABLE void setDenoiseChrominance(int value);
     // Single noise reduction control: one amount in [0, 100] sets both strengths.
     Q_INVOKABLE void setDenoiseAmount(int value);
     Q_INVOKABLE void setDenoiseBeforeProfile(bool enabled);
-    Q_INVOKABLE void setSharpeningAmount(int value);
-    Q_INVOKABLE void setSharpeningRadius(float value);
-    Q_INVOKABLE void setSharpeningMasking(int value);
     Q_INVOKABLE void setColorMixer(int band, int hue, int saturation,
                                    int luminance);
     Q_INVOKABLE void setColorGrading(int zone, int hue, int saturation);
@@ -329,7 +311,6 @@ public:
     Q_INVOKABLE void setColorGradingBlending(int blending);
     Q_INVOKABLE void setColorGradingBalance(int balance);
     Q_INVOKABLE void setAutomaticWhiteBalance(bool enabled);
-    Q_INVOKABLE void setGrayscale(bool enabled);
     Q_INVOKABLE void setToneCurve(int channel, const QVariantList &points);
     Q_INVOKABLE void resetToneCurve(int channel);
     Q_INVOKABLE void resetToneCurves();

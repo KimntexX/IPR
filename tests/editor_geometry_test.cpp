@@ -185,7 +185,7 @@ int main(int argc, char **argv)
                "the geometry is saved in the sidecar")) return 1;
     if (!check(awaitLoad(editor, other) && editor.geometry().value("identity").toBool(),
                "another photo has its own geometry")) return 1;
-    editor.setContrast(30);
+    editor.setAdjustment(QStringLiteral("contrast"), 30);
     if (!check(settled(editor), "the other photo renders")) return 1;
     editor.copyAdjustments();
     if (!check(awaitLoad(editor, photo) && editor.geometry().value("rotation").toDouble() == 15,
