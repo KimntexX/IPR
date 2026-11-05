@@ -220,12 +220,12 @@ int main(int argc, char **argv)
     if (!check(label(0) == QStringLiteral("Ouverture") && label(1) == QStringLiteral("Contraste"),
                "steps carry the names the panels use")) return 1;
     editor.resetAdjustments();
-    editor.setSaturation(20);
+    editor.setAdjustment(QStringLiteral("saturation"), 20);
     editor.undo();
     editor.undo();
-    editor.setContrast(10);
-    editor.setSaturation(10);
-    editor.setVibrance(10);
+    editor.setAdjustment(QStringLiteral("contrast"), 10);
+    editor.setAdjustment(QStringLiteral("saturation"), 10);
+    editor.setAdjustment(QStringLiteral("vibrance"), 10);
     editor.pasteAdjustments();   // nothing copied: no step
     if (!check(label(editor.historySteps().size() - 1) == QStringLiteral("Vibrance"), "a step names its one field"))
         return 1;
@@ -284,8 +284,8 @@ int main(int argc, char **argv)
         settleLayout();
         if (!check(editor.historySteps().size() == steps - 2 && editor.adjustmentValue(QStringLiteral("vibrance")) == 0,
                    "the Delete key removes the current step")) return 1;
-        editor.setSaturation(10);
-        editor.setVibrance(10);
+        editor.setAdjustment(QStringLiteral("saturation"), 10);
+        editor.setAdjustment(QStringLiteral("vibrance"), 10);
         settleLayout();
     }
 
@@ -328,7 +328,7 @@ int main(int argc, char **argv)
                editor.snapshots().at(0).toMap().value("name").toString() == QStringLiteral("Avant ciel"),
                "the create button takes a snapshot under its name")) return 1;
     const double saved = editor.adjustmentValue(QStringLiteral("contrast"));
-    editor.setContrast(int(saved) - 20);
+    editor.setAdjustment(QStringLiteral("contrast"), int(saved) - 20);
     click(visualItemNamed(history, QStringLiteral("snapshotRestore")));
     if (!check(editor.adjustmentValue(QStringLiteral("contrast")) == saved, "a snapshot's button restores it")) return 1;
     click(visualItemNamed(history, QStringLiteral("snapshotRemove")));
@@ -338,7 +338,7 @@ int main(int argc, char **argv)
     // Optional capture for a visual review (IPR_UI_CAPTURE_DIRECTORY, as the other interface tests).
     const QString captureDirectory = qEnvironmentVariable("IPR_UI_CAPTURE_DIRECTORY");
     if (!captureDirectory.isEmpty()) {
-        for (int step = 0; step < 12; ++step) editor.setClarity(step + 1);
+        for (int step = 0; step < 12; ++step) editor.setAdjustment(QStringLiteral("clarity"), step + 1);
         editor.addSnapshot(QStringLiteral("Avant ciel"));
         editor.addSnapshot(QStringLiteral("Contraste fort"));
 #ifdef Q_OS_WIN
@@ -378,7 +378,7 @@ int main(int argc, char **argv)
     QObject *redoAction = actions->findChild<QObject *>(QStringLiteral("redoAction"));
     if (!check(undoAction && redoAction, "the history actions exist")) return 1;
     const double current = editor.adjustmentValue(QStringLiteral("contrast"));
-    editor.setContrast(int(current) + 5);
+    editor.setAdjustment(QStringLiteral("contrast"), int(current) + 5);
     if (!check(undoAction->property("enabled").toBool(), "undo is offered when a step can be undone")) return 1;
     QMetaObject::invokeMethod(undoAction, "trigger");
     if (!check(editor.adjustmentValue(QStringLiteral("contrast")) == current &&

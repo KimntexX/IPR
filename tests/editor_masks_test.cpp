@@ -1,4 +1,5 @@
 #include "imageeditor.h"
+#include "RenderChain.h"
 #include "CameraSignal.h"
 #include "RecipeCodec.h"
 #include "RenderStageCache.h"
@@ -30,7 +31,7 @@ public:
     static ColorPipeline::WorkingImage render(const ColorPipeline::WorkingImage &source, const Settings &settings,
                                               double pixelScale = 1.0, RenderStageCache *cache = nullptr)
     {
-        return ImageEditor::renderWorkingImage(source, settings, pixelScale, cache);
+        return RenderChain::workingImage(source, settings, pixelScale, cache);
     }
 };
 
@@ -586,7 +587,7 @@ void commands(const QDir &folder)
     const auto saved = Sidecar::read(photo);
     check(saved && saved->settings.localMasks.size() == 2, "the masks are saved in the sidecar");
     check(load(other) && editor.localMasks().isEmpty(), "another photo has its own");
-    editor.setContrast(25);
+    editor.setAdjustment(QStringLiteral("contrast"), 25);
     check(settled(), "the other photo renders");
     editor.copyAdjustments();
     check(load(photo) && editor.localMasks().size() == 2, "reopening a photo restores its masks");

@@ -322,7 +322,7 @@ int main(int argc, char **argv)
         const QString stableText = profileStatus->property("text").toString();
         const qreal stableHeight = profileStatus->height();
         const qreal stableLightY = lightSection->y();
-        editor.setBrightness(width / 1000.0);
+        editor.setAdjustment(QStringLiteral("brightness"), width / 1000.0);
         if (!check(editor.busy() && profileStatus->property("text").toString() == stableText,
                    "processing must not replace the RAW profile description")) return 1;
         settleLayout();
@@ -335,7 +335,7 @@ int main(int argc, char **argv)
                    "finishing a render must preserve profile text and control positions")) return 1;
     }
     panel->setWidth(320);
-    editor.setBrightness(0);
+    editor.setAdjustment(QStringLiteral("brightness"), 0);
     // Point colour: a picked point becomes a selected swatch; removal keeps a valid selection.
     auto *pointModule = root->findChild<QQuickItem *>("pointColorModule");
     for (int attempt = 0; attempt < 100 && editor.busy(); ++attempt) settleLayout();
@@ -443,7 +443,7 @@ int main(int argc, char **argv)
     for (int attempt = 0; attempt < 100 && editor.busy(); ++attempt) settleLayout();
     editor.copyAdjustments();
     if (!check(editor.hasCopiedAdjustments(), "copy must retain a complete settings snapshot")) return 1;
-    editor.setDenoiseLuminance(7); // Editing the source must not change the snapshot.
+    editor.setAdjustment(QStringLiteral("denoiseLuminance"), 7); // Editing the source must not change the snapshot.
     for (int attempt = 0; attempt < 100 && editor.busy(); ++attempt) settleLayout();
     if (!check(awaitLoad(editor, QUrl::fromLocalFile(second)) &&
                noise->property("value").toInt() == 0 && sharp->property("value").toInt() == 0 &&

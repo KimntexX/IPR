@@ -147,9 +147,9 @@ void commands(const QDir &folder)
     check(settled() && editor.retouches().at(0).toMap().value(QStringLiteral("strokes")).toInt() == 1, "a stroke that makes no sense is ignored");
 
     // A setting after it: the retouch goes with the image, and the slider's cache sees it.
-    editor.setContrast(20);
+    editor.setAdjustment(QStringLiteral("contrast"), 20);
     check(settled() && spot() < 170, "another setting keeps the retouch");
-    editor.setContrast(0);
+    editor.setAdjustment(QStringLiteral("contrast"), 0);
     check(settled() && provider.image() == removed, "and comes back to the same pixels");
 
     // Off, undone, redone.
@@ -193,7 +193,7 @@ void commands(const QDir &folder)
     const auto saved = Sidecar::read(photo);
     check(saved && saved->settings.retouches.size() == 2, "retouches are saved in the sidecar");
     check(load(other) && editor.retouches().isEmpty(), "another photo has its own");
-    editor.setContrast(25);
+    editor.setAdjustment(QStringLiteral("contrast"), 25);
     check(settled(), "the other photo renders");
     editor.copyAdjustments();
     check(load(photo) && editor.retouches().size() == 2, "reopening a photo restores its retouches");
@@ -204,7 +204,7 @@ void commands(const QDir &folder)
     // The source is never changed: gone with its retouches, the photo is as it was.
     editor.removeRetouch(1);
     editor.removeRetouch(0);
-    editor.setContrast(0);
+    editor.setAdjustment(QStringLiteral("contrast"), 0);
     check(settled() && editor.retouches().isEmpty(), "they can be removed");
     check(provider.image() == before, "and the photo is as it was");
     QImage file(photo);

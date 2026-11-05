@@ -94,7 +94,7 @@ int main(int argc, char **argv)
 
     // The source: as-shot white balance, some edits.
     if (!check(awaitLoad(editor, source), "source loads")) return 1;
-    editor.setContrast(37);
+    editor.setAdjustment(QStringLiteral("contrast"), 37);
     editor.setColorGrading(3, 40, 20);
     for (const QString &target : {warm, annotated, locked, source})
         editor.setImageSelected(QUrl::fromLocalFile(target), true);
@@ -123,7 +123,7 @@ int main(int argc, char **argv)
     QFile::setPermissions(locked + QStringLiteral(".ipr"), QFileDevice::ReadOwner | QFileDevice::WriteOwner);
 
     // A custom white balance is copied as such.
-    editor.setTemperature(5100);
+    editor.setAdjustment(QStringLiteral("temperature"), 5100);
     editor.clearImageSelection();
     editor.setImageSelected(QUrl::fromLocalFile(warm), true);
     waitFor([&] { return !editor.busy(); });
@@ -132,7 +132,7 @@ int main(int argc, char **argv)
                Sidecar::read(warm)->settings.temperature == 5100, "a custom white balance is copied")) return 1;
 
     // Copy and paste: as shot stays as shot on the target.
-    editor.setTemperature(4500);
+    editor.setAdjustment(QStringLiteral("temperature"), 4500);
     waitFor([&] { return !editor.busy(); });
     editor.copyAdjustments();
     if (!check(awaitLoad(editor, annotated), "paste target loads")) return 1;

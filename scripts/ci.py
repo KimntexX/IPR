@@ -308,6 +308,15 @@ def arch_recipe(output, label):
     return recipe
 
 
+def shipped_runtime_dll(name):
+    """Whether a third-party DLL of a runtime folder belongs in a package: not a debug build of
+    OpenCV, nor its video plugins. IPR uses its core and imgproc modules only."""
+    lowered = name.lower()
+    if not lowered.startswith('opencv_'):
+        return True
+    return not (lowered.startswith('opencv_videoio_') or re.search(r'\dd\.dll$', lowered))
+
+
 def package(build, output, label, mode, env, runtime_dirs, native_format=None, verify_only=False, approval=None, installer=False):
     if installer and (os.name != 'nt' or mode != 'standalone'):
         raise ValueError('Windows installer requires Windows standalone mode')
@@ -324,7 +333,8 @@ def package(build, output, label, mode, env, runtime_dirs, native_format=None, v
             if not runtime_dirs: raise ValueError('Windows standalone requires --runtime-dir for third-party DLLs')
             for directory in runtime_dirs:
                 for dll in Path(directory).glob('*.dll'):
-                    shutil.copy2(dll, stage / 'bin' / dll.name)
+                    if shipped_runtime_dll(dll.name):
+                        shutil.copy2(dll, stage / 'bin' / dll.name)
         if platform.system() != 'Darwin':
             shutil.copytree(stage / 'share/IPR/config', stage / 'bin/config')
             shutil.copytree(stage / 'share/IPR/profiles', stage / 'bin/profiles')

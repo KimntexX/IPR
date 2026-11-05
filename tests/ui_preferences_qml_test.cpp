@@ -478,7 +478,7 @@ int main(int argc, char **argv)
         if (!check(image.save(first) && image.save(second), "navigation fixtures should save")) return 1;
         editor.openImage(QUrl::fromLocalFile(first));
         settleEditor(editor);
-        editor.setBrightness(1);
+        editor.setAdjustment(QStringLiteral("brightness"), 1);
         settleEditor(editor);
         shortcut(Qt::Key_R, Qt::ControlModifier | Qt::ShiftModifier, "R");
         auto *resetConfirmation = root->findChild<QObject *>("resetAdjustmentsDialog");
@@ -493,7 +493,7 @@ int main(int argc, char **argv)
         if (!check(editor.adjustmentValue("brightness") == 0, "confirmed reset must update the engine")) return 1;
         if (!check(!root->findChild<QObject *>("pasteAdjustmentsAction")->property("enabled").toBool(),
                    "paste must be unavailable before copying a recipe")) return 1;
-        editor.setBrightness(.75f);
+        editor.setAdjustment(QStringLiteral("brightness"), .75f);
         settleEditor(editor);
         shortcut(Qt::Key_C, Qt::ControlModifier | Qt::ShiftModifier, "C");
         if (!check(editor.hasCopiedAdjustments(), "copy shortcut must capture current edits")) return 1;

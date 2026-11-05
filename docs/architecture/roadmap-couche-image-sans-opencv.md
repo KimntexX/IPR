@@ -55,14 +55,14 @@ L'indépendance n'est pas qu'un principe. Constaté ces derniers jours :
 
 ## 3. Gains immédiats, sans attendre
 
-**O0 : à faire dès maintenant.**
+**O0 : commencé le 5 novembre 2026, à la demande de l'utilisateur.**
 
-| Action | Gain | Risque |
+| Action | Gain | État |
 | --- | --- | --- |
-| Ne plus copier `opencv_world500d.dll`, version de débogage, ni `opencv_videoio_ffmpeg500_64.dll` dans le paquet | **171 Mo** | Nul : jamais chargées. À vérifier aussi sur les paquets de CI |
-| Retirer `imgcodecs` de `CMakeLists.txt` | Une dépendance | Nul : aucun `imread` ni `imwrite` |
-| Retirer `jpeg`, `png` et `tiff` de `vcpkg.json` | Taille du build | Nul |
-| Construire OpenCV réduit à `core` et `imgproc`, pour remplacer `opencv_world` de 80 Mo | Environ à mesurer | Faible : CI à adapter |
+| Ne plus copier les DLL de débogage ni les modules vidéo d'OpenCV dans le paquet | **172 Mo de DLL en moins ; archive de 122,4 à 74,8 Mo** | Fait sur `patch_image_core` |
+| Retirer `imgcodecs` de `CMakeLists.txt` | Une dépendance | Fait |
+| Retirer `jpeg`, `png` et `tiff` de `vcpkg.json` | Taille du build | Fait |
+| Construire OpenCV réduit à `core` et `imgproc`, pour remplacer `opencv_world` de 80 Mo | À mesurer | À faire : demande une construction propre d'OpenCV sous Windows, et la CI à adapter |
 
 ## 4. Paliers
 

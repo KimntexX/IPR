@@ -21,7 +21,7 @@ option(IPR_BUILD_TOOLS "Build the analysis tools of src/tools" ON)
 
 find_package(Qt6 6.8 REQUIRED COMPONENTS Core Gui Quick Concurrent)
 find_package(TIFF REQUIRED)
-find_package(OpenCV REQUIRED COMPONENTS core imgproc imgcodecs)
+find_package(OpenCV REQUIRED COMPONENTS core imgproc)
 qt_standard_project_setup()
 
 set(IPR_SOURCE_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/src")
@@ -142,6 +142,10 @@ set(IPR_ENGINE_SOURCES
     src/core/VibranceModel.h
     src/editor/imageeditor.h
     src/editor/imageeditor.cpp
+    src/editor/AdjustmentTable.h
+    src/editor/AdjustmentTable.cpp
+    src/editor/RenderChain.h
+    src/editor/RenderChain.cpp
     src/profiles/CameraProfileEngine.h
     src/profiles/CameraProfileEngine.cpp
     src/profiles/PreparedProfileCache.h
@@ -398,6 +402,10 @@ if(BUILD_TESTING)
     set_tests_properties(renderStageCacheTests PROPERTIES LABELS "unit;pipeline;cache" TIMEOUT 120)
     ipr_add_test(vibranceMathTests tests/vibrance_math_test.cpp)
     set_tests_properties(vibranceMathTests PROPERTIES LABELS "unit;pipeline;colour")
+    ipr_add_test(adjustmentTableTests tests/adjustment_table_test.cpp)
+    set_tests_properties(adjustmentTableTests PROPERTIES LABELS "unit")
+    ipr_add_test(renderChainTests tests/render_chain_test.cpp)
+    set_tests_properties(renderChainTests PROPERTIES LABELS "unit;pipeline")
     ipr_add_test(lineDetectionTests tests/line_detection_test.cpp)
     set_tests_properties(lineDetectionTests PROPERTIES LABELS "unit;detection")
     ipr_add_test(detailProcessingTests tests/detail_processing_test.cpp)
