@@ -271,8 +271,51 @@ travaille désormais sur des copies neuves.
 - **Sur les modules** : exports à un niveau sur 65 535 au plus, exports neutres identiques, empilement identique au bit près ;
   le panorama garde son cadre, son alignement bouge d'une fraction de pixel par les gradients de ses points.
 - **La vitesse, mesurée sur l'export avant de conclure.** D'abord 29 % plus lent sur le débruitage de la couleur, les autres réglages
-  inchangés. Après réécriture : 9 %. La moyenne en boîte va désormais plus vite qu'OpenCV ; restent le médian 5 x 5, 2,5 à 4,5 fois
-  plus lent, et minimum et maximum, limités par la mémoire.
+  inchangés. Après réécriture : 9 %. La moyenne en boîte va désormais plus vite qu'OpenCV.
+- **Vectorisation vérifiée, et non supposée** (`97b4295`). J'avais attribué la lenteur du médian, du minimum et du maximum à la
+  mémoire sans le mesurer ; l'utilisateur l'a mis en doute à raison. Le rapport du compilateur (`/Qvec-report:2`) montrait ces
+  boucles laissées en scalaire, par crainte d'un recouvrement entre tableaux lus et écrits. Placées dans de petites fonctions sur
+  des pointeurs distincts, elles sont vectorisées ; minimum et maximum parcourent en outre des bandes de colonnes avec un anneau de
+  lignes, comme OpenCV, au lieu de repasser plusieurs fois sur l'image. Sobel va aussi vite qu'OpenCV ou plus, le médian 5 x 5
+  1,2 fois son temps, minimum et maximum 1,2 à 3,5 fois. Résultats inchangés.
+
+### Arithmétique des pixels
+
+Canaux séparés et réunis, produits, quotients, mélanges, bornes, racines, transformations, masques en octets, et les réductions :
+comptage, extrêmes avec leur place, moyenne et écart-type (`93e5ace`).
+[Noyaux](../validation/raw/image-kernel-pixels-v001-20261106.json), [modules](../validation/raw/image-layer-pixels-v001-20261106.json).
+
+- **Contre OpenCV : à un arrondi de flottant près, les réductions identiques.**
+- **Sur les modules** : exports avec réglages à 5 niveaux sur 65 535 au plus, sur 0,07 % des valeurs ; exports neutres à 24 niveaux
+  au plus sur quelques pixels (moins d'un millionième) ; empilement au même bruit à 1e-6 près ; panorama au même cadre, à 7/255 au
+  plus sur 0,2 % des pixels.
+- **Une écriture dans une région à préserver** : là où OpenCV écrivait dans une région d'une image plus grande, le résultat est
+  recopié dans cette région ; la couverture du panorama en dépend.
+
+### Analyse : corrélations, valeurs propres, résolution
+
+Mise en correspondance de blocs, corrélation de phase et sa fenêtre de Hann, vecteurs propres symétriques, Cholesky, valeurs
+singulières, déterminant et rotation la plus proche (`6bfeaa2`) : empilement, panorama, profil de l'appareil, grain.
+[Noyaux](../validation/raw/image-kernel-analysis-v001-20261106.json), [modules](../validation/raw/image-layer-analysis-v001-20261106.json).
+
+- **Fenêtre de Hann identique au bit près ; algèbre linéaire à 1e-14 ; scores de correspondance à 2e-5, aux mêmes pics.** La
+  décomposition en valeurs singulières, par Jacobi, va beaucoup plus vite que celle d'OpenCV, qui calcule une matrice U complète.
+- **Corrélation de phase : un critère changé après mesure, et je le signale.** La tolérance fixée d'avance, 1e-3 pixel contre
+  OpenCV en flottants simples, ne pouvait pas tenir : sur une texture lisse, OpenCV en flottants simples s'écarte de son propre calcul
+  en double de 0,2 à 0,3 pixel, ses hautes fréquences tombant sous la précision du flottant. La couche image calcule en double ; elle
+  rejoint OpenCV en double à 1e-4 pixel sur une texture nette, et reste plus près d'OpenCV en flottants simples que lui-même en double.
+  L'oracle mesure désormais ces deux écarts.
+- **Sur les modules** : exports identiques au bit près ; empilement aux mêmes points et au même bruit, DNG à 38 niveaux au plus sur
+  0,4 % des valeurs ; panorama aux mêmes écarts au dix-millionième, à 11/255 au plus dans l'image, jusqu'à 80/255 dans les bords
+  remplis, que le remplissage invente et où de minuscules écarts d'entrée changent le motif choisi.
+- **La vitesse** : la mise en correspondance est appelée environ 135 000 fois par empilement de 8 vues. Réécrite pour ajouter huit
+  coefficients par passage le long d'une ligne, vectorisée d'après le rapport du compilateur et sans changer l'ordre des sommes, elle
+  va 2 à 5 fois plus vite qu'OpenCV sur les petits blocs et 1,35 fois plus lentement sur les blocs de 65 pixels, où OpenCV passe par
+  une transformée de Fourier. **L'empilement reste environ 40 % plus long** (14,0 et 14,5 s contre 10,0 et 10,5 s, mesures alternées
+  sur une machine chargée) ; l'utilisateur l'a accepté le 5 novembre 2026, l'amélioration viendra plus tard.
+- **Une fausse alerte de mesure.** Un premier essai montrait la Lune d'un empilement assombrie de 13 % : l'outil d'audit lit
+  `config/raw-normalization.json` depuis le dossier courant, et cette mesure était lancée d'ailleurs. Les mesures partent désormais de
+  la racine du dépôt.
 
 ## 5. Principes de conception
 
