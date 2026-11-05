@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <array>
+#include <cstddef>
 #include <cstdint>
 #include <limits>
 #include <stdexcept>
@@ -69,20 +70,32 @@ void sobelInto(const Image &image, Image &out, bool alongX, double scale, int th
         for (int y = first; y < last; ++y) {
             const Three three = rowsAround(image, y);
             const float *source[3] = {three.above, three.here, three.below};
-            // Along each of the three rows first.
+            // Along each of the three rows first; the mirror only at the two edge pixels.
             for (int r = 0; r < 3; ++r) {
                 float *row = rows.data() + size_t(r) * size_t(width) * size_t(channels);
-                for (int x = 0; x < width; ++x) {
+                const float *s = source[r];
+                const auto one = [&](int x) {
                     const int left = beyondEdge(x - 1, width, BlurBorder::Mirror) * channels;
                     const int right = beyondEdge(x + 1, width, BlurBorder::Mirror) * channels;
                     for (int c = 0; c < channels; ++c) {
-                        const float a = source[r][left + c], b = source[r][x * channels + c], d = source[r][right + c];
-                        if (alongX)
-                            row[x * channels + c] = d - a;
-                        else
-                            row[x * channels + c] = unit ? a + b * 2 + d : b * centre + (a + d) * near;
+                        const float a = s[left + c], b = s[x * channels + c], d = s[right + c];
+                        row[x * channels + c] = alongX ? d - a : (unit ? a + b * 2 + d : b * centre + (a + d) * near);
                     }
+                };
+                one(0);
+                const int insideEnd = (width - 1) * channels;
+                if (alongX) {
+                    for (int v = channels; v < insideEnd; ++v)
+                        row[v] = s[v + channels] - s[v - channels];
+                } else if (unit) {
+                    for (int v = channels; v < insideEnd; ++v)
+                        row[v] = s[v - channels] + s[v] * 2 + s[v + channels];
+                } else {
+                    for (int v = channels; v < insideEnd; ++v)
+                        row[v] = s[v] * centre + (s[v - channels] + s[v + channels]) * near;
                 }
+                if (width > 1)
+                    one(width - 1);
             }
             const size_t values = size_t(width) * size_t(channels);
             const float *r0 = rows.data(), *r1 = r0 + values, *r2 = r1 + values;
@@ -225,53 +238,65 @@ void medianInto(const Image &image, Image &out, int side, int threads)
 }
 
 // As OpenCV's normalized box filter for floats: running sums in double along each row, then down
-// each column from the top, scaled at the end. Columns are spread over threads, rows never: a
-// running sum restarted mid-column would round otherwise.
+// each column from the top, scaled at the end. Bands of columns go to threads; each walks down
+// the image once, keeping the row sums of its window in a ring that stays in the cache. A row's
+// running sum starts at its band rather than at the row's start, a rounding of 1e-16 in double.
 void boxMeanInto(const Image &image, Image &out, int width, int height, BlurBorder border, int threads)
 {
     checkFloats(image, out);
     if (width < 1 || height < 1)
         throw std::invalid_argument("The box has a size");
-    const int columns = image.width(), rowsCount = image.height(), channels = image.channels();
+    const int columns = image.width(), rows = image.height(), channels = image.channels();
     const int left = width / 2, top = height / 2;
-    const size_t values = size_t(columns) * size_t(channels);
-    std::vector<double> sums(values * size_t(rowsCount));
-    parallelRows(rowsCount, [&](int first, int last) {
-        for (int y = first; y < last; ++y) {
-            const float *in = image.row<float>(y);
-            double *row = sums.data() + values * size_t(y);
-            for (int c = 0; c < channels; ++c) {
-                const auto at = [&](int x) { return double(in[beyondEdge(x - left, columns, border) * channels + c]); };
-                double s = 0.0;
-                for (int k = 0; k < width; ++k)
-                    s += at(k);
-                row[c] = s;
-                for (int x = 1; x < columns; ++x) {
-                    s += at(x + width - 1) - at(x - 1);
-                    row[size_t(x) * size_t(channels) + size_t(c)] = s;
-                }
-            }
-        }
-    }, threads);
     const double scale = 1.0 / (double(width) * double(height));
-    const auto sourceRow = [&](int y) { return sums.data() + values * size_t(beyondEdge(y - top, rowsCount, border)); };
+    constexpr int bandColumns = 256;
+    const int bands = (columns + bandColumns - 1) / bandColumns;
     Image &target = out;
-    const int chunks = int((values + 255) / 256);
-    parallelRows(chunks, [&](int first, int last) {
-        const size_t begin = size_t(first) * 256, end = std::min(values, size_t(last) * 256);
-        std::vector<double> sum(end - begin, 0.0);
-        for (int k = 0; k < height - 1; ++k) {
-            const double *entering = sourceRow(k);
-            for (size_t v = begin; v < end; ++v)
-                sum[v - begin] += entering[v];
-        }
-        for (int y = 0; y < rowsCount; ++y) {
-            const double *entering = sourceRow(y + height - 1), *leaving = sourceRow(y);
-            float *row = target.mutableRow<float>(y);
-            for (size_t v = begin; v < end; ++v) {
-                const double s = sum[v - begin] + entering[v];
-                row[v] = float(s * scale);
-                sum[v - begin] = s - leaving[v];
+    parallelRows(bands, [&](int firstBand, int lastBand) {
+        for (int band = firstBand; band < lastBand; ++band) {
+            const int x0 = band * bandColumns, x1 = std::min(columns, x0 + bandColumns), bandWidth = x1 - x0;
+            const size_t bandValues = size_t(bandWidth) * size_t(channels);
+            // The band's columns of a row, extended by the window, and their running sums.
+            std::vector<double> extended(size_t(bandWidth + width - 1) * size_t(channels));
+            std::vector<double> ring(bandValues * size_t(height));
+            std::vector<double> sum(bandValues, 0.0);
+            std::vector<int> sources(size_t(bandWidth + width - 1));
+            for (int k = 0; k < bandWidth + width - 1; ++k)
+                sources[size_t(k)] = beyondEdge(x0 + k - left, columns, border) * channels;
+            const auto rowSums = [&](int y, double *row) {
+                const float *in = image.row<float>(beyondEdge(y, rows, border));
+                for (int k = 0; k < bandWidth + width - 1; ++k)
+                    for (int c = 0; c < channels; ++c)
+                        extended[size_t(k) * size_t(channels) + size_t(c)] = double(in[sources[size_t(k)] + c]);
+                for (int c = 0; c < channels; ++c) {
+                    const double *e = extended.data() + c;
+                    double s = 0.0;
+                    for (int k = 0; k < width; ++k)
+                        s += e[size_t(k) * size_t(channels)];
+                    row[c] = s;
+                    for (int x = 1; x < bandWidth; ++x) {
+                        s += e[size_t(x + width - 1) * size_t(channels)] - e[size_t(x - 1) * size_t(channels)];
+                        row[size_t(x) * size_t(channels) + size_t(c)] = s;
+                    }
+                }
+            };
+            // The first height - 1 rows of the first window, summed down.
+            for (int k = 0; k < height - 1; ++k) {
+                double *row = ring.data() + bandValues * size_t(k);
+                rowSums(k - top, row);
+                for (size_t v = 0; v < bandValues; ++v)
+                    sum[v] += row[v];
+            }
+            for (int y = 0; y < rows; ++y) {
+                double *entering = ring.data() + bandValues * size_t((y + height - 1) % height);
+                rowSums(y + height - 1 - top, entering);
+                const double *leaving = ring.data() + bandValues * size_t(y % height);
+                float *row = target.mutableRow<float>(y) + size_t(x0) * size_t(channels);
+                for (size_t v = 0; v < bandValues; ++v) {
+                    const double s = sum[v] + entering[v];
+                    row[v] = float(s * scale);
+                    sum[v] = s - leaving[v];
+                }
             }
         }
     }, threads);
@@ -279,58 +304,104 @@ void boxMeanInto(const Image &image, Image &out, int width, int height, BlurBord
 
 namespace {
 
+// What a window holds beyond the edge: the value that changes nothing, or zero.
+template <typename T, bool Largest>
+T padding(Beyond beyond)
+{
+    if (beyond == Beyond::Zero)
+        return T(0);
+    if constexpr (std::numeric_limits<T>::has_infinity)
+        return Largest ? -std::numeric_limits<T>::infinity() : std::numeric_limits<T>::infinity();
+    else
+        return Largest ? std::numeric_limits<T>::lowest() : std::numeric_limits<T>::max();
+}
+
+// The extreme of every window of `window` lines, the lines `stride` values apart and padded already:
+// line i of the result, its `values` values from `first`, is the extreme of lines i to
+// i + window - 1. Doubling: extremes over 2, 4, 8 lines, each from the last, then two overlapping
+// ones cover the window. Each step is one loop that reads ahead of what it writes.
+template <typename T, bool Largest>
+void slidingExtreme(T *lines, int count, size_t stride, size_t first, size_t values, int window)
+{
+    const auto better = [](T a, T b) { return Largest ? (a < b ? b : a) : (b < a ? b : a); };
+    int span = 1;
+    int reach = count;
+    while (span * 2 <= window) {
+        reach -= span;
+        const size_t offset = size_t(span) * stride;
+        for (int i = 0; i < reach; ++i) {
+            T *line = lines + size_t(i) * stride + first;
+            for (size_t v = 0; v < values; ++v)
+                line[v] = better(line[v], line[v + offset]);
+        }
+        span *= 2;
+    }
+    if (span < window) {
+        const size_t offset = size_t(window - span) * stride;
+        for (int i = 0; i + window <= count; ++i) {
+            T *line = lines + size_t(i) * stride + first;
+            for (size_t v = 0; v < values; ++v)
+                line[v] = better(line[v], line[v + offset]);
+        }
+    }
+}
+
+// Along one padded row, pixels as lines: each step is a single run along the row.
+template <typename T, bool Largest>
+void slidingAlongRow(T *row, int count, int channels, int window)
+{
+    const auto better = [](T a, T b) { return Largest ? (a < b ? b : a) : (b < a ? b : a); };
+    const size_t total = size_t(count) * size_t(channels);
+    int span = 1;
+    size_t reach = total;
+    while (span * 2 <= window) {
+        const size_t offset = size_t(span) * size_t(channels);
+        reach -= offset;
+        for (size_t v = 0; v < reach; ++v)
+            row[v] = better(row[v], row[v + offset]);
+        span *= 2;
+    }
+    if (span < window) {
+        const size_t offset = size_t(window - span) * size_t(channels);
+        const size_t kept = size_t(count - window + 1) * size_t(channels);
+        for (size_t v = 0; v < kept; ++v)
+            row[v] = better(row[v], row[v + offset]);
+    }
+}
+
 template <typename T, bool Largest>
 void extremeInto(const Image &image, Image &out, int width, int height, Beyond beyond, int threads)
 {
     const int columns = image.width(), rows = image.height(), channels = image.channels();
     const int left = width / 2, top = height / 2;
     const size_t values = size_t(columns) * size_t(channels);
-    const auto better = [](T a, T b) { return Largest ? std::max(a, b) : std::min(a, b); };
-    // Along rows into a buffer, then down columns: a rectangle's extreme is separable.
-    std::vector<T> across(values * size_t(rows));
+    const T pad = padding<T, Largest>(beyond);
+    // Rows padded above and below for the second pass; the first fills the rows in between.
+    const int extendedRows = rows + height - 1;
+    std::vector<T> across(values * size_t(extendedRows), pad);
+    const int extendedColumns = columns + width - 1;
     parallelRows(rows, [&](int first, int last) {
+        std::vector<T> line(size_t(extendedColumns) * size_t(channels));
         for (int y = first; y < last; ++y) {
             const T *in = image.row<T>(y);
-            T *row = across.data() + values * size_t(y);
-            for (int x = 0; x < columns; ++x)
-                for (int c = 0; c < channels; ++c) {
-                    bool outside = false;
-                    T value = in[x * channels + c];
-                    for (int k = -left; k < width - left; ++k) {
-                        const int sx = x + k;
-                        if (sx < 0 || sx >= columns) {
-                            outside = true;
-                            continue;
-                        }
-                        value = better(value, in[sx * channels + c]);
-                    }
-                    if (outside && beyond == Beyond::Zero)
-                        value = better(value, T(0));
-                    row[size_t(x) * size_t(channels) + size_t(c)] = value;
-                }
+            std::fill(line.begin(), line.begin() + std::ptrdiff_t(left) * channels, pad);
+            std::copy(in, in + values, line.begin() + std::ptrdiff_t(left) * channels);
+            std::fill(line.begin() + std::ptrdiff_t(left) * channels + std::ptrdiff_t(values), line.end(), pad);
+            slidingAlongRow<T, Largest>(line.data(), extendedColumns, channels, width);
+            std::copy(line.begin(), line.begin() + std::ptrdiff_t(values), across.begin() + std::ptrdiff_t(values) * (y + top));
         }
+    }, threads);
+    // Down the columns, in place, spread over threads by runs of columns.
+    const int chunks = int((values + 1023) / 1024);
+    parallelRows(chunks, [&](int first, int last) {
+        const size_t begin = size_t(first) * 1024, end = std::min(values, size_t(last) * 1024);
+        slidingExtreme<T, Largest>(across.data(), extendedRows, values, begin, end - begin, height);
     }, threads);
     Image &target = out;
     parallelRows(rows, [&](int first, int last) {
-        for (int y = first; y < last; ++y) {
-            T *row = target.mutableRow<T>(y);
-            bool outside = false;
-            for (size_t v = 0; v < values; ++v)
-                row[v] = across[values * size_t(y) + v];
-            for (int k = -top; k < height - top; ++k) {
-                const int sy = y + k;
-                if (sy < 0 || sy >= rows) {
-                    outside = true;
-                    continue;
-                }
-                const T *other = across.data() + values * size_t(sy);
-                for (size_t v = 0; v < values; ++v)
-                    row[v] = better(row[v], other[v]);
-            }
-            if (outside && beyond == Beyond::Zero)
-                for (size_t v = 0; v < values; ++v)
-                    row[v] = better(row[v], T(0));
-        }
+        for (int y = first; y < last; ++y)
+            std::copy(across.begin() + std::ptrdiff_t(values) * y, across.begin() + std::ptrdiff_t(values) * (y + 1),
+                      target.mutableRow<T>(y));
     }, threads);
 }
 
