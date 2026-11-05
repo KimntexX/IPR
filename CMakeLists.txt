@@ -89,6 +89,8 @@ set(IPR_ENGINE_SOURCES
     src/core/Grain.cpp
     src/core/LocalContrast.h
     src/core/LocalContrast.cpp
+    src/image/OpenCvBridge.h
+    src/image/OpenCvBridge.cpp
     src/core/ColorAdjustments.h
     src/core/ColorAdjustments.cpp
     src/core/ColorGrading.h
@@ -238,6 +240,14 @@ foreach(qml_file IN LISTS IPR_QML_FILES)
     set_source_files_properties("${qml_file}" PROPERTIES QT_RESOURCE_ALIAS "${qml_alias}")
 endforeach()
 
+# The image layer: standard C++ only, no Qt and no OpenCV (roadmap-couche-image-sans-opencv.md).
+find_package(Threads REQUIRED)
+add_library(iprImage STATIC src/image/Types.h src/image/Image.h src/image/Image.cpp
+    src/image/Parallel.h src/image/Parallel.cpp src/image/Filters.h src/image/Filters.cpp)
+target_include_directories(iprImage PUBLIC src/image)
+target_link_libraries(iprImage PUBLIC Threads::Threads)
+set_target_properties(iprImage PROPERTIES AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)
+
 add_library(iprEngine STATIC ${IPR_ENGINE_SOURCES})
 qt_add_resources(iprEngine ipr_ui_defaults
     PREFIX "/"
@@ -246,6 +256,7 @@ qt_add_resources(iprEngine ipr_ui_defaults
 target_include_directories(iprEngine PUBLIC ${IPR_INCLUDE_DIRECTORIES})
 target_link_libraries(iprEngine
     PUBLIC
+        iprImage
         Qt6::Core
         Qt6::Gui
         Qt6::Quick
@@ -402,6 +413,25 @@ if(BUILD_TESTING)
     set_tests_properties(renderStageCacheTests PROPERTIES LABELS "unit;pipeline;cache" TIMEOUT 120)
     ipr_add_test(vibranceMathTests tests/vibrance_math_test.cpp)
     set_tests_properties(vibranceMathTests PROPERTIES LABELS "unit;pipeline;colour")
+    # The image layer without Qt: only the standard library, and OpenCV for the way across.
+    add_executable(imageCoreTests tests/image_core_test.cpp)
+    target_link_libraries(imageCoreTests PRIVATE iprImage)
+    add_test(NAME imageCoreTests COMMAND imageCoreTests)
+    set_tests_properties(imageCoreTests PROPERTIES LABELS "unit;image")
+    add_executable(imageFiltersTests tests/image_filters_test.cpp)
+    target_link_libraries(imageFiltersTests PRIVATE iprImage)
+    add_test(NAME imageFiltersTests COMMAND imageFiltersTests)
+    set_tests_properties(imageFiltersTests PROPERTIES LABELS "unit;image")
+    add_executable(iprExportModuleProbe EXCLUDE_FROM_ALL tests/export_module_probe.cpp)
+    target_link_libraries(iprExportModuleProbe PRIVATE iprEngine)
+    add_executable(iprImageKernelOracle tests/image_kernel_oracle.cpp src/image/OpenCvBridge.h src/image/OpenCvBridge.cpp)
+    target_link_libraries(iprImageKernelOracle PRIVATE iprImage ${OpenCV_LIBS})
+    target_include_directories(iprImageKernelOracle PRIVATE ${OpenCV_INCLUDE_DIRS})
+    add_executable(imageBridgeTests tests/image_opencv_bridge_test.cpp src/image/OpenCvBridge.h src/image/OpenCvBridge.cpp)
+    target_link_libraries(imageBridgeTests PRIVATE iprImage ${OpenCV_LIBS})
+    target_include_directories(imageBridgeTests PRIVATE ${OpenCV_INCLUDE_DIRS})
+    add_test(NAME imageBridgeTests COMMAND imageBridgeTests)
+    set_tests_properties(imageBridgeTests PROPERTIES LABELS "unit;image")
     ipr_add_test(adjustmentTableTests tests/adjustment_table_test.cpp)
     set_tests_properties(adjustmentTableTests PROPERTIES LABELS "unit")
     ipr_add_test(renderChainTests tests/render_chain_test.cpp)

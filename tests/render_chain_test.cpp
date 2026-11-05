@@ -1,6 +1,8 @@
 #include "RenderChain.h"
 #include "ToneRecovery.h"
 
+#include <opencv2/imgproc.hpp>
+
 #include <QCoreApplication>
 
 #include <QColorSpace>
@@ -162,6 +164,23 @@ void everyStageActsAndLeavesTheSourceAlone()
     }
 }
 
+// The Effects slider gives half its value as a sigma, in pixels of the full image.
+void theBlurSliderFollowsItsSigma()
+{
+    const WorkingImage source = scene();
+    const WorkingImage plain = RenderChain::workingImage(source, neutral());
+    Settings settings = neutral();
+    settings.blur = 6;
+    const WorkingImage blurred = RenderChain::workingImage(source, settings);
+    cv::Mat expected;
+    cv::GaussianBlur(plain.linearRgba, expected, cv::Size(0, 0), 3.0);
+    check(cv::norm(blurred.linearRgba, expected, cv::NORM_INF) < 1e-5, "the whole image, borders included");
+
+    const WorkingImage half = RenderChain::workingImage(source, settings, 0.5);
+    cv::GaussianBlur(plain.linearRgba, expected, cv::Size(0, 0), 1.5);
+    check(cv::norm(half.linearRgba, expected, cv::NORM_INF) < 1e-5, "the sigma follows the scale");
+}
+
 void theCacheNeverChangesThePixels()
 {
     const WorkingImage source = scene();
@@ -288,6 +307,7 @@ int main(int argc, char **argv)
         aNeutralRecipeHandsBackTheSourceBuffer();
         invalidSourcesRenderNothing();
         everyStageActsAndLeavesTheSourceAlone();
+        theBlurSliderFollowsItsSigma();
         theCacheNeverChangesThePixels();
         retouchesWithoutEffectAreReported();
         cropKeepsWhatItShould();

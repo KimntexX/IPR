@@ -1,6 +1,8 @@
 #include "LocalContrast.h"
 #include "WorkingColorSpace.h"
 
+#include "OpenCvBridge.h"
+
 #include <opencv2/imgproc.hpp>
 
 #include <algorithm>
@@ -78,16 +80,12 @@ cv::Mat blurSigma(const cv::Mat &plane, double sigma)
     if (sigma < 0.25) return plane.clone();
     int factor = 1;
     while (sigma / (2 * factor) >= 2.0) factor *= 2;
-    cv::Mat result;
-    if (factor == 1) {
-        cv::GaussianBlur(plane, result, cv::Size(0, 0), sigma, sigma, cv::BORDER_REFLECT);
-        return result;
-    }
-    cv::Mat small;
+    if (factor == 1)
+        return ipr::gaussianBlurred(plane, sigma, ipr::BlurBorder::MirrorEdge);
+    cv::Mat result, small;
     cv::resize(plane, small, cv::Size(std::max(1, plane.cols / factor), std::max(1, plane.rows / factor)), 0, 0,
                cv::INTER_AREA);
-    cv::GaussianBlur(small, small, cv::Size(0, 0), sigma / factor, sigma / factor, cv::BORDER_REFLECT);
-    cv::resize(small, result, plane.size(), 0, 0, cv::INTER_LINEAR);
+    cv::resize(ipr::gaussianBlurred(small, sigma / factor, ipr::BlurBorder::MirrorEdge), result, plane.size(), 0, 0, cv::INTER_LINEAR);
     return result;
 }
 

@@ -1,6 +1,8 @@
 #include "DetailProcessing.h"
 #include "WorkingColorSpace.h"
 
+#include "OpenCvBridge.h"
+
 #include <opencv2/imgproc.hpp>
 
 #include <algorithm>
@@ -56,7 +58,7 @@ cv::Mat extractLuminance(const cv::Mat &linearRgb)
 float estimateNoiseSigma(const cv::Mat &plane)
 {
     cv::Mat base;
-    cv::GaussianBlur(plane, base, cv::Size(0, 0), 0.8, 0.8, cv::BORDER_REPLICATE);
+    base = ipr::gaussianBlurred(plane, 0.8, ipr::BlurBorder::LastPixel);
     const int step = std::max(1, static_cast<int>(std::sqrt(
         static_cast<double>(plane.total()) / 16384.0)));
     std::vector<float> samples;
@@ -149,11 +151,9 @@ cv::Mat denoiseLuminance(const cv::Mat &plane, const cv::Mat &protectionMap,
         return plane;
 
     cv::Mat fineBase;
-    cv::GaussianBlur(plane, fineBase, cv::Size(0, 0), kFineSigma, kFineSigma,
-                     cv::BORDER_REPLICATE);
+    fineBase = ipr::gaussianBlurred(plane, kFineSigma, ipr::BlurBorder::LastPixel);
     cv::Mat coarseBase;
-    cv::GaussianBlur(fineBase, coarseBase, cv::Size(0, 0), kCoarseSigma, kCoarseSigma,
-                     cv::BORDER_REPLICATE);
+    coarseBase = ipr::gaussianBlurred(fineBase, kCoarseSigma, ipr::BlurBorder::LastPixel);
 
     const float strength = static_cast<float>(std::clamp(amount, 0, 100)) / 100.0f;
     const float fineThreshold = noiseSigma * kLumaThresholdAtMaximum * strength;
@@ -284,7 +284,7 @@ cv::Mat colourEdgeProtection(const cv::Mat &chromaOrange, const cv::Mat &chromaG
     cv::Mat gradient = cv::Mat::zeros(chromaOrange.rows, chromaOrange.cols, CV_32F);
     for (const cv::Mat *plane : {&chromaOrange, &chromaGreen}) {
         cv::Mat smooth, gx, gy;
-        cv::GaussianBlur(*plane, smooth, cv::Size(), edgeSigma, edgeSigma, cv::BORDER_REPLICATE);
+        smooth = ipr::gaussianBlurred(*plane, edgeSigma, ipr::BlurBorder::LastPixel);
         cv::Sobel(smooth, gx, CV_32F, 1, 0);
         cv::Sobel(smooth, gy, CV_32F, 0, 1);
         gradient += gx.mul(gx) + gy.mul(gy);
@@ -333,10 +333,10 @@ void denoiseChrominance(const cv::Mat &luma, cv::Mat *chromaOrange, cv::Mat *chr
             target[x] = std::log2(std::max(source[x], kChromaLogFloor));
     }
     cv::Mat fineGuide, guide, level;
-    cv::GaussianBlur(logLuma, fineGuide, cv::Size(), kFineSigma, kFineSigma, cv::BORDER_REPLICATE);
+    fineGuide = ipr::gaussianBlurred(logLuma, kFineSigma, ipr::BlurBorder::LastPixel);
     const double guideSigma = scaled(kChromaGuideSigma);
-    cv::GaussianBlur(logLuma, guide, cv::Size(), guideSigma, guideSigma, cv::BORDER_REPLICATE);
-    cv::GaussianBlur(guide, level, cv::Size(), kChromaLevelSigma, kChromaLevelSigma, cv::BORDER_REPLICATE);
+    guide = ipr::gaussianBlurred(logLuma, guideSigma, ipr::BlurBorder::LastPixel);
+    level = ipr::gaussianBlurred(guide, kChromaLevelSigma, ipr::BlurBorder::LastPixel);
     const float guideNoise = kChromaGuideNoise * estimateDenoiseSigma(fineGuide);
     const float eps = guideNoise * guideNoise + 1e-12f;
     const cv::Mat colourEdge = colourEdgeProtection(*chromaOrange, *chromaGreen, level,
@@ -441,7 +441,7 @@ void reduceNoiseLocally(cv::Mat &linearRgb, const DenoiseSettings &settings, dou
     if (std::any_of(luminanceValues.cbegin(), luminanceValues.cend(), [](float v) { return v > 0.f; })) {
         const float lumaSigma = estimateDenoiseSigma(luma);
         cv::Mat lumaGuide;
-        cv::GaussianBlur(luma, lumaGuide, cv::Size(), kFineSigma, kFineSigma, cv::BORDER_REPLICATE);
+        lumaGuide = ipr::gaussianBlurred(luma, kFineSigma, ipr::BlurBorder::LastPixel);
         const cv::Mat protection = structureProtection(lumaGuide, lumaSigma);
         for (float value : luminanceValues)
             lumaPlanes.push_back(denoiseLuminance(luma, protection, lumaSigma, int(std::lround(value))));
@@ -546,8 +546,7 @@ void reduceNoise(cv::Mat &linearRgb, const DenoiseSettings &settings, double pix
     if (settings.luminance > 0) {
         const float lumaSigma = estimateDenoiseSigma(luma);
         cv::Mat lumaGuide;
-        cv::GaussianBlur(luma, lumaGuide, cv::Size(), kFineSigma, kFineSigma,
-                         cv::BORDER_REPLICATE);
+        lumaGuide = ipr::gaussianBlurred(luma, kFineSigma, ipr::BlurBorder::LastPixel);
         luma = denoiseLuminance(luma, structureProtection(lumaGuide, lumaSigma),
                                 lumaSigma, settings.luminance);
     }
@@ -571,8 +570,7 @@ void sharpen(cv::Mat &linearRgb, const SharpenSettings &settings, double pixelSc
     const cv::Mat luma = extractLuminance(linearRgb);
     cv::Mat localBase;
     const double radius = std::clamp(static_cast<double>(settings.radius), 0.3, 3.0) * pixelScale;
-    cv::GaussianBlur(luma, localBase, cv::Size(0, 0), radius, radius,
-                     cv::BORDER_REPLICATE);
+    localBase = ipr::gaussianBlurred(luma, radius, ipr::BlurBorder::LastPixel);
     cv::Mat localMinimum, localMaximum;
     const int kernelSize = std::max(3, static_cast<int>(std::ceil(radius * 2.0)) * 2 + 1);
     const cv::Mat kernel = cv::getStructuringElement(cv::MORPH_RECT,

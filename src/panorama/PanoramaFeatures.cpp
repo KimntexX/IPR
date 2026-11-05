@@ -1,5 +1,7 @@
 #include "PanoramaFeatures.h"
 
+#include "OpenCvBridge.h"
+
 #include <opencv2/imgproc.hpp>
 
 #include <algorithm>
@@ -37,9 +39,9 @@ std::vector<cv::Point2f> cornersOf(const cv::Mat &level, int wanted)
     cv::multiply(gradientX, gradientX, xx);
     cv::multiply(gradientY, gradientY, yy);
     cv::multiply(gradientX, gradientY, xy);
-    cv::GaussianBlur(xx, xx, cv::Size(), harrisBlur);
-    cv::GaussianBlur(yy, yy, cv::Size(), harrisBlur);
-    cv::GaussianBlur(xy, xy, cv::Size(), harrisBlur);
+    xx = ipr::gaussianBlurred(xx, harrisBlur, ipr::BlurBorder::Mirror);
+    yy = ipr::gaussianBlurred(yy, harrisBlur, ipr::BlurBorder::Mirror);
+    xy = ipr::gaussianBlurred(xy, harrisBlur, ipr::BlurBorder::Mirror);
 
     cv::Mat response(level.size(), CV_32FC1);
     float strongest = 0.0f;
@@ -98,8 +100,8 @@ void detectOnLevel(const cv::Mat &level, float toImage, const Options &options, 
     const std::vector<cv::Point2f> corners = cornersOf(level, options.cornersPerLevel);
 
     cv::Mat sampled, smooth, gradientX, gradientY;
-    cv::GaussianBlur(level, sampled, cv::Size(), sampleBlur);
-    cv::GaussianBlur(level, smooth, cv::Size(), orientationBlur);
+    sampled = ipr::gaussianBlurred(level, sampleBlur, ipr::BlurBorder::Mirror);
+    smooth = ipr::gaussianBlurred(level, orientationBlur, ipr::BlurBorder::Mirror);
     cv::Sobel(smooth, gradientX, CV_32F, 1, 0);
     cv::Sobel(smooth, gradientY, CV_32F, 0, 1);
 

@@ -1,0 +1,68 @@
+{
+ "question": "What local contrast costs and writes when it blurs with the image layer instead of cv::GaussianBlur",
+ "revision_opencv": "ea0b1a6",
+ "revision_image_layer": "ce32349",
+ "tool": "tests/export_module_probe.cpp, then a comparison of the TIFF files with OpenCV and NumPy",
+ "settings": "texture 50, clarity 30, against neutral; 16-bit TIFF at full resolution",
+ "timing": "median of three exports through the real editor, on a machine busy with other work",
+ "not_covered": "One module, whose blurs at full resolution have sigmas below 4; the preview was not timed.",
+ "photos": [
+  {
+   "photo": "6V1A0007.CR3",
+   "opencv_neutral_ms": 853.3276,
+   "image_layer_neutral_ms": 839.7296,
+   "opencv_effect_ms": 2293.8127,
+   "image_layer_effect_ms": 2349.1597,
+   "neutral_identical": true,
+   "effect_identical": false,
+   "size": [
+    4639,
+    6959
+   ],
+   "largest_difference_16bit_levels": 1,
+   "mean_difference_16bit_levels": 0.000726493652146231,
+   "share_of_values_that_differ": 0.000726493652146231,
+   "share_of_values_differing_by_more_than_one_level": 0.0,
+   "share_of_values_differing_by_more_than_256_levels": 0.0,
+   "mean_change_made_by_the_effect_16bit_levels": 992.0836763901001
+  },
+  {
+   "photo": "6V1A0032.CR3",
+   "opencv_neutral_ms": 824.8907,
+   "image_layer_neutral_ms": 813.333,
+   "opencv_effect_ms": 2195.0673,
+   "image_layer_effect_ms": 2214.1932,
+   "neutral_identical": true,
+   "effect_identical": false,
+   "size": [
+    4639,
+    6959
+   ],
+   "largest_difference_16bit_levels": 1,
+   "mean_difference_16bit_levels": 0.0004432158783248083,
+   "share_of_values_that_differ": 0.0004432158783248083,
+   "share_of_values_differing_by_more_than_one_level": 0.0,
+   "share_of_values_differing_by_more_than_256_levels": 0.0,
+   "mean_change_made_by_the_effect_16bit_levels": 1229.9753622370004
+  },
+  {
+   "photo": "IMG_6858.CR2",
+   "opencv_neutral_ms": 459.4998,
+   "image_layer_neutral_ms": 453.1889,
+   "opencv_effect_ms": 1282.8466,
+   "image_layer_effect_ms": 1263.0449,
+   "neutral_identical": true,
+   "effect_identical": false,
+   "size": [
+    5202,
+    3464
+   ],
+   "largest_difference_16bit_levels": 1,
+   "mean_difference_16bit_levels": 0.0002472845317088027,
+   "share_of_values_that_differ": 0.0002472845317088027,
+   "share_of_values_differing_by_more_than_one_level": 0.0,
+   "share_of_values_differing_by_more_than_256_levels": 0.0,
+   "mean_change_made_by_the_effect_16bit_levels": 268.7944214945975
+  }
+ ]
+}

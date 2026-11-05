@@ -1,5 +1,7 @@
 #include "Geometry.h"
 
+#include "OpenCvBridge.h"
+
 #include <opencv2/imgproc.hpp>
 
 #include <algorithm>
@@ -87,10 +89,7 @@ cv::Mat antialiased(const cv::Mat &image, const Settings &s)
         std::swap(sigmaX, sigmaY);
     if (sigmaX <= 0 && sigmaY <= 0)
         return image;
-    cv::Mat result;
-    // A zero sigma would copy the other: a tiny one leaves its axis as it is.
-    cv::GaussianBlur(image, result, cv::Size(0, 0), std::max(sigmaX, 1e-3), std::max(sigmaY, 1e-3), cv::BORDER_REPLICATE);
-    return result;
+    return ipr::gaussianBlurred(image, sigmaX, sigmaY, ipr::BlurBorder::LastPixel);
 }
 
 cv::Mat resampled(const cv::Mat &image, const Settings &s, Quality quality, int border)

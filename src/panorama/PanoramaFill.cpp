@@ -1,5 +1,7 @@
 #include "PanoramaFill.h"
 
+#include "OpenCvBridge.h"
+
 #include <opencv2/imgproc.hpp>
 
 #include <algorithm>
@@ -535,7 +537,7 @@ Report fill(cv::Mat &image, const cv::Mat &known, const Options &options, const 
         }
     }
     const double waySmoothing = std::max(1.0, double(transition) / 8.0);
-    cv::GaussianBlur(smoothWays, smoothWays, cv::Size(), waySmoothing, waySmoothing, cv::BORDER_REPLICATE);
+    smoothWays = ipr::gaussianBlurred(smoothWays, waySmoothing, ipr::BlurBorder::LastPixel);
     cv::parallel_for_(cv::Range(0, image.rows), [&](const cv::Range &range) {
         for (int y = range.start; y < range.end; ++y) {
             const uchar *inKnown = known.ptr<uchar>(y);

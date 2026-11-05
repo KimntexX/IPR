@@ -1,5 +1,7 @@
 #include "Demosaic.h"
 
+#include "OpenCvBridge.h"
+
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
 
@@ -181,7 +183,7 @@ cv::Mat flatWeight(const cv::Mat &luma)
     const float sigma = haarSigma(luma);
     if (!(sigma > 0.f)) return cv::Mat(luma.size(), CV_32F, cv::Scalar(1.f));
     cv::Mat smooth, gx, gy, gradient;
-    cv::GaussianBlur(luma, smooth, cv::Size(0, 0), 1.0, 1.0, cv::BORDER_REFLECT);
+    smooth = ipr::gaussianBlurred(luma, 1.0, ipr::BlurBorder::MirrorEdge);
     const cv::Mat dx = (cv::Mat_<float>(1, 3) << -0.5f, 0.f, 0.5f), dy = dx.t();
     cv::filter2D(smooth, gx, CV_32F, dx, cv::Point(-1, -1), 0, cv::BORDER_REFLECT);
     cv::filter2D(smooth, gy, CV_32F, dy, cv::Point(-1, -1), 0, cv::BORDER_REFLECT);
