@@ -42,25 +42,6 @@ cv::Mat proxyOf(const cv::Mat &rgba)
     return rgb;
 }
 
-// Square root of the luminance: a step weighs the same in shadows and in lights.
-cv::Mat perceptualLuminance(const cv::Mat &rgb)
-{
-    cv::Mat out(rgb.size(), CV_32FC1);
-    for (int y = 0; y < rgb.rows; ++y) {
-        const auto *in = rgb.ptr<cv::Vec3f>(y);
-        auto *row = out.ptr<float>(y);
-        for (int x = 0; x < rgb.cols; ++x)
-            row[x] = std::sqrt(std::max(0.0f, 0.2627f * in[x][0] + 0.678f * in[x][1] + 0.0593f * in[x][2]));
-    }
-    return out;
-}
-
-std::vector<LineDetection::Segment> linesOf(const cv::Mat &luminance)
-{
-    const cv::Mat continuous = luminance.isContinuous() ? luminance : luminance.clone();
-    return LineDetection::detect({continuous.ptr<float>(), continuous.cols, continuous.rows, std::ptrdiff_t(continuous.step1())});
-}
-
 const char *refusalName(Straightening::Refusal refusal)
 {
     switch (refusal) {
@@ -185,10 +166,9 @@ int main(int argc, char **argv)
         const cv::Size size = rgb.size();
         entry["proxy"] = QJsonArray{size.width, size.height};
 
-        const cv::Mat luminance = perceptualLuminance(rgb);
         QElapsedTimer clock;
         clock.start();
-        const std::vector<LineDetection::Segment> lines = linesOf(luminance);
+        const std::vector<LineDetection::Segment> lines = Straightening::linesOf(rgb);
         const double elapsed = double(clock.nsecsElapsed()) / 1e6;
         detectMs.push_back(elapsed);
         entry["lines"] = int(lines.size());
@@ -206,14 +186,14 @@ int main(int argc, char **argv)
         refused += level.valid() ? 0 : 1;
 
         // A known rotation of the photo itself, read on the same central area.
-        const cv::Mat straightCentre = central(luminance);
-        const auto reference = Straightening::propose(linesOf(straightCentre), straightCentre.size(), {}, Straightening::Mode::Level);
+        const cv::Mat straightCentre = central(rgb);
+        const auto reference = Straightening::propose(Straightening::linesOf(straightCentre), straightCentre.size(), {}, Straightening::Mode::Level);
         QJsonArray known;
         for (const float angle : {-5.0f, -2.0f, -0.5f, 0.5f, 2.0f, 5.0f}) {
             Geometry::Settings turned;
             turned.rotation = angle;
-            const cv::Mat turnedCentre = central(perceptualLuminance(Geometry::warpRgb(rgb, turned, Geometry::Quality::Export)));
-            const auto read = Straightening::propose(linesOf(turnedCentre), turnedCentre.size(), {}, Straightening::Mode::Level);
+            const cv::Mat turnedCentre = central(Geometry::warpRgb(rgb, turned, Geometry::Quality::Export));
+            const auto read = Straightening::propose(Straightening::linesOf(turnedCentre), turnedCentre.size(), {}, Straightening::Mode::Level);
             QJsonObject item{{"angle", double(angle)}, {"refusal", refusalName(read.refusal)}};
             if (read.valid() && reference.valid()) {
                 // The photo leans by the angle more than the reference did, and the proposal answers the opposite.

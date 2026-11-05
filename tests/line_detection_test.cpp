@@ -223,6 +223,28 @@ Straightening::Proposal proposed(const Buffer &image, Straightening::Mode mode, 
     return Straightening::propose(LineDetection::detect(image.image()), {image.width, image.height}, base, mode);
 }
 
+void linesAreReadOnLinearImages()
+{
+    check(Straightening::linesOf({}).empty(), "nothing to read");
+    check(Straightening::linesOf(cv::Mat(64, 64, CV_8UC3, cv::Scalar::all(0))).empty(), "another type");
+    check(Straightening::linesOf(cv::Mat(64, 64, CV_32FC1, cv::Scalar::all(0))).empty(), "one channel");
+
+    for (const int type : {CV_32FC3, CV_32FC4}) {
+        cv::Mat image(300, 400, type, cv::Scalar::all(0.04));
+        image(cv::Rect(0, 150, 400, 150)).setTo(cv::Scalar::all(0.5));
+        const auto lines = Straightening::linesOf(image);
+        check(lines.size() == 1 && std::abs(angleOf(lines[0])) < 0.1, "a level edge");
+    }
+    // A part of an image has its own rows.
+    cv::Mat whole(400, 600, CV_32FC3, cv::Scalar::all(0.04));
+    whole(cv::Rect(0, 200, 600, 200)).setTo(cv::Scalar::all(0.5));
+    const auto lines = Straightening::linesOf(whole(cv::Rect(100, 50, 400, 300)));
+    check(lines.size() == 1 && std::abs(lines[0].y0 - 149.5f) < 0.3f, "at its place in the part");
+    // Below the black, nothing breaks.
+    cv::Mat negative(100, 100, CV_32FC3, cv::Scalar::all(-0.1));
+    check(Straightening::linesOf(negative).empty(), "signed values");
+}
+
 void levelFindsAKnownRotation()
 {
     for (const float truth : {-8.0f, -2.5f, -0.4f, 0.0f, 0.7f, 3.0f, 10.0f}) {
@@ -418,6 +440,7 @@ int main()
         aLargeImageGivesItsOwnCoordinates();
         aStrideIsFollowed();
         itIsDeterministic();
+        linesAreReadOnLinearImages();
         levelFindsAKnownRotation();
         verticalFindsAKnownKeystone();
         fullFindsBothPerspectives();

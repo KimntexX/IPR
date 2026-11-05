@@ -344,6 +344,10 @@ public:
     Q_INVOKABLE void setGeometryConstrain(bool constrain);
     Q_INVOKABLE void resetGeometryCrop();
     Q_INVOKABLE void resetGeometry();
+    // Proposes a rotation, and perspectives if the lines allow them, from the photo's straight
+    // lines: "level", "vertical" or "full". The result goes in the geometry, where it can be
+    // changed or undone; a refusal changes nothing and says why in the status.
+    Q_INVOKABLE void proposeStraightening(const QString &mode);
 
     // The masks' panel. Coordinates: the normalized canvas (LocalAdjustments). Kinds: linear,
     // radial, brush. Combinations: add, subtract, intersect. A bad index does nothing.

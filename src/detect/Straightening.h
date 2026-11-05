@@ -55,6 +55,11 @@ struct Proposal
     bool valid() const { return refusal == Refusal::None; }
 };
 
+// The lines of a linear image, CV_32FC3 or CV_32FC4 (its opacity ignored), read on the square
+// root of the luminance so that a step weighs the same in shadows and in lights. Empty on any
+// other type.
+std::vector<LineDetection::Segment> linesOf(const cv::Mat &image);
+
 // segments: in pixels of a source of this size. base: the geometry in place, whose turns and
 // mirrors stay; only the rotation and the two perspectives are worked out.
 Proposal propose(const std::vector<LineDetection::Segment> &segments, const cv::Size &source,

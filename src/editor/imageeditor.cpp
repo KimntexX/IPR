@@ -20,6 +20,7 @@
 #include "CameraProfileEngine.h"
 #include "imageprovider.h"
 #include "ThumbnailProvider.h"
+#include "Straightening.h"
 
 #include <QDir>
 #include <QDirIterator>
@@ -2218,6 +2219,36 @@ void ImageEditor::resetGeometryCrop()
     next.cropWidth = next.cropHeight = 1;
     next.cropRatio = 0;
     commitGeometry(next);
+}
+
+void ImageEditor::proposeStraightening(const QString &mode)
+{
+    Straightening::Mode chosen = Straightening::Mode::Level;
+    if (mode == QStringLiteral("vertical")) chosen = Straightening::Mode::Vertical;
+    else if (mode == QStringLiteral("full")) chosen = Straightening::Mode::Full;
+    else if (mode != QStringLiteral("level")) return;
+    const ColorPipeline::WorkingImage &source = previewSource();
+    if (source.isNull())
+        return;
+    const Straightening::Proposal proposal = Straightening::propose(
+        Straightening::linesOf(source.linearRgba), source.linearRgba.size(), m_settings.geometry, chosen);
+    switch (proposal.refusal) {
+    case Straightening::Refusal::None:
+        break;
+    case Straightening::Refusal::NotEnoughEvidence:
+        setStatusMessage(tr("Trop peu de lignes pour une correction aussi grande : aucune proposition."));
+        return;
+    case Straightening::Refusal::NoAgreement:
+        setStatusMessage(tr("Les lignes de cette photo ne s'accordent pas : aucune proposition."));
+        return;
+    case Straightening::Refusal::NotEnoughLines:
+    case Straightening::Refusal::InvalidInput:
+        setStatusMessage(tr("Pas assez de lignes droites dans cette photo : aucune proposition."));
+        return;
+    }
+    commitGeometry(Straightening::applied(m_settings.geometry, proposal));
+    setStatusMessage(tr("Redressement proposé d'après %n ligne(s) : à vérifier, il ne connaît pas la scène.", nullptr,
+                        proposal.supportingLines));
 }
 
 void ImageEditor::resetGeometry()

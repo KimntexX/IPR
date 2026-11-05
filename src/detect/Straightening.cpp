@@ -212,6 +212,21 @@ PerspectiveSearch searchPerspective(const std::vector<Line> &lines, const cv::Si
 
 } // namespace
 
+std::vector<LineDetection::Segment> linesOf(const cv::Mat &image)
+{
+    if (image.empty() || (image.type() != CV_32FC3 && image.type() != CV_32FC4))
+        return {};
+    const int channels = image.channels();
+    cv::Mat luminance(image.size(), CV_32FC1);
+    for (int y = 0; y < image.rows; ++y) {
+        const float *in = image.ptr<float>(y);
+        float *out = luminance.ptr<float>(y);
+        for (int x = 0; x < image.cols; ++x, in += channels)
+            out[x] = std::sqrt(std::max(0.0f, 0.2627f * in[0] + 0.678f * in[1] + 0.0593f * in[2]));
+    }
+    return LineDetection::detect({luminance.ptr<float>(), luminance.cols, luminance.rows, std::ptrdiff_t(luminance.step1())});
+}
+
 Proposal propose(const std::vector<LineDetection::Segment> &segments, const cv::Size &source,
                  const Geometry::Settings &base, Mode mode, const Options &options)
 {
