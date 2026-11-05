@@ -154,6 +154,65 @@ void theSizeDoesNotMatterToTheMirror()
     check(std::abs(gaussianBlur(single, 5.0).row<float>(0)[0] - 0.5f) < 1e-5f, "one pixel keeps its value");
 }
 
+// The whole sum written out, for a row: the mirror is what is being checked.
+void theEdgeMirrorRepeatsTheEdge()
+{
+    Image image = Image::create({4, 1}, Depth::F32, 1);
+    const float values[4] = {1.0f, 2.0f, 4.0f, 8.0f};
+    for (int x = 0; x < 4; ++x)
+        image.mutableRow<float>(0)[x] = values[x];
+    const std::vector<float> half = gaussianHalfKernel(1.0);
+    const int radius = int(half.size()) - 1;
+    check(radius == 4, "this sigma reaches past the row");
+    // dcba|abcd|dcba, read at positions -4 to 7.
+    const float reflected[12] = {8, 4, 2, 1, 1, 2, 4, 8, 8, 4, 2, 1};
+    const Image blurred = gaussianBlur(image, 1.0, 1, BlurBorder::MirrorEdge);
+    for (int x = 0; x < 4; ++x) {
+        float expected = half[0] * reflected[x + 4];
+        for (int k = 1; k <= radius; ++k)
+            expected += half[size_t(k)] * (reflected[x + 4 - k] + reflected[x + 4 + k]);
+        check(std::abs(blurred.row<float>(0)[x] - expected) < 1e-5f, "the edge is repeated");
+    }
+    const Image other = gaussianBlur(image, 1.0, 1, BlurBorder::Mirror);
+    check(other.row<float>(0)[0] != blurred.row<float>(0)[0], "the two mirrors differ");
+    // A flat image stays flat whatever the mirror, on every size against the kernel.
+    for (const Size size : {Size{1, 1}, Size{2, 3}, Size{9, 1}, Size{40, 30}}) {
+        Image flat = Image::create(size, Depth::F32, 2);
+        for (int y = 0; y < size.height; ++y)
+            for (int v = 0; v < size.width * 2; ++v)
+                flat.mutableRow<float>(y)[v] = 0.25f;
+        const Image out = gaussianBlur(flat, 6.0, 0, BlurBorder::MirrorEdge);
+        for (int y = 0; y < size.height; ++y)
+            for (int v = 0; v < size.width * 2; ++v)
+                check(std::abs(out.row<float>(y)[v] - 0.25f) < 1e-5f, "flat stays flat");
+    }
+}
+
+void aBufferReceivesTheSamePixels()
+{
+    const Image image = noisy({97, 61}, 3);
+    Image out = Image::create(image.size(), Depth::F32, 3);
+    gaussianBlurInto(image, out, 2.5, 0, BlurBorder::MirrorEdge);
+    check(identical(out, gaussianBlur(image, 2.5, 0, BlurBorder::MirrorEdge)), "the same as a new image");
+    gaussianBlurInto(image, out, 0.0);
+    check(identical(out, image), "no sigma copies");
+    const auto refused = [&](Image buffer) {
+        try {
+            gaussianBlurInto(image, buffer, 2.0);
+        } catch (const std::invalid_argument &) {
+            return true;
+        }
+        return false;
+    };
+    check(refused(Image::create({96, 61}, Depth::F32, 3)), "another size");
+    check(refused(Image::create(image.size(), Depth::F32, 1)), "other channels");
+    check(refused(Image::create(image.size(), Depth::U16, 3)), "another depth");
+    check(refused(Image()), "no buffer");
+    Image none;
+    gaussianBlurInto(Image(), none, 2.0);
+    check(none.empty(), "nothing into nothing");
+}
+
 void threadsDoNotChangeTheResult()
 {
     const Image image = noisy({320, 211}, 3);
@@ -215,6 +274,8 @@ int main()
         aConstantStaysConstant();
         theMirrorIsTheOneAnnounced();
         theSizeDoesNotMatterToTheMirror();
+        theEdgeMirrorRepeatsTheEdge();
+        aBufferReceivesTheSamePixels();
         threadsDoNotChangeTheResult();
         aPartOfAnImageHasItsRows();
         itLeavesItsInputAlone();

@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <cmath>
 #include <cstdint>
+#include <cstring>
 #include <stdexcept>
 
 namespace ipr {
@@ -17,21 +18,24 @@ constexpr int chunkValues = 1024;
 // Under this many values, starting threads costs more than they give.
 constexpr std::int64_t aloneValues = 1 << 16;
 
-// Where a position beyond [0, length) reads, mirrored without repeating the edge.
-int mirrored(int position, int length)
+// Where a position beyond [0, length) reads.
+int mirrored(int position, int length, BlurBorder border)
 {
     if (length == 1)
         return 0;
-    const int period = 2 * (length - 1);
+    const bool repeatsEdge = border == BlurBorder::MirrorEdge;
+    const int period = repeatsEdge ? 2 * length : 2 * (length - 1);
     int wrapped = position % period;
     if (wrapped < 0)
         wrapped += period;
-    return wrapped < length ? wrapped : period - wrapped;
+    if (wrapped < length)
+        return wrapped;
+    return repeatsEdge ? period - 1 - wrapped : period - wrapped;
 }
 
 // The kernel along a row, channels side by side. Interior pixels run without any test, which is
 // what lets a compiler vectorize this loop; the borders go through the mirror.
-void blurRow(const float *in, float *out, int width, int channels, const std::vector<float> &half)
+void blurRow(const float *in, float *out, int width, int channels, const std::vector<float> &half, BlurBorder border)
 {
     const int radius = int(half.size()) - 1;
     const int interiorFirst = std::min(radius, width);
@@ -40,7 +44,8 @@ void blurRow(const float *in, float *out, int width, int channels, const std::ve
         for (int c = 0; c < channels; ++c) {
             float sum = half[0] * in[x * channels + c];
             for (int k = 1; k <= radius; ++k)
-                sum += half[size_t(k)] * (in[mirrored(x - k, width) * channels + c] + in[mirrored(x + k, width) * channels + c]);
+                sum += half[size_t(k)] * (in[mirrored(x - k, width, border) * channels + c] +
+                                          in[mirrored(x + k, width, border) * channels + c]);
             out[x * channels + c] = sum;
         }
     };
@@ -83,24 +88,43 @@ std::vector<float> gaussianHalfKernel(double sigma)
     return half;
 }
 
-Image gaussianBlur(const Image &image, double sigma, int threads)
+Image gaussianBlur(const Image &image, double sigma, int threads, BlurBorder border)
 {
     if (!image.empty() && image.depth() != Depth::F32)
         throw std::invalid_argument("The blur reads 32-bit floats");
-    const std::vector<float> half = gaussianHalfKernel(sigma);
-    if (image.empty() || half.empty())
+    if (image.empty() || gaussianHalfKernel(sigma).empty())
         return image.clone();
+    Image out = Image::create(image.size(), Depth::F32, image.channels());
+    gaussianBlurInto(image, out, sigma, threads, border);
+    return out;
+}
+
+void gaussianBlurInto(const Image &image, Image &out, double sigma, int threads, BlurBorder border)
+{
+    if (image.empty() != out.empty())
+        throw std::invalid_argument("The blur needs a buffer of the image's size");
+    if (image.empty())
+        return;
+    if (image.depth() != Depth::F32 || out.depth() != Depth::F32 || image.size() != out.size() ||
+        image.channels() != out.channels())
+        throw std::invalid_argument("The blur reads and writes 32-bit floats of one size");
+    const std::vector<float> half = gaussianHalfKernel(sigma);
+    if (half.empty()) {
+        const size_t rowBytes = size_t(image.width()) * size_t(image.channels()) * sizeof(float);
+        for (int y = 0; y < image.height(); ++y)
+            std::memcpy(out.mutableRow<float>(y), image.row<float>(y), rowBytes);
+        return;
+    }
 
     const int width = image.width(), height = image.height(), channels = image.channels();
     const int radius = int(half.size()) - 1;
     if (std::int64_t(width) * height * channels < aloneValues)
         threads = 1;
     Image across = Image::create(image.size(), Depth::F32, channels);
-    Image out = Image::create(image.size(), Depth::F32, channels);
     Image &acrossRef = across;
     parallelRows(height, [&](int first, int last) {
         for (int y = first; y < last; ++y)
-            blurRow(image.row<float>(y), acrossRef.mutableRow<float>(y), width, channels, half);
+            blurRow(image.row<float>(y), acrossRef.mutableRow<float>(y), width, channels, half, border);
     }, threads);
 
     Image &outRef = out;
@@ -112,7 +136,7 @@ Image gaussianBlur(const Image &image, double sigma, int threads)
             const float *centre = across.row<float>(y);
             // Asked once per row: the check of row() has no place in the loops over a chunk.
             for (int k = -radius; k <= radius; ++k)
-                rows[size_t(k + radius)] = across.row<float>(mirrored(y + k, height));
+                rows[size_t(k + radius)] = across.row<float>(mirrored(y + k, height, border));
             for (size_t chunk = 0; chunk < values; chunk += size_t(chunkValues)) {
                 const size_t chunkEnd = std::min(chunk + size_t(chunkValues), values);
                 const float middle = half[0];
@@ -128,7 +152,6 @@ Image gaussianBlur(const Image &image, double sigma, int threads)
             }
         }
     }, threads);
-    return out;
 }
 
 } // namespace ipr

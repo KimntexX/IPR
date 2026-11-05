@@ -11,11 +11,19 @@ namespace ipr {
 // is four sigmas, as OpenCV takes for floats. Empty when sigma is not above zero.
 std::vector<float> gaussianHalfKernel(double sigma);
 
-// A new image, blurred by this sigma in pixels, on both axes; beyond the borders the image is
-// mirrored without repeating its edge (dcb|abcd|cba). F32 only, any channel count: throws
+// What lies beyond the borders: the image mirrored without repeating its edge (dcb|abcd|cba), or
+// repeating it (dcba|abcd|dcba).
+enum class BlurBorder { Mirror, MirrorEdge };
+
+// A new image, blurred by this sigma in pixels, on both axes. F32 only, any channel count: throws
 // std::invalid_argument on another depth. Sigma not above zero, or an empty image, gives a clone.
 // threads as in parallelRows. The result does not depend on them.
-Image gaussianBlur(const Image &image, double sigma, int threads = 0);
+Image gaussianBlur(const Image &image, double sigma, int threads = 0, BlurBorder border = BlurBorder::Mirror);
+
+// The same into a buffer of the image's size, depth and channel count, or std::invalid_argument.
+// out may not be the image itself.
+void gaussianBlurInto(const Image &image, Image &out, double sigma, int threads = 0,
+                      BlurBorder border = BlurBorder::Mirror);
 
 } // namespace ipr
 

@@ -88,6 +88,8 @@ set(IPR_ENGINE_SOURCES
     src/core/Grain.cpp
     src/core/LocalContrast.h
     src/core/LocalContrast.cpp
+    src/image/OpenCvBridge.h
+    src/image/OpenCvBridge.cpp
     src/core/ColorAdjustments.h
     src/core/ColorAdjustments.cpp
     src/core/ColorGrading.h
@@ -244,6 +246,7 @@ qt_add_resources(iprEngine ipr_ui_defaults
 target_include_directories(iprEngine PUBLIC ${IPR_INCLUDE_DIRECTORIES})
 target_link_libraries(iprEngine
     PUBLIC
+        iprImage
         Qt6::Core
         Qt6::Gui
         Qt6::Quick
@@ -409,6 +412,8 @@ if(BUILD_TESTING)
     target_link_libraries(imageFiltersTests PRIVATE iprImage)
     add_test(NAME imageFiltersTests COMMAND imageFiltersTests)
     set_tests_properties(imageFiltersTests PROPERTIES LABELS "unit;image")
+    add_executable(iprExportModuleProbe EXCLUDE_FROM_ALL tests/export_module_probe.cpp)
+    target_link_libraries(iprExportModuleProbe PRIVATE iprEngine)
     add_executable(iprImageKernelOracle tests/image_kernel_oracle.cpp src/image/OpenCvBridge.h src/image/OpenCvBridge.cpp)
     target_link_libraries(iprImageKernelOracle PRIVATE iprImage ${OpenCV_LIBS})
     target_include_directories(iprImageKernelOracle PRIVATE ${OpenCV_INCLUDE_DIRS})
