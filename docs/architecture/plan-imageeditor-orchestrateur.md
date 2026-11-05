@@ -72,7 +72,7 @@ Du plus sûr au plus délicat. Chaque palier est une fusion à part, sans aucun 
 
 ### État au 5 novembre 2026
 
-Branche locale `patch_render_chain`, construite sur la retouche B3 en attente de validation, **à ne fusionner qu'après elle**.
+Intégré à `dev` depuis la branche `patch_render_chain`, après la retouche B3.
 `imageeditor.cpp` passe de 3 476 à 2 917 lignes.
 
 - **E0 :** `render_chain_test` protège désormais le contrat de la chaîne : source partagée pour une recette neutre, refus des sources
