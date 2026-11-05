@@ -2221,15 +2221,17 @@ void ImageEditor::resetGeometryCrop()
     commitGeometry(next);
 }
 
-void ImageEditor::proposeStraightening(const QString &mode)
+bool ImageEditor::proposeStraightening(const QString &mode)
 {
     Straightening::Mode chosen = Straightening::Mode::Level;
     if (mode == QStringLiteral("vertical")) chosen = Straightening::Mode::Vertical;
     else if (mode == QStringLiteral("full")) chosen = Straightening::Mode::Full;
-    else if (mode != QStringLiteral("level")) return;
+    else if (mode != QStringLiteral("level")) return false;
     const ColorPipeline::WorkingImage &source = previewSource();
-    if (source.isNull())
-        return;
+    if (source.isNull()) {
+        setStatusMessage(tr("L'image n'est pas prête : aucune proposition."));
+        return false;
+    }
     const Straightening::Proposal proposal = Straightening::propose(
         Straightening::linesOf(source.linearRgba), source.linearRgba.size(), m_settings.geometry, chosen);
     switch (proposal.refusal) {
@@ -2237,18 +2239,19 @@ void ImageEditor::proposeStraightening(const QString &mode)
         break;
     case Straightening::Refusal::NotEnoughEvidence:
         setStatusMessage(tr("Trop peu de lignes pour une correction aussi grande : aucune proposition."));
-        return;
+        return false;
     case Straightening::Refusal::NoAgreement:
         setStatusMessage(tr("Les lignes de cette photo ne s'accordent pas : aucune proposition."));
-        return;
+        return false;
     case Straightening::Refusal::NotEnoughLines:
     case Straightening::Refusal::InvalidInput:
         setStatusMessage(tr("Pas assez de lignes droites dans cette photo : aucune proposition."));
-        return;
+        return false;
     }
     commitGeometry(Straightening::applied(m_settings.geometry, proposal));
     setStatusMessage(tr("Redressement proposé d'après %n ligne(s) : à vérifier, il ne connaît pas la scène.", nullptr,
                         proposal.supportingLines));
+    return true;
 }
 
 void ImageEditor::resetGeometry()
