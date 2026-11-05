@@ -7,9 +7,11 @@
 #include "Dehaze.h"
 #include "DetailProcessing.h"
 #include "Exposure.h"
+#include "Filters.h"
 #include "Grain.h"
 #include "Histogram.h"
 #include "LocalContrast.h"
+#include "OpenCvBridge.h"
 #include "ToneCurve.h"
 #include "ToneRecovery.h"
 
@@ -298,7 +300,10 @@ ColorPipeline::WorkingImage workingImage(const ColorPipeline::WorkingImage &sour
 
     if (settings.blur > 0) {
         const double sigma = static_cast<double>(settings.blur) / 2.0 * pixelScale;
-        cv::GaussianBlur(adjusted, adjusted, cv::Size(0, 0), sigma);
+        cv::Mat blurred(adjusted.size(), adjusted.type());
+        ipr::Image target = ipr::fromMutableMat(blurred);
+        ipr::gaussianBlurInto(ipr::fromMat(adjusted), target, sigma);
+        adjusted = blurred;
     }
 
     // Capture/output sharpening follows denoise and all contrast operations.

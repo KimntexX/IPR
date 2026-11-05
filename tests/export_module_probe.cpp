@@ -1,7 +1,8 @@
-// What a module costs in a real export, and what it writes: exports each photo as a 16-bit TIFF,
-// neutral then with texture and clarity, three times each, through the real editor. Reads private
-// copies only, since the editor writes its .ipr beside a photo.
-// usage: iprExportModuleProbe <revision> <new json> <folder for the exports> <photo>...
+// What a module costs in a real export and on the preview, and what it writes: exports each photo
+// as a 16-bit TIFF, neutral then with the adjustments given, three times each, through the real
+// editor, and times the preview's answer to the same change. Reads private copies only, since the
+// editor writes its .ipr beside a photo.
+// usage: iprExportModuleProbe <revision> <new json> <folder for the exports> <name=value,...> <photo>...
 
 #include "controlled_memory.h"
 #include "imageeditor.h"
@@ -17,12 +18,14 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QStringList>
 #include <QTimer>
 #include <QUrl>
 
 #include <algorithm>
 #include <functional>
 #include <iostream>
+#include <utility>
 #include <vector>
 
 namespace {
@@ -72,13 +75,61 @@ std::vector<double> exports(ImageEditor &editor, const QString &target)
     return times;
 }
 
+using Adjustments = std::vector<std::pair<QString, double>>;
+
+Adjustments adjustmentsFrom(const QString &text)
+{
+    Adjustments result;
+    for (const QString &item : text.split(QLatin1Char(','), Qt::SkipEmptyParts)) {
+        const QStringList parts = item.split(QLatin1Char('='));
+        bool valid = parts.size() == 2;
+        const double value = valid ? parts[1].toDouble(&valid) : 0.0;
+        if (!valid)
+            return {};
+        result.emplace_back(parts[0], value);
+    }
+    return result;
+}
+
+void apply(ImageEditor &editor, const Adjustments &adjustments, bool on)
+{
+    for (const auto &[name, value] : adjustments)
+        editor.setAdjustment(name, on ? value : 0.0);
+}
+
+// Milliseconds from the change to the new preview, three times; empty when one does not come.
+std::vector<double> previewAnswers(ImageEditor &editor, const Adjustments &adjustments)
+{
+    std::vector<double> times;
+    int previews = 0;
+    const QMetaObject::Connection counting =
+        QObject::connect(&editor, &ImageEditor::previewChanged, &editor, [&] { ++previews; });
+    for (int i = 0; i < 3; ++i) {
+        apply(editor, adjustments, false);
+        waitFor([&] { return !editor.busy(); });
+        QEventLoop settle;
+        QTimer::singleShot(300, &settle, &QEventLoop::quit);
+        settle.exec();
+        const int before = previews;
+        QElapsedTimer clock;
+        clock.start();
+        apply(editor, adjustments, true);
+        if (!waitFor([&] { return previews > before && !editor.busy(); }, 60000))
+            break;
+        times.push_back(double(clock.nsecsElapsed()) / 1e6);
+    }
+    QObject::disconnect(counting);
+    return times.size() == 3 ? times : std::vector<double>{};
+}
+
 } // namespace
 
 int main(int argc, char **argv)
 {
     QGuiApplication application(argc, argv);
-    if (argc < 5 || QFile::exists(QString::fromLocal8Bit(argv[2]))) {
-        std::cerr << "usage: iprExportModuleProbe <revision> <new json> <folder> <photo>...\n";
+    const Adjustments adjustments = argc >= 6 ? adjustmentsFrom(QString::fromLocal8Bit(argv[4])) : Adjustments{};
+    if (argc < 6 || adjustments.empty() || QFile::exists(QString::fromLocal8Bit(argv[2]))) {
+        std::cerr << "usage: iprExportModuleProbe <revision> <new json> <folder> <name=value,...> <photo>...\n";
         return 2;
     }
     const QDir folder(QString::fromLocal8Bit(argv[3]));
@@ -89,36 +140,35 @@ int main(int argc, char **argv)
     ImageProvider provider;
     ImageEditor editor(&provider, nullptr, nullptr, controlledMemory);
     QJsonArray photos;
-    for (int a = 4; a < argc; ++a) {
+    for (int a = 5; a < argc; ++a) {
         const QFileInfo photo(QString::fromLocal8Bit(argv[a]));
         editor.loadImage(QUrl::fromLocalFile(photo.canonicalFilePath()));
         if (!waitFor([&] { return editor.hasImage() && !editor.busy() && !editor.imageSource().isEmpty(); })) {
             std::cerr << "Cannot open " << argv[a] << '\n';
             return 1;
         }
-        editor.setTexture(0);
-        editor.setClarity(0);
+        apply(editor, adjustments, false);
         waitFor([&] { return !editor.busy(); });
         const QString neutral = folder.filePath(photo.completeBaseName() + QStringLiteral("-neutral.tif"));
         const std::vector<double> neutralTimes = exports(editor, neutral);
-        editor.setTexture(50);
-        editor.setClarity(30);
+        const std::vector<double> previewTimes = previewAnswers(editor, adjustments);
+        apply(editor, adjustments, true);
         waitFor([&] { return !editor.busy(); });
         const QString effect = folder.filePath(photo.completeBaseName() + QStringLiteral("-effect.tif"));
         const std::vector<double> effectTimes = exports(editor, effect);
-        if (neutralTimes.empty() || effectTimes.empty()) {
+        if (neutralTimes.empty() || effectTimes.empty() || previewTimes.empty()) {
             std::cerr << "An export failed: " << editor.statusMessage().toStdString() << '\n';
             return 1;
         }
-        editor.setTexture(0);
-        editor.setClarity(0);
+        apply(editor, adjustments, false);
         waitFor([&] { return !editor.busy(); });
         const double withEffect = medianOf(effectTimes), without = medianOf(neutralTimes);
-        std::cout << photo.fileName().toStdString() << ": neutral " << without << " ms, with texture and clarity "
-                  << withEffect << " ms\n";
+        std::cout << photo.fileName().toStdString() << ": neutral " << without << " ms, with the adjustments "
+                  << withEffect << " ms, preview " << medianOf(previewTimes) << " ms\n";
         photos.append(QJsonObject{{"photo", photo.fileName()},
                                   {"neutral_ms", without},
                                   {"effect_ms", withEffect},
+                                  {"preview_ms", medianOf(previewTimes)},
                                   {"effect_sha256", sha256Of(effect)},
                                   {"neutral_sha256", sha256Of(neutral)}});
     }
@@ -128,7 +178,7 @@ int main(int argc, char **argv)
         return 1;
     }
     out.write(QJsonDocument(QJsonObject{{"revision", QString::fromLocal8Bit(argv[1])},
-                                        {"settings", "texture 50, clarity 30, against neutral"},
+                                        {"settings", QString::fromLocal8Bit(argv[4])},
                                         {"timing", "median of three exports, on a machine busy with other work"},
                                         {"photos", photos}}).toJson());
     return 0;
