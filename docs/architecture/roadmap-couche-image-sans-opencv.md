@@ -3,7 +3,8 @@
 **Décision :** [ADR-0018](../decisions/ADR-0018-independance-decodage-raw-et-couche-image.md),
 20 octobre 2026, et volonté réaffirmée par l'utilisateur le 5 novembre 2026 : être le plus indépendant
 possible. **État :** O0 commencé, O1 et O2 faits, O3 commencé par le flou gaussien, le 5 novembre 2026, sur une branche locale.
-Un seul module utilise le nouveau flou, le contraste local. **Une décision attend l'utilisateur** : §7, point 1.
+Deux modules utilisent le nouveau flou : le contraste local et le curseur « Flou gaussien » du menu Effets. **Une décision attend
+l'utilisateur** : §7, point 1.
 Suivi : [issue 29](https://github.com/KimntexX/IPR/issues/29).
 Chantier distinct des [décodeurs RAW](roadmap-decodeurs-raw.md), sur sa propre branche durable,
 `patch_image_core`, après le palier E1 de la [refonte d'`ImageEditor`](plan-imageeditor-orchestrateur.md).
@@ -165,6 +166,22 @@ résolution, médiane de trois exports par le vrai éditeur.
 - **Ce n'est pas une règle générale.** Ces flous ont des sigmas sous 4 ; les modules qui floutent large en pleine résolution, là où le
   noyau atteint ×3,2, restent à mesurer un par un. L'aperçu n'a pas été chronométré. Les redimensionnements de ce module passent
   encore par OpenCV.
+- **L'utilisateur a essayé Texture et Clarté le 5 novembre 2026** dans le paquet de test : rien de choquant sur la latence.
+
+### Deuxième module : le curseur « Flou gaussien »
+
+Le cas défavorable, car ce flou large porte sur toute l'image en pleine résolution. [Preuve](../validation/raw/gaussian-blur-slider-v001-20261105.json) :
+curseur au maximum, soit un sigma de 10 pixels, TIFF 16 bits, médiane de trois.
+
+| Photo | Export avec OpenCV | Avec la couche image | Aperçu avec OpenCV | Avec la couche image | Plus grand écart, sur 65 535 | Valeurs qui diffèrent |
+| --- | --- | --- | --- | --- | --- | --- |
+| `6V1A0007.CR3` | 1 365 ms | 1 554 ms | 191 ms | 200 ms | 1 | 0,10 % |
+| `6V1A0032.CR3` | 1 196 ms | 1 393 ms | 190 ms | 191 ms | 1 | 0,05 % |
+| `IMG_6858.CR2` | 708 ms | 873 ms | 185 ms | 190 ms | 1 | 0,02 % |
+
+- **Ici le coût se voit à l'export :** 165 à 197 ms de plus, soit 14 à 23 %, curseur au maximum.
+- **L'aperçu reste sous 250 ms,** mesuré du changement à la nouvelle image, tout le rendu compris.
+- **Les pixels ne bougent pas à l'œil :** un niveau sur 65 535 au plus.
 
 ## 5. Principes de conception
 
