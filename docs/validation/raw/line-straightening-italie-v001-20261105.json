@@ -1,0 +1,1534 @@
+{
+    "central_share": 0.7,
+    "corpus": "italie-garda",
+    "created_utc": "2026-11-05T13:25:37.159Z",
+    "detect_ms_median": 31.2539,
+    "entries": [
+        {
+            "detect_ms": 25.3801,
+            "file": "IMG_5869.JPG",
+            "full": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            },
+            "known_rotations": [
+                {
+                    "angle": -5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": -2,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": -0.5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 0.5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 2,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 5,
+                    "refusal": "not_enough_lines"
+                }
+            ],
+            "level": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            },
+            "lines": 23,
+            "propose_ms": 0.0182,
+            "proxy": [
+                2048,
+                1365
+            ],
+            "vertical": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            }
+        },
+        {
+            "detect_ms": 23.743,
+            "file": "IMG_5882.JPG",
+            "full": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            },
+            "known_rotations": [
+                {
+                    "angle": -5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": -2,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": -0.5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 0.5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 2,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 5,
+                    "refusal": "not_enough_lines"
+                }
+            ],
+            "level": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            },
+            "lines": 16,
+            "propose_ms": 0.0010333333333333334,
+            "proxy": [
+                1365,
+                2048
+            ],
+            "vertical": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            }
+        },
+        {
+            "detect_ms": 39.1576,
+            "file": "IMG_5915.JPG",
+            "full": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            },
+            "known_rotations": [
+                {
+                    "angle": -5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": -2,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": -0.5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 0.5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 2,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 5,
+                    "refusal": "not_enough_lines"
+                }
+            ],
+            "level": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            },
+            "lines": 3,
+            "propose_ms": 0.0012333333333333335,
+            "proxy": [
+                1365,
+                2048
+            ],
+            "vertical": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            }
+        },
+        {
+            "detect_ms": 34.1408,
+            "file": "IMG_5918.JPG",
+            "full": {
+                "horizontal": 0,
+                "misalignment_after": 0.6378851532936096,
+                "misalignment_before": 0.8216797113418579,
+                "refusal": "none",
+                "rotation": -0.4327387511730194,
+                "supporting_lines": 3,
+                "vertical": 0
+            },
+            "known_rotations": [
+                {
+                    "angle": -5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": -2,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": -0.5,
+                    "refusal": "no_agreement"
+                },
+                {
+                    "angle": 0.5,
+                    "error": 0.13751909136772156,
+                    "refusal": "none"
+                },
+                {
+                    "angle": 2,
+                    "refusal": "not_enough_evidence"
+                },
+                {
+                    "angle": 5,
+                    "refusal": "not_enough_evidence"
+                }
+            ],
+            "level": {
+                "horizontal": 0,
+                "misalignment_after": 0.6378851532936096,
+                "misalignment_before": 0.8216797113418579,
+                "refusal": "none",
+                "rotation": -0.4327387511730194,
+                "supporting_lines": 3,
+                "vertical": 0
+            },
+            "lines": 22,
+            "propose_ms": 0.006933333333333333,
+            "proxy": [
+                2048,
+                1365
+            ],
+            "vertical": {
+                "horizontal": 0,
+                "misalignment_after": 0.6378851532936096,
+                "misalignment_before": 0.8216797113418579,
+                "refusal": "none",
+                "rotation": -0.4327387511730194,
+                "supporting_lines": 3,
+                "vertical": 0
+            }
+        },
+        {
+            "detect_ms": 35.1155,
+            "file": "IMG_5927.JPG",
+            "full": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            },
+            "known_rotations": [
+                {
+                    "angle": -5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": -2,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": -0.5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 0.5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 2,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 5,
+                    "refusal": "not_enough_lines"
+                }
+            ],
+            "level": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            },
+            "lines": 42,
+            "propose_ms": 0.0015333333333333334,
+            "proxy": [
+                2048,
+                1365
+            ],
+            "vertical": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            }
+        },
+        {
+            "detect_ms": 31.4474,
+            "file": "IMG_5932.JPG",
+            "full": {
+                "horizontal": 0,
+                "misalignment_after": 1.4198240041732788,
+                "misalignment_before": 1.849622368812561,
+                "refusal": "none",
+                "rotation": 1.083536148071289,
+                "supporting_lines": 2,
+                "vertical": 0
+            },
+            "known_rotations": [
+                {
+                    "angle": -5,
+                    "refusal": "not_enough_evidence"
+                },
+                {
+                    "angle": -2,
+                    "refusal": "not_enough_evidence"
+                },
+                {
+                    "angle": -0.5,
+                    "error": -3.142597794532776,
+                    "refusal": "none"
+                },
+                {
+                    "angle": 0.5,
+                    "error": -2.5803996324539185,
+                    "refusal": "none"
+                },
+                {
+                    "angle": 2,
+                    "error": -0.2802194356918335,
+                    "refusal": "none"
+                },
+                {
+                    "angle": 5,
+                    "refusal": "not_enough_evidence"
+                }
+            ],
+            "level": {
+                "horizontal": 0,
+                "misalignment_after": 1.4198240041732788,
+                "misalignment_before": 1.849622368812561,
+                "refusal": "none",
+                "rotation": 1.083536148071289,
+                "supporting_lines": 2,
+                "vertical": 0
+            },
+            "lines": 92,
+            "propose_ms": 0.044366666666666665,
+            "proxy": [
+                1365,
+                2048
+            ],
+            "vertical": {
+                "horizontal": 0,
+                "misalignment_after": 1.4198240041732788,
+                "misalignment_before": 1.849622368812561,
+                "refusal": "none",
+                "rotation": 1.083536148071289,
+                "supporting_lines": 2,
+                "vertical": 0
+            }
+        },
+        {
+            "detect_ms": 54.0315,
+            "file": "IMG_5966.JPG",
+            "full": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            },
+            "known_rotations": [
+                {
+                    "angle": -5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": -2,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": -0.5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 0.5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 2,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 5,
+                    "refusal": "not_enough_lines"
+                }
+            ],
+            "level": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            },
+            "lines": 6,
+            "propose_ms": 0.0012333333333333335,
+            "proxy": [
+                1365,
+                2048
+            ],
+            "vertical": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            }
+        },
+        {
+            "detect_ms": 26.6559,
+            "file": "IMG_5968.JPG",
+            "full": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            },
+            "known_rotations": [
+                {
+                    "angle": -5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": -2,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": -0.5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 0.5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 2,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 5,
+                    "refusal": "not_enough_lines"
+                }
+            ],
+            "level": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            },
+            "lines": 8,
+            "propose_ms": 0.0015999999999999999,
+            "proxy": [
+                1365,
+                2048
+            ],
+            "vertical": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            }
+        },
+        {
+            "detect_ms": 32.9836,
+            "file": "IMG_5970.JPG",
+            "full": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            },
+            "known_rotations": [
+                {
+                    "angle": -5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": -2,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": -0.5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 0.5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 2,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 5,
+                    "refusal": "not_enough_lines"
+                }
+            ],
+            "level": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            },
+            "lines": 2,
+            "propose_ms": 0.0034000000000000002,
+            "proxy": [
+                2048,
+                1365
+            ],
+            "vertical": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            }
+        },
+        {
+            "detect_ms": 25.8006,
+            "file": "IMG_5974.JPG",
+            "full": {
+                "horizontal": 0,
+                "misalignment_after": 0.42308658361434937,
+                "misalignment_before": 3,
+                "refusal": "none",
+                "rotation": 3.6256020069122314,
+                "supporting_lines": 5,
+                "vertical": 0
+            },
+            "known_rotations": [
+                {
+                    "angle": -5,
+                    "refusal": "not_enough_evidence"
+                },
+                {
+                    "angle": -2,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": -0.5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 0.5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 2,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 5,
+                    "refusal": "not_enough_lines"
+                }
+            ],
+            "level": {
+                "horizontal": 0,
+                "misalignment_after": 0.42308658361434937,
+                "misalignment_before": 3,
+                "refusal": "none",
+                "rotation": 3.6256020069122314,
+                "supporting_lines": 5,
+                "vertical": 0
+            },
+            "lines": 11,
+            "propose_ms": 0.05196666666666667,
+            "proxy": [
+                2048,
+                1365
+            ],
+            "vertical": {
+                "horizontal": 0,
+                "misalignment_after": 0.42308658361434937,
+                "misalignment_before": 3,
+                "refusal": "none",
+                "rotation": 3.6256020069122314,
+                "supporting_lines": 5,
+                "vertical": 0
+            }
+        },
+        {
+            "detect_ms": 33.2752,
+            "file": "IMG_5976.JPG",
+            "full": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            },
+            "known_rotations": [
+                {
+                    "angle": -5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": -2,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": -0.5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 0.5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 2,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 5,
+                    "refusal": "not_enough_lines"
+                }
+            ],
+            "level": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            },
+            "lines": 12,
+            "propose_ms": 0.0011,
+            "proxy": [
+                2048,
+                1365
+            ],
+            "vertical": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            }
+        },
+        {
+            "detect_ms": 30.1598,
+            "file": "IMG_5978.JPG",
+            "full": {
+                "horizontal": 0,
+                "misalignment_after": 0.24547022581100464,
+                "misalignment_before": 0.49099937081336975,
+                "refusal": "none",
+                "rotation": -0.45924386382102966,
+                "supporting_lines": 7,
+                "vertical": 0
+            },
+            "known_rotations": [
+                {
+                    "angle": -5,
+                    "refusal": "not_enough_evidence"
+                },
+                {
+                    "angle": -2,
+                    "refusal": "not_enough_evidence"
+                },
+                {
+                    "angle": -0.5,
+                    "refusal": "not_enough_evidence"
+                },
+                {
+                    "angle": 0.5,
+                    "refusal": "not_enough_evidence"
+                },
+                {
+                    "angle": 2,
+                    "refusal": "not_enough_evidence"
+                },
+                {
+                    "angle": 5,
+                    "refusal": "not_enough_evidence"
+                }
+            ],
+            "level": {
+                "horizontal": 0,
+                "misalignment_after": 0.24547022581100464,
+                "misalignment_before": 0.49099937081336975,
+                "refusal": "none",
+                "rotation": -0.45924386382102966,
+                "supporting_lines": 7,
+                "vertical": 0
+            },
+            "lines": 54,
+            "propose_ms": 0.05946666666666667,
+            "proxy": [
+                2048,
+                1365
+            ],
+            "vertical": {
+                "horizontal": 0,
+                "misalignment_after": 0.24547022581100464,
+                "misalignment_before": 0.49099937081336975,
+                "refusal": "none",
+                "rotation": -0.45924386382102966,
+                "supporting_lines": 7,
+                "vertical": 0
+            }
+        },
+        {
+            "detect_ms": 27.4881,
+            "file": "IMG_5980.JPG",
+            "full": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            },
+            "known_rotations": [
+                {
+                    "angle": -5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": -2,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": -0.5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 0.5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 2,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 5,
+                    "refusal": "not_enough_lines"
+                }
+            ],
+            "level": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            },
+            "lines": 9,
+            "propose_ms": 0.0013333333333333333,
+            "proxy": [
+                2048,
+                1365
+            ],
+            "vertical": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            }
+        },
+        {
+            "detect_ms": 29.3768,
+            "file": "IMG_5982.JPG",
+            "full": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            },
+            "known_rotations": [
+                {
+                    "angle": -5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": -2,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": -0.5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 0.5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 2,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 5,
+                    "refusal": "not_enough_lines"
+                }
+            ],
+            "level": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            },
+            "lines": 1,
+            "propose_ms": 0.0011,
+            "proxy": [
+                2048,
+                1365
+            ],
+            "vertical": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            }
+        },
+        {
+            "detect_ms": 30.3935,
+            "file": "IMG_5984.JPG",
+            "full": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "no_agreement",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            },
+            "known_rotations": [
+                {
+                    "angle": -5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": -2,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": -0.5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 0.5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 2,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 5,
+                    "refusal": "not_enough_lines"
+                }
+            ],
+            "level": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            },
+            "lines": 4,
+            "propose_ms": 0.0024333333333333334,
+            "proxy": [
+                2048,
+                1365
+            ],
+            "vertical": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "no_agreement",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            }
+        },
+        {
+            "detect_ms": 28.7157,
+            "file": "IMG_5986.JPG",
+            "full": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            },
+            "known_rotations": [
+                {
+                    "angle": -5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": -2,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": -0.5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 0.5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 2,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 5,
+                    "refusal": "not_enough_lines"
+                }
+            ],
+            "level": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            },
+            "lines": 1,
+            "propose_ms": 0.0022333333333333333,
+            "proxy": [
+                1365,
+                2048
+            ],
+            "vertical": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            }
+        },
+        {
+            "detect_ms": 29.2058,
+            "file": "IMG_5988.JPG",
+            "full": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            },
+            "known_rotations": [
+                {
+                    "angle": -5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": -2,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": -0.5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 0.5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 2,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 5,
+                    "refusal": "not_enough_lines"
+                }
+            ],
+            "level": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            },
+            "lines": 9,
+            "propose_ms": 0.0011333333333333332,
+            "proxy": [
+                2048,
+                1365
+            ],
+            "vertical": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            }
+        },
+        {
+            "detect_ms": 31.2539,
+            "file": "IMG_5990.JPG",
+            "full": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            },
+            "known_rotations": [
+                {
+                    "angle": -5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": -2,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": -0.5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 0.5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 2,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 5,
+                    "refusal": "not_enough_lines"
+                }
+            ],
+            "level": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            },
+            "lines": 7,
+            "propose_ms": 0.0009000000000000001,
+            "proxy": [
+                2048,
+                1365
+            ],
+            "vertical": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            }
+        },
+        {
+            "detect_ms": 33.8724,
+            "file": "IMG_5996.JPG",
+            "full": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            },
+            "known_rotations": [
+                {
+                    "angle": -5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": -2,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": -0.5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 0.5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 2,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 5,
+                    "refusal": "not_enough_lines"
+                }
+            ],
+            "level": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            },
+            "lines": 15,
+            "propose_ms": 0.0012,
+            "proxy": [
+                2048,
+                1365
+            ],
+            "vertical": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            }
+        },
+        {
+            "detect_ms": 34.7962,
+            "file": "IMG_5998.JPG",
+            "full": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            },
+            "known_rotations": [
+                {
+                    "angle": -5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": -2,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": -0.5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 0.5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 2,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 5,
+                    "refusal": "not_enough_lines"
+                }
+            ],
+            "level": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            },
+            "lines": 11,
+            "propose_ms": 0.0014,
+            "proxy": [
+                2048,
+                1365
+            ],
+            "vertical": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            }
+        },
+        {
+            "detect_ms": 29.5666,
+            "file": "IMG_6005.JPG",
+            "full": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            },
+            "known_rotations": [
+                {
+                    "angle": -5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": -2,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": -0.5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 0.5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 2,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 5,
+                    "refusal": "not_enough_lines"
+                }
+            ],
+            "level": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            },
+            "lines": 11,
+            "propose_ms": 0.0014999999999999998,
+            "proxy": [
+                1365,
+                2048
+            ],
+            "vertical": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            }
+        },
+        {
+            "detect_ms": 36.4397,
+            "file": "IMG_6007.JPG",
+            "full": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            },
+            "known_rotations": [
+                {
+                    "angle": -5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": -2,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": -0.5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 0.5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 2,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 5,
+                    "refusal": "not_enough_lines"
+                }
+            ],
+            "level": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            },
+            "lines": 16,
+            "propose_ms": 0.0012,
+            "proxy": [
+                1365,
+                2048
+            ],
+            "vertical": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            }
+        },
+        {
+            "detect_ms": 46.0523,
+            "file": "IMG_6009.JPG",
+            "full": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            },
+            "known_rotations": [
+                {
+                    "angle": -5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": -2,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": -0.5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 0.5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 2,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 5,
+                    "refusal": "not_enough_lines"
+                }
+            ],
+            "level": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            },
+            "lines": 5,
+            "propose_ms": 0.0011,
+            "proxy": [
+                2048,
+                1365
+            ],
+            "vertical": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            }
+        },
+        {
+            "detect_ms": 27.7286,
+            "file": "IMG_6063.JPG",
+            "full": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            },
+            "known_rotations": [
+                {
+                    "angle": -5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": -2,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": -0.5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 0.5,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 2,
+                    "refusal": "not_enough_lines"
+                },
+                {
+                    "angle": 5,
+                    "refusal": "not_enough_lines"
+                }
+            ],
+            "level": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            },
+            "lines": 13,
+            "propose_ms": 0.0011333333333333332,
+            "proxy": [
+                2048,
+                1365
+            ],
+            "vertical": {
+                "horizontal": 0,
+                "misalignment_after": 0,
+                "misalignment_before": 0,
+                "refusal": "not_enough_lines",
+                "rotation": 0,
+                "supporting_lines": 0,
+                "vertical": 0
+            }
+        }
+    ],
+    "known_rotation_error_median_degrees": 2.5803996324539185,
+    "known_rotation_error_p95_degrees": 3.142597794532776,
+    "known_rotation_error_worst_degrees": 3.142597794532776,
+    "known_rotation_measures": 4,
+    "level_refused": 20,
+    "photos": 24,
+    "proxy_side": 2048,
+    "revision": "a5185686eb098089f65128470c0c7d9974348967",
+    "truth": "the rotation we applied, relative to the same photo unrotated: repeatability of the reading, not whether the proposal is the right level for the scene",
+    "unreadable": 0
+}
