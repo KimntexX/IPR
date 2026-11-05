@@ -1,5 +1,7 @@
 #include "PanoramaGeometry.h"
 
+#include "OpenCvBridge.h"
+
 #include <opencv2/imgproc.hpp>
 
 #include <algorithm>
@@ -558,7 +560,7 @@ void refine(Solution &solution, const std::vector<cv::Mat> &images, double image
                 }
                 if (!inside)
                     continue;
-                cv::remap(imageB, search, mapX, mapY, cv::INTER_CUBIC, cv::BORDER_REPLICATE);
+                search = ipr::remapped(imageB, mapX, mapY, ipr::Resampling::Cubic, ipr::Outside::LastPixel);
                 cv::matchTemplate(search, tile, response, cv::TM_CCOEFF_NORMED);
                 double score = 0.0;
                 cv::Point peak;

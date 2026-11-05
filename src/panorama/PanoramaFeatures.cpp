@@ -188,9 +188,7 @@ std::vector<Feature> detect(const cv::Mat &image, const Options &options)
     float toImage = 1.0f;
     for (int index = 0; index < options.levels && std::min(level.cols, level.rows) > grid * int(spacing) * 2; ++index) {
         detectOnLevel(level, toImage, options, features);
-        cv::Mat next;
-        cv::pyrDown(level, next);
-        level = next;
+        level = ipr::pyramidDown(level);
         toImage *= 2.0f;
     }
     return features;

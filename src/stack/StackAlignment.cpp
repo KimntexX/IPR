@@ -412,9 +412,7 @@ Pyramid buildPyramid(const cv::Mat &cameraRgb, const Options &options)
     });
     pyramid.push_back(std::move(luminance));
     while (std::max(pyramid.back().cols, pyramid.back().rows) > options.coarsestSide) {
-        cv::Mat smaller;
-        cv::pyrDown(pyramid.back(), smaller);
-        pyramid.push_back(std::move(smaller));
+        pyramid.push_back(ipr::pyramidDown(pyramid.back()));
     }
     return pyramid;
 }

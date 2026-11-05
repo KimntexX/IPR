@@ -299,19 +299,16 @@ Result run(const Request &request)
         double fieldReach = 0.0;
         if (request.localRefinement) {
             // Measured on a cheap resampling, so that the pixels are resampled only once.
-            cv::Mat roughly;
-            cv::warpPerspective(framePyramid[0], roughly, report.alignment.referenceToFrame, size,
-                                cv::INTER_LINEAR | cv::WARP_INVERSE_MAP, cv::BORDER_REPLICATE);
+            const cv::Mat roughly = ipr::warpedPerspective(framePyramid[0], report.alignment.referenceToFrame, size, ipr::Resampling::Linear, ipr::Outside::LastPixel);
             const StackAlignment::LocalField field = StackAlignment::localField(referencePyramid[0], roughly, request.local);
             report.localBlocks = field.measured;
             report.localLargest = field.largest;
             fieldReach = field.largest;
             cv::Mat mapX, mapY;
             sourceMaps(report.alignment.referenceToFrame, field.displacements, mapX, mapY);
-            cv::remap(frame.cameraRgb, registered, mapX, mapY, cv::INTER_LANCZOS4, cv::BORDER_REPLICATE);
+            registered = ipr::remapped(frame.cameraRgb, mapX, mapY, ipr::Resampling::Lanczos4, ipr::Outside::LastPixel);
         } else {
-            cv::warpPerspective(frame.cameraRgb, registered, report.alignment.referenceToFrame, size,
-                                cv::INTER_LANCZOS4 | cv::WARP_INVERSE_MAP, cv::BORDER_REPLICATE);
+            registered = ipr::warpedPerspective(frame.cameraRgb, report.alignment.referenceToFrame, size, ipr::Resampling::Lanczos4, ipr::Outside::LastPixel);
         }
         frame.cameraRgb.release();
         if (!levelGains(referenceProxy, proxyOf(registered), report.gains)) {

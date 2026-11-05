@@ -3,6 +3,8 @@
 #include "ImageMath.h"
 #include "WorkingColorSpace.h"
 
+#include "OpenCvBridge.h"
+
 #include <opencv2/imgproc.hpp>
 
 #include <algorithm>
@@ -421,8 +423,7 @@ cv::Mat toSource(const cv::Mat &canvasMap, const Geometry::Settings &geometry, c
     const cv::Matx33d sourceToNormal(1.0 / source.width, 0, 0.5 / source.width, 0, 1.0 / source.height, 0.5 / source.height, 0, 0, 1);
     const cv::Matx33d normalToCanvas(canvas.width, 0, -0.5, 0, canvas.height, -0.5, 0, 0, 1);
     const cv::Matx33d sourceToCanvas = normalToCanvas * Geometry::homography(geometry, source) * sourceToNormal;
-    cv::Mat out;
-    cv::warpPerspective(canvasMap, out, sourceToCanvas, source, cv::INTER_LINEAR | cv::WARP_INVERSE_MAP, cv::BORDER_REPLICATE);
+    cv::Mat out = ipr::warpedPerspective(canvasMap, sourceToCanvas, source, ipr::Resampling::Linear, ipr::Outside::LastPixel);
     return out;
 }
 

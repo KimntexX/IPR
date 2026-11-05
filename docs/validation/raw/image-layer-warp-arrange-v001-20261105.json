@@ -1,0 +1,489 @@
+{
+ "question": "What the modules write and cost with the image layer warps, turns, mirrors, padding and pyramid instead of OpenCV",
+ "revisions": {
+  "opencv": "d1a98ce",
+  "warps": "b47f9ca",
+  "arrange": "4387cbe (the region padding fixed before the commit)"
+ },
+ "warps_against_opencv": {
+  "settings": "geometry rotation 3, vertical 20, horizontal -10; 16-bit TIFF; median of three; fresh copies",
+  "results": {
+   "exports": {
+    "6V1A0007.CR3": {
+     "neutral_identical": true,
+     "neutral_gap_16bit": {
+      "largest": 0,
+      "mean": 0.0,
+      "share_differing": 0.0,
+      "share_beyond_16": 0.0
+     },
+     "effect_gap_16bit": {
+      "largest": 0,
+      "mean": 0.0,
+      "share_differing": 0.0,
+      "share_beyond_16": 0.0
+     },
+     "effect_ms": [
+      1539.7226,
+      1533.6818
+     ],
+     "neutral_ms": [
+      849.7379,
+      788.4198
+     ],
+     "preview_ms": [
+      294.9434,
+      300.0194
+     ]
+    },
+    "IMG_6858.CR2": {
+     "neutral_identical": true,
+     "neutral_gap_16bit": {
+      "largest": 0,
+      "mean": 0.0,
+      "share_differing": 0.0,
+      "share_beyond_16": 0.0
+     },
+     "effect_gap_16bit": {
+      "largest": 0,
+      "mean": 0.0,
+      "share_differing": 0.0,
+      "share_beyond_16": 0.0
+     },
+     "effect_ms": [
+      797.7191,
+      809.3529
+     ],
+     "neutral_ms": [
+      433.4952,
+      437.04
+     ],
+     "preview_ms": [
+      290.7414,
+      298.2348
+     ]
+    }
+   },
+   "stack": {
+    "frames": [
+     [
+      [
+       175,
+       0.456307
+      ],
+      [
+       175,
+       0.456308
+      ]
+     ],
+     [
+      [
+       173,
+       0.429834
+      ],
+      [
+       173,
+       0.429837
+      ]
+     ],
+     [
+      [
+       177,
+       0.428571
+      ],
+      [
+       177,
+       0.42857
+      ]
+     ],
+     [
+      [
+       177,
+       0.360627
+      ],
+      [
+       177,
+       0.360627
+      ]
+     ],
+     [
+      [
+       0,
+       0
+      ],
+      [
+       0,
+       0
+      ]
+     ],
+     [
+      [
+       178,
+       0.353844
+      ],
+      [
+       178,
+       0.353849
+      ]
+     ],
+     [
+      [
+       176,
+       0.41661
+      ],
+      [
+       176,
+       0.416614
+      ]
+     ],
+     [
+      [
+       177,
+       0.403489
+      ],
+      [
+       177,
+       0.403491
+      ]
+     ]
+    ],
+    "noise": [
+     [
+      0.3526679308052066,
+      0.350391527048259,
+      0.3530366249395693
+     ],
+     [
+      0.3526625451440232,
+      0.350391140065009,
+      0.35303821496967386
+     ]
+    ],
+    "rejected_share": [
+     0.020904957771042176,
+     0.02090538031101446
+    ],
+    "seconds_stack_from_decoded": [
+     9.21,
+     15.057
+    ],
+    "images": {
+     "stack-flat-ev0.png": {
+      "largest": 17,
+      "mean": 0.0015697916666666666,
+      "share_differing": 0.0012973958333333333,
+      "share_beyond_16": 5.208333333333334e-07
+     },
+     "stack-flat-ev2.png": {
+      "largest": 71,
+      "mean": 0.0063515625,
+      "share_differing": 0.0025953125,
+      "share_beyond_16": 1.3541666666666666e-05
+     },
+     "stack-textured-ev0.png": {
+      "largest": 134,
+      "mean": 0.0095390625,
+      "share_differing": 0.0014791666666666666,
+      "share_beyond_16": 0.00017083333333333333
+     },
+     "stack-textured-ev2.png": {
+      "largest": 531,
+      "mean": 0.010447395833333333,
+      "share_differing": 0.0017296875,
+      "share_beyond_16": 0.00015208333333333333
+     },
+     "stack-textured2-ev0.png": {
+      "largest": 17,
+      "mean": 0.002592708333333333,
+      "share_differing": 0.0021328125,
+      "share_beyond_16": 1.0416666666666667e-06
+     },
+     "stack-textured2-ev2.png": {
+      "largest": 70,
+      "mean": 0.010591145833333333,
+      "share_differing": 0.004544270833333333,
+      "share_beyond_16": 2.8125e-05
+     },
+     "stack-textured3-ev0.png": {
+      "note": "shape differs or missing"
+     },
+     "stack-textured3-ev2.png": {
+      "note": "shape differs or missing"
+     }
+    }
+   },
+   "panorama": {
+    "success": [
+     true,
+     true
+    ],
+    "canvas_width": [
+     18448,
+     18448
+    ],
+    "canvas_height": [
+     4224,
+     4224
+    ],
+    "kept_width": [
+     17719,
+     17719
+    ],
+    "kept_height": [
+     3042,
+     3042
+    ],
+    "residual_pixels": [
+     1.8458880617104712,
+     1.8458879935061003
+    ],
+    "worst_pair_pixels": [
+     3.7794846113198832,
+     3.779485113492902
+    ],
+    "job_seconds": [
+     32.332,
+     11.053
+    ],
+    "render_seconds": [
+     1.955,
+     1.981
+    ],
+    "image": {
+     "largest": 9,
+     "mean": 0.009386470408320052,
+     "share_differing": 0.00789733838568857,
+     "share_beyond_16": 0.0
+    }
+   }
+  }
+ },
+ "arrange_against_opencv": {
+  "settings": "a quarter turn and a mirror; the stacking and panorama against the warps step, so that only this lot differs",
+  "results": {
+   "exports": {
+    "6V1A0007.CR3": {
+     "neutral_identical": false,
+     "effect_identical": false,
+     "effect_gap_16bit": {
+      "largest": 1,
+      "share_differing": 0.001856
+     },
+     "effect_ms": [
+      907.8527,
+      864.0596
+     ],
+     "neutral_ms": [
+      885.8984,
+      888.849
+     ]
+    },
+    "IMG_6858.CR2": {
+     "neutral_identical": false,
+     "effect_identical": false,
+     "effect_gap_16bit": {
+      "largest": 1,
+      "share_differing": 0.000332
+     },
+     "effect_ms": [
+      848.7689,
+      468.486
+     ],
+     "neutral_ms": [
+      468.8538,
+      473.7551
+     ]
+    }
+   },
+   "stack": {
+    "frames_identical": [
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true,
+     true
+    ],
+    "noise_identical": true,
+    "seconds_stack_from_decoded": [
+     15.057,
+     16.079
+    ],
+    "images": {
+     "stack-flat-ev0.png": {
+      "largest": 0,
+      "share_differing": 0.0
+     },
+     "stack-flat-ev2.png": {
+      "largest": 0,
+      "share_differing": 0.0
+     },
+     "stack-textured-ev0.png": {
+      "largest": 0,
+      "share_differing": 0.0
+     },
+     "stack-textured-ev2.png": {
+      "largest": 0,
+      "share_differing": 0.0
+     },
+     "stack-textured2-ev0.png": {
+      "largest": 0,
+      "share_differing": 0.0
+     },
+     "stack-textured2-ev2.png": {
+      "largest": 0,
+      "share_differing": 0.0
+     },
+     "stack-textured3-ev0.png": {
+      "largest": 0,
+      "share_differing": 0.0
+     },
+     "stack-textured3-ev2.png": {
+      "largest": 0,
+      "share_differing": 0.0
+     }
+    }
+   },
+   "panorama": {
+    "canvas_width": true,
+    "canvas_height": true,
+    "kept_width": true,
+    "kept_height": true,
+    "residual_pixels": false,
+    "worst_pair_pixels": false,
+    "job_seconds": [
+     11.053,
+     11.151
+    ],
+    "image": {
+     "largest": 62,
+     "share_differing": 0.541652
+    }
+   }
+  }
+ },
+ "panorama_alignment": {
+  "opencv": {
+   "residual_pixels": 1.8458880617104712,
+   "worst_pair_pixels": 3.7794846113198832,
+   "pairs": [
+    [
+     1823,
+     2.457390190823953
+    ],
+    [
+     696,
+     1.5574256556603079
+    ],
+    [
+     2281,
+     1.7111659213078034
+    ],
+    [
+     1243,
+     1.1916997891221757
+    ],
+    [
+     2499,
+     1.2281671614442495
+    ],
+    [
+     40,
+     3.7794846113198832
+    ],
+    [
+     547,
+     3.466197448993757
+    ],
+    [
+     559,
+     1.3077854463176113
+    ]
+   ]
+  },
+  "warps": {
+   "residual_pixels": 1.8458879935061003,
+   "worst_pair_pixels": 3.779485113492902,
+   "pairs": [
+    [
+     1823,
+     2.4573899266078554
+    ],
+    [
+     696,
+     1.55742571364794
+    ],
+    [
+     2281,
+     1.7111657551139505
+    ],
+    [
+     1243,
+     1.191699942980136
+    ],
+    [
+     2499,
+     1.2281673343520199
+    ],
+    [
+     40,
+     3.779485113492902
+    ],
+    [
+     547,
+     3.4661973573227596
+    ],
+    [
+     559,
+     1.3077852945743669
+    ]
+   ]
+  },
+  "warps_and_pyramid": {
+   "residual_pixels": 1.8466130710708217,
+   "worst_pair_pixels": 3.777140811227731,
+   "pairs": [
+    [
+     1823,
+     2.457629548251286
+    ],
+    [
+     696,
+     1.5585441733609218
+    ],
+    [
+     2281,
+     1.7154185458645725
+    ],
+    [
+     1243,
+     1.1901965284302338
+    ],
+    [
+     2499,
+     1.2270808662212096
+    ],
+    [
+     40,
+     3.777140811227731
+    ],
+    [
+     547,
+     3.466173215640122
+    ],
+    [
+     559,
+     1.3078147331998498
+    ]
+   ]
+  }
+ },
+ "notes": [
+  "Exports through Lanczos come out identical to the bit; the neutral exports move by one level of 65,535 at most, through the lens correction, whose linear remap OpenCV 5 computes in floats.",
+  "The pyramid lies 2e-7 from pyrDown; the panorama keeps its points, and its residual moves from 1.8459 to 1.8466 px.",
+  "Stacking from decoded frames: 9.2 s with OpenCV, 15.1 s with the image layer, as Lanczos runs about three times slower.",
+  "One mistake was found by these measures: padding a region mirrored at the tile, where OpenCV reads the image around it; every demosaic tile joint was wrong until fixed. The oracle now compares a region too."
+ ]
+}

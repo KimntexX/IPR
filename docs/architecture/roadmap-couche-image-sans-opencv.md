@@ -3,8 +3,8 @@
 **Décision :** [ADR-0018](../decisions/ADR-0018-independance-decodage-raw-et-couche-image.md),
 20 octobre 2026, et volonté réaffirmée par l'utilisateur le 5 novembre 2026 : être le plus indépendant
 possible. **État :** O0 commencé, O1 et O2 faits, O3 commencé par le flou gaussien, le 5 novembre 2026, intégré à `dev`.
-**Plus aucun module n'appelle `cv::GaussianBlur` ni `cv::resize`** : le flou et le redimensionnement de la couche image servent
-tous ceux qui en avaient besoin. Le reste d'OpenCV demeure.
+**Plus aucun module n'appelle le flou, le redimensionnement, les déformations, les rotations, les symétries, les bordures ni la
+pyramide d'OpenCV** : la couche image les fournit. Le reste d'OpenCV demeure.
 Suivi : [issue 29](https://github.com/KimntexX/IPR/issues/29).
 Chantier distinct des [décodeurs RAW](roadmap-decodeurs-raw.md), sur sa propre branche durable,
 `patch_image_core`, après le palier E1 de la [refonte d'`ImageEditor`](plan-imageeditor-orchestrateur.md).
@@ -238,6 +238,27 @@ threads. Ils partagent désormais un seul budget, celui des huit threads ; les p
 9,7 s : l'outil d'audit gardait en cache les vues déjà décodées, et la première mesure n'en décodait qu'une. Un export paraissait
 s'écarter d'un niveau : l'éditeur écrit un `.ipr` à côté des copies, et une mesure partait de ce qu'une autre avait laissé. L'outil
 travaille désormais sur des copies neuves.
+
+### Déformations, rotations, symétries, bordures et pyramide
+
+[Noyaux](../validation/raw/image-kernel-warp-arrange-v001-20261105.json), [modules](../validation/raw/image-layer-warp-arrange-v001-20261105.json).
+
+- **Lanczos** lit ses poids au 1/32 de pixel, comme OpenCV : **identique au bit près**, en remap comme en perspective. C'est lui
+  qui sert l'export de la géométrie, l'empilement et le panorama ; ces exports sortent identiques au bit près.
+- **Bilinéaire et bicubique** : OpenCV 5 ne les arrondit plus au 1/32 et calcule la perspective en flottants simples ; OpenCV 4
+  arrondit au 1/32. Les deux ne s'accordent déjà pas. La couche image prend des positions exactes en double : en remap, 7e-7
+  d'OpenCV 5 ; **en perspective, jusqu'à 2e-4 sur une texture de bruit, hors de la tolérance de 1e-5**. Cela touche l'aperçu de la
+  géométrie, la carte des masques et l'alignement grossier de l'empilement. Choix : ne pas imiter une imprécision qui change d'une
+  version d'OpenCV à l'autre.
+- **Rotations, symétries, transposition, bordures : identiques au bit près**, aussi rapides qu'OpenCV après une optimisation par
+  lignes entières. **La pyramide** : 2e-7.
+- **Sur les modules** : recalage de l'empilement identique au millionième, rares pixels jusqu'à 134 niveaux sur 65 535 par
+  l'alignement grossier ; panorama aux mêmes points, écart résiduel de 1,8459 à 1,8466 px par la pyramide.
+- **Lenteur à reprendre** : Lanczos tourne environ trois fois plus lentement qu'OpenCV ; la fusion de l'empilement passe de 9,2 à
+  15,1 s sur 8 vues.
+- **Une erreur trouvée par la mesure** : la bordure d'une région se faisait en miroir au bord de la tuile, quand OpenCV lit
+  l'image autour ; chaque jointure de tuile du dématriçage était fausse. Corrigée avant le commit ; l'oracle compare désormais une
+  région aussi.
 
 ## 5. Principes de conception
 

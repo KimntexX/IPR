@@ -1,9 +1,11 @@
 #ifndef IPR_IMAGE_OPENCVBRIDGE_H
 #define IPR_IMAGE_OPENCVBRIDGE_H
 
+#include "Arrange.h"
 #include "Filters.h"
 #include "Image.h"
 #include "Resize.h"
+#include "Warp.h"
 
 #include <opencv2/core.hpp>
 
@@ -30,6 +32,19 @@ cv::Mat gaussianBlurred(const cv::Mat &mat, double sigmaX, double sigmaY, BlurBo
 // A new Mat at this size, or at these scales, as Resize.h. CV_32F of any channel count.
 cv::Mat resized(const cv::Mat &mat, cv::Size size, Interpolation interpolation);
 cv::Mat resizedBy(const cv::Mat &mat, double scaleX, double scaleY, Interpolation interpolation);
+// A new Mat read through two maps of single floats, or through a homography from the new Mat to this
+// one, as Warp.h. CV_32F of any channel count.
+cv::Mat remapped(const cv::Mat &mat, const cv::Mat &mapX, const cv::Mat &mapY, Resampling resampling, Outside outside);
+cv::Mat warpedPerspective(const cv::Mat &mat, const cv::Matx33d &outToImage, cv::Size size, Resampling resampling,
+                          Outside outside);
+// New Mats as Arrange.h gives them: any depth, except the pyramid in CV_32F.
+cv::Mat turned(const cv::Mat &mat, int quarterTurns);
+cv::Mat mirrored(const cv::Mat &mat, bool leftToRight, bool topToBottom);
+cv::Mat transposed(const cv::Mat &mat);
+cv::Mat padded(const cv::Mat &mat, int top, int bottom, int left, int right);
+// A region of the Mat with margins, its own pixels where they exist, as copyMakeBorder on a region.
+cv::Mat paddedRegion(const cv::Mat &whole, cv::Rect region, int top, int bottom, int left, int right);
+cv::Mat pyramidDown(const cv::Mat &mat);
 
 inline cv::Size toCv(const Size &size) { return {size.width, size.height}; }
 inline Size fromCv(const cv::Size &size) { return {size.width, size.height}; }

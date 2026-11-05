@@ -312,7 +312,7 @@ Result run(const Request &request)
         sources[size_t(member)]->remove();
         cv::Mat mapX, mapY, valid, warped;
         PanoramaGeometry::sourceMaps(surface, frameView, area, interpolationMargin, mapX, mapY, valid);
-        cv::remap(source, warped, mapX, mapY, cv::INTER_LANCZOS4, cv::BORDER_REPLICATE);
+        warped = ipr::remapped(source, mapX, mapY, ipr::Resampling::Lanczos4, ipr::Outside::LastPixel);
         source.release();
         mapX.release();
         mapY.release();

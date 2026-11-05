@@ -111,6 +111,87 @@ cv::Mat resizedBy(const cv::Mat &mat, double scaleX, double scaleY, Interpolatio
     return out;
 }
 
+cv::Mat remapped(const cv::Mat &mat, const cv::Mat &mapX, const cv::Mat &mapY, Resampling resampling, Outside outside)
+{
+    if (mat.empty() || mapX.empty())
+        return {};
+    cv::Mat out(mapX.size(), mat.type());
+    Image target = fromMutableMat(out);
+    remapInto(fromMat(mat), target, fromMat(mapX), fromMat(mapY), resampling, outside);
+    return out;
+}
+
+cv::Mat warpedPerspective(const cv::Mat &mat, const cv::Matx33d &outToImage, cv::Size size, Resampling resampling,
+                          Outside outside)
+{
+    if (mat.empty() || size.empty())
+        return {};
+    cv::Mat out(size, mat.type());
+    Image target = fromMutableMat(out);
+    warpPerspectiveInto(fromMat(mat), target, fromCv(outToImage), resampling, outside);
+    return out;
+}
+
+cv::Mat turned(const cv::Mat &mat, int quarterTurns)
+{
+    if (mat.empty())
+        return {};
+    cv::Mat out(quarterTurns % 2 ? cv::Size(mat.rows, mat.cols) : mat.size(), mat.type());
+    Image target = fromMutableMat(out);
+    turnInto(fromMat(mat), target, quarterTurns);
+    return out;
+}
+
+cv::Mat mirrored(const cv::Mat &mat, bool leftToRight, bool topToBottom)
+{
+    if (mat.empty())
+        return {};
+    cv::Mat out(mat.size(), mat.type());
+    Image target = fromMutableMat(out);
+    mirrorInto(fromMat(mat), target, leftToRight, topToBottom);
+    return out;
+}
+
+cv::Mat transposed(const cv::Mat &mat)
+{
+    if (mat.empty())
+        return {};
+    cv::Mat out(mat.cols, mat.rows, mat.type());
+    Image target = fromMutableMat(out);
+    transposeInto(fromMat(mat), target);
+    return out;
+}
+
+cv::Mat padded(const cv::Mat &mat, int top, int bottom, int left, int right)
+{
+    if (mat.empty())
+        return {};
+    cv::Mat out(mat.rows + top + bottom, mat.cols + left + right, mat.type());
+    Image target = fromMutableMat(out);
+    padInto(fromMat(mat), target, top, bottom, left, right);
+    return out;
+}
+
+cv::Mat paddedRegion(const cv::Mat &whole, cv::Rect region, int top, int bottom, int left, int right)
+{
+    if (whole.empty())
+        return {};
+    cv::Mat out(region.height + top + bottom, region.width + left + right, whole.type());
+    Image target = fromMutableMat(out);
+    padRegionInto(fromMat(whole), target, fromCv(region), top, bottom, left, right);
+    return out;
+}
+
+cv::Mat pyramidDown(const cv::Mat &mat)
+{
+    if (mat.empty())
+        return {};
+    cv::Mat out(toCv(pyramidDownSize(fromCv(mat.size()))), mat.type());
+    Image target = fromMutableMat(out);
+    pyramidDownInto(fromMat(mat), target);
+    return out;
+}
+
 cv::Matx33d toCv(const Matrix33d &matrix)
 {
     cv::Matx33d out;
