@@ -72,8 +72,8 @@ cv::Mat objectsOf(const Level &level)
     }
     const int side = std::max(3, int(std::max(level.colour.cols, level.colour.rows) * standingOutRadius)) | 1;
     cv::Mat sum, count;
-    cv::blur(luminance, sum, cv::Size(side, side), cv::Point(-1, -1), cv::BORDER_REPLICATE);
-    cv::blur(weight, count, cv::Size(side, side), cv::Point(-1, -1), cv::BORDER_REPLICATE);
+    sum = ipr::boxMean(luminance, cv::Size(side, side), ipr::BlurBorder::LastPixel);
+    count = ipr::boxMean(weight, cv::Size(side, side), ipr::BlurBorder::LastPixel);
     cv::Mat objects = cv::Mat::zeros(level.colour.size(), CV_8UC1);
     for (int y = 0; y < objects.rows; ++y) {
         const float *value = luminance.ptr<float>(y), *around = sum.ptr<float>(y), *amount = count.ptr<float>(y), *present = weight.ptr<float>(y);
@@ -82,8 +82,7 @@ cv::Mat objectsOf(const Level &level)
             if (present[x] > 0.0f && amount[x] > 1e-3f && std::abs(value[x] - around[x] / amount[x]) > standingOut)
                 out[x] = 255;
     }
-    const cv::Mat reach = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(4 * patchHalf + 1, 4 * patchHalf + 1));
-    cv::dilate(objects, objects, reach);
+    objects = ipr::maximum(objects, cv::Size(4 * patchHalf + 1, 4 * patchHalf + 1), ipr::Beyond::Nothing);
     // An object stands alone. Details close enough to join up are the texture of a slope, and
     // without them it could only be continued by what is left, such as a plain patch of earth.
     const int largest = int(largestObject * double(cv::countNonZero(level.known)));
@@ -120,8 +119,7 @@ cv::Mat objectsOf(const Level &level)
 // banned: cells no patch may be centred on, of this level's size, or empty.
 void describe(Level &level, const cv::Mat &banned)
 {
-    const cv::Mat kernel = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(2 * patchHalf + 1, 2 * patchHalf + 1));
-    cv::erode(level.known, level.usable, kernel, cv::Point(-1, -1), 1, cv::BORDER_CONSTANT, cv::Scalar(0));
+    level.usable = ipr::minimum(level.known, cv::Size(2 * patchHalf + 1, 2 * patchHalf + 1), ipr::Beyond::Zero);
     if (!banned.empty())
         level.usable.setTo(cv::Scalar(0), banned);
     level.holeIndex.create(level.known.size(), CV_32SC1);

@@ -30,7 +30,7 @@ double sharpnessOf(const cv::Mat &luminance)
 {
     cv::Mat smoothed, detail;
     smoothed = ipr::gaussianBlurred(luminance, 1.0, ipr::BlurBorder::Mirror);
-    cv::Laplacian(smoothed, detail, CV_32F);
+    detail = ipr::laplacian(smoothed);
     cv::Scalar mean, deviation;
     cv::meanStdDev(detail, mean, deviation);
     return deviation[0] * deviation[0];

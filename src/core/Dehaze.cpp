@@ -297,7 +297,7 @@ void apply(cv::Mat &linearRgb, int amount, double pixelScale, const cv::Mat &loc
         }
     }
     const int window = int(DarkWindow * scale) + 1;
-    cv::erode(dark, dark, cv::getStructuringElement(cv::MORPH_RECT, cv::Size(window, window)));
+    dark = ipr::minimum(dark, cv::Size(window, window), ipr::Beyond::Nothing);
     const Airlight airlight = airlightOf(small, dark);
     const cv::Vec2f centre(std::log2(std::max(airlight.colour[0], 1e-6f) / std::max(airlight.colour[1], 1e-6f)),
                            std::log2(std::max(airlight.colour[2], 1e-6f) / std::max(airlight.colour[1], 1e-6f)));

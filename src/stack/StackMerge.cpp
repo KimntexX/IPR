@@ -1,5 +1,7 @@
 #include "StackMerge.h"
 
+#include "OpenCvBridge.h"
+
 #include <opencv2/imgproc.hpp>
 
 #include <algorithm>
@@ -27,9 +29,7 @@ cv::Mat decisionLuminance(const cv::Mat &frame)
         for (int x = 0; x < frame.cols; ++x)
             out[x] = 0.25f * in[x][0] + 0.5f * in[x][1] + 0.25f * in[x][2];
     }
-    cv::Mat smoothed;
-    cv::blur(luminance, smoothed, cv::Size(decisionWindow, decisionWindow), cv::Point(-1, -1), cv::BORDER_REPLICATE);
-    return smoothed;
+    return ipr::boxMean(luminance, cv::Size(decisionWindow, decisionWindow), ipr::BlurBorder::LastPixel);
 }
 }
 

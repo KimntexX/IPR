@@ -126,8 +126,8 @@ cv::Mat structureProtection(const cv::Mat &guide, float noiseSigma)
 {
     cv::Mat gradientX, gradientY, magnitude;
     // Sobel's derivative scale is 8. Normalize it before comparing with sigma.
-    cv::Sobel(guide, gradientX, CV_32F, 1, 0, 3, 1.0 / 8.0);
-    cv::Sobel(guide, gradientY, CV_32F, 0, 1, 3, 1.0 / 8.0);
+    gradientX = ipr::sobel(guide, true, 1.0 / 8.0);
+    gradientY = ipr::sobel(guide, false, 1.0 / 8.0);
     cv::magnitude(gradientX, gradientY, magnitude);
     const float sigma = std::max(noiseSigma, kDenoiseSigmaEpsilon);
     for (int y = 0; y < magnitude.rows; ++y) {
@@ -208,10 +208,7 @@ cv::Mat denoiseLuminance(const cv::Mat &plane, const cv::Mat &protectionMap,
 
 cv::Mat boxMean(const cv::Mat &plane, int radius)
 {
-    cv::Mat mean;
-    cv::boxFilter(plane, mean, CV_32F, cv::Size(2 * radius + 1, 2 * radius + 1),
-                  cv::Point(-1, -1), true, cv::BORDER_REPLICATE);
-    return mean;
+    return ipr::boxMean(plane, cv::Size(2 * radius + 1, 2 * radius + 1), ipr::BlurBorder::LastPixel);
 }
 
 // He's guided filter: the plane follows the guide's edges inside each window.
@@ -285,8 +282,8 @@ cv::Mat colourEdgeProtection(const cv::Mat &chromaOrange, const cv::Mat &chromaG
     for (const cv::Mat *plane : {&chromaOrange, &chromaGreen}) {
         cv::Mat smooth, gx, gy;
         smooth = ipr::gaussianBlurred(*plane, edgeSigma, ipr::BlurBorder::LastPixel);
-        cv::Sobel(smooth, gx, CV_32F, 1, 0);
-        cv::Sobel(smooth, gy, CV_32F, 0, 1);
+        gx = ipr::sobel(smooth, true);
+        gy = ipr::sobel(smooth, false);
         gradient += gx.mul(gx) + gy.mul(gy);
     }
     cv::sqrt(gradient, gradient);
@@ -299,9 +296,7 @@ cv::Mat colourEdgeProtection(const cv::Mat &chromaOrange, const cv::Mat &chromaG
         for (int x = 0; x < gradient.cols; ++x)
             target[x] = noise[x] > 0.0f ? smoothStep(kChromaEdgeLow, kChromaEdgeHigh, edge[x] / noise[x]) : 0.0f;
     }
-    cv::dilate(protection, protection, cv::getStructuringElement(
-        cv::MORPH_RECT, cv::Size(2 * radius + 1, 2 * radius + 1)));
-    return protection;
+    return ipr::maximum(protection, cv::Size(2 * radius + 1, 2 * radius + 1), ipr::Beyond::Nothing);
 }
 
 // Colour noise. A 5 x 5 median first removes isolated colour dots, which an
@@ -320,8 +315,7 @@ void denoiseChrominance(const cv::Mat &luma, cv::Mat *chromaOrange, cv::Mat *chr
     const auto scaled = [pixelScale](double sigma) { return std::max(0.8, sigma * pixelScale); };
 
     for (cv::Mat *plane : {chromaOrange, chromaGreen}) {
-        cv::Mat median;
-        cv::medianBlur(*plane, median, pixelScale >= 0.6 ? 5 : 3);
+        const cv::Mat median = ipr::median(*plane, pixelScale >= 0.6 ? 5 : 3);
         cv::addWeighted(*plane, 1.0 - weight, median, weight, 0.0, *plane);
     }
 
@@ -571,12 +565,9 @@ void sharpen(cv::Mat &linearRgb, const SharpenSettings &settings, double pixelSc
     cv::Mat localBase;
     const double radius = std::clamp(static_cast<double>(settings.radius), 0.3, 3.0) * pixelScale;
     localBase = ipr::gaussianBlurred(luma, radius, ipr::BlurBorder::LastPixel);
-    cv::Mat localMinimum, localMaximum;
     const int kernelSize = std::max(3, static_cast<int>(std::ceil(radius * 2.0)) * 2 + 1);
-    const cv::Mat kernel = cv::getStructuringElement(cv::MORPH_RECT,
-                                                     cv::Size(kernelSize, kernelSize));
-    cv::erode(luma, localMinimum, kernel);
-    cv::dilate(luma, localMaximum, kernel);
+    const cv::Mat localMinimum = ipr::minimum(luma, cv::Size(kernelSize, kernelSize), ipr::Beyond::Nothing);
+    const cv::Mat localMaximum = ipr::maximum(luma, cv::Size(kernelSize, kernelSize), ipr::Beyond::Nothing);
 
     const float noiseSigma = estimateNoiseSigma(luma);
     const float threshold = noiseSigma *
