@@ -2,6 +2,8 @@
 
 #include "PanoramaFill.h"
 
+#include "OpenCvBridge.h"
+
 #include <QStringLiteral>
 #include <QVariantMap>
 #include <opencv2/imgproc.hpp>
@@ -116,8 +118,8 @@ bool copyZone(cv::Mat &rgb, const cv::Mat &zone, const cv::Rect &box, const Oper
             }
         }
         const double sigma = std::max(2.0, healBlurOfZone * std::max(box.width, box.height));
-        cv::GaussianBlur(difference, difference, cv::Size(), sigma, sigma, cv::BORDER_REPLICATE);
-        cv::GaussianBlur(weight, weight, cv::Size(), sigma, sigma, cv::BORDER_REPLICATE);
+        difference = ipr::gaussianBlurred(difference, sigma, ipr::BlurBorder::LastPixel);
+        weight = ipr::gaussianBlurred(weight, sigma, ipr::BlurBorder::LastPixel);
         for (int y = 0; y < box.height; ++y) {
             cv::Vec3f *out = result.ptr<cv::Vec3f>(y);
             for (int x = 0; x < box.width; ++x) {

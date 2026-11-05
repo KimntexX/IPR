@@ -23,6 +23,8 @@ int mirrored(int position, int length, BlurBorder border)
 {
     if (length == 1)
         return 0;
+    if (border == BlurBorder::LastPixel)
+        return std::clamp(position, 0, length - 1);
     const bool repeatsEdge = border == BlurBorder::MirrorEdge;
     const int period = repeatsEdge ? 2 * length : 2 * (length - 1);
     int wrapped = position % period;
@@ -75,7 +77,7 @@ std::vector<float> gaussianHalfKernel(double sigma)
 {
     if (!(sigma > 0.0) || !std::isfinite(sigma))
         return {};
-    const int radius = std::max(1, int(std::lround(sigma * 4.0)));
+    const int radius = (int(std::lrint(sigma * 8.0 + 1.0)) | 1) / 2;
     std::vector<double> weights(size_t(radius) + 1);
     double total = 0;
     for (int k = 0; k <= radius; ++k) {

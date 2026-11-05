@@ -2,6 +2,8 @@
 #include "LocalValues.h"
 #include "WorkingColorSpace.h"
 
+#include "OpenCvBridge.h"
+
 #include <opencv2/imgproc.hpp>
 
 #include <algorithm>
@@ -299,7 +301,7 @@ void apply(cv::Mat &linearRgb, int amount, double pixelScale, const cv::Mat &loc
     const Airlight airlight = airlightOf(small, dark);
     const cv::Vec2f centre(std::log2(std::max(airlight.colour[0], 1e-6f) / std::max(airlight.colour[1], 1e-6f)),
                            std::log2(std::max(airlight.colour[2], 1e-6f) / std::max(airlight.colour[1], 1e-6f)));
-    cv::GaussianBlur(dark, dark, cv::Size(0, 0), HazeSigma * scale, HazeSigma * scale, cv::BORDER_REFLECT);
+    dark = ipr::gaussianBlurred(dark, HazeSigma * scale, ipr::BlurBorder::MirrorEdge);
     // Tone change of the law, smoothed into a base: Lightroom's change is a smooth
     // local map, not a per-pixel curve. On the reduced image: log2 luminance before
     // and after the law, both blurred at BaseSigma.
@@ -312,9 +314,9 @@ void apply(cv::Mat &linearRgb, int amount, double pixelScale, const cv::Mat &loc
     }
     const double baseSigma = BaseSigma * scale, meanSigma = DetailMeanSigma * scale;
     cv::Mat tone;
-    cv::GaussianBlur(before, tone, cv::Size(0, 0), meanSigma, meanSigma, cv::BORDER_REFLECT);
+    tone = ipr::gaussianBlurred(before, meanSigma, ipr::BlurBorder::MirrorEdge);
     tone -= std::log2(airlight.level + LogFloor);
-    cv::GaussianBlur(before, before, cv::Size(0, 0), baseSigma, baseSigma, cv::BORDER_REFLECT);
+    before = ipr::gaussianBlurred(before, baseSigma, ipr::BlurBorder::MirrorEdge);
     const auto shiftAt = [&](const Law &law) {
         cv::Mat after(small.size(), CV_32F);
         for (int y = 0; y < small.rows; ++y) {
@@ -329,7 +331,7 @@ void apply(cv::Mat &linearRgb, int amount, double pixelScale, const cv::Mat &loc
                 a[x] = std::log2(target + LogFloor);
             }
         }
-        cv::GaussianBlur(after, after, cv::Size(0, 0), baseSigma, baseSigma, cv::BORDER_REFLECT);
+        after = ipr::gaussianBlurred(after, baseSigma, ipr::BlurBorder::MirrorEdge);
         cv::Mat difference = after - before;
         return difference;
     };

@@ -1,7 +1,6 @@
 #include "LocalContrast.h"
 #include "WorkingColorSpace.h"
 
-#include "Filters.h"
 #include "OpenCvBridge.h"
 
 #include <opencv2/imgproc.hpp>
@@ -76,25 +75,17 @@ Bands detailGainAt(const std::array<Row, 6> &table, int value)
 // resolution (area reduction by a power of 2 leaving a sigma of 2 to 4, then
 // bilinear enlargement). A sigma far below a pixel leaves the plane: that band
 // is finer than this image can show.
-cv::Mat gaussian(const cv::Mat &plane, double sigma)
-{
-    cv::Mat blurred(plane.size(), plane.type());
-    ipr::Image target = ipr::fromMutableMat(blurred);
-    ipr::gaussianBlurInto(ipr::fromMat(plane), target, sigma, 0, ipr::BlurBorder::MirrorEdge);
-    return blurred;
-}
-
 cv::Mat blurSigma(const cv::Mat &plane, double sigma)
 {
     if (sigma < 0.25) return plane.clone();
     int factor = 1;
     while (sigma / (2 * factor) >= 2.0) factor *= 2;
     if (factor == 1)
-        return gaussian(plane, sigma);
+        return ipr::gaussianBlurred(plane, sigma, ipr::BlurBorder::MirrorEdge);
     cv::Mat result, small;
     cv::resize(plane, small, cv::Size(std::max(1, plane.cols / factor), std::max(1, plane.rows / factor)), 0, 0,
                cv::INTER_AREA);
-    cv::resize(gaussian(small, sigma / factor), result, plane.size(), 0, 0, cv::INTER_LINEAR);
+    cv::resize(ipr::gaussianBlurred(small, sigma / factor, ipr::BlurBorder::MirrorEdge), result, plane.size(), 0, 0, cv::INTER_LINEAR);
     return result;
 }
 

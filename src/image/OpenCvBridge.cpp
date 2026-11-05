@@ -76,6 +76,16 @@ cv::Mat asMutableMat(Image &image)
     return headerOn(image);
 }
 
+cv::Mat gaussianBlurred(const cv::Mat &mat, double sigma, BlurBorder border)
+{
+    if (mat.empty())
+        return {};
+    cv::Mat blurred(mat.size(), mat.type());
+    Image target = fromMutableMat(blurred);
+    gaussianBlurInto(fromMat(mat), target, sigma, 0, border);
+    return blurred;
+}
+
 cv::Matx33d toCv(const Matrix33d &matrix)
 {
     cv::Matx33d out;

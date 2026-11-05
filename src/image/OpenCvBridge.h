@@ -1,6 +1,7 @@
 #ifndef IPR_IMAGE_OPENCVBRIDGE_H
 #define IPR_IMAGE_OPENCVBRIDGE_H
 
+#include "Filters.h"
 #include "Image.h"
 
 #include <opencv2/core.hpp>
@@ -20,6 +21,10 @@ Image fromMutableMat(cv::Mat &mat);
 // image comes out as a const Mat, and asMutableMat refuses it (std::logic_error).
 const cv::Mat asMat(const Image &image);
 cv::Mat asMutableMat(Image &image);
+
+// A new Mat, blurred by this sigma in pixels. CV_32F of any channel count: throws
+// std::invalid_argument on another depth. While the modules still hold Mats.
+cv::Mat gaussianBlurred(const cv::Mat &mat, double sigma, BlurBorder border = BlurBorder::Mirror);
 
 inline cv::Size toCv(const Size &size) { return {size.width, size.height}; }
 inline Size fromCv(const cv::Size &size) { return {size.width, size.height}; }

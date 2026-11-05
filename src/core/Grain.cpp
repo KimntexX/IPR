@@ -1,5 +1,7 @@
 #include "Grain.h"
 
+#include "OpenCvBridge.h"
+
 #include <opencv2/imgproc.hpp>
 
 #include <algorithm>
@@ -66,7 +68,7 @@ void apply(cv::Mat &linearRgb, int amount, double pixelScale)
     });
     float deviation = StandardDeviation * float(std::min(amount, 100)) / 100.0f;
     if (pixelScale >= 1.0) {
-        cv::GaussianBlur(noise, noise, cv::Size(0, 0), Sigma, Sigma, cv::BORDER_REFLECT);
+        noise = ipr::gaussianBlurred(noise, Sigma, ipr::BlurBorder::MirrorEdge);
         // The blur lowers the deviation of unit white noise to the norm of its kernel.
         const cv::Mat kernel = cv::getGaussianKernel(2 * int(std::ceil(4 * Sigma)) + 1, Sigma, CV_32F);
         deviation /= float(kernel.dot(kernel));

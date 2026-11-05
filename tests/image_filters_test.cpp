@@ -188,6 +188,37 @@ void theEdgeMirrorRepeatsTheEdge()
     }
 }
 
+void theLastPixelRepeatsBeyondTheBorder()
+{
+    Image image = Image::create({4, 1}, Depth::F32, 1);
+    const float values[4] = {1.0f, 2.0f, 4.0f, 8.0f};
+    for (int x = 0; x < 4; ++x)
+        image.mutableRow<float>(0)[x] = values[x];
+    const std::vector<float> half = gaussianHalfKernel(1.0);
+    const int radius = int(half.size()) - 1;
+    const float extended[12] = {1, 1, 1, 1, 1, 2, 4, 8, 8, 8, 8, 8};
+    const Image blurred = gaussianBlur(image, 1.0, 1, BlurBorder::LastPixel);
+    for (int x = 0; x < 4; ++x) {
+        float expected = half[0] * extended[x + 4];
+        for (int k = 1; k <= radius; ++k)
+            expected += half[size_t(k)] * (extended[x + 4 - k] + extended[x + 4 + k]);
+        check(std::abs(blurred.row<float>(0)[x] - expected) < 1e-5f, "the last pixel repeats");
+    }
+}
+
+// OpenCV's rule for floats: an odd size of 8 sigmas plus one, rounded to even.
+void theRadiusIsTheOneOfOpenCv()
+{
+    const struct { double sigma; size_t size; } cases[] = {
+        {0.5, 3}, {0.6, 4}, {0.8, 4}, {1.0, 5}, {1.1, 6}, {1.37, 7}, {2.0, 9}, {3.9, 17}, {10.0, 41},
+    };
+    for (const auto &c : cases)
+        check(gaussianHalfKernel(c.sigma).size() == c.size, "the radius of a fractional sigma");
+    check(gaussianHalfKernel(0.01).size() == 1, "a sigma far below a pixel has only its centre");
+    Image one = noisy({9, 7}, 1);
+    check(identical(gaussianBlur(one, 0.01, 1), one), "and changes nothing");
+}
+
 void aBufferReceivesTheSamePixels()
 {
     const Image image = noisy({97, 61}, 3);
@@ -275,6 +306,8 @@ int main()
         theMirrorIsTheOneAnnounced();
         theSizeDoesNotMatterToTheMirror();
         theEdgeMirrorRepeatsTheEdge();
+        theLastPixelRepeatsBeyondTheBorder();
+        theRadiusIsTheOneOfOpenCv();
         aBufferReceivesTheSamePixels();
         threadsDoNotChangeTheResult();
         aPartOfAnImageHasItsRows();

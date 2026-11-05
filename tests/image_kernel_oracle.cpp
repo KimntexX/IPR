@@ -66,24 +66,27 @@ int main(int argc, char **argv)
     std::ostringstream cases;
     bool within = true;
     bool first = true;
-    struct Case { int width, height, channels; double sigma; bool repeatsEdge = false; };
+    struct Case { int width, height, channels; double sigma; BlurBorder border = BlurBorder::Mirror; };
+    const BlurBorder edge = BlurBorder::MirrorEdge, last = BlurBorder::LastPixel;
     const std::vector<Case> list = {
         {1, 1, 3, 2.0}, {3, 2, 1, 5.0}, {17, 5, 3, 3.0}, {64, 64, 1, 0.5}, {64, 64, 4, 8.0}, {640, 480, 3, 1.0}, {640, 480, 3, 40.0},
         {2048, 1365, 3, 1.0}, {2048, 1365, 3, 3.0}, {2048, 1365, 3, 10.0}, {2048, 1365, 3, 30.0}, {2048, 1365, 4, 3.0},
         {6960, 4640, 3, 1.0}, {6960, 4640, 3, 3.0}, {6960, 4640, 3, 10.0}, {6960, 4640, 3, 30.0},
         // One plane with the edge repeated: what local contrast asks for.
-        {3, 2, 1, 5.0, true}, {17, 5, 1, 3.0, true}, {64, 64, 1, 0.5, true}, {2048, 1365, 1, 1.0, true}, {2048, 1365, 1, 2.0, true},
-        {6960, 4640, 1, 1.0, true}, {6960, 4640, 1, 2.0, true}, {6960, 4640, 1, 3.9, true},
+        {3, 2, 1, 5.0, edge}, {17, 5, 1, 3.0, edge}, {64, 64, 1, 0.5, edge}, {2048, 1365, 1, 1.0, edge}, {2048, 1365, 1, 2.0, edge},
+        {6960, 4640, 1, 1.0, edge}, {6960, 4640, 1, 2.0, edge}, {6960, 4640, 1, 3.9, edge},
+        // The last pixel repeated, and sigmas that are not whole: what detail and retouch ask for.
+        {3, 2, 1, 5.0, last}, {17, 5, 3, 3.0, last}, {64, 64, 1, 0.8, last}, {640, 480, 1, 1.1, last}, {640, 480, 3, 1.37, last},
+        {2048, 1365, 1, 0.6, last}, {2048, 1365, 1, 2.5, last}, {2048, 1365, 3, 12.3, last}, {6960, 4640, 1, 0.8, last}, {6960, 4640, 1, 2.5, last},
     };
     for (const Case &c : list) {
         const cv::Mat input = scene(c.width, c.height, c.channels);
         const Image image = fromMat(input);
         cv::Mat oracle;
-        const double openCv = medianOfThree([&] { cv::GaussianBlur(input, oracle, cv::Size(0, 0), c.sigma, c.sigma, c.repeatsEdge ? cv::BORDER_REFLECT : cv::BORDER_REFLECT_101); });
+        const double openCv = medianOfThree([&] { cv::GaussianBlur(input, oracle, cv::Size(0, 0), c.sigma, c.sigma, c.border == edge ? cv::BORDER_REFLECT : c.border == last ? cv::BORDER_REPLICATE : cv::BORDER_REFLECT_101); });
         Image ours;
-        const BlurBorder border = c.repeatsEdge ? BlurBorder::MirrorEdge : BlurBorder::Mirror;
-        const double mine = medianOfThree([&] { ours = gaussianBlur(image, c.sigma, threads, border); });
-        const double one = c.width >= 640 ? milliseconds([&] { (void)gaussianBlur(image, c.sigma, 1, border); }) : 0.0;
+        const double mine = medianOfThree([&] { ours = gaussianBlur(image, c.sigma, threads, c.border); });
+        const double one = c.width >= 640 ? milliseconds([&] { (void)gaussianBlur(image, c.sigma, 1, c.border); }) : 0.0;
         double difference = 0;
         const cv::Mat gap = cv::abs(asMat(ours) - oracle);
         cv::minMaxLoc(gap.reshape(1), nullptr, &difference);
@@ -93,7 +96,7 @@ int main(int argc, char **argv)
                       c.width, c.height, c.channels, c.sigma, openCv, mine, mine / std::max(openCv, 1e-3), one, difference);
         std::cout << line << std::endl;
         cases << (first ? "" : ",\n") << "  {\"width\": " << c.width << ", \"height\": " << c.height << ", \"channels\": " << c.channels
-              << ", \"sigma\": " << c.sigma << ", \"edge_repeated\": " << (c.repeatsEdge ? "true" : "false") << ", \"opencv_ms\": " << openCv << ", \"ipr_ms\": " << mine << ", \"ipr_one_thread_ms\": " << one
+              << ", \"sigma\": " << c.sigma << ", \"border\": \"" << (c.border == edge ? "mirror edge" : c.border == last ? "last pixel" : "mirror") << "\"" << ", \"opencv_ms\": " << openCv << ", \"ipr_ms\": " << mine << ", \"ipr_one_thread_ms\": " << one
               << ", \"largest_difference\": " << difference << "}";
         first = false;
     }
