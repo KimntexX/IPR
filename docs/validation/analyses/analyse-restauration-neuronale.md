@@ -10,8 +10,8 @@ Ce bénéfice n'est pas démontré pour le correcteur CFA actuel.
 | Ce qui fonctionne | Contrats, signal signé, limites de ressources, reprise et mesures synthétiques traçables. Ce ne sont pas des preuves de qualité photo. |
 | Ce qui bloque | Bénéfice photo instable selon la graine ; loi de bruit encore expérimentale ; absence de confirmation photographique indépendante. |
 | Derniers résultats | Réplication close : 10 et 12 échecs forts sur 48, après les 12 et 16 précédents. Sur les photos, sensibilité aux graines et motifs directionnels : bénéfice non validé. |
-| Calcul engagé | Courbe de continuation préparée : mêmes cibles connues, deux graines, reconstructeur gelé, bruit mesuré expérimental ; contrôles à +0/+256/+1024/+2048. Prémesures et reprise CUDA vérifiées, résultat de campagne à venir. |
-| Prochaine preuve utile | Carte sigma locale testée à poids constants : entrée physiquement mieux motivée, mais sensibilité aux graines persistante et bénéfice photo non établi. Arrêter les balayages de sigma ; préparer une courbe d'apprentissage bornée avec le bruit caractérisé, et compléter le classique couleur. |
+| Calcul engagé | Continuation CUDA lancée à 18 h 31 UTC : mêmes cibles connues, deux graines, reconstructeur gelé, bruit expérimental ; contrôles à +0/+256/+1024/+2048. Graine 71 démarrée et premier checkpoint technique confirmé ; résultats à venir. |
+| Prochaine preuve utile | Lire la courbe bornée et toutes les planches après la campagne. Carte sigma physiquement mieux motivée, mais bénéfice photo non établi ; pas de nouveau balayage des forces et classique couleur encore à compléter. |
 | GPU | CUDA qualifié ; prémesure définitive avec lecture et bruit : environ 0,32–0,33 s/mise à jour. Projection d'environ 23 min d'entraînement pour les deux graines, hors rendus ; plafond de campagne 90 min. |
 | Données | 349 RAW inventoriés, 105 paires étudiées. Température, bruit fixe et propagation restent à qualifier ; pas de nouvelles prises demandées pour cette expérience. |
 | Critère d'arrêt | Pas de nouvelle série de variantes synthétiques pour améliorer les mêmes seuils. Après une courbe longue figée et un bruit caractérisé, absence de gain visible face au classique : abandon ou changement de taille/architecture, décision documentée. |
@@ -6619,3 +6619,9 @@ Cette étape prépare une lecture de la courbe et des photos, **pas une
 qualification complète** : les régressions fines/classiques connues
 restent à rejouer si une direction utile se dégage. Elles ne sont ni
 relâchées ni déclarées satisfaites par la baisse d'une perte d'entraînement.
+
+**Démarrage confirmé à 18 h 31 min 58 s UTC** : superviseur PID 21548,
+étape `train-71`, checkpoint technique +64 constaté sans erreur. Code
+figé au commit local `13e7ba8`. Les scripts ne sont plus modifiés pendant
+la campagne. Cette confirmation de démarrage n'est pas un verdict de
+qualité ni l'annonce d'une campagne achevée.
