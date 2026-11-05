@@ -317,6 +317,21 @@ singulières, déterminant et rotation la plus proche (`6bfeaa2`) : empilement, 
   `config/raw-normalization.json` depuis le dossier courant, et cette mesure était lancée d'ailleurs. Les mesures partent désormais de
   la racine du dépôt.
 
+### Fils d'exécution et petits types
+
+- **Les 50 `cv::parallel_for_`** passent par `ipr::parallelRows`, qui partage un seul budget de threads avec les noyaux de la couche
+  image (`99bffce`). Exports, DNG empilé et panorama : identiques au bit près.
+- **Les petits types** (`Vec`, `Matx`, `Point`, `Rect`, `Size`, environ 1 250 usages) deviennent ceux de la couche image. Leur
+  arithmétique est celle d'OpenCV, expression pour expression : mêmes conversions, même ordre des sommes, division par produit avec
+  l'inverse, arrondi au plus proche avec égalité au pair, intersection de rectangles par sa formule, inverse par cofacteurs.
+  [Oracle](../validation/raw/image-kernel-types-v002-20261106.json), [modules](../validation/raw/image-layer-types-v001-20261106.json) : chaque opération sur 20 000 valeurs aléatoires et limites,
+  **bits identiques**. Seule différence voulue : au-delà de la plage des entiers, OpenCV rend `INT_MIN` quel que soit le signe, la
+  couche image la borne la plus proche.
+- **Une surprise lue dans le code d'OpenCV** : pour une matrice 3 × 3, `inv(DECOMP_CHOLESKY)` ignore la méthode et inverse par
+  cofacteurs. Le débruitage de la caméra le demandait ; il garde exactement le même calcul.
+- **Ce qui reste** : `cv::Mat` (environ 625 usages), ses constantes de type et les appels d'OpenCV des tests. Aux jonctions entre les
+  petits types et `cv::Mat`, des conversions explicites `ipr::toCv` / `ipr::fromCv` signalent ce qui partira avec `cv::Mat`.
+
 ## 5. Principes de conception
 
 - **Noyaux sans Qt.** `src/image/` ne dépend que du C++ standard, pour ne pas remplacer une dépendance lourde par une autre,

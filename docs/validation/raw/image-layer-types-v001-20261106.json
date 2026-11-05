@@ -1,0 +1,125 @@
+{
+ "question": "Whether the modules write the same with the image layer threads and small types instead of OpenCV",
+ "revisions": {
+  "parallel_rows": "99bffce",
+  "small_types": "85b661a"
+ },
+ "settings": "dehaze 30, texture 40, clarity 20, colour denoise 30, sharpening 40, rotation 2; 16-bit TIFF; fresh copies. Stacking on D:/DCIM/101EOSR6 6V1A0016 to 6V1A0023; panorama on Oliana _MG_7596 to _MG_7601 with filled edges; from the repository root.",
+ "parallel_rows_against_analysis_lot": "identical to the bit: exports, stacked DNG, panorama image and residuals",
+ "small_types_against_parallel_rows": {
+  "exports": {
+   "6V1A0007.CR3": {
+    "neutral": {
+     "largest": 0,
+     "share_differing": 0.0
+    },
+    "effect": {
+     "largest": 0,
+     "share_differing": 0.0
+    },
+    "effect_ms": [
+     6559.9617,
+     6287.8052
+    ],
+    "preview_ms": [
+     1055.3238,
+     956.9172
+    ]
+   },
+   "IMG_6858.CR2": {
+    "neutral": {
+     "largest": 0,
+     "share_differing": 0.0
+    },
+    "effect": {
+     "largest": 0,
+     "share_differing": 0.0
+    },
+    "effect_ms": [
+     3572.6096,
+     3497.6912
+    ],
+    "preview_ms": [
+     792.7482,
+     782.7736
+    ]
+   }
+  },
+  "stack": {
+   "dng": {
+    "largest": 0,
+    "share_differing": 0.0
+   },
+   "noise": [
+    [
+     0.35267831706277014,
+     0.3503921505824428,
+     0.3530538879891962
+    ],
+    [
+     0.35267831706277014,
+     0.3503921505824428,
+     0.3530538879891962
+    ]
+   ],
+   "residuals_px": [
+    [
+     0.4563074045103632,
+     0.42983518419097233,
+     0.428567015958631,
+     0.36063215893525724,
+     0,
+     0.35384734807901885,
+     0.4166197953683561,
+     0.40349265783931854
+    ],
+    [
+     0.4563074045103632,
+     0.42983518419097233,
+     0.428567015958631,
+     0.36063215893525724,
+     0,
+     0.35384734807901885,
+     0.4166197953683561,
+     0.40349265783931854
+    ]
+   ],
+   "seconds_stack_from_decoded": [
+    19.599,
+    14.649
+   ]
+  },
+  "panorama": {
+   "canvas_width": [
+    18448,
+    18448
+   ],
+   "canvas_height": [
+    4224,
+    4224
+   ],
+   "residual_pixels": [
+    1.8458881319839247,
+    1.8458881319839247
+   ],
+   "worst_pair_pixels": [
+    3.779481872853713,
+    3.779481872853713
+   ],
+   "filled_share": [
+    0.15178814704804988,
+    0.15178814704804988
+   ],
+   "job_seconds": [
+    11.786,
+    11.387
+   ],
+   "image": {
+    "largest": 0,
+    "share_differing": 0.0,
+    "inner_rows_600_3300_largest": 0
+   }
+  }
+ },
+ "timing": "one run per side on a machine training a network at the same time"
+}

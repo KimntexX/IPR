@@ -1,0 +1,26 @@
+{
+ "kernel": "small types",
+ "revision": "3d1bd74",
+ "opencv": "5.0.0",
+ "oracle": "OpenCV's own operators",
+ "tolerance": "identical bits",
+ "within_tolerance": true,
+ "cases": [
+  {"case": "saturate double to int", "trials": 20000, "differing": 0},
+  {"case": "saturate float to short", "trials": 20000, "differing": 0}  {"case": "beyond the range of int, by design: OpenCV gives INT_MIN, the layer the nearest end", "trials": 4, "differing": 2},
+,
+  {"case": "saturate int to short", "trials": 20000, "differing": 0},
+  {"case": "point2f arithmetic", "trials": 20000, "differing": 0},
+  {"case": "point2d arithmetic and rounding to point", "trials": 20000, "differing": 0},
+  {"case": "point arithmetic", "trials": 20000, "differing": 0},
+  {"case": "size", "trials": 20000, "differing": 0},
+  {"case": "rect intersection, union, corners", "trials": 20000, "differing": 0},
+  {"case": "rect2d intersection, union, rounding to rect", "trials": 20000, "differing": 0},
+  {"case": "vec3f arithmetic", "trials": 20000, "differing": 0},
+  {"case": "vec3d arithmetic and rounding to floats", "trials": 20000, "differing": 0},
+  {"case": "vec2s, vec2f, vec4f", "trials": 20000, "differing": 0},
+  {"case": "matx33d arithmetic, product, inverse", "trials": 20000, "differing": 0},
+  {"case": "matx33f arithmetic, product, inverse", "trials": 20000, "differing": 0},
+  {"case": "matx33d identity and singular inverse", "trials": 20000, "differing": 0}
+ ]
+}
