@@ -165,9 +165,12 @@ int main(int argc, char **argv)
                "a click selects a tab")) return 1;
     // The tabs share the bar's width, side by side, as tabs of the panel below them.
     auto *settingsTab = visualItemNamed(tabs, QStringLiteral("panelTabSettings"));
+    auto *retouchTab = visualItemNamed(tabs, QStringLiteral("panelTabRetouch"));
+    if (!check(retouchTab != nullptr, "the Retouch tab exists")) return 1;
     if (!check(std::abs(geometryTab->x() - settingsTab->width()) < 1 &&
-               std::abs(assembleTab->x() - 3 * settingsTab->width()) < 1 &&
-               std::abs(settingsTab->width() + geometryTab->width() + masksTab->width() + assembleTab->width() - tabs->width()) < 1,
+               std::abs(retouchTab->x() - 3 * settingsTab->width()) < 1 &&
+               std::abs(assembleTab->x() - 4 * settingsTab->width()) < 1 &&
+               std::abs(settingsTab->width() + geometryTab->width() + masksTab->width() + retouchTab->width() + assembleTab->width() - tabs->width()) < 1,
                "the tabs join across the bar")) return 1;
 
     // The panel shows whole: its groups have titles, and nothing folds.

@@ -196,10 +196,10 @@ ApplicationWindow {
                 visible: imageEditor.hasImage
                 picking: settingsView.pointColorPicking
                 cropEditing: panelTabs.currentKey === "panelTabGeometry"
-                maskShape: masksView.visible ? masksView.currentShape : null
-                maskBrushSize: masksView.brushSize
-                onMaskShapeEdited: (values) => masksView.applyShape(values)
-                onMaskStrokeDrawn: (points) => masksView.applyStroke(points)
+                maskShape: masksView.visible ? masksView.currentShape : retouchView.visible ? retouchView.currentShape : null
+                maskBrushSize: retouchView.visible ? retouchView.brushSize : masksView.brushSize
+                onMaskShapeEdited: (values) => (retouchView.visible ? retouchView : masksView).applyShape(values)
+                onMaskStrokeDrawn: (points) => (retouchView.visible ? retouchView : masksView).applyStroke(points)
                 geometry: imageEditor.geometry
                 showGeometryGrid: geometryView.showGrid
                 onCropEdited: (x, y, width, height) => imageEditor.setGeometryCrop(x, y, width, height)
@@ -384,6 +384,13 @@ ApplicationWindow {
                 id: masksView
                 anchors.fill: settingsView
                 visible: panelTabs.currentKey === "panelTabMasks"
+                editor: imageEditor
+                preferences: uiPreferences
+            }
+            RetouchPanel {
+                id: retouchView
+                anchors.fill: settingsView
+                visible: panelTabs.currentKey === "panelTabRetouch"
                 editor: imageEditor
                 preferences: uiPreferences
             }

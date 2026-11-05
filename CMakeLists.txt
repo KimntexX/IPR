@@ -203,6 +203,7 @@ set(IPR_QML_FILES
     src/qml/HistoryModule.qml
     src/qml/GeometryPanel.qml
     src/qml/AssemblePanel.qml
+    src/qml/RetouchPanel.qml
     src/qml/MasksPanel.qml
     src/qml/MaskOverlay.qml
     src/qml/CropOverlay.qml
@@ -489,6 +490,12 @@ if(BUILD_TESTING)
         IPR_QML_DIRECTORY="${IPR_SOURCE_ROOT}/qml")
     set_tests_properties(assembleQmlTests PROPERTIES
         LABELS "unit;stack;qml" TIMEOUT 120
+        ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Basic")
+    ipr_add_test(retouchQmlTests tests/retouch_qml_test.cpp)
+    target_compile_definitions(retouchQmlTests PRIVATE
+        IPR_QML_DIRECTORY="${IPR_SOURCE_ROOT}/qml")
+    set_tests_properties(retouchQmlTests PROPERTIES
+        LABELS "unit;retouch;qml" TIMEOUT 120
         ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Basic")
     ipr_add_test(masksQmlTests tests/masks_qml_test.cpp)
     target_compile_definitions(masksQmlTests PRIVATE
