@@ -39,7 +39,7 @@ def correct_window(model,windows,pattern,sigma,device):
 def tiled_correct(model,mosaic,pattern,sigma,destination,device='cpu',core=256,halo=128,batch=4,check=lambda:None,progress=lambda x,y:None):
     if (mosaic.ndim!=2 or mosaic.dtype!=np.float32 or destination.shape!=mosaic.shape
             or destination.dtype!=np.float32 or min(mosaic.shape)<2
-            or isinstance(core,bool) or core<=0 or core%8 or halo<112 or halo%8 or batch<1):
+            or isinstance(core,bool) or core<=0 or core%8 or halo<max(112,getattr(model,'required_cfa_halo',112)) or halo%8 or batch<1):
         raise ValueError('Matching float32 CFA/output,8pixel grid and qualified112+ halo required')
     height,width=mosaic.shape
     extra_y=(-height)%core

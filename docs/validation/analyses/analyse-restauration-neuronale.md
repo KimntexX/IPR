@@ -11,8 +11,8 @@ Ce bénéfice n'est pas démontré pour le correcteur CFA actuel.
 | Ce qui bloque | Bénéfice photo instable selon la graine ; loi de bruit encore expérimentale ; absence de confirmation photographique indépendante. |
 | Derniers résultats | Réplication close : 10 et 12 échecs forts sur 48, après les 12 et 16 précédents. Sur les photos, sensibilité aux graines et motifs directionnels : bénéfice non validé. |
 | Calcul engagé | Courbe et photos achevées ; qualification des poids finaux préparée sur les contrôles connus, CPU épinglé, deux graines et seuils inchangés. Aucune nouvelle réserve. |
-| Prochaine preuve utile | Rejouer les contrôles de développement connus et leurs critères sur les poids finaux avant davantage d'apprentissage. Convergence chroma descriptive, mais bénéfice photo robuste non établi ; classique couleur encore à compléter. |
-| GPU | CUDA qualifié ; prémesure définitive avec lecture et bruit : environ 0,32–0,33 s/mise à jour. Projection d'environ 23 min d'entraînement pour les deux graines, hors rendus ; plafond de campagne 90 min. |
+| Prochaine preuve utile | Figer le protocole de la nouvelle architecture : donn?es, perte CFA, comparatif au m?me RCD, contr?les de d?tails et jalons d?arr?t. Planifier ensuite un pilote court avant toute r?servation de plusieurs heures. |
+| GPU | Nouveau mod?le : 1,805 s/mise ? jour mesur?e sur six pas techniques, quatre accumulations. Environ 5 h pour 10 000 pas par graine, hors validations et chargement r?el. Reprise mod?le + Adam v?rifi?e au bit pr?s. |
 | Données | 349 RAW inventoriés, 105 paires étudiées. Température, bruit fixe et propagation restent à qualifier ; pas de nouvelles prises demandées pour cette expérience. |
 | Critère d'arrêt | Pas de nouvelle série de variantes synthétiques pour améliorer les mêmes seuils. Après une courbe longue figée et un bruit caractérisé, absence de gain visible face au classique : abandon ou changement de taille/architecture, décision documentée. |
 
@@ -6814,3 +6814,157 @@ Les calculs et journaux restent dans le build, les mesures complètes
 seront sauvegardées en JSON canonique. Aucun résultat n'est encore
 annoncé pour cette nouvelle étape ; aucune modification du moteur,
 fusion, publication ou tag n'est engagé.
+
+
+### R?sultats clos ? contr?les connus et d?cision
+
+Les deux graines passent le d?veloppement connu (624 observations chacune),
+avec des ratios MSE RGB ancien bruit faible/fort de 0,9422/0,7852 pour 71
+et 0,9592/0,7558 pour 73, par rapport au parent appris. Les cibles, bruits,
+cartes sigma et r?ponses du parent rejouent exactement les sources initiales.
+Ce r?sultat ne suffit pas : sur les 4 032 observations du contr?le fin,
+**20 groupes forts sur 48 ?chouent, contre 10 avant la continuation**.
+Dix-sept ?checs concernent le transfert de canal ? bruit fort ; trois
+concernent une tr?s l?g?re hausse de MSE ? bruit faible. Les deux types
+d??chec restent s?par?s dans les donn?es, sans arrondir les petits ?carts
+? une r?ussite. Les crit?res et les seuils n?ont pas chang?.
+
+Les ratios RGB globaux s?am?liorent pourtant : 0,8173/0,6071 pour 71 et
+0,8941/0,5699 pour 73. Cette opposition confirme qu?une moyenne MSE plus
+faible peut masquer une destruction de signal. La cha?ne s?est arr?t?e
+normalement apr?s cette r?gression ; les deux contr?les classiques suivants
+n?ont pas ?t? lanc?s. Aucune nouvelle r?serve n?a ?t? ouverte.
+
+Preuves : [d?veloppement](../raw/neural-curve-known-development-v001-20261105T213422Z.json),
+[r?gression fine](../raw/neural-fine-regression-v001-20261105T213427Z.json),
+[supervision](../raw/neural-curve-known-controls-v001-20261105T214010Z.json)
+et [relecture compl?te](../raw/neural-curve-controls-review-v001-20261105T214102Z.json).
+
+### Localisation de l?att?nuation ? avant la reconstruction RGB
+
+Le diagnostic conserve les 48 groupes forts, pas seulement les cas en
+?chec : 1 728 champs au total. L?ajustement sinuso?dal se fait aux positions
+r?elles de chaque plan CFA, en excluant les bords. Les sorties CFA sont
+reli?es sans erreur ? leurs positions ?chantillonn?es dans la reconstruction.
+? fr?quence 10 et bruit fort chromatique, les gains R/B du CFA final sont
+0,7578/0,7666 pour 71 et 0,7848/0,7637 pour 73 ; le CFA bruit? observ?
+reste proche de 1. L?att?nuation est donc d?j? pr?sente avant reconstruction
+RGB, RCD, DCP ou affichage. Ce banc synth?tique n?incrimine pas le d?codage.
+
+Enlever la protection change tr?s peu ces cas pr?cis, mais son effet
+maximal entre groupes atteint 0,306 : elle n?est pas inutile partout.
+Le diagnostic ne justifie ni sa suppression ni un seuil affaibli. Il
+localise la perte sans distinguer compl?tement capacit?, donn?es et perte
+d?apprentissage. La continuation du petit mod?le n?est pas retenue ;
+un entra?nement plus long de ces m?mes poids n?est pas lanc?.
+
+Preuve : [transfert CFA](../raw/neural-curve-sensor-transfer-v001-20261105T214915Z.json).
+
+## 5 novembre 2026 ? pr?paration technique d?une architecture CFA directe
+
+### Hypoth?se et p?rim?tre
+
+Le banc pr?pare une architecture r?siduelle multi-?chelle ?prouv?e,
+[DRUNet dans DPIR](https://github.com/cszn/DPIR), avec **poids al?atoires**,
+pas les poids RGB pr?entra?n?s. La r?vision locale et les empreintes du code
+MIT sont enregistr?es dans les preuves. L?adaptation compte 32 643 840
+param?tres, huit entr?es (quatre plans CFA et quatre sigma locaux), et
+quatre r?sidus normalis?s. Elle calcule CFA corrig? = CFA ? sigma ? r?sidu,
+sans borne du signal sign? ; sigma nul reste exactement l?identit?.
+Le futur objectif CFA ?vite le reconstructeur RGB gel? dans la perte.
+Ce changement d?architecture n?est pas encore une preuve d?am?lioration.
+
+Le support maximal couvre 185 cellules empaquet?es. Le halo retenu vaut
+192 cellules, soit **384 pixels CFA** de chaque c?t? ; le centre utile
+128 ? 128 empaquet? demande un contexte 512 ? 512, soit 1 024 ? 1 024 CFA.
+Le moteur de tuilage refuse un halo insuffisant pour ce mod?le. R?utiliser
+les petits contextes de l?ancienne architecture serait incorrect.
+
+### Ressources et calcul des activations
+
+Le premier essai s?arr?te apr?s un pas sur le plafond m?moire souple local ;
+il reste conserv? comme ?chec technique. Aucun plafond n?a ?t? relev?.
+Le calcul des activations par ?tage est ensuite repris pendant la
+r?tropropagation pour r?duire la m?moire, suivant le m?canisme de
+[checkpointing PyTorch](https://docs.pytorch.org/docs/2.9/checkpoint.html).
+Un test compare le r?sultat et les gradients au calcul officiel direct.
+L?inf?rence reste inchang?e ; aucune couche al?atoire n?est ajout?e.
+
+Le second pr?vol termine six mises ? jour de quatre accumulations :
+**1,805 s/pas m?dian**, 17,13 s au total. Pic CUDA allou? 1,37 Gio,
+pic priv? ?chantillonn? 4,36 Gio, pic r?sident 1,54 Gio ; RAM globale
+?chantillonn?e 70,44 %. Les limites restent 6 Gio engag?s, 4,5 Gio souples,
+50 % d?allocation CUDA et 92 % de RAM physique globale. Le contr?le
+CPU/GPU apr?s quelques pas donne un ?cart maximal de 1,49 ? 10?? ;
+le rejeu GPU est exact. Tous les poids de ce pr?vol sont ?cart?s.
+
+Preuves : [arr?t initial](../raw/neural-dru-cfa-engineering-v001-20261105T215603Z.json)
+et [pr?vol achev?](../raw/neural-dru-cfa-engineering-v001-20261105T220054Z.json).
+
+### Arr?t et reprise : qualification technique termin?e
+
+La sauvegarde intervient seulement entre deux mises ? jour compl?tes,
+gradients lib?r?s. Elle conserve mod?le, Adam, g?n?rateurs al?atoires,
+position, pertes et contrat d?ex?cution. L??criture se fait dans un
+fichier temporaire puis par remplacement atomique, sans copie CPU globale
+de tous les ?tats ? la fois. Un contrat diff?rent est refus? ? la reprise.
+
+Sur le contexte complet, une ex?cution continue est compar?e ? une
+sauvegarde apr?s le premier pas, destruction du mod?le et d?Adam, puis
+rechargement et rejeu du deuxi?me pas. **Mod?le, ?tat d?Adam et perte
+suivante sont identiques au bit pr?s.** Le checkpoint technique occupe
+391 815 547 octets, environ 374 Mio ; ce n?est pas un mod?le utile entra?n?.
+Le test prend 12,31 s ; pic priv? ?chantillonn? 4,45 Gio, r?sident 1,63 Gio,
+RAM globale ?chantillonn?e 73,06 %. Le budget local reste ?troit lors du
+rechargement : ne pas lancer un second mod?le ou un gros cache en parall?le.
+
+Preuve : [reprise compl?te](../raw/neural-dru-checkpoint-v001-20261105T220835Z.json).
+L?utilitaire bas niveau est v?rifi? ; un arr?t demand? par l?utilisateur,
+les sauvegardes p?riodiques et l?orchestration du futur apprentissage long
+restent ? raccorder. Ne pas pr?senter ce contr?le de deux pas comme une
+campagne longue d?j? pr?te ? lancer.
+
+### Pr?paration du planning avec l?utilisateur
+
+L?utilisateur demande de pr?parer les besoins avant de r?server la machine.
+Le calcul principal utilise la RTX 3060 ; le CPU pr?pare les observations,
+alimente le GPU et ex?cute les validations. Le pr?vol limite PyTorch ?
+quatre threads CPU et un thread interop. Cela ne mesure pas encore la
+charge CPU du chargement r?el : quatre threads ne signifient pas quatre
+c?urs satur?s pendant toute la s?ance.
+
+| Budget par graine | Projection entra?nement seul ? 1,805 s/pas |
+| --- | ---: |
+| 10 000 mises ? jour | environ 5 h |
+| 50 000 | environ 25 h |
+| 100 000 | environ 50 h |
+| 200 000 | environ 100 h |
+
+Deux graines doublent ces temps. Ce sont des extrapolations de six pas,
+pas une estimation de la convergence n?cessaire. Le chargement de vrais
+contextes, les sauvegardes, les contr?les et les rendus s?ajoutent.
+Le [papier DRUNet](https://arxiv.org/pdf/2008.13751) d?crit un entra?nement
+RGB diff?rent, avec perte L1 et plusieurs jours sur un autre GPU ; il ne
+permet pas de promettre le m?me d?lai ou la m?me qualit? en CFA.
+La MSE du pr?vol n??tait qu?une v?rification technique, pas une d?cision
+d?finitive sur la perte du futur mod?le.
+
+Avant de r?server une premi?re tranche longue :
+
+1. Figer donn?es d?apprentissage, perte, graines, bruit exp?rimental et
+   jalons. Distinguer les contr?les d?j? consult?s d?une validation r?serv?e.
+2. Charger les contextes ? la demande, sans conserver toutes les grandes
+   images en RAM ; mesurer ce chargement avec les m?mes gardes m?moire.
+3. Raccorder arr?t propre, sauvegarde p?riodique et reprise au lanceur,
+   puis v?rifier une interruption r?elle de cette orchestration.
+4. Comparer au m?me RCD et au classique courant, avec contr?les de transfert
+   et de d?tails ; ne pas r?utiliser implicitement le parent RGB appris.
+5. Planifier un pilote court de deux graines, puis d?cider d?un premier
+   budget de 10 000 pas uniquement si les contr?les justifient de continuer.
+
+**?tat de cl?ture : tous les calculs sont termin?s et les ressources
+lib?r?es.** Pr?paration technique de l?architecture et de sa sauvegarde
+qualifi?e ; protocole d?apprentissage utile et lanceur long encore ? finir.
+Aucune campagne de plusieurs heures n?est engag?e avant le planning avec
+l?utilisateur. Production, profils, r?serves et environnements ?pingl?s
+restent inchang?s ; aucune fusion, publication ni cr?ation de tag.

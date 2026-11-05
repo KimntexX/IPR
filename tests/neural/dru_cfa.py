@@ -4,6 +4,7 @@ from pathlib import Path
 import sys
 import torch
 from torch import nn
+from torch.utils.checkpoint import checkpoint
 from campaign_artifacts import sha256
 
 
@@ -29,8 +30,19 @@ def support():
 
 class DruCfaCorrector(nn.Module):
     """Predict standardized residual in canonical R/G1/G2/B sensor planes."""
-    def __init__(self,core):
-        super().__init__();self.core=core
+    required_cfa_halo=384
+
+    def __init__(self,core,checkpoint_stages=False):
+        super().__init__();self.core=core;self.checkpoint_stages=checkpoint_stages
+
+    def _residual(self,values):
+        if not self.checkpoint_stages or not self.training or not torch.is_grad_enabled():return self.core(values)
+        def stage(module,value):return checkpoint(module,value,use_reentrant=False,preserve_rng_state=False)
+        x1=self.core.m_head(values)
+        x2=stage(self.core.m_down1,x1);x3=stage(self.core.m_down2,x2);x4=stage(self.core.m_down3,x3)
+        value=stage(self.core.m_body,x4)
+        value=stage(self.core.m_up3,value+x4);value=stage(self.core.m_up2,value+x3);value=stage(self.core.m_up1,value+x2)
+        return self.core.m_tail(value+x1)
 
     def correct_observations(self,packed,sigma,pattern):
         if (packed.ndim!=4 or packed.shape[1]!=4 or sigma.shape!=packed.shape or packed.dtype!=torch.float32
@@ -42,7 +54,7 @@ class DruCfaCorrector(nn.Module):
         expected=torch.tensor([[0,1,3,2]],device=packed.device).expand(len(packed),-1)
         if not torch.equal(pattern,expected):raise ValueError('Canonical R/G1/G2/B phase required')
         if (sigma==0).all():return packed
-        residual=self.core(torch.cat((packed,sigma),dim=1))
+        residual=self._residual(torch.cat((packed,sigma),dim=1))
         if residual.shape!=packed.shape or not torch.isfinite(residual).all():raise ValueError('Invalid predicted sensor residual')
         corrected=torch.where(sigma==0,packed,packed-sigma*residual)
         if not torch.isfinite(corrected).all():raise ValueError('Nonfinite sensor output')
@@ -60,7 +72,7 @@ def create(root,seed):
     core=UNetRes(in_nc=8,out_nc=4,nc=[64,128,256,512],nb=4,act_mode='R',downsample_mode='strideconv',upsample_mode='convtranspose')
     if not isinstance(core.m_tail,nn.Conv2d):raise ValueError('Unexpected official tail')
     nn.init.zeros_(core.m_tail.weight)
-    model=DruCfaCorrector(core)
+    model=DruCfaCorrector(core,checkpoint_stages=True)
     return model,dict(repository=manifest['source_repository'],revision=manifest['source_commit'],
         source_manifest_sha256=sha256(external/'manifest.json'),pretrained_weights_loaded=False,
-        seed=seed,parameters=sum(p.numel() for p in model.parameters()),support=support())
+        seed=seed,parameters=sum(p.numel() for p in model.parameters()),support=support(),activation_checkpointing='nonreentrant perstage in training only, no stochastic layers')

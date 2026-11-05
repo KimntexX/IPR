@@ -1182,3 +1182,27 @@ reproductibles et la campagne active n'est pas modifiée. Avant toute demande
 de nouvelles prises, requalifier les noirs/aplats/rafales existants avec la
 chaîne signée actuelle. Le rapport unique contient le point de décision
 en tête, les réponses factuelles à la revue et les critères d'arrêt.
+
+
+### Courbe rejet?e et nouvelle architecture CFA ? cl?ture du 5 novembre 2026
+
+La continuation de deux graines passe le d?veloppement connu mais aggrave
+la r?gression fine (20/48 ?checs forts contre 10/48). L?att?nuation est d?j?
+mesurable dans le CFA corrig? avant reconstruction RGB. Aucun prolongement
+de ces poids ni assouplissement des crit?res n?est retenu.
+
+Le banc pr?pare une adaptation CFA directe de DRUNet (32,64 M param?tres,
+poids al?atoires, quatre plans + quatre cartes sigma, quatre r?sidus).
+Le signal reste sign?, avec identit? exacte ? sigma nul. Le support exige
+un halo de 384 pixels CFA et un contexte de 1 024 pixels pour un centre
+utile de 256 pixels CFA. L?inf?rence tuil?e refuse un halo insuffisant.
+La supervision future en CFA doit ?viter le reconstructeur RGB gel? dans
+la perte ; elle n?est pas encore une qualification photographique.
+
+Pr?vol de six pas termin?, ressources born?es gr?ce au recalcul des
+activations pendant la r?tropropagation ; calcul et gradients compar?s
+? la topologie officielle. La reprise mod?le + Adam a rejou? le pas
+suivant au bit pr?s. Ce sont des contrats techniques, pas un mod?le utile.
+Le lanceur long, son arr?t demand?, les donn?es et la comparaison au m?me
+RCD restent ? finaliser avant planification avec l?utilisateur. Aucun
+apprentissage long n?est en cours. Mesures et limites en fin du rapport.

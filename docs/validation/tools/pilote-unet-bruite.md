@@ -405,3 +405,30 @@ précédents passent. Un échec stoppe la suite ; aucune cohorte réservée
 nouvelle n'est ouverte. Lire `curve-known-controls-v001/progress.json`
 et les journaux d'étape, puis les JSON canoniques. Une qualification
 procédurale connue ne constitue pas une validation photographique.
+
+
+## Pr?paration CFA directe apr?s ?chec de la continuation
+
+La courbe +2048 passe le d?veloppement connu mais ?choue davantage sur les
+d?tails fins : ne pas la prolonger pour am?liorer sa seule MSE globale.
+Le rapport contient les r?sultats complets et le diagnostic CFA.
+
+`dru_cfa.py` adapte la topologie officielle DRUNet ?pingl?e dans le cache
+local, avec poids al?atoires et r?sidu CFA sign?. `probe_dru_cfa.py`
+mesure uniquement ressources et arithm?tique ; ses poids sont ?cart?s.
+`probe_dru_checkpoint.py` v?rifie sauvegarde/rechargement mod?le + Adam
+et identit? du pas suivant. Son dossier v001 existe d?j? : le script
+refuse de l??craser. Il ne faut pas le supprimer pour relancer un test.
+
+`dru_checkpoint.py` est un utilitaire bas niveau : sauvegarder uniquement
+apr?s une mise ? jour compl?te et la lib?ration des gradients ; reprendre
+avec le m?me contrat. La sauvegarde technique vaut environ 374 Mio.
+Le pilote long avec arr?t utilisateur et sauvegardes p?riodiques n?est
+pas encore raccord?. Aucun de ces pr?vols n?est un apprentissage utile.
+
+Ressources observ?es : quatre threads CPU, GPU principal, environ
+1,4 Gio CUDA allou?s et jusqu?? 4,45 Gio priv?s au rechargement. Gardes
+inchang?es : 6 Gio engag?s, 4,5 Gio souples, 92 % de RAM physique globale.
+Pr?voir un cr?neau GPU et de la marge RAM ; la charge CPU du chargement
+r?el reste ? mesurer avant r?servation. Aucun entra?nement long n?est
+lanc? avant le planning demand? par l?utilisateur.

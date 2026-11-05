@@ -1,5 +1,6 @@
 """Discarded resource/arithmetic probe, no useful weights or quality verdict."""
 from datetime import datetime,timezone
+import argparse
 import json
 import os
 from pathlib import Path
@@ -10,9 +11,10 @@ from campaign_artifacts import sha256
 from memory_budget import MemoryGuard
 
 
-def run():
+def run(output):
     root=Path(__file__).resolve().parents[2];build=root/'build-patch_neural_restoration'
-    output=build/'dru-cfa-engineering-v001';output.mkdir(exist_ok=False)
+    if not output.resolve().is_relative_to(build.resolve()):raise ValueError('Owned output required')
+    output.mkdir(exist_ok=False)
     source=build/'local-sigma-plan-v001/plan.json';source_plan=json.loads(source.read_text(encoding='utf-8'))
     protocol=dict(schema_version=1,created_at_utc=datetime.now(timezone.utc).isoformat(),source_sha256=sha256(source),
         seed=9101,steps=6,accumulation=4,packed_context=512,packed_core=128,learning_rate=.0001,
@@ -46,6 +48,7 @@ def run():
                 initial=model.correct_observations(values,sigma,device_tags)
                 result['initial_positive_sigma_identity_bit_exact']=bool(torch.equal(initial,values))
                 del initial
+            torch.cuda.empty_cache()
             if not result['initial_positive_sigma_identity_bit_exact']:raise ValueError('Zero head changed CFA')
             optimizer=torch.optim.Adam(model.parameters(),lr=protocol['learning_rate'])
             for step in range(6):
@@ -61,6 +64,7 @@ def run():
                     if not torch.isfinite(loss):raise ValueError('Nonfinite engineering loss')
                     if loss.requires_grad:loss.backward()
                     total+=float(loss.detach())
+                    del prediction,loss,observed,deviation
                 torch.nn.utils.clip_grad_norm_(model.parameters(),1.,error_if_nonfinite=True);optimizer.step();torch.cuda.synchronize()
                 result['updates'].append(dict(step=step+1,seconds=time.monotonic()-tick,fixture_loss=total))
                 print('DRU CFA PREFLIGHT',step+1,'/6',flush=True)
@@ -90,4 +94,5 @@ def run():
         with (root/'docs/validation/raw'/f'neural-dru-cfa-engineering-v001-{stamp}.json').open('x',encoding='utf-8') as stream:json.dump(result,stream,indent=2,allow_nan=False)
 
 
-if __name__=='__main__':run()
+if __name__=='__main__':
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--output',type=Path,required=True);run(parser.parse_args().output)

@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "status": "completed_discarded_dru_cfa_engineering_not_quality_qualification",
+  "plan": {
+    "schema_version": 1,
+    "created_at_utc": "2026-11-05T22:00:37.779816+00:00",
+    "source_sha256": "4adc19f9d0e1b796eb422033159802c0a6b1f6a2d3e854c9fca86576c288d1f1",
+    "seed": 9101,
+    "steps": 6,
+    "accumulation": 4,
+    "packed_context": 512,
+    "packed_core": 128,
+    "learning_rate": 0.0001,
+    "dtype": "float32",
+    "input_channels": 8,
+    "output_channels": 4,
+    "pretrained_weights": false,
+    "policy": "Official topology from pinned source, RANDOM weights, direct camera-CFA residual; no frozenRGB reconstruction in loss. One synthetic engineering fixture, not a learning experiment. All updated weights discarded.",
+    "tools": {
+      "dru_cfa.py": "72b3b01b586316a46960173e93c515768bf8d55e38aec134215f9645d36ec3f1",
+      "probe_dru_cfa.py": "ef82c6bcf05b8c411de8c1ee4b709756d454cebf00d847014adbf057bd00beed",
+      "sensor_curve_noise.py": "9b1868ae317b9da7bee29eb9355edd27b534dc6683548e65b15f8f6cb94d3c0a"
+    }
+  },
+  "updates": [
+    {
+      "step": 1,
+      "seconds": 2.0851599000161514,
+      "fixture_loss": 0.00012086097194696777
+    },
+    {
+      "step": 2,
+      "seconds": 1.7945987999555655,
+      "fixture_loss": 0.00012136065197410062
+    },
+    {
+      "step": 3,
+      "seconds": 1.8104179000365548,
+      "fixture_loss": 0.00012147130291850772
+    },
+    {
+      "step": 4,
+      "seconds": 1.8009889999520965,
+      "fixture_loss": 0.00012066440285707358
+    },
+    {
+      "step": 5,
+      "seconds": 1.8085799000109546,
+      "fixture_loss": 0.0001218383877130691
+    },
+    {
+      "step": 6,
+      "seconds": 1.7706512999720871,
+      "fixture_loss": 0.00012091810276615433
+    }
+  ],
+  "architecture": {
+    "repository": "https://github.com/cszn/DPIR",
+    "revision": "15bca3fcc1f3cc51a1f99ccf027691e278c19354",
+    "source_manifest_sha256": "8d945a7ac1e578eb8ff0cf6091024b7e6922be52e35423bf5cbefbedfbaac64a",
+    "pretrained_weights_loaded": false,
+    "seed": 9101,
+    "parameters": 32643840,
+    "support": {
+      "packed_radius": 185,
+      "packed_halo": 192,
+      "cfa_halo": 384,
+      "packed_core": 128,
+      "packed_context": 512,
+      "intervals": [
+        {
+          "output": 256,
+          "low": 71,
+          "high": 440
+        },
+        {
+          "output": 257,
+          "low": 79,
+          "high": 440
+        },
+        {
+          "output": 258,
+          "low": 79,
+          "high": 440
+        },
+        {
+          "output": 259,
+          "low": 79,
+          "high": 440
+        },
+        {
+          "output": 260,
+          "low": 79,
+          "high": 440
+        },
+        {
+          "output": 261,
+          "low": 79,
+          "high": 440
+        },
+        {
+          "output": 262,
+          "low": 79,
+          "high": 440
+        },
+        {
+          "output": 263,
+          "low": 79,
+          "high": 448
+        }
+      ],
+      "scope": "Deepest-path maximum, eight stride phases; residual skip paths are shorter. Pinned fourblocks/stage,strideconv2,transposeconv2 topology."
+    },
+    "activation_checkpointing": "nonreentrant perstage in training only, no stochastic layers"
+  },
+  "torch_version": "2.9.1+cu128",
+  "initial_positive_sigma_identity_bit_exact": true,
+  "non_tail_gradient_present": true,
+  "cpu_gpu_nonzero_tail_max_error": 1.4901161193847656e-08,
+  "gpu_repeat_bit_exact": true,
+  "zero_sigma_identity": true,
+  "median_seconds_per_update": 1.8047844499815255,
+  "peak_cuda_allocated_bytes": 1475196416,
+  "weights_retained": false,
+  "elapsed_seconds": 17.127837100008037,
+  "memory": {
+    "hard_process_commit_bytes": 6442450944,
+    "soft_process_bytes": 4831838208,
+    "system_stop_fraction": 0.92,
+    "poll_seconds": 0.25,
+    "samples": 68,
+    "peak_rss_bytes": 1657475072,
+    "peak_private_sampled_bytes": 4681654272,
+    "peak_system_used_fraction": 0.7043554465880226,
+    "os_job_peak_commit_bytes": 4701249536,
+    "reason": null,
+    "last": {
+      "system_total_bytes": 16933507072,
+      "system_available_bytes": 5151264768,
+      "system_used_fraction": 0.69579457190426,
+      "process_rss_bytes": 1657475072,
+      "process_private_bytes": 4681654272,
+      "process_peak_rss_bytes": 1657475072,
+      "process_peak_pagefile_bytes": 4681654272
+    }
+  }
+}
