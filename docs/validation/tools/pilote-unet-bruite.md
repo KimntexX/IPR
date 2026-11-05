@@ -291,3 +291,29 @@ distinct 6 Gio engagés/4,5 Gio souples et un maximum d'allocateur de
 L'arrêt physique coopératif reste à 92 %. Les sorties et preuves des
 tentatives arrêtées sont conservées. Terminer les tâches lourdes avant
 les tests graphiques du soir de l'utilisateur.
+
+## Diagnostic du bruit capteur existant
+
+Utiliser le Python existant disposant de rawpy/NumPy/Matplotlib, et non
+modifier les environnements neuronaux. `study_sensor_noise.py --output
+<nouveau dossier du build>` lit l'inventaire canonique et scelle les
+appariements, seuils, rôles et outils avant capture. Il garde neuf zones
+par prise en DN entiers, leurs empreintes, les identités des RAW, tous
+les résultats par point, les exclusions et les journaux par paire. Le
+pont avec le natif doit retrouver les 27 régions DN connues exactement.
+La limite physique reste 92 %, avec plafond engagé 2 Gio/1,25 Gio souple.
+
+`assess_sensor_noise.py` effectue le contrôle entre sessions et le
+diagnostic de passage aux unités caméra sur les trois photos connues.
+`check_sensor_saturation.py` réutilise les caches uint16 vérifiés pour
+la sensibilité au blanc annoncé moins 16 DN ; il ne redécode pas les RAW.
+Les chemins de campagne sont explicites dans ces outils de banc.
+Chaque sortie canonique est neuve ; la sensibilité postérieure ne
+remplace pas la première analyse et ne devient pas une confirmation
+indépendante.
+
+L'ajustement `a × signal + b`, l'interpolation ISO et le sigma illustratif
+ne sont pas installés dans l'application ni injectés automatiquement dans
+un modèle. Les tests `test_sensor_noise_math.py` protègent dérive moyenne,
+bruit connu, composante fixe, appariement, manque de support et saturation.
+Les six tests n'attestent pas la qualité physique des acquisitions.

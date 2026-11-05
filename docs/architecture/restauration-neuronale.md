@@ -18,9 +18,17 @@ avant génération/évaluation. Aucun apprentissage long ni intégration en
 production. La limite globale physique reste 92 %, avec budgets locaux
 distincts pour natif pleine définition et runtime CUDA.
 
-Prochaine preuve : compléter le comparateur par la couleur courante après
-les tons et rejouer la calibration sous la chaîne signée actuelle. Les
-349 RAW inventoriés ne sont pas automatiquement admis à l'apprentissage.
+Étape suivante exécutée le même jour : 105 paires disjointes des fichiers
+de calibration, codes CFA avant balance et dématriçage, indiquent une loi
+variance/signal plus juste qu'une constante. Une sensibilité à la saturation
+et un contrôle entre sessions sont conservés séparément. Ce sont des
+coefficients expérimentaux ; pas de calibration ni de nouveaux poids livrés.
+Le pont rawpy/natif retrouve exactement 27 régions DN connues, avec une
+couverture limitée aux cas contrôlés.
+
+Prochaine preuve : carte sigma locale à poids constants, puis compléter
+le comparateur par la couleur courante après les tons. Les 349 RAW
+inventoriés ne sont pas automatiquement admis à l'apprentissage.
 Pas de nouvelle acquisition avant examen des noirs/aplats/rafales existants,
 pas de nouvelle micro-variante procédurale sur les mêmes seuils. Le
 [rapport unique](../validation/analyses/analyse-restauration-neuronale.md)

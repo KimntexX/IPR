@@ -11,7 +11,7 @@ Ce bénéfice n'est pas démontré pour le correcteur CFA actuel.
 | Ce qui bloque | Débruitage réel non calibré ; reconstructeur appris différent de RCD ; comparateur neuronal éprouvé manquant ; budget d'entraînement court. |
 | Derniers résultats | Réplication close : 10 et 12 échecs forts sur 48, après les 12 et 16 précédents. Sur les photos, sensibilité aux graines et motifs directionnels : bénéfice non validé. |
 | Calcul engagé | Comparatif réel terminé : trois scènes, neuf régions chacune, deux graines fixées avant lecture des résultats ; DRUNet officiel ajouté. Pas de nouvel ajustement procédural ni d'apprentissage long. |
-| Prochaine preuve utile | Compléter le classique par la couleur après les tons et requalifier le bruit capteur avec les fichiers existants. Lire les planches sans assimiler le lissage à une conservation des détails. |
+| Prochaine preuve utile | Loi de bruit capteur exploratoire mesurée sur 105 paires : nettement plus juste qu'un sigma constant. Tester une carte sigma locale, sans réapprendre ni modifier le moteur ; compléter encore le classique par la couleur après les tons. |
 | GPU | CUDA qualifié sur le calcul courant : erreur CPU/GPU maximale 7,45 × 10⁻⁸ ; essai d'apprentissage jetable à 0,327 s/mise à jour. Environ 9,1 h pour 100 000 mises à jour par graine, hors génération/évaluation. |
 | Données | Auditer rafales, noirs et aplats existants avant de demander de nouvelles prises. Une demi-pile RGB rééchantillonnée n'est pas une vérité CFA. |
 | Critère d'arrêt | Pas de nouvelle série de variantes synthétiques pour améliorer les mêmes seuils. Après une courbe longue figée et un bruit caractérisé, absence de gain visible face au classique : abandon ou changement de taille/architecture, décision documentée. |
@@ -6258,3 +6258,169 @@ du captureur mosaïque, 27 régions RGB natives identiques et 27 PNG neutres
 identiques après l'ajout du mode diagnostique au renderer. Le contrôle
 documentaire donne zéro erreur et zéro avertissement de lien ; il ne
 vérifie ni liens externes, ni traduction, ni compilation LaTeX.
+
+## 5 novembre 2026 — bruit des mosaïques existantes et loi dépendant du signal
+
+### Hypothèse et protocole fixés avant la mesure
+
+L'hypothèse est que fournir un sigma uniforme au correcteur ignore une
+variation importante du bruit à l'intérieur d'une même photo. La nouvelle
+étude porte sur les **données capteur avant balance des blancs et RCD**,
+sans réapprentissage, nouveau modèle ou changement de production.
+
+L'inventaire fournit **105 paires disjointes, 210 RAW** : 37 paires noires
+et 68 éclairées. Les fichiers sont associés par métadonnées identiques
+(boîtier, ISO, exposition, ouverture, focale, date, dossier), numéros
+consécutifs et intervalle maximal de 30 secondes. Le contenu `iso-3200`
+est classé selon les ISO réellement déclarés. Vingt-six fichiers candidats
+restent sans paire ; ils ne sont pas assimilés à des mesures manquantes
+à refaire. Aucune nouvelle réserve neuronale n'est ouverte. Les trois
+photos connues du comparatif servent seulement au pont de décodage et au
+diagnostic d'unités.
+
+Chaque prise donne neuf zones fixes, centrées à 20/50/80 % dans les deux
+axes, de **128 × 128 échantillons par site Bayer**. R, G1, G2, B restent
+distincts. On conserve les codes entiers DN, sans soustraire le noir,
+écrêter, équilibrer, recaler ou interpoler les pixels. La variance
+temporelle est `Var(A − B) / 2`, avec variance d'échantillon ; le décalage
+moyen entre prises est enregistré séparément, ainsi que la variance
+spatiale et les différences des moyennes de blocs.
+
+Cette mesure annule les structures communes aux deux prises : elle ne
+représente pas tout le bruit d'une seule photographie. Mouvement,
+éclairage et effets de compression peuvent encore intervenir. Le dossier
+`blacks` et la cohérence des statistiques ne suffisent pas à certifier
+la température ou toutes les conditions de prise.
+
+Le Python existant utilise rawpy 0.27.1 / LibRaw 0.22.1, alors que le
+banc natif utilisait 0.22.2. Avant la mesure, la capture native normalisée
+non bornée des trois photos connues est ramenée aux codes entiers par
+son diviseur et ses noirs effectifs. Les **27 régions retrouvent exactement
+les DN décompressés par rawpy**. Ce pont limité ne qualifie pas toutes
+les variantes de CR3 et ne valide pas les noirs erronés annoncés par les
+métadonnées LibRaw : ceux-ci sont enregistrés mais non appliqués.
+
+Pour l'ajustement exploratoire, les seuils sont gelés avant lecture des
+résultats : dérive moyenne au plus 1 % du signal au-dessus du noir
+empirique, étendue 90–10 % des moyennes de blocs au plus 5 %, aucune
+valeur au blanc annoncé, variance positive. **Toutes les mesures sont
+conservées**, y compris celles exclues de l'ajustement et leurs raisons.
+Sur 2 448 mesures éclairées zone/site, 1 277 sont admissibles, 1 171
+ne le sont pas. Ce sont des observations corrélées par prise, pas
+2 448 expériences indépendantes.
+
+La loi essayée est `variance_DN² = a × signal_DN + b`, avec pente
+non négative et intercept fixé à la médiane des variances des noirs
+à 1/200 s. Les niveaux d'exposition distincts sont répartis alternativement
+entre ajustement et contrôle, avant mesure. Utiliser cet intercept pour
+d'autres temps de pose suppose un courant d'obscurité négligeable ; les
+sessions et températures différentes restent une limite de qualification.
+
+### Résultats sur les niveaux non utilisés pour l'ajustement
+
+Le tableau donne la plage des erreurs relatives médianes de variance
+sur les quatre sites Bayer, pas un score perceptuel ni une incertitude
+sur toute la population de boîtiers. La constante de comparaison est
+la médiane des variances des points d'ajustement du même ISO/site. Les
+contrôles hors de l'étendue de signal d'ajustement sont inclus dans ces
+erreurs et signalés comme tels dans les JSON ; tout n'est pas interpolation.
+
+| ISO | Loi avec signal | Variance constante |
+| --- | ---: | ---: |
+| 100 | 1,6–2,2 % | 48,9–67,6 % |
+| 1600 | 1,1–2,7 % | 81,1–95,8 % |
+| 3200 | 0,9–2,8 % | 62,5–91,6 % |
+| 6400 | 0,5–1,0 % | 90,7–140,8 % |
+| 16000 | 0,9–1,2 % | 86,8–116,0 % |
+| 51200 | 2,4–6,1 % | 18,4–50,5 % |
+
+Les ISO 12800 et 25600 ont des noirs, mais pas de paires éclairées
+admissibles à cette sélection ; **aucune pente directement caractérisée
+n'est déclarée à ces ISO**. À ISO 100 et 16000, une seule paire noire
+est disponible dans cette association, ce qui limite fortement la
+robustesse de l'intercept. Les valeurs et identités par point restent
+dans la [preuve de mesure](../raw/neural-sensor-noise-v001-20261105T173608Z.json).
+
+![Loi exploratoire de variance par signal et site Bayer](../figures/neural-sensor-variance-v001.svg)
+
+La courbe est un dérivé des mesures ; elle ne constitue pas un profil
+de bruit livré. La variance temporelle des noirs va environ de 1,1 DN
+d'écart-type à ISO 100 à 179–199 DN à ISO 51200 selon le site. Ces valeurs
+sont **avant** normalisation et gains ; elles ne se substituent pas au
+sigma d'une image dématricée.
+
+### Contrôles des biais et de saturation
+
+Un contrôle supplémentaire, exploratoire après cette première lecture,
+ajuste avec les niveaux éclairés du 16 octobre et les noirs du 28,
+puis examine les niveaux éclairés du 22. Les noirs du 22 ne servent pas
+à cet ajustement ; les mêmes seuils sont recalculés avec le noir
+d'ajustement. Il n'y a ni modification de seuil ni recherche du meilleur
+découpage. Ce contrôle n'est pas une confirmation sur des données jamais
+vues et les dates ne prouvent pas des scènes indépendantes.
+
+Pour ISO 1600/3200/6400/51200, l'erreur médiane par site reste entre
+environ **0,6 et 5,9 %**, inférieure à celle de la constante dans ces
+cas. ISO 100 et 16000 manquent de noirs dans la session d'ajustement ;
+ils ne sont pas complétés artificiellement. La
+[preuve d'évaluation](../raw/neural-sensor-assessment-v001-20261105T173933Z.json)
+conserve ces abstentions et tous les points de contrôle.
+
+Soixante mesures de différence sont nulles dans des zones proches de
+**16382 DN**, alors que le blanc déclaré vaut 16383 : ne tester que
+`pixel >= blanc` manque ces saturations. Elles étaient déjà exclues par
+la variance nulle. Une sensibilité explicitement postérieure applique
+un garde conservateur supplémentaire : présence de n'importe quel
+échantillon à `blanc annoncé − 16 DN` ou au-dessus. Ce n'est pas une
+nouvelle estimation du blanc physique. Elle ne rejette **aucun des
+1 277 points auparavant admissibles** et ne change ni les ajustements
+ni leur conclusion. La preuve de sensibilité reste séparée de la
+première mesure ; aucun résultat initial n'est écrasé.
+La [preuve de sensibilité](../raw/neural-sensor-saturation-v001-20261105T174125Z.json)
+conserve la règle, les mesures et les identités des caches utilisés.
+
+### Conséquence pour le correcteur CFA
+
+Sur les neuf régions des trois photos connues, on peut illustrer le
+passage aux unités caméra par :
+
+`sigma_caméra = gain_BdB × sqrt(a × max(signal_DN, 0) + b) / diviseur`.
+
+Le signal vient de la capture native normalisée avant balance et sans
+borne. Les paramètres positifs sont interpolés en log–log entre ISO
+observés, sans extrapolation ; cela reste **une hypothèse non qualifiée**.
+À ISO 12800, la pente est interpolée et le terme noir est mesuré ; à
+ISO 4000, les deux sont interpolés. La troncature du signal estimé à
+zéro ne tronque pas les pixels de l'image et évite une variance négative,
+mais peut biaiser l'estimation près du noir.
+
+Les plages ci-dessous vont du plus petit quantile 5 % au plus grand
+quantile 95 % parmi régions et canaux ; elles ne sont pas les extrema
+de tous les pixels :
+
+| Photo | Sigma caméra illustratif |
+| --- | ---: |
+| 6V1A0181, ISO 12800 | 0,00388–0,05210 |
+| 6V1A0263, ISO 6400 | 0,00565–0,05662 |
+| 6V1A9819, ISO 4000 | 0,00146–0,01405 |
+
+Cela explique pourquoi les seules constantes 0,01 et 0,03 ne décrivent
+pas toutes les régions. L'apprentissage synthétique fournit déjà une
+carte issue de `a × max(signal propre, 0) + b` ; c'est l'essai photographique
+récent qui utilisait les deux constantes, faute de caractérisation.
+Cela **ne démontre pas encore** qu'une carte
+sigma améliore le réseau : la loi traite le capteur, pas les corrélations
+de RCD, la compression, les points chauds ou le bruit fixe. Les planches
+actuelles et le moteur restent inchangés.
+
+La prochaine expérience est donc une comparaison bornée **carte sigma
+locale contre sigma constant**, avec les mêmes poids, les deux graines,
+les trois photos et le même RCD. Aucun réapprentissage ni nouvelle
+micro-variante de perte n'est justifié avant ce contrôle. Le comparateur
+couleur après les tons reste attendu de Claude. Aucune nouvelle photo
+n'est demandée maintenant ; pas de publication, fusion ou tag.
+
+La mesure a pris 35,1 secondes ; pic résident échantillonné 122 Mio,
+mémoire physique globale échantillonnée au plus 69,4 %, sous l'arrêt
+à 92 %. Les six tests dédiés couvrent appariement, bruit connu, composante
+fixe, dérive d'éclairage, absence de support et saturation sous le blanc.
