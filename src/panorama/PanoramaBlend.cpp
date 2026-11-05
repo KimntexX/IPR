@@ -17,7 +17,8 @@ constexpr float brightestForGain = 0.9f;   // of white: above it, clipping does
 constexpr int fewestForGain = 32;          // cells that make an overlap worth a constraint
 constexpr double gainPull = 0.01;          // towards 1, against one overlap's full weight
 constexpr float keptWeight = 1e-4f;        // a covered pixel is never left without a source
-constexpr int capacityScale = 4096;
+// A seam's place needs few levels of cost: fine ones only multiply the paths a cut must push.
+constexpr int capacityLevels = 32;
 constexpr double lowestRectangleShare = 0.9; // of the largest area, to stay on the bottom of the view
 
 inline float perceptual(const cv::Vec3f &colour, const cv::Vec3d &gains)
@@ -245,7 +246,7 @@ cv::Mat seams(const std::vector<View> &views, const cv::Size &canvas, const std:
                                                    std::abs(composite.at<float>(y + area.y, x + area.x) - composite.at<float>(ay, ax));
                             // A difference costs less where the image itself varies a lot.
                             const float cost = (herePair + therePair) / (gradient + 0.02f);
-                            const int capacity = 1 + int(std::min(cost, 64.0f) * float(capacityScale) / 64.0f);
+                            const int capacity = 1 + int(std::min(cost, 64.0f) * float(capacityLevels) / 64.0f);
                             flow.add(here, there, capacity, capacity);
                         }
                     }
