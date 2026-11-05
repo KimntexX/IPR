@@ -91,6 +91,26 @@ cv::Mat gaussianBlurred(const cv::Mat &mat, double sigmaX, double sigmaY, BlurBo
     return blurred;
 }
 
+cv::Mat resized(const cv::Mat &mat, cv::Size size, Interpolation interpolation)
+{
+    if (mat.empty())
+        return {};
+    cv::Mat out(size, mat.type());
+    Image target = fromMutableMat(out);
+    resizeInto(fromMat(mat), target, interpolation);
+    return out;
+}
+
+cv::Mat resizedBy(const cv::Mat &mat, double scaleX, double scaleY, Interpolation interpolation)
+{
+    if (mat.empty())
+        return {};
+    cv::Mat out(toCv(scaledSize(fromCv(mat.size()), scaleX, scaleY)), mat.type());
+    Image target = fromMutableMat(out);
+    resizeInto(fromMat(mat), target, scaleX, scaleY, interpolation);
+    return out;
+}
+
 cv::Matx33d toCv(const Matrix33d &matrix)
 {
     cv::Matx33d out;

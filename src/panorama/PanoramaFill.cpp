@@ -312,7 +312,7 @@ void searchAndVote(Level &level, int levelIndex, int iteration)
 void inherit(Level &fine, const Level &coarse)
 {
     cv::Mat enlarged;
-    cv::resize(coarse.colour, enlarged, fine.colour.size(), 0, 0, cv::INTER_LINEAR);
+    enlarged = ipr::resized(coarse.colour, fine.colour.size(), ipr::Interpolation::Linear);
     fine.field.resize(fine.holes.size());
     const int sourceCount = int(fine.sources.size());
     for (size_t i = 0; i < fine.holes.size(); ++i) {

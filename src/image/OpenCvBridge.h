@@ -3,6 +3,7 @@
 
 #include "Filters.h"
 #include "Image.h"
+#include "Resize.h"
 
 #include <opencv2/core.hpp>
 
@@ -26,6 +27,9 @@ cv::Mat asMutableMat(Image &image);
 // std::invalid_argument on another depth. While the modules still hold Mats.
 cv::Mat gaussianBlurred(const cv::Mat &mat, double sigma, BlurBorder border = BlurBorder::Mirror);
 cv::Mat gaussianBlurred(const cv::Mat &mat, double sigmaX, double sigmaY, BlurBorder border);
+// A new Mat at this size, or at these scales, as Resize.h. CV_32F of any channel count.
+cv::Mat resized(const cv::Mat &mat, cv::Size size, Interpolation interpolation);
+cv::Mat resizedBy(const cv::Mat &mat, double scaleX, double scaleY, Interpolation interpolation);
 
 inline cv::Size toCv(const Size &size) { return {size.width, size.height}; }
 inline Size fromCv(const cv::Size &size) { return {size.width, size.height}; }

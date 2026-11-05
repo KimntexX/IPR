@@ -8,6 +8,8 @@
 #include "PanoramaJob.h"
 #include "SystemMemory.h"
 
+#include "OpenCvBridge.h"
+
 #include <QDir>
 #include <QElapsedTimer>
 #include <QFileInfo>
@@ -66,7 +68,7 @@ QImage previewOf(const cv::Mat &cameraRgb, const CameraProfileEngine::DcpWorking
 {
     const double factor = std::min(1.0, double(previewSide) / std::max(cameraRgb.cols, cameraRgb.rows));
     cv::Mat small;
-    cv::resize(cameraRgb, small, cv::Size(), factor, factor, cv::INTER_AREA);
+    small = ipr::resizedBy(cameraRgb, factor, factor, ipr::Interpolation::Area);
     QString error;
     const ColorPipeline::WorkingImage image = rendered(small, context, metadata, &error);
     return image.isNull() ? QImage() : ColorPipeline::toSrgb(image, ColorPipeline::OutputFormat::Jpeg8Bit, &error);

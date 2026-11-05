@@ -3,8 +3,8 @@
 **Décision :** [ADR-0018](../decisions/ADR-0018-independance-decodage-raw-et-couche-image.md),
 20 octobre 2026, et volonté réaffirmée par l'utilisateur le 5 novembre 2026 : être le plus indépendant
 possible. **État :** O0 commencé, O1 et O2 faits, O3 commencé par le flou gaussien, le 5 novembre 2026, intégré à `dev`.
-**Plus aucun module n'appelle `cv::GaussianBlur`** : le flou de la couche image sert tous ceux qui floutaient. Le reste d'OpenCV
-demeure.
+**Plus aucun module n'appelle `cv::GaussianBlur` ni `cv::resize`** : le flou et le redimensionnement de la couche image servent
+tous ceux qui en avaient besoin. Le reste d'OpenCV demeure.
 Suivi : [issue 29](https://github.com/KimntexX/IPR/issues/29).
 Chantier distinct des [décodeurs RAW](roadmap-decodeurs-raw.md), sur sa propre branche durable,
 `patch_image_core`, après le palier E1 de la [refonte d'`ImageEditor`](plan-imageeditor-orchestrateur.md).
@@ -220,6 +220,24 @@ La couche image gagne un sigma par axe, pour l'anticrénelage de la géométrie.
   l'exposition réelle, sur 0,06 % des pixels au plus. Le rejet des pixels en mouvement, par seuil, bascule sur quelques pixels. Un
   extrait de comparaison change de place, car l'outil choisit lui-même les zones les plus texturées.
 - **Une seule mesure de durée par outil :** les écarts de temps ne départagent pas les deux versions.
+
+### Redimensionnement
+
+Bilinéaire et par zone, comme OpenCV les calcule en flottants, agrandissement par zone et échelles données compris.
+[Noyau](../validation/raw/image-kernel-resize-v001-20261105.json) : 6e-8 au plus du code d'OpenCV. **Intel IPP**, qu'OpenCV appelait
+pour certains agrandissements bilinéaires, s'écarte lui-même de ce code jusqu'à 6e-5, soit 4 niveaux sur 65 535 ; l'outil mesure les
+deux. [Modules](../validation/raw/image-layer-resize-v001-20261105.json) :
+
+- **Exports avec voile, texture et clarté : identiques au bit près**, et aussi rapides.
+- **Empilement et panorama : identiques au bit près**, recalage, bruit, cadre et images compris.
+
+**Threads.** Chaque appel du flou lançait jusqu'à sept threads, y compris depuis les tuiles du dématriçage déjà réparties sur des
+threads. Ils partagent désormais un seul budget, celui des huit threads ; les pixels ne changent pas.
+
+**Une erreur de mesure évitée.** Deux mesures ont semblé révéler un recul. Le décodage du panorama paraissait passer de 2,5 à
+9,7 s : l'outil d'audit gardait en cache les vues déjà décodées, et la première mesure n'en décodait qu'une. Un export paraissait
+s'écarter d'un niveau : l'éditeur écrit un `.ipr` à côté des copies, et une mesure partait de ce qu'une autre avait laissé. L'outil
+travaille désormais sur des copies neuves.
 
 ## 5. Principes de conception
 

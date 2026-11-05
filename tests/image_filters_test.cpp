@@ -2,6 +2,8 @@
 #include "Parallel.h"
 
 #include <atomic>
+#include <chrono>
+#include <thread>
 #include <cmath>
 #include <cstring>
 #include <iostream>
@@ -271,6 +273,41 @@ void aBufferReceivesTheSamePixels()
     check(none.empty(), "nothing into nothing");
 }
 
+// Calls from threads of their own, as demosaic's tiles make them, share one budget of helpers.
+void callsShareTheBudget()
+{
+    std::atomic<int> running{0}, most{0};
+    std::atomic<long long> rows{0};
+    const int callers = 6;
+    std::vector<std::thread> threads;
+    for (int t = 0; t < callers; ++t)
+        threads.emplace_back([&] {
+            for (int repeat = 0; repeat < 20; ++repeat)
+                parallelRows(64, [&](int first, int last) {
+                    const int now = running.fetch_add(1) + 1;
+                    int seen = most.load();
+                    while (now > seen && !most.compare_exchange_weak(seen, now)) {}
+                    std::this_thread::sleep_for(std::chrono::microseconds(200));
+                    rows.fetch_add(last - first);
+                    running.fetch_sub(1);
+                });
+        });
+    for (std::thread &thread : threads)
+        thread.join();
+    check(rows.load() == 64LL * 20 * callers, "every row once");
+    check(most.load() <= callers + workerThreads() - 1, "never more helpers than the budget");
+    // The budget is whole again: one call alone has all its helpers back.
+    std::atomic<int> alone{0}, aloneMost{0};
+    parallelRows(64, [&](int, int) {
+        const int now = alone.fetch_add(1) + 1;
+        int seen = aloneMost.load();
+        while (now > seen && !aloneMost.compare_exchange_weak(seen, now)) {}
+        std::this_thread::sleep_for(std::chrono::milliseconds(2));
+        alone.fetch_sub(1);
+    });
+    check(workerThreads() == 1 || aloneMost.load() > 1, "the helpers come back after each call");
+}
+
 void threadsDoNotChangeTheResult()
 {
     const Image image = noisy({320, 211}, 3);
@@ -338,6 +375,7 @@ int main()
         aBufferReceivesTheSamePixels();
         eachAxisHasItsSigma();
         threadsDoNotChangeTheResult();
+        callsShareTheBudget();
         aPartOfAnImageHasItsRows();
         itLeavesItsInputAlone();
         nothingToBlur();

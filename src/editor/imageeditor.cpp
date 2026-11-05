@@ -14,6 +14,8 @@
 #include "ThumbnailProvider.h"
 #include "Straightening.h"
 
+#include "OpenCvBridge.h"
+
 #include <QDir>
 #include <QDirIterator>
 #include <QCryptographicHash>
@@ -2334,7 +2336,7 @@ ColorPipeline::WorkingImage ImageEditor::buildEditProxy(
         std::max(1, static_cast<int>(std::lround(source.linearRgba.rows * scale))));
 
     ColorPipeline::WorkingImage proxy;
-    cv::resize(source.linearRgba, proxy.linearRgba, proxySize, 0, 0, cv::INTER_AREA);
+    proxy.linearRgba = ipr::resized(source.linearRgba, proxySize, ipr::Interpolation::Area);
     // Area averaging rounds alpha slightly above 1; a proxy restored from the
     // cache is revalidated as a master, which requires alpha within [0, 1].
     for (int y = 0; y < proxy.linearRgba.rows; ++y) {
@@ -2347,9 +2349,9 @@ ColorPipeline::WorkingImage ImageEditor::buildEditProxy(
     proxy.referenceWhiteBalanceKelvin = source.referenceWhiteBalanceKelvin;
     if (source.dcpContext) {
         auto context = std::make_shared<CameraProfileEngine::DcpWorkingContext>(*source.dcpContext);
-        cv::resize(source.dcpContext->cameraRgb, context->cameraRgb, proxySize, 0, 0, cv::INTER_AREA);
+        context->cameraRgb = ipr::resized(source.dcpContext->cameraRgb, proxySize, ipr::Interpolation::Area);
         if (!source.dcpContext->preLensCameraRgb.empty())
-            cv::resize(source.dcpContext->preLensCameraRgb, context->preLensCameraRgb, proxySize, 0, 0, cv::INTER_AREA);
+            context->preLensCameraRgb = ipr::resized(source.dcpContext->preLensCameraRgb, proxySize, ipr::Interpolation::Area);
         proxy.dcpContext = context;
     }
     return proxy;

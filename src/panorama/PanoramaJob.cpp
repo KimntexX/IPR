@@ -4,6 +4,8 @@
 #include "PanoramaBlend.h"
 #include "PanoramaFill.h"
 
+#include "OpenCvBridge.h"
+
 #include <QDir>
 #include <QStorageInfo>
 #include <QTemporaryDir>
@@ -33,7 +35,7 @@ constexpr int largestWarp = 32000;        // of an area resampled at once
 cv::Mat perceptualCopy(const cv::Mat &cameraRgb, double scale)
 {
     cv::Mat reduced;
-    cv::resize(cameraRgb, reduced, cv::Size(), scale, scale, scale < 1.0 ? cv::INTER_AREA : cv::INTER_LINEAR);
+    reduced = ipr::resizedBy(cameraRgb, scale, scale, scale < 1.0 ? ipr::Interpolation::Area : ipr::Interpolation::Linear);
     cv::Mat out(reduced.size(), CV_32FC1);
     cv::parallel_for_(cv::Range(0, reduced.rows), [&](const cv::Range &range) {
         for (int y = range.start; y < range.end; ++y) {

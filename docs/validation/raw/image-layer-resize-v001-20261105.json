@@ -1,0 +1,67 @@
+{
+ "question": "What the modules write and cost with the image layer resize instead of cv::resize",
+ "revision_opencv": "b8c9b94",
+ "revision_image_layer": "114cc59",
+ "exports": {
+  "settings": "dehaze 40, texture 50, clarity 30, against neutral; 16-bit TIFF at full resolution; median of three",
+  "photos": [
+   {
+    "photo": "6V1A0007.CR3",
+    "neutral_identical": true,
+    "effect_identical": true,
+    "opencv_effect_ms": 3004.7792,
+    "image_layer_effect_ms": 2930.1767,
+    "opencv_preview_ms": 605.0297,
+    "image_layer_preview_ms": 610.0786
+   },
+   {
+    "photo": "IMG_6858.CR2",
+    "neutral_identical": true,
+    "effect_identical": true,
+    "opencv_effect_ms": 1583.8901,
+    "image_layer_effect_ms": 1573.8502,
+    "opencv_preview_ms": 385.7129,
+    "image_layer_preview_ms": 379.6423
+   }
+  ]
+ },
+ "stacking": {
+  "series": "D:/DCIM/101EOSR6, 6V1A0016 to 6V1A0023, read only",
+  "frames_identical": [
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true
+  ],
+  "noise_identical": true,
+  "crops_identical": "all eight stack crops identical to the bit"
+ },
+ "panorama": {
+  "series": "Oliana _MG_7596 to _MG_7601, crop edges",
+  "residual_pixels": [
+   1.8458880617104712,
+   1.8458880617104712
+  ],
+  "canvas": [
+   [
+    18448,
+    4224
+   ],
+   [
+    18448,
+    4224
+   ]
+  ],
+  "image_identical": "the rendered JPEG identical to the bit",
+  "job_seconds": [
+   7.355,
+   35.11
+  ],
+  "note": "One later run took 35 s for the job; a run again took 7.3 s. Decode times depend on the audit cache, which skips the frames it already holds, and are not compared."
+ },
+ "caution": "The exports of each pair ran one after the other on the same private copies. The probe now copies the photos afresh for each run, as the editor writes an .ipr beside them."
+}

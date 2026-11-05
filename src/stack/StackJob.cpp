@@ -2,6 +2,8 @@
 
 #include "FrameSpool.h"
 
+#include "OpenCvBridge.h"
+
 #include <QDir>
 #include <QStorageInfo>
 #include <QTemporaryDir>
@@ -56,8 +58,8 @@ StackTurbulence::View subjectView(const cv::Mat &frame, const cv::Rect &subject,
 cv::Mat proxyOf(const cv::Mat &image)
 {
     cv::Mat proxy;
-    cv::resize(image, proxy, cv::Size(std::max(1, image.cols / proxyDivisor), std::max(1, image.rows / proxyDivisor)),
-               0, 0, cv::INTER_AREA);
+    proxy = ipr::resized(image, cv::Size(std::max(1, image.cols / proxyDivisor), std::max(1, image.rows / proxyDivisor)),
+                         ipr::Interpolation::Area);
     return proxy;
 }
 
