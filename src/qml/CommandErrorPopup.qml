@@ -74,8 +74,8 @@ Basic.Popup {
     background: Rectangle {
         radius: 4
         color: root.palette.window
-        border.color: root.errorColor
-        border.width: 2
+        border.color: root.palette.mid
+        border.width: 1
     }
 
     contentItem: Column {

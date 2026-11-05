@@ -6,7 +6,7 @@ Suivi de la validation partielle : [issue 30](https://github.com/KimntexX/IPR/is
 ## Point de décision, 5 novembre 2026
 
 **Le redressement d'après les lignes fonctionne sur les horizons, sans réseau ni OpenCV, en 30 ms.** Il refuse souvent, et c'est
-voulu. **Il est raccordé au panneau Géométrie, sur une branche locale.** Sur 470 photos de bâtiments que le réglage n'avait jamais
+voulu. **Il est raccordé au panneau Géométrie et intégré à `dev`.** Sur 470 photos de bâtiments que le réglage n'avait jamais
 vues, il corrige la perspective de 134 d'entre elles, et ce que j'ai regardé paraît juste à une exception près. **Mais sa lecture y
 est bien moins stable que sur les corpus du réglage**, et seul l'avis de l'utilisateur dira si ces propositions sont les bonnes.
 
