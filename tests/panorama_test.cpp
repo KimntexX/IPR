@@ -8,6 +8,7 @@
 
 #include <QCoreApplication>
 #include <QDir>
+#include <QElapsedTimer>
 #include <QTemporaryDir>
 #include <opencv2/imgproc.hpp>
 
@@ -615,6 +616,23 @@ void jobMakesAPanorama()
     check(whole.coveredShare > 0.5 && whole.coveredShare < 1.0, "and says how much of it is covered");
 }
 
+void framesThatNearlyCoincideStayCheap()
+{
+    // A burst chosen by mistake: everything overlaps, and every place costs about the same.
+    QTemporaryDir folder;
+    std::vector<cv::Mat> frames;
+    for (int i = 0; i < 6; ++i)
+        frames.push_back(render(sharedWorld(), camera((i - 3) * 0.05 * degree, (i - 3) * -0.04 * degree)));
+    PanoramaJob::Request request = requestFor(frames);
+    request.scratchRoot = folder.path();
+    QElapsedTimer watch;
+    watch.start();
+    const PanoramaJob::Result result = PanoramaJob::run(request);
+    check(result.success && result.usedFrames == 6, "frames that nearly coincide still join");
+    std::cout << "nearly coinciding frames: " << watch.elapsed() << " ms\n";
+    check(watch.elapsed() < 30000, "and stay cheap");
+}
+
 void jobFailsWithItsReason()
 {
     QTemporaryDir folder;
@@ -744,6 +762,7 @@ int main(int argc, char **argv)
     blendKeepsADetailAndHidesASlowStep();
     jobMakesAPanorama();
     fillInventsOnlyWhatIsMissing();
+    framesThatNearlyCoincideStayCheap();
     jobFailsWithItsReason();
     jobStopsWhenCancelled();
     if (failures == 0)
