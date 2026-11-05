@@ -1,5 +1,7 @@
 #include "CameraDenoise.h"
 
+#include "OpenCvBridge.h"
+
 #include <algorithm>
 #include <array>
 #include <atomic>
@@ -262,7 +264,7 @@ bool estimate(const cv::Mat &source,
         bool flat=true; float signalUncertainty=0;
         for (int level = 0; level < Levels; ++level) {
             const auto &d = p.detail[std::size_t(level)];
-            if (!cv::checkRange(d)) return false;
+            if (!ipr::allFinite(d)) return false;
             PatchNoise item; item.signal=signal;
             std::array<std::vector<float>, 3> samples;
             for (int y = margin; y < margin + height; ++y) for (int x = margin; x < margin + width; ++x) {
@@ -496,7 +498,7 @@ bool apply(cv::Mat &cameraRgb, int luminance, const Context &context,
     if (luminance == 0) return true;
     try {
         const auto stop = [&] { return cancelled && cancelled(); };
-        if (stop() || !validContext(context) || !cv::checkRange(cameraRgb)) return false;
+        if (stop() || !validContext(context) || !ipr::allFinite(cameraRgb)) return false;
         std::array<int, Levels> steps{};
         for (int i = 0; i < Levels; ++i) steps[std::size_t(i)] = std::max(1, int(std::lround((1 << i) * context.pixelScale)));
         const int radius = std::max(1, int(std::lround(3 * context.pixelScale)));
@@ -545,7 +547,7 @@ bool apply(cv::Mat &cameraRgb, int luminance, const Context &context,
         catch (...) { stopped.store(true); throw; }
         work(true);
         for (auto &thread : pool) if (thread.joinable()) thread.join();
-        if (stopped.load() || stop() || !cv::checkRange(delta)) return false;
+        if (stopped.load() || stop() || !ipr::allFinite(delta)) return false;
         // Balance the signed corrections, moving them toward zero, not adding an
         // offset to unchanged areas. Preserve DC without clamps.
         double positive = 0, negative = 0;
@@ -566,7 +568,7 @@ bool apply(cv::Mat &cameraRgb, int luminance, const Context &context,
             for (int x = 0; x < delta.cols; ++x)
                 out[x] = in[x] + cv::Vec3f::all(d[x] * (d[x] > 0 ? plus : minus));
         }
-        if (stop() || !cv::checkRange(output)) return false;
+        if (stop() || !ipr::allFinite(output)) return false;
         cameraRgb = std::move(output);
         return true;
     } catch (...) { return false; }

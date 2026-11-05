@@ -36,9 +36,9 @@ std::vector<cv::Point2f> cornersOf(const cv::Mat &level, int wanted)
     gradientX = ipr::sobel(level, true);
     gradientY = ipr::sobel(level, false);
     cv::Mat xx, yy, xy;
-    cv::multiply(gradientX, gradientX, xx);
-    cv::multiply(gradientY, gradientY, yy);
-    cv::multiply(gradientX, gradientY, xy);
+    xx = ipr::multiplied(gradientX, gradientX);
+    yy = ipr::multiplied(gradientY, gradientY);
+    xy = ipr::multiplied(gradientX, gradientY);
     xx = ipr::gaussianBlurred(xx, harrisBlur, ipr::BlurBorder::Mirror);
     yy = ipr::gaussianBlurred(yy, harrisBlur, ipr::BlurBorder::Mirror);
     xy = ipr::gaussianBlurred(xy, harrisBlur, ipr::BlurBorder::Mirror);
@@ -184,7 +184,7 @@ std::vector<Feature> detect(const cv::Mat &image, const Options &options)
         return features;
     // An undefined pixel must not become an undefined place.
     cv::Mat level = image.clone();
-    cv::patchNaNs(level, 0.0);
+    ipr::replaceNaN(level, 0.0f);
     float toImage = 1.0f;
     for (int index = 0; index < options.levels && std::min(level.cols, level.rows) > grid * int(spacing) * 2; ++index) {
         detectOnLevel(level, toImage, options, features);

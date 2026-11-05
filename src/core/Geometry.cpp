@@ -221,15 +221,11 @@ cv::Mat warpRgb(const cv::Mat &rgb, const Settings &s, Quality quality)
     cv::Mat result = resampled(antialiased(rgb, s), s, quality, cv::BORDER_REPLICATE);
     // The filter's lobes must not push a pixel below what the source holds.
     std::vector<cv::Mat> channels;
-    cv::split(rgb, channels);
-    cv::Scalar floor;
-    for (int channel = 0; channel < rgb.channels(); ++channel) {
-        double low = 0;
-        cv::minMaxIdx(channels[size_t(channel)], &low);
-        floor[channel] = std::min(0.0, low);
-    }
-    cv::max(result, floor, result);
-    return result;
+    channels = ipr::splitChannels(rgb);
+    std::vector<float> floor(size_t(rgb.channels()));
+    for (int channel = 0; channel < rgb.channels(); ++channel)
+        floor[size_t(channel)] = float(std::min(0.0, ipr::extremesOf(channels[size_t(channel)]).smallest));
+    return ipr::atLeast(result, floor);
 }
 
 cv::Mat warpCoverage(const cv::Mat &alpha, const Settings &s, Quality quality)
@@ -263,13 +259,13 @@ cv::Mat warpRgba(const cv::Mat &rgba, const Settings &s, Quality quality)
     if (!needsResampling(s))
         return turnedAndMirrored(rgba, s);
     cv::Mat rgb, alpha;
-    cv::cvtColor(rgba, rgb, cv::COLOR_RGBA2RGB);
-    cv::extractChannel(rgba, alpha, 3);
+    rgb = ipr::withoutAlpha(rgba);
+    alpha = ipr::channel(rgba, 3);
     std::vector<cv::Mat> channels;
-    cv::split(warpRgb(rgb, s, quality), channels);
+    channels = ipr::splitChannels(warpRgb(rgb, s, quality));
     channels.push_back(warpCoverage(alpha, s, quality));
     cv::Mat result;
-    cv::merge(channels, result);
+    result = ipr::merged(channels);
     clearTransparent(result);
     return result;
 }

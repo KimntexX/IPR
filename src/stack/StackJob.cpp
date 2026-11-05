@@ -322,7 +322,7 @@ Result run(const Request &request)
             advance();
             continue;
         }
-        cv::multiply(registered, cv::Scalar(report.gains[0], report.gains[1], report.gains[2]), registered);
+        registered = ipr::multiplied(registered, std::vector<double>{report.gains[0], report.gains[1], report.gains[2]});
         if (!spoolFrame(registered)) {
             result.error = QStringLiteral("Écriture impossible dans le dossier tampon (disque plein ?).");
             return result;

@@ -34,7 +34,7 @@ cv::Mat rangeLuminanceOf(const ColorPipeline::WorkingImage &source, const Settin
     if (!LocalAdjustments::usesLuminance(settings.localMasks))
         return {};
     cv::Mat rgb;
-    cv::cvtColor(source.linearRgba, rgb, cv::COLOR_RGBA2RGB);
+    rgb = ipr::withoutAlpha(source.linearRgba);
     return LocalAdjustments::rangeLuminance(Geometry::warpRgb(rgb, settings.geometry, geometryQuality(pixelScale)));
 }
 
@@ -212,7 +212,7 @@ cv::Mat tonesOutput(const ColorPipeline::WorkingImage &source, const Settings &s
     cv::Mat tones = cache ? cache->peek(source.linearRgba, pixelScale, 0, stageKeys(settings)[0]) : cv::Mat();
     if (!tones.empty())
         return tones;
-    cv::cvtColor(source.linearRgba, tones, cv::COLOR_RGBA2RGB);
+    tones = ipr::withoutAlpha(source.linearRgba);
     const int reference = static_cast<int>(std::lround(source.referenceWhiteBalanceKelvin.value_or(5200.0)));
     if (!renderTones(source, settings, reference, pixelScale, tones, maskValues(source, settings, pixelScale, cache)))
         tones.release();
@@ -223,7 +223,7 @@ ColorPipeline::WorkingImage workingImage(const ColorPipeline::WorkingImage &sour
                                          double pixelScale, RenderStageCache *cache, int *retouchesNotDone)
 {
     if (source.isNull() || source.colorSpace != ColorPipeline::workingColorSpace() ||
-        source.linearRgba.type() != CV_32FC4 || !cv::checkRange(source.linearRgba, true))
+        source.linearRgba.type() != CV_32FC4 || !ipr::allFinite(source.linearRgba))
         return {};
 
     const int referenceTemperature = static_cast<int>(std::lround(
@@ -264,7 +264,7 @@ ColorPipeline::WorkingImage workingImage(const ColorPipeline::WorkingImage &sour
     const auto reached = [&](int stage, const cv::Mat &rgb) { if (cache) cache->store(start, stage, rgb); };
     cv::Mat adjusted = start.rgb;
     if (runs(0)) {
-        cv::cvtColor(source.linearRgba, adjusted, cv::COLOR_RGBA2RGB);
+        adjusted = ipr::withoutAlpha(source.linearRgba);
         if (!renderTones(source, settings, referenceTemperature, pixelScale, adjusted, local)) return {};
         // On the canvas, once the tones are set; what follows treats the zone as the rest.
         const int notDone = Retouch::apply(adjusted, settings.retouches);
@@ -314,12 +314,12 @@ ColorPipeline::WorkingImage workingImage(const ColorPipeline::WorkingImage &sour
     Grain::apply(adjusted, settings.grain, pixelScale);
 
     std::vector<cv::Mat> channels;
-    cv::split(adjusted, channels);
+    channels = ipr::splitChannels(adjusted);
     cv::Mat alpha;
-    cv::extractChannel(source.linearRgba, alpha, 3);
+    alpha = ipr::channel(source.linearRgba, 3);
     channels.push_back(Geometry::warpCoverage(alpha, settings.geometry, geometryQuality(pixelScale)));
     cv::Mat rgbaOutput;
-    cv::merge(channels, rgbaOutput);
+    rgbaOutput = ipr::merged(channels);
     if (Geometry::transformsPixels(settings.geometry))
         Geometry::clearTransparent(rgbaOutput);
 

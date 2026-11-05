@@ -1,5 +1,7 @@
 #include "CameraSignal.h"
 
+#include "OpenCvBridge.h"
+
 #include <QFileInfo>
 #include <cmath>
 #include <vector>
@@ -14,7 +16,7 @@ bool validate(const Source &source, QString *error)
     };
     if (source.coordinates != Coordinates::CameraRgb || !source.whiteBalanceApplied ||
         source.rgb.empty() || source.rgb.dims != 2 || source.rgb.type() != CV_32FC3 ||
-        !cv::checkRange(source.rgb, true))
+        !ipr::allFinite(source.rgb))
         return reject("Expected finite linear camera RGB float32, with WB already applied.");
     if (source.cameraMake.trimmed().isEmpty() || source.cameraModel.trimmed().isEmpty())
         return reject("Camera identity is required for DCP rendering.");
@@ -53,9 +55,9 @@ ColorPipeline::WorkingImage render(Source &&source, const QString &profile,
         return {};
     ColorPipeline::WorkingImage result;
     std::vector<cv::Mat> channels;
-    cv::split(rendered, channels);
+    channels = ipr::splitChannels(rendered);
     channels.push_back(cv::Mat(rendered.size(), CV_32FC1, cv::Scalar(1.f)));
-    cv::merge(channels, result.linearRgba);
+    result.linearRgba = ipr::merged(channels);
     result.colorSpace = ColorPipeline::workingColorSpace();
     result.referenceWhiteBalanceKelvin = source.whiteBalanceKelvin;
     result.dcpContext = context;

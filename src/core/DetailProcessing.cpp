@@ -128,7 +128,7 @@ cv::Mat structureProtection(const cv::Mat &guide, float noiseSigma)
     // Sobel's derivative scale is 8. Normalize it before comparing with sigma.
     gradientX = ipr::sobel(guide, true, 1.0 / 8.0);
     gradientY = ipr::sobel(guide, false, 1.0 / 8.0);
-    cv::magnitude(gradientX, gradientY, magnitude);
+    magnitude = ipr::magnitude(gradientX, gradientY);
     const float sigma = std::max(noiseSigma, kDenoiseSigmaEpsilon);
     for (int y = 0; y < magnitude.rows; ++y) {
         float *row = magnitude.ptr<float>(y);
@@ -226,8 +226,8 @@ cv::Mat guidedFilter(const cv::Mat &guide, const cv::Mat &plane, int radius, flo
 // typical value at that brightness, sampled on a sparse grid.
 cv::Mat levelMedian(const cv::Mat &value, const cv::Mat &level)
 {
-    double low = 0.0, high = 0.0;
-    cv::minMaxLoc(level, &low, &high);
+    const ipr::MatExtremes range = ipr::extremesOf(level);
+    const double low = range.smallest, high = range.largest;
     const int first = static_cast<int>(std::floor(low));
     const int bins = std::max(1, static_cast<int>(std::ceil(high)) - first + 1);
     std::vector<std::vector<float>> samples(static_cast<size_t>(bins));
@@ -286,7 +286,7 @@ cv::Mat colourEdgeProtection(const cv::Mat &chromaOrange, const cv::Mat &chromaG
         gy = ipr::sobel(smooth, false);
         gradient += gx.mul(gx) + gy.mul(gy);
     }
-    cv::sqrt(gradient, gradient);
+    gradient = ipr::squareRoot(gradient);
     const cv::Mat typical = levelMedian(gradient, level);
     cv::Mat protection(gradient.rows, gradient.cols, CV_32F);
     for (int y = 0; y < gradient.rows; ++y) {
@@ -316,7 +316,7 @@ void denoiseChrominance(const cv::Mat &luma, cv::Mat *chromaOrange, cv::Mat *chr
 
     for (cv::Mat *plane : {chromaOrange, chromaGreen}) {
         const cv::Mat median = ipr::median(*plane, pixelScale >= 0.6 ? 5 : 3);
-        cv::addWeighted(*plane, 1.0 - weight, median, weight, 0.0, *plane);
+        *plane = ipr::blended(*plane, 1.0 - weight, median, weight, 0.0);
     }
 
     cv::Mat logLuma(luma.rows, luma.cols, CV_32F);
@@ -405,7 +405,7 @@ void mergeLumaChroma(const cv::Mat &luma, const cv::Mat &chromaOrange,
 cv::Mat clampedLuma(const cv::Mat &plane)
 {
     cv::Mat bounded;
-    cv::max(plane, kChromaLumaFloor, bounded);
+    bounded = ipr::atLeast(plane, kChromaLumaFloor);
     return bounded;
 }
 
@@ -448,8 +448,8 @@ void reduceNoiseLocally(cv::Mat &linearRgb, const DenoiseSettings &settings, dou
     if (std::any_of(chrominanceValues.cbegin(), chrominanceValues.cend(), [](float v) { return v > 0.f; })) {
         const cv::Mat divisor = clampedLuma(luma);
         cv::Mat orangeRatio, greenRatio;
-        cv::divide(chromaOrange, divisor, orangeRatio);
-        cv::divide(chromaGreen, divisor, greenRatio);
+        orangeRatio = ipr::divided(chromaOrange, divisor);
+        greenRatio = ipr::divided(chromaGreen, divisor);
         for (float value : chrominanceValues) {
             cv::Mat orange = orangeRatio.clone(), green = greenRatio.clone();
             if (value > 0.f)
@@ -533,8 +533,8 @@ void reduceNoise(cv::Mat &linearRgb, const DenoiseSettings &settings, double pix
     // its own denoise: it keeps the colour edges the photo shows.
     if (settings.chrominance > 0) {
         const cv::Mat divisor = clampedLuma(luma);
-        cv::divide(chromaOrange, divisor, chromaOrange);
-        cv::divide(chromaGreen, divisor, chromaGreen);
+        chromaOrange = ipr::divided(chromaOrange, divisor);
+        chromaGreen = ipr::divided(chromaGreen, divisor);
         denoiseChrominance(luma, &chromaOrange, &chromaGreen, settings.chrominance, pixelScale);
     }
     if (settings.luminance > 0) {

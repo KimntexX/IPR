@@ -229,7 +229,7 @@ cv::Mat shapeCoverage(const Shape &shape, const cv::Size &canvas, const cv::Mat 
         break;
     }
     if (shape.inverted)
-        cv::subtract(cv::Scalar(1.0), out, out);
+        out = ipr::subtractedFrom(1.0, out);
     return out;
 }
 
@@ -408,7 +408,7 @@ LocalValues::Maps valueMaps(const Masks &masks, const cv::Size &canvas, const cv
             cv::Mat &map = maps.values[i];
             if (map.empty())
                 map = cv::Mat(canvas, CV_32FC1, cv::Scalar(0));
-            cv::scaleAdd(weight, double(mask.values[i]), map, map);
+            map = ipr::addScaled(weight, double(mask.values[i]), map);
         }
     }
     return maps;

@@ -339,8 +339,8 @@ Layer prepareLayer(const View &view, const cv::Mat &labels, int label, double na
     view.any.convertTo(present, CV_32FC1, 1.0 / 255.0);
     std::vector<cv::Mat> three{present, present, present};
     cv::Mat presentColour;
-    cv::merge(three, presentColour);
-    cv::multiply(view.colour, presentColour, weighted);
+    presentColour = ipr::merged(three);
+    weighted = ipr::multiplied(view.colour, presentColour);
     cv::Mat blurredColour, blurredPresent;
     blurredColour = ipr::gaussianBlurred(weighted, wideSigma, ipr::BlurBorder::LastPixel);
     blurredPresent = ipr::gaussianBlurred(present, wideSigma, ipr::BlurBorder::LastPixel);

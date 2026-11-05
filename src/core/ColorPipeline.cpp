@@ -1,5 +1,7 @@
 #include "ColorPipeline.h"
 
+#include "OpenCvBridge.h"
+
 #include <algorithm>
 #include <cmath>
 #include <utility>
@@ -139,7 +141,7 @@ WorkingImage fromSourceImage(const QImage &source, QString *error)
     cv::Mat rgbaFloat(linear.height(), linear.width(), CV_32FC4,
                    const_cast<uchar *>(linear.constBits()), linear.bytesPerLine());
     result.linearRgba = rgbaFloat.clone();
-    if (!cv::checkRange(result.linearRgba, true)) {
+    if (!ipr::allFinite(result.linearRgba)) {
         if (error) *error = QStringLiteral("L'image source contient des valeurs non finies.");
         return {};
     }
@@ -152,16 +154,16 @@ WorkingImage fromLinearSrgb(const cv::Mat &rgb, QString *error)
 {
     WorkingImage result;
     // Extended range (negative, above 1) is kept; NaN and infinities are refused.
-    if (rgb.empty() || rgb.type() != CV_32FC3 || !cv::checkRange(rgb)) {
+    if (rgb.empty() || rgb.type() != CV_32FC3 || !ipr::allFinite(rgb)) {
         if (error)
             *error = QStringLiteral("Les données RAW RGB linéaires sont invalides.");
         return result;
     }
 
     std::vector<cv::Mat> channels;
-    cv::split(rgb, channels);
+    channels = ipr::splitChannels(rgb);
     channels.push_back(cv::Mat(rgb.size(), CV_32FC1, cv::Scalar(1.0f)));
-    cv::merge(channels, result.linearRgba);
+    result.linearRgba = ipr::merged(channels);
     WorkingColor::transform(result.linearRgba, WorkingColor::fromSrgb());
     result.colorSpace = workingColorSpace();
     result.sourceProfile = QStringLiteral("RAW — sRGB linéaire");
@@ -172,7 +174,7 @@ WorkingImage mapToSrgbGamut(const WorkingImage &source, QString *error)
 {
     if (source.isNull() || source.colorSpace != workingColorSpace() ||
         source.linearRgba.type() != CV_32FC4 ||
-        !cv::checkRange(source.linearRgba, true)) {
+        !ipr::allFinite(source.linearRgba)) {
         if (error)
             *error = QStringLiteral(
                 "La compression de gamut attend une image RGBA linéaire finie.");
@@ -182,7 +184,7 @@ WorkingImage mapToSrgbGamut(const WorkingImage &source, QString *error)
     WorkingImage result = source;
     result.linearRgba = source.linearRgba.clone();
     WorkingColor::transform(result.linearRgba, WorkingColor::toSrgb());
-    if (!cv::checkRange(result.linearRgba, true)) {
+    if (!ipr::allFinite(result.linearRgba)) {
         if (error) *error = QStringLiteral("La conversion de sortie a produit des valeurs non finies.");
         return {};
     }
@@ -414,7 +416,7 @@ QImage toSrgb(const WorkingImage &source, OutputFormat outputFormat, QString *er
             *error = QStringLiteral("L'image de travail n'est pas en Rec.2020 linéaire.");
         return {};
     }
-    if (!cv::checkRange(source.linearRgba, true)) {
+    if (!ipr::allFinite(source.linearRgba)) {
         if (error)
             *error = QStringLiteral("L'image de travail contient des valeurs non finies.");
         return {};

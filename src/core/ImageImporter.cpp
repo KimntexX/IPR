@@ -1,5 +1,7 @@
 #include "ImageImporter.h"
 
+#include "OpenCvBridge.h"
+
 #include <QFileInfo>
 #include <QImageReader>
 #include <QRegularExpression>
@@ -185,7 +187,7 @@ bool complete(Result &result)
     const auto &image = result.image;
     bool valid = !image.isNull() && image.colorSpace == ColorPipeline::workingColorSpace() &&
         image.linearRgba.dims == 2 && image.linearRgba.type() == CV_32FC4 &&
-        cv::checkRange(image.linearRgba, true);
+        ipr::allFinite(image.linearRgba);
     if (valid) {
         for (int y=0; y<image.linearRgba.rows && valid; ++y) {
             const auto *row = image.linearRgba.ptr<cv::Vec4f>(y);

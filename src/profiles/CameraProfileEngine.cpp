@@ -1970,7 +1970,7 @@ bool renderFromCameraSignal(const DcpWorkingContext &source, int temperature, in
         if (!profile->apply(rgb, illuminants, error, source.options)) return false;
     } else {
         gains *= std::exp2(exposureEv);
-        cv::transform(source.cameraRgb, rgb, cv::Matx33f(
+        rgb = ipr::transformed(source.cameraRgb, cv::Matx33f(
             float(gains[0]),0,0, 0,float(gains[1]),0, 0,0,float(gains[2])));
         applyLocalExposure(rgb);
         if (!profile->apply(rgb, illuminantKelvin(temperature, tint), error, source.options)) return false;
@@ -2047,7 +2047,7 @@ bool applyLcp(const QString &fileName, cv::Mat &linearRgb,
 
     if (options.chromaticAberration && (model.hasRedGreen || model.hasBlueGreen)) {
         std::vector<cv::Mat> channels;
-        cv::split(geometryCorrected, channels);
+        channels = ipr::splitChannels(geometryCorrected);
         const auto correctChromaticChannel = [&](int channel,
                                                  const std::array<double, 5> &ca,
                                                  double centerX,
@@ -2077,7 +2077,7 @@ bool applyLcp(const QString &fileName, cv::Mat &linearRgb,
                 }
             });
             const cv::Mat corrected = ipr::remapped(geometryCorrected, caX, caY, ipr::Resampling::Linear, ipr::Outside::LastPixel);
-            cv::extractChannel(corrected, channels[channel], channel);
+            channels[channel] = ipr::channel(corrected, channel);
         };
         if (model.hasRedGreen)
             correctChromaticChannel(0, model.redGreen,
@@ -2085,7 +2085,7 @@ bool applyLcp(const QString &fileName, cv::Mat &linearRgb,
         if (model.hasBlueGreen)
             correctChromaticChannel(2, model.blueGreen,
                                     model.blueCenterX, model.blueCenterY);
-        cv::merge(channels, geometryCorrected);
+        geometryCorrected = ipr::merged(channels);
     }
 
     if (options.lensCorrection && model.hasVignetting) {

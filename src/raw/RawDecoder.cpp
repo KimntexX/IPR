@@ -9,6 +9,8 @@
 #include "RawNormalization.h"
 #include "CameraSignal.h"
 
+#include "OpenCvBridge.h"
+
 #include <QFileInfo>
 #include <QDir>
 #include <QBuffer>
@@ -755,9 +757,9 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
                                                error, opticalOptions, &opticalApplied)) {
                 WorkingColor::transform(rgb, WorkingColor::fromSrgb());
                 std::vector<cv::Mat> correctedChannels;
-                cv::split(rgb, correctedChannels);
+                correctedChannels = ipr::splitChannels(rgb);
                 correctedChannels.push_back(cv::Mat(rgb.size(), CV_32FC1, cv::Scalar(1.f)));
-                cv::merge(correctedChannels, image.linearRgba);
+                image.linearRgba = ipr::merged(correctedChannels);
             }
         }
     } else {
@@ -1141,7 +1143,7 @@ ColorPipeline::WorkingImage decode(const QString &fileName,
         metadata->cameraRaw = true;
     }
     if (!result.isNull() && (result.colorSpace != ColorPipeline::workingColorSpace() ||
-        result.linearRgba.type() != CV_32FC4 || !cv::checkRange(result.linearRgba, true))) {
+        result.linearRgba.type() != CV_32FC4 || !ipr::allFinite(result.linearRgba))) {
         if (error) *error = QStringLiteral("Le décodeur n'a pas fourni un master Rec.2020 linéaire RGBA fini.");
         return {};
     }

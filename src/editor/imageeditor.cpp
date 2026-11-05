@@ -50,10 +50,8 @@ namespace {
 bool hasEmptyZones(const cv::Mat &rgba)
 {
     cv::Mat alpha;
-    cv::extractChannel(rgba, alpha, 3);
-    double low = 1;
-    cv::minMaxIdx(alpha, &low);
-    return low < 1;
+    alpha = ipr::channel(rgba, 3);
+    return ipr::extremesOf(alpha).smallest < 1;
 }
 
 QString selectionKey(const QUrl &url)
@@ -2013,7 +2011,7 @@ void ImageEditor::addRetouchStroke(int retouch, const QVariantList &points, doub
         const ColorPipeline::WorkingImage &source = previewSource();
         if (!source.isNull()) {
             cv::Mat rgb;
-            cv::cvtColor(source.linearRgba, rgb, cv::COLOR_RGBA2RGB);
+            rgb = ipr::withoutAlpha(source.linearRgba);
             rgb = Geometry::warpRgb(rgb, m_settings.geometry, RenderChain::geometryQuality(previewPixelScale()));
             target.source = Retouch::suggestSource(rgb, target);
         }

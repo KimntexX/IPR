@@ -5,10 +5,13 @@
 #include "Filters.h"
 #include "Image.h"
 #include "Neighbourhood.h"
+#include "Pixels.h"
 #include "Resize.h"
 #include "Warp.h"
 
 #include <opencv2/core.hpp>
+
+#include <vector>
 
 // The way between the image layer and cv::Mat while modules move from one to the other, without
 // copying pixels. It goes away with OpenCV. Only this file knows both.
@@ -54,6 +57,37 @@ cv::Mat median(const cv::Mat &mat, int side);
 cv::Mat boxMean(const cv::Mat &mat, cv::Size window, BlurBorder border);
 cv::Mat minimum(const cv::Mat &mat, cv::Size window, Beyond beyond);
 cv::Mat maximum(const cv::Mat &mat, cv::Size window, Beyond beyond);
+// Pixel arithmetic as Pixels.h gives it.
+bool allFinite(const cv::Mat &mat);
+std::vector<cv::Mat> splitChannels(const cv::Mat &mat);
+cv::Mat merged(const std::vector<cv::Mat> &planes);
+cv::Mat channel(const cv::Mat &mat, int index);
+cv::Mat withoutAlpha(const cv::Mat &rgba);
+cv::Mat multiplied(const cv::Mat &a, const cv::Mat &b);
+cv::Mat multiplied(const cv::Mat &a, const std::vector<double> &factors);
+cv::Mat divided(const cv::Mat &a, const cv::Mat &b);
+cv::Mat blended(const cv::Mat &a, double alpha, const cv::Mat &b, double beta, double gamma);
+cv::Mat addScaled(const cv::Mat &a, double scale, const cv::Mat &b);
+cv::Mat subtractedFrom(double value, const cv::Mat &a);
+cv::Mat magnitude(const cv::Mat &x, const cv::Mat &y);
+cv::Mat squareRoot(const cv::Mat &a);
+cv::Mat atLeast(const cv::Mat &a, float bound);
+cv::Mat atLeast(const cv::Mat &a, const std::vector<float> &bounds);
+cv::Mat atMost(const cv::Mat &a, float bound);
+cv::Mat transformed(const cv::Mat &a, const cv::Matx33f &matrix);
+void replaceNaN(cv::Mat &mat, float value);
+cv::Mat bitwiseOr(const cv::Mat &a, const cv::Mat &b);
+cv::Mat bitwiseAnd(const cv::Mat &a, const cv::Mat &b);
+cv::Mat bitwiseNot(const cv::Mat &a);
+long long countNonZero(const cv::Mat &mat);
+struct MatExtremes
+{
+    double smallest = 0.0, largest = 0.0;
+    cv::Point smallestAt, largestAt;
+};
+MatExtremes extremesOf(const cv::Mat &mat);
+std::vector<double> meanOf(const cv::Mat &mat);
+void meanAndDeviationOf(const cv::Mat &mat, std::vector<double> &mean, std::vector<double> &deviation);
 
 inline cv::Size toCv(const Size &size) { return {size.width, size.height}; }
 inline Size fromCv(const cv::Size &size) { return {size.width, size.height}; }

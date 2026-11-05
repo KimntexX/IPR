@@ -59,7 +59,7 @@ Result develop(const RawInput::Input &input, const Options &options)
         divisor = dataMaximum;
     context.divisor = divisor;
     context.white = divisor + commonBlack;
-    if (parity) cv::max(mosaic, 0.f, mosaic);   // A: the lower bound at 0
+    if (parity) mosaic = ipr::atLeast(mosaic, 0.f);   // A: the lower bound at 0
     if (options.observer) {
         const cv::Mat normalized = mosaic / divisor;
         observe(Stage::NormalizedCfa, normalized, true);

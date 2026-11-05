@@ -1,5 +1,7 @@
 #include "CameraDng.h"
 
+#include "OpenCvBridge.h"
+
 #include <QFile>
 #include <QJsonArray>
 #include <QJsonDocument>
@@ -52,11 +54,10 @@ double headroomOf(const cv::Mat &rgb, const cv::Vec3d &neutral)
 {
     const double scale = neutralScale(neutral);
     std::vector<cv::Mat> channels;
-    cv::split(rgb, channels);
+    channels = ipr::splitChannels(rgb);
     double headroom = 1.0;
     for (int c = 0; c < 3; ++c) {
-        double highest = 0.0;
-        cv::minMaxLoc(channels[size_t(c)], nullptr, &highest);
+        const double highest = ipr::extremesOf(channels[size_t(c)]).largest;
         headroom = std::max(headroom, highest * neutral[c] / scale);
     }
     return std::min(headroom, largestHeadroom);

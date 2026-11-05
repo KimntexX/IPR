@@ -151,7 +151,7 @@ cv::Mat rcd(const cv::Mat &cfa, const Pattern &p, float floor)
             }
         }
     cv::Mat rgb;
-    cv::merge(std::vector<cv::Mat>{R, G, B}, rgb);
+    rgb = ipr::merged(std::vector<cv::Mat>{R, G, B});
     return rgb;
 }
 
@@ -186,9 +186,9 @@ cv::Mat flatWeight(const cv::Mat &luma)
     smooth = ipr::gaussianBlurred(luma, 1.0, ipr::BlurBorder::MirrorEdge);
     gx = ipr::centralDifference(smooth, true);
     gy = ipr::centralDifference(smooth, false);
-    cv::magnitude(gx, gy, gradient);
+    gradient = ipr::magnitude(gx, gy);
     cv::Mat weight = (DetailGradient * sigma - gradient) / ((DetailGradient - FlatGradient) * sigma);
-    return cv::min(cv::max(weight, 0.f), 1.f);
+    return ipr::atMost(ipr::atLeast(weight, 0.f), 1.f);
 }
 
 // One 3x3 median on R - G and B - G where the luminance is flat, green unchanged;
@@ -196,14 +196,14 @@ cv::Mat flatWeight(const cv::Mat &luma)
 void flatChromaMedian(cv::Mat &rgb, float floor)
 {
     std::vector<cv::Mat> c;
-    cv::split(rgb, c);
+    c = ipr::splitChannels(rgb);
     const cv::Mat weight = flatWeight(0.25f * (c[0] + 2.f * c[1] + c[2]));
     for (int k : {0, 2}) {
         const cv::Mat diff = c[size_t(k)] - c[1];
         const cv::Mat median = ipr::median(diff, 3);
-        c[size_t(k)] = cv::max(median.mul(weight) + diff.mul(1.f - weight) + c[1], floor);
+        c[size_t(k)] = ipr::atLeast(cv::Mat(median.mul(weight) + diff.mul(1.f - weight) + c[1]), floor);
     }
-    cv::merge(c, rgb);
+    rgb = ipr::merged(c);
 }
 
 } // namespace

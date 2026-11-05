@@ -354,9 +354,10 @@ Result run(const Request &request)
     for (const PanoramaBlend::View &view : views) {
         const cv::Rect inCanvas = view.area & cv::Rect(0, 0, reducedCanvas.width, reducedCanvas.height);
         cv::Mat seat = covered(inCanvas);
-        cv::bitwise_or(seat, view.whole(inCanvas - view.area.tl()), seat);
+        // Written back into the canvas: seat is a region of it.
+        ipr::bitwiseOr(seat, view.whole(inCanvas - view.area.tl())).copyTo(seat);
     }
-    result.coveredShare = double(cv::countNonZero(covered)) / std::max(1.0, double(reducedCanvas.area()));
+    result.coveredShare = double(ipr::countNonZero(covered)) / std::max(1.0, double(reducedCanvas.area()));
     views.clear();
     if (request.edges == Edges::Crop) {
         const cv::Rect best = PanoramaBlend::lowRectangle(covered);
@@ -412,7 +413,7 @@ Result run(const Request &request)
             if (!real.empty()) {
                 const cv::Rect inBand(part.x - areas[m].x, 0, part.width, part.height);
                 cv::Mat seat = real(part - result.kept.tl());
-                cv::bitwise_or(seat, validBands[m](inBand), seat);
+                ipr::bitwiseOr(seat, validBands[m](inBand)).copyTo(seat);
             }
         }
         cv::Mat blended;

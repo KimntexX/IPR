@@ -185,9 +185,9 @@ bool hasCorners(const cv::Mat &block)
 // The peak with its sub-pixel place, by a parabola along each axis.
 bool peak(const cv::Mat &scores, cv::Point2d &place, double &value)
 {
-    double maximum = 0.0;
-    cv::Point at;
-    cv::minMaxLoc(scores, nullptr, &maximum, nullptr, &at);
+    const ipr::MatExtremes found = ipr::extremesOf(scores);
+    const double maximum = found.largest;
+    const cv::Point at = found.largestAt;
     if (at.x <= 0 || at.y <= 0 || at.x >= scores.cols - 1 || at.y >= scores.rows - 1)
         return false; // on the edge of the search: the true peak may lie beyond it
     const auto offset = [](double before, double middle, double after) {
@@ -356,13 +356,13 @@ LocalField localField(const cv::Mat &reference, const cv::Mat &registered, const
             }
         }
     });
-    field.measured = cv::countNonZero(weight);
+    field.measured = int(ipr::countNonZero(weight));
 
     // A median outvotes the odd block; the weights then fill the gaps, the field falls to
     // zero away from any measure, and it stays smooth: a sharp step would tear an image at
     // an object's edge.
     std::vector<cv::Mat> axes;
-    cv::split(measured, axes);
+    axes = ipr::splitChannels(measured);
     for (cv::Mat &axis : axes) {
         const cv::Mat filtered = ipr::median(axis, 3);
         filtered.copyTo(axis, weight > 0.f);
@@ -372,7 +372,7 @@ LocalField localField(const cv::Mat &reference, const cv::Mat &registered, const
     constexpr float wholeWeight = 0.25f; // this much measure nearby is trusted fully
     for (cv::Mat &axis : axes) {
         cv::Mat weighted, smooth;
-        cv::multiply(axis, weight, weighted);
+        weighted = ipr::multiplied(axis, weight);
         smooth = ipr::gaussianBlurred(weighted, options.smoothing, ipr::BlurBorder::Mirror);
         for (int row = 0; row < axis.rows; ++row) {
             float *out = axis.ptr<float>(row);
@@ -383,12 +383,12 @@ LocalField localField(const cv::Mat &reference, const cv::Mat &registered, const
         }
     }
     cv::Mat coarse;
-    cv::merge(axes, coarse);
+    coarse = ipr::merged(axes);
     field.displacements = ipr::resized(coarse, reference.size(), ipr::Interpolation::Linear);
     double largest = 0.0;
     for (const cv::Mat &axis : axes) {
-        double low = 0.0, high = 0.0;
-        cv::minMaxLoc(axis, &low, &high);
+        const ipr::MatExtremes range = ipr::extremesOf(axis);
+        const double low = range.smallest, high = range.largest;
         largest = std::max({largest, std::abs(low), std::abs(high)});
     }
     field.largest = largest * std::sqrt(2.0);

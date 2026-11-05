@@ -85,8 +85,8 @@ cv::Mat objectsOf(const Level &level)
     objects = ipr::maximum(objects, cv::Size(4 * patchHalf + 1, 4 * patchHalf + 1), ipr::Beyond::Nothing);
     // An object stands alone. Details close enough to join up are the texture of a slope, and
     // without them it could only be continued by what is left, such as a plain patch of earth.
-    const int largest = int(largestObject * double(cv::countNonZero(level.known)));
-    const int smallest = int(smallestObject * double(cv::countNonZero(level.known)));
+    const int largest = int(largestObject * double(ipr::countNonZero(level.known)));
+    const int smallest = int(smallestObject * double(ipr::countNonZero(level.known)));
     cv::Mat seen = cv::Mat::zeros(objects.size(), CV_8UC1);
     std::vector<cv::Point> stack, group;
     for (int y = 0; y < objects.rows; ++y) {
@@ -393,7 +393,7 @@ Report fill(cv::Mat &image, const cv::Mat &known, const Options &options, const 
     if (image.empty() || image.type() != CV_32FC3 || known.size() != image.size() || known.type() != CV_8UC1)
         return report;
     const double wholeArea = double(image.total());
-    const double knownCount = double(cv::countNonZero(known));
+    const double knownCount = double(ipr::countNonZero(known));
     report.filledShare = 1.0 - knownCount / wholeArea;
     if (knownCount >= wholeArea)
         return report;
@@ -429,11 +429,11 @@ Report fill(cv::Mat &image, const cv::Mat &known, const Options &options, const 
     // What stands out is no source, as long as that leaves enough to take from.
     cv::Mat banned = objectsOf(levels.front());
     {
-        const double knownCells = double(cv::countNonZero(levels.front().known));
+        const double knownCells = double(ipr::countNonZero(levels.front().known));
         cv::Mat allowed;
-        cv::bitwise_not(banned, allowed);
-        cv::bitwise_and(allowed, levels.front().known, allowed);
-        if (double(cv::countNonZero(allowed)) < fewestSourcesKept * knownCells)
+        allowed = ipr::bitwiseNot(banned);
+        allowed = ipr::bitwiseAnd(allowed, levels.front().known);
+        if (double(ipr::countNonZero(allowed)) < fewestSourcesKept * knownCells)
             banned.release();
     }
     const cv::Mat objectCells = banned.clone();

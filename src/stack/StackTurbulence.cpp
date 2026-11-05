@@ -31,8 +31,8 @@ double sharpnessOf(const cv::Mat &luminance)
     cv::Mat smoothed, detail;
     smoothed = ipr::gaussianBlurred(luminance, 1.0, ipr::BlurBorder::Mirror);
     detail = ipr::laplacian(smoothed);
-    cv::Scalar mean, deviation;
-    cv::meanStdDev(detail, mean, deviation);
+    std::vector<double> mean, deviation;
+    ipr::meanAndDeviationOf(detail, mean, deviation);
     return deviation[0] * deviation[0];
 }
 
@@ -108,8 +108,8 @@ Report refine(cv::Mat &merged, const cv::Rect &subject, const cv::Point &origin,
                 outY[x] = float((subjectToPixels(1, 0) * px + subjectToPixels(1, 1) * py + subjectToPixels(1, 2)) / w);
             }
         }
-        const cv::Mat output = ipr::remapped(view.pixels, mapX, mapY, ipr::Resampling::Lanczos4, ipr::Outside::LastPixel);
-        cv::multiply(output, cv::Scalar(view.gains[0], view.gains[1], view.gains[2]), output);
+        cv::Mat output = ipr::remapped(view.pixels, mapX, mapY, ipr::Resampling::Lanczos4, ipr::Outside::LastPixel);
+        output = ipr::multiplied(output, std::vector<double>{view.gains[0], view.gains[1], view.gains[2]});
         report.sharpness.push_back(sharpnessOf(rootLuminance(output)));
         registered[i] = std::move(output);
     }

@@ -3,6 +3,8 @@
 #include "Vibrance.h"
 #include "WorkingColorSpace.h"
 
+#include "OpenCvBridge.h"
+
 #include <algorithm>
 #include <cmath>
 
@@ -83,7 +85,7 @@ std::optional<cv::Vec3d> colourBeforePointColour(const cv::Mat &linearRgb, doubl
     const int cy = std::min(int(y * linearRgb.rows), linearRgb.rows - 1);
     const cv::Rect area = cv::Rect(cx - radius, cy - radius, 2 * radius + 1, 2 * radius + 1)
                           & cv::Rect(0, 0, linearRgb.cols, linearRgb.rows);
-    const cv::Scalar mean = cv::mean(linearRgb(area));
+    const std::vector<double> mean = ipr::meanOf(linearRgb(area));
     cv::Mat colour(1, 1, CV_32FC3, cv::Scalar(mean[0], mean[1], mean[2]));
     Parameters before = parameters;   // the stages ahead of the point colour only
     before.pointColor = {};

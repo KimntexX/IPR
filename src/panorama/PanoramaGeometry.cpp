@@ -540,8 +540,8 @@ void refine(Solution &solution, const std::vector<cv::Mat> &images, double image
                 if ((block & cv::Rect(0, 0, imageA.cols, imageA.rows)) != block)
                     continue;
                 const cv::Mat tile = imageA(block);
-                cv::Scalar mean, deviation;
-                cv::meanStdDev(tile, mean, deviation);
+                std::vector<double> mean, deviation;
+                ipr::meanAndDeviationOf(tile, mean, deviation);
                 if (deviation[0] < refinedFlat)
                     continue;
                 bool inside = true;
@@ -564,7 +564,9 @@ void refine(Solution &solution, const std::vector<cv::Mat> &images, double image
                 cv::matchTemplate(search, tile, response, cv::TM_CCOEFF_NORMED);
                 double score = 0.0;
                 cv::Point peak;
-                cv::minMaxLoc(response, nullptr, &score, nullptr, &peak);
+                const ipr::MatExtremes responsePeak = ipr::extremesOf(response);
+                score = responsePeak.largest;
+                peak = responsePeak.largestAt;
                 if (score < refinedScore || peak.x < 1 || peak.y < 1 || peak.x >= response.cols - 1 || peak.y >= response.rows - 1)
                     continue;
                 const auto vertex = [](double left, double middle, double right) {
