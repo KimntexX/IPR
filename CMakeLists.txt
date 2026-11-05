@@ -225,6 +225,12 @@ foreach(qml_file IN LISTS IPR_QML_FILES)
     set_source_files_properties("${qml_file}" PROPERTIES QT_RESOURCE_ALIAS "${qml_alias}")
 endforeach()
 
+# The image layer: standard C++ only, no Qt and no OpenCV (roadmap-couche-image-sans-opencv.md).
+find_package(Threads REQUIRED)
+add_library(iprImage STATIC src/image/Types.h src/image/Image.h src/image/Image.cpp)
+target_include_directories(iprImage PUBLIC src/image)
+set_target_properties(iprImage PROPERTIES AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)
+
 add_library(iprEngine STATIC ${IPR_ENGINE_SOURCES})
 qt_add_resources(iprEngine ipr_ui_defaults
     PREFIX "/"
@@ -389,6 +395,16 @@ if(BUILD_TESTING)
     set_tests_properties(renderStageCacheTests PROPERTIES LABELS "unit;pipeline;cache" TIMEOUT 120)
     ipr_add_test(vibranceMathTests tests/vibrance_math_test.cpp)
     set_tests_properties(vibranceMathTests PROPERTIES LABELS "unit;pipeline;colour")
+    # The image layer without Qt: only the standard library, and OpenCV for the way across.
+    add_executable(imageCoreTests tests/image_core_test.cpp)
+    target_link_libraries(imageCoreTests PRIVATE iprImage Threads::Threads)
+    add_test(NAME imageCoreTests COMMAND imageCoreTests)
+    set_tests_properties(imageCoreTests PROPERTIES LABELS "unit;image")
+    add_executable(imageBridgeTests tests/image_opencv_bridge_test.cpp src/image/OpenCvBridge.h src/image/OpenCvBridge.cpp)
+    target_link_libraries(imageBridgeTests PRIVATE iprImage ${OpenCV_LIBS})
+    target_include_directories(imageBridgeTests PRIVATE ${OpenCV_INCLUDE_DIRS})
+    add_test(NAME imageBridgeTests COMMAND imageBridgeTests)
+    set_tests_properties(imageBridgeTests PROPERTIES LABELS "unit;image")
     ipr_add_test(detailProcessingTests tests/detail_processing_test.cpp)
     add_executable(iprGeometryAudit tests/geometry_audit.cpp)
     target_link_libraries(iprGeometryAudit PRIVATE iprEngine)

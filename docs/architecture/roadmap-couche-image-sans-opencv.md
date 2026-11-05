@@ -2,7 +2,8 @@
 
 **Décision :** [ADR-0018](../decisions/ADR-0018-independance-decodage-raw-et-couche-image.md),
 20 octobre 2026, et volonté réaffirmée par l'utilisateur le 5 novembre 2026 : être le plus indépendant
-possible. **État :** plan ; aucun code. Suivi : [issue 29](https://github.com/KimntexX/IPR/issues/29).
+possible. **État :** O0 commencé, O1 et O2 faits le 5 novembre 2026, sur une branche locale, aucun module migré.
+Suivi : [issue 29](https://github.com/KimntexX/IPR/issues/29).
 Chantier distinct des [décodeurs RAW](roadmap-decodeurs-raw.md), sur sa propre branche durable,
 `patch_image_core`, après le palier E1 de la [refonte d'`ImageEditor`](plan-imageeditor-orchestrateur.md).
 
@@ -81,6 +82,41 @@ L'indépendance n'est pas qu'un principe. Constaté ces derniers jours :
 `StackJob`, `PanoramaFeatures`, `PanoramaGeometry`, `PanoramaBlend`, `PanoramaFill`, `Retouch`, `LocalAdjustments`, enfin l'éditeur.
 La passerelle reste active pendant O4 ; il n'y a jamais deux implémentations **d'un même module** en même temps,
 conformément à la règle d'absence de legacy, et elle disparaît à la fin.
+
+### Résultat de O1 : où `cv::Mat` partage ses pixels
+
+Inventaire statique de `src/`, sur `patch_render_chain` (`3f89026`) : 27 `clone`, 5 `copyTo`, 7 vues par lignes ou colonnes,
+3 paramètres par valeur, 2 images sur une mémoire externe, 81 sorties par référence modifiable, 132 membres `cv::Mat`,
+56 lancements de calcul parallèle. Il donne des candidats et ne prouve rien ; les cas ci-dessous ont été lus un par un.
+
+| Cas | Où | État |
+| --- | --- | --- |
+| Une recette neutre rend le tampon de la source | `RenderChain::workingImage` ; les trois surimpressions de `preview` clonent avant d'écrire | Sûr, couvert par un test |
+| Une fonction peut rendre son entrée | `Geometry::warpRgb` (`Geometry.cpp:226`), `Geometry.cpp:89`, `RawDevelopment::orient` | Sûr tel quel : l'appelant écrit sur une entrée qui lui appartient. **À rendre explicite** |
+| Source et destination sur le même tampon | `CameraProfileEngine.cpp:2041` : `geometryCorrected = linearRgb`, puis `cv::remap(linearRgb, geometryCorrected, ...)` | **À traiter à la migration.** Ne fonctionne que si OpenCV copie sa source dans ce cas, comportement interne que je n'ai pas pu lire ici |
+| Sortie réutilisée en silence | Les 81 références modifiables : `create` garde le tampon s'il a la bonne taille, même partagé | **Le vrai risque.** Un noyau IPR rendra une nouvelle image ou écrira dans une image dont il a la garde |
+| `const` qui ne protège pas | `shared_ptr<const DcpWorkingContext>`, copié ensuite en `denoised = *source.dcpContext` | Sûr par contrat : `CameraDenoise` publie un nouveau tampon, sous test. Rien ne l'imposait dans le type |
+| Mémoire externe | `LibRawInput.cpp:17`, `RawDecoder.cpp:740`, `ColorPipeline.cpp:140` (avec `const_cast`) | Sûr : lus sur place ou clonés aussitôt |
+| Caches | `RenderStageCache` clone en entrant et en sortant | Sûr ; sa copie se paie à chaque interaction |
+
+**Budget mémoire, poste de 16 Go chargé :** un maître du R6 III, 6 959 × 4 639 en `CV_32FC4`, pèse 516 Mo, et un aperçu de
+2 048 pixels 45 Mo. La passerelle ne copie rien : pendant O4, migrer un module n'ajoute pas de tampon.
+
+### Résultat de O2 : le type image
+
+`src/image/`, en C++ standard, sans Qt ni OpenCV, sauf `OpenCvBridge` qui disparaîtra avec lui. **Le type rend impossibles les
+erreurs relevées en O1, au lieu de les documenter :**
+
+- pas de copie par affectation : `Image a = b` ne compile pas. Il faut écrire `clone`, `share`, `view` ou `mutableView` ;
+- **une image partagée ne change plus jamais** : `share` gèle les pixels pour tous leurs détenteurs, définitivement, et demander
+  à les écrire lève une exception, au lieu de modifier ce qu'un autre thread est peut-être en train de lire ;
+- une tuile à écrire est une `mutableView`, qui garde l'image vivante ;
+- une ligne hors de l'image lève une exception, et ce contrôle par ligne ne coûte rien dans une boucle par pixel.
+
+**Mesuré :** tests C++ sous MSVC, puis g++ 13 sous WSL avec ASan et UBSan, et TSan, tous verts. La passerelle ne copie aucun pixel
+dans les deux sens, et un flou gaussien d'OpenCV donne le même résultat au bit près à travers elle, y compris écrit dans nos
+pixels. **Limite :** ni ASan ni TSan n'ont tourné sur la passerelle, qui dépend d'OpenCV sous Windows, et aucun module n'est
+encore migré, si bien que le coût réel à l'usage reste à mesurer. L'estimation promise en §6 attend le premier noyau d'O3.
 
 ## 5. Principes de conception
 
