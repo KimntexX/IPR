@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "started_at_utc": "2026-11-05T12:28:27.459315+00:00",
+  "status": "completed_known_regressions_failed_reserved_unopened",
+  "tools_sha256": "ab8b5c5db4daba3d704dba2b10dec850e9f07cd6c5fbeea1c1e4f680acce2b93",
+  "campaign": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\repeatability-control-campaign-v001",
+  "data_plan": "build-patch_neural_restoration\\paired-repeatability-plan-v001\\control\\plan.json",
+  "prefix": "repeatability-control",
+  "policy": "Both seeds, fixed gates, sequential jobs. Fine regression first; failure skips classics and forbids overall qualification. Reserved cohorts remain unopened.",
+  "stages": [
+    {
+      "name": "prepare_development",
+      "started_at_utc": "2026-11-05T12:28:27.515412+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\run_edge_protected_probe.py",
+        "--prepare",
+        "--data-plan",
+        "build-patch_neural_restoration\\paired-repeatability-plan-v001\\control\\plan.json",
+        "--models",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\repeatability-control-campaign-v001\\seed71-attempt01",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\repeatability-control-campaign-v001\\seed73-attempt01",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\repeatability-control-protected-plan-v001"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-05T12:28:29.792031+00:00"
+    },
+    {
+      "name": "development",
+      "started_at_utc": "2026-11-05T12:28:29.793727+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\run_edge_protected_probe.py",
+        "--plan",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\repeatability-control-protected-plan-v001\\plan.json",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\repeatability-control-protected-v001"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-05T12:31:09.941212+00:00"
+    },
+    {
+      "name": "prepare_fine",
+      "started_at_utc": "2026-11-05T12:31:09.975654+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\prepare_neural_regression.py",
+        "--source",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\repeatability-control-protected-v001\\result.json",
+        "--historical",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\fixed-point-fine-v001\\result.json",
+        "--kind",
+        "fine",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\repeatability-control-fine-plan-v001"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-05T12:31:11.841137+00:00"
+    },
+    {
+      "name": "fine",
+      "started_at_utc": "2026-11-05T12:31:11.842429+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\confirm_fine_noise.py",
+        "--plan",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\repeatability-control-fine-plan-v001\\plan.json",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\repeatability-control-fine-v001"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-05T12:36:22.976446+00:00"
+    }
+  ],
+  "resolved_model_folders": [
+    "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\repeatability-control-campaign-v001\\seed71-attempt01",
+    "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\repeatability-control-campaign-v001\\seed73-attempt01"
+  ],
+  "development_passed": true,
+  "regressions": [
+    {
+      "name": "fine",
+      "passed": false,
+      "result": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\repeatability-control-fine-v001\\result.json",
+      "sha256": "11f73f062c4e885ebd856c1c2cabe2e706deb72a3f231d171115dcb7fa70c5d0"
+    }
+  ],
+  "skipped_classic_regressions": "Fine prerequisite failed; no overall qualification claim.",
+  "finished_at_utc": "2026-11-05T12:36:23.041692+00:00"
+}

@@ -220,3 +220,74 @@ sont figés avant l'inférence. `--reuse <result.json>` reprend seulement
 les observations complètes d'un arrêt mémoire du même plan, sans filtrer
 les résultats défavorables. Ne pas reprendre l'apprentissage sur une
 cohorte encore présentée comme réservée.
+
+## Comparatif réel et qualification CUDA — 5 novembre 2026
+
+Ce banc reste indépendant du générateur TIFF utilisateur et du moteur
+de production. Ses captures flottantes, PNG de contrôle et poids restent
+dans `build-patch_neural_restoration` ; les JSON canoniques sont versionnés
+sous `docs/validation/raw`. Ne pas réutiliser un dossier de sortie :
+les outils refusent l'écrasement.
+
+Le CPU utilise `.venv-neural/Scripts/python.exe`. Le CUDA qualifié est
+dans le worktree frère `../venv-neural-cuda/Scripts/python.exe`. Aucun des
+deux environnements n'est modifié. Le Python existant
+`C:/Users/victo/AppData/Local/Python/pythoncore-3.14-64/python.exe`
+fournit Pillow/OpenCV pour les PNG et l'inventaire, séparément du runtime
+CUDA ; ce chemin local n'est pas une dépendance de l'application livrée.
+
+Ordre de la campagne actuelle :
+
+1. Compiler les cibles de banc `iprNeuralMosaicCapture`,
+   `iprNeuralCameraCapture`, `iprNeuralDisplayCapture` avec le CMake
+   dédié `tests/neural`. `iprNeuralMosaicCapture --full` ajoute une capture
+   CFA entière dans le repère du capteur, en conservant les contrôles des
+   neuf régions existantes. Les contextes caméra déclarent le profil et
+   les réglages DCP effectifs ; ne pas utiliser une capture entière déjà
+   orientée à la place du capteur.
+2. Avec le CPU, `qualify_cuda_runtime.py --output <référence neuve>`
+   prépare les douze cas. Avec CUDA, le même outil
+   `--reference <référence> --output <sonde neuve>` vérifie parité,
+   répétition, petit apprentissage jetable et mémoire. Ce n'est pas une
+   commande d'apprentissage long.
+3. `prepare_photo_comparison.py --output <plan neuf>` scelle les trois
+   sources, les deux graines et les forces, puis calcule RCD et classique
+   luminance sur l'image entière. Le banc classique actuel vient du
+   worktree de Claude, `patch_cfa_path_bench`, révision `473a1a1` ; son
+   empreinte est dans le plan. Les neuf régions doivent rejouer au bit
+   près. Ne pas annoncer que la couleur après les tons est couverte.
+4. Avec CUDA, `infer_real_cfa.py --plan <plan.json> --output <sortie neuve>`
+   produit les douze CFA entières corrigées. Le script exige la sonde
+   CUDA qualifiée et les empreintes du modèle/contrat. Il vérifie aussi
+   sigma nul et l'accord CPU/GPU sur une fenêtre réelle.
+5. `finish_photo_comparison.py --output <sortie neuve>` applique le même
+   RCD, oriente le RGB puis produit les régions avec le profil commun.
+   Les chemins de campagne internes sont figés pour ce banc, pas une
+   interface publique paramétrable. Pour une nouvelle campagne, préparer
+   une nouvelle configuration explicite plutôt que déplacer les preuves.
+6. Avec CUDA, `compare_drunet.py --display <sortie affichage>
+   --output <sortie neuve> --image-python <Python Pillow existant>` utilise
+   les fichiers officiels préalablement téléchargés et vérifiés dans
+   `third-party-drunet-v001/manifest.json`. Il n'en télécharge aucun et
+   n'envoie pas les images. Entrée sRGB encodée, contexte 192 pixels,
+   sigma 15/255 et 25/255. Aucun poids tiers n'est livré au produit.
+7. `diagnose_learned_photo_rgb.py`, avec CUDA, présente séparément les
+   neuf RGB reconstruits par région, avec contexte ; le mode `--tiles`
+   du renderer est réservé à ce diagnostic. L'extension du renderer
+   rejoue les 27 PNG neutres au bit près avant le diagnostic.
+8. Avec le Python Pillow/OpenCV existant,
+   `summarize_photo_comparison.py` produit `comparison.html` et les
+   descripteurs par région. Le rapport de détail fin mélange texture et
+   bruit : ne pas le lire comme un score de qualité ou une cible à minimiser.
+   `inventory_calibration_inputs.py` relit les métadonnées des RAW existants,
+   sans qualifier de référence propre, changer les partitions ou déplacer
+   les fichiers.
+
+`run_guarded_native.py --output <job neuf> --hard-mib 4096
+--soft-mib 3072 -- <exécutable> <arguments>` garde les processus natifs
+pleine définition et leurs journaux. Les tâches CUDA ont un plafond
+distinct 6 Gio engagés/4,5 Gio souples et un maximum d'allocateur de
+50 % de la VRAM ; démarrage refusé si moins de 4 Gio de VRAM sont libres.
+L'arrêt physique coopératif reste à 92 %. Les sorties et preuves des
+tentatives arrêtées sont conservées. Terminer les tâches lourdes avant
+les tests graphiques du soir de l'utilisateur.

@@ -95,6 +95,7 @@ int main(int argc, char **argv)
     QCommandLineParser parser;
     parser.addHelpOption();
     parser.addOption(QCommandLineOption("self-test", "Check all orientation and CFA-origin mappings"));
+    parser.addOption(QCommandLineOption("full", "Also write the sensor-frame full balanced CFA for whole-image comparison"));
     for (const char *key : {"camera-proof", "output"}) parser.addOption(QCommandLineOption(key, key, "path"));
     parser.process(app);
     try {
@@ -113,7 +114,8 @@ int main(int argc, char **argv)
         const auto oldPixels = QFileInfo(proofPath).dir().filePath(proof.value("pixels").toString());
         require(hash(oldPixels) == proof.value("pixels_sha256").toString(), "Changed camera pixels");
         const auto output = QFileInfo(parser.value("output")).absoluteFilePath();
-        require(!QFile::exists(output) && !QFile::exists(output + ".bin"), "Output exists");
+        require(!QFile::exists(output) && !QFile::exists(output + ".bin") &&
+                (!parser.isSet("full") || !QFile::exists(output + ".full.f32")), "Output exists");
         const quint16 endian = 1;
         require(*reinterpret_cast<const unsigned char *>(&endian) == 1, "Little endian required");
         cv::setNumThreads(1);
@@ -134,6 +136,7 @@ int main(int argc, char **argv)
         QFile binary(output + ".bin");
         require(binary.open(QIODevice::WriteOnly | QIODevice::NewOnly), "Cannot create output");
         QJsonArray stages;
+        QJsonObject fullDescriptor;
         RawDevelopment::Context applied;
         RawDevelopment::Options options;
         options.policy = RawDevelopment::Policy::Signed;
@@ -143,6 +146,26 @@ int main(int argc, char **argv)
             if (capture.stage != RawDevelopment::Stage::NormalizedCfa &&
                 capture.stage != RawDevelopment::Stage::PreDemosaicCfa) return;
             applied = capture.context;
+            if (parser.isSet("full") && capture.stage == RawDevelopment::Stage::PreDemosaicCfa) {
+                require(fullDescriptor.isEmpty(), "Full CFA captured more than once");
+                QFile full(output + ".full.f32");
+                require(full.open(QIODevice::WriteOnly | QIODevice::NewOnly), "Cannot create full CFA");
+                fullDescriptor = writeMatrix(full, capture.pixels);
+                full.close();
+                QJsonArray pattern;
+                for (int y = 0; y < 2; ++y) {
+                    QJsonArray row;
+                    for (int x = 0; x < 2; ++x) {
+                        row.append(input.pattern[size_t(y)][size_t(x)]);
+                    }
+                    pattern.append(row);
+                }
+                fullDescriptor.insert("pattern", pattern);
+                fullDescriptor.insert("pixels", QFileInfo(full.fileName()).fileName());
+                fullDescriptor.insert("pixels_sha256", hash(full.fileName()));
+                fullDescriptor.insert("stage", "balanced_cfa_pre_rcd_white_clipped");
+                fullDescriptor.insert("orientation_applied", false);
+            }
             for (int roi = 0; roi < originalTiles.size(); ++roi) {
                 const auto xy = originalTiles[roi].toObject().value("origin_xy").toArray();
                 require(xy.size() == 2, "Invalid camera origin");
@@ -172,6 +195,8 @@ int main(int argc, char **argv)
         const auto fullShape = proof.value("full_shape").toArray();
         require(fullShape.size() == 3 && rgb.rows == fullShape[0].toInt() && rgb.cols == fullShape[1].toInt(),
                 "Orientation or visible dimensions differ");
+        if (parser.isSet("full"))
+            require(fullDescriptor.value("shape").toArray() == QJsonArray{input.mosaic.rows, input.mosaic.cols, 1}, "Full CFA dimensions differ");
         QFile reference(oldPixels);
         require(reference.open(QIODevice::ReadOnly), "Missing camera pixels");
         for (int roi = 0; roi < originalTiles.size(); ++roi) {
@@ -199,6 +224,7 @@ int main(int argc, char **argv)
             {"pixels", QFileInfo(binary.fileName()).fileName()}, {"pixels_sha256", hash(binary.fileName())},
             {"scope", "Bench only; frozen production calibration; signed mosaics; no new training or clean-target claim"}};
         QFile destination(output);
+        if (parser.isSet("full")) result.insert("full_balanced_cfa", fullDescriptor);
         require(destination.open(QIODevice::WriteOnly | QIODevice::NewOnly), "Cannot create descriptor");
         const auto bytes = QJsonDocument(result).toJson();
         require(destination.write(bytes) == bytes.size(), "Incomplete descriptor");

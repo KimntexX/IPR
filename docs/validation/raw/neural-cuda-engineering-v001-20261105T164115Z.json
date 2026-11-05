@@ -1,0 +1,141 @@
+{
+  "schema_version": 1,
+  "measured_at_utc": "2026-11-05T16:41:08.062410+00:00",
+  "status": "completed_cuda_resource_probe_not_training_qualification",
+  "scope": "Resource/arithmetic engineering only; no model selection or photographic training.",
+  "records": [
+    {
+      "phase": 0,
+      "level": 0,
+      "max_absolute_error": 1.4901161193847656e-08,
+      "mean_absolute_error": 5.153803310046594e-12,
+      "repeat_bit_exact": true
+    },
+    {
+      "phase": 0,
+      "level": 1,
+      "max_absolute_error": 5.960464477539063e-08,
+      "mean_absolute_error": 2.536580723244697e-09,
+      "repeat_bit_exact": true
+    },
+    {
+      "phase": 0,
+      "level": 2,
+      "max_absolute_error": 7.450580596923828e-08,
+      "mean_absolute_error": 7.020238020534937e-09,
+      "repeat_bit_exact": true
+    },
+    {
+      "phase": 1,
+      "level": 0,
+      "max_absolute_error": 1.4901161193847656e-08,
+      "mean_absolute_error": 3.713770032239457e-12,
+      "repeat_bit_exact": true
+    },
+    {
+      "phase": 1,
+      "level": 1,
+      "max_absolute_error": 5.960464477539063e-08,
+      "mean_absolute_error": 2.577735358499922e-09,
+      "repeat_bit_exact": true
+    },
+    {
+      "phase": 1,
+      "level": 2,
+      "max_absolute_error": 7.450580596923828e-08,
+      "mean_absolute_error": 7.0785972638987005e-09,
+      "repeat_bit_exact": true
+    },
+    {
+      "phase": 2,
+      "level": 0,
+      "max_absolute_error": 1.4901161193847656e-08,
+      "mean_absolute_error": 3.486396356796225e-12,
+      "repeat_bit_exact": true
+    },
+    {
+      "phase": 2,
+      "level": 1,
+      "max_absolute_error": 5.960464477539063e-08,
+      "mean_absolute_error": 2.5684888290318972e-09,
+      "repeat_bit_exact": true
+    },
+    {
+      "phase": 2,
+      "level": 2,
+      "max_absolute_error": 7.450580596923828e-08,
+      "mean_absolute_error": 7.15355478556982e-09,
+      "repeat_bit_exact": true
+    },
+    {
+      "phase": 3,
+      "level": 0,
+      "max_absolute_error": 1.4901161193847656e-08,
+      "mean_absolute_error": 4.092726157978177e-12,
+      "repeat_bit_exact": true
+    },
+    {
+      "phase": 3,
+      "level": 1,
+      "max_absolute_error": 5.960464477539063e-08,
+      "mean_absolute_error": 2.4980787808696428e-09,
+      "repeat_bit_exact": true
+    },
+    {
+      "phase": 3,
+      "level": 2,
+      "max_absolute_error": 7.450580596923828e-08,
+      "mean_absolute_error": 7.05745151208248e-09,
+      "repeat_bit_exact": true
+    }
+  ],
+  "torch_version": "2.9.1+cu128",
+  "script_sha256": "481fbcbf3e3c68ea46a2748a37b6440f1ad604ec4bbd4a7cb34c8b01c35f6471",
+  "reference_sha256": "9ddcdb39ee3e4f8b08260efff64f35e46c96253cdda5da0571bba4052378445d",
+  "gpu": "NVIDIA GeForce RTX 3060",
+  "cuda_version": "12.8",
+  "tf32": false,
+  "precision": "float32",
+  "deterministic": true,
+  "max_absolute_tolerance": 2e-06,
+  "training_steps": 12,
+  "discarded_warmup_steps": 2,
+  "timed_step_seconds": [
+    0.3442897000350058,
+    0.33123469998827204,
+    0.31682619999628514,
+    0.3419550000107847,
+    0.3197414999594912,
+    0.3233060999773443,
+    0.34268290002364665,
+    0.33035339997150004,
+    0.31562740000663325,
+    0.32320480002090335
+  ],
+  "median_seconds_per_update": 0.32682974997442216,
+  "peak_cuda_allocated_bytes": 74849792,
+  "peak_cuda_reserved_bytes": 96468992,
+  "training_limit": "Unprotected training graph, protected parity graph. Precomputed inputs, H2D transfers included, no procedural generation/validation/checkpoint IO. Projection to long runs is not measured wall-clock duration.",
+  "parity_passed": true,
+  "memory": {
+    "hard_process_commit_bytes": 6442450944,
+    "soft_process_bytes": 4831838208,
+    "system_stop_fraction": 0.92,
+    "poll_seconds": 0.25,
+    "samples": 30,
+    "peak_rss_bytes": 1776152576,
+    "peak_private_sampled_bytes": 3304886272,
+    "peak_system_used_fraction": 0.5850440609778487,
+    "os_job_peak_commit_bytes": 3304886272,
+    "reason": null,
+    "last": {
+      "system_total_bytes": 16933507072,
+      "system_available_bytes": 7050514432,
+      "system_used_fraction": 0.5836353094476092,
+      "process_rss_bytes": 1776152576,
+      "process_private_bytes": 3304886272,
+      "process_peak_rss_bytes": 1776152576,
+      "process_peak_pagefile_bytes": 3304886272
+    }
+  }
+}

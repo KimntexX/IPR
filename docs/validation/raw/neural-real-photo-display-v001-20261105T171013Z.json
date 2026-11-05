@@ -1,0 +1,178 @@
+{
+  "schema_version": 1,
+  "status": "completed_real_photo_display_not_qualification",
+  "started_at_utc": "2026-11-05T17:07:42.504606+00:00",
+  "plan_sha256": "39921d07663bf46a7d84f1e29de0b6e15e7a5a6ac511714c57ab71c86fc70172",
+  "inference_sha256": "a12a17f4f3ff43b23e00b0e6e79d212e45175bcaf00b06b2a84432938ee5d15c",
+  "renderer_sha256": "25cf9e37fcf547fa3ef0345854deafda3fa0a9ffd7669a6401e349a24412fcbf",
+  "scenes": [
+    {
+      "name": "6V1A0181",
+      "iso": 12800,
+      "variants": [
+        {
+          "label": "RCD-neutral",
+          "display": "build-patch_neural_restoration\\real-photo-display-v002\\6V1A0181\\RCD-neutral-srgb.json",
+          "camera": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\real-photo-baselines-v001\\6V1A0181\\parent.rcd.f32",
+          "halo": 0
+        },
+        {
+          "label": "RCD-neutral-context",
+          "display": "build-patch_neural_restoration\\real-photo-display-v002\\6V1A0181\\RCD-neutral-context-srgb.json",
+          "camera": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\real-photo-baselines-v001\\6V1A0181\\parent.rcd.f32",
+          "halo": 192
+        },
+        {
+          "label": "classic-intensity-30",
+          "display": "build-patch_neural_restoration\\real-photo-display-v002\\6V1A0181\\classic-intensity-30-srgb.json",
+          "camera": "build-patch_neural_restoration\\real-photo-baselines-v001\\6V1A0181\\classic.denoise-30.f32",
+          "halo": 0
+        },
+        {
+          "label": "classic-intensity-60",
+          "display": "build-patch_neural_restoration\\real-photo-display-v002\\6V1A0181\\classic-intensity-60-srgb.json",
+          "camera": "build-patch_neural_restoration\\real-photo-baselines-v001\\6V1A0181\\classic.denoise-60.f32",
+          "halo": 0
+        },
+        {
+          "label": "neural-seed71-sigma0.01",
+          "display": "build-patch_neural_restoration\\real-photo-display-v002\\6V1A0181\\neural-seed71-sigma0.01-srgb.json",
+          "camera": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\real-photo-display-v002\\6V1A0181\\neural-seed71-sigma0.01.rcd.f32",
+          "halo": 0
+        },
+        {
+          "label": "neural-seed71-sigma0.03",
+          "display": "build-patch_neural_restoration\\real-photo-display-v002\\6V1A0181\\neural-seed71-sigma0.03-srgb.json",
+          "camera": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\real-photo-display-v002\\6V1A0181\\neural-seed71-sigma0.03.rcd.f32",
+          "halo": 0
+        },
+        {
+          "label": "neural-seed73-sigma0.01",
+          "display": "build-patch_neural_restoration\\real-photo-display-v002\\6V1A0181\\neural-seed73-sigma0.01-srgb.json",
+          "camera": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\real-photo-display-v002\\6V1A0181\\neural-seed73-sigma0.01.rcd.f32",
+          "halo": 0
+        },
+        {
+          "label": "neural-seed73-sigma0.03",
+          "display": "build-patch_neural_restoration\\real-photo-display-v002\\6V1A0181\\neural-seed73-sigma0.03-srgb.json",
+          "camera": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\real-photo-display-v002\\6V1A0181\\neural-seed73-sigma0.03.rcd.f32",
+          "halo": 0
+        }
+      ]
+    },
+    {
+      "name": "6V1A0263",
+      "iso": 6400,
+      "variants": [
+        {
+          "label": "RCD-neutral",
+          "display": "build-patch_neural_restoration\\real-photo-display-v002\\6V1A0263\\RCD-neutral-srgb.json",
+          "camera": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\real-photo-baselines-v001\\6V1A0263\\parent.rcd.f32",
+          "halo": 0
+        },
+        {
+          "label": "RCD-neutral-context",
+          "display": "build-patch_neural_restoration\\real-photo-display-v002\\6V1A0263\\RCD-neutral-context-srgb.json",
+          "camera": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\real-photo-baselines-v001\\6V1A0263\\parent.rcd.f32",
+          "halo": 192
+        },
+        {
+          "label": "classic-intensity-30",
+          "display": "build-patch_neural_restoration\\real-photo-display-v002\\6V1A0263\\classic-intensity-30-srgb.json",
+          "camera": "build-patch_neural_restoration\\real-photo-baselines-v001\\6V1A0263\\classic.denoise-30.f32",
+          "halo": 0
+        },
+        {
+          "label": "classic-intensity-60",
+          "display": "build-patch_neural_restoration\\real-photo-display-v002\\6V1A0263\\classic-intensity-60-srgb.json",
+          "camera": "build-patch_neural_restoration\\real-photo-baselines-v001\\6V1A0263\\classic.denoise-60.f32",
+          "halo": 0
+        },
+        {
+          "label": "neural-seed71-sigma0.01",
+          "display": "build-patch_neural_restoration\\real-photo-display-v002\\6V1A0263\\neural-seed71-sigma0.01-srgb.json",
+          "camera": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\real-photo-display-v002\\6V1A0263\\neural-seed71-sigma0.01.rcd.f32",
+          "halo": 0
+        },
+        {
+          "label": "neural-seed71-sigma0.03",
+          "display": "build-patch_neural_restoration\\real-photo-display-v002\\6V1A0263\\neural-seed71-sigma0.03-srgb.json",
+          "camera": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\real-photo-display-v002\\6V1A0263\\neural-seed71-sigma0.03.rcd.f32",
+          "halo": 0
+        },
+        {
+          "label": "neural-seed73-sigma0.01",
+          "display": "build-patch_neural_restoration\\real-photo-display-v002\\6V1A0263\\neural-seed73-sigma0.01-srgb.json",
+          "camera": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\real-photo-display-v002\\6V1A0263\\neural-seed73-sigma0.01.rcd.f32",
+          "halo": 0
+        },
+        {
+          "label": "neural-seed73-sigma0.03",
+          "display": "build-patch_neural_restoration\\real-photo-display-v002\\6V1A0263\\neural-seed73-sigma0.03-srgb.json",
+          "camera": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\real-photo-display-v002\\6V1A0263\\neural-seed73-sigma0.03.rcd.f32",
+          "halo": 0
+        }
+      ]
+    },
+    {
+      "name": "6V1A9819",
+      "iso": 4000,
+      "variants": [
+        {
+          "label": "RCD-neutral",
+          "display": "build-patch_neural_restoration\\real-photo-display-v002\\6V1A9819\\RCD-neutral-srgb.json",
+          "camera": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\real-photo-baselines-v001\\6V1A9819\\parent-oriented.f32",
+          "halo": 0
+        },
+        {
+          "label": "RCD-neutral-context",
+          "display": "build-patch_neural_restoration\\real-photo-display-v002\\6V1A9819\\RCD-neutral-context-srgb.json",
+          "camera": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\real-photo-baselines-v001\\6V1A9819\\parent-oriented.f32",
+          "halo": 192
+        },
+        {
+          "label": "classic-intensity-30",
+          "display": "build-patch_neural_restoration\\real-photo-display-v002\\6V1A9819\\classic-intensity-30-srgb.json",
+          "camera": "build-patch_neural_restoration\\real-photo-baselines-v001\\6V1A9819\\classic.denoise-30.f32",
+          "halo": 0
+        },
+        {
+          "label": "classic-intensity-60",
+          "display": "build-patch_neural_restoration\\real-photo-display-v002\\6V1A9819\\classic-intensity-60-srgb.json",
+          "camera": "build-patch_neural_restoration\\real-photo-baselines-v001\\6V1A9819\\classic.denoise-60.f32",
+          "halo": 0
+        },
+        {
+          "label": "neural-seed71-sigma0.01",
+          "display": "build-patch_neural_restoration\\real-photo-display-v002\\6V1A9819\\neural-seed71-sigma0.01-srgb.json",
+          "camera": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\real-photo-display-v002\\6V1A9819\\neural-seed71-sigma0.01-oriented.f32",
+          "halo": 0
+        },
+        {
+          "label": "neural-seed71-sigma0.03",
+          "display": "build-patch_neural_restoration\\real-photo-display-v002\\6V1A9819\\neural-seed71-sigma0.03-srgb.json",
+          "camera": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\real-photo-display-v002\\6V1A9819\\neural-seed71-sigma0.03-oriented.f32",
+          "halo": 0
+        },
+        {
+          "label": "neural-seed73-sigma0.01",
+          "display": "build-patch_neural_restoration\\real-photo-display-v002\\6V1A9819\\neural-seed73-sigma0.01-srgb.json",
+          "camera": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\real-photo-display-v002\\6V1A9819\\neural-seed73-sigma0.01-oriented.f32",
+          "halo": 0
+        },
+        {
+          "label": "neural-seed73-sigma0.03",
+          "display": "build-patch_neural_restoration\\real-photo-display-v002\\6V1A9819\\neural-seed73-sigma0.03-srgb.json",
+          "camera": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\real-photo-display-v002\\6V1A9819\\neural-seed73-sigma0.03-oriented.f32",
+          "halo": 0
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "Development photos without clean truth; no photographic qualification.",
+    "Classic comparator is intensity only, excluding colour after tones.",
+    "Both fixed seeds retained; supplied sigma is not ISO calibration or an equivalent slider.",
+    "Common frozen DCP display snapshot, not a claim of current complete production parity."
+  ]
+}

@@ -9,10 +9,10 @@ Ce bénéfice n'est pas démontré pour le correcteur CFA actuel.
 | --- | --- |
 | Ce qui fonctionne | Contrats, signal signé, limites de ressources, reprise et mesures synthétiques traçables. Ce ne sont pas des preuves de qualité photo. |
 | Ce qui bloque | Débruitage réel non calibré ; reconstructeur appris différent de RCD ; comparateur neuronal éprouvé manquant ; budget d'entraînement court. |
-| Derniers résultats | Signes chromatiques : 15/48 échecs contre 16/48, sans gain robuste. Deux tirages stratifiés naturels : 12 et 16 échecs, sans sélection du meilleur. |
-| Calcul engagé | Répétabilité limitée, à terminer sans ouvrir de réserve. Aucun nouvel ajustement procédural après cette campagne avant le comparatif photo. |
-| Prochaine preuve utile | Trois scènes réelles : neutre RCD, classique IPR courant, correcteur CFA suivi de RCD ; reconstruction apprise présentée séparément. |
-| GPU | RTX 3060 12 Go confirmée. Claude prépare CUDA dans un environnement distinct ; débit, mémoire et qualification du calcul à mesurer avant apprentissage long. |
+| Derniers résultats | Réplication close : 10 et 12 échecs forts sur 48, après les 12 et 16 précédents. Sur les photos, sensibilité aux graines et motifs directionnels : bénéfice non validé. |
+| Calcul engagé | Comparatif réel terminé : trois scènes, neuf régions chacune, deux graines fixées avant lecture des résultats ; DRUNet officiel ajouté. Pas de nouvel ajustement procédural ni d'apprentissage long. |
+| Prochaine preuve utile | Compléter le classique par la couleur après les tons et requalifier le bruit capteur avec les fichiers existants. Lire les planches sans assimiler le lissage à une conservation des détails. |
+| GPU | CUDA qualifié sur le calcul courant : erreur CPU/GPU maximale 7,45 × 10⁻⁸ ; essai d'apprentissage jetable à 0,327 s/mise à jour. Environ 9,1 h pour 100 000 mises à jour par graine, hors génération/évaluation. |
 | Données | Auditer rafales, noirs et aplats existants avant de demander de nouvelles prises. Une demi-pile RGB rééchantillonnée n'est pas une vérité CFA. |
 | Critère d'arrêt | Pas de nouvelle série de variantes synthétiques pour améliorer les mêmes seuils. Après une courbe longue figée et un bruit caractérisé, absence de gain visible face au classique : abandon ou changement de taille/architecture, décision documentée. |
 
@@ -6090,3 +6090,171 @@ un modèle de bruit caractérisé, absence de gain visible face au classique
 sur les planches : arrêter cette configuration et décider une architecture
 ou taille différente. La revue visuelle revient à l'utilisateur ; aucun
 jugement humain ni succès n'est supposé en son absence.
+
+## 5 novembre 2026 — réplication close, comparaison photographique et CUDA
+
+### Résultat de la réplication scellée
+
+Les deux nouveaux tirages naturels donnent **10 et 12 échecs forts sur
+48**. Le premier bras donne 1/4 échecs faible/fort pour la graine 71 et
+0/5 pour la graine 73 ; le second donne 1/4 et 0/7. Les tirages précédents
+donnaient 12 et 16. Cela décrit ces essais et ne mesure pas une variance
+de population. Aucun gagnant n'est sélectionné, aucune réserve n'est
+ouverte. Les deux modèles du premier bras naturel sont retenus par leur
+rôle fixé avant les résultats photographiques, et non pour leur score.
+La preuve de clôture est
+[neural-paired-continuation](../raw/neural-paired-continuation-v001-20261105T124453Z.json).
+
+### Chaîne réelle commune et comparateurs
+
+Trois compositions connues de développement sont utilisées :
+**6V1A0181, intérieur ISO 12800 ; 6V1A0263, végétation ISO 6400 ;
+6V1A9819, pièce ISO 4000**. Neuf régions fixes de 384 × 384 pixels par
+photo, sans tri après résultat. Aucune n'est une vérité propre ni une
+nouvelle réserve. Les RAW restent intacts.
+
+La mosaïque équilibrée signée est capturée dans le repère du capteur.
+Le correcteur travaille sur l'image entière par blocs de cœur 256, avec
+128 pixels de contexte ; les dimensions impaires et la phase Bayer sont
+préservées, sans redimensionnement. Le même RCD/médiane intervient ensuite,
+puis l'orientation du RGB, puis un profil Camera Neutral et un affichage
+Rec.2020 vers sRGB communs. Le RCD neutre rejoue **27/27 régions au bit
+près** contre les captures RGB caméra. Les trois tests de tuilage vérifient
+notamment dimensions impaires, sigma nul, orientation et accord avec le
+calcul contextualisé sans tuilage.
+
+Le rendu couleur commun est un instantané gelé du banc, sans correction
+optique ni étirement indépendant ; il ne prouve pas une parité complète
+avec la dernière application. Le comparateur classique fourni par Claude
+est le `CameraDenoise` courant, révision `473a1a1`, aux forces 30 et 60,
+sur l'image orientée entière. **Il couvre la luminance caméra seulement** :
+la réduction couleur après les tons reste à raccorder avant de qualifier
+la comparaison avec le produit complet. Cette limite figure sur les planches.
+
+Les deux graines CFA sont montrées à sigma fourni 0,01 et 0,03 en unités
+caméra équilibrées. Ces valeurs ne viennent pas d'un étalonnage ISO et
+ne sont pas équivalentes aux curseurs classiques. La correction CFA
+seule, suivie de RCD, est distincte du diagnostic de reconstruction RGB
+apprise. Ce dernier utilise les mêmes régions et un contexte de 648 pixels ;
+ce n'est ni une inférence RGB entière ni une qualification de remplacement
+de RCD. Les couleurs sont affichées avec le même profil.
+
+Le comparateur [DRUNet officiel de DPIR](https://github.com/cszn/DPIR)
+utilise les sources figées au commit
+`15bca3fcc1f3cc51a1f99ccf027691e278c19354` et les
+[poids couleur distribués par les auteurs](https://github.com/cszn/KAIR/releases/download/v1.0/drunet_color.pth),
+empreinte `479abe3c5327dfd10ff54a80ec7d4098ca80752a5c9492cdff31cee430bec4b4`.
+Ce modèle de 32 640 960 paramètres reçoit le **sRGB encodé**, pas le signal
+caméra signé. Les 54 rendus utilisent sigma 15/255 et 25/255, avec
+192 pixels de contexte autour de chaque région. Ce comparateur à bruit
+gaussien fourni n'est pas un modèle physique Canon ni une référence propre.
+Sources, licence et poids restent dans le build local ; leur présence
+n'autorise pas une redistribution en production. Aucune photographie
+n'a été envoyée pour ce téléchargement.
+
+### Ce que montrent les mesures et les planches
+
+La médiane du rapport d'écart-type du détail fin de luminance **encodée**,
+par rapport au neutre, est donnée ci-dessous sur les 27 régions. Le filtre
+passe-haut est un retrait gaussien de sigma 1 ; huit pixels de bord sont
+écartés à l'identique. **Ce détail contient texture et bruit** : une valeur
+plus basse ne démontre ni une meilleure justesse ni des détails conservés.
+
+| Variante | Rapport médian de détail fin |
+| --- | ---: |
+| Neutre RCD | 1,000 |
+| Classique luminance 30 / 60 | 0,863 / 0,734 |
+| CFA graine 71, sigma 0,01 / 0,03 | 0,988 / 0,911 |
+| CFA graine 73, sigma 0,01 / 0,03 | 0,967 / 0,695 |
+| DRUNet sRGB, sigma 15 / 25 | 0,414 / 0,174 |
+
+La sensibilité aux graines persiste sur les vraies photos. À la lecture
+des régions du vêtement orange d'0181, le correcteur CFA laisse apparaître
+des motifs directionnels ; le classique et DRUNet lissent aussi, selon
+des forces non équivalentes. Ce constat de banc n'est pas une validation
+visuelle de l'utilisateur. **Aucun bénéfice photographique robuste du
+correcteur CFA n'est établi**, et un lissage plus fort ne suffit pas à
+lever cette réserve. Les variations de luminance moyenne et les mesures
+par région restent dans les JSON, pas seulement dans ce tableau.
+
+Planche locale principale :
+`build-patch_neural_restoration/real-photo-display-v002/comparison.html`.
+Elle montre les pixels à 100 %, avec défilement horizontal des variantes.
+Le diagnostic RGB appris est séparé pour ne pas le confondre avec le
+correcteur suivi de RCD. Les images restent locales et ne sont pas
+supprimées automatiquement.
+
+### Qualification CUDA et ressources
+
+L'environnement séparé de Claude utilise PyTorch 2.9.1+cu128, CUDA 12.8,
+RTX 3060 12 Go. Les douze cas CPU/GPU du modèle protégé ont une erreur
+maximale de **7,45 × 10⁻⁸**, sous la tolérance inchangée de 2 × 10⁻⁶,
+et les répétitions GPU sont identiques au bit près. L'accord du calcul
+sur une fenêtre réelle et de la taille de lot est aussi contrôlé.
+
+Un apprentissage jetable du graphe réel non protégé, Adam neuf et quatre
+micro-lots par mise à jour, donne **0,32683 s/mise à jour** sur dix mises
+à jour chronométrées après deux de chauffe. Les poids sont jetés. Le
+pic alloué CUDA est de 71,4 Mio pour cet essai ; le processus engage
+environ 3,1 Gio avec le runtime. Une extrapolation de 100 000 mises à
+jour donne environ **9,1 h par graine, 45 h pour cinq**, avant génération,
+évaluation et sauvegardes. Aucun long apprentissage n'a été lancé.
+
+La correction CFA réelle seule prend de **4,63 à 8,18 secondes** par
+photo dans ce petit modèle ; cela exclut décodage, RCD et rendu. DRUNet
+sur régions contextualisées alloue au maximum environ 996 Mio CUDA ;
+cela ne mesure pas sa latence sur une image entière. Les budgets distincts
+sont explicites : natif pleine définition 4 Gio engagés/3 Gio souples,
+CUDA 6 Gio/4,5 Gio, et arrêt physique global coopératif toujours à 92 %.
+Le maximum physique échantillonné reste sous 67 %. Les premiers essais
+arrêtés par le budget local trop bas sont conservés, pas effacés ; il
+ne s'agissait pas d'un dépassement des 92 %. Aucun environnement n'a été
+modifié, les travaux lourds sont séquentiels.
+
+### Données existantes et décision suivante
+
+La nouvelle lecture des métadonnées retrouve **349 RAW, zéro erreur**,
+tous R6 Mark III, dans `protocole`, `rafale` et `neural-validation`.
+Les 77 RAW de `blacks` couvrent plusieurs ISO ; la rafale existante
+contient 42 prises ISO 4000. Le dossier `iso-3200` contient aussi huit
+prises ISO 1600 et deux ISO 6400 : classement par métadonnées, sans
+déplacement ni modification des sources. Le nom d'un dossier ne prouve
+ni bouchon fermé, ni uniformité, ni indépendance des prises.
+
+Cet inventaire **ne requalifie pas** les anciennes lois de bruit sous la
+chaîne actuelle. Il reste à rejouer les noirs et niveaux éclairés avec
+le traitement signé courant et à contrôler biais, bruit spatial,
+écrêtage, stabilité et séparation des scènes. Une demi-pile RGB alignée
+et rééchantillonnée ne devient pas une vérité CFA. Aucune nouvelle photo
+n'est demandée avant ce travail.
+
+La prochaine action utile est donc de compléter le comparateur couleur
+courant avec Claude et de caractériser le bruit des données existantes.
+Pas de nouvelle micro-variante procédurale, pas de sélection d'une graine
+sur ces photos, pas de campagne longue décidée sur le seul débit CUDA.
+Il n'y a ni modification du moteur de production, ni publication, fusion
+ou tag dans cette campagne.
+
+Preuves canoniques de cette étape :
+
+- [CUDA, essai final](../raw/neural-cuda-engineering-v001-20261105T164115Z.json)
+  et [arrêt local initial](../raw/neural-cuda-engineering-v001-20261105T163929Z.json).
+- [Inférence CFA réelle](../raw/neural-real-cfa-inference-v001-20261105T170213Z.json)
+  et [affichage commun](../raw/neural-real-photo-display-v001-20261105T171013Z.json).
+- [DRUNet officiel](../raw/neural-drunet-comparison-v001-20261105T171131Z.json)
+  et [reconstruction RGB séparée](../raw/neural-learned-photo-diagnostic-v001-20261105T171531Z.json).
+- [Descripteurs des régions et liaison au diagnostic séparé](../raw/neural-real-photo-descriptors-v001-20261105T171750Z.json)
+  et [inventaire des acquisitions](../raw/neural-calibration-inputs-v001-20261105T171100Z.json).
+
+Un premier assemblage d'affichage s'est arrêté sur une collision de nom
+entre le JSON RCD et le JSON d'affichage ; aucun fichier n'a été écrasé.
+Les suffixes d'affichage sont maintenant distincts. Le dossier arrêté
+`real-photo-display-v001` reste conservé ; la planche achevée est `v002`.
+Cela ne change pas les modèles ni les entrées de la comparaison.
+
+Vérifications de clôture : 14 tests Python ciblés réussis (tuilage CFA,
+protection des structures, phase Bayer et quotas mémoire), 16 contrôles
+du captureur mosaïque, 27 régions RGB natives identiques et 27 PNG neutres
+identiques après l'ajout du mode diagnostique au renderer. Le contrôle
+documentaire donne zéro erreur et zéro avertissement de lien ; il ne
+vérifie ni liens externes, ni traduction, ni compilation LaTeX.

@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "measured_at_utc": "2026-11-05T16:39:19.805187+00:00",
+  "status": "failed_cuda_engineering_probe",
+  "scope": "Resource/arithmetic engineering only; no model selection or photographic training.",
+  "records": [
+    {
+      "phase": 0,
+      "level": 0,
+      "max_absolute_error": 1.4901161193847656e-08,
+      "mean_absolute_error": 5.153803310046594e-12,
+      "repeat_bit_exact": true
+    },
+    {
+      "phase": 0,
+      "level": 1,
+      "max_absolute_error": 5.960464477539063e-08,
+      "mean_absolute_error": 2.5364291407944015e-09,
+      "repeat_bit_exact": true
+    },
+    {
+      "phase": 0,
+      "level": 2,
+      "max_absolute_error": 7.450580596923828e-08,
+      "mean_absolute_error": 7.023724416891734e-09,
+      "repeat_bit_exact": true
+    },
+    {
+      "phase": 1,
+      "level": 0,
+      "max_absolute_error": 1.4901161193847656e-08,
+      "mean_absolute_error": 3.713770032239457e-12,
+      "repeat_bit_exact": true
+    },
+    {
+      "phase": 1,
+      "level": 1,
+      "max_absolute_error": 5.960464477539063e-08,
+      "mean_absolute_error": 2.577053237473592e-09,
+      "repeat_bit_exact": true
+    },
+    {
+      "phase": 1,
+      "level": 2,
+      "max_absolute_error": 7.450580596923828e-08,
+      "mean_absolute_error": 7.079658341050769e-09,
+      "repeat_bit_exact": true
+    },
+    {
+      "phase": 2,
+      "level": 0,
+      "max_absolute_error": 1.4901161193847656e-08,
+      "mean_absolute_error": 3.486396356796225e-12,
+      "repeat_bit_exact": true
+    },
+    {
+      "phase": 2,
+      "level": 1,
+      "max_absolute_error": 5.960464477539063e-08,
+      "mean_absolute_error": 2.568261455356454e-09,
+      "repeat_bit_exact": true
+    },
+    {
+      "phase": 2,
+      "level": 2,
+      "max_absolute_error": 7.450580596923828e-08,
+      "mean_absolute_error": 7.155297983748217e-09,
+      "repeat_bit_exact": true
+    },
+    {
+      "phase": 3,
+      "level": 0,
+      "max_absolute_error": 1.4901161193847656e-08,
+      "mean_absolute_error": 4.092726157978177e-12,
+      "repeat_bit_exact": true
+    },
+    {
+      "phase": 3,
+      "level": 1,
+      "max_absolute_error": 5.960464477539063e-08,
+      "mean_absolute_error": 2.4979271984193474e-09,
+      "repeat_bit_exact": true
+    },
+    {
+      "phase": 3,
+      "level": 2,
+      "max_absolute_error": 7.450580596923828e-08,
+      "mean_absolute_error": 7.056920973506446e-09,
+      "repeat_bit_exact": true
+    }
+  ],
+  "torch_version": "2.9.1+cu128",
+  "script_sha256": "2865279d37c8eed39fa29b53562b83b90c089fcef34b94e3b45a3694fe9a574c",
+  "reference_sha256": "4a2953e468182b7a1a066760548e09612950cd75bbe36c88b8c9ef20b2acaa81",
+  "gpu": "NVIDIA GeForce RTX 3060",
+  "cuda_version": "12.8",
+  "tf32": false,
+  "precision": "float32",
+  "deterministic": true,
+  "max_absolute_tolerance": 2e-06,
+  "error": "process_soft_memory_limit",
+  "memory": {
+    "hard_process_commit_bytes": 4294967296,
+    "soft_process_bytes": 3221225472,
+    "system_stop_fraction": 0.92,
+    "poll_seconds": 0.25,
+    "samples": 39,
+    "peak_rss_bytes": 1732190208,
+    "peak_private_sampled_bytes": 3252191232,
+    "peak_system_used_fraction": 0.6681362125337765,
+    "os_job_peak_commit_bytes": 3252191232,
+    "reason": "process_soft_memory_limit",
+    "last": {
+      "system_total_bytes": 16933507072,
+      "system_available_bytes": 5619617792,
+      "system_used_fraction": 0.6681362125337765,
+      "process_rss_bytes": 1732190208,
+      "process_private_bytes": 3252191232,
+      "process_peak_rss_bytes": 1732190208,
+      "process_peak_pagefile_bytes": 3252191232
+    }
+  }
+}

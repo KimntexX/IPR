@@ -2,6 +2,30 @@
 
 # B4 — étude de préparation de la restauration neuronale locale
 
+## État courant du 5 novembre 2026, après comparatif réel
+
+La réplication est close (10 et 12 échecs forts/48), sans ouverture de
+réserve ni sélection de graine. Trois compositions réelles, neuf régions
+fixes chacune, ont maintenant un comparatif neutre RCD / classique
+luminance courant / correcteur CFA puis RCD, les deux graines conservées.
+DRUNet officiel est testé séparément sur le sRGB encodé ; la reconstruction
+RGB apprise est un autre diagnostic, distinct de RCD. Bénéfice photographique
+non validé : dépendance aux graines et motifs directionnels observés.
+
+CUDA est qualifié numériquement sur le modèle courant ; un essai Adam
+jetable mesure environ 0,327 s/mise à jour, soit 9,1 h pour 100 000,
+avant génération/évaluation. Aucun apprentissage long ni intégration en
+production. La limite globale physique reste 92 %, avec budgets locaux
+distincts pour natif pleine définition et runtime CUDA.
+
+Prochaine preuve : compléter le comparateur par la couleur courante après
+les tons et rejouer la calibration sous la chaîne signée actuelle. Les
+349 RAW inventoriés ne sont pas automatiquement admis à l'apprentissage.
+Pas de nouvelle acquisition avant examen des noirs/aplats/rafales existants,
+pas de nouvelle micro-variante procédurale sur les mêmes seuils. Le
+[rapport unique](../validation/analyses/analyse-restauration-neuronale.md)
+conserve les méthodes, résultats par campagne et limites.
+
 ## État du 3 novembre2026
 
 Le premier contrat bruité (§17) est implémenté et couvert par9 tests

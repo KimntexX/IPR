@@ -123,6 +123,12 @@ int main(int argc, char **argv)
             {"black_estimated", metadata.opticalBlackLevelEstimated},
             {"camera_neutral", QJsonArray{image.dcpContext->cameraNeutral[0],
                 image.dcpContext->cameraNeutral[1], image.dcpContext->cameraNeutral[2]}},
+            {"profile_path", image.dcpContext->profilePath},
+            {"source_kelvin", image.dcpContext->sourceKelvin},
+            {"dcp_options", QJsonObject{
+                {"camera_baseline_exposure_ev", image.dcpContext->options.cameraBaselineExposureEv},
+                {"preserve_tone_curve_hue", image.dcpContext->options.preserveToneCurveHue},
+                {"profile_exposure_compensation_ev", image.dcpContext->options.profileExposureCompensationEv}}},
             {"domain", "signed balanced camera RGB, post-RCD/median, before LCP/DCP; no denoise"}};
         QFile json(output);
         require(json.open(QIODevice::WriteOnly | QIODevice::NewOnly), "Cannot create capture descriptor");

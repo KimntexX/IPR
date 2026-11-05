@@ -15,3 +15,6 @@ target_compile_definitions(iprNeuralCameraCapture PRIVATE IPR_NEURAL_REVISION="$
 add_executable(iprNeuralMosaicCapture capture_mosaic.cpp)
 target_link_libraries(iprNeuralMosaicCapture PRIVATE iprEngine)
 target_compile_definitions(iprNeuralMosaicCapture PRIVATE IPR_NEURAL_REVISION="${IPR_NEURAL_REVISION}")
+add_executable(iprNeuralDisplayCapture render_camera_roi.cpp)
+target_link_libraries(iprNeuralDisplayCapture PRIVATE iprEngine)
+target_compile_definitions(iprNeuralDisplayCapture PRIVATE IPR_NEURAL_REVISION="${IPR_NEURAL_REVISION}")

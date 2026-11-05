@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "started_at_utc": "2026-11-05T12:44:02.534639+00:00",
+  "status": "completed_known_failure_diagnosis_reserved_unopened",
+  "qualification": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\repeatability-replicate-qualification-v001\\progress.json",
+  "data_plan": "build-patch_neural_restoration\\paired-repeatability-plan-v001\\replicate\\plan.json",
+  "campaign": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\repeatability-replicate-campaign-v001",
+  "prefix": "repeatability-replicate",
+  "script_sha256": "f03d2eb9723db5534125a03e69f420194a32adc0a54cc8d18d79fba0a68be5b4",
+  "previous_fine": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\repeatability-control-fine-v001\\result.json",
+  "previous_campaign": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\repeatability-control-campaign-v001",
+  "policy": "No retraining or tuning. Known failure -> paired diagnostic only. All known pass -> frozen new classic cohort then fine cohort2; failure stops opening further reserved data.",
+  "stages": [
+    {
+      "name": "paired_fine_comparison",
+      "started_at_utc": "2026-11-05T12:44:02.535860+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\compare_fine_candidates.py",
+        "--previous",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\repeatability-control-fine-v001\\result.json",
+        "--current",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\repeatability-replicate-fine-v001\\result.json",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\repeatability-replicate-followup-v001\\paired-fine.json"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-05T12:44:03.257457+00:00"
+    },
+    {
+      "name": "fine_diagnosis",
+      "started_at_utc": "2026-11-05T12:44:03.258410+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\trace_fine_attenuation.py",
+        "--proof",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\repeatability-replicate-protected-v001\\result.json",
+        "--historical",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\repeatability-replicate-fine-v001\\result.json",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\repeatability-replicate-fine-trace-v001"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-05T12:44:34.560778+00:00"
+    },
+    {
+      "name": "multitone_diagnosis",
+      "started_at_utc": "2026-11-05T12:44:34.562062+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\diagnose_multitone_training.py",
+        "--data-plan",
+        "build-patch_neural_restoration\\paired-repeatability-plan-v001\\replicate\\plan.json",
+        "--previous-campaign",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\repeatability-control-campaign-v001",
+        "--campaign",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\repeatability-replicate-campaign-v001",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\repeatability-replicate-multitone-diagnostic-v001"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-05T12:44:53.632903+00:00"
+    }
+  ],
+  "qualification_sha256": "6fcf84b0c8d1b8f9a2078dbb0240c1833cb10b5a00880c92cfb2fa525bea4f9d",
+  "finished_at_utc": "2026-11-05T12:44:53.634155+00:00"
+}
