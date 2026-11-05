@@ -1,7 +1,8 @@
-// O3: remap and warpPerspective of the image layer against OpenCV as the oracle: the largest
-// difference and the time. The tolerance is fixed here, before any measure. The oracle is OpenCV's
+// O3: remap and warpPerspective of the image layer against OpenCV as the oracle, and the pixels
+// moved by Arrange.h: the largest difference and the time. The tolerance is fixed here, before any measure. The oracle is OpenCV's
 // own code, IPP off; how far IPP lies from it is reported apart. Writes one JSON proof.
 #include "OpenCvBridge.h"
+#include "Arrange.h"
 #include "Warp.h"
 
 #include <opencv2/core/utility.hpp>
@@ -149,10 +150,56 @@ int main(int argc, char **argv)
               << ", \"largest_difference\": " << difference << ", \"ipp_from_opencv\": " << ippGap << "}";
         first = false;
     }
+    // Pixels moved, and the pyramid: these must agree to the bit, or within the tolerance for the pyramid.
+    std::ostringstream arranged;
+    bool firstArranged = true;
+    for (const cv::Size size : {cv::Size(1, 1), cv::Size(7, 4), cv::Size(640, 481), cv::Size(6960, 4640)})
+        for (const int channels : {1, 3}) {
+            const cv::Mat input = scene(size.width, size.height, channels);
+            const auto compare = [&](const std::string &what, const cv::Mat &theirs, const cv::Mat &mine, double ms, double myMs) {
+                const double difference = largestGap(mine, theirs);
+                within = within && difference <= (what == "pyramid" ? tolerance : 0.0);
+                arranged << (firstArranged ? "" : ",\n") << "  {\"operation\": \"" << what << "\", \"size\": [" << size.width
+                         << ", " << size.height << "], \"channels\": " << channels << ", \"opencv_ms\": " << ms
+                         << ", \"ipr_ms\": " << myMs << ", \"largest_difference\": " << difference << "}";
+                firstArranged = false;
+                std::cout << what << " " << size.width << "x" << size.height << " c" << channels << ": opencv " << ms << " ms, ipr "
+                          << myMs << " ms, largest difference " << difference << std::endl;
+            };
+            cv::Mat theirs, mine;
+            cv::ipp::setUseIPP(false);
+            for (const int turns : {1, 2, 3}) {
+                const int code = turns == 1 ? cv::ROTATE_90_CLOCKWISE : turns == 2 ? cv::ROTATE_180 : cv::ROTATE_90_COUNTERCLOCKWISE;
+                const double ms = medianOfThree([&] { cv::rotate(input, theirs, code); });
+                const double myMs = medianOfThree([&] { mine = turned(input, turns); });
+                compare(turns == 1 ? "quarter turn" : turns == 2 ? "half turn" : "three quarters", theirs, mine, ms, myMs);
+            }
+            double ms = medianOfThree([&] { cv::flip(input, theirs, -1); });
+            double myMs = medianOfThree([&] { mine = mirrored(input, true, true); });
+            compare("both mirrors", theirs, mine, ms, myMs);
+            ms = medianOfThree([&] { cv::transpose(input, theirs); });
+            myMs = medianOfThree([&] { mine = transposed(input); });
+            compare("transpose", theirs, mine, ms, myMs);
+            if (size.width > 4 && size.height > 3) {
+                ms = medianOfThree([&] { cv::copyMakeBorder(input, theirs, 3, 2, 4, 1, cv::BORDER_REFLECT_101); });
+                myMs = medianOfThree([&] { mine = padded(input, 3, 2, 4, 1); });
+                compare("pad", theirs, mine, ms, myMs);
+            }
+            if (size.width > 20 && size.height > 20) {
+                const cv::Rect region(size.width / 3, 0, size.width / 3, size.height / 2);
+                ms = medianOfThree([&] { cv::copyMakeBorder(input(region), theirs, 6, 6, 6, 6, cv::BORDER_REFLECT_101); });
+                myMs = medianOfThree([&] { mine = paddedRegion(input, region, 6, 6, 6, 6); });
+                compare("pad region", theirs, mine, ms, myMs);
+            }
+            ms = medianOfThree([&] { cv::pyrDown(input, theirs); });
+            myMs = medianOfThree([&] { mine = pyramidDown(input); });
+            compare("pyramid", theirs, mine, ms, myMs);
+            cv::ipp::setUseIPP(true);
+        }
     std::ofstream out(argv[2]);
     out << "{\n \"kernel\": \"remap and warpPerspective\",\n \"revision\": \"" << argv[1] << "\",\n \"threads\": " << threads
         << ",\n \"opencv\": \"" << CV_VERSION << "\",\n \"oracle\": \"OpenCV's own code, IPP off; ipp_from_opencv is how far IPP lies from it\""
         << ",\n \"tolerance_fixed_before_measuring\": " << tolerance << ",\n \"within_tolerance\": " << (within ? "true" : "false")
-        << ",\n \"timing\": \"median of three, on a machine busy with other work\",\n \"cases\": [\n" << cases.str() << "\n ]\n}\n";
+        << ",\n \"timing\": \"median of three, on a machine busy with other work\",\n \"cases\": [\n" << cases.str() << "\n ],\n \"arranged\": [\n" << arranged.str() << "\n ]\n}\n";
     return within ? 0 : 1;
 }

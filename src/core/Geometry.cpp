@@ -64,14 +64,10 @@ bool needsResampling(const Settings &s)
 
 cv::Mat turnedAndMirrored(const cv::Mat &image, const Settings &s)
 {
-    // A separate output: rotating into a header of the same size would write in the source.
-    cv::Mat result;
-    if (s.quarterTurns == 1) cv::rotate(image, result, cv::ROTATE_90_CLOCKWISE);
-    else if (s.quarterTurns == 2) cv::rotate(image, result, cv::ROTATE_180);
-    else if (s.quarterTurns == 3) cv::rotate(image, result, cv::ROTATE_90_COUNTERCLOCKWISE);
-    else result = image;
-    if (s.flipHorizontal) { cv::Mat flipped; cv::flip(result, flipped, 1); result = flipped; }
-    if (s.flipVertical) { cv::Mat flipped; cv::flip(result, flipped, 0); result = flipped; }
+    // A separate output each time: the source is never written.
+    cv::Mat result = s.quarterTurns >= 1 && s.quarterTurns <= 3 ? ipr::turned(image, s.quarterTurns) : image;
+    if (s.flipHorizontal || s.flipVertical)
+        result = ipr::mirrored(result, s.flipHorizontal, s.flipVertical);
     return result;
 }
 

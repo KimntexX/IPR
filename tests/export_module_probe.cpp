@@ -3,7 +3,8 @@
 // editor, and times the preview's answer to the same change. Each photo is copied first into the
 // folder of the run, without its .ipr: the editor writes one beside the photo it opens, and a run
 // must not start from what an earlier one left. A name starting with "geometry." sets that geometry
-// value, and going back to neutral resets the geometry.
+// value, "geometry.turn" turns by that many quarters and "geometry.mirror" mirrors left to right
+// (above zero) or top to bottom; going back to neutral resets the geometry.
 // usage: iprExportModuleProbe <revision> <new json> <folder for the exports> <name=value,...> <photo>...
 
 #include "controlled_memory.h"
@@ -100,6 +101,11 @@ void apply(ImageEditor &editor, const Adjustments &adjustments, bool on)
     for (const auto &[name, value] : adjustments) {
         if (!name.startsWith(geometry))
             editor.setAdjustment(name, on ? value : 0.0);
+        else if (on && name == geometry + QStringLiteral("turn"))
+            for (int turn = 0; turn < int(value); ++turn)
+                editor.turnGeometry();
+        else if (on && name == geometry + QStringLiteral("mirror"))
+            editor.mirrorGeometry(value > 0);
         else if (on)
             editor.setGeometryValue(name.mid(geometry.size()), value);
         else if (!geometryReset) {

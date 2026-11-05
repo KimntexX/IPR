@@ -1,5 +1,7 @@
 #include "RawDevelopment.h"
 
+#include "OpenCvBridge.h"
+
 #include <algorithm>
 #include <cmath>
 #include <cstdint>
@@ -112,9 +114,8 @@ Result develop(const RawInput::Input &input, const Options &options)
 cv::Mat orient(cv::Mat image, int orientation)
 {
     // LibRaw's flip bits: 2 the rows, 1 the columns, then 4 transposes.
-    if (orientation & 2) cv::flip(image, image, 0);
-    if (orientation & 1) cv::flip(image, image, 1);
-    if (orientation & 4) cv::transpose(image, image);
+    if (orientation & 3) image = ipr::mirrored(image, (orientation & 1) != 0, (orientation & 2) != 0);
+    if (orientation & 4) image = ipr::transposed(image);
     return image;
 }
 

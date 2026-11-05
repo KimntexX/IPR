@@ -55,7 +55,8 @@ target_include_directories(iprRawDevelopmentCapture PRIVATE "${IPR_RAW_SOURCE_RO
 if(EXISTS "${IPR_RAW_SOURCE_ROOT}/src/image/OpenCvBridge.cpp")
     target_sources(iprRawDevelopmentCapture PRIVATE "${IPR_RAW_SOURCE_ROOT}/src/image/Image.cpp"
         "${IPR_RAW_SOURCE_ROOT}/src/image/Parallel.cpp" "${IPR_RAW_SOURCE_ROOT}/src/image/Filters.cpp"
-        "${IPR_RAW_SOURCE_ROOT}/src/image/OpenCvBridge.cpp")
+        "${IPR_RAW_SOURCE_ROOT}/src/image/Resize.cpp" "${IPR_RAW_SOURCE_ROOT}/src/image/Warp.cpp"
+        "${IPR_RAW_SOURCE_ROOT}/src/image/Arrange.cpp" "${IPR_RAW_SOURCE_ROOT}/src/image/OpenCvBridge.cpp")
     target_include_directories(iprRawDevelopmentCapture PRIVATE "${IPR_RAW_SOURCE_ROOT}/src/image")
 endif()
 target_link_libraries(iprRawDevelopmentCapture PRIVATE Qt6::Core "${LIBRAW_LIBRARY}" ${OpenCV_LIBS})

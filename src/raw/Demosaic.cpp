@@ -229,9 +229,8 @@ bool interpolate(const cv::Mat &mosaic, const Pattern &pattern, ChromaMedian med
         for (int x = 0; x < width; x += TileSize)
             tiles.emplace_back(x, y, std::min(TileSize, width - x), std::min(TileSize, height - y));
     const auto processTile = [&](const cv::Rect &core) {
-        cv::Mat padded;
         // real neighbours where they exist, mirrored with the same parity at the border
-        cv::copyMakeBorder(mosaic(core), padded, TileMargin, TileMargin, TileMargin, TileMargin, cv::BORDER_REFLECT_101);
+        const cv::Mat padded = ipr::paddedRegion(mosaic, core, TileMargin, TileMargin, TileMargin, TileMargin);
         cv::Mat tile = rcd(padded, pattern, floor);
         const cv::Rect inner(TileMargin, TileMargin, core.width, core.height);
         if (beforeMedian) tile(inner).copyTo((*beforeMedian)(core));
