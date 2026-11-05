@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "status": "paused_dru_training",
+  "seed": 71,
+  "preflight": false,
+  "plan_sha256": "964d9584b898f17011daf91baeb03b276a1395baef1d2c0f2f2c6d5dd01aea54",
+  "started_at_utc": "2026-11-05T22:37:35.319180+00:00",
+  "losses": [],
+  "milestones": [
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-overnight-campaign-v001\\seed71\\checkpoint-000000.pt",
+      "sha256": "6d7f62991528289fdc3cd0c40992c4b09ccbb652667f6982677d46dd9ce94426",
+      "step": 0
+    }
+  ],
+  "controls": [],
+  "architecture": {
+    "repository": "https://github.com/cszn/DPIR",
+    "revision": "15bca3fcc1f3cc51a1f99ccf027691e278c19354",
+    "source_manifest_sha256": "8d945a7ac1e578eb8ff0cf6091024b7e6922be52e35423bf5cbefbedfbaac64a",
+    "pretrained_weights_loaded": false,
+    "seed": 71,
+    "parameters": 32643840,
+    "support": {
+      "packed_radius": 185,
+      "packed_halo": 192,
+      "cfa_halo": 384,
+      "packed_core": 128,
+      "packed_context": 512,
+      "intervals": [
+        {
+          "output": 256,
+          "low": 71,
+          "high": 440
+        },
+        {
+          "output": 257,
+          "low": 79,
+          "high": 440
+        },
+        {
+          "output": 258,
+          "low": 79,
+          "high": 440
+        },
+        {
+          "output": 259,
+          "low": 79,
+          "high": 440
+        },
+        {
+          "output": 260,
+          "low": 79,
+          "high": 440
+        },
+        {
+          "output": 261,
+          "low": 79,
+          "high": 440
+        },
+        {
+          "output": 262,
+          "low": 79,
+          "high": 440
+        },
+        {
+          "output": 263,
+          "low": 79,
+          "high": 448
+        }
+      ],
+      "scope": "Deepest-path maximum, eight stride phases; residual skip paths are shorter. Pinned fourblocks/stage,strideconv2,transposeconv2 topology."
+    },
+    "activation_checkpointing": "nonreentrant perstage in training only, no stochastic layers"
+  },
+  "completed_steps": 0,
+  "elapsed_seconds": 14.01778789999662,
+  "step_seconds": [],
+  "reason": "Requested full-update stop",
+  "memory": {
+    "hard_process_commit_bytes": 6442450944,
+    "soft_process_bytes": 4831838208,
+    "system_stop_fraction": 0.92,
+    "poll_seconds": 0.25,
+    "samples": 50,
+    "peak_rss_bytes": 1103278080,
+    "peak_private_sampled_bytes": 2946678784,
+    "peak_system_used_fraction": 0.6547661349097289,
+    "os_job_peak_commit_bytes": 2978529280,
+    "reason": null,
+    "last": {
+      "system_total_bytes": 16933507072,
+      "system_available_bytes": 5898727424,
+      "system_used_fraction": 0.651653529365237,
+      "process_rss_bytes": 1102860288,
+      "process_private_bytes": 2945433600,
+      "process_peak_rss_bytes": 1103278080,
+      "process_peak_pagefile_bytes": 2978529280
+    }
+  }
+}

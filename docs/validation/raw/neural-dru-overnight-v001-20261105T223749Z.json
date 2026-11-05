@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "status": "stopped_on_error",
+  "started_at_utc": "2026-11-05T22:37:15.195079+00:00",
+  "plan": {
+    "schema_version": 1,
+    "status": "sealed_dru_cfa_bootstrap",
+    "created_at_utc": "2026-11-05T22:31:10.792814+00:00",
+    "seeds": [
+      71,
+      73
+    ],
+    "steps_per_seed": 4000,
+    "milestones": [
+      128,
+      512,
+      2048,
+      4000
+    ],
+    "learning_rate": 0.0001,
+    "accumulation": 4,
+    "training_deadline_utc": "2026-11-06T07:45:00+00:00",
+    "campaign_deadline_utc": "2026-11-06T08:45:00+00:00",
+    "noise_source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-plan-v001\\plan.json",
+    "noise_sha256": "4adc19f9d0e1b796eb422033159802c0a6b1f6a2d3e854c9fca86576c288d1f1",
+    "tools": {
+      "train_dru_cfa.py": "1b4d3dd79f5abf1df4f8e5fda13a8365f134e4a114f9c927d3c7ef9e4ee67d06",
+      "dru_training_data.py": "6409c8250c8b724acadd26081c3b28a0aee68aa11c3c709e3a9e27f8ad480aab",
+      "dru_known_controls.py": "bba84fe1f0ce6f20798cfd8b758d6f6f93f376f7ccfbaa2d7b6f8b9461beafe1",
+      "dru_checkpoint.py": "d2cdd5dfb6c4bc3e4cfaa1a3b6d3f0cc295a5038a9b43ce01e84ef3c81598ca1",
+      "dru_cfa.py": "72b3b01b586316a46960173e93c515768bf8d55e38aec134215f9645d36ec3f1",
+      "sensor_curve_noise.py": "9b1868ae317b9da7bee29eb9355edd27b534dc6683548e65b15f8f6cb94d3c0a",
+      "bayer_canonical.py": "a759c19f855f53dc96b8631e6f3d7817d99eb28a7da766fd74c5c91f6c9016f8",
+      "context_data.py": "91bcccd5185cfc80be408f7c4833b43052df87a9d8a1d20d0559d99dfe6e2dc6",
+      "fine_texture_training.py": "ecb0c2716c7555110dc472a2c2a7fbe45c5002344e09e04981fa0f0847d12e14",
+      "joint_bayer_unet.py": "c4899cbbdd27d8065a5c2e1eb981806e8a2f848f14b43052863d81c573c22e3f",
+      "memory_budget.py": "b8d74cb457c1ebb252a475f7258dba7adf10c4423778eb1e341852dfece7606d",
+      "sensor_transfer_math.py": "b98bd65fec8d36219bb6f2ab10d41c5b66d8b0ceb6abd0ad4fe98934b970c3f6"
+    },
+    "config": {
+      "dtype": "float32",
+      "pretrained": false,
+      "parameters": 32643840,
+      "packed_context": 512,
+      "packed_core": 128,
+      "raw_cfa_halo": 384,
+      "threads": 4,
+      "checkpoint_every": 32,
+      "loss": "Mean squared CFA error divided by each camera plane mean core variance, floor1e-8; equal plane weighting.",
+      "data": "Fresh deterministic procedural textures/constants/ramps/edges/waves, identity280000000+seed*100000+serial, eightfamilycycle; physical phases balanced acrosscycles; streaming, no photo targets.",
+      "noise": "Existing three experimental measured-law Gaussian scenarios, observed-signal sigma, no clipping, zero noise every127 observations.",
+      "limits": "Bootstrap only, procedural content not sensor truth, no reserved cohort, no production or photographic qualification."
+    },
+    "reason": "User authorizes preparation and overnight launch for results before Nov6 10:00 Europe/Paris; stop training08:45Paris, wholecampaign09:45Paris.",
+    "supersedes_plan_sha256": "72ae9c475d9ca63e9ff50f06ff333458ead81a73a8e19ebce79c6c51037ec21a",
+    "revision_reason": "Preserve both failed preflights; release previous Adam before reload, initialize durable step0, shorten to fit measured 2.5..3sec with morning controls."
+  },
+  "plan_sha256": "964d9584b898f17011daf91baeb03b276a1395baef1d2c0f2f2c6d5dd01aea54",
+  "preflight_sha256": "785a6f4a5412ad55496888d781232ec0d43cc9bedcf90e68e1baa77fc9d33d36",
+  "stages": [
+    {
+      "name": "train-71-attempt1",
+      "started_at_utc": "2026-11-05T22:37:35.204732+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\venv-neural-cuda\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\train_dru_cfa.py",
+        "--plan",
+        "build-patch_neural_restoration\\dru-overnight-plan-v002\\plan.json",
+        "--output",
+        "build-patch_neural_restoration\\dru-overnight-campaign-v001\\seed71",
+        "--seed",
+        "71"
+      ],
+      "pid": 7824,
+      "returncode": 0,
+      "finished_at_utc": "2026-11-05T22:37:49.926428+00:00"
+    }
+  ],
+  "pid": 18388,
+  "tools": {
+    "run_dru_overnight.py": "a8d86ad434c9d0958e50107d037c427f8785f2ac376ec1f7898af415f651adf8",
+    "infer_dru_photos.py": "b2db68de04112216edc40239c01a64a55f4e9ae2ab19236941876b39dcc3d42e",
+    "display_local_sigma.py": "52f55ca87f021bab48bd63d02f84cbd46a9061970e29068521d85252be534866",
+    "summarize_dru_overnight.py": "86c067be1f060e4003d0d21bf99bbd63ccd69c71c7c0401e22f3cba1c49f65b2"
+  },
+  "policy": "Both seeds sequentially, last declared checkpoints, no model selection, no new reserve, no publication or sleep.",
+  "admission_memory": {
+    "system_total_bytes": 16933507072,
+    "system_available_bytes": 7190376448,
+    "system_used_fraction": 0.5753758263171911,
+    "process_rss_bytes": 22552576,
+    "process_private_bytes": 14651392,
+    "process_peak_rss_bytes": 23572480,
+    "process_peak_pagefile_bytes": 15781888
+  },
+  "error": "No trained checkpoint",
+  "known_controls": [],
+  "finished_at_utc": "2026-11-05T22:37:49.935229+00:00"
+}

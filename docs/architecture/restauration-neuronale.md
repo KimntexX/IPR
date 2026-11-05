@@ -1206,3 +1206,21 @@ suivant au bit pr?s. Ce sont des contrats techniques, pas un mod?le utile.
 Le lanceur long, son arr?t demand?, les donn?es et la comparaison au m?me
 RCD restent ? finaliser avant planification avec l?utilisateur. Aucun
 apprentissage long n?est en cours. Mesures et limites en fin du rapport.
+
+
+### Campagne amor?age CFA autoris?e ? nuit du 5 au 6 novembre
+
+Le lanceur interruptible est d?sormais v?rifi? sur le flux r?el pour les
+deux graines : mod?le, Adam et pertes rejou?s au bit pr?s apr?s lib?ration
+puis rechargement de l??tat complet. La campagne born?e comporte 4 000
+mises ? jour par graine et conserve les jalons, sans s?lectionner de poids
+sur les photos. Supervision locale ind?pendante du chat, garde m?moire
+inchang?e, sauvegarde toutes les 32 ?tapes, contr?les connus ? support
+adapt?. Les donn?es proc?durales et la loi gaussienne exp?rimentale restent
+une limite de validit?, pas une caract?risation physique compl?te.
+
+L?utilisateur r?serve la machine jusqu?au 6 novembre 10 h Paris ;
+l?apprentissage s?arr?te au plus tard ? 08 h 45 et son superviseur ?
+09 h 45. Le mode `--training-only` diff?re les inf?rences photo et leur
+analyse ; aucun rendu lourd ne commence automatiquement apr?s 10 h.
+La disponibilit? horaire prime le nombre de mises ? jour cible.

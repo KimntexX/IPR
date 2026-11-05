@@ -432,3 +432,34 @@ inchang?es : 6 Gio engag?s, 4,5 Gio souples, 92 % de RAM physique globale.
 Pr?voir un cr?neau GPU et de la marge RAM ; la charge CPU du chargement
 r?el reste ? mesurer avant r?servation. Aucun entra?nement long n?est
 lanc? avant le planning demand? par l?utilisateur.
+
+
+## Campagne nocturne CFA directe ? 5 au 6 novembre
+
+`train_dru_cfa.py` utilise le plan scell?, le flux ? la demande de
+`dru_training_data.py` et les contr?les connus de `dru_known_controls.py`.
+Les poids sont initialis?s al?atoirement. `--preflight` v?rifie huit pas
+et un rejeu exact depuis le quatri?me, puis ?carte les poids ; `--resume`
+charge le checkpoint dont l?empreinte figure dans `resume.json`.
+
+`run_dru_overnight.py --plan <plan.json> --preflight <result.json>
+--output <dossier neuf> --training-only` lance les deux graines successives,
+avec v?rification du plan et des sources. Le mode utilis? cette nuit
+s?arr?te apr?s les entra?nements ; il ne lance pas de comparaison photo.
+Cr?er un fichier `STOP` dans ce dossier demande un arr?t propre. Consulter
+`progress.json`, les journaux `train-*-attempt*.log` et les r?sultats par
+graine ; ne pas modifier les sources ou le plan pendant l?ex?cution.
+
+Les sauvegardes toutes les 32 mises ? jour et les jalons sont conserv?s.
+Une reprise m?moire utilise le dernier ?tat durable, sans relever les
+gardes. La date limite appartient au plan : pour cette campagne,
+entra?nement arr?t? ? 08 h 45 Paris le 6 novembre et superviseur born?
+? 09 h 45, avant l?utilisation du PC ? 10 h. La demande de maintien ?veill?
+est lib?r?e ? la cl?ture ; aucun ordre de veille du PC.
+
+Apr?s disponibilit? de la machine, `infer_dru_photos.py --campaign
+<dossier>` corrige les trois photos connues avec le dernier jalon d?clar?
+par graine, sans s?lectionner le meilleur rendu. `display_local_sigma.py`
+applique le RCD et l?affichage communs ; `summarize_dru_overnight.py`
+produit la planche et les mesures descriptives. Ces calculs sont diff?r?s,
+et ne sont pas lanc?s automatiquement ? 10 h.

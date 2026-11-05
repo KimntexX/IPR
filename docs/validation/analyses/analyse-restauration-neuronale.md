@@ -11,8 +11,8 @@ Ce bénéfice n'est pas démontré pour le correcteur CFA actuel.
 | Ce qui bloque | Bénéfice photo instable selon la graine ; loi de bruit encore expérimentale ; absence de confirmation photographique indépendante. |
 | Derniers résultats | Réplication close : 10 et 12 échecs forts sur 48, après les 12 et 16 précédents. Sur les photos, sensibilité aux graines et motifs directionnels : bénéfice non validé. |
 | Calcul engagé | Courbe et photos achevées ; qualification des poids finaux préparée sur les contrôles connus, CPU épinglé, deux graines et seuils inchangés. Aucune nouvelle réserve. |
-| Prochaine preuve utile | Figer le protocole de la nouvelle architecture : donn?es, perte CFA, comparatif au m?me RCD, contr?les de d?tails et jalons d?arr?t. Planifier ensuite un pilote court avant toute r?servation de plusieurs heures. |
-| GPU | Nouveau mod?le : 1,805 s/mise ? jour mesur?e sur six pas techniques, quatre accumulations. Environ 5 h pour 10 000 pas par graine, hors validations et chargement r?el. Reprise mod?le + Adam v?rifi?e au bit pr?s. |
+| Prochaine preuve utile | Terminer le premier amor?age CFA de nuit, lire tous les jalons connus puis comparer au m?me RCD sur les photos. Rendus et analyse diff?r?s apr?s le 6 novembre ? 10 h, selon disponibilit? du PC. |
+| GPU | Nouvelle architecture : 1,805 s/pas technique, environ 2,5?3 s avec g?n?ration r?elle. Deux graines de 4 000 pas, sauvegarde/reprise exacte v?rifi?e. ?ch?ance interne apprentissage 08 h 45 Paris, superviseur 09 h 45. |
 | Données | 349 RAW inventoriés, 105 paires étudiées. Température, bruit fixe et propagation restent à qualifier ; pas de nouvelles prises demandées pour cette expérience. |
 | Critère d'arrêt | Pas de nouvelle série de variantes synthétiques pour améliorer les mêmes seuils. Après une courbe longue figée et un bruit caractérisé, absence de gain visible face au classique : abandon ou changement de taille/architecture, décision documentée. |
 
@@ -6968,3 +6968,96 @@ qualifi?e ; protocole d?apprentissage utile et lanceur long encore ? finir.
 Aucune campagne de plusieurs heures n?est engag?e avant le planning avec
 l?utilisateur. Production, profils, r?serves et environnements ?pingl?s
 restent inchang?s ; aucune fusion, publication ni cr?ation de tag.
+
+
+## 5 novembre 2026 ? campagne nocturne autoris?e, machine disponible avant 10 h
+
+L?utilisateur autorise la pr?paration et le lancement, puis pr?cise que
+**l?apprentissage doit ?tre termin? au plus tard le 6 novembre ? 10 h,
+heure de Paris**, pour pouvoir r?utiliser le PC. L?interpr?tation peut
+attendre cette heure. La campagne est donc lanc?e en mode entra?nement
+seul : aucune inf?rence photo compl?te, aucun RCD ni rendu comparatif
+ne s?encha?ne automatiquement au r?veil de l?utilisateur.
+
+### Protocole de d?marrage fig?
+
+Deux graines 71/73, initialis?es al?atoirement, s?entra?nent successivement
+avec toute l?architecture CFA de 32 643 840 param?tres. Cible abaiss?e de
+6 000 ? **4 000 mises ? jour par graine** apr?s mesure du chargement r?el
+(2,5?3 s/pas plut?t que 1,8 s dans le pr?vol technique). Quatre observations
+sont accumul?es par mise ? jour ; Adam ? 10??, float32 d?terministe, quatre
+threads CPU. Aucun ajustement de force d?apr?s les photos pendant la nuit.
+
+Les cibles sont produites ? la demande : textures, surfaces constantes,
+gradients, contours et ondes, identit?s fra?ches d?clar?es dans le plan.
+Les quatre phases Bayer sont r?parties entre cycles ; les contextes
+1 024 ? 1 024 ne sont pas tous conserv?s en RAM. Le bruit gaussien suit les
+trois sc?narios exp?rimentaux d?j? mesur?s ; sigma d?pend de l?observation.
+Une observation sur 127 est sans bruit. Pas d??cr?tage ni de photo r?serv?e.
+Ce jeu est un amor?age proc?dural, pas une v?rit? propre issue du capteur.
+
+La perte est la MSE CFA, normalis?e par la variance moyenne de chaque
+plan dans le centre utile, avec plancher 10?? et m?me poids par plan.
+Elle ne contient plus le reconstructeur RGB appris gel?. Architecture,
+objectif et flux changent ensemble : un ?ventuel gain ne sera pas attribu?
+? un seul de ces changements. Ce protocole n?est pas un entra?nement
+DRUNet publi? reproduit ? l?identique.
+
+Sauvegarde mod?le/Adam/position/g?n?rateurs toutes les 32 mises ? jour.
+Jalons conserv?s : 0, 128, 512, 2 048 et 4 000. Les contr?les de transfert
+utilisent tous les **864 champs forts bruit?s d?j? connus** par jalon,
+avec les centres et bruits historiques exacts et le contexte adapt? au
+support du nouveau r?seau. Les mesures CFA ne se pr?sentent pas comme
+les anciens contr?les RGB : leurs r?f?rences et leurs unit?s sont distinctes.
+Le transfert de 0,95 reste visible, sans assouplissement ni s?lection
+d?une graine ou d?un jalon. Pas de nouveau jeu r?serv?.
+
+### V?rifications avant lancement et incidents conserv?s
+
+Trois tests couvrent la g?n?ration d?terministe du contexte complet,
+l?identit? sans bruit, la normalisation de perte et l?exclusion du halo,
+ainsi que le refus des dimensions insuffisantes. Le premier pr?vol du
+lanceur s?arr?te ? six pas sur une pointe de RAM globale ? 92,43 %.
+Le deuxi?me termine huit pas, puis d?passe le plafond local pendant le
+rechargement d?Adam : l?ancien ?tat n?avait pas ?t? lib?r? avant lecture.
+Les r?sultats d??chec et les checkpoints sont conserv?s.
+
+Le lanceur lib?re d?sormais l?ancien mod?le et Adam avant de recharger,
+comme dans le test technique pr?c?dent. Les deux graines terminent alors
+leur pr?vol sur le vrai flux de donn?es : huit pas, sauvegarde ? quatre,
+rechargement et quatre pas rejou?s ; **mod?le, Adam et pertes suivants
+sont identiques au bit pr?s**. Les pr?vols sont ?cart?s de l?apprentissage.
+Le plafond souple reste ?troit, environ 4,49 Gio priv?s au pic ; aucune
+garde m?moire n?est relev?e. Admission seulement apr?s 20 s sous 80 %
+de RAM physique globale, puis arr?t surveill? ? 92 % pendant l?ex?cution.
+
+Le premier superviseur a ?t? arr?t? proprement ? z?ro mise ? jour utile,
+pendant le contr?le initial, pour appliquer la pr?cision de planning de
+l?utilisateur. Son r?sultat reste archiv?. Le second superviseur d?marre
+avec `--training-only` ; il ne modifie pas le plan d?apprentissage scell?.
+
+### Limites horaires et surveillance ind?pendante du chat
+
+L??ch?ance interne d?apprentissage est **08 h 45 Paris** : si le budget
+n?est pas atteint, sauvegarder le dernier pas complet et terminer. Le
+superviseur poss?de en plus un d?lai absolu ? **09 h 45 Paris**, qui
+termine seulement son propre arbre de processus si n?cessaire. Ces marges
+sont plus strictes que la limite utilisateur de 10 h. Aucune nouvelle
+campagne ne red?marre apr?s l??ch?ance. Les erreurs m?moire autorisent
+au plus deux reprises du dernier ?tat durable, apr?s admission m?moire ;
+une autre erreur arr?te la campagne. Aucune autre application n?est ferm?e.
+
+La surveillance est un petit processus local, pas une boucle de requ?tes
+au mod?le. Il maintient la machine ?veill?e pendant la campagne, laisse
+l??cran se mettre en veille et lib?re cette demande ? la fin. Il ne met
+pas le PC en veille. Le fichier `STOP` dans le dossier de campagne demande
+un arr?t propre. Le contr?le horaire et la garde m?moire restent actifs
+m?me sans r?ponse de l?utilisateur.
+
+Suivi : `build-patch_neural_restoration/dru-overnight-campaign-v002/progress.json`.
+L?entra?nement actif ?crit son propre `seed71/progress.json` ou
+`seed73/progress.json`. Les r?sultats finaux complets, contr?les inclus,
+sont enregistr?s en JSON canonique horodat?. Les poids restent locaux.
+Les outils d?inf?rence sur les trois photos connues et d?affichage au m?me
+RCD/DCP sont pr?par?s, mais diff?r?s. Aucun b?n?fice photo n?est annonc?
+avant ce comparatif. Pas de production, publication, fusion ni tag.

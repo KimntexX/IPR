@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "status": "passed_dru_training_preflight_discarded",
+  "seed": 73,
+  "preflight": true,
+  "plan_sha256": "964d9584b898f17011daf91baeb03b276a1395baef1d2c0f2f2c6d5dd01aea54",
+  "started_at_utc": "2026-11-05T22:35:30.538235+00:00",
+  "losses": [
+    0.7381667196750641,
+    0.9952040463685989,
+    0.9924350082874298,
+    1.0005159080028534,
+    1.0007141381502151,
+    1.003769725561142,
+    0.9980245530605316,
+    1.007663905620575
+  ],
+  "milestones": [
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-overnight-preflight-seed73-v001\\checkpoint-000000.pt",
+      "sha256": "4c23f76c632becd548e41869961cc620845e9fd073e2c9aeb1e2177b8bf9a0f4",
+      "step": 0
+    },
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-overnight-preflight-seed73-v001\\bridge.pt",
+      "sha256": "610046adb45ebf809f568471d5733d22eb6c851f2b1d26331bc77c74ca09ed19",
+      "step": 4
+    }
+  ],
+  "controls": [
+    {
+      "step": 0,
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-overnight-preflight-seed73-v001\\control-000000.json",
+      "sha256": "ed900dcf4d033d8cfdc4c3ba2042758f58733c96d469758853a308280785736e",
+      "observations": 2
+    }
+  ],
+  "architecture": {
+    "repository": "https://github.com/cszn/DPIR",
+    "revision": "15bca3fcc1f3cc51a1f99ccf027691e278c19354",
+    "source_manifest_sha256": "8d945a7ac1e578eb8ff0cf6091024b7e6922be52e35423bf5cbefbedfbaac64a",
+    "pretrained_weights_loaded": false,
+    "seed": 73,
+    "parameters": 32643840,
+    "support": {
+      "packed_radius": 185,
+      "packed_halo": 192,
+      "cfa_halo": 384,
+      "packed_core": 128,
+      "packed_context": 512,
+      "intervals": [
+        {
+          "output": 256,
+          "low": 71,
+          "high": 440
+        },
+        {
+          "output": 257,
+          "low": 79,
+          "high": 440
+        },
+        {
+          "output": 258,
+          "low": 79,
+          "high": 440
+        },
+        {
+          "output": 259,
+          "low": 79,
+          "high": 440
+        },
+        {
+          "output": 260,
+          "low": 79,
+          "high": 440
+        },
+        {
+          "output": 261,
+          "low": 79,
+          "high": 440
+        },
+        {
+          "output": 262,
+          "low": 79,
+          "high": 440
+        },
+        {
+          "output": 263,
+          "low": 79,
+          "high": 448
+        }
+      ],
+      "scope": "Deepest-path maximum, eight stride phases; residual skip paths are shorter. Pinned fourblocks/stage,strideconv2,transposeconv2 topology."
+    },
+    "activation_checkpointing": "nonreentrant perstage in training only, no stochastic layers"
+  },
+  "completed_steps": 8,
+  "elapsed_seconds": 39.12108569999691,
+  "step_seconds": [
+    2.1249612999963574,
+    2.7543611000292003,
+    2.4824241999886,
+    2.494773200014606,
+    2.4470918999868445,
+    2.440859900030773,
+    2.4344853999791667,
+    2.6091198999783956,
+    2.613852599984966,
+    2.4339726000325754,
+    2.66130689997226,
+    2.464383899990935
+  ],
+  "resume_bit_exact": true,
+  "peak_cuda_allocated_bytes": 1475720704,
+  "memory": {
+    "hard_process_commit_bytes": 6442450944,
+    "soft_process_bytes": 4831838208,
+    "system_stop_fraction": 0.92,
+    "poll_seconds": 0.25,
+    "samples": 153,
+    "peak_rss_bytes": 1791029248,
+    "peak_private_sampled_bytes": 4816433152,
+    "peak_system_used_fraction": 0.8631520283337086,
+    "os_job_peak_commit_bytes": 4818444288,
+    "reason": null,
+    "last": {
+      "system_total_bytes": 16933507072,
+      "system_available_bytes": 3199299584,
+      "system_used_fraction": 0.8110669236799667,
+      "process_rss_bytes": 1770582016,
+      "process_private_bytes": 4795949056,
+      "process_peak_rss_bytes": 1791029248,
+      "process_peak_pagefile_bytes": 4818444288
+    }
+  }
+}
