@@ -59,8 +59,8 @@ Du plus sûr au plus délicat. Chaque palier est une fusion à part, sans aucun 
 | Palier | Travail | Risque | Protection |
 | --- | --- | --- | --- |
 | **E0** | Filet de sécurité : mesurer la couverture réelle, ajouter les tests manquants, figer l'état de référence | Nul | Suite verte, parité de rendu de référence |
-| **E1** | `RenderChain` : sortir `renderWorkingImage`, `renderTones`, `stageKeys`, `cropped`, `maskValues` | **Faible** : déjà statiques | Parité octet par octet sur le corpus, 957 rendus |
-| **E2** | Réglages par table : un seul accès par nom, à la place des 87 fonctions proches | Faible | Tests existants ; la table pilote aussi recette et clés |
+| **E1** | `RenderChain` : sortir `renderWorkingImage`, `renderTones`, `stageKeys`, `cropped`, `maskValues` | **Faible** : déjà statiques | Parité octet par octet sur le corpus. **Fait**, voir ci-dessous |
+| **E2** | Réglages par table : un seul accès par nom, à la place des 87 fonctions proches | Faible | Tests existants ; la table pilote aussi recette et clés. **Fait en partie**, voir ci-dessous |
 | **E3** | `ExportService` : export, lots, sélection | Moyen : tâches, annulation | Tests d'export et de lot ; fichiers identiques au bit près |
 | **E4** | `RawController` : options, profils, statut | Moyen | `editorRawDevelopmentTests`, parité |
 | **E5** | Panneaux `geometry`, `masks`, `retouch` en objets exposés | Moyen : **contrat QML** | Tests QML ; IHM-CONN à jour ; moteur puis QML sur branche enfant |
@@ -69,6 +69,22 @@ Du plus sûr au plus délicat. Chaque palier est une fusion à part, sans aucun 
 | **E8** | Reste : façade, nettoyage, retrait de ce qui ne sert plus | Faible | Suite complète |
 
 **E1 d'abord, parce qu'il a le plus de valeur** : c'est lui qui ouvre les trois chantiers suivants.
+
+### État au 5 novembre 2026
+
+Branche locale `patch_render_chain`, construite sur la retouche B3 en attente de validation, **à ne fusionner qu'après elle**.
+`imageeditor.cpp` passe de 3 476 à 2 917 lignes.
+
+- **E0 :** `render_chain_test` protège désormais le contrat de la chaîne : source partagée pour une recette neutre, refus des sources
+  invalides, chaque étage actif, cache sans effet sur les pixels, surimpressions, recadrage. Aucun outil de couverture n'est installé :
+  **la couverture n'a pas été mesurée**.
+- **E1 : parité sur deux niveaux.** Sur le corpus réel, le serveur de rendu donne des pixels et une déclaration identiques avant et
+  après sur [934 états sur 934](../validation/raw/render-chain-parity-v001-20261105.json), un sur onze des 10 266 états, 29 scènes.
+  Sur image de synthèse, les hachages sont identiques sur 26 états à deux échelles, en couvrant ce que le serveur n'exerce pas :
+  aperçu, cache, surimpressions, masques, retouche. Cette seconde vérification a été faite avec une sonde temporaire, non conservée.
+- **E2 :** 21 fonctions quasi identiques cèdent la place à `setAdjustment` et `AdjustmentTable`, qui porte noms et bornes. **Restent hors de la
+  table** la recette, les clés de cache et les 40 fonctions restantes, ce qui demandera plus que ce palier sans risque : à reprendre
+  avec E6. Une valeur qui n'est pas un nombre est désormais refusée, seul changement de comportement.
 
 ## 4. Ce que ce plan débloque
 
