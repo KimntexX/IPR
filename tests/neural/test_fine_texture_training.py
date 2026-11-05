@@ -48,8 +48,11 @@ class FineTextureTrainingTests(unittest.TestCase):
         family = 'chromatic_wave'
         source = dict(freeze=dict(train_slots=[dict(family=family)], train_edge_events=[], config=dict(side=128),
             phase_schedule_sha256=tensor_hash(torch.tensor([[*s['ids'], *s['phases']] for s in schedule]))))
+        from training_texture_data import training_texture
         events = [dict(serial=s, texture_serial=4000000+s, family=family, phase=s%4,
-            target_sha256=tensor_hash(texture(family, 4000000+s, 128)[0])) for s in range(16)]
+            colour_flips=[1,-1,-1 if s%2 else 1]) for s in range(16)]
+        for event in events:
+            event['target_sha256']=tensor_hash(training_texture(event)[0])
         config = dict(steps=4, accumulation=4, side=128, scale=2., learning_rate=.001)
         context = dict(plan_sha256='fixed', config=config, seed=71,
             parent_weights_sha256='parent', source_result_sha256='source')

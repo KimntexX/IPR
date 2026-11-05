@@ -18,13 +18,17 @@ from prepare_warm_continuation import prefix_source,check_embedding
 from run_noisy_moment_pilot import train,TOOLS,MEMORY_POLICY,runtime_versions
 from run_synthetic_joint_pilot import tensor_hash
 from texture_sampling import sample_events
+from colour_texture_sampling import sample_colour_pair
 
 
-def prepare(root,output):
+def prepare(root,output,design='coverage'):
+    if design not in ('coverage','colour_signs'):
+        raise ValueError('Declared paired texture design required')
+    arms=('control','stratified') if design=='coverage' else ('control','colour_balanced')
     base=root/'build-patch_neural_restoration'
     if not output.resolve().is_relative_to(base.resolve()):
         raise ValueError('Dedicated neural output required')
-    template_path=base/'paired-correlation-plan-v002/control/plan.json'
+    template_path=base/('paired-correlation-plan-v002/control/plan.json' if design=='coverage' else 'paired-coverage-plan-v001/stratified/plan.json')
     template=json.loads(template_path.read_text(encoding='utf-8'))
     source_path=Path(template['source'])/'result.json'
     if digest(source_path)!=template['source_result_sha256']:
@@ -37,12 +41,14 @@ def prepare(root,output):
         raise ValueError('Current inference engineering required')
     source=json.loads(source_path.read_text(encoding='utf-8'))
     now=datetime.now(timezone.utc)
-    identity='neural-coverage-preflight-v001-'+now.strftime('%Y%m%dT%H%M%SZ')
+    identity='neural-'+('coverage' if design=='coverage' else 'colour-signs')+'-preflight-v001-'+now.strftime('%Y%m%dT%H%M%SZ')
     result=dict(schema_version=1,campaign_id=identity,measured_at_utc=now.isoformat(),status='incomplete',
         template_sha256=digest(template_path),source_sha256=digest(source_path),
         script_sha256=digest(Path(__file__)),architecture_engineering_sha256=digest(engineering_path),
-        cases=[],embedding_checks=[],coverage={},sampling={},
-        policy='Both arms learn the same observed correlation branch from identical2048-step initializers, fresh Adam0.00025,512steps, fixed losses and replayed nontexture exposures. Only fresh texture sampling differs. No scores used to select data or weights.')
+        cases=[],embedding_checks=[],coverage={},sampling={},design=design,
+        policy='Both arms learn the same observed correlation branch from identical2048-step initializers, fresh Adam0.00025,512steps, fixed losses and replayed nontexture exposures. '+
+            ('Only fresh texture sampling differs.' if design=='coverage' else 'Matched fresh stratified carriers and magnitudes; only declared G/B contrast signs differ. Achromatic targets unchanged.')+
+            ' No scores used to select data or weights.')
     output.mkdir(parents=True,exist_ok=False)
     guard=MemoryGuard(**MEMORY_POLICY)
     try:
@@ -57,21 +63,30 @@ def prepare(root,output):
             known_plan=json.loads(known.read_text(encoding='utf-8'))
             excluded.update(c['target_sha256'] for c in known_plan['cases'])
             events={}
-            for arm in ('control','stratified'):
-                rows,selection=sample_events(template['texture_augmentation']['events'],arm,excluded,guard,tensor_hash)
-                events[arm]=rows
+            if design=='colour_signs':
+                events,selection=sample_colour_pair(template['texture_augmentation']['events'],excluded,guard,tensor_hash)
+                result['colour_sampling']=selection
+                if selection['candidate_colour_coverage']['missing_cells']:
+                    raise ValueError('Conditional colour sign coverage incomplete')
+            for arm in arms:
+                if design=='coverage':
+                    rows,selection=sample_events(template['texture_augmentation']['events'],arm,excluded,guard,tensor_hash)
+                    events[arm]=rows
+                else:
+                    rows=events[arm]
+                    selection=dict(paired_design='colour_signs',arm=arm,policy=result['colour_sampling']['policy'])
                 result['sampling'][arm]=selection
                 result['coverage'][arm]=coverage(rows)
                 excluded.update(e['target_sha256'] for e in rows)
                 print('DATA',arm,len(rows),'missing',result['coverage'][arm]['missing_cells'],flush=True)
-            if result['coverage']['stratified']['missing_cells']:
+            if result['coverage'][arms[1]]['missing_cells']:
                 raise ValueError('Stratified positive joint coverage incomplete')
             original_source_path=Path(source['origin']['path'])
             if digest(original_source_path)!=source['origin']['sha256']:
                 raise ValueError('Ancestor source changed')
             original_source=json.loads(original_source_path.read_text(encoding='utf-8'))
             small=prefix_source(original_source,8)
-            for arm in ('control','stratified'):
+            for arm in arms:
                 for ref in template['warm_start']['models']:
                     guard.check()
                     torch.manual_seed(ref['seed'])
@@ -100,7 +115,7 @@ def prepare(root,output):
                     print('ENGINEERING',arm,ref['seed'],flush=True)
                     del model,clean
             result['lineage_exclusions']=sorted(excluded)
-            result['status']='passed_fresh_vs_stratified_engineering_not_quality_qualification'
+            result['status']='passed_paired_texture_engineering_not_quality_qualification'
     except Exception as error:
         result.update(status='failed_coverage_preparation',error=str(error))
         raise
@@ -108,18 +123,20 @@ def prepare(root,output):
         result['memory']=guard.stats()
         save(output/'preflight.json',result)
         save(root/'docs/validation/raw'/f'{identity}.json',result)
-    tools={n:digest(Path(__file__).with_name(n)) for n in TOOLS+('prepare_coverage_continuation.py',)}
-    for arm in ('control','stratified'):
+    tools={n:digest(Path(__file__).with_name(n)) for n in TOOLS+('prepare_coverage_continuation.py','colour_texture_sampling.py')}
+    for arm in arms:
         plan=copy.deepcopy(template)
         plan.update(frozen_at_utc=datetime.now(timezone.utc).isoformat(),tools=tools,
             engineering_preflight=dict(path=str((output/'preflight.json').resolve()),sha256=digest(output/'preflight.json'),campaign_id=identity),
-            continuation=dict(arm=arm,experiment='fresh_random_vs_stratified_texture_coverage',stage_steps=512,total_optimizer_steps=2560,
-                data='Same nontexture replay, source schedule, noise IDs and both initializers. Fresh disjoint texture ID streams; original generator distribution constrained only by candidate quotas.'),
+            continuation=dict(arm=arm,experiment=design,stage_steps=512,total_optimizer_steps=2560,
+                data=result['policy']),
             training_policy=result['policy'])
         plan['config']['statistics_trainable']=True
         plan['texture_augmentation'].update(events=events[arm],sampling=result['sampling'][arm],
             coverage=result['coverage'][arm],
-            policy_scope='Base generator parameter law; sampling quotas/rejection recorded separately. Not a claim of identical empirical marginals between arms.')
+            policy_scope='Base generator parameter law; quotas and any colour flips recorded separately; no independent new data claim for matched carriers.')
+        if design=='colour_signs':
+            plan['texture_augmentation']['colour_sampling']=result['colour_sampling']
         plan['lineage_exclusions']['target_sha256']=result['lineage_exclusions']
         plan['lineage_exclusions']['scope']='All initializer contents, all fresh training contents of both arms and consulted fine truths; no reserved generation.'
         plan['conditioning']='Same40base features and32observed correlation cues, both branches trainable in both arms.'
@@ -131,5 +148,6 @@ def prepare(root,output):
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output',type=Path,required=True)
+    parser.add_argument('--design',choices=('coverage','colour_signs'),default='coverage')
     args=parser.parse_args()
-    prepare(Path(__file__).resolve().parents[2],args.output)
+    prepare(Path(__file__).resolve().parents[2],args.output,args.design)

@@ -44,11 +44,13 @@ def strata(events):
     return result
 
 
-def sample_events(templates,arm,excluded,guard,hash_tensor):
+def sample_events(templates,arm,excluded,guard,hash_tensor,identity_start=None):
     if arm not in ('control','stratified'):
         raise ValueError('Declared fresh-random or stratified arm required')
     assignments = strata(templates) if arm == 'stratified' else {}
-    next_identity = 4000000 if arm == 'control' else 8000000
+    if identity_start is not None and (isinstance(identity_start,bool) or not isinstance(identity_start,int) or identity_start<0):
+        raise ValueError('Nonnegative fresh content stream origin required')
+    next_identity = identity_start if identity_start is not None else (4000000 if arm == 'control' else 8000000)
     rows,seen,attempts = [],set(excluded),0
     for template in templates:
         for _ in range(10000):

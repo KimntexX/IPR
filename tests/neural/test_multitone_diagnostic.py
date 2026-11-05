@@ -38,3 +38,7 @@ class MultitoneDiagnosticTests(unittest.TestCase):
         shared=select_domains(previous,list(previous))
         self.assertEqual(len(shared),16)
         self.assertTrue(all(r['source_domain']=='shared' for r in shared))
+        partial=list(previous[:8])+current[8:]
+        mixed=select_domains(previous,partial)
+        self.assertEqual(len(mixed),24)
+        self.assertEqual(sum(r['source_domain']=='shared' for r in mixed),8)

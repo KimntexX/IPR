@@ -1084,3 +1084,12 @@ quand les données d'apprentissage diffèrent. Chaque mesure déclare si son
 contenu a été appris par le modèle ; un contenu de l'autre domaine ne
 devient pas une validation réservée. Les dix défauts de transfert et les
 deux défauts RGB restants doivent être étudiés sans modifier les critères.
+
+La campagne chromatique suivante conserve le réseau et les pertes. La cible
+procédurale est identifiée par `texture_serial` et ses signes de contraste
+par `colour_flips`. `training_texture_data.py` reconstruit le centre et le
+halo avec la même transformation, sans écrêtage. Les coefficients absolus,
+DC et géométrie sont appariés ; seul le signe G/B peut changer. Les quotas
+regroupent les phases Bayer. Cette transformation appartient exclusivement
+au banc d'apprentissage, sans option ni traitement de production. Les
+prétests passent ; le bénéfice de ce nouvel essai reste à mesurer.

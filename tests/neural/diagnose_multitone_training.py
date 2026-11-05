@@ -11,10 +11,9 @@ from torch.nn import functional as F
 
 from bayer_canonical import canonicalize
 from campaign_artifacts import campaign_models
-from context_data import extend_texture, extend_observation
+from context_data import extend_observation
 from diagnose_train_learnability import digest, save
 from edge_protected_noise import EdgeProtectedNoisyUNet, edge_confidence
-from fine_texture_training import texture
 from joint_bayer_unet import sample_rgb
 from memory_budget import MemoryGuard
 from noisy_moment_unet import NoisyMomentUNet, FORWARD_TOOLS
@@ -22,6 +21,7 @@ from run_noisy_moment_pilot import observation, NOISE
 from run_synthetic_joint_pilot import tensor_hash
 from synthetic_bayer_data import PATTERNS
 from texture_sampling import texture_identity
+from training_texture_data import training_texture,training_context
 
 
 def select_events(events):
@@ -40,8 +40,9 @@ def select_domains(previous_events,current_events):
     """Freeze both known training domains instead of pretending disjoint data are shared."""
     if previous_events==current_events:
         return [dict(source_domain='shared',event=e) for e in select_events(current_events)]
-    return [dict(source_domain=domain,event=e) for domain,events in
-        (('previous',previous_events),('current',current_events)) for e in select_events(events)]
+    previous,current=select_events(previous_events),select_events(current_events)
+    return ([dict(source_domain='shared' if e in current else 'previous',event=e) for e in previous]
+        +[dict(source_domain='current',event=e) for e in current if e not in previous])
 
 
 def bases(metadata, tags):
@@ -112,10 +113,10 @@ def run(root, output, plan_path, previous_campaign, campaign):
                         if selection['source_domain'] in ('shared',variant) and not seen_in_training:
                             raise ValueError('Declared own training domain is absent from model')
                         guard.check()
-                        centre, meta = texture(event['family'], texture_identity(event), 128)
+                        centre, meta = training_texture(event)
                         if tensor_hash(centre) != event['target_sha256']:
                             raise ValueError('Frozen training target changed')
-                        truth = extend_texture(event['family'], texture_identity(event), 256)
+                        truth = training_context(event,256)
                         tags = torch.tensor([PATTERNS[event['phase']]])
                         clean, _, labels, _ = canonicalize(sample_rgb(truth, tags)/2,
                             torch.zeros_like(sample_rgb(truth, tags)), tags)

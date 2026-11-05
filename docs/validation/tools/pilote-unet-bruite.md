@@ -8,6 +8,23 @@ Les JSON horodatés restent la mémoire canonique.
 
 ## Lancement de la campagne courante
 
+La campagne courante rééquilibre les signes de contraste des textures
+chromatiques, à paramètres et magnitudes appariés. Les deux bras gardent
+la couverture fréquence/amplitude précédente. La préparation est déjà
+exécutée ; conserver les dossiers et ne pas les écraser :
+
+```powershell
+& .venv-neural/Scripts/python.exe tests/neural/prepare_coverage_continuation.py --design colour_signs --output build-patch_neural_restoration/paired-colour-signs-plan-v001
+& .venv-neural/Scripts/python.exe tests/neural/run_paired_continuation.py --prepared build-patch_neural_restoration/paired-colour-signs-plan-v001 --output build-patch_neural_restoration/paired-colour-signs-campaign-v001 --prefix colour-signs --candidate colour_balanced
+```
+
+Les champs `texture_serial` et `colour_flips` déterminent la cible et son
+halo. Les quotas de signes regroupent les phases Bayer ; ne pas annoncer
+une couverture exhaustive de toutes les combinaisons. Les événements
+partagés ne sont comptés qu'une fois dans le diagnostic de domaines.
+
+### Campagne précédente de couverture fréquence/amplitude
+
 Essai courant du 5 novembre : contrôle aléatoire frais contre couverture
 stratifiée, avec branche de corrélation apprise dans les deux bras.
 Campagne terminée : apprentissages et mesures fines complets, critères

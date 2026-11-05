@@ -12,6 +12,10 @@ Aucune qualité photographique validée, aucun moteur de production modifié
 ni nouveau jeu réservé ouvert. Les résultats et décisions actuels sont
 consignés en fin de rapport.
 
+La campagne suivante, autorisée le même jour, rééquilibre les signes des
+contrastes chromatiques sur des textures appariées. Sa préparation passe ;
+aucun résultat de qualité de ce nouvel essai n'est encore disponible.
+
 ## 1er novembre 2026 — scène pilote 6V1A0133
 
 **Conclusion : composition retenue pour poursuivre les acquisitions ; pas
@@ -5824,3 +5828,61 @@ chromatiques, et les deux défauts RGB, en conservant les contrôles sur aplats.
 Ne pas remplacer cette analyse par une hausse uniforme de force, une baisse
 des critères ou une nouvelle série de réglages de durée. Aucun nouvel
 apprentissage n'est lancé après ces diagnostics.
+
+### Contrastes chromatiques appariés — 5 novembre 2026, 11:16 UTC
+
+L'utilisateur autorise la prochaine campagne. L'audit de la stratification
+précédente trouve 14 cellules absentes sur 96 : quatre bandes de fréquence,
+trois bandes d'amplitude, deux niveaux de bruit et quatre classes de signes
+relatifs entre R, G et B. Les phases Bayer sont regroupées dans ce décompte.
+La classe indique si G et B varient chacun dans le même sens que R ou en
+opposition ; elle n'est pas une teinte colorimétrique d'écran. Le déséquilibre
+est conditionnel : les quatre classes sont déjà présentes globalement.
+Il ne prouve pas la cause des échecs chromatiques.
+
+L'essai compare **les mêmes 822 textures de base nouvelles**, déjà stratifiées
+en fréquence/amplitude dans les deux bras. Les deux modèles repartent des
+mêmes poids à 2 048 étapes, avec branche statistique apprise, Adam neuf
+0,00025 et 512 étapes par graine 71/73. Architecture, pertes, reconstructeur
+figé, calendrier des phases/niveaux et graines de bruit restent identiques.
+L'amplitude absolue de chaque canal, le DC, les deux fréquences, directions
+et phases du motif sont appariés. Les réalisations bruitées ne sont pas
+identiques quand le signal change : la loi de variance dépend du signal.
+
+Dans le candidat, seuls les signes de variation G et/ou B peuvent changer,
+par réflexion autour du DC du motif synthétique. Aucun écrêtage n'est ajouté.
+Les quatre classes relatives sont distribuées avec des effectifs différant
+d'au plus un dans chaque groupe fréquence/amplitude/niveau de bruit. Les
+phases Bayer sont regroupées pour ces quotas : cela ne garantit pas une
+couverture exhaustive phase × classe au budget actuel. Le signe de R et
+les magnitudes des trois coefficients restent inchangés.
+
+Les 417 textures achromatiques restent identiques. Sur les 405 chromatiques,
+105 restent aussi identiques ; **300 sont transformées**, soit 522 cibles
+partagées au total. Le contrôle frais présente 8/96 cellules absentes ; le
+candidat aucune. Les effectifs globaux des quatre classes du candidat sont
+103, 103, 100 et 99. Les paramètres appariés et les images achromatiques
+identiques ont été vérifiés ; les petites différences d'arrondi des canaux
+réfléchis sont dans leurs propres empreintes, sans promesse d'identité avec
+un autre mode de génération.
+
+Les prétests de huit étapes par bras/graine passent et sont jetés. Les
+80 sorties initiales restent identiques aux empreintes archivées ; les
+28 tests ciblés passent, dont centre/halo, absence de mutation du RNG global,
+signes invalides et reprise après interruption avec contrastes transformés.
+Le reconstructeur reste inchangé. Pic résident du prétest 416,4 Mio.
+Les 6 682 empreintes exclues couvrent ascendance, entraînements précédents,
+nouvelles cibles des deux bras et références fines déjà consultées. Aucun
+nouveau jeu réservé n'est généré.
+
+Le diagnostic de contenus traite chaque événement partagé une seule fois
+et conserve ses étiquettes de domaine. Les doublons appariés ne deviennent
+pas des observations indépendantes. Les plans `paired-colour-signs-plan-v001`
+sont figés avant résultat ; les deux bras et graines sont entraînés avant
+évaluation. Les critères fins et l'arrêt avant cohortes réservées restent
+inchangés. Preuve : [appariement, quotas et prétests](../raw/neural-colour-signs-preflight-v001-20261105T111630Z.json).
+
+Cette campagne évalue une hypothèse de diversité d'apprentissage, sans
+modifier la colorimétrie de production ni transformer les photographies
+de l'utilisateur. Elle conserve les limites de quatre threads et de RAM
+déjà déclarées. Un gain sur ce banc ne vaudra pas validation photographique.
