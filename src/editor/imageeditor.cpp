@@ -1161,6 +1161,7 @@ ImageEditor::BatchResult ImageEditor::applyToFiles(const QStringList &files, con
         Settings copied = settings;
         copied.geometry = target.settings.geometry;   // the framing belongs to each photo
         copied.localMasks = target.settings.localMasks;   // and so do zones drawn on it
+        copied.retouches = target.settings.retouches;
         copied.automaticWhiteBalance = target.settings.automaticWhiteBalance;
         if (target.settings.automaticWhiteBalance) {
             copied.temperature = target.settings.temperature;
@@ -1738,6 +1739,7 @@ void ImageEditor::setAutomaticWhiteBalance(bool enabled)
     emit pointColorsChanged();
     emit geometryChanged();
     emit localMasksChanged();
+    emit retouchesChanged();
     scheduleSidecarSave();
 
     if (m_original.isNull() || !m_currentFile.isLocalFile())
@@ -1768,9 +1770,11 @@ void ImageEditor::pasteAdjustments()
     const bool automaticWhiteBalance = m_settings.automaticWhiteBalance;
     const Geometry::Settings geometry = m_settings.geometry;   // the framing belongs to each photo
     const LocalAdjustments::Masks masks = m_settings.localMasks;   // and so do zones drawn on it
+    const Retouch::Operations retouches = m_settings.retouches;
     m_settings = m_copiedAdjustments;
     m_settings.geometry = geometry;
     m_settings.localMasks = masks;
+    m_settings.retouches = retouches;
     m_settings.automaticWhiteBalance = automaticWhiteBalance;
     m_settings.denoiseBeforeProfile = m_denoiseBeforeProfile;
     if (m_copiedAsShot) {   // the target's own as-shot white balance
@@ -1784,6 +1788,7 @@ void ImageEditor::pasteAdjustments()
     emit pointColorsChanged();
     emit geometryChanged();
     emit localMasksChanged();
+    emit retouchesChanged();
     scheduleRender();
 }
 
@@ -1876,6 +1881,7 @@ void ImageEditor::restoreRecipe(const std::optional<QCborMap> &recipe)
     emit pointColorsChanged();
     emit geometryChanged();
     emit localMasksChanged();
+    emit retouchesChanged();
     emit rawDevelopmentChanged();
     emit historyChanged();
     const QString fileName = m_currentFile.toLocalFile();
@@ -2155,6 +2161,107 @@ void ImageEditor::addLocalMaskStroke(int mask, int shape, const QVariantList &po
     commitLocalMasks(std::move(next));
 }
 
+QVariantList ImageEditor::retouches() const
+{
+    return Retouch::describe(m_settings.retouches);
+}
+
+void ImageEditor::setRetouchOverlay(int retouch)
+{
+    if (retouch == m_retouchOverlay)
+        return;
+    m_retouchOverlay = retouch;
+    emit retouchOverlayChanged();
+    if (!m_original.isNull())
+        scheduleRender();
+}
+
+bool ImageEditor::commitRetouches(Retouch::Operations next)
+{
+    if (m_original.isNull() || !Retouch::bound(next))
+        return false;
+    if (next == m_settings.retouches)
+        return true;
+    m_settings.retouches = std::move(next);
+    emit retouchesChanged();
+    scheduleRender();
+    return true;
+}
+
+int ImageEditor::addRetouch(const QString &kind)
+{
+    Retouch::Operation operation;
+    if (!Retouch::kindNamed(kind, operation.kind) || m_original.isNull())
+        return -1;
+    Retouch::Operations next = m_settings.retouches;
+    next.push_back(operation);
+    return commitRetouches(std::move(next)) ? int(m_settings.retouches.size()) - 1 : -1;
+}
+
+void ImageEditor::removeRetouch(int retouch)
+{
+    if (retouch < 0 || retouch >= int(m_settings.retouches.size()))
+        return;
+    Retouch::Operations next = m_settings.retouches;
+    next.erase(next.begin() + retouch);
+    if (m_retouchOverlay >= int(next.size()))
+        setRetouchOverlay(-1);
+    commitRetouches(std::move(next));
+}
+
+void ImageEditor::setRetouchVisible(int retouch, bool visible)
+{
+    if (retouch < 0 || retouch >= int(m_settings.retouches.size()))
+        return;
+    Retouch::Operations next = m_settings.retouches;
+    next[size_t(retouch)].visible = visible;
+    commitRetouches(std::move(next));
+}
+
+void ImageEditor::setRetouchOpacity(int retouch, double opacity)
+{
+    if (retouch < 0 || retouch >= int(m_settings.retouches.size()) || !std::isfinite(opacity))
+        return;
+    Retouch::Operations next = m_settings.retouches;
+    next[size_t(retouch)].opacity = float(opacity);
+    commitRetouches(std::move(next));
+}
+
+void ImageEditor::setRetouchSource(int retouch, double shiftX, double shiftY)
+{
+    if (retouch < 0 || retouch >= int(m_settings.retouches.size()) || !std::isfinite(shiftX) || !std::isfinite(shiftY))
+        return;
+    Retouch::Operations next = m_settings.retouches;
+    next[size_t(retouch)].source = cv::Point2f(float(shiftX), float(shiftY));
+    commitRetouches(std::move(next));
+}
+
+void ImageEditor::addRetouchStroke(int retouch, const QVariantList &points, double size, double feather)
+{
+    if (retouch < 0 || retouch >= int(m_settings.retouches.size()) || points.isEmpty() || points.size() % 2 != 0)
+        return;
+    LocalAdjustments::BrushStroke stroke;
+    stroke.size = float(size);
+    stroke.feather = float(feather);
+    for (qsizetype i = 0; i + 1 < points.size(); i += 2)
+        stroke.points.emplace_back(points.at(i).toFloat(), points.at(i + 1).toFloat());
+    Retouch::Operations next = m_settings.retouches;
+    Retouch::Operation &target = next[size_t(retouch)];
+    const bool first = target.strokes.empty();
+    target.strokes.push_back(std::move(stroke));
+    // A first stroke of a heal or a clone comes with a source; the user can move it.
+    if (first && target.kind != Retouch::Kind::Remove) {
+        const ColorPipeline::WorkingImage &source = previewSource();
+        if (!source.isNull()) {
+            cv::Mat rgb;
+            cv::cvtColor(source.linearRgba, rgb, cv::COLOR_RGBA2RGB);
+            rgb = Geometry::warpRgb(rgb, m_settings.geometry, geometryQuality(previewPixelScale()));
+            target.source = Retouch::suggestSource(rgb, target);
+        }
+    }
+    commitRetouches(std::move(next));
+}
+
 void ImageEditor::setGeometryValue(const QString &name, double value)
 {
     if (!std::isfinite(value))
@@ -2240,6 +2347,7 @@ void ImageEditor::resetAdjustments()
     emit pointColorsChanged();
     emit geometryChanged();
     emit localMasksChanged();
+    emit retouchesChanged();
     emit rawDevelopmentChanged();
     scheduleRender();
 }
@@ -2317,6 +2425,7 @@ RenderStageCache::Keys stageKeys(const EditRecipe::Settings &s)
     QDataStream stream(&key, QIODevice::WriteOnly);
     const auto ints = [&stream](const auto &values) { for (int value : values) stream << qint32(value); };
     LocalAdjustments::appendKey(stream, s.localMasks);   // adds nothing without a mask
+    Retouch::appendKey(stream, s.retouches);             // nor without a retouch
     stream << s.grayscale << s.brightness << qint32(s.contrast) << qint32(s.temperature) << qint32(s.tint)
            << qint32(s.shadows) << qint32(s.blacks) << qint32(s.highlights) << qint32(s.whites);
     const Geometry::Settings &g = s.geometry;   // the crop comes after every stage
@@ -2378,7 +2487,7 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
         std::all_of(settings.gradingLuminance.cbegin(), settings.gradingLuminance.cend(),
                     [](int value) { return value == 0; }) && !PointColor::active(settings.pointColor) &&
         !hasToneCurves && !Geometry::transformsPixels(settings.geometry) &&
-        !LocalAdjustments::active(settings.localMasks))
+        !LocalAdjustments::active(settings.localMasks) && !Retouch::active(settings.retouches))
         return source;
 
     // What the masks add per setting; every map stays empty without any.
@@ -2394,6 +2503,8 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
     if (runs(0)) {
         cv::cvtColor(source.linearRgba, adjusted, cv::COLOR_RGBA2RGB);
         if (!renderTones(source, settings, referenceTemperature, pixelScale, adjusted, local)) return {};
+        // On the canvas, once the tones are set; what follows treats the zone as the rest.
+        Retouch::apply(adjusted, settings.retouches);
         reached(0, adjusted);
     }
     if (runs(1)) {
@@ -2558,7 +2669,7 @@ bool ImageEditor::renderTones(const ColorPipeline::WorkingImage &source, const S
 
 ImageEditor::RenderResult ImageEditor::renderPreview(
     const ColorPipeline::WorkingImage &source, const Settings &settings,
-    bool includeOriginal, double pixelScale, RenderStageCache *cache, int overlayPoint, int overlayMask, bool wholeCanvas)
+    bool includeOriginal, double pixelScale, RenderStageCache *cache, int overlayPoint, int overlayMask, bool wholeCanvas, int overlayRetouch)
 {
     RenderResult result;
     if (includeOriginal) {
@@ -2602,6 +2713,12 @@ ImageEditor::RenderResult ImageEditor::renderPreview(
         const cv::Mat weights = LocalAdjustments::coverage(settings.localMasks[size_t(overlayMask)], rendered.linearRgba.size(),
                                                            rangeLuminanceOf(source, settings, pixelScale));
         // A neutral pipeline hands back the source buffer itself: overlay a copy.
+        rendered.linearRgba = rendered.linearRgba.clone();
+        ColorAdjustments::showWeights(rendered.linearRgba, weights);
+    }
+
+    if (overlayRetouch >= 0 && overlayRetouch < int(settings.retouches.size())) {
+        const cv::Mat weights = Retouch::coverage(settings.retouches[size_t(overlayRetouch)], rendered.linearRgba.size());
         rendered.linearRgba = rendered.linearRgba.clone();
         ColorAdjustments::showWeights(rendered.linearRgba, weights);
     }
@@ -2998,6 +3115,7 @@ void ImageEditor::applyLoadedImage(LoadResult loaded)
             emit pointColorsChanged();
             emit geometryChanged();
             emit localMasksChanged();
+    emit retouchesChanged();
             if (!m_pendingLoadIsFreshOpen) scheduleRender();
         }
         setStatusMessage(tr("Échec du développement de « %1 » : %2")
@@ -3068,6 +3186,7 @@ void ImageEditor::applyLoadedImage(LoadResult loaded)
         emit pointColorsChanged();
         emit geometryChanged();
         emit localMasksChanged();
+    emit retouchesChanged();
     }
     if (m_pendingLoadIsFreshOpen) emit hasImageChanged();
     // Freeze only after restoring the incoming image's settings (not old WB).
@@ -3194,12 +3313,12 @@ void ImageEditor::startRender()
     m_renderWatcher.setFuture(m_tasks.submit<RenderResult>(
         QStringLiteral("render"), Tasks::Priority::Interactive,
         [sourceCopy, settings, includeOriginal, pixelScale, resources = m_taskResources, overlay,
-         maskOverlay = m_localMaskOverlay, wholeCanvas](Tasks::Context &) {
+         maskOverlay = m_localMaskOverlay, retouchOverlay = m_retouchOverlay, wholeCanvas](Tasks::Context &) {
             ImageCacheController *controller = &resources->cache;
             const auto admission = controller->acquire({}, SystemMemory::estimateProcessingPeak(sourceCopy.linearRgba.total()), false).result();
             if (!admission.reservation) { RenderResult result; result.error = admission.error; return result; }
             const auto release = qScopeGuard([&] { controller->release(admission.reservation); });
-            return renderPreview(sourceCopy, settings, includeOriginal, pixelScale, &resources->stages, overlay, maskOverlay, wholeCanvas);
+            return renderPreview(sourceCopy, settings, includeOriginal, pixelScale, &resources->stages, overlay, maskOverlay, wholeCanvas, retouchOverlay);
         }).future);
 }
 

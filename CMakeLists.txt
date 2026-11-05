@@ -94,6 +94,8 @@ set(IPR_ENGINE_SOURCES
     src/core/ColorGrading.cpp
     src/stack/FrameSpool.h
     src/stack/FrameSpool.cpp
+    src/core/Retouch.h
+    src/core/Retouch.cpp
     src/panorama/PanoramaFeatures.h
     src/panorama/PanoramaFeatures.cpp
     src/panorama/PanoramaGeometry.h
@@ -404,6 +406,10 @@ if(BUILD_TESTING)
     if(WIN32)
         target_link_libraries(iprPanoramaAudit PRIVATE psapi)
     endif()
+    ipr_add_test(retouchTests tests/retouch_test.cpp)
+    set_tests_properties(retouchTests PROPERTIES LABELS "unit;retouch" TIMEOUT 120)
+    ipr_add_test(editorRetouchTests tests/editor_retouch_test.cpp)
+    set_tests_properties(editorRetouchTests PROPERTIES LABELS "unit;retouch" TIMEOUT 180)
     ipr_add_test(panoramaTests tests/panorama_test.cpp)
     set_tests_properties(panoramaTests PROPERTIES LABELS "unit;panorama" TIMEOUT 180)
     ipr_add_test(stackSessionTests tests/stack_session_test.cpp)
