@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "status": "stopped_on_error",
+  "started_at_utc": "2026-11-05T18:31:58.331121+00:00",
+  "plan_sha256": "00dfd3e56f2185a431aeefb39bc3dac93fb5d86e503ec4bab3fdf19790634683",
+  "stages": [
+    {
+      "name": "train-71",
+      "started_at_utc": "2026-11-05T18:31:58.337041+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\venv-neural-cuda\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\train_sensor_curve.py",
+        "--seed",
+        "71",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\sensor-learning-campaign-v001\\seed71"
+      ],
+      "returncode": 1,
+      "finished_at_utc": "2026-11-05T18:35:04.145168+00:00"
+    }
+  ],
+  "script_sha256": "3e1f490e344e5bd36f7bd2d4f3f03d276fc9df274b70a32ae291c6b2637a0788",
+  "tools": {
+    "train_sensor_curve.py": "c6cacff0628294ad8fef8bdc6a8124ba2e2b75fbcf1cb8a43ffdd2178f735c9b",
+    "sensor_curve_noise.py": "9b1868ae317b9da7bee29eb9355edd27b534dc6683548e65b15f8f6cb94d3c0a",
+    "infer_sensor_sigma.py": "7b026ca36c50495ed35ad00b8e1d9fc4356fdcf5d0157211a8540e846844cfc2",
+    "display_local_sigma.py": "52f55ca87f021bab48bd63d02f84cbd46a9061970e29068521d85252be534866",
+    "prepare_curve_photos.py": "199f8657cda10a8520f797b4a016f912492b367cc0e0b3fdb994c046332c679e",
+    "summarize_sensor_curve.py": "c74850efda8806aee85d8d2f136387aa59cbf831f024f211ba0ce4dd8f6ebca4"
+  },
+  "policy": "Two seeds sequentially, all declared milestones, same known photo controls. No gate relaxation, new reserve, publication, merge, tag or sleep.",
+  "error": "Stage failed: train-71",
+  "finished_at_utc": "2026-11-05T18:35:04.146326+00:00"
+}

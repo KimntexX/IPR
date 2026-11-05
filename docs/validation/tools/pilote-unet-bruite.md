@@ -373,3 +373,11 @@ photos connues et conserve les pertes d'entraînement, luma/chroma et
 limites. Suivre `sensor-learning-campaign-v001/progress.json` et les
 journaux par étape. L'attente entre processus est faite par le superviseur,
 sans boucle d'analyse du modèle ni interrogation répétée du chat.
+
+`run_sensor_curve.py --resume` reprend un superviseur arrêté pendant
+l'entraînement : il valide les prévols et les sources, reprend la graine
+interrompue depuis `resume.pt`, puis continue la chaîne. Il ne reprend
+pas automatiquement une étape photo partiellement produite. Les journaux
+de chaque tentative sont distincts, les résultats d'arrêt sont conservés
+et le temps actif déjà consommé est déduit du budget initial. Ne pas
+relever une garde mémoire pour contourner un arrêt.

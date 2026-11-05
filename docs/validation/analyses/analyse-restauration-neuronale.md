@@ -10,7 +10,7 @@ Ce bénéfice n'est pas démontré pour le correcteur CFA actuel.
 | Ce qui fonctionne | Contrats, signal signé, limites de ressources, reprise et mesures synthétiques traçables. Ce ne sont pas des preuves de qualité photo. |
 | Ce qui bloque | Bénéfice photo instable selon la graine ; loi de bruit encore expérimentale ; absence de confirmation photographique indépendante. |
 | Derniers résultats | Réplication close : 10 et 12 échecs forts sur 48, après les 12 et 16 précédents. Sur les photos, sensibilité aux graines et motifs directionnels : bénéfice non validé. |
-| Calcul engagé | Continuation CUDA lancée à 18 h 31 UTC : mêmes cibles connues, deux graines, reconstructeur gelé, bruit expérimental ; contrôles à +0/+256/+1024/+2048. Graine 71 démarrée et premier checkpoint technique confirmé ; résultats à venir. |
+| Calcul engagé | Premier essai arrêté à 619 mises à jour par la garde RAM globale 92 %. Checkpoint 576 vérifié, graine 73 non démarrée. Reprise préparée sans changer le calcul, les poids initiaux ni les limites ; aucun résultat final disponible. |
 | Prochaine preuve utile | Lire la courbe bornée et toutes les planches après la campagne. Carte sigma physiquement mieux motivée, mais bénéfice photo non établi ; pas de nouveau balayage des forces et classique couleur encore à compléter. |
 | GPU | CUDA qualifié ; prémesure définitive avec lecture et bruit : environ 0,32–0,33 s/mise à jour. Projection d'environ 23 min d'entraînement pour les deux graines, hors rendus ; plafond de campagne 90 min. |
 | Données | 349 RAW inventoriés, 105 paires étudiées. Température, bruit fixe et propagation restent à qualifier ; pas de nouvelles prises demandées pour cette expérience. |
@@ -6625,3 +6625,37 @@ relâchées ni déclarées satisfaites par la baisse d'une perte d'entraînement
 figé au commit local `13e7ba8`. Les scripts ne sont plus modifiés pendant
 la campagne. Cette confirmation de démarrage n'est pas un verdict de
 qualité ni l'annonce d'une campagne achevée.
+
+### Arrêt mémoire et reprise de la courbe
+
+La campagne s'est arrêtée à **18 h 35 min 04 s UTC**, au cours de la
+première graine. Le contrôleur a mesuré **92,012 % de RAM physique
+globale utilisée** et a appliqué la limite de 92 %, comme prévu.
+Le processus d'entraînement utilisait alors environ 1,61 Gio résidents,
+3,02 Gio engagés ; il n'avait pas dépassé son propre plafond. Cette
+observation ne permet pas d'attribuer la hausse globale à une application
+précise.
+
+La graine 71 avait effectué 619 mises à jour. Le dernier checkpoint
+technique durable est à **576**, avec 576 pertes et 2 304 expositions
+validées. La graine 73 et les comparatifs de courbe n'ont pas démarré.
+Il ne s'agit donc ni d'une campagne achevée ni d'un verdict négatif
+sur la qualité du modèle.
+
+Le checkpoint et les empreintes du code d'entraînement ont été contrôlés
+avant reprise. Le calcul, les cibles, les poids de départ, Adam et les
+seuils restent inchangés. Les 43 mises à jour non sauvegardées sont
+rejouées depuis 576 avec les mêmes graines de bruit. L'arrêt initial et
+ses journaux restent conservés dans les JSON canoniques.
+
+La reprise du superviseur est limitée aux interruptions d'entraînement,
+avant les étapes photo. Les nouvelles étapes ont des journaux distincts,
+et le budget actif restant retranche le temps déjà consommé ; l'attente
+entre les deux tentatives n'est pas du temps de calcul. Les jalons déjà
+créés restent conservés et leurs empreintes sont reprises dans la
+synthèse. À l'export, chaque reconstructeur est aussi comparé aux poids
+initiaux, indépendamment du checkpoint de reprise.
+
+Lors du contrôle de reprise, la RAM globale est redescendue à environ
+57,8 % et la VRAM utilisée à 815 Mio. La limite 92 % n'est pas relevée
+et aucun processus d'un autre agent n'est arrêté.

@@ -30,7 +30,9 @@ def run():
     for seed in (71,73):
         path=campaign/f'seed{seed}'/'result.json';value=json.loads(path.read_text(encoding='utf-8'))
         if value['status']!='completed_sensor_curve_continuation_not_quality_qualification':raise ValueError('Incomplete training')
-        result['training'][seed]=dict(source_sha256=sha256(path),milestones=value['milestones'],
+        milestones=[dict(step=step,path=str(campaign/f'seed{seed}'/f'checkpoint-{step:06d}.pt'),
+            sha256=sha256(campaign/f'seed{seed}'/f'checkpoint-{step:06d}.pt')) for step in (0,256,1024,2048)]
+        result['training'][seed]=dict(source_sha256=sha256(path),milestones=milestones,
             losses=value['losses'],median_seconds_per_update=value['median_seconds_per_update'],
             training_loss_tail64=float(np.mean(value['losses'][-64:])))
     panels=[]

@@ -20,6 +20,10 @@ def run():
             path=source/f'checkpoint-{step:06d}.pt';state=torch.load(path,weights_only=True,map_location='cpu')
             validate_state(state,state['context'])
             if state['completed_step']!=step or state['context']['seed']!=seed:raise ValueError('Wrong milestone')
+            initializer=next(r for r in parent['models'] if r['seed']==seed)
+            initial=torch.load(initializer['path'],weights_only=True,map_location='cpu')['state_dict']
+            if any(not torch.equal(value,initial[name]) for name,value in state['model_state'].items()
+                   if not name.startswith(('noise_features.','noise_head.'))):raise ValueError('Reconstruction differs from original initializer')
             target=folder/f'seed{seed}-weights.pt'
             with target.open('xb') as stream:torch.save(dict(state_dict=state['model_state']),stream)
             plan['models'].append(dict(seed=seed,path=str(target.resolve()),weights_sha256=sha256(target),
