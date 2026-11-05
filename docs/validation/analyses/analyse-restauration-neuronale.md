@@ -1,18 +1,25 @@
 # Restauration neuronale — qualification du corpus
 
-**État au 5 novembre 2026, bilan chromatique :** la répartition des signes
-de contraste donne 15/48 échecs forts contre 16/48 au contrôle apparié,
-sans gain robuste entre graines. Les deux tirages stratifiés naturels
-déjà mesurés donnent 12 et 16 échecs avec mêmes initialisations, budget et
-critères. Cette variabilité interdit de traiter le meilleur tirage comme
-une référence stable. Une campagne limitée de répétabilité sur deux autres
-tirages est préparée, sans nouvelle architecture, perte ou critère.
-Aucune qualité photographique validée, aucun moteur de production modifié
-ni nouveau jeu réservé ouvert. Les résultats et décisions actuels sont
-consignés en fin de rapport.
+**Point de décision au 5 novembre 2026, après revue de Claude.** Le but
+est un bénéfice visible sur de vraies photos face au débruitage classique
+IPR, avec une perte de détails acceptable, pas la seule réussite du banc.
+Ce bénéfice n'est pas démontré pour le correcteur CFA actuel.
 
-Les jeux réservés restent fermés ; la répétabilité n'est mesurée que sur
-les contrôles connus. Les conclusions et preuves actuelles sont en fin de rapport.
+| Question | État et décision actuelle |
+| --- | --- |
+| Ce qui fonctionne | Contrats, signal signé, limites de ressources, reprise et mesures synthétiques traçables. Ce ne sont pas des preuves de qualité photo. |
+| Ce qui bloque | Débruitage réel non calibré ; reconstructeur appris différent de RCD ; comparateur neuronal éprouvé manquant ; budget d'entraînement court. |
+| Derniers résultats | Signes chromatiques : 15/48 échecs contre 16/48, sans gain robuste. Deux tirages stratifiés naturels : 12 et 16 échecs, sans sélection du meilleur. |
+| Calcul engagé | Répétabilité limitée, à terminer sans ouvrir de réserve. Aucun nouvel ajustement procédural après cette campagne avant le comparatif photo. |
+| Prochaine preuve utile | Trois scènes réelles : neutre RCD, classique IPR courant, correcteur CFA suivi de RCD ; reconstruction apprise présentée séparément. |
+| GPU | RTX 3060 12 Go confirmée. Claude prépare CUDA dans un environnement distinct ; débit, mémoire et qualification du calcul à mesurer avant apprentissage long. |
+| Données | Auditer rafales, noirs et aplats existants avant de demander de nouvelles prises. Une demi-pile RGB rééchantillonnée n'est pas une vérité CFA. |
+| Critère d'arrêt | Pas de nouvelle série de variantes synthétiques pour améliorer les mêmes seuils. Après une courbe longue figée et un bruit caractérisé, absence de gain visible face au classique : abandon ou changement de taille/architecture, décision documentée. |
+
+Les détails et limites de cette réorientation sont consignés en fin de
+rapport. Aucun modèle n'est validé en production ; les réserves restent
+fermées. Cette page de décision évolue dans le rapport unique, sans rapport
+de synthèse parallèle.
 
 ## 1er novembre 2026 — scène pilote 6V1A0133
 
@@ -5958,3 +5965,128 @@ reste une erreur, sans relance sur score. Les données et résultats défavorabl
 restent conservés. Aucun nouvel ajustement du modèle n'est décidé avant ce
 bilan de répétabilité. Les limites mémoire et quatre threads sont inchangés.
 Preuve : [tirages et prétests figés](../raw/neural-repeatability-preflight-v001-20261105T120647Z.json).
+
+### Revue de Claude et recentrage produit — 5 novembre 2026, 12:27 UTC
+
+Source fournie par l'utilisateur : `REVUE-UNET-CLAUDE-2026-11-05.md`, revue
+du banc `44abb00`, empreinte SHA-256
+`592588225c59cf5df76ec114ff295feb2109301e49b02028c6218e91d3af5853`.
+La revue est documentaire ; elle n'est pas une nouvelle mesure. La réponse
+de coordination est ajoutée au journal partagé `PLAN-SEPARATION-LIBRAW.md`.
+
+**Accord sur le diagnostic principal.** Les dernières campagnes ont trop
+optimisé un jeu procédural de développement, avec trop peu de retour sur
+le bénéfice photographique du candidat actuel. La rigueur des preuves
+ne valide pas à elle seule cette orientation. Le seuil de transfert 0,95
+n'est ni un seuil perceptuel ni une limite physique démontrée. Les signes
+uniformisés ne représentent pas un a priori mesuré sur les photos naturelles.
+L'échec de leur essai ne justifie pas une nouvelle succession de quotas.
+
+**Deux précisions factuelles.** Des pilotes sur de vraies photos ont été
+entraînés avant le correcteur CFA : le pilote du 1er novembre porte sur
+342 découpes d'apprentissage et 186 de contrôle, avec une dégradation de
+4,19 % de la MSE du contrôle ([preuve](../raw/neural-reserved-photo-pilot-v001-20261101T220513Z.json)).
+Des pilotes enrichis et l'ablation de contexte ont ensuite mesuré des gains
+MSE mais des défauts de détails/couleur, sans qualification produit
+([contexte réel](../raw/neural-context-ablation-v001-20261102T101919Z.json)).
+Enfin, 54 planches exploratoires en canal vert ont été générées le 3 novembre
+sur 27 ROI réelles ([preuve](../raw/neural-camera-visual-v001-20261103T170454Z.json)).
+Ces éléments ne valident pas le correcteur CFA courant. La comparaison
+photographique actuelle, en couleur et contre le classique, manque toujours,
+comme le témoin NAFNet/DRUNet. La conclusion centrale de la revue reste valable.
+
+**Choix immédiat.** Terminer uniquement la réplication scellée, sans la
+prolonger ni sélectionner le meilleur tirage. Suspendre ensuite les nouveaux
+ajustements de pertes, statistiques, quotas ou architecture procédurale
+avant une comparaison photographique. Figer comme candidat exploratoire
+le **premier bras naturel de répétabilité**, graines 71 et 73 toutes deux,
+par son rôle déclaré avant ses résultats photo, pas selon son score fin.
+Ses poids définitifs seront identifiés avant les inférences photographiques.
+
+#### Comparatif photographique à préparer avant un nouvel entraînement
+
+Sur trois scènes de développement déjà disponibles, choisir avant rendu
+les ROI d'aplat, détail fin, ombre et bord contrasté. Conserver les deux
+graines et une présentation partagée sans normalisation indépendante.
+Comparer neutre RCD/médiane, classique IPR courant et correction CFA suivie
+du **même RCD/médiane** ; présenter le reconstructeur appris séparément
+pour distinguer ses effets. Ne pas mélanger profil, géométrie, exposition,
+balance ou force avec un effet attribué au débruiteur. Déclarer les sigma
+fournis et leurs limites, sans inventer une calibration ISO.
+
+Ce comparatif peut être exploratoire sans référence propre et sans ouvrir
+une réserve. Les résidus ne seront pas appelés erreur à la vérité. Une
+demi-pile RGB peut servir à une mesure référencée seulement après audit
+des images membres disjointes, alignements, masques, exposition et bruit
+commun. Le rééchantillonnage après dématriçage interdit de l'utiliser comme
+vérité CFA directe. Aucun nouveau moteur d'empilement CFA n'est demandé
+avant contrôle des mouvements des séries disponibles.
+
+Le `dev` local lu à `8b776bc` possède l'empilement. Ses fichiers RCD ne
+diffèrent pas de ceux du banc courant, mais `CameraDenoise.cpp` et
+`DetailProcessing.cpp` ont évolué : le témoin classique doit provenir du
+build `dev` qualifié, avec SHA et paramètres, pas d'une ancienne copie.
+Une interface de banc et les unités des demi-piles sont demandées à Claude
+dans le journal ; aucun travail moteur d'un autre agent n'est modifié.
+
+#### Mettre les seuils synthétiques en perspective
+
+Conserver les critères gelés et ajouter des témoins, sans les abaisser :
+classique IPR et référence linéaire de Wiener définie avec domaine, support,
+puissances, conventions spectrales et hypothèses explicités avant calcul.
+Un oracle utilisant la puissance propre d'un signal n'est pas un algorithme
+déployable. Wiener n'est pas une borne universelle de toute reconstruction
+non linéaire ; un SNR par pixel ne suffit pas à prouver qu'un transfert
+cohérent de 0,95 est impossible sur un grand support. L'étalon doit aider
+à interpréter les échecs, pas les faire disparaître.
+
+Mesurer les corrélations/signes et le spectre sur des données réelles
+admissibles avant d'en faire un a priori. Séparer plan CFA, RGB caméra
+après RCD et image rendue : interpolation et bruit changent leurs
+statistiques. Les références moyennées gardent du bruit commun ; les
+faibles contrastes dominés par le bruit ne sont pas des signes de texture
+fiables. Une loi naturelle de fréquences ne sera pas supposée mesurée.
+
+#### Courbe d'apprentissage et CUDA
+
+Le GPU observé est une RTX 3060, 12 288 Mio, pilote 610.88. L'utilisateur
+confie l'installation CUDA à Claude ; un environnement distinct de
+`.venv-neural` CPU est demandé dans le journal. Ne pas modifier le runtime
+de la campagne engagée. Attendre chemin Python, versions et petit test
+d'allocation/forward/backward, puis mesurer débit et pics mémoire avec
+synchronisation avant de fixer une campagne longue.
+
+Le nombre de pas de l'apprentissage courant est trop court pour conclure
+à une limite de capacité du réseau. Cela ne démontre pas pour autant que
+100 000 pas sur cinq graines seront suffisants ou réalisables en une nuit.
+Figer ensuite un candidat, durée et checkpoints, données et partition,
+cinq graines préannoncées et métriques de courbe. Distinguer départ froid
+du correcteur sur reconstructeur préentraîné et départ froid du réseau
+entier. Comparer une ascendance commune ne vaut pas cinq entraînements
+indépendants. Ne pas choisir le checkpoint final d'après la scène de test.
+
+Les budgets d'entraînement et d'inférence seront séparés et mesurés,
+sans renoncer à la limite globale de RAM demandée. L'évaluation reste
+reproductible dans le runtime CPU de référence ; GPU et CPU n'offrent pas
+une identité bit à bit présumée. TF32, précision et déterminisme doivent
+être déclarés. Aucun apprentissage GPU n'est lancé à ce stade.
+
+#### Données et décisions d'arrêt
+
+Les dossiers réels `tests/image/colorimétrie/protocole` contiennent déjà
+`blacks` (77 fichiers présents, sans présumer que chacun est une prise
+recevable), ISO 100/1600/3200/6400/16000/51200, ainsi que les rafales et
+la validation neuronale. Auditer leurs métadonnées et la chaîne actuelle
+signée/noir avant de demander des acquisitions ; ne pas assimiler les
+anciennes études à une calibration actuelle. Le bruit de ligne/colonne,
+fixe, pixels chauds et saturations restent à caractériser par boîtier.
+
+Arrêts décidés pour cette piste : pas de troisième campagne locale de
+réglage synthétique avant le comparatif réel ; pas d'ouverture de réserve
+pour justifier une adaptation au développement ; si le comparatif est
+impossible faute de contrat ou données admissibles, corriger ce manque
+plutôt que reprendre les micro-variantes. Après une courbe longue figée et
+un modèle de bruit caractérisé, absence de gain visible face au classique
+sur les planches : arrêter cette configuration et décider une architecture
+ou taille différente. La revue visuelle revient à l'utilisateur ; aucun
+jugement humain ni succès n'est supposé en son absence.

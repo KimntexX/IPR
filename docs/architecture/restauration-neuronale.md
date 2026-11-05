@@ -1101,3 +1101,26 @@ donné 12 et 16 échecs ; la suite mesure la répétabilité sur deux autres
 tirages à paramètres fixes. Le périmètre `known_only` du plan interdit
 l'ouverture de nouvelles cohortes réservées, même après réussite des
 contrôles connus. Aucun modèle n'est sélectionné d'après le meilleur tirage.
+
+### Recentrage produit après revue — 5 novembre 2026
+
+Les contrôles synthétiques restent un banc de développement ; ils ne sont
+plus une condition préalable pour produire une planche photographique
+exploratoire non qualifiante. La réplication engagée se termine, puis les
+nouveaux réglages procéduraux sont suspendus avant comparaison sur trois
+scènes réelles. Le premier bras naturel de réplication, les deux graines,
+est fixé par rôle avant notation photo, sans sélectionner le meilleur score.
+
+Comparer le même RCD/médiane en neutre, avec classique IPR courant et après
+le correcteur CFA ; montrer séparément la reconstruction apprise. Une
+demi-pile RGB rééchantillonnée n'est pas une vérité CFA. Les seuils gelés
+reçoivent des comparateurs, pas des assouplissements. Une courbe longue
+GPU devra avoir un budget mesuré, données/points de contrôle/graines figés,
+et distinguer froid complet, correcteur froid et continuation. Le CPU et
+le GPU ont des contrats numériques distincts.
+
+Claude prépare CUDA dans un environnement séparé. Les archives CPU restent
+reproductibles et la campagne active n'est pas modifiée. Avant toute demande
+de nouvelles prises, requalifier les noirs/aplats/rafales existants avec la
+chaîne signée actuelle. Le rapport unique contient le point de décision
+en tête, les réponses factuelles à la revue et les critères d'arrêt.
