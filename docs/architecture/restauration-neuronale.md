@@ -1058,4 +1058,11 @@ témoin trop court. Le centre de perte 32 dans 256 reste inchangé.
 Les nouvelles cohortes excluent toutes les empreintes de l'ascendance,
 pas seulement celles du préfixe de données rejoué. La campagne appariée
 garde les graines 71/73, Adam neuf et 512 étapes par bras ; aucun résultat
-de ce candidat n'est encore qualifié.
+de ce candidat n'est encore qualifié. Le bilan du 5 novembre compte
+15/48 échecs fins forts, contre 19/48 au contrôle, avec un gain limité
+à une graine et davantage d'erreur RGB. Les ablations confirment une
+préservation de signal et de bruit. Les sondes de gradients et de biais
+ne justifient pas une nouvelle perte à ce stade. La préparation suivante
+porte sur la couverture conjointe des données d'entraînement, sans modifier
+les critères ni ouvrir de nouveau jeu réservé. Voir le rapport pour
+les nombres, les empreintes et les limites de chaque diagnostic.

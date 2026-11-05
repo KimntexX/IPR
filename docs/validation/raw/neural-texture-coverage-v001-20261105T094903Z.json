@@ -1,0 +1,3118 @@
+{
+  "schema_version": 1,
+  "campaign_id": "neural-texture-coverage-v001-20261105T094903Z",
+  "measured_at_utc": "2026-11-05T09:49:03.260033+00:00",
+  "status": "completed_known_training_coverage_audit_not_qualification",
+  "source_sha256": "c325a96ad38afe6f0a009b50151bdf1384bb7ce767763a3a119433fbae129a27",
+  "script_sha256": "86b02ff5fa3f8295f4e4b2a9a7d79798819385e59bbd42c591e6474c8ac04e40",
+  "frequency_bin_edges": [
+    2.0,
+    6.0,
+    12.0,
+    20.0,
+    29.0
+  ],
+  "amplitude_bin_edges": [
+    0.003,
+    0.01,
+    0.04,
+    0.121
+  ],
+  "noise_recipe": "Exposure serial modulo3, unchanged actual training policy.",
+  "scopes": {
+    "initializer2048": {
+      "texture_exposures": 3282,
+      "positive_joint_cells": 192,
+      "missing_cells": 0,
+      "singleton_cells": 2,
+      "cells": [
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 0,
+          "exposures": 22
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 1,
+          "exposures": 18
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 2,
+          "exposures": 17
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 0,
+          "exposures": 10
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 1,
+          "exposures": 13
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 2,
+          "exposures": 19
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 0,
+          "exposures": 11
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 1,
+          "exposures": 10
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 2,
+          "exposures": 12
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 0,
+          "exposures": 11
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 1,
+          "exposures": 9
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 2,
+          "exposures": 8
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 0,
+          "exposures": 18
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 1,
+          "exposures": 17
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 2,
+          "exposures": 17
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 0,
+          "exposures": 10
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 1,
+          "exposures": 5
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 2,
+          "exposures": 8
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 0,
+          "exposures": 11
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 1,
+          "exposures": 17
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 2,
+          "exposures": 6
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 0,
+          "exposures": 4
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 1,
+          "exposures": 8
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 2,
+          "exposures": 1
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 0,
+          "exposures": 14
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 1,
+          "exposures": 22
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 2,
+          "exposures": 21
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 0,
+          "exposures": 19
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 1,
+          "exposures": 7
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 2,
+          "exposures": 14
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 0,
+          "exposures": 14
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 1,
+          "exposures": 8
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 2,
+          "exposures": 6
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 0,
+          "exposures": 3
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 1,
+          "exposures": 7
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 2,
+          "exposures": 6
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 0,
+          "exposures": 25
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 1,
+          "exposures": 19
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 2,
+          "exposures": 17
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 0,
+          "exposures": 8
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 1,
+          "exposures": 12
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 2,
+          "exposures": 8
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 0,
+          "exposures": 10
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 1,
+          "exposures": 7
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 2,
+          "exposures": 8
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 0,
+          "exposures": 3
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 1,
+          "exposures": 2
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 2,
+          "exposures": 7
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 0,
+          "exposures": 22
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 1,
+          "exposures": 27
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 2,
+          "exposures": 19
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 0,
+          "exposures": 11
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 1,
+          "exposures": 9
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 2,
+          "exposures": 5
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 0,
+          "exposures": 13
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 1,
+          "exposures": 13
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 2,
+          "exposures": 13
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 0,
+          "exposures": 7
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 1,
+          "exposures": 5
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 2,
+          "exposures": 2
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 0,
+          "exposures": 30
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 1,
+          "exposures": 18
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 2,
+          "exposures": 19
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 0,
+          "exposures": 17
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 1,
+          "exposures": 14
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 2,
+          "exposures": 7
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 0,
+          "exposures": 10
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 1,
+          "exposures": 9
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 2,
+          "exposures": 7
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 0,
+          "exposures": 6
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 1,
+          "exposures": 3
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 2,
+          "exposures": 4
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 0,
+          "exposures": 16
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 1,
+          "exposures": 22
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 2,
+          "exposures": 8
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 0,
+          "exposures": 13
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 1,
+          "exposures": 8
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 2,
+          "exposures": 10
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 0,
+          "exposures": 11
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 1,
+          "exposures": 11
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 2,
+          "exposures": 8
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 0,
+          "exposures": 7
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 1,
+          "exposures": 7
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 2,
+          "exposures": 6
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 0,
+          "exposures": 26
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 1,
+          "exposures": 25
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 2,
+          "exposures": 16
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 0,
+          "exposures": 16
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 1,
+          "exposures": 13
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 2,
+          "exposures": 16
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 0,
+          "exposures": 5
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 1,
+          "exposures": 8
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 2,
+          "exposures": 7
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 0,
+          "exposures": 6
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 1,
+          "exposures": 7
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 2,
+          "exposures": 6
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 0,
+          "exposures": 18
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 1,
+          "exposures": 21
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 2,
+          "exposures": 17
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 0,
+          "exposures": 15
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 1,
+          "exposures": 19
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 2,
+          "exposures": 12
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 0,
+          "exposures": 5
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 1,
+          "exposures": 8
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 2,
+          "exposures": 9
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 0,
+          "exposures": 8
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 1,
+          "exposures": 3
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 2,
+          "exposures": 6
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 0,
+          "exposures": 25
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 1,
+          "exposures": 22
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 2,
+          "exposures": 22
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 0,
+          "exposures": 16
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 1,
+          "exposures": 10
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 2,
+          "exposures": 12
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 0,
+          "exposures": 6
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 1,
+          "exposures": 9
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 2,
+          "exposures": 4
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 0,
+          "exposures": 3
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 1,
+          "exposures": 7
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 2,
+          "exposures": 7
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 0,
+          "exposures": 19
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 1,
+          "exposures": 22
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 2,
+          "exposures": 27
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 0,
+          "exposures": 15
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 1,
+          "exposures": 15
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 2,
+          "exposures": 13
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 0,
+          "exposures": 11
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 1,
+          "exposures": 5
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 2,
+          "exposures": 10
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 0,
+          "exposures": 5
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 1,
+          "exposures": 7
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 2,
+          "exposures": 5
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 0,
+          "exposures": 9
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 1,
+          "exposures": 13
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 2,
+          "exposures": 22
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 0,
+          "exposures": 17
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 1,
+          "exposures": 15
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 2,
+          "exposures": 5
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 0,
+          "exposures": 6
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 1,
+          "exposures": 13
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 2,
+          "exposures": 7
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 0,
+          "exposures": 7
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 1,
+          "exposures": 6
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 2,
+          "exposures": 3
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 0,
+          "exposures": 18
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 1,
+          "exposures": 28
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 2,
+          "exposures": 18
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 0,
+          "exposures": 7
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 1,
+          "exposures": 10
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 2,
+          "exposures": 8
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 0,
+          "exposures": 11
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 1,
+          "exposures": 11
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 2,
+          "exposures": 10
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 0,
+          "exposures": 1
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 1,
+          "exposures": 6
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 2,
+          "exposures": 7
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 0,
+          "exposures": 13
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 1,
+          "exposures": 17
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 2,
+          "exposures": 17
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 0,
+          "exposures": 6
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 1,
+          "exposures": 20
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 2,
+          "exposures": 11
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 0,
+          "exposures": 12
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 1,
+          "exposures": 6
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 2,
+          "exposures": 5
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 0,
+          "exposures": 3
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 1,
+          "exposures": 10
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 2,
+          "exposures": 6
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 0,
+          "exposures": 12
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 1,
+          "exposures": 16
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 2,
+          "exposures": 15
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 0,
+          "exposures": 12
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 1,
+          "exposures": 17
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 2,
+          "exposures": 7
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 0,
+          "exposures": 8
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 1,
+          "exposures": 10
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 2,
+          "exposures": 12
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 0,
+          "exposures": 13
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 1,
+          "exposures": 4
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 2,
+          "exposures": 9
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 0,
+          "exposures": 23
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 1,
+          "exposures": 15
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 2,
+          "exposures": 19
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 0,
+          "exposures": 13
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 1,
+          "exposures": 18
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 2,
+          "exposures": 9
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 0,
+          "exposures": 6
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 1,
+          "exposures": 9
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 2,
+          "exposures": 5
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 0,
+          "exposures": 2
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 1,
+          "exposures": 11
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 2,
+          "exposures": 6
+        }
+      ]
+    },
+    "continuation512": {
+      "texture_exposures": 822,
+      "positive_joint_cells": 192,
+      "missing_cells": 19,
+      "singleton_cells": 31,
+      "cells": [
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 0,
+          "exposures": 5
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 1,
+          "exposures": 4
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 2,
+          "exposures": 3
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 0,
+          "exposures": 2
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 1,
+          "exposures": 3
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 2,
+          "exposures": 6
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 0,
+          "exposures": 2
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 1,
+          "exposures": 4
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 2,
+          "exposures": 5
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 0,
+          "exposures": 3
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 1,
+          "exposures": 3
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 2,
+          "exposures": 0
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 0,
+          "exposures": 4
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 1,
+          "exposures": 5
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 2,
+          "exposures": 2
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 0,
+          "exposures": 5
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 1,
+          "exposures": 1
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 2,
+          "exposures": 2
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 0,
+          "exposures": 2
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 1,
+          "exposures": 4
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 2,
+          "exposures": 5
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 0,
+          "exposures": 0
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 1,
+          "exposures": 2
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 2,
+          "exposures": 0
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 0,
+          "exposures": 4
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 1,
+          "exposures": 6
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 2,
+          "exposures": 7
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 0,
+          "exposures": 1
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 1,
+          "exposures": 0
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 2,
+          "exposures": 5
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 0,
+          "exposures": 3
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 1,
+          "exposures": 1
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 2,
+          "exposures": 3
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 0,
+          "exposures": 2
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 1,
+          "exposures": 0
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 2,
+          "exposures": 1
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 0,
+          "exposures": 6
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 1,
+          "exposures": 3
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 2,
+          "exposures": 7
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 0,
+          "exposures": 3
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 1,
+          "exposures": 5
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 2,
+          "exposures": 0
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 0,
+          "exposures": 2
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 1,
+          "exposures": 1
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 2,
+          "exposures": 2
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 0,
+          "exposures": 0
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 1,
+          "exposures": 2
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 2,
+          "exposures": 2
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 0,
+          "exposures": 4
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 1,
+          "exposures": 8
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 2,
+          "exposures": 4
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 0,
+          "exposures": 2
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 1,
+          "exposures": 3
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 2,
+          "exposures": 1
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 0,
+          "exposures": 2
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 1,
+          "exposures": 2
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 2,
+          "exposures": 3
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 0,
+          "exposures": 2
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 1,
+          "exposures": 1
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 2,
+          "exposures": 0
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 0,
+          "exposures": 6
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 1,
+          "exposures": 7
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 2,
+          "exposures": 8
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 0,
+          "exposures": 5
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 1,
+          "exposures": 1
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 2,
+          "exposures": 2
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 0,
+          "exposures": 3
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 1,
+          "exposures": 2
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 2,
+          "exposures": 2
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 0,
+          "exposures": 3
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 1,
+          "exposures": 1
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 2,
+          "exposures": 2
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 0,
+          "exposures": 2
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 1,
+          "exposures": 8
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 2,
+          "exposures": 2
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 0,
+          "exposures": 4
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 1,
+          "exposures": 3
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 2,
+          "exposures": 3
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 0,
+          "exposures": 1
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 1,
+          "exposures": 4
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 2,
+          "exposures": 0
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 0,
+          "exposures": 3
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 1,
+          "exposures": 0
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 2,
+          "exposures": 2
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 0,
+          "exposures": 5
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 1,
+          "exposures": 8
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 2,
+          "exposures": 4
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 0,
+          "exposures": 5
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 1,
+          "exposures": 2
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 2,
+          "exposures": 6
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 0,
+          "exposures": 0
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 1,
+          "exposures": 3
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 2,
+          "exposures": 2
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 0,
+          "exposures": 2
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 1,
+          "exposures": 1
+        },
+        {
+          "family": "weak_achromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 2,
+          "exposures": 1
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 0,
+          "exposures": 6
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 1,
+          "exposures": 4
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 2,
+          "exposures": 5
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 0,
+          "exposures": 4
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 1,
+          "exposures": 3
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 2,
+          "exposures": 2
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 0,
+          "exposures": 0
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 1,
+          "exposures": 3
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 2,
+          "exposures": 2
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 0,
+          "exposures": 1
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 1,
+          "exposures": 1
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 2,
+          "exposures": 2
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 0,
+          "exposures": 7
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 1,
+          "exposures": 7
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 2,
+          "exposures": 4
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 0,
+          "exposures": 2
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 1,
+          "exposures": 3
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 2,
+          "exposures": 2
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 0,
+          "exposures": 3
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 1,
+          "exposures": 6
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 2,
+          "exposures": 0
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 0,
+          "exposures": 1
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 1,
+          "exposures": 1
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 0,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 2,
+          "exposures": 2
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 0,
+          "exposures": 3
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 1,
+          "exposures": 5
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 2,
+          "exposures": 4
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 0,
+          "exposures": 3
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 1,
+          "exposures": 3
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 2,
+          "exposures": 4
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 0,
+          "exposures": 3
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 1,
+          "exposures": 1
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 2,
+          "exposures": 2
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 0,
+          "exposures": 1
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 1,
+          "exposures": 2
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 2,
+          "exposures": 0
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 0,
+          "exposures": 2
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 1,
+          "exposures": 3
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 2,
+          "exposures": 7
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 0,
+          "exposures": 7
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 1,
+          "exposures": 4
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 2,
+          "exposures": 1
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 0,
+          "exposures": 2
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 1,
+          "exposures": 3
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 2,
+          "exposures": 2
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 0,
+          "exposures": 1
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 1,
+          "exposures": 0
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 1,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 2,
+          "exposures": 2
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 0,
+          "exposures": 8
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 1,
+          "exposures": 7
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 2,
+          "exposures": 5
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 0,
+          "exposures": 1
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 1,
+          "exposures": 3
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 2,
+          "exposures": 1
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 0,
+          "exposures": 1
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 1,
+          "exposures": 2
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 2,
+          "exposures": 4
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 0,
+          "exposures": 0
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 1,
+          "exposures": 5
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 2,
+          "exposures": 2
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 0,
+          "exposures": 4
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 1,
+          "exposures": 6
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 2,
+          "exposures": 2
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 0,
+          "exposures": 0
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 1,
+          "exposures": 3
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 2,
+          "exposures": 3
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 0,
+          "exposures": 1
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 1,
+          "exposures": 2
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 2,
+          "exposures": 1
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 0,
+          "exposures": 0
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 1,
+          "exposures": 1
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 2,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 2,
+          "exposures": 3
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 0,
+          "exposures": 2
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 1,
+          "exposures": 4
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 0,
+          "amplitude_bin": 2,
+          "exposures": 4
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 0,
+          "exposures": 6
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 1,
+          "exposures": 3
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 1,
+          "amplitude_bin": 2,
+          "exposures": 3
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 0,
+          "exposures": 1
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 1,
+          "exposures": 2
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 2,
+          "amplitude_bin": 2,
+          "exposures": 1
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 0,
+          "exposures": 2
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 1,
+          "exposures": 1
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 1,
+          "frequency_bin": 3,
+          "amplitude_bin": 2,
+          "exposures": 2
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 0,
+          "exposures": 7
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 1,
+          "exposures": 7
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 0,
+          "amplitude_bin": 2,
+          "exposures": 4
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 0,
+          "exposures": 4
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 1,
+          "exposures": 3
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 1,
+          "amplitude_bin": 2,
+          "exposures": 2
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 0,
+          "exposures": 1
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 1,
+          "exposures": 2
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 2,
+          "amplitude_bin": 2,
+          "exposures": 3
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 0,
+          "exposures": 1
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 1,
+          "exposures": 3
+        },
+        {
+          "family": "chromatic_wave",
+          "phase": 3,
+          "noise_index": 2,
+          "frequency_bin": 3,
+          "amplitude_bin": 2,
+          "exposures": 0
+        }
+      ]
+    }
+  },
+  "limits": [
+    "Exploratory post-result bins; no statistical significance or causal proof.",
+    "Model seeds do not duplicate exposure coverage; replay does not add distinct contents.",
+    "Coarse cells ignore direction, DC, second wave and channel-specific amplitude; nonempty does not mean sufficient.",
+    "No new training, noise draw or reserved image generated."
+  ]
+}

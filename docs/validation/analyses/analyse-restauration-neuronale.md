@@ -1,17 +1,15 @@
 # Restauration neuronale — qualification du corpus
 
-**État au 4 novembre 2026, soir :** les gradients limités stabilisent les
-deux entraînements et les deux corpus classiques passent. Une supervision
-de structure réduit les échecs fins de 24 à 19/48 groupes forts, sans les
-résoudre. L'essai à deux projections échoue sur la stabilité à deux graines :
-la graine 73 reste presque à l'identité. La supervision simple reste la
-référence expérimentale. Un essai de continuation appariée a été mesuré :
-512 étapes de contrôle contre 512 étapes d'introduction progressive. Le progressif
-termine à 17/48 échecs contre 19/48 pour le contrôle, avec un pire transfert
-encore insuffisant. Une sonde de corrélation CFA apporte une piste d'entrée
-statistique, sans nouvel entraînement à ce stade. Aucune qualité
-photographique validée, aucun moteur de production modifié ni nouveau jeu
-réservé ouvert.
+**État au 5 novembre 2026 :** le candidat à entrées de corrélation termine
+à 15/48 échecs fins forts contre 19/48 au contrôle. Le gain concerne une
+seule graine et s'accompagne d'un peu plus d'erreur RGB. Il reste expérimental.
+Les diagnostics de branche, de gradients et de variance sont terminés.
+La piste prioritaire devient la couverture des expositions d'entraînement :
+19 cellules conjointes sur 192 sont absentes du stage de continuation.
+Ce constat exploratoire n'en prouve pas la responsabilité causale.
+Aucune qualité photographique validée, aucun moteur de production modifié
+ni nouveau jeu réservé ouvert. Les résultats et décisions actuels sont
+consignés en fin de rapport.
 
 ## 1er novembre 2026 — scène pilote 6V1A0133
 
@@ -5519,3 +5517,154 @@ puis rejouer les textures fines en premier. Un échec arrête l'ouverture
 des cohortes réservées. La séparation observée entre motifs procéduraux
 et placebos ne constitue ni une garantie de restauration ni une validation
 photographique. Aucun changement de production n'est engagé.
+
+### Résultat des entrées de corrélation — 5 novembre 2026
+
+La campagne appariée s'est terminée à 00 h 10, heure de Paris. Les quatre
+apprentissages atteignent leurs 512 étapes et passent le développement,
+avec des pics résidents compris entre 395 et 401 Mio. Les jeux réservés
+restent fermés après les échecs du rejeu fin.
+
+| Graine et bruit | Échecs forts contrôle → candidat | Pire transfert contrôle → candidat | Erreur RGB candidat / contrôle |
+| --- | ---: | ---: | ---: |
+| 71, niveau 1 | 1 → 1 | 0,9684 → 0,9694 | 1,0048 |
+| 71, niveau 2 | 9 → 5 | 0,7236 → 0,7599 | 1,0034 |
+| 73, niveau 1 | 0 → 0 | 0,9676 → 0,9692 | 1,0005 |
+| 73, niveau 2 | 9 → 9 | 0,5677 → 0,5960 | 1,0084 |
+
+Le total passe de 19 à 15 groupes forts en échec sur 48. Les quatre
+groupes gagnés concernent seulement la graine 71 à bruit fort. Les deux
+pires transferts à bruit fort progressent, mais le candidat n'est pas
+qualifié. L'erreur CFA des motifs forts augmente aussi : les rapports
+erreur / observation bruitée passent de 0,7933 à 0,8062 pour 71 et de
+0,6691 à 0,6752 pour 73. Le compromis préservation/lissage n'est donc pas
+résolu par ces entrées supplémentaires.
+
+La décomposition descriptive indique une réduction du biais cohérent
+des motifs forts à bruit élevé, sans réduction générale de l'erreur RGB.
+Elle utilise trois réalisations par série ; elle ne mesure pas toute la
+variance spatiale du bruit et ne justifie pas un intervalle de confiance
+indépendant. Preuves : [contrôle](../raw/neural-fine-regression-v001-20261104T225710Z.json),
+[candidat](../raw/neural-fine-regression-v001-20261104T230449Z.json),
+[campagne et comparaison](../raw/neural-paired-continuation-v001-20261104T231034Z.json),
+[diagnostic du front CFA](../raw/neural-fine-trace-v001-20261104T230953Z.json).
+
+La mise en veille demandée a eu lieu après sauvegarde de toute la chaîne.
+À la reprise, aucun entraînement supplémentaire n'est ajouté d'emblée.
+La prochaine sonde neutralise seulement la sortie de la projection
+statistique dans les mêmes poids finaux. Le contrôle figé à zéro doit
+rester identique au bit près ; le candidat complet doit retrouver les
+mesures fines archivées. Ce contre-factuel distingue l'action directe
+de la branche de l'adaptation des autres poids. Il reste descriptif,
+sur une phase et une réalisation connues, sans nouveau seuil ni cohorte.
+
+### Diagnostic causal de branche — 5 novembre 2026, 09:33 UTC
+
+La sonde mesure 576 observations connues : deux bras, deux graines, toutes
+les fréquences, amplitudes et couleurs, deux bruits positifs, phase 0 et
+réalisation 0. Le contrôle est exactement identique quand on neutralise
+sa projection nulle. Le candidat complet retrouve les mesures archivées.
+Les crochets sont retirés même en cas d'erreur ; aucun poids n'est modifié.
+
+Sur les motifs forts au bruit élevé, activer la branche fait passer le
+gain moyen rouge/bleu d'environ 0,755 à 0,803 pour 71, et de 0,738 à 0,769
+pour 73. Mais le rapport erreur CFA / observation bruitée monte aussi de
+0,773 à 0,791 et de 0,648 à 0,662. Son action directe préserve donc davantage
+de signal et davantage de bruit. Sur les très faibles motifs au bruit
+élevé, son effet est presque nul. Ces moyennes concernent seulement la
+sous-sélection déclarée ; elles ne remplacent pas les mesures fines complètes.
+
+Calcul terminé en 77,5 secondes, pic résident 295,4 Mio. Preuve :
+[ablation à poids fixes](../raw/neural-statistics-ablation-v001-20261105T093314Z.json).
+Ce contre-factuel ne remplace pas un contrôle entraîné séparément.
+
+### Gradients des textures connues — 5 novembre 2026, 09:38 UTC
+
+La sonde choisit les deux premiers événements forts de chaque famille
+dans les bandes de fréquence [2,6[, [6,12[, [12,20[ et [20,29[.
+Elle conserve les deux bruits, graines et bras : 128 mesures sans mise
+à jour. Les trois pertes et le centre de 32 pixels sont ceux de
+l'apprentissage ; la sonde isole aussi les gradients de la projection.
+
+Au bruit fort, les gradients RGB et structure sont opposés dans seulement
+2/16 cas par graine et par bras. Pour le candidat, leur cosinus médian
+global vaut environ 0,616/0,609 ; dans la projection, 0,661/0,583.
+Au bruit faible, le conflit est plus fréquent dans la projection (9/16
+par graine). Cette observation ne soutient pas un conflit général comme
+explication principale du défaut à bruit fort. **Ne pas lancer une chirurgie
+des gradients sur cette seule hypothèse.** Les normes ne sont ni une mesure
+de progrès photographique ni une preuve d'optimum.
+
+La première exécution s'est arrêtée avant calcul : le diagnostic utilisait
+la liste des outils d'entraînement au lieu du contrat d'inférence protégée,
+qui contient aussi le fichier de protection. Le calcul courant n'avait pas
+changé. Sa preuve incomplète est conservée ; l'exécution corrigée vérifie
+le contrat protégé avant toute mesure. Preuves :
+[arrêt technique](../raw/neural-texture-gradients-v001-20261105T093806Z.json),
+[diagnostic complet](../raw/neural-texture-gradients-v001-20261105T093825Z.json).
+Durée 25,7 secondes, pic résident 367,3 Mio.
+
+### Faisabilité d'une pénalité de biais appariée — 5 novembre 2026, 09:44 UTC
+
+La perte projetée courante pénalise une erreur dont l'espérance quadratique
+contient biais au carré et variance. Pour distinguer ces deux termes, une
+sonde utilise huit observations indépendantes d'un même contenu, avec
+normalisation fixée par la variance du signal propre simulé. Ce signal
+propre sert seulement au diagnostic et à une éventuelle perte d'entraînement.
+Il n'entre pas dans le réseau à l'inférence.
+
+Si `q1` et `q2` sont deux projections indépendantes conditionnellement au
+contenu, `E[q1*q2] = E[q]^2`. Le produit croisé est donc une piste de
+pénalité du biais cohérent, distincte de la moyenne des carrés. Il peut
+être négatif sur un lot fini ; ne pas le tronquer. Le test réutilisant
+le même bruit retrouve au contraire la variance, ce qui contrôle
+l'exigence d'indépendance. La normalisation dépendant de l'observation
+ne permettrait pas de revendiquer directement cette même équation.
+
+Sur les 128 séries conditionnelles connues du diagnostic, la part de
+variance du candidat représente environ 51,8 % et 45,5 % au bruit faible,
+mais seulement 9,3 % et 3,4 % au bruit fort (71/73). Le biais domine donc
+encore ce dernier régime. Retirer la variance de cette pénalité ne constitue
+pas une correction démontrée de sa principale limite ; **pas d'entraînement
+supplémentaire fondé seulement sur cette sonde**. Les estimations de biais
+au carré négatives restent conservées. Les 28 produits issus de huit
+tirages ne sont pas 28 observations indépendantes.
+
+Le produit croisé ci-dessus est une proposition du banc, pas une formule
+attribuée à Noise2Noise. Ce dernier fournit un contexte sur l'apprentissage
+avec observations bruitées et ses hypothèses ; il ne valide ni cette perte
+ni nos résultats : [article original, ICML 2018](https://proceedings.mlr.press/v80/lehtinen18a.html).
+Preuve : [huit réalisations par série](../raw/neural-paired-bias-study-v001-20261105T094456Z.json).
+Durée 22,6 secondes, pic résident 266,7 Mio. Aucun entraînement réalisé.
+
+### Couverture conjointe d'apprentissage — 5 novembre 2026, 09:49 UTC
+
+Un audit des seules métadonnées croise famille, phase Bayer, niveau de
+bruit positif, fréquence (quatre bandes précédentes) et amplitude
+([0,003;0,01[, [0,01;0,04[, [0,04;0,121[). Les 192 cellules ont toutes
+au moins une exposition dans les 3 282 textures du préentraînement 2 048.
+Deux n'en ont qu'une. Le stage rejoué de 512 pas ne contient que 822
+textures : **19 cellules sont vides et 31 n'ont qu'une exposition**.
+Répéter le stage ou changer la graine du réseau n'ajoute pas de contenu.
+
+Les fortes fréquences et amplitudes au bruit fort ne comptent que cinq
+expositions achromatiques et sept chromatiques dans ce stage. La couverture
+globale des phases ne garantit donc pas celle de leurs combinaisons avec
+le signal et le bruit. Cette observation ne prouve pas que ces cellules
+vides causent les échecs ; les bandes sont exploratoires après résultat.
+Elles ignorent aussi DC, orientation et amplitude effective par canal.
+Preuve : [cellules et provenance](../raw/neural-texture-coverage-v001-20261105T094903Z.json).
+
+**Direction retenue :** préparer une continuation à couverture stratifiée,
+avant d'augmenter encore la profondeur ou de multiplier les pertes. Comparer
+un contrôle à tirages frais et un bras stratifié, avec mêmes parents,
+budget, graines, pertes et marges ; conserver des distributions déclarées
+et tracer tout changement de fréquence d'exposition. Générer uniquement
+des textures procédurales d'entraînement distinctes des références fines,
+sans copier leurs angles, phases ou fréquences exactes. Figer les deux
+plans et prouver la couverture avant d'entraîner. Rejouer les critères
+inchangés et fermer les jeux réservés dès un échec connu.
+
+La préparation de ce prochain apprentissage reste à réaliser ; aucun
+nouvel apprentissage coûteux n'a été lancé au cours de ces diagnostics.
+Le moteur actuel et les références photographiques restent inchangés.

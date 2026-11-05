@@ -1,0 +1,525 @@
+{
+  "schema_version": 1,
+  "started_at_utc": "2026-11-04T22:34:21.352368+00:00",
+  "script_sha256": "886aa3b27175668d4472e8b5ee150cf752736b8b758648a2a45fbc5da21dff8c",
+  "status": "completed_paired_continuation",
+  "stages": [
+    {
+      "name": "train_control",
+      "started_at_utc": "2026-11-04T22:34:21.355060+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\run_noisy_campaign.py",
+        "--plan",
+        "build-patch_neural_restoration\\paired-correlation-plan-v002\\control\\plan.json",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-control-campaign-v001",
+        "--until",
+        "2026-11-05T00:34:21.353250+00:00"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-04T22:44:45.693053+00:00"
+    },
+    {
+      "name": "train_correlation",
+      "started_at_utc": "2026-11-04T22:44:45.702881+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\run_noisy_campaign.py",
+        "--plan",
+        "build-patch_neural_restoration\\paired-correlation-plan-v002\\correlation\\plan.json",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-correlation-campaign-v001",
+        "--until",
+        "2026-11-05T00:34:21.353250+00:00"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-04T22:54:38.397509+00:00"
+    },
+    {
+      "name": "qualify_control",
+      "started_at_utc": "2026-11-04T22:54:38.409759+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\run_stability_qualification.py",
+        "--campaign",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-control-campaign-v001",
+        "--data-plan",
+        "build-patch_neural_restoration\\paired-correlation-plan-v002\\control\\plan.json",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-control-qualification-v001",
+        "--prefix",
+        "input-cues-control"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-04T23:02:15.615157+00:00"
+    },
+    {
+      "name": "qualify_correlation",
+      "started_at_utc": "2026-11-04T23:02:15.625162+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\run_stability_qualification.py",
+        "--campaign",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-correlation-campaign-v001",
+        "--data-plan",
+        "build-patch_neural_restoration\\paired-correlation-plan-v002\\correlation\\plan.json",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-correlation-qualification-v001",
+        "--prefix",
+        "input-cues-correlation"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-04T23:09:51.440492+00:00"
+    },
+    {
+      "name": "candidate_followup",
+      "started_at_utc": "2026-11-04T23:09:51.453230+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\run_neural_followup.py",
+        "--qualification",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-correlation-qualification-v001\\progress.json",
+        "--data-plan",
+        "build-patch_neural_restoration\\paired-correlation-plan-v002\\correlation\\plan.json",
+        "--campaign",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-correlation-campaign-v001",
+        "--prefix",
+        "input-cues-correlation",
+        "--previous-fine",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-control-fine-v001\\result.json",
+        "--previous-campaign",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-control-campaign-v001",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-correlation-followup-v001"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-04T23:10:34.733379+00:00"
+    }
+  ],
+  "prefix": "input-cues",
+  "candidate": "correlation",
+  "policy": "Both arms and seeds predeclared, both trainings before evaluation.512additional steps, same data, no selection. Fine-first qualification; control failure remains visible.",
+  "plans_sha256": {
+    "control": "83e2009a64e90483e04631969e2a294294932cee3da72bd72567af2b8aaa1970",
+    "correlation": "b3922912061fcaa1586ef9e068ef772335083fa60edce732e0241863d8c67c9c"
+  },
+  "qualification": {
+    "control": {
+      "status": "completed_known_regressions_failed_reserved_unopened",
+      "regressions": [
+        {
+          "name": "fine",
+          "passed": false,
+          "result": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-control-fine-v001\\result.json",
+          "sha256": "060b15e659fb3b6ca5b90a9ad519676edc6b973d76a5b12a6cc3ed43272f2c2c"
+        }
+      ]
+    },
+    "correlation": {
+      "status": "completed_known_regressions_failed_reserved_unopened",
+      "regressions": [
+        {
+          "name": "fine",
+          "passed": false,
+          "result": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-correlation-fine-v001\\result.json",
+          "sha256": "ce6e74884d01af1e61e35dca3b2f77ad1d15fa4a3a0b0936cc69bc8e3158079c"
+        }
+      ]
+    }
+  },
+  "candidate_followup_status": "completed_known_failure_diagnosis_reserved_unopened",
+  "paired_fine": {
+    "previous_passed": false,
+    "current_passed": false,
+    "observation_count": 4032,
+    "comparisons": [
+      {
+        "seed": 71,
+        "noise_index": 1,
+        "current_over_previous_rgb_mse": 1.0047788767430765,
+        "previous_strong_failed": 1,
+        "current_strong_failed": 1,
+        "previous_minimum_transfer": 0.9683956970031374,
+        "current_minimum_transfer": 0.9693525759687239,
+        "previous_strong_rgb_over_parent": 0.9432632126388475,
+        "current_strong_rgb_over_parent": 0.9475391639277295,
+        "previous_strong_sensor_over_noisy": 0.9082132007576712,
+        "current_strong_sensor_over_noisy": 0.9159174029112288
+      },
+      {
+        "seed": 71,
+        "noise_index": 2,
+        "current_over_previous_rgb_mse": 1.0034431945452367,
+        "previous_strong_failed": 9,
+        "current_strong_failed": 5,
+        "previous_minimum_transfer": 0.7235837010375687,
+        "current_minimum_transfer": 0.7598628015080489,
+        "previous_strong_rgb_over_parent": 0.8027880881621742,
+        "current_strong_rgb_over_parent": 0.8089480937028802,
+        "previous_strong_sensor_over_noisy": 0.7932891590306376,
+        "current_strong_sensor_over_noisy": 0.8062419515126794
+      },
+      {
+        "seed": 73,
+        "noise_index": 1,
+        "current_over_previous_rgb_mse": 1.0004983215164978,
+        "previous_strong_failed": 0,
+        "current_strong_failed": 0,
+        "previous_minimum_transfer": 0.9675825009136482,
+        "current_minimum_transfer": 0.9692403071198932,
+        "previous_strong_rgb_over_parent": 0.9391298296228329,
+        "current_strong_rgb_over_parent": 0.939735144486188,
+        "previous_strong_sensor_over_noisy": 0.8525249174462554,
+        "current_strong_sensor_over_noisy": 0.8540355696505126
+      },
+      {
+        "seed": 73,
+        "noise_index": 2,
+        "current_over_previous_rgb_mse": 1.0084358793079808,
+        "previous_strong_failed": 9,
+        "current_strong_failed": 9,
+        "previous_minimum_transfer": 0.5677379887270833,
+        "current_minimum_transfer": 0.5960288663913819,
+        "previous_strong_rgb_over_parent": 0.7076688088163309,
+        "current_strong_rgb_over_parent": 0.7166121168391014,
+        "previous_strong_sensor_over_noisy": 0.6690951817165549,
+        "current_strong_sensor_over_noisy": 0.6751624120205642
+      }
+    ],
+    "coherent_error_decomposition": {
+      "previous": [
+        {
+          "seed": 71,
+          "noise_index": 1,
+          "amplitude": 0.008,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 0.000927173702108069,
+          "bias_squared_estimate": 0.06984604316719767,
+          "mean_squared_error": 0.07077321686930574
+        },
+        {
+          "seed": 71,
+          "noise_index": 1,
+          "amplitude": 0.008,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 0.002253592124119367,
+          "bias_squared_estimate": 0.20385638303675552,
+          "mean_squared_error": 0.2061099751608749
+        },
+        {
+          "seed": 71,
+          "noise_index": 1,
+          "amplitude": 0.06,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 3.080765805155268e-05,
+          "bias_squared_estimate": 0.00866288149321313,
+          "mean_squared_error": 0.008693689151264684
+        },
+        {
+          "seed": 71,
+          "noise_index": 1,
+          "amplitude": 0.06,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 7.722902077081118e-05,
+          "bias_squared_estimate": 0.00837274004699427,
+          "mean_squared_error": 0.00844996906776508
+        },
+        {
+          "seed": 71,
+          "noise_index": 2,
+          "amplitude": 0.008,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 0.006071920645686702,
+          "bias_squared_estimate": 0.08512138793800783,
+          "mean_squared_error": 0.09119330858369454
+        },
+        {
+          "seed": 71,
+          "noise_index": 2,
+          "amplitude": 0.008,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 0.01221024403983616,
+          "bias_squared_estimate": 0.2782282657950337,
+          "mean_squared_error": 0.29043850983486985
+        },
+        {
+          "seed": 71,
+          "noise_index": 2,
+          "amplitude": 0.06,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 0.00023295550621589567,
+          "bias_squared_estimate": 0.01764084449211519,
+          "mean_squared_error": 0.017873799998331087
+        },
+        {
+          "seed": 71,
+          "noise_index": 2,
+          "amplitude": 0.06,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 0.00048538086471040234,
+          "bias_squared_estimate": 0.02169699522940647,
+          "mean_squared_error": 0.02218237609411687
+        },
+        {
+          "seed": 73,
+          "noise_index": 1,
+          "amplitude": 0.008,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 0.0009038379612635378,
+          "bias_squared_estimate": 0.07857705399325375,
+          "mean_squared_error": 0.07948089195451728
+        },
+        {
+          "seed": 73,
+          "noise_index": 1,
+          "amplitude": 0.008,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 0.0021084371075712413,
+          "bias_squared_estimate": 0.21112076629206317,
+          "mean_squared_error": 0.21322920339963441
+        },
+        {
+          "seed": 73,
+          "noise_index": 1,
+          "amplitude": 0.06,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 3.173899200811747e-05,
+          "bias_squared_estimate": 0.013905323049630368,
+          "mean_squared_error": 0.013937062041638484
+        },
+        {
+          "seed": 73,
+          "noise_index": 1,
+          "amplitude": 0.06,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 7.861112320486577e-05,
+          "bias_squared_estimate": 0.01270949879567566,
+          "mean_squared_error": 0.012788109918880526
+        },
+        {
+          "seed": 73,
+          "noise_index": 2,
+          "amplitude": 0.008,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 0.006515414259584188,
+          "bias_squared_estimate": 0.08942366388621284,
+          "mean_squared_error": 0.09593907814579702
+        },
+        {
+          "seed": 73,
+          "noise_index": 2,
+          "amplitude": 0.008,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 0.013996646151049015,
+          "bias_squared_estimate": 0.24886924408861746,
+          "mean_squared_error": 0.26286589023966644
+        },
+        {
+          "seed": 73,
+          "noise_index": 2,
+          "amplitude": 0.06,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 0.0002504648645558102,
+          "bias_squared_estimate": 0.022680292905739557,
+          "mean_squared_error": 0.022930757770295365
+        },
+        {
+          "seed": 73,
+          "noise_index": 2,
+          "amplitude": 0.06,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 0.0005029324244603055,
+          "bias_squared_estimate": 0.04404345260890558,
+          "mean_squared_error": 0.04454638503336589
+        }
+      ],
+      "current": [
+        {
+          "seed": 71,
+          "noise_index": 1,
+          "amplitude": 0.008,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 0.0009780289744653935,
+          "bias_squared_estimate": 0.06558702206664488,
+          "mean_squared_error": 0.06656505104111028
+        },
+        {
+          "seed": 71,
+          "noise_index": 1,
+          "amplitude": 0.008,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 0.002491645670878839,
+          "bias_squared_estimate": 0.18564085437695732,
+          "mean_squared_error": 0.18813250004783616
+        },
+        {
+          "seed": 71,
+          "noise_index": 1,
+          "amplitude": 0.06,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 3.0829022189532546e-05,
+          "bias_squared_estimate": 0.008643763362943617,
+          "mean_squared_error": 0.00867459238513315
+        },
+        {
+          "seed": 71,
+          "noise_index": 1,
+          "amplitude": 0.06,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 7.784594233156583e-05,
+          "bias_squared_estimate": 0.00829614564809069,
+          "mean_squared_error": 0.008373991590422255
+        },
+        {
+          "seed": 71,
+          "noise_index": 2,
+          "amplitude": 0.008,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 0.0060315664170649125,
+          "bias_squared_estimate": 0.09193825219268693,
+          "mean_squared_error": 0.09796981860975185
+        },
+        {
+          "seed": 71,
+          "noise_index": 2,
+          "amplitude": 0.008,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 0.012148583579940885,
+          "bias_squared_estimate": 0.2805893203749966,
+          "mean_squared_error": 0.2927379039549375
+        },
+        {
+          "seed": 71,
+          "noise_index": 2,
+          "amplitude": 0.06,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 0.0002258666701120302,
+          "bias_squared_estimate": 0.014151868233772617,
+          "mean_squared_error": 0.014377734903884647
+        },
+        {
+          "seed": 71,
+          "noise_index": 2,
+          "amplitude": 0.06,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 0.00048136774239327626,
+          "bias_squared_estimate": 0.016977612032611392,
+          "mean_squared_error": 0.01745897977500467
+        },
+        {
+          "seed": 73,
+          "noise_index": 1,
+          "amplitude": 0.008,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 0.0009107185017436186,
+          "bias_squared_estimate": 0.07928740924706582,
+          "mean_squared_error": 0.08019812774880943
+        },
+        {
+          "seed": 73,
+          "noise_index": 1,
+          "amplitude": 0.008,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 0.0021343259573429916,
+          "bias_squared_estimate": 0.2068368910862428,
+          "mean_squared_error": 0.20897121704358582
+        },
+        {
+          "seed": 73,
+          "noise_index": 1,
+          "amplitude": 0.06,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 3.171325593907374e-05,
+          "bias_squared_estimate": 0.01390677163178964,
+          "mean_squared_error": 0.013938484887728714
+        },
+        {
+          "seed": 73,
+          "noise_index": 1,
+          "amplitude": 0.06,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 7.858656089410544e-05,
+          "bias_squared_estimate": 0.012692918315252433,
+          "mean_squared_error": 0.012771504876146538
+        },
+        {
+          "seed": 73,
+          "noise_index": 2,
+          "amplitude": 0.008,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 0.006455854025008131,
+          "bias_squared_estimate": 0.09389995222763708,
+          "mean_squared_error": 0.10035580625264522
+        },
+        {
+          "seed": 73,
+          "noise_index": 2,
+          "amplitude": 0.008,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 0.013849635811991477,
+          "bias_squared_estimate": 0.25508311347787666,
+          "mean_squared_error": 0.2689327492898681
+        },
+        {
+          "seed": 73,
+          "noise_index": 2,
+          "amplitude": 0.06,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 0.00024111549658160293,
+          "bias_squared_estimate": 0.021347262499891276,
+          "mean_squared_error": 0.021588377996472882
+        },
+        {
+          "seed": 73,
+          "noise_index": 2,
+          "amplitude": 0.06,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 0.0004993078606777789,
+          "bias_squared_estimate": 0.03874663170706844,
+          "mean_squared_error": 0.03924593956774622
+        }
+      ],
+      "limits": "Sine/quadrature coefficient error, not total pixel noise. Three realizations per conditional series; high uncertainty individually. Finite-sample corrected squared-bias estimates are not clipped, may be negative. Descriptive, not a new gate."
+    },
+    "schema_version": 1,
+    "measured_at_utc": "2026-11-04T23:09:52.254992+00:00",
+    "previous_sha256": "060b15e659fb3b6ca5b90a9ad519676edc6b973d76a5b12a6cc3ed43272f2c2c",
+    "current_sha256": "ce6e74884d01af1e61e35dca3b2f77ad1d15fa4a3a0b0936cc69bc8e3158079c",
+    "tool_sha256": "e7dcee7cdc775f3b24f6f7cec45859e2558909774c509a4f94d650fba09b8ed9",
+    "status": "completed_paired_known_fine_comparison_not_qualification"
+  },
+  "finished_at_utc": "2026-11-04T23:10:34.744575+00:00"
+}

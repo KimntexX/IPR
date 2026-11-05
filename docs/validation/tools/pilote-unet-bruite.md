@@ -20,8 +20,9 @@ Depuis le worktree, la préparation exige le prétest courant :
 & .venv-neural/Scripts/python.exe tests/neural/run_paired_continuation.py --prepared build-patch_neural_restoration/paired-correlation-plan-v002 --output build-patch_neural_restoration/paired-correlation-campaign-v001 --prefix input-cues --candidate correlation
 ```
 
-Le plan indiqué est déjà préparé : ne pas relancer sa première commande
-dans le même dossier. Pour une nouvelle préparation, choisir de nouveaux
+Le plan indiqué est déjà préparé et la campagne a terminé le 5 novembre :
+ne relancer aucune des deux commandes dans leurs dossiers existants.
+Pour une nouvelle préparation, choisir de nouveaux
 noms de plan, sortie et préfixe. Le pilote apparié entraîne le contrôle et
 le candidat avant leurs évaluations ; sa fenêtre de départ est de deux heures.
 Le dossier de sortie doit être nouveau. En lancement direct d'une campagne,

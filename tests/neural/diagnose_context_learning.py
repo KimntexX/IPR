@@ -53,17 +53,27 @@ def probe(model, values, sigma, labels, truth, border, weight=1.):
         anchor = clean_cfa_loss(anchored, clean, reference, truth, 2., border)
         noisy_corrected = model.correct_observations(values, sigma, labels)
         structure = structure_loss(noisy_corrected, clean, sigma, border//2, weight)
-        parameters = [p for p in model.parameters() if p.requires_grad]
+        named = [(n,p) for n,p in model.named_parameters() if p.requires_grad]
+        parameters = [p for _,p in named]
         components = {}
+        statistical_components = {}
         for name, term in (('rgb', rgb), ('anchor', anchor), ('structure', structure)):
             gradients = torch.autograd.grad(term, parameters, retain_graph=True, allow_unused=True)
             components[name] = torch.cat([(g if g is not None else torch.zeros_like(p)).detach().flatten()
                 for p, g in zip(parameters, gradients)])
+            selected = [(g if g is not None else torch.zeros_like(p)).detach().flatten()
+                for (n,p),g in zip(named, gradients) if n.startswith('noise_features.statistics.')]
+            statistical_components[name] = torch.cat(selected) if selected else rgb.new_zeros(0)
         component_norms = {n: float(v.norm()) for n, v in components.items()}
         alignments = {}
         for a, b in (('rgb', 'anchor'), ('rgb', 'structure'), ('anchor', 'structure')):
             denominator = component_norms[a]*component_norms[b]
             alignments[a+'_'+b] = float(torch.dot(components[a], components[b]))/denominator if denominator else None
+        statistical_norms = {n:float(v.norm()) for n,v in statistical_components.items()}
+        statistical_cosines = {}
+        for a,b in (('rgb','anchor'), ('rgb','structure'), ('anchor','structure')):
+            denominator = statistical_norms[a]*statistical_norms[b]
+            statistical_cosines[a+'_'+b] = float(torch.dot(statistical_components[a], statistical_components[b]))/denominator if denominator else None
         (rgb+anchor+structure).backward()
         gradients = {n: statistics(p.grad) for n, p in model.named_parameters()
             if p.requires_grad and p.grad is not None}
@@ -80,7 +90,8 @@ def probe(model, values, sigma, labels, truth, border, weight=1.):
         if any(not torch.equal(p, baseline[n]) for n, p in model.named_parameters()):
             raise ValueError('Diagnostic mutated weights')
         return dict(measures=measures, activations=noisy_activations, gradients=gradients,
-            component_gradient_norms=component_norms, component_gradient_cosines=alignments)
+            component_gradient_norms=component_norms, component_gradient_cosines=alignments,
+            statistics_gradient_norms=statistical_norms, statistics_gradient_cosines=statistical_cosines)
     finally:
         for handle in handles:
             handle.remove()

@@ -1,0 +1,358 @@
+{
+  "schema_version": 1,
+  "campaign_id": "neural-texture-gradients-v001-20261105T093806Z",
+  "measured_at_utc": "2026-11-05T09:38:06.295920+00:00",
+  "status": "incomplete",
+  "script_sha256": "8b6ad460316d070eb829557dfab983a0f8b7b9150adb9174f62cbc2b844d4234",
+  "probe_sha256": "93b93b5e5d1b560ed9c75d9181f4c0b9ddd183213fd25534049a150a67ca5609",
+  "selection": "First two strong training textures per family and frequency bin [2,6,12,20,29), both positive noises, seeds71/73 and arms; one fixed fresh simulated draw.",
+  "selected_events": [
+    {
+      "serial": 2,
+      "family": "weak_achromatic_wave",
+      "phase": 2,
+      "target_sha256": "bfb69b83db19ad498f42fc4b32c92010813f4c8fa7ffeb85215a04d36bebd56d",
+      "seed": 120000002,
+      "frequency": 2.043519442884881,
+      "amplitude": 0.08797883049578345,
+      "dc": 0.0053844916820526105,
+      "direction": 2.0591111723939797,
+      "phase_radians": 1.4878939529839792,
+      "other_frequency": 3.003516633710517,
+      "other_direction": 1.321466961934637,
+      "other_phase_radians": 2.263589388292428,
+      "colours": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "serial": 8,
+      "family": "weak_achromatic_wave",
+      "phase": 1,
+      "target_sha256": "2f4aed165ec88ac9cc1bab1ef03edb277aab54eaa4a0a2ecabd8633f73af56e3",
+      "seed": 120000008,
+      "frequency": 4.162702841202622,
+      "amplitude": 0.046130550572848344,
+      "dc": 0.44832131981849666,
+      "direction": 0.5975373861048757,
+      "phase_radians": 3.7615894134348777,
+      "other_frequency": 3.2958540240352954,
+      "other_direction": 0.3296978241177505,
+      "other_phase_radians": 5.743730028839064,
+      "colours": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "serial": 31,
+      "family": "weak_achromatic_wave",
+      "phase": 1,
+      "target_sha256": "6f46aefca6c8fbad4c8cb09ab93cd47dc2a0119f3ec89fb9cd9a3fdaf1a3075f",
+      "seed": 120000031,
+      "frequency": 6.2397639309982695,
+      "amplitude": 0.042941948326709604,
+      "dc": 0.2322655022144318,
+      "direction": 0.22558112518218235,
+      "phase_radians": 4.9278732088305945,
+      "other_frequency": 8.954153119830682,
+      "other_direction": 2.2675436207506534,
+      "other_phase_radians": 3.6956949018068315,
+      "colours": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "serial": 50,
+      "family": "weak_achromatic_wave",
+      "phase": 3,
+      "target_sha256": "303928ad7d733bb6d0ded2a22694d81b9e4b53688d3f295ff9dff34c9fc71e38",
+      "seed": 120000050,
+      "frequency": 9.185145013707066,
+      "amplitude": 0.06213559328571816,
+      "dc": 0.2187741994857788,
+      "direction": 0.9223194309692603,
+      "phase_radians": 5.485124312141515,
+      "other_frequency": 4.959176997718024,
+      "other_direction": 0.8198807107739562,
+      "other_phase_radians": 1.3965820238527564,
+      "colours": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "serial": 3,
+      "family": "weak_achromatic_wave",
+      "phase": 2,
+      "target_sha256": "3c8b52a20ff94baf77f3049b43f6f9ac20f3302176b0ba816b5f870e704e748b",
+      "seed": 120000003,
+      "frequency": 18.59257826360642,
+      "amplitude": 0.04472086486933815,
+      "dc": 0.0026268446445465096,
+      "direction": 1.8306596380934503,
+      "phase_radians": 1.893565958142752,
+      "other_frequency": 14.618809091736365,
+      "other_direction": 1.3976018064907965,
+      "other_phase_radians": 4.422952721597027,
+      "colours": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "serial": 20,
+      "family": "weak_achromatic_wave",
+      "phase": 0,
+      "target_sha256": "36236350ddb713be1df9d2245b0dbafcc8e9e029653aed0f6acbdeea343267ea",
+      "seed": 120000020,
+      "frequency": 13.986205565979285,
+      "amplitude": 0.04571813766852066,
+      "dc": 0.3402461087703705,
+      "direction": 2.0075812523431162,
+      "phase_radians": 4.008690274223284,
+      "other_frequency": 9.17077788878036,
+      "other_direction": 2.4111944051138514,
+      "other_phase_radians": 2.5996128233715514,
+      "colours": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "serial": 126,
+      "family": "weak_achromatic_wave",
+      "phase": 3,
+      "target_sha256": "fed9f5349faaf15bff45e024c95ed2c3797b68b6095473109c02b0a1220087e3",
+      "seed": 120000126,
+      "frequency": 26.949736327102368,
+      "amplitude": 0.08646732580868588,
+      "dc": 0.27540078997612,
+      "direction": 0.6745246086574288,
+      "phase_radians": 4.185672184104504,
+      "other_frequency": 28.0,
+      "other_direction": 1.950624725452296,
+      "other_phase_radians": 3.337077457710828,
+      "colours": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "serial": 184,
+      "family": "weak_achromatic_wave",
+      "phase": 3,
+      "target_sha256": "b730cd85c8897c50ef10021af01cee88b0257821930160b5118e70f2a7931e6d",
+      "seed": 120000184,
+      "frequency": 24.123150235912426,
+      "amplitude": 0.06711926662575107,
+      "dc": 0.3343617463111877,
+      "direction": 2.022277282640338,
+      "phase_radians": 2.6081384758706276,
+      "other_frequency": 28.0,
+      "other_direction": 2.4351437550661217,
+      "other_phase_radians": 0.009643555978529117,
+      "colours": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "serial": 49,
+      "family": "chromatic_wave",
+      "phase": 2,
+      "target_sha256": "820ba0586d419d803631ac567feb08a7ce0bd7b4b48c6c6f066d749927a88a78",
+      "seed": 120000049,
+      "frequency": 5.247652965169679,
+      "amplitude": 0.08001309577010232,
+      "dc": 0.29855801105499263,
+      "direction": 2.4605847665120804,
+      "phase_radians": 3.465100812797441,
+      "other_frequency": 5.016835214037301,
+      "other_direction": 0.9795214472171262,
+      "other_phase_radians": 5.1961191109434175,
+      "colours": [
+        1.0,
+        0.7557677626609802,
+        0.9566368460655212
+      ]
+    },
+    {
+      "serial": 54,
+      "family": "chromatic_wave",
+      "phase": 2,
+      "target_sha256": "264be2ed82fd2cc44b2f94053d6b6b810f02d527725ea868ceda0e09ee62612f",
+      "seed": 120000054,
+      "frequency": 2.5948535614085144,
+      "amplitude": 0.046708586670777257,
+      "dc": 0.4078787124156952,
+      "direction": 1.0346850217099968,
+      "phase_radians": 0.6880566711107178,
+      "other_frequency": 2.0,
+      "other_direction": 3.0056127094335943,
+      "other_phase_radians": 2.4820475770500035,
+      "colours": [
+        1.0,
+        0.4881458580493927,
+        -0.1776638925075531
+      ]
+    },
+    {
+      "serial": 13,
+      "family": "chromatic_wave",
+      "phase": 3,
+      "target_sha256": "5086ff961798de6f7563e4f047527cd119dfa2e2cb75639a8f44c0f3d015f8a0",
+      "seed": 120000013,
+      "frequency": 8.628184768192035,
+      "amplitude": 0.09152021994360075,
+      "dc": 0.30063779473304747,
+      "direction": 2.9364259065198293,
+      "phase_radians": 2.0321747543840494,
+      "other_frequency": 5.3938656945281505,
+      "other_direction": 0.6006457944397026,
+      "other_phase_radians": 2.2862878847702017,
+      "colours": [
+        -1.0,
+        0.36889103055000305,
+        -0.4783048927783966
+      ]
+    },
+    {
+      "serial": 72,
+      "family": "chromatic_wave",
+      "phase": 3,
+      "target_sha256": "ad08150cc1b91d18aa0888c0b6fec78bfe3624c643dedb640cf525cf51291e70",
+      "seed": 120000072,
+      "frequency": 6.315937262610034,
+      "amplitude": 0.04873256513767045,
+      "dc": 0.12017311096191406,
+      "direction": 1.4225447235891264,
+      "phase_radians": 2.948181494884413,
+      "other_frequency": 5.813169981720767,
+      "other_direction": 2.0254692060424744,
+      "other_phase_radians": 3.8837206494453667,
+      "colours": [
+        -0.1343870759010315,
+        -1.0,
+        0.7147417068481445
+      ]
+    },
+    {
+      "serial": 52,
+      "family": "chromatic_wave",
+      "phase": 1,
+      "target_sha256": "137a0eb053dc4fedcff4ba2d76b14005cc27af1bd41828f13a91f80ad4e16e7d",
+      "seed": 120000052,
+      "frequency": 18.230640981379004,
+      "amplitude": 0.04593375252195765,
+      "dc": 0.5350556051731109,
+      "direction": 0.8424544964113084,
+      "phase_radians": 4.247887538686607,
+      "other_frequency": 9.462629452466496,
+      "other_direction": 2.9539650069223327,
+      "other_phase_radians": 5.140590579351476,
+      "colours": [
+        1.0,
+        -0.7069839835166931,
+        0.985508143901825
+      ]
+    },
+    {
+      "serial": 98,
+      "family": "chromatic_wave",
+      "phase": 1,
+      "target_sha256": "a9b1841a87ac2ce19e5c6e51de2e99e87157eb3067c88c9c16c3d48026f25897",
+      "seed": 120000098,
+      "frequency": 15.939219356741283,
+      "amplitude": 0.0649948707790842,
+      "dc": 0.0119733989238739,
+      "direction": 2.555048359539898,
+      "phase_radians": 6.249517499843129,
+      "other_frequency": 9.335280219224076,
+      "other_direction": 0.8299586949053045,
+      "other_phase_radians": 4.570479653703051,
+      "colours": [
+        -1.0,
+        0.08224543184041977,
+        0.6908051371574402
+      ]
+    },
+    {
+      "serial": 161,
+      "family": "chromatic_wave",
+      "phase": 2,
+      "target_sha256": "8512f0e6c23dd17de44b15b7240252b92303ee2914a717fc0145d28134767dec",
+      "seed": 120000161,
+      "frequency": 26.164621608868018,
+      "amplitude": 0.058217643712431544,
+      "dc": 0.3889060032367706,
+      "direction": 1.5564525203577837,
+      "phase_radians": 3.9294591928107168,
+      "other_frequency": 28.0,
+      "other_direction": 1.720834141272107,
+      "other_phase_radians": 6.177485941542455,
+      "colours": [
+        1.0,
+        -0.17927302420139313,
+        0.31132206320762634
+      ]
+    },
+    {
+      "serial": 174,
+      "family": "chromatic_wave",
+      "phase": 0,
+      "target_sha256": "3e1ab02411547f1ddba9922053d3ad8db38c4fc88a916b9d2a306c15bf5b5706",
+      "seed": 120000174,
+      "frequency": 21.640389642277295,
+      "amplitude": 0.0510849020961316,
+      "dc": 0.29159755945205684,
+      "direction": 0.634497484727052,
+      "phase_radians": 5.989121639550342,
+      "other_frequency": 25.073257827215897,
+      "other_direction": 0.02243503078336994,
+      "other_phase_radians": 2.093807750537157,
+      "colours": [
+        -0.21100348234176636,
+        -0.07603566348552704,
+        -1.0
+      ]
+    }
+  ],
+  "records": [],
+  "limits": [
+    "Descriptive gradients, not an optimizer update or evidence that projecting gradients improves quality.",
+    "Known training contents, not reserved validation; losses and criteria unchanged."
+  ],
+  "elapsed_seconds": 0.007184399990364909,
+  "memory": {
+    "hard_process_commit_bytes": 2147483648,
+    "soft_process_bytes": 1342177280,
+    "system_stop_fraction": 0.92,
+    "poll_seconds": 0.25,
+    "samples": 1,
+    "peak_rss_bytes": 212914176,
+    "peak_private_sampled_bytes": 865353728,
+    "peak_system_used_fraction": 0.680565832405494,
+    "os_job_peak_commit_bytes": 866811904,
+    "reason": null,
+    "last": {
+      "system_total_bytes": 16933507072,
+      "system_available_bytes": 5409140736,
+      "system_used_fraction": 0.680565832405494,
+      "process_rss_bytes": 211759104,
+      "process_private_bytes": 865353728,
+      "process_peak_rss_bytes": 212914176,
+      "process_peak_pagefile_bytes": 867393536
+    }
+  }
+}
