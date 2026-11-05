@@ -1,4 +1,5 @@
 #include "imageeditor.h"
+#include "RenderChain.h"
 #include "CameraSignal.h"
 #include "RecipeCodec.h"
 #include "RenderStageCache.h"
@@ -30,7 +31,7 @@ public:
     static ColorPipeline::WorkingImage render(const ColorPipeline::WorkingImage &source, const Settings &settings,
                                               double pixelScale = 1.0, RenderStageCache *cache = nullptr)
     {
-        return ImageEditor::renderWorkingImage(source, settings, pixelScale, cache);
+        return RenderChain::workingImage(source, settings, pixelScale, cache);
     }
 };
 

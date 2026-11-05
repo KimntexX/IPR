@@ -1,4 +1,5 @@
 #include "imageeditor.h"
+#include "RenderChain.h"
 #include "RenderStageCache.h"
 #include "ToneRecovery.h"
 
@@ -137,10 +138,10 @@ public:
             if (step) edits[step - 1](settings);
             QElapsedTimer clock;
             clock.start();
-            const auto expected = ImageEditor::renderWorkingImage(source, settings, pixelScale);
+            const auto expected = RenderChain::workingImage(source, settings, pixelScale);
             const double plainMs = double(clock.nsecsElapsed()) / 1e6;
             clock.restart();
-            const auto rendered = ImageEditor::renderWorkingImage(source, settings, pixelScale, &cache);
+            const auto rendered = RenderChain::workingImage(source, settings, pixelScale, &cache);
             const double cachedMs = double(clock.nsecsElapsed()) / 1e6;
             if (step > 0) { plain += plainMs; cached += cachedMs; }
             check(!expected.isNull() && !rendered.isNull(), "render");
@@ -153,8 +154,8 @@ public:
         // The export path never touches a cache, and a new source starts over.
         auto other = scene(1200, 800);
         other.linearRgba *= 0.8;
-        const auto expected = ImageEditor::renderWorkingImage(other, settings, pixelScale);
-        const auto rendered = ImageEditor::renderWorkingImage(other, settings, pixelScale, &cache);
+        const auto expected = RenderChain::workingImage(other, settings, pixelScale);
+        const auto rendered = RenderChain::workingImage(other, settings, pixelScale, &cache);
         check(cv::norm(rendered.linearRgba, expected.linearRgba, cv::NORM_INF) == 0, "new source renders from scratch");
     }
 
@@ -169,10 +170,10 @@ public:
         settings.pointColor.count = 1;
         settings.pointColor.points[0].source = PointColor::toHsv({0.3, 0.2, 0.1});
         RenderStageCache cache;
-        const auto overlaid = ImageEditor::renderPreview(source, settings, false, 1.0, &cache, 0);
+        const auto overlaid = RenderChain::preview(source, settings, false, 1.0, &cache, 0);
         check(!overlaid.preview.isNull(), "overlay preview renders");
         check(cv::norm(source.linearRgba, before, cv::NORM_INF) == 0, "the overlay leaves the source untouched");
-        const auto plain = ImageEditor::renderPreview(source, settings, false, 1.0, &cache, -1);
+        const auto plain = RenderChain::preview(source, settings, false, 1.0, &cache, -1);
         check(plain.preview != overlaid.preview, "without the overlay the preview keeps its colours");
     }
 };

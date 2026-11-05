@@ -10,7 +10,7 @@
 #include "ToneCurve.h"
 #include "DecodedImageCache.h"
 #include "ImageCacheController.h"
-#include "PerceptualColour.h"
+#include "RenderChain.h"
 #include "RenderStageCache.h"
 #include "RawDecoder.h"
 #include "StackSession.h"
@@ -415,17 +415,6 @@ private:
 
     using RawDevelopment = EditRecipe::RawDevelopment;
 
-    struct RenderResult
-    {
-        QImage preview;
-        QImage originalPreview;
-        Geometry::Settings originalGeometry;   // the framing originalPreview shows
-        bool originalWholeCanvas = false;
-        QVariantList histogram;
-        QString error;
-        int retouchesNotDone = -1;             // -1: the render did not reach them, a cache had them
-    };
-
     using UserImageMetadata = EditRecipe::UserImageMetadata;
 
     static DecodedImageCache::Entry retainedEntry(const ColorPipeline::WorkingImage &image,
@@ -437,29 +426,9 @@ private:
     bool commitRetouches(Retouch::Operations next);
     bool originalFramingStale() const;
     RawDecoder::Options developmentOptions() const;
-    // pixelScale: pixels of source per pixel of the full image (below 1 for the
-    // preview proxy), so effects keep their full-image radii. With a cache (the
-    // preview), the render resumes from the stages it kept; same pixels as without.
-    static ColorPipeline::WorkingImage renderWorkingImage(
-        const ColorPipeline::WorkingImage &source, const Settings &settings,
-        double pixelScale = 1.0, RenderStageCache *cache = nullptr, int *retouchesNotDone = nullptr);
-    // local: what the masks add, on the canvas (LocalAdjustments::valueMaps).
-    static bool renderTones(const ColorPipeline::WorkingImage &source, const Settings &settings,
-                            int referenceTemperature, double pixelScale, cv::Mat &adjusted,
-                            const LocalValues::Maps &local);
-    static PerceptualColour::Parameters perceptualParameters(const Settings &settings);
     // The preview's source (edit proxy, or the image) and its pixel scale.
     const ColorPipeline::WorkingImage &previewSource() const;
     double previewPixelScale() const;
-    // overlayPoint: a point colour whose range the preview shows (colour where it
-    // acts, grey elsewhere), -1 for none.
-    static RenderResult renderPreview(const ColorPipeline::WorkingImage &source,
-                                      const Settings &settings,
-                                      bool includeOriginal,
-                                      double pixelScale = 1.0,
-                                      RenderStageCache *cache = nullptr,
-                                      int overlayPoint = -1, int overlayMask = -1,
-                                      bool wholeCanvas = false, int overlayRetouch = -1);
     static ColorPipeline::WorkingImage buildEditProxy(
         const ColorPipeline::WorkingImage &source);
     static QString cacheKeyForFile(const QString &fileName,
@@ -565,7 +534,7 @@ private:
     QSize m_fullSize;
     QTimer m_renderDebounce;
     QTimer m_sidecarDebounce;
-    QFutureWatcher<RenderResult> m_renderWatcher;
+    QFutureWatcher<RenderChain::Preview> m_renderWatcher;
     QFutureWatcher<ExportResult> m_exportWatcher;
     struct BatchResult
     {

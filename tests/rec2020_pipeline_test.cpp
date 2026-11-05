@@ -1,4 +1,5 @@
 #include "imageeditor.h"
+#include "RenderChain.h"
 #include "DetailProcessing.h"
 #include <QCoreApplication>
 #include <QImageReader>
@@ -15,7 +16,7 @@ public:
     static void exercise(const ColorPipeline::WorkingImage &source) {
         const auto check = [](bool ok) { if (!ok) throw std::runtime_error("render contract"); };
         ImageEditor::Settings neutral;
-        auto result = ImageEditor::renderWorkingImage(source, neutral);
+        auto result = RenderChain::workingImage(source, neutral);
         check(!result.isNull() && result.colorSpace == ColorPipeline::workingColorSpace());
         check(cv::norm(result.linearRgba, source.linearRgba, cv::NORM_INF) == 0);
         for (int group = 0; group < 14; ++group) {
@@ -37,7 +38,7 @@ public:
                 case 12: settings.sharpeningAmount = 100; break;
                 case 13: settings.grayscale = true; break;
                 }
-                result = ImageEditor::renderWorkingImage(source, settings);
+                result = RenderChain::workingImage(source, settings);
                 check(!result.isNull() && result.colorSpace == ColorPipeline::workingColorSpace());
                 check(cv::checkRange(result.linearRgba, true));
                 for (int y = 0; y < source.linearRgba.rows; ++y)
@@ -45,7 +46,7 @@ public:
                         check(result.linearRgba.at<cv::Vec4f>(y,x)[3] == source.linearRgba.at<cv::Vec4f>(y,x)[3]);
             }
         }
-        const auto preview = ImageEditor::renderPreview(source, neutral, true);
+        const auto preview = RenderChain::preview(source, neutral, true);
         check(!preview.preview.isNull() && !preview.originalPreview.isNull());
         for (int channel = 0; channel < 3; ++channel) {
             std::array<quint64,256> expected{};
@@ -59,7 +60,7 @@ public:
         }
         auto invalid = source;
         invalid.colorSpace = QColorSpace(QColorSpace::SRgbLinear);
-        check(ImageEditor::renderWorkingImage(invalid, neutral).isNull());
+        check(RenderChain::workingImage(invalid, neutral).isNull());
     }
 };
 

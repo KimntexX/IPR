@@ -1,4 +1,5 @@
 #include "CameraProfileEngine.h"
+#include "RenderChain.h"
 #include "synthetic_dcp.h"
 #include "LocalValues.h"
 #include "CameraDenoise.h"
@@ -27,7 +28,7 @@ public:
         settings.temperature = temperature;
         settings.tint = tint;
         settings.brightness = ev;
-        return ImageEditor::renderWorkingImage(source, settings);
+        return RenderChain::workingImage(source, settings);
     }
     static ColorPipeline::WorkingImage denoised(const ColorPipeline::WorkingImage &source, int temperature,
                                                  int luminance, bool beforeProfile) {
@@ -35,7 +36,7 @@ public:
         settings.temperature = temperature;
         settings.denoiseLuminance = luminance;
         settings.denoiseBeforeProfile = beforeProfile;
-        return ImageEditor::renderWorkingImage(source, settings);
+        return RenderChain::workingImage(source, settings);
     }
     static ColorPipeline::WorkingImage proxy(const ColorPipeline::WorkingImage &source) {
         return ImageEditor::buildEditProxy(source);
