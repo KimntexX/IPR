@@ -10,7 +10,7 @@ Ce bénéfice n'est pas démontré pour le correcteur CFA actuel.
 | Ce qui fonctionne | Contrats, signal signé, limites de ressources, reprise et mesures synthétiques traçables. Ce ne sont pas des preuves de qualité photo. |
 | Ce qui bloque | Bénéfice photo instable selon la graine ; loi de bruit encore expérimentale ; absence de confirmation photographique indépendante. |
 | Derniers résultats | Réplication close : 10 et 12 échecs forts sur 48, après les 12 et 16 précédents. Sur les photos, sensibilité aux graines et motifs directionnels : bénéfice non validé. |
-| Calcul engagé | Campagne achevée à 19 h 16 UTC : deux graines à +2048, tous les jalons et rendus terminés. Reprise mémoire fidèle, reconstructeurs gelés vérifiés. Aucun calcul actif. |
+| Calcul engagé | Courbe et photos achevées ; qualification des poids finaux préparée sur les contrôles connus, CPU épinglé, deux graines et seuils inchangés. Aucune nouvelle réserve. |
 | Prochaine preuve utile | Rejouer les contrôles de développement connus et leurs critères sur les poids finaux avant davantage d'apprentissage. Convergence chroma descriptive, mais bénéfice photo robuste non établi ; classique couleur encore à compléter. |
 | GPU | CUDA qualifié ; prémesure définitive avec lecture et bruit : environ 0,32–0,33 s/mise à jour. Projection d'environ 23 min d'entraînement pour les deux graines, hors rendus ; plafond de campagne 90 min. |
 | Données | 349 RAW inventoriés, 105 paires étudiées. Température, bruit fixe et propagation restent à qualifier ; pas de nouvelles prises demandées pour cette expérience. |
@@ -6756,3 +6756,61 @@ Cette dernière preuve conserve aussi le plan scellé, les recettes du
 jeu d'apprentissage connu et leurs identités. Les JSON restent la mémoire
 des mesures ; ils ne sauvegardent pas les poids, tenseurs ni pixels.
 Ces fichiers sont conservés localement pour le rejeu exact.
+
+## 5 novembre 2026 — contrôles connus des poids finaux de la courbe
+
+### Source et contrat de qualification
+
+L'étape suivante utilise les **deux poids finaux +2048**, sans sélection
+d'un jalon sur les photos, sans entraînement et sans nouvelle scène.
+L'adaptateur accepte seulement une courbe complète, hors prévol, avec
+2 048 pertes, 8 192 expositions, le reconstructeur gelé vérifié et les
+empreintes exactes des checkpoints et exports. Il ne présente pas ces
+poids comme issus de l'ancien budget de 512 pas et ne modifie pas la
+règle d'éligibilité de cet ancien entraîneur.
+
+Les observations sont celles du contrôle de développement déjà consulté
+avant la courbe : **20 cas mixtes et 32 contours distincts**, quatre
+phases Bayer et trois niveaux de bruit, plus les contrôles historiques
+sans bruit. Les cibles, observations bruitées, cartes sigma, parents
+gelés et critères sont repris exactement. Les deux anciens niveaux de
+bruit restent des tests de régression, même si l'entraînement récent
+utilise une autre loi. Ils ne deviennent pas une calibration Canon.
+
+Le calcul reste celui de `run_noisy_moment_pilot.evaluate`, sur le Python
+CPU/PyTorch épinglé, avec la protection existante. Les empreintes de ses
+sources qualifiées sont vérifiées. Chaque observation et la sortie du
+parent doivent rejouer au bit près le contrôle initial. Cette évaluation
+compare le reconstructeur appris historique ; elle ne se substitue pas
+au comparatif photographique avec RCD.
+
+Les critères sont calculés à partir des mesures, jamais préremplis pour
+déverrouiller l'étape suivante. Deux tests couvrent le contrat de source
+(courbe incomplète, mauvais compte, prévol, reconstructeur non vérifié)
+et le verrou de progression (une seule graine ou un échec de graine
+ne peut pas être masqué par le booléen de synthèse).
+
+### Ordre et limites du lancement
+
+La chaîne préparée est **développement connu → régression fine connue
+→ première puis seconde régression classique connue**. Elle s'arrête
+sur le premier critère non satisfait. Les préparateurs de régression
+existants ne sont appelés que si le développement complet passe pour
+les deux graines. Ils conservent les données et les seuils historiques,
+dont le transfert de canal minimal de 0,95 et le ratio RGB global maximal
+de 0,98 dans le contrôle fin. Aucune nouvelle cohorte n'est préparée,
+même si tous les contrôles connus passent.
+
+Le CPU utilise quatre threads, le plafond local de la recette connue
+(2 Gio engagés, 1,25 Gio souple) et l'arrêt physique global de 92 %.
+Le GPU n'est pas utilisé. Le superviseur limite la chaîne à 90 minutes,
+conserve les résultats partiels et termine seulement ses propres processus
+sur erreur ou dépassement de délai. Une défaillance de critère est
+distincte d'une erreur d'exécution.
+
+Suivi prévu :
+`build-patch_neural_restoration/curve-known-controls-v001/progress.json`.
+Les calculs et journaux restent dans le build, les mesures complètes
+seront sauvegardées en JSON canonique. Aucun résultat n'est encore
+annoncé pour cette nouvelle étape ; aucune modification du moteur,
+fusion, publication ou tag n'est engagé.

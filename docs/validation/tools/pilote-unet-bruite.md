@@ -390,3 +390,18 @@ et le plan scellé pour la mémoire canonique. Il n'entraîne, ne sélectionne
 ni ne qualifie un modèle. La planche complète est dans
 `sensor-learning-campaign-v001/comparison.html` ; les poids et caches
 restent nécessaires pour un rejeu exact.
+
+## Contrôles connus après la courbe
+
+`qualify_sensor_curve.py --prepare` valide les deux courbes complètes,
+les exports +2048 et les sources du banc, puis prépare le plan de
+développement connu. Il ne déclare pas ces poids qualifiés. Le mode
+`--plan <plan.json>` utilise l'évaluateur et les critères existants,
+sur le CPU épinglé, sans entraînement.
+
+`run_curve_controls.py` enchaîne ce développement, puis la régression
+fine et les deux classiques historiques, seulement lorsque les verrous
+précédents passent. Un échec stoppe la suite ; aucune cohorte réservée
+nouvelle n'est ouverte. Lire `curve-known-controls-v001/progress.json`
+et les journaux d'étape, puis les JSON canoniques. Une qualification
+procédurale connue ne constitue pas une validation photographique.
