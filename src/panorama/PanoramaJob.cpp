@@ -40,7 +40,7 @@ cv::Mat perceptualCopy(const cv::Mat &cameraRgb, double scale)
     cv::Mat out(reduced.size(), CV_32FC1);
     ipr::parallelRows(reduced.rows, [&](int first, int last) {
         for (int y = first; y < last; ++y) {
-            const cv::Vec3f *in = reduced.ptr<cv::Vec3f>(y);
+            const ipr::Vec3f *in = reduced.ptr<ipr::Vec3f>(y);
             float *target = out.ptr<float>(y);
             for (int x = 0; x < reduced.cols; ++x)
                 target[x] = std::sqrt(std::max(0.0f, 0.25f * in[x][0] + 0.5f * in[x][1] + 0.25f * in[x][2]));
@@ -50,18 +50,18 @@ cv::Mat perceptualCopy(const cv::Mat &cameraRgb, double scale)
 }
 
 // The reduced copy of a warped frame: the mean of the valid pixels of each cell.
-PanoramaBlend::View reducedView(const cv::Mat &warped, const cv::Mat &valid, const cv::Rect &area, int cell)
+PanoramaBlend::View reducedView(const cv::Mat &warped, const cv::Mat &valid, const ipr::Recti &area, int cell)
 {
     PanoramaBlend::View view;
     const int left = area.x / cell, top = area.y / cell;
     const int right = (area.x + area.width + cell - 1) / cell, bottom = (area.y + area.height + cell - 1) / cell;
-    view.area = cv::Rect(left, top, right - left, bottom - top);
-    cv::Mat sums = cv::Mat::zeros(view.area.size(), CV_32FC3);
-    cv::Mat counts = cv::Mat::zeros(view.area.size(), CV_32SC1);
+    view.area = ipr::Recti(left, top, right - left, bottom - top);
+    cv::Mat sums = cv::Mat::zeros(ipr::toCv(view.area.size()), CV_32FC3);
+    cv::Mat counts = cv::Mat::zeros(ipr::toCv(view.area.size()), CV_32SC1);
     for (int y = 0; y < warped.rows; ++y) {
-        const cv::Vec3f *colour = warped.ptr<cv::Vec3f>(y);
+        const ipr::Vec3f *colour = warped.ptr<ipr::Vec3f>(y);
         const uchar *inside = valid.ptr<uchar>(y);
-        cv::Vec3f *sumRow = sums.ptr<cv::Vec3f>((y + area.y) / cell - top);
+        ipr::Vec3f *sumRow = sums.ptr<ipr::Vec3f>((y + area.y) / cell - top);
         int *countRow = counts.ptr<int>((y + area.y) / cell - top);
         for (int x = 0; x < warped.cols; ++x) {
             if (!inside[x])
@@ -71,16 +71,16 @@ PanoramaBlend::View reducedView(const cv::Mat &warped, const cv::Mat &valid, con
             ++countRow[at];
         }
     }
-    view.colour.create(view.area.size(), CV_32FC3);
-    view.whole.create(view.area.size(), CV_8UC1);
-    view.any.create(view.area.size(), CV_8UC1);
+    view.colour.create(ipr::toCv(view.area.size()), CV_32FC3);
+    view.whole.create(ipr::toCv(view.area.size()), CV_8UC1);
+    view.any.create(ipr::toCv(view.area.size()), CV_8UC1);
     for (int y = 0; y < view.area.height; ++y) {
-        const cv::Vec3f *sumRow = sums.ptr<cv::Vec3f>(y);
+        const ipr::Vec3f *sumRow = sums.ptr<ipr::Vec3f>(y);
         const int *countRow = counts.ptr<int>(y);
-        cv::Vec3f *colourRow = view.colour.ptr<cv::Vec3f>(y);
+        ipr::Vec3f *colourRow = view.colour.ptr<ipr::Vec3f>(y);
         uchar *wholeRow = view.whole.ptr<uchar>(y), *anyRow = view.any.ptr<uchar>(y);
         for (int x = 0; x < view.area.width; ++x) {
-            colourRow[x] = countRow[x] > 0 ? sumRow[x] * (1.0f / float(countRow[x])) : cv::Vec3f(0, 0, 0);
+            colourRow[x] = countRow[x] > 0 ? sumRow[x] * (1.0f / float(countRow[x])) : ipr::Vec3f(0, 0, 0);
             wholeRow[x] = countRow[x] == cell * cell ? 255 : 0;
             anyRow[x] = countRow[x] > 0 ? 255 : 0;
         }
@@ -133,7 +133,7 @@ Result run(const Request &request)
     std::vector<std::unique_ptr<FrameSpool>> sources(static_cast<size_t>(request.frameCount));
     std::vector<std::vector<PanoramaFeatures::Feature>> features(static_cast<size_t>(request.frameCount));
     std::vector<cv::Mat> finer(static_cast<size_t>(request.frameCount));
-    cv::Size size;
+    ipr::Size size;
     double focalMm = 0.0, finerScale = 1.0, detectionScale = 1.0;
     PanoramaGeometry::LensKnowledge lens;
     for (int index = 0; index < request.frameCount; ++index) {
@@ -148,7 +148,7 @@ Result run(const Request &request)
             continue;
         }
         if (size.empty()) {
-            size = frame.cameraRgb.size();
+            size = ipr::fromCv(frame.cameraRgb.size());
             result.frameSize = size;
             focalMm = frame.focalMm;
             if (frame.focalMm > 0.0 && frame.sensorWidthMm > 0.0)
@@ -165,7 +165,7 @@ Result run(const Request &request)
                 return result;
             }
         }
-        if (frame.cameraRgb.size() != size) {
+        if (ipr::fromCv(frame.cameraRgb.size()) != size) {
             report.exclusion = QStringLiteral("Dimensions différentes du reste de la série.");
             advance();
             continue;
@@ -179,7 +179,7 @@ Result run(const Request &request)
         features[size_t(index)] = PanoramaFeatures::detect(detection);
         report.features = int(features[size_t(index)].size());
         for (PanoramaFeatures::Feature &feature : features[size_t(index)])
-            feature.position = (feature.position + cv::Point2f(0.5f, 0.5f)) * float(1.0 / detectionScale) - cv::Point2f(0.5f, 0.5f);
+            feature.position = (feature.position + ipr::Point2f(0.5f, 0.5f)) * float(1.0 / detectionScale) - ipr::Point2f(0.5f, 0.5f);
         finer[size_t(index)] = perceptualCopy(frame.cameraRgb, finerScale);
         auto spool = std::make_unique<FrameSpool>(scratch.filePath(QStringLiteral("%1.source").arg(index)));
         if (!spool->write(frame.cameraRgb, result.scratchBytes)) {
@@ -251,11 +251,11 @@ Result run(const Request &request)
     surface.projection = result.shape.projection;
     surface.layout = result.shape.layout;
     surface.scale = solution.focal;
-    std::vector<cv::Rect2d> outlines;
-    cv::Rect2d whole;
+    std::vector<ipr::Rectd> outlines;
+    ipr::Rectd whole;
     for (const int member : solution.members) {
         PanoramaGeometry::FrameView view{solution.worldToCamera[size_t(member)], solution.focal, solution.distortion, size};
-        cv::Rect2d area;
+        ipr::Rectd area;
         if (!PanoramaGeometry::outline(surface, view, area)) {
             result.error = QStringLiteral("Ce champ dépasse ce qu'une projection plane peut tenir : choisissez une projection cylindrique ou sphérique.");
             return result;
@@ -263,8 +263,8 @@ Result run(const Request &request)
         whole = outlines.empty() ? area : (area | whole);
         outlines.push_back(area);
     }
-    surface.origin = cv::Point2d(std::floor(whole.x) - 1.0, std::floor(whole.y) - 1.0);
-    result.canvas = cv::Size(int(std::ceil(whole.width)) + 3, int(std::ceil(whole.height)) + 3);
+    surface.origin = ipr::Point2d(std::floor(whole.x) - 1.0, std::floor(whole.y) - 1.0);
+    result.canvas = ipr::Size(int(std::ceil(whole.width)) + 3, int(std::ceil(whole.height)) + 3);
     const double megapixels = double(result.canvas.width) * double(result.canvas.height) / 1e6;
     if (megapixels > request.maximumMegapixels || std::max(result.canvas.width, result.canvas.height) > largestCanvasSide) {
         result.error = QStringLiteral("Panorama trop grand : %1 × %2 pixels, %3 Mpx au plus.")
@@ -287,19 +287,19 @@ Result run(const Request &request)
                                int(std::ceil(std::sqrt(double(result.canvas.width) * result.canvas.height / reducedCanvasCells))),
                                int(std::ceil(std::sqrt(double(size.area()) / reducedFrameCells)))});
     result.seamCellPixels = cell;
-    const cv::Size reducedCanvas((result.canvas.width + cell - 1) / cell, (result.canvas.height + cell - 1) / cell);
+    const ipr::Size reducedCanvas((result.canvas.width + cell - 1) / cell, (result.canvas.height + cell - 1) / cell);
     std::vector<PanoramaBlend::View> views;
-    std::vector<cv::Rect> areas;
+    std::vector<ipr::Recti> areas;
     std::vector<std::unique_ptr<FrameSpool>> warpedColour, warpedValid;
-    const cv::Rect canvasArea(0, 0, result.canvas.width, result.canvas.height);
+    const ipr::Recti canvasArea(0, 0, result.canvas.width, result.canvas.height);
     for (size_t m = 0; m < solution.members.size(); ++m) {
         if (stopped())
             return result;
         const int member = solution.members[m];
         PanoramaGeometry::FrameView frameView{solution.worldToCamera[size_t(member)], solution.focal, solution.distortion, size};
-        cv::Rect2d placed;
+        ipr::Rectd placed;
         PanoramaGeometry::outline(surface, frameView, placed);
-        const cv::Rect area = cv::Rect(int(std::floor(placed.x)) - 1, int(std::floor(placed.y)) - 1,
+        const ipr::Recti area = ipr::Recti(int(std::floor(placed.x)) - 1, int(std::floor(placed.y)) - 1,
                                        int(std::ceil(placed.width)) + 3, int(std::ceil(placed.height)) + 3) & canvasArea;
         if (area.width >= largestWarp || area.height >= largestWarp) {
             result.error = QStringLiteral("Une photo occupe une trop grande partie de cette projection : choisissez-en une autre.");
@@ -351,51 +351,51 @@ Result run(const Request &request)
         layers.push_back(PanoramaBlend::prepareLayer(views[m], labels, int(m), narrowSigma, wideSigma));
 
     // Whole cells only: the rectangle has no gap, at the price of a few pixels at its edge.
-    cv::Mat covered = cv::Mat::zeros(reducedCanvas, CV_8UC1);
+    cv::Mat covered = cv::Mat::zeros(ipr::toCv(reducedCanvas), CV_8UC1);
     for (const PanoramaBlend::View &view : views) {
-        const cv::Rect inCanvas = view.area & cv::Rect(0, 0, reducedCanvas.width, reducedCanvas.height);
-        cv::Mat seat = covered(inCanvas);
+        const ipr::Recti inCanvas = view.area & ipr::Recti(0, 0, reducedCanvas.width, reducedCanvas.height);
+        cv::Mat seat = covered(ipr::toCv(inCanvas));
         // Written back into the canvas: seat is a region of it.
-        ipr::bitwiseOr(seat, view.whole(inCanvas - view.area.tl())).copyTo(seat);
+        ipr::bitwiseOr(seat, view.whole(ipr::toCv(inCanvas - view.area.tl()))).copyTo(seat);
     }
     result.coveredShare = double(ipr::countNonZero(covered)) / std::max(1.0, double(reducedCanvas.area()));
     views.clear();
     if (request.edges == Edges::Crop) {
-        const cv::Rect best = PanoramaBlend::lowRectangle(covered);
+        const ipr::Recti best = PanoramaBlend::lowRectangle(covered);
         if (best.empty()) {
             result.error = QStringLiteral("Aucun rectangle plein dans ce panorama.");
             return result;
         }
-        result.kept = cv::Rect(best.x * cell, best.y * cell, best.width * cell, best.height * cell) & canvasArea;
+        result.kept = ipr::Recti(best.x * cell, best.y * cell, best.width * cell, best.height * cell) & canvasArea;
     } else {
         result.kept = canvasArea;
     }
 
     // Written by bands: only the rows being joined are in memory.
     qint64 rowBytes = 0;
-    for (const cv::Rect &area : areas)
+    for (const ipr::Recti &area : areas)
         rowBytes += qint64(area.width) * qint64(3 * sizeof(float) + 1);
     const int bandRows = int(std::clamp<qint64>(qint64(request.memoryBudgetBytes) / std::max<qint64>(1, rowBytes),
                                                 minimumBandRows, std::max(minimumBandRows, result.kept.height)));
     result.bandRows = bandRows;
     const int bands = (result.kept.height + bandRows - 1) / bandRows;
     total = done + bands;
-    result.cameraRgb.create(result.kept.size(), CV_32FC3);
+    result.cameraRgb.create(ipr::toCv(result.kept.size()), CV_32FC3);
     // Pixel by pixel, what the frames really cover: only a fill needs it.
     cv::Mat real;
     if (request.edges == Edges::Fill)
-        real = cv::Mat::zeros(result.kept.size(), CV_8UC1);
+        real = cv::Mat::zeros(ipr::toCv(result.kept.size()), CV_8UC1);
     std::vector<cv::Mat> colourBands(areas.size()), validBands(areas.size());
     for (int band = 0; band < bands; ++band) {
         if (stopped()) {
             result.cameraRgb.release();
             return result;
         }
-        const cv::Rect region(result.kept.x, result.kept.y + band * bandRows, result.kept.width,
+        const ipr::Recti region(result.kept.x, result.kept.y + band * bandRows, result.kept.width,
                               std::min(bandRows, result.kept.height - band * bandRows));
         std::vector<PanoramaBlend::Pixels> pixels;
         for (size_t m = 0; m < areas.size(); ++m) {
-            const cv::Rect part = areas[m] & region;
+            const ipr::Recti part = areas[m] & region;
             if (part.empty())
                 continue;
             const int top = part.y, rows = part.height;
@@ -407,19 +407,19 @@ Result run(const Request &request)
             }
             PanoramaBlend::Pixels entry;
             entry.layer = &layers[m];
-            entry.area = cv::Rect(areas[m].x, top, areas[m].width, rows);
+            entry.area = ipr::Recti(areas[m].x, top, areas[m].width, rows);
             entry.colour = colourBands[m];
             entry.valid = validBands[m];
             pixels.push_back(entry);
             if (!real.empty()) {
-                const cv::Rect inBand(part.x - areas[m].x, 0, part.width, part.height);
-                cv::Mat seat = real(part - result.kept.tl());
-                ipr::bitwiseOr(seat, validBands[m](inBand)).copyTo(seat);
+                const ipr::Recti inBand(part.x - areas[m].x, 0, part.width, part.height);
+                cv::Mat seat = real(ipr::toCv(part - result.kept.tl()));
+                ipr::bitwiseOr(seat, validBands[m](ipr::toCv(inBand))).copyTo(seat);
             }
         }
         cv::Mat blended;
         PanoramaBlend::blendBand(pixels, cell, region, blended);
-        blended.copyTo(result.cameraRgb(cv::Rect(0, band * bandRows, region.width, region.height)));
+        blended.copyTo(result.cameraRgb(ipr::toCv(ipr::Recti(0, band * bandRows, region.width, region.height))));
         advance();
     }
     for (const std::unique_ptr<FrameSpool> &spool : warpedColour)

@@ -2,6 +2,7 @@
 
 #include "ColorMixerModel.h"
 #include "WorkingColorSpace.h"
+#include "Types.h"
 
 #include <algorithm>
 #include <cmath>
@@ -133,7 +134,7 @@ bool active(const Parameters &parameters)
     return any(parameters.hue) || any(parameters.saturation) || any(parameters.luminance);
 }
 
-void adjust(cv::Vec3d &lab, double proPhotoSaturation, const Parameters &parameters)
+void adjust(ipr::Vec3d &lab, double proPhotoSaturation, const Parameters &parameters)
 {
     const double chroma = std::hypot(lab[1], lab[2]);
     if (chroma < 1e-12) return;
@@ -166,26 +167,26 @@ void adjust(cv::Vec3d &lab, double proPhotoSaturation, const Parameters &paramet
     lab[2] = a * std::sin(rotation) + b * std::cos(rotation);
 }
 
-cv::Vec3f apply(const cv::Vec3f &rgb, const Parameters &parameters)
+ipr::Vec3f apply(const ipr::Vec3f &rgb, const Parameters &parameters)
 {
     if (!active(parameters) || (rgb[0] == rgb[1] && rgb[1] == rgb[2]))
         return rgb; // zero settings / exact grey identity, without matrix round trip
-    cv::Vec3d lab = WorkingColor::workingToOklab(cv::Vec3d(rgb));
+    ipr::Vec3d lab = WorkingColor::workingToOklab(ipr::Vec3d(rgb));
     if (std::hypot(lab[1], lab[2]) < 1e-12) return rgb;
-    adjust(lab, WorkingColor::proPhotoSaturation(cv::Vec3d(rgb)), parameters);
-    return cv::Vec3f(WorkingColor::oklabToWorking(lab));
+    adjust(lab, WorkingColor::proPhotoSaturation(ipr::Vec3d(rgb)), parameters);
+    return ipr::Vec3f(WorkingColor::oklabToWorking(lab));
 }
 
-cv::Vec3f trackColour(int band, int component, int value)
+ipr::Vec3f trackColour(int band, int component, int value)
 {
     if (band < 0 || band >= int(BandCount) || component < 0 || component >= Model::ComponentCount)
         return {0.5f, 0.5f, 0.5f};
     const double hue = peakHues()[size_t(band)] / DegreesPerRadian;
-    const cv::Vec3d reference = WorkingColor::oklabToWorking(
+    const ipr::Vec3d reference = WorkingColor::oklabToWorking(
         {TrackLightness, TrackChroma * std::cos(hue), TrackChroma * std::sin(hue)});
     Parameters parameters;
     (component == 0 ? parameters.hue : component == 1 ? parameters.saturation : parameters.luminance)[size_t(band)] = value;
-    const cv::Vec3f reached = apply(cv::Vec3f(reference), parameters);
-    return WorkingColor::encodedInGamut(WorkingColor::workingToOklab(cv::Vec3d(reached)));
+    const ipr::Vec3f reached = apply(ipr::Vec3f(reference), parameters);
+    return WorkingColor::encodedInGamut(WorkingColor::workingToOklab(ipr::Vec3d(reached)));
 }
 }

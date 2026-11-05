@@ -7,6 +7,7 @@
 #include "controlled_memory.h"
 #include "imageprovider.h"
 #include "synthetic_dcp.h"
+#include "OpenCvBridge.h"
 
 #include <QCoreApplication>
 #include <QDir>
@@ -61,33 +62,33 @@ bool waitFor(const std::function<bool()> &done, int milliseconds = 60000)
     return done();
 }
 
-cv::Mat noisyRgb(const cv::Size &size)
+cv::Mat noisyRgb(const ipr::Size &size)
 {
-    cv::Mat rgb(size, CV_32FC3);
+    cv::Mat rgb(ipr::toCv(size), CV_32FC3);
     cv::RNG random(5);
     for (int y = 0; y < rgb.rows; ++y)
         for (int x = 0; x < rgb.cols; ++x) {
             const float shared = float(random.gaussian(0.01));
             const float u = float(x) / float(rgb.cols), v = float(y) / float(rgb.rows);
-            rgb.at<cv::Vec3f>(y, x) = cv::Vec3f(std::max(0.002f, 0.05f + 0.6f * u + shared + float(random.gaussian(0.006))),
+            ipr::at<ipr::Vec3f>(rgb, y, x) = ipr::Vec3f(std::max(0.002f, 0.05f + 0.6f * u + shared + float(random.gaussian(0.006))),
                                                 std::max(0.002f, 0.06f + 0.5f * v + shared + float(random.gaussian(0.006))),
                                                 std::max(0.002f, 0.30f - 0.2f * u + shared + float(random.gaussian(0.006))));
         }
     return rgb;
 }
 
-ColorPipeline::WorkingImage rasterSource(const cv::Size &size)
+ColorPipeline::WorkingImage rasterSource(const ipr::Size &size)
 {
     std::vector<cv::Mat> channels;
     cv::split(noisyRgb(size), channels);
-    channels.emplace_back(size, CV_32FC1, cv::Scalar(1));
+    channels.emplace_back(ipr::toCv(size), CV_32FC1, cv::Scalar(1));
     ColorPipeline::WorkingImage image;
     cv::merge(channels, image.linearRgba);
     image.referenceWhiteBalanceKelvin = 5200.0;
     return image;
 }
 
-ColorPipeline::WorkingImage cameraSource(const cv::Size &size, const QString &profile)
+ColorPipeline::WorkingImage cameraSource(const ipr::Size &size, const QString &profile)
 {
     CameraSignal::Source signal;
     signal.rgb = noisyRgb(size);
@@ -95,7 +96,7 @@ ColorPipeline::WorkingImage cameraSource(const cv::Size &size, const QString &pr
     signal.cameraModel = QStringLiteral("EOS R6 Mark III");
     signal.whiteBalanceKelvin = 5200.0;
     signal.whiteBalanceApplied = true;
-    signal.cameraNeutral = cv::Vec3d(0.6, 1.0, 0.8);
+    signal.cameraNeutral = ipr::Vec3d(0.6, 1.0, 0.8);
     QString error;
     ColorPipeline::WorkingImage image = CameraSignal::render(std::move(signal), profile, {}, &error);
     if (image.isNull())
@@ -239,13 +240,13 @@ void rendering(const ColorPipeline::WorkingImage &source, const char *name)
     const ColorPipeline::WorkingImage zoned = IprTestImageGenerator::render(source, zone);
     const ColorPipeline::WorkingImage lifted = IprTestImageGenerator::render(source, oneEv);
     const int rows = zoned.linearRgba.rows, cols = zoned.linearRgba.cols;
-    const cv::Rect upper(0, 0, cols, rows * 2 / 5), lower(0, rows * 3 / 5, cols, rows - rows * 3 / 5);
+    const ipr::Recti upper(0, 0, cols, rows * 2 / 5), lower(0, rows * 3 / 5, cols, rows - rows * 3 / 5);
     cv::Mat difference;
     double worst = 0.0;
-    cv::absdiff(zoned.linearRgba(upper), lifted.linearRgba(upper), difference);
+    cv::absdiff(zoned.linearRgba(ipr::toCv(upper)), lifted.linearRgba(ipr::toCv(upper)), difference);
     cv::minMaxLoc(difference.reshape(1), nullptr, &worst);
     check(worst <= 1e-4, "inside its zone, the whole effect");
-    cv::absdiff(zoned.linearRgba(lower), plain.linearRgba(lower), difference);
+    cv::absdiff(zoned.linearRgba(ipr::toCv(lower)), plain.linearRgba(ipr::toCv(lower)), difference);
     cv::minMaxLoc(difference.reshape(1), nullptr, &worst);
     check(worst <= 1e-4, "outside it, nothing");
 
@@ -312,7 +313,7 @@ void withRange(const ColorPipeline::WorkingImage &source)
     for (int y = 0; y < plain.linearRgba.rows; ++y)
         for (int x = 0; x < plain.linearRgba.cols; ++x) {
             const float tone = luminance.at<float>(y, x);
-            const float before = plain.linearRgba.at<cv::Vec4f>(y, x)[1], after = lifted.linearRgba.at<cv::Vec4f>(y, x)[1];
+            const float before = ipr::at<ipr::Vec4f>(plain.linearRgba, y, x)[1], after = ipr::at<ipr::Vec4f>(lifted.linearRgba, y, x)[1];
             if (tone < 0.35f) {
                 ++darkTotal;
                 // A profile can leave a dark colour below zero: an exposure scales it all the same.
@@ -350,12 +351,12 @@ void withGeometry(const ColorPipeline::WorkingImage &source)
         const ColorPipeline::WorkingImage zoned = IprTestImageGenerator::render(source, masked);
         check(zoned.linearRgba.size() == plain.linearRgba.size(), "the canvas stays the same");
         const int rows = plain.linearRgba.rows, cols = plain.linearRgba.cols;
-        const auto meanOf = [](const cv::Mat &image, const cv::Rect &area) {
-            const cv::Scalar mean = cv::mean(image(area));
+        const auto meanOf = [](const cv::Mat &image, const ipr::Recti &area) {
+            const cv::Scalar mean = cv::mean(image(ipr::toCv(area)));
             return (mean[0] + mean[1] + mean[2]) / 3.0;
         };
         // Inside the image, away from the zones a transform empties.
-        const cv::Rect upper(cols / 4, rows / 8, cols / 2, rows / 4), lower(cols / 4, rows * 5 / 8, cols / 2, rows / 4);
+        const ipr::Recti upper(cols / 4, rows / 8, cols / 2, rows / 4), lower(cols / 4, rows * 5 / 8, cols / 2, rows / 4);
         const double gain = meanOf(zoned.linearRgba, upper) / std::max(1e-6, meanOf(plain.linearRgba, upper));
         const double unchanged = meanOf(zoned.linearRgba, lower) / std::max(1e-6, meanOf(plain.linearRgba, lower));
         if (gain < 1.3 || std::abs(unchanged - 1.0) > 0.002)
@@ -647,7 +648,7 @@ int main(int argc, char **argv)
     check(file.open(QIODevice::WriteOnly) && file.write(SyntheticDcp::make(true)) > 0, "a synthetic profile");
     file.close();
 
-    const cv::Size size(240, 160);
+    const ipr::Size size(240, 160);
     const ColorPipeline::WorkingImage raster = rasterSource(size);
     rendering(raster, "raster");
     withRange(raster);

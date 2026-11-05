@@ -298,7 +298,7 @@ StackSession::Outcome StackSession::compute(Tasks::Context &context, const QStri
     result->usedFrames = job.usedFrames;
     result->leftOut = int(files.size()) - job.usedFrames;
     const double whole = double(job.commonArea.area());
-    const cv::Size frame = job.frameSize;
+    const ipr::Size frame = job.frameSize;
     result->areaKept = frame.area() > 0 ? whole / double(frame.area()) : 0.0;
     result->cameraRgb = std::move(job.cameraRgb);
     result->sharpestViews = job.turbulence.applied ? job.turbulence.kept : 0;

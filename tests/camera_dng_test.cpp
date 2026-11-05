@@ -3,6 +3,7 @@
 #include "ImageExporter.h"
 #include "RawDecoder.h"
 #include "synthetic_dcp.h"
+#include "OpenCvBridge.h"
 
 #include <QCoreApplication>
 #include <QDir>
@@ -41,7 +42,7 @@ CameraDng::Content sample()
     content.exposureSeconds = 0.005;
     content.focalLengthMm = 200.0;
     content.captureDate = QDateTime(QDate(2026, 10, 30), QTime(22, 44, 40), Qt::UTC);
-    content.cameraNeutral = cv::Vec3d(0.5, 1.0, 0.7);
+    content.cameraNeutral = ipr::Vec3d(0.5, 1.0, 0.7);
     content.whiteBalanceKelvin = 4321.0;
     content.renderOptions.cameraBaselineExposureEv = 0.25;
     content.renderOptions.profileExposureCompensationEv = -0.1;
@@ -91,10 +92,10 @@ void roundTrip(const QDir &folder)
 
     // A signal above white keeps its range, and tells it through the baseline exposure.
     CameraDng::Content bright = sample();
-    bright.cameraRgb.at<cv::Vec3f>(5, 5) = cv::Vec3f(3.f, 3.f, 3.f);
+    ipr::at<ipr::Vec3f>(bright.cameraRgb, 5, 5) = ipr::Vec3f(3.f, 3.f, 3.f);
     const QString brightPath = folder.filePath(QStringLiteral("bright.dng"));
     check(CameraDng::write(bright, brightPath, &error) && CameraDng::read(brightPath, read, &error), "a bright signal goes through");
-    const cv::Vec3f high = read.cameraRgb.at<cv::Vec3f>(5, 5);
+    const ipr::Vec3f high = ipr::at<ipr::Vec3f>(read.cameraRgb, 5, 5);
     check(std::abs(high[1] - 3.f) < 0.001f, "above white stays above white");
 
     // What other software reads: the standard tags of a LinearRaw file.
@@ -131,7 +132,7 @@ void refusals(const QDir &folder)
     wrongType.cameraRgb = cv::Mat(4, 4, CV_8UC3, cv::Scalar::all(1));
     check(!CameraDng::write(wrongType, path, &error), "a wrong type is refused");
     CameraDng::Content noBalance = sample();
-    noBalance.cameraNeutral = cv::Vec3d(0, 0, 0);
+    noBalance.cameraNeutral = ipr::Vec3d(0, 0, 0);
     check(!CameraDng::write(noBalance, path, &error), "an unknown balance is refused");
     CameraDng::Content noMatrix = sample();
     noMatrix.colorMatrix = {};

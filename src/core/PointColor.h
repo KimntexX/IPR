@@ -1,6 +1,8 @@
 #ifndef IPR_CORE_POINTCOLOR_H
 #define IPR_CORE_POINTCOLOR_H
 
+#include "Types.h"
+
 #include <array>
 #include <cstddef>
 #include <opencv2/core.hpp>
@@ -20,7 +22,7 @@ inline constexpr size_t MaxPoints = 8;
 // a linear ProPhoto RGB colour of the rendered image. Lightroom writes a source in
 // the same form but in its own space, ahead of its rendering: its numbers are near,
 // not equal (the studies fit the offset).
-using Hsv = cv::Vec3d;
+using Hsv = ipr::Vec3d;
 
 struct Point {
     Hsv source{};                // picked colour
@@ -41,8 +43,8 @@ bool active(const Parameters &parameters);
 
 // HSV of a linear working-space (Rec.2020) colour, and back; the source of a
 // pixel picked in the photo.
-Hsv toHsv(const cv::Vec3d &workingRgb);
-cv::Vec3d fromHsv(const Hsv &hsv);
+Hsv toHsv(const ipr::Vec3d &workingRgb);
+ipr::Vec3d fromHsv(const Hsv &hsv);
 
 // Weight in [0, 1] of a colour in a point's neighbourhood: 1 near its source, 0
 // beyond its range, 0 for greys. Also for the range overlay.
@@ -50,10 +52,10 @@ double weight(const Hsv &colour, const Point &point);
 
 // One linear working-space colour, in place; values clamped to their ranges.
 // Greys are left unchanged; no clipping. The image loop is PerceptualColour's.
-void adjust(cv::Vec3d &workingRgb, const Parameters &parameters);
+void adjust(ipr::Vec3d &workingRgb, const Parameters &parameters);
 
 // Input/output: linear Rec.2020 D65 RGB, as adjust().
-cv::Vec3f apply(const cv::Vec3f &rgb, const Parameters &parameters);
+ipr::Vec3f apply(const ipr::Vec3f &rgb, const Parameters &parameters);
 } // namespace PointColor
 
 #endif // IPR_CORE_POINTCOLOR_H

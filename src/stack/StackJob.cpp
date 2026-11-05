@@ -26,51 +26,51 @@ constexpr int minimumBandRows = 16;
 constexpr double subjectMargin = 0.15;    // around what the matches span, of its size
 
 // What a small subject needs around what the matches span.
-cv::Rect subjectArea(const cv::Rect2d &inliers, const cv::Size &size)
+ipr::Recti subjectArea(const ipr::Rectd &inliers, const ipr::Size &size)
 {
     const double marginX = subjectMargin * inliers.width + 32.0, marginY = subjectMargin * inliers.height + 32.0;
-    const cv::Rect area(int(inliers.x - marginX), int(inliers.y - marginY),
+    const ipr::Recti area(int(inliers.x - marginX), int(inliers.y - marginY),
                         int(inliers.width + 2.0 * marginX), int(inliers.height + 2.0 * marginY));
-    return area & cv::Rect(0, 0, size.width, size.height);
+    return area & ipr::Recti(0, 0, size.width, size.height);
 }
 
 // The pixels of a frame that the subject's area can reach, kept as decoded.
-StackTurbulence::View subjectView(const cv::Mat &frame, const cv::Rect &subject, const cv::Matx33d &referenceToFrame, int reach)
+StackTurbulence::View subjectView(const cv::Mat &frame, const ipr::Recti &subject, const ipr::Matrix33d &referenceToFrame, int reach)
 {
-    cv::Point2d lowest(frame.cols, frame.rows), highest(0, 0);
-    for (const cv::Point corner : {subject.tl(), cv::Point(subject.x + subject.width, subject.y),
-                                   cv::Point(subject.x, subject.y + subject.height), subject.br()}) {
-        const cv::Vec3d mapped = referenceToFrame * cv::Vec3d(corner.x, corner.y, 1.0);
-        const cv::Point2d place(mapped[0] / mapped[2], mapped[1] / mapped[2]);
+    ipr::Point2d lowest(frame.cols, frame.rows), highest(0, 0);
+    for (const ipr::Point2i corner : {subject.tl(), ipr::Point2i(subject.x + subject.width, subject.y),
+                                   ipr::Point2i(subject.x, subject.y + subject.height), subject.br()}) {
+        const ipr::Vec3d mapped = referenceToFrame * ipr::Vec3d(corner.x, corner.y, 1.0);
+        const ipr::Point2d place(mapped[0] / mapped[2], mapped[1] / mapped[2]);
         lowest = {std::min(lowest.x, place.x), std::min(lowest.y, place.y)};
         highest = {std::max(highest.x, place.x), std::max(highest.y, place.y)};
     }
-    const cv::Rect wanted(int(lowest.x) - reach, int(lowest.y) - reach,
+    const ipr::Recti wanted(int(lowest.x) - reach, int(lowest.y) - reach,
                           int(highest.x - lowest.x) + 2 * reach + 1, int(highest.y - lowest.y) + 2 * reach + 1);
-    const cv::Rect area = wanted & cv::Rect(0, 0, frame.cols, frame.rows);
+    const ipr::Recti area = wanted & ipr::Recti(0, 0, frame.cols, frame.rows);
     StackTurbulence::View view;
     view.origin = area.tl();
     view.referenceToFrame = referenceToFrame;
     if (!area.empty())
-        view.pixels = frame(area).clone();
+        view.pixels = frame(ipr::toCv(area)).clone();
     return view;
 }
 
 cv::Mat proxyOf(const cv::Mat &image)
 {
     cv::Mat proxy;
-    proxy = ipr::resized(image, cv::Size(std::max(1, image.cols / proxyDivisor), std::max(1, image.rows / proxyDivisor)),
+    proxy = ipr::resized(image, ipr::Size(std::max(1, image.cols / proxyDivisor), std::max(1, image.rows / proxyDivisor)),
                          ipr::Interpolation::Area);
     return proxy;
 }
 
 // Per channel, the median ratio of the reference to a registered frame, where both are
 // well exposed. Corrects the flicker of a lamp and a different as-shot balance.
-bool levelGains(const cv::Mat &referenceProxy, const cv::Mat &frameProxy, cv::Vec3d &gains)
+bool levelGains(const cv::Mat &referenceProxy, const cv::Mat &frameProxy, ipr::Vec3d &gains)
 {
     std::array<std::vector<float>, 3> ratios;
     for (int y = 0; y < referenceProxy.rows; ++y) {
-        const cv::Vec3f *a = referenceProxy.ptr<cv::Vec3f>(y), *b = frameProxy.ptr<cv::Vec3f>(y);
+        const ipr::Vec3f *a = referenceProxy.ptr<ipr::Vec3f>(y), *b = frameProxy.ptr<ipr::Vec3f>(y);
         for (int x = 0; x < referenceProxy.cols; ++x)
             for (int c = 0; c < 3; ++c)
                 if (a[x][c] > darkestForGain && b[x][c] > darkestForGain &&
@@ -89,13 +89,13 @@ bool levelGains(const cv::Mat &referenceProxy, const cv::Mat &frameProxy, cv::Ve
 }
 
 // The source coordinates of each reference pixel: the local field, then the transform.
-void sourceMaps(const cv::Matx33d &referenceToFrame, const cv::Mat &displacements, cv::Mat &mapX, cv::Mat &mapY)
+void sourceMaps(const ipr::Matrix33d &referenceToFrame, const cv::Mat &displacements, cv::Mat &mapX, cv::Mat &mapY)
 {
     mapX.create(displacements.size(), CV_32FC1);
     mapY.create(displacements.size(), CV_32FC1);
     ipr::parallelRows(displacements.rows, [&](int first, int last) {
         for (int y = first; y < last; ++y) {
-            const cv::Vec2f *field = displacements.ptr<cv::Vec2f>(y);
+            const ipr::Vec2f *field = displacements.ptr<ipr::Vec2f>(y);
             float *outX = mapX.ptr<float>(y), *outY = mapY.ptr<float>(y);
             for (int x = 0; x < displacements.cols; ++x) {
                 const double px = x + double(field[x][0]), py = y + double(field[x][1]);
@@ -110,7 +110,7 @@ void sourceMaps(const cv::Matx33d &referenceToFrame, const cv::Mat &displacement
 // Where the frame's pixels, with the kernel's whole support, fall inside it. The preimage
 // of a rectangle under a transform is convex: one span per row. A local field moves pixels
 // by at most its longest displacement, which the margin covers.
-void narrowSpans(const cv::Matx33d &referenceToFrame, const cv::Size &size, double fieldReach, std::vector<cv::Vec2i> &spans)
+void narrowSpans(const ipr::Matrix33d &referenceToFrame, const ipr::Size &size, double fieldReach, std::vector<ipr::Vec2i> &spans)
 {
     const double margin = interpolationMargin + std::ceil(fieldReach);
     const double right = size.width - 1 - margin, bottom = size.height - 1 - margin;
@@ -128,7 +128,7 @@ void narrowSpans(const cv::Matx33d &referenceToFrame, const cv::Size &size, doub
                     last = x;
                 }
             }
-            cv::Vec2i &span = spans[size_t(y)];
+            ipr::Vec2i &span = spans[size_t(y)];
             span[0] = std::max(span[0], first);
             span[1] = std::min(span[1], last + 1);
         }
@@ -137,9 +137,9 @@ void narrowSpans(const cv::Matx33d &referenceToFrame, const cv::Size &size, doub
 
 } // namespace
 
-cv::Rect largestRectangle(const std::vector<cv::Vec2i> &spans)
+ipr::Recti largestRectangle(const std::vector<ipr::Vec2i> &spans)
 {
-    cv::Rect best;
+    ipr::Recti best;
     qint64 bestArea = 0;
     const int rows = int(spans.size());
     // In a convex area the narrowest row of a range is one of its two ends.
@@ -155,14 +155,14 @@ cv::Rect largestRectangle(const std::vector<cv::Vec2i> &spans)
             const qint64 area = qint64(std::max(0, right - left)) * height;
             if (area > bestArea) {
                 bestArea = area;
-                best = cv::Rect(left, top, right - left, height);
+                best = ipr::Recti(left, top, right - left, height);
             }
         }
     }
     return best;
 }
 
-quint64 scratchBytesNeeded(int frameCount, const cv::Size &size)
+quint64 scratchBytesNeeded(int frameCount, const ipr::Size &size)
 {
     return quint64(std::max(0, frameCount)) * quint64(std::max(0, size.width)) * quint64(std::max(0, size.height)) *
            quint64(3 * sizeof(float));
@@ -203,7 +203,7 @@ Result run(const Request &request)
             ? QStringLiteral("L'image de référence n'a pas pu être décodée.") : reference.error;
         return result;
     }
-    const cv::Size size = reference.cameraRgb.size();
+    const ipr::Size size = ipr::fromCv(reference.cameraRgb.size());
     result.frameSize = size;
 
     const QString root = request.scratchRoot.isEmpty() ? QDir::tempPath() : request.scratchRoot;
@@ -222,8 +222,8 @@ Result run(const Request &request)
     }
     std::vector<std::unique_ptr<FrameSpool>> spool;
 
-    std::vector<cv::Vec2i> spans(size_t(size.height), cv::Vec2i(0, size.width));
-    cv::Rect subject;
+    std::vector<ipr::Vec2i> spans(size_t(size.height), ipr::Vec2i(0, size.width));
+    ipr::Recti subject;
     std::vector<StackTurbulence::View> views;
     StackTurbulence::View pendingView;
     bool hasPendingView = false;
@@ -264,7 +264,7 @@ Result run(const Request &request)
         report.index = index;
         hasPendingView = false;
         Frame frame = request.frame(index);
-        if (frame.cameraRgb.empty() || frame.cameraRgb.type() != CV_32FC3 || frame.cameraRgb.size() != size) {
+        if (frame.cameraRgb.empty() || frame.cameraRgb.type() != CV_32FC3 || ipr::fromCv(frame.cameraRgb.size()) != size) {
             report.exclusion = !frame.error.isEmpty() ? frame.error
                 : frame.cameraRgb.empty() ? QStringLiteral("Image illisible.")
                                           : QStringLiteral("Dimensions différentes de l'image de référence.");
@@ -288,7 +288,7 @@ Result run(const Request &request)
             const int reach = request.turbulence.local.radius + request.turbulence.local.blockHalf + interpolationMargin;
             if (viewBytes * quint64(request.frameCount) <= request.memoryBudgetBytes) {
                 if (!referencePixels.empty())
-                    views.push_back(subjectView(referencePixels, subject, cv::Matx33d::eye(), reach));
+                    views.push_back(subjectView(referencePixels, subject, ipr::Matrix33d::identity(), reach));
                 pendingView = subjectView(frame.cameraRgb, subject, report.alignment.referenceToFrame, reach);
                 hasPendingView = true;
             } else {
@@ -355,7 +355,7 @@ Result run(const Request &request)
     result.bandRows = bandRows;
     const int bands = (result.commonArea.height + bandRows - 1) / bandRows;
     total = request.frameCount + bands;
-    result.cameraRgb.create(result.commonArea.size(), CV_32FC3);
+    result.cameraRgb.create(ipr::toCv(result.commonArea.size()), CV_32FC3);
     std::vector<cv::Mat> rows(spool.size()), cut(spool.size());
     for (int band = 0; band < bands; ++band) {
         if (stopped()) {
@@ -367,16 +367,16 @@ Result run(const Request &request)
         // The decisions look around a pixel: each part reads that much more, the same
         // context whatever the bands. The common area keeps a margin inside the frame.
         const int context = (StackMerge::decisionWindow - 1) / 2;
-        const cv::Rect wanted(result.commonArea.x - context, result.commonArea.y + top - context,
+        const ipr::Recti wanted(result.commonArea.x - context, result.commonArea.y + top - context,
                               result.commonArea.width + 2 * context, height + 2 * context);
-        const cv::Rect readable = wanted & cv::Rect(0, 0, size.width, size.height);
+        const ipr::Recti readable = wanted & ipr::Recti(0, 0, size.width, size.height);
         for (size_t i = 0; i < spool.size(); ++i) {
             if (!spool[i]->read(size, CV_32FC3, readable.y, readable.height, rows[i])) {
                 result.cameraRgb.release();
                 result.error = QStringLiteral("Lecture impossible dans le dossier tampon.");
                 return result;
             }
-            cut[i] = rows[i](cv::Rect(readable.x, 0, readable.width, readable.height));
+            cut[i] = rows[i](ipr::toCv(ipr::Recti(readable.x, 0, readable.width, readable.height)));
         }
         cv::Mat merged;
         StackMerge::Statistics statistics;
@@ -385,14 +385,14 @@ Result run(const Request &request)
             result.error = QStringLiteral("Fusion impossible.");
             return result;
         }
-        merged(cv::Rect(result.commonArea.x - readable.x, result.commonArea.y + top - readable.y, result.commonArea.width, height))
-            .copyTo(result.cameraRgb(cv::Rect(0, top, result.commonArea.width, height)));
+        merged(ipr::toCv(ipr::Recti(result.commonArea.x - readable.x, result.commonArea.y + top - readable.y, result.commonArea.width, height)))
+            .copyTo(result.cameraRgb(ipr::toCv(ipr::Recti(0, top, result.commonArea.width, height))));
         result.merge.samples += statistics.samples;
         result.merge.rejected += statistics.rejected;
         advance();
     }
     if (!views.empty()) {
-        const cv::Rect inMerged = (subject & result.commonArea) - result.commonArea.tl();
+        const ipr::Recti inMerged = (subject & result.commonArea) - result.commonArea.tl();
         result.subject = inMerged + result.commonArea.tl();
         StackTurbulence::Options options = request.turbulence;
         options.rejectionSigma = request.rejectionSigma;

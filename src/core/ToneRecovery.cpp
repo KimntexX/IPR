@@ -4,6 +4,7 @@
 #include "ToneRecoveryModel.h"
 #include "WorkingColorSpace.h"
 #include "Parallel.h"
+#include "OpenCvBridge.h"
 
 #include <algorithm>
 #include <cmath>
@@ -220,26 +221,26 @@ float Curve::read(const Table &table, float y, bool perChannel) const
 }
 
 namespace {
-inline void applyToPixel(cv::Vec3f &pixel, const Curve &toneCurve)
+inline void applyToPixel(ipr::Vec3f &pixel, const Curve &toneCurve)
 {
     if (!toneCurve.luminanceIdentity()) {
         const float luminance = WorkingColor::nonNegativeLuminance(pixel);
         const float target = toneCurve.luminance(luminance);
         if (target > luminance && luminance > 0.0f) {
-            const cv::Vec3d delivery = WorkingColor::toSrgb() * cv::Vec3d(pixel);
+            const ipr::Vec3d delivery = WorkingColor::toSrgb() * ipr::Vec3d(pixel);
             float rgb[3] = {float(delivery[0]), float(delivery[1]), float(delivery[2])};
             brightenTowardWhite(rgb, luminance, target);
-            pixel = cv::Vec3f(WorkingColor::fromSrgb() * cv::Vec3d(rgb[0], rgb[1], rgb[2]));
+            pixel = ipr::Vec3f(WorkingColor::fromSrgb() * ipr::Vec3d(rgb[0], rgb[1], rgb[2]));
         } else if (target < luminance) {
             float rgb[3] = {pixel[0], pixel[1], pixel[2]};
             darkenKeepingColour(rgb, luminance, target);
-            pixel = cv::Vec3f(rgb[0], rgb[1], rgb[2]);
+            pixel = ipr::Vec3f(rgb[0], rgb[1], rgb[2]);
         }
     }
     if (!toneCurve.channelIdentity()) {
-        cv::Vec3d srgb = WorkingColor::toSrgb() * cv::Vec3d(pixel);
+        ipr::Vec3d srgb = WorkingColor::toSrgb() * ipr::Vec3d(pixel);
         for (int c = 0; c < 3; ++c) srgb[c] = toneCurve.channel(float(srgb[c]));
-        pixel = cv::Vec3f(WorkingColor::fromSrgb() * srgb);
+        pixel = ipr::Vec3f(WorkingColor::fromSrgb() * srgb);
     }
 }
 }
@@ -260,7 +261,7 @@ void apply(cv::Mat &image, const Amounts &amounts, const Statistics &statistics,
     const LocalValues::Combinations combinations(
         {axis(amounts.shadows, LocalValues::Shadows), axis(amounts.blacks, LocalValues::Blacks),
          axis(amounts.highlights, LocalValues::Highlights), axis(amounts.whites, LocalValues::Whites)},
-        image.size(), MaxLocalCurves);
+        ipr::fromCv(image.size()), MaxLocalCurves);
     if (combinations.active()) {
         const Adaptation adaptation = adapt(statistics);
         std::vector<std::unique_ptr<const Curve>> curves(size_t(combinations.count()));
@@ -272,7 +273,7 @@ void apply(cv::Mat &image, const Amounts &amounts, const Statistics &statistics,
         });
         ipr::parallelRows(image.rows, [&](int first, int last) {
             for (int y = first; y < last; ++y) {
-                cv::Vec3f *row = image.ptr<cv::Vec3f>(y);
+                ipr::Vec3f *row = image.ptr<ipr::Vec3f>(y);
                 auto indices = combinations.row(y);
                 for (int x = 0; x < image.cols; ++x)
                     applyToPixel(row[x], *curves[size_t(indices.at(x))]);
@@ -283,7 +284,7 @@ void apply(cv::Mat &image, const Amounts &amounts, const Statistics &statistics,
     if (identity(amounts)) return;
     const Curve toneCurve(amounts, adapt(statistics));
     for (int y = 0; y < image.rows; ++y) {
-        cv::Vec3f *row = image.ptr<cv::Vec3f>(y);
+        ipr::Vec3f *row = image.ptr<ipr::Vec3f>(y);
         for (int x = 0; x < image.cols; ++x)
             applyToPixel(row[x], toneCurve);
     }

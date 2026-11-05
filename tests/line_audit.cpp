@@ -7,6 +7,7 @@
 #include "LineDetection.h"
 #include "RawDecoder.h"
 #include "Straightening.h"
+#include "OpenCvBridge.h"
 
 #include <QCommandLineParser>
 #include <QCoreApplication>
@@ -66,7 +67,7 @@ QJsonObject toJson(const Straightening::Proposal &proposal)
 cv::Mat central(const cv::Mat &image)
 {
     const int width = int(image.cols * centralShare), height = int(image.rows * centralShare);
-    return image(cv::Rect((image.cols - width) / 2, (image.rows - height) / 2, width, height));
+    return image(ipr::toCv(ipr::Recti((image.cols - width) / 2, (image.rows - height) / 2, width, height)));
 }
 
 QImage shown(const cv::Mat &rgb, int side)
@@ -163,7 +164,7 @@ int main(int argc, char **argv)
             continue;
         }
         const cv::Mat rgb = proxyOf(loaded.image.linearRgba);
-        const cv::Size size = rgb.size();
+        const ipr::Size size = ipr::fromCv(rgb.size());
         entry["proxy"] = QJsonArray{size.width, size.height};
 
         QElapsedTimer clock;
@@ -187,13 +188,13 @@ int main(int argc, char **argv)
 
         // A known rotation of the photo itself, read on the same central area.
         const cv::Mat straightCentre = central(rgb);
-        const auto reference = Straightening::propose(Straightening::linesOf(straightCentre), straightCentre.size(), {}, Straightening::Mode::Level);
+        const auto reference = Straightening::propose(Straightening::linesOf(straightCentre), ipr::fromCv(straightCentre.size()), {}, Straightening::Mode::Level);
         QJsonArray known;
         for (const float angle : {-5.0f, -2.0f, -0.5f, 0.5f, 2.0f, 5.0f}) {
             Geometry::Settings turned;
             turned.rotation = angle;
             const cv::Mat turnedCentre = central(Geometry::warpRgb(rgb, turned, Geometry::Quality::Export));
-            const auto read = Straightening::propose(Straightening::linesOf(turnedCentre), turnedCentre.size(), {}, Straightening::Mode::Level);
+            const auto read = Straightening::propose(Straightening::linesOf(turnedCentre), ipr::fromCv(turnedCentre.size()), {}, Straightening::Mode::Level);
             QJsonObject item{{"angle", double(angle)}, {"refusal", refusalName(read.refusal)}};
             if (read.valid() && reference.valid()) {
                 // The photo leans by the angle more than the reference did, and the proposal answers the opposite.

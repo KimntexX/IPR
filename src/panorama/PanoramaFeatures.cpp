@@ -31,7 +31,7 @@ inline float bilinear(const cv::Mat &image, float x, float y)
 
 // Harris corners, the strongest first, none too close to a stronger one so that a busy part
 // of the image does not take them all.
-std::vector<cv::Point2f> cornersOf(const cv::Mat &level, int wanted)
+std::vector<ipr::Point2f> cornersOf(const cv::Mat &level, int wanted)
 {
     cv::Mat gradientX, gradientY;
     gradientX = ipr::sobel(level, true);
@@ -55,7 +55,7 @@ std::vector<cv::Point2f> cornersOf(const cv::Mat &level, int wanted)
             strongest = std::max(strongest, out[x]);
         }
     }
-    std::vector<cv::Point2f> corners;
+    std::vector<ipr::Point2f> corners;
     if (strongest <= 0.0f)
         return corners;
 
@@ -98,7 +98,7 @@ std::vector<cv::Point2f> cornersOf(const cv::Mat &level, int wanted)
 
 void detectOnLevel(const cv::Mat &level, float toImage, const Options &options, std::vector<Feature> &features)
 {
-    const std::vector<cv::Point2f> corners = cornersOf(level, options.cornersPerLevel);
+    const std::vector<ipr::Point2f> corners = cornersOf(level, options.cornersPerLevel);
 
     cv::Mat sampled, smooth, gradientX, gradientY;
     sampled = ipr::gaussianBlurred(level, sampleBlur, ipr::BlurBorder::Mirror);
@@ -108,7 +108,7 @@ void detectOnLevel(const cv::Mat &level, float toImage, const Options &options, 
 
     // The patch can turn in any direction: its corners stay inside with this margin.
     const float reach = spacing * float(grid) * 0.5f * std::sqrt(2.0f) + 2.0f;
-    for (const cv::Point2f &corner : corners) {
+    for (const ipr::Point2f &corner : corners) {
         if (corner.x < reach || corner.y < reach || corner.x >= float(level.cols) - reach || corner.y >= float(level.rows) - reach)
             continue;
         const int cx = int(corner.x + 0.5f), cy = int(corner.y + 0.5f);

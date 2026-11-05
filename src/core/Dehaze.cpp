@@ -203,13 +203,13 @@ float gainAt(const Law &law, float tone, float haze)
     return std::clamp(g, law.low, law.high);
 }
 
-float srgbLuminance(const cv::Vec3f &s) { return 0.2126f * s[0] + 0.7152f * s[1] + 0.0722f * s[2]; }
+float srgbLuminance(const ipr::Vec3f &s) { return 0.2126f * s[0] + 0.7152f * s[1] + 0.0722f * s[2]; }
 
 // Airlight of a reduced linear sRGB image: level A = max(0.03, 99th percentile of
 // the luminance; max RGB put saturated colours far above the brightest tones),
 // colour = mean of the haziest pixels (brightest eroded dark channel, He et al.
 // 2009) at luminance 1.
-struct Airlight { float level; cv::Vec3f colour; };
+struct Airlight { float level; ipr::Vec3f colour; };
 
 Airlight airlightOf(const cv::Mat &srgb, const cv::Mat &dark)
 {
@@ -217,14 +217,14 @@ Airlight airlightOf(const cv::Mat &srgb, const cv::Mat &dark)
     maxima.reserve(srgb.total());
     darks.reserve(srgb.total());
     for (int y = 0; y < srgb.rows; ++y) {
-        const auto *row = srgb.ptr<cv::Vec3f>(y);
+        const auto *row = srgb.ptr<ipr::Vec3f>(y);
         const float *d = dark.ptr<float>(y);
         for (int x = 0; x < srgb.cols; ++x) {
             maxima.push_back(std::max(0.f, srgbLuminance(row[x])));
             darks.push_back(d[x]);
         }
     }
-    Airlight result{0.03f, cv::Vec3f(1.f, 1.f, 1.f)};
+    Airlight result{0.03f, ipr::Vec3f(1.f, 1.f, 1.f)};
     if (maxima.empty()) return result;
     auto at = maxima.begin() + std::ptrdiff_t((maxima.size() - 1) * 99 / 100);
     std::nth_element(maxima.begin(), at, maxima.end());
@@ -232,22 +232,22 @@ Airlight airlightOf(const cv::Mat &srgb, const cv::Mat &dark)
     at = darks.begin() + std::ptrdiff_t(double(darks.size() - 1) * (1.0 - HaziestShare));
     std::nth_element(darks.begin(), at, darks.end());
     const float threshold = *at;
-    cv::Vec3d sum(0, 0, 0);
+    ipr::Vec3d sum(0, 0, 0);
     for (int y = 0; y < srgb.rows; ++y) {
-        const auto *row = srgb.ptr<cv::Vec3f>(y);
+        const auto *row = srgb.ptr<ipr::Vec3f>(y);
         const float *d = dark.ptr<float>(y);
         for (int x = 0; x < srgb.cols; ++x)
-            if (d[x] >= threshold) sum += cv::Vec3d(row[x]);
+            if (d[x] >= threshold) sum += ipr::Vec3d(row[x]);
     }
     const double luminance = 0.2126 * sum[0] + 0.7152 * sum[1] + 0.0722 * sum[2];
-    if (luminance > 1e-9) result.colour = cv::Vec3f(sum / luminance);
+    if (luminance > 1e-9) result.colour = ipr::Vec3f(sum / luminance);
     return result;
 }
 
 // Log ratios to green, taken from the airlight's (centre), d, gain
 // kappa h d / (1 + (d / R0)^2), luminance kept: the haze's cast is removed and
 // its faint colours expanded, strong colours barely.
-cv::Vec3f saturate(const cv::Vec3f &s, float gain, const cv::Vec2f &centre)
+ipr::Vec3f saturate(const ipr::Vec3f &s, float gain, const ipr::Vec2f &centre)
 {
     if (gain <= 0.f || s[0] <= 1e-6f || s[1] <= 1e-6f || s[2] <= 1e-6f) return s;
     const auto expand = [gain](float r, float c) {
@@ -279,18 +279,18 @@ PixelLaw pixelLawAt(float value)
 void apply(cv::Mat &linearRgb, int amount, double pixelScale, const cv::Mat &localValues)
 {
     if (linearRgb.empty() || linearRgb.type() != CV_32FC3) return;
-    const bool hasLocal = !localValues.empty() && LocalValues::fits(localValues, linearRgb.size());
+    const bool hasLocal = !localValues.empty() && LocalValues::fits(localValues, ipr::fromCv(linearRgb.size()));
     if (amount == 0 && !hasLocal) return;
-    const cv::Matx33f toSrgb(WorkingColor::toSrgb()), fromSrgb(WorkingColor::fromSrgb());
+    const ipr::Matrix33f toSrgb(WorkingColor::toSrgb()), fromSrgb(WorkingColor::fromSrgb());
     // Haze measured in linear sRGB at 1/4 of the full resolution, as fitted, then enlarged.
     const int reduction = std::max(1, int(std::lround(FittedReduction * pixelScale)));
     const double scale = pixelScale / reduction;   // pixels of the reduced image per full-image pixel
     cv::Mat small;
-    small = ipr::resized(linearRgb, cv::Size(std::max(1, linearRgb.cols / reduction), std::max(1, linearRgb.rows / reduction)),
+    small = ipr::resized(linearRgb, ipr::Size(std::max(1, linearRgb.cols / reduction), std::max(1, linearRgb.rows / reduction)),
                          ipr::Interpolation::Area);
     cv::Mat dark(small.size(), CV_32F);
     for (int y = 0; y < small.rows; ++y) {
-        auto *row = small.ptr<cv::Vec3f>(y);
+        auto *row = small.ptr<ipr::Vec3f>(y);
         float *d = dark.ptr<float>(y);
         for (int x = 0; x < small.cols; ++x) {
             row[x] = toSrgb * row[x];
@@ -298,9 +298,9 @@ void apply(cv::Mat &linearRgb, int amount, double pixelScale, const cv::Mat &loc
         }
     }
     const int window = int(DarkWindow * scale) + 1;
-    dark = ipr::minimum(dark, cv::Size(window, window), ipr::Beyond::Nothing);
+    dark = ipr::minimum(dark, ipr::Size(window, window), ipr::Beyond::Nothing);
     const Airlight airlight = airlightOf(small, dark);
-    const cv::Vec2f centre(std::log2(std::max(airlight.colour[0], 1e-6f) / std::max(airlight.colour[1], 1e-6f)),
+    const ipr::Vec2f centre(std::log2(std::max(airlight.colour[0], 1e-6f) / std::max(airlight.colour[1], 1e-6f)),
                            std::log2(std::max(airlight.colour[2], 1e-6f) / std::max(airlight.colour[1], 1e-6f)));
     dark = ipr::gaussianBlurred(dark, HazeSigma * scale, ipr::BlurBorder::MirrorEdge);
     // Tone change of the law, smoothed into a base: Lightroom's change is a smooth
@@ -308,7 +308,7 @@ void apply(cv::Mat &linearRgb, int amount, double pixelScale, const cv::Mat &loc
     // and after the law, both blurred at BaseSigma.
     cv::Mat before(small.size(), CV_32F);
     for (int y = 0; y < small.rows; ++y) {
-        const auto *row = small.ptr<cv::Vec3f>(y);
+        const auto *row = small.ptr<ipr::Vec3f>(y);
         float *b = before.ptr<float>(y);
         for (int x = 0; x < small.cols; ++x)
             b[x] = std::log2(std::max(0.f, srgbLuminance(row[x])) + LogFloor);
@@ -321,7 +321,7 @@ void apply(cv::Mat &linearRgb, int amount, double pixelScale, const cv::Mat &loc
     const auto shiftAt = [&](const Law &law) {
         cv::Mat after(small.size(), CV_32F);
         for (int y = 0; y < small.rows; ++y) {
-            const auto *row = small.ptr<cv::Vec3f>(y);
+            const auto *row = small.ptr<ipr::Vec3f>(y);
             const float *d = dark.ptr<float>(y);
             float *a = after.ptr<float>(y);
             for (int x = 0; x < small.cols; ++x) {
@@ -340,7 +340,7 @@ void apply(cv::Mat &linearRgb, int amount, double pixelScale, const cv::Mat &loc
     if (hasLocal) {
         // The tone change at the values the map needs, mixed per reduced pixel.
         cv::Mat reducedValues;
-        reducedValues = ipr::resized(localValues, small.size(), ipr::Interpolation::Area);
+        reducedValues = ipr::resized(localValues, ipr::fromCv(small.size()), ipr::Interpolation::Area);
         const std::vector<float> lattice = LocalValues::latticeOf(float(amount), reducedValues, -100.f, 100.f, 5.f, 8);
         std::vector<cv::Mat> shifts;
         for (float value : lattice)
@@ -360,10 +360,10 @@ void apply(cv::Mat &linearRgb, int amount, double pixelScale, const cv::Mat &loc
         shift = shiftAt(lawAt(float(amount)));
     }
     cv::Mat haze, base, toneShift, localTone;
-    haze = ipr::resized(dark, linearRgb.size(), ipr::Interpolation::Linear);
-    localTone = ipr::resized(tone, linearRgb.size(), ipr::Interpolation::Linear);
-    base = ipr::resized(before, linearRgb.size(), ipr::Interpolation::Linear);
-    toneShift = ipr::resized(shift, linearRgb.size(), ipr::Interpolation::Linear);
+    haze = ipr::resized(dark, ipr::fromCv(linearRgb.size()), ipr::Interpolation::Linear);
+    localTone = ipr::resized(tone, ipr::fromCv(linearRgb.size()), ipr::Interpolation::Linear);
+    base = ipr::resized(before, ipr::fromCv(linearRgb.size()), ipr::Interpolation::Linear);
+    toneShift = ipr::resized(shift, ipr::fromCv(linearRgb.size()), ipr::Interpolation::Linear);
     // Per half slider unit when local: whole values read the global law exactly.
     const PixelLaw globalLaw = hasLocal ? PixelLaw{} : pixelLawAt(float(amount));
     std::vector<PixelLaw> pixelLaws;
@@ -372,7 +372,7 @@ void apply(cv::Mat &linearRgb, int amount, double pixelScale, const cv::Mat &loc
             pixelLaws.push_back(pixelLawAt(float(half) / 2.f));
     ipr::parallelRows(linearRgb.rows, [&](int first, int last) {
         for (int y = first; y < last; ++y) {
-            auto *row = linearRgb.ptr<cv::Vec3f>(y);
+            auto *row = linearRgb.ptr<ipr::Vec3f>(y);
             const float *hr = haze.ptr<float>(y), *br = base.ptr<float>(y), *tr = toneShift.ptr<float>(y);
             const float *ur = localTone.ptr<float>(y);
             const float *values = hasLocal ? localValues.ptr<float>(y) : nullptr;
@@ -400,11 +400,11 @@ void apply(cv::Mat &linearRgb, int amount, double pixelScale, const cv::Mat &loc
                 const float detailGain = lawOfPixel->removing && deviation > 0.f
                     ? 1.f + (gain - 1.f) * std::clamp(-own / HighlightRange, 0.f, 1.f) : gain;
                 const float target = std::max(0.f, std::exp2(br[x] + tr[x] + detailGain * deviation) - LogFloor);
-                const cv::Vec3f s = toSrgb * row[x];
-                cv::Vec3f out = s * (target / luminance);
+                const ipr::Vec3f s = toSrgb * row[x];
+                ipr::Vec3f out = s * (target / luminance);
                 if (lawOfPixel->beta > 0.f) {
                     // Part of the change is light of the airlight's colour.
-                    cv::Vec3f z = s + airlight.colour * (target - luminance);
+                    ipr::Vec3f z = s + airlight.colour * (target - luminance);
                     for (int c = 0; c < 3; ++c) z[c] = std::max(0.f, z[c]);
                     const float lz = srgbLuminance(z);
                     if (lz > 1e-9f) out = (1.f - lawOfPixel->beta) * out + lawOfPixel->beta * z * (target / lz);

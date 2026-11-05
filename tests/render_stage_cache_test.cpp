@@ -2,6 +2,7 @@
 #include "RenderChain.h"
 #include "RenderStageCache.h"
 #include "ToneRecovery.h"
+#include "OpenCvBridge.h"
 
 #include <QCoreApplication>
 #include <QElapsedTimer>
@@ -27,7 +28,7 @@ ColorPipeline::WorkingImage scene(int width, int height)
         for (int x = 0; x < width; ++x) {
             const float u = float(x) / float(width), v = float(y) / float(height);
             const float detail = 0.08f * float(std::sin(x * 0.21) * std::cos(y * 0.17));
-            rgba.at<cv::Vec4f>(y, x) = {
+            ipr::at<ipr::Vec4f>(rgba, y, x) = {
                 std::clamp(0.05f + 0.7f * u * v + detail + float(rng.gaussian(0.01)), 0.f, 1.f),
                 std::clamp(0.10f + 0.5f * u + detail + float(rng.gaussian(0.01)), 0.f, 1.f),
                 std::clamp(0.30f * (1.f - v) + 0.1f + detail + float(rng.gaussian(0.01)), 0.f, 1.f), 1.f};
@@ -122,7 +123,7 @@ public:
         for (int v : {30, 40}) edits.push_back([v](auto &s) { s.denoiseLuminance = v; });
         edits.push_back([](auto &s) { s.dehaze = 0; });
         // A point colour on a colour of the scene, then another shift: the cache key holds the points.
-        const cv::Vec4f picked = source.linearRgba.at<cv::Vec4f>(400, 600);
+        const ipr::Vec4f picked = ipr::at<ipr::Vec4f>(source.linearRgba, 400, 600);
         const PointColor::Hsv hsv = PointColor::toHsv({picked[0], picked[1], picked[2]});
         edits.push_back([hsv](auto &s) {
             s.pointColor.count = 1;

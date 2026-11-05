@@ -1,4 +1,5 @@
 #include "FrameSpool.h"
+#include "Types.h"
 
 bool FrameSpool::write(const cv::Mat &image, quint64 &written)
 {
@@ -14,7 +15,7 @@ bool FrameSpool::write(const cv::Mat &image, quint64 &written)
     return m_file.error() == QFile::NoError && m_file.open(QIODevice::ReadOnly);
 }
 
-bool FrameSpool::read(const cv::Size &size, int type, int row, int rows, cv::Mat &band)
+bool FrameSpool::read(const ipr::Size &size, int type, int row, int rows, cv::Mat &band)
 {
     band.create(rows, size.width, type);
     const qint64 rowBytes = qint64(size.width) * qint64(band.elemSize());

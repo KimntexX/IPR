@@ -1,6 +1,7 @@
 #include "RawDecoder.h"
 #include "Demosaic.h"
 #include "CameraProfileEngine.h"
+#include "OpenCvBridge.h"
 #include <QCoreApplication>
 #include <QCommandLineParser>
 #include <QCommandLineOption>
@@ -49,9 +50,9 @@ QString imageHash(const cv::Mat &m){
 QJsonObject cameraSummary(const cv::Mat &m){
     require(m.type()==CV_32FC3&&cv::checkRange(m),"Invalid pre-DCP camera image");
     std::array<double,3> sums{},negative{},zero{},minimum{},maximum{};
-    for(int c=0;c<3;++c)minimum[size_t(c)]=maximum[size_t(c)]=m.at<cv::Vec3f>(0,0)[c];
+    for(int c=0;c<3;++c)minimum[size_t(c)]=maximum[size_t(c)]=ipr::at<ipr::Vec3f>(m, 0,0)[c];
     for(int y=0;y<m.rows;++y){
-        const auto *row=m.ptr<cv::Vec3f>(y);
+        const auto *row=m.ptr<ipr::Vec3f>(y);
         for(int x=0;x<m.cols;++x)for(int c=0;c<3;++c){
             const double v=row[x][c];const auto k=size_t(c);
             sums[k]+=v;negative[k]+=v<0;zero[k]+=v==0;

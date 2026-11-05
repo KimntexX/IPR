@@ -2,6 +2,7 @@
 #define IPR_TESTS_DCP_HEADROOM_EXPERIMENT_H
 // Requires raw_opening_trial_helpers.h. Diagnostic only; no production API change.
 #include "raw_highlight_headroom.h"
+#include "OpenCvBridge.h"
 #include <QTemporaryDir>
 #include <QFileInfo>
 
@@ -29,28 +30,28 @@ QJsonObject runHeadroomExperiment(const cv::Mat &camera,
     // Recover the exact matrix/exposure operator from basis vectors, then query
     // isolated real DCP stages through its inverse. No proprietary LUT copy in JSON.
     cv::Mat basis=cv::Mat::zeros(1,3,CV_32FC3);
-    for(int c=0;c<3;++c)basis.at<cv::Vec3f>(0,c)[c]=1;
+    for(int c=0;c<3;++c)ipr::at<ipr::Vec3f>(basis, 0,c)[c]=1;
     const auto mappedBasis=apply(basis,matrix);
-    cv::Matx33d cameraToSrgb;
-    for(int c=0;c<3;++c)for(int r=0;r<3;++r)cameraToSrgb(r,c)=mappedBasis.at<cv::Vec3f>(0,c)[r];
-    if(std::abs(cv::determinant(cameraToSrgb))<1e-12)throw std::runtime_error("Singular study matrix");
+    ipr::Matrix33d cameraToSrgb;
+    for(int c=0;c<3;++c)for(int r=0;r<3;++r)cameraToSrgb(r,c)=ipr::at<ipr::Vec3f>(mappedBasis, 0,c)[r];
+    if(std::abs(ipr::determinant(cameraToSrgb))<1e-12)throw std::runtime_error("Singular study matrix");
     const auto proToCamera=cameraToSrgb.inv()*proToSrgb;
     const auto srgbToPro=proToSrgb.inv();
-    const auto transform=[](const cv::Mat &rgb,const cv::Matx33d &matrix) {
-        cv::Mat result;cv::transform(rgb,result,matrix);return result;
+    const auto transform=[](const cv::Mat &rgb,const ipr::Matrix33d &matrix) {
+        cv::Mat result;cv::transform(rgb,result,ipr::toCv(matrix));return result;
     };
     const auto input=transform(apply(camera.clone(),matrix),srgbToPro);
     const auto stage=[&](const cv::Mat &signal,const QString &path,bool extended) {
         auto query=signal.clone();
         if(extended)for(int y=0;y<query.rows;++y)for(int x=0;x<query.cols;++x) {
-            auto &v=query.at<cv::Vec3f>(y,x);const float s=std::max(1.f,std::max({v[0],v[1],v[2]}));
+            auto &v=ipr::at<ipr::Vec3f>(query, y,x);const float s=std::max(1.f,std::max({v[0],v[1],v[2]}));
             for(int c=0;c<3;++c)v[c]=std::clamp(v[c]/s,0.f,1.f);
         }
         auto result=transform(apply(transform(query,proToCamera),path),srgbToPro);
         if(extended)for(int y=0;y<result.rows;++y)for(int x=0;x<result.cols;++x) {
-            const auto p=signal.at<cv::Vec3f>(y,x),q=query.at<cv::Vec3f>(y,x);
+            const auto p=ipr::at<ipr::Vec3f>(signal, y,x),q=ipr::at<ipr::Vec3f>(query, y,x);
             const float s=std::max(1.f,std::max({p[0],p[1],p[2]}));
-            auto &v=result.at<cv::Vec3f>(y,x);v=p+s*(v-q);
+            auto &v=ipr::at<ipr::Vec3f>(result, y,x);v=p+s*(v-q);
         }
         if(!cv::checkRange(result,true,nullptr,-1e10,1e10))throw std::runtime_error("Nonfinite study stage");
         return result;
@@ -73,7 +74,7 @@ QJsonObject runHeadroomExperiment(const cv::Mat &camera,
     auto extended=tables(true);
     auto shoulder=extended.clone();
     for(int y=0;y<shoulder.rows;++y)for(int x=0;x<shoulder.cols;++x) {
-        auto &p=shoulder.at<cv::Vec3f>(y,x);const double peak=std::max({p[0],p[1],p[2]});
+        auto &p=ipr::at<ipr::Vec3f>(shoulder, y,x);const double peak=std::max({p[0],p[1],p[2]});
         if(peak>.85)p*=float(RawHighlightStudy::softShoulder(peak,.85)/peak);
     }
     const auto boundedCurve=transform(stage(extended,curve,false),proToSrgb);
@@ -82,7 +83,7 @@ QJsonObject runHeadroomExperiment(const cv::Mat &camera,
     const auto softGamut=[](const cv::Mat &source) {
         auto result=source.clone();
         for(int y=0;y<result.rows;++y)for(int x=0;x<result.cols;++x) {
-            auto &p=result.at<cv::Vec3f>(y,x);const double Y=.2126*p[0]+.7152*p[1]+.0722*p[2];
+            auto &p=ipr::at<ipr::Vec3f>(result, y,x);const double Y=.2126*p[0]+.7152*p[1]+.0722*p[2];
             if(Y<=0){p={0,0,0};continue;}if(Y>=1){p={1,1,1};continue;}
             double extent=0;for(int c=0;c<3;++c)extent=std::max(extent,p[c]>=Y?(p[c]-Y)/(1-Y):(Y-p[c])/Y);
             const double scale=extent>.85?RawHighlightStudy::softShoulder(extent,.85)/extent:1;
@@ -99,10 +100,10 @@ QJsonObject runHeadroomExperiment(const cv::Mat &camera,
     const auto gated=[&](const cv::Mat &source) {
         const auto hard=currentGamut(source),soft=softGamut(source);auto result=hard.clone();
         for(int y=0;y<result.rows;++y)for(int x=0;x<result.cols;++x) {
-            const auto b=hard.at<cv::Vec3f>(y,x),s=soft.at<cv::Vec3f>(y,x);
+            const auto b=ipr::at<ipr::Vec3f>(hard, y,x),s=ipr::at<ipr::Vec3f>(soft, y,x);
             const double Y=.2126*b[0]+.7152*b[1]+.0722*b[2];
             const float w=float(RawHighlightStudy::highlightWeight(Y,.25,.75));
-            result.at<cv::Vec3f>(y,x)=w==0?b:b+w*(s-b);
+            ipr::at<ipr::Vec3f>(result, y,x)=w==0?b:b+w*(s-b);
         }return result;
     };
     QJsonObject models;

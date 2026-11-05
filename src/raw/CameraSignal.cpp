@@ -23,9 +23,9 @@ bool validate(const Source &source, QString *error)
     if (source.whiteBalanceKelvin && (!std::isfinite(*source.whiteBalanceKelvin) ||
         *source.whiteBalanceKelvin < 2000 || *source.whiteBalanceKelvin > 50000))
         return reject("Invalid source white balance temperature.");
-    const bool unavailable = source.cameraNeutral == cv::Vec3d(0, 0, 0);
+    const bool unavailable = source.cameraNeutral == ipr::Vec3d(0, 0, 0);
     if (!unavailable) {
-        for (double channel : source.cameraNeutral.val)
+        for (double channel : source.cameraNeutral.values)
             if (!std::isfinite(channel) || channel <= 0)
                 return reject("Invalid applied camera neutral.");
         if (std::abs(source.cameraNeutral[1] - 1.0) > 1e-9)

@@ -177,7 +177,7 @@ private:
             self->m_failed = !Demosaic::interpolate(mosaic, pattern, self->m_median, Demosaic::Range::NonNegative, rgb, nullptr, self->m_cancelled);
             if (!self->m_failed)
                 for (int y = 0; y < height; ++y) {
-                    const auto *row = rgb.ptr<cv::Vec3f>(y);
+                    const auto *row = rgb.ptr<ipr::Vec3f>(y);
                     for (int x = 0; x < width; ++x)
                         for (int c = 0; c < 3; ++c)
                             d.image[size_t(y) * size_t(width) + size_t(x)][c] =
@@ -289,7 +289,7 @@ bool developedByIpr(const LibRaw &raw, const Options &options)
 // Camera RGB (CV_32FC3, white 1) to linear sRGB in place. Policy A as LibRaw's
 // output stage: on the 16-bit counts, single-precision products summed in channel
 // order, truncated, clipped to the 16-bit range. Policy B: the plain product.
-void cameraToSrgb(cv::Mat &rgb, const cv::Matx33d &matrix, bool libRawGrid)
+void cameraToSrgb(cv::Mat &rgb, const ipr::Matrix33d &matrix, bool libRawGrid)
 {
     float m[3][3];
     for (int r = 0; r < 3; ++r)
@@ -297,9 +297,9 @@ void cameraToSrgb(cv::Mat &rgb, const cv::Matx33d &matrix, bool libRawGrid)
     constexpr float gridStep = float(1.0 / 65535.0);   // as OpenCV's u16 to f32 conversion
     ipr::parallelRows(rgb.rows, [&](int first, int last) {
         for (int y = first; y < last; ++y) {
-            auto *row = rgb.ptr<cv::Vec3f>(y);
+            auto *row = rgb.ptr<ipr::Vec3f>(y);
             for (int x = 0; x < rgb.cols; ++x) {
-                cv::Vec3f in = row[x];
+                ipr::Vec3f in = row[x];
                 if (libRawGrid)
                     for (int k = 0; k < 3; ++k) in[k] = float(std::lround(in[k] * 65535.f));
                 for (int r = 0; r < 3; ++r) {

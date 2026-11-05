@@ -1,6 +1,8 @@
 #ifndef IPR_CORE_GEOMETRY_H
 #define IPR_CORE_GEOMETRY_H
 
+#include "Types.h"
+
 #include <opencv2/core.hpp>
 
 #include <optional>
@@ -49,17 +51,17 @@ bool hasCrop(const Settings &settings);
 // Clamps every field to its range and orders the crop; false on a non-finite value.
 bool bound(Settings &settings);
 
-cv::Size canvasSize(const Settings &settings, const cv::Size &source);
+ipr::Size canvasSize(const Settings &settings, const ipr::Size &source);
 // The rectangle of a canvas of this size; the same at every resolution, at least 1 px.
-cv::Rect cropRect(const Settings &settings, const cv::Size &canvas);
+ipr::Recti cropRect(const Settings &settings, const ipr::Size &canvas);
 
 // From normalized source to normalized canvas, for a source of this size.
-cv::Matx33d homography(const Settings &settings, const cv::Size &source);
+ipr::Matrix33d homography(const Settings &settings, const ipr::Size &source);
 // Empty when the point lies behind the projection.
-std::optional<cv::Point2d> toCanvas(const Settings &settings, const cv::Size &source, const cv::Point2d &point);
-std::optional<cv::Point2d> toSource(const Settings &settings, const cv::Size &source, const cv::Point2d &point);
+std::optional<ipr::Point2d> toCanvas(const Settings &settings, const ipr::Size &source, const ipr::Point2d &point);
+std::optional<ipr::Point2d> toSource(const Settings &settings, const ipr::Size &source, const ipr::Point2d &point);
 // From the normalized displayed crop to the normalized canvas.
-cv::Point2d viewToCanvas(const Settings &settings, const cv::Point2d &point);
+ipr::Point2d viewToCanvas(const Settings &settings, const ipr::Point2d &point);
 
 // CV_32FC3. Beyond the source, the border repeats, so neighbourhood filters see no
 // false edge; the coverage (warpCoverage) makes these pixels transparent. Turns and
@@ -75,16 +77,16 @@ void clearTransparent(cv::Mat &rgba);
 cv::Mat crop(const cv::Mat &canvasImage, const Settings &settings);
 
 // Commands, as the panel gives them; the crop follows the image.
-void turn(Settings &settings, const cv::Size &source);         // a quarter turn, clockwise
-void mirror(Settings &settings, bool horizontal, const cv::Size &source);
+void turn(Settings &settings, const ipr::Size &source);         // a quarter turn, clockwise
+void mirror(Settings &settings, bool horizontal, const ipr::Size &source);
 // Whether every corner of this crop lies on the image.
-bool cropInsideImage(const Settings &settings, const cv::Size &source);
+bool cropInsideImage(const Settings &settings, const ipr::Size &source);
 // With constrain, shrinks the crop around its centre until it lies on the image,
 // keeping its proportions. Without constrain, leaves it.
-void applyConstraint(Settings &settings, const cv::Size &source);
+void applyConstraint(Settings &settings, const ipr::Size &source);
 // Sets a crop within the canvas; a ratio shapes it around its centre.
-void setCrop(Settings &settings, const cv::Size &source, double x, double y, double width, double height);
-void setCropRatio(Settings &settings, const cv::Size &source, double ratio);
+void setCrop(Settings &settings, const ipr::Size &source, double x, double y, double width, double height);
+void setCropRatio(Settings &settings, const ipr::Size &source, double ratio);
 
 } // namespace Geometry
 

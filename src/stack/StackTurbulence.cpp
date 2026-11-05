@@ -17,7 +17,7 @@ cv::Mat rootLuminance(const cv::Mat &rgb)
 {
     cv::Mat luminance(rgb.size(), CV_32FC1);
     for (int y = 0; y < rgb.rows; ++y) {
-        const cv::Vec3f *in = rgb.ptr<cv::Vec3f>(y);
+        const ipr::Vec3f *in = rgb.ptr<ipr::Vec3f>(y);
         float *out = luminance.ptr<float>(y);
         for (int x = 0; x < rgb.cols; ++x)
             out[x] = std::sqrt(std::max(0.f, 0.25f * in[x][0] + 0.5f * in[x][1] + 0.25f * in[x][2]));
@@ -37,9 +37,9 @@ double sharpnessOf(const cv::Mat &luminance)
 }
 
 // 1 inside, falling to 0 at the area's edge.
-cv::Mat fadeMask(const cv::Size &size, int feather)
+cv::Mat fadeMask(const ipr::Size &size, int feather)
 {
-    cv::Mat mask(size, CV_32FC1);
+    cv::Mat mask(ipr::toCv(size), CV_32FC1);
     const float reach = float(std::max(1, feather));
     for (int y = 0; y < size.height; ++y) {
         float *out = mask.ptr<float>(y);
@@ -54,12 +54,12 @@ cv::Mat fadeMask(const cv::Size &size, int feather)
 
 } // namespace
 
-Report refine(cv::Mat &merged, const cv::Rect &subject, const cv::Point &origin, const std::vector<View> &views,
+Report refine(cv::Mat &merged, const ipr::Recti &subject, const ipr::Point2i &origin, const std::vector<View> &views,
               const Options &options, const std::function<bool()> &cancelled)
 {
     Report report;
     report.views = int(views.size());
-    const cv::Rect bounds(0, 0, merged.cols, merged.rows);
+    const ipr::Recti bounds(0, 0, merged.cols, merged.rows);
     if (merged.empty() || merged.type() != CV_32FC3 || subject.empty() || (subject & bounds) != subject) {
         report.reason = QStringLiteral("Zone du sujet invalide.");
         return report;
@@ -69,10 +69,10 @@ Report refine(cv::Mat &merged, const cv::Rect &subject, const cv::Point &origin,
         return report;
     }
 
-    const cv::Size size = subject.size();
-    const cv::Mat reference = rootLuminance(merged(subject));
+    const ipr::Size size = subject.size();
+    const cv::Mat reference = rootLuminance(merged(ipr::toCv(subject)));
     // From the subject's own coordinates to the frame's.
-    const cv::Matx33d subjectToReference(1, 0, double(origin.x + subject.x), 0, 1, double(origin.y + subject.y), 0, 0, 1);
+    const ipr::Matrix33d subjectToReference(1, 0, double(origin.x + subject.x), 0, 1, double(origin.y + subject.y), 0, 0, 1);
 
     std::vector<cv::Mat> registered(views.size());
     std::vector<int> measured;
@@ -86,8 +86,8 @@ Report refine(cv::Mat &merged, const cv::Rect &subject, const cv::Point &origin,
             report.sharpness.push_back(0.0);
             continue;
         }
-        const cv::Matx33d frameToPixels(1, 0, -double(view.origin.x), 0, 1, -double(view.origin.y), 0, 0, 1);
-        const cv::Matx33d subjectToPixels = frameToPixels * view.referenceToFrame * subjectToReference;
+        const ipr::Matrix33d frameToPixels(1, 0, -double(view.origin.x), 0, 1, -double(view.origin.y), 0, 0, 1);
+        const ipr::Matrix33d subjectToPixels = frameToPixels * view.referenceToFrame * subjectToReference;
         const cv::Mat roughly = ipr::warpedPerspective(rootLuminance(view.pixels), subjectToPixels, size, ipr::Resampling::Linear, ipr::Outside::LastPixel);
         const StackAlignment::LocalField field = StackAlignment::localField(reference, roughly, options.local);
         if (field.displacements.empty()) {
@@ -97,9 +97,9 @@ Report refine(cv::Mat &merged, const cv::Rect &subject, const cv::Point &origin,
         measured.push_back(field.measured);
         report.largestDisplacement = std::max(report.largestDisplacement, field.largest);
 
-        cv::Mat mapX(size, CV_32FC1), mapY(size, CV_32FC1);
+        cv::Mat mapX(ipr::toCv(size), CV_32FC1), mapY(ipr::toCv(size), CV_32FC1);
         for (int y = 0; y < size.height; ++y) {
-            const cv::Vec2f *move = field.displacements.ptr<cv::Vec2f>(y);
+            const ipr::Vec2f *move = field.displacements.ptr<ipr::Vec2f>(y);
             float *outX = mapX.ptr<float>(y), *outY = mapY.ptr<float>(y);
             for (int x = 0; x < size.width; ++x) {
                 const double px = x + double(move[x][0]), py = y + double(move[x][1]);
@@ -137,10 +137,10 @@ Report refine(cv::Mat &merged, const cv::Rect &subject, const cv::Point &origin,
         return report;
     }
     const cv::Mat mask = fadeMask(size, options.feather);
-    cv::Mat area = merged(subject);
+    cv::Mat area = merged(ipr::toCv(subject));
     for (int y = 0; y < size.height; ++y) {
-        cv::Vec3f *out = area.ptr<cv::Vec3f>(y);
-        const cv::Vec3f *in = refined.ptr<cv::Vec3f>(y);
+        ipr::Vec3f *out = area.ptr<ipr::Vec3f>(y);
+        const ipr::Vec3f *in = refined.ptr<ipr::Vec3f>(y);
         const float *weight = mask.ptr<float>(y);
         for (int x = 0; x < size.width; ++x)
             out[x] = in[x] * weight[x] + out[x] * (1.f - weight[x]);

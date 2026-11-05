@@ -1,4 +1,5 @@
 #include "RawDevelopment.h"
+#include "OpenCvBridge.h"
 
 #include <cmath>
 #include <iostream>
@@ -21,7 +22,7 @@ RawInput::Input sample(int width = 48, int height = 40)
     input.black = {2048, 2048, 2048, 2048};
     input.white = 11222;
     input.asShotMultipliers = {2076, 1024, 1611, 1024};
-    input.origin = cv::Point(36, 12);
+    input.origin = ipr::Point2i(36, 12);
     input.mosaic = cv::Mat(height, width, CV_16UC1);
     const std::uint16_t counts[4] = {3000, 5000, 3838, 5000};   // per RawInput::Colour
     for (int y = 0; y < height; ++y)
@@ -78,7 +79,7 @@ int main()
         std::vector<RawDevelopment::Stage> stages;
         cv::Mat signedCounts, normalized, preDemosaic;
         double divisor = 0.0;
-        cv::Point origin;
+        ipr::Point2i origin;
         auto options = calibrated();
         options.observer = [&](const RawDevelopment::Capture &c) {
             stages.push_back(c.stage);
@@ -101,7 +102,7 @@ int main()
         ok &= check(std::abs(result.gains[2] - 1611.0 / 1024.0) < 1e-12 && result.gains[1] == 1.0,
                     "the gains are the multipliers over the smallest");
         ok &= check(divisor == 9174.0, "the calibrated white keeps the divisor white - black");
-        ok &= check(origin == cv::Point(36, 12), "the captures carry the visible area's origin");
+        ok &= check(origin == ipr::Point2i(36, 12), "the captures carry the visible area's origin");
         ok &= check(counts(preDemosaic, 1, 1) == 20117.f && counts(preDemosaic, 1, 3) == 55687.f &&
                         counts(preDemosaic, 1, 5) == 61576.f && counts(preDemosaic, 1, 7) == 65535.f,
                     "the scaled counts match LibRaw's, the top clipped");
@@ -138,11 +139,11 @@ int main()
         for (int y = 0; y < result.cameraRgb.rows; ++y)
             for (int x = 0; x < result.cameraRgb.cols; ++x)
                 for (int c = 0; c < 3; ++c) {
-                    const float value = result.cameraRgb.at<cv::Vec3f>(y, x)[c] * 65535.f;
+                    const float value = ipr::at<ipr::Vec3f>(result.cameraRgb, y, x)[c] * 65535.f;
                     worst = std::max(worst, double(std::abs(value - expected[c])));
                     onGrid &= std::abs(value - std::round(value)) < 1e-2f;
                 }
-        ok &= check(result.cameraRgb.type() == CV_32FC3 && result.cameraRgb.size() == cv::Size(48, 40),
+        ok &= check(result.cameraRgb.type() == CV_32FC3 && ipr::fromCv(result.cameraRgb.size()) == ipr::Size(48, 40),
                     "the output is camera RGB at the mosaic's size");
         ok &= check(worst <= 1.0 && onGrid, "a uniform colour is reproduced on the 16-bit grid");
     }
@@ -167,7 +168,7 @@ int main()
         ok &= check(std::abs(counts(preDemosaic, 0, 0) - 952.f * float(2076.0 / 1024.0 * 65535.0 / 9174.0)) < 0.02f,
                     "B scales as A before the truncation");
         double low = 0.0, high = 0.0;
-        cv::minMaxLoc(preOutput(cv::Rect(18, 18, 4, 4)).reshape(1), nullptr, &high);
+        cv::minMaxLoc(preOutput(ipr::toCv(ipr::Recti(18, 18, 4, 4))).reshape(1), nullptr, &high);
         ok &= check(high < 0.0, "B keeps every colour signed through RCD below the black");
         cv::minMaxLoc(signedResult.cameraRgb.reshape(1), &low, &high);
         ok &= check(cv::checkRange(signedResult.cameraRgb) && low < 0.0 &&

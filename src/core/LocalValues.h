@@ -1,6 +1,8 @@
 #ifndef IPR_CORE_LOCALVALUES_H
 #define IPR_CORE_LOCALVALUES_H
 
+#include "OpenCvBridge.h"
+
 #include <QtGlobal>
 
 #include <opencv2/core.hpp>
@@ -30,9 +32,9 @@ struct Maps
 };
 
 // A map a module can read for an image of this size: empty, or one float per pixel.
-inline bool fits(const cv::Mat &map, const cv::Size &size)
+inline bool fits(const cv::Mat &map, const ipr::Size &size)
 {
-    return map.empty() || (map.type() == CV_32FC1 && map.size() == size);
+    return map.empty() || (map.type() == CV_32FC1 && ipr::fromCv(map.size()) == size);
 }
 
 // One setting of a module that prepares a curve or a matrix per value, too costly
@@ -58,7 +60,7 @@ public:
     static constexpr int MaxAxes = 4;
     using Values = std::array<float, MaxAxes>;
 
-    Combinations(std::vector<Axis> axes, const cv::Size &size, int maxCount);
+    Combinations(std::vector<Axis> axes, const ipr::Size &size, int maxCount);
 
     // False when no axis has a usable map: the module keeps its global path.
     bool active() const { return m_active; }
@@ -85,7 +87,7 @@ public:
 private:
     quint64 keyAt(const std::array<const float *, MaxAxes> &rows, int x) const;
     std::array<const float *, MaxAxes> rowsAt(int y) const;
-    void scan(const cv::Size &size);
+    void scan(const ipr::Size &size);
 
     std::vector<Axis> m_axes;
     std::vector<float> m_steps;

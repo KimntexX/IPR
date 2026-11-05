@@ -1,5 +1,6 @@
 #include "ToneCurve.h"
 #include "WorkingColorSpace.h"
+#include "OpenCvBridge.h"
 
 #include <cmath>
 #include <iostream>
@@ -35,8 +36,8 @@ bool evaluation()
 bool application()
 {
     cv::Mat image(1, 2, CV_32FC3);
-    image.at<cv::Vec3f>(0, 0) = {0.2f, 0.3f, 0.1f};
-    image.at<cv::Vec3f>(0, 1) = {0.5f, 0.5f, 0.5f};
+    ipr::at<ipr::Vec3f>(image, 0, 0) = {0.2f, 0.3f, 0.1f};
+    ipr::at<ipr::Vec3f>(image, 0, 1) = {0.5f, 0.5f, 0.5f};
     const cv::Mat before = image.clone();
     const ToneCurve::Curves identity{{curve({{0, 0}, {1, 1}}), curve({{0, 0}, {1, 1}}), {}, {}}};
     ToneCurve::apply(image, identity);
@@ -45,14 +46,14 @@ bool application()
     // A blue curve changes the blue of ProPhoto only.
     const ToneCurve::Curves blue{{{}, {}, {}, curve({{0, 0}, {0.5f, 0.75f}, {1, 1}})}};
     ToneCurve::apply(image, blue);
-    const cv::Vec3d p0 = WorkingColor::toProPhoto() * cv::Vec3d(before.at<cv::Vec3f>(0, 0));
-    const cv::Vec3d p1 = WorkingColor::toProPhoto() * cv::Vec3d(image.at<cv::Vec3f>(0, 0));
+    const ipr::Vec3d p0 = WorkingColor::toProPhoto() * ipr::Vec3d(ipr::at<ipr::Vec3f>(before, 0, 0));
+    const ipr::Vec3d p1 = WorkingColor::toProPhoto() * ipr::Vec3d(ipr::at<ipr::Vec3f>(image, 0, 0));
     ok &= check(std::abs(p1[0] - p0[0]) < 1e-5 && std::abs(p1[1] - p0[1]) < 1e-5 && p1[2] > p0[2] * 1.2,
                 "a channel curve acts on its ProPhoto channel alone");
     // The RGB curve acts on every channel: a grey stays grey and brightens.
     image = before.clone();
     ToneCurve::apply(image, ToneCurve::Curves{{curve({{0, 0}, {0.5f, 0.75f}, {1, 1}}), {}, {}, {}}});
-    const cv::Vec3f grey = image.at<cv::Vec3f>(0, 1);
+    const ipr::Vec3f grey = ipr::at<ipr::Vec3f>(image, 0, 1);
     // The published matrices map D65 white to D50 white within about 1e-4.
     ok &= check(grey[0] > 0.6f && std::abs(grey[0] - grey[1]) < 1e-3f && std::abs(grey[1] - grey[2]) < 1e-3f,
                 "the RGB curve brightens a grey and keeps it grey");

@@ -2,6 +2,7 @@
 #define IPR_STACK_STACKTURBULENCE_H
 
 #include "StackAlignment.h"
+#include "Types.h"
 
 #include <QString>
 #include <opencv2/core.hpp>
@@ -20,9 +21,9 @@ namespace StackTurbulence {
 struct View
 {
     cv::Mat pixels;                 // CV_32FC3
-    cv::Point origin;               // of pixels in the frame
-    cv::Matx33d referenceToFrame = cv::Matx33d::eye();
-    cv::Vec3d gains{1.0, 1.0, 1.0}; // brings it to the reference's level
+    ipr::Point2i origin;               // of pixels in the frame
+    ipr::Matrix33d referenceToFrame = ipr::Matrix33d::identity();
+    ipr::Vec3d gains{1.0, 1.0, 1.0}; // brings it to the reference's level
 };
 
 struct Options
@@ -47,7 +48,7 @@ struct Report
 
 // merged: the first stack, CV_32FC3, refined in place. subject: its area in merged, which
 // the frame coordinates reach by adding origin to it.
-Report refine(cv::Mat &merged, const cv::Rect &subject, const cv::Point &origin, const std::vector<View> &views,
+Report refine(cv::Mat &merged, const ipr::Recti &subject, const ipr::Point2i &origin, const std::vector<View> &views,
               const Options &options = {}, const std::function<bool()> &cancelled = {});
 
 } // namespace StackTurbulence

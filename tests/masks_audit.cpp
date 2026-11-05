@@ -1,6 +1,7 @@
 // Numeric audit of the masks: their place at every resolution, and what they cost per
 // render. Works on charts in memory, on no photo. Tolerances are fixed here, before the run.
 #include "LocalAdjustments.h"
+#include "OpenCvBridge.h"
 
 #include <opencv2/imgproc.hpp>
 
@@ -27,10 +28,10 @@ constexpr double placeTolerance = 0.002;     // of the canvas's side
 constexpr double crossTolerance = 0.02;      // between resolutions, in coverage
 constexpr double previewLatencyMs = 40.0;    // one mask on the 2048 px proxy, per render
 
-const cv::Size preview(2048, 1365);
-const cv::Size full(6000, 4000);
+const ipr::Size preview(2048, 1365);
+const ipr::Size full(6000, 4000);
 
-Shape linear(cv::Point2f start, cv::Point2f end)
+Shape linear(ipr::Point2f start, ipr::Point2f end)
 {
     Shape shape;
     shape.start = start;
@@ -38,7 +39,7 @@ Shape linear(cv::Point2f start, cv::Point2f end)
     return shape;
 }
 
-Shape radial(cv::Point2f centre, float radiusX, float radiusY, float feather)
+Shape radial(ipr::Point2f centre, float radiusX, float radiusY, float feather)
 {
     Shape shape;
     shape.kind = Kind::Radial;
@@ -100,14 +101,14 @@ std::vector<float> rowOf(const cv::Mat &map, int y)
 double worstAcross(const Mask &mask)
 {
     cv::Mat reduced, difference;
-    cv::resize(coverage(mask, full), reduced, preview, 0, 0, cv::INTER_AREA);
+    cv::resize(coverage(mask, full), reduced, ipr::toCv(preview), 0, 0, cv::INTER_AREA);
     cv::absdiff(reduced, coverage(mask, preview), difference);
     double worst = 0.0;
     cv::minMaxLoc(difference, nullptr, &worst);
     return worst;
 }
 
-double millisecondsOf(const Masks &masks, const cv::Size &size)
+double millisecondsOf(const Masks &masks, const ipr::Size &size)
 {
     double best = std::numeric_limits<double>::infinity();
     for (int run = 0; run < 3; ++run) {
@@ -138,7 +139,7 @@ int main(int argc, char **argv)
     };
 
     // A gradient's middle is where its two ends say, at both resolutions.
-    for (const cv::Size &size : {preview, full}) {
+    for (const ipr::Size &size : {preview, full}) {
         const cv::Mat map = coverage(maskOf(linear({0.5f, 0.3f}, {0.5f, 0.7f})), size);
         record(QStringLiteral("linear middle at %1 px").arg(size.width), std::abs(crossing(column(map, size.width / 2), 0.5f) - 0.5), placeTolerance);
         const cv::Mat edge = coverage(maskOf(radial({0.5f, 0.5f}, 0.25f, 0.2f, 0.0f)), size);
@@ -159,7 +160,7 @@ int main(int argc, char **argv)
     // What a render pays.
     QJsonArray costs;
     const auto cost = [&](const QString &name, const Masks &masks) {
-        for (const cv::Size &size : {preview, full}) {
+        for (const ipr::Size &size : {preview, full}) {
             const double ms = millisecondsOf(masks, size);
             costs.append(QJsonObject{{QStringLiteral("name"), name}, {QStringLiteral("width"), size.width},
                                      {QStringLiteral("masks"), int(masks.size())}, {QStringLiteral("milliseconds"), ms}});

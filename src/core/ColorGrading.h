@@ -1,6 +1,8 @@
 #ifndef IPR_CORE_COLORGRADING_H
 #define IPR_CORE_COLORGRADING_H
 
+#include "Types.h"
+
 #include <opencv2/core.hpp>
 
 #include <array>
@@ -23,7 +25,7 @@ namespace ColorGrading {
 // [-100, 100] they share, the global wheel's fixed. With the luminance [-100, 100]
 // of each, the lightness shift and chroma gain they add up to. Computed once per render.
 struct Zones {
-    std::array<cv::Vec3f, 4> change{};
+    std::array<ipr::Vec3f, 4> change{};
     std::array<bool, 4> active{};
     std::array<std::array<float, 21>, 4> curve{};
     std::array<float, 21> lightnessShift{};
@@ -36,12 +38,12 @@ Zones prepare(const std::array<int, 4> &hue, const std::array<int, 4> &saturatio
 // One Oklab colour, in place: the luminance shift and chroma gain of its lightness,
 // then each active zone's change weighted by the shifted lightness. The image loop
 // is PerceptualColour's.
-void adjust(cv::Vec3d &lab, const Zones &zones);
+void adjust(ipr::Vec3d &lab, const Zones &zones);
 
 // Encoded sRGB colour showing what a zone does at a hue and saturation, for the UI
 // wheel and track: a light grey pushed along the zone's measured Oklab change (its
 // chroma enlarged to be read, proportional to the saturation), fitted to sRGB.
-cv::Vec3f displayColour(int zone, int hue, int saturation);
+ipr::Vec3f displayColour(int zone, int hue, int saturation);
 
 } // namespace ColorGrading
 

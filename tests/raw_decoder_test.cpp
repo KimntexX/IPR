@@ -1,4 +1,5 @@
 #include "RawDecoder.h"
+#include "OpenCvBridge.h"
 
 #include <QCoreApplication>
 
@@ -50,7 +51,7 @@ int main(int argc, char **argv)
                        }
                        ColorPipeline::WorkingImage result;
                        result.linearRgba = cv::Mat::zeros(1, 1, CV_32FC4);
-                       result.linearRgba.at<cv::Vec4f>(0, 0)[3] = 1.0f;
+                       ipr::at<ipr::Vec4f>(result.linearRgba, 0, 0)[3] = 1.0f;
                        return result;
                    },
                    &error, futureFormat),

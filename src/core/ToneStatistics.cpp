@@ -1,6 +1,7 @@
 #include "ToneStatistics.h"
 
 #include "WorkingColorSpace.h"
+#include "Types.h"
 
 #include <algorithm>
 #include <cmath>
@@ -29,9 +30,9 @@ Statistics measure(const cv::Mat &linearRgba)
     std::vector<float> values;
     values.reserve(linearRgba.total() / size_t(stride * stride) + linearRgba.rows);
     for (int y = 0; y < linearRgba.rows; y += stride) {
-        const auto *row = linearRgba.ptr<cv::Vec4f>(y);
+        const auto *row = linearRgba.ptr<ipr::Vec4f>(y);
         for (int x = 0; x < linearRgba.cols; x += stride) {
-            const cv::Vec3f rgb(row[x][0], row[x][1], row[x][2]);
+            const ipr::Vec3f rgb(row[x][0], row[x][1], row[x][2]);
             values.push_back(std::log2(std::max(WorkingColor::luminance(rgb), 0x1p-20f)));
         }
     }

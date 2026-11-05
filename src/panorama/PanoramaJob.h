@@ -2,6 +2,7 @@
 #define IPR_PANORAMA_PANORAMAJOB_H
 
 #include "PanoramaGeometry.h"
+#include "Types.h"
 
 #include <QString>
 #include <opencv2/core.hpp>
@@ -55,8 +56,8 @@ struct FrameReport
     bool used = false;
     QString exclusion;                     // why it was left out, empty when used
     int features = 0;
-    cv::Vec3d gains{1.0, 1.0, 1.0};
-    cv::Rect area;                         // of the canvas
+    ipr::Vec3d gains{1.0, 1.0, 1.0};
+    ipr::Recti area;                         // of the canvas
 };
 
 struct PairReport
@@ -73,9 +74,9 @@ struct Result
     bool cancelled = false;
     QString error;
     cv::Mat cameraRgb;                     // CV_32FC3
-    cv::Size frameSize;
-    cv::Size canvas;
-    cv::Rect kept;                         // of the canvas
+    ipr::Size frameSize;
+    ipr::Size canvas;
+    ipr::Recti kept;                         // of the canvas
     double coveredShare = 0.0;             // of the canvas that holds pixels
     double filledShare = 0.0;              // of the result that is invented
     std::vector<FrameReport> frames;

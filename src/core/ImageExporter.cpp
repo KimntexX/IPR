@@ -1,6 +1,7 @@
 #include "ImageExporter.h"
 
 #include "WorkingColorSpace.h"
+#include "Types.h"
 
 #include <QColorSpace>
 #include <QCoreApplication>
@@ -65,7 +66,7 @@ bool writeLinearDng(const ColorPipeline::WorkingImage &image,
     constexpr float asShotNeutral[] = {1.0f, 1.0f, 1.0f};
     // DNG ColorMatrix maps XYZ at CalibrationIlluminant1 (D65) to the
     // stored linear RGB, not RGB to XYZ. ICC must describe linear samples.
-    const cv::Matx33f xyzToStoredRgb(WorkingColor::srgbToXyz().inv());
+    const ipr::Matrix33f xyzToStoredRgb(WorkingColor::srgbToXyz().inv());
     const QByteArray uniqueCameraModel =
         QByteArrayLiteral("IPR Rendered Linear DNG");
     const QByteArray software = QByteArrayLiteral("IPR");
@@ -98,7 +99,7 @@ bool writeLinearDng(const ColorPipeline::WorkingImage &image,
                      uniqueCameraModel.constData()) == 1 &&
         TIFFSetField(tiff, TIFFTAG_BLACKLEVEL, 3, blackLevel) == 1 &&
         TIFFSetField(tiff, TIFFTAG_WHITELEVEL, 3, whiteLevel) == 1 &&
-        TIFFSetField(tiff, TIFFTAG_COLORMATRIX1, 9, xyzToStoredRgb.val) == 1 &&
+        TIFFSetField(tiff, TIFFTAG_COLORMATRIX1, 9, xyzToStoredRgb.values.data()) == 1 &&
         TIFFSetField(tiff, TIFFTAG_ASSHOTNEUTRAL, 3, asShotNeutral) == 1 &&
         TIFFSetField(tiff, TIFFTAG_CALIBRATIONILLUMINANT1, 21) == 1;
     if (!iccProfile.isEmpty()) {
@@ -118,7 +119,7 @@ bool writeLinearDng(const ColorPipeline::WorkingImage &image,
     std::vector<quint16> row(
         static_cast<size_t>(gamutMapped.linearRgba.cols) * 3);
     for (int y = 0; y < gamutMapped.linearRgba.rows; ++y) {
-        const cv::Vec4f *source = gamutMapped.linearRgba.ptr<cv::Vec4f>(y);
+        const ipr::Vec4f *source = gamutMapped.linearRgba.ptr<ipr::Vec4f>(y);
         for (int x = 0; x < gamutMapped.linearRgba.cols; ++x) {
             for (int channel = 0; channel < 3; ++channel) {
                 row[static_cast<size_t>(x) * 3 + channel] =

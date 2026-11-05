@@ -3,6 +3,7 @@
 
 #include "Geometry.h"
 #include "LineDetection.h"
+#include "Types.h"
 
 #include <vector>
 
@@ -62,7 +63,7 @@ std::vector<LineDetection::Segment> linesOf(const cv::Mat &image);
 
 // segments: in pixels of a source of this size. base: the geometry in place, whose turns and
 // mirrors stay; only the rotation and the two perspectives are worked out.
-Proposal propose(const std::vector<LineDetection::Segment> &segments, const cv::Size &source,
+Proposal propose(const std::vector<LineDetection::Segment> &segments, const ipr::Size &source,
                  const Geometry::Settings &base, Mode mode, const Options &options = {});
 
 // The base with the proposal in it, within Geometry's ranges.

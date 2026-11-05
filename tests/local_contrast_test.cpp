@@ -1,5 +1,6 @@
 #include "LocalContrast.h"
 #include "WorkingColorSpace.h"
+#include "OpenCvBridge.h"
 
 #include <opencv2/imgproc.hpp>
 
@@ -35,7 +36,7 @@ cv::Mat texturedGrey(int size)
     for (int y = 0; y < size; ++y)
         for (int x = 0; x < size; ++x) {
             const float v = std::exp2(log2Luminance.at<float>(y, x));
-            rgb.at<cv::Vec3f>(y, x) = cv::Vec3f(v, v, v);
+            ipr::at<ipr::Vec3f>(rgb, y, x) = ipr::Vec3f(v, v, v);
         }
     return rgb;
 }
@@ -47,7 +48,7 @@ double bandGain(const cv::Mat &original, const cv::Mat &variant, double a, doubl
         cv::Mat l(rgb.size(), CV_32F);
         for (int y = 0; y < rgb.rows; ++y)
             for (int x = 0; x < rgb.cols; ++x)
-                l.at<float>(y, x) = std::log2(WorkingColor::nonNegativeLuminance(rgb.at<cv::Vec3f>(y, x)) + 1e-3f);
+                l.at<float>(y, x) = std::log2(WorkingColor::nonNegativeLuminance(ipr::at<ipr::Vec3f>(rgb, y, x)) + 1e-3f);
         cv::Mat ga, gb;
         if (a > 0) cv::GaussianBlur(l, ga, cv::Size(0, 0), a, a, cv::BORDER_REFLECT); else ga = l;
         cv::GaussianBlur(l, gb, cv::Size(0, 0), b, b, cv::BORDER_REFLECT);
@@ -88,7 +89,7 @@ int main()
         for (int x = 0; x < step.cols; ++x) {
             const float base = x < 256 ? 0.05f : 0.8f;
             const float v = base * std::exp2(0.04f * std::sin(0.4f * float(y)));
-            step.at<cv::Vec3f>(y, x) = cv::Vec3f(v, v, v);
+            ipr::at<ipr::Vec3f>(step, y, x) = ipr::Vec3f(v, v, v);
         }
     cv::GaussianBlur(step, step, cv::Size(0, 0), 1.5, 0.0, cv::BORDER_REFLECT);   // edge softened as by optics
     cv::Mat clear = step.clone();
@@ -97,7 +98,7 @@ int main()
         double lo = 1e9, hi = -1e9;
         for (int y = 64; y < 192; ++y)
             for (int x = x0; x < x1; ++x) {
-                const double l = std::log2(WorkingColor::nonNegativeLuminance(m.at<cv::Vec3f>(y, x)));
+                const double l = std::log2(WorkingColor::nonNegativeLuminance(ipr::at<ipr::Vec3f>(m, y, x)));
                 lo = std::min(lo, l);
                 hi = std::max(hi, l);
             }
@@ -110,8 +111,8 @@ int main()
     double halo = 0;
     for (int x = 200; x < 312; ++x) {
         if (std::abs(x - 256) < 8) continue;
-        const double before = std::log2(WorkingColor::nonNegativeLuminance(step.at<cv::Vec3f>(128, x)));
-        const double after = std::log2(WorkingColor::nonNegativeLuminance(clear.at<cv::Vec3f>(128, x)));
+        const double before = std::log2(WorkingColor::nonNegativeLuminance(ipr::at<ipr::Vec3f>(step, 128, x)));
+        const double after = std::log2(WorkingColor::nonNegativeLuminance(ipr::at<ipr::Vec3f>(clear, 128, x)));
         halo = std::max(halo, std::abs(after - before));
     }
     if (!(halo < 1.2)) std::cerr << "clarity +100: largest change 8-56 px off the edge " << halo << " EV\n";
@@ -123,15 +124,15 @@ int main()
     cv::Mat colour = original.clone();
     for (int y = 0; y < colour.rows; ++y)
         for (int x = 0; x < colour.cols; ++x) {
-            auto &p = colour.at<cv::Vec3f>(y, x);
-            p = cv::Vec3f(p[0] * 1.4f, p[1], p[2] * 0.5f);
+            auto &p = ipr::at<ipr::Vec3f>(colour, y, x);
+            p = ipr::Vec3f(p[0] * 1.4f, p[1], p[2] * 0.5f);
         }
     const cv::Mat before = colour.clone();
     LocalContrast::apply(colour, 60, 60);
     bool ratios = true, finite = true;
     for (int y = 0; y < colour.rows; ++y)
         for (int x = 0; x < colour.cols; ++x) {
-            const auto &a = before.at<cv::Vec3f>(y, x), &b = colour.at<cv::Vec3f>(y, x);
+            const auto &a = ipr::at<ipr::Vec3f>(before, y, x), &b = ipr::at<ipr::Vec3f>(colour, y, x);
             finite = finite && std::isfinite(b[0]) && std::isfinite(b[1]) && std::isfinite(b[2]) && b[0] >= 0 && b[2] >= 0;
             ratios = ratios && std::abs(b[0] / b[1] - a[0] / a[1]) < 1e-3f && std::abs(b[2] / b[1] - a[2] / a[1]) < 1e-3f;
         }
@@ -146,8 +147,8 @@ int main()
             cv::Mat change(reduced.size(), CV_32F);
             for (int y = 0; y < reduced.rows; ++y)
                 for (int x = 0; x < reduced.cols; ++x)
-                    change.at<float>(y, x) = std::log2(WorkingColor::nonNegativeLuminance(rgb.at<cv::Vec3f>(y, x)) + 1e-3f)
-                        - std::log2(WorkingColor::nonNegativeLuminance(reduced.at<cv::Vec3f>(y, x)) + 1e-3f);
+                    change.at<float>(y, x) = std::log2(WorkingColor::nonNegativeLuminance(ipr::at<ipr::Vec3f>(rgb, y, x)) + 1e-3f)
+                        - std::log2(WorkingColor::nonNegativeLuminance(ipr::at<ipr::Vec3f>(reduced, y, x)) + 1e-3f);
             return change;
         };
         for (const auto &[texture, clarity] : {std::pair{100, 0}, std::pair{0, 100}}) {

@@ -8,6 +8,7 @@
 #include "ImageExporter.h"
 #include "RawDecoder.h"
 #include "StackJob.h"
+#include "OpenCvBridge.h"
 
 #include <QCoreApplication>
 #include <QCryptographicHash>
@@ -116,7 +117,7 @@ cv::Mat luminanceOf(const cv::Mat &rgb)
     cv::Mat luminance(rgb.size(), CV_32FC1);
     cv::parallel_for_(cv::Range(0, rgb.rows), [&](const cv::Range &range) {
         for (int y = range.start; y < range.end; ++y) {
-            const cv::Vec3f *in = rgb.ptr<cv::Vec3f>(y);
+            const ipr::Vec3f *in = rgb.ptr<ipr::Vec3f>(y);
             float *out = luminance.ptr<float>(y);
             for (int x = 0; x < rgb.cols; ++x)
                 out[x] = 0.25f * in[x][0] + 0.5f * in[x][1] + 0.25f * in[x][2];
@@ -127,8 +128,8 @@ cv::Mat luminanceOf(const cv::Mat &rgb)
 
 struct Tiles
 {
-    std::vector<cv::Rect> flat;     // the least detail of the frame: noise is read there
-    std::vector<cv::Rect> textured; // the most: detail is read there
+    std::vector<ipr::Recti> flat;     // the least detail of the frame: noise is read there
+    std::vector<ipr::Recti> textured; // the most: detail is read there
 };
 
 // Ranks the tiles by the detail of the noise-free view: the merged image's coarse gradients.
@@ -141,13 +142,13 @@ Tiles chooseTiles(const cv::Mat &merged)
     cv::Sobel(coarse, gx, CV_32F, 1, 0);
     cv::Sobel(coarse, gy, CV_32F, 0, 1);
     cv::Mat energy = gx.mul(gx) + gy.mul(gy);
-    struct Ranked { double score; cv::Rect tile; double level; };
+    struct Ranked { double score; ipr::Recti tile; double level; };
     std::vector<Ranked> ranked;
     for (int y = 0; y + tileSide <= merged.rows; y += tileSide)
         for (int x = 0; x + tileSide <= merged.cols; x += tileSide) {
-            const cv::Rect tile(x, y, tileSide, tileSide);
-            const double level = cv::mean(luminance(tile))[0];
-            ranked.push_back({cv::mean(energy(tile))[0] / std::max(1e-6, level * level), tile, level});
+            const ipr::Recti tile(x, y, tileSide, tileSide);
+            const double level = cv::mean(luminance(ipr::toCv(tile)))[0];
+            ranked.push_back({cv::mean(energy(ipr::toCv(tile)))[0] / std::max(1e-6, level * level), tile, level});
         }
     std::sort(ranked.begin(), ranked.end(), [](const Ranked &a, const Ranked &b) { return a.score < b.score; });
     Tiles tiles;
@@ -167,15 +168,15 @@ cv::Mat highPass(const cv::Mat &image)
 }
 
 // Median over the flat tiles of the ratio of a stack's noise to the reference's, per channel.
-QJsonObject noiseRatio(const cv::Mat &reference, const cv::Mat &stack, const std::vector<cv::Rect> &tiles)
+QJsonObject noiseRatio(const cv::Mat &reference, const cv::Mat &stack, const std::vector<ipr::Recti> &tiles)
 {
     const cv::Mat a = highPass(reference), b = highPass(stack);
     std::array<std::vector<double>, 3> ratios;
     std::array<std::vector<double>, 3> levels;
-    for (const cv::Rect &tile : tiles) {
+    for (const ipr::Recti &tile : tiles) {
         cv::Scalar mean, deviationA, deviationB;
-        cv::meanStdDev(a(tile), mean, deviationA);
-        cv::meanStdDev(b(tile), mean, deviationB);
+        cv::meanStdDev(a(ipr::toCv(tile)), mean, deviationA);
+        cv::meanStdDev(b(ipr::toCv(tile)), mean, deviationB);
         for (int c = 0; c < 3; ++c) {
             if (deviationA[c] > 0.0)
                 ratios[size_t(c)].push_back(deviationB[c] / deviationA[c]);
@@ -198,20 +199,20 @@ QJsonObject noiseRatio(const cv::Mat &reference, const cv::Mat &stack, const std
 // The fusion's transfer of detail, by frequency: with A and B two stacks whose noise is
 // independent of each other and of the reference R, T = <A conj B> / <A conj R>. The noise
 // of each cancels in the averages, so a loss of T is a true loss of detail. 1 means none.
-QJsonObject transfer(const cv::Mat &reference, const cv::Mat &a, const cv::Mat &b, const std::vector<cv::Rect> &tiles)
+QJsonObject transfer(const cv::Mat &reference, const cv::Mat &a, const cv::Mat &b, const std::vector<ipr::Recti> &tiles)
 {
     constexpr int bins = 9;
     std::array<double, bins> crossAB{}, crossAR{}, powerA{}, powerR{};
     cv::Mat window;
     cv::createHanningWindow(window, cv::Size(tileSide, tileSide), CV_32F);
     const cv::Mat lr = luminanceOf(reference), la = luminanceOf(a), lb = luminanceOf(b);
-    const auto spectrum = [&](const cv::Mat &image, const cv::Rect &tile) {
+    const auto spectrum = [&](const cv::Mat &image, const ipr::Recti &tile) {
         cv::Mat windowed, out;
-        cv::multiply(image(tile) - cv::mean(image(tile)), window, windowed);
+        cv::multiply(image(ipr::toCv(tile)) - cv::mean(image(ipr::toCv(tile))), window, windowed);
         cv::dft(windowed, out, cv::DFT_COMPLEX_OUTPUT);
         return out;
     };
-    for (const cv::Rect &tile : tiles) {
+    for (const ipr::Recti &tile : tiles) {
         const cv::Mat fr = spectrum(lr, tile), fa = spectrum(la, tile), fb = spectrum(lb, tile);
         for (int v = 0; v < tileSide; ++v)
             for (int u = 0; u < tileSide; ++u) {
@@ -220,7 +221,7 @@ QJsonObject transfer(const cv::Mat &reference, const cv::Mat &a, const cv::Mat &
                 const int bin = int(std::hypot(fu, fv) / 0.05) - 1;
                 if (bin < 0 || bin >= bins)
                     continue;
-                const cv::Vec2f pa = fa.at<cv::Vec2f>(v, u), pb = fb.at<cv::Vec2f>(v, u), pr = fr.at<cv::Vec2f>(v, u);
+                const ipr::Vec2f pa = ipr::at<ipr::Vec2f>(fa, v, u), pb = ipr::at<ipr::Vec2f>(fb, v, u), pr = ipr::at<ipr::Vec2f>(fr, v, u);
                 crossAB[size_t(bin)] += double(pa[0]) * pb[0] + double(pa[1]) * pb[1];
                 crossAR[size_t(bin)] += double(pa[0]) * pr[0] + double(pa[1]) * pr[1];
                 powerA[size_t(bin)] += double(pa[0]) * pa[0] + double(pa[1]) * pa[1];
@@ -242,7 +243,7 @@ QJsonObject transfer(const cv::Mat &reference, const cv::Mat &a, const cv::Mat &
 
 // The signal two stacks with independent noise have in common, by frequency: <A conj B>.
 // Noise cancels in it, so a rise at high frequencies is detail recovered, not noise kept.
-QJsonObject sharedSignal(const cv::Mat &a, const cv::Mat &b, const cv::Rect &area)
+QJsonObject sharedSignal(const cv::Mat &a, const cv::Mat &b, const ipr::Recti &area)
 {
     constexpr int bins = 9;
     constexpr int step = tileSide / 2;
@@ -250,16 +251,16 @@ QJsonObject sharedSignal(const cv::Mat &a, const cv::Mat &b, const cv::Rect &are
     cv::Mat window;
     cv::createHanningWindow(window, cv::Size(tileSide, tileSide), CV_32F);
     const cv::Mat la = luminanceOf(a), lb = luminanceOf(b);
-    const auto spectrum = [&](const cv::Mat &image, const cv::Rect &tile) {
+    const auto spectrum = [&](const cv::Mat &image, const ipr::Recti &tile) {
         cv::Mat windowed, out;
-        cv::multiply(image(tile) - cv::mean(image(tile)), window, windowed);
+        cv::multiply(image(ipr::toCv(tile)) - cv::mean(image(ipr::toCv(tile))), window, windowed);
         cv::dft(windowed, out, cv::DFT_COMPLEX_OUTPUT);
         return out;
     };
     int tiles = 0;
     for (int y = area.y; y + tileSide <= area.y + area.height; y += step)
         for (int x = area.x; x + tileSide <= area.x + area.width; x += step) {
-            const cv::Rect tile(x, y, tileSide, tileSide);
+            const ipr::Recti tile(x, y, tileSide, tileSide);
             const cv::Mat fa = spectrum(la, tile), fb = spectrum(lb, tile);
             ++tiles;
             for (int v = 0; v < tileSide; ++v)
@@ -269,7 +270,7 @@ QJsonObject sharedSignal(const cv::Mat &a, const cv::Mat &b, const cv::Rect &are
                     const int bin = int(std::hypot(fu, fv) / 0.05) - 1;
                     if (bin < 0 || bin >= bins)
                         continue;
-                    const cv::Vec2f pa = fa.at<cv::Vec2f>(v, u), pb = fb.at<cv::Vec2f>(v, u);
+                    const ipr::Vec2f pa = ipr::at<ipr::Vec2f>(fa, v, u), pb = ipr::at<ipr::Vec2f>(fb, v, u);
                     power[size_t(bin)] += double(pa[0]) * pb[0] + double(pa[1]) * pb[1];
                 }
         }
@@ -283,7 +284,7 @@ QJsonObject sharedSignal(const cv::Mat &a, const cv::Mat &b, const cv::Rect &are
 
 // How far blocks of the stack lie from the reference, what one transform leaves over a
 // scene with depth (parallax).
-QJsonObject localShifts(const cv::Mat &reference, const cv::Mat &stack, const std::vector<cv::Rect> &tiles)
+QJsonObject localShifts(const cv::Mat &reference, const cv::Mat &stack, const std::vector<ipr::Recti> &tiles)
 {
     constexpr int radius = 6;
     constexpr int half = 32;
@@ -292,14 +293,14 @@ QJsonObject localShifts(const cv::Mat &reference, const cv::Mat &stack, const st
     cv::sqrt(cv::max(a, 0.f), ra);
     cv::sqrt(cv::max(b, 0.f), rb);
     std::vector<double> shifts;
-    for (const cv::Rect &tile : tiles) {
-        const cv::Point centre(tile.x + tile.width / 2, tile.y + tile.height / 2);
-        const cv::Rect block(centre.x - half, centre.y - half, 2 * half + 1, 2 * half + 1);
-        const cv::Rect search(block.x - radius, block.y - radius, block.width + 2 * radius, block.height + 2 * radius);
-        if ((search & cv::Rect(0, 0, a.cols, a.rows)) != search)
+    for (const ipr::Recti &tile : tiles) {
+        const ipr::Point2i centre(tile.x + tile.width / 2, tile.y + tile.height / 2);
+        const ipr::Recti block(centre.x - half, centre.y - half, 2 * half + 1, 2 * half + 1);
+        const ipr::Recti search(block.x - radius, block.y - radius, block.width + 2 * radius, block.height + 2 * radius);
+        if ((search & ipr::Recti(0, 0, a.cols, a.rows)) != search)
             continue;
         cv::Mat scores;
-        cv::matchTemplate(rb(search), ra(block), scores, cv::TM_CCOEFF_NORMED);
+        cv::matchTemplate(rb(ipr::toCv(search)), ra(ipr::toCv(block)), scores, cv::TM_CCOEFF_NORMED);
         double top = 0.0;
         cv::Point at;
         cv::minMaxLoc(scores, nullptr, &top, nullptr, &at);
@@ -343,12 +344,12 @@ QJsonObject frameJson(const StackJob::FrameReport &frame, const QString &name)
     };
 }
 
-bool renderCrop(const RawDecoder::DcpSource &source, const cv::Mat &cameraRgb, const cv::Rect &area, double ev,
+bool renderCrop(const RawDecoder::DcpSource &source, const cv::Mat &cameraRgb, const ipr::Recti &area, double ev,
                 const QString &path)
 {
     // As the decoder renders a calibrated signal: applyProfile asks a new decode for it.
     CameraSignal::Source signal;
-    signal.rgb = cameraRgb(area) * std::pow(2.0, ev);
+    signal.rgb = cameraRgb(ipr::toCv(area)) * std::pow(2.0, ev);
     signal.cameraMake = source.metadata.cameraMake;
     signal.cameraModel = source.metadata.cameraModel;
     signal.whiteBalanceKelvin = source.whiteBalanceKelvin;
@@ -468,7 +469,7 @@ int main(int argc, char **argv)
     std::cout << "stack of " << whole.usedFrames << " in " << wholeSeconds << " s, area " << whole.commonArea.width << 'x' << whole.commonArea.height << std::endl;
     const double wholePeak = peakMemoryGb();
     const cv::Mat referenceFull = readCache(cache.filePath(names[referenceIndex] + QStringLiteral(".rgb")));
-    const cv::Mat reference = referenceFull(whole.commonArea);
+    const cv::Mat reference = referenceFull(ipr::toCv(whole.commonArea));
     const Tiles tiles = chooseTiles(whole.cameraRgb);
     const QJsonObject noiseWhole = noiseRatio(reference, whole.cameraRgb, tiles.flat);
 
@@ -486,17 +487,17 @@ int main(int argc, char **argv)
         const double seconds = runJob(subset, at, true, partial);
         if (!partial.success)
             continue;
-        const cv::Rect area = partial.commonArea & whole.commonArea;
-        const cv::Rect inPartial(area.x - partial.commonArea.x, area.y - partial.commonArea.y, area.width, area.height);
-        const cv::Rect inWhole(area.x - whole.commonArea.x, area.y - whole.commonArea.y, area.width, area.height);
-        std::vector<cv::Rect> inside;
-        for (const cv::Rect &tile : tiles.flat)
+        const ipr::Recti area = partial.commonArea & whole.commonArea;
+        const ipr::Recti inPartial(area.x - partial.commonArea.x, area.y - partial.commonArea.y, area.width, area.height);
+        const ipr::Recti inWhole(area.x - whole.commonArea.x, area.y - whole.commonArea.y, area.width, area.height);
+        std::vector<ipr::Recti> inside;
+        for (const ipr::Recti &tile : tiles.flat)
             if ((tile & inWhole) == tile)
                 inside.push_back(tile - inWhole.tl());
         growth.append(QJsonObject{{QStringLiteral("frames"), partial.usedFrames},
                                   {QStringLiteral("ideal_ratio"), 1.0 / std::sqrt(double(partial.usedFrames))},
                                   {QStringLiteral("seconds"), seconds},
-                                  {QStringLiteral("noise"), noiseRatio(reference(inWhole), partial.cameraRgb(inPartial), inside)}});
+                                  {QStringLiteral("noise"), noiseRatio(reference(ipr::toCv(inWhole)), partial.cameraRgb(ipr::toCv(inPartial)), inside)}});
         std::cout << "growth " << frames << std::endl;
     }
 
@@ -512,18 +513,18 @@ int main(int argc, char **argv)
     }
     QJsonObject detail;
     if (halfA.success && halfB.success) {
-        const cv::Rect area = (halfA.commonArea & halfB.commonArea) & whole.commonArea;
-        const cv::Rect inA(area.x - halfA.commonArea.x, area.y - halfA.commonArea.y, area.width, area.height);
-        const cv::Rect inB(area.x - halfB.commonArea.x, area.y - halfB.commonArea.y, area.width, area.height);
-        const cv::Mat a = halfA.cameraRgb(inA), b = halfB.cameraRgb(inB), r = referenceFull(area);
-        const Tiles halfTiles = chooseTiles(whole.cameraRgb(cv::Rect(area.x - whole.commonArea.x, area.y - whole.commonArea.y, area.width, area.height)));
+        const ipr::Recti area = (halfA.commonArea & halfB.commonArea) & whole.commonArea;
+        const ipr::Recti inA(area.x - halfA.commonArea.x, area.y - halfA.commonArea.y, area.width, area.height);
+        const ipr::Recti inB(area.x - halfB.commonArea.x, area.y - halfB.commonArea.y, area.width, area.height);
+        const cv::Mat a = halfA.cameraRgb(ipr::toCv(inA)), b = halfB.cameraRgb(ipr::toCv(inB)), r = referenceFull(ipr::toCv(area));
+        const Tiles halfTiles = chooseTiles(whole.cameraRgb(ipr::toCv(ipr::Recti(area.x - whole.commonArea.x, area.y - whole.commonArea.y, area.width, area.height))));
         cv::Mat difference = (a - b) * std::sqrt(0.5);
         std::array<std::vector<double>, 3> ratios;
         const cv::Mat hr = highPass(r);
-        for (const cv::Rect &tile : halfTiles.flat) {
+        for (const ipr::Recti &tile : halfTiles.flat) {
             cv::Scalar mean, deviationD, deviationR;
-            cv::meanStdDev(difference(tile), mean, deviationD);
-            cv::meanStdDev(hr(tile), mean, deviationR);
+            cv::meanStdDev(difference(ipr::toCv(tile)), mean, deviationD);
+            cv::meanStdDev(hr(ipr::toCv(tile)), mean, deviationR);
             for (int c = 0; c < 3; ++c)
                 if (deviationR[c] > 0.0)
                     ratios[size_t(c)].push_back(deviationD[c] / deviationR[c]);
@@ -540,8 +541,8 @@ int main(int argc, char **argv)
                              {QStringLiteral("local_shift_textured"), localShifts(r, a, halfTiles.textured)}};
         const QStringList subjectParts = value(QStringLiteral("--subject")).split(QLatin1Char(','));
         if (subjectParts.size() == 4) {
-            const cv::Rect wanted(subjectParts[0].toInt(), subjectParts[1].toInt(), subjectParts[2].toInt(), subjectParts[3].toInt());
-            const cv::Rect inHalves = (wanted & area) - area.tl();
+            const ipr::Recti wanted(subjectParts[0].toInt(), subjectParts[1].toInt(), subjectParts[2].toInt(), subjectParts[3].toInt());
+            const ipr::Recti inHalves = (wanted & area) - area.tl();
             detail.insert(QStringLiteral("shared_signal_subject"), sharedSignal(a, b, inHalves));
             detail.insert(QStringLiteral("subject"), QJsonArray{wanted.x, wanted.y, wanted.width, wanted.height});
         }
@@ -550,11 +551,11 @@ int main(int argc, char **argv)
     // The reference and the stack side by side, on a tile of each kind, at 100 %.
     QJsonArray crops;
     if (!referenceSource->cameraRgb.empty() && !tiles.flat.empty() && !tiles.textured.empty()) {
-        const auto grown = [&](const cv::Rect &tile) {
-            const cv::Point centre(tile.x + tile.width / 2, tile.y + tile.height / 2);
-            return cv::Rect(centre.x - 400, centre.y - 300, 800, 600) & cv::Rect(0, 0, reference.cols, reference.rows);
+        const auto grown = [&](const ipr::Recti &tile) {
+            const ipr::Point2i centre(tile.x + tile.width / 2, tile.y + tile.height / 2);
+            return ipr::Recti(centre.x - 400, centre.y - 300, 800, 600) & ipr::Recti(0, 0, reference.cols, reference.rows);
         };
-        const std::vector<std::pair<QString, cv::Rect>> areas{{QStringLiteral("flat"), grown(tiles.flat[tiles.flat.size() / 2])},
+        const std::vector<std::pair<QString, ipr::Recti>> areas{{QStringLiteral("flat"), grown(tiles.flat[tiles.flat.size() / 2])},
                                                               {QStringLiteral("textured"), grown(tiles.textured.back())},
                                                               {QStringLiteral("textured2"), grown(tiles.textured[tiles.textured.size() * 3 / 4])},
                                                               {QStringLiteral("textured3"), grown(tiles.textured[tiles.textured.size() / 2])}};
@@ -572,13 +573,13 @@ int main(int argc, char **argv)
     if (!referenceSource->cameraRgb.empty()) {
         cv::Mat overview;
         cv::resize(whole.cameraRgb, overview, cv::Size(), 0.25, 0.25, cv::INTER_AREA);
-        renderCrop(*referenceSource, overview, cv::Rect(0, 0, overview.cols, overview.rows), 0.0, out.filePath(QStringLiteral("overview.png")));
+        renderCrop(*referenceSource, overview, ipr::Recti(0, 0, overview.cols, overview.rows), 0.0, out.filePath(QStringLiteral("overview.png")));
         int number = 0;
         for (const QString &text : value(QStringLiteral("--areas")).split(QLatin1Char(';'), Qt::SkipEmptyParts)) {
             const QStringList parts = text.split(QLatin1Char(','));
             if (parts.size() != 4)
                 continue;
-            const cv::Rect area = (cv::Rect(parts[0].toInt(), parts[1].toInt(), parts[2].toInt(), parts[3].toInt()) & whole.commonArea) - whole.commonArea.tl();
+            const ipr::Recti area = (ipr::Recti(parts[0].toInt(), parts[1].toInt(), parts[2].toInt(), parts[3].toInt()) & whole.commonArea) - whole.commonArea.tl();
             if (area.empty())
                 continue;
             const QString name = QStringLiteral("area%1-ev%2.png").arg(number++);

@@ -1,4 +1,5 @@
 #include "Demosaic.h"
+#include "OpenCvBridge.h"
 
 #include <algorithm>
 #include <cmath>
@@ -32,7 +33,7 @@ double maxError(const cv::Mat &rgb, double (*value)(int x, int y, int colour), i
     for (int y = border; y < rgb.rows - border; ++y)
         for (int x = border; x < rgb.cols - border; ++x)
             for (int c = 0; c < 3; ++c)
-                worst = std::max(worst, std::abs(double(rgb.at<cv::Vec3f>(y, x)[c]) - value(x, y, c)));
+                worst = std::max(worst, std::abs(double(ipr::at<ipr::Vec3f>(rgb, y, x)[c]) - value(x, y, c)));
     return worst;
 }
 
@@ -55,7 +56,7 @@ int main()
                                        Demosaic::Pattern{{{1, 0}, {2, 1}}}, Demosaic::Pattern{{{1, 2}, {0, 1}}}}) {
         if (!check(Demosaic::interpolate(mosaic(w, h, p, flat), p, Demosaic::ChromaMedian::Off, Demosaic::Range::NonNegative, rgb, nullptr, {}),
                    "interpolation completes")) return 1;
-        if (!check(rgb.size() == cv::Size(w, h) && rgb.type() == CV_32FC3 && maxError(rgb, flat, 0) < 2.0 / 65535.0,
+        if (!check(ipr::fromCv(rgb.size()) == ipr::Size(w, h) && rgb.type() == CV_32FC3 && maxError(rgb, flat, 0) < 2.0 / 65535.0,
                    "a uniform colour is reconstructed exactly, borders and tile seams included")) return 1;
     }
     Demosaic::interpolate(mosaic(w, h, Rggb, gradient), Rggb, Demosaic::ChromaMedian::FlatOnly, Demosaic::Range::NonNegative, rgb, nullptr, {});
@@ -67,7 +68,7 @@ int main()
         for (int y = 8; y < h - 8; ++y)
             for (int x = 8; x < w - 8; ++x) {
                 if (std::abs(x - 300) <= 2) continue;
-                const cv::Vec3f px = rgb.at<cv::Vec3f>(y, x);
+                const ipr::Vec3f px = ipr::at<ipr::Vec3f>(rgb, y, x);
                 worst = std::max({worst, double(std::abs(px[0] - px[1])), double(std::abs(px[2] - px[1]))});
             }
         if (!check(worst < 1e-3, "no false colour away from a grey edge")) return 1;
@@ -86,7 +87,7 @@ int main()
         cv::minMaxLoc(rgb.reshape(1), &low, &high);
         if (!check(std::abs(low + 0.01) < 1e-6 && std::abs(high + 0.01) < 1e-6, "a signed uniform mosaic stays signed")) return 1;
         Demosaic::interpolate(dark, Rggb, Demosaic::ChromaMedian::FlatOnly, Demosaic::Range::NonNegative, rgb, nullptr, {});
-        if (!check(rgb.at<cv::Vec3f>(100, 100)[1] == 0.f || rgb.at<cv::Vec3f>(100, 101)[1] == 0.f,
+        if (!check(ipr::at<ipr::Vec3f>(rgb, 100, 100)[1] == 0.f || ipr::at<ipr::Vec3f>(rgb, 100, 101)[1] == 0.f,
                    "the non-negative range bounds the interpolated values")) return 1;
     }
     if (!check(!Demosaic::interpolate(mosaic(w, h, Rggb, flat), Rggb, Demosaic::ChromaMedian::Off, Demosaic::Range::NonNegative, rgb, nullptr,

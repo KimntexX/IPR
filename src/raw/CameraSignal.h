@@ -3,6 +3,7 @@
 
 #include "ColorPipeline.h"
 #include "CameraProfileEngine.h"
+#include "Types.h"
 
 namespace CameraSignal {
 
@@ -18,7 +19,7 @@ struct Source
     QString cameraMake;
     QString cameraModel;
     std::optional<double> whiteBalanceKelvin;
-    cv::Vec3d cameraNeutral{0, 0, 0}; // Inverse applied WB gains, G=1; all-zero = unavailable.
+    ipr::Vec3d cameraNeutral{0, 0, 0}; // Inverse applied WB gains, G=1; all-zero = unavailable.
     bool whiteBalanceApplied = false;
     Coordinates coordinates = Coordinates::CameraRgb;
 };

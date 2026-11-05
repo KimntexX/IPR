@@ -4,6 +4,7 @@
 #include "../src/raw/RawDecoder.cpp"
 #undef RawDecoder
 #include "raw_opening_trial_helpers.h"
+#include "OpenCvBridge.h"
 
 #include <QCoreApplication>
 #include <QCryptographicHash>
@@ -145,7 +146,7 @@ cv::Mat sample(const cv::Mat &rgb)
     cv::Mat result((rgb.rows + 7) / 8, (rgb.cols + 7) / 8, CV_32FC3);
     for (int y = 0; y < result.rows; ++y)
         for (int x = 0; x < result.cols; ++x)
-            result.at<cv::Vec3f>(y, x) = rgb.at<cv::Vec3f>(8*y, 8*x);
+            ipr::at<ipr::Vec3f>(result, y, x) = ipr::at<ipr::Vec3f>(rgb, 8*y, 8*x);
     return result;
 }
 
@@ -178,7 +179,7 @@ QJsonObject saveEncodedSample(const QDir &out, const QString &name, const cv::Ma
     for (int y = 0; y < encoded.height(); ++y) {
         const auto *row = reinterpret_cast<const QRgba64 *>(encoded.constScanLine(y));
         for (int x = 0; x < encoded.width(); ++x)
-            encodedRgb.at<cv::Vec3f>(y, x) = cv::Vec3f(row[x].red(), row[x].green(), row[x].blue()) / 65535.f;
+            ipr::at<ipr::Vec3f>(encodedRgb, y, x) = ipr::Vec3f(row[x].red(), row[x].green(), row[x].blue()) / 65535.f;
     }
     return saveSample(out, name, encodedRgb);
 }

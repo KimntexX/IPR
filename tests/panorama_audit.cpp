@@ -7,6 +7,7 @@
 #include "PanoramaFill.h"
 #include "PanoramaJob.h"
 #include "RawDecoder.h"
+#include "OpenCvBridge.h"
 
 #include <QCoreApplication>
 #include <QCryptographicHash>
@@ -270,14 +271,14 @@ int main(int argc, char **argv)
     if (job.success && arguments.contains(QStringLiteral("--holdout"))) {
         QJsonArray corners;
         const int depth = job.cameraRgb.rows / 4, length = job.cameraRgb.cols / 6;
-        const QVector<QPair<QString, cv::Point>> tips{{QStringLiteral("top_left"), cv::Point(0, 0)}, {QStringLiteral("top_right"), cv::Point(1, 0)},
-                                                      {QStringLiteral("bottom_left"), cv::Point(0, 1)}, {QStringLiteral("bottom_right"), cv::Point(1, 1)}};
+        const QVector<QPair<QString, ipr::Point2i>> tips{{QStringLiteral("top_left"), ipr::Point2i(0, 0)}, {QStringLiteral("top_right"), ipr::Point2i(1, 0)},
+                                                      {QStringLiteral("bottom_left"), ipr::Point2i(0, 1)}, {QStringLiteral("bottom_right"), ipr::Point2i(1, 1)}};
         for (const auto &tip : tips) {
             cv::Mat known(job.cameraRgb.size(), CV_8UC1, cv::Scalar(255));
             for (int y = 0; y < depth; ++y) {
                 const int row = tip.second.y == 0 ? y : known.rows - 1 - y;
                 const int span = length * (depth - y) / depth;
-                known(cv::Rect(tip.second.x == 0 ? 0 : known.cols - span, row, span, 1)).setTo(0);
+                known(ipr::toCv(ipr::Recti(tip.second.x == 0 ? 0 : known.cols - span, row, span, 1))).setTo(0);
             }
             cv::Mat filled = job.cameraRgb.clone();
             QElapsedTimer fillWatch;

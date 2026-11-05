@@ -1,5 +1,6 @@
 #include "LineDetection.h"
 #include "Straightening.h"
+#include "OpenCvBridge.h"
 
 #include <algorithm>
 #include <cmath>
@@ -39,7 +40,7 @@ float pattern(double u, double v)
 Buffer photographed(int width, int height, const Geometry::Settings &truth, double noise = 0.0)
 {
     Buffer out{width, height, std::vector<float>(size_t(width) * size_t(height))};
-    const cv::Matx33d h = Geometry::homography(truth, {width, height});
+    const ipr::Matrix33d h = Geometry::homography(truth, {width, height});
     std::mt19937 random(11);
     std::normal_distribution<float> gaussian(0.0f, float(noise));
     for (int y = 0; y < height; ++y)
@@ -47,7 +48,7 @@ Buffer photographed(int width, int height, const Geometry::Settings &truth, doub
             float sum = 0;
             for (const double sy : {0.25, 0.75})
                 for (const double sx : {0.25, 0.75}) {
-                    const cv::Vec3d q = h * cv::Vec3d((x + sx) / width, (y + sy) / height, 1.0);
+                    const ipr::Vec3d q = h * ipr::Vec3d((x + sx) / width, (y + sy) / height, 1.0);
                     sum += pattern(q[0] / q[2], q[1] / q[2]);
                 }
             out.values[size_t(y) * size_t(width) + size_t(x)] = sum / 4.0f + (noise > 0.0 ? gaussian(random) : 0.0f);
@@ -231,14 +232,14 @@ void linesAreReadOnLinearImages()
 
     for (const int type : {CV_32FC3, CV_32FC4}) {
         cv::Mat image(300, 400, type, cv::Scalar::all(0.04));
-        image(cv::Rect(0, 150, 400, 150)).setTo(cv::Scalar::all(0.5));
+        image(ipr::toCv(ipr::Recti(0, 150, 400, 150))).setTo(cv::Scalar::all(0.5));
         const auto lines = Straightening::linesOf(image);
         check(lines.size() == 1 && std::abs(angleOf(lines[0])) < 0.1, "a level edge");
     }
     // A part of an image has its own rows.
     cv::Mat whole(400, 600, CV_32FC3, cv::Scalar::all(0.04));
-    whole(cv::Rect(0, 200, 600, 200)).setTo(cv::Scalar::all(0.5));
-    const auto lines = Straightening::linesOf(whole(cv::Rect(100, 50, 400, 300)));
+    whole(ipr::toCv(ipr::Recti(0, 200, 600, 200))).setTo(cv::Scalar::all(0.5));
+    const auto lines = Straightening::linesOf(whole(ipr::toCv(ipr::Recti(100, 50, 400, 300))));
     check(lines.size() == 1 && std::abs(lines[0].y0 - 149.5f) < 0.3f, "at its place in the part");
     // Below the black, nothing breaks.
     cv::Mat negative(100, 100, CV_32FC3, cv::Scalar::all(-0.1));

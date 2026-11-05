@@ -4,6 +4,7 @@
 #include "ColorMixer.h"
 #include "LocalValues.h"
 #include "PointColor.h"
+#include "Types.h"
 
 #include <opencv2/core.hpp>
 
@@ -37,7 +38,7 @@ void apply(cv::Mat &linearRgb, const Parameters &parameters, const LocalValues::
 // output, CV_32FC3): the mean over a square of the given radius around (x, y), in
 // [0, 1] of the image, after saturation, vibrance and the mixer. Empty outside the
 // image or on an empty input.
-std::optional<cv::Vec3d> colourBeforePointColour(const cv::Mat &linearRgb, double x, double y, int radius,
+std::optional<ipr::Vec3d> colourBeforePointColour(const cv::Mat &linearRgb, double x, double y, int radius,
                                                  const Parameters &parameters);
 
 // Weight (CV_32FC1, [0, 1]) of every pixel of the stage's input in the

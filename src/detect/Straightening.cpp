@@ -1,4 +1,5 @@
 #include "Straightening.h"
+#include "Types.h"
 
 #include <algorithm>
 #include <cmath>
@@ -13,7 +14,7 @@ enum class Axis { Horizontal, Vertical };
 
 struct Line
 {
-    cv::Point2d from, to;   // normalized source
+    ipr::Point2d from, to;   // normalized source
     double length = 0;      // in source pixels
     Axis axis = Axis::Horizontal;
     double tilt = 0;        // degrees from its axis, with the base's geometry
@@ -34,7 +35,7 @@ double deviationOf(double dx, double dy, Axis axis)
 class Evaluator
 {
 public:
-    Evaluator(const std::vector<Line> &lines, const cv::Size &source, const Geometry::Settings &base)
+    Evaluator(const std::vector<Line> &lines, const ipr::Size &source, const Geometry::Settings &base)
         : m_lines(lines), m_source(source), m_settings(base)
     {
     }
@@ -44,26 +45,26 @@ public:
         m_settings.rotation = rotation;
         m_settings.vertical = vertical;
         m_settings.horizontal = horizontal;
-        const cv::Matx33d h = Geometry::homography(m_settings, m_source);
-        const cv::Size canvas = Geometry::canvasSize(m_settings, m_source);
+        const ipr::Matrix33d h = Geometry::homography(m_settings, m_source);
+        const ipr::Size canvas = Geometry::canvasSize(m_settings, m_source);
         std::vector<double> out;
         out.reserve(m_lines.size());
         for (const Line &line : m_lines) {
-            const cv::Point2d a = mapped(h, line.from), b = mapped(h, line.to);
+            const ipr::Point2d a = mapped(h, line.from), b = mapped(h, line.to);
             out.push_back(deviationOf((b.x - a.x) * canvas.width, (b.y - a.y) * canvas.height, line.axis));
         }
         return out;
     }
 
 private:
-    static cv::Point2d mapped(const cv::Matx33d &h, const cv::Point2d &p)
+    static ipr::Point2d mapped(const ipr::Matrix33d &h, const ipr::Point2d &p)
     {
-        const cv::Vec3d q = h * cv::Vec3d(p.x, p.y, 1.0);
+        const ipr::Vec3d q = h * ipr::Vec3d(p.x, p.y, 1.0);
         return {q[0] / q[2], q[1] / q[2]};
     }
 
     const std::vector<Line> &m_lines;
-    cv::Size m_source;
+    ipr::Size m_source;
     Geometry::Settings m_settings;
 };
 
@@ -167,7 +168,7 @@ struct PerspectiveSearch
 
 // The perspective that best brings these lines to their axis, with the rotation that goes with
 // it; the current value when none removes enough of what is left.
-PerspectiveSearch searchPerspective(const std::vector<Line> &lines, const cv::Size &source, const Geometry::Settings &base,
+PerspectiveSearch searchPerspective(const std::vector<Line> &lines, const ipr::Size &source, const Geometry::Settings &base,
                                     Axis axis, float rotation, int vertical, int horizontal, const Options &options)
 {
     Evaluator evaluator(lines, source, base);
@@ -227,7 +228,7 @@ std::vector<LineDetection::Segment> linesOf(const cv::Mat &image)
     return LineDetection::detect({luminance.ptr<float>(), luminance.cols, luminance.rows, std::ptrdiff_t(luminance.step1())});
 }
 
-Proposal propose(const std::vector<LineDetection::Segment> &segments, const cv::Size &source,
+Proposal propose(const std::vector<LineDetection::Segment> &segments, const ipr::Size &source,
                  const Geometry::Settings &base, Mode mode, const Options &options)
 {
     Proposal proposal;
@@ -244,11 +245,11 @@ Proposal propose(const std::vector<LineDetection::Segment> &segments, const cv::
     const double longSide = std::max(source.width, source.height);
     std::vector<Line> lines;
     lines.reserve(segments.size());
-    const cv::Matx33d h = Geometry::homography(frame, source);
-    const cv::Size canvas = Geometry::canvasSize(frame, source);
-    const auto onCanvas = [&h](const cv::Point2d &p) {
-        const cv::Vec3d q = h * cv::Vec3d(p.x, p.y, 1.0);
-        return cv::Point2d(q[0] / q[2], q[1] / q[2]);
+    const ipr::Matrix33d h = Geometry::homography(frame, source);
+    const ipr::Size canvas = Geometry::canvasSize(frame, source);
+    const auto onCanvas = [&h](const ipr::Point2d &p) {
+        const ipr::Vec3d q = h * ipr::Vec3d(p.x, p.y, 1.0);
+        return ipr::Point2d(q[0] / q[2], q[1] / q[2]);
     };
     for (const LineDetection::Segment &segment : segments) {
         if (!std::isfinite(segment.x0) || !std::isfinite(segment.y0) || !std::isfinite(segment.x1) || !std::isfinite(segment.y1))
@@ -259,7 +260,7 @@ Proposal propose(const std::vector<LineDetection::Segment> &segments, const cv::
         line.length = std::hypot(double(segment.x1 - segment.x0), double(segment.y1 - segment.y0));
         if (line.length < double(options.minimumVoteShare) * longSide || line.length <= 0.0)
             continue;
-        const cv::Point2d a = onCanvas(line.from), b = onCanvas(line.to);
+        const ipr::Point2d a = onCanvas(line.from), b = onCanvas(line.to);
         const double dx = (b.x - a.x) * canvas.width, dy = (b.y - a.y) * canvas.height;
         const double fromHorizontal = deviationOf(dx, dy, Axis::Horizontal);
         const double fromVertical = deviationOf(dx, dy, Axis::Vertical);

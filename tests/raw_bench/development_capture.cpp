@@ -2,6 +2,7 @@
 #include "LibRawInput.h"
 #include "RawDevelopment.h"
 #include "Demosaic.h"
+#include "OpenCvBridge.h"
 #include <libraw/libraw.h>
 #include <QCoreApplication>
 #include <QCommandLineParser>
@@ -53,7 +54,7 @@ public:
         for(double fraction:{.2,.5,.8}){
             const int x=(int(image.cols*fraction)-128)/2*2,y=(image.rows/2-128)/2*2;
             require(x>=0&&y>=0&&x+256<=image.cols&&y+256<=image.rows,"Image too small for bench ROIs");
-            cv::Mat crop=image(cv::Rect(x,y,256,256)).clone();const auto offset=pixels.pos();
+            cv::Mat crop=image(ipr::Recti(x,y,256,256)).clone();const auto offset=pixels.pos();
             QByteArray bytes(int(crop.total()*crop.elemSize()),Qt::Uninitialized);
             if(crop.depth()==CV_16U){for(size_t i=0;i<crop.total()*crop.channels();++i)qToLittleEndian<quint16>(crop.ptr<quint16>()[i],bytes.data()+i*2);}
             else {const quint16 endian=1;require(*reinterpret_cast<const unsigned char *>(&endian)==1,"Float capture currently requires little-endian host");std::copy(crop.datastart,crop.dataend,reinterpret_cast<unsigned char *>(bytes.data()));}
@@ -92,9 +93,9 @@ private:
             require(Demosaic::interpolate(mosaic,pattern,Demosaic::OpeningMedian,Demosaic::Range::NonNegative,rgb,&before,{}),"Reference RCD failed");
             self->writer->save("post_demosaic_camera_rgb",before,"linear_camera_white_1",*self->input);
             self->writer->save("pre_output_camera_rgb",rgb,"linear_camera_white_1",*self->input);
-            rgb.forEach<cv::Vec3f>([](cv::Vec3f &v,const int *){for(int c=0;c<3;++c)v[c]=float(std::clamp(std::lround(v[c]*65535.f),0L,65535L))*float(1.0/65535.0);});
+            rgb.forEach<ipr::Vec3f>([](ipr::Vec3f &v,const int *){for(int c=0;c<3;++c)v[c]=float(std::clamp(std::lround(v[c]*65535.f),0L,65535L))*float(1.0/65535.0);});
             self->writer->save("post_median_camera_rgb",rgb,"linear_camera_grid_1_65535",*self->input);
-            for(int y=0;y<rgb.rows;++y)for(int x=0;x<rgb.cols;++x)for(int c=0;c<3;++c)d.image[size_t(y)*rgb.cols+x][c]=std::uint16_t(std::lround(rgb.at<cv::Vec3f>(y,x)[c]*65535.f));
+            for(int y=0;y<rgb.rows;++y)for(int x=0;x<rgb.cols;++x)for(int c=0;c<3;++c)d.image[size_t(y)*rgb.cols+x][c]=std::uint16_t(std::lround(ipr::at<ipr::Vec3f>(rgb, y,x)[c]*65535.f));
         }catch(...){self->failed=true;}
     }
 };
@@ -150,7 +151,7 @@ int main(int argc,char **argv){
             // F1 I2 output representation: the reciprocal product historically
             // delivered to the DCP by OpenCV. Pre-RCD still uses division.
             cv::Mat integers(memory->height,memory->width,CV_16UC3,memory->data),rgb(memory->height,memory->width,CV_32FC3);
-            for(int y=0;y<rgb.rows;++y)for(int x=0;x<rgb.cols;++x)for(int c=0;c<3;++c)rgb.at<cv::Vec3f>(y,x)[c]=float(integers.at<cv::Vec<std::uint16_t,3>>(y,x)[c])*float(1.0/65535.0);
+            for(int y=0;y<rgb.rows;++y)for(int x=0;x<rgb.cols;++x)for(int c=0;c<3;++c)ipr::at<ipr::Vec3f>(rgb, y,x)[c]=float(integers.at<cv::Vec<std::uint16_t,3>>(y,x)[c])*float(1.0/65535.0);
             writer.save("pre_dcp_camera_rgb",rgb,"linear_camera_grid_1_65535",input);
         }
         writer.pixels.close();require(hash(source)==sourceHash,"Source changed during capture");

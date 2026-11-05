@@ -53,10 +53,10 @@ struct Level
     cv::Mat colour;                 // CV_32FC3, perceptual; missing cells hold the current estimate
     cv::Mat known;                  // CV_8UC1
     cv::Mat usable;                 // CV_8UC1: where a whole patch of known pixels is centred
-    std::vector<cv::Point> sources; // the same, as a list
-    std::vector<cv::Point> holes;
+    std::vector<ipr::Point2i> sources; // the same, as a list
+    std::vector<ipr::Point2i> holes;
     cv::Mat holeIndex;              // CV_32SC1, -1 on a known cell
-    std::vector<cv::Point> field;   // per hole: the centre of its source patch
+    std::vector<ipr::Point2i> field;   // per hole: the centre of its source patch
 };
 
 // Known cells that stand out from what surrounds them, widened by what a patch reaches.
@@ -65,7 +65,7 @@ cv::Mat objectsOf(const Level &level)
     cv::Mat luminance(level.colour.size(), CV_32FC1), weight;
     level.known.convertTo(weight, CV_32FC1, 1.0 / 255.0);
     for (int y = 0; y < luminance.rows; ++y) {
-        const cv::Vec3f *in = level.colour.ptr<cv::Vec3f>(y);
+        const ipr::Vec3f *in = level.colour.ptr<ipr::Vec3f>(y);
         const float *present = weight.ptr<float>(y);
         float *out = luminance.ptr<float>(y);
         for (int x = 0; x < luminance.cols; ++x)
@@ -73,8 +73,8 @@ cv::Mat objectsOf(const Level &level)
     }
     const int side = std::max(3, int(std::max(level.colour.cols, level.colour.rows) * standingOutRadius)) | 1;
     cv::Mat sum, count;
-    sum = ipr::boxMean(luminance, cv::Size(side, side), ipr::BlurBorder::LastPixel);
-    count = ipr::boxMean(weight, cv::Size(side, side), ipr::BlurBorder::LastPixel);
+    sum = ipr::boxMean(luminance, ipr::Size(side, side), ipr::BlurBorder::LastPixel);
+    count = ipr::boxMean(weight, ipr::Size(side, side), ipr::BlurBorder::LastPixel);
     cv::Mat objects = cv::Mat::zeros(level.colour.size(), CV_8UC1);
     for (int y = 0; y < objects.rows; ++y) {
         const float *value = luminance.ptr<float>(y), *around = sum.ptr<float>(y), *amount = count.ptr<float>(y), *present = weight.ptr<float>(y);
@@ -83,35 +83,35 @@ cv::Mat objectsOf(const Level &level)
             if (present[x] > 0.0f && amount[x] > 1e-3f && std::abs(value[x] - around[x] / amount[x]) > standingOut)
                 out[x] = 255;
     }
-    objects = ipr::maximum(objects, cv::Size(4 * patchHalf + 1, 4 * patchHalf + 1), ipr::Beyond::Nothing);
+    objects = ipr::maximum(objects, ipr::Size(4 * patchHalf + 1, 4 * patchHalf + 1), ipr::Beyond::Nothing);
     // An object stands alone. Details close enough to join up are the texture of a slope, and
     // without them it could only be continued by what is left, such as a plain patch of earth.
     const int largest = int(largestObject * double(ipr::countNonZero(level.known)));
     const int smallest = int(smallestObject * double(ipr::countNonZero(level.known)));
     cv::Mat seen = cv::Mat::zeros(objects.size(), CV_8UC1);
-    std::vector<cv::Point> stack, group;
+    std::vector<ipr::Point2i> stack, group;
     for (int y = 0; y < objects.rows; ++y) {
         for (int x = 0; x < objects.cols; ++x) {
             if (!objects.at<uchar>(y, x) || seen.at<uchar>(y, x))
                 continue;
             group.clear();
-            stack.assign(1, cv::Point(x, y));
+            stack.assign(1, ipr::Point2i(x, y));
             seen.at<uchar>(y, x) = 255;
             while (!stack.empty()) {
-                const cv::Point p = stack.back();
+                const ipr::Point2i p = stack.back();
                 stack.pop_back();
                 group.push_back(p);
-                for (const cv::Point &step : {cv::Point(1, 0), cv::Point(-1, 0), cv::Point(0, 1), cv::Point(0, -1)}) {
-                    const cv::Point q = p + step;
-                    if (q.x >= 0 && q.y >= 0 && q.x < objects.cols && q.y < objects.rows && objects.at<uchar>(q) && !seen.at<uchar>(q)) {
-                        seen.at<uchar>(q) = 255;
+                for (const ipr::Point2i &step : {ipr::Point2i(1, 0), ipr::Point2i(-1, 0), ipr::Point2i(0, 1), ipr::Point2i(0, -1)}) {
+                    const ipr::Point2i q = p + step;
+                    if (q.x >= 0 && q.y >= 0 && q.x < objects.cols && q.y < objects.rows && ipr::at<uchar>(objects, q) && !ipr::at<uchar>(seen, q)) {
+                        ipr::at<uchar>(seen, q) = 255;
                         stack.push_back(q);
                     }
                 }
             }
             if (int(group.size()) > largest || int(group.size()) < smallest)
-                for (const cv::Point &p : group)
-                    objects.at<uchar>(p) = 0;
+                for (const ipr::Point2i &p : group)
+                    ipr::at<uchar>(objects, p) = 0;
         }
     }
     return objects;
@@ -120,7 +120,7 @@ cv::Mat objectsOf(const Level &level)
 // banned: cells no patch may be centred on, of this level's size, or empty.
 void describe(Level &level, const cv::Mat &banned)
 {
-    level.usable = ipr::minimum(level.known, cv::Size(2 * patchHalf + 1, 2 * patchHalf + 1), ipr::Beyond::Zero);
+    level.usable = ipr::minimum(level.known, ipr::Size(2 * patchHalf + 1, 2 * patchHalf + 1), ipr::Beyond::Zero);
     if (!banned.empty())
         level.usable.setTo(cv::Scalar(0), banned);
     level.holeIndex.create(level.known.size(), CV_32SC1);
@@ -144,20 +144,20 @@ void describe(Level &level, const cv::Mat &banned)
 // The mean of each cell's known pixels; a cell is known only when all of its pixels are.
 void reduced(const cv::Mat &colour, const cv::Mat &known, int factor, cv::Mat &outColour, cv::Mat &outKnown)
 {
-    const cv::Size size((colour.cols + factor - 1) / factor, (colour.rows + factor - 1) / factor);
-    outColour.create(size, CV_32FC3);
-    outKnown.create(size, CV_8UC1);
+    const ipr::Size size((colour.cols + factor - 1) / factor, (colour.rows + factor - 1) / factor);
+    outColour.create(ipr::toCv(size), CV_32FC3);
+    outKnown.create(ipr::toCv(size), CV_8UC1);
     ipr::parallelRows(size.height, [&](int first, int last) {
         for (int cy = first; cy < last; ++cy) {
-            cv::Vec3f *targetColour = outColour.ptr<cv::Vec3f>(cy);
+            ipr::Vec3f *targetColour = outColour.ptr<ipr::Vec3f>(cy);
             uchar *targetKnown = outKnown.ptr<uchar>(cy);
             const int top = cy * factor, bottom = std::min(colour.rows, top + factor);
             for (int cx = 0; cx < size.width; ++cx) {
                 const int left = cx * factor, right = std::min(colour.cols, left + factor);
-                cv::Vec3f sum(0, 0, 0);
+                ipr::Vec3f sum(0, 0, 0);
                 int count = 0;
                 for (int y = top; y < bottom; ++y) {
-                    const cv::Vec3f *inColour = colour.ptr<cv::Vec3f>(y);
+                    const ipr::Vec3f *inColour = colour.ptr<ipr::Vec3f>(y);
                     const uchar *inKnown = known.ptr<uchar>(y);
                     for (int x = left; x < right; ++x) {
                         if (inKnown[x]) {
@@ -166,7 +166,7 @@ void reduced(const cv::Mat &colour, const cv::Mat &known, int factor, cv::Mat &o
                         }
                     }
                 }
-                targetColour[cx] = count > 0 ? sum * (1.0f / float(count)) : cv::Vec3f(0, 0, 0);
+                targetColour[cx] = count > 0 ? sum * (1.0f / float(count)) : ipr::Vec3f(0, 0, 0);
                 targetKnown[cx] = count == (bottom - top) * (right - left) ? 255 : 0;
             }
         }
@@ -177,18 +177,18 @@ void reduced(const cv::Mat &colour, const cv::Mat &known, int factor, cv::Mat &o
 void growFromEdges(Level &level)
 {
     cv::Mat present = level.known.clone();
-    std::vector<cv::Point> remaining = level.holes;
+    std::vector<ipr::Point2i> remaining = level.holes;
     while (!remaining.empty()) {
-        std::vector<cv::Point> next;
-        std::vector<std::pair<cv::Point, cv::Vec3f>> layer;
-        for (const cv::Point &p : remaining) {
-            cv::Vec3f sum(0, 0, 0);
+        std::vector<ipr::Point2i> next;
+        std::vector<std::pair<ipr::Point2i, ipr::Vec3f>> layer;
+        for (const ipr::Point2i &p : remaining) {
+            ipr::Vec3f sum(0, 0, 0);
             int count = 0;
             for (int dy = -1; dy <= 1; ++dy) {
                 for (int dx = -1; dx <= 1; ++dx) {
                     const int x = p.x + dx, y = p.y + dy;
                     if (x >= 0 && y >= 0 && x < present.cols && y < present.rows && present.at<uchar>(y, x)) {
-                        sum += level.colour.at<cv::Vec3f>(y, x);
+                        sum += ipr::at<ipr::Vec3f>(level.colour, y, x);
                         ++count;
                     }
                 }
@@ -201,14 +201,14 @@ void growFromEdges(Level &level)
         if (layer.empty())
             break; // nothing known at all: the caller has refused that already
         for (const auto &entry : layer) {
-            level.colour.at<cv::Vec3f>(entry.first) = entry.second;
-            present.at<uchar>(entry.first) = 255;
+            ipr::at<ipr::Vec3f>(level.colour, entry.first) = entry.second;
+            ipr::at<uchar>(present, entry.first) = 255;
         }
         remaining = std::move(next);
     }
 }
 
-inline float patchCost(const cv::Mat &colour, const cv::Point &target, const cv::Point &source)
+inline float patchCost(const cv::Mat &colour, const ipr::Point2i &target, const ipr::Point2i &source)
 {
     float sum = 0.0f;
     int count = 0;
@@ -216,13 +216,13 @@ inline float patchCost(const cv::Mat &colour, const cv::Point &target, const cv:
         const int ty = target.y + dy;
         if (ty < 0 || ty >= colour.rows)
             continue;
-        const cv::Vec3f *targetRow = colour.ptr<cv::Vec3f>(ty);
-        const cv::Vec3f *sourceRow = colour.ptr<cv::Vec3f>(source.y + dy);
+        const ipr::Vec3f *targetRow = colour.ptr<ipr::Vec3f>(ty);
+        const ipr::Vec3f *sourceRow = colour.ptr<ipr::Vec3f>(source.y + dy);
         for (int dx = -patchHalf; dx <= patchHalf; ++dx) {
             const int tx = target.x + dx;
             if (tx < 0 || tx >= colour.cols)
                 continue;
-            const cv::Vec3f difference = targetRow[tx] - sourceRow[source.x + dx];
+            const ipr::Vec3f difference = targetRow[tx] - sourceRow[source.x + dx];
             sum += difference.dot(difference);
             ++count;
         }
@@ -236,17 +236,17 @@ inline float patchCost(const cv::Mat &colour, const cv::Point &target, const cv:
 void searchAndVote(Level &level, int levelIndex, int iteration)
 {
     const int holeCount = int(level.holes.size());
-    std::vector<cv::Point> improved(static_cast<size_t>(holeCount));
+    std::vector<ipr::Point2i> improved(static_cast<size_t>(holeCount));
     const int widest = std::max(level.colour.cols, level.colour.rows);
     const int sourceCount = int(level.sources.size());
     ipr::parallelRows(holeCount, [&](int first, int last) {
         for (int i = first; i < last; ++i) {
-            const cv::Point p = level.holes[size_t(i)];
-            cv::Point best = level.field[size_t(i)];
+            const ipr::Point2i p = level.holes[size_t(i)];
+            ipr::Point2i best = level.field[size_t(i)];
             float bestCost = patchCost(level.colour, p, best);
-            const auto attempt = [&](const cv::Point &candidate) {
+            const auto attempt = [&](const ipr::Point2i &candidate) {
                 if (candidate.x < 0 || candidate.y < 0 || candidate.x >= level.usable.cols || candidate.y >= level.usable.rows ||
-                    !level.usable.at<uchar>(candidate))
+                    !ipr::at<uchar>(level.usable, candidate))
                     return;
                 const float cost = patchCost(level.colour, p, candidate);
                 if (cost < bestCost) {
@@ -256,11 +256,11 @@ void searchAndVote(Level &level, int levelIndex, int iteration)
             };
             // What a neighbour found, shifted by the distance to it.
             for (const int step : {1, 2, 4}) {
-                for (const cv::Point &offset : {cv::Point(step, 0), cv::Point(-step, 0), cv::Point(0, step), cv::Point(0, -step)}) {
-                    const cv::Point neighbour = p + offset;
+                for (const ipr::Point2i &offset : {ipr::Point2i(step, 0), ipr::Point2i(-step, 0), ipr::Point2i(0, step), ipr::Point2i(0, -step)}) {
+                    const ipr::Point2i neighbour = p + offset;
                     if (neighbour.x < 0 || neighbour.y < 0 || neighbour.x >= level.holeIndex.cols || neighbour.y >= level.holeIndex.rows)
                         continue;
-                    const int index = level.holeIndex.at<int>(neighbour);
+                    const int index = ipr::at<int>(level.holeIndex, neighbour);
                     if (index >= 0)
                         attempt(level.field[size_t(index)] - offset);
                 }
@@ -270,60 +270,60 @@ void searchAndVote(Level &level, int levelIndex, int iteration)
             // Around the best so far, closer and closer; and anywhere, in case it is a poor place.
             for (int radius = widest / 2, tries = 0; radius >= 1 && tries < randomTries; radius /= 2, ++tries) {
                 const int span = 2 * radius + 1;
-                attempt(best + cv::Point(int(nextRandom(state) % unsigned(span)) - radius, int(nextRandom(state) % unsigned(span)) - radius));
+                attempt(best + ipr::Point2i(int(nextRandom(state) % unsigned(span)) - radius, int(nextRandom(state) % unsigned(span)) - radius));
             }
             attempt(level.sources[size_t(nextRandom(state) % unsigned(sourceCount))]);
             // And at its own height: what runs across the image, as a horizon, carries on.
-            attempt(cv::Point(best.x, p.y));
-            attempt(cv::Point(int(nextRandom(state) % unsigned(level.usable.cols)), p.y));
+            attempt(ipr::Point2i(best.x, p.y));
+            attempt(ipr::Point2i(int(nextRandom(state) % unsigned(level.usable.cols)), p.y));
             improved[size_t(i)] = best;
         }
     });
     level.field = std::move(improved);
 
-    std::vector<cv::Vec3f> voted(static_cast<size_t>(holeCount));
+    std::vector<ipr::Vec3f> voted(static_cast<size_t>(holeCount));
     ipr::parallelRows(holeCount, [&](int first, int last) {
         for (int i = first; i < last; ++i) {
-            const cv::Point p = level.holes[size_t(i)];
-            cv::Vec3f sum(0, 0, 0);
+            const ipr::Point2i p = level.holes[size_t(i)];
+            ipr::Vec3f sum(0, 0, 0);
             int count = 0;
             for (int dy = -patchHalf; dy <= patchHalf; ++dy) {
                 for (int dx = -patchHalf; dx <= patchHalf; ++dx) {
-                    const cv::Point q = p + cv::Point(dx, dy);
+                    const ipr::Point2i q = p + ipr::Point2i(dx, dy);
                     if (q.x < 0 || q.y < 0 || q.x >= level.holeIndex.cols || q.y >= level.holeIndex.rows)
                         continue;
-                    const int index = level.holeIndex.at<int>(q);
+                    const int index = ipr::at<int>(level.holeIndex, q);
                     if (index < 0)
                         continue;
                     // The pixel of that patch that falls on p; a source's patch is entirely known.
-                    sum += level.colour.at<cv::Vec3f>(level.field[size_t(index)] - cv::Point(dx, dy));
+                    sum += ipr::at<ipr::Vec3f>(level.colour, level.field[size_t(index)] - ipr::Point2i(dx, dy));
                     ++count;
                 }
             }
-            voted[size_t(i)] = count > 0 ? sum * (1.0f / float(count)) : level.colour.at<cv::Vec3f>(p);
+            voted[size_t(i)] = count > 0 ? sum * (1.0f / float(count)) : ipr::at<ipr::Vec3f>(level.colour, p);
         }
     });
     for (int i = 0; i < holeCount; ++i)
-        level.colour.at<cv::Vec3f>(level.holes[size_t(i)]) = voted[size_t(i)];
+        ipr::at<ipr::Vec3f>(level.colour, level.holes[size_t(i)]) = voted[size_t(i)];
 }
 
 // The coarser level's result as a start for this one.
 void inherit(Level &fine, const Level &coarse)
 {
     cv::Mat enlarged;
-    enlarged = ipr::resized(coarse.colour, fine.colour.size(), ipr::Interpolation::Linear);
+    enlarged = ipr::resized(coarse.colour, ipr::fromCv(fine.colour.size()), ipr::Interpolation::Linear);
     fine.field.resize(fine.holes.size());
     const int sourceCount = int(fine.sources.size());
     for (size_t i = 0; i < fine.holes.size(); ++i) {
-        const cv::Point p = fine.holes[i];
-        fine.colour.at<cv::Vec3f>(p) = enlarged.at<cv::Vec3f>(p);
-        const cv::Point parent(p.x / 2, p.y / 2);
-        cv::Point candidate(-1, -1);
-        const int index = coarse.holeIndex.at<int>(parent);
+        const ipr::Point2i p = fine.holes[i];
+        ipr::at<ipr::Vec3f>(fine.colour, p) = ipr::at<ipr::Vec3f>(enlarged, p);
+        const ipr::Point2i parent(p.x / 2, p.y / 2);
+        ipr::Point2i candidate(-1, -1);
+        const int index = ipr::at<int>(coarse.holeIndex, parent);
         if (index >= 0)
             candidate = coarse.field[size_t(index)] * 2 + (p - parent * 2);
         const bool valid = candidate.x >= 0 && candidate.y >= 0 && candidate.x < fine.usable.cols && candidate.y < fine.usable.rows &&
-                           fine.usable.at<uchar>(candidate);
+                           ipr::at<uchar>(fine.usable, candidate);
         std::uint32_t state = std::uint32_t(i) * 2654435761u + 7u;
         fine.field[i] = valid ? candidate : fine.sources[size_t(nextRandom(state) % unsigned(sourceCount))];
     }
@@ -337,21 +337,21 @@ cv::Mat waysToKnown(const cv::Mat &known)
     cv::Mat ways(known.size(), CV_16SC2);
     for (int y = 0; y < known.rows; ++y) {
         const uchar *in = known.ptr<uchar>(y);
-        cv::Vec2s *out = ways.ptr<cv::Vec2s>(y);
+        ipr::Vec2s *out = ways.ptr<ipr::Vec2s>(y);
         for (int x = 0; x < known.cols; ++x)
-            out[x] = in[x] ? cv::Vec2s(0, 0) : cv::Vec2s(far, far);
+            out[x] = in[x] ? ipr::Vec2s(0, 0) : ipr::Vec2s(far, far);
     }
-    const auto length = [](const cv::Vec2s &way) { return int(way[0]) * way[0] + int(way[1]) * way[1]; };
-    const auto compare = [&](cv::Vec2s &here, int x, int y, int dx, int dy) {
+    const auto length = [](const ipr::Vec2s &way) { return int(way[0]) * way[0] + int(way[1]) * way[1]; };
+    const auto compare = [&](ipr::Vec2s &here, int x, int y, int dx, int dy) {
         if (x + dx < 0 || y + dy < 0 || x + dx >= ways.cols || y + dy >= ways.rows)
             return;
-        const cv::Vec2s &there = ways.at<cv::Vec2s>(y + dy, x + dx);
-        const cv::Vec2s candidate(short(std::clamp(there[0] + dx, -far, far)), short(std::clamp(there[1] + dy, -far, far)));
+        const ipr::Vec2s &there = ipr::at<ipr::Vec2s>(ways, y + dy, x + dx);
+        const ipr::Vec2s candidate(short(std::clamp(there[0] + dx, -far, far)), short(std::clamp(there[1] + dy, -far, far)));
         if (length(candidate) < length(here))
             here = candidate;
     };
     for (int y = 0; y < ways.rows; ++y) {
-        cv::Vec2s *row = ways.ptr<cv::Vec2s>(y);
+        ipr::Vec2s *row = ways.ptr<ipr::Vec2s>(y);
         for (int x = 0; x < ways.cols; ++x) {
             compare(row[x], x, y, -1, 0);
             compare(row[x], x, y, 0, -1);
@@ -362,7 +362,7 @@ cv::Mat waysToKnown(const cv::Mat &known)
             compare(row[x], x, y, 1, 0);
     }
     for (int y = ways.rows - 1; y >= 0; --y) {
-        cv::Vec2s *row = ways.ptr<cv::Vec2s>(y);
+        ipr::Vec2s *row = ways.ptr<ipr::Vec2s>(y);
         for (int x = ways.cols - 1; x >= 0; --x) {
             compare(row[x], x, y, 1, 0);
             compare(row[x], x, y, 0, 1);
@@ -375,13 +375,13 @@ cv::Mat waysToKnown(const cv::Mat &known)
     return ways;
 }
 
-inline cv::Vec3f bilinearAt(const cv::Mat &image, float x, float y)
+inline ipr::Vec3f bilinearAt(const cv::Mat &image, float x, float y)
 {
     const float cx = std::clamp(x, 0.0f, float(image.cols - 1)), cy = std::clamp(y, 0.0f, float(image.rows - 1));
     const int x0 = int(cx), y0 = int(cy), x1 = std::min(x0 + 1, image.cols - 1), y1 = std::min(y0 + 1, image.rows - 1);
     const float fx = cx - float(x0), fy = cy - float(y0);
-    const cv::Vec3f top = image.at<cv::Vec3f>(y0, x0) * (1.0f - fx) + image.at<cv::Vec3f>(y0, x1) * fx;
-    const cv::Vec3f bottom = image.at<cv::Vec3f>(y1, x0) * (1.0f - fx) + image.at<cv::Vec3f>(y1, x1) * fx;
+    const ipr::Vec3f top = ipr::at<ipr::Vec3f>(image, y0, x0) * (1.0f - fx) + ipr::at<ipr::Vec3f>(image, y0, x1) * fx;
+    const ipr::Vec3f bottom = ipr::at<ipr::Vec3f>(image, y1, x0) * (1.0f - fx) + ipr::at<ipr::Vec3f>(image, y1, x1) * fx;
     return top * (1.0f - fy) + bottom * fy;
 }
 
@@ -408,10 +408,10 @@ Report fill(cv::Mat &image, const cv::Mat &known, const Options &options, const 
     cv::Mat perceptual(image.size(), CV_32FC3);
     ipr::parallelRows(image.rows, [&](int first, int last) {
         for (int y = first; y < last; ++y) {
-            const cv::Vec3f *in = image.ptr<cv::Vec3f>(y);
-            cv::Vec3f *out = perceptual.ptr<cv::Vec3f>(y);
+            const ipr::Vec3f *in = image.ptr<ipr::Vec3f>(y);
+            ipr::Vec3f *out = perceptual.ptr<ipr::Vec3f>(y);
             for (int x = 0; x < image.cols; ++x)
-                out[x] = cv::Vec3f(encoded(in[x][0]), encoded(in[x][1]), encoded(in[x][2]));
+                out[x] = ipr::Vec3f(encoded(in[x][0]), encoded(in[x][1]), encoded(in[x][2]));
         }
     });
     const int factor = std::max(1, int(std::ceil(double(std::max(image.cols, image.rows)) / options.workingSide)));
@@ -503,10 +503,10 @@ Report fill(cv::Mat &image, const cv::Mat &known, const Options &options, const 
     const Level &working = levels.front();
     cv::Mat workingLinear(working.colour.size(), CV_32FC3);
     for (int y = 0; y < workingLinear.rows; ++y) {
-        const cv::Vec3f *in = working.colour.ptr<cv::Vec3f>(y);
-        cv::Vec3f *out = workingLinear.ptr<cv::Vec3f>(y);
+        const ipr::Vec3f *in = working.colour.ptr<ipr::Vec3f>(y);
+        ipr::Vec3f *out = workingLinear.ptr<ipr::Vec3f>(y);
         for (int x = 0; x < workingLinear.cols; ++x)
-            out[x] = cv::Vec3f(decoded(in[x][0]), decoded(in[x][1]), decoded(in[x][2]));
+            out[x] = ipr::Vec3f(decoded(in[x][0]), decoded(in[x][1]), decoded(in[x][2]));
     }
     const float toCell = 1.0f / float(factor);
     // Across the limit with the real image, its texture carries on, mirrored, and fades into
@@ -528,7 +528,7 @@ Report fill(cv::Mat &image, const cv::Mat &known, const Options &options, const 
     ways.convertTo(smoothWays, CV_32FC2);
     const float longestWay = 2.0f * transition / float(waysDivisor);
     for (int y = 0; y < smoothWays.rows; ++y) {
-        cv::Vec2f *row = smoothWays.ptr<cv::Vec2f>(y);
+        ipr::Vec2f *row = smoothWays.ptr<ipr::Vec2f>(y);
         for (int x = 0; x < smoothWays.cols; ++x) {
             const float length = std::hypot(row[x][0], row[x][1]);
             if (length > longestWay)
@@ -540,17 +540,17 @@ Report fill(cv::Mat &image, const cv::Mat &known, const Options &options, const 
     ipr::parallelRows(image.rows, [&](int first, int last) {
         for (int y = first; y < last; ++y) {
             const uchar *inKnown = known.ptr<uchar>(y);
-            cv::Vec3f *out = image.ptr<cv::Vec3f>(y);
+            ipr::Vec3f *out = image.ptr<ipr::Vec3f>(y);
             const float cellY = (float(y) + 0.5f) * toCell - 0.5f;
             for (int x = 0; x < image.cols; ++x) {
                 if (inKnown[x])
                     continue;
                 const float cellX = (float(x) + 0.5f) * toCell - 0.5f;
-                cv::Vec3f value = bilinearAt(workingLinear, cellX, cellY);
+                ipr::Vec3f value = bilinearAt(workingLinear, cellX, cellY);
                 if (factor > 1) {
                     const int cx0 = std::clamp(int(std::floor(cellX)), 0, workingLinear.cols - 1), cy0 = std::clamp(int(std::floor(cellY)), 0, workingLinear.rows - 1);
                     const float fx = std::clamp(cellX - float(cx0), 0.0f, 1.0f), fy = std::clamp(cellY - float(cy0), 0.0f, 1.0f);
-                    cv::Vec3f detail(0, 0, 0);
+                    ipr::Vec3f detail(0, 0, 0);
                     float weightSum = 0.0f;
                     for (int j = 0; j < 2; ++j) {
                         for (int i = 0; i < 2; ++i) {
@@ -558,12 +558,12 @@ Report fill(cv::Mat &image, const cv::Mat &known, const Options &options, const 
                             const int index = working.holeIndex.at<int>(cy, cx);
                             if (index < 0)
                                 continue;
-                            const cv::Point from = working.field[size_t(index)];
+                            const ipr::Point2i from = working.field[size_t(index)];
                             const int sx = x + (from.x - cx) * factor, sy = y + (from.y - cy) * factor;
                             if (sx < 0 || sy < 0 || sx >= image.cols || sy >= image.rows || !known.at<uchar>(sy, sx))
                                 continue;
                             const float weight = (i == 0 ? 1.0f - fx : fx) * (j == 0 ? 1.0f - fy : fy);
-                            const cv::Vec3f here = image.at<cv::Vec3f>(sy, sx) - bilinearAt(workingLinear, (float(sx) + 0.5f) * toCell - 0.5f, (float(sy) + 0.5f) * toCell - 0.5f);
+                            const ipr::Vec3f here = ipr::at<ipr::Vec3f>(image, sy, sx) - bilinearAt(workingLinear, (float(sx) + 0.5f) * toCell - 0.5f, (float(sy) + 0.5f) * toCell - 0.5f);
                             detail += here * weight;
                             weightSum += weight;
                         }
@@ -571,10 +571,10 @@ Report fill(cv::Mat &image, const cv::Mat &known, const Options &options, const 
                     if (weightSum > 1e-3f)
                         value += detail * (1.0f / weightSum);
                 }
-                const cv::Vec2s way = ways.at<cv::Vec2s>(y / waysDivisor, x / waysDivisor);
+                const ipr::Vec2s way = ipr::at<ipr::Vec2s>(ways, y / waysDivisor, x / waysDivisor);
                 const float distance = std::hypot(float(way[0]), float(way[1])) * waysDivisor;
                 if (distance < transition) {
-                    const cv::Vec2f fold = smoothWays.at<cv::Vec2f>(y / waysDivisor, x / waysDivisor) * float(waysDivisor);
+                    const ipr::Vec2f fold = ipr::at<ipr::Vec2f>(smoothWays, y / waysDivisor, x / waysDivisor) * float(waysDivisor);
                     const int mirrorX = x + int(std::lround(2.0f * fold[0])), mirrorY = y + int(std::lround(2.0f * fold[1]));
                     const bool onObject = !objectCells.empty() && mirrorX >= 0 && mirrorY >= 0 && mirrorX < image.cols && mirrorY < image.rows &&
                                           objectCells.at<uchar>(mirrorY / factor, mirrorX / factor);
@@ -582,12 +582,12 @@ Report fill(cv::Mat &image, const cv::Mat &known, const Options &options, const 
                         const float t = distance / transition;
                         const float invented = t * t * (3.0f - 2.0f * t);
                         // Measured on the slow variations of both places.
-                        const cv::Vec3f here = bilinearAt(working.colour, cellX, cellY);
-                        const cv::Vec3f there = bilinearAt(working.colour, (float(mirrorX) + 0.5f) * toCell - 0.5f, (float(mirrorY) + 0.5f) * toCell - 0.5f);
-                        const cv::Vec3f gap = here - there;
+                        const ipr::Vec3f here = bilinearAt(working.colour, cellX, cellY);
+                        const ipr::Vec3f there = bilinearAt(working.colour, (float(mirrorX) + 0.5f) * toCell - 0.5f, (float(mirrorY) + 0.5f) * toCell - 0.5f);
+                        const ipr::Vec3f gap = here - there;
                         const float unlike = std::clamp((std::sqrt(gap.dot(gap) / 3.0f) - mirrorLikeFrom) / (mirrorLikeTo - mirrorLikeFrom), 0.0f, 1.0f);
                         const float mirrored = (1.0f - invented) * (1.0f - unlike * unlike * (3.0f - 2.0f * unlike));
-                        value = value * (1.0f - mirrored) + image.at<cv::Vec3f>(mirrorY, mirrorX) * mirrored;
+                        value = value * (1.0f - mirrored) + ipr::at<ipr::Vec3f>(image, mirrorY, mirrorX) * mirrored;
                     }
                 }
                 out[x] = value;

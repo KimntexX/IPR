@@ -1,6 +1,7 @@
 // Numeric qualification of the geometry (B1) on synthetic charts held in memory:
 // iprGeometryAudit OUTPUT.json. Tolerances are fixed here, before any campaign.
 #include "Geometry.h"
+#include "OpenCvBridge.h"
 
 #include <QCoreApplication>
 #include <QCryptographicHash>
@@ -73,39 +74,39 @@ std::vector<State> states()
     return list;
 }
 
-std::vector<cv::Point2d> landmarkPositions()
+std::vector<ipr::Point2d> landmarkPositions()
 {
-    std::vector<cv::Point2d> positions;
+    std::vector<ipr::Point2d> positions;
     for (double v : {0.2, 0.35, 0.5, 0.65, 0.8})
         for (double u : {0.2, 0.35, 0.5, 0.65, 0.8})
             positions.emplace_back(u, v);
     return positions;
 }
 
-cv::Mat landmarks(const cv::Size &size, double sigma)
+cv::Mat landmarks(const ipr::Size &size, double sigma)
 {
-    cv::Mat image(size, CV_32FC3, cv::Scalar::all(0));
+    cv::Mat image(ipr::toCv(size), CV_32FC3, cv::Scalar::all(0));
     const int radius = int(std::ceil(4 * sigma));
-    for (const cv::Point2d &position : landmarkPositions()) {
+    for (const ipr::Point2d &position : landmarkPositions()) {
         const double cx = position.x * size.width, cy = position.y * size.height;
         for (int y = std::max(0, int(cy) - radius); y <= std::min(size.height - 1, int(cy) + radius); ++y)
             for (int x = std::max(0, int(cx) - radius); x <= std::min(size.width - 1, int(cx) + radius); ++x) {
                 const double dx = x + .5 - cx, dy = y + .5 - cy;
-                image.at<cv::Vec3f>(y, x) = cv::Vec3f::all(float(std::exp(-(dx * dx + dy * dy) / (2 * sigma * sigma))));
+                ipr::at<ipr::Vec3f>(image, y, x) = ipr::Vec3f::all(float(std::exp(-(dx * dx + dy * dy) / (2 * sigma * sigma))));
             }
     }
     return image;
 }
 
 // The centroids of the landmarks that stay on the canvas, in normalized coordinates.
-struct Measured { cv::Point2d found, expected; };
+struct Measured { ipr::Point2d found, expected; };
 
-std::vector<Measured> measureLandmarks(const cv::Mat &output, const State &state, const cv::Size &source, double sigma)
+std::vector<Measured> measureLandmarks(const cv::Mat &output, const State &state, const ipr::Size &source, double sigma)
 {
     std::vector<Measured> result;
     const double zoom = std::max(0.3, state.settings.scale / 100.0);
     const int radius = int(std::ceil(6 * sigma * std::max(1.0, zoom * 1.5)));
-    for (const cv::Point2d &position : landmarkPositions()) {
+    for (const ipr::Point2d &position : landmarkPositions()) {
         const auto expected = Geometry::toCanvas(state.settings, source, position);
         if (!expected)
             continue;
@@ -115,7 +116,7 @@ std::vector<Measured> measureLandmarks(const cv::Mat &output, const State &state
         double sum = 0, sumX = 0, sumY = 0;
         for (int y = int(py) - radius; y <= int(py) + radius; ++y)
             for (int x = int(px) - radius; x <= int(px) + radius; ++x) {
-                const double value = std::max(0.f, output.at<cv::Vec3f>(y, x)[0]);
+                const double value = std::max(0.f, ipr::at<ipr::Vec3f>(output, y, x)[0]);
                 sum += value;
                 sumX += value * (x + .5);
                 sumY += value * (y + .5);
@@ -126,7 +127,7 @@ std::vector<Measured> measureLandmarks(const cv::Mat &output, const State &state
     return result;
 }
 
-QJsonObject landmarkRecord(const State &state, const cv::Size &small, const cv::Size &large)
+QJsonObject landmarkRecord(const State &state, const ipr::Size &small, const ipr::Size &large)
 {
     // Small on both: a wide dot's centroid drifts under perspective, without any error.
     const double smallSigma = 3, largeSigma = 3;
@@ -146,7 +147,7 @@ QJsonObject landmarkRecord(const State &state, const cv::Size &small, const cv::
             if (std::hypot(small.expected.x - big.expected.x * ratioX, small.expected.y - big.expected.y * ratioY) < 1)
                 between = std::max(between, std::hypot(small.found.x - big.found.x * ratioX, small.found.y - big.found.y * ratioY));
     double inverse = 0;
-    for (const cv::Point2d &position : landmarkPositions()) {
+    for (const ipr::Point2d &position : landmarkPositions()) {
         const auto canvas = Geometry::toCanvas(state.settings, large, position);
         const auto back = canvas ? Geometry::toSource(state.settings, large, *canvas) : std::nullopt;
         if (back)
@@ -164,13 +165,13 @@ QJsonObject landmarkRecord(const State &state, const cv::Size &small, const cv::
 // A straight step: the output's edge spread, from pixels projected on its normal.
 QJsonObject edgeRecord(double angle, Geometry::Quality quality)
 {
-    const cv::Size size(1536, 1024);
-    cv::Mat image(size, CV_32FC3);
+    const ipr::Size size(1536, 1024);
+    cv::Mat image(ipr::toCv(size), CV_32FC3);
     // Antialiased by area, a sensor's edge rather than an impossible perfect step.
     const double edgeX = size.width / 2.0 + 0.3;
     for (int y = 0; y < size.height; ++y)
         for (int x = 0; x < size.width; ++x)
-            image.at<cv::Vec3f>(y, x) = cv::Vec3f::all(float(std::clamp(x + 1 - edgeX, 0.0, 1.0) * .6 + .2));
+            ipr::at<ipr::Vec3f>(image, y, x) = ipr::Vec3f::all(float(std::clamp(x + 1 - edgeX, 0.0, 1.0) * .6 + .2));
     Geometry::Settings settings;
     settings.rotation = float(angle);
     const cv::Mat output = Geometry::warpRgb(image, settings, quality);
@@ -186,7 +187,7 @@ QJsonObject edgeRecord(double angle, Geometry::Quality quality)
             if (std::abs(distance) >= reach)
                 continue;
             const auto bin = size_t((distance + reach) * binsPerPixel);
-            sums[bin] += output.at<cv::Vec3f>(y, x)[0];
+            sums[bin] += ipr::at<ipr::Vec3f>(output, y, x)[0];
             counts[bin] += 1;
         }
     const double low = .2, high = .8, step = high - low;
@@ -209,20 +210,20 @@ QJsonObject edgeRecord(double angle, Geometry::Quality quality)
 // A fine grating, beyond the output's Nyquist at this scale: what comes out is alias.
 QJsonObject aliasRecord(int scale, Geometry::Quality quality)
 {
-    const cv::Size size(1024, 768);
+    const ipr::Size size(1024, 768);
     const double period = 2.5, amplitude = .2;
-    cv::Mat image(size, CV_32FC3);
+    cv::Mat image(ipr::toCv(size), CV_32FC3);
     for (int y = 0; y < size.height; ++y)
         for (int x = 0; x < size.width; ++x)
-            image.at<cv::Vec3f>(y, x) = cv::Vec3f::all(float(.5 + amplitude * std::sin(2 * 3.14159265358979323846 * (x + .5) / period)));
+            ipr::at<ipr::Vec3f>(image, y, x) = ipr::Vec3f::all(float(.5 + amplitude * std::sin(2 * 3.14159265358979323846 * (x + .5) / period)));
     Geometry::Settings settings;
     settings.scale = scale;
     const cv::Mat output = Geometry::warpRgb(image, settings, quality);
     const double zoom = scale / 100.0;
     const int inset = int(size.width * (.5 - zoom / 2)) + 16;
-    const cv::Rect area(std::max(16, inset), size.height / 4, size.width - 2 * std::max(16, inset), size.height / 2);
+    const ipr::Recti area(std::max(16, inset), size.height / 4, size.width - 2 * std::max(16, inset), size.height / 2);
     cv::Mat channel;
-    cv::extractChannel(output(area), channel, 0);
+    cv::extractChannel(output(ipr::toCv(area)), channel, 0);
     cv::Scalar mean, deviation;
     cv::meanStdDev(channel, mean, deviation);
     const double ratio = deviation[0] * std::sqrt(2.0) / amplitude;
@@ -232,11 +233,11 @@ QJsonObject aliasRecord(int scale, Geometry::Quality quality)
             {"passed", period * zoom >= 2 || ratio <= AliasTolerance}};
 }
 
-QJsonObject timing(const cv::Size &size, Geometry::Quality quality)
+QJsonObject timing(const ipr::Size &size, Geometry::Quality quality)
 {
-    cv::Mat rgb(size, CV_32FC3);
+    cv::Mat rgb(ipr::toCv(size), CV_32FC3);
     cv::randu(rgb, cv::Scalar::all(0), cv::Scalar::all(1));
-    cv::Mat alpha(size, CV_32FC1, cv::Scalar(1));
+    cv::Mat alpha(ipr::toCv(size), CV_32FC1, cv::Scalar(1));
     Geometry::Settings settings;
     settings.rotation = 8.5f;
     settings.vertical = 30;
@@ -287,7 +288,7 @@ int main(int argc, char **argv)
     };
     QJsonArray landmarksRecords, edges, aliases, timings;
     // A preview proxy's rounded proportions against the full image's.
-    const cv::Size small(2048, 1365), large(6000, 4000);
+    const ipr::Size small(2048, 1365), large(6000, 4000);
     for (const State &state : states())
         collect(landmarksRecords, landmarkRecord(state, small, large));
     for (double angle : {0.5, 1.0, 8.5, 20.0, 45.0})

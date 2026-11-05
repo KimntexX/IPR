@@ -1,4 +1,5 @@
 #include "Grain.h"
+#include "OpenCvBridge.h"
 
 #include <opencv2/imgproc.hpp>
 
@@ -28,7 +29,7 @@ Statistics measure(const cv::Mat &rgb, double base)
     cv::Mat g(rgb.size(), CV_64F), chroma(rgb.size(), CV_64F);
     for (int y = 0; y < rgb.rows; ++y)
         for (int x = 0; x < rgb.cols; ++x) {
-            const cv::Vec3f p = rgb.at<cv::Vec3f>(y, x);
+            const ipr::Vec3f p = ipr::at<ipr::Vec3f>(rgb, y, x);
             g.at<double>(y, x) = encode(p[1]) - base;
             chroma.at<double>(y, x) = encode(p[0]) - encode(p[2]);
         }

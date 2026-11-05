@@ -55,7 +55,7 @@ LocalValues::Maps maskValues(const ColorPipeline::WorkingImage &source, const Se
         if (cache->maskMaps(source.linearRgba, pixelScale, key, kept))
             return kept;
     }
-    const cv::Size canvas = Geometry::canvasSize(settings.geometry, source.linearRgba.size());
+    const ipr::Size canvas = Geometry::canvasSize(settings.geometry, ipr::fromCv(source.linearRgba.size()));
     const LocalValues::Maps maps = LocalAdjustments::valueMaps(settings.localMasks, canvas, rangeLuminanceOf(source, settings, pixelScale));
     if (cache)
         cache->storeMaskMaps(source.linearRgba, pixelScale, key, maps);
@@ -139,7 +139,7 @@ bool renderTones(const ColorPipeline::WorkingImage &source, const Settings &sett
         // The camera signal comes before the geometry: there, the maps follow the source's pixels.
         LocalValues::Maps onSource;
         for (const LocalValues::Parameter parameter : {LocalValues::Exposure, LocalValues::Temperature, LocalValues::Tint})
-            onSource[parameter] = LocalAdjustments::toSource(local[parameter], settings.geometry, adjusted.size());
+            onSource[parameter] = LocalAdjustments::toSource(local[parameter], settings.geometry, ipr::fromCv(adjusted.size()));
         if (camera->cameraRgb.size() != adjusted.size() ||
             !CameraProfileEngine::renderFromCameraSignal(*camera,
                 settings.temperature, settings.tint, settings.brightness, adjusted, &error, onSource)) {
@@ -364,7 +364,7 @@ Preview preview(const ColorPipeline::WorkingImage &source, const Settings &setti
         }
     }
     if (overlayMask >= 0 && overlayMask < int(settings.localMasks.size())) {
-        const cv::Mat weights = LocalAdjustments::coverage(settings.localMasks[size_t(overlayMask)], rendered.linearRgba.size(),
+        const cv::Mat weights = LocalAdjustments::coverage(settings.localMasks[size_t(overlayMask)], ipr::fromCv(rendered.linearRgba.size()),
                                                            rangeLuminanceOf(source, settings, pixelScale));
         // A neutral pipeline hands back the source buffer itself: overlay a copy.
         rendered.linearRgba = rendered.linearRgba.clone();
@@ -372,7 +372,7 @@ Preview preview(const ColorPipeline::WorkingImage &source, const Settings &setti
     }
 
     if (overlayRetouch >= 0 && overlayRetouch < int(settings.retouches.size())) {
-        const cv::Mat weights = Retouch::coverage(settings.retouches[size_t(overlayRetouch)], rendered.linearRgba.size());
+        const cv::Mat weights = Retouch::coverage(settings.retouches[size_t(overlayRetouch)], ipr::fromCv(rendered.linearRgba.size()));
         rendered.linearRgba = rendered.linearRgba.clone();
         ColorAdjustments::showWeights(rendered.linearRgba, weights);
     }

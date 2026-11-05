@@ -1,5 +1,7 @@
 #include "RawDevelopment.h"
 
+#include "Parallel.h"
+
 #include "OpenCvBridge.h"
 
 #include <algorithm>
@@ -103,9 +105,13 @@ Result develop(const RawInput::Input &input, const Options &options)
     // A: on the 16-bit grid, as LibRaw's image after the interpolation. B: unbounded,
     // the values below the black reach the profile stage.
     if (parity)
-        result.cameraRgb.forEach<cv::Vec3f>([](cv::Vec3f &pixel, const int *) {
-            for (int c = 0; c < 3; ++c)
-                pixel[c] = float(std::clamp(std::lround(pixel[c] * 65535.f), 0L, 65535L)) * GridStep;
+        ipr::parallelRows(result.cameraRgb.rows, [&](int first, int last) {
+            for (int y = first; y < last; ++y) {
+                ipr::Vec3f *row = result.cameraRgb.ptr<ipr::Vec3f>(y);
+                for (int x = 0; x < result.cameraRgb.cols; ++x)
+                    for (int c = 0; c < 3; ++c)
+                        row[x][c] = float(std::clamp(std::lround(row[x][c] * 65535.f), 0L, 65535L)) * GridStep;
+            }
         });
     observe(Stage::PostMedianCameraRgb, result.cameraRgb, false);
     return result;

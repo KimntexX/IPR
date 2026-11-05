@@ -3,6 +3,7 @@
 #include "ImageImporter.h"
 #include "raw_opening_trial_helpers.h"
 #include "dcp_headroom_experiment.h"
+#include "OpenCvBridge.h"
 #include <QCoreApplication>
 #include <QDir>
 #include <QFile>
@@ -65,7 +66,7 @@ int main(int argc, char **argv)
         packed.convertTo(linear,CV_32FC4,1.0/65535.0);
         cv::parallel_for_(cv::Range(0,linear.rows),[&](const cv::Range &range) {
             for(int y=range.start;y<range.end;++y) {
-                auto *row=linear.ptr<cv::Vec4f>(y);
+                auto *row=linear.ptr<ipr::Vec4f>(y);
                 for(int x=0;x<linear.cols;++x)for(int c=0;c<3;++c) {
                     const float v=row[x][c];
                     row[x][c]=v<=.04045f?v/12.92f:std::pow((v+.055f)/1.055f,2.4f);
@@ -73,7 +74,7 @@ int main(int argc, char **argv)
             }
         });
         cv::Mat area;
-        cv::resize(linear,area,cv::Size((full.width()+3)/4,(full.height()+3)/4),0,0,cv::INTER_AREA);
+        cv::resize(linear,area,ipr::Size((full.width()+3)/4,(full.height()+3)/4),0,0,cv::INTER_AREA);
         std::vector<cv::Mat> components;cv::split(area,components);components.resize(3);
         cv::Mat rgb;cv::merge(components,rgb);
         QFile data(out.filePath("output-area-linear-rgb.f32"));
@@ -89,7 +90,7 @@ int main(int argc, char **argv)
     cv::Mat grid(rows,cols,CV_32FC4);
     for (int y=0;y<rows;++y)
         for (int x=0;x<cols;++x)
-            grid.at<cv::Vec4f>(y,x)=image.linearRgba.at<cv::Vec4f>(8*y,8*x);
+            ipr::at<ipr::Vec4f>(grid, y,x)=ipr::at<ipr::Vec4f>(image.linearRgba, 8*y,8*x);
     image.linearRgba=grid;
     std::vector<cv::Mat> channels;cv::split(grid,channels);channels.resize(3);
     cv::Mat stageRgb;cv::merge(channels,stageRgb);
@@ -152,7 +153,7 @@ int main(int argc, char **argv)
         auto stats=linearStageStats(rgb);
         // Reconstruct linear ProPhoto using the exact production matrices;
         // these are pre-curve coordinates only for the plus_look ablation.
-        const cv::Matx33d proPhotoToXyz(.7976749,.1351917,.0313534,.2880402,.7118741,.0000857,0.,0.,.8252100);
+        const ipr::Matrix33d proPhotoToXyz(.7976749,.1351917,.0313534,.2880402,.7118741,.0000857,0.,0.,.8252100);
         const auto srgbToProPhoto=(WorkingColor::toSrgb()*WorkingColor::fromXyzD50()*proPhotoToXyz).inv();
         cv::Mat proPhoto;cv::transform(rgb,proPhoto,srgbToProPhoto);
         auto bounds=linearStageStats(proPhoto);
@@ -169,11 +170,11 @@ int main(int argc, char **argv)
     double beforeY=0,currentY=0,candidateY=0;int negative=0,above=0,overY=0,cameraHigh=0;
     auto mapped=ColorPipeline::mapToSrgbGamut(image,&error);
     for(int y=0;y<rows;++y)for(int x=0;x<cols;++x) {
-        const auto v=stageRgb.at<cv::Vec3f>(y,x);const auto m=mapped.linearRgba.at<cv::Vec4f>(y,x);const auto c=candidate.at<cv::Vec3f>(y,x);
+        const auto v=ipr::at<ipr::Vec3f>(stageRgb, y,x);const auto m=ipr::at<ipr::Vec4f>(mapped.linearRgba, y,x);const auto c=ipr::at<ipr::Vec3f>(candidate, y,x);
         const double Y=.2126*v[0]+.7152*v[1]+.0722*v[2];beforeY+=Y;currentY+=.2126*m[0]+.7152*m[1]+.0722*m[2];candidateY+=.2126*c[0]+.7152*c[1]+.0722*c[2];
         negative+=std::min({v[0],v[1],v[2]})<0;above+=std::max({v[0],v[1],v[2]})>1;overY+=Y>=1;
         if(image.dcpContext) {
-            const auto p=image.dcpContext->cameraRgb.at<cv::Vec3f>(y*8,x*8);
+            const auto p=ipr::at<ipr::Vec3f>(image.dcpContext->cameraRgb, y*8,x*8);
             cameraHigh+=std::max({p[0],p[1],p[2]})>=65534.f/65535;
         }
     }
@@ -189,7 +190,7 @@ int main(int argc, char **argv)
     for(int y=0;y<rows;++y) {
         const auto *line=reinterpret_cast<const QRgba64 *>(encoded.constScanLine(y));
         for(int x=0;x<cols;++x)
-            rgb.at<cv::Vec3f>(y,x)=cv::Vec3f(line[x].red(),line[x].green(),line[x].blue())/65535.f;
+            ipr::at<ipr::Vec3f>(rgb, y,x)=ipr::Vec3f(line[x].red(),line[x].green(),line[x].blue())/65535.f;
     }
     QFile pixels(out.filePath("encoded.f32"));
     const qint64 bytes=qint64(rgb.total()*rgb.elemSize());

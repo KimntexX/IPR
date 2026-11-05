@@ -5,6 +5,7 @@
 #include "RawDecoder.h"
 #include "CameraProfileEngine.h"
 #include "Sidecar.h"
+#include "OpenCvBridge.h"
 #include <tiffio.h>
 
 #include <QCoreApplication>
@@ -197,7 +198,7 @@ bool verifyToneCurvesAndHistogram(ImageEditor &editor, const QString &directory)
             QImage sample(1,1,QImage::Format_RGBA8888);
             sample.setPixelColor(0,0,original); sample.setColorSpace(QColorSpace(QColorSpace::SRgb));
             auto expectedMaster = ColorPipeline::fromSourceImage(sample);
-            cv::Vec4f &master = expectedMaster.linearRgba.at<cv::Vec4f>(0,0);
+            ipr::Vec4f &master = ipr::at<ipr::Vec4f>(expectedMaster.linearRgba, 0,0);
             // The channel of linear ProPhoto, sRGB-encoded, through the natural spline of
             // (0,0), (.6,.9), (1,1): second derivative -3.75 at the middle point, 0 at the ends.
             const auto spline = [](double x) {
@@ -206,10 +207,10 @@ bool verifyToneCurvesAndHistogram(ImageEditor &editor, const QString &directory)
                 const double h = 0.4, t = x - 0.6;
                 return m * (1.0 - x) * (1.0 - x) * (1.0 - x) / (6 * h) + (0.9 / h - m * h / 6) * (1.0 - x) + (1.0 / h) * t;
             };
-            cv::Vec3d proPhoto = WorkingColor::toProPhoto() * cv::Vec3d(master[0], master[1], master[2]);
+            ipr::Vec3d proPhoto = WorkingColor::toProPhoto() * ipr::Vec3d(master[0], master[1], master[2]);
             proPhoto[changed] = WorkingColor::srgbDecode(spline(WorkingColor::srgbEncode(proPhoto[changed])));
-            const cv::Vec3d rgb = WorkingColor::toProPhoto().inv() * proPhoto;
-            master = cv::Vec4f(float(rgb[0]), float(rgb[1]), float(rgb[2]), master[3]);
+            const ipr::Vec3d rgb = WorkingColor::toProPhoto().inv() * proPhoto;
+            master = ipr::Vec4f(float(rgb[0]), float(rgb[1]), float(rgb[2]), master[3]);
             const auto expected = ColorPipeline::toSrgb(expectedMaster,
                 ColorPipeline::OutputFormat::Preview8Bit).pixelColor(0,0);
             if (!check(std::abs(pixel.red()-expected.red()) <= 2 &&
@@ -427,13 +428,13 @@ bool verifyColorMixer(ImageEditor &editor, const QString &directory)
     // Otherwise gamut mapping changes the centre before it can be reimported.
     ColorPipeline::WorkingImage patches;
     patches.linearRgba = cv::Mat(1, 8, CV_32FC4);
-    const std::array<cv::Vec4f, 8> colors{{
+    const std::array<ipr::Vec4f, 8> colors{{
         {0.35f, 0.25f, 0.25f, 1.0f}, {0.35f, 0.30f, 0.25f, 1.0f},
         {0.35f, 0.35f, 0.25f, 1.0f}, {0.25f, 0.35f, 0.25f, 1.0f},
         {0.25f, 0.35f, 0.35f, 1.0f}, {0.25f, 0.25f, 0.35f, 1.0f},
         {0.30f, 0.25f, 0.35f, 1.0f}, {0.35f, 0.25f, 0.35f, 1.0f}}};
     for (int band = 0; band < 8; ++band)
-        patches.linearRgba.at<cv::Vec4f>(0, band) = colors[band];
+        ipr::at<ipr::Vec4f>(patches.linearRgba, 0, band) = colors[band];
     const QString sourcePath = directory + QStringLiteral("/mixer-source.png");
     if (!ColorPipeline::toSrgb(patches, ColorPipeline::OutputFormat::HighBitDepth)
              .save(sourcePath, "PNG") ||
@@ -669,9 +670,9 @@ bool verifyDngOutput(ImageEditor &editor, const QString &directory)
     const bool hasIcc = TIFFGetField(tiff, TIFFTAG_ICCPROFILE, &profileBytes, &profile) == 1;
     const QColorSpace embedded = hasIcc ? QColorSpace::fromIccProfile(
         QByteArray(static_cast<const char *>(profile), int(profileBytes))) : QColorSpace{};
-    const cv::Matx33d expectedMatrix = WorkingColor::srgbToXyz().inv();
+    const ipr::Matrix33d expectedMatrix = WorkingColor::srgbToXyz().inv();
     bool consistent = hasMatrix && embedded == QColorSpace(QColorSpace::SRgbLinear);
-    if (hasMatrix) for (int i=0; i<9; ++i) consistent &= std::abs(matrix[i]-expectedMatrix.val[i]) < 1e-6;
+    if (hasMatrix) for (int i=0; i<9; ++i) consistent &= std::abs(matrix[i]-expectedMatrix.values[i]) < 1e-6;
     TIFFClose(tiff);
     if (!check(mainImage, "DNG main IFD needs NewSubfileType 0 for Adobe readers")) return false;
     if (!check(consistent, "DNG linear samples need linear ICC and XYZ-to-stored-RGB matrix")) return false;
@@ -707,7 +708,7 @@ bool verifyDngOutput(ImageEditor &editor, const QString &directory)
         std::cerr << "DNG decode error: " << imported.error.toStdString() << '\n';
     return check(!imported.image.isNull() && imported.capabilities.cameraDevelopment &&
                      imported.image.colorSpace == ColorPipeline::workingColorSpace() &&
-                     imported.image.linearRgba.size() == cv::Size(64, 64),
+                     ipr::fromCv(imported.image.linearRgba.size()) == ipr::Size(64, 64),
                  "exported linear DNG should use the common import contract through LibRaw");
 #else
     return true;

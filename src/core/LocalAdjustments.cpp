@@ -33,7 +33,7 @@ constexpr std::array<float, LocalValues::ParameterCount> valueLimit{
     200.0f                           // Sharpening
 };
 
-bool finite(const cv::Point2f &point)
+bool finite(const ipr::Point2f &point)
 {
     return std::isfinite(point.x) && std::isfinite(point.y);
 }
@@ -45,15 +45,15 @@ float fadeInside(float position, float feather)
                            : 1.0f - ImageMath::smoothStep(1.0f - feather, 1.0f, position);
 }
 
-cv::Point2f pixelOf(const cv::Point2f &point, const cv::Size &canvas)
+ipr::Point2f pixelOf(const ipr::Point2f &point, const ipr::Size &canvas)
 {
     return {point.x * float(canvas.width) - 0.5f, point.y * float(canvas.height) - 0.5f};
 }
 
 void paintLinear(const Shape &shape, cv::Mat &out)
 {
-    const cv::Point2f from = pixelOf(shape.start, out.size()), to = pixelOf(shape.end, out.size());
-    const cv::Point2f axis = to - from;
+    const ipr::Point2f from = pixelOf(shape.start, ipr::fromCv(out.size())), to = pixelOf(shape.end, ipr::fromCv(out.size()));
+    const ipr::Point2f axis = to - from;
     const float lengthSquared = axis.dot(axis);
     ipr::parallelRows(out.rows, [&](int first, int last) {
         for (int y = first; y < last; ++y) {
@@ -73,7 +73,7 @@ void paintLinear(const Shape &shape, cv::Mat &out)
 
 void paintRadial(const Shape &shape, cv::Mat &out)
 {
-    const cv::Point2f centre = pixelOf(shape.center, out.size());
+    const ipr::Point2f centre = pixelOf(shape.center, ipr::fromCv(out.size()));
     const float radiusX = std::max(1e-3f, shape.radiusX * float(out.cols));
     const float radiusY = std::max(1e-3f, shape.radiusY * float(out.rows));
     const float radians = shape.angle * float(CV_PI) / 180.0f;
@@ -93,7 +93,7 @@ void paintRadial(const Shape &shape, cv::Mat &out)
 
 // The points that shape a line, within a distance below what a coverage can show: each span
 // keeps its furthest point while it lies too far from the span's straight line.
-std::vector<cv::Point2f> shapingPoints(const std::vector<cv::Point2f> &line)
+std::vector<ipr::Point2f> shapingPoints(const std::vector<ipr::Point2f> &line)
 {
     constexpr float furthestFromTheLine = 0.05f;   // pixels
     if (line.size() <= 2)
@@ -104,13 +104,13 @@ std::vector<cv::Point2f> shapingPoints(const std::vector<cv::Point2f> &line)
     while (!spans.empty()) {
         const auto [first, last] = spans.back();
         spans.pop_back();
-        const cv::Point2f a = line[first], ab = line[last] - a;
+        const ipr::Point2f a = line[first], ab = line[last] - a;
         const float squared = ab.dot(ab);
         float furthest = 0.0f;
         size_t at = first;
         for (size_t i = first + 1; i < last; ++i) {
             const float t = squared > 0.0f ? std::clamp((line[i] - a).dot(ab) / squared, 0.0f, 1.0f) : 0.0f;
-            const cv::Point2f to = line[i] - (a + ab * t);
+            const ipr::Point2f to = line[i] - (a + ab * t);
             const float distance = to.dot(to);
             if (distance > furthest) {
                 furthest = distance;
@@ -123,7 +123,7 @@ std::vector<cv::Point2f> shapingPoints(const std::vector<cv::Point2f> &line)
             spans.emplace_back(at, last);
         }
     }
-    std::vector<cv::Point2f> shaping;
+    std::vector<ipr::Point2f> shaping;
     for (size_t i = 0; i < line.size(); ++i)
         if (kept[i])
             shaping.push_back(line[i]);
@@ -139,23 +139,23 @@ void paintStroke(const BrushStroke &stroke, cv::Mat &out)
     if (stroke.points.empty())
         return;
     const float radius = std::max(0.5f, stroke.size * float(std::max(out.cols, out.rows)));
-    std::vector<cv::Point2f> dense;
+    std::vector<ipr::Point2f> dense;
     dense.reserve(stroke.points.size());
-    for (const cv::Point2f &point : stroke.points)
-        dense.push_back(pixelOf(point, out.size()));
-    std::vector<cv::Point2f> points = shapingPoints(dense);
+    for (const ipr::Point2f &point : stroke.points)
+        dense.push_back(pixelOf(point, ipr::fromCv(out.size())));
+    std::vector<ipr::Point2f> points = shapingPoints(dense);
     if (points.size() == 1)
         points.push_back(points.front());
 
-    cv::Point2f lowest = points.front(), highest = lowest;
-    for (const cv::Point2f &point : points) {
+    ipr::Point2f lowest = points.front(), highest = lowest;
+    for (const ipr::Point2f &point : points) {
         lowest = {std::min(lowest.x, point.x), std::min(lowest.y, point.y)};
         highest = {std::max(highest.x, point.x), std::max(highest.y, point.y)};
     }
     const int reach = int(std::ceil(radius)) + 1;
-    const cv::Rect area = cv::Rect(cv::Point(int(std::floor(lowest.x)) - reach, int(std::floor(lowest.y)) - reach),
-                                   cv::Point(int(std::ceil(highest.x)) + reach + 1, int(std::ceil(highest.y)) + reach + 1))
-                          & cv::Rect(0, 0, out.cols, out.rows);
+    const ipr::Recti area = ipr::Recti(ipr::Point2i(int(std::floor(lowest.x)) - reach, int(std::floor(lowest.y)) - reach),
+                                   ipr::Point2i(int(std::ceil(highest.x)) + reach + 1, int(std::ceil(highest.y)) + reach + 1))
+                          & ipr::Recti(0, 0, out.cols, out.rows);
     if (area.empty())
         return;
     const float reachSquared = radius * radius;
@@ -172,16 +172,16 @@ void paintStroke(const BrushStroke &stroke, cv::Mat &out)
                 continue;
             float *row = out.ptr<float>(y);
             for (int x = area.x; x < area.x + area.width; ++x) {
-                const cv::Point2f pixel{float(x), py};
+                const ipr::Point2f pixel{float(x), py};
                 float nearest = reachSquared;
                 for (const size_t i : near) {
-                    const cv::Point2f &a = points[i], &b = points[i + 1];
+                    const ipr::Point2f &a = points[i], &b = points[i + 1];
                     if (std::min(a.x, b.x) - radius > pixel.x || pixel.x > std::max(a.x, b.x) + radius)
                         continue;
-                    const cv::Point2f ab = b - a;
+                    const ipr::Point2f ab = b - a;
                     const float squared = ab.dot(ab);
                     const float t = squared > 0.0f ? std::clamp((pixel - a).dot(ab) / squared, 0.0f, 1.0f) : 0.0f;
-                    const cv::Point2f to = pixel - (a + ab * t);
+                    const ipr::Point2f to = pixel - (a + ab * t);
                     nearest = std::min(nearest, to.dot(to));
                 }
                 if (nearest >= reachSquared)
@@ -211,9 +211,9 @@ void paintRange(const Shape &shape, const cv::Mat &luminance, cv::Mat &out)
     });
 }
 
-cv::Mat shapeCoverage(const Shape &shape, const cv::Size &canvas, const cv::Mat &luminance)
+cv::Mat shapeCoverage(const Shape &shape, const ipr::Size &canvas, const cv::Mat &luminance)
 {
-    cv::Mat out(canvas, CV_32FC1, cv::Scalar(0));
+    cv::Mat out(ipr::toCv(canvas), CV_32FC1, cv::Scalar(0));
     switch (shape.kind) {
     case Kind::Linear:
         paintLinear(shape, out);
@@ -246,12 +246,12 @@ constexpr std::array<const char *, LocalValues::ParameterCount> parameterNames{
     "shadows", "blacks", "highlights", "whites",
     "texture", "clarity", "dehaze", "denoiseLuminance", "denoiseChrominance", "sharpening"};
 
-QVariantList pointValue(const cv::Point2f &point)
+QVariantList pointValue(const ipr::Point2f &point)
 {
     return {double(point.x), double(point.y)};
 }
 
-bool readPoint(const QVariant &value, cv::Point2f &point)
+bool readPoint(const QVariant &value, ipr::Point2f &point)
 {
     const QVariantList list = value.toList();
     if (list.size() != 2)
@@ -298,7 +298,7 @@ bool bound(Masks &masks)
     if (int(masks.size()) > largestMaskCount)
         return false;
     // Coordinates may leave the canvas (a gradient can start beyond it), not without limit.
-    const auto place = [](cv::Point2f &point) {
+    const auto place = [](ipr::Point2f &point) {
         if (!finite(point))
             return false;
         point = {std::clamp(point.x, -4.0f, 5.0f), std::clamp(point.y, -4.0f, 5.0f)};
@@ -333,7 +333,7 @@ bool bound(Masks &masks)
                 stroke.size = std::clamp(stroke.size, 0.0f, 1.0f);
                 stroke.feather = std::clamp(stroke.feather, 0.0f, 1.0f);
                 stroke.flow = std::clamp(stroke.flow, 0.0f, 1.0f);
-                for (cv::Point2f &point : stroke.points)
+                for (ipr::Point2f &point : stroke.points)
                     if (!place(point))
                         return false;
             }
@@ -364,7 +364,7 @@ cv::Mat rangeLuminance(const cv::Mat &linearRgb)
     cv::Mat luminance(linearRgb.size(), CV_32FC1);
     ipr::parallelRows(linearRgb.rows, [&](int first, int last) {
         for (int y = first; y < last; ++y) {
-            const cv::Vec3f *in = linearRgb.ptr<cv::Vec3f>(y);
+            const ipr::Vec3f *in = linearRgb.ptr<ipr::Vec3f>(y);
             float *out = luminance.ptr<float>(y);
             for (int x = 0; x < linearRgb.cols; ++x)
                 out[x] = WorkingColor::srgbEncode(std::clamp(WorkingColor::nonNegativeLuminance(in[x]), 0.0f, 1.0f));
@@ -373,9 +373,9 @@ cv::Mat rangeLuminance(const cv::Mat &linearRgb)
     return luminance;
 }
 
-cv::Mat coverage(const Mask &mask, const cv::Size &canvas, const cv::Mat &luminance)
+cv::Mat coverage(const Mask &mask, const ipr::Size &canvas, const cv::Mat &luminance)
 {
-    cv::Mat combined(canvas, CV_32FC1, cv::Scalar(0));
+    cv::Mat combined(ipr::toCv(canvas), CV_32FC1, cv::Scalar(0));
     for (const Shape &shape : mask.shapes) {
         const cv::Mat own = shapeCoverage(shape, canvas, luminance);
         switch (shape.combine) {
@@ -393,7 +393,7 @@ cv::Mat coverage(const Mask &mask, const cv::Size &canvas, const cv::Mat &lumina
     return combined;
 }
 
-LocalValues::Maps valueMaps(const Masks &masks, const cv::Size &canvas, const cv::Mat &luminance)
+LocalValues::Maps valueMaps(const Masks &masks, const ipr::Size &canvas, const cv::Mat &luminance)
 {
     LocalValues::Maps maps;
     if (!active(masks) || canvas.empty())
@@ -408,22 +408,22 @@ LocalValues::Maps valueMaps(const Masks &masks, const cv::Size &canvas, const cv
                 continue;
             cv::Mat &map = maps.values[i];
             if (map.empty())
-                map = cv::Mat(canvas, CV_32FC1, cv::Scalar(0));
+                map = cv::Mat(ipr::toCv(canvas), CV_32FC1, cv::Scalar(0));
             map = ipr::addScaled(weight, double(mask.values[i]), map);
         }
     }
     return maps;
 }
 
-cv::Mat toSource(const cv::Mat &canvasMap, const Geometry::Settings &geometry, const cv::Size &source)
+cv::Mat toSource(const cv::Mat &canvasMap, const Geometry::Settings &geometry, const ipr::Size &source)
 {
     if (canvasMap.empty() || !Geometry::transformsPixels(geometry))
         return canvasMap;
-    const cv::Size canvas = canvasMap.size();
+    const ipr::Size canvas = ipr::fromCv(canvasMap.size());
     // From a source pixel's index to a canvas pixel's: normalized at their outer edges in between.
-    const cv::Matx33d sourceToNormal(1.0 / source.width, 0, 0.5 / source.width, 0, 1.0 / source.height, 0.5 / source.height, 0, 0, 1);
-    const cv::Matx33d normalToCanvas(canvas.width, 0, -0.5, 0, canvas.height, -0.5, 0, 0, 1);
-    const cv::Matx33d sourceToCanvas = normalToCanvas * Geometry::homography(geometry, source) * sourceToNormal;
+    const ipr::Matrix33d sourceToNormal(1.0 / source.width, 0, 0.5 / source.width, 0, 1.0 / source.height, 0.5 / source.height, 0, 0, 1);
+    const ipr::Matrix33d normalToCanvas(canvas.width, 0, -0.5, 0, canvas.height, -0.5, 0, 0, 1);
+    const ipr::Matrix33d sourceToCanvas = normalToCanvas * Geometry::homography(geometry, source) * sourceToNormal;
     cv::Mat out = ipr::warpedPerspective(canvasMap, sourceToCanvas, source, ipr::Resampling::Linear, ipr::Outside::LastPixel);
     return out;
 }
@@ -443,7 +443,7 @@ void appendKey(QDataStream &stream, const Masks &masks)
                    << qint32(shape.strokes.size());
             for (const BrushStroke &stroke : shape.strokes) {
                 stream << stroke.size << stroke.feather << stroke.flow << qint32(stroke.points.size());
-                for (const cv::Point2f &point : stroke.points)
+                for (const ipr::Point2f &point : stroke.points)
                     stream << point.x << point.y;
             }
         }

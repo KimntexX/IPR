@@ -19,7 +19,7 @@ namespace ipr {
 // value converted to T: as is for a floating T, rounded to the nearest and kept within T's range
 // for an integer one.
 template <typename T, typename U>
-constexpr T saturate(U value)
+T saturate(U value)
 {
     if constexpr (std::is_floating_point_v<T>) {
         return static_cast<T>(value);
@@ -42,7 +42,7 @@ struct SizeOf
     constexpr SizeOf() = default;
     constexpr SizeOf(T w, T h) : width(w), height(h) {}
     template <typename U>
-    constexpr SizeOf(const SizeOf<U> &other) : width(saturate<T>(other.width)), height(saturate<T>(other.height)) {}
+    SizeOf(const SizeOf<U> &other) : width(saturate<T>(other.width)), height(saturate<T>(other.height)) {}
 
     T area() const { return width * height; }
     bool empty() const { return width <= 0 || height <= 0; }
@@ -86,7 +86,7 @@ struct Point
     constexpr Point() = default;
     constexpr Point(T px, T py) : x(px), y(py) {}
     template <typename U>
-    constexpr Point(const Point<U> &other) : x(saturate<T>(other.x)), y(saturate<T>(other.y)) {}
+    Point(const Point<U> &other) : x(saturate<T>(other.x)), y(saturate<T>(other.y)) {}
 
     T dot(const Point &p) const
     {
@@ -175,7 +175,7 @@ struct Rect
     {
     }
     template <typename U>
-    constexpr Rect(const Rect<U> &other)
+    Rect(const Rect<U> &other)
         : x(saturate<T>(other.x)), y(saturate<T>(other.y)), width(saturate<T>(other.width)), height(saturate<T>(other.height))
     {
     }
@@ -257,7 +257,7 @@ struct Vec
     {
     }
     template <typename U>
-    constexpr Vec(const Vec<U, N> &other)
+    Vec(const Vec<U, N> &other)
     {
         for (std::size_t i = 0; i < N; ++i)
             values[i] = saturate<T>(other[i]);
@@ -384,6 +384,23 @@ double length(const Vec<T, N> &v)
     return std::sqrt(sum);
 }
 
+// The vector scaled to a length of one, as OpenCV's normalize: a zero vector stays zero.
+template <typename T, std::size_t N>
+Vec<T, N> unit(const Vec<T, N> &v)
+{
+    const double norm = length(v);
+    return v * (norm != 0.0 ? 1.0 / norm : 0.0);
+}
+
+template <typename T, std::size_t N>
+bool allFinite(const Vec<T, N> &v)
+{
+    for (std::size_t i = 0; i < N; ++i)
+        if (!std::isfinite(double(v[i])))
+            return false;
+    return true;
+}
+
 // By rows.
 template <typename T, std::size_t Rows, std::size_t Columns>
 struct Matrix
@@ -398,7 +415,7 @@ struct Matrix
     {
     }
     template <typename U>
-    constexpr Matrix(const Matrix<U, Rows, Columns> &other)
+    Matrix(const Matrix<U, Rows, Columns> &other)
     {
         for (std::size_t i = 0; i < Rows * Columns; ++i)
             values[i] = saturate<T>(other.values[i]);
@@ -447,6 +464,13 @@ struct Matrix
     // The inverse of a 3 x 3 matrix by its cofactors, as OpenCV's Matx::inv; zeros when singular,
     // and ok, if given, false.
     Matrix inv(bool *ok = nullptr) const;
+    template <typename U, typename = std::enable_if_t<std::is_arithmetic_v<U>>>
+    Matrix &operator*=(U scale)
+    {
+        for (std::size_t i = 0; i < Rows * Columns; ++i)
+            values[i] = saturate<T>(values[i] * scale);
+        return *this;
+    }
 
     friend Matrix operator+(Matrix a, const Matrix &b)
     {

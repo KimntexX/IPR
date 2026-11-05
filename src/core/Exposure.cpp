@@ -1,6 +1,7 @@
 #include "Exposure.h"
 #include "LocalValues.h"
 #include "Parallel.h"
+#include "OpenCvBridge.h"
 
 #include <cmath>
 
@@ -11,13 +12,13 @@ float factor(double ev) { return static_cast<float>(std::exp2(ev)); }
 
 void apply(cv::Mat &linearRgb, float exposureEv, const cv::Mat &localEv)
 {
-    if (localEv.empty() || !LocalValues::fits(localEv, linearRgb.size())) {
+    if (localEv.empty() || !LocalValues::fits(localEv, ipr::fromCv(linearRgb.size()))) {
         if (exposureEv != 0.0f) linearRgb *= factor(double(exposureEv));
         return;
     }
     ipr::parallelRows(linearRgb.rows, [&](int first, int last) {
         for (int y = first; y < last; ++y) {
-            auto *row = linearRgb.ptr<cv::Vec3f>(y);
+            auto *row = linearRgb.ptr<ipr::Vec3f>(y);
             const float *local = localEv.ptr<float>(y);
             for (int x = 0; x < linearRgb.cols; ++x) {
                 const double ev = double(exposureEv) + double(local[x]);

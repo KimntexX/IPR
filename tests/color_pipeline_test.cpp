@@ -1,4 +1,5 @@
 #include "ColorPipeline.h"
+#include "OpenCvBridge.h"
 
 #include <QColor>
 #include <QBuffer>
@@ -35,7 +36,7 @@ int main(int argc, char **argv)
     ramp.linearRgba = cv::Mat(1, 65536, CV_32FC4);
     for (int code = 0; code <= 65535; ++code) {
         const float value = float(code) / 65535.f;
-        ramp.linearRgba.at<cv::Vec4f>(0, code) = {value, value, value, .37f};
+        ipr::at<ipr::Vec4f>(ramp.linearRgba, 0, code) = {value, value, value, .37f};
     }
     ramp.colorSpace = ColorPipeline::workingColorSpace();
     const QImage encodedRamp = ColorPipeline::toSrgb(ramp, ColorPipeline::OutputFormat::HighBitDepth, &error);
@@ -67,7 +68,7 @@ int main(int argc, char **argv)
                "working image should retain input profile provenance"))
         return 1;
 
-    const cv::Vec4f gray = linear.linearRgba.at<cv::Vec4f>(0, 0);
+    const ipr::Vec4f gray = ipr::at<ipr::Vec4f>(linear.linearRgba, 0, 0);
     if (!check(std::abs(gray[0] - 0.21586f) < 0.002f,
                "sRGB gray should be linearized"))
         return 1;
@@ -108,9 +109,9 @@ int main(int argc, char **argv)
     const ColorPipeline::WorkingImage raw = ColorPipeline::fromLinearSrgb(rawPixel, &error);
     if (!check(!raw.isNull(), "RAW linear RGB should convert to working space"))
         return 1;
-    const cv::Vec4f rawLinear = raw.linearRgba.at<cv::Vec4f>(0, 0);
-    const cv::Vec3f expectedRaw(WorkingColor::fromSrgb() * cv::Vec3d(0.5, 0.25, -0.01));
-    if (!check(cv::norm(cv::Vec3f(rawLinear[0], rawLinear[1], rawLinear[2]) - expectedRaw) < 1e-6 &&
+    const ipr::Vec4f rawLinear = ipr::at<ipr::Vec4f>(raw.linearRgba, 0, 0);
+    const ipr::Vec3f expectedRaw(WorkingColor::fromSrgb() * ipr::Vec3d(0.5, 0.25, -0.01));
+    if (!check(ipr::length(ipr::Vec3f(rawLinear[0], rawLinear[1], rawLinear[2]) - expectedRaw) < 1e-6 &&
                    raw.colorSpace == ColorPipeline::workingColorSpace(),
                "RAW linear sRGB samples must be converted, not relabelled Rec.2020"))
         return 1;
@@ -133,7 +134,7 @@ int main(int argc, char **argv)
     WorkingColor::transform(neutralRgb, WorkingColor::fromSrgb());
     const cv::Mat originalNeutral = neutralRgb.clone();
     const auto control = [](const cv::Mat &pixels) {
-        return cv::Vec3f(WorkingColor::toSrgb() * cv::Vec3d(pixels.at<cv::Vec3f>(0,0)));
+        return ipr::Vec3f(WorkingColor::toSrgb() * ipr::Vec3d(ipr::at<ipr::Vec3f>(pixels, 0,0)));
     };
     if (!check(ColorPipeline::applyTemperatureTint(neutralRgb, 6500, 6500.0, 0, &error),
                "neutral temperature and tint adjustments should succeed"))
@@ -183,7 +184,7 @@ int main(int argc, char **argv)
     if (!check(ColorPipeline::applyTemperatureTint(neutralGrey, 6500, 6500.0, -150, &error),
                "green tint adjustment should succeed"))
         return 1;
-    const cv::Vec3f tintedGrey = neutralGrey.at<cv::Vec3f>(0, 0);
+    const ipr::Vec3f tintedGrey = ipr::at<ipr::Vec3f>(neutralGrey, 0, 0);
     const float tintedGreyLuminance = WorkingColor::luminance(tintedGrey);
     if (!check(std::abs(tintedGreyLuminance - 0.5f) < 0.0001f,
                "tint should preserve the luminance of a neutral grey"))
@@ -293,19 +294,19 @@ int main(int argc, char **argv)
                    assumedSrgb.sourceProfile.contains(QStringLiteral("supposé")),
                "an untagged image should use and report the documented sRGB fallback"))
         return 1;
-    if (!check(std::abs(assumedSrgb.linearRgba.at<cv::Vec4f>(0, 0)[0] -
+    if (!check(std::abs(ipr::at<ipr::Vec4f>(assumedSrgb.linearRgba, 0, 0)[0] -
                         gray[0]) < 0.002f,
                "untagged input should be interpreted as sRGB"))
         return 1;
 
     ColorPipeline::WorkingImage outOfGamut;
     outOfGamut.linearRgba = cv::Mat(1, 1, CV_32FC4);
-    outOfGamut.linearRgba.at<cv::Vec4f>(0, 0) =
-        cv::Vec4f(1.20f, 0.70f, 0.40f, 1.0f);
+    ipr::at<ipr::Vec4f>(outOfGamut.linearRgba, 0, 0) =
+        ipr::Vec4f(1.20f, 0.70f, 0.40f, 1.0f);
     WorkingColor::transform(outOfGamut.linearRgba, WorkingColor::fromSrgb());
     const ColorPipeline::WorkingImage gamutMapped =
         ColorPipeline::mapToSrgbGamut(outOfGamut, &error);
-    const cv::Vec4f mapped = gamutMapped.linearRgba.at<cv::Vec4f>(0, 0);
+    const ipr::Vec4f mapped = ipr::at<ipr::Vec4f>(gamutMapped.linearRgba, 0, 0);
     const float mappedLuminance =
         0.2126f * mapped[0] + 0.7152f * mapped[1] + 0.0722f * mapped[2];
     if (!check(!gamutMapped.isNull() &&
@@ -339,7 +340,7 @@ int main(int argc, char **argv)
         return 1;
 
     ColorPipeline::WorkingImage invalidValues = linear;
-    invalidValues.linearRgba.at<cv::Vec4f>(0, 0)[0] =
+    ipr::at<ipr::Vec4f>(invalidValues.linearRgba, 0, 0)[0] =
         std::numeric_limits<float>::quiet_NaN();
     if (!check(ColorPipeline::toSrgb(
                    invalidValues, ColorPipeline::OutputFormat::Preview8Bit,

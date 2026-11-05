@@ -1236,13 +1236,13 @@ ImageEditor::BatchResult ImageEditor::exportFiles(Tasks::Context &context, const
 
 QColor ImageEditor::colorMixerTrackColor(int band, int component, int value) const
 {
-    const cv::Vec3f colour = ColorMixer::trackColour(band, component, value);
+    const ipr::Vec3f colour = ColorMixer::trackColour(band, component, value);
     return QColor::fromRgbF(colour[0], colour[1], colour[2]);
 }
 
 QColor ImageEditor::colorGradingDisplayColor(int zone, int hue, int saturation) const
 {
-    const cv::Vec3f colour = ColorGrading::displayColour(zone, hue, saturation);
+    const ipr::Vec3f colour = ColorGrading::displayColour(zone, hue, saturation);
     return QColor::fromRgbF(colour[0], colour[1], colour[2]);
 }
 
@@ -1252,7 +1252,7 @@ QVariantList ImageEditor::pointColors() const
     const size_t count = std::min(m_settings.pointColor.count, PointColor::MaxPoints);
     for (size_t i = 0; i < count; ++i) {
         const PointColor::Point &p = m_settings.pointColor.points[i];
-        const cv::Vec3f swatch = WorkingColor::encodedInGamut(WorkingColor::workingToOklab(PointColor::fromHsv(p.source)));
+        const ipr::Vec3f swatch = WorkingColor::encodedInGamut(WorkingColor::workingToOklab(PointColor::fromHsv(p.source)));
         points.append(QVariantMap{{"colour", QColor::fromRgbF(swatch[0], swatch[1], swatch[2])},
                                   {"hue", p.hueShift}, {"saturation", p.saturationShift},
                                   {"luminance", p.luminanceShift}, {"variance", p.variance}, {"range", p.range}});
@@ -1272,7 +1272,7 @@ bool ImageEditor::addPointColorAt(qreal x, qreal y)
     if (tones.empty())
         return false;
     // The tones cover the whole canvas; the view may show its crop.
-    const cv::Point2d onCanvas = m_cropEditing ? cv::Point2d(x, y)
+    const ipr::Point2d onCanvas = m_cropEditing ? ipr::Point2d(x, y)
                                                : Geometry::viewToCanvas(m_settings.geometry, {x, y});
     const auto colour = PerceptualColour::colourBeforePointColour(tones, onCanvas.x, onCanvas.y, 2,
                                                                   RenderChain::perceptualParameters(m_settings));
@@ -1728,8 +1728,8 @@ QVariantList ImageEditor::snapshots() const
 QVariantMap ImageEditor::geometry() const
 {
     const Geometry::Settings &g = m_settings.geometry;
-    const cv::Size source = m_original.isNull() ? cv::Size() : m_original.linearRgba.size();
-    const cv::Size canvas = Geometry::canvasSize(g, source);
+    const ipr::Size source = m_original.isNull() ? ipr::Size() : ipr::fromCv(m_original.linearRgba.size());
+    const ipr::Size canvas = Geometry::canvasSize(g, source);
     return {{"quarterTurns", g.quarterTurns}, {"flipHorizontal", g.flipHorizontal}, {"flipVertical", g.flipVertical},
             {"rotation", double(g.rotation)}, {"vertical", g.vertical}, {"horizontal", g.horizontal},
             {"aspect", g.aspect}, {"scale", g.scale}, {"offsetX", g.offsetX}, {"offsetY", g.offsetY},
@@ -1763,7 +1763,7 @@ void ImageEditor::commitGeometry(Geometry::Settings next)
 {
     if (m_original.isNull() || !Geometry::bound(next))
         return;
-    Geometry::applyConstraint(next, m_original.linearRgba.size());
+    Geometry::applyConstraint(next, ipr::fromCv(m_original.linearRgba.size()));
     if (next == m_settings.geometry)
         return;
     m_settings.geometry = next;
@@ -1989,7 +1989,7 @@ void ImageEditor::setRetouchSource(int retouch, double shiftX, double shiftY)
     if (retouch < 0 || retouch >= int(m_settings.retouches.size()) || !std::isfinite(shiftX) || !std::isfinite(shiftY))
         return;
     Retouch::Operations next = m_settings.retouches;
-    next[size_t(retouch)].source = cv::Point2f(float(shiftX), float(shiftY));
+    next[size_t(retouch)].source = ipr::Point2f(float(shiftX), float(shiftY));
     commitRetouches(std::move(next));
 }
 
@@ -2040,7 +2040,7 @@ void ImageEditor::turnGeometry()
 {
     if (m_original.isNull()) return;
     Geometry::Settings next = m_settings.geometry;
-    Geometry::turn(next, m_original.linearRgba.size());
+    Geometry::turn(next, ipr::fromCv(m_original.linearRgba.size()));
     commitGeometry(next);
 }
 
@@ -2048,7 +2048,7 @@ void ImageEditor::mirrorGeometry(bool horizontal)
 {
     if (m_original.isNull()) return;
     Geometry::Settings next = m_settings.geometry;
-    Geometry::mirror(next, horizontal, m_original.linearRgba.size());
+    Geometry::mirror(next, horizontal, ipr::fromCv(m_original.linearRgba.size()));
     commitGeometry(next);
 }
 
@@ -2056,7 +2056,7 @@ void ImageEditor::setGeometryCrop(double x, double y, double width, double heigh
 {
     if (m_original.isNull()) return;
     Geometry::Settings next = m_settings.geometry;
-    Geometry::setCrop(next, m_original.linearRgba.size(), x, y, width, height);
+    Geometry::setCrop(next, ipr::fromCv(m_original.linearRgba.size()), x, y, width, height);
     commitGeometry(next);
 }
 
@@ -2064,7 +2064,7 @@ void ImageEditor::setGeometryCropRatio(double ratio)
 {
     if (m_original.isNull()) return;
     Geometry::Settings next = m_settings.geometry;
-    Geometry::setCropRatio(next, m_original.linearRgba.size(), ratio);
+    Geometry::setCropRatio(next, ipr::fromCv(m_original.linearRgba.size()), ratio);
     commitGeometry(next);
 }
 
@@ -2096,7 +2096,7 @@ void ImageEditor::proposeStraightening(const QString &mode)
         return;
     }
     const Straightening::Proposal proposal = Straightening::propose(
-        Straightening::linesOf(source.linearRgba), source.linearRgba.size(), m_settings.geometry, chosen);
+        Straightening::linesOf(source.linearRgba), ipr::fromCv(source.linearRgba.size()), m_settings.geometry, chosen);
     switch (proposal.refusal) {
     case Straightening::Refusal::None:
         break;
@@ -2329,7 +2329,7 @@ ColorPipeline::WorkingImage ImageEditor::buildEditProxy(
 
     const double scale =
         static_cast<double>(kEditProxyMaxDimension) / static_cast<double>(longestSide);
-    const cv::Size proxySize(
+    const ipr::Size proxySize(
         std::max(1, static_cast<int>(std::lround(source.linearRgba.cols * scale))),
         std::max(1, static_cast<int>(std::lround(source.linearRgba.rows * scale))));
 
@@ -2338,7 +2338,7 @@ ColorPipeline::WorkingImage ImageEditor::buildEditProxy(
     // Area averaging rounds alpha slightly above 1; a proxy restored from the
     // cache is revalidated as a master, which requires alpha within [0, 1].
     for (int y = 0; y < proxy.linearRgba.rows; ++y) {
-        auto *row = proxy.linearRgba.ptr<cv::Vec4f>(y);
+        auto *row = proxy.linearRgba.ptr<ipr::Vec4f>(y);
         for (int x = 0; x < proxy.linearRgba.cols; ++x)
             row[x][3] = std::clamp(row[x][3], 0.f, 1.f);
     }

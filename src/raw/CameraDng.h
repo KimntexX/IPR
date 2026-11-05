@@ -2,6 +2,7 @@
 #define IPR_RAW_CAMERADNG_H
 
 #include "CameraProfileEngine.h"
+#include "Types.h"
 
 #include <QDateTime>
 #include <QString>
@@ -30,7 +31,7 @@ struct Content
     double exposureSeconds = 0.0;
     double focalLengthMm = 0.0;
     QDateTime captureDate;
-    cv::Vec3d cameraNeutral{1.0, 1.0, 1.0}; // inverse of the applied gains, G = 1
+    ipr::Vec3d cameraNeutral{1.0, 1.0, 1.0}; // inverse of the applied gains, G = 1
     double whiteBalanceKelvin = 5500.0;
     CameraProfileEngine::DcpRenderOptions renderOptions;
     unsigned calibratedWhite = 0;           // of the source's calibration, for the panel; 0 without one

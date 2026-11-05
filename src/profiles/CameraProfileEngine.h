@@ -6,6 +6,7 @@
 #include <QStringList>
 #include <opencv2/core.hpp>
 #include "PreparedProfileCache.h"
+#include "Types.h"
 
 namespace CameraProfileEngine {
 
@@ -47,7 +48,7 @@ struct DcpWorkingContext
     cv::Mat cameraRgb;
     QString profilePath;
     double sourceKelvin = 5500.0;
-    cv::Vec3d cameraNeutral{0.0, 0.0, 0.0}; // Inverse actual LibRaw multipliers, G=1.
+    ipr::Vec3d cameraNeutral{0.0, 0.0, 0.0}; // Inverse actual LibRaw multipliers, G=1.
     DcpRenderOptions options;
     // Experimental camera-signal denoise: the signal before the lens corrections and
     // what reapplies them. Empty unless the decode was asked for it and corrected.
@@ -58,7 +59,7 @@ struct DcpWorkingContext
 };
 
 bool whiteBalanceGains(const DcpWorkingContext &source, int temperature, int tint,
-                       cv::Vec3d &gains, QString *error = nullptr);
+                       ipr::Vec3d &gains, QString *error = nullptr);
 // Scene-referred source edits: white balance gains and exposure scale the
 // linear camera signal, then the DCP (tables and tone curve) is applied.
 // Exposure therefore precedes the profile tone curve, as in camera RAW editors.

@@ -1,4 +1,5 @@
 #include "ImageImporter.h"
+#include "OpenCvBridge.h"
 #include <QCoreApplication>
 #include <QFile>
 #include <QImageReader>
@@ -95,8 +96,8 @@ int main(int argc, char **argv)
     if (!alpha.save(alphaPath)) return 1;
     const auto importedAlpha=ImageImport::load(alphaPath);
     if (!check(!importedAlpha.image.isNull() &&
-        std::abs(importedAlpha.image.linearRgba.at<cv::Vec4f>(0,0)[3]-17000.f/65535.f)<1e-6 &&
-        importedAlpha.image.linearRgba.at<cv::Vec4f>(0,0)[0]!=importedAlpha.image.linearRgba.at<cv::Vec4f>(0,1)[0],
+        std::abs(ipr::at<ipr::Vec4f>(importedAlpha.image.linearRgba, 0,0)[3]-17000.f/65535.f)<1e-6 &&
+        ipr::at<ipr::Vec4f>(importedAlpha.image.linearRgba, 0,0)[0]!=ipr::at<ipr::Vec4f>(importedAlpha.image.linearRgba, 0,1)[0],
         "PNG alpha and adjacent 16bit values survive import")) return 1;
 
     QString registrationError;
@@ -113,7 +114,7 @@ int main(int argc, char **argv)
     if (!check(!raw.image.isNull() && raw.capabilities.cameraDevelopment &&
         raw.provenance.colorOrigin==ImageImport::ColorOrigin::DecoderMatrix &&
         raw.provenance.decoderId=="synthetic-decoder" && raw.provenance.decoderVersion=="1" &&
-        raw.image.linearRgba.at<cv::Vec4f>(0,0)[0]<0 && raw.image.linearRgba.at<cv::Vec4f>(0,0)[2]>1,
+        ipr::at<ipr::Vec4f>(raw.image.linearRgba, 0,0)[0]<0 && ipr::at<ipr::Vec4f>(raw.image.linearRgba, 0,0)[2]>1,
         "future RAW adapter shares contract without clipping or fake DCP")) return 1;
     auto cached=raw;
     if (!check(ImageImport::complete(cached) && cached.image.linearRgba.data==raw.image.linearRgba.data,
@@ -121,8 +122,8 @@ int main(int argc, char **argv)
     for (int failure=0; failure<5; ++failure) {
         auto invalid=raw;invalid.image.linearRgba=raw.image.linearRgba.clone();
         if (failure==0) invalid.image.colorSpace=QColorSpace(QColorSpace::SRgbLinear);
-        if (failure==1) invalid.image.linearRgba.at<cv::Vec4f>(0,0)[0]=std::numeric_limits<float>::quiet_NaN();
-        if (failure==2) invalid.image.linearRgba.at<cv::Vec4f>(0,0)[3]=1.01f;
+        if (failure==1) ipr::at<ipr::Vec4f>(invalid.image.linearRgba, 0,0)[0]=std::numeric_limits<float>::quiet_NaN();
+        if (failure==2) ipr::at<ipr::Vec4f>(invalid.image.linearRgba, 0,0)[3]=1.01f;
         if (failure==3) invalid.image.linearRgba=cv::Mat::zeros(2,2,CV_8UC4);
         if (failure==4) invalid.error="Decoder reported a failure";
         if (!check(!ImageImport::complete(invalid) && invalid.image.isNull() && !invalid.dcpSource &&

@@ -1,5 +1,6 @@
 #include "RenderChain.h"
 #include "ToneRecovery.h"
+#include "OpenCvBridge.h"
 
 #include <opencv2/imgproc.hpp>
 
@@ -42,7 +43,7 @@ WorkingImage scene(int width = 200, int height = 150)
         for (int x = 0; x < width; ++x) {
             const float u = float(x) / float(width), v = float(y) / float(height);
             const float detail = 0.05f * float(std::sin(x * 0.7) * std::cos(y * 0.5));
-            rgba.at<cv::Vec4f>(y, x) = {0.1f + 0.6f * u + detail + float(random.gaussian(0.005)),
+            ipr::at<ipr::Vec4f>(rgba, y, x) = {0.1f + 0.6f * u + detail + float(random.gaussian(0.005)),
                                         0.15f + 0.5f * v + detail + float(random.gaussian(0.005)),
                                         0.5f - 0.3f * u * v + detail + float(random.gaussian(0.005)), 1.0f};
         }
@@ -112,7 +113,7 @@ void invalidSourcesRenderNothing()
     check(RenderChain::workingImage({}, neutral()).isNull(), "RenderChain::workingImage({}, neutral()).isNull()");
 
     WorkingImage notFinite = scene();
-    notFinite.linearRgba.at<cv::Vec4f>(3, 3)[1] = std::numeric_limits<float>::quiet_NaN();
+    ipr::at<ipr::Vec4f>(notFinite.linearRgba, 3, 3)[1] = std::numeric_limits<float>::quiet_NaN();
     int notDone = -9;
     check(RenderChain::workingImage(notFinite, neutral(), 1.0, nullptr, &notDone).isNull(), "RenderChain::workingImage(notFinite, neutral(), 1.0, nullptr, &notDone).isNull()");
     check(notDone == -9, "notDone == -9");

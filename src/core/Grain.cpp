@@ -80,7 +80,7 @@ void apply(cv::Mat &linearRgb, int amount, double pixelScale)
     }
     ipr::parallelRows(linearRgb.rows, [&](int first, int last) {
         for (int y = first; y < last; ++y) {
-            auto *row = linearRgb.ptr<cv::Vec3f>(y);
+            auto *row = linearRgb.ptr<ipr::Vec3f>(y);
             const float *n = noise.ptr<float>(y);
             for (int x = 0; x < linearRgb.cols; ++x)
                 for (int c = 0; c < 3; ++c)

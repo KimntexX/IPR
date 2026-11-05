@@ -5,6 +5,7 @@
 #include "CameraDenoise.h"
 #include "CameraSignal.h"
 #include "imageeditor.h"
+#include "OpenCvBridge.h"
 
 #include <QCoreApplication>
 #include <QDir>
@@ -220,10 +221,10 @@ int main(int argc, char **argv)
         signal.cameraNeutral = {0, 0, 0};
         signal.whiteBalanceKelvin.reset();
         if (!check(CameraSignal::validate(signal), "unavailable neutral/temperature is explicit")) return 1;
-        signal.rgb.at<cv::Vec3f>(0,0)[0] = -1.f;
-        signal.rgb.at<cv::Vec3f>(0,0)[1] = 2.f;
+        ipr::at<ipr::Vec3f>(signal.rgb, 0,0)[0] = -1.f;
+        ipr::at<ipr::Vec3f>(signal.rgb, 0,0)[1] = 2.f;
         if (!check(CameraSignal::validate(signal), "signed and extended signal is not clipped at the contract")) return 1;
-        signal.rgb.at<cv::Vec3f>(0,0)[0] = std::numeric_limits<float>::quiet_NaN();
+        ipr::at<ipr::Vec3f>(signal.rgb, 0,0)[0] = std::numeric_limits<float>::quiet_NaN();
         if (!check(!CameraSignal::validate(signal), "nonfinite signal is rejected before DCP")) return 1;
     }
 
@@ -233,15 +234,15 @@ int main(int argc, char **argv)
     CameraProfileEngine::DcpWorkingContext wb;
     wb.profilePath = wbPath;
     wb.sourceKelvin = 5200.25;
-    wb.cameraNeutral = cv::Vec3d(.95, 1, 1.08);
+    wb.cameraNeutral = ipr::Vec3d(.95, 1, 1.08);
     wb.cameraRgb = cv::Mat(2, 3, CV_32FC3, cv::Scalar(.18, .15, .22));
     wb.options.cameraBaselineExposureEv = -.25;
     wb.options.profileExposureCompensationEv = -.02;
     const cv::Mat untouched = wb.cameraRgb.clone();
     QString wbError;
-    cv::Vec3d gains;
+    ipr::Vec3d gains;
     if (!check(CameraProfileEngine::whiteBalanceGains(wb, 5200, 0, gains, &wbError) &&
-                   gains == cv::Vec3d(1,1,1), "rounded As Shot is exact identity")) return 1;
+                   gains == ipr::Vec3d(1,1,1), "rounded As Shot is exact identity")) return 1;
     cv::Mat neutralExpected = untouched.clone(), rendered;
     if (!check(CameraProfileEngine::applyDcp(wbPath, neutralExpected, wb.sourceKelvin,
                                              &wbError, wb.options) &&
@@ -410,7 +411,7 @@ int main(int argc, char **argv)
         lens.preLensCameraRgb = cv::Mat(20, 30, CV_32FC3);
         for (int y = 0; y < 20; ++y)
             for (int x = 0; x < 30; ++x)
-                lens.preLensCameraRgb.at<cv::Vec3f>(y, x) = cv::Vec3f(.05f + .01f * x, .1f + .005f * y, .2f);
+                ipr::at<ipr::Vec3f>(lens.preLensCameraRgb, y, x) = ipr::Vec3f(.05f + .01f * x, .1f + .005f * y, .2f);
         lens.lcpPath = lcpPath;
         lens.capture.focalLengthMm = 24;
         lens.capture.focusDistanceM = 2;
@@ -624,8 +625,8 @@ int main(int argc, char **argv)
                "DCP matrix should apply to linear camera RGB"))
         return 1;
     if (!check(cameraRgb.type() == CV_32FC3 &&
-                   cv::norm(cameraRgb.at<cv::Vec3f>(0, 0) -
-                            cv::Vec3f(0.8f, 0.8f, 0.8f)) < 0.01,
+                   ipr::length(ipr::at<ipr::Vec3f>(cameraRgb, 0, 0) -
+                            ipr::Vec3f(0.8f, 0.8f, 0.8f)) < 0.01,
                "DCP ForwardMatrix and look table should transform D50 white"))
         return 1;
 
@@ -646,44 +647,44 @@ int main(int argc, char **argv)
 
     // A 120-degree HSV rotation of (.4,.2,.1) in ProPhoto gives (.1,.4,.2).
     // Identity ForwardMatrix means the synthetic camera input is XYZ D50.
-    const cv::Matx33f proPhotoToXyz(
+    const ipr::Matrix33f proPhotoToXyz(
         .7976749f, .1351917f, .0313534f,
         .2880402f, .7118741f, .0000857f,
         0.f, 0.f, .82521f);
-    const cv::Matx33f xyzToWorking(WorkingColor::fromXyzD50());
+    const ipr::Matrix33f xyzToWorking(WorkingColor::fromXyzD50());
     const QString curveDcp = QDir(dcpDirectory).filePath("monotone-curve.dcp");
     if (!check(writeFile(curveDcp, SyntheticDcp::make(false, false, false, false,
                          0, 0, 0.f, 0.f, 1, 1.f, true)), "tone profile written"))
         return 1;
     const CameraProfileEngine::DcpRenderOptions stable{0.0, true};
-    const cv::Vec3f triplets[] = {{.1f,.4f,.7f}, {.1f,.7f,.4f}, {.4f,.1f,.7f},
+    const ipr::Vec3f triplets[] = {{.1f,.4f,.7f}, {.1f,.7f,.4f}, {.4f,.1f,.7f},
                                  {.4f,.7f,.1f}, {.7f,.1f,.4f}, {.7f,.4f,.1f}};
     for (const auto &triplet : triplets) {
         cv::Mat current(1,1,CV_32FC3);
-        current.at<cv::Vec3f>(0,0) = proPhotoToXyz * triplet;
+        ipr::at<ipr::Vec3f>(current, 0,0) = proPhotoToXyz * triplet;
         cv::Mat channelCurve = current.clone();
-        cv::Vec3f expected;
+        ipr::Vec3f expected;
         for (int c=0;c<3;++c)
             expected[c] = .16f + (triplet[c]-.1f)/.6f*.72f;
         if (!check(CameraProfileEngine::applyDcp(curveDcp,current,5500.,&error,stable) &&
-                   cv::norm(current.at<cv::Vec3f>(0,0) - xyzToWorking*(proPhotoToXyz*expected)) < 1e-5,
+                   ipr::length(ipr::at<ipr::Vec3f>(current, 0,0) - xyzToWorking*(proPhotoToXyz*expected)) < 1e-5,
                    "curve preserves relative middle channel for all permutations")) return 1;
         if (!check(CameraProfileEngine::applyDcp(curveDcp,channelCurve,5500.,&error) &&
                    cv::norm(current-channelCurve) > .01, "hue-preserving curve differs from per-channel evaluation")) return 1;
     }
     for (float value : {0.f, .25f, 1.f}) {
         cv::Mat gray(1,1,CV_32FC3);
-        gray.at<cv::Vec3f>(0,0) = proPhotoToXyz*cv::Vec3f(value,value,value);
+        ipr::at<ipr::Vec3f>(gray, 0,0) = proPhotoToXyz*ipr::Vec3f(value,value,value);
         const float expected = value <= .5f ? value*1.6f : .8f+(value-.5f)*.4f;
         if (!check(CameraProfileEngine::applyDcp(curveDcp,gray,5500.,&error,stable) &&
-                   cv::norm(gray.at<cv::Vec3f>(0,0) - xyzToWorking*(proPhotoToXyz*cv::Vec3f(expected,expected,expected))) < 1e-5,
+                   ipr::length(ipr::at<ipr::Vec3f>(gray, 0,0) - xyzToWorking*(proPhotoToXyz*ipr::Vec3f(expected,expected,expected))) < 1e-5,
                    "equal channels, black and white are finite and correct")) return 1;
     }
     const QString descendingDcp = QDir(dcpDirectory).filePath("descending-curve.dcp");
     if (!check(writeFile(descendingDcp, SyntheticDcp::make(false,false,false,false,
                         0,0,0.f,0.f,1,1.f,true,1.f,.1f)), "descending profile written")) return 1;
     cv::Mat descending(1,1,CV_32FC3);
-    descending.at<cv::Vec3f>(0,0)=proPhotoToXyz*cv::Vec3f(.4f,.6f,.8f);
+    ipr::at<ipr::Vec3f>(descending, 0,0)=proPhotoToXyz*ipr::Vec3f(.4f,.6f,.8f);
     cv::Mat descendingLegacy=descending.clone();
     if (!check(CameraProfileEngine::applyDcp(descendingDcp,descending,5500.,&error,stable) &&
                CameraProfileEngine::applyDcp(descendingDcp,descendingLegacy,5500.,&error) &&
@@ -721,10 +722,10 @@ int main(int argc, char **argv)
                           0, 0, 120.f)), "ProPhoto hue test profile should be written"))
         return 1;
     cv::Mat rotated(1, 1, CV_32FC3);
-    rotated.at<cv::Vec3f>(0, 0) = proPhotoToXyz * cv::Vec3f(.4f, .2f, .1f);
+    ipr::at<ipr::Vec3f>(rotated, 0, 0) = proPhotoToXyz * ipr::Vec3f(.4f, .2f, .1f);
     if (!check(CameraProfileEngine::applyDcp(rotationDcp, rotated, 5500., &error) &&
-               cv::norm(rotated.at<cv::Vec3f>(0, 0) -
-                   xyzToWorking * (proPhotoToXyz * cv::Vec3f(.08f, .32f, .16f))) < 1e-5,
+               ipr::length(ipr::at<ipr::Vec3f>(rotated, 0, 0) -
+                   xyzToWorking * (proPhotoToXyz * ipr::Vec3f(.08f, .32f, .16f))) < 1e-5,
                "DCP hue rotation must be evaluated in ProPhoto, not sRGB"))
         return 1;
 
@@ -733,12 +734,12 @@ int main(int argc, char **argv)
                               1, 1, 0.f, 0.f, 2)), "3D encoded profile should be written"))
         return 1;
     cv::Mat encodedColor(1, 1, CV_32FC3);
-    encodedColor.at<cv::Vec3f>(0, 0) = proPhotoToXyz * cv::Vec3f(.4f, .2f, .1f);
+    ipr::at<ipr::Vec3f>(encodedColor, 0, 0) = proPhotoToXyz * ipr::Vec3f(.4f, .2f, .1f);
     const float encodedV = 1.055f * std::pow(.4f, 1.f / 2.4f) - .055f;
     const float expectedV = std::pow((encodedV * .8f + .055f) / 1.055f, 2.4f);
     if (!check(CameraProfileEngine::applyDcp(encoded3dDcp, encodedColor, 5500., &error) &&
-               cv::norm(encodedColor.at<cv::Vec3f>(0, 0) - xyzToWorking *
-                   (proPhotoToXyz * cv::Vec3f(expectedV, expectedV * .5f, expectedV * .25f))) < 1e-5,
+               ipr::length(ipr::at<ipr::Vec3f>(encodedColor, 0, 0) - xyzToWorking *
+                   (proPhotoToXyz * ipr::Vec3f(expectedV, expectedV * .5f, expectedV * .25f))) < 1e-5,
                "sRGB encoding must modify only HSV Value, preserving hue/saturation"))
         return 1;
 
@@ -750,8 +751,8 @@ int main(int argc, char **argv)
     cv::Mat colorOnlyRgb(1, 1, CV_32FC3, cv::Scalar(1.0f, 1.0f, 1.0f));
     if (!check(CameraProfileEngine::applyDcp(colorOnlyDcp, colorOnlyRgb, 5500.0,
                                              &error) &&
-                   cv::norm(colorOnlyRgb.at<cv::Vec3f>(0, 0) -
-                            cv::Vec3f(0.8f, 0.8f, 0.8f)) < 0.01,
+                   ipr::length(ipr::at<ipr::Vec3f>(colorOnlyRgb, 0, 0) -
+                            ipr::Vec3f(0.8f, 0.8f, 0.8f)) < 0.01,
                "DCP without ForwardMatrix should adapt ColorMatrix through D50"))
         return 1;
 
@@ -804,10 +805,10 @@ int main(int argc, char **argv)
     cv::Mat image(32, 32, CV_32FC3);
     for (int y = 0; y < image.rows; ++y) {
         for (int x = 0; x < image.cols; ++x)
-            image.at<cv::Vec3f>(y, x) =
-                cv::Vec3f(float(x) / 31.0f, float(y) / 31.0f, 0.5f);
+            ipr::at<ipr::Vec3f>(image, y, x) =
+                ipr::Vec3f(float(x) / 31.0f, float(y) / 31.0f, 0.5f);
     }
-    const cv::Vec3f before = image.at<cv::Vec3f>(8, 8);
+    const ipr::Vec3f before = ipr::at<ipr::Vec3f>(image, 8, 8);
     CameraProfileEngine::CaptureSettings capture;
     capture.focalLengthMm = 50.0;
     capture.focusDistanceM = 2.0;
@@ -834,10 +835,10 @@ int main(int argc, char **argv)
     }));
     for(auto &reader:lcpReaders)if(!check(reader.get(),"LCP capture settings stay local to concurrent calls"))return 1;
     if (!check(image.type() == CV_32FC3 &&
-                   cv::norm(image.at<cv::Vec3f>(8, 8) - before) > 0.001,
+                   ipr::length(ipr::at<ipr::Vec3f>(image, 8, 8) - before) > 0.001,
                "LCP remapping should resample image pixels"))
         return 1;
-    if (!check(std::abs(image.at<cv::Vec3f>(8, 8)[0] - before[0]) > 0.001,
+    if (!check(std::abs(ipr::at<ipr::Vec3f>(image, 8, 8)[0] - before[0]) > 0.001,
                "LCP chromatic-aberration model should remap color channels"))
         return 1;
 
@@ -845,8 +846,8 @@ int main(int argc, char **argv)
     if (!check(CameraProfileEngine::applyLcp(lcpPath, uniform, capture, &error),
                "LCP vignetting model should apply"))
         return 1;
-    if (!check(uniform.at<cv::Vec3f>(0, 0)[0] >
-                   uniform.at<cv::Vec3f>(16, 16)[0],
+    if (!check(ipr::at<ipr::Vec3f>(uniform, 0, 0)[0] >
+                   ipr::at<ipr::Vec3f>(uniform, 16, 16)[0],
                "LCP vignette compensation should brighten the frame edges"))
         return 1;
 
@@ -871,11 +872,11 @@ int main(int argc, char **argv)
     cv::Mat channelImage(32, 32, CV_32FC3);
     for (int y = 0; y < channelImage.rows; ++y) {
         for (int x = 0; x < channelImage.cols; ++x) {
-            channelImage.at<cv::Vec3f>(y, x) =
-                cv::Vec3f(float(x) / 31.0f, 0.4f, float(y) / 31.0f);
+            ipr::at<ipr::Vec3f>(channelImage, y, x) =
+                ipr::Vec3f(float(x) / 31.0f, 0.4f, float(y) / 31.0f);
         }
     }
-    const cv::Vec3f channelBefore = channelImage.at<cv::Vec3f>(8, 8);
+    const ipr::Vec3f channelBefore = ipr::at<ipr::Vec3f>(channelImage, 8, 8);
     const cv::Mat originalChannels = channelImage.clone();
     CameraProfileEngine::LcpApplied applied;
     cv::Mat disabled = originalChannels.clone();
@@ -906,7 +907,7 @@ int main(int argc, char **argv)
         cv::Mat ramp(600, 1000, CV_32FC3);
         for (int y = 0; y < ramp.rows; ++y)
             for (int x = 0; x < ramp.cols; ++x)
-                ramp.at<cv::Vec3f>(y, x) = cv::Vec3f(float(x) / 1000.0f, 0.5f, 0.5f);
+                ipr::at<ipr::Vec3f>(ramp, y, x) = ipr::Vec3f(float(x) / 1000.0f, 0.5f, 0.5f);
         const auto movedTo = [&](const QString &path, double focal, double sensor) {
             CameraProfileEngine::CaptureSettings settings;
             settings.focalLengthMm = focal;
@@ -915,7 +916,7 @@ int main(int argc, char **argv)
             QString failure;
             if (!CameraProfileEngine::applyLcp(path, image, settings, &failure, {true, false}))
                 return -1.0;
-            return double(image.at<cv::Vec3f>(300, 900)[0]) * 1000.0;
+            return double(ipr::at<ipr::Vec3f>(image, 300, 900)[0]) * 1000.0;
         };
         const auto expected = [](double unit) {
             const double dx = 400.0 / unit, r2 = dx * dx;
@@ -941,7 +942,7 @@ int main(int argc, char **argv)
     if (!check(CameraProfileEngine::applyLcp(textLcpPath, channelImage, {}, &error),
                "LCP text parameters should parse and apply"))
         return 1;
-    const cv::Vec3f channelAfter = channelImage.at<cv::Vec3f>(8, 8);
+    const ipr::Vec3f channelAfter = ipr::at<ipr::Vec3f>(channelImage, 8, 8);
     if (!check(std::abs(channelAfter[0] - channelBefore[0]) > 0.001f &&
                    std::abs(channelAfter[2] - channelBefore[2]) > 0.001f &&
                    std::abs(channelAfter[1] - channelBefore[1]) < 1e-6f,

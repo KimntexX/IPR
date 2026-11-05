@@ -92,11 +92,11 @@ cv::Mat gaussianBlurred(const cv::Mat &mat, double sigmaX, double sigmaY, BlurBo
     return blurred;
 }
 
-cv::Mat resized(const cv::Mat &mat, cv::Size size, Interpolation interpolation)
+cv::Mat resized(const cv::Mat &mat, Size size, Interpolation interpolation)
 {
     if (mat.empty())
         return {};
-    cv::Mat out(size, mat.type());
+    cv::Mat out(toCv(size), mat.type());
     Image target = fromMutableMat(out);
     resizeInto(fromMat(mat), target, interpolation);
     return out;
@@ -122,14 +122,13 @@ cv::Mat remapped(const cv::Mat &mat, const cv::Mat &mapX, const cv::Mat &mapY, R
     return out;
 }
 
-cv::Mat warpedPerspective(const cv::Mat &mat, const cv::Matx33d &outToImage, cv::Size size, Resampling resampling,
-                          Outside outside)
+cv::Mat warpedPerspective(const cv::Mat &mat, const Matrix33d &outToImage, Size size, Resampling resampling, Outside outside)
 {
     if (mat.empty() || size.empty())
         return {};
-    cv::Mat out(size, mat.type());
+    cv::Mat out(toCv(size), mat.type());
     Image target = fromMutableMat(out);
-    warpPerspectiveInto(fromMat(mat), target, fromCv(outToImage), resampling, outside);
+    warpPerspectiveInto(fromMat(mat), target, outToImage, resampling, outside);
     return out;
 }
 
@@ -173,13 +172,13 @@ cv::Mat padded(const cv::Mat &mat, int top, int bottom, int left, int right)
     return out;
 }
 
-cv::Mat paddedRegion(const cv::Mat &whole, cv::Rect region, int top, int bottom, int left, int right)
+cv::Mat paddedRegion(const cv::Mat &whole, Recti region, int top, int bottom, int left, int right)
 {
     if (whole.empty())
         return {};
     cv::Mat out(region.height + top + bottom, region.width + left + right, whole.type());
     Image target = fromMutableMat(out);
-    padRegionInto(fromMat(whole), target, fromCv(region), top, bottom, left, right);
+    padRegionInto(fromMat(whole), target, region, top, bottom, left, right);
     return out;
 }
 
@@ -233,7 +232,7 @@ cv::Mat median(const cv::Mat &mat, int side)
     return out;
 }
 
-cv::Mat boxMean(const cv::Mat &mat, cv::Size window, BlurBorder border)
+cv::Mat boxMean(const cv::Mat &mat, Size window, BlurBorder border)
 {
     if (mat.empty())
         return {};
@@ -243,7 +242,7 @@ cv::Mat boxMean(const cv::Mat &mat, cv::Size window, BlurBorder border)
     return out;
 }
 
-cv::Mat minimum(const cv::Mat &mat, cv::Size window, Beyond beyond)
+cv::Mat minimum(const cv::Mat &mat, Size window, Beyond beyond)
 {
     if (mat.empty())
         return {};
@@ -253,7 +252,7 @@ cv::Mat minimum(const cv::Mat &mat, cv::Size window, Beyond beyond)
     return out;
 }
 
-cv::Mat maximum(const cv::Mat &mat, cv::Size window, Beyond beyond)
+cv::Mat maximum(const cv::Mat &mat, Size window, Beyond beyond)
 {
     if (mat.empty())
         return {};
@@ -424,16 +423,13 @@ cv::Mat atMost(const cv::Mat &a, float bound)
     return out;
 }
 
-cv::Mat transformed(const cv::Mat &a, const cv::Matx33f &matrix)
+cv::Mat transformed(const cv::Mat &a, const Matrix33f &matrix)
 {
     if (a.empty())
         return {};
     cv::Mat out(a.size(), a.type());
-    Matrix<float, 3, 3> m;
-    for (int i = 0; i < 9; ++i)
-        m.values[size_t(i)] = matrix.val[i];
     Image target = fromMutableMat(out);
-    transformInto(fromMat(a), m, target);
+    transformInto(fromMat(a), matrix, target);
     return out;
 }
 
@@ -506,18 +502,17 @@ cv::Mat matchedTemplate(const cv::Mat &image, const cv::Mat &templ)
     return out;
 }
 
-cv::Mat hannWindow(cv::Size size)
+cv::Mat hannWindow(Size size)
 {
-    cv::Mat out(size, CV_32F);
+    cv::Mat out(toCv(size), CV_32F);
     Image target = fromMutableMat(out);
     hannWindowInto(target);
     return out;
 }
 
-cv::Point2d phaseCorrelation(const cv::Mat &a, const cv::Mat &b, const cv::Mat &window)
+Point2d phaseCorrelation(const cv::Mat &a, const cv::Mat &b, const cv::Mat &window)
 {
-    const Point<double> shift = phaseCorrelation(fromMat(a), fromMat(b), window.empty() ? Image() : fromMat(window));
-    return {shift.x, shift.y};
+    return phaseCorrelation(fromMat(a), fromMat(b), window.empty() ? Image() : fromMat(window));
 }
 
 namespace {
@@ -564,38 +559,6 @@ bool singularValues(const cv::Mat &a, cv::Mat &w, cv::Mat &vt)
     w = cv::Mat(a.cols, 1, CV_64F, values.data()).clone();
     vt = cv::Mat(a.cols, a.cols, CV_64F, vectors.data()).clone();
     return true;
-}
-
-double determinant(const cv::Matx33d &m)
-{
-    return determinant(fromCv(m));
-}
-
-cv::Matx33d nearestRotation(const cv::Matx33d &m)
-{
-    return toCv(nearestRotation(fromCv(m)));
-}
-
-double length(const cv::Vec2d &v)
-{
-    return std::sqrt(v[0] * v[0] + v[1] * v[1]);
-}
-
-double length(const cv::Point2d &p)
-{
-    return std::sqrt(p.x * p.x + p.y * p.y);
-}
-
-cv::Vec3d unit(const cv::Vec3d &v)
-{
-    // As OpenCV's normalize of a Vec: a zero vector stays zero.
-    const double norm = std::sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
-    return v * (norm != 0.0 ? 1.0 / norm : 0.0);
-}
-
-bool allFinite(const cv::Vec3d &v)
-{
-    return std::isfinite(v[0]) && std::isfinite(v[1]) && std::isfinite(v[2]);
 }
 
 cv::Matx33d toCv(const Matrix33d &matrix)

@@ -25,12 +25,12 @@ cv::Mat decisionLuminance(const cv::Mat &frame)
 {
     cv::Mat luminance(frame.size(), CV_32FC1);
     for (int y = 0; y < frame.rows; ++y) {
-        const cv::Vec3f *in = frame.ptr<cv::Vec3f>(y);
+        const ipr::Vec3f *in = frame.ptr<ipr::Vec3f>(y);
         float *out = luminance.ptr<float>(y);
         for (int x = 0; x < frame.cols; ++x)
             out[x] = 0.25f * in[x][0] + 0.5f * in[x][1] + 0.25f * in[x][2];
     }
-    return ipr::boxMean(luminance, cv::Size(decisionWindow, decisionWindow), ipr::BlurBorder::LastPixel);
+    return ipr::boxMean(luminance, ipr::Size(decisionWindow, decisionWindow), ipr::BlurBorder::LastPixel);
 }
 }
 
@@ -38,11 +38,11 @@ bool merge(const std::vector<cv::Mat> &frames, double rejectionSigma, cv::Mat &m
 {
     if (frames.empty())
         return false;
-    const cv::Size size = frames.front().size();
+    const ipr::Size size = ipr::fromCv(frames.front().size());
     for (const cv::Mat &frame : frames)
-        if (frame.empty() || frame.type() != CV_32FC3 || frame.size() != size)
+        if (frame.empty() || frame.type() != CV_32FC3 || ipr::fromCv(frame.size()) != size)
             return false;
-    merged.create(size, CV_32FC3);
+    merged.create(ipr::toCv(size), CV_32FC3);
     const int count = int(frames.size());
     const bool rejecting = rejectionSigma > 0.0 && count >= minimumFramesForRejection;
     const float limit = float(rejectionSigma);
@@ -56,17 +56,17 @@ bool merge(const std::vector<cv::Mat> &frames, double rejectionSigma, cv::Mat &m
         });
 
     ipr::parallelRows(size.height, [&](int first, int last) {
-        std::vector<const cv::Vec3f *> rows(frames.size());
+        std::vector<const ipr::Vec3f *> rows(frames.size());
         std::vector<const float *> luminanceRows(frames.size());
         std::vector<float> order(frames.size());
         quint64 rejectedHere = 0;
         for (int y = first; y < last; ++y) {
             for (int i = 0; i < count; ++i) {
-                rows[size_t(i)] = frames[size_t(i)].ptr<cv::Vec3f>(y);
+                rows[size_t(i)] = frames[size_t(i)].ptr<ipr::Vec3f>(y);
                 if (rejecting)
                     luminanceRows[size_t(i)] = luminance[size_t(i)].ptr<float>(y);
             }
-            cv::Vec3f *out = merged.ptr<cv::Vec3f>(y);
+            ipr::Vec3f *out = merged.ptr<ipr::Vec3f>(y);
             for (int x = 0; x < size.width; ++x) {
                 float allowed = std::numeric_limits<float>::infinity();
                 float median = 0.f;
@@ -81,7 +81,7 @@ bool merge(const std::vector<cv::Mat> &frames, double rejectionSigma, cv::Mat &m
                     std::nth_element(order.begin(), middle, order.end());
                     allowed = limit * std::max(madToSigma * *middle, spreadFloor);
                 }
-                cv::Vec3f sum(0.f, 0.f, 0.f);
+                ipr::Vec3f sum(0.f, 0.f, 0.f);
                 float weights = 0.f;
                 for (int i = 0; i < count; ++i) {
                     float weight = 1.f;

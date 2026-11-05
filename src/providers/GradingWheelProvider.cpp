@@ -1,6 +1,7 @@
 #include "GradingWheelProvider.h"
 
 #include "ColorGrading.h"
+#include "Types.h"
 
 #include <QImage>
 #include <QStringList>
@@ -36,7 +37,7 @@ QImage GradingWheelProvider::requestImage(const QString &id, QSize *size, const 
                 // Hue 0 at the top, clockwise, as the wheel's pointer handling.
                 const int hue = int(std::lround(std::fmod(std::atan2(dx, -dy) * 180.0 / pi + 360.0, 360.0))) % 360;
                 const int intensity = int(std::lround(std::min(100.0, distance / (0.9 * radius) * 100.0)));
-                const cv::Vec3f colour = ColorGrading::displayColour(zone, hue, intensity);
+                const ipr::Vec3f colour = ColorGrading::displayColour(zone, hue, intensity);
                 const auto channel = [](float v) { return int(std::lround(std::clamp(v, 0.f, 1.f) * 255.f)); };
                 row[x] = qRgba(channel(colour[0]), channel(colour[1]), channel(colour[2]), int(std::lround(coverage * 255.0)));
             }

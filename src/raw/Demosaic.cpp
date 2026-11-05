@@ -222,18 +222,18 @@ bool interpolate(const cv::Mat &mosaic, const Pattern &pattern, ChromaMedian med
     const int width = mosaic.cols, height = mosaic.rows;
     rgb.create(height, width, CV_32FC3);
     if (beforeMedian) beforeMedian->create(height, width, CV_32FC3);
-    std::vector<cv::Rect> tiles;
+    std::vector<ipr::Recti> tiles;
     for (int y = 0; y < height; y += TileSize)
         for (int x = 0; x < width; x += TileSize)
             tiles.emplace_back(x, y, std::min(TileSize, width - x), std::min(TileSize, height - y));
-    const auto processTile = [&](const cv::Rect &core) {
+    const auto processTile = [&](const ipr::Recti &core) {
         // real neighbours where they exist, mirrored with the same parity at the border
         const cv::Mat padded = ipr::paddedRegion(mosaic, core, TileMargin, TileMargin, TileMargin, TileMargin);
         cv::Mat tile = rcd(padded, pattern, floor);
-        const cv::Rect inner(TileMargin, TileMargin, core.width, core.height);
-        if (beforeMedian) tile(inner).copyTo((*beforeMedian)(core));
+        const ipr::Recti inner(TileMargin, TileMargin, core.width, core.height);
+        if (beforeMedian) tile(ipr::toCv(inner)).copyTo((*beforeMedian)(ipr::toCv(core)));
         if (median == ChromaMedian::FlatOnly) flatChromaMedian(tile, floor);
-        tile(inner).copyTo(rgb(core));
+        tile(ipr::toCv(inner)).copyTo(rgb(ipr::toCv(core)));
     };
     // Tile by tile from a shared counter on a bounded pool, the calling thread
     // included; every thread is joined on every path, exceptions included. Only

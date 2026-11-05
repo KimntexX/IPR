@@ -1,5 +1,6 @@
 #include "DetailProcessing.h"
 #include "WorkingColorSpace.h"
+#include "OpenCvBridge.h"
 
 #include <opencv2/imgproc.hpp>
 
@@ -22,7 +23,7 @@ cv::Mat component(const cv::Mat &rgb, int kind = 0)
 {
     cv::Mat result(rgb.rows, rgb.cols, CV_32F);
     for (int y = 0; y < rgb.rows; ++y) {
-        const auto *source = rgb.ptr<cv::Vec3f>(y);
+        const auto *source = rgb.ptr<ipr::Vec3f>(y);
         float *row = result.ptr<float>(y);
         for (int x = 0; x < rgb.cols; ++x) {
             const auto &p = source[x];
@@ -57,12 +58,12 @@ cv::Mat noisy(float signal, float noise, bool colored)
     cv::RNG rng(812);
     cv::Mat result(256, 256, CV_32FC3);
     for (int y = 0; y < result.rows; ++y) {
-        auto *row = result.ptr<cv::Vec3f>(y);
+        auto *row = result.ptr<ipr::Vec3f>(y);
         for (int x = 0; x < result.cols; ++x) {
             const float v = std::max(0.f, signal + static_cast<float>(rng.gaussian(noise)));
-            row[x] = colored ? cv::Vec3f(v,
+            row[x] = colored ? ipr::Vec3f(v,
                 std::max(0.f, signal + static_cast<float>(rng.gaussian(noise))),
-                std::max(0.f, signal + static_cast<float>(rng.gaussian(noise)))) : cv::Vec3f(v, v, v);
+                std::max(0.f, signal + static_cast<float>(rng.gaussian(noise)))) : ipr::Vec3f(v, v, v);
         }
     }
     return result;
@@ -88,7 +89,7 @@ int main()
     DetailProcessing::sharpen(sharpZero, {0, 1.f, 0});
     passed &= check(cv::norm(sharpZero, original, cv::NORM_INF) == 0., "zero sharpening must be bit-exact");
 
-    for (const cv::Vec3f color : {cv::Vec3f(0, 0, 0), cv::Vec3f(.02f, .1f, .3f), cv::Vec3f(2.f, 1.5f, .75f)}) {
+    for (const ipr::Vec3f color : {ipr::Vec3f(0, 0, 0), ipr::Vec3f(.02f, .1f, .3f), ipr::Vec3f(2.f, 1.5f, .75f)}) {
         cv::Mat flat(64, 64, CV_32FC3, cv::Scalar(color[0], color[1], color[2]));
         auto filtered = flat.clone();
         DetailProcessing::reduceNoise(filtered, {100, 100});
@@ -158,12 +159,12 @@ int main()
 
     // Same Y on both sides: a chromatic border must not require a luma edge.
     auto colorEdge = noisy(.02f, .002f, true);
-    const cv::Vec3f firstColor(.4f, .05f, .05f);
+    const ipr::Vec3f firstColor(.4f, .05f, .05f);
     const float edgeY = WorkingColor::luminance(firstColor);
     const auto &weights = WorkingColor::lumaWeights();
-    const cv::Vec3f secondColor(.05f, (edgeY - weights[0]*.05f - weights[2]*.1f)/weights[1], .1f);
+    const ipr::Vec3f secondColor(.05f, (edgeY - weights[0]*.05f - weights[2]*.1f)/weights[1], .1f);
     for (int y = 0; y < colorEdge.rows; ++y) {
-        auto *row = colorEdge.ptr<cv::Vec3f>(y);
+        auto *row = colorEdge.ptr<ipr::Vec3f>(y);
         for (int x = 0; x < colorEdge.cols; ++x)
             row[x] += x < 128 ? firstColor : secondColor;
     }
@@ -183,10 +184,10 @@ int main()
     cv::Mat grain(256, 256, CV_32FC3);
     {
         cv::RNG rng(9);
-        const cv::Vec3f orange(.40f, .20f, .05f);
+        const ipr::Vec3f orange(.40f, .20f, .05f);
         for (int y = 0; y < grain.rows; ++y)
             for (int x = 0; x < grain.cols; ++x)
-                grain.at<cv::Vec3f>(y, x) = orange * std::max(.05f, 1.f + static_cast<float>(rng.gaussian(.25)));
+                ipr::at<ipr::Vec3f>(grain, y, x) = orange * std::max(.05f, 1.f + static_cast<float>(rng.gaussian(.25)));
     }
     auto grainFiltered = grain.clone();
     DetailProcessing::reduceNoise(grainFiltered, {0, 100});
@@ -224,12 +225,12 @@ int main()
     }
 
     // Images smaller than the filters must stay finite and keep their luminance.
-    for (const cv::Size size : {cv::Size(1, 1), cv::Size(2, 3), cv::Size(7, 5)}) {
+    for (const ipr::Size size : {ipr::Size(1, 1), ipr::Size(2, 3), ipr::Size(7, 5)}) {
         for (const double scale : {1.0, 0.25}) {
-            cv::Mat tiny = noisy(.05f, .005f, true)(cv::Rect(cv::Point(), size)).clone();
+            cv::Mat tiny = noisy(.05f, .005f, true)(ipr::toCv(ipr::Recti(ipr::Point2i(), size))).clone();
             const auto tinyOriginal = tiny.clone();
             DetailProcessing::reduceNoise(tiny, {100, 100}, scale);
-            passed &= check(tiny.size() == size && cv::checkRange(tiny, true, nullptr, 0., 10.),
+            passed &= check(ipr::fromCv(tiny.size()) == size && cv::checkRange(tiny, true, nullptr, 0., 10.),
                             "tiny images must stay finite and nonnegative");
             passed &= check(std::abs(cv::mean(component(tiny))[0] / cv::mean(component(tinyOriginal))[0] - 1.) < .05,
                             "tiny images must keep their mean luminance");
@@ -253,12 +254,12 @@ int main()
         for (const float radius : {0.5f, 1.0f, 2.0f}) {
             for (const int reduction : {2, 3}) {
                 const DetailProcessing::SharpenSettings settings{100, radius, 0};
-                const cv::Size reduced(chart.cols / reduction, chart.rows / reduction);
+                const ipr::Size reduced(chart.cols / reduction, chart.rows / reduction);
                 auto full = chart.clone();
                 DetailProcessing::sharpen(full, settings);
                 cv::Mat reference, proxy;
-                cv::resize(full, reference, reduced, 0, 0, cv::INTER_AREA);
-                cv::resize(chart, proxy, reduced, 0, 0, cv::INTER_AREA);
+                cv::resize(full, reference, ipr::toCv(reduced), 0, 0, cv::INTER_AREA);
+                cv::resize(chart, proxy, ipr::toCv(reduced), 0, 0, cv::INTER_AREA);
                 const auto distance = [&](const cv::Mat &image) {
                     return cv::norm(image, reference, cv::NORM_L1) / double(image.total());
                 };

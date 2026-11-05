@@ -1,5 +1,6 @@
 #include "RawDecoder.h"
 #include "CameraProfileEngine.h"
+#include "OpenCvBridge.h"
 #include <QCoreApplication>
 #include <QCryptographicHash>
 #include <QDateTime>
@@ -47,19 +48,19 @@ cv::Mat output(const ColorPipeline::WorkingImage &source) {
         const QRgba64 *row = reinterpret_cast<const QRgba64 *>(image.constScanLine(y));
         for (int x=0;x<image.width();++x) {
             const QRgba64 p = row[x];
-            cv::Vec3d v(p.red()/65535.,p.green()/65535.,p.blue()/65535.);
+            ipr::Vec3d v(p.red()/65535.,p.green()/65535.,p.blue()/65535.);
             for(int c=0;c<3;++c) v[c] = v[c]<=.04045 ? v[c]/12.92 : std::pow((v[c]+.055)/1.055,2.4);
-            rgb.at<cv::Vec3d>(y,x)=v;
+            ipr::at<ipr::Vec3d>(rgb, y,x)=v;
         }
     }
     return rgb;
 }
 QJsonObject measure(const cv::Mat &base,const cv::Mat &changed) {
     double rb=0,mg=0,lum=0,lum0=0;
-    cv::Vec3d means0(0,0,0), means1(0,0,0);
+    ipr::Vec3d means0(0,0,0), means1(0,0,0);
     int valid=0,clipped=0;
     for(int y=0;y<base.rows;++y) for(int x=0;x<base.cols;++x) {
-        const auto a=base.at<cv::Vec3d>(y,x), b=changed.at<cv::Vec3d>(y,x);
+        const auto a=ipr::at<ipr::Vec3d>(base, y,x), b=ipr::at<ipr::Vec3d>(changed, y,x);
         const double hiA=std::max({a[0],a[1],a[2]}),hiB=std::max({b[0],b[1],b[2]});
         lum+=.2126*b[0]+.7152*b[1]+.0722*b[2];
         lum0+=.2126*a[0]+.7152*a[1]+.0722*a[2];
@@ -119,7 +120,7 @@ int main(int argc,char **argv) {
                 for(int value:values) {
                     const int temp=feature=="temperature" ? value:5200;
                     const int tint=feature=="tint"?value:0;
-                    cv::Vec3d gains;
+                    ipr::Vec3d gains;
                     if(!CameraProfileEngine::whiteBalanceGains(context,temp,tint,gains,&error) ||
                        !CameraProfileEngine::renderFromCameraSignal(context, temp, tint, 0.0,rgb,&error)) throw std::runtime_error(error.toStdString());
                     const cv::Mat pixels=output(rgba(rgb));

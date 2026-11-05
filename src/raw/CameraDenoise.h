@@ -1,6 +1,8 @@
 #ifndef IPR_RAW_CAMERADENOISE_H
 #define IPR_RAW_CAMERADENOISE_H
 
+#include "Types.h"
+
 #include <opencv2/core.hpp>
 #include <functional>
 #include <utility>
@@ -22,8 +24,8 @@ struct NoiseModelSummary
     bool darkFloorApplied = false;
     bool globalFallbackAvailable = false;
     float low = 0, high = 0, globalSignal = 0;
-    cv::Vec3f globalSigma{};
-    std::vector<std::pair<float, cv::Vec3f>> nodes;
+    ipr::Vec3f globalSigma{};
+    std::vector<std::pair<float, ipr::Vec3f>> nodes;
 };
 
 struct Context

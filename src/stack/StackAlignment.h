@@ -1,6 +1,8 @@
 #ifndef IPR_STACK_STACKALIGNMENT_H
 #define IPR_STACK_STACKALIGNMENT_H
 
+#include "Types.h"
+
 #include <QString>
 #include <opencv2/core.hpp>
 
@@ -34,13 +36,13 @@ struct Options
 struct Result
 {
     bool valid = false;
-    cv::Matx33d referenceToFrame = cv::Matx33d::eye(); // pixel indices, whole resolution
+    ipr::Matrix33d referenceToFrame = ipr::Matrix33d::identity(); // pixel indices, whole resolution
     Model model = Model::Homography;
     int blocks = 0;            // matches kept on the finest level
     int inliers = 0;           // of which agree with the transform
     double residual = 0.0;     // RMS distance of the inliers, pixels
     double support = 0.0;      // smallest share of a side spanned by the inliers
-    cv::Rect2d inlierArea;     // what the inliers span in the reference, pixels
+    ipr::Rectd inlierArea;     // what the inliers span in the reference, pixels
     QString error;
 };
 

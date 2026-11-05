@@ -12,6 +12,7 @@
 // Usage:
 //   demosaicProbe OUTPUT.json CROPS_DIR RAW...
 #include "Demosaic.h"
+#include "OpenCvBridge.h"
 
 #include <QCoreApplication>
 #include <QCryptographicHash>
@@ -146,7 +147,7 @@ void rcdInterpolate(void *context)
             for (int x = 0; x < width; ++x)
                 for (int c = 0; c < 3; ++c)
                     d.image[size_t(y) * size_t(width) + size_t(x)][c] =
-                        std::uint16_t(std::clamp(std::lround(rgb.at<cv::Vec3f>(y, x)[c] * 65535.f), 0L, 65535L));
+                        std::uint16_t(std::clamp(std::lround(ipr::at<ipr::Vec3f>(rgb, y, x)[c] * 65535.f), 0L, 65535L));
     oursMs += std::chrono::duration<double, std::milli>(Clock::now() - t0).count();
 }
 // LibRaw keeps its callbacks protected: a subclass sets the interpolation step.
@@ -194,7 +195,7 @@ Planes split(const cv::Mat &rgb)
 {
     Planes p{cv::Mat(rgb.size(), CV_32F), cv::Mat(rgb.size(), CV_32F), cv::Mat(rgb.size(), CV_32F)};
     for (int y = 0; y < rgb.rows; ++y) {
-        const auto *s = rgb.ptr<cv::Vec3f>(y);
+        const auto *s = rgb.ptr<ipr::Vec3f>(y);
         auto *py = p.y.ptr<float>(y), *pco = p.co.ptr<float>(y), *pcg = p.cg.ptr<float>(y);
         for (int x = 0; x < rgb.cols; ++x) {
             py[x] = 0.25f * (s[x][0] + 2.f * s[x][1] + s[x][2]);
@@ -240,7 +241,7 @@ double rms(const cv::Mat &m) { return std::sqrt(cv::mean(m.mul(m))[0]); }
 cv::Mat blur(const cv::Mat &m, double sigma)
 {
     cv::Mat out;
-    cv::GaussianBlur(m, out, cv::Size(0, 0), sigma, sigma, cv::BORDER_REFLECT);
+    cv::GaussianBlur(m, out, ipr::Size(0, 0), sigma, sigma, cv::BORDER_REFLECT);
     return out;
 }
 
@@ -248,7 +249,7 @@ struct TileMeasure {
     double lumaHh, chromaHh, lumaMid, chromaMid, lumaFine, chromaFine;
 };
 
-TileMeasure measureTile(const cv::Mat &rgb, const cv::Rect &r)
+TileMeasure measureTile(const cv::Mat &rgb, const ipr::Recti &r)
 {
     const Planes p = split(rgb(r));
     const cv::Mat g1y = blur(p.y, 1), g4y = blur(p.y, 4);
@@ -264,13 +265,13 @@ TileMeasure measureTile(const cv::Mat &rgb, const cv::Rect &r)
 }
 
 // Flat and textured tiles chosen once on the AHD output, then reused for every variant.
-void chooseTiles(const cv::Mat &rgb, std::vector<cv::Rect> *flat, std::vector<cv::Rect> *detail)
+void chooseTiles(const cv::Mat &rgb, std::vector<ipr::Recti> *flat, std::vector<ipr::Recti> *detail)
 {
-    struct Candidate { cv::Rect r; double flatness, texture; };
+    struct Candidate { ipr::Recti r; double flatness, texture; };
     std::vector<Candidate> c;
     for (int y = Tile; y + 2 * Tile <= rgb.rows; y += Tile)
         for (int x = Tile; x + 2 * Tile <= rgb.cols; x += Tile) {
-            const cv::Rect r(x, y, Tile, Tile);
+            const ipr::Recti r(x, y, Tile, Tile);
             double minV, maxV;
             cv::minMaxLoc(rgb(r).reshape(1), &minV, &maxV);
             const Planes p = split(rgb(r));
@@ -296,11 +297,11 @@ double median(std::vector<double> v)
 }
 
 // 8-bit display of a tile: the same exposure for every variant, sRGB transfer.
-QImage display(const cv::Mat &rgb, const cv::Rect &r, double exposure)
+QImage display(const cv::Mat &rgb, const ipr::Recti &r, double exposure)
 {
     QImage out(2 * r.width, 2 * r.height, QImage::Format_RGB888);
     for (int y = 0; y < r.height; ++y) {
-        const auto *s = rgb.ptr<cv::Vec3f>(r.y + y) + r.x;
+        const auto *s = rgb.ptr<ipr::Vec3f>(r.y + y) + r.x;
         for (int x = 0; x < r.width; ++x) {
             int v[3];
             for (int c = 0; c < 3; ++c) {
@@ -325,7 +326,7 @@ cv::Mat binnedTruth(LibRaw &raw)
     cv::Mat truth(s.height / 2, s.width / 2, CV_32FC3);
     for (int y = 0; y < truth.rows; ++y)
         for (int x = 0; x < truth.cols; ++x) {
-            cv::Vec3f v(0, 0, 0);
+            ipr::Vec3f v(0, 0, 0);
             for (int dy = 0; dy < 2; ++dy)
                 for (int dx = 0; dx < 2; ++dx) {
                     const int r = 2 * y + dy, c = 2 * x + dx;
@@ -333,7 +334,7 @@ cv::Mat binnedTruth(LibRaw &raw)
                     const float value = mosaic[size_t(r + s.top_margin) * pitch + c + s.left_margin];
                     v[k == 3 ? 1 : k] += k == 0 || k == 2 ? value : 0.5f * value;
                 }
-            truth.at<cv::Vec3f>(y, x) = v;
+            ipr::at<ipr::Vec3f>(truth, y, x) = v;
         }
     return truth;
 }
@@ -346,14 +347,14 @@ void remosaic(LibRaw &raw, const cv::Mat &truth)
     for (int r = 0; r < truth.rows; ++r)
         for (int c = 0; c < truth.cols; ++c) {
             const int k = raw.COLOR(r, c);
-            const float v = truth.at<cv::Vec3f>(r, c)[k == 3 ? 1 : k];
+            const float v = ipr::at<ipr::Vec3f>(truth, r, c)[k == 3 ? 1 : k];
             mosaic[size_t(r + s.top_margin) * pitch + c + s.left_margin] = ushort(std::clamp(std::lround(v), 0L, 65535L));
         }
 }
 
 // Per-channel gain and offset mapping the truth to the processed output (black,
 // white balance and scaling), fitted once on AHD and reused for every variant.
-struct Fit { cv::Vec3d gain, offset; };
+struct Fit { ipr::Vec3d gain, offset; };
 
 Fit fitTruth(const cv::Mat &truth, const cv::Mat &out, const cv::Mat &valid)
 {
@@ -362,7 +363,7 @@ Fit fitTruth(const cv::Mat &truth, const cv::Mat &out, const cv::Mat &valid)
         double sx = 0, sy = 0, sxx = 0, sxy = 0, n = 0;
         for (int y = 0; y < truth.rows; y += 3)
             for (int x = 0; x < truth.cols; x += 3) {
-                const double t = truth.at<cv::Vec3f>(y, x)[c], o = out.at<cv::Vec3f>(y, x)[c];
+                const double t = ipr::at<ipr::Vec3f>(truth, y, x)[c], o = ipr::at<ipr::Vec3f>(out, y, x)[c];
                 if (!valid.at<uchar>(y, x) || o <= 0.0) continue;
                 sx += t; sy += o; sxx += t * t; sxy += t * o; n += 1;
             }
@@ -377,7 +378,7 @@ Fit fitTruth(const cv::Mat &truth, const cv::Mat &out, const cv::Mat &valid)
 // fails the same way where the white balance pushes a channel past white.
 QJsonObject syntheticError(const cv::Mat &truthOut, const cv::Mat &out, const cv::Mat &edges, const cv::Mat &valid)
 {
-    const cv::Rect inner(TruthBorder, TruthBorder, truthOut.cols - 2 * TruthBorder, truthOut.rows - 2 * TruthBorder);
+    const ipr::Recti inner(TruthBorder, TruthBorder, truthOut.cols - 2 * TruthBorder, truthOut.rows - 2 * TruthBorder);
     const Planes t = split(truthOut(inner)), o = split(out(inner));
     const cv::Mat dy = o.y - t.y, dco = o.co - t.co, dcg = o.cg - t.cg;
     const cv::Mat diff = out(inner) - truthOut(inner);
@@ -429,7 +430,7 @@ QJsonObject study(const QString &path, const QDir &crops)
     scene.insert("height", raw.imgdata.sizes.height);
     const double megapixels = raw.imgdata.sizes.width * double(raw.imgdata.sizes.height) / 1e6;
 
-    std::vector<cv::Rect> flat, detail;
+    std::vector<ipr::Recti> flat, detail;
     std::vector<TileMeasure> ahdFlat, ahdDetail;
     std::vector<QImage> montageTiles;
     double exposureFlat = 1, exposureDetail = 1;
@@ -486,7 +487,7 @@ QJsonObject study(const QString &path, const QDir &crops)
         results.insert(v.name, m);
         QImage pair(2 * CropSize, 4 * CropSize, QImage::Format_RGB888);
         {
-            const cv::Rect fr(flat[0].x, flat[0].y, CropSize, CropSize), dr(detail[0].x, detail[0].y, CropSize, CropSize);
+            const ipr::Recti fr(flat[0].x, flat[0].y, CropSize, CropSize), dr(detail[0].x, detail[0].y, CropSize, CropSize);
             const QImage a = display(out, fr, exposureFlat), b = display(out, dr, exposureDetail);
             for (int y = 0; y < a.height(); ++y)
                 for (int x = 0; x < a.width(); ++x) {
@@ -516,14 +517,14 @@ QJsonObject study(const QString &path, const QDir &crops)
     // (optical low-pass of a real sensor): unfiltered, every channel holds detail up
     // to Nyquist and all algorithms alias alike.
     cv::Mat truth = binnedTruth(raw);
-    cv::GaussianBlur(truth, truth, cv::Size(0, 0), TruthBlur, TruthBlur, cv::BORDER_REFLECT);
+    cv::GaussianBlur(truth, truth, ipr::Size(0, 0), TruthBlur, TruthBlur, cv::BORDER_REFLECT);
     remosaic(raw, truth);
     QJsonObject synthetic;
     Fit fit;
     cv::Mat truthOut, edges, valid;
     for (const Variant &v : selected) {
         double ms = 0;
-        const cv::Mat out = process(raw, v, &ms)(cv::Rect(0, 0, truth.cols, truth.rows)).clone();
+        const cv::Mat out = process(raw, v, &ms)(ipr::Recti(0, 0, truth.cols, truth.rows)).clone();
         if (truthOut.empty()) {
             // valid: no channel near white within 3 pixels, on the reference output
             std::vector<cv::Mat> channels;
@@ -536,7 +537,7 @@ QJsonObject study(const QString &path, const QDir &crops)
             for (int y = 0; y < truth.rows; ++y)
                 for (int x = 0; x < truth.cols; ++x)
                     for (int c = 0; c < 3; ++c)
-                        truthOut.at<cv::Vec3f>(y, x)[c] = float(fit.gain[c] * truth.at<cv::Vec3f>(y, x)[c] + fit.offset[c]);
+                        ipr::at<ipr::Vec3f>(truthOut, y, x)[c] = float(fit.gain[c] * ipr::at<ipr::Vec3f>(truth, y, x)[c] + fit.offset[c]);
             // edges: top 10 % of the truth luma gradient
             const Planes t = split(truthOut);
             cv::Mat gx, gy, mag;

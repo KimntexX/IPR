@@ -1,4 +1,5 @@
 #include "LocalAdjustments.h"
+#include "OpenCvBridge.h"
 
 #include <opencv2/imgproc.hpp>
 
@@ -23,9 +24,9 @@ void check(bool condition, const char *message)
     }
 }
 
-const cv::Size canvas(400, 300);
+const ipr::Size canvas(400, 300);
 
-Shape linear(cv::Point2f start, cv::Point2f end)
+Shape linear(ipr::Point2f start, ipr::Point2f end)
 {
     Shape shape;
     shape.kind = Kind::Linear;
@@ -34,7 +35,7 @@ Shape linear(cv::Point2f start, cv::Point2f end)
     return shape;
 }
 
-Shape radial(cv::Point2f centre, float radiusX, float radiusY, float feather)
+Shape radial(ipr::Point2f centre, float radiusX, float radiusY, float feather)
 {
     Shape shape;
     shape.kind = Kind::Radial;
@@ -45,7 +46,7 @@ Shape radial(cv::Point2f centre, float radiusX, float radiusY, float feather)
     return shape;
 }
 
-Shape brush(std::vector<cv::Point2f> points, float size, float feather = 0.0f, float flow = 1.0f)
+Shape brush(std::vector<ipr::Point2f> points, float size, float feather = 0.0f, float flow = 1.0f)
 {
     Shape shape;
     shape.kind = Kind::Brush;
@@ -95,7 +96,7 @@ void shapes()
 {
     // A vertical gradient: whole before its start, nothing after its end, half in the middle.
     const cv::Mat gradient = coverage(maskOf(linear({0.5f, 0.25f}, {0.5f, 0.75f})), canvas);
-    check(gradient.type() == CV_32FC1 && gradient.size() == canvas, "the coverage has the canvas's size");
+    check(gradient.type() == CV_32FC1 && ipr::fromCv(gradient.size()) == canvas, "the coverage has the canvas's size");
     check(at(gradient, 0.5f, 0.1f) == 1.0f, "before the start: all of it");
     check(at(gradient, 0.5f, 0.9f) == 0.0f, "after the end: nothing");
     check(std::abs(at(gradient, 0.5f, 0.5f) - 0.5f) < 0.02f, "in the middle: half");
@@ -146,25 +147,25 @@ void shapes()
     inverse.inverted = true;
     const cv::Mat flipped = coverage(maskOf(inverse), canvas);
     cv::Mat sum = flipped + gradient;
-    check(worstDifference(sum, cv::Mat(canvas, CV_32FC1, cv::Scalar(1))) < 1e-5, "an inverted shape is its complement");
+    check(worstDifference(sum, cv::Mat(ipr::toCv(canvas), CV_32FC1, cv::Scalar(1))) < 1e-5, "an inverted shape is its complement");
     check(cv::countNonZero(coverage(Mask{}, canvas)) == 0, "a mask without shapes covers nothing");
 }
 
 void ranges()
 {
     // A ramp of tones from black to white, across.
-    cv::Mat rgb(canvas, CV_32FC3);
+    cv::Mat rgb(ipr::toCv(canvas), CV_32FC3);
     for (int y = 0; y < rgb.rows; ++y)
         for (int x = 0; x < rgb.cols; ++x) {
             const float linearValue = std::pow(float(x) / float(rgb.cols - 1), 2.2f);
-            rgb.at<cv::Vec3f>(y, x) = cv::Vec3f(linearValue, linearValue, linearValue);
+            ipr::at<ipr::Vec3f>(rgb, y, x) = ipr::Vec3f(linearValue, linearValue, linearValue);
         }
     const cv::Mat luminance = rangeLuminance(rgb);
-    check(luminance.type() == CV_32FC1 && luminance.size() == canvas, "a luminance of the same size");
+    check(luminance.type() == CV_32FC1 && ipr::fromCv(luminance.size()) == canvas, "a luminance of the same size");
     check(at(luminance, 0.0f, 0.5f) < 0.01f && luminance.at<float>(150, 399) > 0.99f, "from 0 to 1");
     check(std::abs(at(luminance, 0.5f, 0.5f) - 0.5f) < 0.03f, "encoded as the eye reads it");
     cv::Mat extended(2, 2, CV_32FC3, cv::Scalar(-0.5, -0.5, -0.5));
-    extended.at<cv::Vec3f>(0, 0) = cv::Vec3f(9.f, 9.f, 9.f);
+    ipr::at<ipr::Vec3f>(extended, 0, 0) = ipr::Vec3f(9.f, 9.f, 9.f);
     const cv::Mat bounded = rangeLuminance(extended);
     check(std::abs(bounded.at<float>(0, 0) - 1.0f) < 1e-5f && bounded.at<float>(1, 1) == 0.0f, "bounded at both ends");
 
@@ -203,23 +204,23 @@ void resolutions()
 {
     // The same zone at every resolution: a preview is the export in small.
     const Mask mask = maskOf(radial({0.4f, 0.6f}, 0.2f, 0.3f, 0.6f));
-    const cv::Mat large = coverage(mask, cv::Size(1600, 1200));
+    const cv::Mat large = coverage(mask, ipr::Size(1600, 1200));
     cv::Mat reduced;
-    cv::resize(large, reduced, canvas, 0, 0, cv::INTER_AREA);
+    cv::resize(large, reduced, ipr::toCv(canvas), 0, 0, cv::INTER_AREA);
     const double worst = worstDifference(reduced, coverage(mask, canvas));
     if (worst > 0.01)
         std::cerr << "radial worst " << worst << '\n';
     check(worst <= 0.01, "a radial is the same at both resolutions");
 
     const Mask strokes = maskOf(brush({{0.2f, 0.2f}, {0.6f, 0.7f}, {0.8f, 0.3f}}, 0.06f, 0.5f));
-    cv::resize(coverage(strokes, cv::Size(1600, 1200)), reduced, canvas, 0, 0, cv::INTER_AREA);
+    cv::resize(coverage(strokes, ipr::Size(1600, 1200)), reduced, ipr::toCv(canvas), 0, 0, cv::INTER_AREA);
     const double worstStroke = worstDifference(reduced, coverage(strokes, canvas));
     // A soft edge falls by up to 0.125 per pixel here: an average over 4 x 4 samples differs a little.
     if (worstStroke > 0.03)
         std::cerr << "stroke worst " << worstStroke << '\n';
     check(worstStroke <= 0.03, "so is a stroke");
     const Mask ramp = maskOf(linear({0.1f, 0.2f}, {0.9f, 0.7f}));
-    cv::resize(coverage(ramp, cv::Size(1600, 1200)), reduced, canvas, 0, 0, cv::INTER_AREA);
+    cv::resize(coverage(ramp, ipr::Size(1600, 1200)), reduced, ipr::toCv(canvas), 0, 0, cv::INTER_AREA);
     check(worstDifference(reduced, coverage(ramp, canvas)) <= 0.01, "and a gradient");
 }
 
@@ -305,15 +306,15 @@ void maps()
     // Two opposite values cancel out where both cover.
     Mask plus = valued(whole(), Exposure, 1.0f), minus = valued(whole(), Exposure, -1.0f);
     check(cv::countNonZero(valueMaps({plus, minus}, canvas)[Exposure]) == 0, "opposite values cancel");
-    check(valueMaps(masks, cv::Size())[Exposure].empty(), "an empty canvas gives nothing");
+    check(valueMaps(masks, ipr::Size())[Exposure].empty(), "an empty canvas gives nothing");
 }
 
 void source()
 {
-    const cv::Size size(300, 200);
+    const ipr::Size size(300, 200);
     // A map whose value is its normalized u, to read where each pixel came from.
     Geometry::Settings straight;
-    cv::Mat map(size, CV_32FC1);
+    cv::Mat map(ipr::toCv(size), CV_32FC1);
     for (int y = 0; y < map.rows; ++y)
         for (int x = 0; x < map.cols; ++x)
             map.at<float>(y, x) = (float(x) + 0.5f) / float(map.cols);
@@ -324,29 +325,29 @@ void source()
     Geometry::Settings mirrored;
     mirrored.flipHorizontal = true;
     const cv::Mat flipped = LocalAdjustments::toSource(map, mirrored, size);
-    check(flipped.size() == size && std::abs(flipped.at<float>(100, 30) - (1.0f - (30.5f / 300.0f))) < 0.005f, "a mirror reads the other side");
+    check(ipr::fromCv(flipped.size()) == size && std::abs(flipped.at<float>(100, 30) - (1.0f - (30.5f / 300.0f))) < 0.005f, "a mirror reads the other side");
 
     // A quarter turn swaps the sides, and the map comes back to the source's.
     Geometry::Settings turned;
     turned.quarterTurns = 1;
-    const cv::Size canvasOfTurn = Geometry::canvasSize(turned, size);
-    cv::Mat turnedMap(canvasOfTurn, CV_32FC1);
+    const ipr::Size canvasOfTurn = Geometry::canvasSize(turned, size);
+    cv::Mat turnedMap(ipr::toCv(canvasOfTurn), CV_32FC1);
     for (int y = 0; y < turnedMap.rows; ++y)
         for (int x = 0; x < turnedMap.cols; ++x)
             turnedMap.at<float>(y, x) = (float(y) + 0.5f) / float(turnedMap.rows);
     const cv::Mat back = LocalAdjustments::toSource(turnedMap, turned, size);
-    check(back.size() == size, "a turned map comes back at the source's size");
+    check(ipr::fromCv(back.size()) == size, "a turned map comes back at the source's size");
     // A clockwise turn sends the source's left to the canvas's top.
     check(std::abs(back.at<float>(100, 30) - 30.5f / 300.0f) < 0.01f, "with each pixel where it belongs");
 
     // A landmark: a rotated canvas's value is read at the mapped source position.
     Geometry::Settings rotated;
     rotated.rotation = 8.0f;
-    const cv::Point2d sourcePoint(0.3, 0.4);
+    const ipr::Point2d sourcePoint(0.3, 0.4);
     const auto canvasPoint = Geometry::toCanvas(rotated, size, sourcePoint);
     check(canvasPoint.has_value(), "the point has its place on the canvas");
     if (canvasPoint) {
-        cv::Mat ramp(size, CV_32FC1);
+        cv::Mat ramp(ipr::toCv(size), CV_32FC1);
         for (int y = 0; y < ramp.rows; ++y)
             for (int x = 0; x < ramp.cols; ++x)
                 ramp.at<float>(y, x) = (float(x) + 0.5f) / float(ramp.cols);

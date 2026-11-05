@@ -190,7 +190,7 @@ bool complete(Result &result)
         ipr::allFinite(image.linearRgba);
     if (valid) {
         for (int y=0; y<image.linearRgba.rows && valid; ++y) {
-            const auto *row = image.linearRgba.ptr<cv::Vec4f>(y);
+            const auto *row = image.linearRgba.ptr<ipr::Vec4f>(y);
             for (int x=0; x<image.linearRgba.cols; ++x)
                 if (row[x][3] < 0.f || row[x][3] > 1.f) { valid=false; break; }
         }

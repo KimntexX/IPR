@@ -1,6 +1,8 @@
 #ifndef IPR_STACK_FRAMESPOOL_H
 #define IPR_STACK_FRAMESPOOL_H
 
+#include "Types.h"
+
 #include <QFile>
 #include <QString>
 #include <opencv2/core.hpp>
@@ -15,7 +17,7 @@ public:
     // False on a full disk. written grows by what reached the file.
     bool write(const cv::Mat &image, quint64 &written);
     // rows rows from row, of an image of this size and type.
-    bool read(const cv::Size &size, int type, int row, int rows, cv::Mat &band);
+    bool read(const ipr::Size &size, int type, int row, int rows, cv::Mat &band);
     // Gives the disk space back at once.
     void remove();
 

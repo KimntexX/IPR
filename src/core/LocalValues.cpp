@@ -1,5 +1,6 @@
 #include "LocalValues.h"
 #include "Parallel.h"
+#include "OpenCvBridge.h"
 
 #include <algorithm>
 #include <cmath>
@@ -14,7 +15,7 @@ constexpr int MaxMultiple = KeyOffset - 1;
 constexpr int MaxWidenings = 16;
 }
 
-Combinations::Combinations(std::vector<Axis> axes, const cv::Size &size, int maxCount)
+Combinations::Combinations(std::vector<Axis> axes, const ipr::Size &size, int maxCount)
     : m_axes(std::move(axes))
 {
     CV_Assert(int(m_axes.size()) <= MaxAxes && maxCount > 0);
@@ -37,7 +38,7 @@ Combinations::Combinations(std::vector<Axis> axes, const cv::Size &size, int max
     }
 }
 
-void Combinations::scan(const cv::Size &size)
+void Combinations::scan(const ipr::Size &size)
 {
     std::unordered_set<quint64> found;
     std::mutex mutex;
@@ -121,7 +122,7 @@ Combinations::Row Combinations::row(int y) const
 
 std::vector<float> latticeOf(float global, const cv::Mat &local, float low, float high, float step, int maxCount)
 {
-    const Combinations combinations({{global, &local, 1.0f, low, high, step}}, local.size(), maxCount);
+    const Combinations combinations({{global, &local, 1.0f, low, high, step}}, ipr::fromCv(local.size()), maxCount);
     std::vector<float> lattice;
     for (int index = 0; index < combinations.count(); ++index)
         lattice.push_back(combinations.values(index)[0]);

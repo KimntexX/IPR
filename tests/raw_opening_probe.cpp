@@ -1,6 +1,7 @@
 // Manual corpus diagnostic: no production switches, TIFF generation or sidecar writes.
 #include "RawDecoder.h"
 #include "CameraProfileEngine.h"
+#include "OpenCvBridge.h"
 #include <QCoreApplication>
 #include <QCryptographicHash>
 #include <QDateTime>
@@ -58,9 +59,9 @@ QJsonObject metrics(const ColorPipeline::WorkingImage &image) {
     if(output.isNull())throw std::runtime_error(error.toStdString());
     Accumulator before,after,roi;int clip=0;QJsonArray warmBands;std::array<Accumulator,12> bands;
     for(int y=0;y<image.linearRgba.rows;++y)for(int x=0;x<image.linearRgba.cols;++x) {
-        const auto p=image.linearRgba.at<cv::Vec4f>(y,x);
+        const auto p=ipr::at<ipr::Vec4f>(image.linearRgba, y,x);
         if(!std::isfinite(p[0])||!std::isfinite(p[1])||!std::isfinite(p[2]))throw std::runtime_error("Nonfinite pixel");
-        const cv::Vec3d diagnostic = WorkingColor::toSrgb() * cv::Vec3d(p[0],p[1],p[2]);
+        const ipr::Vec3d diagnostic = WorkingColor::toSrgb() * ipr::Vec3d(p[0],p[1],p[2]);
         before.add(diagnostic[0],diagnostic[1],diagnostic[2]);
         const QRgba64 pixel=reinterpret_cast<const QRgba64*>(output.constScanLine(y))[x];
         const double r=linear(pixel.red()/65535.),g=linear(pixel.green()/65535.),b=linear(pixel.blue()/65535.);
@@ -119,7 +120,7 @@ int main(int argc,char **argv) {
                 preview(current,"current");
                 if(full.dcpContext) {
                     auto context=*full.dcpContext;context.cameraRgb=sample(context.cameraRgb);
-                    record["camera_neutral"]=array(context.cameraNeutral.val,3);
+                    record["camera_neutral"]=array(context.cameraNeutral.values.data(),3);
                     record["profile_path"]=context.profilePath;record["profile_sha256"]=hash(context.profilePath);
                     const auto beforeProfile=context.cameraRgb.clone();
                     // Release full buffers before sample-only ablations.

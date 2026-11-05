@@ -84,8 +84,8 @@ cv::Mat blurSigma(const cv::Mat &plane, double sigma)
     if (factor == 1)
         return ipr::gaussianBlurred(plane, sigma, ipr::BlurBorder::MirrorEdge);
     cv::Mat result, small;
-    small = ipr::resized(plane, cv::Size(std::max(1, plane.cols / factor), std::max(1, plane.rows / factor)), ipr::Interpolation::Area);
-    result = ipr::resized(ipr::gaussianBlurred(small, sigma / factor, ipr::BlurBorder::MirrorEdge), plane.size(), ipr::Interpolation::Linear);
+    small = ipr::resized(plane, ipr::Size(std::max(1, plane.cols / factor), std::max(1, plane.rows / factor)), ipr::Interpolation::Area);
+    result = ipr::resized(ipr::gaussianBlurred(small, sigma / factor, ipr::BlurBorder::MirrorEdge), ipr::fromCv(plane.size()), ipr::Interpolation::Linear);
     return result;
 }
 
@@ -128,7 +128,7 @@ void applyBands(cv::Mat &linearRgb, Domain domain, const Bands &k, const Bands &
     cv::Mat luminance(linearRgb.size(), CV_32F), value(linearRgb.size(), CV_32F);
     ipr::parallelRows(linearRgb.rows, [&](int first, int last) {
         for (int y = first; y < last; ++y) {
-            const auto *p = linearRgb.ptr<cv::Vec3f>(y);
+            const auto *p = linearRgb.ptr<ipr::Vec3f>(y);
             float *l = luminance.ptr<float>(y), *v = value.ptr<float>(y);
             for (int x = 0; x < linearRgb.cols; ++x) {
                 l[x] = WorkingColor::nonNegativeLuminance(p[x]);
@@ -173,7 +173,7 @@ void applyBands(cv::Mat &linearRgb, Domain domain, const Bands &k, const Bands &
     }
     ipr::parallelRows(linearRgb.rows, [&](int first, int last) {
         for (int y = first; y < last; ++y) {
-            auto *p = linearRgb.ptr<cv::Vec3f>(y);
+            auto *p = linearRgb.ptr<ipr::Vec3f>(y);
             const float *l = luminance.ptr<float>(y), *v = value.ptr<float>(y), *d = delta.ptr<float>(y);
             const float *values = local ? local->values.ptr<float>(y) : nullptr;
             for (int x = 0; x < linearRgb.cols; ++x) {
@@ -188,7 +188,7 @@ void applyBands(cv::Mat &linearRgb, Domain domain, const Bands &k, const Bands &
 void applyEffect(cv::Mat &linearRgb, Domain domain, const std::array<Row, 6> &table, const Bands &reduce,
                  const Bands &enhance, int slider, const cv::Mat &map, double pixelScale)
 {
-    if (map.empty() || !LocalValues::fits(map, linearRgb.size())) {
+    if (map.empty() || !LocalValues::fits(map, ipr::fromCv(linearRgb.size()))) {
         if (slider != 0)
             applyBands(linearRgb, domain, detailGainAt(table, slider), slider < 0 ? reduce : enhance, pixelScale);
         return;

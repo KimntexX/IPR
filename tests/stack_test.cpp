@@ -1,6 +1,7 @@
 #include "StackAlignment.h"
 #include "StackJob.h"
 #include "StackMerge.h"
+#include "OpenCvBridge.h"
 
 #include <QCoreApplication>
 #include <QDir>
@@ -25,12 +26,12 @@ void check(bool condition, const char *message)
 }
 
 // Texture at several scales, in the range of a linear camera image.
-cv::Mat scene(const cv::Size &size, uint64_t seed = 7)
+cv::Mat scene(const ipr::Size &size, uint64_t seed = 7)
 {
     cv::RNG random(seed);
-    cv::Mat image = cv::Mat::zeros(size, CV_32FC3);
+    cv::Mat image = cv::Mat::zeros(ipr::toCv(size), CV_32FC3);
     for (const double sigma : {1.5, 5.0, 18.0}) {
-        cv::Mat layer(size, CV_32FC3);
+        cv::Mat layer(ipr::toCv(size), CV_32FC3);
         random.fill(layer, cv::RNG::NORMAL, cv::Scalar::all(0), cv::Scalar::all(1));
         cv::GaussianBlur(layer, layer, cv::Size(), sigma);
         cv::Scalar mean, deviation;
@@ -50,27 +51,27 @@ cv::Mat noisy(const cv::Mat &image, double sigma, uint64_t seed)
 }
 
 // The frame a camera moved by referenceToFrame would have seen of the scene.
-cv::Mat seenFrom(const cv::Mat &base, const cv::Matx33d &referenceToFrame)
+cv::Mat seenFrom(const cv::Mat &base, const ipr::Matrix33d &referenceToFrame)
 {
     cv::Mat frame;
-    cv::warpPerspective(base, frame, referenceToFrame, base.size(), cv::INTER_LANCZOS4, cv::BORDER_REPLICATE);
+    cv::warpPerspective(base, frame, ipr::toCv(referenceToFrame), base.size(), cv::INTER_LANCZOS4, cv::BORDER_REPLICATE);
     return frame;
 }
 
-double cornerError(const cv::Matx33d &found, const cv::Matx33d &truth, const cv::Size &size)
+double cornerError(const ipr::Matrix33d &found, const ipr::Matrix33d &truth, const ipr::Size &size)
 {
     double worst = 0.0;
     const double margin = 0.1;
     for (const double u : {margin, 1.0 - margin})
         for (const double v : {margin, 1.0 - margin}) {
-            const cv::Vec3d p(u * size.width, v * size.height, 1.0);
-            const cv::Vec3d a = found * p, b = truth * p;
+            const ipr::Vec3d p(u * size.width, v * size.height, 1.0);
+            const ipr::Vec3d a = found * p, b = truth * p;
             worst = std::max(worst, std::hypot(a[0] / a[2] - b[0] / b[2], a[1] / a[2] - b[1] / b[2]));
         }
     return worst;
 }
 
-cv::Matx33d rotation(double degrees, const cv::Size &size, double dx, double dy)
+ipr::Matrix33d rotation(double degrees, const ipr::Size &size, double dx, double dy)
 {
     const double r = degrees * CV_PI / 180.0, c = std::cos(r), s = std::sin(r);
     const double cx = size.width / 2.0, cy = size.height / 2.0;
@@ -91,19 +92,19 @@ void rectangles()
 {
     using StackJob::largestRectangle;
     check(largestRectangle({}).empty(), "no rows, no rectangle");
-    check(largestRectangle({cv::Vec2i(5, 5), cv::Vec2i(9, 2)}).empty(), "empty spans, no rectangle");
-    check(largestRectangle({cv::Vec2i(2, 8)}) == cv::Rect(2, 0, 6, 1), "a single row");
+    check(largestRectangle({ipr::Vec2i(5, 5), ipr::Vec2i(9, 2)}).empty(), "empty spans, no rectangle");
+    check(largestRectangle({ipr::Vec2i(2, 8)}) == ipr::Recti(2, 0, 6, 1), "a single row");
     // A diamond: the best rectangle holds its middle rows.
-    std::vector<cv::Vec2i> diamond;
+    std::vector<ipr::Vec2i> diamond;
     for (int y = 0; y < 21; ++y) {
         const int half = 10 - std::abs(y - 10);
         diamond.emplace_back(10 - half, 10 + half + 1);
     }
-    const cv::Rect best = largestRectangle(diamond);
+    const ipr::Recti best = largestRectangle(diamond);
     check(best.area() >= 110 && best.area() <= 121, "a diamond keeps about half its area");
     for (int y = best.y; y < best.y + best.height; ++y)
         check(best.x >= diamond[size_t(y)][0] && best.x + best.width <= diamond[size_t(y)][1], "the rectangle stays inside");
-    check(largestRectangle({cv::Vec2i(0, 0), cv::Vec2i(1, 4), cv::Vec2i(1, 4), cv::Vec2i(0, 0)}) == cv::Rect(1, 1, 3, 2),
+    check(largestRectangle({ipr::Vec2i(0, 0), ipr::Vec2i(1, 4), ipr::Vec2i(1, 4), ipr::Vec2i(0, 0)}) == ipr::Recti(1, 1, 3, 2),
           "empty rows at both ends are left out");
 }
 
@@ -120,17 +121,17 @@ void merging()
     std::vector<cv::Mat> few;
     for (const float value : {0.1f, 0.2f, 0.9f})
         few.emplace_back(2, 2, CV_32FC3, cv::Scalar::all(value));
-    check(StackMerge::merge(few, 3.0, merged) && std::abs(merged.at<cv::Vec3f>(0, 0)[1] - 0.4f) < 1e-6f, "three frames average");
+    check(StackMerge::merge(few, 3.0, merged) && std::abs(ipr::at<ipr::Vec3f>(merged, 0, 0)[1] - 0.4f) < 1e-6f, "three frames average");
 
     // Enough frames: what flashed in one of them goes, the rest averages.
     std::vector<cv::Mat> many;
     for (int i = 0; i < 9; ++i)
         many.emplace_back(4, 4, CV_32FC3, cv::Scalar::all(0.2 + 0.001 * i));
-    many[3].at<cv::Vec3f>(1, 1) = cv::Vec3f(0.9f, 0.1f, 0.9f);
+    ipr::at<ipr::Vec3f>(many[3], 1, 1) = ipr::Vec3f(0.9f, 0.1f, 0.9f);
     StackMerge::Statistics statistics;
     check(StackMerge::merge(many, 3.0, merged, &statistics), "nine frames merge");
     const float others = float((0.2 * 9 + 0.001 * 36 - (0.2 + 0.003)) / 8.0);
-    const cv::Vec3f mergedPixel = merged.at<cv::Vec3f>(1, 1);
+    const ipr::Vec3f mergedPixel = ipr::at<ipr::Vec3f>(merged, 1, 1);
     check(std::abs(mergedPixel[0] - others) < 1e-5f && std::abs(mergedPixel[1] - others) < 1e-5f, "the outlier is out, colour included");
     check(statistics.samples == 16 * 9 && statistics.rejected >= 1, "the statistics count it");
 
@@ -141,7 +142,7 @@ void merging()
     for (int i = 0; i < 12; ++i) {
         cv::Mat frame(64, 64, CV_32FC3, cv::Scalar::all(0.05));
         const int edge = 32 + (i % 2);
-        frame(cv::Rect(edge, 0, 64 - edge, 64)).setTo(cv::Scalar::all(0.6));
+        frame(ipr::toCv(ipr::Recti(edge, 0, 64 - edge, 64))).setTo(cv::Scalar::all(0.6));
         cv::Mat noise(frame.size(), CV_32FC3);
         waver.fill(noise, cv::RNG::NORMAL, cv::Scalar::all(0), cv::Scalar::all(0.01));
         wavering.push_back(frame + noise);
@@ -149,7 +150,7 @@ void merging()
     check(StackMerge::merge(wavering, 3.0, merged), "a wavering edge merges");
     double teeth = 0.0;
     for (int y = 1; y < 63; ++y) {
-        const float here = merged.at<cv::Vec3f>(y, 32)[1], next = merged.at<cv::Vec3f>(y + 1, 32)[1];
+        const float here = ipr::at<ipr::Vec3f>(merged, y, 32)[1], next = ipr::at<ipr::Vec3f>(merged, y + 1, 32)[1];
         teeth = std::max(teeth, double(std::abs(here - next)));
     }
     if (teeth > 0.1)
@@ -158,21 +159,21 @@ void merging()
 
     // Signed values stay signed; rejection off keeps the outlier.
     std::vector<cv::Mat> negative(6, cv::Mat(2, 2, CV_32FC3, cv::Scalar::all(-0.01)));
-    check(StackMerge::merge(negative, 3.0, merged) && merged.at<cv::Vec3f>(0, 0)[0] < -0.009f, "values below the black stay");
-    check(StackMerge::merge(many, 0.0, merged, &statistics) && statistics.rejected == 0 && merged.at<cv::Vec3f>(1, 1)[0] > others, "sigma 0 keeps all");
+    check(StackMerge::merge(negative, 3.0, merged) && ipr::at<ipr::Vec3f>(merged, 0, 0)[0] < -0.009f, "values below the black stay");
+    check(StackMerge::merge(many, 0.0, merged, &statistics) && statistics.rejected == 0 && ipr::at<ipr::Vec3f>(merged, 1, 1)[0] > others, "sigma 0 keeps all");
 }
 
 void alignment()
 {
-    const cv::Size size(900, 600);
+    const ipr::Size size(900, 600);
     const cv::Mat base = scene(size);
     const StackAlignment::Pyramid reference = StackAlignment::buildPyramid(noisy(base, 0.004, 1));
-    check(reference.size() >= 2 && reference[0].size() == size, "the pyramid starts at the whole size");
+    check(reference.size() >= 2 && ipr::fromCv(reference[0].size()) == size, "the pyramid starts at the whole size");
     check(StackAlignment::buildPyramid(cv::Mat()).empty(), "no image, no pyramid");
     check(StackAlignment::buildPyramid(cv::Mat(4, 4, CV_8UC3)).empty(), "a wrong type gives no pyramid");
 
-    const std::vector<std::pair<const char *, cv::Matx33d>> cases{
-        {"identity", cv::Matx33d::eye()},
+    const std::vector<std::pair<const char *, ipr::Matrix33d>> cases{
+        {"identity", ipr::Matrix33d::identity()},
         {"sub-pixel shift", {1, 0, 0.37, 0, 1, -0.62, 0, 0, 1}},
         {"a large shift", {1, 0, 37.3, 0, 1, -21.7, 0, 0, 1}},
         {"a rotation", rotation(1.5, size, 6.2, -3.4)},
@@ -194,39 +195,39 @@ void alignment()
 
     // A moving object over a tenth of the frame does not pull the transform.
     {
-        const cv::Matx33d truth(1, 0, 14.0, 0, 1, 9.0, 0, 0, 1);
+        const ipr::Matrix33d truth(1, 0, 14.0, 0, 1, 9.0, 0, 0, 1);
         cv::Mat frame = seenFrom(base, truth);
-        scene(cv::Size(280, 200), 99).copyTo(frame(cv::Rect(300, 200, 280, 200)));
+        scene(ipr::Size(280, 200), 99).copyTo(frame(ipr::toCv(ipr::Recti(300, 200, 280, 200))));
         const StackAlignment::Result found = StackAlignment::estimate(reference, StackAlignment::buildPyramid(noisy(frame, 0.004, 3)));
         check(found.valid && cornerError(found.referenceToFrame, truth, size) <= 0.2, "a moving object is outvoted");
     }
 
     // Texture in a small area only: a homography would be a guess there.
     {
-        cv::Mat dark(size, CV_32FC3, cv::Scalar::all(0.02));
-        scene(cv::Size(220, 180), 5).copyTo(dark(cv::Rect(340, 210, 220, 180)));
-        const cv::Matx33d truth(1, 0, 8.0, 0, 1, -5.0, 0, 0, 1);
+        cv::Mat dark(ipr::toCv(size), CV_32FC3, cv::Scalar::all(0.02));
+        scene(ipr::Size(220, 180), 5).copyTo(dark(ipr::toCv(ipr::Recti(340, 210, 220, 180))));
+        const ipr::Matrix33d truth(1, 0, 8.0, 0, 1, -5.0, 0, 0, 1);
         const StackAlignment::Result found = StackAlignment::estimate(
             StackAlignment::buildPyramid(noisy(dark, 0.002, 4)), StackAlignment::buildPyramid(noisy(seenFrom(dark, truth), 0.002, 5)));
         check(found.valid, "a small textured area registers");
         check(found.model == StackAlignment::Model::Similarity, "with a transform it can hold");
-        cv::Vec3d centre = found.referenceToFrame * cv::Vec3d(450, 300, 1);
+        ipr::Vec3d centre = found.referenceToFrame * ipr::Vec3d(450, 300, 1);
         check(std::hypot(centre[0] / centre[2] - 458, centre[1] / centre[2] - 295) <= 0.3, "and the right shift on that area");
     }
 
     // A small subject on an empty background, as the Moon: a regular grid hardly touches it.
     {
-        const cv::Size wide(1800, 1200);
-        cv::Mat sky(wide, CV_32FC3, cv::Scalar::all(0.002));
-        scene(cv::Size(150, 150), 13).copyTo(sky(cv::Rect(1000, 300, 150, 150)));
-        const cv::Matx33d truth(1, 0, 45.0, 0, 1, 18.0, 0, 0, 1);
+        const ipr::Size wide(1800, 1200);
+        cv::Mat sky(ipr::toCv(wide), CV_32FC3, cv::Scalar::all(0.002));
+        scene(ipr::Size(150, 150), 13).copyTo(sky(ipr::toCv(ipr::Recti(1000, 300, 150, 150))));
+        const ipr::Matrix33d truth(1, 0, 45.0, 0, 1, 18.0, 0, 0, 1);
         const StackAlignment::Result found = StackAlignment::estimate(
             StackAlignment::buildPyramid(noisy(sky, 0.002, 8)), StackAlignment::buildPyramid(noisy(seenFrom(sky, truth), 0.002, 9)));
         if (!found.valid)
             std::cerr << "small subject: " << found.error.toStdString() << '\n';
         check(found.valid, "a small subject registers");
         check(found.model == StackAlignment::Model::Similarity, "with what so small a support can hold");
-        const cv::Vec3d at = found.referenceToFrame * cv::Vec3d(1075, 375, 1);
+        const ipr::Vec3d at = found.referenceToFrame * ipr::Vec3d(1075, 375, 1);
         const double error = std::hypot(at[0] / at[2] - 1120, at[1] / at[2] - 393);
         if (error > 0.3)
             std::cerr << "small subject error " << error << '\n';
@@ -235,12 +236,12 @@ void alignment()
 
     // No detail, or another scene: a reason, never a guess.
     {
-        const cv::Mat flat(size, CV_32FC3, cv::Scalar::all(0.4));
+        const cv::Mat flat(ipr::toCv(size), CV_32FC3, cv::Scalar::all(0.4));
         const StackAlignment::Result found = StackAlignment::estimate(reference, StackAlignment::buildPyramid(noisy(flat, 0.004, 6)));
         check(!found.valid && !found.error.isEmpty(), "a uniform frame fails with its reason");
         const StackAlignment::Result other = StackAlignment::estimate(reference, StackAlignment::buildPyramid(scene(size, 1234)));
         check(!other.valid, "another scene fails");
-        const StackAlignment::Result small = StackAlignment::estimate(reference, StackAlignment::buildPyramid(scene(cv::Size(600, 400))));
+        const StackAlignment::Result small = StackAlignment::estimate(reference, StackAlignment::buildPyramid(scene(ipr::Size(600, 400))));
         check(!small.valid && !small.error.isEmpty(), "another size fails");
         const StackAlignment::Result stoppedEarly = StackAlignment::estimate(reference, reference, {}, [] { return true; });
         check(!stoppedEarly.valid, "cancellation stops the registration");
@@ -248,15 +249,15 @@ void alignment()
 }
 
 // A near object over a far wall: the object lies elsewhere than one transform says.
-cv::Mat withParallax(const cv::Mat &base, const cv::Point2d &shift)
+cv::Mat withParallax(const cv::Mat &base, const ipr::Point2d &shift)
 {
-    const cv::Rect object(180, 90, 280, 240);
+    const ipr::Recti object(180, 90, 280, 240);
     cv::Mat frame = base.clone();
-    const cv::Mat near = scene(base.size(), 21);
+    const cv::Mat near = scene(ipr::fromCv(base.size()), 21);
     cv::Mat moved;
     const cv::Matx23d translation(1, 0, shift.x, 0, 1, shift.y);
     cv::warpAffine(near, moved, translation, base.size(), cv::INTER_LANCZOS4, cv::BORDER_REPLICATE);
-    moved(object).copyTo(frame(object));
+    moved(ipr::toCv(object)).copyTo(frame(ipr::toCv(object)));
     return frame;
 }
 
@@ -267,28 +268,28 @@ void localFields()
     check(localField(cv::Mat(8, 8, CV_32FC1), cv::Mat(9, 8, CV_32FC1)).displacements.empty(), "different sizes, no field");
     check(localField(cv::Mat(8, 8, CV_8UC1), cv::Mat(8, 8, CV_8UC1)).displacements.empty(), "a wrong type, no field");
 
-    const cv::Size size(1200, 800);
+    const ipr::Size size(1200, 800);
     const cv::Mat base = scene(size);
     const auto luminance = [](const cv::Mat &rgb) { return StackAlignment::buildPyramid(rgb)[0]; };
     const cv::Mat reference = luminance(noisy(base, 0.004, 1));
 
     // Nothing moved: the field stays at zero.
     StackAlignment::LocalField still = localField(reference, luminance(noisy(base, 0.004, 2)));
-    check(still.displacements.size() == size && still.measured > still.sites / 2, "a textured frame measures its blocks");
+    check(ipr::fromCv(still.displacements.size()) == size && still.measured > still.sites / 2, "a textured frame measures its blocks");
     check(still.largest < 0.3, "nothing moved, nothing to correct");
 
     // A shift everywhere: found within a tenth of a pixel in the middle of the frame.
     const cv::Matx23d everywhere(1, 0, 3.4, 0, 1, -2.2);
     cv::Mat shifted;
-    cv::warpAffine(base, shifted, everywhere, size, cv::INTER_LANCZOS4, cv::BORDER_REPLICATE);
+    cv::warpAffine(base, shifted, everywhere, ipr::toCv(size), cv::INTER_LANCZOS4, cv::BORDER_REPLICATE);
     const StackAlignment::LocalField all = localField(reference, luminance(noisy(shifted, 0.004, 3)));
-    const cv::Vec2f middle = all.displacements.at<cv::Vec2f>(400, 600);
+    const ipr::Vec2f middle = ipr::at<ipr::Vec2f>(all.displacements, 400, 600);
     if (std::abs(middle[0] - 3.4f) > 0.1f || std::abs(middle[1] + 2.2f) > 0.1f)
         std::cerr << "middle " << middle[0] << ' ' << middle[1] << '\n';
     check(std::abs(middle[0] - 3.4f) <= 0.1f && std::abs(middle[1] + 2.2f) <= 0.1f, "a shift is measured");
 
     // No texture: nothing to measure, and no invented motion.
-    const cv::Mat flat(size, CV_32FC3, cv::Scalar::all(0.4));
+    const cv::Mat flat(ipr::toCv(size), CV_32FC3, cv::Scalar::all(0.4));
     const StackAlignment::LocalField none = localField(luminance(noisy(flat, 0.004, 4)), luminance(noisy(flat, 0.004, 5)));
     check(none.measured <= none.sites / 50 && none.largest < 1.0, "a flat frame stays at zero");
     const StackAlignment::LocalField beyond = localField(reference, luminance(noisy(scene(size, 77), 0.004, 6)));
@@ -298,10 +299,10 @@ void localFields()
 void parallax()
 {
     // Nine views where a near object moves against the wall, as with a moving hand.
-    const cv::Size size(640, 420);
+    const ipr::Size size(640, 420);
     const int count = 9;
     const cv::Mat base = scene(size);
-    const cv::Mat clean = withParallax(base, cv::Point2d(0, 0));
+    const cv::Mat clean = withParallax(base, ipr::Point2d(0, 0));
     QTemporaryDir root;
     const auto stack = [&](bool local) {
         StackJob::Request request;
@@ -315,7 +316,7 @@ void parallax()
         request.frame = [&](int index) {
             const double step = index - count / 2;
             StackJob::Frame frame;
-            frame.cameraRgb = noisy(withParallax(base, cv::Point2d(step * 0.8, step * -0.5)), 0.02, uint64_t(300 + index));
+            frame.cameraRgb = noisy(withParallax(base, ipr::Point2d(step * 0.8, step * -0.5)), 0.02, uint64_t(300 + index));
             return frame;
         };
         return StackJob::run(request);
@@ -325,10 +326,10 @@ void parallax()
     check(global.success && refined.success, "both stacks succeed");
     if (!global.success || !refined.success)
         return;
-    const cv::Rect middle(260, 150, 120, 120);
+    const ipr::Recti middle(260, 150, 120, 120);
     const auto errorAt = [&](const StackJob::Result &result) {
-        const cv::Rect inResult = middle - result.commonArea.tl();
-        cv::Mat difference = result.cameraRgb(inResult) - clean(middle);
+        const ipr::Recti inResult = middle - result.commonArea.tl();
+        cv::Mat difference = result.cameraRgb(ipr::toCv(inResult)) - clean(ipr::toCv(middle));
         return cv::norm(difference, cv::NORM_L2) / std::sqrt(double(difference.total() * 3));
     };
     const double before = errorAt(global), after = errorAt(refined);
@@ -344,8 +345,8 @@ cv::Mat deformed(const cv::Mat &image, double amplitude, uint64_t seed)
 {
     cv::RNG random(seed);
     // Cells much smaller than the subject: no single transform follows them.
-    const cv::Size cells(image.cols / 60, image.rows / 60);
-    cv::Mat coarseX(cells, CV_32FC1), coarseY(cells, CV_32FC1);
+    const ipr::Size cells(image.cols / 60, image.rows / 60);
+    cv::Mat coarseX(ipr::toCv(cells), CV_32FC1), coarseY(ipr::toCv(cells), CV_32FC1);
     random.fill(coarseX, cv::RNG::NORMAL, 0.0, amplitude);
     random.fill(coarseY, cv::RNG::NORMAL, 0.0, amplitude);
     cv::Mat moveX, moveY;
@@ -367,11 +368,11 @@ bool scratchEmpty(const QTemporaryDir &root);
 void turbulence()
 {
     // A disc of detail on a black sky, drifting, deformed differently in each view.
-    const cv::Size size(1400, 1000);
-    const cv::Rect disc(600, 380, 240, 240);
+    const ipr::Size size(1400, 1000);
+    const ipr::Recti disc(600, 380, 240, 240);
     const cv::Mat detail = scene(disc.size(), 31) * 1.5;
-    cv::Mat sky(size, CV_32FC3, cv::Scalar::all(0.001));
-    detail.copyTo(sky(disc));
+    cv::Mat sky(ipr::toCv(size), CV_32FC3, cv::Scalar::all(0.001));
+    detail.copyTo(sky(ipr::toCv(disc)));
     const int count = 12;
     QTemporaryDir root;
     const auto stack = [&](bool correct, int blurred) {
@@ -384,7 +385,7 @@ void turbulence()
         request.frame = [&, blurred](int index) {
             cv::Mat moved;
             const cv::Matx23d drift(1, 0, (index - count / 2) * 3.1, 0, 1, (index - count / 2) * 1.9);
-            cv::warpAffine(deformed(sky, 0.8, uint64_t(40 + index)), moved, drift, size, cv::INTER_LANCZOS4, cv::BORDER_REPLICATE);
+            cv::warpAffine(deformed(sky, 0.8, uint64_t(40 + index)), moved, drift, ipr::toCv(size), cv::INTER_LANCZOS4, cv::BORDER_REPLICATE);
             // The first views are badly seen: blurred.
             if (index < blurred)
                 cv::GaussianBlur(moved, moved, cv::Size(), 1.6);
@@ -424,10 +425,10 @@ void turbulence()
     check(blurredCount == 4 && blurredSum / blurredCount < sharpSum / sharpCount, "a blurred view measures less sharp");
 
     // Closer to the true subject than the plain stack, which averages the deformations.
-    const cv::Rect middle(disc.x + 20, disc.y + 20, disc.width - 40, disc.height - 40);
+    const ipr::Recti middle(disc.x + 20, disc.y + 20, disc.width - 40, disc.height - 40);
     const auto errorOf = [&](const StackJob::Result &result) {
-        const cv::Rect inResult = middle - result.commonArea.tl();
-        cv::Mat difference = result.cameraRgb(inResult) - sky(middle);
+        const ipr::Recti inResult = middle - result.commonArea.tl();
+        cv::Mat difference = result.cameraRgb(ipr::toCv(inResult)) - sky(ipr::toCv(middle));
         return cv::norm(difference, cv::NORM_L2) / std::sqrt(double(difference.total() * 3));
     };
     const double before = errorOf(plain), after = errorOf(corrected);
@@ -436,8 +437,8 @@ void turbulence()
     check(after <= before * 0.95, "the pass recovers detail the first stack lost");
 
     // The sky away from the subject stays that of the first stack.
-    const cv::Rect far(60, 60, 200, 200);
-    const auto at = [](const StackJob::Result &result, const cv::Rect &area) { return result.cameraRgb(area - result.commonArea.tl()); };
+    const ipr::Recti far(60, 60, 200, 200);
+    const auto at = [](const StackJob::Result &result, const ipr::Recti &area) { return result.cameraRgb(ipr::toCv(area - result.commonArea.tl())); };
     check(sameBytes(at(plain, far), at(corrected, far)), "the rest of the image is untouched");
     check(scratchEmpty(root), "and the scratch folder is gone");
 
@@ -445,11 +446,11 @@ void turbulence()
     cv::Mat merged(100, 100, CV_32FC3, cv::Scalar::all(0.2));
     StackTurbulence::View view;
     view.pixels = cv::Mat(100, 100, CV_32FC3, cv::Scalar::all(0.2));
-    StackTurbulence::Report report = StackTurbulence::refine(merged, cv::Rect(0, 0, 200, 200), cv::Point(), {view, view, view});
+    StackTurbulence::Report report = StackTurbulence::refine(merged, ipr::Recti(0, 0, 200, 200), ipr::Point2i(), {view, view, view});
     check(!report.applied && !report.reason.isEmpty(), "an area outside the image is refused");
-    report = StackTurbulence::refine(merged, cv::Rect(0, 0, 50, 50), cv::Point(), {view});
+    report = StackTurbulence::refine(merged, ipr::Recti(0, 0, 50, 50), ipr::Point2i(), {view});
     check(!report.applied && !report.reason.isEmpty(), "too few views are refused");
-    report = StackTurbulence::refine(merged, cv::Rect(0, 0, 50, 50), cv::Point(), {view, view, view}, {}, [] { return true; });
+    report = StackTurbulence::refine(merged, ipr::Recti(0, 0, 50, 50), ipr::Point2i(), {view, view, view}, {}, [] { return true; });
     check(!report.applied, "cancellation stops the pass");
     check(cv::norm(merged - cv::Scalar::all(0.2), cv::NORM_INF) < 1e-6, "and a refused pass leaves the stack");
 }
@@ -458,7 +459,7 @@ void turbulence()
 struct Series
 {
     cv::Mat base;
-    std::vector<cv::Matx33d> moves;
+    std::vector<ipr::Matrix33d> moves;
     double noise = 0.02;
     int calls = 0;
 
@@ -471,13 +472,13 @@ struct Series
     }
 };
 
-Series makeSeries(const cv::Size &size, int count)
+Series makeSeries(const ipr::Size &size, int count)
 {
     Series series;
     series.base = scene(size);
     cv::RNG random(42);
     for (int i = 0; i < count; ++i)
-        series.moves.push_back(i == count / 2 ? cv::Matx33d::eye()
+        series.moves.push_back(i == count / 2 ? ipr::Matrix33d::identity()
                                               : rotation(random.uniform(-0.4, 0.4), size, random.uniform(-12.0, 12.0), random.uniform(-9.0, 9.0)));
     return series;
 }
@@ -497,7 +498,7 @@ bool scratchEmpty(const QTemporaryDir &root)
 
 void job()
 {
-    const cv::Size size(600, 400);
+    const ipr::Size size(600, 400);
     const int count = 9;
     QTemporaryDir root;
     check(root.isValid(), "a scratch root for the test");
@@ -528,12 +529,12 @@ void job()
     check(scratchEmpty(root), "the scratch folder is gone");
     check(result.scratchBytes == StackJob::scratchBytesNeeded(count, size), "the frames were written");
     check(lastDone == lastTotal && lastTotal > count, "the progress ends complete");
-    check(result.cameraRgb.size() == result.commonArea.size() && result.commonArea.area() > size.area() / 2, "the common area stays large");
-    const cv::Rect bounds(0, 0, size.width, size.height);
+    check(ipr::fromCv(result.cameraRgb.size()) == result.commonArea.size() && result.commonArea.area() > size.area() / 2, "the common area stays large");
+    const ipr::Recti bounds(0, 0, size.width, size.height);
     check((result.commonArea & bounds) == result.commonArea, "the common area lies in the frame");
 
     // The gain: towards 1/sqrt(N) against one frame, measured on the known scene.
-    const cv::Mat truth = series.base(result.commonArea);
+    const cv::Mat truth = series.base(ipr::toCv(result.commonArea));
     const double single = noiseOf(noisy(truth, series.noise, 500), truth);
     const double stacked = noiseOf(result.cameraRgb, truth);
     if (stacked > single / 2.2 || stacked < single / 4.5)
@@ -567,13 +568,13 @@ void job()
         if (index == 1)
             frame.cameraRgb *= 1.08;
         if (index == 2)
-            frame.cameraRgb(cv::Rect(280, 180, 60, 60)).setTo(cv::Scalar::all(0.95));
+            frame.cameraRgb(ipr::toCv(ipr::Recti(280, 180, 60, 60))).setTo(cv::Scalar::all(0.95));
         return frame;
     };
     const StackJob::Result corrected = StackJob::run(lit);
     check(corrected.success && std::abs(corrected.frames[1].gains[1] - 1.0 / 1.08) < 0.01, "a flicker is measured and undone");
     if (corrected.success) {
-        const cv::Mat clean = moved.base(corrected.commonArea);
+        const cv::Mat clean = moved.base(ipr::toCv(corrected.commonArea));
         check(noiseOf(corrected.cameraRgb, clean) <= single / 2.0, "neither the flicker nor the object remains");
     }
 
@@ -583,7 +584,7 @@ void job()
     excluded.frame = [&mixed, size](int index) {
         StackJob::Frame frame = mixed.frame(index);
         if (index == 0)
-            frame.cameraRgb = cv::Mat(size, CV_32FC3, cv::Scalar::all(0.4));
+            frame.cameraRgb = cv::Mat(ipr::toCv(size), CV_32FC3, cv::Scalar::all(0.4));
         if (index == 1)
             frame.cameraRgb = cv::Mat(cv::Size(300, 200), CV_32FC3, cv::Scalar::all(0.4));
         if (index == 2)

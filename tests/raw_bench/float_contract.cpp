@@ -1,4 +1,5 @@
 #include "ColorPipeline.h"
+#include "OpenCvBridge.h"
 #include <QCoreApplication>
 #include <QDateTime>
 #include <QFile>
@@ -29,7 +30,7 @@ int main(int argc, char **argv)
                            cv::checkRange(image.linearRgba, true);
         bool extended = false;
         if (valid) {
-            const auto p = image.linearRgba.at<cv::Vec4f>(0, 0);
+            const auto p = ipr::at<ipr::Vec4f>(image.linearRgba, 0, 0);
             extended = (p[0] < 0 || p[1] < 0 || p[2] < 0) &&
                        (p[0] > 1 || p[1] > 1 || p[2] > 1) && p[3] == 1.f;
         }
@@ -39,7 +40,7 @@ int main(int argc, char **argv)
     }
     for (int kind = 0; kind < 3; ++kind) {
         cv::Mat input(2, 2, CV_32FC3, cv::Scalar(0.1f, 0.2f, 0.3f));
-        input.at<cv::Vec3f>(0, 0)[0] = kind == 0 ? std::numeric_limits<float>::quiet_NaN()
+        ipr::at<ipr::Vec3f>(input, 0, 0)[0] = kind == 0 ? std::numeric_limits<float>::quiet_NaN()
             : (kind == 1 ? std::numeric_limits<float>::infinity() : -std::numeric_limits<float>::infinity());
         QString error;
         const auto image = ColorPipeline::fromLinearSrgb(input, &error);

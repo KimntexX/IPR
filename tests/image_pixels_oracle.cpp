@@ -87,7 +87,7 @@ int main(int argc, char **argv)
          [&] { return atLeast(a3, std::vector<float>{-0.1f, 0.0f, 0.3f}); }},
         {"min with a bound", [&] { cv::Mat o; cv::min(a1, 1.0f, o); return o; }, [&] { return atMost(a1, 1.0f); }},
         {"transform", [&] { cv::Mat o; cv::transform(a3, o, cv::Matx33f(1.2f, 0, 0, 0, 0.9f, 0, 0, 0, 1.4f)); return o; },
-         [&] { return transformed(a3, cv::Matx33f(1.2f, 0, 0, 0, 0.9f, 0, 0, 0, 1.4f)); }},
+         [&] { return transformed(a3, Matrix33f(1.2f, 0, 0, 0, 0.9f, 0, 0, 0, 1.4f)); }},
         {"rgba to rgb", [&] { cv::Mat o; cv::cvtColor(a4, o, cv::COLOR_RGBA2RGB); return o; }, [&] { return withoutAlpha(a4); }},
         {"extract channel", [&] { cv::Mat o; cv::extractChannel(a4, o, 3); return o; }, [&] { return channel(a4, 3); }},
         {"split and merge", [&] { std::vector<cv::Mat> p; cv::split(a3, p); cv::Mat o; cv::merge(p, o); return o; },

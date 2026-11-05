@@ -3,6 +3,7 @@
 
 #include "Demosaic.h"
 #include "RawInput.h"
+#include "Types.h"
 
 #include <QString>
 #include <opencv2/core.hpp>
@@ -38,7 +39,7 @@ enum class Stage {
 
 struct Context
 {
-    cv::Point origin;                // the captures' (0, 0) in the sensor frame (RawInput::Input::origin)
+    ipr::Point2i origin;                // the captures' (0, 0) in the sensor frame (RawInput::Input::origin)
     std::array<double, 4> black{};   // per RawInput::Colour, counts
     double white = 0.0;              // effective white, counts (after the data adjustment)
     double divisor = 0.0;            // counts dividing the black-subtracted values

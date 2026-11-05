@@ -1,6 +1,7 @@
 #include "CameraDenoise.h"
 #include "CameraProfileEngine.h"
 #include "RawDecoder.h"
+#include "OpenCvBridge.h"
 #include <QCoreApplication>
 #include <QCommandLineParser>
 #include <QCryptographicHash>
@@ -51,9 +52,9 @@ QJsonArray signalSurvey(const cv::Mat &camera,const std::vector<CameraDenoise::N
         std::vector<float> intensities;
         std::array<std::vector<float>,4> quarters;
         for(int y=0;y<current.rows;++y)for(int x=0;x<current.cols;++x) {
-            auto rgb=camera.at<cv::Vec3f>(reflected(oy+y-halo,camera.rows),reflected(ox+x-halo,camera.cols));
-            const cv::Vec3f v(.25f*rgb[0]+.5f*rgb[1]+.25f*rgb[2],.5f*(rgb[0]-rgb[2]),rgb[1]-.5f*(rgb[0]+rgb[2]));
-            current.at<cv::Vec3f>(y,x)=v;
+            auto rgb=ipr::at<ipr::Vec3f>(camera, reflected(oy+y-halo,camera.rows),reflected(ox+x-halo,camera.cols));
+            const ipr::Vec3f v(.25f*rgb[0]+.5f*rgb[1]+.25f*rgb[2],.5f*(rgb[0]-rgb[2]),rgb[1]-.5f*(rgb[0]+rgb[2]));
+            ipr::at<ipr::Vec3f>(current, y,x)=v;
             if(x>=halo&&x<halo+width&&y>=halo&&y<halo+width) {
                 intensities.push_back(v[0]);
                 quarters[size_t((x-halo>=width/2)+2*(y-halo>=width/2))].push_back(v[0]);
@@ -69,19 +70,19 @@ QJsonArray signalSurvey(const cv::Mat &camera,const std::vector<CameraDenoise::N
             cv::Mat base;cv::sepFilter2D(current,base,-1,kernel,kernel,{-1,-1},0,cv::BORDER_REFLECT_101);
             const cv::Mat detail=current-base;
             if(level==0)for(int y=halo;y<halo+width;++y)for(int x=halo;x<halo+width;++x)
-                guide.push_back(base.at<cv::Vec3f>(y,x)[0]);
+                guide.push_back(ipr::at<ipr::Vec3f>(base, y,x)[0]);
             QJsonArray sigma,correlationX,correlationY;bool rejected=false;
             for(int c=0;c<3;++c) {
                 std::vector<float> values;
-                for(int y=halo;y<halo+width;++y)for(int x=halo;x<halo+width;++x)values.push_back(detail.at<cv::Vec3f>(y,x)[c]);
+                for(int y=halo;y<halo+width;++y)for(int x=halo;x<halo+width;++x)values.push_back(ipr::at<ipr::Vec3f>(detail, y,x)[c]);
                 const float center=median(values);
                 for(auto &v:values)v=std::abs(v-center);
                 const float s=median(values)/.67448975f;sigma.append(s);
                 const auto corr=[&](bool horizontal) {
                     double ab=0,aa=0,bb=0;const int lag=2*step;
                     for(int y=0;y<width-(horizontal?0:lag);++y)for(int x=0;x<width-(horizontal?lag:0);++x) {
-                        const double a=detail.at<cv::Vec3f>(halo+y,halo+x)[c]-center;
-                        const double b=detail.at<cv::Vec3f>(halo+y+(horizontal?0:lag),halo+x+(horizontal?lag:0))[c]-center;
+                        const double a=ipr::at<ipr::Vec3f>(detail, halo+y,halo+x)[c]-center;
+                        const double b=ipr::at<ipr::Vec3f>(detail, halo+y+(horizontal?0:lag),halo+x+(horizontal?lag:0))[c]-center;
                         ab+=a*b;aa+=a*a;bb+=b*b;
                     }
                     return aa>0&&bb>0?std::abs(ab/std::sqrt(aa*bb)):0.;

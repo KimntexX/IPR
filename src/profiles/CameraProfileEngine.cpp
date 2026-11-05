@@ -582,16 +582,16 @@ public:
         }
 
         // XYZ D50 -> linear Rec.2020 D65, adaptation exactly once.
-        const cv::Matx33d &xyzToWorking = WorkingColor::fromXyzD50();
+        const ipr::Matrix33d &xyzToWorking = WorkingColor::fromXyzD50();
         // DCP HSV tables and profile tone curves operate in linear ProPhoto
         // (D50), NOT in our final Rec.2020 working space. These are color-space
         // definitions, not empirical camera calibration coefficients.
-        const cv::Matx33d proPhotoToXyz(
+        const ipr::Matrix33d proPhotoToXyz(
             0.7976749, 0.1351917, 0.0313534,
             0.2880402, 0.7118741, 0.0000857,
             0.0,       0.0,       0.8252100);
-        const cv::Matx33d xyzToProPhoto = proPhotoToXyz.inv();
-        const cv::Matx33d proPhotoToWorking = xyzToWorking * proPhotoToXyz;
+        const ipr::Matrix33d xyzToProPhoto = proPhotoToXyz.inv();
+        const ipr::Matrix33d proPhotoToWorking = xyzToWorking * proPhotoToXyz;
         const double exposureScale = std::exp2(
             baselineExposure + options.cameraBaselineExposureEv + options.profileExposureCompensationEv);
         // Extrema interpolation preserves HSV hue, not Lab hue or saturation.
@@ -605,13 +605,13 @@ public:
             hueStable = toneCurve[i] >= 0.0 && toneCurve[i] <= 1.0;
         ipr::parallelRows(rgb.rows, [&](int first, int last) {
             for (int y = first; y < last; ++y) {
-                cv::Vec3f *row = rgb.ptr<cv::Vec3f>(y);
+                ipr::Vec3f *row = rgb.ptr<ipr::Vec3f>(y);
                 auto illuminantAt = illuminants(y);
                 for (int x = 0; x < rgb.cols; ++x) {
                     const Illuminant &illuminant = illuminantAt(x);
                     const std::array<double, 9> &cameraToXyz = illuminant.cameraToXyz;
                     const HueSatTable &hueMap = illuminant.hueMap;
-                    const cv::Vec3f in = row[x];
+                    const ipr::Vec3f in = row[x];
                     const double x2 =
                         cameraToXyz[0] * in[0] + cameraToXyz[1] * in[1] +
                         cameraToXyz[2] * in[2];
@@ -621,20 +621,20 @@ public:
                     const double z2 =
                         cameraToXyz[6] * in[0] + cameraToXyz[7] * in[1] +
                         cameraToXyz[8] * in[2];
-                    const cv::Vec3d xyz(x2, y2, z2);
+                    const ipr::Vec3d xyz(x2, y2, z2);
                     // Preserve the matrix-only path, including extended range.
                     if (hueMap.isEmpty() && lookTable.isEmpty() && toneCurve.isEmpty()) {
-                        row[x] = cv::Vec3f(xyzToWorking * (xyz * exposureScale));
+                        row[x] = ipr::Vec3f(xyzToWorking * (xyz * exposureScale));
                         continue;
                     }
-                    cv::Vec3f out(xyzToProPhoto * (xyz * exposureScale));
+                    ipr::Vec3f out(xyzToProPhoto * (xyz * exposureScale));
                     if (!hueMap.isEmpty())
                         out = applyHueSatMap(out, hueMap, hueSatEncoding);
                     if (!lookTable.isEmpty())
                         out = applyHueSatMap(out, lookTable, lookTableEncoding);
                     if (toneCurve.size() >= 4 && toneCurve.size() % 2 == 0) {
                         if (hueStable) {
-                            const cv::Vec3f bounded(std::clamp(out[0], 0.f, 1.f),
+                            const ipr::Vec3f bounded(std::clamp(out[0], 0.f, 1.f),
                                                     std::clamp(out[1], 0.f, 1.f),
                                                     std::clamp(out[2], 0.f, 1.f));
                             const float low = std::min({bounded[0], bounded[1], bounded[2]});
@@ -650,7 +650,7 @@ public:
                         }
                     }
                     // Do not clip to the smaller sRGB gamut here.
-                    row[x] = cv::Vec3f(proPhotoToWorking * cv::Vec3d(out));
+                    row[x] = ipr::Vec3f(proPhotoToWorking * ipr::Vec3d(out));
                 }
             }
         });
@@ -674,8 +674,8 @@ public:
         return data;
     }
 
-    bool whiteBalanceGains(double sourceKelvin, const cv::Vec3d &neutral,
-                            int temperature, int tint, cv::Vec3d &gains,
+    bool whiteBalanceGains(double sourceKelvin, const ipr::Vec3d &neutral,
+                            int temperature, int tint, ipr::Vec3d &gains,
                             QString *error) const
     {
         const auto fail = [error] {
@@ -685,7 +685,7 @@ public:
         if (!std::isfinite(sourceKelvin) || sourceKelvin < 2000 || sourceKelvin > 50000 ||
             temperature < 2000 || temperature > 50000 || tint < -150 || tint > 150)
             return fail();
-        gains = cv::Vec3d(1, 1, 1);
+        gains = ipr::Vec3d(1, 1, 1);
         if (temperature == int(std::lround(sourceKelvin)) && tint == 0)
             return true;
         const QVector<double> &a = colorMatrix1.size() == 9 ? colorMatrix1 : colorMatrix2;
@@ -694,38 +694,38 @@ public:
             neutral[0] <= 0 || neutral[1] <= 0 || neutral[2] <= 0)
             return fail();
         const auto matrix = [&](double kelvin) {
-            cv::Matx33d result;
+            ipr::Matrix33d result;
             const double w = illuminantWeight(kelvin);
-            for (int i = 0; i < 9; ++i) result.val[i] = a[i] * (1-w) + b[i] * w;
+            for (int i = 0; i < 9; ++i) result.values[i] = a[i] * (1-w) + b[i] * w;
             return result;
         };
         const auto planckUv = [](double kelvin) {
             // Krystek rational approximation in CIE 1960 UCS (not CIE 1976).
             const double t2 = kelvin * kelvin;
-            return cv::Vec2d(
+            return ipr::Vec2d(
                 (.860117757 + 1.54118254e-4*kelvin + 1.28641212e-7*t2) /
                     (1 + 8.42420235e-4*kelvin + 7.08145163e-7*t2),
                 (.317398726 + 4.22806245e-5*kelvin + 4.20481691e-8*t2) /
                     (1 - 2.89741816e-5*kelvin + 1.61456053e-7*t2));
         };
-        const cv::Matx33d sourceMatrix = matrix(sourceKelvin);
+        const ipr::Matrix33d sourceMatrix = matrix(sourceKelvin);
         if (std::abs(ipr::determinant(sourceMatrix)) < 1e-10) return fail();
-        const cv::Vec3d white = sourceMatrix.inv() * neutral;
+        const ipr::Vec3d white = sourceMatrix.inv() * neutral;
         const double d = white[0] + 15*white[1] + 3*white[2];
         if (!std::isfinite(d) || d <= 0 || white[1] <= 0) return fail();
         // Carry the measured off-locus As Shot white, not a universal +5 tint.
-        const cv::Vec2d offset = cv::Vec2d(4*white[0]/d, 6*white[1]/d) - planckUv(sourceKelvin);
-        cv::Vec2d target = planckUv(temperature) + offset;
-        const cv::Vec2d tangent = planckUv(temperature + 1.0) - planckUv(temperature - 1.0);
+        const ipr::Vec2d offset = ipr::Vec2d(4*white[0]/d, 6*white[1]/d) - planckUv(sourceKelvin);
+        ipr::Vec2d target = planckUv(temperature) + offset;
+        const ipr::Vec2d tangent = planckUv(temperature + 1.0) - planckUv(temperature - 1.0);
         const double length = ipr::length(tangent);
         if (length <= 0) return fail();
         // Normal to the locus, Adobe DNG's tint distance convention (-3000).
         // This is a continuous-locus approximation, not Lightroom's private model.
-        target += cv::Vec2d(-tangent[1], tangent[0]) * (-double(tint)/3000.0/length);
+        target += ipr::Vec2d(-tangent[1], tangent[0]) * (-double(tint)/3000.0/length);
         if (target[1] <= 0) return fail();
-        const cv::Vec3d xyz(1.5*target[0]/target[1], 1,
+        const ipr::Vec3d xyz(1.5*target[0]/target[1], 1,
                             (4-target[0]-10*target[1])/(2*target[1]));
-        const cv::Vec3d targetNeutral = matrix(temperature) * xyz;
+        const ipr::Vec3d targetNeutral = matrix(temperature) * xyz;
         for (int c = 0; c < 3; ++c) {
             if (!std::isfinite(targetNeutral[c]) || targetNeutral[c] <= 1e-10) return fail();
             gains[c] = neutral[c] / targetNeutral[c];
@@ -1049,12 +1049,12 @@ private:
         return float(toneCurve.last());
     }
 
-    cv::Vec3f applyHueSatMap(const cv::Vec3f &input,
+    ipr::Vec3f applyHueSatMap(const ipr::Vec3f &input,
                              const HueSatTable &table, int encoding) const
     {
         if (table.isEmpty())
             return input;
-        cv::Vec3f tableInput;
+        ipr::Vec3f tableInput;
         for (int c = 0; c < 3; ++c)
             tableInput[c] = qBound(0.0f, input[c], 1.0f);
         const float r = tableInput[0];
@@ -1092,7 +1092,7 @@ private:
         const float sf = sCoord - s0;
         const float vf = vCoord - v0;
 
-        cv::Vec3f modify(0.0f, 1.0f, 1.0f);
+        ipr::Vec3f modify(0.0f, 1.0f, 1.0f);
         for (int dv = 0; dv < 2; ++dv) {
             const int vi = dv ? v1 : v0;
             const float vw = dv ? vf : 1.0f - vf;
@@ -1126,7 +1126,7 @@ private:
         const float p = outValue * (1.0f - outSaturation);
         const float q = outValue * (1.0f - f * outSaturation);
         const float t = outValue * (1.0f - (1.0f - f) * outSaturation);
-        cv::Vec3f result;
+        ipr::Vec3f result;
         switch (i) {
         case 0: result = {outValue, t, p}; break;
         case 1: result = {q, outValue, p}; break;
@@ -1878,7 +1878,7 @@ bool applyDcp(const QString &fileName, cv::Mat &cameraRgb,
 }
 
 bool whiteBalanceGains(const DcpWorkingContext &source, int temperature, int tint,
-                       cv::Vec3d &gains, QString *error)
+                       ipr::Vec3d &gains, QString *error)
 {
     const auto profile = preparedDcp(source.profilePath, error);
     return profile &&
@@ -1895,7 +1895,7 @@ bool renderFromCameraSignal(const DcpWorkingContext &source, int temperature, in
         return false;
     }
     const auto profile = preparedDcp(source.profilePath, error);
-    cv::Vec3d gains;
+    ipr::Vec3d gains;
     if (!profile ||
         !profile->whiteBalanceGains(source.sourceKelvin, source.cameraNeutral,
                                    temperature, tint, gains, error)) return false;
@@ -1906,7 +1906,7 @@ bool renderFromCameraSignal(const DcpWorkingContext &source, int temperature, in
     const cv::Mat &localExposure = local[LocalValues::Exposure];
     const cv::Mat &localTemperature = local[LocalValues::Temperature];
     const cv::Mat &localTint = local[LocalValues::Tint];
-    const cv::Size size = source.cameraRgb.size();
+    const ipr::Size size = ipr::fromCv(source.cameraRgb.size());
     if (!LocalValues::fits(localExposure, size) || !LocalValues::fits(localTemperature, size) ||
         !LocalValues::fits(localTint, size)) {
         if (error) *error = QStringLiteral("Carte de valeurs locales incompatible avec le signal capteur.");
@@ -1917,7 +1917,7 @@ bool renderFromCameraSignal(const DcpWorkingContext &source, int temperature, in
         // Scene-linear like the global exposure, before the profile's tone curve.
         ipr::parallelRows(signal.rows, [&](int first, int last) {
             for (int y = first; y < last; ++y) {
-                auto *row = signal.ptr<cv::Vec3f>(y);
+                auto *row = signal.ptr<ipr::Vec3f>(y);
                 const float *values = localExposure.ptr<float>(y);
                 for (int x = 0; x < signal.cols; ++x)
                     if (values[x] != 0.0f) row[x] *= static_cast<float>(std::exp2(double(values[x])));
@@ -1937,28 +1937,28 @@ bool renderFromCameraSignal(const DcpWorkingContext &source, int temperature, in
         size, MaxLocalIlluminants);
     cv::Mat rgb;
     if (combinations.active()) {
-        struct Prepared { cv::Vec3f gains; DcpProfile::Illuminant illuminant; };
+        struct Prepared { ipr::Vec3f gains; DcpProfile::Illuminant illuminant; };
         std::vector<Prepared> prepared(size_t(combinations.count()));
         for (int index = 0; index < combinations.count(); ++index) {
             const LocalValues::Combinations::Values v = combinations.values(index);
             const int kelvin = int(std::lround(v[0])), tintValue = int(std::lround(v[1]));
-            cv::Vec3d pixelGains;
+            ipr::Vec3d pixelGains;
             if (!profile->whiteBalanceGains(source.sourceKelvin, source.cameraNeutral, kelvin, tintValue,
                                             pixelGains, error) ||
                 !profile->prepareIlluminant(illuminantKelvin(kelvin, tintValue), prepared[size_t(index)].illuminant, error))
                 return false;
             pixelGains *= std::exp2(exposureEv);
-            prepared[size_t(index)].gains = cv::Vec3f(pixelGains);
+            prepared[size_t(index)].gains = ipr::Vec3f(pixelGains);
         }
-        rgb.create(size, CV_32FC3);
+        rgb.create(ipr::toCv(size), CV_32FC3);
         ipr::parallelRows(rgb.rows, [&](int first, int last) {
             for (int y = first; y < last; ++y) {
-                const auto *in = source.cameraRgb.ptr<cv::Vec3f>(y);
-                auto *out = rgb.ptr<cv::Vec3f>(y);
+                const auto *in = source.cameraRgb.ptr<ipr::Vec3f>(y);
+                auto *out = rgb.ptr<ipr::Vec3f>(y);
                 auto indices = combinations.row(y);
                 for (int x = 0; x < rgb.cols; ++x) {
-                    const cv::Vec3f &g = prepared[size_t(indices.at(x))].gains;
-                    out[x] = cv::Vec3f(in[x][0] * g[0], in[x][1] * g[1], in[x][2] * g[2]);
+                    const ipr::Vec3f &g = prepared[size_t(indices.at(x))].gains;
+                    out[x] = ipr::Vec3f(in[x][0] * g[0], in[x][1] * g[1], in[x][2] * g[2]);
                 }
             }
         });
@@ -1971,7 +1971,7 @@ bool renderFromCameraSignal(const DcpWorkingContext &source, int temperature, in
         if (!profile->apply(rgb, illuminants, error, source.options)) return false;
     } else {
         gains *= std::exp2(exposureEv);
-        rgb = ipr::transformed(source.cameraRgb, cv::Matx33f(
+        rgb = ipr::transformed(source.cameraRgb, ipr::Matrix33f(
             float(gains[0]),0,0, 0,float(gains[1]),0, 0,0,float(gains[2])));
         applyLocalExposure(rgb);
         if (!profile->apply(rgb, illuminantKelvin(temperature, tint), error, source.options)) return false;
@@ -2092,7 +2092,7 @@ bool applyLcp(const QString &fileName, cv::Mat &linearRgb,
         const double vignetteCy = model.vignetteCenterY * linearRgb.rows;
         ipr::parallelRows(geometryCorrected.rows, [&](int first, int last) {
             for (int y = first; y < last; ++y) {
-                cv::Vec3f *row = geometryCorrected.ptr<cv::Vec3f>(y);
+                ipr::Vec3f *row = geometryCorrected.ptr<ipr::Vec3f>(y);
                 for (int x = 0; x < geometryCorrected.cols; ++x) {
                     const double dx = (x - vignetteCx) / scale;
                 const double dy = (y - vignetteCy) / scale;

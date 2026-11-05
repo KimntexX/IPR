@@ -188,7 +188,7 @@ int main(int argc, char **argv)
             if (size.width > 20 && size.height > 20) {
                 const cv::Rect region(size.width / 3, 0, size.width / 3, size.height / 2);
                 ms = medianOfThree([&] { cv::copyMakeBorder(input(region), theirs, 6, 6, 6, 6, cv::BORDER_REFLECT_101); });
-                myMs = medianOfThree([&] { mine = paddedRegion(input, region, 6, 6, 6, 6); });
+                myMs = medianOfThree([&] { mine = paddedRegion(input, fromCv(region), 6, 6, 6, 6); });
                 compare("pad region", theirs, mine, ms, myMs);
             }
             ms = medianOfThree([&] { cv::pyrDown(input, theirs); });

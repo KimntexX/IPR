@@ -7,6 +7,7 @@
 #include "LocalValues.h"
 #include "PerceptualColour.h"
 #include "ToneRecovery.h"
+#include "OpenCvBridge.h"
 
 #include <functional>
 #include <iostream>
@@ -30,9 +31,9 @@ cv::Mat scene()
     cv::Mat image(16, 24, CV_32FC3);
     for (int y = 0; y < image.rows; ++y)
         for (int x = 0; x < image.cols; ++x)
-            image.at<cv::Vec3f>(y, x) = (x + y) % 5 == 0
-                ? cv::Vec3f(0.02f * x, 0.02f * x, 0.02f * x)
-                : cv::Vec3f(0.01f + 0.04f * x, 0.03f + 0.05f * y, 0.2f + 0.01f * (x ^ y));
+            ipr::at<ipr::Vec3f>(image, y, x) = (x + y) % 5 == 0
+                ? ipr::Vec3f(0.02f * x, 0.02f * x, 0.02f * x)
+                : ipr::Vec3f(0.01f + 0.04f * x, 0.03f + 0.05f * y, 0.2f + 0.01f * (x ^ y));
     return image;
 }
 
@@ -44,9 +45,9 @@ cv::Mat noisyScene()
     cv::RNG noise(21);
     for (int y = 0; y < image.rows; ++y)
         for (int x = 0; x < image.cols; ++x) {
-            const cv::Vec3f base(0.05f + 0.005f * x, 0.08f + 0.006f * y, 0.3f - 0.001f * x);
+            const ipr::Vec3f base(0.05f + 0.005f * x, 0.08f + 0.006f * y, 0.3f - 0.001f * x);
             const float shared = float(noise.gaussian(0.01));
-            image.at<cv::Vec3f>(y, x) = cv::Vec3f(
+            ipr::at<ipr::Vec3f>(image, y, x) = ipr::Vec3f(
                 std::max(0.001f, base[0] + shared + float(noise.gaussian(0.006))),
                 std::max(0.001f, base[1] + shared + float(noise.gaussian(0.006))),
                 std::max(0.001f, base[2] + shared + float(noise.gaussian(0.006))));
@@ -55,17 +56,17 @@ cv::Mat noisyScene()
 }
 
 // The local amount over the left half, nothing over the right half.
-cv::Mat leftHalf(const cv::Size &size, float amount)
+cv::Mat leftHalf(const ipr::Size &size, float amount)
 {
-    cv::Mat map(size, CV_32FC1, cv::Scalar(0));
-    map(cv::Rect(0, 0, size.width / 2, size.height)).setTo(amount);
+    cv::Mat map(ipr::toCv(size), CV_32FC1, cv::Scalar(0));
+    map(ipr::toCv(ipr::Recti(0, 0, size.width / 2, size.height))).setTo(amount);
     return map;
 }
 
 double halfDifference(const cv::Mat &a, const cv::Mat &b, bool left)
 {
-    const cv::Rect half(left ? 0 : a.cols / 2, 0, a.cols / 2, a.rows);
-    return cv::norm(a(half), b(half), cv::NORM_INF);
+    const ipr::Recti half(left ? 0 : a.cols / 2, 0, a.cols / 2, a.rows);
+    return cv::norm(a(ipr::toCv(half)), b(ipr::toCv(half)), cv::NORM_INF);
 }
 
 using Module = std::function<void(cv::Mat &, int global, const cv::Mat &local)>;
@@ -76,7 +77,7 @@ bool keepsContract(const char *name, const Module &apply, int global, int local,
     cv::Mat plain = source.clone(), zeros = source.clone(), withMap = source.clone(), shifted = source.clone();
     apply(plain, global, {});
     apply(zeros, global, cv::Mat(source.size(), CV_32FC1, cv::Scalar(0)));
-    apply(withMap, global, leftHalf(source.size(), float(local)));
+    apply(withMap, global, leftHalf(ipr::fromCv(source.size()), float(local)));
     apply(shifted, global + local, {});
     bool ok = check(cv::norm(plain, zeros, cv::NORM_INF) == 0, "a map of zeros renders exactly as no map");
     ok &= check(cv::norm(shifted, plain, cv::NORM_INF) > 1e-3, "the tested value has an effect on the scene");
@@ -136,8 +137,8 @@ int main()
         const cv::Mat source = scene();
         cv::Mat both = source.clone(), expected = source.clone();
         LocalValues::Maps maps;
-        maps[LocalValues::Shadows] = leftHalf(source.size(), 40);
-        maps[LocalValues::Highlights] = leftHalf(source.size(), -60);
+        maps[LocalValues::Shadows] = leftHalf(ipr::fromCv(source.size()), 40);
+        maps[LocalValues::Highlights] = leftHalf(ipr::fromCv(source.size()), -60);
         ToneRecovery::apply(both, {}, statistics, maps);
         ToneRecovery::Amounts amounts;
         amounts.shadows = 0.4f;
@@ -230,21 +231,21 @@ int main()
         cv::Mat ramp(8, 64, CV_32FC1);
         for (int y = 0; y < ramp.rows; ++y)
             for (int x = 0; x < ramp.cols; ++x) ramp.at<float>(y, x) = x == 0 ? 0.0f : float(y * 64 + x);
-        const LocalValues::Combinations few({{0.37f, &ramp, 0.0f, -1.0f, 1.0f, 0.5f}}, ramp.size(), 16);
+        const LocalValues::Combinations few({{0.37f, &ramp, 0.0f, -1.0f, 1.0f, 0.5f}}, ipr::fromCv(ramp.size()), 16);
         ok &= check(!few.active() && few.count() == 1 && few.values(0)[0] == 0.37f,
                     "a scale of zero leaves the global value alone");
-        const LocalValues::Combinations bounded({{20.0f, &ramp, 1.0f, -1000.0f, 1000.0f, 1.0f}}, ramp.size(), 16);
+        const LocalValues::Combinations bounded({{20.0f, &ramp, 1.0f, -1000.0f, 1000.0f, 1.0f}}, ipr::fromCv(ramp.size()), 16);
         auto row = bounded.row(0);
         ok &= check(bounded.active() && bounded.count() <= 16 && bounded.values(row.at(0))[0] == 20.0f,
                     "too many values widen the step, and a zero local value stays exactly the global one");
         const cv::Mat misfit(3, 3, CV_32FC1, cv::Scalar(1));
-        ok &= check(!LocalValues::Combinations({{1.0f, &misfit, 1.0f, -9.0f, 9.0f, 1.0f}}, ramp.size(), 16).active() &&
-                    !LocalValues::Combinations({{1.0f, nullptr, 1.0f, -9.0f, 9.0f, 1.0f}}, ramp.size(), 16).active(),
+        ok &= check(!LocalValues::Combinations({{1.0f, &misfit, 1.0f, -9.0f, 9.0f, 1.0f}}, ipr::fromCv(ramp.size()), 16).active() &&
+                    !LocalValues::Combinations({{1.0f, nullptr, 1.0f, -9.0f, 9.0f, 1.0f}}, ipr::fromCv(ramp.size()), 16).active(),
                     "absent or misfit maps leave nothing to enumerate");
         cv::Mat invalid(1, 2, CV_32FC1);
         invalid.at<float>(0, 0) = std::numeric_limits<float>::quiet_NaN();
         invalid.at<float>(0, 1) = std::numeric_limits<float>::infinity();
-        const LocalValues::Combinations finite({{3.0f, &invalid, 1.0f, -9.0f, 9.0f, 1.0f}}, invalid.size(), 16);
+        const LocalValues::Combinations finite({{3.0f, &invalid, 1.0f, -9.0f, 9.0f, 1.0f}}, ipr::fromCv(invalid.size()), 16);
         ok &= check(finite.count() == 1 && finite.values(0)[0] == 3.0f, "a non-finite local value counts as none");
     }
     {

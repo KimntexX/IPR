@@ -37,7 +37,7 @@ bool convertSourceToWorking(QImage &image, QString *error)
                     highPrecision.bits(), highPrecision.bytesPerLine());
         if (srgb) {
             for (int y = 0; y < rgb.rows; ++y) {
-                auto *row = rgb.ptr<cv::Vec4f>(y);
+                auto *row = rgb.ptr<ipr::Vec4f>(y);
                 for (int x = 0; x < rgb.cols; ++x) for (int c = 0; c < 3; ++c) {
                     const double v = std::abs(double(row[x][c]));
                     const double decoded = WorkingColor::srgbDecode(v);
@@ -62,9 +62,9 @@ bool convertSourceToWorking(QImage &image, QString *error)
     return true;
 }
 
-cv::Vec3f mapRgbToSrgbGamut(const cv::Vec3f &source)
+ipr::Vec3f mapRgbToSrgbGamut(const ipr::Vec3f &source)
 {
-    cv::Vec3f rgb{
+    ipr::Vec3f rgb{
         std::max(0.0f, source[0]),
         std::max(0.0f, source[1]),
         std::max(0.0f, source[2]),
@@ -76,8 +76,8 @@ cv::Vec3f mapRgbToSrgbGamut(const cv::Vec3f &source)
         luminance = 1.0f;
     }
 
-    const cv::Vec3f neutral{luminance, luminance, luminance};
-    const cv::Vec3f chroma = rgb - neutral;
+    const ipr::Vec3f neutral{luminance, luminance, luminance};
+    const ipr::Vec3f chroma = rgb - neutral;
     float chromaScale = 1.0f;
     for (int channel = 0; channel < 3; ++channel) {
         if (chroma[channel] > 0.0f) {
@@ -106,7 +106,7 @@ QImage toEncodedSrgbRgba64(const cv::Mat &linearRgba)
     const qsizetype stride = image.bytesPerLine();
     ipr::parallelRows(linearRgba.rows, [&](int first, int last) {
         for (int y = first; y < last; ++y) {
-            const cv::Vec4f *source = linearRgba.ptr<cv::Vec4f>(y);
+            const ipr::Vec4f *source = linearRgba.ptr<ipr::Vec4f>(y);
             auto *destination = reinterpret_cast<quint16 *>(bits + y * stride);
             for (int x = 0; x < linearRgba.cols; ++x) {
                 for (int channel = 0; channel < 3; ++channel) {
@@ -194,9 +194,9 @@ WorkingImage mapToSrgbGamut(const WorkingImage &source, QString *error)
     // Each pixel on its own: the same result on any number of threads.
     ipr::parallelRows(result.linearRgba.rows, [&](int first, int last) {
         for (int y = first; y < last; ++y) {
-            cv::Vec4f *row = result.linearRgba.ptr<cv::Vec4f>(y);
+            ipr::Vec4f *row = result.linearRgba.ptr<ipr::Vec4f>(y);
             for (int x = 0; x < result.linearRgba.cols; ++x) {
-                const cv::Vec3f rgb = mapRgbToSrgbGamut(
+                const ipr::Vec3f rgb = mapRgbToSrgbGamut(
                     {row[x][0], row[x][1], row[x][2]});
                 row[x][0] = rgb[0];
                 row[x][1] = rgb[1];
@@ -215,7 +215,7 @@ namespace {
 // DNG specification uses to define "Temperature" independently of any
 // specific camera. See docs/imageeditor-render-working-image.md §4 for the
 // rationale behind this model.
-cv::Point2d planckianLocusChromaticity(double kelvinTemperature)
+ipr::Point2d planckianLocusChromaticity(double kelvinTemperature)
 {
     const double t = kelvinTemperature;
     const double t2 = t * t;
@@ -234,12 +234,12 @@ cv::Point2d planckianLocusChromaticity(double kelvinTemperature)
 // reference temperature appear as if it were neutral at the target
 // temperature instead — which is exactly what the "Temperature" slider asks
 // for.
-cv::Vec3d planckianLocusLms(double kelvinTemperature)
+ipr::Vec3d planckianLocusLms(double kelvinTemperature)
 {
-    const cv::Point2d xy = planckianLocusChromaticity(kelvinTemperature);
-    const cv::Vec3d xyz(xy.x / xy.y, 1.0, (1.0 - xy.x - xy.y) / xy.y);
+    const ipr::Point2d xy = planckianLocusChromaticity(kelvinTemperature);
+    const ipr::Vec3d xyz(xy.x / xy.y, 1.0, (1.0 - xy.x - xy.y) / xy.y);
     // Bradford cone-response matrix (XYZ -> LMS).
-    const cv::Matx33d bradford(
+    const ipr::Matrix33d bradford(
         0.8951, 0.2664, -0.1614,
         -0.7502, 1.7135, 0.0367,
         0.0389, -0.0685, 1.0296);
@@ -256,31 +256,31 @@ cv::Vec3d planckianLocusLms(double kelvinTemperature)
 // receives a corpus-calibrated diagonal compensation.  Bradford gives the
 // physical direction, while that compensation corrects the under-attenuated
 // red response measured against the Lightroom TIFF reference at 2000 K.
-cv::Matx33d temperatureAdaptationMatrix(int temperature, double referenceTemperature)
+ipr::Matrix33d temperatureAdaptationMatrix(int temperature, double referenceTemperature)
 {
-    const cv::Matx33d rgbToXyz(
+    const ipr::Matrix33d rgbToXyz(
         0.4124564, 0.3575761, 0.1804375,
         0.2126729, 0.7151522, 0.0721750,
         0.0193339, 0.1191920, 0.9503041);
-    const cv::Matx33d xyzToRgb = rgbToXyz.inv();
-    const cv::Matx33d bradford(
+    const ipr::Matrix33d xyzToRgb = rgbToXyz.inv();
+    const ipr::Matrix33d bradford(
         0.8951, 0.2664, -0.1614,
         -0.7502, 1.7135, 0.0367,
         0.0389, -0.0685, 1.0296);
-    const cv::Matx33d bradfordInv = bradford.inv();
+    const ipr::Matrix33d bradfordInv = bradford.inv();
 
-    const cv::Vec3d referenceLms = planckianLocusLms(referenceTemperature);
-    const cv::Vec3d targetLms = planckianLocusLms(static_cast<double>(temperature));
+    const ipr::Vec3d referenceLms = planckianLocusLms(referenceTemperature);
+    const ipr::Vec3d targetLms = planckianLocusLms(static_cast<double>(temperature));
     // The green/M channel is left untouched (gain = 1): luminance and the
     // green/magenta balance stay governed solely by the Tint control, so the
     // Temperature slider only redistributes energy between red and blue.
-    const cv::Vec3d gain(referenceLms[0] / targetLms[0], 1.0,
+    const ipr::Vec3d gain(referenceLms[0] / targetLms[0], 1.0,
                          referenceLms[2] / targetLms[2]);
-    const cv::Matx33d gainMatrix(
+    const ipr::Matrix33d gainMatrix(
         gain[0], 0.0, 0.0,
         0.0, gain[1], 0.0,
         0.0, 0.0, gain[2]);
-    const cv::Matx33d bradfordAdaptation =
+    const ipr::Matrix33d bradfordAdaptation =
         xyzToRgb * bradfordInv * gainMatrix * bradford * rgbToXyz;
 
     // The Lightroom/IPR eight-scene corpus showed that the uncorrected cold
@@ -297,7 +297,7 @@ cv::Matx33d temperatureAdaptationMatrix(int temperature, double referenceTempera
     const double coldStrength = std::clamp(
         std::log(referenceTemperature / static_cast<double>(temperature)) / coldRange,
         0.0, 1.0);
-    const cv::Matx33d coldCalibration(
+    const ipr::Matrix33d coldCalibration(
         1.0 - 0.65 * coldStrength, 0.0, 0.0,
         0.0, 1.0 + 0.19 * coldStrength, 0.0,
         0.0, 0.0, 1.0 - 0.16 * coldStrength);
@@ -309,7 +309,7 @@ cv::Matx33d temperatureAdaptationMatrix(int temperature, double referenceTempera
 namespace {
 // The control matrix of one temperature and tint, in the working space; nothing
 // when both sit on the reference: the pixels then stay untouched to the bit.
-std::optional<cv::Matx33f> temperatureTintMatrix(int temperature, double referenceTemperature, int tint)
+std::optional<ipr::Matrix33f> temperatureTintMatrix(int temperature, double referenceTemperature, int tint)
 {
     const float tintAmount = static_cast<float>(tint) / 150.0f;
     const float rawGreenGain = std::pow(2.0f, -tintAmount);
@@ -333,10 +333,10 @@ std::optional<cv::Matx33f> temperatureTintMatrix(int temperature, double referen
 
     // The empirical tint/cold axes were calibrated in sRGB. Conjugate the
     // complete control matrix once; all pixel arithmetic stays in Rec.2020.
-    const cv::Matx33d tintMatrix(magentaGain, 0, 0, 0, greenGain, 0, 0, 0, magentaGain);
-    const cv::Matx33d adaptation = WorkingColor::fromSrgb() * tintMatrix *
+    const ipr::Matrix33d tintMatrix(magentaGain, 0, 0, 0, greenGain, 0, 0, 0, magentaGain);
+    const ipr::Matrix33d adaptation = WorkingColor::fromSrgb() * tintMatrix *
         temperatureAdaptationMatrix(temperature, referenceTemperature) * WorkingColor::toSrgb();
-    return cv::Matx33f(
+    return ipr::Matrix33f(
         static_cast<float>(adaptation(0, 0)), static_cast<float>(adaptation(0, 1)),
         static_cast<float>(adaptation(0, 2)),
         static_cast<float>(adaptation(1, 0)), static_cast<float>(adaptation(1, 1)),
@@ -367,9 +367,9 @@ bool applyTemperatureTint(cv::Mat &linearRgb, int temperature,
     const LocalValues::Combinations combinations(
         {{float(temperature), &local[LocalValues::Temperature], 1.0f, 2000.0f, 50000.0f, 5.0f},
          {float(tint), &local[LocalValues::Tint], 1.0f, -150.0f, 150.0f, 1.0f}},
-        linearRgb.size(), MaxLocalMatrices);
+        ipr::fromCv(linearRgb.size()), MaxLocalMatrices);
     if (combinations.active()) {
-        std::vector<std::optional<cv::Matx33f>> matrices(size_t(combinations.count()));
+        std::vector<std::optional<ipr::Matrix33f>> matrices(size_t(combinations.count()));
         for (int index = 0; index < combinations.count(); ++index) {
             const LocalValues::Combinations::Values v = combinations.values(index);
             matrices[size_t(index)] = temperatureTintMatrix(int(std::lround(v[0])), referenceTemperature,
@@ -377,7 +377,7 @@ bool applyTemperatureTint(cv::Mat &linearRgb, int temperature,
         }
         ipr::parallelRows(linearRgb.rows, [&](int first, int last) {
             for (int y = first; y < last; ++y) {
-                cv::Vec3f *row = linearRgb.ptr<cv::Vec3f>(y);
+                ipr::Vec3f *row = linearRgb.ptr<ipr::Vec3f>(y);
                 auto indices = combinations.row(y);
                 for (int x = 0; x < linearRgb.cols; ++x)
                     if (const auto &matrix = matrices[size_t(indices.at(x))]) row[x] = *matrix * row[x];
@@ -386,13 +386,13 @@ bool applyTemperatureTint(cv::Mat &linearRgb, int temperature,
         return true;
     }
 
-    const std::optional<cv::Matx33f> adaptationF = temperatureTintMatrix(temperature, referenceTemperature, tint);
+    const std::optional<ipr::Matrix33f> adaptationF = temperatureTintMatrix(temperature, referenceTemperature, tint);
     if (!adaptationF)
         return true;
     for (int y = 0; y < linearRgb.rows; ++y) {
-        cv::Vec3f *row = linearRgb.ptr<cv::Vec3f>(y);
+        ipr::Vec3f *row = linearRgb.ptr<ipr::Vec3f>(y);
         for (int x = 0; x < linearRgb.cols; ++x) {
-            const cv::Vec3f adapted = *adaptationF * row[x];
+            const ipr::Vec3f adapted = *adaptationF * row[x];
             row[x] = adapted;
         }
     }

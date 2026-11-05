@@ -226,6 +226,18 @@ int main(int argc, char **argv)
         return sameBits(a * b, c * d) && sameBits(a * v, c * w) && sameBits(a.inv(), c.inv()) &&
                sameBits(cv::determinant(a), determinant(c)) && sameBits(a * 0.5, c * 0.5) && sameBits(cv::Matx33d(a), Matrix33d(c));
     });
+    // OpenCV inverts a 3 x 3 by cofactors whatever the method asked: Cholesky included, which then
+    // refuses only a zero determinant.
+    check("a 3 x 3 inverse asked by cholesky is the cofactor inverse", [] {
+        const auto [a, c] = matPair<float>();
+        bool theirOk = false, myOk = false;
+        const cv::Matx33f theirs = a.inv(cv::DECOMP_CHOLESKY, &theirOk);
+        const Matrix33f ours = c.inv(&myOk);
+        bool badOk = false, myBadOk = false;
+        const cv::Matx33f negative = (cv::Matx33f::eye() * -1.0f).inv(cv::DECOMP_CHOLESKY, &badOk);
+        return sameBits(theirs, ours) && theirOk == myOk && sameBits(negative, (Matrix33f::identity() * -1.0f).inv(&myBadOk)) &&
+               badOk == myBadOk;
+    });
     check("matx33d identity and singular inverse", [] {
         cv::Matx33d a = cv::Matx33d::eye();
         Matrix33d c = Matrix33d::identity();

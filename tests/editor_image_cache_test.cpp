@@ -1,5 +1,6 @@
 #include "imageeditor.h"
 #include "imageprovider.h"
+#include "OpenCvBridge.h"
 #include <QCoreApplication>
 #include <QElapsedTimer>
 #include <QEventLoop>
@@ -48,7 +49,7 @@ int main(int argc, char **argv)
         master.linearRgba = cv::Mat(97, 6959, CV_32FC4);
         for (int y = 0; y < master.linearRgba.rows; ++y)
             for (int x = 0; x < master.linearRgba.cols; ++x)
-                master.linearRgba.at<cv::Vec4f>(y, x) = {x / 6959.f, y / 97.f, .37f, 1.f};
+                ipr::at<ipr::Vec4f>(master.linearRgba, y, x) = {x / 6959.f, y / 97.f, .37f, 1.f};
         ImageImport::Result restored;
         restored.image = IprTestImageGenerator::proxy(master);
         if (restored.image.linearRgba.cols != 2048 || !ImageImport::complete(restored)) {

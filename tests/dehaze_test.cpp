@@ -1,4 +1,5 @@
 #include "Dehaze.h"
+#include "OpenCvBridge.h"
 
 #include <opencv2/imgproc.hpp>
 
@@ -25,8 +26,8 @@ cv::Mat hazyScene()
             const float detail = 0.08f + 0.06f * float(((x / 16) + (y / 16)) % 2);
             const float t = y < 32 ? 0.0f : y < 256 ? 0.35f : 1.0f;
             const float airlight = 0.8f;
-            const cv::Vec3f j(detail * 1.2f, detail, detail * 0.8f);
-            scene.at<cv::Vec3f>(y, x) = j * t + cv::Vec3f(airlight, airlight, airlight) * (1 - t);
+            const ipr::Vec3f j(detail * 1.2f, detail, detail * 0.8f);
+            ipr::at<ipr::Vec3f>(scene, y, x) = j * t + ipr::Vec3f(airlight, airlight, airlight) * (1 - t);
         }
     return scene;
 }
@@ -39,7 +40,7 @@ double contrast(const cv::Mat &rgb, int y0, int y1)
     int n = 0;
     for (int y = y0; y < y1; ++y)
         for (int x = 64; x < 448 - 16; ++x, ++n)
-            sum += std::abs(rgb.at<cv::Vec3f>(y, x)[1] - rgb.at<cv::Vec3f>(y, x + 16)[1]);
+            sum += std::abs(ipr::at<ipr::Vec3f>(rgb, y, x)[1] - ipr::at<ipr::Vec3f>(rgb, y, x + 16)[1]);
     return sum / n;
 }
 
@@ -73,7 +74,7 @@ int main()
         for (int y = 0; y < m->rows; ++y)
             for (int x = 0; x < m->cols; ++x)
                 for (int c = 0; c < 3; ++c) {
-                    const float v = m->at<cv::Vec3f>(y, x)[c];
+                    const float v = m->at<ipr::Vec3f>(y, x)[c];
                     valid = valid && std::isfinite(v) && v >= 0;
                 }
     if (!check(valid, "output stays finite and nonnegative")) return 1;

@@ -3,6 +3,7 @@
 
 #include "CameraProfileEngine.h"
 #include "StackSession.h"
+#include "OpenCvBridge.h"
 
 #include <QDir>
 #include <QFileInfo>
@@ -17,12 +18,12 @@
 
 namespace StackFixture {
 
-inline cv::Mat scene(const cv::Size &size)
+inline cv::Mat scene(const ipr::Size &size)
 {
     cv::RNG random(7);
-    cv::Mat image = cv::Mat::zeros(size, CV_32FC3);
+    cv::Mat image = cv::Mat::zeros(ipr::toCv(size), CV_32FC3);
     for (const double sigma : {1.5, 5.0, 18.0}) {
-        cv::Mat layer(size, CV_32FC3);
+        cv::Mat layer(ipr::toCv(size), CV_32FC3);
         random.fill(layer, cv::RNG::NORMAL, cv::Scalar::all(0), cv::Scalar::all(1));
         cv::GaussianBlur(layer, layer, cv::Size(), sigma);
         cv::Scalar mean, deviation;
@@ -35,7 +36,7 @@ inline cv::Mat scene(const cv::Size &size)
 // Frames named frame0, frame1... in place of a RAW decoder: small views of one scene.
 struct Source
 {
-    cv::Mat base = scene(cv::Size(500, 340));
+    cv::Mat base = scene(ipr::Size(500, 340));
     std::shared_ptr<CameraProfileEngine::DcpWorkingContext> context;
     std::shared_ptr<std::atomic_int> calls = std::make_shared<std::atomic_int>(0);
     int slowMs = 0;

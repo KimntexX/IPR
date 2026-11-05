@@ -39,7 +39,7 @@ constexpr float kChromaLogFloor = 1e-5f;  // log2 guide floor, linear Y
 constexpr double kChromaLevelSigma = 4.0;
 constexpr float kChromaEdgeLow = 3.0f, kChromaEdgeHigh = 8.0f;  // in noise units of the level
 
-float luminanceOf(const cv::Vec3f &rgb)
+float luminanceOf(const ipr::Vec3f &rgb)
 {
     return std::max(0.0f, WorkingColor::luminance(rgb));
 }
@@ -48,7 +48,7 @@ cv::Mat extractLuminance(const cv::Mat &linearRgb)
 {
     cv::Mat result(linearRgb.rows, linearRgb.cols, CV_32F);
     for (int y = 0; y < linearRgb.rows; ++y) {
-        const cv::Vec3f *source = linearRgb.ptr<cv::Vec3f>(y);
+        const ipr::Vec3f *source = linearRgb.ptr<ipr::Vec3f>(y);
         float *target = result.ptr<float>(y);
         for (int x = 0; x < linearRgb.cols; ++x)
             target[x] = luminanceOf(source[x]);
@@ -209,7 +209,7 @@ cv::Mat denoiseLuminance(const cv::Mat &plane, const cv::Mat &protectionMap,
 
 cv::Mat boxMean(const cv::Mat &plane, int radius)
 {
-    return ipr::boxMean(plane, cv::Size(2 * radius + 1, 2 * radius + 1), ipr::BlurBorder::LastPixel);
+    return ipr::boxMean(plane, ipr::Size(2 * radius + 1, 2 * radius + 1), ipr::BlurBorder::LastPixel);
 }
 
 // He's guided filter: the plane follows the guide's edges inside each window.
@@ -297,7 +297,7 @@ cv::Mat colourEdgeProtection(const cv::Mat &chromaOrange, const cv::Mat &chromaG
         for (int x = 0; x < gradient.cols; ++x)
             target[x] = noise[x] > 0.0f ? smoothStep(kChromaEdgeLow, kChromaEdgeHigh, edge[x] / noise[x]) : 0.0f;
     }
-    return ipr::maximum(protection, cv::Size(2 * radius + 1, 2 * radius + 1), ipr::Beyond::Nothing);
+    return ipr::maximum(protection, ipr::Size(2 * radius + 1, 2 * radius + 1), ipr::Beyond::Nothing);
 }
 
 // Colour noise. A 5 x 5 median first removes isolated colour dots, which an
@@ -356,7 +356,7 @@ void splitLumaChroma(const cv::Mat &rgb, cv::Mat *luma, cv::Mat *chromaOrange,
     chromaOrange->create(rgb.rows, rgb.cols, CV_32F);
     chromaGreen->create(rgb.rows, rgb.cols, CV_32F);
     for (int y = 0; y < rgb.rows; ++y) {
-        const cv::Vec3f *source = rgb.ptr<cv::Vec3f>(y);
+        const ipr::Vec3f *source = rgb.ptr<ipr::Vec3f>(y);
         float *yRow = luma->ptr<float>(y);
         float *coRow = chromaOrange->ptr<float>(y);
         float *cgRow = chromaGreen->ptr<float>(y);
@@ -371,20 +371,20 @@ void splitLumaChroma(const cv::Mat &rgb, cv::Mat *luma, cv::Mat *chromaOrange,
     }
 }
 
-inline cv::Vec3f mergedPixel(float luma, float co, float cg)
+inline ipr::Vec3f mergedPixel(float luma, float co, float cg)
 {
     const float yValue = std::max(0.0f, luma);
     // Exact inverse of master Y, Co=R-B, Cg=G-(R+B)/2.
     const auto &w = WorkingColor::lumaWeights();
     const float k = w[0] + .5f * w[1];
-    const cv::Vec3f deviation((1.f - k) * co - w[1] * cg,
+    const ipr::Vec3f deviation((1.f - k) * co - w[1] * cg,
                              (.5f - k) * co + (1.f - w[1]) * cg,
                              -k * co - w[1] * cg);
     const float minimum = std::min({deviation[0], deviation[1], deviation[2]});
     const float chromaScale = minimum < -yValue ? yValue / -minimum : 1.0f;
     // Compress toward a gray of the same luminance instead of clipping
     // channels independently (which lifts dark Y). No upper HDR clamp.
-    cv::Vec3f merged;
+    ipr::Vec3f merged;
     for (int channel = 0; channel < 3; ++channel)
         merged[channel] = std::max(0.0f, yValue + chromaScale * deviation[channel]);
     return merged;
@@ -394,7 +394,7 @@ void mergeLumaChroma(const cv::Mat &luma, const cv::Mat &chromaOrange,
                 const cv::Mat &chromaGreen, cv::Mat *rgb)
 {
     for (int y = 0; y < rgb->rows; ++y) {
-        cv::Vec3f *target = rgb->ptr<cv::Vec3f>(y);
+        ipr::Vec3f *target = rgb->ptr<ipr::Vec3f>(y);
         const float *yRow = luma.ptr<float>(y);
         const float *coRow = chromaOrange.ptr<float>(y);
         const float *cgRow = chromaGreen.ptr<float>(y);
@@ -471,7 +471,7 @@ void reduceNoiseLocally(cv::Mat &linearRgb, const DenoiseSettings &settings, dou
     const float *const noRow = nullptr;
     ipr::parallelRows(linearRgb.rows, [&](int first, int last) {
         for (int y = first; y < last; ++y) {
-            auto *pixels = linearRgb.ptr<cv::Vec3f>(y);
+            auto *pixels = linearRgb.ptr<ipr::Vec3f>(y);
             const float *luminanceRow = localLuminance.empty() ? noRow : localLuminance.ptr<float>(y);
             const float *chrominanceRow = localChrominance.empty() ? noRow : localChrominance.ptr<float>(y);
             const std::vector<const float *> lumaRows = rowsOf(lumaPlanes, y);
@@ -514,7 +514,7 @@ void reduceNoise(cv::Mat &linearRgb, const DenoiseSettings &settings, double pix
     if (linearRgb.empty() || linearRgb.type() != CV_32FC3) return;
     const auto usable = [&](LocalValues::Parameter parameter) {
         const cv::Mat &map = local[parameter];
-        return !map.empty() && LocalValues::fits(map, linearRgb.size()) ? map : cv::Mat();
+        return !map.empty() && LocalValues::fits(map, ipr::fromCv(linearRgb.size())) ? map : cv::Mat();
     };
     const cv::Mat localLuminance = usable(LocalValues::DenoiseLuminance);
     const cv::Mat localChrominance = usable(LocalValues::DenoiseChrominance);
@@ -558,7 +558,7 @@ void sharpen(cv::Mat &linearRgb, const SharpenSettings &settings, double pixelSc
 {
     if (linearRgb.empty() || linearRgb.type() != CV_32FC3) return;
     const cv::Mat &map = local[LocalValues::Sharpening];
-    const bool hasLocal = !map.empty() && LocalValues::fits(map, linearRgb.size());
+    const bool hasLocal = !map.empty() && LocalValues::fits(map, ipr::fromCv(linearRgb.size()));
     if (settings.amount <= 0 && !hasLocal)
         return;
 
@@ -567,15 +567,15 @@ void sharpen(cv::Mat &linearRgb, const SharpenSettings &settings, double pixelSc
     const double radius = std::clamp(static_cast<double>(settings.radius), 0.3, 3.0) * pixelScale;
     localBase = ipr::gaussianBlurred(luma, radius, ipr::BlurBorder::LastPixel);
     const int kernelSize = std::max(3, static_cast<int>(std::ceil(radius * 2.0)) * 2 + 1);
-    const cv::Mat localMinimum = ipr::minimum(luma, cv::Size(kernelSize, kernelSize), ipr::Beyond::Nothing);
-    const cv::Mat localMaximum = ipr::maximum(luma, cv::Size(kernelSize, kernelSize), ipr::Beyond::Nothing);
+    const cv::Mat localMinimum = ipr::minimum(luma, ipr::Size(kernelSize, kernelSize), ipr::Beyond::Nothing);
+    const cv::Mat localMaximum = ipr::maximum(luma, ipr::Size(kernelSize, kernelSize), ipr::Beyond::Nothing);
 
     const float noiseSigma = estimateNoiseSigma(luma);
     const float threshold = noiseSigma *
         (0.35f + 5.5f * static_cast<float>(std::clamp(settings.masking, 0, 100)) / 100.0f);
     const float amount = static_cast<float>(std::clamp(settings.amount, 0, 200)) / 100.0f;
     for (int y = 0; y < linearRgb.rows; ++y) {
-        cv::Vec3f *pixels = linearRgb.ptr<cv::Vec3f>(y);
+        ipr::Vec3f *pixels = linearRgb.ptr<ipr::Vec3f>(y);
         const float *sourceLuma = luma.ptr<float>(y);
         const float *base = localBase.ptr<float>(y);
         const float *minimum = localMinimum.ptr<float>(y);

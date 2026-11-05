@@ -2,6 +2,7 @@
 #define IPR_CORE_RETOUCH_H
 
 #include "LocalAdjustments.h"
+#include "Types.h"
 
 #include <QDataStream>
 #include <QVariantList>
@@ -27,7 +28,7 @@ struct Operation
     bool visible = true;
     float opacity = 1.0f;       // in [0, 1]
     std::vector<LocalAdjustments::BrushStroke> strokes;
-    cv::Point2f source{0.0f, 0.0f}; // Heal and Clone: from a zone's pixel to its source, shares of the canvas's sides
+    ipr::Point2f source{0.0f, 0.0f}; // Heal and Clone: from a zone's pixel to its source, shares of the canvas's sides
 };
 
 using Operations = std::vector<Operation>;
@@ -42,7 +43,7 @@ bool bound(Operations &operations);
 bool active(const Operations &operations);
 
 // The zone, CV_32FC1 in [0, 1], of this size; opacity and visibility apart.
-cv::Mat coverage(const Operation &operation, const cv::Size &canvas);
+cv::Mat coverage(const Operation &operation, const ipr::Size &canvas);
 
 // Applies the visible retouches in order, each seeing the result of the ones before, to a linear
 // CV_32FC3 image on the canvas. Pixels outside the zones do not change. An empty pixel, exactly 0
@@ -52,7 +53,7 @@ int apply(cv::Mat &rgb, const Operations &operations);
 
 // Where to take a zone from: the place nearby whose surroundings best match the zone's. Shares of
 // the canvas's sides, or (0, 0) when there is none. rgb: linear CV_32FC3, on the canvas.
-cv::Point2f suggestSource(const cv::Mat &rgb, const Operation &operation);
+ipr::Point2f suggestSource(const cv::Mat &rgb, const Operation &operation);
 
 // What a render's result depends on, for the cache keys. Adds nothing without a retouch.
 void appendKey(QDataStream &stream, const Operations &operations);
