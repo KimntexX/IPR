@@ -1,20 +1,18 @@
 # Restauration neuronale — qualification du corpus
 
-**État au 5 novembre 2026, bilan de couverture :** le candidat stratifié
-termine à 12/48 échecs fins forts contre 19/48 au contrôle aléatoire frais.
-Les deux graines progressent, mais l'erreur RGB fine augmente de 1,9 à 3,5 %.
-Une sonde de force indique un gain de sélectivité sur les contenus connus
-à bruit fort, au-delà d'une simple baisse globale de correction. Elle n'est
-ni une confirmation indépendante ni une validation photographique.
-Le dernier diagnostic a été corrigé pour comparer les deux domaines
-d'entraînement volontairement distincts ; aucun entraînement n'a été rejoué.
+**État au 5 novembre 2026, bilan chromatique :** la répartition des signes
+de contraste donne 15/48 échecs forts contre 16/48 au contrôle apparié,
+sans gain robuste entre graines. Les deux tirages stratifiés naturels
+déjà mesurés donnent 12 et 16 échecs avec mêmes initialisations, budget et
+critères. Cette variabilité interdit de traiter le meilleur tirage comme
+une référence stable. Une campagne limitée de répétabilité sur deux autres
+tirages est préparée, sans nouvelle architecture, perte ou critère.
 Aucune qualité photographique validée, aucun moteur de production modifié
 ni nouveau jeu réservé ouvert. Les résultats et décisions actuels sont
 consignés en fin de rapport.
 
-La campagne suivante, autorisée le même jour, rééquilibre les signes des
-contrastes chromatiques sur des textures appariées. Sa préparation passe ;
-aucun résultat de qualité de ce nouvel essai n'est encore disponible.
+Les jeux réservés restent fermés ; la répétabilité n'est mesurée que sur
+les contrôles connus. Les conclusions et preuves actuelles sont en fin de rapport.
 
 ## 1er novembre 2026 — scène pilote 6V1A0133
 
@@ -5886,3 +5884,77 @@ Cette campagne évalue une hypothèse de diversité d'apprentissage, sans
 modifier la colorimétrie de production ni transformer les photographies
 de l'utilisateur. Elle conserve les limites de quatre threads et de RAM
 déjà déclarées. Un gain sur ce banc ne vaudra pas validation photographique.
+
+### Bilan des signes chromatiques — 5 novembre 2026, terminé à 12:01 UTC
+
+Les quatre apprentissages atteignent leurs 512 étapes en une tentative,
+passent le développement et terminent toute la chaîne de diagnostics sans
+erreur technique. Les pics résidents vont de 399,6 à 401,9 Mio. Aucun jeu
+réservé n'est ouvert après les échecs fins.
+
+| Graine et bruit | Échecs forts contrôle → équilibré | Pire transfert contrôle → équilibré | Erreur RGB équilibré / contrôle |
+| --- | ---: | ---: | ---: |
+| 71, niveau 1 | 1 → 1 | 0,9625 → 0,9712 | 0,9961 |
+| 71, niveau 2 | 6 → 7 | 0,7737 → 0,7921 | 0,9970 |
+| 73, niveau 1 | 0 → 0 | 0,9787 → 0,9836 | 1,0052 |
+| 73, niveau 2 | 9 → 7 | 0,6463 → 0,7224 | 1,0048 |
+
+Le bilan net est **15/48 échecs contre 16/48**. La graine 73 gagne les
+groupes achromatiques à 22 et 26 cycles au bruit fort, tandis que 71 perd
+le groupe chromatique à 18 cycles. Il reste quatorze défauts de transfert
+et un défaut RGB. Le pire transfert augmente dans les quatre groupes,
+mais ni les échecs ni l'erreur RGB ne progressent uniformément entre graines.
+Le candidat n'est donc pas retenu comme amélioration générale ni intégré.
+
+Le diagnostic de textures mesure 22 événements distincts : dix partagés,
+six propres au contrôle et six propres au candidat. Les 88 enregistrements
+modèle/contenu ne comptent pas deux fois les événements partagés dans un
+même modèle. Les médianes de transfert composante par composante changent
+peu et sans gain uniforme ; ce contrôle descriptif ne renverse pas le verdict.
+Preuves : [contrôle fin](../raw/neural-fine-regression-v001-20261105T114645Z.json),
+[candidat fin](../raw/neural-fine-regression-v001-20261105T115431Z.json),
+[campagne complète](../raw/neural-paired-continuation-v001-20261105T120109Z.json),
+[domaines et composantes](../raw/neural-multitone-diagnostic-v001-20261105T120056Z.json).
+
+### Sensibilité au tirage d'entraînement — 5 novembre 2026, 12:04 UTC
+
+Le précédent candidat stratifié naturel comptait 12 échecs ; le nouveau
+contrôle stratifié naturel en compte 16. L'audit des fichiers confirme des
+configurations et références d'initialisation identiques, ainsi que les
+mêmes cibles fines, observations bruitées et critères. Les empreintes des
+révisions du banc restent dans les plans : ne pas prétendre une identité
+de toutes leurs sources logicielles. Les contenus d'entraînement ont changé.
+
+À bruit fort, les deux pires transferts passent de 0,8273/0,8047 sur le
+tirage précédent à 0,7737/0,6463 sur le nouveau contrôle. La variation entre
+ces tirages est importante face au gain de l'intervention sur les signes.
+Cela ne démontre ni sa cause unique ni une variance de population : nous
+n'avons que deux tirages et deux initialisations de modèles. **Ne pas
+sélectionner le tirage à 12 échecs pour le présenter comme stable.**
+Preuve : [audit des entrées communes et des résultats](../raw/neural-texture-repeatability-audit-v001-20261105T120437Z.json).
+
+### Répétabilité limitée — préparation du 5 novembre 2026, 12:06 UTC
+
+La poursuite autonome choisit deux tirages supplémentaires, préfixés et
+indépendants pour les contenus (origines 16 000 000 et 20 000 000), sous la
+même politique de stratification fréquence/amplitude et signes naturels.
+Le calendrier et les graines de bruit sont identiques entre essais ;
+il ne s'agit pas de réalisations complètes statistiquement indépendantes.
+Deux initialisations, 512 étapes et Adam neuf 0,00025 sont conservés, sans
+nouvelle perte, architecture ou critère. Le but est de disposer de quatre
+tirages naturels décrits, pas de retenir un vainqueur.
+
+Chaque bras comporte 822 textures nouvelles et aucune cellule positive
+fréquence/amplitude/phase/bruit manquante. La préparation demande 9 385
+et 10 133 tirages de générateur. Les 80 empreintes de sortie initiales
+restent exactes et les quatre prétests de huit étapes passent ; leurs
+poids sont jetés. Pic résident 416,3 Mio, 8 326 empreintes exclues. Les
+19 tests ciblés passent, dont une barrière empêchant l'ouverture de jeux
+réservés même si tous les contrôles connus réussissent.
+
+Les plans `paired-repeatability-plan-v001` portent le périmètre `known_only`.
+Ce périmètre est appliqué par la suite automatique ; une erreur de calcul
+reste une erreur, sans relance sur score. Les données et résultats défavorables
+restent conservés. Aucun nouvel ajustement du modèle n'est décidé avant ce
+bilan de répétabilité. Les limites mémoire et quatre threads sont inchangés.
+Preuve : [tirages et prétests figés](../raw/neural-repeatability-preflight-v001-20261105T120647Z.json).

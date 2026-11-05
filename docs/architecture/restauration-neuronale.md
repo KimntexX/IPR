@@ -1093,3 +1093,11 @@ DC et géométrie sont appariés ; seul le signe G/B peut changer. Les quotas
 regroupent les phases Bayer. Cette transformation appartient exclusivement
 au banc d'apprentissage, sans option ni traitement de production. Les
 prétests passent ; le bénéfice de ce nouvel essai reste à mesurer.
+
+Son bilan est désormais mesuré : 15/48 échecs contre 16/48 au contrôle,
+sans amélioration robuste entre les graines. La diversité des signes n'est
+pas retenue comme traitement général. Deux tirages stratifiés naturels ont
+donné 12 et 16 échecs ; la suite mesure la répétabilité sur deux autres
+tirages à paramètres fixes. Le périmètre `known_only` du plan interdit
+l'ouverture de nouvelles cohortes réservées, même après réussite des
+contrôles connus. Aucun modèle n'est sélectionné d'après le meilleur tirage.

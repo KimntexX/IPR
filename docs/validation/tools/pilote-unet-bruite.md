@@ -8,7 +8,22 @@ Les JSON horodatés restent la mémoire canonique.
 
 ## Lancement de la campagne courante
 
-La campagne courante rééquilibre les signes de contraste des textures
+Campagne de répétabilité limitée : deux nouveaux tirages sous la même
+stratification, sans équilibrage des signes. Aucun meilleur tirage n'est
+sélectionné. Préparation déjà vérifiée ; ne pas écraser les dossiers :
+
+```powershell
+& .venv-neural/Scripts/python.exe tests/neural/prepare_coverage_continuation.py --design repeatability --output build-patch_neural_restoration/paired-repeatability-plan-v001
+& .venv-neural/Scripts/python.exe tests/neural/run_paired_continuation.py --prepared build-patch_neural_restoration/paired-repeatability-plan-v001 --output build-patch_neural_restoration/paired-repeatability-campaign-v001 --prefix repeatability --candidate replicate
+```
+
+Les plans portent `qualification_scope: known_only` : même une réussite
+de tous les contrôles connus n'ouvre pas les cohortes réservées. Les deux
+bras et graines sont conservés, y compris leurs échecs.
+
+### Campagne précédente de signes chromatiques
+
+La campagne terminée rééquilibrait les signes de contraste des textures
 chromatiques, à paramètres et magnitudes appariés. Les deux bras gardent
 la couverture fréquence/amplitude précédente. La préparation est déjà
 exécutée ; conserver les dossiers et ne pas les écraser :

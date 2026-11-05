@@ -105,6 +105,12 @@ def run(root, output, qualification, data_plan, campaign, prefix, previous_fine,
                     '--campaign', campaign, '--output', base/(prefix+'-learning-diagnostic-v001/result.json'))
             state['status'] = 'completed_known_failure_diagnosis_reserved_unopened'
             return state
+        scope=json.loads(data_plan.read_text(encoding='utf-8')).get('qualification_scope','full')
+        if scope not in ('full','known_only'):
+            raise ValueError('Declared qualification scope required')
+        if scope=='known_only':
+            state['status']='completed_known_only_study_reserved_unopened'
+            return state
         # Inputs, thresholds and both final weights remain frozen before opening this cohort.
         models = campaign_models(campaign)
         classic_plan = base/(prefix+'-independent-plan-v001')

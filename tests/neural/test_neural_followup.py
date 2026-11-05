@@ -58,3 +58,19 @@ class NeuralFollowupTests(unittest.TestCase):
                 execute(['test'], io.StringIO())
         self.assertEqual(kill.call_args.args[0], ['taskkill', '/PID', '12345', '/T', '/F'])
         self.assertEqual(child.wait.call_count, 2)
+
+    def test_repeatability_never_opens_reserved_even_when_all_known_gates_pass(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory)
+            base=root/'build-patch_neural_restoration'
+            base.mkdir()
+            (root/'docs/validation/raw').mkdir(parents=True)
+            qualification=base/'qualification.json'
+            qualification.write_text(json.dumps(dict(status='completed_known_regressions_passed',development_passed=True,
+                regressions=[dict(name=n,passed=True) for n in ('classic_first','classic_second','fine')])))
+            data=base/'data.json'
+            data.write_text(json.dumps(dict(qualification_scope='known_only')))
+            with mock.patch('run_neural_followup.execute',side_effect=AssertionError('No reserved command allowed')),mock.patch(
+                    'run_neural_followup.campaign_models',side_effect=AssertionError('No confirmation models allowed')):
+                result=run(root,base/'output',qualification,data,base/'training','repeatability',base/'previous.json',base/'previous-training')
+            self.assertEqual(result['status'],'completed_known_only_study_reserved_unopened')
