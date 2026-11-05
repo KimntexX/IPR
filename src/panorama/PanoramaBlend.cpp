@@ -1,5 +1,7 @@
 #include "PanoramaBlend.h"
 
+#include "OpenCvBridge.h"
+
 #include <opencv2/imgproc.hpp>
 
 #include <algorithm>
@@ -329,8 +331,8 @@ Layer prepareLayer(const View &view, const cv::Mat &labels, int label, double na
             if (row[x] == label)
                 out[x - view.area.x] = 1.0f;
     }
-    cv::GaussianBlur(mine, layer.narrow, cv::Size(), narrowSigma, narrowSigma, cv::BORDER_REPLICATE);
-    cv::GaussianBlur(mine, layer.wide, cv::Size(), wideSigma, wideSigma, cv::BORDER_REPLICATE);
+    layer.narrow = ipr::gaussianBlurred(mine, narrowSigma, ipr::BlurBorder::LastPixel);
+    layer.wide = ipr::gaussianBlurred(mine, wideSigma, ipr::BlurBorder::LastPixel);
 
     // The blur of the frame's own pixels, measured on them alone: what lies outside it says nothing.
     cv::Mat present, weighted;
@@ -340,8 +342,8 @@ Layer prepareLayer(const View &view, const cv::Mat &labels, int label, double na
     cv::merge(three, presentColour);
     cv::multiply(view.colour, presentColour, weighted);
     cv::Mat blurredColour, blurredPresent;
-    cv::GaussianBlur(weighted, blurredColour, cv::Size(), wideSigma, wideSigma, cv::BORDER_REPLICATE);
-    cv::GaussianBlur(present, blurredPresent, cv::Size(), wideSigma, wideSigma, cv::BORDER_REPLICATE);
+    blurredColour = ipr::gaussianBlurred(weighted, wideSigma, ipr::BlurBorder::LastPixel);
+    blurredPresent = ipr::gaussianBlurred(present, wideSigma, ipr::BlurBorder::LastPixel);
     layer.low.create(view.area.size(), CV_32FC3);
     for (int y = 0; y < layer.low.rows; ++y) {
         const cv::Vec3f *colour = blurredColour.ptr<cv::Vec3f>(y);

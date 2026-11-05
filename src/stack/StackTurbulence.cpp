@@ -2,6 +2,8 @@
 
 #include "StackMerge.h"
 
+#include "OpenCvBridge.h"
+
 #include <opencv2/imgproc.hpp>
 
 #include <algorithm>
@@ -27,7 +29,7 @@ cv::Mat rootLuminance(const cv::Mat &rgb)
 double sharpnessOf(const cv::Mat &luminance)
 {
     cv::Mat smoothed, detail;
-    cv::GaussianBlur(luminance, smoothed, cv::Size(), 1.0);
+    smoothed = ipr::gaussianBlurred(luminance, 1.0, ipr::BlurBorder::Mirror);
     cv::Laplacian(smoothed, detail, CV_32F);
     cv::Scalar mean, deviation;
     cv::meanStdDev(detail, mean, deviation);

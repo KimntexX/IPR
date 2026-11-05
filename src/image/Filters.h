@@ -24,6 +24,9 @@ Image gaussianBlur(const Image &image, double sigma, int threads = 0, BlurBorder
 // out may not be the image itself.
 void gaussianBlurInto(const Image &image, Image &out, double sigma, int threads = 0,
                       BlurBorder border = BlurBorder::Mirror);
+// With a sigma along each axis; an axis whose sigma is not above zero is left as it is.
+void gaussianBlurInto(const Image &image, Image &out, double sigmaX, double sigmaY, int threads = 0,
+                      BlurBorder border = BlurBorder::Mirror);
 
 } // namespace ipr
 

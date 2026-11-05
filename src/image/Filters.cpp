@@ -103,6 +103,11 @@ Image gaussianBlur(const Image &image, double sigma, int threads, BlurBorder bor
 
 void gaussianBlurInto(const Image &image, Image &out, double sigma, int threads, BlurBorder border)
 {
+    gaussianBlurInto(image, out, sigma, sigma, threads, border);
+}
+
+void gaussianBlurInto(const Image &image, Image &out, double sigmaX, double sigmaY, int threads, BlurBorder border)
+{
     if (image.empty() != out.empty())
         throw std::invalid_argument("The blur needs a buffer of the image's size");
     if (image.empty())
@@ -110,16 +115,20 @@ void gaussianBlurInto(const Image &image, Image &out, double sigma, int threads,
     if (image.depth() != Depth::F32 || out.depth() != Depth::F32 || image.size() != out.size() ||
         image.channels() != out.channels())
         throw std::invalid_argument("The blur reads and writes 32-bit floats of one size");
-    const std::vector<float> half = gaussianHalfKernel(sigma);
-    if (half.empty()) {
+    std::vector<float> half = gaussianHalfKernel(sigmaX), halfY = gaussianHalfKernel(sigmaY);
+    if (half.empty() && halfY.empty()) {
         const size_t rowBytes = size_t(image.width()) * size_t(image.channels()) * sizeof(float);
         for (int y = 0; y < image.height(); ++y)
             std::memcpy(out.mutableRow<float>(y), image.row<float>(y), rowBytes);
         return;
     }
+    if (half.empty())
+        half = {1.0f};
+    if (halfY.empty())
+        halfY = {1.0f};
 
     const int width = image.width(), height = image.height(), channels = image.channels();
-    const int radius = int(half.size()) - 1;
+    const int radius = int(halfY.size()) - 1;
     if (std::int64_t(width) * height * channels < aloneValues)
         threads = 1;
     Image across = Image::create(image.size(), Depth::F32, channels);
@@ -141,13 +150,13 @@ void gaussianBlurInto(const Image &image, Image &out, double sigma, int threads,
                 rows[size_t(k + radius)] = across.row<float>(mirrored(y + k, height, border));
             for (size_t chunk = 0; chunk < values; chunk += size_t(chunkValues)) {
                 const size_t chunkEnd = std::min(chunk + size_t(chunkValues), values);
-                const float middle = half[0];
+                const float middle = halfY[0];
                 for (size_t v = chunk; v < chunkEnd; ++v)
                     target[v] = middle * centre[v];
                 for (int k = 1; k <= radius; ++k) {
                     const float *above = rows[size_t(radius - k)];
                     const float *below = rows[size_t(radius + k)];
-                    const float weight = half[size_t(k)];
+                    const float weight = halfY[size_t(k)];
                     for (size_t v = chunk; v < chunkEnd; ++v)
                         target[v] += weight * (above[v] + below[v]);
                 }

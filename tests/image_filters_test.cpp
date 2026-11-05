@@ -219,6 +219,33 @@ void theRadiusIsTheOneOfOpenCv()
     check(identical(gaussianBlur(one, 0.01, 1), one), "and changes nothing");
 }
 
+// One sigma per axis: each pass with its own kernel, and an axis without one left as it is.
+void eachAxisHasItsSigma()
+{
+    const Image image = noisy({61, 47}, 2);
+    Image out = Image::create(image.size(), Depth::F32, 2);
+    gaussianBlurInto(image, out, 2.0, 2.0);
+    check(identical(out, gaussianBlur(image, 2.0)), "the same sigma twice is the usual blur");
+
+    gaussianBlurInto(image, out, 3.0, 0.0, 1, BlurBorder::LastPixel);
+    const std::vector<float> half = gaussianHalfKernel(3.0);
+    const int radius = int(half.size()) - 1;
+    for (int y : {0, 23, 46})
+        for (int x : {0, 30, 60}) {
+            float expected = half[0] * image.row<float>(y)[x * 2];
+            for (int k = 1; k <= radius; ++k) {
+                const int left = std::max(0, x - k), right = std::min(60, x + k);
+                expected += half[size_t(k)] * (image.row<float>(y)[left * 2] + image.row<float>(y)[right * 2]);
+            }
+            check(std::abs(out.row<float>(y)[x * 2] - expected) < 1e-5f, "only along x");
+        }
+    Image across = Image::create(image.size(), Depth::F32, 2);
+    gaussianBlurInto(image, across, 0.0, 3.0, 1, BlurBorder::LastPixel);
+    check(!identical(across, out), "and only along y");
+    gaussianBlurInto(image, out, 0.0, -1.0);
+    check(identical(out, image), "no sigma at all copies");
+}
+
 void aBufferReceivesTheSamePixels()
 {
     const Image image = noisy({97, 61}, 3);
@@ -309,6 +336,7 @@ int main()
         theLastPixelRepeatsBeyondTheBorder();
         theRadiusIsTheOneOfOpenCv();
         aBufferReceivesTheSamePixels();
+        eachAxisHasItsSigma();
         threadsDoNotChangeTheResult();
         aPartOfAnImageHasItsRows();
         itLeavesItsInputAlone();

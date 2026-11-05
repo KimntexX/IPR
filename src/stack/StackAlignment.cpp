@@ -1,5 +1,7 @@
 #include "StackAlignment.h"
 
+#include "OpenCvBridge.h"
+
 #include <opencv2/imgproc.hpp>
 
 #include <algorithm>
@@ -367,12 +369,12 @@ LocalField localField(const cv::Mat &reference, const cv::Mat &registered, const
         filtered.copyTo(axis, weight > 0.f);
     }
     cv::Mat smoothWeight;
-    cv::GaussianBlur(weight, smoothWeight, cv::Size(), options.smoothing);
+    smoothWeight = ipr::gaussianBlurred(weight, options.smoothing, ipr::BlurBorder::Mirror);
     constexpr float wholeWeight = 0.25f; // this much measure nearby is trusted fully
     for (cv::Mat &axis : axes) {
         cv::Mat weighted, smooth;
         cv::multiply(axis, weight, weighted);
-        cv::GaussianBlur(weighted, smooth, cv::Size(), options.smoothing);
+        smooth = ipr::gaussianBlurred(weighted, options.smoothing, ipr::BlurBorder::Mirror);
         for (int row = 0; row < axis.rows; ++row) {
             float *out = axis.ptr<float>(row);
             const float *value = smooth.ptr<float>(row), *share = smoothWeight.ptr<float>(row);

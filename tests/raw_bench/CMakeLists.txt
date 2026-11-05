@@ -52,6 +52,12 @@ add_executable(iprRawDevelopmentCapture development_capture.cpp
     "${IPR_RAW_SOURCE_ROOT}/src/raw/RawInput.cpp" "${IPR_RAW_SOURCE_ROOT}/src/raw/LibRawInput.cpp"
     "${IPR_RAW_SOURCE_ROOT}/src/raw/RawDevelopment.cpp" "${IPR_RAW_SOURCE_ROOT}/src/raw/Demosaic.cpp")
 target_include_directories(iprRawDevelopmentCapture PRIVATE "${IPR_RAW_SOURCE_ROOT}/src/raw" "${LIBRAW_INCLUDE_DIR}" ${OpenCV_INCLUDE_DIRS})
+if(EXISTS "${IPR_RAW_SOURCE_ROOT}/src/image/OpenCvBridge.cpp")
+    target_sources(iprRawDevelopmentCapture PRIVATE "${IPR_RAW_SOURCE_ROOT}/src/image/Image.cpp"
+        "${IPR_RAW_SOURCE_ROOT}/src/image/Parallel.cpp" "${IPR_RAW_SOURCE_ROOT}/src/image/Filters.cpp"
+        "${IPR_RAW_SOURCE_ROOT}/src/image/OpenCvBridge.cpp")
+    target_include_directories(iprRawDevelopmentCapture PRIVATE "${IPR_RAW_SOURCE_ROOT}/src/image")
+endif()
 target_link_libraries(iprRawDevelopmentCapture PRIVATE Qt6::Core "${LIBRAW_LIBRARY}" ${OpenCV_LIBS})
 target_compile_definitions(iprRawDevelopmentCapture PRIVATE IPR_WITH_LIBRAW=1
     IPR_BENCH_REVISION="${IPR_BENCH_REVISION}" IPR_RAW_ENGINE_REVISION="${IPR_RAW_ENGINE_REVISION}")

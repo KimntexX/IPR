@@ -78,11 +78,16 @@ cv::Mat asMutableMat(Image &image)
 
 cv::Mat gaussianBlurred(const cv::Mat &mat, double sigma, BlurBorder border)
 {
+    return gaussianBlurred(mat, sigma, sigma, border);
+}
+
+cv::Mat gaussianBlurred(const cv::Mat &mat, double sigmaX, double sigmaY, BlurBorder border)
+{
     if (mat.empty())
         return {};
     cv::Mat blurred(mat.size(), mat.type());
     Image target = fromMutableMat(blurred);
-    gaussianBlurInto(fromMat(mat), target, sigma, 0, border);
+    gaussianBlurInto(fromMat(mat), target, sigmaX, sigmaY, 0, border);
     return blurred;
 }
 

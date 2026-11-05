@@ -1,7 +1,8 @@
 // What a module costs in a real export and on the preview, and what it writes: exports each photo
 // as a 16-bit TIFF, neutral then with the adjustments given, three times each, through the real
 // editor, and times the preview's answer to the same change. Reads private copies only, since the
-// editor writes its .ipr beside a photo.
+// editor writes its .ipr beside a photo. A name starting with "geometry." sets that geometry value,
+// and going back to neutral resets the geometry.
 // usage: iprExportModuleProbe <revision> <new json> <folder for the exports> <name=value,...> <photo>...
 
 #include "controlled_memory.h"
@@ -93,8 +94,18 @@ Adjustments adjustmentsFrom(const QString &text)
 
 void apply(ImageEditor &editor, const Adjustments &adjustments, bool on)
 {
-    for (const auto &[name, value] : adjustments)
-        editor.setAdjustment(name, on ? value : 0.0);
+    const QString geometry = QStringLiteral("geometry.");
+    bool geometryReset = false;
+    for (const auto &[name, value] : adjustments) {
+        if (!name.startsWith(geometry))
+            editor.setAdjustment(name, on ? value : 0.0);
+        else if (on)
+            editor.setGeometryValue(name.mid(geometry.size()), value);
+        else if (!geometryReset) {
+            editor.resetGeometry();
+            geometryReset = true;
+        }
+    }
 }
 
 // Milliseconds from the change to the new preview, three times; empty when one does not come.

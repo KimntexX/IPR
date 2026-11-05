@@ -25,6 +25,7 @@ cv::Mat asMutableMat(Image &image);
 // A new Mat, blurred by this sigma in pixels. CV_32F of any channel count: throws
 // std::invalid_argument on another depth. While the modules still hold Mats.
 cv::Mat gaussianBlurred(const cv::Mat &mat, double sigma, BlurBorder border = BlurBorder::Mirror);
+cv::Mat gaussianBlurred(const cv::Mat &mat, double sigmaX, double sigmaY, BlurBorder border);
 
 inline cv::Size toCv(const Size &size) { return {size.width, size.height}; }
 inline Size fromCv(const cv::Size &size) { return {size.width, size.height}; }
