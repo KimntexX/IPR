@@ -2,8 +2,8 @@
 
 **Décision :** [ADR-0018](../decisions/ADR-0018-independance-decodage-raw-et-couche-image.md),
 20 octobre 2026, et volonté réaffirmée par l'utilisateur le 5 novembre 2026 : être le plus indépendant
-possible. **État :** O0 commencé, O1 et O2 faits, O3 commencé par le flou gaussien, le 5 novembre 2026, sur une branche locale,
-aucun module migré. **Une décision attend l'utilisateur** : §7, point 1.
+possible. **État :** O0 commencé, O1 et O2 faits, O3 commencé par le flou gaussien, le 5 novembre 2026, sur une branche locale.
+Un seul module utilise le nouveau flou, le contraste local. **Une décision attend l'utilisateur** : §7, point 1.
 Suivi : [issue 29](https://github.com/KimntexX/IPR/issues/29).
 Chantier distinct des [décodeurs RAW](roadmap-decodeurs-raw.md), sur sa propre branche durable,
 `patch_image_core`, après le palier E1 de la [refonte d'`ImageEditor`](plan-imageeditor-orchestrateur.md).
@@ -144,7 +144,27 @@ image de synthèse, sans module réel derrière.
 - **Sur le maître, 8 threads ne donnent que 2,3 à 3,8 fois un seul thread.** La cause n'est pas établie : le débit mémoire est mon
   hypothèse, non mesurée. L'optimisation peut donc continuer sans intrinsèques.
 - **Estimation du chantier :** toujours pas de chiffre sérieux. Ce noyau a pris peu de temps grâce à la spécification d'OpenCV et à
-  son rôle d'oracle, mais un seul noyau, sans migration, ne dit rien des 90 fichiers.
+  son rôle d'oracle, mais un seul noyau et un seul module ne disent rien des 90 fichiers.
+
+### Premier module migré : le contraste local
+
+Texture et clarté, soit le plan de luminance flouté avec le bord répété. La couche image gagne ce second bord et l'écriture dans un
+tampon existant ; [le noyau reste dans la tolérance](../validation/raw/image-kernel-gaussian-v002-20261105.json), à 3,6e-7 au plus.
+[Preuve de l'export](../validation/raw/local-contrast-export-v001-20261105.json) : texture 50, clarté 30, TIFF 16 bits en pleine
+résolution, médiane de trois exports par le vrai éditeur.
+
+| Photo | Export avec OpenCV | Export avec la couche image | Plus grand écart, sur 65 535 | Valeurs qui diffèrent |
+| --- | --- | --- | --- | --- |
+| `6V1A0007.CR3` | 2 294 ms | 2 349 ms | 1 | 0,07 % |
+| `6V1A0032.CR3` | 2 195 ms | 2 214 ms | 1 | 0,04 % |
+| `IMG_6858.CR2` | 1 283 ms | 1 263 ms | 1 | 0,02 % |
+
+- **Sur ce module, le coût à l'export est dans le bruit de la mesure,** alors que le noyau seul reste 2,1 à 2,7 fois plus lent sur une
+  photo entière : il ne pèse qu'une petite part de l'export, car les grands rayons passent déjà par une image réduite.
+- **Les pixels ne bougent pas à l'œil :** un niveau sur 65 535 au plus, sans modifier les exports neutres.
+- **Ce n'est pas une règle générale.** Ces flous ont des sigmas sous 4 ; les modules qui floutent large en pleine résolution, là où le
+  noyau atteint ×3,2, restent à mesurer un par un. L'aperçu n'a pas été chronométré. Les redimensionnements de ce module passent
+  encore par OpenCV.
 
 ## 5. Principes de conception
 
@@ -176,6 +196,7 @@ refaite après O2, sur la vitesse réellement mesurée, plutôt qu'annoncée mai
 1. **Le critère de vitesse d'O3.** C++ standard confirmé par l'utilisateur et, pour le flou, par la mesure : AVX2 n'y change presque
    rien. Mais le flou reste deux à trois fois plus lent qu'OpenCV sur une photo entière. **Je propose de garder « au moins égale »
    comme objectif, d'accepter ×2 à l'export tant que l'aperçu reste sous 250 ms, et de ne juger qu'après une mesure sur un vrai
-   export, module migré.** À toi de trancher : c'est le prix de l'indépendance, et il sera visible.
+   export, module migré.** Première mesure faite : invisible sur le contraste local, ci-dessus. L'utilisateur a accepté le 5 novembre
+   2026 de migrer ce module pour juger ; **sa décision attend son essai du paquet.**
 2. **Algèbre linéaire.** Écrire les petits solveurs nécessaires, sans bibliothèque : **accepté le 5 novembre 2026.**
 3. **Scripts d'analyse Python.** Ils gardent `cv2`, hors du produit : **accepté le 5 novembre 2026.**
