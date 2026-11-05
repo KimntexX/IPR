@@ -32,6 +32,7 @@ from run_synthetic_joint_pilot import tensor_hash, metrics, aggregate
 from synthetic_bayer_data import PATTERNS, FAMILIES, signal, noisy_observation
 from training_resume import save_checkpoint, restore_checkpoint
 from fine_texture_training import POLICY as TEXTURE_POLICY, texture
+from texture_sampling import texture_identity
 from context_data import extend_signal, extend_edge, extend_texture, extend_case, extend_observation, crop_centre
 from multiscale_correction import composed_support
 
@@ -45,7 +46,7 @@ TOOLS = tuple(dict.fromkeys(MODEL_TOOLS+FORWARD_TOOLS+('run_noisy_moment_pilot.p
     'compare_reconstruction_objectives.py', 'confirm_local_route.py',
     'run_synthetic_joint_pilot.py', 'reconstruction_gates.py', 'audit_bayer_symmetries.py',
     'training_resume.py', 'noisy_training_policy.py', 'noise_conditioning.py', 'fine_texture_training.py',
-    'clean_cfa_loss.py', 'cfa_structure_loss.py', 'continuation_policy.py', 'continuation_initialization.py', 'context_data.py')))
+    'clean_cfa_loss.py', 'cfa_structure_loss.py', 'continuation_policy.py', 'continuation_initialization.py', 'context_data.py', 'texture_sampling.py', 'audit_texture_coverage.py')))
 
 
 def observation(truth, tags, noise_index, seed):
@@ -197,7 +198,7 @@ def train(model, source, config, guard, checkpoint_path, context, progress, inte
                 event = events.get(serial)
                 if event is None or event['family'] != family or event['phase'] != phase:
                     raise ValueError('Missing or mismatched frozen training texture')
-                truth, _ = texture(family, serial, 128)
+                truth, _ = texture(family, texture_identity(event), 128)
                 if tensor_hash(truth) != event['target_sha256']:
                     raise ValueError('Frozen training texture changed')
                 tags = torch.tensor([PATTERNS[phase]])
@@ -208,7 +209,7 @@ def train(model, source, config, guard, checkpoint_path, context, progress, inte
             if config['side'] > truth.shape[-1]:
                 event = stream.events.get((step, position))
                 if family in TEXTURE_POLICY['families']:
-                    expanded = extend_texture(family, serial, config['side'])
+                    expanded = extend_texture(family, texture_identity(events[serial]), config['side'])
                 elif event is not None:
                     expanded = extend_edge(event, config['side'])
                 else:

@@ -8,6 +8,23 @@ Les JSON horodatés restent la mémoire canonique.
 
 ## Lancement de la campagne courante
 
+Essai courant du 5 novembre : contrôle aléatoire frais contre couverture
+stratifiée, avec branche de corrélation apprise dans les deux bras.
+Préparation déjà réalisée et vérifiée (ne pas écraser ses sorties) :
+
+```powershell
+& .venv-neural/Scripts/python.exe tests/neural/prepare_coverage_continuation.py --output build-patch_neural_restoration/paired-coverage-plan-v001
+& .venv-neural/Scripts/python.exe tests/neural/run_paired_continuation.py --prepared build-patch_neural_restoration/paired-coverage-plan-v001 --output build-patch_neural_restoration/paired-coverage-campaign-v001 --prefix coverage --candidate stratified
+```
+
+Ces noms désignent la campagne figée. Les 822 textures par bras portent
+une identité de contenu distincte de l'exposition ; ne pas remplacer cette
+identité par le numéro de pas. Les confirmations excluent les contenus
+des deux bras et de leur ascendance. Les marges, critères et protections
+mémoire décrits ci-dessous restent applicables.
+
+### Campagne précédente à entrées de corrélation
+
 Le lancement courant est autorisé par la demande de poursuivre en autonomie.
 Un horaire seul ne vaut pas autorisation. Le plan schéma4
 exige un prétest réussi du calcul courant avant l'apprentissage long.

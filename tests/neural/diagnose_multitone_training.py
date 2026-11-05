@@ -21,6 +21,7 @@ from noisy_moment_unet import NoisyMomentUNet, FORWARD_TOOLS
 from run_noisy_moment_pilot import observation, NOISE
 from run_synthetic_joint_pilot import tensor_hash
 from synthetic_bayer_data import PATTERNS
+from texture_sampling import texture_identity
 
 
 def select_events(events):
@@ -89,10 +90,10 @@ def run(root, output, plan_path, previous_campaign, campaign):
                     model.load_state_dict(torch.load(weights, weights_only=True)['state_dict'], strict=True)
                     for event in selected:
                         guard.check()
-                        centre, meta = texture(event['family'], event['serial'], 128)
+                        centre, meta = texture(event['family'], texture_identity(event), 128)
                         if tensor_hash(centre) != event['target_sha256']:
                             raise ValueError('Frozen training target changed')
-                        truth = extend_texture(event['family'], event['serial'], 256)
+                        truth = extend_texture(event['family'], texture_identity(event), 256)
                         tags = torch.tensor([PATTERNS[event['phase']]])
                         clean, _, labels, _ = canonicalize(sample_rgb(truth, tags)/2,
                             torch.zeros_like(sample_rgb(truth, tags)), tags)

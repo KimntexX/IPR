@@ -5668,3 +5668,49 @@ inchangés et fermer les jeux réservés dès un échec connu.
 La préparation de ce prochain apprentissage reste à réaliser ; aucun
 nouvel apprentissage coûteux n'a été lancé au cours de ces diagnostics.
 Le moteur actuel et les références photographiques restent inchangés.
+
+### Préparation de la couverture stratifiée — 5 novembre 2026, 09:56 UTC
+
+L'utilisateur autorise cet essai. Les deux bras repartent des mêmes poids
+à 2 048 étapes (71/73), avec projection de corrélation initialisée à zéro
+et apprise dans les deux bras. Ils effectuent chacun 512 mises à jour,
+Adam neuf à 0,00025, même supervision simple, ancrage propre, norme maximale
+des gradients et reconstructeur figé. Les expositions hors textures, phases
+Bayer, niveaux et graines de bruit restent identiques. Aucun nouvel état
+photographique n'est ajouté.
+
+Les deux bras reçoivent chacun 822 textures nouvelles, disjointes entre eux,
+des contenus initiaux et des références fines connues. Une identité de contenu
+distincte de l'identifiant d'exposition permet de conserver le calendrier
+et de reconstruire exactement centre et halo analytiques. Le contrôle utilise
+un flux d'identifiants frais sans conditionnement des paramètres. Le candidat
+alloue au moins un exemple à chacune des douze combinaisons fréquence/amplitude
+dans chaque groupe famille × phase × bruit, puis distribue le reste au plus
+près des probabilités logarithmiques du générateur. Il choisit les contenus
+par rejet sur ces deux seuls paramètres, avec une limite technique déclarée.
+Les orientations, DC et couleurs ne sont pas sélectionnées selon un résultat.
+
+Le contrôle présente 28 cellules positives vides sur 192 ; le candidat n'en
+présente aucune. Il a fallu respectivement 822 et 10 212 tirages de contenu.
+Les distributions empiriques ne sont pas identiques : fréquence moyenne
+9,281 contre 9,743 et amplitude moyenne 0,03068 contre 0,03200, DC moyen
+0,28792 contre 0,28822. L'essai mesure donc cette politique de répartition,
+pas l'effet isolé des seules cellules vides à marges strictement constantes.
+Les métadonnées par exposition conservent les distributions et les identités.
+
+Les 80 sorties initiales contrôlées restent identiques aux empreintes archivées.
+Huit étapes techniques par bras et par graine passent, puis leurs poids sont
+jetés. Le reconstructeur reste identique ; la branche statistique apprend dans
+les quatre cas. Le pic résident du prétest est de 416,1 Mio. Les 27 tests ciblés
+passent, dont la reprise après interruption avec les nouvelles identités de
+texture. Les exclusions couvrent 5 560 empreintes, y compris tous les contenus
+d'entraînement des deux bras. Aucun jeu réservé n'a été ouvert.
+
+Les plans `paired-coverage-plan-v001` sont figés avant les résultats. La chaîne
+entraînera les deux bras et graines avant de les évaluer, puis appliquera les
+mêmes critères fins. Un échec connu ferme les confirmations réservées ; les
+diagnostics restent possibles sans ajustement des seuils. Preuve :
+[préparation, couverture et prétests](../raw/neural-coverage-preflight-v001-20261105T095643Z.json).
+Cette préparation n'est pas une réussite photographique. Les limites restent
+quatre threads, arrêt coopératif à 92 % de RAM globale, plafond par processus
+de 2 Gio et seuil doux de 1 280 Mio.
