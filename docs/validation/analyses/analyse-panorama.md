@@ -6,9 +6,12 @@ Rapport évolutif du panorama (lot B8, paliers M3 et M4 du
 partielles : [issue #25](https://github.com/KimntexX/IPR/issues/25). Correction d'objectif trouvée
 en chemin : [issue #26](https://github.com/KimntexX/IPR/issues/26).
 
-État au 4 novembre 2026 : moteur et panneau sur `patch_ui_panorama`, non fusionnés. Parcours complet
-vérifié par l'agent dans la vraie fenêtre, hors écran, sur onze CR2 : sélection, assemblage, aperçu,
-exports DNG et TIFF, réouverture. **Validation de l'utilisateur attendue.**
+État au 5 novembre 2026 : moteur et panneau intégrés à `dev`. **Assemblage validé par l'utilisateur
+sur ses séries** : « l'assemblage sur les deux axes à la fois fonctionne bien dans l'ensemble » ;
+l'alignement par le bas est confirmé. **Remplissage accepté comme premier jet, avec des erreurs
+constatées** (voir [Remplir les bords](#remplir-les-bords)) : un modèle génératif reste un besoin
+futur. Parcours complet vérifié aussi par l'agent dans la vraie fenêtre, hors écran, sur onze CR2 :
+sélection, assemblage, aperçu, exports DNG et TIFF, réouverture.
 
 ## Le moteur
 
@@ -38,7 +41,7 @@ qui ne se présentent pas de la même façon sur les versions d'OpenCV du projet
 
 Consigne de l'utilisateur : « on aligne toujours par le bas d'une image. Généralement une suite de
 photos prises pour faire un panorama, son point d'appui c'est le bas de la vue. » Elle est appliquée
-ainsi, **interprétation à confirmer** :
+ainsi, **interprétation confirmée par l'utilisateur** :
 
 - Dans un balayage, les bords bas de la rangée la plus basse donnent le roulis du monde et sa
   courbure. Un arc court renseigne mal sur la courbure, que de petits changements d'inclinaison
@@ -186,6 +189,20 @@ Vu à 100 % par l'agent : le toit est coupé net, comme derrière les arbres ; l
 sans couture. **Reste** un fin trait le long de la limite, le léger reflet d'un petit arbre, et deux
 antennes recopiées dans la zone inventée. La limite est décidée par la luminance : un objet discret,
 ou très fin, passe à travers.
+
+### Ce que l'utilisateur constate
+
+Sur ses propres assemblages, dont `_MG_7601-panorama-3`, 21 272 × 5 386 pixels :
+
+- Le remplissage **ajoute des sapins au lieu de continuer le champ**, et remplace des arbres d'une
+  autre essence par des sapins : il prolonge ce qui domine autour, pas ce qui devrait se trouver là.
+- Sur un essai à sept images, `_MG_7599-panorama`, **le toit de la maison reste** : la règle évite son
+  reflet et sa copie, mais le morceau réel, coupé par la limite des photos, reste en place. Rien ici
+  ne peut le retirer, puisque aucun pixel réel n'est modifié.
+
+Ces deux points ne se règlent pas en copiant mieux : ils demandent de comprendre la scène, pour
+continuer un champ ou pour effacer et adapter un détail. C'est le rôle du U-Net de
+l'[issue #27](https://github.com/KimntexX/IPR/issues/27).
 
 ### L'avertissement
 

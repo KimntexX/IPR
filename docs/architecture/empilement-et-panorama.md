@@ -4,7 +4,7 @@
 29 octobre 2026. Chantier distinct du prototype de débruitage d'une image.
 M1, le tampon disque, l'onglet Assembler et le fichier résultat existent
 ([analyse](../validation/analyses/analyse-empilement.md)). M3 et M4, le panorama sur une rangée ou
-plusieurs, existent aussi, à valider ([analyse](../validation/analyses/analyse-panorama.md)) ; ils
+plusieurs, existent aussi, validés par l'utilisateur à l'usage ([analyse](../validation/analyses/analyse-panorama.md)) ; ils
 s'alignent sur le bas de la vue. L'ancre de M2, le HDR et la recette multi-source ne sont pas
 implémentés.
 

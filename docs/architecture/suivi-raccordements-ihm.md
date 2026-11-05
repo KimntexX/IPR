@@ -42,7 +42,7 @@ recompilé localement. Les traductions restent sur le chantier documentaire déd
 | IHM-CONN-013 | Raccordé et validé par l'utilisateur, intégré à `dev` | Panneau Géométrie : voir ci-dessous |
 | IHM-CONN-014 | Raccordé et validé par l'utilisateur | Panneau Assembler : voir ci-dessous |
 | IHM-CONN-015 | Raccordé (`v0.5.110-beta`) ; fonctions validées par l'utilisateur, design à revoir | Panneau Masques : voir ci-dessous |
-| IHM-CONN-016 | Raccordé sur `patch_ui_panorama`, à valider | Mode Panorama de l'onglet Assembler : voir ci-dessous |
+| IHM-CONN-016 | Raccordé et assemblage validé par l'utilisateur | Mode Panorama de l'onglet Assembler : voir ci-dessous |
 
 #### IHM-CONN-016 — mode Panorama de l'onglet Assembler (B8)
 
