@@ -1,8 +1,9 @@
 // What a module costs in a real export and on the preview, and what it writes: exports each photo
 // as a 16-bit TIFF, neutral then with the adjustments given, three times each, through the real
-// editor, and times the preview's answer to the same change. Reads private copies only, since the
-// editor writes its .ipr beside a photo. A name starting with "geometry." sets that geometry value,
-// and going back to neutral resets the geometry.
+// editor, and times the preview's answer to the same change. Each photo is copied first into the
+// folder of the run, without its .ipr: the editor writes one beside the photo it opens, and a run
+// must not start from what an earlier one left. A name starting with "geometry." sets that geometry
+// value, and going back to neutral resets the geometry.
 // usage: iprExportModuleProbe <revision> <new json> <folder for the exports> <name=value,...> <photo>...
 
 #include "controlled_memory.h"
@@ -151,8 +152,19 @@ int main(int argc, char **argv)
     ImageProvider provider;
     ImageEditor editor(&provider, nullptr, nullptr, controlledMemory);
     QJsonArray photos;
+    const QDir sources(folder.filePath(QStringLiteral("sources")));
+    if (!QDir().mkpath(sources.path())) {
+        std::cerr << "Cannot create the folder of the copies\n";
+        return 2;
+    }
     for (int a = 5; a < argc; ++a) {
-        const QFileInfo photo(QString::fromLocal8Bit(argv[a]));
+        const QFileInfo original(QString::fromLocal8Bit(argv[a]));
+        const QString copy = sources.filePath(original.fileName());
+        if (QFile::exists(copy) || !QFile::copy(original.absoluteFilePath(), copy)) {
+            std::cerr << "Cannot make a fresh copy of " << argv[a] << '\n';
+            return 2;
+        }
+        const QFileInfo photo(copy);
         editor.loadImage(QUrl::fromLocalFile(photo.canonicalFilePath()));
         if (!waitFor([&] { return editor.hasImage() && !editor.busy() && !editor.imageSource().isEmpty(); })) {
             std::cerr << "Cannot open " << argv[a] << '\n';

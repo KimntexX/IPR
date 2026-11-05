@@ -17,11 +17,52 @@ int workerThreads()
     return std::clamp(host - 1, 1, budget);
 }
 
+namespace {
+
+// The helper threads not running for any call, shared by all of them.
+std::atomic<int> &spareHelpers()
+{
+    static std::atomic<int> spare{workerThreads() - 1};
+    return spare;
+}
+
+int takeHelpers(int wanted)
+{
+    std::atomic<int> &spare = spareHelpers();
+    int available = spare.load();
+    while (available > 0) {
+        const int taken = std::min(available, wanted);
+        if (spare.compare_exchange_weak(available, available - taken))
+            return taken;
+    }
+    return 0;
+}
+
+// Gives the helpers back on every path, exceptions included.
+struct Helpers
+{
+    int count;
+    explicit Helpers(int wanted) : count(wanted > 0 ? takeHelpers(wanted) : 0) {}
+    ~Helpers() { give(count); }
+    void give(int helpers)
+    {
+        if (helpers > 0)
+            spareHelpers().fetch_add(helpers);
+        count -= helpers;
+    }
+    Helpers(const Helpers &) = delete;
+    Helpers &operator=(const Helpers &) = delete;
+};
+
+} // namespace
+
 void parallelRows(int count, const std::function<void(int first, int last)> &work, int threads)
 {
     if (count <= 0)
         return;
-    const int workers = std::clamp(threads > 0 ? threads : workerThreads(), 1, count);
+    const int wanted = std::clamp(threads > 0 ? threads : workerThreads(), 1, count);
+    Helpers helpers(wanted - 1);
+    const int workers = helpers.count + 1;
     if (workers == 1) {
         work(0, count);
         return;
@@ -53,6 +94,7 @@ void parallelRows(int count, const std::function<void(int first, int last)> &wor
     } catch (...) {
         // No more threads to be had: those already there, and this one, do the work.
     }
+    helpers.give(helpers.count - int(pool.size()));
     run();
     for (std::thread &thread : pool)
         thread.join();
