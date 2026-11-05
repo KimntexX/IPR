@@ -423,6 +423,7 @@ private:
         bool originalWholeCanvas = false;
         QVariantList histogram;
         QString error;
+        int retouchesNotDone = -1;             // -1: the render did not reach them, a cache had them
     };
 
     using UserImageMetadata = EditRecipe::UserImageMetadata;
@@ -441,7 +442,7 @@ private:
     // preview), the render resumes from the stages it kept; same pixels as without.
     static ColorPipeline::WorkingImage renderWorkingImage(
         const ColorPipeline::WorkingImage &source, const Settings &settings,
-        double pixelScale = 1.0, RenderStageCache *cache = nullptr);
+        double pixelScale = 1.0, RenderStageCache *cache = nullptr, int *retouchesNotDone = nullptr);
     // local: what the masks add, on the canvas (LocalAdjustments::valueMaps).
     static bool renderTones(const ColorPipeline::WorkingImage &source, const Settings &settings,
                             int referenceTemperature, double pixelScale, cv::Mat &adjusted,

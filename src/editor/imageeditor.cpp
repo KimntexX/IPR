@@ -445,6 +445,8 @@ ImageEditor::ImageEditor(ImageProvider *provider,
             m_histogram = rendered.histogram;
             emit previewChanged();
             emit histogramChanged();
+            if (rendered.retouchesNotDone > 0)
+                setStatusMessage(tr("%n retouche(s) laissée(s) sans effet : la zone est trop grande pour être reconstruite, ou sa source sort de l'image.", nullptr, rendered.retouchesNotDone));
         }
 
         if (m_renderPending) {
@@ -2457,7 +2459,7 @@ RenderStageCache::Keys stageKeys(const EditRecipe::Settings &s)
 
 ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
     const ColorPipeline::WorkingImage &source, const Settings &settings, double pixelScale,
-    RenderStageCache *cache)
+    RenderStageCache *cache, int *retouchesNotDone)
 {
     if (source.isNull() || source.colorSpace != ColorPipeline::workingColorSpace() ||
         source.linearRgba.type() != CV_32FC4 || !cv::checkRange(source.linearRgba, true))
@@ -2504,7 +2506,9 @@ ColorPipeline::WorkingImage ImageEditor::renderWorkingImage(
         cv::cvtColor(source.linearRgba, adjusted, cv::COLOR_RGBA2RGB);
         if (!renderTones(source, settings, referenceTemperature, pixelScale, adjusted, local)) return {};
         // On the canvas, once the tones are set; what follows treats the zone as the rest.
-        Retouch::apply(adjusted, settings.retouches);
+        const int notDone = Retouch::apply(adjusted, settings.retouches);
+        if (retouchesNotDone)
+            *retouchesNotDone = notDone;
         reached(0, adjusted);
     }
     if (runs(1)) {
@@ -2689,7 +2693,7 @@ ImageEditor::RenderResult ImageEditor::renderPreview(
             qWarning() << "Échec du rendu de l'origine :" << error;
     }
     ColorPipeline::WorkingImage rendered =
-        renderWorkingImage(source, settings, pixelScale, cache);
+        renderWorkingImage(source, settings, pixelScale, cache, &result.retouchesNotDone);
     if (rendered.isNull())
         return result;
     if (overlayPoint >= 0) {

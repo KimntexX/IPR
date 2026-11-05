@@ -179,6 +179,15 @@ void commands(const QDir &folder)
     editor.setRetouchSource(heal, std::nan(""), 0.1);
     check(std::abs(editor.retouches().at(heal).toMap().value(QStringLiteral("sourceY")).toDouble() - 0.1) < 1e-6, "not to nowhere");
 
+    // What cannot be done is left as it is, and said rather than hidden.
+    const int tooMuch = editor.addRetouch(QStringLiteral("remove"));
+    const QImage withoutIt = provider.image();
+    editor.addRetouchStroke(tooMuch, {0.5, 0.5}, 1.0, 0.0);
+    check(waitFor([&] { return !editor.busy() && editor.statusMessage().contains(QStringLiteral("sans effet")); }), "a zone too large is reported");
+    check(provider.image() == withoutIt, "and changes nothing");
+    editor.removeRetouch(tooMuch);
+    check(settled(), "it can be taken away");
+
     // Saved with the photo; the other photo has its own, and pasting edits keeps them apart.
     editor.saveCurrentAdjustments();
     const auto saved = Sidecar::read(photo);
