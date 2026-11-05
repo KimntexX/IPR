@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "campaign_id": "neural-coverage-recovery-v001-20261105T110200Z",
+  "measured_at_utc": "2026-11-05T11:02:00.890767+00:00",
+  "status": "completed_diagnostic_recovery_quality_failures_preserved",
+  "no_new_training": true,
+  "reserved_cohorts_opened": false,
+  "records_in_corrected_diagnostic": 128,
+  "artifacts": {
+    "original_supervisor": {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\paired-coverage-campaign-v001\\progress.json",
+      "sha256": "1bd26558bb8b503f5af763be9b21ec4fe5b62ace15f4d0c09cc1e0ced548590a"
+    },
+    "original_followup": {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\coverage-stratified-followup-v001\\progress.json",
+      "sha256": "86e8c58246c72bc4dab7a116829e06e1e4485f08714ae03534fd153421c59557"
+    },
+    "comparison": {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\coverage-stratified-followup-v001\\paired-fine.json",
+      "sha256": "815e28a4f38673600e9ab182644f076c40634ae91f92e9e949230d87fd141b3a"
+    },
+    "corrected_diagnostic": {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\coverage-multitone-cross-domains-v001\\result.json",
+      "sha256": "490871f8b8a34fcf9a9ba7ca7a4bf2e66c0ab11e13482fd6627370a8181ab6fb"
+    }
+  },
+  "diagnostic_tools": {
+    "diagnose_multitone_training.py": "d89818b8c972928f2f171c7077f63e5ded1d4a885e4bf2b1bb3cbeae34e5abce",
+    "test_multitone_diagnostic.py": "0beba233c56e36dd83ebf22bc8888bdaba29bdfbbe66b94aa00a615421ef0c01"
+  },
+  "limits": [
+    "Original stopped_on_error results remain immutable. Both known fine qualifications failed; this recovery does not grant eligibility.",
+    "Two distinct known training domains explicitly labelled seen/unseen by model; no new reserved truth generated."
+  ]
+}

@@ -1,12 +1,13 @@
 # Restauration neuronale — qualification du corpus
 
-**État au 5 novembre 2026 :** le candidat à entrées de corrélation termine
-à 15/48 échecs fins forts contre 19/48 au contrôle. Le gain concerne une
-seule graine et s'accompagne d'un peu plus d'erreur RGB. Il reste expérimental.
-Les diagnostics de branche, de gradients et de variance sont terminés.
-La piste prioritaire devient la couverture des expositions d'entraînement :
-19 cellules conjointes sur 192 sont absentes du stage de continuation.
-Ce constat exploratoire n'en prouve pas la responsabilité causale.
+**État au 5 novembre 2026, bilan de couverture :** le candidat stratifié
+termine à 12/48 échecs fins forts contre 19/48 au contrôle aléatoire frais.
+Les deux graines progressent, mais l'erreur RGB fine augmente de 1,9 à 3,5 %.
+Une sonde de force indique un gain de sélectivité sur les contenus connus
+à bruit fort, au-delà d'une simple baisse globale de correction. Elle n'est
+ni une confirmation indépendante ni une validation photographique.
+Le dernier diagnostic a été corrigé pour comparer les deux domaines
+d'entraînement volontairement distincts ; aucun entraînement n'a été rejoué.
 Aucune qualité photographique validée, aucun moteur de production modifié
 ni nouveau jeu réservé ouvert. Les résultats et décisions actuels sont
 consignés en fin de rapport.
@@ -5714,3 +5715,112 @@ diagnostics restent possibles sans ajustement des seuils. Preuve :
 Cette préparation n'est pas une réussite photographique. Les limites restent
 quatre threads, arrêt coopératif à 92 % de RAM globale, plafond par processus
 de 2 Gio et seuil doux de 1 280 Mio.
+
+### Bilan de couverture — 5 novembre 2026, campagne terminée à 10:34 UTC
+
+Les quatre apprentissages atteignent leurs 512 étapes, sans reprise
+technique, et passent le développement. Le contrôle utilise des contenus
+frais : ne pas confondre cette comparaison avec le contrôle rejouant
+les anciens exemples de la campagne de corrélation précédente.
+
+| Graine et bruit | Échecs forts contrôle → stratifié | Pire transfert contrôle → stratifié | Erreur RGB stratifié / contrôle |
+| --- | ---: | ---: | ---: |
+| 71, niveau 1 | 1 → 1 | 0,9696 → 0,9705 | 1,0352 |
+| 71, niveau 2 | 9 → 4 | 0,7825 → 0,8273 | 1,0258 |
+| 73, niveau 1 | 0 → 0 | 0,9792 → 0,9887 | 1,0191 |
+| 73, niveau 2 | 9 → 7 | 0,6739 → 0,8047 | 1,0192 |
+
+Le total diminue de 19 à 12 échecs sur 48. Huit groupes précédemment en
+échec passent ; un nouveau défaut RGB apparaît à 22 cycles, chromatique,
+graine 71/bruit fort. Le gain net est donc de sept groupes, pas une
+amélioration uniforme. Les défauts restants comprennent dix échecs de
+transfert et deux échecs RGB. Le plus faible bruit garde le défaut RGB
+chromatique à 14 cycles sur 71. Les contrôles CFA des groupes forts passent.
+
+La moyenne RGB fine reste meilleure que le parent sans correction dans
+les quatre groupes (rapports 0,8472 / 0,6587 pour 71, 0,8184 / 0,5679
+pour 73, niveaux 1/2). Cela ne compense pas les critères locaux en défaut.
+Le candidat reste **non qualifié** ; aucun jeu réservé n'est ouvert.
+Preuves : [contrôle fin](../raw/neural-fine-regression-v001-20261105T102056Z.json),
+[candidat fin](../raw/neural-fine-regression-v001-20261105T102852Z.json),
+[trace avant/après reconstruction](../raw/neural-fine-trace-v001-20261105T103353Z.json).
+
+### Correction du diagnostic de domaines — 5 novembre 2026, 10:57 UTC
+
+Le superviseur a terminé en `stopped_on_error` après les mesures principales :
+le dernier diagnostic exigeait des textures d'entraînement identiques dans
+les deux bras. Cette hypothèse était devenue fausse par construction. Les
+résultats d'entraînement et de qualification fine sont complets ; ils ne
+sont pas annulés par cet échec d'orchestration. Les preuves initiales restent
+intactes, y compris l'arrêt technique.
+
+Le diagnostic corrigé sélectionne seize événements par domaine connu et
+fait passer les deux modèles sur chacun, en indiquant explicitement si
+le contenu était dans leur propre apprentissage. Les deux graines d'un
+bras doivent avoir exactement le même domaine déclaré. Lorsque les deux
+domaines sont identiques, une seule sélection est utilisée ; aucune
+validation de contenu n'est supprimée pour contourner l'erreur.
+Les 128 enregistrements issus des deux domaines distincts sont complets,
+avec trois bruits par événement à bruit fort. Ils restent descriptifs :
+un contenu appris par un autre bras n'est pas un jeu réservé indépendant.
+
+Les médianes de transfert composante par composante progressent légèrement
+dans plusieurs comparaisons à contenu égal, mais pas toutes. Les domaines
+eux-mêmes ont des difficultés différentes : comparer seulement chaque
+modèle sur ses propres textures aurait été trompeur. Aucun poids n'est
+modifié, aucun apprentissage ou qualification déjà achevé n'est relancé.
+Preuves : [diagnostic corrigé](../raw/neural-multitone-diagnostic-v001-20261105T105745Z.json),
+[récupération et identités des preuves](../raw/neural-coverage-recovery-v001-20261105T110200Z.json).
+
+### Comparaison à une baisse globale de force — 5 novembre 2026, 11:00 UTC
+
+Pour vérifier que le gain ne vient pas seulement d'un débruitage plus faible,
+le contrôle est évalué aux neuf facteurs fixes `0, 1/8, …, 1`. Le candidat
+reste à 1. Le facteur multiplie le delta CFA protégé avant reconstruction ;
+les coefficients sont recalculés pour chaque état. Ce n'est pas un curseur
+intégré ni un étalonnage recherché sur le score.
+
+La sonde utilise tous les motifs fins connus, amplitudes faible et forte,
+phase 0/réalisation 0, puis les quatre surfaces constantes connues avec
+les mêmes bruits. Elle conserve 576 séries fines et 32 séries constantes.
+Les extrémités contrôle 0/1 et candidat 1 retrouvent les transferts archivés
+à la tolérance inchangée. Les constantes séparent biais moyen et variance
+spatiale ; leur erreur CFA reste distincte de l'erreur RGB des motifs.
+Durée 79,9 secondes, pic résident 311,5 Mio.
+
+| Bruit fort, sous-sélection | Facteur | Erreur CFA des constantes / observation bruitée | Pire transfert fort / parent | Erreur RGB fine moyenne |
+| --- | ---: | ---: | ---: | ---: |
+| 71, contrôle | 1 | 0,5640 | 0,7676 | 0,00030882 |
+| 71, contrôle | 0,75 | 0,5957 | 0,8261 | 0,00032133 |
+| 71, stratifié | 1 | 0,5594 | 0,8029 | 0,00031885 |
+| 73, contrôle | 1 | 0,3790 | 0,6734 | 0,00032298 |
+| 73, contrôle | 0,625 | 0,4786 | 0,7958 | 0,00036152 |
+| 73, stratifié | 1 | 0,3813 | 0,7979 | 0,00033288 |
+
+Tous les points, pas seulement ces exemples, sont dans le JSON. Les deux
+facteurs intermédiaires du tableau servent d'illustration descriptive,
+sans sélection de réglage à déployer. Pour 73, le point stratifié conserve
+un transfert proche du contrôle à 0,625, avec environ 20 % d'erreur CFA
+en moins sur les constantes et environ 8 % d'erreur RGB fine en moins.
+À force 1, il préserve nettement plus de transfert que le contrôle pour
+une erreur des constantes proche. La graine 71 montre aussi un gain de
+transfert sans augmenter l'erreur des constantes au point 1. Cela soutient
+un gain de sélectivité dans ce banc, sans établir une domination universelle.
+
+Ces minima concernent une phase et un bruit tiré par motif : ils diffèrent
+des minima du protocole fin complet, moyennés sur les quatre phases et
+trois réalisations. Les constantes ont leurs propres niveaux de signal ;
+ce n'est pas une égalisation physique générale du bruit ni une mesure de
+bruit perceptuel final après profil. Le bruit caméra n'est toujours pas
+calibré par ISO dans cette sonde.
+Preuves : [tous les facteurs et mesures](../raw/neural-correction-tradeoff-v001-20261105T110045Z.json),
+[synthèse reproductible](../raw/neural-correction-tradeoff-summary-v001-20261105T110355Z.json).
+
+**Conclusion actuelle :** conserver la couverture stratifiée comme direction
+expérimentale, avec un gain sur les deux graines et une indication de meilleure
+sélectivité à bruit fort. Ne pas intégrer ce candidat en production. L'étape
+suivante doit expliquer les dix défauts de transfert restants, principalement
+chromatiques, et les deux défauts RGB, en conservant les contrôles sur aplats.
+Ne pas remplacer cette analyse par une hausse uniforme de force, une baisse
+des critères ou une nouvelle série de réglages de durée. Aucun nouvel
+apprentissage n'est lancé après ces diagnostics.

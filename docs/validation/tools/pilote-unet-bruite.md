@@ -10,7 +10,13 @@ Les JSON horodatés restent la mémoire canonique.
 
 Essai courant du 5 novembre : contrôle aléatoire frais contre couverture
 stratifiée, avec branche de corrélation apprise dans les deux bras.
-Préparation déjà réalisée et vérifiée (ne pas écraser ses sorties) :
+Campagne terminée : apprentissages et mesures fines complets, critères
+fins en échec dans les deux bras. Le dernier diagnostic a été récupéré
+séparément après correction de son hypothèse de contenus partagés.
+Ne pas relancer le superviseur pour écraser l'arrêt initial : la preuve de
+récupération et le bilan sont dans le rapport unique. Aucune confirmation
+réservée n'est autorisée par cette récupération.
+Commandes de la campagne exécutée (ne pas écraser ses sorties) :
 
 ```powershell
 & .venv-neural/Scripts/python.exe tests/neural/prepare_coverage_continuation.py --output build-patch_neural_restoration/paired-coverage-plan-v001

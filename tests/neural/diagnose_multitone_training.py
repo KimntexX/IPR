@@ -36,6 +36,14 @@ def select_events(events):
     return chosen
 
 
+def select_domains(previous_events,current_events):
+    """Freeze both known training domains instead of pretending disjoint data are shared."""
+    if previous_events==current_events:
+        return [dict(source_domain='shared',event=e) for e in select_events(current_events)]
+    return [dict(source_domain=domain,event=e) for domain,events in
+        (('previous',previous_events),('current',current_events)) for e in select_events(events)]
+
+
 def bases(metadata, tags):
     axis = torch.arange(-64, 192, dtype=torch.float32)
     y, x = torch.meshgrid(axis, axis, indexing='ij')
@@ -57,14 +65,22 @@ def run(root, output, plan_path, previous_campaign, campaign):
     for name in FORWARD_TOOLS:
         if digest(Path(__file__).with_name(name)) != plan['tools'][name]:
             raise ValueError('Forward arithmetic changed')
-    selected = select_events(plan['texture_augmentation']['events'])
+    model_folders = {variant:dict(zip((71,73),campaign_models(model_campaign)))
+        for variant,model_campaign in (('previous',previous_campaign),('current',campaign))}
+    domain_events = {}
+    for variant,folders in model_folders.items():
+        first=json.loads((folders[71]/'result.json').read_text(encoding='utf-8'))
+        domain_events[variant]=first['plan']['texture_augmentation']['events']
+        if variant=='current' and first['plan_sha256']!=digest(plan_path):
+            raise ValueError('Current diagnosis plan differs from trained plan')
+    selected = select_domains(domain_events['previous'],domain_events['current'])
     now = datetime.now(timezone.utc)
     identity = 'neural-multitone-diagnostic-v001-'+now.strftime('%Y%m%dT%H%M%SZ')
     result = dict(schema_version=1, campaign_id=identity, measured_at_utc=now.isoformat(),
         status='incomplete', plan_sha256=digest(plan_path), script_sha256=digest(Path(__file__)),
-        selection='First2training events by serial in each family x frequency bin [2,6,12,20,29), amplitude>=.04; no output selection.',
+        selection='First2training events by serial in each family x frequency bin [2,6,12,20,29), amplitude>=.04, from each distinct training domain; no output selection.',
         selected_events=selected, records=[], models=[],
-        limits=['Training contents, three fresh simulated noise draws at high noise; descriptive, not independent qualification.',
+        limits=['Known training contents from either or both arms; seen-in-model-training declared per record. Three fresh simulated noise draws at high noise; descriptive, not independent qualification.',
             'Component fits marked ill-conditioned above1e4; channels with abs(colour)<.25 omitted from relative-amplitude summaries.'])
     output.mkdir(parents=True, exist_ok=False)
     guard, started = MemoryGuard(**plan['memory_policy']), time.monotonic()
@@ -74,7 +90,7 @@ def run(root, output, plan_path, previous_campaign, campaign):
             torch.set_num_interop_threads(1)
             torch.use_deterministic_algorithms(True)
             for variant, model_campaign in (('previous', previous_campaign), ('current', campaign)):
-                folders = dict(zip((71, 73), campaign_models(model_campaign)))
+                folders = model_folders[variant]
                 for seed in (71, 73):
                     folder = folders[seed]
                     proof = json.loads((folder/'result.json').read_text(encoding='utf-8'))
@@ -82,13 +98,19 @@ def run(root, output, plan_path, previous_campaign, campaign):
                     if digest(weights) != proof['weights_sha256']:
                         raise ValueError('Final weights changed')
                     trained_events = {e['serial']:e for e in proof['plan']['texture_augmentation']['events']}
-                    if any(trained_events.get(e['serial']) != e for e in selected):
-                        raise ValueError('Compared models did not share the selected training targets')
+                    if proof['plan']['texture_augmentation']['events']!=domain_events[variant]:
+                        raise ValueError('Seed models differ in their declared training domain')
+                    if any(digest(Path(__file__).with_name(n))!=proof['plan']['tools'][n] for n in FORWARD_TOOLS):
+                        raise ValueError('Compared model forward arithmetic changed')
                     result['models'].append(dict(variant=variant, seed=seed,
                         weights_sha256=digest(weights), result_sha256=digest(folder/'result.json')))
                     model = EdgeProtectedNoisyUNet(8).eval().requires_grad_(False)
                     model.load_state_dict(torch.load(weights, weights_only=True)['state_dict'], strict=True)
-                    for event in selected:
+                    for selection in selected:
+                        event=selection['event']
+                        seen_in_training=trained_events.get(event['serial'])==event
+                        if selection['source_domain'] in ('shared',variant) and not seen_in_training:
+                            raise ValueError('Declared own training domain is absent from model')
                         guard.check()
                         centre, meta = texture(event['family'], texture_identity(event), 128)
                         if tensor_hash(centre) != event['target_sha256']:
@@ -131,11 +153,16 @@ def run(root, output, plan_path, previous_campaign, campaign):
                                 collected.append(dict(replicate=replicate, plane=plane, colour=colour,
                                     condition_number=condition, stable=condition <= 1e4, measured=measured))
                         result['records'].append(dict(variant=variant, seed=seed, serial=event['serial'],
+                            source_domain=selection['source_domain'],seen_in_model_training=seen_in_training,
+                            texture_serial=texture_identity(event),
                             family=event['family'], frequency=meta['frequency'], other_frequency=meta['other_frequency'],
                             target_sha256=event['target_sha256'], fits=collected))
                     del model
                     print('DIAGNOSED', variant, seed, flush=True)
             result['status'] = 'completed_training_multitone_diagnosis_not_qualification'
+    except Exception as error:
+        result.update(status='failed_diagnostic_execution',error=str(error))
+        raise
     finally:
         result['memory'] = guard.stats()
         result['elapsed_seconds'] = time.monotonic()-started

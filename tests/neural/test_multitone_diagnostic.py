@@ -1,6 +1,6 @@
 import unittest
 
-from diagnose_multitone_training import select_events
+from diagnose_multitone_training import select_events,select_domains
 
 
 class MultitoneDiagnosticTests(unittest.TestCase):
@@ -23,3 +23,18 @@ class MultitoneDiagnosticTests(unittest.TestCase):
     def test_missing_stratum_is_an_error_not_silent_replacement(self):
         with self.assertRaises(ValueError):
             select_events([])
+
+    def test_disjoint_domains_are_both_probed_without_false_training_identity(self):
+        previous=[]
+        for family in ('weak_achromatic_wave','chromatic_wave'):
+            for frequency in (4,8,16,24):
+                for _ in range(2):
+                    previous.append(dict(serial=len(previous),family=family,frequency=frequency,amplitude=.05,texture_serial=4000000+len(previous)))
+        current=[dict(e,texture_serial=e['texture_serial']+4000000) for e in previous]
+        selected=select_domains(previous,current)
+        self.assertEqual(len(selected),32)
+        self.assertEqual({r['source_domain'] for r in selected},{'previous','current'})
+        self.assertTrue(all(r['event'] in previous for r in selected if r['source_domain']=='previous'))
+        shared=select_domains(previous,list(previous))
+        self.assertEqual(len(shared),16)
+        self.assertTrue(all(r['source_domain']=='shared' for r in shared))

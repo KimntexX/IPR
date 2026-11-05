@@ -1066,3 +1066,21 @@ ne justifient pas une nouvelle perte à ce stade. La préparation suivante
 porte sur la couverture conjointe des données d'entraînement, sans modifier
 les critères ni ouvrir de nouveau jeu réservé. Voir le rapport pour
 les nombres, les empreintes et les limites de chaque diagnostic.
+
+### Couverture stratifiée — bilan du 5 novembre 2026
+
+L'essai suivant compare deux flux de 822 textures fraîches, à perte et
+architecture identiques. Le candidat couvre chaque cellule déclarée
+famille/phase/bruit/fréquence/amplitude, tandis que le contrôle aléatoire
+en laisse 28/192 vides. Les distributions empiriques changent légèrement ;
+ce n'est pas une expérience à marges strictement égales.
+Les deux graines progressent : 12/48 échecs fins forts contre 19/48,
+avec une hausse de 1,9–3,5 % de l'erreur RGB fine. La grille descriptive
+de force confirme une indication de meilleure sélectivité à bruit fort,
+sans validation indépendante. Le candidat reste absent de la production.
+
+Les diagnostics de contenu comparent désormais les deux domaines connus
+quand les données d'apprentissage diffèrent. Chaque mesure déclare si son
+contenu a été appris par le modèle ; un contenu de l'autre domaine ne
+devient pas une validation réservée. Les dix défauts de transfert et les
+deux défauts RGB restants doivent être étudiés sans modifier les critères.

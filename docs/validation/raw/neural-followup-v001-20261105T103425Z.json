@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "started_at_utc": "2026-11-05T10:33:51.216176+00:00",
+  "status": "stopped_on_error",
+  "qualification": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\coverage-stratified-qualification-v001\\progress.json",
+  "data_plan": "build-patch_neural_restoration\\paired-coverage-plan-v001\\stratified\\plan.json",
+  "campaign": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\coverage-stratified-campaign-v001",
+  "prefix": "coverage-stratified",
+  "script_sha256": "ad816a6ba41a96470e9a78fa5de541e17ab697af197e07d96ac7785f3b4b2a87",
+  "previous_fine": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\coverage-control-fine-v001\\result.json",
+  "previous_campaign": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\coverage-control-campaign-v001",
+  "policy": "No retraining or tuning. Known failure -> paired diagnostic only. All known pass -> frozen new classic cohort then fine cohort2; failure stops opening further reserved data.",
+  "stages": [
+    {
+      "name": "paired_fine_comparison",
+      "started_at_utc": "2026-11-05T10:33:51.217380+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\compare_fine_candidates.py",
+        "--previous",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\coverage-control-fine-v001\\result.json",
+        "--current",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\coverage-stratified-fine-v001\\result.json",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\coverage-stratified-followup-v001\\paired-fine.json"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-05T10:33:51.934411+00:00"
+    },
+    {
+      "name": "fine_diagnosis",
+      "started_at_utc": "2026-11-05T10:33:51.935358+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\trace_fine_attenuation.py",
+        "--proof",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\coverage-stratified-protected-v001\\result.json",
+        "--historical",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\coverage-stratified-fine-v001\\result.json",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\coverage-stratified-fine-trace-v001"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-05T10:34:23.628283+00:00"
+    },
+    {
+      "name": "multitone_diagnosis",
+      "started_at_utc": "2026-11-05T10:34:23.629180+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\diagnose_multitone_training.py",
+        "--data-plan",
+        "build-patch_neural_restoration\\paired-coverage-plan-v001\\stratified\\plan.json",
+        "--previous-campaign",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\coverage-control-campaign-v001",
+        "--campaign",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\coverage-stratified-campaign-v001",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\coverage-stratified-multitone-diagnostic-v001"
+      ],
+      "returncode": 1,
+      "finished_at_utc": "2026-11-05T10:34:25.248460+00:00"
+    }
+  ],
+  "qualification_sha256": "e378bcfa5c921f5cfa7f699b83f1d2d2e553f2bb43faa47546bcdd1803423e68",
+  "error": "Execution failed: multitone_diagnosis",
+  "finished_at_utc": "2026-11-05T10:34:25.249474+00:00"
+}
