@@ -1,5 +1,6 @@
 // Manual measurement only: no changes to rendering, no corpus sidecar writes.
 #include "imageeditor.h"
+#include "RenderChain.h"
 #include "Sidecar.h"
 #include "imageprovider.h"
 #include "CameraProfileEngine.h"
@@ -196,7 +197,7 @@ public:
             ImageEditor::Settings settings;
             settings.temperature = int(std::lround(loaded.image.referenceWhiteBalanceKelvin.value_or(5200.0)));
             t.restart();
-            const auto rendered = ImageEditor::renderPreview(proxy, settings, true);
+            const auto rendered = RenderChain::preview(proxy, settings, true);
             const double previewMs = elapsed(t);
             t.restart();
             auto check = loaded;
@@ -290,8 +291,8 @@ public:
             for (int c = 0; c < curves.size() && c < 4; ++c)
                 for (const auto &point : curves[c].toArray())
                     s.toneCurves[size_t(c)].append({float(point.toArray()[0].toDouble()), float(point.toArray()[1].toDouble())});
-            const auto master = ImageEditor::renderWorkingImage(loaded.image, s);
-            const auto preview = ImageEditor::renderPreview(loaded.editProxy, s, true);
+            const auto master = RenderChain::workingImage(loaded.image, s);
+            const auto preview = RenderChain::preview(loaded.editProxy, s, true);
             QCryptographicHash histogram(QCryptographicHash::Sha256);
             histogram.addData(QJsonDocument(QJsonArray::fromVariantList(preview.histogram)).toJson(QJsonDocument::Compact));
             const QImage view = preview.preview.convertToFormat(QImage::Format_RGBA8888);

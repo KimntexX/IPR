@@ -34,6 +34,7 @@ set(IPR_INCLUDE_DIRECTORIES
     "${IPR_SOURCE_ROOT}/providers"
     "${IPR_SOURCE_ROOT}/raw"
     "${IPR_SOURCE_ROOT}/stack"
+    "${IPR_SOURCE_ROOT}/detect"
     "${IPR_SOURCE_ROOT}/panorama"
     "${IPR_SOURCE_ROOT}/tasks"
 )
@@ -94,6 +95,10 @@ set(IPR_ENGINE_SOURCES
     src/core/ColorAdjustments.cpp
     src/core/ColorGrading.h
     src/core/ColorGrading.cpp
+    src/detect/LineDetection.h
+    src/detect/LineDetection.cpp
+    src/detect/Straightening.h
+    src/detect/Straightening.cpp
     src/stack/FrameSpool.h
     src/stack/FrameSpool.cpp
     src/core/Retouch.h
@@ -139,6 +144,10 @@ set(IPR_ENGINE_SOURCES
     src/core/VibranceModel.h
     src/editor/imageeditor.h
     src/editor/imageeditor.cpp
+    src/editor/AdjustmentTable.h
+    src/editor/AdjustmentTable.cpp
+    src/editor/RenderChain.h
+    src/editor/RenderChain.cpp
     src/profiles/CameraProfileEngine.h
     src/profiles/CameraProfileEngine.cpp
     src/profiles/PreparedProfileCache.h
@@ -191,6 +200,7 @@ set(IPR_QML_FILES
     src/qml/RawCalibrationModule.qml
     src/qml/PreferencesDialog.qml
     src/qml/PreferenceButton.qml
+    src/qml/CommandErrorPopup.qml
     src/qml/PreferenceCheckBox.qml
     src/qml/PreferenceSpinBox.qml
     src/qml/PreferenceComboBox.qml
@@ -422,9 +432,17 @@ if(BUILD_TESTING)
     target_include_directories(imageBridgeTests PRIVATE ${OpenCV_INCLUDE_DIRS})
     add_test(NAME imageBridgeTests COMMAND imageBridgeTests)
     set_tests_properties(imageBridgeTests PROPERTIES LABELS "unit;image")
+    ipr_add_test(adjustmentTableTests tests/adjustment_table_test.cpp)
+    set_tests_properties(adjustmentTableTests PROPERTIES LABELS "unit")
+    ipr_add_test(renderChainTests tests/render_chain_test.cpp)
+    set_tests_properties(renderChainTests PROPERTIES LABELS "unit;pipeline")
+    ipr_add_test(lineDetectionTests tests/line_detection_test.cpp)
+    set_tests_properties(lineDetectionTests PROPERTIES LABELS "unit;detection")
     ipr_add_test(detailProcessingTests tests/detail_processing_test.cpp)
     add_executable(iprGeometryAudit tests/geometry_audit.cpp)
     target_link_libraries(iprGeometryAudit PRIVATE iprEngine)
+    add_executable(iprLineAudit tests/line_audit.cpp)
+    target_link_libraries(iprLineAudit PRIVATE iprEngine)
     add_executable(iprStackAudit tests/stack_audit.cpp)
     target_link_libraries(iprStackAudit PRIVATE iprEngine)
     if(WIN32)

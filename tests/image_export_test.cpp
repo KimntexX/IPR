@@ -615,9 +615,8 @@ bool verifyEffects(ImageEditor &editor, const QString &directory)
                "effects baseline export should succeed"))
         return false;
 
-    const auto verifyEffect = [&](const QString &name,
-                                  void (ImageEditor::*setter)(int)) {
-        (editor.*setter)(100);
+    const auto verifyEffect = [&](const QString &name) {
+        editor.setAdjustment(name, 100);
         const QString path = directory + QStringLiteral("/effects-%1.png").arg(name);
         const QString status = awaitExport(
             editor, QUrl::fromLocalFile(path), QStringLiteral("PNG"));
@@ -629,16 +628,10 @@ bool verifyEffects(ImageEditor &editor, const QString &directory)
                          " should change the rendered export")));
     };
 
-    return verifyEffect(QStringLiteral("texture"), &ImageEditor::setTexture) &&
-           verifyEffect(QStringLiteral("clarity"), &ImageEditor::setClarity) &&
-           verifyEffect(QStringLiteral("dehaze"), &ImageEditor::setDehaze) &&
-           verifyEffect(QStringLiteral("grain"), &ImageEditor::setGrain) &&
-           verifyEffect(QStringLiteral("denoise-luminance"),
-                        &ImageEditor::setDenoiseLuminance) &&
-           verifyEffect(QStringLiteral("denoise-chrominance"),
-                        &ImageEditor::setDenoiseChrominance) &&
-           verifyEffect(QStringLiteral("sharpening"),
-                        &ImageEditor::setSharpeningAmount);
+    return verifyEffect(QStringLiteral("texture")) && verifyEffect(QStringLiteral("clarity")) &&
+           verifyEffect(QStringLiteral("dehaze")) && verifyEffect(QStringLiteral("grain")) &&
+           verifyEffect(QStringLiteral("denoiseLuminance")) && verifyEffect(QStringLiteral("denoiseChrominance")) &&
+           verifyEffect(QStringLiteral("sharpeningAmount"));
 }
 
 bool verifyDngOutput(ImageEditor &editor, const QString &directory)
@@ -733,9 +726,9 @@ bool verifyHighlightRecovery(ImageEditor &editor, const QString &directory)
 
     if (!awaitLoad(editor, QUrl::fromLocalFile(inputPath)))
         return false;
-    editor.setBrightness(-0.49f);
-    editor.setContrast(41);
-    editor.setHighlights(-100);
+    editor.setAdjustment(QStringLiteral("brightness"), -0.49f);
+    editor.setAdjustment(QStringLiteral("contrast"), 41);
+    editor.setAdjustment(QStringLiteral("highlights"), -100);
     const QString exportPath = directory + QStringLiteral("/tonal.jpg");
     const QString status = awaitExport(
         editor, QUrl::fromLocalFile(exportPath), QStringLiteral("JPEG"));
@@ -760,7 +753,7 @@ bool verifyHighlightRecovery(ImageEditor &editor, const QString &directory)
         return false;
 
     editor.resetAdjustments();
-    editor.setWhites(-100);
+    editor.setAdjustment(QStringLiteral("whites"), -100);
     const QString whitesPath = directory + QStringLiteral("/whites.jpg");
     const QString whitesStatus = awaitExport(
         editor, QUrl::fromLocalFile(whitesPath), QStringLiteral("JPEG"));
@@ -772,7 +765,7 @@ bool verifyHighlightRecovery(ImageEditor &editor, const QString &directory)
         return false;
 
     editor.resetAdjustments();
-    editor.setShadows(-100);
+    editor.setAdjustment(QStringLiteral("shadows"), -100);
     const QString shadowsPath = directory + QStringLiteral("/shadows.jpg");
     const QString shadowsStatus = awaitExport(
         editor, QUrl::fromLocalFile(shadowsPath), QStringLiteral("JPEG"));
@@ -784,7 +777,7 @@ bool verifyHighlightRecovery(ImageEditor &editor, const QString &directory)
         return false;
 
     editor.resetAdjustments();
-    editor.setBlacks(-100);
+    editor.setAdjustment(QStringLiteral("blacks"), -100);
     const QString blacksPath = directory + QStringLiteral("/blacks.png");
     const QString blacksStatus = awaitExport(
         editor, QUrl::fromLocalFile(blacksPath), QStringLiteral("PNG"));
@@ -794,7 +787,7 @@ bool verifyHighlightRecovery(ImageEditor &editor, const QString &directory)
                "black point export should succeed"))
         return false;
     editor.resetAdjustments();
-    editor.setBlacks(-50);
+    editor.setAdjustment(QStringLiteral("blacks"), -50);
     const QString halfBlacksPath = directory + QStringLiteral("/blacks-half.png");
     const QString halfBlacksStatus = awaitExport(
         editor, QUrl::fromLocalFile(halfBlacksPath), QStringLiteral("PNG"));
@@ -806,8 +799,8 @@ bool verifyHighlightRecovery(ImageEditor &editor, const QString &directory)
         return false;
 
     editor.resetAdjustments();
-    editor.setShadows(-100);
-    editor.setBlacks(-100);
+    editor.setAdjustment(QStringLiteral("shadows"), -100);
+    editor.setAdjustment(QStringLiteral("blacks"), -100);
     const QString darkTonesPath = directory + QStringLiteral("/dark-tones.png");
     const QString darkTonesStatus = awaitExport(
         editor, QUrl::fromLocalFile(darkTonesPath), QStringLiteral("PNG"));
@@ -876,7 +869,7 @@ bool verifyBlackShadowSeparation(ImageEditor &editor, const QString &directory)
         return false;
 
     editor.resetAdjustments();
-    editor.setBlacks(100);
+    editor.setAdjustment(QStringLiteral("blacks"), 100);
     const auto [blackStatus, blackLift] =
         exportVariant(QStringLiteral("black-lift"));
     if (!check(!blackStatus.isEmpty() &&
@@ -889,7 +882,7 @@ bool verifyBlackShadowSeparation(ImageEditor &editor, const QString &directory)
         return false;
 
     editor.resetAdjustments();
-    editor.setBlacks(-100);
+    editor.setAdjustment(QStringLiteral("blacks"), -100);
     const auto [blackDarkStatus, blackDark] =
         exportVariant(QStringLiteral("black-darkening"));
     if (!check(!blackDarkStatus.isEmpty() && !blackDark.isNull() &&
@@ -900,7 +893,7 @@ bool verifyBlackShadowSeparation(ImageEditor &editor, const QString &directory)
         return false;
 
     editor.resetAdjustments();
-    editor.setShadows(-100);
+    editor.setAdjustment(QStringLiteral("shadows"), -100);
     const auto [shadowDarkStatus, shadowDark] =
         exportVariant(QStringLiteral("shadow-darkening"));
     if (!check(!shadowDarkStatus.isEmpty() &&
@@ -914,7 +907,7 @@ bool verifyBlackShadowSeparation(ImageEditor &editor, const QString &directory)
         return false;
 
     editor.resetAdjustments();
-    editor.setShadows(100);
+    editor.setAdjustment(QStringLiteral("shadows"), 100);
     const auto [shadowStatus, shadowLift] =
         exportVariant(QStringLiteral("shadow-lift"));
     return check(!shadowStatus.isEmpty() &&
@@ -934,7 +927,7 @@ bool verifyPositiveShadowRamp(ImageEditor &editor, const QString &directory)
     const QString path=directory+QStringLiteral("/shadow-ramp.png");
     if (!input.save(path) || !awaitLoad(editor,QUrl::fromLocalFile(path))) return false;
     editor.resetAdjustments();
-    editor.setShadows(100);
+    editor.setAdjustment(QStringLiteral("shadows"), 100);
     const QString target=directory+QStringLiteral("/shadow-ramp.tiff");
     if (!awaitExport(editor,QUrl::fromLocalFile(target),QStringLiteral("TIFF"))
             .startsWith(QStringLiteral("Image exportée"))) return false;
@@ -960,7 +953,7 @@ bool verifyPositiveHighlightColour(ImageEditor &editor, const QString &directory
     input.setPixelColor(2,0,QColor(120,30,220));
     const QString path=directory+QStringLiteral("/highlight-colour.png");
     if (!input.save(path) || !awaitLoad(editor,QUrl::fromLocalFile(path))) return false;
-    editor.resetAdjustments(); editor.setHighlights(100);
+    editor.resetAdjustments(); editor.setAdjustment(QStringLiteral("highlights"), 100);
     const QString target=directory+QStringLiteral("/highlight-colour.tiff");
     if (!awaitExport(editor,QUrl::fromLocalFile(target),QStringLiteral("TIFF"))
             .startsWith(QStringLiteral("Image exportée"))) return false;
@@ -1003,7 +996,7 @@ bool verifyHighlightWhiteSeparation(ImageEditor &editor, const QString &director
         return false;
 
     editor.resetAdjustments();
-    editor.setHighlights(100);
+    editor.setAdjustment(QStringLiteral("highlights"), 100);
     const auto [highlightLiftStatus, highlightLift] =
         exportVariant(QStringLiteral("highlight-lift"));
     if (!check(!highlightLiftStatus.isEmpty() && !highlightLift.isNull() &&
@@ -1014,7 +1007,7 @@ bool verifyHighlightWhiteSeparation(ImageEditor &editor, const QString &director
         return false;
 
     editor.resetAdjustments();
-    editor.setHighlights(-100);
+    editor.setAdjustment(QStringLiteral("highlights"), -100);
     const auto [highlightDarkStatus, highlightDark] =
         exportVariant(QStringLiteral("highlight-darkening"));
     if (!check(!highlightDarkStatus.isEmpty() && !highlightDark.isNull() &&
@@ -1025,7 +1018,7 @@ bool verifyHighlightWhiteSeparation(ImageEditor &editor, const QString &director
         return false;
 
     editor.resetAdjustments();
-    editor.setWhites(100);
+    editor.setAdjustment(QStringLiteral("whites"), 100);
     const auto [whiteLiftStatus, whiteLift] =
         exportVariant(QStringLiteral("white-lift"));
     if (!check(!whiteLiftStatus.isEmpty() && !whiteLift.isNull() &&
@@ -1038,7 +1031,7 @@ bool verifyHighlightWhiteSeparation(ImageEditor &editor, const QString &director
         return false;
 
     editor.resetAdjustments();
-    editor.setWhites(-100);
+    editor.setAdjustment(QStringLiteral("whites"), -100);
     const auto [whiteDarkStatus, whiteDark] =
         exportVariant(QStringLiteral("white-darkening"));
     return check(!whiteDarkStatus.isEmpty() && !whiteDark.isNull() &&
@@ -1115,7 +1108,7 @@ bool verifyContrastResponse(ImageEditor &editor, const QString &directory)
         return false;
 
     editor.resetAdjustments();
-    editor.setContrast(100);
+    editor.setAdjustment(QStringLiteral("contrast"), 100);
     const auto [strongStatus, strong] = exportVariant(QStringLiteral("contrast-strong"));
     if (!check(!strongStatus.isEmpty() && !strong.isNull() &&
                    red(strong, 0) <= red(base, 0) + 1 && red(strong, 5) >= red(base, 5) - 1 &&
@@ -1130,7 +1123,7 @@ bool verifyContrastResponse(ImageEditor &editor, const QString &directory)
             return false;
 
     editor.resetAdjustments();
-    editor.setContrast(-100);
+    editor.setAdjustment(QStringLiteral("contrast"), -100);
     const auto [flatStatus, flat] = exportVariant(QStringLiteral("contrast-flat"));
     return check(!flatStatus.isEmpty() && !flat.isNull() &&
                      red(flat, 0) <= red(base, 0) + 1 && red(flat, 5) >= red(base, 5) - 1 &&
@@ -1178,7 +1171,7 @@ bool verifyOriginalPreview(ImageEditor &editor, ImageProvider &provider,
     const QImage originRequest = provider.requestImage(originalUrl.section(QLatin1Char('/'), 3), &requested, {});
     if (!check(originRequest == baseline && requested == baseline.size(),
                "origin provider URL should return the baseline, not the current image")) return false;
-    editor.setBrightness(1);
+    editor.setAdjustment(QStringLiteral("brightness"), 1);
     if (!check(awaitPreview(editor) && provider.image() != baseline && provider.originalImage() == baseline
             && editor.originalImageSource() == originalUrl,
                "adjustments must not alter or reissue the origin preview")) return false;
@@ -1301,7 +1294,7 @@ int main(int argc, char **argv)
                "absolute paths without a file URL scheme should export"))
         return 1;
 
-    editor.setTemperature(50000);
+    editor.setAdjustment(QStringLiteral("temperature"), 50000);
     const QString warmPath = directory.filePath(QStringLiteral("warm.png"));
     const QString warmStatus = awaitExport(
         editor, QUrl::fromLocalFile(warmPath), QStringLiteral("PNG"));
@@ -1314,7 +1307,7 @@ int main(int argc, char **argv)
         return 1;
 
     editor.resetAdjustments();
-    editor.setTint(150);
+    editor.setAdjustment(QStringLiteral("tint"), 150);
     const QString tintPath = directory.filePath(QStringLiteral("tint.png"));
     const QString tintStatus = awaitExport(
         editor, QUrl::fromLocalFile(tintPath), QStringLiteral("PNG"));
@@ -1328,7 +1321,7 @@ int main(int argc, char **argv)
         return 1;
 
     editor.resetAdjustments();
-    editor.setSaturation(-100);
+    editor.setAdjustment(QStringLiteral("saturation"), -100);
     const QString desaturatedPath =
         directory.filePath(QStringLiteral("desaturated.png"));
     const QString desaturatedStatus = awaitExport(
@@ -1344,7 +1337,7 @@ int main(int argc, char **argv)
         return 1;
 
     editor.resetAdjustments();
-    editor.setVibrance(100);
+    editor.setAdjustment(QStringLiteral("vibrance"), 100);
     const QString vibrantPath = directory.filePath(QStringLiteral("vibrant.png"));
     const QString vibrantStatus = awaitExport(
         editor, QUrl::fromLocalFile(vibrantPath), QStringLiteral("PNG"));
@@ -1357,7 +1350,7 @@ int main(int argc, char **argv)
         return 1;
 
     editor.resetAdjustments();
-    editor.setVibrance(-100);
+    editor.setAdjustment(QStringLiteral("vibrance"), -100);
     const QString reducedVibrancePath = directory.filePath(QStringLiteral("reduced-vibrance.png"));
     const QString reducedVibranceStatus = awaitExport(
         editor, QUrl::fromLocalFile(reducedVibrancePath), QStringLiteral("PNG"));

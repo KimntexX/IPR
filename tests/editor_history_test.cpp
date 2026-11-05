@@ -87,11 +87,11 @@ int main(int argc, char **argv)
     // A slider drag, framed by the interface, is one step whatever its intermediate values.
     editor.beginAdjustmentGesture();
     for (int contrast = 5; contrast <= 25; contrast += 5)
-        editor.setContrast(contrast);
+        editor.setAdjustment(QStringLiteral("contrast"), contrast);
     editor.endAdjustmentGesture();
     if (!check(editor.historySteps().size() == 2 && editor.canUndo(), "a gesture is one step")) return 1;
     // A change outside a gesture (typed value, reset, paste) is a step of its own.
-    editor.setSaturation(10);
+    editor.setAdjustment(QStringLiteral("saturation"), 10);
     if (!check(editor.historySteps().size() == 3 && editor.historyPosition() == 2,
                "a change outside a gesture is a step")) return 1;
     if (!check(editor.historySteps().at(2).toMap().value(QStringLiteral("changes")).toStringList() ==
@@ -107,12 +107,12 @@ int main(int argc, char **argv)
     if (!check(value(editor, "contrast") == 25 && editor.historyPosition() == 1, "redo replays a step")) return 1;
     if (!check(waitFor([&] { return !editor.busy(); }) && editor.historySteps().size() == 3,
                "restoring a step does not record a new one")) return 1;
-    editor.setVibrance(5);
+    editor.setAdjustment(QStringLiteral("vibrance"), 5);
     if (!check(!editor.canRedo() && editor.historySteps().size() == 3, "a new edit drops the redo steps")) return 1;
 
     // Removing a step takes its edit out of the render.
-    editor.setClarity(15);
-    editor.setDehaze(25);
+    editor.setAdjustment(QStringLiteral("clarity"), 15);
+    editor.setAdjustment(QStringLiteral("dehaze"), 25);
     const int stepsWithClarity = int(editor.historySteps().size());
     editor.removeHistoryStep(stepsWithClarity - 2);
     if (!check(value(editor, "clarity") == 0 && value(editor, "dehaze") == 25 &&
@@ -126,7 +126,7 @@ int main(int argc, char **argv)
 
     // A named snapshot comes back as a new step.
     editor.addSnapshot(QStringLiteral("Vibrant"));
-    editor.setVibrance(40);
+    editor.setAdjustment(QStringLiteral("vibrance"), 40);
     editor.restoreSnapshot(0);
     if (!check(editor.snapshots().size() == 1 && value(editor, "vibrance") == 5 &&
                editor.historySteps().size() == 5,
@@ -156,7 +156,7 @@ int main(int argc, char **argv)
     const auto unlock = qScopeGuard([&] {
         QFile::setPermissions(sidecar, QFileDevice::ReadOwner | QFileDevice::WriteOwner);
     });
-    editor.setVibrance(60);
+    editor.setAdjustment(QStringLiteral("vibrance"), 60);
     if (!check(waitFor([&] { return !editor.busy(); }), "the preview settles while locked")) return 1;
     editor.saveCurrentAdjustments();
     if (!check(editor.statusMessage().contains(QStringLiteral("Échec")) && bytesOf(sidecar) == beforeFailure,

@@ -289,7 +289,7 @@ Item {
                     Layout.minimumWidth: 0
                     text: qsTr("Niveaux de gris")
                     enabled: editor.hasImage
-                    onToggled: editor.setGrayscale(checked)
+                    onToggled: editor.setAdjustment("grayscale", checked)
                 }
 
                 AdjustmentControl {
@@ -304,7 +304,7 @@ Item {
                     adjustmentEnabled: editor.hasImage
                     onValueEdited: function(value) {
                         if (editor)
-                            editor.setBrightness(value)
+                            editor.setAdjustment("brightness", value)
                     }
                 }
 
@@ -319,7 +319,7 @@ Item {
                     adjustmentEnabled: editor.hasImage
                     onValueEdited: function(value) {
                         if (editor)
-                            editor.setContrast(Math.round(value))
+                            editor.setAdjustment("contrast", Math.round(value))
                     }
                 }
 
@@ -334,7 +334,7 @@ Item {
                     adjustmentEnabled: editor.hasImage
                     onValueEdited: function(value) {
                         if (editor)
-                            editor.setHighlights(Math.round(value))
+                            editor.setAdjustment("highlights", Math.round(value))
                     }
                 }
 
@@ -349,7 +349,7 @@ Item {
                     adjustmentEnabled: editor.hasImage
                     onValueEdited: function(value) {
                         if (editor)
-                            editor.setWhites(Math.round(value))
+                            editor.setAdjustment("whites", Math.round(value))
                     }
                 }
 
@@ -364,7 +364,7 @@ Item {
                     adjustmentEnabled: editor.hasImage
                     onValueEdited: function(value) {
                         if (editor)
-                            editor.setShadows(Math.round(value))
+                            editor.setAdjustment("shadows", Math.round(value))
                     }
                 }
 
@@ -379,7 +379,7 @@ Item {
                     adjustmentEnabled: editor.hasImage
                     onValueEdited: function(value) {
                         if (editor)
-                            editor.setBlacks(Math.round(value))
+                            editor.setAdjustment("blacks", Math.round(value))
                     }
                 }
             }
@@ -448,7 +448,7 @@ Item {
                     adjustmentEnabled: editor.hasImage
                     onValueEdited: function(value) {
                         if (editor)
-                            editor.setTemperature(Math.round(value))
+                            editor.setAdjustment("temperature", Math.round(value))
                     }
                 }
 
@@ -464,7 +464,7 @@ Item {
                     adjustmentEnabled: editor.hasImage
                     onValueEdited: function(value) {
                         if (editor)
-                            editor.setTint(Math.round(value))
+                            editor.setAdjustment("tint", Math.round(value))
                     }
                 }
 
@@ -480,7 +480,7 @@ Item {
                     adjustmentEnabled: editor.hasImage
                     onValueEdited: function(value) {
                         if (editor)
-                            editor.setVibrance(Math.round(value))
+                            editor.setAdjustment("vibrance", Math.round(value))
                     }
                 }
 
@@ -496,7 +496,7 @@ Item {
                     adjustmentEnabled: editor.hasImage
                     onValueEdited: function(value) {
                         if (editor)
-                            editor.setSaturation(Math.round(value))
+                            editor.setAdjustment("saturation", Math.round(value))
                     }
                 }
             }
@@ -568,7 +568,7 @@ Item {
                     adjustmentEnabled: editor.hasImage
                     onValueEdited: function(value) {
                         if (editor)
-                            editor.setTexture(Math.round(value))
+                            editor.setAdjustment("texture", Math.round(value))
                     }
                 }
 
@@ -583,7 +583,7 @@ Item {
                     adjustmentEnabled: editor.hasImage
                     onValueEdited: function(value) {
                         if (editor)
-                            editor.setClarity(Math.round(value))
+                            editor.setAdjustment("clarity", Math.round(value))
                     }
                 }
 
@@ -598,7 +598,7 @@ Item {
                     adjustmentEnabled: editor.hasImage
                     onValueEdited: function(value) {
                         if (editor)
-                            editor.setDehaze(Math.round(value))
+                            editor.setAdjustment("dehaze", Math.round(value))
                     }
                 }
 
@@ -613,7 +613,7 @@ Item {
                     adjustmentEnabled: editor.hasImage
                     onValueEdited: function(value) {
                         if (editor)
-                            editor.setGrain(Math.round(value))
+                            editor.setAdjustment("grain", Math.round(value))
                     }
                 }
 
@@ -627,7 +627,7 @@ Item {
                     adjustmentEnabled: editor.hasImage
                     onValueEdited: function(value) {
                         if (editor)
-                            editor.setBlur(Math.round(value))
+                            editor.setAdjustment("blur", Math.round(value))
                     }
                 }
             }
@@ -690,7 +690,7 @@ Item {
                         adjustmentEnabled: editor.hasImage
                         onValueEdited: function(value) {
                             if (editor) {
-                                editor.setDenoiseLuminance(Math.round(value))
+                                editor.setAdjustment("denoiseLuminance", Math.round(value))
                                 root.reloadDenoiseAmount()
                             }
                         }
@@ -707,7 +707,7 @@ Item {
                         adjustmentEnabled: editor.hasImage
                         onValueEdited: function(value) {
                             if (editor) {
-                                editor.setDenoiseChrominance(Math.round(value))
+                                editor.setAdjustment("denoiseChrominance", Math.round(value))
                                 root.reloadDenoiseAmount()
                             }
                         }
@@ -733,7 +733,7 @@ Item {
                     adjustmentEnabled: editor.hasImage
                     onValueEdited: function(value) {
                         if (editor)
-                            editor.setSharpeningAmount(Math.round(value))
+                            editor.setAdjustment("sharpeningAmount", Math.round(value))
                     }
                 }
 
@@ -751,7 +751,7 @@ Item {
                     adjustmentEnabled: editor.hasImage
                     onValueEdited: function(value) {
                         if (editor)
-                            editor.setSharpeningRadius(value)
+                            editor.setAdjustment("sharpeningRadius", value)
                     }
                 }
 
@@ -767,7 +767,7 @@ Item {
                     adjustmentEnabled: editor.hasImage
                     onValueEdited: function(value) {
                         if (editor)
-                            editor.setSharpeningMasking(Math.round(value))
+                            editor.setAdjustment("sharpeningMasking", Math.round(value))
                     }
                 }
             }
