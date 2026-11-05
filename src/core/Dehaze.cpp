@@ -3,6 +3,7 @@
 #include "WorkingColorSpace.h"
 
 #include "OpenCvBridge.h"
+#include "Parallel.h"
 
 #include <opencv2/imgproc.hpp>
 
@@ -369,8 +370,8 @@ void apply(cv::Mat &linearRgb, int amount, double pixelScale, const cv::Mat &loc
     if (hasLocal)
         for (int half = -200; half <= 200; ++half)
             pixelLaws.push_back(pixelLawAt(float(half) / 2.f));
-    cv::parallel_for_(cv::Range(0, linearRgb.rows), [&](const cv::Range &rows) {
-        for (int y = rows.start; y < rows.end; ++y) {
+    ipr::parallelRows(linearRgb.rows, [&](int first, int last) {
+        for (int y = first; y < last; ++y) {
             auto *row = linearRgb.ptr<cv::Vec3f>(y);
             const float *hr = haze.ptr<float>(y), *br = base.ptr<float>(y), *tr = toneShift.ptr<float>(y);
             const float *ur = localTone.ptr<float>(y);

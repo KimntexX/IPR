@@ -1,6 +1,7 @@
 #include "ToneCurve.h"
 
 #include "WorkingColorSpace.h"
+#include "Parallel.h"
 
 #include <algorithm>
 #include <cmath>
@@ -101,8 +102,8 @@ void apply(cv::Mat &linearRgb, const Curves &curves)
     const std::array<Spline, 3> channel{Spline(curves[Red]), Spline(curves[Green]), Spline(curves[Blue])};
     const cv::Matx33d &toProPhoto = WorkingColor::toProPhoto();
     const cv::Matx33d &back = fromProPhoto();
-    cv::parallel_for_(cv::Range(0, linearRgb.rows), [&](const cv::Range &rows) {
-        for (int y = rows.start; y < rows.end; ++y) {
+    ipr::parallelRows(linearRgb.rows, [&](int first, int last) {
+        for (int y = first; y < last; ++y) {
             auto *row = linearRgb.ptr<cv::Vec3f>(y);
             for (int x = 0; x < linearRgb.cols; ++x) {
                 cv::Vec3d p = toProPhoto * cv::Vec3d(row[x]);

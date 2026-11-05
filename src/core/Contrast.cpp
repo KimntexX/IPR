@@ -1,5 +1,6 @@
 #include "Contrast.h"
 #include "LocalValues.h"
+#include "Parallel.h"
 
 #include <algorithm>
 #include <cmath>
@@ -39,8 +40,8 @@ void apply(cv::Mat &linearRgb, int contrast, const cv::Mat &local)
         }
         return;
     }
-    cv::parallel_for_(cv::Range(0, linearRgb.rows), [&](const cv::Range &rows) {
-        for (int y = rows.start; y < rows.end; ++y) {
+    ipr::parallelRows(linearRgb.rows, [&](int first, int last) {
+        for (int y = first; y < last; ++y) {
             cv::Vec3f *row = linearRgb.ptr<cv::Vec3f>(y);
             const float *values = local.ptr<float>(y);
             for (int x = 0; x < linearRgb.cols; ++x) {

@@ -1,6 +1,7 @@
 #include "PanoramaFeatures.h"
 
 #include "OpenCvBridge.h"
+#include "Parallel.h"
 
 #include <opencv2/imgproc.hpp>
 
@@ -148,8 +149,8 @@ std::vector<int> closest(const std::vector<Feature> &from, const std::vector<Fea
 {
     std::vector<int> best(from.size(), -1);
     const float squaredRatio = float(ratio * ratio);
-    cv::parallel_for_(cv::Range(0, int(from.size())), [&](const cv::Range &range) {
-        for (int i = range.start; i < range.end; ++i) {
+    ipr::parallelRows(int(from.size()), [&](int begin, int end) {
+        for (int i = begin; i < end; ++i) {
             const float *a = from[size_t(i)].descriptor.data();
             float first = std::numeric_limits<float>::max(), second = first;
             int found = -1;

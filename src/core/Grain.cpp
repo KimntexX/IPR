@@ -1,6 +1,7 @@
 #include "Grain.h"
 
 #include "OpenCvBridge.h"
+#include "Parallel.h"
 
 #include <opencv2/imgproc.hpp>
 
@@ -60,8 +61,8 @@ void apply(cv::Mat &linearRgb, int amount, double pixelScale)
 {
     if (amount <= 0 || linearRgb.empty() || linearRgb.type() != CV_32FC3) return;
     cv::Mat noise(linearRgb.size(), CV_32F);
-    cv::parallel_for_(cv::Range(0, noise.rows), [&](const cv::Range &rows) {
-        for (int y = rows.start; y < rows.end; ++y) {
+    ipr::parallelRows(noise.rows, [&](int first, int last) {
+        for (int y = first; y < last; ++y) {
             float *row = noise.ptr<float>(y);
             for (int x = 0; x < noise.cols; ++x) row[x] = gaussian(x, y);
         }
@@ -77,8 +78,8 @@ void apply(cv::Mat &linearRgb, int amount, double pixelScale)
     } else {
         deviation *= float(reducedDeviation(1.0 / pixelScale));
     }
-    cv::parallel_for_(cv::Range(0, linearRgb.rows), [&](const cv::Range &rows) {
-        for (int y = rows.start; y < rows.end; ++y) {
+    ipr::parallelRows(linearRgb.rows, [&](int first, int last) {
+        for (int y = first; y < last; ++y) {
             auto *row = linearRgb.ptr<cv::Vec3f>(y);
             const float *n = noise.ptr<float>(y);
             for (int x = 0; x < linearRgb.cols; ++x)

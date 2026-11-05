@@ -1,6 +1,7 @@
 #include "StackAlignment.h"
 
 #include "OpenCvBridge.h"
+#include "Parallel.h"
 
 #include <opencv2/imgproc.hpp>
 
@@ -223,8 +224,8 @@ std::vector<cv::Point> detailedSites(const cv::Mat &reference, const Options &op
         for (int x = half; x + half < reference.cols; x += spacing)
             sites.emplace_back(x, y);
     std::vector<double> energy(sites.size());
-    cv::parallel_for_(cv::Range(0, int(sites.size())), [&](const cv::Range &range) {
-        for (int i = range.start; i < range.end; ++i) {
+    ipr::parallelRows(int(sites.size()), [&](int first, int last) {
+        for (int i = first; i < last; ++i) {
             const cv::Point site = sites[size_t(i)];
             energy[size_t(i)] = cornerEnergy(reference(cv::Rect(site.x - half, site.y - half, 2 * half + 1, 2 * half + 1)));
         }
@@ -250,9 +251,9 @@ std::vector<Match> matchBlocks(const cv::Mat &reference, const cv::Mat &frame, c
     const int half = options.blockHalf;
     std::vector<Match> found(sites.size());
     std::vector<char> kept(sites.size(), 0);
-    cv::parallel_for_(cv::Range(0, int(sites.size())), [&](const cv::Range &range) {
+    ipr::parallelRows(int(sites.size()), [&](int first, int last) {
         cv::Mat scores;
-        for (int i = range.start; i < range.end; ++i) {
+        for (int i = first; i < last; ++i) {
             const cv::Point site = sites[size_t(i)];
             const cv::Rect blockArea(site.x - half, site.y - half, 2 * half + 1, 2 * half + 1);
             const cv::Mat block = reference(blockArea);
@@ -333,9 +334,9 @@ LocalField localField(const cv::Mat &reference, const cv::Mat &registered, const
     const cv::Size grid(std::max(1, reference.cols / options.spacing), std::max(1, reference.rows / options.spacing));
     field.sites = grid.area();
     cv::Mat measured(grid, CV_32FC2, cv::Scalar::all(0)), weight(grid, CV_32FC1, cv::Scalar::all(0));
-    cv::parallel_for_(cv::Range(0, grid.height), [&](const cv::Range &range) {
+    ipr::parallelRows(grid.height, [&](int first, int last) {
         cv::Mat scores;
-        for (int row = range.start; row < range.end; ++row) {
+        for (int row = first; row < last; ++row) {
             for (int column = 0; column < grid.width; ++column) {
                 const cv::Point site(int((column + 0.5) * reference.cols / grid.width),
                                      int((row + 0.5) * reference.rows / grid.height));
@@ -399,8 +400,8 @@ Pyramid buildPyramid(const cv::Mat &cameraRgb, const Options &options)
     if (cameraRgb.empty() || cameraRgb.type() != CV_32FC3)
         return pyramid;
     cv::Mat luminance(cameraRgb.size(), CV_32FC1);
-    cv::parallel_for_(cv::Range(0, cameraRgb.rows), [&](const cv::Range &range) {
-        for (int y = range.start; y < range.end; ++y) {
+    ipr::parallelRows(cameraRgb.rows, [&](int first, int last) {
+        for (int y = first; y < last; ++y) {
             const cv::Vec3f *in = cameraRgb.ptr<cv::Vec3f>(y);
             float *out = luminance.ptr<float>(y);
             for (int x = 0; x < cameraRgb.cols; ++x)

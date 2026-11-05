@@ -4,6 +4,7 @@
 #include "WorkingColorSpace.h"
 
 #include "OpenCvBridge.h"
+#include "Parallel.h"
 
 #include <algorithm>
 #include <cmath>
@@ -31,8 +32,8 @@ void apply(cv::Mat &linearRgb, const Parameters &parameters, const LocalValues::
     const ColorGrading::Zones zones = ColorGrading::prepare(parameters.gradingHue, parameters.gradingSaturation,
                                                             parameters.gradingLuminance, parameters.gradingBlending,
                                                             parameters.gradingBalance);
-    cv::parallel_for_(cv::Range(0, linearRgb.rows), [&](const cv::Range &rows) {
-        for (int y = rows.start; y < rows.end; ++y) {
+    ipr::parallelRows(linearRgb.rows, [&](int first, int last) {
+        for (int y = first; y < last; ++y) {
             auto *row = linearRgb.ptr<cv::Vec3f>(y);
             const float *saturationRow = localSaturation ? localSaturation->ptr<float>(y) : nullptr;
             const float *vibranceRow = localVibrance ? localVibrance->ptr<float>(y) : nullptr;
@@ -108,8 +109,8 @@ cv::Mat pointWeights(const cv::Mat &linearRgb, const Parameters &parameters, int
     apply(colours, before);
     const PointColor::Point &selected = parameters.pointColor.points[size_t(point)];
     cv::Mat weights(colours.size(), CV_32FC1);
-    cv::parallel_for_(cv::Range(0, colours.rows), [&](const cv::Range &rows) {
-        for (int y = rows.start; y < rows.end; ++y) {
+    ipr::parallelRows(colours.rows, [&](int first, int last) {
+        for (int y = first; y < last; ++y) {
             const auto *in = colours.ptr<cv::Vec3f>(y);
             auto *out = weights.ptr<float>(y);
             for (int x = 0; x < colours.cols; ++x)

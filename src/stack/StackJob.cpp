@@ -3,6 +3,7 @@
 #include "FrameSpool.h"
 
 #include "OpenCvBridge.h"
+#include "Parallel.h"
 
 #include <QDir>
 #include <QStorageInfo>
@@ -92,8 +93,8 @@ void sourceMaps(const cv::Matx33d &referenceToFrame, const cv::Mat &displacement
 {
     mapX.create(displacements.size(), CV_32FC1);
     mapY.create(displacements.size(), CV_32FC1);
-    cv::parallel_for_(cv::Range(0, displacements.rows), [&](const cv::Range &range) {
-        for (int y = range.start; y < range.end; ++y) {
+    ipr::parallelRows(displacements.rows, [&](int first, int last) {
+        for (int y = first; y < last; ++y) {
             const cv::Vec2f *field = displacements.ptr<cv::Vec2f>(y);
             float *outX = mapX.ptr<float>(y), *outY = mapY.ptr<float>(y);
             for (int x = 0; x < displacements.cols; ++x) {
@@ -113,8 +114,8 @@ void narrowSpans(const cv::Matx33d &referenceToFrame, const cv::Size &size, doub
 {
     const double margin = interpolationMargin + std::ceil(fieldReach);
     const double right = size.width - 1 - margin, bottom = size.height - 1 - margin;
-    cv::parallel_for_(cv::Range(0, size.height), [&](const cv::Range &range) {
-        for (int y = range.start; y < range.end; ++y) {
+    ipr::parallelRows(size.height, [&](int from, int to) {
+        for (int y = from; y < to; ++y) {
             int first = size.width, last = -1;
             for (int x = 0; x < size.width; ++x) {
                 const double w = referenceToFrame(2, 0) * x + referenceToFrame(2, 1) * y + referenceToFrame(2, 2);

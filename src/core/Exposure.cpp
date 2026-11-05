@@ -1,5 +1,6 @@
 #include "Exposure.h"
 #include "LocalValues.h"
+#include "Parallel.h"
 
 #include <cmath>
 
@@ -14,8 +15,8 @@ void apply(cv::Mat &linearRgb, float exposureEv, const cv::Mat &localEv)
         if (exposureEv != 0.0f) linearRgb *= factor(double(exposureEv));
         return;
     }
-    cv::parallel_for_(cv::Range(0, linearRgb.rows), [&](const cv::Range &rows) {
-        for (int y = rows.start; y < rows.end; ++y) {
+    ipr::parallelRows(linearRgb.rows, [&](int first, int last) {
+        for (int y = first; y < last; ++y) {
             auto *row = linearRgb.ptr<cv::Vec3f>(y);
             const float *local = localEv.ptr<float>(y);
             for (int x = 0; x < linearRgb.cols; ++x) {

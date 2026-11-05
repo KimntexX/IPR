@@ -1,6 +1,7 @@
 #include "PanoramaGeometry.h"
 
 #include "OpenCvBridge.h"
+#include "Parallel.h"
 
 #include <opencv2/imgproc.hpp>
 
@@ -522,9 +523,9 @@ void refine(Solution &solution, const std::vector<cv::Mat> &images, double image
         const int total = int(pair.pointsA.size());
         std::vector<cv::Point2d> refinedA(static_cast<size_t>(total)), refinedB(static_cast<size_t>(total));
         std::vector<char> good(static_cast<size_t>(total), 0);
-        cv::parallel_for_(cv::Range(0, total), [&](const cv::Range &range) {
+        ipr::parallelRows(total, [&](int first, int last) {
             cv::Mat mapX(searchSide, searchSide, CV_32FC1), mapY(searchSide, searchSide, CV_32FC1), search, response;
-            for (int index = range.start; index < range.end; ++index) {
+            for (int index = first; index < last; ++index) {
                 const cv::Point2d onA = toImage(pair.pointsA[size_t(index)]);
                 const cv::Point seat(int(std::lround(onA.x)), int(std::lround(onA.y)));
                 const cv::Rect block(seat.x - refinedHalf, seat.y - refinedHalf, templateSide, templateSide);
@@ -840,8 +841,8 @@ void sourceMaps(const Surface &surface, const FrameView &view, const cv::Rect &a
     const double right = view.frame.width - 1 - margin, bottom = view.frame.height - 1 - margin;
     const cv::Matx33d r = view.worldToCamera;
     const Lens lens = lensOf(view.frame, view.focal, view.distortion);
-    cv::parallel_for_(cv::Range(0, area.height), [&](const cv::Range &range) {
-        for (int y = range.start; y < range.end; ++y) {
+    ipr::parallelRows(area.height, [&](int first, int last) {
+        for (int y = first; y < last; ++y) {
             float *outX = mapX.ptr<float>(y), *outY = mapY.ptr<float>(y);
             uchar *inside = valid.ptr<uchar>(y);
             for (int x = 0; x < area.width; ++x) {

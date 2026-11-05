@@ -3,6 +3,7 @@
 #include "WorkingColorSpace.h"
 
 #include "OpenCvBridge.h"
+#include "Parallel.h"
 
 #include <QDir>
 #include <QCoreApplication>
@@ -602,8 +603,8 @@ public:
                          toneCurve[toneCurve.size() - 2] == 1.0;
         for (qsizetype i = 1; hueStable && i < toneCurve.size(); i += 2)
             hueStable = toneCurve[i] >= 0.0 && toneCurve[i] <= 1.0;
-        cv::parallel_for_(cv::Range(0, rgb.rows), [&](const cv::Range &rows) {
-            for (int y = rows.start; y < rows.end; ++y) {
+        ipr::parallelRows(rgb.rows, [&](int first, int last) {
+            for (int y = first; y < last; ++y) {
                 cv::Vec3f *row = rgb.ptr<cv::Vec3f>(y);
                 auto illuminantAt = illuminants(y);
                 for (int x = 0; x < rgb.cols; ++x) {
@@ -1914,8 +1915,8 @@ bool renderFromCameraSignal(const DcpWorkingContext &source, int temperature, in
     const auto applyLocalExposure = [&](cv::Mat &signal) {
         if (localExposure.empty()) return;
         // Scene-linear like the global exposure, before the profile's tone curve.
-        cv::parallel_for_(cv::Range(0, signal.rows), [&](const cv::Range &rows) {
-            for (int y = rows.start; y < rows.end; ++y) {
+        ipr::parallelRows(signal.rows, [&](int first, int last) {
+            for (int y = first; y < last; ++y) {
                 auto *row = signal.ptr<cv::Vec3f>(y);
                 const float *values = localExposure.ptr<float>(y);
                 for (int x = 0; x < signal.cols; ++x)
@@ -1950,8 +1951,8 @@ bool renderFromCameraSignal(const DcpWorkingContext &source, int temperature, in
             prepared[size_t(index)].gains = cv::Vec3f(pixelGains);
         }
         rgb.create(size, CV_32FC3);
-        cv::parallel_for_(cv::Range(0, rgb.rows), [&](const cv::Range &rows) {
-            for (int y = rows.start; y < rows.end; ++y) {
+        ipr::parallelRows(rgb.rows, [&](int first, int last) {
+            for (int y = first; y < last; ++y) {
                 const auto *in = source.cameraRgb.ptr<cv::Vec3f>(y);
                 auto *out = rgb.ptr<cv::Vec3f>(y);
                 auto indices = combinations.row(y);
@@ -2014,9 +2015,8 @@ bool applyLcp(const QString &fileName, cv::Mat &linearRgb,
     const double cy = model.geometryCenterY * linearRgb.rows;
     cv::Mat mapX(linearRgb.size(), CV_32FC1);
     cv::Mat mapY(linearRgb.size(), CV_32FC1);
-    cv::parallel_for_(cv::Range(0, linearRgb.rows),
-                      [&](const cv::Range &rows) {
-        for (int y = rows.start; y < rows.end; ++y) {
+    ipr::parallelRows(linearRgb.rows, [&](int first, int last) {
+        for (int y = first; y < last; ++y) {
             float *mx = mapX.ptr<float>(y);
             float *my = mapY.ptr<float>(y);
             for (int x = 0; x < linearRgb.cols; ++x) {
@@ -2056,9 +2056,8 @@ bool applyLcp(const QString &fileName, cv::Mat &linearRgb,
             cv::Mat caY(linearRgb.size(), CV_32FC1);
             const double caCx = centerX * linearRgb.cols;
             const double caCy = centerY * linearRgb.rows;
-            cv::parallel_for_(cv::Range(0, linearRgb.rows),
-                              [&](const cv::Range &rows) {
-                for (int y = rows.start; y < rows.end; ++y) {
+            ipr::parallelRows(linearRgb.rows, [&](int first, int last) {
+                for (int y = first; y < last; ++y) {
                     float *mx = caX.ptr<float>(y);
                     float *my = caY.ptr<float>(y);
                     for (int x = 0; x < linearRgb.cols; ++x) {
@@ -2091,9 +2090,8 @@ bool applyLcp(const QString &fileName, cv::Mat &linearRgb,
     if (options.lensCorrection && model.hasVignetting) {
         const double vignetteCx = model.vignetteCenterX * linearRgb.cols;
         const double vignetteCy = model.vignetteCenterY * linearRgb.rows;
-        cv::parallel_for_(cv::Range(0, geometryCorrected.rows),
-                          [&](const cv::Range &rows) {
-            for (int y = rows.start; y < rows.end; ++y) {
+        ipr::parallelRows(geometryCorrected.rows, [&](int first, int last) {
+            for (int y = first; y < last; ++y) {
                 cv::Vec3f *row = geometryCorrected.ptr<cv::Vec3f>(y);
                 for (int x = 0; x < geometryCorrected.cols; ++x) {
                     const double dx = (x - vignetteCx) / scale;

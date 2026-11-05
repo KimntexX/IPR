@@ -1,6 +1,7 @@
 #include "PanoramaBlend.h"
 
 #include "OpenCvBridge.h"
+#include "Parallel.h"
 
 #include <opencv2/imgproc.hpp>
 
@@ -360,10 +361,10 @@ Layer prepareLayer(const View &view, const cv::Mat &labels, int label, double na
 void blendBand(const std::vector<Pixels> &pixels, int scale, const cv::Rect &band, cv::Mat &target)
 {
     target.create(band.size(), CV_32FC3);
-    cv::parallel_for_(cv::Range(0, band.height), [&](const cv::Range &range) {
+    ipr::parallelRows(band.height, [&](int from, int to) {
         std::vector<cv::Vec3f> lowSum(static_cast<size_t>(band.width)), detailSum(static_cast<size_t>(band.width)), lowRow;
         std::vector<float> wideSum(static_cast<size_t>(band.width)), narrowSum(static_cast<size_t>(band.width)), wideRow, narrowRow;
-        for (int row = range.start; row < range.end; ++row) {
+        for (int row = from; row < to; ++row) {
             const int canvasY = band.y + row;
             std::fill(lowSum.begin(), lowSum.end(), cv::Vec3f(0, 0, 0));
             std::fill(detailSum.begin(), detailSum.end(), cv::Vec3f(0, 0, 0));

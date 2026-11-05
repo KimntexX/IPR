@@ -1,4 +1,5 @@
 #include "LocalValues.h"
+#include "Parallel.h"
 
 #include <algorithm>
 #include <cmath>
@@ -40,9 +41,9 @@ void Combinations::scan(const cv::Size &size)
 {
     std::unordered_set<quint64> found;
     std::mutex mutex;
-    cv::parallel_for_(cv::Range(0, size.height), [&](const cv::Range &range) {
+    ipr::parallelRows(size.height, [&](int from, int to) {
         std::unordered_set<quint64> local;
-        for (int y = range.start; y < range.end; ++y) {
+        for (int y = from; y < to; ++y) {
             const auto rows = rowsAt(y);
             quint64 last = 0;
             bool hasLast = false;

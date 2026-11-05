@@ -2,6 +2,7 @@
 #include "WorkingColorSpace.h"
 
 #include "OpenCvBridge.h"
+#include "Parallel.h"
 
 #include <opencv2/imgproc.hpp>
 
@@ -468,8 +469,8 @@ void reduceNoiseLocally(cv::Mat &linearRgb, const DenoiseSettings &settings, dou
         return localRow && std::isfinite(localRow[x]) ? std::clamp(global + localRow[x], 0.f, 100.f) : global;
     };
     const float *const noRow = nullptr;
-    cv::parallel_for_(cv::Range(0, linearRgb.rows), [&](const cv::Range &rows) {
-        for (int y = rows.start; y < rows.end; ++y) {
+    ipr::parallelRows(linearRgb.rows, [&](int first, int last) {
+        for (int y = first; y < last; ++y) {
             auto *pixels = linearRgb.ptr<cv::Vec3f>(y);
             const float *luminanceRow = localLuminance.empty() ? noRow : localLuminance.ptr<float>(y);
             const float *chrominanceRow = localChrominance.empty() ? noRow : localChrominance.ptr<float>(y);

@@ -2,6 +2,7 @@
 #include "WorkingColorSpace.h"
 
 #include "OpenCvBridge.h"
+#include "Parallel.h"
 
 #include <opencv2/imgproc.hpp>
 
@@ -125,8 +126,8 @@ void applyBands(cv::Mat &linearRgb, Domain domain, const Bands &k, const Bands &
                 const LocalGains *local = nullptr)
 {
     cv::Mat luminance(linearRgb.size(), CV_32F), value(linearRgb.size(), CV_32F);
-    cv::parallel_for_(cv::Range(0, linearRgb.rows), [&](const cv::Range &rows) {
-        for (int y = rows.start; y < rows.end; ++y) {
+    ipr::parallelRows(linearRgb.rows, [&](int first, int last) {
+        for (int y = first; y < last; ++y) {
             const auto *p = linearRgb.ptr<cv::Vec3f>(y);
             float *l = luminance.ptr<float>(y), *v = value.ptr<float>(y);
             for (int x = 0; x < linearRgb.cols; ++x) {
@@ -143,8 +144,8 @@ void applyBands(cv::Mat &linearRgb, Domain domain, const Bands &k, const Bands &
         if (local) {
             const float reduceA = local->reduce[size_t(b)], enhanceA = local->enhance[size_t(b)];
             const float inverseReduce = 1.f / (reduceA * reduceA), inverseEnhance = 1.f / (enhanceA * enhanceA);
-            cv::parallel_for_(cv::Range(0, delta.rows), [&](const cv::Range &rows) {
-                for (int y = rows.start; y < rows.end; ++y) {
+            ipr::parallelRows(delta.rows, [&](int first, int last) {
+                for (int y = first; y < last; ++y) {
                     const float *p = previous.ptr<float>(y), *c = current.ptr<float>(y);
                     const float *values = local->values.ptr<float>(y);
                     float *o = delta.ptr<float>(y);
@@ -157,8 +158,8 @@ void applyBands(cv::Mat &linearRgb, Domain domain, const Bands &k, const Bands &
                 }
             });
         } else if (gain != 0.f) {
-            cv::parallel_for_(cv::Range(0, delta.rows), [&](const cv::Range &rows) {
-                for (int y = rows.start; y < rows.end; ++y) {
+            ipr::parallelRows(delta.rows, [&](int first, int last) {
+                for (int y = first; y < last; ++y) {
                     const float *p = previous.ptr<float>(y), *c = current.ptr<float>(y);
                     float *o = delta.ptr<float>(y);
                     for (int x = 0; x < delta.cols; ++x) {
@@ -170,8 +171,8 @@ void applyBands(cv::Mat &linearRgb, Domain domain, const Bands &k, const Bands &
         }
         previous = current;
     }
-    cv::parallel_for_(cv::Range(0, linearRgb.rows), [&](const cv::Range &rows) {
-        for (int y = rows.start; y < rows.end; ++y) {
+    ipr::parallelRows(linearRgb.rows, [&](int first, int last) {
+        for (int y = first; y < last; ++y) {
             auto *p = linearRgb.ptr<cv::Vec3f>(y);
             const float *l = luminance.ptr<float>(y), *v = value.ptr<float>(y), *d = delta.ptr<float>(y);
             const float *values = local ? local->values.ptr<float>(y) : nullptr;

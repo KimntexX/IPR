@@ -10,6 +10,7 @@
 #include "CameraSignal.h"
 
 #include "OpenCvBridge.h"
+#include "Parallel.h"
 
 #include <QFileInfo>
 #include <QDir>
@@ -294,8 +295,8 @@ void cameraToSrgb(cv::Mat &rgb, const cv::Matx33d &matrix, bool libRawGrid)
     for (int r = 0; r < 3; ++r)
         for (int k = 0; k < 3; ++k) m[r][k] = float(matrix(r, k));
     constexpr float gridStep = float(1.0 / 65535.0);   // as OpenCV's u16 to f32 conversion
-    cv::parallel_for_(cv::Range(0, rgb.rows), [&](const cv::Range &rows) {
-        for (int y = rows.start; y < rows.end; ++y) {
+    ipr::parallelRows(rgb.rows, [&](int first, int last) {
+        for (int y = first; y < last; ++y) {
             auto *row = rgb.ptr<cv::Vec3f>(y);
             for (int x = 0; x < rgb.cols; ++x) {
                 cv::Vec3f in = row[x];

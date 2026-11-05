@@ -1,6 +1,7 @@
 #include "PanoramaFill.h"
 
 #include "OpenCvBridge.h"
+#include "Parallel.h"
 
 #include <opencv2/imgproc.hpp>
 
@@ -146,8 +147,8 @@ void reduced(const cv::Mat &colour, const cv::Mat &known, int factor, cv::Mat &o
     const cv::Size size((colour.cols + factor - 1) / factor, (colour.rows + factor - 1) / factor);
     outColour.create(size, CV_32FC3);
     outKnown.create(size, CV_8UC1);
-    cv::parallel_for_(cv::Range(0, size.height), [&](const cv::Range &range) {
-        for (int cy = range.start; cy < range.end; ++cy) {
+    ipr::parallelRows(size.height, [&](int first, int last) {
+        for (int cy = first; cy < last; ++cy) {
             cv::Vec3f *targetColour = outColour.ptr<cv::Vec3f>(cy);
             uchar *targetKnown = outKnown.ptr<uchar>(cy);
             const int top = cy * factor, bottom = std::min(colour.rows, top + factor);
@@ -238,8 +239,8 @@ void searchAndVote(Level &level, int levelIndex, int iteration)
     std::vector<cv::Point> improved(static_cast<size_t>(holeCount));
     const int widest = std::max(level.colour.cols, level.colour.rows);
     const int sourceCount = int(level.sources.size());
-    cv::parallel_for_(cv::Range(0, holeCount), [&](const cv::Range &range) {
-        for (int i = range.start; i < range.end; ++i) {
+    ipr::parallelRows(holeCount, [&](int first, int last) {
+        for (int i = first; i < last; ++i) {
             const cv::Point p = level.holes[size_t(i)];
             cv::Point best = level.field[size_t(i)];
             float bestCost = patchCost(level.colour, p, best);
@@ -281,8 +282,8 @@ void searchAndVote(Level &level, int levelIndex, int iteration)
     level.field = std::move(improved);
 
     std::vector<cv::Vec3f> voted(static_cast<size_t>(holeCount));
-    cv::parallel_for_(cv::Range(0, holeCount), [&](const cv::Range &range) {
-        for (int i = range.start; i < range.end; ++i) {
+    ipr::parallelRows(holeCount, [&](int first, int last) {
+        for (int i = first; i < last; ++i) {
             const cv::Point p = level.holes[size_t(i)];
             cv::Vec3f sum(0, 0, 0);
             int count = 0;
@@ -405,8 +406,8 @@ Report fill(cv::Mat &image, const cv::Mat &known, const Options &options, const 
 
     // The pyramid, from the working size down; each level's colours keep to known pixels.
     cv::Mat perceptual(image.size(), CV_32FC3);
-    cv::parallel_for_(cv::Range(0, image.rows), [&](const cv::Range &range) {
-        for (int y = range.start; y < range.end; ++y) {
+    ipr::parallelRows(image.rows, [&](int first, int last) {
+        for (int y = first; y < last; ++y) {
             const cv::Vec3f *in = image.ptr<cv::Vec3f>(y);
             cv::Vec3f *out = perceptual.ptr<cv::Vec3f>(y);
             for (int x = 0; x < image.cols; ++x)
@@ -536,8 +537,8 @@ Report fill(cv::Mat &image, const cv::Mat &known, const Options &options, const 
     }
     const double waySmoothing = std::max(1.0, double(transition) / 8.0);
     smoothWays = ipr::gaussianBlurred(smoothWays, waySmoothing, ipr::BlurBorder::LastPixel);
-    cv::parallel_for_(cv::Range(0, image.rows), [&](const cv::Range &range) {
-        for (int y = range.start; y < range.end; ++y) {
+    ipr::parallelRows(image.rows, [&](int first, int last) {
+        for (int y = first; y < last; ++y) {
             const uchar *inKnown = known.ptr<uchar>(y);
             cv::Vec3f *out = image.ptr<cv::Vec3f>(y);
             const float cellY = (float(y) + 0.5f) * toCell - 0.5f;

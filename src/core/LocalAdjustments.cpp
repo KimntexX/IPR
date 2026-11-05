@@ -4,6 +4,7 @@
 #include "WorkingColorSpace.h"
 
 #include "OpenCvBridge.h"
+#include "Parallel.h"
 
 #include <opencv2/imgproc.hpp>
 
@@ -54,8 +55,8 @@ void paintLinear(const Shape &shape, cv::Mat &out)
     const cv::Point2f from = pixelOf(shape.start, out.size()), to = pixelOf(shape.end, out.size());
     const cv::Point2f axis = to - from;
     const float lengthSquared = axis.dot(axis);
-    cv::parallel_for_(cv::Range(0, out.rows), [&](const cv::Range &range) {
-        for (int y = range.start; y < range.end; ++y) {
+    ipr::parallelRows(out.rows, [&](int first, int last) {
+        for (int y = first; y < last; ++y) {
             float *row = out.ptr<float>(y);
             for (int x = 0; x < out.cols; ++x) {
                 if (lengthSquared <= 0.0f) {
@@ -77,8 +78,8 @@ void paintRadial(const Shape &shape, cv::Mat &out)
     const float radiusY = std::max(1e-3f, shape.radiusY * float(out.rows));
     const float radians = shape.angle * float(CV_PI) / 180.0f;
     const float c = std::cos(radians), s = std::sin(radians);
-    cv::parallel_for_(cv::Range(0, out.rows), [&](const cv::Range &range) {
-        for (int y = range.start; y < range.end; ++y) {
+    ipr::parallelRows(out.rows, [&](int first, int last) {
+        for (int y = first; y < last; ++y) {
             float *row = out.ptr<float>(y);
             const float dy = float(y) - centre.y;
             for (int x = 0; x < out.cols; ++x) {
@@ -158,10 +159,10 @@ void paintStroke(const BrushStroke &stroke, cv::Mat &out)
     if (area.empty())
         return;
     const float reachSquared = radius * radius;
-    cv::parallel_for_(cv::Range(area.y, area.y + area.height), [&](const cv::Range &range) {
+    ipr::parallelRows(area.height, [&](int from, int to) {
         std::vector<size_t> near;
         near.reserve(points.size());
-        for (int y = range.start; y < range.end; ++y) {
+        for (int y = area.y + from; y < area.y + to; ++y) {
             near.clear();
             const float py = float(y);
             for (size_t i = 0; i + 1 < points.size(); ++i)
@@ -197,8 +198,8 @@ void paintRange(const Shape &shape, const cv::Mat &luminance, cv::Mat &out)
     if (luminance.empty() || luminance.size() != out.size() || luminance.type() != CV_32FC1)
         return;
     const float feather = std::max(1e-4f, shape.rangeFeather);
-    cv::parallel_for_(cv::Range(0, out.rows), [&](const cv::Range &range) {
-        for (int y = range.start; y < range.end; ++y) {
+    ipr::parallelRows(out.rows, [&](int first, int last) {
+        for (int y = first; y < last; ++y) {
             float *row = out.ptr<float>(y);
             const float *in = luminance.ptr<float>(y);
             for (int x = 0; x < out.cols; ++x) {
@@ -361,8 +362,8 @@ bool usesLuminance(const Masks &masks)
 cv::Mat rangeLuminance(const cv::Mat &linearRgb)
 {
     cv::Mat luminance(linearRgb.size(), CV_32FC1);
-    cv::parallel_for_(cv::Range(0, linearRgb.rows), [&](const cv::Range &range) {
-        for (int y = range.start; y < range.end; ++y) {
+    ipr::parallelRows(linearRgb.rows, [&](int first, int last) {
+        for (int y = first; y < last; ++y) {
             const cv::Vec3f *in = linearRgb.ptr<cv::Vec3f>(y);
             float *out = luminance.ptr<float>(y);
             for (int x = 0; x < linearRgb.cols; ++x)

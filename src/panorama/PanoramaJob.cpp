@@ -5,6 +5,7 @@
 #include "PanoramaFill.h"
 
 #include "OpenCvBridge.h"
+#include "Parallel.h"
 
 #include <QDir>
 #include <QStorageInfo>
@@ -37,8 +38,8 @@ cv::Mat perceptualCopy(const cv::Mat &cameraRgb, double scale)
     cv::Mat reduced;
     reduced = ipr::resizedBy(cameraRgb, scale, scale, scale < 1.0 ? ipr::Interpolation::Area : ipr::Interpolation::Linear);
     cv::Mat out(reduced.size(), CV_32FC1);
-    cv::parallel_for_(cv::Range(0, reduced.rows), [&](const cv::Range &range) {
-        for (int y = range.start; y < range.end; ++y) {
+    ipr::parallelRows(reduced.rows, [&](int first, int last) {
+        for (int y = first; y < last; ++y) {
             const cv::Vec3f *in = reduced.ptr<cv::Vec3f>(y);
             float *target = out.ptr<float>(y);
             for (int x = 0; x < reduced.cols; ++x)

@@ -1,6 +1,7 @@
 #include "StackMerge.h"
 
 #include "OpenCvBridge.h"
+#include "Parallel.h"
 
 #include <opencv2/imgproc.hpp>
 
@@ -49,17 +50,17 @@ bool merge(const std::vector<cv::Mat> &frames, double rejectionSigma, cv::Mat &m
 
     std::vector<cv::Mat> luminance(frames.size());
     if (rejecting)
-        cv::parallel_for_(cv::Range(0, count), [&](const cv::Range &range) {
-            for (int i = range.start; i < range.end; ++i)
+        ipr::parallelRows(count, [&](int first, int last) {
+            for (int i = first; i < last; ++i)
                 luminance[size_t(i)] = decisionLuminance(frames[size_t(i)]);
         });
 
-    cv::parallel_for_(cv::Range(0, size.height), [&](const cv::Range &range) {
+    ipr::parallelRows(size.height, [&](int first, int last) {
         std::vector<const cv::Vec3f *> rows(frames.size());
         std::vector<const float *> luminanceRows(frames.size());
         std::vector<float> order(frames.size());
         quint64 rejectedHere = 0;
-        for (int y = range.start; y < range.end; ++y) {
+        for (int y = first; y < last; ++y) {
             for (int i = 0; i < count; ++i) {
                 rows[size_t(i)] = frames[size_t(i)].ptr<cv::Vec3f>(y);
                 if (rejecting)

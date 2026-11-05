@@ -3,6 +3,7 @@
 #include "ToneRecoveryHighlights.h"
 #include "ToneRecoveryModel.h"
 #include "WorkingColorSpace.h"
+#include "Parallel.h"
 
 #include <algorithm>
 #include <cmath>
@@ -263,14 +264,14 @@ void apply(cv::Mat &image, const Amounts &amounts, const Statistics &statistics,
     if (combinations.active()) {
         const Adaptation adaptation = adapt(statistics);
         std::vector<std::unique_ptr<const Curve>> curves(size_t(combinations.count()));
-        cv::parallel_for_(cv::Range(0, combinations.count()), [&](const cv::Range &range) {
-            for (int index = range.start; index < range.end; ++index) {
+        ipr::parallelRows(combinations.count(), [&](int first, int last) {
+            for (int index = first; index < last; ++index) {
                 const LocalValues::Combinations::Values v = combinations.values(index);
                 curves[size_t(index)] = std::make_unique<const Curve>(Amounts{v[0], v[1], v[2], v[3]}, adaptation);
             }
         });
-        cv::parallel_for_(cv::Range(0, image.rows), [&](const cv::Range &rows) {
-            for (int y = rows.start; y < rows.end; ++y) {
+        ipr::parallelRows(image.rows, [&](int first, int last) {
+            for (int y = first; y < last; ++y) {
                 cv::Vec3f *row = image.ptr<cv::Vec3f>(y);
                 auto indices = combinations.row(y);
                 for (int x = 0; x < image.cols; ++x)

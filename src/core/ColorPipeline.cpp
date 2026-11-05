@@ -1,6 +1,7 @@
 #include "ColorPipeline.h"
 
 #include "OpenCvBridge.h"
+#include "Parallel.h"
 
 #include <algorithm>
 #include <cmath>
@@ -103,8 +104,8 @@ QImage toEncodedSrgbRgba64(const cv::Mat &linearRgba)
     // shared access to the image is taken first, as scanLine would detach it.
     uchar *const bits = image.bits();
     const qsizetype stride = image.bytesPerLine();
-    cv::parallel_for_(cv::Range(0, linearRgba.rows), [&](const cv::Range &rows) {
-        for (int y = rows.start; y < rows.end; ++y) {
+    ipr::parallelRows(linearRgba.rows, [&](int first, int last) {
+        for (int y = first; y < last; ++y) {
             const cv::Vec4f *source = linearRgba.ptr<cv::Vec4f>(y);
             auto *destination = reinterpret_cast<quint16 *>(bits + y * stride);
             for (int x = 0; x < linearRgba.cols; ++x) {
@@ -191,8 +192,8 @@ WorkingImage mapToSrgbGamut(const WorkingImage &source, QString *error)
     result.colorSpace = QColorSpace(QColorSpace::SRgbLinear);
     result.dcpContext.reset(); // This is an output derivative, not a reeditable source.
     // Each pixel on its own: the same result on any number of threads.
-    cv::parallel_for_(cv::Range(0, result.linearRgba.rows), [&](const cv::Range &rows) {
-        for (int y = rows.start; y < rows.end; ++y) {
+    ipr::parallelRows(result.linearRgba.rows, [&](int first, int last) {
+        for (int y = first; y < last; ++y) {
             cv::Vec4f *row = result.linearRgba.ptr<cv::Vec4f>(y);
             for (int x = 0; x < result.linearRgba.cols; ++x) {
                 const cv::Vec3f rgb = mapRgbToSrgbGamut(
@@ -374,8 +375,8 @@ bool applyTemperatureTint(cv::Mat &linearRgb, int temperature,
             matrices[size_t(index)] = temperatureTintMatrix(int(std::lround(v[0])), referenceTemperature,
                                                             int(std::lround(v[1])));
         }
-        cv::parallel_for_(cv::Range(0, linearRgb.rows), [&](const cv::Range &rows) {
-            for (int y = rows.start; y < rows.end; ++y) {
+        ipr::parallelRows(linearRgb.rows, [&](int first, int last) {
+            for (int y = first; y < last; ++y) {
                 cv::Vec3f *row = linearRgb.ptr<cv::Vec3f>(y);
                 auto indices = combinations.row(y);
                 for (int x = 0; x < linearRgb.cols; ++x)
