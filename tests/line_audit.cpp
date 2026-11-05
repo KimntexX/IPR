@@ -10,7 +10,6 @@
 
 #include <QCommandLineParser>
 #include <QCoreApplication>
-#include <QCryptographicHash>
 #include <QDateTime>
 #include <QDir>
 #include <QElapsedTimer>
@@ -152,10 +151,11 @@ int main(int argc, char **argv)
     parser.addOption({"base", "Folder of photos, read only, without recursion", "folder"});
     parser.addOption({"json", "The proof; refused if it exists", "file"});
     parser.addOption({"sheets", "Folder of the side-by-side images", "folder"});
+    parser.addOption({"revision", "The commit this build comes from", "sha"});
     parser.process(application);
     const QString jsonPath = parser.value("json");
-    if (parser.value("base").isEmpty() || jsonPath.isEmpty() || QFile::exists(jsonPath)) {
-        std::cerr << "--base and a new --json are required\n";
+    if (parser.value("base").isEmpty() || parser.value("revision").isEmpty() || jsonPath.isEmpty() || QFile::exists(jsonPath)) {
+        std::cerr << "--base, --revision and a new --json are required\n";
         return 2;
     }
     QStringList patterns;
@@ -237,6 +237,7 @@ int main(int argc, char **argv)
     const double worst = errors.empty() ? 0.0 : errors.back();
     const double p95 = errors.empty() ? 0.0 : errors[std::min(errors.size() - 1, size_t(double(errors.size()) * 0.95))];
     const QJsonObject proof{{"created_utc", QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs)},
+                            {"revision", parser.value("revision")}, {"corpus", QDir(parser.value("base")).dirName()},
                             {"proxy_side", proxySide}, {"central_share", centralShare},
                             {"photos", proposals}, {"unreadable", skipped}, {"level_refused", refused},
                             {"known_rotation_measures", int(errors.size())},
