@@ -1380,3 +1380,21 @@ identifiée et clôture des travaux figés. Contrôler les adaptateurs/bancs
 natifs et leurs formats de pixels après mise à jour de dev ; ne pas modifier
 les sources numériques en pleine exécution ni annoncer la nouvelle chaîne
 qualifiée sur la seule base des anciens résultats.
+
+### Supervision de fin de campagne autorisée le 6 novembre
+
+Le superviseur indépendant `study_sleep_watch.py` traite les quatre heures
+comme un point de décision flexible : les critères appariés déjà définis
+peuvent justifier la continuation, dans les échéances du lendemain. Il
+n’altère ni les sources figées du worker, ni ses seuils scientifiques.
+Campagne terminée ou non prometteuse : arrêt et sauvegarde des seuls jobs
+possédés, puis veille après trois minutes sans entrée utilisateur. Les
+fichiers `BLOCK_SLEEP` et `CANCEL_SLEEP` du dossier de suivi permettent de
+retenir ou d’annuler la veille. La surveillance expire à 10 h Paris.
+
+La suspension utilise [SetSuspendState](https://learn.microsoft.com/en-us/windows/win32/api/powrprof/nf-powrprof-setsuspendstate),
+sans hibernation ni désactivation des événements de réveil. Le privilège
+requis est activé temporairement et restauré, le jeton fermé sur toutes
+les sorties ; les erreurs de [AdjustTokenPrivileges](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-adjusttokenprivileges)
+sont vérifiées même si son retour indique un succès. Le test de capacité
+n’effectue aucune suspension. Les tests automatisés simulent cet appel.

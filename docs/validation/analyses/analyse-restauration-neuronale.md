@@ -7806,3 +7806,42 @@ propriété mémoire et signal signé avant de comparer de nouveaux rendus.
 Les recettesTorch et captures existantes restent figées pendant ce run ;
 la qualification actuelle ne vaut pas automatiquement après migration.
 Aucun push, fusion vers dev ou tag n’est autorisé implicitement ici.
+
+## 6 novembre 2026 — point de décision flexible et veille autorisée
+
+L’utilisateur précise que les quatre heures sont un point de décision, pas
+un arrêt aveugle : poursuivre une piste prometteuse reste autorisé. Claude
+est en stand-by. Cette consigne remplace la mention précédente « pas de
+veille PC » ; les échéances de libération du PC demain à 10 h restent valables.
+
+Le superviseur indépendant `tests/neural/study_sleep_watch.py` est lancé.
+À **18 h 14 Paris**, il poursuit les calculs actifs seulement si une variante
+présente déjà des résultats prometteurs sur les **deux initialisations**,
+avec les critères numériques appariés fixés avant les mesures. Cela autorise
+la continuation bornée prévue par l’ordonnanceur, pas un modèle de production.
+Si la campagne se termine avant ce point, ou sans piste justifiant une suite,
+il demande l’arrêt des workers avec sauvegarde avant la veille. En dernier
+recours, seul l’arbre de processus de cette campagne est terminé ; aucun
+logiciel tiers n’est fermé. L’identité des processus inclut leur création
+pour éviter de viser un PID recyclé.
+
+La veille attend trois minutes sans entrée utilisateur et l’absence du
+fichier `BLOCK_SLEEP` dans `build-patch_neural_restoration/study-sleep-watch-v001`.
+Créer `CANCEL_SLEEP` dans ce dossier annule cette surveillance. Le contrôle
+cesse à 10 h demain pour éviter une veille tardive lors du retour utilisateur.
+Les limites existantes restent : workers arrêtés au plus tard 08 h 45 et
+ordonnanceur arrêté 09 h 45. Aucun réveil automatique n’est programmé.
+
+Quatre tests ciblés passent : décision flexible, paire complète et cohérente
+requise, appel de suspension sans hibernation avec événements de réveil
+conservés, erreur de suspension remontée. Ces tests simulent l’API de veille ;
+ils ne suspendent pas la machine. Le droit Windows requis a été vérifié,
+sans appel réel de suspension. Le lancement hors environnement restreint
+permet d’utiliser ce droit ; aucun changement des droits système n’est fait.
+
+Plan canonique :
+[neural-study-sleep-plan-v001-20261106T132413Z.json](../raw/neural-study-sleep-plan-v001-20261106T132413Z.json).
+Suivi actif : `build-patch_neural_restoration/study-sleep-watch-v001/progress.json`.
+Au lancement, la référence 73 est terminée et le bras bruit 71 est en cours ;
+aucun verdict sur les variantes n’est encore disponible. Les sources figées
+de l’apprentissage n’ont pas été modifiées.
