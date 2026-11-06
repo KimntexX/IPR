@@ -8,11 +8,11 @@ Ce bénéfice n'est pas démontré pour le correcteur CFA actuel.
 | Question | État et décision actuelle |
 | --- | --- |
 | Ce qui fonctionne | Contrats, signal signé, limites de ressources, reprise et mesures synthétiques traçables. Ce ne sont pas des preuves de qualité photo. |
-| Ce qui bloque | Bénéfice photo instable selon la graine ; loi de bruit encore expérimentale ; absence de confirmation photographique indépendante. |
+| Ce qui bloque | Tenue m?moire prolong?e non qualifi?e : trois pointes de RAM globale interrompent la nuit. Aucun jalon entra?n? ni b?n?fice photographique mesur? pour la nouvelle architecture. |
 | Derniers résultats | Réplication close : 10 et 12 échecs forts sur 48, après les 12 et 16 précédents. Sur les photos, sensibilité aux graines et motifs directionnels : bénéfice non validé. |
 | Calcul engagé | Courbe et photos achevées ; qualification des poids finaux préparée sur les contrôles connus, CPU épinglé, deux graines et seuils inchangés. Aucune nouvelle réserve. |
-| Prochaine preuve utile | Terminer le premier amor?age CFA de nuit, lire tous les jalons connus puis comparer au m?me RCD sur les photos. Rendus et analyse diff?r?s apr?s le 6 novembre ? 10 h, selon disponibilit? du PC. |
-| GPU | Nouvelle architecture : 1,805 s/pas technique, environ 2,5?3 s avec g?n?ration r?elle. Deux graines de 4 000 pas, sauvegarde/reprise exacte v?rifi?e. ?ch?ance interne apprentissage 08 h 45 Paris, superviseur 09 h 45. |
+| Prochaine preuve utile | Qualifier une dur?e m?moire prolong?e avec traces temporelles et marge d?admission suffisante avant de replanifier l?apprentissage. Pas de verdict qualit? ? partir de 32 pas. |
+| GPU | Calcul et reprise exacte qualifi?s sur pr?vol court seulement ; d?bit effectif observ? autour de 2,55?2,60 s/pas. Une nuit stable n?est pas d?montr?e. Aucun rendu GPU relanc? pendant cet audit. |
 | Données | 349 RAW inventoriés, 105 paires étudiées. Température, bruit fixe et propagation restent à qualifier ; pas de nouvelles prises demandées pour cette expérience. |
 | Critère d'arrêt | Pas de nouvelle série de variantes synthétiques pour améliorer les mêmes seuils. Après une courbe longue figée et un bruit caractérisé, absence de gain visible face au classique : abandon ou changement de taille/architecture, décision documentée. |
 
@@ -7061,3 +7061,89 @@ sont enregistr?s en JSON canonique horodat?. Les poids restent locaux.
 Les outils d?inf?rence sur les trois photos connues et d?affichage au m?me
 RCD/DCP sont pr?par?s, mais diff?r?s. Aucun b?n?fice photo n?est annonc?
 avant ce comparatif. Pas de production, publication, fusion ni tag.
+
+
+## 6 novembre 2026 ? ?chec de tenue m?moire de la campagne nocturne
+
+**Conclusion : il n?y a pas de r?sultat d?apprentissage nocturne ? valider.**
+Le superviseur se termine le 5 novembre ? **23 h 47 min 09 s Paris**, apr?s
+les trois tentatives autoris?es. Les poids finaux de deux graines annonc?s
+comme objectif n?ont pas ?t? produits. Le contr?le court d?arr?t/reprise
+?tait r?ussi, mais n??tait pas une preuve suffisante de tenue prolong?e.
+La pr?paration m?moire doit ?tre corrig?e avant de r?server une autre nuit.
+
+### Tentatives et ?tat r?ellement conserv?
+
+| Graine 71 | Position initiale | Dernier pas ex?cut? en m?moire | Dernier ?tat durable | Pic de RAM physique globale |
+| --- | ---: | ---: | ---: | ---: |
+| Tentative 1 | 0 | 42 | 32 | 92,28 % |
+| Tentative 2 | 32 | 61 | 32 | 92,45 % |
+| Tentative 3 | 32 | 60 | 32 | 93,33 % |
+
+Les trois erreurs sont `system_physical_memory_threshold`. Les reprises
+r?ex?cutent des pas depuis le m?me checkpoint ; elles ne s?additionnent
+pas pour donner un apprentissage de 163 pas. Le pas 61 de la deuxi?me
+tentative n?est pas sauvegard?. L?empreinte du checkpoint au **pas 32**
+est v?rifi?e lors de cette analyse ; le fichier est intact. La graine 73
+n?a pas commenc?. Aucun des jalons 128/512/2 048/4 000 n?est atteint.
+
+Le contr?le initial, avant apprentissage, comporte les 864 champs forts
+connus et 24 groupes. Le gain de canal minimal agr?g? vaut environ 0,9936,
+compatible avec le bruit observ? autour de l?identit? initiale. Ce n?est
+pas une ?valuation d?un mod?le entra?n?. Aucun contr?le entra?n?, aucune
+inf?rence photo et aucune planche comparative ne sont disponibles pour
+cette campagne. Il serait trompeur de juger la capacit? du r?seau ou de
+comparer ? Lightroom avec ces seules traces.
+
+Les pertes d?entra?nement restent g?n?ralement proches de 1. Certains
+pas proches de 0,75 comportent une observation sans bruit parmi les quatre
+accumul?es ; leur baisse ne prouve pas un gain de d?bruitage de 25 %.
+Les contenus changent entre mises ? jour et ce ne sont pas des mesures
+appari?es de qualit?. Le d?bit m?dian des tentatives est respectivement
+2,546, 2,566 et 2,600 secondes par mise ? jour.
+
+### Ce que les traces m?moire ?tablissent, et leurs limites
+
+Les pics priv?s du processus sont environ 4,22 ? 4,44 Gio, sous le plafond
+souple de 4,5 Gio ; le pic r?sident maximal est environ 1,63 Gio. La
+condition d?clench?e porte sur **la RAM physique totale de la machine**,
+pas sur un d?passement du plafond CUDA ou du quota propre du processus.
+Le seuil de 92 % est v?rifi? toutes les 250 ms ; d?s un d?passement,
+la raison est m?moris?e et le prochain contr?le interrompt la t?che.
+Un retour ult?rieur vers 78?79 % n?annule donc pas l?arr?t d?j? d?clench?.
+Ce fonctionnement respecte la garde choisie ; aucune preuve ne justifie
+de relever son seuil ou d?ignorer ces pointes.
+
+Le garde conserve le maximum, la derni?re mesure et la raison, mais pas
+la chronologie compl?te ni l??chantillon du premier franchissement avec
+son contexte d?ex?cution. Ces donn?es ne permettent pas de conclure ?
+une fuite, d?incriminer une autre application ou d?attribuer les pointes
+au pilote GPU. La responsabilit? peut ?tre partag?e. La limite de deux
+reprises a ?vit? une boucle sans fin ; en revanche, l?admission sur 20 s
+sous 80 % et les pr?vols de huit pas n?ont pas suffi ? qualifier la nuit.
+
+### D?cision et prochaine pr?paration n?cessaire
+
+Conserver checkpoint, contr?les, pertes et les trois arr?ts. Ne pas
+relancer les 4 000 pas, ne pas produire de comparaison photo avec ces
+poids quasi initiaux et ne pas r?duire arbitrairement le r?seau ? partir
+de cet ?chec de ressources. Aucun calcul lourd n?est relanc? dans cette
+analyse, conform?ment ? la disponibilit? du PC ? partir de 10 h.
+
+Avant une autre campagne, pr?parer une t?l?m?trie born?e ? faible co?t
+avec horodatage, phases lecture/avant-arri?re/sauvegarde/contr?le et
+?chantillon de franchissement ; distinguer m?moire physique globale,
+m?moire propre et allocation GPU. Qualifier ensuite un essai prolong?,
+comprenant plusieurs sauvegardes et un contr?le complet, avec davantage
+de marge d?admission. Les seuils restent inchang?s. La reprise doit aussi
+pr?server explicitement le bilan des tentatives et des jalons ant?rieurs
+pour ne pas donner l?impression qu?ils ont disparu du r?sultat courant.
+Ces am?liorations sont propos?es, pas annonc?es comme impl?ment?es.
+
+Preuves : [audit de cl?ture et trois tentatives](../raw/neural-dru-overnight-review-v001-20261106T090536Z.json),
+[supervision finale](../raw/neural-dru-overnight-v001-20261105T224709Z.json),
+[tentative 1](../raw/neural-dru-training-v001-71-20261105T224318Z.json),
+[tentative 2](../raw/neural-dru-training-v001-71-20261105T224527Z.json)
+et [tentative 3](../raw/neural-dru-training-v001-71-20261105T224708Z.json).
+Les JSON conservent les mesures et identit?s ; le checkpoint local reste
+n?cessaire ? une reprise. Aucune production, publication, fusion ni tag.

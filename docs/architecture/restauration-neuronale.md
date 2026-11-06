@@ -1224,3 +1224,19 @@ l?apprentissage s?arr?te au plus tard ? 08 h 45 et son superviseur ?
 09 h 45. Le mode `--training-only` diff?re les inf?rences photo et leur
 analyse ; aucun rendu lourd ne commence automatiquement apr?s 10 h.
 La disponibilit? horaire prime le nombre de mises ? jour cible.
+
+
+### Bilan r?el de la nuit ? 6 novembre 2026
+
+La campagne se termine le 5 novembre ? 23 h 47 Paris apr?s trois pointes
+RAM globale de 92,28 ? 93,33 %. La graine 71 atteint 42, puis 61 et 60 pas
+en m?moire ; seul le checkpoint32 est durable. La graine73 n?a pas d?marr?.
+Les pr?vols courts r?ussis ne qualifient donc pas la tenue prolong?e.
+Aucune comparaison photo ni conclusion sur la capacit? de l?architecture.
+
+Le garde respecte le seuil global choisi mais ne conserve pas assez de
+chronologie pour attribuer les pointes. Pr?voir traces born?es par phase,
+franchissement explicite et marge d?admission, puis essai prolong? avec
+plusieurs sauvegardes avant une autre nuit. Ne pas relever les seuils.
+Les am?liorations de surveillance restent ? impl?menter ; l?audit du
+rapport et ses JSON font foi sur les trois tentatives r?ellement achev?es.
