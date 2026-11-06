@@ -1240,3 +1240,17 @@ franchissement explicite et marge d?admission, puis essai prolong? avec
 plusieurs sauvegardes avant une autre nuit. Ne pas relever les seuils.
 Les am?liorations de surveillance restent ? impl?menter ; l?audit du
 rapport et ses JSON font foi sur les trois tentatives r?ellement achev?es.
+
+
+### Instrumentation et qualification prolong?e ? 6 novembre 2026
+
+Le banc conserve d?sormais la premi?re violation, une chronologie born?e
+par phase et les secondes pr?c?dant le d?passement. Les acc?s CUDA restent
+sur le thread principal ; le moniteur Windows ne fait qu?enregistrer les
+compteurs et le dernier contexte de phase. Les s?ries sont archiv?es avec
+le bilan canonique ; aucune attribution de m?moire aux autres applications.
+Pr?vol instrument? et tests du garde passent, mais la tenue longue reste
+? v?rifier. Essai deux graines de 256 pas engag?, plusieurs sauvegardes et
+trois contr?les complets par graine ; admission 60 s sous70 %, seuils actifs
+inchang?s, aucune reprise automatique ni photo. L?historique des tentatives
+et r?f?rences de contr?les/jalons est explicitement maintenu ? la reprise.

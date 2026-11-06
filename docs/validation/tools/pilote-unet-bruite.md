@@ -463,3 +463,23 @@ par graine, sans s?lectionner le meilleur rendu. `display_local_sigma.py`
 applique le RCD et l?affichage communs ; `summarize_dru_overnight.py`
 produit la planche et les mesures descriptives. Ces calculs sont diff?r?s,
 et ne sont pas lanc?s automatiquement ? 10 h.
+
+
+## Suivi m?moire par phase ? 6 novembre
+
+Le lanceur courant ?crit `seed*/memory-<UTC>.jsonl` via `memory_trace.py` :
+?chantillonnage 250 ms, plafond 16 Mio, phase/pas/observation et compteurs
+Windows. Les compteurs CUDA sont ceux du dernier changement de phase sur
+le thread principal ; ils ne mesurent pas la m?moire partag?e du pilote.
+Le premier franchissement et les 64 mesures pr?c?dentes restent dans le
+r?sum?, m?me si le fichier est plein. Le garde conserve aussi la premi?re
+mesure en violation. Le superviseur archive les s?ries dans son JSON final.
+
+Le plan peut renforcer l?admission (`admission_fraction`,
+`admission_stable_seconds`) et r?duire les reprises (`maximum_memory_retries`),
+sans relever les seuils en cours de calcul. L?essai m?moire actuel utilise
+70 % pendant 60 s et z?ro reprise automatique. Il ex?cute deux fois 256
+pas, avec contr?les complets ? 0/128/256, en mode entra?nement seul.
+Ne pas relancer les 4 000 pas de nuit avant lecture de cette qualification.
+Le r?sultat courant pr?serve les r?f?rences des jalons/contr?les ant?rieurs
+et le bilan des tentatives lors d?une reprise.

@@ -82,10 +82,13 @@ def violation(sample, soft_bytes, system_fraction):
 
 
 class MemoryGuard:
-    def __init__(self, hard_bytes=2*1024**3, soft_bytes=1280*1024**2, system_fraction=.8, interval=.25):
+    def __init__(self, hard_bytes=2*1024**3, soft_bytes=1280*1024**2, system_fraction=.8, interval=.25, observer=None):
         if not 0 < soft_bytes < hard_bytes or not 0 < system_fraction < 1 or interval <= 0:
             raise ValueError('Positive ordered memory budgets and valid monitoring policy required')
         self.hard_bytes, self.soft_bytes = int(hard_bytes), int(soft_bytes)
+        if observer is not None and not callable(observer):
+            raise ValueError('Memory observer must be callable')
+        self.observer = observer
         self.system_fraction, self.interval = system_fraction, interval
         self.k, self.job, self.thread = None, None, None
         self.stop = threading.Event()
@@ -96,6 +99,7 @@ class MemoryGuard:
         self.job_peak = 0
         self.last = None
         self.entered = False
+        self.first_violation = None
 
     def _observe(self):
         sample = snapshot(self.k)
@@ -105,7 +109,13 @@ class MemoryGuard:
             self.max_rss = max(self.max_rss, sample['process_rss_bytes'], sample['process_peak_rss_bytes'])
             self.max_private = max(self.max_private, sample['process_private_bytes'])
             self.max_system = max(self.max_system, sample['system_used_fraction'])
-            self.reason = self.reason or violation(sample, self.soft_bytes, self.system_fraction)
+            reason = violation(sample, self.soft_bytes, self.system_fraction)
+            if reason and self.first_violation is None:
+                self.first_violation = dict(sample, reason=reason, sample_index=self.observations)
+            self.reason = self.reason or reason
+            sticky_reason = self.reason
+        if self.observer is not None:
+            self.observer(dict(sample), sticky_reason)
 
     def _monitor(self):
         while not self.stop.wait(self.interval):
@@ -152,7 +162,7 @@ class MemoryGuard:
                 system_stop_fraction=self.system_fraction, poll_seconds=self.interval, samples=self.observations,
                 peak_rss_bytes=self.max_rss, peak_private_sampled_bytes=self.max_private,
                 peak_system_used_fraction=self.max_system, os_job_peak_commit_bytes=self.job_peak,
-                reason=self.reason, last=self.last)
+                reason=self.reason, last=self.last, first_violation=self.first_violation)
 
     def close(self):
         self.stop.set()

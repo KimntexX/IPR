@@ -7147,3 +7147,80 @@ Preuves : [audit de cl?ture et trois tentatives](../raw/neural-dru-overnight-rev
 et [tentative 3](../raw/neural-dru-training-v001-71-20261105T224708Z.json).
 Les JSON conservent les mesures et identit?s ; le checkpoint local reste
 n?cessaire ? une reprise. Aucune production, publication, fusion ni tag.
+
+
+## 6 novembre 2026 ? suivi m?moire instrument? et essai prolong?
+
+L?utilisateur demande de pr?parer le suivi et de lancer les essais.
+Le banc ajoute un observateur optionnel au garde existant ; les seuils,
+le quota OS et la r?gle d?arr?t imm?diat restent inchang?s. Le garde
+conserve d?sormais lui-m?me la premi?re mesure en violation, avec sa
+raison et son num?ro d??chantillon, m?me si la RAM redescend ensuite.
+
+`MemoryTrace` ?crit un JSONL local born? ? **16 Mio**, toutes les 250 ms,
+avec UTC, temps ?coul?, phase, pas et observation. Phases d?clar?es :
+import PyTorch, initialisation, lecture/g?n?ration, transfert GPU,
+propagation avant, r?tropropagation, Adam, sauvegarde, rechargement et
+contr?le connu. Les compteurs CUDA (allocation, r?serve et pics) sont lus
+uniquement par le thread de calcul aux changements de phase, puis joints
+au prochain ?chantillon m?moire ; le thread de surveillance ne sollicite
+pas CUDA. La phase et ces compteurs sont un contexte corr?l?, pas une
+preuve de causalit? ni une mesure de m?moire partag?e du pilote.
+
+Un anneau de **64 ?chantillons**, environ 16 secondes, accompagne le
+premier franchissement. Le r?sum? conserve cet ?v?nement et le dernier
+anneau m?me lorsque le journal atteint sa limite. Les JSON canoniques du
+superviseur reprennent les s?ries enregistr?es, leurs chemins et empreintes.
+Aucun compteur d?application tierce ni attribution de responsabilit?
+n?est invent?. Les erreurs de surveillance restent bloquantes.
+
+Les reprises du lanceur conservent maintenant les r?f?rences des jalons
+et contr?les pr?c?dents, ainsi que le bilan et l?empreinte du r?sultat de
+chaque tentative. L??tat d?apprentissage reste celui du checkpoint durable,
+pas celui du dernier pas volatil annonc? dans le journal.
+
+### V?rifications courtes achev?es
+
+Cinq tests passent : seuils et configurations, compteurs Windows, refus
+d?allocation au-del? du quota dans un enfant isol? et fin du thread,
+premier franchissement avec phase conserv? apr?s r?cup?ration, fichier
+born? et fermeture. Le pr?vol instrument? sur le flux r?el passe aussi :
+huit pas, sauvegarde au quatri?me, destruction/rechargement et quatre pas
+rejou?s, poids/Adam/pertes identiques au bit pr?s. Il produit 164 mesures,
+environ 90 ko, avec les onze phases observ?es. Aucun franchissement ;
+pic global 74,33 %, pic priv? 4,4935 Gio. Ce dernier reste proche du plafond
+local : le pr?vol ne suffit toujours pas ? conclure ? la tenue longue.
+
+Preuve courte : [pr?vol instrument?](../raw/neural-dru-training-v001-71-20261106T092338Z.json).
+Les poids de ce pr?vol ne sont pas un candidat photographique.
+
+### Essai prolong? lanc?
+
+Plan : [qualification m?moire](../raw/neural-dru-memory-plan-v001-20261106T092256Z.json).
+Deux d?marrages frais successifs, graines 71/73, **256 mises ? jour chacune**,
+quatre observations par mise ? jour, architecture/donn?es/perte inchang?es.
+Huit sauvegardes p?riodiques par graine, plus les jalons ; trois contr?les
+complets de 864 champs connus aux pas 0/128/256. Le test qualifie les
+ressources ; ses poids ne deviennent pas une validation produit.
+
+Admission renforc?e : **une minute continue sous 70 % de RAM globale**,
+contre 20 s sous 80 % la nuit pr?c?dente. Les limites pendant l?ex?cution
+restent 92 % global, 4,5 Gio souples, 6 Gio engag?s et 50 % d?allocation
+CUDA. **Aucune reprise automatique** sur incident pour cet essai : la
+premi?re d?faillance cl?t la cha?ne et conserve ses traces. Une seconde
+graine n?est lanc?e que si la premi?re se termine sans erreur technique.
+Pas d?inf?rence photo, pas de nouveau corpus r?serv?.
+
+Le plan borne l?apprentissage au 6 novembre **11 h 37 min 56 s Paris**
+et son superviseur ? **11 h 52 min 56 s**. Ce sont des limites, pas des
+dur?es attendues ; la projection est de quelques dizaines de minutes pour
+les deux graines, contr?les compris. Le fichier `STOP` de campagne demande
+un arr?t propre. L?admission peut attendre au plus vingt minutes avant
+refus ; aucune autre application n?est ferm?e et aucun quota n?est relev?.
+
+Suivi : `build-patch_neural_restoration/dru-memory-campaign-v001/progress.json`,
+puis les `seed*/memory-*.jsonl`. Le superviseur attend localement les
+processus sans requ?tes au chat. Maintien ?veill? temporaire pendant
+l?essai, sans ordre de veille du PC. **R?sultats prolong?s encore attendus**,
+? distinguer du pr?vol d?j? r?ussi. Aucun push, fusion, tag ou changement
+de production n?est engag?.
