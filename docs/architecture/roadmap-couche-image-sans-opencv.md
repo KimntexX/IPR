@@ -305,7 +305,7 @@ singulières, déterminant et rotation la plus proche (`6bfeaa2`) : empilement, 
   en double de 0,2 à 0,3 pixel, ses hautes fréquences tombant sous la précision du flottant. La couche image calcule en double ; elle
   rejoint OpenCV en double à 1e-4 pixel sur une texture nette, et reste plus près d'OpenCV en flottants simples que lui-même en double.
   L'oracle mesure désormais ces deux écarts.
-- **Sur les modules** : exports identiques au bit près ; empilement aux mêmes points et au même bruit, DNG à 38 niveaux au plus sur
+- **Sur les modules** : exports identiques au bit près (contrôle refait le 6 novembre, voir plus bas) ; empilement aux mêmes points et au même bruit, DNG à 38 niveaux au plus sur
   0,4 % des valeurs ; panorama aux mêmes écarts au dix-millionième, à 11/255 au plus dans l'image, jusqu'à 80/255 dans les bords
   remplis, que le remplissage invente et où de minuscules écarts d'entrée changent le motif choisi.
 - **La vitesse** : la mise en correspondance est appelée environ 135 000 fois par empilement de 8 vues. Réécrite pour ajouter huit
@@ -320,7 +320,7 @@ singulières, déterminant et rotation la plus proche (`6bfeaa2`) : empilement, 
 ### Fils d'exécution et petits types
 
 - **Les 50 `cv::parallel_for_`** passent par `ipr::parallelRows`, qui partage un seul budget de threads avec les noyaux de la couche
-  image (`99bffce`). Exports, DNG empilé et panorama : identiques au bit près.
+  image (`99bffce`). Exports, DNG empilé et panorama : identiques au bit près (exports : contrôle refait le 6 novembre).
 - **Les petits types** (`Vec`, `Matx`, `Point`, `Rect`, `Size`, environ 1 250 usages) deviennent ceux de la couche image. Leur
   arithmétique est celle d'OpenCV, expression pour expression : mêmes conversions, même ordre des sommes, division par produit avec
   l'inverse, arrondi au plus proche avec égalité au pair, intersection de rectangles par sa formule, inverse par cofacteurs.
@@ -331,6 +331,37 @@ singulières, déterminant et rotation la plus proche (`6bfeaa2`) : empilement, 
   cofacteurs. Le débruitage de la caméra le demandait ; il garde exactement le même calcul.
 - **Ce qui reste** : `cv::Mat` (environ 625 usages), ses constantes de type et les appels d'OpenCV des tests. Aux jonctions entre les
   petits types et `cv::Mat`, des conversions explicites `ipr::toCv` / `ipr::fromCv` signalent ce qui partira avec `cv::Mat`.
+
+### `cv::Mat` : le partage explicite
+
+**Décision de l'utilisateur, 6 novembre 2026** : `ipr::Image` reste déplaçable seulement. Là où `cv::Mat` partageait ses pixels
+sans le dire (masters, contextes du signal caméra, cartes locales, caches, résultats de chargement), une copie est écrite : `share()`
+ou `sharedCopy` de la structure, pixels gelés pour tous leurs détenteurs ; qui veut écrire clone. Le partage par pointeur avec copie
+locale reste une piste d'optimisation, jugée lourde à maintenir ; elle n'est pas engagée.
+
+Lots, chacun mesuré sur photos ([preuve](../validation/raw/image-layer-mat-v001-20261106.json)) :
+
+| Lot | Commit | Résultat |
+| --- | --- | --- |
+| Briques de la couche (types signés, remplissages, copies, conversions, calcul ligne à ligne, générateur d'OpenCV) | `1bc6927` | Oracle : bits identiques |
+| Développement RAW (mosaïque, dématriçage, développement, débruitage caméra) | `ccc412f` | DNG empilé et panorama identiques au bit près |
+| Signal caméra (DCP, LCP, DNG de signal, source retenue) | `8bfe718` | Exports, DNG empilé, panorama identiques au bit près |
+| Chaîne de rendu, modules, caches, éditeur | `b522b23` | Exports, DNG empilé, panorama identiques au bit près |
+
+- **Arithmétique gardée au bit près.** Les expressions de matrices d'OpenCV deviennent des boucles écrites dans le même ordre.
+  L'échelle et le décalage d'une conversion sont appliqués avec un seul arrondi (FMA), comme le font les vecteurs d'OpenCV : sans
+  cela, le DNG empilé s'écartait de 40 niveaux sur 0,002 % des valeurs ; avec, identique. Un produit par un nombre garde son
+  décalage nul, qui rend +0 pour -0.
+- **Le gel a déjà servi.** Deux tests écrivaient, sans le vouloir, dans des pixels partagés : un NaN dans une scène dont le master
+  était partagé, une lecture qui passait par l'accès en écriture. Avec `cv::Mat`, ces écritures auraient touché les autres détenteurs ;
+  ici elles lèvent une erreur.
+- **Une erreur de mesure corrigée.** La sonde d'export n'est pas dans la construction par défaut : jusqu'au lot du signal caméra,
+  elle datait du lot de l'arithmétique des pixels. Les exports annoncés pour l'analyse, les fils, les petits types et le
+  développement RAW mesuraient donc l'ancien code. Le premier contrôle avec une sonde reconstruite trouve les exports identiques au
+  bit près à ceux du lot de l'arithmétique : ces lots sont bien neutres sur les exports. Les mesures vérifient désormais que chaque
+  programme mesuré est plus récent que le moteur.
+- **Ce qui reste** : l'empilement et le panorama (atteints par le pont), les sondes de recherche et le banc RAW, puis le pont
+  lui-même, les oracles qui comparent à OpenCV, et OpenCV dans CMake, la CI et l'installateur.
 
 ## 5. Principes de conception
 
