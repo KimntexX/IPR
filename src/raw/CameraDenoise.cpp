@@ -1,6 +1,5 @@
 #include "CameraDenoise.h"
 
-#include "OpenCvBridge.h"
 #include "Pixels.h"
 
 #include <algorithm>
@@ -588,15 +587,5 @@ bool apply(ipr::Image &cameraRgb, int luminance, const Context &context,
         cameraRgb = std::move(output);
         return true;
     } catch (...) { return false; }
-}
-
-bool apply(cv::Mat &cameraRgb, int luminance, const Context &context, const std::function<bool()> &cancelled)
-{
-    if (cameraRgb.dims != 2 || cameraRgb.type() != CV_32FC3) return false;
-    ipr::Image image;
-    try { image = ipr::fromMat(cameraRgb); } catch (...) { return false; }
-    const bool done = apply(image, luminance, context, cancelled);
-    if (done && luminance != 0) cameraRgb = ipr::asMat(image).clone();
-    return done;
 }
 } // namespace CameraDenoise

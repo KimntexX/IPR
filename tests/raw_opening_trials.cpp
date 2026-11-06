@@ -14,12 +14,12 @@ int main(int argc,char **argv) {
             ImageMetadata metadata;QString error;auto full=RawDecoder::decode(path,options,&metadata,&error);
             if(full.isNull()||!full.dcpContext)throw std::runtime_error(error.toStdString());
             auto current=sample3(full.linearRgba);WorkingColor::transform(current, WorkingColor::toSrgb());
-            auto context=*full.dcpContext;context.cameraRgb=sample3(context.cameraRgb);full={};
+            auto context=CameraProfileEngine::sharedCopy(*full.dcpContext);context.cameraRgb=ipr::fromMat(sample3(ipr::asMat(context.cameraRgb)));full={};
             if(digest(context.profilePath)!=scene["DCP_sha256"].toString())throw std::runtime_error("Unexpected DCP");
             Curve curve(scene["curve"].toArray());QJsonObject models{{"current",metrics(current)}};double witness=0;
             const auto run=[&](double ev,const QString &prefix) {
                 auto renderOptions=context.options;renderOptions.cameraBaselineExposureEv=ev;
-                cv::Mat before=context.cameraRgb.clone();
+                cv::Mat before=ipr::asMat(context.cameraRgb).clone();
                 if(!applyDcpForSrgbAnalysis(scene["without_curve"].toString(),before,context.sourceKelvin,&error,renderOptions))throw std::runtime_error(error.toStdString());
                 for(bool hue:{false,true})for(bool cubic:{false,true}) {
                     auto result=renderCurve(before,curve,cubic,hue);

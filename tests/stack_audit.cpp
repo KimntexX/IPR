@@ -349,7 +349,7 @@ bool renderCrop(const RawDecoder::DcpSource &source, const cv::Mat &cameraRgb, c
 {
     // As the decoder renders a calibrated signal: applyProfile asks a new decode for it.
     CameraSignal::Source signal;
-    signal.rgb = cameraRgb(ipr::toCv(area)) * std::pow(2.0, ev);
+    signal.rgb = ipr::fromMat(cv::Mat(cameraRgb(ipr::toCv(area)) * std::pow(2.0, ev)));
     signal.cameraMake = source.metadata.cameraMake;
     signal.cameraModel = source.metadata.cameraModel;
     signal.whiteBalanceKelvin = source.whiteBalanceKelvin;
@@ -422,9 +422,9 @@ int main(int argc, char **argv)
             continue;
         }
         decodeSeconds.append(double(watch.elapsed()) / 1000.0);
-        const cv::Mat &signal = image.dcpContext->cameraRgb;
+        const cv::Mat signal = ipr::heldMat(image.dcpContext->cameraRgb);
         if (i == referenceIndex) {
-            referenceSource->cameraRgb = signal;
+            referenceSource->cameraRgb = image.dcpContext->cameraRgb.share();
             referenceSource->workingContext = image.dcpContext;
             referenceSource->metadata = metadata;
             referenceSource->whiteBalanceKelvin = image.dcpContext->sourceKelvin;
@@ -594,7 +594,7 @@ int main(int argc, char **argv)
     if (!referenceSource->cameraRgb.empty()) {
         CameraDng::Content content;
         const CameraProfileEngine::DcpCameraData camera = CameraProfileEngine::dcpCameraData(referenceSource->workingContext->profilePath);
-        content.cameraRgb = whole.cameraRgb;
+        content.cameraRgb = ipr::fromMat(whole.cameraRgb);
         content.cameraMake = referenceSource->metadata.cameraMake;
         content.cameraModel = referenceSource->metadata.cameraModel;
         content.lensMake = referenceSource->metadata.lensMake;
@@ -622,7 +622,7 @@ int main(int argc, char **argv)
         const ColorPipeline::WorkingImage reopened = written ? RawDecoder::decode(dngPath, reopenOptions, &reopenedMetadata, &dngError) : ColorPipeline::WorkingImage{};
         const double readSeconds = double(watch.elapsed()) / 1000.0;
         CameraSignal::Source signal;
-        signal.rgb = whole.cameraRgb.clone();
+        signal.rgb = ipr::fromMat(whole.cameraRgb).clone();
         signal.cameraMake = content.cameraMake;
         signal.cameraModel = content.cameraModel;
         signal.whiteBalanceKelvin = content.whiteBalanceKelvin;

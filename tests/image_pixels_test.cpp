@@ -139,6 +139,8 @@ void newImagesAndFills()
     check(multiplied(Image(), Image()).empty() && merged(std::vector<Image>{}).empty(), "empty for empty");
     const Image rgb = merged({&a, &a, &a});
     check(rgb.channels() == 3 && at(withoutAlpha(merged({&a, &a, &a, &a})), 2, 1, 2) == 3.0f, "planes together");
+    const Image rgba = opaque(rgb);
+    check(rgba.channels() == 4 && at(rgba, 3, 1, 2) == 4.0f && at(rgba, 3, 1, 3) == 1.0f, "an alpha of one");
 
     // As OpenCV's Scalar: rounded half to even and saturated for integers.
     const Image bytes = ipr::filled({2, 2}, Depth::U8, 1, 2.5);

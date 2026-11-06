@@ -138,16 +138,17 @@ void rcdInterpolate(void *context)
     const auto t0 = Clock::now();
     // LibRaw's image to the float mosaic and back, as RawDecoder's callback.
     const int width = d.sizes.iwidth, height = d.sizes.iheight;
-    cv::Mat mosaic(height, width, CV_32FC1), rgb;
+    cv::Mat mosaic(height, width, CV_32FC1);
+    ipr::Image rgb;
     for (int y = 0; y < height; ++y)
         for (int x = 0; x < width; ++x)
             mosaic.at<float>(y, x) = d.image[size_t(y) * size_t(width) + size_t(x)][pattern[size_t(y & 1)][size_t(x & 1)]] / 65535.f;
-    if (Demosaic::interpolate(mosaic, pattern, oursMedian, Demosaic::Range::NonNegative, rgb, nullptr, {}))
+    if (Demosaic::interpolate(ipr::fromMat(mosaic), pattern, oursMedian, Demosaic::Range::NonNegative, rgb, nullptr, {}))
         for (int y = 0; y < height; ++y)
             for (int x = 0; x < width; ++x)
                 for (int c = 0; c < 3; ++c)
                     d.image[size_t(y) * size_t(width) + size_t(x)][c] =
-                        std::uint16_t(std::clamp(std::lround(ipr::at<ipr::Vec3f>(rgb, y, x)[c] * 65535.f), 0L, 65535L));
+                        std::uint16_t(std::clamp(std::lround(rgb.row<ipr::Vec3f>(y)[x][c] * 65535.f), 0L, 65535L));
     oursMs += std::chrono::duration<double, std::milli>(Clock::now() - t0).count();
 }
 // LibRaw keeps its callbacks protected: a subclass sets the interpolation step.
@@ -241,7 +242,7 @@ double rms(const cv::Mat &m) { return std::sqrt(cv::mean(m.mul(m))[0]); }
 cv::Mat blur(const cv::Mat &m, double sigma)
 {
     cv::Mat out;
-    cv::GaussianBlur(m, out, ipr::Size(0, 0), sigma, sigma, cv::BORDER_REFLECT);
+    cv::GaussianBlur(m, out, cv::Size(0, 0), sigma, sigma, cv::BORDER_REFLECT);
     return out;
 }
 
@@ -251,7 +252,7 @@ struct TileMeasure {
 
 TileMeasure measureTile(const cv::Mat &rgb, const ipr::Recti &r)
 {
-    const Planes p = split(rgb(r));
+    const Planes p = split(rgb(ipr::toCv(r)));
     const cv::Mat g1y = blur(p.y, 1), g4y = blur(p.y, 4);
     const cv::Mat g1co = blur(p.co, 1), g4co = blur(p.co, 4), g1cg = blur(p.cg, 1), g4cg = blur(p.cg, 4);
     TileMeasure m;
@@ -273,8 +274,8 @@ void chooseTiles(const cv::Mat &rgb, std::vector<ipr::Recti> *flat, std::vector<
         for (int x = Tile; x + 2 * Tile <= rgb.cols; x += Tile) {
             const ipr::Recti r(x, y, Tile, Tile);
             double minV, maxV;
-            cv::minMaxLoc(rgb(r).reshape(1), &minV, &maxV);
-            const Planes p = split(rgb(r));
+            cv::minMaxLoc(rgb(ipr::toCv(r)).reshape(1), &minV, &maxV);
+            const Planes p = split(rgb(ipr::toCv(r)));
             const double mean = cv::mean(p.y)[0];
             if (maxV > 0.95 || mean < 0.003) continue;
             cv::Scalar m, s;
@@ -379,10 +380,10 @@ Fit fitTruth(const cv::Mat &truth, const cv::Mat &out, const cv::Mat &valid)
 QJsonObject syntheticError(const cv::Mat &truthOut, const cv::Mat &out, const cv::Mat &edges, const cv::Mat &valid)
 {
     const ipr::Recti inner(TruthBorder, TruthBorder, truthOut.cols - 2 * TruthBorder, truthOut.rows - 2 * TruthBorder);
-    const Planes t = split(truthOut(inner)), o = split(out(inner));
+    const Planes t = split(truthOut(ipr::toCv(inner))), o = split(out(ipr::toCv(inner)));
     const cv::Mat dy = o.y - t.y, dco = o.co - t.co, dcg = o.cg - t.cg;
-    const cv::Mat diff = out(inner) - truthOut(inner);
-    const cv::Mat ok = valid(inner), edge = edges(inner) & ok, flat = (edges(inner) == 0) & ok;
+    const cv::Mat diff = out(ipr::toCv(inner)) - truthOut(ipr::toCv(inner));
+    const cv::Mat ok = valid(ipr::toCv(inner)), edge = edges(ipr::toCv(inner)) & ok, flat = (edges(ipr::toCv(inner)) == 0) & ok;
     const double white = cv::mean(t.y, ok)[0] * 4.0;   // scale: four times the mean luma
     const auto masked = [&](const cv::Mat &m, const cv::Mat &mask) {
         return std::sqrt(cv::mean(m.mul(m), mask)[0]) / white;
@@ -444,8 +445,8 @@ QJsonObject study(const QString &path, const QDir &crops)
             ahdFirst = out;
             chooseTiles(out, &flat, &detail);
             require(!flat.empty() && !detail.empty(), "no measurable tile");
-            exposureFlat = 0.25 / std::max(1e-4, cv::mean(split(out(flat[0])).y)[0]);
-            exposureDetail = 0.25 / std::max(1e-4, cv::mean(split(out(detail[0])).y)[0]);
+            exposureFlat = 0.25 / std::max(1e-4, cv::mean(split(out(ipr::toCv(flat[0]))).y)[0]);
+            exposureDetail = 0.25 / std::max(1e-4, cv::mean(split(out(ipr::toCv(detail[0]))).y)[0]);
         }
         std::vector<double> lumaHh, chromaHh, lumaMid, chromaMid, lumaFine, chromaFine;
         std::vector<TileMeasure> flatM, detailM;
@@ -517,14 +518,14 @@ QJsonObject study(const QString &path, const QDir &crops)
     // (optical low-pass of a real sensor): unfiltered, every channel holds detail up
     // to Nyquist and all algorithms alias alike.
     cv::Mat truth = binnedTruth(raw);
-    cv::GaussianBlur(truth, truth, ipr::Size(0, 0), TruthBlur, TruthBlur, cv::BORDER_REFLECT);
+    cv::GaussianBlur(truth, truth, cv::Size(0, 0), TruthBlur, TruthBlur, cv::BORDER_REFLECT);
     remosaic(raw, truth);
     QJsonObject synthetic;
     Fit fit;
     cv::Mat truthOut, edges, valid;
     for (const Variant &v : selected) {
         double ms = 0;
-        const cv::Mat out = process(raw, v, &ms)(ipr::Recti(0, 0, truth.cols, truth.rows)).clone();
+        const cv::Mat out = process(raw, v, &ms)(cv::Rect(0, 0, truth.cols, truth.rows)).clone();
         if (truthOut.empty()) {
             // valid: no channel near white within 3 pixels, on the reference output
             std::vector<cv::Mat> channels;

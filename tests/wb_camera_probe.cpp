@@ -24,6 +24,15 @@ QString hash(const QString &path) {
     h.addData(&file);
     return QString::fromLatin1(h.result().toHex());
 }
+// The camera signal rendered into a Mat, as the probe keeps its pixels.
+bool renderInto(const CameraProfileEngine::DcpWorkingContext &context, int temperature, int tint, cv::Mat &rgb, QString *error)
+{
+    bool rendered = false;
+    ipr::changeAsImage(rgb, [&](ipr::Image &image) {
+        rendered = CameraProfileEngine::renderFromCameraSignal(context, temperature, tint, 0.0, image, error);
+    });
+    return rendered;
+}
 cv::Mat sampled(const cv::Mat &input) {
     cv::Mat result((input.rows+7)/8, (input.cols+7)/8, input.type());
     for (int y=0; y<result.rows; ++y)
@@ -102,27 +111,27 @@ int main(int argc,char **argv) {
             QString error;
             const auto decoded=RawDecoder::decode(path,options,&metadata,&error);
             if(decoded.isNull() || !decoded.dcpContext) throw std::runtime_error(error.toStdString());
-            auto context=*decoded.dcpContext;
-            context.cameraRgb=sampled(context.cameraRgb);
+            auto context=CameraProfileEngine::sharedCopy(*decoded.dcpContext);
+            context.cameraRgb=ipr::fromMat(sampled(ipr::asMat(context.cameraRgb)));
             auto neutral=decoded;
             neutral.linearRgba=sampled(decoded.linearRgba);
             const cv::Mat neutralPixels=output(neutral);
             cv::Mat rgb;
             const int ref=int(std::lround(context.sourceKelvin));
-            if(!CameraProfileEngine::renderFromCameraSignal(context, ref, 0, 0.0,rgb,&error)) throw std::runtime_error(error.toStdString());
+            if(!renderInto(context, ref, 0, rgb, &error)) throw std::runtime_error(error.toStdString());
             const bool exact=cv::norm(rgba(rgb).linearRgba,neutral.linearRgba,cv::NORM_INF)==0;
             identity &= exact;
             for(const QString feature : {"temperature","tint"}) {
                 const std::vector<int> values=feature=="temperature" ? std::vector<int>{2000,3500,5200,6500,9000,50000} : std::vector<int>{-150,-100,-50,-25,0,25,50,100,150};
                 cv::Mat supportRgb;
-                if(!CameraProfileEngine::renderFromCameraSignal(context, 5200, 0, 0.0,supportRgb,&error)) throw std::runtime_error(error.toStdString());
+                if(!renderInto(context, 5200, 0, supportRgb, &error)) throw std::runtime_error(error.toStdString());
                 const cv::Mat support=output(rgba(supportRgb));
                 for(int value:values) {
                     const int temp=feature=="temperature" ? value:5200;
                     const int tint=feature=="tint"?value:0;
                     ipr::Vec3d gains;
                     if(!CameraProfileEngine::whiteBalanceGains(context,temp,tint,gains,&error) ||
-                       !CameraProfileEngine::renderFromCameraSignal(context, temp, tint, 0.0,rgb,&error)) throw std::runtime_error(error.toStdString());
+                       !renderInto(context, temp, tint, rgb, &error)) throw std::runtime_error(error.toStdString());
                     const cv::Mat pixels=output(rgba(rgb));
                     records.append(QJsonObject{{"scene",scene},{"feature",feature},{"value",value},
                         {"engine","IPR"},{"settings",QJsonObject{{"temperature",temp},{"tint",tint},

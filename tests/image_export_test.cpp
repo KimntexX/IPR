@@ -116,7 +116,7 @@ bool verifyDecodedImageCache()
         return false;
 
     auto context = std::make_shared<CameraProfileEngine::DcpWorkingContext>();
-    context->cameraRgb = cv::Mat::zeros(10, 10, CV_32FC3);
+    context->cameraRgb = ipr::Image::zeros({10, 10}, ipr::Depth::F32, 3);
     auto withContext = sharedProxy;
     withContext.image.dcpContext = context;
     withContext.editProxy.dcpContext = context;

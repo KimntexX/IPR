@@ -1,6 +1,7 @@
 #include "CameraSignal.h"
 
 #include "OpenCvBridge.h"
+#include "Pixels.h"
 
 #include <QFileInfo>
 #include <cmath>
@@ -15,7 +16,7 @@ bool validate(const Source &source, QString *error)
         return false;
     };
     if (source.coordinates != Coordinates::CameraRgb || !source.whiteBalanceApplied ||
-        source.rgb.empty() || source.rgb.dims != 2 || source.rgb.type() != CV_32FC3 ||
+        source.rgb.empty() || source.rgb.depth() != ipr::Depth::F32 || source.rgb.channels() != 3 ||
         !ipr::allFinite(source.rgb))
         return reject("Expected finite linear camera RGB float32, with WB already applied.");
     if (source.cameraMake.trimmed().isEmpty() || source.cameraModel.trimmed().isEmpty())
@@ -50,14 +51,11 @@ ColorPipeline::WorkingImage render(Source &&source, const QString &profile,
     context->cameraNeutral = source.cameraNeutral;
     context->options = options;
     // One working copy: preserve the immutable camera buffer before nonlinear DCP.
-    auto rendered = context->cameraRgb.clone();
+    ipr::Image rendered = context->cameraRgb.clone();
     if (!CameraProfileEngine::applyDcp(profile, rendered, context->sourceKelvin, error, options))
         return {};
     ColorPipeline::WorkingImage result;
-    std::vector<cv::Mat> channels;
-    channels = ipr::splitChannels(rendered);
-    channels.push_back(cv::Mat(rendered.size(), CV_32FC1, cv::Scalar(1.f)));
-    result.linearRgba = ipr::merged(channels);
+    result.linearRgba = ipr::heldMat(ipr::opaque(rendered));   // a Mat until the masters leave OpenCV
     result.colorSpace = ColorPipeline::workingColorSpace();
     result.referenceWhiteBalanceKelvin = source.whiteBalanceKelvin;
     result.dcpContext = context;

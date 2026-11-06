@@ -55,6 +55,8 @@ Image merged(const std::vector<const Image *> &planes);
 Image merged(const std::vector<Image> &planes);
 Image channel(const Image &image, int index);
 Image withoutAlpha(const Image &rgba);
+// RGB floats with an alpha of one, as RGBA.
+Image opaque(const Image &rgb);
 Image multiplied(const Image &a, const Image &b);
 Image multiplied(const Image &a, const std::vector<double> &factors);
 Image divided(const Image &a, const Image &b);
@@ -82,7 +84,8 @@ void fillWhere(Image &image, double value, const Image &mask);
 // from's pixels into to, of the same size, depth and channels, such as a tile into its place.
 void copyInto(const Image &from, Image &to);
 // Each value times scale plus shift into out, F32 of the same size and channels, from any depth,
-// as OpenCV's convertTo: in floats, the scale and the shift made floats first; doubles in doubles.
+// as OpenCV's convertTo: in floats, the scale and the shift made floats first and applied with one
+// rounding; doubles in doubles.
 void convertInto(const Image &from, Image &out, double scale = 1.0, double shift = 0.0);
 
 // f(a), f(a, b) or f(a, b, c) value by value into a new F32 image, on F32 images of one size and

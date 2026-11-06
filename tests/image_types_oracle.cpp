@@ -289,6 +289,25 @@ int main(int argc, char **argv)
         return same(u16, 1.0 / 65535.0, 1, Depth::U16) && same(u16, scale, 1, Depth::U16) &&
                same(u8, 1.0 / 255.0, 1, Depth::U8) && same(s16, 1.0, 2, Depth::S16);
     });
+    // With a shift, OpenCV's vectors apply scale and shift with one rounding, as the layer does
+    // everywhere; its last values, fewer than a vector, round twice. 64 values: vectors only.
+    check("conversion to floats with a shift", [] {
+        constexpr int width = 64;
+        cv::Mat floats(1, width, CV_32FC1), bytes(1, width, CV_8UC1);
+        for (int x = 0; x < width; ++x) {
+            floats.at<float>(0, x) = float(real(-2.0, 2.0));
+            bytes.at<std::uint8_t>(0, x) = std::uint8_t(whole(0, 255));
+        }
+        const double scale = real(-3.0, 3.0), shift = real(-1.0, 1.0);
+        const auto same = [&](const cv::Mat &from, Depth depth) {
+            cv::Mat theirs;
+            from.convertTo(theirs, CV_32F, scale, shift);
+            Image mine = Image::create({width, 1}, Depth::F32, 1);
+            convertInto(Image::wrapReadOnly(from.data, {width, 1}, depth, 1, std::ptrdiff_t(from.step[0])), mine, scale, shift);
+            return std::memcmp(theirs.data, mine.row<float>(0), sizeof(float) * size_t(width)) == 0;
+        };
+        return same(floats, Depth::F32) && same(bytes, Depth::U8);
+    });
 
     std::ofstream out(argv[2]);
     out << "{\n \"kernel\": \"small types\",\n \"revision\": \"" << argv[1] << "\",\n \"opencv\": \"" << CV_VERSION

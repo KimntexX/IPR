@@ -21,7 +21,7 @@ namespace RawDecoder {
 // manual temperature/tint edits reuse the camera-space working context.
 struct DcpSource
 {
-    cv::Mat cameraRgb;
+    ipr::Image cameraRgb;   // the working context's signal, shared read only
     std::shared_ptr<const CameraProfileEngine::DcpWorkingContext> workingContext;
     ImageMetadata metadata;
     std::optional<double> whiteBalanceKelvin;

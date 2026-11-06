@@ -162,7 +162,7 @@ int main(int argc, char **argv)
                 std::cerr << names[index].toStdString() << ": " << error.toStdString() << '\n';
                 return 1;
             }
-            if (!writeCache(image.dcpContext->cameraRgb, cached))
+            if (!writeCache(ipr::asMat(image.dcpContext->cameraRgb), cached))
                 return 1;
             if (index == middle) {
                 context = image.dcpContext;
@@ -314,7 +314,7 @@ int main(int argc, char **argv)
 
     if (job.success && context) {
         CameraSignal::Source signal;
-        signal.rgb = job.cameraRgb;
+        signal.rgb = ipr::fromMat(job.cameraRgb);
         signal.cameraMake = metadata.cameraMake;
         signal.cameraModel = metadata.cameraModel;
         signal.whiteBalanceKelvin = context->sourceKelvin;

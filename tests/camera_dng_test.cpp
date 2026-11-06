@@ -4,17 +4,18 @@
 #include "RawDecoder.h"
 #include "synthetic_dcp.h"
 #include "OpenCvBridge.h"
+#include "image_testing.h"
 
 #include <QCoreApplication>
 #include <QDir>
 #include <QFile>
 #include <QImage>
 #include <QTemporaryDir>
-#include <opencv2/imgproc.hpp>
 #include <tiffio.h>
 
 #include <cmath>
 #include <iostream>
+#include <random>
 
 namespace {
 
@@ -31,9 +32,12 @@ void check(bool condition, const char *message)
 CameraDng::Content sample()
 {
     CameraDng::Content content;
-    content.cameraRgb.create(120, 180, CV_32FC3);
-    cv::RNG random(3);
-    random.fill(content.cameraRgb, cv::RNG::UNIFORM, cv::Scalar::all(-0.005), cv::Scalar::all(0.95));
+    content.cameraRgb = ipr::Image::create({180, 120}, ipr::Depth::F32, 3);
+    std::mt19937 random(3);
+    std::uniform_real_distribution<float> value(-0.005f, 0.95f);
+    for (int y = 0; y < 120; ++y)
+        for (int v = 0; v < 180 * 3; ++v)
+            content.cameraRgb.mutableRow<float>(y)[v] = value(random);
     content.cameraMake = QStringLiteral("Canon");
     content.cameraModel = QStringLiteral("EOS R6 Mark III");
     content.lensMake = QStringLiteral("Sigma");
@@ -53,14 +57,6 @@ CameraDng::Content sample()
     return content;
 }
 
-double worstDifference(const cv::Mat &a, const cv::Mat &b)
-{
-    cv::Mat difference;
-    cv::absdiff(a, b, difference);
-    double worst = 0.0;
-    cv::minMaxLoc(difference.reshape(1), nullptr, &worst);
-    return worst;
-}
 
 void roundTrip(const QDir &folder)
 {
@@ -75,13 +71,11 @@ void roundTrip(const QDir &folder)
     check(read.cameraRgb.size() == written.cameraRgb.size(), "the same size");
     // One code of the file: at most the scale of the weakest neutral over the 16-bit range.
     const double tolerance = 2.0 / (65535.0 - 1024.0);
-    const double worst = worstDifference(read.cameraRgb, written.cameraRgb);
+    const double worst = ipr::largestDifference(read.cameraRgb, written.cameraRgb);
     if (worst > tolerance)
         std::cerr << "worst " << worst << '\n';
     check(worst <= tolerance, "the same values within a code, below the black too");
-    double lowest = 0.0;
-    cv::minMaxLoc(read.cameraRgb.reshape(1), &lowest);
-    check(lowest < -0.004, "the values below the black stay");
+    check(imagetest::rangeOf(read.cameraRgb).low < -0.004, "the values below the black stay");
     check(read.cameraMake == written.cameraMake && read.cameraModel == written.cameraModel, "the same camera");
     check(read.cameraNeutral == written.cameraNeutral && read.whiteBalanceKelvin == written.whiteBalanceKelvin, "the same balance");
     check(read.renderOptions.cameraBaselineExposureEv == 0.25 && read.renderOptions.profileExposureCompensationEv == -0.1 &&
@@ -92,10 +86,10 @@ void roundTrip(const QDir &folder)
 
     // A signal above white keeps its range, and tells it through the baseline exposure.
     CameraDng::Content bright = sample();
-    ipr::at<ipr::Vec3f>(bright.cameraRgb, 5, 5) = ipr::Vec3f(3.f, 3.f, 3.f);
+    imagetest::at<ipr::Vec3f>(bright.cameraRgb, 5, 5) = ipr::Vec3f(3.f, 3.f, 3.f);
     const QString brightPath = folder.filePath(QStringLiteral("bright.dng"));
     check(CameraDng::write(bright, brightPath, &error) && CameraDng::read(brightPath, read, &error), "a bright signal goes through");
-    const ipr::Vec3f high = ipr::at<ipr::Vec3f>(read.cameraRgb, 5, 5);
+    const ipr::Vec3f high = imagetest::at<ipr::Vec3f>(read.cameraRgb, 5, 5);
     check(std::abs(high[1] - 3.f) < 0.001f, "above white stays above white");
 
     // What other software reads: the standard tags of a LinearRaw file.
@@ -126,10 +120,10 @@ void refusals(const QDir &folder)
     const QString path = folder.filePath(QStringLiteral("refused.dng"));
     QString error;
     CameraDng::Content empty = sample();
-    empty.cameraRgb = cv::Mat();
+    empty.cameraRgb = ipr::Image();
     check(!CameraDng::write(empty, path, &error) && !error.isEmpty(), "no signal, no file");
     CameraDng::Content wrongType = sample();
-    wrongType.cameraRgb = cv::Mat(4, 4, CV_8UC3, cv::Scalar::all(1));
+    wrongType.cameraRgb = ipr::filled({4, 4}, ipr::Depth::U8, 3, 1);
     check(!CameraDng::write(wrongType, path, &error), "a wrong type is refused");
     CameraDng::Content noBalance = sample();
     noBalance.cameraNeutral = ipr::Vec3d(0, 0, 0);
@@ -201,7 +195,7 @@ void decoding(const QDir &folder)
         const ColorPipeline::WorkingImage direct = CameraSignal::render(std::move(signal), dcp, written.renderOptions, &error);
         check(!direct.isNull() && direct.linearRgba.size() == opened.linearRgba.size(), "the same render");
         if (!direct.isNull()) {
-            const double worst = worstDifference(direct.linearRgba, opened.linearRgba);
+            const double worst = ipr::largestDifference(ipr::fromMat(direct.linearRgba), ipr::fromMat(opened.linearRgba));
             if (worst > 2e-3)
                 std::cerr << "render worst " << worst << '\n';
             check(worst <= 2e-3, "within the file's precision");
@@ -212,7 +206,8 @@ void decoding(const QDir &folder)
     check(RawDecoder::sourceDimensions(path) == QSize(180, 120), "LibRaw reads its size");
 
     // A camera without a profile cannot be rendered: said, not guessed.
-    CameraDng::Content unknown = written;
+    CameraDng::Content unknown = sample();
+    unknown.colorMatrix = written.colorMatrix;
     unknown.cameraMake = QStringLiteral("Nobody");
     unknown.cameraModel = QStringLiteral("Camera 1");
     const QString unknownPath = folder.filePath(QStringLiteral("unknown.dng"));

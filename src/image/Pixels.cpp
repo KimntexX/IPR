@@ -492,6 +492,28 @@ Image withoutAlpha(const Image &rgba)
     return made(rgba, 3, [&](Image &out) { firstChannelsInto(rgba, out); });
 }
 
+Image opaque(const Image &rgb)
+{
+    if (rgb.empty())
+        return {};
+    need(floats(rgb) && rgb.channels() == 3, "Floats of three channels");
+    Image rgba = Image::create(rgb.size(), Depth::F32, 4);
+    Image &target = rgba;
+    parallelRows(rgb.height(), [&](int first, int last) {
+        for (int y = first; y < last; ++y) {
+            const float *in = rgb.row<float>(y);
+            float *row = target.mutableRow<float>(y);
+            for (int x = 0; x < rgb.width(); ++x) {
+                row[4 * x] = in[3 * x];
+                row[4 * x + 1] = in[3 * x + 1];
+                row[4 * x + 2] = in[3 * x + 2];
+                row[4 * x + 3] = 1.0f;
+            }
+        }
+    });
+    return rgba;
+}
+
 Image multiplied(const Image &a, const Image &b)
 {
     return made(a, a.channels(), [&](Image &out) { multiplyInto(a, b, out); });
@@ -607,7 +629,7 @@ void convertValues(const Image &from, Image &out, float scale, float shift)
         const T *in = from.row<T>(y);
         float *row = out.mutableRow<float>(y);
         for (size_t v = 0; v < values; ++v)
-            row[v] = float(in[v]) * scale + shift;
+            row[v] = std::fma(float(in[v]), scale, shift);
     }
 }
 

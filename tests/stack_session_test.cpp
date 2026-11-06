@@ -204,7 +204,7 @@ void panoramas(const QDir &folder, const std::shared_ptr<CameraProfileEngine::Dc
         CameraDng::Content read;
         QString error;
         check(CameraDng::read(dng.toLocalFile(), read, &error) && read.provenance.contains(QStringLiteral("panorama")), "and tells its origin");
-        const int cropped = read.cameraRgb.cols;
+        const int cropped = read.cameraRgb.width();
 
         assembling.startPanorama(frames(folder, 3), QStringLiteral("automatic"), QStringLiteral("keep"));
         check(waitFor([&] { return !assembling.running(); }), "a panorama with its edges ends");
@@ -212,7 +212,7 @@ void panoramas(const QDir &folder, const std::shared_ptr<CameraProfileEngine::Dc
         const QUrl whole = QUrl::fromLocalFile(folder.filePath(QStringLiteral("whole.dng")));
         assembling.exportResult(whole, QStringLiteral("DNG"));
         check(waitFor([&] { return !assembling.exporting(); }), "its export ends too");
-        check(CameraDng::read(whole.toLocalFile(), read, &error) && read.cameraRgb.cols >= cropped, "keeping the edges keeps at least as much");
+        check(CameraDng::read(whole.toLocalFile(), read, &error) && read.cameraRgb.width() >= cropped, "keeping the edges keeps at least as much");
     }
     check(waitFor([&] { return cache->statistics().reservedBytes == 0; }), "a panorama gives its memory back");
 

@@ -74,7 +74,7 @@ int main(int argc, char **argv)
             }
         });
         cv::Mat area;
-        cv::resize(linear,area,ipr::Size((full.width()+3)/4,(full.height()+3)/4),0,0,cv::INTER_AREA);
+        cv::resize(linear,area,cv::Size((full.width()+3)/4,(full.height()+3)/4),0,0,cv::INTER_AREA);
         std::vector<cv::Mat> components;cv::split(area,components);components.resize(3);
         cv::Mat rgb;cv::merge(components,rgb);
         QFile data(out.filePath("output-area-linear-rgb.f32"));
@@ -97,7 +97,7 @@ int main(int argc, char **argv)
     WorkingColor::transform(stageRgb, WorkingColor::toSrgb()); // Explicit diagnostic domain.
     if(!image.dcpContext)return 8;
     if(sourceOnly) {
-        auto replay=sample3(image.dcpContext->cameraRgb);
+        auto replay=sample3(ipr::asMat(image.dcpContext->cameraRgb));
         if(!applyDcpForSrgbAnalysis(image.dcpContext->profilePath,replay,image.dcpContext->sourceKelvin,&error,image.dcpContext->options))return 8;
         const double replayError=cv::norm(replay,stageRgb,cv::NORM_INF);
         if(replayError>1e-6)return 9;
@@ -135,7 +135,7 @@ int main(int argc, char **argv)
         if(!manifest.open(QIODevice::WriteOnly|QIODevice::NewOnly)||manifest.write(json)!=json.size())return 7;
         QTextStream(stdout)<<json;return 0;
     }
-    const auto cameraGrid=sample3(image.dcpContext->cameraRgb);
+    const auto cameraGrid=sample3(ipr::asMat(image.dcpContext->cameraRgb));
     QFile profileFile(args[2]);if(!profileFile.open(QIODevice::ReadOnly))return 8;
     const auto profileBytes=profileFile.readAll();
     QJsonObject dcpStages;
@@ -155,7 +155,7 @@ int main(int argc, char **argv)
         // these are pre-curve coordinates only for the plus_look ablation.
         const ipr::Matrix33d proPhotoToXyz(.7976749,.1351917,.0313534,.2880402,.7118741,.0000857,0.,0.,.8252100);
         const auto srgbToProPhoto=(WorkingColor::toSrgb()*WorkingColor::fromXyzD50()*proPhotoToXyz).inv();
-        cv::Mat proPhoto;cv::transform(rgb,proPhoto,srgbToProPhoto);
+        cv::Mat proPhoto;cv::transform(rgb,proPhoto,ipr::toCv(srgbToProPhoto));
         auto bounds=linearStageStats(proPhoto);
         for(const auto &key:{"mean_Y_unbounded","Y_p05_p50_p95_p99","Y_at_or_above_one_percent"})bounds.remove(key);
         stats.insert("prophoto_bounds",bounds);
@@ -174,7 +174,7 @@ int main(int argc, char **argv)
         const double Y=.2126*v[0]+.7152*v[1]+.0722*v[2];beforeY+=Y;currentY+=.2126*m[0]+.7152*m[1]+.0722*m[2];candidateY+=.2126*c[0]+.7152*c[1]+.0722*c[2];
         negative+=std::min({v[0],v[1],v[2]})<0;above+=std::max({v[0],v[1],v[2]})>1;overY+=Y>=1;
         if(image.dcpContext) {
-            const auto p=ipr::at<ipr::Vec3f>(image.dcpContext->cameraRgb, y*8,x*8);
+            const auto p=image.dcpContext->cameraRgb.row<ipr::Vec3f>(y*8)[x*8];
             cameraHigh+=std::max({p[0],p[1],p[2]})>=65534.f/65535;
         }
     }

@@ -122,6 +122,9 @@ void aSharedImageNeverChanges()
     Image second = shared.share();
     throws<std::logic_error>([&] { second.mutableRow<float>(0); }, "nor can another");
     check(shared.row<Vec3f>(1)[2][0] == 2.0f, "reading stays");
+    check(shared.block() == image.block() && shared.blockBytes() == 4 * 4 * sizeof(Vec3f), "one block, counted once");
+    check(image.view({1, 1, 2, 2}).block() == image.block() && image.clone().block() != image.block(), "a part is in it");
+    check(Image().block() == nullptr && Image().blockBytes() == 0, "no block for nothing");
 
     // Even once the others are gone: only a clone writes.
     Image alone = numbered({2, 2});

@@ -315,7 +315,9 @@ QJsonObject process(const QString &path, const QDir &out, bool calibrationOnly =
         CameraProfileEngine::CaptureSettings capture;
         capture.focalLengthMm = d.other.focal_len;
         capture.aperture = d.other.aperture;
-        require(CameraProfileEngine::applyLcp(profiles.lcpPath, rgb, capture, &error), error);
+        bool corrected = false;
+        ipr::changeAsImage(rgb, [&](ipr::Image &image) { corrected = CameraProfileEngine::applyLcp(profiles.lcpPath, image, capture, &error); });
+        require(corrected, error);
     }
     auto withLens = sample(rgb);
     rgb.release();

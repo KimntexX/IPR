@@ -91,7 +91,7 @@ ColorPipeline::WorkingImage rasterSource(const ipr::Size &size)
 ColorPipeline::WorkingImage cameraSource(const ipr::Size &size, const QString &profile)
 {
     CameraSignal::Source signal;
-    signal.rgb = noisyRgb(size);
+    signal.rgb = ipr::fromMat(noisyRgb(size));
     signal.cameraMake = QStringLiteral("Canon");
     signal.cameraModel = QStringLiteral("EOS R6 Mark III");
     signal.whiteBalanceKelvin = 5200.0;

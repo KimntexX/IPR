@@ -11,11 +11,10 @@ enum class Coordinates { CameraRgb, LinearSrgb };
 
 // Post-demosaic, black-subtracted/scaled camera RGB; NOT a sensor mosaic.
 // Decoder WB and requested optical corrections have already been applied.
-// Ownership of rgb is transferred to render(); any remaining aliases must be
-// treated as immutable for the lifetime of the returned DCP working context.
+// render() keeps rgb in the returned DCP working context, shared read only.
 struct Source
 {
-    cv::Mat rgb;
+    ipr::Image rgb;
     QString cameraMake;
     QString cameraModel;
     std::optional<double> whiteBalanceKelvin;

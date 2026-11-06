@@ -2,11 +2,11 @@
 #define IPR_RAW_CAMERADNG_H
 
 #include "CameraProfileEngine.h"
+#include "Image.h"
 #include "Types.h"
 
 #include <QDateTime>
 #include <QString>
-#include <opencv2/core.hpp>
 
 #include <array>
 
@@ -20,7 +20,7 @@ namespace CameraDng {
 
 struct Content
 {
-    cv::Mat cameraRgb;      // CV_32FC3, as a decoder's signal: white balance applied, white 1, signed
+    ipr::Image cameraRgb;   // F32, three channels, as a decoder's signal: white balance applied, white 1, signed
     QString cameraMake;
     QString cameraModel;
     // Kept for IPR alone, in the file's description: another reader must not take the lens

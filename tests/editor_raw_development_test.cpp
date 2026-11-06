@@ -294,7 +294,8 @@ int main(int argc,char **argv)
         [&](const QString &,const RawDecoder::Options &options,ImageMetadata *meta,QString *error) {
             ++fastDecodes;
             auto source = options.retainedDcpSource ? options.retainedDcpSource : std::make_shared<RawDecoder::DcpSource>();
-            source->cameraRgb = cv::Mat(8,8,CV_32FC3,cv::Scalar(.15f,.2f,.1f));
+            source->cameraRgb = ipr::Image::create({8,8},ipr::Depth::F32,3);
+            ipr::fill(source->cameraRgb, std::vector<double>{.15f,.2f,.1f});
             source->metadata.cameraMake = "Mock";
             source->metadata.cameraModel = "Test camera";
             source->metadata.availableDcpProfiles = {neutral,alternate};

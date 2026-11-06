@@ -272,7 +272,7 @@ ImageEditor::ImageEditor(ImageProvider *provider,
             const ColorPipeline::WorkingImage image = RawDecoder::decode(file, options, &decoded.metadata, &decoded.error);
             if (image.dcpContext) {
                 decoded.context = image.dcpContext;
-                decoded.cameraRgb = image.dcpContext->cameraRgb;
+                decoded.cameraRgb = ipr::heldMat(image.dcpContext->cameraRgb);   // a Mat until stacking leaves OpenCV
             }
             return decoded;
         },
@@ -2346,7 +2346,7 @@ ColorPipeline::WorkingImage ImageEditor::buildEditProxy(
     proxy.sourceProfile = source.sourceProfile;
     proxy.referenceWhiteBalanceKelvin = source.referenceWhiteBalanceKelvin;
     if (source.dcpContext) {
-        auto context = std::make_shared<CameraProfileEngine::DcpWorkingContext>(*source.dcpContext);
+        auto context = std::make_shared<CameraProfileEngine::DcpWorkingContext>(CameraProfileEngine::sharedCopy(*source.dcpContext));
         context->cameraRgb = ipr::resized(source.dcpContext->cameraRgb, proxySize, ipr::Interpolation::Area);
         if (!source.dcpContext->preLensCameraRgb.empty())
             context->preLensCameraRgb = ipr::resized(source.dcpContext->preLensCameraRgb, proxySize, ipr::Interpolation::Area);

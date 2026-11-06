@@ -67,6 +67,10 @@ public:
     bool continuous() const;
     bool frozen() const;
     bool sharesPixelsWith(const Image &other) const;
+    // The block of memory the pixels lie in, the same for every image sharing it, and its size in
+    // bytes: to count shared pixels once. Null and zero for an empty image.
+    const void *block() const;
+    std::size_t blockBytes() const;
 
     // Throws std::out_of_range outside the image: a row is the place to check, a pixel is not.
     template <typename T>

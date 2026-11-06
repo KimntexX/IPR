@@ -123,9 +123,9 @@ bool renderTones(const ColorPipeline::WorkingImage &source, const Settings &sett
             // From the retained source each time: never denoised twice.
             // Before the lens corrections when the decode kept that signal, then them again.
             // CameraDenoise publishes a new buffer and never writes the retained one.
-            denoised = *source.dcpContext;
+            denoised = CameraProfileEngine::sharedCopy(*source.dcpContext);
             const bool preLens = !source.dcpContext->preLensCameraRgb.empty();
-            denoised.cameraRgb = preLens ? source.dcpContext->preLensCameraRgb : source.dcpContext->cameraRgb;
+            denoised.cameraRgb = preLens ? source.dcpContext->preLensCameraRgb.share() : source.dcpContext->cameraRgb.share();
             CameraDenoise::Context denoiseContext;
             denoiseContext.pixelScale = pixelScale;
             if (!CameraDenoise::apply(denoised.cameraRgb, settings.denoiseLuminance, denoiseContext) ||
@@ -140,9 +140,13 @@ bool renderTones(const ColorPipeline::WorkingImage &source, const Settings &sett
         LocalValues::Maps onSource;
         for (const LocalValues::Parameter parameter : {LocalValues::Exposure, LocalValues::Temperature, LocalValues::Tint})
             onSource[parameter] = LocalAdjustments::toSource(local[parameter], settings.geometry, ipr::fromCv(adjusted.size()));
-        if (camera->cameraRgb.size() != adjusted.size() ||
-            !CameraProfileEngine::renderFromCameraSignal(*camera,
-                settings.temperature, settings.tint, settings.brightness, adjusted, &error, onSource)) {
+        bool rendered = camera->cameraRgb.size() == ipr::fromCv(adjusted.size());
+        if (rendered)   // into the Mat until the render chain leaves OpenCV
+            ipr::changeAsImage(adjusted, [&](ipr::Image &out) {
+                rendered = CameraProfileEngine::renderFromCameraSignal(*camera, settings.temperature, settings.tint,
+                                                                       settings.brightness, out, &error, onSource);
+            });
+        if (!rendered) {
             qWarning() << "Échec du rendu capteur avant DCP :" << error;
             return false;
         }

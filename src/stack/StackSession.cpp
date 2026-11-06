@@ -31,7 +31,7 @@ ColorPipeline::WorkingImage rendered(const cv::Mat &cameraRgb, const CameraProfi
                                      const ImageMetadata &metadata, QString *error)
 {
     CameraSignal::Source signal;
-    signal.rgb = cameraRgb.clone();
+    signal.rgb = ipr::fromMat(cameraRgb).clone();
     signal.cameraMake = metadata.cameraMake;
     signal.cameraModel = metadata.cameraModel;
     signal.whiteBalanceKelvin = context.sourceKelvin;
@@ -394,7 +394,7 @@ StackSession::Export StackSession::writeResult(const Result &result, const QStri
     if (format == QStringLiteral("DNG")) {
         const CameraProfileEngine::DcpCameraData camera = CameraProfileEngine::dcpCameraData(result.context->profilePath);
         CameraDng::Content content;
-        content.cameraRgb = result.cameraRgb;
+        content.cameraRgb = ipr::fromMat(result.cameraRgb);
         content.cameraMake = result.metadata.cameraMake;
         content.cameraModel = result.metadata.cameraModel;
         content.lensMake = result.metadata.lensMake;

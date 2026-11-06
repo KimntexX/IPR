@@ -212,6 +212,16 @@ bool Image::sharesPixelsWith(const Image &other) const
            (m_block->first < other.m_block->last && other.m_block->first < m_block->last);
 }
 
+const void *Image::block() const
+{
+    return empty() ? nullptr : m_block->first;
+}
+
+std::size_t Image::blockBytes() const
+{
+    return empty() ? 0 : std::size_t(m_block->last - m_block->first);
+}
+
 const std::uint8_t *Image::rowBytes(int y) const
 {
     if (y < 0 || y >= height())

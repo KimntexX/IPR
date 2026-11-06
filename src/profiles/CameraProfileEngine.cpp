@@ -4,6 +4,8 @@
 
 #include "OpenCvBridge.h"
 #include "Parallel.h"
+#include "Pixels.h"
+#include "Warp.h"
 
 #include <QDir>
 #include <QCoreApplication>
@@ -22,7 +24,7 @@
 #include <QRegularExpression>
 #include <QXmlStreamReader>
 
-#include <opencv2/imgproc.hpp>
+
 
 #include <algorithm>
 #include <array>
@@ -553,7 +555,7 @@ public:
         return true;
     }
 
-    bool apply(cv::Mat &rgb, double whiteBalanceKelvin, QString *error,
+    bool apply(ipr::Image &rgb, double whiteBalanceKelvin, QString *error,
                const DcpRenderOptions &options) const
     {
         Illuminant illuminant;
@@ -564,7 +566,7 @@ public:
 
     // illuminants(y) gives, for row y, the function that reads the illuminant of a column.
     template <typename RowIlluminants>
-    bool apply(cv::Mat &rgb, const RowIlluminants &illuminants, QString *error,
+    bool apply(ipr::Image &rgb, const RowIlluminants &illuminants, QString *error,
                const DcpRenderOptions &options) const
     {
         if (!std::isfinite(options.cameraBaselineExposureEv) ||
@@ -575,11 +577,14 @@ public:
                 *error = QStringLiteral("Exposition de base caméra DCP invalide.");
             return false;
         }
-        if (rgb.empty() || rgb.type() != CV_32FC3) {
+        if (rgb.empty() || rgb.depth() != ipr::Depth::F32 || rgb.channels() != 3) {
             if (error)
                 *error = QStringLiteral("L'image caméra DCP doit être RGB flottante.");
             return false;
         }
+        // In place, on pixels of its own: shared ones are copied first, never written.
+        if (rgb.frozen())
+            rgb = rgb.clone();
 
         // XYZ D50 -> linear Rec.2020 D65, adaptation exactly once.
         const ipr::Matrix33d &xyzToWorking = WorkingColor::fromXyzD50();
@@ -603,11 +608,11 @@ public:
                          toneCurve[toneCurve.size() - 2] == 1.0;
         for (qsizetype i = 1; hueStable && i < toneCurve.size(); i += 2)
             hueStable = toneCurve[i] >= 0.0 && toneCurve[i] <= 1.0;
-        ipr::parallelRows(rgb.rows, [&](int first, int last) {
+        ipr::parallelRows(rgb.height(), [&](int first, int last) {
             for (int y = first; y < last; ++y) {
-                ipr::Vec3f *row = rgb.ptr<ipr::Vec3f>(y);
+                ipr::Vec3f *row = rgb.mutableRow<ipr::Vec3f>(y);
                 auto illuminantAt = illuminants(y);
-                for (int x = 0; x < rgb.cols; ++x) {
+                for (int x = 0; x < rgb.width(); ++x) {
                     const Illuminant &illuminant = illuminantAt(x);
                     const std::array<double, 9> &cameraToXyz = illuminant.cameraToXyz;
                     const HueSatTable &hueMap = illuminant.hueMap;
@@ -1867,7 +1872,22 @@ Selection findProfiles(const QString &cameraMake, const QString &cameraModel,
     return selection;
 }
 
-bool applyDcp(const QString &fileName, cv::Mat &cameraRgb,
+DcpWorkingContext sharedCopy(const DcpWorkingContext &context)
+{
+    DcpWorkingContext copy;
+    copy.cameraRgb = context.cameraRgb.share();
+    copy.profilePath = context.profilePath;
+    copy.sourceKelvin = context.sourceKelvin;
+    copy.cameraNeutral = context.cameraNeutral;
+    copy.options = context.options;
+    copy.preLensCameraRgb = context.preLensCameraRgb.share();
+    copy.lcpPath = context.lcpPath;
+    copy.capture = context.capture;
+    copy.lensOptions = context.lensOptions;
+    return copy;
+}
+
+bool applyDcp(const QString &fileName, ipr::Image &cameraRgb,
               double whiteBalanceKelvin, QString *error,
               const DcpRenderOptions &options)
 {
@@ -1887,10 +1907,10 @@ bool whiteBalanceGains(const DcpWorkingContext &source, int temperature, int tin
 }
 
 bool renderFromCameraSignal(const DcpWorkingContext &source, int temperature, int tint,
-                            double exposureEv, cv::Mat &linearRgb, QString *error,
+                            double exposureEv, ipr::Image &linearRgb, QString *error,
                             const LocalValues::Maps &local)
 {
-    if (source.cameraRgb.empty() || source.cameraRgb.type() != CV_32FC3) {
+    if (source.cameraRgb.empty() || source.cameraRgb.depth() != ipr::Depth::F32 || source.cameraRgb.channels() != 3) {
         if (error) *error = QStringLiteral("Source capteur DCP absente.");
         return false;
     }
@@ -1906,20 +1926,20 @@ bool renderFromCameraSignal(const DcpWorkingContext &source, int temperature, in
     const cv::Mat &localExposure = local[LocalValues::Exposure];
     const cv::Mat &localTemperature = local[LocalValues::Temperature];
     const cv::Mat &localTint = local[LocalValues::Tint];
-    const ipr::Size size = ipr::fromCv(source.cameraRgb.size());
+    const ipr::Size size = source.cameraRgb.size();
     if (!LocalValues::fits(localExposure, size) || !LocalValues::fits(localTemperature, size) ||
         !LocalValues::fits(localTint, size)) {
         if (error) *error = QStringLiteral("Carte de valeurs locales incompatible avec le signal capteur.");
         return false;
     }
-    const auto applyLocalExposure = [&](cv::Mat &signal) {
+    const auto applyLocalExposure = [&](ipr::Image &signal) {
         if (localExposure.empty()) return;
         // Scene-linear like the global exposure, before the profile's tone curve.
-        ipr::parallelRows(signal.rows, [&](int first, int last) {
+        ipr::parallelRows(signal.height(), [&](int first, int last) {
             for (int y = first; y < last; ++y) {
-                auto *row = signal.ptr<ipr::Vec3f>(y);
+                auto *row = signal.mutableRow<ipr::Vec3f>(y);
                 const float *values = localExposure.ptr<float>(y);
-                for (int x = 0; x < signal.cols; ++x)
+                for (int x = 0; x < signal.width(); ++x)
                     if (values[x] != 0.0f) row[x] *= static_cast<float>(std::exp2(double(values[x])));
             }
         });
@@ -1935,7 +1955,7 @@ bool renderFromCameraSignal(const DcpWorkingContext &source, int temperature, in
         {{float(temperature), &localTemperature, 1.0f, 2000.0f, 50000.0f, 25.0f},
          {float(tint), &localTint, 1.0f, -150.0f, 150.0f, 1.0f}},
         size, MaxLocalIlluminants);
-    cv::Mat rgb;
+    ipr::Image rgb;
     if (combinations.active()) {
         struct Prepared { ipr::Vec3f gains; DcpProfile::Illuminant illuminant; };
         std::vector<Prepared> prepared(size_t(combinations.count()));
@@ -1950,13 +1970,13 @@ bool renderFromCameraSignal(const DcpWorkingContext &source, int temperature, in
             pixelGains *= std::exp2(exposureEv);
             prepared[size_t(index)].gains = ipr::Vec3f(pixelGains);
         }
-        rgb.create(ipr::toCv(size), CV_32FC3);
-        ipr::parallelRows(rgb.rows, [&](int first, int last) {
+        rgb = ipr::Image::create(size, ipr::Depth::F32, 3);
+        ipr::parallelRows(rgb.height(), [&](int first, int last) {
             for (int y = first; y < last; ++y) {
-                const auto *in = source.cameraRgb.ptr<ipr::Vec3f>(y);
-                auto *out = rgb.ptr<ipr::Vec3f>(y);
+                const auto *in = source.cameraRgb.row<ipr::Vec3f>(y);
+                auto *out = rgb.mutableRow<ipr::Vec3f>(y);
                 auto indices = combinations.row(y);
-                for (int x = 0; x < rgb.cols; ++x) {
+                for (int x = 0; x < rgb.width(); ++x) {
                     const ipr::Vec3f &g = prepared[size_t(indices.at(x))].gains;
                     out[x] = ipr::Vec3f(in[x][0] * g[0], in[x][1] * g[1], in[x][2] * g[2]);
                 }
@@ -1988,7 +2008,7 @@ bool lcpMatchesLens(const QString &path, const QString &cameraMake,
     return profile && lcpMatchScore(*profile, cameraMake, cameraModel, lensMake, lensModel) > 0;
 }
 
-bool applyLcp(const QString &fileName, cv::Mat &linearRgb,
+bool applyLcp(const QString &fileName, ipr::Image &linearRgb,
               const CaptureSettings &capture, QString *error,
               const LcpRenderOptions &options, LcpApplied *applied)
 {
@@ -1996,30 +2016,31 @@ bool applyLcp(const QString &fileName, cv::Mat &linearRgb,
     const auto profile = preparedLcp(fileName, error);
     if (!profile)
         return false;
-    if (linearRgb.empty() || linearRgb.type() != CV_32FC3) {
+    if (linearRgb.empty() || linearRgb.depth() != ipr::Depth::F32 || linearRgb.channels() != 3) {
         if (error)
             *error = QStringLiteral("L'image corrigée par LCP doit être RGB flottante.");
         return false;
     }
+    const int width = linearRgb.width(), height = linearRgb.height();
 
     const LcpData::Model model = selectLcpModel(*profile, capture);
     // The profile's models work in units of the focal length, in pixels: from the profile
     // when it gives it, else from the lens's 35 mm equivalent, as the format defines it. The
     // same parameters then fit whatever sensor the lens is on.
-    const double longSide = double(std::max(linearRgb.cols, linearRgb.rows));
+    const double longSide = double(std::max(width, height));
     const double capturedFocal = capture.focalLengthMm > 0.0 ? capture.focalLengthMm : model.focalLength;
     const double equivalentFocal = capture.sensorWidthMm > 0.0 ? capturedFocal * 36.0 / capture.sensorWidthMm : capturedFocal;
     const double scale = model.focalLengthX > 0.0 ? model.focalLengthX * longSide
                        : equivalentFocal > 0.0 ? equivalentFocal / 35.0 * longSide : longSide;
-    const double cx = model.geometryCenterX * linearRgb.cols;
-    const double cy = model.geometryCenterY * linearRgb.rows;
-    cv::Mat mapX(linearRgb.size(), CV_32FC1);
-    cv::Mat mapY(linearRgb.size(), CV_32FC1);
-    ipr::parallelRows(linearRgb.rows, [&](int first, int last) {
+    const double cx = model.geometryCenterX * width;
+    const double cy = model.geometryCenterY * height;
+    ipr::Image mapX = ipr::Image::create(linearRgb.size(), ipr::Depth::F32, 1);
+    ipr::Image mapY = ipr::Image::create(linearRgb.size(), ipr::Depth::F32, 1);
+    ipr::parallelRows(height, [&](int first, int last) {
         for (int y = first; y < last; ++y) {
-            float *mx = mapX.ptr<float>(y);
-            float *my = mapY.ptr<float>(y);
-            for (int x = 0; x < linearRgb.cols; ++x) {
+            float *mx = mapX.mutableRow<float>(y);
+            float *my = mapY.mutableRow<float>(y);
+            for (int x = 0; x < width; ++x) {
                 const double dx = (x - cx) / scale;
             const double dy = (y - cy) / scale;
             const double r2 = dx * dx + dy * dy;
@@ -2040,27 +2061,26 @@ bool applyLcp(const QString &fileName, cv::Mat &linearRgb,
         }
     });
 
-    cv::Mat geometryCorrected = linearRgb;
-    if (options.lensCorrection && model.hasGeometry) {
-        geometryCorrected = ipr::remapped(linearRgb, mapX, mapY, ipr::Resampling::Linear, ipr::Outside::LastPixel);
-    }
+    // New pixels for the geometry; without it, the vignetting changes the given ones in place.
+    ipr::Image geometryCorrected = options.lensCorrection && model.hasGeometry
+        ? ipr::remapped(linearRgb, mapX, mapY, ipr::Resampling::Linear, ipr::Outside::LastPixel)
+        : std::move(linearRgb);
 
     if (options.chromaticAberration && (model.hasRedGreen || model.hasBlueGreen)) {
-        std::vector<cv::Mat> channels;
-        channels = ipr::splitChannels(geometryCorrected);
+        std::vector<ipr::Image> channels = ipr::splitChannels(geometryCorrected);
         const auto correctChromaticChannel = [&](int channel,
                                                  const std::array<double, 5> &ca,
                                                  double centerX,
                                                  double centerY) {
-            cv::Mat caX(linearRgb.size(), CV_32FC1);
-            cv::Mat caY(linearRgb.size(), CV_32FC1);
-            const double caCx = centerX * linearRgb.cols;
-            const double caCy = centerY * linearRgb.rows;
-            ipr::parallelRows(linearRgb.rows, [&](int first, int last) {
+            ipr::Image caX = ipr::Image::create({width, height}, ipr::Depth::F32, 1);
+            ipr::Image caY = ipr::Image::create({width, height}, ipr::Depth::F32, 1);
+            const double caCx = centerX * width;
+            const double caCy = centerY * height;
+            ipr::parallelRows(height, [&](int first, int last) {
                 for (int y = first; y < last; ++y) {
-                    float *mx = caX.ptr<float>(y);
-                    float *my = caY.ptr<float>(y);
-                    for (int x = 0; x < linearRgb.cols; ++x) {
+                    float *mx = caX.mutableRow<float>(y);
+                    float *my = caY.mutableRow<float>(y);
+                    for (int x = 0; x < width; ++x) {
                         const double dx = (x - caCx) / scale;
                     const double dy = (y - caCy) / scale;
                     const double r2 = dx * dx + dy * dy;
@@ -2075,8 +2095,8 @@ bool applyLcp(const QString &fileName, cv::Mat &linearRgb,
                     }
                 }
             });
-            const cv::Mat corrected = ipr::remapped(geometryCorrected, caX, caY, ipr::Resampling::Linear, ipr::Outside::LastPixel);
-            channels[channel] = ipr::channel(corrected, channel);
+            const ipr::Image corrected = ipr::remapped(geometryCorrected, caX, caY, ipr::Resampling::Linear, ipr::Outside::LastPixel);
+            channels[size_t(channel)] = ipr::channel(corrected, channel);
         };
         if (model.hasRedGreen)
             correctChromaticChannel(0, model.redGreen,
@@ -2088,12 +2108,14 @@ bool applyLcp(const QString &fileName, cv::Mat &linearRgb,
     }
 
     if (options.lensCorrection && model.hasVignetting) {
-        const double vignetteCx = model.vignetteCenterX * linearRgb.cols;
-        const double vignetteCy = model.vignetteCenterY * linearRgb.rows;
-        ipr::parallelRows(geometryCorrected.rows, [&](int first, int last) {
+        if (geometryCorrected.frozen())   // shared pixels are copied, never written
+            geometryCorrected = geometryCorrected.clone();
+        const double vignetteCx = model.vignetteCenterX * width;
+        const double vignetteCy = model.vignetteCenterY * height;
+        ipr::parallelRows(height, [&](int first, int last) {
             for (int y = first; y < last; ++y) {
-                ipr::Vec3f *row = geometryCorrected.ptr<ipr::Vec3f>(y);
-                for (int x = 0; x < geometryCorrected.cols; ++x) {
+                ipr::Vec3f *row = geometryCorrected.mutableRow<ipr::Vec3f>(y);
+                for (int x = 0; x < width; ++x) {
                     const double dx = (x - vignetteCx) / scale;
                 const double dy = (y - vignetteCy) / scale;
                 const double r2 = dx * dx + dy * dy;

@@ -119,23 +119,27 @@ int main(int argc,char **argv) {
                 };
                 preview(current,"current");
                 if(full.dcpContext) {
-                    auto context=*full.dcpContext;context.cameraRgb=sample(context.cameraRgb);
+                    auto context=CameraProfileEngine::sharedCopy(*full.dcpContext);context.cameraRgb=ipr::fromMat(sample(ipr::asMat(context.cameraRgb)));
                     record["camera_neutral"]=array(context.cameraNeutral.values.data(),3);
                     record["profile_path"]=context.profilePath;record["profile_sha256"]=hash(context.profilePath);
-                    const auto beforeProfile=context.cameraRgb.clone();
+                    const cv::Mat beforeProfile=ipr::asMat(context.cameraRgb).clone();
                     // Release full buffers before sample-only ablations.
                     full={};
                     cv::Mat witness=beforeProfile.clone();
-                    if(!CameraProfileEngine::applyDcp(context.profilePath,witness,context.sourceKelvin,&error,context.options))throw std::runtime_error(error.toStdString());
+                    bool applied=false;
+                    ipr::changeAsImage(witness,[&](ipr::Image &image){applied=CameraProfileEngine::applyDcp(context.profilePath,image,context.sourceKelvin,&error,context.options);});
+                    if(!applied)throw std::runtime_error(error.toStdString());
                     const auto witnessImage=working(witness);
                     stages["sample_replay_witness"]=metrics(witnessImage);
                     record["sample_replay_max_abs_float_error"]=cv::norm(witnessImage.linearRgba,current.linearRgba,cv::NORM_INF);
                     auto hueOptions=context.options;hueOptions.preserveToneCurveHue=true;
                     cv::Mat stable=beforeProfile.clone();
-                    if(!CameraProfileEngine::applyDcp(context.profilePath,stable,context.sourceKelvin,&error,hueOptions))throw std::runtime_error(error.toStdString());
+                    ipr::changeAsImage(stable,[&](ipr::Image &image){applied=CameraProfileEngine::applyDcp(context.profilePath,image,context.sourceKelvin,&error,hueOptions);});
+                    if(!applied)throw std::runtime_error(error.toStdString());
                     stages["hue_preserving_curve"]=metrics(working(stable));preview(working(stable),"hue-curve");
                     cv::Mat changed;
-                    if(CameraProfileEngine::renderFromCameraSignal(context, 5200, 5, 0.0,changed,&error)) {
+                    ipr::changeAsImage(changed,[&](ipr::Image &image){applied=CameraProfileEngine::renderFromCameraSignal(context, 5200, 5, 0.0,image,&error);});
+                    if(applied) {
                         stages["display_5200_tint5_diagnostic"]=metrics(working(changed));preview(working(changed),"5200-5");
                     }else record["WB_diagnostic_error"]=error;
                     stages["camera_RGB_before_DCP_not_sRGB"]=QJsonObject{{"mean_RGB",array(cv::mean(beforeProfile).val,3)}};

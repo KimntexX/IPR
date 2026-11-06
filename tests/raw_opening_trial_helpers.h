@@ -25,7 +25,9 @@ namespace {
 // linear sRGB, while the only production renderer now returns Rec.2020.
 bool applyDcpForSrgbAnalysis(const QString &path, cv::Mat &rgb, double kelvin,
                             QString *error, const CameraProfileEngine::DcpRenderOptions &options = {}) {
-    if (!CameraProfileEngine::applyDcp(path, rgb, kelvin, error, options)) return false;
+    bool applied = false;
+    ipr::changeAsImage(rgb, [&](ipr::Image &image) { applied = CameraProfileEngine::applyDcp(path, image, kelvin, error, options); });
+    if (!applied) return false;
     WorkingColor::transform(rgb, WorkingColor::toSrgb());
     return true;
 }

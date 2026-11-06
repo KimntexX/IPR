@@ -104,37 +104,42 @@ quint64 DecodedImageCache::entrySizeBytes(const Entry &entry)
     // only once rather than charging the same shallow cv::Mat twice.
     QSet<quintptr> buffers;
     quint64 bytes = 0;
-    const auto add = [&buffers, &bytes](const cv::Mat &image) {
-        if (image.empty() || !image.data)
+    const auto count = [&buffers, &bytes](const void *start, size_t imageBytes) {
+        const quintptr address = reinterpret_cast<quintptr>(start);
+        if (buffers.contains(address))
             return;
-        const quintptr address = reinterpret_cast<quintptr>(image.datastart);
-        if (!buffers.contains(address)) {
-            buffers.insert(address);
-            const size_t imageBytes = image.total() * image.elemSize();
-            const quint64 cappedBytes = imageBytes >
-                    static_cast<size_t>(std::numeric_limits<quint64>::max())
-                ? std::numeric_limits<quint64>::max()
-                : static_cast<quint64>(imageBytes);
-            bytes = cappedBytes > std::numeric_limits<quint64>::max() - bytes
-                ? std::numeric_limits<quint64>::max()
-                : bytes + cappedBytes;
-        }
+        buffers.insert(address);
+        const quint64 cappedBytes = imageBytes >
+                static_cast<size_t>(std::numeric_limits<quint64>::max())
+            ? std::numeric_limits<quint64>::max()
+            : static_cast<quint64>(imageBytes);
+        bytes = cappedBytes > std::numeric_limits<quint64>::max() - bytes
+            ? std::numeric_limits<quint64>::max()
+            : bytes + cappedBytes;
+    };
+    const auto add = [&count](const cv::Mat &image) {
+        if (!image.empty() && image.data)
+            count(image.datastart, image.total() * image.elemSize());
+    };
+    const auto addImage = [&count](const ipr::Image &image) {
+        if (!image.empty())
+            count(image.block(), image.blockBytes());
     };
     add(entry.image.linearRgba);
     add(entry.editProxy.linearRgba);
     if (entry.image.dcpContext) {
-        add(entry.image.dcpContext->cameraRgb);
-        add(entry.image.dcpContext->preLensCameraRgb);
+        addImage(entry.image.dcpContext->cameraRgb);
+        addImage(entry.image.dcpContext->preLensCameraRgb);
     }
     if (entry.editProxy.dcpContext) {
-        add(entry.editProxy.dcpContext->cameraRgb);
-        add(entry.editProxy.dcpContext->preLensCameraRgb);
+        addImage(entry.editProxy.dcpContext->cameraRgb);
+        addImage(entry.editProxy.dcpContext->preLensCameraRgb);
     }
     if (entry.dcpSource) {
-        add(entry.dcpSource->cameraRgb);
+        addImage(entry.dcpSource->cameraRgb);
         if (entry.dcpSource->workingContext) {
-            add(entry.dcpSource->workingContext->cameraRgb);
-            add(entry.dcpSource->workingContext->preLensCameraRgb);
+            addImage(entry.dcpSource->workingContext->cameraRgb);
+            addImage(entry.dcpSource->workingContext->preLensCameraRgb);
         }
     }
     return bytes;
