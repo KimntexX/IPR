@@ -7,12 +7,12 @@ Ce bénéfice n'est pas démontré pour le correcteur CFA actuel.
 
 | Question | État et décision actuelle |
 | --- | --- |
-| Ce qui fonctionne | Contrats sign?s, reprise, suivi par phase et deux essais m?moire de 256 pas, huit sauvegardes et trois contr?les complets par graine, sans d?passement. Pas une preuve de qualit? photo. |
-| Ce qui bloque | Couverture trop faible des d?tails forts ? haute fr?quence, bruit conditionnel diff?rent des contr?les, contenus et initialisation confondus entre graines. La perte moyenne r?compense des lissages destructeurs sur ce flux. |
+| Ce qui fonctionne | Contrats signés, reprise, suivi par phase et deux essais mémoire de 256 pas, huit sauvegardes et trois contrôles complets par graine, sans dépassement. Pas une preuve de qualité photo. |
+| Ce qui bloque | Couverture trop faible des détails forts à haute fréquence, bruit conditionnel différent des contrôles, contenus et initialisation confondus entre graines. La perte moyenne récompense des lissages destructeurs sur ce flux. |
 | Derniers résultats | Réplication close : 10 et 12 échecs forts sur 48, après les 12 et 16 précédents. Sur les photos, sensibilité aux graines et motifs directionnels : bénéfice non validé. |
-| Calcul engagé | Courbe et photos achevées ; qualification des poids finaux préparée sur les contrôles connus, CPU épinglé, deux graines et seuils inchangés. Aucune nouvelle réserve. |
-| Prochaine preuve utile | Lire tous les bras et jalons de la comparaison ? donn?es communes, v?rifier initialisations et contr?les identiques avant d?interpr?ter les effets. Pas de s?lection de graine ou de poids. |
-| GPU | D?bit m?dian 2,33?2,36 s/pas pendant la qualification ; environ 17 min par graine avec contr?les. Marge locale d?environ 15 Mio seulement au pic ; aucune garantie de plusieurs heures ou d?environnement concurrent. |
+| Calcul engagé | Reprise arrêtée à 12 h 39 Paris sur plafond privé local 4,5 Gio. Référence 71 conservée, référence 73 au pas 242 volatil et checkpoint 224. Bruit/détails non démarrés ; aucun calcul actif. |
+| Prochaine preuve utile | Lire tous les bras et jalons de la comparaison à données communes, vérifier initialisations et contrôles identiques avant d’interpréter les effets. Pas de sélection de graine ou de poids. |
+| GPU | Débit médian 2,33–2,36 s/pas pendant la qualification ; environ 17 min par graine avec contrôles. Marge locale d’environ 15 Mio seulement au pic ; aucune garantie de plusieurs heures ou d’environnement concurrent. |
 | Données | 349 RAW inventoriés, 105 paires étudiées. Température, bruit fixe et propagation restent à qualifier ; pas de nouvelles prises demandées pour cette expérience. |
 | Critère d'arrêt | Pas de nouvelle série de variantes synthétiques pour améliorer les mêmes seuils. Après une courbe longue figée et un bruit caractérisé, absence de gain visible face au classique : abandon ou changement de taille/architecture, décision documentée. |
 
@@ -4298,7 +4298,7 @@ plafonds propres au processus. Le journal confirme le passage1024/2048,
 pas de fin2048 ; l'étape exacte d'arrêt n'est pas conservée dans le JSON.
 La graine 73 n'a pas démarré. Ni checkpoint final ni évaluation disponible.
 
-La preuve [arrêt sous seuil92 %](../raw/neural-noisy-moment-v001-20261103T114145Z.json)
+La preuve [arrêt sous seuil 92 %](../raw/neural-noisy-moment-v001-20261103T114145Z.json)
 est conservée. Une lecture après clôture trouve59,22 % de mémoire globale
 utilisée : le pic n'est plus actif. Cela ne permet pas d'attribuer ce pic
 à une application particulière ni de conclure sur le modèle de bruit.
@@ -6816,772 +6816,866 @@ annoncé pour cette nouvelle étape ; aucune modification du moteur,
 fusion, publication ou tag n'est engagé.
 
 
-### R?sultats clos ? contr?les connus et d?cision
+### Résultats clos — contrôles connus et décision
 
-Les deux graines passent le d?veloppement connu (624 observations chacune),
+Les deux graines passent le développement connu (624 observations chacune),
 avec des ratios MSE RGB ancien bruit faible/fort de 0,9422/0,7852 pour 71
 et 0,9592/0,7558 pour 73, par rapport au parent appris. Les cibles, bruits,
-cartes sigma et r?ponses du parent rejouent exactement les sources initiales.
-Ce r?sultat ne suffit pas : sur les 4 032 observations du contr?le fin,
-**20 groupes forts sur 48 ?chouent, contre 10 avant la continuation**.
-Dix-sept ?checs concernent le transfert de canal ? bruit fort ; trois
-concernent une tr?s l?g?re hausse de MSE ? bruit faible. Les deux types
-d??chec restent s?par?s dans les donn?es, sans arrondir les petits ?carts
-? une r?ussite. Les crit?res et les seuils n?ont pas chang?.
+cartes sigma et réponses du parent rejouent exactement les sources initiales.
+Ce résultat ne suffit pas : sur les 4 032 observations du contrôle fin,
+**20 groupes forts sur 48 échouent, contre 10 avant la continuation**.
+Dix-sept échecs concernent le transfert de canal à bruit fort ; trois
+concernent une très légère hausse de MSE à bruit faible. Les deux types
+d’échec restent séparés dans les données, sans arrondir les petits écarts
+à une réussite. Les critères et les seuils n’ont pas changé.
 
-Les ratios RGB globaux s?am?liorent pourtant : 0,8173/0,6071 pour 71 et
-0,8941/0,5699 pour 73. Cette opposition confirme qu?une moyenne MSE plus
-faible peut masquer une destruction de signal. La cha?ne s?est arr?t?e
-normalement apr?s cette r?gression ; les deux contr?les classiques suivants
-n?ont pas ?t? lanc?s. Aucune nouvelle r?serve n?a ?t? ouverte.
+Les ratios RGB globaux s’améliorent pourtant : 0,8173/0,6071 pour 71 et
+0,8941/0,5699 pour 73. Cette opposition confirme qu’une moyenne MSE plus
+faible peut masquer une destruction de signal. La chaîne s’est arrêtée
+normalement après cette régression ; les deux contrôles classiques suivants
+n’ont pas été lancés. Aucune nouvelle réserve n’a été ouverte.
 
-Preuves : [d?veloppement](../raw/neural-curve-known-development-v001-20261105T213422Z.json),
-[r?gression fine](../raw/neural-fine-regression-v001-20261105T213427Z.json),
+Preuves : [développement](../raw/neural-curve-known-development-v001-20261105T213422Z.json),
+[régression fine](../raw/neural-fine-regression-v001-20261105T213427Z.json),
 [supervision](../raw/neural-curve-known-controls-v001-20261105T214010Z.json)
-et [relecture compl?te](../raw/neural-curve-controls-review-v001-20261105T214102Z.json).
+et [relecture complète](../raw/neural-curve-controls-review-v001-20261105T214102Z.json).
 
-### Localisation de l?att?nuation ? avant la reconstruction RGB
+### Localisation de l’atténuation — avant la reconstruction RGB
 
 Le diagnostic conserve les 48 groupes forts, pas seulement les cas en
-?chec : 1 728 champs au total. L?ajustement sinuso?dal se fait aux positions
-r?elles de chaque plan CFA, en excluant les bords. Les sorties CFA sont
-reli?es sans erreur ? leurs positions ?chantillonn?es dans la reconstruction.
-? fr?quence 10 et bruit fort chromatique, les gains R/B du CFA final sont
-0,7578/0,7666 pour 71 et 0,7848/0,7637 pour 73 ; le CFA bruit? observ?
-reste proche de 1. L?att?nuation est donc d?j? pr?sente avant reconstruction
-RGB, RCD, DCP ou affichage. Ce banc synth?tique n?incrimine pas le d?codage.
+échec : 1 728 champs au total. L’ajustement sinusoïdal se fait aux positions
+réelles de chaque plan CFA, en excluant les bords. Les sorties CFA sont
+reliées sans erreur à leurs positions échantillonnées dans la reconstruction.
+À fréquence 10 et bruit fort chromatique, les gains R/B du CFA final sont
+0,7578/0,7666 pour 71 et 0,7848/0,7637 pour 73 ; le CFA bruité observé
+reste proche de 1. L’atténuation est donc déjà présente avant reconstruction
+RGB, RCD, DCP ou affichage. Ce banc synthétique n’incrimine pas le décodage.
 
-Enlever la protection change tr?s peu ces cas pr?cis, mais son effet
-maximal entre groupes atteint 0,306 : elle n?est pas inutile partout.
+Enlever la protection change très peu ces cas précis, mais son effet
+maximal entre groupes atteint 0,306 : elle n’est pas inutile partout.
 Le diagnostic ne justifie ni sa suppression ni un seuil affaibli. Il
-localise la perte sans distinguer compl?tement capacit?, donn?es et perte
-d?apprentissage. La continuation du petit mod?le n?est pas retenue ;
-un entra?nement plus long de ces m?mes poids n?est pas lanc?.
+localise la perte sans distinguer complètement capacité, données et perte
+d’apprentissage. La continuation du petit modèle n’est pas retenue ;
+un entraînement plus long de ces mêmes poids n’est pas lancé.
 
 Preuve : [transfert CFA](../raw/neural-curve-sensor-transfer-v001-20261105T214915Z.json).
 
-## 5 novembre 2026 ? pr?paration technique d?une architecture CFA directe
+## 5 novembre 2026 — préparation technique d’une architecture CFA directe
 
-### Hypoth?se et p?rim?tre
+### Hypothèse et périmètre
 
-Le banc pr?pare une architecture r?siduelle multi-?chelle ?prouv?e,
-[DRUNet dans DPIR](https://github.com/cszn/DPIR), avec **poids al?atoires**,
-pas les poids RGB pr?entra?n?s. La r?vision locale et les empreintes du code
-MIT sont enregistr?es dans les preuves. L?adaptation compte 32 643 840
-param?tres, huit entr?es (quatre plans CFA et quatre sigma locaux), et
-quatre r?sidus normalis?s. Elle calcule CFA corrig? = CFA ? sigma ? r?sidu,
-sans borne du signal sign? ; sigma nul reste exactement l?identit?.
-Le futur objectif CFA ?vite le reconstructeur RGB gel? dans la perte.
-Ce changement d?architecture n?est pas encore une preuve d?am?lioration.
+Le banc prépare une architecture résiduelle multi-échelle éprouvée,
+[DRUNet dans DPIR](https://github.com/cszn/DPIR), avec **poids aléatoires**,
+pas les poids RGB préentraînés. La révision locale et les empreintes du code
+MIT sont enregistrées dans les preuves. L’adaptation compte 32 643 840
+paramètres, huit entrées (quatre plans CFA et quatre sigma locaux), et
+quatre résidus normalisés. Elle calcule CFA corrigé = CFA − sigma × résidu,
+sans borne du signal signé ; sigma nul reste exactement l’identité.
+Le futur objectif CFA évite le reconstructeur RGB gelé dans la perte.
+Ce changement d’architecture n’est pas encore une preuve d’amélioration.
 
-Le support maximal couvre 185 cellules empaquet?es. Le halo retenu vaut
-192 cellules, soit **384 pixels CFA** de chaque c?t? ; le centre utile
-128 ? 128 empaquet? demande un contexte 512 ? 512, soit 1 024 ? 1 024 CFA.
-Le moteur de tuilage refuse un halo insuffisant pour ce mod?le. R?utiliser
-les petits contextes de l?ancienne architecture serait incorrect.
+Le support maximal couvre 185 cellules empaquetées. Le halo retenu vaut
+192 cellules, soit **384 pixels CFA** de chaque côté ; le centre utile
+128 × 128 empaqueté demande un contexte 512 × 512, soit 1 024 × 1 024 CFA.
+Le moteur de tuilage refuse un halo insuffisant pour ce modèle. Réutiliser
+les petits contextes de l’ancienne architecture serait incorrect.
 
 ### Ressources et calcul des activations
 
-Le premier essai s?arr?te apr?s un pas sur le plafond m?moire souple local ;
-il reste conserv? comme ?chec technique. Aucun plafond n?a ?t? relev?.
-Le calcul des activations par ?tage est ensuite repris pendant la
-r?tropropagation pour r?duire la m?moire, suivant le m?canisme de
+Le premier essai s’arrête après un pas sur le plafond mémoire souple local ;
+il reste conservé comme échec technique. Aucun plafond n’a été relevé.
+Le calcul des activations par étage est ensuite repris pendant la
+rétropropagation pour réduire la mémoire, suivant le mécanisme de
 [checkpointing PyTorch](https://docs.pytorch.org/docs/2.9/checkpoint.html).
-Un test compare le r?sultat et les gradients au calcul officiel direct.
-L?inf?rence reste inchang?e ; aucune couche al?atoire n?est ajout?e.
+Un test compare le résultat et les gradients au calcul officiel direct.
+L’inférence reste inchangée ; aucune couche aléatoire n’est ajoutée.
 
-Le second pr?vol termine six mises ? jour de quatre accumulations :
-**1,805 s/pas m?dian**, 17,13 s au total. Pic CUDA allou? 1,37 Gio,
-pic priv? ?chantillonn? 4,36 Gio, pic r?sident 1,54 Gio ; RAM globale
-?chantillonn?e 70,44 %. Les limites restent 6 Gio engag?s, 4,5 Gio souples,
-50 % d?allocation CUDA et 92 % de RAM physique globale. Le contr?le
-CPU/GPU apr?s quelques pas donne un ?cart maximal de 1,49 ? 10?? ;
-le rejeu GPU est exact. Tous les poids de ce pr?vol sont ?cart?s.
+Le second prévol termine six mises à jour de quatre accumulations :
+**1,805 s/pas médian**, 17,13 s au total. Pic CUDA alloué 1,37 Gio,
+pic privé échantillonné 4,36 Gio, pic résident 1,54 Gio ; RAM globale
+échantillonnée 70,44 %. Les limites restent 6 Gio engagés, 4,5 Gio souples,
+50 % d’allocation CUDA et 92 % de RAM physique globale. Le contrôle
+CPU/GPU après quelques pas donne un écart maximal de 1,49 × 10⁻⁸ ;
+le rejeu GPU est exact. Tous les poids de ce prévol sont écartés.
 
-Preuves : [arr?t initial](../raw/neural-dru-cfa-engineering-v001-20261105T215603Z.json)
-et [pr?vol achev?](../raw/neural-dru-cfa-engineering-v001-20261105T220054Z.json).
+Preuves : [arrêt initial](../raw/neural-dru-cfa-engineering-v001-20261105T215603Z.json)
+et [prévol achevé](../raw/neural-dru-cfa-engineering-v001-20261105T220054Z.json).
 
-### Arr?t et reprise : qualification technique termin?e
+### Arrêt et reprise : qualification technique terminée
 
-La sauvegarde intervient seulement entre deux mises ? jour compl?tes,
-gradients lib?r?s. Elle conserve mod?le, Adam, g?n?rateurs al?atoires,
-position, pertes et contrat d?ex?cution. L??criture se fait dans un
+La sauvegarde intervient seulement entre deux mises à jour complètes,
+gradients libérés. Elle conserve modèle, Adam, générateurs aléatoires,
+position, pertes et contrat d’exécution. L’écriture se fait dans un
 fichier temporaire puis par remplacement atomique, sans copie CPU globale
-de tous les ?tats ? la fois. Un contrat diff?rent est refus? ? la reprise.
+de tous les états à la fois. Un contrat différent est refusé à la reprise.
 
-Sur le contexte complet, une ex?cution continue est compar?e ? une
-sauvegarde apr?s le premier pas, destruction du mod?le et d?Adam, puis
-rechargement et rejeu du deuxi?me pas. **Mod?le, ?tat d?Adam et perte
-suivante sont identiques au bit pr?s.** Le checkpoint technique occupe
-391 815 547 octets, environ 374 Mio ; ce n?est pas un mod?le utile entra?n?.
-Le test prend 12,31 s ; pic priv? ?chantillonn? 4,45 Gio, r?sident 1,63 Gio,
-RAM globale ?chantillonn?e 73,06 %. Le budget local reste ?troit lors du
-rechargement : ne pas lancer un second mod?le ou un gros cache en parall?le.
+Sur le contexte complet, une exécution continue est comparée à une
+sauvegarde après le premier pas, destruction du modèle et d’adam, puis
+rechargement et rejeu du deuxième pas. **Modèle, état d’adam et perte
+suivante sont identiques au bit près.** Le checkpoint technique occupe
+391 815 547 octets, environ 374 Mio ; ce n’est pas un modèle utile entraîné.
+Le test prend 12,31 s ; pic privé échantillonné 4,45 Gio, résident 1,63 Gio,
+RAM globale échantillonnée 73,06 %. Le budget local reste étroit lors du
+rechargement : ne pas lancer un second modèle ou un gros cache en parallèle.
 
-Preuve : [reprise compl?te](../raw/neural-dru-checkpoint-v001-20261105T220835Z.json).
-L?utilitaire bas niveau est v?rifi? ; un arr?t demand? par l?utilisateur,
-les sauvegardes p?riodiques et l?orchestration du futur apprentissage long
-restent ? raccorder. Ne pas pr?senter ce contr?le de deux pas comme une
-campagne longue d?j? pr?te ? lancer.
+Preuve : [reprise complète](../raw/neural-dru-checkpoint-v001-20261105T220835Z.json).
+L’utilitaire bas niveau est vérifié ; un arrêt demandé par l’utilisateur,
+les sauvegardes périodiques et l’orchestration du futur apprentissage long
+restent à raccorder. Ne pas présenter ce contrôle de deux pas comme une
+campagne longue déjà prête à lancer.
 
-### Pr?paration du planning avec l?utilisateur
+### Préparation du planning avec l’utilisateur
 
-L?utilisateur demande de pr?parer les besoins avant de r?server la machine.
-Le calcul principal utilise la RTX 3060 ; le CPU pr?pare les observations,
-alimente le GPU et ex?cute les validations. Le pr?vol limite PyTorch ?
+L’utilisateur demande de préparer les besoins avant de réserver la machine.
+Le calcul principal utilise la RTX 3060 ; le CPU prépare les observations,
+alimente le GPU et exécute les validations. Le prévol limite PyTorch à
 quatre threads CPU et un thread interop. Cela ne mesure pas encore la
-charge CPU du chargement r?el : quatre threads ne signifient pas quatre
-c?urs satur?s pendant toute la s?ance.
+charge CPU du chargement réel : quatre threads ne signifient pas quatre
+cœurs saturés pendant toute la séance.
 
-| Budget par graine | Projection entra?nement seul ? 1,805 s/pas |
+| Budget par graine | Projection entraînement seul à 1,805 s/pas |
 | --- | ---: |
-| 10 000 mises ? jour | environ 5 h |
+| 10 000 mises à jour | environ 5 h |
 | 50 000 | environ 25 h |
 | 100 000 | environ 50 h |
 | 200 000 | environ 100 h |
 
 Deux graines doublent ces temps. Ce sont des extrapolations de six pas,
-pas une estimation de la convergence n?cessaire. Le chargement de vrais
-contextes, les sauvegardes, les contr?les et les rendus s?ajoutent.
-Le [papier DRUNet](https://arxiv.org/pdf/2008.13751) d?crit un entra?nement
-RGB diff?rent, avec perte L1 et plusieurs jours sur un autre GPU ; il ne
-permet pas de promettre le m?me d?lai ou la m?me qualit? en CFA.
-La MSE du pr?vol n??tait qu?une v?rification technique, pas une d?cision
-d?finitive sur la perte du futur mod?le.
+pas une estimation de la convergence nécessaire. Le chargement de vrais
+contextes, les sauvegardes, les contrôles et les rendus s’ajoutent.
+Le [papier DRUNet](https://arxiv.org/pdf/2008.13751) décrit un entraînement
+RGB différent, avec perte L1 et plusieurs jours sur un autre GPU ; il ne
+permet pas de promettre le même délai ou la même qualité en CFA.
+La MSE du prévol n’était qu’une vérification technique, pas une décision
+définitive sur la perte du futur modèle.
 
-Avant de r?server une premi?re tranche longue :
+Avant de réserver une première tranche longue :
 
-1. Figer donn?es d?apprentissage, perte, graines, bruit exp?rimental et
-   jalons. Distinguer les contr?les d?j? consult?s d?une validation r?serv?e.
-2. Charger les contextes ? la demande, sans conserver toutes les grandes
-   images en RAM ; mesurer ce chargement avec les m?mes gardes m?moire.
-3. Raccorder arr?t propre, sauvegarde p?riodique et reprise au lanceur,
-   puis v?rifier une interruption r?elle de cette orchestration.
-4. Comparer au m?me RCD et au classique courant, avec contr?les de transfert
-   et de d?tails ; ne pas r?utiliser implicitement le parent RGB appris.
-5. Planifier un pilote court de deux graines, puis d?cider d?un premier
-   budget de 10 000 pas uniquement si les contr?les justifient de continuer.
+1. Figer données d’apprentissage, perte, graines, bruit expérimental et
+   jalons. Distinguer les contrôles déjà consultés d’une validation réservée.
+2. Charger les contextes à la demande, sans conserver toutes les grandes
+   images en RAM ; mesurer ce chargement avec les mêmes gardes mémoire.
+3. Raccorder arrêt propre, sauvegarde périodique et reprise au lanceur,
+   puis vérifier une interruption réelle de cette orchestration.
+4. Comparer au même RCD et au classique courant, avec contrôles de transfert
+   et de détails ; ne pas réutiliser implicitement le parent RGB appris.
+5. Planifier un pilote court de deux graines, puis décider d’un premier
+   budget de 10 000 pas uniquement si les contrôles justifient de continuer.
 
-**?tat de cl?ture : tous les calculs sont termin?s et les ressources
-lib?r?es.** Pr?paration technique de l?architecture et de sa sauvegarde
-qualifi?e ; protocole d?apprentissage utile et lanceur long encore ? finir.
-Aucune campagne de plusieurs heures n?est engag?e avant le planning avec
-l?utilisateur. Production, profils, r?serves et environnements ?pingl?s
-restent inchang?s ; aucune fusion, publication ni cr?ation de tag.
+**état de clôture : tous les calculs sont terminés et les ressources
+libérées.** Préparation technique de l’architecture et de sa sauvegarde
+qualifiée ; protocole d’apprentissage utile et lanceur long encore à finir.
+Aucune campagne de plusieurs heures n’est engagée avant le planning avec
+l’utilisateur. Production, profils, réserves et environnements épinglés
+restent inchangés ; aucune fusion, publication ni création de tag.
 
 
-## 5 novembre 2026 ? campagne nocturne autoris?e, machine disponible avant 10 h
+## 5 novembre 2026 — campagne nocturne autorisée, machine disponible avant 10 h
 
-L?utilisateur autorise la pr?paration et le lancement, puis pr?cise que
-**l?apprentissage doit ?tre termin? au plus tard le 6 novembre ? 10 h,
-heure de Paris**, pour pouvoir r?utiliser le PC. L?interpr?tation peut
-attendre cette heure. La campagne est donc lanc?e en mode entra?nement
-seul : aucune inf?rence photo compl?te, aucun RCD ni rendu comparatif
-ne s?encha?ne automatiquement au r?veil de l?utilisateur.
+L’utilisateur autorise la préparation et le lancement, puis précise que
+**l’apprentissage doit être terminé au plus tard le 6 novembre à 10 h,
+heure de Paris**, pour pouvoir réutiliser le PC. L’interprétation peut
+attendre cette heure. La campagne est donc lancée en mode entraînement
+seul : aucune inférence photo complète, aucun RCD ni rendu comparatif
+ne s’enchaîne automatiquement au réveil de l’utilisateur.
 
-### Protocole de d?marrage fig?
+### Protocole de démarrage figé
 
-Deux graines 71/73, initialis?es al?atoirement, s?entra?nent successivement
-avec toute l?architecture CFA de 32 643 840 param?tres. Cible abaiss?e de
-6 000 ? **4 000 mises ? jour par graine** apr?s mesure du chargement r?el
-(2,5?3 s/pas plut?t que 1,8 s dans le pr?vol technique). Quatre observations
-sont accumul?es par mise ? jour ; Adam ? 10??, float32 d?terministe, quatre
-threads CPU. Aucun ajustement de force d?apr?s les photos pendant la nuit.
+Deux graines 71/73, initialisées aléatoirement, s’entraînent successivement
+avec toute l’architecture CFA de 32 643 840 paramètres. Cible abaissée de
+6 000 à **4 000 mises à jour par graine** après mesure du chargement réel
+(2,5–3 s/pas plutôt que 1,8 s dans le prévol technique). Quatre observations
+sont accumulées par mise à jour ; Adam à 10⁻⁴, float32 déterministe, quatre
+threads CPU. Aucun ajustement de force d’après les photos pendant la nuit.
 
-Les cibles sont produites ? la demande : textures, surfaces constantes,
-gradients, contours et ondes, identit?s fra?ches d?clar?es dans le plan.
-Les quatre phases Bayer sont r?parties entre cycles ; les contextes
-1 024 ? 1 024 ne sont pas tous conserv?s en RAM. Le bruit gaussien suit les
-trois sc?narios exp?rimentaux d?j? mesur?s ; sigma d?pend de l?observation.
-Une observation sur 127 est sans bruit. Pas d??cr?tage ni de photo r?serv?e.
-Ce jeu est un amor?age proc?dural, pas une v?rit? propre issue du capteur.
+Les cibles sont produites à la demande : textures, surfaces constantes,
+gradients, contours et ondes, identités fraîches déclarées dans le plan.
+Les quatre phases Bayer sont réparties entre cycles ; les contextes
+1 024 × 1 024 ne sont pas tous conservés en RAM. Le bruit gaussien suit les
+trois scénarios expérimentaux déjà mesurés ; sigma dépend de l’observation.
+Une observation sur 127 est sans bruit. Pas d’écrêtage ni de photo réservée.
+Ce jeu est un amorçage procédural, pas une vérité propre issue du capteur.
 
-La perte est la MSE CFA, normalis?e par la variance moyenne de chaque
-plan dans le centre utile, avec plancher 10?? et m?me poids par plan.
-Elle ne contient plus le reconstructeur RGB appris gel?. Architecture,
-objectif et flux changent ensemble : un ?ventuel gain ne sera pas attribu?
-? un seul de ces changements. Ce protocole n?est pas un entra?nement
-DRUNet publi? reproduit ? l?identique.
+La perte est la MSE CFA, normalisée par la variance moyenne de chaque
+plan dans le centre utile, avec plancher 10⁻⁸ et même poids par plan.
+Elle ne contient plus le reconstructeur RGB appris gelé. Architecture,
+objectif et flux changent ensemble : un éventuel gain ne sera pas attribué
+à un seul de ces changements. Ce protocole n’est pas un entraînement
+DRUNet publié reproduit à l’identique.
 
-Sauvegarde mod?le/Adam/position/g?n?rateurs toutes les 32 mises ? jour.
-Jalons conserv?s : 0, 128, 512, 2 048 et 4 000. Les contr?les de transfert
-utilisent tous les **864 champs forts bruit?s d?j? connus** par jalon,
-avec les centres et bruits historiques exacts et le contexte adapt? au
-support du nouveau r?seau. Les mesures CFA ne se pr?sentent pas comme
-les anciens contr?les RGB : leurs r?f?rences et leurs unit?s sont distinctes.
-Le transfert de 0,95 reste visible, sans assouplissement ni s?lection
-d?une graine ou d?un jalon. Pas de nouveau jeu r?serv?.
+Sauvegarde modèle/Adam/position/générateurs toutes les 32 mises à jour.
+Jalons conservés : 0, 128, 512, 2 048 et 4 000. Les contrôles de transfert
+utilisent tous les **864 champs forts bruités déjà connus** par jalon,
+avec les centres et bruits historiques exacts et le contexte adapté au
+support du nouveau réseau. Les mesures CFA ne se présentent pas comme
+les anciens contrôles RGB : leurs références et leurs unités sont distinctes.
+Le transfert de 0,95 reste visible, sans assouplissement ni sélection
+d’une graine ou d’un jalon. Pas de nouveau jeu réservé.
 
-### V?rifications avant lancement et incidents conserv?s
+### Vérifications avant lancement et incidents conservés
 
-Trois tests couvrent la g?n?ration d?terministe du contexte complet,
-l?identit? sans bruit, la normalisation de perte et l?exclusion du halo,
-ainsi que le refus des dimensions insuffisantes. Le premier pr?vol du
-lanceur s?arr?te ? six pas sur une pointe de RAM globale ? 92,43 %.
-Le deuxi?me termine huit pas, puis d?passe le plafond local pendant le
-rechargement d?Adam : l?ancien ?tat n?avait pas ?t? lib?r? avant lecture.
-Les r?sultats d??chec et les checkpoints sont conserv?s.
+Trois tests couvrent la génération déterministe du contexte complet,
+l’identité sans bruit, la normalisation de perte et l’exclusion du halo,
+ainsi que le refus des dimensions insuffisantes. Le premier prévol du
+lanceur s’arrête à six pas sur une pointe de RAM globale à 92,43 %.
+Le deuxième termine huit pas, puis dépasse le plafond local pendant le
+rechargement d’adam : l’ancien état n’avait pas été libéré avant lecture.
+Les résultats d’échec et les checkpoints sont conservés.
 
-Le lanceur lib?re d?sormais l?ancien mod?le et Adam avant de recharger,
-comme dans le test technique pr?c?dent. Les deux graines terminent alors
-leur pr?vol sur le vrai flux de donn?es : huit pas, sauvegarde ? quatre,
-rechargement et quatre pas rejou?s ; **mod?le, Adam et pertes suivants
-sont identiques au bit pr?s**. Les pr?vols sont ?cart?s de l?apprentissage.
-Le plafond souple reste ?troit, environ 4,49 Gio priv?s au pic ; aucune
-garde m?moire n?est relev?e. Admission seulement apr?s 20 s sous 80 %
-de RAM physique globale, puis arr?t surveill? ? 92 % pendant l?ex?cution.
+Le lanceur libère désormais l’ancien modèle et Adam avant de recharger,
+comme dans le test technique précédent. Les deux graines terminent alors
+leur prévol sur le vrai flux de données : huit pas, sauvegarde à quatre,
+rechargement et quatre pas rejoués ; **modèle, Adam et pertes suivants
+sont identiques au bit près**. Les prévols sont écartés de l’apprentissage.
+Le plafond souple reste étroit, environ 4,49 Gio privés au pic ; aucune
+garde mémoire n’est relevée. Admission seulement après 20 s sous 80 %
+de RAM physique globale, puis arrêt surveillé à 92 % pendant l’exécution.
 
-Le premier superviseur a ?t? arr?t? proprement ? z?ro mise ? jour utile,
-pendant le contr?le initial, pour appliquer la pr?cision de planning de
-l?utilisateur. Son r?sultat reste archiv?. Le second superviseur d?marre
-avec `--training-only` ; il ne modifie pas le plan d?apprentissage scell?.
+Le premier superviseur a été arrêté proprement à zéro mise à jour utile,
+pendant le contrôle initial, pour appliquer la précision de planning de
+l’utilisateur. Son résultat reste archivé. Le second superviseur démarre
+avec `--training-only` ; il ne modifie pas le plan d’apprentissage scellé.
 
-### Limites horaires et surveillance ind?pendante du chat
+### Limites horaires et surveillance indépendante du chat
 
-L??ch?ance interne d?apprentissage est **08 h 45 Paris** : si le budget
-n?est pas atteint, sauvegarder le dernier pas complet et terminer. Le
-superviseur poss?de en plus un d?lai absolu ? **09 h 45 Paris**, qui
-termine seulement son propre arbre de processus si n?cessaire. Ces marges
+L’échéance interne d’apprentissage est **08 h 45 Paris** : si le budget
+n’est pas atteint, sauvegarder le dernier pas complet et terminer. Le
+superviseur possède en plus un délai absolu à **09 h 45 Paris**, qui
+termine seulement son propre arbre de processus si nécessaire. Ces marges
 sont plus strictes que la limite utilisateur de 10 h. Aucune nouvelle
-campagne ne red?marre apr?s l??ch?ance. Les erreurs m?moire autorisent
-au plus deux reprises du dernier ?tat durable, apr?s admission m?moire ;
-une autre erreur arr?te la campagne. Aucune autre application n?est ferm?e.
+campagne ne redémarre après l’échéance. Les erreurs mémoire autorisent
+au plus deux reprises du dernier état durable, après admission mémoire ;
+une autre erreur arrête la campagne. Aucune autre application n’est fermée.
 
-La surveillance est un petit processus local, pas une boucle de requ?tes
-au mod?le. Il maintient la machine ?veill?e pendant la campagne, laisse
-l??cran se mettre en veille et lib?re cette demande ? la fin. Il ne met
+La surveillance est un petit processus local, pas une boucle de requêtes
+au modèle. Il maintient la machine éveillée pendant la campagne, laisse
+l’écran se mettre en veille et libère cette demande à la fin. Il ne met
 pas le PC en veille. Le fichier `STOP` dans le dossier de campagne demande
-un arr?t propre. Le contr?le horaire et la garde m?moire restent actifs
-m?me sans r?ponse de l?utilisateur.
+un arrêt propre. Le contrôle horaire et la garde mémoire restent actifs
+même sans réponse de l’utilisateur.
 
 Suivi : `build-patch_neural_restoration/dru-overnight-campaign-v002/progress.json`.
-L?entra?nement actif ?crit son propre `seed71/progress.json` ou
-`seed73/progress.json`. Les r?sultats finaux complets, contr?les inclus,
-sont enregistr?s en JSON canonique horodat?. Les poids restent locaux.
-Les outils d?inf?rence sur les trois photos connues et d?affichage au m?me
-RCD/DCP sont pr?par?s, mais diff?r?s. Aucun b?n?fice photo n?est annonc?
+L’entraînement actif écrit son propre `seed71/progress.json` ou
+`seed73/progress.json`. Les résultats finaux complets, contrôles inclus,
+sont enregistrés en JSON canonique horodaté. Les poids restent locaux.
+Les outils d’inférence sur les trois photos connues et d’affichage au même
+RCD/DCP sont préparés, mais différés. Aucun bénéfice photo n’est annoncé
 avant ce comparatif. Pas de production, publication, fusion ni tag.
 
 
-## 6 novembre 2026 ? ?chec de tenue m?moire de la campagne nocturne
+## 6 novembre 2026 — échec de tenue mémoire de la campagne nocturne
 
-**Conclusion : il n?y a pas de r?sultat d?apprentissage nocturne ? valider.**
-Le superviseur se termine le 5 novembre ? **23 h 47 min 09 s Paris**, apr?s
-les trois tentatives autoris?es. Les poids finaux de deux graines annonc?s
-comme objectif n?ont pas ?t? produits. Le contr?le court d?arr?t/reprise
-?tait r?ussi, mais n??tait pas une preuve suffisante de tenue prolong?e.
-La pr?paration m?moire doit ?tre corrig?e avant de r?server une autre nuit.
+**Conclusion : il n’y a pas de résultat d’apprentissage nocturne à valider.**
+Le superviseur se termine le 5 novembre à **23 h 47 min 09 s Paris**, après
+les trois tentatives autorisées. Les poids finaux de deux graines annoncés
+comme objectif n’ont pas été produits. Le contrôle court d’arrêt/reprise
+était réussi, mais n’était pas une preuve suffisante de tenue prolongée.
+La préparation mémoire doit être corrigée avant de réserver une autre nuit.
 
-### Tentatives et ?tat r?ellement conserv?
+### Tentatives et état réellement conservé
 
-| Graine 71 | Position initiale | Dernier pas ex?cut? en m?moire | Dernier ?tat durable | Pic de RAM physique globale |
+| Graine 71 | Position initiale | Dernier pas exécuté en mémoire | Dernier état durable | Pic de RAM physique globale |
 | --- | ---: | ---: | ---: | ---: |
 | Tentative 1 | 0 | 42 | 32 | 92,28 % |
 | Tentative 2 | 32 | 61 | 32 | 92,45 % |
 | Tentative 3 | 32 | 60 | 32 | 93,33 % |
 
 Les trois erreurs sont `system_physical_memory_threshold`. Les reprises
-r?ex?cutent des pas depuis le m?me checkpoint ; elles ne s?additionnent
-pas pour donner un apprentissage de 163 pas. Le pas 61 de la deuxi?me
-tentative n?est pas sauvegard?. L?empreinte du checkpoint au **pas 32**
-est v?rifi?e lors de cette analyse ; le fichier est intact. La graine 73
-n?a pas commenc?. Aucun des jalons 128/512/2 048/4 000 n?est atteint.
+réexécutent des pas depuis le même checkpoint ; elles ne s’additionnent
+pas pour donner un apprentissage de 163 pas. Le pas 61 de la deuxième
+tentative n’est pas sauvegardé. L’empreinte du checkpoint au **pas 32**
+est vérifiée lors de cette analyse ; le fichier est intact. La graine 73
+n’a pas commencé. Aucun des jalons 128/512/2 048/4 000 n’est atteint.
 
-Le contr?le initial, avant apprentissage, comporte les 864 champs forts
-connus et 24 groupes. Le gain de canal minimal agr?g? vaut environ 0,9936,
-compatible avec le bruit observ? autour de l?identit? initiale. Ce n?est
-pas une ?valuation d?un mod?le entra?n?. Aucun contr?le entra?n?, aucune
-inf?rence photo et aucune planche comparative ne sont disponibles pour
-cette campagne. Il serait trompeur de juger la capacit? du r?seau ou de
-comparer ? Lightroom avec ces seules traces.
+Le contrôle initial, avant apprentissage, comporte les 864 champs forts
+connus et 24 groupes. Le gain de canal minimal agrégé vaut environ 0,9936,
+compatible avec le bruit observé autour de l’identité initiale. Ce n’est
+pas une évaluation d’un modèle entraîné. Aucun contrôle entraîné, aucune
+inférence photo et aucune planche comparative ne sont disponibles pour
+cette campagne. Il serait trompeur de juger la capacité du réseau ou de
+comparer à Lightroom avec ces seules traces.
 
-Les pertes d?entra?nement restent g?n?ralement proches de 1. Certains
+Les pertes d’entraînement restent généralement proches de 1. Certains
 pas proches de 0,75 comportent une observation sans bruit parmi les quatre
-accumul?es ; leur baisse ne prouve pas un gain de d?bruitage de 25 %.
-Les contenus changent entre mises ? jour et ce ne sont pas des mesures
-appari?es de qualit?. Le d?bit m?dian des tentatives est respectivement
-2,546, 2,566 et 2,600 secondes par mise ? jour.
+accumulées ; leur baisse ne prouve pas un gain de débruitage de 25 %.
+Les contenus changent entre mises à jour et ce ne sont pas des mesures
+appariées de qualité. Le débit médian des tentatives est respectivement
+2,546, 2,566 et 2,600 secondes par mise à jour.
 
-### Ce que les traces m?moire ?tablissent, et leurs limites
+### Ce que les traces mémoire établissent, et leurs limites
 
-Les pics priv?s du processus sont environ 4,22 ? 4,44 Gio, sous le plafond
-souple de 4,5 Gio ; le pic r?sident maximal est environ 1,63 Gio. La
-condition d?clench?e porte sur **la RAM physique totale de la machine**,
-pas sur un d?passement du plafond CUDA ou du quota propre du processus.
-Le seuil de 92 % est v?rifi? toutes les 250 ms ; d?s un d?passement,
-la raison est m?moris?e et le prochain contr?le interrompt la t?che.
-Un retour ult?rieur vers 78?79 % n?annule donc pas l?arr?t d?j? d?clench?.
+Les pics privés du processus sont environ 4,22 à 4,44 Gio, sous le plafond
+souple de 4,5 Gio ; le pic résident maximal est environ 1,63 Gio. La
+condition déclenchée porte sur **la RAM physique totale de la machine**,
+pas sur un dépassement du plafond CUDA ou du quota propre du processus.
+Le seuil de 92 % est vérifié toutes les 250 ms ; dès un dépassement,
+la raison est mémorisée et le prochain contrôle interrompt la tâche.
+Un retour ultérieur vers 78–79 % n’annule donc pas l’arrêt déjà déclenché.
 Ce fonctionnement respecte la garde choisie ; aucune preuve ne justifie
-de relever son seuil ou d?ignorer ces pointes.
+de relever son seuil ou d’ignorer ces pointes.
 
-Le garde conserve le maximum, la derni?re mesure et la raison, mais pas
-la chronologie compl?te ni l??chantillon du premier franchissement avec
-son contexte d?ex?cution. Ces donn?es ne permettent pas de conclure ?
-une fuite, d?incriminer une autre application ou d?attribuer les pointes
-au pilote GPU. La responsabilit? peut ?tre partag?e. La limite de deux
-reprises a ?vit? une boucle sans fin ; en revanche, l?admission sur 20 s
-sous 80 % et les pr?vols de huit pas n?ont pas suffi ? qualifier la nuit.
+Le garde conserve le maximum, la dernière mesure et la raison, mais pas
+la chronologie complète ni l’échantillon du premier franchissement avec
+son contexte d’exécution. Ces données ne permettent pas de conclure à
+une fuite, d’incriminer une autre application ou d’attribuer les pointes
+au pilote GPU. La responsabilité peut être partagée. La limite de deux
+reprises a évité une boucle sans fin ; en revanche, l’admission sur 20 s
+sous 80 % et les prévols de huit pas n’ont pas suffi à qualifier la nuit.
 
-### D?cision et prochaine pr?paration n?cessaire
+### Décision et prochaine préparation nécessaire
 
-Conserver checkpoint, contr?les, pertes et les trois arr?ts. Ne pas
+Conserver checkpoint, contrôles, pertes et les trois arrêts. Ne pas
 relancer les 4 000 pas, ne pas produire de comparaison photo avec ces
-poids quasi initiaux et ne pas r?duire arbitrairement le r?seau ? partir
-de cet ?chec de ressources. Aucun calcul lourd n?est relanc? dans cette
-analyse, conform?ment ? la disponibilit? du PC ? partir de 10 h.
+poids quasi initiaux et ne pas réduire arbitrairement le réseau à partir
+de cet échec de ressources. Aucun calcul lourd n’est relancé dans cette
+analyse, conformément à la disponibilité du PC à partir de 10 h.
 
-Avant une autre campagne, pr?parer une t?l?m?trie born?e ? faible co?t
-avec horodatage, phases lecture/avant-arri?re/sauvegarde/contr?le et
-?chantillon de franchissement ; distinguer m?moire physique globale,
-m?moire propre et allocation GPU. Qualifier ensuite un essai prolong?,
-comprenant plusieurs sauvegardes et un contr?le complet, avec davantage
-de marge d?admission. Les seuils restent inchang?s. La reprise doit aussi
-pr?server explicitement le bilan des tentatives et des jalons ant?rieurs
-pour ne pas donner l?impression qu?ils ont disparu du r?sultat courant.
-Ces am?liorations sont propos?es, pas annonc?es comme impl?ment?es.
+Avant une autre campagne, préparer une télémétrie bornée à faible coût
+avec horodatage, phases lecture/avant-arrière/sauvegarde/contrôle et
+échantillon de franchissement ; distinguer mémoire physique globale,
+mémoire propre et allocation GPU. Qualifier ensuite un essai prolongé,
+comprenant plusieurs sauvegardes et un contrôle complet, avec davantage
+de marge d’admission. Les seuils restent inchangés. La reprise doit aussi
+préserver explicitement le bilan des tentatives et des jalons antérieurs
+pour ne pas donner l’impression qu’ils ont disparu du résultat courant.
+Ces améliorations sont proposées, pas annoncées comme implémentées.
 
-Preuves : [audit de cl?ture et trois tentatives](../raw/neural-dru-overnight-review-v001-20261106T090536Z.json),
+Preuves : [audit de clôture et trois tentatives](../raw/neural-dru-overnight-review-v001-20261106T090536Z.json),
 [supervision finale](../raw/neural-dru-overnight-v001-20261105T224709Z.json),
 [tentative 1](../raw/neural-dru-training-v001-71-20261105T224318Z.json),
 [tentative 2](../raw/neural-dru-training-v001-71-20261105T224527Z.json)
 et [tentative 3](../raw/neural-dru-training-v001-71-20261105T224708Z.json).
-Les JSON conservent les mesures et identit?s ; le checkpoint local reste
-n?cessaire ? une reprise. Aucune production, publication, fusion ni tag.
+Les JSON conservent les mesures et identités ; le checkpoint local reste
+nécessaire à une reprise. Aucune production, publication, fusion ni tag.
 
 
-## 6 novembre 2026 ? suivi m?moire instrument? et essai prolong?
+## 6 novembre 2026 — suivi mémoire instrumenté et essai prolongé
 
-L?utilisateur demande de pr?parer le suivi et de lancer les essais.
+L’utilisateur demande de préparer le suivi et de lancer les essais.
 Le banc ajoute un observateur optionnel au garde existant ; les seuils,
-le quota OS et la r?gle d?arr?t imm?diat restent inchang?s. Le garde
-conserve d?sormais lui-m?me la premi?re mesure en violation, avec sa
-raison et son num?ro d??chantillon, m?me si la RAM redescend ensuite.
+le quota OS et la règle d’arrêt immédiat restent inchangés. Le garde
+conserve désormais lui-même la première mesure en violation, avec sa
+raison et son numéro d’échantillon, même si la RAM redescend ensuite.
 
-`MemoryTrace` ?crit un JSONL local born? ? **16 Mio**, toutes les 250 ms,
-avec UTC, temps ?coul?, phase, pas et observation. Phases d?clar?es :
-import PyTorch, initialisation, lecture/g?n?ration, transfert GPU,
-propagation avant, r?tropropagation, Adam, sauvegarde, rechargement et
-contr?le connu. Les compteurs CUDA (allocation, r?serve et pics) sont lus
+`MemoryTrace` écrit un JSONL local borné à **16 Mio**, toutes les 250 ms,
+avec UTC, temps écoulé, phase, pas et observation. Phases déclarées :
+import PyTorch, initialisation, lecture/génération, transfert GPU,
+propagation avant, rétropropagation, Adam, sauvegarde, rechargement et
+contrôle connu. Les compteurs CUDA (allocation, réserve et pics) sont lus
 uniquement par le thread de calcul aux changements de phase, puis joints
-au prochain ?chantillon m?moire ; le thread de surveillance ne sollicite
-pas CUDA. La phase et ces compteurs sont un contexte corr?l?, pas une
-preuve de causalit? ni une mesure de m?moire partag?e du pilote.
+au prochain échantillon mémoire ; le thread de surveillance ne sollicite
+pas CUDA. La phase et ces compteurs sont un contexte corrélé, pas une
+preuve de causalité ni une mesure de mémoire partagée du pilote.
 
-Un anneau de **64 ?chantillons**, environ 16 secondes, accompagne le
-premier franchissement. Le r?sum? conserve cet ?v?nement et le dernier
-anneau m?me lorsque le journal atteint sa limite. Les JSON canoniques du
-superviseur reprennent les s?ries enregistr?es, leurs chemins et empreintes.
-Aucun compteur d?application tierce ni attribution de responsabilit?
-n?est invent?. Les erreurs de surveillance restent bloquantes.
+Un anneau de **64 échantillons**, environ 16 secondes, accompagne le
+premier franchissement. Le résumé conserve cet événement et le dernier
+anneau même lorsque le journal atteint sa limite. Les JSON canoniques du
+superviseur reprennent les séries enregistrées, leurs chemins et empreintes.
+Aucun compteur d’application tierce ni attribution de responsabilité
+n’est inventé. Les erreurs de surveillance restent bloquantes.
 
-Les reprises du lanceur conservent maintenant les r?f?rences des jalons
-et contr?les pr?c?dents, ainsi que le bilan et l?empreinte du r?sultat de
-chaque tentative. L??tat d?apprentissage reste celui du checkpoint durable,
-pas celui du dernier pas volatil annonc? dans le journal.
+Les reprises du lanceur conservent maintenant les références des jalons
+et contrôles précédents, ainsi que le bilan et l’empreinte du résultat de
+chaque tentative. L’état d’apprentissage reste celui du checkpoint durable,
+pas celui du dernier pas volatil annoncé dans le journal.
 
-### V?rifications courtes achev?es
+### Vérifications courtes achevées
 
 Cinq tests passent : seuils et configurations, compteurs Windows, refus
-d?allocation au-del? du quota dans un enfant isol? et fin du thread,
-premier franchissement avec phase conserv? apr?s r?cup?ration, fichier
-born? et fermeture. Le pr?vol instrument? sur le flux r?el passe aussi :
-huit pas, sauvegarde au quatri?me, destruction/rechargement et quatre pas
-rejou?s, poids/Adam/pertes identiques au bit pr?s. Il produit 164 mesures,
-environ 90 ko, avec les onze phases observ?es. Aucun franchissement ;
-pic global 74,33 %, pic priv? 4,4935 Gio. Ce dernier reste proche du plafond
-local : le pr?vol ne suffit toujours pas ? conclure ? la tenue longue.
+d’allocation au-delà du quota dans un enfant isolé et fin du thread,
+premier franchissement avec phase conservé après récupération, fichier
+borné et fermeture. Le prévol instrumenté sur le flux réel passe aussi :
+huit pas, sauvegarde au quatrième, destruction/rechargement et quatre pas
+rejoués, poids/Adam/pertes identiques au bit près. Il produit 164 mesures,
+environ 90 ko, avec les onze phases observées. Aucun franchissement ;
+pic global 74,33 %, pic privé 4,4935 Gio. Ce dernier reste proche du plafond
+local : le prévol ne suffit toujours pas à conclure à la tenue longue.
 
-Preuve courte : [pr?vol instrument?](../raw/neural-dru-training-v001-71-20261106T092338Z.json).
-Les poids de ce pr?vol ne sont pas un candidat photographique.
+Preuve courte : [prévol instrumenté](../raw/neural-dru-training-v001-71-20261106T092338Z.json).
+Les poids de ce prévol ne sont pas un candidat photographique.
 
-### Essai prolong? lanc?
+### Essai prolongé lancé
 
-Plan : [qualification m?moire](../raw/neural-dru-memory-plan-v001-20261106T092256Z.json).
-Deux d?marrages frais successifs, graines 71/73, **256 mises ? jour chacune**,
-quatre observations par mise ? jour, architecture/donn?es/perte inchang?es.
-Huit sauvegardes p?riodiques par graine, plus les jalons ; trois contr?les
+Plan : [qualification mémoire](../raw/neural-dru-memory-plan-v001-20261106T092256Z.json).
+Deux démarrages frais successifs, graines 71/73, **256 mises à jour chacune**,
+quatre observations par mise à jour, architecture/données/perte inchangées.
+Huit sauvegardes périodiques par graine, plus les jalons ; trois contrôles
 complets de 864 champs connus aux pas 0/128/256. Le test qualifie les
 ressources ; ses poids ne deviennent pas une validation produit.
 
-Admission renforc?e : **une minute continue sous 70 % de RAM globale**,
-contre 20 s sous 80 % la nuit pr?c?dente. Les limites pendant l?ex?cution
-restent 92 % global, 4,5 Gio souples, 6 Gio engag?s et 50 % d?allocation
+Admission renforcée : **une minute continue sous 70 % de RAM globale**,
+contre 20 s sous 80 % la nuit précédente. Les limites pendant l’exécution
+restent 92 % global, 4,5 Gio souples, 6 Gio engagés et 50 % d’allocation
 CUDA. **Aucune reprise automatique** sur incident pour cet essai : la
-premi?re d?faillance cl?t la cha?ne et conserve ses traces. Une seconde
-graine n?est lanc?e que si la premi?re se termine sans erreur technique.
-Pas d?inf?rence photo, pas de nouveau corpus r?serv?.
+première défaillance clôt la chaîne et conserve ses traces. Une seconde
+graine n’est lancée que si la première se termine sans erreur technique.
+Pas d’inférence photo, pas de nouveau corpus réservé.
 
-Le plan borne l?apprentissage au 6 novembre **11 h 37 min 56 s Paris**
-et son superviseur ? **11 h 52 min 56 s**. Ce sont des limites, pas des
-dur?es attendues ; la projection est de quelques dizaines de minutes pour
-les deux graines, contr?les compris. Le fichier `STOP` de campagne demande
-un arr?t propre. L?admission peut attendre au plus vingt minutes avant
-refus ; aucune autre application n?est ferm?e et aucun quota n?est relev?.
+Le plan borne l’apprentissage au 6 novembre **11 h 37 min 56 s Paris**
+et son superviseur à **11 h 52 min 56 s**. Ce sont des limites, pas des
+durées attendues ; la projection est de quelques dizaines de minutes pour
+les deux graines, contrôles compris. Le fichier `STOP` de campagne demande
+un arrêt propre. L’admission peut attendre au plus vingt minutes avant
+refus ; aucune autre application n’est fermée et aucun quota n’est relevé.
 
 Suivi : `build-patch_neural_restoration/dru-memory-campaign-v001/progress.json`,
 puis les `seed*/memory-*.jsonl`. Le superviseur attend localement les
-processus sans requ?tes au chat. Maintien ?veill? temporaire pendant
-l?essai, sans ordre de veille du PC. **R?sultats prolong?s encore attendus**,
-? distinguer du pr?vol d?j? r?ussi. Aucun push, fusion, tag ou changement
-de production n?est engag?.
+processus sans requêtes au chat. Maintien éveillé temporaire pendant
+l’essai, sans ordre de veille du PC. **Résultats prolongés encore attendus**,
+à distinguer du prévol déjà réussi. Aucun push, fusion, tag ou changement
+de production n’est engagé.
 
 
-## 6 novembre 2026 ? bilan de la qualification m?moire prolong?e
+## 6 novembre 2026 — bilan de la qualification mémoire prolongée
 
-**Deux verdicts distincts : essai de ressources r?ussi dans les conditions
-mesur?es ; pr?servation du signal appris insuffisante.** Le superviseur
-termine ? **11 h 00 min 07 s Paris**, sans erreur ni reprise. Les deux
-graines atteignent 256 mises ? jour ; les sauvegardes p?riodiques et les
-trois contr?les complets de 864 champs par graine sont pr?sents. Les
-empreintes des checkpoints, exports et checkpoints de reprise sont v?rifi?es.
-Aucun rendu photographique ou apprentissage suppl?mentaire n?est lanc?
+**Deux verdicts distincts : essai de ressources réussi dans les conditions
+mesurées ; préservation du signal appris insuffisante.** Le superviseur
+termine à **11 h 00 min 07 s Paris**, sans erreur ni reprise. Les deux
+graines atteignent 256 mises à jour ; les sauvegardes périodiques et les
+trois contrôles complets de 864 champs par graine sont présents. Les
+empreintes des checkpoints, exports et checkpoints de reprise sont vérifiées.
+Aucun rendu photographique ou apprentissage supplémentaire n’est lancé
 pendant cette relecture.
 
-### Tenue m?moire observ?e
+### Tenue mémoire observée
 
 | Mesure | Graine 71 | Graine 73 |
 | --- | ---: | ---: |
-| Dur?e du processus, contr?les compris | 16 min 48 s | 16 min 57 s |
-| Mise ? jour m?diane | 2,331 s | 2,357 s |
+| Durée du processus, contrôles compris | 16 min 48 s | 16 min 57 s |
+| Mise à jour médiane | 2,331 s | 2,357 s |
 | RAM physique globale maximale | 75,26 % | 75,72 % |
-| M?moire priv?e maximale | 4,4852 Gio | 4,4761 Gio |
-| M?moire r?sidente maximale | 1,589 Gio | 1,590 Gio |
-| ?chantillons m?moire | 3 939 | 3 966 |
+| Mémoire privée maximale | 4,4852 Gio | 4,4761 Gio |
+| Mémoire résidente maximale | 1,589 Gio | 1,590 Gio |
+| échantillons mémoire | 3 939 | 3 966 |
 | Journal local | 2,25 Mo | 2,26 Mo |
-| Premi?re violation | aucune | aucune |
+| Première violation | aucune | aucune |
 
-Les journaux restent sous leur plafond, sans troncature. Les pics priv?s
-se trouvent autour du **premier pas suivant le contr?le 128**, pendant la
-r?tropropagation ou le calcul avant. Les sauvegardes ne constituent pas
-le maximum priv? : leur pic est voisin de 4,35 Gio. La m?moire priv?e
-m?diane des ?chantillons de r?tropropagation passe d?environ 4,27 Gio
-sur les pas 17?128 ? 4,34?4,35 Gio sur 145?256, avec stabilisation sur cette
-fin d?intervalle. Cela d?crit un palier observ?, pas une preuve g?n?rale
-d?absence de fuite.
+Les journaux restent sous leur plafond, sans troncature. Les pics privés
+se trouvent autour du **premier pas suivant le contrôle 128**, pendant la
+rétropropagation ou le calcul avant. Les sauvegardes ne constituent pas
+le maximum privé : leur pic est voisin de 4,35 Gio. La mémoire privée
+médiane des échantillons de rétropropagation passe d’environ 4,27 Gio
+sur les pas 17–128 à 4,34–4,35 Gio sur 145–256, avec stabilisation sur cette
+fin d’intervalle. Cela décrit un palier observé, pas une preuve générale
+d’absence de fuite.
 
-Le pire pic ne laisse qu?environ **15 Mio sous le plafond souple local**.
-Une variation de biblioth?ques, de cache ou de charge concurrente peut
-encore l?atteindre. Les pointes globales ? 92?93 % de la nuit pr?c?dente
-ne sont pas reproduites ; la nouvelle admission et l?environnement ont
-chang? ensemble. On ne peut pas attribuer la r?ussite au seul seuil
-initial de 70 %, ni d?clarer les anciennes alertes erron?es.
-L?essai qualifie deux processus d?environ17 minutes et leurs transitions,
-pas une nuit de plusieurs heures sous une autre charge syst?me.
+Le pire pic ne laisse qu’environ **15 Mio sous le plafond souple local**.
+Une variation de bibliothèques, de cache ou de charge concurrente peut
+encore l’atteindre. Les pointes globales à 92–93 % de la nuit précédente
+ne sont pas reproduites ; la nouvelle admission et l’environnement ont
+changé ensemble. On ne peut pas attribuer la réussite au seul seuil
+initial de 70 %, ni déclarer les anciennes alertes erronées.
+L’essai qualifie deux processus d’environ17 minutes et leurs transitions,
+pas une nuit de plusieurs heures sous une autre charge système.
 
-### Contr?les du signal pendant cet essai de ressources
+### Contrôles du signal pendant cet essai de ressources
 
 Ces mesures sont des diagnostics **CFA directs**, avec gain absolu de
-la composante sinuso?dale par rapport au signal propre. Elles n?utilisent
-pas le parent RGB appris historique : leurs nombres d??checs ne sont pas
-? comparer directement aux20/48 de l?ancien correcteur.
+la composante sinusoïdale par rapport au signal propre. Elles n’utilisent
+pas le parent RGB appris historique : leurs nombres d’échecs ne sont pas
+à comparer directement aux 20/48 de l’ancien correcteur.
 
-| Graine / pas | Groupes avec un gain de canal <0,95 (sur24) | Gain de groupe minimal | M?diane des ratios MSE CFA de groupe au bruit observ? |
+| Graine / pas | Groupes avec un gain de canal <0,95 (sur24) | Gain de groupe minimal | Médiane des ratios MSE CFA de groupe au bruit observé |
 | --- | ---: | ---: | ---: |
 | 71 / 0 | 0 | 0,9936 | 1,0000 |
 | 71 / 128 | 8 | 0,8447 | 0,9783 |
 | 71 / 256 | 19 | 0,6790 | 0,9527 |
 | 73 / 0 | 0 | 0,9936 | 1,0000 |
 | 73 / 128 | 14 | 0,3840 | 0,9468 |
-| 73 / 256 | 21 | ?0,2438 | 1,1944 |
+| 73 / 256 | 21 | −0,2438 | 1,1944 |
 
-Au dernier jalon de 73, une composante p?riodique chromatique ? fr?quence18
-et bruit fort pr?sente m?me une r?ponse sinuso?dale moyenne n?gative
-sur un canal : il ne s?agit pas simplement d?un l?ger lissage. Ce signe
-ne signifie pas que toute l?image ou tous ses pixels deviennent n?gatifs.
+Au dernier jalon de 73, une composante périodique chromatique à fréquence 18
+et bruit fort présente même une réponse sinusoïdale moyenne négative
+sur un canal : il ne s’agit pas simplement d’un léger lissage. Ce signe
+ne signifie pas que toute l’image ou tous ses pixels deviennent négatifs.
 Les groupes et observations restent disponibles dans les preuves, pas
 seulement le cas le plus mauvais.
 
-La perte moyenne des64 premiers/derniers pas passe de 0,9857 ? 0,8084 pour 71
-et de 0,9856 ? 0,8030 pour 73. Cette baisse sur les contenus d?apprentissage
-n?emp?che donc pas la d?gradation des contr?les connus. Pour71, la m?diane
+La perte moyenne des 64 premiers/derniers pas passe de 0,9857 à 0,8084 pour 71
+et de 0,9856 à 0,8030 pour 73. Cette baisse sur les contenus d’apprentissage
+n’empêche donc pas la dégradation des contrôles connus. Pour71, la médiane
 MSE des groupes de bruit faible vaut 1,0066 et celle du bruit fort 0,8942
 au pas 256 ; pour 73, elles valent 1,2248 et 1,1478. La moyenne globale ne doit
-pas masquer les d?fauts ? faible bruit ou la perte de d?tails.
+pas masquer les défauts à faible bruit ou la perte de détails.
 
-### D?cision et prochaine investigation utile
+### Décision et prochaine investigation utile
 
-La nouvelle t?l?m?trie et la qualification prolong?e ont rempli leur r?le.
-Conserver l?architecture et les checkpoints comme ?tat exp?rimental, mais
-ne pas s?lectionner 71 ? la place de 73 ni prolonger automatiquement ces
-poids en supposant qu?un temps plus long corrigera la perte de signal.
-Ce budget court ne d?montre pas non plus que 32,6 M param?tres seraient
-insuffisants ou que l?architecture serait ? abandonner.
+La nouvelle télémétrie et la qualification prolongée ont rempli leur rôle.
+Conserver l’architecture et les checkpoints comme état expérimental, mais
+ne pas sélectionner 71 à la place de 73 ni prolonger automatiquement ces
+poids en supposant qu’un temps plus long corrigera la perte de signal.
+Ce budget court ne démontre pas non plus que 32,6 M paramètres seraient
+insuffisants ou que l’architecture serait à abandonner.
 
 La piste utile est maintenant un audit de la **couverture des niveaux de
-bruit, des fr?quences et de l?objectif CFA**, ? architecture fixe. Les
-sc?narios d?apprentissage ? loi mesur?e et les deux anciennes lois du
-contr?le diff?rent ; les mesures ne doivent pas ?tre pr?sent?es comme
-une g?n?ralisation d?j? acquise. Avant une autre longue r?servation,
-distinguer ce d?calage d?un biais de perte ou de donn?es, avec une petite
-exp?rience contr?l?e et les m?mes crit?res, sans r?glage opportuniste
-sur le pire groupe. Aucune nouvelle photo n?est requise pour cet audit
-pr?paratoire. Cette prochaine exp?rience n?est pas encore lanc?e.
+bruit, des fréquences et de l’objectif CFA**, à architecture fixe. Les
+scénarios d’apprentissage à loi mesurée et les deux anciennes lois du
+contrôle différent ; les mesures ne doivent pas être présentées comme
+une généralisation déjà acquise. Avant une autre longue réservation,
+distinguer ce décalage d’un biais de perte ou de données, avec une petite
+expérience contrôlée et les mêmes critères, sans réglage opportuniste
+sur le pire groupe. Aucune nouvelle photo n’est requise pour cet audit
+préparatoire. Cette prochaine expérience n’est pas encore lancée.
 
-Preuves : [relecture m?moire et contr?les](../raw/neural-dru-memory-review-v001-20261106T100844Z.json),
-[superviseur complet, s?ries et contr?les inclus](../raw/neural-dru-overnight-v001-20261106T100007Z.json),
+Preuves : [relecture mémoire et contrôles](../raw/neural-dru-memory-review-v001-20261106T100844Z.json),
+[superviseur complet, séries et contrôles inclus](../raw/neural-dru-overnight-v001-20261106T100007Z.json),
 [graine71](../raw/neural-dru-training-v001-71-20261106T094208Z.json)
 et [graine 73](../raw/neural-dru-training-v001-73-20261106T100006Z.json).
 Les poids et pixels restent locaux. Aucun changement de production,
 publication, fusion ni tag. Tous les calculs de cette campagne sont clos.
 
 
-## 6 novembre 2026 ? audit de la couverture et de l?objectif CFA
+## 6 novembre 2026 — audit de la couverture et de l’objectif CFA
 
-**Conclusion : le flux d?apprentissage et sa perte moyenne peuvent
-r?compenser un lissage qui d?truit les d?tails des contr?les.** L?audit
-met aussi en ?vidence un d?calage conditionnel du bruit et un m?lange
-des effets de donn?es/initialisation entre graines. Il ne d?montre ni
-une insuffisance des 32,6 M de param?tres ni une erreur de d?rivation de
-la perte. Aucun entra?nement suppl?mentaire ou rendu GPU n?est lanc?.
+**Conclusion : le flux d’apprentissage et sa perte moyenne peuvent
+récompenser un lissage qui détruit les détails des contrôles.** L’audit
+met aussi en évidence un décalage conditionnel du bruit et un mélange
+des effets de données/initialisation entre graines. Il ne démontre ni
+une insuffisance des 32,6 M de paramètres ni une erreur de dérivation de
+la perte. Aucun entraînement supplémentaire ou rendu GPU n’est lancé.
 
-### P?rim?tre et m?thode
+### Périmètre et méthode
 
-L?audit CPU reconstitue les **2 048 observations des recettes scell?es**
-des deux entra?nements de 256 pas, ainsi que les **864 champs forts
-bruit?s d?j? connus**. Les sources et recettes sont v?rifi?es ; les
-cibles et bruits des contr?les rejouent leurs empreintes. Pour
-l?apprentissage, les tenseurs d??poque n??tant pas sauvegard?s, il s?agit
-d?une reconstruction selon le g?n?rateur, pas d?une comparaison aux
+L’audit CPU reconstitue les **2 048 observations des recettes scellées**
+des deux entraînements de 256 pas, ainsi que les **864 champs forts
+bruités déjà connus**. Les sources et recettes sont vérifiées ; les
+cibles et bruits des contrôles rejouent leurs empreintes. Pour
+l’apprentissage, les tenseurs d’époque n’étant pas sauvegardés, il s’agit
+d’une reconstruction selon le générateur, pas d’une comparaison aux
 captures de pixels de chaque pas. Le runtime CPU de qualification est
-Python 3.14.3/PyTorch 2.9.1+cpu ; aucune biblioth?que n?est modifi?e.
+Python 3.14.3/PyTorch 2.9.1+cpu ; aucune bibliothèque n’est modifiée.
 
-La relecture dure **80,37 s**, quatre threads CPU, pic priv? d?environ
+La relecture dure **80,37 s**, quatre threads CPU, pic privé d’environ
 0,913 Gio, sous les gardes CPU existantes et le seuil global de 92 %.
-Les 18 observations sans bruit restent compt?es mais sont exclues des
-moyennes de bruit, soit **2 030 observations bruit?es**. Les fractions
-et plages de valeurs sont calcul?es sur le centre et le contexte complets.
-Les quantiles sigma sont une approximation spatiale d?clar?e, sur une
-grille de pas 4 ; les d?nominateurs de perte utilisent le centre complet.
-Aucun poids n?est charg? et aucun nouveau contenu r?serv? n?est ouvert.
+Les 18 observations sans bruit restent comptées mais sont exclues des
+moyennes de bruit, soit **2 030 observations bruitées**. Les fractions
+et plages de valeurs sont calculées sur le centre et le contexte complets.
+Les quantiles sigma sont une approximation spatiale déclarée, sur une
+grille de pas 4 ; les dénominateurs de perte utilisent le centre complet.
+Aucun poids n’est chargé et aucun nouveau contenu réservé n’est ouvert.
 
 ### 1. Le signal fin fort est rare dans le flux actuel
 
-Les familles se r?partissent en 25 % de textures al?atoires ? fr?quence
-large, 25 % d?ondes basses fr?quences, 25 % de contours, 12,5 % de
+Les familles se répartissent en 25 % de textures aléatoires à fréquence
+large, 25 % d’ondes basses fréquences, 25 % de contours, 12,5 % de
 constantes et 12,5 % de gradients. Les quatre phases Bayer sont bien
 couvertes pour chacune des huit positions de famille sur 32 observations :
-aucune omission de phase n?est mise en ?vidence.
+aucune omission de phase n’est mise en évidence.
 
-Seules **512 observations sur 2 048** ont une fr?quence principale de texture
-al?atoire entre 2 et 28 cycles/128 pixels. Une grande partie est ? faible
-amplitude. La somme des deux ondes y est divis?e par 1,35 ; l?amplitude
-nominale du g?n?rateur n?est donc pas celle de la composante principale.
-Les d?comptes suivants portent sur cette composante, avant le coefficient
-de chaque couleur, pas sur toute l??nergie de la texture.
+Seules **512 observations sur 2 048** ont une fréquence principale de texture
+aléatoire entre 2 et 28 cycles/128 pixels. Une grande partie est à faible
+amplitude. La somme des deux ondes y est divisée par 1,35 ; l’amplitude
+nominale du générateur n’est donc pas celle de la composante principale.
+Les décomptes suivants portent sur cette composante, avant le coefficient
+de chaque couleur, pas sur toute l’énergie de la texture.
 
-| Fr?quence principale / amplitude effective | Graine 71 (1 024 observations) | Graine 73 (1 024 observations) |
+| Fréquence principale / amplitude effective | Graine 71 (1 024 observations) | Graine 73 (1 024 observations) |
 | --- | ---: | ---: |
-| ?18 cycles/128 et ?0,04 | 14 | 5 |
-| ?22 et ?0,04 | 8 | 4 |
-| ?18 et ?0,06 | 9 | 1 |
-| ?22 et ?0,06 | 6 | 1 |
+| ≥18 cycles/128 et ≥0,04 | 14 | 5 |
+| ≥22 et ≥0,04 | 8 | 4 |
+| ≥18 et ≥0,06 | 9 | 1 |
+| ≥22 et ≥0,06 | 6 | 1 |
 
 La seconde composante ne peut pas atteindre 0,04, car son amplitude
-maximale vaut 0,12?0,35/1,35?0,0311. Ce comptage n?exclut pas d?autres
+maximale vaut 0,12×0,35/1,35≈0,0311. Ce comptage n’exclut pas d’autres
 contenus fins dans les contours ou des amplitudes plus faibles ; il
-quantifie le manque de r?p?titions **fortes et p?riodiques** correspondant
-? la difficult? observ?e, sans assimiler les contr?les ? toutes les photos.
-Leur ?chantillonnage ne doit pas ?tre remplac? par les cibles exactes des
-tests pour fabriquer une r?ussite.
+quantifie le manque de répétitions **fortes et périodiques** correspondant
+à la difficulté observée, sans assimiler les contrôles à toutes les photos.
+Leur échantillonnage ne doit pas être remplacé par les cibles exactes des
+tests pour fabriquer une réussite.
 
-### 2. Les niveaux de bruit et les rapports entre couleurs diff?rent
+### 2. Les niveaux de bruit et les rapports entre couleurs différent
 
-? signal ?quilibr? 0,3, en unit?s cam?ra avant division par 2 du tenseur,
+À signal équilibré 0,3, en unités caméra avant division par 2 du tenseur,
 les lois donnent :
 
-| Sc?nario | Sigma R | Sigma G1 | Sigma B | Sigma G2 |
+| Scénario | Sigma R | Sigma G1 | Sigma B | Sigma G2 |
 | --- | ---: | ---: | ---: | ---: |
 | Apprentissage ISO 12800 | 0,03536 | 0,02520 | 0,03518 | 0,02521 |
 | Apprentissage ISO 6400 | 0,02467 | 0,01779 | 0,02453 | 0,01781 |
 | Apprentissage ISO 4000 | 0,01964 | 0,01405 | 0,01942 | 0,01403 |
-| Contr?le faible | 0,00922 | 0,00922 | 0,00922 | 0,00922 |
-| Contr?le fort | 0,02530 | 0,02530 | 0,02530 | 0,02530 |
+| Contrôle faible | 0,00922 | 0,00922 | 0,00922 | 0,00922 |
+| Contrôle fort | 0,02530 | 0,02530 | 0,02530 | 0,02530 |
 
-Les contr?les faibles ne sont donc pas couverts **? cette luminosit?**
-par les trois lois. Une m?me valeur sigma peut ?tre rencontr?e ailleurs
-? un autre niveau de signal, ce qui ne constitue pas la m?me couverture
-conditionnelle. De plus, les lois d?apprentissage ont syst?matiquement
-R/B plus bruit?s que G, contrairement aux contr?les isotropes. Ce d?calage
-ne prouve pas que les contr?les sont mauvais ou qu?il suffit de les enlever :
-il r?v?le une diversit? insuffisante pour conclure ? une g?n?ralisation.
-La loi ? sigma estim? sur l?observation reste un substitut gaussien,
-pas un ?mulateur complet du capteur.
+Les contrôles faibles ne sont donc pas couverts **à cette luminosité**
+par les trois lois. Une même valeur sigma peut être rencontrée ailleurs
+à un autre niveau de signal, ce qui ne constitue pas la même couverture
+conditionnelle. De plus, les lois d’apprentissage ont systématiquement
+R/B plus bruités que G, contrairement aux contrôles isotropes. Ce décalage
+ne prouve pas que les contrôles sont mauvais ou qu’il suffit de les enlever :
+il révèle une diversité insuffisante pour conclure à une généralisation.
+La loi à sigma estimé sur l’observation reste un substitut gaussien,
+pas un émulateur complet du capteur.
 
-### 3. Un t?moin fixe montre l?ambigu?t? de la perte moyenne
+### 3. Un témoin fixe montre l’ambiguïté de la perte moyenne
 
-Trois t?moins ont ?t? d?clar?s avant le rejeu : moyenne 3?3 par plan CFA,
-m?lang?e ? l?observation avec alpha 0,25/0,5/1. Ils n?ont aucun poids appris,
-ne sont pas propos?s comme d?bruiteur et ne sont pas s?lectionn?s d?apr?s
-le meilleur score. Le centre mesur? exclut les bords du filtre.
+Trois témoins ont été déclarés avant le rejeu : moyenne 3×3 par plan CFA,
+mélangée à l’observation avec alpha 0,25/0,5/1. Ils n’ont aucun poids appris,
+ne sont pas proposés comme débruiteur et ne sont pas sélectionnés d’après
+le meilleur score. Le centre mesuré exclut les bords du filtre.
 
-| Pr?diction t?moin | Perte moyenne sur apprentissage bruit? | Perte moyenne sur contr?les forts connus |
+| Prédiction témoin | Perte moyenne sur apprentissage bruité | Perte moyenne sur contrôles forts connus |
 | --- | ---: | ---: |
-| Observation inchang?e | 0,9997 | 1,0006 |
-| M?lange alpha 0,25 | 0,6254 | 0,9478 |
-| M?lange alpha 0,5 | 0,3913 | 1,6790 |
-| Moyenne enti?re | 0,3435 | 5,4934 |
+| Observation inchangée | 0,9997 | 1,0006 |
+| Mélange alpha 0,25 | 0,6254 | 0,9478 |
+| Mélange alpha 0,5 | 0,3913 | 1,6790 |
+| Moyenne entière | 0,3435 | 5,4934 |
 
-Le m?me op?rateur peut donc am?liorer fortement l?objectif moyen du flux
-et d?grader les d?tails forts. ? bruit faible, alpha 0,25 donne d?j?
-1,2051 sur les contr?les ; ? bruit fort, il donne 0,6905. La moyenne m?lange
-ainsi des comportements oppos?s. Cela **ne prouve pas que le r?seau applique
-ce noyau**, mais invalide l?id?e que sa perte train plus basse suffirait ?
-attester une meilleure pr?servation. L?optimum propre exact aurait une
-perte nulle ; le probl?me n?est pas une identit? math?matique qui rendrait
-le flou in?vitable, mais la repr?sentativit? et les compromis appris.
+Le même opérateur peut donc améliorer fortement l’objectif moyen du flux
+et dégrader les détails forts. À bruit faible, alpha 0,25 donne déjà
+1,2051 sur les contrôles ; à bruit fort, il donne 0,6905. La moyenne mélange
+ainsi des comportements opposés. Cela **ne prouve pas que le réseau applique
+ce noyau**, mais invalide l’idée que sa perte train plus basse suffirait à
+attester une meilleure préservation. L’optimum propre exact aurait une
+perte nulle ; le problème n’est pas une identité mathématique qui rendrait
+le flou inévitable, mais la représentativité et les compromis appris.
 
-### 4. Normalisation et plages d?entr?e : distinguer constat et bug
+### 4. Normalisation et plages d’entrée : distinguer constat et bug
 
-La perte utilise l?erreur carr?e par plan divis?e par sa variance moyenne.
-Le r?seau pr?dit un r?sidu normalis?, puis calcule observation?sigma?r?sidu.
-La d?riv?e par rapport ? ce r?sidu contient donc aussi sigma : consid?rer
+La perte utilise l’erreur carrée par plan divisée par sa variance moyenne.
+Le réseau prédit un résidu normalisé, puis calcule observation − sigma × résidu.
+La dérivée par rapport à ce résidu contient donc aussi sigma : considérer
 seulement le facteur inverse de variance serait incomplet. Le calcul
-analytique du gradient est test? contre autograd. Les mesures ? l?identit?
-ne r?v?lent pas un d?faut d?impl?mentation de cette compensation. Les
-observations sans bruit sont exactement l?identit?, pas une source de
-gradients infinis. Ce constat ne d?montre pas que cette perte soit la
+analytique du gradient est testé contre autograd. Les mesures à l’identité
+ne révèlent pas un défaut d’implémentation de cette compensation. Les
+observations sans bruit sont exactement l’identité, pas une source de
+gradients infinis. Ce constat ne démontre pas que cette perte soit la
 meilleure pour le rendu photographique.
 
-Les rampes de luminance synth?tiques ?tendues au grand contexte atteignent environ
-**?8,46 ? 9,75** en unit?s cam?ra ?quilibr?e ; dans le centre utile,
-**?1,82 ? 3,17**. Ces valeurs proviennent de l?extension de pentes con?ues
-sur 128 pixels vers un contexte 1 024. Conserver n?gatifs et valeurs HDR
-est intentionnel ; leur l?galit? num?rique ne prouve pas que cette
-r?partition soit repr?sentative des photos. Revoir la g?n?ration de ces
-pentes reste une piste ; les ?cr?ter arbitrairement cr?erait d?autres
+Les rampes de luminance synthétiques étendues au grand contexte atteignent environ
+**−8,46 à 9,75** en unités caméra équilibrée ; dans le centre utile,
+**−1,82 à 3,17**. Ces valeurs proviennent de l’extension de pentes conçues
+sur 128 pixels vers un contexte 1 024. Conserver négatifs et valeurs HDR
+est intentionnel ; leur légalité numérique ne prouve pas que cette
+répartition soit représentative des photos. Revoir la génération de ces
+pentes reste une piste ; les écrêter arbitrairement créerait d’autres
 structures et ne serait pas une correction neutre.
 
-### 5. Deux graines ne s?parent pas les causes actuelles
+### 5. Deux graines ne séparent pas les causes actuelles
 
-L?identit? des contenus vaut 280000000+graine?100000+num?ro. Changer la
-graine change donc **? la fois l?initialisation et les donn?es**. La
-graine 73 re?oit notamment moins de d?tails forts ? haute fr?quence.
-Ce n?est pas une preuve que ce manque explique ? lui seul son mauvais
-contr?le ; l?exp?rience ne s?pare pas les deux facteurs. Une r?p?tition
-avec une graine de donn?es ind?pendante et commune aux initialisations
-est n?cessaire pour mesurer la stabilit? du mod?le seul.
+L’identité des contenus vaut 280000000+graine×100000+numéro. Changer la
+graine change donc **à la fois l’initialisation et les données**. La
+graine 73 reçoit notamment moins de détails forts à haute fréquence.
+Ce n’est pas une preuve que ce manque explique à lui seul son mauvais
+contrôle ; l’expérience ne sépare pas les deux facteurs. Une répétition
+avec une graine de données indépendante et commune aux initialisations
+est nécessaire pour mesurer la stabilité du modèle seul.
 
-### D?cision et proposition d?exp?rience suivante
+### Décision et proposition d’expérience suivante
 
-Conserver l?architecture et la perte comme r?f?rences, sans augmenter
-la taille ni lancer un apprentissage long. D?abord s?parer les identit?s
-de donn?es et de mod?le, puis figer un plan appari? avec budgets et crit?res
-inchang?s : r?f?rence, bruit diversifi? seul, couverture des d?tails seule.
-Les variations de bruit doivent couvrir luminosit?s et rapports de canaux,
-pas seulement ajouter un sigma constant. Les fr?quences/amplitudes sont
-tir?es dans des intervalles continus avec quotas d?clar?s, sans r?utiliser
-les cibles des contr?les. Ne pas modifier simultan?ment la perte, la taille
-et les donn?es : cela emp?cherait de savoir ce qui a aid?.
+Conserver l’architecture et la perte comme références, sans augmenter
+la taille ni lancer un apprentissage long. D’abord séparer les identités
+de données et de modèle, puis figer un plan apparié avec budgets et critères
+inchangés : référence, bruit diversifié seul, couverture des détails seule.
+Les variations de bruit doivent couvrir luminosités et rapports de canaux,
+pas seulement ajouter un sigma constant. Les fréquences/amplitudes sont
+tirées dans des intervalles continus avec quotas déclarés, sans réutiliser
+les cibles des contrôles. Ne pas modifier simultanément la perte, la taille
+et les données : cela empêcherait de savoir ce qui a aidé.
 
-Une ?ventuelle perte structurelle est ? ?tudier seulement apr?s cette
-comparaison, si n?cessaire, avec contr?le du bruit conserv?. Les contr?les
-actuels sont connus et servent au d?veloppement ; une r?ussite ult?rieure
-ne deviendrait pas une validation ind?pendante sans protocole r?serv?.
-Aucune nouvelle photo n?est n?cessaire pour pr?parer ce petit essai.
-**Cette exp?rience n?est pas encore lanc?e ; tous les calculs de l?audit
-sont termin?s.**
+Une éventuelle perte structurelle est à étudier seulement après cette
+comparaison, si nécessaire, avec contrôle du bruit conservé. Les contrôles
+actuels sont connus et servent au développement ; une réussite ultérieure
+ne deviendrait pas une validation indépendante sans protocole réservé.
+Aucune nouvelle photo n’est nécessaire pour préparer ce petit essai.
+**Cette expérience n’est pas encore lancée ; tous les calculs de l’audit
+sont terminés.**
 
-Preuves : [rejeu et mesures compl?tes](../raw/neural-dru-training-audit-v001-20261106T102117Z.json),
-[relecture d?riv?e initiale](../raw/neural-dru-training-audit-review-v001-20261106T102353Z.json)
-et [compl?ment de runtime conservant la premi?re version](../raw/neural-dru-training-audit-review-v002-20261106T102520Z.json).
-Trois tests v?rifient le gradient, le t?moin de lissage et la couverture
+Preuves : [rejeu et mesures complètes](../raw/neural-dru-training-audit-v001-20261106T102117Z.json),
+[relecture dérivée initiale](../raw/neural-dru-training-audit-review-v001-20261106T102353Z.json)
+et [complément de runtime conservant la première version](../raw/neural-dru-training-audit-review-v002-20261106T102520Z.json).
+Trois tests vérifient le gradient, le témoin de lissage et la couverture
 phase/famille. Aucun changement de production, environnement, poids,
 publication, fusion ou tag.
 
 
-## 6 novembre 2026 ? comparaison appari?e r?f?rence, bruit et d?tails lanc?e
+## 6 novembre 2026 — comparaison appariée référence, bruit et détails lancée
 
-L?utilisateur autorise la comparaison propos?e par l?audit. L?exp?rience
-conserve l?architecture de 32 643 840 param?tres, la perte CFA normalis?e,
-Adam 10??, quatre observations par mise ? jour et le budget de 256 pas.
-Elle comporte **trois bras ? deux initialisations**, tous conserv?s.
-La graine de donn?es vaut 71 dans les six cas, ind?pendamment des graines
-de mod?le 71/73. La r?f?rence doit ?tre r?entra?n?e sur ces donn?es communes :
-l?ancienne graine 73 utilisait d?autres contenus et ne serait pas appari?e.
+L’utilisateur autorise la comparaison proposée par l’audit. L’expérience
+conserve l’architecture de 32 643 840 paramètres, la perte CFA normalisée,
+Adam 10⁻⁴, quatre observations par mise à jour et le budget de 256 pas.
+Elle comporte **trois bras × deux initialisations**, tous conservés.
+La graine de données vaut 71 dans les six cas, indépendamment des graines
+de modèle 71/73. La référence doit être réentraînée sur ces données communes :
+l’ancienne graine 73 utilisait d’autres contenus et ne serait pas appariée.
 
-### Facteurs modifi?s et facteurs maintenus
+### Facteurs modifiés et facteurs maintenus
 
 | Bras | Cibles et textures | Bruit |
 | --- | --- | --- |
-| R?f?rence | G?n?rateur de r?f?rence, m?mes identit?s et tirages pour les deux mod?les | Trois lois exp?rimentales existantes |
-| Bruit | **Exactement les m?mes cibles** que la r?f?rence | Diversification pr?d?clar?e de 504/1 024 observations ; les autres restent identiques |
-| D?tails | Quotas de fr?quence/amplitude sur les 256 emplacements de texture ; autres familles inchang?es | M?mes lois, graines gaussiennes et affectations que la r?f?rence ; sigma reste d?pendant du signal modifi? |
+| Référence | Générateur de référence, mêmes identités et tirages pour les deux modèles | Trois lois expérimentales existantes |
+| Bruit | **Exactement les mêmes cibles** que la référence | Diversification prédéclarée de 504/1 024 observations ; les autres restent identiques |
+| Détails | Quotas de fréquence/amplitude sur les 256 emplacements de texture ; autres familles inchangées | Mêmes lois, graines gaussiennes et affectations que la référence ; sigma reste dépendant du signal modifié |
 
 Le bras bruit modifie une distribution, pas seulement une valeur sigma.
-Une moiti? des blocs de 32 observations garde les lois initiales ; dans
-l?autre, les coefficients de variance sont tir?s contin?ment : a entre
-10?? et 4?10?? et b entre 10?? et 5?10??, avant les rapports de canaux.
-Ces rapports sont tir?s entre 0,7 et 1,5 et affectent a et b selon les gains ;
-un quart de ces blocs diversifi?s est isotrope. Le calendrier est ?quilibr?
+Une moitié des blocs de 32 observations garde les lois initiales ; dans
+l’autre, les coefficients de variance sont tirés continûment : a entre
+10⁻⁵ et 4×10⁻³ et b entre 10⁻⁶ et 5×10⁻⁴, avant les rapports de canaux.
+Ces rapports sont tirés entre 0,7 et 1,5 et affectent a et b selon les gains ;
+un quart de ces blocs diversifiés est isotrope. Le calendrier est équilibré
 entre familles/phases. Les neuf observations sans bruit restent communes,
-ce qui ram?ne le nombre de modifications effectives ? 504. Ces lois sont
-des substituts gaussiens d??tude, pas une nouvelle calibration physique.
+ce qui ramène le nombre de modifications effectives à 504. Ces lois sont
+des substituts gaussiens d’étude, pas une nouvelle calibration physique.
 
-Le bras d?tails conserve la part de 25 % de textures, les DC, directions,
-phases et couleurs. Il r?partit leurs fr?quences principales dans
+Le bras détails conserve la part de 25 % de textures, les DC, directions,
+phases et couleurs. Il répartit leurs fréquences principales dans
 [2;8], [8;16], [16;28] cycles/128 pixels, et leurs amplitudes effectives dans
 [0,003/1,35;0,012], [0,012;0,04], [0,04;0,12/1,35]. Les tirages restent
-continus, pas les valeurs ou images exactes des contr?les. Les neuf cases
-fr?quence/amplitude comptent 28 ou 29 expositions chacune. La fr?quence de
-la composante secondaire suit le rapport de la recette d?origine, born?
-? 2?28 ; son amplitude relative est inchang?e.
+continus, pas les valeurs ou images exactes des contrôles. Les neuf cases
+fréquence/amplitude comptent 28 ou 29 expositions chacune. La fréquence de
+la composante secondaire suit le rapport de la recette d’origine, borné
+à 2–28 ; son amplitude relative est inchangée.
 
-Ce bras modifie donc conjointement fr?quence et amplitude comme une
-politique de couverture ; il ne permettra pas de s?parer leurs effets
-internes. Les rampes extr?mes signal?es par l?audit restent volontairement
-identiques dans les trois bras pour ne pas introduire un quatri?me facteur.
-Aucune perte structurelle, modification de taille ou nouveau rendu n?est
-ajout? pendant cette exp?rience.
+Ce bras modifie donc conjointement fréquence et amplitude comme une
+politique de couverture ; il ne permettra pas de séparer leurs effets
+internes. Les rampes extrêmes signalées par l’audit restent volontairement
+identiques dans les trois bras pour ne pas introduire un quatrième facteur.
+Aucune perte structurelle, modification de taille ou nouveau rendu n’est
+ajouté pendant cette expérience.
 
-### Contr?les d?appariement et qualification du lancement
+### Contrôles d’appariement et qualification du lancement
 
-Cinq tests passent pour les politiques : rejeu au bit pr?s des empreintes
-archiv?es de la r?f?rence sur les cas v?rifi?s, cibles identiques du bras
-bruit, modifications limit?es aux emplacements de texture du bras d?tails,
-refus d?un bras inconnu, neuf quotas continus ?quilibr?s. Trois autres
-tests v?rifient l?analyse des r?sultats : conservation des 18 r?sum?s
-bras/graine/jalon, signe des diff?rences appari?es, rejet de poids initiaux
-ou de contr?les initiaux diff?rents. Les fixtures artificielles de ces
-analyses restent dans des r?pertoires temporaires, hors preuves d??tude.
+Cinq tests passent pour les politiques : rejeu au bit près des empreintes
+archivées de la référence sur les cas vérifiés, cibles identiques du bras
+bruit, modifications limitées aux emplacements de texture du bras détails,
+refus d’un bras inconnu, neuf quotas continus équilibrés. Trois autres
+tests vérifient l’analyse des résultats : conservation des 18 résumés
+bras/graine/jalon, signe des différences appariées, rejet de poids initiaux
+ou de contrôles initiaux différents. Les fixtures artificielles de ces
+analyses restent dans des répertoires temporaires, hors preuves d’étude.
 
-Une empreinte des poids initiaux est calcul?e avant transfert GPU. Le
-bilan final exigera la m?me initialisation pour chaque graine entre bras
-et les m?mes contr?les initiaux complets. Les sources, plans et param?tres
-continus sont scell?s avant les entra?nements. Aucun bras ne r?utilise les
-poids d?j? entra?n?s d?un autre bras ; tous d?marrent des poids al?atoires.
+Une empreinte des poids initiaux est calculée avant transfert GPU. Le
+bilan final exigera la même initialisation pour chaque graine entre bras
+et les mêmes contrôles initiaux complets. Les sources, plans et paramètres
+continus sont scellés avant les entraînements. Aucun bras ne réutilise les
+poids déjà entraînés d’un autre bras ; tous démarrent des poids aléatoires.
 
-Le pr?vol de r?f?rence instrument? termine avec reprise mod?le/Adam/pertes
-au bit pr?s. Les bras bruit et d?tails ont chacun leur propre pr?vol avant
-leur entra?nement. Un ?chec technique arr?te l?ensemble, sans modifier les
-plafonds ni r?essayer automatiquement. Un d?faut de signal mesur? ne retire
-pas un bras : il reste n?cessaire de conserver toute la comparaison.
+Le prévol de référence instrumenté termine avec reprise modèle/Adam/pertes
+au bit près. Les bras bruit et détails ont chacun leur propre prévol avant
+leur entraînement. Un échec technique arrête l’ensemble, sans modifier les
+plafonds ni réessayer automatiquement. Un défaut de signal mesuré ne retire
+pas un bras : il reste nécessaire de conserver toute la comparaison.
 
 ### Budget, jalons et suivi
 
-Six entra?nements s?quentiels de 256 pas ; contr?les connus complets de
-864 champs aux pas 0/128/256. Sauvegardes p?riodiques, checkpoints, traces
-m?moire et JSON canoniques sont conserv?s. L?analyse produira les effets
-par fr?quence, couleur, bruit, graine et jalon, sans choisir un meilleur
-score ni pr?senter les contr?les connus comme une validation ind?pendante.
-Pas d?inf?rence photo et aucune nouvelle cohorte r?serv?e.
+Six entraînements séquentiels de 256 pas ; contrôles connus complets de
+864 champs aux pas 0/128/256. Sauvegardes périodiques, checkpoints, traces
+mémoire et JSON canoniques sont conservés. L’analyse produira les effets
+par fréquence, couleur, bruit, graine et jalon, sans choisir un meilleur
+score ni présenter les contrôles connus comme une validation indépendante.
+Pas d’inférence photo et aucune nouvelle cohorte réservée.
 
-Admission 60 s sous 70 % de RAM globale ; arr?t 92 % global, plafond souple
-4,5 Gio et quota 6 Gio, allocation CUDA plafonn?e ? 50 %. La dur?e projet?e est
-**environ deux heures**, pr?vols et contr?les compris. Les ?ch?ances absolues
-sont **14 h 42 min 25 s Paris pour l?apprentissage**, et **14 h 57 min 25 s**
+Admission 60 s sous 70 % de RAM globale ; arrêt 92 % global, plafond souple
+4,5 Gio et quota 6 Gio, allocation CUDA plafonnée à 50 %. La durée projetée est
+**environ deux heures**, prévols et contrôles compris. Les échéances absolues
+sont **14 h 42 min 25 s Paris pour l’apprentissage**, et **14 h 57 min 25 s**
 pour la campagne du 6 novembre. Le superviseur ne termine que son arbre
-sur erreur ou d?passement et lib?re le maintien ?veill? ? la cl?ture ;
-aucun ordre de veille du PC. `STOP` ? la racine demande l?arr?t de la
+sur erreur ou dépassement et libère le maintien éveillé à la clôture ;
+aucun ordre de veille du PC. `STOP` à la racine demande l’arrêt de la
 comparaison, avec terminaison de son arbre et conservation des derniers
-checkpoints durables si n?cessaire.
+checkpoints durables si nécessaire.
 
 Suivi : `build-patch_neural_restoration/dru-data-comparison-v001/progress.json` ;
 les sous-campagnes sont `reference`, `noise` et `details`. Le superviseur
 attend localement les processus, sans attente active dans le chat.
-**R?sultats encore attendus** ; le premier bras est d?marr?, aucune
-am?lioration n?est annonc?e.
+**Résultats encore attendus** ; le premier bras est démarré, aucune
+amélioration n’est annoncée.
 
-Preuves de pr?paration : [plans et recettes scell?s](../raw/neural-dru-data-comparison-plan-v001-20261106T104225Z.json)
-et [pr?vol de r?f?rence](../raw/neural-dru-training-v001-71-20261106T104420Z.json).
-Pas de modification de production, d?environnement, publication, fusion
-ou tag. La comparaison reste sur le banc exp?rimental.
+Preuves de préparation : [plans et recettes scellés](../raw/neural-dru-data-comparison-plan-v001-20261106T104225Z.json)
+et [prévol de référence](../raw/neural-dru-training-v001-71-20261106T104420Z.json).
+Pas de modification de production, d’environnement, publication, fusion
+ou tag. La comparaison reste sur le banc expérimental.
+
+
+## 6 novembre 2026 — comparaison arrêtée sur sécurité mémoire
+
+À la vérification demandée par l’utilisateur, le superviseur est clos depuis
+**12 h 18 min 21 s Paris**. La référence 71 termine ses 256 pas. La référence 73
+s’arrête au pas 187 sur `system_physical_memory_threshold`, avec checkpoint
+durable au pas 160. Les bras bruit et détails ne commencent pas. Il n’existe
+donc pas encore de comparaison complète ni d’effet de politique à conclure.
+
+Le suivi conserve le premier franchissement à 12 h 18 min 17,65 s, phase
+rétropropagation, pas 187, deuxième observation : RAM globale 92,7135 %,
+mémoire privée4 660 908 032 octets et résidente1 521 209 344 octets. Les compteurs
+CUDA associés au dernier changement de phase sont environ806 Mo alloués
+et 1 680 Mo réservés. Les plafonds propres du processus ne sont pas dépassés.
+Cette corrélation de phase ne prouve pas que la rétropropagation cause
+à elle seule la pointe globale. La garde reste inchangée ; aucune reprise
+ni réinterprétation comme réussite n’est effectuée.
+
+Les résultats et checkpoints partiels sont conservés. Aucun calcul n’est
+relancé à l’occasion de cette demande de statut. Preuves :
+[supervision de comparaison](../raw/neural-dru-data-comparison-supervisor-v001-20261106T111821Z.json),
+[supervision de référence et séries mémoire](../raw/neural-dru-overnight-v001-20261106T111820Z.json),
+[référence 71](../raw/neural-dru-training-v001-71-20261106T110237Z.json),
+[référence 73 arrêtée](../raw/neural-dru-training-v001-73-20261106T111819Z.json).
+
+
+## 6 novembre 2026 — reprise manuelle de la comparaison autorisée
+
+L’utilisateur demande la relance après l’arrêt mémoire. Les superviseurs
+acceptent maintenant une reprise explicite d’une campagne fermée en erreur,
+sans transformer ce choix en nouvelle tentative automatique. Les plans
+d’entraînement, leurs sources, graines, budgets et échéances sont inchangés.
+Seul le manifeste d’orchestration porte les nouvelles empreintes des
+superviseurs et l’identité de l’état interrompu.
+
+La référence 71 complète est vérifiée : plan, longueur de pertes, état final,
+checkpoints et contrôles référencés avec leurs empreintes et chemins locaux.
+Elle est réutilisée sans nouvel entraînement. Pour73, le manifeste et
+l’empreinte du checkpoint durable au **pas 160** sont vérifiés. La reprise
+recharge modèle et Adam ; elle ne repart pas des187pas volatils du résultat
+d’erreur. Le worker confirme `resumed_from_step=160`. Le prévol validé est
+réutilisé puisque le code numérique du worker n’a pas changé.
+
+Les anciens bilans sont copiés dans des fichiers `progress-before-resume`
+versionnés dans le build ; les JSON canoniques d’erreur restent inchangés.
+Les nouveaux journaux portent un suffixe distinct. Une campagne ou un bras
+complet ne peut être réutilisé qu’après vérification de ses fichiers ; un
+worker actif, un plan différent ou un checkpoint altéré est refusé.
+Quatre tests passent sur ces cas et le choix nouveau/reprise/réutilisation.
+
+Le manifeste de reprise conserve les plans des trois bras, leur ordre et
+l’échéance initiale de 14 h 57 Paris pour le superviseur, avec arrêt des workers
+à 14 h 42. Il n’y a ni modification du seuil 92 %, ni suppression d’images ou
+fermeture d’application tierce. Après la fin de référence 73, les bras bruit
+et détails doivent toujours passer leurs prévols avant leurs entraînements.
+Aucun résultat comparatif nouveau n’est encore annoncé.
+
+Preuve : [reprise et contrôles d’éligibilité](../raw/neural-dru-data-comparison-resume-v001-20261106T113517Z.json).
+Suivi inchangé : `build-patch_neural_restoration/dru-data-comparison-v001/progress.json`.
+Le superviseur local attend les calculs sans interrogation active du chat.
+Aucune publication, fusion, création de tag ou modification du moteur.
+
+
+## 6 novembre 2026 — reprise arrêtée sur le plafond local, checkpoint 224 conservé
+
+La relance autorisée a effectivement repris depuis 160 et progressé jusqu’au
+pas 242. Le superviseur se termine à **12 h 39 min 25,78 s Paris**, après
+une nouvelle erreur de ressources. Cette fois, la cause enregistrée est
+`process_soft_memory_limit`, pas le seuil de RAM physique globale.
+
+Premier franchissement à 12 h 39 min 22,64 s, rétropropagation, pas 242,
+deuxième observation : mémoire privée 4 832 014 336 octets contre un plafond
+souple de 4 831 838 208 octets, soit **176 128 octets (172 Kio) au-dessus** au
+premier échantillon déclencheur. La RAM globale vaut 70,29 % à cet instant,
+et culmine à 71,63 % sur la tentative. Le pic de quota OS engagé reste
+sous 6 Gio. Les compteurs privés et le quota OS n’ont pas exactement la même
+définition ; les172 Kio ne décrivent pas tous les pics possibles entre
+échantillons. Le constat confirme surtout que la marge locale était trop
+étroite pour cette reprise, même avec de la mémoire physique disponible.
+
+Le checkpoint durable est maintenant **224**, vérifiable avant une autre
+reprise ; les 18 pas suivants ne sont pas durables. Référence 71 est toujours
+complète et n’a pas été recalculée. Les bras bruit et détails restent non
+démarrés, et la comparaison ne permet toujours pas de conclure. Aucun seuil
+n’est relevé et aucune nouvelle relance n’est engagée à cette clôture.
+La suite doit traiter la marge d’exécution du processus ou son empreinte,
+pas attribuer cet arrêt à une saturation globale de la machine.
+
+Preuves : [supervision après reprise](../raw/neural-dru-data-comparison-supervisor-v001-20261106T113925Z.json),
+[sous-campagne et chronologies](../raw/neural-dru-overnight-v001-20261106T113925Z.json)
+et [worker repris](../raw/neural-dru-training-v001-73-20261106T113924Z.json).
+Les bilans précédents et les checkpoints sont conservés, sans publication,
+fusion ni tag. Tous les calculs de cette tentative sont clos.

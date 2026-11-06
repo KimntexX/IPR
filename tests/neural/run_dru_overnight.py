@@ -10,9 +10,10 @@ import subprocess
 import time
 from campaign_artifacts import sha256
 from memory_budget import snapshot
+from dru_resume_policy import action
 
 
-def run(plan_path,preflight,output,training_only=False):
+def run(plan_path,preflight,output,training_only=False,resume=False):
     root=Path(__file__).resolve().parents[2];build=root/'build-patch_neural_restoration'
     if not all(p.resolve().is_relative_to(build.resolve()) for p in (plan_path,preflight,output)):
         raise ValueError('Owned paths required')
@@ -24,15 +25,23 @@ def run(plan_path,preflight,output,training_only=False):
         raise ValueError('Successful actual-loop preflight for exactly this plan required')
     if shutil.disk_usage(build).free<16*1024**3:raise RuntimeError('At least16GiB free required')
     if any(sha256(root/'tests/neural'/n)!=h for n,h in plan['tools'].items()):raise ValueError('Sealed sources changed')
-    output.mkdir(exist_ok=False)
+    output.mkdir(exist_ok=resume)
+    previous=json.loads((output/'progress.json').read_text(encoding='utf-8')) if resume else None
+    if previous is not None and (previous['status']!='stopped_on_error' or previous['plan_sha256']!=sha256(plan_path)):
+        raise ValueError('Resume requires a closed failed campaign with the same training plan')
     gpu=root.parent/'venv-neural-cuda/Scripts/python.exe';cpu=root/'.venv-neural/Scripts/python.exe'
     images=Path('C:/Users/victo/AppData/Local/Python/pythoncore-3.14-64/python.exe')
     deadline=datetime.fromisoformat(plan['campaign_deadline_utc']).timestamp()
     result=dict(schema_version=1,status='started',started_at_utc=datetime.now(timezone.utc).isoformat(),
         plan=plan,plan_sha256=sha256(plan_path),preflight_sha256=sha256(preflight),stages=[],pid=os.getpid(),
-        tools={n:sha256(Path(__file__).with_name(n)) for n in ('run_dru_overnight.py','infer_dru_photos.py','display_local_sigma.py','summarize_dru_overnight.py')},
+        tools={n:sha256(Path(__file__).with_name(n)) for n in ('run_dru_overnight.py','dru_resume_policy.py','infer_dru_photos.py','display_local_sigma.py','summarize_dru_overnight.py')},
         training_only=training_only,
         policy='Both seeds sequentially, last declared checkpoints, no model selection, no new reserve, no publication or sleep. Training-only mode defers photo calculations and assessment.')
+    stamp=datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')
+    if previous is not None:
+        backup=output/f'progress-before-resume-{stamp}.json'
+        with backup.open('x',encoding='utf-8') as stream:json.dump(previous,stream,indent=2,allow_nan=False)
+        result['prior_attempt']=dict(path=str(backup.resolve()),sha256=sha256(backup),status=previous['status'],stages=previous['stages'])
     power=ctypes.WinDLL('kernel32',use_last_error=True)
     power.SetThreadExecutionState.argtypes=[ctypes.c_uint];power.SetThreadExecutionState.restype=ctypes.c_uint
     if not power.SetThreadExecutionState(0x80000001):raise ctypes.WinError(ctypes.get_last_error())
@@ -74,10 +83,14 @@ def run(plan_path,preflight,output,training_only=False):
     try:
         for seed in plan['seeds']:
             folder=output/f'seed{seed}';attempt=0
+            mode=action(folder,sha256(plan_path),plan['steps_per_seed']) if resume else 'new'
+            if mode=='reuse':
+                result['stages'].append(dict(name=f'train-{seed}',reused_completed_result_sha256=sha256(folder/'result.json')));write();continue
             while True:
                 args=['--plan',plan_path,'--output',folder,'--seed',seed]
-                if attempt:args.append('--resume')
-                code=command(f'train-{seed}-attempt{attempt+1}',gpu,'train_dru_cfa.py',*args)
+                if attempt or mode=='resume':args.append('--resume')
+                label=f'train-{seed}-attempt{attempt+1}'+('-resume-'+stamp if resume else '')
+                code=command(label,gpu,'train_dru_cfa.py',*args)
                 current=json.loads((folder/'result.json').read_text(encoding='utf-8'))
                 if code==0 and current['status'] in ('completed_dru_bootstrap_not_photographic_qualification','paused_dru_training'):break
                 if (current.get('memory',{}).get('reason') not in ('process_soft_memory_limit','system_physical_memory_threshold')
@@ -116,4 +129,5 @@ if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
     for name in ('plan','preflight','output'):p.add_argument('--'+name,type=Path,required=True)
     p.add_argument('--training-only',action='store_true')
-    a=p.parse_args();run(a.plan,a.preflight,a.output,a.training_only)
+    p.add_argument('--resume',action='store_true')
+    a=p.parse_args();run(a.plan,a.preflight,a.output,a.training_only,a.resume)

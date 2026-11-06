@@ -1184,128 +1184,158 @@ chaîne signée actuelle. Le rapport unique contient le point de décision
 en tête, les réponses factuelles à la revue et les critères d'arrêt.
 
 
-### Courbe rejet?e et nouvelle architecture CFA ? cl?ture du 5 novembre 2026
+### Courbe rejetée et nouvelle architecture CFA — clôture du 5 novembre 2026
 
-La continuation de deux graines passe le d?veloppement connu mais aggrave
-la r?gression fine (20/48 ?checs forts contre 10/48). L?att?nuation est d?j?
-mesurable dans le CFA corrig? avant reconstruction RGB. Aucun prolongement
-de ces poids ni assouplissement des crit?res n?est retenu.
+La continuation de deux graines passe le développement connu mais aggrave
+la régression fine (20/48 échecs forts contre 10/48). L’atténuation est déjà
+mesurable dans le CFA corrigé avant reconstruction RGB. Aucun prolongement
+de ces poids ni assouplissement des critères n’est retenu.
 
-Le banc pr?pare une adaptation CFA directe de DRUNet (32,64 M param?tres,
-poids al?atoires, quatre plans + quatre cartes sigma, quatre r?sidus).
-Le signal reste sign?, avec identit? exacte ? sigma nul. Le support exige
+Le banc prépare une adaptation CFA directe de DRUNet (32,64 M paramètres,
+poids aléatoires, quatre plans + quatre cartes sigma, quatre résidus).
+Le signal reste signé, avec identité exacte à sigma nul. Le support exige
 un halo de 384 pixels CFA et un contexte de 1 024 pixels pour un centre
-utile de 256 pixels CFA. L?inf?rence tuil?e refuse un halo insuffisant.
-La supervision future en CFA doit ?viter le reconstructeur RGB gel? dans
-la perte ; elle n?est pas encore une qualification photographique.
+utile de 256 pixels CFA. L’inférence tuilée refuse un halo insuffisant.
+La supervision future en CFA doit éviter le reconstructeur RGB gelé dans
+la perte ; elle n’est pas encore une qualification photographique.
 
-Pr?vol de six pas termin?, ressources born?es gr?ce au recalcul des
-activations pendant la r?tropropagation ; calcul et gradients compar?s
-? la topologie officielle. La reprise mod?le + Adam a rejou? le pas
-suivant au bit pr?s. Ce sont des contrats techniques, pas un mod?le utile.
-Le lanceur long, son arr?t demand?, les donn?es et la comparaison au m?me
-RCD restent ? finaliser avant planification avec l?utilisateur. Aucun
-apprentissage long n?est en cours. Mesures et limites en fin du rapport.
-
-
-### Campagne amor?age CFA autoris?e ? nuit du 5 au 6 novembre
-
-Le lanceur interruptible est d?sormais v?rifi? sur le flux r?el pour les
-deux graines : mod?le, Adam et pertes rejou?s au bit pr?s apr?s lib?ration
-puis rechargement de l??tat complet. La campagne born?e comporte 4 000
-mises ? jour par graine et conserve les jalons, sans s?lectionner de poids
-sur les photos. Supervision locale ind?pendante du chat, garde m?moire
-inchang?e, sauvegarde toutes les 32 ?tapes, contr?les connus ? support
-adapt?. Les donn?es proc?durales et la loi gaussienne exp?rimentale restent
-une limite de validit?, pas une caract?risation physique compl?te.
-
-L?utilisateur r?serve la machine jusqu?au 6 novembre 10 h Paris ;
-l?apprentissage s?arr?te au plus tard ? 08 h 45 et son superviseur ?
-09 h 45. Le mode `--training-only` diff?re les inf?rences photo et leur
-analyse ; aucun rendu lourd ne commence automatiquement apr?s 10 h.
-La disponibilit? horaire prime le nombre de mises ? jour cible.
+Prévol de six pas terminé, ressources bornées grâce au recalcul des
+activations pendant la rétropropagation ; calcul et gradients comparés
+à la topologie officielle. La reprise modèle + Adam a rejoué le pas
+suivant au bit près. Ce sont des contrats techniques, pas un modèle utile.
+Le lanceur long, son arrêt demandé, les données et la comparaison au même
+RCD restent à finaliser avant planification avec l’utilisateur. Aucun
+apprentissage long n’est en cours. Mesures et limites en fin du rapport.
 
 
-### Bilan r?el de la nuit ? 6 novembre 2026
+### Campagne amorçage CFA autorisée — nuit du 5 au 6 novembre
 
-La campagne se termine le 5 novembre ? 23 h 47 Paris apr?s trois pointes
-RAM globale de 92,28 ? 93,33 %. La graine 71 atteint 42, puis 61 et 60 pas
-en m?moire ; seul le checkpoint32 est durable. La graine 73 n?a pas d?marr?.
-Les pr?vols courts r?ussis ne qualifient donc pas la tenue prolong?e.
-Aucune comparaison photo ni conclusion sur la capacit? de l?architecture.
+Le lanceur interruptible est désormais vérifié sur le flux réel pour les
+deux graines : modèle, Adam et pertes rejoués au bit près après libération
+puis rechargement de l’état complet. La campagne bornée comporte 4 000
+mises à jour par graine et conserve les jalons, sans sélectionner de poids
+sur les photos. Supervision locale indépendante du chat, garde mémoire
+inchangée, sauvegarde toutes les 32 étapes, contrôles connus à support
+adapté. Les données procédurales et la loi gaussienne expérimentale restent
+une limite de validité, pas une caractérisation physique complète.
+
+L’utilisateur réserve la machine jusqu’au 6 novembre 10 h Paris ;
+l’apprentissage s’arrête au plus tard à 08 h 45 et son superviseur à
+09 h 45. Le mode `--training-only` diffère les inférences photo et leur
+analyse ; aucun rendu lourd ne commence automatiquement après 10 h.
+La disponibilité horaire prime le nombre de mises à jour cible.
+
+
+### Bilan réel de la nuit — 6 novembre 2026
+
+La campagne se termine le 5 novembre à 23 h 47 Paris après trois pointes
+RAM globale de 92,28 à 93,33 %. La graine 71 atteint 42, puis 61 et 60 pas
+en mémoire ; seul le checkpoint32 est durable. La graine 73 n’a pas démarré.
+Les prévols courts réussis ne qualifient donc pas la tenue prolongée.
+Aucune comparaison photo ni conclusion sur la capacité de l’architecture.
 
 Le garde respecte le seuil global choisi mais ne conserve pas assez de
-chronologie pour attribuer les pointes. Pr?voir traces born?es par phase,
-franchissement explicite et marge d?admission, puis essai prolong? avec
+chronologie pour attribuer les pointes. Prévoir traces bornées par phase,
+franchissement explicite et marge d’admission, puis essai prolongé avec
 plusieurs sauvegardes avant une autre nuit. Ne pas relever les seuils.
-Les am?liorations de surveillance restent ? impl?menter ; l?audit du
-rapport et ses JSON font foi sur les trois tentatives r?ellement achev?es.
+Les améliorations de surveillance restent à implémenter ; l’audit du
+rapport et ses JSON font foi sur les trois tentatives réellement achevées.
 
 
-### Instrumentation et qualification prolong?e ? 6 novembre 2026
+### Instrumentation et qualification prolongée — 6 novembre 2026
 
-Le banc conserve d?sormais la premi?re violation, une chronologie born?e
-par phase et les secondes pr?c?dant le d?passement. Les acc?s CUDA restent
-sur le thread principal ; le moniteur Windows ne fait qu?enregistrer les
-compteurs et le dernier contexte de phase. Les s?ries sont archiv?es avec
-le bilan canonique ; aucune attribution de m?moire aux autres applications.
-Pr?vol instrument? et tests du garde passent, mais la tenue longue reste
-? v?rifier. Essai deux graines de 256 pas engag?, plusieurs sauvegardes et
-trois contr?les complets par graine ; admission 60 s sous70 %, seuils actifs
-inchang?s, aucune reprise automatique ni photo. L?historique des tentatives
-et r?f?rences de contr?les/jalons est explicitement maintenu ? la reprise.
+Le banc conserve désormais la première violation, une chronologie bornée
+par phase et les secondes précédant le dépassement. Les accès CUDA restent
+sur le thread principal ; le moniteur Windows ne fait qu’enregistrer les
+compteurs et le dernier contexte de phase. Les séries sont archivées avec
+le bilan canonique ; aucune attribution de mémoire aux autres applications.
+Prévol instrumenté et tests du garde passent, mais la tenue longue reste
+à vérifier. Essai deux graines de 256 pas engagé, plusieurs sauvegardes et
+trois contrôles complets par graine ; admission 60 s sous70 %, seuils actifs
+inchangés, aucune reprise automatique ni photo. L’historique des tentatives
+et références de contrôles/jalons est explicitement maintenu à la reprise.
 
 
-### Bilan de l?essai prolong? ? 6 novembre 2026, 11 h Paris
+### Bilan de l’essai prolongé — 6 novembre 2026, 11 h Paris
 
-Les deux graines terminent 256 pas, sauvegardes et trois contr?les complets,
-sans d?passement. Pic global 75,72 %, priv? 4,4852 Gio ; marge locale d?environ
+Les deux graines terminent 256 pas, sauvegardes et trois contrôles complets,
+sans dépassement. Pic global 75,72 %, privé 4,4852 Gio ; marge locale d’environ
 15 Mio seulement. Les pointes nocturnes ne sont pas reproduites : admission
-et charge syst?me ont chang? ensemble. La qualification porte sur environ
+et charge système ont changé ensemble. La qualification porte sur environ
 17 minutes par graine, pas plusieurs heures sous charge concurrente.
 
-Le contr?le CFA r?v?le une perte de transfert apr?s apprentissage (19/24
-et 21/24 groupes sous 0,95), avec MSE d?grad?e sur 73 malgr? une perte de formation
-plus faible. Aucun b?n?fice photo, capacit? insuffisante ou condamnation de
-l?architecture ne peut ?tre conclu. Avant prolongation, auditer couverture
-du bruit/fr?quences et objectif ? architecture fixe ; ne pas confondre ces
-contr?les CFA absolus avec les anciens ratios au parent RGB. Pas de nouvelle
-exp?rience ni d?apprentissage long relanc? ? la cl?ture.
+Le contrôle CFA révèle une perte de transfert après apprentissage (19/24
+et 21/24 groupes sous 0,95), avec MSE dégradée sur 73 malgré une perte de formation
+plus faible. Aucun bénéfice photo, capacité insuffisante ou condamnation de
+l’architecture ne peut être conclu. Avant prolongation, auditer couverture
+du bruit/fréquences et objectif à architecture fixe ; ne pas confondre ces
+contrôles CFA absolus avec les anciens ratios au parent RGB. Pas de nouvelle
+expérience ni d’apprentissage long relancé à la clôture.
 
 
-### Audit du flux et de la perte ? 6 novembre 2026
+### Audit du flux et de la perte — 6 novembre 2026
 
-Reconstruction CPU des 2 048 recettes du pilote et des 864 contr?les connus,
-sans poids ni entra?nement. Le flux privil?gie contenus faciles ? lisser,
-avec peu de d?tails forts ? haute fr?quence. Un t?moin fixe diminue sa
-perte moyenne ? 0,344 mais porte celle des contr?les ? 5,493 ; il ne d?crit
-pas n?cessairement le r?seau, mais montre pourquoi la perte train ne
-qualifie pas les d?tails. Les lois de bruit et rapports de canaux du flux
-ne couvrent pas les contr?les ? luminosit? ?gale. La normalisation de
-perte est v?rifi?e par d?riv?e/autograd, sans bug math?matique d?montr?.
+Reconstruction CPU des 2 048 recettes du pilote et des 864 contrôles connus,
+sans poids ni entraînement. Le flux privilégie contenus faciles à lisser,
+avec peu de détails forts à haute fréquence. Un témoin fixe diminue sa
+perte moyenne à 0,344 mais porte celle des contrôles à 5,493 ; il ne décrit
+pas nécessairement le réseau, mais montre pourquoi la perte train ne
+qualifie pas les détails. Les lois de bruit et rapports de canaux du flux
+ne couvrent pas les contrôles à luminosité égale. La normalisation de
+perte est vérifiée par dérivée/autograd, sans bug mathématique démontré.
 
-La graine actuelle change les contenus et l?initialisation ensemble.
-Avant prolongation, pr?voir deux identit?s distinctes et des bras appari?s
-? architecture/perte fixes : bruit seul puis couverture des d?tails seule.
-Quotas continus d?clar?s, aucune cible de contr?le r?utilis?e. Les plages
-exag?r?es des pentes ?tendues au halo restent aussi ? caract?riser sans
-?cr?tage arbitraire. Pas de nouvel entra?nement lanc? ; voir les preuves
+La graine actuelle change les contenus et l’initialisation ensemble.
+Avant prolongation, prévoir deux identités distinctes et des bras appariés
+à architecture/perte fixes : bruit seul puis couverture des détails seule.
+Quotas continus déclarés, aucune cible de contrôle réutilisée. Les plages
+exagérées des pentes étendues au halo restent aussi à caractériser sans
+écrêtage arbitraire. Pas de nouvel entraînement lancé ; voir les preuves
 et les limites causales dans le rapport unique.
 
 
-### Comparaison appari?e autoris?e ? 6 novembre 2026
+### Comparaison appariée autorisée — 6 novembre 2026
 
-Trois politiques du m?me g?n?rateur : r?f?rence, bruit seul diversifi?,
-quotas de textures seuls renforc?s. Graine de donn?es 71 commune aux deux
-initialisations 71/73 ; architecture et perte inchang?es. La r?f?rence est
-r?entra?n?e pour assurer l?appariement. Plans et param?tres continus sont
-scell?s ; chaque bras passe un pr?vol avant ses deux entra?nements de 256 pas.
-L?empreinte des poids initiaux et l??galit? des contr?les initiaux sont
-exig?es pour l?analyse des effets. Aucun mod?le s?lectionn? sur le meilleur
-jalon. Quotas et bruits continus n?utilisent pas les cibles des contr?les.
+Trois politiques du même générateur : référence, bruit seul diversifié,
+quotas de textures seuls renforcés. Graine de données 71 commune aux deux
+initialisations 71/73 ; architecture et perte inchangées. La référence est
+réentraînée pour assurer l’appariement. Plans et paramètres continus sont
+scellés ; chaque bras passe un prévol avant ses deux entraînements de 256 pas.
+L’empreinte des poids initiaux et l’égalité des contrôles initiaux sont
+exigées pour l’analyse des effets. Aucun modèle sélectionné sur le meilleur
+jalon. Quotas et bruits continus n’utilisent pas les cibles des contrôles.
 
-Huit tests de politique et d?analyse passent, pr?vol de r?f?rence r?ussi,
-comparaison lanc?e. R?sultats encore attendus. Limites m?moire conserv?es,
-admission renforc?e, pas de reprise automatique, pas de photo ni nouvelle
-r?serve. Le rapport unique contient plans, facteurs maintenus et limites
-causales ; aucune int?gration de production.
+Huit tests de politique et d’analyse passent, prévol de référence réussi,
+comparaison lancée. Résultats encore attendus. Limites mémoire conservées,
+admission renforcée, pas de reprise automatique, pas de photo ni nouvelle
+réserve. Le rapport unique contient plans, facteurs maintenus et limites
+causales ; aucune intégration de production.
+
+
+### Reprise après l’arrêt et rôle possible d’un serveur ARM64 — 6 novembre
+
+Reprise manuelle autorisée de la comparaison : conserver le résultat256 pas
+de référence 71 et recharger référence 73 depuis 160. Les sources numériques
+et plans d’entraînement restent scellés ; un manifeste d’orchestration
+séparé identifie les empreintes antérieures et les nouveaux superviseurs.
+La réutilisation vérifie les fichiers complets, la reprise le checkpoint
+durable, et l’historique est préservé. Seuils et échéances inchangés.
+
+L’utilisateur dispose d’un Raspberry Pi 5, 16 Go, Ubuntu 24, actuellement serveur
+de stockage. Rôle possible, non raccordé : archivage des preuves et poids,
+audits CPU, préparation hors ligne et tests Linux/ARM64. Conserver les
+entraînements 32,6 M sur RTX ; le VideoCore du Pi n’est pas une carte NVIDIA
+pour cette chaîne CUDA. Ses 16 Go ne deviennent pas une extension de la RAM
+physique du PC. Les fichiers actifs peuvent rester sur SSD local et les
+copies closes être archivées pour éviter un accès réseau à chaque pas.
+
+PyTorch documente l’inférence CPU sur Pi avec OS 64 bits/aarch64 ; les outils
+IPR restent à qualifier sur cette plateforme. Notre garde mémoire Win32
+et les exécutables Windows ne sont pas transportables tels quels : adapter
+la surveillance Linux, construire les outils ARM64 et vérifier la cohérence
+numérique. Proposition initiale de budget à mesurer : deux threads CPU et
+4 Go de mémoire pour préserver le service de stockage. Aucun accès réseau,
+installation ou calcul distant réalisé dans cette étape ; adresse privée
+non publiée dans la documentation versionnée.
+
+Sources consultées : [fiche Raspberry Pi 5](https://datasheets.raspberrypi.com/rpi5/raspberry-pi-5-product-brief.pdf)
+et [PyTorch sur Raspberry Pi](https://docs.pytorch.org/tutorials/intermediate/realtime_rpi.html).

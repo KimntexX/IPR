@@ -407,123 +407,140 @@ et les journaux d'étape, puis les JSON canoniques. Une qualification
 procédurale connue ne constitue pas une validation photographique.
 
 
-## Pr?paration CFA directe apr?s ?chec de la continuation
+## Préparation CFA directe après échec de la continuation
 
-La courbe +2048 passe le d?veloppement connu mais ?choue davantage sur les
-d?tails fins : ne pas la prolonger pour am?liorer sa seule MSE globale.
-Le rapport contient les r?sultats complets et le diagnostic CFA.
+La courbe +2048 passe le développement connu mais échoue davantage sur les
+détails fins : ne pas la prolonger pour améliorer sa seule MSE globale.
+Le rapport contient les résultats complets et le diagnostic CFA.
 
-`dru_cfa.py` adapte la topologie officielle DRUNet ?pingl?e dans le cache
-local, avec poids al?atoires et r?sidu CFA sign?. `probe_dru_cfa.py`
-mesure uniquement ressources et arithm?tique ; ses poids sont ?cart?s.
-`probe_dru_checkpoint.py` v?rifie sauvegarde/rechargement mod?le + Adam
-et identit? du pas suivant. Son dossier v001 existe d?j? : le script
-refuse de l??craser. Il ne faut pas le supprimer pour relancer un test.
+`dru_cfa.py` adapte la topologie officielle DRUNet épinglée dans le cache
+local, avec poids aléatoires et résidu CFA signé. `probe_dru_cfa.py`
+mesure uniquement ressources et arithmétique ; ses poids sont écartés.
+`probe_dru_checkpoint.py` vérifie sauvegarde/rechargement modèle + Adam
+et identité du pas suivant. Son dossier v001 existe déjà : le script
+refuse de l’écraser. Il ne faut pas le supprimer pour relancer un test.
 
 `dru_checkpoint.py` est un utilitaire bas niveau : sauvegarder uniquement
-apr?s une mise ? jour compl?te et la lib?ration des gradients ; reprendre
-avec le m?me contrat. La sauvegarde technique vaut environ 374 Mio.
-Le pilote long avec arr?t utilisateur et sauvegardes p?riodiques n?est
-pas encore raccord?. Aucun de ces pr?vols n?est un apprentissage utile.
+après une mise à jour complète et la libération des gradients ; reprendre
+avec le même contrat. La sauvegarde technique vaut environ 374 Mio.
+Le pilote long avec arrêt utilisateur et sauvegardes périodiques n’est
+pas encore raccordé. Aucun de ces prévols n’est un apprentissage utile.
 
-Ressources observ?es : quatre threads CPU, GPU principal, environ
-1,4 Gio CUDA allou?s et jusqu?? 4,45 Gio priv?s au rechargement. Gardes
-inchang?es : 6 Gio engag?s, 4,5 Gio souples, 92 % de RAM physique globale.
-Pr?voir un cr?neau GPU et de la marge RAM ; la charge CPU du chargement
-r?el reste ? mesurer avant r?servation. Aucun entra?nement long n?est
-lanc? avant le planning demand? par l?utilisateur.
+Ressources observées : quatre threads CPU, GPU principal, environ
+1,4 Gio CUDA alloués et jusqu’à 4,45 Gio privés au rechargement. Gardes
+inchangées : 6 Gio engagés, 4,5 Gio souples, 92 % de RAM physique globale.
+Prévoir un créneau GPU et de la marge RAM ; la charge CPU du chargement
+réel reste à mesurer avant réservation. Aucun entraînement long n’est
+lancé avant le planning demandé par l’utilisateur.
 
 
-## Campagne nocturne CFA directe ? 5 au 6 novembre
+## Campagne nocturne CFA directe — 5 au 6 novembre
 
-`train_dru_cfa.py` utilise le plan scell?, le flux ? la demande de
-`dru_training_data.py` et les contr?les connus de `dru_known_controls.py`.
-Les poids sont initialis?s al?atoirement. `--preflight` v?rifie huit pas
-et un rejeu exact depuis le quatri?me, puis ?carte les poids ; `--resume`
-charge le checkpoint dont l?empreinte figure dans `resume.json`.
+`train_dru_cfa.py` utilise le plan scellé, le flux à la demande de
+`dru_training_data.py` et les contrôles connus de `dru_known_controls.py`.
+Les poids sont initialisés aléatoirement. `--preflight` vérifie huit pas
+et un rejeu exact depuis le quatrième, puis écarte les poids ; `--resume`
+charge le checkpoint dont l’empreinte figure dans `resume.json`.
 
 `run_dru_overnight.py --plan <plan.json> --preflight <result.json>
 --output <dossier neuf> --training-only` lance les deux graines successives,
-avec v?rification du plan et des sources. Le mode utilis? cette nuit
-s?arr?te apr?s les entra?nements ; il ne lance pas de comparaison photo.
-Cr?er un fichier `STOP` dans ce dossier demande un arr?t propre. Consulter
-`progress.json`, les journaux `train-*-attempt*.log` et les r?sultats par
-graine ; ne pas modifier les sources ou le plan pendant l?ex?cution.
+avec vérification du plan et des sources. Le mode utilisé cette nuit
+s’arrête après les entraînements ; il ne lance pas de comparaison photo.
+Créer un fichier `STOP` dans ce dossier demande un arrêt propre. Consulter
+`progress.json`, les journaux `train-*-attempt*.log` et les résultats par
+graine ; ne pas modifier les sources ou le plan pendant l’exécution.
 
-Les sauvegardes toutes les 32 mises ? jour et les jalons sont conserv?s.
-Une reprise m?moire utilise le dernier ?tat durable, sans relever les
+Les sauvegardes toutes les 32 mises à jour et les jalons sont conservés.
+Une reprise mémoire utilise le dernier état durable, sans relever les
 gardes. La date limite appartient au plan : pour cette campagne,
-entra?nement arr?t? ? 08 h 45 Paris le 6 novembre et superviseur born?
-? 09 h 45, avant l?utilisation du PC ? 10 h. La demande de maintien ?veill?
-est lib?r?e ? la cl?ture ; aucun ordre de veille du PC.
+entraînement arrêté à 08 h 45 Paris le 6 novembre et superviseur borné
+à 09 h 45, avant l’utilisation du PC à 10 h. La demande de maintien éveillé
+est libérée à la clôture ; aucun ordre de veille du PC.
 
-Apr?s disponibilit? de la machine, `infer_dru_photos.py --campaign
-<dossier>` corrige les trois photos connues avec le dernier jalon d?clar?
-par graine, sans s?lectionner le meilleur rendu. `display_local_sigma.py`
-applique le RCD et l?affichage communs ; `summarize_dru_overnight.py`
-produit la planche et les mesures descriptives. Ces calculs sont diff?r?s,
-et ne sont pas lanc?s automatiquement ? 10 h.
+Après disponibilité de la machine, `infer_dru_photos.py --campaign
+<dossier>` corrige les trois photos connues avec le dernier jalon déclaré
+par graine, sans sélectionner le meilleur rendu. `display_local_sigma.py`
+applique le RCD et l’affichage communs ; `summarize_dru_overnight.py`
+produit la planche et les mesures descriptives. Ces calculs sont différés,
+et ne sont pas lancés automatiquement à 10 h.
 
 
-## Suivi m?moire par phase ? 6 novembre
+## Suivi mémoire par phase — 6 novembre
 
-Le lanceur courant ?crit `seed*/memory-<UTC>.jsonl` via `memory_trace.py` :
-?chantillonnage 250 ms, plafond 16 Mio, phase/pas/observation et compteurs
+Le lanceur courant écrit `seed*/memory-<UTC>.jsonl` via `memory_trace.py` :
+échantillonnage 250 ms, plafond 16 Mio, phase/pas/observation et compteurs
 Windows. Les compteurs CUDA sont ceux du dernier changement de phase sur
-le thread principal ; ils ne mesurent pas la m?moire partag?e du pilote.
-Le premier franchissement et les 64 mesures pr?c?dentes restent dans le
-r?sum?, m?me si le fichier est plein. Le garde conserve aussi la premi?re
-mesure en violation. Le superviseur archive les s?ries dans son JSON final.
+le thread principal ; ils ne mesurent pas la mémoire partagée du pilote.
+Le premier franchissement et les 64 mesures précédentes restent dans le
+résumé, même si le fichier est plein. Le garde conserve aussi la première
+mesure en violation. Le superviseur archive les séries dans son JSON final.
 
-Le plan peut renforcer l?admission (`admission_fraction`,
-`admission_stable_seconds`) et r?duire les reprises (`maximum_memory_retries`),
-sans relever les seuils en cours de calcul. L?essai m?moire actuel utilise
-70 % pendant 60 s et z?ro reprise automatique. Il ex?cute deux fois 256
-pas, avec contr?les complets ? 0/128/256, en mode entra?nement seul.
+Le plan peut renforcer l’admission (`admission_fraction`,
+`admission_stable_seconds`) et réduire les reprises (`maximum_memory_retries`),
+sans relever les seuils en cours de calcul. L’essai mémoire actuel utilise
+70 % pendant 60 s et zéro reprise automatique. Il exécute deux fois 256
+pas, avec contrôles complets à 0/128/256, en mode entraînement seul.
 Ne pas relancer les 4 000 pas de nuit avant lecture de cette qualification.
-Le r?sultat courant pr?serve les r?f?rences des jalons/contr?les ant?rieurs
-et le bilan des tentatives lors d?une reprise.
+Le résultat courant préserve les références des jalons/contrôles antérieurs
+et le bilan des tentatives lors d’une reprise.
 
 
-## Audit en lecture seule du flux et de l?objectif
+## Audit en lecture seule du flux et de l’objectif
 
-`audit_dru_training.py` reconstruit les recettes des 2 ? 256 pas du plan m?moire,
-v?rifie leurs sources et rejoue les 864 contr?les forts connus. CPU seulement,
-quatre threads, quota 2 Gio/1,25 Gio souple et d?lai 10 min ; aucun mod?le charg?.
-Le dossier `dru-training-audit-v001` existe d?j? : le programme refuse son
-?crasement. Les quantiles sigma utilisent une grille spatiale de pas 4,
-les pertes utilisent le centre entier. Les t?moins de moyenne 3?3 restent
+`audit_dru_training.py` reconstruit les recettes des 2 × 256 pas du plan mémoire,
+vérifie leurs sources et rejoue les 864 contrôles forts connus. CPU seulement,
+quatre threads, quota 2 Gio/1,25 Gio souple et délai 10 min ; aucun modèle chargé.
+Le dossier `dru-training-audit-v001` existe déjà : le programme refuse son
+écrasement. Les quantiles sigma utilisent une grille spatiale de pas 4,
+les pertes utilisent le centre entier. Les témoins de moyenne 3×3 restent
 un diagnostic fixe, pas une proposition de traitement photographique.
 
-`review_dru_training_audit.py` lit cet audit complet et en d?rive les
+`review_dru_training_audit.py` lit cet audit complet et en dérive les
 comptages de couverture, en distinguant amplitude nominale et composante
-principale apr?s division par 1,35. Les JSON horodat?s restent les preuves.
-L?audit met en ?vidence des lacunes de couverture et des graines confondues ;
-il ne choisit aucun poids ni seuil et ne lance pas l?exp?rience suivante.
+principale après division par 1,35. Les JSON horodatés restent les preuves.
+L’audit met en évidence des lacunes de couverture et des graines confondues ;
+il ne choisit aucun poids ni seuil et ne lance pas l’expérience suivante.
 
 
-## Comparaison appari?e des politiques de donn?es
+## Comparaison appariée des politiques de données
 
 `prepare_dru_data_comparison.py` scelle les trois plans, les sources, la
-graine de donn?es commune, les quotas continus et les bruits effectivement
-tir?s. Il refuse d??craser le dossier de pr?paration existant.
+graine de données commune, les quotas continus et les bruits effectivement
+tirés. Il refuse d’écraser le dossier de préparation existant.
 `run_dru_data_comparison.py --plan <plan.json> --output <dossier neuf>`
-ex?cute pour chaque bras un pr?vol puis les deux entra?nements, et appelle
+exécute pour chaque bras un prévol puis les deux entraînements, et appelle
 `summarize_dru_data_comparison.py` seulement si les six calculs sont complets.
-Le GPU et l?environnement restent ceux du banc courant.
+Le GPU et l’environnement restent ceux du banc courant.
 
-`dru_comparison_policy.py` contient les seules variations de donn?es :
+`dru_comparison_policy.py` contient les seules variations de données :
 `reference`, `noise`, `details`. Le lanceur courant exige explicitement
-`data_seed` et `data_arm` dans le plan. La graine mod?le n?identifie plus
+`data_seed` et `data_arm` dans le plan. La graine modèle n’identifie plus
 implicitement les contenus. Les empreintes initiales entre bras et les
-contr?les initiaux doivent correspondre ; sinon l?analyse refuse de conclure.
-Tous les jalons et groupes sont gard?s. La perte et l?architecture restent
-fixes et aucun bras combin? n?est ajout? sans nouveau protocole.
+contrôles initiaux doivent correspondre ; sinon l’analyse refuse de conclure.
+Tous les jalons et groupes sont gardés. La perte et l’architecture restent
+fixes et aucun bras combiné n’est ajouté sans nouveau protocole.
 
 Le suivi est `dru-data-comparison-v001/progress.json`, avec journaux de
-pr?vol et trois sous-campagnes. `STOP` ? la racine arr?te la cha?ne et son
-arbre si n?cessaire ; reprendre seulement depuis un ?tat durable v?rifi?.
-La premi?re erreur technique arr?te la comparaison, sans reprise automatique.
+prévol et trois sous-campagnes. `STOP` à la racine arrête la chaîne et son
+arbre si nécessaire ; reprendre seulement depuis un état durable vérifié.
+La première erreur technique arrête la comparaison, sans reprise automatique.
 Les anciens plans et JSON restent des preuves historiques avec leurs sources
-scell?es ; les donn?es d?une ancienne graine ne remplacent pas le nouveau
-bras de r?f?rence appari?.
+scellées ; les données d’une ancienne graine ne remplacent pas le nouveau
+bras de référence apparié.
+
+
+## Reprise explicite d’une comparaison interrompue
+
+`run_dru_data_comparison.py --resume --plan <manifeste de reprise>
+--output <campagne existante>` exige une campagne close en erreur. Le
+manifeste identifie l’ancien bilan et conserve les empreintes des plans
+d’entraînement. Le changement d’orchestration ne modifie pas le contexte
+scientifique du checkpoint. Ne pas éditer les plans de worker pour reprendre.
+
+`run_dru_overnight.py --resume` vérifie les résultats existants via
+`dru_resume_policy.py` : réutiliser les graines achevées après vérification
+des fichiers ; reprendre les erreurs/pauses depuis `resume.json` et
+`resume.pt` vérifiés. Les progrès volatils au-delà du checkpoint ne sont
+pas durables. Les bilans et journaux précédents sont préservés, avec de
+nouveaux noms pour chaque relance. Une relance manuelle ne relève pas les
+plafonds et n’active pas une boucle de tentatives supplémentaires.
