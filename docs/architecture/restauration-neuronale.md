@@ -87,7 +87,7 @@ noyaux préparés une fois pour une inférence. Deux initialisations et une
 confirmation procédurale distincte de cette première structure sont
 conservées. La [voie locale suivante (§15)](#15-voie-courte-locale--2-novembre-2026)
 réduit l'erreur de reconstruction avec deux initialisations, puis sur
-des contenus procéduraux distincts. La graine73 de l'objectif RGB échoue
+des contenus procéduraux distincts. La graine 73 de l'objectif RGB échoue
 sur les ondes chromatiques du sous-ensemble historique20. L'objectif
 relatif suivant lève cet échec pour les deux graines, puis confirme
 une meilleure fidélité des ondes sur de nouveaux contenus, au prix
@@ -787,7 +787,7 @@ les12 critères sur20 et80 contrôles de développement, sans changer les
 seuils. Le détail, les ablations et les mesures font autorité dans le
 [rapport unique](../validation/analyses/analyse-restauration-neuronale.md).
 
-La reproduction avec la graine73 conserve les gains globaux et passe
+La reproduction avec la graine 73 conserve les gains globaux et passe
 les12 critères sur80 contrôles historiques, mais échoue sur les ondes
 chromatiques du sous-ensemble20 (11/12). Le succès initial71 n'est donc
 pas une qualification de toutes les initialisations. Les deux graines
@@ -1230,7 +1230,7 @@ La disponibilit? horaire prime le nombre de mises ? jour cible.
 
 La campagne se termine le 5 novembre ? 23 h 47 Paris apr?s trois pointes
 RAM globale de 92,28 ? 93,33 %. La graine 71 atteint 42, puis 61 et 60 pas
-en m?moire ; seul le checkpoint32 est durable. La graine73 n?a pas d?marr?.
+en m?moire ; seul le checkpoint32 est durable. La graine 73 n?a pas d?marr?.
 Les pr?vols courts r?ussis ne qualifient donc pas la tenue prolong?e.
 Aucune comparaison photo ni conclusion sur la capacit? de l?architecture.
 
@@ -1271,3 +1271,23 @@ l?architecture ne peut ?tre conclu. Avant prolongation, auditer couverture
 du bruit/fr?quences et objectif ? architecture fixe ; ne pas confondre ces
 contr?les CFA absolus avec les anciens ratios au parent RGB. Pas de nouvelle
 exp?rience ni d?apprentissage long relanc? ? la cl?ture.
+
+
+### Audit du flux et de la perte ? 6 novembre 2026
+
+Reconstruction CPU des 2 048 recettes du pilote et des 864 contr?les connus,
+sans poids ni entra?nement. Le flux privil?gie contenus faciles ? lisser,
+avec peu de d?tails forts ? haute fr?quence. Un t?moin fixe diminue sa
+perte moyenne ? 0,344 mais porte celle des contr?les ? 5,493 ; il ne d?crit
+pas n?cessairement le r?seau, mais montre pourquoi la perte train ne
+qualifie pas les d?tails. Les lois de bruit et rapports de canaux du flux
+ne couvrent pas les contr?les ? luminosit? ?gale. La normalisation de
+perte est v?rifi?e par d?riv?e/autograd, sans bug math?matique d?montr?.
+
+La graine actuelle change les contenus et l?initialisation ensemble.
+Avant prolongation, pr?voir deux identit?s distinctes et des bras appari?s
+? architecture/perte fixes : bruit seul puis couverture des d?tails seule.
+Quotas continus d?clar?s, aucune cible de contr?le r?utilis?e. Les plages
+exag?r?es des pentes ?tendues au halo restent aussi ? caract?riser sans
+?cr?tage arbitraire. Pas de nouvel entra?nement lanc? ; voir les preuves
+et les limites causales dans le rapport unique.

@@ -483,3 +483,20 @@ pas, avec contr?les complets ? 0/128/256, en mode entra?nement seul.
 Ne pas relancer les 4 000 pas de nuit avant lecture de cette qualification.
 Le r?sultat courant pr?serve les r?f?rences des jalons/contr?les ant?rieurs
 et le bilan des tentatives lors d?une reprise.
+
+
+## Audit en lecture seule du flux et de l?objectif
+
+`audit_dru_training.py` reconstruit les recettes des 2 ? 256 pas du plan m?moire,
+v?rifie leurs sources et rejoue les 864 contr?les forts connus. CPU seulement,
+quatre threads, quota 2 Gio/1,25 Gio souple et d?lai 10 min ; aucun mod?le charg?.
+Le dossier `dru-training-audit-v001` existe d?j? : le programme refuse son
+?crasement. Les quantiles sigma utilisent une grille spatiale de pas 4,
+les pertes utilisent le centre entier. Les t?moins de moyenne 3?3 restent
+un diagnostic fixe, pas une proposition de traitement photographique.
+
+`review_dru_training_audit.py` lit cet audit complet et en d?rive les
+comptages de couverture, en distinguant amplitude nominale et composante
+principale apr?s division par 1,35. Les JSON horodat?s restent les preuves.
+L?audit met en ?vidence des lacunes de couverture et des graines confondues ;
+il ne choisit aucun poids ni seuil et ne lance pas l?exp?rience suivante.

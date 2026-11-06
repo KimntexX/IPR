@@ -8,10 +8,10 @@ Ce bénéfice n'est pas démontré pour le correcteur CFA actuel.
 | Question | État et décision actuelle |
 | --- | --- |
 | Ce qui fonctionne | Contrats sign?s, reprise, suivi par phase et deux essais m?moire de 256 pas, huit sauvegardes et trois contr?les complets par graine, sans d?passement. Pas une preuve de qualit? photo. |
-| Ce qui bloque | Pr?servation du signal : apr?s 256 pas, 19/24 et 21/24 groupes connus ont au moins un gain CFA sous 0,95. La seconde graine d?grade aussi la MSE des contr?les. |
+| Ce qui bloque | Couverture trop faible des d?tails forts ? haute fr?quence, bruit conditionnel diff?rent des contr?les, contenus et initialisation confondus entre graines. La perte moyenne r?compense des lissages destructeurs sur ce flux. |
 | Derniers résultats | Réplication close : 10 et 12 échecs forts sur 48, après les 12 et 16 précédents. Sur les photos, sensibilité aux graines et motifs directionnels : bénéfice non validé. |
 | Calcul engagé | Courbe et photos achevées ; qualification des poids finaux préparée sur les contrôles connus, CPU épinglé, deux graines et seuils inchangés. Aucune nouvelle réserve. |
-| Prochaine preuve utile | Auditer couverture des niveaux de bruit et des fr?quences, et objectif CFA ? architecture fixe, avant de prolonger les poids. Pas d?augmentation de taille ni de s?lection du meilleur jalon sur ces scores. |
+| Prochaine preuve utile | S?parer graine de donn?es et initialisation ; pr?parer une comparaison ? architecture/perte fixes, avec bruit seul puis couverture des d?tails seule modifi?s. Crit?res inchang?s, aucune nouvelle r?serve. |
 | GPU | D?bit m?dian 2,33?2,36 s/pas pendant la qualification ; environ 17 min par graine avec contr?les. Marge locale d?environ 15 Mio seulement au pic ; aucune garantie de plusieurs heures ou d?environnement concurrent. |
 | Données | 349 RAW inventoriés, 105 paires étudiées. Température, bruit fixe et propagation restent à qualifier ; pas de nouvelles prises demandées pour cette expérience. |
 | Critère d'arrêt | Pas de nouvelle série de variantes synthétiques pour améliorer les mêmes seuils. Après une courbe longue figée et un bruit caractérisé, absence de gain visible face au classique : abandon ou changement de taille/architecture, décision documentée. |
@@ -558,7 +558,7 @@ Avant le pilote neuronal, préparer une version explicite du protocole
 géométrique : support commun valide plutôt que portée fixe de 12 pixels,
 garde de recouvrement, contrôles locaux et première référence conservée.
 Ne pas simplement augmenter le seuil ou choisir la seconde référence parce
-qu'elle passe mieux. ISO12800 reste insuffisant sur le contrôle principal
+qu'elle passe mieux. ISO 12800 reste insuffisant sur le contrôle principal
 dans ce diagnostic. Aucun gain photographique du réseau revendiqué,
 aucune modification moteur, aucun calcul actif à la clôture de cet audit.
 
@@ -595,7 +595,7 @@ Résultat en environ **3,65 s** :
 
 Recouvrement pleine image mesuré : environ 97,81 % à 98,40 % ; erreur
 aller-retour maximale **0,118 pixel**. Les deux nouvelles gardes passent
-pour les douze prises ; ISO12800 reste refusé par la cohérence locale
+pour les douze prises ; ISO 12800 reste refusé par la cohérence locale
 (1 fenêtre de contrôle au lieu de 2), et non par le déplacement.
 Les neuf fenêtres de la référence conservent 100 % de support intérieur
 stable et valide selon le diagnostic du banc.
@@ -618,9 +618,9 @@ admissible à ISO1600–6400. Aucun entraînement lancé dans cette étape.**
 Suite : reconstruire le jeu d'apprentissage existant avec le même
 qualificateur courant, vérifier séparation par composition et couverture
 ISO, puis lancer le pilote à architecture et durée figées. Les anciennes
-découpes d'apprentissage étaient à ISO12800/51200 : ne pas présenter le
+découpes d'apprentissage étaient à ISO 12800/51200 : ne pas présenter le
 contrôle à ISO1600–6400 comme une validation aux mêmes ISO ou comme une
-qualification produit. Garder ISO12800 exclu du contrôle jusqu'à preuve
+qualification produit. Garder ISO 12800 exclu du contrôle jusqu'à preuve
 complémentaire, sans choisir la seconde référence pour obtenir un succès.
 Pas de nouvelle photo demandée à ce stade ; aucun changement moteur,
 publication Git ou calcul actif à la clôture de cette étape.
@@ -774,7 +774,7 @@ prouver sur une photo inconnue.
 
 Le résidu réel n'est pas expliqué principalement par un décalage RGB
 constant : le carré du biais moyen par canal représente environ 0,009 %
-de la MSE à ISO12800 et 0,48 % à ISO51200. L'énergie de sa moyenne locale
+de la MSE à ISO 12800 et 0,48 % à ISO51200. L'énergie de sa moyenne locale
 9×9 représente environ 10,25 % et 9,96 % de la MSE. Cela ne sépare pas
 bruit corrélé, erreur géométrique et structure ; aucune attribution à
 une « vérité de bruit » n'est faite.
@@ -829,7 +829,7 @@ structure requièrent aussi un voisinage 5×5 entièrement valide.
 
 Ratios sortie / entrée relativement à la même cible, pondérés par le
 nombre de pixels valides. L'erreur totale augmente donc de **31,05 %**,
-et de **20,77 %** au centre. Un gain MSE est présent à ISO6400, et
+et de **20,77 %** au centre. Un gain MSE est présent à ISO 6400, et
 faiblement à ISO3200, mais il ne valide ni la couleur ni les détails.
 Sur l'ensemble des découpes, le rapport d'erreur opposée couleur vaut
 6,74003 ; l'exclusion des bords ne fait pas disparaître le défaut.
@@ -967,7 +967,7 @@ soit au maximum 27 aperçus avec empreintes des sources sélectionnées.
 Ce groupement ne prouve ni cadrage fixe, ni immobilité, ni référence propre.
 
 - **`colorimétrie/rafale/6V1A9819.CR3` à `6V1A9860.CR3` : 42 prises,
-  ISO4000, 1/200 s, f/5,6, 26 mm.** Priorité pour une qualification caméra
+  ISO 4000, 1/200 s, f/5,6, 26 mm.** Priorité pour une qualification caméra
   signée au même ISO, sans remélanger au contrôle. Le dépistage JPEG donne
   des ECC d'environ 0,998 au milieu et 0,988 à la fin, mais aussi des
   déplacements d'environ 53 et 112 pixels pleine image. Il faut contrôler
@@ -1029,7 +1029,7 @@ Tous les travaux et données restent locaux, sans publication.
 **Conclusion actuelle : des données utiles existent ; pas de nouvelles
 photos demandées avant leur qualification.** Ordre proposé :
 
-1. Qualifier la rafale ISO4000 dans le signal caméra signé, en séparant les
+1. Qualifier la rafale ISO 4000 dans le signal caméra signé, en séparant les
    prises sources de celles servant à la moyenne de référence. Vérifier
    stabilité locale et bruit commun ; une moyenne n'est pas une vérité absolue.
 2. Qualifier les régions des cinq sources ISO100 et les profils de bruit
@@ -1043,7 +1043,7 @@ Aucun de ces candidats n'est automatiquement autorisé ou qualifié pour
 l'apprentissage par le seul inventaire. Aucun changement moteur, aucune
 suppression ou copie de RAW, aucun calcul actif à la clôture de l'audit.
 
-## 1er novembre 2026, 22:49 UTC — qualification de la rafale ISO4000 lancée
+## 1er novembre 2026, 22:49 UTC — qualification de la rafale ISO 4000 lancée
 
 Campagne `neural-same-iso-burst-v001-20261101T224914Z`, banc local
 `47f7bf9`, après 33 tests ciblés réussis. Les 42 RAW `6V1A9819` à
@@ -1053,7 +1053,7 @@ débruitage. Le premier développement a confirmé la calibration requise.
 La répartition est figée avant mesure : positions chronologiques impaires
 pour les 21 prises de référence, positions paires pour les 21 sources.
 Aucune source ne participe à sa cible. Toutes les prises conservent leur
-ISO4000 réel ; aucun gain ou décalage radiométrique n'est ajusté. Les
+ISO 4000 réel ; aucun gain ou décalage radiométrique n'est ajusté. Les
 contrôles existants de recouvrement, réciprocité, stabilité temporelle et
 cohérence locale sont maintenus, avec au moins huit références recalées.
 
@@ -1068,7 +1068,7 @@ aucun entraînement, changement de partition du contrôle, changement moteur
 ou publication. La campagne conservera sa mémoire JSON sous
 `docs/validation/raw/` à sa clôture, y compris en cas d'échec.
 
-## 2 novembre 2026 — résultats de la qualification ISO4000
+## 2 novembre 2026 — résultats de la qualification ISO 4000
 
 La campagne précédente s'est terminée normalement en **328,91 s** :
 42 développements caméra signés, calibration appliquée sur chacun.
@@ -1103,7 +1103,7 @@ barrière d'un pilote complet. Aucun `dataset.npz` d'entraînement complet
 ni nouveau modèle n'est produit ; captures, masques reconstructibles,
 identités et décisions d'admission sont conservés.
 
-Mémoire canonique : [qualification de la rafale ISO4000](../raw/neural-same-iso-burst-v001-20261101T224914Z.json).
+Mémoire canonique : [qualification de la rafale ISO 4000](../raw/neural-same-iso-burst-v001-20261101T224914Z.json).
 
 **Conclusion actuelle : ajout exploitable pour un train exploratoire,
 pas validation du U-Net.** Les 152 patches proviennent de seulement
@@ -1167,7 +1167,7 @@ Mémoire canonique : [diagnostic des supports ISO100](../raw/neural-low-iso-supp
 cible propre qualifiée.** Ne pas injecter un bruit arbitraire en prenant
 ces images pour une vérité sans bruit. Pour avancer avec des données
 réellement appariées, la prochaine proposition est un pilote exploratoire
-combinant le train déjà qualifié et les 152 paires de la rafale ISO4000,
+combinant le train déjà qualifié et les 152 paires de la rafale ISO 4000,
 avec durée fixée avant mesure et contrôles par ISO. Le contrôle existant
 reste hors du train mais, déjà consulté, ne constitue plus un test final
 indépendant. Les supports ISO100 attendent un modèle de bruit qualifié
@@ -1180,13 +1180,13 @@ aucun calcul actif à cette clôture.
 Campagne `neural-enriched-photo-pilot-v001-20261102T100228Z`, banc
 `97b30b8`, 23 tests ciblés réussis dont un entraînement synthétique de
 contrat. Les 342 patches du train initial sont combinés aux 152 paires
-ISO4000 ; le contrôle demeure constitué des mêmes 186 patches.
+ISO 4000 ; le contrôle demeure constitué des mêmes 186 patches.
 L'assemblage exige les identités exactes de chaque source et cible des
 deux campagnes parentes. Si elles changent, aucun entraînement ne démarre.
 
 La radiométrie de chaque composition reste celle de sa qualification :
 ajustement global par canal pour les paires inter-ISO existantes, identité
-sans fit pour la rafale ISO4000. Aucun seuil n'est modifié. Les sources
+sans fit pour la rafale ISO 4000. Aucun seuil n'est modifié. Les sources
 ISO100 isolées du dernier diagnostic ne sont pas utilisées comme cibles.
 
 Budget figé : **2 048 étapes**, mêmes largeur, graine, échelle, optimiseur
@@ -1209,11 +1209,11 @@ contrôle. Pas de cible ISO100 isolée, pas de bruit synthétique ajouté.
 
 | Ensemble | Rapport MSE sortie / entrée |
 | --- | ---: |
-| Train, ISO4000/12800/51200 | 0,17469 |
+| Train, ISO 4000/12800/51200 | 0,17469 |
 | Contrôle complet | 0,66333 |
 | Contrôle ISO1600, 54 patches | 0,87290 |
 | Contrôle ISO3200, 60 patches | 0,64955 |
-| Contrôle ISO6400, 72 patches | 0,40225 |
+| Contrôle ISO 6400, 72 patches | 0,40225 |
 
 Les ratios par ISO sont pondérés par le nombre de valeurs valides, comme
 l'agrégat global. La MSE au contrôle baisse donc de **33,67 %** par rapport
@@ -1262,7 +1262,7 @@ entiers, contre une baisse de 12,21 % au cœur. La partie hors cœur donne
 un ratio de 1,47267. Cela motive une vérification du contexte d'inférence ;
 ce n'est pas une preuve que le padding explique tout. À ISO1600, le ratio
 opposé reste 1,36812 **même au cœur** (2,21238 sur le patch entier).
-ISO3200 : 0,74660 au cœur ; ISO6400 : 0,51016.
+ISO3200 : 0,74660 au cœur ; ISO 6400 : 0,51016.
 
 Les gains de projection augmentent par rapport à l'ancien modèle mais
 restent inférieurs à ceux de l'entrée : la réduction du bruit mesurée
@@ -1362,8 +1362,8 @@ Aucun entraînement ou changement de recette.
 
 | Composition et rôle | Patches / RAW sources | Rapport MSE RGB cœur | Rapport erreur opposée cœur |
 | --- | ---: | ---: | ---: |
-| Intérieur initial, train ISO12800/51200 | 342 / 6 | 0,15596 | 0,26342 |
-| Rafale ISO4000, train | 152 / 18 | 0,41433 | 0,52494 |
+| Intérieur initial, train ISO 12800/51200 | 342 / 6 | 0,15596 | 0,26342 |
+| Rafale ISO 4000, train | 152 / 18 | 0,41433 | 0,52494 |
 | Intérieur de contrôle, ISO1600/3200/6400 | 186 / 9 | 0,56166 | 0,87791 |
 
 Les résultats du train sont des mesures sur les images apprises, pas une
@@ -1382,7 +1382,7 @@ l'atténuation du signal corrélé à la référence existe aussi sur le train.
 Elles ne quantifient toujours pas un pourcentage absolu de détail réel
 perdu, car les références et le recalage restent imparfaits.
 
-La rafale ISO4000 présente **zéro composante de gradient forte** et
+La rafale ISO 4000 présente **zéro composante de gradient forte** et
 seulement **492 composantes faibles**, contre 686250 composantes dans la
 bande basse, sur le support retenu. Cela ne décrit pas toute la photo,
 mais uniquement ses régions admises. Les 152 paires enrichissent donc
@@ -1394,7 +1394,7 @@ seuils après coup pour faire apparaître artificiellement une couverture.
 
 Le diagnostic sépare entrée moins référence, sortie moins référence et
 déplacement sortie moins entrée, canal par canal. Sur le cœur de la rafale
-ISO4000, l'entrée moins référence est presque centrée :
+ISO 4000, l'entrée moins référence est presque centrée :
 `[-0,0000254 ; -0,0000133 ; +0,0000257]`. Le modèle déplace la moyenne de
 `[-0,0008859 ; -0,0029199 ; -0,0021920]`, donnant une sortie moins référence
 `[-0,0009113 ; -0,0029332 ; -0,0021663]`, en unités caméra signées.
@@ -1405,7 +1405,7 @@ Le déplacement moyen vert vaut aussi **−0,0036223** sur le train intérieur
 et **−0,0042379** sur le contrôle. Cela documente un comportement commun
 du modèle sur ces groupes, pas sa cause unique ni un pourcentage de
 luminosité à l'affichage. À ISO1600, l'erreur opposée au cœur reste 1,36812,
-contre 0,74660 à ISO3200 et 0,51016 à ISO6400.
+contre 0,74660 à ISO3200 et 0,51016 à ISO 6400.
 
 Mémoire canonique : [diagnostic train / contrôle](../raw/neural-train-control-v001-20261102T102305Z.json).
 
@@ -1463,7 +1463,7 @@ recherche de coefficient ou de checkpoint supplémentaire.
 | Mesure au cœur24 | Pilote enrichi | Avec pénalité de biais |
 | --- | ---: | ---: |
 | MSE train intérieur / entrée | 0,15596 | 0,22456 |
-| MSE train ISO4000 / entrée | 0,41433 | 0,65765 |
+| MSE train ISO 4000 / entrée | 0,41433 | 0,65765 |
 | MSE contrôle / entrée | 0,56166 | 0,57598 |
 | Erreur opposée contrôle / entrée | 0,87791 | 0,87231 |
 | Erreur opposée contrôle ISO1600 / entrée | 1,36812 | 1,07473 |
@@ -1473,7 +1473,7 @@ recherche de coefficient ou de checkpoint supplémentaire.
 La projection des détails s'améliore sans rejoindre celle de l'entrée,
 mais la MSE RGB se dégrade sur les deux compositions du train et sur
 l'agrégat de contrôle. L'erreur opposée à ISO1600 s'améliore nettement,
-tout en restant au-dessus de l'entrée ; à ISO6400 elle passe au contraire
+tout en restant au-dessus de l'entrée ; à ISO 6400 elle passe au contraire
 de 0,51016 à 0,72152. Une moyenne globale seule masque ces compromis.
 
 La grandeur directement visée par la nouvelle perte doit aussi être
@@ -1484,7 +1484,7 @@ du carré de l'erreur moyenne du cœur vaut :
 | Composition | Pilote enrichi | Avec pénalité |
 | --- | ---: | ---: |
 | Train intérieur | 0,0000172340 | 0,0000195531 |
-| Train ISO4000 | 0,0000049920 | 0,0000078239 |
+| Train ISO 4000 | 0,0000049920 | 0,0000078239 |
 | Contrôle | 0,0000099688 | 0,0000076224 |
 
 Ces valeurs se recalculent depuis les sommes de biais et les nombres de
@@ -1529,7 +1529,7 @@ ni sélection d'étape selon les résultats.
 
 L'audit de contenu réutilise les preuves du train : la composition initiale
 représente **69,23 % des patches et 99,13 % de la somme des erreurs RGB
-quadratiques initiales**, contre **30,77 % / 0,87 %** pour la rafaleISO4000.
+quadratiques initiales**, contre **30,77 % / 0,87 %** pour la rafaleISO 4000.
 Ce contraste documente une forte disparité d'échelle d'erreur, pas une
 mesure directe de contribution aux gradients ou un profil physique du
 bruit. La répartition des structures et des fichiers sources est conservée.
@@ -1629,7 +1629,7 @@ production figées, avec le même RCD/médiane signé. Les 54 régions CFA
 passent le rangement aller-retour ; la relation gains/balance/borne haute
 est vérifiée avec un écart maximum de **5,96×10⁻⁸**, compatible avec les
 arrondis flottants des deux calculs. Les valeurs sous zéro sont conservées :
-jusqu'à 10,74 % et 31,89 % dans certains plans/régions à ISO12800 et4000.
+jusqu'à 10,74 % et 31,89 % dans certains plans/régions à ISO 12800 et4000.
 Ces maxima ne décrivent pas le pourcentage global de pixels bruités.
 
 Mémoire canonique : [qualification de l'entrée mosaïque signée](../raw/neural-mosaic-inlet-v001-20261102T113314Z.json).
@@ -3177,7 +3177,7 @@ Le nombre de paramètres stockés reste31300, mais le nombre de degrés
 de liberté indépendants diminue : ne pas annoncer une capacité identique.
 
 L'ordre est fixé : fermeture seule, puis modèle contraint si nécessaire,
-puis reproduction indépendante avec graine73 de la structure retenue,
+puis reproduction indépendante avec graine 73 de la structure retenue,
 sans sélectionner la meilleure graine. Les contrôles historiques restent
 des régressions consultées. Une confirmation distincte est réservée dès
 maintenant : recettes `reserved` indices64à95 (graines2000064à2000095),
@@ -3209,11 +3209,11 @@ mesure non intercalée avec les campagnes antérieures.
 
 Pilotes `neural-equivariant-unet-v001-20261102T161708Z` et
 `neural-equivariant-unet-v001-20261102T161847Z`, terminés respectivement
-en58,58s et54,81s. La graine73 est une initialisation indépendante,
+en58,58s et54,81s. La graine 73 est une initialisation indépendante,
 pas un second modèle choisi parmi une recherche de graines. Les deux
 checkpoints finaux sont conservés et rapportés sans sélection.
 
-| Mesure | Graine71 | Graine73 |
+| Mesure | Graine 71 | Graine 73 |
 | --- | ---: | ---: |
 | RatioRGB,20 contrôles historiques | 0,98866 | 0,98926 |
 | RatioRGB,80 contrôles croisés | 0,973677 | 0,973679 |
@@ -3250,7 +3250,7 @@ respectent leurs empreintes. Les recettes et leurs partitions restent
 dans le JSON ; toutes ces vérités restent issues des mêmes générateurs,
 pas d'une nouvelle séance photographique ou d'un autre boîtier.
 
-| Confirmation, ratio MSE / bilinéaire | Graine71 | Graine73 |
+| Confirmation, ratio MSE / bilinéaire | Graine 71 | Graine 73 |
 | --- | ---: | ---: |
 | RGB,80 nouveaux cas mixtes | 0,96270 | 0,96235 |
 | Erreur opposée,80 nouveaux cas mixtes | 0,96819 | 0,96799 |
@@ -3291,7 +3291,7 @@ et128 nouveaux contours. Les états des modèles sources restent inchangés.
 Les tests unitaires couvrent aussi valeurs signées, image non carrée,
 toutes les phases et refus des poids invalides.
 
-| Mesure CPU128px,sept répétitions intercalées | Graine71 | Graine73 |
+| Mesure CPU128px,sept répétitions intercalées | Graine 71 | Graine 73 |
 | --- | ---: | ---: |
 | Préparation ponctuelle d'une copie | 7,81ms | 4,44ms |
 | Inférence avec projection répétée, médiane | 6,11ms | 5,85ms |
@@ -3309,7 +3309,7 @@ Mémoires canoniques de la campagne autonome :
 
 - [Fermeture seule,31 300 paramètres](../raw/neural-closed-unet-v001-20261102T161547Z.json).
 - [Structure équivariante,graine71](../raw/neural-equivariant-unet-v001-20261102T161708Z.json).
-- [Reproduction indépendante,graine73](../raw/neural-equivariant-unet-v001-20261102T161847Z.json).
+- [Reproduction indépendante,graine 73](../raw/neural-equivariant-unet-v001-20261102T161847Z.json).
 - [Plan complet et confirmation distincte,les deux graines](../raw/neural-structure-confirmation-v001-20261102T162029Z.json).
 - [Préparation ponctuelle et960 sorties exactes](../raw/neural-prepared-inference-v001-20261102T162412Z.json).
 
@@ -3817,7 +3817,7 @@ La covariance D4 conserve un écart maximal8,94e-8.
 
 La confirmation distincte se termine ensuite en17,31s :
 
-| Contrôle nouveau | Graine71 | Graine73 |
+| Contrôle nouveau | Graine 71 | Graine 73 |
 | --- | ---: | ---: |
 | Rapport MSE RGB,80 cas mixtes | 0,40660 | 0,47221 |
 | Rapport d'erreur opposée,80 cas mixtes | 0,40572 | 0,47500 |
@@ -3921,7 +3921,7 @@ sans modification des seuils. Les constantes restent exactes, les rampes
 | Gain de gradient, contours (bilinéaire0,80468) | 0,91959 | 0,91493 |
 
 La fidélité chromatique est fortement améliorée sur ce banc, y compris
-pour la graine73 précédemment en échec. Cependant, l'erreur globale de
+pour la graine 73 précédemment en échec. Cependant, l'erreur globale de
 cette graine augmente de5,57 % face à son témoin : le compromis sur les
 contours n'est pas uniformément meilleur. Le nouveau résultat ne suffit
 donc pas à déclarer cette pondération supérieure dans tous les cas.
@@ -3937,7 +3937,7 @@ campagne ne reste actif.
 Preuves canoniques :
 
 - [Objectif relatif, graine71](../raw/neural-local-route-local-v001-20261102T221126Z.json).
-- [Objectif relatif, graine73](../raw/neural-local-route-local-v001-20261102T221420Z.json).
+- [Objectif relatif, graine 73](../raw/neural-local-route-local-v001-20261102T221420Z.json).
 
 **Conclusion de cette campagne : protection des faibles variations encourageante,
 compromis global à confirmer.** Les deux graines passent les barrières
@@ -3989,7 +3989,7 @@ inchangés. Les quatre modèles passent12/12 critères sur les80 nouveaux
 cas mixtes et leur sous-ensemble20. La campagne dure12,33s, pic résident
 226,41Mio, job870,53Mio, machine56,94 %, aucun seuil déclenché.
 
-| Mesure appariée (MSE relative / MSE objectif RGB) | Graine71 | Graine73 |
+| Mesure appariée (MSE relative / MSE objectif RGB) | Graine 71 | Graine 73 |
 | --- | ---: | ---: |
 | Groupe mixte80 | 0,71600 | 0,91214 |
 | Ondes chromatiques16 | 0,01136 | 0,00514 |
@@ -4250,7 +4250,7 @@ la machine. Il arrête le pilote au prochain contrôle ; il ne peut
 limiter les allocations des autres processus.
 
 Preuve conservée : [reprise interrompue](../raw/neural-noisy-moment-v001-20261103T113520Z.json).
-Il n'y a ni checkpoint final ni évaluation complète, et la graine73
+Il n'y a ni checkpoint final ni évaluation complète, et la graine 73
 n'a pas démarré. Les sorties partielles ne permettent pas de conclure
 à un gain ou un échec du débruitage. Les poids initiaux et les images
 sources sont intacts. Le plan et les tests ne sont pas modifiés pour
@@ -4296,7 +4296,7 @@ pour un pic propre307,20Mio résidents et956,36Mio engagés. Le garde
 92 % a déclenché l'arrêt au contrôle suivant, sans dépassement des
 plafonds propres au processus. Le journal confirme le passage1024/2048,
 pas de fin2048 ; l'étape exacte d'arrêt n'est pas conservée dans le JSON.
-La graine73 n'a pas démarré. Ni checkpoint final ni évaluation disponible.
+La graine 73 n'a pas démarré. Ni checkpoint final ni évaluation disponible.
 
 La preuve [arrêt sous seuil92 %](../raw/neural-noisy-moment-v001-20261103T114145Z.json)
 est conservée. Une lecture après clôture trouve59,22 % de mémoire globale
@@ -7320,6 +7320,170 @@ pr?paratoire. Cette prochaine exp?rience n?est pas encore lanc?e.
 Preuves : [relecture m?moire et contr?les](../raw/neural-dru-memory-review-v001-20261106T100844Z.json),
 [superviseur complet, s?ries et contr?les inclus](../raw/neural-dru-overnight-v001-20261106T100007Z.json),
 [graine71](../raw/neural-dru-training-v001-71-20261106T094208Z.json)
-et [graine73](../raw/neural-dru-training-v001-73-20261106T100006Z.json).
+et [graine 73](../raw/neural-dru-training-v001-73-20261106T100006Z.json).
 Les poids et pixels restent locaux. Aucun changement de production,
 publication, fusion ni tag. Tous les calculs de cette campagne sont clos.
+
+
+## 6 novembre 2026 ? audit de la couverture et de l?objectif CFA
+
+**Conclusion : le flux d?apprentissage et sa perte moyenne peuvent
+r?compenser un lissage qui d?truit les d?tails des contr?les.** L?audit
+met aussi en ?vidence un d?calage conditionnel du bruit et un m?lange
+des effets de donn?es/initialisation entre graines. Il ne d?montre ni
+une insuffisance des 32,6 M de param?tres ni une erreur de d?rivation de
+la perte. Aucun entra?nement suppl?mentaire ou rendu GPU n?est lanc?.
+
+### P?rim?tre et m?thode
+
+L?audit CPU reconstitue les **2 048 observations des recettes scell?es**
+des deux entra?nements de 256 pas, ainsi que les **864 champs forts
+bruit?s d?j? connus**. Les sources et recettes sont v?rifi?es ; les
+cibles et bruits des contr?les rejouent leurs empreintes. Pour
+l?apprentissage, les tenseurs d??poque n??tant pas sauvegard?s, il s?agit
+d?une reconstruction selon le g?n?rateur, pas d?une comparaison aux
+captures de pixels de chaque pas. Le runtime CPU de qualification est
+Python 3.14.3/PyTorch 2.9.1+cpu ; aucune biblioth?que n?est modifi?e.
+
+La relecture dure **80,37 s**, quatre threads CPU, pic priv? d?environ
+0,913 Gio, sous les gardes CPU existantes et le seuil global de 92 %.
+Les 18 observations sans bruit restent compt?es mais sont exclues des
+moyennes de bruit, soit **2 030 observations bruit?es**. Les fractions
+et plages de valeurs sont calcul?es sur le centre et le contexte complets.
+Les quantiles sigma sont une approximation spatiale d?clar?e, sur une
+grille de pas 4 ; les d?nominateurs de perte utilisent le centre complet.
+Aucun poids n?est charg? et aucun nouveau contenu r?serv? n?est ouvert.
+
+### 1. Le signal fin fort est rare dans le flux actuel
+
+Les familles se r?partissent en 25 % de textures al?atoires ? fr?quence
+large, 25 % d?ondes basses fr?quences, 25 % de contours, 12,5 % de
+constantes et 12,5 % de gradients. Les quatre phases Bayer sont bien
+couvertes pour chacune des huit positions de famille sur 32 observations :
+aucune omission de phase n?est mise en ?vidence.
+
+Seules **512 observations sur 2 048** ont une fr?quence principale de texture
+al?atoire entre 2 et 28 cycles/128 pixels. Une grande partie est ? faible
+amplitude. La somme des deux ondes y est divis?e par 1,35 ; l?amplitude
+nominale du g?n?rateur n?est donc pas celle de la composante principale.
+Les d?comptes suivants portent sur cette composante, avant le coefficient
+de chaque couleur, pas sur toute l??nergie de la texture.
+
+| Fr?quence principale / amplitude effective | Graine 71 (1 024 observations) | Graine 73 (1 024 observations) |
+| --- | ---: | ---: |
+| ?18 cycles/128 et ?0,04 | 14 | 5 |
+| ?22 et ?0,04 | 8 | 4 |
+| ?18 et ?0,06 | 9 | 1 |
+| ?22 et ?0,06 | 6 | 1 |
+
+La seconde composante ne peut pas atteindre 0,04, car son amplitude
+maximale vaut 0,12?0,35/1,35?0,0311. Ce comptage n?exclut pas d?autres
+contenus fins dans les contours ou des amplitudes plus faibles ; il
+quantifie le manque de r?p?titions **fortes et p?riodiques** correspondant
+? la difficult? observ?e, sans assimiler les contr?les ? toutes les photos.
+Leur ?chantillonnage ne doit pas ?tre remplac? par les cibles exactes des
+tests pour fabriquer une r?ussite.
+
+### 2. Les niveaux de bruit et les rapports entre couleurs diff?rent
+
+? signal ?quilibr? 0,3, en unit?s cam?ra avant division par 2 du tenseur,
+les lois donnent :
+
+| Sc?nario | Sigma R | Sigma G1 | Sigma B | Sigma G2 |
+| --- | ---: | ---: | ---: | ---: |
+| Apprentissage ISO 12800 | 0,03536 | 0,02520 | 0,03518 | 0,02521 |
+| Apprentissage ISO 6400 | 0,02467 | 0,01779 | 0,02453 | 0,01781 |
+| Apprentissage ISO 4000 | 0,01964 | 0,01405 | 0,01942 | 0,01403 |
+| Contr?le faible | 0,00922 | 0,00922 | 0,00922 | 0,00922 |
+| Contr?le fort | 0,02530 | 0,02530 | 0,02530 | 0,02530 |
+
+Les contr?les faibles ne sont donc pas couverts **? cette luminosit?**
+par les trois lois. Une m?me valeur sigma peut ?tre rencontr?e ailleurs
+? un autre niveau de signal, ce qui ne constitue pas la m?me couverture
+conditionnelle. De plus, les lois d?apprentissage ont syst?matiquement
+R/B plus bruit?s que G, contrairement aux contr?les isotropes. Ce d?calage
+ne prouve pas que les contr?les sont mauvais ou qu?il suffit de les enlever :
+il r?v?le une diversit? insuffisante pour conclure ? une g?n?ralisation.
+La loi ? sigma estim? sur l?observation reste un substitut gaussien,
+pas un ?mulateur complet du capteur.
+
+### 3. Un t?moin fixe montre l?ambigu?t? de la perte moyenne
+
+Trois t?moins ont ?t? d?clar?s avant le rejeu : moyenne 3?3 par plan CFA,
+m?lang?e ? l?observation avec alpha 0,25/0,5/1. Ils n?ont aucun poids appris,
+ne sont pas propos?s comme d?bruiteur et ne sont pas s?lectionn?s d?apr?s
+le meilleur score. Le centre mesur? exclut les bords du filtre.
+
+| Pr?diction t?moin | Perte moyenne sur apprentissage bruit? | Perte moyenne sur contr?les forts connus |
+| --- | ---: | ---: |
+| Observation inchang?e | 0,9997 | 1,0006 |
+| M?lange alpha 0,25 | 0,6254 | 0,9478 |
+| M?lange alpha 0,5 | 0,3913 | 1,6790 |
+| Moyenne enti?re | 0,3435 | 5,4934 |
+
+Le m?me op?rateur peut donc am?liorer fortement l?objectif moyen du flux
+et d?grader les d?tails forts. ? bruit faible, alpha 0,25 donne d?j?
+1,2051 sur les contr?les ; ? bruit fort, il donne 0,6905. La moyenne m?lange
+ainsi des comportements oppos?s. Cela **ne prouve pas que le r?seau applique
+ce noyau**, mais invalide l?id?e que sa perte train plus basse suffirait ?
+attester une meilleure pr?servation. L?optimum propre exact aurait une
+perte nulle ; le probl?me n?est pas une identit? math?matique qui rendrait
+le flou in?vitable, mais la repr?sentativit? et les compromis appris.
+
+### 4. Normalisation et plages d?entr?e : distinguer constat et bug
+
+La perte utilise l?erreur carr?e par plan divis?e par sa variance moyenne.
+Le r?seau pr?dit un r?sidu normalis?, puis calcule observation?sigma?r?sidu.
+La d?riv?e par rapport ? ce r?sidu contient donc aussi sigma : consid?rer
+seulement le facteur inverse de variance serait incomplet. Le calcul
+analytique du gradient est test? contre autograd. Les mesures ? l?identit?
+ne r?v?lent pas un d?faut d?impl?mentation de cette compensation. Les
+observations sans bruit sont exactement l?identit?, pas une source de
+gradients infinis. Ce constat ne d?montre pas que cette perte soit la
+meilleure pour le rendu photographique.
+
+Les rampes de luminance synth?tiques ?tendues au grand contexte atteignent environ
+**?8,46 ? 9,75** en unit?s cam?ra ?quilibr?e ; dans le centre utile,
+**?1,82 ? 3,17**. Ces valeurs proviennent de l?extension de pentes con?ues
+sur 128 pixels vers un contexte 1 024. Conserver n?gatifs et valeurs HDR
+est intentionnel ; leur l?galit? num?rique ne prouve pas que cette
+r?partition soit repr?sentative des photos. Revoir la g?n?ration de ces
+pentes reste une piste ; les ?cr?ter arbitrairement cr?erait d?autres
+structures et ne serait pas une correction neutre.
+
+### 5. Deux graines ne s?parent pas les causes actuelles
+
+L?identit? des contenus vaut 280000000+graine?100000+num?ro. Changer la
+graine change donc **? la fois l?initialisation et les donn?es**. La
+graine 73 re?oit notamment moins de d?tails forts ? haute fr?quence.
+Ce n?est pas une preuve que ce manque explique ? lui seul son mauvais
+contr?le ; l?exp?rience ne s?pare pas les deux facteurs. Une r?p?tition
+avec une graine de donn?es ind?pendante et commune aux initialisations
+est n?cessaire pour mesurer la stabilit? du mod?le seul.
+
+### D?cision et proposition d?exp?rience suivante
+
+Conserver l?architecture et la perte comme r?f?rences, sans augmenter
+la taille ni lancer un apprentissage long. D?abord s?parer les identit?s
+de donn?es et de mod?le, puis figer un plan appari? avec budgets et crit?res
+inchang?s : r?f?rence, bruit diversifi? seul, couverture des d?tails seule.
+Les variations de bruit doivent couvrir luminosit?s et rapports de canaux,
+pas seulement ajouter un sigma constant. Les fr?quences/amplitudes sont
+tir?es dans des intervalles continus avec quotas d?clar?s, sans r?utiliser
+les cibles des contr?les. Ne pas modifier simultan?ment la perte, la taille
+et les donn?es : cela emp?cherait de savoir ce qui a aid?.
+
+Une ?ventuelle perte structurelle est ? ?tudier seulement apr?s cette
+comparaison, si n?cessaire, avec contr?le du bruit conserv?. Les contr?les
+actuels sont connus et servent au d?veloppement ; une r?ussite ult?rieure
+ne deviendrait pas une validation ind?pendante sans protocole r?serv?.
+Aucune nouvelle photo n?est n?cessaire pour pr?parer ce petit essai.
+**Cette exp?rience n?est pas encore lanc?e ; tous les calculs de l?audit
+sont termin?s.**
+
+Preuves : [rejeu et mesures compl?tes](../raw/neural-dru-training-audit-v001-20261106T102117Z.json),
+[relecture d?riv?e initiale](../raw/neural-dru-training-audit-review-v001-20261106T102353Z.json)
+et [compl?ment de runtime conservant la premi?re version](../raw/neural-dru-training-audit-review-v002-20261106T102520Z.json).
+Trois tests v?rifient le gradient, le t?moin de lissage et la couverture
+phase/famille. Aucun changement de production, environnement, poids,
+publication, fusion ou tag.
