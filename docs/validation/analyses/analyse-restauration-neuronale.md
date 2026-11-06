@@ -10,7 +10,7 @@ Ce bénéfice n'est pas démontré pour le correcteur CFA actuel.
 | Ce qui fonctionne | Contrats signés, reprise, suivi par phase et deux essais mémoire de 256 pas, huit sauvegardes et trois contrôles complets par graine, sans dépassement. Pas une preuve de qualité photo. |
 | Ce qui bloque | Couverture trop faible des détails forts à haute fréquence, bruit conditionnel différent des contrôles, contenus et initialisation confondus entre graines. La perte moyenne récompense des lissages destructeurs sur ce flux. |
 | Derniers résultats | Réplication close : 10 et 12 échecs forts sur 48, après les 12 et 16 précédents. Sur les photos, sensibilité aux graines et motifs directionnels : bénéfice non validé. |
-| Calcul engagé | Reprise arrêtée à 12 h 39 Paris sur plafond privé local 4,5 Gio. Référence 71 conservée, référence 73 au pas 242 volatil et checkpoint 224. Bruit/détails non démarrés ; aucun calcul actif. |
+| Calcul engagé | Ordonnanceur de charge lancé : prévol et parité numérique réussis, attente de 14 h Paris pour reprise 224 puis comparaison. Poursuite conditionnelle bornée ; arrêt apprentissage le 7 novembre à 08 h 45 et superviseur 09 h 45. |
 | Prochaine preuve utile | Lire tous les bras et jalons de la comparaison à données communes, vérifier initialisations et contrôles identiques avant d’interpréter les effets. Pas de sélection de graine ou de poids. |
 | GPU | Débit médian 2,33–2,36 s/pas pendant la qualification ; environ 17 min par graine avec contrôles. Marge locale d’environ 15 Mio seulement au pic ; aucune garantie de plusieurs heures ou d’environnement concurrent. |
 | Données | 349 RAW inventoriés, 105 paires étudiées. Température, bruit fixe et propagation restent à qualifier ; pas de nouvelles prises demandées pour cette expérience. |
@@ -4391,7 +4391,7 @@ sans arrêt mémoire ni reprise nécessaire.624 cas nouveaux par modèle et
 exactes au bit près ;64 contrôles D4 ont un écart maximal2,98e-7.
 Les checkpoints techniques finaux pèsent518697octets chacun.
 
-| Rapport MSE RGB complet / parent figé | Faible71 | Faible73 | Fort71 | Fort73 |
+| Rapport MSE RGB complet / parent figé | Faible 71 | Faible 73 | Fort71 | Fort73 |
 | --- | ---: | ---: | ---: | ---: |
 | Mixtes | 0,74003 | 0,75690 | 0,62628 | 0,54908 |
 | Tous les cas, contours distincts inclus | 0,78852 | 0,87212 | 0,70919 | 0,71025 |
@@ -4448,7 +4448,7 @@ le gel.3220 paramètres sont entraînés,33368 restent fixes. Mais le
 verdict complet n'est positif que pour 73 :71 échoue au gain RGB faible
 bruit du lot complet (0,98294>0,98) et au gradient des contours à bruit fort.
 
-| Rapport MSE complet / parent | Faible71 | Faible73 | Fort71 | Fort73 |
+| Rapport MSE complet / parent | Faible 71 | Faible 73 | Fort71 | Fort73 |
 | --- | ---: | ---: | ---: | ---: |
 | Mixtes | 0,96914 | 0,95773 | 0,88707 | 0,78884 |
 | Tous cas | 0,98294 | 0,97738 | 0,92810 | 0,87937 |
@@ -4468,8 +4468,8 @@ restent rapportées ;73 n'est pas sélectionnée comme meilleur modèle.
 Preuves :
 
 - [Campagne gelée](../raw/neural-campaign-v001-20261103T123606Z.json).
-- [Correction seule71](../raw/neural-noisy-moment-v001-20261103T123625Z.json).
-- [Correction seule73](../raw/neural-noisy-moment-v001-20261103T124017Z.json).
+- [Correction seule 71](../raw/neural-noisy-moment-v001-20261103T123625Z.json).
+- [Correction seule 73](../raw/neural-noisy-moment-v001-20261103T124017Z.json).
 
 ### Épreuve suivante — protection de contraste observé, sans réentraînement
 
@@ -7679,3 +7679,130 @@ Preuves : [supervision après reprise](../raw/neural-dru-data-comparison-supervi
 et [worker repris](../raw/neural-dru-training-v001-73-20261106T113924Z.json).
 Les bilans précédents et les checkpoints sont conservés, sans publication,
 fusion ni tag. Tous les calculs de cette tentative sont clos.
+
+
+## 6 novembre 2026 — ordonnanceur de charge et autonomie autorisée
+
+L’utilisateur autorise la relance, demande un ordonnanceur de charge,
+annonce son absence à partir de 14 h et permet une poursuite d’apprentissage
+si le pilote donne une piste concrète. Les ressources doivent être libérées
+avant le **7 novembre à 10 h Paris**. Le Pi est laissé de côté. Aucune fusion
+avec la migration de production OpenCV n’est engagée pendant cette campagne.
+
+### Exécution séparée du protocole scientifique
+
+L’arrêt privé précédent montre une marge locale insuffisante : le premier
+échantillon en violation dépassait4,5 Gio de 172 Kio alors que le système était
+à 70 %. Le nouvel encadrement porte donc explicitement le **plafond souple
+privé à 5 Gio**, sous le quota dur inchangé de 6 Gio. L’arrêt physique global
+reste 92 %, ainsi que la limite d’allocation CUDA de 50 %. Il ne s’agit pas
+de présenter l’ancien test comme réussi : ses résultats et sa limite
+restent archivés.
+
+Les recettes des trois bras, leurs budgets et leurs empreintes ne sont
+pas réécrits pour reprendre les checkpoints. Un **contrat d’exécution
+versionné distinct** autorise le changement du worker de manière explicite,
+avec empreintes avant/après, dépendances effectives et échéances. Le seul
+corps de mise à jour numérique est conservé ; l’AST de `update`, après
+exclusion des seuls appels de surveillance, reste identique à la version
+mesurée. Les autres dépendances scientifiques doivent conserver leurs
+empreintes. Une modification non déclarée bloque le démarrage.
+
+La parité est aussi mesurée : nouveau prévol de huit pas, reprise depuis
+quatre, puis comparaison au checkpoint 8 de référence antérieur. **Poids,
+Adam et pertes sont identiques au bit près.** Cela vérifie ce rejeu court,
+pas une équivalence universelle de tous les parcours. Les compteurs et
+contrats d’exécution effectifs sont inscrits dans chaque nouveau résultat.
+
+Preuves : [contrat de charge et plan d’autonomie](../raw/neural-load-plan-v001-20261106T122858Z.json),
+[prévol instrumenté](../raw/neural-dru-training-v001-71-20261106T123046Z.json)
+et [parité d’exécution](../raw/neural-load-execution-parity-v001-20261106T123405Z.json).
+
+### Admission, pause et reprise
+
+| Condition | Action fixée avant les nouveaux résultats |
+| --- | --- |
+| Avant 14 h Paris | Seulement le court prévol d’exécution et sa parité ; calculs substantiels en attente |
+| Avant un worker | RAM globale <70 % et CPU extérieur <65 %, pendant 60 s |
+| Charge pendant un worker | SurveillanceWindows et estimation CPU hors temps CPU du worker |
+| RAM ≥85 % ou CPU extérieur ≥80 %, soutenu 15 s | Demande de pause coopérative, sauvegarde puis sortie du worker |
+| Après une pause | Attente d’au moins 5 min puis nouvelle admission stable |
+| Franchissement global 92 % malgré cela | Fin du worker, reprise depuis l’état durable après refroidissement ; au plus deux relances par job |
+| Dépassement du nouveau plafond local ou autre erreur | Arrêt, sans relever automatiquement les budgets |
+
+Le CPU propre au worker est soustrait au CPU total pour estimer la charge
+extérieure. Cette estimation par compteurs Windows n’identifie pas chaque
+application. Un seul worker, quatre threads Torch et une priorité CPU basse
+sont utilisés. Aucun autre processus n’est fermé. Le suivi est un processus
+local à faible charge, sans boucle de requêtes au modèle.
+
+Une pause coopérative est traitée au contrôle de frontière de mise à jour
+ou pendant un contrôle connu ; elle n’enregistre pas une demi-étape Adam.
+Si un contrôle est interrompu après le checkpoint de son jalon, la reprise
+rejoue ce contrôle manquant avant d’avancer. Cette récupération est décrite
+explicitement : un jalon ne peut pas être déclaré évalué parce que ses
+poids seuls ont été sauvegardés. Les pauses sont bornées en nombre et par
+l’échéance absolue ; elles ne créent pas une attente infinie.
+
+Le garde dur92 % reste instantané et peut agir avant la pause douce si
+la pointe est trop rapide. La pause à 85 % n’est donc pas une garantie
+contre toute interruption globale. Les tests des politiques CPU, critères
+de poursuite et contrats de sources passent ; la parité du prévol est
+mesurée. Les pauses réellement rencontrées seront documentées dans leurs
+traces, sans prétendre qu’un test court simule toutes les charges système.
+
+### Programme conditionnel de la journée et de la nuit
+
+1. Reprendre référence 73 depuis le checkpoint 224 et réutiliser référence 71
+   complète après vérification ; terminer les trois bras à 256 pas et les
+   deux initialisations avec les mêmes contrôles.
+2. Conserver tous les résultats. Une politique est seulement « prometteuse »
+   si, pour **chacune** des deux graines, elle ne dégrade ni le nombre de
+   groupes sous 0,95, ni le gain minimal, ni la médiane MSE de la référence,
+   sans inversion de signal, avec au moins une amélioration stricte.
+3. Si un bras est prometteur mais n’atteint pas les critères stricts,
+   poursuivre tous les bras prometteurs **et leur référence appariée**
+   jusqu’à 1024 pas totaux, soit 768 pas supplémentaires. Aucun meilleur poids
+   ou meilleure graine n’est choisi d’après les contrôles.
+4. Une poursuite longue est permise seulement si **les deux graines** d’un
+   bras ont tous les gains de groupe entre 0,95 et 1,05, tous les ratios MSE
+   de groupe ≤1,000001, et une médiane MSE ≤0,90. Ce dernier seuil demande un
+   bénéfice numérique réel, pas seulement un rendu presque identité.
+5. Pour chaque bras satisfaisant ces critères, lancer une seule continuation
+   bornée de 2048 pas supplémentaires, avec sa référence au même budget.
+   Si aucun bras ne passe, **ne pas lancer d’apprentissage nocturne**.
+
+Ces critères sont fixés avant les résultats de cette reprise et figurent
+dans le plan scellé. Ils servent à autoriser une **étude supplémentaire**,
+pas une validation photographique ou indépendante. Le budget 1024peut
+encore ne pas atteindre la convergence. Les checkpoints parents, leur
+source scientifique et l’état Adam sont vérifiés avant continuation ;
+les numéros d’observation continuent, sans réinitialiser les données ni
+répéter les premiers pas. Les matrices et scènes photographiques restent
+hors de cette expérience ; aucun profil de production n’est modifié.
+
+### Échéances, supervision et migration annoncée
+
+Le contrat arrête les workers au plus tard le **7 novembre à 08 h 45 Paris**,
+et le superviseur au plus tard **09 h 45**, en ne terminant que son propre
+arbre si nécessaire. Aucun rendu lourd ne s’enchaîne automatiquement après
+ces limites. Les checkpoints permettent de poursuivre plus tard. Le
+maintien éveillé est temporaire, l’écran peut s’éteindre, et aucun ordre
+de mise en veille ou d’arrêt du PC n’est envoyé à la clôture.
+
+Suivi : `build-patch_neural_restoration/neural-load-campaign-v001/progress.json`.
+Les résultats par worker, les contrôles complets et les séries mémoire
+sont archivés en JSON canonique. Le fichier `STOP` du superviseur demande
+l’arrêt de son arbre ; les derniers checkpoints durables sont conservés.
+**À ce lancement : parité réussie, attente de 14 h, résultats comparatifs
+encore attendus.**
+
+La migration OpenCV de Claude est annoncée comme presque terminée, pas
+présumée livrée. Attendre son SHA/jalon et la clôture de cette campagne,
+puis aligner la branche avec dev sans rebase de l’historique publié ni
+reprise des changements non commités d’un autre worktree. Recompiler les
+bancs natifs et qualifier les contrats de pixels, canaux, pas de ligne,
+propriété mémoire et signal signé avant de comparer de nouveaux rendus.
+Les recettesTorch et captures existantes restent figées pendant ce run ;
+la qualification actuelle ne vaut pas automatiquement après migration.
+Aucun push, fusion vers dev ou tag n’est autorisé implicitement ici.

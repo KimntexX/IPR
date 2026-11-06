@@ -544,3 +544,34 @@ des fichiers ; reprendre les erreurs/pauses depuis `resume.json` et
 pas durables. Les bilans et journaux précédents sont préservés, avec de
 nouveaux noms pour chaque relance. Une relance manuelle ne relève pas les
 plafonds et n’active pas une boucle de tentatives supplémentaires.
+
+
+## Ordonnanceur de charge et exécution autonome bornée
+
+`run_neural_load_scheduler.py --manifest <manifest.json> --output <dossier neuf>`
+exécute le programme scellé. `dru_execution.py` vérifie les sources amendées
+explicitement et conserve l’identité scientifique des anciens checkpoints.
+`load_control.py` mesure la charge CPU/RAM et permet une sortie coopérative
+sauvegardée ; `scheduled_comparison_results.py` applique les critères de
+progression déclarés avant les nouveaux résultats. Le code numérique de
+mise à jour reste unique. Le prévol et `check_dru_execution_parity.py`
+comparent réellement les poids, Adam et pertes au rejeu de référence.
+
+Pour le plan du 6 novembre : essais substantiels après 14 h, reprise 224,
+comparaison 256 ; éventuelle étude appariée 1024 puis une continuation +2048
+si les deux graines passent les critères stricts. Sinon aucun apprentissage
+long ne démarre. Le superviseur et les workers respectent les échéances
+du 7 novembre 09 h 45/08 h 45 Paris, avant l’utilisation du PC à 10 h.
+
+Les limites effectives sont 5 Gio souples, 6 Gio durs, 92 % physiques globaux,
+50 % d’allocation CUDA. Admission sous 70 % RAM et 65 % CPU extérieur pendant 60 s.
+Pause à 85 %RAM ou 80 % CPU extérieur pendant 15 s, puis attente minimale 5 min
+et nouvelle admission. Deux reprises au plus sur arrêt global par job ;
+pas d’escalade automatique sur dépassement du quota local. Un contrôle
+connu interrompu est rejoué au checkpoint courant avant progression.
+
+Lire `neural-load-campaign-v001/progress.json` et les journaux numérotés.
+Les archives canoniques par job contiennent le résultat, les contrôles et
+la série mémoire. `STOP` à la racine termine la chaîne et son arbre ; le
+checkpoint durable reste la référence pour une future reprise. Aucun
+service système, tâche réseau ou logiciel supplémentaire n’est installé.

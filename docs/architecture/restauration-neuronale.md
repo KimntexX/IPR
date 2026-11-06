@@ -67,7 +67,7 @@ ciblés, sans intégration en production. Les deux tentatives de premier
 apprentissage sont interrompues par le seuil de mémoire physique globale,
 alors que le processus reste autour de307Mio résidents. Aucun checkpoint
 final ou gain de débruitage n'est qualifié. L'utilisateur autorise ensuite
-un seuil global92 % pour cette campagne, en conservant les plafonds propres
+un seuil global 92 % pour cette campagne, en conservant les plafonds propres
 au processus. Le plan est tracé dans une nouvelle version avant reprise,
 sans modifier données, modèles ou critères photographiques.
 
@@ -907,7 +907,7 @@ continu et reprise après une accumulation partielle interrompue.
 Le lanceur séquentiel attend une marge mémoire, exécute71 puis73, reprend
 seulement après arrêt mémoire, borne les tentatives et arrête sur erreur
 de calcul. Il ne sélectionne pas la meilleure graine et ne modifie pas les
-modèles. Le seuil physique global92 % et les plafonds propres sont conservés.
+modèles. Le seuil physique global 92 % et les plafonds propres sont conservés.
 Le plan schéma3 fige également la politique de checkpoint.
 
 La [procédure de lancement](../validation/tools/pilote-unet-bruite.md) décrit
@@ -1339,3 +1339,44 @@ non publiée dans la documentation versionnée.
 
 Sources consultées : [fiche Raspberry Pi 5](https://datasheets.raspberrypi.com/rpi5/raspberry-pi-5-product-brief.pdf)
 et [PyTorch sur Raspberry Pi](https://docs.pytorch.org/tutorials/intermediate/realtime_rpi.html).
+
+
+### Ordonnancement de charge et séparation du calcul — 6 novembre 2026
+
+`dru_execution.py` sépare le contrat d’exécution du plan scientifique des
+checkpoints. Les mises à jour numériques conservent leur AST hors appels
+de surveillance et rejouent huit pas avec poids/Adam/pertes identiques.
+Les changements de sources d’exécution sont déclarés par empreintes ;
+les autres dépendances scientifiques ne sont pas modifiables tacitement.
+La limite locale passe de4,5 à 5 Gio, sous 6 Gio dur et92 % global inchangés.
+
+```mermaid
+flowchart TD
+    A[File de travaux] --> B{Créneau et charge disponibles}
+    B -->|non| A
+    B -->|oui| C[Checkpoint vérifié puis worker unique]
+    C --> D{Pression CPU ou RAM}
+    D -->|modérée et soutenue| E[Sauvegarde puis sortie et refroidissement]
+    E --> A
+    D -->|limite dure ou erreur| F[Arrêt ou reprise strictement bornée]
+    C --> G[Contrôles appariés complets]
+    G --> H{Critères prédéclarés sur les deux graines}
+    H -->|non| I[Clôture sans apprentissage long]
+    H -->|oui| J[Continuation bornée avec référence]
+    J --> K[Arrêt avant échéance du matin]
+```
+
+Les compteurs Windows distinguent CPU global et temps CPU du worker.
+Admission 60 s sous 70 % RAM et 65 % CPU extérieur, pause à 85 %RAM ou 80 % CPU extérieur
+soutenue 15 s ; quota dur92 %global conservé. La sauvegarde et le rejeu d’un
+contrôle interrompu précèdent toute reprise. Les critères de prolongation
+ne valent ni certification de qualité photo ni autorisation de production.
+Le superviseur local bloque les travaux lourds jusqu’à 14 h le 6 novembre et
+termine avant 09 h 45 le 7, avec arrêt des workers 08 h 45 pour libérer le PC
+avant 10 h. Pas d’intervention sur la machine Pi, mise de côté par l’utilisateur.
+
+La migration de production OpenCV annoncée sera intégrée après livraison
+identifiée et clôture des travaux figés. Contrôler les adaptateurs/bancs
+natifs et leurs formats de pixels après mise à jour de dev ; ne pas modifier
+les sources numériques en pleine exécution ni annoncer la nouvelle chaîne
+qualifiée sur la seule base des anciens résultats.

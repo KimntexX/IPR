@@ -10,6 +10,7 @@ os.environ.setdefault('CUBLAS_WORKSPACE_CONFIG',':4096:8')
 from campaign_artifacts import sha256
 from memory_budget import MemoryGuard
 from memory_trace import MemoryTrace
+from dru_execution import load as load_execution,validate_sources
 
 
 def write(path,value):
@@ -17,20 +18,21 @@ def write(path,value):
     temporary.write_text(json.dumps(value,indent=2,allow_nan=False)+'\n',encoding='utf-8');temporary.replace(path)
 
 
-def run(plan_path,output,seed,preflight=False,resume=False):
+def run(plan_path,output,seed,preflight=False,resume=False,execution_path=None):
     root=Path(__file__).resolve().parents[2];build=root/'build-patch_neural_restoration'
     if not all(p.resolve().is_relative_to(build.resolve()) for p in (plan_path,output)):raise ValueError('Owned paths required')
     plan=json.loads(plan_path.read_text(encoding='utf-8'))
     if seed not in plan['seeds'] or plan['status']!='sealed_dru_cfa_bootstrap':raise ValueError('Sealed declared training required')
     if (plan['data_arm'] not in ('reference','noise','details') or not isinstance(plan['data_seed'],int)
             or isinstance(plan['data_seed'],bool) or plan['data_seed']<0):raise ValueError('Explicit data arm and independent seed required')
-    for name,digest in plan['tools'].items():
-        if sha256(Path(__file__).with_name(name))!=digest:raise ValueError('Sealed source changed: '+name)
+    execution=load_execution(execution_path,plan_path,root)
+    validate_sources(plan,execution,root)
     if sha256(Path(plan['noise_source']))!=plan['noise_sha256']:raise ValueError('Noise source changed')
     output.mkdir(exist_ok=resume)
     previous=json.loads((output/'result.json').read_text(encoding='utf-8')) if resume else None
     result=dict(schema_version=1,status='started',seed=seed,preflight=preflight,plan_sha256=sha256(plan_path),
         started_at_utc=datetime.now(timezone.utc).isoformat(),losses=[],milestones=[],controls=[],data_seed=plan['data_seed'],data_arm=plan['data_arm'])
+    if execution is not None:result['execution']=dict(path=str(execution_path.resolve()),sha256=sha256(execution_path),contract=execution)
     if previous is not None:
         result['milestones']=previous['milestones'];result['controls']=previous['controls']
         result['attempt_history']=previous.get('attempt_history',[])+[dict(status=previous['status'],
@@ -38,8 +40,13 @@ def run(plan_path,output,seed,preflight=False,resume=False):
             started_at_utc=previous['started_at_utc'],elapsed_seconds=previous['elapsed_seconds'])]
     stamp=datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')
     trace=MemoryTrace(output/f'memory-{stamp}.jsonl')
-    started=time.monotonic();guard=MemoryGuard(hard_bytes=6*1024**3,soft_bytes=4608*1024**2,system_fraction=.92,observer=trace.observe)
-    completed=0;timings=[];deadline=datetime.fromisoformat(plan['training_deadline_utc']).timestamp()
+    resources=dict(hard_mib=6144,soft_mib=4608,system_fraction=.92) if execution is None else execution['resources']
+    started=time.monotonic();guard=MemoryGuard(hard_bytes=resources['hard_mib']*1024**2,soft_bytes=resources['soft_mib']*1024**2,system_fraction=resources['system_fraction'],observer=trace.observe)
+    completed=0;timings=[];deadline=datetime.fromisoformat(plan['training_deadline_utc'] if execution is None else execution['training_deadline_utc']).timestamp()
+    controller=None
+    if execution is not None and not preflight:
+        from load_control import YieldController
+        controller=YieldController(execution['load'])
     try:
         with trace,guard:
             trace.phase('torch-import')
@@ -72,6 +79,13 @@ def run(plan_path,output,seed,preflight=False,resume=False):
                 if sha256(output/'resume.pt')!=manifest['sha256']:raise ValueError('Resume file changed')
                 completed,result['losses']=restore(output/'resume.pt',model,optimizer,context)
                 result['resumed_from_step']=completed
+            elif plan.get('parent_checkpoints'):
+                parent=next(r for r in plan['parent_checkpoints'] if r['seed']==seed)
+                parent_path=Path(parent['path'])
+                if not parent_path.resolve().is_relative_to(build.resolve()) or sha256(parent_path)!=parent['sha256']:raise ValueError('Continuation parent changed')
+                parent_context=dict(context,plan_sha256=parent['scientific_plan_sha256'])
+                completed,result['losses']=restore(parent_path,model,optimizer,parent_context)
+                result.update(continued_from_step=completed,parent_checkpoint=parent)
             def report():
                 result.update(completed_steps=completed,elapsed_seconds=time.monotonic()-started,step_seconds=timings)
                 write(output/'progress.json',result)
@@ -79,6 +93,7 @@ def run(plan_path,output,seed,preflight=False,resume=False):
                 guard.check()
                 if time.time()>=deadline:raise TimeoutError('Training deadline reached')
                 if (output.parent/'STOP').exists():raise InterruptedError('Requested full-update stop')
+                if controller is not None and controller.check():raise InterruptedError('load_scheduler_yield')
             def snapshot(name):
                 phase('checkpoint-save')
                 path=output/name;save(path,model,optimizer,context,completed,result['losses'])
@@ -87,6 +102,7 @@ def run(plan_path,output,seed,preflight=False,resume=False):
                 else:result['milestones'].append(row)
                 return row
             def update(step):
+                phase('update-boundary',step)
                 check();optimizer.zero_grad(set_to_none=True);total=0.;tick=time.monotonic()
                 for micro in range(4):
                     phase('data-generation',step,micro)
@@ -117,10 +133,12 @@ def run(plan_path,output,seed,preflight=False,resume=False):
                 result['controls'].append(dict(step=step,path=str(path.resolve()),sha256=sha256(path),observations=value['observations']))
                 gc.collect();torch.cuda.empty_cache();report()
             report();maximum=8 if preflight else plan['steps_per_seed']
-            if completed==0:
+            if completed==0 and not resume:
                 snapshot('checkpoint-000000.pt')
                 snapshot('resume.pt')
                 control(0,limited=preflight)
+            elif not preflight and completed in (0,*plan['milestones']) and not any(c['step']==completed for c in result['controls']):
+                control(completed)
             for step in range(completed+1,maximum+1):
                 result['losses'].append(update(step));completed=step
                 if preflight and step==4:snapshot('bridge.pt')
@@ -155,6 +173,7 @@ def run(plan_path,output,seed,preflight=False,resume=False):
         result.update(status='stopped_on_error',error=str(error));raise
     finally:
         result.update(completed_steps=completed,elapsed_seconds=time.monotonic()-started,memory=guard.stats(),memory_trace=trace.stats())
+        if controller is not None:result['last_load_sample']=controller.last
         write(output/'result.json',result);write(output/'progress.json',result)
         stamp=datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')
         path=root/'docs/validation/raw'/f'neural-dru-training-v001-{seed}-{stamp}.json'
@@ -165,4 +184,5 @@ if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--plan',type=Path,required=True)
     parser.add_argument('--output',type=Path,required=True);parser.add_argument('--seed',type=int,required=True)
     parser.add_argument('--preflight',action='store_true');parser.add_argument('--resume',action='store_true')
-    args=parser.parse_args();run(args.plan,args.output,args.seed,args.preflight,args.resume)
+    parser.add_argument('--execution',type=Path)
+    args=parser.parse_args();run(args.plan,args.output,args.seed,args.preflight,args.resume,args.execution)
