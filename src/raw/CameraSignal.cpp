@@ -1,6 +1,5 @@
 #include "CameraSignal.h"
 
-#include "OpenCvBridge.h"
 #include "Pixels.h"
 
 #include <QFileInfo>
@@ -55,7 +54,7 @@ ColorPipeline::WorkingImage render(Source &&source, const QString &profile,
     if (!CameraProfileEngine::applyDcp(profile, rendered, context->sourceKelvin, error, options))
         return {};
     ColorPipeline::WorkingImage result;
-    result.linearRgba = ipr::heldMat(ipr::opaque(rendered));   // a Mat until the masters leave OpenCV
+    result.linearRgba = ipr::opaque(rendered);
     result.colorSpace = ColorPipeline::workingColorSpace();
     result.referenceWhiteBalanceKelvin = source.whiteBalanceKelvin;
     result.dcpContext = context;

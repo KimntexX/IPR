@@ -7,7 +7,8 @@
 #include "LineDetection.h"
 #include "RawDecoder.h"
 #include "Straightening.h"
-#include "OpenCvBridge.h"
+#include "Resize.h"
+#include "Pixels.h"
 
 #include <QCommandLineParser>
 #include <QCoreApplication>
@@ -21,7 +22,6 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QPainter>
-#include <opencv2/imgproc.hpp>
 
 #include <algorithm>
 #include <cmath>
@@ -33,13 +33,12 @@ namespace {
 constexpr int proxySide = 2048;
 constexpr double centralShare = 0.7;   // what is kept of a rotated image, away from its repeated borders
 
-cv::Mat proxyOf(const cv::Mat &rgba)
+ipr::Image proxyOf(const ipr::Image &rgba)
 {
-    cv::Mat rgb;
-    cv::cvtColor(rgba, rgb, cv::COLOR_RGBA2RGB);
-    const double scale = double(proxySide) / double(std::max(rgb.cols, rgb.rows));
+    ipr::Image rgb = ipr::withoutAlpha(rgba);
+    const double scale = double(proxySide) / double(std::max(rgb.width(), rgb.height()));
     if (scale < 1.0)
-        cv::resize(rgb, rgb, cv::Size(), scale, scale, cv::INTER_AREA);
+        rgb = ipr::resizedBy(rgb, scale, scale, ipr::Interpolation::Area);
     return rgb;
 }
 
@@ -64,22 +63,16 @@ QJsonObject toJson(const Straightening::Proposal &proposal)
             {"misalignment_after", double(proposal.misalignmentAfter)}};
 }
 
-cv::Mat central(const cv::Mat &image)
+ipr::Image central(const ipr::Image &image)
 {
-    const int width = int(image.cols * centralShare), height = int(image.rows * centralShare);
-    return image(ipr::toCv(ipr::Recti((image.cols - width) / 2, (image.rows - height) / 2, width, height)));
+    const int width = int(image.width() * centralShare), height = int(image.height() * centralShare);
+    return image.copy(ipr::Recti((image.width() - width) / 2, (image.height() - height) / 2, width, height));
 }
 
-QImage shown(const cv::Mat &rgb, int side)
+QImage shown(const ipr::Image &rgb, int side)
 {
-    cv::Mat rgba;
-    cv::cvtColor(rgb, rgba, cv::COLOR_RGB2RGBA);
-    std::vector<cv::Mat> channels;
-    cv::split(rgba, channels);
-    channels[3].setTo(1.0f);
-    cv::merge(channels, rgba);
     ColorPipeline::WorkingImage image;
-    image.linearRgba = rgba;
+    image.linearRgba = ipr::opaque(rgb);
     image.colorSpace = ColorPipeline::workingColorSpace();
     QString error;
     const QImage srgb = ColorPipeline::toSrgb(image, ColorPipeline::OutputFormat::Preview8Bit, &error);
@@ -87,7 +80,7 @@ QImage shown(const cv::Mat &rgb, int side)
 }
 
 // The photo with the lines the proposal reads, then with the result of Full.
-void writeSheet(const QString &path, const cv::Mat &rgb, const std::vector<LineDetection::Segment> &lines,
+void writeSheet(const QString &path, const ipr::Image &rgb, const std::vector<LineDetection::Segment> &lines,
                 const Geometry::Settings &settings)
 {
     constexpr int side = 800;
@@ -96,13 +89,13 @@ void writeSheet(const QString &path, const cv::Mat &rgb, const std::vector<LineD
         return;
     {
         QPainter painter(&before);
-        const double scale = double(before.width()) / double(rgb.cols);
+        const double scale = double(before.width()) / double(rgb.width());
         painter.setRenderHint(QPainter::Antialiasing);
         painter.setPen(QPen(QColor(255, 60, 40), 1.5));
         for (const LineDetection::Segment &s : lines)
             painter.drawLine(QPointF((s.x0 + 0.5) * scale, (s.y0 + 0.5) * scale), QPointF((s.x1 + 0.5) * scale, (s.y1 + 0.5) * scale));
     }
-    const QImage after = shown(Geometry::warpRgb(rgb, settings, Geometry::Quality::Preview), side);
+    const QImage after = shown(Geometry::warpRgb(rgb.share(), settings, Geometry::Quality::Preview), side);
     if (after.isNull())
         return;
     QImage sheet(before.width() + after.width() + 8, std::max(before.height(), after.height()), QImage::Format_RGB32);
@@ -163,8 +156,8 @@ int main(int argc, char **argv)
             entries.append(entry);
             continue;
         }
-        const cv::Mat rgb = proxyOf(loaded.image.linearRgba);
-        const ipr::Size size = ipr::fromCv(rgb.size());
+        const ipr::Image rgb = proxyOf(loaded.image.linearRgba);
+        const ipr::Size size = rgb.size();
         entry["proxy"] = QJsonArray{size.width, size.height};
 
         QElapsedTimer clock;
@@ -187,14 +180,14 @@ int main(int argc, char **argv)
         refused += level.valid() ? 0 : 1;
 
         // A known rotation of the photo itself, read on the same central area.
-        const cv::Mat straightCentre = central(rgb);
-        const auto reference = Straightening::propose(Straightening::linesOf(straightCentre), ipr::fromCv(straightCentre.size()), {}, Straightening::Mode::Level);
+        const ipr::Image straightCentre = central(rgb);
+        const auto reference = Straightening::propose(Straightening::linesOf(straightCentre), straightCentre.size(), {}, Straightening::Mode::Level);
         QJsonArray known;
         for (const float angle : {-5.0f, -2.0f, -0.5f, 0.5f, 2.0f, 5.0f}) {
             Geometry::Settings turned;
             turned.rotation = angle;
-            const cv::Mat turnedCentre = central(Geometry::warpRgb(rgb, turned, Geometry::Quality::Export));
-            const auto read = Straightening::propose(Straightening::linesOf(turnedCentre), ipr::fromCv(turnedCentre.size()), {}, Straightening::Mode::Level);
+            const ipr::Image turnedCentre = central(Geometry::warpRgb(rgb.share(), turned, Geometry::Quality::Export));
+            const auto read = Straightening::propose(Straightening::linesOf(turnedCentre), turnedCentre.size(), {}, Straightening::Mode::Level);
             QJsonObject item{{"angle", double(angle)}, {"refusal", refusalName(read.refusal)}};
             if (read.valid() && reference.valid()) {
                 // The photo leans by the angle more than the reference did, and the proposal answers the opposite.

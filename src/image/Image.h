@@ -55,6 +55,9 @@ public:
     // for what this view writes. Throws std::logic_error on frozen pixels. Empty when the
     // rectangle leaves the image.
     Image mutableView(const Recti &area);
+    // New pixels copied from a part: nothing shared, nothing frozen. Empty when the rectangle
+    // leaves the image.
+    Image copy(const Recti &area) const;
 
     bool empty() const { return m_size.empty(); }
     Size size() const { return m_size; }

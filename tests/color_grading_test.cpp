@@ -1,8 +1,9 @@
 #include "ColorGrading.h"
+#include "image_testing.h"
 #include "GradingWheelProvider.h"
 #include "PerceptualColour.h"
 #include "WorkingColorSpace.h"
-#include "OpenCvBridge.h"
+#include "Pixels.h"
 
 #include <cmath>
 #include <iostream>
@@ -18,32 +19,32 @@ bool check(bool condition, const char *message)
 }
 
 // Grey ramp in linear Rec.2020 over Oklab lightness 0.02 .. 0.98.
-cv::Mat greyRamp()
+ipr::Image greyRamp()
 {
-    cv::Mat ramp(1, 49, CV_32FC3);
-    for (int x = 0; x < ramp.cols; ++x) {
+    ipr::Image ramp = ipr::Image::create({49, 1}, ipr::Depth::F32, 3);
+    for (int x = 0; x < ramp.width(); ++x) {
         const double lightness = 0.02 + 0.02 * x;
         const double y = lightness * lightness * lightness;   // Oklab L of a grey is cbrt(Y)
-        ipr::at<ipr::Vec3f>(ramp, 0, x) = ipr::Vec3f(float(y), float(y), float(y));
+        imagetest::at<ipr::Vec3f>(ramp, 0, x) = ipr::Vec3f(float(y), float(y), float(y));
     }
     return ramp;
 }
 
 // Oklab change of each ramp pixel.
-std::vector<ipr::Vec3d> changes(const cv::Mat &before, const cv::Mat &after)
+std::vector<ipr::Vec3d> changes(const ipr::Image &before, const ipr::Image &after)
 {
     std::vector<ipr::Vec3d> out;
-    for (int x = 0; x < before.cols; ++x)
-        out.push_back(WorkingColor::workingToOklab(ipr::Vec3d(ipr::at<ipr::Vec3f>(after, 0, x)))
-                      - WorkingColor::workingToOklab(ipr::Vec3d(ipr::at<ipr::Vec3f>(before, 0, x))));
+    for (int x = 0; x < before.width(); ++x)
+        out.push_back(WorkingColor::workingToOklab(ipr::Vec3d(imagetest::at<ipr::Vec3f>(after, 0, x)))
+                      - WorkingColor::workingToOklab(ipr::Vec3d(imagetest::at<ipr::Vec3f>(before, 0, x))));
     return out;
 }
 
 double chroma(const ipr::Vec3d &d) { return std::hypot(d[1], d[2]); }
 
-cv::Mat graded(const cv::Mat &ramp, int zone, int hue, int saturation)
+ipr::Image graded(const ipr::Image &ramp, int zone, int hue, int saturation)
 {
-    cv::Mat out = ramp.clone();
+    ipr::Image out = ramp.clone();
     PerceptualColour::Parameters p;
     p.gradingHue[size_t(zone)] = hue;
     p.gradingSaturation[size_t(zone)] = saturation;
@@ -55,13 +56,13 @@ cv::Mat graded(const cv::Mat &ramp, int zone, int hue, int saturation)
 
 int main()
 {
-    const cv::Mat ramp = greyRamp();
+    const ipr::Image ramp = greyRamp();
 
-    cv::Mat same = ramp.clone();
+    ipr::Image same = ramp.clone();
     PerceptualColour::Parameters hueOnly;
     hueOnly.gradingHue = {200, 30, 120};
     PerceptualColour::apply(same, hueOnly);
-    if (!check(cv::norm(same, ramp, cv::NORM_INF) == 0, "zero saturation leaves the image unchanged at any hue")) return 1;
+    if (!check(ipr::largestDifference(same, ramp) == 0, "zero saturation leaves the image unchanged at any hue")) return 1;
 
     // Each zone acts where Lightroom's does: peak index on the ramp (lightness 0.02 + 0.02 i).
     const int expected[3] = {16, 29, 41};   // lightness about 0.35, 0.60, 0.85
@@ -83,7 +84,7 @@ int main()
     // Blending widens the shadows towards the midtones; a positive balance folds them back
     // towards black (Lightroom: shadow peak at lightness 0.45 at blending 100, 0.20 at balance +50).
     const auto shadowsAt = [&](int blending, int balance) {
-        cv::Mat out = ramp.clone();
+        ipr::Image out = ramp.clone();
         PerceptualColour::Parameters p;
         p.gradingHue[0] = 30;
         p.gradingSaturation[0] = 50;
@@ -101,10 +102,10 @@ int main()
     const auto a = changes(ramp, graded(ramp, 1, 359, 50)), b = changes(ramp, graded(ramp, 1, 0, 50));
     if (!check(ipr::length(a[29] - b[29]) < 0.01 * chroma(b[29]) + 1e-4, "hue 359 and 0 degrees meet")) return 1;
 
-    cv::Mat strong = graded(ramp, 0, 120, 100);
+    ipr::Image strong = graded(ramp, 0, 120, 100);
     bool finite = true;
-    for (int x = 0; x < strong.cols; ++x)
-        for (int c = 0; c < 3; ++c) finite = finite && std::isfinite(ipr::at<ipr::Vec3f>(strong, 0, x)[c]);
+    for (int x = 0; x < strong.width(); ++x)
+        for (int c = 0; c < 3; ++c) finite = finite && std::isfinite(imagetest::at<ipr::Vec3f>(strong, 0, x)[c]);
     if (!check(finite, "output stays finite")) return 1;
 
     // The direct working-space Oklab is the sRGB one for sRGB colours, and round-trips.
@@ -140,7 +141,7 @@ int main()
     const auto luminanceOf = [&](int zone, int value) {
         PerceptualColour::Parameters p;
         p.gradingLuminance[size_t(zone)] = value;
-        cv::Mat image = ramp.clone();
+        ipr::Image image = ramp.clone();
         PerceptualColour::apply(image, p);
         return changes(ramp, image);
     };
@@ -155,7 +156,7 @@ int main()
         p.gradingHue[3] = 30;
         p.gradingSaturation[3] = 50;
         p.gradingBlending = blending;
-        cv::Mat image = ramp.clone();
+        ipr::Image image = ramp.clone();
         PerceptualColour::apply(image, p);
         return changes(ramp, image);
     };
@@ -183,7 +184,7 @@ int main()
     if (!check(qAlpha(wheels.requestImage(QStringLiteral("7/50"), nullptr, QSize()).pixel(25, 25)) == 0,
                "an unknown zone gives an empty wheel")) return 1;
 
-    cv::Mat empty;
+    ipr::Image empty;
     PerceptualColour::Parameters strongAll;
     strongAll.gradingHue = {30, 30, 30};
     strongAll.gradingSaturation = {50, 50, 50};

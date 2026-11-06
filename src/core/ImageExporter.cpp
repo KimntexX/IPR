@@ -14,7 +14,7 @@
 #include <QScopeGuard>
 #include <QTemporaryFile>
 
-#include <opencv2/core.hpp>
+#include "Image.h"
 #include <tiffio.h>
 
 #include <algorithm>
@@ -77,9 +77,9 @@ bool writeLinearDng(const ColorPipeline::WorkingImage &image,
     bool configured =
         TIFFSetField(tiff, TIFFTAG_SUBFILETYPE, 0) == 1 &&
         TIFFSetField(tiff, TIFFTAG_IMAGEWIDTH,
-                     static_cast<uint32_t>(gamutMapped.linearRgba.cols)) == 1 &&
+                     static_cast<uint32_t>(gamutMapped.linearRgba.width())) == 1 &&
         TIFFSetField(tiff, TIFFTAG_IMAGELENGTH,
-                     static_cast<uint32_t>(gamutMapped.linearRgba.rows)) == 1 &&
+                     static_cast<uint32_t>(gamutMapped.linearRgba.height())) == 1 &&
         TIFFSetField(tiff, TIFFTAG_BITSPERSAMPLE, 16) == 1 &&
         TIFFSetField(tiff, TIFFTAG_SAMPLESPERPIXEL, 3) == 1 &&
         TIFFSetField(tiff, TIFFTAG_SAMPLEFORMAT, SAMPLEFORMAT_UINT) == 1 &&
@@ -117,10 +117,10 @@ bool writeLinearDng(const ColorPipeline::WorkingImage &image,
     }
 
     std::vector<quint16> row(
-        static_cast<size_t>(gamutMapped.linearRgba.cols) * 3);
-    for (int y = 0; y < gamutMapped.linearRgba.rows; ++y) {
-        const ipr::Vec4f *source = gamutMapped.linearRgba.ptr<ipr::Vec4f>(y);
-        for (int x = 0; x < gamutMapped.linearRgba.cols; ++x) {
+        static_cast<size_t>(gamutMapped.linearRgba.width()) * 3);
+    for (int y = 0; y < gamutMapped.linearRgba.height(); ++y) {
+        const ipr::Vec4f *source = gamutMapped.linearRgba.row<ipr::Vec4f>(y);
+        for (int x = 0; x < gamutMapped.linearRgba.width(); ++x) {
             for (int channel = 0; channel < 3; ++channel) {
                 row[static_cast<size_t>(x) * 3 + channel] =
                     static_cast<quint16>(std::lround(

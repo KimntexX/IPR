@@ -28,6 +28,14 @@ inline ipr::Image floats(ipr::Size size, int channels, std::initializer_list<flo
     return image;
 }
 
+// F32 of one value per channel, as many channels as values.
+inline ipr::Image filledWith(ipr::Size size, std::initializer_list<double> values)
+{
+    ipr::Image image = ipr::Image::create(size, ipr::Depth::F32, int(values.size()));
+    ipr::fill(image, std::vector<double>(values));
+    return image;
+}
+
 template <typename T>
 const T &at(const ipr::Image &image, int y, int x)
 {
@@ -38,6 +46,18 @@ template <typename T>
 T &at(ipr::Image &image, int y, int x)
 {
     return image.mutableRow<T>(y)[x];
+}
+
+template <typename T>
+const T &at(const ipr::Image &image, const ipr::Point2i &p)
+{
+    return image.row<T>(p.y)[p.x];
+}
+
+// |a - b|, value by value, of F32 images of one layout.
+inline ipr::Image absoluteDifference(const ipr::Image &a, const ipr::Image &b)
+{
+    return ipr::mapped(a, b, [](float x, float y) { return std::abs(x - y); });
 }
 
 // The smallest and the largest value of an F32 image, over every channel.
@@ -64,6 +84,50 @@ inline bool same(const ipr::Image &a, const ipr::Image &b)
 {
     return a.size() == b.size() && a.depth() == b.depth() && a.channels() == b.channels() &&
            ipr::largestDifference(a, b) == 0.0;
+}
+
+// The columns [first, last) of every row, as new pixels.
+inline ipr::Image columns(const ipr::Image &image, int first, int last)
+{
+    return image.copy({first, 0, last - first, image.height()});
+}
+
+// One value per channel added to the F32 pixels of an area, in place.
+inline void addTo(ipr::Image &image, const ipr::Recti &area, std::initializer_list<float> values)
+{
+    if (int(values.size()) != image.channels())
+        throw std::invalid_argument("A value per channel");
+    ipr::Image part = image.mutableView(area);
+    for (int y = 0; y < part.height(); ++y)
+        for (int x = 0; x < part.width(); ++x) {
+            auto value = values.begin();
+            for (int c = 0; c < part.channels(); ++c)
+                part.mutableRow<float>(y)[x * part.channels() + c] += *value++;
+        }
+}
+
+// Every value finite and within [low, high).
+inline bool within(const ipr::Image &image, double low, double high)
+{
+    const Range range = rangeOf(image);
+    return ipr::allFinite(image) && range.low >= low && range.high < high;
+}
+
+// The largest absolute value of an F32 image.
+inline double largestAbsolute(const ipr::Image &image)
+{
+    const Range range = rangeOf(image);
+    return std::max(std::abs(range.low), std::abs(range.high));
+}
+
+// The sum of the absolute differences between two F32 images of one layout.
+inline double sumOfDifferences(const ipr::Image &a, const ipr::Image &b)
+{
+    double sum = 0.0;
+    for (int y = 0; y < a.height(); ++y)
+        for (int v = 0; v < a.width() * a.channels(); ++v)
+            sum += std::abs(double(a.row<float>(y)[v]) - double(b.row<float>(y)[v]));
+    return sum;
 }
 
 // The Euclidean distance between two F32 images of one layout, over every value.

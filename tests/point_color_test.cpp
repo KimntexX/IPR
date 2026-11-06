@@ -1,9 +1,10 @@
 #include "ColorAdjustments.h"
+#include "image_testing.h"
 #include "PerceptualColour.h"
 #include "PointColor.h"
 #include "Sidecar.h"
 #include "WorkingColorSpace.h"
-#include "OpenCvBridge.h"
+#include "Image.h"
 
 #include <QFile>
 #include <QTemporaryDir>
@@ -201,14 +202,14 @@ bool perceptualStage()
     PerceptualColour::Parameters parameters;
     parameters.pointColor = single(orange());
     parameters.pointColor.points[0].saturationShift = -100;
-    cv::Mat image(1, 2, CV_32FC3);
-    ipr::at<ipr::Vec3f>(image, 0, 0) = ipr::Vec3f(PointColor::fromHsv(Orange));
-    ipr::at<ipr::Vec3f>(image, 0, 1) = ipr::Vec3f(0.3f, 0.3f, 0.3f);
+    ipr::Image image = ipr::Image::create({2, 1}, ipr::Depth::F32, 3);
+    imagetest::at<ipr::Vec3f>(image, 0, 0) = ipr::Vec3f(PointColor::fromHsv(Orange));
+    imagetest::at<ipr::Vec3f>(image, 0, 1) = ipr::Vec3f(0.3f, 0.3f, 0.3f);
     PerceptualColour::apply(image, parameters);
-    const PointColor::Hsv out = PointColor::toHsv(ipr::Vec3d(ipr::at<ipr::Vec3f>(image, 0, 0)));
+    const PointColor::Hsv out = PointColor::toHsv(ipr::Vec3d(imagetest::at<ipr::Vec3f>(image, 0, 0)));
     bool ok = check(std::abs(out[1] / Orange[1] - 0.526) < 0.002 && std::abs(out[2] / Orange[2] - 1.0) < 1e-4,
                     "the perceptual stage applies the point colour");
-    ok &= check(ipr::at<ipr::Vec3f>(image, 0, 1) == ipr::Vec3f(0.3f, 0.3f, 0.3f), "the stage leaves greys");
+    ok &= check(imagetest::at<ipr::Vec3f>(image, 0, 1) == ipr::Vec3f(0.3f, 0.3f, 0.3f), "the stage leaves greys");
     return ok;
 }
 
@@ -216,22 +217,22 @@ bool overlay()
 {
     PerceptualColour::Parameters parameters;
     parameters.pointColor = single(orange());
-    cv::Mat image(1, 2, CV_32FC3);
-    ipr::at<ipr::Vec3f>(image, 0, 0) = ipr::Vec3f(PointColor::fromHsv(Orange));
-    ipr::at<ipr::Vec3f>(image, 0, 1) = ipr::Vec3f(PointColor::fromHsv({4.0, 0.6, 0.5}));
-    const cv::Mat weights = PerceptualColour::pointWeights(image, parameters, 0);
-    bool ok = check(!weights.empty() && std::abs(weights.at<float>(0, 0) - 1.0f) < 1e-4f &&
-                    weights.at<float>(0, 1) == 0.0f, "the overlay weighs the source 1 and a far colour 0");
+    ipr::Image image = ipr::Image::create({2, 1}, ipr::Depth::F32, 3);
+    imagetest::at<ipr::Vec3f>(image, 0, 0) = ipr::Vec3f(PointColor::fromHsv(Orange));
+    imagetest::at<ipr::Vec3f>(image, 0, 1) = ipr::Vec3f(PointColor::fromHsv({4.0, 0.6, 0.5}));
+    const ipr::Image weights = PerceptualColour::pointWeights(image, parameters, 0);
+    bool ok = check(!weights.empty() && std::abs(imagetest::at<float>(weights, 0, 0) - 1.0f) < 1e-4f &&
+                    imagetest::at<float>(weights, 0, 1) == 0.0f, "the overlay weighs the source 1 and a far colour 0");
     ok &= check(PerceptualColour::pointWeights(image, parameters, 1).empty() &&
                 PerceptualColour::pointWeights(image, parameters, -1).empty(), "an invalid point gives no weights");
-    cv::Mat rgba(1, 2, CV_32FC4);
-    ipr::at<ipr::Vec4f>(rgba, 0, 0) = {0.6f, 0.3f, 0.1f, 1.0f};
-    ipr::at<ipr::Vec4f>(rgba, 0, 1) = {0.6f, 0.3f, 0.1f, 0.5f};
-    cv::Mat w(1, 2, CV_32FC1);
-    w.at<float>(0, 0) = 1.0f;
-    w.at<float>(0, 1) = 0.0f;
+    ipr::Image rgba = ipr::Image::create({2, 1}, ipr::Depth::F32, 4);
+    imagetest::at<ipr::Vec4f>(rgba, 0, 0) = {0.6f, 0.3f, 0.1f, 1.0f};
+    imagetest::at<ipr::Vec4f>(rgba, 0, 1) = {0.6f, 0.3f, 0.1f, 0.5f};
+    ipr::Image w = ipr::Image::create({2, 1}, ipr::Depth::F32, 1);
+    imagetest::at<float>(w, 0, 0) = 1.0f;
+    imagetest::at<float>(w, 0, 1) = 0.0f;
     ColorAdjustments::showWeights(rgba, w);
-    const ipr::Vec4f kept = ipr::at<ipr::Vec4f>(rgba, 0, 0), grey = ipr::at<ipr::Vec4f>(rgba, 0, 1);
+    const ipr::Vec4f kept = imagetest::at<ipr::Vec4f>(rgba, 0, 0), grey = imagetest::at<ipr::Vec4f>(rgba, 0, 1);
     ok &= check(ipr::length(kept - ipr::Vec4f(0.6f, 0.3f, 0.1f, 1.0f)) < 1e-6 && grey[0] == grey[1] && grey[1] == grey[2] &&
                 grey[3] == 0.5f, "weight 1 keeps the colour, weight 0 shows its luminance, alpha kept");
     return ok;

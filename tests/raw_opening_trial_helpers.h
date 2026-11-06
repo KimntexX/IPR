@@ -28,7 +28,7 @@ bool applyDcpForSrgbAnalysis(const QString &path, cv::Mat &rgb, double kelvin,
     bool applied = false;
     ipr::changeAsImage(rgb, [&](ipr::Image &image) { applied = CameraProfileEngine::applyDcp(path, image, kelvin, error, options); });
     if (!applied) return false;
-    WorkingColor::transform(rgb, WorkingColor::toSrgb());
+    ipr::changeAsImage(rgb, [](ipr::Image &image) { WorkingColor::transform(image, WorkingColor::toSrgb()); });
     return true;
 }
 // Hide only IFD tag identifiers in disposable profile copies; never alter payloads.
@@ -122,7 +122,7 @@ cv::Mat renderCurve(const cv::Mat &before,const Curve &curve,bool cubic,bool hue
 }
 ColorPipeline::WorkingImage working(const cv::Mat &rgb) {
     ColorPipeline::WorkingImage w;
-    std::vector<cv::Mat> c;cv::split(rgb,c);c.push_back(cv::Mat(rgb.rows,rgb.cols,CV_32F,cv::Scalar(1)));cv::merge(c,w.linearRgba);
+    w.linearRgba=ipr::opaque(ipr::fromMat(rgb));   // these studies keep their pixels in Mats
     WorkingColor::transform(w.linearRgba, WorkingColor::fromSrgb());return w;
 }
 cv::Mat sample3(const cv::Mat &p) {

@@ -4,7 +4,7 @@
 #include "Types.h"
 
 #include <array>
-#include <opencv2/core.hpp>
+#include "Image.h"
 
 // Colour mixer following the Lightroom response tables (ColorMixerModel.h):
 // for each band (red, orange, yellow, green, cyan, blue, violet, magenta) and

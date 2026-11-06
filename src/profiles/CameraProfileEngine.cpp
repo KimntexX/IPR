@@ -1923,9 +1923,9 @@ bool renderFromCameraSignal(const DcpWorkingContext &source, int temperature, in
         if (error) *error = QStringLiteral("Exposition hors domaine.");
         return false;
     }
-    const cv::Mat &localExposure = local[LocalValues::Exposure];
-    const cv::Mat &localTemperature = local[LocalValues::Temperature];
-    const cv::Mat &localTint = local[LocalValues::Tint];
+    const ipr::Image &localExposure = local[LocalValues::Exposure];
+    const ipr::Image &localTemperature = local[LocalValues::Temperature];
+    const ipr::Image &localTint = local[LocalValues::Tint];
     const ipr::Size size = source.cameraRgb.size();
     if (!LocalValues::fits(localExposure, size) || !LocalValues::fits(localTemperature, size) ||
         !LocalValues::fits(localTint, size)) {
@@ -1938,7 +1938,7 @@ bool renderFromCameraSignal(const DcpWorkingContext &source, int temperature, in
         ipr::parallelRows(signal.height(), [&](int first, int last) {
             for (int y = first; y < last; ++y) {
                 auto *row = signal.mutableRow<ipr::Vec3f>(y);
-                const float *values = localExposure.ptr<float>(y);
+                const float *values = localExposure.row<float>(y);
                 for (int x = 0; x < signal.width(); ++x)
                     if (values[x] != 0.0f) row[x] *= static_cast<float>(std::exp2(double(values[x])));
             }

@@ -2,7 +2,7 @@
 #define IPR_CORE_TONECURVE_H
 
 #include <QVector>
-#include <opencv2/core.hpp>
+#include "Image.h"
 
 #include <array>
 
@@ -32,8 +32,8 @@ QVector<Point> normalized(QVector<Point> points);
 // A curve's value at x, in its own encoded coordinates (for the UI drawing too).
 float evaluate(const QVector<Point> &curve, float x);
 
-// Linear Rec.2020 RGB (CV_32FC3), in place.
-void apply(cv::Mat &linearRgb, const Curves &curves);
+// Linear Rec.2020 RGB (F32 of three channels), in place.
+void apply(ipr::Image &linearRgb, const Curves &curves);
 }
 
 #endif // IPR_CORE_TONECURVE_H

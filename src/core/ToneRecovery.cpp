@@ -4,7 +4,7 @@
 #include "ToneRecoveryModel.h"
 #include "WorkingColorSpace.h"
 #include "Parallel.h"
-#include "OpenCvBridge.h"
+#include "Image.h"
 
 #include <algorithm>
 #include <cmath>
@@ -251,7 +251,7 @@ inline void applyToPixel(ipr::Vec3f &pixel, const Curve &toneCurve)
 // colour of bright tones. Blacks and positive Whites then act on each linear
 // sRGB channel, where Lightroom's curves were measured: in the wider Rec.2020,
 // Blacks -100 oversaturated colours (0.99 vs 0.92 on 6V1A0037).
-void apply(cv::Mat &image, const Amounts &amounts, const Statistics &statistics, const LocalValues::Maps &local)
+void apply(ipr::Image &image, const Amounts &amounts, const Statistics &statistics, const LocalValues::Maps &local)
 {
     const auto axis = [&](float amount, LocalValues::Parameter parameter) {
         return LocalValues::Axis{amount, &local[parameter], 0.01f, -1.0f, 1.0f, 0.005f};
@@ -261,7 +261,7 @@ void apply(cv::Mat &image, const Amounts &amounts, const Statistics &statistics,
     const LocalValues::Combinations combinations(
         {axis(amounts.shadows, LocalValues::Shadows), axis(amounts.blacks, LocalValues::Blacks),
          axis(amounts.highlights, LocalValues::Highlights), axis(amounts.whites, LocalValues::Whites)},
-        ipr::fromCv(image.size()), MaxLocalCurves);
+        image.size(), MaxLocalCurves);
     if (combinations.active()) {
         const Adaptation adaptation = adapt(statistics);
         std::vector<std::unique_ptr<const Curve>> curves(size_t(combinations.count()));
@@ -271,11 +271,11 @@ void apply(cv::Mat &image, const Amounts &amounts, const Statistics &statistics,
                 curves[size_t(index)] = std::make_unique<const Curve>(Amounts{v[0], v[1], v[2], v[3]}, adaptation);
             }
         });
-        ipr::parallelRows(image.rows, [&](int first, int last) {
+        ipr::parallelRows(image.height(), [&](int first, int last) {
             for (int y = first; y < last; ++y) {
-                ipr::Vec3f *row = image.ptr<ipr::Vec3f>(y);
+                ipr::Vec3f *row = image.mutableRow<ipr::Vec3f>(y);
                 auto indices = combinations.row(y);
-                for (int x = 0; x < image.cols; ++x)
+                for (int x = 0; x < image.width(); ++x)
                     applyToPixel(row[x], *curves[size_t(indices.at(x))]);
             }
         });
@@ -283,9 +283,9 @@ void apply(cv::Mat &image, const Amounts &amounts, const Statistics &statistics,
     }
     if (identity(amounts)) return;
     const Curve toneCurve(amounts, adapt(statistics));
-    for (int y = 0; y < image.rows; ++y) {
-        ipr::Vec3f *row = image.ptr<ipr::Vec3f>(y);
-        for (int x = 0; x < image.cols; ++x)
+    for (int y = 0; y < image.height(); ++y) {
+        ipr::Vec3f *row = image.mutableRow<ipr::Vec3f>(y);
+        for (int x = 0; x < image.width(); ++x)
             applyToPixel(row[x], toneCurve);
     }
 }

@@ -1,8 +1,10 @@
 #include "Geometry.h"
 
-#include "OpenCvBridge.h"
+#include "Filters.h"
+#include "Warp.h"
+#include "Arrange.h"
+#include "Pixels.h"
 
-#include <opencv2/imgproc.hpp>
 
 #include <algorithm>
 #include <array>
@@ -62,19 +64,21 @@ bool needsResampling(const Settings &s)
            s.offsetX != 0 || s.offsetY != 0;
 }
 
-cv::Mat turnedAndMirrored(const cv::Mat &image, const Settings &s)
+ipr::Image turnedAndMirrored(ipr::Image image, const Settings &s)
 {
     // A separate output each time: the source is never written.
-    cv::Mat result = s.quarterTurns >= 1 && s.quarterTurns <= 3 ? ipr::turned(image, s.quarterTurns) : image;
+    if (s.quarterTurns >= 1 && s.quarterTurns <= 3)
+        image = ipr::turned(image, s.quarterTurns);
     if (s.flipHorizontal || s.flipVertical)
-        result = ipr::mirrored(result, s.flipHorizontal, s.flipVertical);
-    return result;
+        image = ipr::mirrored(image, s.flipHorizontal, s.flipVertical);
+    return image;
 }
 
 // Reducing keeps details the output cannot hold, and they fold back as false patterns:
 // blurred before the warp, by what the reduction needs, along each axis of the source.
 // The scale and the aspect only: perspective reduces less, and varies across the image.
-cv::Mat antialiased(const cv::Mat &image, const Settings &s)
+// Empty when nothing is reduced.
+ipr::Image antialiased(const ipr::Image &image, const Settings &s)
 {
     const auto spread = [](double zoom) {
         return zoom < 1 ? 0.7 * std::sqrt(1 / (zoom * zoom) - 1) : 0.0;
@@ -84,19 +88,19 @@ cv::Mat antialiased(const cv::Mat &image, const Settings &s)
     if (s.quarterTurns % 2)
         std::swap(sigmaX, sigmaY);
     if (sigmaX <= 0 && sigmaY <= 0)
-        return image;
+        return {};
     return ipr::gaussianBlurred(image, sigmaX, sigmaY, ipr::BlurBorder::LastPixel);
 }
 
-cv::Mat resampled(const cv::Mat &image, const Settings &s, Quality quality, int border)
+ipr::Image resampled(const ipr::Image &image, const Settings &s, Quality quality, ipr::Outside outside)
 {
-    const ipr::Size canvas = canvasSize(s, ipr::fromCv(image.size()));
+    const ipr::Size canvas = canvasSize(s, image.size());
     // Pixel x is centred on (x + 0.5) / width: the same geometry at every resolution.
-    const Matrix fromPixels(1.0 / image.cols, 0, 0.5 / image.cols, 0, 1.0 / image.rows, 0.5 / image.rows, 0, 0, 1);
+    const Matrix fromPixels(1.0 / image.width(), 0, 0.5 / image.width(), 0, 1.0 / image.height(), 0.5 / image.height(), 0, 0, 1);
     const Matrix toPixels(canvas.width, 0, -0.5, 0, canvas.height, -0.5, 0, 0, 1);
-    const Matrix forward = toPixels * homography(s, ipr::fromCv(image.size())) * fromPixels;
+    const Matrix forward = toPixels * homography(s, image.size()) * fromPixels;
     return ipr::warpedPerspective(image, forward.inv(), canvas, quality == Quality::Export ? ipr::Resampling::Lanczos4 : ipr::Resampling::Cubic,
-                                  border == cv::BORDER_CONSTANT ? ipr::Outside::Zero : ipr::Outside::LastPixel);
+                                  outside);
 }
 
 std::optional<ipr::Point2d> mapped(const Matrix &matrix, const ipr::Point2d &point)
@@ -212,15 +216,16 @@ ipr::Point2d viewToCanvas(const Settings &s, const ipr::Point2d &point)
     return {s.cropX + point.x * s.cropWidth, s.cropY + point.y * s.cropHeight};
 }
 
-cv::Mat warpRgb(const cv::Mat &rgb, const Settings &s, Quality quality)
+ipr::Image warpRgb(ipr::Image rgb, const Settings &s, Quality quality)
 {
     if (rgb.empty() || !transformsPixels(s))
         return rgb;
     if (!needsResampling(s))
-        return turnedAndMirrored(rgb, s);
-    cv::Mat result = resampled(antialiased(rgb, s), s, quality, cv::BORDER_REPLICATE);
+        return turnedAndMirrored(std::move(rgb), s);
+    const ipr::Image blurred = antialiased(rgb, s);
+    ipr::Image result = resampled(blurred.empty() ? rgb : blurred, s, quality, ipr::Outside::LastPixel);
     // The filter's lobes must not push a pixel below what the source holds.
-    std::vector<cv::Mat> channels;
+    std::vector<ipr::Image> channels;
     channels = ipr::splitChannels(rgb);
     std::vector<float> floor(size_t(rgb.channels()));
     for (int channel = 0; channel < rgb.channels(); ++channel)
@@ -228,53 +233,47 @@ cv::Mat warpRgb(const cv::Mat &rgb, const Settings &s, Quality quality)
     return ipr::atLeast(result, floor);
 }
 
-cv::Mat warpCoverage(const cv::Mat &alpha, const Settings &s, Quality quality)
+ipr::Image warpCoverage(ipr::Image alpha, const Settings &s, Quality quality)
 {
     if (alpha.empty() || !transformsPixels(s))
         return alpha;
     if (!needsResampling(s))
-        return turnedAndMirrored(alpha, s);
-    cv::Mat result = resampled(alpha, s, quality, cv::BORDER_CONSTANT);
+        return turnedAndMirrored(std::move(alpha), s);
+    ipr::Image result = resampled(alpha, s, quality, ipr::Outside::Zero);
     // The filter's rounding must not make the image's inside faintly transparent,
     // nor leave a haze beyond it.
-    result.setTo(1, result >= 0.999);
-    result.setTo(0, result <= 0.001);
+    ipr::mapInPlace(result, [](float v) { return v >= 0.999f ? 1.0f : v <= 0.001f ? 0.0f : v; });
     return result;
 }
 
-void clearTransparent(cv::Mat &rgba)
+void clearTransparent(ipr::Image &rgba)
 {
-    for (int y = 0; y < rgba.rows; ++y) {
-        auto *row = rgba.ptr<ipr::Vec4f>(y);
-        for (int x = 0; x < rgba.cols; ++x)
+    for (int y = 0; y < rgba.height(); ++y) {
+        auto *row = rgba.mutableRow<ipr::Vec4f>(y);
+        for (int x = 0; x < rgba.width(); ++x)
             if (row[x][3] <= 0)
                 row[x] = ipr::Vec4f(0, 0, 0, 0);
     }
 }
 
-cv::Mat warpRgba(const cv::Mat &rgba, const Settings &s, Quality quality)
+ipr::Image warpRgba(ipr::Image rgba, const Settings &s, Quality quality)
 {
     if (rgba.empty() || !transformsPixels(s))
         return rgba;
     if (!needsResampling(s))
-        return turnedAndMirrored(rgba, s);
-    cv::Mat rgb, alpha;
-    rgb = ipr::withoutAlpha(rgba);
-    alpha = ipr::channel(rgba, 3);
-    std::vector<cv::Mat> channels;
-    channels = ipr::splitChannels(warpRgb(rgb, s, quality));
-    channels.push_back(warpCoverage(alpha, s, quality));
-    cv::Mat result;
-    result = ipr::merged(channels);
+        return turnedAndMirrored(std::move(rgba), s);
+    std::vector<ipr::Image> channels = ipr::splitChannels(warpRgb(ipr::withoutAlpha(rgba), s, quality));
+    channels.push_back(warpCoverage(ipr::channel(rgba, 3), s, quality));
+    ipr::Image result = ipr::merged(channels);
     clearTransparent(result);
     return result;
 }
 
-cv::Mat crop(const cv::Mat &canvasImage, const Settings &s)
+ipr::Image crop(ipr::Image canvasImage, const Settings &s)
 {
     if (canvasImage.empty() || !hasCrop(s))
         return canvasImage;
-    return canvasImage(ipr::toCv(cropRect(s, ipr::fromCv(canvasImage.size()))));
+    return canvasImage.copy(cropRect(s, canvasImage.size()));
 }
 
 void turn(Settings &s, const ipr::Size &source)

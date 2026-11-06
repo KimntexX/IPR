@@ -5,7 +5,7 @@
 
 #include <array>
 #include <cstddef>
-#include <opencv2/core.hpp>
+#include "Image.h"
 
 // Point colour, as Lightroom's: colours picked in the photo, each shifting the
 // hue, saturation and value of the colours near it, in the HSV of linear ProPhoto

@@ -1,18 +1,17 @@
 #ifndef IPR_CORE_LOCALVALUES_H
 #define IPR_CORE_LOCALVALUES_H
 
-#include "OpenCvBridge.h"
+#include "Image.h"
 
 #include <QtGlobal>
 
-#include <opencv2/core.hpp>
 
 #include <array>
 #include <unordered_map>
 #include <vector>
 
 // Local values of the in-chain local adjustments (ADR-0021): for a setting, one
-// float per pixel of the rendered image (CV_32FC1), in the units of its global
+// float per pixel of the rendered image (F32, one channel), in the units of its global
 // slider: the masks' values weighted by their coverage, summed. A module applies
 // at each pixel its global value plus the local one. An empty map changes
 // nothing: the module keeps its global path, identical to the bit.
@@ -24,17 +23,19 @@ enum Parameter {
     ParameterCount
 };
 
+// Move only: a copy shares the maps read only, by sharedCopy.
 struct Maps
 {
-    std::array<cv::Mat, ParameterCount> values;
-    cv::Mat &operator[](Parameter parameter) { return values[size_t(parameter)]; }
-    const cv::Mat &operator[](Parameter parameter) const { return values[size_t(parameter)]; }
+    std::array<ipr::Image, ParameterCount> values;
+    ipr::Image &operator[](Parameter parameter) { return values[size_t(parameter)]; }
+    const ipr::Image &operator[](Parameter parameter) const { return values[size_t(parameter)]; }
 };
+Maps sharedCopy(const Maps &maps);
 
 // A map a module can read for an image of this size: empty, or one float per pixel.
-inline bool fits(const cv::Mat &map, const ipr::Size &size)
+inline bool fits(const ipr::Image &map, const ipr::Size &size)
 {
-    return map.empty() || (map.type() == CV_32FC1 && ipr::fromCv(map.size()) == size);
+    return map.empty() || (map.depth() == ipr::Depth::F32 && map.channels() == 1 && map.size() == size);
 }
 
 // One setting of a module that prepares a curve or a matrix per value, too costly
@@ -43,7 +44,7 @@ inline bool fits(const cv::Mat &map, const ipr::Size &size)
 struct Axis
 {
     float global;
-    const cv::Mat *local;   // absent, empty or misfit: the global value everywhere
+    const ipr::Image *local;   // absent, empty or misfit: the global value everywhere
     float scale;
     float low;
     float high;
@@ -99,7 +100,7 @@ private:
 // The few values, sorted and distinct, at which a neighbourhood module computes
 // its image-wide part before mixing per pixel: those a map really needs, rounded
 // to step and widened to at most maxCount. Without a usable map: the global value.
-std::vector<float> latticeOf(float global, const cv::Mat &local, float low, float high, float step, int maxCount);
+std::vector<float> latticeOf(float global, const ipr::Image &local, float low, float high, float step, int maxCount);
 
 // Linear position of a value between the lattice's values, clamped to its ends;
 // exactly on a value when it holds it (t = 0).

@@ -10,14 +10,14 @@
 #include "Grain.h"
 #include "Histogram.h"
 #include "LocalContrast.h"
-#include "OpenCvBridge.h"
+#include "Filters.h"
+#include "Pixels.h"
 #include "ToneCurve.h"
 #include "ToneRecovery.h"
 
 #include <QDataStream>
 #include <QDebug>
 #include <QIODevice>
-#include <opencv2/imgproc.hpp>
 
 #include <algorithm>
 #include <cmath>
@@ -29,13 +29,12 @@ namespace {
 
 // What a luminance range reads: the image as it is before any edit, on the canvas. Empty when
 // no mask has a range.
-cv::Mat rangeLuminanceOf(const ColorPipeline::WorkingImage &source, const Settings &settings, double pixelScale)
+ipr::Image rangeLuminanceOf(const ColorPipeline::WorkingImage &source, const Settings &settings, double pixelScale)
 {
     if (!LocalAdjustments::usesLuminance(settings.localMasks))
         return {};
-    cv::Mat rgb;
-    rgb = ipr::withoutAlpha(source.linearRgba);
-    return LocalAdjustments::rangeLuminance(Geometry::warpRgb(rgb, settings.geometry, geometryQuality(pixelScale)));
+    return LocalAdjustments::rangeLuminance(
+        Geometry::warpRgb(ipr::withoutAlpha(source.linearRgba), settings.geometry, geometryQuality(pixelScale)));
 }
 
 // What the masks add on the canvas; a range reads the image as it is before any edit.
@@ -55,8 +54,8 @@ LocalValues::Maps maskValues(const ColorPipeline::WorkingImage &source, const Se
         if (cache->maskMaps(source.linearRgba, pixelScale, key, kept))
             return kept;
     }
-    const ipr::Size canvas = Geometry::canvasSize(settings.geometry, ipr::fromCv(source.linearRgba.size()));
-    const LocalValues::Maps maps = LocalAdjustments::valueMaps(settings.localMasks, canvas, rangeLuminanceOf(source, settings, pixelScale));
+    const ipr::Size canvas = Geometry::canvasSize(settings.geometry, source.linearRgba.size());
+    LocalValues::Maps maps = LocalAdjustments::valueMaps(settings.localMasks, canvas, rangeLuminanceOf(source, settings, pixelScale));
     if (cache)
         cache->storeMaskMaps(source.linearRgba, pixelScale, key, maps);
     return maps;
@@ -104,7 +103,7 @@ RenderStageCache::Keys stageKeys(const Settings &s)
 // the four tone controls, in place on the source's RGB. local: what the masks
 // add, on the canvas (LocalAdjustments::valueMaps).
 bool renderTones(const ColorPipeline::WorkingImage &source, const Settings &settings, int referenceTemperature,
-                 double pixelScale, cv::Mat &adjusted, const LocalValues::Maps &local)
+                 double pixelScale, ipr::Image &adjusted, const LocalValues::Maps &local)
 {
     const bool whiteBalanceEdit = settings.temperature != referenceTemperature || settings.tint != 0 ||
                                   !local[LocalValues::Temperature].empty() || !local[LocalValues::Tint].empty();
@@ -139,14 +138,10 @@ bool renderTones(const ColorPipeline::WorkingImage &source, const Settings &sett
         // The camera signal comes before the geometry: there, the maps follow the source's pixels.
         LocalValues::Maps onSource;
         for (const LocalValues::Parameter parameter : {LocalValues::Exposure, LocalValues::Temperature, LocalValues::Tint})
-            onSource[parameter] = LocalAdjustments::toSource(local[parameter], settings.geometry, ipr::fromCv(adjusted.size()));
-        bool rendered = camera->cameraRgb.size() == ipr::fromCv(adjusted.size());
-        if (rendered)   // into the Mat until the render chain leaves OpenCV
-            ipr::changeAsImage(adjusted, [&](ipr::Image &out) {
-                rendered = CameraProfileEngine::renderFromCameraSignal(*camera, settings.temperature, settings.tint,
-                                                                       settings.brightness, out, &error, onSource);
-            });
-        if (!rendered) {
+            onSource[parameter] = LocalAdjustments::toSource(local[parameter], settings.geometry, adjusted.size());
+        if (camera->cameraRgb.size() != adjusted.size() ||
+            !CameraProfileEngine::renderFromCameraSignal(*camera, settings.temperature, settings.tint,
+                                                         settings.brightness, adjusted, &error, onSource)) {
             qWarning() << "Échec du rendu capteur avant DCP :" << error;
             return false;
         }
@@ -158,7 +153,7 @@ bool renderTones(const ColorPipeline::WorkingImage &source, const Settings &sett
     // no profile curve to precede.
     // The geometry's single resampling, before anything looks at neighbours; the
     // camera-signal luminance denoise above runs on the sensor's own pixel grid.
-    adjusted = Geometry::warpRgb(adjusted, settings.geometry, geometryQuality(pixelScale));
+    adjusted = Geometry::warpRgb(std::move(adjusted), settings.geometry, geometryQuality(pixelScale));
 
     if (!sceneExposure) Exposure::apply(adjusted, settings.brightness, local[LocalValues::Exposure]);
 
@@ -198,7 +193,7 @@ Geometry::Quality geometryQuality(double pixelScale)
 ColorPipeline::WorkingImage cropped(ColorPipeline::WorkingImage image, const Geometry::Settings &geometry)
 {
     if (!image.isNull() && Geometry::hasCrop(geometry))
-        image.linearRgba = Geometry::crop(image.linearRgba, geometry).clone();
+        image.linearRgba = Geometry::crop(std::move(image.linearRgba), geometry);
     return image;
 }
 
@@ -210,16 +205,16 @@ PerceptualColour::Parameters perceptualParameters(const Settings &settings)
             settings.gradingLuminance, settings.gradingBlending, settings.gradingBalance};
 }
 
-cv::Mat tonesOutput(const ColorPipeline::WorkingImage &source, const Settings &settings, double pixelScale,
+ipr::Image tonesOutput(const ColorPipeline::WorkingImage &source, const Settings &settings, double pixelScale,
                     RenderStageCache *cache)
 {
-    cv::Mat tones = cache ? cache->peek(source.linearRgba, pixelScale, 0, stageKeys(settings)[0]) : cv::Mat();
+    ipr::Image tones = cache ? cache->peek(source.linearRgba, pixelScale, 0, stageKeys(settings)[0]) : ipr::Image();
     if (!tones.empty())
         return tones;
     tones = ipr::withoutAlpha(source.linearRgba);
     const int reference = static_cast<int>(std::lround(source.referenceWhiteBalanceKelvin.value_or(5200.0)));
     if (!renderTones(source, settings, reference, pixelScale, tones, maskValues(source, settings, pixelScale, cache)))
-        tones.release();
+        tones = {};
     return tones;
 }
 
@@ -227,13 +222,13 @@ ColorPipeline::WorkingImage workingImage(const ColorPipeline::WorkingImage &sour
                                          double pixelScale, RenderStageCache *cache, int *retouchesNotDone)
 {
     if (source.isNull() || source.colorSpace != ColorPipeline::workingColorSpace() ||
-        source.linearRgba.type() != CV_32FC4 || !ipr::allFinite(source.linearRgba))
+        !(source.linearRgba.depth() == ipr::Depth::F32 && source.linearRgba.channels() == 4) || !ipr::allFinite(source.linearRgba))
         return {};
 
     const int referenceTemperature = static_cast<int>(std::lround(
         source.referenceWhiteBalanceKelvin.value_or(5200.0)));
     const bool hasToneCurves = !ToneCurve::isIdentity(settings.toneCurves);
-    // A neutral pipeline returns its shallow source and therefore avoids all
+    // A neutral pipeline returns its source, shared, and therefore avoids all
     // RGB split/merge buffers and per-pixel passes.
     if (!settings.grayscale && settings.brightness == 0.0f &&
         settings.contrast == 0 && settings.blur == 0 && settings.shadows == 0 &&
@@ -255,7 +250,7 @@ ColorPipeline::WorkingImage workingImage(const ColorPipeline::WorkingImage &sour
                     [](int value) { return value == 0; }) && !PointColor::active(settings.pointColor) &&
         !hasToneCurves && !Geometry::transformsPixels(settings.geometry) &&
         !LocalAdjustments::active(settings.localMasks) && !Retouch::active(settings.retouches))
-        return source;
+        return ColorPipeline::sharedCopy(source);
 
     // What the masks add per setting; every map stays empty without any.
     const LocalValues::Maps local = maskValues(source, settings, pixelScale, cache);
@@ -265,8 +260,8 @@ ColorPipeline::WorkingImage workingImage(const ColorPipeline::WorkingImage &sour
     RenderStageCache::Start start;
     if (cache) start = cache->begin(source.linearRgba, pixelScale, stageKeys(settings));
     const auto runs = [&start](int stage) { return start.stage < stage; };
-    const auto reached = [&](int stage, const cv::Mat &rgb) { if (cache) cache->store(start, stage, rgb); };
-    cv::Mat adjusted = start.rgb;
+    const auto reached = [&](int stage, const ipr::Image &rgb) { if (cache) cache->store(start, stage, rgb); };
+    ipr::Image adjusted = std::move(start.rgb);
     if (runs(0)) {
         adjusted = ipr::withoutAlpha(source.linearRgba);
         if (!renderTones(source, settings, referenceTemperature, pixelScale, adjusted, local)) return {};
@@ -317,17 +312,13 @@ ColorPipeline::WorkingImage workingImage(const ColorPipeline::WorkingImage &sour
 
     Grain::apply(adjusted, settings.grain, pixelScale);
 
-    std::vector<cv::Mat> channels;
-    channels = ipr::splitChannels(adjusted);
-    cv::Mat alpha;
-    alpha = ipr::channel(source.linearRgba, 3);
-    channels.push_back(Geometry::warpCoverage(alpha, settings.geometry, geometryQuality(pixelScale)));
-    cv::Mat rgbaOutput;
-    rgbaOutput = ipr::merged(channels);
+    std::vector<ipr::Image> channels = ipr::splitChannels(adjusted);
+    channels.push_back(Geometry::warpCoverage(ipr::channel(source.linearRgba, 3), settings.geometry, geometryQuality(pixelScale)));
+    ipr::Image rgbaOutput = ipr::merged(channels);
     if (Geometry::transformsPixels(settings.geometry))
         Geometry::clearTransparent(rgbaOutput);
 
-    return {rgbaOutput, source.colorSpace, source.sourceProfile,
+    return {std::move(rgbaOutput), source.colorSpace, source.sourceProfile,
             source.referenceWhiteBalanceKelvin};
 }
 
@@ -341,8 +332,8 @@ Preview preview(const ColorPipeline::WorkingImage &source, const Settings &setti
         // white balance, but none of the editor settings (including sidecars),
         // except the framing, so that it stays comparable with the preview.
         QString error;
-        ColorPipeline::WorkingImage framed = source;
-        framed.linearRgba = Geometry::warpRgba(source.linearRgba, settings.geometry, geometryQuality(pixelScale));
+        ColorPipeline::WorkingImage framed = ColorPipeline::sharedCopy(source);
+        framed.linearRgba = Geometry::warpRgba(std::move(framed.linearRgba), settings.geometry, geometryQuality(pixelScale));
         if (!wholeCanvas)
             framed = cropped(std::move(framed), settings.geometry);
         result.originalPreview = ColorPipeline::toSrgb(
@@ -359,8 +350,8 @@ Preview preview(const ColorPipeline::WorkingImage &source, const Settings &setti
     if (overlayPoint >= 0) {
         // Weights on the colour entering the point colour: the tones' output the
         // render just kept, or rendered here.
-        const cv::Mat tones = tonesOutput(source, settings, pixelScale, cache);
-        const cv::Mat weights = PerceptualColour::pointWeights(tones, perceptualParameters(settings), overlayPoint);
+        const ipr::Image tones = tonesOutput(source, settings, pixelScale, cache);
+        const ipr::Image weights = PerceptualColour::pointWeights(tones, perceptualParameters(settings), overlayPoint);
         if (!weights.empty() && weights.size() == rendered.linearRgba.size()) {
             // A neutral pipeline hands back the source buffer itself: overlay a copy.
             rendered.linearRgba = rendered.linearRgba.clone();
@@ -368,7 +359,7 @@ Preview preview(const ColorPipeline::WorkingImage &source, const Settings &setti
         }
     }
     if (overlayMask >= 0 && overlayMask < int(settings.localMasks.size())) {
-        const cv::Mat weights = LocalAdjustments::coverage(settings.localMasks[size_t(overlayMask)], ipr::fromCv(rendered.linearRgba.size()),
+        const ipr::Image weights = LocalAdjustments::coverage(settings.localMasks[size_t(overlayMask)], rendered.linearRgba.size(),
                                                            rangeLuminanceOf(source, settings, pixelScale));
         // A neutral pipeline hands back the source buffer itself: overlay a copy.
         rendered.linearRgba = rendered.linearRgba.clone();
@@ -376,15 +367,15 @@ Preview preview(const ColorPipeline::WorkingImage &source, const Settings &setti
     }
 
     if (overlayRetouch >= 0 && overlayRetouch < int(settings.retouches.size())) {
-        const cv::Mat weights = Retouch::coverage(settings.retouches[size_t(overlayRetouch)], ipr::fromCv(rendered.linearRgba.size()));
+        const ipr::Image weights = Retouch::coverage(settings.retouches[size_t(overlayRetouch)], rendered.linearRgba.size());
         rendered.linearRgba = rendered.linearRgba.clone();
         ColorAdjustments::showWeights(rendered.linearRgba, weights);
     }
 
     QString error;
-    result.preview = ColorPipeline::toSrgb(
-        wholeCanvas ? rendered : cropped(std::move(rendered), settings.geometry),
-        ColorPipeline::OutputFormat::Preview8Bit, &error);
+    if (!wholeCanvas)
+        rendered = cropped(std::move(rendered), settings.geometry);
+    result.preview = ColorPipeline::toSrgb(rendered, ColorPipeline::OutputFormat::Preview8Bit, &error);
     if (result.preview.isNull()) {
         qWarning() << "Échec du rendu de l'aperçu :" << error;
         return result;

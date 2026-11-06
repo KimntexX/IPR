@@ -1,8 +1,7 @@
 #include "Geometry.h"
+#include "image_testing.h"
 #include "Histogram.h"
-#include "OpenCvBridge.h"
-
-#include <opencv2/imgproc.hpp>
+#include "Pixels.h"
 
 #include <cmath>
 #include <cstring>
@@ -22,50 +21,50 @@ void check(bool condition, const char *message)
     }
 }
 
-bool same(const cv::Mat &a, const cv::Mat &b)
+bool same(const ipr::Image &a, const ipr::Image &b)
 {
-    if (a.size() != b.size() || a.type() != b.type())
+    if (a.size() != b.size() || a.depth() != b.depth() || a.channels() != b.channels())
         return false;
-    for (int y = 0; y < a.rows; ++y)
-        if (std::memcmp(a.ptr(y), b.ptr(y), size_t(a.cols) * a.elemSize()) != 0)
+    for (int y = 0; y < a.height(); ++y)
+        if (std::memcmp(a.row<unsigned char>(y), b.row<unsigned char>(y), size_t(a.width()) * a.pixelBytes()) != 0)
             return false;
     return true;
 }
 
 // Distinct and smooth in each channel: position can be read back from the value.
-cv::Mat ramp(int width, int height)
+ipr::Image ramp(int width, int height)
 {
-    cv::Mat image(height, width, CV_32FC3);
+    ipr::Image image = ipr::Image::create({width, height}, ipr::Depth::F32, 3);
     for (int y = 0; y < height; ++y)
         for (int x = 0; x < width; ++x)
-            ipr::at<ipr::Vec3f>(image, y, x) = {(x + .5f) / width, (y + .5f) / height, .5f};
+            imagetest::at<ipr::Vec3f>(image, y, x) = {(x + .5f) / width, (y + .5f) / height, .5f};
     return image;
 }
 
 // A bright dot, as a known landmark.
-cv::Mat dot(int width, int height, double u, double v, double sigma)
+ipr::Image dot(int width, int height, double u, double v, double sigma)
 {
-    cv::Mat image(height, width, CV_32FC3, cv::Scalar::all(0));
+    ipr::Image image = ipr::filled({width, height}, ipr::Depth::F32, 3, 0);
     for (int y = 0; y < height; ++y)
         for (int x = 0; x < width; ++x) {
             const double dx = (x + .5) - u * width, dy = (y + .5) - v * height;
             const float value = float(std::exp(-(dx * dx + dy * dy) / (2 * sigma * sigma)));
-            ipr::at<ipr::Vec3f>(image, y, x) = {value, value, value};
+            imagetest::at<ipr::Vec3f>(image, y, x) = {value, value, value};
         }
     return image;
 }
 
-ipr::Point2d centroid(const cv::Mat &image)
+ipr::Point2d centroid(const ipr::Image &image)
 {
     double sum = 0, sumX = 0, sumY = 0;
-    for (int y = 0; y < image.rows; ++y)
-        for (int x = 0; x < image.cols; ++x) {
-            const double value = std::max(0.f, ipr::at<ipr::Vec3f>(image, y, x)[0]);
+    for (int y = 0; y < image.height(); ++y)
+        for (int x = 0; x < image.width(); ++x) {
+            const double value = std::max(0.f, imagetest::at<ipr::Vec3f>(image, y, x)[0]);
             sum += value;
             sumX += value * (x + .5);
             sumY += value * (y + .5);
         }
-    return {sumX / sum / image.cols, sumY / sum / image.rows};
+    return {sumX / sum / image.width(), sumY / sum / image.height()};
 }
 
 bool close(const ipr::Point2d &a, const ipr::Point2d &b, double tolerance)
@@ -100,39 +99,39 @@ void identity()
     const Geometry::Settings neutral;
     check(Geometry::isIdentity(neutral) && !Geometry::transformsPixels(neutral) && !Geometry::hasCrop(neutral),
           "the default settings change nothing");
-    const cv::Mat image = ramp(32, 24);
-    check(Geometry::warpRgb(image, neutral, Geometry::Quality::Export).data == image.data,
+    const ipr::Image image = ramp(32, 24);
+    check(Geometry::warpRgb(image.share(), neutral, Geometry::Quality::Export).block() == image.block(),
           "neutral settings share the buffer");
-    check(Geometry::crop(image, neutral).data == image.data, "no crop shares the buffer");
+    check(Geometry::crop(image.share(), neutral).block() == image.block(), "no crop shares the buffer");
     check(close(seen(neutral), {0.3, 0.2}, 1e-12), "neutral settings map a point to itself");
-    cv::Mat empty;
-    check(Geometry::warpRgb(empty, general(), Geometry::Quality::Export).empty() &&
-          Geometry::warpCoverage(empty, general(), Geometry::Quality::Export).empty() &&
-          Geometry::warpRgba(empty, general(), Geometry::Quality::Export).empty(),
+    ipr::Image empty;
+    check(Geometry::warpRgb(empty.share(), general(), Geometry::Quality::Export).empty() &&
+          Geometry::warpCoverage(empty.share(), general(), Geometry::Quality::Export).empty() &&
+          Geometry::warpRgba(empty.share(), general(), Geometry::Quality::Export).empty(),
           "an empty image stays empty");
 }
 
 void exactOrientation()
 {
-    const cv::Mat image = ramp(16, 10);
-    const cv::Mat reference = image.clone();
+    const ipr::Image image = ramp(16, 10);
+    const ipr::Image reference = image.clone();
     Geometry::Settings s;
     s.quarterTurns = 1;
-    cv::Mat turned = Geometry::warpRgb(image, s, Geometry::Quality::Export);
-    check(turned.cols == 10 && turned.rows == 16, "a quarter turn swaps the sides");
-    check(ipr::at<ipr::Vec3f>(turned, 0, 9) == ipr::at<ipr::Vec3f>(image, 0, 0), "a clockwise turn sends the top left to the top right");
-    check(close(*Geometry::toCanvas(s, ipr::fromCv(image.size()), {0, 0}), {1, 0}, 1e-12), "the matrix agrees with the exact turn");
+    ipr::Image turned = Geometry::warpRgb(image.share(), s, Geometry::Quality::Export);
+    check(turned.width() == 10 && turned.height() == 16, "a quarter turn swaps the sides");
+    check(imagetest::at<ipr::Vec3f>(turned, 0, 9) == imagetest::at<ipr::Vec3f>(image, 0, 0), "a clockwise turn sends the top left to the top right");
+    check(close(*Geometry::toCanvas(s, image.size(), {0, 0}), {1, 0}, 1e-12), "the matrix agrees with the exact turn");
 
     Geometry::Settings half;
     half.quarterTurns = 2;
-    cv::Mat back = Geometry::warpRgb(Geometry::warpRgb(image, half, Geometry::Quality::Export), half, Geometry::Quality::Export);
+    ipr::Image back = Geometry::warpRgb(Geometry::warpRgb(image.share(), half, Geometry::Quality::Export), half, Geometry::Quality::Export);
     check(same(back, image), "two half turns give the exact image");
 
     Geometry::Settings mirrored;
     mirrored.flipHorizontal = true;
-    cv::Mat twice = Geometry::warpRgb(Geometry::warpRgb(image, mirrored, Geometry::Quality::Preview), mirrored, Geometry::Quality::Preview);
+    ipr::Image twice = Geometry::warpRgb(Geometry::warpRgb(image.share(), mirrored, Geometry::Quality::Preview), mirrored, Geometry::Quality::Preview);
     check(same(twice, image), "two mirrors give the exact image");
-    check(close(*Geometry::toCanvas(mirrored, ipr::fromCv(image.size()), {0.25, 0.5}), {0.75, 0.5}, 1e-12), "the matrix agrees with the exact mirror");
+    check(close(*Geometry::toCanvas(mirrored, image.size(), {0.25, 0.5}), {0.75, 0.5}, 1e-12), "the matrix agrees with the exact mirror");
 
     for (int turns = 0; turns < 4; ++turns)
         for (int flips = 0; flips < 4; ++flips) {
@@ -140,10 +139,10 @@ void exactOrientation()
             o.quarterTurns = turns;
             o.flipHorizontal = flips & 1;
             o.flipVertical = flips & 2;
-            const cv::Mat out = Geometry::warpRgb(image, o, Geometry::Quality::Export);
-            const auto corner = Geometry::toCanvas(o, ipr::fromCv(image.size()), {(.5 + 3) / 16, (.5 + 2) / 10});
-            const int x = int(corner->x * out.cols), y = int(corner->y * out.rows);
-            check(ipr::at<ipr::Vec3f>(out, y, x) == ipr::at<ipr::Vec3f>(image, 2, 3), "matrix and exact copy agree on every orientation");
+            const ipr::Image out = Geometry::warpRgb(image.share(), o, Geometry::Quality::Export);
+            const auto corner = Geometry::toCanvas(o, image.size(), {(.5 + 3) / 16, (.5 + 2) / 10});
+            const int x = int(corner->x * out.width()), y = int(corner->y * out.height());
+            check(imagetest::at<ipr::Vec3f>(out, y, x) == imagetest::at<ipr::Vec3f>(image, 2, 3), "matrix and exact copy agree on every orientation");
             check(same(image, reference), "an orientation never writes in its source");
         }
 }
@@ -186,8 +185,8 @@ void landmarks()
     const ipr::Point2d source{0.42, 0.55};
     for (const ipr::Size &size : {ipr::Size(1536, 1024), ipr::Size(3072, 2048)})
         for (const auto quality : {Geometry::Quality::Preview, Geometry::Quality::Export}) {
-            const cv::Mat image = dot(size.width, size.height, source.x, source.y, size.width / 128.0);
-            const cv::Mat out = Geometry::warpRgb(image, s, quality);
+            const ipr::Image image = dot(size.width, size.height, source.x, source.y, size.width / 128.0);
+            const ipr::Image out = Geometry::warpRgb(image.share(), s, quality);
             const auto expected = Geometry::toCanvas(s, size, source);
             // Half a pixel of the small image: perspective shifts a centroid a little.
             check(close(centroid(out), *expected, 0.5 / 1024), "a landmark lands where the matrix says");
@@ -195,22 +194,22 @@ void landmarks()
     // A grating the output cannot hold fades instead of folding back as a false pattern.
     for (const auto quality : {Geometry::Quality::Preview, Geometry::Quality::Export})
         for (const int scale : {50, 75}) {
-            cv::Mat grating(512, 512, CV_32FC3);
-            for (int y = 0; y < grating.rows; ++y)
-                for (int x = 0; x < grating.cols; ++x)
-                    ipr::at<ipr::Vec3f>(grating, y, x) = ipr::Vec3f::all(float(.5 + .2 * std::sin(2 * 3.14159265358979 * (x + .5) / 2.5)));
+            ipr::Image grating = ipr::Image::create({512, 512}, ipr::Depth::F32, 3);
+            for (int y = 0; y < grating.height(); ++y)
+                for (int x = 0; x < grating.width(); ++x)
+                    imagetest::at<ipr::Vec3f>(grating, y, x) = ipr::Vec3f::all(float(.5 + .2 * std::sin(2 * 3.14159265358979 * (x + .5) / 2.5)));
             Geometry::Settings reduced;
             reduced.scale = scale;
-            cv::Mat channel;
-            cv::extractChannel(Geometry::warpRgb(grating, reduced, quality)(ipr::toCv(ipr::Recti(200, 200, 112, 112))), channel, 0);
-            cv::Scalar mean, deviation;
-            cv::meanStdDev(channel, mean, deviation);
+            const ipr::Image channel =
+                ipr::channel(Geometry::warpRgb(grating.share(), reduced, quality).copy(ipr::Recti(200, 200, 112, 112)), 0);
+            std::vector<double> mean, deviation;
+            ipr::meanAndDeviationOf(channel, mean, deviation);
             check(deviation[0] * std::sqrt(2.0) / .2 < 0.35, "a reduced fine grating does not fold back");
         }
     // Preview and export of the same settings agree in position, despite their filters.
-    const cv::Mat image = dot(2048, 1365, source.x, source.y, 16);
-    check(close(centroid(Geometry::warpRgb(image, s, Geometry::Quality::Preview)),
-                centroid(Geometry::warpRgb(image, s, Geometry::Quality::Export)), 0.1 / 1365),
+    const ipr::Image image = dot(2048, 1365, source.x, source.y, 16);
+    check(close(centroid(Geometry::warpRgb(image.share(), s, Geometry::Quality::Preview)),
+                centroid(Geometry::warpRgb(image.share(), s, Geometry::Quality::Export)), 0.1 / 1365),
           "preview and export agree in position");
 }
 
@@ -253,37 +252,36 @@ void directions()
 
 void borders()
 {
-    cv::Mat image(100, 150, CV_32FC3, cv::Scalar(.4, .5, .6));
-    cv::Mat alpha(100, 150, CV_32FC1, cv::Scalar(1));
+    ipr::Image image = imagetest::filledWith({150, 100}, {.4, .5, .6});
+    ipr::Image alpha = ipr::filled({150, 100}, ipr::Depth::F32, 1, 1);
     Geometry::Settings s;
     s.rotation = 20.f;
     for (const auto quality : {Geometry::Quality::Preview, Geometry::Quality::Export}) {
-        const cv::Mat rgb = Geometry::warpRgb(image, s, quality);
-        const cv::Mat coverage = Geometry::warpCoverage(alpha, s, quality);
+        const ipr::Image rgb = Geometry::warpRgb(image.share(), s, quality);
+        const ipr::Image coverage = Geometry::warpCoverage(alpha.share(), s, quality);
         check(rgb.size() == image.size() && coverage.size() == image.size(), "the canvas keeps the source's size");
         // Beyond the source the colour repeats, so a filter sees no false edge.
-        check(cv::norm(rgb, cv::Mat(rgb.size(), CV_32FC3, cv::Scalar(.4, .5, .6)), cv::NORM_INF) < 1e-5,
+        check(ipr::largestDifference(rgb, imagetest::filledWith(rgb.size(), {.4, .5, .6})) < 1e-5,
               "a flat image stays flat up to the border and beyond");
-        double low = 0, high = 0;
-        cv::minMaxIdx(coverage, &low, &high);
-        check(low == 0 && high == 1, "the coverage is in [0, 1]");
-        check(coverage.at<float>(0, 0) == 0, "a corner beyond the source is uncovered");
-        check(coverage.at<float>(50, 75) == 1, "the centre is covered");
+        const imagetest::Range range = imagetest::rangeOf(coverage);
+        check(range.low == 0 && range.high == 1, "the coverage is in [0, 1]");
+        check(imagetest::at<float>(coverage, 0, 0) == 0, "a corner beyond the source is uncovered");
+        check(imagetest::at<float>(coverage, 50, 75) == 1, "the centre is covered");
     }
     // A sharp edge in a dark area: no filter lobe below the source's minimum.
-    cv::Mat edge(64, 64, CV_32FC3, cv::Scalar::all(0));
-    edge(ipr::toCv(ipr::Recti(32, 0, 32, 64))).setTo(cv::Scalar::all(4));
-    double low = 0;
-    cv::minMaxIdx(Geometry::warpRgb(edge, s, Geometry::Quality::Export).reshape(1), &low);
-    check(low >= 0, "the filter's lobes stay above the source's minimum");
+    ipr::Image edge = ipr::filled({64, 64}, ipr::Depth::F32, 3, 0);
+    ipr::Image bright = edge.mutableView(ipr::Recti(32, 0, 32, 64));
+    ipr::fill(bright, 4.0);
+    check(imagetest::rangeOf(Geometry::warpRgb(edge.share(), s, Geometry::Quality::Export)).low >= 0,
+          "the filter's lobes stay above the source's minimum");
 
-    cv::Mat rgba(50, 75, CV_32FC4, cv::Scalar(.4, .5, .6, 1));
-    const cv::Mat warped = Geometry::warpRgba(rgba, s, Geometry::Quality::Export);
-    check(warped.type() == CV_32FC4 && ipr::at<ipr::Vec4f>(warped, 0, 0) == ipr::Vec4f(0, 0, 0, 0),
+    ipr::Image rgba = imagetest::filledWith({75, 50}, {.4, .5, .6, 1});
+    const ipr::Image warped = Geometry::warpRgba(rgba.share(), s, Geometry::Quality::Export);
+    check((warped.depth() == ipr::Depth::F32 && warped.channels() == 4) && imagetest::at<ipr::Vec4f>(warped, 0, 0) == ipr::Vec4f(0, 0, 0, 0),
           "a pixel of no coverage is transparent black");
     Geometry::Settings turned;
     turned.quarterTurns = 1;
-    check(ipr::fromCv(Geometry::warpRgba(rgba, turned, Geometry::Quality::Export).size()) == ipr::Size(50, 75),
+    check(Geometry::warpRgba(rgba.share(), turned, Geometry::Quality::Export).size() == ipr::Size(50, 75),
           "turns of an image with alpha keep every channel");
 }
 
@@ -326,8 +324,8 @@ void cropping()
     check(Geometry::hasCrop(s) && !Geometry::transformsPixels(s) && !Geometry::isIdentity(s), "a crop alone is a change");
     check(Geometry::cropRect(s, {400, 200}) == ipr::Recti(100, 100, 200, 50), "the rectangle follows the canvas");
     check(Geometry::cropRect(s, {1600, 800}) == ipr::Recti(400, 400, 800, 200), "and scales with the resolution");
-    cv::Mat image(200, 400, CV_32FC4, cv::Scalar::all(0));
-    check(ipr::fromCv(Geometry::crop(image, s).size()) == ipr::Size(200, 50), "the view has the rectangle's size");
+    ipr::Image image = ipr::filled({400, 200}, ipr::Depth::F32, 4, 0);
+    check(Geometry::crop(image.share(), s).size() == ipr::Size(200, 50), "the view has the rectangle's size");
     Geometry::Settings tiny;
     tiny.cropX = 0.999;
     tiny.cropWidth = 0.001;
@@ -363,11 +361,9 @@ void constraint()
     check(std::abs(s.cropWidth - s.cropHeight) < 1e-9, "and keeps its proportions");
     check(s.cropWidth > 0.5, "and stays as large as it can");
     // The result has no uncovered pixel, measured on pixels.
-    const cv::Mat alpha(1000, 1500, CV_32FC1, cv::Scalar(1));
-    const cv::Mat coverage = Geometry::warpCoverage(alpha, s, Geometry::Quality::Export);
-    double low = 0;
-    cv::minMaxIdx(Geometry::crop(coverage, s), &low);
-    check(low > 0.4, "the constrained crop holds no empty pixel");
+    ipr::Image alpha = ipr::filled({1500, 1000}, ipr::Depth::F32, 1, 1);
+    const ipr::Image coverage = Geometry::warpCoverage(alpha.share(), s, Geometry::Quality::Export);
+    check(imagetest::rangeOf(Geometry::crop(coverage.share(), s)).low > 0.4, "the constrained crop holds no empty pixel");
 
     Geometry::Settings moved;
     moved.offsetX = 100;

@@ -96,17 +96,17 @@ float evaluate(const QVector<Point> &curve, float x)
     return float(Spline(curve)(x));
 }
 
-void apply(cv::Mat &linearRgb, const Curves &curves)
+void apply(ipr::Image &linearRgb, const Curves &curves)
 {
-    if (isIdentity(curves) || linearRgb.empty() || linearRgb.type() != CV_32FC3) return;
+    if (isIdentity(curves) || linearRgb.empty() || !(linearRgb.depth() == ipr::Depth::F32 && linearRgb.channels() == 3)) return;
     const Spline rgb(curves[Luminance]);
     const std::array<Spline, 3> channel{Spline(curves[Red]), Spline(curves[Green]), Spline(curves[Blue])};
     const ipr::Matrix33d &toProPhoto = WorkingColor::toProPhoto();
     const ipr::Matrix33d &back = fromProPhoto();
-    ipr::parallelRows(linearRgb.rows, [&](int first, int last) {
+    ipr::parallelRows(linearRgb.height(), [&](int first, int last) {
         for (int y = first; y < last; ++y) {
-            auto *row = linearRgb.ptr<ipr::Vec3f>(y);
-            for (int x = 0; x < linearRgb.cols; ++x) {
+            auto *row = linearRgb.mutableRow<ipr::Vec3f>(y);
+            for (int x = 0; x < linearRgb.width(); ++x) {
                 ipr::Vec3d p = toProPhoto * ipr::Vec3d(row[x]);
                 for (int c = 0; c < 3; ++c) {
                     // Below black (out of gamut) a value keeps its offset from the curve's black.

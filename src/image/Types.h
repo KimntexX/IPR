@@ -16,6 +16,9 @@
 // it becomes an integer.
 namespace ipr {
 
+// As OpenCV's CV_PI.
+constexpr double pi = 3.1415926535897932384626433832795;
+
 // value converted to T: as is for a floating T, rounded to the nearest and kept within T's range
 // for an integer one.
 template <typename T, typename U>

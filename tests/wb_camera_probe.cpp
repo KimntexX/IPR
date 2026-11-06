@@ -42,10 +42,7 @@ cv::Mat sampled(const cv::Mat &input) {
 }
 ColorPipeline::WorkingImage rgba(const cv::Mat &rgb) {
     ColorPipeline::WorkingImage result;
-    std::vector<cv::Mat> c;
-    cv::split(rgb,c);
-    c.push_back(cv::Mat(rgb.size(),CV_32FC1,cv::Scalar(1)));
-    cv::merge(c,result.linearRgba);
+    result.linearRgba = ipr::opaque(ipr::fromMat(rgb));   // this probe keeps its pixels in Mats
     return result;
 }
 cv::Mat output(const ColorPipeline::WorkingImage &source) {
@@ -113,13 +110,13 @@ int main(int argc,char **argv) {
             if(decoded.isNull() || !decoded.dcpContext) throw std::runtime_error(error.toStdString());
             auto context=CameraProfileEngine::sharedCopy(*decoded.dcpContext);
             context.cameraRgb=ipr::fromMat(sampled(ipr::asMat(context.cameraRgb)));
-            auto neutral=decoded;
-            neutral.linearRgba=sampled(decoded.linearRgba);
+            auto neutral=ColorPipeline::sharedCopy(decoded);
+            neutral.linearRgba=ipr::fromMat(sampled(ipr::asMat(decoded.linearRgba)));
             const cv::Mat neutralPixels=output(neutral);
             cv::Mat rgb;
             const int ref=int(std::lround(context.sourceKelvin));
             if(!renderInto(context, ref, 0, rgb, &error)) throw std::runtime_error(error.toStdString());
-            const bool exact=cv::norm(rgba(rgb).linearRgba,neutral.linearRgba,cv::NORM_INF)==0;
+            const bool exact=ipr::largestDifference(rgba(rgb).linearRgba,neutral.linearRgba)==0;
             identity &= exact;
             for(const QString feature : {"temperature","tint"}) {
                 const std::vector<int> values=feature=="temperature" ? std::vector<int>{2000,3500,5200,6500,9000,50000} : std::vector<int>{-150,-100,-50,-25,0,25,50,100,150};
@@ -140,7 +137,7 @@ int main(int argc,char **argv) {
                         {"camera_gains",QJsonArray{gains[0],gains[1],gains[2]}},
                         {"raw_file",path},{"raw_sha256",before},{"dcp_file",context.profilePath},{"dcp_sha256",hash(context.profilePath)},
                         {"neutral_exact",exact},{"metrics",measure(support,pixels)},
-                        {"metadata",QJsonObject{{"dimensions",QJsonArray{decoded.linearRgba.cols,decoded.linearRgba.rows}}}},
+                        {"metadata",QJsonObject{{"dimensions",QJsonArray{decoded.linearRgba.width(),decoded.linearRgba.height()}}}},
                         {"shared_AsShot_metrics",measure(neutralPixels,pixels)}});
                 }
             }

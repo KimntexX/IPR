@@ -286,7 +286,7 @@ bool developedByIpr(const LibRaw &raw, const Options &options)
            QString::fromLocal8Bit(d.idata.make).trimmed().compare(QStringLiteral("Canon"), Qt::CaseInsensitive) == 0;
 }
 
-// Camera RGB (CV_32FC3, white 1) to linear sRGB in place. Policy A as LibRaw's
+// Camera RGB (F32 of three channels, white 1) to linear sRGB in place. Policy A as LibRaw's
 // output stage: on the 16-bit counts, single-precision products summed in channel
 // order, truncated, clipped to the 16-bit range. Policy B: the plain product.
 void cameraToSrgb(ipr::Image &rgb, const ipr::Matrix33d &matrix, bool libRawGrid)
@@ -752,7 +752,7 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
     ColorPipeline::WorkingImage image;
     if (profiles.dcpPath.isEmpty()) {
         if (profiles.lcpPath.isEmpty()) {
-            image = ColorPipeline::fromLinearSrgb(ipr::asMat(decoded), error);
+            image = ColorPipeline::fromLinearSrgb(decoded, error);
         } else {
             // Lateral CA refers to the decoder's red/blue planes. Apply it
             // before changing primaries, then enter the master exactly once.
@@ -760,9 +760,8 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
             if (CameraProfileEngine::applyLcp(profiles.lcpPath, rgb, capture,
                                                error, opticalOptions, &opticalApplied)) {
                 if (rgb.frozen()) rgb = rgb.clone();
-                cv::Mat inPlace = ipr::asMutableMat(rgb);
-                WorkingColor::transform(inPlace, WorkingColor::fromSrgb());
-                image.linearRgba = ipr::heldMat(ipr::opaque(rgb));   // a Mat until the masters leave OpenCV
+                WorkingColor::transform(rgb, WorkingColor::fromSrgb());
+                image.linearRgba = ipr::opaque(rgb);
             }
         }
     } else {
@@ -1148,7 +1147,8 @@ ColorPipeline::WorkingImage decode(const QString &fileName,
         metadata->cameraRaw = true;
     }
     if (!result.isNull() && (result.colorSpace != ColorPipeline::workingColorSpace() ||
-        result.linearRgba.type() != CV_32FC4 || !ipr::allFinite(result.linearRgba))) {
+        result.linearRgba.depth() != ipr::Depth::F32 || result.linearRgba.channels() != 4 ||
+        !ipr::allFinite(result.linearRgba))) {
         if (error) *error = QStringLiteral("Le décodeur n'a pas fourni un master Rec.2020 linéaire RGBA fini.");
         return {};
     }

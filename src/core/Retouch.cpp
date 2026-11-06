@@ -2,11 +2,11 @@
 
 #include "PanoramaFill.h"
 
+#include "Filters.h"
 #include "OpenCvBridge.h"
 
 #include <QStringLiteral>
 #include <QVariantMap>
-#include <opencv2/imgproc.hpp>
 
 #include <algorithm>
 #include <cmath>
@@ -28,12 +28,12 @@ constexpr int suggestionSamples = 400;     // pixels around a zone compared per 
 
 inline bool emptyPixel(const ipr::Vec3f &pixel) { return pixel[0] == 0.0f && pixel[1] == 0.0f && pixel[2] == 0.0f; }
 
-ipr::Recti zoneOf(const cv::Mat &zone)
+ipr::Recti zoneOf(const ipr::Image &zone)
 {
-    int left = zone.cols, right = -1, top = zone.rows, bottom = -1;
-    for (int y = 0; y < zone.rows; ++y) {
-        const float *row = zone.ptr<float>(y);
-        for (int x = 0; x < zone.cols; ++x) {
+    int left = zone.width(), right = -1, top = zone.height(), bottom = -1;
+    for (int y = 0; y < zone.height(); ++y) {
+        const float *row = zone.row<float>(y);
+        for (int x = 0; x < zone.width(); ++x) {
             if (row[x] > zoneEdge) {
                 left = std::min(left, x);
                 right = std::max(right, x);
@@ -45,12 +45,12 @@ ipr::Recti zoneOf(const cv::Mat &zone)
     return right < 0 ? ipr::Recti() : ipr::Recti(left, top, right - left + 1, bottom - top + 1);
 }
 
-void blendIn(cv::Mat &rgb, const cv::Mat &zone, const ipr::Recti &area, const cv::Mat &result, float opacity)
+void blendIn(ipr::Image &rgb, const ipr::Image &zone, const ipr::Recti &area, const ipr::Image &result, float opacity)
 {
     for (int y = 0; y < area.height; ++y) {
-        const float *weight = zone.ptr<float>(y + area.y) + area.x;
-        const ipr::Vec3f *in = result.ptr<ipr::Vec3f>(y);
-        ipr::Vec3f *out = rgb.ptr<ipr::Vec3f>(y + area.y) + area.x;
+        const float *weight = zone.row<float>(y + area.y) + area.x;
+        const ipr::Vec3f *in = result.row<ipr::Vec3f>(y);
+        ipr::Vec3f *out = rgb.mutableRow<ipr::Vec3f>(y + area.y) + area.x;
         for (int x = 0; x < area.width; ++x) {
             const float amount = weight[x] * opacity;
             if (amount > 0.0f && !emptyPixel(out[x]))
@@ -59,26 +59,27 @@ void blendIn(cv::Mat &rgb, const cv::Mat &zone, const ipr::Recti &area, const cv
     }
 }
 
-bool removeZone(cv::Mat &rgb, const cv::Mat &zone, const ipr::Recti &box, float opacity)
+bool removeZone(ipr::Image &rgb, const ipr::Image &zone, const ipr::Recti &box, float opacity)
 {
     const int reach = std::max(smallestContext, int(contextOfZone * std::max(box.width, box.height)));
     const ipr::Recti area = ipr::Recti(box.x - reach, box.y - reach, box.width + 2 * reach, box.height + 2 * reach) &
-                          ipr::Recti(0, 0, rgb.cols, rgb.rows);
-    cv::Mat region = rgb(ipr::toCv(area)).clone();
-    cv::Mat known(ipr::toCv(area.size()), CV_8UC1);
+                          ipr::Recti(0, 0, rgb.width(), rgb.height());
+    ipr::Image region = rgb.copy(area);
+    ipr::Image known = ipr::Image::create(area.size(), ipr::Depth::U8, 1);
     for (int y = 0; y < area.height; ++y) {
-        const float *weight = zone.ptr<float>(y + area.y) + area.x;
-        const ipr::Vec3f *pixel = region.ptr<ipr::Vec3f>(y);
-        uchar *out = known.ptr<uchar>(y);
+        const float *weight = zone.row<float>(y + area.y) + area.x;
+        const ipr::Vec3f *pixel = region.row<ipr::Vec3f>(y);
+        uchar *out = known.mutableRow<uchar>(y);
         for (int x = 0; x < area.width; ++x)
             out[x] = weight[x] > zoneEdge || emptyPixel(pixel[x]) ? 0 : 255;
     }
     PanoramaFill::Options options;
     // The same search at any resolution: an export does not find something else than its preview.
-    const double toPreview = std::min(1.0, double(previewLongSide) / std::max(rgb.cols, rgb.rows));
+    const double toPreview = std::min(1.0, double(previewLongSide) / std::max(rgb.width(), rgb.height()));
     options.workingSide = std::max(64, int(std::ceil(std::max(area.width, area.height) * toPreview)));
     options.transitionPixels = std::max(4, std::min(box.width, box.height) / 3);
-    const PanoramaFill::Report report = PanoramaFill::fill(region, known, options);
+    cv::Mat filled = ipr::asMutableMat(region);   // in place, while the panorama fill takes a Mat
+    const PanoramaFill::Report report = PanoramaFill::fill(filled, ipr::asMat(known), options);
     if (report.outcome != PanoramaFill::Outcome::Filled)
         return false;
     blendIn(rgb, zone, area, region, opacity);
@@ -87,14 +88,14 @@ bool removeZone(cv::Mat &rgb, const cv::Mat &zone, const ipr::Recti &box, float 
 
 // Heal and Clone: the source's pixels, at the zone's level for a heal. False when the source
 // falls outside the image.
-bool copyZone(cv::Mat &rgb, const cv::Mat &zone, const ipr::Recti &box, const Operation &operation)
+bool copyZone(ipr::Image &rgb, const ipr::Image &zone, const ipr::Recti &box, const Operation &operation)
 {
-    const int shiftX = int(std::lround(operation.source.x * rgb.cols));
-    const int shiftY = int(std::lround(operation.source.y * rgb.rows));
-    const ipr::Recti image(0, 0, rgb.cols, rgb.rows);
+    const int shiftX = int(std::lround(operation.source.x * rgb.width()));
+    const int shiftY = int(std::lround(operation.source.y * rgb.height()));
+    const ipr::Recti image(0, 0, rgb.width(), rgb.height());
     if ((shiftX == 0 && shiftY == 0) || (box + ipr::Point2i(shiftX, shiftY) & image) != box + ipr::Point2i(shiftX, shiftY))
         return false;
-    cv::Mat result = rgb(ipr::toCv(box + ipr::Point2i(shiftX, shiftY))).clone();
+    ipr::Image result = rgb.copy(box + ipr::Point2i(shiftX, shiftY));
     if (operation.kind == Kind::Heal) {
         // What separates this place from the source, measured around the zone, and carried
         // smoothly across it.
@@ -102,14 +103,15 @@ bool copyZone(cv::Mat &rgb, const cv::Mat &zone, const ipr::Recti &box, const Op
         const ipr::Recti area = ipr::Recti(box.x - reach, box.y - reach, box.width + 2 * reach, box.height + 2 * reach) & image;
         const ipr::Recti shifted = (area + ipr::Point2i(shiftX, shiftY)) & image;
         const ipr::Recti measured = (shifted - ipr::Point2i(shiftX, shiftY)) & area;
-        cv::Mat difference = cv::Mat::zeros(ipr::toCv(measured.size()), CV_32FC3), weight = cv::Mat::zeros(ipr::toCv(measured.size()), CV_32FC1);
+        ipr::Image difference = ipr::Image::zeros(measured.size(), ipr::Depth::F32, 3);
+        ipr::Image weight = ipr::Image::zeros(measured.size(), ipr::Depth::F32, 1);
         for (int y = 0; y < measured.height; ++y) {
-            const float *in = zone.ptr<float>(y + measured.y) + measured.x;
-            const float *inSource = zone.ptr<float>(y + measured.y + shiftY) + measured.x + shiftX;
-            const ipr::Vec3f *here = rgb.ptr<ipr::Vec3f>(y + measured.y) + measured.x;
-            const ipr::Vec3f *there = rgb.ptr<ipr::Vec3f>(y + measured.y + shiftY) + measured.x + shiftX;
-            ipr::Vec3f *outDifference = difference.ptr<ipr::Vec3f>(y);
-            float *outWeight = weight.ptr<float>(y);
+            const float *in = zone.row<float>(y + measured.y) + measured.x;
+            const float *inSource = zone.row<float>(y + measured.y + shiftY) + measured.x + shiftX;
+            const ipr::Vec3f *here = rgb.row<ipr::Vec3f>(y + measured.y) + measured.x;
+            const ipr::Vec3f *there = rgb.row<ipr::Vec3f>(y + measured.y + shiftY) + measured.x + shiftX;
+            ipr::Vec3f *outDifference = difference.mutableRow<ipr::Vec3f>(y);
+            float *outWeight = weight.mutableRow<float>(y);
             for (int x = 0; x < measured.width; ++x) {
                 if (in[x] <= zoneEdge && inSource[x] <= zoneEdge && !emptyPixel(here[x]) && !emptyPixel(there[x])) {
                     outDifference[x] = here[x] - there[x];
@@ -121,14 +123,14 @@ bool copyZone(cv::Mat &rgb, const cv::Mat &zone, const ipr::Recti &box, const Op
         difference = ipr::gaussianBlurred(difference, sigma, ipr::BlurBorder::LastPixel);
         weight = ipr::gaussianBlurred(weight, sigma, ipr::BlurBorder::LastPixel);
         for (int y = 0; y < box.height; ++y) {
-            ipr::Vec3f *out = result.ptr<ipr::Vec3f>(y);
+            ipr::Vec3f *out = result.mutableRow<ipr::Vec3f>(y);
             for (int x = 0; x < box.width; ++x) {
                 const ipr::Point2i p(box.x + x - measured.x, box.y + y - measured.y);
                 if (p.x < 0 || p.y < 0 || p.x >= measured.width || p.y >= measured.height)
                     continue;
-                const float amount = ipr::at<float>(weight, p);
+                const float amount = weight.row<float>(p.y)[p.x];
                 if (amount > 1e-4f)
-                    out[x] += ipr::at<ipr::Vec3f>(difference, p) * (1.0f / amount);
+                    out[x] += difference.row<ipr::Vec3f>(p.y)[p.x] * (1.0f / amount);
             }
         }
     }
@@ -179,7 +181,7 @@ bool active(const Operations &operations)
     });
 }
 
-cv::Mat coverage(const Operation &operation, const ipr::Size &canvas)
+ipr::Image coverage(const Operation &operation, const ipr::Size &canvas)
 {
     LocalAdjustments::Shape shape;
     shape.kind = LocalAdjustments::Kind::Brush;
@@ -189,15 +191,15 @@ cv::Mat coverage(const Operation &operation, const ipr::Size &canvas)
     return LocalAdjustments::coverage(mask, canvas);
 }
 
-int apply(cv::Mat &rgb, const Operations &operations)
+int apply(ipr::Image &rgb, const Operations &operations)
 {
-    if (rgb.empty() || rgb.type() != CV_32FC3)
+    if (rgb.empty() || !(rgb.depth() == ipr::Depth::F32 && rgb.channels() == 3))
         return 0;
     int notDone = 0;
     for (const Operation &operation : operations) {
         if (!operation.visible || operation.opacity <= 0.0f || operation.strokes.empty())
             continue;
-        const cv::Mat zone = coverage(operation, ipr::fromCv(rgb.size()));
+        const ipr::Image zone = coverage(operation, rgb.size());
         const ipr::Recti box = zoneOf(zone);
         if (box.empty())
             continue;
@@ -209,29 +211,31 @@ int apply(cv::Mat &rgb, const Operations &operations)
     return notDone;
 }
 
-ipr::Point2f suggestSource(const cv::Mat &rgb, const Operation &operation)
+ipr::Point2f suggestSource(const ipr::Image &rgb, const Operation &operation)
 {
-    if (rgb.empty() || rgb.type() != CV_32FC3 || operation.strokes.empty())
+    if (rgb.empty() || !(rgb.depth() == ipr::Depth::F32 && rgb.channels() == 3) || operation.strokes.empty())
         return {0.0f, 0.0f};
-    const cv::Mat zone = coverage(operation, ipr::fromCv(rgb.size()));
+    const ipr::Image zone = coverage(operation, rgb.size());
     const ipr::Recti box = zoneOf(zone);
     if (box.empty())
         return {0.0f, 0.0f};
 
     // The zone's surroundings: what the source must match.
     const int ring = std::max(4, std::max(box.width, box.height) / 4);
-    const ipr::Recti around = ipr::Recti(box.x - ring, box.y - ring, box.width + 2 * ring, box.height + 2 * ring) & ipr::Recti(0, 0, rgb.cols, rgb.rows);
+    const ipr::Recti around = ipr::Recti(box.x - ring, box.y - ring, box.width + 2 * ring, box.height + 2 * ring) & ipr::Recti(0, 0, rgb.width(), rgb.height());
+    const ipr::PixelReader<ipr::Vec3f> pixel(rgb);
+    const ipr::PixelReader<float> zoneAt(zone);
     std::vector<ipr::Point2i> samples;
     const int stride = std::max(1, int(std::sqrt(double(around.area()) / suggestionSamples)));
     for (int y = around.y; y < around.y + around.height; y += stride)
         for (int x = around.x; x < around.x + around.width; x += stride)
-            if (zone.at<float>(y, x) <= zoneEdge && !emptyPixel(ipr::at<ipr::Vec3f>(rgb, y, x)))
+            if (zoneAt(y, x) <= zoneEdge && !emptyPixel(pixel(y, x)))
                 samples.emplace_back(x, y);
     if (samples.empty())
         return {0.0f, 0.0f};
 
     const int reachStep = std::max(2, std::max(box.width, box.height) / 2);
-    const ipr::Recti whole(0, 0, rgb.cols, rgb.rows);
+    const ipr::Recti whole(0, 0, rgb.width(), rgb.height());
     float bestCost = std::numeric_limits<float>::max();
     ipr::Point2i best(0, 0);
     for (int stepY = -suggestionSteps; stepY <= suggestionSteps; ++stepY) {
@@ -248,19 +252,19 @@ ipr::Point2f suggestSource(const cv::Mat &rgb, const Operation &operation)
                 const ipr::Point2i there = sample + shift;
                 if (!whole.contains(there))
                     continue;
-                const ipr::Vec3f &value = ipr::at<ipr::Vec3f>(rgb, there);
-                if (emptyPixel(value) || ipr::at<float>(zone, there) > zoneEdge) {
+                const ipr::Vec3f &value = pixel(there.y, there.x);
+                if (emptyPixel(value) || zoneAt(there.y, there.x) > zoneEdge) {
                     usable = false;
                     break;
                 }
-                const ipr::Vec3f &here = ipr::at<ipr::Vec3f>(rgb, sample);
+                const ipr::Vec3f &here = pixel(sample.y, sample.x);
                 sum += std::abs(std::sqrt(std::max(0.0f, here[1])) - std::sqrt(std::max(0.0f, value[1])));
                 ++count;
             }
             if (!usable || count * 2 < int(samples.size()))
                 continue;
             // Among equals, the closest: the light is likelier to be the same.
-            const float distance = float(std::hypot(shift.x, shift.y)) / float(std::max(rgb.cols, rgb.rows));
+            const float distance = float(std::hypot(shift.x, shift.y)) / float(std::max(rgb.width(), rgb.height()));
             const float cost = sum / float(count) + 0.02f * distance;
             if (cost < bestCost) {
                 bestCost = cost;
@@ -268,7 +272,7 @@ ipr::Point2f suggestSource(const cv::Mat &rgb, const Operation &operation)
             }
         }
     }
-    return {float(best.x) / float(rgb.cols), float(best.y) / float(rgb.rows)};
+    return {float(best.x) / float(rgb.width()), float(best.y) / float(rgb.height())};
 }
 
 void appendKey(QDataStream &stream, const Operations &operations)

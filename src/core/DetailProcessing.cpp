@@ -1,10 +1,10 @@
 #include "DetailProcessing.h"
 #include "WorkingColorSpace.h"
 
-#include "OpenCvBridge.h"
+#include "Filters.h"
+#include "Neighbourhood.h"
 #include "Parallel.h"
-
-#include <opencv2/imgproc.hpp>
+#include "Pixels.h"
 
 #include <algorithm>
 #include <cmath>
@@ -44,30 +44,29 @@ float luminanceOf(const ipr::Vec3f &rgb)
     return std::max(0.0f, WorkingColor::luminance(rgb));
 }
 
-cv::Mat extractLuminance(const cv::Mat &linearRgb)
+ipr::Image extractLuminance(const ipr::Image &linearRgb)
 {
-    cv::Mat result(linearRgb.rows, linearRgb.cols, CV_32F);
-    for (int y = 0; y < linearRgb.rows; ++y) {
-        const ipr::Vec3f *source = linearRgb.ptr<ipr::Vec3f>(y);
-        float *target = result.ptr<float>(y);
-        for (int x = 0; x < linearRgb.cols; ++x)
+    ipr::Image result = ipr::Image::create(linearRgb.size(), ipr::Depth::F32, 1);
+    for (int y = 0; y < linearRgb.height(); ++y) {
+        const ipr::Vec3f *source = linearRgb.row<ipr::Vec3f>(y);
+        float *target = result.mutableRow<float>(y);
+        for (int x = 0; x < linearRgb.width(); ++x)
             target[x] = luminanceOf(source[x]);
     }
     return result;
 }
 
-float estimateNoiseSigma(const cv::Mat &plane)
+float estimateNoiseSigma(const ipr::Image &plane)
 {
-    cv::Mat base;
-    base = ipr::gaussianBlurred(plane, 0.8, ipr::BlurBorder::LastPixel);
-    const int step = std::max(1, static_cast<int>(std::sqrt(
-        static_cast<double>(plane.total()) / 16384.0)));
+    const ipr::Image base = ipr::gaussianBlurred(plane, 0.8, ipr::BlurBorder::LastPixel);
+    const double total = double(plane.width()) * double(plane.height());
+    const int step = std::max(1, static_cast<int>(std::sqrt(total / 16384.0)));
     std::vector<float> samples;
-    samples.reserve(static_cast<size_t>(plane.total() / (step * step)));
-    for (int y = 0; y < plane.rows; y += step) {
-        const float *values = plane.ptr<float>(y);
-        const float *smoothed = base.ptr<float>(y);
-        for (int x = 0; x < plane.cols; x += step)
+    samples.reserve(static_cast<size_t>(total / (step * step)));
+    for (int y = 0; y < plane.height(); y += step) {
+        const float *values = plane.row<float>(y);
+        const float *smoothed = base.row<float>(y);
+        for (int x = 0; x < plane.width(); x += step)
             samples.push_back(std::abs(values[x] - smoothed[x]));
     }
     if (samples.empty())
@@ -84,13 +83,13 @@ float smoothStep(float edge0, float edge1, float value)
     return t * t * (3.0f - 2.0f * t);
 }
 
-float estimateDenoiseSigma(const cv::Mat &plane)
+float estimateDenoiseSigma(const ipr::Image &plane)
 {
     // Unit-norm diagonal Haar filter. MAD estimates output high-frequency noise;
     // demosaicing can correlate it, so this is not a physical sensor-noise model.
     // Sample complete adjacent 2x2 blocks, never decimated individual pixels.
-    const int pairRows = plane.rows / 2;
-    const int pairColumns = plane.cols / 2;
+    const int pairRows = plane.height() / 2;
+    const int pairColumns = plane.width() / 2;
     if (pairRows == 0 || pairColumns == 0)
         return 0.0f;
     const int stride = std::max(1, static_cast<int>(std::sqrt(
@@ -99,8 +98,8 @@ float estimateDenoiseSigma(const cv::Mat &plane)
     samples.reserve(static_cast<size_t>((pairRows + stride - 1) / stride) *
                     ((pairColumns + stride - 1) / stride));
     for (int y = 0; y < pairRows; y += stride) {
-        const float *first = plane.ptr<float>(2 * y);
-        const float *second = plane.ptr<float>(2 * y + 1);
+        const float *first = plane.row<float>(2 * y);
+        const float *second = plane.row<float>(2 * y + 1);
         for (int x = 0; x < pairColumns; x += stride) {
             const int column = 2 * x;
             // Exact constant blocks carry no measurable noise. Letting a large
@@ -123,17 +122,14 @@ float estimateDenoiseSigma(const cv::Mat &plane)
     return *middle / 0.67448975f;
 }
 
-cv::Mat structureProtection(const cv::Mat &guide, float noiseSigma)
+ipr::Image structureProtection(const ipr::Image &guide, float noiseSigma)
 {
-    cv::Mat gradientX, gradientY, magnitude;
     // Sobel's derivative scale is 8. Normalize it before comparing with sigma.
-    gradientX = ipr::sobel(guide, true, 1.0 / 8.0);
-    gradientY = ipr::sobel(guide, false, 1.0 / 8.0);
-    magnitude = ipr::magnitude(gradientX, gradientY);
+    ipr::Image magnitude = ipr::magnitude(ipr::sobel(guide, true, 1.0 / 8.0), ipr::sobel(guide, false, 1.0 / 8.0));
     const float sigma = std::max(noiseSigma, kDenoiseSigmaEpsilon);
-    for (int y = 0; y < magnitude.rows; ++y) {
-        float *row = magnitude.ptr<float>(y);
-        for (int x = 0; x < magnitude.cols; ++x)
+    for (int y = 0; y < magnitude.height(); ++y) {
+        float *row = magnitude.mutableRow<float>(y);
+        for (int x = 0; x < magnitude.width(); ++x)
             row[x] = smoothStep(0.5f * sigma, 2.0f * sigma, row[x]);
     }
     return magnitude;
@@ -145,29 +141,27 @@ float softThreshold(float value, float threshold)
     return std::copysign(magnitude, value);
 }
 
-cv::Mat denoiseLuminance(const cv::Mat &plane, const cv::Mat &protectionMap,
-                         float noiseSigma, int amount)
+ipr::Image denoiseLuminance(const ipr::Image &plane, const ipr::Image &protectionMap,
+                            float noiseSigma, int amount)
 {
     if (amount <= 0 || noiseSigma <= kDenoiseSigmaEpsilon)
-        return plane;
+        return plane.share();
 
-    cv::Mat fineBase;
-    fineBase = ipr::gaussianBlurred(plane, kFineSigma, ipr::BlurBorder::LastPixel);
-    cv::Mat coarseBase;
-    coarseBase = ipr::gaussianBlurred(fineBase, kCoarseSigma, ipr::BlurBorder::LastPixel);
+    const ipr::Image fineBase = ipr::gaussianBlurred(plane, kFineSigma, ipr::BlurBorder::LastPixel);
+    const ipr::Image coarseBase = ipr::gaussianBlurred(fineBase, kCoarseSigma, ipr::BlurBorder::LastPixel);
 
     const float strength = static_cast<float>(std::clamp(amount, 0, 100)) / 100.0f;
     const float fineThreshold = noiseSigma * kLumaThresholdAtMaximum * strength;
     const float mediumThreshold = fineThreshold * kMediumThresholdRatio;
-    cv::Mat result(plane.rows, plane.cols, CV_32F);
+    ipr::Image result = ipr::Image::create(plane.size(), ipr::Depth::F32, 1);
 
-    for (int y = 0; y < plane.rows; ++y) {
-        const float *original = plane.ptr<float>(y);
-        const float *fine = fineBase.ptr<float>(y);
-        const float *coarse = coarseBase.ptr<float>(y);
-        const float *edge = protectionMap.ptr<float>(y);
-        float *target = result.ptr<float>(y);
-        for (int x = 0; x < plane.cols; ++x) {
+    for (int y = 0; y < plane.height(); ++y) {
+        const float *original = plane.row<float>(y);
+        const float *fine = fineBase.row<float>(y);
+        const float *coarse = coarseBase.row<float>(y);
+        const float *edge = protectionMap.row<float>(y);
+        float *target = result.mutableRow<float>(y);
+        for (int x = 0; x < plane.width(); ++x) {
             // Strong luminance edges protect real detail from the shrinkage.
             const float protection = edge[x] * 0.86f;
             const float fineDetail = original[x] - fine[x];
@@ -182,10 +176,10 @@ cv::Mat denoiseLuminance(const cv::Mat &plane, const cv::Mat &protectionMap,
     // never beyond the original/candidate range. Luminance is nonnegative.
     // This is not an exposure rescale.
     double positive = 0.0, negative = 0.0;
-    for (int y = 0; y < plane.rows; ++y) {
-        const float *original = plane.ptr<float>(y);
-        float *target = result.ptr<float>(y);
-        for (int x = 0; x < plane.cols; ++x) {
+    for (int y = 0; y < plane.height(); ++y) {
+        const float *original = plane.row<float>(y);
+        float *target = result.mutableRow<float>(y);
+        for (int x = 0; x < plane.width(); ++x) {
             target[x] = std::max(0.0f, target[x]);
             const double change = static_cast<double>(target[x]) - original[x];
             positive += std::max(0.0, change);
@@ -194,10 +188,10 @@ cv::Mat denoiseLuminance(const cv::Mat &plane, const cv::Mat &protectionMap,
     }
     const float positiveScale = positive > 0.0 ? static_cast<float>(std::min(1.0, negative / positive)) : 1.0f;
     const float negativeScale = negative > 0.0 ? static_cast<float>(std::min(1.0, positive / negative)) : 1.0f;
-    for (int y = 0; y < plane.rows; ++y) {
-        const float *original = plane.ptr<float>(y);
-        float *target = result.ptr<float>(y);
-        for (int x = 0; x < plane.cols; ++x) {
+    for (int y = 0; y < plane.height(); ++y) {
+        const float *original = plane.row<float>(y);
+        float *target = result.mutableRow<float>(y);
+        for (int x = 0; x < plane.width(); ++x) {
             const float change = target[x] - original[x];
             // A strength-dependent blend also prevents early threshold plateaus
             // from making 25/50/75 indistinguishable on quiet fields.
@@ -207,36 +201,40 @@ cv::Mat denoiseLuminance(const cv::Mat &plane, const cv::Mat &protectionMap,
     return result;
 }
 
-cv::Mat boxMean(const cv::Mat &plane, int radius)
+ipr::Image boxMean(const ipr::Image &plane, int radius)
 {
     return ipr::boxMean(plane, ipr::Size(2 * radius + 1, 2 * radius + 1), ipr::BlurBorder::LastPixel);
 }
 
 // He's guided filter: the plane follows the guide's edges inside each window.
-cv::Mat guidedFilter(const cv::Mat &guide, const cv::Mat &plane, int radius, float eps)
+ipr::Image guidedFilter(const ipr::Image &guide, const ipr::Image &plane, int radius, float eps)
 {
-    const cv::Mat meanGuide = boxMean(guide, radius), meanPlane = boxMean(plane, radius);
-    const cv::Mat covariance = boxMean(guide.mul(plane), radius) - meanGuide.mul(meanPlane);
-    const cv::Mat variance = boxMean(guide.mul(guide), radius) - meanGuide.mul(meanGuide);
-    const cv::Mat a = covariance / (variance + eps);
-    const cv::Mat b = meanPlane - a.mul(meanGuide);
-    return boxMean(a, radius).mul(guide) + boxMean(b, radius);
+    const auto product = [](float p, float q) { return p * q; };
+    const ipr::Image meanGuide = boxMean(guide, radius), meanPlane = boxMean(plane, radius);
+    const ipr::Image meanProduct = boxMean(ipr::mapped(guide, plane, product), radius);
+    const ipr::Image meanSquare = boxMean(ipr::mapped(guide, guide, product), radius);
+    const ipr::Image a = ipr::mapped(meanProduct, meanGuide, meanPlane, [](float gp, float g, float p) { return gp - g * p; });
+    const ipr::Image slope = ipr::mapped(a, meanSquare, meanGuide, [eps](float covariance, float gg, float g) {
+        return covariance / ((gg - g * g) + eps);
+    });
+    const ipr::Image b = ipr::mapped(meanPlane, slope, meanGuide, [](float p, float s, float g) { return p - s * g; });
+    return ipr::mapped(boxMean(slope, radius), guide, boxMean(b, radius), [](float s, float g, float q) { return s * g + q; });
 }
 
 // Median of value per 1 EV bin of level, interpolated back to each pixel: the
 // typical value at that brightness, sampled on a sparse grid.
-cv::Mat levelMedian(const cv::Mat &value, const cv::Mat &level)
+ipr::Image levelMedian(const ipr::Image &value, const ipr::Image &level)
 {
-    const ipr::MatExtremes range = ipr::extremesOf(level);
+    const ipr::Extremes range = ipr::extremesOf(level);
     const double low = range.smallest, high = range.largest;
     const int first = static_cast<int>(std::floor(low));
     const int bins = std::max(1, static_cast<int>(std::ceil(high)) - first + 1);
     std::vector<std::vector<float>> samples(static_cast<size_t>(bins));
-    const int stride = std::max(1, static_cast<int>(std::sqrt(static_cast<double>(value.total()) / 262144.0)));
-    for (int y = 0; y < value.rows; y += stride) {
-        const float *v = value.ptr<float>(y);
-        const float *l = level.ptr<float>(y);
-        for (int x = 0; x < value.cols; x += stride) {
+    const int stride = std::max(1, static_cast<int>(std::sqrt(double(value.width()) * double(value.height()) / 262144.0)));
+    for (int y = 0; y < value.height(); y += stride) {
+        const float *v = value.row<float>(y);
+        const float *l = level.row<float>(y);
+        for (int x = 0; x < value.width(); x += stride) {
             const int bin = std::clamp(static_cast<int>(std::floor(l[x])) - first, 0, bins - 1);
             samples[static_cast<size_t>(bin)].push_back(v[x]);
         }
@@ -251,13 +249,13 @@ cv::Mat levelMedian(const cv::Mat &value, const cv::Mat &level)
         centers.push_back(static_cast<float>(first + i) + 0.5f);
         medians.push_back(*middle);
     }
-    cv::Mat result(value.rows, value.cols, CV_32F, cv::Scalar(0.0f));
+    ipr::Image result = ipr::filled(value.size(), ipr::Depth::F32, 1, 0.0);
     if (centers.empty())
         return result;
-    for (int y = 0; y < value.rows; ++y) {
-        const float *l = level.ptr<float>(y);
-        float *target = result.ptr<float>(y);
-        for (int x = 0; x < value.cols; ++x) {
+    for (int y = 0; y < value.height(); ++y) {
+        const float *l = level.row<float>(y);
+        float *target = result.mutableRow<float>(y);
+        for (int x = 0; x < value.width(); ++x) {
             const auto upper = std::upper_bound(centers.begin(), centers.end(), l[x]);
             if (upper == centers.begin()) {
                 target[x] = medians.front();
@@ -276,25 +274,23 @@ cv::Mat levelMedian(const cv::Mat &value, const cv::Mat &level)
 // Colour edges that luminance does not show: 1 where the smoothed chroma
 // gradient stands well above its typical value at that brightness, dilated over
 // the filter window so the window does not reach across the edge either.
-cv::Mat colourEdgeProtection(const cv::Mat &chromaOrange, const cv::Mat &chromaGreen,
-                             const cv::Mat &level, double edgeSigma, int radius)
+ipr::Image colourEdgeProtection(const ipr::Image &chromaOrange, const ipr::Image &chromaGreen,
+                                const ipr::Image &level, double edgeSigma, int radius)
 {
-    cv::Mat gradient = cv::Mat::zeros(chromaOrange.rows, chromaOrange.cols, CV_32F);
-    for (const cv::Mat *plane : {&chromaOrange, &chromaGreen}) {
-        cv::Mat smooth, gx, gy;
-        smooth = ipr::gaussianBlurred(*plane, edgeSigma, ipr::BlurBorder::LastPixel);
-        gx = ipr::sobel(smooth, true);
-        gy = ipr::sobel(smooth, false);
-        gradient += gx.mul(gx) + gy.mul(gy);
+    ipr::Image gradient = ipr::Image::zeros(chromaOrange.size(), ipr::Depth::F32, 1);
+    for (const ipr::Image *plane : {&chromaOrange, &chromaGreen}) {
+        const ipr::Image smooth = ipr::gaussianBlurred(*plane, edgeSigma, ipr::BlurBorder::LastPixel);
+        const ipr::Image gx = ipr::sobel(smooth, true), gy = ipr::sobel(smooth, false);
+        gradient = ipr::mapped(gradient, gx, gy, [](float sum, float x, float y) { return sum + (x * x + y * y); });
     }
     gradient = ipr::squareRoot(gradient);
-    const cv::Mat typical = levelMedian(gradient, level);
-    cv::Mat protection(gradient.rows, gradient.cols, CV_32F);
-    for (int y = 0; y < gradient.rows; ++y) {
-        const float *edge = gradient.ptr<float>(y);
-        const float *noise = typical.ptr<float>(y);
-        float *target = protection.ptr<float>(y);
-        for (int x = 0; x < gradient.cols; ++x)
+    const ipr::Image typical = levelMedian(gradient, level);
+    ipr::Image protection = ipr::Image::create(gradient.size(), ipr::Depth::F32, 1);
+    for (int y = 0; y < gradient.height(); ++y) {
+        const float *edge = gradient.row<float>(y);
+        const float *noise = typical.row<float>(y);
+        float *target = protection.mutableRow<float>(y);
+        for (int x = 0; x < gradient.width(); ++x)
             target[x] = noise[x] > 0.0f ? smoothStep(kChromaEdgeLow, kChromaEdgeHigh, edge[x] / noise[x]) : 0.0f;
     }
     return ipr::maximum(protection, ipr::Size(2 * radius + 1, 2 * radius + 1), ipr::Beyond::Nothing);
@@ -306,7 +302,7 @@ cv::Mat colourEdgeProtection(const cv::Mat &chromaOrange, const cv::Mat &chromaG
 // luminance edges. Weight 1 - (1 - s)^8: nearly all the colour noise goes by
 // 25, as in Lightroom; the radius follows the weight. Colour edges that
 // luminance does not show are kept (colourEdgeProtection).
-void denoiseChrominance(const cv::Mat &luma, cv::Mat *chromaOrange, cv::Mat *chromaGreen, int amount,
+void denoiseChrominance(const ipr::Image &luma, ipr::Image *chromaOrange, ipr::Image *chromaGreen, int amount,
                         double pixelScale)
 {
     const float strength = static_cast<float>(std::clamp(amount, 0, 100)) / 100.0f;
@@ -315,52 +311,51 @@ void denoiseChrominance(const cv::Mat &luma, cv::Mat *chromaOrange, cv::Mat *chr
         (kChromaRadiusAtZero + (kChromaRadiusAtMaximum - kChromaRadiusAtZero) * weight) * pixelScale)));
     const auto scaled = [pixelScale](double sigma) { return std::max(0.8, sigma * pixelScale); };
 
-    for (cv::Mat *plane : {chromaOrange, chromaGreen}) {
-        const cv::Mat median = ipr::median(*plane, pixelScale >= 0.6 ? 5 : 3);
+    for (ipr::Image *plane : {chromaOrange, chromaGreen}) {
+        const ipr::Image median = ipr::median(*plane, pixelScale >= 0.6 ? 5 : 3);
         *plane = ipr::blended(*plane, 1.0 - weight, median, weight, 0.0);
     }
 
-    cv::Mat logLuma(luma.rows, luma.cols, CV_32F);
-    for (int y = 0; y < luma.rows; ++y) {
-        const float *source = luma.ptr<float>(y);
-        float *target = logLuma.ptr<float>(y);
-        for (int x = 0; x < luma.cols; ++x)
+    ipr::Image logLuma = ipr::Image::create(luma.size(), ipr::Depth::F32, 1);
+    for (int y = 0; y < luma.height(); ++y) {
+        const float *source = luma.row<float>(y);
+        float *target = logLuma.mutableRow<float>(y);
+        for (int x = 0; x < luma.width(); ++x)
             target[x] = std::log2(std::max(source[x], kChromaLogFloor));
     }
-    cv::Mat fineGuide, guide, level;
-    fineGuide = ipr::gaussianBlurred(logLuma, kFineSigma, ipr::BlurBorder::LastPixel);
+    const ipr::Image fineGuide = ipr::gaussianBlurred(logLuma, kFineSigma, ipr::BlurBorder::LastPixel);
     const double guideSigma = scaled(kChromaGuideSigma);
-    guide = ipr::gaussianBlurred(logLuma, guideSigma, ipr::BlurBorder::LastPixel);
-    level = ipr::gaussianBlurred(guide, kChromaLevelSigma, ipr::BlurBorder::LastPixel);
+    const ipr::Image guide = ipr::gaussianBlurred(logLuma, guideSigma, ipr::BlurBorder::LastPixel);
+    const ipr::Image level = ipr::gaussianBlurred(guide, kChromaLevelSigma, ipr::BlurBorder::LastPixel);
     const float guideNoise = kChromaGuideNoise * estimateDenoiseSigma(fineGuide);
     const float eps = guideNoise * guideNoise + 1e-12f;
-    const cv::Mat colourEdge = colourEdgeProtection(*chromaOrange, *chromaGreen, level,
-                                                    scaled(kChromaEdgeSigma), radius);
+    const ipr::Image colourEdge = colourEdgeProtection(*chromaOrange, *chromaGreen, level,
+                                                       scaled(kChromaEdgeSigma), radius);
 
-    for (cv::Mat *plane : {chromaOrange, chromaGreen}) {
-        const cv::Mat smoothed = guidedFilter(guide, *plane, radius, eps);
-        for (int y = 0; y < plane->rows; ++y) {
-            float *values = plane->ptr<float>(y);
-            const float *target = smoothed.ptr<float>(y);
-            const float *kept = colourEdge.ptr<float>(y);
-            for (int x = 0; x < plane->cols; ++x)
+    for (ipr::Image *plane : {chromaOrange, chromaGreen}) {
+        const ipr::Image smoothed = guidedFilter(guide, *plane, radius, eps);
+        for (int y = 0; y < plane->height(); ++y) {
+            float *values = plane->mutableRow<float>(y);
+            const float *target = smoothed.row<float>(y);
+            const float *kept = colourEdge.row<float>(y);
+            for (int x = 0; x < plane->width(); ++x)
                 values[x] += weight * (1.0f - kept[x]) * (target[x] - values[x]);
         }
     }
 }
 
-void splitLumaChroma(const cv::Mat &rgb, cv::Mat *luma, cv::Mat *chromaOrange,
-                cv::Mat *chromaGreen)
+void splitLumaChroma(const ipr::Image &rgb, ipr::Image *luma, ipr::Image *chromaOrange,
+                ipr::Image *chromaGreen)
 {
-    luma->create(rgb.rows, rgb.cols, CV_32F);
-    chromaOrange->create(rgb.rows, rgb.cols, CV_32F);
-    chromaGreen->create(rgb.rows, rgb.cols, CV_32F);
-    for (int y = 0; y < rgb.rows; ++y) {
-        const ipr::Vec3f *source = rgb.ptr<ipr::Vec3f>(y);
-        float *yRow = luma->ptr<float>(y);
-        float *coRow = chromaOrange->ptr<float>(y);
-        float *cgRow = chromaGreen->ptr<float>(y);
-        for (int x = 0; x < rgb.cols; ++x) {
+    *luma = ipr::Image::create(rgb.size(), ipr::Depth::F32, 1);
+    *chromaOrange = ipr::Image::create(rgb.size(), ipr::Depth::F32, 1);
+    *chromaGreen = ipr::Image::create(rgb.size(), ipr::Depth::F32, 1);
+    for (int y = 0; y < rgb.height(); ++y) {
+        const ipr::Vec3f *source = rgb.row<ipr::Vec3f>(y);
+        float *yRow = luma->mutableRow<float>(y);
+        float *coRow = chromaOrange->mutableRow<float>(y);
+        float *cgRow = chromaGreen->mutableRow<float>(y);
+        for (int x = 0; x < rgb.width(); ++x) {
             const float red = source[x][0];
             const float green = source[x][1];
             const float blue = source[x][2];
@@ -390,24 +385,22 @@ inline ipr::Vec3f mergedPixel(float luma, float co, float cg)
     return merged;
 }
 
-void mergeLumaChroma(const cv::Mat &luma, const cv::Mat &chromaOrange,
-                const cv::Mat &chromaGreen, cv::Mat *rgb)
+void mergeLumaChroma(const ipr::Image &luma, const ipr::Image &chromaOrange,
+                const ipr::Image &chromaGreen, ipr::Image *rgb)
 {
-    for (int y = 0; y < rgb->rows; ++y) {
-        ipr::Vec3f *target = rgb->ptr<ipr::Vec3f>(y);
-        const float *yRow = luma.ptr<float>(y);
-        const float *coRow = chromaOrange.ptr<float>(y);
-        const float *cgRow = chromaGreen.ptr<float>(y);
-        for (int x = 0; x < rgb->cols; ++x)
+    for (int y = 0; y < rgb->height(); ++y) {
+        ipr::Vec3f *target = rgb->mutableRow<ipr::Vec3f>(y);
+        const float *yRow = luma.row<float>(y);
+        const float *coRow = chromaOrange.row<float>(y);
+        const float *cgRow = chromaGreen.row<float>(y);
+        for (int x = 0; x < rgb->width(); ++x)
             target[x] = mergedPixel(yRow[x], coRow[x], cgRow[x]);
     }
 }
 
-cv::Mat clampedLuma(const cv::Mat &plane)
+ipr::Image clampedLuma(const ipr::Image &plane)
 {
-    cv::Mat bounded;
-    bounded = ipr::atLeast(plane, kChromaLumaFloor);
-    return bounded;
+    return ipr::atLeast(plane, kChromaLumaFloor);
 }
 
 float mixed(const std::vector<const float *> &rows, const LocalValues::Bracket &at, int x)
@@ -418,8 +411,8 @@ float mixed(const std::vector<const float *> &rows, const LocalValues::Bracket &
 
 // The global filters at the values the maps need, mixed per pixel. On the lattice
 // every plane is the global path's own, so a pixel renders as that global value.
-void reduceNoiseLocally(cv::Mat &linearRgb, const DenoiseSettings &settings, double pixelScale,
-                        const cv::Mat &localLuminance, const cv::Mat &localChrominance)
+void reduceNoiseLocally(ipr::Image &linearRgb, const DenoiseSettings &settings, double pixelScale,
+                        const ipr::Image &localLuminance, const ipr::Image &localChrominance)
 {
     constexpr int MaxLatticeValues = 5;
     const float globalLuminance = float(std::clamp(settings.luminance, 0, 100));
@@ -429,30 +422,29 @@ void reduceNoiseLocally(cv::Mat &linearRgb, const DenoiseSettings &settings, dou
     const std::vector<float> chrominanceValues = LocalValues::latticeOf(
         globalChrominance, localChrominance, 0.f, 100.f, 5.f, MaxLatticeValues);
 
-    cv::Mat luma, chromaOrange, chromaGreen;
+    ipr::Image luma, chromaOrange, chromaGreen;
     splitLumaChroma(linearRgb, &luma, &chromaOrange, &chromaGreen);
 
-    std::vector<cv::Mat> lumaPlanes;
+    std::vector<ipr::Image> lumaPlanes;
     if (std::any_of(luminanceValues.cbegin(), luminanceValues.cend(), [](float v) { return v > 0.f; })) {
         const float lumaSigma = estimateDenoiseSigma(luma);
-        cv::Mat lumaGuide;
-        lumaGuide = ipr::gaussianBlurred(luma, kFineSigma, ipr::BlurBorder::LastPixel);
-        const cv::Mat protection = structureProtection(lumaGuide, lumaSigma);
+        const ipr::Image lumaGuide = ipr::gaussianBlurred(luma, kFineSigma, ipr::BlurBorder::LastPixel);
+        const ipr::Image protection = structureProtection(lumaGuide, lumaSigma);
         for (float value : luminanceValues)
             lumaPlanes.push_back(denoiseLuminance(luma, protection, lumaSigma, int(std::lround(value))));
     } else {
-        lumaPlanes.assign(luminanceValues.size(), luma);
+        for (size_t i = 0; i < luminanceValues.size(); ++i)
+            lumaPlanes.push_back(luma.share());
     }
 
     // Colour relative to the luminance before its denoise, as the global path.
-    std::vector<cv::Mat> orangePlanes, greenPlanes;
+    std::vector<ipr::Image> orangePlanes, greenPlanes;
     if (std::any_of(chrominanceValues.cbegin(), chrominanceValues.cend(), [](float v) { return v > 0.f; })) {
-        const cv::Mat divisor = clampedLuma(luma);
-        cv::Mat orangeRatio, greenRatio;
-        orangeRatio = ipr::divided(chromaOrange, divisor);
-        greenRatio = ipr::divided(chromaGreen, divisor);
+        const ipr::Image divisor = clampedLuma(luma);
+        const ipr::Image orangeRatio = ipr::divided(chromaOrange, divisor);
+        const ipr::Image greenRatio = ipr::divided(chromaGreen, divisor);
         for (float value : chrominanceValues) {
-            cv::Mat orange = orangeRatio.clone(), green = greenRatio.clone();
+            ipr::Image orange = orangeRatio.clone(), green = greenRatio.clone();
             if (value > 0.f)
                 denoiseChrominance(luma, &orange, &green, int(std::lround(value)), pixelScale);
             orangePlanes.push_back(std::move(orange));
@@ -460,25 +452,25 @@ void reduceNoiseLocally(cv::Mat &linearRgb, const DenoiseSettings &settings, dou
         }
     }
 
-    const auto rowsOf = [](const std::vector<cv::Mat> &planes, int y) {
+    const auto rowsOf = [](const std::vector<ipr::Image> &planes, int y) {
         std::vector<const float *> rows;
-        for (const cv::Mat &plane : planes) rows.push_back(plane.ptr<float>(y));
+        for (const ipr::Image &plane : planes) rows.push_back(plane.row<float>(y));
         return rows;
     };
     const auto valueAt = [](float global, const float *localRow, int x) {
         return localRow && std::isfinite(localRow[x]) ? std::clamp(global + localRow[x], 0.f, 100.f) : global;
     };
     const float *const noRow = nullptr;
-    ipr::parallelRows(linearRgb.rows, [&](int first, int last) {
+    ipr::parallelRows(linearRgb.height(), [&](int first, int last) {
         for (int y = first; y < last; ++y) {
-            auto *pixels = linearRgb.ptr<ipr::Vec3f>(y);
-            const float *luminanceRow = localLuminance.empty() ? noRow : localLuminance.ptr<float>(y);
-            const float *chrominanceRow = localChrominance.empty() ? noRow : localChrominance.ptr<float>(y);
+            auto *pixels = linearRgb.mutableRow<ipr::Vec3f>(y);
+            const float *luminanceRow = localLuminance.empty() ? noRow : localLuminance.row<float>(y);
+            const float *chrominanceRow = localChrominance.empty() ? noRow : localChrominance.row<float>(y);
             const std::vector<const float *> lumaRows = rowsOf(lumaPlanes, y);
             const std::vector<const float *> orangeRows = rowsOf(orangePlanes, y);
             const std::vector<const float *> greenRows = rowsOf(greenPlanes, y);
-            const float *orangeSource = chromaOrange.ptr<float>(y), *greenSource = chromaGreen.ptr<float>(y);
-            for (int x = 0; x < linearRgb.cols; ++x) {
+            const float *orangeSource = chromaOrange.row<float>(y), *greenSource = chromaGreen.row<float>(y);
+            for (int x = 0; x < linearRgb.width(); ++x) {
                 const float luminance = valueAt(globalLuminance, luminanceRow, x);
                 const float chrominance = valueAt(globalChrominance, chrominanceRow, x);
                 if (luminance == 0.f && chrominance == 0.f) continue;
@@ -508,16 +500,17 @@ bool denoiseFromAmount(int amount, DenoiseSettings &settings)
     return true;
 }
 
-void reduceNoise(cv::Mat &linearRgb, const DenoiseSettings &settings, double pixelScale,
+void reduceNoise(ipr::Image &linearRgb, const DenoiseSettings &settings, double pixelScale,
                  const LocalValues::Maps &local)
 {
-    if (linearRgb.empty() || linearRgb.type() != CV_32FC3) return;
-    const auto usable = [&](LocalValues::Parameter parameter) {
-        const cv::Mat &map = local[parameter];
-        return !map.empty() && LocalValues::fits(map, ipr::fromCv(linearRgb.size())) ? map : cv::Mat();
+    if (linearRgb.empty() || linearRgb.depth() != ipr::Depth::F32 || linearRgb.channels() != 3) return;
+    const ipr::Image none;
+    const auto usable = [&](LocalValues::Parameter parameter) -> const ipr::Image & {
+        const ipr::Image &map = local[parameter];
+        return !map.empty() && LocalValues::fits(map, linearRgb.size()) ? map : none;
     };
-    const cv::Mat localLuminance = usable(LocalValues::DenoiseLuminance);
-    const cv::Mat localChrominance = usable(LocalValues::DenoiseChrominance);
+    const ipr::Image &localLuminance = usable(LocalValues::DenoiseLuminance);
+    const ipr::Image &localChrominance = usable(LocalValues::DenoiseChrominance);
     if (!localLuminance.empty() || !localChrominance.empty()) {
         reduceNoiseLocally(linearRgb, settings, pixelScale, localLuminance, localChrominance);
         return;
@@ -525,7 +518,7 @@ void reduceNoise(cv::Mat &linearRgb, const DenoiseSettings &settings, double pix
     if (settings.luminance <= 0 && settings.chrominance <= 0)
         return;
 
-    cv::Mat luma, chromaOrange, chromaGreen;
+    ipr::Image luma, chromaOrange, chromaGreen;
     splitLumaChroma(linearRgb, &luma, &chromaOrange, &chromaGreen);
 
     // Colour is denoised relative to luminance (Co/Y, Cg/Y), then rebuilt on the
@@ -533,55 +526,53 @@ void reduceNoise(cv::Mat &linearRgb, const DenoiseSettings &settings, double pix
     // luminance grain into saturation speckle. The guide is the luminance before
     // its own denoise: it keeps the colour edges the photo shows.
     if (settings.chrominance > 0) {
-        const cv::Mat divisor = clampedLuma(luma);
+        const ipr::Image divisor = clampedLuma(luma);
         chromaOrange = ipr::divided(chromaOrange, divisor);
         chromaGreen = ipr::divided(chromaGreen, divisor);
         denoiseChrominance(luma, &chromaOrange, &chromaGreen, settings.chrominance, pixelScale);
     }
     if (settings.luminance > 0) {
         const float lumaSigma = estimateDenoiseSigma(luma);
-        cv::Mat lumaGuide;
-        lumaGuide = ipr::gaussianBlurred(luma, kFineSigma, ipr::BlurBorder::LastPixel);
+        const ipr::Image lumaGuide = ipr::gaussianBlurred(luma, kFineSigma, ipr::BlurBorder::LastPixel);
         luma = denoiseLuminance(luma, structureProtection(lumaGuide, lumaSigma),
                                 lumaSigma, settings.luminance);
     }
     if (settings.chrominance > 0) {
-        const cv::Mat factor = clampedLuma(luma);
-        chromaOrange = chromaOrange.mul(factor);
-        chromaGreen = chromaGreen.mul(factor);
+        const ipr::Image factor = clampedLuma(luma);
+        chromaOrange = ipr::multiplied(chromaOrange, factor);
+        chromaGreen = ipr::multiplied(chromaGreen, factor);
     }
     mergeLumaChroma(luma, chromaOrange, chromaGreen, &linearRgb);
 }
 
-void sharpen(cv::Mat &linearRgb, const SharpenSettings &settings, double pixelScale,
+void sharpen(ipr::Image &linearRgb, const SharpenSettings &settings, double pixelScale,
              const LocalValues::Maps &local)
 {
-    if (linearRgb.empty() || linearRgb.type() != CV_32FC3) return;
-    const cv::Mat &map = local[LocalValues::Sharpening];
-    const bool hasLocal = !map.empty() && LocalValues::fits(map, ipr::fromCv(linearRgb.size()));
+    if (linearRgb.empty() || linearRgb.depth() != ipr::Depth::F32 || linearRgb.channels() != 3) return;
+    const ipr::Image &map = local[LocalValues::Sharpening];
+    const bool hasLocal = !map.empty() && LocalValues::fits(map, linearRgb.size());
     if (settings.amount <= 0 && !hasLocal)
         return;
 
-    const cv::Mat luma = extractLuminance(linearRgb);
-    cv::Mat localBase;
+    const ipr::Image luma = extractLuminance(linearRgb);
     const double radius = std::clamp(static_cast<double>(settings.radius), 0.3, 3.0) * pixelScale;
-    localBase = ipr::gaussianBlurred(luma, radius, ipr::BlurBorder::LastPixel);
+    const ipr::Image localBase = ipr::gaussianBlurred(luma, radius, ipr::BlurBorder::LastPixel);
     const int kernelSize = std::max(3, static_cast<int>(std::ceil(radius * 2.0)) * 2 + 1);
-    const cv::Mat localMinimum = ipr::minimum(luma, ipr::Size(kernelSize, kernelSize), ipr::Beyond::Nothing);
-    const cv::Mat localMaximum = ipr::maximum(luma, ipr::Size(kernelSize, kernelSize), ipr::Beyond::Nothing);
+    const ipr::Image localMinimum = ipr::minimum(luma, ipr::Size(kernelSize, kernelSize), ipr::Beyond::Nothing);
+    const ipr::Image localMaximum = ipr::maximum(luma, ipr::Size(kernelSize, kernelSize), ipr::Beyond::Nothing);
 
     const float noiseSigma = estimateNoiseSigma(luma);
     const float threshold = noiseSigma *
         (0.35f + 5.5f * static_cast<float>(std::clamp(settings.masking, 0, 100)) / 100.0f);
     const float amount = static_cast<float>(std::clamp(settings.amount, 0, 200)) / 100.0f;
-    for (int y = 0; y < linearRgb.rows; ++y) {
-        ipr::Vec3f *pixels = linearRgb.ptr<ipr::Vec3f>(y);
-        const float *sourceLuma = luma.ptr<float>(y);
-        const float *base = localBase.ptr<float>(y);
-        const float *minimum = localMinimum.ptr<float>(y);
-        const float *maximum = localMaximum.ptr<float>(y);
-        const float *localAmount = hasLocal ? map.ptr<float>(y) : nullptr;
-        for (int x = 0; x < linearRgb.cols; ++x) {
+    for (int y = 0; y < linearRgb.height(); ++y) {
+        ipr::Vec3f *pixels = linearRgb.mutableRow<ipr::Vec3f>(y);
+        const float *sourceLuma = luma.row<float>(y);
+        const float *base = localBase.row<float>(y);
+        const float *minimum = localMinimum.row<float>(y);
+        const float *maximum = localMaximum.row<float>(y);
+        const float *localAmount = hasLocal ? map.row<float>(y) : nullptr;
+        for (int x = 0; x < linearRgb.width(); ++x) {
             float pixelAmount = amount;
             if (localAmount && std::isfinite(localAmount[x]))
                 pixelAmount = std::clamp(float(std::clamp(settings.amount, 0, 200)) + localAmount[x], 0.0f, 200.0f) / 100.0f;

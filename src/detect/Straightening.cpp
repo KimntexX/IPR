@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <iterator>
 
 namespace Straightening {
 
@@ -213,19 +214,20 @@ PerspectiveSearch searchPerspective(const std::vector<Line> &lines, const ipr::S
 
 } // namespace
 
-std::vector<LineDetection::Segment> linesOf(const cv::Mat &image)
+std::vector<LineDetection::Segment> linesOf(const ipr::Image &image)
 {
-    if (image.empty() || (image.type() != CV_32FC3 && image.type() != CV_32FC4))
+    if (image.empty() || image.depth() != ipr::Depth::F32 || (image.channels() != 3 && image.channels() != 4))
         return {};
     const int channels = image.channels();
-    cv::Mat luminance(image.size(), CV_32FC1);
-    for (int y = 0; y < image.rows; ++y) {
-        const float *in = image.ptr<float>(y);
-        float *out = luminance.ptr<float>(y);
-        for (int x = 0; x < image.cols; ++x, in += channels)
+    ipr::Image luminance = ipr::Image::create(image.size(), ipr::Depth::F32, 1);
+    for (int y = 0; y < image.height(); ++y) {
+        const float *in = image.row<float>(y);
+        float *out = luminance.mutableRow<float>(y);
+        for (int x = 0; x < image.width(); ++x, in += channels)
             out[x] = std::sqrt(std::max(0.0f, 0.2627f * in[0] + 0.678f * in[1] + 0.0593f * in[2]));
     }
-    return LineDetection::detect({luminance.ptr<float>(), luminance.cols, luminance.rows, std::ptrdiff_t(luminance.step1())});
+    return LineDetection::detect({luminance.row<float>(0), luminance.width(), luminance.height(),
+                                  luminance.stepBytes() / std::ptrdiff_t(sizeof(float))});
 }
 
 Proposal propose(const std::vector<LineDetection::Segment> &segments, const ipr::Size &source,

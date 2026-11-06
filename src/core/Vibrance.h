@@ -3,7 +3,7 @@
 
 #include "Types.h"
 
-#include <opencv2/core.hpp>
+#include "Image.h"
 
 // Vibrance and saturation in Oklab. Vibrance follows the Lightroom response
 // tables (VibranceModel.h): chroma and lightness gains and hue rotation by the pixel's linear

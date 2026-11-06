@@ -1,4 +1,5 @@
 #include "imageeditor.h"
+#include "image_testing.h"
 #include "RenderChain.h"
 #include "CameraSignal.h"
 #include "RecipeCodec.h"
@@ -7,7 +8,8 @@
 #include "controlled_memory.h"
 #include "imageprovider.h"
 #include "synthetic_dcp.h"
-#include "OpenCvBridge.h"
+#include "Pixels.h"
+#include "Resize.h"
 
 #include <QCoreApplication>
 #include <QDir>
@@ -17,12 +19,12 @@
 #include <QImage>
 #include <QTemporaryDir>
 #include <QTimer>
-#include <opencv2/imgproc.hpp>
 
 #include <cmath>
 #include <functional>
 #include <iostream>
 #include <limits>
+#include <random>
 
 // Friend of ImageEditor, as in the other tests of its private render.
 class IprTestImageGenerator
@@ -62,28 +64,27 @@ bool waitFor(const std::function<bool()> &done, int milliseconds = 60000)
     return done();
 }
 
-cv::Mat noisyRgb(const ipr::Size &size)
+ipr::Image noisyRgb(const ipr::Size &size)
 {
-    cv::Mat rgb(ipr::toCv(size), CV_32FC3);
-    cv::RNG random(5);
-    for (int y = 0; y < rgb.rows; ++y)
-        for (int x = 0; x < rgb.cols; ++x) {
-            const float shared = float(random.gaussian(0.01));
-            const float u = float(x) / float(rgb.cols), v = float(y) / float(rgb.rows);
-            ipr::at<ipr::Vec3f>(rgb, y, x) = ipr::Vec3f(std::max(0.002f, 0.05f + 0.6f * u + shared + float(random.gaussian(0.006))),
-                                                std::max(0.002f, 0.06f + 0.5f * v + shared + float(random.gaussian(0.006))),
-                                                std::max(0.002f, 0.30f - 0.2f * u + shared + float(random.gaussian(0.006))));
+    ipr::Image rgb = ipr::Image::create(size, ipr::Depth::F32, 3);
+    std::mt19937 random(5);
+    std::normal_distribution<float> common(0.0f, 0.01f), own(0.0f, 0.006f);
+    for (int y = 0; y < rgb.height(); ++y)
+        for (int x = 0; x < rgb.width(); ++x) {
+            const float shared = common(random);
+            const float u = float(x) / float(rgb.width()), v = float(y) / float(rgb.height());
+            const float r = own(random), g = own(random), b = own(random);
+            imagetest::at<ipr::Vec3f>(rgb, y, x) = ipr::Vec3f(std::max(0.002f, 0.05f + 0.6f * u + shared + r),
+                                                std::max(0.002f, 0.06f + 0.5f * v + shared + g),
+                                                std::max(0.002f, 0.30f - 0.2f * u + shared + b));
         }
     return rgb;
 }
 
 ColorPipeline::WorkingImage rasterSource(const ipr::Size &size)
 {
-    std::vector<cv::Mat> channels;
-    cv::split(noisyRgb(size), channels);
-    channels.emplace_back(ipr::toCv(size), CV_32FC1, cv::Scalar(1));
     ColorPipeline::WorkingImage image;
-    cv::merge(channels, image.linearRgba);
+    image.linearRgba = ipr::opaque(noisyRgb(size));
     image.referenceWhiteBalanceKelvin = 5200.0;
     return image;
 }
@@ -91,7 +92,7 @@ ColorPipeline::WorkingImage rasterSource(const ipr::Size &size)
 ColorPipeline::WorkingImage cameraSource(const ipr::Size &size, const QString &profile)
 {
     CameraSignal::Source signal;
-    signal.rgb = ipr::fromMat(noisyRgb(size));
+    signal.rgb = noisyRgb(size);
     signal.cameraMake = QStringLiteral("Canon");
     signal.cameraModel = QStringLiteral("EOS R6 Mark III");
     signal.whiteBalanceKelvin = 5200.0;
@@ -127,11 +128,7 @@ double worstDifference(const ColorPipeline::WorkingImage &a, const ColorPipeline
 {
     if (a.isNull() || b.isNull() || a.linearRgba.size() != b.linearRgba.size())
         return std::numeric_limits<double>::infinity();
-    cv::Mat difference;
-    cv::absdiff(a.linearRgba, b.linearRgba, difference);
-    double worst = 0.0;
-    cv::minMaxLoc(difference.reshape(1), nullptr, &worst);
-    return worst;
+    return ipr::largestDifference(a.linearRgba, b.linearRgba);
 }
 
 bool sameBytes(const ColorPipeline::WorkingImage &a, const ColorPipeline::WorkingImage &b)
@@ -239,16 +236,11 @@ void rendering(const ColorPipeline::WorkingImage &source, const char *name)
     oneEv.brightness = 1.0f;
     const ColorPipeline::WorkingImage zoned = IprTestImageGenerator::render(source, zone);
     const ColorPipeline::WorkingImage lifted = IprTestImageGenerator::render(source, oneEv);
-    const int rows = zoned.linearRgba.rows, cols = zoned.linearRgba.cols;
+    const int rows = zoned.linearRgba.height(), cols = zoned.linearRgba.width();
     const ipr::Recti upper(0, 0, cols, rows * 2 / 5), lower(0, rows * 3 / 5, cols, rows - rows * 3 / 5);
-    cv::Mat difference;
-    double worst = 0.0;
-    cv::absdiff(zoned.linearRgba(ipr::toCv(upper)), lifted.linearRgba(ipr::toCv(upper)), difference);
-    cv::minMaxLoc(difference.reshape(1), nullptr, &worst);
-    check(worst <= 1e-4, "inside its zone, the whole effect");
-    cv::absdiff(zoned.linearRgba(ipr::toCv(lower)), plain.linearRgba(ipr::toCv(lower)), difference);
-    cv::minMaxLoc(difference.reshape(1), nullptr, &worst);
-    check(worst <= 1e-4, "outside it, nothing");
+    check(ipr::largestDifference(zoned.linearRgba.copy(upper), lifted.linearRgba.copy(upper)) <= 1e-4,
+          "inside its zone, the whole effect");
+    check(ipr::largestDifference(zoned.linearRgba.copy(lower), plain.linearRgba.copy(lower)) <= 1e-4, "outside it, nothing");
 
     // A cached render resumes rightly: a change of mask is never served from the cache. The
     // cache keeps the tones' stage first: the mask must change a value that lies in it.
@@ -304,16 +296,12 @@ void withRange(const ColorPipeline::WorkingImage &source)
     plainTurned.geometry.quarterTurns = 1;
     const ColorPipeline::WorkingImage plain = IprTestImageGenerator::render(source, plainTurned);
     const ColorPipeline::WorkingImage lifted = IprTestImageGenerator::render(source, dark);
-    const cv::Mat luminance = rangeLuminance([&] {
-        cv::Mat rgb;
-        cv::cvtColor(plain.linearRgba, rgb, cv::COLOR_RGBA2RGB);
-        return rgb;
-    }());
+    const ipr::Image luminance = rangeLuminance(ipr::withoutAlpha(plain.linearRgba));
     int darkRaised = 0, darkTotal = 0, brightKept = 0, brightTotal = 0;
-    for (int y = 0; y < plain.linearRgba.rows; ++y)
-        for (int x = 0; x < plain.linearRgba.cols; ++x) {
-            const float tone = luminance.at<float>(y, x);
-            const float before = ipr::at<ipr::Vec4f>(plain.linearRgba, y, x)[1], after = ipr::at<ipr::Vec4f>(lifted.linearRgba, y, x)[1];
+    for (int y = 0; y < plain.linearRgba.height(); ++y)
+        for (int x = 0; x < plain.linearRgba.width(); ++x) {
+            const float tone = imagetest::at<float>(luminance, y, x);
+            const float before = imagetest::at<ipr::Vec4f>(plain.linearRgba, y, x)[1], after = imagetest::at<ipr::Vec4f>(lifted.linearRgba, y, x)[1];
             if (tone < 0.35f) {
                 ++darkTotal;
                 // A profile can leave a dark colour below zero: an exposure scales it all the same.
@@ -350,9 +338,9 @@ void withGeometry(const ColorPipeline::WorkingImage &source)
         masked.localMasks.push_back(top);
         const ColorPipeline::WorkingImage zoned = IprTestImageGenerator::render(source, masked);
         check(zoned.linearRgba.size() == plain.linearRgba.size(), "the canvas stays the same");
-        const int rows = plain.linearRgba.rows, cols = plain.linearRgba.cols;
-        const auto meanOf = [](const cv::Mat &image, const ipr::Recti &area) {
-            const cv::Scalar mean = cv::mean(image(ipr::toCv(area)));
+        const int rows = plain.linearRgba.height(), cols = plain.linearRgba.width();
+        const auto meanOf = [](const ipr::Image &image, const ipr::Recti &area) {
+            const std::vector<double> mean = ipr::meanOf(image.copy(area));
             return (mean[0] + mean[1] + mean[2]) / 3.0;
         };
         // Inside the image, away from the zones a transform empties.
@@ -380,16 +368,12 @@ void resolutions(const ColorPipeline::WorkingImage &source)
     mask.shapes.push_back(round);
     mask.values[size_t(LocalValues::Exposure)] = 1.0f;
     settings.localMasks.push_back(mask);
-    ColorPipeline::WorkingImage small = source;
-    cv::resize(source.linearRgba, small.linearRgba, cv::Size(), 0.5, 0.5, cv::INTER_AREA);
+    ColorPipeline::WorkingImage small = ColorPipeline::sharedCopy(source);
+    small.linearRgba = ipr::resizedBy(source.linearRgba, 0.5, 0.5, ipr::Interpolation::Area);
     const ColorPipeline::WorkingImage full = IprTestImageGenerator::render(source, settings);
     const ColorPipeline::WorkingImage preview = IprTestImageGenerator::render(small, settings, 0.5);
-    cv::Mat reduced;
-    cv::resize(full.linearRgba, reduced, preview.linearRgba.size(), 0, 0, cv::INTER_AREA);
-    cv::Mat difference;
-    cv::absdiff(reduced, preview.linearRgba, difference);
-    double worst = 0.0;
-    cv::minMaxLoc(difference.reshape(1), nullptr, &worst);
+    const double worst = ipr::largestDifference(ipr::resized(full.linearRgba, preview.linearRgba.size(), ipr::Interpolation::Area),
+                                                preview.linearRgba);
     if (worst > 0.02)
         std::cerr << "resolution worst " << worst << '\n';
     check(worst <= 0.02, "the zone is the same at both resolutions");

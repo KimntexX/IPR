@@ -1,7 +1,7 @@
 #include "Contrast.h"
 #include "LocalValues.h"
 #include "Parallel.h"
-#include "OpenCvBridge.h"
+#include "Image.h"
 
 #include <algorithm>
 #include <cmath>
@@ -28,24 +28,24 @@ float curve(float norm, float amount)
 }
 }
 
-void apply(cv::Mat &linearRgb, int contrast, const cv::Mat &local)
+void apply(ipr::Image &linearRgb, int contrast, const ipr::Image &local)
 {
-    if (local.empty() || !LocalValues::fits(local, ipr::fromCv(linearRgb.size()))) {
+    if (local.empty() || !LocalValues::fits(local, linearRgb.size())) {
         if (contrast == 0) return;
         const float amount = static_cast<float>(contrast) / 100.0f;
-        for (int y = 0; y < linearRgb.rows; ++y) {
-            ipr::Vec3f *row = linearRgb.ptr<ipr::Vec3f>(y);
-            for (int x = 0; x < linearRgb.cols; ++x)
+        for (int y = 0; y < linearRgb.height(); ++y) {
+            ipr::Vec3f *row = linearRgb.mutableRow<ipr::Vec3f>(y);
+            for (int x = 0; x < linearRgb.width(); ++x)
                 for (int c = 0; c < 3; ++c)
                     row[x][c] = curve(row[x][c], amount);
         }
         return;
     }
-    ipr::parallelRows(linearRgb.rows, [&](int first, int last) {
+    ipr::parallelRows(linearRgb.height(), [&](int first, int last) {
         for (int y = first; y < last; ++y) {
-            ipr::Vec3f *row = linearRgb.ptr<ipr::Vec3f>(y);
-            const float *values = local.ptr<float>(y);
-            for (int x = 0; x < linearRgb.cols; ++x) {
+            ipr::Vec3f *row = linearRgb.mutableRow<ipr::Vec3f>(y);
+            const float *values = local.row<float>(y);
+            for (int x = 0; x < linearRgb.width(); ++x) {
                 // Global plus local, within the slider's range the curve was fitted on.
                 const float value = std::clamp(static_cast<float>(contrast) + values[x], -100.0f, 100.0f);
                 if (value == 0.0f) continue;

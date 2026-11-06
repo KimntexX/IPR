@@ -165,11 +165,8 @@ QJsonObject saveSample(const QDir &out, const QString &name, const cv::Mat &rgb)
 
 QJsonObject saveEncodedSample(const QDir &out, const QString &name, const cv::Mat &rgb)
 {
-    std::vector<cv::Mat> channels;
-    cv::split(rgb, channels);
-    channels.push_back(cv::Mat(rgb.rows, rgb.cols, CV_32FC1, cv::Scalar(1.f)));
     ColorPipeline::WorkingImage working;
-    cv::merge(channels, working.linearRgba);
+    working.linearRgba = ipr::opaque(ipr::fromMat(rgb));   // this probe keeps its samples in Mats
     working.colorSpace = ColorPipeline::workingColorSpace();
     WorkingColor::transform(working.linearRgba, WorkingColor::fromSrgb()); // Diagnostic samples are linear sRGB.
     QString error;
@@ -202,11 +199,8 @@ void auditSampleExport(const QString &manifestPath, const QString &outputPath)
         require(rows > 0 && cols > 0 && bytes.size() == qint64(rows) * cols * 12, "Invalid float sample dimensions");
         cv::Mat rgb(rows, cols, CV_32FC3);
         std::memcpy(rgb.data, bytes.constData(), size_t(bytes.size()));
-        std::vector<cv::Mat> channels;
-        cv::split(rgb, channels);
-        channels.push_back(cv::Mat(rows, cols, CV_32FC1, cv::Scalar(1.f)));
         ColorPipeline::WorkingImage working;
-        cv::merge(channels, working.linearRgba);
+        working.linearRgba = ipr::opaque(ipr::fromMat(rgb));
         working.colorSpace = ColorPipeline::workingColorSpace();
         WorkingColor::transform(working.linearRgba, WorkingColor::fromSrgb());
         QString error;

@@ -1,7 +1,9 @@
 // Numeric qualification of the geometry (B1) on synthetic charts held in memory:
 // iprGeometryAudit OUTPUT.json. Tolerances are fixed here, before any campaign.
 #include "Geometry.h"
-#include "OpenCvBridge.h"
+#include "image_testing.h"
+#include "Parallel.h"
+#include "Pixels.h"
 
 #include <QCoreApplication>
 #include <QCryptographicHash>
@@ -12,13 +14,13 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 
-#include <opencv2/imgproc.hpp>
 
 #include <algorithm>
 #include <chrono>
 #include <cmath>
 #include <functional>
 #include <iostream>
+#include <random>
 #include <vector>
 
 namespace {
@@ -83,16 +85,16 @@ std::vector<ipr::Point2d> landmarkPositions()
     return positions;
 }
 
-cv::Mat landmarks(const ipr::Size &size, double sigma)
+ipr::Image landmarks(const ipr::Size &size, double sigma)
 {
-    cv::Mat image(ipr::toCv(size), CV_32FC3, cv::Scalar::all(0));
+    ipr::Image image = ipr::filled(size, ipr::Depth::F32, 3, 0);
     const int radius = int(std::ceil(4 * sigma));
     for (const ipr::Point2d &position : landmarkPositions()) {
         const double cx = position.x * size.width, cy = position.y * size.height;
         for (int y = std::max(0, int(cy) - radius); y <= std::min(size.height - 1, int(cy) + radius); ++y)
             for (int x = std::max(0, int(cx) - radius); x <= std::min(size.width - 1, int(cx) + radius); ++x) {
                 const double dx = x + .5 - cx, dy = y + .5 - cy;
-                ipr::at<ipr::Vec3f>(image, y, x) = ipr::Vec3f::all(float(std::exp(-(dx * dx + dy * dy) / (2 * sigma * sigma))));
+                imagetest::at<ipr::Vec3f>(image, y, x) = ipr::Vec3f::all(float(std::exp(-(dx * dx + dy * dy) / (2 * sigma * sigma))));
             }
     }
     return image;
@@ -101,7 +103,7 @@ cv::Mat landmarks(const ipr::Size &size, double sigma)
 // The centroids of the landmarks that stay on the canvas, in normalized coordinates.
 struct Measured { ipr::Point2d found, expected; };
 
-std::vector<Measured> measureLandmarks(const cv::Mat &output, const State &state, const ipr::Size &source, double sigma)
+std::vector<Measured> measureLandmarks(const ipr::Image &output, const State &state, const ipr::Size &source, double sigma)
 {
     std::vector<Measured> result;
     const double zoom = std::max(0.3, state.settings.scale / 100.0);
@@ -110,13 +112,13 @@ std::vector<Measured> measureLandmarks(const cv::Mat &output, const State &state
         const auto expected = Geometry::toCanvas(state.settings, source, position);
         if (!expected)
             continue;
-        const double px = expected->x * output.cols, py = expected->y * output.rows;
-        if (px < radius || py < radius || px >= output.cols - radius || py >= output.rows - radius)
+        const double px = expected->x * output.width(), py = expected->y * output.height();
+        if (px < radius || py < radius || px >= output.width() - radius || py >= output.height() - radius)
             continue;
         double sum = 0, sumX = 0, sumY = 0;
         for (int y = int(py) - radius; y <= int(py) + radius; ++y)
             for (int x = int(px) - radius; x <= int(px) + radius; ++x) {
-                const double value = std::max(0.f, ipr::at<ipr::Vec3f>(output, y, x)[0]);
+                const double value = std::max(0.f, imagetest::at<ipr::Vec3f>(output, y, x)[0]);
                 sum += value;
                 sumX += value * (x + .5);
                 sumY += value * (y + .5);
@@ -131,8 +133,8 @@ QJsonObject landmarkRecord(const State &state, const ipr::Size &small, const ipr
 {
     // Small on both: a wide dot's centroid drifts under perspective, without any error.
     const double smallSigma = 3, largeSigma = 3;
-    const cv::Mat preview = Geometry::warpRgb(landmarks(small, smallSigma), state.settings, Geometry::Quality::Preview);
-    const cv::Mat exported = Geometry::warpRgb(landmarks(large, largeSigma), state.settings, Geometry::Quality::Export);
+    const ipr::Image preview = Geometry::warpRgb(landmarks(small, smallSigma), state.settings, Geometry::Quality::Preview);
+    const ipr::Image exported = Geometry::warpRgb(landmarks(large, largeSigma), state.settings, Geometry::Quality::Export);
     const auto previewDots = measureLandmarks(preview, state, small, smallSigma);
     const auto exportDots = measureLandmarks(exported, state, large, largeSigma);
     double previewError = 0, exportError = 0, between = 0;
@@ -141,7 +143,7 @@ QJsonObject landmarkRecord(const State &state, const ipr::Size &small, const ipr
     for (const auto &dot : exportDots)
         exportError = std::max(exportError, std::hypot(dot.found.x - dot.expected.x, dot.found.y - dot.expected.y));
     // The same landmark, in preview pixels.
-    const double ratioX = double(preview.cols) / std::max(1, exported.cols), ratioY = double(preview.rows) / std::max(1, exported.rows);
+    const double ratioX = double(preview.width()) / std::max(1, exported.width()), ratioY = double(preview.height()) / std::max(1, exported.height());
     for (const auto &small : previewDots)
         for (const auto &big : exportDots)
             if (std::hypot(small.expected.x - big.expected.x * ratioX, small.expected.y - big.expected.y * ratioY) < 1)
@@ -166,28 +168,28 @@ QJsonObject landmarkRecord(const State &state, const ipr::Size &small, const ipr
 QJsonObject edgeRecord(double angle, Geometry::Quality quality)
 {
     const ipr::Size size(1536, 1024);
-    cv::Mat image(ipr::toCv(size), CV_32FC3);
+    ipr::Image image = ipr::Image::create(size, ipr::Depth::F32, 3);
     // Antialiased by area, a sensor's edge rather than an impossible perfect step.
     const double edgeX = size.width / 2.0 + 0.3;
     for (int y = 0; y < size.height; ++y)
         for (int x = 0; x < size.width; ++x)
-            ipr::at<ipr::Vec3f>(image, y, x) = ipr::Vec3f::all(float(std::clamp(x + 1 - edgeX, 0.0, 1.0) * .6 + .2));
+            imagetest::at<ipr::Vec3f>(image, y, x) = ipr::Vec3f::all(float(std::clamp(x + 1 - edgeX, 0.0, 1.0) * .6 + .2));
     Geometry::Settings settings;
     settings.rotation = float(angle);
-    const cv::Mat output = Geometry::warpRgb(image, settings, quality);
+    const ipr::Image output = Geometry::warpRgb(image.share(), settings, quality);
     const double radians = angle * 3.14159265358979323846 / 180.0;
     const double nx = std::cos(radians), ny = std::sin(radians);
     const auto edge = Geometry::toCanvas(settings, size, {edgeX / size.width, 0.5});
     const double ex = edge->x * size.width, ey = edge->y * size.height;
     constexpr int binsPerPixel = 8, reach = 12;
     std::vector<double> sums((2 * reach) * binsPerPixel, 0.0), counts(sums.size(), 0.0);
-    for (int y = 200; y < output.rows - 200; ++y)
-        for (int x = 400; x < output.cols - 400; ++x) {
+    for (int y = 200; y < output.height() - 200; ++y)
+        for (int x = 400; x < output.width() - 400; ++x) {
             const double distance = (x + .5 - ex) * nx + (y + .5 - ey) * ny;
             if (std::abs(distance) >= reach)
                 continue;
             const auto bin = size_t((distance + reach) * binsPerPixel);
-            sums[bin] += ipr::at<ipr::Vec3f>(output, y, x)[0];
+            sums[bin] += imagetest::at<ipr::Vec3f>(output, y, x)[0];
             counts[bin] += 1;
         }
     const double low = .2, high = .8, step = high - low;
@@ -212,20 +214,18 @@ QJsonObject aliasRecord(int scale, Geometry::Quality quality)
 {
     const ipr::Size size(1024, 768);
     const double period = 2.5, amplitude = .2;
-    cv::Mat image(ipr::toCv(size), CV_32FC3);
+    ipr::Image image = ipr::Image::create(size, ipr::Depth::F32, 3);
     for (int y = 0; y < size.height; ++y)
         for (int x = 0; x < size.width; ++x)
-            ipr::at<ipr::Vec3f>(image, y, x) = ipr::Vec3f::all(float(.5 + amplitude * std::sin(2 * 3.14159265358979323846 * (x + .5) / period)));
+            imagetest::at<ipr::Vec3f>(image, y, x) = ipr::Vec3f::all(float(.5 + amplitude * std::sin(2 * 3.14159265358979323846 * (x + .5) / period)));
     Geometry::Settings settings;
     settings.scale = scale;
-    const cv::Mat output = Geometry::warpRgb(image, settings, quality);
+    const ipr::Image output = Geometry::warpRgb(image.share(), settings, quality);
     const double zoom = scale / 100.0;
     const int inset = int(size.width * (.5 - zoom / 2)) + 16;
     const ipr::Recti area(std::max(16, inset), size.height / 4, size.width - 2 * std::max(16, inset), size.height / 2);
-    cv::Mat channel;
-    cv::extractChannel(output(ipr::toCv(area)), channel, 0);
-    cv::Scalar mean, deviation;
-    cv::meanStdDev(channel, mean, deviation);
+    std::vector<double> mean, deviation;
+    ipr::meanAndDeviationOf(ipr::channel(output.copy(area), 0), mean, deviation);
     const double ratio = deviation[0] * std::sqrt(2.0) / amplitude;
     return {{"scale", scale}, {"quality", quality == Geometry::Quality::Export ? "lanczos" : "bicubic"},
             {"grating_period_source_px", period}, {"beyond_output_nyquist", period * zoom < 2},
@@ -235,9 +235,11 @@ QJsonObject aliasRecord(int scale, Geometry::Quality quality)
 
 QJsonObject timing(const ipr::Size &size, Geometry::Quality quality)
 {
-    cv::Mat rgb(ipr::toCv(size), CV_32FC3);
-    cv::randu(rgb, cv::Scalar::all(0), cv::Scalar::all(1));
-    cv::Mat alpha(ipr::toCv(size), CV_32FC1, cv::Scalar(1));
+    ipr::Image rgb = ipr::Image::create(size, ipr::Depth::F32, 3);
+    std::mt19937 random(1);
+    std::uniform_real_distribution<float> uniform(0.0f, 1.0f);
+    ipr::mapInPlace(rgb, [&](float) { return uniform(random); });
+    ipr::Image alpha = ipr::filled(size, ipr::Depth::F32, 1, 1);
     Geometry::Settings settings;
     settings.rotation = 8.5f;
     settings.vertical = 30;
@@ -252,9 +254,9 @@ QJsonObject timing(const ipr::Size &size, Geometry::Quality quality)
     };
     return {{"width", size.width}, {"height", size.height},
             {"quality", quality == Geometry::Quality::Export ? "lanczos" : "bicubic"},
-            {"opencv_threads", cv::getNumThreads()},
-            {"rgb_ms", measure([&] { Geometry::warpRgb(rgb, settings, quality); })},
-            {"coverage_ms", measure([&] { Geometry::warpCoverage(alpha, settings, quality); })}};
+            {"threads", ipr::workerThreads()},
+            {"rgb_ms", measure([&] { Geometry::warpRgb(rgb.share(), settings, quality); })},
+            {"coverage_ms", measure([&] { Geometry::warpCoverage(alpha.share(), settings, quality); })}};
 }
 
 QString sha256Of(const QString &path)

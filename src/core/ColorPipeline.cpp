@@ -1,6 +1,6 @@
 #include "ColorPipeline.h"
 
-#include "OpenCvBridge.h"
+#include "Pixels.h"
 #include "Parallel.h"
 
 #include <algorithm>
@@ -33,12 +33,12 @@ bool convertSourceToWorking(QImage &image, QString *error)
     const bool srgb = image.colorSpace() == QColorSpace(QColorSpace::SRgb);
     const bool linearSrgb = image.colorSpace() == QColorSpace(QColorSpace::SRgbLinear);
     if (srgb || linearSrgb || image.colorSpace() == working) {
-        cv::Mat rgb(highPrecision.height(), highPrecision.width(), CV_32FC4,
-                    highPrecision.bits(), highPrecision.bytesPerLine());
+        ipr::Image rgb = ipr::Image::wrap(highPrecision.bits(), {highPrecision.width(), highPrecision.height()},
+                                          ipr::Depth::F32, 4, highPrecision.bytesPerLine());
         if (srgb) {
-            for (int y = 0; y < rgb.rows; ++y) {
-                auto *row = rgb.ptr<ipr::Vec4f>(y);
-                for (int x = 0; x < rgb.cols; ++x) for (int c = 0; c < 3; ++c) {
+            for (int y = 0; y < rgb.height(); ++y) {
+                auto *row = rgb.mutableRow<ipr::Vec4f>(y);
+                for (int x = 0; x < rgb.width(); ++x) for (int c = 0; c < 3; ++c) {
                     const double v = std::abs(double(row[x][c]));
                     const double decoded = WorkingColor::srgbDecode(v);
                     row[x][c] = float(std::copysign(decoded, row[x][c]));
@@ -91,24 +91,24 @@ ipr::Vec3f mapRgbToSrgbGamut(const ipr::Vec3f &source)
     return neutral + chroma * std::clamp(chromaScale, 0.0f, 1.0f);
 }
 
-QImage toEncodedSrgbRgba64(const cv::Mat &linearRgba)
+QImage toEncodedSrgbRgba64(const ipr::Image &linearRgba)
 {
     // Encode before quantization. Qt's integer color-space LUT loses low
     // linear16 codes; this buffer is already in sRGB primaries, so only
     // the analytic sRGB transfer is needed. Alpha is straight and linear.
     // RGBA64 stores each pixel as four 16-bit halfwords in R, G, B, A order.
-    QImage image(linearRgba.cols, linearRgba.rows, QImage::Format_RGBA64);
+    QImage image(linearRgba.width(), linearRgba.height(), QImage::Format_RGBA64);
     if (image.isNull())
         return image;   // allocation failed: the caller reports it
     // Each pixel on its own: the same result on any number of threads. The
     // shared access to the image is taken first, as scanLine would detach it.
     uchar *const bits = image.bits();
     const qsizetype stride = image.bytesPerLine();
-    ipr::parallelRows(linearRgba.rows, [&](int first, int last) {
+    ipr::parallelRows(linearRgba.height(), [&](int first, int last) {
         for (int y = first; y < last; ++y) {
-            const ipr::Vec4f *source = linearRgba.ptr<ipr::Vec4f>(y);
+            const ipr::Vec4f *source = linearRgba.row<ipr::Vec4f>(y);
             auto *destination = reinterpret_cast<quint16 *>(bits + y * stride);
-            for (int x = 0; x < linearRgba.cols; ++x) {
+            for (int x = 0; x < linearRgba.width(); ++x) {
                 for (int channel = 0; channel < 3; ++channel) {
                     const double linear = std::clamp(double(source[x][channel]), 0.0, 1.0);
                     const double encoded = WorkingColor::srgbEncode(linear);
@@ -139,8 +139,8 @@ WorkingImage fromSourceImage(const QImage &source, QString *error)
     if (!convertSourceToWorking(linear, error))
         return result;
 
-    cv::Mat rgbaFloat(linear.height(), linear.width(), CV_32FC4,
-                   const_cast<uchar *>(linear.constBits()), linear.bytesPerLine());
+    const ipr::Image rgbaFloat = ipr::Image::wrapReadOnly(linear.constBits(), {linear.width(), linear.height()},
+                                                          ipr::Depth::F32, 4, linear.bytesPerLine());
     result.linearRgba = rgbaFloat.clone();
     if (!ipr::allFinite(result.linearRgba)) {
         if (error) *error = QStringLiteral("L'image source contient des valeurs non finies.");
@@ -151,20 +151,29 @@ WorkingImage fromSourceImage(const QImage &source, QString *error)
     return result;
 }
 
-WorkingImage fromLinearSrgb(const cv::Mat &rgb, QString *error)
+WorkingImage sharedCopy(const WorkingImage &image)
+{
+    WorkingImage copy;
+    copy.linearRgba = image.linearRgba.share();
+    copy.colorSpace = image.colorSpace;
+    copy.sourceProfile = image.sourceProfile;
+    copy.referenceWhiteBalanceKelvin = image.referenceWhiteBalanceKelvin;
+    copy.dcpContext = image.dcpContext;
+    copy.toneStatistics = image.toneStatistics;
+    return copy;
+}
+
+WorkingImage fromLinearSrgb(const ipr::Image &rgb, QString *error)
 {
     WorkingImage result;
     // Extended range (negative, above 1) is kept; NaN and infinities are refused.
-    if (rgb.empty() || rgb.type() != CV_32FC3 || !ipr::allFinite(rgb)) {
+    if (rgb.empty() || !(rgb.depth() == ipr::Depth::F32 && rgb.channels() == 3) || !ipr::allFinite(rgb)) {
         if (error)
             *error = QStringLiteral("Les données RAW RGB linéaires sont invalides.");
         return result;
     }
 
-    std::vector<cv::Mat> channels;
-    channels = ipr::splitChannels(rgb);
-    channels.push_back(cv::Mat(rgb.size(), CV_32FC1, cv::Scalar(1.0f)));
-    result.linearRgba = ipr::merged(channels);
+    result.linearRgba = ipr::opaque(rgb);
     WorkingColor::transform(result.linearRgba, WorkingColor::fromSrgb());
     result.colorSpace = workingColorSpace();
     result.sourceProfile = QStringLiteral("RAW — sRGB linéaire");
@@ -174,7 +183,7 @@ WorkingImage fromLinearSrgb(const cv::Mat &rgb, QString *error)
 WorkingImage mapToSrgbGamut(const WorkingImage &source, QString *error)
 {
     if (source.isNull() || source.colorSpace != workingColorSpace() ||
-        source.linearRgba.type() != CV_32FC4 ||
+        !(source.linearRgba.depth() == ipr::Depth::F32 && source.linearRgba.channels() == 4) ||
         !ipr::allFinite(source.linearRgba)) {
         if (error)
             *error = QStringLiteral(
@@ -182,7 +191,7 @@ WorkingImage mapToSrgbGamut(const WorkingImage &source, QString *error)
         return {};
     }
 
-    WorkingImage result = source;
+    WorkingImage result = sharedCopy(source);
     result.linearRgba = source.linearRgba.clone();
     WorkingColor::transform(result.linearRgba, WorkingColor::toSrgb());
     if (!ipr::allFinite(result.linearRgba)) {
@@ -192,10 +201,10 @@ WorkingImage mapToSrgbGamut(const WorkingImage &source, QString *error)
     result.colorSpace = QColorSpace(QColorSpace::SRgbLinear);
     result.dcpContext.reset(); // This is an output derivative, not a reeditable source.
     // Each pixel on its own: the same result on any number of threads.
-    ipr::parallelRows(result.linearRgba.rows, [&](int first, int last) {
+    ipr::parallelRows(result.linearRgba.height(), [&](int first, int last) {
         for (int y = first; y < last; ++y) {
-            ipr::Vec4f *row = result.linearRgba.ptr<ipr::Vec4f>(y);
-            for (int x = 0; x < result.linearRgba.cols; ++x) {
+            ipr::Vec4f *row = result.linearRgba.mutableRow<ipr::Vec4f>(y);
+            for (int x = 0; x < result.linearRgba.width(); ++x) {
                 const ipr::Vec3f rgb = mapRgbToSrgbGamut(
                     {row[x][0], row[x][1], row[x][2]});
                 row[x][0] = rgb[0];
@@ -346,11 +355,11 @@ std::optional<ipr::Matrix33f> temperatureTintMatrix(int temperature, double refe
 }
 }
 
-bool applyTemperatureTint(cv::Mat &linearRgb, int temperature,
+bool applyTemperatureTint(ipr::Image &linearRgb, int temperature,
                           double referenceTemperature, int tint,
                           QString *error, const LocalValues::Maps &local)
 {
-    if (linearRgb.empty() || linearRgb.type() != CV_32FC3) {
+    if (linearRgb.empty() || !(linearRgb.depth() == ipr::Depth::F32 && linearRgb.channels() == 3)) {
         if (error)
             *error = QStringLiteral("La balance température/nuance attend une image RGB flottante.");
         return false;
@@ -367,7 +376,7 @@ bool applyTemperatureTint(cv::Mat &linearRgb, int temperature,
     const LocalValues::Combinations combinations(
         {{float(temperature), &local[LocalValues::Temperature], 1.0f, 2000.0f, 50000.0f, 5.0f},
          {float(tint), &local[LocalValues::Tint], 1.0f, -150.0f, 150.0f, 1.0f}},
-        ipr::fromCv(linearRgb.size()), MaxLocalMatrices);
+        linearRgb.size(), MaxLocalMatrices);
     if (combinations.active()) {
         std::vector<std::optional<ipr::Matrix33f>> matrices(size_t(combinations.count()));
         for (int index = 0; index < combinations.count(); ++index) {
@@ -375,11 +384,11 @@ bool applyTemperatureTint(cv::Mat &linearRgb, int temperature,
             matrices[size_t(index)] = temperatureTintMatrix(int(std::lround(v[0])), referenceTemperature,
                                                             int(std::lround(v[1])));
         }
-        ipr::parallelRows(linearRgb.rows, [&](int first, int last) {
+        ipr::parallelRows(linearRgb.height(), [&](int first, int last) {
             for (int y = first; y < last; ++y) {
-                ipr::Vec3f *row = linearRgb.ptr<ipr::Vec3f>(y);
+                ipr::Vec3f *row = linearRgb.mutableRow<ipr::Vec3f>(y);
                 auto indices = combinations.row(y);
-                for (int x = 0; x < linearRgb.cols; ++x)
+                for (int x = 0; x < linearRgb.width(); ++x)
                     if (const auto &matrix = matrices[size_t(indices.at(x))]) row[x] = *matrix * row[x];
             }
         });
@@ -389,9 +398,9 @@ bool applyTemperatureTint(cv::Mat &linearRgb, int temperature,
     const std::optional<ipr::Matrix33f> adaptationF = temperatureTintMatrix(temperature, referenceTemperature, tint);
     if (!adaptationF)
         return true;
-    for (int y = 0; y < linearRgb.rows; ++y) {
-        ipr::Vec3f *row = linearRgb.ptr<ipr::Vec3f>(y);
-        for (int x = 0; x < linearRgb.cols; ++x) {
+    for (int y = 0; y < linearRgb.height(); ++y) {
+        ipr::Vec3f *row = linearRgb.mutableRow<ipr::Vec3f>(y);
+        for (int x = 0; x < linearRgb.width(); ++x) {
             const ipr::Vec3f adapted = *adaptationF * row[x];
             row[x] = adapted;
         }
@@ -407,7 +416,7 @@ QImage toSrgb(const WorkingImage &source, OutputFormat outputFormat, QString *er
         return {};
     }
 
-    if (source.linearRgba.type() != CV_32FC4) {
+    if (!(source.linearRgba.depth() == ipr::Depth::F32 && source.linearRgba.channels() == 4)) {
         if (error)
             *error = QStringLiteral("L'image de travail doit être en RGBA flottant 32 bits.");
         return {};

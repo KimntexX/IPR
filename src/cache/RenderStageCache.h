@@ -5,7 +5,7 @@
 
 #include <QByteArray>
 
-#include <opencv2/core.hpp>
+#include "Image.h"
 
 #include <array>
 #include <cstdint>
@@ -27,35 +27,35 @@ public:
     struct Start
     {
         int stage = -1;   // deepest stage resumed from, -1 to render from the source
-        cv::Mat rgb;      // private copy of that stage's output
+        ipr::Image rgb;      // private copy of that stage's output
         std::array<bool, StageCount> keep{};   // outputs to hand to store()
         Keys keys;
         std::uint64_t generation = 0;
     };
 
-    Start begin(const cv::Mat &source, double pixelScale, const Keys &keys);
+    Start begin(const ipr::Image &source, double pixelScale, const Keys &keys);
     // Ignored when the cache was cleared or rebound since begin().
-    void store(const Start &start, int stage, const cv::Mat &rgb);
+    void store(const Start &start, int stage, const ipr::Image &rgb);
     // Copy of a kept stage output for this source, scale and key; empty otherwise.
     // Reads only: the keep policy of the renders is left as it is.
-    cv::Mat peek(const cv::Mat &source, double pixelScale, int stage, const QByteArray &key) const;
+    ipr::Image peek(const ipr::Image &source, double pixelScale, int stage, const QByteArray &key) const;
     // What the masks add, for this source and scale, read-only for those who get them: a render
     // that moves another slider does not draw the masks again. One entry, under its own key.
-    bool maskMaps(const cv::Mat &source, double pixelScale, const QByteArray &key, LocalValues::Maps &maps) const;
-    void storeMaskMaps(const cv::Mat &source, double pixelScale, const QByteArray &key, const LocalValues::Maps &maps);
+    bool maskMaps(const ipr::Image &source, double pixelScale, const QByteArray &key, LocalValues::Maps &maps) const;
+    void storeMaskMaps(const ipr::Image &source, double pixelScale, const QByteArray &key, const LocalValues::Maps &maps);
     void clear();
     int count() const;
 
 private:
-    struct Entry { QByteArray key; cv::Mat rgb; };
+    struct Entry { QByteArray key; ipr::Image rgb; };
 
     mutable std::mutex m_mutex;
-    cv::Mat m_source;   // shallow: its buffer stays alive, so its address identifies it
+    ipr::Image m_source;   // shared: its pixels stay alive, so their address identifies them
     double m_pixelScale = 0.0;
     std::optional<Keys> m_previous;
     std::array<std::optional<Entry>, StageCount> m_entries;
     QByteArray m_maskKey;
-    const uchar *m_maskSource = nullptr;
+    const void *m_maskSource = nullptr;
     double m_maskScale = 0.0;
     LocalValues::Maps m_maskMaps;
     std::uint64_t m_generation = 0;

@@ -13,7 +13,8 @@ int main(int argc,char **argv) {
             RawDecoder::Options options;options.automaticWhiteBalance=false;options.preferCameraNeutral=true;options.useNormalizationEnvironment=false;options.lensCorrectionEnabled=false;options.chromaticAberrationEnabled=false;
             ImageMetadata metadata;QString error;auto full=RawDecoder::decode(path,options,&metadata,&error);
             if(full.isNull()||!full.dcpContext)throw std::runtime_error(error.toStdString());
-            auto current=sample3(full.linearRgba);WorkingColor::transform(current, WorkingColor::toSrgb());
+            auto current=sample3(ipr::asMat(full.linearRgba));
+            ipr::changeAsImage(current,[](ipr::Image &image){WorkingColor::transform(image, WorkingColor::toSrgb());});
             auto context=CameraProfileEngine::sharedCopy(*full.dcpContext);context.cameraRgb=ipr::fromMat(sample3(ipr::asMat(context.cameraRgb)));full={};
             if(digest(context.profilePath)!=scene["DCP_sha256"].toString())throw std::runtime_error("Unexpected DCP");
             Curve curve(scene["curve"].toArray());QJsonObject models{{"current",metrics(current)}};double witness=0;

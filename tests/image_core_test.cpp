@@ -125,6 +125,10 @@ void aSharedImageNeverChanges()
     check(shared.block() == image.block() && shared.blockBytes() == 4 * 4 * sizeof(Vec3f), "one block, counted once");
     check(image.view({1, 1, 2, 2}).block() == image.block() && image.clone().block() != image.block(), "a part is in it");
     check(Image().block() == nullptr && Image().blockBytes() == 0, "no block for nothing");
+    Image writable = numbered({4, 4});
+    const Image part = writable.copy({1, 1, 2, 2});
+    check(!writable.frozen() && !part.sharesPixelsWith(writable) && part.row<Vec3f>(0)[0][0] == 1.0f, "a part copied");
+    check(writable.copy({3, 3, 2, 2}).empty(), "a part outside is nothing");
 
     // Even once the others are gone: only a clone writes.
     Image alone = numbered({2, 2});

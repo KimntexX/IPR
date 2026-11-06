@@ -1,9 +1,8 @@
 #include "Grain.h"
 
-#include "OpenCvBridge.h"
+#include "Filters.h"
 #include "Parallel.h"
 
-#include <opencv2/imgproc.hpp>
 
 #include <algorithm>
 #include <cmath>
@@ -57,14 +56,14 @@ float decode(float e)
 
 } // namespace
 
-void apply(cv::Mat &linearRgb, int amount, double pixelScale)
+void apply(ipr::Image &linearRgb, int amount, double pixelScale)
 {
-    if (amount <= 0 || linearRgb.empty() || linearRgb.type() != CV_32FC3) return;
-    cv::Mat noise(linearRgb.size(), CV_32F);
-    ipr::parallelRows(noise.rows, [&](int first, int last) {
+    if (amount <= 0 || linearRgb.empty() || !(linearRgb.depth() == ipr::Depth::F32 && linearRgb.channels() == 3)) return;
+    ipr::Image noise = ipr::Image::create(linearRgb.size(), ipr::Depth::F32, 1);
+    ipr::parallelRows(noise.height(), [&](int first, int last) {
         for (int y = first; y < last; ++y) {
-            float *row = noise.ptr<float>(y);
-            for (int x = 0; x < noise.cols; ++x) row[x] = gaussian(x, y);
+            float *row = noise.mutableRow<float>(y);
+            for (int x = 0; x < noise.width(); ++x) row[x] = gaussian(x, y);
         }
     });
     float deviation = StandardDeviation * float(std::min(amount, 100)) / 100.0f;
@@ -78,11 +77,11 @@ void apply(cv::Mat &linearRgb, int amount, double pixelScale)
     } else {
         deviation *= float(reducedDeviation(1.0 / pixelScale));
     }
-    ipr::parallelRows(linearRgb.rows, [&](int first, int last) {
+    ipr::parallelRows(linearRgb.height(), [&](int first, int last) {
         for (int y = first; y < last; ++y) {
-            auto *row = linearRgb.ptr<ipr::Vec3f>(y);
-            const float *n = noise.ptr<float>(y);
-            for (int x = 0; x < linearRgb.cols; ++x)
+            auto *row = linearRgb.mutableRow<ipr::Vec3f>(y);
+            const float *n = noise.row<float>(y);
+            for (int x = 0; x < linearRgb.width(); ++x)
                 for (int c = 0; c < 3; ++c)
                     row[x][c] = decode(std::max(0.0f, encode(std::max(0.0f, row[x][c])) + deviation * n[x]));
         }

@@ -9,7 +9,7 @@
 #include <QString>
 #include <QVariantList>
 #include <QVariantMap>
-#include <opencv2/core.hpp>
+#include "Image.h"
 
 #include <array>
 #include <vector>
@@ -85,20 +85,20 @@ bool active(const Masks &masks);
 
 // Whether a shape reads the image: the caller then prepares its luminance.
 bool usesLuminance(const Masks &masks);
-// The luminance a range reads, from linear RGB (CV_32FC3): CV_32FC1, encoded in [0, 1].
-cv::Mat rangeLuminance(const cv::Mat &linearRgb);
+// The luminance a range reads, from linear RGB (F32 of three channels): F32 of one channel, encoded in [0, 1].
+ipr::Image rangeLuminance(const ipr::Image &linearRgb);
 
-// Coverage in [0, 1] of a mask's shapes, CV_32FC1 of this size; opacity and visibility apart.
+// Coverage in [0, 1] of a mask's shapes, F32 of one channel of this size; opacity and visibility apart.
 // luminance: from rangeLuminance, of this size. Without it, a range covers nothing.
-cv::Mat coverage(const Mask &mask, const ipr::Size &canvas, const cv::Mat &luminance = {});
+ipr::Image coverage(const Mask &mask, const ipr::Size &canvas, const ipr::Image &luminance = {});
 
 // What the masks add per setting, for an image of this size. A setting no mask touches stays
 // an empty map, so that its module keeps its global path.
-LocalValues::Maps valueMaps(const Masks &masks, const ipr::Size &canvas, const cv::Mat &luminance = {});
+LocalValues::Maps valueMaps(const Masks &masks, const ipr::Size &canvas, const ipr::Image &luminance = {});
 
 // The maps of the settings that act on the camera signal, before the geometry's resampling:
 // a canvas map brought to the source's pixels. Without a transform, returns it as is.
-cv::Mat toSource(const cv::Mat &canvasMap, const Geometry::Settings &geometry, const ipr::Size &source);
+ipr::Image toSource(const ipr::Image &canvasMap, const Geometry::Settings &geometry, const ipr::Size &source);
 
 // What a render's result depends on, for the cache keys.
 void appendKey(QDataStream &stream, const Masks &masks);

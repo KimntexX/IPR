@@ -187,6 +187,11 @@ Image Image::view(const Recti &area) const
     return other;
 }
 
+Image Image::copy(const Recti &area) const
+{
+    return partOf(area).clone();
+}
+
 Image Image::mutableView(const Recti &area)
 {
     if (frozen())

@@ -5,7 +5,7 @@
 #include "CameraDenoise.h"
 #include "CameraSignal.h"
 #include "imageeditor.h"
-#include "OpenCvBridge.h"
+#include "Pixels.h"
 #include "image_testing.h"
 
 #include <QCoreApplication>
@@ -65,10 +65,15 @@ ipr::Image colour(int width, int height, float r, float g, float b)
     return image;
 }
 
-// A master of the signal, as the editor holds it while the masters are Mats.
-cv::Mat masterOf(const ipr::Image &rgb)
+// The image repeated side by side, as many times.
+ipr::Image repeatedAcross(const ipr::Image &image, int times)
 {
-    return ipr::heldMat(ipr::opaque(rgb));
+    ipr::Image out = ipr::Image::create({image.width() * times, image.height()}, image.depth(), image.channels());
+    for (int i = 0; i < times; ++i) {
+        ipr::Image place = out.mutableView({i * image.width(), 0, image.width(), image.height()});
+        ipr::copyInto(image, place);
+    }
+    return out;
 }
 
 using SyntheticDcp::appendFloat;
@@ -213,7 +218,7 @@ int main(int argc, char **argv)
                    result.dcpContext->cameraRgb.block() == ownedPixels &&
                    ipr::largestDifference(result.dcpContext->cameraRgb, original) == 0,
                    "camera signal transfers immutable storage without an extra source clone")) return 1;
-        if (!check(ipr::largestDifference(ipr::fromMat(result.linearRgba), ipr::opaque(expected)) == 0 &&
+        if (!check(ipr::largestDifference(result.linearRgba, ipr::opaque(expected)) == 0 &&
                    result.colorSpace == ColorPipeline::workingColorSpace() &&
                    result.referenceWhiteBalanceKelvin == 5200. &&
                    result.dcpContext->options.profileExposureCompensationEv == -.02,
@@ -279,22 +284,22 @@ int main(int argc, char **argv)
     if (!check(ipr::largestDifference(wb.cameraRgb, untouched) == 0,
                "repeated WB edits never mutate the retained camera source")) return 1;
     ColorPipeline::WorkingImage editorSource;
-    editorSource.linearRgba = masterOf(neutralExpected);
+    editorSource.linearRgba = ipr::opaque(neutralExpected);
     editorSource.referenceWhiteBalanceKelvin = wb.sourceKelvin;
     editorSource.dcpContext = std::make_shared<CameraProfileEngine::DcpWorkingContext>(CameraProfileEngine::sharedCopy(wb));
     const auto editorNeutral = IprTestImageGenerator::render(editorSource, 5200, 0);
-    if (!check(editorNeutral.linearRgba.data == editorSource.linearRgba.data,
+    if (!check(editorNeutral.linearRgba.block() == editorSource.linearRgba.block(),
                "editor neutral is the untouched source, not a WB round trip")) return 1;
     // Experimental camera-signal denoise: off, or at strength 0, the render is
     // unchanged; on, the camera signal goes through the profile again, from the
     // retained source, which it never mutates.
-    if (!check(IprTestImageGenerator::denoised(editorSource, 5200, 0, true).linearRgba.data ==
-                   editorSource.linearRgba.data,
+    if (!check(IprTestImageGenerator::denoised(editorSource, 5200, 0, true).linearRgba.block() ==
+                   editorSource.linearRgba.block(),
                "camera denoise at strength 0 is the untouched source")) return 1;
     {
         const auto before = IprTestImageGenerator::denoised(editorSource, 5200, 40, true);
-        if (!check(!before.isNull() && cv::checkRange(before.linearRgba) &&
-                       ipr::fromCv(before.linearRgba.size()) == neutralExpected.size() &&
+        if (!check(!before.isNull() && ipr::allFinite(before.linearRgba) &&
+                       before.linearRgba.size() == neutralExpected.size() &&
                        ipr::largestDifference(wb.cameraRgb, untouched) == 0 &&
                        ipr::largestDifference(editorSource.dcpContext->cameraRgb, untouched) == 0,
                    "camera denoise renders through the profile without touching the retained signal")) return 1;
@@ -303,7 +308,7 @@ int main(int argc, char **argv)
     // like WB: never a multiplication of the already rendered master.
     if (!CameraProfileEngine::renderFromCameraSignal(wb, 2000, 0, 1.0, rendered, &wbError)) return 1;
     const auto editorCold = IprTestImageGenerator::render(editorSource, 2000, 0, 1);
-    if (!check(!editorCold.isNull() && ipr::largestDifference(ipr::opaque(rendered), ipr::fromMat(editorCold.linearRgba)) < 1e-6,
+    if (!check(!editorCold.isNull() && ipr::largestDifference(ipr::opaque(rendered), editorCold.linearRgba) < 1e-6,
                "editor applies WB and exposure once, before the DCP, preserves alpha")) return 1;
     ipr::Image coldNeutral;
     if (!CameraProfileEngine::renderFromCameraSignal(wb, 2000, 0, 0.0, coldNeutral, &wbError)) return 1;
@@ -316,19 +321,19 @@ int main(int argc, char **argv)
                "exposure edits never accumulate nor mutate the camera source")) return 1;
     {
         // A local exposure (LocalValues) acts on the camera signal as the global one does.
-        cv::Mat local(ipr::toCv(wb.cameraRgb.size()), CV_32FC1, cv::Scalar(0));
+        ipr::Image local = ipr::filled(wb.cameraRgb.size(), ipr::Depth::F32, 1, 0);
         ipr::Image zone = ipr::filled(wb.cameraRgb.size(), ipr::Depth::U8, 1, 0);
-        for (int y = 0; y < local.rows; ++y)
-            for (int x = 0; x < local.cols; ++x)
-                if ((x + y) % 2 == 0) { local.at<float>(y, x) = 1.0f; at<std::uint8_t>(zone, y, x) = 255; }
+        for (int y = 0; y < local.height(); ++y)
+            for (int x = 0; x < local.width(); ++x)
+                if ((x + y) % 2 == 0) { at<float>(local, y, x) = 1.0f; at<std::uint8_t>(zone, y, x) = 255; }
         const ipr::Image outside = ipr::bitwiseNot(zone);
         ipr::Image locallyBrighter, unchanged;
         LocalValues::Maps exposureMaps;
-        exposureMaps[LocalValues::Exposure] = local;
+        exposureMaps[LocalValues::Exposure] = local.share();
         LocalValues::Maps zeroMaps;
-        zeroMaps[LocalValues::Exposure] = cv::Mat(local.size(), CV_32FC1, cv::Scalar(0));
+        zeroMaps[LocalValues::Exposure] = ipr::filled(local.size(), ipr::Depth::F32, 1, 0);
         LocalValues::Maps misfitMaps;
-        misfitMaps[LocalValues::Exposure] = cv::Mat(local.rows + 1, local.cols, CV_32FC1);
+        misfitMaps[LocalValues::Exposure] = ipr::Image::create({local.width(), local.height() + 1}, ipr::Depth::F32, 1);
         if (!check(CameraProfileEngine::renderFromCameraSignal(wb, 2000, 0, 0.0, locallyBrighter, &wbError, exposureMaps) &&
                        imagetest::largestDifferenceWhere(locallyBrighter, rendered, zone) < 1e-5 &&
                        imagetest::largestDifferenceWhere(locallyBrighter, coldNeutral, outside) == 0,
@@ -341,10 +346,10 @@ int main(int argc, char **argv)
         // Local white balance: the gains and the profile's illuminant follow the pixel.
         ipr::Image warmGlobal, tintedGlobal, warmLocal, tintedLocal, zeroWhiteBalance;
         LocalValues::Maps temperatureMaps, tintMaps, zeroWhiteMaps;
-        temperatureMaps[LocalValues::Temperature] = local * 2500.0f;
-        tintMaps[LocalValues::Tint] = local * 30.0f;
-        zeroWhiteMaps[LocalValues::Temperature] = cv::Mat(local.size(), CV_32FC1, cv::Scalar(0));
-        zeroWhiteMaps[LocalValues::Tint] = cv::Mat(local.size(), CV_32FC1, cv::Scalar(0));
+        temperatureMaps[LocalValues::Temperature] = ipr::mapped(local, [](float v) { return v * 2500.0f; });
+        tintMaps[LocalValues::Tint] = ipr::mapped(local, [](float v) { return v * 30.0f; });
+        zeroWhiteMaps[LocalValues::Temperature] = ipr::filled(local.size(), ipr::Depth::F32, 1, 0);
+        zeroWhiteMaps[LocalValues::Tint] = ipr::filled(local.size(), ipr::Depth::F32, 1, 0);
         if (!check(CameraProfileEngine::renderFromCameraSignal(wb, 4500, 0, 0.0, warmGlobal, &wbError) &&
                        CameraProfileEngine::renderFromCameraSignal(wb, 2000, 0, 0.0, warmLocal, &wbError, temperatureMaps) &&
                        imagetest::largestDifferenceWhere(warmLocal, warmGlobal, zone) < 1e-5 &&
@@ -359,16 +364,14 @@ int main(int argc, char **argv)
                        ipr::largestDifference(zeroWhiteBalance, coldNeutral) == 0,
                    "maps of zeros keep the white balance exactly")) return 1;
     }
-    auto large = editorSource;
-    cv::repeat(editorSource.linearRgba, 1, 800, large.linearRgba);
+    auto large = ColorPipeline::sharedCopy(editorSource);
+    large.linearRgba = repeatedAcross(editorSource.linearRgba, 800);
     auto largeContext = std::make_shared<CameraProfileEngine::DcpWorkingContext>(CameraProfileEngine::sharedCopy(wb));
-    cv::Mat repeated;
-    cv::repeat(ipr::asMat(wb.cameraRgb), 1, 800, repeated);
-    largeContext->cameraRgb = ipr::fromMat(repeated);
+    largeContext->cameraRgb = repeatedAcross(wb.cameraRgb, 800);
     large.dcpContext = largeContext;
     const auto proxy = IprTestImageGenerator::proxy(large);
-    if (!check(proxy.dcpContext && proxy.dcpContext->cameraRgb.size() == ipr::fromCv(proxy.linearRgba.size()) &&
-                   proxy.linearRgba.cols == 2048 && large.dcpContext->cameraRgb.width() == 2400 &&
+    if (!check(proxy.dcpContext && proxy.dcpContext->cameraRgb.size() == proxy.linearRgba.size() &&
+                   proxy.linearRgba.width() == 2048 && large.dcpContext->cameraRgb.width() == 2400 &&
                    !IprTestImageGenerator::render(proxy, 2000, 0).isNull(),
                "proxy WB uses its own camera geometry without mutating the full-resolution source")) return 1;
     CameraProfileEngine::whiteBalanceGains(wb, 2000, 0, gains, &wbError);
@@ -428,7 +431,7 @@ int main(int argc, char **argv)
             !CameraProfileEngine::renderFromCameraSignal(uncorrectedContext, 5200, 0, 0.0, uncorrected, &lensError))
             return 1;
         ColorPipeline::WorkingImage lensSource;
-        lensSource.linearRgba = masterOf(corrected);
+        lensSource.linearRgba = ipr::opaque(corrected);
         lensSource.referenceWhiteBalanceKelvin = lens.sourceKelvin;
         lensSource.dcpContext = std::make_shared<CameraProfileEngine::DcpWorkingContext>(CameraProfileEngine::sharedCopy(lens));
         ipr::Image expectedCamera = lens.preLensCameraRgb.share();
@@ -440,7 +443,7 @@ int main(int argc, char **argv)
         ipr::Image expected;
         if (!CameraProfileEngine::renderFromCameraSignal(expectedContext, 5200, 0, 0.0, expected, &lensError)) return 1;
         const auto denoisedLens = IprTestImageGenerator::denoised(lensSource, 5200, 40, true);
-        const ipr::Image renderedRgb = denoisedLens.isNull() ? ipr::Image() : ipr::withoutAlpha(ipr::fromMat(denoisedLens.linearRgba));
+        const ipr::Image renderedRgb = denoisedLens.isNull() ? ipr::Image() : ipr::withoutAlpha(denoisedLens.linearRgba);
         if (!check(!renderedRgb.empty() && ipr::largestDifference(renderedRgb, expected) < 1e-6 &&
                        ipr::largestDifference(corrected, uncorrected) > 1e-3 &&
                        ipr::largestDifference(lens.preLensCameraRgb, preLensUntouched) == 0,

@@ -3,7 +3,7 @@
 
 #include "Types.h"
 
-#include <opencv2/core.hpp>
+#include "Image.h"
 
 #include <array>
 

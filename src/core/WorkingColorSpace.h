@@ -3,10 +3,11 @@
 
 #include "Types.h"
 
-#include <opencv2/core.hpp>
+#include "Image.h"
 
 #include <algorithm>
 #include <cmath>
+#include <stdexcept>
 
 // Linear RGB, D65. Matrices derived from the published CIE xy primaries;
 // no transfer function, gamut mapping or range clipping in these operations.
@@ -193,13 +194,14 @@ inline ipr::Vec3f encodedInGamut(const ipr::Vec3d &lab)
 }
 
 // In-place, preserves straight alpha bit-for-bit, including extended RGB.
-inline void transform(cv::Mat &image, const ipr::Matrix33d &matrix)
+inline void transform(ipr::Image &image, const ipr::Matrix33d &matrix)
 {
-    CV_Assert(image.type() == CV_32FC3 || image.type() == CV_32FC4);
+    if (image.depth() != ipr::Depth::F32 || (image.channels() != 3 && image.channels() != 4))
+        throw std::invalid_argument("Linear RGB or RGBA floats");
     const int channels = image.channels();
-    for (int y = 0; y < image.rows; ++y) {
-        float *row = image.ptr<float>(y);
-        for (int x = 0; x < image.cols; ++x) {
+    for (int y = 0; y < image.height(); ++y) {
+        float *row = image.mutableRow<float>(y);
+        for (int x = 0; x < image.width(); ++x) {
             float *p = row + x * channels;
             const ipr::Vec3d converted = matrix * ipr::Vec3d(p[0], p[1], p[2]);
             p[0] = float(converted[0]); p[1] = float(converted[1]); p[2] = float(converted[2]);

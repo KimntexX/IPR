@@ -3,7 +3,7 @@
 #include "ImageExporter.h"
 #include "RawDecoder.h"
 #include "synthetic_dcp.h"
-#include "OpenCvBridge.h"
+#include "Pixels.h"
 #include "image_testing.h"
 
 #include <QCoreApplication>
@@ -195,7 +195,7 @@ void decoding(const QDir &folder)
         const ColorPipeline::WorkingImage direct = CameraSignal::render(std::move(signal), dcp, written.renderOptions, &error);
         check(!direct.isNull() && direct.linearRgba.size() == opened.linearRgba.size(), "the same render");
         if (!direct.isNull()) {
-            const double worst = ipr::largestDifference(ipr::fromMat(direct.linearRgba), ipr::fromMat(opened.linearRgba));
+            const double worst = ipr::largestDifference(direct.linearRgba, opened.linearRgba);
             if (worst > 2e-3)
                 std::cerr << "render worst " << worst << '\n';
             check(worst <= 2e-3, "within the file's precision");

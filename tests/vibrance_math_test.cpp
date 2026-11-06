@@ -1,9 +1,10 @@
 #include "PerceptualColour.h"
+#include "image_testing.h"
 #include "Vibrance.h"
 #include "WorkingColorSpace.h"
-#include "OpenCvBridge.h"
+#include "Image.h"
 
-#include <opencv2/core.hpp>
+#include "Image.h"
 
 #include <cmath>
 #include <iostream>
@@ -85,18 +86,18 @@ int main()
         check(std::abs(hue(Vibrance::applyPixel(blue, 0, .5)) - hue(blue)) < 1e-5, "Saturation keeps the hue");
 
         // Image path: Rec.2020 greys exact, colours changed, unsupported inputs untouched.
-        cv::Mat image(1, 2, CV_32FC3);
-        ipr::at<ipr::Vec3f>(image, 0, 0) = {.3f, .3f, .3f};
-        ipr::at<ipr::Vec3f>(image, 0, 1) = weak;
-        const cv::Mat original = image.clone();
+        ipr::Image image = ipr::Image::create({2, 1}, ipr::Depth::F32, 3);
+        imagetest::at<ipr::Vec3f>(image, 0, 0) = {.3f, .3f, .3f};
+        imagetest::at<ipr::Vec3f>(image, 0, 1) = weak;
+        const ipr::Image original = image.clone();
         PerceptualColour::apply(image, {0, 50, {}, {}, {}});
-        check(ipr::at<ipr::Vec3f>(image, 0, 0) == ipr::at<ipr::Vec3f>(original, 0, 0), "Rec.2020 grey unchanged");
-        check(ipr::length(ipr::at<ipr::Vec3f>(image, 0, 1) - ipr::at<ipr::Vec3f>(original, 0, 1)) > 1e-3, "Rec.2020 colour changed");
-        cv::Mat empty;
+        check(imagetest::at<ipr::Vec3f>(image, 0, 0) == imagetest::at<ipr::Vec3f>(original, 0, 0), "Rec.2020 grey unchanged");
+        check(ipr::length(imagetest::at<ipr::Vec3f>(image, 0, 1) - imagetest::at<ipr::Vec3f>(original, 0, 1)) > 1e-3, "Rec.2020 colour changed");
+        ipr::Image empty;
         PerceptualColour::apply(empty, {50, 50, {}, {}, {}});
-        cv::Mat wrong(1, 1, CV_32FC4, cv::Scalar(.1, .2, .3, 1));
+        ipr::Image wrong = imagetest::filledWith({1, 1}, {.1, .2, .3, 1});
         PerceptualColour::apply(wrong, {50, 50, {}, {}, {}});
-        check(ipr::at<ipr::Vec4f>(wrong, 0, 0) == ipr::Vec4f(.1f, .2f, .3f, 1.f), "Unsupported type untouched");
+        check(imagetest::at<ipr::Vec4f>(wrong, 0, 0) == ipr::Vec4f(.1f, .2f, .3f, 1.f), "Unsupported type untouched");
     } catch (const std::exception &error) {
         std::cerr << error.what() << '\n';
         return 1;

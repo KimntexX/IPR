@@ -6,7 +6,7 @@
 #include <QColorSpace>
 #include <QImage>
 #include <QString>
-#include <opencv2/core.hpp>
+#include "Image.h"
 #include <optional>
 #include <memory>
 #include "WorkingColorSpace.h"
@@ -28,11 +28,12 @@ inline QString engineIdentity()
     return QStringLiteral("ipr-render-rec2020-linear-d65-v1|profile-render=2");
 }
 
+// Move only: a copy shares the master read only, through sharedCopy.
 struct WorkingImage
 {
-    // CV_32FC4, straight-alpha RGBA in linear Rec.2020 D65. RAW/profile transforms and
+    // F32 of four channels, straight-alpha RGBA in linear Rec.2020 D65. RAW/profile transforms and
     // edits may generate values outside [0, 1]; output encoding clips to sRGB.
-    cv::Mat linearRgba;
+    ipr::Image linearRgba;
     QColorSpace colorSpace = workingColorSpace();
     QString sourceProfile;
     std::optional<double> referenceWhiteBalanceKelvin;
@@ -43,6 +44,8 @@ struct WorkingImage
 
     bool isNull() const { return linearRgba.empty(); }
 };
+// The same image on the same pixels, frozen for every holder.
+WorkingImage sharedCopy(const WorkingImage &image);
 
 enum class OutputFormat
 {
@@ -52,15 +55,15 @@ enum class OutputFormat
 };
 
 WorkingImage fromSourceImage(const QImage &source, QString *error = nullptr);
-// A RAW decoder's linear sRGB (CV_32FC3, white 1, finite, extended range kept) -> Rec.2020 master.
-WorkingImage fromLinearSrgb(const cv::Mat &rgb, QString *error = nullptr);
+// A RAW decoder's linear sRGB (F32, three channels, white 1, finite, extended range kept) -> Rec.2020 master.
+WorkingImage fromLinearSrgb(const ipr::Image &rgb, QString *error = nullptr);
 // Output-only derivative: returned pixels AND tag are linear sRGB, not a master.
 WorkingImage mapToSrgbGamut(const WorkingImage &source,
                             QString *error = nullptr);
 // local: per-pixel temperature (kelvins) and tint added to the global ones
 // (LocalValues), the sums within the sliders' ranges. One matrix per combination
 // of values present, rounded to 5 K and 1 tint unit.
-bool applyTemperatureTint(cv::Mat &linearRgb, int temperature,
+bool applyTemperatureTint(ipr::Image &linearRgb, int temperature,
                           double referenceTemperature, int tint,
                           QString *error = nullptr, const LocalValues::Maps &local = {});
 QImage toSrgb(const WorkingImage &source, OutputFormat outputFormat,

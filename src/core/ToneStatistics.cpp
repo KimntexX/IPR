@@ -24,14 +24,15 @@ Statistics measure(std::vector<float> log2Luminance)
     return s;
 }
 
-Statistics measure(const cv::Mat &linearRgba)
+Statistics measure(const ipr::Image &linearRgba)
 {
-    const int stride = std::max(1, int(std::sqrt(double(linearRgba.total()) / 1.0e6)));
+    const size_t total = size_t(linearRgba.width()) * size_t(linearRgba.height());
+    const int stride = std::max(1, int(std::sqrt(double(total) / 1.0e6)));
     std::vector<float> values;
-    values.reserve(linearRgba.total() / size_t(stride * stride) + linearRgba.rows);
-    for (int y = 0; y < linearRgba.rows; y += stride) {
-        const auto *row = linearRgba.ptr<ipr::Vec4f>(y);
-        for (int x = 0; x < linearRgba.cols; x += stride) {
+    values.reserve(total / size_t(stride * stride) + size_t(linearRgba.height()));
+    for (int y = 0; y < linearRgba.height(); y += stride) {
+        const auto *row = linearRgba.row<ipr::Vec4f>(y);
+        for (int x = 0; x < linearRgba.width(); x += stride) {
             const ipr::Vec3f rgb(row[x][0], row[x][1], row[x][2]);
             values.push_back(std::log2(std::max(WorkingColor::luminance(rgb), 0x1p-20f)));
         }

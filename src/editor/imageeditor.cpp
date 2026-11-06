@@ -14,6 +14,8 @@
 #include "ThumbnailProvider.h"
 #include "Straightening.h"
 
+#include "Resize.h"
+#include "Pixels.h"
 #include "OpenCvBridge.h"
 
 #include <QDir>
@@ -32,8 +34,7 @@
 #include <QTemporaryFile>
 #include <QDebug>
 
-#include <opencv2/core.hpp>
-#include <opencv2/imgproc.hpp>
+#include "Image.h"
 #include <tiffio.h>
 
 #include <algorithm>
@@ -47,9 +48,9 @@
 
 namespace {
 
-bool hasEmptyZones(const cv::Mat &rgba)
+bool hasEmptyZones(const ipr::Image &rgba)
 {
-    cv::Mat alpha;
+    ipr::Image alpha;
     alpha = ipr::channel(rgba, 3);
     return ipr::extremesOf(alpha).smallest < 1;
 }
@@ -347,7 +348,7 @@ ImageEditor::ImageEditor(ImageProvider *provider,
         if (m_activePrefetchGeneration == m_prefetchGeneration && m_prefetchCancel &&
             !m_prefetchCancel->load() && !loaded.image.isNull()) {
             const QSize fullSize = loaded.proxyOnly ? loaded.fullSize
-                : QSize(loaded.image.linearRgba.cols, loaded.image.linearRgba.rows);
+                : QSize(loaded.image.linearRgba.width(), loaded.image.linearRgba.height());
             m_decodedImageCache.insert(loaded.cacheKey, retainedEntry(loaded.image, loaded.editProxy,
                 loaded.metadata, loaded.dcpSource, fullSize, loaded.proxyOnly));
         }
@@ -1203,7 +1204,7 @@ ImageEditor::BatchResult ImageEditor::exportFiles(Tasks::Context &context, const
             continue;
         }
         options.cancellationRequested = [cancel] { return cancel->load(); };
-        const auto admission = controller->acquire({}, SystemMemory::estimateDecodePeak(fileName), false, cancel).result();
+        const auto admission = controller->acquire({}, SystemMemory::estimateDecodePeak(fileName), false, cancel).takeResult();
         if (!admission.reservation) {
             if (cancel->load()) { result.cancelled = true; break; }
             result.failed.append(tr("%1 (%2)").arg(name, admission.error));
@@ -1268,7 +1269,7 @@ bool ImageEditor::addPointColorAt(qreal x, qreal y)
     // The colour entering the point colour: the tones' output the preview keeps,
     // or rendered here when it was not kept, then saturation, vibrance and mixer.
     const double pixelScale = previewPixelScale();
-    const cv::Mat tones = RenderChain::tonesOutput(source, m_settings, pixelScale, &m_renderStageCache);
+    const ipr::Image tones = RenderChain::tonesOutput(source, m_settings, pixelScale, &m_renderStageCache);
     if (tones.empty())
         return false;
     // The tones cover the whole canvas; the view may show its crop.
@@ -1728,7 +1729,7 @@ QVariantList ImageEditor::snapshots() const
 QVariantMap ImageEditor::geometry() const
 {
     const Geometry::Settings &g = m_settings.geometry;
-    const ipr::Size source = m_original.isNull() ? ipr::Size() : ipr::fromCv(m_original.linearRgba.size());
+    const ipr::Size source = m_original.isNull() ? ipr::Size() : m_original.linearRgba.size();
     const ipr::Size canvas = Geometry::canvasSize(g, source);
     return {{"quarterTurns", g.quarterTurns}, {"flipHorizontal", g.flipHorizontal}, {"flipVertical", g.flipVertical},
             {"rotation", double(g.rotation)}, {"vertical", g.vertical}, {"horizontal", g.horizontal},
@@ -1763,7 +1764,7 @@ void ImageEditor::commitGeometry(Geometry::Settings next)
 {
     if (m_original.isNull() || !Geometry::bound(next))
         return;
-    Geometry::applyConstraint(next, ipr::fromCv(m_original.linearRgba.size()));
+    Geometry::applyConstraint(next, m_original.linearRgba.size());
     if (next == m_settings.geometry)
         return;
     m_settings.geometry = next;
@@ -2010,9 +2011,8 @@ void ImageEditor::addRetouchStroke(int retouch, const QVariantList &points, doub
     if (first && target.kind != Retouch::Kind::Remove) {
         const ColorPipeline::WorkingImage &source = previewSource();
         if (!source.isNull()) {
-            cv::Mat rgb;
-            rgb = ipr::withoutAlpha(source.linearRgba);
-            rgb = Geometry::warpRgb(rgb, m_settings.geometry, RenderChain::geometryQuality(previewPixelScale()));
+            const ipr::Image rgb = Geometry::warpRgb(ipr::withoutAlpha(source.linearRgba), m_settings.geometry,
+                                                     RenderChain::geometryQuality(previewPixelScale()));
             target.source = Retouch::suggestSource(rgb, target);
         }
     }
@@ -2040,7 +2040,7 @@ void ImageEditor::turnGeometry()
 {
     if (m_original.isNull()) return;
     Geometry::Settings next = m_settings.geometry;
-    Geometry::turn(next, ipr::fromCv(m_original.linearRgba.size()));
+    Geometry::turn(next, m_original.linearRgba.size());
     commitGeometry(next);
 }
 
@@ -2048,7 +2048,7 @@ void ImageEditor::mirrorGeometry(bool horizontal)
 {
     if (m_original.isNull()) return;
     Geometry::Settings next = m_settings.geometry;
-    Geometry::mirror(next, horizontal, ipr::fromCv(m_original.linearRgba.size()));
+    Geometry::mirror(next, horizontal, m_original.linearRgba.size());
     commitGeometry(next);
 }
 
@@ -2056,7 +2056,7 @@ void ImageEditor::setGeometryCrop(double x, double y, double width, double heigh
 {
     if (m_original.isNull()) return;
     Geometry::Settings next = m_settings.geometry;
-    Geometry::setCrop(next, ipr::fromCv(m_original.linearRgba.size()), x, y, width, height);
+    Geometry::setCrop(next, m_original.linearRgba.size(), x, y, width, height);
     commitGeometry(next);
 }
 
@@ -2064,7 +2064,7 @@ void ImageEditor::setGeometryCropRatio(double ratio)
 {
     if (m_original.isNull()) return;
     Geometry::Settings next = m_settings.geometry;
-    Geometry::setCropRatio(next, ipr::fromCv(m_original.linearRgba.size()), ratio);
+    Geometry::setCropRatio(next, m_original.linearRgba.size(), ratio);
     commitGeometry(next);
 }
 
@@ -2096,7 +2096,7 @@ void ImageEditor::proposeStraightening(const QString &mode)
         return;
     }
     const Straightening::Proposal proposal = Straightening::propose(
-        Straightening::linesOf(source.linearRgba), ipr::fromCv(source.linearRgba.size()), m_settings.geometry, chosen);
+        Straightening::linesOf(source.linearRgba), source.linearRgba.size(), m_settings.geometry, chosen);
     switch (proposal.refusal) {
     case Straightening::Refusal::None:
         break;
@@ -2161,7 +2161,8 @@ void ImageEditor::exportImage(const QUrl &target, const QString &format, int qua
         return;
     }
 
-    const ColorPipeline::WorkingImage source = m_original;
+    // Shared with the task, read only: std::function copies what it captures.
+    const auto source = std::make_shared<const ColorPipeline::WorkingImage>(ColorPipeline::sharedCopy(m_original));
     const Settings settings = m_settings;
     const QString fileName = targetPath;
     // Never export a restored proxy: rebuild the full master with this recipe.
@@ -2177,17 +2178,18 @@ void ImageEditor::exportImage(const QUrl &target, const QString &format, int qua
          options](Tasks::Context &) {
             ImageCacheController *controller = &resources->cache;
             const quint64 peak = rebuild ? SystemMemory::estimateDecodePeak(sourceFile)
-                                         : SystemMemory::estimateProcessingPeak(source.linearRgba.total());
-            const auto admission = controller->acquire({}, peak, false).result();
+                                         : SystemMemory::estimateProcessingPeak(
+                                               quint64(source->linearRgba.width()) * quint64(source->linearRgba.height()));
+            const auto admission = controller->acquire({}, peak, false).takeResult();
             if (!admission.reservation) return ExportResult{false, admission.error};
             const auto release = qScopeGuard([&] { controller->release(admission.reservation); });
             if (!rebuild)
-                return writeImage(source, settings, fileName, format, quality);
+                return writeImage(*source, settings, fileName, format, quality);
             auto master = loadFromDisk(sourceFile, settings.automaticWhiteBalance, options);
             if (master.image.isNull())
                 return ExportResult{false, tr("Échec de la reconstruction pleine résolution : %1").arg(master.error)};
             // Same tone weights as the preview the user validated.
-            master.image.toneStatistics = source.toneStatistics;
+            master.image.toneStatistics = source->toneStatistics;
             return writeImage(master.image, settings, fileName, format, quality);
         }).future);
 }
@@ -2213,7 +2215,7 @@ double ImageEditor::previewPixelScale() const
 {
     const ColorPipeline::WorkingImage &source = previewSource();
     const int fullExtent = std::max(m_fullSize.width(), m_fullSize.height());
-    const int sourceExtent = std::max(source.linearRgba.cols, source.linearRgba.rows);
+    const int sourceExtent = std::max(source.linearRgba.width(), source.linearRgba.height());
     return fullExtent > 0 && sourceExtent > 0 ? std::min(1.0, double(sourceExtent) / double(fullExtent)) : 1.0;
 }
 
@@ -2296,10 +2298,29 @@ DecodedImageCache::Entry ImageEditor::retainedEntry(const ColorPipeline::Working
     std::shared_ptr<RawDecoder::DcpSource> dcpSource, QSize fullSize, bool imageIsProxy)
 {
     const QString digest = image.dcpContext ? resourceDigest(image.dcpContext->profilePath) : QString();
-    const bool proxyIsMaster = proxy.linearRgba.datastart == image.linearRgba.datastart;
+    const bool proxyIsMaster = proxy.linearRgba.block() == image.linearRgba.block();
     if (proxyIsMaster && !imageIsProxy)
-        return {image, proxy, metadata, std::move(dcpSource), digest, fullSize, false};
-    return {proxy, proxy, metadata, nullptr, digest, fullSize, true};
+        return {ColorPipeline::sharedCopy(image), ColorPipeline::sharedCopy(proxy), metadata, std::move(dcpSource), digest,
+                fullSize, false};
+    return {ColorPipeline::sharedCopy(proxy), ColorPipeline::sharedCopy(proxy), metadata, nullptr, digest, fullSize, true};
+}
+
+ImageEditor::LoadResult ImageEditor::sharedCopy(const LoadResult &loaded)
+{
+    LoadResult copy;
+    copy.image = ColorPipeline::sharedCopy(loaded.image);
+    copy.metadata = loaded.metadata;
+    copy.dcpSource = loaded.dcpSource;
+    copy.provenance = loaded.provenance;
+    copy.capabilities = loaded.capabilities;
+    copy.warnings = loaded.warnings;
+    copy.error = loaded.error;
+    copy.editProxy = ColorPipeline::sharedCopy(loaded.editProxy);
+    copy.cacheKey = loaded.cacheKey;
+    copy.memoryPressure = loaded.memoryPressure;
+    copy.fullSize = loaded.fullSize;
+    copy.proxyOnly = loaded.proxyOnly;
+    return copy;
 }
 
 DecodedImageCache::Entry ImageEditor::retainedCurrentEntry() const
@@ -2323,23 +2344,23 @@ ColorPipeline::WorkingImage ImageEditor::buildEditProxy(
 
     constexpr int kEditProxyMaxDimension = 2048;
     const int longestSide =
-        std::max(source.linearRgba.cols, source.linearRgba.rows);
+        std::max(source.linearRgba.width(), source.linearRgba.height());
     if (longestSide <= kEditProxyMaxDimension)
-        return source; // Shallow cv::Mat copy: no extra pixel data is allocated.
+        return ColorPipeline::sharedCopy(source); // The same pixels, shared: nothing is allocated.
 
     const double scale =
         static_cast<double>(kEditProxyMaxDimension) / static_cast<double>(longestSide);
     const ipr::Size proxySize(
-        std::max(1, static_cast<int>(std::lround(source.linearRgba.cols * scale))),
-        std::max(1, static_cast<int>(std::lround(source.linearRgba.rows * scale))));
+        std::max(1, static_cast<int>(std::lround(source.linearRgba.width() * scale))),
+        std::max(1, static_cast<int>(std::lround(source.linearRgba.height() * scale))));
 
     ColorPipeline::WorkingImage proxy;
     proxy.linearRgba = ipr::resized(source.linearRgba, proxySize, ipr::Interpolation::Area);
     // Area averaging rounds alpha slightly above 1; a proxy restored from the
     // cache is revalidated as a master, which requires alpha within [0, 1].
-    for (int y = 0; y < proxy.linearRgba.rows; ++y) {
-        auto *row = proxy.linearRgba.ptr<ipr::Vec4f>(y);
-        for (int x = 0; x < proxy.linearRgba.cols; ++x)
+    for (int y = 0; y < proxy.linearRgba.height(); ++y) {
+        auto *row = proxy.linearRgba.mutableRow<ipr::Vec4f>(y);
+        for (int x = 0; x < proxy.linearRgba.width(); ++x)
             row[x][3] = std::clamp(row[x][3], 0.f, 1.f);
     }
     proxy.colorSpace = source.colorSpace;
@@ -2526,11 +2547,11 @@ void ImageEditor::beginLoad(const QString &fileName, const QString &extension,
             ImageCacheController *controller = &resources->cache;
             if (transfer && prefetchFuture.isStarted()) {
                 prefetchFuture.waitForFinished();
-                auto ready = *transfer;
+                auto ready = sharedCopy(*transfer);
                 if (!cancel->load() && !ready.image.isNull() && ready.cacheKey == key) return ready;
             }
             const auto peak = SystemMemory::estimateDecodePeak(fileName);
-            auto admission = controller->acquire(key, peak, false, cancel).result();
+            auto admission = controller->acquire(key, peak, false, cancel).takeResult();
             if (admission.cached) {
                 auto &cached = *admission.cached;
                 if (cacheAssetsUnchanged(cached)) {
@@ -2542,7 +2563,7 @@ void ImageEditor::beginLoad(const QString &fileName, const QString &extension,
                     return result;
                 }
                 admission.cached.reset();
-                admission = controller->acquire({}, peak, false, cancel).result();
+                admission = controller->acquire({}, peak, false, cancel).takeResult();
             }
             if (!admission.reservation || cancel->load()) {
                 controller->release(admission.reservation);
@@ -2632,7 +2653,7 @@ void ImageEditor::applyLoadedImage(LoadResult loaded)
     m_restorePreview = m_restoreOriginal = QImage();
     m_masterIsProxy = loaded.proxyOnly;
     m_fullSize = loaded.proxyOnly ? loaded.fullSize
-        : QSize(loaded.image.linearRgba.cols, loaded.image.linearRgba.rows);
+        : QSize(loaded.image.linearRgba.width(), loaded.image.linearRgba.height());
     m_original = std::move(loaded.image);
     m_editProxy = std::move(loaded.editProxy);
     m_renderStageCache.clear();
@@ -2699,7 +2720,7 @@ void ImageEditor::releaseCurrentImage()
     }
 
     // release() drops this owner's reference immediately. It does not clone
-    // pixels and is safe while background workers retain their own cv::Mat.
+    // pixels and is safe while background workers retain their own ipr::Image.
     m_original = {};
     m_editProxy = {};
     m_renderStageCache.clear();
@@ -2779,7 +2800,7 @@ void ImageEditor::startRender()
     // Use the capped-resolution edit proxy for the interactive preview (see
     // buildEditProxy()); m_original is reserved for exportImage()/writeImage()
     // so exports are never affected by this optimization.
-    const ColorPipeline::WorkingImage sourceCopy = previewSource();
+    const auto sourceCopy = std::make_shared<const ColorPipeline::WorkingImage>(ColorPipeline::sharedCopy(previewSource()));
     const double pixelScale = previewPixelScale();
     const Settings settings = m_settings;
     // A point removed or replaced since the overlay was asked shows nothing.
@@ -2796,10 +2817,11 @@ void ImageEditor::startRender()
         [sourceCopy, settings, includeOriginal, pixelScale, resources = m_taskResources, overlay,
          maskOverlay = m_localMaskOverlay, retouchOverlay = m_retouchOverlay, wholeCanvas](Tasks::Context &) {
             ImageCacheController *controller = &resources->cache;
-            const auto admission = controller->acquire({}, SystemMemory::estimateProcessingPeak(sourceCopy.linearRgba.total()), false).result();
+            const auto admission = controller->acquire({}, SystemMemory::estimateProcessingPeak(
+                quint64(sourceCopy->linearRgba.width()) * quint64(sourceCopy->linearRgba.height())), false).takeResult();
             if (!admission.reservation) { RenderChain::Preview result; result.error = admission.error; return result; }
             const auto release = qScopeGuard([&] { controller->release(admission.reservation); });
-            return RenderChain::preview(sourceCopy, settings, includeOriginal, pixelScale, &resources->stages, overlay, maskOverlay, wholeCanvas, retouchOverlay);
+            return RenderChain::preview(*sourceCopy, settings, includeOriginal, pixelScale, &resources->stages, overlay, maskOverlay, wholeCanvas, retouchOverlay);
         }).future);
 }
 
@@ -2903,10 +2925,10 @@ void ImageEditor::startPrefetch()
         const auto peak = SystemMemory::estimateDecodePeak(file);
         // Do not spend CPU on an image unlikely to fit the retention cap.
         if (peak / 2 > controller->budgetBytes()) return result;
-        auto admission = controller->acquire(key, peak, true).result();
+        auto admission = controller->acquire(key, peak, true).takeResult();
         if (admission.cached && !cacheAssetsUnchanged(*admission.cached)) {
             admission.cached.reset();
-            admission = controller->acquire({}, peak, true).result();
+            admission = controller->acquire({}, peak, true).takeResult();
         }
         if (admission.cached) {
             auto &entry = *admission.cached;
@@ -2914,7 +2936,7 @@ void ImageEditor::startPrefetch()
             result.metadata = std::move(entry.metadata); result.dcpSource = std::move(entry.dcpSource);
             result.fullSize = entry.fullSize; result.proxyOnly = entry.proxyOnly;
             result.cacheKey = key;
-            *transfer = result;
+            *transfer = sharedCopy(result);
             return result;
         }
         if (!admission.reservation) return result;
@@ -2925,7 +2947,7 @@ void ImageEditor::startPrefetch()
         result = loadFromDisk(file, automaticWB, options);
         if (cancel->load()) return LoadResult{};
         result.cacheKey = key;
-        *transfer = result;
+        *transfer = sharedCopy(result);
         return result;
     }).future);
 }

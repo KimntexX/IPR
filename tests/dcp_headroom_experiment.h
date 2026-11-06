@@ -93,8 +93,7 @@ QJsonObject runHeadroomExperiment(const cv::Mat &camera,
     const auto currentGamut=[](const cv::Mat &source) {
         auto mapped=ColorPipeline::mapToSrgbGamut(working(source));
         if(mapped.isNull())throw std::runtime_error("Study gamut failed");
-        std::vector<cv::Mat> parts;cv::split(mapped.linearRgba,parts);parts.resize(3);
-        cv::Mat rgb;cv::merge(parts,rgb);return rgb;
+        return ipr::asMat(ipr::withoutAlpha(mapped.linearRgba)).clone();
     };
     const auto baseline=currentGamut(direct);
     const auto gated=[&](const cv::Mat &source) {

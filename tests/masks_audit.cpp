@@ -1,9 +1,10 @@
 // Numeric audit of the masks: their place at every resolution, and what they cost per
 // render. Works on charts in memory, on no photo. Tolerances are fixed here, before the run.
 #include "LocalAdjustments.h"
-#include "OpenCvBridge.h"
+#include "image_testing.h"
+#include "Resize.h"
+#include "Pixels.h"
 
-#include <opencv2/imgproc.hpp>
 
 #include <QCoreApplication>
 #include <QDateTime>
@@ -84,28 +85,23 @@ double crossing(const std::vector<float> &profile, float level)
     return -1.0;
 }
 
-std::vector<float> column(const cv::Mat &map, int x)
+std::vector<float> column(const ipr::Image &map, int x)
 {
-    std::vector<float> values(size_t(map.rows));
-    for (int y = 0; y < map.rows; ++y)
-        values[size_t(y)] = map.at<float>(y, x);
+    std::vector<float> values(size_t(map.height()));
+    for (int y = 0; y < map.height(); ++y)
+        values[size_t(y)] = imagetest::at<float>(map, y, x);
     return values;
 }
 
-std::vector<float> rowOf(const cv::Mat &map, int y)
+std::vector<float> rowOf(const ipr::Image &map, int y)
 {
-    const float *row = map.ptr<float>(y);
-    return std::vector<float>(row, row + map.cols);
+    const float *row = map.row<float>(y);
+    return std::vector<float>(row, row + map.width());
 }
 
 double worstAcross(const Mask &mask)
 {
-    cv::Mat reduced, difference;
-    cv::resize(coverage(mask, full), reduced, ipr::toCv(preview), 0, 0, cv::INTER_AREA);
-    cv::absdiff(reduced, coverage(mask, preview), difference);
-    double worst = 0.0;
-    cv::minMaxLoc(difference, nullptr, &worst);
-    return worst;
+    return ipr::largestDifference(ipr::resized(coverage(mask, full), preview, ipr::Interpolation::Area), coverage(mask, preview));
 }
 
 double millisecondsOf(const Masks &masks, const ipr::Size &size)
@@ -140,9 +136,9 @@ int main(int argc, char **argv)
 
     // A gradient's middle is where its two ends say, at both resolutions.
     for (const ipr::Size &size : {preview, full}) {
-        const cv::Mat map = coverage(maskOf(linear({0.5f, 0.3f}, {0.5f, 0.7f})), size);
+        const ipr::Image map = coverage(maskOf(linear({0.5f, 0.3f}, {0.5f, 0.7f})), size);
         record(QStringLiteral("linear middle at %1 px").arg(size.width), std::abs(crossing(column(map, size.width / 2), 0.5f) - 0.5), placeTolerance);
-        const cv::Mat edge = coverage(maskOf(radial({0.5f, 0.5f}, 0.25f, 0.2f, 0.0f)), size);
+        const ipr::Image edge = coverage(maskOf(radial({0.5f, 0.5f}, 0.25f, 0.2f, 0.0f)), size);
         // From the centre outwards; the share is then of the half that was read.
         const std::vector<float> across = rowOf(edge, size.height / 2), down = column(edge, size.width / 2);
         const std::vector<float> right(across.begin() + size.width / 2, across.end()), below(down.begin() + size.height / 2, down.end());
@@ -185,8 +181,8 @@ int main(int argc, char **argv)
 
     const LocalValues::Maps maps = valueMaps(sixteen, preview);
     quint64 bytes = 0;
-    for (const cv::Mat &map : maps.values)
-        bytes += quint64(map.total() * map.elemSize());
+    for (const ipr::Image &map : maps.values)
+        bytes += quint64(map.width()) * quint64(map.height()) * map.pixelBytes();
 
     const auto gitOutput = [](const QStringList &arguments) {
         QProcess git;

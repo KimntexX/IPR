@@ -86,15 +86,15 @@ int main(int argc, char **argv)
                    {"source_height",full.height()},{"sha256",digest(data.fileName())},
                    {"domain","linear sRGB decoded from full production 16bit output, then INTER_AREA"}};
     }
-    const int rows=(image.linearRgba.rows+7)/8, cols=(image.linearRgba.cols+7)/8;
-    cv::Mat grid(rows,cols,CV_32FC4);
+    const int rows=(image.linearRgba.height()+7)/8, cols=(image.linearRgba.width()+7)/8;
+    ipr::Image grid=ipr::Image::create({cols,rows},ipr::Depth::F32,4);
     for (int y=0;y<rows;++y)
         for (int x=0;x<cols;++x)
-            ipr::at<ipr::Vec4f>(grid, y,x)=ipr::at<ipr::Vec4f>(image.linearRgba, 8*y,8*x);
-    image.linearRgba=grid;
-    std::vector<cv::Mat> channels;cv::split(grid,channels);channels.resize(3);
-    cv::Mat stageRgb;cv::merge(channels,stageRgb);
-    WorkingColor::transform(stageRgb, WorkingColor::toSrgb()); // Explicit diagnostic domain.
+            grid.mutableRow<ipr::Vec4f>(y)[x]=image.linearRgba.row<ipr::Vec4f>(8*y)[8*x];
+    ipr::Image stageImage=ipr::withoutAlpha(grid);
+    image.linearRgba=std::move(grid);
+    WorkingColor::transform(stageImage, WorkingColor::toSrgb()); // Explicit diagnostic domain.
+    const cv::Mat stageRgb=ipr::heldMat(stageImage);   // the study's measures read Mats
     if(!image.dcpContext)return 8;
     if(sourceOnly) {
         auto replay=sample3(ipr::asMat(image.dcpContext->cameraRgb));
@@ -170,7 +170,7 @@ int main(int argc, char **argv)
     double beforeY=0,currentY=0,candidateY=0;int negative=0,above=0,overY=0,cameraHigh=0;
     auto mapped=ColorPipeline::mapToSrgbGamut(image,&error);
     for(int y=0;y<rows;++y)for(int x=0;x<cols;++x) {
-        const auto v=ipr::at<ipr::Vec3f>(stageRgb, y,x);const auto m=ipr::at<ipr::Vec4f>(mapped.linearRgba, y,x);const auto c=ipr::at<ipr::Vec3f>(candidate, y,x);
+        const auto v=ipr::at<ipr::Vec3f>(stageRgb, y,x);const auto m=mapped.linearRgba.row<ipr::Vec4f>(y)[x];const auto c=ipr::at<ipr::Vec3f>(candidate, y,x);
         const double Y=.2126*v[0]+.7152*v[1]+.0722*v[2];beforeY+=Y;currentY+=.2126*m[0]+.7152*m[1]+.0722*m[2];candidateY+=.2126*c[0]+.7152*c[1]+.0722*c[2];
         negative+=std::min({v[0],v[1],v[2]})<0;above+=std::max({v[0],v[1],v[2]})>1;overY+=Y>=1;
         if(image.dcpContext) {
@@ -178,7 +178,7 @@ int main(int argc, char **argv)
             cameraHigh+=std::max({p[0],p[1],p[2]})>=65534.f/65535;
         }
     }
-    const double count=double(grid.total());
+    const double count=double(rows)*double(cols);
     const QJsonObject stageAudit{{"pre_gamut_mean_Y",beforeY/count},{"current_map_mean_Y",currentY/count},
         {"candidate_map_mean_Y",candidateY/count},{"negative_srgb_percent",100*negative/count},
         {"above_one_srgb_percent",100*above/count},{"luminance_above_one_percent",100*overY/count},

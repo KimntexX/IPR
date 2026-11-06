@@ -1,6 +1,6 @@
 #include "LineDetection.h"
 #include "Straightening.h"
-#include "OpenCvBridge.h"
+#include "Pixels.h"
 
 #include <algorithm>
 #include <cmath>
@@ -227,22 +227,24 @@ Straightening::Proposal proposed(const Buffer &image, Straightening::Mode mode, 
 void linesAreReadOnLinearImages()
 {
     check(Straightening::linesOf({}).empty(), "nothing to read");
-    check(Straightening::linesOf(cv::Mat(64, 64, CV_8UC3, cv::Scalar::all(0))).empty(), "another type");
-    check(Straightening::linesOf(cv::Mat(64, 64, CV_32FC1, cv::Scalar::all(0))).empty(), "one channel");
+    check(Straightening::linesOf(ipr::filled({64, 64}, ipr::Depth::U8, 3, 0)).empty(), "another type");
+    check(Straightening::linesOf(ipr::filled({64, 64}, ipr::Depth::F32, 1, 0)).empty(), "one channel");
 
-    for (const int type : {CV_32FC3, CV_32FC4}) {
-        cv::Mat image(300, 400, type, cv::Scalar::all(0.04));
-        image(ipr::toCv(ipr::Recti(0, 150, 400, 150))).setTo(cv::Scalar::all(0.5));
+    for (const int channels : {3, 4}) {
+        ipr::Image image = ipr::filled({400, 300}, ipr::Depth::F32, channels, 0.04);
+        ipr::Image lower = image.mutableView(ipr::Recti(0, 150, 400, 150));
+        ipr::fill(lower, 0.5);
         const auto lines = Straightening::linesOf(image);
         check(lines.size() == 1 && std::abs(angleOf(lines[0])) < 0.1, "a level edge");
     }
     // A part of an image has its own rows.
-    cv::Mat whole(400, 600, CV_32FC3, cv::Scalar::all(0.04));
-    whole(ipr::toCv(ipr::Recti(0, 200, 600, 200))).setTo(cv::Scalar::all(0.5));
-    const auto lines = Straightening::linesOf(whole(ipr::toCv(ipr::Recti(100, 50, 400, 300))));
+    ipr::Image whole = ipr::filled({600, 400}, ipr::Depth::F32, 3, 0.04);
+    ipr::Image lower = whole.mutableView(ipr::Recti(0, 200, 600, 200));
+    ipr::fill(lower, 0.5);
+    const auto lines = Straightening::linesOf(whole.view(ipr::Recti(100, 50, 400, 300)));
     check(lines.size() == 1 && std::abs(lines[0].y0 - 149.5f) < 0.3f, "at its place in the part");
     // Below the black, nothing breaks.
-    cv::Mat negative(100, 100, CV_32FC3, cv::Scalar::all(-0.1));
+    ipr::Image negative = ipr::filled({100, 100}, ipr::Depth::F32, 3, -0.1);
     check(Straightening::linesOf(negative).empty(), "signed values");
 }
 

@@ -1,5 +1,6 @@
 #include "ImageImporter.h"
-#include "OpenCvBridge.h"
+#include "image_testing.h"
+#include "Pixels.h"
 #include <QCoreApplication>
 #include <QFile>
 #include <QImageReader>
@@ -39,8 +40,8 @@ int main(int argc, char **argv)
             const auto expected=ColorPipeline::fromSourceImage(decoded, &error);
             const auto result=ImageImport::load(path);
             if (!check(!result.image.isNull() && result.error.isEmpty() &&
-                result.image.linearRgba.cols==7 && result.image.linearRgba.rows==3 &&
-                cv::norm(result.image.linearRgba, expected.linearRgba, cv::NORM_INF)==0 &&
+                result.image.linearRgba.width()==7 && result.image.linearRgba.height()==3 &&
+                ipr::largestDifference(result.image.linearRgba, expected.linearRgba)==0 &&
                 result.image.colorSpace==ColorPipeline::workingColorSpace(),
                 "raster adapter reaches common full-resolution master without extra transform")) return 1;
             if (!check(!result.capabilities.cameraDevelopment &&
@@ -69,7 +70,7 @@ int main(int argc, char **argv)
         if (!rotated.open(QIODevice::WriteOnly) || rotated.write(bytes)!=bytes.size()) return 1;
         rotated.close();
         const auto result=ImageImport::load(path);
-        if (!check(!result.image.isNull() && result.image.linearRgba.cols==3 && result.image.linearRgba.rows==7,
+        if (!check(!result.image.isNull() && result.image.linearRgba.width()==3 && result.image.linearRgba.height()==7,
                    "JPEG EXIF orientation is applied exactly at import")) return 1;
     }
     // A field answers only for its own name: the lens never stands for the camera.
@@ -96,8 +97,8 @@ int main(int argc, char **argv)
     if (!alpha.save(alphaPath)) return 1;
     const auto importedAlpha=ImageImport::load(alphaPath);
     if (!check(!importedAlpha.image.isNull() &&
-        std::abs(ipr::at<ipr::Vec4f>(importedAlpha.image.linearRgba, 0,0)[3]-17000.f/65535.f)<1e-6 &&
-        ipr::at<ipr::Vec4f>(importedAlpha.image.linearRgba, 0,0)[0]!=ipr::at<ipr::Vec4f>(importedAlpha.image.linearRgba, 0,1)[0],
+        std::abs(imagetest::at<ipr::Vec4f>(importedAlpha.image.linearRgba, 0,0)[3]-17000.f/65535.f)<1e-6 &&
+        imagetest::at<ipr::Vec4f>(importedAlpha.image.linearRgba, 0,0)[0]!=imagetest::at<ipr::Vec4f>(importedAlpha.image.linearRgba, 0,1)[0],
         "PNG alpha and adjacent 16bit values survive import")) return 1;
 
     QString registrationError;
@@ -106,7 +107,7 @@ int main(int argc, char **argv)
         ImageMetadata *metadata,QString *) {
         metadata->cameraMake="Synthetic";metadata->cameraModel="Synthetic camera";
         ColorPipeline::WorkingImage master;
-        master.linearRgba=cv::Mat(3,7,CV_32FC4,cv::Scalar(-.1f,.2f,1.4f,1.f)).clone();
+        master.linearRgba=imagetest::filledWith({7,3},{-.1f,.2f,1.4f,1.f});
         master.sourceProfile="Synthetic matrix, not a real camera characterization";
         return master;
     }, &registrationError, format)) return 1;
@@ -114,17 +115,22 @@ int main(int argc, char **argv)
     if (!check(!raw.image.isNull() && raw.capabilities.cameraDevelopment &&
         raw.provenance.colorOrigin==ImageImport::ColorOrigin::DecoderMatrix &&
         raw.provenance.decoderId=="synthetic-decoder" && raw.provenance.decoderVersion=="1" &&
-        ipr::at<ipr::Vec4f>(raw.image.linearRgba, 0,0)[0]<0 && ipr::at<ipr::Vec4f>(raw.image.linearRgba, 0,0)[2]>1,
+        imagetest::at<ipr::Vec4f>(raw.image.linearRgba, 0,0)[0]<0 && imagetest::at<ipr::Vec4f>(raw.image.linearRgba, 0,0)[2]>1,
         "future RAW adapter shares contract without clipping or fake DCP")) return 1;
-    auto cached=raw;
-    if (!check(ImageImport::complete(cached) && cached.image.linearRgba.data==raw.image.linearRgba.data,
+    ImageImport::Result cached;
+    cached.image=ColorPipeline::sharedCopy(raw.image);
+    cached.metadata=raw.metadata;
+    cached.dcpSource=raw.dcpSource;
+    if (!check(ImageImport::complete(cached) && cached.image.linearRgba.block()==raw.image.linearRgba.block(),
                "cache descriptors are rebuilt without pixel copying")) return 1;
     for (int failure=0; failure<5; ++failure) {
-        auto invalid=raw;invalid.image.linearRgba=raw.image.linearRgba.clone();
+        ImageImport::Result invalid;
+        invalid.image=ColorPipeline::sharedCopy(raw.image);invalid.metadata=raw.metadata;invalid.dcpSource=raw.dcpSource;
+        invalid.image.linearRgba=raw.image.linearRgba.clone();
         if (failure==0) invalid.image.colorSpace=QColorSpace(QColorSpace::SRgbLinear);
-        if (failure==1) ipr::at<ipr::Vec4f>(invalid.image.linearRgba, 0,0)[0]=std::numeric_limits<float>::quiet_NaN();
-        if (failure==2) ipr::at<ipr::Vec4f>(invalid.image.linearRgba, 0,0)[3]=1.01f;
-        if (failure==3) invalid.image.linearRgba=cv::Mat::zeros(2,2,CV_8UC4);
+        if (failure==1) imagetest::at<ipr::Vec4f>(invalid.image.linearRgba, 0,0)[0]=std::numeric_limits<float>::quiet_NaN();
+        if (failure==2) imagetest::at<ipr::Vec4f>(invalid.image.linearRgba, 0,0)[3]=1.01f;
+        if (failure==3) invalid.image.linearRgba=ipr::Image::zeros({2,2},ipr::Depth::U8,4);
         if (failure==4) invalid.error="Decoder reported a failure";
         if (!check(!ImageImport::complete(invalid) && invalid.image.isNull() && !invalid.dcpSource &&
                    !invalid.capabilities.cameraDevelopment && !invalid.error.isEmpty(),

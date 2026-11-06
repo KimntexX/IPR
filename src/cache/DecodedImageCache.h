@@ -4,15 +4,15 @@
 #include "ColorPipeline.h"
 #include "ImageMetadata.h"
 
-#include <QHash>
 #include <QString>
 
 #include <list>
 #include <optional>
+#include <unordered_map>
 namespace RawDecoder { struct DcpSource; }
 
-// Keeps decoded source images that are not currently being edited.  cv::Mat
-// copies are shallow, so retaining an entry never copies the pixel buffer.
+// Keeps decoded source images that are not currently being edited. What it gives
+// back shares the pixels it keeps, read only: retaining an entry never copies them.
 class DecodedImageCache final
 {
 public:
@@ -44,6 +44,8 @@ public:
     quint64 evictions() const { return m_evictions; }
 
     static quint64 entrySizeBytes(const Entry &entry);
+    // The same entry on the same pixels, shared read only.
+    static Entry sharedCopy(const Entry &entry);
 
 private:
     struct StoredEntry
@@ -53,14 +55,15 @@ private:
         std::list<QString>::iterator lruPosition;
     };
 
-    void touch(QHash<QString, StoredEntry>::iterator iterator);
+    using Entries = std::unordered_map<QString, StoredEntry>;
+    void touch(Entries::iterator iterator);
     void trim();
 
     quint64 m_budgetBytes;
     quint64 m_sizeBytes = 0;
     quint64 m_evictions = 0;
     std::list<QString> m_lru;
-    QHash<QString, StoredEntry> m_entries;
+    Entries m_entries;
 };
 
 #endif // IPR_CACHE_DECODEDIMAGECACHE_H

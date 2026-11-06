@@ -58,7 +58,7 @@ quint64 reserve(ImageCacheController &cache, quint64 bytes, Tasks::Context &cont
         }
         QThread::msleep(20);
     }
-    const ImageCacheController::Admission admission = waiting.result();
+    const ImageCacheController::Admission admission = waiting.takeResult();
     if (!admission.reservation && refusal)
         *refusal = tooLong ? StackSession::tr("Mémoire insuffisante pour le moment : fermez d'autres applications, puis recommencez.") : admission.error;
     return admission.reservation;

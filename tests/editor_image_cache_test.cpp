@@ -1,6 +1,7 @@
 #include "imageeditor.h"
+#include "image_testing.h"
 #include "imageprovider.h"
-#include "OpenCvBridge.h"
+#include "Image.h"
 #include <QCoreApplication>
 #include <QElapsedTimer>
 #include <QEventLoop>
@@ -46,13 +47,13 @@ int main(int argc, char **argv)
         // alpha above 1 (real 32 MP ratio 6959 -> 2048, smooth gradient).
         ColorPipeline::WorkingImage master;
         master.colorSpace = ColorPipeline::workingColorSpace();
-        master.linearRgba = cv::Mat(97, 6959, CV_32FC4);
-        for (int y = 0; y < master.linearRgba.rows; ++y)
-            for (int x = 0; x < master.linearRgba.cols; ++x)
-                ipr::at<ipr::Vec4f>(master.linearRgba, y, x) = {x / 6959.f, y / 97.f, .37f, 1.f};
+        master.linearRgba = ipr::Image::create({6959, 97}, ipr::Depth::F32, 4);
+        for (int y = 0; y < master.linearRgba.height(); ++y)
+            for (int x = 0; x < master.linearRgba.width(); ++x)
+                imagetest::at<ipr::Vec4f>(master.linearRgba, y, x) = {x / 6959.f, y / 97.f, .37f, 1.f};
         ImageImport::Result restored;
         restored.image = IprTestImageGenerator::proxy(master);
-        if (restored.image.linearRgba.cols != 2048 || !ImageImport::complete(restored)) {
+        if (restored.image.linearRgba.width() != 2048 || !ImageImport::complete(restored)) {
             std::cerr << "Edit proxy fails master validation: " << restored.error.toStdString() << '\n';
             return 1;
         }
@@ -80,7 +81,7 @@ int main(int argc, char **argv)
                 QThread::msleep(5);
             }
             ColorPipeline::WorkingImage image;
-            image.linearRgba = cv::Mat(80, 120, CV_32FC4, cv::Scalar(.2f, .3f, .4f, 1.f));
+            image.linearRgba = imagetest::filledWith({120, 80}, {.2f, .3f, .4f, 1.f});
             return image;
         }, &error, format)) return 2;
     ImageProvider provider;
@@ -163,7 +164,7 @@ int main(int argc, char **argv)
             if (file == z || file == w) QThread::msleep(600); // slow development
             if (file == w) return ColorPipeline::WorkingImage{};
             ColorPipeline::WorkingImage image;
-            image.linearRgba = cv::Mat(200, 3000, CV_32FC4, cv::Scalar(.2f, .3f, .4f, 1.f));
+            image.linearRgba = imagetest::filledWith({3000, 200}, {.2f, .3f, .4f, 1.f});
             return image;
         }, &error, big)) return 11;
     available.store(24ULL << 30); // Pressure from the previous scenario has ended.

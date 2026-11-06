@@ -3,7 +3,7 @@
 #include "WorkingColorSpace.h"
 #include "Parallel.h"
 
-#include <opencv2/core.hpp>
+#include "Image.h"
 
 #include <QMutex>
 #include <QMutexLocker>

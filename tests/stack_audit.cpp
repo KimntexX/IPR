@@ -631,10 +631,9 @@ int main(int argc, char **argv)
         const ColorPipeline::WorkingImage direct = CameraSignal::render(std::move(signal), referenceSource->workingContext->profilePath, content.renderOptions, &dngError);
         double worst = -1.0, mean = -1.0;
         if (!reopened.isNull() && !direct.isNull() && reopened.linearRgba.size() == direct.linearRgba.size()) {
-            cv::Mat difference;
-            cv::absdiff(reopened.linearRgba, direct.linearRgba, difference);
-            cv::minMaxLoc(difference.reshape(1), nullptr, &worst);
-            mean = cv::mean(difference)[0];
+            worst = ipr::largestDifference(reopened.linearRgba, direct.linearRgba);
+            mean = ipr::meanOf(ipr::mapped(reopened.linearRgba, direct.linearRgba,
+                                           [](float a, float b) { return std::abs(a - b); }))[0];
         }
         dngRoundTrip = QJsonObject{{QStringLiteral("written"), written},
                                    {QStringLiteral("reopened"), !reopened.isNull()},

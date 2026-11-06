@@ -41,7 +41,7 @@ struct Context
 // are not changed. Only the caller invokes cancellation; all workers are joined.
 int workerThreads();
 
-// Input: finite CV_32FC3, white 1, signed/extended range, with white balance
+// Input: finite F32 of three channels, white 1, signed/extended range, with white balance
 // ALREADY applied. Do not undo WB: both estimation and correction operate in
 // these balanced camera axes. Camera intensity is an
 // opponent-axis proxy, not photometric Rec.2020 luminance. Noise is measured per

@@ -3,7 +3,7 @@
 
 #include "Types.h"
 
-#include <opencv2/core.hpp>
+#include "Image.h"
 
 #include <optional>
 
@@ -63,18 +63,19 @@ std::optional<ipr::Point2d> toSource(const Settings &settings, const ipr::Size &
 // From the normalized displayed crop to the normalized canvas.
 ipr::Point2d viewToCanvas(const Settings &settings, const ipr::Point2d &point);
 
-// CV_32FC3. Beyond the source, the border repeats, so neighbourhood filters see no
-// false edge; the coverage (warpCoverage) makes these pixels transparent. Turns and
-// mirrors alone are exact copies. Without transformsPixels, returns the input.
-cv::Mat warpRgb(const cv::Mat &rgb, const Settings &settings, Quality quality);
-// CV_32FC1 in [0, 1]; zero beyond the source.
-cv::Mat warpCoverage(const cv::Mat &alpha, const Settings &settings, Quality quality);
-// CV_32FC4: straight alpha; a pixel of no coverage is transparent black.
-cv::Mat warpRgba(const cv::Mat &rgba, const Settings &settings, Quality quality);
-// Blackens the fully transparent pixels of a CV_32FC4 image in place.
-void clearTransparent(cv::Mat &rgba);
-// A view of the crop on a canvas-sized image, of any type; no copy.
-cv::Mat crop(const cv::Mat &canvasImage, const Settings &settings);
+// F32, three channels. Beyond the source, the border repeats, so neighbourhood filters see
+// no false edge; the coverage (warpCoverage) makes these pixels transparent. Turns and
+// mirrors alone are exact copies. Without transformsPixels, returns the input itself: the
+// image is taken by value, to move in, or to share for a caller that keeps it.
+ipr::Image warpRgb(ipr::Image rgb, const Settings &settings, Quality quality);
+// F32, one channel, in [0, 1]; zero beyond the source.
+ipr::Image warpCoverage(ipr::Image alpha, const Settings &settings, Quality quality);
+// F32, four channels: straight alpha; a pixel of no coverage is transparent black.
+ipr::Image warpRgba(ipr::Image rgba, const Settings &settings, Quality quality);
+// Blackens the fully transparent pixels of an RGBA image of floats in place.
+void clearTransparent(ipr::Image &rgba);
+// The crop of a canvas-sized image, of any type, as new pixels; the image itself without a crop.
+ipr::Image crop(ipr::Image canvasImage, const Settings &settings);
 
 // Commands, as the panel gives them; the crop follows the image.
 void turn(Settings &settings, const ipr::Size &source);         // a quarter turn, clockwise

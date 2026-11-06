@@ -186,12 +186,12 @@ bool complete(Result &result)
     result.warnings.clear();
     const auto &image = result.image;
     bool valid = !image.isNull() && image.colorSpace == ColorPipeline::workingColorSpace() &&
-        image.linearRgba.dims == 2 && image.linearRgba.type() == CV_32FC4 &&
+        image.linearRgba.depth() == ipr::Depth::F32 && image.linearRgba.channels() == 4 &&
         ipr::allFinite(image.linearRgba);
     if (valid) {
-        for (int y=0; y<image.linearRgba.rows && valid; ++y) {
-            const auto *row = image.linearRgba.ptr<ipr::Vec4f>(y);
-            for (int x=0; x<image.linearRgba.cols; ++x)
+        for (int y=0; y<image.linearRgba.height() && valid; ++y) {
+            const auto *row = image.linearRgba.row<ipr::Vec4f>(y);
+            for (int x=0; x<image.linearRgba.width(); ++x)
                 if (row[x][3] < 0.f || row[x][3] > 1.f) { valid=false; break; }
         }
     }
