@@ -7,7 +7,7 @@ namespace RawInput {
 
 bool valid(const Input &input)
 {
-    if (input.mosaic.empty() || input.mosaic.type() != CV_16UC1 || input.spatialBlack)
+    if (input.mosaic.empty() || input.mosaic.depth() != ipr::Depth::U16 || input.mosaic.channels() != 1 || input.spatialBlack)
         return false;
     std::array<int, 4> sites{};
     for (const auto &row : input.pattern)

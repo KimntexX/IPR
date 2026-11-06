@@ -57,13 +57,13 @@ void noPixelIsCopiedEitherWay()
 
 void everyDepthAndChannelCrosses()
 {
-    for (const int depth : {CV_8U, CV_16U, CV_32F, CV_64F})
+    for (const int depth : {CV_8U, CV_16U, CV_16S, CV_32S, CV_32F, CV_64F})
         for (int channels = 1; channels <= 4; ++channels) {
             const cv::Mat mat(3, 5, CV_MAKETYPE(depth, channels), cv::Scalar::all(1));
             const cv::Mat back = asMat(fromMat(mat));
             check(back.type() == mat.type() && back.data == mat.data, "the type crosses");
         }
-    throws<std::invalid_argument>([] { fromMat(cv::Mat(3, 3, CV_16SC1)); }, "a depth we do not have");
+    throws<std::invalid_argument>([] { fromMat(cv::Mat(3, 3, CV_8SC1)); }, "a depth we do not have");
     throws<std::invalid_argument>([] { fromMat(cv::Mat(3, 3, CV_8UC(5))); }, "too many channels");
     const int sizes[] = {2, 2, 2};
     throws<std::invalid_argument>([&] { fromMat(cv::Mat(3, sizes, CV_8UC1)); }, "three dimensions");
@@ -164,6 +164,41 @@ void smallValuesCross()
 
 } // namespace
 
+// A Mat made from an image keeps its pixels after the image goes, through copies, and lets them
+// go with the last Mat; the image is frozen by it. changeAsImage follows what the image became.
+void aHeldMatKeepsTheImageAlive()
+{
+    cv::Mat kept;
+    const unsigned char *pixels = nullptr;
+    {
+        Image image = Image::create({4, 3}, Depth::F32, 1);
+        for (int y = 0; y < 3; ++y)
+            for (int x = 0; x < 4; ++x)
+                image.mutableRow<float>(y)[x] = float(10 * y + x);
+        pixels = image.row<unsigned char>(0);
+        kept = heldMat(image);
+        check(image.frozen(), "the image is shared from then on");
+    }
+    check(kept.data == pixels && kept.at<float>(2, 3) == 23.0f, "the pixels outlive the image, not copied");
+    cv::Mat copy = kept;
+    kept.release();
+    check(copy.at<float>(1, 1) == 11.0f, "a copy of the Mat keeps them too");
+    cv::Mat bigger = copy;
+    bigger.create(5, 5, CV_32FC1);
+    check(bigger.data != pixels && copy.at<float>(1, 2) == 12.0f, "a new size takes OpenCV's own pixels");
+    copy.release();
+    check(heldMat(Image()).empty(), "nothing from nothing");
+
+    cv::Mat mat(2, 2, CV_32FC1, cv::Scalar(1.0f));
+    const uchar *own = mat.data;
+    changeAsImage(mat, [](Image &image) { image.mutableRow<float>(0)[0] = 5.0f; });
+    check(mat.data == own && mat.at<float>(0, 0) == 5.0f, "written in place, the same pixels");
+    changeAsImage(mat, [](Image &image) { image = filled({3, 1}, Depth::F32, 1, 2.0); });
+    check(mat.cols == 3 && mat.at<float>(0, 2) == 2.0f, "new pixels in their place");
+    changeAsImage(mat, [](Image &image) { image = Image(); });
+    check(mat.empty(), "emptied");
+}
+
 int main()
 {
     try {
@@ -176,6 +211,7 @@ int main()
         aPartOfAMatKeepsItsLayout();
         anAlgorithmGivesTheSameThroughTheBridge();
         smallValuesCross();
+        aHeldMatKeepsTheImageAlive();
     } catch (const std::exception &error) {
         std::cerr << "FAILED: " << error.what() << '\n';
         return 1;

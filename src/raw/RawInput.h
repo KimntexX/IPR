@@ -1,10 +1,10 @@
 #ifndef IPR_RAW_RAWINPUT_H
 #define IPR_RAW_RAWINPUT_H
 
+#include "Image.h"
 #include "Types.h"
 
 #include <QString>
-#include <opencv2/core.hpp>
 
 #include <array>
 
@@ -21,7 +21,7 @@ enum Colour { Red = 0, Green = 1, Blue = 2, Green2 = 3 };
 
 struct Input
 {
-    cv::Mat mosaic;                                // CV_16UC1, visible area only, sensor counts (owned copy)
+    ipr::Image mosaic;                             // U16, one channel, visible area only, sensor counts (owned copy)
     ipr::Point2i origin;                              // the visible area's top-left corner in the sensor frame (margins)
     std::array<std::array<int, 2>, 2> pattern{};  // Colour of each site of the 2x2 cell, row then column
     std::array<double, 4> black{};                 // per Colour, counts (IPR's optical black reading applied)

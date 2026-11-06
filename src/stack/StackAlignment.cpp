@@ -427,8 +427,8 @@ Result estimate(const Pyramid &reference, const Pyramid &frame, const Options &o
     const int coarsest = int(reference.size()) - 1;
 
     // A hand's shift can exceed the block search; the coarsest level recovers it whole.
-    const cv::Mat window = ipr::hannWindow(ipr::fromCv(reference[size_t(coarsest)].size()));
-    const ipr::Point2d shift = ipr::phaseCorrelation(reference[size_t(coarsest)], frame[size_t(coarsest)], window);
+    const ipr::Image window = ipr::hannWindow(ipr::fromCv(reference[size_t(coarsest)].size()));
+    const ipr::Point2d shift = ipr::phaseCorrelation(ipr::fromMat(reference[size_t(coarsest)]), ipr::fromMat(frame[size_t(coarsest)]), window);
     ipr::Matrix33d guess(1, 0, std::isfinite(shift.x) ? shift.x : 0.0,
                       0, 1, std::isfinite(shift.y) ? shift.y : 0.0,
                       0, 0, 1);

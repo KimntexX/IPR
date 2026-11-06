@@ -168,16 +168,16 @@ private:
         try {
             // LibRaw's image: four 16-bit channels per pixel, only the site's colour set.
             const int width = d.sizes.iwidth, height = d.sizes.iheight;
-            cv::Mat mosaic(height, width, CV_32FC1), rgb;
+            ipr::Image mosaic = ipr::Image::create({width, height}, ipr::Depth::F32, 1), rgb;
             for (int y = 0; y < height; ++y) {
-                float *row = mosaic.ptr<float>(y);
+                float *row = mosaic.mutableRow<float>(y);
                 for (int x = 0; x < width; ++x)
                     row[x] = d.image[size_t(y) * size_t(width) + size_t(x)][pattern[size_t(y & 1)][size_t(x & 1)]] / 65535.f;
             }
             self->m_failed = !Demosaic::interpolate(mosaic, pattern, self->m_median, Demosaic::Range::NonNegative, rgb, nullptr, self->m_cancelled);
             if (!self->m_failed)
                 for (int y = 0; y < height; ++y) {
-                    const auto *row = rgb.ptr<ipr::Vec3f>(y);
+                    const auto *row = rgb.row<ipr::Vec3f>(y);
                     for (int x = 0; x < width; ++x)
                         for (int c = 0; c < 3; ++c)
                             d.image[size_t(y) * size_t(width) + size_t(x)][c] =
@@ -693,7 +693,8 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
                 try {
                     developed = RawDevelopment::develop(input, development);
                     if (!developed.cameraRgb.empty()) {
-                        decoded = RawDevelopment::orient(std::move(developed.cameraRgb), input.orientation);
+                        // A copy while the profiles take a Mat (roadmap).
+                        decoded = ipr::asMat(RawDevelopment::orient(std::move(developed.cameraRgb), input.orientation)).clone();
                         if (profiles.dcpPath.isEmpty())
                             cameraToSrgb(decoded, input.cameraToSrgb, !options.signedDevelopment);
                     }

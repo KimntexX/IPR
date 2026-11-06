@@ -386,6 +386,37 @@ Extremes extremesOf(const Image &image)
     return result;
 }
 
+namespace {
+
+template <typename T>
+double largestDifferenceOf(const Image &a, const Image &b)
+{
+    const size_t values = size_t(a.width()) * size_t(a.channels());
+    double largest = 0.0;
+    for (int y = 0; y < a.height(); ++y) {
+        const T *x = a.row<T>(y), *z = b.row<T>(y);
+        for (size_t v = 0; v < values; ++v)
+            largest = std::max(largest, std::abs(double(x[v]) - double(z[v])));
+    }
+    return largest;
+}
+
+} // namespace
+
+double largestDifference(const Image &a, const Image &b)
+{
+    sameShape(a, b);
+    switch (a.depth()) {
+    case Depth::U8: return largestDifferenceOf<std::uint8_t>(a, b);
+    case Depth::U16: return largestDifferenceOf<std::uint16_t>(a, b);
+    case Depth::S16: return largestDifferenceOf<std::int16_t>(a, b);
+    case Depth::S32: return largestDifferenceOf<std::int32_t>(a, b);
+    case Depth::F32: return largestDifferenceOf<float>(a, b);
+    case Depth::F64: return largestDifferenceOf<double>(a, b);
+    }
+    return 0.0;
+}
+
 std::vector<double> meanOf(const Image &image)
 {
     std::vector<double> mean, deviation;

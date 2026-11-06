@@ -29,6 +29,23 @@ Image fromMutableMat(cv::Mat &mat);
 // image comes out as a const Mat, and asMutableMat refuses it (std::logic_error).
 const cv::Mat asMat(const Image &image);
 cv::Mat asMutableMat(Image &image);
+// A Mat that keeps the image's pixels alive as long as it or a copy of it lives, without copying
+// them: the image is shared (frozen) from then on, and the Mat is for reading. For the modules not
+// yet on the image layer, where a Mat outlives the image it came from.
+cv::Mat heldMat(const Image &image);
+// f changes the Mat's pixels as an image. When f puts new pixels in their place, the Mat holds
+// those; when it empties the image, the Mat is emptied too.
+template <typename F>
+void changeAsImage(cv::Mat &mat, F f)
+{
+    Image image = fromMutableMat(mat);
+    const unsigned char *before = image.empty() ? nullptr : image.row<unsigned char>(0);
+    f(image);
+    if (image.empty())
+        mat.release();
+    else if (image.row<unsigned char>(0) != before)
+        mat = heldMat(image);
+}
 
 // A new Mat, blurred by this sigma in pixels. CV_32F of any channel count: throws
 // std::invalid_argument on another depth. While the modules still hold Mats.
@@ -91,7 +108,6 @@ std::vector<double> meanOf(const cv::Mat &mat);
 void meanAndDeviationOf(const cv::Mat &mat, std::vector<double> &mean, std::vector<double> &deviation);
 // Analysis as Analysis.h gives it, on Mats of doubles for the linear algebra.
 cv::Mat matchedTemplate(const cv::Mat &image, const cv::Mat &templ);
-cv::Mat hannWindow(Size size);
 Point2d phaseCorrelation(const cv::Mat &a, const cv::Mat &b, const cv::Mat &window);
 bool symmetricEigen(const cv::Mat &matrix, cv::Mat &values, cv::Mat &vectors);
 bool solveCholesky(const cv::Mat &a, const cv::Mat &b, cv::Mat &x);

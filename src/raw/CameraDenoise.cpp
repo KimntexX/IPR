@@ -1,6 +1,7 @@
 #include "CameraDenoise.h"
 
 #include "OpenCvBridge.h"
+#include "Pixels.h"
 
 #include <algorithm>
 #include <array>
@@ -40,8 +41,8 @@ using Energy = ipr::Vec4f; // Intensity and joint energies, then their expectati
 
 struct Pyramid
 {
-    std::array<cv::Mat, Levels> detail;
-    cv::Mat signal; // Smoothed intensity guide; never the noisy detail itself.
+    std::array<ipr::Image, Levels> detail;
+    ipr::Image signal; // Smoothed intensity guide; never the noisy detail itself.
 };
 
 int reflect(int x, int length)
@@ -66,48 +67,53 @@ ipr::Vec3f opponent(const ipr::Vec3f &x)
 }
 
 // All filtering loops are local to this translation unit; no nested OpenCV pool.
-bool blur(const cv::Mat &source, cv::Mat &output, int step,
+bool blur(const ipr::Image &source, ipr::Image &output, int step,
           const std::function<bool()> &stop)
 {
-    cv::Mat horizontal(source.size(), CV_32FC3);
-    output.create(source.size(), CV_32FC3);
-    for (int y = 0; y < source.rows; ++y) {
+    const int width = source.width(), height = source.height();
+    ipr::Image horizontal = ipr::Image::create(source.size(), ipr::Depth::F32, 3);
+    output = ipr::Image::create(source.size(), ipr::Depth::F32, 3);
+    for (int y = 0; y < height; ++y) {
         if ((y & 15) == 0 && stop()) return false;
-        const auto *in = source.ptr<ipr::Vec3f>(y);
-        auto *out = horizontal.ptr<ipr::Vec3f>(y);
-        for (int x = 0; x < source.cols; ++x) {
+        const auto *in = source.row<ipr::Vec3f>(y);
+        auto *out = horizontal.mutableRow<ipr::Vec3f>(y);
+        for (int x = 0; x < width; ++x) {
             ipr::Vec3f value{};
-            for (int k = -2; k <= 2; ++k) value += in[reflect(x + k * step, source.cols)] * Kernel[k + 2];
+            for (int k = -2; k <= 2; ++k) value += in[reflect(x + k * step, width)] * Kernel[k + 2];
             out[x] = value;
         }
     }
-    for (int y = 0; y < source.rows; ++y) {
+    const ipr::PixelReader<ipr::Vec3f> across(horizontal);
+    for (int y = 0; y < height; ++y) {
         if ((y & 15) == 0 && stop()) return false;
-        auto *out = output.ptr<ipr::Vec3f>(y);
-        for (int x = 0; x < source.cols; ++x) {
+        auto *out = output.mutableRow<ipr::Vec3f>(y);
+        for (int x = 0; x < width; ++x) {
             ipr::Vec3f value{};
-            for (int k = -2; k <= 2; ++k) value += horizontal.ptr<ipr::Vec3f>(reflect(y + k * step, source.rows))[x] * Kernel[k + 2];
+            for (int k = -2; k <= 2; ++k) value += across(reflect(y + k * step, height), x) * Kernel[k + 2];
             out[x] = value;
         }
     }
     return true;
 }
 
-bool pyramid(cv::Mat current, Pyramid &out, const std::array<int, Levels> &steps,
+bool pyramid(ipr::Image first, Pyramid &out, const std::array<int, Levels> &steps,
              const std::function<bool()> &stop)
 {
+    ipr::Image current = std::move(first);
     for (int level = 0; level < Levels; ++level) {
-        cv::Mat base;
+        ipr::Image base;
         if (!blur(current, base, steps[std::size_t(level)], stop)) return false;
-        if (level == 0) out.signal.create(base.size(), CV_32F);
-        auto &detail = out.detail[std::size_t(level)]; detail.create(current.size(), CV_32FC3);
-        for (int y = 0; y < current.rows; ++y) {
+        if (level == 0) out.signal = ipr::Image::create(base.size(), ipr::Depth::F32, 1);
+        auto &detail = out.detail[std::size_t(level)];
+        detail = ipr::Image::create(current.size(), ipr::Depth::F32, 3);
+        for (int y = 0; y < current.height(); ++y) {
             if ((y & 15) == 0 && stop()) return false;
-            const auto *a = current.ptr<ipr::Vec3f>(y), *b = base.ptr<ipr::Vec3f>(y);
-            auto *d = detail.ptr<ipr::Vec3f>(y);
-            for (int x = 0; x < current.cols; ++x) {
+            const auto *a = current.row<ipr::Vec3f>(y), *b = base.row<ipr::Vec3f>(y);
+            auto *d = detail.mutableRow<ipr::Vec3f>(y);
+            float *signal = level == 0 ? out.signal.mutableRow<float>(y) : nullptr;
+            for (int x = 0; x < current.width(); ++x) {
                 d[x] = a[x] - b[x];
-                if (level == 0) out.signal.at<float>(y,x) = b[x][0];
+                if (signal) signal[x] = b[x][0];
             }
         }
         current = std::move(base);
@@ -115,14 +121,14 @@ bool pyramid(cv::Mat current, Pyramid &out, const std::array<int, Levels> &steps
     return true;
 }
 
-cv::Mat patch(const cv::Mat &source, const ipr::Recti &core, int margin)
+ipr::Image patch(const ipr::Image &source, const ipr::Recti &core, int margin)
 {
-    cv::Mat out(core.height + 2 * margin, core.width + 2 * margin, CV_32FC3);
-    for (int y = 0; y < out.rows; ++y) {
-        const auto *in = source.ptr<ipr::Vec3f>(reflect(core.y + y - margin, source.rows));
-        auto *row = out.ptr<ipr::Vec3f>(y);
-        for (int x = 0; x < out.cols; ++x)
-            row[x] = opponent(in[reflect(core.x + x - margin, source.cols)]);
+    ipr::Image out = ipr::Image::create({core.width + 2 * margin, core.height + 2 * margin}, ipr::Depth::F32, 3);
+    for (int y = 0; y < out.height(); ++y) {
+        const auto *in = source.row<ipr::Vec3f>(reflect(core.y + y - margin, source.height()));
+        auto *row = out.mutableRow<ipr::Vec3f>(y);
+        for (int x = 0; x < out.width(); ++x)
+            row[x] = opponent(in[reflect(core.x + x - margin, source.width())]);
     }
     return out;
 }
@@ -236,23 +242,23 @@ bool floorDarkCovariance(Knot &dark, const Knot &pooled)
     return changed;
 }
 
-bool estimate(const cv::Mat &source,
+bool estimate(const ipr::Image &source,
               const std::array<int, Levels> &steps, int margin,
               std::array<NoiseCurve, Levels> &models, const std::function<bool()> &stop,
               const std::function<void(const NoiseModelSummary &)> &observer)
 {
     std::array<std::vector<PatchNoise>, Levels> patches;
     std::array<std::vector<PatchNoise>, Levels> allPatches;
-    const int width = std::min(64, source.cols), height = std::min(64, source.rows);
+    const int width = std::min(64, source.width()), height = std::min(64, source.height());
     std::set<std::pair<int, int>> origins;
     for (int y = 0; y < 5; ++y) for (int x = 0; x < 5; ++x)
-        origins.emplace((source.cols - width) * x / 4, (source.rows - height) * y / 4);
+        origins.emplace((source.width() - width) * x / 4, (source.height() - height) * y / 4);
     for (auto origin : origins) {
         if (stop()) return false;
-        const auto input=patch(source,{origin.first,origin.second,width,height},margin);
+        ipr::Image input=patch(source,{origin.first,origin.second,width,height},margin);
         std::vector<float> signals; std::array<std::vector<float>,4> quarters;
         for(int y=0;y<height;++y)for(int x=0;x<width;++x) {
-            const float v=ipr::at<ipr::Vec3f>(input, margin+y,margin+x)[0]; signals.push_back(v);
+            const float v=input.row<ipr::Vec3f>(margin+y)[margin+x][0]; signals.push_back(v);
             const int quadrant=(x>=width/2)+2*(y>=height/2);
             quarters[std::size_t(quadrant)].push_back(v);
         }
@@ -260,7 +266,7 @@ bool estimate(const cv::Mat &source,
         float low=signal,high=signal;
         for(const auto &q:quarters)if(!q.empty()){const float v=median(q);low=std::min(low,v);high=std::max(high,v);}
         Pyramid p;
-        if (!pyramid(input, p, steps, stop)) return false;
+        if (!pyramid(std::move(input), p, steps, stop)) return false;
         bool flat=true; float signalUncertainty=0;
         for (int level = 0; level < Levels; ++level) {
             const auto &d = p.detail[std::size_t(level)];
@@ -268,7 +274,7 @@ bool estimate(const cv::Mat &source,
             PatchNoise item; item.signal=signal;
             std::array<std::vector<float>, 3> samples;
             for (int y = margin; y < margin + height; ++y) for (int x = margin; x < margin + width; ++x) {
-                const auto v = ipr::at<ipr::Vec3f>(d, y, x); item.samples.push_back(v);
+                const auto v = d.row<ipr::Vec3f>(y)[x]; item.samples.push_back(v);
                 for (int c = 0; c < 3; ++c) samples[std::size_t(c)].push_back(v[c]);
             }
             for (int c = 0; c < 3; ++c) {
@@ -396,30 +402,36 @@ Energy energyAt(const NoiseCurve &curve,float signal,const ipr::Vec3f &detail)
     return result;
 }
 
-bool boxMean(const cv::Mat &source, cv::Mat &out, int radius, const std::function<bool()> &stop)
+bool boxMean(const ipr::Image &source, ipr::Image &out, int radius, const std::function<bool()> &stop)
 {
-    cv::Mat horizontal(source.size(), source.type()); out.create(source.size(), source.type());
+    const int width = source.width(), height = source.height();
+    ipr::Image horizontal = ipr::Image::create(source.size(), ipr::Depth::F32, 4);
+    out = ipr::Image::create(source.size(), ipr::Depth::F32, 4);
     const float scale = 1.f / float(2 * radius + 1);
-    for (int y = 0; y < source.rows; ++y) {
+    for (int y = 0; y < height; ++y) {
         if ((y & 15) == 0 && stop()) return false;
-        for (int x = 0; x < source.cols; ++x) {
+        const Energy *in = source.row<Energy>(y);
+        Energy *row = horizontal.mutableRow<Energy>(y);
+        for (int x = 0; x < width; ++x) {
             Energy sum{};
-            for (int k = -radius; k <= radius; ++k) sum += ipr::at<Energy>(source, y, reflect(x + k, source.cols));
-            ipr::at<Energy>(horizontal, y, x) = sum * scale;
+            for (int k = -radius; k <= radius; ++k) sum += in[reflect(x + k, width)];
+            row[x] = sum * scale;
         }
     }
-    for (int y = 0; y < source.rows; ++y) {
+    const ipr::PixelReader<Energy> across(horizontal);
+    for (int y = 0; y < height; ++y) {
         if ((y & 15) == 0 && stop()) return false;
-        for (int x = 0; x < source.cols; ++x) {
+        Energy *row = out.mutableRow<Energy>(y);
+        for (int x = 0; x < width; ++x) {
             Energy sum{};
-            for (int k = -radius; k <= radius; ++k) sum += ipr::at<Energy>(horizontal, reflect(y + k, source.rows), x);
-            ipr::at<Energy>(out, y, x) = sum * scale;
+            for (int k = -radius; k <= radius; ++k) sum += across(reflect(y + k, height), x);
+            row[x] = sum * scale;
         }
     }
     return true;
 }
 
-bool tile(const cv::Mat &source, cv::Mat &delta, const ipr::Recti &core, int margin,
+bool tile(const ipr::Image &source, const ipr::PixelWriter<float> &delta, const ipr::Recti &core, int margin,
           const std::array<int, Levels> &steps,
           const std::array<NoiseCurve, Levels> &models, float strength,
           int radius, const std::function<bool()> &stop)
@@ -427,41 +439,43 @@ bool tile(const cv::Mat &source, cv::Mat &delta, const ipr::Recti &core, int mar
     Pyramid p;
     if (!pyramid(patch(source, core, margin), p, steps, stop)) return false;
     for (int y = 0; y < core.height; ++y)
-        std::fill_n(delta.ptr<float>(core.y + y) + core.x, core.width, 0.f);
+        std::fill_n(&delta(core.y + y, core.x), core.width, 0.f);
     for (int level = 0; level < Levels; ++level) {
         const auto &model = models[std::size_t(level)];
         if (!model.valid && !model.pooledValid) continue;
         const auto &detail = p.detail[std::size_t(level)];
-        cv::Mat energy(detail.size(), CV_32FC4),fallbackEnergy;
-        for (int y = 0; y < detail.rows; ++y) {
+        ipr::Image energy = ipr::Image::create(detail.size(), ipr::Depth::F32, 4), fallbackEnergy;
+        for (int y = 0; y < detail.height(); ++y) {
             if ((y & 15) == 0 && stop()) return false;
-            const auto *d = detail.ptr<ipr::Vec3f>(y); auto *e = energy.ptr<Energy>(y);
-            for (int x = 0; x < detail.cols; ++x) {
-                const float signal=p.signal.at<float>(y,x);
+            const auto *d = detail.row<ipr::Vec3f>(y); auto *e = energy.mutableRow<Energy>(y);
+            const float *signals = p.signal.row<float>(y);
+            for (int x = 0; x < detail.width(); ++x) {
+                const float signal=signals[x];
                 const bool fallback=model.valid&&model.pooledValid&&(signal<model.low||signal>model.high);
                 const auto sample=energyAt(model,signal,d[x]);
                 if(fallback) {
                     // Do not let normalized pooled energies alter the local
                     // decisions of already-supported conditional pixels.
-                    if(fallbackEnergy.empty())fallbackEnergy=cv::Mat::zeros(detail.size(),CV_32FC4);
-                    ipr::at<Energy>(fallbackEnergy, y,x)=sample;
+                    if(fallbackEnergy.empty())fallbackEnergy=ipr::Image::zeros(detail.size(),ipr::Depth::F32,4);
+                    fallbackEnergy.mutableRow<Energy>(y)[x]=sample;
                     e[x]=Energy{};
                 } else e[x]=sample;
             }
         }
-        cv::Mat local,fallbackLocal;
+        ipr::Image local,fallbackLocal;
         if (!boxMean(energy, local, radius, stop)) return false;
         if(!fallbackEnergy.empty()&&!boxMean(fallbackEnergy,fallbackLocal,radius,stop))return false;
         for (int y = 0; y < core.height; ++y) {
             if ((y & 15) == 0 && stop()) return false;
-            auto *out = delta.ptr<float>(core.y + y) + core.x;
-            const auto *d = detail.ptr<ipr::Vec3f>(margin + y) + margin;
-            const auto *e = local.ptr<Energy>(margin + y) + margin;
-            const auto *current=energy.ptr<Energy>(margin+y)+margin;
-            const auto *pooled=fallbackLocal.empty()?nullptr:fallbackLocal.ptr<Energy>(margin+y)+margin;
-            const auto *pooledCurrent=fallbackEnergy.empty()?nullptr:fallbackEnergy.ptr<Energy>(margin+y)+margin;
+            auto *out = &delta(core.y + y, core.x);
+            const auto *d = detail.row<ipr::Vec3f>(margin + y) + margin;
+            const auto *e = local.row<Energy>(margin + y) + margin;
+            const auto *current=energy.row<Energy>(margin+y)+margin;
+            const auto *pooled=fallbackLocal.empty()?nullptr:fallbackLocal.row<Energy>(margin+y)+margin;
+            const auto *pooledCurrent=fallbackEnergy.empty()?nullptr:fallbackEnergy.row<Energy>(margin+y)+margin;
+            const float *signals = p.signal.row<float>(margin + y) + margin;
             for (int x = 0; x < core.width; ++x) {
-                const float signal=p.signal.at<float>(margin+y,margin+x);
+                const float signal=signals[x];
                 const bool usePooled=pooled&&pooledCurrent&&(signal<model.low||signal>model.high);
                 const auto &stats=usePooled?pooled[x]:e[x];
                 const auto &pixel=usePooled?pooledCurrent[x]:current[x];
@@ -490,10 +504,10 @@ int workerThreads()
     return int(std::max(1u, std::min(8u, host > 1 ? host - 1 : 1)));
 }
 
-bool apply(cv::Mat &cameraRgb, int luminance, const Context &context,
+bool apply(ipr::Image &cameraRgb, int luminance, const Context &context,
            const std::function<bool()> &cancelled)
 {
-    if (cameraRgb.empty() || cameraRgb.dims != 2 || cameraRgb.type() != CV_32FC3 ||
+    if (cameraRgb.empty() || cameraRgb.depth() != ipr::Depth::F32 || cameraRgb.channels() != 3 ||
         luminance < 0 || luminance > 100) return false;
     if (luminance == 0) return true;
     try {
@@ -520,10 +534,12 @@ bool apply(cv::Mat &cameraRgb, int luminance, const Context &context,
             cameraRgb=std::move(unchanged);
             return true;
         }
-        cv::Mat delta(cameraRgb.size(), CV_32F);
+        ipr::Image delta = ipr::Image::create(cameraRgb.size(), ipr::Depth::F32, 1);
+        const ipr::PixelWriter<float> deltaPixels(delta);
+        const int width = cameraRgb.width(), height = cameraRgb.height();
         std::vector<ipr::Recti> tiles;
-        for (int y = 0; y < cameraRgb.rows; y += TileSize) for (int x = 0; x < cameraRgb.cols; x += TileSize)
-            tiles.emplace_back(x, y, std::min(TileSize, cameraRgb.cols - x), std::min(TileSize, cameraRgb.rows - y));
+        for (int y = 0; y < height; y += TileSize) for (int x = 0; x < width; x += TileSize)
+            tiles.emplace_back(x, y, std::min(TileSize, width - x), std::min(TileSize, height - y));
         std::atomic<std::size_t> next{0}; std::atomic<bool> stopped{false};
         const float strength = luminance / 100.f;
         const auto work = [&](bool caller) {
@@ -534,7 +550,7 @@ bool apply(cv::Mat &cameraRgb, int luminance, const Context &context,
                     return false;
                 };
                 for (std::size_t i; (i = next.fetch_add(1)) < tiles.size();) {
-                    if (halt() || !tile(cameraRgb, delta, tiles[i], margin, steps, models, strength, radius, halt)) {
+                    if (halt() || !tile(cameraRgb, deltaPixels, tiles[i], margin, steps, models, strength, radius, halt)) {
                         stopped.store(true); return;
                     }
                 }
@@ -551,26 +567,36 @@ bool apply(cv::Mat &cameraRgb, int luminance, const Context &context,
         // Balance the signed corrections, moving them toward zero, not adding an
         // offset to unchanged areas. Preserve DC without clamps.
         double positive = 0, negative = 0;
-        for (int y = 0; y < delta.rows; ++y) {
+        for (int y = 0; y < height; ++y) {
             if ((y & 15) == 0 && stop()) return false;
-            const auto *d = delta.ptr<float>(y);
-            for (int x = 0; x < delta.cols; ++x) {
+            const auto *d = delta.row<float>(y);
+            for (int x = 0; x < width; ++x) {
                 positive += std::max(0., double(d[x])); negative += std::max(0., -double(d[x]));
             }
         }
         const float plus = positive > 0 ? float(std::min(1., negative / positive)) : 1.f;
         const float minus = negative > 0 ? float(std::min(1., positive / negative)) : 1.f;
-        cv::Mat output(cameraRgb.size(), CV_32FC3);
-        for (int y = 0; y < delta.rows; ++y) {
+        ipr::Image output = ipr::Image::create(cameraRgb.size(), ipr::Depth::F32, 3);
+        for (int y = 0; y < height; ++y) {
             if ((y & 15) == 0 && stop()) return false;
-            const auto *in = cameraRgb.ptr<ipr::Vec3f>(y); const auto *d = delta.ptr<float>(y);
-            auto *out = output.ptr<ipr::Vec3f>(y);
-            for (int x = 0; x < delta.cols; ++x)
+            const auto *in = cameraRgb.row<ipr::Vec3f>(y); const auto *d = delta.row<float>(y);
+            auto *out = output.mutableRow<ipr::Vec3f>(y);
+            for (int x = 0; x < width; ++x)
                 out[x] = in[x] + ipr::Vec3f::all(d[x] * (d[x] > 0 ? plus : minus));
         }
         if (stop() || !ipr::allFinite(output)) return false;
         cameraRgb = std::move(output);
         return true;
     } catch (...) { return false; }
+}
+
+bool apply(cv::Mat &cameraRgb, int luminance, const Context &context, const std::function<bool()> &cancelled)
+{
+    if (cameraRgb.dims != 2 || cameraRgb.type() != CV_32FC3) return false;
+    ipr::Image image;
+    try { image = ipr::fromMat(cameraRgb); } catch (...) { return false; }
+    const bool done = apply(image, luminance, context, cancelled);
+    if (done && luminance != 0) cameraRgb = ipr::asMat(image).clone();
+    return done;
 }
 } // namespace CameraDenoise

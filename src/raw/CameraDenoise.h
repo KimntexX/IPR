@@ -1,6 +1,7 @@
 #ifndef IPR_RAW_CAMERADENOISE_H
 #define IPR_RAW_CAMERADENOISE_H
 
+#include "Image.h"
 #include "Types.h"
 
 #include <opencv2/core.hpp>
@@ -60,6 +61,9 @@ int workerThreads();
 // Nonzero validates finitude/Context. Success publishes a NEW buffer, never edits
 // aliased source pixels; on failure/cancellation the input is unchanged. No
 // lower/upper clamp.
+bool apply(ipr::Image &cameraRgb, int luminance, const Context &context,
+           const std::function<bool()> &cancelled = {});
+// The same on a Mat, a copy of the result, while the editor's camera signal is one (roadmap).
 bool apply(cv::Mat &cameraRgb, int luminance, const Context &context,
            const std::function<bool()> &cancelled = {});
 

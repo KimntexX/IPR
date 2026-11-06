@@ -168,6 +168,8 @@ void newImagesAndFills()
     Image twice = a.clone();
     mapInPlace(twice, [](float x) { return 2.0f * x; });
     check(at(twice, 3, 0) == 8.0f, "in place");
+    check(largestDifference(twice, a) == 4.0 && largestDifference(a, a) == 0.0, "how far apart");
+    check(largestDifference(Image(), Image()) == 0.0, "nothing apart");
 }
 
 void openCvsGenerator()

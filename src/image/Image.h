@@ -96,6 +96,46 @@ private:
     int m_channels = 0;
 };
 
+// Pixels by (y, x) without a check, for the stencils that read around each pixel: the image is
+// checked once, here, and keeping (y, x) inside it is the caller's. T is the whole pixel, such as
+// float or Vec3f. Valid while the image's pixels live; an empty image gives a reader of nothing.
+template <typename T>
+class PixelReader
+{
+public:
+    explicit PixelReader(const Image &image)
+        : m_first(image.empty() ? nullptr : image.row<std::uint8_t>(0)), m_step(image.stepBytes())
+    {
+    }
+    const T &operator()(int y, int x) const
+    {
+        return reinterpret_cast<const T *>(m_first + m_step * std::ptrdiff_t(y))[x];
+    }
+
+private:
+    const std::uint8_t *m_first;
+    std::ptrdiff_t m_step;
+};
+
+// The same to write, refused on frozen pixels as mutableRow is.
+template <typename T>
+class PixelWriter
+{
+public:
+    explicit PixelWriter(Image &image)
+        : m_first(image.empty() ? nullptr : image.mutableRow<std::uint8_t>(0)), m_step(image.stepBytes())
+    {
+    }
+    T &operator()(int y, int x) const
+    {
+        return reinterpret_cast<T *>(m_first + m_step * std::ptrdiff_t(y))[x];
+    }
+
+private:
+    std::uint8_t *m_first;
+    std::ptrdiff_t m_step;
+};
+
 } // namespace ipr
 
 #endif // IPR_IMAGE_IMAGE_H

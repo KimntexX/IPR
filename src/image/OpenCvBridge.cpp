@@ -81,6 +81,44 @@ cv::Mat asMutableMat(Image &image)
     return headerOn(image);
 }
 
+namespace {
+
+// Never allocates (new Mats go to OpenCV's own allocator): it only lets go of the image a Mat
+// holds, through the context of the Mat's data, when the last Mat on it goes.
+class HoldingAllocator final : public cv::MatAllocator
+{
+public:
+    cv::UMatData *allocate(int dims, const int *sizes, int type, void *data, size_t *step, cv::AccessFlag flags,
+                           cv::UMatUsageFlags usage) const override
+    {
+        return cv::Mat::getStdAllocator()->allocate(dims, sizes, type, data, step, flags, usage);
+    }
+    bool allocate(cv::UMatData *data, cv::AccessFlag flags, cv::UMatUsageFlags usage) const override
+    {
+        return cv::Mat::getStdAllocator()->allocate(data, flags, usage);
+    }
+    void deallocate(cv::UMatData *data) const override { delete data; }
+};
+
+} // namespace
+
+cv::Mat heldMat(const Image &image)
+{
+    if (image.empty())
+        return {};
+    static HoldingAllocator holding;   // its methods change nothing
+    cv::Mat mat = headerOn(image);
+    auto *data = new cv::UMatData(&holding);
+    data->data = data->origdata = mat.data;
+    data->size = std::size_t(image.stepBytes()) * std::size_t(image.height());
+    data->flags = cv::UMatData::USER_ALLOCATED;
+    data->allocatorContext = std::make_shared<Image>(image.share());
+    data->refcount = 1;
+    mat.u = data;
+    mat.allocator = &holding;
+    return mat;
+}
+
 cv::Mat gaussianBlurred(const cv::Mat &mat, double sigma, BlurBorder border)
 {
     return gaussianBlurred(mat, sigma, sigma, border);
@@ -503,14 +541,6 @@ cv::Mat matchedTemplate(const cv::Mat &image, const cv::Mat &templ)
     cv::Mat out(image.rows - templ.rows + 1, image.cols - templ.cols + 1, CV_32F);
     Image target = fromMutableMat(out);
     matchTemplateInto(fromMat(image), fromMat(templ), target);
-    return out;
-}
-
-cv::Mat hannWindow(Size size)
-{
-    cv::Mat out(toCv(size), CV_32F);
-    Image target = fromMutableMat(out);
-    hannWindowInto(target);
     return out;
 }
 

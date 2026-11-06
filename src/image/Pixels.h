@@ -153,6 +153,9 @@ struct Extremes
     Point<int> smallestAt, largestAt;
 };
 Extremes extremesOf(const Image &image);
+// The largest absolute difference between two images of one layout, over every value, in double:
+// how far apart two results are. Any depth; zero for two empty images.
+double largestDifference(const Image &a, const Image &b);
 
 // Per channel: the mean, and the standard deviation over all the values, in double.
 std::vector<double> meanOf(const Image &image);

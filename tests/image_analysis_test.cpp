@@ -89,7 +89,7 @@ void rotations()
     check(near(determinant(mirrored), 1.0), "a mirror is turned into a rotation");
 }
 
-void hannWindow()
+void hannWindows()
 {
     Image window = Image::create({3, 3}, Depth::F32, 1);
     hannWindowInto(window);
@@ -164,7 +164,7 @@ int main()
         cholesky();
         singularValueDecomposition();
         rotations();
-        hannWindow();
+        hannWindows();
         phase();
         templateMatching();
     } catch (const std::exception &error) {
