@@ -1291,3 +1291,21 @@ Quotas continus d?clar?s, aucune cible de contr?le r?utilis?e. Les plages
 exag?r?es des pentes ?tendues au halo restent aussi ? caract?riser sans
 ?cr?tage arbitraire. Pas de nouvel entra?nement lanc? ; voir les preuves
 et les limites causales dans le rapport unique.
+
+
+### Comparaison appari?e autoris?e ? 6 novembre 2026
+
+Trois politiques du m?me g?n?rateur : r?f?rence, bruit seul diversifi?,
+quotas de textures seuls renforc?s. Graine de donn?es 71 commune aux deux
+initialisations 71/73 ; architecture et perte inchang?es. La r?f?rence est
+r?entra?n?e pour assurer l?appariement. Plans et param?tres continus sont
+scell?s ; chaque bras passe un pr?vol avant ses deux entra?nements de 256 pas.
+L?empreinte des poids initiaux et l??galit? des contr?les initiaux sont
+exig?es pour l?analyse des effets. Aucun mod?le s?lectionn? sur le meilleur
+jalon. Quotas et bruits continus n?utilisent pas les cibles des contr?les.
+
+Huit tests de politique et d?analyse passent, pr?vol de r?f?rence r?ussi,
+comparaison lanc?e. R?sultats encore attendus. Limites m?moire conserv?es,
+admission renforc?e, pas de reprise automatique, pas de photo ni nouvelle
+r?serve. Le rapport unique contient plans, facteurs maintenus et limites
+causales ; aucune int?gration de production.

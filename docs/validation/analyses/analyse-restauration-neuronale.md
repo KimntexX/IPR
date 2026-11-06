@@ -11,7 +11,7 @@ Ce bénéfice n'est pas démontré pour le correcteur CFA actuel.
 | Ce qui bloque | Couverture trop faible des d?tails forts ? haute fr?quence, bruit conditionnel diff?rent des contr?les, contenus et initialisation confondus entre graines. La perte moyenne r?compense des lissages destructeurs sur ce flux. |
 | Derniers résultats | Réplication close : 10 et 12 échecs forts sur 48, après les 12 et 16 précédents. Sur les photos, sensibilité aux graines et motifs directionnels : bénéfice non validé. |
 | Calcul engagé | Courbe et photos achevées ; qualification des poids finaux préparée sur les contrôles connus, CPU épinglé, deux graines et seuils inchangés. Aucune nouvelle réserve. |
-| Prochaine preuve utile | S?parer graine de donn?es et initialisation ; pr?parer une comparaison ? architecture/perte fixes, avec bruit seul puis couverture des d?tails seule modifi?s. Crit?res inchang?s, aucune nouvelle r?serve. |
+| Prochaine preuve utile | Lire tous les bras et jalons de la comparaison ? donn?es communes, v?rifier initialisations et contr?les identiques avant d?interpr?ter les effets. Pas de s?lection de graine ou de poids. |
 | GPU | D?bit m?dian 2,33?2,36 s/pas pendant la qualification ; environ 17 min par graine avec contr?les. Marge locale d?environ 15 Mio seulement au pic ; aucune garantie de plusieurs heures ou d?environnement concurrent. |
 | Données | 349 RAW inventoriés, 105 paires étudiées. Température, bruit fixe et propagation restent à qualifier ; pas de nouvelles prises demandées pour cette expérience. |
 | Critère d'arrêt | Pas de nouvelle série de variantes synthétiques pour améliorer les mêmes seuils. Après une courbe longue figée et un bruit caractérisé, absence de gain visible face au classique : abandon ou changement de taille/architecture, décision documentée. |
@@ -3260,7 +3260,7 @@ pas d'une nouvelle séance photographique ou d'un autre boîtier.
 
 Les **12 critères passent pour les deux graines** sur les80 nouveaux
 cas mixtes, ainsi que sur leur sous-groupe20cas. Le gainRGB agrégé vaut
-environ3,73–3,76 % sur80cas et1,57–1,58 % sur les128 contours. Aucun
+environ3,73–3,76 % sur80cas et 1,57–1,58 % sur les128 contours. Aucun
 seuil ne change. Le succès de ce nouveau groupe ne remplace pas l'échec
 du groupe20 historique, conservé dans la conclusion.
 
@@ -7487,3 +7487,101 @@ et [compl?ment de runtime conservant la premi?re version](../raw/neural-dru-trai
 Trois tests v?rifient le gradient, le t?moin de lissage et la couverture
 phase/famille. Aucun changement de production, environnement, poids,
 publication, fusion ou tag.
+
+
+## 6 novembre 2026 ? comparaison appari?e r?f?rence, bruit et d?tails lanc?e
+
+L?utilisateur autorise la comparaison propos?e par l?audit. L?exp?rience
+conserve l?architecture de 32 643 840 param?tres, la perte CFA normalis?e,
+Adam 10??, quatre observations par mise ? jour et le budget de 256 pas.
+Elle comporte **trois bras ? deux initialisations**, tous conserv?s.
+La graine de donn?es vaut 71 dans les six cas, ind?pendamment des graines
+de mod?le 71/73. La r?f?rence doit ?tre r?entra?n?e sur ces donn?es communes :
+l?ancienne graine 73 utilisait d?autres contenus et ne serait pas appari?e.
+
+### Facteurs modifi?s et facteurs maintenus
+
+| Bras | Cibles et textures | Bruit |
+| --- | --- | --- |
+| R?f?rence | G?n?rateur de r?f?rence, m?mes identit?s et tirages pour les deux mod?les | Trois lois exp?rimentales existantes |
+| Bruit | **Exactement les m?mes cibles** que la r?f?rence | Diversification pr?d?clar?e de 504/1 024 observations ; les autres restent identiques |
+| D?tails | Quotas de fr?quence/amplitude sur les 256 emplacements de texture ; autres familles inchang?es | M?mes lois, graines gaussiennes et affectations que la r?f?rence ; sigma reste d?pendant du signal modifi? |
+
+Le bras bruit modifie une distribution, pas seulement une valeur sigma.
+Une moiti? des blocs de 32 observations garde les lois initiales ; dans
+l?autre, les coefficients de variance sont tir?s contin?ment : a entre
+10?? et 4?10?? et b entre 10?? et 5?10??, avant les rapports de canaux.
+Ces rapports sont tir?s entre 0,7 et 1,5 et affectent a et b selon les gains ;
+un quart de ces blocs diversifi?s est isotrope. Le calendrier est ?quilibr?
+entre familles/phases. Les neuf observations sans bruit restent communes,
+ce qui ram?ne le nombre de modifications effectives ? 504. Ces lois sont
+des substituts gaussiens d??tude, pas une nouvelle calibration physique.
+
+Le bras d?tails conserve la part de 25 % de textures, les DC, directions,
+phases et couleurs. Il r?partit leurs fr?quences principales dans
+[2;8], [8;16], [16;28] cycles/128 pixels, et leurs amplitudes effectives dans
+[0,003/1,35;0,012], [0,012;0,04], [0,04;0,12/1,35]. Les tirages restent
+continus, pas les valeurs ou images exactes des contr?les. Les neuf cases
+fr?quence/amplitude comptent 28 ou 29 expositions chacune. La fr?quence de
+la composante secondaire suit le rapport de la recette d?origine, born?
+? 2?28 ; son amplitude relative est inchang?e.
+
+Ce bras modifie donc conjointement fr?quence et amplitude comme une
+politique de couverture ; il ne permettra pas de s?parer leurs effets
+internes. Les rampes extr?mes signal?es par l?audit restent volontairement
+identiques dans les trois bras pour ne pas introduire un quatri?me facteur.
+Aucune perte structurelle, modification de taille ou nouveau rendu n?est
+ajout? pendant cette exp?rience.
+
+### Contr?les d?appariement et qualification du lancement
+
+Cinq tests passent pour les politiques : rejeu au bit pr?s des empreintes
+archiv?es de la r?f?rence sur les cas v?rifi?s, cibles identiques du bras
+bruit, modifications limit?es aux emplacements de texture du bras d?tails,
+refus d?un bras inconnu, neuf quotas continus ?quilibr?s. Trois autres
+tests v?rifient l?analyse des r?sultats : conservation des 18 r?sum?s
+bras/graine/jalon, signe des diff?rences appari?es, rejet de poids initiaux
+ou de contr?les initiaux diff?rents. Les fixtures artificielles de ces
+analyses restent dans des r?pertoires temporaires, hors preuves d??tude.
+
+Une empreinte des poids initiaux est calcul?e avant transfert GPU. Le
+bilan final exigera la m?me initialisation pour chaque graine entre bras
+et les m?mes contr?les initiaux complets. Les sources, plans et param?tres
+continus sont scell?s avant les entra?nements. Aucun bras ne r?utilise les
+poids d?j? entra?n?s d?un autre bras ; tous d?marrent des poids al?atoires.
+
+Le pr?vol de r?f?rence instrument? termine avec reprise mod?le/Adam/pertes
+au bit pr?s. Les bras bruit et d?tails ont chacun leur propre pr?vol avant
+leur entra?nement. Un ?chec technique arr?te l?ensemble, sans modifier les
+plafonds ni r?essayer automatiquement. Un d?faut de signal mesur? ne retire
+pas un bras : il reste n?cessaire de conserver toute la comparaison.
+
+### Budget, jalons et suivi
+
+Six entra?nements s?quentiels de 256 pas ; contr?les connus complets de
+864 champs aux pas 0/128/256. Sauvegardes p?riodiques, checkpoints, traces
+m?moire et JSON canoniques sont conserv?s. L?analyse produira les effets
+par fr?quence, couleur, bruit, graine et jalon, sans choisir un meilleur
+score ni pr?senter les contr?les connus comme une validation ind?pendante.
+Pas d?inf?rence photo et aucune nouvelle cohorte r?serv?e.
+
+Admission 60 s sous 70 % de RAM globale ; arr?t 92 % global, plafond souple
+4,5 Gio et quota 6 Gio, allocation CUDA plafonn?e ? 50 %. La dur?e projet?e est
+**environ deux heures**, pr?vols et contr?les compris. Les ?ch?ances absolues
+sont **14 h 42 min 25 s Paris pour l?apprentissage**, et **14 h 57 min 25 s**
+pour la campagne du 6 novembre. Le superviseur ne termine que son arbre
+sur erreur ou d?passement et lib?re le maintien ?veill? ? la cl?ture ;
+aucun ordre de veille du PC. `STOP` ? la racine demande l?arr?t de la
+comparaison, avec terminaison de son arbre et conservation des derniers
+checkpoints durables si n?cessaire.
+
+Suivi : `build-patch_neural_restoration/dru-data-comparison-v001/progress.json` ;
+les sous-campagnes sont `reference`, `noise` et `details`. Le superviseur
+attend localement les processus, sans attente active dans le chat.
+**R?sultats encore attendus** ; le premier bras est d?marr?, aucune
+am?lioration n?est annonc?e.
+
+Preuves de pr?paration : [plans et recettes scell?s](../raw/neural-dru-data-comparison-plan-v001-20261106T104225Z.json)
+et [pr?vol de r?f?rence](../raw/neural-dru-training-v001-71-20261106T104420Z.json).
+Pas de modification de production, d?environnement, publication, fusion
+ou tag. La comparaison reste sur le banc exp?rimental.

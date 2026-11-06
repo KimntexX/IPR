@@ -500,3 +500,30 @@ comptages de couverture, en distinguant amplitude nominale et composante
 principale apr?s division par 1,35. Les JSON horodat?s restent les preuves.
 L?audit met en ?vidence des lacunes de couverture et des graines confondues ;
 il ne choisit aucun poids ni seuil et ne lance pas l?exp?rience suivante.
+
+
+## Comparaison appari?e des politiques de donn?es
+
+`prepare_dru_data_comparison.py` scelle les trois plans, les sources, la
+graine de donn?es commune, les quotas continus et les bruits effectivement
+tir?s. Il refuse d??craser le dossier de pr?paration existant.
+`run_dru_data_comparison.py --plan <plan.json> --output <dossier neuf>`
+ex?cute pour chaque bras un pr?vol puis les deux entra?nements, et appelle
+`summarize_dru_data_comparison.py` seulement si les six calculs sont complets.
+Le GPU et l?environnement restent ceux du banc courant.
+
+`dru_comparison_policy.py` contient les seules variations de donn?es :
+`reference`, `noise`, `details`. Le lanceur courant exige explicitement
+`data_seed` et `data_arm` dans le plan. La graine mod?le n?identifie plus
+implicitement les contenus. Les empreintes initiales entre bras et les
+contr?les initiaux doivent correspondre ; sinon l?analyse refuse de conclure.
+Tous les jalons et groupes sont gard?s. La perte et l?architecture restent
+fixes et aucun bras combin? n?est ajout? sans nouveau protocole.
+
+Le suivi est `dru-data-comparison-v001/progress.json`, avec journaux de
+pr?vol et trois sous-campagnes. `STOP` ? la racine arr?te la cha?ne et son
+arbre si n?cessaire ; reprendre seulement depuis un ?tat durable v?rifi?.
+La premi?re erreur technique arr?te la comparaison, sans reprise automatique.
+Les anciens plans et JSON restent des preuves historiques avec leurs sources
+scell?es ; les donn?es d?une ancienne graine ne remplacent pas le nouveau
+bras de r?f?rence appari?.

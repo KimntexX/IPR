@@ -22,13 +22,15 @@ def run(plan_path,output,seed,preflight=False,resume=False):
     if not all(p.resolve().is_relative_to(build.resolve()) for p in (plan_path,output)):raise ValueError('Owned paths required')
     plan=json.loads(plan_path.read_text(encoding='utf-8'))
     if seed not in plan['seeds'] or plan['status']!='sealed_dru_cfa_bootstrap':raise ValueError('Sealed declared training required')
+    if (plan['data_arm'] not in ('reference','noise','details') or not isinstance(plan['data_seed'],int)
+            or isinstance(plan['data_seed'],bool) or plan['data_seed']<0):raise ValueError('Explicit data arm and independent seed required')
     for name,digest in plan['tools'].items():
         if sha256(Path(__file__).with_name(name))!=digest:raise ValueError('Sealed source changed: '+name)
     if sha256(Path(plan['noise_source']))!=plan['noise_sha256']:raise ValueError('Noise source changed')
     output.mkdir(exist_ok=resume)
     previous=json.loads((output/'result.json').read_text(encoding='utf-8')) if resume else None
     result=dict(schema_version=1,status='started',seed=seed,preflight=preflight,plan_sha256=sha256(plan_path),
-        started_at_utc=datetime.now(timezone.utc).isoformat(),losses=[],milestones=[],controls=[])
+        started_at_utc=datetime.now(timezone.utc).isoformat(),losses=[],milestones=[],controls=[],data_seed=plan['data_seed'],data_arm=plan['data_arm'])
     if previous is not None:
         result['milestones']=previous['milestones'];result['controls']=previous['controls']
         result['attempt_history']=previous.get('attempt_history',[])+[dict(status=previous['status'],
@@ -58,7 +60,9 @@ def run(plan_path,output,seed,preflight=False,resume=False):
                         peak_allocated_bytes=torch.cuda.max_memory_allocated(),peak_reserved_bytes=torch.cuda.max_memory_reserved())
                 trace.phase(name,completed if step is None else step,micro,gpu)
             phase('model-initialization')
-            model,provenance=create(root,seed);model=model.cuda();result['architecture']=provenance
+            model,provenance=create(root,seed)
+            result['initial_model_fingerprint']=fingerprint(model.state_dict())
+            model=model.cuda();result['architecture']=provenance
             optimizer=torch.optim.Adam(model.parameters(),lr=plan['learning_rate'])
             context=dict(plan_sha256=sha256(plan_path),seed=seed,torch_version=str(torch.__version__))
             source=json.loads(Path(plan['noise_source']).read_text(encoding='utf-8'));scenarios=source['scenes']
@@ -86,7 +90,7 @@ def run(plan_path,output,seed,preflight=False,resume=False):
                 check();optimizer.zero_grad(set_to_none=True);total=0.;tick=time.monotonic()
                 for micro in range(4):
                     phase('data-generation',step,micro)
-                    packed,sigma,tags,target=example((step-1)*4+micro,seed,scenarios)
+                    packed,sigma,tags,target=example((step-1)*4+micro,plan['data_seed'],scenarios,arm=plan['data_arm'])
                     phase('host-to-device',step,micro)
                     packed,sigma,tags,target=(x.cuda() for x in (packed,sigma,tags,target))
                     phase('forward',step,micro)
