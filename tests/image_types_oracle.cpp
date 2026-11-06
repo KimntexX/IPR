@@ -1,5 +1,7 @@
 // O3: the small types of the image layer against OpenCV's: every operation the modules use, on random
 // values and on the edges of rounding and range, compared to the bit. Writes one JSON proof.
+#include "Pixels.h"
+#include "Random.h"
 #include "Types.h"
 
 #include <opencv2/core.hpp>
@@ -245,6 +247,47 @@ int main(int argc, char **argv)
         for (int j = 0; j < 3; ++j)
             a(row, j) = c(size_t(row), size_t(j)) = 0.0;
         return sameBits(cv::Matx33d::eye(), Matrix33d::identity()) && sameBits(a.inv(), c.inv());
+    });
+
+    // What replaces the Mat's own tools: its generator, its Scalar fills, its conversions to floats.
+    check("random generator", [] {
+        const std::uint64_t seed = std::uint64_t(whole(0, 1 << 30)) * 7919u;
+        const int high = whole(1, 100000);
+        cv::RNG theirs(seed);
+        Random mine(seed);
+        for (int i = 0; i < 50; ++i)
+            if (theirs.uniform(0, high) != mine.uniform(0, high) || unsigned(theirs) != mine.next())
+                return false;
+        return true;
+    });
+    check("fill as a scalar", [] {
+        const double v = edgy(-40000.0, 40000.0);
+        const cv::Mat a(1, 1, CV_8UC1, cv::Scalar(v)), b(1, 1, CV_16SC1, cv::Scalar(v)), c(1, 1, CV_32SC1, cv::Scalar(v)),
+            d(1, 1, CV_32FC1, cv::Scalar(v)), e(1, 1, CV_16UC1, cv::Scalar(v));
+        return a.at<std::uint8_t>(0, 0) == filled({1, 1}, Depth::U8, 1, v).row<std::uint8_t>(0)[0] &&
+               b.at<std::int16_t>(0, 0) == filled({1, 1}, Depth::S16, 1, v).row<std::int16_t>(0)[0] &&
+               c.at<std::int32_t>(0, 0) == filled({1, 1}, Depth::S32, 1, v).row<std::int32_t>(0)[0] &&
+               sameBits(d.at<float>(0, 0), filled({1, 1}, Depth::F32, 1, v).row<float>(0)[0]) &&
+               e.at<std::uint16_t>(0, 0) == filled({1, 1}, Depth::U16, 1, v).row<std::uint16_t>(0)[0];
+    });
+    check("conversion to floats", [] {
+        constexpr int width = 37;
+        cv::Mat u16(1, width, CV_16UC1), u8(1, width, CV_8UC1), s16(1, width, CV_16SC2);
+        for (int x = 0; x < width; ++x) {
+            u16.at<std::uint16_t>(0, x) = std::uint16_t(whole(0, 65535));
+            u8.at<std::uint8_t>(0, x) = std::uint8_t(whole(0, 255));
+            s16.at<cv::Vec2s>(0, x) = cv::Vec2s(short(whole(-32768, 32767)), short(whole(-32768, 32767)));
+        }
+        const double scale = real(1e-6, 2.0);
+        const auto same = [&](const cv::Mat &from, double a, int channels, Depth depth) {
+            cv::Mat theirs;
+            from.convertTo(theirs, CV_32FC(channels), a);
+            Image mine = Image::create({width, 1}, Depth::F32, channels);
+            convertInto(Image::wrapReadOnly(from.data, {width, 1}, depth, channels, std::ptrdiff_t(from.step[0])), mine, a);
+            return std::memcmp(theirs.data, mine.row<float>(0), sizeof(float) * size_t(width * channels)) == 0;
+        };
+        return same(u16, 1.0 / 65535.0, 1, Depth::U16) && same(u16, scale, 1, Depth::U16) &&
+               same(u8, 1.0 / 255.0, 1, Depth::U8) && same(s16, 1.0, 2, Depth::S16);
     });
 
     std::ofstream out(argv[2]);

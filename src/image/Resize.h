@@ -11,7 +11,7 @@ namespace ipr {
 enum class Interpolation { Linear, Area };
 
 // A new image of this size, as OpenCV's resize gives it for floats. F32 only, any channel count:
-// throws std::invalid_argument on another depth, an empty image or an empty size.
+// throws std::invalid_argument on another depth or an empty size. An empty image gives an empty one.
 Image resized(const Image &image, Size size, Interpolation interpolation, int threads = 0);
 
 // The size is the image's times the scale, rounded; the pixels follow the scale itself, not the

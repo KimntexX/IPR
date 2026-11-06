@@ -102,7 +102,7 @@ void aBlurOfAnImpulseIsItsKernel()
     const std::vector<float> half = gaussianHalfKernel(2.0);
     Image image = Image::zeros({41, 41}, Depth::F32, 1);
     image.mutableRow<float>(20)[20] = 1.0f;
-    const Image blurred = gaussianBlur(image, 2.0);
+    const Image blurred = gaussianBlurred(image, 2.0);
     for (int y = 12; y <= 28; ++y)
         for (int x = 12; x <= 28; ++x) {
             const float expected = half[size_t(std::abs(x - 20))] * half[size_t(std::abs(y - 20))];
@@ -117,7 +117,7 @@ void aConstantStaysConstant()
         for (int y = 0; y < 17; ++y)
             for (int v = 0; v < 23 * channels; ++v)
                 image.mutableRow<float>(y)[v] = 0.25f + 0.1f * float(v % channels);
-        const Image blurred = gaussianBlur(image, 3.0);
+        const Image blurred = gaussianBlurred(image, 3.0);
         for (int y = 0; y < 17; ++y)
             for (int v = 0; v < 23 * channels; ++v)
                 check(std::abs(blurred.row<float>(y)[v] - image.row<float>(y)[v]) < 1e-5f, "each channel alone, up to the borders");
@@ -132,7 +132,7 @@ void theMirrorIsTheOneAnnounced()
     Image image = Image::create({4, 1}, Depth::F32, 1);
     const float values[] = {1.0f, 2.0f, 4.0f, 8.0f};
     std::memcpy(image.mutableRow<float>(0), values, sizeof(values));
-    const Image blurred = gaussianBlur(image, 0.25);
+    const Image blurred = gaussianBlurred(image, 0.25);
     // Along the height, one row is mirrored on itself: only its weight sum, one, remains.
     const float *row = blurred.row<float>(0);
     check(std::abs(row[0] - (half[0] * 1 + half[1] * (2 + 2))) < 1e-5f, "left border reads b twice");
@@ -145,7 +145,7 @@ void theSizeDoesNotMatterToTheMirror()
     // Smaller than the kernel, even one pixel, on every axis.
     for (const Size size : {Size{1, 1}, Size{1, 9}, Size{9, 1}, Size{2, 2}, Size{3, 5}}) {
         Image image = noisy(size, 3);
-        const Image blurred = gaussianBlur(image, 8.0);
+        const Image blurred = gaussianBlurred(image, 8.0);
         check(blurred.size() == size, "same size");
         for (int y = 0; y < size.height; ++y)
             for (int v = 0; v < size.width * 3; ++v)
@@ -153,7 +153,7 @@ void theSizeDoesNotMatterToTheMirror()
     }
     Image single = Image::create({1, 1}, Depth::F32, 1);
     single.mutableRow<float>(0)[0] = 0.5f;
-    check(std::abs(gaussianBlur(single, 5.0).row<float>(0)[0] - 0.5f) < 1e-5f, "one pixel keeps its value");
+    check(std::abs(gaussianBlurred(single, 5.0).row<float>(0)[0] - 0.5f) < 1e-5f, "one pixel keeps its value");
 }
 
 // The whole sum written out, for a row: the mirror is what is being checked.
@@ -168,14 +168,14 @@ void theEdgeMirrorRepeatsTheEdge()
     check(radius == 4, "this sigma reaches past the row");
     // dcba|abcd|dcba, read at positions -4 to 7.
     const float reflected[12] = {8, 4, 2, 1, 1, 2, 4, 8, 8, 4, 2, 1};
-    const Image blurred = gaussianBlur(image, 1.0, 1, BlurBorder::MirrorEdge);
+    const Image blurred = gaussianBlurred(image, 1.0, BlurBorder::MirrorEdge, 1);
     for (int x = 0; x < 4; ++x) {
         float expected = half[0] * reflected[x + 4];
         for (int k = 1; k <= radius; ++k)
             expected += half[size_t(k)] * (reflected[x + 4 - k] + reflected[x + 4 + k]);
         check(std::abs(blurred.row<float>(0)[x] - expected) < 1e-5f, "the edge is repeated");
     }
-    const Image other = gaussianBlur(image, 1.0, 1, BlurBorder::Mirror);
+    const Image other = gaussianBlurred(image, 1.0, BlurBorder::Mirror, 1);
     check(other.row<float>(0)[0] != blurred.row<float>(0)[0], "the two mirrors differ");
     // A flat image stays flat whatever the mirror, on every size against the kernel.
     for (const Size size : {Size{1, 1}, Size{2, 3}, Size{9, 1}, Size{40, 30}}) {
@@ -183,7 +183,7 @@ void theEdgeMirrorRepeatsTheEdge()
         for (int y = 0; y < size.height; ++y)
             for (int v = 0; v < size.width * 2; ++v)
                 flat.mutableRow<float>(y)[v] = 0.25f;
-        const Image out = gaussianBlur(flat, 6.0, 0, BlurBorder::MirrorEdge);
+        const Image out = gaussianBlurred(flat, 6.0, BlurBorder::MirrorEdge);
         for (int y = 0; y < size.height; ++y)
             for (int v = 0; v < size.width * 2; ++v)
                 check(std::abs(out.row<float>(y)[v] - 0.25f) < 1e-5f, "flat stays flat");
@@ -199,7 +199,7 @@ void theLastPixelRepeatsBeyondTheBorder()
     const std::vector<float> half = gaussianHalfKernel(1.0);
     const int radius = int(half.size()) - 1;
     const float extended[12] = {1, 1, 1, 1, 1, 2, 4, 8, 8, 8, 8, 8};
-    const Image blurred = gaussianBlur(image, 1.0, 1, BlurBorder::LastPixel);
+    const Image blurred = gaussianBlurred(image, 1.0, BlurBorder::LastPixel, 1);
     for (int x = 0; x < 4; ++x) {
         float expected = half[0] * extended[x + 4];
         for (int k = 1; k <= radius; ++k)
@@ -218,7 +218,7 @@ void theRadiusIsTheOneOfOpenCv()
         check(gaussianHalfKernel(c.sigma).size() == c.size, "the radius of a fractional sigma");
     check(gaussianHalfKernel(0.01).size() == 1, "a sigma far below a pixel has only its centre");
     Image one = noisy({9, 7}, 1);
-    check(identical(gaussianBlur(one, 0.01, 1), one), "and changes nothing");
+    check(identical(gaussianBlurred(one, 0.01, BlurBorder::Mirror, 1), one), "and changes nothing");
 }
 
 // One sigma per axis: each pass with its own kernel, and an axis without one left as it is.
@@ -227,7 +227,7 @@ void eachAxisHasItsSigma()
     const Image image = noisy({61, 47}, 2);
     Image out = Image::create(image.size(), Depth::F32, 2);
     gaussianBlurInto(image, out, 2.0, 2.0);
-    check(identical(out, gaussianBlur(image, 2.0)), "the same sigma twice is the usual blur");
+    check(identical(out, gaussianBlurred(image, 2.0)), "the same sigma twice is the usual blur");
 
     gaussianBlurInto(image, out, 3.0, 0.0, 1, BlurBorder::LastPixel);
     const std::vector<float> half = gaussianHalfKernel(3.0);
@@ -253,7 +253,7 @@ void aBufferReceivesTheSamePixels()
     const Image image = noisy({97, 61}, 3);
     Image out = Image::create(image.size(), Depth::F32, 3);
     gaussianBlurInto(image, out, 2.5, 0, BlurBorder::MirrorEdge);
-    check(identical(out, gaussianBlur(image, 2.5, 0, BlurBorder::MirrorEdge)), "the same as a new image");
+    check(identical(out, gaussianBlurred(image, 2.5, BlurBorder::MirrorEdge)), "the same as a new image");
     gaussianBlurInto(image, out, 0.0);
     check(identical(out, image), "no sigma copies");
     const auto refused = [&](Image buffer) {
@@ -311,9 +311,9 @@ void callsShareTheBudget()
 void threadsDoNotChangeTheResult()
 {
     const Image image = noisy({320, 211}, 3);
-    const Image one = gaussianBlur(image, 4.0, 1);
+    const Image one = gaussianBlurred(image, 4.0, BlurBorder::Mirror, 1);
     for (const int threads : {2, 3, 8, 32})
-        check(identical(one, gaussianBlur(image, 4.0, threads)), "bit for bit");
+        check(identical(one, gaussianBlurred(image, 4.0, BlurBorder::Mirror, threads)), "bit for bit");
 }
 
 void aPartOfAnImageHasItsRows()
@@ -321,14 +321,14 @@ void aPartOfAnImageHasItsRows()
     Image image = noisy({120, 90}, 3);
     const Image part = image.view({11, 7, 60, 40});
     const Image own = part.clone();
-    check(identical(gaussianBlur(part, 3.0), gaussianBlur(own, 3.0)), "the step is followed");
+    check(identical(gaussianBlurred(part, 3.0), gaussianBlurred(own, 3.0)), "the step is followed");
 }
 
 void itLeavesItsInputAlone()
 {
     Image image = noisy({64, 64}, 1);
     const Image before = image.clone();
-    const Image blurred = gaussianBlur(image, 2.0);
+    const Image blurred = gaussianBlurred(image, 2.0);
     check(identical(image, before), "the input is unchanged");
     check(!image.frozen(), "and stays writable");
     check(!blurred.sharesPixelsWith(image) && !blurred.frozen(), "the result has its own pixels");
@@ -336,14 +336,14 @@ void itLeavesItsInputAlone()
 
 void nothingToBlur()
 {
-    check(gaussianBlur(Image(), 2.0).empty(), "empty");
+    check(gaussianBlurred(Image(), 2.0).empty(), "empty");
     const Image image = noisy({8, 8}, 1);
-    const Image same = gaussianBlur(image, 0.0);
+    const Image same = gaussianBlurred(image, 0.0);
     check(identical(same, image) && !same.sharesPixelsWith(image), "no sigma gives a clone");
-    check(identical(gaussianBlur(image, -2.0), image), "a negative sigma too");
+    check(identical(gaussianBlurred(image, -2.0), image), "a negative sigma too");
     bool refused = false;
     try {
-        gaussianBlur(Image::zeros({4, 4}, Depth::U16, 1), 1.0);
+        gaussianBlurred(Image::zeros({4, 4}, Depth::U16, 1), 1.0);
     } catch (const std::invalid_argument &) {
         refused = true;
     }
@@ -354,7 +354,7 @@ void aFrozenImageCanBeBlurred()
 {
     Image image = noisy({32, 32}, 3);
     const Image shared = image.share();
-    check(identical(gaussianBlur(shared, 2.0), gaussianBlur(shared.clone(), 2.0)), "reading is all it needs");
+    check(identical(gaussianBlurred(shared, 2.0), gaussianBlurred(shared.clone(), 2.0)), "reading is all it needs");
 }
 
 } // namespace

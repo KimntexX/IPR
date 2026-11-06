@@ -4,6 +4,7 @@
 #include "Image.h"
 #include "Types.h"
 
+#include <cstddef>
 #include <vector>
 
 namespace ipr {
@@ -48,6 +49,100 @@ void replaceNaN(Image &image, float value);
 void bitwiseOrInto(const Image &a, const Image &b, Image &out);
 void bitwiseAndInto(const Image &a, const Image &b, Image &out);
 void bitwiseNotInto(const Image &a, Image &out);
+
+// The same into new images. An empty image gives an empty one.
+Image merged(const std::vector<const Image *> &planes);
+Image merged(const std::vector<Image> &planes);
+Image channel(const Image &image, int index);
+Image withoutAlpha(const Image &rgba);
+Image multiplied(const Image &a, const Image &b);
+Image multiplied(const Image &a, const std::vector<double> &factors);
+Image divided(const Image &a, const Image &b);
+Image blended(const Image &a, double alpha, const Image &b, double beta, double gamma);
+Image addScaled(const Image &a, double scale, const Image &b);
+Image subtractedFrom(double value, const Image &a);
+Image magnitude(const Image &x, const Image &y);
+Image squareRoot(const Image &a);
+Image atLeast(const Image &a, float bound);
+Image atLeast(const Image &a, const std::vector<float> &bounds);
+Image atMost(const Image &a, float bound);
+Image transformed(const Image &a, const Matrix<float, 3, 3> &matrix);
+Image bitwiseOr(const Image &a, const Image &b);
+Image bitwiseAnd(const Image &a, const Image &b);
+Image bitwiseNot(const Image &a);
+
+// New pixels at one value, every channel alike, as OpenCV makes a Scalar the depth's: rounded half
+// to even and saturated for integers. Any depth.
+Image filled(Size size, Depth depth, int channels, double value);
+// The same in place: one value, or one per channel (as many as channels); value where mask, bytes
+// of one channel and of the image's size, is not zero.
+void fill(Image &image, double value);
+void fill(Image &image, const std::vector<double> &values);
+void fillWhere(Image &image, double value, const Image &mask);
+// from's pixels into to, of the same size, depth and channels, such as a tile into its place.
+void copyInto(const Image &from, Image &to);
+// Each value times scale plus shift into out, F32 of the same size and channels, from any depth,
+// as OpenCV's convertTo: in floats, the scale and the shift made floats first; doubles in doubles.
+void convertInto(const Image &from, Image &out, double scale = 1.0, double shift = 0.0);
+
+// f(a), f(a, b) or f(a, b, c) value by value into a new F32 image, on F32 images of one size and
+// channel count, or std::invalid_argument: the arithmetic a module writes in one line, in the
+// order it is written. Serial: run within a caller's threads or on small images.
+void checkMappable(const Image &a, const Image *b = nullptr, const Image *c = nullptr);
+template <typename F>
+Image mapped(const Image &a, F f)
+{
+    checkMappable(a);
+    Image out = Image::create(a.size(), Depth::F32, a.channels());
+    const std::size_t values = std::size_t(a.width()) * std::size_t(a.channels());
+    for (int y = 0; y < a.height(); ++y) {
+        const float *x = a.row<float>(y);
+        float *row = out.mutableRow<float>(y);
+        for (std::size_t v = 0; v < values; ++v)
+            row[v] = f(x[v]);
+    }
+    return out;
+}
+template <typename F>
+Image mapped(const Image &a, const Image &b, F f)
+{
+    checkMappable(a, &b);
+    Image out = Image::create(a.size(), Depth::F32, a.channels());
+    const std::size_t values = std::size_t(a.width()) * std::size_t(a.channels());
+    for (int y = 0; y < a.height(); ++y) {
+        const float *x = a.row<float>(y), *z = b.row<float>(y);
+        float *row = out.mutableRow<float>(y);
+        for (std::size_t v = 0; v < values; ++v)
+            row[v] = f(x[v], z[v]);
+    }
+    return out;
+}
+template <typename F>
+Image mapped(const Image &a, const Image &b, const Image &c, F f)
+{
+    checkMappable(a, &b, &c);
+    Image out = Image::create(a.size(), Depth::F32, a.channels());
+    const std::size_t values = std::size_t(a.width()) * std::size_t(a.channels());
+    for (int y = 0; y < a.height(); ++y) {
+        const float *x = a.row<float>(y), *z = b.row<float>(y), *w = c.row<float>(y);
+        float *row = out.mutableRow<float>(y);
+        for (std::size_t v = 0; v < values; ++v)
+            row[v] = f(x[v], z[v], w[v]);
+    }
+    return out;
+}
+// The same in place on a writable F32 image.
+template <typename F>
+void mapInPlace(Image &a, F f)
+{
+    checkMappable(a);
+    const std::size_t values = std::size_t(a.width()) * std::size_t(a.channels());
+    for (int y = 0; y < a.height(); ++y) {
+        float *row = a.mutableRow<float>(y);
+        for (std::size_t v = 0; v < values; ++v)
+            row[v] = f(row[v]);
+    }
+}
 
 // Over a whole image of one channel: how many values are not zero (F32 or bytes); the smallest and
 // largest and where each first lies, rows first.

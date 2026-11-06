@@ -85,8 +85,8 @@ int main(int argc, char **argv)
         cv::Mat oracle;
         const double openCv = medianOfThree([&] { cv::GaussianBlur(input, oracle, cv::Size(0, 0), c.sigma, c.sigma, c.border == edge ? cv::BORDER_REFLECT : c.border == last ? cv::BORDER_REPLICATE : cv::BORDER_REFLECT_101); });
         Image ours;
-        const double mine = medianOfThree([&] { ours = gaussianBlur(image, c.sigma, threads, c.border); });
-        const double one = c.width >= 640 ? milliseconds([&] { (void)gaussianBlur(image, c.sigma, 1, c.border); }) : 0.0;
+        const double mine = medianOfThree([&] { ours = gaussianBlurred(image, c.sigma, c.border, threads); });
+        const double one = c.width >= 640 ? milliseconds([&] { (void)gaussianBlurred(image, c.sigma, c.border, 1); }) : 0.0;
         double difference = 0;
         const cv::Mat gap = cv::abs(asMat(ours) - oracle);
         cv::minMaxLoc(gap.reshape(1), nullptr, &difference);

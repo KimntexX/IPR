@@ -47,13 +47,6 @@ std::uint16_t at(const Image &image, int x, int y, int c = 0)
     return image.row<std::uint16_t>(y)[x * image.channels() + c];
 }
 
-Image turned(const Image &image, int turns)
-{
-    Image out = Image::create(turns % 2 ? Size{image.height(), image.width()} : image.size(), image.depth(), image.channels());
-    turnInto(image, out, turns);
-    return out;
-}
-
 void turnsComeBackAfterFour()
 {
     const Image image = numbered({5, 3}, 2);

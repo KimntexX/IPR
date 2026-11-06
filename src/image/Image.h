@@ -9,7 +9,8 @@
 
 namespace ipr {
 
-enum class Depth { U8, U16, F32, F64 };
+// S16 and S32: signed integers, for labels and indices.
+enum class Depth { U8, U16, S16, S32, F32, F64 };
 
 std::size_t depthBytes(Depth depth);
 

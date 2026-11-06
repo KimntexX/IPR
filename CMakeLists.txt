@@ -246,7 +246,7 @@ add_library(iprImage STATIC src/image/Types.h src/image/Image.h src/image/Image.
     src/image/Parallel.h src/image/Parallel.cpp src/image/Filters.h src/image/Filters.cpp
     src/image/Resize.h src/image/Resize.cpp src/image/Warp.h src/image/Warp.cpp src/image/Arrange.h src/image/Arrange.cpp
     src/image/Neighbourhood.h src/image/Neighbourhood.cpp src/image/Pixels.h src/image/Pixels.cpp
-    src/image/Analysis.h src/image/Analysis.cpp)
+    src/image/Analysis.h src/image/Analysis.cpp src/image/Random.h)
 target_include_directories(iprImage PUBLIC src/image)
 target_link_libraries(iprImage PUBLIC Threads::Threads)
 set_target_properties(iprImage PROPERTIES AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)

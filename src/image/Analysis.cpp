@@ -526,4 +526,20 @@ void matchTemplateInto(const Image &image, const Image &templ, Image &out)
         parallelRows(size.height, rows);
 }
 
+Image hannWindow(Size size)
+{
+    Image out = Image::create(size, Depth::F32, 1);
+    hannWindowInto(out);
+    return out;
+}
+
+Image matchedTemplate(const Image &image, const Image &templ)
+{
+    if (image.empty() || templ.empty())
+        return {};
+    Image out = Image::create({image.width() - templ.width() + 1, image.height() - templ.height() + 1}, Depth::F32, 1);
+    matchTemplateInto(image, templ, out);
+    return out;
+}
+
 } // namespace ipr

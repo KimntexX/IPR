@@ -13,6 +13,8 @@ Depth depthOf(const cv::Mat &mat)
     switch (mat.depth()) {
     case CV_8U: return Depth::U8;
     case CV_16U: return Depth::U16;
+    case CV_16S: return Depth::S16;
+    case CV_32S: return Depth::S32;
     case CV_32F: return Depth::F32;
     case CV_64F: return Depth::F64;
     default: throw std::invalid_argument("The image layer has no such depth");
@@ -24,6 +26,8 @@ int cvDepthOf(Depth depth)
     switch (depth) {
     case Depth::U8: return CV_8U;
     case Depth::U16: return CV_16U;
+    case Depth::S16: return CV_16S;
+    case Depth::S32: return CV_32S;
     case Depth::F32: return CV_32F;
     case Depth::F64: return CV_64F;
     }

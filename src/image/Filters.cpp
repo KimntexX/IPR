@@ -108,14 +108,19 @@ std::vector<float> gaussianKernel(int size, double sigma)
     return taps;
 }
 
-Image gaussianBlur(const Image &image, double sigma, int threads, BlurBorder border)
+Image gaussianBlurred(const Image &image, double sigma, BlurBorder border, int threads)
 {
-    if (!image.empty() && image.depth() != Depth::F32)
+    return gaussianBlurred(image, sigma, sigma, border, threads);
+}
+
+Image gaussianBlurred(const Image &image, double sigmaX, double sigmaY, BlurBorder border, int threads)
+{
+    if (image.empty())
+        return {};
+    if (image.depth() != Depth::F32)
         throw std::invalid_argument("The blur reads 32-bit floats");
-    if (image.empty() || gaussianHalfKernel(sigma).empty())
-        return image.clone();
     Image out = Image::create(image.size(), Depth::F32, image.channels());
-    gaussianBlurInto(image, out, sigma, threads, border);
+    gaussianBlurInto(image, out, sigmaX, sigmaY, threads, border);
     return out;
 }
 

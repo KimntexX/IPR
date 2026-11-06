@@ -160,8 +160,10 @@ Size scaledSize(Size size, double scaleX, double scaleY)
 
 Image resized(const Image &image, Size size, Interpolation interpolation, int threads)
 {
-    if (image.empty() || size.empty())
-        throw std::invalid_argument("Resizing needs an image and a size");
+    if (image.empty())
+        return {};
+    if (size.empty())
+        throw std::invalid_argument("Resizing needs a size");
     Image out = Image::create(size, Depth::F32, image.channels());
     resizeInto(image, out, interpolation, threads);
     return out;
@@ -169,8 +171,10 @@ Image resized(const Image &image, Size size, Interpolation interpolation, int th
 
 Image resizedBy(const Image &image, double scaleX, double scaleY, Interpolation interpolation, int threads)
 {
-    if (image.empty() || !validScales(scaleX, scaleY))
-        throw std::invalid_argument("Resizing needs an image and scales above zero");
+    if (image.empty())
+        return {};
+    if (!validScales(scaleX, scaleY))
+        throw std::invalid_argument("Resizing needs scales above zero");
     const Size size = scaledSize(image.size(), scaleX, scaleY);
     if (size.empty())
         throw std::invalid_argument("Resizing needs an image and a size");

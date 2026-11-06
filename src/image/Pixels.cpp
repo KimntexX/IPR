@@ -416,4 +416,234 @@ void meanAndDeviationOf(const Image &image, std::vector<double> &mean, std::vect
     }
 }
 
+namespace {
+
+Image like(const Image &a, int channels)
+{
+    return Image::create(a.size(), a.depth(), channels);
+}
+
+// A new image of a's layout written by into, or empty for an empty a.
+template <typename Into>
+Image made(const Image &a, int channels, const Into &into)
+{
+    if (a.empty())
+        return {};
+    Image out = like(a, channels);
+    into(out);
+    return out;
+}
+
+} // namespace
+
+Image merged(const std::vector<const Image *> &planes)
+{
+    if (planes.empty() || !planes.front() || planes.front()->empty())
+        return {};
+    return made(*planes.front(), int(planes.size()), [&](Image &out) { mergeChannelsInto(planes, out); });
+}
+
+Image merged(const std::vector<Image> &planes)
+{
+    std::vector<const Image *> pointers;
+    for (const Image &plane : planes)
+        pointers.push_back(&plane);
+    return merged(pointers);
+}
+
+Image channel(const Image &image, int index)
+{
+    return made(image, 1, [&](Image &out) { channelInto(image, out, index); });
+}
+
+Image withoutAlpha(const Image &rgba)
+{
+    return made(rgba, 3, [&](Image &out) { firstChannelsInto(rgba, out); });
+}
+
+Image multiplied(const Image &a, const Image &b)
+{
+    return made(a, a.channels(), [&](Image &out) { multiplyInto(a, b, out); });
+}
+
+Image multiplied(const Image &a, const std::vector<double> &factors)
+{
+    return made(a, a.channels(), [&](Image &out) { multiplyInto(a, factors, out); });
+}
+
+Image divided(const Image &a, const Image &b)
+{
+    return made(a, a.channels(), [&](Image &out) { divideInto(a, b, out); });
+}
+
+Image blended(const Image &a, double alpha, const Image &b, double beta, double gamma)
+{
+    return made(a, a.channels(), [&](Image &out) { blendInto(a, alpha, b, beta, gamma, out); });
+}
+
+Image addScaled(const Image &a, double scale, const Image &b)
+{
+    return made(a, a.channels(), [&](Image &out) { addScaledInto(a, scale, b, out); });
+}
+
+Image subtractedFrom(double value, const Image &a)
+{
+    return made(a, a.channels(), [&](Image &out) { subtractFromInto(value, a, out); });
+}
+
+Image magnitude(const Image &x, const Image &y)
+{
+    return made(x, x.channels(), [&](Image &out) { magnitudeInto(x, y, out); });
+}
+
+Image squareRoot(const Image &a)
+{
+    return made(a, a.channels(), [&](Image &out) { squareRootInto(a, out); });
+}
+
+Image atLeast(const Image &a, float bound)
+{
+    return made(a, a.channels(), [&](Image &out) { atLeastInto(a, bound, out); });
+}
+
+Image atLeast(const Image &a, const std::vector<float> &bounds)
+{
+    return made(a, a.channels(), [&](Image &out) { atLeastInto(a, bounds, out); });
+}
+
+Image atMost(const Image &a, float bound)
+{
+    return made(a, a.channels(), [&](Image &out) { atMostInto(a, bound, out); });
+}
+
+Image transformed(const Image &a, const Matrix<float, 3, 3> &matrix)
+{
+    return made(a, a.channels(), [&](Image &out) { transformInto(a, matrix, out); });
+}
+
+Image bitwiseOr(const Image &a, const Image &b)
+{
+    return made(a, a.channels(), [&](Image &out) { bitwiseOrInto(a, b, out); });
+}
+
+Image bitwiseAnd(const Image &a, const Image &b)
+{
+    return made(a, a.channels(), [&](Image &out) { bitwiseAndInto(a, b, out); });
+}
+
+Image bitwiseNot(const Image &a)
+{
+    return made(a, a.channels(), [&](Image &out) { bitwiseNotInto(a, out); });
+}
+
+namespace {
+
+template <typename T>
+void fillValues(Image &image, const std::vector<double> &values, const Image *mask)
+{
+    const int channels = image.channels();
+    std::vector<T> pixel(static_cast<size_t>(channels));
+    for (int c = 0; c < channels; ++c)
+        pixel[size_t(c)] = saturate<T>(values[size_t(c)]);
+    for (int y = 0; y < image.height(); ++y) {
+        T *row = image.mutableRow<T>(y);
+        const std::uint8_t *where = mask ? mask->row<std::uint8_t>(y) : nullptr;
+        for (int x = 0; x < image.width(); ++x)
+            if (!where || where[x])
+                for (int c = 0; c < channels; ++c)
+                    row[x * channels + c] = pixel[size_t(c)];
+    }
+}
+
+void fillValues(Image &image, const std::vector<double> &values, const Image *mask)
+{
+    need(int(values.size()) >= image.channels(), "A value per channel");
+    switch (image.depth()) {
+    case Depth::U8: fillValues<std::uint8_t>(image, values, mask); break;
+    case Depth::U16: fillValues<std::uint16_t>(image, values, mask); break;
+    case Depth::S16: fillValues<std::int16_t>(image, values, mask); break;
+    case Depth::S32: fillValues<std::int32_t>(image, values, mask); break;
+    case Depth::F32: fillValues<float>(image, values, mask); break;
+    case Depth::F64: fillValues<double>(image, values, mask); break;
+    }
+}
+
+template <typename T>
+void convertValues(const Image &from, Image &out, float scale, float shift)
+{
+    const size_t values = size_t(from.width()) * size_t(from.channels());
+    for (int y = 0; y < from.height(); ++y) {
+        const T *in = from.row<T>(y);
+        float *row = out.mutableRow<float>(y);
+        for (size_t v = 0; v < values; ++v)
+            row[v] = float(in[v]) * scale + shift;
+    }
+}
+
+} // namespace
+
+Image filled(Size size, Depth depth, int channels, double value)
+{
+    Image image = Image::create(size, depth, channels);
+    fill(image, value);
+    return image;
+}
+
+void fill(Image &image, double value)
+{
+    fillValues(image, std::vector<double>(size_t(std::max(image.channels(), 1)), value), nullptr);
+}
+
+void fill(Image &image, const std::vector<double> &values)
+{
+    fillValues(image, values, nullptr);
+}
+
+void fillWhere(Image &image, double value, const Image &mask)
+{
+    need(mask.depth() == Depth::U8 && mask.channels() == 1 && mask.size() == image.size(),
+         "A mask of bytes, one channel, of the image's size");
+    fillValues(image, std::vector<double>(size_t(std::max(image.channels(), 1)), value), &mask);
+}
+
+void copyInto(const Image &from, Image &to)
+{
+    sameShape(from, to);
+    const size_t length = size_t(from.width()) * from.pixelBytes();
+    for (int y = 0; y < from.height(); ++y)
+        std::memcpy(to.mutableRow<std::uint8_t>(y), from.row<std::uint8_t>(y), length);
+}
+
+void convertInto(const Image &from, Image &out, double scale, double shift)
+{
+    need(out.depth() == Depth::F32 && out.size() == from.size() && out.channels() == from.channels(),
+         "Floats of the image's size and channels");
+    const float a = float(scale), b = float(shift);
+    switch (from.depth()) {
+    case Depth::U8: convertValues<std::uint8_t>(from, out, a, b); break;
+    case Depth::U16: convertValues<std::uint16_t>(from, out, a, b); break;
+    case Depth::S16: convertValues<std::int16_t>(from, out, a, b); break;
+    case Depth::S32: convertValues<std::int32_t>(from, out, a, b); break;
+    case Depth::F32: convertValues<float>(from, out, a, b); break;
+    case Depth::F64:
+        // Doubles are scaled in doubles, then rounded.
+        for (int y = 0; y < from.height(); ++y) {
+            const double *in = from.row<double>(y);
+            float *row = out.mutableRow<float>(y);
+            for (size_t v = 0; v < size_t(from.width()) * size_t(from.channels()); ++v)
+                row[v] = float(in[v] * scale + shift);
+        }
+        break;
+    }
+}
+
+void checkMappable(const Image &a, const Image *b, const Image *c)
+{
+    need(a.empty() || a.depth() == Depth::F32, "Floats");
+    if (b)
+        sameShape(a, *b);
+    if (c)
+        sameShape(a, *c);
+}
+
 } // namespace ipr

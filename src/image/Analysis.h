@@ -31,6 +31,7 @@ Matrix33d nearestRotation(const Matrix33d &m);
 // The Hann window of this size, as OpenCV's createHanningWindow: the square root of the product of
 // a Hann curve across and one down. F32, one channel, two values or more each way.
 void hannWindowInto(Image &out);
+Image hannWindow(Size size);
 
 // The translation of b against a, by phase correlation of the two windowed images, as OpenCV's
 // phaseCorrelate: both F32 of one channel and of one size, the window too.
@@ -40,6 +41,8 @@ Point<double> phaseCorrelation(const Image &a, const Image &b, const Image &wind
 // TM_CCOEFF_NORMED), from -1 to 1. Both F32 of one channel; out is
 // (image.width - templ.width + 1, image.height - templ.height + 1).
 void matchTemplateInto(const Image &image, const Image &templ, Image &out);
+// The same into a new image; empty when either is.
+Image matchedTemplate(const Image &image, const Image &templ);
 
 } // namespace ipr
 

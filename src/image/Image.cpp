@@ -42,6 +42,8 @@ std::size_t depthBytes(Depth depth)
     switch (depth) {
     case Depth::U8: return 1;
     case Depth::U16: return 2;
+    case Depth::S16: return 2;
+    case Depth::S32: return 4;
     case Depth::F32: return 4;
     case Depth::F64: return 8;
     }

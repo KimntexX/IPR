@@ -448,4 +448,54 @@ void maximumInto(const Image &image, Image &out, int width, int height, Beyond b
     extreme<true>(image, out, width, height, beyond, threads);
 }
 
+namespace {
+
+// A new image of the image's layout written by into, or empty for an empty image.
+template <typename Into>
+Image filtered(const Image &image, const Into &into)
+{
+    if (image.empty())
+        return {};
+    Image out = Image::create(image.size(), image.depth(), image.channels());
+    into(out);
+    return out;
+}
+
+} // namespace
+
+Image sobel(const Image &image, bool alongX, double scale)
+{
+    return filtered(image, [&](Image &out) { sobelInto(image, out, alongX, scale); });
+}
+
+Image laplacian(const Image &image)
+{
+    return filtered(image, [&](Image &out) { laplacianInto(image, out); });
+}
+
+Image centralDifference(const Image &image, bool alongX)
+{
+    return filtered(image, [&](Image &out) { centralDifferenceInto(image, out, alongX); });
+}
+
+Image median(const Image &image, int side)
+{
+    return filtered(image, [&](Image &out) { medianInto(image, out, side); });
+}
+
+Image boxMean(const Image &image, Size window, BlurBorder border)
+{
+    return filtered(image, [&](Image &out) { boxMeanInto(image, out, window.width, window.height, border); });
+}
+
+Image minimum(const Image &image, Size window, Beyond beyond)
+{
+    return filtered(image, [&](Image &out) { minimumInto(image, out, window.width, window.height, beyond); });
+}
+
+Image maximum(const Image &image, Size window, Beyond beyond)
+{
+    return filtered(image, [&](Image &out) { maximumInto(image, out, window.width, window.height, beyond); });
+}
+
 } // namespace ipr

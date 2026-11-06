@@ -23,6 +23,11 @@ void remapInto(const Image &image, Image &out, const Image &mapX, const Image &m
 void warpPerspectiveInto(const Image &image, Image &out, const Matrix33d &outToImage, Resampling resampling,
                          Outside outside, int threads = 0);
 
+// The same into new images, of the maps' size or of this size. Empty for an empty image or map.
+Image remapped(const Image &image, const Image &mapX, const Image &mapY, Resampling resampling, Outside outside);
+Image warpedPerspective(const Image &image, const Matrix33d &outToImage, Size size, Resampling resampling,
+                        Outside outside);
+
 } // namespace ipr
 
 #endif // IPR_IMAGE_WARP_H
