@@ -806,11 +806,11 @@ le pilote bruité, sans choisir la meilleure graine ou assouplir les seuils.
 L'essai suivant conserve cette architecture et pondère la MSE de chaque
 exemple par `max(MSE bilinéaire,1e-6)` en unités physiques, avec référence
 détachée du gradient. Les deux graines passent alors12/12 critères sur20
-et80 contrôles consultés. L'erreur globale baisse pour71 mais augmente
-de5,57 % pour73 face à leurs témoins respectifs. La fidélité des ondes
+et80 contrôles consultés. L'erreur globale baisse pour 71 mais augmente
+de5,57 % pour 73 face à leurs témoins respectifs. La fidélité des ondes
 progresse fortement. La confirmation suivante sur quatre checkpoints
 et832 cas nouveaux retrouve ce gain, mais l'erreur sur128 contours
-distincts augmente de6,69 %/17,96 % pour71/73 face à l'objectif RGB.
+distincts augmente de6,69 %/17,96 % pour 71/73 face à l'objectif RGB.
 Il n'y a donc pas de supériorité globale uniforme. Un seul objectif
 intermédiaire, d'exposant d'énergie1/2, est fixé avant deux nouveaux
 apprentissages, puis comparaison des six modèles sur une autre cohorte.
@@ -1254,3 +1254,20 @@ Pr?vol instrument? et tests du garde passent, mais la tenue longue reste
 trois contr?les complets par graine ; admission 60 s sous70 %, seuils actifs
 inchang?s, aucune reprise automatique ni photo. L?historique des tentatives
 et r?f?rences de contr?les/jalons est explicitement maintenu ? la reprise.
+
+
+### Bilan de l?essai prolong? ? 6 novembre 2026, 11 h Paris
+
+Les deux graines terminent 256 pas, sauvegardes et trois contr?les complets,
+sans d?passement. Pic global 75,72 %, priv? 4,4852 Gio ; marge locale d?environ
+15 Mio seulement. Les pointes nocturnes ne sont pas reproduites : admission
+et charge syst?me ont chang? ensemble. La qualification porte sur environ
+17 minutes par graine, pas plusieurs heures sous charge concurrente.
+
+Le contr?le CFA r?v?le une perte de transfert apr?s apprentissage (19/24
+et 21/24 groupes sous 0,95), avec MSE d?grad?e sur 73 malgr? une perte de formation
+plus faible. Aucun b?n?fice photo, capacit? insuffisante ou condamnation de
+l?architecture ne peut ?tre conclu. Avant prolongation, auditer couverture
+du bruit/fr?quences et objectif ? architecture fixe ; ne pas confondre ces
+contr?les CFA absolus avec les anciens ratios au parent RGB. Pas de nouvelle
+exp?rience ni d?apprentissage long relanc? ? la cl?ture.

@@ -7,12 +7,12 @@ Ce bénéfice n'est pas démontré pour le correcteur CFA actuel.
 
 | Question | État et décision actuelle |
 | --- | --- |
-| Ce qui fonctionne | Contrats, signal signé, limites de ressources, reprise et mesures synthétiques traçables. Ce ne sont pas des preuves de qualité photo. |
-| Ce qui bloque | Tenue m?moire prolong?e non qualifi?e : trois pointes de RAM globale interrompent la nuit. Aucun jalon entra?n? ni b?n?fice photographique mesur? pour la nouvelle architecture. |
+| Ce qui fonctionne | Contrats sign?s, reprise, suivi par phase et deux essais m?moire de 256 pas, huit sauvegardes et trois contr?les complets par graine, sans d?passement. Pas une preuve de qualit? photo. |
+| Ce qui bloque | Pr?servation du signal : apr?s 256 pas, 19/24 et 21/24 groupes connus ont au moins un gain CFA sous 0,95. La seconde graine d?grade aussi la MSE des contr?les. |
 | Derniers résultats | Réplication close : 10 et 12 échecs forts sur 48, après les 12 et 16 précédents. Sur les photos, sensibilité aux graines et motifs directionnels : bénéfice non validé. |
 | Calcul engagé | Courbe et photos achevées ; qualification des poids finaux préparée sur les contrôles connus, CPU épinglé, deux graines et seuils inchangés. Aucune nouvelle réserve. |
-| Prochaine preuve utile | Qualifier une dur?e m?moire prolong?e avec traces temporelles et marge d?admission suffisante avant de replanifier l?apprentissage. Pas de verdict qualit? ? partir de 32 pas. |
-| GPU | Calcul et reprise exacte qualifi?s sur pr?vol court seulement ; d?bit effectif observ? autour de 2,55?2,60 s/pas. Une nuit stable n?est pas d?montr?e. Aucun rendu GPU relanc? pendant cet audit. |
+| Prochaine preuve utile | Auditer couverture des niveaux de bruit et des fr?quences, et objectif CFA ? architecture fixe, avant de prolonger les poids. Pas d?augmentation de taille ni de s?lection du meilleur jalon sur ces scores. |
+| GPU | D?bit m?dian 2,33?2,36 s/pas pendant la qualification ; environ 17 min par graine avec contr?les. Marge locale d?environ 15 Mio seulement au pic ; aucune garantie de plusieurs heures ou d?environnement concurrent. |
 | Données | 349 RAW inventoriés, 105 paires étudiées. Température, bruit fixe et propagation restent à qualifier ; pas de nouvelles prises demandées pour cette expérience. |
 | Critère d'arrêt | Pas de nouvelle série de variantes synthétiques pour améliorer les mêmes seuils. Après une courbe longue figée et un bruit caractérisé, absence de gain visible face au classique : abandon ou changement de taille/architecture, décision documentée. |
 
@@ -3265,10 +3265,10 @@ seuil ne change. Le succès de ce nouveau groupe ne remplace pas l'échec
 du groupe20 historique, conservé dans la conclusion.
 
 Le gain n'est pas universel : sur les128 nouveaux couples de contours,
-64 gagnent/64 perdent pour la graine71 et61 gagnent/67 perdent pour73
+64 gagnent/64 perdent pour la graine71 et61 gagnent/67 perdent pour 73
 face à la bilinéaire (tolérance absolue MSE10⁻¹²). Les pires ratios
 individuels y valent1,03062 et1,03236. Sur80cas mixtes,41 gagnent/7
-perdent/32 sont ex æquo pour71,40/8/32 pour73. Cela reste une validation
+perdent/32 sont ex æquo pour 71,40/8/32 pour 73. Cela reste une validation
 de structure synthétique limitée, sans gain visuel ou débruitage réel
 revendiqué. Ces données de confirmation sont désormais consultées.
 
@@ -3835,7 +3835,7 @@ sur cette distribution procédurale, sans annuler l'échec historique73.
 Les576 sorties comparées (288 par graine, dont80 rejeux connus) sont
 **identiques au bit près** entre les noyaux projetés à chaque appel et
 leur copie préparée une fois. Les sites observés restent exacts et les
-modèles sources inchangés. La préparation prend6,00/4,74ms pour71/73.
+modèles sources inchangés. La préparation prend6,00/4,74ms pour 71/73.
 Les médianes CPU par appel128px passent de8,17à7,16ms et de8,09à6,89ms.
 Le protocole chronométrique porte sur quatre entrées constantes en
 quatre phases, pas sur des photos pleine définition.
@@ -4000,7 +4000,7 @@ cas mixtes et leur sous-ensemble20. La campagne dure12,33s, pic résident
 Le groupe mixte favorise le nouvel objectif, mais le groupe distinct de
 contours montre une hausse d'erreur de6,69 % et17,96 %. Il serait biaisé
 de présenter seulement les contours du groupe mixte. Sur128 cas distincts,
-83/80 s'améliorent et45/48 régressent pour71/73 ; malgré la majorité de
+83/80 s'améliorent et45/48 régressent pour 71/73 ; malgré la majorité de
 cas gagnants, les régressions pèsent davantage dans l'erreur agrégée.
 Les rapports RGB à la bilinéaire restent inférieurs à1 sur ce groupe :
 RGB71/73=0,35571/0,40164, relatif71/73=0,37952/0,47375.
@@ -4043,7 +4043,7 @@ restent une étude sans bruit, sans qualification photo ou intégration.
 
 Les deux apprentissages tempérés se terminent en149,06/152,29s. Sur les
 contrôles historiques80, leurs rapports RGB à la bilinéaire valent
-0,37017/0,42457 pour71/73 ;12/12 critères passent sur20 et80. Les pics
+0,37017/0,42457 pour 71/73 ;12/12 critères passent sur20 et80. Les pics
 résidents valent304,06/299,44Mio, engagés950,51/959,66Mio, machine65,01/
 63,62 %. Aucun seuil atteint. L'écart maximal D4 reste1,79e-7/2,38e-7.
 
@@ -4103,7 +4103,7 @@ cas mixtes et leur sous-ensemble20. Les sites capteur restent inchangés.
 
 Face au témoin RGB, le tempéré réduit ici l'erreur mixte de19,76/19,97 %
 et celle des contours distincts de9,46/6,95 %. Sur128 contours,102/100
-cas s'améliorent et26/28 régressent pour71/73. Le gain ne vaut donc
+cas s'améliorent et26/28 régressent pour 71/73. Le gain ne vaut donc
 pas pour tous les contenus. Le gradient de ces contours vaut0,95337/
 0,90692, contre0,93590/0,90456 en RGB. Les erreurs des ondes chromatiques
 tempérées valent0,03735/0,08663 fois celles de la bilinéaire, avec des
@@ -4400,12 +4400,12 @@ Les checkpoints techniques finaux pèsent518697octets chacun.
 L'erreur bruitée baisse, et la correction contribue. Mais les deux modèles
 échouent au critère de gradient des contours à bruit fort, dans les mixtes
 et le groupe complet. Le gradient projeté des contours mixtes est0,87537
-contre0,95783 pour le parent71 ;0,81388 contre0,94884 pour73. Le lissage
+contre0,95783 pour le parent71 ;0,81388 contre0,94884 pour 73. Le lissage
 réduit aussi une partie du signal. Il ne suffit pas de présenter la MSE.
 
 Les nouveaux contrôles sans bruit passent12/12 pour les deux graines,
-mais la fidélité des ondes chromatiques historiques échoue pour71 sur
-20et80 et pour73 sur20. L'affinage du tronc dégrade donc une propriété
+mais la fidélité des ondes chromatiques historiques échoue pour 71 sur
+20et80 et pour 73 sur20. L'affinage du tronc dégrade donc une propriété
 déjà validée, malgré les ancres sans bruit. La petite ablation de correction
 ne permet pas d'attribuer tout le gain à celle-ci : le tronc est aussi affiné.
 Les parents ont un budget d'apprentissage plus court, limite maintenue.
@@ -4445,7 +4445,7 @@ Les deux affinages atteignent2048 étapes en214,08/176,98s, sans reprise.
 Tous les contrôles sans bruit passent pour les deux graines, et les
 rendus sigma0 sont identiques aux parents au bit près, comme prévu par
 le gel.3220 paramètres sont entraînés,33368 restent fixes. Mais le
-verdict complet n'est positif que pour73 :71 échoue au gain RGB faible
+verdict complet n'est positif que pour 73 :71 échoue au gain RGB faible
 bruit du lot complet (0,98294>0,98) et au gradient des contours à bruit fort.
 
 | Rapport MSE complet / parent | Faible71 | Faible73 | Fort71 | Fort73 |
@@ -4556,7 +4556,7 @@ rejoue les deux graines, sans ajustement de formule ni sélection.
 
 L'épreuve complète se termine en53,22s : les critères de structure, de
 couleur et de fidélité sans bruit passent. Le gain RGB faible du groupe
-complet échoue toujours :0,98883/0,98374 pour71/73, au lieu d'au plus0,98.
+complet échoue toujours :0,98883/0,98374 pour 71/73, au lieu d'au plus0,98.
 Au bruit fort, rapports0,94626/0,89891, critères passés. Le détecteur
 remplit mieux sa fonction, mais ne rend pas la correction suffisamment
 efficace. Preuve : [courbure, deux graines complètes](../raw/neural-edge-protection-v001-20261103T132514Z.json).
@@ -4620,7 +4620,7 @@ JSON de la campagne conservent les interruptions.
 
 La protection de courbure, sans réentraînement, conserve les contours.
 Les rapports RGB tous cas complets/parent deviennent0,90901/0,91164 au
-faible bruit et0,71243/0,70588 au bruit fort pour71/73. Mais le seul critère
+faible bruit et0,71243/0,70588 au bruit fort pour 71/73. Mais le seul critère
 restant échoue pour les deux : gradient des ondes achromatiques faibles.
 Pour71,0,95672 contre1,02031 au faible bruit,0,94705 contre0,99909 au fort.
 Pour73,0,95642 contre1,02126 et0,94190 contre1,00114. Ces projections
@@ -7224,3 +7224,102 @@ processus sans requ?tes au chat. Maintien ?veill? temporaire pendant
 l?essai, sans ordre de veille du PC. **R?sultats prolong?s encore attendus**,
 ? distinguer du pr?vol d?j? r?ussi. Aucun push, fusion, tag ou changement
 de production n?est engag?.
+
+
+## 6 novembre 2026 ? bilan de la qualification m?moire prolong?e
+
+**Deux verdicts distincts : essai de ressources r?ussi dans les conditions
+mesur?es ; pr?servation du signal appris insuffisante.** Le superviseur
+termine ? **11 h 00 min 07 s Paris**, sans erreur ni reprise. Les deux
+graines atteignent 256 mises ? jour ; les sauvegardes p?riodiques et les
+trois contr?les complets de 864 champs par graine sont pr?sents. Les
+empreintes des checkpoints, exports et checkpoints de reprise sont v?rifi?es.
+Aucun rendu photographique ou apprentissage suppl?mentaire n?est lanc?
+pendant cette relecture.
+
+### Tenue m?moire observ?e
+
+| Mesure | Graine 71 | Graine 73 |
+| --- | ---: | ---: |
+| Dur?e du processus, contr?les compris | 16 min 48 s | 16 min 57 s |
+| Mise ? jour m?diane | 2,331 s | 2,357 s |
+| RAM physique globale maximale | 75,26 % | 75,72 % |
+| M?moire priv?e maximale | 4,4852 Gio | 4,4761 Gio |
+| M?moire r?sidente maximale | 1,589 Gio | 1,590 Gio |
+| ?chantillons m?moire | 3 939 | 3 966 |
+| Journal local | 2,25 Mo | 2,26 Mo |
+| Premi?re violation | aucune | aucune |
+
+Les journaux restent sous leur plafond, sans troncature. Les pics priv?s
+se trouvent autour du **premier pas suivant le contr?le 128**, pendant la
+r?tropropagation ou le calcul avant. Les sauvegardes ne constituent pas
+le maximum priv? : leur pic est voisin de 4,35 Gio. La m?moire priv?e
+m?diane des ?chantillons de r?tropropagation passe d?environ 4,27 Gio
+sur les pas 17?128 ? 4,34?4,35 Gio sur 145?256, avec stabilisation sur cette
+fin d?intervalle. Cela d?crit un palier observ?, pas une preuve g?n?rale
+d?absence de fuite.
+
+Le pire pic ne laisse qu?environ **15 Mio sous le plafond souple local**.
+Une variation de biblioth?ques, de cache ou de charge concurrente peut
+encore l?atteindre. Les pointes globales ? 92?93 % de la nuit pr?c?dente
+ne sont pas reproduites ; la nouvelle admission et l?environnement ont
+chang? ensemble. On ne peut pas attribuer la r?ussite au seul seuil
+initial de 70 %, ni d?clarer les anciennes alertes erron?es.
+L?essai qualifie deux processus d?environ17 minutes et leurs transitions,
+pas une nuit de plusieurs heures sous une autre charge syst?me.
+
+### Contr?les du signal pendant cet essai de ressources
+
+Ces mesures sont des diagnostics **CFA directs**, avec gain absolu de
+la composante sinuso?dale par rapport au signal propre. Elles n?utilisent
+pas le parent RGB appris historique : leurs nombres d??checs ne sont pas
+? comparer directement aux20/48 de l?ancien correcteur.
+
+| Graine / pas | Groupes avec un gain de canal <0,95 (sur24) | Gain de groupe minimal | M?diane des ratios MSE CFA de groupe au bruit observ? |
+| --- | ---: | ---: | ---: |
+| 71 / 0 | 0 | 0,9936 | 1,0000 |
+| 71 / 128 | 8 | 0,8447 | 0,9783 |
+| 71 / 256 | 19 | 0,6790 | 0,9527 |
+| 73 / 0 | 0 | 0,9936 | 1,0000 |
+| 73 / 128 | 14 | 0,3840 | 0,9468 |
+| 73 / 256 | 21 | ?0,2438 | 1,1944 |
+
+Au dernier jalon de 73, une composante p?riodique chromatique ? fr?quence18
+et bruit fort pr?sente m?me une r?ponse sinuso?dale moyenne n?gative
+sur un canal : il ne s?agit pas simplement d?un l?ger lissage. Ce signe
+ne signifie pas que toute l?image ou tous ses pixels deviennent n?gatifs.
+Les groupes et observations restent disponibles dans les preuves, pas
+seulement le cas le plus mauvais.
+
+La perte moyenne des64 premiers/derniers pas passe de 0,9857 ? 0,8084 pour 71
+et de 0,9856 ? 0,8030 pour 73. Cette baisse sur les contenus d?apprentissage
+n?emp?che donc pas la d?gradation des contr?les connus. Pour71, la m?diane
+MSE des groupes de bruit faible vaut 1,0066 et celle du bruit fort 0,8942
+au pas 256 ; pour 73, elles valent 1,2248 et 1,1478. La moyenne globale ne doit
+pas masquer les d?fauts ? faible bruit ou la perte de d?tails.
+
+### D?cision et prochaine investigation utile
+
+La nouvelle t?l?m?trie et la qualification prolong?e ont rempli leur r?le.
+Conserver l?architecture et les checkpoints comme ?tat exp?rimental, mais
+ne pas s?lectionner 71 ? la place de 73 ni prolonger automatiquement ces
+poids en supposant qu?un temps plus long corrigera la perte de signal.
+Ce budget court ne d?montre pas non plus que 32,6 M param?tres seraient
+insuffisants ou que l?architecture serait ? abandonner.
+
+La piste utile est maintenant un audit de la **couverture des niveaux de
+bruit, des fr?quences et de l?objectif CFA**, ? architecture fixe. Les
+sc?narios d?apprentissage ? loi mesur?e et les deux anciennes lois du
+contr?le diff?rent ; les mesures ne doivent pas ?tre pr?sent?es comme
+une g?n?ralisation d?j? acquise. Avant une autre longue r?servation,
+distinguer ce d?calage d?un biais de perte ou de donn?es, avec une petite
+exp?rience contr?l?e et les m?mes crit?res, sans r?glage opportuniste
+sur le pire groupe. Aucune nouvelle photo n?est requise pour cet audit
+pr?paratoire. Cette prochaine exp?rience n?est pas encore lanc?e.
+
+Preuves : [relecture m?moire et contr?les](../raw/neural-dru-memory-review-v001-20261106T100844Z.json),
+[superviseur complet, s?ries et contr?les inclus](../raw/neural-dru-overnight-v001-20261106T100007Z.json),
+[graine71](../raw/neural-dru-training-v001-71-20261106T094208Z.json)
+et [graine73](../raw/neural-dru-training-v001-73-20261106T100006Z.json).
+Les poids et pixels restent locaux. Aucun changement de production,
+publication, fusion ni tag. Tous les calculs de cette campagne sont clos.
