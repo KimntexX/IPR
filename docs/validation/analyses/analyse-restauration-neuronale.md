@@ -8094,3 +8094,69 @@ Contrats canoniques :
 Suivi : `build-patch_neural_restoration/dru-objective-study-v001/progress.json`.
 Aucun push, fusion, tag, changement photographique de production ou
 alignement de branche avec la migration OpenCV en cours de campagne.
+
+## 7 novembre 2026 — objectif structurel : gain partiel, critères non atteints
+
+La campagne s’est terminée normalement à **12 h 38 Paris**, après environ
+82 minutes : deux prévols et quatre entraînements de 256 étapes, tous
+réussis techniquement. Les prévols confirment la reprise exacte modèle/Adam.
+Les références rejouées ont les pertes et tous les contrôles 0/128/256
+identiques aux anciennes références. Aucun changement caché du raccordement
+MSE n’est détecté par ces vérifications.
+
+Preuve canonique incluant étapes et synthèse complète :
+[neural-dru-objective-study-v001-20261107T113848Z.json](../raw/neural-dru-objective-study-v001-20261107T113848Z.json).
+Les JSON par worker conservent les pertes totales, MSE et projection séparés,
+les contrôles complets, empreintes et séries mémoire. Aucun arrêt sur quota
+ni pause de charge n’a interrompu les quatre entraînements. Le pic privé
+échantillonné maximal est d’environ 4,51 Gio, sous la limite souple 5 Gio.
+
+### Résultat au jalon 256
+
+| Critère | Référence 71 | Structure 71 | Référence 73 | Structure 73 |
+| --- | ---: | ---: | ---: | ---: |
+| Groupes dont un gain moyen canal est sous 0,95, sur 24 | 19 | 13 | 21 | 18 |
+| Plus petit gain moyen de groupe/canal | 0,679 | 0,611 | 0,095 | 0,342 |
+| Ratio MSE médian des groupes | 0,953 | 0,924 | 1,030 | 0,951 |
+| Plus grand ratio MSE de groupe | 1,171 | 1,247 | 1,235 | 1,152 |
+
+Le terme structurel améliore le nombre de groupes protégés et le ratio MSE
+médian sur les **deux** graines. Mais le gain minimal et le pire ratio MSE
+se dégradent sur 71. Les critères stricts et le critère de poursuite appariée
+prédéfinis échouent donc tous deux. Ce n’est ni une absence d’effet, ni une
+validation. Aucun meilleur jalon/graine n’est choisi après lecture.
+
+À la fréquence 14, le gain moyen progresse de 0,933 à 0,972 pour 71 et de
+0,850 à 0,936 pour 73. À la fréquence 26, il passe de 0,899 à 0,903 pour 71,
+et de 0,810 à 0,868 pour 73. La protection paraît plus nette sur les
+fréquences intermédiaires ; les défauts fins extrêmes persistent.
+Ces moyennes sont descriptives, pas les critères d’acceptation par groupe.
+
+Au jalon 128, structure 73 conserve presque l’identité (gain minimal 0,991,
+ratio MSE médian 0,997) : cela ne constitue pas un bon débruiteur à retenir.
+Après 256 étapes, la protection s’érode. La moyenne des 32 derniers pas de
+structure 71 vaut MSE 0,827 + projection 0,013 ; pour 73, 0,827 + 0,019.
+Les pertes totales de deux objectifs différents ne sont pas comparées comme
+si elles mesuraient la même chose. Le petit terme moyen de projection sur
+les exemples train ne prouve pas la conservation des détails des contrôles.
+
+### Contrôle d’amplitude lancé avant une nouvelle modification d’objectif
+
+La variante ayant un effet partiel, la prochaine mesure utile est de vérifier
+si la protection concerne également les faibles contrastes, sans relancer un
+apprentissage long ni modifier la pondération après résultat. Le même banc
+d’amplitude est réutilisé avec une campagne et une liste de bras explicites :
+**référence/structure × graines 71/73 × jalons 128/256 × 108 champs**, soit
+**864 observations**. Les trois amplitudes 0,008/0,03/0,06, fréquences 6/14/26,
+angles, bruits, phase et tirages sont inchangés. Il ne s’agit pas d’un jeu
+réservé ni d’une nouvelle validation indépendante.
+
+Le contrôle GPU est lancé dans
+`build-patch_neural_restoration/dru-structure-amplitude-v001` ; logs
+`dru-structure-amplitude.stdout.log` et `.stderr.log`. Budget maximal
+20 minutes, quotas 5/6 Gio processus et 92 % système, allocation CUDA 50 %,
+quatre threads, pas d’entraînement, pas de veille demandée. Les plans et
+poids parents sont vérifiés ; les mesures brutes et tous les modèles sont
+conservés. Le bilan de ce contrôle sera nécessaire avant de décider si la
+projection globale doit être remplacée par une protection plus localisée.
+Aucune modification de production, publication ou fusion.

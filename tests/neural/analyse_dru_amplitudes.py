@@ -1,4 +1,5 @@
 """Summarize paired transfer and replay fixed blur witnesses without fitting a model."""
+import argparse
 from collections import defaultdict
 from datetime import datetime,timezone
 import json
@@ -27,16 +28,18 @@ def summarize(records):
         mse_ratio=sum(v[2] for v in rows)/sum(v[3] for v in rows)) for key,rows in sorted(buckets.items())]
 
 
-def run():
+def run(source=None,output=None):
     root=Path(__file__).resolve().parents[2];build=root/'build-patch_neural_restoration'
-    source=build/'dru-amplitude-diagnosis-v001/result.json'
+    source=build/'dru-amplitude-diagnosis-v001/result.json' if source is None else source.resolve()
+    output=build/'dru-amplitude-analysis-v001/result.json' if output is None else output.resolve()
+    if not all(p.resolve().is_relative_to(build.resolve()) for p in (source,output)):raise ValueError('Owned analysis paths required')
     measured=json.loads(source.read_text(encoding='utf-8'));plan=measured['plan']
     if measured['status']!='completed_amplitude_diagnostic_not_qualification':raise ValueError('Completed sweep required')
     def identity(r):return tuple(r[k] for k in ('arm','seed','step','amplitude','case_index','noise_index'))
     expected={(m['arm'],m['seed'],m['step'],a,f['case_index'],f['noise_index'])
         for m in plan['models'] for a in plan['amplitudes'] for f in plan['base_fields']}
     actual=[identity(r) for r in measured['records']]
-    if len(actual)!=1296 or len(set(actual))!=1296 or set(actual)!=expected:raise ValueError('Missing or duplicated observations')
+    if not expected or len(actual)!=len(expected) or len(set(actual))!=len(expected) or set(actual)!=expected:raise ValueError('Missing or duplicated observations')
     paired={}
     for row in measured['records']:
         k=tuple(row[n] for n in ('amplitude','case_index','noise_index'))
@@ -76,7 +79,7 @@ def run():
                     angle=case['angle'],noise_index=field['noise_index'],case_index=field['case_index'],
                     loss=probe,blurred_transfer=transfer))
     result.update(status='completed_amplitude_summary_and_objective_witness',memory=guard.stats())
-    output=build/'dru-amplitude-analysis-v001/result.json';output.parent.mkdir(exist_ok=False)
+    output.parent.mkdir(exist_ok=False)
     output.write_text(json.dumps(result,indent=2,allow_nan=False),encoding='utf-8')
     stamp=datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')
     canonical=root/'docs/validation/raw'/f'neural-dru-amplitude-analysis-v001-{stamp}.json'
@@ -84,4 +87,7 @@ def run():
     print(canonical,flush=True)
 
 
-if __name__=='__main__':run()
+if __name__=='__main__':
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--source',type=Path);parser.add_argument('--output',type=Path)
+    args=parser.parse_args();run(args.source,args.output)

@@ -1,4 +1,5 @@
 """Bounded no-training amplitude sweep, all arms/seeds at both trained milestones."""
+import argparse
 from datetime import datetime, timezone
 import gc
 import json
@@ -11,9 +12,13 @@ from campaign_artifacts import sha256
 from memory_budget import MemoryGuard
 
 
-def run():
+def run(campaign=None,output=None,arms=('reference','noise','details')):
     root=Path(__file__).resolve().parents[2];build=root/'build-patch_neural_restoration'
-    output=build/'dru-amplitude-diagnosis-v001';output.mkdir(exist_ok=False)
+    campaign=build/'dru-data-comparison-v001' if campaign is None else campaign.resolve()
+    output=build/'dru-amplitude-diagnosis-v001' if output is None else output.resolve()
+    if not all(p.resolve().is_relative_to(build.resolve()) for p in (campaign,output)):raise ValueError('Owned diagnostic paths required')
+    if len(set(arms))!=len(arms) or not arms or any(a not in ('reference','noise','details','structured') for a in arms):raise ValueError('Distinct declared arms required')
+    output.mkdir(exist_ok=False)
     source=build/'curve-known-fine-v001/result.json'
     source_plan=json.loads(source.read_text(encoding='utf-8'))['plan']
     fields=[f for f in source_plan['fields'] if source_plan['cases'][f['case_index']]['amplitude']==.06
@@ -22,7 +27,7 @@ def run():
     if len(fields)!=36:raise ValueError('Expected 36 balanced diagnostic fields')
     plan=dict(schema_version=1,created_at_utc=datetime.now(timezone.utc).isoformat(),amplitudes=[.008,.03,.06],
         frequencies=[6,14,26],angles=[.17,.63,1.07],milestones=[128,256],seeds=[71,73],
-        arms=['reference','noise','details'],base_fields=fields,source_sha256=sha256(source),
+        arms=list(arms),campaign=str(campaign),base_fields=fields,source_sha256=sha256(source),
         tools={n:sha256(Path(__file__).with_name(n)) for n in ('probe_dru_amplitudes.py','dru_cfa.py','confirm_fine_noise.py',
             'context_data.py','bayer_canonical.py','sensor_transfer_math.py')},models=[],
         limits=['Post-hoc known-development diagnostic, no independent validation or photographic claim.',
@@ -32,7 +37,7 @@ def run():
             '128-to-256 trajectory cannot prove asymptotic convergence.'])
     for arm in plan['arms']:
         for seed in plan['seeds']:
-            state_path=build/f'dru-data-comparison-v001/{arm}/seed{seed}/result.json'
+            state_path=campaign/arm/f'seed{seed}/result.json'
             state=json.loads(state_path.read_text(encoding='utf-8'))
             if state['status']!='completed_dru_bootstrap_not_photographic_qualification' or state['completed_steps']!=256:
                 raise ValueError('Complete parent runs required')
@@ -102,4 +107,8 @@ def run():
             json.dump(result,stream,indent=2,allow_nan=False)
 
 
-if __name__=='__main__':run()
+if __name__=='__main__':
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--campaign',type=Path);parser.add_argument('--output',type=Path)
+    parser.add_argument('--arms',nargs='+',default=['reference','noise','details'])
+    args=parser.parse_args();run(args.campaign,args.output,args.arms)
