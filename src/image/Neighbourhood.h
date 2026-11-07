@@ -31,6 +31,15 @@ enum class Beyond { Nothing, Zero };
 void minimumInto(const Image &image, Image &out, int width, int height, Beyond beyond, int threads = 0);
 void maximumInto(const Image &image, Image &out, int width, int height, Beyond beyond, int threads = 0);
 
+// The same into new images. An empty image gives an empty one.
+Image sobel(const Image &image, bool alongX, double scale = 1.0);
+Image laplacian(const Image &image);
+Image centralDifference(const Image &image, bool alongX);
+Image median(const Image &image, int side);
+Image boxMean(const Image &image, Size window, BlurBorder border);
+Image minimum(const Image &image, Size window, Beyond beyond);
+Image maximum(const Image &image, Size window, Beyond beyond);
+
 } // namespace ipr
 
 #endif // IPR_IMAGE_NEIGHBOURHOOD_H

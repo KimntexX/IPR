@@ -42,6 +42,8 @@ std::size_t depthBytes(Depth depth)
     switch (depth) {
     case Depth::U8: return 1;
     case Depth::U16: return 2;
+    case Depth::S16: return 2;
+    case Depth::S32: return 4;
     case Depth::F32: return 4;
     case Depth::F64: return 8;
     }
@@ -185,6 +187,11 @@ Image Image::view(const Recti &area) const
     return other;
 }
 
+Image Image::copy(const Recti &area) const
+{
+    return partOf(area).clone();
+}
+
 Image Image::mutableView(const Recti &area)
 {
     if (frozen())
@@ -208,6 +215,16 @@ bool Image::sharesPixelsWith(const Image &other) const
         return false;
     return m_block == other.m_block ||
            (m_block->first < other.m_block->last && other.m_block->first < m_block->last);
+}
+
+const void *Image::block() const
+{
+    return empty() ? nullptr : m_block->first;
+}
+
+std::size_t Image::blockBytes() const
+{
+    return empty() ? 0 : std::size_t(m_block->last - m_block->first);
 }
 
 const std::uint8_t *Image::rowBytes(int y) const

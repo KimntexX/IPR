@@ -1,8 +1,10 @@
 // Numeric audit of the masks: their place at every resolution, and what they cost per
 // render. Works on charts in memory, on no photo. Tolerances are fixed here, before the run.
 #include "LocalAdjustments.h"
+#include "image_testing.h"
+#include "Resize.h"
+#include "Pixels.h"
 
-#include <opencv2/imgproc.hpp>
 
 #include <QCoreApplication>
 #include <QDateTime>
@@ -27,10 +29,10 @@ constexpr double placeTolerance = 0.002;     // of the canvas's side
 constexpr double crossTolerance = 0.02;      // between resolutions, in coverage
 constexpr double previewLatencyMs = 40.0;    // one mask on the 2048 px proxy, per render
 
-const cv::Size preview(2048, 1365);
-const cv::Size full(6000, 4000);
+const ipr::Size preview(2048, 1365);
+const ipr::Size full(6000, 4000);
 
-Shape linear(cv::Point2f start, cv::Point2f end)
+Shape linear(ipr::Point2f start, ipr::Point2f end)
 {
     Shape shape;
     shape.start = start;
@@ -38,7 +40,7 @@ Shape linear(cv::Point2f start, cv::Point2f end)
     return shape;
 }
 
-Shape radial(cv::Point2f centre, float radiusX, float radiusY, float feather)
+Shape radial(ipr::Point2f centre, float radiusX, float radiusY, float feather)
 {
     Shape shape;
     shape.kind = Kind::Radial;
@@ -83,31 +85,26 @@ double crossing(const std::vector<float> &profile, float level)
     return -1.0;
 }
 
-std::vector<float> column(const cv::Mat &map, int x)
+std::vector<float> column(const ipr::Image &map, int x)
 {
-    std::vector<float> values(size_t(map.rows));
-    for (int y = 0; y < map.rows; ++y)
-        values[size_t(y)] = map.at<float>(y, x);
+    std::vector<float> values(size_t(map.height()));
+    for (int y = 0; y < map.height(); ++y)
+        values[size_t(y)] = imagetest::at<float>(map, y, x);
     return values;
 }
 
-std::vector<float> rowOf(const cv::Mat &map, int y)
+std::vector<float> rowOf(const ipr::Image &map, int y)
 {
-    const float *row = map.ptr<float>(y);
-    return std::vector<float>(row, row + map.cols);
+    const float *row = map.row<float>(y);
+    return std::vector<float>(row, row + map.width());
 }
 
 double worstAcross(const Mask &mask)
 {
-    cv::Mat reduced, difference;
-    cv::resize(coverage(mask, full), reduced, preview, 0, 0, cv::INTER_AREA);
-    cv::absdiff(reduced, coverage(mask, preview), difference);
-    double worst = 0.0;
-    cv::minMaxLoc(difference, nullptr, &worst);
-    return worst;
+    return ipr::largestDifference(ipr::resized(coverage(mask, full), preview, ipr::Interpolation::Area), coverage(mask, preview));
 }
 
-double millisecondsOf(const Masks &masks, const cv::Size &size)
+double millisecondsOf(const Masks &masks, const ipr::Size &size)
 {
     double best = std::numeric_limits<double>::infinity();
     for (int run = 0; run < 3; ++run) {
@@ -138,10 +135,10 @@ int main(int argc, char **argv)
     };
 
     // A gradient's middle is where its two ends say, at both resolutions.
-    for (const cv::Size &size : {preview, full}) {
-        const cv::Mat map = coverage(maskOf(linear({0.5f, 0.3f}, {0.5f, 0.7f})), size);
+    for (const ipr::Size &size : {preview, full}) {
+        const ipr::Image map = coverage(maskOf(linear({0.5f, 0.3f}, {0.5f, 0.7f})), size);
         record(QStringLiteral("linear middle at %1 px").arg(size.width), std::abs(crossing(column(map, size.width / 2), 0.5f) - 0.5), placeTolerance);
-        const cv::Mat edge = coverage(maskOf(radial({0.5f, 0.5f}, 0.25f, 0.2f, 0.0f)), size);
+        const ipr::Image edge = coverage(maskOf(radial({0.5f, 0.5f}, 0.25f, 0.2f, 0.0f)), size);
         // From the centre outwards; the share is then of the half that was read.
         const std::vector<float> across = rowOf(edge, size.height / 2), down = column(edge, size.width / 2);
         const std::vector<float> right(across.begin() + size.width / 2, across.end()), below(down.begin() + size.height / 2, down.end());
@@ -159,7 +156,7 @@ int main(int argc, char **argv)
     // What a render pays.
     QJsonArray costs;
     const auto cost = [&](const QString &name, const Masks &masks) {
-        for (const cv::Size &size : {preview, full}) {
+        for (const ipr::Size &size : {preview, full}) {
             const double ms = millisecondsOf(masks, size);
             costs.append(QJsonObject{{QStringLiteral("name"), name}, {QStringLiteral("width"), size.width},
                                      {QStringLiteral("masks"), int(masks.size())}, {QStringLiteral("milliseconds"), ms}});
@@ -184,8 +181,8 @@ int main(int argc, char **argv)
 
     const LocalValues::Maps maps = valueMaps(sixteen, preview);
     quint64 bytes = 0;
-    for (const cv::Mat &map : maps.values)
-        bytes += quint64(map.total() * map.elemSize());
+    for (const ipr::Image &map : maps.values)
+        bytes += quint64(map.width()) * quint64(map.height()) * map.pixelBytes();
 
     const auto gitOutput = [](const QStringList &arguments) {
         QProcess git;

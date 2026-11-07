@@ -28,13 +28,22 @@ add_test(NAME rawBenchSignalDenoiseReference COMMAND "${Python3_EXECUTABLE}" -m 
     -s "${CMAKE_CURRENT_SOURCE_DIR}" -p test_signal_denoise.py)
 
 # C2 module bench: compile the committed development sources in this worktree,
-# never link an engine or CMake cache from another agent's build.
-find_package(OpenCV REQUIRED COMPONENTS core imgproc)
+# never link an engine or CMake cache from another agent's build. The tools follow
+# the image layer (ipr::Image): an engine from before it builds with the bench of its
+# own revision.
 find_package(Threads REQUIRED)
 get_filename_component(IPR_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../.." ABSOLUTE)
+# The image layer, standard C++ only, from a given source tree.
+function(ipr_bench_image_layer target root)
+    foreach(unit Analysis Arrange Filters Image Neighbourhood Parallel Pixels Resize Warp)
+        target_sources(${target} PRIVATE "${root}/src/image/${unit}.cpp")
+    endforeach()
+    target_include_directories(${target} PRIVATE "${root}/src/image")
+endfunction()
 add_executable(cameraDenoiseTests test_camera_denoise.cpp "${IPR_ROOT}/src/raw/CameraDenoise.cpp")
-target_include_directories(cameraDenoiseTests PRIVATE "${IPR_ROOT}/src/raw" ${OpenCV_INCLUDE_DIRS})
-target_link_libraries(cameraDenoiseTests PRIVATE ${OpenCV_LIBS} Threads::Threads)
+target_include_directories(cameraDenoiseTests PRIVATE "${IPR_ROOT}/src/raw")
+ipr_bench_image_layer(cameraDenoiseTests "${IPR_ROOT}")
+target_link_libraries(cameraDenoiseTests PRIVATE Threads::Threads)
 if(WIN32)
     target_link_libraries(cameraDenoiseTests PRIVATE Psapi)
 endif()
@@ -51,15 +60,8 @@ endif()
 add_executable(iprRawDevelopmentCapture development_capture.cpp
     "${IPR_RAW_SOURCE_ROOT}/src/raw/RawInput.cpp" "${IPR_RAW_SOURCE_ROOT}/src/raw/LibRawInput.cpp"
     "${IPR_RAW_SOURCE_ROOT}/src/raw/RawDevelopment.cpp" "${IPR_RAW_SOURCE_ROOT}/src/raw/Demosaic.cpp")
-target_include_directories(iprRawDevelopmentCapture PRIVATE "${IPR_RAW_SOURCE_ROOT}/src/raw" "${LIBRAW_INCLUDE_DIR}" ${OpenCV_INCLUDE_DIRS})
-if(EXISTS "${IPR_RAW_SOURCE_ROOT}/src/image/OpenCvBridge.cpp")
-    target_sources(iprRawDevelopmentCapture PRIVATE "${IPR_RAW_SOURCE_ROOT}/src/image/Image.cpp"
-        "${IPR_RAW_SOURCE_ROOT}/src/image/Parallel.cpp" "${IPR_RAW_SOURCE_ROOT}/src/image/Filters.cpp"
-        "${IPR_RAW_SOURCE_ROOT}/src/image/Resize.cpp" "${IPR_RAW_SOURCE_ROOT}/src/image/Warp.cpp"
-        "${IPR_RAW_SOURCE_ROOT}/src/image/Arrange.cpp" "${IPR_RAW_SOURCE_ROOT}/src/image/Neighbourhood.cpp"
-        "${IPR_RAW_SOURCE_ROOT}/src/image/OpenCvBridge.cpp")
-    target_include_directories(iprRawDevelopmentCapture PRIVATE "${IPR_RAW_SOURCE_ROOT}/src/image")
-endif()
-target_link_libraries(iprRawDevelopmentCapture PRIVATE Qt6::Core "${LIBRAW_LIBRARY}" ${OpenCV_LIBS})
+target_include_directories(iprRawDevelopmentCapture PRIVATE "${IPR_RAW_SOURCE_ROOT}/src/raw" "${LIBRAW_INCLUDE_DIR}")
+ipr_bench_image_layer(iprRawDevelopmentCapture "${IPR_RAW_SOURCE_ROOT}")
+target_link_libraries(iprRawDevelopmentCapture PRIVATE Qt6::Core "${LIBRAW_LIBRARY}")
 target_compile_definitions(iprRawDevelopmentCapture PRIVATE IPR_WITH_LIBRAW=1
     IPR_BENCH_REVISION="${IPR_BENCH_REVISION}" IPR_RAW_ENGINE_REVISION="${IPR_RAW_ENGINE_REVISION}")

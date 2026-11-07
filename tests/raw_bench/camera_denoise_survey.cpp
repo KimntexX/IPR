@@ -1,6 +1,7 @@
 #include "CameraDenoise.h"
 #include "CameraProfileEngine.h"
 #include "RawDecoder.h"
+#include "Pixels.h"
 #include <QCoreApplication>
 #include <QCommandLineParser>
 #include <QCryptographicHash>
@@ -9,7 +10,6 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include <opencv2/imgproc.hpp>
 #include <algorithm>
 #include <array>
 #include <cmath>
@@ -39,21 +39,47 @@ int reflected(int x,int size)
     while(x<0||x>=size)x=x<0?-x:2*size-2-x;
     return x;
 }
-QJsonArray signalSurvey(const cv::Mat &camera,const std::vector<CameraDenoise::NoiseModelSummary> &models)
+// One level of the B3 spline with holes, step pixels between its taps, across then down,
+// the image reflected without repeating its edge.
+ipr::Image atrous(const ipr::Image &in,int step)
+{
+    static constexpr std::array<float,5> weights{1.f/16,4.f/16,6.f/16,4.f/16,1.f/16};
+    const int width=in.width(),height=in.height();
+    ipr::Image across=ipr::Image::create(in.size(),ipr::Depth::F32,3),out=ipr::Image::create(in.size(),ipr::Depth::F32,3);
+    for(int y=0;y<height;++y) {
+        const ipr::Vec3f *row=in.row<ipr::Vec3f>(y);ipr::Vec3f *target=across.mutableRow<ipr::Vec3f>(y);
+        for(int x=0;x<width;++x) {
+            ipr::Vec3f sum(0,0,0);
+            for(int k=0;k<5;++k)sum+=row[reflected(x+(k-2)*step,width)]*weights[size_t(k)];
+            target[x]=sum;
+        }
+    }
+    for(int y=0;y<height;++y) {
+        ipr::Vec3f *target=out.mutableRow<ipr::Vec3f>(y);
+        for(int x=0;x<width;++x) {
+            ipr::Vec3f sum(0,0,0);
+            for(int k=0;k<5;++k)sum+=across.row<ipr::Vec3f>(reflected(y+(k-2)*step,height))[x]*weights[size_t(k)];
+            target[x]=sum;
+        }
+    }
+    return out;
+}
+QJsonArray signalSurvey(const ipr::Image &camera,const std::vector<CameraDenoise::NoiseModelSummary> &models)
 {
     // Independent coefficient survey, not a second production denoiser.
     constexpr int width=64,halo=65;
-    require(camera.cols>=width&&camera.rows>=width,"Survey needs 64px images");
+    require(camera.width()>=width&&camera.height()>=width,"Survey needs 64px images");
+    const auto at=[](const ipr::Image &image,int y,int x){return image.row<ipr::Vec3f>(y)[x];};
     QJsonArray records;
     for(int gy=0;gy<9;++gy)for(int gx=0;gx<9;++gx) {
-        const int ox=(camera.cols-width)*gx/8,oy=(camera.rows-width)*gy/8;
-        cv::Mat current(width+2*halo,width+2*halo,CV_32FC3);
+        const int ox=(camera.width()-width)*gx/8,oy=(camera.height()-width)*gy/8;
+        ipr::Image current=ipr::Image::create({width+2*halo,width+2*halo},ipr::Depth::F32,3);
         std::vector<float> intensities;
         std::array<std::vector<float>,4> quarters;
-        for(int y=0;y<current.rows;++y)for(int x=0;x<current.cols;++x) {
-            auto rgb=camera.at<cv::Vec3f>(reflected(oy+y-halo,camera.rows),reflected(ox+x-halo,camera.cols));
-            const cv::Vec3f v(.25f*rgb[0]+.5f*rgb[1]+.25f*rgb[2],.5f*(rgb[0]-rgb[2]),rgb[1]-.5f*(rgb[0]+rgb[2]));
-            current.at<cv::Vec3f>(y,x)=v;
+        for(int y=0;y<current.height();++y)for(int x=0;x<current.width();++x) {
+            auto rgb=at(camera,reflected(oy+y-halo,camera.height()),reflected(ox+x-halo,camera.width()));
+            const ipr::Vec3f v(.25f*rgb[0]+.5f*rgb[1]+.25f*rgb[2],.5f*(rgb[0]-rgb[2]),rgb[1]-.5f*(rgb[0]+rgb[2]));
+            current.mutableRow<ipr::Vec3f>(y)[x]=v;
             if(x>=halo&&x<halo+width&&y>=halo&&y<halo+width) {
                 intensities.push_back(v[0]);
                 quarters[size_t((x-halo>=width/2)+2*(y-halo>=width/2))].push_back(v[0]);
@@ -64,24 +90,22 @@ QJsonArray signalSurvey(const cv::Mat &camera,const std::vector<CameraDenoise::N
         QJsonArray levels; std::vector<float> guide;
         for(int level=0;level<5;++level) {
             const int step=1<<level;
-            cv::Mat kernel=cv::Mat::zeros(1,4*step+1,CV_32F);
-            for(int k=0;k<5;++k)kernel.at<float>(0,k*step)=std::array<float,5>{1.f/16,4.f/16,6.f/16,4.f/16,1.f/16}[size_t(k)];
-            cv::Mat base;cv::sepFilter2D(current,base,-1,kernel,kernel,{-1,-1},0,cv::BORDER_REFLECT_101);
-            const cv::Mat detail=current-base;
+            ipr::Image base=atrous(current,step);
+            const ipr::Image detail=ipr::mapped(current,base,[](float a,float b){return a-b;});
             if(level==0)for(int y=halo;y<halo+width;++y)for(int x=halo;x<halo+width;++x)
-                guide.push_back(base.at<cv::Vec3f>(y,x)[0]);
+                guide.push_back(at(base,y,x)[0]);
             QJsonArray sigma,correlationX,correlationY;bool rejected=false;
             for(int c=0;c<3;++c) {
                 std::vector<float> values;
-                for(int y=halo;y<halo+width;++y)for(int x=halo;x<halo+width;++x)values.push_back(detail.at<cv::Vec3f>(y,x)[c]);
+                for(int y=halo;y<halo+width;++y)for(int x=halo;x<halo+width;++x)values.push_back(at(detail,y,x)[c]);
                 const float center=median(values);
                 for(auto &v:values)v=std::abs(v-center);
                 const float s=median(values)/.67448975f;sigma.append(s);
                 const auto corr=[&](bool horizontal) {
                     double ab=0,aa=0,bb=0;const int lag=2*step;
                     for(int y=0;y<width-(horizontal?0:lag);++y)for(int x=0;x<width-(horizontal?lag:0);++x) {
-                        const double a=detail.at<cv::Vec3f>(halo+y,halo+x)[c]-center;
-                        const double b=detail.at<cv::Vec3f>(halo+y+(horizontal?0:lag),halo+x+(horizontal?lag:0))[c]-center;
+                        const double a=at(detail,halo+y,halo+x)[c]-center;
+                        const double b=at(detail,halo+y+(horizontal?0:lag),halo+x+(horizontal?lag:0))[c]-center;
                         ab+=a*b;aa+=a*a;bb+=b*b;
                     }
                     return aa>0&&bb>0?std::abs(ab/std::sqrt(aa*bb)):0.;
@@ -117,7 +141,6 @@ int main(int argc,char **argv)
     p.process(app);
     try {
         for(const auto *key:{"input","manifest","profile-root","label"})require(p.isSet(key),"Missing argument");
-        cv::setNumThreads(1);
         RawDecoder::Options options;options.automaticWhiteBalance=false;options.signedDevelopment=true;
         options.retainPreLensSignal=true;options.preferCameraNeutral=true;
         options.automaticLcpSelection=false;options.lensCorrectionEnabled=false;options.chromaticAberrationEnabled=false;
@@ -126,7 +149,7 @@ int main(int argc,char **argv)
         ImageMetadata meta;QString error;
         auto loaded=RawDecoder::decode(p.value("input"),options,&meta,&error);
         if(loaded.isNull()||!loaded.dcpContext)throw std::runtime_error(error.toStdString());
-        auto full=*loaded.dcpContext;loaded={};
+        auto full=CameraProfileEngine::sharedCopy(*loaded.dcpContext);loaded={};
         CameraDenoise::Context context;
         // The source is already white-balanced; never compensate these axes.
         QJsonArray modelJson; std::vector<CameraDenoise::NoiseModelSummary> models;
@@ -142,9 +165,9 @@ int main(int argc,char **argv)
                 {"low",m.low},{"high",m.high},{"global_signal",m.globalSignal},
                 {"global_sigma",sigma},{"nodes",nodes}});
         };
-        auto filtered=full.cameraRgb;
+        auto filtered=full.cameraRgb.clone();
         require(CameraDenoise::apply(filtered,100,context),"Model observation failed");
-        filtered.release();
+        filtered={};
         const QJsonObject result{{"created_utc",QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs)},
             {"label",p.value("label")},{"source",p.value("input")},{"source_sha256",hash(p.value("input"))},
             {"manifest_sha256",hash(p.value("manifest"))},{"profile_sha256",hash(full.profilePath)},

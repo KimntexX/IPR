@@ -1,7 +1,7 @@
 #ifndef IPR_CORE_TONESTATISTICS_H
 #define IPR_CORE_TONESTATISTICS_H
 
-#include <opencv2/core.hpp>
+#include "Image.h"
 
 #include <array>
 #include <vector>
@@ -21,9 +21,9 @@ struct Statistics
 // From one log2 luminance per sampled pixel (consumed, partially sorted).
 Statistics measure(std::vector<float> log2Luminance);
 
-// From a linear Rec.2020 RGBA image (CV_32FC4), sampled on about one million
+// From a linear Rec.2020 RGBA image (F32 of four channels), sampled on about one million
 // pixels at most.
-Statistics measure(const cv::Mat &linearRgba);
+Statistics measure(const ipr::Image &linearRgba);
 }
 
 #endif // IPR_CORE_TONESTATISTICS_H

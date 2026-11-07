@@ -1,7 +1,7 @@
 #ifndef IPR_PANORAMA_PANORAMAFILL_H
 #define IPR_PANORAMA_PANORAMAFILL_H
 
-#include <opencv2/core.hpp>
+#include "Image.h"
 
 #include <functional>
 
@@ -34,9 +34,9 @@ struct Report
     int levels = 0;
 };
 
-// image: CV_32FC3, linear, possibly signed, changed in place where known is 0.
-// known: CV_8UC1 of the same size, non-zero where the pixel is real.
-Report fill(cv::Mat &image, const cv::Mat &known, const Options &options = {}, const std::function<bool()> &cancelled = {},
+// image: F32 of three channels, linear, possibly signed, changed in place where known is 0.
+// known: bytes of one channel of the same size, non-zero where the pixel is real.
+Report fill(ipr::Image &image, const ipr::Image &known, const Options &options = {}, const std::function<bool()> &cancelled = {},
             const std::function<void(int done, int total)> &progress = {});
 
 } // namespace PanoramaFill

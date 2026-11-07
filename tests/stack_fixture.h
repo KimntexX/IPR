@@ -3,13 +3,14 @@
 
 #include "CameraProfileEngine.h"
 #include "StackSession.h"
+#include "Filters.h"
+#include "image_testing.h"
 
 #include <QDir>
 #include <QFileInfo>
 #include <QStringList>
 #include <QThread>
 #include <QUrl>
-#include <opencv2/imgproc.hpp>
 
 #include <atomic>
 #include <functional>
@@ -17,25 +18,25 @@
 
 namespace StackFixture {
 
-inline cv::Mat scene(const cv::Size &size)
+inline ipr::Image scene(const ipr::Size &size)
 {
-    cv::RNG random(7);
-    cv::Mat image = cv::Mat::zeros(size, CV_32FC3);
+    ipr::Image image = ipr::Image::zeros(size, ipr::Depth::F32, 3);
+    unsigned seed = 7;
     for (const double sigma : {1.5, 5.0, 18.0}) {
-        cv::Mat layer(size, CV_32FC3);
-        random.fill(layer, cv::RNG::NORMAL, cv::Scalar::all(0), cv::Scalar::all(1));
-        cv::GaussianBlur(layer, layer, cv::Size(), sigma);
-        cv::Scalar mean, deviation;
-        cv::meanStdDev(layer, mean, deviation);
-        image += layer * (0.05 / std::max(1e-6, deviation[0]));
+        const ipr::Image layer = ipr::gaussianBlurred(imagetest::normalNoise(size, 3, 0.0, 1.0, seed++), sigma);
+        std::vector<double> mean, deviation;
+        ipr::meanAndDeviationOf(layer, mean, deviation);
+        const float weight = float(0.05 / std::max(1e-6, deviation[0]));
+        image = ipr::mapped(image, layer, [weight](float a, float b) { return a + b * weight; });
     }
-    return image + cv::Scalar::all(0.3);
+    return ipr::mapped(image, [](float v) { return v + 0.3f; });
 }
 
 // Frames named frame0, frame1... in place of a RAW decoder: small views of one scene.
 struct Source
 {
-    cv::Mat base = scene(cv::Size(500, 340));
+    // Shared, read only: the source is copied into the session's decoder.
+    std::shared_ptr<const ipr::Image> base = std::make_shared<const ipr::Image>(scene(ipr::Size(500, 340)));
     std::shared_ptr<CameraProfileEngine::DcpWorkingContext> context;
     std::shared_ptr<std::atomic_int> calls = std::make_shared<std::atomic_int>(0);
     int slowMs = 0;
@@ -46,14 +47,11 @@ struct Source
         for (int waited = 0; waited < slowMs && !cancelled(); waited += 5)
             QThread::msleep(5);
         const int index = QFileInfo(file).baseName().remove(QStringLiteral("frame")).toInt();
-        cv::Mat moved;
-        const cv::Matx23d shift(1, 0, (index - 3) * 2.3, 0, 1, (index - 3) * -1.7);
-        cv::warpAffine(base, moved, shift, base.size(), cv::INTER_LANCZOS4, cv::BORDER_REPLICATE);
-        cv::RNG random(uint64_t(100 + index));
-        cv::Mat noise(base.size(), CV_32FC3);
-        random.fill(noise, cv::RNG::NORMAL, cv::Scalar::all(0), cv::Scalar::all(0.01));
+        const ipr::Matrix33d shift(1, 0, (index - 3) * 2.3, 0, 1, (index - 3) * -1.7, 0, 0, 1);
+        const ipr::Image moved = imagetest::moved(*base, shift, base->size());
+        const ipr::Image noise = imagetest::normalNoise(base->size(), 3, 0.0, 0.01, unsigned(100 + index));
         StackSession::Decoded decoded;
-        decoded.cameraRgb = moved + noise;
+        decoded.cameraRgb = ipr::mapped(moved, noise, [](float a, float b) { return a + b; });
         decoded.context = context;
         decoded.metadata.cameraMake = QStringLiteral("Canon");
         decoded.metadata.cameraModel = QStringLiteral("EOS R6 Mark III");

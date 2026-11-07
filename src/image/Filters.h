@@ -11,14 +11,20 @@ namespace ipr {
 // is about four sigmas, the same as OpenCV takes for floats. Empty when sigma is not above zero.
 std::vector<float> gaussianHalfKernel(double sigma);
 
+// The normalized gaussian of `size` taps, as OpenCV's getGaussianKernel gives it in floats for a
+// sigma above zero: each tap rounded to float, the sum taken in double, then each tap scaled.
+std::vector<float> gaussianKernel(int size, double sigma);
+
 // What lies beyond the borders: the image mirrored without repeating its edge (dcb|abcd|cba),
 // mirrored repeating it (dcba|abcd|dcba), or its last pixel again (aaa|abcd|ddd).
 enum class BlurBorder { Mirror, MirrorEdge, LastPixel };
 
-// A new image, blurred by this sigma in pixels, on both axes. F32 only, any channel count: throws
-// std::invalid_argument on another depth. Sigma not above zero, or an empty image, gives a clone.
-// threads as in parallelRows. The result does not depend on them.
-Image gaussianBlur(const Image &image, double sigma, int threads = 0, BlurBorder border = BlurBorder::Mirror);
+// A new image, blurred by this sigma in pixels, on both axes, or by one sigma along each. F32 only,
+// any channel count: throws std::invalid_argument on another depth. An axis whose sigma is not above
+// zero is left as it is; an empty image gives an empty one. threads as in parallelRows. The result
+// does not depend on them.
+Image gaussianBlurred(const Image &image, double sigma, BlurBorder border = BlurBorder::Mirror, int threads = 0);
+Image gaussianBlurred(const Image &image, double sigmaX, double sigmaY, BlurBorder border, int threads = 0);
 
 // The same into a buffer of the image's size, depth and channel count, or std::invalid_argument.
 // out may not be the image itself.

@@ -8,14 +8,13 @@
 #include "PanoramaJob.h"
 #include "SystemMemory.h"
 
-#include "OpenCvBridge.h"
+#include "Resize.h"
 
 #include <QDir>
 #include <QElapsedTimer>
 #include <QFileInfo>
 #include <QScopeGuard>
 #include <QThread>
-#include <opencv2/imgproc.hpp>
 
 #include <algorithm>
 #include <vector>
@@ -27,7 +26,7 @@ constexpr double inventedWarning = 0.25;  // of a filled panorama, beyond which 
 // The bands held while merging, on top of what a decode needs.
 quint64 mergeBytes() { return StackJob::Request{}.memoryBudgetBytes; }
 
-ColorPipeline::WorkingImage rendered(const cv::Mat &cameraRgb, const CameraProfileEngine::DcpWorkingContext &context,
+ColorPipeline::WorkingImage rendered(const ipr::Image &cameraRgb, const CameraProfileEngine::DcpWorkingContext &context,
                                      const ImageMetadata &metadata, QString *error)
 {
     CameraSignal::Source signal;
@@ -58,17 +57,16 @@ quint64 reserve(ImageCacheController &cache, quint64 bytes, Tasks::Context &cont
         }
         QThread::msleep(20);
     }
-    const ImageCacheController::Admission admission = waiting.result();
+    const ImageCacheController::Admission admission = waiting.takeResult();
     if (!admission.reservation && refusal)
         *refusal = tooLong ? StackSession::tr("Mémoire insuffisante pour le moment : fermez d'autres applications, puis recommencez.") : admission.error;
     return admission.reservation;
 }
 
-QImage previewOf(const cv::Mat &cameraRgb, const CameraProfileEngine::DcpWorkingContext &context, const ImageMetadata &metadata)
+QImage previewOf(const ipr::Image &cameraRgb, const CameraProfileEngine::DcpWorkingContext &context, const ImageMetadata &metadata)
 {
-    const double factor = std::min(1.0, double(previewSide) / std::max(cameraRgb.cols, cameraRgb.rows));
-    cv::Mat small;
-    small = ipr::resizedBy(cameraRgb, factor, factor, ipr::Interpolation::Area);
+    const double factor = std::min(1.0, double(previewSide) / std::max(cameraRgb.width(), cameraRgb.height()));
+    const ipr::Image small = ipr::resizedBy(cameraRgb, factor, factor, ipr::Interpolation::Area);
     QString error;
     const ColorPipeline::WorkingImage image = rendered(small, context, metadata, &error);
     return image.isNull() ? QImage() : ColorPipeline::toSrgb(image, ColorPipeline::OutputFormat::Jpeg8Bit, &error);
@@ -298,7 +296,7 @@ StackSession::Outcome StackSession::compute(Tasks::Context &context, const QStri
     result->usedFrames = job.usedFrames;
     result->leftOut = int(files.size()) - job.usedFrames;
     const double whole = double(job.commonArea.area());
-    const cv::Size frame = job.frameSize;
+    const ipr::Size frame = job.frameSize;
     result->areaKept = frame.area() > 0 ? whole / double(frame.area()) : 0.0;
     result->cameraRgb = std::move(job.cameraRgb);
     result->sharpestViews = job.turbulence.applied ? job.turbulence.kept : 0;
@@ -334,7 +332,7 @@ void StackSession::finished()
     if (m_result->panorama) {
         setStatus(tr("Panorama de %1 photos, %2 rangée(s), projection %3 : %4 × %5 pixels%6. Choisissez un format pour exporter.")
                       .arg(m_result->usedFrames).arg(m_result->rows).arg(m_result->projection)
-                      .arg(m_result->cameraRgb.cols).arg(m_result->cameraRgb.rows)
+                      .arg(m_result->cameraRgb.width()).arg(m_result->cameraRgb.height())
                       .arg((m_result->leftOut > 0 ? tr(", %1 écartée(s)").arg(m_result->leftOut) : QString())
                            + (m_result->filledShare > 0.0 ? tr(", dont %1 % de pixels inventés").arg(m_result->filledShare * 100.0, 0, 'f', 1) : QString())));
         if (m_result->filledShare > inventedWarning) {
@@ -394,7 +392,7 @@ StackSession::Export StackSession::writeResult(const Result &result, const QStri
     if (format == QStringLiteral("DNG")) {
         const CameraProfileEngine::DcpCameraData camera = CameraProfileEngine::dcpCameraData(result.context->profilePath);
         CameraDng::Content content;
-        content.cameraRgb = result.cameraRgb;
+        content.cameraRgb = result.cameraRgb.share();
         content.cameraMake = result.metadata.cameraMake;
         content.cameraModel = result.metadata.cameraModel;
         content.lensMake = result.metadata.lensMake;

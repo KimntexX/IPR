@@ -166,6 +166,7 @@ public:
     // without sidecars or preferences.
     using Settings = EditRecipe::Settings;
     using ExportResult = ImageExporter::Result;
+    // Move only: a copy shares the images read only, through sharedCopy.
     struct LoadResult : ImageImport::Result
     {
         ColorPipeline::WorkingImage editProxy;
@@ -174,6 +175,7 @@ public:
         QSize fullSize;          // true source size, also when image is a proxy
         bool proxyOnly = false;  // image is the edit proxy restored from the cache
     };
+    static LoadResult sharedCopy(const LoadResult &loaded);
     static LoadResult loadFromDisk(const QString &fileName,
                                    bool automaticWhiteBalance,
                                    const RawDecoder::Options &rawOptions = {});

@@ -77,7 +77,7 @@ int main(int argc, char **argv)
     auto context = std::make_shared<CameraProfileEngine::DcpWorkingContext>();
     context->profilePath = dcp;
     context->sourceKelvin = 5000.0;
-    context->cameraNeutral = cv::Vec3d(0.6, 1.0, 0.8);
+    context->cameraNeutral = ipr::Vec3d(0.6, 1.0, 0.8);
     StackFixture::Source source;
     source.context = context;
     StackSession session(source);

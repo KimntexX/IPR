@@ -1,7 +1,8 @@
 #ifndef IPR_PANORAMA_PANORAMAFEATURES_H
 #define IPR_PANORAMA_PANORAMAFEATURES_H
 
-#include <opencv2/core.hpp>
+#include "Image.h"
+#include "Types.h"
 
 #include <array>
 #include <vector>
@@ -14,7 +15,7 @@ namespace PanoramaFeatures {
 
 struct Feature
 {
-    cv::Point2f position;                // pixels of the image given
+    ipr::Point2f position;                // pixels of the image given
     std::array<float, 64> descriptor{};  // mean 0, deviation 1
 };
 
@@ -27,12 +28,12 @@ struct Options
 
 struct Correspondence
 {
-    cv::Point2f a;
-    cv::Point2f b;
+    ipr::Point2f a;
+    ipr::Point2f b;
 };
 
-// image: CV_32FC1, a perceptual scale. Deterministic.
-std::vector<Feature> detect(const cv::Mat &image, const Options &options = {});
+// image: F32 of one channel, a perceptual scale. Deterministic.
+std::vector<Feature> detect(const ipr::Image &image, const Options &options = {});
 
 // The pairs that choose each other, and clearly so against the second candidate.
 std::vector<Correspondence> match(const std::vector<Feature> &a, const std::vector<Feature> &b, const Options &options = {});

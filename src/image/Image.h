@@ -9,7 +9,8 @@
 
 namespace ipr {
 
-enum class Depth { U8, U16, F32, F64 };
+// S16 and S32: signed integers, for labels and indices.
+enum class Depth { U8, U16, S16, S32, F32, F64 };
 
 std::size_t depthBytes(Depth depth);
 
@@ -54,6 +55,9 @@ public:
     // for what this view writes. Throws std::logic_error on frozen pixels. Empty when the
     // rectangle leaves the image.
     Image mutableView(const Recti &area);
+    // New pixels copied from a part: nothing shared, nothing frozen. Empty when the rectangle
+    // leaves the image.
+    Image copy(const Recti &area) const;
 
     bool empty() const { return m_size.empty(); }
     Size size() const { return m_size; }
@@ -66,6 +70,10 @@ public:
     bool continuous() const;
     bool frozen() const;
     bool sharesPixelsWith(const Image &other) const;
+    // The block of memory the pixels lie in, the same for every image sharing it, and its size in
+    // bytes: to count shared pixels once. Null and zero for an empty image.
+    const void *block() const;
+    std::size_t blockBytes() const;
 
     // Throws std::out_of_range outside the image: a row is the place to check, a pixel is not.
     template <typename T>
@@ -93,6 +101,46 @@ private:
     std::ptrdiff_t m_stepBytes = 0;
     Depth m_depth = Depth::U8;
     int m_channels = 0;
+};
+
+// Pixels by (y, x) without a check, for the stencils that read around each pixel: the image is
+// checked once, here, and keeping (y, x) inside it is the caller's. T is the whole pixel, such as
+// float or Vec3f. Valid while the image's pixels live; an empty image gives a reader of nothing.
+template <typename T>
+class PixelReader
+{
+public:
+    explicit PixelReader(const Image &image)
+        : m_first(image.empty() ? nullptr : image.row<std::uint8_t>(0)), m_step(image.stepBytes())
+    {
+    }
+    const T &operator()(int y, int x) const
+    {
+        return reinterpret_cast<const T *>(m_first + m_step * std::ptrdiff_t(y))[x];
+    }
+
+private:
+    const std::uint8_t *m_first;
+    std::ptrdiff_t m_step;
+};
+
+// The same to write, refused on frozen pixels as mutableRow is.
+template <typename T>
+class PixelWriter
+{
+public:
+    explicit PixelWriter(Image &image)
+        : m_first(image.empty() ? nullptr : image.mutableRow<std::uint8_t>(0)), m_step(image.stepBytes())
+    {
+    }
+    T &operator()(int y, int x) const
+    {
+        return reinterpret_cast<T *>(m_first + m_step * std::ptrdiff_t(y))[x];
+    }
+
+private:
+    std::uint8_t *m_first;
+    std::ptrdiff_t m_step;
 };
 
 } // namespace ipr

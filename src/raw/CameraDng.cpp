@@ -1,5 +1,7 @@
 #include "CameraDng.h"
 
+#include "Pixels.h"
+
 #include <QFile>
 #include <QJsonArray>
 #include <QJsonDocument>
@@ -43,20 +45,18 @@ bool fail(QString *error, const QString &message)
 
 // The channels' scale between the signal and the file, which holds them before white
 // balance, as a raw file does: largest neutral first, then the headroom of the data.
-double neutralScale(const cv::Vec3d &neutral)
+double neutralScale(const ipr::Vec3d &neutral)
 {
     return std::max({neutral[0], neutral[1], neutral[2]});
 }
 
-double headroomOf(const cv::Mat &rgb, const cv::Vec3d &neutral)
+double headroomOf(const ipr::Image &rgb, const ipr::Vec3d &neutral)
 {
     const double scale = neutralScale(neutral);
-    std::vector<cv::Mat> channels;
-    cv::split(rgb, channels);
+    const std::vector<ipr::Image> channels = ipr::splitChannels(rgb);
     double headroom = 1.0;
     for (int c = 0; c < 3; ++c) {
-        double highest = 0.0;
-        cv::minMaxLoc(channels[size_t(c)], nullptr, &highest);
+        const double highest = ipr::extremesOf(channels[size_t(c)]).largest;
         headroom = std::max(headroom, highest * neutral[c] / scale);
     }
     return std::min(headroom, largestHeadroom);
@@ -97,9 +97,9 @@ QJsonObject readDescription(TIFF *tiff)
 
 bool write(const Content &content, const QString &fileName, QString *error)
 {
-    if (content.cameraRgb.empty() || content.cameraRgb.type() != CV_32FC3)
+    if (content.cameraRgb.empty() || content.cameraRgb.depth() != ipr::Depth::F32 || content.cameraRgb.channels() != 3)
         return fail(error, QStringLiteral("Le signal à écrire est vide ou d'un type inattendu."));
-    const cv::Vec3d neutral = content.cameraNeutral;
+    const ipr::Vec3d neutral = content.cameraNeutral;
     if (!(neutral[0] > 0.0 && neutral[1] > 0.0 && neutral[2] > 0.0))
         return fail(error, QStringLiteral("La balance des blancs du signal est inconnue."));
     if (std::all_of(content.colorMatrix.begin(), content.colorMatrix.end(), [](double v) { return v == 0.0; }))
@@ -131,8 +131,8 @@ bool write(const Content &content, const QString &fileName, QString *error)
     // NewSubfileType 0 marks the main image; Adobe readers reject an IFD without it.
     const bool configured =
         TIFFSetField(tiff, TIFFTAG_SUBFILETYPE, 0) == 1 &&
-        TIFFSetField(tiff, TIFFTAG_IMAGEWIDTH, uint32_t(content.cameraRgb.cols)) == 1 &&
-        TIFFSetField(tiff, TIFFTAG_IMAGELENGTH, uint32_t(content.cameraRgb.rows)) == 1 &&
+        TIFFSetField(tiff, TIFFTAG_IMAGEWIDTH, uint32_t(content.cameraRgb.width())) == 1 &&
+        TIFFSetField(tiff, TIFFTAG_IMAGELENGTH, uint32_t(content.cameraRgb.height())) == 1 &&
         TIFFSetField(tiff, TIFFTAG_BITSPERSAMPLE, 16) == 1 &&
         TIFFSetField(tiff, TIFFTAG_SAMPLESPERPIXEL, 3) == 1 &&
         TIFFSetField(tiff, TIFFTAG_SAMPLEFORMAT, SAMPLEFORMAT_UINT) == 1 &&
@@ -160,10 +160,10 @@ bool write(const Content &content, const QString &fileName, QString *error)
     const std::array<float, 3> toCode{float(neutral[0] / scale / headroom * (whiteCode - blackCode)),
                                       float(neutral[1] / scale / headroom * (whiteCode - blackCode)),
                                       float(neutral[2] / scale / headroom * (whiteCode - blackCode))};
-    std::vector<quint16> row(size_t(content.cameraRgb.cols) * 3);
-    for (int y = 0; y < content.cameraRgb.rows; ++y) {
-        const cv::Vec3f *in = content.cameraRgb.ptr<cv::Vec3f>(y);
-        for (int x = 0; x < content.cameraRgb.cols; ++x)
+    std::vector<quint16> row(size_t(content.cameraRgb.width()) * 3);
+    for (int y = 0; y < content.cameraRgb.height(); ++y) {
+        const ipr::Vec3f *in = content.cameraRgb.row<ipr::Vec3f>(y);
+        for (int x = 0; x < content.cameraRgb.width(); ++x)
             for (int c = 0; c < 3; ++c)
                 row[size_t(x) * 3 + size_t(c)] = quint16(std::clamp(blackCode + in[x][c] * toCode[size_t(c)], 0.f, whiteCode) + 0.5f);
         if (TIFFWriteScanline(tiff, row.data(), uint32_t(y), 0) < 0)
@@ -205,7 +205,7 @@ bool read(const QString &fileName, Content &content, QString *error)
 
     const QJsonArray neutralValues = object.value(QStringLiteral("neutral")).toArray();
     const double headroom = object.value(QStringLiteral("headroom")).toDouble();
-    const cv::Vec3d neutral(neutralValues.at(0).toDouble(), neutralValues.at(1).toDouble(), neutralValues.at(2).toDouble());
+    const ipr::Vec3d neutral(neutralValues.at(0).toDouble(), neutralValues.at(1).toDouble(), neutralValues.at(2).toDouble());
     if (neutralValues.size() != 3 || !(neutral[0] > 0.0 && neutral[1] > 0.0 && neutral[2] > 0.0) ||
         !(headroom >= 1.0 && headroom <= largestHeadroom))
         return fail(error, QStringLiteral("Description invalide dans le fichier DNG."));
@@ -233,14 +233,14 @@ bool read(const QString &fileName, Content &content, QString *error)
     const std::array<float, 3> fromCode{float(scale / neutral[0] * headroom / (whiteCode - blackCode)),
                                         float(scale / neutral[1] * headroom / (whiteCode - blackCode)),
                                         float(scale / neutral[2] * headroom / (whiteCode - blackCode))};
-    content.cameraRgb.create(int(height), int(width), CV_32FC3);
+    content.cameraRgb = ipr::Image::create({int(width), int(height)}, ipr::Depth::F32, 3);
     std::vector<quint16> row(size_t(width) * 3);
     for (uint32_t y = 0; y < height; ++y) {
         if (TIFFReadScanline(tiff, row.data(), y, 0) < 0) {
-            content.cameraRgb.release();
+            content.cameraRgb = {};
             return fail(error, QStringLiteral("Impossible de lire les pixels du DNG."));
         }
-        cv::Vec3f *out = content.cameraRgb.ptr<cv::Vec3f>(int(y));
+        ipr::Vec3f *out = content.cameraRgb.mutableRow<ipr::Vec3f>(int(y));
         for (uint32_t x = 0; x < width; ++x)
             for (int c = 0; c < 3; ++c)
                 out[x][c] = (float(row[size_t(x) * 3 + size_t(c)]) - blackCode) * fromCode[size_t(c)];

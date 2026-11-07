@@ -4,7 +4,7 @@
 #include "LocalValues.h"
 #include "ToneStatistics.h"
 
-#include <opencv2/core.hpp>
+#include "Image.h"
 
 #include <array>
 
@@ -31,11 +31,11 @@ inline bool identity(const Amounts &a)
 }
 
 // Applies the four controls (slider amounts in [-1, 1]) to a linear Rec.2020
-// RGB image (CV_32FC3) in place, adapted to the image's statistics. local:
+// RGB image (F32 of three channels) in place, adapted to the image's statistics. local:
 // per-pixel Shadows, Blacks, Highlights and Whites in slider units [-100, 100],
 // added to the amounts (LocalValues). One curve is sampled per combination of
 // values present, each rounded to half a slider unit.
-void apply(cv::Mat &rgb, const Amounts &amounts, const Statistics &statistics,
+void apply(ipr::Image &rgb, const Amounts &amounts, const Statistics &statistics,
            const LocalValues::Maps &local = {});
 
 // Building blocks of apply(), exposed for the unit tests.

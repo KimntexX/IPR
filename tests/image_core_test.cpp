@@ -122,6 +122,13 @@ void aSharedImageNeverChanges()
     Image second = shared.share();
     throws<std::logic_error>([&] { second.mutableRow<float>(0); }, "nor can another");
     check(shared.row<Vec3f>(1)[2][0] == 2.0f, "reading stays");
+    check(shared.block() == image.block() && shared.blockBytes() == 4 * 4 * sizeof(Vec3f), "one block, counted once");
+    check(image.view({1, 1, 2, 2}).block() == image.block() && image.clone().block() != image.block(), "a part is in it");
+    check(Image().block() == nullptr && Image().blockBytes() == 0, "no block for nothing");
+    Image writable = numbered({4, 4});
+    const Image part = writable.copy({1, 1, 2, 2});
+    check(!writable.frozen() && !part.sharesPixelsWith(writable) && part.row<Vec3f>(0)[0][0] == 1.0f, "a part copied");
+    check(writable.copy({3, 3, 2, 2}).empty(), "a part outside is nothing");
 
     // Even once the others are gone: only a clone writes.
     Image alone = numbered({2, 2});
@@ -300,13 +307,13 @@ void smallValues()
 
     const Recti r{1, 2, 3, 4};
     check(r.right() == 4 && r.bottom() == 6, "rectangle sides");
-    check(r.contains({1, 2}) && !r.contains({4, 2}) && !r.contains({1, 6}), "contains, its far sides out");
-    check(intersection(r, Recti{2, 3, 10, 1}) == Recti{2, 3, 2, 1}, "common part");
-    check(intersection(r, Recti{4, 2, 1, 1}).empty(), "touching rectangles have nothing in common");
+    check(r.contains(Point2i{1, 2}) && !r.contains(Point2i{4, 2}) && !r.contains(Point2i{1, 6}), "contains, its far sides out");
+    check((r & Recti{2, 3, 10, 1}) == Recti{2, 3, 2, 1}, "common part");
+    check((r & Recti{4, 2, 1, 1}).empty(), "touching rectangles have nothing in common");
     check(Rectd{0, 0, 1, 0}.empty(), "empty rectangle");
 
     const Vec3d a{{1, 2, 3}}, b{{4, 5, 6}};
-    check(dot(a, b) == 32.0, "dot");
+    check(a.dot(b) == 32.0, "dot");
     check(a + b == Vec3d{{5, 7, 9}} && b - a == Vec3d{{3, 3, 3}} && a * 2.0 == Vec3d{{2, 4, 6}}, "vector arithmetic");
 
     Matrix33d m = Matrix33d::identity();

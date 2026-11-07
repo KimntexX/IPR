@@ -1,12 +1,14 @@
 #include "imageeditor.h"
+#include <random>
+#include "image_testing.h"
 #include "RenderChain.h"
 #include "RenderStageCache.h"
 #include "ToneRecovery.h"
+#include "Pixels.h"
 
 #include <QCoreApplication>
 #include <QElapsedTimer>
 
-#include <opencv2/imgproc.hpp>
 
 #include <functional>
 #include <iostream>
@@ -21,28 +23,29 @@ void check(bool ok, const char *why)
 // Smooth gradients with texture and noise, so every stage changes pixels.
 ColorPipeline::WorkingImage scene(int width, int height)
 {
-    cv::Mat rgba(height, width, CV_32FC4);
-    cv::RNG rng(7);
+    ipr::Image rgba = ipr::Image::create({width, height}, ipr::Depth::F32, 4);
+    std::mt19937 rng(7);
+    std::normal_distribution<float> gaussian(0.f, 0.01f);
     for (int y = 0; y < height; ++y)
         for (int x = 0; x < width; ++x) {
             const float u = float(x) / float(width), v = float(y) / float(height);
             const float detail = 0.08f * float(std::sin(x * 0.21) * std::cos(y * 0.17));
-            rgba.at<cv::Vec4f>(y, x) = {
-                std::clamp(0.05f + 0.7f * u * v + detail + float(rng.gaussian(0.01)), 0.f, 1.f),
-                std::clamp(0.10f + 0.5f * u + detail + float(rng.gaussian(0.01)), 0.f, 1.f),
-                std::clamp(0.30f * (1.f - v) + 0.1f + detail + float(rng.gaussian(0.01)), 0.f, 1.f), 1.f};
+            imagetest::at<ipr::Vec4f>(rgba, y, x) = {
+                std::clamp(0.05f + 0.7f * u * v + detail + gaussian(rng), 0.f, 1.f),
+                std::clamp(0.10f + 0.5f * u + detail + gaussian(rng), 0.f, 1.f),
+                std::clamp(0.30f * (1.f - v) + 0.1f + detail + gaussian(rng), 0.f, 1.f), 1.f};
         }
     ColorPipeline::WorkingImage image;
-    image.linearRgba = rgba;
-    image.referenceWhiteBalanceKelvin = 5200.0;
     image.toneStatistics = ToneRecovery::measure(rgba);
+    image.linearRgba = std::move(rgba);
+    image.referenceWhiteBalanceKelvin = 5200.0;
     return image;
 }
 
 void policy()
 {
-    const cv::Mat source(8, 8, CV_32FC4, cv::Scalar::all(0.5));
-    const cv::Mat rgb(8, 8, CV_32FC3, cv::Scalar::all(0.25));
+    ipr::Image source = ipr::filled({8, 8}, ipr::Depth::F32, 4, 0.5);
+    ipr::Image rgb = ipr::filled({8, 8}, ipr::Depth::F32, 3, 0.25);
     RenderStageCache::Keys keys{"a", "ab", "abc", "abcd", "abcde"};
     RenderStageCache cache;
     auto start = cache.begin(source, 0.5, keys);
@@ -50,8 +53,8 @@ void policy()
     for (int stage = 0; stage < RenderStageCache::StageCount; ++stage) cache.store(start, stage, rgb);
     check(cache.count() == 1, "only the requested output is stored");
     // peek() reads a kept output without touching the keep policy (the point colour eyedropper).
-    const cv::Mat peeked = cache.peek(source, 0.5, 0, keys[0]);
-    check(!peeked.empty() && peeked.data != rgb.data && cv::norm(peeked, rgb, cv::NORM_INF) == 0,
+    const ipr::Image peeked = cache.peek(source, 0.5, 0, keys[0]);
+    check(!peeked.empty() && peeked.block() != rgb.block() && ipr::largestDifference(peeked, rgb) == 0,
           "peek returns a private copy of a kept output");
     check(cache.peek(source, 0.5, 0, "other").empty() && cache.peek(source, 0.25, 0, keys[0]).empty() &&
           cache.peek(source, 0.5, 1, keys[1]).empty() && cache.peek(source, 0.5, 7, keys[0]).empty(),
@@ -61,7 +64,7 @@ void policy()
     dehaze[4] = "abcdX";
     start = cache.begin(source, 0.5, dehaze);
     check(start.stage == 0 && start.keep[3] && !start.keep[0], "a dehaze edit resumes after the tones and keeps local contrast");
-    check(cv::norm(start.rgb, rgb, cv::NORM_INF) == 0 && start.rgb.data != rgb.data, "resumed output is a private copy");
+    check(ipr::largestDifference(start.rgb, rgb) == 0 && start.rgb.block() != rgb.block(), "resumed output is a private copy");
     cache.store(start, 3, rgb);
     dehaze[4] = "abcdY";
     start = cache.begin(source, 0.5, dehaze);
@@ -83,11 +86,11 @@ void policy()
 
     // What the masks add: one entry, for its source, scale and key.
     LocalValues::Maps maps, read;
-    maps[LocalValues::Exposure] = cv::Mat(4, 4, CV_32FC1, cv::Scalar(0.5));
-    const cv::Mat maskSource = source.clone();
+    maps[LocalValues::Exposure] = ipr::filled({4, 4}, ipr::Depth::F32, 1, 0.5);
+    const ipr::Image maskSource = source.clone();
     check(!cache.maskMaps(maskSource, 0.5, "a", read), "nothing kept at first");
     cache.storeMaskMaps(maskSource, 0.5, "a", maps);
-    check(cache.maskMaps(maskSource, 0.5, "a", read) && read[LocalValues::Exposure].at<float>(0, 0) == 0.5f, "the same masks find their maps");
+    check(cache.maskMaps(maskSource, 0.5, "a", read) && imagetest::at<float>(std::as_const(read)[LocalValues::Exposure], 0, 0) == 0.5f, "the same masks find their maps");
     check(!cache.maskMaps(maskSource, 0.5, "b", read), "other masks do not");
     check(!cache.maskMaps(maskSource, 0.25, "a", read), "nor another scale");
     check(!cache.maskMaps(maskSource.clone(), 0.5, "a", read), "nor another source");
@@ -122,7 +125,7 @@ public:
         for (int v : {30, 40}) edits.push_back([v](auto &s) { s.denoiseLuminance = v; });
         edits.push_back([](auto &s) { s.dehaze = 0; });
         // A point colour on a colour of the scene, then another shift: the cache key holds the points.
-        const cv::Vec4f picked = source.linearRgba.at<cv::Vec4f>(400, 600);
+        const ipr::Vec4f picked = imagetest::at<ipr::Vec4f>(source.linearRgba, 400, 600);
         const PointColor::Hsv hsv = PointColor::toHsv({picked[0], picked[1], picked[2]});
         edits.push_back([hsv](auto &s) {
             s.pointColor.count = 1;
@@ -145,18 +148,18 @@ public:
             const double cachedMs = double(clock.nsecsElapsed()) / 1e6;
             if (step > 0) { plain += plainMs; cached += cachedMs; }
             check(!expected.isNull() && !rendered.isNull(), "render");
-            check(cv::checkRange(rendered.linearRgba, true), "finite output");
-            check(cv::norm(rendered.linearRgba, expected.linearRgba, cv::NORM_INF) == 0, "cached render is bit-identical");
+            check(ipr::allFinite(rendered.linearRgba), "finite output");
+            check(ipr::largestDifference(rendered.linearRgba, expected.linearRgba) == 0, "cached render is bit-identical");
             check(cache.count() <= 2, "at most two stage outputs kept");
         }
         std::cout << "edits: " << plain << " ms without the cache, " << cached << " ms with it\n";
 
         // The export path never touches a cache, and a new source starts over.
         auto other = scene(1200, 800);
-        other.linearRgba *= 0.8;
+        ipr::mapInPlace(other.linearRgba, [](float v) { return v * 0.8f; });
         const auto expected = RenderChain::workingImage(other, settings, pixelScale);
         const auto rendered = RenderChain::workingImage(other, settings, pixelScale, &cache);
-        check(cv::norm(rendered.linearRgba, expected.linearRgba, cv::NORM_INF) == 0, "new source renders from scratch");
+        check(ipr::largestDifference(rendered.linearRgba, expected.linearRgba) == 0, "new source renders from scratch");
     }
 
     // The range overlay must never write into the source: a point without shift
@@ -164,7 +167,7 @@ public:
     static void overlayKeepsSource()
     {
         const auto source = scene(64, 48);
-        const cv::Mat before = source.linearRgba.clone();
+        const ipr::Image before = source.linearRgba.clone();
         ImageEditor::Settings settings;
         settings.temperature = 5200;
         settings.pointColor.count = 1;
@@ -172,7 +175,7 @@ public:
         RenderStageCache cache;
         const auto overlaid = RenderChain::preview(source, settings, false, 1.0, &cache, 0);
         check(!overlaid.preview.isNull(), "overlay preview renders");
-        check(cv::norm(source.linearRgba, before, cv::NORM_INF) == 0, "the overlay leaves the source untouched");
+        check(ipr::largestDifference(source.linearRgba, before) == 0, "the overlay leaves the source untouched");
         const auto plain = RenderChain::preview(source, settings, false, 1.0, &cache, -1);
         check(plain.preview != overlaid.preview, "without the overlay the preview keeps its colours");
     }

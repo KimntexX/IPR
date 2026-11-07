@@ -1,9 +1,8 @@
 #ifndef IPR_CORE_DETAILPROCESSING_H
 #define IPR_CORE_DETAILPROCESSING_H
 
+#include "Image.h"
 #include "LocalValues.h"
-
-#include <opencv2/core.hpp>
 
 namespace DetailProcessing {
 
@@ -26,7 +25,7 @@ struct SharpenSettings
     int masking = 0;
 };
 
-// Both operations require a CV_32FC3 RGB image in linear Rec.2020 D65.
+// Both operations require a F32 of three channels RGB image in linear Rec.2020 D65.
 // HDR values are preserved. Denoising compresses chroma toward neutral when
 // needed to keep RGB nonnegative without independently lifting its luminance.
 // pixelScale: pixels of this image per pixel of the full image (1 for the master).
@@ -35,11 +34,11 @@ struct SharpenSettings
 // look at the whole image: each runs at the few values the map needs (at most 5,
 // so up to 60 bytes a pixel while it renders), then the results mix per pixel; a
 // pixel at zero stays untouched.
-void reduceNoise(cv::Mat &linearRgb, const DenoiseSettings &settings, double pixelScale = 1.0,
+void reduceNoise(ipr::Image &linearRgb, const DenoiseSettings &settings, double pixelScale = 1.0,
                  const LocalValues::Maps &local = {});
 // The sharpening radius is in pixels of the full image. local: per-pixel Sharpening
 // added to the amount (LocalValues), the sum within [0, 200].
-void sharpen(cv::Mat &linearRgb, const SharpenSettings &settings, double pixelScale = 1.0,
+void sharpen(ipr::Image &linearRgb, const SharpenSettings &settings, double pixelScale = 1.0,
              const LocalValues::Maps &local = {});
 
 }

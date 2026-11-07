@@ -47,7 +47,7 @@ def main():
                       profile=profile, manifest=dict(path=str(args.manifest.resolve()), sha256=sha256(args.manifest)),
                       tool=dict(path=str(args.tool.resolve()), sha256=tool_hash), engine_revision=args.engine_revision,
                       engine_source=str(args.engine_source.resolve()), engine_hashes=engine_hashes, sources=sources,
-                      conditions='signedDevelopment requested, WB as-shot, optics off, actual pre-DCP inlet retained; existing six noise pairs, full-frame stats and three256 ROIs. Native decode budget20.8s, 8 RCD workers, OpenCV1/OMP8.',
+                      conditions='signedDevelopment requested, WB as-shot, optics off, actual pre-DCP inlet retained; existing six noise pairs, full-frame stats and three256 ROIs. Native decode budget20.8s, 8 RCD workers, 8 image-layer workers, OMP8.',
                       limitations='No nonlinear DCP range modification, no optics/fallback/no-profile inlet coverage, no visual or denoising benefit claim. Negative presence alone does not prove absence of every intermediate quantization.'))
     env = dict(os.environ); env['OMP_NUM_THREADS'] = '8'
     env['PATH'] = os.pathsep.join([str(d) for d in args.runtime_dir]+[env.get('PATH', '')])
@@ -86,7 +86,7 @@ def main():
                     raise ValueError('Black witness lacks exact module/inlet comparison')
                 if not all(np.isfinite(values).all() for _, values in stages.values()):
                     raise ValueError('Nonfinite camera/master capture')
-                budget = manifest['decode_ms'] <= 20800 and manifest['rcd_workers'] <= 8 and manifest['opencv_threads'] <= 1
+                budget = manifest['decode_ms'] <= 20800 and manifest['rcd_workers'] <= 8 and manifest['worker_threads'] <= 8
                 records.append(dict(iso=pair['iso'], role=pair['role'], source=item,
                                     capture=dict(path=str(out), sha256=sha256(out)), inlet=inlet, module_to_inlet=transfer,
                                     metadata=manifest['metadata'], decode_ms=manifest['decode_ms'],

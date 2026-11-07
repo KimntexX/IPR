@@ -105,7 +105,7 @@ void refusals()
         return false;
     };
     const Image image = Image::create({4, 4}, Depth::F32, 1);
-    check(refused([&] { resized(Image(), {2, 2}, Interpolation::Linear); }), "no image");
+    check(resized(Image(), {2, 2}, Interpolation::Linear).empty(), "no image gives none");
     check(refused([&] { resized(image, {0, 2}, Interpolation::Linear); }), "no size");
     check(refused([&] { resized(Image::create({4, 4}, Depth::U16, 1), {2, 2}, Interpolation::Area); }), "another depth");
     check(refused([&] { resizedBy(image, 0.0, 1.0, Interpolation::Linear); }), "no scale");

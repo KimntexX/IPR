@@ -267,8 +267,8 @@ def bundled_path(path, frameworks):
 
 def relocate_bundled_references(bundle):
     """Absolute install names and references to a library or framework the bundle
-    carries point to that copy. macdeployqt leaves some behind (OpenCV's own ids,
-    paths into the staging folder); references to libraries the bundle does not
+    carries point to that copy. macdeployqt leaves some behind (a Homebrew library's own
+    ids, paths into the staging folder); references to libraries the bundle does not
     carry are left for assert_macos_portable to refuse."""
     frameworks = bundle / 'Contents/Frameworks'
     for binary in macho_files(bundle):
@@ -308,15 +308,6 @@ def arch_recipe(output, label):
     return recipe
 
 
-def shipped_runtime_dll(name):
-    """Whether a third-party DLL of a runtime folder belongs in a package: not a debug build of
-    OpenCV, nor its video plugins. IPR uses its core and imgproc modules only."""
-    lowered = name.lower()
-    if not lowered.startswith('opencv_'):
-        return True
-    return not (lowered.startswith('opencv_videoio_') or re.search(r'\dd\.dll$', lowered))
-
-
 def package(build, output, label, mode, env, runtime_dirs, native_format=None, verify_only=False, approval=None, installer=False):
     if installer and (os.name != 'nt' or mode != 'standalone'):
         raise ValueError('Windows installer requires Windows standalone mode')
@@ -333,8 +324,7 @@ def package(build, output, label, mode, env, runtime_dirs, native_format=None, v
             if not runtime_dirs: raise ValueError('Windows standalone requires --runtime-dir for third-party DLLs')
             for directory in runtime_dirs:
                 for dll in Path(directory).glob('*.dll'):
-                    if shipped_runtime_dll(dll.name):
-                        shutil.copy2(dll, stage / 'bin' / dll.name)
+                    shutil.copy2(dll, stage / 'bin' / dll.name)
         if platform.system() != 'Darwin':
             shutil.copytree(stage / 'share/IPR/config', stage / 'bin/config')
             shutil.copytree(stage / 'share/IPR/profiles', stage / 'bin/profiles')
@@ -361,7 +351,7 @@ def package(build, output, label, mode, env, runtime_dirs, native_format=None, v
                 if qt_notices.is_dir(): shutil.copytree(qt_notices, licenses / 'Qt', dirs_exist_ok=True)
         if platform.system() == 'Linux':
             for folder in Path('/usr/share/doc').glob('*'):
-                if folder.name.startswith(('libopencv', 'libraw', 'libtiff', 'libjpeg', 'libpng', 'libwebp', 'zlib')):
+                if folder.name.startswith(('libraw', 'libtiff', 'libjpeg', 'libpng', 'libwebp', 'zlib')):
                     if (folder / 'copyright').exists():
                         shutil.copy2(folder / 'copyright', licenses / (folder.name + '.txt'))
     if platform.system() == 'Darwin':
@@ -381,7 +371,7 @@ def package(build, output, label, mode, env, runtime_dirs, native_format=None, v
                 'source_dirty': dirty,
                 'private_profiles': False, 'signed_release': False, 'smoke': check,
                 'build_dependencies': {k: v for k, v in cache(build).items()
-                    if k in ('Qt6_DIR', 'OpenCV_DIR', 'LIBRAW_LIBRARY', 'TIFF_LIBRARY_RELEASE', 'CMAKE_CXX_COMPILER')},
+                    if k in ('Qt6_DIR', 'LIBRAW_LIBRARY', 'TIFF_LIBRARY_RELEASE', 'CMAKE_CXX_COMPILER')},
                 'files': files}
     (stage / 'package-manifest.json').write_text(json.dumps(manifest, indent=2), encoding='utf8')
     installer_path = None

@@ -1,8 +1,10 @@
 #include "ColorAdjustments.h"
+#include "image_testing.h"
 #include "PerceptualColour.h"
 #include "PointColor.h"
 #include "Sidecar.h"
 #include "WorkingColorSpace.h"
+#include "Image.h"
 
 #include <QFile>
 #include <QTemporaryDir>
@@ -46,7 +48,7 @@ PointColor::Parameters single(const PointColor::Point &point)
 // The HSV a colour reaches.
 PointColor::Hsv adjusted(const PointColor::Hsv &hsv, const PointColor::Parameters &parameters)
 {
-    cv::Vec3d rgb = PointColor::fromHsv(hsv);
+    ipr::Vec3d rgb = PointColor::fromHsv(hsv);
     PointColor::adjust(rgb, parameters);
     return PointColor::toHsv(rgb);
 }
@@ -73,12 +75,12 @@ bool identity()
     ok &= check(!PointColor::active(parameters), "a point without shift is inactive");
     parameters.points[1].hueShift = 50;   // beyond count
     ok &= check(!PointColor::active(parameters), "points beyond the count are ignored");
-    const cv::Vec3f rgb(0.3f, 0.2f, 0.1f);
+    const ipr::Vec3f rgb(0.3f, 0.2f, 0.1f);
     ok &= check(PointColor::apply(rgb, parameters) == rgb, "inactive settings leave the colour unchanged");
     parameters.points[0].hueShift = 100;
-    const cv::Vec3f grey(0.4f, 0.4f, 0.4f);
+    const ipr::Vec3f grey(0.4f, 0.4f, 0.4f);
     ok &= check(PointColor::apply(grey, parameters) == grey, "exact greys are unchanged");
-    const cv::Vec3f blue(cv::Vec3d(PointColor::fromHsv({4.0, 0.6, 0.5})));
+    const ipr::Vec3f blue(ipr::Vec3d(PointColor::fromHsv({4.0, 0.6, 0.5})));
     ok &= check(PointColor::apply(blue, parameters) == blue, "a colour outside the range is not even converted");
     return ok;
 }
@@ -168,7 +170,7 @@ bool overlap()
     second.points[0] = turn;
     second.points[1] = lighten;
     first.count = second.count = 2;
-    ok &= check(cv::norm(adjusted(Orange, first) - adjusted(Orange, second)) > 1e-6, "the points act in order");
+    ok &= check(ipr::length(adjusted(Orange, first) - adjusted(Orange, second)) > 1e-6, "the points act in order");
     return ok;
 }
 
@@ -182,16 +184,16 @@ bool robustness()
     point.hueShift = 100;
     point.saturationShift = -100;
     point.range = 100;
-    bool ok = check(cv::norm(clamped - adjusted(Orange, single(point))) < 1e-12, "values are clamped");
+    bool ok = check(ipr::length(clamped - adjusted(Orange, single(point))) < 1e-12, "values are clamped");
     PointColor::Parameters many = single(orange());
     many.count = 1000;
     many.points[0].hueShift = 100;
     const PointColor::Hsv result = adjusted(Orange, many);
     ok &= check(std::isfinite(result[0]) && std::isfinite(result[1]) && std::isfinite(result[2]),
                 "a count above the maximum is bounded");
-    cv::Vec3d black(0.0, 0.0, 0.0);
+    ipr::Vec3d black(0.0, 0.0, 0.0);
     PointColor::adjust(black, single(point));
-    ok &= check(black == cv::Vec3d(0.0, 0.0, 0.0), "black stays black");
+    ok &= check(black == ipr::Vec3d(0.0, 0.0, 0.0), "black stays black");
     return ok;
 }
 
@@ -200,14 +202,14 @@ bool perceptualStage()
     PerceptualColour::Parameters parameters;
     parameters.pointColor = single(orange());
     parameters.pointColor.points[0].saturationShift = -100;
-    cv::Mat image(1, 2, CV_32FC3);
-    image.at<cv::Vec3f>(0, 0) = cv::Vec3f(PointColor::fromHsv(Orange));
-    image.at<cv::Vec3f>(0, 1) = cv::Vec3f(0.3f, 0.3f, 0.3f);
+    ipr::Image image = ipr::Image::create({2, 1}, ipr::Depth::F32, 3);
+    imagetest::at<ipr::Vec3f>(image, 0, 0) = ipr::Vec3f(PointColor::fromHsv(Orange));
+    imagetest::at<ipr::Vec3f>(image, 0, 1) = ipr::Vec3f(0.3f, 0.3f, 0.3f);
     PerceptualColour::apply(image, parameters);
-    const PointColor::Hsv out = PointColor::toHsv(cv::Vec3d(image.at<cv::Vec3f>(0, 0)));
+    const PointColor::Hsv out = PointColor::toHsv(ipr::Vec3d(imagetest::at<ipr::Vec3f>(image, 0, 0)));
     bool ok = check(std::abs(out[1] / Orange[1] - 0.526) < 0.002 && std::abs(out[2] / Orange[2] - 1.0) < 1e-4,
                     "the perceptual stage applies the point colour");
-    ok &= check(image.at<cv::Vec3f>(0, 1) == cv::Vec3f(0.3f, 0.3f, 0.3f), "the stage leaves greys");
+    ok &= check(imagetest::at<ipr::Vec3f>(image, 0, 1) == ipr::Vec3f(0.3f, 0.3f, 0.3f), "the stage leaves greys");
     return ok;
 }
 
@@ -215,23 +217,23 @@ bool overlay()
 {
     PerceptualColour::Parameters parameters;
     parameters.pointColor = single(orange());
-    cv::Mat image(1, 2, CV_32FC3);
-    image.at<cv::Vec3f>(0, 0) = cv::Vec3f(PointColor::fromHsv(Orange));
-    image.at<cv::Vec3f>(0, 1) = cv::Vec3f(PointColor::fromHsv({4.0, 0.6, 0.5}));
-    const cv::Mat weights = PerceptualColour::pointWeights(image, parameters, 0);
-    bool ok = check(!weights.empty() && std::abs(weights.at<float>(0, 0) - 1.0f) < 1e-4f &&
-                    weights.at<float>(0, 1) == 0.0f, "the overlay weighs the source 1 and a far colour 0");
+    ipr::Image image = ipr::Image::create({2, 1}, ipr::Depth::F32, 3);
+    imagetest::at<ipr::Vec3f>(image, 0, 0) = ipr::Vec3f(PointColor::fromHsv(Orange));
+    imagetest::at<ipr::Vec3f>(image, 0, 1) = ipr::Vec3f(PointColor::fromHsv({4.0, 0.6, 0.5}));
+    const ipr::Image weights = PerceptualColour::pointWeights(image, parameters, 0);
+    bool ok = check(!weights.empty() && std::abs(imagetest::at<float>(weights, 0, 0) - 1.0f) < 1e-4f &&
+                    imagetest::at<float>(weights, 0, 1) == 0.0f, "the overlay weighs the source 1 and a far colour 0");
     ok &= check(PerceptualColour::pointWeights(image, parameters, 1).empty() &&
                 PerceptualColour::pointWeights(image, parameters, -1).empty(), "an invalid point gives no weights");
-    cv::Mat rgba(1, 2, CV_32FC4);
-    rgba.at<cv::Vec4f>(0, 0) = {0.6f, 0.3f, 0.1f, 1.0f};
-    rgba.at<cv::Vec4f>(0, 1) = {0.6f, 0.3f, 0.1f, 0.5f};
-    cv::Mat w(1, 2, CV_32FC1);
-    w.at<float>(0, 0) = 1.0f;
-    w.at<float>(0, 1) = 0.0f;
+    ipr::Image rgba = ipr::Image::create({2, 1}, ipr::Depth::F32, 4);
+    imagetest::at<ipr::Vec4f>(rgba, 0, 0) = {0.6f, 0.3f, 0.1f, 1.0f};
+    imagetest::at<ipr::Vec4f>(rgba, 0, 1) = {0.6f, 0.3f, 0.1f, 0.5f};
+    ipr::Image w = ipr::Image::create({2, 1}, ipr::Depth::F32, 1);
+    imagetest::at<float>(w, 0, 0) = 1.0f;
+    imagetest::at<float>(w, 0, 1) = 0.0f;
     ColorAdjustments::showWeights(rgba, w);
-    const cv::Vec4f kept = rgba.at<cv::Vec4f>(0, 0), grey = rgba.at<cv::Vec4f>(0, 1);
-    ok &= check(cv::norm(kept - cv::Vec4f(0.6f, 0.3f, 0.1f, 1.0f)) < 1e-6 && grey[0] == grey[1] && grey[1] == grey[2] &&
+    const ipr::Vec4f kept = imagetest::at<ipr::Vec4f>(rgba, 0, 0), grey = imagetest::at<ipr::Vec4f>(rgba, 0, 1);
+    ok &= check(ipr::length(kept - ipr::Vec4f(0.6f, 0.3f, 0.1f, 1.0f)) < 1e-6 && grey[0] == grey[1] && grey[1] == grey[2] &&
                 grey[3] == 0.5f, "weight 1 keeps the colour, weight 0 shows its luminance, alpha kept");
     return ok;
 }

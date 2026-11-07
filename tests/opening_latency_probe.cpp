@@ -4,6 +4,7 @@
 #include "Sidecar.h"
 #include "imageprovider.h"
 #include "CameraProfileEngine.h"
+#include "Parallel.h"
 #include <QCoreApplication>
 #include <QCryptographicHash>
 #include <QElapsedTimer>
@@ -200,14 +201,18 @@ public:
             const auto rendered = RenderChain::preview(proxy, settings, true);
             const double previewMs = elapsed(t);
             t.restart();
-            auto check = loaded;
+            ImageImport::Result check;
+            check.image = ColorPipeline::sharedCopy(loaded.image);
+            check.metadata = loaded.metadata;
+            check.dcpSource = loaded.dcpSource;
             ImageImport::complete(check);
             const double validationMs = elapsed(t);
-            const auto bytes = DecodedImageCache::entrySizeBytes({loaded.image, proxy, loaded.metadata});
+            const auto bytes = DecodedImageCache::entrySizeBytes(
+                {ColorPipeline::sharedCopy(loaded.image), ColorPipeline::sharedCopy(proxy), loaded.metadata});
             runs.append(QJsonObject{{"run", i + 1}, {"import_ms", importMs},
                 {"proxy_ms", proxyMs}, {"preview_pair_histogram_ms", previewMs},
                 {"cache_hit_validation_ms", validationMs}, {"entry_bytes", double(bytes)},
-                {"width", loaded.image.linearRgba.cols}, {"height", loaded.image.linearRgba.rows},
+                {"width", loaded.image.linearRgba.width()}, {"height", loaded.image.linearRgba.height()},
                 {"preview_valid", !rendered.preview.isNull()},
                 {"camera", loaded.metadata.cameraModel}, {"normalization_applied", loaded.metadata.rawNormalizationApplied},
                 {"dcp", loaded.metadata.dcpProfile}, {"prepared_cache", profiles()},
@@ -258,10 +263,10 @@ public:
         options.chromaticAberrationEnabled = false;
         const auto loaded = ImageEditor::loadFromDisk(raw, false, options);
         if (loaded.image.isNull()) return {{"error", loaded.error}};
-        const auto digest = [](const cv::Mat &m) {
+        const auto digest = [](const ipr::Image &m) {
             QCryptographicHash h(QCryptographicHash::Sha256);
-            for (int y = 0; y < m.rows; ++y)
-                h.addData(QByteArrayView(reinterpret_cast<const char *>(m.ptr(y)), qsizetype(m.cols * m.elemSize())));
+            for (int y = 0; y < m.height(); ++y)
+                h.addData(QByteArrayView(reinterpret_cast<const char *>(m.row<unsigned char>(y)), qsizetype(m.width() * m.pixelBytes())));
             return QString::fromLatin1(h.result().toHex());
         };
         QJsonObject out;
@@ -298,7 +303,7 @@ public:
             const QImage view = preview.preview.convertToFormat(QImage::Format_RGBA8888);
             out[it.key()] = QJsonObject{
                 {"master", master.isNull() ? QString("null") : digest(master.linearRgba)},
-                {"preview", digest(cv::Mat(view.height(), view.width(), CV_8UC4, const_cast<uchar *>(view.constBits()), size_t(view.bytesPerLine())))},
+                {"preview", digest(ipr::Image::wrapReadOnly(view.constBits(), {view.width(), view.height()}, ipr::Depth::U8, 4, view.bytesPerLine()))},
                 {"histogram", QString::fromLatin1(histogram.result().toHex())}};
         }
         return {{"raw", raw}, {"sets", out}};
@@ -398,7 +403,8 @@ public:
                 {"retention_budget_bytes", double(after.budgetBytes)},
                 {"reserved_bytes", double(after.reservedBytes)}, {"pressure", after.pressure},
                 {"max_global_used_ratio_sampled", maxUsed},
-                {"entry_bytes", double(DecodedImageCache::entrySizeBytes({editor.m_original, editor.m_editProxy, editor.m_sourceMetadata}))},
+                {"entry_bytes", double(DecodedImageCache::entrySizeBytes({ColorPipeline::sharedCopy(editor.m_original),
+                                                                          ColorPipeline::sharedCopy(editor.m_editProxy), editor.m_sourceMetadata}))},
                 {"process", processMemory()},
                 {"prepared_before", profilesBefore}, {"prepared_after", profiles()}});
             if (timedOut || editor.m_original.isNull() || editor.m_displayedFile != QUrl::fromLocalFile(paths[index]))
@@ -449,7 +455,7 @@ int main(int argc, char **argv)
     }
     result["qt"] = QT_VERSION_STR;
     result["libraw"] = RawDecoder::backendVersion();
-    result["opencv_threads"] = cv::getNumThreads();
+    result["worker_threads"] = ipr::workerThreads();
     result["logical_processors"] = QThread::idealThreadCount();
     std::cout << QJsonDocument(result).toJson(QJsonDocument::Compact).constData() << '\n';
     return result.contains("error") ? 1 : 0;

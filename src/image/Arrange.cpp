@@ -201,4 +201,61 @@ void pyramidDownInto(const Image &image, Image &out, int threads)
     }, threads);
 }
 
+Image turned(const Image &image, int quarterTurns)
+{
+    if (image.empty())
+        return {};
+    const Size size = quarterTurns % 2 ? Size(image.height(), image.width()) : image.size();
+    Image out = Image::create(size, image.depth(), image.channels());
+    turnInto(image, out, quarterTurns);
+    return out;
+}
+
+Image mirrored(const Image &image, bool leftToRight, bool topToBottom)
+{
+    if (image.empty())
+        return {};
+    Image out = Image::create(image.size(), image.depth(), image.channels());
+    mirrorInto(image, out, leftToRight, topToBottom);
+    return out;
+}
+
+Image transposed(const Image &image)
+{
+    if (image.empty())
+        return {};
+    Image out = Image::create({image.height(), image.width()}, image.depth(), image.channels());
+    transposeInto(image, out);
+    return out;
+}
+
+Image padded(const Image &image, int top, int bottom, int left, int right)
+{
+    if (image.empty())
+        return {};
+    Image out = Image::create({image.width() + left + right, image.height() + top + bottom}, image.depth(),
+                              image.channels());
+    padInto(image, out, top, bottom, left, right);
+    return out;
+}
+
+Image paddedRegion(const Image &image, Rect<int> region, int top, int bottom, int left, int right)
+{
+    if (image.empty())
+        return {};
+    Image out = Image::create({region.width + left + right, region.height + top + bottom}, image.depth(),
+                              image.channels());
+    padRegionInto(image, out, region, top, bottom, left, right);
+    return out;
+}
+
+Image pyramidDown(const Image &image)
+{
+    if (image.empty())
+        return {};
+    Image out = Image::create(pyramidDownSize(image.size()), image.depth(), image.channels());
+    pyramidDownInto(image, out);
+    return out;
+}
+
 } // namespace ipr

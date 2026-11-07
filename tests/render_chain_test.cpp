@@ -1,7 +1,10 @@
 #include "RenderChain.h"
+#include <random>
+#include "image_testing.h"
 #include "ToneRecovery.h"
+#include "Filters.h"
+#include "Pixels.h"
 
-#include <opencv2/imgproc.hpp>
 
 #include <QCoreApplication>
 
@@ -36,27 +39,28 @@ Settings neutral()
 // Gradients with texture and noise, so that every stage changes pixels.
 WorkingImage scene(int width = 200, int height = 150)
 {
-    cv::Mat rgba(height, width, CV_32FC4);
-    cv::RNG random(7);
+    ipr::Image rgba = ipr::Image::create({width, height}, ipr::Depth::F32, 4);
+    std::mt19937 random(7);
+    std::normal_distribution<float> gaussian(0.f, 0.005f);
     for (int y = 0; y < height; ++y)
         for (int x = 0; x < width; ++x) {
             const float u = float(x) / float(width), v = float(y) / float(height);
             const float detail = 0.05f * float(std::sin(x * 0.7) * std::cos(y * 0.5));
-            rgba.at<cv::Vec4f>(y, x) = {0.1f + 0.6f * u + detail + float(random.gaussian(0.005)),
-                                        0.15f + 0.5f * v + detail + float(random.gaussian(0.005)),
-                                        0.5f - 0.3f * u * v + detail + float(random.gaussian(0.005)), 1.0f};
+            const float r = gaussian(random), g = gaussian(random), b = gaussian(random);
+            imagetest::at<ipr::Vec4f>(rgba, y, x) = {0.1f + 0.6f * u + detail + r, 0.15f + 0.5f * v + detail + g,
+                                                     0.5f - 0.3f * u * v + detail + b, 1.0f};
         }
     WorkingImage image;
-    image.linearRgba = rgba;
+    image.toneStatistics = ToneRecovery::measure(rgba);
+    image.linearRgba = std::move(rgba);
     image.colorSpace = ColorPipeline::workingColorSpace();
     image.referenceWhiteBalanceKelvin = 5200.0;
-    image.toneStatistics = ToneRecovery::measure(rgba);
     return image;
 }
 
-bool same(const cv::Mat &a, const cv::Mat &b)
+bool same(const ipr::Image &a, const ipr::Image &b)
 {
-    return a.size() == b.size() && a.type() == b.type() && cv::norm(a, b, cv::NORM_INF) == 0;
+    return imagetest::same(a, b);
 }
 
 LocalAdjustments::BrushStroke stroke()
@@ -104,7 +108,7 @@ void aNeutralRecipeHandsBackTheSourceBuffer()
 {
     const WorkingImage source = scene();
     const WorkingImage rendered = RenderChain::workingImage(source, neutral());
-    check(rendered.linearRgba.data == source.linearRgba.data, "rendered.linearRgba.data == source.linearRgba.data");
+    check(rendered.linearRgba.block() == source.linearRgba.block(), "the same pixels");
 }
 
 void invalidSourcesRenderNothing()
@@ -112,13 +116,13 @@ void invalidSourcesRenderNothing()
     check(RenderChain::workingImage({}, neutral()).isNull(), "RenderChain::workingImage({}, neutral()).isNull()");
 
     WorkingImage notFinite = scene();
-    notFinite.linearRgba.at<cv::Vec4f>(3, 3)[1] = std::numeric_limits<float>::quiet_NaN();
+    imagetest::at<ipr::Vec4f>(notFinite.linearRgba, 3, 3)[1] = std::numeric_limits<float>::quiet_NaN();
     int notDone = -9;
     check(RenderChain::workingImage(notFinite, neutral(), 1.0, nullptr, &notDone).isNull(), "RenderChain::workingImage(notFinite, neutral(), 1.0, nullptr, &notDone).isNull()");
     check(notDone == -9, "notDone == -9");
 
     WorkingImage wrongType = scene();
-    wrongType.linearRgba.convertTo(wrongType.linearRgba, CV_64FC4);
+    wrongType.linearRgba = ipr::Image::zeros(wrongType.linearRgba.size(), ipr::Depth::F64, 4);
     check(RenderChain::workingImage(wrongType, neutral()).isNull(), "RenderChain::workingImage(wrongType, neutral()).isNull()");
 
     WorkingImage wrongSpace = scene();
@@ -152,13 +156,13 @@ void everyStageActsAndLeavesTheSourceAlone()
         {"retouch", [](Settings &s) { s = withRemoval(); }},
     };
     const WorkingImage source = scene();
-    const cv::Mat before = source.linearRgba.clone();
+    const ipr::Image before = source.linearRgba.clone();
     for (const auto &[name, edit] : stages) {
         Settings settings = neutral();
         edit(settings);
         const WorkingImage rendered = RenderChain::workingImage(source, settings);
         check(!rendered.isNull(), name);
-        check(cv::checkRange(rendered.linearRgba, true), name);
+        check(ipr::allFinite(rendered.linearRgba), name);
         check(!same(rendered.linearRgba, before), name);
         check(same(source.linearRgba, before), name);
     }
@@ -172,13 +176,12 @@ void theBlurSliderFollowsItsSigma()
     Settings settings = neutral();
     settings.blur = 6;
     const WorkingImage blurred = RenderChain::workingImage(source, settings);
-    cv::Mat expected;
-    cv::GaussianBlur(plain.linearRgba, expected, cv::Size(0, 0), 3.0);
-    check(cv::norm(blurred.linearRgba, expected, cv::NORM_INF) < 1e-5, "the whole image, borders included");
+    ipr::Image expected = ipr::gaussianBlurred(plain.linearRgba, 3.0);
+    check(ipr::largestDifference(blurred.linearRgba, expected) < 1e-5, "the whole image, borders included");
 
     const WorkingImage half = RenderChain::workingImage(source, settings, 0.5);
-    cv::GaussianBlur(plain.linearRgba, expected, cv::Size(0, 0), 1.5);
-    check(cv::norm(half.linearRgba, expected, cv::NORM_INF) < 1e-5, "the sigma follows the scale");
+    expected = ipr::gaussianBlurred(plain.linearRgba, 1.5);
+    check(ipr::largestDifference(half.linearRgba, expected) < 1e-5, "the sigma follows the scale");
 }
 
 void theCacheNeverChangesThePixels()
@@ -213,15 +216,15 @@ void retouchesWithoutEffectAreReported()
 void cropKeepsWhatItShould()
 {
     const WorkingImage whole = scene();
-    const WorkingImage same = RenderChain::cropped(whole, neutral().geometry);
-    check(same.linearRgba.data == whole.linearRgba.data, "same.linearRgba.data == whole.linearRgba.data");
+    const WorkingImage same = RenderChain::cropped(ColorPipeline::sharedCopy(whole), neutral().geometry);
+    check(same.linearRgba.block() == whole.linearRgba.block(), "without a crop, the same pixels");
     check(RenderChain::cropped({}, withCrop().geometry).isNull(), "RenderChain::cropped({}, withCrop().geometry).isNull()");
 
-    const WorkingImage part = RenderChain::cropped(whole, withCrop().geometry);
-    check(part.linearRgba.cols == 100, "part.linearRgba.cols == 100");
-    check(part.linearRgba.rows == 75, "part.linearRgba.rows == 75");
+    const WorkingImage part = RenderChain::cropped(ColorPipeline::sharedCopy(whole), withCrop().geometry);
+    check(part.linearRgba.width() == 100, "part.linearRgba.width() == 100");
+    check(part.linearRgba.height() == 75, "part.linearRgba.height() == 75");
     // Its own pixels: the source is not reachable through them.
-    check(part.linearRgba.datastart != whole.linearRgba.datastart, "part.linearRgba.datastart != whole.linearRgba.datastart");
+    check(part.linearRgba.block() != whole.linearRgba.block(), "the part has pixels of its own");
 }
 
 void theQualityFollowsTheScale()
@@ -236,8 +239,8 @@ void theTonesOutputIsTheSameFromTheCache()
     Settings settings = neutral();
     settings.contrast = 25;
     settings.saturation = 30;
-    const cv::Mat cold = RenderChain::tonesOutput(source, settings, 1.0, nullptr);
-    check(cold.type() == CV_32FC3, "cold.type() == CV_32FC3");
+    const ipr::Image cold = RenderChain::tonesOutput(source, settings, 1.0, nullptr);
+    check((cold.depth() == ipr::Depth::F32 && cold.channels() == 3), "(cold.depth() == ipr::Depth::F32 && cold.channels() == 3)");
     check(cold.size() == source.linearRgba.size(), "cold.size() == source.linearRgba.size()");
 
     RenderStageCache cache;
@@ -272,7 +275,7 @@ void theWholeCanvasIgnoresTheCrop()
 void overlaysShowCoverageWithoutTouchingTheSource()
 {
     const WorkingImage source = scene();
-    const cv::Mat before = source.linearRgba.clone();
+    const ipr::Image before = source.linearRgba.clone();
     Settings settings = withMask();
     settings.retouches = withRemoval().retouches;
     settings.pointColor.count = 1;
@@ -290,7 +293,7 @@ void overlaysShowCoverageWithoutTouchingTheSource()
 void anOverlayOnANeutralRecipeNeverWritesInTheSource()
 {
     const WorkingImage source = scene();
-    const cv::Mat before = source.linearRgba.clone();
+    const ipr::Image before = source.linearRgba.clone();
     Settings settings = neutral();
     settings.pointColor.count = 1;
     settings.pointColor.points[0].source = PointColor::toHsv({0.4, 0.3, 0.2});

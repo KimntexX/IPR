@@ -1,8 +1,10 @@
 #include "LocalValues.h"
+#include "Parallel.h"
 
 #include <algorithm>
 #include <cmath>
 #include <mutex>
+#include <stdexcept>
 #include <unordered_set>
 
 namespace LocalValues {
@@ -13,10 +15,11 @@ constexpr int MaxMultiple = KeyOffset - 1;
 constexpr int MaxWidenings = 16;
 }
 
-Combinations::Combinations(std::vector<Axis> axes, const cv::Size &size, int maxCount)
+Combinations::Combinations(std::vector<Axis> axes, const ipr::Size &size, int maxCount)
     : m_axes(std::move(axes))
 {
-    CV_Assert(int(m_axes.size()) <= MaxAxes && maxCount > 0);
+    if (int(m_axes.size()) > MaxAxes || maxCount <= 0)
+        throw std::invalid_argument("At most four axes, and at least one combination");
     for (Axis &axis : m_axes) {
         if (axis.local && (axis.local->empty() || !fits(*axis.local, size) || axis.scale == 0.0f))
             axis.local = nullptr;
@@ -36,13 +39,13 @@ Combinations::Combinations(std::vector<Axis> axes, const cv::Size &size, int max
     }
 }
 
-void Combinations::scan(const cv::Size &size)
+void Combinations::scan(const ipr::Size &size)
 {
     std::unordered_set<quint64> found;
     std::mutex mutex;
-    cv::parallel_for_(cv::Range(0, size.height), [&](const cv::Range &range) {
+    ipr::parallelRows(size.height, [&](int from, int to) {
         std::unordered_set<quint64> local;
-        for (int y = range.start; y < range.end; ++y) {
+        for (int y = from; y < to; ++y) {
             const auto rows = rowsAt(y);
             quint64 last = 0;
             bool hasLast = false;
@@ -68,7 +71,7 @@ std::array<const float *, Combinations::MaxAxes> Combinations::rowsAt(int y) con
 {
     std::array<const float *, MaxAxes> rows{};
     for (size_t axis = 0; axis < m_axes.size(); ++axis)
-        rows[axis] = m_axes[axis].local ? m_axes[axis].local->ptr<float>(y) : nullptr;
+        rows[axis] = m_axes[axis].local ? m_axes[axis].local->row<float>(y) : nullptr;
     return rows;
 }
 
@@ -118,7 +121,15 @@ Combinations::Row Combinations::row(int y) const
     return Row(*this, y);
 }
 
-std::vector<float> latticeOf(float global, const cv::Mat &local, float low, float high, float step, int maxCount)
+Maps sharedCopy(const Maps &maps)
+{
+    Maps copy;
+    for (size_t i = 0; i < maps.values.size(); ++i)
+        copy.values[i] = maps.values[i].share();
+    return copy;
+}
+
+std::vector<float> latticeOf(float global, const ipr::Image &local, float low, float high, float step, int maxCount)
 {
     const Combinations combinations({{global, &local, 1.0f, low, high, step}}, local.size(), maxCount);
     std::vector<float> lattice;

@@ -36,7 +36,7 @@ class StackSession final : public QObject
 public:
     struct Decoded
     {
-        cv::Mat cameraRgb;
+        ipr::Image cameraRgb;
         std::shared_ptr<const CameraProfileEngine::DcpWorkingContext> context;
         ImageMetadata metadata;
         QString error;
@@ -77,7 +77,7 @@ signals:
 private:
     struct Result
     {
-        cv::Mat cameraRgb;
+        ipr::Image cameraRgb;
         std::shared_ptr<const CameraProfileEngine::DcpWorkingContext> context;
         ImageMetadata metadata;
         QString referenceFile;

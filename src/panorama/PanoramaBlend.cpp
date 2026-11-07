@@ -1,8 +1,9 @@
 #include "PanoramaBlend.h"
 
-#include "OpenCvBridge.h"
-
-#include <opencv2/imgproc.hpp>
+#include "Analysis.h"
+#include "Filters.h"
+#include "Parallel.h"
+#include "Pixels.h"
 
 #include <algorithm>
 #include <array>
@@ -23,7 +24,7 @@ constexpr float keptWeight = 1e-4f;        // a covered pixel is never left with
 constexpr int capacityLevels = 32;
 constexpr double lowestRectangleShare = 0.9; // of the largest area, to stay on the bottom of the view
 
-inline float perceptual(const cv::Vec3f &colour, const cv::Vec3d &gains)
+inline float perceptual(const ipr::Vec3f &colour, const ipr::Vec3d &gains)
 {
     const float luminance = 0.25f * colour[0] * float(gains[0]) + 0.5f * colour[1] * float(gains[1]) + 0.25f * colour[2] * float(gains[2]);
     return std::sqrt(std::max(0.0f, luminance));
@@ -134,21 +135,22 @@ void levelGains(std::vector<View> &views)
     if (count == 0)
         return;
     for (int channel = 0; channel < 3; ++channel) {
-        cv::Mat normal = cv::Mat::zeros(count, count, CV_64F), right = cv::Mat::zeros(count, 1, CV_64F);
-        for (int k = 0; k < count; ++k)
-            normal.at<double>(k, k) = gainPull;
+        const size_t n = size_t(count);
+        std::vector<double> normal(n * n, 0.0), right(n, 0.0);
+        for (size_t k = 0; k < n; ++k)
+            normal[k * n + k] = gainPull;
         std::vector<float> ratios;
         for (int a = 0; a < count; ++a) {
             for (int b = a + 1; b < count; ++b) {
-                const cv::Rect common = views[size_t(a)].area & views[size_t(b)].area;
+                const ipr::Recti common = views[size_t(a)].area & views[size_t(b)].area;
                 if (common.empty())
                     continue;
                 ratios.clear();
                 for (int y = common.y; y < common.y + common.height; ++y) {
-                    const cv::Vec3f *ca = views[size_t(a)].colour.ptr<cv::Vec3f>(y - views[size_t(a)].area.y);
-                    const cv::Vec3f *cb = views[size_t(b)].colour.ptr<cv::Vec3f>(y - views[size_t(b)].area.y);
-                    const uchar *wa = views[size_t(a)].whole.ptr<uchar>(y - views[size_t(a)].area.y);
-                    const uchar *wb = views[size_t(b)].whole.ptr<uchar>(y - views[size_t(b)].area.y);
+                    const ipr::Vec3f *ca = views[size_t(a)].colour.row<ipr::Vec3f>(y - views[size_t(a)].area.y);
+                    const ipr::Vec3f *cb = views[size_t(b)].colour.row<ipr::Vec3f>(y - views[size_t(b)].area.y);
+                    const std::uint8_t *wa = views[size_t(a)].whole.row<std::uint8_t>(y - views[size_t(a)].area.y);
+                    const std::uint8_t *wb = views[size_t(b)].whole.row<std::uint8_t>(y - views[size_t(b)].area.y);
                     for (int x = common.x; x < common.x + common.width; ++x) {
                         const int xa = x - views[size_t(a)].area.x, xb = x - views[size_t(b)].area.x;
                         if (!wa[xa] || !wb[xb])
@@ -164,56 +166,60 @@ void levelGains(std::vector<View> &views)
                 std::nth_element(ratios.begin(), middle, ratios.end());
                 // gain(a) * a = gain(b) * b on the overlap: log gain(a) - log gain(b) = -log(a / b).
                 const double difference = -std::log(double(*middle));
-                normal.at<double>(a, a) += 1.0;
-                normal.at<double>(b, b) += 1.0;
-                normal.at<double>(a, b) -= 1.0;
-                normal.at<double>(b, a) -= 1.0;
-                right.at<double>(a) += difference;
-                right.at<double>(b) -= difference;
+                normal[size_t(a) * n + size_t(a)] += 1.0;
+                normal[size_t(b) * n + size_t(b)] += 1.0;
+                normal[size_t(a) * n + size_t(b)] -= 1.0;
+                normal[size_t(b) * n + size_t(a)] -= 1.0;
+                right[size_t(a)] += difference;
+                right[size_t(b)] -= difference;
             }
         }
-        cv::Mat solved;
-        if (!cv::solve(normal, right, solved, cv::DECOMP_CHOLESKY))
+        std::vector<double> solved;
+        if (!ipr::solveCholesky(normal, right, count, solved))
             continue;
         for (int k = 0; k < count; ++k)
-            views[size_t(k)].gains[channel] = std::exp(solved.at<double>(k));
+            views[size_t(k)].gains[channel] = std::exp(solved[size_t(k)]);
     }
 }
 
-cv::Mat seams(const std::vector<View> &views, const cv::Size &canvas, const std::function<bool()> &cancelled)
+ipr::Image seams(const std::vector<View> &views, const ipr::Size &canvas, const std::function<bool()> &cancelled)
 {
-    cv::Mat labels(canvas, CV_16SC1, cv::Scalar(-1));
-    cv::Mat composite(canvas, CV_32FC1, cv::Scalar(0));
-    const cv::Rect whole(0, 0, canvas.width, canvas.height);
+    ipr::Image labels = ipr::filled(canvas, ipr::Depth::S16, 1, -1);
+    ipr::Image composite = ipr::filled(canvas, ipr::Depth::F32, 1, 0);
+    ipr::PixelWriter<short> label(labels);
+    ipr::PixelWriter<float> compositeAt(composite);
+    const ipr::Recti whole(0, 0, canvas.width, canvas.height);
     for (int index = 0; index < int(views.size()); ++index) {
         if (cancelled && cancelled())
             return {};
         const View &view = views[size_t(index)];
-        const cv::Rect area = view.area & whole;
+        const ipr::Recti area = view.area & whole;
         if (area.empty())
             continue;
-        const auto cellOf = [&](int x, int y) { return view.whole.at<uchar>(y - view.area.y, x - view.area.x) != 0; };
+        const auto cellOf = [&](int x, int y) { return view.whole.row<std::uint8_t>(y - view.area.y)[x - view.area.x] != 0; };
         const auto covered = [&](int x, int y) {
             return x >= area.x && y >= area.y && x < area.x + area.width && y < area.y + area.height && cellOf(x, y);
         };
 
         // The overlap's cells, numbered on its bounding box.
-        cv::Mat node(area.size(), CV_32SC1, cv::Scalar(-1));
+        ipr::Image nodeImage = ipr::filled(area.size(), ipr::Depth::S32, 1, -1);
+        ipr::PixelWriter<int> node(nodeImage);
         int nodes = 0;
         for (int y = area.y; y < area.y + area.height; ++y)
             for (int x = area.x; x < area.x + area.width; ++x)
-                if (cellOf(x, y) && labels.at<short>(y, x) >= 0)
-                    node.at<int>(y - area.y, x - area.x) = nodes++;
+                if (cellOf(x, y) && label(y, x) >= 0)
+                    node(y - area.y, x - area.x) = nodes++;
 
         std::vector<float> difference(static_cast<size_t>(nodes));
-        cv::Mat mine(area.size(), CV_32FC1, cv::Scalar(0));
+        ipr::Image mineImage = ipr::filled(area.size(), ipr::Depth::F32, 1, 0);
         for (int y = area.y; y < area.y + area.height; ++y) {
-            const cv::Vec3f *source = view.colour.ptr<cv::Vec3f>(y - view.area.y) + (area.x - view.area.x);
-            float *out = mine.ptr<float>(y - area.y);
+            const ipr::Vec3f *source = view.colour.row<ipr::Vec3f>(y - view.area.y) + (area.x - view.area.x);
+            float *out = mineImage.mutableRow<float>(y - area.y);
             for (int x = 0; x < area.width; ++x)
                 out[x] = perceptual(source[x], view.gains);
         }
 
+        const ipr::PixelReader<float> mine(mineImage);
         std::vector<char> takesNew(static_cast<size_t>(nodes), 0);
         if (nodes > 0) {
             const int source = nodes, sink = nodes + 1;
@@ -224,15 +230,15 @@ cv::Mat seams(const std::vector<View> &views, const cv::Size &canvas, const std:
             const int hold = std::numeric_limits<int>::max() / 4;
             for (int y = 0; y < area.height; ++y) {
                 for (int x = 0; x < area.width; ++x) {
-                    const int here = node.at<int>(y, x);
+                    const int here = node(y, x);
                     if (here < 0)
                         continue;
-                    const float herePair = std::abs(mine.at<float>(y, x) - composite.at<float>(y + area.y, x + area.x));
+                    const float herePair = std::abs(mine(y, x) - compositeAt(y + area.y, x + area.x));
                     for (int side = 0; side < 4; ++side) {
                         const int nx = x + neighbourX[side], ny = y + neighbourY[side];
                         const int ax = area.x + nx, ay = area.y + ny;
                         const bool inCanvas = ax >= 0 && ay >= 0 && ax < canvas.width && ay < canvas.height;
-                        const bool oldThere = inCanvas && labels.at<short>(ay, ax) >= 0;
+                        const bool oldThere = inCanvas && label(ay, ax) >= 0;
                         const bool newThere = covered(ax, ay);
                         if (oldThere && !newThere) {
                             flow.add(source, here, hold, 0);
@@ -242,10 +248,10 @@ cv::Mat seams(const std::vector<View> &views, const cv::Size &canvas, const std:
                             holdsNew = true;
                         } else if (oldThere && newThere && (side == 0 || side == 2)) {
                             // Each edge of the grid once: right and down.
-                            const int there = node.at<int>(ny, nx);
-                            const float therePair = std::abs(mine.at<float>(ny, nx) - composite.at<float>(ay, ax));
-                            const float gradient = std::abs(mine.at<float>(y, x) - mine.at<float>(ny, nx)) +
-                                                   std::abs(composite.at<float>(y + area.y, x + area.x) - composite.at<float>(ay, ax));
+                            const int there = node(ny, nx);
+                            const float therePair = std::abs(mine(ny, nx) - compositeAt(ay, ax));
+                            const float gradient = std::abs(mine(y, x) - mine(ny, nx)) +
+                                                   std::abs(compositeAt(y + area.y, x + area.x) - compositeAt(ay, ax));
                             // A difference costs less where the image itself varies a lot.
                             const float cost = (herePair + therePair) / (gradient + 0.02f);
                             const int capacity = 1 + int(std::min(cost, 64.0f) * float(capacityLevels) / 64.0f);
@@ -269,10 +275,10 @@ cv::Mat seams(const std::vector<View> &views, const cv::Size &canvas, const std:
             for (int x = 0; x < area.width; ++x) {
                 if (!cellOf(area.x + x, area.y + y))
                     continue;
-                const int here = node.at<int>(y, x);
+                const int here = node(y, x);
                 if (here < 0 || takesNew[size_t(here)]) {
-                    labels.at<short>(y + area.y, x + area.x) = short(index);
-                    composite.at<float>(y + area.y, x + area.x) = mine.at<float>(y, x);
+                    label(y + area.y, x + area.x) = short(index);
+                    compositeAt(y + area.y, x + area.x) = mine(y, x);
                 }
             }
         }
@@ -280,22 +286,22 @@ cv::Mat seams(const std::vector<View> &views, const cv::Size &canvas, const std:
     return labels;
 }
 
-cv::Rect lowRectangle(const cv::Mat &mask)
+ipr::Recti lowRectangle(const ipr::Image &mask)
 {
-    if (mask.empty() || mask.type() != CV_8UC1)
+    if (mask.empty() || mask.depth() != ipr::Depth::U8 || mask.channels() != 1)
         return {};
     // The largest rectangle standing on each row.
-    std::vector<cv::Rect> standing(static_cast<size_t>(mask.rows));
-    std::vector<int> heights(size_t(mask.cols) + 1, 0);
+    std::vector<ipr::Recti> standing(static_cast<size_t>(mask.height()));
+    std::vector<int> heights(size_t(mask.width()) + 1, 0);
     std::vector<int> stack;
     std::int64_t bestArea = 0;
-    for (int y = 0; y < mask.rows; ++y) {
-        const uchar *row = mask.ptr<uchar>(y);
-        for (int x = 0; x < mask.cols; ++x)
+    for (int y = 0; y < mask.height(); ++y) {
+        const std::uint8_t *row = mask.row<std::uint8_t>(y);
+        for (int x = 0; x < mask.width(); ++x)
             heights[size_t(x)] = row[x] ? heights[size_t(x)] + 1 : 0;
         stack.clear();
         std::int64_t rowArea = 0;
-        for (int x = 0; x <= mask.cols; ++x) {
+        for (int x = 0; x <= mask.width(); ++x) {
             while (!stack.empty() && heights[size_t(stack.back())] >= heights[size_t(x)]) {
                 const int height = heights[size_t(stack.back())];
                 stack.pop_back();
@@ -303,30 +309,30 @@ cv::Rect lowRectangle(const cv::Mat &mask)
                 const std::int64_t area = std::int64_t(height) * std::int64_t(x - left);
                 if (height > 0 && area > rowArea) {
                     rowArea = area;
-                    standing[size_t(y)] = cv::Rect(left, y - height + 1, x - left, height);
+                    standing[size_t(y)] = ipr::Recti(left, y - height + 1, x - left, height);
                 }
             }
             stack.push_back(x);
         }
         bestArea = std::max(bestArea, rowArea);
     }
-    for (int y = mask.rows - 1; y >= 0; --y)
+    for (int y = mask.height() - 1; y >= 0; --y)
         if (bestArea > 0 && double(standing[size_t(y)].area()) >= lowestRectangleShare * double(bestArea))
             return standing[size_t(y)];
     return {};
 }
 
-Layer prepareLayer(const View &view, const cv::Mat &labels, int label, double narrowSigma, double wideSigma)
+Layer prepareLayer(const View &view, const ipr::Image &labels, int label, double narrowSigma, double wideSigma)
 {
     Layer layer;
     layer.area = view.area;
-    layer.gains = cv::Vec3f(float(view.gains[0]), float(view.gains[1]), float(view.gains[2]));
+    layer.gains = ipr::Vec3f(float(view.gains[0]), float(view.gains[1]), float(view.gains[2]));
 
-    cv::Mat mine(view.area.size(), CV_32FC1, cv::Scalar(0));
-    const cv::Rect inCanvas = view.area & cv::Rect(0, 0, labels.cols, labels.rows);
+    ipr::Image mine = ipr::filled(view.area.size(), ipr::Depth::F32, 1, 0);
+    const ipr::Recti inCanvas = view.area & ipr::Recti(0, 0, labels.width(), labels.height());
     for (int y = inCanvas.y; y < inCanvas.y + inCanvas.height; ++y) {
-        const short *row = labels.ptr<short>(y);
-        float *out = mine.ptr<float>(y - view.area.y);
+        const short *row = labels.row<short>(y);
+        float *out = mine.mutableRow<float>(y - view.area.y);
         for (int x = inCanvas.x; x < inCanvas.x + inCanvas.width; ++x)
             if (row[x] == label)
                 out[x - view.area.x] = 1.0f;
@@ -335,38 +341,35 @@ Layer prepareLayer(const View &view, const cv::Mat &labels, int label, double na
     layer.wide = ipr::gaussianBlurred(mine, wideSigma, ipr::BlurBorder::LastPixel);
 
     // The blur of the frame's own pixels, measured on them alone: what lies outside it says nothing.
-    cv::Mat present, weighted;
-    view.any.convertTo(present, CV_32FC1, 1.0 / 255.0);
-    std::vector<cv::Mat> three{present, present, present};
-    cv::Mat presentColour;
-    cv::merge(three, presentColour);
-    cv::multiply(view.colour, presentColour, weighted);
-    cv::Mat blurredColour, blurredPresent;
-    blurredColour = ipr::gaussianBlurred(weighted, wideSigma, ipr::BlurBorder::LastPixel);
-    blurredPresent = ipr::gaussianBlurred(present, wideSigma, ipr::BlurBorder::LastPixel);
-    layer.low.create(view.area.size(), CV_32FC3);
-    for (int y = 0; y < layer.low.rows; ++y) {
-        const cv::Vec3f *colour = blurredColour.ptr<cv::Vec3f>(y);
-        const float *amount = blurredPresent.ptr<float>(y);
-        cv::Vec3f *out = layer.low.ptr<cv::Vec3f>(y);
-        for (int x = 0; x < layer.low.cols; ++x) {
+    ipr::Image present = ipr::Image::create(view.any.size(), ipr::Depth::F32, 1);
+    ipr::convertInto(view.any, present, 1.0 / 255.0);
+    const ipr::Image weighted = ipr::multiplied(view.colour, ipr::merged({&present, &present, &present}));
+    const ipr::Image blurredColour = ipr::gaussianBlurred(weighted, wideSigma, ipr::BlurBorder::LastPixel);
+    const ipr::Image blurredPresent = ipr::gaussianBlurred(present, wideSigma, ipr::BlurBorder::LastPixel);
+    layer.low = ipr::Image::create(view.area.size(), ipr::Depth::F32, 3);
+    for (int y = 0; y < layer.low.height(); ++y) {
+        const ipr::Vec3f *colour = blurredColour.row<ipr::Vec3f>(y);
+        const float *amount = blurredPresent.row<float>(y);
+        ipr::Vec3f *out = layer.low.mutableRow<ipr::Vec3f>(y);
+        for (int x = 0; x < layer.low.width(); ++x) {
             const float divide = amount[x] > 1e-6f ? 1.0f / amount[x] : 0.0f;
-            out[x] = cv::Vec3f(colour[x][0] * divide * layer.gains[0], colour[x][1] * divide * layer.gains[1], colour[x][2] * divide * layer.gains[2]);
+            out[x] = ipr::Vec3f(colour[x][0] * divide * layer.gains[0], colour[x][1] * divide * layer.gains[1], colour[x][2] * divide * layer.gains[2]);
         }
     }
     return layer;
 }
 
-void blendBand(const std::vector<Pixels> &pixels, int scale, const cv::Rect &band, cv::Mat &target)
+void blendBand(const std::vector<Pixels> &pixels, int scale, const ipr::Recti &band, ipr::Image &target)
 {
-    target.create(band.size(), CV_32FC3);
-    cv::parallel_for_(cv::Range(0, band.height), [&](const cv::Range &range) {
-        std::vector<cv::Vec3f> lowSum(static_cast<size_t>(band.width)), detailSum(static_cast<size_t>(band.width)), lowRow;
+    if (target.empty() || target.size() != band.size() || target.depth() != ipr::Depth::F32 || target.channels() != 3)
+        target = ipr::Image::create(band.size(), ipr::Depth::F32, 3);
+    ipr::parallelRows(band.height, [&](int from, int to) {
+        std::vector<ipr::Vec3f> lowSum(static_cast<size_t>(band.width)), detailSum(static_cast<size_t>(band.width)), lowRow;
         std::vector<float> wideSum(static_cast<size_t>(band.width)), narrowSum(static_cast<size_t>(band.width)), wideRow, narrowRow;
-        for (int row = range.start; row < range.end; ++row) {
+        for (int row = from; row < to; ++row) {
             const int canvasY = band.y + row;
-            std::fill(lowSum.begin(), lowSum.end(), cv::Vec3f(0, 0, 0));
-            std::fill(detailSum.begin(), detailSum.end(), cv::Vec3f(0, 0, 0));
+            std::fill(lowSum.begin(), lowSum.end(), ipr::Vec3f(0, 0, 0));
+            std::fill(detailSum.begin(), detailSum.end(), ipr::Vec3f(0, 0, 0));
             std::fill(wideSum.begin(), wideSum.end(), 0.0f);
             std::fill(narrowSum.begin(), narrowSum.end(), 0.0f);
             for (const Pixels &source : pixels) {
@@ -381,17 +384,17 @@ void blendBand(const std::vector<Pixels> &pixels, int scale, const cv::Rect &ban
                 lowRow.resize(size_t(cells));
                 wideRow.resize(size_t(cells));
                 narrowRow.resize(size_t(cells));
-                const cv::Vec3f *lowTop = layer.low.ptr<cv::Vec3f>(topRow), *lowBottom = layer.low.ptr<cv::Vec3f>(bottomRow);
-                const float *wideTop = layer.wide.ptr<float>(topRow), *wideBottom = layer.wide.ptr<float>(bottomRow);
-                const float *narrowTop = layer.narrow.ptr<float>(topRow), *narrowBottom = layer.narrow.ptr<float>(bottomRow);
+                const ipr::Vec3f *lowTop = layer.low.row<ipr::Vec3f>(topRow), *lowBottom = layer.low.row<ipr::Vec3f>(bottomRow);
+                const float *wideTop = layer.wide.row<float>(topRow), *wideBottom = layer.wide.row<float>(bottomRow);
+                const float *narrowTop = layer.narrow.row<float>(topRow), *narrowBottom = layer.narrow.row<float>(bottomRow);
                 for (int c = 0; c < cells; ++c) {
                     lowRow[size_t(c)] = lowTop[c] * (1.0f - fy) + lowBottom[c] * fy;
                     wideRow[size_t(c)] = wideTop[c] * (1.0f - fy) + wideBottom[c] * fy;
                     narrowRow[size_t(c)] = narrowTop[c] * (1.0f - fy) + narrowBottom[c] * fy;
                 }
                 const int first = std::max(band.x, source.area.x), last = std::min(band.x + band.width, source.area.x + source.area.width);
-                const cv::Vec3f *colour = source.colour.ptr<cv::Vec3f>(canvasY - source.area.y);
-                const uchar *valid = source.valid.ptr<uchar>(canvasY - source.area.y);
+                const ipr::Vec3f *colour = source.colour.row<ipr::Vec3f>(canvasY - source.area.y);
+                const std::uint8_t *valid = source.valid.row<std::uint8_t>(canvasY - source.area.y);
                 for (int x = first; x < last; ++x) {
                     if (!valid[x - source.area.x])
                         continue;
@@ -400,9 +403,9 @@ void blendBand(const std::vector<Pixels> &pixels, int scale, const cv::Rect &ban
                     const float fx = cellX - float(left);
                     const float wide = wideRow[size_t(left)] * (1.0f - fx) + wideRow[size_t(right)] * fx + keptWeight;
                     const float narrow = narrowRow[size_t(left)] * (1.0f - fx) + narrowRow[size_t(right)] * fx + keptWeight;
-                    const cv::Vec3f low = lowRow[size_t(left)] * (1.0f - fx) + lowRow[size_t(right)] * fx;
-                    const cv::Vec3f &value = colour[x - source.area.x];
-                    const cv::Vec3f levelled(value[0] * layer.gains[0], value[1] * layer.gains[1], value[2] * layer.gains[2]);
+                    const ipr::Vec3f low = lowRow[size_t(left)] * (1.0f - fx) + lowRow[size_t(right)] * fx;
+                    const ipr::Vec3f &value = colour[x - source.area.x];
+                    const ipr::Vec3f levelled(value[0] * layer.gains[0], value[1] * layer.gains[1], value[2] * layer.gains[2]);
                     const size_t at = size_t(x - band.x);
                     lowSum[at] += low * wide;
                     wideSum[at] += wide;
@@ -410,10 +413,10 @@ void blendBand(const std::vector<Pixels> &pixels, int scale, const cv::Rect &ban
                     narrowSum[at] += narrow;
                 }
             }
-            cv::Vec3f *out = target.ptr<cv::Vec3f>(row);
+            ipr::Vec3f *out = target.mutableRow<ipr::Vec3f>(row);
             for (int x = 0; x < band.width; ++x) {
                 const size_t at = size_t(x);
-                out[x] = narrowSum[at] > 0.0f ? lowSum[at] * (1.0f / wideSum[at]) + detailSum[at] * (1.0f / narrowSum[at]) : cv::Vec3f(0, 0, 0);
+                out[x] = narrowSum[at] > 0.0f ? lowSum[at] * (1.0f / wideSum[at]) + detailSum[at] * (1.0f / narrowSum[at]) : ipr::Vec3f(0, 0, 0);
             }
         }
     });

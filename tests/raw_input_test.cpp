@@ -1,3 +1,4 @@
+#include "Pixels.h"
 #include "RawInput.h"
 
 #include <iostream>
@@ -13,7 +14,7 @@ bool check(bool condition, const char *message)
 RawInput::Input sample()
 {
     RawInput::Input input;
-    input.mosaic = cv::Mat(4, 6, CV_16UC1, cv::Scalar(2048));
+    input.mosaic = ipr::filled({6, 4}, ipr::Depth::U16, 1, 2048);
     input.pattern = {{{RawInput::Red, RawInput::Green}, {RawInput::Green2, RawInput::Blue}}};
     input.black = {512, 512, 512, 512};
     input.white = 16383;
@@ -41,7 +42,7 @@ int main()
     input.asShotMultipliers[2] = 0.0;
     ok &= check(!RawInput::valid(input), "a missing multiplier is refused");
     input = sample();
-    input.mosaic = cv::Mat(4, 6, CV_32FC1);
+    input.mosaic = ipr::Image::create({6, 4}, ipr::Depth::F32, 1);
     ok &= check(!RawInput::valid(input) && !RawInput::valid(RawInput::Input{}), "the mosaic is 16-bit and not empty");
     if (ok) std::cout << "rawInputTests passed\n";
     return ok ? 0 : 1;

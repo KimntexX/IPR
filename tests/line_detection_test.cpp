@@ -1,5 +1,6 @@
 #include "LineDetection.h"
 #include "Straightening.h"
+#include "Pixels.h"
 
 #include <algorithm>
 #include <cmath>
@@ -39,7 +40,7 @@ float pattern(double u, double v)
 Buffer photographed(int width, int height, const Geometry::Settings &truth, double noise = 0.0)
 {
     Buffer out{width, height, std::vector<float>(size_t(width) * size_t(height))};
-    const cv::Matx33d h = Geometry::homography(truth, {width, height});
+    const ipr::Matrix33d h = Geometry::homography(truth, {width, height});
     std::mt19937 random(11);
     std::normal_distribution<float> gaussian(0.0f, float(noise));
     for (int y = 0; y < height; ++y)
@@ -47,7 +48,7 @@ Buffer photographed(int width, int height, const Geometry::Settings &truth, doub
             float sum = 0;
             for (const double sy : {0.25, 0.75})
                 for (const double sx : {0.25, 0.75}) {
-                    const cv::Vec3d q = h * cv::Vec3d((x + sx) / width, (y + sy) / height, 1.0);
+                    const ipr::Vec3d q = h * ipr::Vec3d((x + sx) / width, (y + sy) / height, 1.0);
                     sum += pattern(q[0] / q[2], q[1] / q[2]);
                 }
             out.values[size_t(y) * size_t(width) + size_t(x)] = sum / 4.0f + (noise > 0.0 ? gaussian(random) : 0.0f);
@@ -226,22 +227,24 @@ Straightening::Proposal proposed(const Buffer &image, Straightening::Mode mode, 
 void linesAreReadOnLinearImages()
 {
     check(Straightening::linesOf({}).empty(), "nothing to read");
-    check(Straightening::linesOf(cv::Mat(64, 64, CV_8UC3, cv::Scalar::all(0))).empty(), "another type");
-    check(Straightening::linesOf(cv::Mat(64, 64, CV_32FC1, cv::Scalar::all(0))).empty(), "one channel");
+    check(Straightening::linesOf(ipr::filled({64, 64}, ipr::Depth::U8, 3, 0)).empty(), "another type");
+    check(Straightening::linesOf(ipr::filled({64, 64}, ipr::Depth::F32, 1, 0)).empty(), "one channel");
 
-    for (const int type : {CV_32FC3, CV_32FC4}) {
-        cv::Mat image(300, 400, type, cv::Scalar::all(0.04));
-        image(cv::Rect(0, 150, 400, 150)).setTo(cv::Scalar::all(0.5));
+    for (const int channels : {3, 4}) {
+        ipr::Image image = ipr::filled({400, 300}, ipr::Depth::F32, channels, 0.04);
+        ipr::Image lower = image.mutableView(ipr::Recti(0, 150, 400, 150));
+        ipr::fill(lower, 0.5);
         const auto lines = Straightening::linesOf(image);
         check(lines.size() == 1 && std::abs(angleOf(lines[0])) < 0.1, "a level edge");
     }
     // A part of an image has its own rows.
-    cv::Mat whole(400, 600, CV_32FC3, cv::Scalar::all(0.04));
-    whole(cv::Rect(0, 200, 600, 200)).setTo(cv::Scalar::all(0.5));
-    const auto lines = Straightening::linesOf(whole(cv::Rect(100, 50, 400, 300)));
+    ipr::Image whole = ipr::filled({600, 400}, ipr::Depth::F32, 3, 0.04);
+    ipr::Image lower = whole.mutableView(ipr::Recti(0, 200, 600, 200));
+    ipr::fill(lower, 0.5);
+    const auto lines = Straightening::linesOf(whole.view(ipr::Recti(100, 50, 400, 300)));
     check(lines.size() == 1 && std::abs(lines[0].y0 - 149.5f) < 0.3f, "at its place in the part");
     // Below the black, nothing breaks.
-    cv::Mat negative(100, 100, CV_32FC3, cv::Scalar::all(-0.1));
+    ipr::Image negative = ipr::filled({100, 100}, ipr::Depth::F32, 3, -0.1);
     check(Straightening::linesOf(negative).empty(), "signed values");
 }
 

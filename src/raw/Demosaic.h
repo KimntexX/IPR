@@ -1,7 +1,7 @@
 #ifndef IPR_RAW_DEMOSAIC_H
 #define IPR_RAW_DEMOSAIC_H
 
-#include <opencv2/core.hpp>
+#include "Image.h"
 
 #include <array>
 #include <functional>
@@ -34,13 +34,13 @@ enum class Range { NonNegative, Signed };
 // demosaic and denoise studies gain nothing beyond).
 int workerThreads();
 
-// Interpolates a white-balanced Bayer mosaic (CV_32FC1, white 1, the pattern's
-// colour at each site) into camera RGB (CV_32FC3, same size). The median works
+// Interpolates a white-balanced Bayer mosaic (F32, one channel, white 1, the
+// pattern's colour at each site) into camera RGB (F32, three channels, same size). The median works
 // tile by tile; beforeMedian, when given, receives the interpolation before it
 // (the development's intermediate capture). Returns false when cancelled or on
 // an invalid mosaic; the outputs are then incomplete.
-bool interpolate(const cv::Mat &mosaic, const Pattern &pattern, ChromaMedian median, Range range, cv::Mat &rgb,
-                 cv::Mat *beforeMedian, const std::function<bool()> &cancelled);
+bool interpolate(const ipr::Image &mosaic, const Pattern &pattern, ChromaMedian median, Range range, ipr::Image &rgb,
+                 ipr::Image *beforeMedian, const std::function<bool()> &cancelled);
 
 } // namespace Demosaic
 

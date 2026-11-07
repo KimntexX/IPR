@@ -1,6 +1,8 @@
 #include "RawDecoder.h"
 #include "Demosaic.h"
 #include "CameraProfileEngine.h"
+#include "Parallel.h"
+#include "Pixels.h"
 #include <QCoreApplication>
 #include <QCommandLineParser>
 #include <QCommandLineOption>
@@ -13,7 +15,6 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QJsonDocument>
-#include <opencv2/core.hpp>
 #include <algorithm>
 #include <array>
 #include <cmath>
@@ -42,25 +43,25 @@ quint64 peakBytes(){
 #endif
 #endif
 }
-QString imageHash(const cv::Mat &m){
-    QCryptographicHash h(QCryptographicHash::Sha256);for(int y=0;y<m.rows;++y)h.addData(QByteArrayView(reinterpret_cast<const char *>(m.ptr(y)),qsizetype(m.cols*m.elemSize())));
+QString imageHash(const ipr::Image &m){
+    QCryptographicHash h(QCryptographicHash::Sha256);for(int y=0;y<m.height();++y)h.addData(QByteArrayView(reinterpret_cast<const char *>(m.row<std::uint8_t>(y)),qsizetype(m.width()*m.pixelBytes())));
     return QString::fromLatin1(h.result().toHex());
 }
-QJsonObject cameraSummary(const cv::Mat &m){
-    require(m.type()==CV_32FC3&&cv::checkRange(m),"Invalid pre-DCP camera image");
+QJsonObject cameraSummary(const ipr::Image &m){
+    require(m.depth()==ipr::Depth::F32&&m.channels()==3&&ipr::allFinite(m),"Invalid pre-DCP camera image");
     std::array<double,3> sums{},negative{},zero{},minimum{},maximum{};
-    for(int c=0;c<3;++c)minimum[size_t(c)]=maximum[size_t(c)]=m.at<cv::Vec3f>(0,0)[c];
-    for(int y=0;y<m.rows;++y){
-        const auto *row=m.ptr<cv::Vec3f>(y);
-        for(int x=0;x<m.cols;++x)for(int c=0;c<3;++c){
+    for(int c=0;c<3;++c)minimum[size_t(c)]=maximum[size_t(c)]=m.row<ipr::Vec3f>(0)[0][c];
+    for(int y=0;y<m.height();++y){
+        const auto *row=m.row<ipr::Vec3f>(y);
+        for(int x=0;x<m.width();++x)for(int c=0;c<3;++c){
             const double v=row[x][c];const auto k=size_t(c);
             sums[k]+=v;negative[k]+=v<0;zero[k]+=v==0;
             minimum[k]=(std::min)(minimum[k],v);maximum[k]=(std::max)(maximum[k],v);
         }
     }
-    const double count=double(m.total());QJsonArray means,negatives,zeros,lows,highs;
+    const double count=double(m.size().area());QJsonArray means,negatives,zeros,lows,highs;
     for(int c=0;c<3;++c){const auto k=size_t(c);means.append(sums[k]/count);negatives.append(negative[k]/count);zeros.append(zero[k]/count);lows.append(minimum[k]);highs.append(maximum[k]);}
-    return QJsonObject{{"shape",QJsonArray{m.rows,m.cols,3}},{"dtype","f32"},{"sha256",imageHash(m)},
+    return QJsonObject{{"shape",QJsonArray{m.height(),m.width(),3}},{"dtype","f32"},{"sha256",imageHash(m)},
         {"finite",true},{"unit","linear_camera_white_1"},{"orientation","display"},
         {"mean",means},{"negative_fraction",negatives},{"zero_fraction",zeros},{"minimum",lows},{"maximum",highs}};
 }
@@ -81,7 +82,6 @@ int main(int argc,char **argv){
         const auto sourceHash=hash(source),manifestHash=hash(p.value("manifest"));
         const auto profile=p.value("profile");const auto profileHash=profile.isEmpty()?QString():hash(profile);
         require(!p.isSet("capture-camera")||!profile.isEmpty(),"Camera inlet capture requires explicit DCP; no fabricated no-profile inlet");
-        cv::setNumThreads(1);
         RawDecoder::Options options;options.automaticWhiteBalance=false;options.profileDirectories=QStringList{p.value("profile-root")};
         options.dcpProfileOverride=profile;options.preferCameraNeutral=false;options.automaticLcpSelection=false;
         options.lensCorrectionEnabled=false;options.chromaticAberrationEnabled=false;options.useNormalizationEnvironment=false;options.normalizationManifest=p.value("manifest");
@@ -96,11 +96,11 @@ int main(int argc,char **argv){
         auto image=RawDecoder::decode(source,options,&metadata,&error);
         const double elapsed=double(timer.nsecsElapsed())/1e6;const auto memory=peakBytes();
         if(image.isNull())throw std::runtime_error(("Decode failed: "+error).toStdString());
-        require(image.linearRgba.type()==CV_32FC4&&cv::checkRange(image.linearRgba),"Invalid working image");
+        require(image.linearRgba.depth()==ipr::Depth::F32&&image.linearRgba.channels()==4&&ipr::allFinite(image.linearRgba),"Invalid working image");
         require(metadata.lensGeometryApplied==false&&metadata.lensVignettingApplied==false&&metadata.chromaticAberrationApplied==false,"Unexpected optics");
         if(profile.isEmpty())require(metadata.dcpProfile.isEmpty()&&!image.dcpContext,"Unexpected implicit DCP");
         else require(image.dcpContext&&hash(image.dcpContext->profilePath)==profileHash,"Requested DCP not applied");
-        QJsonObject full{{"shape",QJsonArray{image.linearRgba.rows,image.linearRgba.cols,4}},{"dtype","f32"},{"sha256",imageHash(image.linearRgba)}};
+        QJsonObject full{{"shape",QJsonArray{image.linearRgba.height(),image.linearRgba.width(),4}},{"dtype","f32"},{"sha256",imageHash(image.linearRgba)}};
         QJsonObject camera;
         if(p.isSet("capture-camera")){
             require(image.dcpContext&&!image.dcpContext->cameraRgb.empty(),"Missing retained pre-DCP camera buffer");
@@ -110,9 +110,9 @@ int main(int argc,char **argv){
         QFile binary(output+".bin");require(binary.open(QIODevice::WriteOnly|QIODevice::NewOnly),"Cannot create pixels");QJsonArray stages;
         const quint16 endian=1;require(*reinterpret_cast<const unsigned char *>(&endian)==1,"Float binary requires little-endian host");
         for(double f:{.2,.5,.8}){
-            const auto &m=image.linearRgba;const int x=(int(m.cols*f)-128)/2*2,y=(m.rows/2-128)/2*2;
-            require(x>=0&&y>=0&&x+256<=m.cols&&y+256<=m.rows,"Image too small");
-            const auto offset=binary.pos();for(int yy=0;yy<256;++yy){const char *row=reinterpret_cast<const char *>(m.ptr<float>(y+yy)+x*4);require(binary.write(row,256*4*4)==256*4*4,"Incomplete capture");}
+            const auto &m=image.linearRgba;const int x=(int(m.width()*f)-128)/2*2,y=(m.height()/2-128)/2*2;
+            require(x>=0&&y>=0&&x+256<=m.width()&&y+256<=m.height(),"Image too small");
+            const auto offset=binary.pos();for(int yy=0;yy<256;++yy){const char *row=reinterpret_cast<const char *>(m.row<float>(y+yy)+x*4);require(binary.write(row,256*4*4)==256*4*4,"Incomplete capture");}
             QJsonObject context{{"profile_sha256",profileHash},{"calibration_applied",metadata.rawNormalizationApplied},{"white",int(metadata.normalizationWhiteLevel)},
                 {"baseline_ev",metadata.normalizationBaselineExposureEv},{"profile_compensation_ev",metadata.profileExposureCompensationEv}};
             stages.append(QJsonObject{{"stage","working_rec2020"},{"dtype","f32"},{"shape",QJsonArray{256,256,4}},{"offset_bytes",double(offset)},
@@ -120,10 +120,10 @@ int main(int argc,char **argv){
         }
         if(p.isSet("capture-camera"))for(double f:{.2,.5,.8}){
             const auto &m=image.dcpContext->cameraRgb;
-            const int x=(int(m.cols*f)-128)/2*2,y=(m.rows/2-128)/2*2;
-            require(x>=0&&y>=0&&x+256<=m.cols&&y+256<=m.rows,"Camera image too small");
+            const int x=(int(m.width()*f)-128)/2*2,y=(m.height()/2-128)/2*2;
+            require(x>=0&&y>=0&&x+256<=m.width()&&y+256<=m.height(),"Camera image too small");
             const auto offset=binary.pos();
-            for(int yy=0;yy<256;++yy){const char *row=reinterpret_cast<const char *>(m.ptr<float>(y+yy)+x*3);require(binary.write(row,256*3*4)==256*3*4,"Incomplete camera capture");}
+            for(int yy=0;yy<256;++yy){const char *row=reinterpret_cast<const char *>(m.row<float>(y+yy)+x*3);require(binary.write(row,256*3*4)==256*3*4,"Incomplete camera capture");}
             stages.append(QJsonObject{{"stage","pre_dcp_camera_rgb"},{"dtype","f32"},{"shape",QJsonArray{256,256,3}},{"offset_bytes",double(offset)},
                 {"stride_bytes",256*3*4},{"origin_yx",QJsonArray{y,x}},{"orientation","display"},{"unit","linear_camera_white_1"},{"layout","rgb"},
                 {"context",QJsonObject{{"profile_sha256",profileHash},{"calibration_applied",metadata.rawNormalizationApplied},
@@ -133,7 +133,7 @@ int main(int argc,char **argv){
         QJsonObject data{{"schema_version",1},{"mode",mode},{"capabilities",QJsonObject{{"signed_development",signedCapability}}},
             {"engine_revision",IPR_ENGINE_REVISION},{"measured_at_utc",QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs)},
             {"source",QJsonObject{{"path",source},{"sha256",sourceHash}}},{"pixels",QJsonObject{{"path",QFileInfo(binary.fileName()).fileName()},{"sha256",hash(binary.fileName())}}},
-            {"stages",stages},{"full_image",full},{"decode_ms",elapsed},{"decode_peak_working_set_bytes",double(memory)},{"rcd_workers",Demosaic::workerThreads()},{"opencv_threads",cv::getNumThreads()},
+            {"stages",stages},{"full_image",full},{"decode_ms",elapsed},{"decode_peak_working_set_bytes",double(memory)},{"rcd_workers",Demosaic::workerThreads()},{"worker_threads",ipr::workerThreads()},
             {"manifest_sha256",manifestHash},{"profile_sha256",profileHash},{"metadata",QJsonObject{{"model",metadata.cameraModel},{"iso",metadata.iso},{"format",metadata.format},
                 {"profile",metadata.dcpProfile},{"normalization_applied",metadata.rawNormalizationApplied},{"white",int(metadata.normalizationWhiteLevel)},
                 {"baseline_ev",metadata.normalizationBaselineExposureEv},{"profile_compensation_ev",metadata.profileExposureCompensationEv},{"black_estimated",metadata.opticalBlackLevelEstimated},

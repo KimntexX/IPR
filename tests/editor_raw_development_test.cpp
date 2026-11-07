@@ -1,4 +1,5 @@
 #include "imageeditor.h"
+#include "Pixels.h"
 #include "imageprovider.h"
 #include "controlled_memory.h"
 #include "Sidecar.h"
@@ -146,7 +147,8 @@ int main(int argc,char **argv)
             meta->normalizationProvenance="Synthetic wiring test, not a RAW calibration";
             meta->normalizationReason="No matching calibration";
             ColorPipeline::WorkingImage image;
-            image.linearRgba=cv::Mat(8,8,CV_32FC4,cv::Scalar(.1f,.2f,.3f,1.f)).clone();
+            image.linearRgba=ipr::Image::create({8,8},ipr::Depth::F32,4);
+            ipr::fill(image.linearRgba,std::vector<double>{.1f,.2f,.3f,1.f});
             image.colorSpace=ColorPipeline::workingColorSpace();
             return image;
         });
@@ -294,7 +296,8 @@ int main(int argc,char **argv)
         [&](const QString &,const RawDecoder::Options &options,ImageMetadata *meta,QString *error) {
             ++fastDecodes;
             auto source = options.retainedDcpSource ? options.retainedDcpSource : std::make_shared<RawDecoder::DcpSource>();
-            source->cameraRgb = cv::Mat(8,8,CV_32FC3,cv::Scalar(.15f,.2f,.1f));
+            source->cameraRgb = ipr::Image::create({8,8},ipr::Depth::F32,3);
+            ipr::fill(source->cameraRgb, std::vector<double>{.15f,.2f,.1f});
             source->metadata.cameraMake = "Mock";
             source->metadata.cameraModel = "Test camera";
             source->metadata.availableDcpProfiles = {neutral,alternate};
@@ -370,9 +373,9 @@ int main(int argc,char **argv)
             meta->lensVignettingApplied = meta->lensGeometryApplied;
             meta->chromaticAberrationApplied = !path.isEmpty() && options.chromaticAberrationEnabled;
             ColorPipeline::WorkingImage result;
-            result.linearRgba = cv::Mat(8,8,CV_32FC4,cv::Scalar(
-                meta->lensGeometryApplied ? .3f : .1f,
-                meta->chromaticAberrationApplied ? .4f : .2f, .1f, 1.f)).clone();
+            result.linearRgba = ipr::Image::create({8,8},ipr::Depth::F32,4);
+            ipr::fill(result.linearRgba, std::vector<double>{meta->lensGeometryApplied ? .3f : .1f,
+                meta->chromaticAberrationApplied ? .4f : .2f, .1f, 1.f});
             result.colorSpace = ColorPipeline::workingColorSpace();
             return result;
         });

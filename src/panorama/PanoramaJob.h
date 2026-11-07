@@ -1,10 +1,11 @@
 #ifndef IPR_PANORAMA_PANORAMAJOB_H
 #define IPR_PANORAMA_PANORAMAJOB_H
 
+#include "Image.h"
 #include "PanoramaGeometry.h"
+#include "Types.h"
 
 #include <QString>
-#include <opencv2/core.hpp>
 
 #include <functional>
 #include <vector>
@@ -18,7 +19,7 @@ namespace PanoramaJob {
 
 struct Frame
 {
-    cv::Mat cameraRgb;     // CV_32FC3, linear, white 1, the same balance intended across the series
+    ipr::Image cameraRgb;  // F32, three channels, linear, white 1, the same balance intended across the series
     double focalMm = 0.0;  // 0 when unknown
     double sensorWidthMm = 0.0;        // long side, 0 when unknown
     bool lensGeometryCorrected = false; // a lens profile has removed the distortion
@@ -55,8 +56,8 @@ struct FrameReport
     bool used = false;
     QString exclusion;                     // why it was left out, empty when used
     int features = 0;
-    cv::Vec3d gains{1.0, 1.0, 1.0};
-    cv::Rect area;                         // of the canvas
+    ipr::Vec3d gains{1.0, 1.0, 1.0};
+    ipr::Recti area;                         // of the canvas
 };
 
 struct PairReport
@@ -72,10 +73,10 @@ struct Result
     bool success = false;
     bool cancelled = false;
     QString error;
-    cv::Mat cameraRgb;                     // CV_32FC3
-    cv::Size frameSize;
-    cv::Size canvas;
-    cv::Rect kept;                         // of the canvas
+    ipr::Image cameraRgb;                  // F32, three channels
+    ipr::Size frameSize;
+    ipr::Size canvas;
+    ipr::Recti kept;                         // of the canvas
     double coveredShare = 0.0;             // of the canvas that holds pixels
     double filledShare = 0.0;              // of the result that is invented
     std::vector<FrameReport> frames;

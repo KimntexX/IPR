@@ -233,7 +233,7 @@ photographique privés ne sont pas remplacés par ces tests synthétiques.
 | Événement / modification | Validation |
 | --- | --- |
 | Push `patch_*`, documentation seule | Lecture UTF-8, JSON valides, liens locaux signalés ; aucune compilation native |
-| Push `patch_*`, tests/analyse Python seulement | Suites Python concernées, sans installer Qt/OpenCV/LibRaw |
+| Push `patch_*`, tests/analyse Python seulement | Suites Python concernées, sans installer Qt/LibRaw |
 | Push `patch_*`, code photographique cartographié | Compilation des cibles et tests sélectionnés, Windows, Ubuntu et macOS ARM |
 | Modification transversale, inconnue ou ≥20 fichiers de code | Tous les tests, quatre plateformes, Intel compris |
 | Push `dev`/`main`, PR vers `dev`/`main`, lancement manuel | Tous les tests, quatre plateformes |
@@ -365,7 +365,7 @@ Standalone : bibliothèques dynamiques Qt et tierces ; sous Linux restent glibc,
 chargeur et pilotes du système. Système : DLL/bibliothèques et modules QML
 doivent être installés dans les versions ABI compatibles. Les paquets natifs
 déclarent les dépendances ; les archives génériques ne les installent pas.
-Windows système nécessite le runtime Visual C++ et Qt/OpenCV/LibRaw/TIFF dans
+Windows système nécessite le runtime Visual C++ et Qt/LibRaw/TIFF dans
 PATH. macOS système utilise Homebrew de la même architecture.
 
 Pas de signature Authenticode, certificat Apple Developer ID ou notarisation

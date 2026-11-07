@@ -6,6 +6,8 @@ possible. **État :** O0 commencé, O1 et O2 faits, O3 commencé par le flou gau
 **Plus aucun module n'appelle le flou, le redimensionnement, les déformations, les rotations, les symétries, les bordures, la
 pyramide ni les petits filtres d'OpenCV** : la couche image les fournit. Restent l'arithmétique et la couleur, l'analyse
 (corrélations, valeurs propres, systèmes), le parallélisme et le type `cv::Mat` lui-même.
+**7 novembre 2026, sur `patch_image_core`, pas encore intégré à `dev` :** OpenCV a quitté le produit, ses tests, ses sondes et
+sa construction ; les scripts d'analyse Python gardent `cv2` (§7). Voir [la sortie complète](#cvmat--le-partage-explicite).
 Suivi : [issue 29](https://github.com/KimntexX/IPR/issues/29).
 Chantier distinct des [décodeurs RAW](roadmap-decodeurs-raw.md), sur sa propre branche durable,
 `patch_image_core`, après le palier E1 de la [refonte d'`ImageEditor`](plan-imageeditor-orchestrateur.md).
@@ -271,8 +273,115 @@ travaille désormais sur des copies neuves.
 - **Sur les modules** : exports à un niveau sur 65 535 au plus, exports neutres identiques, empilement identique au bit près ;
   le panorama garde son cadre, son alignement bouge d'une fraction de pixel par les gradients de ses points.
 - **La vitesse, mesurée sur l'export avant de conclure.** D'abord 29 % plus lent sur le débruitage de la couleur, les autres réglages
-  inchangés. Après réécriture : 9 %. La moyenne en boîte va désormais plus vite qu'OpenCV ; restent le médian 5 x 5, 2,5 à 4,5 fois
-  plus lent, et minimum et maximum, limités par la mémoire.
+  inchangés. Après réécriture : 9 %. La moyenne en boîte va désormais plus vite qu'OpenCV.
+- **Vectorisation vérifiée, et non supposée** (`97b4295`). J'avais attribué la lenteur du médian, du minimum et du maximum à la
+  mémoire sans le mesurer ; l'utilisateur l'a mis en doute à raison. Le rapport du compilateur (`/Qvec-report:2`) montrait ces
+  boucles laissées en scalaire, par crainte d'un recouvrement entre tableaux lus et écrits. Placées dans de petites fonctions sur
+  des pointeurs distincts, elles sont vectorisées ; minimum et maximum parcourent en outre des bandes de colonnes avec un anneau de
+  lignes, comme OpenCV, au lieu de repasser plusieurs fois sur l'image. Sobel va aussi vite qu'OpenCV ou plus, le médian 5 x 5
+  1,2 fois son temps, minimum et maximum 1,2 à 3,5 fois. Résultats inchangés.
+
+### Arithmétique des pixels
+
+Canaux séparés et réunis, produits, quotients, mélanges, bornes, racines, transformations, masques en octets, et les réductions :
+comptage, extrêmes avec leur place, moyenne et écart-type (`93e5ace`).
+[Noyaux](../validation/raw/image-kernel-pixels-v001-20261106.json), [modules](../validation/raw/image-layer-pixels-v001-20261106.json).
+
+- **Contre OpenCV : à un arrondi de flottant près, les réductions identiques.**
+- **Sur les modules** : exports avec réglages à 5 niveaux sur 65 535 au plus, sur 0,07 % des valeurs ; exports neutres à 24 niveaux
+  au plus sur quelques pixels (moins d'un millionième) ; empilement au même bruit à 1e-6 près ; panorama au même cadre, à 7/255 au
+  plus sur 0,2 % des pixels.
+- **Une écriture dans une région à préserver** : là où OpenCV écrivait dans une région d'une image plus grande, le résultat est
+  recopié dans cette région ; la couverture du panorama en dépend.
+
+### Analyse : corrélations, valeurs propres, résolution
+
+Mise en correspondance de blocs, corrélation de phase et sa fenêtre de Hann, vecteurs propres symétriques, Cholesky, valeurs
+singulières, déterminant et rotation la plus proche (`6bfeaa2`) : empilement, panorama, profil de l'appareil, grain.
+[Noyaux](../validation/raw/image-kernel-analysis-v001-20261106.json), [modules](../validation/raw/image-layer-analysis-v001-20261106.json).
+
+- **Fenêtre de Hann identique au bit près ; algèbre linéaire à 1e-14 ; scores de correspondance à 2e-5, aux mêmes pics.** La
+  décomposition en valeurs singulières, par Jacobi, va beaucoup plus vite que celle d'OpenCV, qui calcule une matrice U complète.
+- **Corrélation de phase : un critère changé après mesure, et je le signale.** La tolérance fixée d'avance, 1e-3 pixel contre
+  OpenCV en flottants simples, ne pouvait pas tenir : sur une texture lisse, OpenCV en flottants simples s'écarte de son propre calcul
+  en double de 0,2 à 0,3 pixel, ses hautes fréquences tombant sous la précision du flottant. La couche image calcule en double ; elle
+  rejoint OpenCV en double à 1e-4 pixel sur une texture nette, et reste plus près d'OpenCV en flottants simples que lui-même en double.
+  L'oracle mesure désormais ces deux écarts.
+- **Sur les modules** : exports identiques au bit près (contrôle refait le 6 novembre, voir plus bas) ; empilement aux mêmes points et au même bruit, DNG à 38 niveaux au plus sur
+  0,4 % des valeurs ; panorama aux mêmes écarts au dix-millionième, à 11/255 au plus dans l'image, jusqu'à 80/255 dans les bords
+  remplis, que le remplissage invente et où de minuscules écarts d'entrée changent le motif choisi.
+- **La vitesse** : la mise en correspondance est appelée environ 135 000 fois par empilement de 8 vues. Réécrite pour ajouter huit
+  coefficients par passage le long d'une ligne, vectorisée d'après le rapport du compilateur et sans changer l'ordre des sommes, elle
+  va 2 à 5 fois plus vite qu'OpenCV sur les petits blocs et 1,35 fois plus lentement sur les blocs de 65 pixels, où OpenCV passe par
+  une transformée de Fourier. **L'empilement reste environ 40 % plus long** (14,0 et 14,5 s contre 10,0 et 10,5 s, mesures alternées
+  sur une machine chargée) ; l'utilisateur l'a accepté le 5 novembre 2026, l'amélioration viendra plus tard.
+- **Une fausse alerte de mesure.** Un premier essai montrait la Lune d'un empilement assombrie de 13 % : l'outil d'audit lit
+  `config/raw-normalization.json` depuis le dossier courant, et cette mesure était lancée d'ailleurs. Les mesures partent désormais de
+  la racine du dépôt.
+
+### Fils d'exécution et petits types
+
+- **Les 50 `cv::parallel_for_`** passent par `ipr::parallelRows`, qui partage un seul budget de threads avec les noyaux de la couche
+  image (`99bffce`). Exports, DNG empilé et panorama : identiques au bit près (exports : contrôle refait le 6 novembre).
+- **Les petits types** (`Vec`, `Matx`, `Point`, `Rect`, `Size`, environ 1 250 usages) deviennent ceux de la couche image. Leur
+  arithmétique est celle d'OpenCV, expression pour expression : mêmes conversions, même ordre des sommes, division par produit avec
+  l'inverse, arrondi au plus proche avec égalité au pair, intersection de rectangles par sa formule, inverse par cofacteurs.
+  [Oracle](../validation/raw/image-kernel-types-v002-20261106.json), [modules](../validation/raw/image-layer-types-v001-20261106.json) : chaque opération sur 20 000 valeurs aléatoires et limites,
+  **bits identiques**. Seule différence voulue : au-delà de la plage des entiers, OpenCV rend `INT_MIN` quel que soit le signe, la
+  couche image la borne la plus proche.
+- **Une surprise lue dans le code d'OpenCV** : pour une matrice 3 × 3, `inv(DECOMP_CHOLESKY)` ignore la méthode et inverse par
+  cofacteurs. Le débruitage de la caméra le demandait ; il garde exactement le même calcul.
+- **Ce qui reste** : `cv::Mat` (environ 625 usages), ses constantes de type et les appels d'OpenCV des tests. Aux jonctions entre les
+  petits types et `cv::Mat`, des conversions explicites `ipr::toCv` / `ipr::fromCv` signalent ce qui partira avec `cv::Mat`.
+
+### `cv::Mat` : le partage explicite
+
+**Décision de l'utilisateur, 6 novembre 2026** : `ipr::Image` reste déplaçable seulement. Là où `cv::Mat` partageait ses pixels
+sans le dire (masters, contextes du signal caméra, cartes locales, caches, résultats de chargement), une copie est écrite : `share()`
+ou `sharedCopy` de la structure, pixels gelés pour tous leurs détenteurs ; qui veut écrire clone. Le partage par pointeur avec copie
+locale reste une piste d'optimisation, jugée lourde à maintenir ; elle n'est pas engagée.
+
+Lots, chacun mesuré sur photos ([preuve](../validation/raw/image-layer-mat-v001-20261106.json)) :
+
+| Lot | Commit | Résultat |
+| --- | --- | --- |
+| Briques de la couche (types signés, remplissages, copies, conversions, calcul ligne à ligne, générateur d'OpenCV) | `1bc6927` | Oracle : bits identiques |
+| Développement RAW (mosaïque, dématriçage, développement, débruitage caméra) | `ccc412f` | DNG empilé et panorama identiques au bit près |
+| Signal caméra (DCP, LCP, DNG de signal, source retenue) | `8bfe718` | Exports, DNG empilé, panorama identiques au bit près |
+| Chaîne de rendu, modules, caches, éditeur | `b522b23` | Exports, DNG empilé, panorama identiques au bit près |
+
+- **Arithmétique gardée au bit près.** Les expressions de matrices d'OpenCV deviennent des boucles écrites dans le même ordre.
+  L'échelle et le décalage d'une conversion sont appliqués avec un seul arrondi (FMA), comme le font les vecteurs d'OpenCV : sans
+  cela, le DNG empilé s'écartait de 40 niveaux sur 0,002 % des valeurs ; avec, identique. Un produit par un nombre garde son
+  décalage nul, qui rend +0 pour -0.
+- **Le gel a déjà servi.** Deux tests écrivaient, sans le vouloir, dans des pixels partagés : un NaN dans une scène dont le master
+  était partagé, une lecture qui passait par l'accès en écriture. Avec `cv::Mat`, ces écritures auraient touché les autres détenteurs ;
+  ici elles lèvent une erreur.
+- **Une erreur de mesure corrigée.** La sonde d'export n'est pas dans la construction par défaut : jusqu'au lot du signal caméra,
+  elle datait du lot de l'arithmétique des pixels. Les exports annoncés pour l'analyse, les fils, les petits types et le
+  développement RAW mesuraient donc l'ancien code. Le premier contrôle avec une sonde reconstruite trouve les exports identiques au
+  bit près à ceux du lot de l'arithmétique : ces lots sont bien neutres sur les exports. Les mesures vérifient désormais que chaque
+  programme mesuré est plus récent que le moteur.
+- **La sortie complète, le 7 novembre 2026** ([preuve](../validation/raw/image-layer-mat-v002-20261107.json)) :
+
+  | Lot | Commit | Résultat |
+  | --- | --- | --- |
+  | Empilement (tampon, fusion, alignement, turbulence, job, session) | `01033e2` | Exports, DNG empilé, panorama identiques au bit près |
+  | Panorama (points, géométrie, fondu, remplissage, job) et retouche | `bf1549f` | Identiques au bit près, mêmes résidus de géométrie |
+  | Sondes de recherche et banc RAW | `1e379c0` | 76 tests sur 76 ; banc RAW 7 sur 7 |
+  | Pont, oracles, CMake, CI, vcpkg, paquets | ce lot | Construit sans OpenCV, lancé sans OpenCV dans le `PATH` : identiques au bit près |
+
+- **Ajout à la couche** : `ipr::fourierTransform`, la transformée de Fourier qui servait déjà à la corrélation de phase, pour les
+  spectres de l'audit d'empilement ; testée contre la somme directe.
+- **Ce que les tests ont perdu ou retrouvé.** Les tests synthétiques tirent leur bruit d'un `std::mt19937` à graine fixe : leurs
+  scènes ont changé, leurs tolérances tiennent. Deux vérifications ne vérifiaient plus rien depuis le lot des fils d'exécution, car
+  `cv::setNumThreads` ne règle plus nos threads : l'indépendance du remplissage de panorama au nombre de threads (le test vérifie
+  désormais qu'un second remplissage donne les mêmes pixels) et l'option `--threads` de la sonde de dématriçage (retirée). La
+  variante « OpenCV EA » de cette sonde part avec OpenCV ; les campagnes publiées gardent ses mesures. Le test de contrat du
+  débruitage caméra, dans le banc RAW, ne se compilait plus depuis le lot du développement RAW : il passe de nouveau.
+- **Les oracles sont supprimés.** Ils comparaient chaque brique à OpenCV ; leurs résultats restent dans les preuves JSON. Les
+  premiers tirages du générateur d'OpenCV sont gardés comme valeurs attendues dans `image_pixels_test`.
+- **Le banc RAW suit la couche image** : un moteur antérieur à la sortie d'OpenCV se construit avec le banc de sa propre révision.
 
 ## 5. Principes de conception
 
@@ -282,7 +391,8 @@ travaille désormais sur des copies neuves.
 - **Le partage de données est explicite.** Une vue et une copie sont deux choses différentes dans le code.
 - **Déterminisme.** Mêmes pixels sur Windows, Linux et macOS, quel que soit le nombre de threads, autant que possible.
   Ce serait un gain réel sur la situation actuelle, à tester en CI.
-- **OpenCV sert d'oracle jusqu'au bout.** Il reste dans les tests de O3 pour valider chaque noyau, et ne part qu'à O5.
+- **OpenCV a servi d'oracle jusqu'au bout.** Les oracles ont validé chaque noyau, puis sont partis avec OpenCV, le
+  7 novembre 2026 ; leurs résultats restent dans les preuves JSON.
 
 ## 6. Risques
 

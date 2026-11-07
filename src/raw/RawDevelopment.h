@@ -2,10 +2,11 @@
 #define IPR_RAW_RAWDEVELOPMENT_H
 
 #include "Demosaic.h"
+#include "Image.h"
 #include "RawInput.h"
+#include "Types.h"
 
 #include <QString>
-#include <opencv2/core.hpp>
 
 #include <array>
 #include <functional>
@@ -27,18 +28,18 @@ enum class Policy {
 
 // Intermediate stages the comparison bench observes (interface I2).
 enum class Stage {
-    UnpackedCfa,            // sensor counts (CV_16UC1)
-    BlackSubtractedCfa,     // counts minus black, signed, before the lower bound (CV_32FC1)
-    NormalizedCfa,          // divided by the effective white (CV_32FC1), before the gains; A clips at 0 first
-    PreDemosaicCfa,         // the mosaic RCD reads (CV_32FC1, white 1)
-    PostDemosaicCameraRgb,  // RCD before the median (CV_32FC3)
-    PreOutputCameraRgb,     // after the median, before A's output bound and grid; B: the output (CV_32FC3)
-    PostMedianCameraRgb     // the development's output (CV_32FC3); A: counts k as float(k) * float(1 / 65535)
+    UnpackedCfa,            // sensor counts (U16)
+    BlackSubtractedCfa,     // counts minus black, signed, before the lower bound (F32)
+    NormalizedCfa,          // divided by the effective white (F32), before the gains; A clips at 0 first
+    PreDemosaicCfa,         // the mosaic RCD reads (F32, white 1)
+    PostDemosaicCameraRgb,  // RCD before the median (F32, three channels)
+    PreOutputCameraRgb,     // after the median, before A's output bound and grid; B: the output (F32, three channels)
+    PostMedianCameraRgb     // the development's output (F32, three channels); A: counts k as float(k) * float(1 / 65535)
 };
 
 struct Context
 {
-    cv::Point origin;                // the captures' (0, 0) in the sensor frame (RawInput::Input::origin)
+    ipr::Point2i origin;                // the captures' (0, 0) in the sensor frame (RawInput::Input::origin)
     std::array<double, 4> black{};   // per RawInput::Colour, counts
     double white = 0.0;              // effective white, counts (after the data adjustment)
     double divisor = 0.0;            // counts dividing the black-subtracted values
@@ -49,7 +50,7 @@ struct Context
 struct Capture
 {
     Stage stage;
-    const cv::Mat &pixels;                               // whole image, sensor orientation, valid during the call
+    const ipr::Image &pixels;                            // whole image, sensor orientation, valid during the call
     bool mosaic;                                         // CFA (pattern below) or RGB
     const std::array<std::array<int, 2>, 2> &pattern;    // RawInput::Colour of each 2x2 site
     const Context &context;
@@ -70,16 +71,16 @@ struct Options
 
 struct Result
 {
-    cv::Mat cameraRgb;                 // CV_32FC3, white 1, sensor orientation; empty on failure
+    ipr::Image cameraRgb;              // F32, three channels, white 1, sensor orientation; empty on failure
     std::array<double, 4> gains{};     // white-balance gains applied (smallest 1)
     QString error;
 };
 
 Result develop(const RawInput::Input &input, const Options &options);
 
-// The image turned as the decoder's orientation code (RawInput::Input::orientation).
-// Flips in place: the result shares the image's buffer unless it is transposed.
-cv::Mat orient(cv::Mat image, int orientation);
+// The image turned as the decoder's orientation code (RawInput::Input::orientation): the
+// same image for code 0, new pixels otherwise.
+ipr::Image orient(ipr::Image image, int orientation);
 
 } // namespace RawDevelopment
 

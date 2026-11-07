@@ -6,7 +6,7 @@ arch=('x86_64' 'aarch64')
 url='https://github.com/KimntexX/IPR'
 # Project licence not yet declared: no fabricated SPDX identifier.
 license=('custom')
-depends=('qt6-base' 'qt6-declarative' 'qt6-imageformats' 'opencv' 'libraw' 'libtiff')
+depends=('qt6-base' 'qt6-declarative' 'qt6-imageformats' 'libraw' 'libtiff')
 makedepends=('cmake' 'ninja' 'gcc')
 source=('ipr-source.tar')
 sha256sums=('@SHA256@')

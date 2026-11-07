@@ -1,10 +1,13 @@
 #include "imageeditor.h"
+#include <random>
+#include "image_testing.h"
 #include "DecodedImageCache.h"
 #include "controlled_memory.h"
 #include "imageprovider.h"
 #include "RawDecoder.h"
 #include "CameraProfileEngine.h"
 #include "Sidecar.h"
+#include "Image.h"
 #include <tiffio.h>
 
 #include <QCoreApplication>
@@ -107,27 +110,27 @@ bool awaitLoad(ImageEditor &editor, const QUrl &fileUrl)
 bool verifyDecodedImageCache()
 {
     ColorPipeline::WorkingImage image;
-    image.linearRgba = cv::Mat::zeros(10, 10, CV_32FC4);
-    DecodedImageCache::Entry sharedProxy{image, image, {}};
+    image.linearRgba = ipr::Image::zeros({10, 10}, ipr::Depth::F32, 4);
+    DecodedImageCache::Entry sharedProxy{ColorPipeline::sharedCopy(image), ColorPipeline::sharedCopy(image), {}};
     const quint64 imageBytes = DecodedImageCache::entrySizeBytes(sharedProxy);
     if (!check(imageBytes == 10U * 10U * 4U * sizeof(float),
                "a shallow edit proxy must not be counted twice"))
         return false;
 
     auto context = std::make_shared<CameraProfileEngine::DcpWorkingContext>();
-    context->cameraRgb = cv::Mat::zeros(10, 10, CV_32FC3);
-    auto withContext = sharedProxy;
+    context->cameraRgb = ipr::Image::zeros({10, 10}, ipr::Depth::F32, 3);
+    auto withContext = DecodedImageCache::sharedCopy(sharedProxy);
     withContext.image.dcpContext = context;
     withContext.editProxy.dcpContext = context;
     if (!check(DecodedImageCache::entrySizeBytes(withContext) == imageBytes + 1200,
                "shared camera source counted exactly once in LRU budget")) return false;
     DecodedImageCache limited(imageBytes);
-    limited.insert("oversized-context", withContext);
+    limited.insert("oversized-context", DecodedImageCache::sharedCopy(withContext));
     if (!check(limited.count() == 0, "pre-DCP storage cannot bypass the LRU budget")) return false;
 
     DecodedImageCache cache(imageBytes * 2);
-    cache.insert(QStringLiteral("first"), sharedProxy);
-    cache.insert(QStringLiteral("second"), sharedProxy);
+    cache.insert(QStringLiteral("first"), DecodedImageCache::sharedCopy(sharedProxy));
+    cache.insert(QStringLiteral("second"), DecodedImageCache::sharedCopy(sharedProxy));
     if (!check(cache.count() == 2 && cache.sizeBytes() == imageBytes * 2,
                "cache should retain entries within its explicit budget"))
         return false;
@@ -135,7 +138,7 @@ bool verifyDecodedImageCache()
     if (!check(cache.find(QStringLiteral("first")).has_value(),
                "a cache lookup should return the stored image"))
         return false;
-    cache.insert(QStringLiteral("third"), sharedProxy);
+    cache.insert(QStringLiteral("third"), DecodedImageCache::sharedCopy(sharedProxy));
     if (!check(cache.find(QStringLiteral("first")).has_value() &&
                    !cache.find(QStringLiteral("second")).has_value() &&
                    cache.find(QStringLiteral("third")).has_value(),
@@ -197,7 +200,7 @@ bool verifyToneCurvesAndHistogram(ImageEditor &editor, const QString &directory)
             QImage sample(1,1,QImage::Format_RGBA8888);
             sample.setPixelColor(0,0,original); sample.setColorSpace(QColorSpace(QColorSpace::SRgb));
             auto expectedMaster = ColorPipeline::fromSourceImage(sample);
-            cv::Vec4f &master = expectedMaster.linearRgba.at<cv::Vec4f>(0,0);
+            ipr::Vec4f &master = imagetest::at<ipr::Vec4f>(expectedMaster.linearRgba, 0,0);
             // The channel of linear ProPhoto, sRGB-encoded, through the natural spline of
             // (0,0), (.6,.9), (1,1): second derivative -3.75 at the middle point, 0 at the ends.
             const auto spline = [](double x) {
@@ -206,10 +209,10 @@ bool verifyToneCurvesAndHistogram(ImageEditor &editor, const QString &directory)
                 const double h = 0.4, t = x - 0.6;
                 return m * (1.0 - x) * (1.0 - x) * (1.0 - x) / (6 * h) + (0.9 / h - m * h / 6) * (1.0 - x) + (1.0 / h) * t;
             };
-            cv::Vec3d proPhoto = WorkingColor::toProPhoto() * cv::Vec3d(master[0], master[1], master[2]);
+            ipr::Vec3d proPhoto = WorkingColor::toProPhoto() * ipr::Vec3d(master[0], master[1], master[2]);
             proPhoto[changed] = WorkingColor::srgbDecode(spline(WorkingColor::srgbEncode(proPhoto[changed])));
-            const cv::Vec3d rgb = WorkingColor::toProPhoto().inv() * proPhoto;
-            master = cv::Vec4f(float(rgb[0]), float(rgb[1]), float(rgb[2]), master[3]);
+            const ipr::Vec3d rgb = WorkingColor::toProPhoto().inv() * proPhoto;
+            master = ipr::Vec4f(float(rgb[0]), float(rgb[1]), float(rgb[2]), master[3]);
             const auto expected = ColorPipeline::toSrgb(expectedMaster,
                 ColorPipeline::OutputFormat::Preview8Bit).pixelColor(0,0);
             if (!check(std::abs(pixel.red()-expected.red()) <= 2 &&
@@ -426,14 +429,14 @@ bool verifyColorMixer(ImageEditor &editor, const QString &directory)
     // Rec.2020 HSV centres with low enough chroma to fit the sRGB fixture file.
     // Otherwise gamut mapping changes the centre before it can be reimported.
     ColorPipeline::WorkingImage patches;
-    patches.linearRgba = cv::Mat(1, 8, CV_32FC4);
-    const std::array<cv::Vec4f, 8> colors{{
+    patches.linearRgba = ipr::Image::create({8, 1}, ipr::Depth::F32, 4);
+    const std::array<ipr::Vec4f, 8> colors{{
         {0.35f, 0.25f, 0.25f, 1.0f}, {0.35f, 0.30f, 0.25f, 1.0f},
         {0.35f, 0.35f, 0.25f, 1.0f}, {0.25f, 0.35f, 0.25f, 1.0f},
         {0.25f, 0.35f, 0.35f, 1.0f}, {0.25f, 0.25f, 0.35f, 1.0f},
         {0.30f, 0.25f, 0.35f, 1.0f}, {0.35f, 0.25f, 0.35f, 1.0f}}};
     for (int band = 0; band < 8; ++band)
-        patches.linearRgba.at<cv::Vec4f>(0, band) = colors[band];
+        imagetest::at<ipr::Vec4f>(patches.linearRgba, 0, band) = colors[band];
     const QString sourcePath = directory + QStringLiteral("/mixer-source.png");
     if (!ColorPipeline::toSrgb(patches, ColorPipeline::OutputFormat::HighBitDepth)
              .save(sourcePath, "PNG") ||
@@ -583,7 +586,8 @@ bool verifyColorMixer(ImageEditor &editor, const QString &directory)
 bool verifyEffects(ImageEditor &editor, const QString &directory)
 {
     QImage source(96, 64, QImage::Format_RGBA8888);
-    cv::RNG noise(812);
+    std::mt19937 noise(812);
+    std::normal_distribution<double> grainOf(0.0, 5.0), channelOf(0.0, 3.0);
     for (int y = 0; y < source.height(); ++y) {
         for (int x = 0; x < source.width(); ++x) {
             const int gradient = 70 + x * 95 / (source.width() - 1);
@@ -592,11 +596,14 @@ bool verifyEffects(ImageEditor &editor, const QString &directory)
             // estimator must not be required to mistake that texture for noise.
             // Add deterministic luminance/chroma noise and keep the pattern so
             // this test still exercises all effects through the actual export.
-            const int grain = static_cast<int>(std::lround(noise.gaussian(5.0)));
+            const int grain = static_cast<int>(std::lround(grainOf(noise)));
+            const int red = static_cast<int>(std::lround(channelOf(noise)));
+            const int green = static_cast<int>(std::lround(channelOf(noise)));
+            const int blue = static_cast<int>(std::lround(channelOf(noise)));
             source.setPixelColor(x, y, QColor(
-                qBound(0, gradient + detail + y / 5 + grain + static_cast<int>(std::lround(noise.gaussian(3.0))), 255),
-                qBound(0, gradient + detail + 25 + grain + static_cast<int>(std::lround(noise.gaussian(3.0))), 255),
-                qBound(0, gradient + detail + 50 + grain + static_cast<int>(std::lround(noise.gaussian(3.0))), 255)));
+                qBound(0, gradient + detail + y / 5 + grain + red, 255),
+                qBound(0, gradient + detail + 25 + grain + green, 255),
+                qBound(0, gradient + detail + 50 + grain + blue, 255)));
         }
     }
     source.setColorSpace(QColorSpace(QColorSpace::SRgb));
@@ -669,9 +676,9 @@ bool verifyDngOutput(ImageEditor &editor, const QString &directory)
     const bool hasIcc = TIFFGetField(tiff, TIFFTAG_ICCPROFILE, &profileBytes, &profile) == 1;
     const QColorSpace embedded = hasIcc ? QColorSpace::fromIccProfile(
         QByteArray(static_cast<const char *>(profile), int(profileBytes))) : QColorSpace{};
-    const cv::Matx33d expectedMatrix = WorkingColor::srgbToXyz().inv();
+    const ipr::Matrix33d expectedMatrix = WorkingColor::srgbToXyz().inv();
     bool consistent = hasMatrix && embedded == QColorSpace(QColorSpace::SRgbLinear);
-    if (hasMatrix) for (int i=0; i<9; ++i) consistent &= std::abs(matrix[i]-expectedMatrix.val[i]) < 1e-6;
+    if (hasMatrix) for (int i=0; i<9; ++i) consistent &= std::abs(matrix[i]-expectedMatrix.values[i]) < 1e-6;
     TIFFClose(tiff);
     if (!check(mainImage, "DNG main IFD needs NewSubfileType 0 for Adobe readers")) return false;
     if (!check(consistent, "DNG linear samples need linear ICC and XYZ-to-stored-RGB matrix")) return false;
@@ -707,7 +714,7 @@ bool verifyDngOutput(ImageEditor &editor, const QString &directory)
         std::cerr << "DNG decode error: " << imported.error.toStdString() << '\n';
     return check(!imported.image.isNull() && imported.capabilities.cameraDevelopment &&
                      imported.image.colorSpace == ColorPipeline::workingColorSpace() &&
-                     imported.image.linearRgba.size() == cv::Size(64, 64),
+                     imported.image.linearRgba.size() == ipr::Size(64, 64),
                  "exported linear DNG should use the common import contract through LibRaw");
 #else
     return true;
@@ -1197,7 +1204,7 @@ bool verifyEditProxyDownscaling(ImageEditor &editor, ImageProvider &provider,
                                 const QString &directory)
 {
     // Larger than the 2048 px edit-proxy cap on its long side, so loading it
-    // exercises ImageEditor::buildEditProxy()'s cv::resize() path.
+    // exercises ImageEditor::buildEditProxy()'s reduction.
     constexpr int width = 2200;
     constexpr int height = 1600;
     QImage input(width, height, QImage::Format_RGBA8888);

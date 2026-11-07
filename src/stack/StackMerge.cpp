@@ -1,8 +1,9 @@
 #include "StackMerge.h"
 
-#include "OpenCvBridge.h"
+#include "Filters.h"
+#include "Neighbourhood.h"
+#include "Parallel.h"
 
-#include <opencv2/imgproc.hpp>
 
 #include <algorithm>
 #include <atomic>
@@ -20,52 +21,52 @@ constexpr float fadeEnd = 1.5f;
 
 // The smoothed luminance the decisions read. One pixel's noise then does not flip them,
 // which would leave a toothed line along a contrasted edge.
-cv::Mat decisionLuminance(const cv::Mat &frame)
+ipr::Image decisionLuminance(const ipr::Image &frame)
 {
-    cv::Mat luminance(frame.size(), CV_32FC1);
-    for (int y = 0; y < frame.rows; ++y) {
-        const cv::Vec3f *in = frame.ptr<cv::Vec3f>(y);
-        float *out = luminance.ptr<float>(y);
-        for (int x = 0; x < frame.cols; ++x)
+    ipr::Image luminance = ipr::Image::create(frame.size(), ipr::Depth::F32, 1);
+    for (int y = 0; y < frame.height(); ++y) {
+        const ipr::Vec3f *in = frame.row<ipr::Vec3f>(y);
+        float *out = luminance.mutableRow<float>(y);
+        for (int x = 0; x < frame.width(); ++x)
             out[x] = 0.25f * in[x][0] + 0.5f * in[x][1] + 0.25f * in[x][2];
     }
-    return ipr::boxMean(luminance, cv::Size(decisionWindow, decisionWindow), ipr::BlurBorder::LastPixel);
+    return ipr::boxMean(luminance, ipr::Size(decisionWindow, decisionWindow), ipr::BlurBorder::LastPixel);
 }
 }
 
-bool merge(const std::vector<cv::Mat> &frames, double rejectionSigma, cv::Mat &merged, Statistics *statistics)
+bool merge(const std::vector<ipr::Image> &frames, double rejectionSigma, ipr::Image &merged, Statistics *statistics)
 {
     if (frames.empty())
         return false;
-    const cv::Size size = frames.front().size();
-    for (const cv::Mat &frame : frames)
-        if (frame.empty() || frame.type() != CV_32FC3 || frame.size() != size)
+    const ipr::Size size = frames.front().size();
+    for (const ipr::Image &frame : frames)
+        if (frame.empty() || !(frame.depth() == ipr::Depth::F32 && frame.channels() == 3) || frame.size() != size)
             return false;
-    merged.create(size, CV_32FC3);
+    merged = ipr::Image::create(size, ipr::Depth::F32, 3);
     const int count = int(frames.size());
     const bool rejecting = rejectionSigma > 0.0 && count >= minimumFramesForRejection;
     const float limit = float(rejectionSigma);
     std::atomic<quint64> rejected{0};
 
-    std::vector<cv::Mat> luminance(frames.size());
+    std::vector<ipr::Image> luminance(frames.size());
     if (rejecting)
-        cv::parallel_for_(cv::Range(0, count), [&](const cv::Range &range) {
-            for (int i = range.start; i < range.end; ++i)
+        ipr::parallelRows(count, [&](int first, int last) {
+            for (int i = first; i < last; ++i)
                 luminance[size_t(i)] = decisionLuminance(frames[size_t(i)]);
         });
 
-    cv::parallel_for_(cv::Range(0, size.height), [&](const cv::Range &range) {
-        std::vector<const cv::Vec3f *> rows(frames.size());
+    ipr::parallelRows(size.height, [&](int first, int last) {
+        std::vector<const ipr::Vec3f *> rows(frames.size());
         std::vector<const float *> luminanceRows(frames.size());
         std::vector<float> order(frames.size());
         quint64 rejectedHere = 0;
-        for (int y = range.start; y < range.end; ++y) {
+        for (int y = first; y < last; ++y) {
             for (int i = 0; i < count; ++i) {
-                rows[size_t(i)] = frames[size_t(i)].ptr<cv::Vec3f>(y);
+                rows[size_t(i)] = frames[size_t(i)].row<ipr::Vec3f>(y);
                 if (rejecting)
-                    luminanceRows[size_t(i)] = luminance[size_t(i)].ptr<float>(y);
+                    luminanceRows[size_t(i)] = luminance[size_t(i)].row<float>(y);
             }
-            cv::Vec3f *out = merged.ptr<cv::Vec3f>(y);
+            ipr::Vec3f *out = merged.mutableRow<ipr::Vec3f>(y);
             for (int x = 0; x < size.width; ++x) {
                 float allowed = std::numeric_limits<float>::infinity();
                 float median = 0.f;
@@ -80,7 +81,7 @@ bool merge(const std::vector<cv::Mat> &frames, double rejectionSigma, cv::Mat &m
                     std::nth_element(order.begin(), middle, order.end());
                     allowed = limit * std::max(madToSigma * *middle, spreadFloor);
                 }
-                cv::Vec3f sum(0.f, 0.f, 0.f);
+                ipr::Vec3f sum(0.f, 0.f, 0.f);
                 float weights = 0.f;
                 for (int i = 0; i < count; ++i) {
                     float weight = 1.f;

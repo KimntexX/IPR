@@ -2,10 +2,11 @@
 #define IPR_RAW_CAMERADNG_H
 
 #include "CameraProfileEngine.h"
+#include "Image.h"
+#include "Types.h"
 
 #include <QDateTime>
 #include <QString>
-#include <opencv2/core.hpp>
 
 #include <array>
 
@@ -19,7 +20,7 @@ namespace CameraDng {
 
 struct Content
 {
-    cv::Mat cameraRgb;      // CV_32FC3, as a decoder's signal: white balance applied, white 1, signed
+    ipr::Image cameraRgb;   // F32, three channels, as a decoder's signal: white balance applied, white 1, signed
     QString cameraMake;
     QString cameraModel;
     // Kept for IPR alone, in the file's description: another reader must not take the lens
@@ -30,7 +31,7 @@ struct Content
     double exposureSeconds = 0.0;
     double focalLengthMm = 0.0;
     QDateTime captureDate;
-    cv::Vec3d cameraNeutral{1.0, 1.0, 1.0}; // inverse of the applied gains, G = 1
+    ipr::Vec3d cameraNeutral{1.0, 1.0, 1.0}; // inverse of the applied gains, G = 1
     double whiteBalanceKelvin = 5500.0;
     CameraProfileEngine::DcpRenderOptions renderOptions;
     unsigned calibratedWhite = 0;           // of the source's calibration, for the panel; 0 without one

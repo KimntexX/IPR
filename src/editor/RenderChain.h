@@ -9,7 +9,7 @@
 #include <QImage>
 #include <QString>
 #include <QVariantList>
-#include <opencv2/core.hpp>
+#include "Image.h"
 
 // From a source image and a recipe to pixels: the order of the processing modules, and
 // nothing else. No state: what is kept between two renders lives in the cache a caller gives.
@@ -34,9 +34,9 @@ ColorPipeline::WorkingImage workingImage(const ColorPipeline::WorkingImage &sour
                                          double pixelScale = 1.0, RenderStageCache *cache = nullptr,
                                          int *retouchesNotDone = nullptr);
 
-// The colour entering the point colour: the tones' output (CV_32FC3, whole canvas), from the
+// The colour entering the point colour: the tones' output (F32 of three channels, whole canvas), from the
 // cache when it kept it. Empty on failure.
-cv::Mat tonesOutput(const ColorPipeline::WorkingImage &source, const Settings &settings, double pixelScale,
+ipr::Image tonesOutput(const ColorPipeline::WorkingImage &source, const Settings &settings, double pixelScale,
                     RenderStageCache *cache);
 
 struct Preview

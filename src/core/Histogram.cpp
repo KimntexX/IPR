@@ -1,8 +1,9 @@
 #include "Histogram.h"
 
 #include "WorkingColorSpace.h"
+#include "Parallel.h"
 
-#include <opencv2/core.hpp>
+#include "Image.h"
 
 #include <QMutex>
 #include <QMutexLocker>
@@ -35,9 +36,9 @@ QVariantList compute(const QImage &preview)
     QMutex merging;
     static const std::array<float, 256> decode = decodingTable();
     // Counts add up in any order: the same result on any number of threads.
-    cv::parallel_for_(cv::Range(0, preview.height()), [&](const cv::Range &rows) {
+    ipr::parallelRows(preview.height(), [&](int first, int last) {
         Bins local{};
-        for (int y = rows.start; y < rows.end; ++y) {
+        for (int y = first; y < last; ++y) {
             const uchar *row = preview.constScanLine(y);
             for (int x = 0; x < preview.width(); ++x) {
                 const uchar *p = row + 4 * x;

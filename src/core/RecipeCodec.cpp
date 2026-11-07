@@ -1,4 +1,5 @@
 #include "RecipeCodec.h"
+#include "Types.h"
 
 #include <QCborArray>
 #include <QCborValue>
@@ -144,12 +145,12 @@ void load(const QCborMap &map, Owner &owner, const Field<Owner, Value> (&fields)
 }
 
 namespace {
-QCborArray pointArray(const cv::Point2f &point)
+QCborArray pointArray(const ipr::Point2f &point)
 {
     return QCborArray{double(point.x), double(point.y)};
 }
 
-bool readPoint(const QCborValue &value, cv::Point2f &point)
+bool readPoint(const QCborValue &value, ipr::Point2f &point)
 {
     const QCborArray array = value.toArray();
     if (array.size() != 2 || !array.at(0).isDouble() || !array.at(1).isDouble())
@@ -165,7 +166,7 @@ QCborArray encodeRetouches(const Retouch::Operations &operations)
         QCborArray strokes;
         for (const LocalAdjustments::BrushStroke &stroke : operation.strokes) {
             QCborArray points;
-            for (const cv::Point2f &point : stroke.points) {
+            for (const ipr::Point2f &point : stroke.points) {
                 points.append(double(point.x));
                 points.append(double(point.y));
             }
@@ -201,7 +202,7 @@ bool decodeRetouches(const QCborArray &list, Retouch::Operations &operations)
             return false;
         operation.visible = entry.value(QStringLiteral("visible")).toBool(true);
         operation.opacity = float(entry.value(QStringLiteral("opacity")).toDouble(1.0));
-        operation.source = cv::Point2f(float(entry.value(QStringLiteral("sourceX")).toDouble()),
+        operation.source = ipr::Point2f(float(entry.value(QStringLiteral("sourceX")).toDouble()),
                                        float(entry.value(QStringLiteral("sourceY")).toDouble()));
         for (const QCborValue &strokeValue : entry.value(QStringLiteral("strokes")).toArray()) {
             const QCborMap strokeEntry = strokeValue.toMap();
@@ -232,7 +233,7 @@ QCborArray encodeMasks(const LocalAdjustments::Masks &masks)
             QCborArray strokes;
             for (const LocalAdjustments::BrushStroke &stroke : shape.strokes) {
                 QCborArray points;
-                for (const cv::Point2f &point : stroke.points) {
+                for (const ipr::Point2f &point : stroke.points) {
                     points.append(double(point.x));
                     points.append(double(point.y));
                 }

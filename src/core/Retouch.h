@@ -2,10 +2,11 @@
 #define IPR_CORE_RETOUCH_H
 
 #include "LocalAdjustments.h"
+#include "Types.h"
 
 #include <QDataStream>
 #include <QVariantList>
-#include <opencv2/core.hpp>
+#include "Image.h"
 
 #include <vector>
 
@@ -27,7 +28,7 @@ struct Operation
     bool visible = true;
     float opacity = 1.0f;       // in [0, 1]
     std::vector<LocalAdjustments::BrushStroke> strokes;
-    cv::Point2f source{0.0f, 0.0f}; // Heal and Clone: from a zone's pixel to its source, shares of the canvas's sides
+    ipr::Point2f source{0.0f, 0.0f}; // Heal and Clone: from a zone's pixel to its source, shares of the canvas's sides
 };
 
 using Operations = std::vector<Operation>;
@@ -41,18 +42,18 @@ bool bound(Operations &operations);
 // Whether these retouches change anything at all.
 bool active(const Operations &operations);
 
-// The zone, CV_32FC1 in [0, 1], of this size; opacity and visibility apart.
-cv::Mat coverage(const Operation &operation, const cv::Size &canvas);
+// The zone, F32 of one channel in [0, 1], of this size; opacity and visibility apart.
+ipr::Image coverage(const Operation &operation, const ipr::Size &canvas);
 
 // Applies the visible retouches in order, each seeing the result of the ones before, to a linear
-// CV_32FC3 image on the canvas. Pixels outside the zones do not change. An empty pixel, exactly 0
+// F32 of three channels image on the canvas. Pixels outside the zones do not change. An empty pixel, exactly 0
 // where a transform left nothing, is never taken as a source. Returns how many could not be done:
 // a zone that takes too much of what surrounds it to be invented is left as it is.
-int apply(cv::Mat &rgb, const Operations &operations);
+int apply(ipr::Image &rgb, const Operations &operations);
 
 // Where to take a zone from: the place nearby whose surroundings best match the zone's. Shares of
-// the canvas's sides, or (0, 0) when there is none. rgb: linear CV_32FC3, on the canvas.
-cv::Point2f suggestSource(const cv::Mat &rgb, const Operation &operation);
+// the canvas's sides, or (0, 0) when there is none. rgb: linear F32 of three channels, on the canvas.
+ipr::Point2f suggestSource(const ipr::Image &rgb, const Operation &operation);
 
 // What a render's result depends on, for the cache keys. Adds nothing without a retouch.
 void appendKey(QDataStream &stream, const Operations &operations);

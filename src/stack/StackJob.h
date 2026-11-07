@@ -4,9 +4,10 @@
 #include "StackAlignment.h"
 #include "StackMerge.h"
 #include "StackTurbulence.h"
+#include "Types.h"
 
 #include <QString>
-#include <opencv2/core.hpp>
+#include "Image.h"
 
 #include <array>
 #include <functional>
@@ -21,7 +22,7 @@ namespace StackJob {
 
 struct Frame
 {
-    cv::Mat cameraRgb;   // CV_32FC3, linear, white 1, the same balance intended across the series
+    ipr::Image cameraRgb;   // F32, three channels, linear, white 1, the same balance intended across the series
     QString error;
 };
 
@@ -57,7 +58,7 @@ struct FrameReport
     bool reference = false;
     QString exclusion;                                // why it was left out, empty when used
     StackAlignment::Result alignment;
-    cv::Vec3d gains{1.0, 1.0, 1.0};                   // what brought it to the reference's level
+    ipr::Vec3d gains{1.0, 1.0, 1.0};                   // what brought it to the reference's level
     int localBlocks = 0;                              // blocks that measured the local field
     double localLargest = 0.0;                        // longest local displacement, pixels
 };
@@ -67,24 +68,24 @@ struct Result
     bool success = false;
     bool cancelled = false;
     QString error;
-    cv::Mat cameraRgb;                                // merged common area, CV_32FC3
-    cv::Rect commonArea;                              // of the reference's frame
-    cv::Size frameSize;
+    ipr::Image cameraRgb;                                // merged common area, F32, three channels
+    ipr::Recti commonArea;                              // of the reference's frame
+    ipr::Size frameSize;
     std::vector<FrameReport> frames;
     int usedFrames = 0;
     StackMerge::Statistics merge;
     quint64 scratchBytes = 0;                         // written to the scratch folder
     int bandRows = 0;
     StackTurbulence::Report turbulence;
-    cv::Rect subject;                                 // of the reference's frame, when a pass ran
+    ipr::Recti subject;                                 // of the reference's frame, when a pass ran
 };
 
 // The largest upright rectangle in a convex area given by its span on each row: spans[y]
 // is [left, right), empty when right <= left. Empty rectangle when there is none.
-cv::Rect largestRectangle(const std::vector<cv::Vec2i> &spans);
+ipr::Recti largestRectangle(const std::vector<ipr::Vec2i> &spans);
 
 // Bytes the scratch folder needs for this series.
-quint64 scratchBytesNeeded(int frameCount, const cv::Size &size);
+quint64 scratchBytesNeeded(int frameCount, const ipr::Size &size);
 
 Result run(const Request &request);
 

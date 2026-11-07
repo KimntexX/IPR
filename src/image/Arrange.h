@@ -26,6 +26,14 @@ void padRegionInto(const Image &image, Image &out, Rect<int> region, int top, in
 void pyramidDownInto(const Image &image, Image &out, int threads = 0);
 Size pyramidDownSize(Size size);
 
+// The same into new images. An empty image gives an empty one.
+Image turned(const Image &image, int quarterTurns);
+Image mirrored(const Image &image, bool leftToRight, bool topToBottom);
+Image transposed(const Image &image);
+Image padded(const Image &image, int top, int bottom, int left, int right);
+Image paddedRegion(const Image &image, Rect<int> region, int top, int bottom, int left, int right);
+Image pyramidDown(const Image &image);
+
 } // namespace ipr
 
 #endif // IPR_IMAGE_ARRANGE_H

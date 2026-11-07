@@ -300,4 +300,23 @@ void warpPerspectiveInto(const Image &image, Image &out, const Matrix33d &outToI
     }, threads);
 }
 
+Image remapped(const Image &image, const Image &mapX, const Image &mapY, Resampling resampling, Outside outside)
+{
+    if (image.empty() || mapX.empty())
+        return {};
+    Image out = Image::create(mapX.size(), image.depth(), image.channels());
+    remapInto(image, out, mapX, mapY, resampling, outside);
+    return out;
+}
+
+Image warpedPerspective(const Image &image, const Matrix33d &outToImage, Size size, Resampling resampling,
+                        Outside outside)
+{
+    if (image.empty() || size.empty())
+        return {};
+    Image out = Image::create(size, image.depth(), image.channels());
+    warpPerspectiveInto(image, out, outToImage, resampling, outside);
+    return out;
+}
+
 } // namespace ipr

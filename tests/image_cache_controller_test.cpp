@@ -30,7 +30,7 @@ int main(int argc, char **argv)
         return SystemMemory::Snapshot{32 * GiB, available.load(), 0, valid.load(), false};
     });
     const auto admit = [&](const QString &key, quint64 size = 1, bool background = false) {
-        return controller.acquire(key, size, background).result();
+        return controller.acquire(key, size, background).takeResult();
     };
     // A waiting foreground request stays unresolved across several 500 ms samples.
     const auto stillWaiting = [&](const QFuture<ImageCacheController::Admission> &future) {
@@ -49,22 +49,22 @@ int main(int argc, char **argv)
     controller.release(token.reservation);
     if (!check(controller.statistics().budgetBytes == 8 * GiB, "automatic retention cap")) return 1;
     ColorPipeline::WorkingImage image;
-    image.linearRgba = cv::Mat::zeros(100, 100, CV_32FC4);
-    const DecodedImageCache::Entry entry{image, image, {}};
+    image.linearRgba = ipr::Image::zeros({100, 100}, ipr::Depth::F32, 4);
+    const DecodedImageCache::Entry entry{ColorPipeline::sharedCopy(image), ColorPipeline::sharedCopy(image), {}};
     const auto size = DecodedImageCache::entrySizeBytes(entry);
     controller.setBudgetBytes(size * 2);
-    controller.insert("A", entry); controller.insert("B", entry);
+    controller.insert("A", DecodedImageCache::sharedCopy(entry)); controller.insert("B", DecodedImageCache::sharedCopy(entry));
     auto a = admit("A");
     if (!check(a.cached.has_value() && !a.reservation, "cache hit transfers pixels without a decode reservation")) return 2;
     controller.insert("A", std::move(*a.cached));
-    controller.insert("C", entry);
+    controller.insert("C", DecodedImageCache::sharedCopy(entry));
     auto b = admit("B");
     if (!check(!b.cached && b.reservation, "least recently used B must be evicted")) return 2;
     controller.release(b.reservation);
     auto c = admit("C");
     if (!check(c.cached.has_value(), "most recent entry must survive")) return 2;
     // External holders (render/export) keep pixels valid after controller eviction.
-    auto active = c.cached->image;
+    auto active = std::move(c.cached->image);
     available.store(5 * GiB);
     auto denied = admit("absent", MiB, true);
     if (!check(!denied.reservation && !denied.error.isEmpty() && controller.count() == 0 &&
@@ -84,7 +84,7 @@ int main(int argc, char **argv)
     denied = admit({}, 1, true);
     if (!check(!denied.reservation, "foreground, even waiting, takes priority over preload")) return 4;
     controller.release(token.reservation);
-    token = queued.result();
+    token = queued.takeResult();
     if (!check(token.reservation && waitStats([](const auto &s) { return !s.waitingRequests; }),
         "finished work returns its reservation and wakes the waiting request")) return 4;
     controller.release(token.reservation);
@@ -95,10 +95,11 @@ int main(int argc, char **argv)
     auto next = controller.acquire({}, 2 * GiB, false);
     if (!check(stillWaiting(stale) && stillWaiting(next), "FIFO waiting under pressure")) return 4;
     cancel->store(true);
-    if (!check(stale.result().reservation == 0 && !stale.result().error.isEmpty() && !next.isFinished(),
+    const auto staleAdmission = stale.takeResult();
+    if (!check(staleAdmission.reservation == 0 && !staleAdmission.error.isEmpty() && !next.isFinished(),
         "cancelled wait ends while the newer request keeps waiting")) return 4;
     available.store(24 * GiB);
-    token = next.result();
+    token = next.takeResult();
     if (!check(token.reservation, "freed external memory resumes the waiting open")) return 4;
     controller.release(token.reservation);
     // Other applications cause the pressure and IPR holds nothing: proceed, flagged.
@@ -110,7 +111,7 @@ int main(int argc, char **argv)
     queued = controller.acquire({}, 2 * GiB, false);
     if (!check(stillWaiting(queued), "IPR's own reservation is released before any further pressure admission")) return 4;
     controller.release(token.reservation);
-    token = queued.result();
+    token = queued.takeResult();
     if (!check(token.reservation && token.underPressure, "waiting request proceeds once IPR released its work")) return 4;
     controller.release(token.reservation);
     available.store(24 * GiB);
@@ -128,7 +129,7 @@ int main(int argc, char **argv)
     queued = controller.acquire({}, MiB, false);
     if (!check(stillWaiting(queued), "no available RAM is not admission")) return 5;
     controller.abortWaiting();
-    if (!check(!queued.result().reservation, "abort ends waits for shutdown")) return 5;
+    if (!check(!queued.takeResult().reservation, "abort ends waits for shutdown")) return 5;
     available.store(24 * GiB);
     std::vector<QFuture<ImageCacheController::Admission>> admissions;
     std::vector<std::thread> threads;
@@ -145,8 +146,8 @@ int main(int argc, char **argv)
     for (auto &admission : admissions)
         (admission.isFinished() ? acceptedHalf : waitingHalf).push_back(admission);
     const auto accepted = acceptedHalf.size();
-    for (auto &admission : acceptedHalf) controller.release(admission.result().reservation);
-    for (auto &admission : waitingHalf) controller.release(admission.result().reservation);
+    for (auto &admission : acceptedHalf) controller.release(admission.takeResult().reservation);
+    for (auto &admission : waitingHalf) controller.release(admission.takeResult().reservation);
     if (!check(accepted == 4 && waitStats([](const auto &s) { return !s.waitingRequests && !s.reservedBytes; }),
         "released reservations admit the waiting half, then everything is returned")) return 5;
     {
@@ -158,7 +159,7 @@ int main(int argc, char **argv)
             pending = lowCommit.acquire({}, 2 * MiB, false);
             if (!check(stillWaiting(pending), "commit availability is also enforced")) return 5;
         }
-        if (!check(pending.isFinished() && !pending.result().reservation, "destroying the controller ends waits")) return 5;
+        if (!check(pending.isFinished() && !pending.takeResult().reservation, "destroying the controller ends waits")) return 5;
     }
     {
         // IPR's own admitted peak is reserved: it must not evict retained images.
@@ -168,9 +169,9 @@ int main(int argc, char **argv)
             for (int i = 0; i < 300 && !done(own.statistics()); ++i) QThread::msleep(10);
             return done(own.statistics());
         };
-        own.insert("kept", entry);
+        own.insert("kept", DecodedImageCache::sharedCopy(entry));
         if (!ownStats([](const auto &s) { return s.entries == 1; })) return 7;
-        auto work = own.acquire({}, 12 * GiB, false).result();
+        auto work = own.acquire({}, 12 * GiB, false).takeResult();
         free.store(5 * GiB); // 84% raw use, 47% once the reserved work is excluded
         QThread::msleep(700);
         if (!check(work.reservation && own.statistics().entries == 1 && !own.statistics().pressure,
@@ -180,7 +181,7 @@ int main(int argc, char **argv)
         if (!ownStats([](const auto &s) { return !s.pressure && !s.reservedBytes && s.entries == 1; })) return 7;
         // 78%, no pressure, but no margin: evicting a small entry cannot fit 4 GiB.
         free.store(7 * GiB);
-        auto big = own.acquire({}, 4 * GiB, false).result();
+        auto big = own.acquire({}, 4 * GiB, false).takeResult();
         if (!check(big.reservation && big.underPressure && own.statistics().entries == 1,
             "pointless eviction is skipped; unfittable work proceeds under pressure")) return 7;
         own.release(big.reservation);

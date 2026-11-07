@@ -1,6 +1,8 @@
 // Manual corpus diagnostic: no production switches, TIFF generation or sidecar writes.
 #include "RawDecoder.h"
 #include "CameraProfileEngine.h"
+#include "Pixels.h"
+#include "WorkingColorSpace.h"
 #include <QCoreApplication>
 #include <QCryptographicHash>
 #include <QDateTime>
@@ -27,16 +29,16 @@ QString hash(const QString &path) {
 template<typename T> QJsonArray array(const T *p,int n=4) {
     QJsonArray a; for(int i=0;i<n;++i)a.append(double(p[i]));return a;
 }
-cv::Mat sample(const cv::Mat &p) {
-    cv::Mat q((p.rows+7)/8,(p.cols+7)/8,p.type());
-    for(int y=0;y<q.rows;++y)for(int x=0;x<q.cols;++x)
-        std::memcpy(q.ptr(y)+x*q.elemSize(),p.ptr(y*8)+x*8*p.elemSize(),q.elemSize());
+ipr::Image sample(const ipr::Image &p) {
+    ipr::Image q=ipr::Image::create({(p.width()+7)/8,(p.height()+7)/8},p.depth(),p.channels());
+    const size_t bytes=p.pixelBytes();
+    for(int y=0;y<q.height();++y)for(int x=0;x<q.width();++x)
+        std::memcpy(q.mutableRow<unsigned char>(y)+x*bytes,p.row<unsigned char>(y*8)+x*8*bytes,bytes);
     return q;
 }
-ColorPipeline::WorkingImage working(const cv::Mat &rgb) {
+ColorPipeline::WorkingImage working(const ipr::Image &rgb) {
     ColorPipeline::WorkingImage result;
-    if(rgb.channels()==4) result.linearRgba=rgb;
-    else {std::vector<cv::Mat> c;cv::split(rgb,c);c.push_back(cv::Mat(rgb.rows,rgb.cols,CV_32F,cv::Scalar(1)));cv::merge(c,result.linearRgba);}
+    result.linearRgba = rgb.channels()==4 ? rgb.share() : ipr::opaque(rgb);
     return result;
 }
 double linear(double x){return x<=.04045?x/12.92:std::pow((x+.055)/1.055,2.4);}
@@ -57,15 +59,16 @@ QJsonObject metrics(const ColorPipeline::WorkingImage &image) {
     QString error;const QImage output=ColorPipeline::toSrgb(image,ColorPipeline::OutputFormat::HighBitDepth,&error);
     if(output.isNull())throw std::runtime_error(error.toStdString());
     Accumulator before,after,roi;int clip=0;QJsonArray warmBands;std::array<Accumulator,12> bands;
-    for(int y=0;y<image.linearRgba.rows;++y)for(int x=0;x<image.linearRgba.cols;++x) {
-        const auto p=image.linearRgba.at<cv::Vec4f>(y,x);
+    for(int y=0;y<image.linearRgba.height();++y)for(int x=0;x<image.linearRgba.width();++x) {
+        const auto p=image.linearRgba.row<ipr::Vec4f>(y)[x];
         if(!std::isfinite(p[0])||!std::isfinite(p[1])||!std::isfinite(p[2]))throw std::runtime_error("Nonfinite pixel");
-        const cv::Vec3d diagnostic = WorkingColor::toSrgb() * cv::Vec3d(p[0],p[1],p[2]);
+        const ipr::Vec3d diagnostic = WorkingColor::toSrgb() * ipr::Vec3d(p[0],p[1],p[2]);
         before.add(diagnostic[0],diagnostic[1],diagnostic[2]);
         const QRgba64 pixel=reinterpret_cast<const QRgba64*>(output.constScanLine(y))[x];
         const double r=linear(pixel.red()/65535.),g=linear(pixel.green()/65535.),b=linear(pixel.blue()/65535.);
         after.add(r,g,b);clip+=pixel.red()>=65534||pixel.green()>=65534||pixel.blue()>=65534;
-        if(x>=image.linearRgba.cols*.25 && x<image.linearRgba.cols*.75 && y>=image.linearRgba.rows*.48 && y<image.linearRgba.rows*.76)roi.add(r,g,b);
+        const int w=image.linearRgba.width(),h=image.linearRgba.height();
+        if(x>=w*.25 && x<w*.75 && y>=h*.48 && y<h*.76)roi.add(r,g,b);
         const double hi=std::max({r,g,b}),lo=std::min({r,g,b}),delta=hi-lo;
         if(hi>1e-8 && delta/hi>.1) {
             double h=hi==r?(g-b)/delta:hi==g?(b-r)/delta+2:(r-g)/delta+4;
@@ -74,7 +77,7 @@ QJsonObject metrics(const ColorPipeline::WorkingImage &image) {
     }
     for(int i=0;i<12;++i){auto item=bands[i].json();item["hue_begin_degrees"]=i*30;warmBands.append(item);}
     return {{"pre_output",before.json()},{"output",after.json()},{"flower_ROI",roi.json()},
-            {"encoded_clipped_percent",100.*clip/image.linearRgba.total()},{"hue_bands_linear_HSV",warmBands}};
+            {"encoded_clipped_percent",100.*clip/(double(image.linearRgba.width())*image.linearRgba.height())},{"hue_bands_linear_HSV",warmBands}};
 }
 QJsonObject metadata(const ImageMetadata &m) {
     return {{"camera",m.cameraModel},{"lens",m.lensModel},{"ISO",m.iso},{"focal_mm",m.focalLengthMm},
@@ -107,7 +110,7 @@ int main(int argc,char **argv) {
                 ImageMetadata meta;QString error;
                 auto full=RawDecoder::decode(file.absoluteFilePath(),options,&meta,&error);
                 if(full.isNull())throw std::runtime_error(error.toStdString());
-                record["metadata"]=metadata(meta);record["width"]=full.linearRgba.cols;record["height"]=full.linearRgba.rows;
+                record["metadata"]=metadata(meta);record["width"]=full.linearRgba.width();record["height"]=full.linearRgba.height();
                 record["reference_kelvin"]=full.referenceWhiteBalanceKelvin.value_or(0);
                 auto current=working(sample(full.linearRgba));
                 QJsonObject stages{{"current",metrics(current)}};
@@ -118,26 +121,26 @@ int main(int argc,char **argv) {
                 };
                 preview(current,"current");
                 if(full.dcpContext) {
-                    auto context=*full.dcpContext;context.cameraRgb=sample(context.cameraRgb);
-                    record["camera_neutral"]=array(context.cameraNeutral.val,3);
+                    auto context=CameraProfileEngine::sharedCopy(*full.dcpContext);context.cameraRgb=sample(context.cameraRgb);
+                    record["camera_neutral"]=array(context.cameraNeutral.values.data(),3);
                     record["profile_path"]=context.profilePath;record["profile_sha256"]=hash(context.profilePath);
-                    const auto beforeProfile=context.cameraRgb.clone();
+                    const ipr::Image beforeProfile=context.cameraRgb.clone();
                     // Release full buffers before sample-only ablations.
                     full={};
-                    cv::Mat witness=beforeProfile.clone();
+                    ipr::Image witness=beforeProfile.clone();
                     if(!CameraProfileEngine::applyDcp(context.profilePath,witness,context.sourceKelvin,&error,context.options))throw std::runtime_error(error.toStdString());
                     const auto witnessImage=working(witness);
                     stages["sample_replay_witness"]=metrics(witnessImage);
-                    record["sample_replay_max_abs_float_error"]=cv::norm(witnessImage.linearRgba,current.linearRgba,cv::NORM_INF);
+                    record["sample_replay_max_abs_float_error"]=ipr::largestDifference(witnessImage.linearRgba,current.linearRgba);
                     auto hueOptions=context.options;hueOptions.preserveToneCurveHue=true;
-                    cv::Mat stable=beforeProfile.clone();
+                    ipr::Image stable=beforeProfile.clone();
                     if(!CameraProfileEngine::applyDcp(context.profilePath,stable,context.sourceKelvin,&error,hueOptions))throw std::runtime_error(error.toStdString());
                     stages["hue_preserving_curve"]=metrics(working(stable));preview(working(stable),"hue-curve");
-                    cv::Mat changed;
+                    ipr::Image changed;
                     if(CameraProfileEngine::renderFromCameraSignal(context, 5200, 5, 0.0,changed,&error)) {
                         stages["display_5200_tint5_diagnostic"]=metrics(working(changed));preview(working(changed),"5200-5");
                     }else record["WB_diagnostic_error"]=error;
-                    stages["camera_RGB_before_DCP_not_sRGB"]=QJsonObject{{"mean_RGB",array(cv::mean(beforeProfile).val,3)}};
+                    stages["camera_RGB_before_DCP_not_sRGB"]=QJsonObject{{"mean_RGB",array(ipr::meanOf(beforeProfile).data(),3)}};
                 }else{full={};record["DCP_context_missing"]=true;}
                 record["stages"]=stages;record["status"]="measured";
                 if(record["sha256"].toString()!=hash(file.absoluteFilePath()))throw std::runtime_error("RAW changed");

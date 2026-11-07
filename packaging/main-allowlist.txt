@@ -65,7 +65,6 @@ docs/build-documentation.ps1
 docs/camera-profile-engine.md
 docs/decisions/
 docs/imageeditor-render-working-image.md
-docs/installation-opencv-windows.md
 docs/release/
 docs/scholar/
 docs/specifications/

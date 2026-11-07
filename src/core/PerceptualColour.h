@@ -4,8 +4,9 @@
 #include "ColorMixer.h"
 #include "LocalValues.h"
 #include "PointColor.h"
+#include "Types.h"
 
-#include <opencv2/core.hpp>
+#include "Image.h"
 
 #include <array>
 #include <optional>
@@ -28,22 +29,22 @@ struct Parameters {
     int gradingBalance = 0;                   // [-100, 100]
 };
 
-// Linear Rec.2020 image (CV_32FC3), in place. No clipping: the output handles gamut.
+// Linear Rec.2020 image (F32 of three channels), in place. No clipping: the output handles gamut.
 // local: per-pixel saturation and vibrance added to the global ones (LocalValues);
 // maps that do not fit the image are ignored.
-void apply(cv::Mat &linearRgb, const Parameters &parameters, const LocalValues::Maps &local = {});
+void apply(ipr::Image &linearRgb, const Parameters &parameters, const LocalValues::Maps &local = {});
 
 // The colour the point colour sees at a place of the stage's input (the tones'
-// output, CV_32FC3): the mean over a square of the given radius around (x, y), in
+// output, F32 of three channels): the mean over a square of the given radius around (x, y), in
 // [0, 1] of the image, after saturation, vibrance and the mixer. Empty outside the
 // image or on an empty input.
-std::optional<cv::Vec3d> colourBeforePointColour(const cv::Mat &linearRgb, double x, double y, int radius,
+std::optional<ipr::Vec3d> colourBeforePointColour(const ipr::Image &linearRgb, double x, double y, int radius,
                                                  const Parameters &parameters);
 
-// Weight (CV_32FC1, [0, 1]) of every pixel of the stage's input in the
+// Weight (F32 of one channel, [0, 1]) of every pixel of the stage's input in the
 // neighbourhood of one point, as the point colour sees it (after saturation,
 // vibrance and the mixer): the range overlay. Empty for an invalid point or input.
-cv::Mat pointWeights(const cv::Mat &linearRgb, const Parameters &parameters, int point);
+ipr::Image pointWeights(const ipr::Image &linearRgb, const Parameters &parameters, int point);
 
 } // namespace PerceptualColour
 

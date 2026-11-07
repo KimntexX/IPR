@@ -18,7 +18,20 @@ std::optional<DecodedImageCache::Entry> DecodedImageCache::find(const QString &k
         return std::nullopt;
 
     touch(iterator);
-    return iterator->entry;
+    return sharedCopy(iterator->second.entry);
+}
+
+DecodedImageCache::Entry DecodedImageCache::sharedCopy(const Entry &kept)
+{
+    Entry entry;
+    entry.image = ColorPipeline::sharedCopy(kept.image);
+    entry.editProxy = ColorPipeline::sharedCopy(kept.editProxy);
+    entry.metadata = kept.metadata;
+    entry.dcpSource = kept.dcpSource;
+    entry.profileDigest = kept.profileDigest;
+    entry.fullSize = kept.fullSize;
+    entry.proxyOnly = kept.proxyOnly;
+    return entry;
 }
 
 void DecodedImageCache::insert(const QString &key, Entry entry)
@@ -32,8 +45,8 @@ void DecodedImageCache::insert(const QString &key, Entry entry)
 
     auto existing = m_entries.find(key);
     if (existing != m_entries.end()) {
-        m_sizeBytes -= existing->sizeBytes;
-        m_lru.erase(existing->lruPosition);
+        m_sizeBytes -= existing->second.sizeBytes;
+        m_lru.erase(existing->second.lruPosition);
         m_entries.erase(existing);
     }
 
@@ -42,7 +55,7 @@ void DecodedImageCache::insert(const QString &key, Entry entry)
     stored.entry = std::move(entry);
     stored.sizeBytes = entryBytes;
     stored.lruPosition = m_lru.begin();
-    m_entries.insert(key, std::move(stored));
+    m_entries.emplace(key, std::move(stored));
     m_sizeBytes += entryBytes;
     trim();
 }
@@ -51,9 +64,9 @@ std::optional<DecodedImageCache::Entry> DecodedImageCache::take(const QString &k
 {
     auto it = m_entries.find(key);
     if (it == m_entries.end()) return std::nullopt;
-    auto entry = std::move(it->entry);
-    m_sizeBytes -= it->sizeBytes;
-    m_lru.erase(it->lruPosition);
+    auto entry = std::move(it->second.entry);
+    m_sizeBytes -= it->second.sizeBytes;
+    m_lru.erase(it->second.lruPosition);
     m_entries.erase(it);
     return entry;
 }
@@ -70,7 +83,7 @@ bool DecodedImageCache::evictOldest()
     if (m_lru.empty()) return false;
     const QString key = m_lru.back();
     auto it = m_entries.find(key);
-    m_sizeBytes -= it->sizeBytes;
+    m_sizeBytes -= it->second.sizeBytes;
     m_entries.erase(it);
     m_lru.pop_back();
     ++m_evictions;
@@ -101,50 +114,51 @@ qsizetype DecodedImageCache::count() const
 quint64 DecodedImageCache::entrySizeBytes(const Entry &entry)
 {
     // A small image uses its original as edit proxy. Count each allocation
-    // only once rather than charging the same shallow cv::Mat twice.
+    // only once rather than charging the same shallow ipr::Image twice.
     QSet<quintptr> buffers;
     quint64 bytes = 0;
-    const auto add = [&buffers, &bytes](const cv::Mat &image) {
-        if (image.empty() || !image.data)
+    const auto count = [&buffers, &bytes](const void *start, size_t imageBytes) {
+        const quintptr address = reinterpret_cast<quintptr>(start);
+        if (buffers.contains(address))
             return;
-        const quintptr address = reinterpret_cast<quintptr>(image.datastart);
-        if (!buffers.contains(address)) {
-            buffers.insert(address);
-            const size_t imageBytes = image.total() * image.elemSize();
-            const quint64 cappedBytes = imageBytes >
-                    static_cast<size_t>(std::numeric_limits<quint64>::max())
-                ? std::numeric_limits<quint64>::max()
-                : static_cast<quint64>(imageBytes);
-            bytes = cappedBytes > std::numeric_limits<quint64>::max() - bytes
-                ? std::numeric_limits<quint64>::max()
-                : bytes + cappedBytes;
-        }
+        buffers.insert(address);
+        const quint64 cappedBytes = imageBytes >
+                static_cast<size_t>(std::numeric_limits<quint64>::max())
+            ? std::numeric_limits<quint64>::max()
+            : static_cast<quint64>(imageBytes);
+        bytes = cappedBytes > std::numeric_limits<quint64>::max() - bytes
+            ? std::numeric_limits<quint64>::max()
+            : bytes + cappedBytes;
     };
-    add(entry.image.linearRgba);
-    add(entry.editProxy.linearRgba);
+    const auto addImage = [&count](const ipr::Image &image) {
+        if (!image.empty())
+            count(image.block(), image.blockBytes());
+    };
+    addImage(entry.image.linearRgba);
+    addImage(entry.editProxy.linearRgba);
     if (entry.image.dcpContext) {
-        add(entry.image.dcpContext->cameraRgb);
-        add(entry.image.dcpContext->preLensCameraRgb);
+        addImage(entry.image.dcpContext->cameraRgb);
+        addImage(entry.image.dcpContext->preLensCameraRgb);
     }
     if (entry.editProxy.dcpContext) {
-        add(entry.editProxy.dcpContext->cameraRgb);
-        add(entry.editProxy.dcpContext->preLensCameraRgb);
+        addImage(entry.editProxy.dcpContext->cameraRgb);
+        addImage(entry.editProxy.dcpContext->preLensCameraRgb);
     }
     if (entry.dcpSource) {
-        add(entry.dcpSource->cameraRgb);
+        addImage(entry.dcpSource->cameraRgb);
         if (entry.dcpSource->workingContext) {
-            add(entry.dcpSource->workingContext->cameraRgb);
-            add(entry.dcpSource->workingContext->preLensCameraRgb);
+            addImage(entry.dcpSource->workingContext->cameraRgb);
+            addImage(entry.dcpSource->workingContext->preLensCameraRgb);
         }
     }
     return bytes;
 }
 
-void DecodedImageCache::touch(QHash<QString, StoredEntry>::iterator iterator)
+void DecodedImageCache::touch(Entries::iterator iterator)
 {
-    m_lru.erase(iterator->lruPosition);
-    m_lru.push_front(iterator.key());
-    iterator->lruPosition = m_lru.begin();
+    m_lru.erase(iterator->second.lruPosition);
+    m_lru.push_front(iterator->first);
+    iterator->second.lruPosition = m_lru.begin();
 }
 
 void DecodedImageCache::trim()
