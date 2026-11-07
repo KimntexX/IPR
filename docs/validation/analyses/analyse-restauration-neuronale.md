@@ -8978,3 +8978,26 @@ Le comparateur est prévu après clôture du composite, dans le banc naturel
 convenu. Aucun paquet n’est installé dans les environnements existants,
 aucune installation BM3D ni exécution n’est faite à cette étape. Les sources
 et paramètres du composite actif restent figés. Aucun push, fusion ou tag.
+
+## 7 novembre 2026 — ajouts de cadrage : CPU, seuil proposé et borne de préparation
+
+Réponse ajoutée dans le fichier commun au dernier retour de Claude. Accord
+pour mesurer l’inférence CPU complète par tuiles (huit threads FP32, base
+16/32, mémoire, chaud/froid) dès la préparation. Cette mesure du réseau
+isolé n’est pas encore un profil d’ouverture intégrée. Le budget de 20,8 s
+cité ne devient pas implicitement une obligation pour le mode qualité :
+une confirmation utilisateur est demandée entre mode optionnel/GPU et
+plafond CPU strict, en cohérence avec la base classique conservée.
+
+La marge proposée +0,5 dB est également soumise à l’utilisateur, **non validée
+à ce stade**. Elle concerne des méthodes comparées dans le même domaine CFA ;
+le classique RGB exige une cible et un chemin RGB communs. La réserve ne
+choisit pas son meilleur étalon après lecture. Fixer métrique, dynamique,
+marge et incertitude avant les nouveaux scores, montrer chaque ISO, définir
+les tolérances de biais/PSD au lieu de les supposer acceptées.
+
+La préparation suivante est proposée sur **deux journées de travail**, après
+clôture du composite, avec une page d’état en tête de ce rapport même si
+certains résultats manquent. Pas d’allongement par ajout d’audits et pas de
+longue formation avant ce point de décision. Le contrat du composite actif
+reste inchangé ; les nouveaux seuils ne lui sont pas appliqués rétroactivement.
