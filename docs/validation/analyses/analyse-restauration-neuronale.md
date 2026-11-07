@@ -7845,3 +7845,95 @@ Suivi actif : `build-patch_neural_restoration/study-sleep-watch-v001/progress.js
 Au lancement, la référence 73 est terminée et le bras bruit 71 est en cours ;
 aucun verdict sur les variantes n’est encore disponible. Les sources figées
 de l’apprentissage n’ont pas été modifiées.
+
+## 7 novembre 2026 — clôture de la comparaison et diagnostic des pertes
+
+La campagne du 6 novembre a terminé les six configurations appariées à
+256 pas à 15 h 19 Paris, sans erreur d’exécution. Aucun bras ne satisfait
+les critères de poursuite sur les deux initialisations. Le superviseur a
+demandé la veille à 15 h 20 et a enregistré son retour le lendemain. Il n’y
+a pas eu d’apprentissage nocturne. L’arrêt automatique a appliqué le plan
+préparé, mais n’a pas remplacé l’analyse des causes : cette étape manquait.
+
+À la demande de l’utilisateur, `diagnose_dru_controls.py` relit maintenant
+les **18 contrôles complets** (trois bras, deux initialisations, jalons
+0/128/256), soit 15 552 observations enregistrées. Les empreintes des
+sources, l’identité des observations, le poids initial apparié et les
+ordres physiques des couleurs sont vérifiés. Trois tests ciblés passent :
+correspondance site/couleur, refus des données invalides, et ratio des
+sommes MSE plutôt qu’une moyenne trompeuse de ratios. Aucun poids n’est
+chargé pour cette première analyse ; aucune nouvelle mesure GPU n’y est
+inventée.
+
+Mémoire canonique :
+[neural-dru-control-diagnosis-v001-20261107T095416Z.json](../raw/neural-dru-control-diagnosis-v001-20261107T095416Z.json).
+Ce JSON conserve les groupes par fréquence, amplitude, type chromatique,
+niveau de bruit, couleur, bras, graine et jalon ; les trajectoires et les
+effets appariés sont explicités. Les contrôles sont connus et déjà utilisés :
+ce diagnostic a posteriori n’est pas une confirmation indépendante.
+
+### Localisation du défaut
+
+Dans la référence, le gain moyen de signal au jalon 256 évolue ainsi
+(moyenne des groupes et canaux, pour chaque fréquence du générateur ;
+ces moyennes descriptives ne remplacent pas les critères par groupe) :
+
+| Fréquence du générateur | Graine 71 | Graine 73 |
+| --- | ---: | ---: |
+| 6 | 0,993 | 0,980 |
+| 10 | 0,967 | 0,912 |
+| 14 | 0,933 | 0,850 |
+| 18 | 0,910 | 0,835 |
+| 22 | 0,897 | 0,824 |
+| 26 | 0,899 | 0,810 |
+
+La perte se concentre donc sur les détails fins, tout en variant selon le
+canal et l’initialisation. La moyenne par canal sur les six configurations
+situe le bleu à 0,832, le rouge à 0,870 et les deux verts à 0,947/0,970 :
+c’est une description de ce banc particulier, pas une propriété générale
+du capteur ni une preuve de cause liée à la couleur.
+
+Entre 128 et 256 pas, le gain moyen de la référence baisse à la fréquence
+26 de 0,058 (graine 71) et 0,094 (73). Dans le même intervalle, le ratio MSE
+moyen à cette fréquence reste presque constant pour 71 (+0,001), et empire
+pour 73 (+0,152). La perte d’entraînement moyenne des 32 premiers/derniers
+pas baisse pourtant de 0,982 à 0,795/0,796. Cela montre une divergence entre
+le progrès de l’objectif sur les observations d’entraînement et la fidélité
+aux structures fines du contrôle. Les fenêtres ne portent pas sur les
+mêmes exemples : elles ne prouvent ni convergence ni optimum du modèle.
+
+La diversification du bruit protège mieux les basses et moyennes
+fréquences, mais ne résout pas les hautes. L’enrichissement des textures
+ne suffit pas avec cet objectif et ce budget. Il serait donc prématuré de
+conclure que le réseau manque seulement de temps d’entraînement. Les
+interventions testées n’isolent pas l’architecture et l’objectif ; aucune
+attribution causale définitive à l’un des deux n’est permise.
+
+### Complément lancé : dépendance à l’amplitude
+
+Les contrôles sauvegardés ne couvrent que l’amplitude forte 0,06. Il manque
+une mesure pour savoir si les petites structures sont encore davantage
+atténuées. Le banc GPU `probe_dru_amplitudes.py` est donc lancé, sans
+entraînement, sur tous les bras et les deux graines, aux jalons 128/256 :
+amplitudes **0,008 / 0,03 / 0,06**, fréquences **6 / 14 / 26**, trois angles,
+états achromatique/chromatique, deux niveaux de bruit. Une phase CFA et une
+réalisation de bruit sont conservées, soit **1 296 observations** ; cette
+restriction est déclarée et interdit de présenter ce sous-ensemble comme
+une validation générale. Les tirages gaussiens sont appariés ; la variance
+physique dépend encore du signal, donc l’image bruitée n’est pas identique
+entre amplitudes.
+
+Les observations corrigées et brutes, gains sinus/quadrature, erreurs DC,
+MSE et empreintes seront conservés. Les poids proviennent des checkpoints
+vérifiés ; aucun optimiseur ni apprentissage n’est exécuté. Budget maximal
+20 minutes, quatre threads CPU, priorité basse, limite processus souple
+5 Gio/dure 6 Gio, mémoire système 92 %, allocation CUDA 50 %. Le suivi est
+`build-patch_neural_restoration/dru-amplitude-diagnosis-v001/progress.json` ;
+un fichier `STOP` dans ce dossier demande l’arrêt au prochain contrôle.
+Aucune mise en veille n’est demandée pour ce test de journée.
+
+La prochaine décision dépend de cette mesure : séparer une simple réponse
+fréquentielle d’une suppression des faibles contrastes. Un essai modifiant
+l’objectif demanderait ensuite une référence appariée au même budget et
+une pondération fixée avant mesure ; continuer longtemps les seuls poids
+actuels n’est pas la conclusion de ce diagnostic.

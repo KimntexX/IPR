@@ -1,0 +1,362 @@
+{
+  "schema_version": 1,
+  "status": "completed_scheduler_no_fidelity_candidate_for_night",
+  "pid": 12856,
+  "started_at_utc": "2026-11-06T12:28:59.954022+00:00",
+  "manifest_sha256": "b1656b36b325b588c37125264db8452c828fe7dd85c3ca5f291f32c2920dd86a",
+  "execution": {
+    "schema_version": 1,
+    "created_at_utc": "2026-11-06T12:28:58.036224+00:00",
+    "scientific_plan_sha256": [
+      "0d329a0a22455fb5f92600dbbe48d3f08b232010890a0e87d79d31388b407df6",
+      "a5a3c8396853940df1623e3b33011828dfa55390c11a08018f6b6c42e08a7d9e",
+      "0d2b61e38cd63ff2ae520b50539ae9e140923f0c1c567c9fde120cac7da8c04b"
+    ],
+    "training_deadline_utc": "2026-11-07T07:45:00+00:00",
+    "hard_stop_utc": "2026-11-07T08:45:00+00:00",
+    "resources": {
+      "hard_mib": 6144,
+      "soft_mib": 5120,
+      "system_fraction": 0.92
+    },
+    "load": {
+      "yield_memory_fraction": 0.85,
+      "yield_external_cpu_fraction": 0.8,
+      "pressure_seconds": 15
+    },
+    "runtime_tools": {
+      "train_dru_cfa.py": "b2f7a03f06424dab2a254f9fc3004a70fa493039d16c4ca6887ac0866e59c067",
+      "dru_execution.py": "d43e021e9b8456abb7ad96d6d76bae19f520bf8df53fec0dc7a9798eebac5dc2",
+      "load_control.py": "11cb829f0fa2fc86de20c1d0e06ea0b2f573891508136aaf8bbdd3ad6ef90c75",
+      "run_neural_load_scheduler.py": "6474f37b691a685b26be0dd9576ce8ce03db6756b29175ff1c56fe59f65ff6a8",
+      "scheduled_comparison_results.py": "8d5cf1489974d85bdd735842f10b594fd3444fc90569124f0642b5b67eb9fc27",
+      "dru_resume_policy.py": "2ee9da3c4ecab9f72cd681de5d7c57957321c3e7123f752d0fe1bab26f6a1bb5",
+      "check_dru_execution_parity.py": "9256276d49087d36f94b944c8353ea90f5cc8c398092825872ee5960f2460ee6"
+    },
+    "tool_amendments": {
+      "train_dru_cfa.py": {
+        "from_sha256": "b27faeb780188e66499ba81df834e91cb33d8d91d62413799aa60ed96d234dd9",
+        "to_sha256": "b2f7a03f06424dab2a254f9fc3004a70fa493039d16c4ca6887ac0866e59c067",
+        "reason": "Explicit execution contract, cooperative pauses with pending-control recovery, parent continuation; numerical update AST unchanged after removing monitoring calls."
+      }
+    },
+    "numerical_proof": {
+      "ancestor_git_sha": "a973661",
+      "update_ast_equal_excluding_monitoring": true,
+      "update_ast_sha256": "11c27e4f4c904eaedcb399eb78f0d8dc8903722ad0aae495abc80bf513b2a711"
+    },
+    "authorization": "User requests load scheduling, autonomous study from14h and possible longer training only with useful pilot; resources free by Nov7 10h Paris.",
+    "limits": "Known synthetic controls, no camera-profile production changes; new5GiB soft private quota stays below6GiB hard and92percent system cap."
+  },
+  "stages": [
+    {
+      "label": "execution-qualification",
+      "started_at_utc": "2026-11-06T12:30:10.032001+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\venv-neural-cuda\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\train_dru_cfa.py",
+        "--plan",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-data-comparison-plan-v001\\reference.json",
+        "--output",
+        "build-patch_neural_restoration\\neural-load-campaign-v001\\execution-qualification",
+        "--seed",
+        "71",
+        "--preflight",
+        "--execution",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\neural-load-plan-v001\\execution.json"
+      ],
+      "pid": 27176,
+      "returncode": 0,
+      "finished_at_utc": "2026-11-06T12:30:46.800211+00:00"
+    },
+    {
+      "label": "execution-parity",
+      "started_at_utc": "2026-11-06T12:30:46.804558+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\venv-neural-cuda\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\check_dru_execution_parity.py",
+        "--prior",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-data-comparison-v001\\reference-preflight\\resume.pt",
+        "--current",
+        "build-patch_neural_restoration\\neural-load-campaign-v001\\execution-qualification\\resume.pt",
+        "--output",
+        "build-patch_neural_restoration\\neural-load-campaign-v001\\execution-parity.json"
+      ],
+      "pid": 16904,
+      "returncode": 0,
+      "finished_at_utc": "2026-11-06T12:30:50.251959+00:00"
+    },
+    {
+      "label": "noise-preflight",
+      "started_at_utc": "2026-11-06T13:01:03.239056+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\venv-neural-cuda\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\train_dru_cfa.py",
+        "--plan",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-data-comparison-plan-v001\\noise.json",
+        "--output",
+        "build-patch_neural_restoration\\neural-load-campaign-v001\\noise-preflight",
+        "--seed",
+        "71",
+        "--preflight",
+        "--execution",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\neural-load-plan-v001\\execution.json"
+      ],
+      "pid": 27992,
+      "returncode": 0,
+      "finished_at_utc": "2026-11-06T13:01:39.272011+00:00"
+    },
+    {
+      "label": "details-preflight",
+      "started_at_utc": "2026-11-06T13:02:39.330512+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\venv-neural-cuda\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\train_dru_cfa.py",
+        "--plan",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-data-comparison-plan-v001\\details.json",
+        "--output",
+        "build-patch_neural_restoration\\neural-load-campaign-v001\\details-preflight",
+        "--seed",
+        "71",
+        "--preflight",
+        "--execution",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\neural-load-plan-v001\\execution.json"
+      ],
+      "pid": 33276,
+      "returncode": 0,
+      "finished_at_utc": "2026-11-06T13:03:15.334145+00:00"
+    },
+    {
+      "label": "reuse-reference-71",
+      "sha256": "9e7f2b814dd20b32aef30ecee37df1c9fa04f321ec5bf195fc8f94ff32a68aef"
+    },
+    {
+      "label": "reference-73",
+      "started_at_utc": "2026-11-06T13:04:16.705198+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\venv-neural-cuda\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\train_dru_cfa.py",
+        "--plan",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-data-comparison-plan-v001\\reference.json",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-data-comparison-v001\\reference\\seed73",
+        "--seed",
+        "73",
+        "--execution",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\neural-load-plan-v001\\execution.json",
+        "--resume"
+      ],
+      "pid": 21576,
+      "returncode": 0,
+      "finished_at_utc": "2026-11-06T13:08:04.509205+00:00"
+    },
+    {
+      "label": "noise-71",
+      "started_at_utc": "2026-11-06T13:09:04.878390+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\venv-neural-cuda\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\train_dru_cfa.py",
+        "--plan",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-data-comparison-plan-v001\\noise.json",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-data-comparison-v001\\noise\\seed71",
+        "--seed",
+        "71",
+        "--execution",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\neural-load-plan-v001\\execution.json"
+      ],
+      "pid": 19192,
+      "returncode": 0,
+      "finished_at_utc": "2026-11-06T13:26:26.887962+00:00"
+    },
+    {
+      "label": "noise-73",
+      "started_at_utc": "2026-11-06T13:27:27.320144+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\venv-neural-cuda\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\train_dru_cfa.py",
+        "--plan",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-data-comparison-plan-v001\\noise.json",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-data-comparison-v001\\noise\\seed73",
+        "--seed",
+        "73",
+        "--execution",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\neural-load-plan-v001\\execution.json"
+      ],
+      "pid": 476,
+      "returncode": 0,
+      "finished_at_utc": "2026-11-06T13:44:14.937434+00:00"
+    },
+    {
+      "label": "details-71",
+      "started_at_utc": "2026-11-06T13:45:15.362363+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\venv-neural-cuda\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\train_dru_cfa.py",
+        "--plan",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-data-comparison-plan-v001\\details.json",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-data-comparison-v001\\details\\seed71",
+        "--seed",
+        "71",
+        "--execution",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\neural-load-plan-v001\\execution.json"
+      ],
+      "pid": 32676,
+      "returncode": 0,
+      "finished_at_utc": "2026-11-06T14:02:01.172260+00:00"
+    },
+    {
+      "label": "details-73",
+      "started_at_utc": "2026-11-06T14:03:01.593888+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\venv-neural-cuda\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\train_dru_cfa.py",
+        "--plan",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-data-comparison-plan-v001\\details.json",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-data-comparison-v001\\details\\seed73",
+        "--seed",
+        "73",
+        "--execution",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\neural-load-plan-v001\\execution.json"
+      ],
+      "pid": 34160,
+      "returncode": 0,
+      "finished_at_utc": "2026-11-06T14:19:44.468041+00:00"
+    }
+  ],
+  "assessments": [
+    {
+      "stage": "comparison256",
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\neural-load-campaign-v001\\assessment-comparison256.json",
+      "sha256": "4b8648c01a6a4ba43c6b50123f1ab12eba175e3d9bea3ffe3e26575d7eabe961",
+      "assessment": {
+        "step": 256,
+        "rows": [
+          {
+            "arm": "reference",
+            "seed": 71,
+            "step": 256,
+            "groups_below095": 19,
+            "minimum_gain": 0.6789648187252482,
+            "maximum_gain": 1.0925271676318327,
+            "median_mse_ratio": 0.9527043745191425,
+            "maximum_mse_ratio": 1.1708083985151716
+          },
+          {
+            "arm": "reference",
+            "seed": 73,
+            "step": 256,
+            "groups_below095": 21,
+            "minimum_gain": 0.09523186356682348,
+            "maximum_gain": 1.083132666916888,
+            "median_mse_ratio": 1.030417732709975,
+            "maximum_mse_ratio": 1.2348535403039622
+          },
+          {
+            "arm": "noise",
+            "seed": 71,
+            "step": 256,
+            "groups_below095": 13,
+            "minimum_gain": 0.6659273600817294,
+            "maximum_gain": 1.122659093315223,
+            "median_mse_ratio": 0.9292705890869457,
+            "maximum_mse_ratio": 1.247432181350942
+          },
+          {
+            "arm": "noise",
+            "seed": 73,
+            "step": 256,
+            "groups_below095": 19,
+            "minimum_gain": 0.25926819658379124,
+            "maximum_gain": 1.0832702861608103,
+            "median_mse_ratio": 1.0306565809981625,
+            "maximum_mse_ratio": 1.1925872068781813
+          },
+          {
+            "arm": "details",
+            "seed": 71,
+            "step": 256,
+            "groups_below095": 19,
+            "minimum_gain": 0.6694017073149837,
+            "maximum_gain": 1.1650817497210408,
+            "median_mse_ratio": 0.9592012953669065,
+            "maximum_mse_ratio": 1.1905995130645204
+          },
+          {
+            "arm": "details",
+            "seed": 73,
+            "step": 256,
+            "groups_below095": 21,
+            "minimum_gain": -0.05460313367868284,
+            "maximum_gain": 1.1088598758462704,
+            "median_mse_ratio": 1.0323999216897364,
+            "maximum_mse_ratio": 1.3316670315443495
+          }
+        ],
+        "strict_candidates": [],
+        "promising_candidates": [],
+        "scope": "Known development numeric gates only; not independent or photographic validation. Thresholds fixed before scheduling."
+      }
+    }
+  ],
+  "load": {
+    "at_utc": "2026-11-06T14:03:01.588636+00:00",
+    "memory": {
+      "system_total_bytes": 16933507072,
+      "system_available_bytes": 9146765312,
+      "system_used_fraction": 0.4598422362769483,
+      "process_rss_bytes": 35340288,
+      "process_private_bytes": 34471936,
+      "process_peak_rss_bytes": 40792064,
+      "process_peak_pagefile_bytes": 40144896
+    },
+    "cpu": {
+      "total_cpu_fraction": 0.016447876447876486,
+      "process_cpu_fraction": 0.0,
+      "external_cpu_fraction": 0.016447876447876486
+    }
+  },
+  "parity": {
+    "status": "passed_execution_amendment_parity",
+    "measured_at_utc": "2026-11-06T12:30:49.957019+00:00",
+    "checkpoints": [
+      {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-data-comparison-v001\\reference-preflight\\resume.pt",
+        "sha256": "b434b23b920e87e6f722f50ef0fd7651196b76b38c4d2c69aed0f4b69040a1b2",
+        "step": 8,
+        "losses": [
+          0.7461819648742676,
+          0.9993632584810257,
+          0.9958458244800568,
+          0.9998504966497421,
+          0.9986728876829147,
+          1.0017489790916443,
+          0.9977790266275406,
+          0.9949692338705063
+        ],
+        "trajectory": "17392ebc7224c7385fedfa33f95356cd4c6230864d0ea2f3735b49b5de5bde45"
+      },
+      {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\neural-load-campaign-v001\\execution-qualification\\resume.pt",
+        "sha256": "b434b23b920e87e6f722f50ef0fd7651196b76b38c4d2c69aed0f4b69040a1b2",
+        "step": 8,
+        "losses": [
+          0.7461819648742676,
+          0.9993632584810257,
+          0.9958458244800568,
+          0.9998504966497421,
+          0.9986728876829147,
+          1.0017489790916443,
+          0.9977790266275406,
+          0.9949692338705063
+        ],
+        "trajectory": "17392ebc7224c7385fedfa33f95356cd4c6230864d0ea2f3735b49b5de5bde45"
+      }
+    ],
+    "scope": "Eight matched reference updates, model+Adam+loss exact; not a universal equivalence proof or photo qualification."
+  },
+  "finished_at_utc": "2026-11-06T14:19:44.876485+00:00"
+}
