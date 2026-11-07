@@ -9001,3 +9001,16 @@ clôture du composite, avec une page d’état en tête de ce rapport même si
 certains résultats manquent. Pas d’allongement par ajout d’audits et pas de
 longue formation avant ce point de décision. Le contrat du composite actif
 reste inchangé ; les nouveaux seuils ne lui sont pas appliqués rétroactivement.
+
+## 7 novembre 2026 — cible PSNR acceptée, politique CPU encore à clarifier
+
+L’utilisateur accepte **+0,5 dB comme marge utile** pour les futurs tests
+CFA contre des étalons CFA fixés à l’avance, avec validation visuelle des
+détails et couleurs. Le classique RGB reste comparé dans un domaine RGB
+commun. Ce choix ne modifie pas rétroactivement le contrat du composite.
+
+La question CPU n’est pas tranchée : l’utilisateur demande la différence
+entre mode qualité optionnel (éventuellement lent/GPU, classique conservé)
+et plafond CPU strict de 20,8 s. Aucune de ces deux politiques n’est déclarée
+validée. La réponse explique leurs conséquences de produit avant sélection ;
+le profil de coût réel reste à mesurer dans les deux cas.
