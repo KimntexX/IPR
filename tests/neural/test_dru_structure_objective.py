@@ -33,5 +33,13 @@ class StructureObjectiveTests(unittest.TestCase):
         self.assertTrue(torch.isfinite(p.grad).all())
         with self.assertRaises(ValueError):structure_penalty(p,p,8)
 
+    def test_haar_dispatch_uses_clean_variance_only_in_loss(self):
+        target=torch.randn(1,4,64,64,generator=torch.Generator().manual_seed(36))*.02
+        prediction=(.9*target).requires_grad_();estimated=torch.full_like(target,.01);known=torch.full_like(target,.012)
+        total,mse,structure=loss_components(prediction,target,estimated,'haar_noise_aware_v1',0,known,.1)
+        torch.testing.assert_close(total,mse+.1*structure)
+        total.backward();self.assertTrue(torch.isfinite(prediction.grad).all())
+        with self.assertRaises(ValueError):loss_components(prediction,target,estimated,'haar_noise_aware_v1',0)
+
 
 if __name__=='__main__':unittest.main()

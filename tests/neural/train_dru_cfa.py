@@ -26,7 +26,9 @@ def run(plan_path,output,seed,preflight=False,resume=False,execution_path=None):
     if (plan['data_arm'] not in ('reference','noise','details') or not isinstance(plan['data_seed'],int)
             or isinstance(plan['data_seed'],bool) or plan['data_seed']<0):raise ValueError('Explicit data arm and independent seed required')
     objective=plan.get('objective','mse')
-    if objective not in ('mse','structure_projection_v1'):raise ValueError('Unknown training objective')
+    if objective not in ('mse','haar_noise_aware_v1'):raise ValueError('Unknown training objective')
+    weight=plan.get('structure_weight',1.)
+    if not isinstance(weight,(int,float)) or isinstance(weight,bool) or not 0<weight<=1:raise ValueError('Declared positive structure weight up to one required')
     execution=load_execution(execution_path,plan_path,root)
     validate_sources(plan,execution,root)
     if sha256(Path(plan['noise_source']))!=plan['noise_sha256']:raise ValueError('Noise source changed')
@@ -34,7 +36,7 @@ def run(plan_path,output,seed,preflight=False,resume=False,execution_path=None):
     previous=json.loads((output/'result.json').read_text(encoding='utf-8')) if resume else None
     result=dict(schema_version=1,status='started',seed=seed,preflight=preflight,plan_sha256=sha256(plan_path),
         started_at_utc=datetime.now(timezone.utc).isoformat(),losses=[],milestones=[],controls=[],data_seed=plan['data_seed'],data_arm=plan['data_arm'])
-    result.update(objective=objective,loss_components={})
+    result.update(objective=objective,structure_weight=weight,loss_components={})
     if execution is not None:result['execution']=dict(path=str(execution_path.resolve()),sha256=sha256(execution_path),contract=execution)
     if previous is not None:
         result['loss_components']=previous.get('loss_components',{})
@@ -56,9 +58,11 @@ def run(plan_path,output,seed,preflight=False,resume=False,execution_path=None):
             trace.phase('torch-import')
             import torch
             from dru_cfa import create
-            from dru_checkpoint import save,restore,fingerprint
+            from dru_checkpoint import save,restore,fingerprint,link_identical_checkpoint
             from dru_training_data import example
             from dru_structure_objective import loss_components
+            from dru_clean_variance import clean_sigma
+            from dru_comparison_policy import scenario_for
             from dru_known_controls import evaluate
             torch.set_num_threads(4);torch.set_num_interop_threads(1)
             if not torch.cuda.is_available() or torch.cuda.mem_get_info()[0]<4*1024**3:raise RuntimeError('CUDA unavailable or busy')
@@ -114,16 +118,21 @@ def run(plan_path,output,seed,preflight=False,resume=False,execution_path=None):
                     packed,sigma,tags,target=example((step-1)*4+micro,plan['data_seed'],scenarios,arm=plan['data_arm'])
                     phase('host-to-device',step,micro)
                     packed,sigma,tags,target=(x.cuda() for x in (packed,sigma,tags,target))
+                    known=None
+                    if objective=='haar_noise_aware_v1':
+                        serial=(step-1)*4+micro;identity=280000000+plan['data_seed']*100000+serial
+                        scenario=scenario_for(serial,identity,scenarios,plan['data_arm'])
+                        known=clean_sigma(target,tags,scenario)
                     phase('forward',step,micro)
                     prediction=model.correct_observations(packed,sigma,tags)
-                    combined,mse,structure=loss_components(prediction,target,sigma,objective)
+                    combined,mse,structure=loss_components(prediction,target,sigma,objective,known_sigma=known,weight=weight)
                     loss=combined/4
                     if not torch.isfinite(loss):raise ValueError('Nonfinite training loss')
                     if loss.requires_grad:
                         phase('backward',step,micro);loss.backward()
                     total+=float(loss.detach())
                     parts[0]+=float(mse.detach())/4;parts[1]+=float(structure.detach())/4
-                    del prediction,loss,combined,mse,structure,packed,sigma,tags,target
+                    del prediction,loss,combined,mse,structure,packed,sigma,tags,target,known
                 phase('optimizer-update',step)
                 torch.nn.utils.clip_grad_norm_(model.parameters(),1.,error_if_nonfinite=True)
                 optimizer.step();optimizer.zero_grad(set_to_none=True);torch.cuda.synchronize()
@@ -170,6 +179,11 @@ def run(plan_path,output,seed,preflight=False,resume=False,execution_path=None):
                 result['status']='passed_dru_training_preflight_discarded'
             else:
                 snapshot('weights.pt');result['status']='completed_dru_bootstrap_not_photographic_qualification'
+                final=output/f'checkpoint-{completed:06d}.pt'
+                result['deduplicated_checkpoint_paths']=[]
+                if final.exists():
+                    for name in ('weights.pt','resume.pt'):
+                        if link_identical_checkpoint(final,output/name):result['deduplicated_checkpoint_paths'].append(name)
             result['peak_cuda_allocated_bytes']=torch.cuda.max_memory_allocated()
             del model,optimizer;gc.collect();torch.cuda.empty_cache()
     except (TimeoutError,InterruptedError) as error:

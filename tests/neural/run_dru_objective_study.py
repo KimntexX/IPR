@@ -17,25 +17,33 @@ def write(path,value):
 
 
 def prepare(root):
-    build=root/'build-patch_neural_restoration';folder=build/'dru-objective-plan-v001';folder.mkdir(exist_ok=False)
+    build=root/'build-patch_neural_restoration';folder=build/'dru-haar-convergence-plan-v001';folder.mkdir(exist_ok=False)
     source=build/'dru-data-comparison-plan-v001/reference.json';prior=json.loads(source.read_text(encoding='utf-8'))
-    now=datetime.now(timezone.utc);hard=(now+timedelta(hours=3)).isoformat();training=(now+timedelta(hours=2,minutes=45)).isoformat()
-    names=set(prior['tools'])|{'dru_structure_objective.py','dru_execution.py','load_control.py','run_dru_objective_study.py','scheduled_comparison_results.py'}
+    audit=json.loads((build/'dru-haar-recipe-audit-v001/result.json').read_text(encoding='utf-8'))
+    if audit['status']!='completed_actual_recipe_haar_audit' or not all(audit['checks'].values()):raise ValueError('Complete successful recipe qualification required')
+    for name,digest in audit['plan']['tools'].items():
+        if sha256(root/'tests/neural'/name)!=digest:raise ValueError('Qualified Haar recipe source changed: '+name)
+    now=datetime.now(timezone.utc);hard=(now+timedelta(hours=6)).isoformat();training=(now+timedelta(hours=5,minutes=45)).isoformat()
+    names=set(prior['tools'])|{'dru_structure_objective.py','dru_haar_objective.py','dru_clean_variance.py','dru_execution.py','load_control.py','run_dru_objective_study.py','scheduled_comparison_results.py'}
     hashes={n:sha256(root/'tests/neural'/n) for n in sorted(names)}
     manifest=dict(schema_version=1,status='sealed_matched_objective_study',created_at_utc=now.isoformat(),
-        source_sha256=sha256(source),tools=hashes,arms=[],hard_stop_utc=hard,
-        fixed=dict(seeds=[71,73],data_seed=71,data_arm='reference',steps=256,learning_rate=.0001,
-            accumulation=4,structure_weight=1.,structure_scales=[1,2,4],energy_epsilon=1e-8),
+        source_sha256=sha256(source),tools=hashes,arms=[],hard_stop_utc=hard,output=str(build/'dru-haar-convergence-v001'),
+        fixed=dict(seeds=[71,73],data_seed=71,data_arm='reference',steps=1024,learning_rate=.0001,
+            accumulation=4,structure_weight=.1,haar_levels=3,coefficient_tile_side=8,energy_epsilon=1e-8),
+        control_steps=[0,128,256,512,1024],
+        audit=dict(path=str(build/'dru-haar-recipe-audit-v001/result.json'),sha256=sha256(build/'dru-haar-recipe-audit-v001/result.json'),
+            reason='Training-recipe output-gradient ratio p95=9.25; fixed weight0.1 before any trained Haar scores. No validation-set weight tuning.'),
         policy='All four runs from scratch; no best seed/checkpoint, coefficient sweep, automatic continuation or production change.',
         limits=['Known development controls, not independent qualification.',
-            'Clean-gradient projection is an experimental contrast constraint, not a published DRUNet objective.',
+            'Noise-aware local Haar projection is an experimental constraint, not a published DRUNet objective.',
             'Increased residual noise or gradient artefacts remain failure modes.'])
     plans=[]
-    for label,objective in [('reference','mse'),('structured','structure_projection_v1')]:
+    for label,objective in [('reference','mse'),('haar','haar_noise_aware_v1')]:
         plan=dict(prior,tools=hashes,objective=objective,created_at_utc=now.isoformat(),training_deadline_utc=training,
-            campaign_deadline_utc=hard,purpose='Matched objective-only comparison with fixed clean-gradient projection')
+            campaign_deadline_utc=hard,steps_per_seed=1024,milestones=[128,256,512,1024],structure_weight=.1,
+            purpose='Matched 1024-update convergence comparison; MSE versus noise-aware local Haar, loss-only clean variance')
         path=folder/f'{label}.json';write(path,plan);plans.append(path)
-        manifest['arms'].append(dict(name=label,path=str(path),sha256=sha256(path)))
+        manifest['arms'].append(dict(name=label,path=str(path),sha256=sha256(path),plan=plan))
     execution=dict(schema_version=1,scientific_plan_sha256=[sha256(p) for p in plans],runtime_tools=hashes,tool_amendments={},
         training_deadline_utc=training,hard_stop_utc=hard,resources=dict(soft_mib=5120,hard_mib=6144,system_fraction=.92),
         load=dict(yield_memory_fraction=.85,yield_external_cpu_fraction=.8,pressure_seconds=15))
@@ -47,14 +55,16 @@ def prepare(root):
     print(folder/'manifest.json',flush=True)
 
 
-def summarize(root,output):
+def summarize(output):
     result=dict(status='completed_matched_objective_study_known_only',rows=[],sources=[],paired_effects=[])
     controls={};states={};identities=None
-    for arm in ('reference','structured'):
+    for arm in ('reference','haar'):
         for seed in (71,73):
             folder=output/arm/f'seed{seed}';path=folder/'result.json';state=json.loads(path.read_text(encoding='utf-8'))
+            if state.get('status')!='completed_dru_bootstrap_not_photographic_qualification' or state.get('completed_steps')!=1024:
+                raise ValueError('All four complete 1024-update runs required')
             states[arm,seed]=state;result['sources'].append(dict(path=str(path),sha256=sha256(path)))
-            for step in (0,128,256):
+            for step in (0,128,256,512,1024):
                 path=folder/f'control-{step:06d}.json';value=json.loads(path.read_text(encoding='utf-8'))
                 ids=[(r['observation_sha256'],r['sigma_sha256']) for r in value['records']]
                 if len(ids)!=864 or len(set(ids))!=864 or identities is not None and ids!=identities:raise ValueError('Unpaired full controls')
@@ -62,11 +72,11 @@ def summarize(root,output):
                 result['sources'].append(dict(path=str(path),sha256=sha256(path)))
                 result['rows'].append(dict(arm=arm,seed=seed,step=step,**metrics(value),groups=value['groups']))
     for seed in (71,73):
-        if states['reference',seed]['initial_model_fingerprint']!=states['structured',seed]['initial_model_fingerprint']:
+        if states['reference',seed]['initial_model_fingerprint']!=states['haar',seed]['initial_model_fingerprint']:
             raise ValueError('Initial model pairing failed')
-        if controls['reference',seed,0]!=controls['structured',seed,0]:raise ValueError('Initial controls differ')
-        for step in (128,256):
-            ref=controls['reference',seed,step]['groups'];candidate=controls['structured',seed,step]['groups']
+        if controls['reference',seed,0]!=controls['haar',seed,0]:raise ValueError('Initial controls differ')
+        for step in (128,256,512,1024):
+            ref=controls['reference',seed,step]['groups'];candidate=controls['haar',seed,step]['groups']
             if len(ref)!=len(candidate):raise ValueError('Incomplete groups')
             for a,b in zip(ref,candidate):
                 names=('frequency','chromatic','noise_index','fields')
@@ -74,18 +84,20 @@ def summarize(root,output):
                 result['paired_effects'].append(dict(seed=seed,step=step,**{k:a[k] for k in names},
                     gain_delta=[y-x for x,y in zip(a['mean_sensor_gain_by_colour'],b['mean_sensor_gain_by_colour'])],
                     mse_ratio_delta=b['sensor_mse_ratio']-a['sensor_mse_ratio']))
-    by={(r['arm'],r['seed']):r for r in result['rows'] if r['step']==256}
-    result['strict_both_seeds']=all(strict(by['structured',s]) for s in (71,73))
-    result['promising_both_seeds']=all(promising(by['structured',s],by['reference',s]) for s in (71,73))
+    by={(r['arm'],r['seed']):r for r in result['rows'] if r['step']==1024}
+    result['strict_both_seeds']=all(strict(by['haar',s]) for s in (71,73))
+    result['promising_both_seeds']=all(promising(by['haar',s],by['reference',s]) for s in (71,73))
     write(output/'assessment.json',result)
     return result
 
 
 def run(root,plan_path):
-    build=root/'build-patch_neural_restoration';output=build/'dru-objective-study-v001'
+    build=root/'build-patch_neural_restoration'
     if not plan_path.resolve().is_relative_to(build.resolve()):raise ValueError('Owned plan required')
     plan=json.loads(plan_path.read_text(encoding='utf-8'))
     if plan['status']!='sealed_matched_objective_study':raise ValueError('Sealed objective study required')
+    output=Path(plan['output'])
+    if not output.resolve().is_relative_to(build.resolve()) or output.resolve()==build.resolve():raise ValueError('Owned fresh campaign output required')
     output.mkdir(exist_ok=False);deadline=datetime.fromisoformat(plan['hard_stop_utc']).timestamp()
     result=dict(status='started',pid=os.getpid(),started_at_utc=datetime.now(timezone.utc).isoformat(),plan_sha256=sha256(plan_path),stages=[])
     gpu=root.parent/'venv-neural-cuda/Scripts/python.exe';execution=Path(plan['execution']['path'])
@@ -95,7 +107,7 @@ def run(root,plan_path):
     if not power.SetThreadExecutionState(0x80000001):raise ctypes.WinError(ctypes.get_last_error())
     def report():write(output/'progress.json',result)
     def check():
-        if time.time()>=deadline:raise TimeoutError('Three-hour study deadline')
+        if time.time()>=deadline:raise TimeoutError('Six-hour study deadline')
         if (output/'STOP').exists():raise InterruptedError('User study stop')
         if any(sha256(root/'tests/neural'/n)!=h for n,h in plan['tools'].items()):raise ValueError('Sealed source changed')
     def admit():
@@ -141,7 +153,8 @@ def run(root,plan_path):
             raise RuntimeError('Worker failed or paused; no automatic retries: '+name)
         if label=='reference':
             prior=json.loads((build/f'dru-data-comparison-v001/reference/seed{seed}/result.json').read_text(encoding='utf-8'))
-            if state['losses']!=prior['losses'][:8 if preflight else 256]:raise ValueError('MSE replay losses changed')
+            limit=8 if preflight else 256
+            if state['losses'][:limit]!=prior['losses'][:limit]:raise ValueError('MSE replay losses changed')
             if not preflight:
                 for step in (0,128,256):
                     old=build/f'dru-data-comparison-v001/reference/seed{seed}/control-{step:06d}.json'
@@ -152,7 +165,7 @@ def run(root,plan_path):
         for arm in plan['arms']:command(arm,71,True)
         for arm in plan['arms']:
             for seed in (71,73):command(arm,seed,False)
-        result['assessment']=summarize(root,output);result['status']='completed_matched_objective_study'
+        result['assessment']=summarize(output);result['status']='completed_matched_objective_study'
     except Exception as error:
         result.update(status='stopped_on_error_or_load',error=str(error));raise
     finally:

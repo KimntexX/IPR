@@ -1,7 +1,9 @@
-"""Training-only clean-gradient projection; no inference or production change."""
+"""Current training losses and global-projection diagnostic witness; no inference hook."""
+import math
 import torch
 from torch.nn import functional as F
 from dru_training_data import core_loss
+from dru_haar_objective import noise_aware_haar_penalty
 
 
 def structure_penalty(prediction,target,margin=192):
@@ -22,9 +24,11 @@ def structure_penalty(prediction,target,margin=192):
     return torch.stack(penalties).mean()
 
 
-def loss_components(prediction,target,sigma,objective,margin=192):
-    if objective not in ('mse','structure_projection_v1'):raise ValueError('Unknown training objective')
+def loss_components(prediction,target,sigma,objective,margin=192,known_sigma=None,weight=1.):
+    if objective not in ('mse','haar_noise_aware_v1'):raise ValueError('Unknown training objective')
+    if not math.isfinite(weight) or weight<=0:raise ValueError('Positive finite objective weight required')
     mse=core_loss(prediction,target,sigma,margin)
-    structure=mse.new_zeros(()) if objective=='mse' else structure_penalty(prediction,target,margin)
-    # Fixed before any outcome: unit weight, equal three-scale/plane weighting.
-    return mse+structure,mse,structure
+    if objective=='mse':return mse,mse,mse.new_zeros(())
+    if known_sigma is None:raise ValueError('Known synthetic variance required for Haar training loss')
+    structure=noise_aware_haar_penalty(prediction,target,known_sigma,margin)
+    return mse+weight*structure,mse,structure

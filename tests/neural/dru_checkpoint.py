@@ -49,3 +49,24 @@ def restore(path,model,optimizer,context):
     model.load_state_dict(state['model_state'],strict=True);optimizer.load_state_dict(state['optimizer_state'])
     torch.set_rng_state(state['cpu_rng']);torch.cuda.set_rng_state_all(state['cuda_rng'])
     return step,state['losses']
+
+
+def link_identical_checkpoint(source,target):
+    """Keep both same-directory paths; atomically share storage only for equal bytes."""
+    source=Path(source).resolve();target=Path(target).resolve()
+    if source.parent!=target.parent or source.suffix!='.pt' or target.suffix!='.pt':raise ValueError('Same-directory checkpoints required')
+    if os.path.samefile(source,target):return False
+    if source.stat().st_size!=target.stat().st_size:return False
+    def digest(path):
+        h=hashlib.sha256()
+        with path.open('rb') as stream:
+            while block:=stream.read(4*1024**2):h.update(block)
+        return h.digest()
+    if digest(source)!=digest(target):return False
+    temporary=target.with_name(target.name+'.dedup-link')
+    if temporary.exists():raise ValueError('Existing checkpoint temporary link')
+    os.link(source,temporary)
+    try:os.replace(temporary,target)
+    finally:temporary.unlink(missing_ok=True)
+    if not os.path.samefile(source,target):raise RuntimeError('Checkpoint link identity failed')
+    return True

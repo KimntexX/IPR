@@ -1,0 +1,265 @@
+{
+  "manifest": {
+    "schema_version": 1,
+    "status": "sealed_matched_objective_study",
+    "created_at_utc": "2026-11-07T17:27:02.408772+00:00",
+    "source_sha256": "0d329a0a22455fb5f92600dbbe48d3f08b232010890a0e87d79d31388b407df6",
+    "tools": {
+      "bayer_canonical.py": "a759c19f855f53dc96b8631e6f3d7817d99eb28a7da766fd74c5c91f6c9016f8",
+      "context_data.py": "91bcccd5185cfc80be408f7c4833b43052df87a9d8a1d20d0559d99dfe6e2dc6",
+      "dru_cfa.py": "72b3b01b586316a46960173e93c515768bf8d55e38aec134215f9645d36ec3f1",
+      "dru_checkpoint.py": "b09da0b0fb8ff6df39d7d51ab8960ee3e0f0df2eb9d150e803fa830dfcd10e88",
+      "dru_clean_variance.py": "de14eec36ab82a2f6a4f4a8dbb4ee3b62e496d474a64e2a40d4d2f980369c328",
+      "dru_comparison_policy.py": "be362e74c8dc48af4976167d88aab1ed3f0b3b2ec47737eaa43236d6a7cd9ad3",
+      "dru_execution.py": "d43e021e9b8456abb7ad96d6d76bae19f520bf8df53fec0dc7a9798eebac5dc2",
+      "dru_haar_objective.py": "d38a51520ed5e7ba7959b24fed95e77a337bdb6cd8492d67356c09cf7b4d522c",
+      "dru_known_controls.py": "bba84fe1f0ce6f20798cfd8b758d6f6f93f376f7ccfbaa2d7b6f8b9461beafe1",
+      "dru_structure_objective.py": "0594b1358811e95d32b2b1bd1060ec7066b5cc22bfaf768bed59b13dd0f6a1e1",
+      "dru_training_data.py": "bf813cccf2ccafec96a4697abebfb546514cd345f3a5ef479c2e101bed5a0186",
+      "fine_texture_training.py": "ecb0c2716c7555110dc472a2c2a7fbe45c5002344e09e04981fa0f0847d12e14",
+      "joint_bayer_unet.py": "c4899cbbdd27d8065a5c2e1eb981806e8a2f848f14b43052863d81c573c22e3f",
+      "load_control.py": "11cb829f0fa2fc86de20c1d0e06ea0b2f573891508136aaf8bbdd3ad6ef90c75",
+      "memory_budget.py": "e8b15c8f1fc698c7a865e34e332badde54272b8715ae26b52270ab542e0abf79",
+      "memory_trace.py": "745fb9f056dfc105703692dd857fc87681b792cdbda6bf586d13300b69b89cd6",
+      "run_dru_objective_study.py": "b469b0cc18fc5f38dee169d0fbdfc270b56b267dd0882b8e99a07bfe059cc225",
+      "scheduled_comparison_results.py": "8d5cf1489974d85bdd735842f10b594fd3444fc90569124f0642b5b67eb9fc27",
+      "sensor_curve_noise.py": "9b1868ae317b9da7bee29eb9355edd27b534dc6683548e65b15f8f6cb94d3c0a",
+      "sensor_transfer_math.py": "b98bd65fec8d36219bb6f2ab10d41c5b66d8b0ceb6abd0ad4fe98934b970c3f6",
+      "train_dru_cfa.py": "aeff427f728dca5dd38ea7719a61f0f0632851ea6dc85c040e7e2bf96055925f"
+    },
+    "arms": [
+      {
+        "name": "reference",
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-haar-convergence-plan-v001\\reference.json",
+        "sha256": "d5d1e192ab53465245107ff666f168c29f7f535b05c93e627dc4908d446fdb70",
+        "plan": {
+          "schema_version": 1,
+          "status": "sealed_dru_cfa_bootstrap",
+          "created_at_utc": "2026-11-07T17:27:02.408772+00:00",
+          "seeds": [
+            71,
+            73
+          ],
+          "steps_per_seed": 1024,
+          "milestones": [
+            128,
+            256,
+            512,
+            1024
+          ],
+          "learning_rate": 0.0001,
+          "accumulation": 4,
+          "training_deadline_utc": "2026-11-07T23:12:02.408772+00:00",
+          "campaign_deadline_utc": "2026-11-07T23:27:02.408772+00:00",
+          "noise_source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-plan-v001\\plan.json",
+          "noise_sha256": "4adc19f9d0e1b796eb422033159802c0a6b1f6a2d3e854c9fca86576c288d1f1",
+          "tools": {
+            "bayer_canonical.py": "a759c19f855f53dc96b8631e6f3d7817d99eb28a7da766fd74c5c91f6c9016f8",
+            "context_data.py": "91bcccd5185cfc80be408f7c4833b43052df87a9d8a1d20d0559d99dfe6e2dc6",
+            "dru_cfa.py": "72b3b01b586316a46960173e93c515768bf8d55e38aec134215f9645d36ec3f1",
+            "dru_checkpoint.py": "b09da0b0fb8ff6df39d7d51ab8960ee3e0f0df2eb9d150e803fa830dfcd10e88",
+            "dru_clean_variance.py": "de14eec36ab82a2f6a4f4a8dbb4ee3b62e496d474a64e2a40d4d2f980369c328",
+            "dru_comparison_policy.py": "be362e74c8dc48af4976167d88aab1ed3f0b3b2ec47737eaa43236d6a7cd9ad3",
+            "dru_execution.py": "d43e021e9b8456abb7ad96d6d76bae19f520bf8df53fec0dc7a9798eebac5dc2",
+            "dru_haar_objective.py": "d38a51520ed5e7ba7959b24fed95e77a337bdb6cd8492d67356c09cf7b4d522c",
+            "dru_known_controls.py": "bba84fe1f0ce6f20798cfd8b758d6f6f93f376f7ccfbaa2d7b6f8b9461beafe1",
+            "dru_structure_objective.py": "0594b1358811e95d32b2b1bd1060ec7066b5cc22bfaf768bed59b13dd0f6a1e1",
+            "dru_training_data.py": "bf813cccf2ccafec96a4697abebfb546514cd345f3a5ef479c2e101bed5a0186",
+            "fine_texture_training.py": "ecb0c2716c7555110dc472a2c2a7fbe45c5002344e09e04981fa0f0847d12e14",
+            "joint_bayer_unet.py": "c4899cbbdd27d8065a5c2e1eb981806e8a2f848f14b43052863d81c573c22e3f",
+            "load_control.py": "11cb829f0fa2fc86de20c1d0e06ea0b2f573891508136aaf8bbdd3ad6ef90c75",
+            "memory_budget.py": "e8b15c8f1fc698c7a865e34e332badde54272b8715ae26b52270ab542e0abf79",
+            "memory_trace.py": "745fb9f056dfc105703692dd857fc87681b792cdbda6bf586d13300b69b89cd6",
+            "run_dru_objective_study.py": "b469b0cc18fc5f38dee169d0fbdfc270b56b267dd0882b8e99a07bfe059cc225",
+            "scheduled_comparison_results.py": "8d5cf1489974d85bdd735842f10b594fd3444fc90569124f0642b5b67eb9fc27",
+            "sensor_curve_noise.py": "9b1868ae317b9da7bee29eb9355edd27b534dc6683548e65b15f8f6cb94d3c0a",
+            "sensor_transfer_math.py": "b98bd65fec8d36219bb6f2ab10d41c5b66d8b0ceb6abd0ad4fe98934b970c3f6",
+            "train_dru_cfa.py": "aeff427f728dca5dd38ea7719a61f0f0632851ea6dc85c040e7e2bf96055925f"
+          },
+          "config": {
+            "dtype": "float32",
+            "pretrained": false,
+            "parameters": 32643840,
+            "packed_context": 512,
+            "packed_core": 128,
+            "raw_cfa_halo": 384,
+            "threads": 4,
+            "checkpoint_every": 32,
+            "loss": "Mean squared CFA error divided by each camera plane mean core variance, floor1e-8; equal plane weighting.",
+            "data": "Fresh deterministic procedural textures/constants/ramps/edges/waves, identity280000000+seed*100000+serial, eightfamilycycle; physical phases balanced acrosscycles; streaming, no photo targets.",
+            "noise": "Existing three experimental measured-law Gaussian scenarios, observed-signal sigma, no clipping, zero noise every127 observations.",
+            "limits": "Bootstrap only, procedural content not sensor truth, no reserved cohort, no production or photographic qualification."
+          },
+          "reason": "User authorizes reference/noise/details comparison after read-only audit; day campaign, not former overnight deadline.",
+          "supersedes_plan_sha256": "72ae9c475d9ca63e9ff50f06ff333458ead81a73a8e19ebce79c6c51037ec21a",
+          "revision_reason": "Fixed common data_seed independent of model initialization; single declared factor per arm.",
+          "purpose": "Matched 1024-update convergence comparison; MSE versus noise-aware local Haar, loss-only clean variance",
+          "admission_fraction": 0.7,
+          "admission_stable_seconds": 60,
+          "maximum_memory_retries": 0,
+          "data_arm": "reference",
+          "data_seed": 71,
+          "objective": "mse",
+          "structure_weight": 0.1
+        }
+      },
+      {
+        "name": "haar",
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-haar-convergence-plan-v001\\haar.json",
+        "sha256": "e62d36256a84248cfe7f00bf49cc7b999df14b23ebf2e5db0148cfc91d8bf968",
+        "plan": {
+          "schema_version": 1,
+          "status": "sealed_dru_cfa_bootstrap",
+          "created_at_utc": "2026-11-07T17:27:02.408772+00:00",
+          "seeds": [
+            71,
+            73
+          ],
+          "steps_per_seed": 1024,
+          "milestones": [
+            128,
+            256,
+            512,
+            1024
+          ],
+          "learning_rate": 0.0001,
+          "accumulation": 4,
+          "training_deadline_utc": "2026-11-07T23:12:02.408772+00:00",
+          "campaign_deadline_utc": "2026-11-07T23:27:02.408772+00:00",
+          "noise_source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-plan-v001\\plan.json",
+          "noise_sha256": "4adc19f9d0e1b796eb422033159802c0a6b1f6a2d3e854c9fca86576c288d1f1",
+          "tools": {
+            "bayer_canonical.py": "a759c19f855f53dc96b8631e6f3d7817d99eb28a7da766fd74c5c91f6c9016f8",
+            "context_data.py": "91bcccd5185cfc80be408f7c4833b43052df87a9d8a1d20d0559d99dfe6e2dc6",
+            "dru_cfa.py": "72b3b01b586316a46960173e93c515768bf8d55e38aec134215f9645d36ec3f1",
+            "dru_checkpoint.py": "b09da0b0fb8ff6df39d7d51ab8960ee3e0f0df2eb9d150e803fa830dfcd10e88",
+            "dru_clean_variance.py": "de14eec36ab82a2f6a4f4a8dbb4ee3b62e496d474a64e2a40d4d2f980369c328",
+            "dru_comparison_policy.py": "be362e74c8dc48af4976167d88aab1ed3f0b3b2ec47737eaa43236d6a7cd9ad3",
+            "dru_execution.py": "d43e021e9b8456abb7ad96d6d76bae19f520bf8df53fec0dc7a9798eebac5dc2",
+            "dru_haar_objective.py": "d38a51520ed5e7ba7959b24fed95e77a337bdb6cd8492d67356c09cf7b4d522c",
+            "dru_known_controls.py": "bba84fe1f0ce6f20798cfd8b758d6f6f93f376f7ccfbaa2d7b6f8b9461beafe1",
+            "dru_structure_objective.py": "0594b1358811e95d32b2b1bd1060ec7066b5cc22bfaf768bed59b13dd0f6a1e1",
+            "dru_training_data.py": "bf813cccf2ccafec96a4697abebfb546514cd345f3a5ef479c2e101bed5a0186",
+            "fine_texture_training.py": "ecb0c2716c7555110dc472a2c2a7fbe45c5002344e09e04981fa0f0847d12e14",
+            "joint_bayer_unet.py": "c4899cbbdd27d8065a5c2e1eb981806e8a2f848f14b43052863d81c573c22e3f",
+            "load_control.py": "11cb829f0fa2fc86de20c1d0e06ea0b2f573891508136aaf8bbdd3ad6ef90c75",
+            "memory_budget.py": "e8b15c8f1fc698c7a865e34e332badde54272b8715ae26b52270ab542e0abf79",
+            "memory_trace.py": "745fb9f056dfc105703692dd857fc87681b792cdbda6bf586d13300b69b89cd6",
+            "run_dru_objective_study.py": "b469b0cc18fc5f38dee169d0fbdfc270b56b267dd0882b8e99a07bfe059cc225",
+            "scheduled_comparison_results.py": "8d5cf1489974d85bdd735842f10b594fd3444fc90569124f0642b5b67eb9fc27",
+            "sensor_curve_noise.py": "9b1868ae317b9da7bee29eb9355edd27b534dc6683548e65b15f8f6cb94d3c0a",
+            "sensor_transfer_math.py": "b98bd65fec8d36219bb6f2ab10d41c5b66d8b0ceb6abd0ad4fe98934b970c3f6",
+            "train_dru_cfa.py": "aeff427f728dca5dd38ea7719a61f0f0632851ea6dc85c040e7e2bf96055925f"
+          },
+          "config": {
+            "dtype": "float32",
+            "pretrained": false,
+            "parameters": 32643840,
+            "packed_context": 512,
+            "packed_core": 128,
+            "raw_cfa_halo": 384,
+            "threads": 4,
+            "checkpoint_every": 32,
+            "loss": "Mean squared CFA error divided by each camera plane mean core variance, floor1e-8; equal plane weighting.",
+            "data": "Fresh deterministic procedural textures/constants/ramps/edges/waves, identity280000000+seed*100000+serial, eightfamilycycle; physical phases balanced acrosscycles; streaming, no photo targets.",
+            "noise": "Existing three experimental measured-law Gaussian scenarios, observed-signal sigma, no clipping, zero noise every127 observations.",
+            "limits": "Bootstrap only, procedural content not sensor truth, no reserved cohort, no production or photographic qualification."
+          },
+          "reason": "User authorizes reference/noise/details comparison after read-only audit; day campaign, not former overnight deadline.",
+          "supersedes_plan_sha256": "72ae9c475d9ca63e9ff50f06ff333458ead81a73a8e19ebce79c6c51037ec21a",
+          "revision_reason": "Fixed common data_seed independent of model initialization; single declared factor per arm.",
+          "purpose": "Matched 1024-update convergence comparison; MSE versus noise-aware local Haar, loss-only clean variance",
+          "admission_fraction": 0.7,
+          "admission_stable_seconds": 60,
+          "maximum_memory_retries": 0,
+          "data_arm": "reference",
+          "data_seed": 71,
+          "objective": "haar_noise_aware_v1",
+          "structure_weight": 0.1
+        }
+      }
+    ],
+    "hard_stop_utc": "2026-11-07T23:27:02.408772+00:00",
+    "output": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-haar-convergence-v001",
+    "fixed": {
+      "seeds": [
+        71,
+        73
+      ],
+      "data_seed": 71,
+      "data_arm": "reference",
+      "steps": 1024,
+      "learning_rate": 0.0001,
+      "accumulation": 4,
+      "structure_weight": 0.1,
+      "haar_levels": 3,
+      "coefficient_tile_side": 8,
+      "energy_epsilon": 1e-08
+    },
+    "control_steps": [
+      0,
+      128,
+      256,
+      512,
+      1024
+    ],
+    "audit": {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-haar-recipe-audit-v001\\result.json",
+      "sha256": "0d5b1c0ecf049fe5e94b5d6ce3b53d36b3c9a3619015877a1e84818765fe230b",
+      "reason": "Training-recipe output-gradient ratio p95=9.25; fixed weight0.1 before any trained Haar scores. No validation-set weight tuning."
+    },
+    "policy": "All four runs from scratch; no best seed/checkpoint, coefficient sweep, automatic continuation or production change.",
+    "limits": [
+      "Known development controls, not independent qualification.",
+      "Noise-aware local Haar projection is an experimental constraint, not a published DRUNet objective.",
+      "Increased residual noise or gradient artefacts remain failure modes."
+    ],
+    "execution": {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-haar-convergence-plan-v001\\execution.json",
+      "sha256": "6c3f48c6b0d5cce452b848e97d93bdc06f5e0dde0607527d9d751b12ea6901ba"
+    }
+  },
+  "execution": {
+    "schema_version": 1,
+    "scientific_plan_sha256": [
+      "d5d1e192ab53465245107ff666f168c29f7f535b05c93e627dc4908d446fdb70",
+      "e62d36256a84248cfe7f00bf49cc7b999df14b23ebf2e5db0148cfc91d8bf968"
+    ],
+    "runtime_tools": {
+      "bayer_canonical.py": "a759c19f855f53dc96b8631e6f3d7817d99eb28a7da766fd74c5c91f6c9016f8",
+      "context_data.py": "91bcccd5185cfc80be408f7c4833b43052df87a9d8a1d20d0559d99dfe6e2dc6",
+      "dru_cfa.py": "72b3b01b586316a46960173e93c515768bf8d55e38aec134215f9645d36ec3f1",
+      "dru_checkpoint.py": "b09da0b0fb8ff6df39d7d51ab8960ee3e0f0df2eb9d150e803fa830dfcd10e88",
+      "dru_clean_variance.py": "de14eec36ab82a2f6a4f4a8dbb4ee3b62e496d474a64e2a40d4d2f980369c328",
+      "dru_comparison_policy.py": "be362e74c8dc48af4976167d88aab1ed3f0b3b2ec47737eaa43236d6a7cd9ad3",
+      "dru_execution.py": "d43e021e9b8456abb7ad96d6d76bae19f520bf8df53fec0dc7a9798eebac5dc2",
+      "dru_haar_objective.py": "d38a51520ed5e7ba7959b24fed95e77a337bdb6cd8492d67356c09cf7b4d522c",
+      "dru_known_controls.py": "bba84fe1f0ce6f20798cfd8b758d6f6f93f376f7ccfbaa2d7b6f8b9461beafe1",
+      "dru_structure_objective.py": "0594b1358811e95d32b2b1bd1060ec7066b5cc22bfaf768bed59b13dd0f6a1e1",
+      "dru_training_data.py": "bf813cccf2ccafec96a4697abebfb546514cd345f3a5ef479c2e101bed5a0186",
+      "fine_texture_training.py": "ecb0c2716c7555110dc472a2c2a7fbe45c5002344e09e04981fa0f0847d12e14",
+      "joint_bayer_unet.py": "c4899cbbdd27d8065a5c2e1eb981806e8a2f848f14b43052863d81c573c22e3f",
+      "load_control.py": "11cb829f0fa2fc86de20c1d0e06ea0b2f573891508136aaf8bbdd3ad6ef90c75",
+      "memory_budget.py": "e8b15c8f1fc698c7a865e34e332badde54272b8715ae26b52270ab542e0abf79",
+      "memory_trace.py": "745fb9f056dfc105703692dd857fc87681b792cdbda6bf586d13300b69b89cd6",
+      "run_dru_objective_study.py": "b469b0cc18fc5f38dee169d0fbdfc270b56b267dd0882b8e99a07bfe059cc225",
+      "scheduled_comparison_results.py": "8d5cf1489974d85bdd735842f10b594fd3444fc90569124f0642b5b67eb9fc27",
+      "sensor_curve_noise.py": "9b1868ae317b9da7bee29eb9355edd27b534dc6683548e65b15f8f6cb94d3c0a",
+      "sensor_transfer_math.py": "b98bd65fec8d36219bb6f2ab10d41c5b66d8b0ceb6abd0ad4fe98934b970c3f6",
+      "train_dru_cfa.py": "aeff427f728dca5dd38ea7719a61f0f0632851ea6dc85c040e7e2bf96055925f"
+    },
+    "tool_amendments": {},
+    "training_deadline_utc": "2026-11-07T23:12:02.408772+00:00",
+    "hard_stop_utc": "2026-11-07T23:27:02.408772+00:00",
+    "resources": {
+      "soft_mib": 5120,
+      "hard_mib": 6144,
+      "system_fraction": 0.92
+    },
+    "load": {
+      "yield_memory_fraction": 0.85,
+      "yield_external_cpu_fraction": 0.8,
+      "pressure_seconds": 15
+    }
+  }
+}

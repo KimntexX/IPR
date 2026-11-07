@@ -8577,3 +8577,93 @@ interrompt le contrôle en préservant le résultat partiel. Aucun checkpoint,
 image ou grand cache n’est créé. La comparaison réseau à 1 024 étapes
 n’est pas encore lancée et dépend de cette vérification puis d’un prévol.
 Aucun push, fusion, tag ou changement de production.
+
+## 7 novembre 2026 — recettes qualifiées et comparaison de convergence lancée
+
+Le contrôle des **4 096 recettes** est terminé normalement en **288,80 s**.
+Les trois vérifications passent : toutes les expositions présentes, sens
+de dérivée non positif face à l’atténuation, identité exacte sans bruit.
+Aucune valeur ni gradient non fini. Pic privé échantillonné environ 930 Mio,
+pic mémoire système 74,83 %. Preuve :
+[neural-dru-haar-recipe-audit-v001-20261107T171228Z.json](../raw/neural-dru-haar-recipe-audit-v001-20261107T171228Z.json).
+
+### Variance et gradients : ce que le contrôle autorise
+
+Le ratio moyen par exposition de variance estimée/vraie est médian à
+1,00009 ; quantile 95 % environ 1,00258, maximum 1,10155. La MSE du bruit
+standardisé par sa variance vraie est médiane à 0,99997 et reste dans
+[0,98154 ; 1,01964] sur les expositions bruitées. Cela confirme la cohérence
+des unités, des couleurs et du tirage gaussien dans ce simulateur ; cela
+n’établit pas un modèle exact du capteur réel.
+
+Le terme Haar normalisé reste fini et inférieur à 0,967 sur ces sorties
+brutes, mais la norme de son gradient de sortie n’est pas négligeable :
+ratio Haar/MSE médian environ **1,388**, quantile 95 % **9,247**, maximum
+**14,695**, avec la variance vraie. Avec la variance estimée, les résultats
+sont proches mais la dépendance au bruit reste réelle. Il faut distinguer
+la taille de la perte de celle de sa dérivée.
+
+### Protocole de convergence scellé avant les nouveaux scores
+
+La comparaison MSE / Haar local tient désormais compte de ces mesures
+**d’entraînement**, sans utiliser les scores des contrôles pour choisir une
+pondération. Le poids de Haar est fixé à **0,1** : son gradient au quantile
+95 % est alors de l’ordre de celui du MSE sur les sorties brutes sondées.
+Ce choix ne garantit pas les normes de gradients des paramètres réseau,
+qui seront vérifiées dans le prévol. Il remplace le poids 1 de la seule
+étude mathématique ; aucun entraînement Haar antérieur n’avait été effectué.
+
+Le terme Haar utilise la variance connue de la simulation **dans la perte
+seulement**. L’entrée sigma du réseau et la normalisation du MSE restent
+estimées depuis le signal bruité, sans changement. Les cibles propres et
+lois sont des informations d’entraînement, pas une entrée disponible pour
+l’inférence. Le worker courant prend en charge MSE et Haar ; la projection
+globale rejetée reste seulement un témoin analytique des audits, pas un
+ancien moteur conservé pour compatibilité.
+
+**Quatre entraînements depuis zéro**, architecture 32 643 840 paramètres,
+germes d’initialisation 71/73, observations partagées data_seed 71,
+politique référence, Adam 10⁻⁴, quatre micro-lots par mise à jour,
+**1 024 mises à jour** chacun. Les contrôles complets (864 observations)
+et checkpoints sont gardés à **0 / 128 / 256 / 512 / 1 024**. Les scores
+intermédiaires servent à étudier la convergence : ils ne déclenchent pas
+un arrêt automatique ni une sélection du meilleur jalon. Les critères
+historiques restent interprétés au budget final, sans assimiler un échec
+à 256 à une incapacité définitive du modèle.
+
+Les deux objectifs passent d’abord par un prévol de huit mises à jour
+avec reprise exacte modèle/Adam. Pour MSE, les premières pertes et les
+contrôles 0/128/256 doivent reproduire exactement la référence historique.
+La synthèse appariée est automatiquement produite après les quatre jobs ;
+elle conserve tous les jalons et les deux initialisations. Les contrôles
+restent connus, non indépendants ; les faibles contrastes et les photos
+réelles demanderont encore une qualification séparée.
+
+### Ressources, conservation et état au lancement
+
+Onze tests ciblés passent : synthèse appariée (4), dispatch de perte et
+gradients (5), liens de checkpoints (2). Les liens sont créés uniquement
+si les fichiers d’un même dossier sont strictement identiques ; un nouvel
+état écrit par remplacement atomique laisse l’ancien état lié intact.
+Les checkpoints distincts nécessaires aux trajectoires sont conservés,
+sans nouvelle génération d’images ou de grands caches de pixels.
+
+Le superviseur est lancé, admission après 60 s sous 70 % RAM, quatre
+threads par worker à priorité basse, quotas processus 5/6 Gio, plafond
+physique système 92 %, allocation CUDA 50 %. Pression externe soutenue :
+sauvegarde puis arrêt sans boucle de relance. `STOP` dans le dossier de
+campagne demande un arrêt avec sauvegarde avant l’éventuel secours forcé
+sur son seul arbre. Aucune application tierce n’est fermée.
+
+Budget maximal **six heures** à partir du scellement : fin des workers
+au plus tard **8 novembre à 00 h 12 Paris**, superviseur à **00 h 27**.
+Ce sont des limites, pas une promesse de durée. Aucun entraînement
+supplémentaire ni mise en veille automatique n’est programmé ensuite.
+
+Plan complet scellé :
+[neural-dru-objective-plan-v001-20261107T172702Z.json](../raw/neural-dru-objective-plan-v001-20261107T172702Z.json).
+Suivi : `build-patch_neural_restoration/dru-haar-convergence-v001/progress.json`.
+Logs par objectif/graine dans ce même dossier ; log général
+`dru-haar-convergence.stderr.log`. Au lancement, aucun score nouveau n’est
+disponible ; les prévols GPU restent à mesurer. Aucun push, fusion, tag
+ou changement photographique de production.
