@@ -8178,3 +8178,39 @@ précédemment reste complète ; seul ce contrôle complémentaire manque.
 Aucun calcul lourd ni relance automatique supplémentaire n’est lancé
 pendant le build WSL. Reprendre dans un nouveau dossier avec preuve de
 charge disponible après sa fin ; conserver cette tentative sans écrasement.
+
+## 7 novembre 2026 — alignement sur dev et relance après le build WSL
+
+L’utilisateur confirme la fin du build WSL et la publication de la migration
+OpenCV. `origin/dev` est vérifié par fetch ; le jalon publié est **7ba4fc2**.
+Il est fusionné localement, sans conflit et sans rebase, dans la branche
+`patch_neural_restoration` (**3b1353a**). Aucune modification des autres
+worktrees ni publication de cette branche n’est effectuée.
+
+La migration n’a modifié aucun fichier sous `tests/neural`. Le contrôle
+courant utilise des tenseurs synthétiques Torch et les checkpoints déjà
+qualifiés, sans appeler le moteur C++ ni OpenCV. Les tests ciblés de la
+synthèse d’amplitude (2) et de l’objectif structurel (4) passent après
+fusion. Cela justifie de reprendre ce contrôle, mais ne qualifie **pas**
+les adaptateurs natifs, les captures photographiques ou la nouvelle chaîne
+C++ ; leur compilation/parité reste nécessaire avant un essai photographique
+sur ce nouveau moteur. Aucun ancien cache de build natif n’est réutilisé
+comme preuve de cette qualification.
+
+La RAM globale mesurée avant lancement est à environ **54 %**. Le même
+contrôle de **864 observations**, avec les mêmes poids, amplitudes, champs,
+germes et quotas, est relancé depuis zéro dans
+`build-patch_neural_restoration/dru-structure-amplitude-retry-v001`. La
+tentative partielle précédente reste intacte. Le superviseur
+`run_dru_transfer_check.py` enchaîne automatiquement la synthèse CPU après
+succès du GPU ; en cas d’échec, il ne poursuit pas et conserve le motif.
+Les deux phases sont séquentielles et à priorité basse.
+
+Suivi : `build-patch_neural_restoration/dru-structure-transfer-retry-v001/progress.json`.
+Logs `probe.log` et `analysis.log` dans ce même dossier. Synthèse attendue :
+`build-patch_neural_restoration/dru-structure-amplitude-analysis-v001/result.json`.
+Le worker GPU conserve son budget 20 minutes et les limites 5/6 Gio, 92 %
+RAM système, 50 % CUDA et quatre threads. Un délai externe de 22 minutes
+arrête/récolte le worker en cas de blocage ; la synthèse CPU est bornée à
+3 minutes, avec son propre quota 1,25/2 Gio et 92 % système. Aucun lancement
+d’apprentissage, changement de production, push, fusion vers dev ou tag.
