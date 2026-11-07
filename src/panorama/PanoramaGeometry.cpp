@@ -1,13 +1,14 @@
 #include "PanoramaGeometry.h"
 
-#include "OpenCvBridge.h"
+#include "Analysis.h"
 #include "Parallel.h"
-
-#include <opencv2/imgproc.hpp>
+#include "Pixels.h"
+#include "Warp.h"
 
 #include <algorithm>
 #include <array>
 #include <cmath>
+#include <cstdint>
 #include <limits>
 #include <numeric>
 #include <random>
@@ -25,9 +26,9 @@ constexpr double refinedScore = 0.7;
 constexpr double refinedFlat = 1e-3;
 constexpr double rowGapOfField = 0.25;   // between two rows, of the field across
 constexpr double bendPull = 0.002;       // against the spread of the bottom edges along their arc
-constexpr double spanFlatLimit = 50.0 * CV_PI / 180.0;    // along, for a flat projection by default
-constexpr double spanSphereLimit = 60.0 * CV_PI / 180.0;  // across, beyond which a sphere is needed
-constexpr double spanFlatRefused = 150.0 * CV_PI / 180.0; // no flat projection can hold more
+constexpr double spanFlatLimit = 50.0 * ipr::pi / 180.0;    // along, for a flat projection by default
+constexpr double spanSphereLimit = 60.0 * ipr::pi / 180.0;  // across, beyond which a sphere is needed
+constexpr double spanFlatRefused = 150.0 * ipr::pi / 180.0; // no flat projection can hold more
 
 ipr::Point2d apply(const ipr::Matrix33d &h, const ipr::Point2d &p)
 {
@@ -53,19 +54,28 @@ bool fitHomography(const std::vector<ipr::Point2d> &a, const std::vector<ipr::Po
         return ipr::Matrix33d(s, 0, -s * mean.x, 0, s, -s * mean.y, 0, 0, 1);
     };
     const ipr::Matrix33d ta = normalizer(a), tb = normalizer(b);
-    cv::Mat system(int(a.size()) * 2, 9, CV_64F);
+    const int rows = int(a.size()) * 2;
+    std::vector<double> system(size_t(rows) * 9);
     for (int i = 0; i < int(a.size()); ++i) {
         const ipr::Point2d p = apply(ta, a[size_t(i)]), q = apply(tb, b[size_t(i)]);
-        double *u = system.ptr<double>(2 * i), *v = system.ptr<double>(2 * i + 1);
+        double *u = &system[size_t(2 * i) * 9], *v = &system[size_t(2 * i + 1) * 9];
         const double rowU[9] = {p.x, p.y, 1, 0, 0, 0, -q.x * p.x, -q.x * p.y, -q.x};
         const double rowV[9] = {0, 0, 0, p.x, p.y, 1, -q.y * p.x, -q.y * p.y, -q.y};
         std::copy(rowU, rowU + 9, u);
         std::copy(rowV, rowV + 9, v);
     }
-    cv::Mat normal = system.t() * system, values, vectors;
-    if (!ipr::symmetricEigen(normal, values, vectors))
+    // The normal equations, system transposed times system.
+    std::vector<double> normal(81, 0.0), values, vectors;
+    for (int r = 0; r < 9; ++r)
+        for (int c = 0; c < 9; ++c) {
+            double sum = 0.0;
+            for (int k = 0; k < rows; ++k)
+                sum += system[size_t(k) * 9 + size_t(r)] * system[size_t(k) * 9 + size_t(c)];
+            normal[size_t(r) * 9 + size_t(c)] = sum;
+        }
+    if (!ipr::symmetricEigen(normal, 9, values, vectors))
         return false;
-    const double *h = vectors.ptr<double>(8);
+    const double *h = &vectors[8 * 9];
     const ipr::Matrix33d fitted(h[0], h[1], h[2], h[3], h[4], h[5], h[6], h[7], h[8]);
     result = tb.inv() * fitted * ta;
     if (std::abs(result(2, 2)) < 1e-12)
@@ -175,8 +185,8 @@ double adjust(const std::vector<Pair> &pairs, const std::vector<int> &members, i
     for (int iteration = 0; iteration < adjustmentIterations; ++iteration) {
         if (cancelled && cancelled())
             break;
-        cv::Mat normal = cv::Mat::zeros(bundle.unknowns, bundle.unknowns, CV_64F);
-        cv::Mat gradient = cv::Mat::zeros(bundle.unknowns, 1, CV_64F);
+        const size_t unknowns = size_t(bundle.unknowns);
+        std::vector<double> normal(unknowns * unknowns, 0.0), gradient(unknowns, 0.0);
         Lens longer = lens, bent = lens;
         longer.focal = lens.focal * (1.0 + step);
         bent.distortion = lens.distortion + step;
@@ -214,9 +224,9 @@ double adjust(const std::vector<Pair> &pairs, const std::vector<int> &members, i
                     record(project(ra, rb, longer), focalSlot); // per relative change of the focal
                     record(project(ra, rb, bent), distortionSlot);
                     for (int m = 0; m < used; ++m) {
-                        gradient.at<double>(place[m]) += weight * (dx[m] * residual.x + dy[m] * residual.y);
+                        gradient[size_t(place[m])] += weight * (dx[m] * residual.x + dy[m] * residual.y);
                         for (int n = 0; n < used; ++n)
-                            normal.at<double>(place[m], place[n]) += weight * (dx[m] * dx[n] + dy[m] * dy[n]);
+                            normal[size_t(place[m]) * unknowns + size_t(place[n])] += weight * (dx[m] * dx[n] + dy[m] * dy[n]);
                     }
                 }
             }
@@ -224,22 +234,23 @@ double adjust(const std::vector<Pair> &pairs, const std::vector<int> &members, i
         bool improved = false;
         const double previous = current;
         for (int attempt = 0; attempt < 8 && !improved; ++attempt) {
-            cv::Mat damped = normal.clone();
-            for (int k = 0; k < bundle.unknowns; ++k)
-                damped.at<double>(k, k) += damping * std::max(normal.at<double>(k, k), 1e-9);
-            cv::Mat change;
-            if (!ipr::solveCholesky(damped, cv::Mat(-gradient), change)) {
+            std::vector<double> damped = normal, downhill(unknowns), change;
+            for (size_t k = 0; k < unknowns; ++k) {
+                damped[k * unknowns + k] += damping * std::max(normal[k * unknowns + k], 1e-9);
+                downhill[k] = -gradient[k];
+            }
+            if (!ipr::solveCholesky(damped, downhill, bundle.unknowns, change)) {
                 damping *= 10.0;
                 continue;
             }
             std::vector<ipr::Matrix33d> trial = rotations;
             for (size_t i = 1; i < members.size(); ++i) {
                 const int slot = bundle.slot[size_t(members[i])];
-                trial[size_t(members[i])] = exponential(change.at<double>(slot), change.at<double>(slot + 1), change.at<double>(slot + 2)) * rotations[size_t(members[i])];
+                trial[size_t(members[i])] = exponential(change[size_t(slot)], change[size_t(slot + 1)], change[size_t(slot + 2)]) * rotations[size_t(members[i])];
             }
             Lens trialLens = lens;
-            trialLens.focal = std::clamp(lens.focal * std::exp(std::clamp(change.at<double>(focalSlot), -0.5, 0.5)), focalLow, focalHigh);
-            trialLens.distortion = std::clamp(lens.distortion + change.at<double>(distortionSlot), -distortionLimit, distortionLimit);
+            trialLens.focal = std::clamp(lens.focal * std::exp(std::clamp(change[size_t(focalSlot)], -0.5, 0.5)), focalLow, focalHigh);
+            trialLens.distortion = std::clamp(lens.distortion + change[size_t(distortionSlot)], -distortionLimit, distortionLimit);
             const double trialCost = cost(trial, trialLens);
             if (trialCost < current) {
                 rotations = std::move(trial);
@@ -491,7 +502,7 @@ Solution solve(int frameCount, std::vector<Pair> pairs, const ipr::Size &frame, 
     }
 }
 
-void refine(Solution &solution, const std::vector<cv::Mat> &images, double imageScale, const ipr::Size &frame, const LensKnowledge &known,
+void refine(Solution &solution, const std::vector<ipr::Image> &images, double imageScale, const ipr::Size &frame, const LensKnowledge &known,
             const SolveOptions &options, const std::function<bool()> &cancelled)
 {
     if (!solution.valid)
@@ -511,7 +522,7 @@ void refine(Solution &solution, const std::vector<cv::Mat> &images, double image
     for (Pair &pair : solution.pairs) {
         if (cancelled && cancelled())
             return;
-        const cv::Mat &imageA = images[size_t(pair.a)], &imageB = images[size_t(pair.b)];
+        const ipr::Image &imageA = images[size_t(pair.a)], &imageB = images[size_t(pair.b)];
         if (imageA.empty() || imageB.empty())
             continue;
         const ipr::Matrix33d &ra = solution.worldToCamera[size_t(pair.a)], &rb = solution.worldToCamera[size_t(pair.b)];
@@ -519,25 +530,26 @@ void refine(Solution &solution, const std::vector<cv::Mat> &images, double image
         std::vector<ipr::Point2d> refinedA(static_cast<size_t>(total)), refinedB(static_cast<size_t>(total));
         std::vector<char> good(static_cast<size_t>(total), 0);
         ipr::parallelRows(total, [&](int first, int last) {
-            cv::Mat mapX(searchSide, searchSide, CV_32FC1), mapY(searchSide, searchSide, CV_32FC1), search, response;
+            ipr::Image mapX = ipr::Image::create({searchSide, searchSide}, ipr::Depth::F32, 1);
+            ipr::Image mapY = ipr::Image::create({searchSide, searchSide}, ipr::Depth::F32, 1);
             for (int index = first; index < last; ++index) {
                 const ipr::Point2d onA = toImage(pair.pointsA[size_t(index)]);
                 const ipr::Point2i seat(int(std::lround(onA.x)), int(std::lround(onA.y)));
                 const ipr::Recti block(seat.x - refinedHalf, seat.y - refinedHalf, templateSide, templateSide);
-                if ((block & ipr::Recti(0, 0, imageA.cols, imageA.rows)) != block)
+                if ((block & ipr::Recti(0, 0, imageA.width(), imageA.height())) != block)
                     continue;
-                const cv::Mat tile = imageA(ipr::toCv(block));
+                const ipr::Image tile = imageA.copy(block);
                 std::vector<double> mean, deviation;
                 ipr::meanAndDeviationOf(tile, mean, deviation);
                 if (deviation[0] < refinedFlat)
                     continue;
                 bool inside = true;
                 for (int y = 0; y < searchSide && inside; ++y) {
-                    float *outX = mapX.ptr<float>(y), *outY = mapY.ptr<float>(y);
+                    float *outX = mapX.mutableRow<float>(y), *outY = mapY.mutableRow<float>(y);
                     for (int x = 0; x < searchSide; ++x) {
                         const ipr::Point2d place(seat.x - refinedHalf - refinedRadius + x, seat.y - refinedHalf - refinedRadius + y);
                         const ipr::Point2d onB = toImage(predicted(fromImage(place), ra, rb, lens));
-                        if (onB.x < 1 || onB.y < 1 || onB.x > imageB.cols - 2 || onB.y > imageB.rows - 2) {
+                        if (onB.x < 1 || onB.y < 1 || onB.x > imageB.width() - 2 || onB.y > imageB.height() - 2) {
                             inside = false;
                             break;
                         }
@@ -547,21 +559,20 @@ void refine(Solution &solution, const std::vector<cv::Mat> &images, double image
                 }
                 if (!inside)
                     continue;
-                search = ipr::remapped(imageB, mapX, mapY, ipr::Resampling::Cubic, ipr::Outside::LastPixel);
-                response = ipr::matchedTemplate(search, tile);
-                double score = 0.0;
-                ipr::Point2i peak;
-                const ipr::MatExtremes responsePeak = ipr::extremesOf(response);
-                score = responsePeak.largest;
-                peak = responsePeak.largestAt;
-                if (score < refinedScore || peak.x < 1 || peak.y < 1 || peak.x >= response.cols - 1 || peak.y >= response.rows - 1)
+                const ipr::Image search = ipr::remapped(imageB, mapX, mapY, ipr::Resampling::Cubic, ipr::Outside::LastPixel);
+                const ipr::Image response = ipr::matchedTemplate(search, tile);
+                const ipr::Extremes responsePeak = ipr::extremesOf(response);
+                const double score = responsePeak.largest;
+                const ipr::Point2i peak = responsePeak.largestAt;
+                if (score < refinedScore || peak.x < 1 || peak.y < 1 || peak.x >= response.width() - 1 || peak.y >= response.height() - 1)
                     continue;
                 const auto vertex = [](double left, double middle, double right) {
                     const double curve = left - 2.0 * middle + right;
                     return curve < 0.0 ? std::clamp(0.5 * (left - right) / curve, -0.5, 0.5) : 0.0;
                 };
-                const double subX = vertex(response.at<float>(peak.y, peak.x - 1), response.at<float>(peak.y, peak.x), response.at<float>(peak.y, peak.x + 1));
-                const double subY = vertex(response.at<float>(peak.y - 1, peak.x), response.at<float>(peak.y, peak.x), response.at<float>(peak.y + 1, peak.x));
+                const float *above = response.row<float>(peak.y - 1), *here = response.row<float>(peak.y), *below = response.row<float>(peak.y + 1);
+                const double subX = vertex(here[peak.x - 1], here[peak.x], here[peak.x + 1]);
+                const double subY = vertex(above[peak.x], here[peak.x], below[peak.x]);
                 // The block at this seat of the frame looks like the other frame at that place.
                 const ipr::Point2d found(seat.x + peak.x - refinedRadius + subX, seat.y + peak.y - refinedRadius + subY);
                 refinedA[size_t(index)] = fromImage(ipr::Point2d(seat));
@@ -621,18 +632,17 @@ Shape straighten(Solution &solution, const ipr::Size &frame, Projection requeste
     shape.layout = (highY - lowY) > 1.2 * (highX - lowX) ? Layout::Vertical : Layout::Horizontal;
 
     // First level: along a horizontal sweep the frames' X axes lie in the horizon's plane.
-    cv::Mat spread = cv::Mat::zeros(3, 3, CV_64F);
+    std::vector<double> spread(9, 0.0);
     for (const int m : solution.members) {
         const ipr::Vec3d x = axisOf(m, 0);
         for (int r = 0; r < 3; ++r)
             for (int c = 0; c < 3; ++c)
-                spread.at<double>(r, c) += x[size_t(r)] * x[size_t(c)];
+                spread[size_t(r * 3 + c)] += x[size_t(r)] * x[size_t(c)];
     }
-    cv::Mat values, vectors;
-    ipr::symmetricEigen(spread, values, vectors);
+    std::vector<double> values, vectors;
     ipr::Vec3d axisY = meanY;
-    if (values.at<double>(1) > 1e-4 * values.at<double>(0))
-        axisY = ipr::Vec3d(vectors.at<double>(2, 0), vectors.at<double>(2, 1), vectors.at<double>(2, 2));
+    if (ipr::symmetricEigen(spread, 3, values, vectors) && values[1] > 1e-4 * values[0])
+        axisY = ipr::Vec3d(vectors[6], vectors[7], vectors[8]);
     if (axisY.dot(meanY) < 0.0)
         axisY = -axisY;
     if (shape.layout == Layout::Horizontal) {
@@ -828,19 +838,19 @@ bool outline(const Surface &surface, const FrameView &view, ipr::Rectd &area)
 }
 
 void sourceMaps(const Surface &surface, const FrameView &view, const ipr::Recti &area, double margin,
-                cv::Mat &mapX, cv::Mat &mapY, cv::Mat &valid)
+                ipr::Image &mapX, ipr::Image &mapY, ipr::Image &valid)
 {
-    mapX.create(ipr::toCv(area.size()), CV_32FC1);
-    mapY.create(ipr::toCv(area.size()), CV_32FC1);
-    valid.create(ipr::toCv(area.size()), CV_8UC1);
+    mapX = ipr::Image::create(area.size(), ipr::Depth::F32, 1);
+    mapY = ipr::Image::create(area.size(), ipr::Depth::F32, 1);
+    valid = ipr::Image::create(area.size(), ipr::Depth::U8, 1);
     const double centreX = (view.frame.width - 1) * 0.5, centreY = (view.frame.height - 1) * 0.5;
     const double right = view.frame.width - 1 - margin, bottom = view.frame.height - 1 - margin;
     const ipr::Matrix33d r = view.worldToCamera;
     const Lens lens = lensOf(view.frame, view.focal, view.distortion);
     ipr::parallelRows(area.height, [&](int first, int last) {
         for (int y = first; y < last; ++y) {
-            float *outX = mapX.ptr<float>(y), *outY = mapY.ptr<float>(y);
-            uchar *inside = valid.ptr<uchar>(y);
+            float *outX = mapX.mutableRow<float>(y), *outY = mapY.mutableRow<float>(y);
+            std::uint8_t *inside = valid.mutableRow<std::uint8_t>(y);
             for (int x = 0; x < area.width; ++x) {
                 const ipr::Vec3d seen = r * surface.ray(area.x + x, area.y + y);
                 outX[x] = -1.0f;

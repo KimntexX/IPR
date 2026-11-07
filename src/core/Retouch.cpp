@@ -3,13 +3,14 @@
 #include "PanoramaFill.h"
 
 #include "Filters.h"
-#include "OpenCvBridge.h"
+#include "Pixels.h"
 
 #include <QStringLiteral>
 #include <QVariantMap>
 
 #include <algorithm>
 #include <cmath>
+#include <cstdint>
 #include <limits>
 
 namespace Retouch {
@@ -69,7 +70,7 @@ bool removeZone(ipr::Image &rgb, const ipr::Image &zone, const ipr::Recti &box, 
     for (int y = 0; y < area.height; ++y) {
         const float *weight = zone.row<float>(y + area.y) + area.x;
         const ipr::Vec3f *pixel = region.row<ipr::Vec3f>(y);
-        uchar *out = known.mutableRow<uchar>(y);
+        std::uint8_t *out = known.mutableRow<std::uint8_t>(y);
         for (int x = 0; x < area.width; ++x)
             out[x] = weight[x] > zoneEdge || emptyPixel(pixel[x]) ? 0 : 255;
     }
@@ -78,8 +79,7 @@ bool removeZone(ipr::Image &rgb, const ipr::Image &zone, const ipr::Recti &box, 
     const double toPreview = std::min(1.0, double(previewLongSide) / std::max(rgb.width(), rgb.height()));
     options.workingSide = std::max(64, int(std::ceil(std::max(area.width, area.height) * toPreview)));
     options.transitionPixels = std::max(4, std::min(box.width, box.height) / 3);
-    cv::Mat filled = ipr::asMutableMat(region);   // in place, while the panorama fill takes a Mat
-    const PanoramaFill::Report report = PanoramaFill::fill(filled, ipr::asMat(known), options);
+    const PanoramaFill::Report report = PanoramaFill::fill(region, known, options);
     if (report.outcome != PanoramaFill::Outcome::Filled)
         return false;
     blendIn(rgb, zone, area, region, opacity);

@@ -7,7 +7,8 @@
 #include "PanoramaFill.h"
 #include "PanoramaJob.h"
 #include "RawDecoder.h"
-#include "OpenCvBridge.h"
+#include "Filters.h"
+#include "Pixels.h"
 
 #include <QCoreApplication>
 #include <QCryptographicHash>
@@ -21,9 +22,12 @@
 #include <QJsonObject>
 #include <QProcess>
 #include <QUuid>
-#include <opencv2/imgproc.hpp>
 
+#include <algorithm>
+#include <cmath>
+#include <cstdint>
 #include <iostream>
+#include <utility>
 #include <vector>
 #ifdef Q_OS_WIN
 #ifndef NOMINMAX
@@ -79,31 +83,49 @@ RawDecoder::Options decodeOptions(bool lensCorrection)
     return options;
 }
 
-bool writeCache(const cv::Mat &image, const QString &path)
+bool writeCache(const ipr::Image &image, const QString &path)
 {
     QFile file(path);
     if (!file.open(QIODevice::WriteOnly))
         return false;
-    const int header[2]{image.cols, image.rows};
+    const int header[2]{image.width(), image.height()};
     bool fine = file.write(reinterpret_cast<const char *>(header), sizeof(header)) == qint64(sizeof(header));
-    const qint64 rowBytes = qint64(image.cols) * qint64(image.elemSize());
-    for (int y = 0; fine && y < image.rows; ++y)
-        fine = file.write(reinterpret_cast<const char *>(image.ptr(y)), rowBytes) == rowBytes;
+    const qint64 rowBytes = qint64(image.width()) * qint64(image.pixelBytes());
+    for (int y = 0; fine && y < image.height(); ++y)
+        fine = file.write(reinterpret_cast<const char *>(image.row<std::uint8_t>(y)), rowBytes) == rowBytes;
     return fine;
 }
 
-cv::Mat readCache(const QString &path)
+ipr::Image readCache(const QString &path)
 {
     QFile file(path);
     int header[2]{};
-    if (!file.open(QIODevice::ReadOnly) || file.read(reinterpret_cast<char *>(header), sizeof(header)) != qint64(sizeof(header)))
+    if (!file.open(QIODevice::ReadOnly) || file.read(reinterpret_cast<char *>(header), sizeof(header)) != qint64(sizeof(header)) ||
+        header[0] <= 0 || header[1] <= 0)
         return {};
-    cv::Mat image(header[1], header[0], CV_32FC3);
-    const qint64 rowBytes = qint64(image.cols) * qint64(image.elemSize());
-    for (int y = 0; y < image.rows; ++y)
-        if (file.read(reinterpret_cast<char *>(image.ptr(y)), rowBytes) != rowBytes)
+    ipr::Image image = ipr::Image::create(ipr::Size(header[0], header[1]), ipr::Depth::F32, 3);
+    const qint64 rowBytes = qint64(image.width()) * qint64(image.pixelBytes());
+    for (int y = 0; y < image.height(); ++y)
+        if (file.read(reinterpret_cast<char *>(image.mutableRow<std::uint8_t>(y)), rowBytes) != rowBytes)
             return {};
     return image;
+}
+
+// Per channel, the mean of an F32 image where the mask, bytes, is not zero.
+std::vector<double> meansWhere(const ipr::Image &image, const ipr::Image &mask)
+{
+    std::vector<double> sums(size_t(image.channels()), 0.0);
+    long long count = 0;
+    for (int y = 0; y < image.height(); ++y)
+        for (int x = 0; x < image.width(); ++x)
+            if (mask.row<std::uint8_t>(y)[x]) {
+                for (int c = 0; c < image.channels(); ++c)
+                    sums[size_t(c)] += image.row<float>(y)[x * image.channels() + c];
+                ++count;
+            }
+    for (double &sum : sums)
+        sum = count > 0 ? sum / double(count) : 0.0;
+    return sums;
 }
 
 QString projectionName(PanoramaGeometry::Projection projection)
@@ -162,7 +184,7 @@ int main(int argc, char **argv)
                 std::cerr << names[index].toStdString() << ": " << error.toStdString() << '\n';
                 return 1;
             }
-            if (!writeCache(ipr::asMat(image.dcpContext->cameraRgb), cached))
+            if (!writeCache(image.dcpContext->cameraRgb, cached))
                 return 1;
             if (index == middle) {
                 context = image.dcpContext;
@@ -223,8 +245,8 @@ int main(int argc, char **argv)
     report[QStringLiteral("layout")] = job.shape.layout == PanoramaGeometry::Layout::Vertical ? QStringLiteral("vertical") : QStringLiteral("horizontal");
     report[QStringLiteral("projection")] = projectionName(job.shape.projection);
     report[QStringLiteral("rows")] = job.shape.rows;
-    report[QStringLiteral("span_along_degrees")] = job.shape.spanAlong * 180.0 / CV_PI;
-    report[QStringLiteral("span_across_degrees")] = job.shape.spanAcross * 180.0 / CV_PI;
+    report[QStringLiteral("span_along_degrees")] = job.shape.spanAlong * 180.0 / ipr::pi;
+    report[QStringLiteral("span_across_degrees")] = job.shape.spanAcross * 180.0 / ipr::pi;
     report[QStringLiteral("canvas_width")] = job.canvas.width;
     report[QStringLiteral("canvas_height")] = job.canvas.height;
     report[QStringLiteral("edges")] = edges;
@@ -270,35 +292,30 @@ int main(int argc, char **argv)
     // hidden, filled, and compared with what was there.
     if (job.success && arguments.contains(QStringLiteral("--holdout"))) {
         QJsonArray corners;
-        const int depth = job.cameraRgb.rows / 4, length = job.cameraRgb.cols / 6;
+        const int depth = job.cameraRgb.height() / 4, length = job.cameraRgb.width() / 6;
         const QVector<QPair<QString, ipr::Point2i>> tips{{QStringLiteral("top_left"), ipr::Point2i(0, 0)}, {QStringLiteral("top_right"), ipr::Point2i(1, 0)},
                                                       {QStringLiteral("bottom_left"), ipr::Point2i(0, 1)}, {QStringLiteral("bottom_right"), ipr::Point2i(1, 1)}};
         for (const auto &tip : tips) {
-            cv::Mat known(job.cameraRgb.size(), CV_8UC1, cv::Scalar(255));
+            ipr::Image known = ipr::filled(job.cameraRgb.size(), ipr::Depth::U8, 1, 255);
             for (int y = 0; y < depth; ++y) {
-                const int row = tip.second.y == 0 ? y : known.rows - 1 - y;
+                const int row = tip.second.y == 0 ? y : known.height() - 1 - y;
                 const int span = length * (depth - y) / depth;
-                known(ipr::toCv(ipr::Recti(tip.second.x == 0 ? 0 : known.cols - span, row, span, 1))).setTo(0);
+                ipr::Image hiddenRow = known.mutableView(ipr::Recti(tip.second.x == 0 ? 0 : known.width() - span, row, span, 1));
+                ipr::fill(hiddenRow, 0);
             }
-            cv::Mat filled = job.cameraRgb.clone();
+            ipr::Image filled = job.cameraRgb.clone();
             QElapsedTimer fillWatch;
             fillWatch.start();
             const PanoramaFill::Report filling = PanoramaFill::fill(filled, known);
             const double seconds = fillWatch.elapsed() / 1000.0;
-            cv::Mat truthRoot, filledRoot;
-            cv::sqrt(cv::max(job.cameraRgb, 0.0), truthRoot);
-            cv::sqrt(cv::max(filled, 0.0), filledRoot);
-            cv::Mat hidden;
-            cv::bitwise_not(known, hidden);
-            cv::Mat difference;
-            cv::absdiff(truthRoot, filledRoot, difference);
-            const cv::Scalar error = cv::mean(difference, hidden);
-            const auto detailOf = [&](const cv::Mat &image) {
-                cv::Mat grey, smooth, fine;
-                cv::extractChannel(image, grey, 1);
-                cv::GaussianBlur(grey, smooth, cv::Size(), 4.0);
-                cv::absdiff(grey, smooth, fine);
-                return cv::mean(fine, hidden)[0];
+            const auto root = [](float v) { return std::sqrt(std::max(v, 0.0f)); };
+            const ipr::Image truthRoot = ipr::mapped(job.cameraRgb, root), filledRoot = ipr::mapped(filled, root);
+            const ipr::Image hidden = ipr::bitwiseNot(known);
+            const auto difference = [](float a, float b) { return std::abs(a - b); };
+            const std::vector<double> error = meansWhere(ipr::mapped(truthRoot, filledRoot, difference), hidden);
+            const auto detailOf = [&](const ipr::Image &image) {
+                const ipr::Image grey = std::move(ipr::splitChannels(image)[1]);
+                return meansWhere(ipr::mapped(grey, ipr::gaussianBlurred(grey, 4.0), difference), hidden)[0];
             };
             QJsonObject corner;
             corner[QStringLiteral("corner")] = tip.first;
@@ -314,7 +331,7 @@ int main(int argc, char **argv)
 
     if (job.success && context) {
         CameraSignal::Source signal;
-        signal.rgb = ipr::fromMat(job.cameraRgb);
+        signal.rgb = std::move(job.cameraRgb);
         signal.cameraMake = metadata.cameraMake;
         signal.cameraModel = metadata.cameraModel;
         signal.whiteBalanceKelvin = context->sourceKelvin;

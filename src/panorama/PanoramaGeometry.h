@@ -2,9 +2,8 @@
 #define IPR_PANORAMA_PANORAMAGEOMETRY_H
 
 #include "PanoramaFeatures.h"
+#include "Image.h"
 #include "Types.h"
-
-#include <opencv2/core.hpp>
 
 #include <functional>
 #include <vector>
@@ -75,9 +74,9 @@ Solution solve(int frameCount, std::vector<Pair> pairs, const ipr::Size &frame, 
                const std::function<bool()> &cancelled = {});
 
 // Measures the correspondences again on finer images, through what the solution predicts,
-// and solves once more. images: per frame, CV_32FC1, of size frame * imageScale; empty for
+// and solves once more. images: per frame, F32 of one channel, of size frame * imageScale; empty for
 // those outside the panorama. Fewer points are kept where the two views differ.
-void refine(Solution &solution, const std::vector<cv::Mat> &images, double imageScale, const ipr::Size &frame, const LensKnowledge &lens,
+void refine(Solution &solution, const std::vector<ipr::Image> &images, double imageScale, const ipr::Size &frame, const LensKnowledge &lens,
             const SolveOptions &options = {}, const std::function<bool()> &cancelled = {});
 
 struct Shape
@@ -121,10 +120,10 @@ struct FrameView
 // reaches behind a flat projection.
 bool outline(const Surface &surface, const FrameView &view, ipr::Rectd &area);
 
-// The source coordinates of a canvas area (CV_32FC1 maps), -1 where the frame's pixels,
-// margin included, do not reach; the valid mask is CV_8UC1.
+// The source coordinates of a canvas area (F32 maps of one channel), -1 where the frame's pixels,
+// margin included, do not reach; the valid mask is bytes of one channel.
 void sourceMaps(const Surface &surface, const FrameView &view, const ipr::Recti &area, double margin,
-                cv::Mat &mapX, cv::Mat &mapY, cv::Mat &valid);
+                ipr::Image &mapX, ipr::Image &mapY, ipr::Image &valid);
 
 } // namespace PanoramaGeometry
 

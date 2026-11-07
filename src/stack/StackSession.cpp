@@ -8,7 +8,6 @@
 #include "PanoramaJob.h"
 #include "SystemMemory.h"
 
-#include "OpenCvBridge.h"
 #include "Resize.h"
 
 #include <QDir>
@@ -223,7 +222,7 @@ StackSession::Outcome StackSession::computePanorama(Tasks::Context &context, con
         frame.focalMm = decoded.metadata.focalLengthMm;
         frame.sensorWidthMm = decoded.metadata.sensorWidthMm;
         frame.lensGeometryCorrected = decoded.metadata.lensGeometryApplied;
-        frame.cameraRgb = ipr::heldMat(decoded.cameraRgb);   // a Mat until the panorama leaves OpenCV
+        frame.cameraRgb = std::move(decoded.cameraRgb);
         return frame;
     };
     PanoramaJob::Result job = PanoramaJob::run(request);
@@ -239,7 +238,7 @@ StackSession::Outcome StackSession::computePanorama(Tasks::Context &context, con
     result->filledShare = job.filledShare;
     result->projection = job.shape.projection == PanoramaGeometry::Projection::Rectilinear ? tr("plane")
         : job.shape.projection == PanoramaGeometry::Projection::Spherical ? tr("sphérique") : tr("cylindrique");
-    result->cameraRgb = ipr::fromMat(job.cameraRgb);
+    result->cameraRgb = std::move(job.cameraRgb);
     outcome.preview = previewOf(result->cameraRgb, *result->context, result->metadata);
     outcome.result = std::move(result);
     return outcome;

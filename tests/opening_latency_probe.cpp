@@ -4,6 +4,7 @@
 #include "Sidecar.h"
 #include "imageprovider.h"
 #include "CameraProfileEngine.h"
+#include "Parallel.h"
 #include <QCoreApplication>
 #include <QCryptographicHash>
 #include <QElapsedTimer>
@@ -454,7 +455,7 @@ int main(int argc, char **argv)
     }
     result["qt"] = QT_VERSION_STR;
     result["libraw"] = RawDecoder::backendVersion();
-    result["opencv_threads"] = cv::getNumThreads();
+    result["worker_threads"] = ipr::workerThreads();
     result["logical_processors"] = QThread::idealThreadCount();
     std::cout << QJsonDocument(result).toJson(QJsonDocument::Compact).constData() << '\n';
     return result.contains("error") ? 1 : 0;
