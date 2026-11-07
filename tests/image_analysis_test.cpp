@@ -107,6 +107,35 @@ void hannWindows()
     check(refused, "two values or more each way");
 }
 
+void fourier()
+{
+    // Against the direct sum, on a size made of 2, 3 and 5 and on one that is not.
+    for (const Size size : {Size(12, 10), Size(7, 11)}) {
+        const std::vector<float> values = noise(size.area());
+        const Image plane = filled(size, [&](int x, int y) { return values[size_t(y * size.width + x)]; });
+        const std::vector<std::complex<double>> found = fourierTransform(plane);
+        double worst = 0.0;
+        for (int v = 0; v < size.height; ++v)
+            for (int u = 0; u < size.width; ++u) {
+                std::complex<double> sum = 0.0;
+                for (int y = 0; y < size.height; ++y)
+                    for (int x = 0; x < size.width; ++x)
+                        sum += double(values[size_t(y * size.width + x)]) *
+                               std::polar(1.0, -2.0 * pi * (double(u * x) / size.width + double(v * y) / size.height));
+                worst = std::max(worst, std::abs(found[size_t(v * size.width + u)] - sum));
+            }
+        check(found.size() == size_t(size.area()) && worst < 1e-9, "the transform is the direct sum");
+    }
+    check(fourierTransform(Image()).empty(), "no plane, no transform");
+    bool refused = false;
+    try {
+        fourierTransform(Image::create({4, 4}, Depth::F32, 2));
+    } catch (const std::invalid_argument &) {
+        refused = true;
+    }
+    check(refused, "one channel of floats");
+}
+
 void phase()
 {
     // A texture and the same moved round by (5, -3): the shift found whole.
@@ -165,6 +194,7 @@ int main()
         singularValueDecomposition();
         rotations();
         hannWindows();
+        fourier();
         phase();
         templateMatching();
     } catch (const std::exception &error) {

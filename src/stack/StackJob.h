@@ -7,7 +7,7 @@
 #include "Types.h"
 
 #include <QString>
-#include <opencv2/core.hpp>
+#include "Image.h"
 
 #include <array>
 #include <functional>
@@ -22,7 +22,7 @@ namespace StackJob {
 
 struct Frame
 {
-    cv::Mat cameraRgb;   // CV_32FC3, linear, white 1, the same balance intended across the series
+    ipr::Image cameraRgb;   // F32, three channels, linear, white 1, the same balance intended across the series
     QString error;
 };
 
@@ -68,7 +68,7 @@ struct Result
     bool success = false;
     bool cancelled = false;
     QString error;
-    cv::Mat cameraRgb;                                // merged common area, CV_32FC3
+    ipr::Image cameraRgb;                                // merged common area, F32, three channels
     ipr::Recti commonArea;                              // of the reference's frame
     ipr::Size frameSize;
     std::vector<FrameReport> frames;

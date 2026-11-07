@@ -5,7 +5,7 @@
 #include "Types.h"
 
 #include <QString>
-#include <opencv2/core.hpp>
+#include "Image.h"
 
 #include <functional>
 #include <vector>
@@ -20,7 +20,7 @@ namespace StackTurbulence {
 // The subject's pixels in one frame, as decoded.
 struct View
 {
-    cv::Mat pixels;                 // CV_32FC3
+    ipr::Image pixels;                 // F32, three channels
     ipr::Point2i origin;               // of pixels in the frame
     ipr::Matrix33d referenceToFrame = ipr::Matrix33d::identity();
     ipr::Vec3d gains{1.0, 1.0, 1.0}; // brings it to the reference's level
@@ -46,9 +46,9 @@ struct Report
     QString reason;                 // why it was not applied
 };
 
-// merged: the first stack, CV_32FC3, refined in place. subject: its area in merged, which
+// merged: the first stack, F32, three channels, refined in place. subject: its area in merged, which
 // the frame coordinates reach by adding origin to it.
-Report refine(cv::Mat &merged, const ipr::Recti &subject, const ipr::Point2i &origin, const std::vector<View> &views,
+Report refine(ipr::Image &merged, const ipr::Recti &subject, const ipr::Point2i &origin, const std::vector<View> &views,
               const Options &options = {}, const std::function<bool()> &cancelled = {});
 
 } // namespace StackTurbulence

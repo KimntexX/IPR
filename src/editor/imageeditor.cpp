@@ -273,7 +273,7 @@ ImageEditor::ImageEditor(ImageProvider *provider,
             const ColorPipeline::WorkingImage image = RawDecoder::decode(file, options, &decoded.metadata, &decoded.error);
             if (image.dcpContext) {
                 decoded.context = image.dcpContext;
-                decoded.cameraRgb = ipr::heldMat(image.dcpContext->cameraRgb);   // a Mat until stacking leaves OpenCV
+                decoded.cameraRgb = image.dcpContext->cameraRgb.share();
             }
             return decoded;
         },

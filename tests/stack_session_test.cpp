@@ -173,11 +173,11 @@ void failing(const QDir &folder)
 void panoramas(const QDir &folder, const std::shared_ptr<CameraProfileEngine::DcpWorkingContext> &context)
 {
     // Views along one scene, a third of each shared with the next.
-    const cv::Mat world = StackFixture::scene(ipr::Size(1500, 420));
+    const auto world = std::make_shared<const ipr::Image>(StackFixture::scene(ipr::Size(1500, 420)));
     const auto decoder = [world, context](const QString &file, const std::function<bool()> &) {
         const int index = QFileInfo(file).baseName().remove(QStringLiteral("frame")).toInt();
         StackSession::Decoded decoded;
-        decoded.cameraRgb = world(ipr::toCv(ipr::Recti(index * 430, 0, 640, 420))).clone();
+        decoded.cameraRgb = world->copy(ipr::Recti(index * 430, 0, 640, 420));
         decoded.context = context;
         decoded.metadata.cameraMake = QStringLiteral("Canon");
         decoded.metadata.cameraModel = QStringLiteral("EOS R6 Mark III");
@@ -252,11 +252,11 @@ void panoramas(const QDir &folder, const std::shared_ptr<CameraProfileEngine::Dc
 
     // Frames far apart leave much of the canvas to invent: the message warns, and still delivers.
     {
-        const cv::Mat tall = StackFixture::scene(ipr::Size(1500, 1000));
+        const auto tall = std::make_shared<const ipr::Image>(StackFixture::scene(ipr::Size(1500, 1000)));
         StackSession assembling([tall, context](const QString &file, const std::function<bool()> &) {
             const int index = QFileInfo(file).baseName().remove(QStringLiteral("frame")).toInt();
             StackSession::Decoded decoded;
-            decoded.cameraRgb = tall(ipr::toCv(ipr::Recti(index * 430, index * 280, 640, 420))).clone();
+            decoded.cameraRgb = tall->copy(ipr::Recti(index * 430, index * 280, 640, 420));
             decoded.context = context;
             decoded.metadata.cameraMake = QStringLiteral("Canon");
             decoded.metadata.cameraModel = QStringLiteral("EOS R6 Mark III");
@@ -278,7 +278,7 @@ void panoramas(const QDir &folder, const std::shared_ptr<CameraProfileEngine::Dc
     StackSession noProfile([world](const QString &file, const std::function<bool()> &) {
         const int index = QFileInfo(file).baseName().remove(QStringLiteral("frame")).toInt();
         StackSession::Decoded decoded;
-        decoded.cameraRgb = world(ipr::toCv(ipr::Recti(index * 430, 0, 640, 420))).clone();
+        decoded.cameraRgb = world->copy(ipr::Recti(index * 430, 0, 640, 420));
         return decoded;
     });
     noProfile.startPanorama(frames(folder, 3));

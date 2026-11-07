@@ -19,6 +19,16 @@
 namespace PanoramaJob {
 namespace {
 
+// A band of a spool as a Mat, while the panorama works on Mats.
+bool readMat(FrameSpool &spool, const ipr::Size &size, ipr::Depth depth, int channels, int row, int rows, cv::Mat &band)
+{
+    ipr::Image image;
+    if (!spool.read(size, depth, channels, row, rows, image))
+        return false;
+    band = ipr::heldMat(image);
+    return true;
+}
+
 constexpr int detectionSide = 1600;       // long side the corners are looked for on, pixels
 constexpr int refinementSide = 3000;      // long side the matches are measured again on
 constexpr int reducedCanvasSide = 2400;   // long side of the canvas seams are decided on
@@ -182,7 +192,7 @@ Result run(const Request &request)
             feature.position = (feature.position + ipr::Point2f(0.5f, 0.5f)) * float(1.0 / detectionScale) - ipr::Point2f(0.5f, 0.5f);
         finer[size_t(index)] = perceptualCopy(frame.cameraRgb, finerScale);
         auto spool = std::make_unique<FrameSpool>(scratch.filePath(QStringLiteral("%1.source").arg(index)));
-        if (!spool->write(frame.cameraRgb, result.scratchBytes)) {
+        if (!spool->write(ipr::fromMat(frame.cameraRgb), result.scratchBytes)) {
             result.error = QStringLiteral("Écriture impossible dans le dossier tampon (disque plein ?).");
             return result;
         }
@@ -306,7 +316,7 @@ Result run(const Request &request)
             return result;
         }
         cv::Mat source;
-        if (!sources[size_t(member)]->read(size, CV_32FC3, 0, size.height, source)) {
+        if (!readMat(*sources[size_t(member)], size, ipr::Depth::F32, 3, 0, size.height, source)) {
             result.error = QStringLiteral("Lecture impossible dans le dossier tampon.");
             return result;
         }
@@ -323,7 +333,7 @@ Result run(const Request &request)
 
         auto colourSpool = std::make_unique<FrameSpool>(scratch.filePath(QStringLiteral("%1.warped").arg(member)));
         auto validSpool = std::make_unique<FrameSpool>(scratch.filePath(QStringLiteral("%1.valid").arg(member)));
-        if (!colourSpool->write(warped, result.scratchBytes) || !validSpool->write(valid, result.scratchBytes)) {
+        if (!colourSpool->write(ipr::fromMat(warped), result.scratchBytes) || !validSpool->write(ipr::fromMat(valid), result.scratchBytes)) {
             result.error = QStringLiteral("Écriture impossible dans le dossier tampon (disque plein ?).");
             return result;
         }
@@ -399,8 +409,8 @@ Result run(const Request &request)
             if (part.empty())
                 continue;
             const int top = part.y, rows = part.height;
-            if (!warpedColour[m]->read(areas[m].size(), CV_32FC3, top - areas[m].y, rows, colourBands[m]) ||
-                !warpedValid[m]->read(areas[m].size(), CV_8UC1, top - areas[m].y, rows, validBands[m])) {
+            if (!readMat(*warpedColour[m], areas[m].size(), ipr::Depth::F32, 3, top - areas[m].y, rows, colourBands[m]) ||
+                !readMat(*warpedValid[m], areas[m].size(), ipr::Depth::U8, 1, top - areas[m].y, rows, validBands[m])) {
                 result.cameraRgb.release();
                 result.error = QStringLiteral("Lecture impossible dans le dossier tampon.");
                 return result;

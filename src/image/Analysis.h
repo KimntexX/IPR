@@ -4,6 +4,7 @@
 #include "Image.h"
 #include "Types.h"
 
+#include <complex>
 #include <vector>
 
 namespace ipr {
@@ -32,6 +33,11 @@ Matrix33d nearestRotation(const Matrix33d &m);
 // a Hann curve across and one down. F32, one channel, two values or more each way.
 void hannWindowInto(Image &out);
 Image hannWindow(Size size);
+
+// The discrete Fourier transform of a plane of floats (F32, one channel), of its own size: rows
+// first, out[v * width + u] for the frequency (u, v), unscaled, as OpenCV's dft with a complex
+// output. Empty for an empty plane; throws std::invalid_argument on another type.
+std::vector<std::complex<double>> fourierTransform(const Image &plane);
 
 // The translation of b against a, by phase correlation of the two windowed images, as OpenCV's
 // phaseCorrelate: both F32 of one channel and of one size, the window too.

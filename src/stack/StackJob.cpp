@@ -2,13 +2,14 @@
 
 #include "FrameSpool.h"
 
-#include "OpenCvBridge.h"
+#include "Resize.h"
+#include "Warp.h"
+#include "Pixels.h"
 #include "Parallel.h"
 
 #include <QDir>
 #include <QStorageInfo>
 #include <QTemporaryDir>
-#include <opencv2/imgproc.hpp>
 
 #include <algorithm>
 #include <cmath>
@@ -35,9 +36,9 @@ ipr::Recti subjectArea(const ipr::Rectd &inliers, const ipr::Size &size)
 }
 
 // The pixels of a frame that the subject's area can reach, kept as decoded.
-StackTurbulence::View subjectView(const cv::Mat &frame, const ipr::Recti &subject, const ipr::Matrix33d &referenceToFrame, int reach)
+StackTurbulence::View subjectView(const ipr::Image &frame, const ipr::Recti &subject, const ipr::Matrix33d &referenceToFrame, int reach)
 {
-    ipr::Point2d lowest(frame.cols, frame.rows), highest(0, 0);
+    ipr::Point2d lowest(frame.width(), frame.height()), highest(0, 0);
     for (const ipr::Point2i corner : {subject.tl(), ipr::Point2i(subject.x + subject.width, subject.y),
                                    ipr::Point2i(subject.x, subject.y + subject.height), subject.br()}) {
         const ipr::Vec3d mapped = referenceToFrame * ipr::Vec3d(corner.x, corner.y, 1.0);
@@ -47,31 +48,29 @@ StackTurbulence::View subjectView(const cv::Mat &frame, const ipr::Recti &subjec
     }
     const ipr::Recti wanted(int(lowest.x) - reach, int(lowest.y) - reach,
                           int(highest.x - lowest.x) + 2 * reach + 1, int(highest.y - lowest.y) + 2 * reach + 1);
-    const ipr::Recti area = wanted & ipr::Recti(0, 0, frame.cols, frame.rows);
+    const ipr::Recti area = wanted & ipr::Recti(0, 0, frame.width(), frame.height());
     StackTurbulence::View view;
     view.origin = area.tl();
     view.referenceToFrame = referenceToFrame;
     if (!area.empty())
-        view.pixels = frame(ipr::toCv(area)).clone();
+        view.pixels = frame.copy(area);
     return view;
 }
 
-cv::Mat proxyOf(const cv::Mat &image)
+ipr::Image proxyOf(const ipr::Image &image)
 {
-    cv::Mat proxy;
-    proxy = ipr::resized(image, ipr::Size(std::max(1, image.cols / proxyDivisor), std::max(1, image.rows / proxyDivisor)),
-                         ipr::Interpolation::Area);
-    return proxy;
+    return ipr::resized(image, ipr::Size(std::max(1, image.width() / proxyDivisor), std::max(1, image.height() / proxyDivisor)),
+                        ipr::Interpolation::Area);
 }
 
 // Per channel, the median ratio of the reference to a registered frame, where both are
 // well exposed. Corrects the flicker of a lamp and a different as-shot balance.
-bool levelGains(const cv::Mat &referenceProxy, const cv::Mat &frameProxy, ipr::Vec3d &gains)
+bool levelGains(const ipr::Image &referenceProxy, const ipr::Image &frameProxy, ipr::Vec3d &gains)
 {
     std::array<std::vector<float>, 3> ratios;
-    for (int y = 0; y < referenceProxy.rows; ++y) {
-        const ipr::Vec3f *a = referenceProxy.ptr<ipr::Vec3f>(y), *b = frameProxy.ptr<ipr::Vec3f>(y);
-        for (int x = 0; x < referenceProxy.cols; ++x)
+    for (int y = 0; y < referenceProxy.height(); ++y) {
+        const ipr::Vec3f *a = referenceProxy.row<ipr::Vec3f>(y), *b = frameProxy.row<ipr::Vec3f>(y);
+        for (int x = 0; x < referenceProxy.width(); ++x)
             for (int c = 0; c < 3; ++c)
                 if (a[x][c] > darkestForGain && b[x][c] > darkestForGain &&
                     a[x][c] < brightestForGain && b[x][c] < brightestForGain)
@@ -89,15 +88,15 @@ bool levelGains(const cv::Mat &referenceProxy, const cv::Mat &frameProxy, ipr::V
 }
 
 // The source coordinates of each reference pixel: the local field, then the transform.
-void sourceMaps(const ipr::Matrix33d &referenceToFrame, const cv::Mat &displacements, cv::Mat &mapX, cv::Mat &mapY)
+void sourceMaps(const ipr::Matrix33d &referenceToFrame, const ipr::Image &displacements, ipr::Image &mapX, ipr::Image &mapY)
 {
-    mapX.create(displacements.size(), CV_32FC1);
-    mapY.create(displacements.size(), CV_32FC1);
-    ipr::parallelRows(displacements.rows, [&](int first, int last) {
+    mapX = ipr::Image::create(displacements.size(), ipr::Depth::F32, 1);
+    mapY = ipr::Image::create(displacements.size(), ipr::Depth::F32, 1);
+    ipr::parallelRows(displacements.height(), [&](int first, int last) {
         for (int y = first; y < last; ++y) {
-            const ipr::Vec2f *field = displacements.ptr<ipr::Vec2f>(y);
-            float *outX = mapX.ptr<float>(y), *outY = mapY.ptr<float>(y);
-            for (int x = 0; x < displacements.cols; ++x) {
+            const ipr::Vec2f *field = displacements.row<ipr::Vec2f>(y);
+            float *outX = mapX.mutableRow<float>(y), *outY = mapY.mutableRow<float>(y);
+            for (int x = 0; x < displacements.width(); ++x) {
                 const double px = x + double(field[x][0]), py = y + double(field[x][1]);
                 const double w = referenceToFrame(2, 0) * px + referenceToFrame(2, 1) * py + referenceToFrame(2, 2);
                 outX[x] = float((referenceToFrame(0, 0) * px + referenceToFrame(0, 1) * py + referenceToFrame(0, 2)) / w);
@@ -198,12 +197,12 @@ Result run(const Request &request)
     };
 
     Frame reference = request.frame(request.referenceIndex);
-    if (reference.cameraRgb.empty() || reference.cameraRgb.type() != CV_32FC3) {
+    if (reference.cameraRgb.empty() || !(reference.cameraRgb.depth() == ipr::Depth::F32 && reference.cameraRgb.channels() == 3)) {
         result.error = reference.error.isEmpty()
             ? QStringLiteral("L'image de référence n'a pas pu être décodée.") : reference.error;
         return result;
     }
-    const ipr::Size size = ipr::fromCv(reference.cameraRgb.size());
+    const ipr::Size size = reference.cameraRgb.size();
     result.frameSize = size;
 
     const QString root = request.scratchRoot.isEmpty() ? QDir::tempPath() : request.scratchRoot;
@@ -228,11 +227,11 @@ Result run(const Request &request)
     StackTurbulence::View pendingView;
     bool hasPendingView = false;
     // The reference waits for the first frame that tells whether the subject is small.
-    cv::Mat referencePixels;
+    ipr::Image referencePixels;
     const StackAlignment::Pyramid referencePyramid = StackAlignment::buildPyramid(reference.cameraRgb, request.alignment);
-    const cv::Mat referenceProxy = proxyOf(reference.cameraRgb);
+    const ipr::Image referenceProxy = proxyOf(reference.cameraRgb);
 
-    const auto spoolFrame = [&](const cv::Mat &image) {
+    const auto spoolFrame = [&](const ipr::Image &image) {
         auto file = std::make_unique<FrameSpool>(scratch.filePath(QStringLiteral("%1.frame").arg(spool.size())));
         if (!file->write(image, result.scratchBytes))
             return false;
@@ -251,8 +250,8 @@ Result run(const Request &request)
         return result;
     }
     if (request.correctTurbulence && request.mergeReference)
-        referencePixels = reference.cameraRgb;
-    reference.cameraRgb.release();
+        referencePixels = std::move(reference.cameraRgb);
+    reference.cameraRgb = {};
     advance();
 
     for (int index = 0; index < request.frameCount; ++index) {
@@ -264,7 +263,7 @@ Result run(const Request &request)
         report.index = index;
         hasPendingView = false;
         Frame frame = request.frame(index);
-        if (frame.cameraRgb.empty() || frame.cameraRgb.type() != CV_32FC3 || ipr::fromCv(frame.cameraRgb.size()) != size) {
+        if (frame.cameraRgb.empty() || !(frame.cameraRgb.depth() == ipr::Depth::F32 && frame.cameraRgb.channels() == 3) || frame.cameraRgb.size() != size) {
             report.exclusion = !frame.error.isEmpty() ? frame.error
                 : frame.cameraRgb.empty() ? QStringLiteral("Image illisible.")
                                           : QStringLiteral("Dimensions différentes de l'image de référence.");
@@ -295,23 +294,23 @@ Result run(const Request &request)
                 result.turbulence.reason = QStringLiteral("Sujet trop grand pour la seconde passe.");
             }
         }
-        referencePixels.release();
-        cv::Mat registered;
+        referencePixels = {};
+        ipr::Image registered;
         double fieldReach = 0.0;
         if (request.localRefinement) {
             // Measured on a cheap resampling, so that the pixels are resampled only once.
-            const cv::Mat roughly = ipr::warpedPerspective(framePyramid[0], report.alignment.referenceToFrame, size, ipr::Resampling::Linear, ipr::Outside::LastPixel);
+            const ipr::Image roughly = ipr::warpedPerspective(framePyramid[0], report.alignment.referenceToFrame, size, ipr::Resampling::Linear, ipr::Outside::LastPixel);
             const StackAlignment::LocalField field = StackAlignment::localField(referencePyramid[0], roughly, request.local);
             report.localBlocks = field.measured;
             report.localLargest = field.largest;
             fieldReach = field.largest;
-            cv::Mat mapX, mapY;
+            ipr::Image mapX, mapY;
             sourceMaps(report.alignment.referenceToFrame, field.displacements, mapX, mapY);
             registered = ipr::remapped(frame.cameraRgb, mapX, mapY, ipr::Resampling::Lanczos4, ipr::Outside::LastPixel);
         } else {
             registered = ipr::warpedPerspective(frame.cameraRgb, report.alignment.referenceToFrame, size, ipr::Resampling::Lanczos4, ipr::Outside::LastPixel);
         }
-        frame.cameraRgb.release();
+        frame.cameraRgb = {};
         if (!levelGains(referenceProxy, proxyOf(registered), report.gains)) {
             report.exclusion = QStringLiteral("Aucune zone bien exposée à comparer à la référence.");
             advance();
@@ -355,11 +354,11 @@ Result run(const Request &request)
     result.bandRows = bandRows;
     const int bands = (result.commonArea.height + bandRows - 1) / bandRows;
     total = request.frameCount + bands;
-    result.cameraRgb.create(ipr::toCv(result.commonArea.size()), CV_32FC3);
-    std::vector<cv::Mat> rows(spool.size()), cut(spool.size());
+    result.cameraRgb = ipr::Image::create(result.commonArea.size(), ipr::Depth::F32, 3);
+    std::vector<ipr::Image> rows(spool.size()), cut(spool.size());
     for (int band = 0; band < bands; ++band) {
         if (stopped()) {
-            result.cameraRgb.release();
+            result.cameraRgb = {};
             return result;
         }
         const int top = band * bandRows;
@@ -371,22 +370,23 @@ Result run(const Request &request)
                               result.commonArea.width + 2 * context, height + 2 * context);
         const ipr::Recti readable = wanted & ipr::Recti(0, 0, size.width, size.height);
         for (size_t i = 0; i < spool.size(); ++i) {
-            if (!spool[i]->read(size, CV_32FC3, readable.y, readable.height, rows[i])) {
-                result.cameraRgb.release();
+            if (!spool[i]->read(size, ipr::Depth::F32, 3, readable.y, readable.height, rows[i])) {
+                result.cameraRgb = {};
                 result.error = QStringLiteral("Lecture impossible dans le dossier tampon.");
                 return result;
             }
-            cut[i] = rows[i](ipr::toCv(ipr::Recti(readable.x, 0, readable.width, readable.height)));
+            cut[i] = rows[i].view(ipr::Recti(readable.x, 0, readable.width, readable.height));
         }
-        cv::Mat merged;
+        ipr::Image merged;
         StackMerge::Statistics statistics;
         if (!StackMerge::merge(cut, request.rejectionSigma, merged, &statistics)) {
-            result.cameraRgb.release();
+            result.cameraRgb = {};
             result.error = QStringLiteral("Fusion impossible.");
             return result;
         }
-        merged(ipr::toCv(ipr::Recti(result.commonArea.x - readable.x, result.commonArea.y + top - readable.y, result.commonArea.width, height)))
-            .copyTo(result.cameraRgb(ipr::toCv(ipr::Recti(0, top, result.commonArea.width, height))));
+        ipr::Image place = result.cameraRgb.mutableView(ipr::Recti(0, top, result.commonArea.width, height));
+        ipr::copyInto(merged.view(ipr::Recti(result.commonArea.x - readable.x, result.commonArea.y + top - readable.y,
+                                             result.commonArea.width, height)), place);
         result.merge.samples += statistics.samples;
         result.merge.rejected += statistics.rejected;
         advance();
@@ -398,7 +398,7 @@ Result run(const Request &request)
         options.rejectionSigma = request.rejectionSigma;
         result.turbulence = StackTurbulence::refine(result.cameraRgb, inMerged, result.commonArea.tl(), views, options, request.cancelled);
         if (stopped()) {
-            result.cameraRgb.release();
+            result.cameraRgb = {};
             return result;
         }
     }

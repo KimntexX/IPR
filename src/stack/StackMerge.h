@@ -2,7 +2,7 @@
 #define IPR_STACK_STACKMERGE_H
 
 #include <QtGlobal>
-#include <opencv2/core.hpp>
+#include "Image.h"
 
 #include <vector>
 
@@ -25,9 +25,9 @@ constexpr int minimumFramesForRejection = 5;
 // keeps the middle of the result.
 constexpr int decisionWindow = 3;
 
-// frames: at least one CV_32FC3, same size. merged: CV_32FC3 of this size, reallocated
+// frames: at least one, F32 of three channels, same size. merged: the same of this size, reallocated
 // if needed. rejectionSigma <= 0 keeps every sample. False on invalid frames.
-bool merge(const std::vector<cv::Mat> &frames, double rejectionSigma, cv::Mat &merged,
+bool merge(const std::vector<ipr::Image> &frames, double rejectionSigma, ipr::Image &merged,
            Statistics *statistics = nullptr);
 
 } // namespace StackMerge

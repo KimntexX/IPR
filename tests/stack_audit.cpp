@@ -8,7 +8,12 @@
 #include "ImageExporter.h"
 #include "RawDecoder.h"
 #include "StackJob.h"
-#include "OpenCvBridge.h"
+#include "Analysis.h"
+#include "Filters.h"
+#include "Neighbourhood.h"
+#include "Parallel.h"
+#include "Pixels.h"
+#include "Resize.h"
 
 #include <QCoreApplication>
 #include <QCryptographicHash>
@@ -22,11 +27,13 @@
 #include <QJsonObject>
 #include <QProcess>
 #include <QUuid>
-#include <opencv2/imgproc.hpp>
 
 #include <algorithm>
+#include <array>
 #include <cmath>
+#include <complex>
 #include <iostream>
+#include <limits>
 #include <memory>
 #include <vector>
 #ifdef Q_OS_WIN
@@ -85,45 +92,59 @@ RawDecoder::Options decodeOptions()
     return options;
 }
 
-bool writeCache(const cv::Mat &image, const QString &path)
+bool writeCache(const ipr::Image &image, const QString &path)
 {
     QFile file(path);
     if (!file.open(QIODevice::WriteOnly))
         return false;
-    const int header[2]{image.cols, image.rows};
+    const int header[2]{image.width(), image.height()};
     bool fine = file.write(reinterpret_cast<const char *>(header), sizeof(header)) == qint64(sizeof(header));
-    const qint64 rowBytes = qint64(image.cols) * qint64(image.elemSize());
-    for (int y = 0; fine && y < image.rows; ++y)
-        fine = file.write(reinterpret_cast<const char *>(image.ptr(y)), rowBytes) == rowBytes;
+    const qint64 rowBytes = qint64(image.width()) * qint64(image.pixelBytes());
+    for (int y = 0; fine && y < image.height(); ++y)
+        fine = file.write(reinterpret_cast<const char *>(image.row<std::uint8_t>(y)), rowBytes) == rowBytes;
     return fine;
 }
 
-cv::Mat readCache(const QString &path)
+ipr::Image readCache(const QString &path)
 {
     QFile file(path);
     int header[2]{};
-    if (!file.open(QIODevice::ReadOnly) || file.read(reinterpret_cast<char *>(header), sizeof(header)) != qint64(sizeof(header)))
+    if (!file.open(QIODevice::ReadOnly) || file.read(reinterpret_cast<char *>(header), sizeof(header)) != qint64(sizeof(header)) ||
+        header[0] <= 0 || header[1] <= 0)
         return {};
-    cv::Mat image(header[1], header[0], CV_32FC3);
-    const qint64 rowBytes = qint64(image.cols) * qint64(image.elemSize());
-    for (int y = 0; y < image.rows; ++y)
-        if (file.read(reinterpret_cast<char *>(image.ptr(y)), rowBytes) != rowBytes)
+    ipr::Image image = ipr::Image::create(ipr::Size(header[0], header[1]), ipr::Depth::F32, 3);
+    const qint64 rowBytes = qint64(image.width()) * qint64(image.pixelBytes());
+    for (int y = 0; y < image.height(); ++y)
+        if (file.read(reinterpret_cast<char *>(image.mutableRow<std::uint8_t>(y)), rowBytes) != rowBytes)
             return {};
     return image;
 }
 
-cv::Mat luminanceOf(const cv::Mat &rgb)
+ipr::Image luminanceOf(const ipr::Image &rgb)
 {
-    cv::Mat luminance(rgb.size(), CV_32FC1);
-    cv::parallel_for_(cv::Range(0, rgb.rows), [&](const cv::Range &range) {
-        for (int y = range.start; y < range.end; ++y) {
-            const ipr::Vec3f *in = rgb.ptr<ipr::Vec3f>(y);
-            float *out = luminance.ptr<float>(y);
-            for (int x = 0; x < rgb.cols; ++x)
+    ipr::Image luminance = ipr::Image::create(rgb.size(), ipr::Depth::F32, 1);
+    ipr::parallelRows(rgb.height(), [&](int first, int last) {
+        for (int y = first; y < last; ++y) {
+            const ipr::Vec3f *in = rgb.row<ipr::Vec3f>(y);
+            float *out = luminance.mutableRow<float>(y);
+            for (int x = 0; x < rgb.width(); ++x)
                 out[x] = 0.25f * in[x][0] + 0.5f * in[x][1] + 0.25f * in[x][2];
         }
     });
     return luminance;
+}
+
+ipr::Image differenceOf(const ipr::Image &a, const ipr::Image &b)
+{
+    return ipr::mapped(a, b, [](float x, float y) { return x - y; });
+}
+
+// The windowed spectrum of a tile of a plane, its mean taken out first.
+std::vector<std::complex<double>> spectrumOf(const ipr::Image &plane, const ipr::Recti &tile, const ipr::Image &window)
+{
+    const ipr::Image part = plane.copy(tile);
+    const float mean = float(ipr::meanOf(part)[0]);
+    return ipr::fourierTransform(ipr::mapped(part, window, [mean](float v, float w) { return (v - mean) * w; }));
 }
 
 struct Tiles
@@ -133,22 +154,18 @@ struct Tiles
 };
 
 // Ranks the tiles by the detail of the noise-free view: the merged image's coarse gradients.
-Tiles chooseTiles(const cv::Mat &merged)
+Tiles chooseTiles(const ipr::Image &merged)
 {
-    cv::Mat luminance = luminanceOf(merged);
-    cv::Mat coarse;
-    cv::GaussianBlur(luminance, coarse, cv::Size(), blurForDetail);
-    cv::Mat gx, gy;
-    cv::Sobel(coarse, gx, CV_32F, 1, 0);
-    cv::Sobel(coarse, gy, CV_32F, 0, 1);
-    cv::Mat energy = gx.mul(gx) + gy.mul(gy);
+    const ipr::Image luminance = luminanceOf(merged);
+    const ipr::Image coarse = ipr::gaussianBlurred(luminance, blurForDetail);
+    const ipr::Image energy = ipr::mapped(ipr::sobel(coarse, true), ipr::sobel(coarse, false), [](float x, float y) { return x * x + y * y; });
     struct Ranked { double score; ipr::Recti tile; double level; };
     std::vector<Ranked> ranked;
-    for (int y = 0; y + tileSide <= merged.rows; y += tileSide)
-        for (int x = 0; x + tileSide <= merged.cols; x += tileSide) {
+    for (int y = 0; y + tileSide <= merged.height(); y += tileSide)
+        for (int x = 0; x + tileSide <= merged.width(); x += tileSide) {
             const ipr::Recti tile(x, y, tileSide, tileSide);
-            const double level = cv::mean(luminance(ipr::toCv(tile)))[0];
-            ranked.push_back({cv::mean(energy(ipr::toCv(tile)))[0] / std::max(1e-6, level * level), tile, level});
+            const double level = ipr::meanOf(luminance.view(tile))[0];
+            ranked.push_back({ipr::meanOf(energy.view(tile))[0] / std::max(1e-6, level * level), tile, level});
         }
     std::sort(ranked.begin(), ranked.end(), [](const Ranked &a, const Ranked &b) { return a.score < b.score; });
     Tiles tiles;
@@ -160,23 +177,21 @@ Tiles chooseTiles(const cv::Mat &merged)
     return tiles;
 }
 
-cv::Mat highPass(const cv::Mat &image)
+ipr::Image highPass(const ipr::Image &image)
 {
-    cv::Mat blurred;
-    cv::GaussianBlur(image, blurred, cv::Size(), blurForDetail);
-    return image - blurred;
+    return differenceOf(image, ipr::gaussianBlurred(image, blurForDetail));
 }
 
 // Median over the flat tiles of the ratio of a stack's noise to the reference's, per channel.
-QJsonObject noiseRatio(const cv::Mat &reference, const cv::Mat &stack, const std::vector<ipr::Recti> &tiles)
+QJsonObject noiseRatio(const ipr::Image &reference, const ipr::Image &stack, const std::vector<ipr::Recti> &tiles)
 {
-    const cv::Mat a = highPass(reference), b = highPass(stack);
+    const ipr::Image a = highPass(reference), b = highPass(stack);
     std::array<std::vector<double>, 3> ratios;
     std::array<std::vector<double>, 3> levels;
     for (const ipr::Recti &tile : tiles) {
-        cv::Scalar mean, deviationA, deviationB;
-        cv::meanStdDev(a(ipr::toCv(tile)), mean, deviationA);
-        cv::meanStdDev(b(ipr::toCv(tile)), mean, deviationB);
+        std::vector<double> mean, deviationA, deviationB;
+        ipr::meanAndDeviationOf(a.view(tile), mean, deviationA);
+        ipr::meanAndDeviationOf(b.view(tile), mean, deviationB);
         for (int c = 0; c < 3; ++c) {
             if (deviationA[c] > 0.0)
                 ratios[size_t(c)].push_back(deviationB[c] / deviationA[c]);
@@ -199,21 +214,14 @@ QJsonObject noiseRatio(const cv::Mat &reference, const cv::Mat &stack, const std
 // The fusion's transfer of detail, by frequency: with A and B two stacks whose noise is
 // independent of each other and of the reference R, T = <A conj B> / <A conj R>. The noise
 // of each cancels in the averages, so a loss of T is a true loss of detail. 1 means none.
-QJsonObject transfer(const cv::Mat &reference, const cv::Mat &a, const cv::Mat &b, const std::vector<ipr::Recti> &tiles)
+QJsonObject transfer(const ipr::Image &reference, const ipr::Image &a, const ipr::Image &b, const std::vector<ipr::Recti> &tiles)
 {
     constexpr int bins = 9;
     std::array<double, bins> crossAB{}, crossAR{}, powerA{}, powerR{};
-    cv::Mat window;
-    cv::createHanningWindow(window, cv::Size(tileSide, tileSide), CV_32F);
-    const cv::Mat lr = luminanceOf(reference), la = luminanceOf(a), lb = luminanceOf(b);
-    const auto spectrum = [&](const cv::Mat &image, const ipr::Recti &tile) {
-        cv::Mat windowed, out;
-        cv::multiply(image(ipr::toCv(tile)) - cv::mean(image(ipr::toCv(tile))), window, windowed);
-        cv::dft(windowed, out, cv::DFT_COMPLEX_OUTPUT);
-        return out;
-    };
+    const ipr::Image window = ipr::hannWindow(ipr::Size(tileSide, tileSide));
+    const ipr::Image lr = luminanceOf(reference), la = luminanceOf(a), lb = luminanceOf(b);
     for (const ipr::Recti &tile : tiles) {
-        const cv::Mat fr = spectrum(lr, tile), fa = spectrum(la, tile), fb = spectrum(lb, tile);
+        const auto fr = spectrumOf(lr, tile, window), fa = spectrumOf(la, tile, window), fb = spectrumOf(lb, tile, window);
         for (int v = 0; v < tileSide; ++v)
             for (int u = 0; u < tileSide; ++u) {
                 const double fu = (u <= tileSide / 2 ? u : u - tileSide) / double(tileSide);
@@ -221,11 +229,12 @@ QJsonObject transfer(const cv::Mat &reference, const cv::Mat &a, const cv::Mat &
                 const int bin = int(std::hypot(fu, fv) / 0.05) - 1;
                 if (bin < 0 || bin >= bins)
                     continue;
-                const ipr::Vec2f pa = ipr::at<ipr::Vec2f>(fa, v, u), pb = ipr::at<ipr::Vec2f>(fb, v, u), pr = ipr::at<ipr::Vec2f>(fr, v, u);
-                crossAB[size_t(bin)] += double(pa[0]) * pb[0] + double(pa[1]) * pb[1];
-                crossAR[size_t(bin)] += double(pa[0]) * pr[0] + double(pa[1]) * pr[1];
-                powerA[size_t(bin)] += double(pa[0]) * pa[0] + double(pa[1]) * pa[1];
-                powerR[size_t(bin)] += double(pr[0]) * pr[0] + double(pr[1]) * pr[1];
+                const size_t at = size_t(v * tileSide + u);
+                const std::complex<double> pa = fa[at], pb = fb[at], pr = fr[at];
+                crossAB[size_t(bin)] += (pa * std::conj(pb)).real();
+                crossAR[size_t(bin)] += (pa * std::conj(pr)).real();
+                powerA[size_t(bin)] += std::norm(pa);
+                powerR[size_t(bin)] += std::norm(pr);
             }
     }
     QJsonArray frequencies, transfers, coherences;
@@ -243,25 +252,18 @@ QJsonObject transfer(const cv::Mat &reference, const cv::Mat &a, const cv::Mat &
 
 // The signal two stacks with independent noise have in common, by frequency: <A conj B>.
 // Noise cancels in it, so a rise at high frequencies is detail recovered, not noise kept.
-QJsonObject sharedSignal(const cv::Mat &a, const cv::Mat &b, const ipr::Recti &area)
+QJsonObject sharedSignal(const ipr::Image &a, const ipr::Image &b, const ipr::Recti &area)
 {
     constexpr int bins = 9;
     constexpr int step = tileSide / 2;
     std::array<double, bins> power{};
-    cv::Mat window;
-    cv::createHanningWindow(window, cv::Size(tileSide, tileSide), CV_32F);
-    const cv::Mat la = luminanceOf(a), lb = luminanceOf(b);
-    const auto spectrum = [&](const cv::Mat &image, const ipr::Recti &tile) {
-        cv::Mat windowed, out;
-        cv::multiply(image(ipr::toCv(tile)) - cv::mean(image(ipr::toCv(tile))), window, windowed);
-        cv::dft(windowed, out, cv::DFT_COMPLEX_OUTPUT);
-        return out;
-    };
+    const ipr::Image window = ipr::hannWindow(ipr::Size(tileSide, tileSide));
+    const ipr::Image la = luminanceOf(a), lb = luminanceOf(b);
     int tiles = 0;
     for (int y = area.y; y + tileSide <= area.y + area.height; y += step)
         for (int x = area.x; x + tileSide <= area.x + area.width; x += step) {
             const ipr::Recti tile(x, y, tileSide, tileSide);
-            const cv::Mat fa = spectrum(la, tile), fb = spectrum(lb, tile);
+            const auto fa = spectrumOf(la, tile, window), fb = spectrumOf(lb, tile, window);
             ++tiles;
             for (int v = 0; v < tileSide; ++v)
                 for (int u = 0; u < tileSide; ++u) {
@@ -270,8 +272,8 @@ QJsonObject sharedSignal(const cv::Mat &a, const cv::Mat &b, const ipr::Recti &a
                     const int bin = int(std::hypot(fu, fv) / 0.05) - 1;
                     if (bin < 0 || bin >= bins)
                         continue;
-                    const ipr::Vec2f pa = ipr::at<ipr::Vec2f>(fa, v, u), pb = ipr::at<ipr::Vec2f>(fb, v, u);
-                    power[size_t(bin)] += double(pa[0]) * pb[0] + double(pa[1]) * pb[1];
+                    const size_t at = size_t(v * tileSide + u);
+                    power[size_t(bin)] += (fa[at] * std::conj(fb[at])).real();
                 }
         }
     QJsonArray frequencies, values;
@@ -284,34 +286,38 @@ QJsonObject sharedSignal(const cv::Mat &a, const cv::Mat &b, const ipr::Recti &a
 
 // How far blocks of the stack lie from the reference, what one transform leaves over a
 // scene with depth (parallax).
-QJsonObject localShifts(const cv::Mat &reference, const cv::Mat &stack, const std::vector<ipr::Recti> &tiles)
+QJsonObject localShifts(const ipr::Image &reference, const ipr::Image &stack, const std::vector<ipr::Recti> &tiles)
 {
     constexpr int radius = 6;
     constexpr int half = 32;
-    const cv::Mat a = luminanceOf(reference), b = luminanceOf(stack);
-    cv::Mat ra, rb;
-    cv::sqrt(cv::max(a, 0.f), ra);
-    cv::sqrt(cv::max(b, 0.f), rb);
+    const auto root = [](float v) { return std::sqrt(std::max(v, 0.f)); };
+    const ipr::Image ra = ipr::mapped(luminanceOf(reference), root), rb = ipr::mapped(luminanceOf(stack), root);
     std::vector<double> shifts;
     for (const ipr::Recti &tile : tiles) {
         const ipr::Point2i centre(tile.x + tile.width / 2, tile.y + tile.height / 2);
         const ipr::Recti block(centre.x - half, centre.y - half, 2 * half + 1, 2 * half + 1);
         const ipr::Recti search(block.x - radius, block.y - radius, block.width + 2 * radius, block.height + 2 * radius);
-        if ((search & ipr::Recti(0, 0, a.cols, a.rows)) != search)
+        if ((search & ipr::Recti(0, 0, ra.width(), ra.height())) != search)
             continue;
-        cv::Mat scores;
-        cv::matchTemplate(rb(ipr::toCv(search)), ra(ipr::toCv(block)), scores, cv::TM_CCOEFF_NORMED);
-        double top = 0.0;
-        cv::Point at;
-        cv::minMaxLoc(scores, nullptr, &top, nullptr, &at);
-        if (top < 0.8 || at.x <= 0 || at.y <= 0 || at.x >= scores.cols - 1 || at.y >= scores.rows - 1)
+        const ipr::Image scores = ipr::matchedTemplate(rb.view(search), ra.view(block));
+        // The first place of the best score, rows first.
+        double top = -std::numeric_limits<double>::infinity();
+        ipr::Point2i at;
+        for (int y = 0; y < scores.height(); ++y)
+            for (int x = 0; x < scores.width(); ++x)
+                if (scores.row<float>(y)[x] > top) {
+                    top = scores.row<float>(y)[x];
+                    at = ipr::Point2i(x, y);
+                }
+        if (top < 0.8 || at.x <= 0 || at.y <= 0 || at.x >= scores.width() - 1 || at.y >= scores.height() - 1)
             continue;
         const auto offset = [](double before, double middle, double after) {
             const double curve = before - 2.0 * middle + after;
             return std::abs(curve) > 1e-12 ? 0.5 * (before - after) / curve : 0.0;
         };
-        const double dx = at.x + offset(scores.at<float>(at.y, at.x - 1), top, scores.at<float>(at.y, at.x + 1)) - radius;
-        const double dy = at.y + offset(scores.at<float>(at.y - 1, at.x), top, scores.at<float>(at.y + 1, at.x)) - radius;
+        const float *row = scores.row<float>(at.y);
+        const double dx = at.x + offset(row[at.x - 1], top, row[at.x + 1]) - radius;
+        const double dy = at.y + offset(scores.row<float>(at.y - 1)[at.x], top, scores.row<float>(at.y + 1)[at.x]) - radius;
         shifts.push_back(std::hypot(dx, dy));
     }
     std::sort(shifts.begin(), shifts.end());
@@ -344,12 +350,13 @@ QJsonObject frameJson(const StackJob::FrameReport &frame, const QString &name)
     };
 }
 
-bool renderCrop(const RawDecoder::DcpSource &source, const cv::Mat &cameraRgb, const ipr::Recti &area, double ev,
+bool renderCrop(const RawDecoder::DcpSource &source, const ipr::Image &cameraRgb, const ipr::Recti &area, double ev,
                 const QString &path)
 {
     // As the decoder renders a calibrated signal: applyProfile asks a new decode for it.
     CameraSignal::Source signal;
-    signal.rgb = ipr::fromMat(cv::Mat(cameraRgb(ipr::toCv(area)) * std::pow(2.0, ev)));
+    const float gain = float(std::pow(2.0, ev));
+    signal.rgb = ipr::mapped(cameraRgb.copy(area), [gain](float v) { return v * gain; });
     signal.cameraMake = source.metadata.cameraMake;
     signal.cameraModel = source.metadata.cameraModel;
     signal.whiteBalanceKelvin = source.whiteBalanceKelvin;
@@ -422,7 +429,7 @@ int main(int argc, char **argv)
             continue;
         }
         decodeSeconds.append(double(watch.elapsed()) / 1000.0);
-        const cv::Mat signal = ipr::heldMat(image.dcpContext->cameraRgb);
+        const ipr::Image &signal = image.dcpContext->cameraRgb;
         if (i == referenceIndex) {
             referenceSource->cameraRgb = image.dcpContext->cameraRgb.share();
             referenceSource->workingContext = image.dcpContext;
@@ -431,7 +438,7 @@ int main(int argc, char **argv)
         }
         if (!QFileInfo::exists(cached) && !writeCache(signal, cached))
             std::cerr << "cache write failed\n";
-        std::cout << "decoded " << names[i].toStdString() << ' ' << signal.cols << 'x' << signal.rows << std::endl;
+        std::cout << "decoded " << names[i].toStdString() << ' ' << signal.width() << 'x' << signal.height() << std::endl;
     }
 
     const QString scratchRoot = value(QStringLiteral("--scratch"), out.path());
@@ -468,8 +475,12 @@ int main(int argc, char **argv)
     }
     std::cout << "stack of " << whole.usedFrames << " in " << wholeSeconds << " s, area " << whole.commonArea.width << 'x' << whole.commonArea.height << std::endl;
     const double wholePeak = peakMemoryGb();
-    const cv::Mat referenceFull = readCache(cache.filePath(names[referenceIndex] + QStringLiteral(".rgb")));
-    const cv::Mat reference = referenceFull(ipr::toCv(whole.commonArea));
+    const ipr::Image referenceFull = readCache(cache.filePath(names[referenceIndex] + QStringLiteral(".rgb")));
+    if (referenceFull.empty()) {
+        std::cerr << "the reference is not in the cache\n";
+        return 1;
+    }
+    const ipr::Image reference = referenceFull.view(whole.commonArea);
     const Tiles tiles = chooseTiles(whole.cameraRgb);
     const QJsonObject noiseWhole = noiseRatio(reference, whole.cameraRgb, tiles.flat);
 
@@ -497,7 +508,7 @@ int main(int argc, char **argv)
         growth.append(QJsonObject{{QStringLiteral("frames"), partial.usedFrames},
                                   {QStringLiteral("ideal_ratio"), 1.0 / std::sqrt(double(partial.usedFrames))},
                                   {QStringLiteral("seconds"), seconds},
-                                  {QStringLiteral("noise"), noiseRatio(reference(ipr::toCv(inWhole)), partial.cameraRgb(ipr::toCv(inPartial)), inside)}});
+                                  {QStringLiteral("noise"), noiseRatio(reference.view(inWhole), partial.cameraRgb.view(inPartial), inside)}});
         std::cout << "growth " << frames << std::endl;
     }
 
@@ -516,15 +527,16 @@ int main(int argc, char **argv)
         const ipr::Recti area = (halfA.commonArea & halfB.commonArea) & whole.commonArea;
         const ipr::Recti inA(area.x - halfA.commonArea.x, area.y - halfA.commonArea.y, area.width, area.height);
         const ipr::Recti inB(area.x - halfB.commonArea.x, area.y - halfB.commonArea.y, area.width, area.height);
-        const cv::Mat a = halfA.cameraRgb(ipr::toCv(inA)), b = halfB.cameraRgb(ipr::toCv(inB)), r = referenceFull(ipr::toCv(area));
-        const Tiles halfTiles = chooseTiles(whole.cameraRgb(ipr::toCv(ipr::Recti(area.x - whole.commonArea.x, area.y - whole.commonArea.y, area.width, area.height))));
-        cv::Mat difference = (a - b) * std::sqrt(0.5);
+        const ipr::Image a = halfA.cameraRgb.view(inA), b = halfB.cameraRgb.view(inB), r = referenceFull.view(area);
+        const Tiles halfTiles = chooseTiles(whole.cameraRgb.view(ipr::Recti(area.x - whole.commonArea.x, area.y - whole.commonArea.y, area.width, area.height)));
+        const float half = std::sqrt(0.5f);
+        const ipr::Image difference = ipr::mapped(a, b, [half](float x, float y) { return (x - y) * half; });
         std::array<std::vector<double>, 3> ratios;
-        const cv::Mat hr = highPass(r);
+        const ipr::Image hr = highPass(r);
         for (const ipr::Recti &tile : halfTiles.flat) {
-            cv::Scalar mean, deviationD, deviationR;
-            cv::meanStdDev(difference(ipr::toCv(tile)), mean, deviationD);
-            cv::meanStdDev(hr(ipr::toCv(tile)), mean, deviationR);
+            std::vector<double> mean, deviationD, deviationR;
+            ipr::meanAndDeviationOf(difference.view(tile), mean, deviationD);
+            ipr::meanAndDeviationOf(hr.view(tile), mean, deviationR);
             for (int c = 0; c < 3; ++c)
                 if (deviationR[c] > 0.0)
                     ratios[size_t(c)].push_back(deviationD[c] / deviationR[c]);
@@ -553,7 +565,7 @@ int main(int argc, char **argv)
     if (!referenceSource->cameraRgb.empty() && !tiles.flat.empty() && !tiles.textured.empty()) {
         const auto grown = [&](const ipr::Recti &tile) {
             const ipr::Point2i centre(tile.x + tile.width / 2, tile.y + tile.height / 2);
-            return ipr::Recti(centre.x - 400, centre.y - 300, 800, 600) & ipr::Recti(0, 0, reference.cols, reference.rows);
+            return ipr::Recti(centre.x - 400, centre.y - 300, 800, 600) & ipr::Recti(0, 0, reference.width(), reference.height());
         };
         const std::vector<std::pair<QString, ipr::Recti>> areas{{QStringLiteral("flat"), grown(tiles.flat[tiles.flat.size() / 2])},
                                                               {QStringLiteral("textured"), grown(tiles.textured.back())},
@@ -571,9 +583,8 @@ int main(int argc, char **argv)
     // Views chosen by hand, in the reference's frame, the same from one run to the next; and
     // the whole picture at a quarter of its size, to choose them.
     if (!referenceSource->cameraRgb.empty()) {
-        cv::Mat overview;
-        cv::resize(whole.cameraRgb, overview, cv::Size(), 0.25, 0.25, cv::INTER_AREA);
-        renderCrop(*referenceSource, overview, ipr::Recti(0, 0, overview.cols, overview.rows), 0.0, out.filePath(QStringLiteral("overview.png")));
+        const ipr::Image overview = ipr::resizedBy(whole.cameraRgb, 0.25, 0.25, ipr::Interpolation::Area);
+        renderCrop(*referenceSource, overview, ipr::Recti(0, 0, overview.width(), overview.height()), 0.0, out.filePath(QStringLiteral("overview.png")));
         int number = 0;
         for (const QString &text : value(QStringLiteral("--areas")).split(QLatin1Char(';'), Qt::SkipEmptyParts)) {
             const QStringList parts = text.split(QLatin1Char(','));
@@ -594,7 +605,7 @@ int main(int argc, char **argv)
     if (!referenceSource->cameraRgb.empty()) {
         CameraDng::Content content;
         const CameraProfileEngine::DcpCameraData camera = CameraProfileEngine::dcpCameraData(referenceSource->workingContext->profilePath);
-        content.cameraRgb = ipr::fromMat(whole.cameraRgb);
+        content.cameraRgb = whole.cameraRgb.share();
         content.cameraMake = referenceSource->metadata.cameraMake;
         content.cameraModel = referenceSource->metadata.cameraModel;
         content.lensMake = referenceSource->metadata.lensMake;
@@ -622,7 +633,7 @@ int main(int argc, char **argv)
         const ColorPipeline::WorkingImage reopened = written ? RawDecoder::decode(dngPath, reopenOptions, &reopenedMetadata, &dngError) : ColorPipeline::WorkingImage{};
         const double readSeconds = double(watch.elapsed()) / 1000.0;
         CameraSignal::Source signal;
-        signal.rgb = ipr::fromMat(whole.cameraRgb).clone();
+        signal.rgb = whole.cameraRgb.clone();
         signal.cameraMake = content.cameraMake;
         signal.cameraModel = content.cameraModel;
         signal.whiteBalanceKelvin = content.whiteBalanceKelvin;
@@ -678,9 +689,9 @@ int main(int argc, char **argv)
         {QStringLiteral("sources_intact"), sourcesIntact},
         {QStringLiteral("frames"), frames},
         {QStringLiteral("used_frames"), whole.usedFrames},
-        {QStringLiteral("frame_size"), QJsonArray{referenceFull.cols, referenceFull.rows}},
+        {QStringLiteral("frame_size"), QJsonArray{referenceFull.width(), referenceFull.height()}},
         {QStringLiteral("common_area"), QJsonArray{whole.commonArea.x, whole.commonArea.y, whole.commonArea.width, whole.commonArea.height}},
-        {QStringLiteral("area_kept"), double(whole.commonArea.area()) / double(referenceFull.total())},
+        {QStringLiteral("area_kept"), double(whole.commonArea.area()) / double(referenceFull.size().area())},
         {QStringLiteral("rejected_share"), double(whole.merge.rejected) / std::max(1.0, double(whole.merge.samples))},
         {QStringLiteral("seconds_decode_each"), decodeSeconds},
         {QStringLiteral("seconds_stack_from_decoded"), wholeSeconds},

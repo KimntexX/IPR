@@ -5,12 +5,14 @@
 // values, two images equal value for value. Checks are the tests' own.
 #include "Image.h"
 #include "Pixels.h"
+#include "Warp.h"
 
 #include <algorithm>
 #include <cmath>
 #include <cstdint>
 #include <initializer_list>
 #include <limits>
+#include <random>
 #include <stdexcept>
 
 namespace imagetest {
@@ -128,6 +130,28 @@ inline double sumOfDifferences(const ipr::Image &a, const ipr::Image &b)
         for (int v = 0; v < a.width() * a.channels(); ++v)
             sum += std::abs(double(a.row<float>(y)[v]) - double(b.row<float>(y)[v]));
     return sum;
+}
+
+// F32 values drawn from a normal law, rows first, from a seeded generator.
+inline ipr::Image normalNoise(ipr::Size size, int channels, double mean, double deviation, unsigned seed)
+{
+    std::mt19937 random(seed);
+    std::normal_distribution<float> normal{float(mean), float(deviation)};
+    ipr::Image image = ipr::Image::create(size, ipr::Depth::F32, channels);
+    for (int y = 0; y < size.height; ++y) {
+        float *row = image.mutableRow<float>(y);
+        for (int v = 0; v < size.width * channels; ++v)
+            row[v] = normal(random);
+    }
+    return image;
+}
+
+// The image moved by imageToOut (a point of the image to its place in the result), at this size,
+// the last pixel repeated beyond the image.
+inline ipr::Image moved(const ipr::Image &image, const ipr::Matrix33d &imageToOut, ipr::Size size,
+                        ipr::Resampling resampling = ipr::Resampling::Lanczos4)
+{
+    return ipr::warpedPerspective(image, imageToOut.inv(), size, resampling, ipr::Outside::LastPixel);
 }
 
 // The Euclidean distance between two F32 images of one layout, over every value.

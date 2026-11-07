@@ -2,9 +2,11 @@
 
 #include "StackMerge.h"
 
-#include "OpenCvBridge.h"
+#include "Filters.h"
+#include "Warp.h"
+#include "Neighbourhood.h"
+#include "Pixels.h"
 
-#include <opencv2/imgproc.hpp>
 
 #include <algorithm>
 #include <cmath>
@@ -13,22 +15,22 @@
 namespace StackTurbulence {
 namespace {
 
-cv::Mat rootLuminance(const cv::Mat &rgb)
+ipr::Image rootLuminance(const ipr::Image &rgb)
 {
-    cv::Mat luminance(rgb.size(), CV_32FC1);
-    for (int y = 0; y < rgb.rows; ++y) {
-        const ipr::Vec3f *in = rgb.ptr<ipr::Vec3f>(y);
-        float *out = luminance.ptr<float>(y);
-        for (int x = 0; x < rgb.cols; ++x)
+    ipr::Image luminance = ipr::Image::create(rgb.size(), ipr::Depth::F32, 1);
+    for (int y = 0; y < rgb.height(); ++y) {
+        const ipr::Vec3f *in = rgb.row<ipr::Vec3f>(y);
+        float *out = luminance.mutableRow<float>(y);
+        for (int x = 0; x < rgb.width(); ++x)
             out[x] = std::sqrt(std::max(0.f, 0.25f * in[x][0] + 0.5f * in[x][1] + 0.25f * in[x][2]));
     }
     return luminance;
 }
 
 // Fine detail of a view, read at a scale above the noise of a single pixel.
-double sharpnessOf(const cv::Mat &luminance)
+double sharpnessOf(const ipr::Image &luminance)
 {
-    cv::Mat smoothed, detail;
+    ipr::Image smoothed, detail;
     smoothed = ipr::gaussianBlurred(luminance, 1.0, ipr::BlurBorder::Mirror);
     detail = ipr::laplacian(smoothed);
     std::vector<double> mean, deviation;
@@ -37,12 +39,12 @@ double sharpnessOf(const cv::Mat &luminance)
 }
 
 // 1 inside, falling to 0 at the area's edge.
-cv::Mat fadeMask(const ipr::Size &size, int feather)
+ipr::Image fadeMask(const ipr::Size &size, int feather)
 {
-    cv::Mat mask(ipr::toCv(size), CV_32FC1);
+    ipr::Image mask = ipr::Image::create(size, ipr::Depth::F32, 1);
     const float reach = float(std::max(1, feather));
     for (int y = 0; y < size.height; ++y) {
-        float *out = mask.ptr<float>(y);
+        float *out = mask.mutableRow<float>(y);
         for (int x = 0; x < size.width; ++x) {
             const float edge = float(std::min({x, y, size.width - 1 - x, size.height - 1 - y}));
             const float t = std::clamp(edge / reach, 0.f, 1.f);
@@ -54,13 +56,13 @@ cv::Mat fadeMask(const ipr::Size &size, int feather)
 
 } // namespace
 
-Report refine(cv::Mat &merged, const ipr::Recti &subject, const ipr::Point2i &origin, const std::vector<View> &views,
+Report refine(ipr::Image &merged, const ipr::Recti &subject, const ipr::Point2i &origin, const std::vector<View> &views,
               const Options &options, const std::function<bool()> &cancelled)
 {
     Report report;
     report.views = int(views.size());
-    const ipr::Recti bounds(0, 0, merged.cols, merged.rows);
-    if (merged.empty() || merged.type() != CV_32FC3 || subject.empty() || (subject & bounds) != subject) {
+    const ipr::Recti bounds(0, 0, merged.width(), merged.height());
+    if (merged.empty() || !(merged.depth() == ipr::Depth::F32 && merged.channels() == 3) || subject.empty() || (subject & bounds) != subject) {
         report.reason = QStringLiteral("Zone du sujet invalide.");
         return report;
     }
@@ -70,11 +72,11 @@ Report refine(cv::Mat &merged, const ipr::Recti &subject, const ipr::Point2i &or
     }
 
     const ipr::Size size = subject.size();
-    const cv::Mat reference = rootLuminance(merged(ipr::toCv(subject)));
+    const ipr::Image reference = rootLuminance(merged.copy(subject));
     // From the subject's own coordinates to the frame's.
     const ipr::Matrix33d subjectToReference(1, 0, double(origin.x + subject.x), 0, 1, double(origin.y + subject.y), 0, 0, 1);
 
-    std::vector<cv::Mat> registered(views.size());
+    std::vector<ipr::Image> registered(views.size());
     std::vector<int> measured;
     for (size_t i = 0; i < views.size(); ++i) {
         if (cancelled && cancelled()) {
@@ -82,13 +84,13 @@ Report refine(cv::Mat &merged, const ipr::Recti &subject, const ipr::Point2i &or
             return report;
         }
         const View &view = views[i];
-        if (view.pixels.empty() || view.pixels.type() != CV_32FC3) {
+        if (view.pixels.empty() || !(view.pixels.depth() == ipr::Depth::F32 && view.pixels.channels() == 3)) {
             report.sharpness.push_back(0.0);
             continue;
         }
         const ipr::Matrix33d frameToPixels(1, 0, -double(view.origin.x), 0, 1, -double(view.origin.y), 0, 0, 1);
         const ipr::Matrix33d subjectToPixels = frameToPixels * view.referenceToFrame * subjectToReference;
-        const cv::Mat roughly = ipr::warpedPerspective(rootLuminance(view.pixels), subjectToPixels, size, ipr::Resampling::Linear, ipr::Outside::LastPixel);
+        const ipr::Image roughly = ipr::warpedPerspective(rootLuminance(view.pixels), subjectToPixels, size, ipr::Resampling::Linear, ipr::Outside::LastPixel);
         const StackAlignment::LocalField field = StackAlignment::localField(reference, roughly, options.local);
         if (field.displacements.empty()) {
             report.sharpness.push_back(0.0);
@@ -97,10 +99,10 @@ Report refine(cv::Mat &merged, const ipr::Recti &subject, const ipr::Point2i &or
         measured.push_back(field.measured);
         report.largestDisplacement = std::max(report.largestDisplacement, field.largest);
 
-        cv::Mat mapX(ipr::toCv(size), CV_32FC1), mapY(ipr::toCv(size), CV_32FC1);
+        ipr::Image mapX = ipr::Image::create(size, ipr::Depth::F32, 1), mapY = ipr::Image::create(size, ipr::Depth::F32, 1);
         for (int y = 0; y < size.height; ++y) {
-            const ipr::Vec2f *move = field.displacements.ptr<ipr::Vec2f>(y);
-            float *outX = mapX.ptr<float>(y), *outY = mapY.ptr<float>(y);
+            const ipr::Vec2f *move = field.displacements.row<ipr::Vec2f>(y);
+            float *outX = mapX.mutableRow<float>(y), *outY = mapY.mutableRow<float>(y);
             for (int x = 0; x < size.width; ++x) {
                 const double px = x + double(move[x][0]), py = y + double(move[x][1]);
                 const double w = subjectToPixels(2, 0) * px + subjectToPixels(2, 1) * py + subjectToPixels(2, 2);
@@ -108,7 +110,7 @@ Report refine(cv::Mat &merged, const ipr::Recti &subject, const ipr::Point2i &or
                 outY[x] = float((subjectToPixels(1, 0) * px + subjectToPixels(1, 1) * py + subjectToPixels(1, 2)) / w);
             }
         }
-        cv::Mat output = ipr::remapped(view.pixels, mapX, mapY, ipr::Resampling::Lanczos4, ipr::Outside::LastPixel);
+        ipr::Image output = ipr::remapped(view.pixels, mapX, mapY, ipr::Resampling::Lanczos4, ipr::Outside::LastPixel);
         output = ipr::multiplied(output, std::vector<double>{view.gains[0], view.gains[1], view.gains[2]});
         report.sharpness.push_back(sharpnessOf(rootLuminance(output)));
         registered[i] = std::move(output);
@@ -120,28 +122,28 @@ Report refine(cv::Mat &merged, const ipr::Recti &subject, const ipr::Point2i &or
         const double sa = report.sharpness[size_t(a)], sb = report.sharpness[size_t(b)];
         return sa != sb ? sa > sb : a < b;
     });
-    const int usable = int(std::count_if(registered.begin(), registered.end(), [](const cv::Mat &m) { return !m.empty(); }));
+    const int usable = int(std::count_if(registered.begin(), registered.end(), [](const ipr::Image &m) { return !m.empty(); }));
     const int wanted = std::max(options.minimumKept, int(std::ceil(options.keepShare * usable)));
     const int kept = std::min(wanted, usable);
     if (kept < options.minimumKept) {
         report.reason = QStringLiteral("Trop peu de vues utilisables sur le sujet.");
         return report;
     }
-    std::vector<cv::Mat> best;
+    std::vector<ipr::Image> best;
     for (int i = 0; i < kept; ++i)
-        best.push_back(registered[size_t(order[size_t(i)])]);
+        best.push_back(std::move(registered[size_t(order[size_t(i)])]));
 
-    cv::Mat refined;
+    ipr::Image refined;
     if (!StackMerge::merge(best, options.rejectionSigma, refined)) {
         report.reason = QStringLiteral("Fusion impossible.");
         return report;
     }
-    const cv::Mat mask = fadeMask(size, options.feather);
-    cv::Mat area = merged(ipr::toCv(subject));
+    const ipr::Image mask = fadeMask(size, options.feather);
+    ipr::Image area = merged.mutableView(subject);
     for (int y = 0; y < size.height; ++y) {
-        ipr::Vec3f *out = area.ptr<ipr::Vec3f>(y);
-        const ipr::Vec3f *in = refined.ptr<ipr::Vec3f>(y);
-        const float *weight = mask.ptr<float>(y);
+        ipr::Vec3f *out = area.mutableRow<ipr::Vec3f>(y);
+        const ipr::Vec3f *in = refined.row<ipr::Vec3f>(y);
+        const float *weight = mask.row<float>(y);
         for (int x = 0; x < size.width; ++x)
             out[x] = in[x] * weight[x] + out[x] * (1.f - weight[x]);
     }

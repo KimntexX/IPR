@@ -347,6 +347,22 @@ void transform2d(std::vector<Complex> &values, int rows, int cols, bool inverse)
 
 } // namespace
 
+std::vector<Complex> fourierTransform(const Image &plane)
+{
+    if (plane.empty())
+        return {};
+    if (plane.depth() != Depth::F32 || plane.channels() != 1)
+        throw std::invalid_argument("A plane of floats");
+    std::vector<Complex> values(size_t(plane.width()) * size_t(plane.height()));
+    for (int y = 0; y < plane.height(); ++y) {
+        const float *row = plane.row<float>(y);
+        for (int x = 0; x < plane.width(); ++x)
+            values[size_t(y) * size_t(plane.width()) + size_t(x)] = double(row[x]);
+    }
+    transform2d(values, plane.height(), plane.width(), false);
+    return values;
+}
+
 Point<double> phaseCorrelation(const Image &a, const Image &b, const Image &window)
 {
     const auto plane = [](const Image &image) { return !image.empty() && image.depth() == Depth::F32 && image.channels() == 1; };
