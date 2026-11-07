@@ -8511,3 +8511,69 @@ ensuite les deux initialisations, le même budget et une référence MSE,
 avec mesures indépendantes et photographiques avant toute intégration.
 Aucune nouvelle photo n’est requise pour cette étape. Aucun calcul lourd
 actif, changement de production, publication, fusion ou tag.
+
+## 7 novembre 2026 — vérification Haar sur les 4 096 recettes de la campagne étendue
+
+Après clarification avec l’utilisateur, une étape signifie une mise à jour
+Adam après quatre micro-lots : 256 mises à jour correspondent à 1 024
+présentations de patchs, pas à une convergence démontrée. L’utilisateur
+autorise l’étape suivante en vue d’une comparaison 512/1 024 étapes. Les
+anciens verdicts à 256 pas restent des verdicts à court budget, pas une
+preuve d’incapacité asymptotique de l’objectif ou du modèle.
+
+Le contrôle `audit_dru_haar_recipes.py` est lancé sur **toutes les recettes
+serial 0 à 4 095**, soit celles des quatre micro-lots des 1 024 futures
+mises à jour. Il emploie data_seed 71, politique référence, génération
+complète du contexte qualifié de 1 024 pixels RAW, et cœur identique de
+128×128 cellules packed pour les calculs de perte. Les sources de génération
+et lois de bruit sont comparées aux empreintes de la précédente campagne.
+Aucun poids de modèle n’est chargé ni entraîné.
+
+### Variance vraie synthétique et variance estimée
+
+Le générateur actuel ajoute un bruit gaussien dont la variance dépend du
+signal propre, puis **estime le sigma fourni au modèle depuis le signal
+bruité**. Ces deux variances ne sont pas la même information. La dépendance
+statistique de la seconde au bruit interdit d’appliquer aveuglément la
+borne d’espérance démontrée pour une variance connue indépendante.
+
+`dru_clean_variance.clean_sigma` reconstruit uniquement la variance vraie
+de la simulation à partir de la cible propre et de la loi physique du
+scénario. Les gains et le diviseur sont appliqués par couleur physique.
+En unités packed = caméra équilibrée /2 :
+
+`variance = (a × gain/diviseur)/2 × max(cible_packed, 0)
+            + b × (gain/diviseur)²/4`.
+
+Cette information est **réservée au calcul/contrôle de la perte pendant
+l’entraînement synthétique** ; elle ne remplace pas le sigma bruité en
+entrée réseau et n’est pas disponible comme vérité sur une photo réelle.
+Les images sans bruit restent explicitement à sigma nul. Deux tests ciblés
+passent sur unités/gains/couleurs, valeurs négatives, bruit nul et paramètres
+invalides. Il n’y a pas de changement du générateur, du réseau ou du moteur.
+
+### Mesures enregistrées
+
+Pour chacun des 4 096 patchs : variances vraie/estimée par plan, ratio de
+variance, énergie du bruit standardisée par sa variance vraie, fraction
+négative de cible, MSE et pénalité Haar avec les deux sigmas. Les gradients
+MSE/Haar sont comparés par norme et cosinus ; leur finitude est obligatoire.
+La dérivée face à une atténuation de contraste à 0,8 doit pousser vers la
+restauration ou être nulle sur une cible sans détail. Le cas sans bruit doit
+rester exactement identité. Toutes les recettes sont gardées, pas seulement
+les plus favorables.
+
+Ces gradients concernent **la sortie image**, pas les paramètres du réseau,
+Adam ou le gradient après clipping. Cette vérification prépare un prévol
+réseau ; elle ne le remplace pas. Les tableaux produits ne prouvent ni la
+qualité photographique ni l’absence d’artefact après long apprentissage.
+
+Suivi : `build-patch_neural_restoration/dru-haar-recipe-audit-v001/progress.json`.
+Logs `dru-haar-recipes.stdout.log` et `.stderr.log`. L’analyse est bornée à
+15 minutes, CPU quatre threads à priorité basse, limite processus souple
+1,25 Gio/dure 2 Gio, RAM globale 92 %. Une pression externe soutenue
+(85 % RAM ou 80 % CPU externe pendant 15 s) ou le fichier `STOP` du dossier
+interrompt le contrôle en préservant le résultat partiel. Aucun checkpoint,
+image ou grand cache n’est créé. La comparaison réseau à 1 024 étapes
+n’est pas encore lancée et dépend de cette vérification puis d’un prévol.
+Aucun push, fusion, tag ou changement de production.
