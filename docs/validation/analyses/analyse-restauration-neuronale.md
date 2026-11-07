@@ -8214,3 +8214,58 @@ RAM système, 50 % CUDA et quatre threads. Un délai externe de 22 minutes
 arrête/récolte le worker en cas de blocage ; la synthèse CPU est bornée à
 3 minutes, avec son propre quota 1,25/2 Gio et 92 % système. Aucun lancement
 d’apprentissage, changement de production, push, fusion vers dev ou tag.
+
+## 7 novembre 2026 — contrôle repris complet et volume de travail inventorié
+
+Le contrôle repris s’est terminé normalement à **13 h 18 Paris** :
+864 observations en 153 secondes, puis synthèse CPU en 2,19 secondes.
+Les 324 premières observations sont exactement égales à celles conservées
+avant l’arrêt mémoire. La tentative partielle n’est pas écrasée. Pic privé
+échantillonné du worker : 3,08 Gio ; pic mémoire système : 62,74 %.
+La migration de dev n’a pas changé ces mesures Torch synthétiques ; cela
+ne remplace pas une qualification de la nouvelle chaîne photographique C++.
+
+Preuves :
+[mesures](../raw/neural-dru-amplitudes-v001-20261107T121818Z.json),
+[analyse](../raw/neural-dru-amplitude-analysis-v001-20261107T121821Z.json),
+[enchaînement](../raw/neural-dru-transfer-retry-v001-20261107T121821Z.json).
+
+À fréquence 26 et amplitude faible 0,008, la variation de gain corrigé moins
+brut à 256 étapes passe de −0,153 à −0,161 pour la graine 71 (dégradation),
+et de −0,212 à −0,154 pour 73 (amélioration). À amplitude 0,06, elle passe
+de −0,110 à −0,118 pour 71 et de −0,163 à −0,113 pour 73. La protection des
+faibles contrastes n’est donc pas confirmée sur les deux initialisations.
+Le résultat reste partiel : ne pas retenir seulement la graine 73, ne pas
+relancer un apprentissage long sur cette base. Aucun calcul encore actif.
+
+### Inventaire demandé par l’utilisateur
+
+L’inventaire logique du worktree est d’environ **68,8 Go**, dont **66,8 Go**
+dans `build-patch_neural_restoration` et **31,3 Go** de checkpoints `.pt`
+(287 fichiers). L’environnement CPU local représente environ 0,64 Go.
+Ce total n’inclut ni les objets Git partagés ni l’environnement CUDA situé
+hors de ce worktree. Les tailles logiques ne prouvent pas l’allocation NTFS
+exacte. Inventaire : [neural-storage-inventory-v001-20261107T124515Z.json](../raw/neural-storage-inventory-v001-20261107T124515Z.json).
+
+Les JSON canoniques suivis dans tout ce checkout représentent environ
+1,31 Go ; la branche a ajouté environ **840,6 Mo / 391 JSON** par rapport
+à dev, comprenant les preuves historiques de l’étude. Ils sont distincts
+des caches/checkpoints ignorés de Git. Les objets Git sont partagés entre
+les branches/worktrees : leur volume ne s’attribue pas à cette seule branche.
+
+Le volume d’un checkpoint de ce réseau est cohérent avec le modèle et
+l’état Adam (environ 392 Mo pour les états complets). En revanche, le
+cumul des campagnes rejetées, prévols, états finaux présents sous plusieurs
+noms et rendus/cache n’est pas nécessaire dans son intégralité pour la
+suite. Le stockage temporaire n’a pas encore été purgé ; un tri est justifié.
+La question de l’utilisateur n’est pas assimilée à une autorisation de
+suppression : **rien supprimé**.
+
+Plan de tri recommandé : conserver les sources, contrats, JSON canoniques
+et un ensemble explicite de checkpoints utiles à la reproduction/reprise ;
+inventorier les contenus identiques et les références de chemins avant
+suppression ; retirer en priorité les caches/rendus régénérables et les
+copies redondantes. Supprimer un checkpoint rejeté économise de l’espace
+mais retire la possibilité de rejouer immédiatement son rendu : cette limite
+doit rester documentée. Ne pas effacer les preuves ni réécrire l’historique
+Git pour alléger le disque local.
