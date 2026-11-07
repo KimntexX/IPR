@@ -8269,3 +8269,31 @@ copies redondantes. Supprimer un checkpoint rejeté économise de l’espace
 mais retire la possibilité de rejouer immédiatement son rendu : cette limite
 doit rester documentée. Ne pas effacer les preuves ni réécrire l’historique
 Git pour alléger le disque local.
+
+## 7 novembre 2026 — nettoyage autorisé terminé
+
+Après autorisation explicite de l’utilisateur, le nettoyage a libéré
+**39,75 Go** sur le volume. Périmètre vérifié : uniquement les artefacts
+ignorés de Git dans le build de ce worktree, sans calcul actif.
+
+- 102 sorties flottantes de rendus/inférences supprimées : **27,73 Go**.
+- 51 copies de checkpoints identiques remplacées par des liens physiques :
+  **12,02 Go** de contenus redondants évités ; tous leurs chemins subsistent.
+- Les **287 chemins de checkpoints** sont conservés, ainsi que tous leurs
+  états distincts. Égalités de SHA-256 et identités de fichiers vérifiées.
+
+Les JSON canoniques, RAW, captures sources `.bin`, six captures CFA,
+cibles d’entraînement, aperçus et environnements sont conservés. Aucun
+changement des sources de calcul, aucune suppression ou réécriture Git.
+Les caches supprimés ne sont plus une sauvegarde de pixels : une
+régénération exige les sources et la version adéquate des outils.
+
+Le worktree est désormais à environ **41,06 Go logiques**, soit environ
+**29,03 Go de contenus de fichiers distincts** après liens physiques ; les
+clusters NTFS et les objets Git partagés ne sont pas inclus dans ce dernier
+calcul. Les checkpoints liés sont des artefacts immuables : ne pas les
+modifier en place. Une nouvelle sauvegarde doit écrire un nouveau fichier
+et remplacer atomiquement son chemin, comme le fait `dru_checkpoint.save`.
+
+[Plan, exécution, source et contrôle du nettoyage](../../reports/storage/neural-cleanup-2026-11-07/README.md).
+Le contrôle final est réussi. Aucun calcul, push, fusion ou tag lancé.

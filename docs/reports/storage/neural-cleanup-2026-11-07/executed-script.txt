@@ -1,0 +1,137 @@
+"""One-off, explicitly scoped cleanup authorized on 2026-11-07."""
+import argparse
+from collections import defaultdict
+from datetime import datetime,timezone
+import hashlib
+import json
+import os
+from pathlib import Path
+import shutil
+import tempfile
+
+ROOT=Path(__file__).resolve().parent
+WORKTREE=ROOT.parent
+REPORT=WORKTREE/'docs/reports/storage/neural-cleanup-2026-11-07'
+CACHE_FOLDERS=('sensor-learning-campaign-v001','real-photo-display-v002','real-photo-baselines-v001',
+    'local-sigma-display-v001','real-photo-neural-v001','local-sigma-inference-v001',
+    'real-photo-display-v001','learned-photo-diagnostic-v001')
+
+
+def owned(path):
+    path=Path(path)
+    if path.is_symlink() or not path.resolve().is_relative_to(ROOT) or path.resolve()==ROOT:
+        raise ValueError('Unowned or linked cleanup target: '+str(path))
+    return path.resolve()
+
+
+def digest(path):
+    h=hashlib.sha256()
+    with path.open('rb') as f:
+        while block:=f.read(4*1024**2):h.update(block)
+    return h.hexdigest()
+
+
+def signature(path):
+    s=path.stat()
+    return dict(path=str(path.relative_to(ROOT)),bytes=s.st_size,sha256=digest(path))
+
+
+def same_bytes_link(keeper,target,expected):
+    keeper=owned(keeper);target=owned(target)
+    if keeper==target:return False
+    if keeper.stat().st_size!=expected['bytes'] or target.stat().st_size!=expected['bytes']:
+        raise ValueError('Checkpoint size changed')
+    if digest(keeper)!=expected['sha256'] or digest(target)!=expected['sha256']:
+        raise ValueError('Checkpoint content changed')
+    if os.path.samefile(keeper,target):return False
+    temporary=target.with_name(target.name+'.dedup-link')
+    if temporary.exists():raise ValueError('Existing temporary link')
+    os.link(keeper,temporary)
+    try:
+        if not os.path.samefile(keeper,temporary):raise RuntimeError('Hardlink identity not established')
+        # Atomic path replacement: target remains intact if creating the hardlink failed.
+        os.replace(temporary,target)
+    finally:
+        temporary.unlink(missing_ok=True)
+    if not os.path.samefile(keeper,target):raise RuntimeError('Final hardlink identity differs')
+    return True
+
+
+def self_test():
+    with tempfile.TemporaryDirectory(dir=ROOT) as d:
+        a=Path(d)/'a.pt';b=Path(d)/'b.pt';a.write_bytes(b'fixture-checkpoint');b.write_bytes(a.read_bytes())
+        row=signature(a)
+        assert same_bytes_link(a,b,row) and os.path.samefile(a,b)
+        assert b.read_bytes()==b'fixture-checkpoint'
+        assert not same_bytes_link(a,b,row)
+        c=Path(d)/'c.pt';c.write_bytes(b'different')
+        try:same_bytes_link(a,c,row)
+        except ValueError:pass
+        else:raise AssertionError('Different checkpoint accepted')
+        assert c.read_bytes()==b'different'
+    try:owned(WORKTREE/'docs')
+    except ValueError:pass
+    else:raise AssertionError('Outside path accepted')
+    print('SELF TEST PASSED',flush=True)
+
+
+def prepare():
+    REPORT.mkdir(parents=True,exist_ok=False)
+    plan=dict(schema_version=1,created_at_utc=datetime.now(timezone.utc).isoformat(),root=str(ROOT),
+        script_sha256=digest(Path(__file__)),delete=[],deduplicate=[],
+        policy='Delete only generated float render caches in explicit folders; preserve all JSON, source captures, targets, unique checkpoints and previews. Replace only bit-identical checkpoint copies by hardlinks, preserving all paths.',
+        kept_source_caches=['sensor-learning-plan-v001/targets.f32','photo-comparison-v001/full-cfa','photo-comparison-v001/full-cfa-sensor-v002'])
+    for folder in CACHE_FOLDERS:
+        for path in sorted((ROOT/folder).rglob('*.f32')):
+            path=owned(path);plan['delete'].append(signature(path))
+        print('INVENTORIED CACHE',folder,flush=True)
+    by_size=defaultdict(list)
+    for path in ROOT.rglob('*.pt'):
+        path=owned(path);by_size[path.stat().st_size].append(path)
+    for size,paths in by_size.items():
+        if len(paths)<2:continue
+        groups=defaultdict(list)
+        for path in paths:groups[digest(path)].append(path)
+        for checksum,group in groups.items():
+            if len(group)<2:continue
+            group.sort(key=lambda p:('checkpoint-' not in p.name,str(p)))
+            keeper=group[0]
+            plan['deduplicate'].append(dict(bytes=size,sha256=checksum,keeper=str(keeper.relative_to(ROOT)),
+                targets=[str(p.relative_to(ROOT)) for p in group[1:] if not os.path.samefile(keeper,p)]))
+        print('HASHED CHECKPOINT SIZE',size,'count',len(paths),flush=True)
+    plan['delete_bytes']=sum(r['bytes'] for r in plan['delete'])
+    plan['deduplicate_bytes_upper_bound']=sum(r['bytes']*len(r['targets']) for r in plan['deduplicate'])
+    with (REPORT/'plan.json').open('x',encoding='utf-8') as f:json.dump(plan,f,indent=2)
+    print('PLAN',len(plan['delete']),plan['delete_bytes'],plan['deduplicate_bytes_upper_bound'],flush=True)
+
+
+def execute():
+    plan=json.loads((REPORT/'plan.json').read_text(encoding='utf-8'))
+    if plan['root']!=str(ROOT) or plan['script_sha256']!=digest(Path(__file__)):raise ValueError('Cleanup contract changed')
+    result=dict(status='started',started_at_utc=datetime.now(timezone.utc).isoformat(),plan_sha256=digest(REPORT/'plan.json'),
+        free_before=shutil.disk_usage(ROOT).free,deleted=[],linked=[])
+    try:
+        for row in plan['delete']:
+            path=owned(ROOT/row['path'])
+            if path.suffix!='.f32' or path.relative_to(ROOT).parts[0] not in CACHE_FOLDERS:raise ValueError('Unexpected deletion target')
+            if path.stat().st_size!=row['bytes'] or digest(path)!=row['sha256']:raise ValueError('Cache changed since inventory')
+            path.unlink();result['deleted'].append(row['path'])
+        print('CACHE DELETION COMPLETE',len(result['deleted']),flush=True)
+        for row in plan['deduplicate']:
+            keeper=owned(ROOT/row['keeper'])
+            for name in row['targets']:
+                target=owned(ROOT/name)
+                if keeper.suffix!='.pt' or target.suffix!='.pt':raise ValueError('Checkpoint only')
+                if same_bytes_link(keeper,target,row):result['linked'].append(name)
+        result['status']='completed'
+    except BaseException as e:
+        result.update(status='stopped_on_error',error=str(e));raise
+    finally:
+        result.update(finished_at_utc=datetime.now(timezone.utc).isoformat(),free_after=shutil.disk_usage(ROOT).free)
+        with (REPORT/'result.json').open('x',encoding='utf-8') as f:json.dump(result,f,indent=2)
+        print('RESULT',result['status'],'free_delta',result['free_after']-result['free_before'],flush=True)
+
+
+if __name__=='__main__':
+    p=argparse.ArgumentParser();p.add_argument('action',choices=('self-test','prepare','execute'))
+    a=p.parse_args();{'self-test':self_test,'prepare':prepare,'execute':execute}[a.action]()
