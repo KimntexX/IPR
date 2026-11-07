@@ -9066,3 +9066,55 @@ la trace de la clarification, pas une politique encore en attente.
 Les autres critères acceptés (+0,5 dB par scène/bande, noirs/PSD, planches)
 restent inchangés. Ce cadrage ne remplace pas le futur plan de données et
 de calcul à sceller avant campagne ; le composite actuel reste inchangé.
+
+
+## 7 novembre 2026 — préparation après le composite, sans nouveau réglage procédural
+
+À la demande de l’utilisateur, la préparation du futur apprentissage peut
+continuer après la fin des tests, avec un essai court si le temps le permet.
+Le composite reste figé : aucun de ses fichiers exécutés n’a été modifié.
+
+Une file indépendante (`tests/neural/prepare_next_training.py`) attend sa
+clôture et son archivage. En cas d’échec ou d’interruption du composite,
+elle conserve la préparation documentaire mais ne relance pas ses calculs.
+Après réussite, elle prépare un inventaire des sources ISO 100 déjà étudiées,
+sans attribuer artificiellement les scènes, séances ou partitions et sans
+transformer les anciennes captures RGB en CFA. Les sources originales ne
+sont ni déplacées ni modifiées. Les contrôles d’empreinte, extraction CFA,
+netteté et saturation restent nécessaires avant constitution des données.
+
+L’essai autorisé porte sur le **coût**, avec poids aléatoires et perte L1 :
+largeurs 16/32 (environ 2/8 millions de paramètres), patchs empaquetés
+128/256, lot physique 8, Adam, FP32 contre AMP FP16. Quatre mises à jour de
+chauffe puis seize mesurées par configuration ; pas de checkpoint ou cache
+d’images volumineux. La génération du bruit, les transferts, le calcul,
+la rétropropagation et Adam sont inclus. Le temps, la mémoire, les normes
+de gradient avant clipping et les sauts du scaler sont enregistrés.
+La comparaison de précision est une mesure d’ingénierie : elle ne démontre
+pas l’équivalence photographique, qui devra être qualifiée séparément.
+Deux mesures CPU FP32 à huit threads portent uniquement sur une tuile
+512 × 512 empaquetée ; elles ne représentent pas un temps d’image complète.
+
+L’orchestrateur lance un seul travail à la fois, en priorité réduite,
+après une minute sous 70 % de RAM utilisée. Chaque essai est limité à
+quinze minutes, avec plafond de processus 6 Gio (arrêt coopératif à 5 Gio),
+seuil global 92 %, quota CUDA 50 %, admission GPU avec 4 Gio libres et
+abandon sur pression soutenue. L’attente mémoire est bornée à dix minutes.
+Une erreur numérique ou de pression arrête la file ; une configuration
+indisponible conserve son erreur sans augmentation automatique des quotas.
+Arrêt général fixé au **8 novembre à 09 h Paris**, par précaution pour
+libérer les ressources avant la matinée ; ce n’est pas une nouvelle fenêtre
+d’apprentissage long. Pas de mise en veille automatique dans cette file.
+
+Le prochain entraînement photographique reste conditionné au banc naturel,
+à la qualification minimale de la banque de noirs, aux étalons CFA calibrés
+et aux partitions par scène/séance figées avant examen des scores.
+La cible reste +0,5 dB médian apparié par scène et bande d’ISO ; le neuronal
+reste une qualité optionnelle, hors du budget d’ouverture par défaut.
+BM3D 4.0.3 reste prévu dans un environnement extérieur au dépôt : cette file
+n’installe aucun paquet et ne prétend pas avoir qualifié cet étalon.
+
+Les résultats de préparation seront conservés dans un JSON horodaté
+`neural-training-preparation-v001-*` sous `docs/validation/raw/`.
+Cinq contrôles ciblés de la préparation passent ; ce résultat ne valide
+ni le débit GPU réel, ni un modèle de débruitage.
