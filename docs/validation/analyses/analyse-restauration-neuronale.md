@@ -8964,3 +8964,17 @@ sigma/adaptateur sur développement ; figer budget/candidat ; entraîner dans
 les plages autorisées et ouvrir le test une fois. Le transfert 60D/ISO
 réservés vient ensuite, sans retarder le socle physique du premier boîtier.
 Aucun changement de moteur, push, fusion ou tag pour cet échange.
+
+## 7 novembre 2026 — BM3D Tampere accepté comme référence externe
+
+L’utilisateur accepte BM3D de Tampere comme point de référence, avec un
+environnement isolé **hors dépôt**, sans code/binaire ni sortie intermédiaire
+commité, livré ou redistribué. Seules les mesures JSON et planches autorisées
+entreront dans les preuves, avec version, source, licence et paramètres.
+Cette décision est inscrite dans le fichier commun de revue et son périmètre
+n’a pas à être redemandé. La provenance de la version utilisée sera conservée.
+
+Le comparateur est prévu après clôture du composite, dans le banc naturel
+convenu. Aucun paquet n’est installé dans les environnements existants,
+aucune installation BM3D ni exécution n’est faite à cette étape. Les sources
+et paramètres du composite actif restent figés. Aucun push, fusion ou tag.
