@@ -9035,3 +9035,20 @@ contrôles visuels et sa comparaison au classique dans un domaine RGB commun.
 Le contrat du composite actif et ses échéances ne changent pas. Aucune
 intégration moteur/IHM, installation ou publication n’est faite par cette
 consignation.
+
+## 7 novembre 2026 — critères naturels acceptés, périmètre CPU contradictoire
+
+Claude transmet la validation des critères : gain médian apparié par scène
+>= 0,5 dB, bandes ISO 3200–6400 / 16000–51200, non-régression des noirs/PSD,
+planches utilisateur et trois sorties de décision. Ces clauses sont
+consignées dans l’architecture pour le futur contrat, avant nouveaux calculs.
+Le meilleur étalon CFA sera figé avant test ; le classique reste dans un
+RGB commun. Aucune modification rétroactive du composite.
+
+Une clause demande clarification : « ouverture complète en 20,8 s à huit
+threads » dans le message transmis, contre « qualité optionnelle » plus
+lente/GPU accepté directement juste avant. Une seule question de périmètre
+est adressée à l’utilisateur : ouverture par défaut seule, ou neuronal
+optionnel inclus ? Aucun plafond n’est attribué silencieusement à ce mode.
+Le futur contrat n’est pas déclaré totalement scellé tant que ce point
+reste ouvert. Aucun calcul de la nouvelle campagne n’est lancé.

@@ -1430,3 +1430,26 @@ réservé aux capacités GPU appropriées ; 20,8 s n’est pas son plafond CPU
 obligatoire. Mesurer néanmoins temps, mémoire et matériel requis avant
 sélection et intégration ; conserver les garde-fous et les échéances des
 campagnes. Cette décision produit n’est pas une fonctionnalité déjà livrée.
+
+### Critères du futur banc naturel — décision rapportée le 7 novembre 2026
+
+À fixer dans le contrat de campagne avant nouveaux calculs :
+
+- Gain **médian apparié par scène >= 0,5 dB** de PSNR CFA linéaire face à un
+  étalon CFA choisi sur développement puis figé ; bandes ISO 3200–6400 et
+  16000–51200, avec détail des ISO couverts et limites de calibration.
+- Aucune régression bloquante du biais des aplats sombres ni du spectre
+  résiduel ; définitions, unités et tolérances opérationnelles à décrire
+  avant lecture des nouveaux scores.
+- Planches à 100 % acceptées par l’utilisateur ; classique RGB comparé
+  séparément dans un chemin RGB commun. Aucun score CFA imputé au classique.
+- Décision à trois sorties : progrès qualifié, régression claire ou
+  inconclusif au budget fixé. Aucun changement des verdicts historiques.
+
+**Clarification CPU requise avant scellement complet :** la décision
+transmise par Claude cite une ouverture totale à 20,8 s/huit threads,
+alors que le choix direct précédent autorise une qualité optionnelle plus
+lente ou GPU. Le périmètre du plafond a été demandé à l’utilisateur. Les
+20,8 s ne sont pas appliquées au mode qualité par déduction. Les autres
+critères ne sont pas remis en question. Le composite actuel reste hors de
+ce nouveau contrat ; aucune nouvelle campagne naturelle n’est lancée ici.
