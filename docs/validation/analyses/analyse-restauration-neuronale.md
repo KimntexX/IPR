@@ -8398,3 +8398,116 @@ indépendante restera à faire ensuite.
 Les JSON et checkpoints utiles sont conservés ; cet audit n’a ajouté que
 des mesures légères. Aucun calcul lourd en attente, aucune modification
 photographique de production, publication, fusion ou tag.
+
+## 7 novembre 2026 — piste Haar locale : audit mathématique et normalisation du bruit
+
+L’utilisateur autorise la piste suivante. Deux études **sans entraînement**
+sont terminées, sur CPU et avec moins de 0,84 Gio de mémoire privée
+échantillonnée. Aucun fichier image, poids ou checkpoint n’est généré.
+Les deux itérations sont conservées :
+[Haar local initial](../raw/neural-dru-haar-audit-v001-20261107T151614Z.json),
+[Haar local normalisé par le bruit](../raw/neural-dru-haar-noise-aware-audit-v001-20261107T151919Z.json).
+La seconde fixe une nouvelle normalisation après constat du défaut de la
+première ; ce n’est pas une validation indépendante. Les recettes sont
+identiques et le source exact du premier objectif est conservé et vérifié
+par empreinte dans le contrat de la seconde étude.
+
+### Structure de la protection étudiée
+
+Chaque plan CFA est décomposé par **Haar orthonormal**, trois niveaux,
+trois orientations de détail par niveau. La projection sur la cible propre
+est mesurée séparément dans des voisinages de **8×8 coefficients**, avant
+la moyenne des pertes. Aucune fréquence du contrôle n’est codée dans
+l’objectif ; le modèle et l’inférence ne sont pas modifiés. Les plans,
+orientations et niveaux ont même poids ; le poids additionnel reste fixé
+à 1 pour cette étude, sans balayage de paramètres.
+
+Six tests ciblés passent : conservation de l’énergie par Haar, détails
+nuls pour une constante, cibles exactes/uniformes, sens et finitude des
+gradients, refus de dimensions/sigma invalides, récupération de l’objectif
+local sans bruit et contrôle Monte-Carlo du terme normalisé. La pénalité
+n’est **pas** enregistrée dans le worker d’entraînement à ce stade.
+
+### Première itération : le masquage recule mais le bruit domine
+
+Pour le même motif atténué de 20 %, sans déplacement de grille :
+
+| Fond | Ancienne projection globale | Haar local initial |
+| --- | ---: | ---: |
+| Aucun | 0,03972 | 0,03736 |
+| Bord fort | 0,0003457 | 0,03736 |
+| Onde grossière | 0,002920 | 0,007651 |
+| Trois autres composantes | 0,0003816 | 0,0007911 |
+
+Les quatre déplacements circulaires d’une cellule packed confirment une
+réduction du masquage dans ces fixtures. Ils sondent le découpage des
+coefficients, pas toutes les phases CFA ni les bords d’une photographie.
+Le contre-exemple de compensation précédemment invisible est maintenant
+pénalisé à environ **0,00206**. Cela prouve sa détection, pas une garantie
+sur toute erreur possible.
+
+Mais les petites énergies de référence amplifient aussi la projection
+accidentelle du bruit. Sur le motif faible à sigma packed 0,03, la pénalité
+moyenne du signal brut atteint **44,92**, pour un MSE normalisé de 1,001.
+Ce terme dominerait l’objectif : ne pas lancer un entraînement sur cette
+première formule sans traiter cette dépendance.
+
+### Seconde itération : utiliser la variance de la projection
+
+Pour un voisinage de N=64 coefficients propres `t_i`, on note
+`q = moyenne((p_i − t_i) × t_i)` et `E = moyenne(t_i²)`.
+Si le bruit d’entrée est indépendant et centré, et de variance connue,
+sa variance se propage dans Haar par les carrés des poids : chaque
+coefficient 2×2 reçoit `somme(variances) / 4`. La variance de sa projection
+sur le signal propre est alors :
+
+`V(q) = somme(variance_i × t_i²) / N²`.
+
+La nouvelle pénalité est `q² / ((E + 10⁻⁸)² + V(q))`.
+Elle revient à la formule locale initiale lorsque sigma est nul, et reste
+nulle pour une cible propre uniforme. Sous les hypothèses idéales, la
+contribution moyenne du seul bruit à un terme est au plus 1 ; les
+corrélations entre niveaux ne sont pas nécessaires à ce calcul d’espérance
+par terme. Une variance estimée à partir de l’observation, du bruit corrélé
+ou un traitement après dématriçage/LCP demandent une qualification séparée.
+
+Les 16 tirages fixés, trois niveaux de bruit et trois scènes mathématiques
+(aplat, onde faible, onde faible + bord) sont tous conservés. Pour l’onde
+faible brute, les pénalités moyennes deviennent :
+
+| Sigma packed | Haar local initial | Haar tenant compte du bruit |
+| --- | ---: | ---: |
+| 0,005 | 1,248 | 0,238 |
+| 0,015 | 11,229 | 0,571 |
+| 0,03 | 44,918 | 0,808 |
+
+Ce n’est pas un gain de débruitage : aucun réseau n’a été entraîné avec
+cette formule. Cela montre seulement que la normalisation évite l’explosion
+du terme dans ces cas. L’oracle propre reste strictement meilleur que le
+signal brut ; les témoins de flou sont tous conservés, sans choisir leur
+meilleur mélange. Le score ne remplace pas les critères de bruit/détail.
+
+### Bilan et limites avant entraînement
+
+Les trois vérifications mathématiques déclarées passent : contre-exemple
+détecté, masquage réduit sur tous les fonds/déplacements sondés, oracle
+meilleur que le signal bruité. Le motif seul atténué vaut environ 0,02381
+avec la nouvelle normalisation ; près du bord, environ 0,02381 aussi.
+La protection conserve environ 80–100 % de sa sensibilité près du bord
+selon le déplacement, contre moins de 1 % avec la projection globale.
+
+En revanche, avec trois autres ondes, la sensibilité ne conserve encore
+qu’environ **2,7–3,1 %** de celle du motif seul. Plusieurs textures dans
+une même sous-bande et un même voisinage peuvent donc toujours se masquer.
+La formule ne supprime pas tout espace de compensation ; les bandes dont
+la cible propre est uniforme n’ajoutent aucune contrainte, le MSE devant
+continuer à y réduire le bruit.
+
+La piste est mathématiquement plus défendable que la projection globale,
+mais **aucun nouveau modèle n’est validé**. Avant un entraînement apparié
+borné, contrôler la cohérence de sigma avec les recettes CFA réellement
+utilisées et le comportement des gradients sur ces recettes. Conserver
+ensuite les deux initialisations, le même budget et une référence MSE,
+avec mesures indépendantes et photographiques avant toute intégration.
+Aucune nouvelle photo n’est requise pour cette étape. Aucun calcul lourd
+actif, changement de production, publication, fusion ou tag.
