@@ -9014,3 +9014,24 @@ entre mode qualité optionnel (éventuellement lent/GPU, classique conservé)
 et plafond CPU strict de 20,8 s. Aucune de ces deux politiques n’est déclarée
 validée. La réponse explique leurs conséquences de produit avant sélection ;
 le profil de coût réel reste à mesurer dans les deux cas.
+
+## 7 novembre 2026 — mode qualité optionnel validé par l’utilisateur
+
+L’utilisateur choisit **Qualité optionnelle** pour le débruitage neuronal.
+La base classique est conservée ; un traitement neuronal plus lent sur CPU
+ou dépendant du GPU n’est pas éliminé par un plafond implicite de 20,8 s.
+Ce mode doit être déclenché explicitement et ne doit pas ralentir l’ouverture
+par défaut. Il s’agit d’une direction produit, pas d’un raccordement IHM
+ou d’une capacité neuronale déjà livrée.
+
+Le coût CPU/GPU, la mémoire et les capacités matérielles restent à mesurer
+et à présenter avec les résultats. Le choix n’autorise ni attente infinie,
+ni dépassement des quotas mémoire, ni suppression du classique sur une
+machine moins adaptée. Les 20,8 s peuvent rester une référence comparative,
+pas un critère éliminatoire du mode qualité.
+
+La cible future +0,5 dB CFA précédemment acceptée reste valable, avec ses
+contrôles visuels et sa comparaison au classique dans un domaine RGB commun.
+Le contrat du composite actif et ses échéances ne changent pas. Aucune
+intégration moteur/IHM, installation ou publication n’est faite par cette
+consignation.

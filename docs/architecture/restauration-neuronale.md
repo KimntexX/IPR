@@ -1420,3 +1420,13 @@ requis est activé temporairement et restauré, le jeton fermé sur toutes
 les sorties ; les erreurs de [AdjustTokenPrivileges](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-adjusttokenprivileges)
 sont vérifiées même si son retour indique un succès. Le test de capacité
 n’effectue aucune suspension. Les tests automatisés simulent cet appel.
+
+### Décision utilisateur — qualité neuronale optionnelle, 7 novembre 2026
+
+Le débruitage neuronal est prévu comme **mode qualité optionnel**, déclenché
+explicitement. Le classique reste disponible et l’ouverture par défaut ne
+reçoit pas ce coût supplémentaire. Le mode peut être plus lent sur CPU ou
+réservé aux capacités GPU appropriées ; 20,8 s n’est pas son plafond CPU
+obligatoire. Mesurer néanmoins temps, mémoire et matériel requis avant
+sélection et intégration ; conserver les garde-fous et les échéances des
+campagnes. Cette décision produit n’est pas une fonctionnalité déjà livrée.
