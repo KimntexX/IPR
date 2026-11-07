@@ -8016,3 +8016,81 @@ Mémoire d’analyse et témoins :
 [neural-dru-amplitude-analysis-v001-20261107T101048Z.json](../raw/neural-dru-amplitude-analysis-v001-20261107T101048Z.json).
 Les données brutes et tous les bras/jalons restent conservés. Aucun push,
 fusion, tag, changement de production ou mise en veille de journée.
+
+## 7 novembre 2026 — comparaison appariée de l’objectif avec protection de contraste
+
+L’utilisateur autorise la prochaine piste. Le nouveau protocole est scellé
+avant tout résultat : deux objectifs, deux initialisations 71/73, mêmes
+observations (data_seed 71, politique `reference`), 256 étapes depuis zéro,
+Adam 10⁻⁴, quatre micro-lots par étape. On conserve **tous les contrôles**
+connus aux jalons 0/128/256. Les données enrichies ne sont pas combinées à
+cette intervention : le facteur testé est uniquement l’objectif.
+
+### Objectif expérimental fixé
+
+L’objectif de référence est le MSE normalisé courant. La variante ajoute
+une pénalité de projection des gradients sur la référence propre, par
+plan CFA, à trois échelles **1 / 2 / 4** (moyenne spatiale pour 2 et 4).
+Sur le cœur de traitement, avec P la prédiction et T la cible propre,
+D les différences adjacentes horizontales/verticales, la pénalité est :
+
+`moyenne_échelles,plans ( <D(P−T), D(T)> / (<D(T),D(T)> + 10⁻⁸) )²`.
+
+Les produits sont moyennés spatialement dans chaque direction puis
+additionnés. Le poids additionnel est fixé à **1**, sans recherche de
+coefficient ; les trois échelles et les plans ont même poids. La perte
+MSE conserve la maîtrise des erreurs DC et des composantes non projetées.
+Une cible uniforme donne une pénalité structurelle nulle. L’objectif vise
+le contraste cohérent avec une structure connue pendant l’entraînement,
+sans utiliser de fréquence, angle ou identité du banc dans sa formule.
+Il n’ajoute aucun calcul à l’inférence et ne modifie pas le réseau.
+
+C’est une proposition expérimentale propre à ce banc, pas un objectif
+attribué à DRUNet ni une méthode publiée revendiquée. Elle peut préserver
+du bruit ou créer des artefacts ; elle ne pénalise pas directement toutes
+les erreurs orthogonales aux gradients propres. Les erreurs de bruit,
+phase, couleur et conservation du signal restent donc à mesurer. Les
+contrôles sont connus : aucune qualification indépendante ou production
+ne peut être déduite de cette seule expérience.
+
+### Contrôle du raccordement et déroulement
+
+`train_dru_cfa.py` reçoit l’objectif explicitement dans le plan, enregistre
+MSE et terme structurel séparément à chaque étape, puis utilise le même
+Adam et la même limitation de gradient. Le chemin MSE est vérifié par un
+test de valeur et gradient exacts. Les prévols de chaque objectif exécutent
+huit étapes et vérifient la reprise modèle + Adam au bit près. Les deux
+références complètes sont ensuite rejouées : leurs pertes et contrôles
+0/128/256 doivent égaler les anciens résultats, sinon la comparaison
+s’arrête avant de mesurer les deux candidats.
+
+Neuf tests ciblés passent avant lancement : quatre tests d’objectif
+(valeur/gradient de référence, cible exacte/uniforme, correction de
+l’atténuation, cas limite), deux tests du contrat de sources et trois
+tests de synthèse appariée (tous jalons/graines, identités, doublons).
+Les prévols GPU et les contrôles complets restent à réaliser ; les tests
+unitaires ne sont pas leur substitut.
+
+Le superviseur `run_dru_objective_study.py` est lancé, quatre jobs lourds
+séquentiels après prévols, à priorité basse. Il attend 60 s sous 70 % RAM
+avant admission. Quatre threads CPU, limite processus souple 5 Gio/dure
+6 Gio, plafond RAM système 92 %, allocation CUDA 50 %. Pression externe
+soutenue (RAM 85 % ou CPU externe 80 %, 15 s) : le worker sauvegarde puis
+la campagne s’arrête, sans boucle de relance. L’arrêt utilisateur est
+signalé par `STOP` dans le dossier de campagne ; le superviseur demande
+une sortie avec sauvegarde avant d’utiliser un arrêt forcé de son seul
+arbre en dernier recours. Il ne ferme aucun logiciel tiers.
+
+Budget total **trois heures**, fin des workers au plus tard après 2 h 45
+à partir du scellement. Aucun entraînement long supplémentaire ni veille
+automatique ne sont prévus. Le résultat doit montrer simultanément une
+meilleure conservation et un bénéfice de bruit ; une simple identité ne
+suffit pas. Les anciens critères numériques sont conservés, sans sélection
+de la meilleure graine ou du meilleur jalon.
+
+Contrats canoniques :
+[plan scellé](../raw/neural-dru-objective-plan-v001-20261107T101619Z.json),
+[plans complets et contrat d’exécution](../raw/neural-dru-objective-contract-v001-20261107T101721Z.json).
+Suivi : `build-patch_neural_restoration/dru-objective-study-v001/progress.json`.
+Aucun push, fusion, tag, changement photographique de production ou
+alignement de branche avec la migration OpenCV en cours de campagne.

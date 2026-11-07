@@ -1,0 +1,111 @@
+{
+  "manifest": {
+    "schema_version": 1,
+    "status": "sealed_matched_objective_study",
+    "created_at_utc": "2026-11-07T10:16:19.145891+00:00",
+    "source_sha256": "0d329a0a22455fb5f92600dbbe48d3f08b232010890a0e87d79d31388b407df6",
+    "tools": {
+      "bayer_canonical.py": "a759c19f855f53dc96b8631e6f3d7817d99eb28a7da766fd74c5c91f6c9016f8",
+      "context_data.py": "91bcccd5185cfc80be408f7c4833b43052df87a9d8a1d20d0559d99dfe6e2dc6",
+      "dru_cfa.py": "72b3b01b586316a46960173e93c515768bf8d55e38aec134215f9645d36ec3f1",
+      "dru_checkpoint.py": "d2cdd5dfb6c4bc3e4cfaa1a3b6d3f0cc295a5038a9b43ce01e84ef3c81598ca1",
+      "dru_comparison_policy.py": "be362e74c8dc48af4976167d88aab1ed3f0b3b2ec47737eaa43236d6a7cd9ad3",
+      "dru_execution.py": "d43e021e9b8456abb7ad96d6d76bae19f520bf8df53fec0dc7a9798eebac5dc2",
+      "dru_known_controls.py": "bba84fe1f0ce6f20798cfd8b758d6f6f93f376f7ccfbaa2d7b6f8b9461beafe1",
+      "dru_structure_objective.py": "0eb9b3d8ddaf315f7db3c97197e78301d993fafd01cabf76af8a1525cd63d621",
+      "dru_training_data.py": "bf813cccf2ccafec96a4697abebfb546514cd345f3a5ef479c2e101bed5a0186",
+      "fine_texture_training.py": "ecb0c2716c7555110dc472a2c2a7fbe45c5002344e09e04981fa0f0847d12e14",
+      "joint_bayer_unet.py": "c4899cbbdd27d8065a5c2e1eb981806e8a2f848f14b43052863d81c573c22e3f",
+      "load_control.py": "11cb829f0fa2fc86de20c1d0e06ea0b2f573891508136aaf8bbdd3ad6ef90c75",
+      "memory_budget.py": "e8b15c8f1fc698c7a865e34e332badde54272b8715ae26b52270ab542e0abf79",
+      "memory_trace.py": "745fb9f056dfc105703692dd857fc87681b792cdbda6bf586d13300b69b89cd6",
+      "run_dru_objective_study.py": "4833df34f843f298bba457eb09180ca98c2a9918bf867b2aa318440baf5aaccc",
+      "scheduled_comparison_results.py": "8d5cf1489974d85bdd735842f10b594fd3444fc90569124f0642b5b67eb9fc27",
+      "sensor_curve_noise.py": "9b1868ae317b9da7bee29eb9355edd27b534dc6683548e65b15f8f6cb94d3c0a",
+      "sensor_transfer_math.py": "b98bd65fec8d36219bb6f2ab10d41c5b66d8b0ceb6abd0ad4fe98934b970c3f6",
+      "train_dru_cfa.py": "7aedaebba88f0d3083af89f85da0e9916ed65356a4433f6f3e97accd6153c696"
+    },
+    "arms": [
+      {
+        "name": "reference",
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-objective-plan-v001\\reference.json",
+        "sha256": "bd5d56825f2f3a006fc4f48dbeb1a6899ddaefa0d1cc5e53fe427fa8bf34eac3"
+      },
+      {
+        "name": "structured",
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-objective-plan-v001\\structured.json",
+        "sha256": "ee3d1b4d7a11e3b17f62401313d50d154e1b2003c93524a60ce62b5cb8799d65"
+      }
+    ],
+    "hard_stop_utc": "2026-11-07T13:16:19.145891+00:00",
+    "fixed": {
+      "seeds": [
+        71,
+        73
+      ],
+      "data_seed": 71,
+      "data_arm": "reference",
+      "steps": 256,
+      "learning_rate": 0.0001,
+      "accumulation": 4,
+      "structure_weight": 1.0,
+      "structure_scales": [
+        1,
+        2,
+        4
+      ],
+      "energy_epsilon": 1e-08
+    },
+    "policy": "All four runs from scratch; no best seed/checkpoint, coefficient sweep, automatic continuation or production change.",
+    "limits": [
+      "Known development controls, not independent qualification.",
+      "Clean-gradient projection is an experimental contrast constraint, not a published DRUNet objective.",
+      "Increased residual noise or gradient artefacts remain failure modes."
+    ],
+    "execution": {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-objective-plan-v001\\execution.json",
+      "sha256": "a4652af18d0942bfb7f63e79b078e12873a70c1ece943a4bea09532a7872144b"
+    }
+  },
+  "execution": {
+    "schema_version": 1,
+    "scientific_plan_sha256": [
+      "bd5d56825f2f3a006fc4f48dbeb1a6899ddaefa0d1cc5e53fe427fa8bf34eac3",
+      "ee3d1b4d7a11e3b17f62401313d50d154e1b2003c93524a60ce62b5cb8799d65"
+    ],
+    "runtime_tools": {
+      "bayer_canonical.py": "a759c19f855f53dc96b8631e6f3d7817d99eb28a7da766fd74c5c91f6c9016f8",
+      "context_data.py": "91bcccd5185cfc80be408f7c4833b43052df87a9d8a1d20d0559d99dfe6e2dc6",
+      "dru_cfa.py": "72b3b01b586316a46960173e93c515768bf8d55e38aec134215f9645d36ec3f1",
+      "dru_checkpoint.py": "d2cdd5dfb6c4bc3e4cfaa1a3b6d3f0cc295a5038a9b43ce01e84ef3c81598ca1",
+      "dru_comparison_policy.py": "be362e74c8dc48af4976167d88aab1ed3f0b3b2ec47737eaa43236d6a7cd9ad3",
+      "dru_execution.py": "d43e021e9b8456abb7ad96d6d76bae19f520bf8df53fec0dc7a9798eebac5dc2",
+      "dru_known_controls.py": "bba84fe1f0ce6f20798cfd8b758d6f6f93f376f7ccfbaa2d7b6f8b9461beafe1",
+      "dru_structure_objective.py": "0eb9b3d8ddaf315f7db3c97197e78301d993fafd01cabf76af8a1525cd63d621",
+      "dru_training_data.py": "bf813cccf2ccafec96a4697abebfb546514cd345f3a5ef479c2e101bed5a0186",
+      "fine_texture_training.py": "ecb0c2716c7555110dc472a2c2a7fbe45c5002344e09e04981fa0f0847d12e14",
+      "joint_bayer_unet.py": "c4899cbbdd27d8065a5c2e1eb981806e8a2f848f14b43052863d81c573c22e3f",
+      "load_control.py": "11cb829f0fa2fc86de20c1d0e06ea0b2f573891508136aaf8bbdd3ad6ef90c75",
+      "memory_budget.py": "e8b15c8f1fc698c7a865e34e332badde54272b8715ae26b52270ab542e0abf79",
+      "memory_trace.py": "745fb9f056dfc105703692dd857fc87681b792cdbda6bf586d13300b69b89cd6",
+      "run_dru_objective_study.py": "4833df34f843f298bba457eb09180ca98c2a9918bf867b2aa318440baf5aaccc",
+      "scheduled_comparison_results.py": "8d5cf1489974d85bdd735842f10b594fd3444fc90569124f0642b5b67eb9fc27",
+      "sensor_curve_noise.py": "9b1868ae317b9da7bee29eb9355edd27b534dc6683548e65b15f8f6cb94d3c0a",
+      "sensor_transfer_math.py": "b98bd65fec8d36219bb6f2ab10d41c5b66d8b0ceb6abd0ad4fe98934b970c3f6",
+      "train_dru_cfa.py": "7aedaebba88f0d3083af89f85da0e9916ed65356a4433f6f3e97accd6153c696"
+    },
+    "tool_amendments": {},
+    "training_deadline_utc": "2026-11-07T13:01:19.145891+00:00",
+    "hard_stop_utc": "2026-11-07T13:16:19.145891+00:00",
+    "resources": {
+      "soft_mib": 5120,
+      "hard_mib": 6144,
+      "system_fraction": 0.92
+    },
+    "load": {
+      "yield_memory_fraction": 0.85,
+      "yield_external_cpu_fraction": 0.8,
+      "pressure_seconds": 15
+    }
+  }
+}

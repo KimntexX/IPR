@@ -25,6 +25,8 @@ def run(plan_path,output,seed,preflight=False,resume=False,execution_path=None):
     if seed not in plan['seeds'] or plan['status']!='sealed_dru_cfa_bootstrap':raise ValueError('Sealed declared training required')
     if (plan['data_arm'] not in ('reference','noise','details') or not isinstance(plan['data_seed'],int)
             or isinstance(plan['data_seed'],bool) or plan['data_seed']<0):raise ValueError('Explicit data arm and independent seed required')
+    objective=plan.get('objective','mse')
+    if objective not in ('mse','structure_projection_v1'):raise ValueError('Unknown training objective')
     execution=load_execution(execution_path,plan_path,root)
     validate_sources(plan,execution,root)
     if sha256(Path(plan['noise_source']))!=plan['noise_sha256']:raise ValueError('Noise source changed')
@@ -32,8 +34,10 @@ def run(plan_path,output,seed,preflight=False,resume=False,execution_path=None):
     previous=json.loads((output/'result.json').read_text(encoding='utf-8')) if resume else None
     result=dict(schema_version=1,status='started',seed=seed,preflight=preflight,plan_sha256=sha256(plan_path),
         started_at_utc=datetime.now(timezone.utc).isoformat(),losses=[],milestones=[],controls=[],data_seed=plan['data_seed'],data_arm=plan['data_arm'])
+    result.update(objective=objective,loss_components={})
     if execution is not None:result['execution']=dict(path=str(execution_path.resolve()),sha256=sha256(execution_path),contract=execution)
     if previous is not None:
+        result['loss_components']=previous.get('loss_components',{})
         result['milestones']=previous['milestones'];result['controls']=previous['controls']
         result['attempt_history']=previous.get('attempt_history',[])+[dict(status=previous['status'],
             completed_volatile_steps=previous['completed_steps'],source_sha256=sha256(output/'result.json'),
@@ -53,7 +57,8 @@ def run(plan_path,output,seed,preflight=False,resume=False,execution_path=None):
             import torch
             from dru_cfa import create
             from dru_checkpoint import save,restore,fingerprint
-            from dru_training_data import example,core_loss
+            from dru_training_data import example
+            from dru_structure_objective import loss_components
             from dru_known_controls import evaluate
             torch.set_num_threads(4);torch.set_num_interop_threads(1)
             if not torch.cuda.is_available() or torch.cuda.mem_get_info()[0]<4*1024**3:raise RuntimeError('CUDA unavailable or busy')
@@ -103,7 +108,7 @@ def run(plan_path,output,seed,preflight=False,resume=False,execution_path=None):
                 return row
             def update(step):
                 phase('update-boundary',step)
-                check();optimizer.zero_grad(set_to_none=True);total=0.;tick=time.monotonic()
+                check();optimizer.zero_grad(set_to_none=True);total=0.;parts=[0.,0.];tick=time.monotonic()
                 for micro in range(4):
                     phase('data-generation',step,micro)
                     packed,sigma,tags,target=example((step-1)*4+micro,plan['data_seed'],scenarios,arm=plan['data_arm'])
@@ -111,15 +116,18 @@ def run(plan_path,output,seed,preflight=False,resume=False,execution_path=None):
                     packed,sigma,tags,target=(x.cuda() for x in (packed,sigma,tags,target))
                     phase('forward',step,micro)
                     prediction=model.correct_observations(packed,sigma,tags)
-                    loss=core_loss(prediction,target,sigma)/4
+                    combined,mse,structure=loss_components(prediction,target,sigma,objective)
+                    loss=combined/4
                     if not torch.isfinite(loss):raise ValueError('Nonfinite training loss')
                     if loss.requires_grad:
                         phase('backward',step,micro);loss.backward()
                     total+=float(loss.detach())
-                    del prediction,loss,packed,sigma,tags,target
+                    parts[0]+=float(mse.detach())/4;parts[1]+=float(structure.detach())/4
+                    del prediction,loss,combined,mse,structure,packed,sigma,tags,target
                 phase('optimizer-update',step)
                 torch.nn.utils.clip_grad_norm_(model.parameters(),1.,error_if_nonfinite=True)
                 optimizer.step();optimizer.zero_grad(set_to_none=True);torch.cuda.synchronize()
+                result['loss_components'][str(step)]=dict(mse=parts[0],structure=parts[1])
                 timings.append(time.monotonic()-tick);return total
             def control(step,limited=False):
                 phase('known-control',step)
