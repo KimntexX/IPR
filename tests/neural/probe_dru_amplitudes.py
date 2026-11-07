@@ -12,12 +12,14 @@ from campaign_artifacts import sha256
 from memory_budget import MemoryGuard
 
 
-def run(campaign=None,output=None,arms=('reference','noise','details')):
+def run(campaign=None,output=None,arms=('reference','noise','details'),steps=(128,256)):
     root=Path(__file__).resolve().parents[2];build=root/'build-patch_neural_restoration'
     campaign=build/'dru-data-comparison-v001' if campaign is None else campaign.resolve()
     output=build/'dru-amplitude-diagnosis-v001' if output is None else output.resolve()
     if not all(p.resolve().is_relative_to(build.resolve()) for p in (campaign,output)):raise ValueError('Owned diagnostic paths required')
-    if len(set(arms))!=len(arms) or not arms or any(a not in ('reference','noise','details','structured') for a in arms):raise ValueError('Distinct declared arms required')
+    if len(set(arms))!=len(arms) or not arms or any(a not in ('reference','noise','details','structured','haar') for a in arms):raise ValueError('Distinct declared arms required')
+    if not steps or any(isinstance(s,bool) or not isinstance(s,int) or s<=0 for s in steps) or list(steps)!=sorted(set(steps)):
+        raise ValueError('Distinct increasing positive milestones required')
     output.mkdir(exist_ok=False)
     source=build/'curve-known-fine-v001/result.json'
     source_plan=json.loads(source.read_text(encoding='utf-8'))['plan']
@@ -26,7 +28,7 @@ def run(campaign=None,output=None,arms=('reference','noise','details')):
         and f['phase_index']==0 and f['replicate']==0 and f['noise_index']>0]
     if len(fields)!=36:raise ValueError('Expected 36 balanced diagnostic fields')
     plan=dict(schema_version=1,created_at_utc=datetime.now(timezone.utc).isoformat(),amplitudes=[.008,.03,.06],
-        frequencies=[6,14,26],angles=[.17,.63,1.07],milestones=[128,256],seeds=[71,73],
+        frequencies=[6,14,26],angles=[.17,.63,1.07],milestones=list(steps),seeds=[71,73],
         arms=list(arms),campaign=str(campaign),base_fields=fields,source_sha256=sha256(source),
         tools={n:sha256(Path(__file__).with_name(n)) for n in ('probe_dru_amplitudes.py','dru_cfa.py','confirm_fine_noise.py',
             'context_data.py','bayer_canonical.py','sensor_transfer_math.py')},models=[],
@@ -34,12 +36,12 @@ def run(campaign=None,output=None,arms=('reference','noise','details')):
             'Single CFA phase and noise replicate, all three existing angles and both chromatic states/noise levels.',
             'Identical Gaussian noise realizations across amplitudes; all arms and both seeds retained.',
             'No optimizer, no training, no model selection, no threshold adjustment.',
-            '128-to-256 trajectory cannot prove asymptotic convergence.'])
+            'Saved milestone trajectories cannot prove asymptotic convergence.'])
     for arm in plan['arms']:
         for seed in plan['seeds']:
             state_path=campaign/arm/f'seed{seed}/result.json'
             state=json.loads(state_path.read_text(encoding='utf-8'))
-            if state['status']!='completed_dru_bootstrap_not_photographic_qualification' or state['completed_steps']!=256:
+            if state['status']!='completed_dru_bootstrap_not_photographic_qualification' or state['completed_steps']<max(steps):
                 raise ValueError('Complete parent runs required')
             for step in plan['milestones']:
                 entries=[r for r in state['milestones'] if r['step']==step and Path(r['path']).name.startswith('checkpoint-')]
@@ -111,4 +113,5 @@ if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--campaign',type=Path);parser.add_argument('--output',type=Path)
     parser.add_argument('--arms',nargs='+',default=['reference','noise','details'])
-    args=parser.parse_args();run(args.campaign,args.output,args.arms)
+    parser.add_argument('--steps',nargs='+',type=int,default=[128,256])
+    args=parser.parse_args();run(args.campaign,args.output,args.arms,args.steps)

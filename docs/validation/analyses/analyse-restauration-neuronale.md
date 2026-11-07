@@ -8667,3 +8667,87 @@ Logs par objectif/graine dans ce même dossier ; log général
 `dru-haar-convergence.stderr.log`. Au lancement, aucun score nouveau n’est
 disponible ; les prévols GPU restent à mesurer. Aucun push, fusion, tag
 ou changement photographique de production.
+
+## 7 novembre 2026 — convergence à 1 024 étapes : progrès tardif et limites restantes
+
+Les quatre entraînements sont terminés sans erreur le **7 novembre à
+22 h 08 Paris**, en environ **3 h 41** pour la campagne complète. Les
+prévols des deux objectifs ont confirmé la reprise exacte modèle/Adam.
+Les deux références ont reproduit leurs pertes et contrôles historiques
+0/128/256 ; elles poursuivent ensuite jusqu’à 512/1 024. Aucun score de
+256 n’a interrompu la campagne ni servi à choisir une graine favorable.
+
+Preuve de campagne, synthèse et identités :
+[neural-dru-objective-study-v001-20261107T210810Z.json](../raw/neural-dru-objective-study-v001-20261107T210810Z.json).
+Pour préserver aussi les mesures par observation hors des caches locaux,
+les 20 contrôles complets (quatre runs × cinq jalons) sont archivés avec
+leurs métadonnées partagées factorisées sans perte :
+[neural-dru-convergence-controls-v001-20261107T211701Z.json](../raw/neural-dru-convergence-controls-v001-20261107T211701Z.json).
+Cela représente environ 10,2 Mo, pas un nouveau cache d’images. Les 864
+observations communes et tous les ajustements corrigés sont conservés,
+avec unités, paramètres de cas et empreintes des fichiers sources.
+
+### Résultat final sur les contrôles connus de forte amplitude
+
+| Critère à 1 024 étapes | MSE 71 | Haar 71 | MSE 73 | Haar 73 |
+| --- | ---: | ---: | ---: | ---: |
+| Groupes sous gain canal moyen 0,95, sur 24 | 21 | 13 | 14 | 12 |
+| Gain moyen minimal de groupe/canal | 0,519 | 0,677 | 0,372 | 0,680 |
+| Ratio MSE médian des groupes | 0,883 | 0,849 | 0,837 | 0,842 |
+| Ratio MSE maximal de groupe | 1,037 | 0,972 | 1,028 | 0,974 |
+
+Haar améliore donc la conservation du signal sur **les deux initialisations**
+et fait passer tous ses ratios MSE de groupe sous 1, par rapport à l’image
+bruitée. Cette propriété porte sur les groupes agrégés ; elle ne signifie
+pas que chaque pixel, chaque champ ou chaque photographie s’améliore.
+Le MSE inclut erreur de signal, bruit et phase, pas seulement le grain visible.
+
+La médiane MSE Haar de 73 reste légèrement plus haute que celle du MSE
+seul (+0,00545 point). Les critères préétablis ne sont pas assouplis : ni
+le critère strict de gain minimal 0,95, ni la poursuite Pareto sur les deux
+graines ne passent. Il serait pourtant faux de conclure à l’absence de
+progrès : le compromis bruit/détail est meilleur sur plusieurs dimensions
+et les pires gains se redressent nettement. Aucune validation photographique
+ou indépendante n’est revendiquée.
+
+### Pourquoi les résultats à 256 étapes ne suffisaient pas
+
+| Variante / graine | Minimum à 256 | Minimum à 512 | Minimum à 1 024 |
+| --- | ---: | ---: | ---: |
+| MSE 71 | 0,679 | 0,582 | 0,519 |
+| Haar 71 | 0,703 | 0,556 | 0,677 |
+| MSE 73 | 0,095 | 0,297 | 0,372 |
+| Haar 73 | 0,193 | 0,183 | 0,680 |
+
+La trajectoire n’est pas monotone. Haar 73 paraissait moins bon que MSE
+sur le minimum à 512, puis passe nettement devant à 1 024. Cela confirme
+l’intérêt de l’allongement demandé par l’utilisateur et limite la portée
+des rejets à court budget. Cela ne prouve pas que 1 024 soit la convergence
+ni qu’un prolongement arbitraire résoudrait tous les défauts.
+
+À fréquence 26, le gain moyen final passe d’environ 0,803 à 0,890 pour 71
+et de 0,807 à 0,883 pour 73. Les erreurs moyennes des groupes de cette
+fréquence baissent également. Ces gains moyens ne cachent pas les pires
+cas : un minimum autour de 0,68 signifie que certaines structures du banc
+restent fortement atténuées. Les faibles amplitudes n’ont pas encore été
+mesurées sur ces nouveaux checkpoints.
+
+### Suite mesurée, sans nouvel entraînement
+
+Le contrôle d’amplitude est lancé sur **256 / 512 / 1 024**, référence et
+Haar, graines 71/73 : **1 296 observations**, amplitudes 0,008/0,03/0,06,
+fréquences 6/14/26, mêmes angles, phase et tirages déjà déclarés. La synthèse
+CPU s’enchaîne automatiquement après le GPU. Ce contrôle reste connu et
+ne sera pas présenté comme une réserve indépendante.
+
+Suivi : `build-patch_neural_restoration/dru-haar-convergence-transfer-v001/progress.json`.
+Logs `probe.log` / `analysis.log` dans ce dossier. Aucun nouvel apprentissage
+n’est lancé sur la seule base d’un minimum ou d’une médiane améliorés.
+Il faut vérifier les faibles contrastes et les transferts hors de ce banc
+avant de sélectionner un candidat ou de décider un prolongement.
+
+Sur les quatre entraînements, pic privé maximal environ 4,50 Gio, pic
+système maximal 71,64 %, sans arrêt sur quota. Les huit copies finales
+`weights.pt`/`resume.pt` identiques aux checkpoints ont été dédupliquées,
+leurs chemins conservés ; les états distincts aux jalons sont gardés.
+Aucune génération d’images ni modification de production, push, fusion ou tag.
