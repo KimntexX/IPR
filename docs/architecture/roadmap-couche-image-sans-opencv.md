@@ -6,6 +6,8 @@ possible. **État :** O0 commencé, O1 et O2 faits, O3 commencé par le flou gau
 **Plus aucun module n'appelle le flou, le redimensionnement, les déformations, les rotations, les symétries, les bordures, la
 pyramide ni les petits filtres d'OpenCV** : la couche image les fournit. Restent l'arithmétique et la couleur, l'analyse
 (corrélations, valeurs propres, systèmes), le parallélisme et le type `cv::Mat` lui-même.
+**7 novembre 2026, sur `patch_image_core`, pas encore intégré à `dev` :** OpenCV a quitté le produit, ses tests, ses sondes et
+sa construction ; les scripts d'analyse Python gardent `cv2` (§7). Voir [la sortie complète](#cvmat--le-partage-explicite).
 Suivi : [issue 29](https://github.com/KimntexX/IPR/issues/29).
 Chantier distinct des [décodeurs RAW](roadmap-decodeurs-raw.md), sur sa propre branche durable,
 `patch_image_core`, après le palier E1 de la [refonte d'`ImageEditor`](plan-imageeditor-orchestrateur.md).
@@ -360,8 +362,26 @@ Lots, chacun mesuré sur photos ([preuve](../validation/raw/image-layer-mat-v001
   développement RAW mesuraient donc l'ancien code. Le premier contrôle avec une sonde reconstruite trouve les exports identiques au
   bit près à ceux du lot de l'arithmétique : ces lots sont bien neutres sur les exports. Les mesures vérifient désormais que chaque
   programme mesuré est plus récent que le moteur.
-- **Ce qui reste** : l'empilement et le panorama (atteints par le pont), les sondes de recherche et le banc RAW, puis le pont
-  lui-même, les oracles qui comparent à OpenCV, et OpenCV dans CMake, la CI et l'installateur.
+- **La sortie complète, le 7 novembre 2026** ([preuve](../validation/raw/image-layer-mat-v002-20261107.json)) :
+
+  | Lot | Commit | Résultat |
+  | --- | --- | --- |
+  | Empilement (tampon, fusion, alignement, turbulence, job, session) | `01033e2` | Exports, DNG empilé, panorama identiques au bit près |
+  | Panorama (points, géométrie, fondu, remplissage, job) et retouche | `bf1549f` | Identiques au bit près, mêmes résidus de géométrie |
+  | Sondes de recherche et banc RAW | `1e379c0` | 76 tests sur 76 ; banc RAW 7 sur 7 |
+  | Pont, oracles, CMake, CI, vcpkg, paquets | ce lot | Construit sans OpenCV, lancé sans OpenCV dans le `PATH` : identiques au bit près |
+
+- **Ajout à la couche** : `ipr::fourierTransform`, la transformée de Fourier qui servait déjà à la corrélation de phase, pour les
+  spectres de l'audit d'empilement ; testée contre la somme directe.
+- **Ce que les tests ont perdu ou retrouvé.** Les tests synthétiques tirent leur bruit d'un `std::mt19937` à graine fixe : leurs
+  scènes ont changé, leurs tolérances tiennent. Deux vérifications ne vérifiaient plus rien depuis le lot des fils d'exécution, car
+  `cv::setNumThreads` ne règle plus nos threads : l'indépendance du remplissage de panorama au nombre de threads (le test vérifie
+  désormais qu'un second remplissage donne les mêmes pixels) et l'option `--threads` de la sonde de dématriçage (retirée). La
+  variante « OpenCV EA » de cette sonde part avec OpenCV ; les campagnes publiées gardent ses mesures. Le test de contrat du
+  débruitage caméra, dans le banc RAW, ne se compilait plus depuis le lot du développement RAW : il passe de nouveau.
+- **Les oracles sont supprimés.** Ils comparaient chaque brique à OpenCV ; leurs résultats restent dans les preuves JSON. Les
+  premiers tirages du générateur d'OpenCV sont gardés comme valeurs attendues dans `image_pixels_test`.
+- **Le banc RAW suit la couche image** : un moteur antérieur à la sortie d'OpenCV se construit avec le banc de sa propre révision.
 
 ## 5. Principes de conception
 
@@ -371,7 +391,8 @@ Lots, chacun mesuré sur photos ([preuve](../validation/raw/image-layer-mat-v001
 - **Le partage de données est explicite.** Une vue et une copie sont deux choses différentes dans le code.
 - **Déterminisme.** Mêmes pixels sur Windows, Linux et macOS, quel que soit le nombre de threads, autant que possible.
   Ce serait un gain réel sur la situation actuelle, à tester en CI.
-- **OpenCV sert d'oracle jusqu'au bout.** Il reste dans les tests de O3 pour valider chaque noyau, et ne part qu'à O5.
+- **OpenCV a servi d'oracle jusqu'au bout.** Les oracles ont validé chaque noyau, puis sont partis avec OpenCV, le
+  7 novembre 2026 ; leurs résultats restent dans les preuves JSON.
 
 ## 6. Risques
 
