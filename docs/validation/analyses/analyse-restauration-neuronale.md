@@ -7937,3 +7937,82 @@ fréquentielle d’une suppression des faibles contrastes. Un essai modifiant
 l’objectif demanderait ensuite une référence appariée au même budget et
 une pondération fixée avant mesure ; continuer longtemps les seuls poids
 actuels n’est pas la conclusion de ce diagnostic.
+
+## 7 novembre 2026 — amplitude mesurée et témoin de fonction de coût
+
+Le complément est **complet : 1 296 observations, 221,96 secondes**,
+sans erreur. Le pic privé échantillonné est de 3,13 Gio (pic résident
+1,40 Gio), le pic d’occupation système de 69,84 %, sans déclenchement de
+quota. Les poids n’ont pas été modifiés. Preuve complète :
+[neural-dru-amplitudes-v001-20261107T095945Z.json](../raw/neural-dru-amplitudes-v001-20261107T095945Z.json).
+
+L’analyse `analyse_dru_amplitudes.py` vérifie les 1 296 identités attendues,
+l’absence de doublon et l’appariement des empreintes de vérité, observation
+et sigma entre tous les modèles/jalons. Elle calcule les résultats par
+couleur physique et sépare le gain mesuré de sa **variation par rapport à
+l’observation brute**, pour ne pas confondre l’erreur du tirage bruité avec
+une atténuation due au réseau. Deux tests ciblés passent, notamment sur
+la différence appariée et le ratio des sommes d’erreurs.
+
+### Résultat : les faibles contrastes sont davantage supprimés
+
+Pour la référence au jalon 256 et à la fréquence 26, les variations moyennes
+de gain corrigé moins brut sont les suivantes (trois angles, les deux
+états chromatiques, deux bruits, quatre canaux ; une phase et un tirage) :
+
+| Amplitude | Graine 71 | Graine 73 |
+| --- | ---: | ---: |
+| 0,008 | −0,153 | −0,212 |
+| 0,03 | −0,132 | −0,185 |
+| 0,06 | −0,110 | −0,163 |
+
+Il s’agit de **points de gain**, pas d’un pourcentage de réduction globale
+du bruit. Le détail fin faible perd davantage de contraste. À la fréquence
+6, les variations restent proches de −0,007/−0,022 sur la référence : le
+défaut dépend donc fortement de la fréquence, en plus de l’amplitude.
+Ces moyennes décrivent ce sous-ensemble ; aucune confiance statistique
+multi-réalisation ni généralisation photographique n’est revendiquée.
+
+Le ratio MSE du détail faible à fréquence 26 baisse pourtant à environ
+0,778/0,784 (graines 71/73), tandis que celui du détail fort est à environ
+1,079/1,077. Une baisse de l’erreur globale ne suffit donc pas à garantir
+la conservation des structures. Cela explique pourquoi la perte train
+peut s’améliorer pendant que certains détails s’atténuent ; cela ne prouve
+pas une erreur de programmation de cette perte.
+
+### Témoin fixe : vérifier la préférence de l’objectif sans entraîner
+
+Le rejeu CPU a repris les témoins déjà définis dans l’audit précédent :
+moyenne 3×3 par plan CFA mélangée au signal à 0,25 / 0,5 / 1. Aucun mélange
+n’est optimisé ni retenu comme algorithme. Les 108 observations bruitées
+sont identiques à celles du complément GPU, vérifiées par empreintes.
+La perte emploie la même équation normalisée que l’entraînement sur le
+cœur de mesure 32×32 packed ; cette fenêtre n’est pas tout le jeu train.
+
+À fréquence 26, le témoin de mélange 0,25 produit :
+
+| Amplitude | Perte identité | Perte témoin | Gain moyen témoin |
+| --- | ---: | ---: | ---: |
+| 0,008 | 1,007 | 0,628 | 0,745 |
+| 0,03 | 1,007 | 0,811 | 0,734 |
+| 0,06 | 1,007 | 1,404 | 0,733 |
+
+Le même lissage fait donc baisser l’objectif pour les faibles amplitudes,
+malgré une atténuation nette, mais est pénalisé sur le contraste fort.
+C’est un compromis bruit/biais du MSE, pas une preuve que le réseau réalise
+ce filtre. Les nouvelles données seules n’ont pas supprimé ce compromis.
+La continuation de durée seule n’est pas la prochaine expérience prioritaire.
+
+La piste à préparer est une **comparaison appariée de l’objectif courant
+avec une protection explicite des structures**, sous les mêmes données,
+initialisations et budget. La protection doit rester générique (pas un
+objectif codant les fréquences de ce banc), garder la mesure du bruit
+résiduel et éviter de récompenser une simple identité ou du bruit conservé.
+Une mesure indépendante est nécessaire avant toute conclusion de qualité.
+La pondération doit être fixée avant l’essai, sans ajustement sur ce tableau.
+Aucun nouvel apprentissage long n’est lancé dans cette analyse.
+
+Mémoire d’analyse et témoins :
+[neural-dru-amplitude-analysis-v001-20261107T101048Z.json](../raw/neural-dru-amplitude-analysis-v001-20261107T101048Z.json).
+Les données brutes et tous les bras/jalons restent conservés. Aucun push,
+fusion, tag, changement de production ou mise en veille de journée.
