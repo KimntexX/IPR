@@ -1,4 +1,6 @@
 #include "RawDecoder.h"
+
+#include "CameraDng.h"
 #include "CameraProfileEngine.h"
 #include "Demosaic.h"
 #include "LibRawInput.h"
@@ -6,6 +8,9 @@
 #include "RawDevelopment.h"
 #include "RawNormalization.h"
 #include "CameraSignal.h"
+
+#include "Parallel.h"
+#include "Pixels.h"
 
 #include <QFileInfo>
 #include <QDir>
@@ -163,16 +168,16 @@ private:
         try {
             // LibRaw's image: four 16-bit channels per pixel, only the site's colour set.
             const int width = d.sizes.iwidth, height = d.sizes.iheight;
-            cv::Mat mosaic(height, width, CV_32FC1), rgb;
+            ipr::Image mosaic = ipr::Image::create({width, height}, ipr::Depth::F32, 1), rgb;
             for (int y = 0; y < height; ++y) {
-                float *row = mosaic.ptr<float>(y);
+                float *row = mosaic.mutableRow<float>(y);
                 for (int x = 0; x < width; ++x)
                     row[x] = d.image[size_t(y) * size_t(width) + size_t(x)][pattern[size_t(y & 1)][size_t(x & 1)]] / 65535.f;
             }
             self->m_failed = !Demosaic::interpolate(mosaic, pattern, self->m_median, Demosaic::Range::NonNegative, rgb, nullptr, self->m_cancelled);
             if (!self->m_failed)
                 for (int y = 0; y < height; ++y) {
-                    const auto *row = rgb.ptr<cv::Vec3f>(y);
+                    const auto *row = rgb.row<ipr::Vec3f>(y);
                     for (int x = 0; x < width; ++x)
                         for (int c = 0; c < 3; ++c)
                             d.image[size_t(y) * size_t(width) + size_t(x)][c] =
@@ -281,20 +286,20 @@ bool developedByIpr(const LibRaw &raw, const Options &options)
            QString::fromLocal8Bit(d.idata.make).trimmed().compare(QStringLiteral("Canon"), Qt::CaseInsensitive) == 0;
 }
 
-// Camera RGB (CV_32FC3, white 1) to linear sRGB in place. Policy A as LibRaw's
+// Camera RGB (F32 of three channels, white 1) to linear sRGB in place. Policy A as LibRaw's
 // output stage: on the 16-bit counts, single-precision products summed in channel
 // order, truncated, clipped to the 16-bit range. Policy B: the plain product.
-void cameraToSrgb(cv::Mat &rgb, const cv::Matx33d &matrix, bool libRawGrid)
+void cameraToSrgb(ipr::Image &rgb, const ipr::Matrix33d &matrix, bool libRawGrid)
 {
     float m[3][3];
     for (int r = 0; r < 3; ++r)
         for (int k = 0; k < 3; ++k) m[r][k] = float(matrix(r, k));
     constexpr float gridStep = float(1.0 / 65535.0);   // as OpenCV's u16 to f32 conversion
-    cv::parallel_for_(cv::Range(0, rgb.rows), [&](const cv::Range &rows) {
-        for (int y = rows.start; y < rows.end; ++y) {
-            auto *row = rgb.ptr<cv::Vec3f>(y);
-            for (int x = 0; x < rgb.cols; ++x) {
-                cv::Vec3f in = row[x];
+    ipr::parallelRows(rgb.height(), [&](int first, int last) {
+        for (int y = first; y < last; ++y) {
+            auto *row = rgb.mutableRow<ipr::Vec3f>(y);
+            for (int x = 0; x < rgb.width(); ++x) {
+                ipr::Vec3f in = row[x];
                 if (libRawGrid)
                     for (int k = 0; k < 3; ++k) in[k] = float(std::lround(in[k] * 65535.f));
                 for (int r = 0; r < 3; ++r) {
@@ -392,6 +397,105 @@ std::optional<double> estimateWhiteBalanceKelvin(const LibRaw &raw)
     return kelvin;
 }
 
+void preferCameraNeutral(CameraProfileEngine::Selection &profiles, const QString &make, const QString &model,
+                         const QStringList &directories)
+{
+    for (const auto &path : CameraProfileEngine::availableDcpProfiles(make, model, directories)) {
+        if (QFileInfo(path).completeBaseName().endsWith(" Camera Neutral", Qt::CaseInsensitive)) {
+            profiles.dcpPath = path;
+            return;
+        }
+    }
+}
+
+// A camera signal IPR wrote: already demosaicked, corrected and calibrated.
+ColorPipeline::WorkingImage decodeCameraDng(const QString &fileName, const Options &options,
+                                            ImageMetadata *metadata, QString *error)
+{
+    CameraDng::Content content;
+    if (!CameraDng::read(fileName, content, error))
+        return {};
+    CameraProfileEngine::Selection profiles = CameraProfileEngine::findProfiles(
+        content.cameraMake, content.cameraModel, content.lensMake, content.lensModel, options.profileDirectories);
+    if (options.preferCameraNeutral)
+        preferCameraNeutral(profiles, content.cameraMake, content.cameraModel, options.profileDirectories);
+    const QString defaultProfile = profiles.dcpPath;
+    if (!options.dcpProfileOverride.isEmpty() &&
+        CameraProfileEngine::dcpMatchesCamera(options.dcpProfileOverride, content.cameraMake, content.cameraModel))
+        profiles.dcpPath = options.dcpProfileOverride;
+    if (profiles.dcpPath.isEmpty()) {
+        if (error)
+            *error = QStringLiteral("Aucun profil de couleur pour %1 : ce fichier a besoin de celui de son boîtier.")
+                         .arg(content.cameraModel);
+        return {};
+    }
+    CameraSignal::Source signal;
+    signal.rgb = std::move(content.cameraRgb);
+    signal.cameraMake = content.cameraMake;
+    signal.cameraModel = content.cameraModel;
+    signal.whiteBalanceKelvin = content.whiteBalanceKelvin;
+    signal.whiteBalanceApplied = true;
+    signal.cameraNeutral = content.cameraNeutral;
+    ColorPipeline::WorkingImage image = CameraSignal::render(std::move(signal), profiles.dcpPath, content.renderOptions, error);
+    if (image.isNull())
+        return {};
+    image.sourceProfile = QStringLiteral("DCP %1 → Rec.2020 linéaire").arg(QFileInfo(profiles.dcpPath).completeBaseName());
+    image.referenceWhiteBalanceKelvin = content.whiteBalanceKelvin;
+    const CameraProfileEngine::DcpRenderOptions &render = content.renderOptions;
+    if (metadata) {
+        metadata->decoderId = QStringLiteral("ipr-camera-dng");
+        metadata->decoderVersion = QStringLiteral("1");
+        metadata->cameraRaw = true;
+        metadata->cameraMake = content.cameraMake;
+        metadata->cameraModel = content.cameraModel;
+        metadata->lensMake = content.lensMake;
+        metadata->lensModel = content.lensModel;
+        metadata->iso = content.iso;
+        metadata->exposureSeconds = content.exposureSeconds;
+        metadata->focalLengthMm = content.focalLengthMm;
+        metadata->captureDate = content.captureDate;
+        metadata->dcpProfile = QFileInfo(profiles.dcpPath).completeBaseName();
+        metadata->rawNormalizationApplied = render.cameraBaselineExposureEv != 0.0 || render.profileExposureCompensationEv != 0.0;
+        metadata->normalizationWhiteLevel = content.calibratedWhite;
+        metadata->normalizationBaselineExposureEv = render.cameraBaselineExposureEv;
+        metadata->profileExposureCompensationEv = render.profileExposureCompensationEv;
+        metadata->normalizationReason = content.provenance;
+        if (options.listDcpProfiles)
+            metadata->availableDcpProfiles = CameraProfileEngine::availableDcpProfiles(
+                content.cameraMake, content.cameraModel, options.profileDirectories);
+    }
+    if (options.retainedDcpSource && image.dcpContext && options.normalizationManifest.isEmpty() &&
+        !options.useNormalizationEnvironment && !(metadata && metadata->rawNormalizationApplied)) {
+        options.retainedDcpSource->cameraRgb = image.dcpContext->cameraRgb.share();
+        options.retainedDcpSource->workingContext = image.dcpContext;
+        options.retainedDcpSource->whiteBalanceKelvin = content.whiteBalanceKelvin;
+        options.retainedDcpSource->defaultProfile = defaultProfile;
+        options.retainedDcpSource->automaticWhiteBalance = false;
+        if (metadata)
+            options.retainedDcpSource->metadata = *metadata;
+    }
+    return image;
+}
+
+// The long side of the sensor from what the file tells of its format. Canon's APS-C is smaller
+// than the others'.
+double sensorWidthOf(const LibRaw &raw)
+{
+    const double equivalent = raw.imgdata.lens.FocalLengthIn35mmFormat;
+    const double focal = raw.imgdata.other.focal_len;
+    if (equivalent > 0.0 && focal > 0.0)
+        return 36.0 * focal / equivalent;
+    switch (raw.imgdata.lens.makernotes.CameraFormat) {
+    case LIBRAW_FORMAT_FF: return 36.0;
+    case LIBRAW_FORMAT_APSH: return 28.7;
+    case LIBRAW_FORMAT_APSC:
+        return QString::fromLocal8Bit(raw.imgdata.idata.make).startsWith(QStringLiteral("Canon"), Qt::CaseInsensitive) ? 22.3 : 23.6;
+    case LIBRAW_FORMAT_FT: return 17.3;
+    case LIBRAW_FORMAT_1INCH: return 13.2;
+    default: return 0.0;
+    }
+}
+
 ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
                                              const Options &options,
                                              ImageMetadata *metadata,
@@ -421,6 +525,7 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
         metadata->lensModel = QString::fromLocal8Bit(raw.imgdata.lens.Lens).trimmed();
         metadata->iso = static_cast<int>(std::lround(raw.imgdata.other.iso_speed));
         metadata->focalLengthMm = raw.imgdata.other.focal_len;
+        metadata->sensorWidthMm = sensorWidthOf(raw);
         metadata->exposureSeconds = raw.imgdata.other.shutter;
         if (raw.imgdata.other.timestamp > 0)
             metadata->captureDate = QDateTime::fromSecsSinceEpoch(
@@ -439,16 +544,8 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
             sourceMetadata.cameraMake, sourceMetadata.cameraModel,
             sourceMetadata.lensMake, sourceMetadata.lensModel,
             options.profileDirectories);
-    if (options.preferCameraNeutral) {
-        const auto available = CameraProfileEngine::availableDcpProfiles(
-            sourceMetadata.cameraMake, sourceMetadata.cameraModel, options.profileDirectories);
-        for (const auto &path : available) {
-            if (QFileInfo(path).completeBaseName().endsWith(" Camera Neutral", Qt::CaseInsensitive)) {
-                profiles.dcpPath = path;
-                break;
-            }
-        }
-    }
+    if (options.preferCameraNeutral)
+        preferCameraNeutral(profiles, sourceMetadata.cameraMake, sourceMetadata.cameraModel, options.profileDirectories);
     const QString defaultProfile = profiles.dcpPath;
     if (!options.automaticLcpSelection)
         profiles.lcpPath.clear();
@@ -488,6 +585,7 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
     }
     CameraProfileEngine::CaptureSettings capture;
     capture.focalLengthMm = raw.imgdata.other.focal_len;
+    capture.sensorWidthMm = sensorWidthOf(raw);
     capture.aperture = raw.imgdata.other.aperture;
     if (metadata) {
         metadata->dcpProfile = profiles.dcpPath.isEmpty()
@@ -513,7 +611,7 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
 
     std::optional<double> sourceWhiteBalanceKelvin;
     CameraProfileEngine::DcpRenderOptions dcpOptions;
-    cv::Mat decoded;   // CV_32FC3, white 1, oriented: camera RGB with a DCP, linear sRGB without
+    ipr::Image decoded;   // F32, three channels, white 1, oriented: camera RGB with a DCP, linear sRGB without
     std::array<double, 4> appliedMultipliers{};   // white balance applied, per LibRaw colour
     if (metadata) {
         metadata->rawNormalizationApplied = false;
@@ -600,7 +698,7 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
                             cameraToSrgb(decoded, input.cameraToSrgb, !options.signedDevelopment);
                     }
                 } catch (const std::exception &exception) {
-                    decoded.release();
+                    decoded = {};
                     developed.error = QString::fromLocal8Bit(exception.what());
                 }
                 if (decoded.empty()) {
@@ -642,8 +740,11 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
             }
             return {};
         }
-        cv::Mat(int(processed->height), int(processed->width), CV_16UC3, processed->data)
-            .convertTo(decoded, CV_32FC3, 1.0 / 65535.0);
+        const ipr::Image counts = ipr::Image::wrapReadOnly(
+            processed->data, {int(processed->width), int(processed->height)}, ipr::Depth::U16, 3,
+            std::ptrdiff_t(processed->width) * 3 * std::ptrdiff_t(sizeof(std::uint16_t)));
+        decoded = ipr::Image::create(counts.size(), ipr::Depth::F32, 3);
+        ipr::convertInto(counts, decoded, 1.0 / 65535.0);
         // scale_colors updates pre_mul to the multipliers actually used, auto WB included.
         for (int c = 0; c < 4; ++c) appliedMultipliers[size_t(c)] = raw.imgdata.color.pre_mul[c];
     }
@@ -655,24 +756,22 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
         } else {
             // Lateral CA refers to the decoder's red/blue planes. Apply it
             // before changing primaries, then enter the master exactly once.
-            cv::Mat rgb = std::move(decoded);
+            ipr::Image rgb = std::move(decoded);
             if (CameraProfileEngine::applyLcp(profiles.lcpPath, rgb, capture,
                                                error, opticalOptions, &opticalApplied)) {
+                if (rgb.frozen()) rgb = rgb.clone();
                 WorkingColor::transform(rgb, WorkingColor::fromSrgb());
-                std::vector<cv::Mat> correctedChannels;
-                cv::split(rgb, correctedChannels);
-                correctedChannels.push_back(cv::Mat(rgb.size(), CV_32FC1, cv::Scalar(1.f)));
-                cv::merge(correctedChannels, image.linearRgba);
+                image.linearRgba = ipr::opaque(rgb);
             }
         }
     } else {
-        cv::Mat cameraRgb = std::move(decoded);
-        cv::Mat preLens;
+        ipr::Image cameraRgb = std::move(decoded);
+        ipr::Image preLens;
         if (options.retainPreLensSignal && !profiles.lcpPath.isEmpty()) preLens = cameraRgb.clone();
         if (!profiles.lcpPath.isEmpty() &&
             !CameraProfileEngine::applyLcp(profiles.lcpPath, cameraRgb, capture,
                                             error, opticalOptions, &opticalApplied))
-            cameraRgb.release();
+            cameraRgb = {};
         if (metadata) {
             metadata->lensGeometryApplied = opticalApplied.geometry;
             metadata->lensVignettingApplied = opticalApplied.vignetting;
@@ -692,7 +791,8 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
             image = CameraSignal::render(std::move(signal), profiles.dcpPath, dcpOptions, error);
             if (!image.isNull() && !preLens.empty() &&
                 (opticalApplied.geometry || opticalApplied.vignetting || opticalApplied.chromaticAberration)) {
-                auto context = std::make_shared<CameraProfileEngine::DcpWorkingContext>(*image.dcpContext);
+                auto context = std::make_shared<CameraProfileEngine::DcpWorkingContext>(
+                    CameraProfileEngine::sharedCopy(*image.dcpContext));
                 context->preLensCameraRgb = std::move(preLens);
                 context->lcpPath = profiles.lcpPath;
                 context->capture = capture;
@@ -703,9 +803,9 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
         // Calibration changes the LibRaw white level upstream: never reuse this
         // buffer for a profile-independent fast path when a manifest is active.
         constexpr size_t retainedBufferLimit = 384u * 1024u * 1024u;
-        if (!image.isNull() && image.dcpContext->cameraRgb.total() * image.dcpContext->cameraRgb.elemSize() <= retainedBufferLimit && options.retainedDcpSource &&
+        if (!image.isNull() && image.dcpContext->cameraRgb.blockBytes() <= retainedBufferLimit && options.retainedDcpSource &&
             options.normalizationManifest.isEmpty() && !options.useNormalizationEnvironment) {
-            options.retainedDcpSource->cameraRgb = image.dcpContext->cameraRgb;
+            options.retainedDcpSource->cameraRgb = image.dcpContext->cameraRgb.share();
             options.retainedDcpSource->workingContext = image.dcpContext;
             options.retainedDcpSource->whiteBalanceKelvin = sourceWhiteBalanceKelvin;
             options.retainedDcpSource->defaultProfile = defaultProfile;
@@ -833,6 +933,36 @@ QImage decodeEmbeddedThumbnailWithLibRaw(const QString &fileName,
                                      Qt::SmoothTransformation);
     return thumbnail;
 }
+
+// Half-size development in sRGB: enough for a thumbnail, without the demosaicing.
+QImage developThumbnailWithLibRaw(const QString &fileName, const QSize &maximumSize, QString *error)
+{
+    const auto owned = std::make_unique<LibRaw>();   // heap: too large for worker stacks
+    LibRaw &raw = *owned;
+    raw.imgdata.params.half_size = 1;
+    raw.imgdata.params.use_camera_wb = 1;
+    raw.imgdata.params.output_color = 1;
+    raw.imgdata.params.output_bps = 8;
+    raw.imgdata.params.no_auto_bright = 1;   // a night stays a night in the ribbon
+    int result = openRaw(raw, fileName);
+    if (result == LIBRAW_SUCCESS) result = raw.unpack();
+    if (result == LIBRAW_SUCCESS) result = raw.dcraw_process();
+    if (result != LIBRAW_SUCCESS) {
+        if (error) *error = QString::fromLatin1(libraw_strerror(result));
+        return {};
+    }
+    std::unique_ptr<libraw_processed_image_t, void (*)(libraw_processed_image_t *)> processed(
+        raw.dcraw_make_mem_image(&result), &LibRaw::dcraw_clear_mem);
+    if (!processed || result != LIBRAW_SUCCESS || processed->type != LIBRAW_IMAGE_BITMAP ||
+        processed->bits != 8 || processed->colors != 3) {
+        if (error) *error = QStringLiteral("LibRaw n'a pas fourni d'image exploitable pour la vignette.");
+        return {};
+    }
+    // copy(): the image must outlive LibRaw's buffer, and scaled() may share its source.
+    const QImage image = QImage(processed->data, int(processed->width), int(processed->height),
+                                int(processed->width) * 3, QImage::Format_RGB888).copy();
+    return maximumSize.isValid() ? image.scaled(maximumSize, Qt::KeepAspectRatio, Qt::SmoothTransformation) : image;
+}
 #endif
 
 void registerBuiltInHandlers()
@@ -848,10 +978,14 @@ void registerBuiltInHandlers()
             const auto raw = std::make_unique<LibRaw>();
             if (openRaw(*raw, path) != LIBRAW_SUCCESS) return std::nullopt;
             return estimateWhiteBalanceKelvin(*raw);
-        }};
+        }, developThumbnailWithLibRaw};
     if (!addFormatHandler({QStringLiteral("cr2")}, decodeCr2, &error, format) ||
         !addFormatHandler({QStringLiteral("cr3")}, decodeCr3, &error, format) ||
-        !addFormatHandler({QStringLiteral("dng")}, decodeWithLibRaw, &error, format))
+        !addFormatHandler({QStringLiteral("dng")},
+                          [](const QString &file, const Options &options, ImageMetadata *metadata, QString *message) {
+                              return CameraDng::isCameraDng(file) ? decodeCameraDng(file, options, metadata, message)
+                                                                  : decodeWithLibRaw(file, options, metadata, message);
+                          }, &error, format))
         qFatal("Failed to register built-in LibRaw handlers: %s",
                qPrintable(error));
 #endif
@@ -884,7 +1018,7 @@ ColorPipeline::WorkingImage applyProfile(const DcpSource &source, const QString 
         return {};
     }
     CameraSignal::Source signal;
-    signal.rgb = source.cameraRgb; // Already immutable, shared with the active source.
+    signal.rgb = source.cameraRgb.share(); // Already immutable, shared with the active source.
     signal.cameraMake = source.metadata.cameraMake;
     signal.cameraModel = source.metadata.cameraModel;
     signal.whiteBalanceKelvin = source.whiteBalanceKelvin;
@@ -896,8 +1030,9 @@ ColorPipeline::WorkingImage applyProfile(const DcpSource &source, const QString 
     // A source without applied-WB context cannot promise pre-DCP WB editing.
     if (!source.workingContext) image.dcpContext.reset();
     else if (!source.workingContext->preLensCameraRgb.empty()) {
-        auto context = std::make_shared<CameraProfileEngine::DcpWorkingContext>(*image.dcpContext);
-        context->preLensCameraRgb = source.workingContext->preLensCameraRgb;
+        auto context = std::make_shared<CameraProfileEngine::DcpWorkingContext>(
+            CameraProfileEngine::sharedCopy(*image.dcpContext));
+        context->preLensCameraRgb = source.workingContext->preLensCameraRgb.share();
         context->lcpPath = source.workingContext->lcpPath;
         context->capture = source.workingContext->capture;
         context->lensOptions = source.workingContext->lensOptions;
@@ -1002,14 +1137,18 @@ ColorPipeline::WorkingImage decode(const QString &fileName,
                          .arg(extension);
         return {};
     }
-    auto result = decoder(fileName, options, metadata, error);
+    // A handler that reads several kinds of file may name the one it used.
     if (metadata) {
         metadata->decoderId = format.decoderId;
         metadata->decoderVersion = format.decoderVersion;
+    }
+    auto result = decoder(fileName, options, metadata, error);
+    if (metadata) {
         metadata->cameraRaw = true;
     }
     if (!result.isNull() && (result.colorSpace != ColorPipeline::workingColorSpace() ||
-        result.linearRgba.type() != CV_32FC4 || !cv::checkRange(result.linearRgba, true))) {
+        result.linearRgba.depth() != ipr::Depth::F32 || result.linearRgba.channels() != 4 ||
+        !ipr::allFinite(result.linearRgba))) {
         if (error) *error = QStringLiteral("Le décodeur n'a pas fourni un master Rec.2020 linéaire RGBA fini.");
         return {};
     }
@@ -1019,8 +1158,10 @@ ColorPipeline::WorkingImage decode(const QString &fileName,
     return result;
 }
 
-QImage decodeEmbeddedThumbnail(const QString &fileName,
-                               const QSize &maximumSize, QString *error)
+namespace {
+// Runs one of a format's thumbnail functions, outside the registry lock.
+QImage runThumbnail(ThumbnailFunction FormatOptions::*function, const QString &fileName,
+                    const QSize &maximumSize, QString *error)
 {
     ensureBuiltInHandlers();
     if (error) error->clear();
@@ -1031,7 +1172,7 @@ QImage decodeEmbeddedThumbnail(const QString &fileName,
         QMutexLocker locker(&store.mutex);
         for (const FormatHandler &handler : store.handlers) {
             if (handler.extensions.contains(extension)) {
-                thumbnail = handler.options.thumbnail;
+                thumbnail = handler.options.*function;
                 break;
             }
         }
@@ -1046,6 +1187,18 @@ QImage decodeEmbeddedThumbnail(const QString &fileName,
         (result.width() > maximumSize.width() || result.height() > maximumSize.height()))
         result = result.scaled(maximumSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     return result;
+}
+}
+
+QImage decodeEmbeddedThumbnail(const QString &fileName,
+                               const QSize &maximumSize, QString *error)
+{
+    return runThumbnail(&FormatOptions::thumbnail, fileName, maximumSize, error);
+}
+
+QImage developThumbnail(const QString &fileName, const QSize &maximumSize, QString *error)
+{
+    return runThumbnail(&FormatOptions::developedThumbnail, fileName, maximumSize, error);
 }
 
 }

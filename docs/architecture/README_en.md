@@ -1,4 +1,4 @@
-<!-- translation-source: docs/architecture/README.md; sha256: e79fbd1e363536faad4823a3e3c4b3b9edd1b8b47c98f41e64bd02120cedccf1 -->
+<!-- translation-source: docs/architecture/README.md; sha256: 9643183a07df62f4c760debc4b38974ded4013151608616f3e783c86619c5335 -->
 *[Français](README.md) | [English](README_en.md)*
 
 # Architecture
@@ -17,6 +17,7 @@ This area contains reference documents that describe components, data contracts,
 - [OpenCV-independent image layer](roadmap-couche-image-sans-opencv.md): measured use, stages and removal of unused `imgcodecs`.
 - [Light roadmap](roadmap-lumieres.md): six controls, integrated plan B, Rec.2020 campaigns and 21 October highlight reservation.
 - [Lightroom feature inventory](roadmap-fonctions-lightroom.md): coverage, implementation status and planning.
+- [Editing foundation of the beta, B0](socle-edition-b0.md), in French: inventory, decisions, task runner, CBOR recipe, history, local value maps and B0.4 report.
 - [Beta action plan](roadmap-beta_en.md): geometry, layers/filters, removal and local noise/sharpening/shapes/objects networks; not implemented.
 - [Working, display ICC and export](gestion-couleurs-affichage.md): target separation, distinct from current code.
 - [Linear Rec.2020 integration](integration-rec2020.md): master port, initial audit and remaining qualification.
@@ -27,6 +28,9 @@ This area contains reference documents that describe components, data contracts,
 - [CI and Multiplatform Build](ci-et-build-multiplateforme.md): Windows/macOS/Linux matrix, prerequisites, packaging, and GitHub roadmap.
 - [Denoising and Sharpening](denoising-sharpening_en.md): algorithms, pipeline order, AI/GPU limits, and expected validation.
 - [Neural B4 preparation](restauration-neuronale_en.md): local models, RGB/RAW contracts, host inventory and proposed bench; no qualified inference.
+- [B5 preparation: detection](detection-objets.md): clicking on an object, lines, models to assess, contracts and validation; no code.
+- [B9 preparation: HDR merge](fusion-hdr.md): radiometric merge, floating-point DNG, steps and shots to make; no code.
+- [`ImageEditor` as an orchestrator](plan-imageeditor-orchestrateur.md): measured state, target and steps of the refactoring; no code.
 - [Stacking and panorama](empilement-et-panorama.md): multi-image plan, user anchor, sky/ground alignment, automatic crop and disk scratch directory; not implemented.
 - [Source Tree](../../src/README.md): C++/QML domains and internal `iprEngine` library.
 - [UI Preferences](ui-preferences.md): user INI, geometry, sections, colors, and extensible schema.

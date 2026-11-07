@@ -106,12 +106,11 @@ et le [rapport Lumières](docs/validation/analyses/analyse-validation-lumieres-b
 | Dépendance | Usage |
 | --- | --- |
 | Qt ≥ 6.8 | Interface Quick/QML, Core, Gui et Concurrent |
-| OpenCV | Calculs image : `core`, `imgproc`, `imgcodecs` |
 | LibTIFF | Écriture du DNG linéaire |
 | LibRaw ≥ 0.21, facultatif | Décodage CR2/CR3/DNG ; option `IPR_ENABLE_LIBRAW` |
 | CMake ≥ 3.21 et compilateur C++17 | Configuration et compilation |
 
-Qt et OpenCV ne remplacent pas un décodeur RAW. Sans LibRaw, les formats rendus
+Qt ne remplace pas un décodeur RAW. Sans LibRaw, les formats rendus
 restent utilisables, mais le backend RAW actuel n'est pas disponible.
 
 **LibRaw est un décodeur de secours, appelé à être remplacé petit à petit.** IPR
@@ -141,7 +140,6 @@ bash scripts/build-windows.sh --full-tests
 ```
 
 - [Prérequis, options et tests ciblés](docs/architecture/tests-cibles-et-build-windows.md).
-- [Installation OpenCV : MSVC/vcpkg ou MinGW](docs/installation-opencv-windows.md).
 - [Packaging Windows autonome](docs/architecture/build-windows-standalone.md).
 
 Ne pas mélanger bibliothèques MSVC et MinGW. Choisir les dépendances compatibles

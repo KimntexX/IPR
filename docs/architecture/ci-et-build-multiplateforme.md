@@ -34,7 +34,7 @@ Pour une GitHub Release, lancer `release.yml` sur main avec un **tag existant
 sur le SHA main promu**. Ne pas déplacer un tag de validation dev : les
 archives source automatiques GitHub doivent elles aussi pointer vers main,
 sans y réintroduire les tests et analyses. La nomenclature retenue pour main
-est `release-v0.1.X-alpha`, distincte du tag de validation dev `v0.1.X-alpha`.
+est `release-v0.Y.X-beta`, distincte du tag de validation dev `v0.Y.X-beta`.
 Le script accepte le préfixe facultatif `release-` : il conserve le tag complet
 pour GitHub et ne le retire que pour calculer la version des paquets.
 Le workflow ne crée aucun tag. Une licence `LICENSE` doit exister dans le
@@ -111,8 +111,10 @@ depuis `patch_light` :
 - Plus aucun chemin propre à Qt < 6.8 : le contournement de conversion RGBA64
   vers flottant, propre à Qt 6.4.2, est supprimé. Qt 6.8.3 convertit exactement.
 
-La version de flux `QDataStream::Qt_6_4` des sidecars `.ipr` (ADR-0001) est un
-**format de fichier**, pas un minimum de compilation : elle reste inchangée.
+La version de flux `QDataStream::Qt_6_4` des anciens sidecars `.ipr` binaires
+(ADR-0001) est un **format de fichier**, pas un minimum de compilation : elle
+reste celle de leur lecture. Les sidecars courants sont des documents CBOR
+(ADR-0021).
 
 ## Orientation de compatibilité Qt ≥ 6.8 — 15 octobre 2026
 
@@ -231,7 +233,7 @@ photographique privés ne sont pas remplacés par ces tests synthétiques.
 | Événement / modification | Validation |
 | --- | --- |
 | Push `patch_*`, documentation seule | Lecture UTF-8, JSON valides, liens locaux signalés ; aucune compilation native |
-| Push `patch_*`, tests/analyse Python seulement | Suites Python concernées, sans installer Qt/OpenCV/LibRaw |
+| Push `patch_*`, tests/analyse Python seulement | Suites Python concernées, sans installer Qt/LibRaw |
 | Push `patch_*`, code photographique cartographié | Compilation des cibles et tests sélectionnés, Windows, Ubuntu et macOS ARM |
 | Modification transversale, inconnue ou ≥20 fichiers de code | Tous les tests, quatre plateformes, Intel compris |
 | Push `dev`/`main`, PR vers `dev`/`main`, lancement manuel | Tous les tests, quatre plateformes |
@@ -289,7 +291,7 @@ Pas de `pull_request_target`, de permission d'écriture ou de publication de
 release automatique. Le token GitHub est utilisé en lecture seule, sans
 être enregistré dans les artefacts.
 
-Les tags suivent `v0.1.X-alpha`, puis `v0.Y.X-beta` (Y >= 2), puis `v1.Y.X`.
+Les tags ont suivi `v0.1.X-alpha`, suivent `v0.Y.X-beta` (Y >= 2), puis suivront `v1.Y.X`.
 Le script ne crée ni tag ni fusion et ne calcule pas le nombre de patchs livrés.
 Les labels manuels identifient des constructions, pas une validation stable.
 
@@ -363,7 +365,7 @@ Standalone : bibliothèques dynamiques Qt et tierces ; sous Linux restent glibc,
 chargeur et pilotes du système. Système : DLL/bibliothèques et modules QML
 doivent être installés dans les versions ABI compatibles. Les paquets natifs
 déclarent les dépendances ; les archives génériques ne les installent pas.
-Windows système nécessite le runtime Visual C++ et Qt/OpenCV/LibRaw/TIFF dans
+Windows système nécessite le runtime Visual C++ et Qt/LibRaw/TIFF dans
 PATH. macOS système utilise Homebrew de la même architecture.
 
 Pas de signature Authenticode, certificat Apple Developer ID ou notarisation

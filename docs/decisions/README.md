@@ -6,7 +6,7 @@ Un ADR consigne un choix qui influe sur la compatibilité, le rendu, les donnée
 
 | ADR | Décision | Statut |
 | --- | --- | --- |
-| [ADR-0001](ADR-0001-sidecar-ipr.md) | Persistance non destructive `.ipr` | Accepté |
+| [ADR-0001](ADR-0001-sidecar-ipr.md) | Persistance non destructive `.ipr` | Remplacé par ADR-0021 (format CBOR) |
 | [ADR-0002](ADR-0002-pipeline-lineaire-et-calibration.md) | Pipeline linéaire et calibration de rendu | Accepté, à revalider sur changement de pipeline |
 | [ADR-0003](ADR-0003-profils-dcp-lcp-locaux.md) | Bibliothèque locale DCP/LCP | Accepté sous contrainte de licence |
 | [ADR-0004](ADR-0004-preferences-ihm-ini.md) | Préférences globales d’IHM dans un INI utilisateur | Accepté |
@@ -49,3 +49,5 @@ RAW et aux images développées, métadonnées indépendantes et contrôles part
 [ADR-0005](ADR-0005-melangeur-huit-bandes-luminance-bornee.md) complète les ADR
 0001/0002/0004 : huit bandes, protection des neutres, luminance bornée, sidecar
 v4 et INI schéma 2 (4 octobre 2026).
+
+[ADR-0021](ADR-0021-socle-edition-beta.md) : socle d'édition bêta — retouches décrites dans le `.ipr`, résultats lourds dans `<photo>.ipr-data/`, historique de 100 étapes conservé, géométrie après l'optique et calques après les réglages, format à en-tête et sections, évolution sans rupture à partir de la stable (1er novembre 2026).

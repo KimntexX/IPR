@@ -1,5 +1,6 @@
 #include "ColorGrading.h"
 #include "WorkingColorSpace.h"
+#include "Types.h"
 
 #include <algorithm>
 #include <cmath>
@@ -218,7 +219,7 @@ float weightAt(const Curve &curve, float lightness)
 
 // Change of a zone at full weight: the colour of its hue, interpolated around the
 // circle, times the strength of its saturation.
-cv::Vec3f changeOf(size_t zone, int hue, int saturation)
+ipr::Vec3f changeOf(size_t zone, int hue, int saturation)
 {
     const float h = float(((hue % 360) + 360) % 360) / 30.f;
     const int i = int(h) % Hues, j = (i + 1) % Hues;
@@ -229,7 +230,7 @@ cv::Vec3f changeOf(size_t zone, int hue, int saturation)
     while (k + 1 < SaturationKnots.size() && SaturationKnots[k] < s) ++k;
     const float u = (s - SaturationKnots[k - 1]) / (SaturationKnots[k] - SaturationKnots[k - 1]);
     const float strength = Strengths[zone][k - 1] + u * (Strengths[zone][k] - Strengths[zone][k - 1]);
-    return cv::Vec3f(a[0] + t * (b[0] - a[0]), a[1] + t * (b[1] - a[1]), a[2] + t * (b[2] - a[2])) * strength;
+    return ipr::Vec3f(a[0] + t * (b[0] - a[0]), a[1] + t * (b[1] - a[1]), a[2] + t * (b[2] - a[2])) * strength;
 }
 
 } // namespace
@@ -265,24 +266,24 @@ Zones prepare(const std::array<int, 4> &hue, const std::array<int, 4> &saturatio
     return zones;
 }
 
-void adjust(cv::Vec3d &lab, const Zones &zones)
+void adjust(ipr::Vec3d &lab, const Zones &zones)
 {
     // Luminance first, on the pixel's own lightness; the colours are then weighted
     // by the shifted lightness (closer to Lightroom on luminance + colour states).
     if (zones.luminance) {
         const float lightness = float(lab[0]);
         const double gain = 1.0 + double(weightAt(zones.chromaGain, lightness));
-        lab = cv::Vec3d(lab[0] + double(weightAt(zones.lightnessShift, lightness)), lab[1] * gain, lab[2] * gain);
+        lab = ipr::Vec3d(lab[0] + double(weightAt(zones.lightnessShift, lightness)), lab[1] * gain, lab[2] * gain);
     }
     const float lightness = float(lab[0]);
     for (size_t zone = 0; zone < ZoneCount; ++zone)
-        if (zones.active[zone]) lab += cv::Vec3d(zones.change[zone]) * double(weightAt(zones.curve[zone], lightness));
+        if (zones.active[zone]) lab += ipr::Vec3d(zones.change[zone]) * double(weightAt(zones.curve[zone], lightness));
 }
 
-cv::Vec3f displayColour(int zone, int hue, int saturation)
+ipr::Vec3f displayColour(int zone, int hue, int saturation)
 {
     if (zone < 0 || zone >= int(ZoneCount)) return {0.5f, 0.5f, 0.5f};
-    const cv::Vec3f change = changeOf(size_t(zone), hue, 50);
+    const ipr::Vec3f change = changeOf(size_t(zone), hue, 50);
     const double chroma = std::hypot(double(change[1]), double(change[2]));
     if (chroma <= 0) return WorkingColor::encodedInGamut({DisplayLightness, 0, 0});
     const double scale = DisplayChroma * std::clamp(saturation, 0, 100) / 100.0 / chroma;

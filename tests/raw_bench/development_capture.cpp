@@ -2,6 +2,7 @@
 #include "LibRawInput.h"
 #include "RawDevelopment.h"
 #include "Demosaic.h"
+#include "Pixels.h"
 #include <libraw/libraw.h>
 #include <QCoreApplication>
 #include <QCommandLineParser>
@@ -14,7 +15,6 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QtEndian>
-#include <opencv2/core.hpp>
 #include <algorithm>
 #include <cmath>
 #include <iostream>
@@ -47,22 +47,30 @@ public:
     explicit Writer(const QString &output):pixels(output+".bin"){
         require(!QFile::exists(output),"Manifest exists");require(pixels.open(QIODevice::WriteOnly|QIODevice::NewOnly),"Binary exists or inaccessible");
     }
-    void save(const char *stage,const cv::Mat &image,const char *units,const RawInput::Input &input){
-        require(!image.empty()&&(image.depth()==CV_16U||image.depth()==CV_32F)&&cv::checkRange(image),"Invalid capture image");
+    void save(const char *stage,const ipr::Image &image,const char *units,const RawInput::Input &input){
+        const bool integers=image.depth()==ipr::Depth::U16;
+        require(!image.empty()&&(integers||(image.depth()==ipr::Depth::F32&&ipr::allFinite(image))),"Invalid capture image");
         QJsonArray pattern;for(auto row:input.pattern){QJsonArray r;for(auto c:row)r.append(c);pattern.append(r);}
         for(double fraction:{.2,.5,.8}){
-            const int x=(int(image.cols*fraction)-128)/2*2,y=(image.rows/2-128)/2*2;
-            require(x>=0&&y>=0&&x+256<=image.cols&&y+256<=image.rows,"Image too small for bench ROIs");
-            cv::Mat crop=image(cv::Rect(x,y,256,256)).clone();const auto offset=pixels.pos();
-            QByteArray bytes(int(crop.total()*crop.elemSize()),Qt::Uninitialized);
-            if(crop.depth()==CV_16U){for(size_t i=0;i<crop.total()*crop.channels();++i)qToLittleEndian<quint16>(crop.ptr<quint16>()[i],bytes.data()+i*2);}
-            else {const quint16 endian=1;require(*reinterpret_cast<const unsigned char *>(&endian)==1,"Float capture currently requires little-endian host");std::copy(crop.datastart,crop.dataend,reinterpret_cast<unsigned char *>(bytes.data()));}
+            const int x=(int(image.width()*fraction)-128)/2*2,y=(image.height()/2-128)/2*2;
+            require(x>=0&&y>=0&&x+256<=image.width()&&y+256<=image.height(),"Image too small for bench ROIs");
+            const ipr::Image crop=image.copy(ipr::Recti(x,y,256,256));const auto offset=pixels.pos();
+            const qsizetype rowBytes=qsizetype(crop.width())*qsizetype(crop.pixelBytes());
+            QByteArray bytes(int(rowBytes*crop.height()),Qt::Uninitialized);
+            if(integers){
+                const int values=crop.width()*crop.channels();
+                for(int row=0;row<crop.height();++row)for(int i=0;i<values;++i)
+                    qToLittleEndian<quint16>(crop.row<quint16>(row)[i],bytes.data()+(qsizetype(row)*values+i)*2);
+            }else{
+                const quint16 endian=1;require(*reinterpret_cast<const unsigned char *>(&endian)==1,"Float capture currently requires little-endian host");
+                for(int row=0;row<crop.height();++row)std::copy_n(crop.row<std::uint8_t>(row),rowBytes,reinterpret_cast<unsigned char *>(bytes.data())+rowBytes*row);
+            }
             require(pixels.write(bytes)==bytes.size(),"Incomplete stage capture");
-            QJsonObject context{{"cfa",pattern},{"visible_size",QJsonArray{image.rows,image.cols}},
+            QJsonObject context{{"cfa",pattern},{"visible_size",QJsonArray{image.height(),image.width()}},
                 {"sensor_origin_xy",QJsonArray{input.origin.x,input.origin.y}},{"input_black",four(input.black)},
                 {"input_white",input.white},{"input_as_shot_multipliers",four(input.asShotMultipliers)}};
-            stages.append(QJsonObject{{"stage",stage},{"shape",QJsonArray{256,256,image.channels()}},{"dtype",image.depth()==CV_16U?"u16":"f32"},
-                {"offset_bytes",double(offset)},{"stride_bytes",int(crop.step)},{"origin_yx",QJsonArray{y,x}},{"layout",image.channels()==1?"cfa":"rgb"},
+            stages.append(QJsonObject{{"stage",stage},{"shape",QJsonArray{256,256,image.channels()}},{"dtype",integers?"u16":"f32"},
+                {"offset_bytes",double(offset)},{"stride_bytes",int(rowBytes)},{"origin_yx",QJsonArray{y,x}},{"layout",image.channels()==1?"cfa":"rgb"},
                 {"unit",units},{"orientation","sensor"},{"context",context}});
         }
     }
@@ -85,16 +93,16 @@ private:
             require(self->writer&&self->input&&self->imgdata.image,"Missing reference capture state");
             auto &d=self->imgdata;Demosaic::Pattern pattern{};
             for(int y=0;y<2;++y)for(int x=0;x<2;++x){int c=self->FC(y,x);pattern[size_t(y)][size_t(x)]=c==3?1:c;}
-            cv::Mat mosaic(d.sizes.iheight,d.sizes.iwidth,CV_32FC1);
-            for(int y=0;y<mosaic.rows;++y)for(int x=0;x<mosaic.cols;++x)mosaic.at<float>(y,x)=d.image[size_t(y)*mosaic.cols+x][pattern[size_t(y&1)][size_t(x&1)]]/65535.f;
+            ipr::Image mosaic=ipr::Image::create({d.sizes.iwidth,d.sizes.iheight},ipr::Depth::F32,1);
+            for(int y=0;y<mosaic.height();++y)for(int x=0;x<mosaic.width();++x)mosaic.mutableRow<float>(y)[x]=d.image[size_t(y)*mosaic.width()+x][pattern[size_t(y&1)][size_t(x&1)]]/65535.f;
             self->writer->save("pre_demosaic_cfa",mosaic,"linear_camera_grid_1_65535",*self->input);
-            cv::Mat rgb,before;
+            ipr::Image rgb,before;
             require(Demosaic::interpolate(mosaic,pattern,Demosaic::OpeningMedian,Demosaic::Range::NonNegative,rgb,&before,{}),"Reference RCD failed");
             self->writer->save("post_demosaic_camera_rgb",before,"linear_camera_white_1",*self->input);
             self->writer->save("pre_output_camera_rgb",rgb,"linear_camera_white_1",*self->input);
-            rgb.forEach<cv::Vec3f>([](cv::Vec3f &v,const int *){for(int c=0;c<3;++c)v[c]=float(std::clamp(std::lround(v[c]*65535.f),0L,65535L))*float(1.0/65535.0);});
+            ipr::mapInPlace(rgb,[](float v){return float(std::clamp(std::lround(v*65535.f),0L,65535L))*float(1.0/65535.0);});
             self->writer->save("post_median_camera_rgb",rgb,"linear_camera_grid_1_65535",*self->input);
-            for(int y=0;y<rgb.rows;++y)for(int x=0;x<rgb.cols;++x)for(int c=0;c<3;++c)d.image[size_t(y)*rgb.cols+x][c]=std::uint16_t(std::lround(rgb.at<cv::Vec3f>(y,x)[c]*65535.f));
+            for(int y=0;y<rgb.height();++y)for(int x=0;x<rgb.width();++x)for(int c=0;c<3;++c)d.image[size_t(y)*rgb.width()+x][c]=std::uint16_t(std::lround(rgb.row<ipr::Vec3f>(y)[x][c]*65535.f));
         }catch(...){self->failed=true;}
     }
 };
@@ -111,7 +119,6 @@ int main(int argc,char **argv){
         const auto source=QFileInfo(parser.value("input")).absoluteFilePath(),output=QFileInfo(parser.value("output")).absoluteFilePath(),path=parser.value("path");
         const auto mode=parser.value("mode");
         require(parser.isSet("input")&&parser.isSet("output")&&(path=="reference"||path=="candidate")&&(mode=="parity"||(mode=="signed"&&path=="candidate")),"Need input/output/path and parity or candidate signed mode");
-        cv::setNumThreads(1);
         const auto sourceHash=hash(source);auto raw=std::make_unique<Reference>();
 #ifdef _WIN32
         require(raw->open_file(source.toStdWString().c_str())==LIBRAW_SUCCESS,"RAW open failed");
@@ -148,9 +155,11 @@ int main(int argc,char **argv){
             int error=0;std::unique_ptr<libraw_processed_image_t,void(*)(libraw_processed_image_t *)> memory(raw->dcraw_make_mem_image(&error),LibRaw::dcraw_clear_mem);
             require(memory&&error==LIBRAW_SUCCESS&&memory->bits==16&&memory->colors==3,"Invalid reference output");
             // F1 I2 output representation: the reciprocal product historically
-            // delivered to the DCP by OpenCV. Pre-RCD still uses division.
-            cv::Mat integers(memory->height,memory->width,CV_16UC3,memory->data),rgb(memory->height,memory->width,CV_32FC3);
-            for(int y=0;y<rgb.rows;++y)for(int x=0;x<rgb.cols;++x)for(int c=0;c<3;++c)rgb.at<cv::Vec3f>(y,x)[c]=float(integers.at<cv::Vec<std::uint16_t,3>>(y,x)[c])*float(1.0/65535.0);
+            // delivered to the DCP. Pre-RCD still uses division.
+            ipr::Image rgb=ipr::Image::create({memory->width,memory->height},ipr::Depth::F32,3);
+            const auto *integers=reinterpret_cast<const std::uint16_t *>(memory->data);
+            for(int y=0;y<rgb.height();++y)for(int x=0;x<rgb.width();++x)for(int c=0;c<3;++c)
+                rgb.mutableRow<ipr::Vec3f>(y)[x][c]=float(integers[(size_t(y)*memory->width+x)*3+c])*float(1.0/65535.0);
             writer.save("pre_dcp_camera_rgb",rgb,"linear_camera_grid_1_65535",input);
         }
         writer.pixels.close();require(hash(source)==sourceHash,"Source changed during capture");

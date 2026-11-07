@@ -267,8 +267,8 @@ def bundled_path(path, frameworks):
 
 def relocate_bundled_references(bundle):
     """Absolute install names and references to a library or framework the bundle
-    carries point to that copy. macdeployqt leaves some behind (OpenCV's own ids,
-    paths into the staging folder); references to libraries the bundle does not
+    carries point to that copy. macdeployqt leaves some behind (a Homebrew library's own
+    ids, paths into the staging folder); references to libraries the bundle does not
     carry are left for assert_macos_portable to refuse."""
     frameworks = bundle / 'Contents/Frameworks'
     for binary in macho_files(bundle):
@@ -351,7 +351,7 @@ def package(build, output, label, mode, env, runtime_dirs, native_format=None, v
                 if qt_notices.is_dir(): shutil.copytree(qt_notices, licenses / 'Qt', dirs_exist_ok=True)
         if platform.system() == 'Linux':
             for folder in Path('/usr/share/doc').glob('*'):
-                if folder.name.startswith(('libopencv', 'libraw', 'libtiff', 'libjpeg', 'libpng', 'libwebp', 'zlib')):
+                if folder.name.startswith(('libraw', 'libtiff', 'libjpeg', 'libpng', 'libwebp', 'zlib')):
                     if (folder / 'copyright').exists():
                         shutil.copy2(folder / 'copyright', licenses / (folder.name + '.txt'))
     if platform.system() == 'Darwin':
@@ -371,7 +371,7 @@ def package(build, output, label, mode, env, runtime_dirs, native_format=None, v
                 'source_dirty': dirty,
                 'private_profiles': False, 'signed_release': False, 'smoke': check,
                 'build_dependencies': {k: v for k, v in cache(build).items()
-                    if k in ('Qt6_DIR', 'OpenCV_DIR', 'LIBRAW_LIBRARY', 'TIFF_LIBRARY_RELEASE', 'CMAKE_CXX_COMPILER')},
+                    if k in ('Qt6_DIR', 'LIBRAW_LIBRARY', 'TIFF_LIBRARY_RELEASE', 'CMAKE_CXX_COMPILER')},
                 'files': files}
     (stage / 'package-manifest.json').write_text(json.dumps(manifest, indent=2), encoding='utf8')
     installer_path = None

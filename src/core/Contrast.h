@@ -1,7 +1,7 @@
 #ifndef IPR_CORE_CONTRAST_H
 #define IPR_CORE_CONTRAST_H
 
-#include <opencv2/core.hpp>
+#include "Image.h"
 
 // Contrast: endpoint-preserving S curve in a log domain (24 EV below white),
 // pivot 0.225, applied to each RGB channel. Black and white stay fixed, so no
@@ -13,8 +13,10 @@
 // change left unexplained against 24.2 % before. Lightroom's pivot depends on
 // the image; this fixed one favours the low-pivot scenes.
 namespace Contrast {
-// Slider value in [-100, 100]; linear Rec.2020 RGB (CV_32FC3), in place.
-void apply(cv::Mat &linearRgb, int contrast);
+// Slider value in [-100, 100]; linear Rec.2020 RGB (F32 of three channels), in place. local:
+// per-pixel values added to it (LocalValues), the sum kept within [-100, 100];
+// empty for none. A map that does not fit the image is ignored.
+void apply(ipr::Image &linearRgb, int contrast, const ipr::Image &local = {});
 }
 
 #endif // IPR_CORE_CONTRAST_H

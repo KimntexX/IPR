@@ -1,6 +1,8 @@
 #include "imageeditor.h"
+#include "Pixels.h"
 #include "imageprovider.h"
 #include "controlled_memory.h"
+#include "Sidecar.h"
 #include <QCoreApplication>
 #include <QEventLoop>
 #include <QFile>
@@ -130,10 +132,12 @@ int main(int argc,char **argv)
     if (!write(raw,"mock") || !write(profile,"mock") || !write(manifest,"{}")) return 1;
     std::atomic<int> decodes{0};
     std::atomic<bool> environmentDisabled{false};
+    std::atomic<bool> signedDecode{false};
     RawDecoder::registerFormatHandler({"uimockraw"},
         [&](const QString &,const RawDecoder::Options &options,ImageMetadata *meta,QString *) {
             ++decodes;
             environmentDisabled=!options.useNormalizationEnvironment;
+            signedDecode=options.signedDevelopment;
             meta->cameraMake="Mock"; meta->cameraModel="Test camera";
             meta->availableDcpProfiles={profile};
             meta->dcpProfile=options.dcpProfileOverride.isEmpty()?"Adobe Standard":"Camera Neutral";
@@ -143,7 +147,8 @@ int main(int argc,char **argv)
             meta->normalizationProvenance="Synthetic wiring test, not a RAW calibration";
             meta->normalizationReason="No matching calibration";
             ColorPipeline::WorkingImage image;
-            image.linearRgba=cv::Mat(8,8,CV_32FC4,cv::Scalar(.1f,.2f,.3f,1.f)).clone();
+            image.linearRgba=ipr::Image::create({8,8},ipr::Depth::F32,4);
+            ipr::fill(image.linearRgba,std::vector<double>{.1f,.2f,.3f,1.f});
             image.colorSpace=ColorPipeline::workingColorSpace();
             return image;
         });
@@ -184,6 +189,46 @@ int main(int argc,char **argv)
                "enabled is not equivalent to applied with another profile")) return 1;
     editor.setCameraProfile("unknown.dcp");
     if (!check(editor.selectedCameraProfile().isEmpty() && decodes==5, "unknown profile rejected")) return 1;
+    // The development choices are in the history: undoing one develops again.
+    {
+        settle(editor);
+        const auto stepsBefore = editor.historySteps().size();
+        editor.setCameraProfile(profile);
+        if (!check(settle(editor) && editor.historySteps().size()==stepsBefore+1 &&
+                   editor.historySteps().constLast().toMap().value("changes").toStringList()==QStringList{"rawDevelopment"},
+                   "a development choice becomes one step when its development ends")) return 1;
+        editor.undo();
+        if (!check(settle(editor) && editor.selectedCameraProfile().isEmpty() && editor.canRedo() &&
+                   editor.historySteps().size()==stepsBefore+1, "undo restores the development without a new step")) return 1;
+        editor.redo();
+        if (!check(settle(editor) && editor.selectedCameraProfile()==profile &&
+                   editor.historySteps().size()==stepsBefore+1, "redo restores the development")) return 1;
+        editor.undo();
+        if (!check(settle(editor) && editor.selectedCameraProfile().isEmpty(), "back to the previous development")) return 1;
+
+        // The mode really used is saved, is in the history, and a photo opens again in it.
+        editor.setDenoiseBeforeProfile(true);
+        if (!check(settle(editor) && signedDecode, "the experimental switch develops in signed mode")) return 1;
+        editor.saveCurrentAdjustments();
+        const auto savedMode = Sidecar::read(raw);
+        if (!check(savedMode && savedMode->raw.developmentMode==EditRecipe::SignedDevelopment, "the mode used is saved")) return 1;
+        const QString neighbour = dir.filePath("mode.uimockraw");
+        if (!write(neighbour, "neighbour")) return 1;
+        editor.setDenoiseBeforeProfile(true);
+        editor.loadImage(QUrl::fromLocalFile(neighbour));
+        if (!settle(editor)) return 1;
+        editor.setDenoiseBeforeProfile(false);
+        if (!settle(editor)) return 1;
+        editor.loadImage(QUrl::fromLocalFile(raw));
+        // Served from the cache, whose key holds the mode: no new decode to observe.
+        if (!check(settle(editor) && editor.adjustmentValue("denoiseBeforeProfile")>0 &&
+                   editor.rawDevelopmentStatus().contains(QStringLiteral("mode signé")),
+                   "a photo opens again in its mode, and IPR says so")) return 1;
+        editor.undo();
+        if (!check(settle(editor) && editor.adjustmentValue("denoiseBeforeProfile")==0,
+                   "undo restores the previous mode")) return 1;
+        decodes = 5;
+    }
     // Full restart must restore RAW choices before the first decode, including
     // the automatic WB option (not just its checkbox after decoding).
     editor.setCameraProfile(profile);
@@ -251,7 +296,8 @@ int main(int argc,char **argv)
         [&](const QString &,const RawDecoder::Options &options,ImageMetadata *meta,QString *error) {
             ++fastDecodes;
             auto source = options.retainedDcpSource ? options.retainedDcpSource : std::make_shared<RawDecoder::DcpSource>();
-            source->cameraRgb = cv::Mat(8,8,CV_32FC3,cv::Scalar(.15f,.2f,.1f));
+            source->cameraRgb = ipr::Image::create({8,8},ipr::Depth::F32,3);
+            ipr::fill(source->cameraRgb, std::vector<double>{.15f,.2f,.1f});
             source->metadata.cameraMake = "Mock";
             source->metadata.cameraModel = "Test camera";
             source->metadata.availableDcpProfiles = {neutral,alternate};
@@ -272,7 +318,7 @@ int main(int argc,char **argv)
         if (!check(settle(fast) && fastDecodes == 1 && fast.selectedCameraProfile() == neutral,
                    "automatic Camera Neutral is frozen into recipe")) return 1;
         const QImage baseline = fastProvider.originalImage();
-        fast.setBrightness(.75f);
+        fast.setAdjustment(QStringLiteral("brightness"), .75f);
         fast.setColorMixer(1, 12, 13, 14);
         if (!settle(fast)) return 1;
         bool lostImage = false;
@@ -327,9 +373,9 @@ int main(int argc,char **argv)
             meta->lensVignettingApplied = meta->lensGeometryApplied;
             meta->chromaticAberrationApplied = !path.isEmpty() && options.chromaticAberrationEnabled;
             ColorPipeline::WorkingImage result;
-            result.linearRgba = cv::Mat(8,8,CV_32FC4,cv::Scalar(
-                meta->lensGeometryApplied ? .3f : .1f,
-                meta->chromaticAberrationApplied ? .4f : .2f, .1f, 1.f)).clone();
+            result.linearRgba = ipr::Image::create({8,8},ipr::Depth::F32,4);
+            ipr::fill(result.linearRgba, std::vector<double>{meta->lensGeometryApplied ? .3f : .1f,
+                meta->chromaticAberrationApplied ? .4f : .2f, .1f, 1.f});
             result.colorSpace = ColorPipeline::workingColorSpace();
             return result;
         });
@@ -340,7 +386,7 @@ int main(int argc,char **argv)
         optics.loadImage(QUrl::fromLocalFile(opticRaw));
         if (!check(settle(optics) && optics.opticalDevelopmentStatus().contains("test-lens"),
                    "automatic LCP discovered and frozen on first open")) return 1;
-        optics.setBrightness(.5f);
+        optics.setAdjustment(QStringLiteral("brightness"), .5f);
         if (!settle(optics)) return 1;
         const QImage beforeOptics = p.image();
         optics.setLensCorrectionEnabled(false);

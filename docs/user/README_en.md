@@ -1,4 +1,4 @@
-<!-- translation-source: docs/user/README.md; sha256: 4633daebaf91c4e7f5d26bf1eddd9e027720afbe4ca44887ed885cf8da4f8c1a -->
+<!-- translation-source: docs/user/README.md; sha256: 2f65af92d3f1329de1571261239a1dbf728813104bac71bcd20de2258ac7a2f9 -->
 *[Français](README.md) | [English](README_en.md)*
 
 # IPR user guide
@@ -11,7 +11,7 @@ of the [technical documentation](../technical/latex/README_en.md).
 **Source-checked state on 31 October 2026:** copy/paste, manual saving and
 `Ctrl+click` are connected in `dev`, as are batch application and export.
 Physical duplication with `Ctrl+D` remains unavailable in this reference;
-`Ctrl+S` works. Noise has a master control and advanced controls, with an
+`Ctrl+S` works, as do `Ctrl+Z`, `Ctrl+Shift+Z` and `Ctrl+Y` for the history. Noise has a master control and advanced controls, with an
 experimental signed-RAW checkbox. This review is not a new photographic
 validation. See the [UI status](../architecture/suivi-raccordements-ihm.md)
 and [beta roadmap](../architecture/roadmap-beta.md).

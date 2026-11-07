@@ -5,19 +5,21 @@
 #include "ImageExporter.h"
 #include "ImageImporter.h"
 #include "ColorMixer.h"
+#include "EditHistory.h"
 #include "EditRecipe.h"
 #include "ToneCurve.h"
 #include "DecodedImageCache.h"
 #include "ImageCacheController.h"
-#include "PerceptualColour.h"
+#include "RenderChain.h"
 #include "RenderStageCache.h"
 #include "RawDecoder.h"
+#include "StackSession.h"
+#include "TaskRunner.h"
 
 #include <QAbstractListModel>
 #include <QColor>
 #include <QFileSystemWatcher>
 #include <QFutureWatcher>
-#include <QPromise>
 #include <QHash>
 #include <QImage>
 #include <QTimer>
@@ -30,7 +32,6 @@
 
 #include <array>
 #include <atomic>
-#include <QThreadPool>
 
 class ImageProvider;
 class ThumbnailProvider;
@@ -80,6 +81,7 @@ class ImageEditor final : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QAbstractItemModel *imageModel READ imageModel CONSTANT)
+    Q_PROPERTY(QObject *stacking READ stacking CONSTANT)
     Q_PROPERTY(QUrl folder READ folder NOTIFY folderChanged)
     Q_PROPERTY(QString imageSource READ imageSource NOTIFY previewChanged)
     Q_PROPERTY(bool embeddedPreview READ embeddedPreview NOTIFY previewChanged)
@@ -109,8 +111,22 @@ class ImageEditor final : public QObject
     Q_PROPERTY(int batchExportDone READ batchExportDone NOTIFY batchExportChanged)
     Q_PROPERTY(int batchExportTotal READ batchExportTotal NOTIFY batchExportChanged)
     Q_PROPERTY(bool hasCopiedAdjustments READ hasCopiedAdjustments NOTIFY copiedAdjustmentsChanged)
+    // Edit history of the open image (ADR-0021): steps as {changes: changed recipe
+    // fields}, the first being the opening state; snapshots as {name, created}.
+    Q_PROPERTY(bool canUndo READ canUndo NOTIFY historyChanged)
+    Q_PROPERTY(bool canRedo READ canRedo NOTIFY historyChanged)
+    Q_PROPERTY(QVariantList historySteps READ historySteps NOTIFY historyChanged)
+    Q_PROPERTY(int historyPosition READ historyPosition NOTIFY historyChanged)
+    Q_PROPERTY(QVariantList snapshots READ snapshots NOTIFY historyChanged)
     // Point colour: the picked points in picking order, each {colour (sRGB swatch of
     // its source), hue, saturation, luminance, variance, range}.
+    Q_PROPERTY(QVariantMap geometry READ geometry NOTIFY geometryChanged)
+    Q_PROPERTY(QVariantList localMasks READ localMasks NOTIFY localMasksChanged)
+    // The zone of one mask in the preview (-1: none); never saved nor exported.
+    Q_PROPERTY(int localMaskOverlay READ localMaskOverlay WRITE setLocalMaskOverlay NOTIFY localMaskOverlayChanged)
+    Q_PROPERTY(QVariantList retouches READ retouches NOTIFY retouchesChanged)
+    Q_PROPERTY(int retouchOverlay READ retouchOverlay WRITE setRetouchOverlay NOTIFY retouchOverlayChanged)
+    Q_PROPERTY(bool cropEditing READ cropEditing WRITE setCropEditing NOTIFY cropEditingChanged)
     Q_PROPERTY(QVariantList pointColors READ pointColors NOTIFY pointColorsChanged)
     // Range overlay of one point in the preview (-1: none); never saved nor exported.
     Q_PROPERTY(int pointColorOverlay READ pointColorOverlay WRITE setPointColorOverlay NOTIFY pointColorOverlayChanged)
@@ -150,6 +166,7 @@ public:
     // without sidecars or preferences.
     using Settings = EditRecipe::Settings;
     using ExportResult = ImageExporter::Result;
+    // Move only: a copy shares the images read only, through sharedCopy.
     struct LoadResult : ImageImport::Result
     {
         ColorPipeline::WorkingImage editProxy;
@@ -158,6 +175,7 @@ public:
         QSize fullSize;          // true source size, also when image is a proxy
         bool proxyOnly = false;  // image is the edit proxy restored from the cache
     };
+    static LoadResult sharedCopy(const LoadResult &loaded);
     static LoadResult loadFromDisk(const QString &fileName,
                                    bool automaticWhiteBalance,
                                    const RawDecoder::Options &rawOptions = {});
@@ -172,6 +190,7 @@ public:
     ~ImageEditor() override;
 
     QAbstractItemModel *imageModel();
+    QObject *stacking() { return m_stacking.get(); }
     QUrl folder() const;
     QString imageSource() const;
     QString originalImageSource() const;
@@ -240,6 +259,24 @@ public:
     Q_INVOKABLE void copyAdjustments();
     Q_INVOKABLE void pasteAdjustments();
     Q_INVOKABLE void saveCurrentAdjustments();
+    // A gesture (a slider drag, from press to release) makes one history step,
+    // whatever its intermediate values; a change outside a gesture is a step.
+    Q_INVOKABLE void beginAdjustmentGesture();
+    Q_INVOKABLE void endAdjustmentGesture();
+    Q_INVOKABLE void undo();
+    Q_INVOKABLE void redo();
+    Q_INVOKABLE void goToHistoryStep(int step);
+    // Takes that edit out of the history: the render follows if the current recipe changes.
+    Q_INVOKABLE void removeHistoryStep(int step);
+    Q_INVOKABLE void addSnapshot(const QString &name);
+    Q_INVOKABLE void removeSnapshot(int index);
+    // Applies a snapshot's recipe as a new step.
+    Q_INVOKABLE void restoreSnapshot(int index);
+    bool canUndo() const { return m_history.canUndo(); }
+    bool canRedo() const { return m_history.canRedo(); }
+    QVariantList historySteps() const;
+    int historyPosition() const { return m_history.position(); }
+    QVariantList snapshots() const;
     Q_INVOKABLE int colorMixerValue(int band, int component) const;
     // Colour a mixer slider reaches at a value, for the UI tracks (ColorMixer::trackColour).
     Q_INVOKABLE QColor colorMixerTrackColor(int band, int component, int value) const;
@@ -259,34 +296,16 @@ public:
     Q_INVOKABLE void removePointColor(int index);
     int pointColorOverlay() const { return m_pointColorOverlay; }
     void setPointColorOverlay(int index);
+    // A plain adjustment of the recipe, by its name in AdjustmentTable; bounded there.
+    Q_INVOKABLE void setAdjustment(const QString &name, double value);
     Q_INVOKABLE double adjustmentValue(const QString &name) const;
     Q_INVOKABLE void setImageRating(int rating);
     Q_INVOKABLE void setImageColorLabel(const QString &colorLabel);
     Q_INVOKABLE void setImageFlagged(bool flagged);
     Q_INVOKABLE void setDecodedImageCacheBudgetBytes(qulonglong budgetBytes);
-    Q_INVOKABLE void setBrightness(float value);
-    Q_INVOKABLE void setContrast(int value);
-    Q_INVOKABLE void setBlur(int value);
-    Q_INVOKABLE void setShadows(int value);
-    Q_INVOKABLE void setBlacks(int value);
-    Q_INVOKABLE void setHighlights(int value);
-    Q_INVOKABLE void setWhites(int value);
-    Q_INVOKABLE void setTemperature(int value);
-    Q_INVOKABLE void setTint(int value);
-    Q_INVOKABLE void setVibrance(int value);
-    Q_INVOKABLE void setSaturation(int value);
-    Q_INVOKABLE void setTexture(int value);
-    Q_INVOKABLE void setClarity(int value);
-    Q_INVOKABLE void setDehaze(int value);
-    Q_INVOKABLE void setGrain(int value);
-    Q_INVOKABLE void setDenoiseLuminance(int value);
-    Q_INVOKABLE void setDenoiseChrominance(int value);
     // Single noise reduction control: one amount in [0, 100] sets both strengths.
     Q_INVOKABLE void setDenoiseAmount(int value);
     Q_INVOKABLE void setDenoiseBeforeProfile(bool enabled);
-    Q_INVOKABLE void setSharpeningAmount(int value);
-    Q_INVOKABLE void setSharpeningRadius(float value);
-    Q_INVOKABLE void setSharpeningMasking(int value);
     Q_INVOKABLE void setColorMixer(int band, int hue, int saturation,
                                    int luminance);
     Q_INVOKABLE void setColorGrading(int zone, int hue, int saturation);
@@ -294,11 +313,57 @@ public:
     Q_INVOKABLE void setColorGradingBlending(int blending);
     Q_INVOKABLE void setColorGradingBalance(int balance);
     Q_INVOKABLE void setAutomaticWhiteBalance(bool enabled);
-    Q_INVOKABLE void setGrayscale(bool enabled);
     Q_INVOKABLE void setToneCurve(int channel, const QVariantList &points);
     Q_INVOKABLE void resetToneCurve(int channel);
     Q_INVOKABLE void resetToneCurves();
     Q_INVOKABLE void resetAdjustments();
+    // The geometry panel. Names: rotation, vertical, horizontal, aspect, scale, offsetX, offsetY.
+    QVariantMap geometry() const;
+    bool cropEditing() const;
+    void setCropEditing(bool editing);
+    Q_INVOKABLE void setGeometryValue(const QString &name, double value);
+    Q_INVOKABLE void turnGeometry();
+    Q_INVOKABLE void mirrorGeometry(bool horizontal);
+    Q_INVOKABLE void setGeometryCrop(double x, double y, double width, double height);
+    Q_INVOKABLE void setGeometryCropRatio(double ratio);
+    Q_INVOKABLE void setGeometryConstrain(bool constrain);
+    Q_INVOKABLE void resetGeometryCrop();
+    Q_INVOKABLE void resetGeometry();
+    // Proposes a rotation, and perspectives if the lines allow them, from the photo's straight
+    // lines: "level", "vertical" or "full". The result goes in the geometry, where it can be
+    // changed or undone; a refusal changes nothing and says why in the status.
+    Q_INVOKABLE void proposeStraightening(const QString &mode);
+
+    // The masks' panel. Coordinates: the normalized canvas (LocalAdjustments). Kinds: linear,
+    // radial, brush. Combinations: add, subtract, intersect. A bad index does nothing.
+    QVariantList localMasks() const;
+    int localMaskOverlay() const { return m_localMaskOverlay; }
+    QVariantList retouches() const;
+    int retouchOverlay() const { return m_retouchOverlay; }
+    void setRetouchOverlay(int retouch);
+    // kind: "remove", "heal" or "clone". Returns its index, -1 when refused.
+    Q_INVOKABLE int addRetouch(const QString &kind);
+    Q_INVOKABLE void removeRetouch(int retouch);
+    Q_INVOKABLE void setRetouchVisible(int retouch, bool visible);
+    Q_INVOKABLE void setRetouchOpacity(int retouch, double opacity);
+    // From a zone's pixel to its source, shares of the canvas's sides.
+    Q_INVOKABLE void setRetouchSource(int retouch, double shiftX, double shiftY);
+    // points: u, v, u, v..., on the normalized canvas.
+    Q_INVOKABLE void addRetouchStroke(int retouch, const QVariantList &points, double size, double feather);
+    void setLocalMaskOverlay(int mask);
+    // The index of the new mask, -1 when it could not be added.
+    Q_INVOKABLE int addLocalMask(const QString &kind);
+    Q_INVOKABLE void removeLocalMask(int mask);
+    Q_INVOKABLE int duplicateLocalMask(int mask);
+    Q_INVOKABLE void setLocalMaskName(int mask, const QString &name);
+    Q_INVOKABLE void setLocalMaskVisible(int mask, bool visible);
+    Q_INVOKABLE void setLocalMaskOpacity(int mask, double opacity);
+    Q_INVOKABLE void setLocalMaskValue(int mask, const QString &parameter, double value);
+    Q_INVOKABLE int addLocalMaskShape(int mask, const QString &kind, const QString &combine);
+    Q_INVOKABLE void removeLocalMaskShape(int mask, int shape);
+    Q_INVOKABLE void setLocalMaskShape(int mask, int shape, const QVariantMap &values);
+    // points: [x0, y0, x1, y1, ...] on the normalized canvas, a stroke as one history step.
+    Q_INVOKABLE void addLocalMaskStroke(int mask, int shape, const QVariantList &points, double size, double feather, double flow);
     Q_INVOKABLE void exportImage(const QUrl &target, const QString &format,
                                  int quality);
 
@@ -307,6 +372,8 @@ signals:
     void folderChanged();
     void previewChanged();
     void statusMessageChanged();
+    // A command failed or was refused: the interface shows it where the user just acted.
+    void errorReported(const QString &message);
     void hasImageChanged();
     void busyChanged();
     void imageInfoChanged();
@@ -316,10 +383,17 @@ signals:
     void batchApplyChanged();
     void batchExportChanged();
     void copiedAdjustmentsChanged();
+    void historyChanged();
     void toneCurveChanged(int channel);
     void toneCurvesReset();
     void adjustmentsReset(int temperatureKelvin, int tint);
     void pointColorsChanged();
+    void geometryChanged();
+    void localMasksChanged();
+    void localMaskOverlayChanged();
+    void retouchesChanged();
+    void retouchOverlayChanged();
+    void cropEditingChanged();
     void pointColorOverlayChanged();
 
 private:
@@ -330,41 +404,20 @@ private:
 
     using RawDevelopment = EditRecipe::RawDevelopment;
 
-    struct RenderResult
-    {
-        QImage preview;
-        QImage originalPreview;
-        QVariantList histogram;
-        QString error;
-    };
-
     using UserImageMetadata = EditRecipe::UserImageMetadata;
 
     static DecodedImageCache::Entry retainedEntry(const ColorPipeline::WorkingImage &image,
         const ColorPipeline::WorkingImage &proxy, const ImageMetadata &metadata,
         std::shared_ptr<RawDecoder::DcpSource> dcpSource, QSize fullSize, bool imageIsProxy);
     DecodedImageCache::Entry retainedCurrentEntry() const;
+    void commitGeometry(Geometry::Settings next);
+    bool commitLocalMasks(LocalAdjustments::Masks next);
+    bool commitRetouches(Retouch::Operations next);
+    bool originalFramingStale() const;
     RawDecoder::Options developmentOptions() const;
-    // pixelScale: pixels of source per pixel of the full image (below 1 for the
-    // preview proxy), so effects keep their full-image radii. With a cache (the
-    // preview), the render resumes from the stages it kept; same pixels as without.
-    static ColorPipeline::WorkingImage renderWorkingImage(
-        const ColorPipeline::WorkingImage &source, const Settings &settings,
-        double pixelScale = 1.0, RenderStageCache *cache = nullptr);
-    static bool renderTones(const ColorPipeline::WorkingImage &source, const Settings &settings,
-                            int referenceTemperature, double pixelScale, cv::Mat &adjusted);
-    static PerceptualColour::Parameters perceptualParameters(const Settings &settings);
     // The preview's source (edit proxy, or the image) and its pixel scale.
     const ColorPipeline::WorkingImage &previewSource() const;
     double previewPixelScale() const;
-    // overlayPoint: a point colour whose range the preview shows (colour where it
-    // acts, grey elsewhere), -1 for none.
-    static RenderResult renderPreview(const ColorPipeline::WorkingImage &source,
-                                      const Settings &settings,
-                                      bool includeOriginal,
-                                      double pixelScale = 1.0,
-                                      RenderStageCache *cache = nullptr,
-                                      int overlayPoint = -1);
     static ColorPipeline::WorkingImage buildEditProxy(
         const ColorPipeline::WorkingImage &source);
     static QString cacheKeyForFile(const QString &fileName,
@@ -382,6 +435,11 @@ private:
     void scheduleRender();
     void scheduleSidecarSave();
     bool saveCurrentSidecar();
+    bool historyEditable() const;
+    void recordHistory();
+    void restoreRecipe(const std::optional<QCborMap> &recipe);
+    QCborMap currentRecipe() const;
+    void setRawDevelopment(const RawDevelopment &raw);
     void startRender();
     void startEmbeddedPreview(const QString &fileName);
     void restoreBeforeEmbeddedPreview();
@@ -392,6 +450,9 @@ private:
     void setBusy(bool busy);
     void refreshBusyState();
     void setStatusMessage(const QString &message);
+    void reportError(const QString &message);
+    // For what comes back at every render or save: once, until the message changes.
+    void reportNewError(const QString &message);
     QString currentFileKey() const;
 
     ImageProvider *m_provider;
@@ -411,6 +472,10 @@ private:
     QString m_normalizationManifest;
     bool m_rawNormalizationEnabled = true;
     bool m_denoiseBeforeProfile = false;   // experimental session switch, kept across images
+    bool m_sidecarReadOnly = false;        // the open image's .ipr comes from a newer IPR
+    EditHistory m_history;                 // of the open image, saved in its .ipr
+    bool m_inAdjustmentGesture = false;
+    bool m_restoringHistory = false;
     QString m_rawDevelopmentWarning;
     QString m_profileSha256;
     QString m_manifestSha256;
@@ -424,9 +489,21 @@ private:
     std::shared_ptr<RawDecoder::DcpSource> m_dcpSource;
     QHash<QString, UserImageMetadata> m_userImageMetadata;
     QSet<QString> m_selectedImageKeys;
-    ImageCacheController m_decodedImageCache;
+    // What the running tasks reach besides their own copies: shared with them, so
+    // that a task left running at close never touches a destroyed object.
+    struct TaskResources
+    {
+        explicit TaskResources(ImageCacheController::Sampler sampler) : cache(nullptr, std::move(sampler)) {}
+        ImageCacheController cache;
+        RenderStageCache stages;
+    };
+    std::shared_ptr<TaskResources> m_taskResources;
+    std::unique_ptr<StackSession> m_stacking;
+    int m_localMaskOverlay = -1;
+    int m_retouchOverlay = -1;
+    ImageCacheController &m_decodedImageCache;
     // Preview only; cleared with the image it belongs to.
-    RenderStageCache m_renderStageCache;
+    RenderStageCache &m_renderStageCache;
     QString m_currentCacheKey;
     Settings m_settings;
     int m_pointColorOverlay = -1;
@@ -434,11 +511,13 @@ private:
     bool m_hasCopiedAdjustments = false;
     QString m_imageSource;
     QString m_originalImageSource;
+    Geometry::Settings m_originalGeometry;   // the framing the published original shows
+    bool m_originalWholeCanvas = false;
+    bool m_cropEditing = false;
     QString m_statusMessage = tr("Choisissez un dossier contenant des images.");
     QString m_memoryWaitMessage;
     // Camera-rendered embedded JPEG shown while the IPR development runs.
     QFutureWatcher<QImage> m_embeddedWatcher;
-    QThreadPool m_embeddedPool;
     quint64 m_embeddedRevision = 0, m_embeddedSerial = 0;
     bool m_embeddedPreview = false;
     QImage m_restorePreview, m_restoreOriginal;
@@ -447,7 +526,7 @@ private:
     QSize m_fullSize;
     QTimer m_renderDebounce;
     QTimer m_sidecarDebounce;
-    QFutureWatcher<RenderResult> m_renderWatcher;
+    QFutureWatcher<RenderChain::Preview> m_renderWatcher;
     QFutureWatcher<ExportResult> m_exportWatcher;
     struct BatchResult
     {
@@ -457,7 +536,7 @@ private:
     };
     static BatchResult applyToFiles(const QStringList &files, const Settings &settings, bool asShot,
                                     const QHash<QString, UserImageMetadata> &annotations);
-    static void exportFiles(QPromise<BatchResult> &promise, const QStringList &files, const QString &folder,
+    static BatchResult exportFiles(Tasks::Context &context, const QStringList &files, const QString &folder,
                             const QString &format, int quality, ImageCacheController *controller,
                             ImageCacheController::CancelToken cancel);
     void finishBatch(const BatchResult &result, const QString &done);
@@ -473,7 +552,6 @@ private:
     bool m_copiedAsShot = false;
     QFutureWatcher<LoadResult> m_loadWatcher;
     QFutureWatcher<LoadResult> m_prefetchWatcher;
-    QThreadPool m_prefetchPool;
     QTimer m_prefetchTimer;
     QStringList m_prefetchQueue;
     QString m_prefetchFile;
@@ -483,6 +561,10 @@ private:
     quint64 m_prefetchGeneration = 0, m_activePrefetchGeneration = 0;
     std::shared_ptr<std::atomic_bool> m_prefetchCancel;
     std::shared_ptr<std::atomic_bool> m_loadCancel;
+    // One thread per channel: the tasks mostly wait for memory or run the modules'
+    // own parallel loops, and none must queue behind another's wait. Closing waits a
+    // minute at most, longer than a RAW development.
+    Tasks::TaskRunner m_tasks{8, 60000};
     quint64 m_requestedRevision = 0;
     quint64 m_activeRevision = 0;
     quint64 m_requestedLoadRevision = 0;

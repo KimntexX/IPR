@@ -21,7 +21,6 @@ option(IPR_BUILD_TOOLS "Build the analysis tools of src/tools" ON)
 
 find_package(Qt6 6.8 REQUIRED COMPONENTS Core Gui Quick Concurrent)
 find_package(TIFF REQUIRED)
-find_package(OpenCV REQUIRED COMPONENTS core imgproc imgcodecs)
 qt_standard_project_setup()
 
 set(IPR_SOURCE_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/src")
@@ -33,6 +32,10 @@ set(IPR_INCLUDE_DIRECTORIES
     "${IPR_SOURCE_ROOT}/profiles"
     "${IPR_SOURCE_ROOT}/providers"
     "${IPR_SOURCE_ROOT}/raw"
+    "${IPR_SOURCE_ROOT}/stack"
+    "${IPR_SOURCE_ROOT}/detect"
+    "${IPR_SOURCE_ROOT}/panorama"
+    "${IPR_SOURCE_ROOT}/tasks"
 )
 
 set(IPR_ENGINE_SOURCES
@@ -46,6 +49,8 @@ set(IPR_ENGINE_SOURCES
     src/cache/ImageCacheController.cpp
     src/cache/RenderStageCache.h
     src/cache/RenderStageCache.cpp
+    src/tasks/TaskRunner.h
+    src/tasks/TaskRunner.cpp
     src/core/ColorPipeline.h
     src/core/ImageMetadata.h
     src/core/ImageImporter.h
@@ -53,6 +58,16 @@ set(IPR_ENGINE_SOURCES
     src/core/ImageExporter.h
     src/core/ImageExporter.cpp
     src/core/EditRecipe.h
+    src/core/Exposure.h
+    src/core/Exposure.cpp
+    src/core/LocalAdjustments.h
+    src/core/LocalAdjustments.cpp
+    src/core/LocalValues.h
+    src/core/LocalValues.cpp
+    src/core/RecipeCodec.h
+    src/core/RecipeCodec.cpp
+    src/core/EditHistory.h
+    src/core/EditHistory.cpp
     src/core/Sidecar.h
     src/core/Sidecar.cpp
     src/core/WorkingColorSpace.h
@@ -65,6 +80,8 @@ set(IPR_ENGINE_SOURCES
     src/core/PointColor.cpp
     src/core/DetailProcessing.h
     src/core/DetailProcessing.cpp
+    src/core/Geometry.h
+    src/core/Geometry.cpp
     src/core/Dehaze.h
     src/core/Dehaze.cpp
     src/core/Grain.h
@@ -75,6 +92,36 @@ set(IPR_ENGINE_SOURCES
     src/core/ColorAdjustments.cpp
     src/core/ColorGrading.h
     src/core/ColorGrading.cpp
+    src/detect/LineDetection.h
+    src/detect/LineDetection.cpp
+    src/detect/Straightening.h
+    src/detect/Straightening.cpp
+    src/stack/FrameSpool.h
+    src/stack/FrameSpool.cpp
+    src/core/Retouch.h
+    src/core/Retouch.cpp
+    src/panorama/PanoramaFeatures.h
+    src/panorama/PanoramaFeatures.cpp
+    src/panorama/PanoramaGeometry.h
+    src/panorama/PanoramaGeometry.cpp
+    src/panorama/PanoramaBlend.h
+    src/panorama/PanoramaBlend.cpp
+    src/panorama/PanoramaFill.h
+    src/panorama/PanoramaFill.cpp
+    src/panorama/PanoramaJob.h
+    src/panorama/PanoramaJob.cpp
+    src/stack/StackAlignment.h
+    src/stack/StackAlignment.cpp
+    src/stack/StackMerge.h
+    src/stack/StackMerge.cpp
+    src/stack/StackTurbulence.h
+    src/stack/StackTurbulence.cpp
+    src/stack/StackJob.h
+    src/stack/StackJob.cpp
+    src/stack/StackSession.h
+    src/stack/StackSession.cpp
+    src/raw/CameraDng.h
+    src/raw/CameraDng.cpp
     src/core/PerceptualColour.h
     src/core/PerceptualColour.cpp
     src/core/Contrast.h
@@ -94,6 +141,10 @@ set(IPR_ENGINE_SOURCES
     src/core/VibranceModel.h
     src/editor/imageeditor.h
     src/editor/imageeditor.cpp
+    src/editor/AdjustmentTable.h
+    src/editor/AdjustmentTable.cpp
+    src/editor/RenderChain.h
+    src/editor/RenderChain.cpp
     src/profiles/CameraProfileEngine.h
     src/profiles/CameraProfileEngine.cpp
     src/profiles/PreparedProfileCache.h
@@ -146,6 +197,7 @@ set(IPR_QML_FILES
     src/qml/RawCalibrationModule.qml
     src/qml/PreferencesDialog.qml
     src/qml/PreferenceButton.qml
+    src/qml/CommandErrorPopup.qml
     src/qml/PreferenceCheckBox.qml
     src/qml/PreferenceSpinBox.qml
     src/qml/PreferenceComboBox.qml
@@ -156,6 +208,16 @@ set(IPR_QML_FILES
     src/qml/ImageCanvasBackground.qml
     src/qml/AdvancedRawPreferencesPane.qml
     src/qml/InterfacePaletteSelector.qml
+    src/qml/AppMenu.qml
+    src/qml/HistoryModule.qml
+    src/qml/GeometryPanel.qml
+    src/qml/AssemblePanel.qml
+    src/qml/RetouchPanel.qml
+    src/qml/MasksPanel.qml
+    src/qml/MaskOverlay.qml
+    src/qml/CropOverlay.qml
+    src/qml/PanelTabBar.qml
+    src/qml/PanelScrollBar.qml
     src/qml/SettingsSection.qml
     src/qml/AdjustmentControl.qml
     src/qml/CurveChannelButton.qml
@@ -175,6 +237,17 @@ foreach(qml_file IN LISTS IPR_QML_FILES)
     set_source_files_properties("${qml_file}" PROPERTIES QT_RESOURCE_ALIAS "${qml_alias}")
 endforeach()
 
+# The image layer: standard C++ only, no Qt (roadmap-couche-image-sans-opencv.md).
+find_package(Threads REQUIRED)
+add_library(iprImage STATIC src/image/Types.h src/image/Image.h src/image/Image.cpp
+    src/image/Parallel.h src/image/Parallel.cpp src/image/Filters.h src/image/Filters.cpp
+    src/image/Resize.h src/image/Resize.cpp src/image/Warp.h src/image/Warp.cpp src/image/Arrange.h src/image/Arrange.cpp
+    src/image/Neighbourhood.h src/image/Neighbourhood.cpp src/image/Pixels.h src/image/Pixels.cpp
+    src/image/Analysis.h src/image/Analysis.cpp src/image/Random.h)
+target_include_directories(iprImage PUBLIC src/image)
+target_link_libraries(iprImage PUBLIC Threads::Threads)
+set_target_properties(iprImage PROPERTIES AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)
+
 add_library(iprEngine STATIC ${IPR_ENGINE_SOURCES})
 qt_add_resources(iprEngine ipr_ui_defaults
     PREFIX "/"
@@ -183,12 +256,12 @@ qt_add_resources(iprEngine ipr_ui_defaults
 target_include_directories(iprEngine PUBLIC ${IPR_INCLUDE_DIRECTORIES})
 target_link_libraries(iprEngine
     PUBLIC
+        iprImage
         Qt6::Core
         Qt6::Gui
         Qt6::Quick
         Qt6::Concurrent
         TIFF::TIFF
-        ${OpenCV_LIBS}
 )
 
 if(IPR_ENABLE_LIBRAW)
@@ -237,6 +310,10 @@ if(IPR_BUILD_TOOLS)
     target_link_libraries(iprGenerateTests PRIVATE iprTestRecipes)
     add_executable(iprRenderServer src/tools/render_server.cpp)
     target_link_libraries(iprRenderServer PRIVATE iprTestRecipes)
+    add_executable(iprSidecarDump src/tools/sidecar_dump.cpp src/tools/SidecarJson.cpp)
+    target_link_libraries(iprSidecarDump PRIVATE iprEngine)
+    add_executable(iprSidecarAudit src/tools/sidecar_audit.cpp)
+    target_link_libraries(iprSidecarAudit PRIVATE iprEngine)
 endif()
 
 set_target_properties(appIPR PROPERTIES
@@ -335,7 +412,76 @@ if(BUILD_TESTING)
     set_tests_properties(renderStageCacheTests PROPERTIES LABELS "unit;pipeline;cache" TIMEOUT 120)
     ipr_add_test(vibranceMathTests tests/vibrance_math_test.cpp)
     set_tests_properties(vibranceMathTests PROPERTIES LABELS "unit;pipeline;colour")
+    # The image layer without Qt: only the standard library.
+    add_executable(imageCoreTests tests/image_core_test.cpp)
+    target_link_libraries(imageCoreTests PRIVATE iprImage)
+    add_test(NAME imageCoreTests COMMAND imageCoreTests)
+    set_tests_properties(imageCoreTests PROPERTIES LABELS "unit;image")
+    add_executable(imageFiltersTests tests/image_filters_test.cpp)
+    target_link_libraries(imageFiltersTests PRIVATE iprImage)
+    add_test(NAME imageFiltersTests COMMAND imageFiltersTests)
+    set_tests_properties(imageFiltersTests PROPERTIES LABELS "unit;image")
+    add_executable(iprExportModuleProbe EXCLUDE_FROM_ALL tests/export_module_probe.cpp)
+    target_link_libraries(iprExportModuleProbe PRIVATE iprEngine)
+    add_executable(imageResizeTests tests/image_resize_test.cpp)
+    target_link_libraries(imageResizeTests PRIVATE iprImage)
+    add_test(NAME imageResizeTests COMMAND imageResizeTests)
+    set_tests_properties(imageResizeTests PROPERTIES LABELS "unit;image")
+    add_executable(imageArrangeTests tests/image_arrange_test.cpp)
+    target_link_libraries(imageArrangeTests PRIVATE iprImage)
+    add_test(NAME imageArrangeTests COMMAND imageArrangeTests)
+    set_tests_properties(imageArrangeTests PROPERTIES LABELS "unit;image")
+    add_executable(imageWarpTests tests/image_warp_test.cpp)
+    target_link_libraries(imageWarpTests PRIVATE iprImage)
+    add_test(NAME imageWarpTests COMMAND imageWarpTests)
+    set_tests_properties(imageWarpTests PROPERTIES LABELS "unit;image")
+    add_executable(imageNeighbourhoodTests tests/image_neighbourhood_test.cpp)
+    target_link_libraries(imageNeighbourhoodTests PRIVATE iprImage)
+    add_test(NAME imageNeighbourhoodTests COMMAND imageNeighbourhoodTests)
+    set_tests_properties(imageNeighbourhoodTests PROPERTIES LABELS "unit;image")
+    add_executable(imagePixelsTests tests/image_pixels_test.cpp)
+    target_link_libraries(imagePixelsTests PRIVATE iprImage)
+    add_test(NAME imagePixelsTests COMMAND imagePixelsTests)
+    set_tests_properties(imagePixelsTests PROPERTIES LABELS "unit;image")
+    add_executable(imageAnalysisTests tests/image_analysis_test.cpp)
+    target_link_libraries(imageAnalysisTests PRIVATE iprImage)
+    add_test(NAME imageAnalysisTests COMMAND imageAnalysisTests)
+    set_tests_properties(imageAnalysisTests PROPERTIES LABELS "unit;image")
+    ipr_add_test(adjustmentTableTests tests/adjustment_table_test.cpp)
+    set_tests_properties(adjustmentTableTests PROPERTIES LABELS "unit")
+    ipr_add_test(renderChainTests tests/render_chain_test.cpp)
+    set_tests_properties(renderChainTests PROPERTIES LABELS "unit;pipeline")
+    ipr_add_test(lineDetectionTests tests/line_detection_test.cpp)
+    set_tests_properties(lineDetectionTests PROPERTIES LABELS "unit;detection")
     ipr_add_test(detailProcessingTests tests/detail_processing_test.cpp)
+    add_executable(iprGeometryAudit tests/geometry_audit.cpp)
+    target_link_libraries(iprGeometryAudit PRIVATE iprEngine)
+    add_executable(iprLineAudit tests/line_audit.cpp)
+    target_link_libraries(iprLineAudit PRIVATE iprEngine)
+    add_executable(iprStackAudit tests/stack_audit.cpp)
+    target_link_libraries(iprStackAudit PRIVATE iprEngine)
+    if(WIN32)
+        target_link_libraries(iprStackAudit PRIVATE psapi)
+    endif()
+    ipr_add_test(cameraDngTests tests/camera_dng_test.cpp)
+    set_tests_properties(cameraDngTests PROPERTIES LABELS "unit;stack;export" TIMEOUT 60)
+    add_executable(iprPanoramaAudit tests/panorama_audit.cpp)
+    target_link_libraries(iprPanoramaAudit PRIVATE iprEngine)
+    if(WIN32)
+        target_link_libraries(iprPanoramaAudit PRIVATE psapi)
+    endif()
+    ipr_add_test(retouchTests tests/retouch_test.cpp)
+    set_tests_properties(retouchTests PROPERTIES LABELS "unit;retouch" TIMEOUT 120)
+    ipr_add_test(editorRetouchTests tests/editor_retouch_test.cpp)
+    set_tests_properties(editorRetouchTests PROPERTIES LABELS "unit;retouch" TIMEOUT 180)
+    ipr_add_test(panoramaTests tests/panorama_test.cpp)
+    set_tests_properties(panoramaTests PROPERTIES LABELS "unit;panorama" TIMEOUT 180)
+    ipr_add_test(stackSessionTests tests/stack_session_test.cpp)
+    set_tests_properties(stackSessionTests PROPERTIES LABELS "unit;stack" TIMEOUT 180)
+    ipr_add_test(stackTests tests/stack_test.cpp)
+    set_tests_properties(stackTests PROPERTIES LABELS "unit;stack" TIMEOUT 180)
+    ipr_add_test(geometryTests tests/geometry_test.cpp)
+    set_tests_properties(geometryTests PROPERTIES LABELS "unit;geometry" TIMEOUT 60)
     ipr_add_test(localContrastTests tests/local_contrast_test.cpp)
     ipr_add_test(dehazeTests tests/dehaze_test.cpp)
     ipr_add_test(grainTests tests/grain_test.cpp)
@@ -344,6 +490,20 @@ if(BUILD_TESTING)
     ipr_add_test(editorBatchTests tests/batch_test.cpp)
     set_tests_properties(editorBatchTests PROPERTIES LABELS "unit;export;batch" TIMEOUT 180)
     ipr_add_test(sidecarTests tests/sidecar_test.cpp)
+    ipr_add_test(sidecarJsonTests tests/sidecar_json_test.cpp)
+    target_sources(sidecarJsonTests PRIVATE src/tools/SidecarJson.cpp)
+    target_include_directories(sidecarJsonTests PRIVATE src/tools)
+    ipr_add_test(editHistoryTests tests/edit_history_test.cpp)
+    ipr_add_test(localAdjustmentsTests tests/local_adjustments_test.cpp)
+    add_executable(iprMasksAudit tests/masks_audit.cpp)
+    target_link_libraries(iprMasksAudit PRIVATE iprEngine)
+    ipr_add_test(localValuesTests tests/local_values_test.cpp)
+    ipr_add_test(editorGeometryTests tests/editor_geometry_test.cpp)
+    set_tests_properties(editorGeometryTests PROPERTIES LABELS "unit;geometry" TIMEOUT 120)
+    ipr_add_test(editorMasksTests tests/editor_masks_test.cpp)
+    set_tests_properties(editorMasksTests PROPERTIES LABELS "unit;masks" TIMEOUT 180)
+    ipr_add_test(editorHistoryTests tests/editor_history_test.cpp)
+    set_tests_properties(editorHistoryTests PROPERTIES LABELS "unit;history" TIMEOUT 120)
     ipr_add_test(folderRefreshTests tests/folder_refresh_test.cpp)
     set_tests_properties(folderRefreshTests PROPERTIES LABELS "unit;batch" TIMEOUT 120)
     ipr_add_test(toneRecoveryTests tests/tone_recovery_test.cpp)
@@ -364,6 +524,8 @@ if(BUILD_TESTING)
     target_sources(parallelJobsTests PRIVATE src/tools/ParallelJobs.cpp)
     target_include_directories(parallelJobsTests PRIVATE src/tools)
     set_tests_properties(parallelJobsTests PROPERTIES LABELS "unit;generator;thread" TIMEOUT 20)
+    ipr_add_test(taskRunnerTests tests/task_runner_test.cpp)
+    set_tests_properties(taskRunnerTests PROPERTIES LABELS "unit;thread" TIMEOUT 30)
     set_tests_properties(rawInputTests rawDevelopmentTests PROPERTIES LABELS "unit;raw")
     set_tests_properties(toneCurveTests PROPERTIES LABELS "unit;pipeline;curves")
     set_tests_properties(pointColorTests PROPERTIES LABELS "unit;pipeline;colour")
@@ -379,6 +541,36 @@ if(BUILD_TESTING)
     target_compile_definitions(settingsQmlTests PRIVATE
         IPR_QML_DIRECTORY="${IPR_SOURCE_ROOT}/qml")
     set_tests_properties(settingsQmlTests PROPERTIES
+        ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Basic")
+    ipr_add_test(historyQmlTests tests/history_qml_test.cpp)
+    target_compile_definitions(historyQmlTests PRIVATE
+        IPR_QML_DIRECTORY="${IPR_SOURCE_ROOT}/qml")
+    set_tests_properties(historyQmlTests PROPERTIES
+        LABELS "unit;history;qml" TIMEOUT 60
+        ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Basic")
+    ipr_add_test(assembleQmlTests tests/assemble_qml_test.cpp)
+    target_compile_definitions(assembleQmlTests PRIVATE
+        IPR_QML_DIRECTORY="${IPR_SOURCE_ROOT}/qml")
+    set_tests_properties(assembleQmlTests PROPERTIES
+        LABELS "unit;stack;qml" TIMEOUT 120
+        ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Basic")
+    ipr_add_test(retouchQmlTests tests/retouch_qml_test.cpp)
+    target_compile_definitions(retouchQmlTests PRIVATE
+        IPR_QML_DIRECTORY="${IPR_SOURCE_ROOT}/qml")
+    set_tests_properties(retouchQmlTests PROPERTIES
+        LABELS "unit;retouch;qml" TIMEOUT 120
+        ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Basic")
+    ipr_add_test(masksQmlTests tests/masks_qml_test.cpp)
+    target_compile_definitions(masksQmlTests PRIVATE
+        IPR_QML_DIRECTORY="${IPR_SOURCE_ROOT}/qml")
+    set_tests_properties(masksQmlTests PROPERTIES
+        LABELS "unit;masks;qml" TIMEOUT 120
+        ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Basic")
+    ipr_add_test(geometryQmlTests tests/geometry_qml_test.cpp)
+    target_compile_definitions(geometryQmlTests PRIVATE
+        IPR_QML_DIRECTORY="${IPR_SOURCE_ROOT}/qml")
+    set_tests_properties(geometryQmlTests PROPERTIES
+        LABELS "unit;geometry;qml" TIMEOUT 60
         ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Basic")
     ipr_add_test(imageViewportQmlTests tests/image_viewport_qml_test.cpp)
     target_compile_definitions(imageViewportQmlTests PRIVATE

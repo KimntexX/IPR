@@ -62,7 +62,7 @@ void write(const LoadResult &source, const Settings &settings, const QString &pa
 {
     require(!QFileInfo::exists(path) && !QFileInfo(path).isSymLink(), "Output already exists: " + path);
     QStorageInfo disk(QFileInfo(path).absolutePath());
-    const qint64 needed = qint64(source.image.linearRgba.cols) * source.image.linearRgba.rows * 6
+    const qint64 needed = qint64(source.image.linearRgba.width()) * source.image.linearRgba.height() * 6
         + 512LL * 1024 * 1024;
     require(!disk.isValid() || disk.bytesAvailable() < 0 || disk.bytesAvailable() >= needed,
             "Not enough disk space (512 MiB reserve); stopped without deleting files.");
@@ -151,7 +151,7 @@ int main(int argc, char **argv)
             qint64 count = 1; // neutral
             for (const Feature &feature : selected)
                 if (eligible(feature.name, input.filePath())) count += feature.values.size();
-            estimate += count * (qint64(probe.image.linearRgba.cols) * probe.image.linearRgba.rows * 7 + 65536);
+            estimate += count * (qint64(probe.image.linearRgba.width()) * probe.image.linearRgba.height() * 7 + 65536);
         }
         out << "Estimated storage incl. safety margin: " << estimate / (1024 * 1024)
             << " MiB (optical geometry/metadata can vary; checked again per image)." << Qt::endl;
@@ -212,7 +212,7 @@ int main(int argc, char **argv)
                 }
             }
             quint64 freeBytes = 0;
-            const int workers = workerCount(quint64(loaded.image.linearRgba.total()), &freeBytes);
+            const int workers = workerCount(quint64(loaded.image.linearRgba.width()) * quint64(loaded.image.linearRgba.height()), &freeBytes);
             out << "Parallel renders: " << workers << " (free memory " << freeBytes / (1024 * 1024)
                 << " MiB, 2 GiB reserve)" << Qt::endl;
             ParallelJobs::run(parallel, workers);

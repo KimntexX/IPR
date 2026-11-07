@@ -53,23 +53,23 @@ class DeploymentTests(unittest.TestCase):
     def test_bundled_libraries_are_referenced_inside_the_bundle(self):
         with tempfile.TemporaryDirectory() as directory:
             bundle = Path(directory) / 'appIPR.app'
-            library = bundle / 'Contents/Frameworks/libopencv_geometry.500.dylib'
+            library = bundle / 'Contents/Frameworks/libraw.24.dylib'
             executable = bundle / 'Contents/MacOS/appIPR'
             framework = bundle / 'Contents/Frameworks/QtConcurrent.framework/Versions/A/QtConcurrent'
             for binary in (library, executable, framework):
                 binary.parent.mkdir(parents=True, exist_ok=True)
                 binary.write_bytes(b'\xcf\xfa\xed\xfe' + b'\0' * 12)
-            brew = '/opt/homebrew/opt/opencv/lib/'
+            brew = '/opt/homebrew/opt/libraw/lib/'
             staging = '/runner/dist/.staging/appIPR.app/Contents/Frameworks/QtConcurrent.framework/Versions/A/QtConcurrent'
             outputs = {
-                ('-D', library): f'{library}:\n{brew}libopencv_geometry.500.dylib\n',
+                ('-D', library): f'{library}:\n{brew}libraw.24.dylib\n',
                 ('-D', executable): f'{executable}:\n',
                 # A framework whose id still names the staging folder.
                 ('-D', framework): f'{framework}:\n{staging}\n',
                 ('-L', framework): f'{framework}:\n\t{staging} (compatibility)\n',
-                ('-L', library): (f'{library}:\n\t{brew}libopencv_geometry.500.dylib (compatibility)\n'
-                                  f'\t{brew}libopencv_core.500.dylib (compatibility)\n'),
-                ('-L', executable): f'{executable}:\n\t{brew}libopencv_geometry.500.dylib (compatibility)\n'
+                ('-L', library): (f'{library}:\n\t{brew}libraw.24.dylib (compatibility)\n'
+                                  f'\t{brew}libjpeg.8.dylib (compatibility)\n'),
+                ('-L', executable): f'{executable}:\n\t{brew}libraw.24.dylib (compatibility)\n'
                                     '\t/usr/lib/libSystem.B.dylib (compatibility)\n',
             }
             with patch.object(ci.subprocess, 'check_output',
@@ -77,9 +77,9 @@ class DeploymentTests(unittest.TestCase):
                     patch.object(ci, 'run') as run:
                 ci.relocate_bundled_references(bundle)
             calls = [call.args[0] for call in run.call_args_list]
-            target = '@executable_path/../Frameworks/libopencv_geometry.500.dylib'
+            target = '@executable_path/../Frameworks/libraw.24.dylib'
             self.assertIn(['install_name_tool', '-id', target, library], calls)
-            self.assertIn(['install_name_tool', '-change', brew + 'libopencv_geometry.500.dylib', target, executable],
+            self.assertIn(['install_name_tool', '-change', brew + 'libraw.24.dylib', target, executable],
                           calls)
             self.assertIn(['install_name_tool', '-id',
                            '@executable_path/../Frameworks/QtConcurrent.framework/Versions/A/QtConcurrent', framework],

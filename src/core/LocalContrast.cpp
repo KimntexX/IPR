@@ -1,7 +1,10 @@
 #include "LocalContrast.h"
 #include "WorkingColorSpace.h"
 
-#include <opencv2/imgproc.hpp>
+#include "Filters.h"
+#include "Resize.h"
+#include "Parallel.h"
+
 
 #include <algorithm>
 #include <array>
@@ -73,21 +76,16 @@ Bands detailGainAt(const std::array<Row, 6> &table, int value)
 // resolution (area reduction by a power of 2 leaving a sigma of 2 to 4, then
 // bilinear enlargement). A sigma far below a pixel leaves the plane: that band
 // is finer than this image can show.
-cv::Mat blurSigma(const cv::Mat &plane, double sigma)
+ipr::Image blurSigma(const ipr::Image &plane, double sigma)
 {
     if (sigma < 0.25) return plane.clone();
     int factor = 1;
     while (sigma / (2 * factor) >= 2.0) factor *= 2;
-    cv::Mat result;
-    if (factor == 1) {
-        cv::GaussianBlur(plane, result, cv::Size(0, 0), sigma, sigma, cv::BORDER_REFLECT);
-        return result;
-    }
-    cv::Mat small;
-    cv::resize(plane, small, cv::Size(std::max(1, plane.cols / factor), std::max(1, plane.rows / factor)), 0, 0,
-               cv::INTER_AREA);
-    cv::GaussianBlur(small, small, cv::Size(0, 0), sigma / factor, sigma / factor, cv::BORDER_REFLECT);
-    cv::resize(small, result, plane.size(), 0, 0, cv::INTER_LINEAR);
+    if (factor == 1)
+        return ipr::gaussianBlurred(plane, sigma, ipr::BlurBorder::MirrorEdge);
+    ipr::Image result, small;
+    small = ipr::resized(plane, ipr::Size(std::max(1, plane.width() / factor), std::max(1, plane.height() / factor)), ipr::Interpolation::Area);
+    result = ipr::resized(ipr::gaussianBlurred(small, sigma / factor, ipr::BlurBorder::MirrorEdge), plane.size(), ipr::Interpolation::Linear);
     return result;
 }
 
@@ -103,62 +101,121 @@ float inverse(Domain domain, float value)
     return domain == Domain::Log2 ? std::exp2(value) - LogFloor : value * value * value;
 }
 
+// A slider value per pixel: the gains of every whole value, read linearly between them.
+struct LocalGains
+{
+    const ipr::Image &values;   // global plus local, within [-100, 100]
+    std::array<Bands, 201> gains;
+    const Bands &reduce;
+    const Bands &enhance;
+};
+
+float localGain(const LocalGains &local, float value, size_t band)
+{
+    const float position = value + 100.0f;
+    const int low = std::min(int(position), 200);
+    const float t = position - float(low);
+    const float at = local.gains[size_t(low)][band];
+    return t == 0.0f ? at : at + t * (local.gains[size_t(low) + 1][band] - at);
+}
+
 // Bands of the luminance in the domain: G0 is the image, G1 sigma 1, then sigma
 // 2, 4, ... 256 pixels of the full image; each band d gains k d / (1 + (|d| / A)^2); colours keep their
-// channel ratios.
-void applyBands(cv::Mat &linearRgb, Domain domain, const Bands &k, const Bands &a, double pixelScale)
+// channel ratios. With local gains, each pixel reads its own and a pixel at zero stays untouched.
+void applyBands(ipr::Image &linearRgb, Domain domain, const Bands &k, const Bands &a, double pixelScale,
+                const LocalGains *local = nullptr)
 {
-    cv::Mat luminance(linearRgb.size(), CV_32F), value(linearRgb.size(), CV_32F);
-    cv::parallel_for_(cv::Range(0, linearRgb.rows), [&](const cv::Range &rows) {
-        for (int y = rows.start; y < rows.end; ++y) {
-            const auto *p = linearRgb.ptr<cv::Vec3f>(y);
-            float *l = luminance.ptr<float>(y), *v = value.ptr<float>(y);
-            for (int x = 0; x < linearRgb.cols; ++x) {
+    ipr::Image luminance = ipr::Image::create(linearRgb.size(), ipr::Depth::F32, 1);
+    ipr::Image value = ipr::Image::create(linearRgb.size(), ipr::Depth::F32, 1);
+    ipr::parallelRows(linearRgb.height(), [&](int first, int last) {
+        for (int y = first; y < last; ++y) {
+            const auto *p = linearRgb.row<ipr::Vec3f>(y);
+            float *l = luminance.mutableRow<float>(y), *v = value.mutableRow<float>(y);
+            for (int x = 0; x < linearRgb.width(); ++x) {
                 l[x] = WorkingColor::nonNegativeLuminance(p[x]);
                 v[x] = forward(domain, l[x]);
             }
         }
     });
-    cv::Mat delta = cv::Mat::zeros(linearRgb.size(), CV_32F);
-    cv::Mat previous = value, current;
+    ipr::Image delta = ipr::Image::zeros(linearRgb.size(), ipr::Depth::F32, 1);
+    ipr::Image previous = value.share(), current;
     for (int b = 0; b < BandCount; ++b) {
         current = blurSigma(value, pixelScale * double(b == 0 ? 1 : 2 << (b - 1)));   // sigma 1, 2, 4, ... 256
         const float gain = k[size_t(b)], inverseA2 = 1.f / (a[size_t(b)] * a[size_t(b)]);
-        if (gain != 0.f) {
-            cv::parallel_for_(cv::Range(0, delta.rows), [&](const cv::Range &rows) {
-                for (int y = rows.start; y < rows.end; ++y) {
-                    const float *p = previous.ptr<float>(y), *c = current.ptr<float>(y);
-                    float *o = delta.ptr<float>(y);
-                    for (int x = 0; x < delta.cols; ++x) {
+        if (local) {
+            const float reduceA = local->reduce[size_t(b)], enhanceA = local->enhance[size_t(b)];
+            const float inverseReduce = 1.f / (reduceA * reduceA), inverseEnhance = 1.f / (enhanceA * enhanceA);
+            ipr::parallelRows(delta.height(), [&](int first, int last) {
+                for (int y = first; y < last; ++y) {
+                    const float *p = previous.row<float>(y), *c = current.row<float>(y);
+                    const float *values = local->values.row<float>(y);
+                    float *o = delta.mutableRow<float>(y);
+                    for (int x = 0; x < delta.width(); ++x) {
+                        if (values[x] == 0.f) continue;
+                        const float d = p[x] - c[x];
+                        o[x] += localGain(*local, values[x], size_t(b)) * d /
+                                (1.f + d * d * (values[x] < 0.f ? inverseReduce : inverseEnhance));
+                    }
+                }
+            });
+        } else if (gain != 0.f) {
+            ipr::parallelRows(delta.height(), [&](int first, int last) {
+                for (int y = first; y < last; ++y) {
+                    const float *p = previous.row<float>(y), *c = current.row<float>(y);
+                    float *o = delta.mutableRow<float>(y);
+                    for (int x = 0; x < delta.width(); ++x) {
                         const float d = p[x] - c[x];
                         o[x] += gain * d / (1.f + d * d * inverseA2);
                     }
                 }
             });
         }
-        previous = current;
+        previous = std::move(current);
     }
-    cv::parallel_for_(cv::Range(0, linearRgb.rows), [&](const cv::Range &rows) {
-        for (int y = rows.start; y < rows.end; ++y) {
-            auto *p = linearRgb.ptr<cv::Vec3f>(y);
-            const float *l = luminance.ptr<float>(y), *v = value.ptr<float>(y), *d = delta.ptr<float>(y);
-            for (int x = 0; x < linearRgb.cols; ++x)
+    ipr::parallelRows(linearRgb.height(), [&](int first, int last) {
+        for (int y = first; y < last; ++y) {
+            auto *p = linearRgb.mutableRow<ipr::Vec3f>(y);
+            const float *l = luminance.row<float>(y), *v = value.row<float>(y), *d = delta.row<float>(y);
+            const float *values = local ? local->values.row<float>(y) : nullptr;
+            for (int x = 0; x < linearRgb.width(); ++x) {
+                if (values && values[x] == 0.f) continue;
                 WorkingColor::scaleToLuminance(p[x], l[x], std::max(0.f, inverse(domain, v[x] + d[x])));
+            }
         }
     });
 }
 
+// One effect, with its values per pixel when its map is usable.
+void applyEffect(ipr::Image &linearRgb, Domain domain, const std::array<Row, 6> &table, const Bands &reduce,
+                 const Bands &enhance, int slider, const ipr::Image &map, double pixelScale)
+{
+    if (map.empty() || !LocalValues::fits(map, linearRgb.size())) {
+        if (slider != 0)
+            applyBands(linearRgb, domain, detailGainAt(table, slider), slider < 0 ? reduce : enhance, pixelScale);
+        return;
+    }
+    ipr::Image values = ipr::Image::create(map.size(), ipr::Depth::F32, 1);
+    for (int y = 0; y < map.height(); ++y) {
+        const float *in = map.row<float>(y);
+        float *out = values.mutableRow<float>(y);
+        for (int x = 0; x < map.width(); ++x)
+            out[x] = std::isfinite(in[x]) ? std::clamp(float(slider) + in[x], -100.0f, 100.0f) : float(slider);
+    }
+    LocalGains local{values, {}, reduce, enhance};
+    for (int value = -100; value <= 100; ++value)
+        local.gains[size_t(value + 100)] = detailGainAt(table, value);
+    applyBands(linearRgb, domain, {}, reduce, pixelScale, &local);
+}
+
 } // namespace
 
-void apply(cv::Mat &linearRgb, int texture, int clarity, double pixelScale)
+void apply(ipr::Image &linearRgb, int texture, int clarity, double pixelScale, const LocalValues::Maps &local)
 {
-    if (linearRgb.empty() || linearRgb.type() != CV_32FC3) return;
-    if (texture != 0)
-        applyBands(linearRgb, Domain::CubeRoot, detailGainAt(TextureTable, texture),
-                   texture < 0 ? TextureReduce : TextureEnhance, pixelScale);
-    if (clarity != 0)
-        applyBands(linearRgb, Domain::Log2, detailGainAt(ClarityTable, clarity),
-                   clarity < 0 ? ClarityReduce : ClarityEnhance, pixelScale);
+    if (linearRgb.empty() || !(linearRgb.depth() == ipr::Depth::F32 && linearRgb.channels() == 3)) return;
+    applyEffect(linearRgb, Domain::CubeRoot, TextureTable, TextureReduce, TextureEnhance, texture,
+                local[LocalValues::Texture], pixelScale);
+    applyEffect(linearRgb, Domain::Log2, ClarityTable, ClarityReduce, ClarityEnhance, clarity,
+                local[LocalValues::Clarity], pixelScale);
 }
 
 } // namespace LocalContrast

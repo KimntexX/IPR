@@ -1,0 +1,2120 @@
+{
+  "schema_version": 1,
+  "data_version": 1,
+  "campaign_id": "camera-denoise-merged-parity-v001-20261103T113636Z",
+  "measured_at_utc": "2026-11-03T11:36:36.492814+00:00",
+  "group": "b0-foundation",
+  "status": "passed",
+  "baseline_revision": "b558a52",
+  "baseline_executable_sha256": "bef7c62356276c31fd6218593326d8873e503c3bd876781af2109b48ad9a8163",
+  "candidate_executable_sha256": "eba0d6c9ce1f7488641a92fd93c61dd16eeae292a61743a87fcd643ea1ef54cb",
+  "tool_sha256": "0cb0020c961e94bb1ece4b0794b114db46a693fbce428199e339def22cbeb112",
+  "candidate_revision": "ef8feb590e27fc3fd88385f8636f412067cb3001",
+  "candidate_dirty": false,
+  "units": {
+    "pixels": "little-endian uint16 sRGB codes, RGB row-major",
+    "comparison": "exact bytes, no tolerance"
+  },
+  "protocol_version": 1,
+  "analyser_version": 1,
+  "cwd": "C:\\Users\\victo\\AppData\\Local\\Temp\\claude\\c--Users-victo-Documents-Projet-Programmation-IPR\\17cdf4be-1c50-425b-9d68-3862da401c80\\scratchpad\\parity_dev\\src",
+  "method": "Full-frame in-memory renders of the signed development and its denoise; source digests before and after; folder listing before and after",
+  "limitations": [
+    "Compares the render servers, not the application's preview path",
+    "One or two values per family, not every slider value"
+  ],
+  "records": [
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0007.CR3",
+      "source_sha256": "35f6dc7b66b20dfffa95a3e9ac7dc2600905d72877e0428d0712dd2d202fdfcc",
+      "state": "neutral=0,signed,luminance=0,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "ef79f6233d5fd0626cf3d50b530a71687fee31a996980c23f366361229355092"
+      },
+      "candidate": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "ef79f6233d5fd0626cf3d50b530a71687fee31a996980c23f366361229355092"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0007.CR3",
+      "source_sha256": "35f6dc7b66b20dfffa95a3e9ac7dc2600905d72877e0428d0712dd2d202fdfcc",
+      "state": "neutral=0,signed,luminance=50,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "2df1ffe775ead33c062bd574029b82e911c382efbd894adff5ad51d9c9758107"
+      },
+      "candidate": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "2df1ffe775ead33c062bd574029b82e911c382efbd894adff5ad51d9c9758107"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0007.CR3",
+      "source_sha256": "35f6dc7b66b20dfffa95a3e9ac7dc2600905d72877e0428d0712dd2d202fdfcc",
+      "state": "neutral=0,signed,luminance=100,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "dd577118e48ad6c7c9f1189092f367d30224e46fbe545b9cb9eae74f734cfbcd"
+      },
+      "candidate": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "dd577118e48ad6c7c9f1189092f367d30224e46fbe545b9cb9eae74f734cfbcd"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0007.CR3",
+      "source_sha256": "35f6dc7b66b20dfffa95a3e9ac7dc2600905d72877e0428d0712dd2d202fdfcc",
+      "state": "neutral=0,signed,luminance=100,chrominance=100",
+      "identical": true,
+      "baseline": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "401fcf88a232d390d0484887fbb7af44fd33ca9fa125ec2848f898bc523f2407"
+      },
+      "candidate": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "401fcf88a232d390d0484887fbb7af44fd33ca9fa125ec2848f898bc523f2407"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0032.CR3",
+      "source_sha256": "f32a27f60fff34a35215b18be688c2300e371ce27c5e4977cb70567a9e6e702d",
+      "state": "neutral=0,signed,luminance=0,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "f45a368e1a605e491b629215298a0ce3a6585ec11ee88f8a465b28093e74e93f"
+      },
+      "candidate": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "f45a368e1a605e491b629215298a0ce3a6585ec11ee88f8a465b28093e74e93f"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0032.CR3",
+      "source_sha256": "f32a27f60fff34a35215b18be688c2300e371ce27c5e4977cb70567a9e6e702d",
+      "state": "neutral=0,signed,luminance=50,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "231500d38318300629982ddbb41c086f34e4305217f090e61cc47016ba0abc4d"
+      },
+      "candidate": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "231500d38318300629982ddbb41c086f34e4305217f090e61cc47016ba0abc4d"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0032.CR3",
+      "source_sha256": "f32a27f60fff34a35215b18be688c2300e371ce27c5e4977cb70567a9e6e702d",
+      "state": "neutral=0,signed,luminance=100,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "6b454546d0d0fd3412d4366aaa520299492e6b43002f73127987d7570a6c3c9f"
+      },
+      "candidate": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "6b454546d0d0fd3412d4366aaa520299492e6b43002f73127987d7570a6c3c9f"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0032.CR3",
+      "source_sha256": "f32a27f60fff34a35215b18be688c2300e371ce27c5e4977cb70567a9e6e702d",
+      "state": "neutral=0,signed,luminance=100,chrominance=100",
+      "identical": true,
+      "baseline": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "a2727fe0865b30ff36cba29a2382c813b511b216a39c30170c73052f2a78dd4b"
+      },
+      "candidate": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "a2727fe0865b30ff36cba29a2382c813b511b216a39c30170c73052f2a78dd4b"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0037.CR3",
+      "source_sha256": "091971a9e46b015c2a1c9c3b31a952e02f7202f6a88f17d24d6e2f7e3c98020f",
+      "state": "neutral=0,signed,luminance=0,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 6959,
+        "height": 4639,
+        "bytes": 193696806,
+        "pixel_sha256": "f1c8791993abfc1ec4c661902df605178c95d8538665e3ed0dc75fca163b6b03"
+      },
+      "candidate": {
+        "width": 6959,
+        "height": 4639,
+        "bytes": 193696806,
+        "pixel_sha256": "f1c8791993abfc1ec4c661902df605178c95d8538665e3ed0dc75fca163b6b03"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0037.CR3",
+      "source_sha256": "091971a9e46b015c2a1c9c3b31a952e02f7202f6a88f17d24d6e2f7e3c98020f",
+      "state": "neutral=0,signed,luminance=50,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 6959,
+        "height": 4639,
+        "bytes": 193696806,
+        "pixel_sha256": "33eb6336b2d8d42e7416592c2923750af4d0bc8da146eb11cf38dee8f182705b"
+      },
+      "candidate": {
+        "width": 6959,
+        "height": 4639,
+        "bytes": 193696806,
+        "pixel_sha256": "33eb6336b2d8d42e7416592c2923750af4d0bc8da146eb11cf38dee8f182705b"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0037.CR3",
+      "source_sha256": "091971a9e46b015c2a1c9c3b31a952e02f7202f6a88f17d24d6e2f7e3c98020f",
+      "state": "neutral=0,signed,luminance=100,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 6959,
+        "height": 4639,
+        "bytes": 193696806,
+        "pixel_sha256": "e9ead775eba54740163acd0b3a83306a3d5ea23c15b74a1a002476cdcdae5f1f"
+      },
+      "candidate": {
+        "width": 6959,
+        "height": 4639,
+        "bytes": 193696806,
+        "pixel_sha256": "e9ead775eba54740163acd0b3a83306a3d5ea23c15b74a1a002476cdcdae5f1f"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0037.CR3",
+      "source_sha256": "091971a9e46b015c2a1c9c3b31a952e02f7202f6a88f17d24d6e2f7e3c98020f",
+      "state": "neutral=0,signed,luminance=100,chrominance=100",
+      "identical": true,
+      "baseline": {
+        "width": 6959,
+        "height": 4639,
+        "bytes": 193696806,
+        "pixel_sha256": "398ebbd46fb343740c520bbccc3862745f75da52c356f4b30016587f8046ae3c"
+      },
+      "candidate": {
+        "width": 6959,
+        "height": 4639,
+        "bytes": 193696806,
+        "pixel_sha256": "398ebbd46fb343740c520bbccc3862745f75da52c356f4b30016587f8046ae3c"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0043.CR3",
+      "source_sha256": "403fc63b37987862c8fc30735bdb9c5c1f793758ed6c46fe13f02f5d4b5a4bfe",
+      "state": "neutral=0,signed,luminance=0,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 6959,
+        "height": 4639,
+        "bytes": 193696806,
+        "pixel_sha256": "3dead2e92ea4f8ab23469f1d34aaec477140fd5df9a0466b43b0a1f4546dc6f0"
+      },
+      "candidate": {
+        "width": 6959,
+        "height": 4639,
+        "bytes": 193696806,
+        "pixel_sha256": "3dead2e92ea4f8ab23469f1d34aaec477140fd5df9a0466b43b0a1f4546dc6f0"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0043.CR3",
+      "source_sha256": "403fc63b37987862c8fc30735bdb9c5c1f793758ed6c46fe13f02f5d4b5a4bfe",
+      "state": "neutral=0,signed,luminance=50,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 6959,
+        "height": 4639,
+        "bytes": 193696806,
+        "pixel_sha256": "f1efdc95ba551b3a7669d3ff6a7d6ec7540e00be14082d3ea703ac733bb713e8"
+      },
+      "candidate": {
+        "width": 6959,
+        "height": 4639,
+        "bytes": 193696806,
+        "pixel_sha256": "f1efdc95ba551b3a7669d3ff6a7d6ec7540e00be14082d3ea703ac733bb713e8"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0043.CR3",
+      "source_sha256": "403fc63b37987862c8fc30735bdb9c5c1f793758ed6c46fe13f02f5d4b5a4bfe",
+      "state": "neutral=0,signed,luminance=100,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 6959,
+        "height": 4639,
+        "bytes": 193696806,
+        "pixel_sha256": "473f215ff3d0ab8ac3e47172dedb0d7d8df6fbc9a62dbc8bccc755a56ec6d2d2"
+      },
+      "candidate": {
+        "width": 6959,
+        "height": 4639,
+        "bytes": 193696806,
+        "pixel_sha256": "473f215ff3d0ab8ac3e47172dedb0d7d8df6fbc9a62dbc8bccc755a56ec6d2d2"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0043.CR3",
+      "source_sha256": "403fc63b37987862c8fc30735bdb9c5c1f793758ed6c46fe13f02f5d4b5a4bfe",
+      "state": "neutral=0,signed,luminance=100,chrominance=100",
+      "identical": true,
+      "baseline": {
+        "width": 6959,
+        "height": 4639,
+        "bytes": 193696806,
+        "pixel_sha256": "18dab5547455ad4bb840d9b809ce48ec7d1940b60f9213e983693753506b93b1"
+      },
+      "candidate": {
+        "width": 6959,
+        "height": 4639,
+        "bytes": 193696806,
+        "pixel_sha256": "18dab5547455ad4bb840d9b809ce48ec7d1940b60f9213e983693753506b93b1"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0064.CR3",
+      "source_sha256": "af350c1ad03079873dc5ebcbe5ef4b23d14c921e6aeb151d5eced2ad9a7928ed",
+      "state": "neutral=0,signed,luminance=0,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 6959,
+        "height": 4639,
+        "bytes": 193696806,
+        "pixel_sha256": "115c1560aa0cadfb5d00192072bbafad36abfa36aa1ada7a820c735b99162bf1"
+      },
+      "candidate": {
+        "width": 6959,
+        "height": 4639,
+        "bytes": 193696806,
+        "pixel_sha256": "115c1560aa0cadfb5d00192072bbafad36abfa36aa1ada7a820c735b99162bf1"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0064.CR3",
+      "source_sha256": "af350c1ad03079873dc5ebcbe5ef4b23d14c921e6aeb151d5eced2ad9a7928ed",
+      "state": "neutral=0,signed,luminance=50,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 6959,
+        "height": 4639,
+        "bytes": 193696806,
+        "pixel_sha256": "145ef48e9be7380b7cd6c2c2ccfa8d032ff2eec9508da09861eece887c75b390"
+      },
+      "candidate": {
+        "width": 6959,
+        "height": 4639,
+        "bytes": 193696806,
+        "pixel_sha256": "145ef48e9be7380b7cd6c2c2ccfa8d032ff2eec9508da09861eece887c75b390"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0064.CR3",
+      "source_sha256": "af350c1ad03079873dc5ebcbe5ef4b23d14c921e6aeb151d5eced2ad9a7928ed",
+      "state": "neutral=0,signed,luminance=100,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 6959,
+        "height": 4639,
+        "bytes": 193696806,
+        "pixel_sha256": "a0f27703ac05439089dfc30edd8e3c6f22bf20258a23e98ba825292d19d0564e"
+      },
+      "candidate": {
+        "width": 6959,
+        "height": 4639,
+        "bytes": 193696806,
+        "pixel_sha256": "a0f27703ac05439089dfc30edd8e3c6f22bf20258a23e98ba825292d19d0564e"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0064.CR3",
+      "source_sha256": "af350c1ad03079873dc5ebcbe5ef4b23d14c921e6aeb151d5eced2ad9a7928ed",
+      "state": "neutral=0,signed,luminance=100,chrominance=100",
+      "identical": true,
+      "baseline": {
+        "width": 6959,
+        "height": 4639,
+        "bytes": 193696806,
+        "pixel_sha256": "30240ba2c368cf1cefae25cb6f11b6322a007f67feff4c8c035edca01ea8efd0"
+      },
+      "candidate": {
+        "width": 6959,
+        "height": 4639,
+        "bytes": 193696806,
+        "pixel_sha256": "30240ba2c368cf1cefae25cb6f11b6322a007f67feff4c8c035edca01ea8efd0"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0327.CR3",
+      "source_sha256": "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed",
+      "state": "neutral=0,signed,luminance=0,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "0af538f908691c91b5be1cfe7f6916f7ee008b41d1f4c01b3c930fc12d9c23f5"
+      },
+      "candidate": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "0af538f908691c91b5be1cfe7f6916f7ee008b41d1f4c01b3c930fc12d9c23f5"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0327.CR3",
+      "source_sha256": "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed",
+      "state": "neutral=0,signed,luminance=50,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "ed3028aaaee3caaebaba2e9625301c949dc600aad129adc70274a4b01b7fca0c"
+      },
+      "candidate": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "ed3028aaaee3caaebaba2e9625301c949dc600aad129adc70274a4b01b7fca0c"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0327.CR3",
+      "source_sha256": "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed",
+      "state": "neutral=0,signed,luminance=100,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "6001be993ffbe372ba8e1542c24f36fa1af2e7092e4abd3634fa826a22444b70"
+      },
+      "candidate": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "6001be993ffbe372ba8e1542c24f36fa1af2e7092e4abd3634fa826a22444b70"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0327.CR3",
+      "source_sha256": "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed",
+      "state": "neutral=0,signed,luminance=100,chrominance=100",
+      "identical": true,
+      "baseline": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "cc01af70078faafe9907e108537752600d0d3ac0147c4d8b117f7b8e504f67ad"
+      },
+      "candidate": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "cc01af70078faafe9907e108537752600d0d3ac0147c4d8b117f7b8e504f67ad"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0524.CR3",
+      "source_sha256": "149898806eb49f1e66a9527c2ec7f784eb8192532710f36fca8578642cd3c97b",
+      "state": "neutral=0,signed,luminance=0,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "99597bb2845a98ecf13eca6da315419cb6092c4df9fa408bf552d412e5e63ac4"
+      },
+      "candidate": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "99597bb2845a98ecf13eca6da315419cb6092c4df9fa408bf552d412e5e63ac4"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0524.CR3",
+      "source_sha256": "149898806eb49f1e66a9527c2ec7f784eb8192532710f36fca8578642cd3c97b",
+      "state": "neutral=0,signed,luminance=50,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "a6d098d4492b08412a2eec02b0e9bc592657b3b6b3993a8a9ea679497f20fea8"
+      },
+      "candidate": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "a6d098d4492b08412a2eec02b0e9bc592657b3b6b3993a8a9ea679497f20fea8"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0524.CR3",
+      "source_sha256": "149898806eb49f1e66a9527c2ec7f784eb8192532710f36fca8578642cd3c97b",
+      "state": "neutral=0,signed,luminance=100,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "483c76367a9556e339859e04b9185245d4f36a9cbf204181475787c3a4134140"
+      },
+      "candidate": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "483c76367a9556e339859e04b9185245d4f36a9cbf204181475787c3a4134140"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0524.CR3",
+      "source_sha256": "149898806eb49f1e66a9527c2ec7f784eb8192532710f36fca8578642cd3c97b",
+      "state": "neutral=0,signed,luminance=100,chrominance=100",
+      "identical": true,
+      "baseline": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "77973fde28daf24b95f066959a614071607bbe9b42e38ad2a8c8c93ab1852105"
+      },
+      "candidate": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "77973fde28daf24b95f066959a614071607bbe9b42e38ad2a8c8c93ab1852105"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0544.CR3",
+      "source_sha256": "cac52efb3491f413403db11fd4cdbc299b1c257c8a0f13420ec83140df30c33a",
+      "state": "neutral=0,signed,luminance=0,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "40246c87517a60671626400382d9a2fba9ec87f604e089ccc11ed9529a3421cd"
+      },
+      "candidate": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "40246c87517a60671626400382d9a2fba9ec87f604e089ccc11ed9529a3421cd"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0544.CR3",
+      "source_sha256": "cac52efb3491f413403db11fd4cdbc299b1c257c8a0f13420ec83140df30c33a",
+      "state": "neutral=0,signed,luminance=50,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "6711cd51168615c8205077beeb53ddaee056f5bb1be9a0ebb058c11c4f13c53a"
+      },
+      "candidate": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "6711cd51168615c8205077beeb53ddaee056f5bb1be9a0ebb058c11c4f13c53a"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0544.CR3",
+      "source_sha256": "cac52efb3491f413403db11fd4cdbc299b1c257c8a0f13420ec83140df30c33a",
+      "state": "neutral=0,signed,luminance=100,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "3363d16739f701b77a860612bda14b81f202cd896755bec9469e78936996d778"
+      },
+      "candidate": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "3363d16739f701b77a860612bda14b81f202cd896755bec9469e78936996d778"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0544.CR3",
+      "source_sha256": "cac52efb3491f413403db11fd4cdbc299b1c257c8a0f13420ec83140df30c33a",
+      "state": "neutral=0,signed,luminance=100,chrominance=100",
+      "identical": true,
+      "baseline": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "db29160a9dca5eafb1ec42ae255c8bc23a08d68c24ae9af5715f517bee05ce7d"
+      },
+      "candidate": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "db29160a9dca5eafb1ec42ae255c8bc23a08d68c24ae9af5715f517bee05ce7d"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9112.CR3",
+      "source_sha256": "80094389b8281933fd9ee0f16d9aa6245b77f9e6652578d78a1fed2575e6007b",
+      "state": "neutral=0,signed,luminance=0,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "8870a59576eea11b84314c7db3fde80c69632156c717821a3b30b9ea59f53995"
+      },
+      "candidate": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "8870a59576eea11b84314c7db3fde80c69632156c717821a3b30b9ea59f53995"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9112.CR3",
+      "source_sha256": "80094389b8281933fd9ee0f16d9aa6245b77f9e6652578d78a1fed2575e6007b",
+      "state": "neutral=0,signed,luminance=50,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "dbadac28a49dc15f586a06ca6e22c3ff86eebe03be0c45921cd06c45e562d33b"
+      },
+      "candidate": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "dbadac28a49dc15f586a06ca6e22c3ff86eebe03be0c45921cd06c45e562d33b"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9112.CR3",
+      "source_sha256": "80094389b8281933fd9ee0f16d9aa6245b77f9e6652578d78a1fed2575e6007b",
+      "state": "neutral=0,signed,luminance=100,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "061ebd75b7953067dc778506c28f72b125979ebe326b398bfb84984e6bccadbb"
+      },
+      "candidate": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "061ebd75b7953067dc778506c28f72b125979ebe326b398bfb84984e6bccadbb"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9112.CR3",
+      "source_sha256": "80094389b8281933fd9ee0f16d9aa6245b77f9e6652578d78a1fed2575e6007b",
+      "state": "neutral=0,signed,luminance=100,chrominance=100",
+      "identical": true,
+      "baseline": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "81d4f903bb14a0a8ac69ccc57d7a479ac70f4545f8d20b5b61d09a5e006d297d"
+      },
+      "candidate": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "81d4f903bb14a0a8ac69ccc57d7a479ac70f4545f8d20b5b61d09a5e006d297d"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9141.CR3",
+      "source_sha256": "5e4046a021c570ffbfecfb174cf4dba685fb8b105787f3f904394cd3505effcf",
+      "state": "neutral=0,signed,luminance=0,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "882dcd03a9c33cab3d94920c4fc862f21c7666c233263afbc69371ab930e0f6f"
+      },
+      "candidate": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "882dcd03a9c33cab3d94920c4fc862f21c7666c233263afbc69371ab930e0f6f"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9141.CR3",
+      "source_sha256": "5e4046a021c570ffbfecfb174cf4dba685fb8b105787f3f904394cd3505effcf",
+      "state": "neutral=0,signed,luminance=50,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "ea830415f1494afecdc5be6471ebd5763b08d9c2dc5631a8f969e406f03f7e86"
+      },
+      "candidate": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "ea830415f1494afecdc5be6471ebd5763b08d9c2dc5631a8f969e406f03f7e86"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9141.CR3",
+      "source_sha256": "5e4046a021c570ffbfecfb174cf4dba685fb8b105787f3f904394cd3505effcf",
+      "state": "neutral=0,signed,luminance=100,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "5dc1ad62033e1448d8cc03275e42ac68b0b7a75363fb54efe7f2cdee921ecb49"
+      },
+      "candidate": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "5dc1ad62033e1448d8cc03275e42ac68b0b7a75363fb54efe7f2cdee921ecb49"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9141.CR3",
+      "source_sha256": "5e4046a021c570ffbfecfb174cf4dba685fb8b105787f3f904394cd3505effcf",
+      "state": "neutral=0,signed,luminance=100,chrominance=100",
+      "identical": true,
+      "baseline": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "895cba6df90833061bba6be696c1defe1ceb4617e331788043b09741ae621065"
+      },
+      "candidate": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "895cba6df90833061bba6be696c1defe1ceb4617e331788043b09741ae621065"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9153.CR3",
+      "source_sha256": "7f5e0baf7f9722401cc269a1b01deee35db9eba0d122ea88e98f638266f32b30",
+      "state": "neutral=0,signed,luminance=0,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 6959,
+        "height": 4639,
+        "bytes": 193696806,
+        "pixel_sha256": "79879e8bc488c7001ff91951f18617992d3016970e448390e816ef2d6c6d6ddf"
+      },
+      "candidate": {
+        "width": 6959,
+        "height": 4639,
+        "bytes": 193696806,
+        "pixel_sha256": "79879e8bc488c7001ff91951f18617992d3016970e448390e816ef2d6c6d6ddf"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9153.CR3",
+      "source_sha256": "7f5e0baf7f9722401cc269a1b01deee35db9eba0d122ea88e98f638266f32b30",
+      "state": "neutral=0,signed,luminance=50,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 6959,
+        "height": 4639,
+        "bytes": 193696806,
+        "pixel_sha256": "78f16d790bc176dca77ea9be33ce80a4f5cc636cb2463fcb4e7d6e7752307120"
+      },
+      "candidate": {
+        "width": 6959,
+        "height": 4639,
+        "bytes": 193696806,
+        "pixel_sha256": "78f16d790bc176dca77ea9be33ce80a4f5cc636cb2463fcb4e7d6e7752307120"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9153.CR3",
+      "source_sha256": "7f5e0baf7f9722401cc269a1b01deee35db9eba0d122ea88e98f638266f32b30",
+      "state": "neutral=0,signed,luminance=100,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 6959,
+        "height": 4639,
+        "bytes": 193696806,
+        "pixel_sha256": "8f940ea010c56e54a1f20aefbb1296bebcb8da92f2e14bdcc3f317115b52cc61"
+      },
+      "candidate": {
+        "width": 6959,
+        "height": 4639,
+        "bytes": 193696806,
+        "pixel_sha256": "8f940ea010c56e54a1f20aefbb1296bebcb8da92f2e14bdcc3f317115b52cc61"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9153.CR3",
+      "source_sha256": "7f5e0baf7f9722401cc269a1b01deee35db9eba0d122ea88e98f638266f32b30",
+      "state": "neutral=0,signed,luminance=100,chrominance=100",
+      "identical": true,
+      "baseline": {
+        "width": 6959,
+        "height": 4639,
+        "bytes": 193696806,
+        "pixel_sha256": "1d5666f265f3d39ee30f5da480c85dd82907772afbc9cec84d2351d7436079b3"
+      },
+      "candidate": {
+        "width": 6959,
+        "height": 4639,
+        "bytes": 193696806,
+        "pixel_sha256": "1d5666f265f3d39ee30f5da480c85dd82907772afbc9cec84d2351d7436079b3"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9539.CR3",
+      "source_sha256": "8f97ae28841779db992572f31e4de7482c9bd123eaa4bee79967a6be74d631bf",
+      "state": "neutral=0,signed,luminance=0,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "9a51ca072afa941e74c39ac0f8dd1a5856a1eb5c9469d6a7268fa7abaab57ea2"
+      },
+      "candidate": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "9a51ca072afa941e74c39ac0f8dd1a5856a1eb5c9469d6a7268fa7abaab57ea2"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9539.CR3",
+      "source_sha256": "8f97ae28841779db992572f31e4de7482c9bd123eaa4bee79967a6be74d631bf",
+      "state": "neutral=0,signed,luminance=50,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "c6e5532cf0bfba7e068055894ab17452062b25920b925de85555d9a6cdc36719"
+      },
+      "candidate": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "c6e5532cf0bfba7e068055894ab17452062b25920b925de85555d9a6cdc36719"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9539.CR3",
+      "source_sha256": "8f97ae28841779db992572f31e4de7482c9bd123eaa4bee79967a6be74d631bf",
+      "state": "neutral=0,signed,luminance=100,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "1645a2a1c464fe732bc6df31266b7ccc12395484da7157e988e05c401629d83b"
+      },
+      "candidate": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "1645a2a1c464fe732bc6df31266b7ccc12395484da7157e988e05c401629d83b"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9539.CR3",
+      "source_sha256": "8f97ae28841779db992572f31e4de7482c9bd123eaa4bee79967a6be74d631bf",
+      "state": "neutral=0,signed,luminance=100,chrominance=100",
+      "identical": true,
+      "baseline": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "7659f63b07e189ab9a40dbfe31978aeba9cd696a2721e962f90f2e8ae41e1118"
+      },
+      "candidate": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "7659f63b07e189ab9a40dbfe31978aeba9cd696a2721e962f90f2e8ae41e1118"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9940.CR3",
+      "source_sha256": "01661293b080108e90915d38b0501d0aa489958a666331e5eab2fe5e5527f5be",
+      "state": "neutral=0,signed,luminance=0,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 6959,
+        "height": 4639,
+        "bytes": 193696806,
+        "pixel_sha256": "b27c8c7b767d6ef5bc83f9ab1181dc6fcae507ccf0553f0a4e3f583df4d4b1e4"
+      },
+      "candidate": {
+        "width": 6959,
+        "height": 4639,
+        "bytes": 193696806,
+        "pixel_sha256": "b27c8c7b767d6ef5bc83f9ab1181dc6fcae507ccf0553f0a4e3f583df4d4b1e4"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9940.CR3",
+      "source_sha256": "01661293b080108e90915d38b0501d0aa489958a666331e5eab2fe5e5527f5be",
+      "state": "neutral=0,signed,luminance=50,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 6959,
+        "height": 4639,
+        "bytes": 193696806,
+        "pixel_sha256": "57cc54506f9f0446516113bf3400c890e489e9e4009717c6e829b4171ca7e604"
+      },
+      "candidate": {
+        "width": 6959,
+        "height": 4639,
+        "bytes": 193696806,
+        "pixel_sha256": "57cc54506f9f0446516113bf3400c890e489e9e4009717c6e829b4171ca7e604"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9940.CR3",
+      "source_sha256": "01661293b080108e90915d38b0501d0aa489958a666331e5eab2fe5e5527f5be",
+      "state": "neutral=0,signed,luminance=100,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 6959,
+        "height": 4639,
+        "bytes": 193696806,
+        "pixel_sha256": "353616a7ee547299a6b8c32f2892ded2fda4e7604117019304869becbb5e0ef0"
+      },
+      "candidate": {
+        "width": 6959,
+        "height": 4639,
+        "bytes": 193696806,
+        "pixel_sha256": "353616a7ee547299a6b8c32f2892ded2fda4e7604117019304869becbb5e0ef0"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9940.CR3",
+      "source_sha256": "01661293b080108e90915d38b0501d0aa489958a666331e5eab2fe5e5527f5be",
+      "state": "neutral=0,signed,luminance=100,chrominance=100",
+      "identical": true,
+      "baseline": {
+        "width": 6959,
+        "height": 4639,
+        "bytes": 193696806,
+        "pixel_sha256": "679728e922a423c9e83a3e9537349658c84b4f186c7440b0bcde8849b3ed5886"
+      },
+      "candidate": {
+        "width": 6959,
+        "height": 4639,
+        "bytes": 193696806,
+        "pixel_sha256": "679728e922a423c9e83a3e9537349658c84b4f186c7440b0bcde8849b3ed5886"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9947.CR3",
+      "source_sha256": "ee34e67577716b937e726df6f8f07362bcc34ee4dfd5653e06b1dddb68ff9df4",
+      "state": "neutral=0,signed,luminance=0,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "87163384fbb59ce3247bdecaca0412740debdba5f79944712d3523f98a56c240"
+      },
+      "candidate": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "87163384fbb59ce3247bdecaca0412740debdba5f79944712d3523f98a56c240"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9947.CR3",
+      "source_sha256": "ee34e67577716b937e726df6f8f07362bcc34ee4dfd5653e06b1dddb68ff9df4",
+      "state": "neutral=0,signed,luminance=50,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "b5d7a17494e01bfce6dff1133d12ff9e87cfdb47a172882ea9a91266b70cfe5d"
+      },
+      "candidate": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "b5d7a17494e01bfce6dff1133d12ff9e87cfdb47a172882ea9a91266b70cfe5d"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9947.CR3",
+      "source_sha256": "ee34e67577716b937e726df6f8f07362bcc34ee4dfd5653e06b1dddb68ff9df4",
+      "state": "neutral=0,signed,luminance=100,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "c086af9c9862dca0280917ad1262a3d1892b5741e3cdb8600ec4e7ba07c4beb4"
+      },
+      "candidate": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "c086af9c9862dca0280917ad1262a3d1892b5741e3cdb8600ec4e7ba07c4beb4"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9947.CR3",
+      "source_sha256": "ee34e67577716b937e726df6f8f07362bcc34ee4dfd5653e06b1dddb68ff9df4",
+      "state": "neutral=0,signed,luminance=100,chrominance=100",
+      "identical": true,
+      "baseline": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "2f4945a0928c5c4a7b3da4f6d834b6f56c15a0dbabe9e0dd2a6cd5a9bd625e76"
+      },
+      "candidate": {
+        "width": 4639,
+        "height": 6959,
+        "bytes": 193696806,
+        "pixel_sha256": "2f4945a0928c5c4a7b3da4f6d834b6f56c15a0dbabe9e0dd2a6cd5a9bd625e76"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\7Y6A7599.CR3",
+      "source_sha256": "9c1426494accc3fb6efa2c5b0f8c7c4faac70d65fa9a26721f1de86d011f078e",
+      "state": "neutral=0,signed,luminance=0,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 6984,
+        "height": 4660,
+        "bytes": 195272640,
+        "pixel_sha256": "a1bed6ef943f939908d02fbabfab19cb8be21face1a641c2515d7005a808e72f"
+      },
+      "candidate": {
+        "width": 6984,
+        "height": 4660,
+        "bytes": 195272640,
+        "pixel_sha256": "a1bed6ef943f939908d02fbabfab19cb8be21face1a641c2515d7005a808e72f"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\7Y6A7599.CR3",
+      "source_sha256": "9c1426494accc3fb6efa2c5b0f8c7c4faac70d65fa9a26721f1de86d011f078e",
+      "state": "neutral=0,signed,luminance=50,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 6984,
+        "height": 4660,
+        "bytes": 195272640,
+        "pixel_sha256": "15c9e6c9dd4b9e733aeedabfdf01f194a637fcb038635ee4eadb48c88e7d86d0"
+      },
+      "candidate": {
+        "width": 6984,
+        "height": 4660,
+        "bytes": 195272640,
+        "pixel_sha256": "15c9e6c9dd4b9e733aeedabfdf01f194a637fcb038635ee4eadb48c88e7d86d0"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\7Y6A7599.CR3",
+      "source_sha256": "9c1426494accc3fb6efa2c5b0f8c7c4faac70d65fa9a26721f1de86d011f078e",
+      "state": "neutral=0,signed,luminance=100,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 6984,
+        "height": 4660,
+        "bytes": 195272640,
+        "pixel_sha256": "04be594196d20702d9d7a631fc95ac2e686a792189331391d13f233768f1367d"
+      },
+      "candidate": {
+        "width": 6984,
+        "height": 4660,
+        "bytes": 195272640,
+        "pixel_sha256": "04be594196d20702d9d7a631fc95ac2e686a792189331391d13f233768f1367d"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\7Y6A7599.CR3",
+      "source_sha256": "9c1426494accc3fb6efa2c5b0f8c7c4faac70d65fa9a26721f1de86d011f078e",
+      "state": "neutral=0,signed,luminance=100,chrominance=100",
+      "identical": true,
+      "baseline": {
+        "width": 6984,
+        "height": 4660,
+        "bytes": 195272640,
+        "pixel_sha256": "bd26148687478c0ac33d3afa979d1ffeef3b3b520b211de45f0b152c6e50fd05"
+      },
+      "candidate": {
+        "width": 6984,
+        "height": 4660,
+        "bytes": 195272640,
+        "pixel_sha256": "bd26148687478c0ac33d3afa979d1ffeef3b3b520b211de45f0b152c6e50fd05"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\_MG_7580.CR2",
+      "source_sha256": "020b83b4beff9137bd9f6d409991d7b1006f0422183c31656e5a185f31dde417",
+      "state": "neutral=0,signed,luminance=0,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 3464,
+        "height": 5202,
+        "bytes": 108118368,
+        "pixel_sha256": "a59b5ec8ebf3fd72cddd9ebf0310961c2a6eff8849367eba62d2acb93f64c86c"
+      },
+      "candidate": {
+        "width": 3464,
+        "height": 5202,
+        "bytes": 108118368,
+        "pixel_sha256": "a59b5ec8ebf3fd72cddd9ebf0310961c2a6eff8849367eba62d2acb93f64c86c"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\_MG_7580.CR2",
+      "source_sha256": "020b83b4beff9137bd9f6d409991d7b1006f0422183c31656e5a185f31dde417",
+      "state": "neutral=0,signed,luminance=50,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 3464,
+        "height": 5202,
+        "bytes": 108118368,
+        "pixel_sha256": "bbb973a6f742f4e51e648d6d84bf832cb7c5516c9153f246134b40d46cfc5ab8"
+      },
+      "candidate": {
+        "width": 3464,
+        "height": 5202,
+        "bytes": 108118368,
+        "pixel_sha256": "bbb973a6f742f4e51e648d6d84bf832cb7c5516c9153f246134b40d46cfc5ab8"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\_MG_7580.CR2",
+      "source_sha256": "020b83b4beff9137bd9f6d409991d7b1006f0422183c31656e5a185f31dde417",
+      "state": "neutral=0,signed,luminance=100,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 3464,
+        "height": 5202,
+        "bytes": 108118368,
+        "pixel_sha256": "7948d13136579d86127fe347c8da8bf89954a65e30b402422ffa9acd49331e39"
+      },
+      "candidate": {
+        "width": 3464,
+        "height": 5202,
+        "bytes": 108118368,
+        "pixel_sha256": "7948d13136579d86127fe347c8da8bf89954a65e30b402422ffa9acd49331e39"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\_MG_7580.CR2",
+      "source_sha256": "020b83b4beff9137bd9f6d409991d7b1006f0422183c31656e5a185f31dde417",
+      "state": "neutral=0,signed,luminance=100,chrominance=100",
+      "identical": true,
+      "baseline": {
+        "width": 3464,
+        "height": 5202,
+        "bytes": 108118368,
+        "pixel_sha256": "745be8872f0faa29f3764f729068ab175adc4a7cd0b513e9671bd747911b9ed0"
+      },
+      "candidate": {
+        "width": 3464,
+        "height": 5202,
+        "bytes": 108118368,
+        "pixel_sha256": "745be8872f0faa29f3764f729068ab175adc4a7cd0b513e9671bd747911b9ed0"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\_MG_7840.CR2",
+      "source_sha256": "b37c4176e160c9c1bdd0518b4a3115bde53b44e7012f0574d138f935f472935b",
+      "state": "neutral=0,signed,luminance=0,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "82ba3a4f797d1175239b419d50098d83600a9a1c936b3b2c7a82066c1f86c6d1"
+      },
+      "candidate": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "82ba3a4f797d1175239b419d50098d83600a9a1c936b3b2c7a82066c1f86c6d1"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\_MG_7840.CR2",
+      "source_sha256": "b37c4176e160c9c1bdd0518b4a3115bde53b44e7012f0574d138f935f472935b",
+      "state": "neutral=0,signed,luminance=50,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "c552e3ee6ca527d40ab9798e473a1edcb105a773cdbfb5ddd35f97ddad434acb"
+      },
+      "candidate": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "c552e3ee6ca527d40ab9798e473a1edcb105a773cdbfb5ddd35f97ddad434acb"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\_MG_7840.CR2",
+      "source_sha256": "b37c4176e160c9c1bdd0518b4a3115bde53b44e7012f0574d138f935f472935b",
+      "state": "neutral=0,signed,luminance=100,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "40b1ab45dab4bebb801521208981f679c744444a4c0b0ee5b0d7494388bb2b26"
+      },
+      "candidate": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "40b1ab45dab4bebb801521208981f679c744444a4c0b0ee5b0d7494388bb2b26"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\_MG_7840.CR2",
+      "source_sha256": "b37c4176e160c9c1bdd0518b4a3115bde53b44e7012f0574d138f935f472935b",
+      "state": "neutral=0,signed,luminance=100,chrominance=100",
+      "identical": true,
+      "baseline": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "b05723e10315aed07d1703b6878556e8b67064c09627236375d4db1665e6c09d"
+      },
+      "candidate": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "b05723e10315aed07d1703b6878556e8b67064c09627236375d4db1665e6c09d"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_3135.CR2",
+      "source_sha256": "7bf4440bcdafc359762d0db40e92dcbf1948886b6aa3ca250cecb96496309165",
+      "state": "neutral=0,signed,luminance=0,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "690680fb19c2d49f68672b146b5c472ebb9d0fa55b5c9e31c93caaf36877cd18"
+      },
+      "candidate": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "690680fb19c2d49f68672b146b5c472ebb9d0fa55b5c9e31c93caaf36877cd18"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_3135.CR2",
+      "source_sha256": "7bf4440bcdafc359762d0db40e92dcbf1948886b6aa3ca250cecb96496309165",
+      "state": "neutral=0,signed,luminance=50,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "97b4e22e88a7c2feddacba91ec208bb8f08281a45b7fd80b9b1598a98b4b7b56"
+      },
+      "candidate": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "97b4e22e88a7c2feddacba91ec208bb8f08281a45b7fd80b9b1598a98b4b7b56"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_3135.CR2",
+      "source_sha256": "7bf4440bcdafc359762d0db40e92dcbf1948886b6aa3ca250cecb96496309165",
+      "state": "neutral=0,signed,luminance=100,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "582b37e2e5457cc7cff19580db64b209f181c345b39228307dd4bf180ef00ac7"
+      },
+      "candidate": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "582b37e2e5457cc7cff19580db64b209f181c345b39228307dd4bf180ef00ac7"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_3135.CR2",
+      "source_sha256": "7bf4440bcdafc359762d0db40e92dcbf1948886b6aa3ca250cecb96496309165",
+      "state": "neutral=0,signed,luminance=100,chrominance=100",
+      "identical": true,
+      "baseline": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "87c73a3bf1def6c32fe3be29323be6f5b1daffa106d9c7cc957bf7fe2968293f"
+      },
+      "candidate": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "87c73a3bf1def6c32fe3be29323be6f5b1daffa106d9c7cc957bf7fe2968293f"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_4002.CR2",
+      "source_sha256": "4ead8c801223ce4d134fa912a9505793acedade7955e94c49846aa970450e447",
+      "state": "neutral=0,signed,luminance=0,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "e9a58681a7a3c88774df9ad88882b30c1cf2987363f5d4340ff4eee198a56cca"
+      },
+      "candidate": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "e9a58681a7a3c88774df9ad88882b30c1cf2987363f5d4340ff4eee198a56cca"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_4002.CR2",
+      "source_sha256": "4ead8c801223ce4d134fa912a9505793acedade7955e94c49846aa970450e447",
+      "state": "neutral=0,signed,luminance=50,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "be8875e4d62e3042f620c86fe9ef3f36d2a96f4922abb0215f2f96992fca5335"
+      },
+      "candidate": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "be8875e4d62e3042f620c86fe9ef3f36d2a96f4922abb0215f2f96992fca5335"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_4002.CR2",
+      "source_sha256": "4ead8c801223ce4d134fa912a9505793acedade7955e94c49846aa970450e447",
+      "state": "neutral=0,signed,luminance=100,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "828db877143844a492ddfcaded4c4ec0180d81bac08ea6555b346fef26f7c12a"
+      },
+      "candidate": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "828db877143844a492ddfcaded4c4ec0180d81bac08ea6555b346fef26f7c12a"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_4002.CR2",
+      "source_sha256": "4ead8c801223ce4d134fa912a9505793acedade7955e94c49846aa970450e447",
+      "state": "neutral=0,signed,luminance=100,chrominance=100",
+      "identical": true,
+      "baseline": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "344bdf170cfc27c01d74dc82c7525f2cadb7378f3c1ded3581f11d4163a81970"
+      },
+      "candidate": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "344bdf170cfc27c01d74dc82c7525f2cadb7378f3c1ded3581f11d4163a81970"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_4173.CR2",
+      "source_sha256": "6e5e0f451b39abab76d45a4d17131af5b69af3890bb4b70fa1cd4983aea4d390",
+      "state": "neutral=0,signed,luminance=0,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "9be0576d5de3dc5968df67c04eaa22ae02ed03314d2cedb7056fa70b2fa47cea"
+      },
+      "candidate": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "9be0576d5de3dc5968df67c04eaa22ae02ed03314d2cedb7056fa70b2fa47cea"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_4173.CR2",
+      "source_sha256": "6e5e0f451b39abab76d45a4d17131af5b69af3890bb4b70fa1cd4983aea4d390",
+      "state": "neutral=0,signed,luminance=50,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "4259cea57a8aef4ac930406ae5c1384817a4d2c4dfb2d61c11cca9b55806c6d1"
+      },
+      "candidate": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "4259cea57a8aef4ac930406ae5c1384817a4d2c4dfb2d61c11cca9b55806c6d1"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_4173.CR2",
+      "source_sha256": "6e5e0f451b39abab76d45a4d17131af5b69af3890bb4b70fa1cd4983aea4d390",
+      "state": "neutral=0,signed,luminance=100,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "3842783b50743929f6fec8b4ff43207afeecefdc2e09b16e86d76aa826599b1b"
+      },
+      "candidate": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "3842783b50743929f6fec8b4ff43207afeecefdc2e09b16e86d76aa826599b1b"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_4173.CR2",
+      "source_sha256": "6e5e0f451b39abab76d45a4d17131af5b69af3890bb4b70fa1cd4983aea4d390",
+      "state": "neutral=0,signed,luminance=100,chrominance=100",
+      "identical": true,
+      "baseline": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "1333fbd5a6084b4a748a45a9a66c0676a8a0f52e674a52cb6238b424ec744138"
+      },
+      "candidate": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "1333fbd5a6084b4a748a45a9a66c0676a8a0f52e674a52cb6238b424ec744138"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_4345.CR2",
+      "source_sha256": "47c4d5a394e2e98335f686e14e0e26e1f1a00cb1e21e935caf7f438854a1cb5e",
+      "state": "neutral=0,signed,luminance=0,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "dcc27def636d4d55dae670e1d9ed1757811642c87b811aee04454b0e8e02fca9"
+      },
+      "candidate": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "dcc27def636d4d55dae670e1d9ed1757811642c87b811aee04454b0e8e02fca9"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_4345.CR2",
+      "source_sha256": "47c4d5a394e2e98335f686e14e0e26e1f1a00cb1e21e935caf7f438854a1cb5e",
+      "state": "neutral=0,signed,luminance=50,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "db7a04d75b56725fa1d6221bbaf1448805d84ffe05c954b9d762ea37b61bb4d3"
+      },
+      "candidate": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "db7a04d75b56725fa1d6221bbaf1448805d84ffe05c954b9d762ea37b61bb4d3"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_4345.CR2",
+      "source_sha256": "47c4d5a394e2e98335f686e14e0e26e1f1a00cb1e21e935caf7f438854a1cb5e",
+      "state": "neutral=0,signed,luminance=100,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "33efd1efc330eb95edf65365214b0a74533cf26df612a0abb0edccc960b08901"
+      },
+      "candidate": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "33efd1efc330eb95edf65365214b0a74533cf26df612a0abb0edccc960b08901"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_4345.CR2",
+      "source_sha256": "47c4d5a394e2e98335f686e14e0e26e1f1a00cb1e21e935caf7f438854a1cb5e",
+      "state": "neutral=0,signed,luminance=100,chrominance=100",
+      "identical": true,
+      "baseline": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "a28d28d7c33fdd017fd17d2dae5b3288639806a2add74f01ae847376c7519b68"
+      },
+      "candidate": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "a28d28d7c33fdd017fd17d2dae5b3288639806a2add74f01ae847376c7519b68"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_6248.CR2",
+      "source_sha256": "9434f32e572b6d2a50379a159ab547789d6ecc1656eb2f93bab55ba6933adcd8",
+      "state": "neutral=0,signed,luminance=0,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 3464,
+        "height": 5202,
+        "bytes": 108118368,
+        "pixel_sha256": "991d2006a368852c8ec100b92846aef9f72499f644ca4a0382d80f086435ab70"
+      },
+      "candidate": {
+        "width": 3464,
+        "height": 5202,
+        "bytes": 108118368,
+        "pixel_sha256": "991d2006a368852c8ec100b92846aef9f72499f644ca4a0382d80f086435ab70"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_6248.CR2",
+      "source_sha256": "9434f32e572b6d2a50379a159ab547789d6ecc1656eb2f93bab55ba6933adcd8",
+      "state": "neutral=0,signed,luminance=50,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 3464,
+        "height": 5202,
+        "bytes": 108118368,
+        "pixel_sha256": "2f1408af5d06f24e22d70f0d50a97cf617c14f12ba4b4e36a3c27f312f99ab0d"
+      },
+      "candidate": {
+        "width": 3464,
+        "height": 5202,
+        "bytes": 108118368,
+        "pixel_sha256": "2f1408af5d06f24e22d70f0d50a97cf617c14f12ba4b4e36a3c27f312f99ab0d"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_6248.CR2",
+      "source_sha256": "9434f32e572b6d2a50379a159ab547789d6ecc1656eb2f93bab55ba6933adcd8",
+      "state": "neutral=0,signed,luminance=100,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 3464,
+        "height": 5202,
+        "bytes": 108118368,
+        "pixel_sha256": "de7aeb7903d8d0a4996acb7afe63590370c731f3fdf6fc1566e75c92b26bbc90"
+      },
+      "candidate": {
+        "width": 3464,
+        "height": 5202,
+        "bytes": 108118368,
+        "pixel_sha256": "de7aeb7903d8d0a4996acb7afe63590370c731f3fdf6fc1566e75c92b26bbc90"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_6248.CR2",
+      "source_sha256": "9434f32e572b6d2a50379a159ab547789d6ecc1656eb2f93bab55ba6933adcd8",
+      "state": "neutral=0,signed,luminance=100,chrominance=100",
+      "identical": true,
+      "baseline": {
+        "width": 3464,
+        "height": 5202,
+        "bytes": 108118368,
+        "pixel_sha256": "66b055d835369cc6306729e12812d84d32c29373ea7f4f9bb4cbc7378f11ef81"
+      },
+      "candidate": {
+        "width": 3464,
+        "height": 5202,
+        "bytes": 108118368,
+        "pixel_sha256": "66b055d835369cc6306729e12812d84d32c29373ea7f4f9bb4cbc7378f11ef81"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_6954.CR2",
+      "source_sha256": "3d80e31cad494d129c7f110e5e62ee2c8372d627d8a2bbbad5ab9034e4650577",
+      "state": "neutral=0,signed,luminance=0,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 3464,
+        "height": 5202,
+        "bytes": 108118368,
+        "pixel_sha256": "ac1374ab58076793e6b324b39e30624f1854c8364de1dfae2f772a96e76088e1"
+      },
+      "candidate": {
+        "width": 3464,
+        "height": 5202,
+        "bytes": 108118368,
+        "pixel_sha256": "ac1374ab58076793e6b324b39e30624f1854c8364de1dfae2f772a96e76088e1"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_6954.CR2",
+      "source_sha256": "3d80e31cad494d129c7f110e5e62ee2c8372d627d8a2bbbad5ab9034e4650577",
+      "state": "neutral=0,signed,luminance=50,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 3464,
+        "height": 5202,
+        "bytes": 108118368,
+        "pixel_sha256": "ce0f3e6adb267cb1a0839c0897f0495f338972da4f85b011da13a358b68b6416"
+      },
+      "candidate": {
+        "width": 3464,
+        "height": 5202,
+        "bytes": 108118368,
+        "pixel_sha256": "ce0f3e6adb267cb1a0839c0897f0495f338972da4f85b011da13a358b68b6416"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_6954.CR2",
+      "source_sha256": "3d80e31cad494d129c7f110e5e62ee2c8372d627d8a2bbbad5ab9034e4650577",
+      "state": "neutral=0,signed,luminance=100,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 3464,
+        "height": 5202,
+        "bytes": 108118368,
+        "pixel_sha256": "8a5eac726c2321c5a08963d5d5b028e26de14bf71868107e5577ad6ed72f5def"
+      },
+      "candidate": {
+        "width": 3464,
+        "height": 5202,
+        "bytes": 108118368,
+        "pixel_sha256": "8a5eac726c2321c5a08963d5d5b028e26de14bf71868107e5577ad6ed72f5def"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_6954.CR2",
+      "source_sha256": "3d80e31cad494d129c7f110e5e62ee2c8372d627d8a2bbbad5ab9034e4650577",
+      "state": "neutral=0,signed,luminance=100,chrominance=100",
+      "identical": true,
+      "baseline": {
+        "width": 3464,
+        "height": 5202,
+        "bytes": 108118368,
+        "pixel_sha256": "c046987ad279d138c33c96b874124fe8e494b7592a3682e7babb34e212883974"
+      },
+      "candidate": {
+        "width": 3464,
+        "height": 5202,
+        "bytes": 108118368,
+        "pixel_sha256": "c046987ad279d138c33c96b874124fe8e494b7592a3682e7babb34e212883974"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_6979.CR2",
+      "source_sha256": "1eba7c273b609d1f9cebe68cdbf1c03a065f835094789b30dbbc6302a442a7fb",
+      "state": "neutral=0,signed,luminance=0,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "5e6fc02c82e9c5a13b199212a5268352c73fa7c55f2ff385064fb6ee24a4d96b"
+      },
+      "candidate": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "5e6fc02c82e9c5a13b199212a5268352c73fa7c55f2ff385064fb6ee24a4d96b"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_6979.CR2",
+      "source_sha256": "1eba7c273b609d1f9cebe68cdbf1c03a065f835094789b30dbbc6302a442a7fb",
+      "state": "neutral=0,signed,luminance=50,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "ba0e43ddb9935fc34c24379aabadf37d4e705a303c82db75d318ca1cf3974022"
+      },
+      "candidate": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "ba0e43ddb9935fc34c24379aabadf37d4e705a303c82db75d318ca1cf3974022"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_6979.CR2",
+      "source_sha256": "1eba7c273b609d1f9cebe68cdbf1c03a065f835094789b30dbbc6302a442a7fb",
+      "state": "neutral=0,signed,luminance=100,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "fbff8c4e479dd5454191db67151fa7f7f256983de475c1805ec2365f9faedc11"
+      },
+      "candidate": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "fbff8c4e479dd5454191db67151fa7f7f256983de475c1805ec2365f9faedc11"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_6979.CR2",
+      "source_sha256": "1eba7c273b609d1f9cebe68cdbf1c03a065f835094789b30dbbc6302a442a7fb",
+      "state": "neutral=0,signed,luminance=100,chrominance=100",
+      "identical": true,
+      "baseline": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "d245c61c842e4ceb50215b889f0fb06e45720a58da2aaa63ee690c6a533da25d"
+      },
+      "candidate": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "d245c61c842e4ceb50215b889f0fb06e45720a58da2aaa63ee690c6a533da25d"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_7423.CR2",
+      "source_sha256": "8eea727fdd9cd4b2766292cbccf172a841d5e22aa595e1378e2503c59dd5226c",
+      "state": "neutral=0,signed,luminance=0,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 3464,
+        "height": 5202,
+        "bytes": 108118368,
+        "pixel_sha256": "155e03870f2f80627d49eec04e2ff887d21a2ec6594f78aa0b878c8cecbc28b8"
+      },
+      "candidate": {
+        "width": 3464,
+        "height": 5202,
+        "bytes": 108118368,
+        "pixel_sha256": "155e03870f2f80627d49eec04e2ff887d21a2ec6594f78aa0b878c8cecbc28b8"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_7423.CR2",
+      "source_sha256": "8eea727fdd9cd4b2766292cbccf172a841d5e22aa595e1378e2503c59dd5226c",
+      "state": "neutral=0,signed,luminance=50,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 3464,
+        "height": 5202,
+        "bytes": 108118368,
+        "pixel_sha256": "49c75818c25ced690ff8194e2e4df0547cf18a100c31081cc16cb8638780bb88"
+      },
+      "candidate": {
+        "width": 3464,
+        "height": 5202,
+        "bytes": 108118368,
+        "pixel_sha256": "49c75818c25ced690ff8194e2e4df0547cf18a100c31081cc16cb8638780bb88"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_7423.CR2",
+      "source_sha256": "8eea727fdd9cd4b2766292cbccf172a841d5e22aa595e1378e2503c59dd5226c",
+      "state": "neutral=0,signed,luminance=100,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 3464,
+        "height": 5202,
+        "bytes": 108118368,
+        "pixel_sha256": "2526eb8d06073cb8d76859b3cf53aa98a8d160454703e8ac36a3e31f13f65a13"
+      },
+      "candidate": {
+        "width": 3464,
+        "height": 5202,
+        "bytes": 108118368,
+        "pixel_sha256": "2526eb8d06073cb8d76859b3cf53aa98a8d160454703e8ac36a3e31f13f65a13"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_7423.CR2",
+      "source_sha256": "8eea727fdd9cd4b2766292cbccf172a841d5e22aa595e1378e2503c59dd5226c",
+      "state": "neutral=0,signed,luminance=100,chrominance=100",
+      "identical": true,
+      "baseline": {
+        "width": 3464,
+        "height": 5202,
+        "bytes": 108118368,
+        "pixel_sha256": "bbaa5cdbcac961b95b8de8997e743a822577d334afb260b1fb5c82578f473cf7"
+      },
+      "candidate": {
+        "width": 3464,
+        "height": 5202,
+        "bytes": 108118368,
+        "pixel_sha256": "bbaa5cdbcac961b95b8de8997e743a822577d334afb260b1fb5c82578f473cf7"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_7953.CR2",
+      "source_sha256": "966d5bc82bbbebc89b5364002539300b853828574ad1ff968620661a75a21a16",
+      "state": "neutral=0,signed,luminance=0,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "c7a31639948af61ad8f474c0abdcb7bc8d04e9af95384158201af6becad9ad54"
+      },
+      "candidate": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "c7a31639948af61ad8f474c0abdcb7bc8d04e9af95384158201af6becad9ad54"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_7953.CR2",
+      "source_sha256": "966d5bc82bbbebc89b5364002539300b853828574ad1ff968620661a75a21a16",
+      "state": "neutral=0,signed,luminance=50,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "3440dc4e4084f1b86b5fcb180864a71da6df4925fc559d857abcee24ded5a46f"
+      },
+      "candidate": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "3440dc4e4084f1b86b5fcb180864a71da6df4925fc559d857abcee24ded5a46f"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_7953.CR2",
+      "source_sha256": "966d5bc82bbbebc89b5364002539300b853828574ad1ff968620661a75a21a16",
+      "state": "neutral=0,signed,luminance=100,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "7f3572f8116c83e9458880f99daf1454f2f31cc3a7c78acbf69d82960afcc496"
+      },
+      "candidate": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "7f3572f8116c83e9458880f99daf1454f2f31cc3a7c78acbf69d82960afcc496"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_7953.CR2",
+      "source_sha256": "966d5bc82bbbebc89b5364002539300b853828574ad1ff968620661a75a21a16",
+      "state": "neutral=0,signed,luminance=100,chrominance=100",
+      "identical": true,
+      "baseline": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "3d9c149ea1934fb9629bfa17daa3d19bd45ba43a295ebcc1b2471b23f3fedbad"
+      },
+      "candidate": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "3d9c149ea1934fb9629bfa17daa3d19bd45ba43a295ebcc1b2471b23f3fedbad"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_7958.CR2",
+      "source_sha256": "68a2cf76de50acf6aaf291e99c4c9feaa1056bf09efb8290289d886b4b844dd1",
+      "state": "neutral=0,signed,luminance=0,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "efdc13b87ac45cc4e2ffcaedc4ec22b2773ff1fd3fc38f5e206195b76b32bd96"
+      },
+      "candidate": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "efdc13b87ac45cc4e2ffcaedc4ec22b2773ff1fd3fc38f5e206195b76b32bd96"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_7958.CR2",
+      "source_sha256": "68a2cf76de50acf6aaf291e99c4c9feaa1056bf09efb8290289d886b4b844dd1",
+      "state": "neutral=0,signed,luminance=50,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "7aede79e9fbbd0c0121e2a76fa86d44107af2bc3b61bf340e3392d4a93d63367"
+      },
+      "candidate": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "7aede79e9fbbd0c0121e2a76fa86d44107af2bc3b61bf340e3392d4a93d63367"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_7958.CR2",
+      "source_sha256": "68a2cf76de50acf6aaf291e99c4c9feaa1056bf09efb8290289d886b4b844dd1",
+      "state": "neutral=0,signed,luminance=100,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "2bac7793827063f2005e646c2c58d28c4daf9c155dcb29bacc69c4b9064bb125"
+      },
+      "candidate": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "2bac7793827063f2005e646c2c58d28c4daf9c155dcb29bacc69c4b9064bb125"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_7958.CR2",
+      "source_sha256": "68a2cf76de50acf6aaf291e99c4c9feaa1056bf09efb8290289d886b4b844dd1",
+      "state": "neutral=0,signed,luminance=100,chrominance=100",
+      "identical": true,
+      "baseline": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "77b036cd553267aa1a238a7c1dbde61c68abd42f9e49a29b8970aa41205d0fe6"
+      },
+      "candidate": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "77b036cd553267aa1a238a7c1dbde61c68abd42f9e49a29b8970aa41205d0fe6"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_7961.CR2",
+      "source_sha256": "a949888b39903a441da32f88118be50ce1300cfe5cdd4dcabbc3b2d365fe7aa9",
+      "state": "neutral=0,signed,luminance=0,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "3a5da96f50daa3167dd86a515a165c2f4fa241c4df647984bdac7d221bf77388"
+      },
+      "candidate": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "3a5da96f50daa3167dd86a515a165c2f4fa241c4df647984bdac7d221bf77388"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_7961.CR2",
+      "source_sha256": "a949888b39903a441da32f88118be50ce1300cfe5cdd4dcabbc3b2d365fe7aa9",
+      "state": "neutral=0,signed,luminance=50,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "61d22ac2b79582b70db87405a63f97f706bc30e97fb0d3cadfd4060803e60fed"
+      },
+      "candidate": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "61d22ac2b79582b70db87405a63f97f706bc30e97fb0d3cadfd4060803e60fed"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_7961.CR2",
+      "source_sha256": "a949888b39903a441da32f88118be50ce1300cfe5cdd4dcabbc3b2d365fe7aa9",
+      "state": "neutral=0,signed,luminance=100,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "c86472926a93e729844d00302a5991e8cb9c15be380b6148553f20da6870fb9b"
+      },
+      "candidate": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "c86472926a93e729844d00302a5991e8cb9c15be380b6148553f20da6870fb9b"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_7961.CR2",
+      "source_sha256": "a949888b39903a441da32f88118be50ce1300cfe5cdd4dcabbc3b2d365fe7aa9",
+      "state": "neutral=0,signed,luminance=100,chrominance=100",
+      "identical": true,
+      "baseline": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "3a1fa4e2e29da91f8711ab19b8b333747fd4df2a628eec76895801ed68b8b5e1"
+      },
+      "candidate": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "3a1fa4e2e29da91f8711ab19b8b333747fd4df2a628eec76895801ed68b8b5e1"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_8473.CR2",
+      "source_sha256": "d1acde3f2969bf6fd3b5d77f6b3c82d60371e08f9b2feabbccce7b7b5cd8840e",
+      "state": "neutral=0,signed,luminance=0,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "1f2375027aa1951b3edae69001b718440babfcb4901ec669bdbbf84837b99777"
+      },
+      "candidate": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "1f2375027aa1951b3edae69001b718440babfcb4901ec669bdbbf84837b99777"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_8473.CR2",
+      "source_sha256": "d1acde3f2969bf6fd3b5d77f6b3c82d60371e08f9b2feabbccce7b7b5cd8840e",
+      "state": "neutral=0,signed,luminance=50,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "e424aff3a2c16fd860711cae4c9168334b9b2c9db71065d34cb30714c87cced3"
+      },
+      "candidate": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "e424aff3a2c16fd860711cae4c9168334b9b2c9db71065d34cb30714c87cced3"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_8473.CR2",
+      "source_sha256": "d1acde3f2969bf6fd3b5d77f6b3c82d60371e08f9b2feabbccce7b7b5cd8840e",
+      "state": "neutral=0,signed,luminance=100,chrominance=0",
+      "identical": true,
+      "baseline": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "86f69b92fd7510d55f591f6e99e9c1adaa3c62637b01ede17c15bfd6a446d917"
+      },
+      "candidate": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "86f69b92fd7510d55f591f6e99e9c1adaa3c62637b01ede17c15bfd6a446d917"
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_8473.CR2",
+      "source_sha256": "d1acde3f2969bf6fd3b5d77f6b3c82d60371e08f9b2feabbccce7b7b5cd8840e",
+      "state": "neutral=0,signed,luminance=100,chrominance=100",
+      "identical": true,
+      "baseline": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "1b7ec2e8601b679e614212fcdc6d09ce59e3033bc4c95d989c607f32beeab775"
+      },
+      "candidate": {
+        "width": 5202,
+        "height": 3464,
+        "bytes": 108118368,
+        "pixel_sha256": "1b7ec2e8601b679e614212fcdc6d09ce59e3033bc4c95d989c607f32beeab775"
+      }
+    }
+  ],
+  "different": 0,
+  "identical": 116,
+  "folder_unchanged": true,
+  "finished_at_utc": "2026-11-03T12:02:59.581041+00:00"
+}

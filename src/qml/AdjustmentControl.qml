@@ -15,6 +15,7 @@ ColumnLayout {
     property color textColor: controlSlider.palette.text
     property color secondaryTextColor: controlSlider.palette.windowText
     property alias value: controlSlider.value
+    readonly property alias pressed: controlSlider.pressed
     property bool adjustmentEnabled: false
     readonly property bool modified: Math.abs(value - resetValue) > Math.max(0.000001, increment / 10)
 
@@ -22,13 +23,23 @@ ColumnLayout {
         if (adjustmentEnabled) value = resetValue
     }
 
-    Basic.Menu {
+    // A drag or a typed value is one history step: the first ancestor that holds
+    // the editor frames it, without each of the panels' many controls wiring it.
+    function frameGesture(active) {
+        for (let item = control.parent; item; item = item.parent) {
+            if (item.editor) {
+                if (active) item.editor.beginAdjustmentGesture()
+                else item.editor.endAdjustmentGesture()
+                return
+            }
+        }
+    }
+
+    AppMenu {
         id: parameterMenu
-        popupType: Popup.Item
         width: Math.min(360, control.Window.window ? control.Window.window.width - 24 : 360)
         objectName: "adjustmentContextMenu"
         parent: controlSlider
-        palette: controlSlider.palette
         ActionMenuItem {
             objectName: "contextResetParameter"
             text: qsTr("Réinitialiser %1").arg(control.label)
@@ -104,6 +115,8 @@ ColumnLayout {
             }
             text: control.valueText
 
+            property bool typing: false
+
             function parsedValue() {
                 // The displayed locale can use a comma while users often type
                 // a decimal point. These compact fields never accept grouping,
@@ -130,11 +143,21 @@ ColumnLayout {
             // also emits valueEdited, so the C++ setting follows the field
             // without requiring the user to press Enter or change focus.
             onTextEdited: {
+                if (!typing) {
+                    typing = true
+                    control.frameGesture(true)
+                }
                 if (acceptableInput)
                     applyValue(false)
             }
             onAccepted: applyValue(true)
-            onEditingFinished: applyValue(true)
+            onEditingFinished: {
+                applyValue(true)
+                if (typing) {
+                    typing = false
+                    control.frameGesture(false)
+                }
+            }
             onActiveFocusChanged: {
                 if (!activeFocus)
                     applyValue(true)
@@ -187,6 +210,7 @@ ColumnLayout {
         focusPolicy: Qt.StrongFocus
         Accessible.name: control.label
         Accessible.description: qsTr("Flèches : ajuster. Double-clic : réinitialiser.")
+        onPressedChanged: control.frameGesture(pressed)
         // Slider also applies its release position: reset after that handler,
         // otherwise it immediately overwrites the neutral value with the old position.
         TapHandler { onTapped: if (tapCount === 2) Qt.callLater(control.resetToDefault) }

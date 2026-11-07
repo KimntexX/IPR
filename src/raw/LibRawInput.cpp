@@ -14,9 +14,10 @@ RawInput::Input read(const LibRaw &raw)
     if (!d.rawdata.raw_image || d.idata.filters < 1000)   // no Bayer mosaic (X-Trans, sRAW, linear DNG)
         return input;
     const auto &s = d.sizes;
-    const cv::Mat sensor(int(s.raw_height), int(s.raw_width), CV_16UC1, d.rawdata.raw_image, size_t(s.raw_pitch));
-    input.origin = cv::Point(int(s.left_margin), int(s.top_margin));
-    input.mosaic = sensor(cv::Rect(input.origin, cv::Size(int(s.width), int(s.height)))).clone();
+    const ipr::Image sensor = ipr::Image::wrapReadOnly(d.rawdata.raw_image, {int(s.raw_width), int(s.raw_height)},
+                                                       ipr::Depth::U16, 1, std::ptrdiff_t(s.raw_pitch));
+    input.origin = ipr::Point2i(int(s.left_margin), int(s.top_margin));
+    input.mosaic = sensor.view(ipr::Recti(input.origin, ipr::Size(int(s.width), int(s.height)))).clone();
     // Colour of each site of the visible 2x2 cell, as LibRaw's FC(): 3 is the cell's second green.
     for (int y = 0; y < 2; ++y)
         for (int x = 0; x < 2; ++x)

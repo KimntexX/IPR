@@ -1,6 +1,7 @@
 #include "PointColor.h"
 
 #include "WorkingColorSpace.h"
+#include "Types.h"
 
 #include <algorithm>
 #include <cmath>
@@ -77,9 +78,9 @@ double encodedValue(double value) { return std::pow(std::max(value, 0.0), ValueG
 
 int clampSlider(int value, int low = -100) { return std::clamp(value, low, 100); }
 
-const cv::Matx33d &fromProPhoto()
+const ipr::Matrix33d &fromProPhoto()
 {
-    static const cv::Matx33d matrix = WorkingColor::toProPhoto().inv();
+    static const ipr::Matrix33d matrix = WorkingColor::toProPhoto().inv();
     return matrix;
 }
 } // namespace
@@ -92,9 +93,9 @@ bool active(const Parameters &parameters)
     });
 }
 
-Hsv toHsv(const cv::Vec3d &workingRgb)
+Hsv toHsv(const ipr::Vec3d &workingRgb)
 {
-    const cv::Vec3d p = WorkingColor::toProPhoto() * workingRgb;
+    const ipr::Vec3d p = WorkingColor::toProPhoto() * workingRgb;
     const double high = std::max({p[0], p[1], p[2]}), low = std::min({p[0], p[1], p[2]});
     const double delta = high - low;
     if (!(high > 1e-12) || !(delta > 1e-12)) return {0.0, 0.0, std::max(high, 0.0)};
@@ -105,7 +106,7 @@ Hsv toHsv(const cv::Vec3d &workingRgb)
     return {sector * Pi / 3.0, delta / high, high};
 }
 
-cv::Vec3d fromHsv(const Hsv &hsv)
+ipr::Vec3d fromHsv(const Hsv &hsv)
 {
     const double value = hsv[2], saturation = std::max(hsv[1], 0.0);
     const double sector = std::fmod(std::fmod(hsv[0], 2.0 * Pi) + 2.0 * Pi, 2.0 * Pi) * 3.0 / Pi;
@@ -113,7 +114,7 @@ cv::Vec3d fromHsv(const Hsv &hsv)
     const double f = sector - index;
     const double low = value * (1.0 - saturation), falling = value * (1.0 - saturation * f),
                  rising = value * (1.0 - saturation * (1.0 - f));
-    cv::Vec3d p;
+    ipr::Vec3d p;
     switch (index) {
     case 0: p = {value, rising, low}; break;
     case 1: p = {falling, value, low}; break;
@@ -140,7 +141,7 @@ double weight(const Hsv &colour, const Point &point)
     return hue * saturation * value * std::min(1.0, colour[1] / NearGreySaturation);
 }
 
-void adjust(cv::Vec3d &workingRgb, const Parameters &parameters)
+void adjust(ipr::Vec3d &workingRgb, const Parameters &parameters)
 {
     const size_t count = std::min(parameters.count, MaxPoints);
     if (count == 0) return;
@@ -177,12 +178,12 @@ void adjust(cv::Vec3d &workingRgb, const Parameters &parameters)
     workingRgb = fromHsv(colour);
 }
 
-cv::Vec3f apply(const cv::Vec3f &rgb, const Parameters &parameters)
+ipr::Vec3f apply(const ipr::Vec3f &rgb, const Parameters &parameters)
 {
     if (!active(parameters) || (rgb[0] == rgb[1] && rgb[1] == rgb[2]))
         return rgb; // zero settings / exact grey identity, without matrix round trip
-    cv::Vec3d working(rgb);
+    ipr::Vec3d working(rgb);
     adjust(working, parameters);
-    return cv::Vec3f(working);
+    return ipr::Vec3f(working);
 }
 } // namespace PointColor

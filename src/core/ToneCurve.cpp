@@ -1,6 +1,8 @@
 #include "ToneCurve.h"
 
 #include "WorkingColorSpace.h"
+#include "Parallel.h"
+#include "Types.h"
 
 #include <algorithm>
 #include <cmath>
@@ -62,9 +64,9 @@ struct Spline
 double encode(double v) { return v < 0.0 ? -WorkingColor::srgbEncode(-v) : WorkingColor::srgbEncode(v); }
 double decode(double v) { return v < 0.0 ? -WorkingColor::srgbDecode(-v) : WorkingColor::srgbDecode(v); }
 
-const cv::Matx33d &fromProPhoto()
+const ipr::Matrix33d &fromProPhoto()
 {
-    static const cv::Matx33d matrix = WorkingColor::toProPhoto().inv();
+    static const ipr::Matrix33d matrix = WorkingColor::toProPhoto().inv();
     return matrix;
 }
 } // namespace
@@ -94,25 +96,25 @@ float evaluate(const QVector<Point> &curve, float x)
     return float(Spline(curve)(x));
 }
 
-void apply(cv::Mat &linearRgb, const Curves &curves)
+void apply(ipr::Image &linearRgb, const Curves &curves)
 {
-    if (isIdentity(curves) || linearRgb.empty() || linearRgb.type() != CV_32FC3) return;
+    if (isIdentity(curves) || linearRgb.empty() || !(linearRgb.depth() == ipr::Depth::F32 && linearRgb.channels() == 3)) return;
     const Spline rgb(curves[Luminance]);
     const std::array<Spline, 3> channel{Spline(curves[Red]), Spline(curves[Green]), Spline(curves[Blue])};
-    const cv::Matx33d &toProPhoto = WorkingColor::toProPhoto();
-    const cv::Matx33d &back = fromProPhoto();
-    cv::parallel_for_(cv::Range(0, linearRgb.rows), [&](const cv::Range &rows) {
-        for (int y = rows.start; y < rows.end; ++y) {
-            auto *row = linearRgb.ptr<cv::Vec3f>(y);
-            for (int x = 0; x < linearRgb.cols; ++x) {
-                cv::Vec3d p = toProPhoto * cv::Vec3d(row[x]);
+    const ipr::Matrix33d &toProPhoto = WorkingColor::toProPhoto();
+    const ipr::Matrix33d &back = fromProPhoto();
+    ipr::parallelRows(linearRgb.height(), [&](int first, int last) {
+        for (int y = first; y < last; ++y) {
+            auto *row = linearRgb.mutableRow<ipr::Vec3f>(y);
+            for (int x = 0; x < linearRgb.width(); ++x) {
+                ipr::Vec3d p = toProPhoto * ipr::Vec3d(row[x]);
                 for (int c = 0; c < 3; ++c) {
                     // Below black (out of gamut) a value keeps its offset from the curve's black.
                     const double e = encode(p[c]);
                     const double r = e < 0.0 ? rgb(0.0) + e : rgb(e);
                     p[c] = decode(r < 0.0 ? channel[size_t(c)](0.0) + r : channel[size_t(c)](r));
                 }
-                row[x] = cv::Vec3f(back * p);
+                row[x] = ipr::Vec3f(back * p);
             }
         }
     });

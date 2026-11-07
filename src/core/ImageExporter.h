@@ -6,6 +6,8 @@
 #include <QString>
 #include <QUrl>
 
+#include <functional>
+
 // Writes a rendered working image to JPEG, PNG, TIFF (16-bit sRGB) or linear
 // DNG. The file is encoded beside the destination, then published under the
 // first free name (name-2, name-3, ...): an existing file is never replaced.
@@ -14,6 +16,7 @@ struct Result
 {
     bool success = false;
     QString message;
+    QString path;   // the file published, which may differ from the target's name
 };
 
 // "jpg" -> "JPEG"; other names upper-cased.
@@ -30,6 +33,10 @@ QString availablePath(const QString &target);
 
 Result write(const ColorPipeline::WorkingImage &rendered, const QString &target,
              const QString &format, int quality);
+
+// The same care for an encoder of another kind: encode writes the staged file it is given.
+Result publishEncoded(const QString &target, const QString &format,
+                      const std::function<bool(const QString &staged, QString *error)> &encode);
 }
 
 #endif // IPR_CORE_IMAGEEXPORTER_H

@@ -33,6 +33,7 @@ src/profiles/
 src/providers/
 src/qml/
 src/raw/
+src/tasks/
 # Build, packaging, delivery and promotion scripts
 scripts/build-windows.ps1
 scripts/build-windows.sh
@@ -64,7 +65,6 @@ docs/build-documentation.ps1
 docs/camera-profile-engine.md
 docs/decisions/
 docs/imageeditor-render-working-image.md
-docs/installation-opencv-windows.md
 docs/release/
 docs/scholar/
 docs/specifications/

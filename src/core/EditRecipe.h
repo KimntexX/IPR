@@ -2,6 +2,9 @@
 #define IPR_CORE_EDITRECIPE_H
 
 #include "ColorMixer.h"
+#include "Geometry.h"
+#include "LocalAdjustments.h"
+#include "Retouch.h"
 #include "PointColor.h"
 #include "ToneCurve.h"
 
@@ -52,6 +55,9 @@ struct Settings
     PointColor::Parameters pointColor;   // picked colours, in picking order (sidecar v9)
     bool automaticWhiteBalance = false;
     ToneCurve::Curves toneCurves;
+    Geometry::Settings geometry;
+    LocalAdjustments::Masks localMasks;
+    Retouch::Operations retouches;
 };
 
 struct RawDevelopment
@@ -67,7 +73,13 @@ struct RawDevelopment
     bool lensProfileResolved = false;
     bool lensCorrectionEnabled = true;
     bool chromaticAberrationEnabled = true;
+    // The development really used (ADR-0021), empty when not recorded: a photo
+    // opens again in this mode, even if the session's has changed.
+    QString developmentMode;
 };
+
+inline const QString StandardDevelopment = QStringLiteral("standard");
+inline const QString SignedDevelopment = QStringLiteral("signed");
 
 struct UserImageMetadata
 {

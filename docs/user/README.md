@@ -10,7 +10,8 @@ pas les algorithmes de la [documentation technique](../technical/latex/README.md
 **État vérifié dans les sources au 31 octobre 2026 :** copier/coller,
 sauvegarde manuelle et `Ctrl+clic` sont raccordés dans `dev`, ainsi que
 l'application et l'export par lot. La duplication physique `Ctrl+D` reste
-indisponible dans cette référence ; `Ctrl+S` est fonctionnel. Le panneau Bruit
+indisponible dans cette référence ; `Ctrl+S` est fonctionnel, de même que
+`Ctrl+Z`, `Ctrl+Maj+Z` et `Ctrl+Y` pour l'historique. Le panneau Bruit
 expose une commande globale et ses contrôles avancés, avec une case expérimentale
 pour le signal RAW signé. Cette relecture n'est pas une nouvelle validation
 photographique. Voir le [bilan IHM](../architecture/suivi-raccordements-ihm.md)

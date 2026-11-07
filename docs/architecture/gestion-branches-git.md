@@ -82,16 +82,21 @@ Les commits propres à la branche distante `dev` doivent aussi être conservés.
 
 ### Versions de prototypage
 
-Règle précisée le 11 octobre 2026 : le projet est en alpha. Les prochaines
-fusions validées dans `dev` sont identifiées par `v0.1.X-alpha`. Le compteur
-`X` augmente du nombre de patchs livrés, et non du nombre de commits. Examiner
-les tags existants et identifier les patchs de la livraison avant de choisir
-le prochain numéro ; ne pas créer de tag sur une fusion non validée.
+Règle précisée le 2 novembre 2026 : le projet est en bêta, sur décision de
+l'utilisateur, avec des limites connues suivies par la
+[matrice de validation](../validation/matrice-validation.md) et les issues
+([bilan du passage](socle-edition-b0.md#b05--passage-en-bêta-2-novembre-2026)).
+Les fusions validées dans `dev` sont identifiées par `v0.Y.X-beta`.
 
-Après validation de toutes les fonctionnalités de réglages implémentées, la
-première série beta utilise `v0.2.X-beta`. La version mineure évolue ensuite
-à chaque intégration d'un autre panneau de fonctionnalités : `v0.3.X-beta`,
-`v0.4.X-beta`, etc.
+La version mineure `Y` part de 2 et évolue à chaque intégration d'un autre
+panneau de fonctionnalités : `v0.3.X-beta`, `v0.4.X-beta`, etc. Un lot technique
+interne ne la fait pas monter.
+
+Le compteur `X` augmente du nombre de patchs livrés, et non du nombre de commits.
+Il continue depuis l'alpha et ne revient pas à zéro quand la mineure monte :
+`v0.1.92-alpha`, puis `v0.2.97-beta` avec cinq patchs. Examiner les tags existants
+et identifier les patchs de la livraison avant de choisir le prochain numéro ; ne
+pas créer de tag sur une fusion non validée.
 
 Le passage en version stable **`v1.Y.X`** intervient après validation de tous
 les panneaux de fonctionnalités sur les boîtiers que l'utilisateur possède
@@ -106,7 +111,8 @@ Poser le tag de version sur le commit de fusion validé de `dev` ; publier ce
 tag seulement dans le cadre d'une livraison autorisée. Cette règle documentaire
 ne crée pas elle-même de tag et n'autorise aucune fusion ou publication.
 
-Pendant le prototypage, aucun legacy n'est conservé, même dans les tests.
+Pendant le prototypage (alpha et bêta), aucun legacy n'est conservé, même dans
+les tests.
 Un remplacement supprime l'ancienne implémentation, ses options de compatibilité
 et les tests qui ne concernent que celle-ci ; les tests de l'implémentation
 courante sont maintenus. L'historique Git et les preuves d'analyse JSON restent
@@ -142,10 +148,10 @@ et CI complète verte d'un commit de `dev` :
 
 ```bash
 # Contrôle à blanc : classement de tous les chemins, aucun écrit.
-python scripts/promote_main.py --source <sha-dev> --label v0.1.X-alpha
+python scripts/promote_main.py --source <sha-dev> --label v0.Y.X-beta
 # Commit d'instantané sur main_promotion (parent : main, jamais dev).
 git switch main_promotion && git pull --ff-only origin main_promotion
-python scripts/promote_main.py --source <sha-dev> --parent main_promotion --label v0.1.X-alpha --write
+python scripts/promote_main.py --source <sha-dev> --parent main_promotion --label v0.Y.X-beta --write
 git push origin main_promotion
 gh pr create --base main --head main_promotion
 ```

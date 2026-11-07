@@ -1,4 +1,4 @@
-<!-- translation-source: docs/architecture/roadmap-beta.md; sha256: aa83c3e33fec27550cba277b47e30ff449ce15e849c57818bae753f52ec91b55 -->
+<!-- translation-source: docs/architecture/roadmap-beta.md; sha256: 85d3193cc2b1a3e104c0002e68922ca9f38b1ed07b86c70aa063eb1085052dcf -->
 *[Français](roadmap-beta.md) | [English](roadmap-beta_en.md)*
 
 # Beta action plan — editing panels and neural processing
@@ -30,8 +30,10 @@ Before the first beta milestone:
 - freeze the reference state, known limits and regression recipes;
 - qualify saving/restoration and preview/export behavior.
 
-The first beta series is `v0.2.X-beta`. New panel integrations increment the
-minor version according to the [Git rules](gestion-branches-git.md).
+The beta has been open since 2 November 2026 by the user's decision, with known
+limits ([report](socle-edition-b0.md#b05--passage-en-bêta-2-novembre-2026), in French):
+these conditions remain to be closed. The first series is `v0.2.X-beta`. New panel
+integrations increment the minor version according to the [Git rules](gestion-branches-git.md).
 Internal technical packages or individual commits do not automatically count
 as panels or minor releases. Release numbers are settled upon validation;
 this plan creates no tag.
@@ -199,6 +201,8 @@ explicit message, preserved source/edits and no silent download.
 
 ## 8. B5 — Shape and object detection networks
 
+Detailed preparation, in French: [shape and object detection](detection-objets.md).
+
 Provide a shared assistance layer, but distinct tasks and outputs:
 
 | Task | Expected output | Use |
@@ -307,6 +311,8 @@ recorded in the [dedicated report](../reports/storage/workspace-cleanup-2026-10-
 | B0.4 | Implement the modular foundation, then connect the UI | Unchanged rendering without new operations; qualified persistence and undo/redo |
 | B0.5 | Close remaining alpha validations and obtain milestone approval | Referenced matrix and JSON, known limits, user approval before a beta tag |
 
+Status on 2 November 2026: B0.1 to B0.5 are described in the [foundation document](socle-edition-b0.md), with the limits tracked by [issue #21](https://github.com/KimntexX/IPR/issues/21).
+
 Start with B0.1, then B0.2/B0.3; do not start all five panels or train a network
 in parallel. For initial development, create the foundation branch from current
 `dev` in an isolated worktree; do not implement the engine on
@@ -314,6 +320,8 @@ in parallel. For initial development, create the foundation branch from current
 starts, without duplicating an existing branch.
 
 ## 12. B7/B8/B9 — stacking, panorama and HDR
+
+Detailed preparation of HDR, in French: [HDR merge](fusion-hdr.md).
 
 Added at the user's request on 31 October 2026. Reuse the
 [stacking and panorama plan (French)](empilement-et-panorama.md) as the detailed

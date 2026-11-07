@@ -1,4 +1,5 @@
 #include "RawDevelopment.h"
+#include "image_testing.h"
 
 #include <cmath>
 #include <iostream>
@@ -21,12 +22,12 @@ RawInput::Input sample(int width = 48, int height = 40)
     input.black = {2048, 2048, 2048, 2048};
     input.white = 11222;
     input.asShotMultipliers = {2076, 1024, 1611, 1024};
-    input.origin = cv::Point(36, 12);
-    input.mosaic = cv::Mat(height, width, CV_16UC1);
+    input.origin = ipr::Point2i(36, 12);
+    input.mosaic = ipr::Image::create({width, height}, ipr::Depth::U16, 1);
     const std::uint16_t counts[4] = {3000, 5000, 3838, 5000};   // per RawInput::Colour
     for (int y = 0; y < height; ++y)
         for (int x = 0; x < width; ++x)
-            input.mosaic.at<std::uint16_t>(y, x) = counts[input.pattern[size_t(y & 1)][size_t(x & 1)]];
+            imagetest::at<std::uint16_t>(input.mosaic, y, x) = counts[input.pattern[size_t(y & 1)][size_t(x & 1)]];
     return input;
 }
 
@@ -38,9 +39,10 @@ RawDevelopment::Options calibrated()
     return options;
 }
 
-float counts(const cv::Mat &mosaic, int y, int x) { return mosaic.at<float>(y, x) * 65535.f; }
+float counts(const ipr::Image &mosaic, int y, int x) { return imagetest::at<float>(mosaic, y, x) * 65535.f; }
 
-bool same(const cv::Mat &a, const cv::Mat &b) { return a.size() == b.size() && cv::norm(a, b, cv::NORM_INF) == 0; }
+using imagetest::at;
+using imagetest::same;
 } // namespace
 
 int main()
@@ -73,12 +75,12 @@ int main()
         // single precision, the scaled count truncated, the top clipped to 65535.
         RawInput::Input input = sample(8, 8);
         const std::uint16_t blue[4] = {3838, 7003, 7527, 7900};
-        for (int i = 0; i < 4; ++i) input.mosaic.at<std::uint16_t>(1, 1 + 2 * i) = blue[i];
-        input.mosaic.at<std::uint16_t>(3, 1) = 1000;   // below the black
+        for (int i = 0; i < 4; ++i) at<std::uint16_t>(input.mosaic, 1, 1 + 2 * i) = blue[i];
+        at<std::uint16_t>(input.mosaic, 3, 1) = 1000;   // below the black
         std::vector<RawDevelopment::Stage> stages;
-        cv::Mat signedCounts, normalized, preDemosaic;
+        ipr::Image signedCounts, normalized, preDemosaic;
         double divisor = 0.0;
-        cv::Point origin;
+        ipr::Point2i origin;
         auto options = calibrated();
         options.observer = [&](const RawDevelopment::Capture &c) {
             stages.push_back(c.stage);
@@ -101,19 +103,19 @@ int main()
         ok &= check(std::abs(result.gains[2] - 1611.0 / 1024.0) < 1e-12 && result.gains[1] == 1.0,
                     "the gains are the multipliers over the smallest");
         ok &= check(divisor == 9174.0, "the calibrated white keeps the divisor white - black");
-        ok &= check(origin == cv::Point(36, 12), "the captures carry the visible area's origin");
+        ok &= check(origin == ipr::Point2i(36, 12), "the captures carry the visible area's origin");
         ok &= check(counts(preDemosaic, 1, 1) == 20117.f && counts(preDemosaic, 1, 3) == 55687.f &&
                         counts(preDemosaic, 1, 5) == 61576.f && counts(preDemosaic, 1, 7) == 65535.f,
                     "the scaled counts match LibRaw's, the top clipped");
-        ok &= check(signedCounts.at<float>(3, 1) == -1048.f && normalized.at<float>(3, 1) == 0.f &&
+        ok &= check(at<float>(signedCounts, 3, 1) == -1048.f && at<float>(normalized, 3, 1) == 0.f &&
                         counts(preDemosaic, 3, 1) == 0.f,
                     "a count below the black is kept signed, then clipped at 0");
-        ok &= check(std::abs(normalized.at<float>(0, 0) - 952.f / 9174.f) < 1e-7f, "the normalized mosaic has no gain");
+        ok &= check(std::abs(at<float>(normalized, 0, 0) - 952.f / 9174.f) < 1e-7f, "the normalized mosaic has no gain");
     }
     {
         // LibRaw lowers the white to the data maximum when it lies above the threshold's share.
         RawInput::Input input = sample();
-        input.mosaic.at<std::uint16_t>(0, 1) = 10000;
+        at<std::uint16_t>(input.mosaic, 0, 1) = 10000;
         double divisor = 0.0, white = 0.0;
         auto options = calibrated();
         options.adjustWhiteThreshold = 0.75;
@@ -123,7 +125,7 @@ int main()
         };
         RawDevelopment::develop(input, options);
         ok &= check(divisor == 7952.0 && white == 10000.0, "the white drops to the data maximum");
-        input.mosaic.at<std::uint16_t>(0, 1) = 5000;
+        at<std::uint16_t>(input.mosaic, 0, 1) = 5000;
         RawDevelopment::develop(input, options);
         ok &= check(divisor == 9174.0, "a data maximum below the threshold keeps the white");
     }
@@ -135,14 +137,15 @@ int main()
                                    std::trunc(1790.f * (1611.f / 1024.f * 65535.f / 9174.f))};
         double worst = 0.0;
         bool onGrid = true;
-        for (int y = 0; y < result.cameraRgb.rows; ++y)
-            for (int x = 0; x < result.cameraRgb.cols; ++x)
+        for (int y = 0; y < result.cameraRgb.height(); ++y)
+            for (int x = 0; x < result.cameraRgb.width(); ++x)
                 for (int c = 0; c < 3; ++c) {
-                    const float value = result.cameraRgb.at<cv::Vec3f>(y, x)[c] * 65535.f;
+                    const float value = at<ipr::Vec3f>(result.cameraRgb, y, x)[c] * 65535.f;
                     worst = std::max(worst, double(std::abs(value - expected[c])));
                     onGrid &= std::abs(value - std::round(value)) < 1e-2f;
                 }
-        ok &= check(result.cameraRgb.type() == CV_32FC3 && result.cameraRgb.size() == cv::Size(48, 40),
+        ok &= check(result.cameraRgb.depth() == ipr::Depth::F32 && result.cameraRgb.channels() == 3 &&
+                        result.cameraRgb.size() == ipr::Size(48, 40),
                     "the output is camera RGB at the mosaic's size");
         ok &= check(worst <= 1.0 && onGrid, "a uniform colour is reproduced on the 16-bit grid");
     }
@@ -150,10 +153,10 @@ int main()
         // Policy B: the values below the black reach the demosaic, without the 16-bit grid.
         RawInput::Input input = sample();
         for (int y = 16; y < 24; ++y)
-            for (int x = 16; x < 24; ++x) input.mosaic.at<std::uint16_t>(y, x) = 1900;   // below the black
+            for (int x = 16; x < 24; ++x) at<std::uint16_t>(input.mosaic, y, x) = 1900;   // below the black
         auto options = calibrated();
         options.policy = RawDevelopment::Policy::Signed;
-        cv::Mat preDemosaic, preOutput;
+        ipr::Image preDemosaic, preOutput;
         RawDevelopment::Policy observed = RawDevelopment::Policy::LibRawParity;
         options.observer = [&](const RawDevelopment::Capture &c) {
             observed = c.context.policy;
@@ -162,21 +165,19 @@ int main()
         };
         const auto signedResult = RawDevelopment::develop(input, options);
         ok &= check(observed == RawDevelopment::Policy::Signed, "the captures name the policy");
-        ok &= check(std::abs(preDemosaic.at<float>(17, 17) - float(-148.0 * (1611.0 / 1024.0) / 9174.0)) < 1e-7f,
+        ok &= check(std::abs(at<float>(preDemosaic, 17, 17) - float(-148.0 * (1611.0 / 1024.0) / 9174.0)) < 1e-7f,
                     "B keeps the signed value, scaled without the grid");
         ok &= check(std::abs(counts(preDemosaic, 0, 0) - 952.f * float(2076.0 / 1024.0 * 65535.0 / 9174.0)) < 0.02f,
                     "B scales as A before the truncation");
-        double low = 0.0, high = 0.0;
-        cv::minMaxLoc(preOutput(cv::Rect(18, 18, 4, 4)).reshape(1), nullptr, &high);
-        ok &= check(high < 0.0, "B keeps every colour signed through RCD below the black");
-        cv::minMaxLoc(signedResult.cameraRgb.reshape(1), &low, &high);
-        ok &= check(cv::checkRange(signedResult.cameraRgb) && low < 0.0 &&
-                        cv::norm(signedResult.cameraRgb, preOutput, cv::NORM_INF) == 0,
+        ok &= check(imagetest::rangeOf(preOutput.view(ipr::Recti(18, 18, 4, 4))).high < 0.0,
+                    "B keeps every colour signed through RCD below the black");
+        ok &= check(ipr::allFinite(signedResult.cameraRgb) && imagetest::rangeOf(signedResult.cameraRgb).low < 0.0 &&
+                        ipr::largestDifference(signedResult.cameraRgb, preOutput) == 0,
                     "B's output is finite, signed and unbounded");
         const auto parityResult = RawDevelopment::develop(sample(), calibrated());
         options.observer = {};
         const auto uniform = RawDevelopment::develop(sample(), options);
-        ok &= check(cv::norm(parityResult.cameraRgb, uniform.cameraRgb, cv::NORM_INF) < 2.0 / 65535.0,
+        ok &= check(ipr::largestDifference(parityResult.cameraRgb, uniform.cameraRgb) < 2.0 / 65535.0,
                     "away from the black, B differs from A by the grid only");
     }
     {
@@ -186,13 +187,13 @@ int main()
         ok &= check(result.cameraRgb.empty() && !result.error.isEmpty(), "a cancelled development reports it");
     }
     {
-        const cv::Mat image = (cv::Mat_<float>(2, 3) << 1, 2, 3, 4, 5, 6);
+        const ipr::Image image = imagetest::floats({3, 2}, 1, {1, 2, 3, 4, 5, 6});
         ok &= check(same(RawDevelopment::orient(image.clone(), 0), image), "code 0 keeps the image");
-        ok &= check(same(RawDevelopment::orient(image.clone(), 3), cv::Mat((cv::Mat_<float>(2, 3) << 6, 5, 4, 3, 2, 1))),
+        ok &= check(same(RawDevelopment::orient(image.clone(), 3), imagetest::floats({3, 2}, 1, {6, 5, 4, 3, 2, 1})),
                     "code 3 turns by 180 degrees");
-        ok &= check(same(RawDevelopment::orient(image.clone(), 6), cv::Mat((cv::Mat_<float>(3, 2) << 4, 1, 5, 2, 6, 3))),
+        ok &= check(same(RawDevelopment::orient(image.clone(), 6), imagetest::floats({2, 3}, 1, {4, 1, 5, 2, 6, 3})),
                     "code 6 turns clockwise");
-        ok &= check(same(RawDevelopment::orient(image.clone(), 5), cv::Mat((cv::Mat_<float>(3, 2) << 3, 6, 2, 5, 1, 4))),
+        ok &= check(same(RawDevelopment::orient(image.clone(), 5), imagetest::floats({2, 3}, 1, {3, 6, 2, 5, 1, 4})),
                     "code 5 turns anticlockwise");
     }
     if (ok) std::cout << "rawDevelopmentTests passed\n";

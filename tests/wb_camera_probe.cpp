@@ -1,5 +1,7 @@
 #include "RawDecoder.h"
 #include "CameraProfileEngine.h"
+#include "Pixels.h"
+#include "image_testing.h"
 #include <QCoreApplication>
 #include <QCryptographicHash>
 #include <QDateTime>
@@ -23,43 +25,46 @@ QString hash(const QString &path) {
     h.addData(&file);
     return QString::fromLatin1(h.result().toHex());
 }
-cv::Mat sampled(const cv::Mat &input) {
-    cv::Mat result((input.rows+7)/8, (input.cols+7)/8, input.type());
-    for (int y=0; y<result.rows; ++y)
-        for (int x=0; x<result.cols; ++x)
-            std::memcpy(result.ptr(y)+x*input.elemSize(), input.ptr(y*8)+x*8*input.elemSize(), input.elemSize());
+bool renderInto(const CameraProfileEngine::DcpWorkingContext &context, int temperature, int tint, ipr::Image &rgb, QString *error)
+{
+    return CameraProfileEngine::renderFromCameraSignal(context, temperature, tint, 0.0, rgb, error);
+}
+ipr::Image sampled(const ipr::Image &input) {
+    ipr::Image result=ipr::Image::create({(input.width()+7)/8, (input.height()+7)/8}, input.depth(), input.channels());
+    const size_t bytes=input.pixelBytes();
+    for (int y=0; y<result.height(); ++y)
+        for (int x=0; x<result.width(); ++x)
+            std::memcpy(result.mutableRow<std::uint8_t>(y)+x*bytes, input.row<std::uint8_t>(y*8)+x*8*bytes, bytes);
     return result;
 }
-ColorPipeline::WorkingImage rgba(const cv::Mat &rgb) {
+ColorPipeline::WorkingImage rgba(const ipr::Image &rgb) {
     ColorPipeline::WorkingImage result;
-    std::vector<cv::Mat> c;
-    cv::split(rgb,c);
-    c.push_back(cv::Mat(rgb.size(),CV_32FC1,cv::Scalar(1)));
-    cv::merge(c,result.linearRgba);
+    result.linearRgba = ipr::opaque(rgb);
     return result;
 }
-cv::Mat output(const ColorPipeline::WorkingImage &source) {
+ipr::Image output(const ColorPipeline::WorkingImage &source) {
     QString error;
     QImage image = ColorPipeline::toSrgb(source,ColorPipeline::OutputFormat::HighBitDepth,&error);
     if (image.isNull()) throw std::runtime_error(error.toStdString());
-    cv::Mat rgb(image.height(),image.width(),CV_64FC3);
+    ipr::Image rgb=ipr::Image::create({image.width(),image.height()},ipr::Depth::F64,3);
     for (int y=0;y<image.height();++y) {
         const QRgba64 *row = reinterpret_cast<const QRgba64 *>(image.constScanLine(y));
         for (int x=0;x<image.width();++x) {
             const QRgba64 p = row[x];
-            cv::Vec3d v(p.red()/65535.,p.green()/65535.,p.blue()/65535.);
+            ipr::Vec3d v(p.red()/65535.,p.green()/65535.,p.blue()/65535.);
             for(int c=0;c<3;++c) v[c] = v[c]<=.04045 ? v[c]/12.92 : std::pow((v[c]+.055)/1.055,2.4);
-            rgb.at<cv::Vec3d>(y,x)=v;
+            imagetest::at<ipr::Vec3d>(rgb, y,x)=v;
         }
     }
     return rgb;
 }
-QJsonObject measure(const cv::Mat &base,const cv::Mat &changed) {
+QJsonObject measure(const ipr::Image &base,const ipr::Image &changed) {
     double rb=0,mg=0,lum=0,lum0=0;
-    cv::Vec3d means0(0,0,0), means1(0,0,0);
+    ipr::Vec3d means0(0,0,0), means1(0,0,0);
     int valid=0,clipped=0;
-    for(int y=0;y<base.rows;++y) for(int x=0;x<base.cols;++x) {
-        const auto a=base.at<cv::Vec3d>(y,x), b=changed.at<cv::Vec3d>(y,x);
+    const double total=double(base.size().area());
+    for(int y=0;y<base.height();++y) for(int x=0;x<base.width();++x) {
+        const auto a=imagetest::at<ipr::Vec3d>(base, y,x), b=imagetest::at<ipr::Vec3d>(changed, y,x);
         const double hiA=std::max({a[0],a[1],a[2]}),hiB=std::max({b[0],b[1],b[2]});
         lum+=.2126*b[0]+.7152*b[1]+.0722*b[2];
         lum0+=.2126*a[0]+.7152*a[1]+.0722*a[2];
@@ -71,13 +76,13 @@ QJsonObject measure(const cv::Mat &base,const cv::Mat &changed) {
             ++valid;
         }
     }
-    means0/=double(base.total()); means1/=double(base.total());
+    means0/=total; means1/=total;
     return {{"axis_samples",valid},{"delta_log_R_B",valid?QJsonValue(rb/valid):QJsonValue()},
         {"delta_log_magenta_green",valid?QJsonValue(mg/valid):QJsonValue()},
-        {"mean_Y_variant",lum/base.total()},{"Y_ratio",lum0>0?QJsonValue(lum/lum0):QJsonValue()},
+        {"mean_Y_variant",lum/total},{"Y_ratio",lum0>0?QJsonValue(lum/lum0):QJsonValue()},
         {"channel_mean_RGB_neutral",QJsonArray{means0[0],means0[1],means0[2]}},
         {"channel_mean_RGB_variant",QJsonArray{means1[0],means1[1],means1[2]}},
-        {"clipped_percent_variant",100.*clipped/base.total()}};
+        {"clipped_percent_variant",100.*clipped/total}};
 }
 }
 int main(int argc,char **argv) {
@@ -101,28 +106,28 @@ int main(int argc,char **argv) {
             QString error;
             const auto decoded=RawDecoder::decode(path,options,&metadata,&error);
             if(decoded.isNull() || !decoded.dcpContext) throw std::runtime_error(error.toStdString());
-            auto context=*decoded.dcpContext;
+            auto context=CameraProfileEngine::sharedCopy(*decoded.dcpContext);
             context.cameraRgb=sampled(context.cameraRgb);
-            auto neutral=decoded;
+            auto neutral=ColorPipeline::sharedCopy(decoded);
             neutral.linearRgba=sampled(decoded.linearRgba);
-            const cv::Mat neutralPixels=output(neutral);
-            cv::Mat rgb;
+            const ipr::Image neutralPixels=output(neutral);
+            ipr::Image rgb;
             const int ref=int(std::lround(context.sourceKelvin));
-            if(!CameraProfileEngine::renderFromCameraSignal(context, ref, 0, 0.0,rgb,&error)) throw std::runtime_error(error.toStdString());
-            const bool exact=cv::norm(rgba(rgb).linearRgba,neutral.linearRgba,cv::NORM_INF)==0;
+            if(!renderInto(context, ref, 0, rgb, &error)) throw std::runtime_error(error.toStdString());
+            const bool exact=ipr::largestDifference(rgba(rgb).linearRgba,neutral.linearRgba)==0;
             identity &= exact;
             for(const QString feature : {"temperature","tint"}) {
                 const std::vector<int> values=feature=="temperature" ? std::vector<int>{2000,3500,5200,6500,9000,50000} : std::vector<int>{-150,-100,-50,-25,0,25,50,100,150};
-                cv::Mat supportRgb;
-                if(!CameraProfileEngine::renderFromCameraSignal(context, 5200, 0, 0.0,supportRgb,&error)) throw std::runtime_error(error.toStdString());
-                const cv::Mat support=output(rgba(supportRgb));
+                ipr::Image supportRgb;
+                if(!renderInto(context, 5200, 0, supportRgb, &error)) throw std::runtime_error(error.toStdString());
+                const ipr::Image support=output(rgba(supportRgb));
                 for(int value:values) {
                     const int temp=feature=="temperature" ? value:5200;
                     const int tint=feature=="tint"?value:0;
-                    cv::Vec3d gains;
+                    ipr::Vec3d gains;
                     if(!CameraProfileEngine::whiteBalanceGains(context,temp,tint,gains,&error) ||
-                       !CameraProfileEngine::renderFromCameraSignal(context, temp, tint, 0.0,rgb,&error)) throw std::runtime_error(error.toStdString());
-                    const cv::Mat pixels=output(rgba(rgb));
+                       !renderInto(context, temp, tint, rgb, &error)) throw std::runtime_error(error.toStdString());
+                    const ipr::Image pixels=output(rgba(rgb));
                     records.append(QJsonObject{{"scene",scene},{"feature",feature},{"value",value},
                         {"engine","IPR"},{"settings",QJsonObject{{"temperature",temp},{"tint",tint},
                         {"normalization",false},{"auto_wb",false},{"lens_correction",false},{"chromatic_aberration",false}}},
@@ -130,7 +135,7 @@ int main(int argc,char **argv) {
                         {"camera_gains",QJsonArray{gains[0],gains[1],gains[2]}},
                         {"raw_file",path},{"raw_sha256",before},{"dcp_file",context.profilePath},{"dcp_sha256",hash(context.profilePath)},
                         {"neutral_exact",exact},{"metrics",measure(support,pixels)},
-                        {"metadata",QJsonObject{{"dimensions",QJsonArray{decoded.linearRgba.cols,decoded.linearRgba.rows}}}},
+                        {"metadata",QJsonObject{{"dimensions",QJsonArray{decoded.linearRgba.width(),decoded.linearRgba.height()}}}},
                         {"shared_AsShot_metrics",measure(neutralPixels,pixels)}});
                 }
             }

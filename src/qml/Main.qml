@@ -73,7 +73,7 @@ ApplicationWindow {
             }
         }
 
-        Basic.Menu {
+        AppMenu {
             palette: root.palette
             title: qsTr("Fichier")
             width: 440
@@ -88,10 +88,13 @@ ApplicationWindow {
             Basic.MenuSeparator { }
             ActionMenuItem { action: fileActions.quitAction }
         }
-        Basic.Menu {
+        AppMenu {
             palette: root.palette
             title: qsTr("Édition")
             width: 440
+            ActionMenuItem { action: fileActions.undoAction }
+            ActionMenuItem { action: fileActions.redoAction }
+            Basic.MenuSeparator {}
             ActionMenuItem { action: fileActions.copyAction }
             ActionMenuItem { action: fileActions.pasteAction }
             ActionMenuItem { action: fileActions.applySelectionAction }
@@ -99,7 +102,7 @@ ApplicationWindow {
             ActionMenuItem { action: fileActions.resetAction }
         }
 
-        Basic.Menu {
+        AppMenu {
             palette: root.palette
             title: qsTr("Affichage")
             width: 300
@@ -125,7 +128,7 @@ ApplicationWindow {
                 onTriggered: uiPreferences.setValue("layout/showFilmstrip", checked)
             }
         }
-        Basic.Menu {
+        AppMenu {
             palette: root.palette
             title: qsTr("Préférences")
             width: 400
@@ -192,6 +195,14 @@ ApplicationWindow {
                 panelColor: uiPreferences.theme.panel
                 visible: imageEditor.hasImage
                 picking: settingsView.pointColorPicking
+                cropEditing: panelTabs.currentKey === "panelTabGeometry"
+                maskShape: masksView.visible ? masksView.currentShape : retouchView.visible ? retouchView.currentShape : null
+                maskBrushSize: retouchView.visible ? retouchView.brushSize : masksView.brushSize
+                onMaskShapeEdited: (values) => (retouchView.visible ? retouchView : masksView).applyShape(values)
+                onMaskStrokeDrawn: (points) => (retouchView.visible ? retouchView : masksView).applyStroke(points)
+                geometry: imageEditor.geometry
+                showGeometryGrid: geometryView.showGrid
+                onCropEdited: (x, y, width, height) => imageEditor.setGeometryCrop(x, y, width, height)
                 onPointPicked: (x, y) => {
                     imageEditor.addPointColorAt(x, y)
                     settingsView.pointColorPicking = false
@@ -331,13 +342,63 @@ ApplicationWindow {
             border.color: "#3d4654"
             focus: true
 
+            PanelTabBar {
+                id: panelTabs
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.right: parent.right
+                textColor: uiPreferences.theme.text
+                secondaryTextColor: uiPreferences.theme.secondaryText
+                panelColor: settingsPanel.color
+                lineColor: settingsPanel.border.color
+                outerRadius: settingsPanel.radius
+                // The eyedropper belongs to the Settings tab's panel.
+                onCurrentIndexChanged: settingsView.pointColorPicking = false
+            }
+            // The Geometry tab shows the whole canvas, its crop as a frame.
+            Binding {
+                target: imageEditor
+                property: "cropEditing"
+                value: panelTabs.currentKey === "panelTabGeometry"
+            }
             Setting {
                 id: settingsView
-                anchors.fill: parent
+                anchors.top: panelTabs.bottom
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
                 anchors.margins: 14
+                visible: panelTabs.currentKey === "panelTabSettings"
                 editor: imageEditor
                 preferences: uiPreferences
                 resetAction: fileActions.resetAction
+            }
+            GeometryPanel {
+                id: geometryView
+                anchors.fill: settingsView
+                visible: panelTabs.currentKey === "panelTabGeometry"
+                editor: imageEditor
+                preferences: uiPreferences
+            }
+            MasksPanel {
+                id: masksView
+                anchors.fill: settingsView
+                visible: panelTabs.currentKey === "panelTabMasks"
+                editor: imageEditor
+                preferences: uiPreferences
+            }
+            RetouchPanel {
+                id: retouchView
+                anchors.fill: settingsView
+                visible: panelTabs.currentKey === "panelTabRetouch"
+                editor: imageEditor
+                preferences: uiPreferences
+            }
+            AssemblePanel {
+                anchors.fill: settingsView
+                visible: panelTabs.currentKey === "panelTabAssemble"
+                editor: imageEditor
+                preferences: uiPreferences
             }
 
         }
@@ -419,12 +480,24 @@ ApplicationWindow {
         verticalAlignment: Text.AlignVCenter
         elide: Text.ElideRight
         color: uiPreferences.theme.secondaryText
+        font.pointSize: 12
         text: imageEditor.statusMessage + (imageEditor.memoryCacheStatus && imageEditor.memoryCacheStatus.available
             ? qsTr(" | Cache : %1 image(s), %2 Mio%3")
                 .arg(imageEditor.decodedImageCacheEntryCount)
                 .arg(Math.round(imageEditor.decodedImageCacheSizeBytes / 1048576))
                 .arg(imageEditor.memoryCacheStatus.pressure ? qsTr(" — pression mémoire") : "") : "")
         background: Rectangle { color: uiPreferences.theme.panel }
+    }
+
+    function commandButtonReleased(button) {
+        commandError.noteRelease(button)
+    }
+
+    CommandErrorPopup {
+        id: commandError
+        parent: Overlay.overlay
+        editor: imageEditor
+        restingGap: applicationFooter.height + 8
     }
 
     PreferencesDialog {

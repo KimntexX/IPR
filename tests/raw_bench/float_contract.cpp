@@ -1,11 +1,11 @@
 #include "ColorPipeline.h"
+#include "Pixels.h"
 #include <QCoreApplication>
 #include <QDateTime>
 #include <QFile>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include <opencv2/core.hpp>
 #include <cmath>
 #include <iostream>
 #include <limits>
@@ -21,30 +21,32 @@ int main(int argc, char **argv)
         rows.append(item); passed = passed && ok;
     };
     {
-        cv::Mat input(2, 2, CV_32FC3, cv::Scalar(-0.2f, 0.1f, 1.4f));
-        const cv::Mat original = input.clone();
+        ipr::Image input = ipr::Image::create({2, 2}, ipr::Depth::F32, 3);
+        ipr::fill(input, {-0.2, 0.1, 1.4});
+        const ipr::Image original = input.clone();
         QString error;
         const auto image = ColorPipeline::fromLinearSrgb(input, &error);
-        const bool valid = !image.isNull() && image.linearRgba.type() == CV_32FC4 &&
-                           cv::checkRange(image.linearRgba, true);
+        const bool valid = !image.isNull() && image.linearRgba.depth() == ipr::Depth::F32 &&
+                           image.linearRgba.channels() == 4 && ipr::allFinite(image.linearRgba);
         bool extended = false;
         if (valid) {
-            const auto p = image.linearRgba.at<cv::Vec4f>(0, 0);
+            const auto p = image.linearRgba.row<ipr::Vec4f>(0)[0];
             extended = (p[0] < 0 || p[1] < 0 || p[2] < 0) &&
                        (p[0] > 1 || p[1] > 1 || p[2] > 1) && p[3] == 1.f;
         }
-        const bool unchanged = cv::norm(original, input, cv::NORM_INF) == 0;
+        const bool unchanged = ipr::largestDifference(original, input) == 0;
         record("finite_negative_and_above_one", valid && extended && unchanged && error.isEmpty(),
                QJsonObject{{"finite_output", valid}, {"extended_range", extended}, {"input_unchanged", unchanged}, {"error", error}});
     }
     for (int kind = 0; kind < 3; ++kind) {
-        cv::Mat input(2, 2, CV_32FC3, cv::Scalar(0.1f, 0.2f, 0.3f));
-        input.at<cv::Vec3f>(0, 0)[0] = kind == 0 ? std::numeric_limits<float>::quiet_NaN()
+        ipr::Image input = ipr::Image::create({2, 2}, ipr::Depth::F32, 3);
+        ipr::fill(input, {0.1, 0.2, 0.3});
+        input.mutableRow<ipr::Vec3f>(0)[0][0] = kind == 0 ? std::numeric_limits<float>::quiet_NaN()
             : (kind == 1 ? std::numeric_limits<float>::infinity() : -std::numeric_limits<float>::infinity());
         QString error;
         const auto image = ColorPipeline::fromLinearSrgb(input, &error);
         const bool empty = image.isNull();
-        const bool nonfinite = !empty && !cv::checkRange(image.linearRgba, true);
+        const bool nonfinite = !empty && !ipr::allFinite(image.linearRgba);
         record(kind == 0 ? "reject_NaN" : (kind == 1 ? "reject_positive_infinity" : "reject_negative_infinity"),
                empty && !error.isEmpty(), QJsonObject{{"empty_output", empty}, {"returned_nonfinite_image", nonfinite}, {"error", error}});
     }

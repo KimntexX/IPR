@@ -18,16 +18,15 @@ def native_arguments():
         qt = os.environ['QT_ROOT_DIR']
         if not prefix or not qt:
             raise ValueError('The Homebrew and selected Qt prefixes must be explicit')
-        raw, tiff, opencv = (prefix + '/opt/' + name for name in ('libraw', 'libtiff', 'opencv'))
+        raw, tiff = (prefix + '/opt/' + name for name in ('libraw', 'libtiff'))
         # A broad /opt/homebrew/include (or /usr/local/include) exposes another
         # Qt version before framework headers. Scope the two header search
         # roots to their formulae; retain the selected Qt in both build modes.
-        return ['--cmake-arg=-DOpenCV_DIR=' + opencv + '/lib/cmake/opencv4',
-                '--cmake-arg=-DQt6_DIR=' + qt + '/lib/cmake/Qt6',
+        return ['--cmake-arg=-DQt6_DIR=' + qt + '/lib/cmake/Qt6',
                 '--cmake-arg=-DLIBRAW_INCLUDE_DIR=' + raw + '/include',
                 '--cmake-arg=-DLIBRAW_LIBRARY=' + raw + '/lib/libraw.dylib',
                 '--cmake-arg=-DTIFF_INCLUDE_DIR=' + tiff + '/include',
-                '--cmake-arg=-DCMAKE_PREFIX_PATH=' + ';'.join((qt, raw, tiff, opencv))]
+                '--cmake-arg=-DCMAKE_PREFIX_PATH=' + ';'.join((qt, raw, tiff))]
     return []
 
 

@@ -21,7 +21,7 @@ namespace RawDecoder {
 // manual temperature/tint edits reuse the camera-space working context.
 struct DcpSource
 {
-    cv::Mat cameraRgb;
+    ipr::Image cameraRgb;   // the working context's signal, shared read only
     std::shared_ptr<const CameraProfileEngine::DcpWorkingContext> workingContext;
     ImageMetadata metadata;
     std::optional<double> whiteBalanceKelvin;
@@ -77,6 +77,8 @@ struct FormatOptions
     std::function<QSize(const QString &)> dimensions;
     // The camera's as-shot white balance in kelvins, read without decoding the pixels.
     std::function<std::optional<double>(const QString &)> asShotWhiteBalanceKelvin;
+    // For a file without an embedded preview: a quick development of its sensor data.
+    ThumbnailFunction developedThumbnail;
 };
 
 bool registerFormatHandler(const QStringList &extensions,
@@ -94,6 +96,11 @@ ColorPipeline::WorkingImage decode(const QString &fileName,
 QImage decodeEmbeddedThumbnail(const QString &fileName,
                                const QSize &maximumSize,
                                QString *error = nullptr);
+// A thumbnail developed from the sensor data, for the files without an embedded
+// preview (many DNG): slower than the embedded one, and not the profile's rendering.
+QImage developThumbnail(const QString &fileName,
+                        const QSize &maximumSize,
+                        QString *error = nullptr);
 
 }
 

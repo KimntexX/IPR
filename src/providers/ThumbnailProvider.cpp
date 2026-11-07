@@ -150,6 +150,9 @@ QImage ThumbnailProvider::loadThumbnail(const QString &fileName, const QSize &si
     QImage thumbnail;
     if (RawDecoder::supportedExtensions().contains(extension)) {
         thumbnail = RawDecoder::decodeEmbeddedThumbnail(fileName, size);
+        // Many DNG carry no preview: the ribbon must still show them.
+        if (thumbnail.isNull())
+            thumbnail = RawDecoder::developThumbnail(fileName, size);
     } else {
         QImageReader reader(fileName);
         reader.setAutoTransform(true);

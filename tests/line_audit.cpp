@@ -1,0 +1,233 @@
+// Manual measurement of the straightening proposal on real photos: the angle a known rotation
+// gives back, what each mode proposes, how often it refuses, and the time it takes. Reads the
+// sources only; everything it writes goes to --json and --sheets.
+#include "ColorPipeline.h"
+#include "Geometry.h"
+#include "ImageImporter.h"
+#include "LineDetection.h"
+#include "RawDecoder.h"
+#include "Straightening.h"
+#include "Resize.h"
+#include "Pixels.h"
+
+#include <QCommandLineParser>
+#include <QCoreApplication>
+#include <QDateTime>
+#include <QDir>
+#include <QElapsedTimer>
+#include <QFile>
+#include <QFileInfo>
+#include <QImage>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QPainter>
+
+#include <algorithm>
+#include <cmath>
+#include <iostream>
+#include <vector>
+
+namespace {
+
+constexpr int proxySide = 2048;
+constexpr double centralShare = 0.7;   // what is kept of a rotated image, away from its repeated borders
+
+ipr::Image proxyOf(const ipr::Image &rgba)
+{
+    ipr::Image rgb = ipr::withoutAlpha(rgba);
+    const double scale = double(proxySide) / double(std::max(rgb.width(), rgb.height()));
+    if (scale < 1.0)
+        rgb = ipr::resizedBy(rgb, scale, scale, ipr::Interpolation::Area);
+    return rgb;
+}
+
+const char *refusalName(Straightening::Refusal refusal)
+{
+    switch (refusal) {
+    case Straightening::Refusal::None: return "none";
+    case Straightening::Refusal::InvalidInput: return "invalid_input";
+    case Straightening::Refusal::NotEnoughLines: return "not_enough_lines";
+    case Straightening::Refusal::NoAgreement: return "no_agreement";
+    case Straightening::Refusal::NotEnoughEvidence: return "not_enough_evidence";
+    }
+    return "unknown";
+}
+
+QJsonObject toJson(const Straightening::Proposal &proposal)
+{
+    return {{"refusal", refusalName(proposal.refusal)}, {"rotation", double(proposal.rotation)},
+            {"vertical", proposal.vertical}, {"horizontal", proposal.horizontal},
+            {"supporting_lines", proposal.supportingLines},
+            {"misalignment_before", double(proposal.misalignmentBefore)},
+            {"misalignment_after", double(proposal.misalignmentAfter)}};
+}
+
+ipr::Image central(const ipr::Image &image)
+{
+    const int width = int(image.width() * centralShare), height = int(image.height() * centralShare);
+    return image.copy(ipr::Recti((image.width() - width) / 2, (image.height() - height) / 2, width, height));
+}
+
+QImage shown(const ipr::Image &rgb, int side)
+{
+    ColorPipeline::WorkingImage image;
+    image.linearRgba = ipr::opaque(rgb);
+    image.colorSpace = ColorPipeline::workingColorSpace();
+    QString error;
+    const QImage srgb = ColorPipeline::toSrgb(image, ColorPipeline::OutputFormat::Preview8Bit, &error);
+    return srgb.isNull() ? srgb : srgb.scaled(side, side, Qt::KeepAspectRatio, Qt::SmoothTransformation).convertToFormat(QImage::Format_RGB32);
+}
+
+// The photo with the lines the proposal reads, then with the result of Full.
+void writeSheet(const QString &path, const ipr::Image &rgb, const std::vector<LineDetection::Segment> &lines,
+                const Geometry::Settings &settings)
+{
+    constexpr int side = 800;
+    QImage before = shown(rgb, side);
+    if (before.isNull())
+        return;
+    {
+        QPainter painter(&before);
+        const double scale = double(before.width()) / double(rgb.width());
+        painter.setRenderHint(QPainter::Antialiasing);
+        painter.setPen(QPen(QColor(255, 60, 40), 1.5));
+        for (const LineDetection::Segment &s : lines)
+            painter.drawLine(QPointF((s.x0 + 0.5) * scale, (s.y0 + 0.5) * scale), QPointF((s.x1 + 0.5) * scale, (s.y1 + 0.5) * scale));
+    }
+    const QImage after = shown(Geometry::warpRgb(rgb.share(), settings, Geometry::Quality::Preview), side);
+    if (after.isNull())
+        return;
+    QImage sheet(before.width() + after.width() + 8, std::max(before.height(), after.height()), QImage::Format_RGB32);
+    sheet.fill(Qt::black);
+    QPainter painter(&sheet);
+    painter.drawImage(0, 0, before);
+    painter.drawImage(before.width() + 8, 0, after);
+    painter.end();
+    sheet.save(path);
+}
+
+double median(std::vector<double> values)
+{
+    if (values.empty())
+        return 0.0;
+    const auto middle = values.begin() + std::ptrdiff_t(values.size() / 2);
+    std::nth_element(values.begin(), middle, values.end());
+    return *middle;
+}
+
+} // namespace
+
+int main(int argc, char **argv)
+{
+    QCoreApplication application(argc, argv);
+    QCommandLineParser parser;
+    parser.addHelpOption();
+    parser.addOption({"base", "Folder of photos, read only, without recursion", "folder"});
+    parser.addOption({"json", "The proof; refused if it exists", "file"});
+    parser.addOption({"sheets", "Folder of the side-by-side images", "folder"});
+    parser.addOption({"revision", "The commit this build comes from", "sha"});
+    parser.process(application);
+    const QString jsonPath = parser.value("json");
+    if (parser.value("base").isEmpty() || parser.value("revision").isEmpty() || jsonPath.isEmpty() || QFile::exists(jsonPath)) {
+        std::cerr << "--base, --revision and a new --json are required\n";
+        return 2;
+    }
+    QStringList patterns;
+    for (const QString &extension : RawDecoder::supportedExtensions())
+        patterns << QStringLiteral("*.") + extension;
+    patterns << QStringLiteral("*.jpg") << QStringLiteral("*.jpeg") << QStringLiteral("*.tif");
+    const QFileInfoList files = QDir(parser.value("base")).entryInfoList(patterns, QDir::Files, QDir::Name);
+    if (!parser.value("sheets").isEmpty() && !QDir().mkpath(parser.value("sheets"))) {
+        std::cerr << "Cannot create the sheets folder\n";
+        return 2;
+    }
+
+    QJsonArray entries;
+    std::vector<double> errors, detectMs;
+    int refused = 0, proposals = 0, skipped = 0;
+    for (const QFileInfo &file : files) {
+        QJsonObject entry{{"file", file.fileName()}};
+        RawDecoder::Options options;
+        const ImageImport::Result loaded = ImageImport::load(file.absoluteFilePath(), options);
+        if (loaded.image.isNull()) {
+            ++skipped;
+            entry["error"] = loaded.error;
+            entries.append(entry);
+            continue;
+        }
+        const ipr::Image rgb = proxyOf(loaded.image.linearRgba);
+        const ipr::Size size = rgb.size();
+        entry["proxy"] = QJsonArray{size.width, size.height};
+
+        QElapsedTimer clock;
+        clock.start();
+        const std::vector<LineDetection::Segment> lines = Straightening::linesOf(rgb);
+        const double elapsed = double(clock.nsecsElapsed()) / 1e6;
+        detectMs.push_back(elapsed);
+        entry["lines"] = int(lines.size());
+        entry["detect_ms"] = elapsed;
+
+        clock.restart();
+        const auto level = Straightening::propose(lines, size, {}, Straightening::Mode::Level);
+        const auto vertical = Straightening::propose(lines, size, {}, Straightening::Mode::Vertical);
+        const auto full = Straightening::propose(lines, size, {}, Straightening::Mode::Full);
+        entry["propose_ms"] = double(clock.nsecsElapsed()) / 1e6 / 3.0;
+        entry["level"] = toJson(level);
+        entry["vertical"] = toJson(vertical);
+        entry["full"] = toJson(full);
+        ++proposals;
+        refused += level.valid() ? 0 : 1;
+
+        // A known rotation of the photo itself, read on the same central area.
+        const ipr::Image straightCentre = central(rgb);
+        const auto reference = Straightening::propose(Straightening::linesOf(straightCentre), straightCentre.size(), {}, Straightening::Mode::Level);
+        QJsonArray known;
+        for (const float angle : {-5.0f, -2.0f, -0.5f, 0.5f, 2.0f, 5.0f}) {
+            Geometry::Settings turned;
+            turned.rotation = angle;
+            const ipr::Image turnedCentre = central(Geometry::warpRgb(rgb.share(), turned, Geometry::Quality::Export));
+            const auto read = Straightening::propose(Straightening::linesOf(turnedCentre), turnedCentre.size(), {}, Straightening::Mode::Level);
+            QJsonObject item{{"angle", double(angle)}, {"refusal", refusalName(read.refusal)}};
+            if (read.valid() && reference.valid()) {
+                // The photo leans by the angle more than the reference did, and the proposal answers the opposite.
+                const double error = double(read.rotation) + double(angle) - double(reference.rotation);
+                item["error"] = error;
+                errors.push_back(std::abs(error));
+            }
+            known.append(item);
+        }
+        entry["known_rotations"] = known;
+        entries.append(entry);
+        if (!parser.value("sheets").isEmpty())
+            writeSheet(QDir(parser.value("sheets")).filePath(file.completeBaseName() + QStringLiteral(".png")), rgb, lines,
+                       Straightening::applied({}, full));
+        std::cout << file.fileName().toStdString() << ": " << lines.size() << " lines, " << elapsed << " ms, level "
+                  << level.rotation << " (" << refusalName(level.refusal) << "), full " << full.rotation << ' '
+                  << full.vertical << ' ' << full.horizontal << std::endl;
+    }
+
+    std::sort(errors.begin(), errors.end());
+    const double worst = errors.empty() ? 0.0 : errors.back();
+    const double p95 = errors.empty() ? 0.0 : errors[std::min(errors.size() - 1, size_t(double(errors.size()) * 0.95))];
+    const QJsonObject proof{{"created_utc", QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs)},
+                            {"revision", parser.value("revision")}, {"corpus", QDir(parser.value("base")).dirName()},
+                            {"proxy_side", proxySide}, {"central_share", centralShare},
+                            {"photos", proposals}, {"unreadable", skipped}, {"level_refused", refused},
+                            {"known_rotation_measures", int(errors.size())},
+                            {"known_rotation_error_median_degrees", median(errors)},
+                            {"known_rotation_error_p95_degrees", p95},
+                            {"known_rotation_error_worst_degrees", worst},
+                            {"detect_ms_median", median(detectMs)},
+                            {"truth", "the rotation we applied, relative to the same photo unrotated: repeatability of the "
+                                      "reading, not whether the proposal is the right level for the scene"},
+                            {"entries", entries}};
+    QFile out(jsonPath);
+    if (!out.open(QIODevice::WriteOnly | QIODevice::NewOnly) || out.write(QJsonDocument(proof).toJson()) < 0) {
+        std::cerr << "Cannot write the proof\n";
+        return 1;
+    }
+    std::cout << proposals << " photos, " << refused << " refused to level, " << errors.size() << " known rotations: median error "
+              << median(errors) << ", p95 " << p95 << ", worst " << worst << " degrees; detection median " << median(detectMs) << " ms\n";
+    return 0;
+}
