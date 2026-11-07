@@ -8297,3 +8297,104 @@ et remplacer atomiquement son chemin, comme le fait `dru_checkpoint.save`.
 
 [Plan, exécution, source et contrôle du nettoyage](../../reports/storage/neural-cleanup-2026-11-07/README.md).
 Le contrôle final est réussi. Aucun calcul, push, fusion ou tag lancé.
+
+## 7 novembre 2026 — analyse des résultats : limites de la projection globale
+
+Après le nettoyage, l’analyse est reprise sur les mesures conservées, sans
+nouvel entraînement. `audit_dru_projection.py` vérifie les groupes appariés
+par fréquence, amplitude, état chromatique, bruit et couleur, puis construit
+des témoins analytiques pour tester la suffisance de l’objectif. Les
+comparaisons des modèles concernent toujours les contrôles connus. Les
+témoins ne cherchent pas à reproduire l’erreur exacte du réseau.
+
+Preuve :
+[neural-dru-projection-audit-v001-20261107T131118Z.json](../raw/neural-dru-projection-audit-v001-20261107T131118Z.json).
+Deux tests ciblés passent : reconstruction de la pénalité par échelle,
+et contre-exemple explicite dont la pénalité reste presque nulle en float64
+comme en float32. Le pic privé échantillonné est d’environ 827 Mio, sous
+le quota 1,25 Gio ; pas de poids, image pleine définition ou checkpoint créé.
+
+### Ce qui progresse et ce qui se déplace
+
+Les 576 effets appariés comprennent tous les jalons 128/256 ; la lecture
+suivante porte sur 256, sans choisir un jalon de livraison. Les fréquences
+intermédiaires restent la zone la plus favorable. À fréquence 14, l’écart
+moyen absolu de gain à 1 baisse de 0,032/0,096 (graines 71/73). À fréquence
+26, le gain est plus inégal et la variation moyenne du ratio MSE est
++0,031 pour 71 contre −0,025 pour 73. Les petits sous-groupes ne constituent
+pas des répétitions indépendantes ; aucune confiance de population n’est
+calculée avec un seul tirage/une seule phase CFA.
+
+Le rouge (étiquette CFA 0) conserve mieux le contraste en moyenne sur
+**les deux graines** : réduction de l’écart absolu de gain de 0,078/0,066.
+Mais son ratio MSE augmente de **0,091/0,085 point**. Cela n’équivaut pas
+à « 9 % de bruit visible en plus » : le MSE contient bruit, biais et erreurs
+de phase. C’est un compromis mesuré, pas un gain simultané sur tous les
+critères. Les verts et le bleu ne suivent pas tous la même évolution.
+Augmenter le poids global pour améliorer les seuls gains risquerait donc
+de conserver encore davantage d’erreur.
+
+### Limite démontrée 1 : une structure forte masque une petite structure
+
+Le même petit motif est réduit à 80 % de son contraste dans quatre témoins
+propres de 128×128 cellules packed. Seul le fond change ; les quatre plans
+sont identiques pour isoler le mécanisme de l’objectif. Ce sont des fixtures
+analytiques, pas des photos ni de nouveaux tests de qualité réservés.
+
+| Fond autour du motif faible | Pénalité structurelle |
+| --- | ---: |
+| Aucun | 0,03972 |
+| Une onde plus forte, plus grossière | 0,002920 |
+| Un bord fort | 0,0003457 |
+| Trois autres composantes | 0,0003816 |
+
+La même perte relative de détail peut donc être pénalisée **plus de cent
+fois moins** lorsqu’un bord domine l’énergie globale des gradients.
+La division par l’énergie totale et la moyenne spatiale ne protègent pas
+chaque structure séparément. Ce n’est pas un défaut de la dérivée : c’est
+une limite de la grandeur choisie.
+
+### Limite démontrée 2 : compensation entre composantes
+
+Pour un mélange de quatre ondes, on construit une direction d’erreur
+satisfaisant les trois contraintes globales des échelles 1/2/4. Le contraste
+de la composante la plus fine baisse de 20 %, pendant que les trois autres
+varient d’environ +4,56 %, −8,27 % et +27,64 %. La pénalité reste à environ
+**1,2×10⁻³³ en float64**, **2,2×10⁻¹⁷ en float32**, malgré une erreur MSE
+non nulle. Les coefficients sont un contre-exemple algébrique, pas une
+correction proposée ni des poids ajustés pour une image.
+
+Cela réfute la suffisance de la projection globale pour garantir tous les
+contrastes. Cela **ne prouve pas** que le réseau a appris exactement cette
+compensation ni que le mécanisme explique seul la régression observée.
+La perte MSE reste présente et peut pénaliser ces erreurs ; elle ne retire
+pas ce trou dans la protection additionnelle.
+
+Le plancher numérique a également un effet secondaire : sur les ondes
+pures sondées, la pénalité attendue pour 20 % d’atténuation varie d’environ
+0,0274 à 0,0400 selon l’énergie après réduction. Les moyennes spatiales aux
+grosses échelles et le plancher affaiblissent certaines composantes. Ce
+résultat ne justifie pas de retirer arbitrairement le plancher, nécessaire
+à la finitude des cibles uniformes.
+
+### Direction retenue après analyse
+
+Ne pas lancer un apprentissage long de cette variante, ni augmenter son
+seul poids. La prochaine piste doit **séparer les structures avant leur
+agrégation**, avec une protection par bandes et/ou voisinages, pour qu’un
+bord ou une fréquence ne paie pas la perte d’une autre. Une décomposition
+fixe en sous-bandes, par exemple Haar sur chaque plan CFA, est un candidat
+à tester mathématiquement avant de l’entraîner ; ce n’est pas une nouvelle
+implémentation de production ni une variante déjà qualifiée.
+
+La prochaine étude devra vérifier les deux contre-exemples, les motifs
+uniformes/faibles, la finitude des gradients et le bruit conservé. Si elle
+les passe, comparer à données, initialisations et budget identiques, avec
+pondérations fixées avant mesures et références appariées. Ne pas optimiser
+sur ces témoins puis les appeler une réserve indépendante. Aucune nouvelle
+photo n’est nécessaire pour ce diagnostic ; la validation photographique
+indépendante restera à faire ensuite.
+
+Les JSON et checkpoints utiles sont conservés ; cet audit n’a ajouté que
+des mesures légères. Aucun calcul lourd en attente, aucune modification
+photographique de production, publication, fusion ou tag.
