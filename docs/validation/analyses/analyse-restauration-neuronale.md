@@ -8751,3 +8751,108 @@ système maximal 71,64 %, sans arrêt sur quota. Les huit copies finales
 `weights.pt`/`resume.pt` identiques aux checkpoints ont été dédupliquées,
 leurs chemins conservés ; les états distincts aux jalons sont gardés.
 Aucune génération d’images ni modification de production, push, fusion ou tag.
+
+## 7 novembre 2026 — expérience de coexistence de textures, réserve scellée
+
+L’utilisateur autorise l’expérience proposée après le contrôle des faibles
+contrastes. Ce dernier est complet : sur la fréquence 26 à 1 024 étapes,
+le gain corrigé moins brut pour l’amplitude 0,008 passe de −0,507 à −0,469
+avec Haar pour 71 et de −0,404 à −0,355 pour 73. Le progrès est donc présent
+sur les deux graines mais la texture faible reste fortement atténuée.
+Preuves :
+[mesures](../raw/neural-dru-amplitudes-v001-20261107T211904Z.json),
+[analyse](../raw/neural-dru-amplitude-analysis-v001-20261107T211907Z.json),
+[supervision](../raw/neural-dru-transfer-retry-v001-20261107T211907Z.json).
+Ces valeurs sont des points de gain de motifs synthétiques, pas des
+pourcentages de bruit visible ou une validation photographique.
+
+### Intervention unique sur les données
+
+Le modèle, sa taille, la perte Haar normalisée (poids 0,1), le sigma fourni
+au réseau, Adam 10⁻⁴, data_seed 71, les initialisations 71/73 et le budget
+**1 024 mises à jour** sont conservés. Les emplacements de texture sont
+ceux déjà utilisés (un quart des expositions). Dans ces emplacements,
+un tiers reste exactement inchangé ; dans les deux autres tiers on ajoute
+respectivement un bord achromatique ou une onde plus grossière, tirés par
+un générateur distinct. Les textures originales, leur distribution de
+fréquences/amplitudes et toutes les autres familles sont inchangées.
+
+L’intervention modifie donc **682 expositions sur 4 096** (16,65 %) ;
+**3 414 restent identiques**. Les lois physiques et tirages gaussiens restent
+les mêmes ; le bruit étant hétéroscédastique, son amplitude change quand
+le signal propre change. Ce n’est pas une modification séparée de la loi
+de bruit ni une promesse d’images bruitées identiques dans les zones modifiées.
+Pas de clipping des cibles, pas de nouveaux poids/prétraitements en entrée.
+
+Deux candidats sont entraînés depuis zéro. Leurs références sont les
+**deux Haar actuels figés à 1 024 étapes**, sans meilleur jalon/graine choisi
+ni réentraînement inutile de la référence. Un prévol de référence de huit
+étapes doit retrouver les pertes et l’empreinte initiale du précédent prévol
+Haar ; cela vérifie le raccordement inchangé sur ces huit étapes, pas une
+nouvelle preuve de parité de tous les 1 024 pas. Il est réussi au premier
+contrôle de lancement. Le candidat a son propre prévol avec reprise exacte
+modèle/Adam, puis conserve les contrôles connus et checkpoints
+0/128/256/512/1 024.
+
+### Réserve prospective figée avant entraînement
+
+Le contrat scelle **24 cas / 384 observations** avant toute prédiction de
+modèle sur cette réserve : deux états chromatiques, deux amplitudes faibles
+0,006/0,018, deux strates de fréquence avec tirages continus, trois fonds
+(aplat, bord, onde grossière), quatre phases CFA et deux réalisations par
+niveau de bruit. Les identités de cibles/tirages sont distinctes des
+expositions d’apprentissage. Les pixels propres et bruités sont identifiés
+par SHA-256 ; les images ne sont pas écrites sur disque.
+
+Le contrôle réservé est ouvert **une fois les deux candidats terminés**,
+sur les quatre modèles figés (deux références, deux candidats). Il n’est
+pas consulté aux jalons intermédiaires ni utilisé pour fixer le coefficient
+ou choisir un checkpoint. Il est réservé à cette intervention prospective,
+pas indépendant de toutes les décisions historiques du projet ; il devient
+connu après lecture et ne devra plus être présenté comme une réserve neuve
+pour une prochaine variante. Ce contrôle synthétique ne remplace pas des
+photographies indépendantes ou une qualification multi-boîtiers.
+
+Les contrastes du motif faible et du fond sont estimés **conjointement**
+(régression DC, sinus, quadrature et fond connu), pour qu’une erreur du fond
+ne soit pas automatiquement attribuée au motif faible. Les cas propres
+sont vérifiés avant scellement : rang complet et conditionnement maximal
+environ 2,67 sur les grilles sondées. Cette mesure utilise la vérité pour
+l’évaluation uniquement, pas pour l’entrée du réseau. Le MSE reste mesuré
+contre le signal complet, fond inclus.
+
+Les 48 strates (8 observations chacune) et tous les résultats par champ
+seront conservés. Un premier progrès doit réduire, sur les deux graines,
+la médiane d’erreur absolue de gain sans augmenter la médiane MSE. Les
+pires groupes seront également rapportés ; cette comparaison de médianes
+n’est ni un seuil photographique ni une validation complète. Aucun score
+intermédiaire ne déclenche une sélection ou une continuation automatique.
+
+### Tests et lancement
+
+Quinze tests ciblés passent : cinq sur composites/réserve/mesure conjointe,
+cinq sur les politiques dont le rejeu exact de cibles/sigma/observations
+historiques, cinq sur les objectifs. Les autres familles restent au bit
+près dans les tests de génération. La réserve et les plans complets sont
+versionnés avant résultats :
+[neural-dru-composite-plan-v001-20261107T213313Z.json](../raw/neural-dru-composite-plan-v001-20261107T213313Z.json).
+
+Le superviseur est lancé dans
+`build-patch_neural_restoration/dru-composite-study-v001` : `progress.json`
+et logs par prévol/graine, puis `once-reserved-evaluation.log`. Après les
+deux entraînements, le contrôle réservé s’enchaîne automatiquement. Les
+mesures des contrôles connus sont également archivées hors build, avec
+métadonnées partagées factorisées. Les copies finales de checkpoints
+identiques sont dédupliquées ; les états distincts restent disponibles.
+
+Admission après 60 s sous 70 % RAM, quatre threads par worker, priorité
+basse, quotas 5/6 Gio, plafond RAM système 92 %, allocation CUDA 50 %.
+Une pression externe soutenue provoque sauvegarde et arrêt sans boucle
+de relance. `STOP` au dossier de campagne demande un arrêt avec sauvegarde
+avant un éventuel secours limité à son arbre de processus.
+
+Budget maximal quatre heures : arrêt des workers au plus tard **8 novembre
+à 02 h 18 Paris**, superviseur **02 h 33**. Le contrôle réservé a un budget
+interne de vingt minutes. Aucune mise en veille ni formation supplémentaire
+ne sont programmées. Aucun nouveau RAW, export TIFF, changement du moteur,
+push, fusion ou tag.

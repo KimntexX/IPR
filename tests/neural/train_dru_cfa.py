@@ -23,7 +23,7 @@ def run(plan_path,output,seed,preflight=False,resume=False,execution_path=None):
     if not all(p.resolve().is_relative_to(build.resolve()) for p in (plan_path,output)):raise ValueError('Owned paths required')
     plan=json.loads(plan_path.read_text(encoding='utf-8'))
     if seed not in plan['seeds'] or plan['status']!='sealed_dru_cfa_bootstrap':raise ValueError('Sealed declared training required')
-    if (plan['data_arm'] not in ('reference','noise','details') or not isinstance(plan['data_seed'],int)
+    if (plan['data_arm'] not in ('reference','noise','details','composite') or not isinstance(plan['data_seed'],int)
             or isinstance(plan['data_seed'],bool) or plan['data_seed']<0):raise ValueError('Explicit data arm and independent seed required')
     objective=plan.get('objective','mse')
     if objective not in ('mse','haar_noise_aware_v1'):raise ValueError('Unknown training objective')
@@ -46,13 +46,16 @@ def run(plan_path,output,seed,preflight=False,resume=False,execution_path=None):
             started_at_utc=previous['started_at_utc'],elapsed_seconds=previous['elapsed_seconds'])]
     stamp=datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')
     trace=MemoryTrace(output/f'memory-{stamp}.jsonl')
-    resources=dict(hard_mib=6144,soft_mib=4608,system_fraction=.92) if execution is None else execution['resources']
+    resources=plan.get('resources',dict(hard_mib=6144,soft_mib=4608,system_fraction=.92)) if execution is None else execution['resources']
+    if not 0<resources['soft_mib']<resources['hard_mib']<=6144 or not 0<resources['system_fraction']<=.92:
+        raise ValueError('Unsafe training resources')
     started=time.monotonic();guard=MemoryGuard(hard_bytes=resources['hard_mib']*1024**2,soft_bytes=resources['soft_mib']*1024**2,system_fraction=resources['system_fraction'],observer=trace.observe)
     completed=0;timings=[];deadline=datetime.fromisoformat(plan['training_deadline_utc'] if execution is None else execution['training_deadline_utc']).timestamp()
     controller=None
-    if execution is not None and not preflight:
+    load_policy=plan.get('load') if execution is None else execution['load']
+    if load_policy is not None and not preflight:
         from load_control import YieldController
-        controller=YieldController(execution['load'])
+        controller=YieldController(load_policy)
     try:
         with trace,guard:
             trace.phase('torch-import')

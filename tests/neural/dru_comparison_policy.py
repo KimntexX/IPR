@@ -3,9 +3,10 @@ import math
 import torch
 from context_data import extend_texture
 from fine_texture_training import texture,POLICY
+from dru_composite_data import training_texture
 
 
-ARMS=('reference','noise','details')
+ARMS=('reference','noise','details','composite')
 
 
 def texture_parameters(family,identity,serial):
@@ -23,6 +24,7 @@ def texture_parameters(family,identity,serial):
 
 def texture_context(family,identity,side,serial,arm):
     if arm not in ARMS:raise ValueError('Declared comparison arm required')
+    if arm=='composite':return training_texture(family,identity,side,serial)
     if arm!='details':return extend_texture(family,identity,side)
     metadata=texture_parameters(family,identity,serial)
     frequency=metadata['frequency'];amplitude=metadata['amplitude'];secondary=metadata['other_frequency']
