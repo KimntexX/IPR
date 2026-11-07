@@ -1446,10 +1446,12 @@ campagnes. Cette décision produit n’est pas une fonctionnalité déjà livré
 - Décision à trois sorties : progrès qualifié, régression claire ou
   inconclusif au budget fixé. Aucun changement des verdicts historiques.
 
-**Clarification CPU requise avant scellement complet :** la décision
-transmise par Claude cite une ouverture totale à 20,8 s/huit threads,
-alors que le choix direct précédent autorise une qualité optionnelle plus
-lente ou GPU. Le périmètre du plafond a été demandé à l’utilisateur. Les
-20,8 s ne sont pas appliquées au mode qualité par déduction. Les autres
-critères ne sont pas remis en question. Le composite actuel reste hors de
-ce nouveau contrat ; aucune nouvelle campagne naturelle n’est lancée ici.
+**Périmètre CPU confirmé par l’utilisateur : ouverture par défaut seulement.**
+Les 20,8 s à huit threads n’incluent pas le neuronal qualité optionnel.
+Le mode qualité peut être plus lent sur CPU ou nécessiter un GPU ; le
+classique reste disponible et l’ouverture par défaut conserve son propre
+budget. Temps CPU/GPU, mémoire et matériel du neuronal seront mesurés
+séparément, sans veto automatique à 20,8 s. Ce point n’est plus en attente.
+Les critères d’acceptation sont à reporter sans modification dans le plan
+exécutable du futur banc ; son inventaire, ses partitions et ses définitions
+de métriques restent à préparer. Le composite conserve son contrat initial.

@@ -9052,3 +9052,17 @@ est adressée à l’utilisateur : ouverture par défaut seule, ou neuronal
 optionnel inclus ? Aucun plafond n’est attribué silencieusement à ce mode.
 Le futur contrat n’est pas déclaré totalement scellé tant que ce point
 reste ouvert. Aucun calcul de la nouvelle campagne n’est lancé.
+
+## 7 novembre 2026 — plafond d’ouverture par défaut clarifié
+
+L’utilisateur confirme : **« Ouverture par défaut seulement »**. Le budget
+20,8 s à huit threads n’inclut donc pas le débruitage neuronal qualité
+optionnel. Le coût de celui-ci sera mesuré séparément ; il peut être plus
+lent sur CPU ou exiger un GPU, avec maintien du classique. Aucun veto
+20,8 s ne lui est appliqué. La contradiction précédente est résolue dans
+l’architecture et le fichier commun ; les passages historiques restent
+la trace de la clarification, pas une politique encore en attente.
+
+Les autres critères acceptés (+0,5 dB par scène/bande, noirs/PSD, planches)
+restent inchangés. Ce cadrage ne remplace pas le futur plan de données et
+de calcul à sceller avant campagne ; le composite actuel reste inchangé.
