@@ -8160,3 +8160,21 @@ poids parents sont vérifiés ; les mesures brutes et tous les modèles sont
 conservés. Le bilan de ce contrôle sera nécessaire avant de décider si la
 projection globale doit être remplacée par une protection plus localisée.
 Aucune modification de production, publication ou fusion.
+
+## 7 novembre 2026 — contrôle d’amplitude interrompu sur mémoire système
+
+L’utilisateur signale un build ASan + UBSan en cours sous WSL. Le contrôle
+complémentaire est déjà arrêté par son garde-fou : RAM physique système
+mesurée à **92,25 %**, après 60,69 s et **324 observations sur 864**. La
+mémoire privée du worker était alors d’environ 2,74 Gio : le déclenchement
+est global, pas un dépassement du quota privé. Aucune attribution certaine
+de cette pression au seul build WSL n’est faite.
+
+Preuve partielle conservée :
+[neural-dru-amplitudes-v001-20261107T120526Z.json](../raw/neural-dru-amplitudes-v001-20261107T120526Z.json).
+Ces données ne couvrent pas la comparaison référence/structure et ne
+permettent donc aucun verdict apparié. La campagne d’entraînement achevée
+précédemment reste complète ; seul ce contrôle complémentaire manque.
+Aucun calcul lourd ni relance automatique supplémentaire n’est lancé
+pendant le build WSL. Reprendre dans un nouveau dossier avec preuve de
+charge disponible après sa fin ; conserver cette tentative sans écrasement.
