@@ -1,25 +1,27 @@
 # Restauration neuronale — qualification du corpus
 
-**Point de décision au 5 novembre 2026, après revue de Claude.** Le but
-est un bénéfice visible sur de vraies photos face au débruitage classique
-IPR, avec une perte de détails acceptable, pas la seule réussite du banc.
-Ce bénéfice n'est pas démontré pour le correcteur CFA actuel.
+**Point de décision au 7 novembre 2026, après la deuxième revue de Claude.**
+Le but reste un bénéfice visible et mesuré sur de vraies photos face aux
+étalons, pas la seule réussite du banc procédural. Aucun bénéfice
+photographique n’est validé pour le correcteur CFA 32,6 M actuel.
 
 | Question | État et décision actuelle |
 | --- | --- |
-| Ce qui fonctionne | Contrats signés, reprise, suivi par phase et deux essais mémoire de 256 pas, huit sauvegardes et trois contrôles complets par graine, sans dépassement. Pas une preuve de qualité photo. |
-| Ce qui bloque | Couverture trop faible des détails forts à haute fréquence, bruit conditionnel différent des contrôles, contenus et initialisation confondus entre graines. La perte moyenne récompense des lissages destructeurs sur ce flux. |
-| Derniers résultats | Réplication close : 10 et 12 échecs forts sur 48, après les 12 et 16 précédents. Sur les photos, sensibilité aux graines et motifs directionnels : bénéfice non validé. |
-| Calcul engagé | Ordonnanceur de charge lancé : prévol et parité numérique réussis, attente de 14 h Paris pour reprise 224 puis comparaison. Poursuite conditionnelle bornée ; arrêt apprentissage le 7 novembre à 08 h 45 et superviseur 09 h 45. |
-| Prochaine preuve utile | Lire tous les bras et jalons de la comparaison à données communes, vérifier initialisations et contrôles identiques avant d’interpréter les effets. Pas de sélection de graine ou de poids. |
-| GPU | Débit médian 2,33–2,36 s/pas pendant la qualification ; environ 17 min par graine avec contrôles. Marge locale d’environ 15 Mio seulement au pic ; aucune garantie de plusieurs heures ou d’environnement concurrent. |
-| Données | 349 RAW inventoriés, 105 paires étudiées. Température, bruit fixe et propagation restent à qualifier ; pas de nouvelles prises demandées pour cette expérience. |
-| Critère d'arrêt | Pas de nouvelle série de variantes synthétiques pour améliorer les mêmes seuils. Après une courbe longue figée et un bruit caractérisé, absence de gain visible face au classique : abandon ou changement de taille/architecture, décision documentée. |
+| Ce qui fonctionne | Contrats signés, quatre entraînements GPU à 1 024 mises à jour, prévols et reprise modèle/Adam exacts, références historiques rejouées. |
+| Derniers résultats connus | Haar améliore la conservation sur les deux initialisations à 1 024 ; minimum de gain ~0,68 et atténuation forte des faibles textures : pas de validation. |
+| Calcul engagé | Deux candidats composites à 1 024, références Haar figées réutilisées ; réserve prospective 384 observations ouverte seulement après les deux candidats. Budget maximal au 8 novembre 02 h 33 Paris, sans veille automatique. |
+| Ce qui bloque | Sous-entraînement possible, contenus procéduraux et bruit incomplet, absence d’étalon CFA calibré ; biais du conditionnement, effet du clipping des gradients et portée de la paramétrisation à qualifier. |
+| Prochaine preuve utile | Lire puis clore le composite. Construire un banc de contenu CFA bas ISO naturel à bruit ajouté déclaré, comparer des étalons calibrés, mesurer petits patchs/réseaux et L1 avant nouvelle série d’apprentissage. |
+| GPU | DRUNet 32 643 840 paramètres : médiane ~2,44–2,46 s par mise à jour de quatre micro-lots dans la dernière campagne. Le 0,327 s concernait un ancien petit modèle. Débit pleine perte sur patchs 128/256 non mesuré. |
+| Données | 349 RAW inventoriés, 105 paires étudiées ; ISO 100 utilisable comme proxy déclaré, pas vérité parfaite. Noirs/pentes par ISO, 60D et réalisme du bruit restent à qualifier. Inventorier avant de demander de nouvelles photos. |
+| Critère d’arrêt de cette série | Après le composite, aucune nouvelle perte, pondération, recette procédurale ou prolongation pour faire passer le minimum sinus. Un succès composite ne lève pas cette suspension. |
 
-Les détails et limites de cette réorientation sont consignés en fin de
-rapport. Aucun modèle n'est validé en production ; les réserves restent
-fermées. Cette page de décision évolue dans le rapport unique, sans rapport
-de synthèse parallèle.
+Les seuils et verdicts historiques restent conservés ; les sinus sont des
+diagnostics de développement, pas une condition préalable à la preuve
+photographique. Les 864 contrôles principaux ont quatre phases CFA et
+trois réalisations ; le petit sondage d’amplitude a une phase/un tirage.
+Les limites et réponses détaillées à la deuxième revue sont consignées en
+fin de ce rapport et dans le fichier commun transmis par l’utilisateur.
 
 ## 1er novembre 2026 — scène pilote 6V1A0133
 
@@ -8856,3 +8858,59 @@ Budget maximal quatre heures : arrêt des workers au plus tard **8 novembre
 interne de vingt minutes. Aucune mise en veille ni formation supplémentaire
 ne sont programmées. Aucun nouveau RAW, export TIFF, changement du moteur,
 push, fusion ou tag.
+
+## 7 novembre 2026 — réponses à la deuxième revue de Claude et arrêt de la série
+
+Les douze réponses sont écrites directement sous les questions de la
+« Deuxième revue — 7 novembre 2026 » dans le fichier commun
+`REVUE-UNET-CLAUDE-2026-11-05.md` du dépôt principal, conformément à la demande.
+Les réponses se fondent sur le code et les JSON locaux ; les chiffres des
+articles cités par le rapport bibliographique n’ont pas tous été reproduits.
+
+Accord sur le diagnostic prioritaire : budget court, distribution procédurale,
+bruit incomplet et manque d’étalons calibrés limitent la portée produit.
+Les comparaisons à budget fixe restent descriptives, sans preuve de convergence
+ni rejet définitif d’une architecture. La moyenne 3×3 doit être rejouée sur
+les mêmes données avant comparaison avec les fenêtres terminales du réseau.
+Un ISO 100 réel peut être un proxy de contenu propre déclaré, malgré son
+bruit résiduel ; ce risque ne constitue pas un interdit de l’utiliser.
+
+Corrections factuelles apportées : contrôle principal à quatre phases/trois
+tirages ; une phase/un tirage seulement pour le sondage d’amplitude ;
+0,327 s/pas ancien petit modèle contre ~2,45 s actuel ; anciens comparatifs
+réels RCD et courbe +2 048 du petit modèle effectivement réalisés, sans
+les confondre avec un entraînement long réussi du 32,6 M. Le comparateur
+sRGB pré-entraîné existant est exploratoire/non calibré, pas un étalon CFA.
+
+Le cœur DRUNet local ne possède pas de biais additifs, mais le wrapper
+`D(x,sigma)=x−sigma·F(x,sigma)` ne possède pas automatiquement l’homogénéité
+du cœur : si F est homogène en ses entrées jointes, le terme correctif
+évolue en lambda² quand x et sigma évoluent en lambda. Cette propriété ne
+prouve pas la cause des défauts ; elle invalide une garantie de généralisation
+hors bruit déduite du seul `bias=False`. Les convolutions transposées sont
+2×2/stride 2 ; les effets périodiques restent à mesurer. NAFNet officiel
+contient des biais et ne doit pas être décrit comme sans biais par défaut
+([source primaire](https://raw.githubusercontent.com/megvii-research/NAFNet/main/basicsr/models/archs/NAFNet_arch.py)).
+
+Le halo protège un centre de 128 dans un contexte 512 (rayon maximal 185,
+halo arrondi 192), mais ne justifie pas à lui seul cette dépense pour tout
+l’entraînement. Son débit sur patches courts n’est pas connu. La dérivée
+MSE est testée ; la distribution des normes de gradients des paramètres
+avant clipping ne l’est pas. Les audits de sortie ne la remplacent pas.
+Retirer le clamp de variance sans remplacer l’estimateur pourrait produire
+une variance négative ; la simulation doit aussi distinguer les codes capteur
+saturés du signal signé après noir/gains.
+
+**Arrêt explicite de la série :** laisser finir le composite, ouvrir une fois
+sa réserve, consigner tous les résultats, puis suspendre les nouvelles pertes,
+coefficients et recettes synthétiques. Même un résultat composite positif
+ne déclenche pas une nouvelle variante. Prochaine étape proposée : contenu
+CFA naturel, étalons calibrés VST/classique/pré-entraîné, mesure de débit et
+paramétrisation de petits réseaux, puis budget d’apprentissage réaliste.
+Aucun score BM3D/DRUNet gris ou débit patch128/256 n’est inventé ; ces mesures
+restent à faire après fixation du protocole. Le 60D et les pentes manquantes
+12800/25600 restent à qualifier sans extrapoler les lois du R6 III.
+
+L’expérience composite active n’est pas interrompue ni modifiée. Aucun calcul
+concurrent lourd, changement en production, téléchargement de poids, push,
+fusion ou tag n’a été lancé pour répondre à cette revue.

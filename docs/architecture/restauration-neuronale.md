@@ -2,7 +2,29 @@
 
 # B4 — étude de préparation de la restauration neuronale locale
 
-## État courant du 5 novembre 2026, après comparatif réel
+## État courant du 7 novembre 2026, après deuxième revue
+
+Le DRUNet CFA 32,6 M a terminé quatre entraînements de 1 024 mises à jour.
+Haar améliore les contrôles connus sur deux initialisations mais ne valide
+pas les détails faibles ni une qualité photographique. La campagne composite
+est en cours ; elle terminera ses deux candidats et ouvrira une fois sa
+réserve prospective, sans modification pendant exécution.
+
+Après lecture de cette campagne : **gel des nouvelles variantes de pertes,
+coefficients et recettes procédurales**, même si elle progresse. Recentrer
+sur du contenu CFA naturel bas ISO comme proxy déclaré, des étalons calibrés
+et la mesure de débit sur patches/réseaux plus petits. La médiane actuelle
+est ~2,45 s/mise à jour ; le chiffre 0,327 s ci-dessous appartient à l’ancien
+petit modèle. Aucun score d’étalon CFA BM3D/DRUNet gris n’est disponible.
+
+Les seuils sinus restent historiques et diagnostiques. Le cœur sans biais
+additifs ne suffit pas à rendre le correcteur à résidu multiplié par sigma
+homogène. Pas de modèle photographique ni de bruit multi-boîtier qualifié.
+Les douze réponses à la revue sont dans le fichier commun ; le
+[rapport évolutif](../validation/analyses/analyse-restauration-neuronale.md)
+porte le bilan et la décision actuelle.
+
+## État historique du 5 novembre 2026, après comparatif réel
 
 La réplication est close (10 et 12 échecs forts/48), sans ouverture de
 réserve ni sélection de graine. Trois compositions réelles, neuf régions
