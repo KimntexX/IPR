@@ -1,7 +1,6 @@
 #include "StackSession.h"
 #include "stack_fixture.h"
 #include "synthetic_dcp.h"
-#include "OpenCvBridge.h"
 
 #include <QDir>
 #include <QEventLoop>

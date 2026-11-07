@@ -2,7 +2,6 @@
 #include "LocalValues.h"
 #include "WorkingColorSpace.h"
 
-#include "OpenCvBridge.h"
 #include "Parallel.h"
 #include "Pixels.h"
 #include "Warp.h"

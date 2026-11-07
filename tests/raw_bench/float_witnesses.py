@@ -75,7 +75,7 @@ def main():
                             if max(row['inlet']['full_camera']['maximum']) <= 1:
                                 raise ValueError('9153 signed overshoot was bounded before DCP')
                             row['above_one_preserved'] = True
-                    if capture['decode_ms'] > 20800 or capture['rcd_workers'] > 8 or capture['opencv_threads'] > 1:
+                    if capture['decode_ms'] > 20800 or capture['rcd_workers'] > 8 or capture['worker_threads'] > 8:
                         raise ValueError('Witness resource budget exceeded')
                     records.append(row)
                     print(len(records), '/12', source.name, mode, policy, 'pass', flush=True)

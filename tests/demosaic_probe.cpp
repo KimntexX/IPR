@@ -1,7 +1,7 @@
-// Demosaicing study: LibRaw's Bayer algorithms and their noise options, OpenCV's
-// edge-aware demosaic and IPR's RCD (src/raw/Demosaic), the last two plugged into
-// LibRaw through interpolate_bayer_cb, applied to the same unpacked RAW. For each
-// variant:
+// Demosaicing study: LibRaw's Bayer algorithms and their noise options, and IPR's
+// RCD (src/raw/Demosaic) plugged into LibRaw through interpolate_bayer_cb, applied to
+// the same unpacked RAW. OpenCV's edge-aware demosaic, measured in the v002 campaign,
+// left with OpenCV. For each variant:
 //  - cost of dcraw_process (LibRaw is built without OpenMP: one core);
 //  - noise left in flat zones and detail kept in textured zones, as ratios to
 //    AHD, LibRaw's default and IPR's algorithm before RCD;
@@ -12,7 +12,10 @@
 // Usage:
 //   demosaicProbe OUTPUT.json CROPS_DIR RAW...
 #include "Demosaic.h"
-#include "OpenCvBridge.h"
+#include "Filters.h"
+#include "Neighbourhood.h"
+#include "Pixels.h"
+#include "image_testing.h"
 
 #include <QCoreApplication>
 #include <QCryptographicHash>
@@ -27,12 +30,11 @@
 #include <QSysInfo>
 
 #include <libraw/libraw.h>
-#include <opencv2/core.hpp>
-#include <opencv2/imgproc.hpp>
 
 #include <algorithm>
 #include <chrono>
 #include <cmath>
+#include <cstdint>
 #include <iostream>
 #include <memory>
 #include <stdexcept>
@@ -59,7 +61,7 @@ struct Variant {
     int fbdd = 0;           // fbdd_noiserd (0 off, 1 light, 2 full, before interpolation)
     int dcbIterations = 0;
     int dcbEnhance = 0;
-    enum class Ours { None, OpenCvEdgeAware, Rcd } ours = Ours::None;
+    enum class Ours { None, Rcd } ours = Ours::None;
     Demosaic::ChromaMedian oursMedian = Demosaic::ChromaMedian::Off;   // IPR's median after its interpolation
 };
 
@@ -79,7 +81,6 @@ const std::vector<Variant> &variants()
         {"DCB-fbdd1", 4, 0, 1},
         {"DHT", 11},
         {"AAHD", 12},
-        {"OpenCV-EA", 0, 0, 0, 0, 0, Variant::Ours::OpenCvEdgeAware},
         {"RCD", 0, 0, 0, 0, 0, Variant::Ours::Rcd},
         {"RCD-median-flat", 0, 0, 0, 0, 0, Variant::Ours::Rcd, Demosaic::ChromaMedian::FlatOnly},
     };
@@ -88,38 +89,6 @@ const std::vector<Variant> &variants()
 
 // Variants of this run: AHD first (reference of the ratios), then the requested ones or all.
 std::vector<Variant> selected;
-// OpenCV threads of our interpolations: the first for the measures, the others for scaling.
-std::vector<int> threadCounts{8};
-
-// OpenCV edge-aware demosaic in place of LibRaw's interpolation. At this step the
-// image is white-balanced, one colour per pixel (second green folded into 1).
-void openCvEdgeAware(void *context)
-{
-    auto *raw = static_cast<LibRaw *>(context);
-    auto &d = raw->imgdata;
-    const int w = d.sizes.iwidth, h = d.sizes.iheight;
-    require(d.image && w > 1 && h > 1, "interpolation callback without image");
-    const auto colour = [&](int r, int c) { const int k = raw->FC(r, c); return k == 3 ? 1 : k; };
-    cv::Mat cfa(h, w, CV_16U);
-    for (int y = 0; y < h; ++y) {
-        auto *p = cfa.ptr<ushort>(y);
-        for (int x = 0; x < w; ++x) p[x] = d.image[size_t(y) * w + x][colour(y, x)];
-    }
-    // OpenCV names a Bayer pattern by its second row: RGGB is BayerBG.
-    const int a = colour(0, 0), b = colour(0, 1);
-    const int code = a == 0 ? cv::COLOR_BayerBG2RGB_EA
-                   : a == 2 ? cv::COLOR_BayerRG2RGB_EA
-                   : b == 0 ? cv::COLOR_BayerGB2RGB_EA
-                            : cv::COLOR_BayerGR2RGB_EA;
-    cv::Mat rgb;
-    cv::demosaicing(cfa, rgb, code);
-    for (int y = 0; y < h; ++y) {
-        const auto *p = rgb.ptr<cv::Vec<ushort, 3>>(y);
-        for (int x = 0; x < w; ++x)
-            for (int c = 0; c < 3; ++c) d.image[size_t(y) * w + x][c] = p[x][c];
-    }
-}
-
 
 // --- IPR's production interpolation (src/raw/Demosaic) ---------------------------
 Demosaic::ChromaMedian oursMedian = Demosaic::ChromaMedian::Off;   // set by process() for the callback
@@ -138,12 +107,12 @@ void rcdInterpolate(void *context)
     const auto t0 = Clock::now();
     // LibRaw's image to the float mosaic and back, as RawDecoder's callback.
     const int width = d.sizes.iwidth, height = d.sizes.iheight;
-    cv::Mat mosaic(height, width, CV_32FC1);
+    ipr::Image mosaic = ipr::Image::create({width, height}, ipr::Depth::F32, 1);
     ipr::Image rgb;
     for (int y = 0; y < height; ++y)
         for (int x = 0; x < width; ++x)
-            mosaic.at<float>(y, x) = d.image[size_t(y) * size_t(width) + size_t(x)][pattern[size_t(y & 1)][size_t(x & 1)]] / 65535.f;
-    if (Demosaic::interpolate(ipr::fromMat(mosaic), pattern, oursMedian, Demosaic::Range::NonNegative, rgb, nullptr, {}))
+            mosaic.mutableRow<float>(y)[x] = d.image[size_t(y) * size_t(width) + size_t(x)][pattern[size_t(y & 1)][size_t(x & 1)]] / 65535.f;
+    if (Demosaic::interpolate(mosaic, pattern, oursMedian, Demosaic::Range::NonNegative, rgb, nullptr, {}))
         for (int y = 0; y < height; ++y)
             for (int x = 0; x < width; ++x)
                 for (int c = 0; c < 3; ++c)
@@ -162,8 +131,8 @@ struct ImageDeleter {
     void operator()(libraw_processed_image_t *p) const { LibRaw::dcraw_clear_mem(p); }
 };
 
-// Demosaics with one variant; returns linear camera RGB in [0, 1] (CV_32FC3) and the cost.
-cv::Mat process(StudyRaw &raw, const Variant &v, double *ms)
+// Demosaics with one variant; returns linear camera RGB in [0, 1] (F32, three channels) and the cost.
+ipr::Image process(StudyRaw &raw, const Variant &v, double *ms)
 {
     auto &p = raw.imgdata.params;
     p.user_qual = v.quality;
@@ -173,9 +142,7 @@ cv::Mat process(StudyRaw &raw, const Variant &v, double *ms)
     p.dcb_enhance_fl = v.dcbEnhance;
     oursMedian = v.oursMedian;
     oursMs = 0;
-    raw.setBayerInterpolation(v.ours == Variant::Ours::OpenCvEdgeAware ? openCvEdgeAware
-                              : v.ours == Variant::Ours::Rcd           ? rcdInterpolate
-                                                                       : nullptr);
+    raw.setBayerInterpolation(v.ours == Variant::Ours::Rcd ? rcdInterpolate : nullptr);
     const auto t0 = Clock::now();
     const int result = raw.dcraw_process();
     *ms = std::chrono::duration<double, std::milli>(Clock::now() - t0).count();
@@ -184,21 +151,23 @@ cv::Mat process(StudyRaw &raw, const Variant &v, double *ms)
     int error = 0;
     std::unique_ptr<libraw_processed_image_t, ImageDeleter> image(raw.dcraw_make_mem_image(&error));
     require(image && error == LIBRAW_SUCCESS && image->colors == 3 && image->bits == 16, "dcraw_make_mem_image failed");
-    const cv::Mat wrapped(image->height, image->width, CV_16UC3, image->data);
-    cv::Mat out;
-    wrapped.convertTo(out, CV_32FC3, 1.0 / 65535.0);
+    const ipr::Image wrapped = ipr::Image::wrapReadOnly(image->data, {image->width, image->height}, ipr::Depth::U16, 3,
+                                                        std::ptrdiff_t(image->width) * 6);
+    ipr::Image out = ipr::Image::create(wrapped.size(), ipr::Depth::F32, 3);
+    ipr::convertInto(wrapped, out, 1.0 / 65535.0);
     return out;
 }
 
-struct Planes { cv::Mat y, co, cg; };
+struct Planes { ipr::Image y, co, cg; };
 
-Planes split(const cv::Mat &rgb)
+Planes split(const ipr::Image &rgb)
 {
-    Planes p{cv::Mat(rgb.size(), CV_32F), cv::Mat(rgb.size(), CV_32F), cv::Mat(rgb.size(), CV_32F)};
-    for (int y = 0; y < rgb.rows; ++y) {
-        const auto *s = rgb.ptr<ipr::Vec3f>(y);
-        auto *py = p.y.ptr<float>(y), *pco = p.co.ptr<float>(y), *pcg = p.cg.ptr<float>(y);
-        for (int x = 0; x < rgb.cols; ++x) {
+    Planes p{ipr::Image::create(rgb.size(), ipr::Depth::F32, 1), ipr::Image::create(rgb.size(), ipr::Depth::F32, 1),
+             ipr::Image::create(rgb.size(), ipr::Depth::F32, 1)};
+    for (int y = 0; y < rgb.height(); ++y) {
+        const auto *s = rgb.row<ipr::Vec3f>(y);
+        auto *py = p.y.mutableRow<float>(y), *pco = p.co.mutableRow<float>(y), *pcg = p.cg.mutableRow<float>(y);
+        for (int x = 0; x < rgb.width(); ++x) {
             py[x] = 0.25f * (s[x][0] + 2.f * s[x][1] + s[x][2]);
             pco[x] = s[x][0] - s[x][2];
             pcg[x] = s[x][1] - 0.5f * (s[x][0] + s[x][2]);
@@ -207,9 +176,24 @@ Planes split(const cv::Mat &rgb)
     return p;
 }
 
-double madSigma(const cv::Mat &m)
+// The values of a plane of floats, rows first.
+std::vector<float> valuesOf(const ipr::Image &plane)
 {
-    std::vector<float> v(m.begin<float>(), m.end<float>());
+    std::vector<float> values;
+    values.reserve(size_t(plane.size().area()));
+    for (int y = 0; y < plane.height(); ++y)
+        values.insert(values.end(), plane.row<float>(y), plane.row<float>(y) + plane.width());
+    return values;
+}
+
+ipr::Image minus(const ipr::Image &a, const ipr::Image &b)
+{
+    return ipr::mapped(a, b, [](float x, float y) { return x - y; });
+}
+
+double madSigma(const ipr::Image &m)
+{
+    std::vector<float> v = valuesOf(m);
     for (float &x : v) x = std::abs(x);
     const auto mid = v.begin() + v.size() / 2;
     std::nth_element(v.begin(), mid, v.end());
@@ -218,12 +202,12 @@ double madSigma(const cv::Mat &m)
 
 // Robust sigma of the diagonal Haar coefficient (HH), the finest noise band;
 // constant 2x2 cells (clipped or empty) are skipped.
-double haarSigma(const cv::Mat &plane)
+double haarSigma(const ipr::Image &plane)
 {
     std::vector<float> values;
-    for (int y = 0; y + 1 < plane.rows; y += 2) {
-        const float *a = plane.ptr<float>(y), *b = plane.ptr<float>(y + 1);
-        for (int x = 0; x + 1 < plane.cols; x += 2) {
+    for (int y = 0; y + 1 < plane.height(); y += 2) {
+        const float *a = plane.row<float>(y), *b = plane.row<float>(y + 1);
+        for (int x = 0; x + 1 < plane.width(); x += 2) {
             if (a[x] == a[x + 1] && a[x] == b[x] && a[x] == b[x + 1]) continue;
             values.push_back(0.5f * (a[x] - a[x + 1] - b[x] + b[x + 1]));
         }
@@ -237,49 +221,73 @@ double haarSigma(const cv::Mat &plane)
     return *mid / 0.6745;
 }
 
-double rms(const cv::Mat &m) { return std::sqrt(cv::mean(m.mul(m))[0]); }
+double rms(const ipr::Image &m) { return std::sqrt(ipr::meanOf(ipr::multiplied(m, m))[0]); }
 
-cv::Mat blur(const cv::Mat &m, double sigma)
+ipr::Image blur(const ipr::Image &m, double sigma)
 {
-    cv::Mat out;
-    cv::GaussianBlur(m, out, cv::Size(0, 0), sigma, sigma, cv::BORDER_REFLECT);
-    return out;
+    return ipr::gaussianBlurred(m, sigma, ipr::BlurBorder::MirrorEdge);
+}
+
+// The root mean square of a plane where the mask, bytes, is not zero.
+double maskedRms(const ipr::Image &m, const ipr::Image &mask)
+{
+    double sum = 0.0;
+    long long count = 0;
+    for (int y = 0; y < m.height(); ++y)
+        for (int x = 0; x < m.width(); ++x)
+            if (mask.row<std::uint8_t>(y)[x]) {
+                const double v = m.row<float>(y)[x];
+                sum += v * v;
+                ++count;
+            }
+    return count > 0 ? std::sqrt(sum / double(count)) : 0.0;
+}
+
+// Bytes, 255 where the test holds.
+template <typename Test>
+ipr::Image maskOf(ipr::Size size, Test test)
+{
+    ipr::Image mask = ipr::Image::create(size, ipr::Depth::U8, 1);
+    for (int y = 0; y < size.height; ++y)
+        for (int x = 0; x < size.width; ++x)
+            mask.mutableRow<std::uint8_t>(y)[x] = test(y, x) ? 255 : 0;
+    return mask;
 }
 
 struct TileMeasure {
     double lumaHh, chromaHh, lumaMid, chromaMid, lumaFine, chromaFine;
 };
 
-TileMeasure measureTile(const cv::Mat &rgb, const ipr::Recti &r)
+TileMeasure measureTile(const ipr::Image &rgb, const ipr::Recti &r)
 {
-    const Planes p = split(rgb(ipr::toCv(r)));
-    const cv::Mat g1y = blur(p.y, 1), g4y = blur(p.y, 4);
-    const cv::Mat g1co = blur(p.co, 1), g4co = blur(p.co, 4), g1cg = blur(p.cg, 1), g4cg = blur(p.cg, 4);
+    const Planes p = split(rgb.copy(r));
+    const ipr::Image g1y = blur(p.y, 1), g4y = blur(p.y, 4);
+    const ipr::Image g1co = blur(p.co, 1), g4co = blur(p.co, 4), g1cg = blur(p.cg, 1), g4cg = blur(p.cg, 4);
     TileMeasure m;
     m.lumaHh = haarSigma(p.y);
     m.chromaHh = 0.5 * (haarSigma(p.co) + haarSigma(p.cg));
-    m.lumaMid = madSigma(g1y - g4y);
-    m.chromaMid = 0.5 * (madSigma(g1co - g4co) + madSigma(g1cg - g4cg));
-    m.lumaFine = rms(p.y - g1y);
-    m.chromaFine = 0.5 * (rms(p.co - g1co) + rms(p.cg - g1cg));
+    m.lumaMid = madSigma(minus(g1y, g4y));
+    m.chromaMid = 0.5 * (madSigma(minus(g1co, g4co)) + madSigma(minus(g1cg, g4cg)));
+    m.lumaFine = rms(minus(p.y, g1y));
+    m.chromaFine = 0.5 * (rms(minus(p.co, g1co)) + rms(minus(p.cg, g1cg)));
     return m;
 }
 
 // Flat and textured tiles chosen once on the AHD output, then reused for every variant.
-void chooseTiles(const cv::Mat &rgb, std::vector<ipr::Recti> *flat, std::vector<ipr::Recti> *detail)
+void chooseTiles(const ipr::Image &rgb, std::vector<ipr::Recti> *flat, std::vector<ipr::Recti> *detail)
 {
     struct Candidate { ipr::Recti r; double flatness, texture; };
     std::vector<Candidate> c;
-    for (int y = Tile; y + 2 * Tile <= rgb.rows; y += Tile)
-        for (int x = Tile; x + 2 * Tile <= rgb.cols; x += Tile) {
+    for (int y = Tile; y + 2 * Tile <= rgb.height(); y += Tile)
+        for (int x = Tile; x + 2 * Tile <= rgb.width(); x += Tile) {
             const ipr::Recti r(x, y, Tile, Tile);
-            double minV, maxV;
-            cv::minMaxLoc(rgb(ipr::toCv(r)).reshape(1), &minV, &maxV);
-            const Planes p = split(rgb(ipr::toCv(r)));
-            const double mean = cv::mean(p.y)[0];
+            const ipr::Image tile = rgb.copy(r);
+            const double maxV = imagetest::rangeOf(tile).high;
+            const Planes p = split(tile);
+            const double mean = ipr::meanOf(p.y)[0];
             if (maxV > 0.95 || mean < 0.003) continue;
-            cv::Scalar m, s;
-            cv::meanStdDev(blur(p.y, 3), m, s);
+            std::vector<double> m, s;
+            ipr::meanAndDeviationOf(blur(p.y, 3), m, s);
             const double noise = std::max(1e-6, double(haarSigma(p.y)));
             c.push_back({r, s[0] / mean, s[0] / noise});
         }
@@ -298,11 +306,11 @@ double median(std::vector<double> v)
 }
 
 // 8-bit display of a tile: the same exposure for every variant, sRGB transfer.
-QImage display(const cv::Mat &rgb, const ipr::Recti &r, double exposure)
+QImage display(const ipr::Image &rgb, const ipr::Recti &r, double exposure)
 {
     QImage out(2 * r.width, 2 * r.height, QImage::Format_RGB888);
     for (int y = 0; y < r.height; ++y) {
-        const auto *s = rgb.ptr<ipr::Vec3f>(r.y + y) + r.x;
+        const auto *s = rgb.row<ipr::Vec3f>(r.y + y) + r.x;
         for (int x = 0; x < r.width; ++x) {
             int v[3];
             for (int c = 0; c < 3; ++c) {
@@ -318,15 +326,15 @@ QImage display(const cv::Mat &rgb, const ipr::Recti &r, double exposure)
 }
 
 // Truth for the synthetic mosaic: the visible area binned 2x2, raw units with black.
-cv::Mat binnedTruth(LibRaw &raw)
+ipr::Image binnedTruth(LibRaw &raw)
 {
     const auto &s = raw.imgdata.sizes;
     const ushort *mosaic = raw.imgdata.rawdata.raw_image;
     require(mosaic && raw.imgdata.idata.filters >= 1000, "not a Bayer RAW");
     const int pitch = int(s.raw_pitch / sizeof(ushort));
-    cv::Mat truth(s.height / 2, s.width / 2, CV_32FC3);
-    for (int y = 0; y < truth.rows; ++y)
-        for (int x = 0; x < truth.cols; ++x) {
+    ipr::Image truth = ipr::Image::create({s.width / 2, s.height / 2}, ipr::Depth::F32, 3);
+    for (int y = 0; y < truth.height(); ++y)
+        for (int x = 0; x < truth.width(); ++x) {
             ipr::Vec3f v(0, 0, 0);
             for (int dy = 0; dy < 2; ++dy)
                 for (int dx = 0; dx < 2; ++dx) {
@@ -335,20 +343,20 @@ cv::Mat binnedTruth(LibRaw &raw)
                     const float value = mosaic[size_t(r + s.top_margin) * pitch + c + s.left_margin];
                     v[k == 3 ? 1 : k] += k == 0 || k == 2 ? value : 0.5f * value;
                 }
-            ipr::at<ipr::Vec3f>(truth, y, x) = v;
+            imagetest::at<ipr::Vec3f>(truth, y, x) = v;
         }
     return truth;
 }
 
-void remosaic(LibRaw &raw, const cv::Mat &truth)
+void remosaic(LibRaw &raw, const ipr::Image &truth)
 {
     const auto &s = raw.imgdata.sizes;
     ushort *mosaic = raw.imgdata.rawdata.raw_image;
     const int pitch = int(s.raw_pitch / sizeof(ushort));
-    for (int r = 0; r < truth.rows; ++r)
-        for (int c = 0; c < truth.cols; ++c) {
+    for (int r = 0; r < truth.height(); ++r)
+        for (int c = 0; c < truth.width(); ++c) {
             const int k = raw.COLOR(r, c);
-            const float v = ipr::at<ipr::Vec3f>(truth, r, c)[k == 3 ? 1 : k];
+            const float v = imagetest::at<ipr::Vec3f>(truth, r, c)[k == 3 ? 1 : k];
             mosaic[size_t(r + s.top_margin) * pitch + c + s.left_margin] = ushort(std::clamp(std::lround(v), 0L, 65535L));
         }
 }
@@ -357,15 +365,15 @@ void remosaic(LibRaw &raw, const cv::Mat &truth)
 // white balance and scaling), fitted once on AHD and reused for every variant.
 struct Fit { ipr::Vec3d gain, offset; };
 
-Fit fitTruth(const cv::Mat &truth, const cv::Mat &out, const cv::Mat &valid)
+Fit fitTruth(const ipr::Image &truth, const ipr::Image &out, const ipr::Image &valid)
 {
     Fit f;
     for (int c = 0; c < 3; ++c) {
         double sx = 0, sy = 0, sxx = 0, sxy = 0, n = 0;
-        for (int y = 0; y < truth.rows; y += 3)
-            for (int x = 0; x < truth.cols; x += 3) {
-                const double t = ipr::at<ipr::Vec3f>(truth, y, x)[c], o = ipr::at<ipr::Vec3f>(out, y, x)[c];
-                if (!valid.at<uchar>(y, x) || o <= 0.0) continue;
+        for (int y = 0; y < truth.height(); y += 3)
+            for (int x = 0; x < truth.width(); x += 3) {
+                const double t = imagetest::at<ipr::Vec3f>(truth, y, x)[c], o = imagetest::at<ipr::Vec3f>(out, y, x)[c];
+                if (!imagetest::at<std::uint8_t>(valid, y, x) || o <= 0.0) continue;
                 sx += t; sy += o; sxx += t * t; sxy += t * o; n += 1;
             }
         require(n > 1000, "synthetic fit without samples");
@@ -377,20 +385,29 @@ Fit fitTruth(const cv::Mat &truth, const cv::Mat &out, const cv::Mat &valid)
 
 // Errors on the valid pixels only (clipped channels excluded): every algorithm
 // fails the same way where the white balance pushes a channel past white.
-QJsonObject syntheticError(const cv::Mat &truthOut, const cv::Mat &out, const cv::Mat &edges, const cv::Mat &valid)
+QJsonObject syntheticError(const ipr::Image &truthOut, const ipr::Image &out, const ipr::Image &edges, const ipr::Image &valid)
 {
-    const ipr::Recti inner(TruthBorder, TruthBorder, truthOut.cols - 2 * TruthBorder, truthOut.rows - 2 * TruthBorder);
-    const Planes t = split(truthOut(ipr::toCv(inner))), o = split(out(ipr::toCv(inner)));
-    const cv::Mat dy = o.y - t.y, dco = o.co - t.co, dcg = o.cg - t.cg;
-    const cv::Mat diff = out(ipr::toCv(inner)) - truthOut(ipr::toCv(inner));
-    const cv::Mat ok = valid(ipr::toCv(inner)), edge = edges(ipr::toCv(inner)) & ok, flat = (edges(ipr::toCv(inner)) == 0) & ok;
-    const double white = cv::mean(t.y, ok)[0] * 4.0;   // scale: four times the mean luma
-    const auto masked = [&](const cv::Mat &m, const cv::Mat &mask) {
-        return std::sqrt(cv::mean(m.mul(m), mask)[0]) / white;
-    };
-    const cv::Scalar squared = cv::mean(diff.mul(diff), ok);
+    const ipr::Recti inner(TruthBorder, TruthBorder, truthOut.width() - 2 * TruthBorder, truthOut.height() - 2 * TruthBorder);
+    const ipr::Image truthInner = truthOut.copy(inner), outInner = out.copy(inner);
+    const Planes t = split(truthInner), o = split(outInner);
+    const ipr::Image dy = minus(o.y, t.y), dco = minus(o.co, t.co), dcg = minus(o.cg, t.cg);
+    const ipr::Image okInner = valid.copy(inner), edgesInner = edges.copy(inner);
+    const ipr::Image &ok = okInner;
+    const ipr::Image edge = ipr::bitwiseAnd(edgesInner, ok), flat = ipr::bitwiseAnd(ipr::bitwiseNot(edgesInner), ok);
+    double lumaSum = 0.0, squaredSum = 0.0;
+    long long count = 0;
+    for (int y = 0; y < inner.height; ++y)
+        for (int x = 0; x < inner.width; ++x) {
+            if (!imagetest::at<std::uint8_t>(ok, y, x)) continue;
+            lumaSum += imagetest::at<float>(t.y, y, x);
+            const ipr::Vec3f d = imagetest::at<ipr::Vec3f>(outInner, y, x) - imagetest::at<ipr::Vec3f>(truthInner, y, x);
+            squaredSum += double(d.dot(d));
+            ++count;
+        }
+    const double white = (count > 0 ? lumaSum / double(count) : 0.0) * 4.0;   // scale: four times the mean luma
+    const auto masked = [&](const ipr::Image &m, const ipr::Image &mask) { return maskedRms(m, mask) / white; };
     QJsonObject r;
-    r.insert("cpsnr_db", 20.0 * std::log10(white / std::sqrt((squared[0] + squared[1] + squared[2]) / 3.0)));
+    r.insert("cpsnr_db", 20.0 * std::log10(white / std::sqrt(squaredSum / double(std::max(1LL, count)) / 3.0)));
     r.insert("luma_rmse", masked(dy, ok));
     r.insert("chroma_rmse", std::hypot(masked(dco, ok), masked(dcg, ok)));
     r.insert("luma_edge_rmse", masked(dy, edge));
@@ -436,17 +453,17 @@ QJsonObject study(const QString &path, const QDir &crops)
     std::vector<QImage> montageTiles;
     double exposureFlat = 1, exposureDetail = 1;
     QJsonObject results;
-    cv::Mat ahdFirst;
+    ipr::Image ahdFirst;
     for (const Variant &v : selected) {
         double ms = 0;
-        const cv::Mat out = process(raw, v, &ms);
+        const ipr::Image out = process(raw, v, &ms);
         const double ours = oursMs;
         if (flat.empty()) {
-            ahdFirst = out;
+            ahdFirst = out.clone();
             chooseTiles(out, &flat, &detail);
             require(!flat.empty() && !detail.empty(), "no measurable tile");
-            exposureFlat = 0.25 / std::max(1e-4, cv::mean(split(out(ipr::toCv(flat[0]))).y)[0]);
-            exposureDetail = 0.25 / std::max(1e-4, cv::mean(split(out(ipr::toCv(detail[0]))).y)[0]);
+            exposureFlat = 0.25 / std::max(1e-4, ipr::meanOf(split(out.copy(flat[0])).y)[0]);
+            exposureDetail = 0.25 / std::max(1e-4, ipr::meanOf(split(out.copy(detail[0])).y)[0]);
         }
         std::vector<double> lumaHh, chromaHh, lumaMid, chromaMid, lumaFine, chromaFine;
         std::vector<TileMeasure> flatM, detailM;
@@ -465,20 +482,8 @@ QJsonObject study(const QString &path, const QDir &crops)
         }
         QJsonObject m;
         m.insert("ms_per_megapixel", ms / megapixels);
-        if (v.ours != Variant::Ours::None) {
+        if (v.ours != Variant::Ours::None)
             m.insert("ours_ms_per_megapixel", ours / megapixels);
-            // scaling: our interpolation again at each further thread count
-            QJsonObject byThreads;
-            byThreads.insert(QString::number(threadCounts.front()), ours / megapixels);
-            for (size_t t = 1; t < threadCounts.size(); ++t) {
-                cv::setNumThreads(threadCounts[t]);
-                double unused = 0;
-                process(raw, v, &unused);
-                byThreads.insert(QString::number(threadCounts[t]), oursMs / megapixels);
-            }
-            cv::setNumThreads(threadCounts.front());
-            m.insert("ours_ms_per_megapixel_by_threads", byThreads);
-        }
         m.insert("flat_luma_hh_ratio", median(lumaHh));
         m.insert("flat_chroma_hh_ratio", median(chromaHh));
         m.insert("flat_luma_mid_ratio", median(lumaMid));
@@ -501,8 +506,8 @@ QJsonObject study(const QString &path, const QDir &crops)
     // repeatability: the first AHD run and a last one must match
     {
         double ms = 0;
-        const cv::Mat again = process(raw, selected.front(), &ms);
-        scene.insert("repeatable", cv::norm(again, ahdFirst, cv::NORM_INF) == 0);
+        const ipr::Image again = process(raw, selected.front(), &ms);
+        scene.insert("repeatable", ipr::largestDifference(again, ahdFirst) == 0);
     }
     QJsonObject ahdAbsolute;
     std::vector<double> lh, ch, cm;
@@ -517,38 +522,36 @@ QJsonObject study(const QString &path, const QDir &crops)
     // Synthetic mosaic in the top-left quarter. The binned truth is blurred a little
     // (optical low-pass of a real sensor): unfiltered, every channel holds detail up
     // to Nyquist and all algorithms alias alike.
-    cv::Mat truth = binnedTruth(raw);
-    cv::GaussianBlur(truth, truth, cv::Size(0, 0), TruthBlur, TruthBlur, cv::BORDER_REFLECT);
+    const ipr::Image truth = ipr::gaussianBlurred(binnedTruth(raw), TruthBlur, ipr::BlurBorder::MirrorEdge);
     remosaic(raw, truth);
     QJsonObject synthetic;
     Fit fit;
-    cv::Mat truthOut, edges, valid;
+    ipr::Image truthOut, edges, valid;
     for (const Variant &v : selected) {
         double ms = 0;
-        const cv::Mat out = process(raw, v, &ms)(cv::Rect(0, 0, truth.cols, truth.rows)).clone();
+        const ipr::Image out = process(raw, v, &ms).copy(ipr::Recti(0, 0, truth.width(), truth.height()));
         if (truthOut.empty()) {
             // valid: no channel near white within 3 pixels, on the reference output
-            std::vector<cv::Mat> channels;
-            cv::split(out, channels);
-            cv::Mat high = cv::max(cv::max(channels[0], channels[1]), channels[2]) > 0.9f;
-            cv::dilate(high, high, cv::Mat::ones(7, 7, CV_8U));
-            valid = high == 0;
+            const ipr::Image bright = maskOf(out.size(), [&](int y, int x) {
+                const ipr::Vec3f p = imagetest::at<ipr::Vec3f>(out, y, x);
+                return std::max({p[0], p[1], p[2]}) > 0.9f;
+            });
+            const ipr::Image high = ipr::maximum(bright, ipr::Size(7, 7), ipr::Beyond::Nothing);
+            valid = ipr::bitwiseNot(high);
             fit = fitTruth(truth, out, valid);
-            truthOut.create(truth.size(), CV_32FC3);
-            for (int y = 0; y < truth.rows; ++y)
-                for (int x = 0; x < truth.cols; ++x)
+            truthOut = ipr::Image::create(truth.size(), ipr::Depth::F32, 3);
+            for (int y = 0; y < truth.height(); ++y)
+                for (int x = 0; x < truth.width(); ++x)
                     for (int c = 0; c < 3; ++c)
-                        ipr::at<ipr::Vec3f>(truthOut, y, x)[c] = float(fit.gain[c] * ipr::at<ipr::Vec3f>(truth, y, x)[c] + fit.offset[c]);
+                        imagetest::at<ipr::Vec3f>(truthOut, y, x)[c] = float(fit.gain[c] * imagetest::at<ipr::Vec3f>(truth, y, x)[c] + fit.offset[c]);
             // edges: top 10 % of the truth luma gradient
             const Planes t = split(truthOut);
-            cv::Mat gx, gy, mag;
-            cv::Sobel(t.y, gx, CV_32F, 1, 0);
-            cv::Sobel(t.y, gy, CV_32F, 0, 1);
-            cv::magnitude(gx, gy, mag);
-            std::vector<float> values(mag.begin<float>(), mag.end<float>());
+            const ipr::Image mag = ipr::magnitude(ipr::sobel(t.y, true), ipr::sobel(t.y, false));
+            std::vector<float> values = valuesOf(mag);
             const auto q = values.begin() + values.size() * 9 / 10;
             std::nth_element(values.begin(), q, values.end());
-            edges = mag > *q;
+            const float threshold = *q;
+            edges = maskOf(mag.size(), [&](int y, int x) { return imagetest::at<float>(mag, y, x) > threshold; });
         }
         synthetic.insert(v.name, syntheticError(truthOut, out, edges, valid));
     }
@@ -557,7 +560,7 @@ QJsonObject study(const QString &path, const QDir &crops)
     gains.insert("offset", QJsonArray{fit.offset[0], fit.offset[1], fit.offset[2]});
     synthetic.insert("fit", gains);
     synthetic.insert("truth_blur_sigma", TruthBlur);
-    synthetic.insert("valid_fraction", cv::countNonZero(valid) / double(valid.total()));
+    synthetic.insert("valid_fraction", double(ipr::countNonZero(valid)) / double(valid.size().area()));
     scene.insert("variants", results);
     scene.insert("synthetic", synthetic);
 
@@ -578,23 +581,16 @@ int main(int argc, char **argv)
 {
     QCoreApplication app(argc, argv);
     QStringList args = QCoreApplication::arguments();
-    // options: --threads N[,M...] (default 8, the performance baseline), --variants A,B,...
+    // option: --variants A,B,...
     QStringList wanted;
     for (int i = 1; i + 1 < args.size();) {
-        if (args[i] == "--threads") {
-            threadCounts.clear();
-            for (const QString &t : args[i + 1].split(',')) threadCounts.push_back(t.toInt());
-            args.remove(i, 2);
-        }
-        else if (args[i] == "--variants") { wanted = args[i + 1].split(','); args.remove(i, 2); }
+        if (args[i] == "--variants") { wanted = args[i + 1].split(','); args.remove(i, 2); }
         else ++i;
     }
-    if (args.size() < 4 || threadCounts.empty() ||
-        std::any_of(threadCounts.begin(), threadCounts.end(), [](int t) { return t < 1; })) {
-        std::cerr << "usage: demosaicProbe [--threads N[,M...]] [--variants A,B] OUTPUT.json CROPS_DIR RAW...\n";
+    if (args.size() < 4) {
+        std::cerr << "usage: demosaicProbe [--variants A,B] OUTPUT.json CROPS_DIR RAW...\n";
         return 2;
     }
-    cv::setNumThreads(threadCounts.front());
     selected.push_back(variants().front());
     for (const auto &v : variants())
         if (&v != &variants().front() && (wanted.isEmpty() || wanted.contains(v.name))) selected.push_back(v);
@@ -616,7 +612,7 @@ int main(int argc, char **argv)
         record.insert("probe", "demosaicProbe");
         record.insert("libraw_version", QString::fromLatin1(LibRaw::version()));
         record.insert("libraw_openmp", false);
-        record.insert("opencv_threads", cv::getNumThreads());
+        record.insert("worker_threads", Demosaic::workerThreads());
         record.insert("machine", QSysInfo::prettyProductName());
         record.insert("generated_utc", QDateTime::currentDateTimeUtc().toString(Qt::ISODate));
         record.insert("variant_order", order);

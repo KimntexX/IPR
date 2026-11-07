@@ -67,7 +67,10 @@ rotation. Mesures :
   du blanc exclus (canal > 0,9, dilaté de 3 pixels). Valable à bas ISO
   seulement : à haut ISO la vérité contient le bruit.
 
-Lanceur : `tests/study_demosaic.py --data-version N [--variants …] [--threads 8[,12,16]]`.
+Lanceur : `tests/study_demosaic.py --data-version N [--variants …]`. Depuis la
+sortie d'OpenCV (7 novembre 2026), la sonde n'a plus la variante OpenCV EA ni
+l'option `--threads`, qui réglait les threads d'OpenCV : les campagnes publiées
+gardent leurs mesures.
 
 ### 3. Campagnes
 

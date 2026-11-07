@@ -1,6 +1,6 @@
 #include "CameraDng.h"
 
-#include "OpenCvBridge.h"
+#include "Pixels.h"
 
 #include <QFile>
 #include <QJsonArray>

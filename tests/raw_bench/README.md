@@ -50,14 +50,16 @@ mode signé et donne `measured_not_parity`, jamais un PASS de parité A.
 
 ## Sonde C2 et campagne de parité ciblée
 
-La configuration CMake utilise aussi OpenCV core/imgproc pour construire
-`iprRawDevelopmentCapture`, avec les sources moteur commitées de ce worktree.
-Elle ne lie pas un moteur compilé chez Claude.
+La configuration CMake construit `iprRawDevelopmentCapture` avec les sources
+moteur commitées de ce worktree et la couche image (`src/image`, C++ standard).
+Elle ne lie pas un moteur compilé chez Claude. Les outils suivent l'API
+`ipr::Image` : un moteur antérieur à la sortie d'OpenCV se construit avec le
+banc de sa propre révision.
 
 ```text
 iprRawDevelopmentCapture --input image.CR3 --output reference.json --path reference --mode parity
 iprRawDevelopmentCapture --input image.CR3 --output candidate.json --path candidate --mode parity
-python tests/raw_bench/parity.py --input image.CR3 --runtime-dir DLL_QT --runtime-dir DLL_LIBRAW --runtime-dir DLL_OPENCV
+python tests/raw_bench/parity.py --input image.CR3 --runtime-dir DLL_QT --runtime-dir DLL_LIBRAW
 ```
 
 Les deux chemins partagent les niveaux natifs de LibRaw, WB telle quelle et
@@ -118,7 +120,7 @@ Le timer natif couvre seulement `decode`, pas les hashes ni la sérialisation.
 Pic mémoire : peak working set du processus relevé immédiatement après
 decode (RSS maximale sur les plateformes POSIX). Processus neuf par cas,
 ordre référence/candidat alterné ; le cache disque OS n'est pas purgé.
-OpenCV1, OMP8, maximum8 workers RCD. Budget de temps annoncé :20,8s par
+8 workers de la couche image, OMP8, maximum8 workers RCD. Budget de temps annoncé :20,8s par
 ouverture ; le pic mémoire est mesuré, pas assimilé à la RAM totale du
 système ou à une preuve du contrôleur80 %. Pas de gain de vitesse statistique
 sur une seule ouverture par cas, ni couverture automatique de tous les replis.
@@ -140,7 +142,7 @@ Les révisions outil et moteur sont distinctes dans les captures.
 
 ```text
 iprRawDevelopmentCapture --input image.CR3 --output B.json --path candidate --mode signed
-python tests/raw_bench/signed_campaign.py --baseline CAPTURES_BRUIT.json --tool EXE_C4 --engine-source ARCHIVE_C4 --engine-revision COMMIT_C4_COMPLET --runtime-dir DLL_QT --runtime-dir DLL_LIBRAW --runtime-dir DLL_OPENCV
+python tests/raw_bench/signed_campaign.py --baseline CAPTURES_BRUIT.json --tool EXE_C4 --engine-source ARCHIVE_C4 --engine-revision COMMIT_C4_COMPLET --runtime-dir DLL_QT --runtime-dir DLL_LIBRAW
 ```
 
 `signed` n'est pas accepté sur le chemin oracle LibRaw. La campagne mesure

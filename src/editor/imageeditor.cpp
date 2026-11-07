@@ -16,7 +16,6 @@
 
 #include "Resize.h"
 #include "Pixels.h"
-#include "OpenCvBridge.h"
 
 #include <QDir>
 #include <QDirIterator>

@@ -1204,7 +1204,7 @@ bool verifyEditProxyDownscaling(ImageEditor &editor, ImageProvider &provider,
                                 const QString &directory)
 {
     // Larger than the 2048 px edit-proxy cap on its long side, so loading it
-    // exercises ImageEditor::buildEditProxy()'s cv::resize() path.
+    // exercises ImageEditor::buildEditProxy()'s reduction.
     constexpr int width = 2200;
     constexpr int height = 1600;
     QImage input(width, height, QImage::Format_RGBA8888);

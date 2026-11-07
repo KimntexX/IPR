@@ -176,7 +176,10 @@ void newImagesAndFills()
 
 void openCvsGenerator()
 {
-    // Against cv::RNG itself in iprImageTypesOracle; here, what does not need OpenCV.
+    // The first draws of cv::RNG(0x1b5d), as the types oracle found them equal before OpenCV left.
+    Random first(0x1b5d);
+    for (const std::uint32_t expected : {3732474018u, 2398033628u, 2735623887u, 1586832222u, 3233871775u})
+        check(first.next() == expected, "OpenCV's draws");
     Random random(0x1b5d), again(0x1b5d);
     for (int i = 0; i < 100; ++i)
         check(random.uniform(0, 1000) == again.uniform(0, 1000), "the same seed draws the same");

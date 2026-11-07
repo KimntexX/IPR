@@ -1,6 +1,6 @@
 #include "ImageImporter.h"
 
-#include "OpenCvBridge.h"
+#include "Pixels.h"
 
 #include <QFileInfo>
 #include <QImageReader>

@@ -22,7 +22,7 @@ def resolve_paths(arguments):
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
-    for name in ('inventory','manifest','adobe-camera-root','reference-source','candidate-source','cmake','qt-dir','vcpkg','opencv-dir','opencv-bin'):
+    for name in ('inventory','manifest','adobe-camera-root','reference-source','candidate-source','cmake','qt-dir','vcpkg'):
         p.add_argument('--'+name,type=Path,required=True)
     p.add_argument('--reference-revision',required=True);p.add_argument('--candidate-revision',required=True)
     p.add_argument('--capture-camera',action='store_true',help='Also compare the actual DCP camera inlet, requiring exact full-buffer equality in A')
@@ -54,19 +54,19 @@ def main():
             engine_sources=engine_hashes,decode_budget_ms=20800,
             capture_camera=a.capture_camera,
             candidate_signed_api=a.candidate_signed_api,
-            scope='30 RAWs, two modes(CameraNeutral DCP and no profile), A/as-shot, optics off; fullRGBA row hashes plus3 diagnostic256 ROIs and optional actual camera inlet. Fresh process per image/mode/engine, alternating engine order; OS cache not flushed. Budget applies native decode only, peak working set measured before serialization, maximum8 RCD workers, OpenCV1 and OMP8. Hash mismatch fails even if ROIs match. No signed-mode quality or automatic-WB/fallback/optics certification.',
+            scope='30 RAWs, two modes(CameraNeutral DCP and no profile), A/as-shot, optics off; fullRGBA row hashes plus3 diagnostic256 ROIs and optional actual camera inlet. Fresh process per image/mode/engine, alternating engine order; OS cache not flushed. Budget applies native decode only, peak working set measured before serialization, maximum8 RCD workers, 8 image-layer workers and OMP8. Hash mismatch fails even if ROIs match. No signed-mode quality or automatic-WB/fallback/optics certification.',
             source=Path(__file__).read_text(encoding='utf-8'),source_sha256=sha256(Path(__file__)))
         freeze=root/'docs/validation/raw'/f'gel-banc-raw-production-v001-{stamp}.json'
         with freeze.open('x',encoding='utf-8') as h:json.dump(policy,h,ensure_ascii=False,indent=2,allow_nan=False)
         print('FROZEN',freeze,flush=True)
-        env=dict(os.environ);env['OMP_NUM_THREADS']='8';env['PATH']=os.pathsep.join([str(a.qt_dir.parents[2]/'bin'),str(a.vcpkg/'bin'),str(a.opencv_bin),env.get('PATH','')])
+        env=dict(os.environ);env['OMP_NUM_THREADS']='8';env['PATH']=os.pathsep.join([str(a.qt_dir.parents[2]/'bin'),str(a.vcpkg/'bin'),env.get('PATH','')])
         tools={}
         for label,source,revision in (('reference',a.reference_source,a.reference_revision),('candidate',a.candidate_source,a.candidate_revision)):
             build=work/label
             commands=[[str(a.cmake),'-S',str(root/'tests/raw_bench/production'),'-B',str(build),
                 '-DIPR_ENGINE_SOURCE='+str(source),'-DIPR_ENGINE_REVISION='+revision,'-DQt6_DIR='+str(a.qt_dir),
                 '-DIPR_BENCH_SIGNED_DEVELOPMENT='+('ON' if label=='candidate' and a.candidate_signed_api else 'OFF'),
-                '-DOpenCV_DIR='+str(a.opencv_dir),'-DCMAKE_PREFIX_PATH='+str(a.vcpkg),
+                '-DCMAKE_PREFIX_PATH='+str(a.vcpkg),
                 '-DLIBRAW_INCLUDE_DIR='+str(a.vcpkg/'include'),'-DLIBRAW_LIBRARY='+str(a.vcpkg/'lib/manual-link/raw.lib')],
                 [str(a.cmake),'--build',str(build),'--config','Release','--target','iprProductionRawCapture','--parallel','2']]
             for index,command in enumerate(commands):
@@ -95,9 +95,9 @@ def main():
                 comparison=compare_captures(captures['reference']['path'],captures['candidate']['path'],stages)
                 whole=full_equal(ref['full_image'],can['full_image']);metadata=ref['metadata']==can['metadata']
                 camera_equal=full_equal(ref['full_camera'],can['full_camera']) if mode=='dcp' and a.capture_camera else None
-                budget=all(o['decode_ms']<=20800 and o['rcd_workers']<=8 and o['opencv_threads']<=1 for o in outputs.values())
+                budget=all(o['decode_ms']<=20800 and o['rcd_workers']<=8 and o['worker_threads']<=8 for o in outputs.values())
                 records.append(dict(source=item,mode=mode,captures=captures,full_image_equal=whole,metadata_equal=metadata,roi_comparison=comparison,
-                    measurements={label:dict(decode_ms=o['decode_ms'],peak_working_set_bytes=o['decode_peak_working_set_bytes'],rcd_workers=o['rcd_workers'],opencv_threads=o['opencv_threads']) for label,o in outputs.items()},
+                    measurements={label:dict(decode_ms=o['decode_ms'],peak_working_set_bytes=o['decode_peak_working_set_bytes'],rcd_workers=o['rcd_workers'],worker_threads=o['worker_threads']) for label,o in outputs.items()},
                     full_images={label:o['full_image'] for label,o in outputs.items()},metadata={label:o['metadata'] for label,o in outputs.items()},
                     full_cameras={label:o.get('full_camera') for label,o in outputs.items()},camera_inlet_equal=camera_equal,
                     parity_pass=whole and metadata and camera_equal is not False and comparison['verdict']=='pass',decode_budget_pass=budget))

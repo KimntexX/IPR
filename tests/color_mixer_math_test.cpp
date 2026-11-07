@@ -1,6 +1,5 @@
 #include "ColorMixer.h"
 #include "WorkingColorSpace.h"
-#include "OpenCvBridge.h"
 
 #include <algorithm>
 #include <cmath>

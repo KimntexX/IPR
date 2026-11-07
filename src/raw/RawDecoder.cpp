@@ -9,8 +9,8 @@
 #include "RawNormalization.h"
 #include "CameraSignal.h"
 
-#include "OpenCvBridge.h"
 #include "Parallel.h"
+#include "Pixels.h"
 
 #include <QFileInfo>
 #include <QDir>

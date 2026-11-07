@@ -4,7 +4,6 @@
 #include "controlled_memory.h"
 #include "stack_fixture.h"
 #include "synthetic_dcp.h"
-#include "OpenCvBridge.h"
 
 #include <QCoreApplication>
 #include <QDir>
@@ -15,7 +14,6 @@
 #include <QTemporaryDir>
 #include <QThread>
 #include <QTimer>
-#include <opencv2/imgproc.hpp>
 
 #include <atomic>
 #include <cmath>

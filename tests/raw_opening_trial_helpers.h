@@ -3,7 +3,8 @@
 // Offline DCP experiment. No production option, source/profile mutation or TIFF export.
 #include "RawDecoder.h"
 #include "CameraProfileEngine.h"
-#include "OpenCvBridge.h"
+#include "Pixels.h"
+#include "image_testing.h"
 #include <QCoreApplication>
 #include <QCryptographicHash>
 #include <QDateTime>
@@ -23,12 +24,10 @@
 namespace {
 // Explicit analysis boundary: historical metrics/experiments use extended
 // linear sRGB, while the only production renderer now returns Rec.2020.
-bool applyDcpForSrgbAnalysis(const QString &path, cv::Mat &rgb, double kelvin,
+bool applyDcpForSrgbAnalysis(const QString &path, ipr::Image &rgb, double kelvin,
                             QString *error, const CameraProfileEngine::DcpRenderOptions &options = {}) {
-    bool applied = false;
-    ipr::changeAsImage(rgb, [&](ipr::Image &image) { applied = CameraProfileEngine::applyDcp(path, image, kelvin, error, options); });
-    if (!applied) return false;
-    ipr::changeAsImage(rgb, [](ipr::Image &image) { WorkingColor::transform(image, WorkingColor::toSrgb()); });
+    if (!CameraProfileEngine::applyDcp(path, rgb, kelvin, error, options)) return false;
+    WorkingColor::transform(rgb, WorkingColor::toSrgb());
     return true;
 }
 // Hide only IFD tag identifiers in disposable profile copies; never alter payloads.
@@ -54,11 +53,11 @@ QByteArray hideDcpTags(QByteArray bytes,const std::vector<int> &tags) {
     return bytes;
 }
 
-QJsonObject linearStageStats(const cv::Mat &rgb) {
+QJsonObject linearStageStats(const ipr::Image &rgb) {
     double sum=0;int negative=0,upper=0,overY=0;std::vector<double> luminance;
     ipr::Vec3d low(1e30,1e30,1e30),high(-1e30,-1e30,-1e30),channelUpper(0,0,0);
-    for(int y=0;y<rgb.rows;++y)for(int x=0;x<rgb.cols;++x) {
-        const auto v=ipr::at<ipr::Vec3f>(rgb, y,x);
+    for(int y=0;y<rgb.height();++y)for(int x=0;x<rgb.width();++x) {
+        const auto v=imagetest::at<ipr::Vec3f>(rgb, y,x);
         for(int c=0;c<3;++c) {
             if(!std::isfinite(v[c]))throw std::runtime_error("Nonfinite stage");
             low[c]=std::min(low[c],double(v[c]));high[c]=std::max(high[c],double(v[c]));
@@ -109,10 +108,10 @@ struct Curve {
 };
 const ipr::Matrix33d proToSrgb=WorkingColor::toSrgb()*WorkingColor::fromXyzD50()*
     ipr::Matrix33d(.7976749,.1351917,.0313534,.2880402,.7118741,.0000857,0,0,.8252100);
-cv::Mat renderCurve(const cv::Mat &before,const Curve &curve,bool cubic,bool hue) {
-    cv::Mat output=before.clone();const auto inverse=proToSrgb.inv();
-    for(int y=0;y<output.rows;++y)for(int x=0;x<output.cols;++x) {
-        auto &p=ipr::at<ipr::Vec3f>(output, y,x);ipr::Vec3d v=inverse*ipr::Vec3d(p);
+ipr::Image renderCurve(const ipr::Image &before,const Curve &curve,bool cubic,bool hue) {
+    ipr::Image output=before.clone();const auto inverse=proToSrgb.inv();
+    for(int y=0;y<output.height();++y)for(int x=0;x<output.width();++x) {
+        auto &p=imagetest::at<ipr::Vec3f>(output, y,x);ipr::Vec3d v=inverse*ipr::Vec3d(p);
         for(int c=0;c<3;++c)v[c]=std::clamp(v[c],0.,1.);
         double lo=std::min({v[0],v[1],v[2]}),hi=std::max({v[0],v[1],v[2]}),a=curve.at(lo,cubic),b=curve.at(hi,cubic);
         for(int c=0;c<3;++c)v[c]=hue&&b>=a?(hi>lo?a+(v[c]-lo)/(hi-lo)*(b-a):a):curve.at(v[c],cubic);
@@ -120,30 +119,30 @@ cv::Mat renderCurve(const cv::Mat &before,const Curve &curve,bool cubic,bool hue
     }
     return output;
 }
-ColorPipeline::WorkingImage working(const cv::Mat &rgb) {
+ColorPipeline::WorkingImage working(const ipr::Image &rgb) {
     ColorPipeline::WorkingImage w;
-    w.linearRgba=ipr::opaque(ipr::fromMat(rgb));   // these studies keep their pixels in Mats
+    w.linearRgba=ipr::opaque(rgb);
     WorkingColor::transform(w.linearRgba, WorkingColor::fromSrgb());return w;
 }
-cv::Mat sample3(const cv::Mat &p) {
-    cv::Mat q((p.rows+7)/8,(p.cols+7)/8,CV_32FC3);
-    for(int y=0;y<q.rows;++y)for(int x=0;x<q.cols;++x) {
-        const float *v=reinterpret_cast<const float*>(p.ptr(y*8))+x*8*p.channels();ipr::at<ipr::Vec3f>(q, y,x)={v[0],v[1],v[2]};
+ipr::Image sample3(const ipr::Image &p) {
+    ipr::Image q=ipr::Image::create({(p.width()+7)/8,(p.height()+7)/8},ipr::Depth::F32,3);
+    for(int y=0;y<q.height();++y)for(int x=0;x<q.width();++x) {
+        const float *v=p.row<float>(y*8)+x*8*p.channels();imagetest::at<ipr::Vec3f>(q, y,x)={v[0],v[1],v[2]};
     }return q;
 }
 double linear(double v){return v<=.04045?v/12.92:std::pow((v+.055)/1.055,2.4);}
-QJsonObject metrics(const cv::Mat &rgb) {
+QJsonObject metrics(const ipr::Image &rgb) {
     auto image=ColorPipeline::toSrgb(working(rgb),ColorPipeline::OutputFormat::HighBitDepth);
     if(image.isNull())throw std::runtime_error("Output conversion failed");
     double sum=0,red=0,green=0;int clip=0,outside=0,dark=0,roi=0;std::vector<double> values;
-    for(int y=0;y<rgb.rows;++y)for(int x=0;x<rgb.cols;++x) {
-        const auto p=ipr::at<ipr::Vec3f>(rgb, y,x);
+    for(int y=0;y<rgb.height();++y)for(int x=0;x<rgb.width();++x) {
+        const auto p=imagetest::at<ipr::Vec3f>(rgb, y,x);
         for(int c=0;c<3;++c)if(!std::isfinite(p[c]))throw std::runtime_error("Nonfinite output");
         outside+=std::min({p[0],p[1],p[2]})<0||std::max({p[0],p[1],p[2]})>1;
         const auto q=reinterpret_cast<const QRgba64*>(image.constScanLine(y))[x];
         double r=linear(q.red()/65535.),g=linear(q.green()/65535.),b=linear(q.blue()/65535.),Y=.2126*r+.7152*g+.0722*b;
         sum+=Y;values.push_back(Y);dark+=Y<=.001;clip+=q.red()>=65534||q.green()>=65534||q.blue()>=65534;
-        if(x>=rgb.cols*.25&&x<rgb.cols*.75&&y>=rgb.rows*.48&&y<rgb.rows*.76){red+=r;green+=g;++roi;}
+        if(x>=rgb.width()*.25&&x<rgb.width()*.75&&y>=rgb.height()*.48&&y<rgb.height()*.76){red+=r;green+=g;++roi;}
     }
     std::sort(values.begin(),values.end());double n=double(values.size());
     QJsonArray quantiles;for(double q:{.05,.5,.95})quantiles.append(values[size_t(q*(n-1))]);
@@ -151,10 +150,10 @@ QJsonObject metrics(const cv::Mat &rgb) {
             {"outside_srgb_percent",100*outside/n},{"black_percent",100*dark/n},
             {"central_ROI_G_over_R",red>0?QJsonValue(green/red):QJsonValue()},{"ROI_samples",roi}};
 }
-cv::Mat preserveLuminanceGamut(const cv::Mat &source) {
-    cv::Mat result=source.clone();
-    for(int y=0;y<result.rows;++y)for(int x=0;x<result.cols;++x) {
-        auto &v=ipr::at<ipr::Vec3f>(result, y,x);
+ipr::Image preserveLuminanceGamut(const ipr::Image &source) {
+    ipr::Image result=source.clone();
+    for(int y=0;y<result.height();++y)for(int x=0;x<result.width();++x) {
+        auto &v=imagetest::at<ipr::Vec3f>(result, y,x);
         const float Y=.2126f*v[0]+.7152f*v[1]+.0722f*v[2];
         if(Y<=0){v={0,0,0};continue;}if(Y>=1){v={1,1,1};continue;}
         const ipr::Vec3f neutral(Y,Y,Y),chroma=v-neutral;float scale=1;
@@ -183,11 +182,11 @@ void selfTest() {
     for(size_t i=0;i<curve.x.size();++i)if(std::abs(curve.at(curve.x[i],true)-curve.y[i])>1e-12)throw std::runtime_error("Spline knot failed");
     // Nonzero curvature test, natural boundary conditions and RGB neutral invariant.
     if(std::abs(curve.at(.4,true)-curve.at(.4,false))<1e-5||curve.m.front()!=0||curve.m.back()!=0)throw std::runtime_error("Spline curvature failed");
-    cv::Mat neutral(1,1,CV_32FC3,cv::Scalar(.2,.2,.2));
-    if(cv::norm(renderCurve(neutral,identity,true,true),neutral,cv::NORM_INF)>1e-5)throw std::runtime_error("Neutral identity failed");
-    cv::Mat extended(1,1,CV_32FC3,cv::Scalar(-.2,.5,1.2));
-    const auto bounded=preserveLuminanceGamut(extended).at<ipr::Vec3f>(0,0);
-    const auto input=ipr::at<ipr::Vec3f>(extended, 0,0);const ipr::Vec3f weights(.2126,.7152,.0722);
+    const ipr::Image neutral=imagetest::filledWith({1,1},{.2,.2,.2});
+    if(ipr::largestDifference(renderCurve(neutral,identity,true,true),neutral)>1e-5)throw std::runtime_error("Neutral identity failed");
+    const ipr::Image extended=imagetest::filledWith({1,1},{-.2,.5,1.2});
+    const auto bounded=imagetest::at<ipr::Vec3f>(preserveLuminanceGamut(extended),0,0);
+    const auto input=imagetest::at<ipr::Vec3f>(extended, 0,0);const ipr::Vec3f weights(.2126,.7152,.0722);
     if(std::abs(bounded.dot(weights)-input.dot(weights))>1e-6 ||
        std::min({bounded[0],bounded[1],bounded[2]})< -1e-6 ||
        std::max({bounded[0],bounded[1],bounded[2]})>1+1e-6)throw std::runtime_error("Luminance gamut invariant failed");

@@ -4,7 +4,6 @@
 #include "../src/raw/RawDecoder.cpp"
 #undef RawDecoder
 #include "raw_opening_trial_helpers.h"
-#include "OpenCvBridge.h"
 
 #include <QCoreApplication>
 #include <QCryptographicHash>
@@ -141,42 +140,71 @@ void writeNew(const QString &path, const QByteArray &data)
     require(out.write(data) == data.size(), "Incomplete write: " + path);
 }
 
-cv::Mat sample(const cv::Mat &rgb)
+ipr::Image sample(const ipr::Image &rgb)
 {
-    cv::Mat result((rgb.rows + 7) / 8, (rgb.cols + 7) / 8, CV_32FC3);
-    for (int y = 0; y < result.rows; ++y)
-        for (int x = 0; x < result.cols; ++x)
-            ipr::at<ipr::Vec3f>(result, y, x) = ipr::at<ipr::Vec3f>(rgb, 8*y, 8*x);
+    ipr::Image result = ipr::Image::create({(rgb.width() + 7) / 8, (rgb.height() + 7) / 8}, ipr::Depth::F32, 3);
+    for (int y = 0; y < result.height(); ++y)
+        for (int x = 0; x < result.width(); ++x)
+            imagetest::at<ipr::Vec3f>(result, y, x) = imagetest::at<ipr::Vec3f>(rgb, 8*y, 8*x);
     return result;
 }
 
-QJsonObject saveSample(const QDir &out, const QString &name, const cv::Mat &rgb)
+// An image's pixels, rows one after another.
+QByteArray bytesOf(const ipr::Image &image)
 {
-    const cv::Mat contiguous = rgb.isContinuous() ? rgb : rgb.clone();
-    const auto bytes = QByteArray(reinterpret_cast<const char *>(contiguous.data),
-                                 qsizetype(contiguous.total() * contiguous.elemSize()));
+    const qsizetype rowBytes = qsizetype(image.width()) * qsizetype(image.pixelBytes());
+    QByteArray bytes;
+    bytes.reserve(rowBytes * image.height());
+    for (int y = 0; y < image.height(); ++y)
+        bytes.append(reinterpret_cast<const char *>(image.row<std::uint8_t>(y)), rowBytes);
+    return bytes;
+}
+
+// rows x cols F32 RGB pixels from bytes written by bytesOf.
+ipr::Image rgbFrom(const QByteArray &bytes, int rows, int cols)
+{
+    ipr::Image rgb = ipr::Image::create({cols, rows}, ipr::Depth::F32, 3);
+    const qsizetype rowBytes = qsizetype(cols) * qsizetype(rgb.pixelBytes());
+    for (int y = 0; y < rows; ++y)
+        std::memcpy(rgb.mutableRow<std::uint8_t>(y), bytes.constData() + rowBytes * y, size_t(rowBytes));
+    return rgb;
+}
+
+// LibRaw's 16-bit memory image as floats, white 1.
+ipr::Image floatsOf(const libraw_processed_image_t &memory)
+{
+    const ipr::Image counts = ipr::Image::wrapReadOnly(memory.data, {memory.width, memory.height}, ipr::Depth::U16, 3,
+                                                       std::ptrdiff_t(memory.width) * 6);
+    ipr::Image rgb = ipr::Image::create(counts.size(), ipr::Depth::F32, 3);
+    ipr::convertInto(counts, rgb, 1.0 / 65535.0);
+    return rgb;
+}
+
+QJsonObject saveSample(const QDir &out, const QString &name, const ipr::Image &rgb)
+{
+    const auto bytes = bytesOf(rgb);
     writeNew(out.filePath(name + ".f32"), bytes);
-    const cv::Scalar average = cv::mean(rgb);
-    return {{"file", name + ".f32"}, {"rows", rgb.rows}, {"cols", rgb.cols},
+    const std::vector<double> average = ipr::meanOf(rgb);
+    return {{"file", name + ".f32"}, {"rows", rgb.height()}, {"cols", rgb.width()},
             {"dtype", "little-endian float32 RGB"},
             {"mean_rgb", QJsonArray{average[0], average[1], average[2]}},
             {"sha256", QString::fromLatin1(QCryptographicHash::hash(bytes, QCryptographicHash::Sha256).toHex())}};
 }
 
-QJsonObject saveEncodedSample(const QDir &out, const QString &name, const cv::Mat &rgb)
+QJsonObject saveEncodedSample(const QDir &out, const QString &name, const ipr::Image &rgb)
 {
     ColorPipeline::WorkingImage working;
-    working.linearRgba = ipr::opaque(ipr::fromMat(rgb));   // this probe keeps its samples in Mats
+    working.linearRgba = ipr::opaque(rgb);
     working.colorSpace = ColorPipeline::workingColorSpace();
     WorkingColor::transform(working.linearRgba, WorkingColor::fromSrgb()); // Diagnostic samples are linear sRGB.
     QString error;
     const QImage encoded = ColorPipeline::toSrgb(working, ColorPipeline::OutputFormat::HighBitDepth, &error);
     require(!encoded.isNull(), error);
-    cv::Mat encodedRgb(encoded.height(), encoded.width(), CV_32FC3);
+    ipr::Image encodedRgb = ipr::Image::create({encoded.width(), encoded.height()}, ipr::Depth::F32, 3);
     for (int y = 0; y < encoded.height(); ++y) {
         const auto *row = reinterpret_cast<const QRgba64 *>(encoded.constScanLine(y));
         for (int x = 0; x < encoded.width(); ++x)
-            ipr::at<ipr::Vec3f>(encodedRgb, y, x) = ipr::Vec3f(row[x].red(), row[x].green(), row[x].blue()) / 65535.f;
+            imagetest::at<ipr::Vec3f>(encodedRgb, y, x) = ipr::Vec3f(row[x].red(), row[x].green(), row[x].blue()) / 65535.f;
     }
     return saveSample(out, name, encodedRgb);
 }
@@ -197,10 +225,9 @@ void auditSampleExport(const QString &manifestPath, const QString &outputPath)
                 stage["sha256"].toString(), "Float stage hash mismatch");
         const int rows = stage["rows"].toInt(), cols = stage["cols"].toInt();
         require(rows > 0 && cols > 0 && bytes.size() == qint64(rows) * cols * 12, "Invalid float sample dimensions");
-        cv::Mat rgb(rows, cols, CV_32FC3);
-        std::memcpy(rgb.data, bytes.constData(), size_t(bytes.size()));
+        const ipr::Image rgb = rgbFrom(bytes, rows, cols);
         ColorPipeline::WorkingImage working;
-        working.linearRgba = ipr::opaque(ipr::fromMat(rgb));
+        working.linearRgba = ipr::opaque(rgb);
         working.colorSpace = ColorPipeline::workingColorSpace();
         WorkingColor::transform(working.linearRgba, WorkingColor::fromSrgb());
         QString error;
@@ -293,10 +320,9 @@ QJsonObject process(const QString &path, const QDir &out, bool calibrationOnly =
     int status = 0;
     auto *memory = raw.dcraw_make_mem_image(&status);
     require(memory && !status && memory->bits == 16 && memory->colors == 3, "memory image: " + path);
-    cv::Mat rgb;
-    cv::Mat(memory->height, memory->width, CV_16UC3, memory->data).convertTo(rgb, CV_32FC3, 1.0/65535.0);
-    result["width"] = rgb.cols;
-    result["height"] = rgb.rows;
+    ipr::Image rgb = floatsOf(*memory);
+    result["width"] = rgb.width();
+    result["height"] = rgb.height();
     LibRaw::dcraw_clear_mem(memory);
     const QString stem = QFileInfo(path).completeBaseName();
     QJsonObject stages;
@@ -310,11 +336,11 @@ QJsonObject process(const QString &path, const QDir &out, bool calibrationOnly =
         capture.focalLengthMm = d.other.focal_len;
         capture.aperture = d.other.aperture;
         bool corrected = false;
-        ipr::changeAsImage(rgb, [&](ipr::Image &image) { corrected = CameraProfileEngine::applyLcp(profiles.lcpPath, image, capture, &error); });
+        corrected = CameraProfileEngine::applyLcp(profiles.lcpPath, rgb, capture, &error);
         require(corrected, error);
     }
     auto withLens = sample(rgb);
-    rgb.release();
+    rgb = {};
     stages["camera_rgb_after_lcp"] = saveSample(out, stem + "-camera-lcp", withLens);
     require(applyDcpForSrgbAnalysis(profiles.dcpPath, withLens, kelvin.value_or(5500), &error), error);
     stages["dcp_with_lcp"] = saveSample(out, stem + "-dcp-lcp", withLens);
@@ -351,11 +377,10 @@ void radiometricTrials(const QString &specPath, const QDir &out)
             require(raw.dcraw_process()==LIBRAW_SUCCESS,"Process failed");trace["before_scale_colors"]=raw.beforeScale;trace["after_process"]=metadata(raw);
             const QString prefix=fixedWhite?"white_":"";decodes[fixedWhite?"fixed_white":"current_white"]=trace;
             int status=0;auto *memory=raw.dcraw_make_mem_image(&status);require(memory&&!status&&memory->colors==3&&memory->bits==16,"Invalid camera RGB");
-            cv::Mat full;cv::Mat(memory->height,memory->width,CV_16UC3,memory->data).convertTo(full,CV_32FC3,1./65535.);
-            cv::Mat camera=sample3(full);full.release();LibRaw::dcraw_clear_mem(memory);
+            ipr::Image camera=sample3(floatsOf(*memory));LibRaw::dcraw_clear_mem(memory);
             for(bool baseline:{false,true})for(bool hue:{false,true}) {
                 const QString name=prefix+(baseline?"exposure_":"")+(hue?"hue":"channel");
-                cv::Mat image=camera.clone();CameraProfileEngine::DcpRenderOptions options;
+                ipr::Image image=camera.clone();CameraProfileEngine::DcpRenderOptions options;
                 options.cameraBaselineExposureEv=baseline?scene["camera_baseline_EV"].toDouble():0;
                 options.preserveToneCurveHue=hue;QString error;
                 require(applyDcpForSrgbAnalysis(profile,image,*kelvin,&error,options),error);
@@ -415,8 +440,7 @@ int main(int argc, char **argv)
                         require(QString::fromLatin1(QCryptographicHash::hash(bytes, QCryptographicHash::Sha256).toHex()) == stage["sha256"].toString(), "Camera grid hash mismatch");
                         const int rows = stage["rows"].toInt(), cols = stage["cols"].toInt();
                         require(rows > 0 && cols > 0 && bytes.size() == qint64(rows) * cols * 12, "Invalid camera grid size");
-                        cv::Mat rgb(rows, cols, CV_32FC3);
-                        std::memcpy(rgb.data, bytes.constData(), size_t(bytes.size()));
+                        ipr::Image rgb = rgbFrom(bytes, rows, cols);
                         QString error;
                         require(applyDcpForSrgbAnalysis(profile, rgb, source["wb_kelvin"].toDouble(), &error), error);
                         const QString directory = stem + "/profile-" + QString::number(profileIndex - 4) + "/" + geometry;
