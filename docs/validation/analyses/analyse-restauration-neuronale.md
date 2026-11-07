@@ -8914,3 +8914,53 @@ restent à faire après fixation du protocole. Le 60D et les pentes manquantes
 L’expérience composite active n’est pas interrompue ni modifiée. Aucun calcul
 concurrent lourd, changement en production, téléchargement de poids, push,
 fusion ou tag n’a été lancé pour répondre à cette revue.
+
+## 7 novembre 2026 — retour croisé avec Claude : ordre et décision bêta proposés
+
+La réponse au « Retour de Claude sur tes réponses — 7 novembre 2026 » est
+ajoutée au fichier commun `REVUE-UNET-CLAUDE-2026-11-05.md`. Accord sur la
+clôture du composite puis sur le gel des variantes. L’expérience active
+continue avec ses sources et critères figés ; cette discussion ne la modifie pas.
+
+Ajustements proposés avant une nouvelle campagne :
+
+- Auditer un minimum de bruit structuré/banque de noirs avant la formation
+  longue, en parallèle du banc naturel et du débit ; ne pas reporter tout
+  le réalisme après une victoire sur le seul surrogate gaussien.
+- Séparer variance vraie d’injection/perte et sigma d’entrée : une carte
+  par pixel calculée depuis le propre peut révéler la cible via a·x+b.
+  Le modèle principal doit recevoir le même estimateur appliqué au bruité
+  pendant train et inférence ; un sigma oracle reste une ablation explicite.
+  Le Haar actuel ne donne déjà ce sigma vrai qu’à la perte, pas au réseau.
+- Mesurer les variantes d’adaptateur à données/perte/initialisation égales,
+  avec identité explicite à sigma nul et télémétrie avant clipping. La
+  comparaison courte qualifie coût/numérique ; elle ne prouve pas convergence.
+- Budgéter la totalité des graines : à 0,3 s/mise à jour, 100 000 étapes
+  coûtent 8 h 20 **par graine**, soit 25 h pour trois, hors contrôles.
+  Ce débit doit inclure un lot effectif 8 et être mesuré, pas promis.
+- Prévoir train/développement/test disjoints par scènes/séances, fixer la
+  métrique principale, marge utile, limites de détail/biais et coût avant
+  lecture finale ; bootstrap apparié par scène, pas par pixel ou tuile liée.
+
+Le critère d’arrêt proposé est une décision de budget bêta, pas une preuve
+d’impossibilité de la voie apprise. Trois sorties à déclarer : progrès
+utile et qualifié, régression claire, ou résultat inconclusif au budget
+fixé. L’absence d’intervalle excluant zéro n’établit pas l’égalité ; elle
+peut néanmoins justifier de geler une intégration. Pas de rallonge automatique.
+La validation visuelle utilisateur et une portée par boîtier/ISO restent nécessaires.
+
+Le classique IPR doit être évalué dans un chemin commun de dématriçage/rendu,
+sans confondre une sortie CFA et une sortie RGB ou avantager un seul bras
+avec un sigma oracle. Les noirs doivent distinguer carte fixe, résidus,
+lecture et quantification pour éviter les doubles comptages. Les conditions
+exactes d’un éventuel BM3D doivent être examinées avant installation/usage ;
+le placement hors dépôt et un accord utilisateur ne remplacent pas les droits
+accordés par la licence ([source officielle](https://webpages.tuni.fi/foi/GCF-BM3D/)).
+Aucun téléchargement ni exécution de cet outil n’est engagé ici.
+
+L’ordre convenu pour discussion est : clore composite ; préparer partitions
+naturelles, audit minimal du bruit et débit ; mesurer étalons ; qualifier
+sigma/adaptateur sur développement ; figer budget/candidat ; entraîner dans
+les plages autorisées et ouvrir le test une fois. Le transfert 60D/ISO
+réservés vient ensuite, sans retarder le socle physique du premier boîtier.
+Aucun changement de moteur, push, fusion ou tag pour cet échange.
