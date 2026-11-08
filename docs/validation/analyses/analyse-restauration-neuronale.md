@@ -9261,3 +9261,20 @@ pression soutenue ; quota CUDA 50 % avec 4 Gio libres avant entraînement.
 Les traces et mesures finales seront archivées dans
 `neural-natural-preflight-v001-*`. Trois tests ciblés de normalisation et
 phase passent. Aucun changement de production, push, fusion ou tag.
+
+
+### Arrêt mémoire du premier lancement et reprise technique bornée
+
+Le premier essai extrait les 36 patchs et réalise deux mises à jour de la
+graine 71, puis le garde-fou à 5 Gio de mémoire engagée arrête le processus.
+Pic privé échantillonné 5,04 Gio, RAM résidente 1,34 Gio, utilisation globale
+60,2 %. Le sondage de coût précédent était déjà proche de ce seuil privé
+(4,89 Gio) ; la seule RAM résidente ne permettait pas de garantir la marge.
+Le checkpoint des deux mises à jour et le JSON d’échec sont conservés.
+
+Une reprise technique distincte v002 active le recalcul des activations par
+étage et libère le cache CUDA de la validation batch1 avant le batch8. Les
+quotas ne sont pas augmentés ; sources, patchs, niveaux de bruit, graines,
+objectif et échéance absolue de v001 sont conservés. Les deux modèles
+repartent de leur initialisation déclarée, sans sélection par score. La
+mesure de coût précédente sans recalcul ne peut plus servir de durée exacte.

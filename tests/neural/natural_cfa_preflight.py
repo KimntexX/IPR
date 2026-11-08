@@ -55,6 +55,7 @@ def prepare(output):
         seeds=[71, 73], data_seed=8001, steps=1024, batch=8, packed_side=256,
         parameters=8162688, width=32, precision='fp32', learning_rate=.0001,
         objective='unweighted L1', sigma_levels=[.005, .01, .02, .04],
+        activation_checkpointing=True,
         sources=[dict(**row, role='training' if index < 2 else 'development_known_not_final_test')
                  for index, row in enumerate(selected)],
         tools={name:digest(ROOT/'tests/neural'/name) for name in tools},
@@ -136,7 +137,7 @@ def train(output, seed, guard):
     core = UNetRes(in_nc=8, out_nc=4, nc=[32, 64, 128, 256], nb=4, act_mode='R',
                   downsample_mode='strideconv', upsample_mode='convtranspose')
     torch.nn.init.zeros_(core.m_tail.weight)
-    model = DruCfaCorrector(core).cuda()
+    model = DruCfaCorrector(core, checkpoint_stages=plan['activation_checkpointing']).cuda()
     if sum(p.numel() for p in model.parameters()) != plan['parameters']:
         raise ValueError('Unexpected parameter count')
     optimizer = torch.optim.Adam(model.parameters(), lr=plan['learning_rate'])
@@ -196,6 +197,8 @@ def train(output, seed, guard):
                         mean_error_by_plane=error.mean(dim=(-2,-1))[0].tolist()))
         result['controls'].append(dict(step=step, rows=rows))
         model.train()
+        # Validation uses batch1; release its cached workspace before batch8 training.
+        torch.cuda.empty_cache()
         write(folder/'progress.json', result)
 
     try:
@@ -238,7 +241,10 @@ def train(output, seed, guard):
         optimizer.zero_grad(set_to_none=True)
         checkpoint('resume.pt')
         result.update(finished_at_utc=datetime.now(timezone.utc).isoformat(), memory=guard.stats(),
-            final_checkpoint_sha256=digest(folder/'resume.pt'), checkpoint_includes_actual_batch_and_data_rng=True)
+            final_checkpoint_sha256=digest(folder/'resume.pt'), checkpoint_includes_actual_batch_and_data_rng=True,
+            activation_checkpointing=plan['activation_checkpointing'],
+            peak_cuda_allocated_bytes=torch.cuda.max_memory_allocated(),
+            peak_cuda_reserved_bytes=torch.cuda.max_memory_reserved())
         write(folder/'progress.json', result)
 
 
