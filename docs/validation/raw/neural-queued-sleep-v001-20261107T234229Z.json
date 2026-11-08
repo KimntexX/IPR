@@ -1,0 +1,18 @@
+{
+  "status": "sleep_requested",
+  "pid": 6224,
+  "cutoff_utc": "2026-11-08T09:00:00+00:00",
+  "started_at_utc": "2026-11-07T23:13:26.173025+00:00",
+  "campaigns": [
+    "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-composite-study-v001\\progress.json",
+    "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\training-preparation-v001\\progress.json"
+  ],
+  "permission_probe_passed": true,
+  "campaign_states": [
+    "completed_composite_experiment_not_production_validation",
+    "completed_cost_preparation_not_quality_validation"
+  ],
+  "last_check_utc": "2026-11-07T23:42:29.335347+00:00",
+  "blocking_processes": [],
+  "idle_seconds": 1819.375
+}
