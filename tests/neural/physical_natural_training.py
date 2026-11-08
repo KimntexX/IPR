@@ -238,11 +238,16 @@ def extract(output, guard):
 
 
 class NoiseModel:
-    """GPU tensors of the frozen per-ISO parameters and dark libraries."""
+    """Frozen per-ISO parameters on the device; dark libraries stay memory-mapped.
+
+    On Windows, device allocations also count in the process commit watched by
+    the memory guard, so only the crops of each batch are sent to the GPU.
+    """
 
     def __init__(self, output, plan, device):
         import numpy as np
         import torch
+        self.device = device
         self.isos = plan['training_iso']
         self.divisor = float(plan['target_domain']['divisor'])
         rows = plan['noise_parameters']
@@ -255,17 +260,20 @@ class NoiseModel:
                                                       [next(r['gamma_y'] for r in rows if r['iso'] == iso and r['plane'] == p) for p in range(4)],
                                                       side, device) for iso in self.isos])
         data = read(output/'data.json')
-        self.darks, self.roles = [], []
+        self.crops, self.pedestals, self.pools = [], [], []
         for iso in self.isos:
-            crops = np.load(output/f'dark-{iso}.npy', allow_pickle=False)
-            pedestals = np.load(output/f'pedestal-{iso}.npy', allow_pickle=False)
-            deviation = torch.from_numpy(crops.astype(np.float32)-pedestals[:, :, None, None].astype(np.float32))
-            self.darks.append(deviation.to(device))
-            self.roles.append(torch.tensor([e['role'] == 'calibration' for e in data['darks'][str(iso)]], device=device))
+            self.crops.append(np.load(output/f'dark-{iso}.npy', mmap_mode='r', allow_pickle=False))
+            self.pedestals.append(np.load(output/f'pedestal-{iso}.npy', allow_pickle=False).astype(np.float32))
+            roles = [e['role'] for e in data['darks'][str(iso)]]
+            self.pools.append({role: [i for i, r in enumerate(roles) if r == role] for role in ('calibration', 'control')})
 
     def dark(self, iso_index, role, choice):
-        pool = self.darks[iso_index][self.roles[iso_index] == (role == 'calibration')]
-        return pool[choice % len(pool)]
+        import numpy as np
+        import torch
+        pool = self.pools[iso_index][role]
+        index = pool[choice % len(pool)]
+        deviation = np.asarray(self.crops[iso_index][index], dtype=np.float32)-self.pedestals[iso_index][index][:, None, None]
+        return torch.from_numpy(deviation).to(self.device)
 
     def sample(self, clean, iso_ids, dark, generator):
         slope = self.slope[iso_ids][:, :, None, None]
@@ -306,7 +314,7 @@ def train(output, seed, guard):
     if sum(p.numel() for p in model.parameters()) != plan['parameters']:
         raise ValueError('Unexpected parameter count')
     optimizer = torch.optim.Adam(model.parameters(), lr=plan['learning_rate'])
-    training = torch.from_numpy(np.load(output/'training.npy', allow_pickle=False)).cuda()
+    training = np.load(output/'training.npy', mmap_mode='r', allow_pickle=False)
     development = torch.from_numpy(np.load(output/'development.npy', allow_pickle=False)).cuda()
     noise = NoiseModel(output, plan, 'cuda')
     rng = torch.Generator(device='cuda').manual_seed(plan['data_seed'])
@@ -375,7 +383,7 @@ def train(output, seed, guard):
             iso_ids = torch.randint(len(plan['training_iso']), (plan['batch'],), device='cuda', generator=rng)
             choices = torch.randint(1 << 30, (plan['batch'],), device='cuda', generator=rng).tolist()
             dark = torch.stack([noise.dark(int(i), 'calibration', c) for i, c in zip(iso_ids.tolist(), choices)])
-            target = training[ids]
+            target = torch.from_numpy(np.stack([training[i] for i in ids.tolist()])).cuda()
             noisy, sigma = noise.sample(target, iso_ids, dark, rng)
             prediction = model.correct_observations(noisy, sigma, tags.expand(plan['batch'], -1))
             loss = torch.nn.functional.l1_loss(prediction, target)
@@ -493,7 +501,7 @@ def run(output):
                                   if (output/f'seed{s}/progress.json').exists()]
         write(output/'progress.json', result)
         stamp = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')
-        with (ROOT/'docs/validation/raw'/f'neural-physical-natural-training-v001-{stamp}.json').open('x', encoding='utf-8') as stream:
+        with (ROOT/'docs/validation/raw'/f'neural-{output.name}-{stamp}.json').open('x', encoding='utf-8') as stream:
             json.dump(result, stream, allow_nan=False, separators=(',', ':'))
 
 
