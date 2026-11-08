@@ -17,6 +17,12 @@ from prepare_next_training import digest, read, write
 def simulate(read_frames, signal, gain, gamma_x, gamma_y, seed, indices):
     """Shared read-frame identities preserve covariance across fields of a capture."""
     first, second = indices
+    if (read_frames.ndim!=3 or len(read_frames)<2 or not np.isfinite(read_frames).all()
+            or first.ndim!=1 or first.shape!=second.shape or len(first)<2
+            or not np.issubdtype(first.dtype,np.integer) or not np.issubdtype(second.dtype,np.integer)
+            or min(first.min(),second.min())<0 or max(first.max(),second.max())>=len(read_frames)
+            or (first==second).any() or not np.isfinite([signal,gain]).all()):
+        raise ValueError('Finite dark library and distinct valid read-frame indices required')
     rng = np.random.default_rng(seed)
     shape = (len(first), *read_frames.shape[-2:])
     if gain <= 0 or signal < 0:
@@ -41,7 +47,32 @@ def aggregate(rows, key):
     return np.stack(values, axis=-2), identities
 
 
-def run(root, output, repetitions=128):
+def expanded_inputs(bank, dataset):
+    if dataset.get('status') != 'completed_expanded_physical_tiles_not_qualified':
+        raise ValueError('Completed expanded extraction required')
+    sources={}
+    for group in dataset['dark_groups']:
+        values=[]
+        for row in group['sources']:
+            path=Path(row['path'])
+            if digest(path)!=row['sha256']:
+                raise ValueError('Expanded dark cache changed')
+            values.append(np.load(path,allow_pickle=False))
+        sources[group['iso']]=np.stack(values)
+    for index,row in dataset['light_frames'].items():
+        bank['frames'][int(index)]['cached_tiles']=row['path']
+        bank['frames'][int(index)]['tiles_sha256']=row['sha256']
+    fits={}
+    for row in bank['fits']:
+        fit={**row['fit'],'heldout':[]}
+        for field in dataset['fields']:
+            if (field['iso'],field['plane']) == (row['iso'],row['plane']) and field['split']=='heldout' and field['gate']['eligible']:
+                fit['heldout'].append(dict(pair=field['pair'],roi=field['roi'],signal_dn=field['gate']['signal_dn']))
+        fits[(row['iso'],row['plane'])]=fit
+    return sources,fits
+
+
+def run(root, output, repetitions=128, dataset_path=None):
     from memory_budget import MemoryGuard
     if repetitions < 128 or repetitions % 2:
         raise ValueError('Even replicate count >=128 required')
@@ -50,12 +81,14 @@ def run(root, output, repetitions=128):
     coefficients = read(coefficient_path)
     bank, sources = dark_sources(root)
     fits = {(r['iso'], r['plane']): r['fit'] for r in bank['fits']}
+    if dataset_path is not None:
+        sources,fits=expanded_inputs(bank,read(dataset_path))
     gammas = {(r['iso'], r['plane']): r for r in coefficients['coefficients']}
     pairs = {r['index']: r for r in bank['pairs']}
     output.mkdir(exist_ok=False)
     now = datetime.now(timezone.utc)
-    result = dict(schema_version=1, data_version='v001', campaign_id='physical-spectrum-' + now.strftime('%Y%m%dT%H%M%SZ'),
-        started_at_utc=now.isoformat(), status='started', rows=[],
+    result = dict(schema_version=1, data_version='v002', campaign_id='physical-spectrum-' + now.strftime('%Y%m%dT%H%M%SZ'),
+        measured_at_utc=now.isoformat(),started_at_utc=now.isoformat(), status='started', rows=[],
         provenance=dict(coefficients_path=str(coefficient_path), coefficients_sha256=digest(coefficient_path),
             bank_sha256=digest(root/'docs/validation/raw/neural-sensor-noise-v001-20261105T173608Z.json')),
         software=dict(python=platform.python_version(), numpy=np.__version__),
@@ -70,12 +103,16 @@ def run(root, output, repetitions=128):
             'Empirical read pairs plus separately rounded correlated photon innovations, no ADC clipping',
             'Monte Carlo calibration conditions on finite read library and fixed fitted parameters',
             'Practical systematic-effect bounds replace an invalid pointwise absolute-periodogram criterion'])
+    if dataset_path is not None:
+        result['provenance']['expanded_dataset']=dict(path=str(dataset_path),sha256=digest(dataset_path))
     write(output/'freeze.json', {k:v for k,v in result.items() if k != 'rows'})
     guard = MemoryGuard(hard_bytes=2*1024**3, soft_bytes=1536*1024**2, system_fraction=.8)
     started = time.monotonic()
     try:
         with guard:
             read_indices = {}
+            if not all(fits[(iso,plane)].get('heldout') for iso in sources for plane in range(4)):
+                raise ValueError('At least one eligible control field required in every ISO/plane group')
             for (iso, plane), fit in sorted(fits.items()):
                 if iso not in sources:
                     continue
@@ -132,13 +169,15 @@ def run(root, output, repetitions=128):
         result.update(finished_at_utc=datetime.now(timezone.utc).isoformat(),memory=guard.stats(),
                       elapsed_seconds=time.monotonic()-started)
         write(output/'result.json',result)
+        write(output/'progress.json',{k:v for k,v in result.items() if k!='rows'})
         stamp=datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')
-        with (root/'docs/validation/raw'/f'neural-physical-spectrum-v001-{stamp}.json').open('x',encoding='utf-8') as stream:
+        with (root/'docs/validation/raw'/f'neural-physical-spectrum-v002-{stamp}.json').open('x',encoding='utf-8') as stream:
             json.dump(result,stream,allow_nan=False,separators=(',',':'))
 
 
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output',type=Path,required=True)
+    parser.add_argument('--dataset',type=Path,help='Completed expanded physical extraction')
     args=parser.parse_args()
-    run(Path(__file__).resolve().parents[2],args.output)
+    run(Path(__file__).resolve().parents[2],args.output,dataset_path=args.dataset)

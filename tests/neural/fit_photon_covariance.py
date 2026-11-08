@@ -21,6 +21,9 @@ def covariances(delta):
 
 def fit_coefficients(observations):
     if not observations:raise ValueError('Training observations required')
+    if not all(np.isfinite([r[k] for k in ('shot_variance','observed_x','observed_y','read_x','read_y')]).all()
+               and r['shot_variance']>=0 for r in observations):
+        raise ValueError('Finite moments and nonnegative shot variance required')
     energy=sum(r['shot_variance']**2 for r in observations)
     if energy<=0:raise ValueError('Positive shot energy required')
     x=sum(r['shot_variance']*(r['observed_x']-r['read_x']) for r in observations)/energy
@@ -31,7 +34,8 @@ def fit_coefficients(observations):
 
 
 def colour_innovations(values,gamma_x,gamma_y):
-    if values.ndim<2 or not np.isfinite(values).all() or 1-2*(abs(gamma_x)+abs(gamma_y))<=0:
+    if (values.ndim<2 or not np.isfinite(values).all() or not np.isfinite([gamma_x,gamma_y]).all()
+            or 1-2*(abs(gamma_x)+abs(gamma_y))<=0):
         raise ValueError('Finite innovations and positive spectral covariance required')
     h,w=values.shape[-2:]
     spectrum=1+2*gamma_x*np.cos(2*np.pi*np.fft.fftfreq(w))[None,:]+2*gamma_y*np.cos(2*np.pi*np.fft.fftfreq(h))[:,None]

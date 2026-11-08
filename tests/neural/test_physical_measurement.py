@@ -26,5 +26,13 @@ class PhysicalMeasurementTests(unittest.TestCase):
         self.assertAlmostEqual(binomial_upper_tail(0,10),1)
         self.assertAlmostEqual(binomial_upper_tail(10,10),.05**10)
 
+    def test_six_joint_metrics_use_their_own_bounds(self):
+        cal=np.random.default_rng(104).normal(0,.001,size=(64,5,6))
+        report=simultaneous(cal,np.zeros((5,6)),bounds=np.full(6,.02),names=[str(i) for i in range(6)])
+        self.assertEqual(report['status'],'equivalent_within_declared_bounds')
+        self.assertEqual(classify(np.full((5,6),.06),report),'outside_bounds')
+        with self.assertRaises(ValueError):classify(np.full((5,6),np.nan),report)
+        with self.assertRaises(ValueError):simultaneous(cal,np.zeros((5,6)),bounds=np.ones(5))
+
 
 if __name__=='__main__':unittest.main()

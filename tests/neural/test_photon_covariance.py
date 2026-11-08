@@ -20,6 +20,9 @@ class PhotonCovarianceTests(unittest.TestCase):
 
     def test_nonpositive_spectrum_refused(self):
         with self.assertRaises(ValueError):colour_innovations(np.ones((32,32)),.4,.2)
+        with self.assertRaises(ValueError):colour_innovations(np.ones((32,32)),np.nan,0)
+        with self.assertRaises(ValueError):fit_coefficients([dict(shot_variance=1,observed_x=np.nan,
+            observed_y=0,read_x=0,read_y=0)])
 
 
 if __name__=='__main__':unittest.main()
