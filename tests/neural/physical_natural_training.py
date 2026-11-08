@@ -202,7 +202,7 @@ def extract(output, guard):
     capacity = len(training_sources)*plan['tiles_per_source']
     side = TILE//2
     tiles = np.lib.format.open_memmap(output/'training.npy', mode='w+', dtype='<f4', shape=(capacity, 4, side, side))
-    entries, count = [], 0
+    entries, kept = [], 0
     for row in training_sources:
         guard.check()
         path = Path(row['source'])
@@ -217,10 +217,10 @@ def extract(output, guard):
             picked = choice.permutation(len(eligible))[:plan['tiles_per_source']]
             for index in sorted(picked.tolist()):
                 y, x = eligible[index]
-                tiles[count] = source_normalized(mosaic[y:y+TILE, x:x+TILE], divisor)
+                tiles[kept] = source_normalized(mosaic[y:y+TILE, x:x+TILE], divisor)
                 entries.append(dict(source=row['source'], crop_xy=[x, y],
-                    sha256=hashlib.sha256(np.asarray(tiles[count]).tobytes()).hexdigest()))
-                count += 1
+                    sha256=hashlib.sha256(np.asarray(tiles[kept]).tobytes()).hexdigest()))
+                kept += 1
             del mosaic
     tiles.flush()
     del tiles
@@ -265,7 +265,7 @@ def extract(output, guard):
         np.save(output/f'dark-{iso}.npy', np.stack(crops), allow_pickle=False)
         np.save(output/f'pedestal-{iso}.npy', np.stack(pedestals), allow_pickle=False)
         dark_entries[iso] = identities
-    write(output/'data.json', dict(status='extracted_natural_physical_inputs', training_tiles=count,
+    write(output/'data.json', dict(status='extracted_natural_physical_inputs', training_tiles=kept,
         training_sources=len(training_sources),
         archived_patch_reproduction=check, training_entries=entries, development_tiles=len(development),
         darks=dark_entries, files={p.name: digest(p) for p in sorted(output.glob('*.npy'))},
