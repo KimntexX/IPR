@@ -226,7 +226,10 @@ Elle ne vaut ni pour C-RAW, ni pour les autres boîtiers, ni pour tous les
 modes d’obturateur/températures. Les critères modèle +0,5 dB restent distincts
 de la qualification de son banc de mesure.
 
-**Noirs manquants :** viser 32 RAW bouchon réellement fermé à ISO100 et
+**Lot reçu le8 novembre :** 52 RAW àISO100 et55 àISO16000, tous au1/200s.
+Les splits32/20 et32/23 passent la répétabilité ; aucune nouvelle série
+à ces deux ISO n’est demandée maintenant. Pour un futur lot de calibration,
+viser 32 RAW bouchon réellement fermé à ISO100 et
 32 à ISO16000, à **1/200 s**, pour compléter les deux prises actuelles de
 chaque ISO. Garder la configuration de lecture, le mode d’obturateur et le
 mode d’entraînement de la scène, sans basculer en rafale rapide qui pourrait

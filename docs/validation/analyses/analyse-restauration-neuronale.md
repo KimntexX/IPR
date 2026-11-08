@@ -1,15 +1,14 @@
 # Restauration neuronale — qualification du corpus
 
-**État courant au 8 novembre 2026 — lancement conditionnel suspendu.**
-Le prévol naturel 8,16 M FP32 termine 2 × 1 024 pas ; gains sur proxies
-connus, pas de validation photographique. L’utilisateur demande la
-qualification **physique complète** avant le prochain 2 × 2 048 pas sous
-40 minutes. L’audit des données existantes et des cartes est réalisé ;
-les noirs ISO100/16000 n’ont que deux prises chacun, la référence secondaire
-ISO100 est stable mais le couple historique de références a changé de
-cadrage. Le banc reste non entièrement qualifié ; aucun nouveau modèle
-n’est lancé. Les corps de RAW déclarent tous RAW, pas CRAW, sur le périmètre
-inventorié. Voir la dernière campagne et les compléments d’acquisition.
+**État courant au 8 novembre 2026 — nouveaux noirs qualifiés par composante.**
+52 nouveaux noirs ISO100 et55 ISO16000, tousRAW/1/200s, ont levé le manque
+de répétitions. Les groupes32/20 et32/23 passent les contrôles indépendants
+de variance, spectre et corrélation. Les cartes du capteur entier sont
+construites aux cinq ISO du périmètre, avec pont natif signé vérifié sur
+quatre nouvelles sources. Le premier rejeu Poisson+noirs reproduit bien
+les variances mais ne satisfait pas tous les contrôles spectraux ; leur
+incertitude doit être prise en compte, notamment à6400. La qualification
+physique complète reste ouverte ; aucun2×2048pas/40min n’est lancé.
 
 **Point de décision au 7 novembre 2026, après la deuxième revue de Claude.**
 Le but reste un bénéfice visible et mesuré sur de vraies photos face aux
@@ -9552,3 +9551,117 @@ sombre. Tant que ces conditions, les profils physiques et les comparateurs
 ne passent pas, la prochaine campagne reste inactive. Les huit tests de
 l’audit précédent et onze tests ciblés de cette étape passent. Aucun push,
 fusion, tag, changement de production ni apprentissage supplémentaire.
+
+
+## 8 novembre 2026 — nouveaux noirs, cartographies complètes et premier rejeu physique
+
+L’utilisateur a ajouté107 RAW dans le dossier `protocole/blacks` :
+52 à ISO 100 (0367–0418),55 à ISO 16000 (0419–0473), tous au 1/200 s,
+Canon RAW. Les anciens constats « seulement deux noirs » décrivent le
+corpus précédent ; **ce manque est maintenant levé**. Le statut consolidé
+est conservé dans [la mémoire mise à jour](../raw/neural-physical-qualification-state-v002-20261108T115758Z.json).
+Aucune nouvelle prise n’est demandée dans cette étape ; les autres volets
+sont étudiés avant d’attribuer leurs limites à un manque de photos.
+
+### Répétabilité et protocole fixé avant décompression
+
+Les 32 premières prises de chaque ISO sont affectées à la calibration,
+les 20/23 suivantes au contrôle chronologique, sans exclusion par résultat.
+Toutes les empreintes RAW sont uniques dans leur groupe et vérifiées.
+Les seuils d’ingénierie de répétabilité sont fixés dans le manifeste avant
+lecture : différence de variance médiane≤5%,q95≤10%, différence relative
+de rapport PSD médiane≤10%,q95≤20%, différence absolue de lag médiane≤0,02,
+q95≤0,05. Ces seuils de composante ne sont pas la validation photographique.
+
+| ISO | Calibration / contrôle | Différence médiane variance | Différence médiane rapport PSD | Sigma temporel médian calibration / contrôle |
+| --- | ---: | ---: | ---: | ---: |
+|100|32/20|0,44%|1,51%|1,071/1,073 DN|
+|16000|32/23|0,37%|2,08%|58,406/58,443 DN|
+
+Les deux composantes passent tous ces gardes, y compris les quantiles.
+Le dernier terme de la loi de variance historique reste compatible :
+les nouvelles variances pleine image diffèrent d’environ−1,0à−2,7% à ISO 100,
+et−0,2à+2,1% à ISO 16000 selon la position Bayer. Aucun coefficient de pente
+éclairée n’est réajusté à partir de ces contrôles.
+
+### Capteur entier, structures communes et points atypiques
+
+Une moyenne et une variance temporelle sont construites en ligne sur
+**4 639 × 6 959=32 282 801 pixels visibles**, séparément pour calibration et
+contrôle. Les moments float32 sont contrôlés face au calcul hors ligne
+float64 sur fixtures ; erreur de moyenne testée<0,002 DN. Pas de
+soustraction de noir, écrêtage, interpolation ou correction des RAW.
+Le pic de mémoire privée du calcul des deux nouvelles séries est 0,723 Gio,
+pour un pic global observé de65,0% environ. Les tableaux restent des caches
+scientifiques dans le build ; les JSON et SHA256 font mémoire des mesures.
+
+Les cartes distinguent les quatre positions physiques et enregistrent les
+variances spatiales communes débiaisées et croisées. La recherche exploratoire
+de moyennes atypiques utilise `écart au piédestal>max(20 DN,10 SEM)` défini
+dans le code avant contrôle. ISO 100 donne 7 candidats, tous persistants dans
+le contrôle ; ISO 16000 donne 61 452 candidats dont61 406 persistants.
+Ce sont des positions selon un critère statistique, **pas un diagnostic de
+capteur défectueux** et pas une correction appliquée. Leur distribution et
+les cartes complètes sont conservées ; les fluctuations temporelles seules
+ne décrivent pas cette composante. Les candidats ISO 16000 sont répartis
+sur l’image, pas seulement dans les marges ; aucune périodicité simple
+4/8/16/32 n’est démontrée par le sondage de résidus de coordonnées.
+
+Les séries existantes ISO 3200/6400/51200 sont également cartographiées,
+sans demander de nouvelles prises : splits5/5,6/6 et5/5, avec davantage
+d’incertitude temporelle que les nouveaux lots32/20–23. Elles passent
+les mêmes contrôles ROI de répétabilité. La construction de cartes ne
+constitue pas une qualification complète de chaque condition de lecture.
+
+### Nouveau pont natif et conservation des négatifs
+
+Les premières prises de calibration et les dernières de contrôle de chaque
+nouvel ISO passent la capture RGB native puis le rejeu CFA, soit quatre RAW
+et36 ROI. Les DN et flottants se rapprochent de rawpy sans écart ; les ROI
+RGB se rejouent au bit près. La référence utilise les outils natifs archivés,
+pas une reconstruction revendiquée deHEAD. Les noirs appliqués sont512 aux
+quatre positions ISO 100 et autour de2046/2047 à ISO 16000, mesurés par l’entrée
+IPR. Blancs 13 995 et 14 351 respectivement. Le CFA normalisé signé conserve
+27–28% de valeurs strictement négatives à ISO 100, environ 49% à ISO 16000.
+La quantification à faible bruit explique que le premier compte ne soit
+pas nécessairement50% ; aucune borne à zéro n’est ajoutée dans le banc.
+
+### Rejeu physique initial : variance convaincante, spectre encore à qualifier
+
+Un prototype compose des photons Poisson au gain DN issu des seules pentes
+historiques d’ajustement et des paires de noirs empiriques de calibration,
+sans remplacer ces noirs par une gaussienne. Les paires sont sans remise
+au sein d’un tirage afin de ne pas sous-estimer leur variance de différence.
+L’arrondi séparé de la composante photon est une approximation déclarée,
+et la saturation ADC n’est pas modélisée. Le prototype porte sur les marges
+temporelles de 422 points de contrôle historiques connus aux cinq ISO,
+pas sur le simulateur naturel complet. Les motifs fixes communs s’annulent
+dans ces différences et ne sont donc pas validés par ce test.
+
+|ISO|Erreur relative médiane variance|Écart relatif médian rapport PSD|Garde du premier rejeu|
+|---|---:|---:|---|
+|100|1,63%|7,95%|passe|
+|3200|1,44%|8,59%|passe|
+|6400|0,85%|11,19%|ne passe pas le seuil PSD10%|
+|16000|0,90%|7,85%|passe|
+|51200|3,07%|12,39%|ne passe pas PSD et lag médian|
+
+Aucun coefficient ni seuil n’est retouché pour faire passer le tableau.
+Un contrôle nul évalue alors la dispersion du protocole lui-même : une
+paire indépendante issue du même simulateur est comparée à son estimation
+sur huit paires, avec de nouvelles graines déclarées. Sous ce modèle
+identique, l’erreur PSD médiane vaut déjà10,53% à ISO 6400 (contre11,19% face
+au réel). Le franchissement du seuil ne prouve donc pas à lui seul un
+modèle incorrect. ÀISO 51200, le plancher nul PSD est8,13% et le lag médian
+nul0,0081, contre12,39% et0,0217 face au réel : cet écart reste à diagnostiquer.
+Une dérive/mouvement résiduel des paires éclairées et une différence du
+modèle temporel ne sont pas séparés par ces seuls chiffres.
+
+**Verdict :** les nouveaux noirs sont exploitables et la composante de
+répétabilité est qualifiée sur le périmètre mesuré. Les cartographies sont
+construites aux cinq ISO. La qualification du simulateur conjoint, des
+comparateurs, de l’incertitude de référence et des décisions spectrales
+n’est pas achevée. Le banc entier ne reçoit pas le statut «physiquement
+qualifié» et la condition utilisateur interdit toujours de lancer le
+2×2048pas. Huit nouveaux tests ciblés passent. Aucun nouveau noir à refaire
+n’est demandé, ni aucun changement de production, push, fusion ou tag.
