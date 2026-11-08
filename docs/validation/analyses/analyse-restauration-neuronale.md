@@ -1,13 +1,15 @@
 # Restauration neuronale — qualification du corpus
 
-**État courant au 8 novembre 2026 — qualification partielle.**
-Le prévol naturel 8,16 M FP32 a terminé ses deux graines à 1 024 pas ; ses
-scores restent des mesures de développement dans une normalisation provisoire.
-En parallèle, provenance et extraction des 36 patchs vérifiées ; le pont CFA
-vers l’IPR archivé compare 5 308 416 valeurs sans écart. Un jeu distinct
-normalisé noir 512 / blanc 13 995 est préparé. BM3D externe est installé mais
-pas encore un étalon CFA calibré. L’incertitude des proxies, le bruit physique
-et le jeu final restent à qualifier. Aucun débruitage neuronal intégré en production.
+**État courant au 8 novembre 2026 — lancement conditionnel suspendu.**
+Le prévol naturel 8,16 M FP32 termine 2 × 1 024 pas ; gains sur proxies
+connus, pas de validation photographique. L’utilisateur demande la
+qualification **physique complète** avant le prochain 2 × 2 048 pas sous
+40 minutes. L’audit des données existantes et des cartes est réalisé ;
+les noirs ISO100/16000 n’ont que deux prises chacun, la référence secondaire
+ISO100 est stable mais le couple historique de références a changé de
+cadrage. Le banc reste non entièrement qualifié ; aucun nouveau modèle
+n’est lancé. Les corps de RAW déclarent tous RAW, pas CRAW, sur le périmètre
+inventorié. Voir la dernière campagne et les compléments d’acquisition.
 
 **Point de décision au 7 novembre 2026, après la deuxième revue de Claude.**
 Le but reste un bénéfice visible et mesuré sur de vraies photos face aux
@@ -9393,3 +9395,160 @@ existants sont la priorité. Suivi de qualification partielle :
 Huit tests ciblés passent (séparation, bordures, orientation, valeurs signées,
 diviseur commun et entrées invalides). Aucune modification moteur, aucun
 changement de recette de la campagne en cours, aucun push, fusion ou tag.
+
+
+## 8 novembre 2026 — résultats du prévol naturel FP32 à 1 024 pas
+
+Mémoire dérivée : [analyse du prévol](../raw/neural-natural-preflight-analysis-v001-20261108T102450Z.json). Les deux graines
+terminent 1 024 mises à jour, avec sauvegarde, en 12 min 52 s pour la campagne
+v002 (extraction, chauffe, contrôles et sauvegardes inclus). Le recalcul des
+activations maintient le pic privé sous 3,93 Gio. Les médianes d’une mise à
+jour sont 0,350 s et 0,357 s.
+
+| Sigma ajouté | Gain médian / entrée bruitée, graine 71 | Graine 73 |
+| --- | ---: | ---: |
+| 0,005 | 1,84 dB | 2,35 dB |
+| 0,01 | 3,43 dB | 3,81 dB |
+| 0,02 | 4,83 dB | 4,48 dB |
+| 0,04 | 5,63 dB | 5,40 dB |
+
+Les deux scènes de développement montrent la même tendance ; il ne faut pas
+traiter leurs neuf patchs respectifs comme dix-huit scènes indépendantes.
+La L1 du dernier lot vaut 0,00623 et 0,00598, contre 0,01995 au premier lot.
+Les lots changent : ces deux seules pertes ne constituent pas une courbe
+appariée, contrairement aux contrôles fixes.
+
+Le réseau apprend donc sur ces proxies, mais aucun avantage sur une référence
+CFA calibrée n’est encore démontré. Les biais moyens maximaux par plan/patch
+atteignent 0,00324 et 0,00277 au bruit ajouté 0,04 ; les noirs, couleurs,
+détails et spectres résiduels doivent être contrôlés. Ce n’est pas une
+validation de modèle. Les scores sont dans le domaine provisoire rawpy,
+pas dans le nouveau domaine signé IPR, et ne seront pas directement comparés
+à des scores d’un autre domaine.
+
+L’utilisateur autorise ensuite une qualification du banc, puis 2 048 pas par
+graine sous une limite de 40 minutes. Le lancement reste conditionné au
+périmètre de qualification : contenu naturel CFA à corruption contrôlée
+ou qualification physique complète du capteur/CR3. La distinction est
+soumise à l’utilisateur pendant la préparation ; aucune qualification
+physique complète n’est déclarée ni contournée par un changement de nom.
+
+
+## 8 novembre 2026 — qualification physique demandée avant 2 × 2 048 pas
+
+L’utilisateur choisit explicitement d’attendre la qualification physique
+complète plutôt que de qualifier seulement la corruption gaussienne des
+proxies. **Aucun entraînement de 2 048 pas n’est donc lancé.** Le statut et
+les conditions figurent dans [la mémoire de qualification physique](../raw/neural-physical-qualification-state-v001-20261108T105848Z.json).
+La recette cible est paramétrée (8,16 M, FP32, recalcul des activations,
+lot 8, Adam/L1, graines 71/73, 2 048 pas chacune), mais pas scellée ni
+exécutable : le profil physique et le dataset qualifié restent à renseigner.
+Le calcul pur estimé est de l’ordre de 24 minutes, hors contrôles/sauvegardes ;
+la limite de campagne sera 40 minutes à partir de son lancement, avec une
+grâce de sauvegarde de 45 s. Le changement de domaine interdit une reprise
+silencieuse des poids du prévol rawpy comme continuation équivalente.
+
+### Inventaire complémentaire et nature du RAW
+
+Les cartes D: et E: ont été remontées par l’utilisateur et leurs **987 fichiers
+CR3** ont été lus en métadonnées, sans décompression des nouveaux pixels.
+Ce ne sont pas nécessairement 987 prises indépendantes : les copies ne seront
+jamais comptées comme répétitions sans contrôle SHA-256. Aucun ensemble
+complémentaire aux conditions ISO100/16000 à 1/200 s n’a été retrouvé sur
+ces cartes. Les neuf photos ISO16000 présentes à d’autres temps de pose
+ne deviennent pas des noirs bouchon fermé par simple proximité d’ISO.
+
+Le lecteur borné CMT3 lit CameraSettings Quality (index3) et FileInfo
+RawJpgQuality (index6), selon les [définitions publiques ExifTool](https://exiftool.org/TagNames/Canon.html).
+Les 210 RAW du banc DN et les 987 fichiers des cartes déclarent **RAW**,
+pas CRAW. Cela ne signifie pas « fichier non compressé » ni preuve de
+l’absence de tout traitement interne. On ne peut pas attribuer les
+corrélations observées au C-RAW ni qualifier cette variante sans données.
+Les champs et versions du lecteur sont conservés dans la mémoire de modes.
+
+### Noirs : bruit temporel, structures communes et spectre
+
+L’étude réutilise les 74 noirs décompressés déjà figés, sans nouvelle sélection
+par score. Chaque groupe est séparé par ISO, exposition et jour. Un minimum
+de huit prises est demandé ici pour permettre un contrôle en deux moitiés
+à au moins quatre prises, pas comme garantie universelle de calibration.
+Les moyennes temporelles et leurs dérives sont conservées ; les métriques
+spectrales retirent le décalage moyen, sans le masquer dans les résultats.
+
+| ISO, série du 28 octobre | Noirs dans le cache figé | Différence médiane de variance entre moitiés |
+| --- | ---: | ---: |
+| 1600 | 12 | ~0,5 % |
+| 3200 | 10 | ~0,6 % |
+| 6400 | 12 | ~0,6 % |
+| 12800 | 8 | ~0,7 % |
+| 25600 | 10 | ~0,7 % |
+| 51200 | 10 | ~0,6 % |
+
+Les fichiers locaux vivants contiennent trois noirs supplémentaires non
+appariés dans cette ancienne extraction ; aucun n’est à ISO100/16000.
+**Ces deux ISO n’ont que deux prises chacun**, pas de seconde session noire
+comparable ni de contrôle en deux sous-rafales. Le bruit temporel médian
+mesuré est d’environ 1,09 DN à ISO100 et 58,2 DN à ISO16000.
+
+À ISO100, les corrélations médianes entre voisins sont environ 0,165 en
+horizontal et 0,163 en vertical, et le rapport PSD basse/haute fréquence
+est 2,19. Le bruit de lecture n’est donc pas décrit intégralement par une
+variance blanche indépendante. Il n’y a pas de cause capteur/quantification/
+codec isolée par ce seul constat. À ISO51200 (28 octobre), la composante
+spatiale commune débiaisée vaut environ 1 818 DN² en médiane, contre une
+variance temporelle de l’ordre de 32 546 DN². Cette composante peut mêler
+motif fixe, dark shading et illumination résiduelle : elle n’est pas une
+carte de défauts calibrée. Les statistiques de neuf ROI ne qualifient pas
+les pixels chauds ou toute la surface du capteur.
+
+### Paires éclairées : ne pas confondre justesse de variance et spectre
+
+L’audit prend exactement les anciens points admissibles de contrôle de la
+loi de variance, sans filtre après résultats : 531 observations ROI/plan
+réparties sur 24 paires. Ce contrôle historique est désormais connu, pas
+une nouvelle réserve. Les médianes de corrélation des voisins sont proches
+de zéro aux ISO100 à 16000 ; les rapports PSD basse/haute fréquence sont
+proches de 1. À ISO51200, les corrélations médianes sont 0,019/0,016 et le
+rapport PSD 1,14. La loi de variance est une base utile ; la composante de
+lecture corrélée et les structures communes ne doivent pas être remplacées
+sans contrôle par un seul tirage gaussien blanc. Un premier lancement de
+l’orchestrateur a refusé le schéma d’indices des frames et s’est arrêté
+sans mesure ; il est conservé. Le lecteur courant utilise le schéma entier
+figé et ses chemins d’erreur sont testés.
+
+### Références : le constat RGB ne suffit pas à rejeter le CFA
+
+Pour vérifier une éventuelle porte fermée à tort, les deux rafales de
+contrôle ISO100 sont relues directement en DN CFA : neuf prises 0301–0309
+et huit prises 0320–0327. Aucun recalage, échange de référence ou changement
+d’intensité n’est appliqué. La comparaison entre leurs moyennes dépasse
+largement la différence attendue du seul bruit temporel ; le diagnostic
+sur les régions structurées indique un déplacement d’environ 90–96 pixels
+horizontaux et 11–24 pixels verticaux. Les régions peu structurées ont des
+réponses faibles et ne prouvent pas un mouvement local différent.
+
+La comparaison entre moitiés donne un rapport MSE observée/bruit des moyennes
+attendu de **2,02 pour la première rafale**, et **1,024 pour la seconde**
+(médianes sur ROI/plans). La seconde est donc une candidate utile pour une
+calibration prospective. Le contrôle RGB historique fournissait déjà des
+exemples admissibles avec cette référence secondaire, tout en conservant
+son verdict primaire insuffisant. On ne remplace pas rétroactivement cette
+référence et on ne transforme pas cette scène déjà inspectée en nouveau
+jeu final indépendant. Le manque de référence ne signifie pas que tout
+le corpus est inutilisable ; le changement de cadrage doit être traité
+ou évité, sans interpolation CFA présentée comme vérité exacte.
+
+### Ce qui bloque et acquisition ciblée
+
+Les priorités sont détaillées dans le
+[protocole de groupe, compléments physiques](../protocols/protocole-bruit.md#compléments-physiques-prioritaires--8-novembre-2026).
+Conserver les séries noires existantes : ne pas tout refaire. Compléter
+les deux ISO insuffisants et vérifier une série éclairée stable couvrant
+les hautes sensibilités ; une seule nouvelle scène pilote suffit pour
+commencer le contrôle, pas pour déclarer la généralisation finale.
+Le cadrage, la mise au point, le mode d’obturateur et l’éclairage doivent
+rester contrôlés ; le bouchon fermé ne peut pas être remplacé par une pièce
+sombre. Tant que ces conditions, les profils physiques et les comparateurs
+ne passent pas, la prochaine campagne reste inactive. Les huit tests de
+l’audit précédent et onze tests ciblés de cette étape passent. Aucun push,
+fusion, tag, changement de production ni apprentissage supplémentaire.

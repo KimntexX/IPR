@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "measured_at_utc": "2026-11-08T10:58:48.072758+00:00",
+  "status": "not_fully_physically_qualified_no_training_launch",
+  "user_decision": "Wait for complete physical qualification before 2048 steps per seed",
+  "parents": {
+    "preflight": {
+      "path": "docs\\validation\\raw\\neural-natural-preflight-analysis-v001-20261108T102450Z.json",
+      "sha256": "91c91cbfccf06d08adfb3c3b7b5e5d4978cd633a3f7b70cef9aee00fac02267d"
+    },
+    "dark": {
+      "path": "docs\\validation\\raw\\neural-physical-dark-audit-v001-20261108T103856Z.json",
+      "sha256": "08d6d1715a56698cb79b483a99c87aba2696c8019eb54f5cb1488ccd071d5303"
+    },
+    "light": {
+      "path": "docs\\validation\\raw\\neural-physical-light-audit-v001-20261108T104912Z.json",
+      "sha256": "084256df7e2d06fab573a54b2b0a94bc6639f7e8c089006de410f99c6f08cc68"
+    },
+    "references": {
+      "path": "docs\\validation\\raw\\neural-physical-reference-stability-v001-20261108T104515Z.json",
+      "sha256": "468f9af14f403f80ca9e82ffa7b5e21c39699cf4effd90379faae5d0c7bcfedf"
+    },
+    "cards": {
+      "path": "docs\\validation\\raw\\neural-physical-card-inventory-v001-20261108T104129Z.json",
+      "sha256": "485d5f82ebee1f6f306691bf0fd643c34374b3316fe1daee6bd266ac7dd36675"
+    },
+    "modes": {
+      "path": "docs\\validation\\raw\\neural-physical-mode-audit-v001-20261108T105848Z.json",
+      "sha256": "c37b33ae276066c53899db21be5d8d3f03decd794455869b25105b5f5f7ffd8f"
+    }
+  },
+  "scope": {
+    "camera": "Canon EOS R6 Mark III",
+    "mode": "Canon metadata RAW, not CRAW",
+    "initial_discrete_ISO": [
+      100,
+      3200,
+      6400,
+      16000,
+      51200
+    ],
+    "other_camera_CRAW_and_intermediate_ISO_not_automatically_qualified": true
+  },
+  "passed": [
+    "Native signed CFA input bridge on archived ROIs",
+    "Physical temporal variance law exploratory heldout measurements already available",
+    "Stable half-burst dark variances at3200/6400/51200 within the measured dataset",
+    "Secondary ISO100 control burst internally consistent; retain as future calibration candidate"
+  ],
+  "open": [
+    "Only two dark frames at ISO100 and16000; no split-burst stability or robust fixed-map estimate",
+    "Residual references/noise independence, full-frame hot/fixed/line components and temporal/readout conditions not fully qualified",
+    "Historical primary/secondary control frames shifted; no silent reference substitution",
+    "Variance law alone does not generate qualified structured physical noise",
+    "Physical comparators and final scene/session assignment pending"
+  ],
+  "next_training_draft": {
+    "status": "pending_not_executable_or_sealed",
+    "steps_per_seed": 2048,
+    "seeds": [
+      71,
+      73
+    ],
+    "parameters": 8162688,
+    "precision": "fp32",
+    "activation_checkpointing": true,
+    "effective_batch": 8,
+    "optimizer": "Adam 1e-4",
+    "objective": "unweighted L1",
+    "maximum_campaign_seconds": 2400,
+    "checkpoint_grace_seconds": 45,
+    "deadline_starts_only_after_qualification_and_launch": true,
+    "noise_profile": null,
+    "qualified_dataset": null,
+    "no_resume_across_changed_units": true,
+    "estimated_learning_seconds": 1462
+  },
+  "no_new_training_started": true,
+  "issue": "https://github.com/KimntexX/IPR/issues/14"
+}

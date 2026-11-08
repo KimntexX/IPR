@@ -1,0 +1,582 @@
+{
+  "schema_version": 1,
+  "measured_at_utc": "2026-11-08T10:24:50.722237+00:00",
+  "parent": {
+    "path": "build-patch_neural_restoration\\natural-cfa-preflight-v002\\progress.json",
+    "sha256": "2f88507ab4211a3dd32e7542bb2e20f5c16bed31dcb3d76a1741c236df6f0b1f"
+  },
+  "status": "completed_development_learning_not_photographic_model_qualification",
+  "seeds": [
+    {
+      "seed": 71,
+      "completed_steps": 1024,
+      "median_step_seconds": 0.35030354995978996,
+      "first_l1": 0.01994987018406391,
+      "last_l1": 0.0062327757477760315,
+      "peak_private_gib": 3.928863525390625,
+      "controls": [
+        {
+          "step": 0,
+          "sigma": 0.005,
+          "median_psnr_gain_vs_noisy_db": 0.0,
+          "minimum_psnr_gain_vs_noisy_db": -3.159406617741258e-07,
+          "maximum_abs_plane_bias": 7.308655040105805e-05,
+          "scene_medians": [
+            {
+              "development_source_index": 0,
+              "median_gain_db": 0.0
+            },
+            {
+              "development_source_index": 1,
+              "median_gain_db": 0.0
+            }
+          ]
+        },
+        {
+          "step": 0,
+          "sigma": 0.01,
+          "median_psnr_gain_vs_noisy_db": 0.0,
+          "minimum_psnr_gain_vs_noisy_db": -3.1536735507084254e-07,
+          "maximum_abs_plane_bias": 0.00012971357500646263,
+          "scene_medians": [
+            {
+              "development_source_index": 0,
+              "median_gain_db": 0.0
+            },
+            {
+              "development_source_index": 1,
+              "median_gain_db": 0.0
+            }
+          ]
+        },
+        {
+          "step": 0,
+          "sigma": 0.02,
+          "median_psnr_gain_vs_noisy_db": 0.0,
+          "minimum_psnr_gain_vs_noisy_db": 0.0,
+          "maximum_abs_plane_bias": 0.00024717289488762617,
+          "scene_medians": [
+            {
+              "development_source_index": 0,
+              "median_gain_db": 0.0
+            },
+            {
+              "development_source_index": 1,
+              "median_gain_db": 0.0
+            }
+          ]
+        },
+        {
+          "step": 0,
+          "sigma": 0.04,
+          "median_psnr_gain_vs_noisy_db": 0.0,
+          "minimum_psnr_gain_vs_noisy_db": 0.0,
+          "maximum_abs_plane_bias": 0.0005630632513202727,
+          "scene_medians": [
+            {
+              "development_source_index": 0,
+              "median_gain_db": 0.0
+            },
+            {
+              "development_source_index": 1,
+              "median_gain_db": 0.0
+            }
+          ]
+        },
+        {
+          "step": 256,
+          "sigma": 0.005,
+          "median_psnr_gain_vs_noisy_db": 0.27339401873229774,
+          "minimum_psnr_gain_vs_noisy_db": 0.2603717461266759,
+          "maximum_abs_plane_bias": 0.0004700487479567528,
+          "scene_medians": [
+            {
+              "development_source_index": 0,
+              "median_gain_db": 0.2729968322813324
+            },
+            {
+              "development_source_index": 1,
+              "median_gain_db": 0.2739823191565064
+            }
+          ]
+        },
+        {
+          "step": 256,
+          "sigma": 0.01,
+          "median_psnr_gain_vs_noisy_db": 0.5279764615745635,
+          "minimum_psnr_gain_vs_noisy_db": 0.5087151600253769,
+          "maximum_abs_plane_bias": 0.0008096859673969448,
+          "scene_medians": [
+            {
+              "development_source_index": 0,
+              "median_gain_db": 0.5279750005218354
+            },
+            {
+              "development_source_index": 1,
+              "median_gain_db": 0.528047573915331
+            }
+          ]
+        },
+        {
+          "step": 256,
+          "sigma": 0.02,
+          "median_psnr_gain_vs_noisy_db": 0.8994050807791804,
+          "minimum_psnr_gain_vs_noisy_db": 0.8671426102775509,
+          "maximum_abs_plane_bias": 0.0011958589311689138,
+          "scene_medians": [
+            {
+              "development_source_index": 0,
+              "median_gain_db": 0.9098316602257189
+            },
+            {
+              "development_source_index": 1,
+              "median_gain_db": 0.8981628552687797
+            }
+          ]
+        },
+        {
+          "step": 256,
+          "sigma": 0.04,
+          "median_psnr_gain_vs_noisy_db": 1.223065518787135,
+          "minimum_psnr_gain_vs_noisy_db": 1.1931658425698348,
+          "maximum_abs_plane_bias": 0.0008436650387011468,
+          "scene_medians": [
+            {
+              "development_source_index": 0,
+              "median_gain_db": 1.225163923027209
+            },
+            {
+              "development_source_index": 1,
+              "median_gain_db": 1.221772185387819
+            }
+          ]
+        },
+        {
+          "step": 512,
+          "sigma": 0.005,
+          "median_psnr_gain_vs_noisy_db": 0.6573049105461481,
+          "minimum_psnr_gain_vs_noisy_db": 0.6057896680096639,
+          "maximum_abs_plane_bias": 0.00025555468164384365,
+          "scene_medians": [
+            {
+              "development_source_index": 0,
+              "median_gain_db": 0.6591073152127662
+            },
+            {
+              "development_source_index": 1,
+              "median_gain_db": 0.6546533642200468
+            }
+          ]
+        },
+        {
+          "step": 512,
+          "sigma": 0.01,
+          "median_psnr_gain_vs_noisy_db": 1.2627700002123166,
+          "minimum_psnr_gain_vs_noisy_db": 1.1968651065663665,
+          "maximum_abs_plane_bias": 0.00047197091043926775,
+          "scene_medians": [
+            {
+              "development_source_index": 0,
+              "median_gain_db": 1.262600650899373
+            },
+            {
+              "development_source_index": 1,
+              "median_gain_db": 1.2629393495252603
+            }
+          ]
+        },
+        {
+          "step": 512,
+          "sigma": 0.02,
+          "median_psnr_gain_vs_noisy_db": 1.841330992998449,
+          "minimum_psnr_gain_vs_noisy_db": 1.7944663955295626,
+          "maximum_abs_plane_bias": 0.000832518155220896,
+          "scene_medians": [
+            {
+              "development_source_index": 0,
+              "median_gain_db": 1.8693337863966806
+            },
+            {
+              "development_source_index": 1,
+              "median_gain_db": 1.8374721546816697
+            }
+          ]
+        },
+        {
+          "step": 512,
+          "sigma": 0.04,
+          "median_psnr_gain_vs_noisy_db": 2.4224843413241777,
+          "minimum_psnr_gain_vs_noisy_db": 2.403639980698263,
+          "maximum_abs_plane_bias": 0.0014814516762271523,
+          "scene_medians": [
+            {
+              "development_source_index": 0,
+              "median_gain_db": 2.4204723963433445
+            },
+            {
+              "development_source_index": 1,
+              "median_gain_db": 2.427782738914319
+            }
+          ]
+        },
+        {
+          "step": 1024,
+          "sigma": 0.005,
+          "median_psnr_gain_vs_noisy_db": 1.8442253200993706,
+          "minimum_psnr_gain_vs_noisy_db": 1.584537519686306,
+          "maximum_abs_plane_bias": 0.00037542343488894403,
+          "scene_medians": [
+            {
+              "development_source_index": 0,
+              "median_gain_db": 1.8513859701310653
+            },
+            {
+              "development_source_index": 1,
+              "median_gain_db": 1.8415976525921702
+            }
+          ]
+        },
+        {
+          "step": 1024,
+          "sigma": 0.01,
+          "median_psnr_gain_vs_noisy_db": 3.4313019459018994,
+          "minimum_psnr_gain_vs_noisy_db": 3.1609902180498954,
+          "maximum_abs_plane_bias": 0.0008465101127512753,
+          "scene_medians": [
+            {
+              "development_source_index": 0,
+              "median_gain_db": 3.382254647402943
+            },
+            {
+              "development_source_index": 1,
+              "median_gain_db": 3.4950057799084124
+            }
+          ]
+        },
+        {
+          "step": 1024,
+          "sigma": 0.02,
+          "median_psnr_gain_vs_noisy_db": 4.827747393415259,
+          "minimum_psnr_gain_vs_noisy_db": 4.298473694569635,
+          "maximum_abs_plane_bias": 0.001875192509032786,
+          "scene_medians": [
+            {
+              "development_source_index": 0,
+              "median_gain_db": 4.527100375205028
+            },
+            {
+              "development_source_index": 1,
+              "median_gain_db": 4.949654175343011
+            }
+          ]
+        },
+        {
+          "step": 1024,
+          "sigma": 0.04,
+          "median_psnr_gain_vs_noisy_db": 5.630947370464491,
+          "minimum_psnr_gain_vs_noisy_db": 5.438716311951051,
+          "maximum_abs_plane_bias": 0.0032406034879386425,
+          "scene_medians": [
+            {
+              "development_source_index": 0,
+              "median_gain_db": 5.629232263015346
+            },
+            {
+              "development_source_index": 1,
+              "median_gain_db": 5.632662477913636
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 73,
+      "completed_steps": 1024,
+      "median_step_seconds": 0.3565995499957353,
+      "first_l1": 0.01994987018406391,
+      "last_l1": 0.005984173156321049,
+      "peak_private_gib": 3.9249649047851562,
+      "controls": [
+        {
+          "step": 0,
+          "sigma": 0.005,
+          "median_psnr_gain_vs_noisy_db": 0.0,
+          "minimum_psnr_gain_vs_noisy_db": -3.159406617741258e-07,
+          "maximum_abs_plane_bias": 7.308655040105805e-05,
+          "scene_medians": [
+            {
+              "development_source_index": 0,
+              "median_gain_db": 0.0
+            },
+            {
+              "development_source_index": 1,
+              "median_gain_db": 0.0
+            }
+          ]
+        },
+        {
+          "step": 0,
+          "sigma": 0.01,
+          "median_psnr_gain_vs_noisy_db": 0.0,
+          "minimum_psnr_gain_vs_noisy_db": -3.1536735507084254e-07,
+          "maximum_abs_plane_bias": 0.00012971357500646263,
+          "scene_medians": [
+            {
+              "development_source_index": 0,
+              "median_gain_db": 0.0
+            },
+            {
+              "development_source_index": 1,
+              "median_gain_db": 0.0
+            }
+          ]
+        },
+        {
+          "step": 0,
+          "sigma": 0.02,
+          "median_psnr_gain_vs_noisy_db": 0.0,
+          "minimum_psnr_gain_vs_noisy_db": 0.0,
+          "maximum_abs_plane_bias": 0.00024717289488762617,
+          "scene_medians": [
+            {
+              "development_source_index": 0,
+              "median_gain_db": 0.0
+            },
+            {
+              "development_source_index": 1,
+              "median_gain_db": 0.0
+            }
+          ]
+        },
+        {
+          "step": 0,
+          "sigma": 0.04,
+          "median_psnr_gain_vs_noisy_db": 0.0,
+          "minimum_psnr_gain_vs_noisy_db": 0.0,
+          "maximum_abs_plane_bias": 0.0005630632513202727,
+          "scene_medians": [
+            {
+              "development_source_index": 0,
+              "median_gain_db": 0.0
+            },
+            {
+              "development_source_index": 1,
+              "median_gain_db": 0.0
+            }
+          ]
+        },
+        {
+          "step": 256,
+          "sigma": 0.005,
+          "median_psnr_gain_vs_noisy_db": 0.4912400805084029,
+          "minimum_psnr_gain_vs_noisy_db": 0.46506808443246617,
+          "maximum_abs_plane_bias": 0.0003575626469682902,
+          "scene_medians": [
+            {
+              "development_source_index": 0,
+              "median_gain_db": 0.47707447171633155
+            },
+            {
+              "development_source_index": 1,
+              "median_gain_db": 0.49784515255406236
+            }
+          ]
+        },
+        {
+          "step": 256,
+          "sigma": 0.01,
+          "median_psnr_gain_vs_noisy_db": 0.7481636062053016,
+          "minimum_psnr_gain_vs_noisy_db": 0.7324042987020605,
+          "maximum_abs_plane_bias": 0.0005451065371744335,
+          "scene_medians": [
+            {
+              "development_source_index": 0,
+              "median_gain_db": 0.7454498940055443
+            },
+            {
+              "development_source_index": 1,
+              "median_gain_db": 0.7540763136247125
+            }
+          ]
+        },
+        {
+          "step": 256,
+          "sigma": 0.02,
+          "median_psnr_gain_vs_noisy_db": 1.1574742829972315,
+          "minimum_psnr_gain_vs_noisy_db": 1.1335878420508125,
+          "maximum_abs_plane_bias": 0.0006775892106816173,
+          "scene_medians": [
+            {
+              "development_source_index": 0,
+              "median_gain_db": 1.1670201111730778
+            },
+            {
+              "development_source_index": 1,
+              "median_gain_db": 1.1517553273385743
+            }
+          ]
+        },
+        {
+          "step": 256,
+          "sigma": 0.04,
+          "median_psnr_gain_vs_noisy_db": 1.599501960732577,
+          "minimum_psnr_gain_vs_noisy_db": 1.57910799838907,
+          "maximum_abs_plane_bias": 0.0008377038757316768,
+          "scene_medians": [
+            {
+              "development_source_index": 0,
+              "median_gain_db": 1.5987720269605394
+            },
+            {
+              "development_source_index": 1,
+              "median_gain_db": 1.6002318945046148
+            }
+          ]
+        },
+        {
+          "step": 512,
+          "sigma": 0.005,
+          "median_psnr_gain_vs_noisy_db": 1.1258973026745402,
+          "minimum_psnr_gain_vs_noisy_db": 1.0341537354527637,
+          "maximum_abs_plane_bias": 0.00023734357091598213,
+          "scene_medians": [
+            {
+              "development_source_index": 0,
+              "median_gain_db": 1.1235480282844352
+            },
+            {
+              "development_source_index": 1,
+              "median_gain_db": 1.138573151610756
+            }
+          ]
+        },
+        {
+          "step": 512,
+          "sigma": 0.01,
+          "median_psnr_gain_vs_noisy_db": 2.078607092976798,
+          "minimum_psnr_gain_vs_noisy_db": 1.9635707832023486,
+          "maximum_abs_plane_bias": 0.00034277202212251723,
+          "scene_medians": [
+            {
+              "development_source_index": 0,
+              "median_gain_db": 2.0764897697816624
+            },
+            {
+              "development_source_index": 1,
+              "median_gain_db": 2.080724416171934
+            }
+          ]
+        },
+        {
+          "step": 512,
+          "sigma": 0.02,
+          "median_psnr_gain_vs_noisy_db": 2.68862726833558,
+          "minimum_psnr_gain_vs_noisy_db": 2.6057019525485847,
+          "maximum_abs_plane_bias": 0.0004269337223377079,
+          "scene_medians": [
+            {
+              "development_source_index": 0,
+              "median_gain_db": 2.7016010307713327
+            },
+            {
+              "development_source_index": 1,
+              "median_gain_db": 2.6825895140488116
+            }
+          ]
+        },
+        {
+          "step": 512,
+          "sigma": 0.04,
+          "median_psnr_gain_vs_noisy_db": 2.9688580456915865,
+          "minimum_psnr_gain_vs_noisy_db": 2.928047821411207,
+          "maximum_abs_plane_bias": 0.0008396095363423228,
+          "scene_medians": [
+            {
+              "development_source_index": 0,
+              "median_gain_db": 2.9724776117202163
+            },
+            {
+              "development_source_index": 1,
+              "median_gain_db": 2.9597871812032555
+            }
+          ]
+        },
+        {
+          "step": 1024,
+          "sigma": 0.005,
+          "median_psnr_gain_vs_noisy_db": 2.346237625946813,
+          "minimum_psnr_gain_vs_noisy_db": 2.0325363711707847,
+          "maximum_abs_plane_bias": 0.00040048774098977447,
+          "scene_medians": [
+            {
+              "development_source_index": 0,
+              "median_gain_db": 2.3356137563001544
+            },
+            {
+              "development_source_index": 1,
+              "median_gain_db": 2.3863492220184517
+            }
+          ]
+        },
+        {
+          "step": 1024,
+          "sigma": 0.01,
+          "median_psnr_gain_vs_noisy_db": 3.8142623588462885,
+          "minimum_psnr_gain_vs_noisy_db": 3.4871255535480783,
+          "maximum_abs_plane_bias": 0.000809677701909095,
+          "scene_medians": [
+            {
+              "development_source_index": 0,
+              "median_gain_db": 3.7988701219024312
+            },
+            {
+              "development_source_index": 1,
+              "median_gain_db": 3.849791605474108
+            }
+          ]
+        },
+        {
+          "step": 1024,
+          "sigma": 0.02,
+          "median_psnr_gain_vs_noisy_db": 4.4776066477304965,
+          "minimum_psnr_gain_vs_noisy_db": 4.218095417620475,
+          "maximum_abs_plane_bias": 0.0016772504895925522,
+          "scene_medians": [
+            {
+              "development_source_index": 0,
+              "median_gain_db": 4.414530301489648
+            },
+            {
+              "development_source_index": 1,
+              "median_gain_db": 4.589099238994423
+            }
+          ]
+        },
+        {
+          "step": 1024,
+          "sigma": 0.04,
+          "median_psnr_gain_vs_noisy_db": 5.401005284243661,
+          "minimum_psnr_gain_vs_noisy_db": 5.300128437866418,
+          "maximum_abs_plane_bias": 0.0027725317049771547,
+          "scene_medians": [
+            {
+              "development_source_index": 0,
+              "median_gain_db": 5.4143847341214535
+            },
+            {
+              "development_source_index": 1,
+              "median_gain_db": 5.390523360949043
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "Known two-scene development, not independent scene holdout",
+    "Rawpy metadata normalization differs from verified IPR input",
+    "Gaussian corruption of single-frame ISO100 proxies, no calibrated ISO or clean sensor truth",
+    "Gains versus noisy input only, not versus BM3D or classical IPR",
+    "No detail or residual-spectrum qualification and no user visual validation"
+  ]
+}

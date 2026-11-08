@@ -57,7 +57,8 @@ pas l'absence : vérifier les images.
 1. Prendre **32 RAW à ISO100**, sans modifier les réglages dans la rafale,
    avec un histogramme laissant de la marge aux hautes lumières.
 2. Sans bouger la scène ni modifier l'ouverture, prendre **16 RAW à chacun
-   des ISO1600, 3200, 6400 et 12800**. Ajuster seulement le temps de pose
+   des ISO3200, 6400, 16000 et 51200** pour le banc B4 actuel.
+   Les ISO1600, 12800 et 25600 restent des extensions à qualifier séparément. Ajuster seulement le temps de pose
    entre les séries pour maintenir une luminosité proche. Ne pas changer
    le temps ou l'ISO à l'intérieur d'une série ; conserver les EXIF.
    L'équivalence des moyennes n'est pas garantie par le seul calcul ISO/temps.
@@ -214,3 +215,55 @@ Les scripts `audit_natural_bench.py`, `audit_native_cfa_bridge.py` et
 `prepare_native_normalized_cfa.py` réalisent les contrôles numériques actuels
 sur les sources déclarées. Ils ne qualifient pas seuls toute cette liste.
 L’audit n’utilise pas les scores neuronaux pour réassigner les images.
+
+
+### Compléments physiques prioritaires — 8 novembre 2026
+
+Cette acquisition complète les fichiers existants ; elle ne demande pas de
+refaire les séries noires 3200/6400/51200 déjà exploitables. La qualification
+initiale vise le **R6 Mark III, mode Canon RAW**, aux ISO explicitement testés.
+Elle ne vaut ni pour C-RAW, ni pour les autres boîtiers, ni pour tous les
+modes d’obturateur/températures. Les critères modèle +0,5 dB restent distincts
+de la qualification de son banc de mesure.
+
+**Noirs manquants :** viser 32 RAW bouchon réellement fermé à ISO100 et
+32 à ISO16000, à **1/200 s**, pour compléter les deux prises actuelles de
+chaque ISO. Garder la configuration de lecture, le mode d’obturateur et le
+mode d’entraînement de la scène, sans basculer en rafale rapide qui pourrait
+modifier la lecture du capteur. Si la référence ISO100 utilise 0,8 s, ajouter
+16 noirs ISO100 à 0,8 s pour contrôler l’effet du temps de pose. Ne pas
+substituer une scène sombre. Laisser la température se stabiliser, conserver
+les EXIF, et noter tout changement d’obturateur ou de réglage depuis les
+anciennes séries. Conserver tous les RAW, sans écraser un fichier existant.
+Le dossier courant est `tests/image/colorimétrie/protocole/blacks`.
+
+**Références éclairées :** commencer par une courte scène pilote (par exemple
+5 ISO100, 5 ISO51200, puis 5 ISO100 de contrôle) avant de multiplier les prises.
+La scène associe aplat mat, ombre, couleurs et détails fins immobiles selon
+la rubrique « Une scène pilote suffisante ». Vérifier le placement avec le
+banc avant les séries complètes de 32/16 prises décrites plus haut.
+Le pilote inspecté est de la calibration, pas un futur test final inédit.
+
+Faire le point une seule fois puis passer **en mise au point manuelle** ;
+ne plus modifier focale, distance ou ouverture. Stabiliser le trépied et
+utiliser télécommande/intervallomètre/contrôle distant pour éviter de déplacer
+le cadrage en changeant l’ISO. Ne pas moyenner deux cadrages comme une vérité
+propre. Une moyenne ISO100 plus tardive est un contrôle annoncé, jamais
+un remplacement choisi pour faire passer l’ancien résultat.
+
+Garder l’éclairage stable, sans branches/rideaux mobiles devant la fenêtre,
+reflets changeants ou scintillement/PWM. Désactiver les automatismes qui
+modifient exposition et débruitage boîtier. Conserver l’ouverture et une marge
+sur les hautes lumières. À titre d’exemple, si ISO100 / 0,8 s donne une
+exposition adaptée, les temps indicatifs sont : ISO3200 / 1/40 s,
+ISO6400 / 1/80 s, ISO16000 / 1/200 s et ISO51200 / 1/640 s.
+Ce calcul n’est pas une garantie de radiométrie identique ; les RAW seront
+contrôlés avant admission. La météo ou les nombres ISO/temps ne suffisent
+pas à certifier la stabilité.
+
+Les données seront séparées par scène/séance et par rôle (calibration,
+apprentissage, développement, réserve) avant apprentissage. Une qualification
+physique complète exige aussi bruit fixe/chaud et lignes/colonnes sur le
+périmètre déclaré, loi dépendant du signal, correspondance avec l’entrée IPR,
+incertitude de référence et comparateurs qualifiés. Les nouveaux noirs ne
+garantissent donc pas à eux seuls le passage de tous ces contrôles.
