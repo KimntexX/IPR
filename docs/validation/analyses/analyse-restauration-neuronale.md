@@ -9798,3 +9798,48 @@ avant le 2 × 2 048 pas ; ce bilan ne la déclare pas complète. Deux suites
 lui sont soumises : lancer avec ces limites déclarées (le spectre restant
 un point ouvert), ou compléter d’abord les paires éclairées. Aucun
 entraînement, push, fusion ou tag.
+
+## 8 novembre 2026 — plan A : apprentissage naturel sous bruit physique mesuré
+
+Décision de l'utilisateur : lancer le 2 × 2 048 pas avec les limites du bilan
+précédent déclarées, et compléter les paires éclairées en parallèle (protocole,
+`aeff636`). Outil `tests/neural/physical_natural_training.py` (`67a6ce1`,
+`3a82224`), mémoire
+[neural-physical-natural-training-v002](../raw/neural-physical-natural-training-v002-20261108T134545Z.json).
+
+**Données.** 208 tuiles de 512 sites sur grille disjointe des deux sources
+d'apprentissage ISO 100 (au lieu de 18) ; les 18 patchs de développement natifs
+v002 inchangés, et les 18 patchs archivés sont reproduits au bit près. Bruit
+synthétisé en DN capteur à ISO 3200, 6400, 16000 et 51200 : photons de Poisson
+à la pente mesurée, covariance photonique figée, écarts de noirs empiriques
+(lecture, lignes, colonnes, motif fixe ; noirs de calibration pour
+l'apprentissage, de contrôle pour le développement) et écrêtage ADC. Carte σ
+par un seul estimateur sur l'observation bruitée (moyenne locale 5 × 5 par plan).
+Contrôle préalable : variance synthétique à 1–3 % de la loi, σ estimé à 1 % de
+l'erreur réelle.
+
+**Exécution.** v001 arrêté au premier pas par le garde mémoire inchangé
+(5,4 Gio privés pour 5 Gio : sous Windows, la mémoire GPU compte dans
+l'engagement du processus) ; v002 garde tuiles et noirs projetés en mémoire.
+Deux graines terminées en 25 min 35 s, 0,36 s par mise à jour, pic privé
+4,04 Gio, aucun clipping de gradient.
+
+| Gain PSNR médian sur l'entrée bruitée, développement | 3200 | 6400 | 16000 | 51200 |
+| --- | ---: | ---: | ---: | ---: |
+| Graine 71, pas 1 024 | +0,60 | +1,03 | +2,09 | +4,39 |
+| Graine 71, pas 2 048 | +0,55 | +1,09 | +2,52 | +6,72 |
+| Graine 73, pas 1 024 | +0,45 | +0,84 | +1,85 | +3,69 |
+| Graine 73, pas 2 048 | +0,56 | +1,10 | +2,59 | +6,91 |
+
+Les deux sources de développement donnent la même tendance (écart ≤ 0,4 dB),
+les graines concordent, et le biais moyen par plan reste ≤ 0,0022 (51200).
+Le gain croît encore entre 1 024 et 2 048 pas aux ISO élevés : **pas de
+convergence**. Aux ISO bas, le gain est plafonné en partie par le bruit propre
+des cibles ISO 100.
+
+**Ce que cela ne dit pas.** Ces gains se mesurent contre l'entrée bruitée, pas
+contre un étalon : ni BM3D, ni le classique IPR, ni le critère de +0,5 dB ne
+sont évalués. Les patchs de développement sont déjà connus ; il n'y a pas de
+test final. Prochaine étape : mêmes réalisations de développement pour
+VST + BM3D par plan et le classique IPR, puis budget long décidé avec
+l'utilisateur. Aucun push, fusion ou tag.
