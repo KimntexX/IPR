@@ -270,3 +270,22 @@ physique complète exige aussi bruit fixe/chaud et lignes/colonnes sur le
 périmètre déclaré, loi dépendant du signal, correspondance avec l’entrée IPR,
 incertitude de référence et comparateurs qualifiés. Les nouveaux noirs ne
 garantissent donc pas à eux seuls le passage de tous ces contrôles.
+
+
+### Contrôle spectral physique — correctif du 8 novembre 2026
+
+Ne pas décider de la conformité d’un modèle sur l’erreur absolue d’un seul
+périodogramme sans contrôle nul. `qualify_physical_spectrum.py` utilise des
+effets signés, des poids égaux par paire et une incertitude simultanée issue
+de Monte-Carlo. Les64 répétitions de contrôle de l’instrument sont séparées
+des64 de calibration. Les seuils, graines, coefficients, sources et limites
+figurent dans le manifeste avant calcul. Les contrôles historiques restent
+connus : ce correctif de méthode ne crée pas de nouvelle réserve.
+
+Exiger la détection des erreurs injectées et contrôler les faux rejets.
+Un intervalle qui recouvre à la fois la zone acceptable et son extérieur
+donne «non concluant». Augmenter le nombre de simulations ne remplace pas
+l’information physique manquante dans les prises. Pour agrandir lesROI,
+conserver leurs centres, vérifier à nouveau stabilité/uniformité/saturation
+et enregistrer les exclusions sans les choisir sur la PSD. La qualification
+marginale reste distincte des structures fixes et du bruit conjoint.

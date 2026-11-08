@@ -1,14 +1,14 @@
 # Restauration neuronale — qualification du corpus
 
-**État courant au 8 novembre 2026 — nouveaux noirs qualifiés par composante.**
-52 nouveaux noirs ISO100 et55 ISO16000, tousRAW/1/200s, ont levé le manque
-de répétitions. Les groupes32/20 et32/23 passent les contrôles indépendants
-de variance, spectre et corrélation. Les cartes du capteur entier sont
-construites aux cinq ISO du périmètre, avec pont natif signé vérifié sur
-quatre nouvelles sources. Le premier rejeu Poisson+noirs reproduit bien
-les variances mais ne satisfait pas tous les contrôles spectraux ; leur
-incertitude doit être prise en compte, notamment à6400. La qualification
-physique complète reste ouverte ; aucun2×2048pas/40min n’est lancé.
+**État courant au 8 novembre 2026 — correction du simulateur en qualification.**
+Les nouveaux noirs passent leur contrôle de répétabilité. Le simulateur
+intègre maintenant un candidat de covariance photonique ajusté sur les
+seules expositions de calibration ; la dérive des prises n’explique pas
+l’écart ISO51200. Le contrôle statistique passe ses essais nul et positifs,
+mais la précision spectrale des zones128×128 reste insuffisante pour une
+équivalence complète. Le verdict reste non concluant, sans relèvement des
+seuils. La qualification physique complète reste ouverte ; aucun nouvel
+entraînement2×2048pas n’est lancé.
 
 **Point de décision au 7 novembre 2026, après la deuxième revue de Claude.**
 Le but reste un bénéfice visible et mesuré sur de vraies photos face aux
@@ -9665,3 +9665,83 @@ n’est pas achevée. Le banc entier ne reçoit pas le statut «physiquement
 qualifié» et la condition utilisateur interdit toujours de lancer le
 2×2048pas. Huit nouveaux tests ciblés passent. Aucun nouveau noir à refaire
 n’est demandé, ni aucun changement de production, push, fusion ou tag.
+
+
+## 8 novembre 2026 — correctifs du simulateur et qualification de la mesure
+
+À la demande de l’utilisateur, la qualification physique précède tout nouvel
+apprentissage. Cette campagne corrige la mesure et teste une représentation
+plus complète du bruit ; elle ne transforme pas les contrôles historiques
+inspectés en nouvelle réserve indépendante.
+
+### La dérive des prises ne résout pas l’écart
+
+Un diagnostic estime, par paire entière, les décalages de moyenne/gain par
+plan et une translation commune à partir des gradients des moyennes lissées.
+Ses dix degrés de liberté et ses tests synthétiques sont conservés. ÀISO51200,
+l’écart médian de lag est0,02168 avant et0,02169 après ; le rapport PSD reste
+également inchangé. La projection n’est donc **pas retenue comme correctif**
+et les mesures suivantes utilisent les différences brutes centrées.
+
+Preuve : [diagnostic de dérive](../raw/neural-physical-pair-drift-v001-20261108T121642Z.json).
+
+### Covariance de la composante dépendant du signal
+
+Les moments de voisinage sont ajustés sur les seules expositions `training`
+du partage historique, après retrait de la covariance temporelle mesurée
+sur les noirs de calibration. Les pentes de variance historiques restent
+figées. Le candidat multiplie les innovations Poisson par la racine du
+spectre `1+2γx cos(ωx)+2γy cos(ωy)`, vérifié strictement positif. Il conserve
+la variance en espérance et ne filtre pas la texture de la cible.
+
+ÀISO51200, les quatre plans donnentγx≈0,021–0,028 etγy≈0,023–0,026.
+Il s’agit d’une description phénoménologique ; elle ne démontre ni une cause
+capteur ni une cause codec. Le bruit de lecture reste empirique. Les motifs
+fixes et les covariances entre couleurs ne sont pas validés par ces seuls
+coefficients. Preuve : [coefficients figés](../raw/neural-photon-covariance-fit-v001-20261108T122052Z.json).
+
+### Une mesure incertaine ne doit donner ni faux échec ni faux succès
+
+Le précédent seuil sur l’erreur absolue d’un périodogramme était déjà franchi
+sous le modèle nul. Le contrôle courant porte sur les effets signés agrégés
+parISO/plan, chaque paire de prises ayant le même poids puis chaqueROI de
+la paire le même poids.128 répétitions Monte-Carlo sont séparées :64 pour
+calibrer l’incertitude simultanée sur les80 statistiques,64 pour vérifier
+l’instrument. Les indices des noirs sont communs auxROI/plans d’une paire.
+
+Les bornes d’effet systématique sont figées avant ce calcul : facteur1,05
+pour la variance, écart absolu0,02 pour les lags, facteur1,10 pour le rapport
+spectral. Les bornes sur les rapports sont symétriques en logarithme. Une
+équivalence exige que l’intervalle entier reste dans ces bornes ; une grande
+incertitude donne «non concluant», jamais «qualifié».
+
+L’instrument ne rejette aucun des64 témoins conformes ; il détecte64/64
+variances augmentées de20% et64/64 covariances supplémentairesγx=γy=0,04.
+Les simulations conditionnent sur la bibliothèque de noirs et les paramètres
+figés : leur incertitude d’estimation reste une limite distincte.
+
+Sur les422 observations réelles, aucun effet n’est démontré hors des bornes,
+mais plusieurs intervalles PSD sont trop larges pour démontrer l’équivalence.
+ÀISO51200, les écarts signés de lag corrigés valent environ−0,001à−0,0095
+selon le plan et l’axe. La variance du plan rouge reste proche de la borne
+supérieure (+4,97%). **Verdict marginal : non concluant ; banc complet non
+qualifié.** Le calcul dure208,45s, avec environ230Mo de mémoire privée au pic.
+
+Preuve complète, effets et intervalles par groupe :
+[qualification spectralev001](../raw/neural-physical-spectrum-v001-20261108T123417Z.json).
+
+### Suite engagée et barrières conservées
+
+Mesurer des zones plus grandes, aux mêmes centres et dans les RAW existants,
+peut réduire l’incertitude sans augmenter artificiellement les tolérances.
+Les nouvelles régions devront repasser les critères physiques de stabilité,
+uniformité et saturation ; il n’est pas permis d’étendre une région déclarée
+uniforme sans contrôle. La sélection ne dépendra pas du score spectral.
+Le contrôle conjoint des quatre plans est également préparé et testé.
+
+Restent à qualifier : marges et spectre avec précision suffisante, covariances
+conjointes, structures fixes dans une observation unique, transfert aux
+patchs naturels/estimationσ, incertitude des références et comparateurs.
+Le contrôle des différences ne valide pas à lui seul le bruit fixe.
+Aucun changement du moteur photographique, aucune générationTIFF, aucun
+entraînement, push, fusion ou tag n’est effectué.
