@@ -272,6 +272,57 @@ incertitude de référence et comparateurs qualifiés. Les nouveaux noirs ne
 garantissent donc pas à eux seuls le passage de tous ces contrôles.
 
 
+### Paires éclairées manquantes pour clore le banc — 8 novembre 2026
+
+Bilan de reprise (Claude, `0071e8b`) : variance et corrélations du simulateur
+équivalentes, mais 15 rapports spectraux sur 20 non concluants faute de
+précision, avec 1 à 4 paires éclairées de contrôle par ISO. La demi-largeur
+d'intervalle (5 à 9 % pour une borne de 9,5 %) décroît en 1/√paires : il faut
+environ **16 paires par ISO** (estimation). ISO 12800 et 25600 n'ont aucune
+pente éclairée. Les noirs existants suffisent ; aucun noir n'est demandé.
+
+| ISO | Paires éclairées à prendre | But |
+| --- | ---: | --- |
+| 3200 | 16 | spectre, ISO d'entraînement |
+| 6400 | 16 | spectre, ISO d'entraînement |
+| 12800 | 16 | première pente éclairée |
+| 16000 | 16 | spectre (1 à 2 paires aujourd'hui) |
+| 25600 | 16 | première pente éclairée |
+| 51200 | 16 | spectre et écart de variance de +2,6 à +5,0 % |
+| 100 | 8 (facultatif) | spectre du domaine des cibles |
+
+Soit 96 paires, 192 RAW (208 avec ISO 100).
+
+**Scène :** un aplat mat uniforme (carton gris ou blanc mat, mur blanc), sans
+texture visible : mise au point manuelle au plus près pour flouter le grain du
+support, cadrage rempli par l'aplat. Lumière continue stable et sans
+scintillement : jour couvert stable ou lampe halogène/LED sans PWM ; pas de
+néon. Trépied, télécommande ou retardateur 2 s, stabilisation désactivée.
+
+**Boîtier :** R6 Mark III, **Canon RAW (pas C-RAW)**, mode M, ouverture fixe
+(f/5,6 comme les séries existantes), même mode d'obturateur que les séries
+précédentes, vue par vue (pas de rafale rapide). Désactiver réduction du bruit
+haute sensibilité, réduction du bruit en pose longue, priorité hautes lumières
+et correcteur automatique de luminosité. Laisser le boîtier se stabiliser.
+
+**Niveaux :** pour chaque ISO, régler d'abord la vitesse T0 qui place l'aplat à
+environ deux tiers de l'histogramme RAW, sans alerte de hautes lumières. Prendre
+ensuite **deux paires** (quatre vues identiques) à chacun des huit niveaux
+T0, T0/2, T0/4 … T0/128. Une paire = deux vues consécutives aux mêmes réglages.
+Si la vitesse demandée dépasse les limites du boîtier ou passe sous 1/4000 s,
+**baisser la lumière** (éloigner ou atténuer la source, filtre ND) plutôt que
+changer l'ouverture. Ne jamais modifier cadrage, mise au point ou ouverture
+pendant une série.
+
+**Rangement :** une série par ISO dans `tests/image/colorimétrie/protocole/iso-<ISO>`
+(créer `iso-12800` et `iso-25600`), sans écraser de fichier existant, EXIF
+conservés. Noter la source de lumière et tout changement de réglage.
+
+**Ce que ces prises permettront :** rejouer `qualify_physical_spectrum.py` sans
+changer ses bornes, ajuster les pentes à 12800/25600 et étendre l'apprentissage
+à ces ISO. Les premières paires de chaque ISO (chronologiquement) iront à
+l'ajustement, les suivantes au contrôle, avant toute lecture des résultats.
+
 ### Contrôle spectral physique — correctif du 8 novembre 2026
 
 Ne pas décider de la conformité d’un modèle sur l’erreur absolue d’un seul
