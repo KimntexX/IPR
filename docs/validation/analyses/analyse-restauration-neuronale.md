@@ -10,6 +10,12 @@ mais la précision spectrale des zones128×128 reste insuffisante pour une
 seuils. La qualification physique complète reste ouverte ; aucun nouvel
 entraînement2×2048pas n’est lancé.
 
+**Reprise par Claude, 8 novembre 2026 (Codex en pause).** Bilan des mesures
+physiques en fin de rapport : aucun écart démontré hors des bornes ; variance
+et corrélations équivalentes, spectre non démontré faute de précision
+(2 à 4 paires éclairées par ISO). Décision de l’utilisateur demandée : lancer
+avec ces limites déclarées, ou compléter les paires éclairées.
+
 **Point de décision au 7 novembre 2026, après la deuxième revue de Claude.**
 Le but reste un bénéfice visible et mesuré sur de vraies photos face aux
 étalons, pas la seule réussite du banc procédural. Aucun bénéfice
@@ -9745,3 +9751,50 @@ patchs naturels/estimationσ, incertitude des références et comparateurs.
 Le contrôle des différences ne valide pas à lui seul le bruit fixe.
 Aucun changement du moteur photographique, aucune générationTIFF, aucun
 entraînement, push, fusion ou tag n’est effectué.
+
+## 8 novembre 2026 — reprise par Claude : bilan de la qualification physique
+
+Codex est en pause. Son travail non commité (zones élargies, contrôle conjoint
+des couleurs, spectre v002, incertitude des paramètres, diagnostic de la loi de
+variance) est enregistré tel quel dans `b40b6ef` ; ses 21 tests ciblés passent.
+Aucun calcul n’est relancé pour ce bilan : il relit les preuves
+[spectre v002](../raw/neural-physical-spectrum-v002-20261108T124604Z.json) et
+[contrôle conjoint](../raw/neural-joint-physical-noise-v001-20261108T124324Z.json),
+avec les bornes figées avant calcul (variance ×1,05, lag 0,02, rapport PSD ×1,10,
+corrélation entre positions Bayer 0,02, quantile simultané 95 %).
+
+| Contrôle | Équivalent | Non concluant | Hors bornes démontré |
+| --- | ---: | ---: | ---: |
+| Variance, 20 groupes ISO × position | 19 | 1 (ISO 51200, rouge) | 0 |
+| Corrélation horizontale des voisins | 20 | 0 | 0 |
+| Corrélation verticale des voisins | 20 | 0 | 0 |
+| Rapport spectral basse/haute fréquence | 5 | 15 | 0 |
+| Corrélation entre positions Bayer (5 ISO × 6 couples) | 29 | 1 (ISO 16000) | 0 |
+
+Lecture :
+
+- **Aucun effet hors bornes n’est démontré.** Le simulateur (Poisson au gain
+  mesuré, noirs empiriques, covariance photonique ajustée) n’est contredit
+  par aucune mesure.
+- **Variance** (effet = réel − moyenne simulée) **:** écarts de −2,9 % à +1,7 % de ISO 100 à 16000. À ISO 51200,
+  le réel est systématiquement un peu plus bruité que le simulateur, de
+  +2,6 % à +5,0 % selon la position ; le rouge (+5,0 %, intervalle jusqu’à
+  +5,7 %) touche la borne de 5 %.
+- **Spectre :** les effets centraux restent entre −4,6 % et +6,3 %, mais les
+  demi-largeurs d’intervalle valent 5 à 9 % pour une borne de 9,5 %. Le
+  non-concluant vient de la précision, pas d’un écart observé : 2 à 4 paires
+  éclairées par ISO ne suffisent pas. Avec une demi-largeur en 1/√paires,
+  il faudrait environ quatre fois plus de paires (12 à 16 par ISO) pour
+  conclure ; c’est une estimation, pas une mesure.
+- **Restent hors de ce contrôle :** le motif fixe dans une observation unique
+  (les différences de paires l’annulent ; les cartes moyennes existent mais ne
+  sont pas validées), l’incertitude des cibles ISO 100 et les comparateurs CFA.
+
+**Verdict :** qualification physique **partielle mais sans défaut démontré** :
+variance et corrélations équivalentes sur les cinq ISO mesurés, spectre non
+démontré faute de précision, ISO 12800 et 25600 sans pente éclairée.
+L’utilisateur avait choisi d’attendre une qualification physique complète
+avant le 2 × 2 048 pas ; ce bilan ne la déclare pas complète. Deux suites
+lui sont soumises : lancer avec ces limites déclarées (le spectre restant
+un point ouvert), ou compléter d’abord les paires éclairées. Aucun
+entraînement, push, fusion ou tag.
