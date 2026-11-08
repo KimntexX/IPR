@@ -162,3 +162,55 @@ Références conservées du protocole initial (pas une nouvelle revue documentai
 - [Adobe — débruitage manuel et IA](https://blog.adobe.com/en/publish/2023/04/20/lowdown-using-high-iso-settings-in-photography),
   pour la distinction des approches ; les possibilités exactes du logiciel
   utilisé doivent être auditées dans la campagne, pas déduites d'un article ancien.
+
+
+## Banc naturel CFA B4 — qualification avant apprentissage long (8 novembre 2026)
+
+Maintenir les preuves dans le rapport unique de
+[restauration neuronale](../analyses/analyse-restauration-neuronale.md), avec
+JSON canoniques horodatés. Une qualification partielle renvoie à
+[l’issue #14](https://github.com/KimntexX/IPR/issues/14) et ne vaut pas
+validation de production.
+
+1. **Provenance et données.** Vérifier les SHA-256 originaux, les métadonnées,
+   le boîtier et les modes de capture ; grouper par scène et séance avant
+   recadrage. Un fichier ou patch différent ne prouve pas une scène indépendante.
+   Séparer apprentissage, développement connu et test final. Ne pas présenter
+   une photo déjà inspectée comme une nouvelle réserve.
+2. **Contrat numérique.** Travailler sur CFA signé avant gains, dématriçage,
+   DCP et LCP. Vérifier origine visible, disposition physique, noir, blanc,
+   diviseur et correspondance avec le décodeur natif. Les valeurs metadata de
+   rawpy ne suffisent pas : conserver un rapprochement pixel à pixel avec
+   l’entrée IPR sur un périmètre déclaré. Les verts physiques restent traçables.
+   Conserver les négatifs et valeurs >1 ; le blanc de normalisation n’est
+   pas à lui seul le seuil de saturation physique.
+3. **Références.** Qualifier netteté et saturation et estimer le bruit résiduel
+   des images bas ISO à partir des données disponibles. ISO100 est un proxy
+   possible, pas une vérité parfaite obligatoire. Déclarer la part d’incertitude,
+   les extrapolations et la limite des paires face au bruit commun. Une scène
+   mobile peut servir de contenu à bruit ajouté sur une même image ; elle
+   ne devient pas pour autant une rafale propre moyennable sans recalage.
+4. **Bruit.** Séparer le banc contrôlé à bruit ajouté du banc physique. Pour
+   le physique, vérifier lois par plan/ISO/mode, niveaux noirs, composantes
+   temporelles et fixes, lignes/colonnes, quantification et compression.
+   Ne pas additionner deux fois le bruit de lecture. L’entrée sigma doit
+   être disponible de la même manière à l’inférence ; pas de carte spatiale
+   calculée depuis la cible propre, sauf expérience oracle explicitement isolée.
+5. **Comparateurs.** Figer identité, références CFA et paramètres sur le
+   développement avant ouverture du test final. BM3D reste externe et non
+   livré, avec version/licence/provenance ; son installation ne qualifie pas
+   automatiquement un étalon signé ou VST. Vérifier finitude, répétabilité,
+   biais et comportement aux frontières. Comparer le classique IPR dans un
+   domaine RGB commun, pas directement à une PSNR CFA.
+6. **Décision.** Réserver la cible de gain médian apparié par scène ≥0,5 dB
+   aux comparaisons CFA qualifiées dans chaque bande 3200–6400 et 16000–51200.
+   Fixer auparavant les tolérances noirs et spectre résiduel ; conserver les
+   planches pour validation visuelle de l’utilisateur. Distinguer progrès,
+   régression et résultat non concluant. Une mesure de débit n’est pas une
+   mesure de qualité. Le budget 20,8 s / 8 threads vise l’ouverture par
+   défaut, pas le traitement neuronal optionnel.
+
+Les scripts `audit_natural_bench.py`, `audit_native_cfa_bridge.py` et
+`prepare_native_normalized_cfa.py` réalisent les contrôles numériques actuels
+sur les sources déclarées. Ils ne qualifient pas seuls toute cette liste.
+L’audit n’utilise pas les scores neuronaux pour réassigner les images.

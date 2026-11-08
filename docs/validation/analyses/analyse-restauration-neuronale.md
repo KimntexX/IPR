@@ -1,13 +1,13 @@
 # Restauration neuronale — qualification du corpus
 
-**État courant au 8 novembre 2026.** Composite terminé : critère de progrès
-conjoint non atteint sur les deux initialisations ; aucune nouvelle variante
-procédurale à engager. Dix sondes de coût réussies. Le modèle 8,16 M sur
-patchs empaquetés 256, lot 8, mesure 0,290 s/mise à jour en FP32 contre
-0,161 s en AMP FP16, sans preuve d’équivalence photographique. Corpus naturel,
-partitions et étalons CFA restent à qualifier avant entraînement long.
-Les résultats détaillés et mémoires JSON figurent à la dernière entrée.
-
+**État courant au 8 novembre 2026 — qualification partielle.**
+Le prévol naturel 8,16 M FP32 a terminé ses deux graines à 1 024 pas ; ses
+scores restent des mesures de développement dans une normalisation provisoire.
+En parallèle, provenance et extraction des 36 patchs vérifiées ; le pont CFA
+vers l’IPR archivé compare 5 308 416 valeurs sans écart. Un jeu distinct
+normalisé noir 512 / blanc 13 995 est préparé. BM3D externe est installé mais
+pas encore un étalon CFA calibré. L’incertitude des proxies, le bruit physique
+et le jeu final restent à qualifier. Aucun débruitage neuronal intégré en production.
 
 **Point de décision au 7 novembre 2026, après la deuxième revue de Claude.**
 Le but reste un bénéfice visible et mesuré sur de vraies photos face aux
@@ -9288,3 +9288,108 @@ sur proxies affines ; aucune conclusion sur les noirs signés ou la loi de
 bruit physique ne sera tirée. La correspondance noir/blanc est ajoutée aux
 points à qualifier avant le banc naturel définitif. Le contrôle existant
 d’équivalence forward et gradients avec/sans recalcul des activations passe.
+
+
+## 8 novembre 2026 — qualification partielle du banc naturel, sans lecture des scores
+
+Cette étape répond à la demande de préparer, voire qualifier le banc pendant
+le prévol. Elle ne consulte aucun score neuronal pour choisir les sources,
+les paramètres ou les seuils. Le prévol a terminé ses deux graines pendant
+ces contrôles ; aucune nouvelle série d’apprentissage n’est déclenchée.
+Le statut consolidé est conservé dans [la mémoire de qualification](../raw/neural-natural-bench-status-v001-20261108T101018Z.json).
+
+### Ce qui est vérifié
+
+- Les quatre SHA-256 des RAW correspondent à l’inventaire, les fichiers
+  sources n’ont pas changé, et les 36 patchs du prévol se réextraient au bit près.
+- Les métadonnées CMT confirment ISO 100 et quatre jours distincts : 17 et
+  25 juillet pour l’apprentissage, 5 et 12 août pour le développement.
+  Il n’y a pas de croisement entre ces groupes par jour/boîtier. Cela ne
+  fait pas des photos déjà connues un jeu final inédit.
+- Une inspection de la planche JPEG embarquée distingue quatre compositions :
+  rocher d’escalade et personnes en bord de mer ; bâtiments/route en front de
+  mer ; voilier ; côte rocheuse sombre avec balise distante. Cette inspection
+  ne qualifie pas la netteté des patchs et n’utilise pas le JPEG comme cible.
+- Le décodeur natif de capture existant reproduit les neuf régions RGB
+  archivées de chacune des quatre photos au bit près. Le rapprochement rawpy
+  et CFA normalisé avant balance des blancs porte sur 36 ROI de 384 × 384,
+  soit **5 308 416 valeurs** : aucun code entier différent et erreur flottante
+  maximale nulle. Cela qualifie ce pont sur ces régions, pas tout le capteur,
+  tous les boîtiers ou automatiquement le moteur HEAD recompilé.
+
+Les références natives des quatre fichiers donnent noir **512 dans les quatre
+plans**, blanc **13 995**, diviseur **13 483**. Le zéro/les faibles offsets
+retournés par rawpy ne constituent donc pas le noir utilisé par IPR pour ces
+fichiers. Les pixels décompressés, eux, correspondent. Les bordures géométriques
+brutes mêlent parties sombres et autres zones : leurs percentiles ne doivent
+pas être assimilés directement à une mesure d’optical black validée.
+
+Un nouveau jeu de 36 patchs a été préparé dans le domaine signé natif :
+`native-normalized-natural-v002/targets.npy`. Les fichiers du prévol n’ont
+pas été modifiés. Chaque patch conserve sa source, son origine, ses niveaux,
+son ordre physique de couleurs et son empreinte. On ne compare pas des MSE
+entre l’ancien et le nouveau domaine sans conversion et déclaration du bruit.
+Des valeurs dépassent 1 dans certaines régions : **1 est le blanc de
+normalisation, pas une preuve suffisante de saturation physique**. Aucun
+écrêtage n’est ajouté à ce stade.
+
+### Incertitude des références : elle peut être étudiée, pas ignorée
+
+La loi DN exploratoire du 5 novembre existe déjà ; il n’est pas nécessaire
+de repartir de zéro. Elle couvre six ISO avec points éclairés réservés dans
+ce banc historique (100, 1600, 3200, 6400, 16000, 51200) et deux ISO sans
+pente éclairée qualifiée (12800 et 25600). Les erreurs médianes absolues
+relatives de variance sont approximativement 0,8 à 3,2 % sur les points
+réservés de cet ancien banc ; ce ne sont pas de nouvelles données réservées.
+La différence de paires ne couvre pas toute la composante commune du bruit.
+
+Un calcul indicatif, sans réajustement, applique l’enveloppe maximale des
+quatre lois ISO100 aux patchs natifs. Pour sigma ajouté 0,005, le rapport
+variance de référence estimée / variance ajoutée est médian à **3,45 %**
+entre patchs, mais atteint **51,5 %** pour la médiane d’un patch clair.
+À sigma 0,02, ces valeurs deviennent 0,22 % et 3,22 %.
+Ce n’est **pas une borne certifiée** : certains patchs clairs sont presque
+entièrement hors du domaine de signal commun où cette loi avait été ajustée,
+et la texture fixe, la compression et la température ne sont pas bornées.
+Le faible bruit ajouté et les hautes lumières demandent donc une attention
+particulière. Une référence ISO100 imparfaite reste utilisable comme proxy
+si son incertitude et le domaine des conclusions sont déclarés ; on n’exige
+pas une vérité physiquement parfaite avant toute expérience.
+
+### Référence externe BM3D
+
+BM3D **4.0.3**, BM4D **4.2.5**, NumPy **2.5.4**, SciPy **1.18.1** et
+PyWavelets **1.10.0** sont installés dans un environnement distinct sous
+`AppData/Local/IPR/reference-envs`, hors du dépôt et des environnements
+CPU/CUDA d’IPR. Seules les mesures, versions, provenances et empreintes des
+binaires/licences sont conservées dans le dépôt. Usage comme référence de
+recherche non commerciale déjà autorisé, pas comme dépendance livrée :
+[description officielle du paquet](https://pypi.org/project/bm3d/4.0.3/).
+
+Le contrôle utilise un seul thread, une surface analytique 64 × 64 et un bruit
+gaussien sigma 0,02. Les sorties sont finies et répétables au bit près sur
+l’entrée testée. Le contrôle préétabli de translation du signal à 1e-5 n’est
+pas satisfait : écart maximal 8,88e-5 pour un décalage de −0,6, contre
+3,98e-6 pour +1,2. Le statut brut `numeric_smoke_failed` est conservé.
+Il ne signifie pas que BM3D est inutilisable : l’invariance exacte par
+translation n’est pas ici une garantie démontrée de l’algorithme. Il faut
+qualifier le domaine signé et le biais de la référence, pas relever le
+seuil après coup ni supposer une équivalence parfaite. Ce contrôle API n’est
+pas encore un étalon VST-BM3D calibré sur le CFA photographique.
+
+### Verdict et prochaine qualification
+
+**Qualification partielle** : provenance, extraction, séparation par jour et
+pont numérique vers l’IPR archivé passent sur le périmètre mesuré. Restent
+la vérification du contrat avec le moteur courant, la netteté et l’incertitude
+des références, le bruit physique structuré/compression, les comparateurs et
+le jeu final par scène/séance. Les tolérances de décision noirs/PSD doivent
+être fixées avant examen des futurs scores candidats. Le critère de +0,5 dB
+par bande d’ISO n’est pas évalué par ces contrôles. Aucun nouveau besoin de
+prise de vue indispensable n’est identifié à ce stade ; les rafales et noirs
+existants sont la priorité. Suivi de qualification partielle :
+[issue #14](https://github.com/KimntexX/IPR/issues/14).
+
+Huit tests ciblés passent (séparation, bordures, orientation, valeurs signées,
+diviseur commun et entrées invalides). Aucune modification moteur, aucun
+changement de recette de la campagne en cours, aucun push, fusion ou tag.

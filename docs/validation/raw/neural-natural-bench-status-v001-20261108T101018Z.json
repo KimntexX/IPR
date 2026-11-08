@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "measured_at_utc": "2026-11-08T10:10:18.372199+00:00",
+  "status": "partially_qualified_native_input_not_full_photographic_benchmark",
+  "independent_of_neural_scores": true,
+  "parents": {
+    "input_audit": {
+      "path": "docs\\validation\\raw\\neural-natural-bench-qualification-v001-20261108T095530Z.json",
+      "sha256": "3bb10f32bd6abccefb02ccfb9e2beabce19f22e9af2f50d58440970b15358e0f"
+    },
+    "native_bridge": {
+      "path": "docs\\validation\\raw\\neural-natural-CFA-bridge-v001-20261108T100609Z.json",
+      "sha256": "95f24b147ea4899571bff62fd25cec950b040eb07897e9ae1056184384e047c9"
+    },
+    "corrected_proxies": {
+      "path": "docs\\validation\\raw\\neural-native-normalized-proxies-v001-20261108T100611Z.json",
+      "sha256": "633d00c23b0bb365e2414008634aaddb74d85eb78884c59c4e7f52a7d12fdad9"
+    },
+    "reference_smoke": {
+      "path": "docs\\validation\\raw\\neural-bm3d-reference-smoke-v001-20261108T100042Z.json",
+      "sha256": "7dd54853cfa4c69b767b4cfbeb0cbb86ad483bf3d2b999ada1523a22b79d505a"
+    },
+    "proxy_uncertainty": {
+      "path": "docs\\validation\\raw\\neural-natural-proxy-uncertainty-v001-20261108T100825Z.json",
+      "sha256": "b85e0207348642499f4b69f8cddfd18736dce76c088a16c7c63383fa394402ca"
+    }
+  },
+  "gates": {
+    "provenance": "passed_4_original_SHA256",
+    "extraction": "passed_36_original_patch_replays",
+    "native_CFA_bridge": "passed_5308416_DN_and_float_values_against_archived_IPR_ROIs",
+    "metadata": "passed_ISO100_and_distinct_camera_capture_days",
+    "scene_review": "coarse_compositions_distinct_on_embedded_JPEG_board_not_focus_qualification",
+    "current_HEAD_bridge": "pending_rebuild_or_contract_regression_against_latest_engine",
+    "targets": "native_normalized_proxy_dataset_prepared_separate_from_active_preflight",
+    "clean_reference_uncertainty": "indicative_estimate_only_with_extrapolation_not_certified_bound",
+    "physical_noise": "exploratory_DN_law_exists_but_structured_and_compression_noise_not_qualified",
+    "BM3D": "external_package_ready_finite_repeatable_shift_probe_exceeds_declared_tolerance_not_calibrated_baseline",
+    "final_reserve": "not_assigned_all_four_photos_previously_known",
+    "photographic_validation": "not_performed"
+  },
+  "source_semantics": {
+    "6V1A9072": "seaside climbing rock and people",
+    "6V1A9938": "seafront buildings and road",
+    "6V1A0005": "sailboat and sea",
+    "6V1A0145": "dark rocky shore and distant beacon"
+  },
+  "scene_review": {
+    "board_sha256": "d557ecd3238b80291c2c6f1c1f306335aacf9d17729bd67a3f587c1f327fd1df",
+    "role": "Visual scene composition only; processed embedded JPEG never used as learning target"
+  },
+  "issue": "https://github.com/KimntexX/IPR/issues/14",
+  "next_actions": [
+    "Recheck current native engine boundary before integrating future dataset",
+    "Quantify residual reference uncertainty using existing low-ISO bursts; do not require impossibly noise-free targets",
+    "Separate Gaussian-proxy development from realistic sensor-noise qualification and qualify structured/read/compression noise",
+    "Calibrate baseline/adapter in declared signed CFA domain and inspect bias instead of assuming exact translation invariance",
+    "Freeze scene/session final reserve and black/PSD decision tolerances before using future candidate scores"
+  ],
+  "no_new_photos_identified_as_required": true
+}
