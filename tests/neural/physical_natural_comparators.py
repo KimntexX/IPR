@@ -162,7 +162,7 @@ def compare(output):
                 'Networks trained 2048 updates only, not converged'])
     write(output/'result.json', result)
     stamp = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')
-    with (ROOT/'docs/validation/raw'/f'neural-physical-natural-comparators-v001-{stamp}.json').open('x', encoding='utf-8') as stream:
+    with (ROOT/'docs/validation/raw'/f'neural-{output.name}-{stamp}.json').open('x', encoding='utf-8') as stream:
         json.dump(result, stream, allow_nan=False, separators=(',', ':'))
 
 

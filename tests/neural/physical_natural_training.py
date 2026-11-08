@@ -1,4 +1,4 @@
-"""Two-seed natural CFA training under the measured physical noise model (plan A).
+"""Natural CFA training under the measured physical noise model.
 
 Clean proxies are ISO100 R6 III mosaics in the archived native signed domain.
 Noise is synthesised in sensor DN per ISO: Poisson photons at the measured
@@ -32,6 +32,9 @@ SOURCE_BLACK, SOURCE_WHITE = 512, 13995
 TARGET_BLACK, TARGET_WHITE, ADC_MAX = 2048, 14351, 16383
 TILE = 512
 CANONICAL_TAGS = (0, 1, 3, 2)
+CONTENT_ROOTS = (Path(r'C:\Users\victo\Pictures\RAW'), ROOT.parent.parent/'tests'/'image')
+# Development sources were shot on 5 and 12 August; 1 November bursts and 16 October charts stay out of training.
+EXCLUDED_DAYS = ('2026:08:05', '2026:08:12', '2026:11:01', '2026:10:16')
 
 
 def grid_origins(height, width, tile=TILE, margin=32):
@@ -120,14 +123,32 @@ def sigma_map(noisy, slope, read_variance, divisor, window=5):
     return (a*mean.clamp_min(0)+b).sqrt()
 
 
-def prepare(output):
+def content_sources(roots=CONTENT_ROOTS, excluded_days=EXCLUDED_DAYS):
+    """Unique ISO100 R6 III CR3 frames outside the development days, darks and lit pairs."""
+    from audit_existing_training_corpus import read_metadata
+    unique = {}
+    for root in roots:
+        for path in sorted(root.rglob('*')):
+            if path.suffix.lower() != '.cr3' or 'blacks' in path.parts or any(p.startswith('iso-') for p in path.parts):
+                continue
+            metadata = read_metadata(path)['metadata']
+            day = str(metadata.get('datetime_original', ''))[:10]
+            if 'R6 Mark III' not in str(metadata.get('model')) or metadata.get('iso') != 100 or day in excluded_days:
+                continue
+            unique.setdefault(digest(path), dict(source=str(path), day=day))
+    return [dict(source=row['source'], sha256=sha, role='training', day=row['day'])
+            for sha, row in sorted(unique.items(), key=lambda item: item[1]['source'])]
+
+
+def prepare(output, steps, seeds, hours, tiles_per_source):
     natural = read(NATURAL/'result.json')
-    roles = {}
+    development = {}
     for entry in natural['entries']:
-        roles.setdefault(entry['source'], dict(source=entry['source'], sha256=entry['source_sha256'], role=entry['role']))
-    sources = sorted(roles.values(), key=lambda r: r['source'])
-    if sorted(r['role'] for r in sources).count('training') != 2:
-        raise ValueError('Expected two training and two development sources')
+        if entry['role'] != 'training':
+            development.setdefault(entry['source'], dict(source=entry['source'], sha256=entry['source_sha256'], role=entry['role']))
+    sources = content_sources()+sorted(development.values(), key=lambda r: r['source'])
+    if len({r['sha256'] for r in sources}) != len(sources):
+        raise ValueError('A development source would also be used for training')
     darks = {}
     for path in DARK_GROUPS:
         for group in read(path)['groups']:
@@ -139,23 +160,28 @@ def prepare(output):
     output.mkdir(exist_ok=False)
     tools = ['physical_natural_training.py', 'natural_cfa_preflight.py', 'dru_cfa.py', 'dru_checkpoint.py',
              'prepare_next_training.py', 'memory_budget.py', 'load_control.py', 'campaign_artifacts.py']
-    plan = dict(schema_version=1, status='frozen_plan_a_development_campaign',
-        created_at_utc=datetime.now(timezone.utc).isoformat(), campaign_seconds=2400, grace_seconds=45,
-        seeds=[71, 73], data_seed=8101, steps=2048, batch=8, packed_side=256, parameters=8162688, width=32,
-        precision='fp32', activation_checkpointing=True, learning_rate=.0001, objective='unweighted L1',
-        gradient_clip_norm=1., controls_at=[0, 512, 1024, 2048], checkpoint_at=[1024],
+    every = max(steps//20, 1)
+    plan = dict(schema_version=2, status='frozen_natural_physical_campaign',
+        created_at_utc=datetime.now(timezone.utc).isoformat(), campaign_seconds=int(hours*3600), grace_seconds=45,
+        seeds=seeds, data_seed=8101, steps=steps, batch=8, packed_side=256, parameters=8162688, width=32,
+        precision='fp32', activation_checkpointing=True, learning_rate=.0001, minimum_learning_rate=1e-6,
+        schedule='cosine from learning_rate to minimum_learning_rate over the steps', objective='unweighted L1',
+        gradient_clip_norm=1., controls_at=sorted({0, *range(every, steps+1, every), steps}),
+        checkpoint_at=sorted({*range(steps//4, steps+1, steps//4)}) if steps >= 4 else [steps],
+        tiles_per_source=tiles_per_source, tile_rule='seeded choice among grid tiles with at most 1 % of sites at or above the source white',
         training_iso=list(TRAINING_ISO), iso_sampling='uniform over training ISO',
         sigma_estimator='sqrt(a*max(box5(noisy),0)+b) per plane, noisy input only',
         source_domain=dict(black=SOURCE_BLACK, white=SOURCE_WHITE, divisor=SOURCE_WHITE-SOURCE_BLACK),
         target_domain=dict(black=TARGET_BLACK, white=TARGET_WHITE, divisor=TARGET_WHITE-TARGET_BLACK, adc_max=ADC_MAX),
-        tile_cfa_sites=TILE, training_tiles='non-overlapping 512-site grid over each training source',
+        tile_cfa_sites=TILE, training_tiles='non-overlapping 512-site grid, tiles_per_source chosen per source',
+        excluded_days=list(EXCLUDED_DAYS),
         development_tiles='the 18 archived native v002 development patches',
         sources=sources, darks={str(k): v for k, v in darks.items()},
         noise_parameters=noise_parameters(read(BANK), read(COVARIANCE)),
         parents={str(p.relative_to(ROOT)): digest(p) for p in (NATURAL/'result.json', NATURAL/'targets.npy', BANK, COVARIANCE, *DARK_GROUPS)},
         tools={name: digest(ROOT/'tests/neural'/name) for name in tools},
         limits=['ISO100 single frames are clean proxies with their own residual noise, not truth',
-                'Two training and two development sources from four days; development patches already inspected; no final test',
+                'Unique ISO100 R6 III frames from days other than the development, burst and chart days; many frames share scenes; development patches already inspected; no final test',
                 'Target white 14351 measured at ISO16000 is assumed for 3200, 6400 and 51200; black 2048',
                 'Shot slopes are descriptive fits; spectrum equivalence not demonstrated (15 of 20 inconclusive)',
                 'ISO51200 real variance 2.6 to 5.0 % above the simulator',
@@ -170,11 +196,14 @@ def extract(output, guard):
     import rawpy
     plan = read(output/'plan.json')
     rng = np.random.default_rng(plan['data_seed'])
+    choice = np.random.default_rng(plan['data_seed']+1)
     divisor = plan['source_domain']['divisor']
-    tiles, entries = [], []
-    for row in plan['sources']:
-        if row['role'] != 'training':
-            continue
+    training_sources = [row for row in plan['sources'] if row['role'] == 'training']
+    capacity = len(training_sources)*plan['tiles_per_source']
+    side = TILE//2
+    tiles = np.lib.format.open_memmap(output/'training.npy', mode='w+', dtype='<f4', shape=(capacity, 4, side, side))
+    entries, count = [], 0
+    for row in training_sources:
         guard.check()
         path = Path(row['source'])
         if digest(path) != row['sha256']:
@@ -183,12 +212,18 @@ def extract(output, guard):
             if raw.raw_colors_visible[:2, :2].tolist() != [[0, 1], [3, 2]]:
                 raise ValueError('RGGB R6 III phase required')
             mosaic = raw.raw_image_visible
-            for y, x in grid_origins(*mosaic.shape):
-                packed = source_normalized(mosaic[y:y+TILE, x:x+TILE], divisor)
-                tiles.append(packed.astype('<f4'))
+            eligible = [(y, x) for y, x in grid_origins(*mosaic.shape)
+                        if (mosaic[y:y+TILE, x:x+TILE] >= SOURCE_WHITE).mean() <= .01]
+            picked = choice.permutation(len(eligible))[:plan['tiles_per_source']]
+            for index in sorted(picked.tolist()):
+                y, x = eligible[index]
+                tiles[count] = source_normalized(mosaic[y:y+TILE, x:x+TILE], divisor)
                 entries.append(dict(source=row['source'], crop_xy=[x, y],
-                    sha256=hashlib.sha256(tiles[-1].tobytes()).hexdigest()))
+                    sha256=hashlib.sha256(np.asarray(tiles[count]).tobytes()).hexdigest()))
+                count += 1
             del mosaic
+    tiles.flush()
+    del tiles
     natural = read(NATURAL/'result.json')
     archived = np.load(NATURAL/'targets.npy', allow_pickle=False)
     check = []
@@ -202,7 +237,6 @@ def extract(output, guard):
     if not all(check):
         raise ValueError('Grid extraction does not reproduce the archived native patches')
     development = archived[[i for i, e in enumerate(natural['entries']) if e['role'] != 'training']]
-    np.save(output/'training.npy', np.stack(tiles), allow_pickle=False)
     np.save(output/'development.npy', development, allow_pickle=False)
     dark_entries = {}
     for iso, frames in plan['darks'].items():
@@ -231,7 +265,8 @@ def extract(output, guard):
         np.save(output/f'dark-{iso}.npy', np.stack(crops), allow_pickle=False)
         np.save(output/f'pedestal-{iso}.npy', np.stack(pedestals), allow_pickle=False)
         dark_entries[iso] = identities
-    write(output/'data.json', dict(status='extracted_plan_a_inputs', training_tiles=len(tiles),
+    write(output/'data.json', dict(status='extracted_natural_physical_inputs', training_tiles=count,
+        training_sources=len(training_sources),
         archived_patch_reproduction=check, training_entries=entries, development_tiles=len(development),
         darks=dark_entries, files={p.name: digest(p) for p in sorted(output.glob('*.npy'))},
         rawpy_version=rawpy.__version__, libraw_version=list(rawpy.libraw_version)))
@@ -314,7 +349,7 @@ def train(output, seed, guard):
     if sum(p.numel() for p in model.parameters()) != plan['parameters']:
         raise ValueError('Unexpected parameter count')
     optimizer = torch.optim.Adam(model.parameters(), lr=plan['learning_rate'])
-    training = np.load(output/'training.npy', mmap_mode='r', allow_pickle=False)
+    training = np.load(output/'training.npy', mmap_mode='r', allow_pickle=False)[:data['training_tiles']]
     development = torch.from_numpy(np.load(output/'development.npy', allow_pickle=False)).cuda()
     noise = NoiseModel(output, plan, 'cuda')
     rng = torch.Generator(device='cuda').manual_seed(plan['data_seed'])
@@ -379,6 +414,9 @@ def train(output, seed, guard):
             optimizer.zero_grad(set_to_none=True)
             torch.cuda.synchronize()
             started = time.perf_counter()
+            for group in optimizer.param_groups:
+                group['lr'] = plan['minimum_learning_rate']+.5*(plan['learning_rate']-plan['minimum_learning_rate'])*(
+                    1+math.cos(math.pi*(step-1)/plan['steps']))
             ids = torch.randint(len(training), (plan['batch'],), device='cuda', generator=rng)
             iso_ids = torch.randint(len(plan['training_iso']), (plan['batch'],), device='cuda', generator=rng)
             choices = torch.randint(1 << 30, (plan['batch'],), device='cuda', generator=rng).tolist()
@@ -399,13 +437,13 @@ def train(output, seed, guard):
                                          clipped=bool(float(norm) > plan['gradient_clip_norm'])))
             completed = step
             result['completed_steps'] = step
-            if step % 32 == 0:
+            if step % 1000 == 0:
                 write(folder/'progress.json', result)
             if step in plan['controls_at']:
                 control(step)
             if step in plan['checkpoint_at']:
                 checkpoint(f'step{step}.pt')
-        result['status'] = 'completed_plan_a_development_training'
+        result['status'] = 'completed_natural_physical_development_training'
     except Exception as error:
         result.update(status='stopped', error=type(error).__name__+': '+str(error))
         raise
@@ -510,10 +548,14 @@ if __name__ == '__main__':
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--mode', choices=('prepare', 'extract', 'run', 'train'), required=True)
     parser.add_argument('--seed', type=int, default=71)
+    parser.add_argument('--steps', type=int, default=100000)
+    parser.add_argument('--seeds', type=int, nargs='+', default=[71])
+    parser.add_argument('--hours', type=float, default=11.5)
+    parser.add_argument('--tiles-per-source', type=int, default=12)
     args = parser.parse_args()
     output = args.output.resolve()
     if args.mode == 'prepare':
-        prepare(output)
+        prepare(output, args.steps, args.seeds, args.hours, args.tiles_per_source)
     elif args.mode == 'run':
         run(output)
     elif args.mode == 'extract':
