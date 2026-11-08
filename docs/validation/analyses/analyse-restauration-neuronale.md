@@ -1,5 +1,14 @@
 # Restauration neuronale — qualification du corpus
 
+**État courant au 8 novembre 2026.** Composite terminé : critère de progrès
+conjoint non atteint sur les deux initialisations ; aucune nouvelle variante
+procédurale à engager. Dix sondes de coût réussies. Le modèle 8,16 M sur
+patchs empaquetés 256, lot 8, mesure 0,290 s/mise à jour en FP32 contre
+0,161 s en AMP FP16, sans preuve d’équivalence photographique. Corpus naturel,
+partitions et étalons CFA restent à qualifier avant entraînement long.
+Les résultats détaillés et mémoires JSON figurent à la dernière entrée.
+
+
 **Point de décision au 7 novembre 2026, après la deuxième revue de Claude.**
 Le but reste un bénéfice visible et mesuré sur de vraies photos face aux
 étalons, pas la seule réussite du banc procédural. Aucun bénéfice
@@ -9118,3 +9127,137 @@ Les résultats de préparation seront conservés dans un JSON horodaté
 `neural-training-preparation-v001-*` sous `docs/validation/raw/`.
 Cinq contrôles ciblés de la préparation passent ; ce résultat ne valide
 ni le débit GPU réel, ni un modèle de débruitage.
+
+
+## 8 novembre 2026 — composite clos et dimensionnement du futur entraînement
+
+Les mémoires canoniques sont
+[composite](../raw/neural-dru-composite-study-v001-20261107T233057Z.json),
+[préparation et coût](../raw/neural-training-preparation-v001-20261107T234223Z.json)
+et [veille demandée](../raw/neural-queued-sleep-v001-20261107T234229Z.json).
+Les deux candidats composites de 1 024 mises à jour et l’évaluation prospective
+ont terminé sans erreur, le 8 novembre à 00 h 30 Paris. Les dix sondes
+suivantes ont fini à 00 h 42. La veille a été demandée à 00 h 42 min 29 s ;
+l’appel Windows est revenu au réveil à 10 h 25 Paris. Ce retour ne constitue
+pas une mesure de consommation électrique pendant la suspension.
+
+### Composite : gain global sans protection des motifs suffisamment reproductible
+
+L’évaluation réservée a été ouverte après les entraînements, une seule fois,
+sur 384 observations. Le tableau décrit les médianes par groupe des mesures
+figées : l’erreur de restitution est la moyenne des écarts absolus du gain à
+1 dans chaque groupe, puis sa médiane ; ce n’est pas une erreur de couleur
+sur photographie.
+
+| Initialisation | Modèle | Écart médian du gain à 1 | MSE médiane / entrée bruitée |
+| --- | --- | ---: | ---: |
+| 71 | Haar figé | 0,05950 | 0,62097 |
+| 71 | Composite | 0,06752 | 0,59369 |
+| 73 | Haar figé | 0,07311 | 0,61882 |
+| 73 | Composite | 0,06504 | 0,60575 |
+
+La MSE médiane baisse d’environ 4,4 % et 2,1 % par rapport au Haar figé.
+Mais le motif faible est moins bien restitué avec l’initialisation 71 et
+mieux avec 73. Le critère conjoint préétabli n’est donc pas atteint. Certains
+gains signés restent négatifs dans les cas difficiles : la conservation
+locale du signal faible n’est pas assurée. Ce résultat ne démontre pas
+l’échec des réseaux neuronaux ; il clôt cette tentative de recette
+procédurale courte. La réserve est désormais connue et ne sera pas réutilisée
+comme jeu inédit pour sélectionner une autre recette.
+
+### Coût : petit réseau et demi-précision réalisables sur cette machine
+
+Chaque temps GPU est une médiane de seize mises à jour après quatre de
+chauffe, avec lot physique 8, Adam, perte L1 non pondérée, poids aléatoires,
+sans checkpointing d’activations. Les transferts et la génération du bruit
+sont inclus ; les temps n’incluent pas l’extraction des RAW, les contrôles
+photographiques, les sauvegardes et les campagnes de validation.
+
+| Paramètres mesurés | Patch empaqueté | FP32, s/mise à jour | AMP FP16, s/mise à jour |
+| --- | ---: | ---: | ---: |
+| 2 041 536 | 128 | 0,0346 | 0,0267 |
+| 2 041 536 | 256 | 0,1378 | 0,0872 |
+| 8 162 688 | 128 | 0,0865 | 0,0487 |
+| 8 162 688 | 256 | 0,2897 | 0,1607 |
+
+Pour 8,16 M / 256, AMP prend environ 45 % de temps en moins, et le pic
+CUDA alloué passe de 2,30 à 1,27 Gio. Il s’agit de la mémoire allouée par
+PyTorch, pas de toute la consommation GPU. Aucun saut du scaler ni clipping
+de gradient n’a été observé sur ces essais courts ; cela ne garantit pas
+la stabilité d’un apprentissage prolongé. Les pics RAM de processus sont
+restés sous 1,36 Gio ; le pic global observé par ces sondes est de 57,3 %.
+La valeur antérieure 2 041 104 était une estimation incorrecte : le réseau
+instancié avec cette interface compte 2 041 536 paramètres.
+
+Sur CPU à huit threads, FP32 et une tuile empaquetée 512 × 512, les médianes
+d’inférence sont 0,172 s pour 2,04 M et 0,545 s pour 8,16 M. Ce ne sont
+pas des temps d’image complète, de tuilage avec recouvrement ni d’ouverture
+IPR. Les configurations diffèrent de l’ancien réseau 32,6 M avec halo et
+micro-lots ; on ne leur attribue pas la même qualité ou le même contexte.
+
+### Suite retenue et limites
+
+Le candidat de dimensionnement intéressant est 8,16 M / patch 256 / lot 8,
+avec AMP à qualifier face au FP32. Ce choix de coût ne sélectionne pas encore
+une recette gagnante. Aucun entraînement long n’a été lancé.
+
+La préparation a repris cinq sources bas ISO déjà étudiées, dont quatre
+accessibles au moment de l’inventaire. Elle n’a ni extrait de CFA, ni figé
+une partition, ni qualifié une référence propre. Le fichier indisponible
+reste à localiser ; cela ne justifie pas à lui seul une nouvelle prise de
+vue. Les étapes suivantes restent l’audit des données naturelles et de la
+banque de noirs, les groupes scène/séance, les étalons CFA calibrés puis
+un prévol photographique. BM3D n’a pas été installé par cette campagne.
+Le critère utilisateur de +0,5 dB par bande d’ISO n’est pas encore évalué.
+
+
+## 8 novembre 2026 — prévol photographique 8,16 M / FP32, deux graines
+
+L’utilisateur demande de préparer et lancer un premier test sous une enveloppe
+de trente minutes : 1 024 mises à jour pour chacune des initialisations 71
+et 73. La mesure de coût précédente suggère environ dix minutes de calcul
+pur ; le chargement réel, les contrôles et les sauvegardes sont en supplément.
+L’estimation n’est pas une promesse de convergence.
+
+Ce prévol avance vers le contenu naturel sans prolonger la recherche des
+recettes procédurales. Les deux sources d’apprentissage sont 6V1A9072 et
+6V1A9938 ; 6V1A0005 et 6V1A0145 servent au développement. Ce découpage par
+fichier est figé avant les mesures mais reste provisoire : les scènes/séances
+ne sont pas encore qualifiées et les photos ont déjà été inspectées. Il ne
+s’agit donc pas d’un nouveau jeu final réservé.
+
+Extraction en lecture seule par rawpy : neuf patchs géométriques fixes de
+512 × 512 sites capteur par source, empaquetés en quatre plans de 256 × 256.
+Soustraction des noirs par couleur et normalisation par le blanc des
+métadonnées LibRaw, sans gain de balance des blancs, dématriçage, DCP ou LCP.
+Les négatifs sont conservés. Cette normalisation n’est pas une qualification
+des niveaux noirs/blancs d’IPR. Les SHA-256 des RAW sont vérifiés contre
+l’inventaire précédent ; les empreintes des patchs, noir, blanc, disposition,
+fractions négatives et au-dessus du blanc sont consignées. Pas de sélection
+par le score, ni de qualification de netteté implicite.
+
+Modèle : DRUNet adapté, largeurs 32/64/128/256, 8 162 688 paramètres, poids
+aléatoires, FP32, lot physique 8, Adam à 1e-4, L1 non pondérée et clipping de
+norme à 1. Les deux graines reçoivent la même suite de données et de bruit.
+Le bruit ajouté est gaussien indépendant à quatre niveaux normalisés
+0,005 / 0,01 / 0,02 / 0,04 ; le sigma fourni est constant par patch, sans
+carte calculée depuis la cible propre. Ce n’est pas un émulateur physique
+par ISO. Les RAW bas ISO sont des proxies, avec leur propre bruit résiduel.
+
+Contrôles de développement fixés aux pas 0, 256, 512 et 1 024, mêmes
+réalisations bruitées à chaque contrôle et pour les deux graines. Les MSE,
+gains PSNR face à l’entrée bruitée et biais par plan sont conservés pour
+chaque patch/niveau. Ces scores ne valent ni comparaison CFA calibrée,
+ni validation du critère utilisateur de +0,5 dB, ni preuve de conservation
+des détails par rapport à une vérité propre indépendante.
+
+Sauvegardes au pas 512 et en fin/arrêt : modèle, Adam, position réelle du lot
+et états aléatoires, dont le générateur dédié aux données. Aucune reprise
+exacte n’est annoncée avant son propre contrôle. Enveloppe globale de trente
+minutes, puis grâce maximale de 45 secondes pour finir une mise à jour et
+sauvegarder. En dernier recours, arrêt du seul arbre de processus lancé.
+RAM : limite processus 6 Gio / seuil 5 Gio, seuil global 92 %, abandon sur
+pression soutenue ; quota CUDA 50 % avec 4 Gio libres avant entraînement.
+Les traces et mesures finales seront archivées dans
+`neural-natural-preflight-v001-*`. Trois tests ciblés de normalisation et
+phase passent. Aucun changement de production, push, fusion ou tag.
