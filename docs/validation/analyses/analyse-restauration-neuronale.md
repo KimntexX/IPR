@@ -9834,8 +9834,8 @@ Deux graines terminées en 25 min 35 s, 0,36 s par mise à jour, pic privé
 Les deux sources de développement donnent la même tendance (écart ≤ 0,4 dB),
 les graines concordent, et le biais moyen par plan reste ≤ 0,0022 (51200).
 Le gain croît encore entre 1 024 et 2 048 pas aux ISO élevés : **pas de
-convergence**. Aux ISO bas, le gain est plafonné en partie par le bruit propre
-des cibles ISO 100.
+convergence**. *(Corrigé ci-dessous : le bruit propre des cibles ISO 100 ne
+plafonne pas ce gain.)*
 
 **Ce que cela ne dit pas.** Ces gains se mesurent contre l'entrée bruitée, pas
 contre un étalon : ni BM3D, ni le classique IPR, ni le critère de +0,5 dB ne
@@ -9843,3 +9843,41 @@ sont évalués. Les patchs de développement sont déjà connus ; il n'y a pas d
 test final. Prochaine étape : mêmes réalisations de développement pour
 VST + BM3D par plan et le classique IPR, puis budget long décidé avec
 l'utilisateur. Aucun push, fusion ou tag.
+
+## 8 novembre 2026 — plan A face à VST + BM3D sur les mêmes observations
+
+Outil `tests/neural/physical_natural_comparators.py`. Les observations de
+développement du plan A sont régénérées à l'identique et les réseaux sauvegardés
+reproduisent exactement leurs scores journalisés (écart relatif 0). BM3D 4.0.3
+(environnement externe, non livré) débruite chaque plan canonique après une
+transformation d'Anscombe généralisée avec la loi a, b propre au plan et à
+l'ISO, puis l'inverse non biaisé approché ; 161 s pour 288 plans. Même métrique
+que les contrôles (bord de 32 cellules, cible ISO 100).
+
+| Gain médian sur l'entrée bruitée | 3200 | 6400 | 16000 | 51200 |
+| --- | ---: | ---: | ---: | ---: |
+| VST + BM3D par plan | +10,28 | +12,25 | +14,88 | +17,42 |
+| Réseau, graine 71 (2 048 pas) | +0,55 | +1,09 | +2,52 | +6,72 |
+| Réseau, graine 73 (2 048 pas) | +0,56 | +1,10 | +2,59 | +6,91 |
+| Écart réseau − BM3D (médiane, graine 71) | −9,55 | −11,17 | −12,09 | −10,56 |
+
+Les deux sources de développement vont dans le même sens (écart de −7,8 à
+−16,6 dB selon la source et l'ISO). Le biais moyen maximal de BM3D par plan
+reste ≤ 0,001.
+
+**Lecture.** Au budget de 2 048 pas depuis zéro, le réseau est très loin de
+l'étalon classique : environ 10 dB en dessous. Le critère de +0,5 dB n'est pas
+approché ; ce résultat ne dit rien de la capacité du réseau après un
+apprentissage long, mais il fixe le niveau réel à battre.
+
+**Correction.** La section précédente attribuait en partie le faible gain à
+ISO 3200 au bruit propre des cibles. C'est inexact pour le réseau : ce bruit
+vaut environ 2,5 % de la variance ajoutée à ISO 3200 (calcul par les lois
+mesurées), soit un plafond d'environ +16 dB. Il devient en revanche proche
+pour BM3D sur la source la plus lisse (+13,9 dB à ISO 3200) : aux ISO bas, un
+étalon fort mesurera une borne inférieure de son vrai gain.
+
+**Suite proposée.** Apprentissage long du même réseau (environ 10 h pour
+100 000 pas à 0,36 s), avec comparaison de l'adaptateur `x − F` et d'un départ
+pré-entraîné ; classique IPR dans un domaine RGB commun ; ne pas engager de
+budget long sans accord de l'utilisateur. Aucun push, fusion ou tag.
