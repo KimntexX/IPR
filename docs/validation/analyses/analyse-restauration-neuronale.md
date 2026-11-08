@@ -9278,3 +9278,13 @@ quotas ne sont pas augmentés ; sources, patchs, niveaux de bruit, graines,
 objectif et échéance absolue de v001 sont conservés. Les deux modèles
 repartent de leur initialisation déclarée, sans sélection par score. La
 mesure de coût précédente sans recalcul ne peut plus servir de durée exacte.
+
+
+Audit de l’extraction : les noirs fournis par rawpy sont proches de
+[0, 31–33, 95–105, 62–69], avec blanc 16 383 et aucun négatif dans les
+patchs extraits. Leur correspondance avec les niveaux physiques du contrat
+RAW IPR n’est pas établie. Le prévol reste un apprentissage sous bruit ajouté
+sur proxies affines ; aucune conclusion sur les noirs signés ou la loi de
+bruit physique ne sera tirée. La correspondance noir/blanc est ajoutée aux
+points à qualifier avant le banc naturel définitif. Le contrôle existant
+d’équivalence forward et gradients avec/sans recalcul des activations passe.
