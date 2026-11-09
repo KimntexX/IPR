@@ -1455,3 +1455,122 @@ séparément, sans veto automatique à 20,8 s. Ce point n’est plus en attente.
 Les critères d’acceptation sont à reporter sans modification dans le plan
 exécutable du futur banc ; son inventaire, ses partitions et ses définitions
 de métriques restent à préparer. Le composite conserve son contrat initial.
+
+## 21. Plan d'intégration en production : loi de bruit et cas des boîtiers — proposition du 9 novembre 2026
+
+**Statut : proposition à valider par l'utilisateur.** Rien n'est engagé dans
+`src/`. Le mode d'entrée du réseau (carte σ, Anscombe) dépend de l'étude
+appariée `input-mode-study-v001` en cours ; le plan ne change pas selon le
+résultat, seul le module d'entrée du réseau en dépend.
+
+### État du code de production (relevé du 9 novembre)
+
+- Deux débruiteurs, tous deux **aveugles** et après dématriçage :
+  `DetailProcessing::reduceNoise` (RGB linéaire après tons, chemin par défaut)
+  et `CameraDenoise::apply` (RGB caméra signé avant LCP et DCP, expérimental,
+  luminance seule). Aucun ne lit l'ISO ni une loi de bruit ;
+  `CameraDenoise::Context::iso` est validé mais jamais renseigné par
+  `RenderChain`.
+- **Aucune loi de bruit** (a, b) n'existe dans `src/`, `config/` ou les
+  profils. La donnée par boîtier la plus proche est
+  `config/raw-normalization.json` (noirs, blancs, mode capteur), choisie par
+  `CameraCharacterization::selectSensorMode`.
+- Le champ DNG *NoiseProfile* (balise 51041) n'est lu nulle part. Marque,
+  modèle et ISO arrivent par `RawInput::Input` (LibRaw).
+- Aucune inférence neuronale en production ; le runtime visé reste ONNX
+  Runtime C++ (§5).
+- Interface : barre unique `denoiseAmount` et sous-menu luminance/couleur ;
+  la recette stocke `denoiseLuminance`/`denoiseChrominance` et le mode de
+  développement signé.
+
+### Les cas à couvrir
+
+| Cas | Source de la loi a, b | Précision attendue | Signalé à l'utilisateur |
+| --- | --- | --- | --- |
+| 1. Boîtier calibré, ISO mesuré (R6 III aujourd'hui) | Catalogue mesuré : noirs et champs plats | Référence | Non |
+| 2. Boîtier calibré, ISO intermédiaire (12800, 25600…) | Interpolation entre ISO mesurés voisins | Bonne, bornée | « loi interpolée » dans l'info |
+| 3. DNG avec *NoiseProfile* | Balise 51041 convertie dans notre domaine | Celle de l'écrivain du DNG | « loi du fichier » |
+| 4. Boîtier inconnu, sans balise | Estimation sur l'image (méthode classique de type Foi 2008, contrainte à a·x + b) | Moindre ; échoue sur image sans zones lisses | « loi estimée », avec confiance |
+| 5. Estimation impossible ou incertaine | Repli prudent (sous-correction voulue) ou estimateur appris, option CBDNet | Faible | « débruitage limité » |
+| 6. Fichier non RAW (JPEG, TIFF) | Pas de loi capteur | — | Chemin actuel `DetailProcessing` seul |
+
+Le 60D (CR2) relève du cas 4 tant qu'il n'a pas sa campagne de noirs et de
+champs plats ; il doit passer au cas 1 avant la version stable. Le réseau
+appris sur le R6 III n'est pas qualifié pour d'autres capteurs : un boîtier
+hors corpus garde le débruiteur classique tant qu'une validation n'existe pas
+(issue GitHub au titre des validations partielles).
+
+### Modules proposés (règles C++ du projet)
+
+1. **`src/raw/NoiseLaw.h/.cpp` : donnée et résolution, fonctions libres.**
+   `struct NoiseLaw { std::array<double, 4> shotSlope, readVariance;`
+   `NoiseLawSource source; double confidence; QString provenance; }` dans le
+   domaine normalisé du capteur. `NoiseLawSource` : `Measured`,
+   `Interpolated`, `DngNoiseProfile`, `Estimated`, `Fallback`. Fonction
+   `resolveNoiseLaw(catalog, input, dngProfile, estimate)` : priorité
+   cas 1 > 2 > 3 > 4 > 5, sans état, testable seule.
+2. **`config/noise-laws.json` : catalogue versionné**, embarqué en ressource
+   comme `raw-normalization.json`. Par boîtier, mode capteur et ISO : a et b
+   par plan, avec l'empreinte et le chemin du JSON de preuve qui les a
+   mesurés. Le chargement suit le modèle de `CameraCharacterization`
+   (même clé marque/modèle/mode). Généré depuis les preuves par un outil de
+   `src/tools`, jamais recopié à la main.
+3. **Interpolation (cas 2)** : a quasi proportionnel au gain, donc
+   interpolé en log-ISO ; b interpolé séparément. Pas d'extrapolation hors
+   des ISO mesurés extrêmes : au-delà, cas 4 ou 5.
+4. **Lecture DNG (cas 3)** : vérifier d'abord si LibRaw expose la balise ;
+   sinon la lire dans le lecteur TIFF/DNG existant (`CameraDng`). Conversion
+   du domaine [0, 1] de la balise vers notre normalisation noir/blanc.
+5. **`src/raw/NoiseLawEstimator.h/.cpp` (cas 4)** : fonctions libres sur la
+   mosaïque CFA ; zones lisses, variance par niveau, ajustement robuste de
+   a et b par plan, score de confiance. Coût CPU borné et mesuré dans le
+   budget de 20,8 s à 8 threads.
+6. **`src/neural/` : module d'inférence derrière une interface courte**,
+   par exemple `NeuralRawDenoiser::denoise(mosaic, law, strength, cancelled)`.
+   Il possède la session ONNX Runtime (durée de vie de ressource, donc une
+   classe), le tuilage avec halo et l'annulation. Le mode d'entrée retenu
+   (Anscombe ou carte σ) est interne au module.
+7. **Place dans la chaîne** : le réseau travaille sur la **mosaïque CFA avant
+   dématriçage**, là où il est entraîné, en tête de chaîne comme décidé pour
+   IPR. Cela demande un étage de rendu nouveau entre décodage et
+   dématriçage (`RenderChain` et `RenderStageCache`), dont la clé de cache
+   comprend la loi, la force et l'empreinte du modèle. `ImageEditor` ne fait
+   que transmettre les réglages (rôle de cadenceur).
+8. **Force et barre unique** : force 0 contourne exactement le réseau
+   (contrat du §4). Une force réglable par un facteur λ sur σ n'est proposée
+   que si l'étude montre que le réseau suit σ ; sinon mélange
+   `entrée + t·(prédiction − entrée)`. Le débruiteur couleur actuel reste en
+   aval jusqu'à preuve du contraire.
+9. **Recette** : stocker la force et l'identifiant du modèle, pas la loi
+   (recalculée à l'ouverture depuis le catalogue versionné). Toute évolution
+   du format passe par la migration des recettes existantes, sans rupture de
+   l'historique des retouches.
+
+### Tests prévus dès la conception
+
+- Résolution : priorité des cas, boîtier absent, ISO hors plage, catalogue
+  invalide ou empreinte de preuve divergente, balise DNG absente ou malformée.
+- Interpolation : retrouver un ISO mesuré retiré du catalogue (validation
+  croisée sur les ISO du R6 III).
+- Estimateur : lois connues sur mosaïques synthétiques Poisson-Gauss,
+  image sans zone lisse (échec propre et confiance faible), puis comparaison
+  à la loi mesurée sur des RAW réels du R6 III.
+- Module neuronal : force 0 identique bit à bit, tuilage sans couture,
+  annulation et libération de la session sur tous les chemins, noirs non
+  biaisés, budget CPU.
+
+### Ordre de travail proposé
+
+1. Choisir le mode d'entrée du réseau selon `input-mode-study-v001`.
+2. `NoiseLaw` et catalogue depuis les preuves existantes du R6 III, avec
+   interpolation ; calibration du 60D (prises de noirs et champs plats).
+3. Lecture *NoiseProfile* et estimateur sur image, avec leur issue de
+   validation partielle.
+4. Étage CFA et module ONNX, d'abord derrière l'interrupteur expérimental
+   existant, puis barre unique et recette.
+5. Qualification : critère bêta du 7 novembre (≥ 0,5 dB médian par bande
+   ISO, noirs, budget CPU, planches à 100 % acceptées).
+
+Branches : le moteur relève de `patch_noise` (existant), le réseau de
+`patch_neural_restoration` ; à confirmer avec l'utilisateur avant tout
+commit dans `src/`. Aucune fusion, publication ni tag sans accord.
