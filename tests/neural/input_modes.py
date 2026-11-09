@@ -1,6 +1,8 @@
 """Network input modes of the noise-input comparison: sigma map, blind, or Anscombe domain.
 
 - sigma_map: noisy planes and the sigma map in, x - sigma*F out (current DRU-CFA adapter).
+- sigma_input: noisy planes and the sigma map in, plain x - F out (the map as
+  information only, without the sigma-scaled output).
 - blind: noisy planes only, x - F out; the network must infer the noise level itself.
 - anscombe: generalized Anscombe transform with the measured per-plane law
   (variance a*y + b), so the noise has unit variance everywhere; the network
@@ -14,7 +16,7 @@ import torch
 from dru_cfa import DruCfaCorrector
 
 
-MODES = ('sigma_map', 'blind', 'anscombe')
+MODES = ('sigma_map', 'sigma_input', 'blind', 'anscombe')
 # Network input u = scale*z: unit noise in z becomes a fixed 0.05 in u for every ISO and tone.
 ANSCOMBE_INPUT_SCALE = .05
 
@@ -22,7 +24,7 @@ ANSCOMBE_INPUT_SCALE = .05
 def in_channels(mode):
     if mode not in MODES:
         raise ValueError('Unknown input mode')
-    return 8 if mode == 'sigma_map' else 4
+    return 8 if mode in ('sigma_map', 'sigma_input') else 4
 
 
 def anscombe(y, a, b):
@@ -57,9 +59,11 @@ class ModeCorrector(DruCfaCorrector):
             raise ValueError('Four-plane batch with per-sample per-plane noise law required')
         if not torch.isfinite(noisy).all() or (a <= 0).any() or (b < 0).any():
             raise ValueError('Finite observations and a positive noise law required')
-        if self.mode == 'blind':
-            residual = self._residual(noisy)
-            corrected = noisy-residual
+        if self.mode in ('blind', 'sigma_input'):
+            if self.mode == 'sigma_input' and (sigma.shape != noisy.shape or not torch.isfinite(sigma).all() or (sigma < 0).any()):
+                raise ValueError('Finite nonnegative sigma map matching the planes required')
+            values = noisy if self.mode == 'blind' else torch.cat((noisy, sigma), dim=1)
+            corrected = noisy-self._residual(values)
             z_hat = None
         else:
             z = anscombe(noisy, a, b)

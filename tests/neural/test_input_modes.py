@@ -44,11 +44,13 @@ class InputModeTests(unittest.TestCase):
         noisy = torch.rand(2, 4, 16, 16)*.5-.02
         sigma = (a*noisy.clamp_min(0)+b).sqrt()
         tags = torch.tensor([[0, 1, 3, 2]]*2)
-        for mode in ('sigma_map', 'blind', 'anscombe'):
+        for mode in ('sigma_map', 'sigma_input', 'blind', 'anscombe'):
             core = ZeroCore(in_channels(mode))
             output = ModeCorrector(core, mode).correct(noisy, sigma, tags, a, b)
             torch.testing.assert_close(output['corrected'], noisy, rtol=1e-5, atol=1e-6)
             self.assertEqual(output['z_hat'] is None, mode != 'anscombe')
+            if mode == 'sigma_input':
+                torch.testing.assert_close(core.seen, torch.cat((noisy, sigma), dim=1))
         torch.testing.assert_close(core.seen, ANSCOMBE_INPUT_SCALE*anscombe(noisy, a, b))
         with self.assertRaises(ValueError):
             ModeCorrector(ZeroCore(4), 'denoise_harder')

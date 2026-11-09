@@ -4,7 +4,10 @@ Four arms trained from scratch for 4096 updates on the frozen v005 arrays
 (hardlinks), same seed, data stream, schedule and development controls:
 A sigma map + unweighted L1 (current), B blind + unweighted L1,
 C Anscombe input + Anscombe-domain L1, D sigma map + calibrated
-sigma-normalized L1 (separates the loss effect from the input effect).
+sigma-normalized L1 (separates the loss effect from the input effect),
+E sigma map as input with a plain x - F output (the map's own contribution).
+A later study may train only some arms and pair them with the verified,
+unchanged arm A of an earlier study.
 Development diagnosis only; no production change.
 """
 import argparse
@@ -27,7 +30,9 @@ STEPS = 4096
 ARMS = (('A_sigma_map', 'sigma_map', 'unweighted L1'),
         ('B_blind', 'blind', 'unweighted L1'),
         ('C_anscombe', 'anscombe', 'anscombe_l1'),
-        ('D_sigma_map_normalized_loss', 'sigma_map', 'sigma_normalized_l1'))
+        ('D_sigma_map_normalized_loss', 'sigma_map', 'sigma_normalized_l1'),
+        ('E_sigma_input', 'sigma_input', 'unweighted L1'))
+REFERENCE = 'A_sigma_map'
 TOOLS = ('input_mode_study.py', 'input_modes.py', 'physical_natural_training.py', 'physical_training_objective.py',
          'dru_cfa.py', 'memory_budget.py', 'load_control.py', 'prepare_next_training.py')
 
@@ -40,7 +45,21 @@ def parameter_count(in_nc):
     return sum(p.numel() for p in core.parameters())
 
 
-def prepare(output):
+def reference_arm(study_path):
+    """Arm A of a completed earlier study, pinned by its plan, progress and checkpoint digests."""
+    earlier = read(study_path)
+    arm = next(a for a in earlier['arms'] if a['name'] == REFERENCE)
+    folder = Path(arm['path'])
+    progress = read(folder/'seed71/progress.json')
+    if (progress['status'] != 'completed_natural_physical_development_training' or progress['completed_steps'] != STEPS
+            or digest(folder/'plan.json') != arm['plan_sha256']
+            or digest(folder/'seed71/resume.pt') != progress['final_checkpoint_sha256']):
+        raise ValueError('Earlier reference arm is incomplete or changed')
+    return dict(arm, reuse=dict(progress_sha256=digest(folder/'seed71/progress.json'),
+                                checkpoint_sha256=progress['final_checkpoint_sha256'], study=str(study_path.resolve())))
+
+
+def prepare(output, names, reference_study=None):
     from input_modes import in_channels
     source_plan, data = read(PARENT/'plan.json'), read(PARENT/'data.json')
     for name, expected in data['files'].items():
@@ -52,8 +71,12 @@ def prepare(output):
         raise ValueError('Completed training-only calibration for the v005 plan required')
     output.mkdir(exist_ok=False)
     tools = {name: digest(ROOT/'tests/neural'/name) for name in TOOLS}
-    arms = []
-    for name, mode, objective in ARMS:
+    if not names or len(set(names)) != len(names) or any(n not in {a[0] for a in ARMS} for n in names):
+        raise ValueError('Distinct known arm names required')
+    if (REFERENCE in names) == (reference_study is not None):
+        raise ValueError('Train arm A here or reuse it from an earlier study, not both')
+    arms = [] if reference_study is None else [reference_arm(reference_study)]
+    for name, mode, objective in (a for a in ARMS if a[0] in names):
         target = output/name
         target.mkdir()
         for filename in data['files']:
@@ -92,7 +115,7 @@ def summarize(study):
         raise ValueError('Different data selections between arms')
     final = {name: {(row['target_index'], row['iso']): row for row in r['controls'][-1]['rows']}
              for name, r in arms.items()}
-    reference = final['A_sigma_map']
+    reference = final[REFERENCE]
     groups = []
     for source in (0, 1):
         for iso in (3200, 6400, 16000, 51200):
@@ -128,6 +151,13 @@ def run(output):
                     raise ValueError('Frozen study source changed: '+name)
             if digest(Path(arm['path'])/'plan.json') != arm['plan_sha256']:
                 raise ValueError('Frozen arm plan changed')
+            if 'reuse' in arm:
+                folder = Path(arm['path'])/'seed71'
+                if (digest(folder/'progress.json') != arm['reuse']['progress_sha256']
+                        or digest(folder/'resume.pt') != arm['reuse']['checkpoint_sha256']):
+                    raise ValueError('Reused reference arm changed')
+                result['stages'].append(dict(arm=arm['name'], status='reused_verified_reference'))
+                continue
             result['active_arm'] = arm['name']
             write(output/'progress.json', result)
             with (output/(arm['name']+'-supervisor.log')).open('x', encoding='utf-8') as log:
@@ -164,8 +194,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--prepare', action='store_true')
+    parser.add_argument('--arms', nargs='+', default=[a[0] for a in ARMS])
+    parser.add_argument('--reference-study', type=Path)
     args = parser.parse_args()
     if args.prepare:
-        prepare(args.output.resolve())
+        prepare(args.output.resolve(), args.arms, args.reference_study.resolve() if args.reference_study else None)
     else:
         run(args.output.resolve())
