@@ -106,6 +106,37 @@ def prepare(output, names, reference_study=None):
         evaluation='Same 72 development observations; per tile, ISO and source, paired with arm A'))
 
 
+def prepare_long(output, name, steps, seeds, hours):
+    """One long campaign of a chosen arm, from scratch, on the frozen v005 arrays; run it with physical_natural_training --mode run."""
+    source_plan, data = read(PARENT/'plan.json'), read(PARENT/'data.json')
+    for filename, expected in data['files'].items():
+        if digest(PARENT/filename) != expected:
+            raise ValueError('Parent array changed: '+filename)
+    from input_modes import in_channels
+    _, mode, objective = next(a for a in ARMS if a[0] == name)
+    if objective != 'unweighted L1':
+        raise ValueError('Long campaigns are prepared for unit-scale objectives only')
+    if steps < 8000 or not seeds or len(set(seeds)) != len(seeds):
+        raise ValueError('At least 8000 steps and distinct seeds required')
+    output.mkdir(exist_ok=False)
+    for filename in data['files']:
+        os.link(PARENT/filename, output/filename)
+    write(output/'data.json', data)
+    every = steps//16
+    plan = {**source_plan, 'schema_version': 4, 'status': 'frozen_long_input_mode_campaign',
+        'created_at_utc': datetime.now(timezone.utc).isoformat(), 'steps': steps, 'seeds': list(seeds),
+        'campaign_seconds': int(hours*3600), 'input_mode': mode, 'objective': objective, 'objective_scale': 1.,
+        'parameters': parameter_count(in_channels(mode)), 'learning_rate': 1e-4, 'minimum_learning_rate': 1e-6,
+        'schedule': f'cosine from 1e-4 to 1e-6 over {steps} steps, from scratch, each seed',
+        'progress_every': 500, 'controls_at': [k*every for k in range(17)], 'checkpoint_at': [k*steps//4 for k in range(1, 5)],
+        'tools': {n: digest(ROOT/'tests/neural'/n) for n in TOOLS}, 'arm': name,
+        'parent_plan_sha256': digest(PARENT/'plan.json'),
+        'limits': source_plan['limits']+[f'Arm {name} chosen on the 4096-step paired study (input-mode-study-v001/v002)',
+            'Development tiles were used to choose the arm; they are not a fresh test']}
+    plan.pop('continuation', None)
+    write(output/'plan.json', plan)
+
+
 def summarize(study):
     arms = {arm['name']: read(Path(arm['path'])/'seed71/progress.json') for arm in study['arms']}
     if any(r['completed_steps'] != STEPS or r['status'] != 'completed_natural_physical_development_training'
@@ -196,8 +227,14 @@ if __name__ == '__main__':
     parser.add_argument('--prepare', action='store_true')
     parser.add_argument('--arms', nargs='+', default=[a[0] for a in ARMS])
     parser.add_argument('--reference-study', type=Path)
+    parser.add_argument('--long', help='prepare one long campaign of this arm')
+    parser.add_argument('--steps', type=int, default=64000)
+    parser.add_argument('--seeds', type=int, nargs='+', default=[71, 73])
+    parser.add_argument('--hours', type=float, default=15.)
     args = parser.parse_args()
-    if args.prepare:
+    if args.long:
+        prepare_long(args.output.resolve(), args.long, args.steps, args.seeds, args.hours)
+    elif args.prepare:
         prepare(args.output.resolve(), args.arms, args.reference_study.resolve() if args.reference_study else None)
     else:
         run(args.output.resolve())

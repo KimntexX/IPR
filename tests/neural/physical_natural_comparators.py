@@ -51,7 +51,7 @@ def export(campaign, output):
     import numpy as np
     import torch
     import sys
-    from dru_cfa import DruCfaCorrector
+    from input_modes import ModeCorrector, in_channels
     from physical_natural_training import CANONICAL_TAGS, NoiseModel
     plan, data = read(campaign/'plan.json'), read(campaign/'data.json')
     for name, expected in data['files'].items():
@@ -74,9 +74,10 @@ def export(campaign, output):
         state = torch.load(campaign/f'seed{seed}/resume.pt', map_location='cuda', weights_only=False)
         if state['completed_steps'] != plan['steps']:
             raise ValueError('Final checkpoint required')
-        core = UNetRes(in_nc=8, out_nc=4, nc=[32, 64, 128, 256], nb=4, act_mode='R',
+        mode = plan.get('input_mode', 'sigma_map')
+        core = UNetRes(in_nc=in_channels(mode), out_nc=4, nc=[32, 64, 128, 256], nb=4, act_mode='R',
                       downsample_mode='strideconv', upsample_mode='convtranspose')
-        model = DruCfaCorrector(core).cuda()
+        model = ModeCorrector(core, mode).cuda()
         model.load_state_dict(state['model_state'])
         model.eval()
         logged = {(r['target_index'], r['iso']): r for r in read(campaign/f'seed{seed}/progress.json')['controls'][-1]['rows']}
@@ -88,7 +89,8 @@ def export(campaign, output):
                     clean = target.unsqueeze(0)
                     dark = noise.dark(iso_index, 'control', index).unsqueeze(0)
                     noisy, sigma = noise.sample(clean, torch.tensor([iso_index], device='cuda'), dark, g)
-                    corrected = model.correct_observations(noisy, sigma, tags)
+                    a, b = noise.law(torch.tensor([iso_index], device='cuda'))
+                    corrected = model.correct(noisy, sigma, tags, a, b)['corrected']
                     noisy_all[index, iso_index] = noisy[0].cpu().numpy()
                     sigma_all[index, iso_index] = sigma[0].cpu().numpy()
                     result[index, iso_index] = corrected[0].cpu().numpy()
@@ -159,7 +161,7 @@ def compare(output):
                 'BM3D per plane ignores cross-plane correlation; external non-commercial reference, not shipped',
                 'Proxy targets keep their own ISO100 noise',
                 'Classical IPR comparator needs a common RGB domain and is not part of this comparison',
-                'Networks trained 2048 updates only, not converged'])
+                'Training length and convergence as declared by the campaign plan'])
     write(output/'result.json', result)
     stamp = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')
     with (ROOT/'docs/validation/raw'/f'neural-{output.name}-{stamp}.json').open('x', encoding='utf-8') as stream:
