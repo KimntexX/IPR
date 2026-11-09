@@ -10207,3 +10207,61 @@ Preuves :
 [étude v003](../raw/neural-physical-continuation-study-v003-20261109T115440Z.json),
 [bras normalisé](../raw/neural-normalized-20261109T115440Z.json),
 [essai interrompu v002](../raw/neural-continuation-study-v002-20261109T111954Z.json).
+
+## 9 novembre 2026 — anatomie de l'erreur : le réseau trouve le bruit mais en retire trop peu
+
+Outil `tests/neural/development_error_anatomy.py` (environnement BM3D externe,
+non livré). Sur les 18 tuiles de développement et les sorties du modèle v005,
+l'erreur `e = estimation − cible` est séparée contre le bruit ajouté
+`n = bruité − cible` : `e = β·n + r`. `β·n` est le bruit laissé en place,
+`r` le reste (détail perdu ou inventé, biais, taches). Un facteur oracle α sur
+la correction (`bruité − α·(bruité − estimation)`, ajusté sur la cible) dit si
+l'estimateur a trouvé le bruit sans l'appliquer en entier. VST + BM3D est
+recalculé à l'identique (176 s).
+
+| Source, ISO | Réseau (dB) | β réseau | α oracle | Réseau × α (dB) | VST + BM3D (dB) |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 1, 3200 | +5,3 | 0,51 | 1,65 | +8,8 | +8,7 |
+| 1, 6400 | +7,5 | 0,32 | 1,26 | +9,1 | +10,3 |
+| 1, 16000 | +10,8 | 0,07 | 1,02 | +10,8 | +12,3 |
+| 1, 51200 | +16,8 | 0,01 | 0,99 | +16,8 | +14,9 |
+| 2, 3200 | +2,2 | 0,78 | 4,15 | +10,6 | +13,9 |
+| 2, 6400 | +2,2 | 0,76 | 3,21 | +12,6 | +16,3 |
+| 2, 16000 | +3,5 | 0,66 | 2,91 | +19,5 | +19,1 |
+| 2, 51200 | +22,5 | 0,00 | 0,99 | +22,6 | +20,3 |
+
+Médianes par source et ISO. α de BM3D : 0,98 à 1,03 partout.
+
+**Constats.**
+
+- La carte σ est juste : le rapport bruit réel / σ annoncé vaut 1,01 à 1,02
+  sur les deux sources et tous les ISO. La sous-correction ne vient pas d'une
+  carte de bruit fausse.
+- La correction du réseau a la bonne forme (corrélation 0,93 à 1,00 avec le
+  bruit) mais pas la bonne amplitude. Sur la seconde source, plus sombre
+  (moyenne 0,033 contre 0,063) et lisse, il ne retire qu'un quart à un tiers
+  du bruit à ISO 3200–16000 : l'erreur y est à 98–100 % du bruit laissé, avec
+  le spectre blanc du bruit d'entrée.
+- Multipliée par α, la correction rejoint BM3D ou le dépasse dans 4 cas
+  sur 8. L'information est donc dans le réseau ; c'est son amplitude aux
+  faibles σ qui manque. À σ élevé (51200, et 16000 sur la première source)
+  α vaut 1.
+- Écart restant à α = 1 : 1,5 dB à ISO 16000 sur la première source, la plus
+  texturée ; c'est le seul cas où le réseau perd du détail plutôt que de
+  laisser du bruit.
+
+**Cause probable.** Le réseau sort `x − σ·F`. Avec une perte L1 non pondérée,
+le gradient reçu par F est proportionnel à σ : les zones à faible σ (ISO bas,
+tons sombres) apprennent plusieurs fois moins vite. L'amplitude n'y a pas
+convergé en 100 000 pas. Cela confirme la normalisation par σ comme bon
+levier, mais la continuation de 4 096 pas à 1e−6 était beaucoup trop petite
+pour corriger un défaut d'amplitude d'un facteur 3 à 4.
+
+**Proposition (accord requis).** Continuation longue la nuit depuis v005 avec
+la perte normalisée calibrée, à un taux relevé (par exemple 3e−5 décroissant
+vers 1e−6), en suivant α oracle dans les contrôles. α ne sert qu'au
+diagnostic : il ne doit jamais entrer dans le modèle livré.
+
+Preuves :
+[anatomie v002](../raw/neural-development-error-anatomy-v002-20261109T121353Z.json)
+(la v001, sans α, est conservée à côté).
