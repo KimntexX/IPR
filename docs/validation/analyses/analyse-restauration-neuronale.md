@@ -10265,3 +10265,44 @@ diagnostic : il ne doit jamais entrer dans le modèle livré.
 Preuves :
 [anatomie v002](../raw/neural-development-error-anatomy-v002-20261109T121353Z.json)
 (la v001, sans α, est conservée à côté).
+
+### Le défaut suit l'ISO et l'image, pas le σ local
+
+Même jeu de tuiles. Mélangées toutes ensemble, les tranches de σ local donnent
+un α qui baisse quand σ monte (2,0 vers 1,0). Mais à l'intérieur d'un même ISO,
+α ne baisse pas avec σ : il reste plat sur la première source (1,5 à 1,6 à
+ISO 3200) et monte même sur la seconde (2,1 à 2,9 à 3200, 2,0 à 3,4 à 6400).
+À σ voisin, la seconde source à ISO 16000 (σ 0,012, α 2,7) et la première à
+ISO 51200 (σ 0,022, α 1,0) n'ont rien de commun. Le réseau ne règle donc pas
+l'amplitude de sa correction sur la carte σ pixel par pixel.
+
+Sonde `tests/neural/sigma_response_probe.py` : le modèle v005 reçoit λ·σ au
+lieu de σ, sur les mêmes observations (sorties reproduites à l'identique à
+λ = 1). Le réseau sort `x − λσ·F` ; s'il lisait σ, F devrait varier comme 1/λ
+(0,5 à λ = 2, 0,25 à λ = 4).
+
+| Source, ISO | F à λ = 2 / F à λ = 1 | F à λ = 4 / F à λ = 1 | Gain λ = 1 (dB) | Meilleur gain sur λ (dB) |
+| --- | ---: | ---: | ---: | ---: |
+| 1, 3200 | 0,73 | 0,44 | +5,3 | +7,5 (λ = 2) |
+| 1, 51200 | 1,37 | 1,54 | +16,8 | +16,8 (λ = 1) |
+| 2, 3200 | 0,57 | 0,87 | +2,2 | +9,7 (λ = 4) |
+| 2, 16000 | 1,40 | 1,70 | +3,5 | +17,8 (λ = 2) |
+| 2, 51200 | 1,20 | 1,36 | +22,5 | +22,5 (λ = 1) |
+
+La réponse de F à σ est incohérente : elle ne suit 1/λ nulle part et monte
+même quand σ double dans plusieurs cas. Le réseau tire l'essentiel de son
+estimation du niveau de bruit de l'image bruitée elle-même. Il sous-estime ce
+niveau sur la source sombre et lisse aux ISO 3200–16000, où bruit et fine
+structure se ressemblent.
+
+**Conclusion de l'anatomie.** Le défaut n'est pas une perte de détail mais
+une sous-correction, et sa cause est double : un gradient proportionnel à σ
+(perte L1 non pondérée), et un conditionnement par σ que le réseau n'exploite
+pas. Les leviers connus visent les deux à la fois : donner au réseau une
+entrée où le bruit est de variance unité, par la transformation d'Anscombe
+généralisée avec la loi mesurée a, b ou par la division par σ, puis revenir
+par l'inverse non biaisé. Le bruit devient homogène entre ISO et tons, le
+gradient aussi. C'est un changement d'architecture d'entrée à décider avec
+l'utilisateur ; λ et α oracle restent des outils de diagnostic.
+
+Preuve : [sonde σ](../raw/neural-sigma-response-probe-v001-20261109T121728Z.json).
