@@ -10165,3 +10165,45 @@ n’est lancé à partir de cette seule lecture.
 Preuves :
 [étude comparée](../raw/neural-continuation-study-v001-20261109T105041Z.json),
 [relecture et diagnostics](../raw/neural-physical-continuation-review-v001-20261109T105532Z.json).
+
+## 9 novembre 2026 — continuation calibrée (étude v003)
+
+Reprise par Claude (Codex en attente). Même expérience que l'étude v001 :
+départ du modèle v005 à 100 000 pas, 4 096 pas à taux constant 1e−6, mêmes
+tirages, témoin L1 v001 réutilisé après vérification de ses empreintes. Seul
+changement : la perte normalisée par σ est multipliée par la constante
+k = 0,007652 calibrée sur 32 mini-lots d'apprentissage
+(`physical-loss-scale-calibration-v001`). Un premier essai (v002) s'est
+retiré au pas 422 sous pression mémoire de l'hôte (85,7 %) ; v003 a tourné
+VS Code fermé, sans arrêt.
+
+| Gain médian apparié sur le témoin (dB) | 3200 | 6400 | 16000 | 51200 |
+| --- | ---: | ---: | ---: | ---: |
+| Normalisée, sans constante (v001) | +0,16 | +0,34 | +0,06 | −0,29 |
+| Normalisée, calibrée (v003) | +0,10 | +0,24 | +0,06 | −0,15 |
+| Par source (v003) | +0,17 / +0,10 | +0,42 / +0,16 | +0,11 / +0,03 | −0,07 / −0,29 |
+
+Gradients limités : 0 % des pas (contre 79 % en v001 et 0,05 % pour le témoin).
+
+**Lecture.**
+
+- La constante règle bien le problème d'échelle : plus aucun gradient limité.
+  Adam étant presque insensible à un facteur constant sur la perte, l'écart
+  entre v001 et v003 vient surtout de la suppression de cette limitation.
+- Le profil reste le même : léger gain aux ISO intermédiaires, régression à
+  51200, réduite de moitié. Les deux sources vont dans le même sens.
+- Tous les écarts restent sous 0,5 dB. À cette dose (4 096 pas à 1e−6), la
+  pondération par ISO ne comble pas les 3,7 à 4,5 dB qui séparent le réseau de
+  VST + BM3D aux ISO 3200 à 16000. Le rééquilibrage de la perte n'est donc pas
+  le levier principal ; il reste candidat pour un apprentissage plus long.
+
+**Décision.** Le modèle v005 reste la référence. Pistes à soumettre à
+l'utilisateur : continuation longue de la nuit avec la perte calibrée et un
+taux relevé ; étude ciblée de la seconde source de développement, la plus
+lisse, où l'écart à BM3D atteint 11 à 15 dB ; évaluation sur le bruit réel
+des scènes intérieures du 1er novembre.
+
+Preuves :
+[étude v003](../raw/neural-physical-continuation-study-v003-20261109T115440Z.json),
+[bras normalisé](../raw/neural-normalized-20261109T115440Z.json),
+[essai interrompu v002](../raw/neural-continuation-study-v002-20261109T111954Z.json).
