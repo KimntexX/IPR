@@ -16,10 +16,18 @@ ROOT=Path(__file__).resolve().parents[2]
 BUILD=ROOT/'build-patch_neural_restoration'
 
 
-def prepare(output):
+def prepare(output,calibration_path):
     parent=BUILD/'physical-natural-training-v005'
     source_plan=read(parent/'plan.json');progress=read(parent/'seed71/progress.json')
     data=read(parent/'data.json');checkpoint=parent/'seed71/resume.pt'
+    calibration=read(calibration_path)
+    if (calibration['status']!='completed_training_only_loss_scale_calibration'
+            or calibration['parent_plan_sha256']!=digest(parent/'plan.json')):
+        raise ValueError('Completed training-only calibration for this parent required')
+    previous=BUILD/'physical-continuation-study-v001'
+    old_study=read(previous/'progress.json')
+    if old_study['status']!='completed_paired_continuation_development_not_model_validation':
+        raise ValueError('Completed paired study required to reuse the current-loss control')
     if (progress['status']!='completed_natural_physical_development_training' or progress['completed_steps']!=100000
             or digest(checkpoint)!=progress['final_checkpoint_sha256'] or digest(parent/'plan.json')!=progress['plan_sha256']):
         raise ValueError('Completed verified100000-step parent required')
@@ -29,6 +37,22 @@ def prepare(output):
     output.mkdir(exist_ok=False)
     arms=[]
     for name,objective in (('current','unweighted L1'),('normalized','sigma_normalized_l1')):
+        if name=='current':
+            target=previous/'current'
+            old_plan=read(target/'plan.json');old_progress=read(target/'seed71/progress.json')
+            if (old_plan['continuation']['checkpoint_sha256']!=digest(checkpoint)
+                    or old_plan['learning_rate']!=1e-6 or old_plan['minimum_learning_rate']!=1e-6
+                    or old_plan['objective']!='unweighted L1' or old_progress['completed_steps']!=4096
+                    or old_plan['steps']!=4096 or old_plan.get('objective_scale',1.)!=1.
+                    or old_plan['gradient_clip_norm']!=source_plan['gradient_clip_norm']
+                    or read(target/'data.json')['files']!=data['files']):
+                raise ValueError('Existing control is not comparable to this continuation')
+            if digest(target/'seed71/resume.pt')!=old_progress['final_checkpoint_sha256']:
+                raise ValueError('Existing control checkpoint changed')
+            arms.append(dict(name=name,path=str(target.resolve()),objective=objective,
+                plan_sha256=digest(target/'plan.json'),reuse=dict(progress_sha256=digest(target/'seed71/progress.json'),
+                    checkpoint_sha256=old_progress['final_checkpoint_sha256'])))
+            continue
         target=output/name;target.mkdir()
         for filename in data['files']:
             os.link(parent/filename,target/filename)
@@ -38,6 +62,8 @@ def prepare(output):
         plan={**source_plan,'schema_version':3,'status':'frozen_paired_continuation',
             'created_at_utc':datetime.now(timezone.utc).isoformat(),'steps':4096,'campaign_seconds':2400,
             'seeds':[71],'objective':objective,'learning_rate':1e-6,'minimum_learning_rate':1e-6,
+            'objective_scale':calibration['objective_scale'],
+            'loss_scale_calibration':dict(path=str(calibration_path.resolve()),sha256=digest(calibration_path)),
             'schedule':'Constant1e-6 for both arms, continuing the final parent learning rate',
             'sigma_floor':1/source_plan['target_domain']['divisor'],'progress_every':128,
             'controls_at':[0,512,1024,2048,4096],'checkpoint_at':[2048,4096],'tools':tools,
@@ -51,10 +77,12 @@ def prepare(output):
                 'Independent hardlinks to read-only arrays; parent arrays and checkpoint must stay immutable']}
         write(target/'plan.json',plan)
         arms.append(dict(name=name,path=str(target.resolve()),objective=objective,plan_sha256=digest(target/'plan.json')))
-    freeze=dict(schema_version=1,data_version='v001',campaign_id=output.name,
+    freeze=dict(schema_version=1,data_version='v002',campaign_id=output.name,
         measured_at_utc=datetime.now(timezone.utc).isoformat(),status='prepared',arms=arms,
         parent_checkpoint_sha256=digest(checkpoint),steps_per_arm=4096,
-        maximum_training_seconds=4800,resources='Sequential GPU workers; private5GiB soft/6GiB hard, CUDA50%, system92%; host pressure yields',
+        maximum_training_seconds=2400,resources='Reuse frozen current control; one GPU worker, private5GiB soft/6GiB hard, CUDA50%, system92%; host pressure yields',
+        calibration=dict(path=str(calibration_path.resolve()),sha256=digest(calibration_path),objective_scale=calibration['objective_scale']),
+        previous_study=dict(path=str((previous/'progress.json').resolve()),sha256=digest(previous/'progress.json')),
         tools={name:digest(ROOT/'tests/neural'/name) for name in ('physical_continuation_study.py','physical_training_objective.py')},
         evaluation='Same72 noisy observations, comparisons per source/ISO and paired arms; no training-data split change',
         no_automatic_sleep=True)
@@ -96,7 +124,7 @@ def summarize(output,study):
 
 def run(output):
     study=read(output/'study.json')
-    result=dict(schema_version=1,data_version='v001',campaign_id=output.name,
+    result=dict(schema_version=1,data_version=study['data_version'],campaign_id=output.name,
         measured_at_utc=datetime.now(timezone.utc).isoformat(),status='running',study=study,stages=[])
     env=dict(os.environ,OMP_NUM_THREADS='4',OPENBLAS_NUM_THREADS='1')
     python=ROOT.parent/'venv-neural-cuda/Scripts/python.exe'
@@ -107,6 +135,13 @@ def run(output):
                     raise ValueError('Frozen study source changed')
             if digest(Path(arm['path'])/'plan.json')!=arm['plan_sha256']:
                 raise ValueError('Frozen arm plan changed')
+            if 'reuse' in arm:
+                folder=Path(arm['path'])/'seed71'
+                if (digest(folder/'progress.json')!=arm['reuse']['progress_sha256']
+                        or digest(folder/'resume.pt')!=arm['reuse']['checkpoint_sha256']):
+                    raise ValueError('Reused control changed')
+                result['stages'].append(dict(arm=arm['name'],status='reused_verified_frozen_control'))
+                continue
             result['active_arm']=arm['name'];write(output/'progress.json',result)
             with (output/(arm['name']+'-supervisor.log')).open('x',encoding='utf-8') as log:
                 process=subprocess.Popen([str(python),str(ROOT/'tests/neural/physical_natural_training.py'),
@@ -132,7 +167,7 @@ def run(output):
         result['finished_at_utc']=datetime.now(timezone.utc).isoformat()
         write(output/'progress.json',result)
         stamp=datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')
-        with (ROOT/'docs/validation/raw'/f'neural-continuation-study-v001-{stamp}.json').open('x',encoding='utf-8') as stream:
+        with (ROOT/'docs/validation/raw'/f'neural-continuation-study-v002-{stamp}.json').open('x',encoding='utf-8') as stream:
             json.dump(result,stream,allow_nan=False,separators=(',',':'))
 
 
@@ -140,6 +175,9 @@ if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output',type=Path,required=True)
     parser.add_argument('--prepare',action='store_true')
+    parser.add_argument('--calibration',type=Path)
     args=parser.parse_args()
-    if args.prepare:prepare(args.output.resolve())
+    if args.prepare:
+        if args.calibration is None:parser.error('--calibration required to freeze a calibrated continuation')
+        prepare(args.output.resolve(),args.calibration.resolve())
     else:run(args.output.resolve())

@@ -1,6 +1,6 @@
 import unittest
 import torch
-from physical_training_objective import training_loss,verify_controls
+from physical_training_objective import training_loss,verify_controls,fixed_sigma_scale
 
 
 class PhysicalTrainingObjectiveTests(unittest.TestCase):
@@ -34,3 +34,22 @@ class PhysicalTrainingObjectiveTests(unittest.TestCase):
         self.assertEqual(verify_controls(parent,parent),0)
         with self.assertRaises(ValueError):verify_controls([{**parent[0],'corrected_mse':.02}],parent)
         with self.assertRaises(ValueError):verify_controls([{**parent[0],'iso':6400}],parent)
+
+    def test_fixed_scale_preserves_local_weight_ratios_and_scales_gradients(self):
+        sigma=torch.tensor([.002,.02]);target=torch.zeros(2)
+        a=torch.tensor([.1,.1],requires_grad=True)
+        raw=training_loss(a,target,sigma,'sigma_normalized_l1',1e-5);raw.backward()
+        b=a.detach().clone().requires_grad_()
+        scaled=training_loss(b,target,sigma,'sigma_normalized_l1',1e-5,.01);scaled.backward()
+        torch.testing.assert_close(scaled,raw*.01)
+        torch.testing.assert_close(b.grad,a.grad*.01)
+        self.assertAlmostEqual(float(b.grad[0]/b.grad[1]),10.,delta=2e-6)
+        with self.assertRaises(ValueError):training_loss(b,target,sigma,'unweighted L1',1e-5,.01)
+        with self.assertRaises(ValueError):training_loss(b,target,sigma,'sigma_normalized_l1',1e-5,0.)
+
+    def test_training_harmonic_mean_makes_calibration_average_weight_one(self):
+        sigma=torch.tensor([.002,.004,.01],dtype=torch.float64)
+        scale=fixed_sigma_scale(float(sigma.reciprocal().sum()),3)
+        self.assertAlmostEqual(float((scale/sigma).mean()),1.)
+        for total,count in ((float('nan'),3),(0.,3),(100.,0),(100.,True)):
+            with self.assertRaises(ValueError):fixed_sigma_scale(total,count)

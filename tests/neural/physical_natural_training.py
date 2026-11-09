@@ -454,7 +454,8 @@ def train(output, seed, guard):
             target = torch.from_numpy(np.stack([training[i] for i in ids.tolist()])).cuda()
             noisy, sigma = noise.sample(target, iso_ids, dark, rng)
             prediction = model.correct_observations(noisy, sigma, tags.expand(plan['batch'], -1))
-            loss = training_loss(prediction,target,sigma,plan['objective'],plan.get('sigma_floor',1/noise.divisor))
+            loss = training_loss(prediction,target,sigma,plan['objective'],plan.get('sigma_floor',1/noise.divisor),
+                                 plan.get('objective_scale',1.))
             if not torch.isfinite(loss):
                 raise ValueError('Nonfinite L1 loss')
             loss.backward()
