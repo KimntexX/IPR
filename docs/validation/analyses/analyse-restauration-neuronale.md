@@ -10306,3 +10306,68 @@ gradient aussi. C'est un changement d'architecture d'entrée à décider avec
 l'utilisateur ; λ et α oracle restent des outils de diagnostic.
 
 Preuve : [sonde σ](../raw/neural-sigma-response-probe-v001-20261109T121728Z.json).
+
+## 9 novembre 2026 — comparaison des entrées du réseau : carte σ, aveugle, Anscombe
+
+Outil `tests/neural/input_mode_study.py` avec `tests/neural/input_modes.py`.
+Quatre bras entraînés **depuis zéro**, 4 096 pas chacun, cosinus 1e−4 → 1e−6,
+graine 71, sur les tableaux figés de v005 (liens physiques). Flux de données
+identique entre bras (même empreinte de sélection), mêmes 72 observations de
+développement que les contrôles de v005 et que la comparaison BM3D.
+
+- A : image + carte σ, sortie `x − σ·F`, L1 non pondérée (architecture actuelle).
+- B : image seule, sortie `x − F`, L1 non pondérée (aveugle).
+- C : transformation d'Anscombe généralisée avec la loi mesurée (racine
+  signée sous le noir, inverse algébrique exact), sortie `z − F`, L1 dans le
+  domaine transformé × k = 0,00765.
+- D : comme A avec la perte normalisée calibrée. **Interrompu au pas 128** :
+  Claude Code a arrêté la tâche de fond pour mémoire système basse pendant
+  l'inactivité de la session ; non relancé sans accord.
+
+| Source, ISO | A (dB) | B aveugle (dB) | C Anscombe (dB) | VST + BM3D (dB) | α oracle A / B / C |
+| --- | ---: | ---: | ---: | ---: | --- |
+| 1, 3200 | +1,6 | **+9,1** | +8,9 | +8,7 | 3,37 / 0,98 / 0,96 |
+| 1, 6400 | +1,7 | **+10,9** | +10,7 | +10,3 | 3,68 / 0,99 / 0,99 |
+| 1, 16000 | +2,6 | **+13,3** | +13,1 | +12,3 | 2,72 / 0,99 / 1,00 |
+| 1, 51200 | +7,1 | **+16,3** | +15,5 | +14,9 | 0,99 / 1,00 / 1,00 |
+| 2, 3200 | +1,0 | +13,6 | +13,1 | **+13,9** | 6,19 / 0,97 / 0,98 |
+| 2, 6400 | +1,1 | +16,2 | +15,3 | **+16,3** | 6,32 / 0,99 / 1,00 |
+| 2, 16000 | +2,5 | **+19,4** | +17,8 | +19,1 | 3,04 / 1,00 / 1,01 |
+| 2, 51200 | +7,0 | **+22,3** | +19,8 | +20,3 | 1,01 / 1,00 / 1,01 |
+
+Médianes par source et ISO ; BM3D tiré de l'anatomie v002 sur les mêmes
+observations. Aucun gradient limité dans les trois bras ; 0,36 à 0,37 s par
+pas. Biais moyen maximal par plan : B 1,2e−4 à 6,5e−4, A et C jusqu'à
+1,2e−3 et 1,3e−3 ; C a le biais le plus fort à ISO 3200 sur la première
+source (3,7e−4 contre 8,7e−5 pour B).
+
+**Lecture.**
+
+- En 4 096 pas, B et C font **mieux que v005 après 100 000 pas** à tous les
+  ISO sous 51200, et rejoignent VST + BM3D : B le dépasse ou l'égale dans
+  6 cas sur 8 et reste à −0,3 dB au pire. A, la même architecture que v005,
+  reste à +1 à +7 dB et retrouve la sous-correction (α 2,7 à 6,3).
+- α vaut 1 dans B et C partout : la sous-correction disparaît dès que la
+  sortie n'est plus multipliée par σ. **Cause corrigée** : ce n'est pas
+  d'abord la carte σ en entrée qui fait défaut, c'est la paramétrisation de
+  sortie `x − σ·F`. Elle impose à F de produire le bruit divisé par σ et
+  réduit d'un facteur σ (0,002 à 0,03) le gradient qui l'atteint ; aux
+  faibles σ, l'apprentissage est presque à l'arrêt. Les conclusions
+  précédentes (« le réseau ne lit pas sa carte », perte proportionnelle à σ)
+  décrivaient les symptômes de cette paramétrisation.
+- L'aveugle B fait légèrement mieux que C (0,2 à 2,5 dB, surtout à 51200 et
+  sur la source sombre) et a moins de biais. Mais B n'a pas de carte du tout :
+  la comparaison ne dit pas encore ce que vaut **la carte σ en entrée avec une
+  sortie simple `x − F`**. Ce bras manquant (E) isole l'apport de la carte,
+  utile pour les boîtiers non appris et pour la force réglable.
+- Limites : une graine, entraînement court, deux sources de développement
+  déjà vues, bruit simulé ; aucune validation sur bruit réel ni planche.
+
+**Suite proposée (accord requis).** Bras E (carte σ en entrée, sortie
+`x − F`) et D (perte seule), même protocole, à lancer VS Code fermé ou la
+nuit ; puis entraînement long du meilleur, évaluation sur les scènes réelles
+intérieures et planches.
+
+Preuves : [A](../raw/neural-A_sigma_map-20261109T131047Z.json),
+[B](../raw/neural-B_blind-20261109T133627Z.json),
+[C](../raw/neural-C_anscombe-20261109T140149Z.json).
