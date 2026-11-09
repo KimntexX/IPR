@@ -9995,3 +9995,57 @@ sont pas réécrits. La présente mémoire les annote explicitement.
 
 Preuve de cette relecture :
 [neural-natural-long-training-review-v001-20261109T093821Z.json](../raw/neural-natural-long-training-review-v001-20261109T093821Z.json).
+
+
+## 9 novembre 2026 — corpus local de bruit réel disponible avant les prochaines prises
+
+À la demande de l’utilisateur, l’inspection donne priorité aux fichiers déjà
+présents dans `tests/image/colorimétrie` et sur la carteD:. Les métadonnées
+statiques de486 RAW locaux et1036 RAW surD:/DCIM sont relues sans erreur,
+tous identifiés R6MarkIII. Ces1522 chemins ne représentent pas1522 photos
+uniques ou scènes indépendantes : des copies existent entre disque et carte.
+Six aperçus JPEG boîtier sont inspectés ; ils ne qualifient pas le bruit CFA.
+
+| Série | Intérêt et rôle proposé | Limite avant apprentissage |
+| --- | --- | --- |
+| `rafale/6V1A9819–9860`,42 vues ISO4000 | Premier candidat de bruit réel : porte, aplats colorés/neutres, poignée et textile. Rôle historique apprentissage conservé. | L’ancien banc fournit152 paires RGB exploratoires ; ne pas les annoncer comme152 paires CFA prêtes. Requalifier le recalage en préservant Bayer et les négatifs. |
+| D:/DCIM/101EOSR6,0134–0209 | Composition de jour historiquement affectée à l’apprentissage :18 vues ISO100,29 ISO3200,14 ISO12800,15 ISO51200. Détails, textures, aplats, couleurs et ombres. | Référence basISO, géométrie et différence de radiométrie à contrôler localement. Ne pas intégrer aveuglément toutes les vues dans une moyenne. |
+| `neural-validation/0301–0366` et copies surD: | Conserver comme développement/contrôle connu, particulièrement l’intérieur de nuit. | Ne pas réaffecter les copies à l’apprentissage. Même pièce et certains objets communs avec le jour : pas une preuve forte de scène finale indépendante. |
+| D:/DCIM/101EOSR6,0211–0300 | Végétation à garder comme épreuve de détails/mouvement. | Le précédent contrôle ISO100 donne un rapport entre moitiés43,7 ; une moyenne non qualifiée n’est pas une vérité propre. |
+| `protocole/blacks`,184 fichiers | Statistiques du capteur et bibliothèque de bruit déjà utiles. | Les noirs seuls n’apprennent pas à préserver les textures d’une scène. |
+
+Les rafales0016–0130 surD: montrent la Lune : utiles ultérieurement, mais
+avec déplacement céleste et turbulence à traiter. La séquence9440–9460
+contient un grimpeur en mouvement : pas une paire entière immédiatement
+exploitable, même si certaines parties statiques du mur pourraient servir.
+
+### Éviter un faux rejet de toute la série jour ISO51200
+
+Les0195–0209 ont les mêmes ISO/temps/ouverture/focale, mais s’échelonnent
+sur195s. Les0195–0202 forment une première rafale de8 vues sur1s ; suivent
+un lot de2, un lot de4, puis une vue isolée. Le diagnostic historique de
+variation globale sur15 vues n’est donc pas une preuve que chaque petite
+rafale est instable. Vérifier ces sous-rafales séparément, sans choisir les
+images selon le score du modèle. ÀISO6400 nuit,0340–0348 forment9 vues
+rapprochées puis0349–0351 un autre lot après une pause de23s ; le même soin
+s’applique avant de les moyenner.
+
+### Décision méthodologique
+
+Le corpus permet de préparer dès maintenant un entraînement sur bruit réel,
+sans attendre une banque publique ni supposer les nouvelles prises déjà
+nécessaires. Priorités : la porte ISO4000 et les zones admissibles de la
+composition jour historiquement destinée à l’apprentissage. Les références
+moyennées excluent strictement l’image bruitée correspondante et leur
+incertitude, les structures communes et le recalage sont mesurés. La moyenne
+réduit le bruit temporel, pas forcément le bruit fixe commun.
+
+Garder un mélange avec les contenus naturels variés existants pour éviter
+un ajustement à deux compositions seulement. Conserver le contrôle nuit et
+la végétation dans leur rôle ; réserver les futures scènes inédites avant
+découpage en patchs. Le bruit réel complète le correctif d’équilibrage des
+ISO : il ne le remplace pas. Aucun téléchargement, changement de partition
+ou nouvel apprentissage n’est lancé par cet inventaire.
+
+Mémoire complète :
+[neural-local-real-noise-candidates-v001-20261109T094946Z.json](../raw/neural-local-real-noise-candidates-v001-20261109T094946Z.json).
