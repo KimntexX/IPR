@@ -310,6 +310,10 @@ class NoiseModel:
         deviation = np.asarray(self.crops[iso_index][index], dtype=np.float32)-self.pedestals[iso_index][index][:, None, None]
         return torch.from_numpy(deviation).to(self.device)
 
+    def law(self, iso_ids):
+        """Per-sample, per-plane variance law a*y + b in normalized units, shaped [B,4,1,1]."""
+        return (self.slope[iso_ids]/self.divisor)[:, :, None, None], (self.read[iso_ids]/self.divisor**2)[:, :, None, None]
+
     def sample(self, clean, iso_ids, dark, generator):
         slope = self.slope[iso_ids][:, :, None, None]
         noisy = synthesise(clean, slope, dark, self.filters[iso_ids], self.divisor, generator)
@@ -320,9 +324,9 @@ class NoiseModel:
 def train(output, seed, guard):
     import numpy as np
     import torch
-    from dru_cfa import DruCfaCorrector
     from dru_checkpoint import fingerprint
-    from physical_training_objective import training_loss,verify_controls
+    from input_modes import ModeCorrector, in_channels, mode_loss, oracle_alpha
+    from physical_training_objective import verify_controls
     from load_control import YieldController
     plan, data = read(output/'plan.json'), read(output/'data.json')
     for name, expected in data['files'].items():
@@ -342,11 +346,12 @@ def train(output, seed, guard):
             raise ValueError('Official architecture source changed')
     sys.path.insert(0, str(external))
     from models.network_unet import UNetRes
+    mode = plan.get('input_mode', 'sigma_map')
     torch.manual_seed(seed)
-    core = UNetRes(in_nc=8, out_nc=4, nc=[32, 64, 128, 256], nb=4, act_mode='R',
+    core = UNetRes(in_nc=in_channels(mode), out_nc=4, nc=[32, 64, 128, 256], nb=4, act_mode='R',
                   downsample_mode='strideconv', upsample_mode='convtranspose')
     torch.nn.init.zeros_(core.m_tail.weight)
-    model = DruCfaCorrector(core, checkpoint_stages=plan['activation_checkpointing']).cuda()
+    model = ModeCorrector(core, mode, checkpoint_stages=plan['activation_checkpointing']).cuda()
     if sum(p.numel() for p in model.parameters()) != plan['parameters']:
         raise ValueError('Unexpected parameter count')
     optimizer = torch.optim.Adam(model.parameters(), lr=plan['learning_rate'])
@@ -421,14 +426,17 @@ def train(output, seed, guard):
                     ids = torch.tensor([iso_index], device='cuda')
                     dark = noise.dark(iso_index, 'control', index).unsqueeze(0)
                     noisy, sigma = noise.sample(clean, ids, dark, g)
-                    corrected = model.correct_observations(noisy, sigma, tags)
+                    a, b = noise.law(ids)
+                    corrected = model.correct(noisy, sigma, tags, a, b)['corrected']
                     error = (corrected-clean)[..., 32:-32, 32:-32]
                     original = (noisy-clean)[..., 32:-32, 32:-32]
                     mse, before = float(error.square().mean()), float(original.square().mean())
                     rows.append(dict(target_index=index, iso=iso, corrected_mse=mse, observed_mse=before,
                         psnr_gain_db=10*math.log10(before/max(mse, 1e-30)),
                         mean_error_by_plane=error.mean(dim=(-2, -1))[0].tolist(),
-                        mean_sigma_by_plane=sigma.mean(dim=(-2, -1))[0].tolist()))
+                        mean_sigma_by_plane=sigma.mean(dim=(-2, -1))[0].tolist(),
+                        oracle_correction_alpha=oracle_alpha(noisy[..., 32:-32, 32:-32], corrected[..., 32:-32, 32:-32],
+                                                             clean[..., 32:-32, 32:-32])))
         result['controls'].append(dict(step=step, rows=rows))
         if step==0 and parent_controls is not None:
             result['parent_control_reproduction_max_relative_error']=verify_controls(rows,parent_controls)
@@ -453,9 +461,11 @@ def train(output, seed, guard):
             input_trace.update(json.dumps([ids.tolist(),iso_ids.tolist(),choices],separators=(',',':')).encode('ascii'))
             target = torch.from_numpy(np.stack([training[i] for i in ids.tolist()])).cuda()
             noisy, sigma = noise.sample(target, iso_ids, dark, rng)
-            prediction = model.correct_observations(noisy, sigma, tags.expand(plan['batch'], -1))
-            loss = training_loss(prediction,target,sigma,plan['objective'],plan.get('sigma_floor',1/noise.divisor),
-                                 plan.get('objective_scale',1.))
+            a, b = noise.law(iso_ids)
+            output_planes = model.correct(noisy, sigma, tags.expand(plan['batch'], -1), a, b)
+            prediction = output_planes['corrected']
+            loss = mode_loss(mode, plan['objective'], output_planes, target, sigma, a, b,
+                             plan.get('sigma_floor', 1/noise.divisor), plan.get('objective_scale', 1.))
             if not torch.isfinite(loss):
                 raise ValueError('Nonfinite L1 loss')
             loss.backward()
