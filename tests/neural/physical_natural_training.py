@@ -322,6 +322,7 @@ def train(output, seed, guard):
     import torch
     from dru_cfa import DruCfaCorrector
     from dru_checkpoint import fingerprint
+    from physical_training_objective import training_loss,verify_controls
     from load_control import YieldController
     plan, data = read(output/'plan.json'), read(output/'data.json')
     for name, expected in data['files'].items():
@@ -354,6 +355,30 @@ def train(output, seed, guard):
     noise = NoiseModel(output, plan, 'cuda')
     rng = torch.Generator(device='cuda').manual_seed(plan['data_seed'])
     tags = torch.tensor([CANONICAL_TAGS], device='cuda')
+    continuation=plan.get('continuation')
+    parent_controls=None
+    base_steps=0
+    if continuation is not None:
+        source=Path(continuation['checkpoint'])
+        if digest(source)!=continuation['checkpoint_sha256']:
+            raise ValueError('Continuation parent checkpoint changed')
+        state=torch.load(source,map_location='cpu',weights_only=True)
+        if (state['completed_steps']!=continuation['completed_steps'] or state['batch']!=plan['batch']
+                or state['context']['plan_sha256']!=continuation['plan_sha256']):
+            raise ValueError('Different continuation parent contract')
+        model.load_state_dict(state['model_state'],strict=True)
+        if fingerprint(model.state_dict())!=fingerprint(state['model_state']):
+            raise ValueError('Restored model differs from the parent')
+        optimizer.load_state_dict(state['optimizer_state'])
+        rng.set_state(state['data_rng'])
+        torch.set_rng_state(state['cpu_rng'])
+        torch.cuda.set_rng_state_all(state['cuda_rng'])
+        parent_progress=Path(continuation['progress'])
+        if digest(parent_progress)!=continuation['progress_sha256']:
+            raise ValueError('Continuation parent progress changed')
+        parent_controls=read(parent_progress)['controls'][-1]['rows']
+        base_steps=continuation['completed_steps']
+        del state
     deadline = datetime.fromisoformat(read(output/'launch.json')['deadline_utc']).timestamp()
     folder = output/f'seed{seed}'
     folder.mkdir(exist_ok=False)
@@ -361,7 +386,9 @@ def train(output, seed, guard):
     result = dict(status='training', seed=seed, started_at_utc=datetime.now(timezone.utc).isoformat(),
         plan_sha256=context['plan_sha256'], initial_model_fingerprint=fingerprint(model.state_dict()),
         losses=[], update_seconds=[], controls=[], completed_steps=0)
+    result.update(objective=plan['objective'],base_completed_steps=base_steps,total_completed_steps=base_steps)
     completed = 0
+    input_trace=hashlib.sha256()
     load = YieldController(dict(yield_memory_fraction=.85, yield_external_cpu_fraction=.80, pressure_seconds=15))
 
     def check():
@@ -403,6 +430,8 @@ def train(output, seed, guard):
                         mean_error_by_plane=error.mean(dim=(-2, -1))[0].tolist(),
                         mean_sigma_by_plane=sigma.mean(dim=(-2, -1))[0].tolist()))
         result['controls'].append(dict(step=step, rows=rows))
+        if step==0 and parent_controls is not None:
+            result['parent_control_reproduction_max_relative_error']=verify_controls(rows,parent_controls)
         model.train()
         torch.cuda.empty_cache()
         write(folder/'progress.json', result)
@@ -421,10 +450,11 @@ def train(output, seed, guard):
             iso_ids = torch.randint(len(plan['training_iso']), (plan['batch'],), device='cuda', generator=rng)
             choices = torch.randint(1 << 30, (plan['batch'],), device='cuda', generator=rng).tolist()
             dark = torch.stack([noise.dark(int(i), 'calibration', c) for i, c in zip(iso_ids.tolist(), choices)])
+            input_trace.update(json.dumps([ids.tolist(),iso_ids.tolist(),choices],separators=(',',':')).encode('ascii'))
             target = torch.from_numpy(np.stack([training[i] for i in ids.tolist()])).cuda()
             noisy, sigma = noise.sample(target, iso_ids, dark, rng)
             prediction = model.correct_observations(noisy, sigma, tags.expand(plan['batch'], -1))
-            loss = torch.nn.functional.l1_loss(prediction, target)
+            loss = training_loss(prediction,target,sigma,plan['objective'],plan.get('sigma_floor',1/noise.divisor))
             if not torch.isfinite(loss):
                 raise ValueError('Nonfinite L1 loss')
             loss.backward()
@@ -433,11 +463,14 @@ def train(output, seed, guard):
             optimizer.zero_grad(set_to_none=True)
             torch.cuda.synchronize()
             result['update_seconds'].append(time.perf_counter()-started)
-            result['losses'].append(dict(l1=float(loss.detach()), gradient_norm_before_clip=float(norm),
+            result['losses'].append(dict(l1=float(torch.nn.functional.l1_loss(prediction.detach(),target)),
+                                         objective_loss=float(loss.detach()),gradient_norm_before_clip=float(norm),
                                          clipped=bool(float(norm) > plan['gradient_clip_norm'])))
             completed = step
             result['completed_steps'] = step
-            if step % 1000 == 0:
+            result['total_completed_steps']=base_steps+step
+            result['input_selection_trace_sha256']=input_trace.hexdigest()
+            if step % plan.get('progress_every',1000) == 0:
                 write(folder/'progress.json', result)
             if step in plan['controls_at']:
                 control(step)
@@ -528,7 +561,7 @@ def run(output):
             result['stages'].append(row)
             if row['returncode']:
                 raise RuntimeError(f'Training worker failed for seed {seed}')
-        result['status'] = 'completed_both_seeds_development_only'
+        result['status'] = 'completed_declared_seeds_development_only'
     except Exception as error:
         result.update(status='stopped', error=str(error))
     finally:

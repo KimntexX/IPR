@@ -10049,3 +10049,49 @@ ou nouvel apprentissage n’est lancé par cet inventaire.
 
 Mémoire complète :
 [neural-local-real-noise-candidates-v001-20261109T094946Z.json](../raw/neural-local-real-noise-candidates-v001-20261109T094946Z.json).
+
+
+## 9 novembre 2026 — lancement de la comparaison courte de l’option1
+
+L’utilisateur autorise la préparation et l’essai. Sa précision sur l’option1
+vise la normalisation locale plutôt que la pondération globale des ISO ;
+il confirme ensuite que le témoin avec la perte actuelle est nécessaire.
+Deux bras de4096 mises à jour sont donc lancés successivement :
+
+- **Témoin :** L1 actuelle en unités CFA normalisées.
+- **Candidat :** moyenne de`abs(prédiction−cible)/max(σ,1/12303)`.
+
+σ provient du même estimateur sur l’image bruitée que précédemment, détaché
+du graphe de perte. Le plancher est un DN natif normalisé, fixé avant calcul.
+Aucun poids global parISO n’est ajouté. Les tests vérifient notamment qu’à
+erreur standardisée identique, les dérivées par rapport au résiduF deviennent
+comparables, et que le plancher protège les valeurs nulles sans écrêter les
+signaux signés.
+
+Chaque bras recharge exactement les poids **et les moments Adam** du
+checkpoint100000, ainsi que les générateurs de tirages CPU/CUDA et de données.
+Le taux est fixé à1e−6 dans les deux bras, soit le taux final de la nuit ;
+aucun redémarrage d’Adam ni relance de son calendrier ne crée une différence
+entre les objectifs. Les sélections de patchs/ISO/noirs sont empreintées pour
+vérifier leur identité entre bras. Les contrôles à0,512,1024,2048,4096 utilisent
+les mêmes72 observations connues. Avant la première mise à jour, le contrôle0
+doit reproduire le parent à1e−6 relatif près ; le témoin l’a passé avec un
+écart nul. À la fin, comparer les4096pas déclarés, pas le meilleur jalon.
+
+Les tableaux existants sont partagés par liens de fichiers et lus seulement ;
+aucune nouvelle copie de plusieursGo ni modification des sources de la nuit.
+Le corpus et le simulateur restent identiques pour isoler l’objectif. Les
+paires de bruit réel inventoriées seront qualifiées et introduites dans un
+essai distinct. Ce lancement ne qualifie pas rétroactivement le banc physique.
+
+Budget attendu : environune heure pour les deux bras. Chaque entraînement
+est borné à40min plus45s de sauvegarde, avec admission mémoire limitée ;
+le superviseur peut interrompre son enfant et ses descendants en cas de
+blocage. Gardes : processus5Gio souple/6Gio dur, GPU50%, RAM globale92%,
+arrêt anticipé sous pression prolongée. Les statuts et checkpoints sont
+conservés si une erreur ou un arrêt survient. L’enchaînement du second bras
+et la comparaison finale sont automatiques. Pas de prolongation automatique,
+veille, push, fusion ou tag.16 tests ciblés passent.
+
+Manifeste figé avant interprétation :
+[neural-physical-continuation-freeze-v001-20261109T100246Z.json](../raw/neural-physical-continuation-freeze-v001-20261109T100246Z.json).
