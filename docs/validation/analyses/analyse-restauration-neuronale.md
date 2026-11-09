@@ -1,20 +1,16 @@
 # Restauration neuronale — qualification du corpus
 
-**État courant au 8 novembre 2026 — correction du simulateur en qualification.**
-Les nouveaux noirs passent leur contrôle de répétabilité. Le simulateur
-intègre maintenant un candidat de covariance photonique ajusté sur les
-seules expositions de calibration ; la dérive des prises n’explique pas
-l’écart ISO51200. Le contrôle statistique passe ses essais nul et positifs,
-mais la précision spectrale des zones128×128 reste insuffisante pour une
-équivalence complète. Le verdict reste non concluant, sans relèvement des
-seuils. La qualification physique complète reste ouverte ; aucun nouvel
-entraînement2×2048pas n’est lancé.
+**État courant au 9 novembre 2026 — progrès à fort bruit, modèle non validé.**
+L’entraînement long de100000pas, une graine, réseau8,16M FP32, est terminé.
+ÀISO51200, le gain médian apparié sur les patchs de développement dépasse
+VST+BM3D de1,81dB sur les deux sources. Aux ISO3200/6400/16000, le réseau
+reste inférieur. Les207 fichiers d’apprentissage ne sont pas207 scènes
+indépendantes ; le contrôle porte sur18 patchs issus de deux sources connues.
+Le simulateur conserve ses limites déclarées, notamment l’équivalence PSD
+non démontrée. Aucun résultat ne qualifie encore le banc physique complet,
+le traitement sur bruit réel ou l’intégration du modèle en production.
+Les états datés précédents restent historiques dans le corps du rapport.
 
-**Reprise par Claude, 8 novembre 2026 (Codex en pause).** Bilan des mesures
-physiques en fin de rapport : aucun écart démontré hors des bornes ; variance
-et corrélations équivalentes, spectre non démontré faute de précision
-(2 à 4 paires éclairées par ISO). Décision de l’utilisateur demandée : lancer
-avec ces limites déclarées, ou compléter les paires éclairées.
 
 **Point de décision au 7 novembre 2026, après la deuxième revue de Claude.**
 Le but reste un bénéfice visible et mesuré sur de vraies photos face aux
@@ -9887,7 +9883,7 @@ budget long sans accord de l'utilisateur. Aucun push, fusion ou tag.
 Campagne `physical-natural-training-v005` : même réseau et même simulateur que
 le plan A, 207 sources ISO 100 (2 484 tuiles, dont les vues du 23 août de la
 carte), 100 000 pas, graine 71, lancée à 21 h le 8 novembre, achevée en 10 h
-(0,36 s par pas). Pic de mémoire privée 4,35 Gio sous la garde de 5 Gio, aucun
+(0,36 s par pas). Pic de mémoire privée 4,06 Gio (4,35 Go décimaux) sous la garde de 5 Gio, aucun
 arrêt. Comparaison `physical-natural-comparators-v003` sur les 18 tuiles de
 développement, mêmes observations régénérées et même métrique qu'en v001.
 Preuves : `docs/validation/raw/neural-physical-natural-training-v005-20261109T060203Z.json`
@@ -9931,3 +9927,71 @@ parts égales ; reprendre depuis le point v005 à 100 000 pas plutôt que depuis
 zéro ; ajouter un contrôle par source au journal. Évaluer ensuite sur le bruit
 réel des scènes du 1er novembre (intérieur nuit et jour, voir l'audit
 `real_noise_bench.py`). Aucun push, fusion ou tag.
+
+
+## 9 novembre 2026 — relecture indépendante des résultats nocturnes
+
+Les empreintes du plan, du checkpoint final et de tous les tableaux d’entrée
+sont revérifiées.100000 mises à jour sont terminées, du8 novembre21h00 au
+9 novembre07h02 Paris, sur une seule initialisation (71),207 fichiers
+ISO100 et2484 patchs. La reproduction exacte des scores du checkpoint par
+l’export comparateur est déjà mesurée à0 d’écart relatif. Cette relecture
+ne relance aucun apprentissage ni comparateur.
+
+Le calcul a utilisé4,06Gio de mémoire privée au pic,1,03Gio CUDA allouée,
+et87,92% de RAM globale au maximum, sous les92% autorisés.61 mises à jour
+sur100000 ont subi le clipping prévu ; aucun arrêt de ressources. La perte
+L1 moyenne des1000 premières mises à jour vaut0,00900, contre0,00328 pour
+les1000 dernières. Cela est plus représentatif que deux pertes instantanées
+sur des mini-lots différents.
+
+### Progrès réel mais très dépendant du niveau de bruit
+
+Les écarts appariés médians des patchs réseau−BM3D restent ceux du tableau
+précédent :−3,66/−4,36/−4,47/+1,81dB àISO3200/6400/16000/51200. On ne doit
+pas soustraire les médianes séparées des deux méthodes pour les recalculer.
+L’avantage51200 existe sur les deux sources (+1,45 et+2,02dB), mais une seule
+graine et deux sources de développement ne prouvent pas sa généralisation.
+
+Un diagnostic donnant le même poids aux scènes prend d’abord la médiane
+des différences appariées par source/ISO, puis la médiane des deux ISO de
+chaque bande et des deux sources. Il donne−7,70dB à3200–6400 et−3,01dB à
+16000–51200. Il ne remplace pas un test final ; il montre que le résultat
+positif51200 ne permet pas de déclarer le critère global+0,5dB atteint.
+Le biais moyen maximal par plan du réseau est0,000651 (unités CFA normalisées)
+à51200 ; cela ne constitue pas un contrôle séparé des noirs profonds ou de
+la PSD résiduelle.
+
+### Interprétation et prochaine expérience utile
+
+Le réseau a appris ; le gain51200 passe de6,72dB à2048pas à19,27dB à100000pas.
+Toutefois il plafonne presque entre85000 et100000pas (19,26→19,27dB), alors
+que les ISO inférieurs restent très inégaux selon les sources. Allonger le
+même entraînement n’est donc pas la première action recommandée.
+
+L’objectif L1 actuel n’est pas pondéré et l’adaptateur calcule`x−σF`. Pour une
+erreur non nulle, la dérivée de la L1 par rapport à la sortieF a une amplitude
+proportionnelle àσ. Un tirage uniforme des ISO ne garantit donc pas une
+contribution comparable de leurs gradients. C’est un mécanisme identifiable,
+pas la preuve mesurée que tous les gradients sont dominés par51200. Le
+contexte, la paramétrisation et la généralisation aux zones lisses restent
+des explications concurrentes.
+
+La prochaine expérience recommandée est une continuation courte et comparée
+depuis le checkpoint100000 : objectif actuel témoin contre L1 normalisée
+parσ, avec les mêmes tirages et des contrôles séparés par ISO/source. Figer
+les seuils de sigma avant l’essai. Le rendu sur les scènes réellement
+bruitées réservées doit précéder toute proposition d’intégration. Aucun
+nouvel entraînement n’est lancé sur la seule demande de retour d’analyse.
+
+### Coquilles des mémoires historiques relevées
+
+Le statut du superviseur dit «both seeds» alors que le plan ne contient
+qu’une graine71. Une limite du comparateur dit encore «2048updates» alors
+que le checkpoint vérifié en contient100000. L’ancien texte confondait
+4,35Go décimaux et4,35Gio. Les deux premières chaînes sont des métadonnées
+périmées, sans effet sur les calculs vérifiés ; leurs JSON historiques ne
+sont pas réécrits. La présente mémoire les annote explicitement.
+
+Preuve de cette relecture :
+[neural-natural-long-training-review-v001-20261109T093821Z.json](../raw/neural-natural-long-training-review-v001-20261109T093821Z.json).
