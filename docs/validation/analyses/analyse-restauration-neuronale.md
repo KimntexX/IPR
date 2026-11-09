@@ -9881,3 +9881,53 @@ pour BM3D sur la source la plus lisse (+13,9 dB à ISO 3200) : aux ISO bas, un
 100 000 pas à 0,36 s), avec comparaison de l'adaptateur `x − F` et d'un départ
 pré-entraîné ; classique IPR dans un domaine RGB commun ; ne pas engager de
 budget long sans accord de l'utilisateur. Aucun push, fusion ou tag.
+
+## 9 novembre 2026 — apprentissage long (v005) face à VST + BM3D
+
+Campagne `physical-natural-training-v005` : même réseau et même simulateur que
+le plan A, 207 sources ISO 100 (2 484 tuiles, dont les vues du 23 août de la
+carte), 100 000 pas, graine 71, lancée à 21 h le 8 novembre, achevée en 10 h
+(0,36 s par pas). Pic de mémoire privée 4,35 Gio sous la garde de 5 Gio, aucun
+arrêt. Comparaison `physical-natural-comparators-v003` sur les 18 tuiles de
+développement, mêmes observations régénérées et même métrique qu'en v001.
+Preuves : `docs/validation/raw/neural-physical-natural-training-v005-20261109T060203Z.json`
+et `docs/validation/raw/neural-physical-natural-comparators-v003-20261109T060532Z.json`.
+
+| Gain médian sur l'entrée bruitée (dB) | 3200 | 6400 | 16000 | 51200 |
+| --- | ---: | ---: | ---: | ---: |
+| VST + BM3D par plan | +10,28 | +12,25 | +14,88 | +17,42 |
+| Réseau, 2 048 pas (plan A) | +0,55 | +1,09 | +2,52 | +6,72 |
+| Réseau, 100 000 pas | +4,18 | +4,72 | +4,91 | +19,27 |
+| Écart réseau − BM3D (médiane) | −3,66 | −4,36 | −4,47 | **+1,81** |
+| Écart par source de développement | −3,4 / −11,2 | −2,2 / −14,1 | −0,0 / −15,5 | +1,4 / +2,0 |
+
+Évolution des contrôles (gain médian, dB) : ISO 51200 atteint +15,6 dès
+5 000 pas et plafonne vers +19 ; ISO 3200 et 6400 restent entre +0,9 et +2,3
+jusqu'à 35 000 pas, puis montent lentement vers +4 à +4,8 ; ISO 16000 stagne à
++3,3–3,7 de 5 000 à 85 000 pas et ne gagne qu'un dB à la fin. La perte L1
+d'entraînement passe de 0,0078 à 0,0028.
+
+**Lecture.**
+
+- Le réseau apprend et dépasse BM3D à ISO 51200 (+1,8 dB, sur les deux
+  sources). C'est le premier résultat au-dessus de l'étalon classique, mais le
+  critère bêta porte sur les bandes 3200–6400 et 16000–51200 : la première est
+  à −4 dB, et la seconde n'est franchie qu'à 51200.
+- L'écart est très inégal selon les sources : sur la première, le réseau
+  égale BM3D à 16000 ; sur la seconde, plus lisse, il reste 11 à 15 dB en
+  dessous aux ISO inférieurs à 51200.
+- Cause probable, à vérifier : la perte L1 **non pondérée** en unités
+  normalisées. L'erreur d'ISO 51200 est environ 5 fois celle d'ISO 3200 ; elle
+  domine le gradient. Le réseau apprend d'abord et surtout l'ISO le plus
+  bruité, puis les autres très lentement. Le plateau d'ISO 16000 va dans le
+  même sens.
+- Hypothèse secondaire, non mesurée : à faible bruit sur une source lisse, le
+  résidu `x − σ·F` laisse un bruit de basse fréquence que BM3D, avec ses
+  groupes de blocs étendus, supprime.
+
+**Suite proposée (accord de l'utilisateur requis pour le choix).** Normaliser
+la perte par la carte de bruit (L1 sur `(x̂ − x)/σ`) ou pondérer chaque ISO à
+parts égales ; reprendre depuis le point v005 à 100 000 pas plutôt que depuis
+zéro ; ajouter un contrôle par source au journal. Évaluer ensuite sur le bruit
+réel des scènes du 1er novembre (intérieur nuit et jour, voir l'audit
+`real_noise_bench.py`). Aucun push, fusion ou tag.
