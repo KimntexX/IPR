@@ -1,15 +1,13 @@
 # Restauration neuronale — qualification du corpus
 
-**État courant au 9 novembre 2026 — progrès à fort bruit, modèle non validé.**
-L’entraînement long de100000pas, une graine, réseau8,16M FP32, est terminé.
-ÀISO51200, le gain médian apparié sur les patchs de développement dépasse
-VST+BM3D de1,81dB sur les deux sources. Aux ISO3200/6400/16000, le réseau
-reste inférieur. Les207 fichiers d’apprentissage ne sont pas207 scènes
-indépendantes ; le contrôle porte sur18 patchs issus de deux sources connues.
-Le simulateur conserve ses limites déclarées, notamment l’équivalence PSD
-non démontrée. Aucun résultat ne qualifie encore le banc physique complet,
-le traitement sur bruit réel ou l’intégration du modèle en production.
-Les états datés précédents restent historiques dans le corps du rapport.
+**État courant au 9 novembre 2026 — continuation comparée terminée, résultat mitigé.**
+Les deux bras4096pas depuis le checkpoint100000 ont terminé : L1 actuelle et
+L1 normalisée parσ, mêmes poids/Adam/tirages. La normalisation gagne modestement
+à3200/6400/16000 et régresse sur les18 patchs à51200. Elle déclenche le clipping
+des gradients dans78,96% des mises à jour, contre0,049% pour le témoin : son
+échelle globale doit être contrôlée avant une nouvelle conclusion de méthode.
+Le checkpoint nocturne reste la référence générale, sans promotion du candidat.
+Le banc physique complet, le bruit réel et la généralisation restent non validés.
 
 
 **Point de décision au 7 novembre 2026, après la deuxième revue de Claude.**
@@ -10095,3 +10093,75 @@ veille, push, fusion ou tag.16 tests ciblés passent.
 
 Manifeste figé avant interprétation :
 [neural-physical-continuation-freeze-v001-20261109T100246Z.json](../raw/neural-physical-continuation-freeze-v001-20261109T100246Z.json).
+
+
+## 9 novembre 2026 — résultats des deux continuations de4096pas
+
+La campagne finit à11h50 Paris, environ51min après le lancement du
+superviseur. Les4096pas de chaque bras sont terminés, sans erreur ni arrêt
+mémoire. Le contrôle0 reproduit le parent avec0 écart relatif, les poids
+initiaux et les empreintes des sélections patchs/ISO/noirs sont identiques.
+Les trois checkpoints (parent et deux sorties) sont vérifiés parSHA256.
+Le parent est intact. Aucun meilleur jalon n’est sélectionné après coup :
+les chiffres suivants portent sur le contrôle4096 prévu.
+
+### Effet de la normalisation face à une vraie continuation témoin
+
+|ISO|Écart médian apparié normalisée−actuelle, patchs|Scène0|Scène1|Patchs améliorés|
+|---|---:|---:|---:|---:|
+|3200|+0,157dB|+0,336dB|+0,135dB|15/18|
+|6400|+0,344dB|+0,483dB|+0,206dB|16/18|
+|16000|+0,059dB|+0,170dB|+0,036dB|15/18|
+|51200|−0,288dB|−0,107dB|−0,494dB|0/18|
+
+Les18 patchs ne sont pas18 scènes indépendantes. Le diagnostic donnant un
+poids égal aux deux scènes et aux deux ISO par bande vaut+0,290dB à3200–6400
+et−0,099dB à16000–51200, relativement au témoin continué. Il ne faut pas le
+confondre avec le critère+0,5dB face aux étalons. Une forte amélioration
+isolée (+8,78dB sur un patch à16000) et une forte régression isolée (−3,69dB
+à51200) sont conservées dans le JSON, pas masquées par les médianes.
+
+La continuation normalisée demeure sousVST+BM3D aux ISO3200/6400/16000 :
+écarts appariés médians−3,44/−3,10/−3,21dB. À51200 elle reste au-dessus,
++1,53dB, contre+1,82dB pour la continuation témoin et+1,81dB pour le parent.
+Ces comparaisons réutilisent les mêmes observations et les mesures BM3D
+figées ; aucun nouveau calcul BM3D n’est nécessaire.
+
+### Échelle de perte et limiteur de gradients : résultat important du test
+
+Le seuil commun de clipping est1,0. Le témoin atteint ce seuil2fois sur4096
+(0,0488%) ; le candidat3234fois (78,955%). La norme médiane avant limitation
+passe de0,0141 à2,189, soit environ×155. Ce phénomène persiste :419 des512
+dernières mises à jour normalisées sont limitées, contre0 pour le témoin.
+
+La division parσ modifie donc aussi l’échelle globale des gradients. Le
+même seuil ne garantit pas un régime d’optimisation comparable. Le test est
+valide pour la **normalisation brute réellement essayée**, mais il ne prouve
+pas qu’une normalisation rééquilibrée à échelle globale comparable échouerait.
+Les moments Adam hérités interagissent également avec ce changement ; sa
+responsabilité exacte dans la régression51200 n’est pas mesurée séparément.
+Le nombre d’étapes est court et le taux1e−6 reste faible : pas de conclusion
+de convergence ni de rejet définitif de l’option1.
+
+### Décision et prochaine correction recommandée
+
+Ne pas remplacer la référence générale par cette sortie mitigée. La prochaine
+correction proposée multiplie la perte normalisée par une constante positive
+fixée sur des mini-lots d’apprentissage uniquement. Cela garde les rapports
+locaux de poids1/σ et les minimiseurs de l’objectif, tout en remettant sa
+magnitude dans un régime comparable pour Adam et le limiteur. Ni la valeur
+ni les seuils ne doivent être choisis pour faire passer les scènes de contrôle.
+Comparer ensuite à nouveau les deux bras, avec les mêmes états et tirages.
+Ce serait une nouvelle version déclarée de l’expérience, pas un effacement
+du présent résultat négatif à51200.
+
+Les pics privés sont3,516/3,519Gio et la RAM globale reste sous76,2%, pour
+les bras actuel/normalisé. Les bornes et les contrôles de reprise ont tenu.
+Les résultats restent ceux de deux images connues à bruit simulé ; les
+paires de bruit réel locales ont toujours leur qualification propre à faire.
+Aucun nouvel apprentissage, push, fusion, tag ou changement de production
+n’est lancé à partir de cette seule lecture.
+
+Preuves :
+[étude comparée](../raw/neural-continuation-study-v001-20261109T105041Z.json),
+[relecture et diagnostics](../raw/neural-physical-continuation-review-v001-20261109T105532Z.json).
