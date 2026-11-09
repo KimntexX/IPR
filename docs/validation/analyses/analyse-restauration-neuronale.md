@@ -10371,3 +10371,49 @@ intérieures et planches.
 Preuves : [A](../raw/neural-A_sigma_map-20261109T131047Z.json),
 [B](../raw/neural-B_blind-20261109T133627Z.json),
 [C](../raw/neural-C_anscombe-20261109T140149Z.json).
+
+### Bras complémentaires D et E (étude v002)
+
+Mêmes protocole, données et tirages ; le témoin A de l'étude v001 est
+réutilisé après vérification de ses empreintes. E : image **et carte σ** en
+entrée, sortie simple `x − F`, L1 non pondérée. D : architecture A avec la
+perte normalisée calibrée (k = 0,00765). Lancés dans un processus détaché,
+sans interruption ; aucun gradient limité.
+
+| Source, ISO | A | D (perte seule) | B aveugle | E carte σ, sortie simple | VST + BM3D |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 1, 3200 | +1,6 | +2,2 | +9,1 | **+9,1** | +8,7 |
+| 1, 6400 | +1,7 | +2,6 | +10,9 | **+10,9** | +10,3 |
+| 1, 16000 | +2,6 | +3,5 | +13,3 | **+13,4** | +12,3 |
+| 1, 51200 | +7,1 | +7,6 | +16,3 | **+16,5** | +14,9 |
+| 2, 3200 | +1,0 | +1,5 | +13,6 | +13,7 | **+13,9** |
+| 2, 6400 | +1,1 | +1,8 | +16,2 | **+16,3** | +16,3 |
+| 2, 16000 | +2,5 | +2,5 | +19,4 | **+19,8** | +19,1 |
+| 2, 51200 | +7,0 | +7,5 | +22,3 | **+23,2** | +20,3 |
+
+Gain médian sur l'entrée bruitée (dB). α oracle : D 2,2 à 4,9 aux ISO bas ;
+E 0,97 à 1,01 partout.
+
+- **D ≈ A** (+0,4 à +0,9 dB) : la perte normalisée seule ne lève pas la
+  sous-correction. La cause est bien la sortie `x − σ·F`.
+- **E est le meilleur bras.** Apparié tuile par tuile avec B (même flux de
+  données), E gagne sur 71 des 72 observations ; gain médian +0,03 à +0,13 dB
+  sur la première source, +0,11 à +0,97 dB sur la seconde, le plus fort à
+  ISO 51200 sur la source sombre. La carte σ apporte donc une information
+  réelle quand elle n'est pas aussi un facteur de sortie.
+- E égale ou dépasse VST + BM3D dans 7 cas sur 8 (de 0 à +2,9 dB) et reste à
+  −0,2 dB au pire (seconde source, ISO 3200), après 4 096 pas depuis zéro.
+- Biais moyen maximal par plan de E : 1,0e−4 à 6,3e−4, du même ordre que B
+  et plus faible que A et C.
+- Limites inchangées : une graine (les poids initiaux de B et E diffèrent par
+  le nombre d'entrées), apprentissage court, deux sources de développement
+  connues, bruit simulé ; ni bruit réel, ni planches, ni coût CPU mesuré.
+
+**Décision proposée (accord requis).** Retenir E comme architecture :
+carte σ en entrée, sortie `x − F`. Prochaine étape : entraînement long de E
+la nuit, puis comparaison BM3D complète et évaluation sur les scènes réelles
+intérieures du 1er novembre, avec deux graines pour la variance.
+
+Preuves : [étude v002](../raw/neural-input-mode-study-v002-20261109T150408Z.json),
+[E](../raw/neural-E_sigma_input-20261109T143850Z.json),
+[D](../raw/neural-D_sigma_map_normalized_loss-20261109T150408Z.json).
