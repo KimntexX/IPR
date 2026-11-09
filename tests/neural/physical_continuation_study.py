@@ -77,7 +77,7 @@ def prepare(output,calibration_path):
                 'Independent hardlinks to read-only arrays; parent arrays and checkpoint must stay immutable']}
         write(target/'plan.json',plan)
         arms.append(dict(name=name,path=str(target.resolve()),objective=objective,plan_sha256=digest(target/'plan.json')))
-    freeze=dict(schema_version=1,data_version='v002',campaign_id=output.name,
+    freeze=dict(schema_version=1,data_version=output.name.rsplit('-',1)[-1],campaign_id=output.name,
         measured_at_utc=datetime.now(timezone.utc).isoformat(),status='prepared',arms=arms,
         parent_checkpoint_sha256=digest(checkpoint),steps_per_arm=4096,
         maximum_training_seconds=2400,resources='Reuse frozen current control; one GPU worker, private5GiB soft/6GiB hard, CUDA50%, system92%; host pressure yields',
@@ -167,7 +167,7 @@ def run(output):
         result['finished_at_utc']=datetime.now(timezone.utc).isoformat()
         write(output/'progress.json',result)
         stamp=datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')
-        with (ROOT/'docs/validation/raw'/f'neural-continuation-study-v002-{stamp}.json').open('x',encoding='utf-8') as stream:
+        with (ROOT/'docs/validation/raw'/f'neural-{output.name}-{stamp}.json').open('x',encoding='utf-8') as stream:
             json.dump(result,stream,allow_nan=False,separators=(',',':'))
 
 
