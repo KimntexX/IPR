@@ -10654,3 +10654,45 @@ masquées utilisée en première intention ici (10 à 40 DN trop haut) était la
 mauvaise statistique ; elle ne concerne que ce banc. Le module neuronal pourra
 prendre le noir de `RawInput::Input::black` ; écart résiduel à suivre à
 51200 (G2 : −4,5 DN), à revoir avec les noirs de production si besoin.
+
+## 10 novembre 2026 — drap multicolore : audit et évaluation sur bruit réel
+
+**Série.** Prises de l'utilisateur, 10 novembre de 15 h 04 à 15 h 27, 147 vues,
+24 mm, f/5,6, trépied et déclenchement au téléphone : ISO 100 (quatre poses,
+4 vues), puis ISO 1600 à 51200 (huit ISO), chacun à quatre poses espacées d'un
+IL, 4 à 6 vues par pose. Drap à dégradés de presque toutes les teintes, plis,
+papier blanc, parquet, tapis sombre.
+
+**Audit** (`color_sheet_audit.py`). Rafales immobiles (rapport des
+demi-rafales 0,99 à 1,05, 1,21 au pire à ISO 100), décalages entiers de 0 à
+2 cellules entre séries, saturation nulle sauf la pose la plus claire à
+51200 (5,3 % des sites, exclus). **Lumière en baisse** : rapporté à
+l'exposition nominale, le gain chute d'environ 2,5 fois entre 15 h 04 et
+15 h 27, avec un saut vers 15 h 20, et la lumière se réchauffe (B baisse
+plus que R). Pas de rafale ISO 100 finale pour le vérifier directement.
+
+**Évaluation** (`real_noise_evaluation.py --scene-set color_sheet`) :
+28 rafales, 2 vues chacune, référence ISO 100 la plus claire (4 vues) et
+référence même rafale ; réseau E graines 71 et 73, VST + BM3D (1 719 s).
+
+- *Référence ISO 100* : les gains sont faibles (+1,3 à +8,2 dB) car la
+  différence de scène (lumière) domine ; le réseau devance BM3D sur les
+  28 rafales, de +0,10 à +0,34 dB (graine 73 : +0,10 à +0,31 dB).
+- *Référence même rafale* : le réseau devance BM3D de +0,5 à +0,95 dB sur
+  25 rafales sur 28 ; +0,10 à +0,33 dB pour 3200 et 6400 à la pose la plus
+  claire et 1600 à 1/160 s ; **−0,28 dB à ISO 1600 1/80 s**, la pose la plus
+  claire de l'ISO le plus bas, sous la plage d'entraînement.
+- α oracle du réseau 0,97 à 1,15, comme BM3D.
+- **Biais de couleur.** Le réseau décale la moyenne des plans : R et B
+  +0,3 à +0,6 %, G2 −0,2 à −0,5 %, G1 presque inchangé, soit 3 à 11 DN
+  selon l'ISO ; BM3D reste sous 0,3 %. L'**écart entre les deux verts** est
+  le plus préoccupant : un déséquilibre G1/G2 peut donner un motif en
+  labyrinthe au dématriçage dans les aplats. À vérifier après dématriçage
+  et à corriger ; l'augmentation de couleur prévue (gains R et B) ne touche
+  pas cet écart.
+
+Planches : `build-patch_neural_restoration/color-sheet-sheets-v001` (28,
+non versionnées) ; plis du drap conservés par les deux méthodes, un peu plus
+nets avec le réseau.
+
+Preuve : [évaluation du drap](../raw/neural-color-sheet-evaluation-v001-20261110T141526Z.json).
