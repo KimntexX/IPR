@@ -10679,7 +10679,7 @@ référence même rafale ; réseau E graines 71 et 73, VST + BM3D (1 719 s).
   différence de scène (lumière) domine ; le réseau devance BM3D sur les
   28 rafales, de +0,10 à +0,34 dB (graine 73 : +0,10 à +0,31 dB).
 - *Référence même rafale* : le réseau devance BM3D de +0,5 à +0,95 dB sur
-  25 rafales sur 28 ; +0,10 à +0,33 dB pour 3200 et 6400 à la pose la plus
+  24 rafales sur 28 ; +0,10 à +0,33 dB pour 3200 et 6400 à la pose la plus
   claire et 1600 à 1/160 s ; **−0,28 dB à ISO 1600 1/80 s**, la pose la plus
   claire de l'ISO le plus bas, sous la plage d'entraînement.
 - α oracle du réseau 0,97 à 1,15, comme BM3D.
