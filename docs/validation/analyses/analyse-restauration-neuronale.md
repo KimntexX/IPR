@@ -10624,3 +10624,33 @@ balance des blancs du boîtier, exposition commune. Dossier
 empreintes dans `sheets.json`). En attente de l'avis de l'utilisateur.
 
 Preuves : [spectre](../raw/neural-residual-spectrum-v001-20261110T102545Z.json), [coût CPU](../raw/neural-cpu-cost-probe-v001-20261110T102329Z.json).
+
+### Revue visuelle de l'utilisateur et noir de production — 10 novembre 2026
+
+**Planches.** L'utilisateur juge les planches `real-noise-sheets-v002`
+« vraiment impressionnantes » : bon travail des textures, la plaque
+d'aluminium garde ses imperfections. Avis favorable sur ces deux scènes à
+demi-résolution ; la revue à 100 % sur scènes non vues reste à faire pour le
+critère bêta.
+
+**Décision produit.** Sans GPU sur l'hôte, l'utilisateur est prévenu que les
+fonctions U-Net sont optionnelles ; elles s'activent dans les préférences, à
+son choix. Même principe attendu pour la détection et la suppression d'objets.
+
+**Noir de production.** `iprRenderServer` (build du 7 novembre) sur quatre
+vues de la scène de nuit et de jour, journal `IPR black` :
+
+| Vue | ISO | Noir mesuré par IPR (R, G1, G2, B) | Valeur LibRaw remplacée | Piédestal des noirs d'entraînement |
+| --- | ---: | --- | --- | --- |
+| 6V1A0334 | 3200 | 2048 2048 2048 2048 | 0 34 109 72 | 2048,0 2048,2 2048,1 2048,1 |
+| 6V1A0346 | 6400 | 2048 2048 2048 2048 | 0 35 104 71 | 2048,1 2048,1 2048,2 2048,0 |
+| 6V1A0359 | 12800 | 2047 2047 2047 2047 | 0 34 106 71 | — |
+| 6V1A0202 | 51200 | 2045 2044 2042 2044 | 0 31 95 63 | 2046,3 2044,9 2046,5 2045,1 |
+
+L'estimateur de production (noir optique gauche des notes Canon, mesure
+robuste) remplace bien la valeur incohérente de LibRaw et tombe à 0 à 4 DN du
+piédestal visible des noirs, en DN entiers. La moyenne simple des colonnes
+masquées utilisée en première intention ici (10 à 40 DN trop haut) était la
+mauvaise statistique ; elle ne concerne que ce banc. Le module neuronal pourra
+prendre le noir de `RawInput::Input::black` ; écart résiduel à suivre à
+51200 (G2 : −4,5 DN), à revoir avec les noirs de production si besoin.

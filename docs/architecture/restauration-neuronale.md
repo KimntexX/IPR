@@ -1541,7 +1541,12 @@ hors corpus garde le débruiteur classique tant qu'une validation n'existe pas
    que si l'étude montre que le réseau suit σ ; sinon mélange
    `entrée + t·(prédiction − entrée)`. Le débruiteur couleur actuel reste en
    aval jusqu'à preuve du contraire.
-9. **Recette** : stocker la force et l'identifiant du modèle, pas la loi
+9. **Activation (décision de l'utilisateur, 10 novembre)** : les fonctions
+   U-Net sont optionnelles et s'activent dans les préférences. Sans GPU sur
+   l'hôte, l'utilisateur est prévenu du coût avant de les activer (mesure de
+   référence : 48 à 56 s par trame de 24 Mpx sur 8 threads CPU, sans
+   couture). Même principe pour la détection et la suppression d'objets.
+10. **Recette** : stocker la force et l'identifiant du modèle, pas la loi
    (recalculée à l'ouverture depuis le catalogue versionné). Toute évolution
    du format passe par la migration des recettes existantes, sans rupture de
    l'historique des retouches.
