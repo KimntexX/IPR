@@ -1553,6 +1553,18 @@ hors corpus garde le débruiteur classique tant qu'une validation n'existe pas
    et Linux (CUDA, DirectML ou équivalent) **et** sur macOS (Metal ou Core ML,
    par exemple via les fournisseurs d'exécution d'ONNX Runtime), le CPU
    restant un repli lent mais fonctionnel.
+   Orientation du 10 novembre, à approfondir au moment de l'intégration :
+   un seul fichier ONNX exporté depuis PyTorch, et le moteur d'exécution
+   choisi soit par build (une configuration par plateforme), soit
+   automatiquement au démarrage. Pour NVIDIA, **détecter** les bibliothèques
+   plutôt que les embarquer : le pilote (`nvcuda.dll`) est presque toujours
+   présent, mais les bibliothèques de calcul (runtime CUDA, cuBLAS, cuDNN)
+   ne font pas partie du pilote. Ordre proposé sous Windows : CUDA si ces
+   bibliothèques sont trouvées, sinon DirectML ou Windows ML (pilote seul,
+   toutes marques), sinon CPU ; proposer à l'utilisateur d'installer les
+   bibliothèques NVIDIA pour gagner en vitesse, sans bloquer. macOS : Core ML.
+   L'export ONNX et un test de concordance avec PyTorch (sortie et biais des
+   noirs) sur les tuiles de contrôle précèdent toute intégration.
 10. **Recette** : stocker la force et l'identifiant du modèle, pas la loi
    (recalculée à l'ouverture depuis le catalogue versionné). Toute évolution
    du format passe par la migration des recettes existantes, sans rupture de
