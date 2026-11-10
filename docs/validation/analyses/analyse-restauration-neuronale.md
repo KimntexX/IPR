@@ -10546,3 +10546,30 @@ l'utilisateur ; coût CPU. Prises du protocole d'extérieur (sujets rigides,
 rafale ISO 100 avant et après) pour une référence sans différence de scène.
 
 Preuve : [évaluation v003](../raw/neural-real-noise-evaluation-v003-20261110T101156Z.json).
+
+### Biais dans les noirs et les ombres (sonde `dark_bias_probe.py`)
+
+Découpes de noirs **de contrôle**, jamais tirées pendant l'entraînement,
+graines 71 et 73, ISO 3200 à 51200, 40 à 48 découpes par ISO.
+
+- **Noir pur** : sortie = entrée à 0,1–0,5 DN près à 3200–16000. À 51200 avec
+  le noir nominal 2048, entrée et sortie valent toutes deux −0,5 à −3,5 DN
+  (le piédestal visible y est 2045–2046 DN) : le réseau ne crée pas de biais,
+  il conserve celui de l'entrée.
+- **Ombres aux rapports de couleur RAW naturels** (R 0,609, B 0,536 du vert,
+  médianes de 300 tuiles d'entraînement) : biais ≤ 0,4 DN (≤ 0,3 %) à
+  3200–16000 de 0,1 % à 5 % du blanc ; à 51200, −0,5 à −1,5 DN à 1 % du blanc
+  (environ 1 %), ≤ 1 DN à 5 %.
+- **Ombres neutres en RAW** (quatre plans égaux, rares en photo) : R et B
+  baissés, verts montés, jusqu'à −8 à −11 DN sur B à 51200 (5 à 7 % à 1 % du
+  blanc), −3 DN à 3200. Le réseau a appris un a priori sur les rapports de
+  couleur RAW du corpus et y ramène les aplats qui s'en écartent.
+
+**Conséquence.** Le léger assombrissement vu la nuit (0,2 à 1 DN) est du même
+ordre que le biais des ombres naturelles. Le défaut de fond est l'a priori de
+couleur : à corriger à l'entraînement par une **augmentation de couleur**
+(gains aléatoires par plan sur les cibles, à la manière d'un changement
+d'illuminant), puis à revérifier avec cette sonde avant tout passage en
+production.
+
+Preuves : [sonde v001](../raw/neural-dark-bias-probe-v001-20261110T101956Z.json), [sonde v002 (ombres naturelles)](../raw/neural-dark-bias-probe-v002-20261110T102136Z.json).
