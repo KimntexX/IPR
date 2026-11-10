@@ -1559,10 +1559,17 @@ hors corpus garde le débruiteur classique tant qu'une validation n'existe pas
    automatiquement au démarrage. Pour NVIDIA, **détecter** les bibliothèques
    plutôt que les embarquer : le pilote (`nvcuda.dll`) est presque toujours
    présent, mais les bibliothèques de calcul (runtime CUDA, cuBLAS, cuDNN)
-   ne font pas partie du pilote. Ordre proposé sous Windows : CUDA si ces
-   bibliothèques sont trouvées, sinon DirectML ou Windows ML (pilote seul,
-   toutes marques), sinon CPU ; proposer à l'utilisateur d'installer les
-   bibliothèques NVIDIA pour gagner en vitesse, sans bloquer. macOS : Core ML.
+   ne font pas partie du pilote. **Ordre retenu le 10 novembre sous
+   Windows** : DirectML ou Windows ML en chemin principal (fourni par le
+   système, pilote graphique seul, toutes marques, Tensor Cores NVIDIA
+   exploités par le pilote) ; CUDA en option si ses bibliothèques sont déjà
+   présentes, après mesure du gain de vitesse ; CPU en dernier repli.
+   Rien à installer dans le cas courant. **macOS** : Core ML (seule voie
+   publique vers l'Apple Neural Engine). Repère public : le billet d'Adobe
+   « Denoise demystified » (avril 2023) cite les Tensor Cores NVIDIA et
+   l'Apple Neural Engine sans mentionner CUDA ; les choix de DxO n'ont pas pu
+   être vérifiés (pages inaccessibles). Aucune inspection de leurs logiciels
+   (règle de boîte noire).
    L'export ONNX et un test de concordance avec PyTorch (sortie et biais des
    noirs) sur les tuiles de contrôle précèdent toute intégration.
 10. **Recette** : stocker la force et l'identifiant du modèle, pas la loi
