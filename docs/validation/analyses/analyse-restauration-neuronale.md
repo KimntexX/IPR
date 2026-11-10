@@ -10417,3 +10417,57 @@ intérieures du 1er novembre, avec deux graines pour la variance.
 Preuves : [étude v002](../raw/neural-input-mode-study-v002-20261109T150408Z.json),
 [E](../raw/neural-E_sigma_input-20261109T143850Z.json),
 [D](../raw/neural-D_sigma_map_normalized_loss-20261109T150408Z.json).
+
+## 10 novembre 2026 — apprentissage long du bras E face à VST + BM3D
+
+Campagne `sigma-input-training-v001` : bras E (image et carte σ en entrée,
+sortie `x − F`, L1 non pondérée), depuis zéro, 64 000 pas par graine,
+cosinus 1e−4 → 1e−6, graines 71 et 73, tableaux figés de v005. Lancée à
+16 h 50 le 9 novembre dans un processus détaché, achevée à 5 h 39 ; 0,36 s par
+pas, aucun gradient limité, pic de RAM système 70 % (graine 71) et 88 %
+(graine 73) sans retrait. Comparaison `physical-natural-comparators-v004` sur
+les 72 observations de développement : sorties reproduites à l'identique
+(écart relatif 0), VST + BM3D recalculé.
+
+| Gain médian sur l'entrée bruitée (dB) | 3200 | 6400 | 16000 | 51200 |
+| --- | ---: | ---: | ---: | ---: |
+| VST + BM3D par plan | +10,28 | +12,25 | +14,88 | +17,42 |
+| v005, ancienne sortie `x − σ·F`, 100 000 pas | +4,18 | +4,72 | +4,91 | +19,27 |
+| E, graine 71 | +11,48 | +13,86 | +17,04 | +20,92 |
+| E, graine 73 | +11,50 | +13,87 | +17,06 | +20,90 |
+| E − BM3D apparié (médiane, graine 71) | **+0,56** | **+1,11** | **+2,16** | **+3,24** |
+| E − BM3D par source (graine 71) | +1,71 / +0,34 | +2,09 / +0,81 | +2,17 / +2,15 | +3,09 / +5,32 |
+
+Par bande du critère, appariement tuile par tuile avec BM3D :
+
+| Bande | Médiane apparié | Minimum | Tuiles gagnantes | Par source |
+| --- | ---: | ---: | ---: | --- |
+| 3200–6400, graine 71 | +0,94 dB | +0,16 dB | 36 / 36 | +1,75 / +0,68 |
+| 3200–6400, graine 73 | +0,94 dB | +0,17 dB | 36 / 36 | +1,79 / +0,68 |
+| 16000–51200, graine 71 | +2,46 dB | +1,11 dB | 36 / 36 | +2,37 / +2,52 |
+| 16000–51200, graine 73 | +2,47 dB | +1,10 dB | 36 / 36 | +2,38 / +2,53 |
+
+- Les deux graines s'accordent à 0,06 dB près : la variance d'initialisation
+  est négligeable devant les écarts mesurés.
+- L'essentiel est appris en 16 000 pas ; de 16 000 à 64 000, le gain ne monte
+  plus que de 0,1 à 0,25 dB. Un apprentissage plus long sur ces données
+  n'apporterait presque rien.
+- α oracle final 0,97 à 1,00 : la sous-correction a disparu.
+- Biais moyen maximal par plan : 1,2e−4 à 7,4e−4, inférieur à celui de
+  VST + BM3D (1,5e−4 à 1,0e−3) à chaque ISO.
+- Point le plus faible : la seconde source (sombre et lisse) à ISO 3200,
+  +0,34 dB sur BM3D, sous le seuil de 0,5 dB pris isolément.
+
+**Ce que ce résultat n'est pas.** Les tuiles de développement ont servi à
+choisir l'architecture : ce n'est pas un test neuf. Le bruit est simulé ;
+le critère bêta du 7 novembre exige en plus un étalon parmi les meilleurs
+(classique IPR, VST + DRUNet gris, VST + BM3D), le spectre du bruit résiduel,
+le coût CPU de 20,8 s à 8 threads et des planches à 100 % acceptées.
+
+**Suite proposée.** Évaluer les deux modèles sur le bruit réel des scènes
+intérieures du 1er novembre (recalage entier, gain par plan) et sur des
+scènes non vues ; spectre du résidu ; mesure du coût CPU ; planches pour
+l'utilisateur. Aucun push, fusion ou tag.
+
+Preuves : [campagne](../raw/neural-sigma-input-training-v001-20261110T043939Z.json),
+[comparaison BM3D](../raw/neural-physical-natural-comparators-v004-20261110T044246Z.json).
