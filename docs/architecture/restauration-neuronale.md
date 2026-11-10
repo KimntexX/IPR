@@ -1546,6 +1546,13 @@ hors corpus garde le débruiteur classique tant qu'une validation n'existe pas
    l'hôte, l'utilisateur est prévenu du coût avant de les activer (mesure de
    référence : 48 à 56 s par trame de 24 Mpx sur 8 threads CPU, sans
    couture). Même principe pour la détection et la suppression d'objets.
+   Précision du 10 novembre : le coût CPU n'est **pas un objectif** des
+   versions bêta, au plus une piste pour de futures versions stables ;
+   l'utilisateur estime que très peu de retoucheurs travaillent sans GPU, ou
+   alors sous macOS. Conséquence : le runtime doit viser le GPU sur Windows
+   et Linux (CUDA, DirectML ou équivalent) **et** sur macOS (Metal ou Core ML,
+   par exemple via les fournisseurs d'exécution d'ONNX Runtime), le CPU
+   restant un repli lent mais fonctionnel.
 10. **Recette** : stocker la force et l'identifiant du modèle, pas la loi
    (recalculée à l'ouverture depuis le catalogue versionné). Toute évolution
    du format passe par la migration des recettes existantes, sans rupture de
