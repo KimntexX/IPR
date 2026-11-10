@@ -35,6 +35,7 @@ import math
 from pathlib import Path
 
 from prepare_next_training import digest, read, write
+from real_noise_bench import CARD
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -42,7 +43,6 @@ BUILD = ROOT/'build-patch_neural_restoration'
 BENCH = BUILD/'real-noise-bench-v001'
 COLOR_AUDIT = BUILD/'color-sheet-audit-v001'
 BANK = ROOT/'docs/validation/raw/neural-sensor-noise-v001-20261105T173608Z.json'
-CARD = Path('D:/DCIM/101EOSR6')
 DIVISOR = 12303.
 NOMINAL_BLACK = 2048.
 DARK_PEDESTALS = BUILD/'physical-natural-training-v005'

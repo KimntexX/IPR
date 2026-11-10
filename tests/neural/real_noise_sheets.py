@@ -11,11 +11,11 @@ import argparse
 from pathlib import Path
 
 from prepare_next_training import digest, read, write
+from real_noise_bench import CARD
 
 
 ROOT = Path(__file__).resolve().parents[2]
 BUILD = ROOT/'build-patch_neural_restoration'
-CARD = Path('D:/DCIM/101EOSR6')
 VIEW = (448, 640)
 
 

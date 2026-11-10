@@ -16,7 +16,9 @@ from prepare_next_training import digest, write
 
 ROOT = Path(__file__).resolve().parents[2]
 BUILD = ROOT/'build-patch_neural_restoration'
-CARD = Path('D:/DCIM/101EOSR6')
+# The card's 101EOSR6 folder, moved by the user into the colorimetry protocol images on 10 November.
+MOVED_CARD = ROOT.parent.parent/'tests'/'image'/'colorimétrie'/'protocole'/'101EOSR6'
+CARD = MOVED_CARD if MOVED_CARD.is_dir() else Path('D:/DCIM/101EOSR6')
 SCENES = {
     'interior_day': {100: (134, 151), 3200: (152, 180), 12800: (181, 194), 51200: (195, 209)},
     'leaves_grass': {100: (211, 243), 1600: (244, 262), 6400: (263, 280), 12800: (281, 300)},
