@@ -106,7 +106,7 @@ def prepare(output, names, reference_study=None):
         evaluation='Same 72 development observations; per tile, ISO and source, paired with arm A'))
 
 
-def prepare_long(output, name, steps, seeds, hours):
+def prepare_long(output, name, steps, seeds, hours, color_augmentation=None):
     """One long campaign of a chosen arm, from scratch, on the frozen v005 arrays; run it with physical_natural_training --mode run."""
     source_plan, data = read(PARENT/'plan.json'), read(PARENT/'data.json')
     for filename, expected in data['files'].items():
@@ -130,6 +130,7 @@ def prepare_long(output, name, steps, seeds, hours):
         'schedule': f'cosine from 1e-4 to 1e-6 over {steps} steps, from scratch, each seed',
         'progress_every': 500, 'controls_at': [k*every for k in range(17)], 'checkpoint_at': [k*steps//4 for k in range(1, 5)],
         'tools': {n: digest(ROOT/'tests/neural'/n) for n in TOOLS}, 'arm': name,
+        'color_augmentation': color_augmentation,
         'parent_plan_sha256': digest(PARENT/'plan.json'),
         'limits': source_plan['limits']+[f'Arm {name} chosen on the 4096-step paired study (input-mode-study-v001/v002)',
             'Development tiles were used to choose the arm; they are not a fresh test']}
@@ -231,9 +232,13 @@ if __name__ == '__main__':
     parser.add_argument('--steps', type=int, default=64000)
     parser.add_argument('--seeds', type=int, nargs='+', default=[71, 73])
     parser.add_argument('--hours', type=float, default=15.)
+    parser.add_argument('--color-augmentation', type=float, nargs=3, metavar=('PROBABILITY', 'LOW', 'HIGH'),
+                        help='red/blue gains log-uniform in [LOW, HIGH] on this share of the training samples')
     args = parser.parse_args()
     if args.long:
-        prepare_long(args.output.resolve(), args.long, args.steps, args.seeds, args.hours)
+        augmentation = None if args.color_augmentation is None else dict(
+            probability=args.color_augmentation[0], red_blue_gain_range=list(args.color_augmentation[1:]))
+        prepare_long(args.output.resolve(), args.long, args.steps, args.seeds, args.hours, augmentation)
     elif args.prepare:
         prepare(args.output.resolve(), args.arms, args.reference_study.resolve() if args.reference_study else None)
     else:

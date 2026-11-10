@@ -115,6 +115,29 @@ def synthesise(clean, slope, read_dark, filters, divisor, generator):
     return observed/divisor
 
 
+def color_augment(clean, generator, probability, gain_range):
+    """Random red and blue gains per sample, greens unchanged, like a change of illuminant or white balance.
+
+    clean: [B,4,H,W] in the source normalization (white = 1), planes R, G1, G2, B.
+    Each sample is augmented with `probability`; the R and B gains are drawn
+    independently, log-uniform in `gain_range`. Values pushed above white are
+    clipped at white, never below their original level. Applied before the
+    noise synthesis, so the noise follows the new signal.
+    """
+    import math
+    import torch
+    low, high = gain_range
+    if not 0 <= probability <= 1 or not 0 < low <= 1 <= high:
+        raise ValueError('Probability in [0, 1] and a gain range around 1 required')
+    batch = clean.shape[0]
+    apply = torch.rand(batch, device=clean.device, generator=generator) < probability
+    logs = torch.rand(batch, 2, device=clean.device, generator=generator)*(math.log(high)-math.log(low))+math.log(low)
+    gains = torch.ones(batch, 4, device=clean.device, dtype=clean.dtype)
+    gains[:, 0], gains[:, 3] = logs[:, 0].exp(), logs[:, 1].exp()
+    gains = torch.where(apply[:, None], gains, torch.ones_like(gains))[:, :, None, None]
+    return torch.minimum(clean*gains, torch.maximum(clean, torch.ones_like(clean)))
+
+
 def sigma_map(noisy, slope, read_variance, divisor, window=5):
     """Same estimator everywhere: local mean per plane, then a*max(mean,0)+b."""
     import torch
@@ -460,6 +483,9 @@ def train(output, seed, guard):
             dark = torch.stack([noise.dark(int(i), 'calibration', c) for i, c in zip(iso_ids.tolist(), choices)])
             input_trace.update(json.dumps([ids.tolist(),iso_ids.tolist(),choices],separators=(',',':')).encode('ascii'))
             target = torch.from_numpy(np.stack([training[i] for i in ids.tolist()])).cuda()
+            if plan.get('color_augmentation') is not None:
+                target = color_augment(target, rng, plan['color_augmentation']['probability'],
+                                       plan['color_augmentation']['red_blue_gain_range'])
             noisy, sigma = noise.sample(target, iso_ids, dark, rng)
             a, b = noise.law(iso_ids)
             output_planes = model.correct(noisy, sigma, tags.expand(plan['batch'], -1), a, b)

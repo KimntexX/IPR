@@ -3,7 +3,7 @@ import unittest
 import numpy as np
 import torch
 
-from physical_natural_training import (ADC_MAX, TARGET_BLACK, covariance_filter, grid_origins, noise_parameters,
+from physical_natural_training import (ADC_MAX, TARGET_BLACK, color_augment, covariance_filter, grid_origins, noise_parameters,
                                        pack_rggb, plane_pedestals, sigma_map, synthesise)
 
 
@@ -74,6 +74,28 @@ class NoiseTests(unittest.TestCase):
         bright = sigma_map(torch.full((1, 4, 16, 16), .5), torch.full((1, 4, 1, 1), 6.),
                            torch.full((1, 4, 1, 1), 100.), 1000.)
         torch.testing.assert_close(bright, torch.full_like(bright, (6e-3*.5+1e-4)**.5))
+
+
+class ColorAugmentationTests(unittest.TestCase):
+    def test_gains_touch_red_and_blue_only_within_range_and_never_cross_white(self):
+        clean = torch.rand(64, 4, 8, 8, dtype=torch.float64)*.9+.05
+        clean[0, :, 0, 0] = 1.2
+        out = color_augment(clean, torch.Generator().manual_seed(4), 1., (.33, 2.5))
+        torch.testing.assert_close(out[:, 1:3], clean[:, 1:3])
+        ratio = (out[:, [0, 3]]/clean[:, [0, 3]])
+        unclipped = out[:, [0, 3]] < torch.maximum(clean[:, [0, 3]], torch.ones_like(clean[:, [0, 3]]))
+        self.assertTrue(((ratio[unclipped] >= .33-1e-9) & (ratio[unclipped] <= 2.5+1e-9)).all())
+        self.assertTrue((out <= torch.maximum(clean, torch.ones_like(clean))+1e-12).all())
+        self.assertEqual(float(out[0, 0, 0, 0]), 1.2 if float(ratio[0, 0, 0, 0]) >= 1 else float(out[0, 0, 0, 0]))
+        per_sample = ratio[:, :, 1, 1]
+        self.assertGreater(float(per_sample.std()), .2)
+
+    def test_probability_zero_and_invalid_ranges(self):
+        clean = torch.rand(8, 4, 4, 4)
+        torch.testing.assert_close(color_augment(clean, torch.Generator().manual_seed(1), 0., (.5, 2.)), clean)
+        for probability, gains in ((1.5, (.5, 2.)), (.5, (1.2, 2.)), (.5, (.5, .9))):
+            with self.assertRaises(ValueError):
+                color_augment(clean, torch.Generator().manual_seed(1), probability, gains)
 
 
 if __name__ == '__main__':
