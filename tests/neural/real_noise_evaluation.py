@@ -10,8 +10,16 @@ to every method and light drift is absorbed. Scores are MSE against the
 reference, gain over the noisy frame, with the ISO100 reference noise floor
 reported beside them.
 
+A second reference avoids the scene mismatch between the ISO100 burst and the
+high-ISO bursts (camera shift, light change): for each evaluated frame, the
+mean of the other frames of its own burst, on the same crop. Its noise is
+known from the measured law, (a*y + b)/(N - 1), and is subtracted from every
+MSE; fixed-pattern noise shared by the burst stays in this reference, so a
+denoiser that removes it is penalized there.
+
 Modes, one environment each:
   prepare  system Python with rawpy: read frames, align, write crops.npz
+  burst    system Python with rawpy: sums of every burst on the same crops, burst.npz
   network  CUDA venv: network outputs per checkpoint, network.npz
   bm3d     external BM3D environment: bm3d.npz
   score    any numpy environment: result.json and the proof JSON
@@ -32,6 +40,8 @@ BENCH = BUILD/'real-noise-bench-v001'
 BANK = ROOT/'docs/validation/raw/neural-sensor-noise-v001-20261105T173608Z.json'
 CARD = Path('D:/DCIM/101EOSR6')
 DIVISOR = 12303.
+NOMINAL_BLACK = 2048.
+DARK_PEDESTALS = BUILD/'physical-natural-training-v005'
 CROP = (1024, 1536)
 BORDER = 32
 BLOCK = 8
@@ -61,6 +71,29 @@ def noise_law(bank, iso):
             provenance = f'shot slope interpolated log-log between ISO {low} and {high}; read variance measured'
         rows.append((float(slope), float(fit['reference_dark_variance_dn2'])))
     return rows, provenance
+
+
+def dark_black(iso):
+    """Visible black per plane: median pedestal of the training dark frames at this ISO, else the nominal 2048.
+
+    rawpy's black_level_per_channel is not usable on these CR3, and the masked
+    columns of lit frames read 10 to 40 DN above the dark frames' visible level.
+    """
+    import numpy as np
+    path = DARK_PEDESTALS/f'pedestal-{iso}.npy'
+    if not path.exists():
+        return [NOMINAL_BLACK]*4, 'nominal 2048, no dark frames at this ISO'
+    return [float(v) for v in np.median(np.load(path, allow_pickle=False), axis=0)], 'median visible pedestal of the training dark frames'
+
+
+def optical_black(raw):
+    """Mean of the masked left columns per canonical plane (diagnosis only)."""
+    import numpy as np
+    sizes = raw.sizes
+    if sizes.top_margin % 2 or sizes.left_margin % 2 or sizes.left_margin < 32:
+        raise ValueError('Even margins and a masked left area are required')
+    masked = raw.raw_image[sizes.top_margin:sizes.top_margin+sizes.height//2*2, 8:sizes.left_margin-8].astype(np.float64)
+    return [float(masked[y::2, x::2].mean()) for y, x in ((0, 0), (0, 1), (1, 0), (1, 1))]
 
 
 def select_frames(first, last, count=FRAMES_PER_BURST):
@@ -132,17 +165,17 @@ def prepare(output):
         law, provenance = noise_law(bank, iso)
         reference = references[scene]
         paths = select_frames(first, last)
-        frames, blacks = [], []
+        black, black_provenance = dark_black(iso)
+        frames, optical = [], []
         for path in paths:
             with rawpy.imread(str(path)) as raw:
                 if raw.raw_colors_visible[:2, :2].tolist() != [[0, 1], [3, 2]]:
                     raise ValueError('RGGB R6 III phase required')
-                black = [float(raw.black_level_per_channel[c]) for c in (0, 1, 3, 2)]
+                optical.append(optical_black(raw))
                 mosaic = raw.raw_image_visible.astype(np.float32)
             mosaic = mosaic[:mosaic.shape[0]//2*2, :mosaic.shape[1]//2*2]
             planes = np.stack([(mosaic[y::2, x::2]-black[i])/DIVISOR for i, (y, x) in enumerate(((0, 0), (0, 1), (1, 0), (1, 1)))])
             frames.append(planes)
-            blacks.append(black)
         mean_green = np.mean([f[1:3].mean(axis=0) for f in frames], axis=0)
         h, w = reference.shape[-2:]
         centre = (slice(h//2-512, h//2+512), slice(w//2-768, w//2+768))
@@ -156,7 +189,8 @@ def prepare(output):
         arrays[key+'-noisy'] = np.stack([f[:, mov_crop[0], mov_crop[1]] for f in frames]).astype(np.float32)
         audited = bench['scenes'][scene]['bursts'][str(iso)].get('shift_packed_cells')
         entries.append(dict(key=key, scene=scene, iso=iso, files=[p.name for p in paths],
-            file_sha256=[digest(p) for p in paths], black_by_plane=blacks, shift_packed_cells=shift,
+            file_sha256=[digest(p) for p in paths], black_by_plane=black, black_provenance=black_provenance,
+            optical_black_by_frame=optical, shift_packed_cells=shift,
             audited_burst_shift=audited, correlation_peak_sharpness=sharpness,
             noise_law=[dict(shot_slope_dn=s, read_variance_dn2=r) for s, r in law], noise_law_provenance=provenance,
             trained_iso=iso in TRAINED_ISO, valid_fraction=float(valid.mean()),
@@ -166,6 +200,52 @@ def prepare(output):
     write(output/'crops.json', dict(schema_version=1, status='prepared_real_noise_crops', crop=list(CROP), divisor=DIVISOR,
         measured_at_utc=datetime.now(timezone.utc).isoformat(), entries=entries, crops_sha256=digest(output/'crops.npz'),
         bench_result_sha256=digest(BENCH/'result.json'), bank_sha256=digest(BANK), tool_sha256=digest(Path(__file__))))
+
+
+def burst(output):
+    import numpy as np
+    import rawpy
+    crops = read(output/'crops.json')
+    if digest(output/'crops.npz') != crops['crops_sha256']:
+        raise ValueError('Crops changed')
+    arrays, counts = {}, {}
+    for entry, (scene, iso, first, last) in zip(crops['entries'], BURSTS):
+        if entry['key'] != f'{scene}-{iso}':
+            raise ValueError('Burst table changed since the crops')
+        black = entry['black_by_plane']
+        shape = np.load(BENCH/f'{scene}-iso100-mean.npy', mmap_mode='r', allow_pickle=False).shape[-2:]
+        _, mov_crop = crop_window(shape, entry['shift_packed_cells'])
+        total, count = None, 0
+        for number in range(first, last+1):
+            with rawpy.imread(str(CARD/f'6V1A{number:04d}.CR3')) as raw:
+                mosaic = raw.raw_image_visible.astype(np.float32)
+            mosaic = mosaic[:mosaic.shape[0]//2*2, :mosaic.shape[1]//2*2]
+            planes = np.stack([(mosaic[y::2, x::2][mov_crop]-black[i])/DIVISOR
+                               for i, (y, x) in enumerate(((0, 0), (0, 1), (1, 0), (1, 1)))]).astype(np.float64)
+            total = planes if total is None else total+planes
+            count += 1
+        arrays[entry['key']+'-sum'] = total
+        counts[entry['key']] = count
+    np.savez(output/'burst.npz', **arrays)
+    write(output/'burst.json', dict(schema_version=1, status='burst_sums', counts=counts,
+        burst_sha256=digest(output/'burst.npz'), crops_sha256=crops['crops_sha256'], tool_sha256=digest(Path(__file__))))
+
+
+def same_burst_score(estimate, noisy, others_mean, count, law, valid):
+    """MSE against the mean of the other frames of the burst, minus that mean's own noise from the law."""
+    import numpy as np
+    inner = (slice(None), slice(BORDER, -BORDER), slice(BORDER, -BORDER))
+    mapping = fit_mapping(noisy, others_mean, valid)
+    g = np.array([m[0] for m in mapping])[:, None, None]
+    o = np.array([m[1] for m in mapping])[:, None, None]
+    a = np.array([r['shot_slope_dn'] for r in law])[:, None, None]/DIVISOR
+    b = np.array([r['read_variance_dn2'] for r in law])[:, None, None]/DIVISOR**2
+    floor = float(((a*np.maximum(others_mean, 0)+b)/(count-1))[inner][valid[inner]].mean())
+    ref, mask = others_mean[inner], valid[inner]
+    before = float(np.mean(((g*noisy+o)[inner]-ref)[mask]**2))-floor
+    after = float(np.mean(((g*estimate+o)[inner]-ref)[mask]**2))-floor
+    return dict(floor_mse=floor, corrected_observed_mse=before, corrected_mse=after,
+                psnr_gain_db=10*math.log10(max(before, 1e-30)/max(after, 1e-30)) if after > 0 else None)
 
 
 def network(output, campaign):
@@ -251,6 +331,12 @@ def score(output):
         if digest(output/name) != meta[key]:
             raise ValueError(name+' changed')
     arrays, networks, bm3ds = np.load(output/'crops.npz'), np.load(output/'network.npz'), np.load(output/'bm3d.npz')
+    bursts, bursts_meta = None, None
+    if (output/'burst.json').exists():
+        bursts_meta = read(output/'burst.json')
+        if digest(output/'burst.npz') != bursts_meta['burst_sha256'] or bursts_meta['crops_sha256'] != crops['crops_sha256']:
+            raise ValueError('burst.npz changed or belongs to other crops')
+        bursts = np.load(output/'burst.npz')
     rows, summary = [], []
     for entry in crops['entries']:
         key = entry['key']
@@ -262,6 +348,12 @@ def score(output):
             methods = {'vst_bm3d': score_method(bm3ds[key][index], frame, reference, valid, mapping)}
             for seed in net['seeds']:
                 methods[f'network_seed{seed}'] = score_method(networks[f'{key}-seed{seed}'][index], frame, reference, valid, mapping)
+            if bursts is not None:
+                count = bursts_meta['counts'][key]
+                others = (bursts[key+'-sum']-frame.astype(np.float64))/(count-1)
+                for name, estimate in [('vst_bm3d', bm3ds[key][index])]+[(f'network_seed{s}', networks[f'{key}-seed{s}'][index]) for s in net['seeds']]:
+                    methods[name]['same_burst'] = same_burst_score(estimate.astype(np.float64), frame.astype(np.float64),
+                                                                   others, count, entry['noise_law'], valid)
             observed = methods['vst_bm3d']['observed_mse']
             # Reference noise floor in reference units (mapping brings estimates onto the reference scale).
             floor_mse = float(np.mean(floor))
@@ -276,6 +368,9 @@ def score(output):
                 median_gain_db=float(np.median([r['methods'][method]['psnr_gain_db'] for r in frame_rows])),
                 median_oracle_alpha=float(np.median([r['methods'][method]['oracle_correction_alpha'] for r in frame_rows])),
                 max_abs_plane_bias=float(max(abs(v) for r in frame_rows for v in r['methods'][method]['mean_error_by_plane'])))
+            if bursts is not None:
+                same = [r['methods'][method]['same_burst']['psnr_gain_db'] for r in frame_rows]
+                entry_summary['methods'][method]['same_burst_median_gain_db'] = float(np.median([v for v in same if v is not None])) if any(v is not None for v in same) else None
             if method != 'vst_bm3d':
                 entry_summary['methods'][method]['median_minus_bm3d_db'] = float(np.median(
                     [r['methods'][method]['psnr_gain_db']-r['methods']['vst_bm3d']['psnr_gain_db'] for r in frame_rows]))
@@ -288,6 +383,7 @@ def score(output):
                 'Reference is an ISO100 burst mean: its own noise is the reported floor, not removed from the scores',
                 'Per-frame gain/offset fitted on noisy block means only; local motion or light change not corrected',
                 'ISO 1600 and 12800 are outside the training ISO; the 12800 shot slope is interpolated',
+                'Same-burst reference: floor from the measured law, fixed-pattern noise shared by the burst kept in the reference',
                 'Shifts are integer packed cells from phase correlation; subcell misregistration counts as error for every method'])
     write(output/'result.json', result)
     stamp = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')
@@ -298,12 +394,14 @@ def score(output):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, required=True)
-    parser.add_argument('--mode', choices=('prepare', 'network', 'bm3d', 'score'), required=True)
+    parser.add_argument('--mode', choices=('prepare', 'burst', 'network', 'bm3d', 'score'), required=True)
     parser.add_argument('--campaign', type=Path, default=BUILD/'sigma-input-training-v001')
     args = parser.parse_args()
     output = args.output.resolve()
     if args.mode == 'prepare':
         prepare(output)
+    elif args.mode == 'burst':
+        burst(output)
     elif args.mode == 'network':
         network(output, args.campaign.resolve())
     elif args.mode == 'bm3d':

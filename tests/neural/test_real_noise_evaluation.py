@@ -4,7 +4,7 @@ import unittest
 import numpy as np
 
 from real_noise_bench import phase_shift
-from real_noise_evaluation import CROP, crop_window, fit_mapping, noise_law, score_method
+from real_noise_evaluation import CROP, DIVISOR, crop_window, fit_mapping, noise_law, same_burst_score, score_method
 
 
 def bank():
@@ -53,6 +53,19 @@ class RealNoiseEvaluationTests(unittest.TestCase):
         halfway = score_method(noisy-.5*(noisy-frame_clean), noisy, reference, valid, [(1.25, .01)]*4)
         self.assertAlmostEqual(halfway['psnr_gain_db'], 10*math.log10(4), delta=1e-6)
         self.assertAlmostEqual(halfway['oracle_correction_alpha'], 2., places=6)
+
+    def test_same_burst_score_removes_the_reference_noise(self):
+        rng = np.random.default_rng(9)
+        truth = np.tile(np.linspace(.05, .4, 256), (4, 192, 1))
+        law = [dict(shot_slope_dn=6.4, read_variance_dn2=156.)]*4
+        variance = 6.4/DIVISOR*truth+156./DIVISOR**2
+        count = 12
+        frames = truth+rng.normal(size=(count,)+truth.shape)*np.sqrt(variance)
+        others = frames[1:].mean(axis=0)
+        valid = np.ones(truth.shape, bool)
+        scored = same_burst_score(truth, frames[0], others, count, law, valid)
+        self.assertAlmostEqual(scored['corrected_observed_mse']/float(variance[:, 32:-32, 32:-32].mean()), 1., delta=.03)
+        self.assertLess(abs(scored['corrected_mse']), .03*scored['corrected_observed_mse'])
 
 
 if __name__ == '__main__':
