@@ -410,7 +410,7 @@ def score(output):
     result = dict(schema_version=1, status='real_noise_evaluation_development_not_qualification',
         measured_at_utc=datetime.now(timezone.utc).isoformat(), crops=crops, network=net, bm3d=ref_bm3d,
         tool_sha256=digest(Path(__file__)), summary=summary, rows=rows,
-        limits=[f"Scene set {crops['scene_set']}, {crops['frames_per_burst']} frames per burst, one central crop",
+        limits=[f"Scene set {crops.get('scene_set', 'interior')}, {crops.get('frames_per_burst', 3)} frames per burst, one central crop",
                 'Reference is an ISO100 burst mean: its own noise is the reported floor, not removed from the scores',
                 'Per-frame gain/offset fitted on noisy block means only; local motion or light change not corrected',
                 'ISO 1600 and 12800 are outside the training ISO; the 12800 shot slope is interpolated',
