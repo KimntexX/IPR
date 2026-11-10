@@ -10573,3 +10573,54 @@ d'illuminant), puis à revérifier avec cette sonde avant tout passage en
 production.
 
 Preuves : [sonde v001](../raw/neural-dark-bias-probe-v001-20261110T101956Z.json), [sonde v002 (ombres naturelles)](../raw/neural-dark-bias-probe-v002-20261110T102136Z.json).
+
+### Spectre du résidu sur bruit réel (`residual_spectrum.py`)
+
+Mêmes vues et même référence (moyenne des autres vues de la rafale). Pour
+chaque bande radiale (cycles par cellule), puissance de l'erreur restante
+divisée par celle du bruit de la vue : 1 = bande intacte, plancher de la
+référence ≈ 1/(N − 1) (0,04 à 0,11).
+
+| Scène, ISO | Méthode | < 1/32 | 1/32–1/16 | 1/16–1/8 | 1/8–1/4 | > 1/4 |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| Nuit, 3200 | VST + BM3D | 0,93 | 0,69 | 0,51 | 0,38 | 0,22 |
+| Nuit, 3200 | Réseau E | **0,60** | **0,41** | **0,31** | **0,25** | **0,19** |
+| Nuit, 12800 | VST + BM3D | 0,88 | 0,53 | 0,35 | 0,23 | 0,14 |
+| Nuit, 12800 | Réseau E | **0,48** | **0,29** | **0,21** | **0,17** | **0,13** |
+| Jour, 51200 | VST + BM3D | 0,92 | 0,64 | 0,37 | 0,20 | 0,12 |
+| Jour, 51200 | Réseau E | **0,70** | **0,33** | **0,22** | **0,16** | **0,12** |
+
+Sur les sept rafales, le réseau laisse moins d'erreur que BM3D dans chaque
+bande, avec le plus grand écart aux basses fréquences : BM3D par plan laisse
+88 à 100 % du bruit à grande échelle (taches), le réseau 48 à 90 %. Aucune
+bande ne dépasse 1 : pas de structure inventée mesurable à cette échelle. Les
+basses fréquences contiennent aussi le bruit fixe resté dans la référence ;
+le rapport y est donc une borne haute pour les deux méthodes.
+
+### Coût CPU de référence (`cpu_cost_probe.py`)
+
+PyTorch fp32, 8 threads, Intel de 12ᵉ génération (20 cœurs logiques), réseau
+seul, trame complète de 2 319 × 3 479 cellules. Rayon de vue exact 185
+cellules, donc marge de 192 pour un découpage sans couture.
+
+| Découpage | Tuile | Tuiles | Temps de trame |
+| --- | ---: | ---: | ---: |
+| cœur 512, marge 192 (sans couture) | 896² : 1,59 s | 35 | 55,8 s |
+| cœur 1 024, marge 192 (sans couture) | 1 408² : 3,98 s | 12 | 47,7 s |
+| cœur 512, marge 64 (couture non mesurée) | 640² : 0,76 s | 35 | 26,7 s |
+
+Le budget de 20,8 s de l'ouverture par défaut n'est pas tenu : 2,3 fois au
+sans-couture. Conformément à la décision du 7 novembre, le réseau ne peut
+entrer que comme **mode qualité optionnel** tant que le coût ne baisse pas.
+Pistes : ONNX Runtime (non mesuré), réduction de la marge après mesure de la
+couture, réseau plus étroit, précision réduite.
+
+### Planches pour revue visuelle
+
+`real_noise_sheets.py` : une planche par scène et ISO (bruité, VST + BM3D,
+réseau E, référence de rafale), une cellule CFA par pixel (demi-résolution),
+balance des blancs du boîtier, exposition commune. Dossier
+`build-patch_neural_restoration/real-noise-sheets-v002` (non versionné ;
+empreintes dans `sheets.json`). En attente de l'avis de l'utilisateur.
+
+Preuves : [spectre](../raw/neural-residual-spectrum-v001-20261110T102545Z.json), [coût CPU](../raw/neural-cpu-cost-probe-v001-20261110T102329Z.json).
