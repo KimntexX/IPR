@@ -10471,3 +10471,78 @@ l'utilisateur. Aucun push, fusion ou tag.
 
 Preuves : [campagne](../raw/neural-sigma-input-training-v001-20261110T043939Z.json),
 [comparaison BM3D](../raw/neural-physical-natural-comparators-v004-20261110T044246Z.json).
+
+## 10 novembre 2026 — première évaluation sur bruit réel (scènes intérieures du 1er novembre)
+
+Outil `tests/neural/real_noise_evaluation.py`. Scènes intérieures nuit et
+jour du 1er novembre (carte D:, lue sans écriture), trois vues par rafale
+(première, médiane, dernière), recadrage central de 1 024 × 1 536 cellules.
+Recalage par décalage entier de cellules (phase Bayer conservée, sans
+rééchantillonnage), identique à l'audit du 8 novembre. Modèles : bras E,
+graines 71 et 73 (`sigma-input-training-v001`). Étalon : VST + BM3D par plan
+avec la même loi (629 s).
+
+**Noirs.** `rawpy` renvoie pour ces CR3 des noirs par canal incohérents
+(0, 34, 109, 72) et les colonnes masquées des vues éclairées lisent 10 à
+40 DN au-dessus du niveau visible des noirs. Le noir retenu est le
+piédestal médian des noirs d'entraînement à l'ISO (2048,0 DN à
+3200–16000, 2045–2046 DN à 51200), 2048 nominal à 1600 et 12800.
+
+**Lois.** Mesurées à 1600, 3200, 6400 et 51200 ; à 12800, bruit de lecture
+mesuré et pente de photons interpolée en log-log entre 6400 et 16000.
+ISO 1600 et 12800 sont **hors des ISO d'entraînement**.
+
+**Deux références, parce qu'aucune n'est parfaite.**
+
+- *Moyenne ISO 100 de la scène* : la vraie scène, mais l'appareil et la
+  lumière ont un peu changé entre rafales. Cette différence de scène, qu'aucun
+  débruiteur ne retire, vaut 9 à 21 % de l'erreur de la vue bruitée sauf à
+  ISO 1600 la nuit (57 %) et ISO 3200 le jour (93 %, lumière changeante) :
+  ces deux cas ne mesurent presque plus le débruitage.
+- *Moyenne des autres vues de la même rafale* : même position, même lumière ;
+  son bruit propre, connu par la loi, est soustrait exactement. Le bruit fixe
+  du capteur, commun à la rafale, y reste et pénalise un peu le débruiteur qui
+  le retire.
+
+| Scène, ISO | ISO appris | Réf. ISO 100 : BM3D | Réseau | Écart | Réf. même rafale : BM3D | Réseau | Écart |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Nuit, 1600 | non | +2,06 | +2,27 | +0,21 | +3,75 | +4,85 | **+1,09** |
+| Nuit, 3200 | oui | +4,94 | +5,64 | +0,70 | +6,83 | +8,40 | **+1,56** |
+| Nuit, 6400 | oui | +7,30 | +8,13 | +0,84 | +8,51 | +10,04 | **+1,53** |
+| Nuit, 12800 | non | +8,01 | +8,83 | +0,80 | +9,23 | +10,75 | **+1,52** |
+| Jour, 3200 | oui | +0,28 | +0,31 | +0,04 | +5,43 | +6,18 | **+0,76** |
+| Jour, 12800 | non | +6,30 | +6,71 | +0,41 | +9,72 | +10,84 | **+1,12** |
+| Jour, 51200 | oui | +7,18 | +7,56 | +0,38 | +11,63 | +12,74 | **+1,11** |
+
+Gains médians sur la vue bruitée (dB), graine 71 ; la graine 73 est à
+0,05 dB près, sauf nuit 1600 (−0,25 et −0,58 dB). Écarts appariés vue par
+vue, référence même rafale : réseau devant BM3D sur les 21 vues, de +0,11
+à +1,58 dB. α oracle du réseau 1,02 à 1,10 (1,29 à ISO 1600, sous la plage
+apprise) ; BM3D 1,00 à 1,12.
+
+**Lecture.**
+
+- Sur bruit réel, le réseau reste devant VST + BM3D à chaque ISO, appris ou
+  non, avec les deux références. L'avance est plus faible qu'en simulation
+  (+0,8 à +1,6 dB contre +0,6 à +3,2 dB) et la référence ISO 100 la comprime
+  encore par la différence de scène.
+- ISO 12800, non appris et à pente interpolée, se comporte comme ses voisins :
+  bon signe pour l'interpolation des lois prévue en production. ISO 1600,
+  sous la plage apprise, sous-corrige un peu (α 1,29) et varie entre graines.
+- **Point à surveiller : le biais.** Le réseau assombrit légèrement les plans
+  la nuit (−1,5 à −8 · 10⁻⁵, soit 0,2 à 1 DN), 3 à 5 fois plus que BM3D. Le jour
+  à 3200, les deux méthodes ont le même biais (différence de scène). Le
+  critère « noirs sans régression » demande une mesure dédiée sur des noirs
+  réels.
+
+**Limites.** Deux scènes d'une journée, trois vues par rafale, un seul
+recadrage ; graines et architecture choisies sur d'autres images, mais ces
+scènes ne sont pas un test de qualification. Pas encore de spectre du
+résidu, de coût CPU ni de planches.
+
+**Suite proposée.** Mesure du biais sur noirs réels hors entraînement ;
+spectre du bruit résiduel ; planches à 100 % des deux scènes pour
+l'utilisateur ; coût CPU. Prises du protocole d'extérieur (sujets rigides,
+rafale ISO 100 avant et après) pour une référence sans différence de scène.
+
+Preuve : [évaluation v003](../raw/neural-real-noise-evaluation-v003-20261110T101156Z.json).
