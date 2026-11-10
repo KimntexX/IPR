@@ -234,10 +234,13 @@ if __name__ == '__main__':
     parser.add_argument('--hours', type=float, default=15.)
     parser.add_argument('--color-augmentation', type=float, nargs=3, metavar=('PROBABILITY', 'LOW', 'HIGH'),
                         help='red/blue gains log-uniform in [LOW, HIGH] on this share of the training samples')
+    parser.add_argument('--green-gain', type=float, nargs=2, metavar=('LOW', 'HIGH'), default=(1., 1.),
+                        help='independent G1 and G2 gains log-uniform in [LOW, HIGH] on the augmented samples')
     args = parser.parse_args()
     if args.long:
         augmentation = None if args.color_augmentation is None else dict(
-            probability=args.color_augmentation[0], red_blue_gain_range=list(args.color_augmentation[1:]))
+            probability=args.color_augmentation[0], red_blue_gain_range=list(args.color_augmentation[1:]),
+            green_gain_range=list(args.green_gain))
         prepare_long(args.output.resolve(), args.long, args.steps, args.seeds, args.hours, augmentation)
     elif args.prepare:
         prepare(args.output.resolve(), args.arms, args.reference_study.resolve() if args.reference_study else None)

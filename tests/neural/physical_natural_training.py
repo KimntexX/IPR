@@ -115,25 +115,30 @@ def synthesise(clean, slope, read_dark, filters, divisor, generator):
     return observed/divisor
 
 
-def color_augment(clean, generator, probability, gain_range):
-    """Random red and blue gains per sample, greens unchanged, like a change of illuminant or white balance.
+def color_augment(clean, generator, probability, gain_range, green_gain_range=(1., 1.)):
+    """Random plane gains per sample, like a change of illuminant, white balance or green balance.
 
     clean: [B,4,H,W] in the source normalization (white = 1), planes R, G1, G2, B.
     Each sample is augmented with `probability`; the R and B gains are drawn
-    independently, log-uniform in `gain_range`. Values pushed above white are
-    clipped at white, never below their original level. Applied before the
-    noise synthesis, so the noise follows the new signal.
+    independently, log-uniform in `gain_range`, and G1 and G2 get their own
+    small independent gains, log-uniform in `green_gain_range`, so the target
+    carries the same green imbalance as the input and the network learns to
+    keep it. Values pushed above white are clipped at white, never below their
+    original level. Applied before the noise synthesis, so the noise follows
+    the new signal.
     """
     import math
     import torch
     low, high = gain_range
-    if not 0 <= probability <= 1 or not 0 < low <= 1 <= high:
-        raise ValueError('Probability in [0, 1] and a gain range around 1 required')
+    green_low, green_high = green_gain_range
+    if not 0 <= probability <= 1 or not 0 < low <= 1 <= high or not 0 < green_low <= 1 <= green_high:
+        raise ValueError('Probability in [0, 1] and gain ranges around 1 required')
     batch = clean.shape[0]
     apply = torch.rand(batch, device=clean.device, generator=generator) < probability
-    logs = torch.rand(batch, 2, device=clean.device, generator=generator)*(math.log(high)-math.log(low))+math.log(low)
-    gains = torch.ones(batch, 4, device=clean.device, dtype=clean.dtype)
-    gains[:, 0], gains[:, 3] = logs[:, 0].exp(), logs[:, 1].exp()
+    unit = torch.rand(batch, 4, device=clean.device, generator=generator)
+    lows = torch.tensor([low, green_low, green_low, low], device=clean.device).log()
+    highs = torch.tensor([high, green_high, green_high, high], device=clean.device).log()
+    gains = (unit*(highs-lows)+lows).exp().to(clean.dtype)
     gains = torch.where(apply[:, None], gains, torch.ones_like(gains))[:, :, None, None]
     return torch.minimum(clean*gains, torch.maximum(clean, torch.ones_like(clean)))
 
@@ -485,7 +490,8 @@ def train(output, seed, guard):
             target = torch.from_numpy(np.stack([training[i] for i in ids.tolist()])).cuda()
             if plan.get('color_augmentation') is not None:
                 target = color_augment(target, rng, plan['color_augmentation']['probability'],
-                                       plan['color_augmentation']['red_blue_gain_range'])
+                                       plan['color_augmentation']['red_blue_gain_range'],
+                                       plan['color_augmentation'].get('green_gain_range', (1., 1.)))
             noisy, sigma = noise.sample(target, iso_ids, dark, rng)
             a, b = noise.law(iso_ids)
             output_planes = model.correct(noisy, sigma, tags.expand(plan['batch'], -1), a, b)

@@ -93,9 +93,19 @@ class ColorAugmentationTests(unittest.TestCase):
     def test_probability_zero_and_invalid_ranges(self):
         clean = torch.rand(8, 4, 4, 4)
         torch.testing.assert_close(color_augment(clean, torch.Generator().manual_seed(1), 0., (.5, 2.)), clean)
+        with self.assertRaises(ValueError):
+            color_augment(clean, torch.Generator().manual_seed(1), .5, (.5, 2.), (1.01, 1.02))
         for probability, gains in ((1.5, (.5, 2.)), (.5, (1.2, 2.)), (.5, (.5, .9))):
             with self.assertRaises(ValueError):
                 color_augment(clean, torch.Generator().manual_seed(1), probability, gains)
+
+    def test_green_gains_are_small_independent_and_follow_their_range(self):
+        clean = torch.full((256, 4, 4, 4), .3, dtype=torch.float64)
+        out = color_augment(clean, torch.Generator().manual_seed(6), 1., (1., 1.), (.98, 1.02))
+        g1, g2 = out[:, 1, 0, 0]/.3, out[:, 2, 0, 0]/.3
+        self.assertTrue(((g1 >= .98-1e-12) & (g1 <= 1.02+1e-12)).all() and ((g2 >= .98-1e-12) & (g2 <= 1.02+1e-12)).all())
+        self.assertGreater(float((g1-g2).abs().mean()), .005)
+        torch.testing.assert_close(out[:, [0, 3]], clean[:, [0, 3]])
 
 
 if __name__ == '__main__':
