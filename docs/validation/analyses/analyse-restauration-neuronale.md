@@ -10752,3 +10752,62 @@ Preuves :
 [intérieur](../raw/neural-real-noise-evaluation-v004-20261111T104613Z.json),
 [drap](../raw/neural-color-sheet-evaluation-v002-20261111T104758Z.json),
 [tuiles de développement](../raw/neural-physical-natural-comparators-v005-20261111T105118Z.json).
+
+## 11 novembre 2026 — salle d'escalade : audit et évaluation des deux modèles
+
+**Série.** Prises de l'utilisateur, 11 novembre de 0 h 06 à 0 h 26, salle
+vide, lumière artificielle, 24 mm f/5,6, trépied et déclenchement au
+téléphone : ISO 100 au début **et à la fin** (4 poses, 5 à 8 vues), ISO 1600 à
+51200 (8 ISO, 4 poses, 4 à 8 vues). Les vues 0737 à 0757 du 10 novembre au
+soir, à d'autres ISO, sont des essais non utilisés. Le 11 novembre est exclu
+du contenu d'entraînement.
+
+**Audit** (`paired_scene_audit.py`, qui remplace `color_sheet_audit.py` et
+retrouve une série par son premier fichier : l'appareil réutilise les noms de
+dossier). Lumière stable : la rafale ISO 100 finale est à 0,98 de son
+exposition nominale rapportée à la référence (2 % sur 20 minutes). Rafales
+ISO élevés immobiles (0,99 à 1,02), décalages entiers de 0 à 1 cellule,
+saturation limitée aux spots (≤ 0,7 %). La **première** rafale ISO 100 a
+bougé (rapport 3,02, dérive +2 %) : la référence est la rafale ISO 100
+**finale** à 1/4 s (rapport 0,88, dérive −0,2 %), audit v002.
+
+**Évaluation** : 27 rafales, 2 vues chacune ; ancien modèle E (graines 71 et
+73) et modèle avec augmentation de couleur (pas 75 000), mêmes vues, même
+VST + BM3D.
+
+| Réseau − VST + BM3D (dB) | Ancien modèle | Avec augmentation |
+| --- | --- | --- |
+| Référence même rafale | +0,69 à +1,53 | **+0,86 à +1,69** |
+| Référence ISO 100 finale | +0,06 à +1,98 | **+0,13 à +2,10** |
+
+Les graines 71 et 73 de l'ancien modèle s'accordent à 0,05 dB près. Le réseau
+devance BM3D sur les 27 rafales avec les deux références ; l'augmentation de
+couleur ajoute +0,1 à +0,2 dB. Ici la référence ISO 100 mesure bien le
+débruitage (plafond mesurable 27 à 41 dB) : l'avance du réseau y croît avec
+l'ISO et la sous-exposition, jusqu'à +2,1 dB.
+
+**Biais.** Le réseau assombrit légèrement tous les plans (−0,1 à −0,3 % du
+niveau moyen, BM3D −0,05 % environ), plus sur G2 et B que sur G1 :
+G2 −0,2 à −0,4 %, G1 −0,05 à −0,13 %. L'écart G1/G2 persiste avec
+l'augmentation (un peu réduit aux ISO élevés).
+
+**Indice sur la cause.** Mesuré sur les noirs d'entraînement, le bruit des
+noirs est asymétrique (queue vers le haut) et davantage sur les lignes
+impaires (G2, B) que sur les lignes paires (R, G1) : coefficient d'asymétrie
+0,46 contre 0,54 à ISO 3200, 0,36 contre 0,44 à 6400 ; médiane − moyenne
+jusqu'à −3,6 DN à 51200. La perte L1 apprend une médiane : avec un bruit à
+queue haute, la médiane est sous la moyenne, d'où un assombrissement, plus
+fort sur les lignes les plus asymétriques. Le corpus, lui, n'a pas de
+déséquilibre des verts (G2/G1 médian 1,0004) et le piédestal des noirs est
+retiré plan par plan. Hypothèse cohérente, non démontrée : à tester par un
+essai court avec une perte visant la moyenne (L2 ou L1 avec terme de
+moyenne).
+
+Planches : `build-patch_neural_restoration/climbing-gym-sheets-v001`
+(27, modèle avec augmentation ; non versionnées).
+
+Preuves :
+[audit v001](../raw/neural-climbing-gym-audit-v001-20261111T111704Z.json),
+[audit v002](../raw/neural-climbing-gym-audit-v002-20261111T112316Z.json),
+[ancien modèle](../raw/neural-climbing-gym-evaluation-v001-20261111T115454Z.json),
+[avec augmentation](../raw/neural-climbing-gym-evaluation-v002-20261111T115622Z.json).
