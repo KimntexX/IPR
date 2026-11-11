@@ -10811,3 +10811,39 @@ Preuves :
 [audit v002](../raw/neural-climbing-gym-audit-v002-20261111T112316Z.json),
 [ancien modèle](../raw/neural-climbing-gym-evaluation-v001-20261111T115454Z.json),
 [avec augmentation](../raw/neural-climbing-gym-evaluation-v002-20261111T115622Z.json).
+
+## 11 novembre 2026 — préparation de la bêta-1 : ONNX, outil DNG et chemin de production
+
+**Export ONNX** (`tests/neural/export_onnx.py`, modèle E avec augmentation de
+couleur, pas 75 000). Graphe `planes`, `sigma` → `corrected`, opset 17,
+32,7 Mo. Concordance avec PyTorch sur les 72 observations de développement :
+écart maximal 1,3·10⁻⁷ (ONNX Runtime CPU) et 2,7·10⁻⁷ (DirectML), gains et
+biais par plan identiques. Tuile de 1 408² : 3,8 s sur CPU, 0,65 s avec
+DirectML sur la RTX (partagée avec un entraînement). Preuve :
+[export ONNX](../raw/neural-onnx-v001-20261111T122912Z.json).
+
+**Outil d'essai DNG** (`tests/neural/denoise_to_dng.py`). Un CR3 du R6 III →
+mosaïque débruitée → DNG Bayer non compressé (motif, noir, blanc, matrice
+couleur D65, neutre de prise de vue, ISO), plus l'original par le même
+écrivain pour une comparaison A/B. 7,8 s par image de 24 Mpx sur GPU. LibRaw le
+relit correctement et IPR l'ouvre avec le profil DCP du R6 III ; l'objectif
+n'est pas inscrit (pas de correction d'objectif). Ouverture dans Lightroom
+à confirmer par l'utilisateur.
+
+**Chemin de production** (branche `patch_noise_cfa`, issue de `dev`) :
+
+- `NoiseLaw` et `config/noise-laws.json`, généré depuis la banque de bruit
+  mesurée (interpolation log-ISO, refus hors plage ou boîtier inconnu) ;
+- étage CFA dans `RawDevelopment::develop`, juste après la soustraction du
+  noir, sur des valeurs signées, avant la balance des blancs ;
+- module ONNX Runtime de Codex (`src/neural`), repris tel quel et validé sous
+  MSVC : tests de contrat, CPU et DirectML, raccords de tuiles nuls ;
+- service `NeuralCfa` : vérification SHA-256 du modèle, un étage par RAW ;
+- test de bout en bout du module C++ avec le vrai modèle sur une vraie vue
+  ISO 6400 de la salle : carte σ à 5,6·10⁻⁹, sortie à 7,5·10⁻⁸ (CPU) et
+  6,0·10⁻⁸ (DirectML) de PyTorch ; sur un aplat gris ISO 6400, 99,8 % de la
+  puissance du bruit retirée, niveau conservé.
+
+Reste pour la bêta-1 : préférence, raccordement éditeur et recette (Codex),
+choix final de la perte (essai L1 / L2 / L1 + moyenne en cours), revue de
+l'utilisateur dans l'application.
