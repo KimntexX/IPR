@@ -53,3 +53,14 @@ class PhysicalTrainingObjectiveTests(unittest.TestCase):
         self.assertAlmostEqual(float((scale/sigma).mean()),1.)
         for total,count in ((float('nan'),3),(0.,3),(100.,0),(100.,True)):
             with self.assertRaises(ValueError):fixed_sigma_scale(total,count)
+
+    def test_mean_seeking_objectives(self):
+        target=torch.zeros(2,4,8,8)
+        sigma=torch.full_like(target,.01)
+        shifted=torch.full_like(target,.1,requires_grad=True)
+        self.assertAlmostEqual(float(training_loss(shifted,target,sigma,'unweighted L2',1e-5)),.01,places=7)
+        self.assertAlmostEqual(float(training_loss(shifted,target,sigma,'l1_plane_mean',1e-5)),.2,places=6)
+        zero_mean=torch.tensor([.1,-.1]*256).reshape(2,4,8,8)
+        self.assertAlmostEqual(float(training_loss(zero_mean,target,sigma,'l1_plane_mean',1e-5)),.1,places=6)
+        for objective in ('unweighted L2','l1_plane_mean'):
+            with self.assertRaises(ValueError):training_loss(shifted,target,sigma,objective,1e-5,.5)

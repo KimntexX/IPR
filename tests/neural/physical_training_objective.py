@@ -2,6 +2,9 @@
 import math
 import torch
 
+# Objectives whose magnitude is already that of the unweighted L1 control: no calibrated scale.
+UNIT_SCALE_OBJECTIVES = ('unweighted L1', 'unweighted L2', 'l1_plane_mean')
+
 
 def training_loss(prediction, target, sigma, objective, sigma_floor, objective_scale=1.):
     if prediction.shape!=target.shape or sigma.shape!=target.shape:
@@ -13,10 +16,18 @@ def training_loss(prediction, target, sigma, objective, sigma_floor, objective_s
     if (not torch.isfinite(prediction).all() or not torch.isfinite(target).all()
             or not torch.isfinite(sigma).all() or (sigma<0).any()):
         raise ValueError('Finite observations and nonnegative sigma required')
+    if objective in UNIT_SCALE_OBJECTIVES and objective_scale!=1.:
+        raise ValueError('Unit-scale objectives must keep unit scale')
     if objective=='unweighted L1':
-        if objective_scale!=1.:
-            raise ValueError('The unchanged L1 control must keep unit scale')
         return torch.nn.functional.l1_loss(prediction,target)
+    if objective=='unweighted L2':
+        # Conditional mean instead of the L1 conditional median: no median bias under skewed noise.
+        return torch.nn.functional.mse_loss(prediction,target)
+    if objective=='l1_plane_mean':
+        # L1 plus the absolute mean error of every plane of every sample: same per-pixel weight as the L1
+        # term, but coherent across the plane, so it pulls the plane means onto the target's.
+        error=prediction-target
+        return error.abs().mean()+error.mean(dim=(-2,-1)).abs().mean()
     if objective=='sigma_normalized_l1':
         return objective_scale*((prediction-target).abs()/sigma.detach().clamp_min(sigma_floor)).mean()
     raise ValueError('Unknown photographic training objective')

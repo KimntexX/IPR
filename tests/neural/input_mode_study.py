@@ -31,7 +31,9 @@ ARMS = (('A_sigma_map', 'sigma_map', 'unweighted L1'),
         ('B_blind', 'blind', 'unweighted L1'),
         ('C_anscombe', 'anscombe', 'anscombe_l1'),
         ('D_sigma_map_normalized_loss', 'sigma_map', 'sigma_normalized_l1'),
-        ('E_sigma_input', 'sigma_input', 'unweighted L1'))
+        ('E_sigma_input', 'sigma_input', 'unweighted L1'),
+        ('F_sigma_input_l2', 'sigma_input', 'unweighted L2'),
+        ('G_sigma_input_l1_plane_mean', 'sigma_input', 'l1_plane_mean'))
 REFERENCE = 'A_sigma_map'
 TOOLS = ('input_mode_study.py', 'input_modes.py', 'physical_natural_training.py', 'physical_training_objective.py',
          'dru_cfa.py', 'memory_budget.py', 'load_control.py', 'prepare_next_training.py')
@@ -45,10 +47,10 @@ def parameter_count(in_nc):
     return sum(p.numel() for p in core.parameters())
 
 
-def reference_arm(study_path):
-    """Arm A of a completed earlier study, pinned by its plan, progress and checkpoint digests."""
+def reference_arm(study_path, reference=REFERENCE):
+    """Reference arm of a completed earlier study, pinned by its plan, progress and checkpoint digests."""
     earlier = read(study_path)
-    arm = next(a for a in earlier['arms'] if a['name'] == REFERENCE)
+    arm = next(a for a in earlier['arms'] if a['name'] == reference)
     folder = Path(arm['path'])
     progress = read(folder/'seed71/progress.json')
     if (progress['status'] != 'completed_natural_physical_development_training' or progress['completed_steps'] != STEPS
@@ -59,8 +61,9 @@ def reference_arm(study_path):
                                 checkpoint_sha256=progress['final_checkpoint_sha256'], study=str(study_path.resolve())))
 
 
-def prepare(output, names, reference_study=None):
+def prepare(output, names, reference_study=None, reference=REFERENCE, color_augmentation=None):
     from input_modes import in_channels
+    from physical_training_objective import UNIT_SCALE_OBJECTIVES
     source_plan, data = read(PARENT/'plan.json'), read(PARENT/'data.json')
     for name, expected in data['files'].items():
         if digest(PARENT/name) != expected:
@@ -73,26 +76,27 @@ def prepare(output, names, reference_study=None):
     tools = {name: digest(ROOT/'tests/neural'/name) for name in TOOLS}
     if not names or len(set(names)) != len(names) or any(n not in {a[0] for a in ARMS} for n in names):
         raise ValueError('Distinct known arm names required')
-    if (REFERENCE in names) == (reference_study is not None):
-        raise ValueError('Train arm A here or reuse it from an earlier study, not both')
-    arms = [] if reference_study is None else [reference_arm(reference_study)]
+    if (reference in names) == (reference_study is not None):
+        raise ValueError('Train the reference arm here or reuse it from an earlier study, not both')
+    arms = [] if reference_study is None else [reference_arm(reference_study, reference)]
     for name, mode, objective in (a for a in ARMS if a[0] in names):
         target = output/name
         target.mkdir()
         for filename in data['files']:
             os.link(PARENT/filename, target/filename)
         write(target/'data.json', data)
-        scale = 1. if objective == 'unweighted L1' else calibration['objective_scale']
+        scale = 1. if objective in UNIT_SCALE_OBJECTIVES else calibration['objective_scale']
         plan = {**source_plan, 'schema_version': 4, 'status': 'frozen_input_mode_comparison',
             'created_at_utc': datetime.now(timezone.utc).isoformat(), 'steps': STEPS, 'campaign_seconds': 2400,
             'seeds': [71], 'input_mode': mode, 'objective': objective, 'objective_scale': scale,
             'parameters': parameter_count(in_channels(mode)), 'learning_rate': 1e-4, 'minimum_learning_rate': 1e-6,
-            'schedule': 'cosine from 1e-4 to 1e-6 over the 4096 steps, from scratch',
+            'schedule': 'cosine from 1e-4 to 1e-6 over the 4096 steps, from scratch', 'color_augmentation': color_augmentation,
             'sigma_floor': 1/source_plan['target_domain']['divisor'], 'progress_every': 128,
             'controls_at': [0, 1024, 2048, 3072, 4096], 'checkpoint_at': [STEPS], 'tools': tools,
             'loss_scale_calibration': dict(path=str(CALIBRATION.resolve()), sha256=digest(CALIBRATION)),
             'parent_plan_sha256': digest(PARENT/'plan.json'),
-            'limits': source_plan['limits']+['Four short arms from scratch, one seed, known development tiles only',
+            'limits': source_plan['limits']+['Short arms from scratch, one seed, known development tiles only',
+                'Every arm of a study shares the same colour augmentation and data stream',
                 'Blind and Anscombe arms have 4 input channels; their initial weights differ from the 8-channel arms',
                 'Anscombe arm: law a, b measured per ISO and plane; algebraic inverse matched to the z-domain target']}
         plan.pop('continuation', None)
@@ -101,9 +105,10 @@ def prepare(output, names, reference_study=None):
                          objective_scale=scale, plan_sha256=digest(target/'plan.json')))
     write(output/'study.json', dict(schema_version=1, data_version=output.name.rsplit('-', 1)[-1],
         campaign_id=output.name, measured_at_utc=datetime.now(timezone.utc).isoformat(), status='prepared',
-        arms=arms, parent_plan_sha256=digest(PARENT/'plan.json'), steps_per_arm=STEPS, tools=tools,
+        arms=arms, reference=reference, color_augmentation=color_augmentation,
+        parent_plan_sha256=digest(PARENT/'plan.json'), steps_per_arm=STEPS, tools=tools,
         resources='Sequential GPU workers; private 5 GiB soft / 6 GiB hard, CUDA 50 %, system 92 %; host pressure yields',
-        evaluation='Same 72 development observations; per tile, ISO and source, paired with arm A'))
+        evaluation=f'Same 72 development observations; per tile, ISO and source, paired with {reference}'))
 
 
 def prepare_long(output, name, steps, seeds, hours, color_augmentation=None):
@@ -147,7 +152,7 @@ def summarize(study):
         raise ValueError('Different data selections between arms')
     final = {name: {(row['target_index'], row['iso']): row for row in r['controls'][-1]['rows']}
              for name, r in arms.items()}
-    reference = final[REFERENCE]
+    reference = final[study.get('reference', REFERENCE)]
     groups = []
     for source in (0, 1):
         for iso in (3200, 6400, 16000, 51200):
@@ -158,7 +163,7 @@ def summarize(study):
                     raise ValueError('Different observed noise between arms')
                 entry['arms'][name] = dict(
                     median_gain_db=statistics.median(rows[k]['psnr_gain_db'] for k in keys),
-                    median_minus_A_db=statistics.median(rows[k]['psnr_gain_db']-reference[k]['psnr_gain_db'] for k in keys),
+                    median_minus_reference_db=statistics.median(rows[k]['psnr_gain_db']-reference[k]['psnr_gain_db'] for k in keys),
                     median_oracle_alpha=statistics.median(rows[k]['oracle_correction_alpha'] for k in keys),
                     max_abs_plane_bias=max(abs(v) for k in keys for v in rows[k]['mean_error_by_plane']))
             groups.append(entry)
@@ -228,6 +233,7 @@ if __name__ == '__main__':
     parser.add_argument('--prepare', action='store_true')
     parser.add_argument('--arms', nargs='+', default=[a[0] for a in ARMS])
     parser.add_argument('--reference-study', type=Path)
+    parser.add_argument('--reference', default=REFERENCE, help='arm every other arm is paired with')
     parser.add_argument('--long', help='prepare one long campaign of this arm')
     parser.add_argument('--steps', type=int, default=64000)
     parser.add_argument('--seeds', type=int, nargs='+', default=[71, 73])
@@ -243,6 +249,10 @@ if __name__ == '__main__':
             green_gain_range=list(args.green_gain))
         prepare_long(args.output.resolve(), args.long, args.steps, args.seeds, args.hours, augmentation)
     elif args.prepare:
-        prepare(args.output.resolve(), args.arms, args.reference_study.resolve() if args.reference_study else None)
+        augmentation = None if args.color_augmentation is None else dict(
+            probability=args.color_augmentation[0], red_blue_gain_range=list(args.color_augmentation[1:]),
+            green_gain_range=list(args.green_gain))
+        prepare(args.output.resolve(), args.arms, args.reference_study.resolve() if args.reference_study else None,
+                args.reference, augmentation)
     else:
         run(args.output.resolve())
