@@ -10696,3 +10696,59 @@ non versionnées) ; plis du drap conservés par les deux méthodes, un peu plus
 nets avec le réseau.
 
 Preuve : [évaluation du drap](../raw/neural-color-sheet-evaluation-v001-20261110T141526Z.json).
+
+## 11 novembre 2026 — augmentation de couleur : campagne interrompue, évaluation du pas 75 000
+
+**Campagne** `sigma-input-color-training-v001` : bras E, augmentation sur 80 %
+des exemples (gains R et B log-uniformes dans [0,33 ; 2,5], gains G1 et G2
+indépendants dans [0,98 ; 1,02]), graine 71, 150 000 pas prévus, lancée le
+10 novembre à 15 h 22. **Windows Update a redémarré la machine le 11 à
+1 h 59** (`MoUsoCoreWorker.exe`, journal système 1074) : processus tué au pas
+106 000, sans sauvegarde finale ni évaluations. Dernière sauvegarde : pas
+75 000. Les contrôles de développement étaient plats depuis environ
+40 000 pas (+0,02 à +0,12 dB de 75 000 à 103 125) ; le pas 75 000 est évalué
+comme modèle de la campagne via le chargeur commun
+(`input_modes.load_trained_model`, sauvegarde vérifiée par son pas et
+l'empreinte du plan).
+
+**Tuiles de développement** (même métrique, BM3D recalculé) : réseau −
+VST + BM3D +0,57 / +1,12 / +2,19 / +3,18 dB à 3200 / 6400 / 16000 / 51200,
+identique au modèle sans augmentation à 0,05 dB près.
+
+**Sonde des ombres** (biais moyen en DN, graine 71) :
+
+| ISO | Cas | Sans augmentation (R, G1, G2, B) | Avec augmentation |
+| --- | --- | --- | --- |
+| 3200 | neutre 5 % | −1,8 / +1,9 / +0,9 / −3,1 | −0,4 / +0,5 / −0,6 / 0,0 |
+| 16000 | neutre 5 % | −1,4 / +2,7 / +0,6 / −4,2 | 0,0 / +1,0 / −1,0 / +0,3 |
+| 51200 | neutre 1 % | −6,6 / +0,9 / +0,2 / −7,9 | +0,1 / +1,2 / −0,8 / +0,2 |
+| 51200 | naturel 5 % | +0,6 / +0,4 / −0,9 / −0,3 | +0,6 / +1,3 / −1,2 / +1,0 |
+
+La dérive de R et B disparaît ; le noir pur reste fidèle. Un **écart G1/G2**
+demeure : G1 monte, G2 baisse, 1 à 3 DN à 16000–51200 sur aplat.
+
+**Bruit réel, mêmes vues et même BM3D qu'avant** (réseau − BM3D, référence
+même rafale) :
+
+- Drap : **+1,02 à +1,50 dB sur les 28 rafales** (avant : −0,28 à +0,95) ;
+  référence ISO 100 : +0,12 à +0,48 dB (avant : +0,10 à +0,34).
+- Intérieur : nuit +1,70 à +1,86 dB (avant +1,52 à +1,56), jour +0,96 à
+  +1,21 dB (avant +0,75 à +1,13).
+- Biais moyen sur le drap : R et B passent de +0,3 à +0,6 % à moins de
+  0,15 %, au niveau de BM3D ; G2 reste à −0,1 à −0,2 % quand G1 est à
+  0 à +0,1 % (écart G1/G2 réduit de moitié environ, non supprimé).
+
+**Lecture.** L'augmentation de couleur corrige le défaut visé et améliore
+nettement le réseau sur bruit réel, surtout là où il était le plus faible
+(drap, ISO bas). Le gain sur BM3D en bruit réel monte d'environ +0,5 dB en
+moyenne. Reste un déséquilibre G1/G2 systématique, faible (0,1 à 0,2 %,
+1 à 3 DN), dont l'origine n'est pas établie : prior du corpus, structure
+lignes paires/impaires des noirs, ou plage de gain des verts trop étroite.
+Avant tout passage en production, vérifier son effet visuel après
+dématriçage (motif en labyrinthe dans les aplats) et en chercher la cause.
+
+Preuves :
+[sonde des ombres](../raw/neural-dark-bias-probe-v003-20261111T104531Z.json),
+[intérieur](../raw/neural-real-noise-evaluation-v004-20261111T104613Z.json),
+[drap](../raw/neural-color-sheet-evaluation-v002-20261111T104758Z.json),
+[tuiles de développement](../raw/neural-physical-natural-comparators-v005-20261111T105118Z.json).
