@@ -6,6 +6,7 @@
   "targets": {
     "parallelJobsTests": "parallelJobsTests",
     "noiseLawTests": "noiseLawTests",
+    "cfaNoiseStageTests": "cfaNoiseStageTests",
     "taskRunnerTests": "taskRunnerTests",
     "imageCacheControllerTests": "imageCacheControllerTests",
     "editorImageCacheTests": "editorImageCacheTests",
@@ -97,6 +98,7 @@
     {"patterns": ["src/core/ImageImporter.*", "src/core/ImageMetadata.h", "tests/image_import_test.cpp"], "tests": ["imageImportTests", "rawDecoderTests", "cameraProfileEngineTests", "editorRawDevelopmentTests", "imageExportTests", "rec2020PipelineTests"], "python": ["profile_rendering_integration"]},
     {"patterns": ["src/raw/CameraSignal.*"], "tests": ["rawDecoderTests", "cameraProfileEngineTests", "editorRawDevelopmentTests", "rec2020PipelineTests", "imageExportTests"], "python": ["profile_rendering_integration"]},
     {"patterns": ["src/raw/NoiseLaw.*", "tests/noise_law_test.cpp", "config/noise-laws.json", "scripts/build_noise_laws.py"], "tests": ["noiseLawTests"]},
+    {"patterns": ["src/raw/CfaNoiseStage.*", "tests/cfa_noise_stage_test.cpp", "src/raw/RawDevelopment.*"], "tests": ["cfaNoiseStageTests", "rawDevelopmentTests", "rawDecoderTests", "editorRawDevelopmentTests"]},
     {"patterns": ["src/raw/CameraCharacterization.*"], "tests": ["rawNormalizationTests", "rawDecoderTests", "editorRawDevelopmentTests"], "python": ["base_colorimetry_analysis", "profile_rendering_integration"]},
     {"patterns": ["tests/verify_profile_rendering_integration.py", "tests/test_verify_profile_rendering_integration.py", "tests/investigate_0081_export.py"], "tests": ["rawNormalizationTests", "cameraProfileEngineTests"], "python": ["profile_rendering_integration"]},
     {"patterns": ["tests/investigate_r7_gain.py", "tests/investigate_r7_baseline.py", "tests/test_investigate_r7_gain.py"], "tests": [], "python": ["r7_gain_study"]},

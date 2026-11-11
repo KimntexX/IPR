@@ -52,6 +52,17 @@ Result develop(const RawInput::Input &input, const Options &options)
         }
     }
     observe(Stage::BlackSubtractedCfa, mosaic, true);
+    if (options.cfaStage) {
+        QString error;
+        if (!options.cfaStage(mosaic, pattern, &error)) {
+            result.error = error.isEmpty() ? QStringLiteral("Débruitage de la mosaïque impossible.") : error;
+            return result;
+        }
+        if (options.cancelled && options.cancelled()) {
+            result.error = QStringLiteral("Développement annulé.");
+            return result;
+        }
+    }
     // The common part of the black (its smallest value) comes off the white; the white
     // drops to the data maximum when that lies just below it (LibRaw's adjustment).
     const double commonBlack = *std::min_element(input.black.cbegin(), input.black.cend());

@@ -64,6 +64,12 @@ struct Options
     Policy policy = Policy::LibRawParity;
     Demosaic::ChromaMedian median = Demosaic::OpeningMedian;
     std::function<bool()> cancelled;
+    // The CFA denoising stage (empty in the default opening): called once on the
+    // black-subtracted mosaic, signed and in counts, before any bound and before the
+    // white balance, with the 2x2 colour pattern. It rewrites the mosaic in place;
+    // false fails the development with its message (a stage that cannot run keeps the
+    // mosaic and returns true). Runs on the developing thread.
+    std::function<bool(ipr::Image &mosaic, const std::array<std::array<int, 2>, 2> &pattern, QString *error)> cfaStage;
     // The comparison bench's observer: called once per stage, after it, on the
     // developing thread; an exception fails the development. Empty in the app.
     std::function<void(const Capture &)> observer;
