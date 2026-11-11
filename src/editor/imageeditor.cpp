@@ -300,6 +300,26 @@ ImageEditor::ImageEditor(ImageProvider *provider,
         emit histogramChanged();
         emit previewChanged();
     });
+    connect(&m_beforeWatcher, &QFutureWatcher<LoadResult>::finished, this, [this] {
+        LoadResult before;
+        try { before = Tasks::takeResult(m_beforeWatcher.future()); } catch (...) { /* the comparison only */ }
+        if (m_beforePending) {
+            m_beforePending = false;
+            if (m_neuralApplied) startBeforeDevelopment();
+            return;
+        }
+        const bool cancelled = m_beforeCancel && m_beforeCancel->load();
+        if (cancelled || !m_neuralApplied || before.cacheKey != plainCacheKey())
+            return;
+        if (before.editProxy.isNull()) {
+            reportNewError(tr("Vue Avant sans débruitage IA indisponible : %1").arg(before.error));
+            return;
+        }
+        m_beforeProxy = std::move(before.editProxy);
+        m_beforeKey = before.cacheKey;
+        m_originalImageSource.clear();   // the original is rendered again from it
+        scheduleRender();
+    });
     m_prefetchTimer.setSingleShot(true);
     m_prefetchTimer.setInterval(250);
     connect(&m_prefetchTimer, &QTimer::timeout, this, &ImageEditor::startPrefetch);
@@ -465,6 +485,7 @@ ImageEditor::~ImageEditor()
 {
     cancelPrefetch();
     if (m_loadCancel) m_loadCancel->store(true);
+    if (m_beforeCancel) m_beforeCancel->store(true);
     if (m_batchExportCancel) m_batchExportCancel->store(true);
     // Workers waiting for memory must not delay or deadlock closing.
     m_decodedImageCache.abortWaiting();
@@ -2564,6 +2585,13 @@ void ImageEditor::beginLoad(const QString &fileName, const QString &extension,
     ++m_requestedRevision;
     m_renderPending = false;
     if (freshOpen) {
+        dropBeforeDevelopment();
+    } else if (!m_neuralApplied && !m_original.isNull()) {
+        // The development the network may replace is the comparison's "before".
+        m_beforeProxy = ColorPipeline::sharedCopy(previewSource());
+        m_beforeKey = m_currentCacheKey;
+    }
+    if (freshOpen) {
         m_neuralReason.clear();
         // Retain the displayed image until its replacement is ready. Cache
         // eviction can release only the cache reference, never these pixels.
@@ -2837,6 +2865,10 @@ void ImageEditor::applyLoadedImage(LoadResult loaded)
         m_cameraProfile, m_rawNormalizationEnabled ? rawNormalizationManifest() : QString(),
         m_lensProfile, m_lensProfileResolved, m_lensCorrectionEnabled, m_chromaticAberrationEnabled,
         m_denoiseBeforeProfile, m_neuralAllowed ? m_neuralStrength : 0, m_neuralModelId);
+    if (m_neuralApplied)
+        startBeforeDevelopment();
+    else
+        dropBeforeDevelopment();
     emit rawDevelopmentChanged();
     m_appliedRawDevelopment = rawDevelopmentRecipe();
     m_appliedAutomaticWhiteBalance = m_settings.automaticWhiteBalance;
@@ -2864,6 +2896,7 @@ void ImageEditor::releaseCurrentImage()
     // pixels and is safe while background workers retain their own ipr::Image.
     m_original = {};
     m_editProxy = {};
+    dropBeforeDevelopment();
     m_renderStageCache.clear();
     m_sourceMetadata = {};
     m_importProvenance = {};
@@ -2949,20 +2982,26 @@ void ImageEditor::startRender()
         ? m_pointColorOverlay : -1;
     const bool wholeCanvas = m_cropEditing;
     // Within a gesture the original can wait for the release (endAdjustmentGesture).
-    const bool includeOriginal = m_originalImageSource.isEmpty() ||
-                                 (!m_inAdjustmentGesture && originalFramingStale());
+    // With the network applied, the original is the development without it, once ready
+    // (startBeforeDevelopment renders again then); never the denoised source.
+    const bool beforeReady = !m_neuralApplied || !m_beforeProxy.isNull();
+    const bool includeOriginal = beforeReady && (m_originalImageSource.isEmpty() ||
+                                 (!m_inAdjustmentGesture && originalFramingStale()));
+    const auto originalCopy = m_neuralApplied && includeOriginal
+        ? std::make_shared<const ColorPipeline::WorkingImage>(ColorPipeline::sharedCopy(m_beforeProxy)) : nullptr;
     m_activeRevision = m_requestedRevision;
     setBusy(true);
     m_renderWatcher.setFuture(m_tasks.submit<RenderChain::Preview>(
         QStringLiteral("render"), Tasks::Priority::Interactive,
-        [sourceCopy, settings, includeOriginal, pixelScale, resources = m_taskResources, overlay,
+        [sourceCopy, originalCopy, settings, includeOriginal, pixelScale, resources = m_taskResources, overlay,
          maskOverlay = m_localMaskOverlay, retouchOverlay = m_retouchOverlay, wholeCanvas](Tasks::Context &) {
             ImageCacheController *controller = &resources->cache;
             const auto admission = controller->acquire({}, SystemMemory::estimateProcessingPeak(
                 quint64(sourceCopy->linearRgba.width()) * quint64(sourceCopy->linearRgba.height())), false).takeResult();
             if (!admission.reservation) { RenderChain::Preview result; result.error = admission.error; return result; }
             const auto release = qScopeGuard([&] { controller->release(admission.reservation); });
-            return RenderChain::preview(*sourceCopy, settings, includeOriginal, pixelScale, &resources->stages, overlay, maskOverlay, wholeCanvas, retouchOverlay);
+            return RenderChain::preview(*sourceCopy, settings, includeOriginal, pixelScale, &resources->stages, overlay,
+                                        maskOverlay, wholeCanvas, retouchOverlay, originalCopy.get());
         }).future);
 }
 
@@ -3020,6 +3059,71 @@ void ImageEditor::restoreBeforeEmbeddedPreview()
     m_originalImageSource = m_restoreOriginalSource;
     m_restorePreview = m_restoreOriginal = QImage();
     emit previewChanged();
+}
+
+QString ImageEditor::plainCacheKey() const
+{
+    return cacheKeyForFile(m_currentFile.toLocalFile(), m_settings.automaticWhiteBalance, m_cameraProfile,
+        m_rawNormalizationEnabled ? rawNormalizationManifest() : QString(), m_lensProfile, m_lensProfileResolved,
+        m_lensCorrectionEnabled, m_chromaticAberrationEnabled, m_denoiseBeforeProfile);
+}
+
+void ImageEditor::startBeforeDevelopment()
+{
+    const QString key = plainCacheKey();
+    if (!m_beforeProxy.isNull() && m_beforeKey == key)
+        return;
+    m_beforeProxy = {};
+    m_beforeKey.clear();
+    if (m_beforeWatcher.isRunning()) {   // never replace a running watcher's future
+        if (m_beforeCancel) m_beforeCancel->store(true);
+        m_beforePending = true;
+        return;
+    }
+    m_beforePending = false;
+    RawDecoder::Options options = developmentOptions();
+    options.cfaStageFactory = {};
+    m_beforeCancel = std::make_shared<std::atomic_bool>(false);
+    const auto cancel = m_beforeCancel;
+    options.cancellationRequested = [cancel] { return cancel->load(); };
+    m_beforeWatcher.setFuture(m_tasks.submit<LoadResult>(
+        QStringLiteral("beforeDevelopment"), Tasks::Priority::Interactive,
+        [fileName = m_currentFile.toLocalFile(), automaticWhiteBalance = m_settings.automaticWhiteBalance,
+         options, key, cancel, resources = m_taskResources](Tasks::Context &) {
+            ImageCacheController *controller = &resources->cache;
+            const quint64 peak = SystemMemory::estimateDecodePeak(fileName);
+            auto admission = controller->acquire(key, peak, false, cancel).takeResult();
+            LoadResult before;
+            before.cacheKey = key;
+            if (admission.cached && cacheAssetsUnchanged(*admission.cached)) {
+                const DecodedImageCache::Entry &cached = *admission.cached;
+                before.editProxy = ColorPipeline::sharedCopy(cached.editProxy.isNull() ? cached.image : cached.editProxy);
+                controller->insert(key, std::move(*admission.cached));   // only looked at
+                return before;
+            }
+            if (admission.cached) {
+                admission.cached.reset();
+                admission = controller->acquire({}, peak, false, cancel).takeResult();
+            }
+            const auto release = qScopeGuard([&] { controller->release(admission.reservation); });
+            if (!admission.reservation || cancel->load()) {
+                before.error = admission.error;
+                return before;
+            }
+            LoadResult loaded = loadFromDisk(fileName, automaticWhiteBalance, options);
+            before.error = loaded.error;
+            // Only the proxy is kept: the full master is released here.
+            before.editProxy = loaded.editProxy.isNull() ? std::move(loaded.image) : std::move(loaded.editProxy);
+            return before;
+        }).future);
+}
+
+void ImageEditor::dropBeforeDevelopment()
+{
+    if (m_beforeCancel) m_beforeCancel->store(true);
+    m_beforePending = false;
+    m_beforeProxy = {};
+    m_beforeKey.clear();
 }
 
 void ImageEditor::cancelPrefetch()

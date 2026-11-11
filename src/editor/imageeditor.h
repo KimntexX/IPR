@@ -459,6 +459,11 @@ private:
     void setRawDevelopment(const RawDevelopment &raw);
     void startRender();
     void startEmbeddedPreview(const QString &fileName);
+    // The current development's cache key without the network.
+    QString plainCacheKey() const;
+    // Develops (or finds in the cache) the "before" of a photo the network was applied to.
+    void startBeforeDevelopment();
+    void dropBeforeDevelopment();
     void restoreBeforeEmbeddedPreview();
     void schedulePrefetch();
     void startPrefetch();
@@ -549,6 +554,13 @@ private:
     // Camera-rendered embedded JPEG shown while the IPR development runs.
     QFutureWatcher<QImage> m_embeddedWatcher;
     quint64 m_embeddedRevision = 0, m_embeddedSerial = 0;
+    // The comparison's "before" while the network is applied: the edit proxy of the same
+    // development without the network, keyed by that development's cache key.
+    ColorPipeline::WorkingImage m_beforeProxy;
+    QString m_beforeKey;
+    QFutureWatcher<LoadResult> m_beforeWatcher;
+    std::shared_ptr<std::atomic_bool> m_beforeCancel;
+    bool m_beforePending = false;
     bool m_embeddedPreview = false;
     QImage m_restorePreview, m_restoreOriginal;
     QString m_restoreImageSource, m_restoreOriginalSource;

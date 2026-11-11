@@ -30,6 +30,18 @@ bool settle(ImageEditor &editor)
     }
     return false;
 }
+
+// The "before" without the network is developed after the denoised image is shown.
+bool waitForOriginal(const ImageProvider &provider, const QImage &expected)
+{
+    QElapsedTimer timer; timer.start();
+    while (timer.elapsed() < 180000) {
+        QCoreApplication::processEvents(QEventLoop::AllEvents, 10);
+        if (provider.originalImage() == expected) return true;
+        QThread::msleep(10);
+    }
+    return false;
+}
 }
 int main(int argc, char **argv)
 {
@@ -42,7 +54,9 @@ int main(int argc, char **argv)
     ImageEditor editor(&provider);
     editor.loadImage(QUrl::fromLocalFile(path));
     if (!settle(editor)) return 4;
+    // Before (original) and after (preview) of the photo without any edit nor network.
     const QImage baseline = provider.originalImage().copy();
+    const QImage plainAfter = provider.image().copy();
     QQmlEngine qml;
     qml.addImageProvider(QStringLiteral("gradingwheel"), new GradingWheelProvider);
     QQmlComponent component(&qml, QUrl::fromLocalFile(QStringLiteral(IPR_QML_DIRECTORY "/Setting.qml")));
@@ -52,7 +66,7 @@ int main(int argc, char **argv)
     auto *intensity = panel->findChild<QObject *>("photoNeuralDenoiseIntensity");
     if (!check || !intensity) return 15;
     editor.setNeuralDenoisePreferences(true, QString::fromLocal8Bit(argv[2]));
-    if (editor.busy() || editor.neuralDenoiseActive() || provider.originalImage() != baseline) return 11;
+    if (editor.busy() || editor.neuralDenoiseActive() || provider.image() != plainAfter) return 11;
     editor.setNeuralDenoiseEnabled(true);
     if (!editor.statusMessage().contains(QStringLiteral("Débruitage IA en cours"))) return 12;
     if (!settle(editor)) return 5;
@@ -76,34 +90,40 @@ int main(int argc, char **argv)
                   << editor.rawDevelopmentStatus().toStdString() << '\n';
         return 6;
     }
-    if (provider.originalImage() == baseline) return 7;
-    const QImage strongest = provider.originalImage().copy();
+    // The comparison: after shows the network, before stays the development without it.
+    if (provider.image() == plainAfter || provider.originalImage() != baseline) return 7;
+    const QImage strongest = provider.image().copy();
     editor.setNeuralDenoiseStrength(100);
-    if (!settle(editor) || provider.originalImage() == strongest) return 10;
+    if (!settle(editor) || provider.image() == strongest || provider.originalImage() != baseline) return 10;
     editor.setNeuralDenoiseEnabled(false);
     if (!settle(editor)) return 8;
-    if (provider.originalImage() != baseline) return 9;
+    if (provider.image() != plainAfter || provider.originalImage() != baseline) return 9;
     editor.pasteAdjustments();
     if (!settle(editor) || !editor.neuralDenoiseActive() || editor.neuralDenoiseStrength() != 50) return 17;
     editor.saveCurrentAdjustments();
     const auto saved = Sidecar::read(path);
     if (!saved || saved->raw.neuralStrength != 50 || saved->raw.neuralModelId.isEmpty()) return 18;
+    // Opened again with the network in its recipe: the before is developed without it.
+    editor.loadImage(QUrl::fromLocalFile(path));
+    if (!settle(editor) || !editor.neuralDenoiseActive() || !waitForOriginal(provider, baseline)) return 31;
+    if (!settle(editor) || provider.image() == plainAfter) return 32;
     editor.undo();
     if (!settle(editor) || editor.neuralDenoiseActive()) return 19;
     editor.redo();
     if (!settle(editor) || !editor.neuralDenoiseActive() || editor.neuralDenoiseStrength() != 50) return 20;
-    const QImage alreadyApplied = provider.originalImage().copy();
+    const QImage alreadyApplied = provider.image().copy();
     editor.setNeuralDenoisePreferences(false, QString::fromLocal8Bit(argv[2]));
-    if (editor.busy() || !editor.neuralDenoiseActive() || provider.originalImage() != alreadyApplied) return 27;
+    if (editor.busy() || !editor.neuralDenoiseActive() || provider.image() != alreadyApplied) return 27;
     editor.setNeuralDenoisePreferences(true, QString::fromLocal8Bit(argv[2]));
-    if (editor.busy() || provider.originalImage() != alreadyApplied) return 28;
+    if (editor.busy() || provider.image() != alreadyApplied) return 28;
     // The 100-strength image is already cached: it must not hide a missing model.
     editor.setNeuralDenoisePreferences(true, directory.filePath(QStringLiteral("missing.onnx")));
     editor.setNeuralDenoiseStrength(100);
-    if (!settle(editor) || editor.neuralDenoiseStrength() != 50 || provider.originalImage() != alreadyApplied) return 30;
+    if (!settle(editor) || editor.neuralDenoiseStrength() != 50 || provider.image() != alreadyApplied) return 30;
     editor.setNeuralDenoisePreferences(true, QString::fromLocal8Bit(argv[2]));
     editor.resetAdjustments();
-    if (!settle(editor) || editor.neuralDenoiseActive() || provider.originalImage() != baseline) return 29;
+    if (!settle(editor) || editor.neuralDenoiseActive() || provider.image() != plainAfter ||
+        provider.originalImage() != baseline) return 29;
     if (argc == 4) {
         const auto other = directory.filePath(QFileInfo(argv[3]).fileName());
         if (!QFile::copy(QString::fromLocal8Bit(argv[3]), other)) return 21;
@@ -122,7 +142,8 @@ int main(int argc, char **argv)
             RecipeCodec::encodeRaw(cleaned->raw).contains(QStringLiteral("neuralStrength"))) return 26;
         std::cout << "Unsupported camera: disabled with reason and no neural recipe\n";
     }
-    std::cout << "Activation changes decoded pixels; disabling restores the exact original; engine "
+    std::cout << "Activation changes the after view only, the before stays without the network; "
+                 "disabling restores the exact original; engine "
               << engine.toStdString() << '\n';
     return 0;
 }

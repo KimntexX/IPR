@@ -329,7 +329,7 @@ ColorPipeline::WorkingImage workingImage(const ColorPipeline::WorkingImage &sour
 
 Preview preview(const ColorPipeline::WorkingImage &source, const Settings &settings, bool includeOriginal,
                 double pixelScale, RenderStageCache *cache, int overlayPoint, int overlayMask, bool wholeCanvas,
-                int overlayRetouch)
+                int overlayRetouch, const ColorPipeline::WorkingImage *originalSource)
 {
     Preview result;
     if (includeOriginal) {
@@ -337,7 +337,8 @@ Preview preview(const ColorPipeline::WorkingImage &source, const Settings &setti
         // white balance, but none of the editor settings (including sidecars),
         // except the framing, so that it stays comparable with the preview.
         QString error;
-        ColorPipeline::WorkingImage framed = ColorPipeline::sharedCopy(source);
+        ColorPipeline::WorkingImage framed = ColorPipeline::sharedCopy(
+            originalSource && !originalSource->isNull() ? *originalSource : source);
         framed.linearRgba = Geometry::warpRgba(std::move(framed.linearRgba), settings.geometry, geometryQuality(pixelScale));
         if (!wholeCanvas)
             framed = cropped(std::move(framed), settings.geometry);
