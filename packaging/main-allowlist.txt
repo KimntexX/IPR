@@ -34,12 +34,14 @@ src/profiles/
 src/providers/
 src/qml/
 src/raw/
+src/neural/
 src/tasks/
 # Build, packaging, delivery and promotion scripts
 scripts/build-windows.ps1
 scripts/build-windows.sh
 scripts/build_windows.py
 scripts/ci.py
+scripts/neural_assets.py
 scripts/ci_documents.py
 scripts/delivery_policy.py
 scripts/github_build.py

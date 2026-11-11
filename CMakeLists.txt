@@ -141,6 +141,8 @@ set(IPR_ENGINE_SOURCES
     src/core/VibranceModel.h
     src/editor/imageeditor.h
     src/editor/imageeditor.cpp
+    src/editor/NeuralDevelopment.h
+    src/editor/NeuralDevelopment.cpp
     src/editor/AdjustmentTable.h
     src/editor/AdjustmentTable.cpp
     src/editor/RenderChain.h
@@ -261,7 +263,7 @@ add_subdirectory(src/neural)
 add_library(iprEngine STATIC ${IPR_ENGINE_SOURCES})
 qt_add_resources(iprEngine ipr_ui_defaults
     PREFIX "/"
-    FILES config/ipr-ui.ini config/raw-normalization.json config/noise-laws.json
+    FILES config/ipr-ui.ini config/raw-normalization.json config/noise-laws.json packaging/neural-model.json
 )
 target_include_directories(iprEngine PUBLIC ${IPR_INCLUDE_DIRECTORIES})
 target_link_libraries(iprEngine
@@ -347,6 +349,29 @@ install(TARGETS appIPR
     BUNDLE DESTINATION .
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+if(IPR_ENABLE_ONNX_RUNTIME AND IPR_NEURAL_MODEL)
+    file(READ "${CMAKE_CURRENT_SOURCE_DIR}/packaging/neural-model.json" ipr_model_manifest)
+    string(JSON ipr_model_id GET "${ipr_model_manifest}" model_id)
+    string(JSON ipr_model_sha GET "${ipr_model_manifest}" sha256)
+    if(NOT ipr_model_id MATCHES "^[A-Za-z0-9][A-Za-z0-9._-]*$")
+        message(FATAL_ERROR "Invalid neural model identifier")
+    endif()
+    file(SHA256 "${IPR_NEURAL_MODEL}" ipr_actual_model_sha)
+    if(NOT ipr_actual_model_sha STREQUAL ipr_model_sha)
+        message(FATAL_ERROR "Neural model SHA-256 does not match packaging/neural-model.json")
+    endif()
+    if(APPLE)
+        set(ipr_model_destination "appIPR.app/Contents/MacOS/models")
+    else()
+        set(ipr_model_destination "${CMAKE_INSTALL_BINDIR}/models")
+    endif()
+    install(FILES "${IPR_NEURAL_MODEL}" DESTINATION "${ipr_model_destination}"
+        RENAME "${ipr_model_id}.onnx" COMPONENT NeuralModel)
+    add_custom_command(TARGET appIPR POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:appIPR>/models"
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${IPR_NEURAL_MODEL}"
+            "$<TARGET_FILE_DIR:appIPR>/models/${ipr_model_id}.onnx")
+endif()
 if(APPLE)
     set(IPR_TOOL_DESTINATION "appIPR.app/Contents/MacOS")
     set(IPR_DATA_DESTINATION "appIPR.app/Contents/Resources")
@@ -634,6 +659,14 @@ if(BUILD_TESTING)
     set_tests_properties(imageImportTests PROPERTIES LABELS "unit;import;pipeline")
     ipr_add_test(rawNormalizationTests tests/raw_normalization_test.cpp)
     ipr_add_test(editorRawDevelopmentTests tests/editor_raw_development_test.cpp)
+    add_executable(editorNeuralTests tests/editor_neural_test.cpp)
+    target_link_libraries(editorNeuralTests PRIVATE iprEngine)
+    set(IPR_NEURAL_TEST_RAW "" CACHE FILEPATH "Private R6 III RAW for optional editor integration test")
+    if(IPR_ENABLE_ONNX_RUNTIME AND IPR_NEURAL_MODEL AND IPR_NEURAL_TEST_RAW)
+        add_test(NAME editorNeuralIntegration COMMAND editorNeuralTests "${IPR_NEURAL_TEST_RAW}" "${IPR_NEURAL_MODEL}")
+        set_tests_properties(editorNeuralIntegration PROPERTIES LABELS "integration;raw;neural"
+            RUN_SERIAL TRUE TIMEOUT 300)
+    endif()
     set_tests_properties(editorRawDevelopmentTests PROPERTIES LABELS "unit;raw;settings" TIMEOUT 60)
     ipr_add_test(rawBlackLevelEstimatorTests tests/raw_black_level_estimator_test.cpp)
     ipr_add_test(cameraProfileEngineTests tests/camera_profile_engine_test.cpp)

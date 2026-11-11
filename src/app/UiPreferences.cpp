@@ -14,6 +14,7 @@
 
 namespace {
 const QMap<QString, QPair<int, int>> integerRanges{
+    {"neural/strength", {0, 100}},
     {"window/normalWidth", {1000, 8192}}, {"window/normalHeight", {650, 8192}},
     {"window/normalX", {-200000, 200000}}, {"window/normalY", {-200000, 200000}},
     {"layout/settingsWidth", {260, 360}}, {"layout/imageInfoWidth", {210, 300}},
@@ -118,7 +119,8 @@ QVariant UiPreferences::normalized(const QString &key, const QVariant &input, bo
         return *ok ? QVariant(static_cast<int>(number)) : QVariant{};
     }
     if (key.startsWith(QStringLiteral("sections/")) ||
-        key.startsWith(QStringLiteral("layout/show")) || key == QStringLiteral("window/positionSaved")) {
+        key.startsWith(QStringLiteral("layout/show")) || key == QStringLiteral("window/positionSaved") ||
+        key == QStringLiteral("neural/enabled")) {
         const QString text = input.toString().trimmed().toLower();
         *ok = text == QStringLiteral("true") || text == QStringLiteral("false") ||
               text == QStringLiteral("1") || text == QStringLiteral("0");

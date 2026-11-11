@@ -1,9 +1,10 @@
 # Module neuronal RAW — intégration bêta-1
 
-État au 11 novembre 2026 : module autonome testé ; raccordement au moteur,
-préférences et recettes encore à faire après alignement de `patch_noise` sur `dev`.
-Le modèle de production n'est pas encore livré. Les graphes de contrôle ne sont
-pas des modèles de débruitage et ne doivent pas être distribués comme tels.
+État au 11 novembre 2026 : service CFA raccordé sur `patch_noise_cfa`, préférence
+désactivée par défaut, force et identifiant dans la recette, installation du modèle
+vérifiée par SHA-256. Le réseau reste un candidat en qualification ; aucune
+livraison dans `dev` n'est implicite. Les graphes de contrôle ne sont pas des
+modèles de débruitage.
 
 ## Contrat avec le développement RAW
 
@@ -49,9 +50,9 @@ de la licence MIT d'ONNX Runtime ; leurs textes sont conservés sous `licenses/`
 DirectML.dll doit accompagner onnxruntime.dll ; le pilote seul ne remplace pas
 cette dépendance du paquet. Aucun toolkit CUDA n'est requis pour cette voie.
 
-Le modèle d'environ 33 Mo reste hors Git. Son futur manifeste
-`packaging/neural-model.json` est volontairement incomplet : l'acquisition
-échoue tant que son identifiant, URL et empreinte ne sont pas validés. Un
+Le modèle d'environ 33 Mo reste hors Git. Le manifeste
+`packaging/neural-model.json` épingle l'identifiant et l'empreinte du candidat ;
+l'acquisition distante reste refusée tant que l'URL de release manque. Un
 chemin local peut être fourni directement à `SessionOptions` en développement.
 
 ## Banc autonome
@@ -74,9 +75,39 @@ réellement la cohérence du voisinage et de la carte sigma entre tuiles.
 
 Qualification locale : GCC 13.1 / MinGW, C++17 ; le SDK DirectML demande
 `-D_Maybenull_=` pour son annotation SAL absente de ce SDK MinGW. Cette option
-n'est pas imposée à la construction de production MSVC, qui reste à qualifier.
-La concordance avec le réseau PyTorch réel, la mémoire pleine définition et
-la latence DirectML restent ouvertes.
+n'est pas imposée à la construction MSVC, validée ensuite par Claude sans ce
+drapeau. Sur une vraie vue ISO 6400, Claude mesure une erreur maximale
+ONNX/PyTorch d'environ 7,5e-8 CPU et 6,0e-8 DirectML. Les autres ISO, les scènes
+réelles et les ressources pleine définition restent des qualifications partielles.
+
+## Préférences, recettes et installation
+
+Le panneau RAW avancé expose l'activation, la force 0–100 (100 par défaut),
+et le coût du repli CPU après identification du moteur. Les clés INI sont
+`neural/enabled`, `neural/strength` et `neural/modelPath`. Le chemin local peut
+aussi être fourni par `IPR_NEURAL_MODEL`. Sinon le service lit
+`<appdir>/models/<model_id>.onnx`.
+
+La recette conserve `neuralStrength` et `neuralModelId`. Une ancienne recette
+sans ces champs reste désactivée, même si la préférence est active. Une nouvelle
+photo sans recette reprend la force des préférences. L'autorisation globale
+désactivée interdit l'inférence sans effacer les paramètres d'une recette reçue.
+Un identifiant enregistré n'est pas remplacé silencieusement par un autre modèle.
+
+Un changement explicite d'activation ou de force sur l'image ouverte redéveloppe
+le RAW. Le cache distingue la force et le modèle ; le raccourci DCP ne réutilise
+pas un signal débruité pendant une transition. Le préchargement spéculatif est
+suspendu lorsque le neuronal est autorisé. L'annulation est rattachée à la factory
+au moment du chargement ; les exports pleine résolution et par lot utilisent cet
+étage. Le catalogue de cette bêta-1 concerne le R6 Mark III. La balance automatique
+empruntant encore un chemin qui peut ignorer cet étage, son association au
+neuronal est temporairement refusée explicitement.
+
+`IPR_NEURAL_MODEL` est disponible en CMake même sans les tests. L'installation
+vérifie le SHA-256 et copie le modèle sous son identifiant. Le lanceur CI accepte
+`--neural-sdk-dir <SDK> --neural-model <ONNX>` : il transmet les chemins CMake et
+les répertoires de DLL, sans téléchargement implicite ni dépendance obligatoire
+pour les autres constructions.
 
 Sources : [paquets C++ officiels](https://onnxruntime.ai/docs/get-started/with-cpp),
 [contraintes DirectML](https://onnxruntime.ai/docs/execution-providers/DirectML-ExecutionProvider.html).

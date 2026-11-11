@@ -83,6 +83,23 @@ bool writeVersion9(const QString &source)
 int main(int argc, char **argv)
 {
     QCoreApplication app(argc, argv);
+    {
+        EditRecipe::RawDevelopment neural;
+        neural.neuralStrength = 75;
+        neural.neuralModelId = QStringLiteral("model-test");
+        const auto encoded = RecipeCodec::encodeRaw(neural);
+        EditRecipe::RawDevelopment restored;
+        RecipeCodec::decodeRaw(encoded, restored);
+        if (!check(restored.neuralStrength == 75 && restored.neuralModelId == neural.neuralModelId,
+                   "neural recipe round trip")) return 1;
+        RecipeCodec::decodeRaw(QCborMap{}, restored);
+        if (!check(restored.neuralStrength == 0 && restored.neuralModelId.isEmpty(),
+                   "old recipes disable neural processing even when reusing an object")) return 1;
+        auto corrupt = encoded;
+        corrupt.insert(QStringLiteral("neuralStrength"), 999);
+        RecipeCodec::decodeRaw(corrupt, restored);
+        if (!check(restored.neuralStrength == 100, "neural strength is bounded")) return 1;
+    }
     QTemporaryDir directory;
     const QString source = QDir(directory.path()).filePath(QStringLiteral("photo.png"));
     if (!check(directory.isValid() && writeBytes(source, "x"), "source written"))

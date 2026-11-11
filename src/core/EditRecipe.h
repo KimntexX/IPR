@@ -76,6 +76,8 @@ struct RawDevelopment
     // The development really used (ADR-0021), empty when not recorded: a photo
     // opens again in this mode, even if the session's has changed.
     QString developmentMode;
+    int neuralStrength = 0; // 0 disables CFA inference; old recipes stay disabled.
+    QString neuralModelId;
 };
 
 inline const QString StandardDevelopment = QStringLiteral("standard");

@@ -23,6 +23,11 @@ int main(int argc, char **argv)
     const QString path = directory.filePath(QStringLiteral("nested/ipr-ui.ini"));
     {
         UiPreferences preferences(path);
+        if (!check(!preferences.value("neural/enabled").toBool() &&
+                   preferences.value("neural/strength").toInt() == 100 &&
+                   !preferences.setValue("neural/strength", 101) &&
+                   !preferences.setValue("neural/enabled", "invalid"),
+                   "neural defaults are off/100 with validated types and range")) return 1;
         if (!check(preferences.writable() && QFile::exists(path) &&
                    preferences.value("window/normalWidth").toInt() == 1440 &&
                    preferences.layout().value("imageInfoFontSize").toInt() == 12 &&

@@ -13,6 +13,7 @@
 #include "RenderChain.h"
 #include "RenderStageCache.h"
 #include "RawDecoder.h"
+#include "NeuralCfa.h"
 #include "StackSession.h"
 #include "TaskRunner.h"
 
@@ -81,6 +82,7 @@ class ImageEditor final : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QAbstractItemModel *imageModel READ imageModel CONSTANT)
+    Q_PROPERTY(QString neuralDenoiseEngine READ neuralDenoiseEngine NOTIFY rawDevelopmentChanged)
     Q_PROPERTY(QObject *stacking READ stacking CONSTANT)
     Q_PROPERTY(QUrl folder READ folder NOTIFY folderChanged)
     Q_PROPERTY(QString imageSource READ imageSource NOTIFY previewChanged)
@@ -306,6 +308,8 @@ public:
     // Single noise reduction control: one amount in [0, 100] sets both strengths.
     Q_INVOKABLE void setDenoiseAmount(int value);
     Q_INVOKABLE void setDenoiseBeforeProfile(bool enabled);
+    Q_INVOKABLE void setNeuralDenoisePreferences(bool enabled, int strength, const QString &modelPath = {});
+    QString neuralDenoiseEngine() const;
     Q_INVOKABLE void setColorMixer(int band, int hue, int saturation,
                                    int luminance);
     Q_INVOKABLE void setColorGrading(int zone, int hue, int saturation);
@@ -425,7 +429,8 @@ private:
                                    const QString &profile = {}, const QString &manifest = {},
                                    const QString &lensProfile = {}, bool lensResolved = false,
                                    bool lensCorrection = true, bool chromaticAberration = true,
-                                   bool cameraSignalExperiment = false);
+                                   bool cameraSignalExperiment = false,
+                                   int neuralStrength = 0, const QString &neuralModelId = {});
     void reloadRawDevelopment();
     RawDevelopment rawDevelopmentRecipe() const;
     void beginLoad(const QString &fileName, const QString &extension,
@@ -472,6 +477,16 @@ private:
     QString m_normalizationManifest;
     bool m_rawNormalizationEnabled = true;
     bool m_denoiseBeforeProfile = false;   // experimental session switch, kept across images
+    bool m_neuralAllowed = false;
+    bool m_neuralReload = false;
+    int m_neuralDefaultStrength = 100;
+    int m_neuralStrength = 0;
+    QString m_neuralModelId;
+    QString m_neuralModelPath;
+    mutable QString m_neuralServiceId;
+    mutable QString m_neuralError;
+    mutable std::shared_ptr<NeuralCfa::Service> m_neuralService;
+    std::shared_ptr<NeuralCfa::Service> neuralService() const;
     bool m_sidecarReadOnly = false;        // the open image's .ipr comes from a newer IPR
     EditHistory m_history;                 // of the open image, saved in its .ipr
     bool m_inAdjustmentGesture = false;
@@ -538,7 +553,9 @@ private:
                                     const QHash<QString, UserImageMetadata> &annotations);
     static BatchResult exportFiles(Tasks::Context &context, const QStringList &files, const QString &folder,
                             const QString &format, int quality, ImageCacheController *controller,
-                            ImageCacheController::CancelToken cancel);
+                              ImageCacheController::CancelToken cancel,
+                              std::shared_ptr<NeuralCfa::Service> neural = {}, const QString &neuralId = {},
+                              const QString &neuralError = {}, bool neuralAllowed = false);
     void finishBatch(const BatchResult &result, const QString &done);
     bool asShotWhiteBalance() const;
     QFutureWatcher<BatchResult> m_batchApplyWatcher;

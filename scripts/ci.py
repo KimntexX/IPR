@@ -417,12 +417,29 @@ def main(argv=None):
     parser.add_argument('--version', default='0.1.0-alpha')
     parser.add_argument('--qt-root', type=Path, default=os.environ.get('QT_ROOT_DIR'))
     parser.add_argument('--runtime-dir', type=Path, action='append', default=[])
+    parser.add_argument('--neural-sdk-dir', type=Path,
+                        help='Verified Windows x64 SDK directory prepared by scripts/neural_assets.py runtime')
+    parser.add_argument('--neural-model', type=Path,
+                        help='Optional ONNX model; requires --neural-sdk-dir and matching manifest SHA-256')
     parser.add_argument('--cmake-arg', action='append', default=[])
     parser.add_argument('--native', choices=('deb', 'rpm', 'arch'))
     parser.add_argument('--windows-installer', action='store_true',
                         help='Compile an Inno Setup installer as well as the Windows standalone ZIP')
     parser.add_argument('--jobs', type=int, default=2)
     args = parser.parse_args(argv)
+    if bool(args.neural_sdk_dir) != bool(args.neural_model):
+        parser.error('--neural-sdk-dir and --neural-model must be provided together')
+    if args.neural_sdk_dir:
+        sdk = args.neural_sdk_dir.resolve()
+        runtime_spec = json.loads((ROOT / 'packaging/neural-runtime.json').read_text(encoding='utf-8'))
+        packages = {item['id']: sdk / item['directory'] for item in runtime_spec['packages']}
+        ort = packages['Microsoft.ML.OnnxRuntime.DirectML']
+        dml = packages['Microsoft.AI.DirectML']
+        args.cmake_arg += ['-DIPR_ENABLE_ONNX_RUNTIME=ON',
+                           '-DIPR_ONNXRUNTIME_ROOT=' + str(ort),
+                           '-DIPR_DIRECTML_ROOT=' + str(dml),
+                           '-DIPR_NEURAL_MODEL=' + str(args.neural_model.resolve())]
+        args.runtime_dir += [ort / 'runtimes/win-x64/native', dml / 'bin/x64-win']
     if args.windows_installer and (os.name != 'nt' or args.mode != 'standalone' or args.action not in ('all', 'package')):
         parser.error('--windows-installer requires Windows standalone all/package')
     if args.verify_package_only and (args.native or args.action not in ('all', 'package')):
