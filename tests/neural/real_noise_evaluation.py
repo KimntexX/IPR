@@ -279,37 +279,23 @@ def same_burst_score(estimate, noisy, others_mean, count, law, valid):
                 psnr_gain_db=10*math.log10(max(before, 1e-30)/max(after, 1e-30)) if after > 0 else None)
 
 
-def network(output, campaign):
+def network(output, campaign, step=None):
     import numpy as np
-    import sys
     import torch
-    from input_modes import ModeCorrector, in_channels
+    from input_modes import load_trained_model
     from physical_natural_training import CANONICAL_TAGS, sigma_map
     crops = read(output/'crops.json')
     if digest(output/'crops.npz') != crops['crops_sha256']:
         raise ValueError('Crops changed')
     plan = read(campaign/'plan.json')
-    sys.path.insert(0, str(BUILD/'third-party-drunet-v001'))
-    from models.network_unet import UNetRes
     torch.backends.cuda.matmul.allow_tf32 = False
     torch.backends.cudnn.allow_tf32 = False
     arrays = np.load(output/'crops.npz')
     tags = torch.tensor([CANONICAL_TAGS], device='cuda')
     outputs, checkpoints = {}, {}
     for seed in plan['seeds']:
-        progress = read(campaign/f'seed{seed}/progress.json')
-        state_path = campaign/f'seed{seed}/resume.pt'
-        if digest(state_path) != progress['final_checkpoint_sha256'] or progress['completed_steps'] != plan['steps']:
-            raise ValueError('Final checkpoint required for seed %d' % seed)
-        mode = plan.get('input_mode', 'sigma_map')
-        core = UNetRes(in_nc=in_channels(mode), out_nc=4, nc=[32, 64, 128, 256], nb=4, act_mode='R',
-                       downsample_mode='strideconv', upsample_mode='convtranspose')
-        model = ModeCorrector(core, mode).cuda()
-        state = torch.load(state_path, map_location='cuda', weights_only=False)
-        model.load_state_dict(state['model_state'])
-        del state
-        model.eval()
-        checkpoints[str(seed)] = progress['final_checkpoint_sha256']
+        model, checkpoint_sha256, checkpoint_step, _ = load_trained_model(campaign, plan, seed, step)
+        checkpoints[str(seed)] = dict(sha256=checkpoint_sha256, step=checkpoint_step)
         with torch.inference_mode():
             for entry in crops['entries']:
                 slope = torch.tensor([r['shot_slope_dn'] for r in entry['noise_law']], device='cuda')[None, :, None, None]
@@ -428,6 +414,7 @@ if __name__ == '__main__':
     parser.add_argument('--mode', choices=('prepare', 'burst', 'network', 'bm3d', 'score'), required=True)
     parser.add_argument('--campaign', type=Path, default=BUILD/'sigma-input-training-v001')
     parser.add_argument('--scene-set', choices=('interior', 'color_sheet'), default='interior')
+    parser.add_argument('--checkpoint-step', type=int, help='network mode: a planned intermediate checkpoint instead of the final one')
     args = parser.parse_args()
     output = args.output.resolve()
     if args.mode == 'prepare':
@@ -435,7 +422,7 @@ if __name__ == '__main__':
     elif args.mode == 'burst':
         burst(output)
     elif args.mode == 'network':
-        network(output, args.campaign.resolve())
+        network(output, args.campaign.resolve(), args.checkpoint_step)
     elif args.mode == 'bm3d':
         bm3d_mode(output)
     else:

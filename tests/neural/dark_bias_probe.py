@@ -27,18 +27,15 @@ NOMINAL_BLACK = 2048.
 NATURAL_RATIOS = (.609, 1., 1., .536)
 
 
-def run(campaign, output):
+def run(campaign, output, step=None):
     import numpy as np
-    import sys
     import torch
-    from input_modes import ModeCorrector, in_channels
+    from input_modes import load_trained_model
     from physical_natural_training import CANONICAL_TAGS, NoiseModel, sigma_map
     plan, data = read(campaign/'plan.json'), read(campaign/'data.json')
     for name, expected in data['files'].items():
         if digest(campaign/name) != expected:
             raise ValueError('Campaign array changed: '+name)
-    sys.path.insert(0, str(BUILD/'third-party-drunet-v001'))
-    from models.network_unet import UNetRes
     torch.backends.cuda.matmul.allow_tf32 = False
     torch.backends.cudnn.allow_tf32 = False
     output.mkdir(exist_ok=False)
@@ -46,18 +43,10 @@ def run(campaign, output):
     tags = torch.tensor([CANONICAL_TAGS], device='cuda')
     mode = plan.get('input_mode', 'sigma_map')
     divisor = noise.divisor
-    rows = []
+    rows, checkpoints = [], {}
     for seed in plan['seeds']:
-        progress = read(campaign/f'seed{seed}/progress.json')
-        if digest(campaign/f'seed{seed}/resume.pt') != progress['final_checkpoint_sha256']:
-            raise ValueError('Checkpoint changed')
-        core = UNetRes(in_nc=in_channels(mode), out_nc=4, nc=[32, 64, 128, 256], nb=4, act_mode='R',
-                       downsample_mode='strideconv', upsample_mode='convtranspose')
-        model = ModeCorrector(core, mode).cuda()
-        state = torch.load(campaign/f'seed{seed}/resume.pt', map_location='cuda', weights_only=False)
-        model.load_state_dict(state['model_state'])
-        del state
-        model.eval()
+        model, checkpoint_sha256, checkpoint_step, _ = load_trained_model(campaign, plan, seed, step)
+        checkpoints[str(seed)] = dict(sha256=checkpoint_sha256, step=checkpoint_step)
         with torch.inference_mode():
             for iso_index, iso in enumerate(plan['training_iso']):
                 ids = torch.tensor([iso_index], device='cuda')
@@ -95,7 +84,7 @@ def run(campaign, output):
         torch.cuda.empty_cache()
     result = dict(schema_version=1, status='dark_bias_diagnosis_not_qualification',
         measured_at_utc=datetime.now(timezone.utc).isoformat(), campaign=str(campaign.resolve()),
-        plan_sha256=digest(campaign/'plan.json'), tool_sha256=digest(Path(__file__)), levels=list(LEVELS), natural_ratios=list(NATURAL_RATIOS), rows=rows,
+        plan_sha256=digest(campaign/'plan.json'), checkpoints=checkpoints, tool_sha256=digest(Path(__file__)), levels=list(LEVELS), natural_ratios=list(NATURAL_RATIOS), rows=rows,
         limits=['Held-out control crops of the same dark frames as training, not new dark captures',
                 'Flat shadows use the training simulator for the photon part; the dark part is real',
                 'Bias in native DN over the 192x192 inner cells of 256x256 crops'])
@@ -109,5 +98,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--campaign', type=Path, default=BUILD/'sigma-input-training-v001')
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--checkpoint-step', type=int, help='evaluate this planned intermediate checkpoint instead of the final one')
     args = parser.parse_args()
-    run(args.campaign.resolve(), args.output.resolve())
+    run(args.campaign.resolve(), args.output.resolve(), args.checkpoint_step)

@@ -11,6 +11,8 @@
   of the clean target, so the algebraic inverse (not the unbiased one) is the
   matching return path.
 """
+from pathlib import Path
+
 import torch
 
 from dru_cfa import DruCfaCorrector
@@ -72,6 +74,47 @@ class ModeCorrector(DruCfaCorrector):
         if not torch.isfinite(corrected).all():
             raise ValueError('Nonfinite sensor output')
         return dict(corrected=corrected, z_hat=z_hat)
+
+
+def load_trained_model(campaign, plan, seed, step=None, device='cuda'):
+    """Model of one seed of a campaign, in eval mode, with the checkpoint it came from.
+
+    step None: the final checkpoint (resume.pt), checked against the recorded
+    final digest and the planned step count. step N: the intermediate
+    checkpoint stepN.pt of the plan, checked for its step count and plan
+    digest; useful when a run stopped after it. Returns the model, the
+    checkpoint digest, its step and the development control logged at that
+    step (None if the run logged none there).
+    """
+    import sys
+    from prepare_next_training import digest, read
+    progress = read(campaign/f'seed{seed}/progress.json')
+    if step is None:
+        path = campaign/f'seed{seed}/resume.pt'
+        if progress.get('final_checkpoint_sha256') is None or digest(path) != progress['final_checkpoint_sha256'] \
+                or progress['completed_steps'] != plan['steps']:
+            raise ValueError('Completed final checkpoint required for seed %d' % seed)
+    else:
+        path = campaign/f'seed{seed}/step{step}.pt'
+        if step not in plan['checkpoint_at'] or not path.is_file():
+            raise ValueError('Planned intermediate checkpoint %d missing for seed %d' % (step, seed))
+    state = torch.load(path, map_location=device, weights_only=False)
+    expected = plan['steps'] if step is None else step
+    if state['completed_steps'] != expected or state['context']['plan_sha256'] != digest(campaign/'plan.json'):
+        raise ValueError('Checkpoint does not belong to this plan and step')
+    drunet = Path(__file__).resolve().parents[2]/'build-patch_neural_restoration'/'third-party-drunet-v001'
+    if str(drunet) not in sys.path:
+        sys.path.insert(0, str(drunet))
+    from models.network_unet import UNetRes
+    mode = plan.get('input_mode', 'sigma_map')
+    core = UNetRes(in_nc=in_channels(mode), out_nc=4, nc=[32, 64, 128, 256], nb=4, act_mode='R',
+                   downsample_mode='strideconv', upsample_mode='convtranspose')
+    model = ModeCorrector(core, mode).to(device)
+    model.load_state_dict(state['model_state'])
+    del state
+    model.eval()
+    control = next((c['rows'] for c in progress['controls'] if c['step'] == expected), None)
+    return model, digest(path), expected, control
 
 
 def mode_loss(mode, objective, output, target, sigma, a, b, sigma_floor, objective_scale):

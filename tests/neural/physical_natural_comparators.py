@@ -47,11 +47,10 @@ def score(estimate, clean, noisy):
                 mean_error_by_plane=error.reshape(4, -1).mean(axis=1).tolist())
 
 
-def export(campaign, output):
+def export(campaign, output, step=None):
     import numpy as np
     import torch
-    import sys
-    from input_modes import ModeCorrector, in_channels
+    from input_modes import load_trained_model
     from physical_natural_training import CANONICAL_TAGS, NoiseModel
     plan, data = read(campaign/'plan.json'), read(campaign/'data.json')
     for name, expected in data['files'].items():
@@ -60,8 +59,6 @@ def export(campaign, output):
     torch.backends.cuda.matmul.allow_tf32 = False
     torch.backends.cudnn.allow_tf32 = False
     torch.backends.cudnn.benchmark = False
-    sys.path.insert(0, str(BUILD/'third-party-drunet-v001'))
-    from models.network_unet import UNetRes
     development = torch.from_numpy(np.load(campaign/'development.npy', allow_pickle=False)).cuda()
     noise = NoiseModel(campaign, plan, 'cuda')
     tags = torch.tensor([CANONICAL_TAGS], device='cuda')
@@ -69,18 +66,13 @@ def export(campaign, output):
     isos = plan['training_iso']
     shape = (len(development), len(isos), 4, plan['packed_side'], plan['packed_side'])
     noisy_all, sigma_all = np.zeros(shape, np.float32), np.zeros(shape, np.float32)
-    outputs, reproduction = {}, []
+    outputs, reproduction, checkpoints = {}, [], {}
     for seed in plan['seeds']:
-        state = torch.load(campaign/f'seed{seed}/resume.pt', map_location='cuda', weights_only=False)
-        if state['completed_steps'] != plan['steps']:
-            raise ValueError('Final checkpoint required')
-        mode = plan.get('input_mode', 'sigma_map')
-        core = UNetRes(in_nc=in_channels(mode), out_nc=4, nc=[32, 64, 128, 256], nb=4, act_mode='R',
-                      downsample_mode='strideconv', upsample_mode='convtranspose')
-        model = ModeCorrector(core, mode).cuda()
-        model.load_state_dict(state['model_state'])
-        model.eval()
-        logged = {(r['target_index'], r['iso']): r for r in read(campaign/f'seed{seed}/progress.json')['controls'][-1]['rows']}
+        model, checkpoint_sha256, checkpoint_step, control = load_trained_model(campaign, plan, seed, step)
+        if control is None:
+            raise ValueError('No development control logged at the evaluated step')
+        checkpoints[str(seed)] = dict(sha256=checkpoint_sha256, step=checkpoint_step)
+        logged = {(r['target_index'], r['iso']): r for r in control}
         result = np.zeros(shape, np.float32)
         with torch.inference_mode():
             for index, target in enumerate(development):
@@ -105,7 +97,7 @@ def export(campaign, output):
     np.savez(output/'arrays.npz', clean=development.cpu().numpy(), noisy=noisy_all, sigma=sigma_all, laws=laws, **outputs)
     write(output/'export.json', dict(status='exported_development_realisations', campaign=str(campaign),
         plan_sha256=digest(campaign/'plan.json'), isos=isos, seeds=plan['seeds'],
-        reproduction_max_relative_mse_error=max(reproduction), arrays_sha256=digest(output/'arrays.npz'),
+        checkpoints=checkpoints, reproduction_max_relative_mse_error=max(reproduction), arrays_sha256=digest(output/'arrays.npz'),
         tool_sha256=digest(Path(__file__))))
 
 
@@ -173,8 +165,9 @@ if __name__ == '__main__':
     parser.add_argument('--campaign', type=Path, default=BUILD/'physical-natural-training-v002')
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--mode', choices=('export', 'bm3d'), required=True)
+    parser.add_argument('--checkpoint-step', type=int, help='evaluate this planned intermediate checkpoint instead of the final one')
     args = parser.parse_args()
     if args.mode == 'export':
-        export(args.campaign.resolve(), args.output.resolve())
+        export(args.campaign.resolve(), args.output.resolve(), args.checkpoint_step)
     else:
         compare(args.output.resolve())
