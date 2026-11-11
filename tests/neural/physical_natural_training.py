@@ -34,7 +34,7 @@ TILE = 512
 CANONICAL_TAGS = (0, 1, 3, 2)
 CONTENT_ROOTS = (Path(r'C:\Users\victo\Pictures\RAW'), ROOT.parent.parent/'tests'/'image', Path('D:/DCIM'))
 # Development sources were shot on 5 and 12 August; 1 November bursts and 16 October charts stay out of training.
-EXCLUDED_DAYS = ('2026:08:05', '2026:08:12', '2026:11:01', '2026:10:16', '2026:11:08', '2026:11:10')
+EXCLUDED_DAYS = ('2026:08:05', '2026:08:12', '2026:11:01', '2026:10:16', '2026:11:08', '2026:11:10', '2026:11:11')
 
 
 def grid_origins(height, width, tile=TILE, margin=32):
