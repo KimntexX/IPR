@@ -119,7 +119,8 @@ def prepare_long(output, name, steps, seeds, hours, color_augmentation=None):
             raise ValueError('Parent array changed: '+filename)
     from input_modes import in_channels
     _, mode, objective = next(a for a in ARMS if a[0] == name)
-    if objective != 'unweighted L1':
+    from physical_training_objective import UNIT_SCALE_OBJECTIVES
+    if objective not in UNIT_SCALE_OBJECTIVES:
         raise ValueError('Long campaigns are prepared for unit-scale objectives only')
     if steps < 8000 or not seeds or len(set(seeds)) != len(seeds):
         raise ValueError('At least 8000 steps and distinct seeds required')

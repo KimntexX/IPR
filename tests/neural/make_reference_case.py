@@ -64,7 +64,7 @@ def run(campaign, step, evaluation, output):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--campaign', type=Path, default=BUILD/'sigma-input-color-training-v001')
-    parser.add_argument('--checkpoint-step', type=int, default=75000)
+    parser.add_argument('--checkpoint-step', type=int, help='a planned intermediate checkpoint; the final one when omitted')
     parser.add_argument('--evaluation', type=Path, default=BUILD/'climbing-gym-evaluation-v001')
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()

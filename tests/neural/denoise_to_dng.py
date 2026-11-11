@@ -213,7 +213,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('inputs', type=Path, nargs='+', help='CR3 files of the Canon EOS R6 Mark III')
     parser.add_argument('--campaign', type=Path, default=BUILD/'sigma-input-color-training-v001')
-    parser.add_argument('--checkpoint-step', type=int, default=75000)
+    parser.add_argument('--checkpoint-step', type=int, help='a planned intermediate checkpoint; the final one when omitted')
     parser.add_argument('--output', type=Path, default=BUILD/'dng-trials')
     parser.add_argument('--strength', type=float, default=1.)
     parser.add_argument('--noisy', action='store_true', help='also write the untouched mosaic through the same DNG writer')
