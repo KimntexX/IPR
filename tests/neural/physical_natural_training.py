@@ -409,7 +409,9 @@ def train(output, seed, guard):
         parent_progress=Path(continuation['progress'])
         if digest(parent_progress)!=continuation['progress_sha256']:
             raise ValueError('Continuation parent progress changed')
-        parent_controls=read(parent_progress)['controls'][-1]['rows']
+        # A parent stopped between two controls has no control at its checkpoint to reproduce.
+        last_control=read(parent_progress)['controls'][-1]
+        parent_controls=last_control['rows'] if last_control['step']==continuation['completed_steps'] else None
         base_steps=continuation['completed_steps']
         del state
     deadline = datetime.fromisoformat(read(output/'launch.json')['deadline_utc']).timestamp()
@@ -420,6 +422,10 @@ def train(output, seed, guard):
         plan_sha256=context['plan_sha256'], initial_model_fingerprint=fingerprint(model.state_dict()),
         losses=[], update_seconds=[], controls=[], completed_steps=0)
     result.update(objective=plan['objective'],base_completed_steps=base_steps,total_completed_steps=base_steps)
+    # A resumed run continues its parent's cosine: same total length, starting at the parent's step.
+    resumed=continuation is not None and continuation.get('continue_schedule',False)
+    schedule_offset=base_steps if resumed else 0
+    schedule_steps=base_steps+plan['steps'] if resumed else plan['steps']
     completed = 0
     input_trace=hashlib.sha256()
     load = YieldController(dict(yield_memory_fraction=.85, yield_external_cpu_fraction=.80, pressure_seconds=15))
@@ -481,7 +487,7 @@ def train(output, seed, guard):
             started = time.perf_counter()
             for group in optimizer.param_groups:
                 group['lr'] = plan['minimum_learning_rate']+.5*(plan['learning_rate']-plan['minimum_learning_rate'])*(
-                    1+math.cos(math.pi*(step-1)/plan['steps']))
+                    1+math.cos(math.pi*(schedule_offset+step-1)/schedule_steps))
             ids = torch.randint(len(training), (plan['batch'],), device='cuda', generator=rng)
             iso_ids = torch.randint(len(plan['training_iso']), (plan['batch'],), device='cuda', generator=rng)
             choices = torch.randint(1 << 30, (plan['batch'],), device='cuda', generator=rng).tolist()

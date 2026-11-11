@@ -7,8 +7,10 @@ from memory_budget import snapshot
 
 
 def cpu_fractions(previous,current):
+    """None when the counters did not advance monotonically: Windows can return such a pair
+    (seen once after 7.6 h of training); one unreadable interval is no evidence of host load."""
     total=current['total']-previous['total'];idle=current['idle']-previous['idle'];own=current['process']-previous['process']
-    if total<=0 or min(idle,own)<0:raise ValueError('Monotonic CPU counters required')
+    if total<=0 or min(idle,own)<0:return None
     busy=max(0.,min(1.,1-idle/total));process=max(0.,min(1.,own/total))
     return dict(total_cpu_fraction=busy,process_cpu_fraction=process,external_cpu_fraction=max(0.,busy-process))
 
