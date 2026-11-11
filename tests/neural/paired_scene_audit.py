@@ -1,12 +1,15 @@
-"""Audit of the multicoloured sheet series of 10 November before it is used for evaluation.
+"""Audit of a paired real-noise scene series before it is used for evaluation.
 
-For every burst (one ISO and one shutter time): split-half stability against
-the burst's own temporal noise, light drift inside the burst, integer packed
-shift and per-plane gain against the mean of the brightest ISO100 burst, and
-the ratio of that gain to the nominal exposure ratio (ISO x time), which
-tracks the light over the 23 minutes of capture. Also the share of sites at
-or above white. Read only on the card; the ISO100 reference means are cached
-in the build folder for the later evaluation.
+Scenes: the multicoloured sheet of 10 November (ISO100 bursts before only)
+and the climbing gym of 11 November (ISO100 bursts before and after). For
+every burst (one ISO and one shutter time): split-half stability against the
+burst's own temporal noise, light drift inside the burst, integer packed
+shift and per-plane gain against the mean of the first, brightest ISO100
+burst, and the ratio of that gain to the nominal exposure ratio (ISO x time),
+which tracks the light over the capture. Final ISO100 bursts, when present,
+check the scene and the light directly. Also the share of sites at or above
+white. Read only; the reference means are cached in the build folder for the
+later evaluation.
 """
 import argparse
 from datetime import datetime, timezone
@@ -18,8 +21,23 @@ from real_noise_bench import CARD, burst_statistics, files, gain_offset, phase_s
 
 
 ROOT = Path(__file__).resolve().parents[2]
+BUILD = ROOT/'build-patch_neural_restoration'
+PROTOCOL = ROOT.parent.parent/'tests'/'image'/'colorimétrie'/'protocole'
+
+
+def locate_series(first_file, card=Path('D:/DCIM')):
+    """Folder holding a series, found by its first file: the camera reuses folder names (100EOSR6, 101EOSR6),
+    so the protocol folders are searched first, then the card; the first match wins."""
+    for root in (PROTOCOL, card):
+        if root.is_dir():
+            for folder in sorted(p for p in root.iterdir() if p.is_dir()):
+                if (folder/first_file).is_file():
+                    return folder
+    raise FileNotFoundError(f'{first_file} found neither in {PROTOCOL} nor on the card')
+
+
 # (ISO, shutter seconds, first, last) as listed by the card metadata.
-BURSTS = ((100, .25, 588, 591), (100, .125, 592, 595), (100, 1/15, 596, 599), (100, 1/30, 600, 603),
+SHEET_BURSTS = ((100, .25, 588, 591), (100, .125, 592, 595), (100, 1/15, 596, 599), (100, 1/30, 600, 603),
           (1600, 1/80, 604, 607), (1600, 1/160, 608, 611), (1600, 1/320, 612, 615), (1600, 1/640, 616, 619),
           (3200, 1/160, 620, 623), (3200, 1/320, 624, 627), (3200, 1/640, 628, 632), (3200, 1/1250, 633, 637),
           (6400, 1/320, 638, 642), (6400, 1/640, 643, 647), (6400, 1/1250, 648, 652), (6400, 1/2500, 653, 658),
@@ -27,16 +45,33 @@ BURSTS = ((100, .25, 588, 591), (100, .125, 592, 595), (100, 1/15, 596, 599), (1
           (16000, 1/1000, 682, 685), (16000, 1/2000, 686, 689), (16000, 1/4000, 690, 693), (16000, 1/8000, 694, 697),
           (25600, 1/1600, 698, 701), (25600, 1/3200, 702, 706), (25600, 1/5000, 707, 710), (25600, 1/8000, 711, 715),
           (51200, 1/1600, 716, 719), (51200, 1/3200, 720, 723), (51200, 1/5000, 724, 728), (51200, 1/8000, 729, 734))
+GYM_BURSTS = ((100, .25, 758, 762), (100, .125, 763, 767), (100, 1/15, 768, 772), (100, 1/30, 773, 777),
+              (1600, 1/60, 778, 782), (1600, 1/125, 783, 788), (1600, 1/250, 789, 793), (1600, 1/500, 794, 800),
+              (3200, 1/100, 801, 805), (3200, 1/200, 806, 810), (3200, 1/400, 811, 816), (3200, 1/800, 817, 821),
+              (6400, 1/200, 822, 826), (6400, 1/400, 827, 831), (6400, 1/800, 832, 836), (6400, 1/1250, 837, 841),
+              (12800, 1/500, 842, 846), (12800, 1/1000, 847, 851), (12800, 1/2000, 852, 857), (12800, 1/4000, 858, 863),
+              (16000, 1/640, 864, 867), (16000, 1/1250, 868, 875), (16000, 1/2500, 876, 881),
+              (25600, 1/800, 882, 887), (25600, 1/1600, 888, 893), (25600, 1/3200, 894, 899), (25600, 1/6400, 900, 905),
+              (51200, 1/1000, 906, 911), (51200, 1/2000, 912, 917), (51200, 1/4000, 918, 924), (51200, 1/8000, 925, 931),
+              (100, .25, 932, 936), (100, .125, 937, 942), (100, 1/15, 943, 950), (100, 1/30, 951, 957))
+SCENES = {'color_sheet': dict(folder=CARD, audit=BUILD/'color-sheet-audit-v001', bursts=SHEET_BURSTS),
+          'climbing_gym': dict(folder=None, first_file='6V1A0758.CR3', audit=BUILD/'climbing-gym-audit-v001', bursts=GYM_BURSTS)}
 
 
-def run(output):
+def scene_folder(scene):
+    table = SCENES[scene]
+    return table['folder'] if table['folder'] is not None else locate_series(table['first_file'])
+
+
+def run(scene, output):
     import numpy as np
     import rawpy
     output.mkdir(exist_ok=False)
     reference, reference_exposure = None, None
     rows = []
-    for iso, shutter, first, last in BURSTS:
-        paths = files(first, last, CARD)
+    folder = scene_folder(scene)
+    for iso, shutter, first, last in SCENES[scene]['bursts']:
+        paths = files(first, last, folder)
         missing = [p.name for p in paths if not p.exists()]
         if missing:
             raise FileNotFoundError(f'ISO {iso} {shutter:g} s: missing {missing}')
@@ -67,10 +102,10 @@ def run(output):
                        nominal_exposure_ratio=nominal, gain_over_nominal=[g['gain']/nominal for g in fitted])
         rows.append(row)
         write(output/'progress.json', dict(status='running', rows=rows))
-    result = dict(schema_version=1, status='audit_of_colour_sheet_series', measured_at_utc=datetime.now(timezone.utc).isoformat(),
-        rows=rows, tool_sha256=digest(Path(__file__)),
+    result = dict(schema_version=2, status='audit_of_paired_scene_series', scene=scene, folder=str(folder),
+        measured_at_utc=datetime.now(timezone.utc).isoformat(), rows=rows, tool_sha256=digest(Path(__file__)),
         limits=['Card files read in place; capture order and tripod/phone release as stated by the user',
-                'No ISO100 burst after the high-ISO bursts: light stability is inferred from gain over nominal exposure',
+                'Without ISO100 bursts after the high-ISO bursts, light stability is only inferred from gain over nominal exposure',
                 'ISO100 and high ISO use different black and white normalizations; gain_over_nominal compares bursts, not absolute levels'])
     write(output/'result.json', result)
     stamp = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')
@@ -80,5 +115,7 @@ def run(output):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--scene', choices=sorted(SCENES), required=True)
     parser.add_argument('--output', type=Path, required=True)
-    run(parser.parse_args().output.resolve())
+    args = parser.parse_args()
+    run(args.scene, args.output.resolve())

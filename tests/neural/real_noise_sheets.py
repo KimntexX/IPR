@@ -40,7 +40,7 @@ def run(evaluation, output):
         key = entry['key']
         frame = arrays[key+'-noisy'][1].astype(np.float64)
         others = (bursts[key+'-sum']-frame)/(burst_meta['counts'][key]-1)
-        with rawpy.imread(str(CARD/entry['files'][1])) as raw:
+        with rawpy.imread(str(Path(entry.get('folder', CARD))/entry['files'][1])) as raw:
             wb = np.asarray(raw.camera_whitebalance[:3], dtype=np.float64)
         wb = wb/wb[1]
         h, w = frame.shape[-2:]

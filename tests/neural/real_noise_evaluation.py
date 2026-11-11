@@ -1,8 +1,9 @@
 """Real-noise evaluation of the denoisers on paired real scenes.
 
 Scene sets: the interior scenes of 1 November (references cached by
-real_noise_bench.py) and the multicoloured sheet of 10 November (reference
-cached by color_sheet_audit.py, four exposures per ISO).
+real_noise_bench.py), the multicoloured sheet of 10 November and the climbing
+gym of 11 November (references cached by paired_scene_audit.py, four
+exposures per ISO).
 Reference: the cached ISO100 burst mean of each scene.
 For a few frames of each high-ISO burst, a central packed crop is aligned on the
 reference by an integer packed-cell shift (Bayer phase kept, no resampling),
@@ -41,7 +42,6 @@ from real_noise_bench import CARD
 ROOT = Path(__file__).resolve().parents[2]
 BUILD = ROOT/'build-patch_neural_restoration'
 BENCH = BUILD/'real-noise-bench-v001'
-COLOR_AUDIT = BUILD/'color-sheet-audit-v001'
 BANK = ROOT/'docs/validation/raw/neural-sensor-noise-v001-20261105T173608Z.json'
 DIVISOR = 12303.
 NOMINAL_BLACK = 2048.
@@ -54,22 +54,31 @@ TRAINED_ISO = (3200, 6400, 16000, 51200)
 
 def scene_sets():
     """Per set: frames evaluated per burst and bursts (scene, ISO, first, last, tag); the leaves scene has no stable reference."""
-    from color_sheet_audit import BURSTS as SHEET
+    from paired_scene_audit import SCENES
     interior = (('interior_night', 1600, 310, 319, ''), ('interior_night', 3200, 328, 339, ''),
                 ('interior_night', 6400, 340, 351, ''), ('interior_night', 12800, 352, 366, ''),
                 ('interior_day', 3200, 152, 180, ''), ('interior_day', 12800, 181, 194, ''), ('interior_day', 51200, 195, 209, ''))
-    sheet = tuple(('color_sheet', iso, first, last, f'1-{round(1/shutter)}') for iso, shutter, first, last in SHEET if iso > 100)
-    return {'interior': dict(frames_per_burst=3, bursts=interior), 'color_sheet': dict(frames_per_burst=2, bursts=sheet)}
+    sets = {'interior': dict(frames_per_burst=3, bursts=interior)}
+    for scene, table in SCENES.items():
+        sets[scene] = dict(frames_per_burst=2, bursts=tuple((scene, iso, first, last, f'1-{round(1/shutter)}')
+                                                            for iso, shutter, first, last in table['bursts'] if iso > 100))
+    return sets
+
+
+def scene_folder(scene):
+    from paired_scene_audit import SCENES, scene_folder as audited_folder
+    return audited_folder(scene) if scene in SCENES else CARD
 
 
 def load_reference(scene):
     """ISO100 mean of the scene, checked against the audit that cached it, with its frame count and temporal sigma."""
     import numpy as np
-    if scene == 'color_sheet':
-        audit = read(COLOR_AUDIT/'result.json')
-        row = audit['rows'][0]
-        path, expected = COLOR_AUDIT/'iso100-brightest-mean.npy', row['reference_mean_sha256']
-        frames, sigma, audit_path = row['frames'], row['temporal_sigma_by_plane'], COLOR_AUDIT/'result.json'
+    from paired_scene_audit import SCENES
+    if scene in SCENES:
+        audit_dir = SCENES[scene]['audit']
+        row = read(audit_dir/'result.json')['rows'][0]
+        path, expected = audit_dir/'iso100-brightest-mean.npy', row['reference_mean_sha256']
+        frames, sigma, audit_path = row['frames'], row['temporal_sigma_by_plane'], audit_dir/'result.json'
     else:
         bench = read(BENCH/'result.json')
         burst = bench['scenes'][scene]['bursts']['100']
@@ -81,8 +90,9 @@ def load_reference(scene):
 
 
 def audited_shift(scene, iso, first):
-    if scene == 'color_sheet':
-        rows = read(COLOR_AUDIT/'result.json')['rows']
+    from paired_scene_audit import SCENES
+    if scene in SCENES:
+        rows = read(SCENES[scene]['audit']/'result.json')['rows']
         return next(r.get('shift_packed_cells') for r in rows if r['first'] == f'6V1A{first:04d}.CR3')
     return read(BENCH/'result.json')['scenes'][scene]['bursts'][str(iso)].get('shift_packed_cells')
 
@@ -129,10 +139,10 @@ def optical_black(raw):
     return [float(masked[y::2, x::2].mean()) for y, x in ((0, 0), (0, 1), (1, 0), (1, 1))]
 
 
-def select_frames(first, last, count):
+def select_frames(first, last, count, folder=CARD):
     numbers = list(range(first, last+1))
     picks = sorted({numbers[0], numbers[len(numbers)//2], numbers[-1]})[:count]
-    return [CARD/f'6V1A{n:04d}.CR3' for n in picks]
+    return [folder/f'6V1A{n:04d}.CR3' for n in picks]
 
 
 def crop_window(shape, shift):
@@ -193,7 +203,7 @@ def prepare(output, scene_set):
     for scene, iso, first, last, tag in chosen['bursts']:
         law, provenance = noise_law(bank, iso)
         reference, reference_frames, reference_sigma, audit_path = references[scene]
-        paths = select_frames(first, last, chosen['frames_per_burst'])
+        paths = select_frames(first, last, chosen['frames_per_burst'], scene_folder(scene))
         black, black_provenance = dark_black(iso)
         frames, optical, clipped = [], [], None
         for path in paths:
@@ -220,7 +230,7 @@ def prepare(output, scene_set):
         arrays[key+'-valid'] = valid
         arrays[key+'-noisy'] = np.stack([f[:, mov_crop[0], mov_crop[1]] for f in frames]).astype(np.float32)
         audited = audited_shift(scene, iso, first)
-        entries.append(dict(key=key, scene=scene, iso=iso, tag=tag, burst_first=first, burst_last=last,
+        entries.append(dict(key=key, scene=scene, iso=iso, tag=tag, burst_first=first, burst_last=last, folder=str(scene_folder(scene)),
             plane_shape=[h, w], files=[p.name for p in paths],
             file_sha256=[digest(p) for p in paths], black_by_plane=black, black_provenance=black_provenance,
             optical_black_by_frame=optical, shift_packed_cells=shift,
@@ -248,7 +258,7 @@ def burst(output):
         _, mov_crop = crop_window(entry['plane_shape'], entry['shift_packed_cells'])
         total, count = None, 0
         for number in range(entry['burst_first'], entry['burst_last']+1):
-            with rawpy.imread(str(CARD/f'6V1A{number:04d}.CR3')) as raw:
+            with rawpy.imread(str(Path(entry.get('folder', CARD))/f'6V1A{number:04d}.CR3')) as raw:
                 mosaic = raw.raw_image_visible.astype(np.float32)
             mosaic = mosaic[:mosaic.shape[0]//2*2, :mosaic.shape[1]//2*2]
             planes = np.stack([(mosaic[y::2, x::2][mov_crop]-black[i])/DIVISOR
@@ -413,7 +423,7 @@ if __name__ == '__main__':
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--mode', choices=('prepare', 'burst', 'network', 'bm3d', 'score'), required=True)
     parser.add_argument('--campaign', type=Path, default=BUILD/'sigma-input-training-v001')
-    parser.add_argument('--scene-set', choices=('interior', 'color_sheet'), default='interior')
+    parser.add_argument('--scene-set', choices=('interior', 'color_sheet', 'climbing_gym'), default='interior')
     parser.add_argument('--checkpoint-step', type=int, help='network mode: a planned intermediate checkpoint instead of the final one')
     args = parser.parse_args()
     output = args.output.resolve()
