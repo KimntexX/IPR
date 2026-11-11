@@ -9,6 +9,7 @@
 #include <QJsonObject>
 #include <QRegularExpression>
 
+#include <algorithm>
 #include <cmath>
 
 namespace NeuralCfa {
@@ -110,8 +111,22 @@ Service::Service(std::shared_ptr<ipr::neural::NeuralRawDenoiser> denoiser, Model
 
 Service::~Service() = default;
 
+bool Service::available(const QString &make, const QString &model, double iso, QString *reason) const
+{
+    QString why;
+    if (NoiseLaw::resolve(m_catalog, make, model, int(std::lround(iso)), &why))
+        return true;
+    // A camera of the catalogue answers for some ISO: the photo's ISO is outside its laws.
+    const bool knownCamera = NoiseLaw::resolve(m_catalog, make, model, 6400, nullptr).has_value()
+        || NoiseLaw::resolve(m_catalog, make, model, 3200, nullptr).has_value();
+    fail(reason, knownCamera ? QStringLiteral("Débruitage IA indisponible à ISO %1 pour ce boîtier.").arg(int(std::lround(iso)))
+                             : QStringLiteral("Débruitage IA indisponible pour ce boîtier."));
+    return false;
+}
+
 RawDevelopment::CfaStage Service::stageFor(const RawInput::Input &input, float strength,
-                                           std::function<bool()> cancelled, QString *reason) const
+                                           std::function<bool()> cancelled, QString *reason,
+                                           std::function<void(bool applied, const QString &why)> report) const
 {
     if (!std::isfinite(strength) || strength <= 0.f || strength > 1.f) {
         fail(reason, QStringLiteral("neural strength outside (0, 1]"));
@@ -121,6 +136,7 @@ RawDevelopment::CfaStage Service::stageFor(const RawInput::Input &input, float s
     settings.catalog = &m_catalog;
     settings.measuredPattern = m_manifest.measuredPattern;
     settings.networkDivisor = m_manifest.inputDivisor;
+    settings.report = std::move(report);
     const std::shared_ptr<ipr::neural::NeuralRawDenoiser> denoiser = m_denoiser;
     settings.denoiser = [denoiser, strength, cancelled](const CfaNoiseStage::Planes &planes,
                                                         const CfaNoiseStage::NormalizedLaw &law, QString *error) {

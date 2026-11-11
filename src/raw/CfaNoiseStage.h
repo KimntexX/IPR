@@ -58,6 +58,9 @@ struct Settings
     Pattern measuredPattern{};   // the 2x2 cell of the catalogue's camera
     double networkDivisor = 0.0; // counts per network unit, from the model's training normalization
     PlaneDenoiser denoiser;
+    // Called once per run of the stage: true when the network's planes replaced the mosaic,
+    // false with the reason when the photo was left as decoded. Optional.
+    std::function<void(bool applied, const QString &reason)> report;
 };
 
 // The stage for one RAW: empty, with a reason, when the camera or its ISO has no

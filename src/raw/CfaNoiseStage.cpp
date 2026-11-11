@@ -128,19 +128,24 @@ RawDevelopment::CfaStage makeStage(const RawInput::Input &input, const Settings 
     const PlaneDenoiser denoiser = settings.denoiser;
     const NormalizedLaw networkLaw = *normalized;
     const QString provenance = law->provenance;
-    return [denoiser, networkLaw, divisor, provenance](ipr::Image &mosaic, const Pattern &pattern, QString *) {
-        const auto planes = pack(mosaic, pattern, divisor);
-        if (!planes) {
-            qWarning().noquote() << "IPR neural CFA | mosaic not packable, left undenoised";
+    const auto report = settings.report;
+    return [denoiser, networkLaw, divisor, provenance, report](ipr::Image &mosaic, const Pattern &pattern, QString *) {
+        const auto leftAsDecoded = [&report](const QString &why) {
+            qWarning().noquote() << "IPR neural CFA | left undenoised:" << why;
+            if (report)
+                report(false, why);
             return true;
-        }
+        };
+        const auto planes = pack(mosaic, pattern, divisor);
+        if (!planes)
+            return leftAsDecoded(QStringLiteral("mosaic not packable"));
         QString error;
         const auto denoised = denoiser(*planes, networkLaw, &error);
-        if (!denoised || !unpack(*denoised, mosaic, pattern, divisor)) {
-            qWarning().noquote() << "IPR neural CFA | left undenoised:" << (error.isEmpty() ? QStringLiteral("shape mismatch") : error);
-            return true;
-        }
+        if (!denoised || !unpack(*denoised, mosaic, pattern, divisor))
+            return leftAsDecoded(error.isEmpty() ? QStringLiteral("shape mismatch") : error);
         qInfo().noquote() << "IPR neural CFA | denoised with" << provenance;
+        if (report)
+            report(true, QString());
         return true;
     };
 }

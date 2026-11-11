@@ -177,6 +177,8 @@ void stageFactory()
             value += 0.01f;
         return std::optional<CfaNoiseStage::Planes>(out);
     };
+    int appliedReports = 0, refusedReports = 0;
+    settings.report = [&](bool applied, const QString &) { applied ? ++appliedReports : ++refusedReports; };
     const RawDevelopment::CfaStage stage = CfaNoiseStage::makeStage(input, settings, &reason);
     check(bool(stage), "a measured camera and ISO give a stage");
     if (stage) {
@@ -185,6 +187,7 @@ void stageFactory()
             for (int x = 0; x < 8; ++x)
                 at<float>(mosaic, y, x) = 100.f;
         check(stage(mosaic, input.pattern, &reason), "the stage succeeds");
+        check(appliedReports == 1 && refusedReports == 0, "an applied network is reported once");
         check(std::abs(at<float>(mosaic, 3, 5) - 110.f) < 1e-3f, "the denoiser's planes come back in counts");
         check(std::abs(received.a[1] - 0.007f) < 1e-7f && std::abs(received.b[3] - 0.00018f) < 1e-9f,
               "the denoiser receives the law normalized by the network divisor");
@@ -206,6 +209,7 @@ void stageFactory()
             at<float>(mosaic, y, x) = 100.f;
     check(failing && failing(mosaic, input.pattern, &reason) && at<float>(mosaic, 2, 2) == 100.f,
           "a failing denoiser leaves the mosaic as decoded and lets the photo open");
+    check(refusedReports == 1, "a photo left as decoded is reported as not denoised");
     settings.networkDivisor = 0.0;
     check(!CfaNoiseStage::makeStage(input, settings, &reason), "an incomplete configuration gives no stage");
 }

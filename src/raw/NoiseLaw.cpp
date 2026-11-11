@@ -135,9 +135,13 @@ std::optional<Catalog> loadCatalog(const QString &path, QString *reason)
 std::optional<Law> resolve(const Catalog &catalog, const QString &make, const QString &model,
                            int iso, QString *reason)
 {
+    // EXIF often repeats the make in the model ("Canon EOS R6 Mark III"); LibRaw does not.
+    QString bareModel = model.trimmed();
+    if (bareModel.startsWith(make.trimmed() + QLatin1Char(' '), Qt::CaseInsensitive))
+        bareModel = bareModel.mid(make.trimmed().size() + 1).trimmed();
     const auto camera = std::find_if(catalog.cameras.begin(), catalog.cameras.end(), [&](const CatalogCamera &entry) {
         return entry.make.compare(make.trimmed(), Qt::CaseInsensitive) == 0
-            && entry.model.compare(model.trimmed(), Qt::CaseInsensitive) == 0;
+            && entry.model.compare(bareModel, Qt::CaseInsensitive) == 0;
     });
     if (camera == catalog.cameras.end()) {
         fail(reason, QStringLiteral("no measured noise law for %1 %2").arg(make, model));

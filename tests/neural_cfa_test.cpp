@@ -91,6 +91,12 @@ void realModel(const QString &modelPath, const QString &manifestPath)
     if (!service)
         return;
     check(!service->stageFor(r6Input(80000), 1.f, {}, &reason), "an ISO above the measured laws gives no stage");
+    check(service->available(QStringLiteral("Canon"), QStringLiteral("Canon EOS R6 Mark III"), 6400, &reason),
+          "an R6 III at ISO 6400 can get the network");
+    check(!service->available(QStringLiteral("Canon"), QStringLiteral("Canon EOS 60D"), 1600, &reason)
+              && reason.contains(QStringLiteral("boîtier")), "a 60D is refused with a camera reason");
+    check(!service->available(QStringLiteral("Canon"), QStringLiteral("EOS R6 Mark III"), 102400, &reason)
+              && reason.contains(QStringLiteral("ISO 102400")), "an ISO outside the laws is refused with an ISO reason");
     check(!service->stageFor(r6Input(6400), 0.f, {}, &reason), "a zero strength gives no stage");
     const RawDevelopment::CfaStage stage = service->stageFor(r6Input(6400), 1.f, {}, &reason);
     check(bool(stage), "an R6 III at ISO 6400 gets a stage");

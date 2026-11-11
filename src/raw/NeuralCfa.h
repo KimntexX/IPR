@@ -45,8 +45,13 @@ public:
 
     // The stage for one RAW at a strength in (0, 1]; empty with a reason when the camera
     // or its ISO has no measured law. The stage keeps the session alive while it exists.
+    // `report` (optional) learns, once per run, whether the network was applied.
     RawDevelopment::CfaStage stageFor(const RawInput::Input &input, float strength,
-                                      std::function<bool()> cancelled, QString *reason) const;
+                                      std::function<bool()> cancelled, QString *reason,
+                                      std::function<void(bool applied, const QString &why)> report = {}) const;
+    // Whether a photo can get the network, from its metadata alone (before any decoding):
+    // false with a user-facing reason for an unsupported camera or an ISO outside the laws.
+    bool available(const QString &make, const QString &model, double iso, QString *reason) const;
     // DirectML, CPU or Unavailable, after the first denoising.
     QString engine() const;
 

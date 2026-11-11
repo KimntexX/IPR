@@ -57,6 +57,8 @@ void measuredInterpolatedAndRefused()
 
     check(!NoiseLaw::resolve(*catalog, QStringLiteral("Canon"), QStringLiteral("EOS 60D"), 6400, &reason),
           "an unknown camera is refused");
+    check(NoiseLaw::resolve(*catalog, QStringLiteral("Canon"), QStringLiteral("Canon EOS R6 Mark III"), 6400, &reason).has_value(),
+          "an EXIF model repeating the make is recognised");
     check(!NoiseLaw::resolve(*catalog, QStringLiteral("Canon"), QStringLiteral("EOS R6 Mark III"), 3200, &reason),
           "an ISO below the measured range is refused");
     check(!NoiseLaw::resolve(*catalog, QStringLiteral("Canon"), QStringLiteral("EOS R6 Mark III"), 102400, &reason),
