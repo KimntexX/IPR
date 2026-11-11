@@ -56,6 +56,9 @@ struct Capture
     const Context &context;
 };
 
+// The CFA denoising stage: rewrites the signed, black-subtracted mosaic (counts) in place.
+using CfaStage = std::function<bool(ipr::Image &mosaic, const std::array<std::array<int, 2>, 2> &pattern, QString *error)>;
+
 struct Options
 {
     // LibRaw lowers the white to the data maximum when it lies above this share of
@@ -69,7 +72,7 @@ struct Options
     // white balance, with the 2x2 colour pattern. It rewrites the mosaic in place;
     // false fails the development with its message (a stage that cannot run keeps the
     // mosaic and returns true). Runs on the developing thread.
-    std::function<bool(ipr::Image &mosaic, const std::array<std::array<int, 2>, 2> &pattern, QString *error)> cfaStage;
+    CfaStage cfaStage;
     // The comparison bench's observer: called once per stage, after it, on the
     // developing thread; an exception fails the development. Empty in the app.
     std::function<void(const Capture &)> observer;

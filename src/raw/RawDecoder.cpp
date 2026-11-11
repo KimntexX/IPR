@@ -688,6 +688,7 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
                 development.adjustWhiteThreshold = calibration ? 0.0 : double(raw.imgdata.params.adjust_maximum_thr);
                 development.median = Demosaic::OpeningMedian;
                 development.cancelled = options.cancellationRequested;
+                if (options.cfaStageFactory) development.cfaStage = options.cfaStageFactory(input);
                 if (options.signedDevelopment) development.policy = RawDevelopment::Policy::Signed;
                 RawDevelopment::Result developed;
                 try {
