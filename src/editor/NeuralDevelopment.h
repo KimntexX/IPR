@@ -7,11 +7,17 @@
 
 // Adapter only: service/session lifetime, recipe identity and decode cancellation.
 namespace NeuralDevelopment {
+struct Report {
+    bool called = false;
+    bool applied = false;
+    QString reason;
+};
 struct Factory {
     std::shared_ptr<NeuralCfa::Service> service;
     float strength = 0;
     QString error;
     std::function<bool()> cancelled;
+    std::shared_ptr<Report> report;
     RawDevelopment::CfaStage operator()(const RawInput::Input &input) const;
 };
 std::shared_ptr<NeuralCfa::Service> create(const QString &overridePath,

@@ -93,6 +93,8 @@ int main(int argc, char **argv)
         if (!check(restored.neuralStrength == 75 && restored.neuralModelId == neural.neuralModelId,
                    "neural recipe round trip")) return 1;
         RecipeCodec::decodeRaw(QCborMap{}, restored);
+        if (!check(!RecipeCodec::encodeRaw(restored).contains(QStringLiteral("neuralStrength")),
+                   "inactive recipe contains no neural strength")) return 1;
         if (!check(restored.neuralStrength == 0 && restored.neuralModelId.isEmpty(),
                    "old recipes disable neural processing even when reusing an object")) return 1;
         auto corrupt = encoded;

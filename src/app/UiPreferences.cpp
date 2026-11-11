@@ -14,7 +14,6 @@
 
 namespace {
 const QMap<QString, QPair<int, int>> integerRanges{
-    {"neural/strength", {0, 100}},
     {"window/normalWidth", {1000, 8192}}, {"window/normalHeight", {650, 8192}},
     {"window/normalX", {-200000, 200000}}, {"window/normalY", {-200000, 200000}},
     {"layout/settingsWidth", {260, 360}}, {"layout/imageInfoWidth", {210, 300}},
@@ -178,6 +177,7 @@ bool UiPreferences::sync()
     m_saveTimer.stop();
     if (!m_writable)
         return false;
+    m_settings.remove(QStringLiteral("neural/strength")); // Per-photo only; remove the replaced preference.
     if (!m_pending.isEmpty()) {
         const QString directory = QFileInfo(m_settings.fileName()).absolutePath();
         if (!QDir().mkpath(directory)) {

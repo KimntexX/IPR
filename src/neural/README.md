@@ -82,17 +82,30 @@ réelles et les ressources pleine définition restent des qualifications partiel
 
 ## Préférences, recettes et installation
 
-Le panneau RAW avancé expose l'activation, la force 0–100 (100 par défaut),
-et le coût du repli CPU après identification du moteur. Les clés INI sont
-`neural/enabled`, `neural/strength` et `neural/modelPath`. Le chemin local peut
-aussi être fourni par `IPR_NEURAL_MODEL`. Sinon le service lit
-`<appdir>/models/<model_id>.onnx`.
+La préférence « Autoriser le débruitage IA (U-Net) » est désactivée par défaut.
+Elle ne lance aucun traitement et ne modifie aucune photo. Les clés INI sont
+`neural/enabled` et `neural/modelPath` ; il n'y a plus de force globale.
+Le chemin local peut aussi être fourni par `IPR_NEURAL_MODEL`. Sinon le service
+lit `<appdir>/models/<model_id>.onnx`.
 
-La recette conserve `neuralStrength` et `neuralModelId`. Une ancienne recette
-sans ces champs reste désactivée, même si la préférence est active. Une nouvelle
-photo sans recette reprend la force des préférences. L'autorisation globale
-désactivée interdit l'inférence sans effacer les paramètres d'une recette reçue.
-Un identifiant enregistré n'est pas remplacé silencieusement par un autre modèle.
+Le panneau Réduction du bruit expose « Débruitage IA » par photo et une intensité
+0–100, initialisée à 50 à l'activation. Les prises non éligibles affichent une
+case grisée et la raison renvoyée par le service. Le calcul affiche
+« Débruitage IA en cours… » et conserve l'image précédente.
+
+La recette contient `neuralStrength` et `neuralModelId` seulement lorsque le
+réseau s'est réellement appliqué. Le callback du service confirme ce fait ;
+une abstention supprime l'IA de la recette et affiche sa raison. Les recettes
+anciennes et les nouvelles photos sont désactivées par défaut. Les réglages
+IA suivent le copier/coller et l'historique. Un autre modèle ne remplace pas
+silencieusement l'identifiant enregistré.
+
+Lorsque l'IA est confirmée, la luminance classique et la barre commune sont
+grisées ; le rendu ignore la luminance classique sans effacer sa valeur. La
+couleur reste disponible. À l'arrêt de l'IA, la valeur classique reprend effet.
+Une révocation de l'autorisation ne modifie pas le rendu déjà affiché ; elle
+interdit de nouvelles activations et inférences. Une recette non appliquée lors
+d'une ouverture ultérieure ne sera pas réenregistrée comme appliquée.
 
 Un changement explicite d'activation ou de force sur l'image ouverte redéveloppe
 le RAW. Le cache distingue la force et le modèle ; le raccourci DCP ne réutilise

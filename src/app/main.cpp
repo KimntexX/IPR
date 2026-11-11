@@ -34,7 +34,6 @@ int main(int argc, char *argv[])
     const auto applyNeuralPreferences = [&] {
         imageEditor.setNeuralDenoisePreferences(
             uiPreferences.value(QStringLiteral("neural/enabled")).toBool(),
-            uiPreferences.value(QStringLiteral("neural/strength")).toInt(),
             uiPreferences.value(QStringLiteral("neural/modelPath")).toString());
     };
     QObject::connect(&uiPreferences, &UiPreferences::preferencesChanged,

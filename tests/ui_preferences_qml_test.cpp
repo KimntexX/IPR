@@ -334,13 +334,9 @@ int main(int argc, char **argv)
         {
             auto *neural = dialog->findChild<QObject *>("neuralDenoiseCheckBox");
             auto *strength = dialog->findChild<QObject *>("neuralDenoiseStrength");
-            if (!check(neural && strength && !neural->property("checked").toBool() &&
-                       strength->property("value").toInt() == 100,
-                       "preferences expose neural opt-in off with strength 100")) return 1;
-            strength->setProperty("value", 65);
-            QMetaObject::invokeMethod(strength, "valueModified");
-            if (!check(preferences.value("neural/strength").toInt() == 65,
-                       "neural strength updates preferences")) return 1;
+            if (!check(neural && !strength && !neural->property("checked").toBool() &&
+                       neural->property("text").toString().contains(QStringLiteral("U-Net")),
+                       "neural preference is permission only, with no strength")) return 1;
         }
         QObject *background = dialog->findChild<QObject *>("preference_canvasBackground");
         QObject *infoSize = dialog->findChild<QObject *>("preference_imageInfoFontSize");

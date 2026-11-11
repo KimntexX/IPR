@@ -83,6 +83,10 @@ class ImageEditor final : public QObject
     Q_OBJECT
     Q_PROPERTY(QAbstractItemModel *imageModel READ imageModel CONSTANT)
     Q_PROPERTY(QString neuralDenoiseEngine READ neuralDenoiseEngine NOTIFY rawDevelopmentChanged)
+    Q_PROPERTY(bool neuralDenoiseAllowed READ neuralDenoiseAllowed NOTIFY rawDevelopmentChanged)
+    Q_PROPERTY(bool neuralDenoiseActive READ neuralDenoiseActive NOTIFY rawDevelopmentChanged)
+    Q_PROPERTY(int neuralDenoiseStrength READ neuralDenoiseStrength NOTIFY rawDevelopmentChanged)
+    Q_PROPERTY(QString neuralDenoiseUnavailableReason READ neuralDenoiseUnavailableReason NOTIFY rawDevelopmentChanged)
     Q_PROPERTY(QObject *stacking READ stacking CONSTANT)
     Q_PROPERTY(QUrl folder READ folder NOTIFY folderChanged)
     Q_PROPERTY(QString imageSource READ imageSource NOTIFY previewChanged)
@@ -176,6 +180,8 @@ public:
         bool memoryPressure = false;
         QSize fullSize;          // true source size, also when image is a proxy
         bool proxyOnly = false;  // image is the edit proxy restored from the cache
+        bool neuralApplied = false;
+        QString neuralReason;
     };
     static LoadResult sharedCopy(const LoadResult &loaded);
     static LoadResult loadFromDisk(const QString &fileName,
@@ -308,7 +314,13 @@ public:
     // Single noise reduction control: one amount in [0, 100] sets both strengths.
     Q_INVOKABLE void setDenoiseAmount(int value);
     Q_INVOKABLE void setDenoiseBeforeProfile(bool enabled);
-    Q_INVOKABLE void setNeuralDenoisePreferences(bool enabled, int strength, const QString &modelPath = {});
+    Q_INVOKABLE void setNeuralDenoisePreferences(bool enabled, const QString &modelPath = {});
+    Q_INVOKABLE void setNeuralDenoiseEnabled(bool enabled);
+    Q_INVOKABLE void setNeuralDenoiseStrength(int strength);
+    bool neuralDenoiseAllowed() const { return m_neuralAllowed; }
+    bool neuralDenoiseActive() const { return m_neuralApplied && m_neuralStrength > 0; }
+    int neuralDenoiseStrength() const { return m_neuralStrength > 0 ? m_neuralStrength : 50; }
+    QString neuralDenoiseUnavailableReason() const;
     QString neuralDenoiseEngine() const;
     Q_INVOKABLE void setColorMixer(int band, int hue, int saturation,
                                    int luminance);
@@ -479,7 +491,8 @@ private:
     bool m_denoiseBeforeProfile = false;   // experimental session switch, kept across images
     bool m_neuralAllowed = false;
     bool m_neuralReload = false;
-    int m_neuralDefaultStrength = 100;
+    bool m_neuralApplied = false;
+    QString m_neuralReason;
     int m_neuralStrength = 0;
     QString m_neuralModelId;
     QString m_neuralModelPath;
@@ -523,6 +536,8 @@ private:
     Settings m_settings;
     int m_pointColorOverlay = -1;
     Settings m_copiedAdjustments;
+    int m_copiedNeuralStrength = 0;
+    QString m_copiedNeuralModelId;
     bool m_hasCopiedAdjustments = false;
     QString m_imageSource;
     QString m_originalImageSource;

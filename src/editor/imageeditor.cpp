@@ -1230,6 +1230,7 @@ ImageEditor::BatchResult ImageEditor::exportFiles(Tasks::Context &context, const
         Settings settings;
         if (std::optional<Sidecar::Document> saved = Sidecar::read(fileName)) {
             settings = std::move(saved->settings);
+            settings.neuralDenoiseApplied = loaded.neuralApplied;
             settings.denoiseBeforeProfile = saved->raw.developmentMode == EditRecipe::SignedDevelopment;
         } else
             settings.temperature = static_cast<int>(std::lround(
@@ -1450,25 +1451,55 @@ QString ImageEditor::neuralDenoiseEngine() const
     return m_neuralService ? m_neuralService->engine() : QStringLiteral("Unavailable");
 }
 
-void ImageEditor::setNeuralDenoisePreferences(bool enabled, int strength, const QString &modelPath)
+QString ImageEditor::neuralDenoiseUnavailableReason() const
 {
-    strength = std::clamp(strength, 0, 100);
-    if (enabled == m_neuralAllowed && strength == m_neuralDefaultStrength && modelPath == m_neuralModelPath)
-        return;
-    if (busy()) return;
-    cancelPrefetch();
+    if (!rawImage()) return tr("Débruitage IA réservé aux images RAW.");
+    if (!m_neuralAllowed) return tr("Autorisez le débruitage IA dans les préférences.");
+    const auto service = neuralService();
+    if (!service) return m_neuralError;
+    QString reason;
+    if (!service->available(m_sourceMetadata.cameraMake, m_sourceMetadata.cameraModel, m_sourceMetadata.iso, &reason))
+        return reason;
+    return m_neuralReason;
+}
+
+void ImageEditor::setNeuralDenoisePreferences(bool enabled, const QString &modelPath)
+{
+    if (enabled == m_neuralAllowed && modelPath == m_neuralModelPath) return;
     if (modelPath != m_neuralModelPath) {
         m_neuralService.reset(); m_neuralServiceId.clear(); m_neuralError.clear();
     }
     m_neuralModelPath = modelPath;
+    m_neuralReason.clear();
     m_neuralAllowed = enabled;
-    m_neuralDefaultStrength = strength;
-    m_neuralStrength = enabled ? strength : 0;
-    if (enabled && strength > 0) neuralService();
-    m_neuralModelId = m_neuralServiceId;
+    // Permission changes availability only, never the current photo or its recipe.
+    if (enabled) { cancelPrefetch(); neuralService(); }
+    emit rawDevelopmentChanged();
+}
+
+void ImageEditor::setNeuralDenoiseEnabled(bool enabled)
+{
+    if (busy() || !rawImage()) return;
+    if (enabled && !neuralDenoiseUnavailableReason().isEmpty()) {
+        setStatusMessage(neuralDenoiseUnavailableReason()); return;
+    }
+    if (enabled == neuralDenoiseActive()) return;
+    m_neuralStrength = enabled ? 50 : 0;
+    m_neuralReason.clear();
+    m_neuralModelId = enabled ? m_neuralServiceId : QString();
     m_neuralReload = true;
-    if (rawImage()) reloadRawDevelopment();
-    else emit rawDevelopmentChanged();
+    reloadRawDevelopment();
+}
+
+void ImageEditor::setNeuralDenoiseStrength(int strength)
+{
+    if (busy() || !m_neuralAllowed || !neuralDenoiseActive()) return;
+    strength = std::clamp(strength, 0, 100);
+    if (strength == m_neuralStrength) return;
+    m_neuralStrength = strength;
+    if (strength == 0) m_neuralModelId.clear();
+    m_neuralReload = true;
+    reloadRawDevelopment();
 }
 
 void ImageEditor::setColorMixer(int band, int hue, int saturation, int luminance)
@@ -1561,6 +1592,8 @@ void ImageEditor::copyAdjustments()
 {
     if (!hasImage() || busy() || embeddedPreview()) return;
     m_copiedAdjustments = m_settings;
+    m_copiedNeuralStrength = m_neuralApplied ? m_neuralStrength : 0;
+    m_copiedNeuralModelId = m_neuralApplied ? m_neuralModelId : QString();
     m_copiedAsShot = asShotWhiteBalance();
     m_hasCopiedAdjustments = true;
     emit copiedAdjustmentsChanged();
@@ -1576,6 +1609,7 @@ void ImageEditor::pasteAdjustments()
     const LocalAdjustments::Masks masks = m_settings.localMasks;   // and so do zones drawn on it
     const Retouch::Operations retouches = m_settings.retouches;
     m_settings = m_copiedAdjustments;
+    m_settings.neuralDenoiseApplied = m_neuralApplied;
     m_settings.geometry = geometry;
     m_settings.localMasks = masks;
     m_settings.retouches = retouches;
@@ -1593,7 +1627,13 @@ void ImageEditor::pasteAdjustments()
     emit geometryChanged();
     emit localMasksChanged();
     emit retouchesChanged();
-    scheduleRender();
+    if ((m_copiedNeuralStrength != m_neuralStrength || m_copiedNeuralModelId != m_neuralModelId) && rawImage() &&
+        (m_copiedNeuralStrength == 0 || neuralDenoiseUnavailableReason().isEmpty())) {
+        m_neuralStrength = m_copiedNeuralStrength;
+        m_neuralModelId = m_copiedNeuralModelId;
+        m_neuralReload = true;
+        reloadRawDevelopment();
+    } else scheduleRender();
 }
 
 void ImageEditor::saveCurrentAdjustments()
@@ -1679,6 +1719,7 @@ void ImageEditor::restoreRecipe(const std::optional<QCborMap> &recipe)
     if (RecipeCodec::encodeRaw(development) != before)
         setRawDevelopment(development);
     restored.denoiseBeforeProfile = m_denoiseBeforeProfile;
+    restored.neuralDenoiseApplied = m_neuralApplied;
     m_restoringHistory = true;
     const auto restoring = qScopeGuard([this] { m_restoringHistory = false; });
     m_settings = std::move(restored);
@@ -2187,7 +2228,12 @@ void ImageEditor::resetAdjustments()
     emit localMasksChanged();
     emit retouchesChanged();
     emit rawDevelopmentChanged();
-    scheduleRender();
+    if (m_neuralApplied) {
+        m_neuralStrength = 0;
+        m_neuralModelId.clear();
+        m_neuralReload = true;
+        reloadRawDevelopment();
+    } else scheduleRender();
 }
 
 void ImageEditor::exportImage(const QUrl &target, const QString &format, int quality)
@@ -2237,6 +2283,8 @@ void ImageEditor::exportImage(const QUrl &target, const QString &format, int qua
             auto master = loadFromDisk(sourceFile, settings.automaticWhiteBalance, options);
             if (master.image.isNull())
                 return ExportResult{false, tr("Échec de la reconstruction pleine résolution : %1").arg(master.error)};
+            if (settings.neuralDenoiseApplied && !master.neuralApplied)
+                return ExportResult{false, master.neuralReason};
             // Same tone weights as the preview the user validated.
             master.image.toneStatistics = source->toneStatistics;
             return writeImage(master.image, settings, fileName, format, quality);
@@ -2308,6 +2356,12 @@ ImageEditor::LoadResult ImageEditor::loadFromDisk(const QString &fileName,
         return result;
     }
     static_cast<ImageImport::Result &>(result) = ImageImport::load(fileName, options);
+    if (const auto *factory = options.cfaStageFactory.target<NeuralDevelopment::Factory>()) {
+        result.neuralApplied = factory->report && factory->report->called && factory->report->applied;
+        result.neuralReason = factory->report ? factory->report->reason : QString();
+        if (!result.neuralApplied && result.neuralReason.isEmpty())
+            result.neuralReason = tr("Le débruitage IA ne s’est pas appliqué à ce développement.");
+    }
     if (!result.image.isNull()) {
         result.editProxy = buildEditProxy(result.image);
         attachToneStatistics(result.image, result.editProxy);
@@ -2378,6 +2432,8 @@ ImageEditor::LoadResult ImageEditor::sharedCopy(const LoadResult &loaded)
     copy.capabilities = loaded.capabilities;
     copy.warnings = loaded.warnings;
     copy.error = loaded.error;
+    copy.neuralApplied = loaded.neuralApplied;
+    copy.neuralReason = loaded.neuralReason;
     copy.editProxy = ColorPipeline::sharedCopy(loaded.editProxy);
     copy.cacheKey = loaded.cacheKey;
     copy.memoryPressure = loaded.memoryPressure;
@@ -2479,7 +2535,8 @@ ImageEditor::RawDevelopment ImageEditor::rawDevelopmentRecipe() const
             m_lensProfile, m_lensProfileSha256, m_lensProfileResolved,
             m_lensCorrectionEnabled, m_chromaticAberrationEnabled,
             rawImage() ? (m_denoiseBeforeProfile ? EditRecipe::SignedDevelopment : EditRecipe::StandardDevelopment)
-                       : QString(), m_neuralStrength, m_neuralModelId};
+                       : QString(), m_neuralApplied ? m_neuralStrength : 0,
+            m_neuralApplied ? m_neuralModelId : QString()};
 }
 
 QString ImageEditor::currentFileKey() const
@@ -2507,13 +2564,13 @@ void ImageEditor::beginLoad(const QString &fileName, const QString &extension,
     ++m_requestedRevision;
     m_renderPending = false;
     if (freshOpen) {
+        m_neuralReason.clear();
         // Retain the displayed image until its replacement is ready. Cache
         // eviction can release only the cache reference, never these pixels.
         if (!m_currentCacheKey.isEmpty() && !m_original.isNull())
             m_decodedImageCache.insert(m_currentCacheKey, retainedCurrentEntry());
-        m_neuralStrength = m_neuralAllowed && RawDecoder::supportedExtensions().contains(extension)
-            ? m_neuralDefaultStrength : 0;
-        m_neuralModelId = m_neuralServiceId;
+        m_neuralStrength = 0;
+        m_neuralModelId.clear();
         m_cameraProfile.clear();
         m_profileSha256.clear();
         m_normalizationManifest.clear();
@@ -2583,7 +2640,8 @@ void ImageEditor::beginLoad(const QString &fileName, const QString &extension,
             m_denoiseBeforeProfile, m_neuralAllowed ? m_neuralStrength : 0, m_neuralModelId);
 
     setBusy(true);
-    setStatusMessage(freshOpen ? tr("Ouverture de %1...").arg(QFileInfo(fileName).fileName())
+    setStatusMessage(m_neuralAllowed && m_neuralStrength > 0 ? tr("Débruitage IA en cours…")
+                              : freshOpen ? tr("Ouverture de %1...").arg(QFileInfo(fileName).fileName())
                               : tr("Mise à jour du développement RAW…"));
     ++m_requestedLoadRevision;
     m_activeLoadRevision = m_requestedLoadRevision;
@@ -2592,7 +2650,7 @@ void ImageEditor::beginLoad(const QString &fileName, const QString &extension,
 
     setBusy(true);
     RawDecoder::Options options = developmentOptions();
-    const bool fast = !m_neuralReload && !options.cfaStageFactory && !freshOpen && !m_rawNormalizationEnabled && m_dcpSource &&
+    const bool fast = !m_neuralApplied && !m_neuralReload && !options.cfaStageFactory && !freshOpen && !m_rawNormalizationEnabled && m_dcpSource &&
         !m_dcpSource->cameraRgb.empty() && m_dcpSource->automaticWhiteBalance == automaticWhiteBalance &&
         m_dcpSource->lensCorrectionEnabled == m_lensCorrectionEnabled &&
         m_dcpSource->chromaticAberrationEnabled == m_chromaticAberrationEnabled &&
@@ -2624,11 +2682,13 @@ void ImageEditor::beginLoad(const QString &fileName, const QString &extension,
             auto admission = controller->acquire(key, peak, false, cancel).takeResult();
             if (admission.cached) {
                 auto &cached = *admission.cached;
-                if (cacheAssetsUnchanged(cached)) {
+                const auto *neural = options.cfaStageFactory.target<NeuralDevelopment::Factory>();
+                if (cacheAssetsUnchanged(cached) && (!neural || neural->service)) {
                     LoadResult result;
                     result.image = std::move(cached.image); result.editProxy = std::move(cached.editProxy);
                     result.metadata = std::move(cached.metadata); result.dcpSource = std::move(cached.dcpSource);
                     result.fullSize = cached.fullSize; result.proxyOnly = cached.proxyOnly;
+                    result.neuralApplied = bool(options.cfaStageFactory);
                     ImageImport::complete(result);
                     return result;
                 }
@@ -2700,6 +2760,14 @@ void ImageEditor::applyLoadedImage(LoadResult loaded)
         return;
     }
 
+    m_neuralApplied = loaded.neuralApplied;
+    m_neuralReason = loaded.neuralReason;
+    if (!m_neuralApplied) {
+        if (m_neuralStrength > 0 && !loaded.neuralReason.isEmpty())
+            m_rawDevelopmentWarning += loaded.neuralReason + QLatin1Char(' ');
+        m_neuralStrength = 0;
+        m_neuralModelId.clear();
+    }
     m_sourceMetadata = std::move(loaded.metadata);
     m_importProvenance = std::move(loaded.provenance);
     m_importCapabilities = loaded.capabilities;
@@ -2763,6 +2831,7 @@ void ImageEditor::applyLoadedImage(LoadResult loaded)
     emit retouchesChanged();
     }
     if (m_pendingLoadIsFreshOpen) emit hasImageChanged();
+    m_settings.neuralDenoiseApplied = m_neuralApplied;
     // Freeze only after restoring the incoming image's settings (not old WB).
     m_currentCacheKey = cacheKeyForFile(m_currentFile.toLocalFile(), m_settings.automaticWhiteBalance,
         m_cameraProfile, m_rawNormalizationEnabled ? rawNormalizationManifest() : QString(),

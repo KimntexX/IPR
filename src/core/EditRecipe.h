@@ -39,6 +39,7 @@ struct Settings
     // sliders act on its camera signal before the lens and colour profiles. A session
     // switch of the editor, not stored in the sidecar.
     bool denoiseBeforeProfile = false;
+    bool neuralDenoiseApplied = false; // transient: inhibits classical luminance, never serialized
     int sharpeningAmount = 0;
     float sharpeningRadius = 1.0f;
     int sharpeningMasking = 0;

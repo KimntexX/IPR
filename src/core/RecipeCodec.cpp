@@ -475,9 +475,12 @@ void decodeMetadata(const QCborMap &map, UserImageMetadata &metadata)
 QCborMap encodeRaw(const RawDevelopment &raw)
 {
     QCborMap map;
-    map.insert(QStringLiteral("neuralStrength"), std::clamp(raw.neuralStrength, 0, 100));
     store(map, raw, RawStrings);
     store(map, raw, RawBools);
+    if (raw.neuralStrength > 0 && !raw.neuralModelId.isEmpty())
+        map.insert(QStringLiteral("neuralStrength"), std::clamp(raw.neuralStrength, 0, 100));
+    else
+        map.remove(QStringLiteral("neuralModelId"));
     return map;
 }
 

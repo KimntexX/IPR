@@ -640,6 +640,44 @@ Item {
                 title: qsTr("Réduction du bruit")
 
                 PreferenceCheckBox {
+                    objectName: "photoNeuralDenoiseCheckBox"
+                    Layout.fillWidth: true
+                    text: qsTr("Débruitage IA")
+                    visible: editor.rawImage && (editor.neuralDenoiseAllowed || editor.neuralDenoiseActive)
+                    checked: editor.neuralDenoiseActive
+                    enabled: !editor.busy && (editor.neuralDenoiseActive || editor.neuralDenoiseUnavailableReason.length === 0)
+                    onToggled: editor.setNeuralDenoiseEnabled(checked)
+                }
+                Label {
+                    objectName: "photoNeuralDenoiseReason"
+                    Layout.fillWidth: true
+                    visible: editor.rawImage && editor.neuralDenoiseAllowed && editor.neuralDenoiseUnavailableReason.length > 0
+                    text: editor.neuralDenoiseUnavailableReason
+                    color: root.secondaryTextColor
+                    wrapMode: Text.WordWrap
+                }
+                AdjustmentControl {
+                    id: neuralIntensitySlider
+                    objectName: "photoNeuralDenoiseIntensity"
+                    label: qsTr("Intensité")
+                    textColor: root.textColor
+                    secondaryTextColor: root.secondaryTextColor
+                    minimumValue: 0
+                    maximumValue: 100
+                    value: editor.neuralDenoiseStrength
+                    valueText: Math.round(value)
+                    visible: editor.neuralDenoiseActive
+                    adjustmentEnabled: !editor.busy && editor.neuralDenoiseAllowed && editor.neuralDenoiseActive
+                    onValueEdited: { if (!pressed) neuralIntensityCommit.restart() }
+                    onPressedChanged: { if (!pressed) neuralIntensityCommit.restart() }
+                    Timer {
+                        id: neuralIntensityCommit
+                        interval: 500
+                        onTriggered: editor.setNeuralDenoiseStrength(Math.round(neuralIntensitySlider.value))
+                    }
+                }
+
+                PreferenceCheckBox {
                     id: denoiseBeforeProfileCheck
                     objectName: "denoiseBeforeProfileCheck"
                     Layout.fillWidth: true
@@ -661,7 +699,7 @@ Item {
                     valueText: custom ? qsTr("Perso.") : Math.round(value)
                     minimumValue: 0
                     maximumValue: 100
-                    adjustmentEnabled: editor.hasImage
+                    adjustmentEnabled: editor.hasImage && !editor.neuralDenoiseActive
                     onValueEdited: function(value) {
                         if (editor && !syncing) {
                             editor.setDenoiseAmount(Math.round(value))
@@ -687,7 +725,7 @@ Item {
                         valueText: Math.round(value)
                         minimumValue: 0
                         maximumValue: 100
-                        adjustmentEnabled: editor.hasImage
+                        adjustmentEnabled: editor.hasImage && !editor.neuralDenoiseActive
                         onValueEdited: function(value) {
                             if (editor) {
                                 editor.setAdjustment("denoiseLuminance", Math.round(value))

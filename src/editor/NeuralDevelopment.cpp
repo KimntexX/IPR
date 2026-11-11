@@ -20,8 +20,14 @@ RawDevelopment::CfaStage Factory::operator()(const RawInput::Input &input) const
         };
     }
     QString why;
-    auto stage = service->stageFor(input, strength, cancelled, &why);
-    if (!stage) qInfo() << "Neural CFA unavailable for this RAW:" << why;
+    auto stage = service->stageFor(input, strength, cancelled, &why,
+        [state = report](bool applied, const QString &reason) {
+            if (state) { state->called = true; state->applied = applied; state->reason = reason; }
+        });
+    if (!stage) {
+        if (report) { report->called = true; report->applied = false; report->reason = why; }
+        qInfo() << "Neural CFA unavailable for this RAW:" << why;
+    }
     return stage;
 }
 
@@ -48,7 +54,9 @@ std::shared_ptr<NeuralCfa::Service> create(const QString &overridePath, QString 
 
 void bindCancellation(RawDecoder::Options &options)
 {
-    if (auto *factory = options.cfaStageFactory.target<Factory>())
+    if (auto *factory = options.cfaStageFactory.target<Factory>()) {
         factory->cancelled = options.cancellationRequested;
+        factory->report = std::make_shared<Report>();
+    }
 }
 }
