@@ -252,6 +252,10 @@ target_include_directories(iprImage PUBLIC src/image)
 target_link_libraries(iprImage PUBLIC Threads::Threads)
 set_target_properties(iprImage PROPERTIES AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)
 
+# Optional neural RAW denoising (preferences, off by default): the module always builds and
+# reports itself unavailable without IPR_ENABLE_ONNX_RUNTIME; see src/neural/README.md.
+add_subdirectory(src/neural)
+
 add_library(iprEngine STATIC ${IPR_ENGINE_SOURCES})
 qt_add_resources(iprEngine ipr_ui_defaults
     PREFIX "/"
@@ -266,6 +270,7 @@ target_link_libraries(iprEngine
         Qt6::Quick
         Qt6::Concurrent
         TIFF::TIFF
+        iprNeural
 )
 
 if(IPR_ENABLE_LIBRAW)
@@ -298,6 +303,13 @@ qt_add_qml_module(appIPR
 )
 
 target_link_libraries(appIPR PRIVATE iprEngine)
+if(WIN32 AND IPR_ENABLE_ONNX_RUNTIME)
+    # The runtime DLLs beside the executable for development runs; install() deploys them in packages.
+    foreach(runtime IN LISTS IPR_NEURAL_RUNTIME_FILES)
+        add_custom_command(TARGET appIPR POST_BUILD COMMAND ${CMAKE_COMMAND}
+            -E copy_if_different "${runtime}" "$<TARGET_FILE_DIR:appIPR>")
+    endforeach()
+endif()
 target_compile_definitions(appIPR PRIVATE IPR_RELEASE_LABEL="${IPR_RELEASE_LABEL}")
 
 # Console tools, intentionally independent of the QML application/sidecar
