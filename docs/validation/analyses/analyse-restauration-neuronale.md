@@ -10847,3 +10847,41 @@ n'est pas inscrit (pas de correction d'objectif). Ouverture dans Lightroom
 Reste pour la bêta-1 : préférence, raccordement éditeur et recette (Codex),
 choix final de la perte (essai L1 / L2 / L1 + moyenne en cours), revue de
 l'utilisateur dans l'application.
+
+## 11 novembre 2026 — choix de la perte : L1, L2 ou L1 avec terme de moyenne par plan
+
+Essai apparié (`input_mode_study.py`, études `loss-mean-study-v001` et `-v002`) :
+bras E, 4 096 pas depuis zéro, augmentation de couleur (R/B 0,33–2,5 ; G1/G2
+0,98–1,02), mêmes données et tirages. E : L1 (étude v001). F : L2. G : L1 plus la
+valeur absolue de l'erreur moyenne de chaque plan de chaque exemple
+(`l1_plane_mean`, même poids par pixel que le terme L1 mais cohérent sur le
+plan). Le premier lancement de F s'est arrêté au pas 219 : un outil figé a été
+modifié pendant l'essai et le superviseur l'a détecté ; F et G ont été relancés
+dans v002, appariés au bras E déjà terminé.
+
+| Critère | E, L1 | F, L2 | G, L1 + moyenne |
+| --- | --- | --- | --- |
+| Tuiles de contrôle, écart à E (dB, 2 sources × 4 ISO) | 0 | −0,29 à −5,63 | −0,14 à +0,03 |
+| Ombres, G1 − G2 (DN, 3200 / 16000 / 51200, aplats 1 à 5 %) | −0,2 à −2,1 | −0,4 à −5,5 | −0,02 à +0,39 |
+| Bruit réel, réseau − BM3D (médiane, intérieur / drap / salle) | +0,22 / +0,50 / +0,25 dB | +0,22 / +0,21 / +0,01 dB | **+0,44 / +0,53 / +0,28 dB** |
+| Bruit réel, biais moyen des plans relatif à BM3D | −0,05 à −0,12 % | −0,03 à +0,04 % | +0,02 à +0,04 % |
+| Bruit réel, G1 − G2 relatif à BM3D | −0,05 à +0,03 % | +0,12 à +0,17 % | −0,02 à −0,01 % |
+
+**Lecture.**
+
+- **G est retenu.** Il garde tout le débruitage de L1 (écart ≤ 0,14 dB sur les
+  tuiles), supprime l'écart G1/G2 (≤ 0,4 DN sur aplat, ≤ 0,02 % sur scènes
+  réelles), supprime l'assombrissement relatif à BM3D, et devance un peu mieux
+  BM3D sur bruit réel.
+- **L2 est rejeté** : débruitage nettement plus faible, surtout à ISO élevé
+  (jusqu'à −5,6 dB), et écart G1/G2 plus grand. L'hypothèse « la médiane de L1
+  sous un bruit asymétrique » n'explique donc pas seule l'écart des verts ;
+  c'est la contrainte explicite sur la moyenne de chaque plan qui le corrige.
+- Reste un léger excès sur R à 51200 dans les aplats (+1 à +1,8 DN), à suivre.
+
+**Décision proposée** : entraînement final de la bêta-1 avec G
+(`l1_plane_mean`, augmentation de couleur), une graine, la nuit du 11 au 12.
+
+Preuves : [étude v001](../raw/neural-loss-mean-study-v001-20261111T124928Z.json),
+[étude v002](../raw/neural-loss-mean-study-v002-20261111T134726Z.json) et les
+sondes et évaluations `neural-loss-*-20261111T*.json`.
