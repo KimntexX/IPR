@@ -147,6 +147,69 @@ void developmentHook()
     check(stopped.cameraRgb.empty() && !stopped.error.isEmpty(), "a cancellation during the stage stops the development");
 }
 
+const char *Catalogue = R"({"schema_version": 1, "cameras": [{"make": "Canon", "model": "EOS R6 Mark III",
+  "provenance": {"proof": "bank.json"}, "isos": [
+  {"iso": 3200, "positions": [{"shot_slope_dn": 6, "read_variance_dn2": 150}, {"shot_slope_dn": 7, "read_variance_dn2": 160},
+                              {"shot_slope_dn": 8, "read_variance_dn2": 170}, {"shot_slope_dn": 9, "read_variance_dn2": 180}]},
+  {"iso": 6400, "positions": [{"shot_slope_dn": 12, "read_variance_dn2": 500}, {"shot_slope_dn": 13, "read_variance_dn2": 510},
+                              {"shot_slope_dn": 14, "read_variance_dn2": 520}, {"shot_slope_dn": 15, "read_variance_dn2": 530}]}]}]})";
+
+void stageFactory()
+{
+    QString reason;
+    const auto catalog = NoiseLaw::parseCatalog(Catalogue, &reason);
+    check(catalog.has_value(), "the factory's catalogue parses");
+    if (!catalog)
+        return;
+    RawInput::Input input = sample();
+    input.make = QStringLiteral("Canon");
+    input.model = QStringLiteral("EOS R6 Mark III");
+    input.iso = 3200.0;
+    CfaNoiseStage::NormalizedLaw received;
+    CfaNoiseStage::Settings settings;
+    settings.catalog = &*catalog;
+    settings.measuredPattern = Rggb;
+    settings.networkDivisor = 1000.0;
+    settings.denoiser = [&](const CfaNoiseStage::Planes &planes, const CfaNoiseStage::NormalizedLaw &law, QString *) {
+        received = law;
+        CfaNoiseStage::Planes out = planes;
+        for (float &value : out.values)
+            value += 0.01f;
+        return std::optional<CfaNoiseStage::Planes>(out);
+    };
+    const RawDevelopment::CfaStage stage = CfaNoiseStage::makeStage(input, settings, &reason);
+    check(bool(stage), "a measured camera and ISO give a stage");
+    if (stage) {
+        ipr::Image mosaic = ipr::Image::create({8, 6}, ipr::Depth::F32, 1);
+        for (int y = 0; y < 6; ++y)
+            for (int x = 0; x < 8; ++x)
+                at<float>(mosaic, y, x) = 100.f;
+        check(stage(mosaic, input.pattern, &reason), "the stage succeeds");
+        check(std::abs(at<float>(mosaic, 3, 5) - 110.f) < 1e-3f, "the denoiser's planes come back in counts");
+        check(std::abs(received.a[1] - 0.007f) < 1e-7f && std::abs(received.b[3] - 0.00018f) < 1e-9f,
+              "the denoiser receives the law normalized by the network divisor");
+    }
+    input.iso = 12800.0;
+    check(!CfaNoiseStage::makeStage(input, settings, &reason) && !reason.isEmpty(), "an ISO outside the laws gives no stage");
+    input.iso = 3200.0;
+    input.model = QStringLiteral("EOS 60D");
+    check(!CfaNoiseStage::makeStage(input, settings, &reason), "a camera without laws gives no stage");
+    input.model = QStringLiteral("EOS R6 Mark III");
+    settings.denoiser = [](const CfaNoiseStage::Planes &, const CfaNoiseStage::NormalizedLaw &, QString *error) {
+        *error = QStringLiteral("no GPU");
+        return std::optional<CfaNoiseStage::Planes>();
+    };
+    const RawDevelopment::CfaStage failing = CfaNoiseStage::makeStage(input, settings, &reason);
+    ipr::Image mosaic = ipr::Image::create({8, 6}, ipr::Depth::F32, 1);
+    for (int y = 0; y < 6; ++y)
+        for (int x = 0; x < 8; ++x)
+            at<float>(mosaic, y, x) = 100.f;
+    check(failing && failing(mosaic, input.pattern, &reason) && at<float>(mosaic, 2, 2) == 100.f,
+          "a failing denoiser leaves the mosaic as decoded and lets the photo open");
+    settings.networkDivisor = 0.0;
+    check(!CfaNoiseStage::makeStage(input, settings, &reason), "an incomplete configuration gives no stage");
+}
+
 } // namespace
 
 int main()
@@ -155,6 +218,7 @@ int main()
     packAndUnpack();
     normalizedLaw();
     developmentHook();
+    stageFactory();
     if (!passed)
         return 1;
     std::cout << "CFA noise stage tests passed\n";

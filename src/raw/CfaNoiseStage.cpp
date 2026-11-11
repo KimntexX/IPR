@@ -2,6 +2,8 @@
 
 #include "RawInput.h"
 
+#include <QDebug>
+
 #include <cmath>
 
 namespace CfaNoiseStage {
@@ -104,6 +106,43 @@ std::optional<NormalizedLaw> normalize(const NoiseLaw::Law &law, const Pattern &
         normalized.b[size_t(plane)] = float(position.readVariance / (divisor * divisor));
     }
     return normalized;
+}
+
+RawDevelopment::CfaStage makeStage(const RawInput::Input &input, const Settings &settings, QString *reason)
+{
+    const auto refuse = [reason](const QString &why) {
+        if (reason)
+            *reason = why;
+        return RawDevelopment::CfaStage();
+    };
+    if (!settings.catalog || !settings.denoiser || !usableDivisor(settings.networkDivisor))
+        return refuse(QStringLiteral("neural CFA stage not configured"));
+    QString why;
+    const auto law = NoiseLaw::resolve(*settings.catalog, input.make, input.model, int(std::lround(input.iso)), &why);
+    if (!law)
+        return refuse(why);
+    const auto normalized = normalize(*law, settings.measuredPattern, settings.networkDivisor);
+    if (!normalized || !planeOfSite(input.pattern))
+        return refuse(QStringLiteral("noise law or CFA pattern unusable for the neural stage"));
+    const double divisor = settings.networkDivisor;
+    const PlaneDenoiser denoiser = settings.denoiser;
+    const NormalizedLaw networkLaw = *normalized;
+    const QString provenance = law->provenance;
+    return [denoiser, networkLaw, divisor, provenance](ipr::Image &mosaic, const Pattern &pattern, QString *) {
+        const auto planes = pack(mosaic, pattern, divisor);
+        if (!planes) {
+            qWarning().noquote() << "IPR neural CFA | mosaic not packable, left undenoised";
+            return true;
+        }
+        QString error;
+        const auto denoised = denoiser(*planes, networkLaw, &error);
+        if (!denoised || !unpack(*denoised, mosaic, pattern, divisor)) {
+            qWarning().noquote() << "IPR neural CFA | left undenoised:" << (error.isEmpty() ? QStringLiteral("shape mismatch") : error);
+            return true;
+        }
+        qInfo().noquote() << "IPR neural CFA | denoised with" << provenance;
+        return true;
+    };
 }
 
 } // namespace CfaNoiseStage

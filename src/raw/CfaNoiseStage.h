@@ -3,6 +3,11 @@
 
 #include "Image.h"
 #include "NoiseLaw.h"
+#include "RawDevelopment.h"
+#include "RawInput.h"
+
+#include <QString>
+#include <functional>
 
 #include <array>
 #include <cstddef>
@@ -43,6 +48,23 @@ struct NormalizedLaw
 // The catalogue gives the law per raster site of the measured camera's own 2x2 cell;
 // `measuredPattern` is that cell, so each site's law lands on its colour's plane.
 std::optional<NormalizedLaw> normalize(const NoiseLaw::Law &law, const Pattern &measuredPattern, double divisor);
+
+// The network on canonical planes: denoised planes of the same shape, or nullopt and a reason.
+using PlaneDenoiser = std::function<std::optional<Planes>(const Planes &planes, const NormalizedLaw &law, QString *error)>;
+
+struct Settings
+{
+    const NoiseLaw::Catalog *catalog = nullptr;
+    Pattern measuredPattern{};   // the 2x2 cell of the catalogue's camera
+    double networkDivisor = 0.0; // counts per network unit, from the model's training normalization
+    PlaneDenoiser denoiser;
+};
+
+// The stage for one RAW: empty, with a reason, when the camera or its ISO has no
+// measured law or the settings are incomplete. When the denoiser fails the mosaic is
+// left as decoded and the stage still returns true, so the photo opens undenoised;
+// the reason goes to the log.
+RawDevelopment::CfaStage makeStage(const RawInput::Input &input, const Settings &settings, QString *reason);
 
 }
 
