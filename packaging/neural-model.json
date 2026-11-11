@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "model_id": null,
+  "url": null,
+  "sha256": null,
+  "status": "awaiting_validated_onnx_export",
+  "contract": {
+    "inputs": ["planes", "sigma"],
+    "output": "corrected",
+    "dtype": "float32",
+    "layout": "NCHW",
+    "planes": ["R", "G1", "G2", "B"],
+    "halo": 192,
+    "core": 1024
+  }
+}
