@@ -173,6 +173,8 @@ set(IPR_ENGINE_SOURCES
     src/raw/RawNormalization.cpp
     src/raw/CameraCharacterization.h
     src/raw/CameraCharacterization.cpp
+    src/raw/NoiseLaw.h
+    src/raw/NoiseLaw.cpp
     src/raw/CameraSignal.h
     src/raw/CameraSignal.cpp
 )
@@ -251,7 +253,7 @@ set_target_properties(iprImage PROPERTIES AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)
 add_library(iprEngine STATIC ${IPR_ENGINE_SOURCES})
 qt_add_resources(iprEngine ipr_ui_defaults
     PREFIX "/"
-    FILES config/ipr-ui.ini config/raw-normalization.json
+    FILES config/ipr-ui.ini config/raw-normalization.json config/noise-laws.json
 )
 target_include_directories(iprEngine PUBLIC ${IPR_INCLUDE_DIRECTORIES})
 target_link_libraries(iprEngine
@@ -339,7 +341,7 @@ endif()
 if(IPR_BUILD_TOOLS)
     install(TARGETS iprGenerateTests RUNTIME DESTINATION "${IPR_TOOL_DESTINATION}")
 endif()
-install(FILES config/ipr-ui.ini config/raw-normalization.json DESTINATION "${IPR_DATA_DESTINATION}/config")
+install(FILES config/ipr-ui.ini config/raw-normalization.json config/noise-laws.json DESTINATION "${IPR_DATA_DESTINATION}/config")
 install(FILES packaging/profiles-index.json DESTINATION "${IPR_DATA_DESTINATION}/profiles" RENAME index.json)
 install(DIRECTORY DESTINATION "${IPR_DATA_DESTINATION}/profiles/dcp")
 install(DIRECTORY DESTINATION "${IPR_DATA_DESTINATION}/profiles/lcp")
@@ -464,6 +466,8 @@ if(BUILD_TESTING)
         target_link_libraries(iprStackAudit PRIVATE psapi)
     endif()
     ipr_add_test(cameraDngTests tests/camera_dng_test.cpp)
+    ipr_add_test(noiseLawTests tests/noise_law_test.cpp)
+    set_tests_properties(noiseLawTests PROPERTIES LABELS "unit;raw;noise" TIMEOUT 30)
     set_tests_properties(cameraDngTests PROPERTIES LABELS "unit;stack;export" TIMEOUT 60)
     add_executable(iprPanoramaAudit tests/panorama_audit.cpp)
     target_link_libraries(iprPanoramaAudit PRIVATE iprEngine)

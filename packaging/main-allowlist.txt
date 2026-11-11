@@ -17,6 +17,7 @@ vcpkg.json
 cmake/
 config/ipr-ui.ini
 config/raw-normalization.json
+config/noise-laws.json
 packaging/
 licenses/
 # Public profile index and empty folders only, never DCP or LCP files
@@ -85,6 +86,7 @@ scripts/analyse_*.py
 scripts/audit_camera_levels.py
 scripts/audit_translations.py
 scripts/build_highlights_references.py
+scripts/build_noise_laws.py
 scripts/build_mixer_model.py
 scripts/build_vibrance_model.py
 scripts/ci_scope.py
