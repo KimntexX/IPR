@@ -177,6 +177,8 @@ set(IPR_ENGINE_SOURCES
     src/raw/NoiseLaw.cpp
     src/raw/CfaNoiseStage.h
     src/raw/CfaNoiseStage.cpp
+    src/raw/NeuralCfa.h
+    src/raw/NeuralCfa.cpp
     src/raw/CameraSignal.h
     src/raw/CameraSignal.cpp
 )
@@ -482,6 +484,12 @@ if(BUILD_TESTING)
     ipr_add_test(cameraDngTests tests/camera_dng_test.cpp)
     ipr_add_test(noiseLawTests tests/noise_law_test.cpp)
     ipr_add_test(cfaNoiseStageTests tests/cfa_noise_stage_test.cpp)
+    ipr_add_test(neuralCfaTests tests/neural_cfa_test.cpp)
+    set_tests_properties(neuralCfaTests PROPERTIES LABELS "unit;raw;noise" TIMEOUT 60)
+    if(IPR_ENABLE_ONNX_RUNTIME AND IPR_NEURAL_MODEL)
+        add_test(NAME neuralCfaModelTests COMMAND neuralCfaTests "${IPR_NEURAL_MODEL}" "${CMAKE_SOURCE_DIR}/packaging/neural-model.json")
+        set_tests_properties(neuralCfaModelTests PROPERTIES LABELS "integration;raw;noise" TIMEOUT 300)
+    endif()
     set_tests_properties(cfaNoiseStageTests PROPERTIES LABELS "unit;raw;noise" TIMEOUT 30)
     set_tests_properties(noiseLawTests PROPERTIES LABELS "unit;raw;noise" TIMEOUT 30)
     set_tests_properties(cameraDngTests PROPERTIES LABELS "unit;stack;export" TIMEOUT 60)
