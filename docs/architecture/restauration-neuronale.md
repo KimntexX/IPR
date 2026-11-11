@@ -1605,3 +1605,76 @@ hors corpus garde le débruiteur classique tant qu'une validation n'existe pas
 Branches : le moteur relève de `patch_noise` (existant), le réseau de
 `patch_neural_restoration` ; à confirmer avec l'utilisateur avant tout
 commit dans `src/`. Aucune fusion, publication ni tag sans accord.
+
+## 22. Plan d'intégration de la bêta-1 du débruitage neuronal — 11 novembre 2026
+
+**Objectif fixé par l'utilisateur** : une version bêta-1 du débruitage neuronal
+d'ici le samedi 14 novembre, publiée sur `dev` le samedi après-midi.
+Périmètre volontairement réduit : R6 III seulement, option désactivée par
+défaut dans les préférences, GPU par DirectML sous Windows, CPU en repli lent.
+Ce que la bêta-1 n'est pas : le critère bêta du 7 novembre n'est pas encore
+entièrement satisfait (écart G1/G2, 60D sans loi, revue à 100 % sur scènes
+non vues) ; une issue GitHub de validation partielle en garde la trace.
+
+### Modèle livré
+
+Réseau E (carte σ en entrée, sortie `x − F`), entraîné avec l'augmentation de
+couleur. Candidat actuel : pas 75 000 de `sigma-input-color-training-v001`.
+Si l'essai des pertes (`loss-mean-study-v001`, L1 / L2 / L1 + moyenne par plan)
+montre qu'une perte visant la moyenne supprime l'assombrissement et l'écart
+G1/G2 sans perte de débruitage, un entraînement de nuit le jeudi produit le
+modèle final. **Gel du modèle vendredi midi**, quel que soit le résultat.
+
+### Répartition des tâches
+
+Les deux agents travaillent sur des fichiers disjoints pour éviter les
+conflits ; chaque tâche arrive avec ses tests.
+
+| # | Tâche | Agent | Fichiers principaux | Échéance |
+| --- | --- | --- | --- | --- |
+| 1 | Outil DNG mosaïque débruitée pour les essais réels de l'utilisateur | Claude | `tests/neural/denoise_to_dng.py` | mer. 11 |
+| 2 | Essai des pertes, analyse, choix du modèle | Claude | `tests/neural/` | jeu. 12 |
+| 3 | Export ONNX et test de concordance avec PyTorch (sortie, biais des noirs, tuiles) | Claude | `tests/neural/export_onnx.py` | jeu. 12 |
+| 4 | Dépendance ONNX Runtime (DirectML, CPU) : vcpkg ou paquet officiel, CMake, DLL au déploiement, licence | Codex | `vcpkg.json`, `CMakeLists.txt`, `cmake/`, `scripts/` | jeu. 12 |
+| 5 | Module `src/neural/NeuralRawDenoiser` : session, choix du moteur (DirectML puis CPU), tuiles avec marge de 192 cellules, annulation, libération | Codex | `src/neural/*` | ven. 13 |
+| 6 | Lois de bruit : `src/raw/NoiseLaw` et `config/noise-laws.json` généré depuis les preuves (R6 III, interpolation en log-ISO), refus propre hors catalogue | Claude | `src/raw/NoiseLaw*`, `config/`, `src/tools/` | jeu. 12 |
+| 7 | Étage CFA dans `RawDevelopment::develop` juste avant `Demosaic::interpolate` (étape `PreDemosaicCfa`), noir et loi passés au module ; clé de cache | Claude | `src/raw/RawDevelopment*`, `src/raw/RawDecoder.cpp` | ven. 13 |
+| 8 | Préférence utilisateur (désactivée par défaut, avertissement sans GPU), raccordement `ImageEditor` en cadenceur, recette (force et identifiant du modèle) et migration | Codex | `src/qml/`, `src/editor/`, `src/core/EditRecipe*`, `RecipeCodec*` | ven. 13 |
+| 9 | Tests C++ : force 0 identique bit à bit, tuiles sans couture, concordance avec les sorties Python de référence, annulation et libération | Claude + Codex | `tests/` | ven. 13 |
+| 10 | Validation dans l'application sur photos réelles, planches, issue de validation partielle | Claude, puis l'utilisateur | `docs/validation/` | sam. 14 matin |
+| 11 | Fusion `--no-ff` dans `dev`, tag, publication | Claude, **sur accord explicite** | — | sam. 14 après-midi |
+
+### Calendrier
+
+- **Mercredi 11** : plan, outil DNG, essai des pertes lancé (le soir ou dès
+  que VS Code est fermé).
+- **Jeudi 12** : analyse de l'essai ; export ONNX et concordance ; lois de
+  bruit ; dépendance ONNX Runtime. Le soir, entraînement final si la perte
+  change (suspendre Windows Update avant).
+- **Vendredi 13** : module neuronal, étage CFA, préférence et recette ;
+  gel du modèle à midi ; tests C++ ; CI complète.
+- **Samedi 14** : matin, essais de l'utilisateur dans l'application et
+  corrections ; après-midi, fusion dans `dev`, tag et publication après accord.
+
+### Décisions à prendre par l'utilisateur
+
+- **Branche de production** : proposition `patch_noise` (branche durable du
+  groupe bruit), après y avoir fusionné `dev` à jour ; le travail de
+  recherche reste sur `patch_neural_restoration`.
+- **Fichier du modèle** (environ 33 Mo en ONNX fp32) : versionné dans le dépôt,
+  via Git LFS, ou téléchargé depuis une release.
+- **Numéro de version** : la règle donne `v0.Y.X-beta` ; à confirmer si le
+  débruitage neuronal compte comme nouveau panneau (`Y` + 1) ou non, et le
+  nombre de patchs livrés pour `X`.
+- **Coordination avec Codex** : le plan lui est transmis par le fichier
+  commun et la file `codex queue` ; il reprend les tâches 4, 5, 8 et sa part
+  de la 9.
+
+### Risques
+
+- ONNX Runtime avec DirectML : intégration CMake et déploiement de DLL
+  nouveaux dans le projet (tâche 4 critique, à démarrer en premier).
+- Temps de rendu : environ 50 s par image sur CPU ; sur GPU, à mesurer avec
+  DirectML dès que la tâche 5 tourne.
+- Écart G1/G2 : s'il n'est pas résolu, la bêta-1 part avec la limite
+  documentée et une vérification visuelle du dématriçage dans les aplats.
