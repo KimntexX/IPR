@@ -17,10 +17,10 @@ gardant le même résultat que l'export.
 
 ## Invariant
 
-Pour tous réglages et pour toute zone, le rendu de la zone est égal au
-recadrage du rendu pleine image sur cette zone, à une tolérance près (à fixer
-avec l'utilisateur : par exemple au plus 1 niveau sur 255 en sRGB 8 bits, sur
-le corpus de régression). Un test compare les deux sur des zones au centre,
+Pour tous réglages et pour toute zone, le rendu de la zone est **strictement
+égal** au recadrage du rendu pleine image sur cette zone (décision de
+l'utilisateur du 12 novembre 2026) : deux tuiles voisines se raccordent sans
+couture. Un test compare les deux sur des zones au centre,
 au bord et dans les coins, pour chaque étape et pour leurs combinaisons.
 
 **Repli** : un réglage dont une étape ne sait pas encore se rendre par zone
@@ -64,11 +64,33 @@ la marge atteint environ 770 px de chaque côté.
    correspondante, puis rogne la marge. Les modules qui lisent des
    coordonnées (grain, masques, retouches, réductions de la clarté) reçoivent
    l'origine de la région.
-3. **Ordonnancement** : la vue publie sa région visible (en pixels de la pleine
-   image) ; le moteur rend la région, l'affiche au-dessus de l'aperçu agrandi,
-   et garde les régions déjà rendues pour ces réglages (déplacement sans
-   nouveau rendu). Une tuile hors réglages courants n'est jamais montrée,
-   comme aujourd'hui.
+3. **Affinage progressif par tuiles** (décidé par l'utilisateur le 12 novembre
+   2026) :
+   - l'aperçu agrandi s'affiche aussitôt ; la zone visible est découpée en
+     tuiles de 512×512 pixels du fichier, rendues en pleine résolution l'une
+     après l'autre, **en spirale depuis le centre de la vue** (depuis le
+     pointeur après un zoom à la molette ou au clic), et posées au-dessus de
+     l'aperçu agrandi dès qu'elles sont prêtes ;
+   - **couronne de préchargement** : une bande de 512 px autour de la zone
+     visible est rendue ensuite, pour qu'un déplacement trouve ses tuiles prêtes ;
+   - **déplacement** : les tuiles qui sortent de la zone visible et de sa
+     couronne, du côté opposé au mouvement, sont libérées ; les tuiles en
+     attente de ce côté sont retirées de la file, et celle en cours de rendu
+     est abandonnée à son prochain point d'annulation ; la file est
+     réordonnée en spirale depuis le nouveau centre, la couronne d'abord dans
+     le sens du mouvement ;
+   - **changement de réglage** : toutes les tuiles sont masquées et la file
+     annulée ; on repart de l'aperçu agrandi des nouveaux réglages. Une tuile
+     d'autres réglages n'est jamais montrée ;
+   - **étapes à grand rayon partagées** : clarté (bandes jusqu'à σ = 256 px) et
+     voile (cartes à ¼ de résolution) sont des variations lentes, déjà
+     calculées sur des images réduites ; leurs couches réduites sont calculées
+     une fois pour la zone visible, sa couronne et leur marge, puis lues par
+     chaque tuile. Une tuile n'a alors qu'une petite marge (rayon du bruit, de
+     la netteté, de l'interpolation) : sans cela, une marge de 770 px autour
+     d'une tuile de 512 px multiplierait les pixels calculés par 16 ;
+   - un niveau intermédiaire (mi-résolution) n'est ajouté que si les tuiles
+     pleine résolution restent trop lentes à venir.
 4. **Proxy adapté aux ressources** (second volet) : taille de l'aperçu selon
    la mémoire et les threads de l'hôte ([cible de ressources](controle-memoire-images.md)).
 
@@ -105,20 +127,22 @@ Pic de mémoire du processus : 3,7 Gio avec le RAW de 32 Mpx chargé.
 
 ## Étapes
 
-1. ✅ Banc de mesure (ci-dessus). Reste : profilage de « tons et couleur » ;
-   temps et mémoire du rendu pleine image actuel sur le corpus
-   R6 III, avec et sans clarté, voile, masques, retouches ; outil de comparaison
-   zone / recadrage du plein rendu.
+1. ✅ Banc de mesure (ci-dessus). Reste : profilage de « tons et couleur »
+   (6 s par pixel seul en pleine résolution) ; outil de comparaison zone /
+   recadrage du plein rendu.
 2. Contexte global extrait des trois mesures, sans changer les pixels (test
    d'égalité stricte avec la version actuelle).
 3. Rendu de région pour les étapes « direct » et la géométrie, repli pour les
    autres ; invariant testé.
 4. Clarté, voile, débruitage, netteté par zone ; puis masques et retouches.
-5. Vue : région visible, tuiles conservées pendant le déplacement.
+5. Vue et ordonnanceur : tuiles en spirale, couronne de 512 px, libération et
+   annulation du côté opposé au déplacement, annulation au changement de réglage.
 6. Proxy adapté aux ressources.
 
-## Décisions à prendre avec l'utilisateur
+## Décisions de l'utilisateur
 
-- La tolérance de l'invariant (égalité stricte, ou 1 niveau sur 255).
-- La clarté et le voile au zoom : marge pleine (exacte, plus lente) ou repli
-  sur le rendu entier quand ils sont actifs.
+- 12 novembre 2026 : égalité stricte entre une zone et le recadrage du rendu
+  entier ; affinage progressif par tuiles de 512 px en spirale depuis le
+  centre ; couronne de préchargement de 512 px ; libération et arrêt des tuiles
+  du côté opposé au déplacement. La clarté et le voile partagent leurs couches
+  réduites entre les tuiles au lieu d'un repli sur le rendu entier.
