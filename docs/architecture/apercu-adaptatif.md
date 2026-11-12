@@ -72,9 +72,41 @@ la marge atteint environ 770 px de chaque côté.
 4. **Proxy adapté aux ressources** (second volet) : taille de l'aperçu selon
    la mémoire et les threads de l'hôte ([cible de ressources](controle-memoire-images.md)).
 
+## Mesure du rendu actuel — 12 novembre 2026
+
+Sonde `detailRenderProbe` (`tests/detail_render_probe.cpp`), meilleur de 2 rendus,
+20 threads, sans cache d'étapes ni réseau
+([preuve](../validation/raw/adaptive-preview-full-resolution-cost-v001-20261112T114126Z.json)).
+
+| Réglages | R6 III 32 Mpx (4639×6959), plein / aperçu | 60D 18 Mpx, plein / aperçu |
+| --- | --- | --- |
+| Neutre | 0,9–1,0 s / 80 ms | 0,6 s / 90 ms |
+| Tons et couleur | 5,9–6,1 s / 0,52 s | 3,3 s / 0,53 s |
+| + bruit (luminance 40, couleur 30) | 8,7 s / 0,74 s | 4,8 s / 0,76 s |
+| + netteté 40 | 6,4–6,5 s / 0,54–0,61 s | 3,6 s / 0,56 s |
+| + texture 20, clarté 30 | 7,1 s / 0,65 s | 3,9 s / 0,65 s |
+| + voile 25 | 6,5 s / 0,82 s | 3,7 s / 0,63 s |
+| Tout | 11,1–11,2 s / 1,2 s | 6,2 s / 1,0 s |
+
+Pic de mémoire du processus : 3,7 Gio avec le RAW de 32 Mpx chargé.
+
+**Lecture.**
+
+- Le R6 III fait **32 Mpx**, non 24 : le zoom de la bêta-1 attend 6 à 11 s
+  après chaque réglage. Le rendu par zone est donc nécessaire, pas un confort.
+- Le coût suit le nombre de pixels : rapport 11 à 12 entre le plein format
+  (32,3 Mpx) et l'aperçu (2,8 Mpx, 11,6 fois moins de pixels). Une zone d'écran
+  2560×1440 (3,7 Mpx) sans grande marge coûterait donc
+  environ 0,7 à 1,3 s ; avec la marge de la clarté (≈ 770 px), environ 12 Mpx
+  et 2,5 à 4 s.
+- « Tons et couleur », sans aucun filtre de voisinage, coûte déjà 6 s : une
+  étape par pixel est anormalement lente en pleine résolution. La profiler
+  avant le rendu par zone peut diviser tous les temps.
+
 ## Étapes
 
-1. Banc de mesure : temps et mémoire du rendu pleine image actuel sur le corpus
+1. ✅ Banc de mesure (ci-dessus). Reste : profilage de « tons et couleur » ;
+   temps et mémoire du rendu pleine image actuel sur le corpus
    R6 III, avec et sans clarté, voile, masques, retouches ; outil de comparaison
    zone / recadrage du plein rendu.
 2. Contexte global extrait des trois mesures, sans changer les pixels (test

@@ -421,6 +421,9 @@ if(BUILD_TESTING AND IPR_ENABLE_LIBRAW AND LIBRAW_INCLUDE_DIR AND LIBRAW_LIBRARY
     target_link_libraries(demosaicProbe PRIVATE iprEngine)
     add_executable(openingLatencyProbe EXCLUDE_FROM_ALL tests/opening_latency_probe.cpp)
     target_link_libraries(openingLatencyProbe PRIVATE iprEngine)
+    # Adaptive preview, step 1: cost of the zoom's full-resolution render (manual, not in CTest).
+    add_executable(detailRenderProbe EXCLUDE_FROM_ALL tests/detail_render_probe.cpp)
+    target_link_libraries(detailRenderProbe PRIVATE iprEngine)
     add_executable(wbCameraProbe EXCLUDE_FROM_ALL tests/wb_camera_probe.cpp)
     target_link_libraries(wbCameraProbe PRIVATE iprEngine)
     add_executable(rawOpeningProbe EXCLUDE_FROM_ALL tests/raw_opening_probe.cpp)
