@@ -1,0 +1,898 @@
+{
+ "schema_version": 1,
+ "data_version": 1,
+ "created_at_utc": "2026-10-28T09:05:55.406298+00:00",
+ "source": {
+  "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9819.CR3",
+  "sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165"
+ },
+ "native": {
+  "declaration": {
+   "chromatic_aberration_applied": false,
+   "created_at_utc": "2026-10-28T09:05:55.294Z",
+   "dcp_profile": "Canon EOS R6 Mark III Camera Neutral",
+   "executable_sha256": "807b265fe8cf8787d9daa518f3764de81ebed14459efe721d245dbef23449a7e",
+   "feature": "neutral",
+   "group": "bruit",
+   "ipr_test_schema": 1,
+   "lcp_profile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+   "lcp_sha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+   "lens_geometry_applied": false,
+   "lens_vignetting_applied": false,
+   "qt_version": "6.11.2",
+   "raw_normalization": true,
+   "reference": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9819.CR3",
+   "scene": "6V1A9819",
+   "settings": {
+    "automaticWhiteBalance": false,
+    "blacks": 0,
+    "blur": 0,
+    "clarity": 0,
+    "contrast": 0,
+    "dehaze": 0,
+    "denoiseChrominance": 0,
+    "denoiseLuminance": 0,
+    "exposure": 0,
+    "grading": [
+     {
+      "hue": 0,
+      "saturation": 0
+     },
+     {
+      "hue": 0,
+      "saturation": 0
+     },
+     {
+      "hue": 0,
+      "saturation": 0
+     }
+    ],
+    "grain": 0,
+    "grayscale": false,
+    "highlights": 0,
+    "mixerHue": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "mixerLuminance": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "mixerSaturation": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "saturation": 0,
+    "shadows": 0,
+    "sharpeningAmount": 0,
+    "sharpeningMasking": 0,
+    "sharpeningRadius": 1,
+    "temperature": 4924,
+    "texture": 0,
+    "tint": 0,
+    "toneCurves": [
+     [],
+     [],
+     [],
+     []
+    ],
+    "vibrance": 0,
+    "whites": 0
+   },
+   "source_sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165",
+   "value": 0
+  },
+  "estimate_ms": 134.8685,
+  "height": 6959,
+  "models": [
+   {
+    "affine": false,
+    "intercept": 2.60192700807238e-05,
+    "maximum_signal": 0.34037137031555176,
+    "minimum_signal": 0.0001727977069094777,
+    "patches": 576,
+    "slope": 0
+   },
+   {
+    "affine": false,
+    "intercept": 1.6139712897711433e-05,
+    "maximum_signal": 0.34037137031555176,
+    "minimum_signal": 0.0001727977069094777,
+    "patches": 576,
+    "slope": 0
+   },
+   {
+    "affine": false,
+    "intercept": 2.186612164223334e-06,
+    "maximum_signal": 0.34037137031555176,
+    "minimum_signal": 0.0001727977069094777,
+    "patches": 576,
+    "slope": 0
+   }
+  ],
+  "raw": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9819.CR3",
+  "regions": [
+   {
+    "local_haar_mad_sigma": [
+     0.0017384197562932968,
+     0.0036035096272826195,
+     0.001282240147702396
+    ],
+    "mean_y": 0.022912733137907537,
+    "predicted_effective_sigma": [
+     0.005100908689200878,
+     0.0040174261666834354,
+     0.0014787197578698397
+    ],
+    "rect": [
+     800,
+     1264,
+     256,
+     256
+    ]
+   },
+   {
+    "local_haar_mad_sigma": [
+     0.009202695451676846,
+     0.004770189523696899,
+     0.0030409214086830616
+    ],
+    "mean_y": 0.2190671299214344,
+    "predicted_effective_sigma": [
+     0.005100908689200878,
+     0.0040174261666834354,
+     0.0014787197578698397
+    ],
+    "rect": [
+     2192,
+     1264,
+     256,
+     256
+    ]
+   },
+   {
+    "local_haar_mad_sigma": [
+     0.010440305806696415,
+     0.005036028567701578,
+     0.003115881234407425
+    ],
+    "mean_y": 0.17970817508421533,
+    "predicted_effective_sigma": [
+     0.005100908689200878,
+     0.0040174261666834354,
+     0.0014787197578698397
+    ],
+    "rect": [
+     3583,
+     1264,
+     256,
+     256
+    ]
+   },
+   {
+    "local_haar_mad_sigma": [
+     0.0009096693829633296,
+     0.001832798938266933,
+     0.0006799203692935407
+    ],
+    "mean_y": 0.006834281487003491,
+    "predicted_effective_sigma": [
+     0.005100908689200878,
+     0.0040174261666834354,
+     0.0014787197578698397
+    ],
+    "rect": [
+     800,
+     3352,
+     256,
+     256
+    ]
+   },
+   {
+    "local_haar_mad_sigma": [
+     0.00658963480964303,
+     0.005019188392907381,
+     0.0020017498172819614
+    ],
+    "mean_y": 0.08476184555414079,
+    "predicted_effective_sigma": [
+     0.005100908689200878,
+     0.0040174261666834354,
+     0.0014787197578698397
+    ],
+    "rect": [
+     2192,
+     3352,
+     256,
+     256
+    ]
+   },
+   {
+    "local_haar_mad_sigma": [
+     0.009163972921669483,
+     0.0060179405845701694,
+     0.0024562545586377382
+    ],
+    "mean_y": 0.10473433121325115,
+    "predicted_effective_sigma": [
+     0.005100908689200878,
+     0.0040174261666834354,
+     0.0014787197578698397
+    ],
+    "rect": [
+     3583,
+     3352,
+     256,
+     256
+    ]
+   },
+   {
+    "local_haar_mad_sigma": [
+     0.004202573094516993,
+     0.0034805594477802515,
+     0.0011128586484119296
+    ],
+    "mean_y": 0.0263379996462767,
+    "predicted_effective_sigma": [
+     0.005100908689200878,
+     0.0040174261666834354,
+     0.0014787197578698397
+    ],
+    "rect": [
+     800,
+     5439,
+     256,
+     256
+    ]
+   },
+   {
+    "local_haar_mad_sigma": [
+     0.006567792035639286,
+     0.005335369147360325,
+     0.0019494642037898302
+    ],
+    "mean_y": 0.07407763195911721,
+    "predicted_effective_sigma": [
+     0.005100908689200878,
+     0.0040174261666834354,
+     0.0014787197578698397
+    ],
+    "rect": [
+     2192,
+     5439,
+     256,
+     256
+    ]
+   },
+   {
+    "local_haar_mad_sigma": [
+     0.009198342449963093,
+     0.0072176954708993435,
+     0.002860469976440072
+    ],
+    "mean_y": 0.10193926249317542,
+    "predicted_effective_sigma": [
+     0.005100908689200878,
+     0.0040174261666834354,
+     0.0014787197578698397
+    ],
+    "rect": [
+     3583,
+     5439,
+     256,
+     256
+    ]
+   }
+  ],
+  "rules": "One RAW only; existing fullframe production estimator, no burst/profile covariance imported; native grid fixed; no denoising or TIFF",
+  "sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165",
+  "width": 4639
+ },
+ "predictions": [
+  {
+   "region": 0,
+   "observed_chroma_band_covariance": [
+    [
+     [
+      2.613290908974272e-05,
+      -9.510445175155476e-06
+     ],
+     [
+      -9.510445175155476e-06,
+      3.552811031162417e-06
+     ]
+    ],
+    [
+     [
+      1.418014147102796e-05,
+      -5.732077080289455e-06
+     ],
+     [
+      -5.732077080289455e-06,
+      2.36709265740268e-06
+     ]
+    ],
+    [
+     [
+      7.111127451620495e-06,
+      -2.97619901558528e-06
+     ],
+     [
+      -2.97619901558528e-06,
+      1.2677622633660935e-06
+     ]
+    ],
+    [
+     [
+      2.3158822442396355e-06,
+      -9.774026794082303e-07
+     ],
+     [
+      -9.774026794082303e-07,
+      4.197415397924966e-07
+     ]
+    ]
+   ],
+   "production": {
+    "local_haar_mad_sigma": [
+     0.0017384197562932968,
+     0.0036035096272826195,
+     0.001282240147702396
+    ],
+    "mean_y": 0.022912733137907537,
+    "predicted_effective_sigma": [
+     0.005100908689200878,
+     0.0040174261666834354,
+     0.0014787197578698397
+    ],
+    "rect": [
+     800,
+     1264,
+     256,
+     256
+    ]
+   }
+  },
+  {
+   "region": 1,
+   "observed_chroma_band_covariance": [
+    [
+     [
+      5.945953380778159e-05,
+      8.638890837411643e-07
+     ],
+     [
+      8.638890837411643e-07,
+      3.222790636580733e-05
+     ]
+    ],
+    [
+     [
+      5.536695784485733e-05,
+      -1.737058848021197e-07
+     ],
+     [
+      -1.737058848021197e-07,
+      3.856950513174459e-05
+     ]
+    ],
+    [
+     [
+      4.764438677757003e-05,
+      4.2509546946971765e-06
+     ],
+     [
+      4.2509546946971765e-06,
+      2.4356549494332443e-05
+     ]
+    ],
+    [
+     [
+      4.364863708123835e-05,
+      8.01296394941646e-06
+     ],
+     [
+      8.01296394941646e-06,
+      1.027530777581179e-05
+     ]
+    ]
+   ],
+   "production": {
+    "local_haar_mad_sigma": [
+     0.009202695451676846,
+     0.004770189523696899,
+     0.0030409214086830616
+    ],
+    "mean_y": 0.2190671299214344,
+    "predicted_effective_sigma": [
+     0.005100908689200878,
+     0.0040174261666834354,
+     0.0014787197578698397
+    ],
+    "rect": [
+     2192,
+     1264,
+     256,
+     256
+    ]
+   }
+  },
+  {
+   "region": 2,
+   "observed_chroma_band_covariance": [
+    [
+     [
+      5.744409726403817e-05,
+      5.0034996870344495e-06
+     ],
+     [
+      5.0034996870344495e-06,
+      2.4902978202734027e-05
+     ]
+    ],
+    [
+     [
+      5.066286272080275e-05,
+      -6.6720863666162604e-06
+     ],
+     [
+      -6.6720863666162604e-06,
+      2.774243626101971e-05
+     ]
+    ],
+    [
+     [
+      2.9719775683120682e-05,
+      -5.706687179829003e-06
+     ],
+     [
+      -5.706687179829003e-06,
+      1.7401555906458027e-05
+     ]
+    ],
+    [
+     [
+      9.521966322061347e-06,
+      -1.9096348937502456e-06
+     ],
+     [
+      -1.9096348937502456e-06,
+      5.9763691351235385e-06
+     ]
+    ]
+   ],
+   "production": {
+    "local_haar_mad_sigma": [
+     0.010440305806696415,
+     0.005036028567701578,
+     0.003115881234407425
+    ],
+    "mean_y": 0.17970817508421533,
+    "predicted_effective_sigma": [
+     0.005100908689200878,
+     0.0040174261666834354,
+     0.0014787197578698397
+    ],
+    "rect": [
+     3583,
+     1264,
+     256,
+     256
+    ]
+   }
+  },
+  {
+   "region": 3,
+   "observed_chroma_band_covariance": [
+    [
+     [
+      7.568789435952573e-06,
+      -2.846259568177831e-06
+     ],
+     [
+      -2.846259568177831e-06,
+      1.096474053532611e-06
+     ]
+    ],
+    [
+     [
+      3.6763612474926413e-06,
+      -1.4686047010113212e-06
+     ],
+     [
+      -1.4686047010113212e-06,
+      6.04064934988719e-07
+     ]
+    ],
+    [
+     [
+      2.000449789656888e-06,
+      -8.227281974384356e-07
+     ],
+     [
+      -8.227281974384356e-07,
+      3.4693721288478214e-07
+     ]
+    ],
+    [
+     [
+      6.021385074168423e-07,
+      -2.4826059716364483e-07
+     ],
+     [
+      -2.4826059716364483e-07,
+      1.0493744901439267e-07
+     ]
+    ]
+   ],
+   "production": {
+    "local_haar_mad_sigma": [
+     0.0009096693829633296,
+     0.001832798938266933,
+     0.0006799203692935407
+    ],
+    "mean_y": 0.006834281487003491,
+    "predicted_effective_sigma": [
+     0.005100908689200878,
+     0.0040174261666834354,
+     0.0014787197578698397
+    ],
+    "rect": [
+     800,
+     3352,
+     256,
+     256
+    ]
+   }
+  },
+  {
+   "region": 4,
+   "observed_chroma_band_covariance": [
+    [
+     [
+      7.247375816299043e-05,
+      -2.9380631104974613e-06
+     ],
+     [
+      -2.9380631104974613e-06,
+      1.9986837929417968e-05
+     ]
+    ],
+    [
+     [
+      5.010623446514468e-05,
+      6.592217912931495e-08
+     ],
+     [
+      6.592217912931495e-08,
+      1.6680047079390597e-05
+     ]
+    ],
+    [
+     [
+      8.170128547484665e-05,
+      1.404492676303057e-05
+     ],
+     [
+      1.404492676303057e-05,
+      1.237388785346389e-05
+     ]
+    ],
+    [
+     [
+      9.488404867333023e-05,
+      2.011219576582792e-05
+     ],
+     [
+      2.011219576582792e-05,
+      7.640343353367285e-06
+     ]
+    ]
+   ],
+   "production": {
+    "local_haar_mad_sigma": [
+     0.00658963480964303,
+     0.005019188392907381,
+     0.0020017498172819614
+    ],
+    "mean_y": 0.08476184555414079,
+    "predicted_effective_sigma": [
+     0.005100908689200878,
+     0.0040174261666834354,
+     0.0014787197578698397
+    ],
+    "rect": [
+     2192,
+     3352,
+     256,
+     256
+    ]
+   }
+  },
+  {
+   "region": 5,
+   "observed_chroma_band_covariance": [
+    [
+     [
+      7.240770485424566e-05,
+      6.36686098612006e-06
+     ],
+     [
+      6.36686098612006e-06,
+      1.4951642569415594e-05
+     ]
+    ],
+    [
+     [
+      4.032876766123429e-05,
+      -7.646851983454636e-06
+     ],
+     [
+      -7.646851983454636e-06,
+      1.6229021403029346e-05
+     ]
+    ],
+    [
+     [
+      2.2330807842510325e-05,
+      -6.496475152117287e-06
+     ],
+     [
+      -6.496475152117287e-06,
+      9.879064814673034e-06
+     ]
+    ],
+    [
+     [
+      8.739756401587604e-06,
+      -2.933218066754941e-06
+     ],
+     [
+      -2.933218066754941e-06,
+      3.773514149217048e-06
+     ]
+    ]
+   ],
+   "production": {
+    "local_haar_mad_sigma": [
+     0.009163972921669483,
+     0.0060179405845701694,
+     0.0024562545586377382
+    ],
+    "mean_y": 0.10473433121325115,
+    "predicted_effective_sigma": [
+     0.005100908689200878,
+     0.0040174261666834354,
+     0.0014787197578698397
+    ],
+    "rect": [
+     3583,
+     3352,
+     256,
+     256
+    ]
+   }
+  },
+  {
+   "region": 6,
+   "observed_chroma_band_covariance": [
+    [
+     [
+      2.5890782943187972e-05,
+      -3.955488804185834e-07
+     ],
+     [
+      -3.955488804185834e-07,
+      3.5077973746591357e-06
+     ]
+    ],
+    [
+     [
+      1.299985423296157e-05,
+      -2.417929341898094e-06
+     ],
+     [
+      -2.417929341898094e-06,
+      3.5832394927509595e-06
+     ]
+    ],
+    [
+     [
+      8.363307985820857e-06,
+      -1.5842459577273175e-06
+     ],
+     [
+      -1.5842459577273175e-06,
+      2.0124925326653497e-06
+     ]
+    ],
+    [
+     [
+      3.7618708022589406e-06,
+      -5.882964930120636e-07
+     ],
+     [
+      -5.882964930120636e-07,
+      7.173298987935441e-07
+     ]
+    ]
+   ],
+   "production": {
+    "local_haar_mad_sigma": [
+     0.004202573094516993,
+     0.0034805594477802515,
+     0.0011128586484119296
+    ],
+    "mean_y": 0.0263379996462767,
+    "predicted_effective_sigma": [
+     0.005100908689200878,
+     0.0040174261666834354,
+     0.0014787197578698397
+    ],
+    "rect": [
+     800,
+     5439,
+     256,
+     256
+    ]
+   }
+  },
+  {
+   "region": 7,
+   "observed_chroma_band_covariance": [
+    [
+     [
+      9.264981514914714e-05,
+      -1.0158122996236743e-06
+     ],
+     [
+      -1.0158122996236743e-06,
+      1.6097304894532732e-05
+     ]
+    ],
+    [
+     [
+      5.512093307589689e-05,
+      -6.214526457073136e-06
+     ],
+     [
+      -6.214526457073136e-06,
+      1.4426332816995353e-05
+     ]
+    ],
+    [
+     [
+      3.722613635088175e-05,
+      -3.1971831554352636e-06
+     ],
+     [
+      -3.1971831554352636e-06,
+      8.315564652579186e-06
+     ]
+    ],
+    [
+     [
+      2.875531450454906e-05,
+      6.117273638082438e-07
+     ],
+     [
+      6.117273638082438e-07,
+      2.97195924018577e-06
+     ]
+    ]
+   ],
+   "production": {
+    "local_haar_mad_sigma": [
+     0.006567792035639286,
+     0.005335369147360325,
+     0.0019494642037898302
+    ],
+    "mean_y": 0.07407763195911721,
+    "predicted_effective_sigma": [
+     0.005100908689200878,
+     0.0040174261666834354,
+     0.0014787197578698397
+    ],
+    "rect": [
+     2192,
+     5439,
+     256,
+     256
+    ]
+   }
+  },
+  {
+   "region": 8,
+   "observed_chroma_band_covariance": [
+    [
+     [
+      0.0001187232849370774,
+      7.185103045012712e-07
+     ],
+     [
+      7.185103045012712e-07,
+      2.2833173452459013e-05
+     ]
+    ],
+    [
+     [
+      7.133856472846767e-05,
+      -7.201634582887794e-06
+     ],
+     [
+      -7.201634582887794e-06,
+      2.1182307225844654e-05
+     ]
+    ],
+    [
+     [
+      4.7682353974073606e-05,
+      -3.1252076844477603e-06
+     ],
+     [
+      -3.1252076844477603e-06,
+      1.1935568224571872e-05
+     ]
+    ],
+    [
+     [
+      2.2428273623484208e-05,
+      4.2615640461161653e-07
+     ],
+     [
+      4.2615640461161653e-07,
+      3.792765798004126e-06
+     ]
+    ]
+   ],
+   "production": {
+    "local_haar_mad_sigma": [
+     0.009198342449963093,
+     0.0072176954708993435,
+     0.002860469976440072
+    ],
+    "mean_y": 0.10193926249317542,
+    "predicted_effective_sigma": [
+     0.005100908689200878,
+     0.0040174261666834354,
+     0.0014787197578698397
+    ],
+    "rect": [
+     3583,
+     5439,
+     256,
+     256
+    ]
+   }
+  }
+ ],
+ "tool": {
+  "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-tools\\Release\\iprNoiseSingleAudit.exe",
+  "sha256": "807b265fe8cf8787d9daa518f3764de81ebed14459efe721d245dbef23449a7e"
+ },
+ "pixels": {
+  "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\single-photo-audit\\20261028T090522Z\\single-photo.json.f32",
+  "sha256": "099071f5b3a15b5958a07149537785cb61559fcef483b351dba7e5f76ab19ee6"
+ },
+ "runner_sha256": "cbeae181c7a1c8ec5ec78c32a753d74f59f2481b05e9f186cf283464fcb84927",
+ "runner_source": "\"\"\"One-photo prediction freeze followed by separate, target-excluded burst scoring.\"\"\"\nfrom datetime import datetime,timezone\nimport json\nfrom pathlib import Path\nimport subprocess\nimport sys\nimport numpy as np\nfrom analysis.render import available_memory,runtime_env\nfrom study_noise_burst_band_wiener import pyramid\nfrom study_noise_burst_shared_chroma import covariance_bands\nfrom study_noise_burst_residuals import residual\nfrom study_noise_burst_bands import haar\nfrom study_noise_neighbourhoods import ROOT,sha256,git\n\n\ndef observed_covariances(frame):\n    \"\"\"Single input only: observed spatial band energy, not certified noise covariance.\"\"\"\n    if frame.shape!=(3,256,256) or not np.isfinite(frame).all():raise ValueError('Finite native256 Y/Co/Cg required')\n    co,_=pyramid(frame[1]);cg,_=pyramid(frame[2]);result=[]\n    for a,b in zip(co,cg):\n        samples=np.stack((a[32:-32,32:-32].ravel(),b[32:-32,32:-32].ravel())).astype(float)\n        samples-=samples.mean(axis=1,keepdims=True)\n        result.append(samples@samples.T/samples.shape[1])\n    return np.array(result)\n\n\ndef compare_covariance(observed,reference):\n    if observed.shape!=(4,2,2) or reference.shape!=(4,2,2):raise ValueError('Four2x2 bands required')\n    result=[]\n    for estimate,truth in zip(observed,reference):\n        diagonal=np.diag(truth)\n        if np.min(diagonal)<=0:raise ValueError('Nonpositive temporal reference variance')\n        sd=np.sqrt(np.maximum(np.diag(estimate),0)/diagonal)\n        result.append(dict(observed=estimate.tolist(),temporal_reference=truth.tolist(),\n            sigma_ratios=sd.tolist(),relative_frobenius_error=float(np.linalg.norm(estimate-truth)/np.linalg.norm(truth))))\n    return result\n\n\ndef run():\n    started=datetime.now(timezone.utc)\n    if sys.byteorder!='little' or (available_memory() or 0)<5*1024**3:raise ValueError('Need little-endian host and5GiB before RAW')\n    parent=ROOT/'docs/validation/raw/extraction-native-rafale-bruit-v001-20261027T230112Z.json'\n    contract=json.loads(parent.read_text(encoding='utf-8'));target=contract['records'][0]\n    raw=Path(target['path']);tool=ROOT/'build-patch_noise/burst-tools/Release/iprNoiseSingleAudit.exe'\n    if sha256(raw)!=target['sha256']:raise ValueError('Changed source RAW')\n    tool_hash=sha256(tool);stamp=started.strftime('%Y%m%dT%H%M%SZ')\n    folder=ROOT/'build-patch_noise/single-photo-audit'/stamp;folder.mkdir(parents=True,exist_ok=False)\n    native_path=folder/'single-photo.json'\n    subprocess.run([str(tool),str(native_path),str(raw)],env=runtime_env(tool),check=True,timeout=240)\n    native=json.loads(native_path.read_text(encoding='utf-8'));pixel_path=Path(str(native_path)+'.f32')\n    frame=np.fromfile(pixel_path,dtype='<f4').reshape(9,3,256,256)\n    if native['sha256']!=target['sha256']:raise ValueError('Native identity mismatch')\n    predictions=[dict(region=i,observed_chroma_band_covariance=observed_covariances(p).tolist(),\n        production=native['regions'][i]) for i,p in enumerate(frame)]\n    # Explicit boundary: the predictor above opens one RAW only, no temporal pixels.\n    freeze=ROOT/'docs/validation/raw'/f'prediction-photo-seule-bruit-v001-{stamp}.json'\n    frozen=dict(schema_version=1,data_version=1,created_at_utc=datetime.now(timezone.utc).isoformat(),\n        source=dict(path=str(raw),sha256=target['sha256']),native=native,predictions=predictions,\n        tool=dict(path=str(tool),sha256=tool_hash),pixels=dict(path=str(pixel_path),sha256=sha256(pixel_path)),\n        runner_sha256=sha256(Path(__file__)),runner_source=Path(__file__).read_text(encoding='utf-8'),\n        rules='Prediction from6V1A9819ONLY:currentfullframeproduction3HaarMADmodels plus observedB3bandCoCgspatialcovarianceson9fixed256ROIs. No burstpixel/shape/priorvariance imported before this prediction JSON written. Observedbandmomentsnotcertifiednoiseestimator. No tuning, new denoiser or sealed frames.')\n    with freeze.open('x',encoding='utf-8') as handle:json.dump(frozen,handle,ensure_ascii=False,indent=1,allow_nan=False)\n    print('PREDICTION_FROZEN',freeze,flush=True)\n    # Other frames become available to the scorer only, never to the predictor.\n    p=Path(contract['pixels']['path'])\n    if sha256(p)!=contract['pixels']['sha256']:raise ValueError('Changed temporal archive')\n    with np.load(p,allow_pickle=False) as saved:stack=saved['planes'].copy()\n    delta=float(np.max(abs(frame-stack[0])))\n    if delta>2e-7:raise ValueError('Single-frame pixels differ from anchored native opening')\n    motion_path=ROOT/'docs/validation/raw/residus-rafale-bruit-v001-20261027T230219Z.json'\n    motion=json.loads(motion_path.read_text(encoding='utf-8'));others=list(range(1,14))\n    basis=np.linalg.qr(np.asarray(motion['basis'])[others],mode='reduced')[0];dof=len(others)-basis.shape[1]\n    results=[]\n    for i,record in enumerate(predictions):\n        other=stack[others,i];truth=covariance_bands(other,basis)\n        noise=residual(other,basis);hh=haar(noise[:,:,32:-32,32:-32])\n        hh_sigma=np.sqrt(np.sum(hh*hh,axis=(0,2,3))/(dof*hh.shape[2]*hh.shape[3]))\n        results.append(dict(region=i,production=record['production'],temporal_haar_sigma=hh_sigma.tolist(),\n            production_sigma_to_temporal_haar=(np.asarray(record['production']['predicted_effective_sigma'])/hh_sigma).tolist(),\n            local_mad_sigma_to_temporal_haar=(np.asarray(record['production']['local_haar_mad_sigma'])/hh_sigma).tolist(),\n            bands=compare_covariance(np.asarray(record['observed_chroma_band_covariance']),truth)))\n    if sha256(tool)!=tool_hash:raise ValueError('Tool changed')\n    now=datetime.now(timezone.utc);output=ROOT/'docs/validation/raw'/f'audit-photo-seule-bruit-v001-{now.strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n    source_paths=(ROOT/'tests/burst_tools/single_image_audit.cpp',ROOT/'tests/burst_tools/CMakeLists.txt')\n    result=dict(campaign_id='single-photo-noise-audit-'+stamp,schema_version=1,data_version=1,measured_at_utc=now.isoformat(),\n        started_at_utc=started.isoformat(),completed_at_utc=now.isoformat(),prediction=dict(path=str(freeze),sha256=sha256(freeze)),\n        reference_parents=[dict(path=str(x),sha256=sha256(x)) for x in (parent,motion_path)],records=results,\n        native_baseline_max_abs_delta=delta,reference_indices=others,residual_dof=dof,\n        runner_sha256=sha256(Path(__file__)),runner_source=Path(__file__).read_text(encoding='utf-8'),commit=git('rev-parse','HEAD'),\n        sources={str(x.relative_to(ROOT)):dict(sha256=sha256(x),source=x.read_text(encoding='utf-8')) for x in source_paths},\n        limitations='One previously inspected scene/cameraISO4000,not untouched validation. Temporal reference excludes target but includes motion/fixeddesign assumptions;not absolute noise truth. ProductionHaarMADmodelcomparedtoHaarnoise,NOTpixelSTD. Singlebandcovariance contains texture/commonpattern. No reference-derivedmultipliersfittedorapplied. Final14sealednotdecoded;no production change.',\n        verdict='single_photo_estimation_diagnostic_not_conformance')\n    with output.open('x',encoding='utf-8') as handle:json.dump(result,handle,ensure_ascii=False,indent=1,allow_nan=False)\n    print('RESULT',output,flush=True)\n    for r in results:print('ROI',r['region'],'production/Haar',np.round(r['production_sigma_to_temporal_haar'],3).tolist(),\n        'band-sigma-ratios',np.round([b['sigma_ratios'] for b in r['bands']],3).tolist(),flush=True)\n\n\nif __name__=='__main__':run()\n",
+ "rules": "Prediction from6V1A9819ONLY:currentfullframeproduction3HaarMADmodels plus observedB3bandCoCgspatialcovarianceson9fixed256ROIs. No burstpixel/shape/priorvariance imported before this prediction JSON written. Observedbandmomentsnotcertifiednoiseestimator. No tuning, new denoiser or sealed frames."
+}

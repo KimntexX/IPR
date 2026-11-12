@@ -1,0 +1,1236 @@
+{
+ "campaign_id": "noise-repeated-blacks-freeze-20261028T100341Z",
+ "schema_version": 1,
+ "data_version": 1,
+ "measured_at_utc": "2026-10-28T10:03:41.533690+00:00",
+ "groups": [
+  {
+   "iso": 1600,
+   "frames": [
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0003.CR3",
+     "sha256": "172231741d16ea44e6bc0f509d39a9d6482aa52dbab2eea0246e06d125668b6e",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:58:56",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 1600,
+      "recommended_iso": 1600,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 25292500,
+     "mtime_ns": 1793185154000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0004.CR3",
+     "sha256": "6df877e9085f8d939cfd99fdc4dbc10f5b8e7bb1f97d9ad6a06835432ae34742",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:58:56",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 1600,
+      "recommended_iso": 1600,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 25294036,
+     "mtime_ns": 1793185157000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0005.CR3",
+     "sha256": "a0475c1c538277a44606dfa30f6f6654fc661dcf93a63359d26e250a93ebcaa4",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:58:56",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 1600,
+      "recommended_iso": 1600,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 25294548,
+     "mtime_ns": 1793185159000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0006.CR3",
+     "sha256": "0e4f80df91a3d47e106070406b994dfe70714e6ec8396d2d59caf651340c1fe2",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:58:56",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 1600,
+      "recommended_iso": 1600,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 25297108,
+     "mtime_ns": 1793185161000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0007.CR3",
+     "sha256": "b03af93b591a936e9ccaef80fad4457bc1e4326980682814fd55271d657f01de",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:58:56",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 1600,
+      "recommended_iso": 1600,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 25297108,
+     "mtime_ns": 1793185164000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0008.CR3",
+     "sha256": "687d2b24aeec0904b788f4e5b02793ce7a34a268c19278255abd2a0a6eceef3e",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:58:56",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 1600,
+      "recommended_iso": 1600,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 25296084,
+     "mtime_ns": 1793185166000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0009.CR3",
+     "sha256": "d3f082f255ff0e408bca298daead6df509f05ea762721701b1f6e7faab684a83",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:58:56",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 1600,
+      "recommended_iso": 1600,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 25297620,
+     "mtime_ns": 1793185169000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0010.CR3",
+     "sha256": "2a9110a5aaad5e95ddc26d0171a94e306ebe6dc4a00b9df2b62fa0960ac269e2",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:58:56",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 1600,
+      "recommended_iso": 1600,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 25295572,
+     "mtime_ns": 1793185171000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0011.CR3",
+     "sha256": "9b83009482ae37e863f8cfcd8a9c1e442c6cb81fe0ca610d0df56e4612fa271e",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:58:56",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 1600,
+      "recommended_iso": 1600,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 25300692,
+     "mtime_ns": 1793185173000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0012.CR3",
+     "sha256": "158cfa1c09abe4d9f1d6da8760fe95e2824887dd6f9ef49ffac3b7dda3b2fca7",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:58:56",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 1600,
+      "recommended_iso": 1600,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 25298132,
+     "mtime_ns": 1793185176000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0013.CR3",
+     "sha256": "b0a125661c9b2458997a13b158302d79576c9057e698b6713c6d42c4165e8279",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:58:57",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 1600,
+      "recommended_iso": 1600,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 25296084,
+     "mtime_ns": 1793185178000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0014.CR3",
+     "sha256": "f24646aba5248adc177e21a736abf09aa2e9a81622579e711cfb7d68c25b58d5",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:58:57",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 1600,
+      "recommended_iso": 1600,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 25299156,
+     "mtime_ns": 1793185180000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0015.CR3",
+     "sha256": "ee56a265fed436cf69718225ebdfc82f89e0fcf3037bc54ae9b2e6a82503ca20",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:58:57",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 1600,
+      "recommended_iso": 1600,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 25299156,
+     "mtime_ns": 1793185183000000000
+    }
+   ],
+   "development": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "control": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+   ]
+  },
+  {
+   "iso": 3200,
+   "frames": [
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9991.CR3",
+     "sha256": "518821a941e8440c0686774ff1d718b5e60d79ef21958bdce788607c2d043649",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:58:37",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 3200,
+      "recommended_iso": 3200,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 29997780,
+     "mtime_ns": 1793185129000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9992.CR3",
+     "sha256": "370c32e2906117642c94c2f1c29608f39639a17fbf1b86de54585616589205cf",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:58:37",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 3200,
+      "recommended_iso": 3200,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 29995220,
+     "mtime_ns": 1793185132000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9993.CR3",
+     "sha256": "3303898360c12af594c0856e29a6411e4e1e694da34b5839704f2d7ea4165a4b",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:58:37",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 3200,
+      "recommended_iso": 3200,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 29995220,
+     "mtime_ns": 1793185134000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9994.CR3",
+     "sha256": "0fb0ae208b8a76e9f24eca477de0953e32a9585f0a554c524439fc3357529281",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:58:37",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 3200,
+      "recommended_iso": 3200,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 29992660,
+     "mtime_ns": 1793185136000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9995.CR3",
+     "sha256": "bc179b84d8e148b873023a0702404a3684275fb2f0a4a5b1904deaa1d2f07d39",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:58:37",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 3200,
+      "recommended_iso": 3200,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 29997268,
+     "mtime_ns": 1793185138000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9996.CR3",
+     "sha256": "1e02577ebd668c5860c9fc33e889c6728cfaa01c047511e2f89f6d8c60060011",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:58:37",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 3200,
+      "recommended_iso": 3200,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 29994708,
+     "mtime_ns": 1793185140000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9997.CR3",
+     "sha256": "c5ae10fad86360ac295cd3d5543609dcc569ecabf7bc5a19ba4fa6206ab77ba5",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:58:37",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 3200,
+      "recommended_iso": 3200,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 29995732,
+     "mtime_ns": 1793185142000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9998.CR3",
+     "sha256": "fdeab6578ac9404151a04727c7aa4b9c4678f82d8fbdb23de9773f249345901a",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:58:38",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 3200,
+      "recommended_iso": 3200,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 29994708,
+     "mtime_ns": 1793185145000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9999.CR3",
+     "sha256": "fb350585671bf4590e5c33963284c0451796b61e5b70b0c98f6d18cc0ac83809",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:58:38",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 3200,
+      "recommended_iso": 3200,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 29996244,
+     "mtime_ns": 1793185147000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0001.CR3",
+     "sha256": "2a63e54f4ed34baf6ca938c94b8461835e79ede0e36e53d7ff2ac57386992c3c",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:58:38",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 3200,
+      "recommended_iso": 3200,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 29995220,
+     "mtime_ns": 1793185150000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0002.CR3",
+     "sha256": "fc98c18f82c1693eb90f227154b6b35e6f65f2d37233f3c3a0bf09e74446daab",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:58:38",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 3200,
+      "recommended_iso": 3200,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 29994196,
+     "mtime_ns": 1793185152000000000
+    }
+   ],
+   "development": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "control": [
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ]
+  },
+  {
+   "iso": 6400,
+   "frames": [
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9979.CR3",
+     "sha256": "cc972a71fcc9bea10d497a514a965e9cdab0ff4e25ead9c2ceb69b06303a77a1",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:58:19",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 6400,
+      "recommended_iso": 6400,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 34022100,
+     "mtime_ns": 1793185102000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9980.CR3",
+     "sha256": "cf6b474410f8e7ac0af16fcf0171ef0b1806dbd6c74010f225fe43b880dfad08",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:58:19",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 6400,
+      "recommended_iso": 6400,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 34023124,
+     "mtime_ns": 1793185104000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9981.CR3",
+     "sha256": "24e65a3cb2633144c4a756a158bc9fcb758488bf0a19e0e7f56cd783b1482c45",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:58:19",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 6400,
+      "recommended_iso": 6400,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 34025172,
+     "mtime_ns": 1793185107000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9982.CR3",
+     "sha256": "e8a4eab89ad5e1f5bd7db5ac7b51498087837c5eeab890131371f4996e8d0d9a",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:58:20",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 6400,
+      "recommended_iso": 6400,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 34025684,
+     "mtime_ns": 1793185109000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9983.CR3",
+     "sha256": "1e5f78021b0932fafd2238e73bfc7c8c4826fd675c4273f7953b087b361a304f",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:58:20",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 6400,
+      "recommended_iso": 6400,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 34026196,
+     "mtime_ns": 1793185111000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9984.CR3",
+     "sha256": "fdc9801a72b2ef1df03739bbf2715fa339cc505c3c72ecb11813c173dff7b196",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:58:20",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 6400,
+      "recommended_iso": 6400,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 34025684,
+     "mtime_ns": 1793185113000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9985.CR3",
+     "sha256": "89aaaa0c7a267862b65004cfe6ecc091f779faf0bdae36e8ee65989e9631efe3",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:58:20",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 6400,
+      "recommended_iso": 6400,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 34024148,
+     "mtime_ns": 1793185115000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9986.CR3",
+     "sha256": "4744ac1b9c34944f5c3f470b86cd76a4b35215d8784ee7c7991622a8cc036be1",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:58:20",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 6400,
+      "recommended_iso": 6400,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 34027220,
+     "mtime_ns": 1793185118000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9987.CR3",
+     "sha256": "897d2b57bf67a471f6434cd9e580c5987e427166702675d097ef30013a9e5597",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:58:20",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 6400,
+      "recommended_iso": 6400,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 34028756,
+     "mtime_ns": 1793185120000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9988.CR3",
+     "sha256": "478e87f1bfce8cfbf1f716d75274584245064e09f176a2cef8c1aaca561158d0",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:58:20",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 6400,
+      "recommended_iso": 6400,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 34030292,
+     "mtime_ns": 1793185122000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9989.CR3",
+     "sha256": "dd2e5d41c7032e068b7a2a3fd77cd28ec361a0a16014b99658b7964f206f293b",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:58:20",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 6400,
+      "recommended_iso": 6400,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 34027732,
+     "mtime_ns": 1793185125000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9990.CR3",
+     "sha256": "35075f50f8866549daa34845ebf30dfff2bd14ffd08022b51700c2a7d919f650",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:58:20",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 6400,
+      "recommended_iso": 6400,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 34030804,
+     "mtime_ns": 1793185127000000000
+    }
+   ],
+   "development": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "control": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+   ]
+  },
+  {
+   "iso": 12800,
+   "frames": [
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9970.CR3",
+     "sha256": "2735db36746e2bff2260f56397c7309bd2a1412c91813fbe4e6056e98b2f3d69",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:57:59",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 12800,
+      "recommended_iso": 12800,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 38667476,
+     "mtime_ns": 1793185081000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9971.CR3",
+     "sha256": "2d34e73dcf5920aeb09ac2e1f67b49d80f5af6cdbf1a9cfd41f850cbb6f9f5d7",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:57:59",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 12800,
+      "recommended_iso": 12800,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 38664916,
+     "mtime_ns": 1793185084000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9972.CR3",
+     "sha256": "42e320eb537c935fdf0d0d41e9427a56b011669f18709be1bd3bfd0d63eab246",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:57:59",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 12800,
+      "recommended_iso": 12800,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 38663380,
+     "mtime_ns": 1793185086000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9973.CR3",
+     "sha256": "a7662555047655150962910826b8a408b1aad7d326b31632c76746bf7be42c10",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:57:59",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 12800,
+      "recommended_iso": 12800,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 38664404,
+     "mtime_ns": 1793185089000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9974.CR3",
+     "sha256": "a2159db3da396773a6e5198af7a5c257d3efa026c91dda782a027bbf907bc90a",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:57:59",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 12800,
+      "recommended_iso": 12800,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 38664916,
+     "mtime_ns": 1793185091000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9975.CR3",
+     "sha256": "67e65a95e49769cbdb75bbc8bfec786f18a83df0165c21a9922f11a3793691e1",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:57:59",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 12800,
+      "recommended_iso": 12800,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 38667476,
+     "mtime_ns": 1793185093000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9976.CR3",
+     "sha256": "3114b69fdd0b90d8c5c5c1b49967235087abe819a6a3a090e4af9fa35921b48c",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:57:59",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 12800,
+      "recommended_iso": 12800,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 38664404,
+     "mtime_ns": 1793185096000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9977.CR3",
+     "sha256": "2b4748e25f64b0c6b8c271eac870deb1d99bf5b883584558ecb2425f9bbbf059",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:57:59",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 12800,
+      "recommended_iso": 12800,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 38664916,
+     "mtime_ns": 1793185098000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9978.CR3",
+     "sha256": "1121d835d151e5d3e51c806f0c6ee7ed6fe60c59805f150c25ad32dc45b1f722",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:57:59",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 12800,
+      "recommended_iso": 12800,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 38663892,
+     "mtime_ns": 1793185100000000000
+    }
+   ],
+   "development": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "control": [
+    4,
+    5,
+    6,
+    7,
+    8
+   ]
+  },
+  {
+   "iso": 25600,
+   "frames": [
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9960.CR3",
+     "sha256": "a96b3b2974ce65944ec7520574a410d2d7499fdb097ec454e47864384a9341ef",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:57:35",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 25600,
+      "recommended_iso": 25600,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 43452116,
+     "mtime_ns": 1793185058000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9961.CR3",
+     "sha256": "7df1617934d00a487b7157dd030c67dd93881433a618314d6e6c2fa401ae9484",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:57:35",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 25600,
+      "recommended_iso": 25600,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 43459284,
+     "mtime_ns": 1793185060000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9962.CR3",
+     "sha256": "e7e3da690c452adf28adfc86279d9a33959979e13ac4467d31f4e36f7bcee3bb",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:57:35",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 25600,
+      "recommended_iso": 25600,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 43462356,
+     "mtime_ns": 1793185062000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9963.CR3",
+     "sha256": "55c607b2c14ef9ebbddedb61ff608be98202fa9b9d2c85068f7ec956f7b657d0",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:57:35",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 25600,
+      "recommended_iso": 25600,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 43445460,
+     "mtime_ns": 1793185065000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9964.CR3",
+     "sha256": "c4181137b404611c49c42399e953449626ecc400c814de584454d81c6aafe733",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:57:35",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 25600,
+      "recommended_iso": 25600,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 43442388,
+     "mtime_ns": 1793185067000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9965.CR3",
+     "sha256": "04c1ffe1357f691b887a84f20c992767e9840d6b539f8605445f9927c2eff0dc",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:57:35",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 25600,
+      "recommended_iso": 25600,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 43456212,
+     "mtime_ns": 1793185069000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9966.CR3",
+     "sha256": "ef0714ee1a69dec55d9ffc608e02b978182760d5a8b9a7df5dba091109d1d683",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:57:35",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 25600,
+      "recommended_iso": 25600,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 43467988,
+     "mtime_ns": 1793185071000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9967.CR3",
+     "sha256": "8571e342b2be819a40413d2649387644756c3c1ec0cedd86ba343212406f76db",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:57:35",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 25600,
+      "recommended_iso": 25600,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 43451092,
+     "mtime_ns": 1793185073000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9968.CR3",
+     "sha256": "54622e608b6661b42bc5e910ad1a202a7e03f39f5a54471c190975f46a3c60e6",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:57:35",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 25600,
+      "recommended_iso": 25600,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 43454164,
+     "mtime_ns": 1793185076000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9969.CR3",
+     "sha256": "37860fe991fef52db1359a174e46a6bb797f664de1e1fe118afd70e1ca0db67b",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:57:36",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 25600,
+      "recommended_iso": 25600,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 43555540,
+     "mtime_ns": 1793185078000000000
+    }
+   ],
+   "development": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "control": [
+    5,
+    6,
+    7,
+    8,
+    9
+   ]
+  },
+  {
+   "iso": 51200,
+   "frames": [
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9950.CR3",
+     "sha256": "8f7eba49f50e1cc2e1c4b892053a238ec82063408337670810eeb0cd4f9b9b16",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:57:07",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 51200,
+      "recommended_iso": 51200,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 48068820,
+     "mtime_ns": 1793185029000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9951.CR3",
+     "sha256": "05043c4ec89b26b4b7fbfbf11f6903e540d10918e45819bc68e261394183f47c",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:57:07",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 51200,
+      "recommended_iso": 51200,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 48024788,
+     "mtime_ns": 1793185031000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9952.CR3",
+     "sha256": "cb12f47be240f80494cdf8cadb5eeb89b9dd3302f8de625991882ad5f47f95a8",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:57:07",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 51200,
+      "recommended_iso": 51200,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 47990996,
+     "mtime_ns": 1793185034000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9953.CR3",
+     "sha256": "4b6fd77a1e7bf57da76e61bb3ef7385166a797717aff90eb504e0e850ad5de9c",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:57:07",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 51200,
+      "recommended_iso": 51200,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 47992020,
+     "mtime_ns": 1793185036000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9954.CR3",
+     "sha256": "347d038b02711ab19cb01299204f030c7446b1af4fb3da06e2b98c41a2d78a26",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:57:07",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 51200,
+      "recommended_iso": 51200,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 48072916,
+     "mtime_ns": 1793185038000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9955.CR3",
+     "sha256": "01e1c4c8a6e902fa1b4f148c17eb1c807060e81ac0ad50acf4fd33b6a7ed8ebf",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:57:07",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 51200,
+      "recommended_iso": 51200,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 48041684,
+     "mtime_ns": 1793185040000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9956.CR3",
+     "sha256": "10b7234ce2a4ec573168555e8cf45b41f960b41ea8698a44b0df962078e6d057",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:57:08",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 51200,
+      "recommended_iso": 51200,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 48019156,
+     "mtime_ns": 1793185042000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9957.CR3",
+     "sha256": "e4b5f7b5cd68010672531126ebacda28c9499e68123aae156ac3321a7ec4681b",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:57:08",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 51200,
+      "recommended_iso": 51200,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 48016596,
+     "mtime_ns": 1793185044000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9958.CR3",
+     "sha256": "bb2cb0274203ee6405627f8551ff948ba5ee28313ef00db46e5705eff094bca8",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:57:11",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 51200,
+      "recommended_iso": 51200,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 48064724,
+     "mtime_ns": 1793185046000000000
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9959.CR3",
+     "sha256": "4929819fe4ae469c71a2bc23318906bac888ca5c1a24ba220b26d57cca5b1949",
+     "metadata": {
+      "make": "Canon",
+      "model": "Canon EOS R6 Mark III",
+      "datetime": "2026:10:28 11:57:11",
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "iso": 51200,
+      "recommended_iso": 51200,
+      "focal_mm": 90.0,
+      "lens": "RF24-105mm F2.8 L IS USM Z"
+     },
+     "size": 48040148,
+     "mtime_ns": 1793185048000000000
+    }
+   ],
+   "development": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "control": [
+    5,
+    6,
+    7,
+    8,
+    9
+   ]
+  }
+ ],
+ "runner_source": "\"\"\"Qualify repeated user-declared blacks, then revisit cached illuminated bursts.\"\"\"\nfrom datetime import datetime, timezone\nimport json\nimport mmap\nfrom pathlib import Path\nimport platform\n\nimport numpy as np\nimport rawpy\n\nfrom audit_noise_pairs import metadata, read_frame, pair_stats, matching\nfrom audit_noise_new_bursts import stack_moments\nfrom study_noise_neighbourhoods import ROOT, sha256, git\n\n\ndef split_indices(count):\n    if count < 8:\n        raise ValueError('At least eight dark captures required for this protocol')\n    cut=count//2\n    return list(range(cut)),list(range(cut,count))\n\n\ndef capture_key(frame):\n    \"\"\"Camera time then numeric rollover from explicitly scoped filename start.\"\"\"\n    return (frame['metadata']['datetime'],(int(Path(frame['path']).stem[4:])-9950)%10000)\n\n\ndef revised_scene(plane,reference):\n    mean=float(np.mean(plane['frame_means_dn']))\n    black=reference['development_black_dn']\n    variance=reference['development']['centered_temporal_variance_dn2']\n    signal=mean-black\n    return dict(mean_raw_dn=mean,new_black_dn=black,new_candidate_signal_dn=signal,\n        new_candidate_signal_in_dark_sigma=signal/np.sqrt(variance) if variance>0 else None,\n        old_candidate_signal_dn=plane['candidate_signal_dn'],\n        signal_shift_from_previous_dn=signal-plane['candidate_signal_dn'] if plane['candidate_signal_dn'] is not None else None,\n        scene_centered_temporal_variance_dn2=plane['centered_temporal_variance_dn2'],\n        dark_centered_temporal_variance_dn2=variance,\n        scene_to_dark_temporal_variance_ratio=plane['centered_temporal_variance_dn2']/variance if variance>0 else None,\n        scene_minus_dark_temporal_variance_dn2=plane['centered_temporal_variance_dn2']-variance,\n        useful_mean_range_fraction=plane['mean_range_dn']/max(abs(signal),1))\n\n\ndef run():\n    started=datetime.now(timezone.utc)\n    image_root=Path('C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image')\n    corpus=next(p for p in image_root.glob('color*') if (p/'protocole/blacks').is_dir())\n    folder=corpus/'protocole/blacks'\n    paths=[folder/f'6V1A{i:04}.CR3' for i in list(range(9950,10000))+list(range(1,16))]\n    if any(not p.is_file() for p in paths):raise ValueError('Explicit new black range incomplete')\n    parent=ROOT/'docs/validation/raw/qualification-rafales-carte-bruit-v001-20261028T094754Z.json'\n    parent_hash=sha256(parent);scenes=json.loads(parent.read_text(encoding='utf-8'))\n    frames=[]\n    for path in paths:\n        stat=path.stat()\n        with path.open('rb') as stream:\n            with mmap.mmap(stream.fileno(),0,access=mmap.ACCESS_READ) as data:meta=metadata(data)\n        if not meta.get('datetime','').startswith('2026:10:28 ') or meta.get('exposure_s')!=.005:\n            raise ValueError('Unexpected black capture date or exposure')\n        frames.append(dict(path=str(path),sha256=sha256(path),metadata=meta,size=stat.st_size,mtime_ns=stat.st_mtime_ns))\n    if len({f['sha256'] for f in frames})!=len(frames):raise ValueError('Duplicate captures')\n    groups=[]\n    for iso in sorted({f['metadata']['iso'] for f in frames}):\n        members=sorted([f for f in frames if f['metadata']['iso']==iso],key=capture_key)\n        if not all(matching(members[0]['metadata'],f['metadata']) for f in members):raise ValueError('Settings changed within ISO')\n        development,control=split_indices(len(members))\n        groups.append(dict(iso=iso,frames=members,development=development,control=control))\n    if {g['iso'] for g in groups}!={1600,3200,6400,12800,25600,51200}:raise ValueError('ISO coverage changed')\n    now=datetime.now(timezone.utc)\n    freeze=ROOT/'docs/validation/raw'/f'gel-noirs-repetes-bruit-v001-{now.strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n    frozen=dict(campaign_id='noise-repeated-blacks-freeze-'+now.strftime('%Y%m%dT%H%M%SZ'),schema_version=1,data_version=1,\n        measured_at_utc=now.isoformat(),groups=groups,runner_source=Path(__file__).read_text(encoding='utf-8'),runner_sha256=sha256(Path(__file__)),\n        capture_role='User-provided new cap-on captures in blacks; declaration, not independent light-leak certification.',\n        policy='Freeze before pixels: first floor(N/2) time-ordered frames for development, remaining frames for chronological internal control, not independent-session validation. Three existing CFA crops. No coefficient fit or threshold selection. Never reuse previous sealed burst frames.')\n    with freeze.open('x',encoding='utf-8') as handle:json.dump(frozen,handle,ensure_ascii=False,indent=1,allow_nan=False)\n    print('FROZEN',freeze,flush=True)\n    records=[];references={}\n    for group in groups:\n        decoded=[];crops=[]\n        for frame in group['frames']:\n            path=Path(frame['path']);before=path.stat()\n            if (before.st_size,before.st_mtime_ns)!=(frame['size'],frame['mtime_ns']):raise ValueError('Input changed before decode')\n            item,pixels=read_frame(path,corpus,declared_dark=True)\n            after=path.stat()\n            if item['sha256']!=frame['sha256'] or (after.st_size,after.st_mtime_ns)!=(frame['size'],frame['mtime_ns']):\n                raise ValueError('Input changed during decode')\n            if decoded and (item['shape'],item['cfa'])!=(decoded[0]['shape'],decoded[0]['cfa']):raise ValueError('CFA geometry changed')\n            decoded.append(item);crops.append(pixels)\n        stack=np.asarray(crops,dtype=np.float64)\n        rows=[]\n        for roi in range(3):\n            for index,(dy,dx) in enumerate(((0,0),(0,1),(1,0),(1,1))):\n                name=('R','G1','G2','B')[index]\n                declared_name=decoded[0]['rois'][roi]['planes'][index]['name']\n                if declared_name!=name[0]:raise ValueError('Unexpected CFA order for phase labels')\n                data=stack[:,roi,dy::2,dx::2]\n                development=stack_moments(data[group['development']]);control=stack_moments(data[group['control']])\n                all_moments=stack_moments(data)\n                black=float(np.mean(development['frame_means_dn']))\n                control_black=float(np.mean(control['frame_means_dn']))\n                dv=development['centered_temporal_variance_dn2'];cv=control['centered_temporal_variance_dn2']\n                pairs=[dict(left=group['frames'][i]['path'],right=group['frames'][i+1]['path'],\n                            **pair_stats(data[i],data[i+1])) for i in range(0,len(data)-1,2)]\n                row=dict(roi=roi,plane=name,offset=[dy,dx],development_black_dn=black,control_black_dn=control_black,\n                    control_minus_development_black_dn=control_black-black,\n                    control_to_development_temporal_variance_ratio=cv/dv if dv>0 else None,\n                    development=development,control=control,all_frames=all_moments,disjoint_pair_diagnostics=pairs)\n                rows.append(row);references[(group['iso'],roi,name)]=row\n        record=dict(iso=group['iso'],frames=len(decoded),development_indices=group['development'],control_indices=group['control'],\n            decoded_frames=decoded,measurements=rows)\n        records.append(record)\n        print('ISO',group['iso'],'N',len(decoded),'dev/control',len(group['development']),len(group['control']),\n            'black R',[round(r['development_black_dn'],3) for r in rows if r['plane']=='R'],\n            'sigma R',[round(np.sqrt(r['development']['centered_temporal_variance_dn2']),3) for r in rows if r['plane']=='R'],\n            'control/dev variance',[round(min(r['control_to_development_temporal_variance_ratio'] for r in rows),4),\n                                    round(max(r['control_to_development_temporal_variance_ratio'] for r in rows),4)],flush=True)\n    revised=[]\n    for group in scenes['records']:\n        values=[]\n        for plane in group['planes']:\n            ref=references[(group['metadata']['iso'],plane['roi'],plane['plane'])]\n            matching_frame=next(r for r in records if r['iso']==group['metadata']['iso'])['decoded_frames'][0]\n            if group['decoder'][0]['shape']!=matching_frame['shape'] or group['decoder'][0]['cfa']!=matching_frame['cfa']:\n                raise ValueError('Scene/dark geometry differs')\n            if group['metadata']['model']!=matching_frame['metadata']['model'] or group['metadata']['exposure_s']!=matching_frame['metadata']['exposure_s']:\n                raise ValueError('Scene/dark camera or exposure differs')\n            values.append(dict(roi=plane['roi'],plane=plane['plane'],**revised_scene(plane,ref)))\n        revised.append(dict(group_index=group['group_index'],paths=group['paths'],metadata=group['metadata'],measurements=values))\n    if sha256(parent)!=parent_hash:raise ValueError('Scene measurements changed')\n    now=datetime.now(timezone.utc)\n    output=ROOT/'docs/validation/raw'/f'qualification-noirs-repetes-bruit-v001-{now.strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n    result=dict(campaign_id='noise-repeated-blacks-'+now.strftime('%Y%m%dT%H%M%SZ'),schema_version=1,data_version=1,\n        started_at_utc=started.isoformat(),measured_at_utc=now.isoformat(),completed_at_utc=now.isoformat(),\n        freeze=dict(path=str(freeze),sha256=sha256(freeze)),parent=dict(path=str(parent),sha256=parent_hash),\n        records=records,revised_scene_measurements=revised,commit=git('rev-parse','HEAD'),\n        sources={name:dict(sha256=sha256(ROOT/'tests'/name),source=(ROOT/'tests'/name).read_text(encoding='utf-8')) for name in ('audit_noise_pairs.py','audit_canon_metadata.py','audit_noise_new_bursts.py')},\n        versions=dict(python=platform.python_version(),numpy=np.__version__,rawpy=rawpy.__version__,libraw=list(rawpy.libraw_version)),\n        units='Decoded visible CFA DN and DN^2; per-phase per-ROI dark development means, no fitted slope/intercept.',\n        limitations='User-declared cap-on, no independent physical light-leak certification. Control subset same burst/session, possible temporal correlation; no iid pixel confidence interval. Development mean retained without tuning on control. Dark/scene acquisition times differ, sensor temperature and shutter mode not certified equal. Per-ROI references are local diagnostics, not universal camera calibration. Shared spatial structure not uniquely fixed-pattern sensor noise. Revised scene signal remains provisional, especially near zero. No RAW scene reread, production change, coefficient fit or final sealed burst access.',\n        verdict='repeated_dark_reference_internal_control_and_cached_scene_reassessment_only')\n    with output.open('x',encoding='utf-8') as handle:json.dump(result,handle,ensure_ascii=False,indent=1,allow_nan=False)\n    print('RESULT',output,flush=True)\n\n\nif __name__=='__main__':run()\n",
+ "runner_sha256": "8f65f6eff62ad67fc532b89a4adc78d162e0a84730675f4be84d81bc7a6f2796",
+ "capture_role": "User-provided new cap-on captures in blacks; declaration, not independent light-leak certification.",
+ "policy": "Freeze before pixels: first floor(N/2) time-ordered frames for development, remaining frames for chronological internal control, not independent-session validation. Three existing CFA crops. No coefficient fit or threshold selection. Never reuse previous sealed burst frames."
+}

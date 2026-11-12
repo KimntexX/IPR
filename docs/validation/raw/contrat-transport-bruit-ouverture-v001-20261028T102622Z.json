@@ -1,0 +1,5583 @@
+{
+ "campaign_id": "noise-opening-transport-20261028T102622Z",
+ "schema_version": 1,
+ "data_version": 1,
+ "started_at_utc": "2026-10-28T10:26:22.672037+00:00",
+ "measured_at_utc": "2026-10-28T10:26:22.716161+00:00",
+ "completed_at_utc": "2026-10-28T10:26:22.716161+00:00",
+ "parent": {
+  "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\qualification-noirs-repetes-bruit-v001-20261028T100350Z.json",
+  "sha256": "8d9d5b1eeffda90a2b122021126dc6e941fe6dfc72f05734be1f8c23fc11830a"
+ },
+ "source_evidence": {
+  "src\\raw\\RawDecoder.cpp": {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\src\\raw\\RawDecoder.cpp",
+   "sha256": "fb2a6904fe36da1fb2dbe14031068a85564d360b0a5fc78256437991bdd5a4eb",
+   "anchors": [
+    {
+     "line": 241,
+     "text": ".arg(measured.levels[0]).arg(measured.levels[1]).arg(measured.levels[2]).arg(measured.levels[3]);"
+    },
+    {
+     "line": 245,
+     "text": "data.color.cblack[channel] = measured.levels[size_t(channel)];"
+    },
+    {
+     "line": 246,
+     "text": "data.rawdata.color.cblack[channel] = measured.levels[size_t(channel)];"
+    },
+    {
+     "line": 252,
+     "text": ".arg(measured.levels[0]).arg(measured.levels[1]).arg(measured.levels[2]).arg(measured.levels[3])"
+    },
+    {
+     "line": 290,
+     "text": "// actually metered/dialed for this capture), while pre_mul is a fixed"
+    },
+    {
+     "line": 292,
+     "text": "// from shot to shot. Using pre_mul here made every photo report"
+    },
+    {
+     "line": 294,
+     "text": "// shooting conditions; pre_mul is kept only as a defensive fallback"
+    },
+    {
+     "line": 309,
+     "text": "const double gain = color.pre_mul[channel];"
+    },
+    {
+     "line": 531,
+     "text": "raw.useIprDemosaic(Demosaic::OpeningMedian, options.cancellationRequested);"
+    },
+    {
+     "line": 532,
+     "text": "result = raw.dcraw_process();"
+    },
+    {
+     "line": 569,
+     "text": "rgb16.convertTo(rgb, CV_32FC3, 1.0 / 65535.0);"
+    },
+    {
+     "line": 570,
+     "text": "if (CameraProfileEngine::applyLcp(profiles.lcpPath, rgb, capture,"
+    },
+    {
+     "line": 582,
+     "text": "cv::Mat cameraRgb;"
+    },
+    {
+     "line": 583,
+     "text": "rgb16.convertTo(cameraRgb, CV_32FC3, 1.0 / 65535.0);"
+    },
+    {
+     "line": 585,
+     "text": "!CameraProfileEngine::applyLcp(profiles.lcpPath, cameraRgb, capture,"
+    },
+    {
+     "line": 587,
+     "text": "cameraRgb.release();"
+    },
+    {
+     "line": 593,
+     "text": "if (!cameraRgb.empty()) {"
+    },
+    {
+     "line": 595,
+     "text": "signal.rgb = std::move(cameraRgb);"
+    },
+    {
+     "line": 600,
+     "text": "// scale_colors updates pre_mul to the multipliers actually used,"
+    },
+    {
+     "line": 604,
+     "text": "if (color.pre_mul[c] > 0 && std::isfinite(color.pre_mul[c]))"
+    },
+    {
+     "line": 605,
+     "text": "signal.cameraNeutral[c] = color.pre_mul[1] / color.pre_mul[c];"
+    },
+    {
+     "line": 611,
+     "text": "if (!image.isNull() && image.dcpContext->cameraRgb.total() * image.dcpContext->cameraRgb.elemSize() <= retainedBufferLimit && options.retainedDcpSource &&"
+    },
+    {
+     "line": 613,
+     "text": "options.retainedDcpSource->cameraRgb = image.dcpContext->cameraRgb;"
+    },
+    {
+     "line": 782,
+     "text": "if (source.cameraRgb.empty() || !CameraProfileEngine::dcpMatchesCamera("
+    },
+    {
+     "line": 788,
+     "text": "signal.rgb = source.cameraRgb; // Already immutable, shared with the active source."
+    },
+    {
+     "line": 894,
+     "text": "!options.retainedDcpSource->cameraRgb.empty())"
+    }
+   ]
+  },
+  "src\\raw\\RawBlackLevelEstimator.cpp": {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\src\\raw\\RawBlackLevelEstimator.cpp",
+   "sha256": "8e9d6eae3c33636d64683d0372048db4fe6c637c811c390853aa1bdd8419404d",
+   "anchors": [
+    {
+     "line": 110,
+     "text": "const unsigned int a = decoder[size_t(channel)], b = measured.levels[size_t(channel)];"
+    }
+   ]
+  },
+  "src\\raw\\Demosaic.cpp": {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\src\\raw\\Demosaic.cpp",
+   "sha256": "be100b15b2a32e23f487ae877605e8a9ae2b598cb984ee5bff2c17b5c1a75b7b",
+   "anchors": [
+    {
+     "line": 19,
+     "text": "constexpr float FlatGradient = 0.5f, DetailGradient = 1.0f;   // in luminance noise sigmas"
+    },
+    {
+     "line": 20,
+     "text": "constexpr float LaplacianWeight = 0.5f;   // green: share of the colour-difference estimate"
+    },
+    {
+     "line": 53,
+     "text": "return LaplacianWeight * byLaplacian + (1.f - LaplacianWeight) * byRatio;"
+    },
+    {
+     "line": 174,
+     "text": "// below FlatGradient noise sigmas, 0 above DetailGradient, linear between."
+    },
+    {
+     "line": 185,
+     "text": "cv::Mat weight = (DetailGradient * sigma - gradient) / ((DetailGradient - FlatGradient) * sigma);"
+    },
+    {
+     "line": 220,
+     "text": "for (int x = 0; x < width; ++x) o[x] = image[size_t(y) * size_t(width) + size_t(x)][colour(y, x)] / 65535.f;"
+    },
+    {
+     "line": 237,
+     "text": "px[c] = std::uint16_t(std::clamp(std::lround(s[x][c] * 65535.f), 0L, 65535L));"
+    }
+   ]
+  },
+  "src\\raw\\RawNormalization.cpp": {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\src\\raw\\RawNormalization.cpp",
+   "sha256": "e56195e1c142d7c9508a6c62fd8eab4db542eb6aca6273f0585560299c041967",
+   "anchors": [
+    {
+     "line": 78,
+     "text": "white > 65535 || !std::isfinite(ev) || std::abs(ev) > 2 ||"
+    }
+   ]
+  },
+  "src\\raw\\CameraSignal.cpp": {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\src\\raw\\CameraSignal.cpp",
+   "sha256": "08a83c79d8baa2b11f3a6fb13ce67eb711fe21770ecbf099a535601f5a2d3d58",
+   "anchors": [
+    {
+     "line": 45,
+     "text": "context->cameraRgb = std::move(source.rgb);"
+    },
+    {
+     "line": 51,
+     "text": "auto rendered = context->cameraRgb.clone();"
+    },
+    {
+     "line": 52,
+     "text": "if (!CameraProfileEngine::applyDcp(profile, rendered, context->sourceKelvin, error, options))"
+    }
+   ]
+  },
+  "src\\profiles\\CameraProfileEngine.cpp": {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\src\\profiles\\CameraProfileEngine.cpp",
+   "sha256": "25fdd3c7f2d716448280c8c73c81f2aff2c90455742681b44a1db32be39e889a",
+   "anchors": [
+    {
+     "line": 552,
+     "text": "const double exposureScale = std::exp2("
+    },
+    {
+     "line": 580,
+     "text": "row[x] = cv::Vec3f(xyzToWorking * (xyz * exposureScale));"
+    },
+    {
+     "line": 583,
+     "text": "cv::Vec3f out(xyzToProPhoto * (xyz * exposureScale));"
+    },
+    {
+     "line": 585,
+     "text": "out = applyHueSatMap(out, hueMap, hueSatEncoding);"
+    },
+    {
+     "line": 587,
+     "text": "out = applyHueSatMap(out, lookTable, lookTableEncoding);"
+    },
+    {
+     "line": 595,
+     "text": "const float a = applyCurve(low), b = applyCurve(high);"
+    },
+    {
+     "line": 597,
+     "text": "out[c] = b < a ? applyCurve(bounded[c]) :"
+    },
+    {
+     "line": 602,
+     "text": "out[c] = applyCurve(out[c]);"
+    },
+    {
+     "line": 973,
+     "text": "float applyCurve(float value) const"
+    },
+    {
+     "line": 989,
+     "text": "cv::Vec3f applyHueSatMap(const cv::Vec3f &input,"
+    },
+    {
+     "line": 1792,
+     "text": "bool applyDcp(const QString &fileName, cv::Mat &cameraRgb,"
+    },
+    {
+     "line": 1799,
+     "text": "return profile->apply(cameraRgb, whiteBalanceKelvin, error, options);"
+    },
+    {
+     "line": 1814,
+     "text": "if (source.cameraRgb.empty() || source.cameraRgb.type() != CV_32FC3) {"
+    },
+    {
+     "line": 1829,
+     "text": "cv::transform(source.cameraRgb, rgb, cv::Matx33f("
+    },
+    {
+     "line": 1846,
+     "text": "bool applyLcp(const QString &fileName, cv::Mat &linearRgb,"
+    }
+   ]
+  },
+  "src\\core\\WorkingColorSpace.h": {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\src\\core\\WorkingColorSpace.h",
+   "sha256": "353365f56eb3223ec64cbc3e5504ba3484d02e34a3dc22fb6b4ebf320c7ec163",
+   "anchors": []
+  },
+  "src\\core\\DetailProcessing.cpp": {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\src\\core\\DetailProcessing.cpp",
+   "sha256": "a9e01b312baadbd3912dee6447115bb4d529fa1692ee24956b0ebbee0aa3b20d",
+   "anchors": [
+    {
+     "line": 231,
+     "text": "void reduceNoise(cv::Mat &linearRgb, const DenoiseSettings &settings)"
+    }
+   ]
+  },
+  "src\\editor\\imageeditor.cpp": {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\src\\editor\\imageeditor.cpp",
+   "sha256": "f2c7d39e59c5cfb0ea80dec6a337b43c6f909e22a3d1002b0d055f6d7e121d10",
+   "anchors": [
+    {
+     "line": 610,
+     "text": "return rawImage() && m_importCapabilities.profileWithoutRedecode && !m_rawNormalizationEnabled && m_dcpSource && !m_dcpSource->cameraRgb.empty()"
+    },
+    {
+     "line": 1491,
+     "text": "if (source.dcpContext->cameraRgb.size() != adjusted.size() ||"
+    },
+    {
+     "line": 1509,
+     "text": "Contrast::apply(adjusted, settings.contrast);"
+    },
+    {
+     "line": 1528,
+     "text": "ToneRecovery::apply(adjusted, tones, source.toneStatistics ? *source.toneStatistics"
+    },
+    {
+     "line": 1531,
+     "text": "Vibrance::apply(adjusted, settings.saturation, settings.vibrance);"
+    },
+    {
+     "line": 1540,
+     "text": "*noiseAnalysis = DetailProcessing::estimateNoise(adjusted);"
+    },
+    {
+     "line": 1544,
+     "text": "DetailProcessing::reduceNoise("
+    },
+    {
+     "line": 1738,
+     "text": "cv::resize(source.dcpContext->cameraRgb, context->cameraRgb, proxySize, 0, 0, cv::INTER_AREA);"
+    },
+    {
+     "line": 1881,
+     "text": "!m_dcpSource->cameraRgb.empty() && m_dcpSource->automaticWhiteBalance == automaticWhiteBalance &&"
+    }
+   ]
+  },
+  "config\\raw-normalization.json": {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\config\\raw-normalization.json",
+   "sha256": "c01cd196f9d35141281e8d7852de4e19e9cbacddb4c7ed29bf8196b3676fc30c",
+   "anchors": []
+  },
+  "LibRaw/src/postprocessing/dcraw_process.cpp": {
+   "path": "C:\\dev\\vcpkg\\buildtrees\\libraw\\src\\0.22.2-fabf993e5f.clean\\src\\postprocessing\\dcraw_process.cpp",
+   "sha256": "6b50457c0267d3beda5155f661f05f6ad72e6e1f1d2c9013651aa068ce6db365",
+   "anchors": [
+    {
+     "line": 47,
+     "text": "int rc = raw2image_ex(subtract_inline); // allocate imgdata.image and copy data!"
+    }
+   ]
+  },
+  "LibRaw/src/preprocessing/raw2image.cpp": {
+   "path": "C:\\dev\\vcpkg\\buildtrees\\libraw\\src\\0.22.2-fabf993e5f.clean\\src\\preprocessing\\raw2image.cpp",
+   "sha256": "24b5268f66fa8684aba8456e71fef3f25ffd2a8826ca9a633006bf1e5465b35f",
+   "anchors": [
+    {
+     "line": 251,
+     "text": "if (val > cblack[cc])"
+    },
+    {
+     "line": 290,
+     "text": "if (val > cblack[cc])"
+    },
+    {
+     "line": 310,
+     "text": "int LibRaw::raw2image_ex(int do_subtract_black)"
+    },
+    {
+     "line": 473,
+     "text": "if (val > cblack[cc])"
+    }
+   ]
+  },
+  "LibRaw/src/preprocessing/subtract_black.cpp": {
+   "path": "C:\\dev\\vcpkg\\buildtrees\\libraw\\src\\0.22.2-fabf993e5f.clean\\src\\preprocessing\\subtract_black.cpp",
+   "sha256": "dfb40396a6654fd45adee4410ae4b75def7278b5b3187413bb8c6f7079a82239",
+   "anchors": [
+    {
+     "line": 50,
+     "text": "imgdata.image[q][c] = CLIP(val);"
+    },
+    {
+     "line": 63,
+     "text": "imgdata.image[q][c] = CLIP(val);"
+    }
+   ]
+  },
+  "LibRaw/src/postprocessing/postprocessing_utils_dcrdefs.cpp": {
+   "path": "C:\\dev\\vcpkg\\buildtrees\\libraw\\src\\0.22.2-fabf993e5f.clean\\src\\postprocessing\\postprocessing_utils_dcrdefs.cpp",
+   "sha256": "335761c5d3ce3c6150e09e7114dd9669323112c792651a7d70b34586bf4876ea",
+   "anchors": [
+    {
+     "line": 122,
+     "text": "memcpy(pre_mul, user_mul, sizeof pre_mul);"
+    },
+    {
+     "line": 159,
+     "text": "FORC4 if (dsum[c]) pre_mul[c] = float(dsum[c + 4] / dsum[c]);"
+    },
+    {
+     "line": 175,
+     "text": "pre_mul[0] = pre_mul[1] = pre_mul[2] = pre_mul[3] = 1.0;"
+    },
+    {
+     "line": 178,
+     "text": "FORC4 pre_mul[c] = (float)sum[c + 4] / sum[c];"
+    },
+    {
+     "line": 180,
+     "text": "memcpy(pre_mul, cam_mul, sizeof pre_mul);"
+    },
+    {
+     "line": 191,
+     "text": "pre_mul[c] /= cam_mul[c];"
+    },
+    {
+     "line": 193,
+     "text": "if (pre_mul[1] == 0)"
+    },
+    {
+     "line": 194,
+     "text": "pre_mul[1] = 1;"
+    },
+    {
+     "line": 195,
+     "text": "if (pre_mul[3] == 0)"
+    },
+    {
+     "line": 196,
+     "text": "pre_mul[3] = colors < 4 ? pre_mul[1] : 1;"
+    },
+    {
+     "line": 199,
+     "text": "maximum -= black;"
+    },
+    {
+     "line": 202,
+     "text": "if (dmin > pre_mul[c])"
+    },
+    {
+     "line": 203,
+     "text": "dmin = pre_mul[c];"
+    },
+    {
+     "line": 204,
+     "text": "if (dmax < pre_mul[c])"
+    },
+    {
+     "line": 205,
+     "text": "dmax = pre_mul[c];"
+    },
+    {
+     "line": 210,
+     "text": "FORC4 scale_mul[c] = (pre_mul[c] /= float(dmax)) * 65535.f / maximum;"
+    },
+    {
+     "line": 212,
+     "text": "FORC4 scale_mul[c] = 1.0;"
+    },
+    {
+     "line": 308,
+     "text": "image[j * width + i][3] = f > 65535.f ? 0xffff : ushort(f);"
+    }
+   ]
+  },
+  "LibRaw/src/postprocessing/postprocessing_utils.cpp": {
+   "path": "C:\\dev\\vcpkg\\buildtrees\\libraw\\src\\0.22.2-fabf993e5f.clean\\src\\postprocessing\\postprocessing_utils.cpp",
+   "sha256": "e8f9e4eba7c473eb19ab271bd149e6110fef0eb55a601e9a2db6466a20675ebf",
+   "anchors": [
+    {
+     "line": 17,
+     "text": "#define TBLN 65535"
+    },
+    {
+     "line": 159,
+     "text": "val = int(val * scale_mul[c]);"
+    },
+    {
+     "line": 160,
+     "text": "imgdata.image[i][c] = CLIP(val);"
+    },
+    {
+     "line": 173,
+     "text": "val = int(val * scale_mul[c]);"
+    },
+    {
+     "line": 174,
+     "text": "imgdata.image[i][c] = CLIP(val);"
+    },
+    {
+     "line": 185,
+     "text": "val = int(val * scale_mul[c]);"
+    },
+    {
+     "line": 186,
+     "text": "imgdata.image[i][c] = CLIP(val);"
+    }
+   ]
+  }
+ },
+ "records": [
+  {
+   "group_index": 0,
+   "iso": 1600,
+   "roi": 0,
+   "plane": "R",
+   "input_signal_dn": 26.492746988932595,
+   "input_variance_dn2": 122.59457310966835,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.392717186409005,
+    "probability_below_zero": 0.00836206334452505,
+    "rectified_mean_dn": 26.523536047405504,
+    "rectified_variance_dn2": 120.7527948213584,
+    "variance_ratio": 0.9849766735868287,
+    "mean_bias_dn": 0.030789058472908692
+   }
+  },
+  {
+   "group_index": 0,
+   "iso": 1600,
+   "roi": 0,
+   "plane": "G1",
+   "input_signal_dn": 55.604593912760265,
+   "input_variance_dn2": 213.18548141889613,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 3.808306211546885,
+    "probability_below_zero": 6.996096918010508e-05,
+    "rectified_mean_dn": 55.60483385454628,
+    "rectified_variance_dn2": 213.1572248328548,
+    "variance_ratio": 0.9998674553921155,
+    "mean_bias_dn": 0.00023994178601327576
+   }
+  },
+  {
+   "group_index": 0,
+   "iso": 1600,
+   "roi": 0,
+   "plane": "G2",
+   "input_signal_dn": 55.525675455729015,
+   "input_variance_dn2": 210.24810852859218,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 3.829374153113323,
+    "probability_below_zero": 6.423477967565372e-05,
+    "rectified_mean_dn": 55.52589325317874,
+    "rectified_variance_dn2": 210.22250988971973,
+    "variance_ratio": 0.9998782455687635,
+    "mean_bias_dn": 0.00021779744972150183
+   }
+  },
+  {
+   "group_index": 0,
+   "iso": 1600,
+   "roi": 0,
+   "plane": "B",
+   "input_signal_dn": 36.737538655598655,
+   "input_variance_dn2": 177.41166780056523,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.758156893725529,
+    "probability_below_zero": 0.002906414564415538,
+    "rectified_mean_dn": 36.74919607705444,
+    "rectified_variance_dn2": 176.46763507854075,
+    "variance_ratio": 0.9946788577452206,
+    "mean_bias_dn": 0.011657421455787187
+   }
+  },
+  {
+   "group_index": 0,
+   "iso": 1600,
+   "roi": 1,
+   "plane": "R",
+   "input_signal_dn": 26.92054239908839,
+   "input_variance_dn2": 123.16826637415689,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.42568493815925,
+    "probability_below_zero": 0.007639764276348604,
+    "rectified_mean_dn": 26.948477787770376,
+    "rectified_variance_dn2": 121.47447365134269,
+    "variance_ratio": 0.9862481402663504,
+    "mean_bias_dn": 0.02793538868198553
+   }
+  },
+  {
+   "group_index": 0,
+   "iso": 1600,
+   "roi": 1,
+   "plane": "G1",
+   "input_signal_dn": 53.742024739583485,
+   "input_variance_dn2": 208.06845268679967,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 3.7257259418153357,
+    "probability_below_zero": 9.737695708467164e-05,
+    "rectified_mean_dn": 53.74236060447131,
+    "rectified_variance_dn2": 208.030141442096,
+    "variance_ratio": 0.999815871919991,
+    "mean_bias_dn": 0.0003358648878233339
+   }
+  },
+  {
+   "group_index": 0,
+   "iso": 1600,
+   "roi": 1,
+   "plane": "G2",
+   "input_signal_dn": 53.71613566080714,
+   "input_variance_dn2": 209.89528676635913,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 3.707690026291431,
+    "probability_below_zero": 0.00010457922794204766,
+    "rectified_mean_dn": 53.71649937198515,
+    "rectified_variance_dn2": 209.85379878805543,
+    "variance_ratio": 0.9998023396382888,
+    "mean_bias_dn": 0.0003637111780108171
+   }
+  },
+  {
+   "group_index": 0,
+   "iso": 1600,
+   "roi": 1,
+   "plane": "B",
+   "input_signal_dn": 33.654591878254905,
+   "input_variance_dn2": 168.89258640185847,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.5896378561169464,
+    "probability_below_zero": 0.004803847272934592,
+    "rectified_mean_dn": 33.67425353611482,
+    "rectified_variance_dn2": 167.4191605595379,
+    "variance_ratio": 0.9912759590357936,
+    "mean_bias_dn": 0.019661657859913362
+   }
+  },
+  {
+   "group_index": 0,
+   "iso": 1600,
+   "roi": 2,
+   "plane": "R",
+   "input_signal_dn": 21.921295166015625,
+   "input_variance_dn2": 111.13421410432912,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.0794204870315465,
+    "probability_below_zero": 0.018789359546171225,
+    "rectified_mean_dn": 21.99345955117731,
+    "rectified_variance_dn2": 107.45892891155256,
+    "variance_ratio": 0.9669293095524452,
+    "mean_bias_dn": 0.07216438516168466
+   }
+  },
+  {
+   "group_index": 0,
+   "iso": 1600,
+   "roi": 2,
+   "plane": "G1",
+   "input_signal_dn": 43.803070068359375,
+   "input_variance_dn2": 178.3350738616666,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 3.2800930757116955,
+    "probability_below_zero": 0.0005188642255187226,
+    "rectified_mean_dn": 43.80490282305116,
+    "rectified_variance_dn2": 178.1622585305122,
+    "variance_ratio": 0.999030951526179,
+    "mean_bias_dn": 0.0018327546917831228
+   }
+  },
+  {
+   "group_index": 0,
+   "iso": 1600,
+   "roi": 2,
+   "plane": "G2",
+   "input_signal_dn": 43.75250244140625,
+   "input_variance_dn2": 175.64322274014864,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 3.3013167788866458,
+    "probability_below_zero": 0.0004811608216734875,
+    "rectified_mean_dn": 43.754180730227205,
+    "rectified_variance_dn2": 175.48527795038422,
+    "variance_ratio": 0.9991007635404293,
+    "mean_bias_dn": 0.0016782888209547764
+   }
+  },
+  {
+   "group_index": 0,
+   "iso": 1600,
+   "roi": 2,
+   "plane": "B",
+   "input_signal_dn": 27.047068277994867,
+   "input_variance_dn2": 142.76105979657558,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.263681469411236,
+    "probability_below_zero": 0.01179685650868767,
+    "rectified_mean_dn": 27.0957010645314,
+    "rectified_variance_dn2": 139.75918861319815,
+    "variance_ratio": 0.9789727591847883,
+    "mean_bias_dn": 0.048632786536533246
+   }
+  },
+  {
+   "group_index": 1,
+   "iso": 3200,
+   "roi": 0,
+   "plane": "R",
+   "input_signal_dn": 54.704756673177144,
+   "input_variance_dn2": 512.0051738263467,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.4176193102753767,
+    "probability_below_zero": 0.007811205756923512,
+    "rectified_mean_dn": 54.76312295690858,
+    "rectified_variance_dn2": 504.80947609245686,
+    "variance_ratio": 0.9859460448805342,
+    "mean_bias_dn": 0.05836628373143782
+   }
+  },
+  {
+   "group_index": 1,
+   "iso": 3200,
+   "roi": 0,
+   "plane": "G1",
+   "input_signal_dn": 114.01130371093768,
+   "input_variance_dn2": 882.5434905323469,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 3.837778043086761,
+    "probability_below_zero": 6.207631128773983e-05,
+    "rectified_mean_dn": 114.01173417091688,
+    "rectified_variance_dn2": 882.4396279991834,
+    "variance_ratio": 0.9998823145439542,
+    "mean_bias_dn": 0.0004304599791993269
+   }
+  },
+  {
+   "group_index": 1,
+   "iso": 3200,
+   "roi": 0,
+   "plane": "G2",
+   "input_signal_dn": 113.67922770182258,
+   "input_variance_dn2": 887.7331061644285,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 3.815398514984729,
+    "probability_below_zero": 6.798166361865476e-05,
+    "rectified_mean_dn": 113.67970275844903,
+    "rectified_variance_dn2": 887.6187522949331,
+    "variance_ratio": 0.9998711844036217,
+    "mean_bias_dn": 0.0004750566264419831
+   }
+  },
+  {
+   "group_index": 1,
+   "iso": 3200,
+   "roi": 0,
+   "plane": "B",
+   "input_signal_dn": 75.37986246744777,
+   "input_variance_dn2": 724.6051066681779,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.8003005488951067,
+    "probability_below_zero": 0.002552752350955312,
+    "rectified_mean_dn": 75.40032910886622,
+    "rectified_variance_dn2": 721.2121777799111,
+    "variance_ratio": 0.9953175476448575,
+    "mean_bias_dn": 0.02046664141845156
+   }
+  },
+  {
+   "group_index": 1,
+   "iso": 3200,
+   "roi": 1,
+   "plane": "R",
+   "input_signal_dn": 54.88955485026008,
+   "input_variance_dn2": 512.0508645985234,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.42567804178119,
+    "probability_below_zero": 0.007639909437970549,
+    "rectified_mean_dn": 54.946514976904176,
+    "rectified_variance_dn2": 505.00908191361987,
+    "variance_ratio": 0.9862478843963584,
+    "mean_bias_dn": 0.05696012664409267
+   }
+  },
+  {
+   "group_index": 1,
+   "iso": 3200,
+   "roi": 1,
+   "plane": "G1",
+   "input_signal_dn": 110.55782063802098,
+   "input_variance_dn2": 868.7114349596839,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 3.7510400400969113,
+    "probability_below_zero": 8.805128580946509e-05,
+    "rectified_mean_dn": 110.5584377950687,
+    "rectified_variance_dn2": 868.5667118817692,
+    "variance_ratio": 0.9998334048890223,
+    "mean_bias_dn": 0.0006171570477135901
+   }
+  },
+  {
+   "group_index": 1,
+   "iso": 3200,
+   "roi": 1,
+   "plane": "G2",
+   "input_signal_dn": 110.72134195963508,
+   "input_variance_dn2": 859.4206412786745,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 3.776838815121007,
+    "probability_below_zero": 7.941572315717238e-05,
+    "rectified_mean_dn": 110.72189253163451,
+    "rectified_variance_dn2": 859.2914293932008,
+    "variance_ratio": 0.999849652336391,
+    "mean_bias_dn": 0.0005505719994260971
+   }
+  },
+  {
+   "group_index": 1,
+   "iso": 3200,
+   "roi": 1,
+   "plane": "B",
+   "input_signal_dn": 69.69855550130205,
+   "input_variance_dn2": 707.4002294690397,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.620542329800075,
+    "probability_below_zero": 0.004389501529264539,
+    "rectified_mean_dn": 69.73501849914224,
+    "rectified_variance_dn2": 701.7523472510629,
+    "variance_ratio": 0.9920160017162901,
+    "mean_bias_dn": 0.03646299784018936
+   }
+  },
+  {
+   "group_index": 1,
+   "iso": 3200,
+   "roi": 2,
+   "plane": "R",
+   "input_signal_dn": 42.767012532552144,
+   "input_variance_dn2": 441.750295166557,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.034794193795743,
+    "probability_below_zero": 0.020935792772761364,
+    "rectified_mean_dn": 42.92950291796455,
+    "rectified_variance_dn2": 425.5262710549407,
+    "variance_ratio": 0.963273314609786,
+    "mean_bias_dn": 0.16249038541240424
+   }
+  },
+  {
+   "group_index": 1,
+   "iso": 3200,
+   "roi": 2,
+   "plane": "G1",
+   "input_signal_dn": 84.76553548177117,
+   "input_variance_dn2": 698.1235876674218,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 3.208138831078339,
+    "probability_below_zero": 0.0006679849548371086,
+    "rectified_mean_dn": 84.77028438113331,
+    "rectified_variance_dn2": 697.2546860648172,
+    "variance_ratio": 0.9987553756699329,
+    "mean_bias_dn": 0.004748899362141401
+   }
+  },
+  {
+   "group_index": 1,
+   "iso": 3200,
+   "roi": 2,
+   "plane": "G2",
+   "input_signal_dn": 84.62784423828134,
+   "input_variance_dn2": 697.296390086618,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 3.204826843616648,
+    "probability_below_zero": 0.0006757187781359919,
+    "rectified_mean_dn": 84.63264908128613,
+    "rectified_variance_dn2": 696.4185672299955,
+    "variance_ratio": 0.9987411051181356,
+    "mean_bias_dn": 0.004804843004791337
+   }
+  },
+  {
+   "group_index": 1,
+   "iso": 3200,
+   "roi": 2,
+   "plane": "B",
+   "input_signal_dn": 52.435428873697674,
+   "input_variance_dn2": 568.8444331767404,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.198508091253132,
+    "probability_below_zero": 0.013956459299239055,
+    "rectified_mean_dn": 52.55248193411637,
+    "rectified_variance_dn2": 554.7539501545239,
+    "variance_ratio": 0.9752296371372969,
+    "mean_bias_dn": 0.1170530604186979
+   }
+  },
+  {
+   "group_index": 2,
+   "iso": 6400,
+   "roi": 0,
+   "plane": "R",
+   "input_signal_dn": 108.64319864908884,
+   "input_variance_dn2": 1918.7403868082815,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.480244156240514,
+    "probability_below_zero": 0.006564622330887948,
+    "rectified_mean_dn": 108.73651273668466,
+    "rectified_variance_dn2": 1895.9979323434873,
+    "variance_ratio": 0.9881471956179413,
+    "mean_bias_dn": 0.0933140875958145
+   }
+  },
+  {
+   "group_index": 2,
+   "iso": 6400,
+   "roi": 0,
+   "plane": "G1",
+   "input_signal_dn": 227.8300272623701,
+   "input_variance_dn2": 3404.483887872419,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 3.9046788543812605,
+    "probability_below_zero": 4.71752963510097e-05,
+    "rectified_mean_dn": 227.8306607376729,
+    "rectified_variance_dn2": 3404.1789552392875,
+    "variance_ratio": 0.9999104320527943,
+    "mean_bias_dn": 0.0006334753028056639
+   }
+  },
+  {
+   "group_index": 2,
+   "iso": 6400,
+   "roi": 0,
+   "plane": "G2",
+   "input_signal_dn": 227.06609090169286,
+   "input_variance_dn2": 3363.917203457883,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 3.914980780835616,
+    "probability_below_zero": 4.5205704709783134e-05,
+    "rectified_mean_dn": 227.06669299646964,
+    "rectified_variance_dn2": 3363.628419540277,
+    "variance_ratio": 0.9999141524894521,
+    "mean_bias_dn": 0.0006020947767808593
+   }
+  },
+  {
+   "group_index": 2,
+   "iso": 6400,
+   "roi": 0,
+   "plane": "B",
+   "input_signal_dn": 149.82271321614576,
+   "input_variance_dn2": 2780.2732500828656,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.8414100816284495,
+    "probability_below_zero": 0.002245725797881959,
+    "rectified_mean_dn": 149.8576092991559,
+    "rectified_variance_dn2": 2768.8000751461877,
+    "variance_ratio": 0.995873364268661,
+    "mean_bias_dn": 0.034896083010153234
+   }
+  },
+  {
+   "group_index": 2,
+   "iso": 6400,
+   "roi": 1,
+   "plane": "R",
+   "input_signal_dn": 109.8094991048174,
+   "input_variance_dn2": 1970.5525923446053,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.473693542569311,
+    "probability_below_zero": 0.006686217509908499,
+    "rectified_mean_dn": 109.90599123404938,
+    "rectified_variance_dn2": 1946.7719859879508,
+    "variance_ratio": 0.9879320113307101,
+    "mean_bias_dn": 0.09649212923197581
+   }
+  },
+  {
+   "group_index": 2,
+   "iso": 6400,
+   "roi": 1,
+   "plane": "G1",
+   "input_signal_dn": 223.3120829264326,
+   "input_variance_dn2": 3400.378234441056,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 3.8295576222543537,
+    "probability_below_zero": 6.418691112353159e-05,
+    "rectified_mean_dn": 223.31295813105456,
+    "rectified_variance_dn2": 3399.9645301324344,
+    "variance_ratio": 0.999878335796756,
+    "mean_bias_dn": 0.0008752046219626664
+   }
+  },
+  {
+   "group_index": 2,
+   "iso": 6400,
+   "roi": 1,
+   "plane": "G2",
+   "input_signal_dn": 223.62265014648438,
+   "input_variance_dn2": 3389.5466865471717,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 3.8410059500040945,
+    "probability_below_zero": 6.126557206465044e-05,
+    "rectified_mean_dn": 223.6234821549189,
+    "rectified_variance_dn2": 3389.1529674070625,
+    "variance_ratio": 0.9998838431281469,
+    "mean_bias_dn": 0.0008320084345143641
+   }
+  },
+  {
+   "group_index": 2,
+   "iso": 6400,
+   "roi": 1,
+   "plane": "B",
+   "input_signal_dn": 141.716064453125,
+   "input_variance_dn2": 2700.5511204223717,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.727048625442059,
+    "probability_below_zero": 0.0031951810602730557,
+    "rectified_mean_dn": 141.7664748447159,
+    "rectified_variance_dn2": 2684.7758671187185,
+    "variance_ratio": 0.9941585059492649,
+    "mean_bias_dn": 0.05041039159090133
+   }
+  },
+  {
+   "group_index": 2,
+   "iso": 6400,
+   "roi": 2,
+   "plane": "R",
+   "input_signal_dn": 86.46361287434866,
+   "input_variance_dn2": 1682.7868545880872,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.1077486661634737,
+    "probability_below_zero": 0.017526367648880492,
+    "rectified_mean_dn": 86.7233300272029,
+    "rectified_variance_dn2": 1630.7701771391676,
+    "variance_ratio": 0.9690889685125023,
+    "mean_bias_dn": 0.25971715285425034
+   }
+  },
+  {
+   "group_index": 2,
+   "iso": 6400,
+   "roi": 2,
+   "plane": "G1",
+   "input_signal_dn": 174.09651692708326,
+   "input_variance_dn2": 2732.154751681232,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 3.3307147107572947,
+    "probability_below_zero": 0.0004331166526978514,
+    "rectified_mean_dn": 174.1024342451777,
+    "rectified_variance_dn2": 2729.941190476082,
+    "variance_ratio": 0.9991898111906772,
+    "mean_bias_dn": 0.005917318094446955
+   }
+  },
+  {
+   "group_index": 2,
+   "iso": 6400,
+   "roi": 2,
+   "plane": "G2",
+   "input_signal_dn": 174.45328776041652,
+   "input_variance_dn2": 2737.6298175029333,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 3.3342011532926494,
+    "probability_below_zero": 0.000427723846850081,
+    "rectified_mean_dn": 174.45913248866646,
+    "rectified_variance_dn2": 2735.439201726018,
+    "variance_ratio": 0.9991998130050638,
+    "mean_bias_dn": 0.00584472824994009
+   }
+  },
+  {
+   "group_index": 2,
+   "iso": 6400,
+   "roi": 2,
+   "plane": "B",
+   "input_signal_dn": 108.54633585611987,
+   "input_variance_dn2": 2169.17651868518,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.330599883992265,
+    "probability_below_zero": 0.009887233808315021,
+    "rectified_mean_dn": 108.70219172389734,
+    "rectified_variance_dn2": 2130.7874888529896,
+    "variance_ratio": 0.982302486910812,
+    "mean_bias_dn": 0.1558558677774755
+   }
+  },
+  {
+   "group_index": 3,
+   "iso": 12800,
+   "roi": 0,
+   "plane": "R",
+   "input_signal_dn": 214.82276916503906,
+   "input_variance_dn2": 7671.184865788896,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.452726289789285,
+    "probability_below_zero": 0.007088908642918668,
+    "rectified_mean_dn": 215.02579787165345,
+    "rectified_variance_dn2": 7573.148127461769,
+    "variance_ratio": 0.987220130912978,
+    "mean_bias_dn": 0.20302870661438988
+   }
+  },
+  {
+   "group_index": 3,
+   "iso": 12800,
+   "roi": 0,
+   "plane": "G1",
+   "input_signal_dn": 451.0957336425781,
+   "input_variance_dn2": 13574.919033992861,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 3.8716857111361924,
+    "probability_below_zero": 5.404263052000147e-05,
+    "rectified_mean_dn": 451.09719285330925,
+    "rectified_variance_dn2": 13573.527163794584,
+    "variance_ratio": 0.9998974675138178,
+    "mean_bias_dn": 0.001459210731127314
+   }
+  },
+  {
+   "group_index": 3,
+   "iso": 12800,
+   "roi": 0,
+   "plane": "G2",
+   "input_signal_dn": 450.6861572265625,
+   "input_variance_dn2": 13678.623973753996,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 3.8534791501003167,
+    "probability_below_zero": 5.8225592049154784e-05,
+    "rectified_mean_dn": 450.6877414780213,
+    "rectified_variance_dn2": 13677.113525062829,
+    "variance_ratio": 0.9998895759767893,
+    "mean_bias_dn": 0.0015842514587802725
+   }
+  },
+  {
+   "group_index": 3,
+   "iso": 12800,
+   "roi": 0,
+   "plane": "B",
+   "input_signal_dn": 294.95985412597656,
+   "input_variance_dn2": 10666.427387447342,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.8559685404064674,
+    "probability_below_zero": 0.0021452882251984384,
+    "rectified_mean_dn": 295.0249041557172,
+    "rectified_variance_dn2": 10624.353447578556,
+    "variance_ratio": 0.9960554796521374,
+    "mean_bias_dn": 0.06505002974063245
+   }
+  },
+  {
+   "group_index": 3,
+   "iso": 12800,
+   "roi": 1,
+   "plane": "R",
+   "input_signal_dn": 224.0831298828125,
+   "input_variance_dn2": 7968.96846667438,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.5101987426846524,
+    "probability_below_zero": 0.006033161486990846,
+    "rectified_mean_dn": 224.25646457222814,
+    "rectified_variance_dn2": 7882.018968394106,
+    "variance_ratio": 0.989088989541885,
+    "mean_bias_dn": 0.1733346894156398
+   }
+  },
+  {
+   "group_index": 3,
+   "iso": 12800,
+   "roi": 1,
+   "plane": "G1",
+   "input_signal_dn": 457.03709411621094,
+   "input_variance_dn2": 13651.379753402918,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 3.911678704994599,
+    "probability_below_zero": 4.582839857070198e-05,
+    "rectified_mean_dn": 457.03832459228914,
+    "rectified_variance_dn2": 13650.191757805296,
+    "variance_ratio": 0.9999129761519289,
+    "mean_bias_dn": 0.001230476078205811
+   }
+  },
+  {
+   "group_index": 3,
+   "iso": 12800,
+   "roi": 1,
+   "plane": "G2",
+   "input_signal_dn": 455.35169982910156,
+   "input_variance_dn2": 13663.268909230115,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 3.895557815022825,
+    "probability_below_zero": 4.8986493899727535e-05,
+    "rectified_mean_dn": 455.35302014287424,
+    "rectified_variance_dn2": 13661.998384727136,
+    "variance_ratio": 0.9999070116740423,
+    "mean_bias_dn": 0.0013203137726804925
+   }
+  },
+  {
+   "group_index": 3,
+   "iso": 12800,
+   "roi": 1,
+   "plane": "B",
+   "input_signal_dn": 290.14739990234375,
+   "input_variance_dn2": 10859.650996476137,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.7842661595636975,
+    "probability_below_zero": 0.0026824495037938156,
+    "rectified_mean_dn": 290.2310055268647,
+    "rectified_variance_dn2": 10806.255586576852,
+    "variance_ratio": 0.9950831375781218,
+    "mean_bias_dn": 0.083605624520942
+   }
+  },
+  {
+   "group_index": 3,
+   "iso": 12800,
+   "roi": 2,
+   "plane": "R",
+   "input_signal_dn": 171.71408081054688,
+   "input_variance_dn2": 6637.712779448101,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.1076412088330416,
+    "probability_below_zero": 0.01753101810979585,
+    "rectified_mean_dn": 172.23005086026956,
+    "rectified_variance_dn2": 6432.4813685978515,
+    "variance_ratio": 0.9690810046066329,
+    "mean_bias_dn": 0.5159700497226822
+   }
+  },
+  {
+   "group_index": 3,
+   "iso": 12800,
+   "roi": 2,
+   "plane": "G1",
+   "input_signal_dn": 346.7167205810547,
+   "input_variance_dn2": 10931.862011576808,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 3.3161007409296683,
+    "probability_below_zero": 0.0004564145842798073,
+    "rectified_mean_dn": 346.72923641819574,
+    "rectified_variance_dn2": 10922.532943666316,
+    "variance_ratio": 0.9991466167519666,
+    "mean_bias_dn": 0.012515837141052089
+   }
+  },
+  {
+   "group_index": 3,
+   "iso": 12800,
+   "roi": 2,
+   "plane": "G2",
+   "input_signal_dn": 345.13038635253906,
+   "input_variance_dn2": 10975.790205719808,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 3.294316329437339,
+    "probability_below_zero": 0.0004933069960307845,
+    "rectified_mean_dn": 345.1440105582331,
+    "rectified_variance_dn2": 10965.673458630452,
+    "variance_ratio": 0.9990782670860378,
+    "mean_bias_dn": 0.013624205694043212
+   }
+  },
+  {
+   "group_index": 3,
+   "iso": 12800,
+   "roi": 2,
+   "plane": "B",
+   "input_signal_dn": 215.9441680908203,
+   "input_variance_dn2": 8767.149394658141,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.3062812923321374,
+    "probability_below_zero": 0.01054745988478989,
+    "rectified_mean_dn": 216.2807582903954,
+    "rectified_variance_dn2": 8601.8802545168,
+    "variance_ratio": 0.9811490448375341,
+    "mean_bias_dn": 0.3365901995750846
+   }
+  },
+  {
+   "group_index": 4,
+   "iso": 25600,
+   "roi": 0,
+   "plane": "R",
+   "input_signal_dn": 431.83439025878897,
+   "input_variance_dn2": 30452.440325789332,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.474606646957364,
+    "probability_below_zero": 0.0066691495586723715,
+    "rectified_mean_dn": 432.2126490011345,
+    "rectified_variance_dn2": 30085.860233793093,
+    "variance_ratio": 0.9879622096595723,
+    "mean_bias_dn": 0.3782587423455084
+   }
+  },
+  {
+   "group_index": 4,
+   "iso": 25600,
+   "roi": 0,
+   "plane": "G1",
+   "input_signal_dn": 902.1220153808595,
+   "input_variance_dn2": 53651.894916382844,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 3.8946886848186755,
+    "probability_below_zero": 4.916246461172946e-05,
+    "rectified_mean_dn": 902.1246415894466,
+    "rectified_variance_dn2": 53646.888089517364,
+    "variance_ratio": 0.9999066794029683,
+    "mean_bias_dn": 0.0026262085871167073
+   }
+  },
+  {
+   "group_index": 4,
+   "iso": 25600,
+   "roi": 0,
+   "plane": "G2",
+   "input_signal_dn": 899.7832550048829,
+   "input_variance_dn2": 54317.460518373366,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 3.8607188672557187,
+    "probability_below_zero": 5.6526960748870536e-05,
+    "rectified_mean_dn": 899.7863151866553,
+    "rectified_variance_dn2": 54311.63660773402,
+    "variance_ratio": 0.9998927801376617,
+    "mean_bias_dn": 0.003060181772411852
+   }
+  },
+  {
+   "group_index": 4,
+   "iso": 25600,
+   "roi": 0,
+   "plane": "B",
+   "input_signal_dn": 593.7307586669922,
+   "input_variance_dn2": 43894.275938948245,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.8339070637130894,
+    "probability_below_zero": 0.0022991351320911235,
+    "rectified_mean_dn": 593.8729861060725,
+    "rectified_variance_dn2": 43708.89203308651,
+    "variance_ratio": 0.9957765812991292,
+    "mean_bias_dn": 0.14222743908032953
+   }
+  },
+  {
+   "group_index": 4,
+   "iso": 25600,
+   "roi": 1,
+   "plane": "R",
+   "input_signal_dn": 449.26297607421884,
+   "input_variance_dn2": 31105.124859284715,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.5473267439467095,
+    "probability_below_zero": 0.005427587052964755,
+    "rectified_mean_dn": 449.56793638792254,
+    "rectified_variance_dn2": 30799.198707405623,
+    "variance_ratio": 0.9901647669551863,
+    "mean_bias_dn": 0.30496031370370247
+   }
+  },
+  {
+   "group_index": 4,
+   "iso": 25600,
+   "roi": 1,
+   "plane": "G1",
+   "input_signal_dn": 918.5767242431639,
+   "input_variance_dn2": 54222.70474692555,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 3.9447987144238565,
+    "probability_below_zero": 3.993351881581564e-05,
+    "rectified_mean_dn": 918.5788463379633,
+    "rectified_variance_dn2": 54218.59013213252,
+    "variance_ratio": 0.9999241163860743,
+    "mean_bias_dn": 0.002122094799460683
+   }
+  },
+  {
+   "group_index": 4,
+   "iso": 25600,
+   "roi": 1,
+   "plane": "G2",
+   "input_signal_dn": 917.8320587158205,
+   "input_variance_dn2": 54595.836131690434,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 3.9281083831327632,
+    "probability_below_zero": 4.2808313635678275e-05,
+    "rectified_mean_dn": 917.8343493774646,
+    "rectified_variance_dn2": 54591.396528074285,
+    "variance_ratio": 0.9999186823770692,
+    "mean_bias_dn": 0.0022906616441105143
+   }
+  },
+  {
+   "group_index": 4,
+   "iso": 25600,
+   "roi": 1,
+   "plane": "B",
+   "input_signal_dn": 585.6468444824218,
+   "input_variance_dn2": 43676.36042974497,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.8022868380481913,
+    "probability_below_zero": 0.0025370868196022967,
+    "rectified_mean_dn": 585.8046863048277,
+    "rectified_variance_dn2": 43473.08523211023,
+    "variance_ratio": 0.9953458759925357,
+    "mean_bias_dn": 0.15784182240588507
+   }
+  },
+  {
+   "group_index": 4,
+   "iso": 25600,
+   "roi": 2,
+   "plane": "R",
+   "input_signal_dn": 343.9598205566406,
+   "input_variance_dn2": 26543.197849196302,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.111208333943078,
+    "probability_below_zero": 0.01737720441104229,
+    "rectified_mean_dn": 344.9814683595767,
+    "rectified_variance_dn2": 25729.50171524484,
+    "variance_ratio": 0.9693444573417856,
+    "mean_bias_dn": 1.0216478029361156
+   }
+  },
+  {
+   "group_index": 4,
+   "iso": 25600,
+   "roi": 2,
+   "plane": "G1",
+   "input_signal_dn": 693.4245574951174,
+   "input_variance_dn2": 43103.482118939806,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 3.3399736457282603,
+    "probability_below_zero": 0.0004189317026819239,
+    "rectified_mean_dn": 693.447241904973,
+    "rectified_variance_dn2": 43069.6942623356,
+    "variance_ratio": 0.9992161223422513,
+    "mean_bias_dn": 0.022684409855628473
+   }
+  },
+  {
+   "group_index": 4,
+   "iso": 25600,
+   "roi": 2,
+   "plane": "G2",
+   "input_signal_dn": 691.0241760253907,
+   "input_variance_dn2": 43719.5726129488,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 3.3048769026689615,
+    "probability_below_zero": 0.0004750906133521582,
+    "rectified_mean_dn": 691.0502983461662,
+    "rectified_variance_dn2": 43680.750016815146,
+    "variance_ratio": 0.9991120087911802,
+    "mean_bias_dn": 0.026122320775471053
+   }
+  },
+  {
+   "group_index": 4,
+   "iso": 25600,
+   "roi": 2,
+   "plane": "B",
+   "input_signal_dn": 433.57677001953107,
+   "input_variance_dn2": 35175.51688244418,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.3117760588880394,
+    "probability_below_zero": 0.010395013709234124,
+    "rectified_mean_dn": 434.24018487716376,
+    "rectified_variance_dn2": 34521.7855117931,
+    "variance_ratio": 0.9814151595032468,
+    "mean_bias_dn": 0.6634148576326879
+   }
+  },
+  {
+   "group_index": 5,
+   "iso": 51200,
+   "roi": 0,
+   "plane": "R",
+   "input_signal_dn": 893.8423787434899,
+   "input_variance_dn2": 121237.04586442724,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.567102849375929,
+    "probability_below_zero": 0.005127609495471641,
+    "rectified_mean_dn": 894.4081139017925,
+    "rectified_variance_dn2": 120109.39152094454,
+    "variance_ratio": 0.9906987642643182,
+    "mean_bias_dn": 0.5657351583025729
+   }
+  },
+  {
+   "group_index": 5,
+   "iso": 51200,
+   "roi": 0,
+   "plane": "G1",
+   "input_signal_dn": 1892.1539794921875,
+   "input_variance_dn2": 215400.43746749737,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 4.076929344753219,
+    "probability_below_zero": 2.2817176035028197e-05,
+    "rectified_mean_dn": 1892.1563311419936,
+    "rectified_variance_dn2": 215391.07294872822,
+    "variance_ratio": 0.9999565250707972,
+    "mean_bias_dn": 0.0023516498060871527
+   }
+  },
+  {
+   "group_index": 5,
+   "iso": 51200,
+   "roi": 0,
+   "plane": "G2",
+   "input_signal_dn": 1893.524715169271,
+   "input_variance_dn2": 216468.93182890277,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 4.069801158286264,
+    "probability_below_zero": 2.3526639959303708e-05,
+    "rectified_mean_dn": 1893.5271494879244,
+    "rectified_variance_dn2": 216459.22959381994,
+    "variance_ratio": 0.9999551795493198,
+    "mean_bias_dn": 0.0024343186532860273
+   }
+  },
+  {
+   "group_index": 5,
+   "iso": 51200,
+   "roi": 0,
+   "plane": "B",
+   "input_signal_dn": 1254.3879516601562,
+   "input_variance_dn2": 176468.30111232062,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.98605994307636,
+    "probability_below_zero": 0.001412986213798595,
+    "rectified_mean_dn": 1254.5565759251779,
+    "rectified_variance_dn2": 176007.40515513276,
+    "variance_ratio": 0.9973882223930148,
+    "mean_bias_dn": 0.16862426502166272
+   }
+  },
+  {
+   "group_index": 5,
+   "iso": 51200,
+   "roi": 1,
+   "plane": "R",
+   "input_signal_dn": 905.2271931966147,
+   "input_variance_dn2": 120152.36501753372,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.611508417095719,
+    "probability_below_zero": 0.004507188441667198,
+    "rectified_mean_dn": 905.7163325293436,
+    "rectified_variance_dn2": 119167.79418415274,
+    "variance_ratio": 0.9918056474940189,
+    "mean_bias_dn": 0.48913933272888244
+   }
+  },
+  {
+   "group_index": 5,
+   "iso": 51200,
+   "roi": 1,
+   "plane": "G1",
+   "input_signal_dn": 1858.444718424479,
+   "input_variance_dn2": 210378.53104600558,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 4.051808748901487,
+    "probability_below_zero": 2.5411601101810177e-05,
+    "rectified_mean_dn": 1858.4473200925713,
+    "rectified_variance_dn2": 210368.34992760047,
+    "variance_ratio": 0.9999516057158756,
+    "mean_bias_dn": 0.0026016680922111846
+   }
+  },
+  {
+   "group_index": 5,
+   "iso": 51200,
+   "roi": 1,
+   "plane": "G2",
+   "input_signal_dn": 1870.2417928059897,
+   "input_variance_dn2": 215285.50542305605,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 4.030791760399032,
+    "probability_below_zero": 2.7794639043454694e-05,
+    "rectified_mean_dn": 1870.2446839002196,
+    "rectified_variance_dn2": 215274.11458652746,
+    "variance_ratio": 0.9999470896263721,
+    "mean_bias_dn": 0.002891094229880764
+   }
+  },
+  {
+   "group_index": 5,
+   "iso": 51200,
+   "roi": 1,
+   "plane": "B",
+   "input_signal_dn": 1197.2778361002602,
+   "input_variance_dn2": 171756.912714522,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.8889353983825923,
+    "probability_below_zero": 0.0019327423915900255,
+    "rectified_mean_dn": 1197.5110335006596,
+    "rectified_variance_dn2": 171145.69438830833,
+    "variance_ratio": 0.996441375682913,
+    "mean_bias_dn": 0.23319740039937642
+   }
+  },
+  {
+   "group_index": 5,
+   "iso": 51200,
+   "roi": 2,
+   "plane": "R",
+   "input_signal_dn": 695.8526611328125,
+   "input_variance_dn2": 102321.90010338882,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.175369295161635,
+    "probability_below_zero": 0.014801226762000685,
+    "rectified_mean_dn": 697.5289550236649,
+    "rectified_variance_dn2": 99638.14693124098,
+    "variance_ratio": 0.9737714685767552,
+    "mean_bias_dn": 1.6762938908524347
+   }
+  },
+  {
+   "group_index": 5,
+   "iso": 51200,
+   "roi": 2,
+   "plane": "G1",
+   "input_signal_dn": 1416.6427734375,
+   "input_variance_dn2": 169056.76002433864,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 3.4454351482355787,
+    "probability_below_zero": 0.00028507037842206984,
+    "rectified_mean_dn": 1416.6726075225115,
+    "rectified_variance_dn2": 168966.30181877734,
+    "variance_ratio": 0.9994649240553984,
+    "mean_bias_dn": 0.02983408501154372
+   }
+  },
+  {
+   "group_index": 5,
+   "iso": 51200,
+   "roi": 2,
+   "plane": "G2",
+   "input_signal_dn": 1417.3808430989584,
+   "input_variance_dn2": 168794.59279716533,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 3.4499062509739598,
+    "probability_below_zero": 0.00028039063041918055,
+    "rectified_mean_dn": 1417.4101346955076,
+    "rectified_variance_dn2": 168705.74616906955,
+    "variance_ratio": 0.999473640555521,
+    "mean_bias_dn": 0.029291596549228416
+   }
+  },
+  {
+   "group_index": 5,
+   "iso": 51200,
+   "roi": 2,
+   "plane": "B",
+   "input_signal_dn": 893.226114908854,
+   "input_variance_dn2": 135133.25326464008,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.429854650857492,
+    "probability_below_zero": 0.0075524394903737635,
+    "rectified_mean_dn": 894.1397798895288,
+    "rectified_variance_dn2": 133295.72334150842,
+    "variance_ratio": 0.9864020892064731,
+    "mean_bias_dn": 0.9136649806747528
+   }
+  },
+  {
+   "group_index": 6,
+   "iso": 51200,
+   "roi": 0,
+   "plane": "R",
+   "input_signal_dn": 52.23316650390643,
+   "input_variance_dn2": 38188.0960130235,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.26728977889262456,
+    "probability_below_zero": 0.39462302791929516,
+    "rectified_mean_dn": 106.84541714172812,
+    "rectified_variance_dn2": 17283.12523344474,
+    "variance_ratio": 0.4525788671828671,
+    "mean_bias_dn": 54.61225063782169
+   }
+  },
+  {
+   "group_index": 6,
+   "iso": 51200,
+   "roi": 0,
+   "plane": "G1",
+   "input_signal_dn": 239.35675862630228,
+   "input_variance_dn2": 65358.86125320857,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.9362535050101433,
+    "probability_below_zero": 0.1745713404400927,
+    "rectified_mean_dn": 263.3706433016021,
+    "rectified_variance_dn2": 47624.52497949368,
+    "variance_ratio": 0.7286620982423515,
+    "mean_bias_dn": 24.013884675299835
+   }
+  },
+  {
+   "group_index": 6,
+   "iso": 51200,
+   "roi": 0,
+   "plane": "G2",
+   "input_signal_dn": 239.41727294921884,
+   "input_variance_dn2": 66172.55222001388,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.9307146222065981,
+    "probability_below_zero": 0.1760006019357987,
+    "rectified_mean_dn": 263.82992747277774,
+    "rectified_variance_dn2": 48085.35432529483,
+    "variance_ratio": 0.7266661585821594,
+    "mean_bias_dn": 24.4126545235589
+   }
+  },
+  {
+   "group_index": 6,
+   "iso": 51200,
+   "roi": 0,
+   "plane": "B",
+   "input_signal_dn": 310.8249226888022,
+   "input_variance_dn2": 83647.36817591338,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.0747060499880805,
+    "probability_below_zero": 0.1412531771185911,
+    "rectified_mean_dn": 331.68376252114297,
+    "rectified_variance_dn2": 64913.37318604044,
+    "variance_ratio": 0.7760360499271814,
+    "mean_bias_dn": 20.858839832340777
+   }
+  },
+  {
+   "group_index": 6,
+   "iso": 51200,
+   "roi": 1,
+   "plane": "R",
+   "input_signal_dn": 121.77518717447902,
+   "input_variance_dn2": 45409.46103458326,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.57145973062274,
+    "probability_below_zero": 0.2838440249640496,
+    "rectified_mean_dn": 159.4155287889314,
+    "rectified_variance_dn2": 26519.801880815034,
+    "variance_ratio": 0.5840149007850565,
+    "mean_bias_dn": 37.64034161445238
+   }
+  },
+  {
+   "group_index": 6,
+   "iso": 51200,
+   "roi": 1,
+   "plane": "G1",
+   "input_signal_dn": 166.06729736328134,
+   "input_variance_dn2": 55435.03660878464,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.7053293378979797,
+    "probability_below_zero": 0.24030265350661417,
+    "rectified_mean_dn": 199.40517426756813,
+    "rectified_variance_dn2": 35466.10506064735,
+    "variance_ratio": 0.6397777873033303,
+    "mean_bias_dn": 33.33787690428679
+   }
+  },
+  {
+   "group_index": 6,
+   "iso": 51200,
+   "roi": 1,
+   "plane": "G2",
+   "input_signal_dn": 165.1105672200522,
+   "input_variance_dn2": 54959.29901073623,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.7042944677000581,
+    "probability_below_zero": 0.2406247054412971,
+    "rectified_mean_dn": 198.3634234177934,
+    "rectified_variance_dn2": 35138.58348121411,
+    "variance_ratio": 0.6393564713107027,
+    "mean_bias_dn": 33.25285619774121
+   }
+  },
+  {
+   "group_index": 6,
+   "iso": 51200,
+   "roi": 1,
+   "plane": "B",
+   "input_signal_dn": 170.8254638671874,
+   "input_variance_dn2": 62454.22327711125,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.6835522275692157,
+    "probability_below_zero": 0.2471289799225289,
+    "rectified_mean_dn": 207.5373966644225,
+    "rectified_variance_dn2": 39400.87582752748,
+    "variance_ratio": 0.630876084275432,
+    "mean_bias_dn": 36.71193279723508
+   }
+  },
+  {
+   "group_index": 6,
+   "iso": 51200,
+   "roi": 2,
+   "plane": "R",
+   "input_signal_dn": 112.91054280598973,
+   "input_variance_dn2": 44570.31060745688,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.5348249569754273,
+    "probability_below_zero": 0.2963854518920863,
+    "rectified_mean_dn": 152.44511918697128,
+    "rectified_variance_dn2": 25333.46574868997,
+    "variance_ratio": 0.5683932959724882,
+    "mean_bias_dn": 39.53457638098155
+   }
+  },
+  {
+   "group_index": 6,
+   "iso": 51200,
+   "roi": 2,
+   "plane": "G1",
+   "input_signal_dn": 417.48111165364594,
+   "input_variance_dn2": 72648.50370999346,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.5489004084293967,
+    "probability_below_zero": 0.06070283137979593,
+    "rectified_mean_dn": 424.54047347852935,
+    "rectified_variance_dn2": 65241.54902769899,
+    "variance_ratio": 0.8980439471697532,
+    "mean_bias_dn": 7.0593618248834105
+   }
+  },
+  {
+   "group_index": 6,
+   "iso": 51200,
+   "roi": 2,
+   "plane": "G2",
+   "input_signal_dn": 417.52470296223964,
+   "input_variance_dn2": 71627.53467911178,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.5600631333237345,
+    "probability_below_zero": 0.05937248129936901,
+    "rectified_mean_dn": 424.35492703643166,
+    "rectified_variance_dn2": 64476.39097721013,
+    "variance_ratio": 0.9001620852380519,
+    "mean_bias_dn": 6.830224074192017
+   }
+  },
+  {
+   "group_index": 6,
+   "iso": 51200,
+   "roi": 2,
+   "plane": "B",
+   "input_signal_dn": 263.94797770182277,
+   "input_variance_dn2": 65988.86984653484,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.0275027517835775,
+    "probability_below_zero": 0.1520918951756447,
+    "rectified_mean_dn": 284.2526999114617,
+    "rectified_variance_dn2": 50180.82546203431,
+    "variance_ratio": 0.7604437775451517,
+    "mean_bias_dn": 20.304722209638953
+   }
+  },
+  {
+   "group_index": 7,
+   "iso": 12800,
+   "roi": 0,
+   "plane": "R",
+   "input_signal_dn": 10.883377075195312,
+   "input_variance_dn2": 2449.267711645691,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.2199102882182531,
+    "probability_below_zero": 0.4129705118015048,
+    "rectified_mean_dn": 25.66086552680316,
+    "rectified_variance_dn2": 1058.5892272478739,
+    "variance_ratio": 0.43220641917358865,
+    "mean_bias_dn": 14.777488451607848
+   }
+  },
+  {
+   "group_index": 7,
+   "iso": 12800,
+   "roi": 0,
+   "plane": "G1",
+   "input_signal_dn": 49.066253662109375,
+   "input_variance_dn2": 3656.36154561886,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.8114435889535573,
+    "probability_below_zero": 0.20855548789492584,
+    "rectified_mean_dn": 56.18947335284884,
+    "rectified_variance_dn2": 2493.5573165527803,
+    "variance_ratio": 0.6819777763882843,
+    "mean_bias_dn": 7.123219690739468
+   }
+  },
+  {
+   "group_index": 7,
+   "iso": 12800,
+   "roi": 0,
+   "plane": "G2",
+   "input_signal_dn": 49.0128173828125,
+   "input_variance_dn2": 3608.8210487815113,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.8158813278048904,
+    "probability_below_zero": 0.2072840062495056,
+    "rectified_mean_dn": 56.03414774194552,
+    "rectified_variance_dn2": 2467.3359012638707,
+    "variance_ratio": 0.6836958297217166,
+    "mean_bias_dn": 7.021330359133017
+   }
+  },
+  {
+   "group_index": 7,
+   "iso": 12800,
+   "roi": 0,
+   "plane": "B",
+   "input_signal_dn": 55.81986999511719,
+   "input_variance_dn2": 4675.676704207889,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.8163315532358022,
+    "probability_below_zero": 0.2071552662300491,
+    "rectified_mean_dn": 63.8055548792541,
+    "rectified_variance_dn2": 3197.5545966188374,
+    "variance_ratio": 0.683869907802049,
+    "mean_bias_dn": 7.985684884136916
+   }
+  },
+  {
+   "group_index": 7,
+   "iso": 12800,
+   "roi": 1,
+   "plane": "R",
+   "input_signal_dn": 134.76010131835938,
+   "input_variance_dn2": 5829.091511289854,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.7650657675585317,
+    "probability_below_zero": 0.038776356561540215,
+    "rectified_mean_dn": 135.94960908579023,
+    "rectified_variance_dn2": 5441.347464431496,
+    "variance_ratio": 0.9334812215407202,
+    "mean_bias_dn": 1.1895077674308538
+   }
+  },
+  {
+   "group_index": 7,
+   "iso": 12800,
+   "roi": 1,
+   "plane": "G1",
+   "input_signal_dn": 588.5818634033203,
+   "input_variance_dn2": 18930.319820252935,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 4.277873125296512,
+    "probability_below_zero": 9.43437545619652e-06,
+    "rectified_mean_dn": 588.5821402712018,
+    "rectified_variance_dn2": 18929.97826501797,
+    "variance_ratio": 0.9999819572390637,
+    "mean_bias_dn": 0.00027686788143910235
+   }
+  },
+  {
+   "group_index": 7,
+   "iso": 12800,
+   "roi": 1,
+   "plane": "G2",
+   "input_signal_dn": 590.0459136962891,
+   "input_variance_dn2": 18796.363505727342,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 4.303768369497852,
+    "probability_below_zero": 8.395861151422324e-06,
+    "rectified_mean_dn": 590.0461579662119,
+    "rectified_variance_dn2": 18796.061563539668,
+    "variance_ratio": 0.9999839361380949,
+    "mean_bias_dn": 0.0002442699228595302
+   }
+  },
+  {
+   "group_index": 7,
+   "iso": 12800,
+   "roi": 1,
+   "plane": "B",
+   "input_signal_dn": 464.1056823730469,
+   "input_variance_dn2": 18252.832199835262,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 3.435197849165622,
+    "probability_below_zero": 0.00029606067856779994,
+    "rectified_mean_dn": 464.1158872650267,
+    "rectified_variance_dn2": 18242.692001452757,
+    "variance_ratio": 0.9994444589052544,
+    "mean_bias_dn": 0.010204891979810782
+   }
+  },
+  {
+   "group_index": 7,
+   "iso": 12800,
+   "roi": 2,
+   "plane": "R",
+   "input_signal_dn": 24.0926513671875,
+   "input_variance_dn2": 2854.780676536651,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.45091867480444453,
+    "probability_below_zero": 0.3260240817494249,
+    "rectified_mean_dn": 35.492905781975026,
+    "rectified_variance_dn2": 1519.4252720381887,
+    "variance_ratio": 0.5322388807400497,
+    "mean_bias_dn": 11.400254414787526
+   }
+  },
+  {
+   "group_index": 7,
+   "iso": 12800,
+   "roi": 2,
+   "plane": "G1",
+   "input_signal_dn": 60.15275573730469,
+   "input_variance_dn2": 3685.290055393307,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.9908768694114658,
+    "probability_below_zero": 0.16087285410450514,
+    "rectified_mean_dn": 65.29903570041573,
+    "rectified_variance_dn2": 2756.3798069437134,
+    "variance_ratio": 0.7479410753326832,
+    "mean_bias_dn": 5.146279963111041
+   }
+  },
+  {
+   "group_index": 7,
+   "iso": 12800,
+   "roi": 2,
+   "plane": "G2",
+   "input_signal_dn": 60.58641052246094,
+   "input_variance_dn2": 3691.2987985872333,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.9972076983492069,
+    "probability_below_zero": 0.15933185250038884,
+    "rectified_mean_dn": 65.67530334287058,
+    "rectified_variance_dn2": 2768.94274321611,
+    "variance_ratio": 0.7501269591819184,
+    "mean_bias_dn": 5.08889282040964
+   }
+  },
+  {
+   "group_index": 7,
+   "iso": 12800,
+   "roi": 2,
+   "plane": "B",
+   "input_signal_dn": 34.30119323730469,
+   "input_variance_dn2": 3700.4663561015514,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.5638726084083981,
+    "probability_below_zero": 0.2864204164364529,
+    "rectified_mean_dn": 45.1778457673751,
+    "rectified_variance_dn2": 2149.19351090901,
+    "variance_ratio": 0.5807899070249053,
+    "mean_bias_dn": 10.876652530070416
+   }
+  },
+  {
+   "group_index": 8,
+   "iso": 6400,
+   "roi": 0,
+   "plane": "R",
+   "input_signal_dn": 5.876739501953125,
+   "input_variance_dn2": 624.2560496980384,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.23520960916821804,
+    "probability_below_zero": 0.4070230240787822,
+    "rectified_mean_dn": 13.180447061805275,
+    "rectified_variance_dn2": 273.90333370293,
+    "variance_ratio": 0.43876760799582315,
+    "mean_bias_dn": 7.30370755985215
+   }
+  },
+  {
+   "group_index": 8,
+   "iso": 6400,
+   "roi": 0,
+   "plane": "G1",
+   "input_signal_dn": 28.222239176432595,
+   "input_variance_dn2": 880.3436469372788,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.9511857839122546,
+    "probability_below_zero": 0.1707550368568157,
+    "rectified_mean_dn": 30.932738534723242,
+    "rectified_variance_dn2": 646.1773671093003,
+    "variance_ratio": 0.7340058275621748,
+    "mean_bias_dn": 2.7104993582906474
+   }
+  },
+  {
+   "group_index": 8,
+   "iso": 6400,
+   "roi": 0,
+   "plane": "G2",
+   "input_signal_dn": 28.296051025390625,
+   "input_variance_dn2": 895.8591547809241,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.9453790238391477,
+    "probability_below_zero": 0.1722327036240866,
+    "rectified_mean_dn": 31.060137279885563,
+    "rectified_variance_dn2": 655.710011968559,
+    "variance_ratio": 0.7319342649670284,
+    "mean_bias_dn": 2.764086254494938
+   }
+  },
+  {
+   "group_index": 8,
+   "iso": 6400,
+   "roi": 0,
+   "plane": "B",
+   "input_signal_dn": 37.31791178385424,
+   "input_variance_dn2": 1191.2584646692565,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.0812206557939572,
+    "probability_below_zero": 0.13979948594127467,
+    "rectified_mean_dn": 39.77555611767296,
+    "rectified_variance_dn2": 926.966973568215,
+    "variance_ratio": 0.7781409333578839,
+    "mean_bias_dn": 2.4576443338187204
+   }
+  },
+  {
+   "group_index": 8,
+   "iso": 6400,
+   "roi": 1,
+   "plane": "R",
+   "input_signal_dn": 99.95211791992188,
+   "input_variance_dn2": 1838.8232307427097,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.3308912420744017,
+    "probability_below_zero": 0.00987954760398746,
+    "rectified_mean_dn": 100.09549238954317,
+    "rectified_variance_dn2": 1806.305350966435,
+    "variance_ratio": 0.9823159294310522,
+    "mean_bias_dn": 0.14337446962129263
+   }
+  },
+  {
+   "group_index": 8,
+   "iso": 6400,
+   "roi": 1,
+   "plane": "G1",
+   "input_signal_dn": 344.57630411783884,
+   "input_variance_dn2": 5104.5757680201905,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 4.822870283601792,
+    "probability_below_zero": 7.075350126894975e-07,
+    "rectified_mean_dn": 344.57631384735265,
+    "rectified_variance_dn2": 5104.5688037941,
+    "variance_ratio": 0.9999986356895446,
+    "mean_bias_dn": 9.729513806178147e-06
+   }
+  },
+  {
+   "group_index": 8,
+   "iso": 6400,
+   "roi": 1,
+   "plane": "G2",
+   "input_signal_dn": 344.35749308268214,
+   "input_variance_dn2": 5103.179617752099,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 4.820466956819015,
+    "probability_below_zero": 7.16112895871035e-07,
+    "rectified_mean_dn": 344.3575029330736,
+    "rectified_variance_dn2": 5103.17257124318,
+    "variance_ratio": 0.999998619192455,
+    "mean_bias_dn": 9.850391450072493e-06
+   }
+  },
+  {
+   "group_index": 8,
+   "iso": 6400,
+   "roi": 1,
+   "plane": "B",
+   "input_signal_dn": 236.39658610026027,
+   "input_variance_dn2": 4217.401438867702,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 3.640145385547235,
+    "probability_below_zero": 0.00013624207156526236,
+    "rectified_mean_dn": 236.39874174550786,
+    "rectified_variance_dn2": 4216.317259534859,
+    "variance_ratio": 0.9997429271676982,
+    "mean_bias_dn": 0.002155645247597704
+   }
+  },
+  {
+   "group_index": 8,
+   "iso": 6400,
+   "roi": 2,
+   "plane": "R",
+   "input_signal_dn": 30.785064697265625,
+   "input_variance_dn2": 956.5340657909733,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.9953821534909856,
+    "probability_below_zero": 0.15977521754091317,
+    "rectified_mean_dn": 33.38457507832828,
+    "rectified_variance_dn2": 716.9200778604466,
+    "variance_ratio": 0.7494976953775441,
+    "mean_bias_dn": 2.5995103810626574
+   }
+  },
+  {
+   "group_index": 8,
+   "iso": 6400,
+   "roi": 2,
+   "plane": "G1",
+   "input_signal_dn": 50.66099039713549,
+   "input_variance_dn2": 1190.4183740664546,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.4683306521076454,
+    "probability_below_zero": 0.07100721433801438,
+    "rectified_mean_dn": 51.7474211433193,
+    "rectified_variance_dn2": 1049.670092061383,
+    "variance_ratio": 0.881765700974291,
+    "mean_bias_dn": 1.086430746183808
+   }
+  },
+  {
+   "group_index": 8,
+   "iso": 6400,
+   "roi": 2,
+   "plane": "G2",
+   "input_signal_dn": 50.430399576822765,
+   "input_variance_dn2": 1176.7912477284774,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.4700858397843546,
+    "probability_below_zero": 0.07076925346786611,
+    "rectified_mean_dn": 51.50632582908911,
+    "rectified_variance_dn2": 1038.0936015219136,
+    "variance_ratio": 0.8821391249516111,
+    "mean_bias_dn": 1.075926252266342
+   }
+  },
+  {
+   "group_index": 8,
+   "iso": 6400,
+   "roi": 2,
+   "plane": "B",
+   "input_signal_dn": 16.332244873047102,
+   "input_variance_dn2": 925.761627411483,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.536779961773929,
+    "probability_below_zero": 0.2957098073297395,
+    "rectified_mean_dn": 22.012390889228588,
+    "rectified_variance_dn2": 526.9712405202861,
+    "variance_ratio": 0.5692299452870471,
+    "mean_bias_dn": 5.680146016181485
+   }
+  },
+  {
+   "group_index": 9,
+   "iso": 3200,
+   "roi": 0,
+   "plane": "R",
+   "input_signal_dn": 2.947198486328034,
+   "input_variance_dn2": 178.81674699888688,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.22039680297935246,
+    "probability_below_zero": 0.4127810675283574,
+    "rectified_mean_dn": 6.9373954979479535,
+    "rectified_variance_dn2": 77.32300449640076,
+    "variance_ratio": 0.43241478102094144,
+    "mean_bias_dn": 3.9901970116199195
+   }
+  },
+  {
+   "group_index": 9,
+   "iso": 3200,
+   "roi": 0,
+   "plane": "G1",
+   "input_signal_dn": 13.078808593750182,
+   "input_variance_dn2": 259.81212350663367,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.8114064912485525,
+    "probability_below_zero": 0.20856613631229115,
+    "rectified_mean_dn": 14.977743168244363,
+    "rectified_variance_dn2": 177.18235838969008,
+    "variance_ratio": 0.6819633972360268,
+    "mean_bias_dn": 1.8989345744941808
+   }
+  },
+  {
+   "group_index": 9,
+   "iso": 3200,
+   "roi": 0,
+   "plane": "G2",
+   "input_signal_dn": 12.919116210937318,
+   "input_variance_dn2": 263.67159030338945,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.7956116532144688,
+    "probability_below_zero": 0.21312889560457915,
+    "rectified_mean_dn": 14.886179078142192,
+    "rectified_variance_dn2": 178.1935053605494,
+    "variance_ratio": 0.6758160981830236,
+    "mean_bias_dn": 1.9670628672048736
+   }
+  },
+  {
+   "group_index": 9,
+   "iso": 3200,
+   "roi": 0,
+   "plane": "B",
+   "input_signal_dn": 14.89764404296875,
+   "input_variance_dn2": 337.922963417443,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.8104173697036389,
+    "probability_below_zero": 0.20885016907529352,
+    "rectified_mean_dn": 17.067093301916696,
+    "rectified_variance_dn2": 230.32150245704725,
+    "variance_ratio": 0.681579908413997,
+    "mean_bias_dn": 2.169449258947946
+   }
+  },
+  {
+   "group_index": 9,
+   "iso": 3200,
+   "roi": 1,
+   "plane": "R",
+   "input_signal_dn": 25.532397460937318,
+   "input_variance_dn2": 332.15541964916713,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.4009444817966434,
+    "probability_below_zero": 0.0806153378424661,
+    "rectified_mean_dn": 26.19929031269306,
+    "rectified_variance_dn2": 287.90647884733494,
+    "variance_ratio": 0.8667824211672678,
+    "mean_bias_dn": 0.6668928517557404
+   }
+  },
+  {
+   "group_index": 9,
+   "iso": 3200,
+   "roi": 1,
+   "plane": "G1",
+   "input_signal_dn": 129.38543701171875,
+   "input_variance_dn2": 1082.8741484882266,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 3.9318451376987156,
+    "probability_below_zero": 4.2148182020751435e-05,
+    "rectified_mean_dn": 129.38575439277363,
+    "rectified_variance_dn2": 1082.7874427242969,
+    "variance_ratio": 0.9999199299715015,
+    "mean_bias_dn": 0.0003173810548844358
+   }
+  },
+  {
+   "group_index": 9,
+   "iso": 3200,
+   "roi": 1,
+   "plane": "G2",
+   "input_signal_dn": 129.01750488281232,
+   "input_variance_dn2": 1095.4601244132161,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 3.898076445869527,
+    "probability_below_zero": 4.8479905246701094e-05,
+    "rectified_mean_dn": 129.01787467104305,
+    "rectified_variance_dn2": 1095.3593073185766,
+    "variance_ratio": 0.999907968266126,
+    "mean_bias_dn": 0.00036978823072786327
+   }
+  },
+  {
+   "group_index": 9,
+   "iso": 3200,
+   "roi": 1,
+   "plane": "B",
+   "input_signal_dn": 113.6474792480467,
+   "input_variance_dn2": 1154.6661488625518,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 3.3445030041514223,
+    "probability_below_zero": 0.00041215068473610117,
+    "rectified_mean_dn": 113.65112807633854,
+    "rectified_variance_dn2": 1153.7755589671324,
+    "variance_ratio": 0.9992287035553118,
+    "mean_bias_dn": 0.0036488282918440973
+   }
+  },
+  {
+   "group_index": 9,
+   "iso": 3200,
+   "roi": 2,
+   "plane": "R",
+   "input_signal_dn": 4.361230468749909,
+   "input_variance_dn2": 198.87236864450526,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.30925862051772746,
+    "probability_below_zero": 0.3785624025659552,
+    "rectified_mean_dn": 8.073496060516367,
+    "rectified_variance_dn2": 93.61580533574204,
+    "variance_ratio": 0.47073309366111676,
+    "mean_bias_dn": 3.7122655917664584
+   }
+  },
+  {
+   "group_index": 9,
+   "iso": 3200,
+   "roi": 2,
+   "plane": "G1",
+   "input_signal_dn": 16.370831298828307,
+   "input_variance_dn2": 268.1860033533683,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.9996608383994846,
+    "probability_below_zero": 0.1587373350266803,
+    "rectified_mean_dn": 17.7361190040885,
+    "rectified_variance_dn2": 201.39996667428454,
+    "variance_ratio": 0.750971207132369,
+    "mean_bias_dn": 1.3652877052601937
+   }
+  },
+  {
+   "group_index": 9,
+   "iso": 3200,
+   "roi": 2,
+   "plane": "G2",
+   "input_signal_dn": 16.51260986328134,
+   "input_variance_dn2": 266.5169752393749,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.0114706429262998,
+    "probability_below_zero": 0.15589561253117523,
+    "rectified_mean_dn": 17.843312631517865,
+    "rectified_variance_dn2": 201.22400262120595,
+    "variance_ratio": 0.7550138314472261,
+    "mean_bias_dn": 1.3307027682365238
+   }
+  },
+  {
+   "group_index": 9,
+   "iso": 3200,
+   "roi": 2,
+   "plane": "B",
+   "input_signal_dn": 9.828271484374909,
+   "input_variance_dn2": 270.3035282902699,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.5977936357084994,
+    "probability_below_zero": 0.2749888188782036,
+    "rectified_mean_dn": 12.611366501842314,
+    "rectified_variance_dn2": 160.87444903238486,
+    "variance_ratio": 0.5951622239263824,
+    "mean_bias_dn": 2.7830950174674047
+   }
+  },
+  {
+   "group_index": 10,
+   "iso": 1600,
+   "roi": 0,
+   "plane": "R",
+   "input_signal_dn": 1.135640462239735,
+   "input_variance_dn2": 40.76769641577481,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.1778618362470657,
+    "probability_below_zero": 0.4294157415790416,
+    "rectified_mean_dn": 3.155234894418741,
+    "rectified_variance_dn2": 16.889111001940627,
+    "variance_ratio": 0.41427680459780625,
+    "mean_bias_dn": 2.019594432179006
+   }
+  },
+  {
+   "group_index": 10,
+   "iso": 1600,
+   "roi": 0,
+   "plane": "G1",
+   "input_signal_dn": 5.354034423828125,
+   "input_variance_dn2": 61.1220307009332,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.6848292033863903,
+    "probability_below_zero": 0.24672585242549605,
+    "rectified_mean_dn": 6.500053977225724,
+    "rectified_variance_dn2": 38.592456618227615,
+    "variance_ratio": 0.6314001052592383,
+    "mean_bias_dn": 1.1460195533975988
+   }
+  },
+  {
+   "group_index": 10,
+   "iso": 1600,
+   "roi": 0,
+   "plane": "G2",
+   "input_signal_dn": 5.182708740234375,
+   "input_variance_dn2": 59.76346217119773,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.67040759927196,
+    "probability_below_zero": 0.2512989958113213,
+    "rectified_mean_dn": 6.3436820426709115,
+    "rectified_variance_dn2": 37.38011865068084,
+    "variance_ratio": 0.6254677572661734,
+    "mean_bias_dn": 1.1609733024365365
+   }
+  },
+  {
+   "group_index": 10,
+   "iso": 1600,
+   "roi": 0,
+   "plane": "B",
+   "input_signal_dn": 6.086771647135265,
+   "input_variance_dn2": 79.17381050888962,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.6840632120111398,
+    "probability_below_zero": 0.2469676253744777,
+    "rectified_mean_dn": 7.39277337672867,
+    "rectified_variance_dn2": 49.965467719160564,
+    "variance_ratio": 0.6310858022117106,
+    "mean_bias_dn": 1.3060017295934045
+   }
+  },
+  {
+   "group_index": 10,
+   "iso": 1600,
+   "roi": 1,
+   "plane": "R",
+   "input_signal_dn": 9.89813232421875,
+   "input_variance_dn2": 75.14435337702083,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.141839544647541,
+    "probability_below_zero": 0.12676036080940212,
+    "rectified_mean_dn": 10.44538928262178,
+    "rectified_variance_dn2": 59.902716062017234,
+    "variance_ratio": 0.797168561175423,
+    "mean_bias_dn": 0.5472569584030307
+   }
+  },
+  {
+   "group_index": 10,
+   "iso": 1600,
+   "roi": 1,
+   "plane": "G1",
+   "input_signal_dn": 51.26482137044286,
+   "input_variance_dn2": 233.25724438649428,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 3.3566176823972955,
+    "probability_below_zero": 0.00039451067206319745,
+    "rectified_mean_dn": 51.2663867513556,
+    "rectified_variance_dn2": 233.0849704909624,
+    "variance_ratio": 0.9992614424645846,
+    "mean_bias_dn": 0.0015653809127371687
+   }
+  },
+  {
+   "group_index": 10,
+   "iso": 1600,
+   "roi": 1,
+   "plane": "G2",
+   "input_signal_dn": 50.93915812174464,
+   "input_variance_dn2": 230.1081878339852,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 3.358038932178051,
+    "probability_below_zero": 0.00039248778133771367,
+    "rectified_mean_dn": 50.94070441656364,
+    "rectified_variance_dn2": 229.93910383455932,
+    "variance_ratio": 0.999265197814048,
+    "mean_bias_dn": 0.0015462948190005932
+   }
+  },
+  {
+   "group_index": 10,
+   "iso": 1600,
+   "roi": 1,
+   "plane": "B",
+   "input_signal_dn": 48.739115397135265,
+   "input_variance_dn2": 269.8134160284259,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.967193523302676,
+    "probability_below_zero": 0.0015026586624741212,
+    "rectified_mean_dn": 48.746160583548566,
+    "rectified_variance_dn2": 269.064552773335,
+    "variance_ratio": 0.99722451438437,
+    "mean_bias_dn": 0.0070451864133005415
+   }
+  },
+  {
+   "group_index": 10,
+   "iso": 1600,
+   "roi": 2,
+   "plane": "R",
+   "input_signal_dn": 2.361968994140625,
+   "input_variance_dn2": 45.98613021804948,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.348305842898304,
+    "probability_below_zero": 0.36380525313148904,
+    "rectified_mean_dn": 4.048798050944932,
+    "rectified_variance_dn2": 22.426504276067813,
+    "variance_ratio": 0.48767974538691333,
+    "mean_bias_dn": 1.6868290568043074
+   }
+  },
+  {
+   "group_index": 10,
+   "iso": 1600,
+   "roi": 2,
+   "plane": "G1",
+   "input_signal_dn": 8.719197591145985,
+   "input_variance_dn2": 66.79856197215375,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.0668244561616445,
+    "probability_below_zero": 0.1430255564131686,
+    "rectified_mean_dn": 9.31780444678458,
+    "rectified_variance_dn2": 51.66695885714192,
+    "variance_ratio": 0.7734741187793874,
+    "mean_bias_dn": 0.5986068556385948
+   }
+  },
+  {
+   "group_index": 10,
+   "iso": 1600,
+   "roi": 2,
+   "plane": "G2",
+   "input_signal_dn": 8.717681884765625,
+   "input_variance_dn2": 66.76023709485145,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.0669451215870338,
+    "probability_below_zero": 0.1429983089198985,
+    "rectified_mean_dn": 9.315975995639489,
+    "rectified_variance_dn2": 51.639942511962815,
+    "variance_ratio": 0.773513467883494,
+    "mean_bias_dn": 0.598294110873864
+   }
+  },
+  {
+   "group_index": 10,
+   "iso": 1600,
+   "roi": 2,
+   "plane": "B",
+   "input_signal_dn": 5.2071431477863825,
+   "input_variance_dn2": 66.00892502899347,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.6409116807586507,
+    "probability_below_zero": 0.26079003316294314,
+    "rectified_mean_dn": 6.48862737588459,
+    "rectified_variance_dn2": 40.479381637429675,
+    "variance_ratio": 0.6132410370211253,
+    "mean_bias_dn": 1.2814842280982077
+   }
+  },
+  {
+   "group_index": 11,
+   "iso": 1600,
+   "roi": 0,
+   "plane": "R",
+   "input_signal_dn": 16.62596638997411,
+   "input_variance_dn2": 94.92247792660575,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.7064845662858155,
+    "probability_below_zero": 0.04395894872002026,
+    "rectified_mean_dn": 16.80134462337278,
+    "rectified_variance_dn2": 87.80319544828342,
+    "variance_ratio": 0.9249989819710883,
+    "mean_bias_dn": 0.1753782333986713
+   }
+  },
+  {
+   "group_index": 11,
+   "iso": 1600,
+   "roi": 0,
+   "plane": "G1",
+   "input_signal_dn": 28.87628173828125,
+   "input_variance_dn2": 130.36441088284516,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.5290752251896493,
+    "probability_below_zero": 0.005718175635561984,
+    "rectified_mean_dn": 28.89718555660964,
+    "rectified_variance_dn2": 129.01490276771347,
+    "variance_ratio": 0.9896481861422711,
+    "mean_bias_dn": 0.020903818328388724
+   }
+  },
+  {
+   "group_index": 11,
+   "iso": 1600,
+   "roi": 0,
+   "plane": "G2",
+   "input_signal_dn": 28.7803955078125,
+   "input_variance_dn2": 130.75634625918087,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.5168965738228235,
+    "probability_below_zero": 0.005919678885523139,
+    "rectified_mean_dn": 28.80214100559159,
+    "rectified_variance_dn2": 129.3559937838122,
+    "variance_ratio": 0.9892903670419718,
+    "mean_bias_dn": 0.021745497779090073
+   }
+  },
+  {
+   "group_index": 11,
+   "iso": 1600,
+   "roi": 0,
+   "plane": "B",
+   "input_signal_dn": 17.641510009765625,
+   "input_variance_dn2": 110.83671382710094,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.6756909916654312,
+    "probability_below_zero": 0.04689936762339608,
+    "rectified_mean_dn": 17.84574399996334,
+    "rectified_variance_dn2": 101.99383453399508,
+    "variance_ratio": 0.9202170563546277,
+    "mean_bias_dn": 0.20423399019771438
+   }
+  },
+  {
+   "group_index": 11,
+   "iso": 1600,
+   "roi": 1,
+   "plane": "R",
+   "input_signal_dn": 13.121246337890625,
+   "input_variance_dn2": 82.90632560317223,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.4410573178202146,
+    "probability_below_zero": 0.07478424522388405,
+    "rectified_mean_dn": 13.426057686049335,
+    "rectified_variance_dn2": 72.61382387491213,
+    "variance_ratio": 0.8758538428355305,
+    "mean_bias_dn": 0.3048113481587098
+   }
+  },
+  {
+   "group_index": 11,
+   "iso": 1600,
+   "roi": 1,
+   "plane": "G1",
+   "input_signal_dn": 20.844136555989735,
+   "input_variance_dn2": 105.73165148885793,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.0271290705827716,
+    "probability_below_zero": 0.02132460728856378,
+    "rectified_mean_dn": 20.92529729680136,
+    "rectified_variance_dn2": 101.77865291257467,
+    "variance_ratio": 0.9626129118327463,
+    "mean_bias_dn": 0.08116074081162594
+   }
+  },
+  {
+   "group_index": 11,
+   "iso": 1600,
+   "roi": 1,
+   "plane": "G2",
+   "input_signal_dn": 20.721588134765625,
+   "input_variance_dn2": 106.5569707915539,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.0073916089278354,
+    "probability_below_zero": 0.022353990793615663,
+    "rectified_mean_dn": 20.807513925471884,
+    "rectified_variance_dn2": 102.38709516080621,
+    "variance_ratio": 0.9608671718070443,
+    "mean_bias_dn": 0.08592579070625916
+   }
+  },
+  {
+   "group_index": 11,
+   "iso": 1600,
+   "roi": 1,
+   "plane": "B",
+   "input_signal_dn": 11.44764200846339,
+   "input_variance_dn2": 89.76190086820655,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.2082867670429462,
+    "probability_below_zero": 0.11346848835936063,
+    "rectified_mean_dn": 11.970200808051324,
+    "rectified_variance_dn2": 73.32161989934653,
+    "variance_ratio": 0.816845668264105,
+    "mean_bias_dn": 0.5225587995879337
+   }
+  },
+  {
+   "group_index": 11,
+   "iso": 1600,
+   "roi": 2,
+   "plane": "R",
+   "input_signal_dn": 13.06328328450536,
+   "input_variance_dn2": 85.48392281529085,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.4128957641250053,
+    "probability_below_zero": 0.07884318737962182,
+    "rectified_mean_dn": 13.392793541571965,
+    "rectified_variance_dn2": 74.33103502809638,
+    "variance_ratio": 0.8695323352053808,
+    "mean_bias_dn": 0.3295102570666053
+   }
+  },
+  {
+   "group_index": 11,
+   "iso": 1600,
+   "roi": 2,
+   "plane": "G1",
+   "input_signal_dn": 20.546091715495095,
+   "input_variance_dn2": 105.78951674988777,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.9975971318942214,
+    "probability_below_zero": 0.022880177225988785,
+    "rectified_mean_dn": 20.633985877537043,
+    "rectified_variance_dn2": 101.55542695970718,
+    "variance_ratio": 0.9599762819581545,
+    "mean_bias_dn": 0.08789416204194822
+   }
+  },
+  {
+   "group_index": 11,
+   "iso": 1600,
+   "roi": 2,
+   "plane": "G2",
+   "input_signal_dn": 20.527791341145985,
+   "input_variance_dn2": 104.96316351047761,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.0036588030678497,
+    "probability_below_zero": 0.022553311081262906,
+    "rectified_mean_dn": 20.613930794761018,
+    "rectified_variance_dn2": 100.82022389623353,
+    "variance_ratio": 0.9605295850879101,
+    "mean_bias_dn": 0.08613945361503283
+   }
+  },
+  {
+   "group_index": 11,
+   "iso": 1600,
+   "roi": 2,
+   "plane": "B",
+   "input_signal_dn": 11.287953694661383,
+   "input_variance_dn2": 88.54012656373389,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.1996240115511374,
+    "probability_below_zero": 0.11514269840700542,
+    "rectified_mean_dn": 11.816261219787862,
+    "rectified_variance_dn2": 72.10275775261368,
+    "variance_ratio": 0.8143511936445214,
+    "mean_bias_dn": 0.528307525126479
+   }
+  },
+  {
+   "group_index": 12,
+   "iso": 3200,
+   "roi": 0,
+   "plane": "R",
+   "input_signal_dn": 34.714095052083394,
+   "input_variance_dn2": 382.3381688454189,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.7753419709596219,
+    "probability_below_zero": 0.03792071963309884,
+    "rectified_mean_dn": 35.011032360986185,
+    "rectified_variance_dn2": 357.44354860841963,
+    "variance_ratio": 0.9348884776213272,
+    "mean_bias_dn": 0.29693730890279113
+   }
+  },
+  {
+   "group_index": 12,
+   "iso": 3200,
+   "roi": 0,
+   "plane": "G1",
+   "input_signal_dn": 60.69288330078143,
+   "input_variance_dn2": 555.1921618508042,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.5758235331615906,
+    "probability_below_zero": 0.0050000834389377635,
+    "rectified_mean_dn": 60.730126811201934,
+    "rectified_variance_dn2": 550.1543516061747,
+    "variance_ratio": 0.990926006181652,
+    "mean_bias_dn": 0.037243510420502446
+   }
+  },
+  {
+   "group_index": 12,
+   "iso": 3200,
+   "roi": 0,
+   "plane": "G2",
+   "input_signal_dn": 60.47311197916633,
+   "input_variance_dn2": 556.3432176433921,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.5638400017348393,
+    "probability_below_zero": 0.00517606266368964,
+    "rectified_mean_dn": 60.51183211740837,
+    "rectified_variance_dn2": 551.1205237814875,
+    "variance_ratio": 0.9906124606245271,
+    "mean_bias_dn": 0.03872013824203435
+   }
+  },
+  {
+   "group_index": 12,
+   "iso": 3200,
+   "roi": 0,
+   "plane": "B",
+   "input_signal_dn": 37.42486572265625,
+   "input_variance_dn2": 470.09473374653993,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.7261063800323733,
+    "probability_below_zero": 0.042164138127418815,
+    "rectified_mean_dn": 37.79683482450246,
+    "rectified_variance_dn2": 436.2143397575787,
+    "variance_ratio": 0.9279285821414276,
+    "mean_bias_dn": 0.37196910184621146
+   }
+  },
+  {
+   "group_index": 12,
+   "iso": 3200,
+   "roi": 1,
+   "plane": "R",
+   "input_signal_dn": 27.689786783853833,
+   "input_variance_dn2": 337.41552972311393,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.5074297356725967,
+    "probability_below_zero": 0.06585027080620609,
+    "rectified_mean_dn": 28.21906743308843,
+    "rectified_variance_dn2": 300.26081938484765,
+    "variance_ratio": 0.8898844093846073,
+    "mean_bias_dn": 0.5292806492345967
+   }
+  },
+  {
+   "group_index": 12,
+   "iso": 3200,
+   "roi": 1,
+   "plane": "G1",
+   "input_signal_dn": 44.552144368489735,
+   "input_variance_dn2": 449.5883729168594,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.1011694445424838,
+    "probability_below_zero": 0.017813047306158625,
+    "rectified_mean_dn": 44.688852898285774,
+    "rectified_variance_dn2": 435.4704865837966,
+    "variance_ratio": 0.9685981951858138,
+    "mean_bias_dn": 0.13670852979603865
+   }
+  },
+  {
+   "group_index": 12,
+   "iso": 3200,
+   "roi": 1,
+   "plane": "G2",
+   "input_signal_dn": 44.70492350260383,
+   "input_variance_dn2": 451.1760708307642,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.104661841561373,
+    "probability_below_zero": 0.01766037715651736,
+    "rectified_mean_dn": 44.840557477088495,
+    "rectified_variance_dn2": 437.1262282271721,
+    "variance_ratio": 0.9688595129220356,
+    "mean_bias_dn": 0.1356339744846622
+   }
+  },
+  {
+   "group_index": 12,
+   "iso": 3200,
+   "roi": 1,
+   "plane": "B",
+   "input_signal_dn": 24.993701171874818,
+   "input_variance_dn2": 375.3509483148798,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.2900656579950862,
+    "probability_below_zero": 0.09851393115697538,
+    "rectified_mean_dn": 25.8945543243633,
+    "rectified_variance_dn2": 315.04645993749534,
+    "variance_ratio": 0.8393383881188562,
+    "mean_bias_dn": 0.9008531524884802
+   }
+  },
+  {
+   "group_index": 12,
+   "iso": 3200,
+   "roi": 2,
+   "plane": "R",
+   "input_signal_dn": 24.801700846353924,
+   "input_variance_dn2": 331.33601045681286,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.3625333637764816,
+    "probability_below_zero": 0.08651481115356474,
+    "rectified_mean_dn": 25.52617968873835,
+    "rectified_variance_dn2": 284.1773609723722,
+    "variance_ratio": 0.8576712219736603,
+    "mean_bias_dn": 0.7244788423844248
+   }
+  },
+  {
+   "group_index": 12,
+   "iso": 3200,
+   "roi": 2,
+   "plane": "G1",
+   "input_signal_dn": 39.2635416666667,
+   "input_variance_dn2": 414.17760649908905,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.929284008092394,
+    "probability_below_zero": 0.026847806970052845,
+    "rectified_mean_dn": 39.47196055609667,
+    "rectified_variance_dn2": 394.83114388575746,
+    "variance_ratio": 0.9532894528584945,
+    "mean_bias_dn": 0.20841888942997144
+   }
+  },
+  {
+   "group_index": 12,
+   "iso": 3200,
+   "roi": 2,
+   "plane": "G2",
+   "input_signal_dn": 39.003413899739826,
+   "input_variance_dn2": 410.01482708724956,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.9262064849653882,
+    "probability_below_zero": 0.02703929820629669,
+    "rectified_mean_dn": 39.212461779594264,
+    "rectified_variance_dn2": 390.7310319097369,
+    "variance_ratio": 0.9529680540713491,
+    "mean_bias_dn": 0.20904787985443818
+   }
+  },
+  {
+   "group_index": 12,
+   "iso": 3200,
+   "roi": 2,
+   "plane": "B",
+   "input_signal_dn": 20.94497070312491,
+   "input_variance_dn2": 350.37292513129125,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.1189598090477517,
+    "probability_below_zero": 0.13157864275408282,
+    "rectified_mean_dn": 22.181988632592223,
+    "rectified_variance_dn2": 276.8318135349814,
+    "variance_ratio": 0.7901061802399468,
+    "mean_bias_dn": 1.2370179294673136
+   }
+  },
+  {
+   "group_index": 13,
+   "iso": 6400,
+   "roi": 0,
+   "plane": "R",
+   "input_signal_dn": 71.51429239908884,
+   "input_variance_dn2": 1467.1606377309383,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.8670416763191173,
+    "probability_below_zero": 0.030947884047825558,
+    "rectified_mean_dn": 71.9753593319076,
+    "rectified_variance_dn2": 1388.5696622692167,
+    "variance_ratio": 0.9464332851900472,
+    "mean_bias_dn": 0.46106693281875266
+   }
+  },
+  {
+   "group_index": 13,
+   "iso": 6400,
+   "roi": 0,
+   "plane": "G1",
+   "input_signal_dn": 127.15416463216161,
+   "input_variance_dn2": 2163.489865793392,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.7337145005069234,
+    "probability_below_zero": 0.0031312159236669412,
+    "rectified_mean_dn": 127.19830413581877,
+    "rectified_variance_dn2": 2151.1010418643364,
+    "variance_ratio": 0.9942736852504219,
+    "mean_bias_dn": 0.04413950365716346
+   }
+  },
+  {
+   "group_index": 13,
+   "iso": 6400,
+   "roi": 0,
+   "plane": "G2",
+   "input_signal_dn": 126.62914021809911,
+   "input_variance_dn2": 2152.121401985673,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.729607953467243,
+    "probability_below_zero": 0.0031704842126032418,
+    "rectified_mean_dn": 126.67376385031302,
+    "rectified_variance_dn2": 2139.6454916078674,
+    "variance_ratio": 0.9942029709075452,
+    "mean_bias_dn": 0.044623632213912856
+   }
+  },
+  {
+   "group_index": 13,
+   "iso": 6400,
+   "roi": 0,
+   "plane": "B",
+   "input_signal_dn": 77.55218505859398,
+   "input_variance_dn2": 1795.5556838772866,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.8301833484589156,
+    "probability_below_zero": 0.033611263440211925,
+    "rectified_mean_dn": 78.11264069419286,
+    "rectified_variance_dn2": 1691.4261190763455,
+    "variance_ratio": 0.9420070534509485,
+    "mean_bias_dn": 0.5604556355988848
+   }
+  },
+  {
+   "group_index": 13,
+   "iso": 6400,
+   "roi": 1,
+   "plane": "R",
+   "input_signal_dn": 57.406402587890625,
+   "input_variance_dn2": 1274.289204293203,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.6081491682727425,
+    "probability_below_zero": 0.053901256439755185,
+    "rectified_mean_dn": 58.22026513893966,
+    "rectified_variance_dn2": 1158.2201216054555,
+    "variance_ratio": 0.9089146464580413,
+    "mean_bias_dn": 0.8138625510490343
+   }
+  },
+  {
+   "group_index": 13,
+   "iso": 6400,
+   "roi": 1,
+   "plane": "G1",
+   "input_signal_dn": 93.21709187825536,
+   "input_variance_dn2": 1708.627516840532,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.2551313991343145,
+    "probability_below_zero": 0.01206254114669747,
+    "rectified_mean_dn": 93.38955519176737,
+    "rectified_variance_dn2": 1671.9108549784796,
+    "variance_ratio": 0.9785110203949272,
+    "mean_bias_dn": 0.1724633135120115
+   }
+  },
+  {
+   "group_index": 13,
+   "iso": 6400,
+   "roi": 1,
+   "plane": "G2",
+   "input_signal_dn": 92.85814412434866,
+   "input_variance_dn2": 1703.9811247503308,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.2495083506161873,
+    "probability_below_zero": 0.012240086068957101,
+    "rectified_mean_dn": 93.03319324760616,
+    "rectified_variance_dn2": 1666.838870211668,
+    "variance_ratio": 0.9782026608163839,
+    "mean_bias_dn": 0.17504912325750865
+   }
+  },
+  {
+   "group_index": 13,
+   "iso": 6400,
+   "roi": 1,
+   "plane": "B",
+   "input_signal_dn": 52.0430908203125,
+   "input_variance_dn2": 1433.284078282634,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.3746652141148974,
+    "probability_below_zero": 0.08461763021533164,
+    "rectified_mean_dn": 53.51059839772746,
+    "rectified_variance_dn2": 1233.475767532318,
+    "variance_ratio": 0.8605940624208098,
+    "mean_bias_dn": 1.4675075774149633
+   }
+  },
+  {
+   "group_index": 13,
+   "iso": 6400,
+   "roi": 2,
+   "plane": "R",
+   "input_signal_dn": 48.24762980143214,
+   "input_variance_dn2": 1191.5928043357019,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.3976938273533763,
+    "probability_below_zero": 0.08110251433381177,
+    "rectified_mean_dn": 49.51983674086324,
+    "rectified_variance_dn2": 1031.9521519007767,
+    "variance_ratio": 0.8660275122054611,
+    "mean_bias_dn": 1.2722069394311006
+   }
+  },
+  {
+   "group_index": 13,
+   "iso": 6400,
+   "roi": 2,
+   "plane": "G1",
+   "input_signal_dn": 76.54585774739576,
+   "input_variance_dn2": 1506.0587232552039,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.9724261015603557,
+    "probability_below_zero": 0.02428049230473861,
+    "rectified_mean_dn": 76.9005206588124,
+    "rectified_variance_dn2": 1442.2171134684104,
+    "variance_ratio": 0.9576101457393336,
+    "mean_bias_dn": 0.3546629114166393
+   }
+  },
+  {
+   "group_index": 13,
+   "iso": 6400,
+   "roi": 2,
+   "plane": "G2",
+   "input_signal_dn": 76.05918375651027,
+   "input_variance_dn2": 1491.6846573343837,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.9693057500442306,
+    "probability_below_zero": 0.024458995647513193,
+    "rectified_mean_dn": 76.41508704531356,
+    "rectified_variance_dn2": 1428.0031679995618,
+    "variance_ratio": 0.9573090136566668,
+    "mean_bias_dn": 0.35590328880329025
+   }
+  },
+  {
+   "group_index": 13,
+   "iso": 6400,
+   "roi": 2,
+   "plane": "B",
+   "input_signal_dn": 40.24885050455737,
+   "input_variance_dn2": 1252.3546337161913,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.1373387026322488,
+    "probability_below_zero": 0.1276983606755353,
+    "rectified_mean_dn": 42.50323681423379,
+    "rectified_variance_dn2": 996.6122848152797,
+    "variance_ratio": 0.7957907911898476,
+    "mean_bias_dn": 2.25438630967642
+   }
+  },
+  {
+   "group_index": 14,
+   "iso": 12800,
+   "roi": 0,
+   "plane": "R",
+   "input_signal_dn": 137.8374481201172,
+   "input_variance_dn2": 5698.176786417025,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.8259936568808464,
+    "probability_below_zero": 0.033925608655584805,
+    "rectified_mean_dn": 138.8465397320211,
+    "rectified_variance_dn2": 5364.753792125233,
+    "variance_ratio": 0.9414860214434579,
+    "mean_bias_dn": 1.0090916119039264
+   }
+  },
+  {
+   "group_index": 14,
+   "iso": 12800,
+   "roi": 0,
+   "plane": "G1",
+   "input_signal_dn": 240.29483032226562,
+   "input_variance_dn2": 8164.741313402275,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.65933600064686,
+    "probability_below_zero": 0.0039147418627139,
+    "rectified_mean_dn": 240.40416694681304,
+    "rectified_variance_dn2": 8106.493478643373,
+    "variance_ratio": 0.9928659301595644,
+    "mean_bias_dn": 0.10933662454741011
+   }
+  },
+  {
+   "group_index": 14,
+   "iso": 12800,
+   "roi": 0,
+   "plane": "G2",
+   "input_signal_dn": 239.95413208007812,
+   "input_variance_dn2": 8216.317848649369,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.647217451502178,
+    "probability_below_zero": 0.004057857402907983,
+    "rectified_mean_dn": 240.06819191963854,
+    "rectified_variance_dn2": 8155.595062988672,
+    "variance_ratio": 0.9926094892165499,
+    "mean_bias_dn": 0.11405983956041155
+   }
+  },
+  {
+   "group_index": 14,
+   "iso": 12800,
+   "roi": 0,
+   "plane": "B",
+   "input_signal_dn": 145.3168487548828,
+   "input_variance_dn2": 6810.132790854742,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.7609141420070933,
+    "probability_below_zero": 0.03912646797434327,
+    "rectified_mean_dn": 146.61590847821492,
+    "rectified_variance_dn2": 6353.21352680854,
+    "variance_ratio": 0.9329059684915698,
+    "mean_bias_dn": 1.2990597233321068
+   }
+  },
+  {
+   "group_index": 14,
+   "iso": 12800,
+   "roi": 1,
+   "plane": "R",
+   "input_signal_dn": 115.6092529296875,
+   "input_variance_dn2": 5170.567829926779,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.6077683494474162,
+    "probability_below_zero": 0.05394296137734522,
+    "rectified_mean_dn": 117.25013422929996,
+    "rectified_variance_dn2": 4699.258536544183,
+    "variance_ratio": 0.9088476722702097,
+    "mean_bias_dn": 1.6408812996124595
+   }
+  },
+  {
+   "group_index": 14,
+   "iso": 12800,
+   "roi": 1,
+   "plane": "G1",
+   "input_signal_dn": 186.41819763183594,
+   "input_variance_dn2": 6753.44163323089,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.2684318130604653,
+    "probability_below_zero": 0.011651450302800903,
+    "rectified_mean_dn": 186.74811366432178,
+    "rectified_variance_dn2": 6613.143046934092,
+    "variance_ratio": 0.9792256165202573,
+    "mean_bias_dn": 0.32991603248584056
+   }
+  },
+  {
+   "group_index": 14,
+   "iso": 12800,
+   "roi": 1,
+   "plane": "G2",
+   "input_signal_dn": 186.36387634277344,
+   "input_variance_dn2": 6922.570301053347,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.239896998076127,
+    "probability_below_zero": 0.012548805291490939,
+    "rectified_mean_dn": 186.72661406722898,
+    "rectified_variance_dn2": 6767.967527146735,
+    "variance_ratio": 0.9776668539020705,
+    "mean_bias_dn": 0.36273772445554187
+   }
+  },
+  {
+   "group_index": 14,
+   "iso": 12800,
+   "roi": 1,
+   "plane": "B",
+   "input_signal_dn": 103.538818359375,
+   "input_variance_dn2": 5611.6424781023015,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.3821596404470944,
+    "probability_below_zero": 0.0834613446694088,
+    "rectified_mean_dn": 106.39538787869756,
+    "rectified_variance_dn2": 4839.3614290651185,
+    "variance_ratio": 0.8623787862375818,
+    "mean_bias_dn": 2.856569519322562
+   }
+  },
+  {
+   "group_index": 14,
+   "iso": 12800,
+   "roi": 2,
+   "plane": "R",
+   "input_signal_dn": 97.8297119140625,
+   "input_variance_dn2": 4682.753557450269,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.4296183810673695,
+    "probability_below_zero": 0.07641328853431739,
+    "rectified_mean_dn": 100.17969099387658,
+    "rectified_variance_dn2": 4089.508780671873,
+    "variance_ratio": 0.8733128341049375,
+    "mean_bias_dn": 2.3499790798140765
+   }
+  },
+  {
+   "group_index": 14,
+   "iso": 12800,
+   "roi": 2,
+   "plane": "G1",
+   "input_signal_dn": 153.97264099121094,
+   "input_variance_dn2": 6005.3875789552685,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.9868864056443039,
+    "probability_below_zero": 0.023467493221332347,
+    "rectified_mean_dn": 154.65410549431357,
+    "rectified_variance_dn2": 5759.064903501199,
+    "variance_ratio": 0.9589830510994395,
+    "mean_bias_dn": 0.6814645031026316
+   }
+  },
+  {
+   "group_index": 14,
+   "iso": 12800,
+   "roi": 2,
+   "plane": "G2",
+   "input_signal_dn": 152.9873809814453,
+   "input_variance_dn2": 6072.69280524895,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.9632018460117364,
+    "probability_below_zero": 0.02481136247899607,
+    "rectified_mean_dn": 153.7171975385748,
+    "rectified_variance_dn2": 5809.835666955132,
+    "variance_ratio": 0.9567148962208961,
+    "mean_bias_dn": 0.7298165571294817
+   }
+  },
+  {
+   "group_index": 14,
+   "iso": 12800,
+   "roi": 2,
+   "plane": "B",
+   "input_signal_dn": 80.62013244628906,
+   "input_variance_dn2": 4923.323932404848,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.148984848204653,
+    "probability_below_zero": 0.12528111425052013,
+    "rectified_mean_dn": 84.98663084107336,
+    "rectified_variance_dn2": 3935.430437191243,
+    "variance_ratio": 0.7993442014425692,
+    "mean_bias_dn": 4.366498394784301
+   }
+  },
+  {
+   "group_index": 15,
+   "iso": 51200,
+   "roi": 0,
+   "plane": "R",
+   "input_signal_dn": 564.1043416341149,
+   "input_variance_dn2": 88028.00694035258,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.9012928184139004,
+    "probability_below_zero": 0.028631834606229978,
+    "rectified_mean_dn": 567.3731152646693,
+    "rectified_variance_dn2": 83652.98932705767,
+    "variance_ratio": 0.9502997084069005,
+    "mean_bias_dn": 3.268773630554392
+   }
+  },
+  {
+   "group_index": 15,
+   "iso": 51200,
+   "roi": 0,
+   "plane": "G1",
+   "input_signal_dn": 991.7190633138023,
+   "input_variance_dn2": 130404.43086670584,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.74626528755377,
+    "probability_below_zero": 0.003013899996999414,
+    "rectified_mean_dn": 992.0478249930851,
+    "rectified_variance_dn2": 129685.25764403446,
+    "variance_ratio": 0.9944850553168205,
+    "mean_bias_dn": 0.3287616792828203
+   }
+  },
+  {
+   "group_index": 15,
+   "iso": 51200,
+   "roi": 0,
+   "plane": "G2",
+   "input_signal_dn": 996.1238362630211,
+   "input_variance_dn2": 130646.33837084423,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.755907973590299,
+    "probability_below_zero": 0.002926473091972248,
+    "rectified_mean_dn": 996.4425512646086,
+    "rectified_variance_dn2": 129946.4241877289,
+    "variance_ratio": 0.9946426804467448,
+    "mean_bias_dn": 0.3187150015875204
+   }
+  },
+  {
+   "group_index": 15,
+   "iso": 51200,
+   "roi": 0,
+   "plane": "B",
+   "input_signal_dn": 608.5098388671875,
+   "input_variance_dn2": 105725.49009608998,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.8714479431414692,
+    "probability_below_zero": 0.030641509462164596,
+    "rectified_mean_dn": 612.3796665630185,
+    "rectified_variance_dn2": 100116.09769688925,
+    "variance_ratio": 0.9469438032956616,
+    "mean_bias_dn": 3.869827695831077
+   }
+  },
+  {
+   "group_index": 15,
+   "iso": 51200,
+   "roi": 1,
+   "plane": "R",
+   "input_signal_dn": 449.7288818359375,
+   "input_variance_dn2": 76037.86166636848,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.630931915701529,
+    "probability_below_zero": 0.05145234322904346,
+    "rectified_mean_dn": 455.6848301308437,
+    "rectified_variance_dn2": 69411.5002224755,
+    "variance_ratio": 0.9128544477885572,
+    "mean_bias_dn": 5.955948294906193
+   }
+  },
+  {
+   "group_index": 15,
+   "iso": 51200,
+   "roi": 1,
+   "plane": "G1",
+   "input_signal_dn": 731.1385253906251,
+   "input_variance_dn2": 103303.63437215693,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.274792920773763,
+    "probability_below_zero": 0.011459177556429667,
+    "rectified_mean_dn": 732.4052244536515,
+    "rectified_variance_dn2": 101192.12267209077,
+    "variance_ratio": 0.9795601412002668,
+    "mean_bias_dn": 1.2666990630264081
+   }
+  },
+  {
+   "group_index": 15,
+   "iso": 51200,
+   "roi": 1,
+   "plane": "G2",
+   "input_signal_dn": 731.2542439778647,
+   "input_variance_dn2": 104181.73916964687,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.2655445052983016,
+    "probability_below_zero": 0.01173964307611075,
+    "rectified_mean_dn": 732.5609395400136,
+    "rectified_variance_dn2": 102001.44860804628,
+    "variance_ratio": 0.9790722387725717,
+    "mean_bias_dn": 1.3066955621488887
+   }
+  },
+  {
+   "group_index": 15,
+   "iso": 51200,
+   "roi": 1,
+   "plane": "B",
+   "input_signal_dn": 411.0545898437499,
+   "input_variance_dn2": 82529.80594538875,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.4308499410093443,
+    "probability_below_zero": 0.07623661324122644,
+    "rectified_mean_dn": 420.8930780735526,
+    "rectified_variance_dn2": 72097.06145402463,
+    "variance_ratio": 0.8735881616119681,
+    "mean_bias_dn": 9.838488229802692
+   }
+  },
+  {
+   "group_index": 15,
+   "iso": 51200,
+   "roi": 2,
+   "plane": "R",
+   "input_signal_dn": 391.58384195963527,
+   "input_variance_dn2": 71006.36210690597,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.4695221334224107,
+    "probability_below_zero": 0.07084561148901125,
+    "rectified_mean_dn": 399.952074914961,
+    "rectified_variance_dn2": 62628.98082997781,
+    "variance_ratio": 0.8820192863237336,
+    "mean_bias_dn": 8.368232955325709
+   }
+  },
+  {
+   "group_index": 15,
+   "iso": 51200,
+   "roi": 2,
+   "plane": "G1",
+   "input_signal_dn": 616.7559733072915,
+   "input_variance_dn2": 92507.84867601235,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.0277951205826747,
+    "probability_below_zero": 0.021290581286720345,
+    "rectified_mean_dn": 619.1523285884681,
+    "rectified_variance_dn2": 89054.59385165031,
+    "variance_ratio": 0.9626706828254511,
+    "mean_bias_dn": 2.396355281176625
+   }
+  },
+  {
+   "group_index": 15,
+   "iso": 51200,
+   "roi": 2,
+   "plane": "G2",
+   "input_signal_dn": 615.1246378580727,
+   "input_variance_dn2": 91172.45407333177,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.037188894323456,
+    "probability_below_zero": 0.020815558165338643,
+    "rectified_mean_dn": 617.4439206091391,
+    "rectified_variance_dn2": 87842.62151767209,
+    "variance_ratio": 0.963477646954842,
+    "mean_bias_dn": 2.319282751066453
+   }
+  },
+  {
+   "group_index": 15,
+   "iso": 51200,
+   "roi": 2,
+   "plane": "B",
+   "input_signal_dn": 330.009033203125,
+   "input_variance_dn2": 73297.11353594129,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.2189401763201797,
+    "probability_below_zero": 0.11143344966238322,
+    "rectified_mean_dn": 344.6172054395681,
+    "rectified_variance_dn2": 60095.13583163306,
+    "variance_ratio": 0.8198840709077223,
+    "mean_bias_dn": 14.608172236443124
+   }
+  },
+  {
+   "group_index": 16,
+   "iso": 51200,
+   "roi": 0,
+   "plane": "R",
+   "input_signal_dn": 30.812715657552417,
+   "input_variance_dn2": 35324.47084214766,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.16394272285170297,
+    "probability_below_zero": 0.434888117054006,
+    "rectified_mean_dn": 91.39216466114664,
+    "rectified_variance_dn2": 14425.791253258909,
+    "variance_ratio": 0.4083795428308771,
+    "mean_bias_dn": 60.57944900359422
+   }
+  },
+  {
+   "group_index": 16,
+   "iso": 51200,
+   "roi": 0,
+   "plane": "G1",
+   "input_signal_dn": 59.531298828125045,
+   "input_variance_dn2": 37379.59448065474,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.30791302839578855,
+    "probability_below_zero": 0.3790742559514252,
+    "rectified_mean_dn": 110.52414577220443,
+    "rectified_variance_dn2": 17574.011666147402,
+    "variance_ratio": 0.47014987482656007,
+    "mean_bias_dn": 50.99284694407939
+   }
+  },
+  {
+   "group_index": 16,
+   "iso": 51200,
+   "roi": 0,
+   "plane": "G2",
+   "input_signal_dn": 57.466996256510356,
+   "input_variance_dn2": 38278.42716308053,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.2937253671215759,
+    "probability_below_zero": 0.38448388437024617,
+    "rectified_mean_dn": 110.12902650118549,
+    "rectified_variance_dn2": 17761.370675413724,
+    "variance_ratio": 0.4640047147115943,
+    "mean_bias_dn": 52.66203024467514
+   }
+  },
+  {
+   "group_index": 16,
+   "iso": 51200,
+   "roi": 0,
+   "plane": "B",
+   "input_signal_dn": 37.187512207031205,
+   "input_variance_dn2": 43125.61444765122,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.17907273953207947,
+    "probability_below_zero": 0.4289402933506299,
+    "rectified_mean_dn": 102.76572678775199,
+    "rectified_variance_dn2": 17888.10785271862,
+    "variance_ratio": 0.41479079386642503,
+    "mean_bias_dn": 65.57821458072078
+   }
+  },
+  {
+   "group_index": 16,
+   "iso": 51200,
+   "roi": 1,
+   "plane": "R",
+   "input_signal_dn": 26.680887858072765,
+   "input_variance_dn2": 35240.586053911255,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.14212769618054105,
+    "probability_below_zero": 0.4434895709261035,
+    "rectified_mean_dn": 88.98693073501869,
+    "rectified_variance_dn2": 14067.33014381383,
+    "variance_ratio": 0.3991798014452298,
+    "mean_bias_dn": 62.306042876945924
+   }
+  },
+  {
+   "group_index": 16,
+   "iso": 51200,
+   "roi": 1,
+   "plane": "G1",
+   "input_signal_dn": 52.885005696614826,
+   "input_variance_dn2": 37686.18669984945,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.27242154887002823,
+    "probability_below_zero": 0.39264895272180056,
+    "rectified_mean_dn": 106.74503208283758,
+    "rectified_variance_dn2": 17139.454715495493,
+    "variance_ratio": 0.4547940828293981,
+    "mean_bias_dn": 53.860026386222756
+   }
+  },
+  {
+   "group_index": 16,
+   "iso": 51200,
+   "roi": 1,
+   "plane": "G2",
+   "input_signal_dn": 51.115917968749955,
+   "input_variance_dn2": 37348.583305621694,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.26449599360156917,
+    "probability_below_zero": 0.3956988757845087,
+    "rectified_mean_dn": 105.33790074574108,
+    "rectified_variance_dn2": 16858.16103944315,
+    "variance_ratio": 0.45137350730263615,
+    "mean_bias_dn": 54.221982776991126
+   }
+  },
+  {
+   "group_index": 16,
+   "iso": 51200,
+   "roi": 1,
+   "plane": "B",
+   "input_signal_dn": 33.468693033853924,
+   "input_variance_dn2": 44587.25706985903,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.15850149951394943,
+    "probability_below_zero": 0.437030819579175,
+    "rectified_mean_dn": 102.02973355243807,
+    "rectified_variance_dn2": 18105.98687364212,
+    "variance_ratio": 0.4060798547278604,
+    "mean_bias_dn": 68.56104051858415
+   }
+  },
+  {
+   "group_index": 16,
+   "iso": 51200,
+   "roi": 2,
+   "plane": "R",
+   "input_signal_dn": 24.580220540364735,
+   "input_variance_dn2": 36304.825288118875,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.12900412565819971,
+    "probability_below_zero": 0.4486771921533409,
+    "rectified_mean_dn": 88.93551207902838,
+    "rectified_variance_dn2": 14292.20740824188,
+    "variance_ratio": 0.39367239188778447,
+    "mean_bias_dn": 64.35529153866365
+   }
+  },
+  {
+   "group_index": 16,
+   "iso": 51200,
+   "roi": 2,
+   "plane": "G1",
+   "input_signal_dn": 51.280895996093705,
+   "input_variance_dn2": 37431.80616303723,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.2650545190223871,
+    "probability_below_zero": 0.3954837315588515,
+    "rectified_mean_dn": 105.52050842472923,
+    "rectified_variance_dn2": 16904.744302461768,
+    "variance_ratio": 0.45161444331143946,
+    "mean_bias_dn": 54.239612428635525
+   }
+  },
+  {
+   "group_index": 16,
+   "iso": 51200,
+   "roi": 2,
+   "plane": "G2",
+   "input_signal_dn": 45.25258789062491,
+   "input_variance_dn2": 37622.23070740294,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.23330344376151835,
+    "probability_below_zero": 0.4077628923260923,
+    "rectified_mean_dn": 102.10337036546451,
+    "rectified_variance_dn2": 16476.624599797782,
+    "variance_ratio": 0.4379491670214991,
+    "mean_bias_dn": 56.850782474839605
+   }
+  },
+  {
+   "group_index": 16,
+   "iso": 51200,
+   "roi": 2,
+   "plane": "B",
+   "input_signal_dn": 28.219502766927235,
+   "input_variance_dn2": 42791.61382961019,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.13641748051467859,
+    "probability_below_zero": 0.44574562770307713,
+    "rectified_mean_dn": 97.4021880751642,
+    "rectified_variance_dn2": 16978.894136765128,
+    "variance_ratio": 0.3967808787107807,
+    "mean_bias_dn": 69.18268530823697
+   }
+  },
+  {
+   "group_index": 17,
+   "iso": 12800,
+   "roi": 0,
+   "plane": "R",
+   "input_signal_dn": 7.030400594075672,
+   "input_variance_dn2": 2385.116321879691,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.1439545146923383,
+    "probability_below_zero": 0.44276819372348997,
+    "rectified_mean_dn": 23.200133280731002,
+    "rectified_variance_dn2": 953.9227227764098,
+    "variance_ratio": 0.3999480922694081,
+    "mean_bias_dn": 16.16973268665533
+   }
+  },
+  {
+   "group_index": 17,
+   "iso": 12800,
+   "roi": 0,
+   "plane": "G1",
+   "input_signal_dn": 13.84539794921875,
+   "input_variance_dn2": 2445.1898097216185,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.2799942768173393,
+    "probability_below_zero": 0.3897409478948417,
+    "rectified_mean_dn": 27.418203872616953,
+    "rectified_variance_dn2": 1120.0572555667122,
+    "variance_ratio": 0.4580655665722037,
+    "mean_bias_dn": 13.572805923398203
+   }
+  },
+  {
+   "group_index": 17,
+   "iso": 12800,
+   "roi": 0,
+   "plane": "G2",
+   "input_signal_dn": 13.768046061197765,
+   "input_variance_dn2": 2439.506677920909,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.2787541261728297,
+    "probability_below_zero": 0.3902167607303588,
+    "rectified_mean_dn": 27.348957059730626,
+    "rectified_variance_dn2": 1116.1465325516344,
+    "variance_ratio": 0.4575296073806529,
+    "mean_bias_dn": 13.580910998532861
+   }
+  },
+  {
+   "group_index": 17,
+   "iso": 12800,
+   "roi": 0,
+   "plane": "B",
+   "input_signal_dn": 8.540603637695312,
+   "input_variance_dn2": 2941.293507694565,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.1574778166637123,
+    "probability_below_zero": 0.4374341447448207,
+    "rectified_mean_dn": 26.17414194067196,
+    "rectified_variance_dn2": 1193.1285632543131,
+    "variance_ratio": 0.40564756972843125,
+    "mean_bias_dn": 17.633538302976646
+   }
+  },
+  {
+   "group_index": 17,
+   "iso": 12800,
+   "roi": 1,
+   "plane": "R",
+   "input_signal_dn": 8.602864583333485,
+   "input_variance_dn2": 2385.8680708711586,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.1761245409461815,
+    "probability_below_zero": 0.4300980506979113,
+    "rectified_mean_dn": 24.089361958226796,
+    "rectified_variance_dn2": 986.6510236381531,
+    "variance_ratio": 0.41353964021903966,
+    "mean_bias_dn": 15.486497374893311
+   }
+  },
+  {
+   "group_index": 17,
+   "iso": 12800,
+   "roi": 1,
+   "plane": "G1",
+   "input_signal_dn": 13.221257527669422,
+   "input_variance_dn2": 2514.255648942859,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.2636744491293192,
+    "probability_below_zero": 0.39601539280266895,
+    "rectified_mean_dn": 27.305910684346507,
+    "rectified_variance_dn2": 1133.9774294041995,
+    "variance_ratio": 0.45101914353100503,
+    "mean_bias_dn": 14.084653156677085
+   }
+  },
+  {
+   "group_index": 17,
+   "iso": 12800,
+   "roi": 1,
+   "plane": "G2",
+   "input_signal_dn": 14.571161905924328,
+   "input_variance_dn2": 2438.6233560085225,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.29506780049375375,
+    "probability_below_zero": 0.38397104333751864,
+    "rectified_mean_dn": 27.837769667081666,
+    "rectified_variance_dn2": 1132.949830576073,
+    "variance_ratio": 0.4645858196119539,
+    "mean_bias_dn": 13.266607761157339
+   }
+  },
+  {
+   "group_index": 17,
+   "iso": 12800,
+   "roi": 1,
+   "plane": "B",
+   "input_signal_dn": 8.587381998697765,
+   "input_variance_dn2": 2969.1652951396836,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.15759542092193266,
+    "probability_below_zero": 0.43738780602850125,
+    "rectified_mean_dn": 26.301468238927477,
+    "rectified_variance_dn2": 1204.582124333546,
+    "variance_ratio": 0.40569722618857323,
+    "mean_bias_dn": 17.71408624022971
+   }
+  },
+  {
+   "group_index": 17,
+   "iso": 12800,
+   "roi": 2,
+   "plane": "R",
+   "input_signal_dn": 6.806304931640625,
+   "input_variance_dn2": 2441.387142625742,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.13775046566000806,
+    "probability_below_zero": 0.44521881685469367,
+    "rectified_mean_dn": 23.301771482270723,
+    "rectified_variance_dn2": 970.0620554454247,
+    "variance_ratio": 0.39734052764860184,
+    "mean_bias_dn": 16.4954665506301
+   }
+  },
+  {
+   "group_index": 17,
+   "iso": 12800,
+   "roi": 2,
+   "plane": "G1",
+   "input_signal_dn": 11.820205688476562,
+   "input_variance_dn2": 2458.2005074549993,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.23840556127950924,
+    "probability_below_zero": 0.40578327724470675,
+    "rectified_mean_dn": 26.249220979503633,
+    "rectified_variance_dn2": 1081.953438524502,
+    "variance_ratio": 0.44014043412783266,
+    "mean_bias_dn": 14.42901529102707
+   }
+  },
+  {
+   "group_index": 17,
+   "iso": 12800,
+   "roi": 2,
+   "plane": "G2",
+   "input_signal_dn": 12.309524536132812,
+   "input_variance_dn2": 2501.1516422635823,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.246133805631387,
+    "probability_below_zero": 0.4027893273818892,
+    "rectified_mean_dn": 26.70779313913156,
+    "rectified_variance_dn2": 1109.1684751855828,
+    "variance_ratio": 0.4434631057322728,
+    "mean_bias_dn": 14.398268602998748
+   }
+  },
+  {
+   "group_index": 17,
+   "iso": 12800,
+   "roi": 2,
+   "plane": "B",
+   "input_signal_dn": 6.988347371419422,
+   "input_variance_dn2": 2933.683242469696,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.1290232194342544,
+    "probability_below_zero": 0.44866963796902415,
+    "rectified_mean_dn": 25.2818842788342,
+    "rectified_variance_dn2": 1154.9335610111816,
+    "variance_ratio": 0.39368038931118915,
+    "mean_bias_dn": 18.29353690741478
+   }
+  },
+  {
+   "group_index": 18,
+   "iso": 6400,
+   "roi": 0,
+   "plane": "R",
+   "input_signal_dn": 4.03606160481786,
+   "input_variance_dn2": 596.546671735755,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.1652477568945028,
+    "probability_below_zero": 0.43437448867438866,
+    "rectified_mean_dn": 11.894654103295295,
+    "rectified_variance_dn2": 243.9467767219878,
+    "variance_ratio": 0.40893158621132314,
+    "mean_bias_dn": 7.858592498477435
+   }
+  },
+  {
+   "group_index": 18,
+   "iso": 6400,
+   "roi": 0,
+   "plane": "G1",
+   "input_signal_dn": 7.67149861653661,
+   "input_variance_dn2": 621.7740795929732,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.30765494813619754,
+    "probability_below_zero": 0.3791724520605666,
+    "rectified_mean_dn": 14.25064206027144,
+    "rectified_variance_dn2": 292.2574589261569,
+    "variance_ratio": 0.4700380226809632,
+    "mean_bias_dn": 6.57914344373483
+   }
+  },
+  {
+   "group_index": 18,
+   "iso": 6400,
+   "roi": 0,
+   "plane": "G2",
+   "input_signal_dn": 7.71983846028661,
+   "input_variance_dn2": 620.9466958890313,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.3097997425014247,
+    "probability_below_zero": 0.37835662371969314,
+    "rectified_mean_dn": 14.274359736452926,
+    "rectified_variance_dn2": 292.4458059263258,
+    "variance_ratio": 0.4709676496589145,
+    "mean_bias_dn": 6.554521276166316
+   }
+  },
+  {
+   "group_index": 18,
+   "iso": 6400,
+   "roi": 0,
+   "plane": "B",
+   "input_signal_dn": 5.1367594401042425,
+   "input_variance_dn2": 746.9274322802219,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.18795332919843644,
+    "probability_below_zero": 0.42545661848249594,
+    "rectified_mean_dn": 13.663480195059723,
+    "rectified_variance_dn2": 312.63753252632625,
+    "variance_ratio": 0.4185648016326106,
+    "mean_bias_dn": 8.52672075495548
+   }
+  },
+  {
+   "group_index": 18,
+   "iso": 6400,
+   "roi": 1,
+   "plane": "R",
+   "input_signal_dn": 3.81043497721339,
+   "input_variance_dn2": 604.7514201598909,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.1549480469765299,
+    "probability_below_zero": 0.43843113750811713,
+    "rectified_mean_dn": 11.833420599933506,
+    "rectified_variance_dn2": 244.67020376867413,
+    "variance_ratio": 0.40457979198128297,
+    "mean_bias_dn": 8.022985622720116
+   }
+  },
+  {
+   "group_index": 18,
+   "iso": 6400,
+   "roi": 1,
+   "plane": "G1",
+   "input_signal_dn": 7.01128133138036,
+   "input_variance_dn2": 617.5762717114229,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.28213183470095743,
+    "probability_below_zero": 0.3889212118832873,
+    "rectified_mean_dn": 13.811766334927906,
+    "rectified_variance_dn2": 283.4610498538739,
+    "variance_ratio": 0.45898954159677907,
+    "mean_bias_dn": 6.800485003547546
+   }
+  },
+  {
+   "group_index": 18,
+   "iso": 6400,
+   "roi": 1,
+   "plane": "G2",
+   "input_signal_dn": 6.746561686197765,
+   "input_variance_dn2": 616.376508192011,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.271743682580808,
+    "probability_below_zero": 0.39290955542278705,
+    "rectified_mean_dn": 13.641256989524592,
+    "rectified_variance_dn2": 280.14397788808867,
+    "variance_ratio": 0.454501387000978,
+    "mean_bias_dn": 6.894695303326827
+   }
+  },
+  {
+   "group_index": 18,
+   "iso": 6400,
+   "roi": 1,
+   "plane": "B",
+   "input_signal_dn": 5.09918212890625,
+   "input_variance_dn2": 758.231183267037,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.1851823978782895,
+    "probability_below_zero": 0.42654298738657426,
+    "rectified_mean_dn": 13.722684816982763,
+    "rectified_variance_dn2": 316.4753798197803,
+    "variance_ratio": 0.41738639455075366,
+    "mean_bias_dn": 8.623502688076513
+   }
+  },
+  {
+   "group_index": 18,
+   "iso": 6400,
+   "roi": 2,
+   "plane": "R",
+   "input_signal_dn": 2.967447916666515,
+   "input_variance_dn2": 609.870275341314,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.12016123182367898,
+    "probability_below_zero": 0.4521777138626012,
+    "rectified_mean_dn": 11.40686408758695,
+    "rectified_variance_dn2": 237.83325524445067,
+    "variance_ratio": 0.3899735154518676,
+    "mean_bias_dn": 8.439416170920435
+   }
+  },
+  {
+   "group_index": 18,
+   "iso": 6400,
+   "roi": 2,
+   "plane": "G1",
+   "input_signal_dn": 5.8027140299479925,
+   "input_variance_dn2": 613.4673741141613,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.2342801172942875,
+    "probability_below_zero": 0.4073837602711361,
+    "rectified_mean_dn": 13.05240813033361,
+    "rectified_variance_dn2": 268.9247622255697,
+    "variance_ratio": 0.43836848310620175,
+    "mean_bias_dn": 7.249694100385618
+   }
+  },
+  {
+   "group_index": 18,
+   "iso": 6400,
+   "roi": 2,
+   "plane": "G2",
+   "input_signal_dn": 5.779998779296875,
+   "input_variance_dn2": 623.7785957009046,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.23142619371772158,
+    "probability_below_zero": 0.4084918588903228,
+    "rectified_mean_dn": 13.119442913608136,
+    "rectified_variance_dn2": 272.68069926933424,
+    "variance_ratio": 0.43714340496556864,
+    "mean_bias_dn": 7.339444134311261
+   }
+  },
+  {
+   "group_index": 18,
+   "iso": 6400,
+   "roi": 2,
+   "plane": "B",
+   "input_signal_dn": 3.7915751139323675,
+   "input_variance_dn2": 738.4954114735931,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.13952298640170624,
+    "probability_below_zero": 0.44451844653185413,
+    "rectified_mean_dn": 12.842504317722815,
+    "rectified_variance_dn2": 293.9839810153668,
+    "variance_ratio": 0.3980850475817465,
+    "mean_bias_dn": 9.050929203790448
+   }
+  },
+  {
+   "group_index": 19,
+   "iso": 3200,
+   "roi": 0,
+   "plane": "R",
+   "input_signal_dn": 8.050968424478924,
+   "input_variance_dn2": 211.65017754898335,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.5533995540031214,
+    "probability_below_zero": 0.28999492212917477,
+    "rectified_mean_dn": 10.696096223487084,
+    "rectified_variance_dn2": 121.98015933042804,
+    "variance_ratio": 0.5763291141213313,
+    "mean_bias_dn": 2.6451277990081596
+   }
+  },
+  {
+   "group_index": 19,
+   "iso": 3200,
+   "roi": 0,
+   "plane": "G1",
+   "input_signal_dn": 11.866487630208667,
+   "input_variance_dn2": 227.49643275099817,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.7867466372373614,
+    "probability_below_zero": 0.21571509857094961,
+    "rectified_mean_dn": 13.722306573826991,
+    "rectified_variance_dn2": 152.95590084573084,
+    "variance_ratio": 0.6723441725925688,
+    "mean_bias_dn": 1.8558189436183241
+   }
+  },
+  {
+   "group_index": 19,
+   "iso": 3200,
+   "roi": 0,
+   "plane": "G2",
+   "input_signal_dn": 11.954638671874818,
+   "input_variance_dn2": 228.77484262494335,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.7903734106291854,
+    "probability_below_zero": 0.21465486293224922,
+    "rectified_mean_dn": 13.803860487195427,
+    "rectified_variance_dn2": 154.1408101903753,
+    "variance_ratio": 0.6737664352503824,
+    "mean_bias_dn": 1.8492218153206093
+   }
+  },
+  {
+   "group_index": 19,
+   "iso": 3200,
+   "roi": 0,
+   "plane": "B",
+   "input_signal_dn": 6.264729817708485,
+   "input_variance_dn2": 242.84696215252544,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.40200921488437286,
+    "probability_below_zero": 0.343838622297434,
+    "rectified_mean_dn": 9.84500704477561,
+    "rectified_variance_dn2": 124.09894273415847,
+    "variance_ratio": 0.5110170686681902,
+    "mean_bias_dn": 3.580277227067125
+   }
+  },
+  {
+   "group_index": 19,
+   "iso": 3200,
+   "roi": 1,
+   "plane": "R",
+   "input_signal_dn": 1.687487792968568,
+   "input_variance_dn2": 174.02321267618422,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.12791958709378445,
+    "probability_below_zero": 0.44910630506583515,
+    "rectified_mean_dn": 6.1495047753033525,
+    "rectified_variance_dn2": 68.42909589514471,
+    "variance_ratio": 0.39321820832301824,
+    "mean_bias_dn": 4.462016982334784
+   }
+  },
+  {
+   "group_index": 19,
+   "iso": 3200,
+   "roi": 1,
+   "plane": "G1",
+   "input_signal_dn": 3.320638020833485,
+   "input_variance_dn2": 177.0378422625647,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.24956776074953568,
+    "probability_below_zero": 0.40146081647936993,
+    "rectified_mean_dn": 7.132922067200693,
+    "rectified_variance_dn2": 78.77136055931976,
+    "variance_ratio": 0.44494080786690793,
+    "mean_bias_dn": 3.812284046367208
+   }
+  },
+  {
+   "group_index": 19,
+   "iso": 3200,
+   "roi": 1,
+   "plane": "G2",
+   "input_signal_dn": 3.199348958333303,
+   "input_variance_dn2": 178.8822932013316,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.23920923106444414,
+    "probability_below_zero": 0.4054716725361629,
+    "rectified_mean_dn": 7.087337443435056,
+    "rectified_variance_dn2": 78.79510421977741,
+    "variance_ratio": 0.440485767538175,
+    "mean_bias_dn": 3.8879884851017525
+   }
+  },
+  {
+   "group_index": 19,
+   "iso": 3200,
+   "roi": 1,
+   "plane": "B",
+   "input_signal_dn": 2.312894694010083,
+   "input_variance_dn2": 217.1825120844369,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.1569435361864263,
+    "probability_below_zero": 0.4376446740364843,
+    "rectified_mean_dn": 7.107963527263558,
+    "rectified_variance_dn2": 88.05056799933479,
+    "variance_ratio": 0.4054219980893407,
+    "mean_bias_dn": 4.795068833253475
+   }
+  },
+  {
+   "group_index": 19,
+   "iso": 3200,
+   "roi": 2,
+   "plane": "R",
+   "input_signal_dn": 1.531783040364644,
+   "input_variance_dn2": 180.41817374909436,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.11403997555981278,
+    "probability_below_zero": 0.4546030521111595,
+    "rectified_mean_dn": 6.159284346565193,
+    "rectified_variance_dn2": 69.89742494744357,
+    "variance_ratio": 0.387418980554859,
+    "mean_bias_dn": 4.627501306200549
+   }
+  },
+  {
+   "group_index": 19,
+   "iso": 3200,
+   "roi": 2,
+   "plane": "G1",
+   "input_signal_dn": 2.926159667968932,
+   "input_variance_dn2": 179.34374337230403,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.21850174255816354,
+    "probability_below_zero": 0.4135191003772076,
+    "rectified_mean_dn": 6.932717304650997,
+    "rectified_variance_dn2": 77.40534849480072,
+    "variance_ratio": 0.43160328338922355,
+    "mean_bias_dn": 4.006557636682065
+   }
+  },
+  {
+   "group_index": 19,
+   "iso": 3200,
+   "roi": 2,
+   "plane": "G2",
+   "input_signal_dn": 2.975113932291606,
+   "input_variance_dn2": 177.62684794742657,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.22322832326632905,
+    "probability_below_zero": 0.41167890463724854,
+    "rectified_mean_dn": 6.936456256699166,
+    "rectified_variance_dn2": 77.02394399919888,
+    "variance_ratio": 0.43362782647584996,
+    "mean_bias_dn": 3.9613423244075596
+   }
+  },
+  {
+   "group_index": 19,
+   "iso": 3200,
+   "roi": 2,
+   "plane": "B",
+   "input_signal_dn": 1.994470214843659,
+   "input_variance_dn2": 212.24735401191367,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.13690093447224802,
+    "probability_below_zero": 0.4455545500949605,
+    "rectified_mean_dn": 6.863689745355653,
+    "rectified_variance_dn2": 84.25876752682905,
+    "variance_ratio": 0.39698383011219784,
+    "mean_bias_dn": 4.869219530511994
+   }
+  },
+  {
+   "group_index": 20,
+   "iso": 1600,
+   "roi": 0,
+   "plane": "R",
+   "input_signal_dn": 2.27159627278661,
+   "input_variance_dn2": 44.990700504321836,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.3386645741420796,
+    "probability_below_zero": 0.36743121544948887,
+    "rectified_mean_dn": 3.9637127103572336,
+    "rectified_variance_dn2": 21.75264930309185,
+    "variance_ratio": 0.4834921230222294,
+    "mean_bias_dn": 1.6921164375706237
+   }
+  },
+  {
+   "group_index": 20,
+   "iso": 1600,
+   "roi": 0,
+   "plane": "G1",
+   "input_signal_dn": 3.632537841796875,
+   "input_variance_dn2": 48.59124585416941,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.5211120672136769,
+    "probability_below_zero": 0.30114435256195315,
+    "rectified_mean_dn": 4.966465155816746,
+    "rectified_variance_dn2": 27.333363055764966,
+    "variance_ratio": 0.5625162017412979,
+    "mean_bias_dn": 1.3339273140198706
+   }
+  },
+  {
+   "group_index": 20,
+   "iso": 1600,
+   "roi": 0,
+   "plane": "G2",
+   "input_signal_dn": 3.655517578125,
+   "input_variance_dn2": 48.23671438667369,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.5263322936301228,
+    "probability_below_zero": 0.29932867455156664,
+    "rectified_mean_dn": 4.9736843650311275,
+    "rectified_variance_dn2": 27.24193706604984,
+    "variance_ratio": 0.5647552370104201,
+    "mean_bias_dn": 1.3181667869061275
+   }
+  },
+  {
+   "group_index": 20,
+   "iso": 1600,
+   "roi": 0,
+   "plane": "B",
+   "input_signal_dn": 1.95380655924464,
+   "input_variance_dn2": 55.83369306187006,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.2614769351857753,
+    "probability_below_zero": 0.3968623670224759,
+    "rectified_mean_dn": 4.059205887131538,
+    "rectified_variance_dn2": 25.129152127208634,
+    "variance_ratio": 0.45007146669239106,
+    "mean_bias_dn": 2.1053993278868983
+   }
+  },
+  {
+   "group_index": 20,
+   "iso": 1600,
+   "roi": 1,
+   "plane": "R",
+   "input_signal_dn": 0.967010498046875,
+   "input_variance_dn2": 40.22073900918635,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.15247764155209179,
+    "probability_below_zero": 0.43940511184475195,
+    "rectified_mean_dn": 3.042944780581327,
+    "rectified_variance_dn2": 16.230587296508197,
+    "variance_ratio": 0.403537769228983,
+    "mean_bias_dn": 2.075934282534452
+   }
+  },
+  {
+   "group_index": 20,
+   "iso": 1600,
+   "roi": 1,
+   "plane": "G1",
+   "input_signal_dn": 1.76378377278661,
+   "input_variance_dn2": 40.895535856334384,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.2758083379038129,
+    "probability_below_zero": 0.3913476396518243,
+    "rectified_mean_dn": 3.5295380124925284,
+    "rectified_variance_dn2": 18.658867716899493,
+    "variance_ratio": 0.45625683405758305,
+    "mean_bias_dn": 1.7657542397059185
+   }
+  },
+  {
+   "group_index": 20,
+   "iso": 1600,
+   "roi": 1,
+   "plane": "G2",
+   "input_signal_dn": 1.75513712565089,
+   "input_variance_dn2": 42.36034515460958,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.26966917574285676,
+    "probability_below_zero": 0.3937073882223867,
+    "rectified_mean_dn": 3.5679203903928896,
+    "rectified_variance_dn2": 19.214897925953437,
+    "variance_ratio": 0.45360579229988884,
+    "mean_bias_dn": 1.8127832647419995
+   }
+  },
+  {
+   "group_index": 20,
+   "iso": 1600,
+   "roi": 1,
+   "plane": "B",
+   "input_signal_dn": 1.10004679361964,
+   "input_variance_dn2": 52.924028498243224,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.15121146191803042,
+    "probability_below_zero": 0.43990445447868587,
+    "rectified_mean_dn": 3.485401601631351,
+    "rectified_variance_dn2": 21.328593144606053,
+    "variance_ratio": 0.40300396152409373,
+    "mean_bias_dn": 2.385354808011711
+   }
+  },
+  {
+   "group_index": 20,
+   "iso": 1600,
+   "roi": 2,
+   "plane": "R",
+   "input_signal_dn": 0.7666015625,
+   "input_variance_dn2": 41.07158216946671,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.1196186739086398,
+    "probability_below_zero": 0.4523926131504684,
+    "rectified_mean_dn": 2.9582764296051636,
+    "rectified_variance_dn2": 16.007521684882246,
+    "variance_ratio": 0.3897468964997044,
+    "mean_bias_dn": 2.1916748671051636
+   }
+  },
+  {
+   "group_index": 20,
+   "iso": 1600,
+   "roi": 2,
+   "plane": "G1",
+   "input_signal_dn": 1.340779622395985,
+   "input_variance_dn2": 41.89864316161558,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.20713687563666613,
+    "probability_below_zero": 0.41795148197998666,
+    "rectified_mean_dn": 3.3079106059506493,
+    "rectified_variance_dn2": 17.879949715473106,
+    "variance_ratio": 0.42674292927589086,
+    "mean_bias_dn": 1.9671309835546644
+   }
+  },
+  {
+   "group_index": 20,
+   "iso": 1600,
+   "roi": 2,
+   "plane": "G2",
+   "input_signal_dn": 1.42803955078125,
+   "input_variance_dn2": 42.383874689798496,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.219351145786293,
+    "probability_below_zero": 0.4131882616384581,
+    "rectified_mean_dn": 3.373483109463995,
+    "rectified_variance_dn2": 18.308434199586642,
+    "variance_ratio": 0.4319669764405319,
+    "mean_bias_dn": 1.945443558682745
+   }
+  },
+  {
+   "group_index": 20,
+   "iso": 1600,
+   "roi": 2,
+   "plane": "B",
+   "input_signal_dn": 0.8426411946613825,
+   "input_variance_dn2": 51.42006516586124,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.11751041920127785,
+    "probability_below_zero": 0.45322779395988455,
+    "rectified_mean_dn": 3.301776108195506,
+    "rectified_variance_dn2": 19.99554956112806,
+    "variance_ratio": 0.38886667095092453,
+    "mean_bias_dn": 2.4591349135341236
+   }
+  },
+  {
+   "group_index": 21,
+   "iso": 1600,
+   "roi": 0,
+   "plane": "R",
+   "input_signal_dn": 29.81401570638036,
+   "input_variance_dn2": 133.12170936323528,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.5840209662993403,
+    "probability_below_zero": 0.00488279288211424,
+    "rectified_mean_dn": 29.83178536107202,
+    "rectified_variance_dn2": 131.94160310359973,
+    "variance_ratio": 0.9911351329149815,
+    "mean_bias_dn": 0.017769654691658587
+   }
+  },
+  {
+   "group_index": 21,
+   "iso": 1600,
+   "roi": 0,
+   "plane": "G1",
+   "input_signal_dn": 36.766459147135265,
+   "input_variance_dn2": 155.60309179023864,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.9474245422652565,
+    "probability_below_zero": 0.001602164728440325,
+    "rectified_mean_dn": 36.77219205029697,
+    "rectified_variance_dn2": 155.1429785888679,
+    "variance_ratio": 0.9970430330395298,
+    "mean_bias_dn": 0.00573290316170727
+   }
+  },
+  {
+   "group_index": 21,
+   "iso": 1600,
+   "roi": 0,
+   "plane": "G2",
+   "input_signal_dn": 36.675313313802235,
+   "input_variance_dn2": 154.26572301588664,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.9528345462729804,
+    "probability_below_zero": 0.0015743533895972162,
+    "rectified_mean_dn": 36.680914807942294,
+    "rectified_variance_dn2": 153.81738632260908,
+    "variance_ratio": 0.9970937374517644,
+    "mean_bias_dn": 0.00560149414005906
+   }
+  },
+  {
+   "group_index": 21,
+   "iso": 1600,
+   "roi": 0,
+   "plane": "B",
+   "input_signal_dn": 21.52064005533839,
+   "input_variance_dn2": 125.36204597140797,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.9220830462450782,
+    "probability_below_zero": 0.027297654489986223,
+    "rectified_mean_dn": 21.63748669714103,
+    "rectified_variance_dn2": 119.41168849671254,
+    "variance_ratio": 0.9525346174068302,
+    "mean_bias_dn": 0.11684664180263837
+   }
+  },
+  {
+   "group_index": 21,
+   "iso": 1600,
+   "roi": 1,
+   "plane": "R",
+   "input_signal_dn": 8.62437947591161,
+   "input_variance_dn2": 69.39030618137298,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.0353291824445403,
+    "probability_below_zero": 0.15025760288792556,
+    "rectified_mean_dn": 9.272956016479407,
+    "rectified_variance_dn2": 52.94966337689512,
+    "variance_ratio": 0.7630700351500803,
+    "mean_bias_dn": 0.648576540567797
+   }
+  },
+  {
+   "group_index": 21,
+   "iso": 1600,
+   "roi": 1,
+   "plane": "G1",
+   "input_signal_dn": 21.50480143229197,
+   "input_variance_dn2": 112.9055140773802,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.0238478536300235,
+    "probability_below_zero": 0.02149290436978002,
+    "rectified_mean_dn": 21.58941677414216,
+    "rectified_variance_dn2": 108.65205077980403,
+    "variance_ratio": 0.9623272314701915,
+    "mean_bias_dn": 0.08461534185018849
+   }
+  },
+  {
+   "group_index": 21,
+   "iso": 1600,
+   "roi": 1,
+   "plane": "G2",
+   "input_signal_dn": 21.322743733723655,
+   "input_variance_dn2": 113.46998989699212,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.0017165472640586,
+    "probability_below_zero": 0.022657612852072795,
+    "rectified_mean_dn": 21.412773504175625,
+    "rectified_variance_dn2": 108.97124371225652,
+    "variance_ratio": 0.9603529868221584,
+    "mean_bias_dn": 0.09002977045197014
+   }
+  },
+  {
+   "group_index": 21,
+   "iso": 1600,
+   "roi": 1,
+   "plane": "B",
+   "input_signal_dn": 17.790456136067405,
+   "input_variance_dn2": 117.35557094715931,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.6422347132523338,
+    "probability_below_zero": 0.05027068563404624,
+    "rectified_mean_dn": 18.01821356495797,
+    "rectified_variance_dn2": 107.3522439379147,
+    "variance_ratio": 0.9147605271014468,
+    "mean_bias_dn": 0.22775742889056616
+   }
+  },
+  {
+   "group_index": 21,
+   "iso": 1600,
+   "roi": 2,
+   "plane": "R",
+   "input_signal_dn": 10.76201375325536,
+   "input_variance_dn2": 76.59223443456854,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.2297056628822178,
+    "probability_below_zero": 0.10940367273535645,
+    "rectified_mean_dn": 11.22383121092617,
+    "rectified_variance_dn2": 63.029401489263094,
+    "variance_ratio": 0.8229215658032285,
+    "mean_bias_dn": 0.4618174576708096
+   }
+  },
+  {
+   "group_index": 21,
+   "iso": 1600,
+   "roi": 2,
+   "plane": "G1",
+   "input_signal_dn": 23.161346435546875,
+   "input_variance_dn2": 114.57665744531495,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.163793084146012,
+    "probability_below_zero": 0.015240116578184026,
+    "rectified_mean_dn": 23.21930124881792,
+    "rectified_variance_dn2": 111.48482556055035,
+    "variance_ratio": 0.973015167716511,
+    "mean_bias_dn": 0.05795481327104568
+   }
+  },
+  {
+   "group_index": 21,
+   "iso": 1600,
+   "roi": 2,
+   "plane": "G2",
+   "input_signal_dn": 23.011820475260265,
+   "input_variance_dn2": 114.43780546761344,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.1511278193752705,
+    "probability_below_zero": 0.015733056133377166,
+    "rectified_mean_dn": 23.07183824689287,
+    "rectified_variance_dn2": 111.25262873136455,
+    "variance_ratio": 0.972166743994839,
+    "mean_bias_dn": 0.06001777163260513
+   }
+  },
+  {
+   "group_index": 21,
+   "iso": 1600,
+   "roi": 2,
+   "plane": "B",
+   "input_signal_dn": 16.238698323567633,
+   "input_variance_dn2": 107.0960255300587,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.5691502732228448,
+    "probability_below_zero": 0.05830646395408179,
+    "rectified_mean_dn": 16.497273204832346,
+    "rectified_variance_dn2": 96.58585451773382,
+    "variance_ratio": 0.9018621749938331,
+    "mean_bias_dn": 0.25857488126471395
+   }
+  },
+  {
+   "group_index": 22,
+   "iso": 3200,
+   "roi": 0,
+   "plane": "R",
+   "input_signal_dn": 51.734979248046784,
+   "input_variance_dn2": 499.11574073059904,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.3157071999641685,
+    "probability_below_zero": 0.010287130513702114,
+    "rectified_mean_dn": 51.81309624449746,
+    "rectified_variance_dn2": 489.9337885088303,
+    "variance_ratio": 0.9816035611132433,
+    "mean_bias_dn": 0.07811699645067449
+   }
+  },
+  {
+   "group_index": 22,
+   "iso": 3200,
+   "roi": 0,
+   "plane": "G1",
+   "input_signal_dn": 62.43882446289081,
+   "input_variance_dn2": 564.1562997114453,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.62878456997536,
+    "probability_below_zero": 0.004284531331924635,
+    "rectified_mean_dn": 62.47053807599489,
+    "rectified_variance_dn2": 559.7579878942825,
+    "variance_ratio": 0.992203735348852,
+    "mean_bias_dn": 0.03171361310408116
+   }
+  },
+  {
+   "group_index": 22,
+   "iso": 3200,
+   "roi": 0,
+   "plane": "G2",
+   "input_signal_dn": 62.38264770507794,
+   "input_variance_dn2": 572.5624641735592,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.6070680475014187,
+    "probability_below_zero": 0.004566060500378999,
+    "rectified_mean_dn": 62.41689558077067,
+    "rectified_variance_dn2": 567.8104632409204,
+    "variance_ratio": 0.9917004672328671,
+    "mean_bias_dn": 0.0342478756927278
+   }
+  },
+  {
+   "group_index": 22,
+   "iso": 3200,
+   "roi": 0,
+   "plane": "B",
+   "input_signal_dn": 34.662445068359375,
+   "input_variance_dn2": 455.5200647869761,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.624072596965863,
+    "probability_below_zero": 0.05218015780179719,
+    "rectified_mean_dn": 35.131018870868225,
+    "rectified_variance_dn2": 415.289480826174,
+    "variance_ratio": 0.9116820814915894,
+    "mean_bias_dn": 0.4685738025088497
+   }
+  },
+  {
+   "group_index": 22,
+   "iso": 3200,
+   "roi": 1,
+   "plane": "R",
+   "input_signal_dn": 9.856829833984193,
+   "input_variance_dn2": 226.95012561365238,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.6542926555089139,
+    "probability_below_zero": 0.2564616383755557,
+    "rectified_mean_dn": 12.180864038688856,
+    "rectified_variance_dn2": 140.43737990046702,
+    "variance_ratio": 0.6188028295676735,
+    "mean_bias_dn": 2.324034204704663
+   }
+  },
+  {
+   "group_index": 22,
+   "iso": 3200,
+   "roi": 1,
+   "plane": "G1",
+   "input_signal_dn": 19.7901611328125,
+   "input_variance_dn2": 282.6177810792819,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.1771981993575085,
+    "probability_below_zero": 0.1195582036006757,
+    "rectified_mean_dn": 20.778278540277665,
+    "rectified_variance_dn2": 228.2971281450258,
+    "variance_ratio": 0.8077946379494867,
+    "mean_bias_dn": 0.9881174074651646
+   }
+  },
+  {
+   "group_index": 22,
+   "iso": 3200,
+   "roi": 1,
+   "plane": "G2",
+   "input_signal_dn": 19.965350341796693,
+   "input_variance_dn2": 282.6631870163831,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.1875237653793913,
+    "probability_below_zero": 0.11751054407465578,
+    "rectified_mean_dn": 20.93296997503152,
+    "rectified_variance_dn2": 229.19212939045622,
+    "variance_ratio": 0.8108311938659782,
+    "mean_bias_dn": 0.9676196332348255
+   }
+  },
+  {
+   "group_index": 22,
+   "iso": 3200,
+   "roi": 1,
+   "plane": "B",
+   "input_signal_dn": 14.198962402343568,
+   "input_variance_dn2": 305.27596319236216,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.8126626576703716,
+    "probability_below_zero": 0.20820574831942706,
+    "rectified_mean_dn": 16.252773727489622,
+    "rectified_variance_dn2": 208.33562208540815,
+    "variance_ratio": 0.6824501343203708,
+    "mean_bias_dn": 2.0538113251460537
+   }
+  },
+  {
+   "group_index": 22,
+   "iso": 3200,
+   "roi": 2,
+   "plane": "R",
+   "input_signal_dn": 20.08950195312491,
+   "input_variance_dn2": 291.47273915767056,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.1767120449160922,
+    "probability_below_zero": 0.11965522932523043,
+    "rectified_mean_dn": 21.093972503720185,
+    "rectified_variance_dn2": 235.40822753665293,
+    "variance_ratio": 0.8076509254929332,
+    "mean_bias_dn": 1.0044705505952756
+   }
+  },
+  {
+   "group_index": 22,
+   "iso": 3200,
+   "roi": 2,
+   "plane": "G1",
+   "input_signal_dn": 45.04276733398456,
+   "input_variance_dn2": 446.7737829728433,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.1309890817372428,
+    "probability_below_zero": 0.016545020838346525,
+    "rectified_mean_dn": 45.16822355371819,
+    "rectified_variance_dn2": 433.71526684439755,
+    "variance_ratio": 0.9707715254875653,
+    "mean_bias_dn": 0.12545621973363552
+   }
+  },
+  {
+   "group_index": 22,
+   "iso": 3200,
+   "roi": 2,
+   "plane": "G2",
+   "input_signal_dn": 44.833868408203216,
+   "input_variance_dn2": 454.6678520649233,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.1026117587014843,
+    "probability_below_zero": 0.017749860604010514,
+    "rectified_mean_dn": 44.970800182825435,
+    "rectified_variance_dn2": 440.4396295944309,
+    "variance_ratio": 0.9687063371516738,
+    "mean_bias_dn": 0.1369317746222194
+   }
+  },
+  {
+   "group_index": 22,
+   "iso": 3200,
+   "roi": 2,
+   "plane": "B",
+   "input_signal_dn": 32.14492187499991,
+   "input_variance_dn2": 440.95132933027946,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.5307950403918356,
+    "probability_below_zero": 0.06291002787868205,
+    "rectified_mean_dn": 32.7183988993833,
+    "rectified_variance_dn2": 394.44781886556234,
+    "variance_ratio": 0.8945382236734675,
+    "mean_bias_dn": 0.5734770243833935
+   }
+  },
+  {
+   "group_index": 23,
+   "iso": 6400,
+   "roi": 0,
+   "plane": "R",
+   "input_signal_dn": 120.91952514648438,
+   "input_variance_dn2": 2112.885269174663,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.6306221670380507,
+    "probability_below_zero": 0.004261436555830889,
+    "rectified_mean_dn": 120.98053815391107,
+    "rectified_variance_dn2": 2096.499956177453,
+    "variance_ratio": 0.9922450531336184,
+    "mean_bias_dn": 0.0610130074266948
+   }
+  },
+  {
+   "group_index": 23,
+   "iso": 6400,
+   "roi": 0,
+   "plane": "G1",
+   "input_signal_dn": 149.7940165201826,
+   "input_variance_dn2": 2529.326957319685,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.9784614236050637,
+    "probability_below_zero": 0.0014484974715649468,
+    "rectified_mean_dn": 149.81475105930522,
+    "rectified_variance_dn2": 2522.5568938002616,
+    "variance_ratio": 0.9973233735164878,
+    "mean_bias_dn": 0.020734539122628348
+   }
+  },
+  {
+   "group_index": 23,
+   "iso": 6400,
+   "roi": 0,
+   "plane": "G2",
+   "input_signal_dn": 150.15699259440134,
+   "input_variance_dn2": 2529.4720649668784,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.9855930955472116,
+    "probability_below_zero": 0.0014151448664427857,
+    "rectified_mean_dn": 150.17721418488733,
+    "rectified_variance_dn2": 2522.8556734337544,
+    "variance_ratio": 0.9973842796586841,
+    "mean_bias_dn": 0.020221590485988372
+   }
+  },
+  {
+   "group_index": 23,
+   "iso": 6400,
+   "roi": 0,
+   "plane": "B",
+   "input_signal_dn": 84.02067057291674,
+   "input_variance_dn2": 1899.0634943071407,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.9280416022119595,
+    "probability_below_zero": 0.026924975871021495,
+    "rectified_mean_dn": 84.46841250832948,
+    "rectified_variance_dn2": 1810.1112050476631,
+    "variance_ratio": 0.9531599182828107,
+    "mean_bias_dn": 0.4477419354127363
+   }
+  },
+  {
+   "group_index": 23,
+   "iso": 6400,
+   "roi": 1,
+   "plane": "R",
+   "input_signal_dn": 22.39887491861964,
+   "input_variance_dn2": 831.4980232986824,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.7767756337803351,
+    "probability_below_zero": 0.21864557743946245,
+    "rectified_mean_dn": 26.009279929562293,
+    "rectified_variance_dn2": 555.7906232660687,
+    "variance_ratio": 0.6684208593318846,
+    "mean_bias_dn": 3.610405010942653
+   }
+  },
+  {
+   "group_index": 23,
+   "iso": 6400,
+   "roi": 1,
+   "plane": "G1",
+   "input_signal_dn": 46.743377685546875,
+   "input_variance_dn2": 1147.527212313736,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.3798713412874082,
+    "probability_below_zero": 0.08381313096178222,
+    "rectified_mean_dn": 48.041619355404144,
+    "rectified_variance_dn2": 988.979731651269,
+    "variance_ratio": 0.8618355373527126,
+    "mean_bias_dn": 1.2982416698572692
+   }
+  },
+  {
+   "group_index": 23,
+   "iso": 6400,
+   "roi": 1,
+   "plane": "G2",
+   "input_signal_dn": 46.835479736328125,
+   "input_variance_dn2": 1151.6062092773595,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.3801394633035373,
+    "probability_below_zero": 0.08377185434436984,
+    "rectified_mean_dn": 48.13526431071159,
+    "rectified_variance_dn2": 992.5685476167705,
+    "variance_ratio": 0.861899266972183,
+    "mean_bias_dn": 1.299784574383466
+   }
+  },
+  {
+   "group_index": 23,
+   "iso": 6400,
+   "roi": 1,
+   "plane": "B",
+   "input_signal_dn": 33.998819986979015,
+   "input_variance_dn2": 1194.7496188062723,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.9836155677455207,
+    "probability_below_zero": 0.16265228389160735,
+    "rectified_mean_dn": 36.969611796559626,
+    "rectified_variance_dn2": 890.5918447002111,
+    "variance_ratio": 0.7454213256749487,
+    "mean_bias_dn": 2.9707918095806107
+   }
+  },
+  {
+   "group_index": 23,
+   "iso": 6400,
+   "roi": 2,
+   "plane": "R",
+   "input_signal_dn": 42.923553466796875,
+   "input_variance_dn2": 1138.069863033677,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.2723635135677107,
+    "probability_below_zero": 0.1016219957702138,
+    "rectified_mean_dn": 44.55193631539538,
+    "rectified_variance_dn2": 949.8693232584185,
+    "variance_ratio": 0.8346318219220876,
+    "mean_bias_dn": 1.6283828485985055
+   }
+  },
+  {
+   "group_index": 23,
+   "iso": 6400,
+   "roi": 2,
+   "plane": "G1",
+   "input_signal_dn": 95.25183105468773,
+   "input_variance_dn2": 1743.490776222985,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.281200751272396,
+    "probability_below_zero": 0.01126828516409395,
+    "rectified_mean_dn": 95.41335109291522,
+    "rectified_variance_dn2": 1708.4334568595968,
+    "variance_ratio": 0.9798924549292227,
+    "mean_bias_dn": 0.1615200382274935
+   }
+  },
+  {
+   "group_index": 23,
+   "iso": 6400,
+   "roi": 2,
+   "plane": "G2",
+   "input_signal_dn": 94.97739664713527,
+   "input_variance_dn2": 1745.5866529372397,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.2732623282560818,
+    "probability_below_zero": 0.011505188131426758,
+    "rectified_mean_dn": 95.1427902487812,
+    "rectified_variance_dn2": 1709.7673413455996,
+    "variance_ratio": 0.9794800724837303,
+    "mean_bias_dn": 0.1653936016459312
+   }
+  },
+  {
+   "group_index": 23,
+   "iso": 6400,
+   "roi": 2,
+   "plane": "B",
+   "input_signal_dn": 68.14956665039085,
+   "input_variance_dn2": 1673.3398694374443,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.6659847404958381,
+    "probability_below_zero": 0.047858226895826084,
+    "rectified_mean_dn": 68.96193510029356,
+    "rectified_variance_dn2": 1537.234289972359,
+    "variance_ratio": 0.9186623220118204,
+    "mean_bias_dn": 0.8123684499027064
+   }
+  },
+  {
+   "group_index": 24,
+   "iso": 12800,
+   "roi": 0,
+   "plane": "R",
+   "input_signal_dn": 234.6671905517578,
+   "input_variance_dn2": 8224.167423829706,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.587655173506122,
+    "probability_below_zero": 0.004831583047262722,
+    "rectified_mean_dn": 234.8052589107931,
+    "rectified_variance_dn2": 8152.01249913621,
+    "variance_ratio": 0.9912264766784264,
+    "mean_bias_dn": 0.13806835903528736
+   }
+  },
+  {
+   "group_index": 24,
+   "iso": 12800,
+   "roi": 0,
+   "plane": "G1",
+   "input_signal_dn": 289.8278350830078,
+   "input_variance_dn2": 9497.916129724259,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.973897033401116,
+    "probability_below_zero": 0.0014702186357006264,
+    "rectified_mean_dn": 289.86866388481343,
+    "rectified_variance_dn2": 9472.117126202604,
+    "variance_ratio": 0.9972837195897197,
+    "mean_bias_dn": 0.04082880180561688
+   }
+  },
+  {
+   "group_index": 24,
+   "iso": 12800,
+   "roi": 0,
+   "plane": "G2",
+   "input_signal_dn": 289.74676513671875,
+   "input_variance_dn2": 9495.356314698334,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.973465903415657,
+    "probability_below_zero": 0.0014722855987927552,
+    "rectified_mean_dn": 289.78765024508385,
+    "rectified_variance_dn2": 9469.528438857655,
+    "variance_ratio": 0.9972799466407912,
+    "mean_bias_dn": 0.04088510836510295
+   }
+  },
+  {
+   "group_index": 24,
+   "iso": 12800,
+   "roi": 0,
+   "plane": "B",
+   "input_signal_dn": 163.62530517578125,
+   "input_variance_dn2": 7400.984280259154,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.9019790488270405,
+    "probability_below_zero": 0.028586946837034333,
+    "rectified_mean_dn": 164.57142154284372,
+    "rectified_variance_dn2": 7033.70902062524,
+    "variance_ratio": 0.950374808846229,
+    "mean_bias_dn": 0.9461163670624728
+   }
+  },
+  {
+   "group_index": 24,
+   "iso": 12800,
+   "roi": 1,
+   "plane": "R",
+   "input_signal_dn": 42.17295837402344,
+   "input_variance_dn2": 3272.0248134097437,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.7372686596498449,
+    "probability_below_zero": 0.23047949352972974,
+    "rectified_mean_dn": 49.84236053013841,
+    "rectified_variance_dn2": 2135.629084282654,
+    "variance_ratio": 0.6526934256519701,
+    "mean_bias_dn": 7.66940215611497
+   }
+  },
+  {
+   "group_index": 24,
+   "iso": 12800,
+   "roi": 1,
+   "plane": "G1",
+   "input_signal_dn": 86.05912780761719,
+   "input_variance_dn2": 4355.146554958658,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.3040539329070628,
+    "probability_below_zero": 0.0961075971126869,
+    "rectified_mean_dn": 89.03787433811142,
+    "rectified_variance_dn2": 3671.362625220754,
+    "variance_ratio": 0.8429940482807943,
+    "mean_bias_dn": 2.9787465304942344
+   }
+  },
+  {
+   "group_index": 24,
+   "iso": 12800,
+   "roi": 1,
+   "plane": "G2",
+   "input_signal_dn": 86.11273193359375,
+   "input_variance_dn2": 4284.471630025418,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.3155844506032528,
+    "probability_below_zero": 0.09415677767890096,
+    "rectified_mean_dn": 88.99541196428481,
+    "rectified_variance_dn2": 3624.514290392988,
+    "variance_ratio": 0.8459652912607769,
+    "mean_bias_dn": 2.8826800306910627
+   }
+  },
+  {
+   "group_index": 24,
+   "iso": 12800,
+   "roi": 1,
+   "plane": "B",
+   "input_signal_dn": 60.498382568359375,
+   "input_variance_dn2": 4442.214111031326,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.907703521273676,
+    "probability_below_zero": 0.18201744152083044,
+    "rectified_mean_dn": 67.09813285528256,
+    "rectified_variance_dn2": 3190.8227422900136,
+    "variance_ratio": 0.718295575705426,
+    "mean_bias_dn": 6.599750286923182
+   }
+  },
+  {
+   "group_index": 24,
+   "iso": 12800,
+   "roi": 2,
+   "plane": "R",
+   "input_signal_dn": 88.34477233886719,
+   "input_variance_dn2": 4569.42085685234,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.3069238278049047,
+    "probability_below_zero": 0.09561929134281,
+    "rectified_mean_dn": 91.3773193445895,
+    "rectified_variance_dn2": 3855.3900565036965,
+    "variance_ratio": 0.8437371337162176,
+    "mean_bias_dn": 3.032547005722307
+   }
+  },
+  {
+   "group_index": 24,
+   "iso": 12800,
+   "roi": 2,
+   "plane": "G1",
+   "input_signal_dn": 204.74986267089844,
+   "input_variance_dn2": 7359.218571807247,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.3867545998259407,
+    "probability_below_zero": 0.008498916607974527,
+    "rectified_mean_dn": 204.99272330274474,
+    "rectified_variance_dn2": 7246.888524560396,
+    "variance_ratio": 0.9847361447209653,
+    "mean_bias_dn": 0.24286063184629825
+   }
+  },
+  {
+   "group_index": 24,
+   "iso": 12800,
+   "roi": 2,
+   "plane": "G2",
+   "input_signal_dn": 204.6798553466797,
+   "input_variance_dn2": 7355.651337660289,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.386517007747567,
+    "probability_below_zero": 0.008504410305301802,
+    "rectified_mean_dn": 204.92283034977214,
+    "rectified_variance_dn2": 7243.304735284139,
+    "variance_ratio": 0.9847264916159164,
+    "mean_bias_dn": 0.2429750030924538
+   }
+  },
+  {
+   "group_index": 24,
+   "iso": 12800,
+   "roi": 2,
+   "plane": "B",
+   "input_signal_dn": 151.2239227294922,
+   "input_variance_dn2": 7073.415656815425,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.7980671624701872,
+    "probability_below_zero": 0.03608318260685539,
+    "rectified_mean_dn": 152.43040393755814,
+    "rectified_variance_dn2": 6634.2798901278,
+    "variance_ratio": 0.9379174379121202,
+    "mean_bias_dn": 1.2064812080659522
+   }
+  },
+  {
+   "group_index": 25,
+   "iso": 51200,
+   "roi": 0,
+   "plane": "R",
+   "input_signal_dn": 941.3202229817712,
+   "input_variance_dn2": 126918.06409405339,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.6422607254536814,
+    "probability_below_zero": 0.004117731615898013,
+    "rectified_mean_dn": 941.7757280512902,
+    "rectified_variance_dn2": 125966.46595042734,
+    "variance_ratio": 0.992502263957313,
+    "mean_bias_dn": 0.455505069519063
+   }
+  },
+  {
+   "group_index": 25,
+   "iso": 51200,
+   "roi": 0,
+   "plane": "G1",
+   "input_signal_dn": 1168.3262817382813,
+   "input_variance_dn2": 147486.5948042917,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 3.042200770620504,
+    "probability_below_zero": 0.0011742759555073423,
+    "rectified_mean_dn": 1168.452620086573,
+    "rectified_variance_dn2": 147165.78446817468,
+    "variance_ratio": 0.9978248169839251,
+    "mean_bias_dn": 0.12633834829171064
+   }
+  },
+  {
+   "group_index": 25,
+   "iso": 51200,
+   "roi": 0,
+   "plane": "G2",
+   "input_signal_dn": 1163.426814778646,
+   "input_variance_dn2": 146347.6651126042,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 3.041208322380723,
+    "probability_below_zero": 0.0011781536989255992,
+    "rectified_mean_dn": 1163.5531109402505,
+    "rectified_variance_dn2": 146028.292777888,
+    "variance_ratio": 0.997817714860907,
+    "mean_bias_dn": 0.12629616160438673
+   }
+  },
+  {
+   "group_index": 25,
+   "iso": 51200,
+   "roi": 0,
+   "plane": "B",
+   "input_signal_dn": 658.9961466471352,
+   "input_variance_dn2": 109869.36944578587,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.9881289949399568,
+    "probability_below_zero": 0.02339871268172722,
+    "rectified_mean_dn": 661.9013103896816,
+    "rectified_variance_dn2": 105375.63594951341,
+    "variance_ratio": 0.9590993056669006,
+    "mean_bias_dn": 2.9051637425463923
+   }
+  },
+  {
+   "group_index": 25,
+   "iso": 51200,
+   "roi": 1,
+   "plane": "R",
+   "input_signal_dn": 163.6253662109375,
+   "input_variance_dn2": 47994.37661225877,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.7468879521520153,
+    "probability_below_zero": 0.22756559948624355,
+    "rectified_mean_dn": 192.5157434169249,
+    "rectified_variance_dn2": 31510.65508111551,
+    "variance_ratio": 0.6565488981279325,
+    "mean_bias_dn": 28.89037720598739
+   }
+  },
+  {
+   "group_index": 25,
+   "iso": 51200,
+   "roi": 1,
+   "plane": "G1",
+   "input_signal_dn": 346.96675211588536,
+   "input_variance_dn2": 65285.56236252965,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.3579359502293078,
+    "probability_below_zero": 0.08724200436420126,
+    "rectified_mean_dn": 357.2383150704497,
+    "rectified_variance_dn2": 55920.52320294989,
+    "variance_ratio": 0.8565526768755417,
+    "mean_bias_dn": 10.271562954564331
+   }
+  },
+  {
+   "group_index": 25,
+   "iso": 51200,
+   "roi": 1,
+   "plane": "G2",
+   "input_signal_dn": 346.2057413736977,
+   "input_variance_dn2": 65726.17683231665,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.350408243280499,
+    "probability_below_zero": 0.08844253406289593,
+    "rectified_mean_dn": 356.68143129338034,
+    "rectified_variance_dn2": 56176.70312466251,
+    "variance_ratio": 0.8547082126499287,
+    "mean_bias_dn": 10.475689919682623
+   }
+  },
+  {
+   "group_index": 25,
+   "iso": 51200,
+   "roi": 1,
+   "plane": "B",
+   "input_signal_dn": 249.32739664713517,
+   "input_variance_dn2": 66721.85085529616,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 0.9652414421116783,
+    "probability_below_zero": 0.16721194708756404,
+    "rectified_mean_dn": 272.31091396677505,
+    "rectified_variance_dn2": 49306.49765301371,
+    "variance_ratio": 0.7389857598517131,
+    "mean_bias_dn": 22.983517319639873
+   }
+  },
+  {
+   "group_index": 25,
+   "iso": 51200,
+   "roi": 2,
+   "plane": "R",
+   "input_signal_dn": 355.89491780598973,
+   "input_variance_dn2": 69315.6361143158,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.351780507659894,
+    "probability_below_zero": 0.08822277077303409,
+    "rectified_mean_dn": 366.6209427695744,
+    "rectified_variance_dn2": 59268.03325409608,
+    "variance_ratio": 0.8550456516961173,
+    "mean_bias_dn": 10.726024963584678
+   }
+  },
+  {
+   "group_index": 25,
+   "iso": 51200,
+   "roi": 2,
+   "plane": "G1",
+   "input_signal_dn": 844.7963175455727,
+   "input_variance_dn2": 114650.01783281629,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.494967821841649,
+    "probability_below_zero": 0.00629842764732369,
+    "rectified_mean_dn": 845.485574651687,
+    "rectified_variance_dn2": 113345.14605028613,
+    "variance_ratio": 0.9886186517263963,
+    "mean_bias_dn": 0.6892571061142689
+   }
+  },
+  {
+   "group_index": 25,
+   "iso": 51200,
+   "roi": 2,
+   "plane": "G2",
+   "input_signal_dn": 838.0489339192709,
+   "input_variance_dn2": 115439.12967410403,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 2.46656665480028,
+    "probability_below_zero": 0.0068207668309864244,
+    "rectified_mean_dn": 838.8038273570446,
+    "rectified_variance_dn2": 114018.53878257354,
+    "variance_ratio": 0.9876940263189704,
+    "mean_bias_dn": 0.7548934377737169
+   }
+  },
+  {
+   "group_index": 25,
+   "iso": 51200,
+   "roi": 2,
+   "plane": "B",
+   "input_signal_dn": 628.460408528646,
+   "input_variance_dn2": 105008.45398628878,
+   "conditional_gaussian_clipping": {
+    "signal_over_total_sigma": 1.9393928543731878,
+    "probability_below_zero": 0.026226759980931935,
+    "rectified_mean_dn": 631.6920893358161,
+    "rectified_variance_dn2": 100212.99526647385,
+    "variance_ratio": 0.9543326414419826,
+    "mean_bias_dn": 3.2316808071701644
+   }
+  }
+ ],
+ "conditional_clipping_levels": [
+  {
+   "signal_over_sigma": 0.0,
+   "signal_over_total_sigma": 0.0,
+   "probability_below_zero": 0.5,
+   "rectified_mean_dn": 0.3989422804014327,
+   "rectified_variance_dn2": 0.3408450569081046,
+   "variance_ratio": 0.3408450569081046,
+   "mean_bias_dn": 0.3989422804014327
+  },
+  {
+   "signal_over_sigma": 0.15,
+   "signal_over_total_sigma": 0.15,
+   "probability_below_zero": 0.4403823076297575,
+   "rectified_mean_dn": 0.47842198476342535,
+   "rectified_variance_dn2": 0.40249339457978106,
+   "variance_ratio": 0.40249339457978106,
+   "mean_bias_dn": 0.3284219847634253
+  },
+  {
+   "signal_over_sigma": 0.5,
+   "signal_over_total_sigma": 0.5,
+   "probability_below_zero": 0.308537538725987,
+   "rectified_mean_dn": 0.6977965574013061,
+   "rectified_variance_dn2": 0.5534407044535519,
+   "variance_ratio": 0.5534407044535519,
+   "mean_bias_dn": 0.19779655740130608
+  },
+  {
+   "signal_over_sigma": 1.0,
+   "signal_over_total_sigma": 1.0,
+   "probability_below_zero": 0.15865525393145719,
+   "rectified_mean_dn": 1.0833154705876862,
+   "rectified_variance_dn2": 0.751087807841609,
+   "variance_ratio": 0.751087807841609,
+   "mean_bias_dn": 0.08331547058768618
+  },
+  {
+   "signal_over_sigma": 2.0,
+   "signal_over_total_sigma": 2.0,
+   "probability_below_zero": 0.022750131948179098,
+   "rectified_mean_dn": 2.0084907026168297,
+   "rectified_variance_dn2": 0.9601963707872345,
+   "variance_ratio": 0.9601963707872345,
+   "mean_bias_dn": 0.008490702616829715
+  },
+  {
+   "signal_over_sigma": 3.0,
+   "signal_over_total_sigma": 3.0,
+   "probability_below_zero": 0.0013498980316301035,
+   "rectified_mean_dn": 3.0003821543170477,
+   "rectified_variance_dn2": 0.9975034929753033,
+   "variance_ratio": 0.9975034929753033,
+   "mean_bias_dn": 0.0003821543170476893
+  },
+  {
+   "signal_over_sigma": 5.0,
+   "signal_over_total_sigma": 5.0,
+   "probability_below_zero": 2.866515718125129e-07,
+   "rectified_mean_dn": 5.0000000534616555,
+   "rectified_variance_dn2": 0.9999994460401496,
+   "variance_ratio": 0.9999994460401496,
+   "mean_bias_dn": 5.3461655546982456e-08
+  }
+ ],
+ "algebraic_checks": {
+  "zero_signal_variance_ratio": 0.3408450569081046,
+  "example_gain_two_law": {
+   "slope": 6,
+   "intercept": 16
+  },
+  "example_covariance": [
+   [
+    1.5,
+    1.0,
+    0.1
+   ],
+   [
+    1.0,
+    2.1875,
+    0.75
+   ],
+   [
+    0.1,
+    0.75,
+    3.01
+   ]
+  ],
+  "example_covariance_min_eigenvalue": 0.7259299200371222,
+  "one_ev_signal_gain": 2.0,
+  "one_ev_variance_gain": 4.0
+ },
+ "runner_sha256": "f9d9b0ffe34be96a2308fec0fc37e17ea983f8b2183b10c7f345c887d5207b93",
+ "runner_source": "\"\"\"Source-backed opening noise contract and conditional Gaussian clipping diagnostic.\"\"\"\nfrom datetime import datetime,timezone\nimport json\nimport math\nfrom pathlib import Path\n\nimport numpy as np\n\nfrom study_noise_neighbourhoods import ROOT,sha256,git\n\n\ndef scale_law(slope,intercept,gain):\n    if not np.isfinite([slope,intercept,gain]).all() or min(slope,intercept)<0 or gain<=0:\n        raise ValueError('Nonnegative law and positive finite gain required')\n    return dict(slope=gain*slope,intercept=gain*gain*intercept)\n\n\ndef rectified_gaussian(signal,variance):\n    if not np.isfinite([signal,variance]).all() or variance<=0:raise ValueError('Positive finite variance required')\n    sigma=math.sqrt(variance);z=signal/sigma\n    cdf=.5*(1+math.erf(z/math.sqrt(2)));density=math.exp(-.5*z*z)/math.sqrt(2*math.pi)\n    mean=sigma*density+signal*cdf\n    second=(variance+signal*signal)*cdf+signal*sigma*density\n    out_variance=max(0.,second-mean*mean)\n    return dict(signal_over_total_sigma=z,probability_below_zero=1-cdf,\n        rectified_mean_dn=mean,rectified_variance_dn2=out_variance,\n        variance_ratio=out_variance/variance,mean_bias_dn=mean-signal)\n\n\ndef transport_covariance(matrix,covariance):\n    matrix=np.asarray(matrix,dtype=float);covariance=np.asarray(covariance,dtype=float)\n    if matrix.shape!=(3,3) or covariance.shape!=(3,3) or not np.isfinite(matrix).all() or not np.isfinite(covariance).all():\n        raise ValueError('Finite 3x3 matrices required')\n    if not np.allclose(covariance,covariance.T) or np.linalg.eigvalsh(covariance).min() < -1e-12:\n        raise ValueError('Symmetric positive semidefinite covariance required')\n    return matrix@covariance@matrix.T\n\n\ndef run():\n    started=datetime.now(timezone.utc)\n    parent=ROOT/'docs/validation/raw/qualification-noirs-repetes-bruit-v001-20261028T100350Z.json'\n    parent_hash=sha256(parent);measurements=json.loads(parent.read_text(encoding='utf-8'))\n    libroot=Path('C:/dev/vcpkg/buildtrees/libraw/src/0.22.2-fabf993e5f.clean')\n    sources={str(p.relative_to(ROOT)):p for p in [ROOT/n for n in (\n        'src/raw/RawDecoder.cpp','src/raw/RawBlackLevelEstimator.cpp','src/raw/Demosaic.cpp',\n        'src/raw/RawNormalization.cpp','src/raw/CameraSignal.cpp','src/profiles/CameraProfileEngine.cpp',\n        'src/core/WorkingColorSpace.h','src/core/DetailProcessing.cpp','src/editor/imageeditor.cpp','config/raw-normalization.json')]}\n    sources.update({'LibRaw/'+n:libroot/n for n in (\n        'src/postprocessing/dcraw_process.cpp','src/preprocessing/raw2image.cpp',\n        'src/preprocessing/subtract_black.cpp','src/postprocessing/postprocessing_utils_dcrdefs.cpp',\n        'src/postprocessing/postprocessing_utils.cpp')})\n    evidence={}\n    for key,path in sources.items():\n        content=path.read_text(encoding='utf-8')\n        needles=('CLIP(val)','val > cblack','scale_mul[c]','maximum -= black','raw2image_ex(',\n            '65535','dcraw_process()','OpeningMedian','FlatGradient','LaplacianWeight',\n            'applyDcp','applyLcp','exposureScale','applyHueSatMap','applyCurve(',\n            'estimateNoise(adjusted)','reduceNoise(','Contrast::apply','ToneRecovery::apply',\n            'Vibrance::apply','cameraRgb','pre_mul','measured.levels')\n        evidence[key]=dict(path=str(path),sha256=sha256(path),\n            anchors=[dict(line=i,text=line.strip()) for i,line in enumerate(content.splitlines(),1)\n                     if any(n in line for n in needles)])\n    rows=[]\n    for group in measurements['revised_scene_measurements']:\n        for p in group['measurements']:\n            rows.append(dict(group_index=group['group_index'],iso=group['metadata']['iso'],roi=p['roi'],plane=p['plane'],\n                input_signal_dn=p['new_candidate_signal_dn'],input_variance_dn2=p['scene_centered_temporal_variance_dn2'],\n                conditional_gaussian_clipping=rectified_gaussian(p['new_candidate_signal_dn'],p['scene_centered_temporal_variance_dn2'])))\n    levels=[dict(signal_over_sigma=z,**rectified_gaussian(z,1)) for z in (0.,.15,.5,1.,2.,3.,5.)]\n    matrix=np.array([[1,.5,0],[0,1,.25],[.1,0,1]],dtype=float)\n    covariance=np.diag([1.,2.,3.]);mapped=transport_covariance(matrix,covariance)\n    checks=dict(zero_signal_variance_ratio=rectified_gaussian(0,1)['variance_ratio'],\n        example_gain_two_law=scale_law(3,4,2),example_covariance=mapped.tolist(),\n        example_covariance_min_eigenvalue=float(np.linalg.eigvalsh(mapped).min()),\n        one_ev_signal_gain=2.,one_ev_variance_gain=4.)\n    if sha256(parent)!=parent_hash:raise ValueError('Parent changed')\n    now=datetime.now(timezone.utc);output=ROOT/'docs/validation/raw'/f'contrat-transport-bruit-ouverture-v001-{now.strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n    result=dict(campaign_id='noise-opening-transport-'+now.strftime('%Y%m%dT%H%M%SZ'),schema_version=1,data_version=1,\n        started_at_utc=started.isoformat(),measured_at_utc=now.isoformat(),completed_at_utc=now.isoformat(),\n        parent=dict(path=str(parent),sha256=parent_hash),source_evidence=evidence,records=rows,\n        conditional_clipping_levels=levels,algebraic_checks=checks,\n        runner_sha256=sha256(Path(__file__)),runner_source=Path(__file__).read_text(encoding='utf-8'),commit=git('rev-parse','HEAD'),\n        rules='No production modification or RAW decode. Fixed affine x=k*s: a_out=k*a,b_out=k^2*b. Fixed deterministic matrices: C_out=M*C_in*M^T. Conditional only on known fixed black/gains. Record LibRaw pre-RCD black clipping, integer quantization, RCD+flat median, DCP and optics nonlinearities, edit-order before denoise.',\n        missing_runtime_parameters=['actually selected optical black per frame','effective LibRaw maximum after black adjustment','effective per-CFA scale_mul before interpolation','clip and saturation fractions in the actual callback input','actual prepared DCP mapping/Jacobian at source WB','full spatial/cross-channel noise covariance','effect of edits before the denoise stage'],\n        limitations='Gaussian rectification is a marginal analytic toy model using empirical mean/temporal variance, NOT an actual reprocessed RAW measurement or proof of Gaussian camera noise. Ignores upper clipping, quantization, black estimator uncertainty, spatial covariance and adaptive demosaic. Installed LibRaw source tree inspected, but no runtime callbacks instrumented to certify effective branch/scales. Source audit establishes locations/contract, not end-to-end transport accuracy. RCD/margin/median and nonlinear DCP cannot be replaced by a universal matrix. No claim of new visual improvement, sealed burst access or Git writes.',\n        verdict='source_and_algebra_contract_qualified_runtime_nonlinear_transport_unmeasured')\n    with output.open('x',encoding='utf-8') as handle:json.dump(result,handle,ensure_ascii=False,indent=1,allow_nan=False)\n    for r in levels:print('S/sigma',r['signal_over_sigma'],'variance ratio',round(r['variance_ratio'],6),flush=True)\n    print('RESULT',output,flush=True)\n\n\nif __name__=='__main__':run()\n",
+ "commit": "2a40c5c6cff78d40294393a68827f4a24555c724",
+ "rules": "No production modification or RAW decode. Fixed affine x=k*s: a_out=k*a,b_out=k^2*b. Fixed deterministic matrices: C_out=M*C_in*M^T. Conditional only on known fixed black/gains. Record LibRaw pre-RCD black clipping, integer quantization, RCD+flat median, DCP and optics nonlinearities, edit-order before denoise.",
+ "missing_runtime_parameters": [
+  "actually selected optical black per frame",
+  "effective LibRaw maximum after black adjustment",
+  "effective per-CFA scale_mul before interpolation",
+  "clip and saturation fractions in the actual callback input",
+  "actual prepared DCP mapping/Jacobian at source WB",
+  "full spatial/cross-channel noise covariance",
+  "effect of edits before the denoise stage"
+ ],
+ "limitations": "Gaussian rectification is a marginal analytic toy model using empirical mean/temporal variance, NOT an actual reprocessed RAW measurement or proof of Gaussian camera noise. Ignores upper clipping, quantization, black estimator uncertainty, spatial covariance and adaptive demosaic. Installed LibRaw source tree inspected, but no runtime callbacks instrumented to certify effective branch/scales. Source audit establishes locations/contract, not end-to-end transport accuracy. RCD/margin/median and nonlinear DCP cannot be replaced by a universal matrix. No claim of new visual improvement, sealed burst access or Git writes.",
+ "verdict": "source_and_algebra_contract_qualified_runtime_nonlinear_transport_unmeasured"
+}

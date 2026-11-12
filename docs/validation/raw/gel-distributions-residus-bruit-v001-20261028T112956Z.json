@@ -1,0 +1,373 @@
+{
+ "trials": 32,
+ "cases": [
+  {
+   "case_id": "0-0",
+   "pair_index": 0,
+   "roi": 0,
+   "iso": 1600,
+   "role": "black",
+   "mean_raw_dn": [
+    2048.130859375,
+    2048.1171264648438,
+    2048.2557373046875,
+    2048.1416625976562
+   ],
+   "raw_variance_dn2": [
+    37.61869765088823,
+    37.05709714259064,
+    37.33278011646308,
+    49.1956415100638
+   ],
+   "conditional_law": [
+    {
+     "signed_signal_dn": -0.017038981119640084,
+     "nonnegative_signal_dn": 0.0,
+     "variance_dn2": 37.61869765088823
+    },
+    {
+     "signed_signal_dn": 0.0228271484375,
+     "nonnegative_signal_dn": 0.0228271484375,
+     "variance_dn2": 37.05709714259064
+    },
+    {
+     "signed_signal_dn": 0.1192626953125,
+     "nonnegative_signal_dn": 0.1192626953125,
+     "variance_dn2": 37.33278011646308
+    },
+    {
+     "signed_signal_dn": 0.053110758463390084,
+     "nonnegative_signal_dn": 0.053110758463390084,
+     "variance_dn2": 49.1956415100638
+    }
+   ],
+   "applied_black_dn": [
+    2048,
+    2048,
+    2048,
+    2048
+   ],
+   "pre_mul": [
+    1.892578125,
+    1,
+    1.6923828125,
+    1
+   ],
+   "maximum": 12303,
+   "profile": "C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Camera/Canon EOS R6 Mark III/Canon EOS R6 Mark III Camera Neutral.dcp",
+   "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+   "source_kelvin": 4924.211272770631,
+   "baseline_exposure_ev": 0.28,
+   "profile_exposure_compensation_ev": 0.0,
+   "preserve_tone_curve_hue": true,
+   "seed": 28102026
+  },
+  {
+   "case_id": "0-1",
+   "pair_index": 0,
+   "roi": 1,
+   "iso": 1600,
+   "role": "black",
+   "mean_raw_dn": [
+    2047.9567260742188,
+    2048.0950317382812,
+    2048.1954345703125,
+    2048.1035766601562
+   ],
+   "raw_variance_dn2": [
+    38.266578904273985,
+    37.95487992580515,
+    38.2345182118891,
+    50.15685013757861
+   ],
+   "conditional_law": [
+    {
+     "signed_signal_dn": -0.064178466796875,
+     "nonnegative_signal_dn": 0.0,
+     "variance_dn2": 38.266578904273985
+    },
+    {
+     "signed_signal_dn": 0.031453450520984916,
+     "nonnegative_signal_dn": 0.031453450520984916,
+     "variance_dn2": 37.95487992580515
+    },
+    {
+     "signed_signal_dn": 0.07844034830714008,
+     "nonnegative_signal_dn": 0.07844034830714008,
+     "variance_dn2": 38.2345182118891
+    },
+    {
+     "signed_signal_dn": 0.07136027018214008,
+     "nonnegative_signal_dn": 0.07136027018214008,
+     "variance_dn2": 50.15685013757861
+    }
+   ],
+   "applied_black_dn": [
+    2048,
+    2048,
+    2048,
+    2048
+   ],
+   "pre_mul": [
+    1.892578125,
+    1,
+    1.6923828125,
+    1
+   ],
+   "maximum": 12303,
+   "profile": "C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Camera/Canon EOS R6 Mark III/Canon EOS R6 Mark III Camera Neutral.dcp",
+   "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+   "source_kelvin": 4924.211272770631,
+   "baseline_exposure_ev": 0.28,
+   "profile_exposure_compensation_ev": 0.0,
+   "preserve_tone_curve_hue": true,
+   "seed": 28102027
+  },
+  {
+   "case_id": "0-2",
+   "pair_index": 0,
+   "roi": 2,
+   "iso": 1600,
+   "role": "black",
+   "mean_raw_dn": [
+    2048.0595092773438,
+    2048.0986328125,
+    2048.253173828125,
+    2048.1129760742188
+   ],
+   "raw_variance_dn2": [
+    39.561340731603785,
+    38.48000596465883,
+    38.90479207022581,
+    50.56112907901376
+   ],
+   "conditional_law": [
+    {
+     "signed_signal_dn": 0.013275146484375,
+     "nonnegative_signal_dn": 0.013275146484375,
+     "variance_dn2": 39.561340731603785
+    },
+    {
+     "signed_signal_dn": 0.006093343099109916,
+     "nonnegative_signal_dn": 0.006093343099109916,
+     "variance_dn2": 38.48000596465883
+    },
+    {
+     "signed_signal_dn": 0.12615966796875,
+     "nonnegative_signal_dn": 0.12615966796875,
+     "variance_dn2": 38.90479207022581
+    },
+    {
+     "signed_signal_dn": 0.15392049153638254,
+     "nonnegative_signal_dn": 0.15392049153638254,
+     "variance_dn2": 50.56112907901376
+    }
+   ],
+   "applied_black_dn": [
+    2048,
+    2048,
+    2048,
+    2048
+   ],
+   "pre_mul": [
+    1.892578125,
+    1,
+    1.6923828125,
+    1
+   ],
+   "maximum": 12303,
+   "profile": "C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Camera/Canon EOS R6 Mark III/Canon EOS R6 Mark III Camera Neutral.dcp",
+   "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+   "source_kelvin": 4924.211272770631,
+   "baseline_exposure_ev": 0.28,
+   "profile_exposure_compensation_ev": 0.0,
+   "preserve_tone_curve_hue": true,
+   "seed": 28102028
+  },
+  {
+   "case_id": "3-0",
+   "pair_index": 3,
+   "roi": 0,
+   "iso": 51200,
+   "role": "black",
+   "mean_raw_dn": [
+    2047.9879150390625,
+    2047.170166015625,
+    2046.9671630859375,
+    2046.3455810546875
+   ],
+   "raw_variance_dn2": [
+    32713.354138745777,
+    32032.999781055052,
+    32116.27722484232,
+    39258.4583829386
+   ],
+   "conditional_law": [
+    {
+     "signed_signal_dn": -2.125109863281068,
+     "nonnegative_signal_dn": 0.0,
+     "variance_dn2": 32713.354138745777
+    },
+    {
+     "signed_signal_dn": -0.24091796874995453,
+     "nonnegative_signal_dn": 0.0,
+     "variance_dn2": 32032.999781055052
+    },
+    {
+     "signed_signal_dn": 1.009130859375091,
+     "nonnegative_signal_dn": 1.009130859375091,
+     "variance_dn2": 32116.27722484232
+    },
+    {
+     "signed_signal_dn": -0.035266113281295475,
+     "nonnegative_signal_dn": 0.0,
+     "variance_dn2": 39258.4583829386
+    }
+   ],
+   "applied_black_dn": [
+    2042,
+    2043,
+    2041,
+    2043
+   ],
+   "pre_mul": [
+    1.892578125,
+    1,
+    1.6923828125,
+    1
+   ],
+   "maximum": 12310,
+   "profile": "C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Camera/Canon EOS R6 Mark III/Canon EOS R6 Mark III Camera Neutral.dcp",
+   "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+   "source_kelvin": 4924.211272770631,
+   "baseline_exposure_ev": 0.28,
+   "profile_exposure_compensation_ev": 0.0,
+   "preserve_tone_curve_hue": true,
+   "seed": 28102035
+  },
+  {
+   "case_id": "3-1",
+   "pair_index": 3,
+   "roi": 1,
+   "iso": 51200,
+   "role": "black",
+   "mean_raw_dn": [
+    2049.1533813476562,
+    2047.4970092773438,
+    2047.09716796875,
+    2045.9075927734375
+   ],
+   "raw_variance_dn2": [
+    32567.076345104466,
+    32421.952964488602,
+    32642.45113457254,
+    39860.58065269974
+   ],
+   "conditional_law": [
+    {
+     "signed_signal_dn": 0.028564453125,
+     "nonnegative_signal_dn": 0.028564453125,
+     "variance_dn2": 32567.076345104466
+    },
+    {
+     "signed_signal_dn": 1.426184082031341,
+     "nonnegative_signal_dn": 1.426184082031341,
+     "variance_dn2": 32421.952964488602
+    },
+    {
+     "signed_signal_dn": 1.1517456054687045,
+     "nonnegative_signal_dn": 1.1517456054687045,
+     "variance_dn2": 32642.45113457254
+    },
+    {
+     "signed_signal_dn": 0.0052734374999090505,
+     "nonnegative_signal_dn": 0.0052734374999090505,
+     "variance_dn2": 39860.58065269974
+    }
+   ],
+   "applied_black_dn": [
+    2042,
+    2043,
+    2041,
+    2043
+   ],
+   "pre_mul": [
+    1.892578125,
+    1,
+    1.6923828125,
+    1
+   ],
+   "maximum": 12310,
+   "profile": "C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Camera/Canon EOS R6 Mark III/Canon EOS R6 Mark III Camera Neutral.dcp",
+   "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+   "source_kelvin": 4924.211272770631,
+   "baseline_exposure_ev": 0.28,
+   "profile_exposure_compensation_ev": 0.0,
+   "preserve_tone_curve_hue": true,
+   "seed": 28102036
+  },
+  {
+   "case_id": "3-2",
+   "pair_index": 3,
+   "roi": 2,
+   "iso": 51200,
+   "role": "black",
+   "mean_raw_dn": [
+    2046.365966796875,
+    2043.1046142578125,
+    2046.1317138671875,
+    2044.0108642578125
+   ],
+   "raw_variance_dn2": [
+    33230.18765397677,
+    32616.915055851176,
+    32716.775415249554,
+    39435.6379474723
+   ],
+   "conditional_law": [
+    {
+     "signed_signal_dn": -3.6590576171875,
+     "nonnegative_signal_dn": 0.0,
+     "variance_dn2": 33230.18765397677
+    },
+    {
+     "signed_signal_dn": -2.0135986328125455,
+     "nonnegative_signal_dn": 0.0,
+     "variance_dn2": 32616.915055851176
+    },
+    {
+     "signed_signal_dn": -0.659216308593841,
+     "nonnegative_signal_dn": 0.0,
+     "variance_dn2": 32716.775415249554
+    },
+    {
+     "signed_signal_dn": -2.59857177734375,
+     "nonnegative_signal_dn": 0.0,
+     "variance_dn2": 39435.6379474723
+    }
+   ],
+   "applied_black_dn": [
+    2042,
+    2043,
+    2041,
+    2043
+   ],
+   "pre_mul": [
+    1.892578125,
+    1,
+    1.6923828125,
+    1
+   ],
+   "maximum": 12310,
+   "profile": "C:/ProgramData/Adobe/CameraRaw/CameraProfiles/Camera/Canon EOS R6 Mark III/Canon EOS R6 Mark III Camera Neutral.dcp",
+   "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+   "source_kelvin": 4924.211272770631,
+   "baseline_exposure_ev": 0.28,
+   "profile_exposure_compensation_ev": 0.0,
+   "preserve_tone_curve_hue": true,
+   "seed": 28102037
+  }
+ ],
+ "policy": "Six predeclared original black cases ISO1600/51200;32 original seeds/realizations and immutable noise parameters. Save central128 CFA,camera,DCP crops to measure16 disjoint simulated residual pairs and compare one real pair per ROI. Descriptive distributions/lag correlations only, no fit, causal claim, threshold selection or sealed RAW access. Real final camera before DCP retained separately from callback camera.",
+ "samples_output": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\residual-distributions\\20261028T112956Z\\samples.f32"
+}

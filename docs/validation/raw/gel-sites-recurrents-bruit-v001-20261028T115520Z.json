@@ -1,0 +1,621 @@
+{
+ "policy": {
+  "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\politique-sites-recurrents-bruit-v001-20261028T115520Z.json",
+  "sha256": "63e277e879f4ea7b033dd89d542c60b5c3c6735cfaea3d2dd9fabfc2f84f8294"
+ },
+ "selections": [
+  {
+   "iso": 1600,
+   "roi": 0,
+   "phase": 0,
+   "development_pair_indices": [
+    0,
+    1,
+    2
+   ],
+   "selected": [
+    {
+     "y": 13,
+     "x": 61,
+     "development_occurrences": 2
+    },
+    {
+     "y": 20,
+     "x": 27,
+     "development_occurrences": 2
+    },
+    {
+     "y": 29,
+     "x": 26,
+     "development_occurrences": 2
+    },
+    {
+     "y": 36,
+     "x": 46,
+     "development_occurrences": 3
+    },
+    {
+     "y": 48,
+     "x": 56,
+     "development_occurrences": 2
+    }
+   ]
+  },
+  {
+   "iso": 1600,
+   "roi": 0,
+   "phase": 1,
+   "development_pair_indices": [
+    0,
+    1,
+    2
+   ],
+   "selected": [
+    {
+     "y": 33,
+     "x": 58,
+     "development_occurrences": 2
+    }
+   ]
+  },
+  {
+   "iso": 1600,
+   "roi": 0,
+   "phase": 2,
+   "development_pair_indices": [
+    0,
+    1,
+    2
+   ],
+   "selected": [
+    {
+     "y": 19,
+     "x": 27,
+     "development_occurrences": 2
+    }
+   ]
+  },
+  {
+   "iso": 1600,
+   "roi": 0,
+   "phase": 3,
+   "development_pair_indices": [
+    0,
+    1,
+    2
+   ],
+   "selected": [
+    {
+     "y": 2,
+     "x": 36,
+     "development_occurrences": 2
+    },
+    {
+     "y": 3,
+     "x": 26,
+     "development_occurrences": 2
+    },
+    {
+     "y": 9,
+     "x": 40,
+     "development_occurrences": 2
+    },
+    {
+     "y": 29,
+     "x": 5,
+     "development_occurrences": 2
+    },
+    {
+     "y": 29,
+     "x": 17,
+     "development_occurrences": 3
+    },
+    {
+     "y": 46,
+     "x": 62,
+     "development_occurrences": 2
+    },
+    {
+     "y": 54,
+     "x": 10,
+     "development_occurrences": 2
+    },
+    {
+     "y": 54,
+     "x": 62,
+     "development_occurrences": 2
+    },
+    {
+     "y": 61,
+     "x": 0,
+     "development_occurrences": 2
+    }
+   ]
+  },
+  {
+   "iso": 1600,
+   "roi": 1,
+   "phase": 0,
+   "development_pair_indices": [
+    0,
+    1,
+    2
+   ],
+   "selected": [
+    {
+     "y": 27,
+     "x": 8,
+     "development_occurrences": 3
+    },
+    {
+     "y": 41,
+     "x": 21,
+     "development_occurrences": 2
+    },
+    {
+     "y": 56,
+     "x": 25,
+     "development_occurrences": 2
+    },
+    {
+     "y": 56,
+     "x": 38,
+     "development_occurrences": 2
+    },
+    {
+     "y": 59,
+     "x": 49,
+     "development_occurrences": 2
+    }
+   ]
+  },
+  {
+   "iso": 1600,
+   "roi": 1,
+   "phase": 1,
+   "development_pair_indices": [
+    0,
+    1,
+    2
+   ],
+   "selected": [
+    {
+     "y": 1,
+     "x": 11,
+     "development_occurrences": 2
+    },
+    {
+     "y": 15,
+     "x": 9,
+     "development_occurrences": 3
+    },
+    {
+     "y": 32,
+     "x": 46,
+     "development_occurrences": 2
+    },
+    {
+     "y": 57,
+     "x": 47,
+     "development_occurrences": 2
+    },
+    {
+     "y": 61,
+     "x": 8,
+     "development_occurrences": 2
+    }
+   ]
+  },
+  {
+   "iso": 1600,
+   "roi": 1,
+   "phase": 2,
+   "development_pair_indices": [
+    0,
+    1,
+    2
+   ],
+   "selected": [
+    {
+     "y": 13,
+     "x": 57,
+     "development_occurrences": 2
+    },
+    {
+     "y": 15,
+     "x": 47,
+     "development_occurrences": 2
+    },
+    {
+     "y": 18,
+     "x": 9,
+     "development_occurrences": 2
+    },
+    {
+     "y": 22,
+     "x": 14,
+     "development_occurrences": 2
+    },
+    {
+     "y": 26,
+     "x": 8,
+     "development_occurrences": 2
+    },
+    {
+     "y": 55,
+     "x": 25,
+     "development_occurrences": 2
+    },
+    {
+     "y": 57,
+     "x": 56,
+     "development_occurrences": 2
+    },
+    {
+     "y": 58,
+     "x": 49,
+     "development_occurrences": 2
+    },
+    {
+     "y": 62,
+     "x": 23,
+     "development_occurrences": 2
+    }
+   ]
+  },
+  {
+   "iso": 1600,
+   "roi": 1,
+   "phase": 3,
+   "development_pair_indices": [
+    0,
+    1,
+    2
+   ],
+   "selected": [
+    {
+     "y": 1,
+     "x": 27,
+     "development_occurrences": 3
+    },
+    {
+     "y": 9,
+     "x": 44,
+     "development_occurrences": 3
+    },
+    {
+     "y": 11,
+     "x": 2,
+     "development_occurrences": 2
+    },
+    {
+     "y": 14,
+     "x": 9,
+     "development_occurrences": 2
+    },
+    {
+     "y": 27,
+     "x": 60,
+     "development_occurrences": 2
+    },
+    {
+     "y": 29,
+     "x": 10,
+     "development_occurrences": 2
+    },
+    {
+     "y": 51,
+     "x": 26,
+     "development_occurrences": 2
+    },
+    {
+     "y": 53,
+     "x": 46,
+     "development_occurrences": 2
+    }
+   ]
+  },
+  {
+   "iso": 1600,
+   "roi": 2,
+   "phase": 0,
+   "development_pair_indices": [
+    0,
+    1,
+    2
+   ],
+   "selected": [
+    {
+     "y": 1,
+     "x": 20,
+     "development_occurrences": 2
+    },
+    {
+     "y": 17,
+     "x": 61,
+     "development_occurrences": 2
+    },
+    {
+     "y": 32,
+     "x": 15,
+     "development_occurrences": 2
+    },
+    {
+     "y": 36,
+     "x": 63,
+     "development_occurrences": 2
+    },
+    {
+     "y": 53,
+     "x": 50,
+     "development_occurrences": 2
+    }
+   ]
+  },
+  {
+   "iso": 1600,
+   "roi": 2,
+   "phase": 1,
+   "development_pair_indices": [
+    0,
+    1,
+    2
+   ],
+   "selected": [
+    {
+     "y": 19,
+     "x": 45,
+     "development_occurrences": 2
+    },
+    {
+     "y": 22,
+     "x": 40,
+     "development_occurrences": 2
+    },
+    {
+     "y": 25,
+     "x": 60,
+     "development_occurrences": 2
+    },
+    {
+     "y": 31,
+     "x": 63,
+     "development_occurrences": 2
+    },
+    {
+     "y": 40,
+     "x": 41,
+     "development_occurrences": 2
+    },
+    {
+     "y": 51,
+     "x": 16,
+     "development_occurrences": 2
+    },
+    {
+     "y": 60,
+     "x": 38,
+     "development_occurrences": 3
+    }
+   ]
+  },
+  {
+   "iso": 1600,
+   "roi": 2,
+   "phase": 2,
+   "development_pair_indices": [
+    0,
+    1,
+    2
+   ],
+   "selected": [
+    {
+     "y": 5,
+     "x": 4,
+     "development_occurrences": 2
+    },
+    {
+     "y": 27,
+     "x": 44,
+     "development_occurrences": 3
+    },
+    {
+     "y": 30,
+     "x": 35,
+     "development_occurrences": 2
+    },
+    {
+     "y": 43,
+     "x": 14,
+     "development_occurrences": 2
+    },
+    {
+     "y": 49,
+     "x": 44,
+     "development_occurrences": 2
+    }
+   ]
+  },
+  {
+   "iso": 1600,
+   "roi": 2,
+   "phase": 3,
+   "development_pair_indices": [
+    0,
+    1,
+    2
+   ],
+   "selected": [
+    {
+     "y": 3,
+     "x": 24,
+     "development_occurrences": 3
+    },
+    {
+     "y": 6,
+     "x": 35,
+     "development_occurrences": 2
+    },
+    {
+     "y": 15,
+     "x": 2,
+     "development_occurrences": 2
+    },
+    {
+     "y": 19,
+     "x": 44,
+     "development_occurrences": 2
+    },
+    {
+     "y": 33,
+     "x": 5,
+     "development_occurrences": 2
+    },
+    {
+     "y": 61,
+     "x": 38,
+     "development_occurrences": 2
+    }
+   ]
+  },
+  {
+   "iso": 51200,
+   "roi": 0,
+   "phase": 0,
+   "development_pair_indices": [
+    6,
+    7
+   ],
+   "selected": []
+  },
+  {
+   "iso": 51200,
+   "roi": 0,
+   "phase": 1,
+   "development_pair_indices": [
+    6,
+    7
+   ],
+   "selected": []
+  },
+  {
+   "iso": 51200,
+   "roi": 0,
+   "phase": 2,
+   "development_pair_indices": [
+    6,
+    7
+   ],
+   "selected": []
+  },
+  {
+   "iso": 51200,
+   "roi": 0,
+   "phase": 3,
+   "development_pair_indices": [
+    6,
+    7
+   ],
+   "selected": []
+  },
+  {
+   "iso": 51200,
+   "roi": 1,
+   "phase": 0,
+   "development_pair_indices": [
+    6,
+    7
+   ],
+   "selected": []
+  },
+  {
+   "iso": 51200,
+   "roi": 1,
+   "phase": 1,
+   "development_pair_indices": [
+    6,
+    7
+   ],
+   "selected": []
+  },
+  {
+   "iso": 51200,
+   "roi": 1,
+   "phase": 2,
+   "development_pair_indices": [
+    6,
+    7
+   ],
+   "selected": [
+    {
+     "y": 18,
+     "x": 10,
+     "development_occurrences": 2
+    }
+   ]
+  },
+  {
+   "iso": 51200,
+   "roi": 1,
+   "phase": 3,
+   "development_pair_indices": [
+    6,
+    7
+   ],
+   "selected": []
+  },
+  {
+   "iso": 51200,
+   "roi": 2,
+   "phase": 0,
+   "development_pair_indices": [
+    6,
+    7
+   ],
+   "selected": [
+    {
+     "y": 12,
+     "x": 62,
+     "development_occurrences": 2
+    }
+   ]
+  },
+  {
+   "iso": 51200,
+   "roi": 2,
+   "phase": 1,
+   "development_pair_indices": [
+    6,
+    7
+   ],
+   "selected": []
+  },
+  {
+   "iso": 51200,
+   "roi": 2,
+   "phase": 2,
+   "development_pair_indices": [
+    6,
+    7
+   ],
+   "selected": []
+  },
+  {
+   "iso": 51200,
+   "roi": 2,
+   "phase": 3,
+   "development_pair_indices": [
+    6,
+    7
+   ],
+   "selected": [
+    {
+     "y": 23,
+     "x": 14,
+     "development_occurrences": 2
+    }
+   ]
+  }
+ ],
+ "frozen_at_utc": "2026-10-28T11:55:20.208589+00:00"
+}

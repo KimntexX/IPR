@@ -1,0 +1,29 @@
+{
+  "campaign_id": "noise-card-burst-capture-roles-v001-20261028T095153Z",
+  "schema_version": 1,
+  "data_version": 1,
+  "recorded_at_utc": "2026-10-28T09:51:53Z",
+  "record_kind": "user_capture_declaration_not_new_pixel_measurement",
+  "parent": {
+    "path": "qualification-rafales-carte-bruit-v001-20261028T094754Z.json",
+    "sha256": "3f24f988c9d9e0fa03deb7ee3300658e2bb5c30723767e361142140524d5808c"
+  },
+  "scope": {
+    "directory": "D:/DCIM/100EOSR6",
+    "first_filename": "6V1A9861.CR3",
+    "last_filename": "6V1A9932.CR3",
+    "file_count": 72,
+    "applies_to_all_parent_groups": true
+  },
+  "capture_roles": {
+    "source": "explicit_user_statement_in_conversation",
+    "statement_fr": "aucunes n'a été prises bouchon fermée, juste une pièce sombre",
+    "lens_cap_closed": false,
+    "scene": "dimly_lit_room",
+    "dark_reference_eligible": false,
+    "uniform_flat_field_confirmed": false
+  },
+  "interpretation": "All new bursts are illuminated scene observations, even when their estimated mean signal is near the prior black reference. Shared spatial structure can contain scene detail. No new black level, read-noise intercept or dark reference may be inferred solely by labeling a dim ROI as cap-on.",
+  "measurement_changes": false,
+  "limitations": "User declaration clarifies acquisition role, not illumination uniformity, motion, temperature or physical calibration. Parent measurements remain immutable."
+}

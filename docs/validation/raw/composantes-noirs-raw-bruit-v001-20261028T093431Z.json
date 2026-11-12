@@ -1,0 +1,4774 @@
+{
+ "schema_version": 1,
+ "data_version": 1,
+ "started_at_utc": "2026-10-28T09:34:31.875032+00:00",
+ "completed_at_utc": "2026-10-28T09:34:31.890261+00:00",
+ "parent": {
+  "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\audit-paires-bruit-v005-20261022T173747Z.json",
+  "sha256": "6001bc09b567f8137f5eeb152fa20831f12e0b623ec4f845678157fba4f0ff4c"
+ },
+ "records": [
+  {
+   "folder": "iso-100",
+   "plane": "R",
+   "left": "protocole\\blacks\\6V1A9791.CR3",
+   "right": "protocole\\blacks\\6V1A9792.CR3",
+   "source_sha256": [
+    "5efb293a7eb91549a1dd5c21a687b793a6f3d77715e2723e913166a9f91591d4",
+    "1fb8910297a52fa30abbac1c4ee6b0a0fa154fe1a07a9fc6b98fabfbf4e2249b"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:28",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 100,
+     "recommended_iso": 100,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:39",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 100,
+     "recommended_iso": 100,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 0,
+   "offset": [
+    0,
+    0
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    1262
+   ],
+   "means_dn": [
+    511.99249267578125,
+    512.0036010742188
+   ],
+   "sd_population_dn": [
+    1.0882696573525905,
+    1.0946086901757273
+   ],
+   "mean_difference_dn": -0.0111083984375,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 2.465697370361029,
+   "difference_horizontal_lag1": 0.16876315538681017,
+   "variance_a_dn2": 1.1844031373448756,
+   "variance_b_dn2": 1.1982413194543793,
+   "average_single_spatial_variance_dn2": 1.1913222283996274,
+   "paired_difference_variance_dn2": 1.1507653748240363,
+   "centered_cross_covariance_dn2": 0.040556853575591134,
+   "signed_covariance_fraction": 0.03404356320126211,
+   "centered_cross_correlation": 0.03404413739123322,
+   "pair_mean_spatial_variance_dn2": 0.6159395409876093
+  },
+  {
+   "folder": "iso-100",
+   "plane": "G1",
+   "left": "protocole\\blacks\\6V1A9791.CR3",
+   "right": "protocole\\blacks\\6V1A9792.CR3",
+   "source_sha256": [
+    "5efb293a7eb91549a1dd5c21a687b793a6f3d77715e2723e913166a9f91591d4",
+    "1fb8910297a52fa30abbac1c4ee6b0a0fa154fe1a07a9fc6b98fabfbf4e2249b"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:28",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 100,
+     "recommended_iso": 100,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:39",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 100,
+     "recommended_iso": 100,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 0,
+   "offset": [
+    0,
+    1
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    1262
+   ],
+   "means_dn": [
+    511.98492431640625,
+    511.96942138671875
+   ],
+   "sd_population_dn": [
+    1.090488337217749,
+    1.0825227368298302
+   ],
+   "mean_difference_dn": 0.0155029296875,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 2.129972759638852,
+   "difference_horizontal_lag1": 0.1421895358194357,
+   "variance_a_dn2": 1.189237398898391,
+   "variance_b_dn2": 1.1719270045013792,
+   "average_single_spatial_variance_dn2": 1.180582201699885,
+   "paired_difference_variance_dn2": 1.163097792097277,
+   "centered_cross_covariance_dn2": 0.01748440960260811,
+   "signed_covariance_fraction": 0.014809989154023184,
+   "centered_cross_correlation": 0.014810387172949047,
+   "pair_mean_spatial_variance_dn2": 0.5990333056512466
+  },
+  {
+   "folder": "iso-100",
+   "plane": "G2",
+   "left": "protocole\\blacks\\6V1A9791.CR3",
+   "right": "protocole\\blacks\\6V1A9792.CR3",
+   "source_sha256": [
+    "5efb293a7eb91549a1dd5c21a687b793a6f3d77715e2723e913166a9f91591d4",
+    "1fb8910297a52fa30abbac1c4ee6b0a0fa154fe1a07a9fc6b98fabfbf4e2249b"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:28",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 100,
+     "recommended_iso": 100,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:39",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 100,
+     "recommended_iso": 100,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 0,
+   "offset": [
+    1,
+    0
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    1262
+   ],
+   "means_dn": [
+    511.9732666015625,
+    511.95989990234375
+   ],
+   "sd_population_dn": [
+    1.103756977795829,
+    1.068019162462317
+   ],
+   "mean_difference_dn": 0.01336669921875,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 2.1181479232982543,
+   "difference_horizontal_lag1": 0.15194771787972353,
+   "variance_a_dn2": 1.2183538284492692,
+   "variance_b_dn2": 1.1407345562985924,
+   "average_single_spatial_variance_dn2": 1.179544192373931,
+   "paired_difference_variance_dn2": 1.1649903159638373,
+   "centered_cross_covariance_dn2": 0.014553876410093647,
+   "signed_covariance_fraction": 0.012338559677702926,
+   "centered_cross_correlation": 0.012345243701140048,
+   "pair_mean_spatial_variance_dn2": 0.5970490343920123
+  },
+  {
+   "folder": "iso-100",
+   "plane": "B",
+   "left": "protocole\\blacks\\6V1A9791.CR3",
+   "right": "protocole\\blacks\\6V1A9792.CR3",
+   "source_sha256": [
+    "5efb293a7eb91549a1dd5c21a687b793a6f3d77715e2723e913166a9f91591d4",
+    "1fb8910297a52fa30abbac1c4ee6b0a0fa154fe1a07a9fc6b98fabfbf4e2249b"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:28",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 100,
+     "recommended_iso": 100,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:39",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 100,
+     "recommended_iso": 100,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 0,
+   "offset": [
+    1,
+    1
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    1262
+   ],
+   "means_dn": [
+    512.0065307617188,
+    512.0075073242188
+   ],
+   "sd_population_dn": [
+    1.164830420166439,
+    1.1548258913367957
+   ],
+   "mean_difference_dn": -0.0009765625,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 2.0817124409272947,
+   "difference_horizontal_lag1": 0.16459322580408176,
+   "variance_a_dn2": 1.3569127271254406,
+   "variance_b_dn2": 1.3337042421486354,
+   "average_single_spatial_variance_dn2": 1.345308484637038,
+   "paired_difference_variance_dn2": 1.3269848127632302,
+   "centered_cross_covariance_dn2": 0.01832367187380779,
+   "signed_covariance_fraction": 0.013620423927342943,
+   "centered_cross_correlation": 0.01362093065509866,
+   "pair_mean_spatial_variance_dn2": 0.6818160782554229
+  },
+  {
+   "folder": "iso-100",
+   "plane": "R",
+   "left": "protocole\\blacks\\6V1A9791.CR3",
+   "right": "protocole\\blacks\\6V1A9792.CR3",
+   "source_sha256": [
+    "5efb293a7eb91549a1dd5c21a687b793a6f3d77715e2723e913166a9f91591d4",
+    "1fb8910297a52fa30abbac1c4ee6b0a0fa154fe1a07a9fc6b98fabfbf4e2249b"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:28",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 100,
+     "recommended_iso": 100,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:39",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 100,
+     "recommended_iso": 100,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 1,
+   "offset": [
+    0,
+    0
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    3350
+   ],
+   "means_dn": [
+    511.9786376953125,
+    511.97540283203125
+   ],
+   "sd_population_dn": [
+    1.0809102155710892,
+    1.0972902342744908
+   ],
+   "mean_difference_dn": 0.00323486328125,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 2.714537055872317,
+   "difference_horizontal_lag1": 0.16756274652168687,
+   "variance_a_dn2": 1.1684382099346504,
+   "variance_b_dn2": 1.2041193518469504,
+   "average_single_spatial_variance_dn2": 1.1862787808908004,
+   "paired_difference_variance_dn2": 1.181738037973695,
+   "centered_cross_covariance_dn2": 0.004540742917105378,
+   "signed_covariance_fraction": 0.0038277199173162683,
+   "centered_cross_correlation": 0.0038281528574107327,
+   "pair_mean_spatial_variance_dn2": 0.5954097619039529
+  },
+  {
+   "folder": "iso-100",
+   "plane": "G1",
+   "left": "protocole\\blacks\\6V1A9791.CR3",
+   "right": "protocole\\blacks\\6V1A9792.CR3",
+   "source_sha256": [
+    "5efb293a7eb91549a1dd5c21a687b793a6f3d77715e2723e913166a9f91591d4",
+    "1fb8910297a52fa30abbac1c4ee6b0a0fa154fe1a07a9fc6b98fabfbf4e2249b"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:28",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 100,
+     "recommended_iso": 100,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:39",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 100,
+     "recommended_iso": 100,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 1,
+   "offset": [
+    0,
+    1
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    3350
+   ],
+   "means_dn": [
+    511.97222900390625,
+    511.96051025390625
+   ],
+   "sd_population_dn": [
+    1.1027078541570796,
+    1.0892611607689413
+   ],
+   "mean_difference_dn": 0.01171875,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 1.7608318100671403,
+   "difference_horizontal_lag1": 0.15229298426994195,
+   "variance_a_dn2": 1.2160388327398735,
+   "variance_b_dn2": 1.186562298374983,
+   "average_single_spatial_variance_dn2": 1.2013005655574283,
+   "paired_difference_variance_dn2": 1.1702298113898553,
+   "centered_cross_covariance_dn2": 0.03107075416757299,
+   "signed_covariance_fraction": 0.02586426333126341,
+   "centered_cross_correlation": 0.025866210074325633,
+   "pair_mean_spatial_variance_dn2": 0.6161856598625006
+  },
+  {
+   "folder": "iso-100",
+   "plane": "G2",
+   "left": "protocole\\blacks\\6V1A9791.CR3",
+   "right": "protocole\\blacks\\6V1A9792.CR3",
+   "source_sha256": [
+    "5efb293a7eb91549a1dd5c21a687b793a6f3d77715e2723e913166a9f91591d4",
+    "1fb8910297a52fa30abbac1c4ee6b0a0fa154fe1a07a9fc6b98fabfbf4e2249b"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:28",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 100,
+     "recommended_iso": 100,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:39",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 100,
+     "recommended_iso": 100,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 1,
+   "offset": [
+    1,
+    0
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    3350
+   ],
+   "means_dn": [
+    511.96514892578125,
+    511.95501708984375
+   ],
+   "sd_population_dn": [
+    1.087456784472169,
+    1.0934108736312826
+   ],
+   "mean_difference_dn": 0.0101318359375,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 1.4253746113361878,
+   "difference_horizontal_lag1": 0.16655061555653358,
+   "variance_a_dn2": 1.182634440372404,
+   "variance_b_dn2": 1.1956203134477716,
+   "average_single_spatial_variance_dn2": 1.1891273769100879,
+   "paired_difference_variance_dn2": 1.1771445435889145,
+   "centered_cross_covariance_dn2": 0.011982833321173336,
+   "signed_covariance_fraction": 0.010076997261900044,
+   "centered_cross_correlation": 0.010077147484895167,
+   "pair_mean_spatial_variance_dn2": 0.6005551051156306
+  },
+  {
+   "folder": "iso-100",
+   "plane": "B",
+   "left": "protocole\\blacks\\6V1A9791.CR3",
+   "right": "protocole\\blacks\\6V1A9792.CR3",
+   "source_sha256": [
+    "5efb293a7eb91549a1dd5c21a687b793a6f3d77715e2723e913166a9f91591d4",
+    "1fb8910297a52fa30abbac1c4ee6b0a0fa154fe1a07a9fc6b98fabfbf4e2249b"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:28",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 100,
+     "recommended_iso": 100,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:39",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 100,
+     "recommended_iso": 100,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 1,
+   "offset": [
+    1,
+    1
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    3350
+   ],
+   "means_dn": [
+    511.98419189453125,
+    512.0032348632812
+   ],
+   "sd_population_dn": [
+    1.1802540470255711,
+    1.1851546677294071
+   ],
+   "mean_difference_dn": -0.01904296875,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 2.3972936274474215,
+   "difference_horizontal_lag1": 0.1623423674377052,
+   "variance_a_dn2": 1.3930846426590733,
+   "variance_b_dn2": 1.404677321140578,
+   "average_single_spatial_variance_dn2": 1.3988809818998256,
+   "paired_difference_variance_dn2": 1.3677610508987976,
+   "centered_cross_covariance_dn2": 0.031119931001027945,
+   "signed_covariance_fraction": 0.022246303583857326,
+   "centered_cross_correlation": 0.022246494560175,
+   "pair_mean_spatial_variance_dn2": 0.7150004564504268
+  },
+  {
+   "folder": "iso-100",
+   "plane": "R",
+   "left": "protocole\\blacks\\6V1A9791.CR3",
+   "right": "protocole\\blacks\\6V1A9792.CR3",
+   "source_sha256": [
+    "5efb293a7eb91549a1dd5c21a687b793a6f3d77715e2723e913166a9f91591d4",
+    "1fb8910297a52fa30abbac1c4ee6b0a0fa154fe1a07a9fc6b98fabfbf4e2249b"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:28",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 100,
+     "recommended_iso": 100,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:39",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 100,
+     "recommended_iso": 100,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 2,
+   "offset": [
+    0,
+    0
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    5438
+   ],
+   "means_dn": [
+    512.001708984375,
+    511.99053955078125
+   ],
+   "sd_population_dn": [
+    1.1307349523639065,
+    1.1405054954084304
+   ],
+   "mean_difference_dn": 0.01116943359375,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 2.3379912873630917,
+   "difference_horizontal_lag1": 0.16472221082677815,
+   "variance_a_dn2": 1.2786395744636208,
+   "variance_b_dn2": 1.3008321815522852,
+   "average_single_spatial_variance_dn2": 1.2897358780079529,
+   "paired_difference_variance_dn2": 1.2571859852790193,
+   "centered_cross_covariance_dn2": 0.032549892728933605,
+   "signed_covariance_fraction": 0.025237642283169,
+   "centered_cross_correlation": 0.025238576393102185,
+   "pair_mean_spatial_variance_dn2": 0.6611428853684432
+  },
+  {
+   "folder": "iso-100",
+   "plane": "G1",
+   "left": "protocole\\blacks\\6V1A9791.CR3",
+   "right": "protocole\\blacks\\6V1A9792.CR3",
+   "source_sha256": [
+    "5efb293a7eb91549a1dd5c21a687b793a6f3d77715e2723e913166a9f91591d4",
+    "1fb8910297a52fa30abbac1c4ee6b0a0fa154fe1a07a9fc6b98fabfbf4e2249b"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:28",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 100,
+     "recommended_iso": 100,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:39",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 100,
+     "recommended_iso": 100,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 2,
+   "offset": [
+    0,
+    1
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    5438
+   ],
+   "means_dn": [
+    511.94354248046875,
+    511.97381591796875
+   ],
+   "sd_population_dn": [
+    1.117618382664507,
+    1.0900542199551042
+   ],
+   "mean_difference_dn": -0.0302734375,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 1.7389136252268045,
+   "difference_horizontal_lag1": 0.15599522939007096,
+   "variance_a_dn2": 1.2491470911575164,
+   "variance_b_dn2": 1.1882907299523038,
+   "average_single_spatial_variance_dn2": 1.21871891055491,
+   "paired_difference_variance_dn2": 1.2120791178355612,
+   "centered_cross_covariance_dn2": 0.0066397927193488915,
+   "signed_covariance_fraction": 0.0054481740308153954,
+   "centered_cross_correlation": 0.005449872935245478,
+   "pair_mean_spatial_variance_dn2": 0.6126793516371295
+  },
+  {
+   "folder": "iso-100",
+   "plane": "G2",
+   "left": "protocole\\blacks\\6V1A9791.CR3",
+   "right": "protocole\\blacks\\6V1A9792.CR3",
+   "source_sha256": [
+    "5efb293a7eb91549a1dd5c21a687b793a6f3d77715e2723e913166a9f91591d4",
+    "1fb8910297a52fa30abbac1c4ee6b0a0fa154fe1a07a9fc6b98fabfbf4e2249b"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:28",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 100,
+     "recommended_iso": 100,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:39",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 100,
+     "recommended_iso": 100,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 2,
+   "offset": [
+    1,
+    0
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    5438
+   ],
+   "means_dn": [
+    511.92706298828125,
+    511.96002197265625
+   ],
+   "sd_population_dn": [
+    1.1180842192016613,
+    1.0700220406542813
+   ],
+   "mean_difference_dn": -0.032958984375,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 1.3491071916836384,
+   "difference_horizontal_lag1": 0.1646886702798624,
+   "variance_a_dn2": 1.2501886266859605,
+   "variance_b_dn2": 1.1450170537807387,
+   "average_single_spatial_variance_dn2": 1.1976028402333496,
+   "paired_difference_variance_dn2": 1.186846186548175,
+   "centered_cross_covariance_dn2": 0.010756653685174644,
+   "signed_covariance_fraction": 0.008981820453163538,
+   "centered_cross_correlation": 0.008990491550017521,
+   "pair_mean_spatial_variance_dn2": 0.6041797469592621
+  },
+  {
+   "folder": "iso-100",
+   "plane": "B",
+   "left": "protocole\\blacks\\6V1A9791.CR3",
+   "right": "protocole\\blacks\\6V1A9792.CR3",
+   "source_sha256": [
+    "5efb293a7eb91549a1dd5c21a687b793a6f3d77715e2723e913166a9f91591d4",
+    "1fb8910297a52fa30abbac1c4ee6b0a0fa154fe1a07a9fc6b98fabfbf4e2249b"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:28",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 100,
+     "recommended_iso": 100,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:39",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 100,
+     "recommended_iso": 100,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 2,
+   "offset": [
+    1,
+    1
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    5438
+   ],
+   "means_dn": [
+    511.95831298828125,
+    511.9600830078125
+   ],
+   "sd_population_dn": [
+    1.1500182512509143,
+    1.1802278948299363
+   ],
+   "mean_difference_dn": -0.00177001953125,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 2.4282192717137523,
+   "difference_horizontal_lag1": 0.16627476576891523,
+   "variance_a_dn2": 1.3226227046936518,
+   "variance_b_dn2": 1.393022907105498,
+   "average_single_spatial_variance_dn2": 1.357822805899575,
+   "paired_difference_variance_dn2": 1.359059655418226,
+   "centered_cross_covariance_dn2": -0.0012368495186509953,
+   "signed_covariance_fraction": -0.0009109064255490736,
+   "centered_cross_correlation": -0.0009112126672758049,
+   "pair_mean_spatial_variance_dn2": 0.678292978190462
+  },
+  {
+   "folder": "iso-1600",
+   "plane": "R",
+   "left": "protocole\\blacks\\6V1A9789.CR3",
+   "right": "protocole\\blacks\\6V1A9790.CR3",
+   "source_sha256": [
+    "3319724e8c2f07165938042c9671fbb53ceff4ca21e4c9295ebdad4d1f5a8999",
+    "d436d5a6a96687d906180a893406eebfa027eb9a5151611fde9e6a27bbd01235"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:10",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 1600,
+     "recommended_iso": 1600,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:15",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 1600,
+     "recommended_iso": 1600,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 0,
+   "offset": [
+    0,
+    0
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    1262
+   ],
+   "means_dn": [
+    2048.1735229492188,
+    2048.1256713867188
+   ],
+   "sd_population_dn": [
+    6.344277582815334,
+    6.319246484839307
+   ],
+   "mean_difference_dn": 0.0478515625,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 1.0474501164279633,
+   "difference_horizontal_lag1": 0.015212319447421406,
+   "variance_a_dn2": 40.25231485413972,
+   "variance_b_dn2": 39.93531359425906,
+   "average_single_spatial_variance_dn2": 40.09381422419939,
+   "paired_difference_variance_dn2": 36.87372533647684,
+   "centered_cross_covariance_dn2": 3.2200888877225537,
+   "signed_covariance_fraction": 0.08031385763689719,
+   "centered_cross_correlation": 0.08031448522227881,
+   "pair_mean_spatial_variance_dn2": 21.656951555960973
+  },
+  {
+   "folder": "iso-1600",
+   "plane": "G1",
+   "left": "protocole\\blacks\\6V1A9789.CR3",
+   "right": "protocole\\blacks\\6V1A9790.CR3",
+   "source_sha256": [
+    "3319724e8c2f07165938042c9671fbb53ceff4ca21e4c9295ebdad4d1f5a8999",
+    "d436d5a6a96687d906180a893406eebfa027eb9a5151611fde9e6a27bbd01235"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:10",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 1600,
+     "recommended_iso": 1600,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:15",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 1600,
+     "recommended_iso": 1600,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 0,
+   "offset": [
+    0,
+    1
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    1262
+   ],
+   "means_dn": [
+    2048.1296997070312,
+    2048.1661987304688
+   ],
+   "sd_population_dn": [
+    6.232756428180654,
+    6.243837004645807
+   ],
+   "mean_difference_dn": -0.0364990234375,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 1.2622082153568848,
+   "difference_horizontal_lag1": 0.01007833542018292,
+   "variance_a_dn2": 38.84962388589139,
+   "variance_b_dn2": 38.98788017194248,
+   "average_single_spatial_variance_dn2": 38.918752028916934,
+   "paired_difference_variance_dn2": 36.2345166814376,
+   "centered_cross_covariance_dn2": 2.684235347479337,
+   "signed_covariance_fraction": 0.06897023176603734,
+   "centered_cross_correlation": 0.06897034056498315,
+   "pair_mean_spatial_variance_dn2": 20.801493688198136
+  },
+  {
+   "folder": "iso-1600",
+   "plane": "G2",
+   "left": "protocole\\blacks\\6V1A9789.CR3",
+   "right": "protocole\\blacks\\6V1A9790.CR3",
+   "source_sha256": [
+    "3319724e8c2f07165938042c9671fbb53ceff4ca21e4c9295ebdad4d1f5a8999",
+    "d436d5a6a96687d906180a893406eebfa027eb9a5151611fde9e6a27bbd01235"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:10",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 1600,
+     "recommended_iso": 1600,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:15",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 1600,
+     "recommended_iso": 1600,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 0,
+   "offset": [
+    1,
+    0
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    1262
+   ],
+   "means_dn": [
+    2048.0973510742188,
+    2048.1712646484375
+   ],
+   "sd_population_dn": [
+    6.372154528474235,
+    6.26430702022443
+   ],
+   "mean_difference_dn": -0.07391357421875,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 0.7932238123242806,
+   "difference_horizontal_lag1": 0.029532693512987353,
+   "variance_a_dn2": 40.60683177907716,
+   "variance_b_dn2": 39.243937703502674,
+   "average_single_spatial_variance_dn2": 39.92538474128992,
+   "paired_difference_variance_dn2": 36.423838450272264,
+   "centered_cross_covariance_dn2": 3.501546291017654,
+   "signed_covariance_fraction": 0.08770225543741436,
+   "centered_cross_correlation": 0.08771503281307795,
+   "pair_mean_spatial_variance_dn2": 21.713465516153786
+  },
+  {
+   "folder": "iso-1600",
+   "plane": "B",
+   "left": "protocole\\blacks\\6V1A9789.CR3",
+   "right": "protocole\\blacks\\6V1A9790.CR3",
+   "source_sha256": [
+    "3319724e8c2f07165938042c9671fbb53ceff4ca21e4c9295ebdad4d1f5a8999",
+    "d436d5a6a96687d906180a893406eebfa027eb9a5151611fde9e6a27bbd01235"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:10",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 1600,
+     "recommended_iso": 1600,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:15",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 1600,
+     "recommended_iso": 1600,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 0,
+   "offset": [
+    1,
+    1
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    1262
+   ],
+   "means_dn": [
+    2048.1122436523438,
+    2048.0623168945312
+   ],
+   "sd_population_dn": [
+    7.216900567689344,
+    7.23250758181851
+   ],
+   "mean_difference_dn": 0.0499267578125,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 1.2319128165353739,
+   "difference_horizontal_lag1": 0.013200470156116131,
+   "variance_a_dn2": 52.08683293190134,
+   "variance_b_dn2": 52.31235881405625,
+   "average_single_spatial_variance_dn2": 52.1995958729788,
+   "paired_difference_variance_dn2": 46.78603308039155,
+   "centered_cross_covariance_dn2": 5.41356279258725,
+   "signed_covariance_fraction": 0.10370890237848736,
+   "centered_cross_correlation": 0.10370914436216341,
+   "pair_mean_spatial_variance_dn2": 28.806579332783024
+  },
+  {
+   "folder": "iso-1600",
+   "plane": "R",
+   "left": "protocole\\blacks\\6V1A9789.CR3",
+   "right": "protocole\\blacks\\6V1A9790.CR3",
+   "source_sha256": [
+    "3319724e8c2f07165938042c9671fbb53ceff4ca21e4c9295ebdad4d1f5a8999",
+    "d436d5a6a96687d906180a893406eebfa027eb9a5151611fde9e6a27bbd01235"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:10",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 1600,
+     "recommended_iso": 1600,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:15",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 1600,
+     "recommended_iso": 1600,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 1,
+   "offset": [
+    0,
+    0
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    3350
+   ],
+   "means_dn": [
+    2048.03271484375,
+    2048.0580444335938
+   ],
+   "sd_population_dn": [
+    6.428365337383479,
+    6.349028936883579
+   ],
+   "mean_difference_dn": -0.02532958984375,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 1.080791298934969,
+   "difference_horizontal_lag1": 0.01915333124330513,
+   "variance_a_dn2": 41.326403274354504,
+   "variance_b_dn2": 40.31262892899056,
+   "average_single_spatial_variance_dn2": 40.819516101672534,
+   "paired_difference_variance_dn2": 37.54930379723539,
+   "centered_cross_covariance_dn2": 3.2702123044371447,
+   "signed_covariance_fraction": 0.08011394099557077,
+   "centered_cross_correlation": 0.08012011853077014,
+   "pair_mean_spatial_variance_dn2": 22.04486420305484
+  },
+  {
+   "folder": "iso-1600",
+   "plane": "G1",
+   "left": "protocole\\blacks\\6V1A9789.CR3",
+   "right": "protocole\\blacks\\6V1A9790.CR3",
+   "source_sha256": [
+    "3319724e8c2f07165938042c9671fbb53ceff4ca21e4c9295ebdad4d1f5a8999",
+    "d436d5a6a96687d906180a893406eebfa027eb9a5151611fde9e6a27bbd01235"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:10",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 1600,
+     "recommended_iso": 1600,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:15",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 1600,
+     "recommended_iso": 1600,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 1,
+   "offset": [
+    0,
+    1
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    3350
+   ],
+   "means_dn": [
+    2048.0842895507812,
+    2048.0104370117188
+   ],
+   "sd_population_dn": [
+    6.290322060060625,
+    6.309672243682126
+   ],
+   "mean_difference_dn": 0.0738525390625,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 0.791128897638515,
+   "difference_horizontal_lag1": 0.0023636992898774484,
+   "variance_a_dn2": 39.57056681501379,
+   "variance_b_dn2": 39.814393900445346,
+   "average_single_spatial_variance_dn2": 39.692480357729565,
+   "paired_difference_variance_dn2": 37.03523891923745,
+   "centered_cross_covariance_dn2": 2.6572414384921146,
+   "signed_covariance_fraction": 0.06694571401292268,
+   "centered_cross_correlation": 0.0669460297919491,
+   "pair_mean_spatial_variance_dn2": 21.17486089811084
+  },
+  {
+   "folder": "iso-1600",
+   "plane": "G2",
+   "left": "protocole\\blacks\\6V1A9789.CR3",
+   "right": "protocole\\blacks\\6V1A9790.CR3",
+   "source_sha256": [
+    "3319724e8c2f07165938042c9671fbb53ceff4ca21e4c9295ebdad4d1f5a8999",
+    "d436d5a6a96687d906180a893406eebfa027eb9a5151611fde9e6a27bbd01235"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:10",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 1600,
+     "recommended_iso": 1600,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:15",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 1600,
+     "recommended_iso": 1600,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 1,
+   "offset": [
+    1,
+    0
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    3350
+   ],
+   "means_dn": [
+    2048.07470703125,
+    2048.1504516601562
+   ],
+   "sd_population_dn": [
+    6.406319352681718,
+    6.411222044708012
+   ],
+   "mean_difference_dn": -0.07574462890625,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 0.9898831320807452,
+   "difference_horizontal_lag1": 0.012012265688160105,
+   "variance_a_dn2": 41.043432740874685,
+   "variance_b_dn2": 41.10627703459164,
+   "average_single_spatial_variance_dn2": 41.07485488773317,
+   "paired_difference_variance_dn2": 36.650338793735195,
+   "centered_cross_covariance_dn2": 4.424516093997973,
+   "signed_covariance_fraction": 0.1077183621485985,
+   "centered_cross_correlation": 0.1077183936681166,
+   "pair_mean_spatial_variance_dn2": 22.74968549086557
+  },
+  {
+   "folder": "iso-1600",
+   "plane": "B",
+   "left": "protocole\\blacks\\6V1A9789.CR3",
+   "right": "protocole\\blacks\\6V1A9790.CR3",
+   "source_sha256": [
+    "3319724e8c2f07165938042c9671fbb53ceff4ca21e4c9295ebdad4d1f5a8999",
+    "d436d5a6a96687d906180a893406eebfa027eb9a5151611fde9e6a27bbd01235"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:10",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 1600,
+     "recommended_iso": 1600,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:15",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 1600,
+     "recommended_iso": 1600,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 1,
+   "offset": [
+    1,
+    1
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    3350
+   ],
+   "means_dn": [
+    2048.0889282226562,
+    2048.0361938476562
+   ],
+   "sd_population_dn": [
+    7.391654888187012,
+    7.370014275125123
+   ],
+   "mean_difference_dn": 0.052734375,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 0.7300768628212215,
+   "difference_horizontal_lag1": 0.016629135831493624,
+   "variance_a_dn2": 54.63989694070621,
+   "variance_b_dn2": 54.32042587122871,
+   "average_single_spatial_variance_dn2": 54.48016140596746,
+   "paired_difference_variance_dn2": 48.6214502075322,
+   "centered_cross_covariance_dn2": 5.858711198435259,
+   "signed_covariance_fraction": 0.10753843320650529,
+   "centered_cross_correlation": 0.10753889544149586,
+   "pair_mean_spatial_variance_dn2": 30.16943630220136
+  },
+  {
+   "folder": "iso-1600",
+   "plane": "R",
+   "left": "protocole\\blacks\\6V1A9789.CR3",
+   "right": "protocole\\blacks\\6V1A9790.CR3",
+   "source_sha256": [
+    "3319724e8c2f07165938042c9671fbb53ceff4ca21e4c9295ebdad4d1f5a8999",
+    "d436d5a6a96687d906180a893406eebfa027eb9a5151611fde9e6a27bbd01235"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:10",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 1600,
+     "recommended_iso": 1600,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:15",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 1600,
+     "recommended_iso": 1600,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 2,
+   "offset": [
+    0,
+    0
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    5438
+   ],
+   "means_dn": [
+    2047.9329223632812,
+    2048.1229248046875
+   ],
+   "sd_population_dn": [
+    6.4805677908215324,
+    6.519307400681459
+   ],
+   "mean_difference_dn": -0.19000244140625,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 1.056831177595062,
+   "difference_horizontal_lag1": 0.012771415984925366,
+   "variance_a_dn2": 42.00032238767296,
+   "variance_b_dn2": 42.503963220616455,
+   "average_single_spatial_variance_dn2": 42.25214280414471,
+   "paired_difference_variance_dn2": 38.318669425621145,
+   "centered_cross_covariance_dn2": 3.9334733785235656,
+   "signed_covariance_fraction": 0.09309524008656225,
+   "centered_cross_correlation": 0.09309689354563125,
+   "pair_mean_spatial_variance_dn2": 23.09280809133414
+  },
+  {
+   "folder": "iso-1600",
+   "plane": "G1",
+   "left": "protocole\\blacks\\6V1A9789.CR3",
+   "right": "protocole\\blacks\\6V1A9790.CR3",
+   "source_sha256": [
+    "3319724e8c2f07165938042c9671fbb53ceff4ca21e4c9295ebdad4d1f5a8999",
+    "d436d5a6a96687d906180a893406eebfa027eb9a5151611fde9e6a27bbd01235"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:10",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 1600,
+     "recommended_iso": 1600,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:15",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 1600,
+     "recommended_iso": 1600,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 2,
+   "offset": [
+    0,
+    1
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    5438
+   ],
+   "means_dn": [
+    2048.1876220703125,
+    2048.0572509765625
+   ],
+   "sd_population_dn": [
+    6.3549165198574125,
+    6.328878709860076
+   ],
+   "mean_difference_dn": 0.13037109375,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 1.3040791249343429,
+   "difference_horizontal_lag1": 0.018450394192641335,
+   "variance_a_dn2": 40.387429027397864,
+   "variance_b_dn2": 40.05715061856707,
+   "average_single_spatial_variance_dn2": 40.22228982298247,
+   "paired_difference_variance_dn2": 36.55836926520631,
+   "centered_cross_covariance_dn2": 3.6639205577761587,
+   "signed_covariance_fraction": 0.09109179447269172,
+   "centered_cross_correlation": 0.09109256222573468,
+   "pair_mean_spatial_variance_dn2": 21.943105190379313
+  },
+  {
+   "folder": "iso-1600",
+   "plane": "G2",
+   "left": "protocole\\blacks\\6V1A9789.CR3",
+   "right": "protocole\\blacks\\6V1A9790.CR3",
+   "source_sha256": [
+    "3319724e8c2f07165938042c9671fbb53ceff4ca21e4c9295ebdad4d1f5a8999",
+    "d436d5a6a96687d906180a893406eebfa027eb9a5151611fde9e6a27bbd01235"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:10",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 1600,
+     "recommended_iso": 1600,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:15",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 1600,
+     "recommended_iso": 1600,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 2,
+   "offset": [
+    1,
+    0
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    5438
+   ],
+   "means_dn": [
+    2048.0109252929688,
+    2048.1131591796875
+   ],
+   "sd_population_dn": [
+    6.350101905654137,
+    6.46536276655668
+   ],
+   "mean_difference_dn": -0.10223388671875,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 0.9492086539400649,
+   "difference_horizontal_lag1": 0.013577672097379763,
+   "variance_a_dn2": 40.32625553149965,
+   "variance_b_dn2": 41.80346718432884,
+   "average_single_spatial_variance_dn2": 41.06486135791424,
+   "paired_difference_variance_dn2": 37.40059080265355,
+   "centered_cross_covariance_dn2": 3.6642705552606927,
+   "signed_covariance_fraction": 0.089231290063871,
+   "centered_cross_correlation": 0.08924572707534575,
+   "pair_mean_spatial_variance_dn2": 22.364565956587466
+  },
+  {
+   "folder": "iso-1600",
+   "plane": "B",
+   "left": "protocole\\blacks\\6V1A9789.CR3",
+   "right": "protocole\\blacks\\6V1A9790.CR3",
+   "source_sha256": [
+    "3319724e8c2f07165938042c9671fbb53ceff4ca21e4c9295ebdad4d1f5a8999",
+    "d436d5a6a96687d906180a893406eebfa027eb9a5151611fde9e6a27bbd01235"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:10",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 1600,
+     "recommended_iso": 1600,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:15",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 1600,
+     "recommended_iso": 1600,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 2,
+   "offset": [
+    1,
+    1
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    5438
+   ],
+   "means_dn": [
+    2048.0652465820312,
+    2048.0208129882812
+   ],
+   "sd_population_dn": [
+    7.235645691099516,
+    7.263490541527713
+   ],
+   "mean_difference_dn": 0.04443359375,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 1.0184678707562345,
+   "difference_horizontal_lag1": 0.004949487601804357,
+   "variance_a_dn2": 52.35776423144776,
+   "variance_b_dn2": 52.761515154183975,
+   "average_single_spatial_variance_dn2": 52.559639692815864,
+   "paired_difference_variance_dn2": 49.024099748023865,
+   "centered_cross_covariance_dn2": 3.5355399447919993,
+   "signed_covariance_fraction": 0.06726720284719258,
+   "centered_cross_correlation": 0.0672676990285971,
+   "pair_mean_spatial_variance_dn2": 28.04758981880393
+  },
+  {
+   "folder": "iso-16000",
+   "plane": "R",
+   "left": "protocole\\blacks\\6V1A9801.CR3",
+   "right": "protocole\\blacks\\6V1A9802.CR3",
+   "source_sha256": [
+    "6cc9f7c661a6d3b2107cbd425f8d352aacfdaeb3457c580fa36d6afffc027af6",
+    "f8d71a03a039e3c8498fbf2c58e5cec3e84eb00c210878155c4080fd33bef4ec"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:17:48",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 16000,
+     "recommended_iso": 16000,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:17:51",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 16000,
+     "recommended_iso": 16000,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 0,
+   "offset": [
+    0,
+    0
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    1262
+   ],
+   "means_dn": [
+    2049.3259887695312,
+    2048.255859375
+   ],
+   "sd_population_dn": [
+    60.474993567959935,
+    60.32694402693263
+   ],
+   "mean_difference_dn": 1.07012939453125,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 0.9539011887643498,
+   "difference_horizontal_lag1": 0.012324855554596247,
+   "variance_a_dn2": 3657.448079959832,
+   "variance_b_dn2": 3639.562316883355,
+   "average_single_spatial_variance_dn2": 3648.5051984215934,
+   "paired_difference_variance_dn2": 3366.5825069073335,
+   "centered_cross_covariance_dn2": 281.9226915142599,
+   "signed_covariance_fraction": 0.0772707386126857,
+   "centered_cross_correlation": 0.07727097073240778,
+   "pair_mean_spatial_variance_dn2": 1965.2139449679266
+  },
+  {
+   "folder": "iso-16000",
+   "plane": "G1",
+   "left": "protocole\\blacks\\6V1A9801.CR3",
+   "right": "protocole\\blacks\\6V1A9802.CR3",
+   "source_sha256": [
+    "6cc9f7c661a6d3b2107cbd425f8d352aacfdaeb3457c580fa36d6afffc027af6",
+    "f8d71a03a039e3c8498fbf2c58e5cec3e84eb00c210878155c4080fd33bef4ec"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:17:48",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 16000,
+     "recommended_iso": 16000,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:17:51",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 16000,
+     "recommended_iso": 16000,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 0,
+   "offset": [
+    0,
+    1
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    1262
+   ],
+   "means_dn": [
+    2047.5328369140625,
+    2049.018798828125
+   ],
+   "sd_population_dn": [
+    59.81748890063591,
+    60.17101391978792
+   ],
+   "mean_difference_dn": -1.4859619140625,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 1.2654698425090425,
+   "difference_horizontal_lag1": 0.004432620397170731,
+   "variance_a_dn2": 3578.350383552477,
+   "variance_b_dn2": 3620.771910514615,
+   "average_single_spatial_variance_dn2": 3599.561147033546,
+   "paired_difference_variance_dn2": 3377.5339306366427,
+   "centered_cross_covariance_dn2": 222.02721639690344,
+   "signed_covariance_fraction": 0.06168174600392037,
+   "centered_cross_correlation": 0.06168281691019836,
+   "pair_mean_spatial_variance_dn2": 1910.7941817152248
+  },
+  {
+   "folder": "iso-16000",
+   "plane": "G2",
+   "left": "protocole\\blacks\\6V1A9801.CR3",
+   "right": "protocole\\blacks\\6V1A9802.CR3",
+   "source_sha256": [
+    "6cc9f7c661a6d3b2107cbd425f8d352aacfdaeb3457c580fa36d6afffc027af6",
+    "f8d71a03a039e3c8498fbf2c58e5cec3e84eb00c210878155c4080fd33bef4ec"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:17:48",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 16000,
+     "recommended_iso": 16000,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:17:51",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 16000,
+     "recommended_iso": 16000,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 0,
+   "offset": [
+    1,
+    0
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    1262
+   ],
+   "means_dn": [
+    2049.0182495117188,
+    2049.3543701171875
+   ],
+   "sd_population_dn": [
+    59.459138341278994,
+    60.19563368217141
+   ],
+   "mean_difference_dn": -0.33612060546875,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 1.1653264039322249,
+   "difference_horizontal_lag1": 0.01246342656172088,
+   "variance_a_dn2": 3535.604928486602,
+   "variance_b_dn2": 3623.7354896599895,
+   "average_single_spatial_variance_dn2": 3579.670209073296,
+   "paired_difference_variance_dn2": 3255.316302991689,
+   "centered_cross_covariance_dn2": 324.35390608160697,
+   "signed_covariance_fraction": 0.09060999676994703,
+   "centered_cross_correlation": 0.09061686274980359,
+   "pair_mean_spatial_variance_dn2": 1952.0120575774515
+  },
+  {
+   "folder": "iso-16000",
+   "plane": "B",
+   "left": "protocole\\blacks\\6V1A9801.CR3",
+   "right": "protocole\\blacks\\6V1A9802.CR3",
+   "source_sha256": [
+    "6cc9f7c661a6d3b2107cbd425f8d352aacfdaeb3457c580fa36d6afffc027af6",
+    "f8d71a03a039e3c8498fbf2c58e5cec3e84eb00c210878155c4080fd33bef4ec"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:17:48",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 16000,
+     "recommended_iso": 16000,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:17:51",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 16000,
+     "recommended_iso": 16000,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 0,
+   "offset": [
+    1,
+    1
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    1262
+   ],
+   "means_dn": [
+    2049.732421875,
+    2049.371337890625
+   ],
+   "sd_population_dn": [
+    68.09765476552191,
+    68.14713336528075
+   ],
+   "mean_difference_dn": 0.361083984375,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 1.2896388021155671,
+   "difference_horizontal_lag1": -0.0025999450462874255,
+   "variance_a_dn2": 4637.573639595923,
+   "variance_b_dn2": 4644.315252412466,
+   "average_single_spatial_variance_dn2": 4640.944446004194,
+   "paired_difference_variance_dn2": 4271.885974093525,
+   "centered_cross_covariance_dn2": 369.05847191066914,
+   "signed_covariance_fraction": 0.07952227745980125,
+   "centered_cross_correlation": 0.07952229843537591,
+   "pair_mean_spatial_variance_dn2": 2505.0014589574316
+  },
+  {
+   "folder": "iso-16000",
+   "plane": "R",
+   "left": "protocole\\blacks\\6V1A9801.CR3",
+   "right": "protocole\\blacks\\6V1A9802.CR3",
+   "source_sha256": [
+    "6cc9f7c661a6d3b2107cbd425f8d352aacfdaeb3457c580fa36d6afffc027af6",
+    "f8d71a03a039e3c8498fbf2c58e5cec3e84eb00c210878155c4080fd33bef4ec"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:17:48",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 16000,
+     "recommended_iso": 16000,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:17:51",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 16000,
+     "recommended_iso": 16000,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 1,
+   "offset": [
+    0,
+    0
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    3350
+   ],
+   "means_dn": [
+    2048.8499755859375,
+    2048.2279663085938
+   ],
+   "sd_population_dn": [
+    60.40507146499216,
+    61.2928459166432
+   ],
+   "mean_difference_dn": 0.62200927734375,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 1.2762780991559821,
+   "difference_horizontal_lag1": 0.005296268367388723,
+   "variance_a_dn2": 3648.995375693721,
+   "variance_b_dn2": 3757.0422722234885,
+   "average_single_spatial_variance_dn2": 3703.018823958605,
+   "paired_difference_variance_dn2": 3480.1099341834397,
+   "centered_cross_covariance_dn2": 222.90888977516533,
+   "signed_covariance_fraction": 0.060196531633309666,
+   "centered_cross_correlation": 0.06020293876380855,
+   "pair_mean_spatial_variance_dn2": 1962.9638568668852
+  },
+  {
+   "folder": "iso-16000",
+   "plane": "G1",
+   "left": "protocole\\blacks\\6V1A9801.CR3",
+   "right": "protocole\\blacks\\6V1A9802.CR3",
+   "source_sha256": [
+    "6cc9f7c661a6d3b2107cbd425f8d352aacfdaeb3457c580fa36d6afffc027af6",
+    "f8d71a03a039e3c8498fbf2c58e5cec3e84eb00c210878155c4080fd33bef4ec"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:17:48",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 16000,
+     "recommended_iso": 16000,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:17:51",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 16000,
+     "recommended_iso": 16000,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 1,
+   "offset": [
+    0,
+    1
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    3350
+   ],
+   "means_dn": [
+    2047.3285522460938,
+    2049.5171508789062
+   ],
+   "sd_population_dn": [
+    59.60111468162891,
+    60.42153416463612
+   ],
+   "mean_difference_dn": -2.1885986328125,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 0.9442798428607982,
+   "difference_horizontal_lag1": 0.009421347799642986,
+   "variance_a_dn2": 3552.509699277256,
+   "variance_b_dn2": 3650.984629225601,
+   "average_single_spatial_variance_dn2": 3601.7471642514283,
+   "paired_difference_variance_dn2": 3402.337948795233,
+   "centered_cross_covariance_dn2": 199.4092154561954,
+   "signed_covariance_fraction": 0.05536457901193066,
+   "centered_cross_correlation": 0.05536975302839554,
+   "pair_mean_spatial_variance_dn2": 1900.5781898538119
+  },
+  {
+   "folder": "iso-16000",
+   "plane": "G2",
+   "left": "protocole\\blacks\\6V1A9801.CR3",
+   "right": "protocole\\blacks\\6V1A9802.CR3",
+   "source_sha256": [
+    "6cc9f7c661a6d3b2107cbd425f8d352aacfdaeb3457c580fa36d6afffc027af6",
+    "f8d71a03a039e3c8498fbf2c58e5cec3e84eb00c210878155c4080fd33bef4ec"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:17:48",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 16000,
+     "recommended_iso": 16000,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:17:51",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 16000,
+     "recommended_iso": 16000,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 1,
+   "offset": [
+    1,
+    0
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    3350
+   ],
+   "means_dn": [
+    2048.3677368164062,
+    2050.072509765625
+   ],
+   "sd_population_dn": [
+    60.36411195660581,
+    60.49923118337291
+   ],
+   "mean_difference_dn": -1.70477294921875,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 1.1119739997375393,
+   "difference_horizontal_lag1": -0.0010197266614646037,
+   "variance_a_dn2": 3644.048427374788,
+   "variance_b_dn2": 3660.380385667975,
+   "average_single_spatial_variance_dn2": 3652.2144065213815,
+   "paired_difference_variance_dn2": 3332.963284708398,
+   "centered_cross_covariance_dn2": 319.25112181298346,
+   "signed_covariance_fraction": 0.08741302844732493,
+   "centered_cross_correlation": 0.0874132469475064,
+   "pair_mean_spatial_variance_dn2": 1985.7327641671825
+  },
+  {
+   "folder": "iso-16000",
+   "plane": "B",
+   "left": "protocole\\blacks\\6V1A9801.CR3",
+   "right": "protocole\\blacks\\6V1A9802.CR3",
+   "source_sha256": [
+    "6cc9f7c661a6d3b2107cbd425f8d352aacfdaeb3457c580fa36d6afffc027af6",
+    "f8d71a03a039e3c8498fbf2c58e5cec3e84eb00c210878155c4080fd33bef4ec"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:17:48",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 16000,
+     "recommended_iso": 16000,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:17:51",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 16000,
+     "recommended_iso": 16000,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 1,
+   "offset": [
+    1,
+    1
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    3350
+   ],
+   "means_dn": [
+    2048.4606323242188,
+    2048.89208984375
+   ],
+   "sd_population_dn": [
+    69.34617424777873,
+    68.9913436169354
+   ],
+   "mean_difference_dn": -0.43145751953125,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 0.9576200154618649,
+   "difference_horizontal_lag1": 0.003860550343451108,
+   "variance_a_dn2": 4809.185412186358,
+   "variance_b_dn2": 4760.096027274842,
+   "average_single_spatial_variance_dn2": 4784.6407197306,
+   "paired_difference_variance_dn2": 4287.02585078418,
+   "centered_cross_covariance_dn2": 497.61486894641985,
+   "signed_covariance_fraction": 0.10400255695153598,
+   "centered_cross_correlation": 0.10400392543362712,
+   "pair_mean_spatial_variance_dn2": 2641.12779433851
+  },
+  {
+   "folder": "iso-16000",
+   "plane": "R",
+   "left": "protocole\\blacks\\6V1A9801.CR3",
+   "right": "protocole\\blacks\\6V1A9802.CR3",
+   "source_sha256": [
+    "6cc9f7c661a6d3b2107cbd425f8d352aacfdaeb3457c580fa36d6afffc027af6",
+    "f8d71a03a039e3c8498fbf2c58e5cec3e84eb00c210878155c4080fd33bef4ec"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:17:48",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 16000,
+     "recommended_iso": 16000,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:17:51",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 16000,
+     "recommended_iso": 16000,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 2,
+   "offset": [
+    0,
+    0
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    5438
+   ],
+   "means_dn": [
+    2048.556640625,
+    2048.28173828125
+   ],
+   "sd_population_dn": [
+    61.19245415212493,
+    61.995600142408826
+   ],
+   "mean_difference_dn": 0.27490234375,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 1.1811501965008702,
+   "difference_horizontal_lag1": 0.0030042698574653196,
+   "variance_a_dn2": 3744.745006256485,
+   "variance_b_dn2": 3843.689037178402,
+   "average_single_spatial_variance_dn2": 3794.2170217174435,
+   "paired_difference_variance_dn2": 3602.6480449198484,
+   "centered_cross_covariance_dn2": 191.56897679759504,
+   "signed_covariance_fraction": 0.0504897257328949,
+   "centered_cross_correlation": 0.050494018163346636,
+   "pair_mean_spatial_variance_dn2": 1992.8929992575193
+  },
+  {
+   "folder": "iso-16000",
+   "plane": "G1",
+   "left": "protocole\\blacks\\6V1A9801.CR3",
+   "right": "protocole\\blacks\\6V1A9802.CR3",
+   "source_sha256": [
+    "6cc9f7c661a6d3b2107cbd425f8d352aacfdaeb3457c580fa36d6afffc027af6",
+    "f8d71a03a039e3c8498fbf2c58e5cec3e84eb00c210878155c4080fd33bef4ec"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:17:48",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 16000,
+     "recommended_iso": 16000,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:17:51",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 16000,
+     "recommended_iso": 16000,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 2,
+   "offset": [
+    0,
+    1
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    5438
+   ],
+   "means_dn": [
+    2047.8358154296875,
+    2048.3854370117188
+   ],
+   "sd_population_dn": [
+    60.0047037663793,
+    60.12638613697008
+   ],
+   "mean_difference_dn": -0.54962158203125,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 1.1903077779676103,
+   "difference_horizontal_lag1": -0.0005248896487734541,
+   "variance_a_dn2": 3600.7842485201654,
+   "variance_b_dn2": 3615.4029765776104,
+   "average_single_spatial_variance_dn2": 3608.093612548888,
+   "paired_difference_variance_dn2": 3365.6991899424347,
+   "centered_cross_covariance_dn2": 242.3944226064532,
+   "signed_covariance_fraction": 0.06718074657581209,
+   "centered_cross_correlation": 0.06718088442993406,
+   "pair_mean_spatial_variance_dn2": 1925.2440175776705
+  },
+  {
+   "folder": "iso-16000",
+   "plane": "G2",
+   "left": "protocole\\blacks\\6V1A9801.CR3",
+   "right": "protocole\\blacks\\6V1A9802.CR3",
+   "source_sha256": [
+    "6cc9f7c661a6d3b2107cbd425f8d352aacfdaeb3457c580fa36d6afffc027af6",
+    "f8d71a03a039e3c8498fbf2c58e5cec3e84eb00c210878155c4080fd33bef4ec"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:17:48",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 16000,
+     "recommended_iso": 16000,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:17:51",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 16000,
+     "recommended_iso": 16000,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 2,
+   "offset": [
+    1,
+    0
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    5438
+   ],
+   "means_dn": [
+    2048.2450561523438,
+    2048.9290161132812
+   ],
+   "sd_population_dn": [
+    60.767252716063936,
+    60.5308640351235
+   ],
+   "mean_difference_dn": -0.6839599609375,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 1.3867117615630649,
+   "difference_horizontal_lag1": 0.015723253854457126,
+   "variance_a_dn2": 3692.884398434251,
+   "variance_b_dn2": 3664.209146416392,
+   "average_single_spatial_variance_dn2": 3678.5467724253213,
+   "paired_difference_variance_dn2": 3349.462966022027,
+   "centered_cross_covariance_dn2": 329.08380640329415,
+   "signed_covariance_fraction": 0.08946027514727622,
+   "centered_cross_correlation": 0.08946095467489494,
+   "pair_mean_spatial_variance_dn2": 2003.8152894143077
+  },
+  {
+   "folder": "iso-16000",
+   "plane": "B",
+   "left": "protocole\\blacks\\6V1A9801.CR3",
+   "right": "protocole\\blacks\\6V1A9802.CR3",
+   "source_sha256": [
+    "6cc9f7c661a6d3b2107cbd425f8d352aacfdaeb3457c580fa36d6afffc027af6",
+    "f8d71a03a039e3c8498fbf2c58e5cec3e84eb00c210878155c4080fd33bef4ec"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:17:48",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 16000,
+     "recommended_iso": 16000,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:17:51",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 16000,
+     "recommended_iso": 16000,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 2,
+   "offset": [
+    1,
+    1
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    5438
+   ],
+   "means_dn": [
+    2049.7444458007812,
+    2048.274658203125
+   ],
+   "sd_population_dn": [
+    67.8918184385933,
+    68.1820566498567
+   ],
+   "mean_difference_dn": 1.46978759765625,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 0.9341310917751974,
+   "difference_horizontal_lag1": 0.014138634457714898,
+   "variance_a_dn2": 4609.580357356276,
+   "variance_b_dn2": 4649.076606121342,
+   "average_single_spatial_variance_dn2": 4629.3284817388085,
+   "paired_difference_variance_dn2": 4276.931546263225,
+   "centered_cross_covariance_dn2": 352.39693547558363,
+   "signed_covariance_fraction": 0.07612268968721374,
+   "centered_cross_correlation": 0.07612338232434343,
+   "pair_mean_spatial_variance_dn2": 2490.862708607196
+  },
+  {
+   "folder": "iso-3200",
+   "plane": "R",
+   "left": "protocole\\blacks\\6V1A9787.CR3",
+   "right": "protocole\\blacks\\6V1A9788.CR3",
+   "source_sha256": [
+    "8a2790ea816313dff99c42e1e691456828d1b590fac63770b492a8fb709639e1",
+    "0859eebb50b15a0e7ac082222c42d65c47f3f1b2988a8a1c2085bff0868bcb20"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:05:58",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 3200,
+     "recommended_iso": 3200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:03",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 3200,
+     "recommended_iso": 3200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 0,
+   "offset": [
+    0,
+    0
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    1262
+   ],
+   "means_dn": [
+    2048.0647583007812,
+    2048.1598510742188
+   ],
+   "sd_population_dn": [
+    13.120624018094516,
+    13.151717482204647
+   ],
+   "mean_difference_dn": -0.0950927734375,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 0.9479353840393109,
+   "difference_horizontal_lag1": 0.0018231471933060875,
+   "variance_a_dn2": 172.1612825149772,
+   "variance_b_dn2": 172.97823048505288,
+   "average_single_spatial_variance_dn2": 172.56975650001505,
+   "paired_difference_variance_dn2": 159.01617058716306,
+   "centered_cross_covariance_dn2": 13.553585912851986,
+   "signed_covariance_fraction": 0.07853975220073284,
+   "centered_cross_correlation": 0.0785399722200376,
+   "pair_mean_spatial_variance_dn2": 93.06167120643352
+  },
+  {
+   "folder": "iso-3200",
+   "plane": "G1",
+   "left": "protocole\\blacks\\6V1A9787.CR3",
+   "right": "protocole\\blacks\\6V1A9788.CR3",
+   "source_sha256": [
+    "8a2790ea816313dff99c42e1e691456828d1b590fac63770b492a8fb709639e1",
+    "0859eebb50b15a0e7ac082222c42d65c47f3f1b2988a8a1c2085bff0868bcb20"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:05:58",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 3200,
+     "recommended_iso": 3200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:03",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 3200,
+     "recommended_iso": 3200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 0,
+   "offset": [
+    0,
+    1
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    1262
+   ],
+   "means_dn": [
+    2048.4884033203125,
+    2048.111572265625
+   ],
+   "sd_population_dn": [
+    12.857480582263005,
+    12.786855161093884
+   ],
+   "mean_difference_dn": 0.3768310546875,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 1.075280489309547,
+   "difference_horizontal_lag1": 0.0012064753766165128,
+   "variance_a_dn2": 165.32489755422446,
+   "variance_b_dn2": 163.51364499166436,
+   "average_single_spatial_variance_dn2": 164.4192712729444,
+   "paired_difference_variance_dn2": 151.8492780647122,
+   "centered_cross_covariance_dn2": 12.569993208232205,
+   "signed_covariance_fraction": 0.07645085099158098,
+   "centered_cross_correlation": 0.07645201071601355,
+   "pair_mean_spatial_variance_dn2": 88.4946322405883
+  },
+  {
+   "folder": "iso-3200",
+   "plane": "G2",
+   "left": "protocole\\blacks\\6V1A9787.CR3",
+   "right": "protocole\\blacks\\6V1A9788.CR3",
+   "source_sha256": [
+    "8a2790ea816313dff99c42e1e691456828d1b590fac63770b492a8fb709639e1",
+    "0859eebb50b15a0e7ac082222c42d65c47f3f1b2988a8a1c2085bff0868bcb20"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:05:58",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 3200,
+     "recommended_iso": 3200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:03",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 3200,
+     "recommended_iso": 3200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 0,
+   "offset": [
+    1,
+    0
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    1262
+   ],
+   "means_dn": [
+    2047.8159790039062,
+    2048.2039184570312
+   ],
+   "sd_population_dn": [
+    12.912127371028095,
+    12.861443552384127
+   ],
+   "mean_difference_dn": -0.387939453125,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 1.1796775793456367,
+   "difference_horizontal_lag1": -0.004071106042120913,
+   "variance_a_dn2": 166.73320983316714,
+   "variance_b_dn2": 165.42682710340344,
+   "average_single_spatial_variance_dn2": 166.0800184682853,
+   "paired_difference_variance_dn2": 150.80547692229558,
+   "centered_cross_covariance_dn2": 15.274541545989706,
+   "signed_covariance_fraction": 0.09197097692343127,
+   "centered_cross_correlation": 0.0919716882547707,
+   "pair_mean_spatial_variance_dn2": 90.6772800071375
+  },
+  {
+   "folder": "iso-3200",
+   "plane": "B",
+   "left": "protocole\\blacks\\6V1A9787.CR3",
+   "right": "protocole\\blacks\\6V1A9788.CR3",
+   "source_sha256": [
+    "8a2790ea816313dff99c42e1e691456828d1b590fac63770b492a8fb709639e1",
+    "0859eebb50b15a0e7ac082222c42d65c47f3f1b2988a8a1c2085bff0868bcb20"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:05:58",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 3200,
+     "recommended_iso": 3200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:03",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 3200,
+     "recommended_iso": 3200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 0,
+   "offset": [
+    1,
+    1
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    1262
+   ],
+   "means_dn": [
+    2048.1265258789062,
+    2048.098388671875
+   ],
+   "sd_population_dn": [
+    14.870635011174228,
+    14.814884345983659
+   ],
+   "mean_difference_dn": 0.02813720703125,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 0.9073163879274025,
+   "difference_horizontal_lag1": 0.0029169030714795287,
+   "variance_a_dn2": 221.14928351663474,
+   "variance_b_dn2": 219.49419504736235,
+   "average_single_spatial_variance_dn2": 220.32173928199853,
+   "paired_difference_variance_dn2": 196.31819656801437,
+   "centered_cross_covariance_dn2": 24.00354271398416,
+   "signed_covariance_fraction": 0.10894768165959817,
+   "centered_cross_correlation": 0.10894845018871285,
+   "pair_mean_spatial_variance_dn2": 122.16264099799135
+  },
+  {
+   "folder": "iso-3200",
+   "plane": "R",
+   "left": "protocole\\blacks\\6V1A9787.CR3",
+   "right": "protocole\\blacks\\6V1A9788.CR3",
+   "source_sha256": [
+    "8a2790ea816313dff99c42e1e691456828d1b590fac63770b492a8fb709639e1",
+    "0859eebb50b15a0e7ac082222c42d65c47f3f1b2988a8a1c2085bff0868bcb20"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:05:58",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 3200,
+     "recommended_iso": 3200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:03",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 3200,
+     "recommended_iso": 3200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 1,
+   "offset": [
+    0,
+    0
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    3350
+   ],
+   "means_dn": [
+    2047.895751953125,
+    2047.8720703125
+   ],
+   "sd_population_dn": [
+    13.276547752911814,
+    13.328578033439788
+   ],
+   "mean_difference_dn": 0.023681640625,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 1.0406764596332656,
+   "difference_horizontal_lag1": 0.006247292153030685,
+   "variance_a_dn2": 176.27747935884375,
+   "variance_b_dn2": 177.66183601141427,
+   "average_single_spatial_variance_dn2": 176.969657685129,
+   "paired_difference_variance_dn2": 162.0838311519086,
+   "centered_cross_covariance_dn2": 14.885826533220381,
+   "signed_covariance_fraction": 0.08411513435656749,
+   "centered_cross_correlation": 0.08411577776611545,
+   "pair_mean_spatial_variance_dn2": 95.92774210917469
+  },
+  {
+   "folder": "iso-3200",
+   "plane": "G1",
+   "left": "protocole\\blacks\\6V1A9787.CR3",
+   "right": "protocole\\blacks\\6V1A9788.CR3",
+   "source_sha256": [
+    "8a2790ea816313dff99c42e1e691456828d1b590fac63770b492a8fb709639e1",
+    "0859eebb50b15a0e7ac082222c42d65c47f3f1b2988a8a1c2085bff0868bcb20"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:05:58",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 3200,
+     "recommended_iso": 3200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:03",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 3200,
+     "recommended_iso": 3200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 1,
+   "offset": [
+    0,
+    1
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    3350
+   ],
+   "means_dn": [
+    2048.1341552734375,
+    2048.0806274414062
+   ],
+   "sd_population_dn": [
+    12.817879793541184,
+    12.882001118963371
+   ],
+   "mean_difference_dn": 0.05352783203125,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 1.137809030468645,
+   "difference_horizontal_lag1": 0.008209442550090065,
+   "variance_a_dn2": 164.30807097045619,
+   "variance_b_dn2": 165.95608198436813,
+   "average_single_spatial_variance_dn2": 165.13207647741217,
+   "paired_difference_variance_dn2": 152.61185546271466,
+   "centered_cross_covariance_dn2": 12.520221014697512,
+   "signed_covariance_fraction": 0.0758194366701984,
+   "centered_cross_correlation": 0.07582038063546026,
+   "pair_mean_spatial_variance_dn2": 88.82614874605484
+  },
+  {
+   "folder": "iso-3200",
+   "plane": "G2",
+   "left": "protocole\\blacks\\6V1A9787.CR3",
+   "right": "protocole\\blacks\\6V1A9788.CR3",
+   "source_sha256": [
+    "8a2790ea816313dff99c42e1e691456828d1b590fac63770b492a8fb709639e1",
+    "0859eebb50b15a0e7ac082222c42d65c47f3f1b2988a8a1c2085bff0868bcb20"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:05:58",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 3200,
+     "recommended_iso": 3200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:03",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 3200,
+     "recommended_iso": 3200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 1,
+   "offset": [
+    1,
+    0
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    3350
+   ],
+   "means_dn": [
+    2047.9558715820312,
+    2048.108154296875
+   ],
+   "sd_population_dn": [
+    13.099480154549887,
+    13.061986828721444
+   ],
+   "mean_difference_dn": -0.15228271484375,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 1.2280464904539998,
+   "difference_horizontal_lag1": 0.002229480976455205,
+   "variance_a_dn2": 171.60685437061645,
+   "variance_b_dn2": 170.62591409301947,
+   "average_single_spatial_variance_dn2": 171.11638423181796,
+   "paired_difference_variance_dn2": 156.34569537406045,
+   "centered_cross_covariance_dn2": 14.770688857757506,
+   "signed_covariance_fraction": 0.08631954750602423,
+   "centered_cross_correlation": 0.08631990209382388,
+   "pair_mean_spatial_variance_dn2": 92.94353654478773
+  },
+  {
+   "folder": "iso-3200",
+   "plane": "B",
+   "left": "protocole\\blacks\\6V1A9787.CR3",
+   "right": "protocole\\blacks\\6V1A9788.CR3",
+   "source_sha256": [
+    "8a2790ea816313dff99c42e1e691456828d1b590fac63770b492a8fb709639e1",
+    "0859eebb50b15a0e7ac082222c42d65c47f3f1b2988a8a1c2085bff0868bcb20"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:05:58",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 3200,
+     "recommended_iso": 3200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:03",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 3200,
+     "recommended_iso": 3200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 1,
+   "offset": [
+    1,
+    1
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    3350
+   ],
+   "means_dn": [
+    2048.0874633789062,
+    2047.8931274414062
+   ],
+   "sd_population_dn": [
+    14.894800505241554,
+    15.004173951639704
+   ],
+   "mean_difference_dn": 0.1943359375,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 1.0365340550154933,
+   "difference_horizontal_lag1": -0.0032435284723856574,
+   "variance_a_dn2": 221.86862387706935,
+   "variance_b_dn2": 225.13897736372476,
+   "average_single_spatial_variance_dn2": 223.50380062039704,
+   "paired_difference_variance_dn2": 198.7018627349997,
+   "centered_cross_covariance_dn2": 24.801937885397336,
+   "signed_covariance_fraction": 0.11096875228319451,
+   "centered_cross_correlation": 0.11097172222349896,
+   "pair_mean_spatial_variance_dn2": 124.15286925289719
+  },
+  {
+   "folder": "iso-3200",
+   "plane": "R",
+   "left": "protocole\\blacks\\6V1A9787.CR3",
+   "right": "protocole\\blacks\\6V1A9788.CR3",
+   "source_sha256": [
+    "8a2790ea816313dff99c42e1e691456828d1b590fac63770b492a8fb709639e1",
+    "0859eebb50b15a0e7ac082222c42d65c47f3f1b2988a8a1c2085bff0868bcb20"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:05:58",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 3200,
+     "recommended_iso": 3200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:03",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 3200,
+     "recommended_iso": 3200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 2,
+   "offset": [
+    0,
+    0
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    5438
+   ],
+   "means_dn": [
+    2048.103515625,
+    2048.1004028320312
+   ],
+   "sd_population_dn": [
+    13.690604219331624,
+    13.701725977394284
+   ],
+   "mean_difference_dn": 0.00311279296875,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 1.278524809645663,
+   "difference_horizontal_lag1": 0.008160956651092236,
+   "variance_a_dn2": 187.4440845693707,
+   "variance_b_dn2": 187.74875403413958,
+   "average_single_spatial_variance_dn2": 187.59641930175513,
+   "paired_difference_variance_dn2": 169.2496136619532,
+   "centered_cross_covariance_dn2": 18.346805639801943,
+   "signed_covariance_fraction": 0.09779933811151528,
+   "centered_cross_correlation": 0.09779937035596083,
+   "pair_mean_spatial_variance_dn2": 102.97161247077854
+  },
+  {
+   "folder": "iso-3200",
+   "plane": "G1",
+   "left": "protocole\\blacks\\6V1A9787.CR3",
+   "right": "protocole\\blacks\\6V1A9788.CR3",
+   "source_sha256": [
+    "8a2790ea816313dff99c42e1e691456828d1b590fac63770b492a8fb709639e1",
+    "0859eebb50b15a0e7ac082222c42d65c47f3f1b2988a8a1c2085bff0868bcb20"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:05:58",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 3200,
+     "recommended_iso": 3200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:03",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 3200,
+     "recommended_iso": 3200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 2,
+   "offset": [
+    0,
+    1
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    5438
+   ],
+   "means_dn": [
+    2048.0751342773438,
+    2048.1015014648438
+   ],
+   "sd_population_dn": [
+    13.043245447856307,
+    13.052099915290578
+   ],
+   "mean_difference_dn": -0.0263671875,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 1.1361810681892308,
+   "difference_horizontal_lag1": -0.0019043895593406773,
+   "variance_a_dn2": 170.13663612919427,
+   "variance_b_dn2": 170.36771061856587,
+   "average_single_spatial_variance_dn2": 170.25217337388005,
+   "paired_difference_variance_dn2": 155.26724682216323,
+   "centered_cross_covariance_dn2": 14.984926551716825,
+   "signed_covariance_fraction": 0.08801606613743117,
+   "centered_cross_correlation": 0.08801608640449296,
+   "pair_mean_spatial_variance_dn2": 92.61854996279844
+  },
+  {
+   "folder": "iso-3200",
+   "plane": "G2",
+   "left": "protocole\\blacks\\6V1A9787.CR3",
+   "right": "protocole\\blacks\\6V1A9788.CR3",
+   "source_sha256": [
+    "8a2790ea816313dff99c42e1e691456828d1b590fac63770b492a8fb709639e1",
+    "0859eebb50b15a0e7ac082222c42d65c47f3f1b2988a8a1c2085bff0868bcb20"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:05:58",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 3200,
+     "recommended_iso": 3200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:03",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 3200,
+     "recommended_iso": 3200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 2,
+   "offset": [
+    1,
+    0
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    5438
+   ],
+   "means_dn": [
+    2047.9048461914062,
+    2048.1028442382812
+   ],
+   "sd_population_dn": [
+    13.245753703087882,
+    13.081367456328719
+   ],
+   "mean_difference_dn": -0.197998046875,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 0.9102653958918939,
+   "difference_horizontal_lag1": -0.006701281707898521,
+   "variance_a_dn2": 175.46070043413306,
+   "variance_b_dn2": 171.13261963367492,
+   "average_single_spatial_variance_dn2": 173.296660033904,
+   "paired_difference_variance_dn2": 155.27423836708593,
+   "centered_cross_covariance_dn2": 18.022421666818076,
+   "signed_covariance_fraction": 0.10399751306973916,
+   "centered_cross_correlation": 0.1040056225700998,
+   "pair_mean_spatial_variance_dn2": 95.65954085036104
+  },
+  {
+   "folder": "iso-3200",
+   "plane": "B",
+   "left": "protocole\\blacks\\6V1A9787.CR3",
+   "right": "protocole\\blacks\\6V1A9788.CR3",
+   "source_sha256": [
+    "8a2790ea816313dff99c42e1e691456828d1b590fac63770b492a8fb709639e1",
+    "0859eebb50b15a0e7ac082222c42d65c47f3f1b2988a8a1c2085bff0868bcb20"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:05:58",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 3200,
+     "recommended_iso": 3200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:06:03",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 3200,
+     "recommended_iso": 3200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 2,
+   "offset": [
+    1,
+    1
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    5438
+   ],
+   "means_dn": [
+    2047.9656982421875,
+    2047.8223266601562
+   ],
+   "sd_population_dn": [
+    15.000038090796586,
+    14.811292212650708
+   ],
+   "mean_difference_dn": 0.14337158203125,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 0.6781270775993475,
+   "difference_horizontal_lag1": -0.009355098087872504,
+   "variance_a_dn2": 225.0148765434969,
+   "variance_b_dn2": 219.38776737518856,
+   "average_single_spatial_variance_dn2": 222.20132195934275,
+   "paired_difference_variance_dn2": 205.31936214837967,
+   "centered_cross_covariance_dn2": 16.88195981096308,
+   "signed_covariance_fraction": 0.07597596477869765,
+   "centered_cross_correlation": 0.0759820561611562,
+   "pair_mean_spatial_variance_dn2": 119.54164088515292
+  },
+  {
+   "folder": "iso-51200",
+   "plane": "R",
+   "left": "protocole\\blacks\\6V1A9793.CR3",
+   "right": "protocole\\blacks\\6V1A9794.CR3",
+   "source_sha256": [
+    "7ce56934ebada77d16bc3f85b4c521a035367efb59871839606e4f9f005e358a",
+    "9cdc553c3ab132d78f49ce3bc2fbf65b5a4d0d0ca87580373a4577f4023b616c"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:07:19",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 51200,
+     "recommended_iso": 51200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:07:22",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 51200,
+     "recommended_iso": 51200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 0,
+   "offset": [
+    0,
+    0
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    1262
+   ],
+   "means_dn": [
+    2047.3042602539062,
+    2048.2713623046875
+   ],
+   "sd_population_dn": [
+    183.99260535310563,
+    183.01525874045456
+   ],
+   "mean_difference_dn": -0.96710205078125,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 1.0533454464133811,
+   "difference_horizontal_lag1": 0.0045877452213956465,
+   "variance_a_dn2": 33855.3451909073,
+   "variance_b_dn2": 33496.629403845036,
+   "average_single_spatial_variance_dn2": 33675.98729737617,
+   "paired_difference_variance_dn2": 32211.737876701623,
+   "centered_cross_covariance_dn2": 1464.2494206745432,
+   "signed_covariance_fraction": 0.043480519449792907,
+   "centered_cross_correlation": 0.04348113615026814,
+   "pair_mean_spatial_variance_dn2": 17570.118359025357
+  },
+  {
+   "folder": "iso-51200",
+   "plane": "G1",
+   "left": "protocole\\blacks\\6V1A9793.CR3",
+   "right": "protocole\\blacks\\6V1A9794.CR3",
+   "source_sha256": [
+    "7ce56934ebada77d16bc3f85b4c521a035367efb59871839606e4f9f005e358a",
+    "9cdc553c3ab132d78f49ce3bc2fbf65b5a4d0d0ca87580373a4577f4023b616c"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:07:19",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 51200,
+     "recommended_iso": 51200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:07:22",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 51200,
+     "recommended_iso": 51200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 0,
+   "offset": [
+    0,
+    1
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    1262
+   ],
+   "means_dn": [
+    2045.8798828125,
+    2046.7881469726562
+   ],
+   "sd_population_dn": [
+    183.67758053023073,
+    184.94911964920908
+   ],
+   "mean_difference_dn": -0.90826416015625,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 0.9362083224353461,
+   "difference_horizontal_lag1": 0.029308646399027354,
+   "variance_a_dn2": 33739.51288588018,
+   "variance_b_dn2": 34208.26476580248,
+   "average_single_spatial_variance_dn2": 33973.888825841335,
+   "paired_difference_variance_dn2": 32180.75099557568,
+   "centered_cross_covariance_dn2": 1793.1378302656558,
+   "signed_covariance_fraction": 0.05277988161607667,
+   "centered_cross_correlation": 0.052781137615526726,
+   "pair_mean_spatial_variance_dn2": 17883.513328053494
+  },
+  {
+   "folder": "iso-51200",
+   "plane": "G2",
+   "left": "protocole\\blacks\\6V1A9793.CR3",
+   "right": "protocole\\blacks\\6V1A9794.CR3",
+   "source_sha256": [
+    "7ce56934ebada77d16bc3f85b4c521a035367efb59871839606e4f9f005e358a",
+    "9cdc553c3ab132d78f49ce3bc2fbf65b5a4d0d0ca87580373a4577f4023b616c"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:07:19",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 51200,
+     "recommended_iso": 51200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:07:22",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 51200,
+     "recommended_iso": 51200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 0,
+   "offset": [
+    1,
+    0
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    1262
+   ],
+   "means_dn": [
+    2047.5979614257812,
+    2043.9850463867188
+   ],
+   "sd_population_dn": [
+    185.59651914356448,
+    186.28076693372506
+   ],
+   "mean_difference_dn": 3.6129150390625,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 0.7741224935246879,
+   "difference_horizontal_lag1": 0.025199320284734813,
+   "variance_a_dn2": 34448.170467674514,
+   "variance_b_dn2": 34702.642210606406,
+   "average_single_spatial_variance_dn2": 34575.40633914046,
+   "paired_difference_variance_dn2": 32807.22746466391,
+   "centered_cross_covariance_dn2": 1768.1788744765508,
+   "signed_covariance_fraction": 0.051139785809976614,
+   "centered_cross_correlation": 0.05114013208237258,
+   "pair_mean_spatial_variance_dn2": 18171.792606808507
+  },
+  {
+   "folder": "iso-51200",
+   "plane": "B",
+   "left": "protocole\\blacks\\6V1A9793.CR3",
+   "right": "protocole\\blacks\\6V1A9794.CR3",
+   "source_sha256": [
+    "7ce56934ebada77d16bc3f85b4c521a035367efb59871839606e4f9f005e358a",
+    "9cdc553c3ab132d78f49ce3bc2fbf65b5a4d0d0ca87580373a4577f4023b616c"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:07:19",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 51200,
+     "recommended_iso": 51200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:07:22",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 51200,
+     "recommended_iso": 51200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 0,
+   "offset": [
+    1,
+    1
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    1262
+   ],
+   "means_dn": [
+    2048.2307739257812,
+    2049.74609375
+   ],
+   "sd_population_dn": [
+    204.4187758395947,
+    204.75924728806655
+   ],
+   "mean_difference_dn": -1.51531982421875,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 1.250996636894851,
+   "difference_horizontal_lag1": 0.015158704957596126,
+   "variance_a_dn2": 41789.586549703155,
+   "variance_b_dn2": 41928.90848745651,
+   "average_single_spatial_variance_dn2": 41859.24751857983,
+   "paired_difference_variance_dn2": 39205.37844578905,
+   "centered_cross_covariance_dn2": 2653.8690727907815,
+   "signed_covariance_fraction": 0.06339982751990043,
+   "centered_cross_correlation": 0.06339991531194632,
+   "pair_mean_spatial_variance_dn2": 22256.558295685307
+  },
+  {
+   "folder": "iso-51200",
+   "plane": "R",
+   "left": "protocole\\blacks\\6V1A9793.CR3",
+   "right": "protocole\\blacks\\6V1A9794.CR3",
+   "source_sha256": [
+    "7ce56934ebada77d16bc3f85b4c521a035367efb59871839606e4f9f005e358a",
+    "9cdc553c3ab132d78f49ce3bc2fbf65b5a4d0d0ca87580373a4577f4023b616c"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:07:19",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 51200,
+     "recommended_iso": 51200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:07:22",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 51200,
+     "recommended_iso": 51200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 1,
+   "offset": [
+    0,
+    0
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    3350
+   ],
+   "means_dn": [
+    2044.7559814453125,
+    2048.7022094726562
+   ],
+   "sd_population_dn": [
+    184.92703580109466,
+    185.32803214050313
+   ],
+   "mean_difference_dn": -3.94622802734375,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 0.83052146041427,
+   "difference_horizontal_lag1": 0.017572270173489547,
+   "variance_a_dn2": 34200.09597838115,
+   "variance_b_dn2": 34348.57596777252,
+   "average_single_spatial_variance_dn2": 34274.335973076835,
+   "paired_difference_variance_dn2": 32769.703278608686,
+   "centered_cross_covariance_dn2": 1504.6326944681496,
+   "signed_covariance_fraction": 0.04389968913329402,
+   "centered_cross_correlation": 0.04389979211752793,
+   "pair_mean_spatial_variance_dn2": 17889.484333772492
+  },
+  {
+   "folder": "iso-51200",
+   "plane": "G1",
+   "left": "protocole\\blacks\\6V1A9793.CR3",
+   "right": "protocole\\blacks\\6V1A9794.CR3",
+   "source_sha256": [
+    "7ce56934ebada77d16bc3f85b4c521a035367efb59871839606e4f9f005e358a",
+    "9cdc553c3ab132d78f49ce3bc2fbf65b5a4d0d0ca87580373a4577f4023b616c"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:07:19",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 51200,
+     "recommended_iso": 51200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:07:22",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 51200,
+     "recommended_iso": 51200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 1,
+   "offset": [
+    0,
+    1
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    3350
+   ],
+   "means_dn": [
+    2044.3964233398438,
+    2045.74951171875
+   ],
+   "sd_population_dn": [
+    185.72203085136442,
+    184.9961065752568
+   ],
+   "mean_difference_dn": -1.35308837890625,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 1.1928449996508619,
+   "difference_horizontal_lag1": 0.022892186361057134,
+   "variance_a_dn2": 34494.7781377286,
+   "variance_b_dn2": 34225.648415802585,
+   "average_single_spatial_variance_dn2": 34360.21327676559,
+   "paired_difference_variance_dn2": 32698.907110533113,
+   "centered_cross_covariance_dn2": 1661.3061662324799,
+   "signed_covariance_fraction": 0.04834970472537365,
+   "centered_cross_correlation": 0.04835007550892392,
+   "pair_mean_spatial_variance_dn2": 18010.75972149904
+  },
+  {
+   "folder": "iso-51200",
+   "plane": "G2",
+   "left": "protocole\\blacks\\6V1A9793.CR3",
+   "right": "protocole\\blacks\\6V1A9794.CR3",
+   "source_sha256": [
+    "7ce56934ebada77d16bc3f85b4c521a035367efb59871839606e4f9f005e358a",
+    "9cdc553c3ab132d78f49ce3bc2fbf65b5a4d0d0ca87580373a4577f4023b616c"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:07:19",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 51200,
+     "recommended_iso": 51200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:07:22",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 51200,
+     "recommended_iso": 51200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 1,
+   "offset": [
+    1,
+    0
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    3350
+   ],
+   "means_dn": [
+    2045.48974609375,
+    2041.1023559570312
+   ],
+   "sd_population_dn": [
+    186.00121811947287,
+    188.12404117362655
+   ],
+   "mean_difference_dn": 4.38739013671875,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 1.1635362279536536,
+   "difference_horizontal_lag1": 0.007224085228816481,
+   "variance_a_dn2": 34598.56487074063,
+   "variance_b_dn2": 35392.81507349448,
+   "average_single_spatial_variance_dn2": 34995.68997211756,
+   "paired_difference_variance_dn2": 32685.844663211934,
+   "centered_cross_covariance_dn2": 2309.845308905624,
+   "signed_covariance_fraction": 0.06600370819223648,
+   "centered_cross_correlation": 0.06600795835774978,
+   "pair_mean_spatial_variance_dn2": 18652.767640511593
+  },
+  {
+   "folder": "iso-51200",
+   "plane": "B",
+   "left": "protocole\\blacks\\6V1A9793.CR3",
+   "right": "protocole\\blacks\\6V1A9794.CR3",
+   "source_sha256": [
+    "7ce56934ebada77d16bc3f85b4c521a035367efb59871839606e4f9f005e358a",
+    "9cdc553c3ab132d78f49ce3bc2fbf65b5a4d0d0ca87580373a4577f4023b616c"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:07:19",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 51200,
+     "recommended_iso": 51200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:07:22",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 51200,
+     "recommended_iso": 51200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 1,
+   "offset": [
+    1,
+    1
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    3350
+   ],
+   "means_dn": [
+    2050.4916381835938,
+    2045.7513427734375
+   ],
+   "sd_population_dn": [
+    204.85387990637915,
+    207.20759485096008
+   ],
+   "mean_difference_dn": 4.74029541015625,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 1.257849288715401,
+   "difference_horizontal_lag1": 0.02960447948819796,
+   "variance_a_dn2": 41967.673616213826,
+   "variance_b_dn2": 42937.60806753702,
+   "average_single_spatial_variance_dn2": 42452.64084187542,
+   "paired_difference_variance_dn2": 40034.147224469576,
+   "centered_cross_covariance_dn2": 2418.4936174058457,
+   "signed_covariance_fraction": 0.05696921485789491,
+   "centered_cross_correlation": 0.05697293250450573,
+   "pair_mean_spatial_variance_dn2": 22435.567229640634
+  },
+  {
+   "folder": "iso-51200",
+   "plane": "R",
+   "left": "protocole\\blacks\\6V1A9793.CR3",
+   "right": "protocole\\blacks\\6V1A9794.CR3",
+   "source_sha256": [
+    "7ce56934ebada77d16bc3f85b4c521a035367efb59871839606e4f9f005e358a",
+    "9cdc553c3ab132d78f49ce3bc2fbf65b5a4d0d0ca87580373a4577f4023b616c"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:07:19",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 51200,
+     "recommended_iso": 51200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:07:22",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 51200,
+     "recommended_iso": 51200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 2,
+   "offset": [
+    0,
+    0
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    5438
+   ],
+   "means_dn": [
+    2043.9318237304688,
+    2047.6041870117188
+   ],
+   "sd_population_dn": [
+    185.21482111032546,
+    186.11192976257433
+   ],
+   "mean_difference_dn": -3.67236328125,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 0.7632430996045645,
+   "difference_horizontal_lag1": 0.020423732670666928,
+   "variance_a_dn2": 34306.62386907812,
+   "variance_b_dn2": 34639.76464339688,
+   "average_single_spatial_variance_dn2": 34473.1942562375,
+   "paired_difference_variance_dn2": 33152.84902783659,
+   "centered_cross_covariance_dn2": 1320.3452284009036,
+   "signed_covariance_fraction": 0.03830063493933416,
+   "centered_cross_correlation": 0.03830108205112187,
+   "pair_mean_spatial_variance_dn2": 17896.7697423192
+  },
+  {
+   "folder": "iso-51200",
+   "plane": "G1",
+   "left": "protocole\\blacks\\6V1A9793.CR3",
+   "right": "protocole\\blacks\\6V1A9794.CR3",
+   "source_sha256": [
+    "7ce56934ebada77d16bc3f85b4c521a035367efb59871839606e4f9f005e358a",
+    "9cdc553c3ab132d78f49ce3bc2fbf65b5a4d0d0ca87580373a4577f4023b616c"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:07:19",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 51200,
+     "recommended_iso": 51200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:07:22",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 51200,
+     "recommended_iso": 51200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 2,
+   "offset": [
+    0,
+    1
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    5438
+   ],
+   "means_dn": [
+    2044.1854248046875,
+    2045.9406127929688
+   ],
+   "sd_population_dn": [
+    184.72499894920134,
+    185.02141504277057
+   ],
+   "mean_difference_dn": -1.75518798828125,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 0.9298432336986725,
+   "difference_horizontal_lag1": -0.0059112300948405486,
+   "variance_a_dn2": 34125.40808639708,
+   "variance_b_dn2": 34235.01356383126,
+   "average_single_spatial_variance_dn2": 34180.21082511417,
+   "paired_difference_variance_dn2": 32865.905605170636,
+   "centered_cross_covariance_dn2": 1314.3052199435333,
+   "signed_covariance_fraction": 0.03845222683582272,
+   "centered_cross_correlation": 0.03845227626090352,
+   "pair_mean_spatial_variance_dn2": 17747.25802252885
+  },
+  {
+   "folder": "iso-51200",
+   "plane": "G2",
+   "left": "protocole\\blacks\\6V1A9793.CR3",
+   "right": "protocole\\blacks\\6V1A9794.CR3",
+   "source_sha256": [
+    "7ce56934ebada77d16bc3f85b4c521a035367efb59871839606e4f9f005e358a",
+    "9cdc553c3ab132d78f49ce3bc2fbf65b5a4d0d0ca87580373a4577f4023b616c"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:07:19",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 51200,
+     "recommended_iso": 51200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:07:22",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 51200,
+     "recommended_iso": 51200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 2,
+   "offset": [
+    1,
+    0
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    5438
+   ],
+   "means_dn": [
+    2047.0736694335938,
+    2043.7738647460938
+   ],
+   "sd_population_dn": [
+    187.69791443972304,
+    187.42507604096156
+   ],
+   "mean_difference_dn": 3.2998046875,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 0.9623616279058796,
+   "difference_horizontal_lag1": 0.014347409267286568,
+   "variance_a_dn2": 35232.65751577817,
+   "variance_b_dn2": 35130.30331251201,
+   "average_single_spatial_variance_dn2": 35181.48041414509,
+   "paired_difference_variance_dn2": 33126.138904943386,
+   "centered_cross_covariance_dn2": 2055.341509201702,
+   "signed_covariance_fraction": 0.05842112057272412,
+   "centered_cross_correlation": 0.05842118238343359,
+   "pair_mean_spatial_variance_dn2": 18618.410961673395
+  },
+  {
+   "folder": "iso-51200",
+   "plane": "B",
+   "left": "protocole\\blacks\\6V1A9793.CR3",
+   "right": "protocole\\blacks\\6V1A9794.CR3",
+   "source_sha256": [
+    "7ce56934ebada77d16bc3f85b4c521a035367efb59871839606e4f9f005e358a",
+    "9cdc553c3ab132d78f49ce3bc2fbf65b5a4d0d0ca87580373a4577f4023b616c"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:07:19",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 51200,
+     "recommended_iso": 51200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:07:22",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 51200,
+     "recommended_iso": 51200,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 2,
+   "offset": [
+    1,
+    1
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    5438
+   ],
+   "means_dn": [
+    2048.2389526367188,
+    2049.6920166015625
+   ],
+   "sd_population_dn": [
+    204.11466472604866,
+    206.3627973275117
+   ],
+   "mean_difference_dn": -1.45306396484375,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 1.1037422367949865,
+   "difference_horizontal_lag1": 0.0067660869382454615,
+   "variance_a_dn2": 41665.339406728155,
+   "variance_b_dn2": 42588.2034984906,
+   "average_single_spatial_variance_dn2": 42126.77145260938,
+   "paired_difference_variance_dn2": 39972.21723451715,
+   "centered_cross_covariance_dn2": 2154.5542180922275,
+   "signed_covariance_fraction": 0.05114453692507623,
+   "centered_cross_correlation": 0.05114760529338186,
+   "pair_mean_spatial_variance_dn2": 22140.662835350802
+  },
+  {
+   "folder": "iso-6400",
+   "plane": "R",
+   "left": "protocole\\blacks\\6V1A9785.CR3",
+   "right": "protocole\\blacks\\6V1A9786.CR3",
+   "source_sha256": [
+    "7ddb06d40979c8e3be30313e03bef230133f0f7f949efab5adb4317f826f49eb",
+    "8fd130e1fae1d6064951b3209a92dc83a7c5391616ccaec613a30d4c4c1cdd49"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:05:31",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 6400,
+     "recommended_iso": 6400,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:05:47",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 6400,
+     "recommended_iso": 6400,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 0,
+   "offset": [
+    0,
+    0
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    1262
+   ],
+   "means_dn": [
+    2048.4957275390625,
+    2048.1895751953125
+   ],
+   "sd_population_dn": [
+    24.25077482065939,
+    24.273840039613834
+   ],
+   "mean_difference_dn": 0.30615234375,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 1.237514793688096,
+   "difference_horizontal_lag1": -0.0008375606722770415,
+   "variance_a_dn2": 588.1359763735418,
+   "variance_b_dn2": 589.2552755565745,
+   "average_single_spatial_variance_dn2": 588.6956259650581,
+   "paired_difference_variance_dn2": 552.7242977428966,
+   "centered_cross_covariance_dn2": 35.971328222161446,
+   "signed_covariance_fraction": 0.06110344061618103,
+   "centered_cross_correlation": 0.06110346822747299,
+   "pair_mean_spatial_variance_dn2": 312.33347709360976
+  },
+  {
+   "folder": "iso-6400",
+   "plane": "G1",
+   "left": "protocole\\blacks\\6V1A9785.CR3",
+   "right": "protocole\\blacks\\6V1A9786.CR3",
+   "source_sha256": [
+    "7ddb06d40979c8e3be30313e03bef230133f0f7f949efab5adb4317f826f49eb",
+    "8fd130e1fae1d6064951b3209a92dc83a7c5391616ccaec613a30d4c4c1cdd49"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:05:31",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 6400,
+     "recommended_iso": 6400,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:05:47",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 6400,
+     "recommended_iso": 6400,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 0,
+   "offset": [
+    0,
+    1
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    1262
+   ],
+   "means_dn": [
+    2048.4678955078125,
+    2048.4978637695312
+   ],
+   "sd_population_dn": [
+    23.69868159498844,
+    23.754851382118126
+   ],
+   "mean_difference_dn": -0.02996826171875,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 0.9779655272849659,
+   "difference_horizontal_lag1": 0.01904442966446865,
+   "variance_a_dn2": 561.661790455784,
+   "variance_b_dn2": 564.3274079980428,
+   "average_single_spatial_variance_dn2": 562.9945992269134,
+   "paired_difference_variance_dn2": 517.8122531155312,
+   "centered_cross_covariance_dn2": 45.18234611138212,
+   "signed_covariance_fraction": 0.0802536048719208,
+   "centered_cross_correlation": 0.08025382975853507,
+   "pair_mean_spatial_variance_dn2": 304.08847266914773
+  },
+  {
+   "folder": "iso-6400",
+   "plane": "G2",
+   "left": "protocole\\blacks\\6V1A9785.CR3",
+   "right": "protocole\\blacks\\6V1A9786.CR3",
+   "source_sha256": [
+    "7ddb06d40979c8e3be30313e03bef230133f0f7f949efab5adb4317f826f49eb",
+    "8fd130e1fae1d6064951b3209a92dc83a7c5391616ccaec613a30d4c4c1cdd49"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:05:31",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 6400,
+     "recommended_iso": 6400,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:05:47",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 6400,
+     "recommended_iso": 6400,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 0,
+   "offset": [
+    1,
+    0
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    1262
+   ],
+   "means_dn": [
+    2048.3858642578125,
+    2048.1253662109375
+   ],
+   "sd_population_dn": [
+    24.337007859389377,
+    23.95198660277275
+   ],
+   "mean_difference_dn": 0.260498046875,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 0.9358806417154545,
+   "difference_horizontal_lag1": -0.005636188087080789,
+   "variance_a_dn2": 592.3261042643051,
+   "variance_b_dn2": 573.7326800831798,
+   "average_single_spatial_variance_dn2": 583.0293921737425,
+   "paired_difference_variance_dn2": 533.3861989359683,
+   "centered_cross_covariance_dn2": 49.6431932377742,
+   "signed_covariance_fraction": 0.0851469821318726,
+   "centered_cross_correlation": 0.08515780892792627,
+   "pair_mean_spatial_variance_dn2": 316.33629270575835
+  },
+  {
+   "folder": "iso-6400",
+   "plane": "B",
+   "left": "protocole\\blacks\\6V1A9785.CR3",
+   "right": "protocole\\blacks\\6V1A9786.CR3",
+   "source_sha256": [
+    "7ddb06d40979c8e3be30313e03bef230133f0f7f949efab5adb4317f826f49eb",
+    "8fd130e1fae1d6064951b3209a92dc83a7c5391616ccaec613a30d4c4c1cdd49"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:05:31",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 6400,
+     "recommended_iso": 6400,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:05:47",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 6400,
+     "recommended_iso": 6400,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 0,
+   "offset": [
+    1,
+    1
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    1262
+   ],
+   "means_dn": [
+    2048.051513671875,
+    2047.2116088867188
+   ],
+   "sd_population_dn": [
+    27.273016237684182,
+    26.934664593004594
+   ],
+   "mean_difference_dn": 0.83990478515625,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 1.3563516434172393,
+   "difference_horizontal_lag1": 0.0035677119111116404,
+   "variance_a_dn2": 743.8628164842178,
+   "variance_b_dn2": 725.5204389910118,
+   "average_single_spatial_variance_dn2": 734.6916277376148,
+   "paired_difference_variance_dn2": 680.5885085225985,
+   "centered_cross_covariance_dn2": 54.10311921501625,
+   "signed_covariance_fraction": 0.07364058221490778,
+   "centered_cross_correlation": 0.07364632045953418,
+   "pair_mean_spatial_variance_dn2": 394.3973734763155
+  },
+  {
+   "folder": "iso-6400",
+   "plane": "R",
+   "left": "protocole\\blacks\\6V1A9785.CR3",
+   "right": "protocole\\blacks\\6V1A9786.CR3",
+   "source_sha256": [
+    "7ddb06d40979c8e3be30313e03bef230133f0f7f949efab5adb4317f826f49eb",
+    "8fd130e1fae1d6064951b3209a92dc83a7c5391616ccaec613a30d4c4c1cdd49"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:05:31",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 6400,
+     "recommended_iso": 6400,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:05:47",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 6400,
+     "recommended_iso": 6400,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 1,
+   "offset": [
+    0,
+    0
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    3350
+   ],
+   "means_dn": [
+    2048.2691040039062,
+    2048.01025390625
+   ],
+   "sd_population_dn": [
+    24.331301625617986,
+    24.592315859828943
+   ],
+   "mean_difference_dn": 0.25885009765625,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 1.1751146985188907,
+   "difference_horizontal_lag1": 0.0098965175235423,
+   "variance_a_dn2": 592.0483745618494,
+   "variance_b_dn2": 604.8189145665477,
+   "average_single_spatial_variance_dn2": 598.4336445641986,
+   "paired_difference_variance_dn2": 546.2814874179284,
+   "centered_cross_covariance_dn2": 52.15215714627027,
+   "signed_covariance_fraction": 0.08714776921382718,
+   "centered_cross_correlation": 0.08715273044989157,
+   "pair_mean_spatial_variance_dn2": 325.29290085523445
+  },
+  {
+   "folder": "iso-6400",
+   "plane": "G1",
+   "left": "protocole\\blacks\\6V1A9785.CR3",
+   "right": "protocole\\blacks\\6V1A9786.CR3",
+   "source_sha256": [
+    "7ddb06d40979c8e3be30313e03bef230133f0f7f949efab5adb4317f826f49eb",
+    "8fd130e1fae1d6064951b3209a92dc83a7c5391616ccaec613a30d4c4c1cdd49"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:05:31",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 6400,
+     "recommended_iso": 6400,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:05:47",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 6400,
+     "recommended_iso": 6400,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 1,
+   "offset": [
+    0,
+    1
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    3350
+   ],
+   "means_dn": [
+    2048.0956420898438,
+    2048.4068603515625
+   ],
+   "sd_population_dn": [
+    23.910106317907058,
+    23.83671703301734
+   ],
+   "mean_difference_dn": -0.31121826171875,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 1.2535142903820646,
+   "difference_horizontal_lag1": 0.0002353296409866155,
+   "variance_a_dn2": 571.7280796462927,
+   "variance_b_dn2": 568.2237605381483,
+   "average_single_spatial_variance_dn2": 569.9759200922206,
+   "paired_difference_variance_dn2": 543.8515564329945,
+   "centered_cross_covariance_dn2": 26.124363659226105,
+   "signed_covariance_fraction": 0.045834153230542185,
+   "centered_cross_correlation": 0.04583436979968636,
+   "pair_mean_spatial_variance_dn2": 298.05014187572334
+  },
+  {
+   "folder": "iso-6400",
+   "plane": "G2",
+   "left": "protocole\\blacks\\6V1A9785.CR3",
+   "right": "protocole\\blacks\\6V1A9786.CR3",
+   "source_sha256": [
+    "7ddb06d40979c8e3be30313e03bef230133f0f7f949efab5adb4317f826f49eb",
+    "8fd130e1fae1d6064951b3209a92dc83a7c5391616ccaec613a30d4c4c1cdd49"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:05:31",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 6400,
+     "recommended_iso": 6400,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:05:47",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 6400,
+     "recommended_iso": 6400,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 1,
+   "offset": [
+    1,
+    0
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    3350
+   ],
+   "means_dn": [
+    2048.1500244140625,
+    2048.5049438476562
+   ],
+   "sd_population_dn": [
+    24.201373857313044,
+    24.33698407604659
+   ],
+   "mean_difference_dn": -0.35491943359375,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 0.9741342763431696,
+   "difference_horizontal_lag1": 0.016851022252334966,
+   "variance_a_dn2": 585.7422474510306,
+   "variance_b_dn2": 592.3249465634096,
+   "average_single_spatial_variance_dn2": 589.0335970072201,
+   "paired_difference_variance_dn2": 534.5251523986343,
+   "centered_cross_covariance_dn2": 54.50844460858582,
+   "signed_covariance_fraction": 0.09253877008974358,
+   "centered_cross_correlation": 0.09254021477014719,
+   "pair_mean_spatial_variance_dn2": 321.77102080790297
+  },
+  {
+   "folder": "iso-6400",
+   "plane": "B",
+   "left": "protocole\\blacks\\6V1A9785.CR3",
+   "right": "protocole\\blacks\\6V1A9786.CR3",
+   "source_sha256": [
+    "7ddb06d40979c8e3be30313e03bef230133f0f7f949efab5adb4317f826f49eb",
+    "8fd130e1fae1d6064951b3209a92dc83a7c5391616ccaec613a30d4c4c1cdd49"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:05:31",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 6400,
+     "recommended_iso": 6400,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:05:47",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 6400,
+     "recommended_iso": 6400,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 1,
+   "offset": [
+    1,
+    1
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    3350
+   ],
+   "means_dn": [
+    2047.8722534179688,
+    2047.3543090820312
+   ],
+   "sd_population_dn": [
+    27.39210192200136,
+    27.80649978703579
+   ],
+   "mean_difference_dn": 0.5179443359375,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 1.647004135934875,
+   "difference_horizontal_lag1": -0.00202075855942847,
+   "variance_a_dn2": 750.3730468414703,
+   "variance_b_dn2": 773.2486257571146,
+   "average_single_spatial_variance_dn2": 761.8108362992925,
+   "paired_difference_variance_dn2": 693.0623428055068,
+   "centered_cross_covariance_dn2": 68.74849349378576,
+   "signed_covariance_fraction": 0.09024352269357395,
+   "centered_cross_correlation": 0.09025369570141811,
+   "pair_mean_spatial_variance_dn2": 415.27966489653915
+  },
+  {
+   "folder": "iso-6400",
+   "plane": "R",
+   "left": "protocole\\blacks\\6V1A9785.CR3",
+   "right": "protocole\\blacks\\6V1A9786.CR3",
+   "source_sha256": [
+    "7ddb06d40979c8e3be30313e03bef230133f0f7f949efab5adb4317f826f49eb",
+    "8fd130e1fae1d6064951b3209a92dc83a7c5391616ccaec613a30d4c4c1cdd49"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:05:31",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 6400,
+     "recommended_iso": 6400,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:05:47",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 6400,
+     "recommended_iso": 6400,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 2,
+   "offset": [
+    0,
+    0
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    5438
+   ],
+   "means_dn": [
+    2048.196044921875,
+    2047.7051391601562
+   ],
+   "sd_population_dn": [
+    24.73878462710137,
+    24.49678426670214
+   ],
+   "mean_difference_dn": 0.49090576171875,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 1.1513662813728933,
+   "difference_horizontal_lag1": 0.012514967753676179,
+   "variance_a_dn2": 612.0448210773936,
+   "variance_b_dn2": 600.1290683808043,
+   "average_single_spatial_variance_dn2": 606.086944729099,
+   "paired_difference_variance_dn2": 565.1613454482847,
+   "centered_cross_covariance_dn2": 40.925599280814254,
+   "signed_covariance_fraction": 0.06752430428790486,
+   "centered_cross_correlation": 0.0675275669696337,
+   "pair_mean_spatial_variance_dn2": 323.5062720049566
+  },
+  {
+   "folder": "iso-6400",
+   "plane": "G1",
+   "left": "protocole\\blacks\\6V1A9785.CR3",
+   "right": "protocole\\blacks\\6V1A9786.CR3",
+   "source_sha256": [
+    "7ddb06d40979c8e3be30313e03bef230133f0f7f949efab5adb4317f826f49eb",
+    "8fd130e1fae1d6064951b3209a92dc83a7c5391616ccaec613a30d4c4c1cdd49"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:05:31",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 6400,
+     "recommended_iso": 6400,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:05:47",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 6400,
+     "recommended_iso": 6400,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 2,
+   "offset": [
+    0,
+    1
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    5438
+   ],
+   "means_dn": [
+    2048.25830078125,
+    2048.04443359375
+   ],
+   "sd_population_dn": [
+    24.531437687246964,
+    23.84621195250666
+   ],
+   "mean_difference_dn": 0.2138671875,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 1.0481679611670263,
+   "difference_horizontal_lag1": -0.0002134504364456422,
+   "variance_a_dn2": 601.8281676795306,
+   "variance_b_dn2": 568.6765337449643,
+   "average_single_spatial_variance_dn2": 585.2523507122474,
+   "paired_difference_variance_dn2": 545.8275837567905,
+   "centered_cross_covariance_dn2": 39.4247669554569,
+   "signed_covariance_fraction": 0.06736370542976423,
+   "centered_cross_correlation": 0.0673907400891321,
+   "pair_mean_spatial_variance_dn2": 312.3385588338522
+  },
+  {
+   "folder": "iso-6400",
+   "plane": "G2",
+   "left": "protocole\\blacks\\6V1A9785.CR3",
+   "right": "protocole\\blacks\\6V1A9786.CR3",
+   "source_sha256": [
+    "7ddb06d40979c8e3be30313e03bef230133f0f7f949efab5adb4317f826f49eb",
+    "8fd130e1fae1d6064951b3209a92dc83a7c5391616ccaec613a30d4c4c1cdd49"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:05:31",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 6400,
+     "recommended_iso": 6400,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:05:47",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 6400,
+     "recommended_iso": 6400,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 2,
+   "offset": [
+    1,
+    0
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    5438
+   ],
+   "means_dn": [
+    2048.3075561523438,
+    2048.1290283203125
+   ],
+   "sd_population_dn": [
+    24.28056026880479,
+    23.963321931268624
+   ],
+   "mean_difference_dn": 0.17852783203125,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 1.1518689556052621,
+   "difference_horizontal_lag1": 0.0032837367372064627,
+   "variance_a_dn2": 589.5815921716621,
+   "variance_b_dn2": 574.275848997794,
+   "average_single_spatial_variance_dn2": 581.9287205847281,
+   "paired_difference_variance_dn2": 540.0735154151043,
+   "centered_cross_covariance_dn2": 41.85520516962379,
+   "signed_covariance_fraction": 0.07192496896796438,
+   "centered_cross_correlation": 0.0719311893247012,
+   "pair_mean_spatial_variance_dn2": 311.89196287717596
+  },
+  {
+   "folder": "iso-6400",
+   "plane": "B",
+   "left": "protocole\\blacks\\6V1A9785.CR3",
+   "right": "protocole\\blacks\\6V1A9786.CR3",
+   "source_sha256": [
+    "7ddb06d40979c8e3be30313e03bef230133f0f7f949efab5adb4317f826f49eb",
+    "8fd130e1fae1d6064951b3209a92dc83a7c5391616ccaec613a30d4c4c1cdd49"
+   ],
+   "metadata": [
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:05:31",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 6400,
+     "recommended_iso": 6400,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    },
+    {
+     "make": "Canon",
+     "model": "Canon EOS R6 Mark III",
+     "datetime": "2026:10:22 18:05:47",
+     "exposure_s": 0.005,
+     "aperture": 5.6,
+     "iso": 6400,
+     "recommended_iso": 6400,
+     "focal_mm": 31.0,
+     "lens": "RF24-105mm F2.8 L IS USM Z"
+    }
+   ],
+   "roi": 2,
+   "offset": [
+    1,
+    1
+   ],
+   "sample_count": 16384,
+   "mosaic_yx": [
+    2190,
+    5438
+   ],
+   "means_dn": [
+    2048.6064453125,
+    2047.6421508789062
+   ],
+   "sd_population_dn": [
+    27.41119178402221,
+    27.54242214724408
+   ],
+   "mean_difference_dn": 0.96429443359375,
+   "historical_status": "candidate_stable",
+   "difference_block_structure_ratio": 0.9467771932920556,
+   "difference_horizontal_lag1": -0.009923175977407573,
+   "variance_a_dn2": 751.4192980147104,
+   "variance_b_dn2": 758.6313209182094,
+   "average_single_spatial_variance_dn2": 755.0253094664599,
+   "paired_difference_variance_dn2": 689.8848230557179,
+   "centered_cross_covariance_dn2": 65.14048641074203,
+   "signed_covariance_fraction": 0.08627589776662412,
+   "centered_cross_correlation": 0.08627688177343518,
+   "pair_mean_spatial_variance_dn2": 410.082897938601
+  }
+ ],
+ "summaries": [
+  {
+   "folder": "iso-100",
+   "measurements": 12,
+   "distinct_dark_pairs": 1,
+   "signed_covariance_fraction_range": [
+    -0.0009109064255490736,
+    0.03404356320126211
+   ],
+   "signed_covariance_fraction_median": 0.012979491802522935,
+   "planes": {
+    "R": {
+     "signed_covariance_fraction_median": 0.025237642283169
+    },
+    "G1": {
+     "signed_covariance_fraction_median": 0.014809989154023184
+    },
+    "G2": {
+     "signed_covariance_fraction_median": 0.010076997261900044
+    },
+    "B": {
+     "signed_covariance_fraction_median": 0.013620423927342943
+    }
+   }
+  },
+  {
+   "folder": "iso-1600",
+   "measurements": 12,
+   "distinct_dark_pairs": 1,
+   "signed_covariance_fraction_range": [
+    0.06694571401292268,
+    0.1077183621485985
+   ],
+   "signed_covariance_fraction_median": 0.08846677275064269,
+   "planes": {
+    "R": {
+     "signed_covariance_fraction_median": 0.08031385763689719
+    },
+    "G1": {
+     "signed_covariance_fraction_median": 0.06897023176603734
+    },
+    "G2": {
+     "signed_covariance_fraction_median": 0.089231290063871
+    },
+    "B": {
+     "signed_covariance_fraction_median": 0.10370890237848736
+    }
+   }
+  },
+  {
+   "folder": "iso-3200",
+   "measurements": 12,
+   "distinct_dark_pairs": 1,
+   "signed_covariance_fraction_range": [
+    0.0758194366701984,
+    0.11096875228319451
+   ],
+   "signed_covariance_fraction_median": 0.0871678068217277,
+   "planes": {
+    "R": {
+     "signed_covariance_fraction_median": 0.08411513435656749
+    },
+    "G1": {
+     "signed_covariance_fraction_median": 0.07645085099158098
+    },
+    "G2": {
+     "signed_covariance_fraction_median": 0.09197097692343127
+    },
+    "B": {
+     "signed_covariance_fraction_median": 0.10894768165959817
+    }
+   }
+  },
+  {
+   "folder": "iso-6400",
+   "measurements": 12,
+   "distinct_dark_pairs": 1,
+   "signed_covariance_fraction_range": [
+    0.045834153230542185,
+    0.09253877008974358
+   ],
+   "signed_covariance_fraction_median": 0.0769470935434143,
+   "planes": {
+    "R": {
+     "signed_covariance_fraction_median": 0.06752430428790486
+    },
+    "G1": {
+     "signed_covariance_fraction_median": 0.06736370542976423
+    },
+    "G2": {
+     "signed_covariance_fraction_median": 0.0851469821318726
+    },
+    "B": {
+     "signed_covariance_fraction_median": 0.08627589776662412
+    }
+   }
+  },
+  {
+   "folder": "iso-16000",
+   "measurements": 12,
+   "distinct_dark_pairs": 1,
+   "signed_covariance_fraction_range": [
+    0.0504897257328949,
+    0.10400255695153598
+   ],
+   "signed_covariance_fraction_median": 0.07669671414994972,
+   "planes": {
+    "R": {
+     "signed_covariance_fraction_median": 0.060196531633309666
+    },
+    "G1": {
+     "signed_covariance_fraction_median": 0.06168174600392037
+    },
+    "G2": {
+     "signed_covariance_fraction_median": 0.08946027514727622
+    },
+    "B": {
+     "signed_covariance_fraction_median": 0.07952227745980125
+    }
+   }
+  },
+  {
+   "folder": "iso-51200",
+   "measurements": 12,
+   "distinct_dark_pairs": 1,
+   "signed_covariance_fraction_range": [
+    0.03830063493933416,
+    0.06600370819223648
+   ],
+   "signed_covariance_fraction_median": 0.05114216136752642,
+   "planes": {
+    "R": {
+     "signed_covariance_fraction_median": 0.043480519449792907
+    },
+    "G1": {
+     "signed_covariance_fraction_median": 0.04834970472537365
+    },
+    "G2": {
+     "signed_covariance_fraction_median": 0.05842112057272412
+    },
+    "B": {
+     "signed_covariance_fraction_median": 0.05696921485789491
+    }
+   }
+  }
+ ],
+ "runner_sha256": "cec6e5b44e39f5f01ab4d5a3b4c7e461d8c3f5ca94ee3ea03c7536fd38563704",
+ "runner_source": "\"\"\"Recover centered dark-pair covariance from cached RAW moments, without decoding.\"\"\"\nfrom datetime import datetime, timezone\nimport json\nimport math\nfrom pathlib import Path\nimport statistics\n\nfrom study_noise_neighbourhoods import ROOT, sha256, git\n\n\ndef components(sd_a, sd_b, difference_variance, count):\n    \"\"\"Input SD uses ddof=0, difference variance uses ddof=1; all units DN.\"\"\"\n    values = (sd_a, sd_b, difference_variance)\n    if count <= 1 or any(not math.isfinite(v) or v < 0 for v in values):\n        raise ValueError('Finite nonnegative moments and at least two pixels required')\n    va, vb = (s*s*count/(count-1) for s in (sd_a, sd_b))\n    average = (va+vb)/2\n    covariance = average-difference_variance\n    bound = math.sqrt(va*vb)\n    if abs(covariance) > bound + 1e-8*max(average, 1):\n        raise ValueError('Inconsistent moments: covariance exceeds Cauchy bound')\n    return dict(variance_a_dn2=va, variance_b_dn2=vb,\n        average_single_spatial_variance_dn2=average,\n        paired_difference_variance_dn2=difference_variance,\n        centered_cross_covariance_dn2=covariance,\n        signed_covariance_fraction=covariance/average if average > 0 else None,\n        centered_cross_correlation=covariance/bound if bound > 0 else None,\n        pair_mean_spatial_variance_dn2=average-difference_variance/2)\n\n\ndef run():\n    started = datetime.now(timezone.utc)\n    parent = ROOT/'docs/validation/raw/audit-paires-bruit-v005-20261022T173747Z.json'\n    parent_hash = sha256(parent)\n    audit = json.loads(parent.read_text(encoding='utf-8'))\n    records = []\n    for group in audit['groups']:\n        frames = {f['path']: f for f in group['frames']}\n        for pair in group['pair_candidates']:\n            if not pair.get('declared_dark_pair') or not pair['measurements']:\n                continue\n            if not pair['matching_exposure_metadata'] or not pair['matching_geometry']:\n                raise ValueError('Incompatible dark-pair metadata/geometry')\n            left, right = [frames[pair[k]] for k in ('left','right')]\n            if left['sha256'] == right['sha256']:\n                raise ValueError('Duplicate dark capture')\n            for m in pair['measurements']:\n                roi, offset = m['roi'], m['offset']\n                a, b = left['rois'][roi], right['rois'][roi]\n                if a['mosaic_yx'] != b['mosaic_yx'] or a['size'] != b['size']:\n                    raise ValueError('Dark moments refer to different spatial support')\n                index = ((0,0),(0,1),(1,0),(1,1)).index(tuple(offset))\n                pa, pb = a['planes'][index], b['planes'][index]\n                if pa['offset'] != offset or pb['offset'] != offset:\n                    raise ValueError('CFA offset mismatch')\n                if a['size'][0] % 2 or a['size'][1] % 2:\n                    raise ValueError('Uneven CFA crop geometry')\n                n = a['size'][0]*a['size'][1]//4\n                if max(abs(pa['mean_dn']-m['means_dn'][0]),abs(pb['mean_dn']-m['means_dn'][1])) > 1e-9:\n                    raise ValueError('Cached marginal and paired means differ')\n                record = dict(folder=group['folder'], plane=('R','G1','G2','B')[index],\n                    left=pair['left'], right=pair['right'], source_sha256=[left['sha256'],right['sha256']],\n                    metadata=[left['metadata'],right['metadata']], roi=roi, offset=offset,\n                    sample_count=n, mosaic_yx=a['mosaic_yx'],\n                    means_dn=m['means_dn'], sd_population_dn=[pa['sd_dn'],pb['sd_dn']],\n                    mean_difference_dn=m['mean_difference_dn'], historical_status=m['status'],\n                    difference_block_structure_ratio=m['difference_block_structure_ratio'],\n                    difference_horizontal_lag1=m['difference_horizontal_lag1'],\n                    **components(pa['sd_dn'],pb['sd_dn'],m['noise_variance_dn2'],n))\n                records.append(record)\n    summaries = []\n    for folder in sorted({r['folder'] for r in records},key=lambda s:int(s.split('-')[1])):\n        rows = [r for r in records if r['folder']==folder]\n        fractions = [r['signed_covariance_fraction'] for r in rows]\n        summary = dict(folder=folder, measurements=len(rows),\n            distinct_dark_pairs=len({(r['left'],r['right']) for r in rows}),\n            signed_covariance_fraction_range=[min(fractions),max(fractions)],\n            signed_covariance_fraction_median=statistics.median(fractions),\n            planes={plane:dict(signed_covariance_fraction_median=statistics.median(\n                r['signed_covariance_fraction'] for r in rows if r['plane']==plane))\n                for plane in ('R','G1','G2','B')})\n        summaries.append(summary)\n        print(folder,'covariance fraction median/range',summary['signed_covariance_fraction_median'],summary['signed_covariance_fraction_range'],flush=True)\n    if sha256(parent) != parent_hash:\n        raise ValueError('Parent changed')\n    now = datetime.now(timezone.utc)\n    output = ROOT/'docs/validation/raw'/f'composantes-noirs-raw-bruit-v001-{now.strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n    result = dict(schema_version=1, data_version=1, started_at_utc=started.isoformat(),completed_at_utc=now.isoformat(),\n        parent=dict(path=str(parent),sha256=parent_hash), records=records,summaries=summaries,\n        runner_sha256=sha256(Path(__file__)), runner_source=Path(__file__).read_text(encoding='utf-8'),\n        commit=git('rev-parse','HEAD'), units='DN and DN^2 in decoded visible CFA, four phases on identical supports',\n        equations='V_A=s_A^2*N/(N-1); V_B likewise; D=Var_sample((A-B)/sqrt(2)); C=(V_A+V_B)/2-D; Var((A+B)/2)=(V_A+V_B)/2-D/2. Covariances spatially centered, signed, never clipped.',\n        policy='All cached measured declared-dark pairs, including historical rejected measurements if any. No RAW decode, refit, production modification or sealed burst access.',\n        limitations='One dark pair per ISO is not a temporal ensemble. Difference variance estimates independent temporal variance only with assumptions of equal noise laws and no temporal correlation. Spatial covariance can contain fixed pattern, shared decoder processing or residual common structure; not uniquely sensor fixed-pattern noise. Centering omits spatially constant offsets. Correlated pixels invalidate iid confidence intervals; none supplied. Decoder DN statistics do not establish electrons or read-noise calibration. Black/dark illumination coverage remains missing.',\n        verdict='centered_dark_covariance_diagnostic_not_identified_physical_decomposition')\n    with output.open('x',encoding='utf-8') as handle:\n        json.dump(result,handle,ensure_ascii=False,indent=1,allow_nan=False)\n    print('RESULT',output,flush=True)\n\n\nif __name__=='__main__':run()\n",
+ "commit": "2a40c5c6cff78d40294393a68827f4a24555c724",
+ "units": "DN and DN^2 in decoded visible CFA, four phases on identical supports",
+ "equations": "V_A=s_A^2*N/(N-1); V_B likewise; D=Var_sample((A-B)/sqrt(2)); C=(V_A+V_B)/2-D; Var((A+B)/2)=(V_A+V_B)/2-D/2. Covariances spatially centered, signed, never clipped.",
+ "policy": "All cached measured declared-dark pairs, including historical rejected measurements if any. No RAW decode, refit, production modification or sealed burst access.",
+ "limitations": "One dark pair per ISO is not a temporal ensemble. Difference variance estimates independent temporal variance only with assumptions of equal noise laws and no temporal correlation. Spatial covariance can contain fixed pattern, shared decoder processing or residual common structure; not uniquely sensor fixed-pattern noise. Centering omits spatially constant offsets. Correlated pixels invalidate iid confidence intervals; none supplied. Decoder DN statistics do not establish electrons or read-noise calibration. Black/dark illumination coverage remains missing.",
+ "verdict": "centered_dark_covariance_diagnostic_not_identified_physical_decomposition"
+}

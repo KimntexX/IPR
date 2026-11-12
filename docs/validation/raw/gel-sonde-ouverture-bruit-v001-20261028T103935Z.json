@@ -1,0 +1,141 @@
+{
+ "campaign_id": "noise-opening-stage-freeze-20261028T103935Z",
+ "schema_version": 1,
+ "data_version": 1,
+ "measured_at_utc": "2026-10-28T10:39:36.343879+00:00",
+ "pairs": [
+  {
+   "iso": 1600,
+   "role": "black",
+   "paths": [
+    "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0003.CR3",
+    "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0004.CR3"
+   ]
+  },
+  {
+   "iso": 1600,
+   "role": "near_black_scene",
+   "paths": [
+    "D:\\DCIM\\100EOSR6\\6V1A9916.CR3",
+    "D:\\DCIM\\100EOSR6\\6V1A9917.CR3"
+   ]
+  },
+  {
+   "iso": 1600,
+   "role": "illuminated_scene",
+   "paths": [
+    "D:\\DCIM\\100EOSR6\\6V1A9861.CR3",
+    "D:\\DCIM\\100EOSR6\\6V1A9862.CR3"
+   ]
+  },
+  {
+   "iso": 51200,
+   "role": "black",
+   "paths": [
+    "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9950.CR3",
+    "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9951.CR3"
+   ]
+  },
+  {
+   "iso": 51200,
+   "role": "near_black_scene",
+   "paths": [
+    "D:\\DCIM\\100EOSR6\\6V1A9905.CR3",
+    "D:\\DCIM\\100EOSR6\\6V1A9906.CR3"
+   ]
+  },
+  {
+   "iso": 51200,
+   "role": "illuminated_scene",
+   "paths": [
+    "D:\\DCIM\\100EOSR6\\6V1A9876.CR3",
+    "D:\\DCIM\\100EOSR6\\6V1A9877.CR3"
+   ]
+  }
+ ],
+ "source_sha256": {
+  "D:\\DCIM\\100EOSR6\\6V1A9861.CR3": "2cb1c583cffd0dc7719a341376b3d20cc3eb47a2faa510bdd70da21214f66b28",
+  "D:\\DCIM\\100EOSR6\\6V1A9862.CR3": "68a9f256c213cf2c4845e89ab1718d5b8d163dc38008218d8eb43768a2cb0406",
+  "D:\\DCIM\\100EOSR6\\6V1A9863.CR3": "8dc5863546e1eb2cfd691f3d7cd8884e7dbb97880ac34ebefd6a561e3191fa67",
+  "D:\\DCIM\\100EOSR6\\6V1A9864.CR3": "3cf5d717b0fc920cfc5e44ae4c5a71e7309f444c902ac6abe2f0ecb4f131350d",
+  "D:\\DCIM\\100EOSR6\\6V1A9865.CR3": "25630914c066c8588b950f2acd0c35db2b80dc2a4a89e67b3b50a699d83dd070",
+  "D:\\DCIM\\100EOSR6\\6V1A9866.CR3": "18058614e1317939f1579685fe11822ba8d556aa96d12f0d6c8169491a7c0a7b",
+  "D:\\DCIM\\100EOSR6\\6V1A9867.CR3": "0de30d964c366c8304532865bb388b737adc37e5c90e7fde4dd4425b7f0b10dc",
+  "D:\\DCIM\\100EOSR6\\6V1A9868.CR3": "282e3b61c7cf4b49dfa2e49dbe473d0f0d814d0c19345f30896b5aa227295789",
+  "D:\\DCIM\\100EOSR6\\6V1A9869.CR3": "b01f0acb094fb7ad4b8022a7097ce4199a98bd87dafb95067aeabf7fa917a8d9",
+  "D:\\DCIM\\100EOSR6\\6V1A9870.CR3": "2472e2a773fe7ba1454d6c5b5a171d4e46707f03f06c0765246fc35af83ada44",
+  "D:\\DCIM\\100EOSR6\\6V1A9871.CR3": "2bb426998512a4e9e1b7b8de03548be18c55c2c6276a256ff9400c6b8849c09d",
+  "D:\\DCIM\\100EOSR6\\6V1A9872.CR3": "5ebe2c42ecbbc2b143e3fb0cc641663f40f12cd882899b6612a0a0ee4fadba64",
+  "D:\\DCIM\\100EOSR6\\6V1A9873.CR3": "9cde008cffa445ca388fa3485da172ff9816c17685e7da6282191f23e27a1a93",
+  "D:\\DCIM\\100EOSR6\\6V1A9874.CR3": "f4c64963b457d371ae9d7b6506fa3e270cec689ed342b9243d2b6783b5f28ece",
+  "D:\\DCIM\\100EOSR6\\6V1A9875.CR3": "9118cc1a6ef249135ab5ecc86fbc4435449c2ada88a6952274feb150d4d2b95c",
+  "D:\\DCIM\\100EOSR6\\6V1A9876.CR3": "7267e862f05bf82802acd65da32bba2361a189db695890ae809d69447cd2964c",
+  "D:\\DCIM\\100EOSR6\\6V1A9877.CR3": "1b7613917913ac71fd02c7d023083ec1597dcb7e49cdd6a271415a7a741de61f",
+  "D:\\DCIM\\100EOSR6\\6V1A9878.CR3": "515f2177da1fb75c1208f842a6b5c5bf3f2239c174b23d2ec8491e9f6ccd6a7f",
+  "D:\\DCIM\\100EOSR6\\6V1A9879.CR3": "8eb0eedc51653f9e2375ee314adcbb39aa1b0e3164cc9112628434072dc3cffb",
+  "D:\\DCIM\\100EOSR6\\6V1A9880.CR3": "8804abf8ed53b56c01b4501897bc5a6a44ad6f7d67679bf88334cb8d7318ee10",
+  "D:\\DCIM\\100EOSR6\\6V1A9881.CR3": "de51a38eaa479f43d43cf1cfd684e535242bcb96cf80ba61e2c331f5f2556177",
+  "D:\\DCIM\\100EOSR6\\6V1A9882.CR3": "6b5d50b470cb07c98f65c4451ca3c450092a74d28230a938e031034e912af0aa",
+  "D:\\DCIM\\100EOSR6\\6V1A9883.CR3": "a8b11f25f15edf01c883e2215a80ce24f8e7fd42d3f6db89234f907254af2c6f",
+  "D:\\DCIM\\100EOSR6\\6V1A9884.CR3": "a46bb3769628c064b262ef3a82593688001bb3a83f55ca721257b0fbbe47ca0a",
+  "D:\\DCIM\\100EOSR6\\6V1A9885.CR3": "8088dc3f59485727795c858eb0d107448adf0252d7ead8911a07d883e76372eb",
+  "D:\\DCIM\\100EOSR6\\6V1A9886.CR3": "1f7e0aa5a361cf2f78fac123111a0ce81d5f8a3c93d9e2f596b0bd35b915f604",
+  "D:\\DCIM\\100EOSR6\\6V1A9887.CR3": "67ec7d027af90d3c38032e7ab4cbea8ddc3f53ef0b4bd7622f020e4cc71c606d",
+  "D:\\DCIM\\100EOSR6\\6V1A9888.CR3": "2044104cdf553ae895b18171c71bf2ee5e9750f788790347e3b5fccfc820cf6e",
+  "D:\\DCIM\\100EOSR6\\6V1A9889.CR3": "c75e66dd362d2d9fafdda263b2d9399592e3856a1da408ee2542e2429da1504a",
+  "D:\\DCIM\\100EOSR6\\6V1A9890.CR3": "16e779bed73d80c42cdd20ddee22b3b7b21f0466f5000b0a55508e82f20ad28c",
+  "D:\\DCIM\\100EOSR6\\6V1A9891.CR3": "010d7ca90be3ca27c1045278c1aee90d9350acff1554fd99f7642201e88f3e5b",
+  "D:\\DCIM\\100EOSR6\\6V1A9892.CR3": "aa0b446df88083bcaedfa9227af29847b8977b1257999ba6ec9eef22dc68fa18",
+  "D:\\DCIM\\100EOSR6\\6V1A9893.CR3": "ab80fdce961664c328a747a6f80f09d0cf658501a1c2e5f03fb6eb12c25f5c03",
+  "D:\\DCIM\\100EOSR6\\6V1A9894.CR3": "702d25311f23d9e23735e795e1693dd87da9dea38b3a3356697fc4665c054c9b",
+  "D:\\DCIM\\100EOSR6\\6V1A9895.CR3": "be31802d73f696ebe7706e9b3bcc450c4094e72bd7504b400e0ab7824bf3543e",
+  "D:\\DCIM\\100EOSR6\\6V1A9896.CR3": "3ea103e61a0fd9f7357fa8b9589c96f76bbc7f66c712bf93312e682c6b93e844",
+  "D:\\DCIM\\100EOSR6\\6V1A9897.CR3": "e7dd5a5cae7b31da271f0e5fd4394875b88d231da848af3428ed00aabadc87d9",
+  "D:\\DCIM\\100EOSR6\\6V1A9898.CR3": "91003c7df799325dcc191b18d7dc3197cbb78d043771c8a868c52fe8303d77fa",
+  "D:\\DCIM\\100EOSR6\\6V1A9899.CR3": "af97b0dd66154a90c7bdf5f23f5d3373b13ddfb82b09fb62bcbe1168b3b526bb",
+  "D:\\DCIM\\100EOSR6\\6V1A9900.CR3": "7114359c9bb4272beab130d30a0b2c05eb00932097e0e33d4d92773877ab615b",
+  "D:\\DCIM\\100EOSR6\\6V1A9901.CR3": "7eda9cedf30900f3fe3f0a437f8c71193ecad3cdea4d6cc36c9b1bcd25a4f61b",
+  "D:\\DCIM\\100EOSR6\\6V1A9902.CR3": "a5688c67d5d9805e2657e26bf4f9f347a200d14bce56c8dc4989fcf3a09356cd",
+  "D:\\DCIM\\100EOSR6\\6V1A9903.CR3": "04de70ff38b73fd14d39ae84ce082363c8a1f6462d8242e839e0edaee8c48e93",
+  "D:\\DCIM\\100EOSR6\\6V1A9904.CR3": "50015138be54ef12ed4755aad0f7bc90d776f66a27ea6c689f3b0ba2e02769e0",
+  "D:\\DCIM\\100EOSR6\\6V1A9905.CR3": "f1a14c6075d8be503b818fdfda981e976b07c6065cce717b8166e8d0fd6987c3",
+  "D:\\DCIM\\100EOSR6\\6V1A9906.CR3": "c8744f5f903619f9d9cfbf1d30bc4865683039c50d1c3db73792f247a8a0b9ae",
+  "D:\\DCIM\\100EOSR6\\6V1A9907.CR3": "9e6fb509fe0f193e5e25711007b086b2a4b7e48257ef84b93ca443639a36868b",
+  "D:\\DCIM\\100EOSR6\\6V1A9908.CR3": "1aeab1527d1521b9d2c4541c1804c5aaa4d3714f1eefece5d1f6b5de7adcb1f2",
+  "D:\\DCIM\\100EOSR6\\6V1A9909.CR3": "d610a9effcbb401cb9aa8b593f08f7702e209a48db657100b41146420a06e588",
+  "D:\\DCIM\\100EOSR6\\6V1A9910.CR3": "03d2bd8749fd9b52c5e08deb59ec80bd270197e8b7802154627333968e2c7ee8",
+  "D:\\DCIM\\100EOSR6\\6V1A9911.CR3": "afdd5b8fb0f177ca99ca4b8237dcecd75eaf5bdee7e401441a86faf535aea6a3",
+  "D:\\DCIM\\100EOSR6\\6V1A9912.CR3": "0502e691b22c01302d4a41fb31860b71acb8fa0d994e084bcffec1d15afa668b",
+  "D:\\DCIM\\100EOSR6\\6V1A9913.CR3": "494f071b87345bbb10697850254cff9d863ae573d6a644a4e40512beed1c6137",
+  "D:\\DCIM\\100EOSR6\\6V1A9914.CR3": "a5cd3256d72b03847ff5deac071ba8cf75e0acb5317a4e18134d5ef89476cd1e",
+  "D:\\DCIM\\100EOSR6\\6V1A9915.CR3": "2573a245990b67d660339ac5d81656b13dd3200d16bc253448be80b2772b8626",
+  "D:\\DCIM\\100EOSR6\\6V1A9916.CR3": "696352225700fc4505c3c415ca004da113071083583ec2dd83b018e6c4503aee",
+  "D:\\DCIM\\100EOSR6\\6V1A9917.CR3": "f033e4fefed8fcc94c9711d36b7f7a3b76ababcf504a8817ea00735310cdcac1",
+  "D:\\DCIM\\100EOSR6\\6V1A9918.CR3": "4444c77564e23452a58f4ed30eac1fd69825c9b68fe6a10e725400ecc0dc200c",
+  "D:\\DCIM\\100EOSR6\\6V1A9919.CR3": "3484b066c041abbc028a766117773ed7a8ab4102f72adabdcd9175c22c205813",
+  "D:\\DCIM\\100EOSR6\\6V1A9920.CR3": "bbf7501935c95132c7d7a08987adc293e343ccaffede76daa181ba55344c0eb2",
+  "D:\\DCIM\\100EOSR6\\6V1A9921.CR3": "1bfbb63bb703d07047edf63fd9fff5c9822e251c4fa73b5ca5823d44c26b06b7",
+  "D:\\DCIM\\100EOSR6\\6V1A9922.CR3": "277c5a208d9eed75389b3d71b46f4a1f2166b1ccea49735030845d0d66f16ac9",
+  "D:\\DCIM\\100EOSR6\\6V1A9923.CR3": "17c0fef7668f4ca15969fe0a8b76b92b31def9b6e56352d38ebab5a1b66c690a",
+  "D:\\DCIM\\100EOSR6\\6V1A9924.CR3": "36b59ce3760d26d0c0af9e645123542eb88f5d8fb4f973685971063e602dfdbe",
+  "D:\\DCIM\\100EOSR6\\6V1A9925.CR3": "878f54e71a57860647ce59c8e8c919614348ead617dfa31ef03f8dc548d09e90",
+  "D:\\DCIM\\100EOSR6\\6V1A9926.CR3": "9de45bd30b1065b10a7de5163e5062f3f356f6a99aa832f0f37480007858d2ae",
+  "D:\\DCIM\\100EOSR6\\6V1A9927.CR3": "493ff1d78c99a324d59ac83db0cdc2df2f8ed48eaa27ed1456d05f20a083cc3a",
+  "D:\\DCIM\\100EOSR6\\6V1A9928.CR3": "6848a19793763b6f82a47def722a3aa0314bbde40849c3419db0f8887a185ae0",
+  "D:\\DCIM\\100EOSR6\\6V1A9929.CR3": "021ba1442e49d0e9763920b39c854d55666ee051c91d4ce8be545139517e41e6",
+  "D:\\DCIM\\100EOSR6\\6V1A9930.CR3": "0f3738c86f3d45bb34f29f2dcf7d283551b2427443a0804f5dd5bcba6ff9799f",
+  "D:\\DCIM\\100EOSR6\\6V1A9931.CR3": "4acdc3df0772ce70a8b852ee89ac3d193125e5a40317fd9bedfa50184b4aa813",
+  "D:\\DCIM\\100EOSR6\\6V1A9932.CR3": "e69fb93df547e465c01750aa0b8b9e824604772ec2b878a83111242efdbcca92",
+  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0003.CR3": "172231741d16ea44e6bc0f509d39a9d6482aa52dbab2eea0246e06d125668b6e",
+  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0004.CR3": "6df877e9085f8d939cfd99fdc4dbc10f5b8e7bb1f97d9ad6a06835432ae34742",
+  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9950.CR3": "8f7eba49f50e1cc2e1c4b892053a238ec82063408337670810eeb0cd4f9b9b16",
+  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9951.CR3": "05043c4ec89b26b4b7fbfbf11f6903e540d10918e45819bc68e261394183f47c"
+ },
+ "tool": {
+  "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-tools\\Release\\iprOpeningTransportProbe.exe",
+  "sha256": "cc36b631a661ccffc7f0c74c59e577f7aa60180d41d3b649b3e9a510a58ad5e1"
+ },
+ "runner_sha256": "33113ec857e1d22669e331d339e6ca24a7f9774372985b44fca9a021c86502ae",
+ "runner_source": "\"\"\"Bounded native-stage pilot with exact-production baseline guards, no denoise change.\"\"\"\nfrom datetime import datetime,timezone\nimport json\nfrom pathlib import Path\nimport subprocess\nimport sys\n\nimport numpy as np\n\nfrom analysis.render import available_memory,runtime_env\nfrom study_noise_neighbourhoods import ROOT,sha256,git\n\n\ndef paired_covariance(a,b):\n    if a.shape!=b.shape or a.ndim!=3 or a.shape[-1]!=3 or not np.isfinite(a).all() or not np.isfinite(b).all():\n        raise ValueError('Finite matching RGB crops required')\n    samples=((a.astype(float)-b.astype(float))/np.sqrt(2)).reshape(-1,3)\n    return np.cov(samples,rowvar=False)\n\n\ndef read_crops(path,record):\n    values=np.fromfile(path,dtype='<f4');result={}\n    for stage in record['stages']:\n        start=int(stage['offset_bytes'])//4;count=int(np.prod(stage['shape']))\n        if start<0 or start+count>len(values):raise ValueError('Invalid crop extent')\n        result.setdefault(stage['stage'],[]).append(values[start:start+count].reshape(stage['shape']))\n    if any(len(v)!=3 for v in result.values()):raise ValueError('Three crops required per stage')\n    return result\n\n\ndef run():\n    started=datetime.now(timezone.utc)\n    if sys.byteorder!='little' or (available_memory() or 0)<7*1024**3:raise ValueError('Need little endian and at least7GiB available')\n    folder=ROOT/'docs/validation/raw'\n    paths=[folder/n for n in ('qualification-noirs-repetes-bruit-v001-20261028T100350Z.json',\n        'qualification-rafales-carte-bruit-v001-20261028T094754Z.json')]\n    hashes=[sha256(p) for p in paths];blacks,scenes=[json.loads(p.read_text(encoding='utf-8')) for p in paths]\n    scene_freeze=Path(scenes['freeze']['path'])\n    if sha256(scene_freeze)!=scenes['freeze']['sha256']:raise ValueError('Scene freeze changed')\n    identities={f['path']:f['sha256'] for f in json.loads(scene_freeze.read_text(encoding='utf-8'))['frames']}\n    pairs=[]\n    for iso,near,bright in ((1600,20,0),(51200,16,5)):\n        dark=next(g for g in blacks['records'] if g['iso']==iso)\n        dark_paths=[]\n        # Preserve the previously frozen development order, including filename rollover.\n        freeze=json.loads(Path(blacks['freeze']['path']).read_text(encoding='utf-8'))\n        if sha256(Path(blacks['freeze']['path']))!=blacks['freeze']['sha256']:raise ValueError('Black freeze changed')\n        member=next(g for g in freeze['groups'] if g['iso']==iso)\n        for index in member['development'][:2]:\n            f=member['frames'][index];dark_paths.append(f['path']);identities[f['path']]=f['sha256']\n        pairs.append(dict(iso=iso,role='black',paths=dark_paths))\n        for name,index in (('near_black_scene',near),('illuminated_scene',bright)):\n            g=next(g for g in scenes['records'] if g['group_index']==index)\n            pairs.append(dict(iso=iso,role=name,paths=g['paths'][:2]))\n    sources=[Path(p) for pair in pairs for p in pair['paths']]\n    if len(set(sources))!=12:raise ValueError('Need twelve disjoint pilot sources')\n    for path in sources:\n        if sha256(path)!=identities[str(path)]:raise ValueError('Changed pilot source')\n    tool=ROOT/'build-patch_noise/burst-tools/Release/iprOpeningTransportProbe.exe';tool_hash=sha256(tool)\n    stamp=started.strftime('%Y%m%dT%H%M%SZ');work=ROOT/'build-patch_noise/opening-stage-pilot'/stamp\n    work.mkdir(parents=True,exist_ok=False)\n    frozen=dict(campaign_id='noise-opening-stage-freeze-'+stamp,schema_version=1,data_version=1,\n        measured_at_utc=datetime.now(timezone.utc).isoformat(),pairs=pairs,source_sha256=identities,\n        tool=dict(path=str(tool),sha256=tool_hash),runner_sha256=sha256(Path(__file__)),runner_source=Path(__file__).read_text(encoding='utf-8'),\n        policy='First two development black captures and first two scene captures of predeclared groups0/20/5/16. ISO1600/51200 only, optics off, calibrated CameraNeutral opening. Two-frame pilot, not a new held-out validation. Fail if instrumented camera or DCP master differs from full production baseline by >1e-7.')\n    freeze_path=folder/f'gel-sonde-ouverture-bruit-v001-{stamp}.json'\n    with freeze_path.open('x',encoding='utf-8') as handle:json.dump(frozen,handle,ensure_ascii=False,indent=1,allow_nan=False)\n    print('FROZEN',freeze_path,flush=True)\n    native={};pixels={}\n    for index,path in enumerate(sources):\n        out=work/f'{index:02}-{path.stem}.json'\n        subprocess.run([str(tool),str(out),str(path)],env=runtime_env(tool),timeout=240,check=True)\n        record=json.loads(out.read_text(encoding='utf-8'))\n        if record['source_sha256']!=identities[str(path)]:raise ValueError('Native source identity mismatch')\n        native[str(path)]=dict(path=str(out),sha256=sha256(out),record=record,\n            pixels=dict(path=str(out)+'.f32',sha256=sha256(Path(str(out)+'.f32'))))\n        pixels[str(path)]=read_crops(Path(str(out)+'.f32'),record)\n        print('FRAME',index+1,'/',len(sources),path.name,'baseline',record['camera_baseline_delta'],record['master_baseline_delta'],flush=True)\n    records=[]\n    projection=np.array([[.2627002120112671,.6779980715188708,.0593017164698620],[1,0,-1],[-.5,1,-.5]])\n    for pair in pairs:\n        a,b=[pixels[p] for p in pair['paths']];rows=[]\n        for stage in a:\n            for roi,(x,y) in enumerate(zip(a[stage],b[stage])):\n                if x.shape!=y.shape:raise ValueError('Pilot crop geometry differs')\n                if x.shape[-1]==1:\n                    channels=[]\n                    for dy,dx in ((0,0),(0,1),(1,0),(1,1)):\n                        xx=x[dy::2,dx::2,0].astype(float);yy=y[dy::2,dx::2,0].astype(float)\n                        channels.append(dict(offset=[dy,dx],means=[float(xx.mean()),float(yy.mean())],\n                            zero_fractions=[float(np.mean(xx==0)),float(np.mean(yy==0))],\n                            pair_variance=float(np.var((xx-yy)/np.sqrt(2),ddof=1))))\n                    rows.append(dict(stage=stage,roi=roi,cfa_phases=channels))\n                else:\n                    c=paired_covariance(x,y)\n                    rows.append(dict(stage=stage,roi=roi,covariance_rgb=c.tolist(),\n                        covariance_y_co_cg=(projection@c@projection.T).tolist() if stage=='post_dcp_rec2020' else None,\n                        means=[np.mean(x,axis=(0,1)).tolist(),np.mean(y,axis=(0,1)).tolist()]))\n        states=[native[p]['record']['pre_interpolate_state'] for p in pair['paths']]\n        records.append(dict(**pair,pre_interpolate_states=states,rows=rows))\n    if tool_hash!=sha256(tool) or hashes!=[sha256(p) for p in paths]:raise ValueError('Tool or parents changed')\n    now=datetime.now(timezone.utc);output=folder/f'sonde-etapes-ouverture-bruit-v001-{now.strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n    result=dict(campaign_id='noise-opening-stage-pilot-'+stamp,schema_version=1,data_version=1,\n        started_at_utc=started.isoformat(),measured_at_utc=now.isoformat(),completed_at_utc=now.isoformat(),\n        parents=[dict(path=str(p),sha256=h) for p,h in zip(paths,hashes)],freeze=dict(path=str(freeze_path),sha256=sha256(freeze_path)),\n        native=native,records=records,commit=git('rev-parse','HEAD'),\n        sources={n:dict(sha256=sha256(ROOT/n),source=(ROOT/n).read_text(encoding='utf-8')) for n in (\n            'tests/burst_tools/opening_transport_probe.cpp','tests/burst_tools/CMakeLists.txt','src/raw/RawDecoder.cpp','src/raw/Demosaic.cpp')},\n        units='Float at pre-RCD after /65535, camera RGB and post-DCP Rec2020; variance/covariance in squared stage units.',\n        limitations='Two captures per pair, three spatial crops only; paired residuals can contain motion and lighting/WB changes. Not clean truth or visual denoise comparison. Profiles and gains can differ across black/scene captures: do not subtract their RGB covariances without transport. Probe reuses unmodified decoder internals via test-only white-box include; baseline equality guards both camera and DCP output. Diagnostics run neutral with optics off only; edits/optical resampling not covered. No raw-floating alternative implemented or IA inference, source deletion, production change or final sealed burst access.',\n        verdict='native_opening_stages_pilot_with_production_baseline_guards')\n    with output.open('x',encoding='utf-8') as handle:json.dump(result,handle,ensure_ascii=False,indent=1,allow_nan=False)\n    print('RESULT',output,flush=True)\n\n\nif __name__=='__main__':run()\n",
+ "policy": "First two development black captures and first two scene captures of predeclared groups0/20/5/16. ISO1600/51200 only, optics off, calibrated CameraNeutral opening. Two-frame pilot, not a new held-out validation. Fail if instrumented camera or DCP master differs from full production baseline by >1e-7."
+}

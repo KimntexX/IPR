@@ -1,0 +1,1362 @@
+{
+ "schema_version": 1,
+ "data_version": 1,
+ "started_at_utc": "2026-10-28T09:47:36.518547+00:00",
+ "frozen_at_utc": "2026-10-28T09:47:43.668152+00:00",
+ "frames": [
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9861.CR3",
+   "sha256": "2cb1c583cffd0dc7719a341376b3d20cc3eb47a2faa510bdd70da21214f66b28",
+   "size": 29558996,
+   "mtime_ns": 1793184083000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:41:20",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 1600,
+    "recommended_iso": 1600,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9862.CR3",
+   "sha256": "68a9f256c213cf2c4845e89ab1718d5b8d163dc38008218d8eb43768a2cb0406",
+   "size": 29553364,
+   "mtime_ns": 1793184085000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:41:20",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 1600,
+    "recommended_iso": 1600,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9863.CR3",
+   "sha256": "8dc5863546e1eb2cfd691f3d7cd8884e7dbb97880ac34ebefd6a561e3191fa67",
+   "size": 29549780,
+   "mtime_ns": 1793184087000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:41:20",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 1600,
+    "recommended_iso": 1600,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9864.CR3",
+   "sha256": "3cf5d717b0fc920cfc5e44ae4c5a71e7309f444c902ac6abe2f0ecb4f131350d",
+   "size": 34291924,
+   "mtime_ns": 1793184090000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:41:28",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 3200,
+    "recommended_iso": 3200,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9865.CR3",
+   "sha256": "25630914c066c8588b950f2acd0c35db2b80dc2a4a89e67b3b50a699d83dd070",
+   "size": 34285268,
+   "mtime_ns": 1793184093000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:41:28",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 3200,
+    "recommended_iso": 3200,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9866.CR3",
+   "sha256": "18058614e1317939f1579685fe11822ba8d556aa96d12f0d6c8169491a7c0a7b",
+   "size": 34284756,
+   "mtime_ns": 1793184095000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:41:28",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 3200,
+    "recommended_iso": 3200,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9867.CR3",
+   "sha256": "0de30d964c366c8304532865bb388b737adc37e5c90e7fde4dd4425b7f0b10dc",
+   "size": 39158484,
+   "mtime_ns": 1793184097000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:41:33",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 6400,
+    "recommended_iso": 6400,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9868.CR3",
+   "sha256": "282e3b61c7cf4b49dfa2e49dbe473d0f0d814d0c19345f30896b5aa227295789",
+   "size": 39160532,
+   "mtime_ns": 1793184100000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:41:33",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 6400,
+    "recommended_iso": 6400,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9869.CR3",
+   "sha256": "b01f0acb094fb7ad4b8022a7097ce4199a98bd87dafb95067aeabf7fa917a8d9",
+   "size": 39172308,
+   "mtime_ns": 1793184102000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:41:33",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 6400,
+    "recommended_iso": 6400,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9870.CR3",
+   "sha256": "2472e2a773fe7ba1454d6c5b5a171d4e46707f03f06c0765246fc35af83ada44",
+   "size": 44574420,
+   "mtime_ns": 1793184104000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:41:38",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 12800,
+    "recommended_iso": 12800,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9871.CR3",
+   "sha256": "2bb426998512a4e9e1b7b8de03548be18c55c2c6276a256ff9400c6b8849c09d",
+   "size": 44574420,
+   "mtime_ns": 1793184106000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:41:38",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 12800,
+    "recommended_iso": 12800,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9872.CR3",
+   "sha256": "5ebe2c42ecbbc2b143e3fb0cc641663f40f12cd882899b6612a0a0ee4fadba64",
+   "size": 49998548,
+   "mtime_ns": 1793184108000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:41:42",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 25600,
+    "recommended_iso": 25600,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9873.CR3",
+   "sha256": "9cde008cffa445ca388fa3485da172ff9816c17685e7da6282191f23e27a1a93",
+   "size": 49992916,
+   "mtime_ns": 1793184110000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:41:42",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 25600,
+    "recommended_iso": 25600,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9874.CR3",
+   "sha256": "f4c64963b457d371ae9d7b6506fa3e270cec689ed342b9243d2b6783b5f28ece",
+   "size": 49988820,
+   "mtime_ns": 1793184113000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:41:42",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 25600,
+    "recommended_iso": 25600,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9875.CR3",
+   "sha256": "9118cc1a6ef249135ab5ecc86fbc4435449c2ada88a6952274feb150d4d2b95c",
+   "size": 49989844,
+   "mtime_ns": 1793184115000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:41:42",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 25600,
+    "recommended_iso": 25600,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9876.CR3",
+   "sha256": "7267e862f05bf82802acd65da32bba2361a189db695890ae809d69447cd2964c",
+   "size": 54258388,
+   "mtime_ns": 1793184117000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:41:47",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 51200,
+    "recommended_iso": 51200,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9877.CR3",
+   "sha256": "1b7613917913ac71fd02c7d023083ec1597dcb7e49cdd6a271415a7a741de61f",
+   "size": 54258388,
+   "mtime_ns": 1793184119000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:41:47",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 51200,
+    "recommended_iso": 51200,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9878.CR3",
+   "sha256": "515f2177da1fb75c1208f842a6b5c5bf3f2239c174b23d2ec8491e9f6ccd6a7f",
+   "size": 54256340,
+   "mtime_ns": 1793184121000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:41:47",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 51200,
+    "recommended_iso": 51200,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9879.CR3",
+   "sha256": "8eb0eedc51653f9e2375ee314adcbb39aa1b0e3164cc9112628434072dc3cffb",
+   "size": 53006548,
+   "mtime_ns": 1793184124000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:42:02",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 51200,
+    "recommended_iso": 51200,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9880.CR3",
+   "sha256": "8804abf8ed53b56c01b4501897bc5a6a44ad6f7d67679bf88334cb8d7318ee10",
+   "size": 53010132,
+   "mtime_ns": 1793184126000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:42:02",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 51200,
+    "recommended_iso": 51200,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9881.CR3",
+   "sha256": "de51a38eaa479f43d43cf1cfd684e535242bcb96cf80ba61e2c331f5f2556177",
+   "size": 53005524,
+   "mtime_ns": 1793184128000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:42:02",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 51200,
+    "recommended_iso": 51200,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9882.CR3",
+   "sha256": "6b5d50b470cb07c98f65c4451ca3c450092a74d28230a938e031034e912af0aa",
+   "size": 42126548,
+   "mtime_ns": 1793184133000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:42:11",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 12800,
+    "recommended_iso": 12800,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9883.CR3",
+   "sha256": "a8b11f25f15edf01c883e2215a80ce24f8e7fd42d3f6db89234f907254af2c6f",
+   "size": 42129620,
+   "mtime_ns": 1793184136000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:42:11",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 12800,
+    "recommended_iso": 12800,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9884.CR3",
+   "sha256": "a46bb3769628c064b262ef3a82593688001bb3a83f55ca721257b0fbbe47ca0a",
+   "size": 36958932,
+   "mtime_ns": 1793184138000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:42:15",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 6400,
+    "recommended_iso": 6400,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9885.CR3",
+   "sha256": "8088dc3f59485727795c858eb0d107448adf0252d7ead8911a07d883e76372eb",
+   "size": 36961492,
+   "mtime_ns": 1793184140000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:42:15",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 6400,
+    "recommended_iso": 6400,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9886.CR3",
+   "sha256": "1f7e0aa5a361cf2f78fac123111a0ce81d5f8a3c93d9e2f596b0bd35b915f604",
+   "size": 36955348,
+   "mtime_ns": 1793184143000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:42:15",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 6400,
+    "recommended_iso": 6400,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9887.CR3",
+   "sha256": "67ec7d027af90d3c38032e7ab4cbea8ddc3f53ef0b4bd7622f020e4cc71c606d",
+   "size": 32364756,
+   "mtime_ns": 1793184145000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:42:19",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 3200,
+    "recommended_iso": 3200,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9888.CR3",
+   "sha256": "2044104cdf553ae895b18171c71bf2ee5e9750f788790347e3b5fccfc820cf6e",
+   "size": 32369876,
+   "mtime_ns": 1793184147000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:42:20",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 3200,
+    "recommended_iso": 3200,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9889.CR3",
+   "sha256": "c75e66dd362d2d9fafdda263b2d9399592e3856a1da408ee2542e2429da1504a",
+   "size": 27600084,
+   "mtime_ns": 1793184150000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:42:24",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 1600,
+    "recommended_iso": 1600,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9890.CR3",
+   "sha256": "16e779bed73d80c42cdd20ddee22b3b7b21f0466f5000b0a55508e82f20ad28c",
+   "size": 27601108,
+   "mtime_ns": 1793184152000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:42:24",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 1600,
+    "recommended_iso": 1600,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9891.CR3",
+   "sha256": "010d7ca90be3ca27c1045278c1aee90d9350acff1554fd99f7642201e88f3e5b",
+   "size": 28032212,
+   "mtime_ns": 1793184159000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:42:36",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 1600,
+    "recommended_iso": 1600,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9892.CR3",
+   "sha256": "aa0b446df88083bcaedfa9227af29847b8977b1257999ba6ec9eef22dc68fa18",
+   "size": 28035284,
+   "mtime_ns": 1793184161000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:42:36",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 1600,
+    "recommended_iso": 1600,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9893.CR3",
+   "sha256": "ab80fdce961664c328a747a6f80f09d0cf658501a1c2e5f03fb6eb12c25f5c03",
+   "size": 28040916,
+   "mtime_ns": 1793184164000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:42:37",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 1600,
+    "recommended_iso": 1600,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9894.CR3",
+   "sha256": "702d25311f23d9e23735e795e1693dd87da9dea38b3a3356697fc4665c054c9b",
+   "size": 32676564,
+   "mtime_ns": 1793184166000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:42:40",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 3200,
+    "recommended_iso": 3200,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9895.CR3",
+   "sha256": "be31802d73f696ebe7706e9b3bcc450c4094e72bd7504b400e0ab7824bf3543e",
+   "size": 32679636,
+   "mtime_ns": 1793184169000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:42:40",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 3200,
+    "recommended_iso": 3200,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9896.CR3",
+   "sha256": "3ea103e61a0fd9f7357fa8b9589c96f76bbc7f66c712bf93312e682c6b93e844",
+   "size": 32678100,
+   "mtime_ns": 1793184171000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:42:41",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 3200,
+    "recommended_iso": 3200,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9897.CR3",
+   "sha256": "e7dd5a5cae7b31da271f0e5fd4394875b88d231da848af3428ed00aabadc87d9",
+   "size": 37282004,
+   "mtime_ns": 1793184173000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:42:44",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 6400,
+    "recommended_iso": 6400,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9898.CR3",
+   "sha256": "91003c7df799325dcc191b18d7dc3197cbb78d043771c8a868c52fe8303d77fa",
+   "size": 37287124,
+   "mtime_ns": 1793184176000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:42:44",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 6400,
+    "recommended_iso": 6400,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9899.CR3",
+   "sha256": "af97b0dd66154a90c7bdf5f23f5d3373b13ddfb82b09fb62bcbe1168b3b526bb",
+   "size": 37294804,
+   "mtime_ns": 1793184178000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:42:44",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 6400,
+    "recommended_iso": 6400,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9900.CR3",
+   "sha256": "7114359c9bb4272beab130d30a0b2c05eb00932097e0e33d4d92773877ab615b",
+   "size": 42458836,
+   "mtime_ns": 1793184180000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:42:49",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 12800,
+    "recommended_iso": 12800,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9901.CR3",
+   "sha256": "7eda9cedf30900f3fe3f0a437f8c71193ecad3cdea4d6cc36c9b1bcd25a4f61b",
+   "size": 42464980,
+   "mtime_ns": 1793184182000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:42:49",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 12800,
+    "recommended_iso": 12800,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9902.CR3",
+   "sha256": "a5688c67d5d9805e2657e26bf4f9f347a200d14bce56c8dc4989fcf3a09356cd",
+   "size": 53219028,
+   "mtime_ns": 1793184184000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:42:55",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 51200,
+    "recommended_iso": 51200,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9903.CR3",
+   "sha256": "04de70ff38b73fd14d39ae84ce082363c8a1f6462d8242e839e0edaee8c48e93",
+   "size": 53219540,
+   "mtime_ns": 1793184186000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:42:55",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 51200,
+    "recommended_iso": 51200,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9904.CR3",
+   "sha256": "50015138be54ef12ed4755aad0f7bc90d776f66a27ea6c689f3b0ba2e02769e0",
+   "size": 53217492,
+   "mtime_ns": 1793184188000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:42:55",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 51200,
+    "recommended_iso": 51200,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9905.CR3",
+   "sha256": "f1a14c6075d8be503b818fdfda981e976b07c6065cce717b8166e8d0fd6987c3",
+   "size": 49619668,
+   "mtime_ns": 1793184191000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:43:08",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 51200,
+    "recommended_iso": 51200,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9906.CR3",
+   "sha256": "c8744f5f903619f9d9cfbf1d30bc4865683039c50d1c3db73792f247a8a0b9ae",
+   "size": 49619156,
+   "mtime_ns": 1793184193000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:43:09",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 51200,
+    "recommended_iso": 51200,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9907.CR3",
+   "sha256": "9e6fb509fe0f193e5e25711007b086b2a4b7e48257ef84b93ca443639a36868b",
+   "size": 49626324,
+   "mtime_ns": 1793184196000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:43:09",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 51200,
+    "recommended_iso": 51200,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9908.CR3",
+   "sha256": "1aeab1527d1521b9d2c4541c1804c5aaa4d3714f1eefece5d1f6b5de7adcb1f2",
+   "size": 39448276,
+   "mtime_ns": 1793184198000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:43:14",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 12800,
+    "recommended_iso": 12800,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9909.CR3",
+   "sha256": "d610a9effcbb401cb9aa8b593f08f7702e209a48db657100b41146420a06e588",
+   "size": 39433428,
+   "mtime_ns": 1793184200000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:43:14",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 12800,
+    "recommended_iso": 12800,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9910.CR3",
+   "sha256": "03d2bd8749fd9b52c5e08deb59ec80bd270197e8b7802154627333968e2c7ee8",
+   "size": 39430356,
+   "mtime_ns": 1793184203000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:43:15",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 12800,
+    "recommended_iso": 12800,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9911.CR3",
+   "sha256": "afdd5b8fb0f177ca99ca4b8237dcecd75eaf5bdee7e401441a86faf535aea6a3",
+   "size": 34677460,
+   "mtime_ns": 1793184205000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:43:17",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 6400,
+    "recommended_iso": 6400,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9912.CR3",
+   "sha256": "0502e691b22c01302d4a41fb31860b71acb8fa0d994e084bcffec1d15afa668b",
+   "size": 34671828,
+   "mtime_ns": 1793184207000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:43:17",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 6400,
+    "recommended_iso": 6400,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9913.CR3",
+   "sha256": "494f071b87345bbb10697850254cff9d863ae573d6a644a4e40512beed1c6137",
+   "size": 30553812,
+   "mtime_ns": 1793184210000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:43:21",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 3200,
+    "recommended_iso": 3200,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9914.CR3",
+   "sha256": "a5cd3256d72b03847ff5deac071ba8cf75e0acb5317a4e18134d5ef89476cd1e",
+   "size": 30544596,
+   "mtime_ns": 1793184212000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:43:21",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 3200,
+    "recommended_iso": 3200,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9915.CR3",
+   "sha256": "2573a245990b67d660339ac5d81656b13dd3200d16bc253448be80b2772b8626",
+   "size": 30540500,
+   "mtime_ns": 1793184214000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:43:21",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 3200,
+    "recommended_iso": 3200,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9916.CR3",
+   "sha256": "696352225700fc4505c3c415ca004da113071083583ec2dd83b018e6c4503aee",
+   "size": 25804500,
+   "mtime_ns": 1793184217000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:43:23",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 1600,
+    "recommended_iso": 1600,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9917.CR3",
+   "sha256": "f033e4fefed8fcc94c9711d36b7f7a3b76ababcf504a8817ea00735310cdcac1",
+   "size": 25800916,
+   "mtime_ns": 1793184219000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:43:23",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 1600,
+    "recommended_iso": 1600,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9918.CR3",
+   "sha256": "4444c77564e23452a58f4ed30eac1fd69825c9b68fe6a10e725400ecc0dc200c",
+   "size": 29004500,
+   "mtime_ns": 1793184224000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:43:42",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 1600,
+    "recommended_iso": 1600,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9919.CR3",
+   "sha256": "3484b066c041abbc028a766117773ed7a8ab4102f72adabdcd9175c22c205813",
+   "size": 28987092,
+   "mtime_ns": 1793184227000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:43:42",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 1600,
+    "recommended_iso": 1600,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9920.CR3",
+   "sha256": "bbf7501935c95132c7d7a08987adc293e343ccaffede76daa181ba55344c0eb2",
+   "size": 28971732,
+   "mtime_ns": 1793184229000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:43:42",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 1600,
+    "recommended_iso": 1600,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9921.CR3",
+   "sha256": "1bfbb63bb703d07047edf63fd9fff5c9822e251c4fa73b5ca5823d44c26b06b7",
+   "size": 33705172,
+   "mtime_ns": 1793184232000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:43:49",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 3200,
+    "recommended_iso": 3200,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9922.CR3",
+   "sha256": "277c5a208d9eed75389b3d71b46f4a1f2166b1ccea49735030845d0d66f16ac9",
+   "size": 33716436,
+   "mtime_ns": 1793184234000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:43:49",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 3200,
+    "recommended_iso": 3200,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9923.CR3",
+   "sha256": "17c0fef7668f4ca15969fe0a8b76b92b31def9b6e56352d38ebab5a1b66c690a",
+   "size": 38636244,
+   "mtime_ns": 1793184241000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:43:59",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 6400,
+    "recommended_iso": 6400,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9924.CR3",
+   "sha256": "36b59ce3760d26d0c0af9e645123542eb88f5d8fb4f973685971063e602dfdbe",
+   "size": 38661844,
+   "mtime_ns": 1793184244000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:44:00",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 6400,
+    "recommended_iso": 6400,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9925.CR3",
+   "sha256": "878f54e71a57860647ce59c8e8c919614348ead617dfa31ef03f8dc548d09e90",
+   "size": 38668500,
+   "mtime_ns": 1793184246000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:44:00",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 6400,
+    "recommended_iso": 6400,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9926.CR3",
+   "sha256": "9de45bd30b1065b10a7de5163e5062f3f356f6a99aa832f0f37480007858d2ae",
+   "size": 44076756,
+   "mtime_ns": 1793184248000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:44:03",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 12800,
+    "recommended_iso": 12800,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9927.CR3",
+   "sha256": "493ff1d78c99a324d59ac83db0cdc2df2f8ed48eaa27ed1456d05f20a083cc3a",
+   "size": 44072148,
+   "mtime_ns": 1793184250000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:44:03",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 12800,
+    "recommended_iso": 12800,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9928.CR3",
+   "sha256": "6848a19793763b6f82a47def722a3aa0314bbde40849c3419db0f8887a185ae0",
+   "size": 44067028,
+   "mtime_ns": 1793184252000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:44:03",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 12800,
+    "recommended_iso": 12800,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9929.CR3",
+   "sha256": "021ba1442e49d0e9763920b39c854d55666ee051c91d4ce8be545139517e41e6",
+   "size": 44067028,
+   "mtime_ns": 1793184254000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:44:04",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 12800,
+    "recommended_iso": 12800,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9930.CR3",
+   "sha256": "0f3738c86f3d45bb34f29f2dcf7d283551b2427443a0804f5dd5bcba6ff9799f",
+   "size": 54069460,
+   "mtime_ns": 1793184256000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:44:08",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 51200,
+    "recommended_iso": 51200,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9931.CR3",
+   "sha256": "4acdc3df0772ce70a8b852ee89ac3d193125e5a40317fd9bedfa50184b4aa813",
+   "size": 54068436,
+   "mtime_ns": 1793184258000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:44:08",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 51200,
+    "recommended_iso": 51200,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9932.CR3",
+   "sha256": "e69fb93df547e465c01750aa0b8b9e824604772ec2b878a83111242efdbcca92",
+   "size": 54068436,
+   "mtime_ns": 1793184260000000000,
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:28 11:44:09",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 51200,
+    "recommended_iso": 51200,
+    "focal_mm": 105.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   }
+  }
+ ],
+ "groups": [
+  [
+   "D:\\DCIM\\100EOSR6\\6V1A9861.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9862.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9863.CR3"
+  ],
+  [
+   "D:\\DCIM\\100EOSR6\\6V1A9864.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9865.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9866.CR3"
+  ],
+  [
+   "D:\\DCIM\\100EOSR6\\6V1A9867.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9868.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9869.CR3"
+  ],
+  [
+   "D:\\DCIM\\100EOSR6\\6V1A9870.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9871.CR3"
+  ],
+  [
+   "D:\\DCIM\\100EOSR6\\6V1A9872.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9873.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9874.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9875.CR3"
+  ],
+  [
+   "D:\\DCIM\\100EOSR6\\6V1A9876.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9877.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9878.CR3"
+  ],
+  [
+   "D:\\DCIM\\100EOSR6\\6V1A9879.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9880.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9881.CR3"
+  ],
+  [
+   "D:\\DCIM\\100EOSR6\\6V1A9882.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9883.CR3"
+  ],
+  [
+   "D:\\DCIM\\100EOSR6\\6V1A9884.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9885.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9886.CR3"
+  ],
+  [
+   "D:\\DCIM\\100EOSR6\\6V1A9887.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9888.CR3"
+  ],
+  [
+   "D:\\DCIM\\100EOSR6\\6V1A9889.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9890.CR3"
+  ],
+  [
+   "D:\\DCIM\\100EOSR6\\6V1A9891.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9892.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9893.CR3"
+  ],
+  [
+   "D:\\DCIM\\100EOSR6\\6V1A9894.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9895.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9896.CR3"
+  ],
+  [
+   "D:\\DCIM\\100EOSR6\\6V1A9897.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9898.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9899.CR3"
+  ],
+  [
+   "D:\\DCIM\\100EOSR6\\6V1A9900.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9901.CR3"
+  ],
+  [
+   "D:\\DCIM\\100EOSR6\\6V1A9902.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9903.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9904.CR3"
+  ],
+  [
+   "D:\\DCIM\\100EOSR6\\6V1A9905.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9906.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9907.CR3"
+  ],
+  [
+   "D:\\DCIM\\100EOSR6\\6V1A9908.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9909.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9910.CR3"
+  ],
+  [
+   "D:\\DCIM\\100EOSR6\\6V1A9911.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9912.CR3"
+  ],
+  [
+   "D:\\DCIM\\100EOSR6\\6V1A9913.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9914.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9915.CR3"
+  ],
+  [
+   "D:\\DCIM\\100EOSR6\\6V1A9916.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9917.CR3"
+  ],
+  [
+   "D:\\DCIM\\100EOSR6\\6V1A9918.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9919.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9920.CR3"
+  ],
+  [
+   "D:\\DCIM\\100EOSR6\\6V1A9921.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9922.CR3"
+  ],
+  [
+   "D:\\DCIM\\100EOSR6\\6V1A9923.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9924.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9925.CR3"
+  ],
+  [
+   "D:\\DCIM\\100EOSR6\\6V1A9926.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9927.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9928.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9929.CR3"
+  ],
+  [
+   "D:\\DCIM\\100EOSR6\\6V1A9930.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9931.CR3",
+   "D:\\DCIM\\100EOSR6\\6V1A9932.CR3"
+  ]
+ ],
+ "runner_sha256": "0cd451c1c7f3c3cabf4fde2d1fc9bcd50aeebe8e2aabde2a264329abf0b682ad",
+ "runner_source": "\"\"\"Read-only qualification of explicitly scoped new card bursts; no profile fit.\"\"\"\nfrom datetime import datetime, timezone\nfrom itertools import combinations\nimport json\nimport mmap\nfrom pathlib import Path\nimport platform\n\nimport numpy as np\nimport rawpy\n\nfrom audit_noise_pairs import metadata, pair_stats, matching\nfrom study_noise_neighbourhoods import ROOT, sha256, git\n\n\ndef group_bursts(frames, gap_seconds=4):\n    groups=[]\n    for frame in frames:\n        previous=groups[-1][-1] if groups else None\n        timestamp=datetime.strptime(frame['metadata']['datetime'],'%Y:%m:%d %H:%M:%S')\n        prior=datetime.strptime(previous['metadata']['datetime'],'%Y:%m:%d %H:%M:%S') if previous else None\n        if (previous is None or not matching(previous['metadata'],frame['metadata']) or\n                not 0 <= (timestamp-prior).total_seconds() <= gap_seconds):\n            groups.append([])\n        groups[-1].append(frame)\n    return groups\n\n\ndef stack_moments(stack):\n    \"\"\"Separate drift and centered spatial covariance; signed estimates, no clipping.\"\"\"\n    stack=np.asarray(stack,dtype=np.float64)\n    if stack.ndim!=3 or stack.shape[0]<2 or min(stack.shape[1:])<2 or not np.isfinite(stack).all():\n        raise ValueError('Need at least two finite equal two-dimensional planes')\n    n=stack.shape[0]\n    means=stack.mean(axis=(1,2))\n    centered=stack-means[:,None,None]\n    pixels=stack.shape[1]*stack.shape[2]\n    temporal=float(np.var(stack,axis=0,ddof=1).mean())\n    centered_temporal=float(np.var(centered,axis=0,ddof=1).mean()*pixels/(pixels-1))\n    marginal=float(np.var(stack,axis=(1,2),ddof=1).mean())\n    mean_spatial=float(np.var(centered.mean(axis=0),ddof=1))\n    common=mean_spatial-centered_temporal/n\n    if not np.isclose(marginal-centered_temporal,common,atol=1e-8,rtol=1e-9):\n        raise ValueError('Finite-sample variance decomposition inconsistent')\n    return dict(frame_means_dn=means.tolist(),mean_range_dn=float(np.ptp(means)),\n        raw_temporal_variance_dn2=temporal,\n        centered_temporal_variance_dn2=centered_temporal,\n        average_single_spatial_variance_dn2=marginal,\n        burst_mean_spatial_variance_dn2=mean_spatial,\n        estimated_shared_spatial_variance_dn2=common,\n        signed_shared_fraction=common/marginal if marginal>0 else None)\n\n\ndef run():\n    started=datetime.now(timezone.utc)\n    source_root=Path('D:/DCIM/100EOSR6')\n    paths=[source_root/f'6V1A{i:04}.CR3' for i in range(9861,9933)]\n    if any(not p.is_file() for p in paths):raise ValueError('Expected new card range incomplete')\n    parent=ROOT/'docs/validation/raw/audit-domaine-raw-bruit-v001-20261028T092101Z.json'\n    parent_hash=sha256(parent)\n    domain=json.loads(parent.read_text(encoding='utf-8'))\n    darks={(int(r['folder'].split('-')[1]),r['plane']):r for r in domain['records'] if 'points' in r}\n    frames=[]\n    for path in paths:\n        stat=path.stat()\n        with path.open('rb') as stream:\n            with mmap.mmap(stream.fileno(),0,access=mmap.ACCESS_READ) as data:meta=metadata(data)\n        if not meta.get('datetime','').startswith('2026:10:28 '):raise ValueError('Unexpected capture date')\n        frames.append(dict(path=str(path),sha256=sha256(path),size=stat.st_size,mtime_ns=stat.st_mtime_ns,metadata=meta))\n    bursts=group_bursts(frames)\n    now=datetime.now(timezone.utc)\n    freeze=ROOT/'docs/validation/raw'/f'gel-rafales-carte-bruit-v001-{now.strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n    protocol=dict(schema_version=1,data_version=1,started_at_utc=started.isoformat(),frozen_at_utc=now.isoformat(),\n        frames=frames,groups=[[f['path'] for f in g] for g in bursts],\n        runner_sha256=sha256(Path(__file__)),runner_source=Path(__file__).read_text(encoding='utf-8'),\n        grouping='Filename order, same model/ISO/exposure/aperture/focal/lens; adjacent camera timestamps gap <=4s. Candidate burst boundaries, NOT confirmed illumination levels.',\n        selection='All 72 explicitly scoped new files. Three 256x256 visible CFA crops at x20/50/80%, center height. No previous sealed burst files opened. No fit or threshold optimization, descriptive inventory only.')\n    with freeze.open('x',encoding='utf-8') as handle:json.dump(protocol,handle,ensure_ascii=False,indent=1,allow_nan=False)\n    print('FROZEN',freeze,'groups',len(bursts),flush=True)\n    records=[]\n    for gi,group in enumerate(bursts):\n        crops=[];decoder=[];geometry=None\n        for frame in group:\n            path=Path(frame['path']);before=path.stat()\n            if (before.st_size,before.st_mtime_ns)!=(frame['size'],frame['mtime_ns']):raise ValueError('Card input changed before decoding')\n            with rawpy.imread(str(path)) as raw:\n                if raw.raw_pattern is None or raw.raw_pattern.shape!=(2,2):raise ValueError('Only Bayer supported')\n                m=raw.raw_image_visible;h,w=m.shape\n                if min(h,w)<512:raise ValueError('Insufficient image dimensions')\n                pattern=raw.raw_pattern.tolist()\n                current=(h,w,pattern)\n                if geometry is not None and geometry!=current:raise ValueError('Geometry changed within burst')\n                geometry=current\n                boxes=[((h//2-128)//2*2,(int(w*f)-128)//2*2) for f in (.2,.5,.8)]\n                crops.append(np.stack([m[y:y+256,x:x+256].copy() for y,x in boxes]))\n                desc=raw.color_desc.decode('ascii')\n                decoder.append(dict(path=str(path),shape=[h,w],cfa=pattern,color_desc=desc,\n                    black_level_per_channel=list(raw.black_level_per_channel),white_level=int(raw.white_level),\n                    crop_mosaic_yx=[list(p) for p in boxes]))\n            after=path.stat()\n            if (after.st_size,after.st_mtime_ns)!=(frame['size'],frame['mtime_ns']) or sha256(path)!=frame['sha256']:\n                raise ValueError('Card input changed during decode')\n        planes=[];iso=group[0]['metadata']['iso']\n        if len(crops)>=2:\n            stack=np.stack(crops).astype(np.float64)\n            for roi in range(3):\n                green=0\n                for dy,dx in ((0,0),(0,1),(1,0),(1,1)):\n                    name=decoder[0]['color_desc'][geometry[2][dy][dx]]\n                    if name=='G':green+=1;name='G'+str(green)\n                    data=stack[:,roi,dy::2,dx::2]\n                    moments=stack_moments(data)\n                    dark=darks.get((iso,name))\n                    signal=float(data.mean())-dark['empirical_black_dn'] if dark else None\n                    pairs=[]\n                    for a,b in combinations(range(len(group)),2):\n                        pairs.append(dict(left=group[a]['path'],right=group[b]['path'],**pair_stats(data[a],data[b])))\n                    planes.append(dict(roi=roi,plane=name,offset=[dy,dx],**moments,\n                        prior_empirical_black_dn=dark['empirical_black_dn'] if dark else None,\n                        prior_dark_variance_dn2=dark['dark_variance_dn2'] if dark else None,\n                        candidate_signal_dn=signal,\n                        candidate_signal_in_prior_dark_sigma=signal/np.sqrt(dark['dark_variance_dn2']) if dark else None,\n                        useful_mean_range_fraction=moments['mean_range_dn']/max(abs(signal),1) if signal is not None else None,\n                        near_white_fraction=float((data>=.98*min(d['white_level'] for d in decoder)).mean()),\n                        pair_diagnostics=pairs))\n        record=dict(group_index=gi,paths=[f['path'] for f in group],frames=len(group),metadata=group[0]['metadata'],\n            decoder=decoder,planes=planes,status='descriptive_only' if planes else 'insufficient_repetitions')\n        records.append(record)\n        print('GROUP',gi,Path(group[0]['path']).stem,Path(group[-1]['path']).stem,'ISO',iso,'N',len(group),\n            'R signal/sigma',[round(p['candidate_signal_in_prior_dark_sigma'],2) if p['candidate_signal_in_prior_dark_sigma'] is not None else None for p in planes if p['plane']=='R'],flush=True)\n    if sha256(parent)!=parent_hash:raise ValueError('Historical reference changed')\n    now=datetime.now(timezone.utc)\n    output=ROOT/'docs/validation/raw'/f'qualification-rafales-carte-bruit-v001-{now.strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n    result=dict(schema_version=1,data_version=1,started_at_utc=started.isoformat(),completed_at_utc=now.isoformat(),\n        freeze=dict(path=str(freeze),sha256=sha256(freeze)),parent=dict(path=str(parent),sha256=parent_hash),records=records,\n        commit=git('rev-parse','HEAD'),versions=dict(python=platform.python_version(),numpy=np.__version__,rawpy=rawpy.__version__,libraw=list(rawpy.libraw_version)),\n        units='Decoded visible CFA DN and DN^2, no demosaicing, no normalization, black not subtracted for variances.',\n        helper_sources={name:dict(sha256=sha256(ROOT/'tests'/name),source=(ROOT/'tests'/name).read_text(encoding='utf-8')) for name in ('audit_noise_pairs.py','audit_canon_metadata.py')},\n        limitations='Capture roles and illumination levels unconfirmed. Prior empirical dark reference from another capture session, unavailable at ISO12800/25600; never substitute declared decoder black as calibrated black. Grouping by timestamp/metadata cannot certify identical scene. Centered temporal variance removes whole-ROI mean changes only, not motion/illumination gradients. Short bursts and temporal correlation prevent clean truth or sensor fixed-pattern identification. No training, no held-out validation claim, no noise coefficients fitted.',\n        verdict='new_raw_burst_inventory_and_variance_qualification_only')\n    with output.open('x',encoding='utf-8') as handle:json.dump(result,handle,ensure_ascii=False,indent=1,allow_nan=False)\n    print('RESULT',output,flush=True)\n\n\nif __name__=='__main__':run()\n",
+ "grouping": "Filename order, same model/ISO/exposure/aperture/focal/lens; adjacent camera timestamps gap <=4s. Candidate burst boundaries, NOT confirmed illumination levels.",
+ "selection": "All 72 explicitly scoped new files. Three 256x256 visible CFA crops at x20/50/80%, center height. No previous sealed burst files opened. No fit or threshold optimization, descriptive inventory only."
+}

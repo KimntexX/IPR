@@ -1,0 +1,195 @@
+{
+ "campaign_id": "noise-dark-distributions-repeatability-freeze-20261028T113543Z",
+ "schema_version": 1,
+ "data_version": 1,
+ "measured_at_utc": "2026-10-28T11:35:43.152895+00:00",
+ "parents": [
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\qualification-noirs-repetes-bruit-v001-20261028T100350Z.json",
+   "sha256": "8d9d5b1eeffda90a2b122021126dc6e941fe6dfc72f05734be1f8c23fc11830a"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\sonde-etapes-ouverture-bruit-v001-20261028T104746Z.json",
+   "sha256": "0a330fcc140d2dbed2991600d4cd9d2e77da5066906bcf579acecd3ce85f1524"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\distributions-residus-bruit-v001-20261028T113008Z.json",
+   "sha256": "3ac323f9ab52ffa8769b92db4ad76897af1870800b43d41f87e5e548a16a0513"
+  }
+ ],
+ "pairs": [
+  {
+   "iso": 1600,
+   "subset": "development",
+   "paths": [
+    "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0003.CR3",
+    "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0004.CR3"
+   ],
+   "indices": [
+    0,
+    1
+   ]
+  },
+  {
+   "iso": 1600,
+   "subset": "development",
+   "paths": [
+    "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0005.CR3",
+    "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0006.CR3"
+   ],
+   "indices": [
+    2,
+    3
+   ]
+  },
+  {
+   "iso": 1600,
+   "subset": "development",
+   "paths": [
+    "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0007.CR3",
+    "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0008.CR3"
+   ],
+   "indices": [
+    4,
+    5
+   ]
+  },
+  {
+   "iso": 1600,
+   "subset": "control",
+   "paths": [
+    "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0009.CR3",
+    "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0010.CR3"
+   ],
+   "indices": [
+    6,
+    7
+   ]
+  },
+  {
+   "iso": 1600,
+   "subset": "control",
+   "paths": [
+    "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0011.CR3",
+    "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0012.CR3"
+   ],
+   "indices": [
+    8,
+    9
+   ]
+  },
+  {
+   "iso": 1600,
+   "subset": "control",
+   "paths": [
+    "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0013.CR3",
+    "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0014.CR3"
+   ],
+   "indices": [
+    10,
+    11
+   ]
+  },
+  {
+   "iso": 51200,
+   "subset": "development",
+   "paths": [
+    "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9950.CR3",
+    "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9951.CR3"
+   ],
+   "indices": [
+    0,
+    1
+   ]
+  },
+  {
+   "iso": 51200,
+   "subset": "development",
+   "paths": [
+    "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9952.CR3",
+    "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9953.CR3"
+   ],
+   "indices": [
+    2,
+    3
+   ]
+  },
+  {
+   "iso": 51200,
+   "subset": "control",
+   "paths": [
+    "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9955.CR3",
+    "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9956.CR3"
+   ],
+   "indices": [
+    5,
+    6
+   ]
+  },
+  {
+   "iso": 51200,
+   "subset": "control",
+   "paths": [
+    "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9957.CR3",
+    "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9958.CR3"
+   ],
+   "indices": [
+    7,
+    8
+   ]
+  }
+ ],
+ "omitted": [
+  {
+   "iso": 1600,
+   "subset": "control",
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0015.CR3",
+   "reason": "unpaired_original_allocation"
+  },
+  {
+   "iso": 51200,
+   "subset": "development",
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9954.CR3",
+   "reason": "unpaired_original_allocation"
+  },
+  {
+   "iso": 51200,
+   "subset": "control",
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9959.CR3",
+   "reason": "unpaired_original_allocation"
+  }
+ ],
+ "source_sha256": {
+  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0003.CR3": "172231741d16ea44e6bc0f509d39a9d6482aa52dbab2eea0246e06d125668b6e",
+  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0004.CR3": "6df877e9085f8d939cfd99fdc4dbc10f5b8e7bb1f97d9ad6a06835432ae34742",
+  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0005.CR3": "a0475c1c538277a44606dfa30f6f6654fc661dcf93a63359d26e250a93ebcaa4",
+  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0006.CR3": "0e4f80df91a3d47e106070406b994dfe70714e6ec8396d2d59caf651340c1fe2",
+  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0007.CR3": "b03af93b591a936e9ccaef80fad4457bc1e4326980682814fd55271d657f01de",
+  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0008.CR3": "687d2b24aeec0904b788f4e5b02793ce7a34a268c19278255abd2a0a6eceef3e",
+  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0009.CR3": "d3f082f255ff0e408bca298daead6df509f05ea762721701b1f6e7faab684a83",
+  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0010.CR3": "2a9110a5aaad5e95ddc26d0171a94e306ebe6dc4a00b9df2b62fa0960ac269e2",
+  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0011.CR3": "9b83009482ae37e863f8cfcd8a9c1e442c6cb81fe0ca610d0df56e4612fa271e",
+  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0012.CR3": "158cfa1c09abe4d9f1d6da8760fe95e2824887dd6f9ef49ffac3b7dda3b2fca7",
+  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0013.CR3": "b0a125661c9b2458997a13b158302d79576c9057e698b6713c6d42c4165e8279",
+  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0014.CR3": "f24646aba5248adc177e21a736abf09aa2e9a81622579e711cfb7d68c25b58d5",
+  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9950.CR3": "8f7eba49f50e1cc2e1c4b892053a238ec82063408337670810eeb0cd4f9b9b16",
+  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9951.CR3": "05043c4ec89b26b4b7fbfbf11f6903e540d10918e45819bc68e261394183f47c",
+  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9952.CR3": "cb12f47be240f80494cdf8cadb5eeb89b9dd3302f8de625991882ad5f47f95a8",
+  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9953.CR3": "4b6fd77a1e7bf57da76e61bb3ef7385166a797717aff90eb504e0e850ad5de9c",
+  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9955.CR3": "01e1c4c8a6e902fa1b4f148c17eb1c807060e81ac0ad50acf4fd33b6a7ed8ebf",
+  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9956.CR3": "10b7234ce2a4ec573168555e8cf45b41f960b41ea8698a44b0df962078e6d057",
+  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9957.CR3": "e4b5f7b5cd68010672531126ebacda28c9499e68123aae156ac3321a7ec4681b",
+  "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9958.CR3": "bb2cb0274203ee6405627f8551ff948ba5ee28313ef00db46e5705eff094bca8"
+ },
+ "original_allocation": {
+  "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\gel-noirs-repetes-bruit-v001-20261028T100341Z.json",
+  "sha256": "f8c0195f48b0262d5a152523366467fe580c60bdefe3e7f97e0a0d359e452705"
+ },
+ "tool": {
+  "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-tools\\Release\\iprOpeningTransportProbe.exe",
+  "sha256": "3b947a79b0c8849a38f675d945c95918c6eea50b2dd43a6b096a2533c7668992"
+ },
+ "policy": "All disjoint adjacent pairs WITHIN original development/control allocations at ISO1600/51200.10 pairs,20 frames; odd leftovers omitted, never cross subset boundaries. Three center128 ROIs, same fixed metrics as previous distribution audit. Reuse4 existing pilot native frames after identity checks; decode16 others via exact-production guarded probe, sequentially. Compare to frozen original simulations, no new model fit, threshold tuning, final42-burst reserve access or production modification. Control frames previously inspected for raw variance; internal repeatability, not pristine blind validation.",
+ "runner_source": "\"\"\"Repeat fixed residual diagnostics on disjoint, preassigned dark pairs.\"\"\"\nfrom datetime import datetime, timezone\nimport json\nfrom pathlib import Path\nimport subprocess\n\nimport numpy as np\n\nfrom analysis.render import available_memory, runtime_env\nfrom measure_noise_opening_stages import read_crops\nfrom study_noise_profile_decomposition import same_profile_context\nfrom study_noise_residual_distributions import describe,pack_cfa\nfrom study_noise_neighbourhoods import ROOT,sha256,git\n\n\ndef disjoint_pairs(indices):\n    values=list(indices)\n    if len(set(values))!=len(values) or any(not isinstance(i,int) or i<0 for i in values):\n        raise ValueError('Distinct nonnegative indices required')\n    return [values[i:i+2] for i in range(0,len(values)-1,2)], values[-1:] if len(values)%2 else []\n\n\ndef run():\n    started=datetime.now(timezone.utc);stamp=started.strftime('%Y%m%dT%H%M%SZ');base=ROOT/'docs/validation/raw'\n    names=('qualification-noirs-repetes-bruit-v001-20261028T100350Z.json',\n           'sonde-etapes-ouverture-bruit-v001-20261028T104746Z.json',\n           'distributions-residus-bruit-v001-20261028T113008Z.json')\n    paths=[base/n for n in names];hashes=[sha256(p) for p in paths]\n    blacks,pilot,prior=[json.loads(p.read_text(encoding='utf-8')) for p in paths]\n    black_freeze=Path(blacks['freeze']['path'])\n    if sha256(black_freeze)!=blacks['freeze']['sha256']:raise ValueError('Original allocation changed')\n    groups=json.loads(black_freeze.read_text(encoding='utf-8'))['groups']\n    pairs=[];omitted=[];identities={}\n    for g in groups:\n        if g['iso'] not in (1600,51200):continue\n        for subset in ('development','control'):\n            selected,leftover=disjoint_pairs(g[subset])\n            omitted.extend(dict(iso=g['iso'],subset=subset,path=g['frames'][i]['path'],reason='unpaired_original_allocation') for i in leftover)\n            for indices in selected:\n                frames=[g['frames'][i] for i in indices]\n                pair=dict(iso=g['iso'],subset=subset,paths=[f['path'] for f in frames],indices=indices)\n                pairs.append(pair)\n                identities.update({f['path']:f['sha256'] for f in frames})\n    if len(pairs)!=10 or len(identities)!=20:raise ValueError('Unexpected frozen coverage')\n    tool=ROOT/'build-patch_noise/burst-tools/Release/iprOpeningTransportProbe.exe';tool_hash=sha256(tool)\n    freeze=base/f'gel-repetabilite-distributions-noirs-v001-{stamp}.json'\n    frozen=dict(campaign_id='noise-dark-distributions-repeatability-freeze-'+stamp,schema_version=1,data_version=1,measured_at_utc=started.isoformat(),\n        parents=[dict(path=str(p),sha256=h) for p,h in zip(paths,hashes)],pairs=pairs,omitted=omitted,source_sha256=identities,\n        original_allocation=dict(path=str(black_freeze),sha256=sha256(black_freeze)),tool=dict(path=str(tool),sha256=tool_hash),\n        policy='All disjoint adjacent pairs WITHIN original development/control allocations at ISO1600/51200.10 pairs,20 frames; odd leftovers omitted, never cross subset boundaries. Three center128 ROIs, same fixed metrics as previous distribution audit. Reuse4 existing pilot native frames after identity checks; decode16 others via exact-production guarded probe, sequentially. Compare to frozen original simulations, no new model fit, threshold tuning, final42-burst reserve access or production modification. Control frames previously inspected for raw variance; internal repeatability, not pristine blind validation.',\n        runner_source=Path(__file__).read_text(encoding='utf-8'),runner_sha256=sha256(Path(__file__)))\n    with freeze.open('x',encoding='utf-8') as h:json.dump(frozen,h,ensure_ascii=False,indent=1,allow_nan=False)\n    print('FROZEN',freeze,flush=True)\n    work=ROOT/'build-patch_noise/dark-distribution-repeatability'/stamp;work.mkdir(parents=True,exist_ok=False)\n    native={}\n    for index,(source,identity) in enumerate(identities.items()):\n        if source in pilot['native']:\n            item=pilot['native'][source]\n            if item['record']['source_sha256']!=identity or sha256(Path(item['path']))!=item['sha256'] or sha256(Path(item['pixels']['path']))!=item['pixels']['sha256']:\n                raise ValueError('Cached pilot changed')\n            native[source]=item;print('REUSED',Path(source).name,flush=True);continue\n        if (available_memory() or 0)<7*1024**3:raise ValueError('Need7GiB available before native decode')\n        path=Path(source)\n        if sha256(path)!=identity:raise ValueError('Dark source changed')\n        out=work/f'{index:02}-{path.stem}.json'\n        subprocess.run([str(tool),str(out),source],check=True,env=runtime_env(tool),timeout=240)\n        record=json.loads(out.read_text(encoding='utf-8'))\n        if record['source_sha256']!=identity or record['camera_baseline_delta']>1e-7 or record['master_baseline_delta']>1e-7:\n            raise ValueError('Native baseline or identity failed')\n        native[source]=dict(path=str(out),sha256=sha256(out),record=record,pixels=dict(path=str(out)+'.f32',sha256=sha256(Path(str(out)+'.f32'))))\n        print('DECODED',index+1,'/',len(identities),path.name,flush=True)\n    simulations={(r['iso'],r['roi']):r for r in prior['records']};records=[]\n    for pi,pair in enumerate(pairs):\n        a,b=[native[p] for p in pair['paths']]\n        crops=[read_crops(Path(i['pixels']['path']),i['record']) for i in (a,b)]\n        context=same_profile_context(a['record'],b['record'])\n        for roi in range(3):\n            stages={}\n            for stage in ('pre_rcd_scaled_cfa','post_rcd_median_camera_rgb','pre_dcp_camera_rgb','post_dcp_rec2020'):\n                values=[v[stage][roi][64:192,64:192] for v in crops]\n                if stage=='pre_rcd_scaled_cfa':values=[pack_cfa(v) for v in values]\n                stats=describe(*values)\n                sim=simulations[(pair['iso'],roi)]['stages'][stage]\n                stages[stage]=dict(real=stats,simulation_reference_case=simulations[(pair['iso'],roi)]['case_id'],\n                    simulated_median_sigma=sim.get('simulated_median_sigma'),simulated_median_lags=sim.get('simulated_median_lags'),\n                    simulated_median_excess_kurtosis=np.median([r['excess_kurtosis'] for r in sim['simulated_pairs']],axis=0).tolist() if 'simulated_pairs' in sim else None)\n            records.append(dict(pair_index=pi,**pair,roi=roi,same_profile_context=context,\n                gains=[i['record']['pre_interpolate_state'] for i in (a,b)],stages=stages))\n        print('SCORED',pi+1,'/',len(pairs),pair['iso'],pair['subset'],flush=True)\n    if hashes!=[sha256(p) for p in paths] or tool_hash!=sha256(tool):raise ValueError('Provenance changed')\n    now=datetime.now(timezone.utc);out=base/f'repetabilite-distributions-noirs-v001-{now.strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n    result=dict(campaign_id='noise-dark-distributions-repeatability-'+stamp,schema_version=1,data_version=1,started_at_utc=started.isoformat(),measured_at_utc=now.isoformat(),completed_at_utc=now.isoformat(),\n        parents=frozen['parents'],freeze=dict(path=str(freeze),sha256=sha256(freeze)),native=native,records=records,omitted=omitted,commit=git('rev-parse','HEAD'),\n        units=prior['units'],metric_source_sha256=sha256(ROOT/'tests/study_noise_residual_distributions.py'),\n        limitations='Same-session dark captures, repeated statistical inspection. Original control allocation preserved but raw moments already seen.10 disjoint pairs not30 independent acquisitions; three ROIs correlated within image. Simulation reference keeps first pilot context, later gains/WB/black may differ; compare descriptively, no exact prediction claim across changed contexts. Pair differences remove common patterns; kurtosis sensitive to rare outliers. No fit, visual denoise proof, final42-burst reserve access, production change or new acquisition request.',verdict='internal_dark_distribution_repeatability_not_blind_validation')\n    with out.open('x',encoding='utf-8') as h:json.dump(result,h,ensure_ascii=False,indent=1,allow_nan=False)\n    print('RESULT',out,flush=True)\n\n\nif __name__=='__main__':run()\n",
+ "runner_sha256": "c87f493b42ed5cdb7ce9a98f3d831ce40d08097f0273fd5d1b27d3db1c057ec3"
+}
