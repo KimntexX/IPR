@@ -124,6 +124,19 @@ int main(int argc, char **argv)
     editor.resetAdjustments();
     if (!settle(editor) || editor.neuralDenoiseActive() || provider.image() != plainAfter ||
         provider.originalImage() != baseline) return 29;
+    // Saved with an earlier model: developed with the installed one, announced, recorded at the next save.
+    {
+        editor.saveCurrentAdjustments();   // no pending save of the reset may overwrite the recipe below
+        Sidecar::Document earlier = *saved;
+        earlier.raw.neuralModelId = QStringLiteral("ipr-neural-denoise-earlier-model");
+        if (!Sidecar::write(path, earlier)) return 33;
+        editor.loadImage(QUrl::fromLocalFile(path));
+        if (!settle(editor) || !editor.neuralDenoiseActive() || editor.neuralDenoiseStrength() != 50) return 34;
+        if (!editor.rawDevelopmentStatus().contains(QStringLiteral("Débruitage IA mis à jour"))) return 35;
+        editor.saveCurrentAdjustments();
+        const auto updated = Sidecar::read(path);
+        if (!updated || updated->raw.neuralModelId != saved->raw.neuralModelId) return 36;
+    }
     if (argc == 4) {
         const auto other = directory.filePath(QFileInfo(argv[3]).fileName());
         if (!QFile::copy(QString::fromLocal8Bit(argv[3]), other)) return 21;

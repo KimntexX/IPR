@@ -505,6 +505,9 @@ private:
     mutable QString m_neuralError;
     mutable std::shared_ptr<NeuralCfa::Service> m_neuralService;
     std::shared_ptr<NeuralCfa::Service> neuralService() const;
+    // A recipe saved with an earlier model takes the installed one (same strength).
+    void adoptInstalledNeuralModel();
+    bool m_neuralModelUpdated = false;     // until the development reports it
     bool m_sidecarReadOnly = false;        // the open image's .ipr comes from a newer IPR
     EditHistory m_history;                 // of the open image, saved in its .ipr
     bool m_inAdjustmentGesture = false;
@@ -581,7 +584,7 @@ private:
     static BatchResult exportFiles(Tasks::Context &context, const QStringList &files, const QString &folder,
                             const QString &format, int quality, ImageCacheController *controller,
                               ImageCacheController::CancelToken cancel,
-                              std::shared_ptr<NeuralCfa::Service> neural = {}, const QString &neuralId = {},
+                              std::shared_ptr<NeuralCfa::Service> neural = {},
                               const QString &neuralError = {}, bool neuralAllowed = false);
     void finishBatch(const BatchResult &result, const QString &done);
     bool asShotWhiteBalance() const;

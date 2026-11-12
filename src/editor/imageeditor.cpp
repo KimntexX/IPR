@@ -1192,10 +1192,10 @@ void ImageEditor::exportSelection(const QUrl &folder, const QString &format, int
         QStringLiteral("batchExport"), Tasks::Priority::Foreground,
         [files, folderPath, format = ImageExporter::normalizedFormat(format), quality,
          resources = m_taskResources, cancel = m_batchExportCancel,
-         neural = m_neuralAllowed ? neuralService() : nullptr, neuralId = m_neuralServiceId,
+         neural = m_neuralAllowed ? neuralService() : nullptr,
          neuralError = m_neuralError, neuralAllowed = m_neuralAllowed](Tasks::Context &context) {
             return exportFiles(context, files, folderPath, format, quality, &resources->cache, cancel,
-                               neural, neuralId, neuralError, neuralAllowed);
+                               neural, neuralError, neuralAllowed);
         }).future);
     m_batchExporting = true;
     emit batchExportChanged();
@@ -1209,7 +1209,7 @@ void ImageEditor::cancelBatchExport()
 ImageEditor::BatchResult ImageEditor::exportFiles(Tasks::Context &context, const QStringList &files, const QString &folder,
                               const QString &format, int quality, ImageCacheController *controller,
                               ImageCacheController::CancelToken cancel,
-                              std::shared_ptr<NeuralCfa::Service> neural, const QString &neuralId,
+                              std::shared_ptr<NeuralCfa::Service> neural,
                               const QString &neuralError, bool neuralAllowed)
 {
     BatchResult result;
@@ -1232,10 +1232,9 @@ ImageEditor::BatchResult ImageEditor::exportFiles(Tasks::Context &context, const
         options.cancellationRequested = [cancel] { return cancel->load(); };
         if (neuralAllowed) {
             if (const auto document = Sidecar::read(fileName); document && document->raw.neuralStrength > 0) {
-                const bool matches = document->raw.neuralModelId == neuralId;
+                // A recipe saved with an earlier model takes the installed one, as the editor does.
                 options.cfaStageFactory = NeuralDevelopment::Factory{
-                    matches ? neural : nullptr, document->raw.neuralStrength/100.0f,
-                    matches ? neuralError : tr("Modèle neuronal enregistré indisponible."), {}};
+                    neural, document->raw.neuralStrength/100.0f, neuralError, {}};
             }
         }
         const auto admission = controller->acquire({}, SystemMemory::estimateDecodePeak(fileName), false, cancel).takeResult();
@@ -1467,6 +1466,14 @@ std::shared_ptr<NeuralCfa::Service> ImageEditor::neuralService() const
     return m_neuralService;
 }
 
+void ImageEditor::adoptInstalledNeuralModel()
+{
+    if (!m_neuralAllowed || m_neuralStrength <= 0 || m_neuralModelId.isEmpty() || !neuralService()) return;
+    if (m_neuralModelId == m_neuralServiceId) return;
+    m_neuralModelId = m_neuralServiceId;
+    m_neuralModelUpdated = true;
+}
+
 QString ImageEditor::neuralDenoiseEngine() const
 {
     return m_neuralService ? m_neuralService->engine() : QStringLiteral("Unavailable");
@@ -1652,6 +1659,7 @@ void ImageEditor::pasteAdjustments()
         (m_copiedNeuralStrength == 0 || neuralDenoiseUnavailableReason().isEmpty())) {
         m_neuralStrength = m_copiedNeuralStrength;
         m_neuralModelId = m_copiedNeuralModelId;
+        adoptInstalledNeuralModel();
         m_neuralReload = true;
         reloadRawDevelopment();
     } else scheduleRender();
@@ -1690,6 +1698,7 @@ void ImageEditor::setRawDevelopment(const RawDevelopment &raw)
 {
     m_neuralStrength = raw.neuralStrength;
     m_neuralModelId = raw.neuralModelId;
+    adoptInstalledNeuralModel();
     m_neuralReload = true;
     m_cameraProfile = raw.profile;
     m_profileSha256 = raw.profileSha256;
@@ -2614,6 +2623,7 @@ void ImageEditor::beginLoad(const QString &fileName, const QString &extension,
             const RawDevelopment &raw = saved->raw;
             m_neuralStrength = raw.neuralStrength;
             m_neuralModelId = raw.neuralModelId;
+            adoptInstalledNeuralModel();
             automaticWhiteBalance = saved->settings.automaticWhiteBalance;
             m_cameraProfile = relocateResource(raw.profile, raw.profileSha256, "profiles");
             m_profileSha256 = raw.profileSha256;
@@ -2749,6 +2759,7 @@ void ImageEditor::beginLoad(const QString &fileName, const QString &extension,
 void ImageEditor::applyLoadedImage(LoadResult loaded)
 {
     if (loaded.image.isNull()) {
+        m_neuralModelUpdated = false;
         const auto failedName = QFileInfo(m_currentFile.toLocalFile()).fileName();
         if (!m_original.isNull()) {
             m_currentFile = m_displayedFile;
@@ -2790,6 +2801,9 @@ void ImageEditor::applyLoadedImage(LoadResult loaded)
 
     m_neuralApplied = loaded.neuralApplied;
     m_neuralReason = loaded.neuralReason;
+    if (m_neuralApplied && m_neuralModelUpdated)
+        m_rawDevelopmentWarning += tr("Débruitage IA mis à jour : la photo utilise le modèle installé. ");
+    m_neuralModelUpdated = false;
     if (!m_neuralApplied) {
         if (m_neuralStrength > 0 && !loaded.neuralReason.isEmpty())
             m_rawDevelopmentWarning += loaded.neuralReason + QLatin1Char(' ');

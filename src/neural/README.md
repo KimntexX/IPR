@@ -97,8 +97,10 @@ La recette contient `neuralStrength` et `neuralModelId` seulement lorsque le
 réseau s'est réellement appliqué. Le callback du service confirme ce fait ;
 une abstention supprime l'IA de la recette et affiche sa raison. Les recettes
 anciennes et les nouvelles photos sont désactivées par défaut. Les réglages
-IA suivent le copier/coller et l'historique. Un autre modèle ne remplace pas
-silencieusement l'identifiant enregistré.
+IA suivent le copier/coller et l'historique. Une recette enregistrée avec un
+ancien modèle (décision du 12 novembre 2026) se développe avec le modèle installé, à
+la même force ; l'éditeur l'annonce (« Débruitage IA mis à jour ») et la recette
+prend le nouvel identifiant au prochain enregistrement. L'export par lot fait de même.
 
 Lorsque l'IA est confirmée, la luminance classique et la barre commune sont
 grisées ; le rendu ignore la luminance classique sans effacer sa valeur. La
