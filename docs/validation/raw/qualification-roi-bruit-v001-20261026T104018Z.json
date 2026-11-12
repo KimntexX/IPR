@@ -1,0 +1,728 @@
+{
+ "schema_version": 1,
+ "data_version": 1,
+ "campaign_id": "qualification-roi-bruit-v001-20261026T104018Z",
+ "measured_at_utc": "2026-10-26T10:40:18.252472+00:00",
+ "commit": "2a40c5c6cff78d40294393a68827f4a24555c724",
+ "local_changes": [
+  "M AGENTS.md",
+  " M CMakeLists.txt",
+  " M docs/validation/analyses/analyse-bruit.md",
+  " M docs/validation/protocols/protocole-bruit-voisinages-adaptatifs.md",
+  " M scripts/test-rules.json",
+  " M tests/noise_neighbourhood_probe.cpp",
+  " M tests/noise_spectral_test.cpp",
+  " M tests/study_noise_neighbourhoods.py",
+  "?? docs/validation/raw/audit-couverture-photos-bruit-v001-20261025T225408Z.json",
+  "?? docs/validation/raw/audit-methodologique-bruit-v001-20261026T100939Z.json",
+  "?? docs/validation/raw/audit-methodologique-bruit-v002-20261026T101230Z.json",
+  "?? docs/validation/raw/etude-ablation-bruit-v001-20261025T113343Z.json",
+  "?? docs/validation/raw/etude-ablation-paires-bruit-v001-20261025T114643Z.json",
+  "?? docs/validation/raw/etude-abstention-bruit-v001-20261025T102254Z.json",
+  "?? docs/validation/raw/etude-abstention-bruit-v002-20261025T102715Z.json",
+  "?? docs/validation/raw/etude-adapte-complet-paires-bruit-v001-20261025T165152Z.json",
+  "?? docs/validation/raw/etude-adapte-fin-paires-bruit-v001-20261025T162825Z.json",
+  "?? docs/validation/raw/etude-ancrage-bruit-v001-20261025T150542Z.json",
+  "?? docs/validation/raw/etude-ancrage-paires-bruit-v001-20261025T150643Z.json",
+  "?? docs/validation/raw/etude-calibration-echelles-bruit-v001-20261025T211357Z.json",
+  "?? docs/validation/raw/etude-conjointe-bruit-v001-20261025T100827Z.json",
+  "?? docs/validation/raw/etude-contamination-profil-bruit-v001-20261025T095249Z.json",
+  "?? docs/validation/raw/etude-contrat-roi-bruit-v001-20261026T102134Z.json",
+  "?? docs/validation/raw/etude-decomposition-nonlocal-bruit-v001-20261025T215412Z.json",
+  "?? docs/validation/raw/etude-detectabilite-paires-bruit-v001-20261025T163944Z.json",
+  "?? docs/validation/raw/etude-distance-covariance-nonlocal-bruit-v001-20261025T215935Z.json",
+  "?? docs/validation/raw/etude-double-distance-nonlocal-bruit-v001-20261025T220339Z.json",
+  "?? docs/validation/raw/etude-etapes-petites-formes-paires-bruit-v001-20261025T155051Z.json",
+  "?? docs/validation/raw/etude-gain-fin-paires-bruit-v001-20261025T160635Z.json",
+  "?? docs/validation/raw/etude-gains-locaux-paires-bruit-v001-20261025T201510Z.json",
+  "?? docs/validation/raw/etude-guide-pilote-nonlocal-bruit-v001-20261025T220729Z.json",
+  "?? docs/validation/raw/etude-hybride-nonlocal-directionnel-bruit-v001-20261025T215018Z.json",
+  "?? docs/validation/raw/etude-innovation-sept-directions-bruit-v001-20261025T214300Z.json",
+  "?? docs/validation/raw/etude-moyennes-non-locales-bruit-v001-20261025T213331Z.json",
+  "?? docs/validation/raw/etude-multiechelle-coefficients-paires-bruit-v001-20261025T180604Z.json",
+  "?? docs/validation/raw/etude-multiechelle-conjointe-paires-bruit-v001-20261025T183008Z.json",
+  "?? docs/validation/raw/etude-multiechelle-null-paires-bruit-v001-20261025T174210Z.json",
+  "?? docs/validation/raw/etude-multiechelle-oracle-paires-bruit-v001-20261025T175813Z.json",
+  "?? docs/validation/raw/etude-multiechelle-paires-bruit-v001-20261025T173139Z.json",
+  "?? docs/validation/raw/etude-multiechelle-pilote-paires-bruit-v001-20261025T175028Z.json",
+  "?? docs/validation/raw/etude-multiechelle-structures-paires-bruit-v001-20261025T185742Z.json",
+  "?? docs/validation/raw/etude-nonlocal-directions-appariees-bruit-v001-20261025T214650Z.json",
+  "?? docs/validation/raw/etude-orientation-echelles-bruit-v001-20261025T211908Z.json",
+  "?? docs/validation/raw/etude-parent-roi-bruit-execution-v001-20261026T103019Z.json",
+  "?? docs/validation/raw/etude-parent-roi-bruit-v001-20261026T103243Z.json",
+  "?? docs/validation/raw/etude-petites-formes-paires-bruit-v001-20261025T153806Z.json",
+  "?? docs/validation/raw/etude-projection-adaptee-paires-bruit-v001-20261025T171605Z.json",
+  "?? docs/validation/raw/etude-reconstruction-bruit-v001-20261025T105505Z.json",
+  "?? docs/validation/raw/etude-reconstruction-bruit-v002-20261025T105639Z.json",
+  "?? docs/validation/raw/etude-reconstruction-bruit-v003-20261025T110749Z.json",
+  "?? docs/validation/raw/etude-reelle-bornee-nonlocal-bruit-v001-20261025T222336Z.json",
+  "?? docs/validation/raw/etude-regions-bruit-v001-20261025T111755Z.json",
+  "?? docs/validation/raw/etude-regions-bruit-v002-20261025T112430Z.json",
+  "?? docs/validation/raw/etude-regions-bruit-v003-20261025T152258Z.json",
+  "?? docs/validation/raw/etude-residu-phase-paires-bruit-v001-20261025T155820Z.json",
+  "?? docs/validation/raw/etude-selecteur-gains-bruit-v001-20261025T200800Z.json",
+  "?? docs/validation/raw/etude-selecteur-gains-locaux-bruit-v001-20261025T202146Z.json",
+  "?? docs/validation/raw/etude-selecteur-gains-locaux-intervalles-bruit-v001-20261025T202633Z.json",
+  "?? docs/validation/raw/etude-selecteur-gains-locaux-intervalles-structures-reservees-bruit-v001-20261025T203007Z.json",
+  "?? docs/validation/raw/etude-selection-modeles-bruit-v001-20261025T200232Z.json",
+  "?? docs/validation/raw/etude-sept-directions-bruit-v001-20261025T213850Z.json",
+  "?? docs/validation/raw/etude-spatial-fin-paires-bruit-v001-20261025T161806Z.json",
+  "?? docs/validation/raw/etude-support-adapte-paires-bruit-v001-20261025T170553Z.json",
+  "?? docs/validation/raw/etude-support-caracteristiques-bruit-v001-20261025T203515Z.json",
+  "?? docs/validation/raw/etude-sure-echelle-mesuree-bruit-v001-20261025T212233Z.json",
+  "?? docs/validation/raw/etude-sure-faisabilite-bruit-v001-20261025T204309Z.json",
+  "?? docs/validation/raw/etude-sure-filtres-bruit-v001-20261025T210241Z.json",
+  "?? docs/validation/raw/etude-sure-sensibilite-bruit-v001-20261025T210753Z.json",
+  "?? docs/validation/raw/etude-sure-structures-orientees-bruit-v001-20261025T212646Z.json",
+  "?? docs/validation/raw/etude-voisinages-bruit-v013-20261025T103134Z.json",
+  "?? docs/validation/raw/etude-voisinages-bruit-v014-20261025T104528Z.json",
+  "?? docs/validation/raw/etude-voisinages-bruit-v015-20261025T105758Z.json",
+  "?? docs/validation/raw/etude-voisinages-bruit-v016-20261025T110911Z.json",
+  "?? docs/validation/raw/etude-voisinages-bruit-v017-20261025T112612Z.json",
+  "?? docs/validation/raw/etude-voisinages-bruit-v018-20261025T113441Z.json",
+  "?? docs/validation/raw/etude-voisinages-bruit-v019-20261025T150859Z.json",
+  "?? docs/validation/raw/etude-voisinages-bruit-v020-20261025T152345Z.json",
+  "?? docs/validation/raw/etude-voisinages-bruit-v021-20261025T154131Z.json",
+  "?? scripts/background_job.py",
+  "?? tests/audit_noise_research.py",
+  "?? tests/noise_matched_detector.cpp",
+  "?? tests/noise_matched_detector.h",
+  "?? tests/noise_matched_detector_test.cpp",
+  "?? tests/noise_multiscale_pilot.cpp",
+  "?? tests/noise_multiscale_pilot.h",
+  "?? tests/noise_multiscale_pilot_test.cpp",
+  "?? tests/noise_perceptual_metrics.cpp",
+  "?? tests/noise_perceptual_metrics.h",
+  "?? tests/noise_perceptual_metrics_test.cpp",
+  "?? tests/noise_profile_contamination.cpp",
+  "?? tests/noise_profile_contamination.h",
+  "?? tests/noise_profile_support.cpp",
+  "?? tests/noise_profile_support.h",
+  "?? tests/noise_profile_support_test.cpp",
+  "?? tests/noise_sure_filters_test.cpp",
+  "?? tests/study_noise_abstention.py",
+  "?? tests/study_noise_contamination.py",
+  "?? tests/study_noise_feature_support.py",
+  "?? tests/study_noise_gain_selector.py",
+  "?? tests/study_noise_joint.py",
+  "?? tests/study_noise_model_selection.py",
+  "?? tests/study_noise_nonlocal.py",
+  "?? tests/study_noise_nonlocal_covariance.py",
+  "?? tests/study_noise_nonlocal_decomposition.py",
+  "?? tests/study_noise_nonlocal_directional.py",
+  "?? tests/study_noise_nonlocal_dual_distance.py",
+  "?? tests/study_noise_nonlocal_hybrid.py",
+  "?? tests/study_noise_nonlocal_pilot.py",
+  "?? tests/study_noise_pair_ablation.py",
+  "?? tests/study_noise_perceptual.py",
+  "?? tests/study_noise_photo_coverage.py",
+  "?? tests/study_noise_real_bounded.py",
+  "?? tests/study_noise_reconstruction.py",
+  "?? tests/study_noise_roi_content.py",
+  "?? tests/study_noise_roi_contract.py",
+  "?? tests/study_noise_roi_parent.py",
+  "?? tests/study_noise_scale_calibration.py",
+  "?? tests/study_noise_scale_orientation.py",
+  "?? tests/study_noise_seven_directions.py",
+  "?? tests/study_noise_seven_innovation.py",
+  "?? tests/study_noise_sure_feasibility.py",
+  "?? tests/study_noise_sure_filters.py",
+  "?? tests/study_noise_sure_measured_scale.py",
+  "?? tests/study_noise_sure_oriented.py",
+  "?? tests/study_noise_sure_sensitivity.py",
+  "?? tests/test_audit_noise_research.py",
+  "?? tests/test_background_job.py",
+  "?? tests/test_study_noise_contamination.py",
+  "?? tests/test_study_noise_feature_support.py",
+  "?? tests/test_study_noise_gain_selector.py",
+  "?? tests/test_study_noise_joint.py",
+  "?? tests/test_study_noise_model_selection.py",
+  "?? tests/test_study_noise_nonlocal.py",
+  "?? tests/test_study_noise_nonlocal_covariance.py",
+  "?? tests/test_study_noise_nonlocal_decomposition.py",
+  "?? tests/test_study_noise_nonlocal_directional.py",
+  "?? tests/test_study_noise_nonlocal_dual_distance.py",
+  "?? tests/test_study_noise_nonlocal_hybrid.py",
+  "?? tests/test_study_noise_nonlocal_pilot.py",
+  "?? tests/test_study_noise_pair_ablation.py",
+  "?? tests/test_study_noise_photo_coverage.py",
+  "?? tests/test_study_noise_real_bounded.py",
+  "?? tests/test_study_noise_roi_content.py",
+  "?? tests/test_study_noise_roi_contract.py",
+  "?? tests/test_study_noise_roi_parent.py",
+  "?? tests/test_study_noise_scale_calibration.py",
+  "?? tests/test_study_noise_scale_orientation.py",
+  "?? tests/test_study_noise_seven_directions.py",
+  "?? tests/test_study_noise_seven_innovation.py",
+  "?? tests/test_study_noise_sure_feasibility.py",
+  "?? tests/test_study_noise_sure_filters.py",
+  "?? tests/test_study_noise_sure_measured_scale.py",
+  "?? tests/test_study_noise_sure_oriented.py",
+  "?? tests/test_study_noise_sure_sensitivity.py"
+ ],
+ "runner_sha256": "ca9c7dff07c7447021169cd4ea3152bfd21fc9ab59134ffb462b614299da0858",
+ "numpy_version": "2.4.2",
+ "matplotlib_version": "3.11.2",
+ "parents": [
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\audit-couverture-photos-bruit-v001-20261025T225408Z.json",
+   "sha256": "b645b7440b4d3871ab509c001c92570ad76e84b1a2c5b3ad0719b301fefa70e1"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\etude-parent-roi-bruit-v001-20261026T103243Z.json",
+   "sha256": "29817b9be7c25c852f4f5becfafbf9cb80e7fa76b5e269134e24030ef3ff2b82"
+  }
+ ],
+ "records": [
+  {
+   "label": "6V1A9426.CR3 dark",
+   "source_label": "dark",
+   "iso": 1000,
+   "extracted_rect": [
+    1656,
+    120,
+    64,
+    64
+   ],
+   "measured_rect": [
+    17,
+    17,
+    31,
+    31
+   ],
+   "planes_y_co_cg": [
+    {
+     "mean": 0.0005018631844688304,
+     "std": 0.0001813012472510519,
+     "span": 0.0014623899478465319,
+     "gradient_energy": 4.572012671603868e-09,
+     "gradient_anisotropy": 0.27311703542624216,
+     "gradient_top10pct_energy_share": 0.42997870299893387,
+     "binomial_residual_energy": 6.8577878803456505e-09
+    },
+    {
+     "mean": 0.00019168909694541547,
+     "std": 0.00013991500930353885,
+     "span": 0.001165705209132284,
+     "gradient_energy": 4.059562418435549e-09,
+     "gradient_anisotropy": 0.08657127403878341,
+     "gradient_top10pct_energy_share": 0.3687185945224566,
+     "binomial_residual_energy": 8.948345569431817e-10
+    },
+    {
+     "mean": 3.773793977606289e-05,
+     "std": 0.00010234379729052805,
+     "span": 0.0007429062970913947,
+     "gradient_energy": 2.3342429971240304e-09,
+     "gradient_anisotropy": 0.07014982821935765,
+     "gradient_top10pct_energy_share": 0.34531669465607023,
+     "binomial_residual_energy": 4.193372778048785e-10
+    }
+   ],
+   "source_parent": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\audit-couverture-photos-bruit-v001-20261025T225408Z.json"
+  },
+  {
+   "label": "6V1A9426.CR3 flat",
+   "source_label": "flat",
+   "iso": 1000,
+   "extracted_rect": [
+    1912,
+    504,
+    64,
+    64
+   ],
+   "measured_rect": [
+    17,
+    17,
+    31,
+    31
+   ],
+   "planes_y_co_cg": [
+    {
+     "mean": 0.022859254989552075,
+     "std": 0.0035239460557696346,
+     "span": 0.02472071908414364,
+     "gradient_energy": 2.766968656367178e-06,
+     "gradient_anisotropy": 0.06695262671079368,
+     "gradient_top10pct_energy_share": 0.34542612148916085,
+     "binomial_residual_energy": 4.31083231661328e-06
+    },
+    {
+     "mean": 0.016276249494384217,
+     "std": 0.0028140339015332513,
+     "span": 0.019485769793391228,
+     "gradient_energy": 2.310146842919879e-06,
+     "gradient_anisotropy": 0.09772300495297526,
+     "gradient_top10pct_energy_share": 0.38316708695164703,
+     "binomial_residual_energy": 1.1159587058103882e-06
+    },
+    {
+     "mean": 0.004013189165993486,
+     "std": 0.002002728021599386,
+     "span": 0.010638102889060974,
+     "gradient_energy": 9.702808071222936e-07,
+     "gradient_anisotropy": 0.12187658177842546,
+     "gradient_top10pct_energy_share": 0.3492740253465247,
+     "binomial_residual_energy": 2.641951136100204e-07
+    }
+   ],
+   "source_parent": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\audit-couverture-photos-bruit-v001-20261025T225408Z.json"
+  },
+  {
+   "label": "6V1A9426.CR3 detail",
+   "source_label": "detail",
+   "iso": 1000,
+   "extracted_rect": [
+    4216,
+    504,
+    64,
+    64
+   ],
+   "measured_rect": [
+    17,
+    17,
+    31,
+    31
+   ],
+   "planes_y_co_cg": [
+    {
+     "mean": 0.9899051785469055,
+     "std": 0.0,
+     "span": 0.0,
+     "gradient_energy": 0.0,
+     "gradient_anisotropy": null,
+     "gradient_top10pct_energy_share": null,
+     "binomial_residual_energy": 0.0
+    },
+    {
+     "mean": -5.233287811279297e-05,
+     "std": 0.0,
+     "span": 0.0,
+     "gradient_energy": 0.0,
+     "gradient_anisotropy": null,
+     "gradient_top10pct_energy_share": null,
+     "binomial_residual_energy": 0.0
+    },
+    {
+     "mean": 2.1696090698242188e-05,
+     "std": 0.0,
+     "span": 0.0,
+     "gradient_energy": 0.0,
+     "gradient_anisotropy": null,
+     "gradient_top10pct_energy_share": null,
+     "binomial_residual_energy": 0.0
+    }
+   ],
+   "source_parent": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\audit-couverture-photos-bruit-v001-20261025T225408Z.json"
+  },
+  {
+   "label": "6V1A9890.CR3 dark",
+   "source_label": "dark",
+   "iso": 25600,
+   "extracted_rect": [
+    1912,
+    4856,
+    64,
+    64
+   ],
+   "measured_rect": [
+    17,
+    17,
+    31,
+    31
+   ],
+   "planes_y_co_cg": [
+    {
+     "mean": 0.0025481098928166754,
+     "std": 0.004402594058438854,
+     "span": 0.04475867748260498,
+     "gradient_energy": 3.745793889287611e-06,
+     "gradient_anisotropy": 0.1540803308832613,
+     "gradient_top10pct_energy_share": 0.5559142113730005,
+     "binomial_residual_energy": 9.200917557832884e-06
+    },
+    {
+     "mean": -0.0003765976328454159,
+     "std": 0.006259723141173662,
+     "span": 0.14091835170984268,
+     "gradient_energy": 7.902806333001708e-06,
+     "gradient_anisotropy": 0.2516326140495006,
+     "gradient_top10pct_energy_share": 0.7366176327108912,
+     "binomial_residual_energy": 1.1033510429680254e-05
+    },
+    {
+     "mean": -0.0011703405407544503,
+     "std": 0.00436224867907923,
+     "span": 0.0921676903963089,
+     "gradient_energy": 4.006271668823708e-06,
+     "gradient_anisotropy": 0.2412963223166883,
+     "gradient_top10pct_energy_share": 0.8047281816549724,
+     "binomial_residual_energy": 4.437861366316248e-06
+    }
+   ],
+   "source_parent": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\audit-couverture-photos-bruit-v001-20261025T225408Z.json"
+  },
+  {
+   "label": "6V1A9890.CR3 flat",
+   "source_label": "flat",
+   "iso": 25600,
+   "extracted_rect": [
+    2296,
+    5624,
+    64,
+    64
+   ],
+   "measured_rect": [
+    17,
+    17,
+    31,
+    31
+   ],
+   "planes_y_co_cg": [
+    {
+     "mean": 0.0029929809211547143,
+     "std": 0.0045208513921890054,
+     "span": 0.04663321375846863,
+     "gradient_energy": 4.3720024178978935e-06,
+     "gradient_anisotropy": 0.052628972891130096,
+     "gradient_top10pct_energy_share": 0.5377665627081073,
+     "binomial_residual_energy": 8.56347174286453e-06
+    },
+    {
+     "mean": 0.0009131895746618051,
+     "std": 0.004792284757909614,
+     "span": 0.06765864230692387,
+     "gradient_energy": 6.41242928607493e-06,
+     "gradient_anisotropy": 0.11867190878960482,
+     "gradient_top10pct_energy_share": 0.6492438750502857,
+     "binomial_residual_energy": 3.839075944956936e-06
+    },
+    {
+     "mean": -0.0009058184103387428,
+     "std": 0.0029589308888403345,
+     "span": 0.03629511408507824,
+     "gradient_energy": 2.322417466507828e-06,
+     "gradient_anisotropy": 0.11745543547075554,
+     "gradient_top10pct_energy_share": 0.6176805360585295,
+     "binomial_residual_energy": 1.8469232406051848e-06
+    }
+   ],
+   "source_parent": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\audit-couverture-photos-bruit-v001-20261025T225408Z.json"
+  },
+  {
+   "label": "6V1A9890.CR3 detail",
+   "source_label": "detail",
+   "iso": 25600,
+   "extracted_rect": [
+    4216,
+    1144,
+    64,
+    64
+   ],
+   "measured_rect": [
+    17,
+    17,
+    31,
+    31
+   ],
+   "planes_y_co_cg": [
+    {
+     "mean": 0.08578732819950574,
+     "std": 0.026150929207553908,
+     "span": 0.16733698640018702,
+     "gradient_energy": 0.0001699918161764589,
+     "gradient_anisotropy": 0.08441171360520977,
+     "gradient_top10pct_energy_share": 0.3408015263314556,
+     "binomial_residual_energy": 0.00017406440293068207
+    },
+    {
+     "mean": 0.20631048269182226,
+     "std": 0.055392620229135096,
+     "span": 0.3226081971079111,
+     "gradient_energy": 0.000808185448700853,
+     "gradient_anisotropy": 0.025060829154145304,
+     "gradient_top10pct_energy_share": 0.35334526880253364,
+     "binomial_residual_energy": 0.0003349760796763342
+    },
+    {
+     "mean": -0.07729391475148988,
+     "std": 0.024915769918118474,
+     "span": 0.1543423756957054,
+     "gradient_energy": 0.00016222100319796795,
+     "gradient_anisotropy": 0.07704307520294695,
+     "gradient_top10pct_energy_share": 0.3567771325549266,
+     "binomial_residual_energy": 4.571569272765028e-05
+    }
+   ],
+   "source_parent": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\audit-couverture-photos-bruit-v001-20261025T225408Z.json"
+  },
+  {
+   "label": "6V1A0112.CR3 dark",
+   "source_label": "dark",
+   "iso": 64000,
+   "extracted_rect": [
+    3832,
+    5880,
+    64,
+    64
+   ],
+   "measured_rect": [
+    17,
+    17,
+    31,
+    31
+   ],
+   "planes_y_co_cg": [
+    {
+     "mean": 0.0074600430570896685,
+     "std": 0.011922948652884744,
+     "span": 0.08772961795330048,
+     "gradient_energy": 2.923543791776577e-05,
+     "gradient_anisotropy": 0.042097702132255985,
+     "gradient_top10pct_energy_share": 0.4285746284283647,
+     "binomial_residual_energy": 6.0393205346311836e-05
+    },
+    {
+     "mean": -0.004325593582710758,
+     "std": 0.022000262294648094,
+     "span": 0.24447773396968842,
+     "gradient_energy": 0.00012987523901272798,
+     "gradient_anisotropy": 0.2789852437684638,
+     "gradient_top10pct_energy_share": 0.6720173296815659,
+     "binomial_residual_energy": 7.552477361861014e-05
+    },
+    {
+     "mean": -0.005329106593534288,
+     "std": 0.014871768532479346,
+     "span": 0.13021160662174225,
+     "gradient_energy": 5.485661461500604e-05,
+     "gradient_anisotropy": 0.10022850927310603,
+     "gradient_top10pct_energy_share": 0.629955746009654,
+     "binomial_residual_energy": 3.2831054695761115e-05
+    }
+   ],
+   "source_parent": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\audit-couverture-photos-bruit-v001-20261025T225408Z.json"
+  },
+  {
+   "label": "6V1A0112.CR3 flat",
+   "source_label": "flat",
+   "iso": 64000,
+   "extracted_rect": [
+    1656,
+    3960,
+    64,
+    64
+   ],
+   "measured_rect": [
+    17,
+    17,
+    31,
+    31
+   ],
+   "planes_y_co_cg": [
+    {
+     "mean": 0.02537228364823963,
+     "std": 0.02719077434297061,
+     "span": 0.16466516256332397,
+     "gradient_energy": 0.0001540627850134055,
+     "gradient_anisotropy": 0.06688636766393369,
+     "gradient_top10pct_energy_share": 0.4152722399250315,
+     "binomial_residual_energy": 0.0002864990983874084
+    },
+    {
+     "mean": 0.013497815939286941,
+     "std": 0.044780323409787735,
+     "span": 0.4102688431739807,
+     "gradient_energy": 0.0005241011387962916,
+     "gradient_anisotropy": 0.09437838528631681,
+     "gradient_top10pct_energy_share": 0.5394888416104486,
+     "binomial_residual_energy": 0.0002327035573695043
+    },
+    {
+     "mean": -0.010059724846474745,
+     "std": 0.024204114740147244,
+     "span": 0.2815113589167595,
+     "gradient_energy": 0.00014487857570530117,
+     "gradient_anisotropy": 0.07646910804536715,
+     "gradient_top10pct_energy_share": 0.41510528882836517,
+     "binomial_residual_energy": 9.037852756761341e-05
+    }
+   ],
+   "source_parent": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\audit-couverture-photos-bruit-v001-20261025T225408Z.json"
+  },
+  {
+   "label": "6V1A0112.CR3 detail",
+   "source_label": "detail",
+   "iso": 64000,
+   "extracted_rect": [
+    4088,
+    5496,
+    64,
+    64
+   ],
+   "measured_rect": [
+    17,
+    17,
+    31,
+    31
+   ],
+   "planes_y_co_cg": [
+    {
+     "mean": 0.010979877330412465,
+     "std": 0.016159298027187102,
+     "span": 0.14870570600032806,
+     "gradient_energy": 5.556481064796359e-05,
+     "gradient_anisotropy": 0.10478768114610801,
+     "gradient_top10pct_energy_share": 0.5050071088834359,
+     "binomial_residual_energy": 0.00010073999025886654
+    },
+    {
+     "mean": -0.0041189022944054235,
+     "std": 0.028041279302590053,
+     "span": 0.31428924202919006,
+     "gradient_energy": 0.00023968717743302494,
+     "gradient_anisotropy": 0.12825040214667202,
+     "gradient_top10pct_energy_share": 0.5691533948144444,
+     "binomial_residual_energy": 0.00014991575338181944
+    },
+    {
+     "mean": -0.006668318447144989,
+     "std": 0.016808771402407566,
+     "span": 0.19293621182441711,
+     "gradient_energy": 8.006519278411806e-05,
+     "gradient_anisotropy": 0.21755040118209473,
+     "gradient_top10pct_energy_share": 0.5467200370378898,
+     "binomial_residual_energy": 5.673238862598896e-05
+    }
+   ],
+   "source_parent": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\audit-couverture-photos-bruit-v001-20261025T225408Z.json"
+  },
+  {
+   "label": "9426 proposal 1",
+   "source_label": "gradient_proposal",
+   "iso": 1000,
+   "absolute_rect": [
+    4133,
+    544,
+    31,
+    31
+   ],
+   "measured_rect": [
+    13,
+    136,
+    31,
+    31
+   ],
+   "planes_y_co_cg": [
+    {
+     "mean": 0.7286491980475764,
+     "std": 0.309365184757421,
+     "span": 0.8183182030916214,
+     "gradient_energy": 0.002741413324860264,
+     "gradient_anisotropy": 0.6403886923496805,
+     "gradient_top10pct_energy_share": 0.7267482673227684,
+     "binomial_residual_energy": 0.0003539017273103864
+    },
+    {
+     "mean": 0.0794721771415389,
+     "std": 0.09207115116140023,
+     "span": 0.4533346891403198,
+     "gradient_energy": 0.0006816152638667059,
+     "gradient_anisotropy": 0.6317730387994586,
+     "gradient_top10pct_energy_share": 0.8453580293235906,
+     "binomial_residual_energy": 0.0003675999925088199
+    },
+    {
+     "mean": 0.02399230653053764,
+     "std": 0.03632710269048391,
+     "span": 0.25664642453193665,
+     "gradient_energy": 0.00018686903583569906,
+     "gradient_anisotropy": 0.6077560135406653,
+     "gradient_top10pct_energy_share": 0.7616331957373503,
+     "binomial_residual_energy": 0.00015473701454760586
+    }
+   ],
+   "source_parent": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\etude-parent-roi-bruit-v001-20261026T103243Z.json"
+  },
+  {
+   "label": "9426 proposal 2",
+   "source_label": "gradient_proposal",
+   "iso": 1000,
+   "absolute_rect": [
+    4137,
+    554,
+    31,
+    31
+   ],
+   "measured_rect": [
+    17,
+    146,
+    31,
+    31
+   ],
+   "planes_y_co_cg": [
+    {
+     "mean": 0.7740252895453222,
+     "std": 0.2760616317505164,
+     "span": 0.7978310436010361,
+     "gradient_energy": 0.002547136506067022,
+     "gradient_anisotropy": 0.6947189717011474,
+     "gradient_top10pct_energy_share": 0.7095938295360097,
+     "binomial_residual_energy": 0.0003071452185174956
+    },
+    {
+     "mean": 0.08746388198712862,
+     "std": 0.1042756612308099,
+     "span": 0.4533346891403198,
+     "gradient_energy": 0.000879856931877538,
+     "gradient_anisotropy": 0.6204707120836516,
+     "gradient_top10pct_energy_share": 0.7978426130364447,
+     "binomial_residual_energy": 0.00035382760675865165
+    },
+    {
+     "mean": 0.03145700299280863,
+     "std": 0.04235751812935953,
+     "span": 0.25664642453193665,
+     "gradient_energy": 0.0002295757402944595,
+     "gradient_anisotropy": 0.585206205933244,
+     "gradient_top10pct_energy_share": 0.7091774295348062,
+     "binomial_residual_energy": 0.00015337014572735353
+    }
+   ],
+   "source_parent": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\etude-parent-roi-bruit-v001-20261026T103243Z.json"
+  }
+ ],
+ "plots": [
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\roi-content\\qualification-roi-bruit-v001-20261026T104018Z\\Y.png",
+   "sha256": "9301ccacd715ac90380e4c8590416d0c49e8ce189aeb2704426d49e09e30e5b0",
+   "plane": "Y",
+   "vmin": 0.0,
+   "vmax": 0.9972468018531799,
+   "meaning": "Derived original-plane diagnostic,not rendered RGB or colour judgement"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\roi-content\\qualification-roi-bruit-v001-20261026T104018Z\\Co.png",
+   "sha256": "16301c89e60a4b7638fdb7a3e80aa4f3a69e020332f19ea42132db4c700b7001",
+   "plane": "Co",
+   "vmin": -0.4287099838256836,
+   "vmax": 0.4287099838256836,
+   "meaning": "Derived original-plane diagnostic,not rendered RGB or colour judgement"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\roi-content\\qualification-roi-bruit-v001-20261026T104018Z\\Cg.png",
+   "sha256": "b78528853adedf59ec065203bb5a81a02d5903a2ef264568c54d2648204acebc",
+   "plane": "Cg",
+   "vmin": -0.2255682647228241,
+   "vmax": 0.2255682647228241,
+   "meaning": "Derived original-plane diagnostic,not rendered RGB or colour judgement"
+  }
+ ],
+ "proposal_overlap": {
+  "intersection_pixels": 567,
+  "fraction_of_first": 0.5900104058272633,
+  "fraction_of_second": 0.5900104058272633
+ },
+ "rules": "11 already selected cores only,no new search/noRAW/no filter. Fixed binomial3 structure tensor and gradient concentration;no fitted cutoff or learned label. Null metrics for zero denominator. Shared linear plot scales;no per-core contrast equalization.",
+ "limitations": "Anisotropy distinguishes orientation,not clean signal/noise;noise can be directional. Gradient concentration can reflect isolated noise or clipping boundaries. Residual mixes texture and noise. No automatic texture class,noise sigma,detail fidelity or held-out validation. Plot review must be recorded separately;source selection stays diagnostic."
+}

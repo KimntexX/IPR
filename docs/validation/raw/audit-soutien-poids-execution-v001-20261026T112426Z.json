@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "data_version": 1,
+  "campaign_id": "audit-soutien-poids-execution-v001-20261026T112426Z",
+  "job_name": "weight-support-20261026-v001",
+  "started_at_utc": "2026-10-26T11:24:07.875343+00:00",
+  "finished_at_utc": "2026-10-26T11:24:26.734071+00:00",
+  "status": "failed_diagnostic_squared_weight_underflow",
+  "exit_code": 1,
+  "runner": "tests/study_noise_weight_support.py",
+  "error": "ValueError: Positive total needs positive squared sum",
+  "failure_location": "noise_weight_diagnostics.describe_weights, called by reconstruct_joint",
+  "last_completed_logged_support": "6V1A9890.CR3 hair white",
+  "cause": "Some positive representable weights are so small that direct w*w underflows to zero. The positive total is then incompatible with the raw squared-weight diagnostic accumulator.",
+  "complete_measurement_json_written": false,
+  "quality_verdict": null,
+  "production_changed": false,
+  "corrective_action": "Normalize weights by running maximum only inside the diagnostic squared-norm accumulator; mathematically scale-invariant neff. Do not change filtering weights, h, output normalization or reference measurements.",
+  "provenance": "Background job status and stdout/stderr inspected after user completion notification; execution failure record,not numerical quality measurement. Partial in-memory results not retained."
+}

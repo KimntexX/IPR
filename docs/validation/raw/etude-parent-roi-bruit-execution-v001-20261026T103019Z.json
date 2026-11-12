@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "data_version": 1,
+  "campaign_id": "etude-parent-roi-bruit-execution-v001-20261026T103019Z",
+  "job_name": "roi-parent-20261026-v001",
+  "started_at_utc": "2026-10-26T10:30:05.891274+00:00",
+  "finished_at_utc": "2026-10-26T10:30:19.188736+00:00",
+  "status": "failed_before_raw_decode",
+  "exit_code": 1,
+  "build_status": "succeeded",
+  "runner": "tests/study_noise_roi_parent.py",
+  "command": "python tests/study_noise_roi_parent.py --data-version 1",
+  "required_available_memory_gib": 5,
+  "error": "ValueError: At least5GiB free required before RAW decoding",
+  "followup_available_memory_gib": 3.0085411071777344,
+  "followup_memory_note": "Read after completion; not the exact memory at the failed guard. Followup timestamp not recorded.",
+  "raw_decode_started": false,
+  "image_measurements": null,
+  "production_changed": false,
+  "provenance": "Local background_job status.json and stdout/stderr logs inspected after user completion notification. Execution failure record, not image measurement proof or filter rejection. No automatic retry, process termination or safety-threshold reduction."
+}

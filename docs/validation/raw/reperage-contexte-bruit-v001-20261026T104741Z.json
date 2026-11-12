@@ -1,0 +1,165 @@
+{
+ "schema_version": 1,
+ "data_version": 1,
+ "campaign_id": "reperage-contexte-bruit-v001-20261026T104741Z",
+ "measured_at_utc": "2026-10-26T10:47:41.723481+00:00",
+ "commit": "2a40c5c6cff78d40294393a68827f4a24555c724",
+ "runner_sha256": "0bffb832ace4a0dc8a83dab9cc30330971167bc3379829ca2cb0dac0ded6cfe3",
+ "preview_helper_sha256": "83031bac0922c8d6480131bc4a035d0154cfc6c39a7be9103d9ed8e0228f071d",
+ "parent": {
+  "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\etude-spectrale-bruit-v001-20261024T195453Z.json",
+  "sha256": "5aed0a42f682e9bf05002193a299c536f3eaa6c31f9591444b239bbd090109d0"
+ },
+ "records": [
+  {
+   "path": "C:\\Users\\victo\\Pictures\\RAW\\05-08-26\\6V1A0112.CR3",
+   "raw": "6V1A0112.CR3",
+   "status": "preview_available",
+   "source_sha256": "44b9758ea2f0a801556161329591e6cc152af34796a5bd5200f0ed346a954a7d",
+   "embedded_dimensions": [
+    4640,
+    6960
+   ],
+   "preview_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\context\\reperage-contexte-bruit-v001-20261026T104741Z\\6V1A0112.png",
+   "preview_sha256": "385f7b0b2d7114fcbefdb405aaf0a8da90bab4f53e8a69bfa14ead8548de5bf5"
+  },
+  {
+   "path": "C:\\Users\\victo\\Pictures\\Eclipse\\12-08-26\\6V1A0195.CR3",
+   "raw": "6V1A0195.CR3",
+   "status": "preview_available",
+   "source_sha256": "fd425fee0a3927fc35bf3a2ead5c024dd48497352d600be777cf4e1e29acc56c",
+   "embedded_dimensions": [
+    6960,
+    4640
+   ],
+   "preview_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\context\\reperage-contexte-bruit-v001-20261026T104741Z\\6V1A0195.png",
+   "preview_sha256": "8816ed72e58c787737369702cac0e066e17f9eae9575b7866e2ba7307aea4b59"
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A0513.CR3",
+   "raw": "6V1A0513.CR3",
+   "status": "preview_available",
+   "source_sha256": "a3c4c9a7a4dd23f6bcba020928b16a38a39b399ad5ad57e50113d9795b461d1c",
+   "embedded_dimensions": [
+    4640,
+    6960
+   ],
+   "preview_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\context\\reperage-contexte-bruit-v001-20261026T104741Z\\6V1A0513.png",
+   "preview_sha256": "f925fb53f9e1b713a1def5d9818c7cdd84c89e6aa2d1fa66568d34767d6b34f1"
+  },
+  {
+   "path": "C:\\Users\\victo\\Pictures\\RAW\\VA\\6V1A9273.CR3",
+   "raw": "6V1A9273.CR3",
+   "status": "preview_available",
+   "source_sha256": "046a4f11a2d4a0ae7f0c5f9dcbcbb974cfecbc183436c909ac70f1eddd0e1f53",
+   "embedded_dimensions": [
+    4640,
+    6960
+   ],
+   "preview_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\context\\reperage-contexte-bruit-v001-20261026T104741Z\\6V1A9273.png",
+   "preview_sha256": "ff42db2358e4d66d7d79fbd944cab6e1c1ff2c41a37551f20f7fd970fa137ad0"
+  },
+  {
+   "path": "D:\\DCIM\\100EOSR6\\6V1A9426.CR3",
+   "raw": "6V1A9426.CR3",
+   "status": "preview_available",
+   "source_sha256": "fceb0f3813e329d9886dca6e227794dd62b4e357d3cf85c511f82560320b0048",
+   "embedded_dimensions": [
+    4640,
+    6960
+   ],
+   "preview_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\context\\reperage-contexte-bruit-v001-20261026T104741Z\\6V1A9426.png",
+   "preview_sha256": "8064926451cfb2d176d189f9fb6a0f038d376d72c90cadd96519e21d60631bb2"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base-hors-protocole\\6V1A9890.CR3",
+   "raw": "6V1A9890.CR3",
+   "status": "preview_available",
+   "source_sha256": "a57c06cb4498dc9385a4d4305bdff769bb2fdb2c5865a0c324ccefabebc0981d",
+   "embedded_dimensions": [
+    4640,
+    6960
+   ],
+   "preview_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\context\\reperage-contexte-bruit-v001-20261026T104741Z\\6V1A9890.png",
+   "preview_sha256": "89970773d608c2d10fdab81771ea9f656c5de3644a38d0f7790c1261d8c9ca13"
+  },
+  {
+   "path": "E:\\DCIM\\100CANON\\6V1A9997.CR3",
+   "raw": "6V1A9997.CR3",
+   "status": "preview_available",
+   "source_sha256": "9ecf366639d4aa0ec9fbe8f47b7eb97472f64730efd893c5d782020b67aff45f",
+   "embedded_dimensions": [
+    4640,
+    6960
+   ],
+   "preview_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\context\\reperage-contexte-bruit-v001-20261026T104741Z\\6V1A9997.png",
+   "preview_sha256": "0e9570cbb24883e9d07656732beab570eaf4a779dc11312e9b76add454d26a11"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base-hors-protocole\\7Y6A7232.CR3",
+   "raw": "7Y6A7232.CR3",
+   "status": "preview_available",
+   "source_sha256": "b1bfd1cdd392b3cfe6a521f5483d3a4ec5ff9c4916198077a530d42cdda62412",
+   "embedded_dimensions": [
+    4640,
+    6960
+   ],
+   "preview_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\context\\reperage-contexte-bruit-v001-20261026T104741Z\\7Y6A7232.png",
+   "preview_sha256": "801c4e3c8e1d59705561bc001c4829145cb19544bb9b15625026a900d17aff10"
+  },
+  {
+   "path": "C:\\Users\\victo\\Pictures\\photo_alea\\IMG_3171.CR2",
+   "raw": "IMG_3171.CR2",
+   "status": "preview_available",
+   "source_sha256": "31ab7e1d09349c22308377a00a29e0255a1effdd934fd7fb8f96c004c2cbaf26",
+   "embedded_dimensions": [
+    5184,
+    3456
+   ],
+   "preview_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\context\\reperage-contexte-bruit-v001-20261026T104741Z\\IMG_3171.png",
+   "preview_sha256": "b5ad376eb0660ecd6092140cb4c650fab794278b4fb5c7c9d61c99556588db1a"
+  },
+  {
+   "path": "C:\\Users\\victo\\Pictures\\Escalade\\Svanna\\IMG_6281.CR2",
+   "raw": "IMG_6281.CR2",
+   "status": "preview_available",
+   "source_sha256": "2f30f95a9a738417d5077198bc3900bdbc2540dc386c28a2adcbde7451e510fe",
+   "embedded_dimensions": [
+    3456,
+    5184
+   ],
+   "preview_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\context\\reperage-contexte-bruit-v001-20261026T104741Z\\IMG_6281.png",
+   "preview_sha256": "f3bc14a4c9439182c3f21d75f596b015358ed952bc27cf7fbaaf366cabacf693"
+  },
+  {
+   "path": "C:\\Users\\victo\\Pictures\\Escalade\\30_11_25\\_MG_7711.CR2",
+   "raw": "_MG_7711.CR2",
+   "status": "preview_available",
+   "source_sha256": "d4b22d1c3026efa3cf7c939488c9cfc1b49f64a1e269d97ac08e32251a5e1e37",
+   "embedded_dimensions": [
+    3456,
+    5184
+   ],
+   "preview_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\context\\reperage-contexte-bruit-v001-20261026T104741Z\\_MG_7711.png",
+   "preview_sha256": "4ada9a978acd8d597b48dcd0404379a6e176132b1c502525a129ccfb56a1e993"
+  },
+  {
+   "path": "C:\\Users\\victo\\Pictures\\Escalade\\30_11_25\\_MG_7845.CR2",
+   "raw": "_MG_7845.CR2",
+   "status": "preview_available",
+   "source_sha256": "5522bd526130f4cb53ee49443f328ad8a943f4d1a49450c30fd17afc841f5166",
+   "embedded_dimensions": [
+    5184,
+    3456
+   ],
+   "preview_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\context\\reperage-contexte-bruit-v001-20261026T104741Z\\_MG_7845.png",
+   "preview_sha256": "f591a6061714573e3f366dbb5d9852cab73bcd2db483a890430c2666b2313f73"
+  }
+ ],
+ "overview": {
+  "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\context\\reperage-contexte-bruit-v001-20261026T104741Z\\overview.png",
+  "sha256": "c10af3f60570cb357af127e711707f2aae1de4dad88484e489bac68691b75091"
+ },
+ "purpose": "Locate recognizable scene content before frozen full-resolution ROI extraction. Same12 previously studied natural scenes,source hash checked,noRAW postprocessing/no denoising/noTIFF.",
+ "limitations": "Embedded camera JPEG may be sharpened,denoised,tonemapped and geometrically different from IPR master. Not noise,colour or detail-fidelity truth. Preview coordinates must not be transferred to master without geometry verification. Already inspected scenes are diagnostic,not untouched confirmation. Missing sources recorded,no replacements silently selected."
+}

@@ -1,0 +1,808 @@
+{
+ "schema_version": 1,
+ "data_version": 1,
+ "completed_at_utc": "2026-10-26T17:57:57.735427+00:00",
+ "commit": "2a40c5c6cff78d40294393a68827f4a24555c724",
+ "runner_sha256": "8ca135adfe7583ccc36ddc1f48863b8bb1f641abd0d07e5c775dffa465af7d5c",
+ "runner_source": "\"\"\"Test a fixed instantaneous noise mixing across distinct capture covariances.\"\"\"\nfrom datetime import datetime, timezone\nimport json\nfrom pathlib import Path\nimport numpy as np\nfrom study_noise_neighbourhoods import ROOT, git, sha256\n\n\ndef off_diagonal(matrix):\n    result = matrix.copy()\n    for i in range(3):\n        result[..., i, i] = 0.\n    return result\n\n\ndef joint_diagonalizer(covariances):\n    covariances = np.asarray(covariances, dtype=float)\n    if covariances.ndim!=3 or covariances.shape[1:]!=(3,3) or not np.isfinite(covariances).all():\n        raise ValueError('Finite three-channel covariance set required')\n    trace = np.trace(covariances, axis1=1, axis2=2)\n    if np.any(trace<=0):raise ValueError('Positive covariance traces required')\n    normalized = covariances/trace[:,None,None]\n    average = np.mean(normalized, axis=0)\n    values,vectors = np.linalg.eigh(average)\n    if values.min() <= values.max()*1e-8:raise ValueError('Insufficient covariance rank')\n    whitening=(vectors/np.sqrt(values))@vectors.T\n    transformed=np.einsum('ai,kij,bj->kab',whitening,normalized,whitening)\n    transform=whitening.copy();history=[float(np.sum(off_diagonal(transformed)**2))]\n    for sweep in range(100):\n        for p,q in ((0,1),(0,2),(1,2)):\n            directions=np.stack((transformed[:,p,q],.5*(transformed[:,q,q]-transformed[:,p,p])),axis=1)\n            _,eigen=np.linalg.eigh(directions.T@directions)\n            direction=eigen[:,0]\n            if direction[0]<0:direction=-direction\n            angle=.5*np.arctan2(direction[1],direction[0]);c,s=np.cos(angle),np.sin(angle)\n            rotation=np.eye(3);rotation[p,p]=c;rotation[q,q]=c;rotation[p,q]=-s;rotation[q,p]=s\n            transformed=np.einsum('ia,kij,jb->kab',rotation,transformed,rotation)\n            transform=rotation.T@transform\n        cost=float(np.sum(off_diagonal(transformed)**2));history.append(cost)\n        if cost>history[-2]+1e-10:raise ValueError('Joint diagonalization objective increased')\n        if history[-2]-cost<1e-13*max(1.,history[-2]):break\n    return transform,whitening,history\n\n\ndef score(covariance, transform):\n    transformed=transform@covariance@transform.T\n    standard=np.sqrt(np.diag(transformed))\n    correlation=transformed/(standard[:,None]*standard[None,:])\n    return dict(off_diagonal_energy_fraction=float(np.sum(off_diagonal(transformed)**2)/np.sum(transformed**2)),\n        max_abs_axis_correlation=float(np.max(np.abs(off_diagonal(correlation)))),\n        axis_correlation=correlation.tolist())\n\n\ndef covariance_record(pair):\n    arrays=[np.asarray(next(s for s in pair[k]['samples'] if s['kind']=='flat')['original_y_co_cg'],dtype=float).reshape(3,64,64)\n            for k in ('a','b')]\n    difference=(arrays[0]-arrays[1])/np.sqrt(2)\n    cov=np.cov(difference.reshape(3,-1),bias=True)\n    return cov,dict(a=pair['a']['raw'],b=pair['b']['raw'],iso=pair['a']['iso'],\n        covariance_physical_y_co_cg=cov.tolist(),mean_y_co_cg=((arrays[0]+arrays[1])*.5).mean(axis=(1,2)).tolist())\n\n\ndef run():\n    paths=[ROOT/'docs/validation/raw'/name for name in (\n        'extraction-paires-profils-bruit-v001-20261026T174656Z.json',\n        'etude-reelle-bornee-nonlocal-bruit-v001-20261025T222336Z.json')]\n    hashes=[sha256(p) for p in paths];training,held=[json.loads(p.read_text(encoding='utf-8')) for p in paths]\n    train=[covariance_record(p) for p in training['native']['pairs']]\n    test=[covariance_record(p) for p in held['native']['pairs']]\n    transform,whitening,history=joint_diagonalizer([c for c,_ in train])\n    inverse=np.linalg.inv(transform)\n    if not np.allclose(transform@inverse,np.eye(3),atol=1e-10):raise ValueError('Invalid transform inverse')\n    records=[]\n    for split,rows in (('train',train),('held',test)):\n        for cov,metadata in rows:\n            records.append(dict(split=split,**metadata,scores={name:score(cov,mat) for name,mat in (\n                ('original_axes',np.eye(3)),('pooled_whitening',whitening),('fixed_joint_axes',transform))}))\n    if [sha256(p) for p in paths]!=hashes:raise ValueError('Parents changed')\n    now=datetime.now(timezone.utc)\n    output=ROOT/'docs/validation/raw'/f\"melange-fixe-covariances-bruit-v001-{now.strftime('%Y%m%dT%H%M%SZ')}.json\"\n    result=dict(schema_version=1,data_version=1,completed_at_utc=now.isoformat(),commit=git('rev-parse','HEAD'),\n        runner_sha256=sha256(Path(__file__)),runner_source=Path(__file__).read_text(encoding='utf-8'),\n        parents=[dict(path=str(p),sha256=h) for p,h in zip(paths,hashes)],records=records,\n        fixed_transform=transform.tolist(),inverse_transform=inverse.tolist(),training_objective_history=history,\n        rules='Hypothesis Ck=M diag(vk) M^T for constantmixing,differentchannelvariances. PhysicalYCoCg covariances,NOTindependentperplane normalization;only trace-normalize eachtrainingcovariance for equalweight acrossISO. Whitenmeantrainingmatrix,Jacobi3x3jointrotations,max100sweeps,monotone training objective. Fit4traincaptures ONLY;score4differentheldcaptures. No denoising orvariance regression.',\n        limitations='Zero-lag second-order model only;approximate diagonalization not sensor-axis identification proof. Spatialcrossspectra/nonlinearRCD/median/DCPJacobian and samplingerror can violatefixedmixing. Pair residual possiblemotion/scene. Fourtrain/testpairs previously explored,not untouched camera validation. Axis signs/order arbitrary;not newcolourspace orproductionprofile.')\n    with output.open('x',encoding='utf-8') as handle:json.dump(result,handle,ensure_ascii=False,indent=1,allow_nan=False)\n    print(output,flush=True)\n    for r in records:print(r['split'],r['iso'],r['scores']['fixed_joint_axes'],flush=True)\n\n\nif __name__=='__main__':run()\n",
+ "parents": [
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\extraction-paires-profils-bruit-v001-20261026T174656Z.json",
+   "sha256": "61a789c32b76eb9bcfa46e358a169dfe8e9cc73c30bb9fec3557352b3eac4770"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\etude-reelle-bornee-nonlocal-bruit-v001-20261025T222336Z.json",
+   "sha256": "6249525f6b1063766279cc71d9611b0c4c017e42796e90bf31315318123ca782"
+  }
+ ],
+ "records": [
+  {
+   "split": "train",
+   "a": "6V1A9751.CR3",
+   "b": "6V1A9752.CR3",
+   "iso": 100,
+   "covariance_physical_y_co_cg": [
+    [
+     1.632774864610852e-06,
+     6.133974430292537e-07,
+     3.660849329719484e-07
+    ],
+    [
+     6.133974430292537e-07,
+     1.4319561841675659e-06,
+     -3.215395581980003e-07
+    ],
+    [
+     3.660849329719484e-07,
+     -3.215395581980003e-07,
+     1.0236129453254018e-06
+    ]
+   ],
+   "mean_y_co_cg": [
+    0.04753737731925867,
+    0.034710752682713064,
+    0.006139825846730673
+   ],
+   "scores": {
+    "original_axes": {
+     "off_diagonal_energy_fraction": 0.17554373027874487,
+     "max_abs_axis_correlation": 0.4011566016043872,
+     "axis_correlation": [
+      [
+       1.0,
+       0.4011566016043872,
+       0.28317233178906304
+      ],
+      [
+       0.4011566016043872,
+       1.0,
+       -0.2655838493179611
+      ],
+      [
+       0.28317233178906304,
+       -0.2655838493179611,
+       0.9999999999999998
+      ]
+     ]
+    },
+    "pooled_whitening": {
+     "off_diagonal_energy_fraction": 0.22750048434125242,
+     "max_abs_axis_correlation": 0.6246941385515048,
+     "axis_correlation": [
+      [
+       0.9999999999999999,
+       0.33073662827721995,
+       0.05753760014925496
+      ],
+      [
+       0.33073662827722,
+       1.0,
+       -0.6246941385515048
+      ],
+      [
+       0.05753760014925498,
+       -0.6246941385515048,
+       1.0
+      ]
+     ]
+    },
+    "fixed_joint_axes": {
+     "off_diagonal_energy_fraction": 0.0008194188588491168,
+     "max_abs_axis_correlation": 0.02886407584210408,
+     "axis_correlation": [
+      [
+       1.0,
+       0.013842402589092901,
+       0.02886407584210399
+      ],
+      [
+       0.013842402589092858,
+       0.9999999999999998,
+       -0.0009276368875354898
+      ],
+      [
+       0.02886407584210408,
+       -0.0009276368875355774,
+       1.0000000000000002
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "split": "train",
+   "a": "6V1A9674.CR3",
+   "b": "6V1A9675.CR3",
+   "iso": 1600,
+   "covariance_physical_y_co_cg": [
+    [
+     3.818642913560354e-05,
+     -1.0058734838713295e-05,
+     3.338199367656746e-06
+    ],
+    [
+     -1.0058734838713295e-05,
+     7.932950490288664e-05,
+     4.20307420303546e-05
+    ],
+    [
+     3.338199367656746e-06,
+     4.20307420303546e-05,
+     4.480372086914208e-05
+    ]
+   ],
+   "mean_y_co_cg": [
+    0.0633467466732327,
+    -0.0396777548380669,
+    -0.009191160082536953
+   ],
+   "scores": {
+    "original_axes": {
+     "off_diagonal_energy_fraction": 0.2780153231357088,
+     "max_abs_axis_correlation": 0.7050057254060276,
+     "axis_correlation": [
+      [
+       1.0,
+       -0.18275592398627355,
+       0.08070504884410729
+      ],
+      [
+       -0.18275592398627355,
+       1.0,
+       0.7050057254060276
+      ],
+      [
+       0.08070504884410729,
+       0.7050057254060276,
+       1.0000000000000002
+      ]
+     ]
+    },
+    "pooled_whitening": {
+     "off_diagonal_energy_fraction": 0.17355943074681862,
+     "max_abs_axis_correlation": 0.45702321488247594,
+     "axis_correlation": [
+      [
+       1.0000000000000002,
+       -0.30167533962854925,
+       -0.020974145183540176
+      ],
+      [
+       -0.3016753396285493,
+       1.0,
+       0.45702321488247594
+      ],
+      [
+       -0.020974145183540172,
+       0.4570232148824758,
+       1.0
+      ]
+     ]
+    },
+    "fixed_joint_axes": {
+     "off_diagonal_energy_fraction": 0.0025629127168927098,
+     "max_abs_axis_correlation": 0.06562758822824273,
+     "axis_correlation": [
+      [
+       1.0,
+       0.03410403020705954,
+       -0.06562758822824273
+      ],
+      [
+       0.03410403020705938,
+       0.9999999999999999,
+       -0.03613319664036983
+      ],
+      [
+       -0.06562758822824272,
+       -0.03613319664036987,
+       1.0
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "split": "train",
+   "a": "6V1A9704.CR3",
+   "b": "6V1A9705.CR3",
+   "iso": 6400,
+   "covariance_physical_y_co_cg": [
+    [
+     0.00015978508117945207,
+     -1.49294626046642e-05,
+     2.3252669589366565e-05
+    ],
+    [
+     -1.49294626046642e-05,
+     0.0002913794217801174,
+     0.0001748270647283704
+    ],
+    [
+     2.3252669589366565e-05,
+     0.0001748270647283704,
+     0.00018027107524565
+    ]
+   ],
+   "mean_y_co_cg": [
+    0.049234544525234014,
+    -0.03273504487799528,
+    -0.004256402529676961
+   ],
+   "scores": {
+    "original_axes": {
+     "off_diagonal_energy_fraction": 0.30476702788010757,
+     "max_abs_axis_correlation": 0.7628096928188628,
+     "axis_correlation": [
+      [
+       0.9999999999999998,
+       -0.06919052451889793,
+       0.13700666096529746
+      ],
+      [
+       -0.06919052451889793,
+       1.0,
+       0.7628096928188628
+      ],
+      [
+       0.13700666096529746,
+       0.7628096928188628,
+       1.0
+      ]
+     ]
+    },
+    "pooled_whitening": {
+     "off_diagonal_energy_fraction": 0.18450882726785753,
+     "max_abs_axis_correlation": 0.5490456530785304,
+     "axis_correlation": [
+      [
+       1.0,
+       -0.19419847298790913,
+       0.014167358304862354
+      ],
+      [
+       -0.19419847298790915,
+       1.0000000000000002,
+       0.5490456530785304
+      ],
+      [
+       0.014167358304862382,
+       0.5490456530785303,
+       1.0
+      ]
+     ]
+    },
+    "fixed_joint_axes": {
+     "off_diagonal_energy_fraction": 0.0027961730798983686,
+     "max_abs_axis_correlation": 0.0675823263645739,
+     "axis_correlation": [
+      [
+       0.9999999999999999,
+       -0.02578806068153737,
+       0.06758232636457387
+      ],
+      [
+       -0.025788060681537592,
+       0.9999999999999999,
+       0.04196975219452773
+      ],
+      [
+       0.0675823263645739,
+       0.041969752194527685,
+       0.9999999999999998
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "split": "train",
+   "a": "6V1A9813.CR3",
+   "b": "6V1A9814.CR3",
+   "iso": 51200,
+   "covariance_physical_y_co_cg": [
+    [
+     0.004756175000791767,
+     0.0006642696141700319,
+     0.0004882406814800713
+    ],
+    [
+     0.0006642696141700319,
+     0.007511761520414791,
+     0.001285046660182636
+    ],
+    [
+     0.0004882406814800713,
+     0.001285046660182636,
+     0.004908753782998088
+    ]
+   ],
+   "mean_y_co_cg": [
+    0.3336559609042524,
+    0.16365811445893996,
+    0.04046846969595208
+   ],
+   "scores": {
+    "original_axes": {
+     "off_diagonal_energy_fraction": 0.04324410610500168,
+     "max_abs_axis_correlation": 0.2116227613149286,
+     "axis_correlation": [
+      [
+       0.9999999999999998,
+       0.1111333940587143,
+       0.10104606967761318
+      ],
+      [
+       0.1111333940587143,
+       1.0,
+       0.2116227613149286
+      ],
+      [
+       0.10104606967761318,
+       0.2116227613149286,
+       1.0
+      ]
+     ]
+    },
+    "pooled_whitening": {
+     "off_diagonal_energy_fraction": 0.030623571538878132,
+     "max_abs_axis_correlation": 0.19114440822563541,
+     "axis_correlation": [
+      [
+       1.0,
+       0.06184090341588004,
+       -0.06434365946651639
+      ],
+      [
+       0.06184090341588,
+       0.9999999999999998,
+       -0.1911444082256354
+      ],
+      [
+       -0.06434365946651642,
+       -0.19114440822563541,
+       1.0
+      ]
+     ]
+    },
+    "fixed_joint_axes": {
+     "off_diagonal_energy_fraction": 0.0014422790904561227,
+     "max_abs_axis_correlation": 0.04107963423542004,
+     "axis_correlation": [
+      [
+       0.9999999999999999,
+       -0.01693951934952015,
+       -0.04107963423542004
+      ],
+      [
+       -0.016939519349520104,
+       0.9999999999999999,
+       -0.007397438435342396
+      ],
+      [
+       -0.041079634235419944,
+       -0.007397438435342409,
+       1.0
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "split": "held",
+   "a": "6V1A9660.CR3",
+   "b": "6V1A9661.CR3",
+   "iso": 100,
+   "covariance_physical_y_co_cg": [
+    [
+     2.2119393027047327e-06,
+     -3.0469886934978596e-07,
+     3.83168238229734e-07
+    ],
+    [
+     -3.0469886934978596e-07,
+     3.6936086913868734e-06,
+     1.8071797974314963e-06
+    ],
+    [
+     3.83168238229734e-07,
+     1.8071797974314963e-06,
+     2.1675128914660878e-06
+    ]
+   ],
+   "mean_y_co_cg": [
+    0.06208894002566012,
+    -0.02140645348254111,
+    -0.0016841798360474058
+   ],
+   "scores": {
+    "original_axes": {
+     "off_diagonal_energy_fraction": 0.23181344361807463,
+     "max_abs_axis_correlation": 0.6386972946655254,
+     "axis_correlation": [
+      [
+       1.0,
+       -0.10660039114427579,
+       0.17499355536575378
+      ],
+      [
+       -0.10660039114427579,
+       1.0000000000000002,
+       0.6386972946655254
+      ],
+      [
+       0.17499355536575378,
+       0.6386972946655254,
+       1.0
+      ]
+     ]
+    },
+    "pooled_whitening": {
+     "off_diagonal_energy_fraction": 0.10596685253552261,
+     "max_abs_axis_correlation": 0.3523893687941683,
+     "axis_correlation": [
+      [
+       1.0,
+       -0.2237919928496969,
+       0.06998416629945654
+      ],
+      [
+       -0.22379199284969692,
+       1.0,
+       0.3523893687941683
+      ],
+      [
+       0.06998416629945656,
+       0.3523893687941682,
+       1.0
+      ]
+     ]
+    },
+    "fixed_joint_axes": {
+     "off_diagonal_energy_fraction": 0.002690826458925493,
+     "max_abs_axis_correlation": 0.04932786859894271,
+     "axis_correlation": [
+      [
+       1.0,
+       0.045561046268526396,
+       -0.04932786859894271
+      ],
+      [
+       0.04556104626852644,
+       1.0,
+       -0.03221140772357207
+      ],
+      [
+       -0.049327868598942705,
+       -0.032211407723572005,
+       1.0
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "split": "held",
+   "a": "6V1A9676.CR3",
+   "b": "6V1A9677.CR3",
+   "iso": 1600,
+   "covariance_physical_y_co_cg": [
+    [
+     1.5061078733978081e-05,
+     -6.9475776081544635e-06,
+     5.000323141133156e-07
+    ],
+    [
+     -6.9475776081544635e-06,
+     3.0170647820787463e-05,
+     1.546385494483996e-05
+    ],
+    [
+     5.000323141133156e-07,
+     1.546385494483996e-05,
+     1.38442414657981e-05
+    ]
+   ],
+   "mean_y_co_cg": [
+    0.020132813223995072,
+    -0.01557388460440734,
+    -0.0028106655140618386
+   ],
+   "scores": {
+    "original_axes": {
+     "off_diagonal_energy_fraction": 0.3021424756764816,
+     "max_abs_axis_correlation": 0.7566427355268328,
+     "axis_correlation": [
+      [
+       1.0,
+       -0.32592152943062436,
+       0.034628641074003576
+      ],
+      [
+       -0.32592152943062436,
+       1.0000000000000002,
+       0.7566427355268328
+      ],
+      [
+       0.034628641074003576,
+       0.7566427355268328,
+       0.9999999999999999
+      ]
+     ]
+    },
+    "pooled_whitening": {
+     "off_diagonal_energy_fraction": 0.25333099706662876,
+     "max_abs_axis_correlation": 0.5491139753692837,
+     "axis_correlation": [
+      [
+       1.0000000000000002,
+       -0.44808404162670856,
+       -0.026027154573999327
+      ],
+      [
+       -0.44808404162670856,
+       1.0000000000000002,
+       0.5491139753692837
+      ],
+      [
+       -0.026027154573999317,
+       0.5491139753692836,
+       1.0
+      ]
+     ]
+    },
+    "fixed_joint_axes": {
+     "off_diagonal_energy_fraction": 0.03400940953026583,
+     "max_abs_axis_correlation": 0.1796478773135006,
+     "axis_correlation": [
+      [
+       1.0000000000000002,
+       0.16249361388358033,
+       -0.10198719499900406
+      ],
+      [
+       0.16249361388357994,
+       1.0000000000000002,
+       -0.1796478773135006
+      ],
+      [
+       -0.10198719499900402,
+       -0.1796478773135006,
+       1.0
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "split": "held",
+   "a": "6V1A9702.CR3",
+   "b": "6V1A9703.CR3",
+   "iso": 6400,
+   "covariance_physical_y_co_cg": [
+    [
+     0.0001667498140977719,
+     -2.4230097749837406e-05,
+     1.9743909129965527e-05
+    ],
+    [
+     -2.4230097749837406e-05,
+     0.00024278883801738557,
+     0.00012957729431048025
+    ],
+    [
+     1.9743909129965527e-05,
+     0.00012957729431048025,
+     0.00016097102289329237
+    ]
+   ],
+   "mean_y_co_cg": [
+    0.05846342489644485,
+    -0.036687661390601534,
+    -0.006917655644429033
+   ],
+   "scores": {
+    "original_axes": {
+     "off_diagonal_energy_fraction": 0.23977647694739782,
+     "max_abs_axis_correlation": 0.6554517043060809,
+     "axis_correlation": [
+      [
+       1.0,
+       -0.12042263577476042,
+       0.12051097841198118
+      ],
+      [
+       -0.12042263577476042,
+       1.0000000000000002,
+       0.6554517043060809
+      ],
+      [
+       0.12051097841198118,
+       0.6554517043060809,
+       1.0
+      ]
+     ]
+    },
+    "pooled_whitening": {
+     "off_diagonal_energy_fraction": 0.11025228840014242,
+     "max_abs_axis_correlation": 0.3805143634651395,
+     "axis_correlation": [
+      [
+       1.0,
+       -0.2314269355490864,
+       0.006982432708466507
+      ],
+      [
+       -0.23142693554908644,
+       0.9999999999999998,
+       0.3805143634651395
+      ],
+      [
+       0.006982432708466546,
+       0.38051436346513945,
+       0.9999999999999998
+      ]
+     ]
+    },
+    "fixed_joint_axes": {
+     "off_diagonal_energy_fraction": 0.004907957072375439,
+     "max_abs_axis_correlation": 0.07396642814393681,
+     "axis_correlation": [
+      [
+       1.0,
+       -0.07396642814393663,
+       -0.0054725144439553
+      ],
+      [
+       -0.07396642814393681,
+       1.0,
+       -0.053112374930092666
+      ],
+      [
+       -0.005472514443955226,
+       -0.05311237493009267,
+       1.0
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "split": "held",
+   "a": "6V1A9815.CR3",
+   "b": "6V1A9816.CR3",
+   "iso": 51200,
+   "covariance_physical_y_co_cg": [
+    [
+     0.004878023662487876,
+     0.0015783059345088736,
+     0.000984621502421181
+    ],
+    [
+     0.0015783059345088736,
+     0.006308481267643938,
+     0.0006752485922006496
+    ],
+    [
+     0.000984621502421181,
+     0.0006752485922006496,
+     0.00426389919761422
+    ]
+   ],
+   "mean_y_co_cg": [
+    0.22195471537548883,
+    0.1213245448686564,
+    0.038563032336966785
+   ],
+   "scores": {
+    "original_axes": {
+     "off_diagonal_energy_fraction": 0.08741592334377409,
+     "max_abs_axis_correlation": 0.28451608838256703,
+     "axis_correlation": [
+      [
+       1.0000000000000002,
+       0.28451608838256703,
+       0.21589565394598012
+      ],
+      [
+       0.28451608838256703,
+       0.9999999999999999,
+       0.13019605166881357
+      ],
+      [
+       0.21589565394598012,
+       0.13019605166881357,
+       1.0
+      ]
+     ]
+    },
+    "pooled_whitening": {
+     "off_diagonal_energy_fraction": 0.0797909896609153,
+     "max_abs_axis_correlation": 0.2856782999838347,
+     "axis_correlation": [
+      [
+       0.9999999999999998,
+       0.22457103096479195,
+       0.017554025921810414
+      ],
+      [
+       0.22457103096479195,
+       1.0,
+       -0.2856782999838347
+      ],
+      [
+       0.017554025921810434,
+       -0.2856782999838347,
+       0.9999999999999998
+      ]
+     ]
+    },
+    "fixed_joint_axes": {
+     "off_diagonal_energy_fraction": 0.003116489097870386,
+     "max_abs_axis_correlation": 0.08341455685565663,
+     "axis_correlation": [
+      [
+       0.9999999999999999,
+       0.0026472414813714304,
+       0.02063332663250567
+      ],
+      [
+       0.0026472414813713758,
+       1.0,
+       0.08341455685565663
+      ],
+      [
+       0.02063332663250561,
+       0.08341455685565656,
+       0.9999999999999998
+      ]
+     ]
+    }
+   }
+  }
+ ],
+ "fixed_transform": [
+  [
+   0.6751627136448037,
+   1.3035603452009832,
+   -1.6626587982277274
+  ],
+  [
+   -0.6891195444750984,
+   0.9908363609499655,
+   0.9904953273117276
+  ],
+  [
+   1.6091444329115991,
+   -0.14938712984228514,
+   0.7852984257146641
+  ]
+ ],
+ "inverse_transform": [
+  [
+   0.15727693166784504,
+   -0.1316720239291535,
+   0.49906938025329833
+  ],
+  [
+   0.3625953984461023,
+   0.5444264680248617,
+   0.08101449677802289
+  ],
+  [
+   -0.25329760844716465,
+   0.3733734872540593,
+   0.2661762731636988
+  ]
+ ],
+ "training_objective_history": [
+  2.372592648580889,
+  0.49899692203629126,
+  0.025505568491912996,
+  0.024775520856432965,
+  0.024775520835721085,
+  0.024775520835720308
+ ],
+ "rules": "Hypothesis Ck=M diag(vk) M^T for constantmixing,differentchannelvariances. PhysicalYCoCg covariances,NOTindependentperplane normalization;only trace-normalize eachtrainingcovariance for equalweight acrossISO. Whitenmeantrainingmatrix,Jacobi3x3jointrotations,max100sweeps,monotone training objective. Fit4traincaptures ONLY;score4differentheldcaptures. No denoising orvariance regression.",
+ "limitations": "Zero-lag second-order model only;approximate diagonalization not sensor-axis identification proof. Spatialcrossspectra/nonlinearRCD/median/DCPJacobian and samplingerror can violatefixedmixing. Pair residual possiblemotion/scene. Fourtrain/testpairs previously explored,not untouched camera validation. Axis signs/order arbitrary;not newcolourspace orproductionprofile."
+}

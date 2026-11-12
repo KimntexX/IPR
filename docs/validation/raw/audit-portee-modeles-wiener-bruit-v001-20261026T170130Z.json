@@ -1,0 +1,337 @@
+{
+ "schema_version": 1,
+ "data_version": 1,
+ "completed_at_utc": "2026-10-26T17:01:30.433347+00:00",
+ "runner_sha256": "6368bfcb492297785cbdcc0c8b95abea9d6b1f0a3f3eee48f2919ad309577c56",
+ "runner_source": "\"\"\"Compare current synthetic assumptions to ALREADY STORED post-RCD pair calibrations.\"\"\"\nfrom datetime import datetime, timezone\nimport json\nfrom pathlib import Path\nimport numpy as np\nfrom study_noise_neighbourhoods import ROOT, sha256\nfrom study_noise_semantic_comparison import noise_model\n\n\nLAGS = ((0, 1), (1, 0), (1, 1), (0, 2), (2, 0))\n\n\ndef proxies(model):\n    variance = model['variance']\n    if not np.isfinite(variance) or variance <= 0:\n        raise ValueError('Positive stored marginal variance required')\n    rows = {(int(r[0]), int(r[1])): r[2] for r in model['offsets']}\n    return [float(1-rows[lag]/(2*variance)) for lag in LAGS]\n\n\ndef audit():\n    path = ROOT/'docs/validation/raw/formes-residus-reels-bruit-v001-20261026T120043Z.json'\n    digest = sha256(path); data = json.loads(path.read_text(encoding='utf-8'))\n    models = {name: proxies(noise_model(colored, False))\n              for name, colored in (('white', False), ('binomial_correlated', True))}\n    rows = []\n    for record in data['calibrations']:\n        cal = record['noise_calibration']; cross = np.asarray(cal['normalized_cross_plane_correlation'])\n        if len(cal['plane_models']) != 3 or cross.shape != (3, 3) or not np.isfinite(cross).all():\n            raise ValueError('Invalid stored plane calibration')\n        observed = np.asarray([proxies(m) for m in cal['plane_models']])\n        rows.append(dict(a=record['a'], b=record['b'], iso=record['iso'], camera=record['camera'],\n            rect=record['rect'], sigma_y_co_cg=cal['sigma_y_co_cg'],\n            normalized_cross_plane_correlation=cross.tolist(),\n            stored_distance_correlation_proxies=observed.tolist(),\n            common_binomial_lag1_deviation=(observed[:, :2]-2/3).tolist()))\n    if len(rows) != 4 or sha256(path) != digest:\n        raise ValueError('Unexpected or changed stored calibration')\n    return path, digest, models, rows\n\n\nif __name__ == '__main__':\n    path, digest, models, rows = audit()\n    now = datetime.now(timezone.utc)\n    output = ROOT/'docs/validation/raw'/f\"audit-portee-modeles-wiener-bruit-v001-{now.strftime('%Y%m%dT%H%M%SZ')}.json\"\n    result = dict(schema_version=1, data_version=1, completed_at_utc=now.isoformat(),\n        runner_sha256=sha256(Path(__file__)), runner_source=Path(__file__).read_text(encoding='utf-8'),\n        parent=dict(path=str(path), sha256=digest), lags_dy_dx=[list(p) for p in LAGS],\n        synthetic_models=models, records=rows,\n        rules='Audit of EXISTING four post-RCD pair calibrations,not new empirical measurement or independent validation. Each stored plane distance floor D(d) reported as proxy1-D(d)/(2variance),NOT forced into a PSD covariance. Preserve existing cross-plane matrices and ISO/camera identities. No old RAW decoded or pixels resimulated.',\n        limitations='Distance-to-correlation identity assumes stationarity/zero local difference mean. Finite outside-centre support and pair contamination can bias proxies; do not interpret as exact sensor covariance. Shared binomial independent-plane model cannot represent different marginal spectra and cross-plane coupling simultaneously. No universal camera profile or fitted filter from four pairs.')\n    with output.open('x', encoding='utf-8') as handle:\n        json.dump(result, handle, ensure_ascii=False, indent=1, allow_nan=False)\n    print(output)\n    for row in rows:\n        print(row['iso'], np.asarray(row['stored_distance_correlation_proxies'])[:, :2].tolist(),\n              'CoCg', row['normalized_cross_plane_correlation'][1][2])\n",
+ "parent": {
+  "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\formes-residus-reels-bruit-v001-20261026T120043Z.json",
+  "sha256": "034559d6be983de09192d9a1da4ef2712359955cdff8646421d3e36bcc73fc45"
+ },
+ "lags_dy_dx": [
+  [
+   0,
+   1
+  ],
+  [
+   1,
+   0
+  ],
+  [
+   1,
+   1
+  ],
+  [
+   0,
+   2
+  ],
+  [
+   2,
+   0
+  ]
+ ],
+ "synthetic_models": {
+  "white": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "binomial_correlated": [
+   0.6666666666666666,
+   0.6666666666666666,
+   0.4444444444444444,
+   0.16666666666666663,
+   0.16666666666666663
+  ]
+ },
+ "records": [
+  {
+   "a": "6V1A9660.CR3",
+   "b": "6V1A9661.CR3",
+   "iso": 100,
+   "camera": "EOS R6 Mark III",
+   "rect": [
+    3704,
+    4344,
+    64,
+    64
+   ],
+   "sigma_y_co_cg": [
+    0.0014875791209328028,
+    0.0019797690758579156,
+    0.0014097377364449852
+   ],
+   "normalized_cross_plane_correlation": [
+    [
+     1.0,
+     -0.1233782906081151,
+     0.14824388402416525
+    ],
+    [
+     -0.12337829060811509,
+     1.0,
+     0.6600716479986595
+    ],
+    [
+     0.14824388402416525,
+     0.6600716479986594,
+     1.0
+    ]
+   ],
+   "stored_distance_correlation_proxies": [
+    [
+     0.3657603666300637,
+     0.3176015713151097,
+     0.07658591008128846,
+     0.011933310598767677,
+     -0.002252032465123399
+    ],
+    [
+     0.8322778992587508,
+     0.8381740996045146,
+     0.7295840163350916,
+     0.5558679969134603,
+     0.5823301922172472
+    ],
+    [
+     0.8382269285643458,
+     0.8485840877500864,
+     0.7319118780568137,
+     0.5494262871662248,
+     0.5939592956209624
+    ]
+   ],
+   "common_binomial_lag1_deviation": [
+    [
+     -0.3009063000366029,
+     -0.34906509535155694
+    ],
+    [
+     0.1656112325920842,
+     0.17150743293784798
+    ],
+    [
+     0.17156026189767914,
+     0.1819174210834198
+    ]
+   ]
+  },
+  {
+   "a": "6V1A9676.CR3",
+   "b": "6V1A9677.CR3",
+   "iso": 1600,
+   "camera": "EOS R6 Mark III",
+   "rect": [
+    2808,
+    3320,
+    64,
+    64
+   ],
+   "sigma_y_co_cg": [
+    0.0038788049675940565,
+    0.0055028751270832675,
+    0.003743241241065972
+   ],
+   "normalized_cross_plane_correlation": [
+    [
+     0.9999999999999998,
+     -0.33113626083034864,
+     0.032551064570185737
+    ],
+    [
+     -0.3311362608303486,
+     1.0,
+     0.743210487661972
+    ],
+    [
+     0.03255106457018573,
+     0.743210487661972,
+     0.9999999999999998
+    ]
+   ],
+   "stored_distance_correlation_proxies": [
+    [
+     0.36018154501284205,
+     0.33115695209705853,
+     0.07726590937174926,
+     -0.02694778390956709,
+     -0.04217744697276404
+    ],
+    [
+     0.7814284169574257,
+     0.7705667574398476,
+     0.6305739921845335,
+     0.4767020301818826,
+     0.4669784656300281
+    ],
+    [
+     0.8354774249847335,
+     0.827068837694092,
+     0.6978223230979326,
+     0.5457454339835476,
+     0.5203686373070413
+    ]
+   ],
+   "common_binomial_lag1_deviation": [
+    [
+     -0.3064851216538246,
+     -0.3355097145696081
+    ],
+    [
+     0.11476175029075908,
+     0.10390009077318096
+    ],
+    [
+     0.1688107583180669,
+     0.16040217102742538
+    ]
+   ]
+  },
+  {
+   "a": "6V1A9702.CR3",
+   "b": "6V1A9703.CR3",
+   "iso": 6400,
+   "camera": "EOS R6 Mark III",
+   "rect": [
+    3832,
+    3576,
+    64,
+    64
+   ],
+   "sigma_y_co_cg": [
+    0.013099395591232575,
+    0.01541977332478983,
+    0.012980381449935966
+   ],
+   "normalized_cross_plane_correlation": [
+    [
+     1.0,
+     -0.11596501137531764,
+     0.127415542554975
+    ],
+    [
+     -0.11596501137531764,
+     1.0,
+     0.6753781979740193
+    ],
+    [
+     0.127415542554975,
+     0.6753781979740193,
+     1.0
+    ]
+   ],
+   "stored_distance_correlation_proxies": [
+    [
+     0.3198729202397286,
+     0.3409778122561591,
+     0.048504709093375564,
+     -0.05135119879011962,
+     -0.021093926196978252
+    ],
+    [
+     0.7581545740525762,
+     0.7536162104206813,
+     0.6234698054275473,
+     0.4465695960838598,
+     0.4059708189338441
+    ],
+    [
+     0.8088801018231492,
+     0.8161004415466155,
+     0.698148360653115,
+     0.48616345588520826,
+     0.4950866659945994
+    ]
+   ],
+   "common_binomial_lag1_deviation": [
+    [
+     -0.34679374642693805,
+     -0.32568885441050754
+    ],
+    [
+     0.09148790738590962,
+     0.08694954375401465
+    ],
+    [
+     0.14221343515648255,
+     0.1494337748799489
+    ]
+   ]
+  },
+  {
+   "a": "6V1A9815.CR3",
+   "b": "6V1A9816.CR3",
+   "iso": 51200,
+   "camera": "EOS R6 Mark III",
+   "rect": [
+    2424,
+    1656,
+    64,
+    64
+   ],
+   "sigma_y_co_cg": [
+    0.07117824289212674,
+    0.07688653730162713,
+    0.06479464593727065
+   ],
+   "normalized_cross_plane_correlation": [
+    [
+     0.9999999999999998,
+     0.28968792031349533,
+     0.21869676954370904
+    ],
+    [
+     0.2896879203134954,
+     1.0,
+     0.0762941901263209
+    ],
+    [
+     0.21869676954370904,
+     0.07629419012632088,
+     0.9999999999999998
+    ]
+   ],
+   "stored_distance_correlation_proxies": [
+    [
+     0.3765312996475283,
+     0.3847335731117979,
+     0.10724598416451347,
+     0.020874242831752654,
+     0.008360953603953059
+    ],
+    [
+     0.7866906788264205,
+     0.7844843733594188,
+     0.6454885977680842,
+     0.4967077219478665,
+     0.4847960676917884
+    ],
+    [
+     0.8273560391908832,
+     0.8279281574467824,
+     0.7231015839757469,
+     0.5368935313917278,
+     0.5336765963357872
+    ]
+   ],
+   "common_binomial_lag1_deviation": [
+    [
+     -0.29013536701913833,
+     -0.28193309355486873
+    ],
+    [
+     0.12002401215975389,
+     0.11781770669275216
+    ],
+    [
+     0.16068937252421656,
+     0.16126149078011576
+    ]
+   ]
+  }
+ ],
+ "rules": "Audit of EXISTING four post-RCD pair calibrations,not new empirical measurement or independent validation. Each stored plane distance floor D(d) reported as proxy1-D(d)/(2variance),NOT forced into a PSD covariance. Preserve existing cross-plane matrices and ISO/camera identities. No old RAW decoded or pixels resimulated.",
+ "limitations": "Distance-to-correlation identity assumes stationarity/zero local difference mean. Finite outside-centre support and pair contamination can bias proxies; do not interpret as exact sensor covariance. Shared binomial independent-plane model cannot represent different marginal spectra and cross-plane coupling simultaneously. No universal camera profile or fitted filter from four pairs."
+}

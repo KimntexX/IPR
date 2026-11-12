@@ -1,0 +1,724 @@
+{
+ "schema_version": 1,
+ "data_version": 2,
+ "campaign_id": "audit-methodologique-bruit-v002-20261026T101230Z",
+ "measured_at_utc": "2026-10-26T10:12:30.444664+00:00",
+ "commit": "2a40c5c6cff78d40294393a68827f4a24555c724",
+ "runner_sha256": "6b93e79c5cc15f374dce2eaee0e5a725b1cc28150a7a706c865306bc6dbc1fab",
+ "numpy_version": "2.4.2",
+ "local_changes": [
+  "M AGENTS.md",
+  " M CMakeLists.txt",
+  " M docs/validation/analyses/analyse-bruit.md",
+  " M docs/validation/protocols/protocole-bruit-voisinages-adaptatifs.md",
+  " M scripts/test-rules.json",
+  " M tests/noise_neighbourhood_probe.cpp",
+  " M tests/noise_spectral_test.cpp",
+  " M tests/study_noise_neighbourhoods.py",
+  "?? docs/validation/raw/audit-couverture-photos-bruit-v001-20261025T225408Z.json",
+  "?? docs/validation/raw/audit-methodologique-bruit-v001-20261026T100939Z.json",
+  "?? docs/validation/raw/etude-ablation-bruit-v001-20261025T113343Z.json",
+  "?? docs/validation/raw/etude-ablation-paires-bruit-v001-20261025T114643Z.json",
+  "?? docs/validation/raw/etude-abstention-bruit-v001-20261025T102254Z.json",
+  "?? docs/validation/raw/etude-abstention-bruit-v002-20261025T102715Z.json",
+  "?? docs/validation/raw/etude-adapte-complet-paires-bruit-v001-20261025T165152Z.json",
+  "?? docs/validation/raw/etude-adapte-fin-paires-bruit-v001-20261025T162825Z.json",
+  "?? docs/validation/raw/etude-ancrage-bruit-v001-20261025T150542Z.json",
+  "?? docs/validation/raw/etude-ancrage-paires-bruit-v001-20261025T150643Z.json",
+  "?? docs/validation/raw/etude-calibration-echelles-bruit-v001-20261025T211357Z.json",
+  "?? docs/validation/raw/etude-conjointe-bruit-v001-20261025T100827Z.json",
+  "?? docs/validation/raw/etude-contamination-profil-bruit-v001-20261025T095249Z.json",
+  "?? docs/validation/raw/etude-decomposition-nonlocal-bruit-v001-20261025T215412Z.json",
+  "?? docs/validation/raw/etude-detectabilite-paires-bruit-v001-20261025T163944Z.json",
+  "?? docs/validation/raw/etude-distance-covariance-nonlocal-bruit-v001-20261025T215935Z.json",
+  "?? docs/validation/raw/etude-double-distance-nonlocal-bruit-v001-20261025T220339Z.json",
+  "?? docs/validation/raw/etude-etapes-petites-formes-paires-bruit-v001-20261025T155051Z.json",
+  "?? docs/validation/raw/etude-gain-fin-paires-bruit-v001-20261025T160635Z.json",
+  "?? docs/validation/raw/etude-gains-locaux-paires-bruit-v001-20261025T201510Z.json",
+  "?? docs/validation/raw/etude-guide-pilote-nonlocal-bruit-v001-20261025T220729Z.json",
+  "?? docs/validation/raw/etude-hybride-nonlocal-directionnel-bruit-v001-20261025T215018Z.json",
+  "?? docs/validation/raw/etude-innovation-sept-directions-bruit-v001-20261025T214300Z.json",
+  "?? docs/validation/raw/etude-moyennes-non-locales-bruit-v001-20261025T213331Z.json",
+  "?? docs/validation/raw/etude-multiechelle-coefficients-paires-bruit-v001-20261025T180604Z.json",
+  "?? docs/validation/raw/etude-multiechelle-conjointe-paires-bruit-v001-20261025T183008Z.json",
+  "?? docs/validation/raw/etude-multiechelle-null-paires-bruit-v001-20261025T174210Z.json",
+  "?? docs/validation/raw/etude-multiechelle-oracle-paires-bruit-v001-20261025T175813Z.json",
+  "?? docs/validation/raw/etude-multiechelle-paires-bruit-v001-20261025T173139Z.json",
+  "?? docs/validation/raw/etude-multiechelle-pilote-paires-bruit-v001-20261025T175028Z.json",
+  "?? docs/validation/raw/etude-multiechelle-structures-paires-bruit-v001-20261025T185742Z.json",
+  "?? docs/validation/raw/etude-nonlocal-directions-appariees-bruit-v001-20261025T214650Z.json",
+  "?? docs/validation/raw/etude-orientation-echelles-bruit-v001-20261025T211908Z.json",
+  "?? docs/validation/raw/etude-petites-formes-paires-bruit-v001-20261025T153806Z.json",
+  "?? docs/validation/raw/etude-projection-adaptee-paires-bruit-v001-20261025T171605Z.json",
+  "?? docs/validation/raw/etude-reconstruction-bruit-v001-20261025T105505Z.json",
+  "?? docs/validation/raw/etude-reconstruction-bruit-v002-20261025T105639Z.json",
+  "?? docs/validation/raw/etude-reconstruction-bruit-v003-20261025T110749Z.json",
+  "?? docs/validation/raw/etude-reelle-bornee-nonlocal-bruit-v001-20261025T222336Z.json",
+  "?? docs/validation/raw/etude-regions-bruit-v001-20261025T111755Z.json",
+  "?? docs/validation/raw/etude-regions-bruit-v002-20261025T112430Z.json",
+  "?? docs/validation/raw/etude-regions-bruit-v003-20261025T152258Z.json",
+  "?? docs/validation/raw/etude-residu-phase-paires-bruit-v001-20261025T155820Z.json",
+  "?? docs/validation/raw/etude-selecteur-gains-bruit-v001-20261025T200800Z.json",
+  "?? docs/validation/raw/etude-selecteur-gains-locaux-bruit-v001-20261025T202146Z.json",
+  "?? docs/validation/raw/etude-selecteur-gains-locaux-intervalles-bruit-v001-20261025T202633Z.json",
+  "?? docs/validation/raw/etude-selecteur-gains-locaux-intervalles-structures-reservees-bruit-v001-20261025T203007Z.json",
+  "?? docs/validation/raw/etude-selection-modeles-bruit-v001-20261025T200232Z.json",
+  "?? docs/validation/raw/etude-sept-directions-bruit-v001-20261025T213850Z.json",
+  "?? docs/validation/raw/etude-spatial-fin-paires-bruit-v001-20261025T161806Z.json",
+  "?? docs/validation/raw/etude-support-adapte-paires-bruit-v001-20261025T170553Z.json",
+  "?? docs/validation/raw/etude-support-caracteristiques-bruit-v001-20261025T203515Z.json",
+  "?? docs/validation/raw/etude-sure-echelle-mesuree-bruit-v001-20261025T212233Z.json",
+  "?? docs/validation/raw/etude-sure-faisabilite-bruit-v001-20261025T204309Z.json",
+  "?? docs/validation/raw/etude-sure-filtres-bruit-v001-20261025T210241Z.json",
+  "?? docs/validation/raw/etude-sure-sensibilite-bruit-v001-20261025T210753Z.json",
+  "?? docs/validation/raw/etude-sure-structures-orientees-bruit-v001-20261025T212646Z.json",
+  "?? docs/validation/raw/etude-voisinages-bruit-v013-20261025T103134Z.json",
+  "?? docs/validation/raw/etude-voisinages-bruit-v014-20261025T104528Z.json",
+  "?? docs/validation/raw/etude-voisinages-bruit-v015-20261025T105758Z.json",
+  "?? docs/validation/raw/etude-voisinages-bruit-v016-20261025T110911Z.json",
+  "?? docs/validation/raw/etude-voisinages-bruit-v017-20261025T112612Z.json",
+  "?? docs/validation/raw/etude-voisinages-bruit-v018-20261025T113441Z.json",
+  "?? docs/validation/raw/etude-voisinages-bruit-v019-20261025T150859Z.json",
+  "?? docs/validation/raw/etude-voisinages-bruit-v020-20261025T152345Z.json",
+  "?? docs/validation/raw/etude-voisinages-bruit-v021-20261025T154131Z.json",
+  "?? scripts/background_job.py",
+  "?? tests/audit_noise_research.py",
+  "?? tests/noise_matched_detector.cpp",
+  "?? tests/noise_matched_detector.h",
+  "?? tests/noise_matched_detector_test.cpp",
+  "?? tests/noise_multiscale_pilot.cpp",
+  "?? tests/noise_multiscale_pilot.h",
+  "?? tests/noise_multiscale_pilot_test.cpp",
+  "?? tests/noise_perceptual_metrics.cpp",
+  "?? tests/noise_perceptual_metrics.h",
+  "?? tests/noise_perceptual_metrics_test.cpp",
+  "?? tests/noise_profile_contamination.cpp",
+  "?? tests/noise_profile_contamination.h",
+  "?? tests/noise_profile_support.cpp",
+  "?? tests/noise_profile_support.h",
+  "?? tests/noise_profile_support_test.cpp",
+  "?? tests/noise_sure_filters_test.cpp",
+  "?? tests/study_noise_abstention.py",
+  "?? tests/study_noise_contamination.py",
+  "?? tests/study_noise_feature_support.py",
+  "?? tests/study_noise_gain_selector.py",
+  "?? tests/study_noise_joint.py",
+  "?? tests/study_noise_model_selection.py",
+  "?? tests/study_noise_nonlocal.py",
+  "?? tests/study_noise_nonlocal_covariance.py",
+  "?? tests/study_noise_nonlocal_decomposition.py",
+  "?? tests/study_noise_nonlocal_directional.py",
+  "?? tests/study_noise_nonlocal_dual_distance.py",
+  "?? tests/study_noise_nonlocal_hybrid.py",
+  "?? tests/study_noise_nonlocal_pilot.py",
+  "?? tests/study_noise_pair_ablation.py",
+  "?? tests/study_noise_perceptual.py",
+  "?? tests/study_noise_photo_coverage.py",
+  "?? tests/study_noise_real_bounded.py",
+  "?? tests/study_noise_reconstruction.py",
+  "?? tests/study_noise_scale_calibration.py",
+  "?? tests/study_noise_scale_orientation.py",
+  "?? tests/study_noise_seven_directions.py",
+  "?? tests/study_noise_seven_innovation.py",
+  "?? tests/study_noise_sure_feasibility.py",
+  "?? tests/study_noise_sure_filters.py",
+  "?? tests/study_noise_sure_measured_scale.py",
+  "?? tests/study_noise_sure_oriented.py",
+  "?? tests/study_noise_sure_sensitivity.py",
+  "?? tests/test_audit_noise_research.py",
+  "?? tests/test_background_job.py",
+  "?? tests/test_study_noise_contamination.py",
+  "?? tests/test_study_noise_feature_support.py",
+  "?? tests/test_study_noise_gain_selector.py",
+  "?? tests/test_study_noise_joint.py",
+  "?? tests/test_study_noise_model_selection.py",
+  "?? tests/test_study_noise_nonlocal.py",
+  "?? tests/test_study_noise_nonlocal_covariance.py",
+  "?? tests/test_study_noise_nonlocal_decomposition.py",
+  "?? tests/test_study_noise_nonlocal_directional.py",
+  "?? tests/test_study_noise_nonlocal_dual_distance.py",
+  "?? tests/test_study_noise_nonlocal_hybrid.py",
+  "?? tests/test_study_noise_nonlocal_pilot.py",
+  "?? tests/test_study_noise_pair_ablation.py",
+  "?? tests/test_study_noise_photo_coverage.py",
+  "?? tests/test_study_noise_real_bounded.py",
+  "?? tests/test_study_noise_scale_calibration.py",
+  "?? tests/test_study_noise_scale_orientation.py",
+  "?? tests/test_study_noise_seven_directions.py",
+  "?? tests/test_study_noise_seven_innovation.py",
+  "?? tests/test_study_noise_sure_feasibility.py",
+  "?? tests/test_study_noise_sure_filters.py",
+  "?? tests/test_study_noise_sure_measured_scale.py",
+  "?? tests/test_study_noise_sure_oriented.py",
+  "?? tests/test_study_noise_sure_sensitivity.py"
+ ],
+ "metric_continuity": {
+  "known_bank": "NumPy64 fixed source definitions,not other128/native banks",
+  "campaign_count": 8,
+  "row_occurrences": 5700,
+  "unique_observations": 1824,
+  "repeated_method_MSE_checked": 25536,
+  "max_repeated_MSE_difference": 0.0,
+  "conflicts": [],
+  "decompositions_checked": 10032,
+  "bad_decompositions": [],
+  "limitations": "Agreement of saved metrics does not prove original computations correct;reused rows are not independent replication"
+ },
+ "provenance": [
+  {
+   "path": "etude-sept-directions-bruit-v001-20261025T213850Z.json",
+   "sha256": "2f025dd335918c3f89d08be18ad65aa3bc1ee61f30a75b30518aa5bd63fae3f4",
+   "parents": [
+    {
+     "declared": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\etude-moyennes-non-locales-bruit-v001-20261025T213331Z.json",
+     "resolved": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\etude-moyennes-non-locales-bruit-v001-20261025T213331Z.json",
+     "exists": true,
+     "sha256_matches": true
+    }
+   ]
+  },
+  {
+   "path": "etude-innovation-sept-directions-bruit-v001-20261025T214300Z.json",
+   "sha256": "723086de96fbb4e3387f143d9c30de71edb60c0b5f343da6c83370fef5466978",
+   "parents": [
+    {
+     "declared": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\etude-sept-directions-bruit-v001-20261025T213850Z.json",
+     "resolved": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\etude-sept-directions-bruit-v001-20261025T213850Z.json",
+     "exists": true,
+     "sha256_matches": true
+    }
+   ]
+  },
+  {
+   "path": "etude-nonlocal-directions-appariees-bruit-v001-20261025T214650Z.json",
+   "sha256": "5bf77dc405da93d8a8e45f134a9d40857b217914aecef07172a62a9f75fd8685",
+   "parents": [
+    {
+     "declared": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\etude-innovation-sept-directions-bruit-v001-20261025T214300Z.json",
+     "resolved": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\etude-innovation-sept-directions-bruit-v001-20261025T214300Z.json",
+     "exists": true,
+     "sha256_matches": true
+    },
+    {
+     "declared": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\etude-sept-directions-bruit-v001-20261025T213850Z.json",
+     "resolved": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\etude-sept-directions-bruit-v001-20261025T213850Z.json",
+     "exists": true,
+     "sha256_matches": true
+    }
+   ]
+  },
+  {
+   "path": "etude-hybride-nonlocal-directionnel-bruit-v001-20261025T215018Z.json",
+   "sha256": "b0860a8c27e157612587faa5d085909878bdf87b32436cfe68454fd1adf23213",
+   "parents": [
+    {
+     "declared": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\etude-nonlocal-directions-appariees-bruit-v001-20261025T214650Z.json",
+     "resolved": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\etude-nonlocal-directions-appariees-bruit-v001-20261025T214650Z.json",
+     "exists": true,
+     "sha256_matches": true
+    },
+    {
+     "declared": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\etude-sept-directions-bruit-v001-20261025T213850Z.json",
+     "resolved": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\etude-sept-directions-bruit-v001-20261025T213850Z.json",
+     "exists": true,
+     "sha256_matches": true
+    },
+    {
+     "declared": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\etude-innovation-sept-directions-bruit-v001-20261025T214300Z.json",
+     "resolved": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\etude-innovation-sept-directions-bruit-v001-20261025T214300Z.json",
+     "exists": true,
+     "sha256_matches": true
+    }
+   ]
+  },
+  {
+   "path": "etude-decomposition-nonlocal-bruit-v001-20261025T215412Z.json",
+   "sha256": "23dff2919982b4e9b590cfe325c5dc3952d1575bb1c1c84e453c2518461ffa2a",
+   "parents": [
+    {
+     "declared": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\etude-nonlocal-directions-appariees-bruit-v001-20261025T214650Z.json",
+     "resolved": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\etude-nonlocal-directions-appariees-bruit-v001-20261025T214650Z.json",
+     "exists": true,
+     "sha256_matches": true
+    }
+   ]
+  },
+  {
+   "path": "etude-distance-covariance-nonlocal-bruit-v001-20261025T215935Z.json",
+   "sha256": "851edaa21f973c58c7285d201d28bb8a9b80b41761c4f8e73774ea3ff6029b60",
+   "parents": [
+    {
+     "declared": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\etude-decomposition-nonlocal-bruit-v001-20261025T215412Z.json",
+     "resolved": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\etude-decomposition-nonlocal-bruit-v001-20261025T215412Z.json",
+     "exists": true,
+     "sha256_matches": true
+    }
+   ]
+  },
+  {
+   "path": "etude-double-distance-nonlocal-bruit-v001-20261025T220339Z.json",
+   "sha256": "1e825de8af7be8d0a6382877deef336095f2f47c46dd571976e8642cff506e4f",
+   "parents": [
+    {
+     "declared": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\etude-distance-covariance-nonlocal-bruit-v001-20261025T215935Z.json",
+     "resolved": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\etude-distance-covariance-nonlocal-bruit-v001-20261025T215935Z.json",
+     "exists": true,
+     "sha256_matches": true
+    }
+   ]
+  },
+  {
+   "path": "etude-guide-pilote-nonlocal-bruit-v001-20261025T220729Z.json",
+   "sha256": "2ed8e88ecf05fb79cf17314fb407d2088d2f4a0eb73c1b5009c55c8ce639301b",
+   "parents": [
+    {
+     "declared": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\etude-double-distance-nonlocal-bruit-v001-20261025T220339Z.json",
+     "resolved": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\etude-double-distance-nonlocal-bruit-v001-20261025T220339Z.json",
+     "exists": true,
+     "sha256_matches": true
+    }
+   ]
+  },
+  {
+   "path": "audit-couverture-photos-bruit-v001-20261025T225408Z.json",
+   "sha256": "b645b7440b4d3871ab509c001c92570ad76e84b1a2c5b3ad0719b301fefa70e1",
+   "parents": [
+    {
+     "declared": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\etude-spectrale-bruit-v001-20261024T195453Z.json",
+     "resolved": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\etude-spectrale-bruit-v001-20261024T195453Z.json",
+     "exists": true,
+     "sha256_matches": true
+    },
+    {
+     "declared": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\etude-reelle-bornee-nonlocal-bruit-v001-20261025T222336Z.json",
+     "resolved": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\etude-reelle-bornee-nonlocal-bruit-v001-20261025T222336Z.json",
+     "exists": true,
+     "sha256_matches": true
+    }
+   ]
+  }
+ ],
+ "photo_patches": [
+  {
+   "raw": "6V1A9426.CR3",
+   "iso": 1000,
+   "kind": "dark",
+   "rect": [
+    1656,
+    120,
+    64,
+    64
+   ],
+   "selection_support": [
+    256,
+    256
+   ],
+   "extracted_support": [
+    64,
+    64
+   ],
+   "measurement_support": [
+    31,
+    31
+   ],
+   "selection_structure": 0.020632934170777637,
+   "mean_y": 0.0005018631844688304,
+   "std_y": 0.0001813012472510519,
+   "selection_mean_y": 0.0020981453718827703,
+   "central_span_y_co_cg": [
+    0.0014623899478465319,
+    0.001165705209132284,
+    0.0007429062970913947
+   ],
+   "extracted64_span_y_co_cg": [
+    0.0016227951600740198,
+    0.0013774603721685708,
+    0.0008672369294799864
+   ],
+   "min_y": 9.751634206622839e-05,
+   "max_y": 0.0015599062899127603,
+   "constant_y": false,
+   "zero_central_contrast": false,
+   "valid_for_detail_if_labeled": true,
+   "flat_label_y_range_changed": false,
+   "limitation": "Nonconstant does not certify clean structure;constant level does not establish sensor clipping"
+  },
+  {
+   "raw": "6V1A9426.CR3",
+   "iso": 1000,
+   "kind": "flat",
+   "rect": [
+    1912,
+    504,
+    64,
+    64
+   ],
+   "selection_support": [
+    256,
+    256
+   ],
+   "extracted_support": [
+    64,
+    64
+   ],
+   "measurement_support": [
+    31,
+    31
+   ],
+   "selection_structure": 0.14510043055025384,
+   "mean_y": 0.022859254989552075,
+   "std_y": 0.0035239460557696346,
+   "selection_mean_y": 0.025751850384230224,
+   "central_span_y_co_cg": [
+    0.02472071908414364,
+    0.019485769793391228,
+    0.010638102889060974
+   ],
+   "extracted64_span_y_co_cg": [
+    0.038377279648557305,
+    0.029887789394706488,
+    0.013835960999131203
+   ],
+   "min_y": 0.01256885938346386,
+   "max_y": 0.0372895784676075,
+   "constant_y": false,
+   "zero_central_contrast": false,
+   "valid_for_detail_if_labeled": true,
+   "flat_label_y_range_changed": false,
+   "limitation": "Nonconstant does not certify clean structure;constant level does not establish sensor clipping"
+  },
+  {
+   "raw": "6V1A9426.CR3",
+   "iso": 1000,
+   "kind": "detail",
+   "rect": [
+    4216,
+    504,
+    64,
+    64
+   ],
+   "selection_support": [
+    256,
+    256
+   ],
+   "extracted_support": [
+    64,
+    64
+   ],
+   "measurement_support": [
+    31,
+    31
+   ],
+   "selection_structure": 2.3118263130990484,
+   "mean_y": 0.9899051785469055,
+   "std_y": 0.0,
+   "selection_mean_y": 0.2597188156092187,
+   "central_span_y_co_cg": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "extracted64_span_y_co_cg": [
+    0.5344793200492859,
+    0.2888723313808441,
+    0.08897465467453003
+   ],
+   "min_y": 0.9899051785469055,
+   "max_y": 0.9899051785469055,
+   "constant_y": true,
+   "zero_central_contrast": true,
+   "valid_for_detail_if_labeled": false,
+   "flat_label_y_range_changed": false,
+   "limitation": "Nonconstant does not certify clean structure;constant level does not establish sensor clipping"
+  },
+  {
+   "raw": "6V1A9890.CR3",
+   "iso": 25600,
+   "kind": "dark",
+   "rect": [
+    1912,
+    4856,
+    64,
+    64
+   ],
+   "selection_support": [
+    256,
+    256
+   ],
+   "extracted_support": [
+    64,
+    64
+   ],
+   "measurement_support": [
+    31,
+    31
+   ],
+   "selection_structure": 0.020610646921102534,
+   "mean_y": 0.0025481098928166754,
+   "std_y": 0.004402594058438854,
+   "selection_mean_y": 0.0025716113196814147,
+   "central_span_y_co_cg": [
+    0.04475867748260498,
+    0.14091835170984268,
+    0.0921676903963089
+   ],
+   "extracted64_span_y_co_cg": [
+    0.061940260231494904,
+    0.1500924862921238,
+    0.09916075505316257
+   ],
+   "min_y": 0.0,
+   "max_y": 0.04475867748260498,
+   "constant_y": false,
+   "zero_central_contrast": false,
+   "valid_for_detail_if_labeled": true,
+   "flat_label_y_range_changed": false,
+   "limitation": "Nonconstant does not certify clean structure;constant level does not establish sensor clipping"
+  },
+  {
+   "raw": "6V1A9890.CR3",
+   "iso": 25600,
+   "kind": "flat",
+   "rect": [
+    2296,
+    5624,
+    64,
+    64
+   ],
+   "selection_support": [
+    256,
+    256
+   ],
+   "extracted_support": [
+    64,
+    64
+   ],
+   "measurement_support": [
+    31,
+    31
+   ],
+   "selection_structure": 0.08074985220182983,
+   "mean_y": 0.0029929809211547143,
+   "std_y": 0.0045208513921890054,
+   "selection_mean_y": 0.02348410005528462,
+   "central_span_y_co_cg": [
+    0.04663321375846863,
+    0.06765864230692387,
+    0.03629511408507824
+   ],
+   "extracted64_span_y_co_cg": [
+    0.05007219314575195,
+    0.1374635435640812,
+    0.07494711875915527
+   ],
+   "min_y": 0.0,
+   "max_y": 0.04663321375846863,
+   "constant_y": false,
+   "zero_central_contrast": false,
+   "valid_for_detail_if_labeled": true,
+   "flat_label_y_range_changed": true,
+   "limitation": "Nonconstant does not certify clean structure;constant level does not establish sensor clipping"
+  },
+  {
+   "raw": "6V1A9890.CR3",
+   "iso": 25600,
+   "kind": "detail",
+   "rect": [
+    4216,
+    1144,
+    64,
+    64
+   ],
+   "selection_support": [
+    256,
+    256
+   ],
+   "extracted_support": [
+    64,
+    64
+   ],
+   "measurement_support": [
+    31,
+    31
+   ],
+   "selection_structure": 0.5283740599631007,
+   "mean_y": 0.08578732819950574,
+   "std_y": 0.026150929207553908,
+   "selection_mean_y": 0.1161961365438322,
+   "central_span_y_co_cg": [
+    0.16733698640018702,
+    0.3226081971079111,
+    0.1543423756957054
+   ],
+   "extracted64_span_y_co_cg": [
+    0.5025466592051089,
+    0.3802960638422519,
+    0.4249853640794754
+   ],
+   "min_y": 0.009334533475339413,
+   "max_y": 0.17667151987552643,
+   "constant_y": false,
+   "zero_central_contrast": false,
+   "valid_for_detail_if_labeled": true,
+   "flat_label_y_range_changed": false,
+   "limitation": "Nonconstant does not certify clean structure;constant level does not establish sensor clipping"
+  },
+  {
+   "raw": "6V1A0112.CR3",
+   "iso": 64000,
+   "kind": "dark",
+   "rect": [
+    3832,
+    5880,
+    64,
+    64
+   ],
+   "selection_support": [
+    256,
+    256
+   ],
+   "extracted_support": [
+    64,
+    64
+   ],
+   "measurement_support": [
+    31,
+    31
+   ],
+   "selection_structure": 0.2738574207237922,
+   "mean_y": 0.0074600430570896685,
+   "std_y": 0.011922948652884744,
+   "selection_mean_y": 0.007752301095223622,
+   "central_span_y_co_cg": [
+    0.08772961795330048,
+    0.24447773396968842,
+    0.13021160662174225
+   ],
+   "extracted64_span_y_co_cg": [
+    0.10578534007072449,
+    0.3737633228302002,
+    0.22237932682037354
+   ],
+   "min_y": 0.0,
+   "max_y": 0.08772961795330048,
+   "constant_y": false,
+   "zero_central_contrast": false,
+   "valid_for_detail_if_labeled": true,
+   "flat_label_y_range_changed": false,
+   "limitation": "Nonconstant does not certify clean structure;constant level does not establish sensor clipping"
+  },
+  {
+   "raw": "6V1A0112.CR3",
+   "iso": 64000,
+   "kind": "flat",
+   "rect": [
+    1656,
+    3960,
+    64,
+    64
+   ],
+   "selection_support": [
+    256,
+    256
+   ],
+   "extracted_support": [
+    64,
+    64
+   ],
+   "measurement_support": [
+    31,
+    31
+   ],
+   "selection_structure": 0.2846116367571465,
+   "mean_y": 0.02537228364823963,
+   "std_y": 0.02719077434297061,
+   "selection_mean_y": 0.14078963362804617,
+   "central_span_y_co_cg": [
+    0.16466516256332397,
+    0.4102688431739807,
+    0.2815113589167595
+   ],
+   "extracted64_span_y_co_cg": [
+    0.21277473866939545,
+    0.49327799677848816,
+    0.2815113589167595
+   ],
+   "min_y": 0.0,
+   "max_y": 0.16466516256332397,
+   "constant_y": false,
+   "zero_central_contrast": false,
+   "valid_for_detail_if_labeled": true,
+   "flat_label_y_range_changed": false,
+   "limitation": "Nonconstant does not certify clean structure;constant level does not establish sensor clipping"
+  },
+  {
+   "raw": "6V1A0112.CR3",
+   "iso": 64000,
+   "kind": "detail",
+   "rect": [
+    4088,
+    5496,
+    64,
+    64
+   ],
+   "selection_support": [
+    256,
+    256
+   ],
+   "extracted_support": [
+    64,
+    64
+   ],
+   "measurement_support": [
+    31,
+    31
+   ],
+   "selection_structure": 0.626899623292624,
+   "mean_y": 0.010979877330412465,
+   "std_y": 0.016159298027187102,
+   "selection_mean_y": 0.020482047560805013,
+   "central_span_y_co_cg": [
+    0.14870570600032806,
+    0.31428924202919006,
+    0.19293621182441711
+   ],
+   "extracted64_span_y_co_cg": [
+    0.8851810693740845,
+    0.9730634838342667,
+    0.7495679557323456
+   ],
+   "min_y": 0.0,
+   "max_y": 0.14870570600032806,
+   "constant_y": false,
+   "zero_central_contrast": false,
+   "valid_for_detail_if_labeled": true,
+   "flat_label_y_range_changed": false,
+   "limitation": "Nonconstant does not certify clean structure;constant level does not establish sensor clipping"
+  }
+ ],
+ "historical_precedents": [
+  {
+   "path": "docs\\validation\\raw\\etude-luminance-ensemble-v001-20261020T144553Z.json",
+   "exists": true,
+   "sha256": "b9b654fea8fd5c53f3904ca55d8feb75ceb3147b2a5cb8236f884ce77ae9231b"
+  },
+  {
+   "path": "docs\\validation\\raw\\etude-voisinages-bruit-v001-20261023T093242Z.json",
+   "exists": true,
+   "sha256": "36b084dc85780ce2e51b8b3139177d1a96f4f4abead26ac7fb2c31114ea832e7"
+  },
+  {
+   "path": "docs\\validation\\raw\\etude-multiechelle-pilote-paires-bruit-v001-20261025T175028Z.json",
+   "exists": true,
+   "sha256": "13574943106105e92b404f7f3dd83e0de2e9ed88bc0618d98bab85afd0a9b52b"
+  }
+ ],
+ "engine_diff": [],
+ "rules": "Read saved JSONs only,noRAW,no reconstruction/noise estimation/no denoiser rerun. Metric aliases only nonlocal_h04/h08 noisy-weight spelling changes;explicit NumPy64 bank only. Parent hashes and saved algebraic decompositions checked. Photo labels checked against actual measured centre,not parent256 score.",
+ "limitations": "Not a full audit of200sections or all historical campaigns. No untested-model rejection. Numerical consistency cannot rule out shared model/calibration/selection bias. No proof of visual content,clipping or current equality of every source hash to historical versions.No production change.",
+ "refinement": {
+  "parent": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\audit-methodologique-bruit-v001-20261026T100939Z.json",
+  "sha256": "c1fb82483bfa5492795838ff0a5d3fdc0a3427402df199a24bbf1b55077ac74d",
+  "reason": "Add all-plane centre/64px spans and parent mean;do not reject pure chromatic detail solely because luminance is constant.No denoiser rerun."
+ }
+}

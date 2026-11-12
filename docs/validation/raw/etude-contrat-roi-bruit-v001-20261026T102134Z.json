@@ -1,0 +1,1108 @@
+{
+ "schema_version": 1,
+ "data_version": 1,
+ "campaign_id": "etude-contrat-roi-bruit-v001-20261026T102134Z",
+ "measured_at_utc": "2026-10-26T10:21:34.140575+00:00",
+ "commit": "2a40c5c6cff78d40294393a68827f4a24555c724",
+ "local_changes": [
+  "M AGENTS.md",
+  " M CMakeLists.txt",
+  " M docs/validation/analyses/analyse-bruit.md",
+  " M docs/validation/protocols/protocole-bruit-voisinages-adaptatifs.md",
+  " M scripts/test-rules.json",
+  " M tests/noise_neighbourhood_probe.cpp",
+  " M tests/noise_spectral_test.cpp",
+  " M tests/study_noise_neighbourhoods.py",
+  "?? docs/validation/raw/audit-couverture-photos-bruit-v001-20261025T225408Z.json",
+  "?? docs/validation/raw/audit-methodologique-bruit-v001-20261026T100939Z.json",
+  "?? docs/validation/raw/audit-methodologique-bruit-v002-20261026T101230Z.json",
+  "?? docs/validation/raw/etude-ablation-bruit-v001-20261025T113343Z.json",
+  "?? docs/validation/raw/etude-ablation-paires-bruit-v001-20261025T114643Z.json",
+  "?? docs/validation/raw/etude-abstention-bruit-v001-20261025T102254Z.json",
+  "?? docs/validation/raw/etude-abstention-bruit-v002-20261025T102715Z.json",
+  "?? docs/validation/raw/etude-adapte-complet-paires-bruit-v001-20261025T165152Z.json",
+  "?? docs/validation/raw/etude-adapte-fin-paires-bruit-v001-20261025T162825Z.json",
+  "?? docs/validation/raw/etude-ancrage-bruit-v001-20261025T150542Z.json",
+  "?? docs/validation/raw/etude-ancrage-paires-bruit-v001-20261025T150643Z.json",
+  "?? docs/validation/raw/etude-calibration-echelles-bruit-v001-20261025T211357Z.json",
+  "?? docs/validation/raw/etude-conjointe-bruit-v001-20261025T100827Z.json",
+  "?? docs/validation/raw/etude-contamination-profil-bruit-v001-20261025T095249Z.json",
+  "?? docs/validation/raw/etude-decomposition-nonlocal-bruit-v001-20261025T215412Z.json",
+  "?? docs/validation/raw/etude-detectabilite-paires-bruit-v001-20261025T163944Z.json",
+  "?? docs/validation/raw/etude-distance-covariance-nonlocal-bruit-v001-20261025T215935Z.json",
+  "?? docs/validation/raw/etude-double-distance-nonlocal-bruit-v001-20261025T220339Z.json",
+  "?? docs/validation/raw/etude-etapes-petites-formes-paires-bruit-v001-20261025T155051Z.json",
+  "?? docs/validation/raw/etude-gain-fin-paires-bruit-v001-20261025T160635Z.json",
+  "?? docs/validation/raw/etude-gains-locaux-paires-bruit-v001-20261025T201510Z.json",
+  "?? docs/validation/raw/etude-guide-pilote-nonlocal-bruit-v001-20261025T220729Z.json",
+  "?? docs/validation/raw/etude-hybride-nonlocal-directionnel-bruit-v001-20261025T215018Z.json",
+  "?? docs/validation/raw/etude-innovation-sept-directions-bruit-v001-20261025T214300Z.json",
+  "?? docs/validation/raw/etude-moyennes-non-locales-bruit-v001-20261025T213331Z.json",
+  "?? docs/validation/raw/etude-multiechelle-coefficients-paires-bruit-v001-20261025T180604Z.json",
+  "?? docs/validation/raw/etude-multiechelle-conjointe-paires-bruit-v001-20261025T183008Z.json",
+  "?? docs/validation/raw/etude-multiechelle-null-paires-bruit-v001-20261025T174210Z.json",
+  "?? docs/validation/raw/etude-multiechelle-oracle-paires-bruit-v001-20261025T175813Z.json",
+  "?? docs/validation/raw/etude-multiechelle-paires-bruit-v001-20261025T173139Z.json",
+  "?? docs/validation/raw/etude-multiechelle-pilote-paires-bruit-v001-20261025T175028Z.json",
+  "?? docs/validation/raw/etude-multiechelle-structures-paires-bruit-v001-20261025T185742Z.json",
+  "?? docs/validation/raw/etude-nonlocal-directions-appariees-bruit-v001-20261025T214650Z.json",
+  "?? docs/validation/raw/etude-orientation-echelles-bruit-v001-20261025T211908Z.json",
+  "?? docs/validation/raw/etude-petites-formes-paires-bruit-v001-20261025T153806Z.json",
+  "?? docs/validation/raw/etude-projection-adaptee-paires-bruit-v001-20261025T171605Z.json",
+  "?? docs/validation/raw/etude-reconstruction-bruit-v001-20261025T105505Z.json",
+  "?? docs/validation/raw/etude-reconstruction-bruit-v002-20261025T105639Z.json",
+  "?? docs/validation/raw/etude-reconstruction-bruit-v003-20261025T110749Z.json",
+  "?? docs/validation/raw/etude-reelle-bornee-nonlocal-bruit-v001-20261025T222336Z.json",
+  "?? docs/validation/raw/etude-regions-bruit-v001-20261025T111755Z.json",
+  "?? docs/validation/raw/etude-regions-bruit-v002-20261025T112430Z.json",
+  "?? docs/validation/raw/etude-regions-bruit-v003-20261025T152258Z.json",
+  "?? docs/validation/raw/etude-residu-phase-paires-bruit-v001-20261025T155820Z.json",
+  "?? docs/validation/raw/etude-selecteur-gains-bruit-v001-20261025T200800Z.json",
+  "?? docs/validation/raw/etude-selecteur-gains-locaux-bruit-v001-20261025T202146Z.json",
+  "?? docs/validation/raw/etude-selecteur-gains-locaux-intervalles-bruit-v001-20261025T202633Z.json",
+  "?? docs/validation/raw/etude-selecteur-gains-locaux-intervalles-structures-reservees-bruit-v001-20261025T203007Z.json",
+  "?? docs/validation/raw/etude-selection-modeles-bruit-v001-20261025T200232Z.json",
+  "?? docs/validation/raw/etude-sept-directions-bruit-v001-20261025T213850Z.json",
+  "?? docs/validation/raw/etude-spatial-fin-paires-bruit-v001-20261025T161806Z.json",
+  "?? docs/validation/raw/etude-support-adapte-paires-bruit-v001-20261025T170553Z.json",
+  "?? docs/validation/raw/etude-support-caracteristiques-bruit-v001-20261025T203515Z.json",
+  "?? docs/validation/raw/etude-sure-echelle-mesuree-bruit-v001-20261025T212233Z.json",
+  "?? docs/validation/raw/etude-sure-faisabilite-bruit-v001-20261025T204309Z.json",
+  "?? docs/validation/raw/etude-sure-filtres-bruit-v001-20261025T210241Z.json",
+  "?? docs/validation/raw/etude-sure-sensibilite-bruit-v001-20261025T210753Z.json",
+  "?? docs/validation/raw/etude-sure-structures-orientees-bruit-v001-20261025T212646Z.json",
+  "?? docs/validation/raw/etude-voisinages-bruit-v013-20261025T103134Z.json",
+  "?? docs/validation/raw/etude-voisinages-bruit-v014-20261025T104528Z.json",
+  "?? docs/validation/raw/etude-voisinages-bruit-v015-20261025T105758Z.json",
+  "?? docs/validation/raw/etude-voisinages-bruit-v016-20261025T110911Z.json",
+  "?? docs/validation/raw/etude-voisinages-bruit-v017-20261025T112612Z.json",
+  "?? docs/validation/raw/etude-voisinages-bruit-v018-20261025T113441Z.json",
+  "?? docs/validation/raw/etude-voisinages-bruit-v019-20261025T150859Z.json",
+  "?? docs/validation/raw/etude-voisinages-bruit-v020-20261025T152345Z.json",
+  "?? docs/validation/raw/etude-voisinages-bruit-v021-20261025T154131Z.json",
+  "?? scripts/background_job.py",
+  "?? tests/audit_noise_research.py",
+  "?? tests/noise_matched_detector.cpp",
+  "?? tests/noise_matched_detector.h",
+  "?? tests/noise_matched_detector_test.cpp",
+  "?? tests/noise_multiscale_pilot.cpp",
+  "?? tests/noise_multiscale_pilot.h",
+  "?? tests/noise_multiscale_pilot_test.cpp",
+  "?? tests/noise_perceptual_metrics.cpp",
+  "?? tests/noise_perceptual_metrics.h",
+  "?? tests/noise_perceptual_metrics_test.cpp",
+  "?? tests/noise_profile_contamination.cpp",
+  "?? tests/noise_profile_contamination.h",
+  "?? tests/noise_profile_support.cpp",
+  "?? tests/noise_profile_support.h",
+  "?? tests/noise_profile_support_test.cpp",
+  "?? tests/noise_sure_filters_test.cpp",
+  "?? tests/study_noise_abstention.py",
+  "?? tests/study_noise_contamination.py",
+  "?? tests/study_noise_feature_support.py",
+  "?? tests/study_noise_gain_selector.py",
+  "?? tests/study_noise_joint.py",
+  "?? tests/study_noise_model_selection.py",
+  "?? tests/study_noise_nonlocal.py",
+  "?? tests/study_noise_nonlocal_covariance.py",
+  "?? tests/study_noise_nonlocal_decomposition.py",
+  "?? tests/study_noise_nonlocal_directional.py",
+  "?? tests/study_noise_nonlocal_dual_distance.py",
+  "?? tests/study_noise_nonlocal_hybrid.py",
+  "?? tests/study_noise_nonlocal_pilot.py",
+  "?? tests/study_noise_pair_ablation.py",
+  "?? tests/study_noise_perceptual.py",
+  "?? tests/study_noise_photo_coverage.py",
+  "?? tests/study_noise_real_bounded.py",
+  "?? tests/study_noise_reconstruction.py",
+  "?? tests/study_noise_roi_contract.py",
+  "?? tests/study_noise_scale_calibration.py",
+  "?? tests/study_noise_scale_orientation.py",
+  "?? tests/study_noise_seven_directions.py",
+  "?? tests/study_noise_seven_innovation.py",
+  "?? tests/study_noise_sure_feasibility.py",
+  "?? tests/study_noise_sure_filters.py",
+  "?? tests/study_noise_sure_measured_scale.py",
+  "?? tests/study_noise_sure_oriented.py",
+  "?? tests/study_noise_sure_sensitivity.py",
+  "?? tests/test_audit_noise_research.py",
+  "?? tests/test_background_job.py",
+  "?? tests/test_study_noise_contamination.py",
+  "?? tests/test_study_noise_feature_support.py",
+  "?? tests/test_study_noise_gain_selector.py",
+  "?? tests/test_study_noise_joint.py",
+  "?? tests/test_study_noise_model_selection.py",
+  "?? tests/test_study_noise_nonlocal.py",
+  "?? tests/test_study_noise_nonlocal_covariance.py",
+  "?? tests/test_study_noise_nonlocal_decomposition.py",
+  "?? tests/test_study_noise_nonlocal_directional.py",
+  "?? tests/test_study_noise_nonlocal_dual_distance.py",
+  "?? tests/test_study_noise_nonlocal_hybrid.py",
+  "?? tests/test_study_noise_nonlocal_pilot.py",
+  "?? tests/test_study_noise_pair_ablation.py",
+  "?? tests/test_study_noise_photo_coverage.py",
+  "?? tests/test_study_noise_real_bounded.py",
+  "?? tests/test_study_noise_roi_contract.py",
+  "?? tests/test_study_noise_scale_calibration.py",
+  "?? tests/test_study_noise_scale_orientation.py",
+  "?? tests/test_study_noise_seven_directions.py",
+  "?? tests/test_study_noise_seven_innovation.py",
+  "?? tests/test_study_noise_sure_feasibility.py",
+  "?? tests/test_study_noise_sure_filters.py",
+  "?? tests/test_study_noise_sure_measured_scale.py",
+  "?? tests/test_study_noise_sure_oriented.py",
+  "?? tests/test_study_noise_sure_sensitivity.py"
+ ],
+ "runner_sha256": "f06b61fbd94af9000bc427eef2517382b6df9550d60871291a8be915fb6e763b",
+ "numpy_version": "2.4.2",
+ "parent": {
+  "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\audit-couverture-photos-bruit-v001-20261025T225408Z.json",
+  "sha256": "b645b7440b4d3871ab509c001c92570ad76e84b1a2c5b3ad0719b301fefa70e1"
+ },
+ "protocol": "docs/validation/protocols/protocole-bruit-voisinages-adaptatifs.md",
+ "contract": {
+  "core": 31,
+  "search_radius": 10,
+  "patch_radius": 2,
+  "guide_radius": 1,
+  "required_halo": 13,
+  "context_scope": "Spatial filtering/matching only;noise-calibration independence is a separate requirement"
+ },
+ "records": [
+  {
+   "raw": "6V1A9426.CR3",
+   "iso": 1000,
+   "camera": "EOS R6 Mark III",
+   "original_label": "dark",
+   "extracted_raw_rect": [
+    1656,
+    120,
+    64,
+    64
+   ],
+   "original_measurement": {
+    "rect": [
+     17,
+     17,
+     31,
+     31
+    ],
+    "span_y_co_cg": [
+     0.0014623899478465319,
+     0.001165705209132284,
+     0.0007429062970913947
+    ],
+    "mean_y": 0.0005018631844688304,
+    "mean_band": "dark",
+    "all_planes_constant": false,
+    "luma_constant": false,
+    "has_chroma_variation": true,
+    "gradient_energy_y_co_cg": [
+     4.572012671603869e-09,
+     4.05956241843555e-09,
+     2.334242997124031e-09
+    ],
+    "geometric_eligibility": "candidate_needs_visual_review",
+    "meaning": "Gradient includes noise;nonconstant is not proof of clean detail or a noise-confidence score"
+   },
+   "legal_windows": 64,
+   "nonconstant_windows": 64,
+   "proposals": [
+    {
+     "rect": [
+      18,
+      13,
+      31,
+      31
+     ],
+     "span_y_co_cg": [
+      0.0014623899478465319,
+      0.001165705209132284,
+      0.0007429062970913947
+     ],
+     "mean_y": 0.000539237583922484,
+     "mean_band": "dark",
+     "all_planes_constant": false,
+     "luma_constant": false,
+     "has_chroma_variation": true,
+     "gradient_energy_y_co_cg": [
+      5.241108714843352e-09,
+      4.3868756572100635e-09,
+      2.4260102583727342e-09
+     ],
+     "geometric_eligibility": "candidate_needs_visual_review",
+     "meaning": "Gradient includes noise;nonconstant is not proof of clean detail or a noise-confidence score",
+     "proposed_by": [
+      "luma_gradient"
+     ],
+     "absolute_raw_rect": [
+      1674,
+      133,
+      31,
+      31
+     ]
+    },
+    {
+     "rect": [
+      20,
+      13,
+      31,
+      31
+     ],
+     "span_y_co_cg": [
+      0.0014623899478465319,
+      0.001165705209132284,
+      0.0006746243452653289
+     ],
+     "mean_y": 0.0005304539350640856,
+     "mean_band": "dark",
+     "all_planes_constant": false,
+     "luma_constant": false,
+     "has_chroma_variation": true,
+     "gradient_energy_y_co_cg": [
+      5.128192169673377e-09,
+      4.630778671365503e-09,
+      2.3167268057678774e-09
+     ],
+     "geometric_eligibility": "candidate_needs_visual_review",
+     "meaning": "Gradient includes noise;nonconstant is not proof of clean detail or a noise-confidence score",
+     "proposed_by": [
+      "chroma_gradient"
+     ],
+     "absolute_raw_rect": [
+      1676,
+      133,
+      31,
+      31
+     ]
+    }
+   ],
+   "status": "proposals_only_not_validation",
+   "mismatch_flags": {
+    "detail_label_degenerate": false,
+    "flat_label_measured_dark": false
+   },
+   "sample_sha256": "189b644377f2b9569df9baddb10797a1d4d0f96fab776c6b9bc72f8f3d25e8ef"
+  },
+  {
+   "raw": "6V1A9426.CR3",
+   "iso": 1000,
+   "camera": "EOS R6 Mark III",
+   "original_label": "flat",
+   "extracted_raw_rect": [
+    1912,
+    504,
+    64,
+    64
+   ],
+   "original_measurement": {
+    "rect": [
+     17,
+     17,
+     31,
+     31
+    ],
+    "span_y_co_cg": [
+     0.02472071908414364,
+     0.019485769793391228,
+     0.010638102889060974
+    ],
+    "mean_y": 0.022859254989552075,
+    "mean_band": "non_dark",
+    "all_planes_constant": false,
+    "luma_constant": false,
+    "has_chroma_variation": true,
+    "gradient_energy_y_co_cg": [
+     2.766968656367178e-06,
+     2.3101468429198786e-06,
+     9.702808071222936e-07
+    ],
+    "geometric_eligibility": "candidate_needs_visual_review",
+    "meaning": "Gradient includes noise;nonconstant is not proof of clean detail or a noise-confidence score"
+   },
+   "legal_windows": 64,
+   "nonconstant_windows": 64,
+   "proposals": [
+    {
+     "rect": [
+      20,
+      19,
+      31,
+      31
+     ],
+     "span_y_co_cg": [
+      0.02472071908414364,
+      0.019485769793391228,
+      0.01003708690404892
+     ],
+     "mean_y": 0.02313179195578463,
+     "mean_band": "non_dark",
+     "all_planes_constant": false,
+     "luma_constant": false,
+     "has_chroma_variation": true,
+     "gradient_energy_y_co_cg": [
+      2.8649237305521183e-06,
+      2.2915401422630657e-06,
+      9.027218495377819e-07
+     ],
+     "geometric_eligibility": "candidate_needs_visual_review",
+     "meaning": "Gradient includes noise;nonconstant is not proof of clean detail or a noise-confidence score",
+     "proposed_by": [
+      "luma_gradient"
+     ],
+     "absolute_raw_rect": [
+      1932,
+      523,
+      31,
+      31
+     ]
+    },
+    {
+     "rect": [
+      14,
+      20,
+      31,
+      31
+     ],
+     "span_y_co_cg": [
+      0.02472071908414364,
+      0.019485769793391228,
+      0.010170673951506615
+     ],
+     "mean_y": 0.023448801537419395,
+     "mean_band": "non_dark",
+     "all_planes_constant": false,
+     "luma_constant": false,
+     "has_chroma_variation": true,
+     "gradient_energy_y_co_cg": [
+      2.8232853424001194e-06,
+      2.414260299660414e-06,
+      1.058599910015897e-06
+     ],
+     "geometric_eligibility": "candidate_needs_visual_review",
+     "meaning": "Gradient includes noise;nonconstant is not proof of clean detail or a noise-confidence score",
+     "proposed_by": [
+      "chroma_gradient"
+     ],
+     "absolute_raw_rect": [
+      1926,
+      524,
+      31,
+      31
+     ]
+    }
+   ],
+   "status": "proposals_only_not_validation",
+   "mismatch_flags": {
+    "detail_label_degenerate": false,
+    "flat_label_measured_dark": false
+   },
+   "sample_sha256": "cb2d07c36a47e22562f21ad5a9f69be6e5a0929ecb3ca8db2baaae9ac26f3dbf"
+  },
+  {
+   "raw": "6V1A9426.CR3",
+   "iso": 1000,
+   "camera": "EOS R6 Mark III",
+   "original_label": "detail",
+   "extracted_raw_rect": [
+    4216,
+    504,
+    64,
+    64
+   ],
+   "original_measurement": {
+    "rect": [
+     17,
+     17,
+     31,
+     31
+    ],
+    "span_y_co_cg": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "mean_y": 0.9899051785469055,
+    "mean_band": "non_dark",
+    "all_planes_constant": true,
+    "luma_constant": true,
+    "has_chroma_variation": false,
+    "gradient_energy_y_co_cg": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "geometric_eligibility": "reject_constant",
+    "meaning": "Gradient includes noise;nonconstant is not proof of clean detail or a noise-confidence score"
+   },
+   "legal_windows": 64,
+   "nonconstant_windows": 0,
+   "proposals": [],
+   "status": "needs_more_source_pixels",
+   "mismatch_flags": {
+    "detail_label_degenerate": true,
+    "flat_label_measured_dark": false
+   },
+   "sample_sha256": "fa68e4dc2cd1ef4924da2ca0eb4fb7dc6149ff60e04d6f474105c03cbab1bf02"
+  },
+  {
+   "raw": "6V1A9890.CR3",
+   "iso": 25600,
+   "camera": "EOS R6 Mark III",
+   "original_label": "dark",
+   "extracted_raw_rect": [
+    1912,
+    4856,
+    64,
+    64
+   ],
+   "original_measurement": {
+    "rect": [
+     17,
+     17,
+     31,
+     31
+    ],
+    "span_y_co_cg": [
+     0.04475867748260498,
+     0.14091835170984268,
+     0.0921676903963089
+    ],
+    "mean_y": 0.0025481098928166754,
+    "mean_band": "dark",
+    "all_planes_constant": false,
+    "luma_constant": false,
+    "has_chroma_variation": true,
+    "gradient_energy_y_co_cg": [
+     3.7457938892876113e-06,
+     7.902806333001708e-06,
+     4.006271668823708e-06
+    ],
+    "geometric_eligibility": "candidate_needs_visual_review",
+    "meaning": "Gradient includes noise;nonconstant is not proof of clean detail or a noise-confidence score"
+   },
+   "legal_windows": 64,
+   "nonconstant_windows": 64,
+   "proposals": [
+    {
+     "rect": [
+      17,
+      14,
+      31,
+      31
+     ],
+     "span_y_co_cg": [
+      0.04475867748260498,
+      0.14091835170984268,
+      0.0921676903963089
+     ],
+     "mean_y": 0.002602879742187518,
+     "mean_band": "dark",
+     "all_planes_constant": false,
+     "luma_constant": false,
+     "has_chroma_variation": true,
+     "gradient_energy_y_co_cg": [
+      3.859118421315897e-06,
+      8.250190911217865e-06,
+      4.037970721791957e-06
+     ],
+     "geometric_eligibility": "candidate_needs_visual_review",
+     "meaning": "Gradient includes noise;nonconstant is not proof of clean detail or a noise-confidence score",
+     "proposed_by": [
+      "luma_gradient"
+     ],
+     "absolute_raw_rect": [
+      1929,
+      4870,
+      31,
+      31
+     ]
+    },
+    {
+     "rect": [
+      15,
+      14,
+      31,
+      31
+     ],
+     "span_y_co_cg": [
+      0.04475867748260498,
+      0.14091835170984268,
+      0.0921676903963089
+     ],
+     "mean_y": 0.0025344224319713278,
+     "mean_band": "dark",
+     "all_planes_constant": false,
+     "luma_constant": false,
+     "has_chroma_variation": true,
+     "gradient_energy_y_co_cg": [
+      3.7052357190556867e-06,
+      1.0023521419333e-05,
+      4.956992683450157e-06
+     ],
+     "geometric_eligibility": "candidate_needs_visual_review",
+     "meaning": "Gradient includes noise;nonconstant is not proof of clean detail or a noise-confidence score",
+     "proposed_by": [
+      "chroma_gradient"
+     ],
+     "absolute_raw_rect": [
+      1927,
+      4870,
+      31,
+      31
+     ]
+    }
+   ],
+   "status": "proposals_only_not_validation",
+   "mismatch_flags": {
+    "detail_label_degenerate": false,
+    "flat_label_measured_dark": false
+   },
+   "sample_sha256": "56338d04dfe5ba5bfa133d9c098102fdbd6a39908b6e1b35b0422ffcaccff6a6"
+  },
+  {
+   "raw": "6V1A9890.CR3",
+   "iso": 25600,
+   "camera": "EOS R6 Mark III",
+   "original_label": "flat",
+   "extracted_raw_rect": [
+    2296,
+    5624,
+    64,
+    64
+   ],
+   "original_measurement": {
+    "rect": [
+     17,
+     17,
+     31,
+     31
+    ],
+    "span_y_co_cg": [
+     0.04663321375846863,
+     0.06765864230692387,
+     0.03629511408507824
+    ],
+    "mean_y": 0.0029929809211547143,
+    "mean_band": "dark",
+    "all_planes_constant": false,
+    "luma_constant": false,
+    "has_chroma_variation": true,
+    "gradient_energy_y_co_cg": [
+     4.372002417897894e-06,
+     6.412429286074931e-06,
+     2.3224174665078276e-06
+    ],
+    "geometric_eligibility": "candidate_needs_visual_review",
+    "meaning": "Gradient includes noise;nonconstant is not proof of clean detail or a noise-confidence score"
+   },
+   "legal_windows": 64,
+   "nonconstant_windows": 64,
+   "proposals": [
+    {
+     "rect": [
+      13,
+      20,
+      31,
+      31
+     ],
+     "span_y_co_cg": [
+      0.04663321375846863,
+      0.06765864230692387,
+      0.03629511408507824
+     ],
+     "mean_y": 0.003032348946766022,
+     "mean_band": "dark",
+     "all_planes_constant": false,
+     "luma_constant": false,
+     "has_chroma_variation": true,
+     "gradient_energy_y_co_cg": [
+      5.082001766177651e-06,
+      6.880062559326099e-06,
+      2.1322112791507643e-06
+     ],
+     "geometric_eligibility": "candidate_needs_visual_review",
+     "meaning": "Gradient includes noise;nonconstant is not proof of clean detail or a noise-confidence score",
+     "proposed_by": [
+      "luma_gradient"
+     ],
+     "absolute_raw_rect": [
+      2309,
+      5644,
+      31,
+      31
+     ]
+    },
+    {
+     "rect": [
+      13,
+      15,
+      31,
+      31
+     ],
+     "span_y_co_cg": [
+      0.04461750388145447,
+      0.06765864230692387,
+      0.0354852769523859
+     ],
+     "mean_y": 0.0031864272392535787,
+     "mean_band": "dark",
+     "all_planes_constant": false,
+     "luma_constant": false,
+     "has_chroma_variation": true,
+     "gradient_energy_y_co_cg": [
+      4.7538812102478644e-06,
+      8.716413191707389e-06,
+      2.5465908099368967e-06
+     ],
+     "geometric_eligibility": "candidate_needs_visual_review",
+     "meaning": "Gradient includes noise;nonconstant is not proof of clean detail or a noise-confidence score",
+     "proposed_by": [
+      "chroma_gradient"
+     ],
+     "absolute_raw_rect": [
+      2309,
+      5639,
+      31,
+      31
+     ]
+    }
+   ],
+   "status": "proposals_only_not_validation",
+   "mismatch_flags": {
+    "detail_label_degenerate": false,
+    "flat_label_measured_dark": true
+   },
+   "sample_sha256": "67fda6d16eb2987db362f16a7f80bdf64a95c1a840ddf555055db0a64bec4c12"
+  },
+  {
+   "raw": "6V1A9890.CR3",
+   "iso": 25600,
+   "camera": "EOS R6 Mark III",
+   "original_label": "detail",
+   "extracted_raw_rect": [
+    4216,
+    1144,
+    64,
+    64
+   ],
+   "original_measurement": {
+    "rect": [
+     17,
+     17,
+     31,
+     31
+    ],
+    "span_y_co_cg": [
+     0.16733698640018702,
+     0.3226081971079111,
+     0.1543423756957054
+    ],
+    "mean_y": 0.08578732819950574,
+    "mean_band": "non_dark",
+    "all_planes_constant": false,
+    "luma_constant": false,
+    "has_chroma_variation": true,
+    "gradient_energy_y_co_cg": [
+     0.0001699918161764589,
+     0.0008081854487008531,
+     0.00016222100319796792
+    ],
+    "geometric_eligibility": "candidate_needs_visual_review",
+    "meaning": "Gradient includes noise;nonconstant is not proof of clean detail or a noise-confidence score"
+   },
+   "legal_windows": 64,
+   "nonconstant_windows": 64,
+   "proposals": [
+    {
+     "rect": [
+      13,
+      14,
+      31,
+      31
+     ],
+     "span_y_co_cg": [
+      0.18325875792652369,
+      0.3226081971079111,
+      0.1543423756957054
+     ],
+     "mean_y": 0.08820745304641658,
+     "mean_band": "non_dark",
+     "all_planes_constant": false,
+     "luma_constant": false,
+     "has_chroma_variation": true,
+     "gradient_energy_y_co_cg": [
+      0.00017567795406407552,
+      0.0008082116779009614,
+      0.00016502618700337367
+     ],
+     "geometric_eligibility": "candidate_needs_visual_review",
+     "meaning": "Gradient includes noise;nonconstant is not proof of clean detail or a noise-confidence score",
+     "proposed_by": [
+      "luma_gradient"
+     ],
+     "absolute_raw_rect": [
+      4229,
+      1158,
+      31,
+      31
+     ]
+    },
+    {
+     "rect": [
+      20,
+      17,
+      31,
+      31
+     ],
+     "span_y_co_cg": [
+      0.17635458800941706,
+      0.32975190319120884,
+      0.1482860930263996
+     ],
+     "mean_y": 0.0861789240132587,
+     "mean_band": "non_dark",
+     "all_planes_constant": false,
+     "luma_constant": false,
+     "has_chroma_variation": true,
+     "gradient_energy_y_co_cg": [
+      0.00017337995441373075,
+      0.0008590794894957337,
+      0.00016968007009145745
+     ],
+     "geometric_eligibility": "candidate_needs_visual_review",
+     "meaning": "Gradient includes noise;nonconstant is not proof of clean detail or a noise-confidence score",
+     "proposed_by": [
+      "chroma_gradient"
+     ],
+     "absolute_raw_rect": [
+      4236,
+      1161,
+      31,
+      31
+     ]
+    }
+   ],
+   "status": "proposals_only_not_validation",
+   "mismatch_flags": {
+    "detail_label_degenerate": false,
+    "flat_label_measured_dark": false
+   },
+   "sample_sha256": "cdc314d9891c9ef97b009406d9bf1a5f33fd4eacac9cab9b28e7acd4c429d72c"
+  },
+  {
+   "raw": "6V1A0112.CR3",
+   "iso": 64000,
+   "camera": "EOS R6 Mark III",
+   "original_label": "dark",
+   "extracted_raw_rect": [
+    3832,
+    5880,
+    64,
+    64
+   ],
+   "original_measurement": {
+    "rect": [
+     17,
+     17,
+     31,
+     31
+    ],
+    "span_y_co_cg": [
+     0.08772961795330048,
+     0.24447773396968842,
+     0.13021160662174225
+    ],
+    "mean_y": 0.0074600430570896685,
+    "mean_band": "dark",
+    "all_planes_constant": false,
+    "luma_constant": false,
+    "has_chroma_variation": true,
+    "gradient_energy_y_co_cg": [
+     2.923543791776577e-05,
+     0.00012987523901272798,
+     5.485661461500604e-05
+    ],
+    "geometric_eligibility": "candidate_needs_visual_review",
+    "meaning": "Gradient includes noise;nonconstant is not proof of clean detail or a noise-confidence score"
+   },
+   "legal_windows": 64,
+   "nonconstant_windows": 64,
+   "proposals": [
+    {
+     "rect": [
+      20,
+      18,
+      31,
+      31
+     ],
+     "span_y_co_cg": [
+      0.08772961795330048,
+      0.2752755582332611,
+      0.1294722780585289
+     ],
+     "mean_y": 0.007635960358034883,
+     "mean_band": "dark",
+     "all_planes_constant": false,
+     "luma_constant": false,
+     "has_chroma_variation": true,
+     "gradient_energy_y_co_cg": [
+      2.9828253976853315e-05,
+      0.0001525214265579729,
+      5.7670888949171396e-05
+     ],
+     "geometric_eligibility": "candidate_needs_visual_review",
+     "meaning": "Gradient includes noise;nonconstant is not proof of clean detail or a noise-confidence score",
+     "proposed_by": [
+      "luma_gradient"
+     ],
+     "absolute_raw_rect": [
+      3852,
+      5898,
+      31,
+      31
+     ]
+    },
+    {
+     "rect": [
+      20,
+      20,
+      31,
+      31
+     ],
+     "span_y_co_cg": [
+      0.08772961795330048,
+      0.2752755582332611,
+      0.1294722780585289
+     ],
+     "mean_y": 0.007715269027020943,
+     "mean_band": "dark",
+     "all_planes_constant": false,
+     "luma_constant": false,
+     "has_chroma_variation": true,
+     "gradient_energy_y_co_cg": [
+      2.972556917603584e-05,
+      0.0001597284391598939,
+      5.9903362416651776e-05
+     ],
+     "geometric_eligibility": "candidate_needs_visual_review",
+     "meaning": "Gradient includes noise;nonconstant is not proof of clean detail or a noise-confidence score",
+     "proposed_by": [
+      "chroma_gradient"
+     ],
+     "absolute_raw_rect": [
+      3852,
+      5900,
+      31,
+      31
+     ]
+    }
+   ],
+   "status": "proposals_only_not_validation",
+   "mismatch_flags": {
+    "detail_label_degenerate": false,
+    "flat_label_measured_dark": false
+   },
+   "sample_sha256": "9efc417456a8e7fbe735fa75c323124f7635ec9fc98b73d6347cf8feb63c881b"
+  },
+  {
+   "raw": "6V1A0112.CR3",
+   "iso": 64000,
+   "camera": "EOS R6 Mark III",
+   "original_label": "flat",
+   "extracted_raw_rect": [
+    1656,
+    3960,
+    64,
+    64
+   ],
+   "original_measurement": {
+    "rect": [
+     17,
+     17,
+     31,
+     31
+    ],
+    "span_y_co_cg": [
+     0.16466516256332397,
+     0.4102688431739807,
+     0.2815113589167595
+    ],
+    "mean_y": 0.02537228364823963,
+    "mean_band": "non_dark",
+    "all_planes_constant": false,
+    "luma_constant": false,
+    "has_chroma_variation": true,
+    "gradient_energy_y_co_cg": [
+     0.00015406278501340547,
+     0.0005241011387962916,
+     0.0001448785757053012
+    ],
+    "geometric_eligibility": "candidate_needs_visual_review",
+    "meaning": "Gradient includes noise;nonconstant is not proof of clean detail or a noise-confidence score"
+   },
+   "legal_windows": 64,
+   "nonconstant_windows": 64,
+   "proposals": [
+    {
+     "rect": [
+      20,
+      17,
+      31,
+      31
+     ],
+     "span_y_co_cg": [
+      0.16466516256332397,
+      0.4102688431739807,
+      0.2815113589167595
+     ],
+     "mean_y": 0.02644895873509483,
+     "mean_band": "non_dark",
+     "all_planes_constant": false,
+     "luma_constant": false,
+     "has_chroma_variation": true,
+     "gradient_energy_y_co_cg": [
+      0.000160964051430112,
+      0.0005262845979498948,
+      0.00014074238826726802
+     ],
+     "geometric_eligibility": "candidate_needs_visual_review",
+     "meaning": "Gradient includes noise;nonconstant is not proof of clean detail or a noise-confidence score",
+     "proposed_by": [
+      "luma_gradient"
+     ],
+     "absolute_raw_rect": [
+      1676,
+      3977,
+      31,
+      31
+     ]
+    },
+    {
+     "rect": [
+      20,
+      20,
+      31,
+      31
+     ],
+     "span_y_co_cg": [
+      0.14897871017456055,
+      0.4102688431739807,
+      0.2815113589167595
+     ],
+     "mean_y": 0.025572261679813846,
+     "mean_band": "non_dark",
+     "all_planes_constant": false,
+     "luma_constant": false,
+     "has_chroma_variation": true,
+     "gradient_energy_y_co_cg": [
+      0.00015290831890899217,
+      0.0005428943616976743,
+      0.00013744927295167785
+     ],
+     "geometric_eligibility": "candidate_needs_visual_review",
+     "meaning": "Gradient includes noise;nonconstant is not proof of clean detail or a noise-confidence score",
+     "proposed_by": [
+      "chroma_gradient"
+     ],
+     "absolute_raw_rect": [
+      1676,
+      3980,
+      31,
+      31
+     ]
+    }
+   ],
+   "status": "proposals_only_not_validation",
+   "mismatch_flags": {
+    "detail_label_degenerate": false,
+    "flat_label_measured_dark": false
+   },
+   "sample_sha256": "c65c52270e06ec3defb3951092bffdc381525ad32276556767f195c2a30044a3"
+  },
+  {
+   "raw": "6V1A0112.CR3",
+   "iso": 64000,
+   "camera": "EOS R6 Mark III",
+   "original_label": "detail",
+   "extracted_raw_rect": [
+    4088,
+    5496,
+    64,
+    64
+   ],
+   "original_measurement": {
+    "rect": [
+     17,
+     17,
+     31,
+     31
+    ],
+    "span_y_co_cg": [
+     0.14870570600032806,
+     0.31428924202919006,
+     0.19293621182441711
+    ],
+    "mean_y": 0.010979877330412465,
+    "mean_band": "dark",
+    "all_planes_constant": false,
+    "luma_constant": false,
+    "has_chroma_variation": true,
+    "gradient_energy_y_co_cg": [
+     5.5564810647963584e-05,
+     0.00023968717743302494,
+     8.006519278411807e-05
+    ],
+    "geometric_eligibility": "candidate_needs_visual_review",
+    "meaning": "Gradient includes noise;nonconstant is not proof of clean detail or a noise-confidence score"
+   },
+   "legal_windows": 64,
+   "nonconstant_windows": 64,
+   "proposals": [
+    {
+     "rect": [
+      13,
+      20,
+      31,
+      31
+     ],
+     "span_y_co_cg": [
+      0.25834357738494873,
+      0.47714488208293915,
+      0.22281604260206223
+     ],
+     "mean_y": 0.015084036977916996,
+     "mean_band": "dark",
+     "all_planes_constant": false,
+     "luma_constant": false,
+     "has_chroma_variation": true,
+     "gradient_energy_y_co_cg": [
+      0.0001396436309759691,
+      0.00037425298017535917,
+      0.00011068797109006972
+     ],
+     "geometric_eligibility": "candidate_needs_visual_review",
+     "meaning": "Gradient includes noise;nonconstant is not proof of clean detail or a noise-confidence score",
+     "proposed_by": [
+      "luma_gradient",
+      "chroma_gradient"
+     ],
+     "absolute_raw_rect": [
+      4101,
+      5516,
+      31,
+      31
+     ]
+    }
+   ],
+   "status": "proposals_only_not_validation",
+   "mismatch_flags": {
+    "detail_label_degenerate": false,
+    "flat_label_measured_dark": false
+   },
+   "sample_sha256": "c25f35e6d89067b54d875061cc62d29a837fe7727e94d2d57e92e739fca043fd"
+  }
+ ],
+ "rules": "Reuse9 saved original64px3plane patches only,noRAW/no denoising/reference output access. Qualify exact existing31px measurement. Test ALL legal31px positions with13px halo:8x8=64windows per64patch. Reject only exact all-plane constant cores for detail eligibility;Y-constant chroma detail remains eligible. At most2 proposals per source patch ranked separately by Y and chroma gradient after fixed binomial3 smoothing,not validated signal/noise classification. Do not reduce context,threshold or resolution to manufacture a valid ROI. All proposals require visual confirmation before frozen measurement selection.",
+ "limitations": "Small original64patches cannot establish full-scene coverage or clean structure. Maximizing gradient can select noise or edges;not unbiased validation selection. Pure white/constant may be physically clipped or simply flat,no clipping conclusion. No independent corpus,filter-quality result or production change. Existing current native selector is not replaced by this diagnostic."
+}

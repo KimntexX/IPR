@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "data_version": 1,
+  "campaign_id": "veille-modeles-debruitage-ouverts-v001-20261026T113855Z",
+  "researched_at_utc": "2026-10-26T11:38:55Z",
+  "purpose": "Desktop research only: open-weight image denoisers,not textual LLMs. No checkpoint downloaded,installed or run;no user image uploaded.",
+  "size_convention": "FP32 bytes=4*parameter_count,decimal MB=bytes/1000000. Inferred raw tensor storage,not actual checkpoint/archive size or runtime memory.",
+  "models": [
+    {
+      "name":"IRCNN color,one7layer network",
+      "parameters":188163,
+      "count_method":"Analytical count of KAIR IRCNN(in_nc=3,out_nc=3,nc=64):two RGB boundary convolutions and five64to64 convolutions,3x3,with biases.",
+      "raw_fp32_mb":0.752652,
+      "scope":"Historical Gaussian-noise baseline. Author evaluation selects one of25noise-level checkpoints;one network is not the entire bank.",
+      "architecture":"https://raw.githubusercontent.com/cszn/KAIR/master/models/network_dncnn.py",
+      "weights_reference":"https://raw.githubusercontent.com/cszn/KAIR/master/main_test_ircnn_denoiser.py"
+    },
+    {
+      "name":"FFDNet gray",
+      "parameters":485316,
+      "count_method":"Analytical count of KAIR FFDNet(in_nc=1,out_nc=1,nc=64,nb=15,act_mode=R),convolution weights and biases. No batchnorm in this deployment variant.",
+      "raw_fp32_mb":1.941264,
+      "scope":"Grayscale,known/estimated noise map. Not RGB camera-noise validation.",
+      "architecture":"https://raw.githubusercontent.com/cszn/KAIR/master/models/network_ffdnet.py"
+    },
+    {
+      "name":"FFDNet color",
+      "parameters":852108,
+      "count_method":"Analytical count of author KAIR deployment configuration:nc96,nb12,13unshuffledinput channels,12output channels,3x3convs and biases.",
+      "raw_fp32_mb":3.408432,
+      "scope":"RGB Gaussian-noise model conditioned by noise level. Official pretrained color/gray and clipped variants listed in author evaluation.",
+      "architecture":"https://raw.githubusercontent.com/cszn/KAIR/master/models/network_ffdnet.py",
+      "config":"https://raw.githubusercontent.com/cszn/KAIR/master/main_test_ffdnet.py",
+      "paper":"https://arxiv.org/pdf/1710.04026"
+    },
+    {
+      "name":"NAFNet SIDD width32",
+      "parameters":29159715,
+      "count_method":"Analytical count from official config enc[2,2,4,8],middle12,dec[2,2,2,2],width32,RGB. Each NAFBlock(c) has7c^2+33c trainable scalars with default expansion2;add intro/ending/down/up convolutions. Not measured by loading a checkpoint.",
+      "raw_fp32_mb":116.63886,
+      "scope":"Published RGB real-image SIDD checkpoint;smartphone data not Canon post-RCD Rec2020 validation. Different depths at same width have different counts.",
+      "architecture":"https://raw.githubusercontent.com/megvii-research/NAFNet/main/basicsr/models/archs/NAFNet_arch.py",
+      "config":"https://raw.githubusercontent.com/megvii-research/NAFNet/main/options/test/SIDD/NAFNet-width32.yml",
+      "weights_reference":"https://github.com/megvii-research/NAFNet",
+      "paper":"https://arxiv.org/html/2204.04676v1"
+    },
+    {
+      "name":"Restormer,standard reference scale",
+      "parameters_approx_million":26.1,
+      "count_method":"Paper table8 reports26.12M for refinement variant;order of magnitude only,exact checkpoint/task config must be counted separately.",
+      "raw_fp32_mb_approx":104.4,
+      "scope":"Image-restoration transformer,not language model. Author repository exposes Gaussian and real-image denoising weights.",
+      "paper":"https://arxiv.org/pdf/2111.09881",
+      "weights_reference":"https://github.com/swz30/Restormer/blob/main/Denoising/README.md"
+    }
+  ],
+  "license_observations": [
+    {"scope":"KAIR implementation","url":"https://raw.githubusercontent.com/cszn/KAIR/master/LICENSE","observation":"MIT code license observed. Check individual checkpoint provenance,third-party/data terms before redistribution;do not infer all weight rights from this alone."},
+    {"scope":"NAFNet repository","url":"https://raw.githubusercontent.com/megvii-research/NAFNet/main/LICENSE","observation":"MIT plus retained BasicSR Apache2text in repository license. Exact checkpoint/dependencies still require inventory."},
+    {"scope":"Restormer repository","url":"https://github.com/swz30/Restormer","observation":"Repository displays MIT license. Exact weights/data provenance not legally audited."}
+  ],
+  "memory_example": {"feature_map":"512x512x64 FP32","bytes":67108864,"mib":64,"meaning":"One activation tensor only;additional layers,skip features,workspaces,image buffers and runtime increase memory."},
+  "minimum_conclusion":"No universal minimum size for quality. Existing historical denoisers demonstrate roughly0.2to1Mparameters can perform Gaussian denoising;not a guarantee for CanonRAW or modern quality. Few-tens-of-millions models are practical comparison candidates,not billions-parameterLLMs.",
+  "ipr_domain_warning":"Current linearRec2020 master is unbounded,can have negative or>1values and correlated/demosaic-dependentnoise. Do not blindly feed or clip to RGB[0,1] checkpoints. Need explicit domain/noise adaptation and held-out validation. No neural integration authorized by this research.",
+  "limitations":"Selective source-verified landscape,not exhaustive market survey or performance ranking. No inference latency/RAM/quality measured onIPRhardware. Parameter counts inferred from specific author implementations,not downloaded model file inspection. No guarantee of sub10second fullframe inference."
+}

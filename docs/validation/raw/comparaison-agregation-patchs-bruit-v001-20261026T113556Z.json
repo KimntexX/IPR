@@ -1,0 +1,1009 @@
+{
+ "schema_version": 1,
+ "data_version": 1,
+ "campaign_id": "comparaison-agregation-patchs-bruit-v001-20261026T113556Z",
+ "started_at_utc": "2026-10-26T11:35:12.352882+00:00",
+ "completed_at_utc": "2026-10-26T11:35:56.859688+00:00",
+ "commit": "2a40c5c6cff78d40294393a68827f4a24555c724",
+ "local_changes": [
+  "M AGENTS.md",
+  " M CMakeLists.txt",
+  " M docs/validation/analyses/analyse-bruit.md",
+  " M docs/validation/protocols/protocole-bruit-voisinages-adaptatifs.md",
+  " M scripts/test-rules.json",
+  " M tests/noise_neighbourhood_probe.cpp",
+  " M tests/noise_spectral_test.cpp",
+  " M tests/preview_noise_sources.py",
+  " M tests/study_noise_neighbourhoods.py",
+  "?? docs/validation/raw/audit-couverture-photos-bruit-v001-20261025T225408Z.json",
+  "?? docs/validation/raw/audit-methodologique-bruit-v001-20261026T100939Z.json",
+  "?? docs/validation/raw/audit-methodologique-bruit-v002-20261026T101230Z.json",
+  "?? docs/validation/raw/audit-soutien-poids-bruit-v001-20261026T112808Z.json",
+  "?? docs/validation/raw/audit-soutien-poids-execution-v001-20261026T112426Z.json",
+  "?? docs/validation/raw/comparaison-multicanal-semantique-bruit-v001-20261026T111607Z.json",
+  "?? docs/validation/raw/comparaison-supports-semantiques-bruit-v001-20261026T110853Z.json",
+  "?? docs/validation/raw/etude-ablation-bruit-v001-20261025T113343Z.json",
+  "?? docs/validation/raw/etude-ablation-paires-bruit-v001-20261025T114643Z.json",
+  "?? docs/validation/raw/etude-abstention-bruit-v001-20261025T102254Z.json",
+  "?? docs/validation/raw/etude-abstention-bruit-v002-20261025T102715Z.json",
+  "?? docs/validation/raw/etude-adapte-complet-paires-bruit-v001-20261025T165152Z.json",
+  "?? docs/validation/raw/etude-adapte-fin-paires-bruit-v001-20261025T162825Z.json",
+  "?? docs/validation/raw/etude-ancrage-bruit-v001-20261025T150542Z.json",
+  "?? docs/validation/raw/etude-ancrage-paires-bruit-v001-20261025T150643Z.json",
+  "?? docs/validation/raw/etude-calibration-echelles-bruit-v001-20261025T211357Z.json",
+  "?? docs/validation/raw/etude-conjointe-bruit-v001-20261025T100827Z.json",
+  "?? docs/validation/raw/etude-contamination-profil-bruit-v001-20261025T095249Z.json",
+  "?? docs/validation/raw/etude-contrat-roi-bruit-v001-20261026T102134Z.json",
+  "?? docs/validation/raw/etude-decomposition-nonlocal-bruit-v001-20261025T215412Z.json",
+  "?? docs/validation/raw/etude-detectabilite-paires-bruit-v001-20261025T163944Z.json",
+  "?? docs/validation/raw/etude-distance-covariance-nonlocal-bruit-v001-20261025T215935Z.json",
+  "?? docs/validation/raw/etude-double-distance-nonlocal-bruit-v001-20261025T220339Z.json",
+  "?? docs/validation/raw/etude-etapes-petites-formes-paires-bruit-v001-20261025T155051Z.json",
+  "?? docs/validation/raw/etude-gain-fin-paires-bruit-v001-20261025T160635Z.json",
+  "?? docs/validation/raw/etude-gains-locaux-paires-bruit-v001-20261025T201510Z.json",
+  "?? docs/validation/raw/etude-guide-pilote-nonlocal-bruit-v001-20261025T220729Z.json",
+  "?? docs/validation/raw/etude-hybride-nonlocal-directionnel-bruit-v001-20261025T215018Z.json",
+  "?? docs/validation/raw/etude-innovation-sept-directions-bruit-v001-20261025T214300Z.json",
+  "?? docs/validation/raw/etude-moyennes-non-locales-bruit-v001-20261025T213331Z.json",
+  "?? docs/validation/raw/etude-multiechelle-coefficients-paires-bruit-v001-20261025T180604Z.json",
+  "?? docs/validation/raw/etude-multiechelle-conjointe-paires-bruit-v001-20261025T183008Z.json",
+  "?? docs/validation/raw/etude-multiechelle-null-paires-bruit-v001-20261025T174210Z.json",
+  "?? docs/validation/raw/etude-multiechelle-oracle-paires-bruit-v001-20261025T175813Z.json",
+  "?? docs/validation/raw/etude-multiechelle-paires-bruit-v001-20261025T173139Z.json",
+  "?? docs/validation/raw/etude-multiechelle-pilote-paires-bruit-v001-20261025T175028Z.json",
+  "?? docs/validation/raw/etude-multiechelle-structures-paires-bruit-v001-20261025T185742Z.json",
+  "?? docs/validation/raw/etude-nonlocal-directions-appariees-bruit-v001-20261025T214650Z.json",
+  "?? docs/validation/raw/etude-orientation-echelles-bruit-v001-20261025T211908Z.json",
+  "?? docs/validation/raw/etude-parent-roi-bruit-execution-v001-20261026T103019Z.json",
+  "?? docs/validation/raw/etude-parent-roi-bruit-v001-20261026T103243Z.json",
+  "?? docs/validation/raw/etude-petites-formes-paires-bruit-v001-20261025T153806Z.json",
+  "?? docs/validation/raw/etude-projection-adaptee-paires-bruit-v001-20261025T171605Z.json",
+  "?? docs/validation/raw/etude-reconstruction-bruit-v001-20261025T105505Z.json",
+  "?? docs/validation/raw/etude-reconstruction-bruit-v002-20261025T105639Z.json",
+  "?? docs/validation/raw/etude-reconstruction-bruit-v003-20261025T110749Z.json",
+  "?? docs/validation/raw/etude-reelle-bornee-nonlocal-bruit-v001-20261025T222336Z.json",
+  "?? docs/validation/raw/etude-regions-bruit-v001-20261025T111755Z.json",
+  "?? docs/validation/raw/etude-regions-bruit-v002-20261025T112430Z.json",
+  "?? docs/validation/raw/etude-regions-bruit-v003-20261025T152258Z.json",
+  "?? docs/validation/raw/etude-residu-phase-paires-bruit-v001-20261025T155820Z.json",
+  "?? docs/validation/raw/etude-selecteur-gains-bruit-v001-20261025T200800Z.json",
+  "?? docs/validation/raw/etude-selecteur-gains-locaux-bruit-v001-20261025T202146Z.json",
+  "?? docs/validation/raw/etude-selecteur-gains-locaux-intervalles-bruit-v001-20261025T202633Z.json",
+  "?? docs/validation/raw/etude-selecteur-gains-locaux-intervalles-structures-reservees-bruit-v001-20261025T203007Z.json",
+  "?? docs/validation/raw/etude-selection-modeles-bruit-v001-20261025T200232Z.json",
+  "?? docs/validation/raw/etude-sept-directions-bruit-v001-20261025T213850Z.json",
+  "?? docs/validation/raw/etude-spatial-fin-paires-bruit-v001-20261025T161806Z.json",
+  "?? docs/validation/raw/etude-support-adapte-paires-bruit-v001-20261025T170553Z.json",
+  "?? docs/validation/raw/etude-support-caracteristiques-bruit-v001-20261025T203515Z.json",
+  "?? docs/validation/raw/etude-sure-echelle-mesuree-bruit-v001-20261025T212233Z.json",
+  "?? docs/validation/raw/etude-sure-faisabilite-bruit-v001-20261025T204309Z.json",
+  "?? docs/validation/raw/etude-sure-filtres-bruit-v001-20261025T210241Z.json",
+  "?? docs/validation/raw/etude-sure-sensibilite-bruit-v001-20261025T210753Z.json",
+  "?? docs/validation/raw/etude-sure-structures-orientees-bruit-v001-20261025T212646Z.json",
+  "?? docs/validation/raw/etude-voisinages-bruit-v013-20261025T103134Z.json",
+  "?? docs/validation/raw/etude-voisinages-bruit-v014-20261025T104528Z.json",
+  "?? docs/validation/raw/etude-voisinages-bruit-v015-20261025T105758Z.json",
+  "?? docs/validation/raw/etude-voisinages-bruit-v016-20261025T110911Z.json",
+  "?? docs/validation/raw/etude-voisinages-bruit-v017-20261025T112612Z.json",
+  "?? docs/validation/raw/etude-voisinages-bruit-v018-20261025T113441Z.json",
+  "?? docs/validation/raw/etude-voisinages-bruit-v019-20261025T150859Z.json",
+  "?? docs/validation/raw/etude-voisinages-bruit-v020-20261025T152345Z.json",
+  "?? docs/validation/raw/etude-voisinages-bruit-v021-20261025T154131Z.json",
+  "?? docs/validation/raw/qualification-roi-bruit-v001-20261026T104018Z.json",
+  "?? docs/validation/raw/reperage-contexte-bruit-v001-20261026T104741Z.json",
+  "?? docs/validation/raw/revue-supports-semantiques-bruit-v001-20261026T105825Z.json",
+  "?? docs/validation/raw/supports-semantiques-bruit-v001-20261026T105634Z.json",
+  "?? scripts/background_job.py",
+  "?? tests/audit_noise_research.py",
+  "?? tests/noise_matched_detector.cpp",
+  "?? tests/noise_matched_detector.h",
+  "?? tests/noise_matched_detector_test.cpp",
+  "?? tests/noise_multiscale_pilot.cpp",
+  "?? tests/noise_multiscale_pilot.h",
+  "?? tests/noise_multiscale_pilot_test.cpp",
+  "?? tests/noise_perceptual_metrics.cpp",
+  "?? tests/noise_perceptual_metrics.h",
+  "?? tests/noise_perceptual_metrics_test.cpp",
+  "?? tests/noise_profile_contamination.cpp",
+  "?? tests/noise_profile_contamination.h",
+  "?? tests/noise_profile_support.cpp",
+  "?? tests/noise_profile_support.h",
+  "?? tests/noise_profile_support_test.cpp",
+  "?? tests/noise_sure_filters_test.cpp",
+  "?? tests/noise_weight_diagnostics.py",
+  "?? tests/study_noise_abstention.py",
+  "?? tests/study_noise_contamination.py",
+  "?? tests/study_noise_context.py",
+  "?? tests/study_noise_feature_support.py",
+  "?? tests/study_noise_gain_selector.py",
+  "?? tests/study_noise_joint.py",
+  "?? tests/study_noise_model_selection.py",
+  "?? tests/study_noise_nonlocal.py",
+  "?? tests/study_noise_nonlocal_covariance.py",
+  "?? tests/study_noise_nonlocal_decomposition.py",
+  "?? tests/study_noise_nonlocal_directional.py",
+  "?? tests/study_noise_nonlocal_dual_distance.py",
+  "?? tests/study_noise_nonlocal_hybrid.py",
+  "?? tests/study_noise_nonlocal_pilot.py",
+  "?? tests/study_noise_pair_ablation.py",
+  "?? tests/study_noise_patch_aggregation.py",
+  "?? tests/study_noise_perceptual.py",
+  "?? tests/study_noise_photo_coverage.py",
+  "?? tests/study_noise_real_bounded.py",
+  "?? tests/study_noise_reconstruction.py",
+  "?? tests/study_noise_roi_content.py",
+  "?? tests/study_noise_roi_contract.py",
+  "?? tests/study_noise_roi_parent.py",
+  "?? tests/study_noise_scale_calibration.py",
+  "?? tests/study_noise_scale_orientation.py",
+  "?? tests/study_noise_semantic_comparison.py",
+  "?? tests/study_noise_semantic_joint.py",
+  "?? tests/study_noise_semantic_samples.py",
+  "?? tests/study_noise_seven_directions.py",
+  "?? tests/study_noise_seven_innovation.py",
+  "?? tests/study_noise_sure_feasibility.py",
+  "?? tests/study_noise_sure_filters.py",
+  "?? tests/study_noise_sure_measured_scale.py",
+  "?? tests/study_noise_sure_oriented.py",
+  "?? tests/study_noise_sure_sensitivity.py",
+  "?? tests/study_noise_weight_support.py",
+  "?? tests/test_audit_noise_research.py",
+  "?? tests/test_background_job.py",
+  "?? tests/test_noise_weight_diagnostics.py",
+  "?? tests/test_study_noise_contamination.py",
+  "?? tests/test_study_noise_feature_support.py",
+  "?? tests/test_study_noise_gain_selector.py",
+  "?? tests/test_study_noise_joint.py",
+  "?? tests/test_study_noise_model_selection.py",
+  "?? tests/test_study_noise_nonlocal.py",
+  "?? tests/test_study_noise_nonlocal_covariance.py",
+  "?? tests/test_study_noise_nonlocal_decomposition.py",
+  "?? tests/test_study_noise_nonlocal_directional.py",
+  "?? tests/test_study_noise_nonlocal_dual_distance.py",
+  "?? tests/test_study_noise_nonlocal_hybrid.py",
+  "?? tests/test_study_noise_nonlocal_pilot.py",
+  "?? tests/test_study_noise_pair_ablation.py",
+  "?? tests/test_study_noise_patch_aggregation.py",
+  "?? tests/test_study_noise_photo_coverage.py",
+  "?? tests/test_study_noise_real_bounded.py",
+  "?? tests/test_study_noise_roi_content.py",
+  "?? tests/test_study_noise_roi_contract.py",
+  "?? tests/test_study_noise_roi_parent.py",
+  "?? tests/test_study_noise_scale_calibration.py",
+  "?? tests/test_study_noise_scale_orientation.py",
+  "?? tests/test_study_noise_semantic_comparison.py",
+  "?? tests/test_study_noise_semantic_joint.py",
+  "?? tests/test_study_noise_semantic_samples.py",
+  "?? tests/test_study_noise_seven_directions.py",
+  "?? tests/test_study_noise_seven_innovation.py",
+  "?? tests/test_study_noise_sure_feasibility.py",
+  "?? tests/test_study_noise_sure_filters.py",
+  "?? tests/test_study_noise_sure_measured_scale.py",
+  "?? tests/test_study_noise_sure_oriented.py",
+  "?? tests/test_study_noise_sure_sensitivity.py"
+ ],
+ "runner_sha256": "aebaed71b6c8af4cb834468f57c0b63664ed7c91123cfa52c91372c6e3ba38e4",
+ "parents": [
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\comparaison-multicanal-semantique-bruit-v001-20261026T111607Z.json",
+   "sha256": "7ee029da5f66b4ba74ad5d416354b264208beb32e96f95ce5f5cd00f48d51f9a"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\supports-semantiques-bruit-v001-20261026T105634Z.json",
+   "sha256": "331f6525fa46bc73fd5052167e4880b395b492861858356fde65a934569f3459"
+  }
+ ],
+ "numpy_version": "2.4.2",
+ "calibrations": {
+  "white": {
+   "target": 0.09424136808733781,
+   "strength_scan": [
+    [
+     0.02,
+     0.10301943538138042
+    ],
+    [
+     0.1,
+     0.10088051194949292
+    ],
+    [
+     0.4,
+     0.07230438179459212
+    ],
+    [
+     0.8,
+     0.05089720514774136
+    ],
+    [
+     2.0,
+     0.046208821486660105
+    ]
+   ],
+   "status": "matched_on_calibration_only",
+   "h": 0.19776397521456826,
+   "achieved": 0.09427104987806582,
+   "validation_residual_std": 0.0937838821754657,
+   "centre_only_control_std_on228": 0.09414179272576356
+  },
+  "binomial_correlated": {
+   "target": 0.22689220152938933,
+   "strength_scan": [
+    [
+     0.02,
+     0.2023091290581862
+    ],
+    [
+     0.1,
+     0.2007287372642965
+    ],
+    [
+     0.4,
+     0.17522069523029427
+    ],
+    [
+     0.8,
+     0.13647042890680133
+    ],
+    [
+     2.0,
+     0.11921991179732085
+    ]
+   ],
+   "status": "abstained_target_unreachable"
+  }
+ },
+ "records": [
+  {
+   "raw": "6V1A0513.CR3",
+   "label": "rock",
+   "rect": [
+    3212,
+    4395,
+    256,
+    256
+   ],
+   "noise": "white",
+   "trial": 0,
+   "plane": 0,
+   "metrics": {
+    "centre_only_joint": {
+     "surrogate_mse": 0.37780657985813526,
+     "signal_distortion_mse": 0.2175253220036039,
+     "residual_injected_noise_mse": 0.18098238182638302,
+     "cross_term": -0.020701123971851667,
+     "mean_shift": -0.050978343898942756,
+     "residual_injected_std": 0.42541015708377206
+    },
+    "overlap_joint": {
+     "surrogate_mse": 0.28761880717406185,
+     "signal_distortion_mse": 0.15365098625834725,
+     "residual_injected_noise_mse": 0.13582059919725475,
+     "cross_term": -0.001852778281540123,
+     "mean_shift": -0.04031344776017939,
+     "residual_injected_std": 0.3684763314441683
+    }
+   }
+  },
+  {
+   "raw": "6V1A0513.CR3",
+   "label": "rock",
+   "rect": [
+    3212,
+    4395,
+    256,
+    256
+   ],
+   "noise": "white",
+   "trial": 0,
+   "plane": 1,
+   "metrics": {
+    "centre_only_joint": {
+     "surrogate_mse": 0.26093716762541297,
+     "signal_distortion_mse": 0.09587734771468998,
+     "residual_injected_noise_mse": 0.17607610327310738,
+     "cross_term": -0.011016283362384421,
+     "mean_shift": -0.016701630666218634,
+     "residual_injected_std": 0.41960829460862087
+    },
+    "overlap_joint": {
+     "surrogate_mse": 0.20577055083713683,
+     "signal_distortion_mse": 0.07711258872873404,
+     "residual_injected_noise_mse": 0.13319187257890389,
+     "cross_term": -0.004533910470501095,
+     "mean_shift": -0.013746614965251947,
+     "residual_injected_std": 0.36495381740474303
+    }
+   }
+  },
+  {
+   "raw": "6V1A0513.CR3",
+   "label": "rock",
+   "rect": [
+    3212,
+    4395,
+    256,
+    256
+   ],
+   "noise": "white",
+   "trial": 0,
+   "plane": 2,
+   "metrics": {
+    "centre_only_joint": {
+     "surrogate_mse": 0.20813599539367228,
+     "signal_distortion_mse": 0.031064960746793505,
+     "residual_injected_noise_mse": 0.18046337059648365,
+     "cross_term": -0.003392335949604862,
+     "mean_shift": -0.008045528220325022,
+     "residual_injected_std": 0.4248096835271371
+    },
+    "overlap_joint": {
+     "surrogate_mse": 0.15817386848000495,
+     "signal_distortion_mse": 0.022377018493270694,
+     "residual_injected_noise_mse": 0.1371968467289936,
+     "cross_term": -0.0013999967422593394,
+     "mean_shift": -0.003912584085142109,
+     "residual_injected_std": 0.3703932977013441
+    }
+   }
+  },
+  {
+   "raw": "6V1A0513.CR3",
+   "label": "rock",
+   "rect": [
+    3212,
+    4395,
+    256,
+    256
+   ],
+   "noise": "white",
+   "trial": 1,
+   "plane": 0,
+   "metrics": {
+    "centre_only_joint": {
+     "surrogate_mse": 0.36859620255243947,
+     "signal_distortion_mse": 0.21928620630322174,
+     "residual_injected_noise_mse": 0.1727363624520848,
+     "cross_term": -0.02342636620286699,
+     "mean_shift": -0.04193833802315552,
+     "residual_injected_std": 0.41551324172439336
+    },
+    "overlap_joint": {
+     "surrogate_mse": 0.2814718311911068,
+     "signal_distortion_mse": 0.15638781798077192,
+     "residual_injected_noise_mse": 0.1291872908663738,
+     "cross_term": -0.004103277656038914,
+     "mean_shift": -0.03739091591945894,
+     "residual_injected_std": 0.35936329254597815
+    }
+   }
+  },
+  {
+   "raw": "6V1A0513.CR3",
+   "label": "rock",
+   "rect": [
+    3212,
+    4395,
+    256,
+    256
+   ],
+   "noise": "white",
+   "trial": 1,
+   "plane": 1,
+   "metrics": {
+    "centre_only_joint": {
+     "surrogate_mse": 0.2563272561323354,
+     "signal_distortion_mse": 0.09467777447224696,
+     "residual_injected_noise_mse": 0.16999568898844136,
+     "cross_term": -0.00834620732835291,
+     "mean_shift": -0.012173542466961305,
+     "residual_injected_std": 0.41229910767484584
+    },
+    "overlap_joint": {
+     "surrogate_mse": 0.2014681554599053,
+     "signal_distortion_mse": 0.07676937768583114,
+     "residual_injected_noise_mse": 0.12767564823834865,
+     "cross_term": -0.002976870464274511,
+     "mean_shift": -0.010295843459182106,
+     "residual_injected_std": 0.3573160056063143
+    }
+   }
+  },
+  {
+   "raw": "6V1A0513.CR3",
+   "label": "rock",
+   "rect": [
+    3212,
+    4395,
+    256,
+    256
+   ],
+   "noise": "white",
+   "trial": 1,
+   "plane": 2,
+   "metrics": {
+    "centre_only_joint": {
+     "surrogate_mse": 0.19936552650115116,
+     "signal_distortion_mse": 0.0313934311244696,
+     "residual_injected_noise_mse": 0.1713978918780655,
+     "cross_term": -0.0034257965013839244,
+     "mean_shift": -0.002375984918164858,
+     "residual_injected_std": 0.41400206883807544
+    },
+    "overlap_joint": {
+     "surrogate_mse": 0.1523679125779744,
+     "signal_distortion_mse": 0.0227573054483091,
+     "residual_injected_noise_mse": 0.13097318827700277,
+     "cross_term": -0.0013625811473374561,
+     "mean_shift": -0.0035119021554973263,
+     "residual_injected_std": 0.36190014197610304
+    }
+   }
+  },
+  {
+   "raw": "6V1A0513.CR3",
+   "label": "fabric",
+   "rect": [
+    985,
+    4187,
+    256,
+    256
+   ],
+   "noise": "white",
+   "trial": 0,
+   "plane": 0,
+   "metrics": {
+    "centre_only_joint": {
+     "surrogate_mse": 0.10780149864178991,
+     "signal_distortion_mse": 0.07148576985503842,
+     "residual_injected_noise_mse": 0.04560836781223794,
+     "cross_term": -0.009292639025486441,
+     "mean_shift": -0.008879257651823637,
+     "residual_injected_std": 0.2135585502523553
+    },
+    "overlap_joint": {
+     "surrogate_mse": 0.09385234481870101,
+     "signal_distortion_mse": 0.06258337490715318,
+     "residual_injected_noise_mse": 0.038106764757831695,
+     "cross_term": -0.006837794846283845,
+     "mean_shift": -0.008285772439655774,
+     "residual_injected_std": 0.1951922306483374
+    }
+   }
+  },
+  {
+   "raw": "6V1A0513.CR3",
+   "label": "fabric",
+   "rect": [
+    985,
+    4187,
+    256,
+    256
+   ],
+   "noise": "white",
+   "trial": 0,
+   "plane": 1,
+   "metrics": {
+    "centre_only_joint": {
+     "surrogate_mse": 0.08845541400417448,
+     "signal_distortion_mse": 0.051543675366663884,
+     "residual_injected_noise_mse": 0.04359585071278724,
+     "cross_term": -0.006684112075276622,
+     "mean_shift": -0.012310061204448948,
+     "residual_injected_std": 0.20876024872987511
+    },
+    "overlap_joint": {
+     "surrogate_mse": 0.0787479744320008,
+     "signal_distortion_mse": 0.04688274876588045,
+     "residual_injected_noise_mse": 0.037608476903859954,
+     "cross_term": -0.005743251237739605,
+     "mean_shift": -0.011606191272227468,
+     "residual_injected_std": 0.19389987964170763
+    }
+   }
+  },
+  {
+   "raw": "6V1A0513.CR3",
+   "label": "fabric",
+   "rect": [
+    985,
+    4187,
+    256,
+    256
+   ],
+   "noise": "white",
+   "trial": 0,
+   "plane": 2,
+   "metrics": {
+    "centre_only_joint": {
+     "surrogate_mse": 0.0577033581301439,
+     "signal_distortion_mse": 0.01642080078166716,
+     "residual_injected_noise_mse": 0.0439548072181471,
+     "cross_term": -0.002672249869670382,
+     "mean_shift": 0.002227687401120141,
+     "residual_injected_std": 0.2096515047335757
+    },
+    "overlap_joint": {
+     "surrogate_mse": 0.049248847274693745,
+     "signal_distortion_mse": 0.0144356300284557,
+     "residual_injected_noise_mse": 0.03696927663588398,
+     "cross_term": -0.0021560593896459332,
+     "mean_shift": 0.0022565273265571294,
+     "residual_injected_std": 0.19226998243232765
+    }
+   }
+  },
+  {
+   "raw": "6V1A0513.CR3",
+   "label": "fabric",
+   "rect": [
+    985,
+    4187,
+    256,
+    256
+   ],
+   "noise": "white",
+   "trial": 1,
+   "plane": 0,
+   "metrics": {
+    "centre_only_joint": {
+     "surrogate_mse": 0.1068035472652468,
+     "signal_distortion_mse": 0.07344343719710304,
+     "residual_injected_noise_mse": 0.040525449231927795,
+     "cross_term": -0.0071653391637840355,
+     "mean_shift": -0.00879372225355586,
+     "residual_injected_std": 0.20125166087422383
+    },
+    "overlap_joint": {
+     "surrogate_mse": 0.0947136431519397,
+     "signal_distortion_mse": 0.06564494088019146,
+     "residual_injected_noise_mse": 0.033711866744792755,
+     "cross_term": -0.0046431644730445115,
+     "mean_shift": -0.010676075585431832,
+     "residual_injected_std": 0.18358481223789574
+    }
+   }
+  },
+  {
+   "raw": "6V1A0513.CR3",
+   "label": "fabric",
+   "rect": [
+    985,
+    4187,
+    256,
+    256
+   ],
+   "noise": "white",
+   "trial": 1,
+   "plane": 1,
+   "metrics": {
+    "centre_only_joint": {
+     "surrogate_mse": 0.08752677359092931,
+     "signal_distortion_mse": 0.053829426578920966,
+     "residual_injected_noise_mse": 0.039945220418378766,
+     "cross_term": -0.006247873406370411,
+     "mean_shift": -0.012083253693952998,
+     "residual_injected_std": 0.1998384586290313
+    },
+    "overlap_joint": {
+     "surrogate_mse": 0.0781472914070267,
+     "signal_distortion_mse": 0.04860986121931072,
+     "residual_injected_noise_mse": 0.03399398373680228,
+     "cross_term": -0.004456553549086311,
+     "mean_shift": -0.011128799035322967,
+     "residual_injected_std": 0.18436271976784785
+    }
+   }
+  },
+  {
+   "raw": "6V1A0513.CR3",
+   "label": "fabric",
+   "rect": [
+    985,
+    4187,
+    256,
+    256
+   ],
+   "noise": "white",
+   "trial": 1,
+   "plane": 2,
+   "metrics": {
+    "centre_only_joint": {
+     "surrogate_mse": 0.056309995061961764,
+     "signal_distortion_mse": 0.01719919416003645,
+     "residual_injected_noise_mse": 0.041226577511156465,
+     "cross_term": -0.0021157766092311557,
+     "mean_shift": -0.0011213463343634127,
+     "residual_injected_std": 0.20304298816798078
+    },
+    "overlap_joint": {
+     "surrogate_mse": 0.04702099381094344,
+     "signal_distortion_mse": 0.014942017028765442,
+     "residual_injected_noise_mse": 0.03433251196799109,
+     "cross_term": -0.002253535185813095,
+     "mean_shift": -0.0013889848798079852,
+     "residual_injected_std": 0.18528854891731195
+    }
+   }
+  },
+  {
+   "raw": "6V1A9890.CR3",
+   "label": "hair",
+   "rect": [
+    1449,
+    3421,
+    256,
+    256
+   ],
+   "noise": "white",
+   "trial": 0,
+   "plane": 0,
+   "metrics": {
+    "centre_only_joint": {
+     "surrogate_mse": 0.6597796819357105,
+     "signal_distortion_mse": 0.4430298049921664,
+     "residual_injected_noise_mse": 0.26858508553638727,
+     "cross_term": -0.051835208592843206,
+     "mean_shift": -0.09107381591741433,
+     "residual_injected_std": 0.5182058957378227
+    },
+    "overlap_joint": {
+     "surrogate_mse": 0.45464017464468415,
+     "signal_distortion_mse": 0.2855080145535016,
+     "residual_injected_noise_mse": 0.19639387197384492,
+     "cross_term": -0.027261711882662406,
+     "mean_shift": -0.07727753323277506,
+     "residual_injected_std": 0.44304198907795944
+    }
+   }
+  },
+  {
+   "raw": "6V1A9890.CR3",
+   "label": "hair",
+   "rect": [
+    1449,
+    3421,
+    256,
+    256
+   ],
+   "noise": "white",
+   "trial": 0,
+   "plane": 1,
+   "metrics": {
+    "centre_only_joint": {
+     "surrogate_mse": 0.7030757752253328,
+     "signal_distortion_mse": 0.4805843303355063,
+     "residual_injected_noise_mse": 0.2714331407110112,
+     "cross_term": -0.048941695821184614,
+     "mean_shift": -0.06049890064699147,
+     "residual_injected_std": 0.5209862049581067
+    },
+    "overlap_joint": {
+     "surrogate_mse": 0.4664337851974938,
+     "signal_distortion_mse": 0.2884047489135921,
+     "residual_injected_noise_mse": 0.19390802423185854,
+     "cross_term": -0.01587898794795682,
+     "mean_shift": -0.05665737940124293,
+     "residual_injected_std": 0.4403359493065783
+    }
+   }
+  },
+  {
+   "raw": "6V1A9890.CR3",
+   "label": "hair",
+   "rect": [
+    1449,
+    3421,
+    256,
+    256
+   ],
+   "noise": "white",
+   "trial": 0,
+   "plane": 2,
+   "metrics": {
+    "centre_only_joint": {
+     "surrogate_mse": 0.4102750628936745,
+     "signal_distortion_mse": 0.16041537851380414,
+     "residual_injected_noise_mse": 0.2713486898966577,
+     "cross_term": -0.02148900551678729,
+     "mean_shift": 0.021180171097190954,
+     "residual_injected_std": 0.5208801273069696
+    },
+    "overlap_joint": {
+     "surrogate_mse": 0.29419141454416126,
+     "signal_distortion_mse": 0.1067849431154551,
+     "residual_injected_noise_mse": 0.19630932536051002,
+     "cross_term": -0.008902853931803862,
+     "mean_shift": 0.020280636884945167,
+     "residual_injected_std": 0.443049791873761
+    }
+   }
+  },
+  {
+   "raw": "6V1A9890.CR3",
+   "label": "hair",
+   "rect": [
+    1449,
+    3421,
+    256,
+    256
+   ],
+   "noise": "white",
+   "trial": 1,
+   "plane": 0,
+   "metrics": {
+    "centre_only_joint": {
+     "surrogate_mse": 0.659092037798798,
+     "signal_distortion_mse": 0.45080339164637634,
+     "residual_injected_noise_mse": 0.26228516535366847,
+     "cross_term": -0.053996519201246596,
+     "mean_shift": -0.08182836582170189,
+     "residual_injected_std": 0.5119908158052797
+    },
+    "overlap_joint": {
+     "surrogate_mse": 0.4480956725698792,
+     "signal_distortion_mse": 0.2872283652879469,
+     "residual_injected_noise_mse": 0.18981647293137044,
+     "cross_term": -0.02894916564943808,
+     "mean_shift": -0.07669520910850695,
+     "residual_injected_std": 0.4355786262197803
+    }
+   }
+  },
+  {
+   "raw": "6V1A9890.CR3",
+   "label": "hair",
+   "rect": [
+    1449,
+    3421,
+    256,
+    256
+   ],
+   "noise": "white",
+   "trial": 1,
+   "plane": 1,
+   "metrics": {
+    "centre_only_joint": {
+     "surrogate_mse": 0.699192309468189,
+     "signal_distortion_mse": 0.48119782235933495,
+     "residual_injected_noise_mse": 0.26248414152608673,
+     "cross_term": -0.044489654417232856,
+     "mean_shift": -0.057553829968403906,
+     "residual_injected_std": 0.5123139280737112
+    },
+    "overlap_joint": {
+     "surrogate_mse": 0.464291164740159,
+     "signal_distortion_mse": 0.2871108534132734,
+     "residual_injected_noise_mse": 0.18960307939388957,
+     "cross_term": -0.012422768067003966,
+     "mean_shift": -0.053846923966579086,
+     "residual_injected_std": 0.43539151545767385
+    }
+   }
+  },
+  {
+   "raw": "6V1A9890.CR3",
+   "label": "hair",
+   "rect": [
+    1449,
+    3421,
+    256,
+    256
+   ],
+   "noise": "white",
+   "trial": 1,
+   "plane": 2,
+   "metrics": {
+    "centre_only_joint": {
+     "surrogate_mse": 0.4083333722534203,
+     "signal_distortion_mse": 0.16079397864501882,
+     "residual_injected_noise_mse": 0.263564068536394,
+     "cross_term": -0.016024674927992564,
+     "mean_shift": 0.022458536372855827,
+     "residual_injected_std": 0.5133802695059866
+    },
+    "overlap_joint": {
+     "surrogate_mse": 0.2881495349425298,
+     "signal_distortion_mse": 0.1062826011807141,
+     "residual_injected_noise_mse": 0.19185392795266892,
+     "cross_term": -0.009986994190853258,
+     "mean_shift": 0.019849967100548885,
+     "residual_injected_std": 0.4379942661959496
+    }
+   }
+  },
+  {
+   "raw": "6V1A9890.CR3",
+   "label": "letters",
+   "rect": [
+    4279,
+    916,
+    256,
+    256
+   ],
+   "noise": "white",
+   "trial": 0,
+   "plane": 0,
+   "metrics": {
+    "centre_only_joint": {
+     "surrogate_mse": 2.428191148284001,
+     "signal_distortion_mse": 1.9664299003721377,
+     "residual_injected_noise_mse": 0.4851370551160663,
+     "cross_term": -0.023375807204203042,
+     "mean_shift": -0.028462268507861783,
+     "residual_injected_std": 0.6965012194308716
+    },
+    "overlap_joint": {
+     "surrogate_mse": 1.1859415815538144,
+     "signal_distortion_mse": 0.8400872618831147,
+     "residual_injected_noise_mse": 0.3299547547866989,
+     "cross_term": 0.01589956488400081,
+     "mean_shift": -0.02967086561103572,
+     "residual_injected_std": 0.5744102243411275
+    }
+   }
+  },
+  {
+   "raw": "6V1A9890.CR3",
+   "label": "letters",
+   "rect": [
+    4279,
+    916,
+    256,
+    256
+   ],
+   "noise": "white",
+   "trial": 0,
+   "plane": 1,
+   "metrics": {
+    "centre_only_joint": {
+     "surrogate_mse": 3.2364558562734413,
+     "signal_distortion_mse": 2.779726781541075,
+     "residual_injected_noise_mse": 0.4845715358626166,
+     "cross_term": -0.027842461130250212,
+     "mean_shift": 0.02927316318112629,
+     "residual_injected_std": 0.6961072600178897
+    },
+    "overlap_joint": {
+     "surrogate_mse": 1.3680162241095015,
+     "signal_distortion_mse": 1.0196549736496072,
+     "residual_injected_noise_mse": 0.32964079619313746,
+     "cross_term": 0.01872045426675679,
+     "mean_shift": 0.024419088015954084,
+     "residual_injected_std": 0.5741329913682061
+    }
+   }
+  },
+  {
+   "raw": "6V1A9890.CR3",
+   "label": "letters",
+   "rect": [
+    4279,
+    916,
+    256,
+    256
+   ],
+   "noise": "white",
+   "trial": 0,
+   "plane": 2,
+   "metrics": {
+    "centre_only_joint": {
+     "surrogate_mse": 1.2551977163695165,
+     "signal_distortion_mse": 0.7811352717989575,
+     "residual_injected_noise_mse": 0.48226886989610707,
+     "cross_term": -0.008206425325548166,
+     "mean_shift": -0.02530742875174324,
+     "residual_injected_std": 0.6944481695791638
+    },
+    "overlap_joint": {
+     "surrogate_mse": 0.5953351014908723,
+     "signal_distortion_mse": 0.2610758984167299,
+     "residual_injected_noise_mse": 0.32928308294313396,
+     "cross_term": 0.0049761201310085075,
+     "mean_shift": -0.014604135640106814,
+     "residual_injected_std": 0.5738226321910358
+    }
+   }
+  },
+  {
+   "raw": "6V1A9890.CR3",
+   "label": "letters",
+   "rect": [
+    4279,
+    916,
+    256,
+    256
+   ],
+   "noise": "white",
+   "trial": 1,
+   "plane": 0,
+   "metrics": {
+    "centre_only_joint": {
+     "surrogate_mse": 2.4324273183790925,
+     "signal_distortion_mse": 1.9735415518371788,
+     "residual_injected_noise_mse": 0.4785152263221777,
+     "cross_term": -0.01962945978026435,
+     "mean_shift": -0.03460624666094097,
+     "residual_injected_std": 0.6917476450787537
+    },
+    "overlap_joint": {
+     "surrogate_mse": 1.1681495423528692,
+     "signal_distortion_mse": 0.8337968738890534,
+     "residual_injected_noise_mse": 0.3259576897126794,
+     "cross_term": 0.008394978751136432,
+     "mean_shift": -0.029843702596514886,
+     "residual_injected_std": 0.5709239899037103
+    }
+   }
+  },
+  {
+   "raw": "6V1A9890.CR3",
+   "label": "letters",
+   "rect": [
+    4279,
+    916,
+    256,
+    256
+   ],
+   "noise": "white",
+   "trial": 1,
+   "plane": 1,
+   "metrics": {
+    "centre_only_joint": {
+     "surrogate_mse": 3.221115328359655,
+     "signal_distortion_mse": 2.7641591807496058,
+     "residual_injected_noise_mse": 0.47796432015341866,
+     "cross_term": -0.02100817254336874,
+     "mean_shift": 0.028808801143197026,
+     "residual_injected_std": 0.6913482920319818
+    },
+    "overlap_joint": {
+     "surrogate_mse": 1.3644106812053638,
+     "signal_distortion_mse": 1.0110319809527004,
+     "residual_injected_noise_mse": 0.3252660457983114,
+     "cross_term": 0.028112654454352244,
+     "mean_shift": 0.027269669938039438,
+     "residual_injected_std": 0.5703180728393067
+    }
+   }
+  },
+  {
+   "raw": "6V1A9890.CR3",
+   "label": "letters",
+   "rect": [
+    4279,
+    916,
+    256,
+    256
+   ],
+   "noise": "white",
+   "trial": 1,
+   "plane": 2,
+   "metrics": {
+    "centre_only_joint": {
+     "surrogate_mse": 1.25458506177934,
+     "signal_distortion_mse": 0.7724673849879632,
+     "residual_injected_noise_mse": 0.48219043255077565,
+     "cross_term": -7.275575939906631e-05,
+     "mean_shift": -0.034311916642021004,
+     "residual_injected_std": 0.6943758110156216
+    },
+    "overlap_joint": {
+     "surrogate_mse": 0.5931282208111629,
+     "signal_distortion_mse": 0.2591237282815712,
+     "residual_injected_noise_mse": 0.3296214642188865,
+     "cross_term": 0.004383028310705286,
+     "mean_shift": -0.020086321756026013,
+     "residual_injected_std": 0.5741257389157742
+    }
+   }
+  }
+ ],
+ "dependencies": {
+  "study_noise_semantic_joint.py": "8c8b120fbf3403badfa39cdb883fc506f7dd5cd06161763b8fb26caeb8a48002",
+  "study_noise_semantic_comparison.py": "87a7771e77beafa56e2c8833d7420c30c2de12c6190e67c13b4b9a0020dadbf5",
+  "study_noise_nonlocal_directional.py": "7374efe7679f7c2d3946c487b2da87d8033b8debfebd651da7043210fed08040",
+  "study_noise_sure_feasibility.py": "16ac02d273bb0f651102cca7847fdb331783714b4cb4871d3a8228e1924838db"
+ },
+ "rules": "Patch5 joint matching/search21,existing covariance correction and maxself. Each reference patch normalized separately,uniform aggregation over25covering estimates. No extra denoising layers or learned weights. Halo14/core228 required;centre-only baseline recomputed onSAME228,not copied230metrics. Fixed old flat target,independent control,abstention if unreachable. Same four supports/3planes/2covariances/2trials;noRAW.",
+ "limitations": "Original photo remains noisy surrogate. Gaussian added noise not RCD truth. Aggregation may spread weights across edges;flat calibration not structured residual equality. Not BM3D or collaborative transform,not nativeB replay. Radius0 tests operator equivalence only. Not independent quality confirmation or production/LR comparison. Max~200MiB temporary weight cache per reconstruction."
+}

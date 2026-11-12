@@ -1,0 +1,525 @@
+{
+ "schema_version": 1,
+ "data_version": 1,
+ "completed_at_utc": "2026-10-26T18:06:50.430121+00:00",
+ "commit": "2a40c5c6cff78d40294393a68827f4a24555c724",
+ "runner_sha256": "a7ac7efc42e10b799bcbc242a93141addb04c96cc3621f6595d32e48a540c366",
+ "runner_source": "\"\"\"Single-frame flat-tile Haar MAD in frozen axes: spectral vs empirical calibration.\"\"\"\nfrom datetime import datetime,timezone\nimport json\nfrom pathlib import Path\nfrom statistics import NormalDist\nimport numpy as np\nfrom study_noise_neighbourhoods import ROOT,git,sha256\nfrom study_noise_profile_capture_transfer import flat_planes\nfrom study_noise_empirical_cross_spectrum import fit,GRID\n\n\nGAUSSIAN_MAD=NormalDist().inv_cdf(.75)\n\n\ndef haar_mad(plane):\n    if plane.ndim!=2 or min(plane.shape)<4 or any(n%2 for n in plane.shape) or not np.isfinite(plane).all():\n        raise ValueError('Finite even-sized two-dimensional plane required')\n    hh=(plane[::2,::2]-plane[1::2,::2]-plane[::2,1::2]+plane[1::2,1::2])*.5\n    return float(np.median(np.abs(hh-np.median(hh))))\n\n\ndef haar_variance(covariance):\n    positions=np.array([[0,0],[1,0],[0,1],[1,1]])\n    delta=positions[:,None]-positions[None,:]\n    kernel=np.array([.5,-.5,-.5,.5])\n    return float(kernel@covariance[delta[:,:,0]%GRID,delta[:,:,1]%GRID]@kernel)\n\n\ndef run():\n    names=('extraction-paires-profils-bruit-v001-20261026T174656Z.json',\n           'etude-reelle-bornee-nonlocal-bruit-v001-20261025T222336Z.json',\n           'melange-fixe-covariances-bruit-v001-20261026T175757Z.json')\n    paths=[ROOT/'docs/validation/raw'/name for name in names];hashes=[sha256(p) for p in paths]\n    training,held,axes=[json.loads(p.read_text(encoding='utf-8')) for p in paths]\n    matrix=np.asarray(axes['fixed_transform']);records=[]\n    outside=np.ones((64,64),dtype=bool);outside[16:49,16:49]=False\n    for train in training['native']['pairs']:\n        test=next(p for p in held['native']['pairs'] if p['a']['iso']==train['a']['iso'])\n        train_a,train_b=[flat_planes(train,k) for k in ('a','b')]\n        test_a,test_b=[flat_planes(test,k) for k in ('a','b')]\n        training_noise=np.einsum('ab,byx->ayx',matrix,(train_a-train_b)/np.sqrt(2))\n        target_noise=np.einsum('ab,byx->ayx',matrix,(test_a-test_b)/np.sqrt(2))\n        cov,_,_,std,_=fit(training_noise)\n        factors_gaussian=[];factors_empirical=[]\n        for c in range(3):\n            variance=haar_variance(cov[c,c])\n            if variance<=1e-12:raise ValueError('No measurable Haar variance in prepared model')\n            factors_gaussian.append(GAUSSIAN_MAD*np.sqrt(variance))\n            factors_empirical.append(haar_mad(training_noise[c])/std[c])\n        reference=np.std(target_noise[:,outside],axis=1)\n        frames=[]\n        for frame,planes in (('a',test_a),('b',test_b)):\n            transformed=np.einsum('ab,byx->ayx',matrix,planes)\n            mads=np.array([haar_mad(plane) for plane in transformed])\n            estimates={}\n            for label,factors in (('white_gaussian',[GAUSSIAN_MAD]*3),\n                                  ('spectral_gaussian',factors_gaussian),('empirical_training',factors_empirical)):\n                estimates[label]=dict(sigma=[float(mads[c]/factors[c]) if factors[c]>1e-12 else None for c in range(3)],\n                    ratio_to_differential_reference=[float(mads[c]/factors[c]/reference[c]) if factors[c]>1e-12 else None for c in range(3)])\n            frames.append(dict(frame=frame,raw=test[frame]['raw'],hh_mad=mads.tolist(),estimates=estimates))\n        records.append(dict(iso=train['a']['iso'],training_pair=[train[k]['raw'] for k in ('a','b')],\n            test_pair=[test[k]['raw'] for k in ('a','b')],\n            gaussian_spectral_factors=factors_gaussian,empirical_training_factors=factors_empirical,\n            reference_differential_axis_sigma=reference.tolist(),frames=frames))\n        print(train['a']['iso'],'frameA ratios',frames[0]['estimates'],flush=True)\n    if [sha256(p) for p in paths]!=hashes:raise ValueError('Parents changed')\n    now=datetime.now(timezone.utc);output=ROOT/'docs/validation/raw'/f\"sigma-axes-image-seule-bruit-v001-{now.strftime('%Y%m%dT%H%M%SZ')}.json\"\n    dependencies=('study_noise_profile_capture_transfer.py','study_noise_empirical_cross_spectrum.py')\n    result=dict(schema_version=1,data_version=1,completed_at_utc=now.isoformat(),commit=git('rev-parse','HEAD'),\n        runner_sha256=sha256(Path(__file__)),runner_source=Path(__file__).read_text(encoding='utf-8'),\n        numpy_version=np.__version__,parents=[dict(path=str(p),sha256=h) for p,h in zip(paths,hashes)],records=records,\n        dependencies={n:dict(sha256=sha256(ROOT/'tests'/n),source=(ROOT/'tests'/n).read_text(encoding='utf-8')) for n in dependencies},\n        rules='Frozen axes from4trainingcaptures. Nonoverlapping2x2HH Haar,unitL2kernel,median centered MAD. Three alternatives:standardGaussianwhite factor;Gaussianfactor corrected by exactHHvariance intrainingaxisPSD;empiricalMAD/std ratio learned ontrainingnoise difference. EachheldA/B64flatsample estimatedSEPARATELY,nodifferentialtargetpixels used tocomputeestimates. Compare againstoutside3007Dstd onlyafter,not calibration. No averaging correlatedMADmodels orposthoccorrection.',\n        limitations='Selectedflatregions not arbitrarytexture/singlewholephoto estimator. FrameMAD includes texture/fixedpattern not present in paired difference;nonGaussian noise differences can have different law from eachframe. ReferenceDstd NOT clean sensortruth and stillsameframes. Fourtestpairs,not broadvalidation. No denoising or production;models use sameMAD statistic,not independent estimators.')\n    with output.open('x',encoding='utf-8') as handle:json.dump(result,handle,ensure_ascii=False,indent=1,allow_nan=False)\n    print(output,flush=True)\n\n\nif __name__=='__main__':run()\n",
+ "numpy_version": "2.4.2",
+ "parents": [
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\extraction-paires-profils-bruit-v001-20261026T174656Z.json",
+   "sha256": "61a789c32b76eb9bcfa46e358a169dfe8e9cc73c30bb9fec3557352b3eac4770"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\etude-reelle-bornee-nonlocal-bruit-v001-20261025T222336Z.json",
+   "sha256": "6249525f6b1063766279cc71d9611b0c4c017e42796e90bf31315318123ca782"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\melange-fixe-covariances-bruit-v001-20261026T175757Z.json",
+   "sha256": "b242bf674ef8bda8a71a8cba594eb2059ddca0d74bb5056c03c300ab538f6cb5"
+  }
+ ],
+ "records": [
+  {
+   "iso": 100,
+   "training_pair": [
+    "6V1A9751.CR3",
+    "6V1A9752.CR3"
+   ],
+   "test_pair": [
+    "6V1A9660.CR3",
+    "6V1A9661.CR3"
+   ],
+   "gaussian_spectral_factors": [
+    0.23913675772632886,
+    0.23927062669856483,
+    0.37117513074277386
+   ],
+   "empirical_training_factors": [
+    0.21483456810556753,
+    0.2217887261432672,
+    0.34261232450235146
+   ],
+   "reference_differential_axis_sigma": [
+    0.0020015766851562773,
+    0.003200247572666072,
+    0.002761994467229209
+   ],
+   "frames": [
+    {
+     "frame": "a",
+     "raw": "6V1A9660.CR3",
+     "hh_mad": [
+      0.00045909009449861173,
+      0.0008210383247491109,
+      0.0013448984620118253
+     ],
+     "estimates": {
+      "white_gaussian": {
+       "sigma": [
+        0.0006806479925975882,
+        0.0012172732417511547,
+        0.001993949443443504
+       ],
+       "ratio_to_differential_reference": [
+        0.34005591574146715,
+        0.3803684602866725,
+        0.7219237645482338
+       ]
+      },
+      "spectral_gaussian": {
+       "sigma": [
+        0.0019197805425797412,
+        0.0034314212992949695,
+        0.0036233528343358927
+       ],
+       "ratio_to_differential_reference": [
+        0.9591341450052163,
+        1.072236200912516,
+        1.3118610038240899
+       ]
+      },
+      "empirical_training": {
+       "sigma": [
+        0.0021369470404456487,
+        0.003701893865510328,
+        0.003925423476710321
+       ],
+       "ratio_to_differential_reference": [
+        1.0676318605693602,
+        1.1567523391405443,
+        1.421227856639498
+       ]
+      }
+     }
+    },
+    {
+     "frame": "b",
+     "raw": "6V1A9661.CR3",
+     "hh_mad": [
+      0.0004352507190799734,
+      0.0008899626182245664,
+      0.0013205385015402742
+     ],
+     "estimates": {
+      "white_gaussian": {
+       "sigma": [
+        0.0006453036817141271,
+        0.0013194605521667962,
+        0.001957833312005674
+       ],
+       "ratio_to_differential_reference": [
+        0.3223976810380081,
+        0.4122995243982252,
+        0.7088476589056105
+       ]
+      },
+      "spectral_gaussian": {
+       "sigma": [
+        0.0018200912449355855,
+        0.0037194812857064517,
+        0.0035577235438637553
+       ],
+       "ratio_to_differential_reference": [
+        0.9093287598888463,
+        1.1622479827733498,
+        1.288099446279054
+       ]
+      },
+      "empirical_training": {
+       "sigma": [
+        0.002025980841528704,
+        0.004012659406545687,
+        0.003854322822328042
+       ],
+       "ratio_to_differential_reference": [
+        1.0121924663458604,
+        1.2538590579112003,
+        1.3954853523637358
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "iso": 1600,
+   "training_pair": [
+    "6V1A9674.CR3",
+    "6V1A9675.CR3"
+   ],
+   "test_pair": [
+    "6V1A9676.CR3",
+    "6V1A9677.CR3"
+   ],
+   "gaussian_spectral_factors": [
+    0.21046448878754445,
+    0.24705847588118546,
+    0.36251064667482263
+   ],
+   "empirical_training_factors": [
+    0.18476213469413577,
+    0.24385831918808404,
+    0.363345234508944
+   ],
+   "reference_differential_axis_sigma": [
+    0.0040995730976905774,
+    0.009733930451164892,
+    0.0069992397769695356
+   ],
+   "frames": [
+    {
+     "frame": "a",
+     "raw": "6V1A9676.CR3",
+     "hh_mad": [
+      0.0006145914422927676,
+      0.002199115415076669,
+      0.0023947821486219956
+     ],
+     "estimates": {
+      "white_gaussian": {
+       "sigma": [
+        0.0009111946358178148,
+        0.003260413393142537,
+        0.003550509326384583
+       ],
+       "ratio_to_differential_reference": [
+        0.222265736969325,
+        0.3349534301174663,
+        0.5072707093229272
+       ]
+      },
+      "spectral_gaussian": {
+       "sigma": [
+        0.0029201669404341807,
+        0.008901193967270567,
+        0.006606101560294725
+       ],
+       "ratio_to_differential_reference": [
+        0.712310006639278,
+        0.9144501300813519,
+        0.9438312975119952
+       ]
+      },
+      "empirical_training": {
+       "sigma": [
+        0.0033263928418568673,
+        0.009018004480628467,
+        0.00659092763899466
+       ],
+       "ratio_to_differential_reference": [
+        0.8113998122708758,
+        0.9264504740270928,
+        0.9416633590238763
+       ]
+      }
+     }
+    },
+    {
+     "frame": "b",
+     "raw": "6V1A9677.CR3",
+     "hh_mad": [
+      0.0006688767795986789,
+      0.0022803145772645264,
+      0.002532941795637576
+     ],
+     "estimates": {
+      "white_gaussian": {
+       "sigma": [
+        0.000991678197339884,
+        0.0033807994511430507,
+        0.0037553451255578334
+       ],
+       "ratio_to_differential_reference": [
+        0.24189791807798927,
+        0.34732110200545546,
+        0.5365361446702412
+       ]
+      },
+      "spectral_gaussian": {
+       "sigma": [
+        0.0031780980413939736,
+        0.009229857705271231,
+        0.0069872204275138496
+       ],
+       "ratio_to_differential_reference": [
+        0.7752265822956784,
+        0.948214881088108,
+        0.9982827635802342
+       ]
+      },
+      "empirical_training": {
+       "sigma": [
+        0.0036202048688491833,
+        0.009350981278214076,
+        0.006971171093136288
+       ],
+       "ratio_to_differential_reference": [
+        0.8830687446184488,
+        0.9606583204110538,
+        0.995989752497749
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "iso": 6400,
+   "training_pair": [
+    "6V1A9704.CR3",
+    "6V1A9705.CR3"
+   ],
+   "test_pair": [
+    "6V1A9702.CR3",
+    "6V1A9703.CR3"
+   ],
+   "gaussian_spectral_factors": [
+    0.24801770460881215,
+    0.22649686528478066,
+    0.37079833125456735
+   ],
+   "empirical_training_factors": [
+    0.21973002433210165,
+    0.20142063871867702,
+    0.3571229034765464
+   ],
+   "reference_differential_axis_sigma": [
+    0.016618953106901948,
+    0.027376569903228575,
+    0.024122149907247606
+   ],
+   "frames": [
+    {
+     "frame": "a",
+     "raw": "6V1A9702.CR3",
+     "hh_mad": [
+      0.0034300947227589897,
+      0.006275708476791465,
+      0.00890963884389133
+     ],
+     "estimates": {
+      "white_gaussian": {
+       "sigma": [
+        0.0050854660456468356,
+        0.009304379310385438,
+        0.013209450316036972
+       ],
+       "ratio_to_differential_reference": [
+        0.3060039951334126,
+        0.3398665115196975,
+        0.5476066754758097
+       ]
+      },
+      "spectral_gaussian": {
+       "sigma": [
+        0.013830039787559253,
+        0.027707705662508162,
+        0.024028260358524966
+       ],
+       "ratio_to_differential_reference": [
+        0.8321847771395153,
+        1.0120955897853563,
+        0.9961077454089434
+       ]
+      },
+      "empirical_training": {
+       "sigma": [
+        0.015610496258693887,
+        0.031157226571784977,
+        0.024948382635661615
+       ],
+       "ratio_to_differential_reference": [
+        0.9393188703451337,
+        1.1380982600055582,
+        1.0342520352286577
+       ]
+      }
+     }
+    },
+    {
+     "frame": "b",
+     "raw": "6V1A9703.CR3",
+     "hh_mad": [
+      0.0033855844314149112,
+      0.006685230151505409,
+      0.008521454653799996
+     ],
+     "estimates": {
+      "white_gaussian": {
+       "sigma": [
+        0.005019474988953774,
+        0.009911537053842462,
+        0.01263392757461876
+       ],
+       "ratio_to_differential_reference": [
+        0.3020331639824627,
+        0.362044517953784,
+        0.5237479919160456
+       ]
+      },
+      "spectral_gaussian": {
+       "sigma": [
+        0.013650575618199719,
+        0.029515773399777026,
+        0.022981372718071078
+       ],
+       "ratio_to_differential_reference": [
+        0.821386012126754,
+        1.0781399387910964,
+        0.9527083119223226
+       ]
+      },
+      "empirical_training": {
+       "sigma": [
+        0.015407928168696294,
+        0.033190392970814823,
+        0.02386140617374218
+       ],
+       "ratio_to_differential_reference": [
+        0.9271298901672267,
+        1.2123649196424937,
+        0.9891906925996224
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "iso": 51200,
+   "training_pair": [
+    "6V1A9813.CR3",
+    "6V1A9814.CR3"
+   ],
+   "test_pair": [
+    "6V1A9815.CR3",
+    "6V1A9816.CR3"
+   ],
+   "gaussian_spectral_factors": [
+    0.20239578364250088,
+    0.26188743037356454,
+    0.37223203368118374
+   ],
+   "empirical_training_factors": [
+    0.17618539662020888,
+    0.23774005842638812,
+    0.36113960216782437
+   ],
+   "reference_differential_axis_sigma": [
+    0.15056893522436435,
+    0.09985323994448543,
+    0.13112716777251485
+   ],
+   "frames": [
+    {
+     "frame": "a",
+     "raw": "6V1A9815.CR3",
+     "hh_mad": [
+      0.02713808925688095,
+      0.02173234677705576,
+      0.045805877746830106
+     ],
+     "estimates": {
+      "white_gaussian": {
+       "sigma": [
+        0.04023499133825474,
+        0.032220425544995934,
+        0.0679118959680467
+       ],
+       "ratio_to_differential_reference": [
+        0.2672197374465069,
+        0.3226778175941938,
+        0.5179086616578437
+       ]
+      },
+      "spectral_gaussian": {
+       "sigma": [
+        0.13408426187778671,
+        0.08298354276131562,
+        0.12305732339539262
+       ],
+       "ratio_to_differential_reference": [
+        0.890517434276774,
+        0.8310550845165493,
+        0.9384578763180323
+       ]
+      },
+      "empirical_training": {
+       "sigma": [
+        0.15403143380481596,
+        0.09141222106574347,
+        0.1268370388400211
+       ],
+       "ratio_to_differential_reference": [
+        1.022996101920307,
+        0.9154657486984413,
+        0.9672826843943091
+       ]
+      }
+     }
+    },
+    {
+     "frame": "b",
+     "raw": "6V1A9816.CR3",
+     "hh_mad": [
+      0.02925557240133251,
+      0.024643608445168056,
+      0.04736264255052309
+     ],
+     "estimates": {
+      "white_gaussian": {
+       "sigma": [
+        0.04337437654586684,
+        0.036536668552789545,
+        0.07021995891969335
+       ],
+       "ratio_to_differential_reference": [
+        0.2880698895906664,
+        0.3659036859805704,
+        0.5355103760153961
+       ]
+      },
+      "spectral_gaussian": {
+       "sigma": [
+        0.1445463530653766,
+        0.09410000476164751,
+        0.12723956635900158
+       ],
+       "ratio_to_differential_reference": [
+        0.9600011639186169,
+        0.942383089561876,
+        0.9703524335989804
+       ]
+      },
+      "empirical_training": {
+       "sigma": [
+        0.16604992787453773,
+        0.10365778745191358,
+        0.13114773972784435
+       ],
+       "ratio_to_differential_reference": [
+        1.1028166442640044,
+        1.038101392699359,
+        1.0001568855308856
+       ]
+      }
+     }
+    }
+   ]
+  }
+ ],
+ "dependencies": {
+  "study_noise_profile_capture_transfer.py": {
+   "sha256": "58ce49c9aa5b6e9112b2330128c1e797c1f4a27b4532a5e84e4355119529e7c2",
+   "source": "\"\"\"Profile covariance prepared on a distinct capture pair, not the tested residual field.\"\"\"\nfrom datetime import datetime, timezone\nimport json\nfrom pathlib import Path\nimport numpy as np\nfrom study_noise_neighbourhoods import ROOT, git, sha256\nfrom study_noise_empirical_cross_spectrum import fit\nfrom study_noise_profile_covariance_wiener import prepare, reconstruct, binomial_covariance, zero_lag_whitener\nfrom study_noise_profile_color_invariance import DIRECTIONS\nfrom study_noise_profile_real_residuals import measures\n\n\ndef flat_planes(pair, key):\n    return np.asarray(next(s for s in pair[key]['samples'] if s['kind']=='flat')['original_y_co_cg'], dtype=float).reshape(3,64,64)\n\n\ndef run():\n    paths = [ROOT/'docs/validation/raw'/name for name in (\n        'extraction-paires-profils-bruit-v001-20261026T174656Z.json',\n        'etude-reelle-bornee-nonlocal-bruit-v001-20261025T222336Z.json',\n        'formes-residus-reels-bruit-v001-20261026T120043Z.json')]\n    hashes = [sha256(p) for p in paths]\n    training, heldout, calibration = [json.loads(p.read_text(encoding='utf-8')) for p in paths]\n    start = datetime.now(timezone.utc); records = []; folds = []\n    common = prepare(binomial_covariance()); yy, xx = np.mgrid[:64, :64]\n    training_names = {p[k]['raw'] for p in training['native']['pairs'] for k in ('a','b')}\n    heldout_names = {p[k]['raw'] for p in heldout['native']['pairs'] for k in ('a','b')}\n    if training_names & heldout_names:\n        raise ValueError('Capture profile/test identities overlap')\n    for train in training['native']['pairs']:\n        test = next(p for p in heldout['native']['pairs'] if p['a']['iso']==train['a']['iso'])\n        if train['a']['camera'] != test['a']['camera']:\n            raise ValueError('Camera mismatch')\n        for key in ('dcp_profile', 'raw_normalization'):\n            if train['a']['declaration'][key] != test['a']['declaration'][key]:\n                raise ValueError('Opening declaration mismatch:'+key)\n        if train['a']['opening_chroma_median'] != test['a']['opening_chroma_median']:\n            raise ValueError('Opening chroma policy mismatch')\n        train_a, train_b = [flat_planes(train, k) for k in ('a','b')]\n        test_a, test_b = [flat_planes(test, k) for k in ('a','b')]\n        cov, _, _, training_std, audit = fit((train_a-train_b)/np.sqrt(2))\n        whitening, inverse, white_cov = zero_lag_whitener(cov); cross = prepare(white_cov)\n        old = next(c for c in calibration['calibrations'] if c['a']==test['a']['raw'])['noise_calibration']\n        mean = np.asarray(old['outer_mean_y_co_cg']); sigma = np.asarray(old['sigma_y_co_cg'])\n        normalized = ((test_a-test_b)/np.sqrt(2)-mean[:,None,None])/sigma[:,None,None]\n        fold = len(folds)\n        folds.append(dict(iso=train['a']['iso'], camera=train['a']['camera'],\n            training_pair=[train[k]['raw'] for k in ('a','b')], test_pair=[test[k]['raw'] for k in ('a','b')],\n            training_mean_y_co_cg=((train_a+train_b)*.5).mean(axis=(1,2)).tolist(),\n            test_mean_y_co_cg=((test_a+test_b)*.5).mean(axis=(1,2)).tolist(),\n            training_diff_std=training_std.tolist(), test_outer_diff_std=sigma.tolist(), fit_audit=audit,\n            profile_calibration_independent_capture=True, known_test_noise_amplitude=True))\n        configs = [(None,'flat',0.,None)]\n        configs += [(direction,'gaussian',a,w) for direction in DIRECTIONS for a in (3.,6.) for w in (1.,1.5,2.5)]\n        configs += [(direction,'step',a,None) for direction in DIRECTIONS for a in (3.,6.)]\n        for direction, shape, amplitude, width in configs:\n            vector = np.asarray(direction or (1.,0.,0.));vector=vector/np.linalg.norm(vector)\n            scalar = (amplitude*np.exp(-((xx-32)**2+(yy-32)**2)/(2*width*width)) if shape=='gaussian'\n                      else amplitude*np.where(xx>=32,1.,-1.) if shape=='step' else np.zeros((64,64)))\n            truth = vector[:,None,None]*scalar; observed=truth+normalized;outputs={}\n            for mode, prepared, transform, restore, policy in (\n                    ('common',common,np.eye(3),np.eye(3),'per_plane'),\n                    ('common_shared',common,np.eye(3),np.eye(3),'shared'),\n                    ('cross_per_plane',cross,whitening,inverse,'per_plane'),\n                    ('cross_shared',cross,whitening,inverse,'shared')):\n                values=reconstruct(np.einsum('ab,byx->ayx',transform,observed),\n                    np.einsum('ab,byx->ayx',transform,truth),prepared,policy)['dc_wiener']\n                outputs[mode]=tuple(np.einsum('ab,byx->ayx',restore,v) for v in values)\n            core=truth[:,26:38,26:38];metrics={m:measures(v,core,vector) for m,v in outputs.items()}\n            for m in ('common_shared','cross_shared'):\n                leak=metrics[m]['color_direction']['relative_orthogonal_rms']\n                if leak is not None and leak>1e-9:raise ValueError('Shared transport invariant fails')\n            if shape=='gaussian':\n                for m,(_,signal,_) in outputs.items():\n                    metrics[m]['peak_directional_signal_ratio']=float(vector@signal[:,6,6]/amplitude)\n            records.append(dict(fold=fold,shape=shape,amplitude=amplitude,width=width,direction=vector.tolist(),metrics=metrics))\n        print('Completed distinct capture transfer',fold,train['a']['iso'],len(records),flush=True)\n    if [sha256(p) for p in paths] != hashes:raise ValueError('Parents changed')\n    now=datetime.now(timezone.utc)\n    output=ROOT/'docs/validation/raw'/f\"transfert-captures-profils-bruit-v001-{now.strftime('%Y%m%dT%H%M%SZ')}.json\"\n    names=('study_noise_empirical_cross_spectrum.py','study_noise_profile_covariance_wiener.py',\n           'study_noise_profile_real_residuals.py','study_noise_profile_color_invariance.py',\n           'study_noise_wiener_search_context.py','study_noise_patch_aggregation.py','study_noise_collaborative_wiener.py')\n    result=dict(schema_version=1,data_version=1,started_at_utc=start.isoformat(),completed_at_utc=now.isoformat(),\n        commit=git('rev-parse','HEAD'),runner_sha256=sha256(Path(__file__)),runner_source=Path(__file__).read_text(encoding='utf-8'),\n        numpy_version=np.__version__,parents=[dict(path=str(p),sha256=h) for p,h in zip(paths,hashes)],folds=folds,records=records,\n        dependencies={n:dict(sha256=sha256(ROOT/'tests'/n),source=(ROOT/'tests'/n).read_text(encoding='utf-8')) for n in names},\n        rules='4trainingcapturepairs distinct from4heldcapturepairs,ISOmatched,camera/DCP/normalization/chromamedianchecked. Fitfulltraining64,NOtestpixels inprofilefit. Test residual normalizedbyalreadyrecordedheldoutermean/sigma (known amplitude still).196relatedstates=49formsper4realheldfields. Samevalid12ROI/25refs. Level/chromaticity oftrainingandtestflatregions differ,means recorded;doNOTclaimsameconditionorfitISOexception.',\n        limitations='Historically explored heldcaptures,NOTuntouchedfinaltest. Paired differential maycontainmotion/scene artifacts. Known heldnoiseamplitude,not estimationintegration. One training/testpair perISO;colour/flux/readout influence profiletransfer,notuniversal ISOprofile. No nativewholeimage,LR,production orcasegating.')\n    with output.open('x',encoding='utf-8') as handle:json.dump(result,handle,ensure_ascii=False,indent=1,allow_nan=False)\n    print(output,flush=True)\n\n\nif __name__=='__main__':run()\n"
+  },
+  "study_noise_empirical_cross_spectrum.py": {
+   "sha256": "81f9720be471787e8db0777cbd43bc38e1b2f27e8f48567829a4c5e81bad34bb",
+   "source": "\"\"\"Prepare PSD-valid three-plane stationary noise models from stored disjoint pair halves.\"\"\"\nfrom datetime import datetime, timezone\nimport json\nfrom pathlib import Path\nimport numpy as np\nfrom study_noise_neighbourhoods import ROOT, git, sha256\n\n\nGRID = 128\nFIT_RADIUS = 8\n\n\ndef covariance(tile):\n    if tile.ndim != 3 or tile.shape[0] != 3 or min(tile.shape[1:]) < 17 or not np.isfinite(tile).all():\n        raise ValueError('Finite three-plane tile with valid lag context required')\n    transformed = np.fft.fft2(tile, s=(GRID, GRID), axes=(-2, -1))\n    spectrum = transformed[:, None]*transformed[None].conj()/np.prod(tile.shape[1:])\n    return np.fft.ifft2(spectrum, axes=(-2, -1)).real\n\n\ndef fit(tile):\n    mean = np.mean(tile, axis=(1, 2)); std = np.std(tile, axis=(1, 2))\n    if np.any(std < 1e-12) or not np.isfinite(std).all():\n        raise ValueError('Positive measurable marginal noise required')\n    normalized = (tile-mean[:, None, None])/std[:, None, None]\n    cov = covariance(normalized)\n    lag = np.minimum(np.arange(GRID), GRID-np.arange(GRID))\n    cov *= ((lag[:, None] <= FIT_RADIUS) & (lag[None, :] <= FIT_RADIUS))[None, None]\n    raw = np.fft.fft2(cov, axes=(-2, -1)).transpose(2, 3, 0, 1)\n    raw = (raw+raw.swapaxes(-1, -2).conj())*.5\n    values, vectors = np.linalg.eigh(raw)\n    clipped = np.maximum(values, 0.)\n    projected = (vectors*clipped[..., None, :]) @ vectors.swapaxes(-1, -2).conj()\n    cov_before = np.fft.ifft2(projected.transpose(2, 3, 0, 1), axes=(-2, -1)).real\n    scales = np.sqrt(np.diag(cov_before[:, :, 0, 0]))\n    if np.any(scales <= 0):\n        raise ValueError('Degenerate projected spectrum')\n    projected /= scales[None, None, :, None]*scales[None, None, None, :]\n    prepared = np.fft.ifft2(projected.transpose(2, 3, 0, 1), axes=(-2, -1)).real\n    eigen = np.linalg.eigvalsh(projected)\n    if eigen.min() < -1e-9 or not np.allclose(np.diag(prepared[:, :, 0, 0]), 1., atol=1e-10):\n        raise ValueError('Invalid prepared covariance')\n    reverse = (-np.arange(GRID)) % GRID\n    conjugate_error = float(np.max(np.abs(projected-projected[reverse][:, reverse].conj())))\n    if conjugate_error > 1e-9:\n        raise ValueError('Spectrum does not generate real-valued fields')\n    audit = dict(raw_min_eigenvalue=float(values.min()), prepared_min_eigenvalue=float(eigen.min()),\n        removed_negative_eigenmass_fraction=float(-np.minimum(values, 0.).sum()/np.maximum(values, 0.).sum()),\n        zero_lag_variance_before_renormalization=(scales*scales).tolist(),\n        conjugate_symmetry_max_error=conjugate_error)\n    return prepared, projected, mean, std, audit\n\n\ndef lag_block(cov, radius):\n    index = np.arange(-radius, radius+1) % GRID\n    return cov[:, :, index][:, :, :, index]\n\n\ndef run():\n    parent = ROOT/'docs/validation/raw/etude-reelle-bornee-nonlocal-bruit-v001-20261025T222336Z.json'\n    digest = sha256(parent); data = json.loads(parent.read_text(encoding='utf-8'))\n    start = datetime.now(timezone.utc); records = []\n    for pair in data['native']['pairs']:\n        sources = [np.asarray(next(s for s in pair[key]['samples'] if s['kind']=='flat')['original_y_co_cg'], dtype=float).reshape(3, 64, 64)\n                   for key in ('a', 'b')]\n        residual = (sources[0]-sources[1])/np.sqrt(2)\n        halves = (residual[:, :, :24], residual[:, :, 40:])\n        for training_side in (0, 1):\n            prepared, spectrum, mean, std, audit = fit(halves[training_side])\n            held = halves[1-training_side]; held_mean = held.mean(axis=(1, 2))\n            normalized_held = (held-held_mean[:, None, None])/std[:, None, None]\n            actual = covariance(normalized_held)\n            diagonal = prepared.copy()\n            for i in range(3):\n                for j in range(3):\n                    if i != j:\n                        diagonal[i, j] = 0.\n            index = np.arange(-4, 5); dy, dx = np.meshgrid(index, index, indexing='ij')\n            axis_y = np.where(dy==0, 1., np.where(np.abs(dy)==1, 2/3, np.where(np.abs(dy)==2, 1/6, 0.)))\n            axis_x = np.where(dx==0, 1., np.where(np.abs(dx)==1, 2/3, np.where(np.abs(dx)==2, 1/6, 0.)))\n            binomial = np.eye(3)[:, :, None, None]*(axis_y*axis_x)[None, None]\n            reference = lag_block(actual, 4)\n            scores = {name: float(np.mean((block-reference)**2)) for name, block in\n                      (('common_binomial', binomial), ('marginal_only', lag_block(diagonal, 4)),\n                       ('full_cross', lag_block(prepared, 4)))}\n            records.append(dict(a=pair['a']['raw'], b=pair['b']['raw'], camera=pair['a']['camera'], iso=pair['a']['iso'],\n                training_x=[0, 24] if training_side==0 else [40, 64],\n                held_x=[40, 64] if training_side==0 else [0, 24], gap_pixels=16,\n                training_mean_original_units=mean.tolist(), training_std_original_units=std.tolist(),\n                held_mean_original_units=held_mean.tolist(),\n                held_variance_relative_to_training=np.diag(actual[:, :, 0, 0]).tolist(),\n                audit=audit, held_covariance_radius4=reference.tolist(),\n                prepared_cross_covariance_radius24=lag_block(prepared, 24).tolist(),\n                held_mean_squared_covariance_error=scores))\n            print(pair['a']['iso'], training_side, scores, audit['removed_negative_eigenmass_fraction'], flush=True)\n    if sha256(parent) != digest:\n        raise ValueError('Parent changed')\n    now = datetime.now(timezone.utc)\n    output = ROOT/'docs/validation/raw'/f\"preparation-spectres-croises-bruit-v001-{now.strftime('%Y%m%dT%H%M%SZ')}.json\"\n    result = dict(schema_version=1, data_version=1, started_at_utc=start.isoformat(), completed_at_utc=now.isoformat(),\n        commit=git('rev-parse', 'HEAD'), runner_sha256=sha256(Path(__file__)),\n        runner_source=Path(__file__).read_text(encoding='utf-8'), numpy_version=np.__version__,\n        parent=dict(path=str(parent), sha256=digest), records=records,\n        rules='Same stored four RCD pair differences;two disjoint64x24halves separated16px,swap roles (NOT8independentpairs). Biased zero-padded covariance denominator1536,own halfmeans,normalize training marginalstd. Lag cut8,128FFT,perfrequency Hermitian PSD projection by clipping negative eigenvalues,renormalize marginalvariance1. Preserve crossplanes. Compare commonbinomial,marginals-only,fullcross onheld covariance lags+-4;fixed hyperparameters,not tuned toheldhalf. Storepreparedcovlags+-24 for groupcontext,fullspectrum reproducible fromsources.',\n        limitations='One patch/pair/ISO,not population camera calibration. Pair differences may contain motion/scene artifacts;halves only spatial holdout,not independent capture. Gaussian stationary periodic128 model;PSD projection changes estimatedcovariance,trace/mass audited. Not native denoising or proofGaussian law. Mean subtraction removes finite-regionDC. No noise generation,production or learnedneural model.')\n    with output.open('x', encoding='utf-8') as handle:\n        json.dump(result, handle, ensure_ascii=False, indent=1, allow_nan=False)\n    print(output, flush=True)\n\n\nif __name__ == '__main__':\n    run()\n"
+  }
+ },
+ "rules": "Frozen axes from4trainingcaptures. Nonoverlapping2x2HH Haar,unitL2kernel,median centered MAD. Three alternatives:standardGaussianwhite factor;Gaussianfactor corrected by exactHHvariance intrainingaxisPSD;empiricalMAD/std ratio learned ontrainingnoise difference. EachheldA/B64flatsample estimatedSEPARATELY,nodifferentialtargetpixels used tocomputeestimates. Compare againstoutside3007Dstd onlyafter,not calibration. No averaging correlatedMADmodels orposthoccorrection.",
+ "limitations": "Selectedflatregions not arbitrarytexture/singlewholephoto estimator. FrameMAD includes texture/fixedpattern not present in paired difference;nonGaussian noise differences can have different law from eachframe. ReferenceDstd NOT clean sensortruth and stillsameframes. Fourtestpairs,not broadvalidation. No denoising or production;models use sameMAD statistic,not independent estimators."
+}

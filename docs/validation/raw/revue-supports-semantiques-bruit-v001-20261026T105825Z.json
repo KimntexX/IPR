@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "data_version": 1,
+  "campaign_id": "revue-supports-semantiques-bruit-v001-20261026T105825Z",
+  "reviewed_at_utc": "2026-10-26T10:58:25Z",
+  "reviewer": "Codex; visual interpretation of actual master context and fixed-transfer original Y support sheets, not user ground truth",
+  "parent": {
+    "path": "docs/validation/raw/supports-semantiques-bruit-v001-20261026T105634Z.json",
+    "sha256": "331f6525fa46bc73fd5052167e4880b395b492861858356fde65a934569f3459"
+  },
+  "selection_scope": "Diagnostic natural-scene support set frozen before any denoiser comparison. Not a held-out confirmation set or clean reference.",
+  "support_size": [256, 256],
+  "proposed_measurement_core": [13, 13, 230, 230],
+  "core_note": "Future bounded matching/pilot halo13. Not the former arbitrary centre31. Content observations concern full256; quantitative protocol and comparators still need freezing. Whole-frame denoisers may have wider or global dependence.",
+  "records": [
+    {"raw":"6V1A0513.CR3","label":"rock","rect":[3212,4395,256,256],"role":"structure_control","observation":"Rock/lichen-like irregular structured surface identifiable; not clean truth."},
+    {"raw":"6V1A0513.CR3","label":"fabric","rect":[985,4187,256,256],"role":"structure_control","observation":"Fabric folds and seam-like lines visible; not a uniformly textured or flat target."},
+    {"raw":"6V1A9890.CR3","label":"hair","rect":[1449,3421,256,256],"role":"structure_control","observation":"Directional hair-like strands visible in context and noisy full-resolution support; individual finest strands not certified."},
+    {"raw":"6V1A9890.CR3","label":"blue_hold","rect":[2099,568,256,256],"role":"structure_control","observation":"Hold surface with holes and screw/ring detail visible. Not an independent uniform noise sample."},
+    {"raw":"6V1A9890.CR3","label":"letters","rect":[4279,916,256,256],"role":"structure_control","observation":"Partial white lettering on hold identifiable with strong noise; useful contour/legibility diagnostic,not perfect small-symbol truth."},
+    {"raw":"6V1A9426.CR3","label":"wall","rect":[1913,3004,256,256],"role":"structure_control_not_flat","observation":"Wall holes and two hold boundaries visible. Reject original expectation of uniform flat sample."},
+    {"raw":"6V1A9426.CR3","label":"joint","rect":[2655,4743,256,256],"role":"structure_control","observation":"Oblique dark floor joint with weaker surrounding surface texture visible."},
+    {"raw":"6V1A9426.CR3","label":"floor","rect":[2192,5718,256,256],"role":"ambiguous_weak_surface_stress","observation":"Weak irregular surface variations visible; no clean texture/noise separation and not a certified flat."},
+    {"raw":"6V1A0195.CR3","label":"sky_points","rect":[3004,1032,256,256],"role":"dark_sky_only","observation":"No stellar point confirmed in the inspected fixed-transfer Y support; do not claim point-preservation coverage or proof of absence."},
+    {"raw":"6V1A0195.CR3","label":"horizon","rect":[2656,3119,256,256],"role":"sky_gradient_only","observation":"Sky gradient/noise support; no horizon silhouette or point confirmed inside this256 crop."}
+  ],
+  "unresolved_coverage": ["Certified uniform noise-only regions", "Confirmed isolated small bright point in a full-resolution support", "Independent confirmation scenes not used in variant/force selection", "Reference and equal-residual-noise comparison contract"],
+  "production_changed": false,
+  "filter_quality_conclusion": null
+}
