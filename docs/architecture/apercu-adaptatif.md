@@ -1,0 +1,92 @@
+# Aperçu adaptatif : zone visible en pleine résolution
+
+Branche `patch_adaptive_preview`, ouverte le 12 novembre 2026 depuis `dev`
+(`b7a4b14`, bêta-1). Chantier décidé par l'utilisateur le 24 octobre 2026 et
+lancé après la livraison de la bêta-1.
+
+## Point de départ
+
+La bêta-1 rend **toute l'image** en pleine résolution, par le rendu de l'export,
+dès que le zoom agrandit l'aperçu de 2048 px ([contrat](../specifications/zoom-image.md)).
+Les pixels sont justes, mais le coût est celui d'un export à chaque réglage :
+environ 96 Mio de plus et une attente de plusieurs secondes sur un RAW de 24 Mpx
+chargé d'effets.
+
+Le but est de rendre **seulement la zone visible**, avec une marge, en
+gardant le même résultat que l'export.
+
+## Invariant
+
+Pour tous réglages et pour toute zone, le rendu de la zone est égal au
+recadrage du rendu pleine image sur cette zone, à une tolérance près (à fixer
+avec l'utilisateur : par exemple au plus 1 niveau sur 255 en sRGB 8 bits, sur
+le corpus de régression). Un test compare les deux sur des zones au centre,
+au bord et dans les coins, pour chaque étape et pour leurs combinaisons.
+
+**Repli** : un réglage dont une étape ne sait pas encore se rendre par zone
+garde le rendu de toute l'image de la bêta-1. Le chantier n'est jamais un
+compromis sur les pixels : il étend la liste des étapes rendues par zone.
+
+## Audit des étapes (`RenderChain::workingImage`)
+
+| Étape | Portée spatiale | Dépendance globale | Rendu par zone |
+| --- | --- | --- | --- |
+| Signal caméra, BdB, exposition de scène (DCP) | par pixel | — | direct |
+| Débruitage du signal caméra (expérimental) | voisinage | **modèle de bruit estimé sur des aplats de toute l'image** (`CameraDenoise::estimate`) | repli d'abord |
+| Géométrie (rotation, perspective, échelle) | rééchantillonnage | — | zone source = image inverse de la zone affichée (`Geometry::toSource`), plus la marge de l'interpolation |
+| Exposition, contraste, courbes, couleur (`PerceptualColour`) | par pixel | — | direct |
+| Ombres/noirs/hautes lumières/blancs (`ToneRecovery`) | par pixel | statistiques mesurées au chargement | direct (statistiques déjà partagées) |
+| Retouches | zone et sa source, n'importe où | contexte proportionnel à la taille de la zone | élargir la région aux retouches qui la touchent, ou repli |
+| Masques (`LocalAdjustments::valueMaps`) | paramétriques, plage de luminance par pixel | — | cartes calculées sur la région seule (nouvelle entrée de région) |
+| Bruit de luminance et de couleur (`DetailProcessing::reduceNoise`) | rayon jusqu'à 24 px plein format | **σ du bruit estimé sur tout le plan** (`estimateNoiseSigma`, `estimateDenoiseSigma`) | σ mesuré une fois sur l'image entière puis transmis |
+| Texture, clarté (`LocalContrast`) | bandes jusqu'à σ = 256 px plein format, flous à résolution réduite par puissances de 2 | — | marge d'environ 3σ (768 px) ; réductions alignées sur la grille de la pleine image |
+| Voile (`Dehaze`) | flous σ = 64 et 128 px à ¼ de résolution | **lumière du ciel : 99ᵉ centile de toute l'image** | lumière du ciel mesurée une fois, transmise ; marge d'environ 400 px |
+| Flou, netteté | rayon fixe | netteté : σ du bruit estimé sur le plan | σ transmis ; marge du rayon |
+| Grain | bruit tiré par position (`gaussian(x, y)`), puis flou σ 0,75 | — | coordonnées absolues transmises : identique par construction |
+| Recadrage, sortie sRGB | — | — | direct |
+
+**Constats** : trois mesures globales (σ du bruit pour le débruitage et la
+netteté, lumière du ciel du voile, modèle du débruitage caméra) et deux grands
+rayons (clarté, voile). Sans clarté ni voile, la marge tient en quelques
+dizaines de pixels, et la zone rendue est à peu près l'écran ; avec la clarté,
+la marge atteint environ 770 px de chaque côté.
+
+## Conception proposée
+
+1. **Contexte global** : un petit objet de mesures calculées une fois par
+   source et par préfixe de réglages qui les influencent (σ du bruit à l'entrée
+   du débruitage et de la netteté, lumière du ciel), à partir de l'image
+   entière, et mis en cache comme les étapes. Le rendu par zone le reçoit au lieu
+   de remesurer. L'export s'en sert aussi, ce qui garde un seul chemin de calcul.
+2. **Rendu de région** : `RenderChain` reçoit une région de la toile (en
+   pixels de la pleine image) et une marge calculée d'après les étapes
+   actives. Il rend la région élargie à partir de la zone source
+   correspondante, puis rogne la marge. Les modules qui lisent des
+   coordonnées (grain, masques, retouches, réductions de la clarté) reçoivent
+   l'origine de la région.
+3. **Ordonnancement** : la vue publie sa région visible (en pixels de la pleine
+   image) ; le moteur rend la région, l'affiche au-dessus de l'aperçu agrandi,
+   et garde les régions déjà rendues pour ces réglages (déplacement sans
+   nouveau rendu). Une tuile hors réglages courants n'est jamais montrée,
+   comme aujourd'hui.
+4. **Proxy adapté aux ressources** (second volet) : taille de l'aperçu selon
+   la mémoire et les threads de l'hôte ([cible de ressources](controle-memoire-images.md)).
+
+## Étapes
+
+1. Banc de mesure : temps et mémoire du rendu pleine image actuel sur le corpus
+   R6 III, avec et sans clarté, voile, masques, retouches ; outil de comparaison
+   zone / recadrage du plein rendu.
+2. Contexte global extrait des trois mesures, sans changer les pixels (test
+   d'égalité stricte avec la version actuelle).
+3. Rendu de région pour les étapes « direct » et la géométrie, repli pour les
+   autres ; invariant testé.
+4. Clarté, voile, débruitage, netteté par zone ; puis masques et retouches.
+5. Vue : région visible, tuiles conservées pendant le déplacement.
+6. Proxy adapté aux ressources.
+
+## Décisions à prendre avec l'utilisateur
+
+- La tolérance de l'invariant (égalité stricte, ou 1 niveau sur 255).
+- La clarté et le voile au zoom : marge pleine (exacte, plus lente) ou repli
+  sur le rendu entier quand ils sont actifs.
