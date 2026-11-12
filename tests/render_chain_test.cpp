@@ -318,6 +318,64 @@ void anOverlayOnANeutralRecipeNeverWritesInTheSource()
 
 } // namespace
 
+// A region renders alone as the same region of the full-resolution render, bit for bit, for each
+// stage that renders by region and for them together; the others say so and render nothing.
+void aRegionIsThatPartOfTheWholeRender()
+{
+    const std::vector<std::pair<const char *, std::function<void(Settings &)>>> recipes = {
+        {"neutral", [](Settings &) {}},
+        {"grayscale", [](Settings &s) { s.grayscale = true; }},
+        {"exposure", [](Settings &s) { s.brightness = 0.5f; }},
+        {"contrast", [](Settings &s) { s.contrast = 30; }},
+        {"temperature", [](Settings &s) { s.temperature = 7000; s.tint = 12; }},
+        {"tones", [](Settings &s) { s.shadows = 50; s.blacks = -20; s.highlights = -60; s.whites = 15; }},
+        {"colour", [](Settings &s) { s.saturation = 40; s.vibrance = -25; s.mixerHue[2] = 30; s.gradingSaturation[0] = 40; }},
+        {"curve", [](Settings &s) { s.toneCurves[0] = {{0.0f, 0.1f}, {1.0f, 0.9f}}; }},
+        {"turn", [](Settings &s) { s.geometry.quarterTurns = 1; s.geometry.flipVertical = true; s.contrast = 20; }},
+        {"rotation", [](Settings &s) { s.geometry.rotation = 5.0f; s.brightness = 0.3f; }},
+        {"perspective", [](Settings &s) { s.geometry.vertical = 35; s.geometry.scale = 70; s.geometry.aspect = 20; }},
+        {"crop", [](Settings &s) { s = withCrop(); s.contrast = 25; }},
+        {"together", [](Settings &s) {
+             s.brightness = -0.4f; s.contrast = -15; s.temperature = 4300; s.shadows = 40; s.saturation = 20;
+             s.toneCurves[0] = {{0.0f, 0.05f}, {0.5f, 0.55f}, {1.0f, 0.95f}};
+             s.geometry.rotation = -8.0f; s.geometry.horizontal = 20; s.geometry.quarterTurns = 3; }},
+    };
+    const WorkingImage source = scene(211, 143);
+    for (const auto &[name, edit] : recipes) {
+        Settings settings = neutral();
+        edit(settings);
+        check(RenderChain::rendersByRegion(settings), name);
+        const WorkingImage whole = RenderChain::workingImage(source, settings);
+        check(!whole.isNull(), name);
+        RenderChain::WholeMeasures measures;
+        check(RenderChain::measureWhole(source, settings, measures), name);
+        const ipr::Size canvas = whole.linearRgba.size();
+        for (const ipr::Recti &region : {ipr::Recti(0, 0, 40, 40), ipr::Recti(canvas.width - 33, canvas.height - 21, 33, 21),
+                                         ipr::Recti(canvas.width / 2 - 25, canvas.height / 2 - 10, 50, 20),
+                                         ipr::Recti(17, 0, 1, canvas.height), ipr::Recti(0, 0, canvas.width, canvas.height)}) {
+            const WorkingImage part = RenderChain::workingRegion(source, settings, region, measures);
+            check(!part.isNull(), name);
+            check(same(part.linearRgba, whole.linearRgba.view(region)), name);
+        }
+        check(RenderChain::workingRegion(source, settings, ipr::Recti(canvas.width - 5, 0, 10, 10), measures).isNull(),
+              "a region beyond the canvas renders nothing");
+    }
+
+    for (const auto &[name, edit] : std::vector<std::pair<const char *, std::function<void(Settings &)>>>{
+             {"denoise", [](Settings &s) { s.denoiseLuminance = 60; }}, {"texture", [](Settings &s) { s.texture = 50; }},
+             {"mask", [](Settings &s) { s = withMask(); }}, {"retouch", [](Settings &s) { s = withRemoval(); }}}) {
+        Settings settings = neutral();
+        edit(settings);
+        RenderChain::WholeMeasures measures;
+        check(!RenderChain::rendersByRegion(settings) && !RenderChain::measureWhole(source, settings, measures) &&
+                  RenderChain::workingRegion(source, settings, ipr::Recti(0, 0, 10, 10), measures).isNull(), name);
+    }
+    Settings rotated = neutral();
+    rotated.geometry.rotation = 4.0f;
+    check(RenderChain::workingRegion(source, rotated, ipr::Recti(0, 0, 10, 10), RenderChain::WholeMeasures{}).isNull(),
+          "a region needs the measures of the whole image");
+}
+
 int main(int argc, char **argv)
 {
     QCoreApplication application(argc, argv);
@@ -336,6 +394,7 @@ int main(int argc, char **argv)
         theWholeCanvasIgnoresTheCrop();
         overlaysShowCoverageWithoutTouchingTheSource();
         anOverlayOnANeutralRecipeNeverWritesInTheSource();
+        aRegionIsThatPartOfTheWholeRender();
     } catch (const std::exception &error) {
         std::cerr << "FAILED: " << error.what() << '\n';
         return 1;

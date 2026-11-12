@@ -147,6 +147,45 @@ Le 60D passe de 6,2 à 4,0 s pour « tout »
 Ce gain vaut aussi pour l'aperçu et l'export. Restent les plus coûteux :
 exposition de scène (≈ 0,9 s), vibrance (≈ 0,9 s) et débruitage (≈ 2,5 s).
 
+### Rendu par zone, premier lot — 12 novembre 2026
+
+`RenderChain::workingRegion` rend une zone du canevas pleine résolution
+(avant recadrage) à partir de la seule fenêtre de la source qu'elle lit
+(`Geometry::sourceWindow` : noyau d'interpolation, arrondi, bord répété et flou
+d'anticrénelage compris). `RenderChain::measureWhole` fournit ce que la zone
+ne peut pas mesurer sur ses propres pixels : les statistiques des tons de la
+source et, quand la géométrie rééchantillonne, le **plancher de la
+déformation** (`Geometry::warpFloor`, minimum de chaque canal avant la
+déformation, troisième mesure globale trouvée en codant, absente de l'audit
+ci-dessus). La déformation par zone suit les blocs d'arrondi de la sortie
+entière, ce qui la rend identique à l'octet près.
+
+Recettes rendues par zone : signal caméra et DCP, noir et blanc, exposition,
+contraste, balance des blancs, quatre tons, couleur perceptuelle (saturation,
+vibrance, mélangeur, étalonnage, couleur du point), courbes, géométrie
+complète. Les autres (masques, retouches, bruit, texture, clarté, voile, flou,
+netteté, grain) répondent `rendersByRegion == false` : le rendu entier reste
+leur chemin.
+
+Tests : `geometryTests` (9 géométries × 2 qualités × 6 zones, RVB et
+couverture) et `renderChainTests` (13 recettes × 5 zones, refus des recettes
+non couvertes, des zones hors canevas et des mesures absentes), égalité octet
+par octet. Sur RAW réels, sonde `detailRenderProbe --regions`
+([preuve](../validation/raw/adaptive-preview-region-render-v001-20261112T203440Z.json)) :
+toutes les zones identiques à l'octet près.
+
+| Recette (R6 III 32 Mpx) | Image entière | Mesures globales | Écran 2560×1440 | Tuile 512 |
+| --- | --- | --- | --- | --- |
+| Tons et couleur | 2,2 s | 25 ms | 0,32–0,34 s | 35 ms |
+| + courbe | 2,8 s | 26 ms | 0,35–0,37 s | 35 ms |
+| + rotation 2,5° | 3,0 s | 1,0 s | 0,36–0,37 s | 35 ms |
+| + perspective | 3,5 s | 0,95 s | 0,37 s | 36–41 ms |
+
+Sur le 60D (18 Mpx), une tuile coûte 28 à 38 ms et l'image entière 1,2 à
+1,8 s. La mesure du plancher rend une fois le signal caméra de toute
+l'image ; elle ne dépend que des réglages en amont de la géométrie
+(signal caméra, noir et blanc) et se met en cache sur eux.
+
 ## Étapes
 
 1. ✅ Banc de mesure (ci-dessus). Reste : profilage de « tons et couleur »
@@ -154,8 +193,8 @@ exposition de scène (≈ 0,9 s), vibrance (≈ 0,9 s) et débruitage (≈ 2,5 s
    recadrage du plein rendu.
 2. Contexte global extrait des trois mesures, sans changer les pixels (test
    d'égalité stricte avec la version actuelle).
-3. Rendu de région pour les étapes « direct » et la géométrie, repli pour les
-   autres ; invariant testé.
+3. ✅ Rendu de région pour les étapes « direct » et la géométrie, repli pour les
+   autres ; invariant testé (ci-dessus).
 4. Clarté, voile, débruitage, netteté par zone ; puis masques et retouches.
 5. Vue et ordonnanceur : tuiles en spirale, couronne de 512 px, libération et
    annulation du côté opposé au déplacement, annulation au changement de réglage.

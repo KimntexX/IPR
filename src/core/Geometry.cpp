@@ -275,6 +275,11 @@ std::vector<float> warpFloor(const ipr::Image &rgb)
     return floor;
 }
 
+bool resamples(const Settings &s)
+{
+    return needsResampling(s);
+}
+
 ipr::Image warpRgb(ipr::Image rgb, const Settings &s, Quality quality)
 {
     if (rgb.empty() || !transformsPixels(s))

@@ -48,6 +48,8 @@ bool isIdentity(const Settings &settings);
 // Whether the pixels move at all; false leaves the buffers shared and untouched.
 bool transformsPixels(const Settings &settings);
 bool hasCrop(const Settings &settings);
+// Whether the pixels are resampled, beyond quarter turns and mirrors.
+bool resamples(const Settings &settings);
 
 // Clamps every field to its range and orders the crop; false on a non-finite value.
 bool bound(Settings &settings);
