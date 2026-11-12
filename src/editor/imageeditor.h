@@ -13,6 +13,7 @@
 #include "RenderChain.h"
 #include "RenderStageCache.h"
 #include "RawDecoder.h"
+#include "NeuralCfa.h"
 #include "StackSession.h"
 #include "TaskRunner.h"
 
@@ -81,11 +82,23 @@ class ImageEditor final : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QAbstractItemModel *imageModel READ imageModel CONSTANT)
+    Q_PROPERTY(QString neuralDenoiseEngine READ neuralDenoiseEngine NOTIFY rawDevelopmentChanged)
+    Q_PROPERTY(bool neuralDenoiseAllowed READ neuralDenoiseAllowed NOTIFY rawDevelopmentChanged)
+    Q_PROPERTY(bool neuralDenoiseActive READ neuralDenoiseActive NOTIFY rawDevelopmentChanged)
+    Q_PROPERTY(int neuralDenoiseStrength READ neuralDenoiseStrength NOTIFY rawDevelopmentChanged)
+    Q_PROPERTY(QString neuralDenoiseUnavailableReason READ neuralDenoiseUnavailableReason NOTIFY rawDevelopmentChanged)
     Q_PROPERTY(QObject *stacking READ stacking CONSTANT)
     Q_PROPERTY(QUrl folder READ folder NOTIFY folderChanged)
     Q_PROPERTY(QString imageSource READ imageSource NOTIFY previewChanged)
     Q_PROPERTY(bool embeddedPreview READ embeddedPreview NOTIFY previewChanged)
     Q_PROPERTY(QString originalImageSource READ originalImageSource NOTIFY previewChanged)
+    // Zoomed beyond the preview: the whole image at full resolution, as exported,
+    // rendered in the background once the settings rest. Empty while it is not ready.
+    Q_PROPERTY(bool detailWanted READ detailWanted WRITE setDetailWanted NOTIFY detailChanged)
+    Q_PROPERTY(QString detailImageSource READ detailImageSource NOTIFY detailChanged)
+    Q_PROPERTY(bool detailRendering READ detailRendering NOTIFY detailChanged)
+    // Full-resolution pixels per preview pixel; 1 when no full resolution can be shown.
+    Q_PROPERTY(double detailRatio READ detailRatio NOTIFY previewChanged)
     Q_PROPERTY(QString statusMessage READ statusMessage NOTIFY statusMessageChanged)
     Q_PROPERTY(bool hasImage READ hasImage NOTIFY hasImageChanged)
     Q_PROPERTY(bool busy READ busy NOTIFY busyChanged)
@@ -174,6 +187,8 @@ public:
         bool memoryPressure = false;
         QSize fullSize;          // true source size, also when image is a proxy
         bool proxyOnly = false;  // image is the edit proxy restored from the cache
+        bool neuralApplied = false;
+        QString neuralReason;
     };
     static LoadResult sharedCopy(const LoadResult &loaded);
     static LoadResult loadFromDisk(const QString &fileName,
@@ -194,6 +209,11 @@ public:
     QUrl folder() const;
     QString imageSource() const;
     QString originalImageSource() const;
+    bool detailWanted() const { return m_detailWanted; }
+    void setDetailWanted(bool wanted);
+    QString detailImageSource() const { return m_detailSource; }
+    bool detailRendering() const { return m_detailWatcher.isRunning(); }
+    double detailRatio() const;
     QString statusMessage() const;
     bool hasImage() const;
     bool busy() const;
@@ -306,6 +326,14 @@ public:
     // Single noise reduction control: one amount in [0, 100] sets both strengths.
     Q_INVOKABLE void setDenoiseAmount(int value);
     Q_INVOKABLE void setDenoiseBeforeProfile(bool enabled);
+    Q_INVOKABLE void setNeuralDenoisePreferences(bool enabled, const QString &modelPath = {});
+    Q_INVOKABLE void setNeuralDenoiseEnabled(bool enabled);
+    Q_INVOKABLE void setNeuralDenoiseStrength(int strength);
+    bool neuralDenoiseAllowed() const { return m_neuralAllowed; }
+    bool neuralDenoiseActive() const { return m_neuralApplied && m_neuralStrength > 0; }
+    int neuralDenoiseStrength() const { return m_neuralStrength > 0 ? m_neuralStrength : 50; }
+    QString neuralDenoiseUnavailableReason() const;
+    QString neuralDenoiseEngine() const;
     Q_INVOKABLE void setColorMixer(int band, int hue, int saturation,
                                    int luminance);
     Q_INVOKABLE void setColorGrading(int zone, int hue, int saturation);
@@ -371,6 +399,7 @@ signals:
     void rawDevelopmentChanged();
     void folderChanged();
     void previewChanged();
+    void detailChanged();
     void statusMessageChanged();
     // A command failed or was refused: the interface shows it where the user just acted.
     void errorReported(const QString &message);
@@ -425,7 +454,8 @@ private:
                                    const QString &profile = {}, const QString &manifest = {},
                                    const QString &lensProfile = {}, bool lensResolved = false,
                                    bool lensCorrection = true, bool chromaticAberration = true,
-                                   bool cameraSignalExperiment = false);
+                                   bool cameraSignalExperiment = false,
+                                   int neuralStrength = 0, const QString &neuralModelId = {});
     void reloadRawDevelopment();
     RawDevelopment rawDevelopmentRecipe() const;
     void beginLoad(const QString &fileName, const QString &extension,
@@ -442,6 +472,17 @@ private:
     void setRawDevelopment(const RawDevelopment &raw);
     void startRender();
     void startEmbeddedPreview(const QString &fileName);
+    // The current development's cache key without the network.
+    QString plainCacheKey() const;
+    // Develops (or finds in the cache) the "before" of a photo the network was applied to.
+    void startBeforeDevelopment();
+    void dropBeforeDevelopment();
+    // The full-resolution view: what it shows, when it is shown, its background render.
+    QByteArray detailKey() const;
+    bool detailShowable() const;
+    void refreshDetail();
+    void startDetailRender();
+    void dropDetail();
     void restoreBeforeEmbeddedPreview();
     void schedulePrefetch();
     void startPrefetch();
@@ -472,6 +513,20 @@ private:
     QString m_normalizationManifest;
     bool m_rawNormalizationEnabled = true;
     bool m_denoiseBeforeProfile = false;   // experimental session switch, kept across images
+    bool m_neuralAllowed = false;
+    bool m_neuralReload = false;
+    bool m_neuralApplied = false;
+    QString m_neuralReason;
+    int m_neuralStrength = 0;
+    QString m_neuralModelId;
+    QString m_neuralModelPath;
+    mutable QString m_neuralServiceId;
+    mutable QString m_neuralError;
+    mutable std::shared_ptr<NeuralCfa::Service> m_neuralService;
+    std::shared_ptr<NeuralCfa::Service> neuralService() const;
+    // A recipe saved with an earlier model takes the installed one (same strength).
+    void adoptInstalledNeuralModel();
+    bool m_neuralModelUpdated = false;     // until the development reports it
     bool m_sidecarReadOnly = false;        // the open image's .ipr comes from a newer IPR
     EditHistory m_history;                 // of the open image, saved in its .ipr
     bool m_inAdjustmentGesture = false;
@@ -508,6 +563,8 @@ private:
     Settings m_settings;
     int m_pointColorOverlay = -1;
     Settings m_copiedAdjustments;
+    int m_copiedNeuralStrength = 0;
+    QString m_copiedNeuralModelId;
     bool m_hasCopiedAdjustments = false;
     QString m_imageSource;
     QString m_originalImageSource;
@@ -519,6 +576,22 @@ private:
     // Camera-rendered embedded JPEG shown while the IPR development runs.
     QFutureWatcher<QImage> m_embeddedWatcher;
     quint64 m_embeddedRevision = 0, m_embeddedSerial = 0;
+    // The comparison's "before" while the network is applied: the edit proxy of the same
+    // development without the network, keyed by that development's cache key.
+    ColorPipeline::WorkingImage m_beforeProxy;
+    QString m_beforeKey;
+    QFutureWatcher<LoadResult> m_beforeWatcher;
+    std::shared_ptr<std::atomic_bool> m_beforeCancel;
+    bool m_beforePending = false;
+    bool m_detailWanted = false;
+    QString m_detailSource;
+    QByteArray m_detailImageKey;           // what the provider's detail image shows
+    QByteArray m_detailRenderKey;          // what the running render will show
+    QByteArray m_detailFailedKey;          // not retried until the settings or the source change
+    quint64 m_sourceGeneration = 0;        // a new decoded source: a detail of the former is stale
+    int m_detailRevision = 0;
+    QTimer m_detailDelay;                  // the settings rest before a full-resolution render
+    QFutureWatcher<RenderChain::Preview> m_detailWatcher;
     bool m_embeddedPreview = false;
     QImage m_restorePreview, m_restoreOriginal;
     QString m_restoreImageSource, m_restoreOriginalSource;
@@ -538,7 +611,9 @@ private:
                                     const QHash<QString, UserImageMetadata> &annotations);
     static BatchResult exportFiles(Tasks::Context &context, const QStringList &files, const QString &folder,
                             const QString &format, int quality, ImageCacheController *controller,
-                            ImageCacheController::CancelToken cancel);
+                              ImageCacheController::CancelToken cancel,
+                              std::shared_ptr<NeuralCfa::Service> neural = {},
+                              const QString &neuralError = {}, bool neuralAllowed = false);
     void finishBatch(const BatchResult &result, const QString &done);
     bool asShotWhiteBalance() const;
     QFutureWatcher<BatchResult> m_batchApplyWatcher;

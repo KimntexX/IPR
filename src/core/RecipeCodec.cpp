@@ -73,6 +73,7 @@ const Field<RawDevelopment, QString> RawStrings[] = {
     {"engineVersion", &RawDevelopment::engineVersion}, {"lensProfile", &RawDevelopment::lensProfile},
     {"lensProfileSha256", &RawDevelopment::lensProfileSha256},
     {"developmentMode", &RawDevelopment::developmentMode},
+    {"neuralModelId", &RawDevelopment::neuralModelId},
 };
 const Field<RawDevelopment, bool> RawBools[] = {
     {"normalizationEnabled", &RawDevelopment::normalizationEnabled},
@@ -476,11 +477,19 @@ QCborMap encodeRaw(const RawDevelopment &raw)
     QCborMap map;
     store(map, raw, RawStrings);
     store(map, raw, RawBools);
+    if (raw.neuralStrength > 0 && !raw.neuralModelId.isEmpty())
+        map.insert(QStringLiteral("neuralStrength"), std::clamp(raw.neuralStrength, 0, 100));
+    else
+        map.remove(QStringLiteral("neuralModelId"));
     return map;
 }
 
 void decodeRaw(const QCborMap &map, RawDevelopment &raw)
 {
+    raw.neuralStrength = 0;
+    raw.neuralModelId.clear();
+    decode(map.value(QStringLiteral("neuralStrength")), raw.neuralStrength);
+    raw.neuralStrength = std::clamp(raw.neuralStrength, 0, 100);
     load(map, raw, RawStrings);
     load(map, raw, RawBools);
 }

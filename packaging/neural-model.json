@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "model_id": "ipr-neural-denoise-final-beta1-step150000",
+  "url": null,
+  "sha256": "34c19dbfc2220e7342b6df884553c7852a068af23967d933f6ff349dedb146ae",
+  "status": "beta1_candidate_attached_to_release",
+  "input_divisor": 12303,
+  "noise_law_pattern": [["R", "G1"], ["G2", "B"]],
+  "contract": {
+    "inputs": ["planes", "sigma"],
+    "output": "corrected",
+    "dtype": "float32",
+    "layout": "NCHW",
+    "planes": ["R", "G1", "G2", "B"],
+    "halo": 192,
+    "core": 1024
+  }
+}

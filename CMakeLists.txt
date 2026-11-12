@@ -141,6 +141,8 @@ set(IPR_ENGINE_SOURCES
     src/core/VibranceModel.h
     src/editor/imageeditor.h
     src/editor/imageeditor.cpp
+    src/editor/NeuralDevelopment.h
+    src/editor/NeuralDevelopment.cpp
     src/editor/AdjustmentTable.h
     src/editor/AdjustmentTable.cpp
     src/editor/RenderChain.h
@@ -173,6 +175,12 @@ set(IPR_ENGINE_SOURCES
     src/raw/RawNormalization.cpp
     src/raw/CameraCharacterization.h
     src/raw/CameraCharacterization.cpp
+    src/raw/NoiseLaw.h
+    src/raw/NoiseLaw.cpp
+    src/raw/CfaNoiseStage.h
+    src/raw/CfaNoiseStage.cpp
+    src/raw/NeuralCfa.h
+    src/raw/NeuralCfa.cpp
     src/raw/CameraSignal.h
     src/raw/CameraSignal.cpp
 )
@@ -248,10 +256,14 @@ target_include_directories(iprImage PUBLIC src/image)
 target_link_libraries(iprImage PUBLIC Threads::Threads)
 set_target_properties(iprImage PROPERTIES AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)
 
+# Optional neural RAW denoising (preferences, off by default): the module always builds and
+# reports itself unavailable without IPR_ENABLE_ONNX_RUNTIME; see src/neural/README.md.
+add_subdirectory(src/neural)
+
 add_library(iprEngine STATIC ${IPR_ENGINE_SOURCES})
 qt_add_resources(iprEngine ipr_ui_defaults
     PREFIX "/"
-    FILES config/ipr-ui.ini config/raw-normalization.json
+    FILES config/ipr-ui.ini config/raw-normalization.json config/noise-laws.json packaging/neural-model.json
 )
 target_include_directories(iprEngine PUBLIC ${IPR_INCLUDE_DIRECTORIES})
 target_link_libraries(iprEngine
@@ -262,6 +274,7 @@ target_link_libraries(iprEngine
         Qt6::Quick
         Qt6::Concurrent
         TIFF::TIFF
+        iprNeural
 )
 
 if(IPR_ENABLE_LIBRAW)
@@ -294,6 +307,13 @@ qt_add_qml_module(appIPR
 )
 
 target_link_libraries(appIPR PRIVATE iprEngine)
+if(WIN32 AND IPR_ENABLE_ONNX_RUNTIME)
+    # The runtime DLLs beside the executable for development runs; install() deploys them in packages.
+    foreach(runtime IN LISTS IPR_NEURAL_RUNTIME_FILES)
+        add_custom_command(TARGET appIPR POST_BUILD COMMAND ${CMAKE_COMMAND}
+            -E copy_if_different "${runtime}" "$<TARGET_FILE_DIR:appIPR>")
+    endforeach()
+endif()
 target_compile_definitions(appIPR PRIVATE IPR_RELEASE_LABEL="${IPR_RELEASE_LABEL}")
 
 # Console tools, intentionally independent of the QML application/sidecar
@@ -329,6 +349,29 @@ install(TARGETS appIPR
     BUNDLE DESTINATION .
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+if(IPR_ENABLE_ONNX_RUNTIME AND IPR_NEURAL_MODEL)
+    file(READ "${CMAKE_CURRENT_SOURCE_DIR}/packaging/neural-model.json" ipr_model_manifest)
+    string(JSON ipr_model_id GET "${ipr_model_manifest}" model_id)
+    string(JSON ipr_model_sha GET "${ipr_model_manifest}" sha256)
+    if(NOT ipr_model_id MATCHES "^[A-Za-z0-9][A-Za-z0-9._-]*$")
+        message(FATAL_ERROR "Invalid neural model identifier")
+    endif()
+    file(SHA256 "${IPR_NEURAL_MODEL}" ipr_actual_model_sha)
+    if(NOT ipr_actual_model_sha STREQUAL ipr_model_sha)
+        message(FATAL_ERROR "Neural model SHA-256 does not match packaging/neural-model.json")
+    endif()
+    if(APPLE)
+        set(ipr_model_destination "appIPR.app/Contents/MacOS/models")
+    else()
+        set(ipr_model_destination "${CMAKE_INSTALL_BINDIR}/models")
+    endif()
+    install(FILES "${IPR_NEURAL_MODEL}" DESTINATION "${ipr_model_destination}"
+        RENAME "${ipr_model_id}.onnx" COMPONENT NeuralModel)
+    add_custom_command(TARGET appIPR POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:appIPR>/models"
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${IPR_NEURAL_MODEL}"
+            "$<TARGET_FILE_DIR:appIPR>/models/${ipr_model_id}.onnx")
+endif()
 if(APPLE)
     set(IPR_TOOL_DESTINATION "appIPR.app/Contents/MacOS")
     set(IPR_DATA_DESTINATION "appIPR.app/Contents/Resources")
@@ -339,7 +382,7 @@ endif()
 if(IPR_BUILD_TOOLS)
     install(TARGETS iprGenerateTests RUNTIME DESTINATION "${IPR_TOOL_DESTINATION}")
 endif()
-install(FILES config/ipr-ui.ini config/raw-normalization.json DESTINATION "${IPR_DATA_DESTINATION}/config")
+install(FILES config/ipr-ui.ini config/raw-normalization.json config/noise-laws.json DESTINATION "${IPR_DATA_DESTINATION}/config")
 install(FILES packaging/profiles-index.json DESTINATION "${IPR_DATA_DESTINATION}/profiles" RENAME index.json)
 install(DIRECTORY DESTINATION "${IPR_DATA_DESTINATION}/profiles/dcp")
 install(DIRECTORY DESTINATION "${IPR_DATA_DESTINATION}/profiles/lcp")
@@ -464,6 +507,16 @@ if(BUILD_TESTING)
         target_link_libraries(iprStackAudit PRIVATE psapi)
     endif()
     ipr_add_test(cameraDngTests tests/camera_dng_test.cpp)
+    ipr_add_test(noiseLawTests tests/noise_law_test.cpp)
+    ipr_add_test(cfaNoiseStageTests tests/cfa_noise_stage_test.cpp)
+    ipr_add_test(neuralCfaTests tests/neural_cfa_test.cpp)
+    set_tests_properties(neuralCfaTests PROPERTIES LABELS "unit;raw;noise" TIMEOUT 60)
+    if(IPR_ENABLE_ONNX_RUNTIME AND IPR_NEURAL_MODEL)
+        add_test(NAME neuralCfaModelTests COMMAND neuralCfaTests "${IPR_NEURAL_MODEL}" "${CMAKE_SOURCE_DIR}/packaging/neural-model.json")
+        set_tests_properties(neuralCfaModelTests PROPERTIES LABELS "integration;raw;noise" TIMEOUT 300)
+    endif()
+    set_tests_properties(cfaNoiseStageTests PROPERTIES LABELS "unit;raw;noise" TIMEOUT 30)
+    set_tests_properties(noiseLawTests PROPERTIES LABELS "unit;raw;noise" TIMEOUT 30)
     set_tests_properties(cameraDngTests PROPERTIES LABELS "unit;stack;export" TIMEOUT 60)
     add_executable(iprPanoramaAudit tests/panorama_audit.cpp)
     target_link_libraries(iprPanoramaAudit PRIVATE iprEngine)
@@ -504,6 +557,8 @@ if(BUILD_TESTING)
     set_tests_properties(editorMasksTests PROPERTIES LABELS "unit;masks" TIMEOUT 180)
     ipr_add_test(editorHistoryTests tests/editor_history_test.cpp)
     set_tests_properties(editorHistoryTests PROPERTIES LABELS "unit;history" TIMEOUT 120)
+    ipr_add_test(editorDetailTests tests/editor_detail_test.cpp)
+    set_tests_properties(editorDetailTests PROPERTIES LABELS "unit;zoom" TIMEOUT 180)
     ipr_add_test(folderRefreshTests tests/folder_refresh_test.cpp)
     set_tests_properties(folderRefreshTests PROPERTIES LABELS "unit;batch" TIMEOUT 120)
     ipr_add_test(toneRecoveryTests tests/tone_recovery_test.cpp)
@@ -606,6 +661,15 @@ if(BUILD_TESTING)
     set_tests_properties(imageImportTests PROPERTIES LABELS "unit;import;pipeline")
     ipr_add_test(rawNormalizationTests tests/raw_normalization_test.cpp)
     ipr_add_test(editorRawDevelopmentTests tests/editor_raw_development_test.cpp)
+    add_executable(editorNeuralTests tests/editor_neural_test.cpp)
+    target_link_libraries(editorNeuralTests PRIVATE iprEngine)
+    target_compile_definitions(editorNeuralTests PRIVATE IPR_QML_DIRECTORY="${CMAKE_CURRENT_SOURCE_DIR}/src/qml")
+    set(IPR_NEURAL_TEST_RAW "" CACHE FILEPATH "Private R6 III RAW for optional editor integration test")
+    if(IPR_ENABLE_ONNX_RUNTIME AND IPR_NEURAL_MODEL AND IPR_NEURAL_TEST_RAW)
+        add_test(NAME editorNeuralIntegration COMMAND editorNeuralTests "${IPR_NEURAL_TEST_RAW}" "${IPR_NEURAL_MODEL}")
+        set_tests_properties(editorNeuralIntegration PROPERTIES LABELS "integration;raw;neural"
+            RUN_SERIAL TRUE TIMEOUT 300)
+    endif()
     set_tests_properties(editorRawDevelopmentTests PROPERTIES LABELS "unit;raw;settings" TIMEOUT 60)
     ipr_add_test(rawBlackLevelEstimatorTests tests/raw_black_level_estimator_test.cpp)
     ipr_add_test(cameraProfileEngineTests tests/camera_profile_engine_test.cpp)

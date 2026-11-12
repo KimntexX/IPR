@@ -331,6 +331,13 @@ int main(int argc, char **argv)
                        "each preferences page must fit and use a slim scrollbar")) return 1;
         }
         tabs->setProperty("currentIndex", 0);
+        {
+            auto *neural = dialog->findChild<QObject *>("neuralDenoiseCheckBox");
+            auto *strength = dialog->findChild<QObject *>("neuralDenoiseStrength");
+            if (!check(neural && !strength && !neural->property("checked").toBool() &&
+                       neural->property("text").toString().contains(QStringLiteral("U-Net")),
+                       "neural preference is permission only, with no strength")) return 1;
+        }
         QObject *background = dialog->findChild<QObject *>("preference_canvasBackground");
         QObject *infoSize = dialog->findChild<QObject *>("preference_imageInfoFontSize");
         if (!check(infoSize, "preferences must expose information text sizing")) return 1;

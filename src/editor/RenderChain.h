@@ -52,10 +52,12 @@ struct Preview
 
 // The render for the screen, in 8-bit sRGB. overlayPoint, overlayMask, overlayRetouch: an
 // element whose coverage the preview shows (colour where it acts, grey elsewhere), -1 for none.
-// wholeCanvas: without the crop, for the crop tool.
+// wholeCanvas: without the crop, for the crop tool. originalSource: what the original
+// shows when it is not the source itself (the development without the neural denoiser).
 Preview preview(const ColorPipeline::WorkingImage &source, const Settings &settings, bool includeOriginal,
                 double pixelScale = 1.0, RenderStageCache *cache = nullptr, int overlayPoint = -1, int overlayMask = -1,
-                bool wholeCanvas = false, int overlayRetouch = -1);
+                bool wholeCanvas = false, int overlayRetouch = -1,
+                const ColorPipeline::WorkingImage *originalSource = nullptr);
 
 } // namespace RenderChain
 

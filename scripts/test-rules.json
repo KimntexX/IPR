@@ -5,6 +5,10 @@
   "ignored_patterns": ["docs/**", "README.md", "licenses/**", "tests/image/**", ".gitignore", "CMakeLists.txt.user"],
   "targets": {
     "parallelJobsTests": "parallelJobsTests",
+    "noiseLawTests": "noiseLawTests",
+    "cfaNoiseStageTests": "cfaNoiseStageTests",
+    "neuralCfaTests": "neuralCfaTests",
+    "neuralRawContract": "neuralRawTests",
     "taskRunnerTests": "taskRunnerTests",
     "imageCacheControllerTests": "imageCacheControllerTests",
     "editorImageCacheTests": "editorImageCacheTests",
@@ -95,6 +99,10 @@
     {"patterns": ["src/profiles/PreparedProfileCache.*", "tests/prepared_profile_cache_test.cpp"], "tests": ["preparedProfileCacheTests", "cameraProfileEngineTests", "editorRawDevelopmentTests", "rawDecoderTests", "imageImportTests", "imageExportTests"], "python": ["profile_rendering_integration"]},
     {"patterns": ["src/core/ImageImporter.*", "src/core/ImageMetadata.h", "tests/image_import_test.cpp"], "tests": ["imageImportTests", "rawDecoderTests", "cameraProfileEngineTests", "editorRawDevelopmentTests", "imageExportTests", "rec2020PipelineTests"], "python": ["profile_rendering_integration"]},
     {"patterns": ["src/raw/CameraSignal.*"], "tests": ["rawDecoderTests", "cameraProfileEngineTests", "editorRawDevelopmentTests", "rec2020PipelineTests", "imageExportTests"], "python": ["profile_rendering_integration"]},
+    {"patterns": ["src/raw/NoiseLaw.*", "tests/noise_law_test.cpp", "config/noise-laws.json", "scripts/build_noise_laws.py"], "tests": ["noiseLawTests"]},
+    {"patterns": ["src/raw/NeuralCfa.*", "tests/neural_cfa_test.cpp", "packaging/neural-model.json"], "tests": ["neuralCfaTests"]},
+    {"patterns": ["src/neural/**", "tests/neural_raw_test.cpp", "tests/neural_model_case_test.cpp", "cmake/OnnxRuntime.cmake"], "tests": ["neuralRawContract", "neuralCfaTests"]},
+    {"patterns": ["src/raw/CfaNoiseStage.*", "tests/cfa_noise_stage_test.cpp", "src/raw/RawDevelopment.*"], "tests": ["cfaNoiseStageTests", "rawDevelopmentTests", "rawDecoderTests", "editorRawDevelopmentTests"]},
     {"patterns": ["src/raw/CameraCharacterization.*"], "tests": ["rawNormalizationTests", "rawDecoderTests", "editorRawDevelopmentTests"], "python": ["base_colorimetry_analysis", "profile_rendering_integration"]},
     {"patterns": ["tests/verify_profile_rendering_integration.py", "tests/test_verify_profile_rendering_integration.py", "tests/investigate_0081_export.py"], "tests": ["rawNormalizationTests", "cameraProfileEngineTests"], "python": ["profile_rendering_integration"]},
     {"patterns": ["tests/investigate_r7_gain.py", "tests/investigate_r7_baseline.py", "tests/test_investigate_r7_gain.py"], "tests": [], "python": ["r7_gain_study"]},
@@ -194,6 +202,7 @@
     {"patterns": ["tests/analyse_noise.py", "tests/test_analyse_noise.py"], "tests": [], "python": ["noise_analysis"]},
     {"patterns": ["tests/study_sources.py", "tests/test_study_sources.py", "tests/study_demosaic.py", "tests/demosaic_probe.cpp", "tests/study_lr_neutral_noise.py", "tests/study_lr_aligned.py", "tests/study_effects_response.py", "tests/study_effects_amplitude.py", "tests/study_effects_tone_protection.py", "tests/study_clarity_adaptation.py", "tests/study_dehaze_law.py", "tests/study_dehaze_detail.py", "tests/study_grading_response.py", "tests/study_grading_blend.py", "tests/study_grading_luminance.py", "tests/study_grading_ipr.py", "tests/study_clarity_masking.py", "tests/study_clarity_affine_grid.py", "tests/study_clarity_clahe.py", "tests/study_grain.py"], "tests": [], "python": ["study_sources"]},
     {"patterns": ["tests/test_build_windows.py"], "tests": [], "python": ["selection"]},
-    {"patterns": ["tests/test_windows_installer.py"], "tests": [], "python": ["windows_installer"]}
+    {"patterns": ["tests/test_windows_installer.py"], "tests": [], "python": ["windows_installer"]},
+    {"patterns": ["src/editor/NeuralDevelopment.*", "tests/editor_neural_test.cpp"], "tests": ["sidecarTests", "uiPreferencesTests", "uiPreferencesQmlTests", "editorRawDevelopmentTests", "editorHistoryTests"]}
   ]
 }

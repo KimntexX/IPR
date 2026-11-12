@@ -39,6 +39,7 @@ struct Settings
     // sliders act on its camera signal before the lens and colour profiles. A session
     // switch of the editor, not stored in the sidecar.
     bool denoiseBeforeProfile = false;
+    bool neuralDenoiseApplied = false; // transient: inhibits classical luminance, never serialized
     int sharpeningAmount = 0;
     float sharpeningRadius = 1.0f;
     int sharpeningMasking = 0;
@@ -76,6 +77,8 @@ struct RawDevelopment
     // The development really used (ADR-0021), empty when not recorded: a photo
     // opens again in this mode, even if the session's has changed.
     QString developmentMode;
+    int neuralStrength = 0; // 0 disables CFA inference; old recipes stay disabled.
+    QString neuralModelId;
 };
 
 inline const QString StandardDevelopment = QStringLiteral("standard");

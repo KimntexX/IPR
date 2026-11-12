@@ -111,6 +111,21 @@ void aNeutralRecipeHandsBackTheSourceBuffer()
     check(rendered.linearRgba.block() == source.linearRgba.block(), "the same pixels");
 }
 
+void neuralDenoisePreservesClassicalSettings()
+{
+    const auto source = scene(40, 32);
+    auto settings = neutral();
+    settings.neuralDenoiseApplied = true;
+    settings.denoiseLuminance = 100;
+    settings.denoiseChrominance = 25;
+    const auto suppressed = RenderChain::workingImage(source, settings);
+    check(settings.denoiseLuminance == 100, "stored classical luminance retained");
+    settings.neuralDenoiseApplied = false;
+    settings.denoiseLuminance = 0;
+    const auto expected = RenderChain::workingImage(source, settings);
+    check(same(suppressed.linearRgba, expected.linearRgba), "neural bypasses luminance but keeps colour");
+}
+
 void invalidSourcesRenderNothing()
 {
     check(RenderChain::workingImage({}, neutral()).isNull(), "RenderChain::workingImage({}, neutral()).isNull()");
@@ -308,6 +323,7 @@ int main(int argc, char **argv)
     QCoreApplication application(argc, argv);
     try {
         aNeutralRecipeHandsBackTheSourceBuffer();
+        neuralDenoisePreservesClassicalSettings();
         invalidSourcesRenderNothing();
         everyStageActsAndLeavesTheSourceAlone();
         theBlurSliderFollowsItsSigma();

@@ -188,6 +188,10 @@ ApplicationWindow {
                 anchors.margins: 12
                 source: imageEditor.hasImage ? imageEditor.imageSource : ""
                 originalSource: imageEditor.hasImage ? imageEditor.originalImageSource : ""
+                detailSource: imageEditor.hasImage ? imageEditor.detailImageSource : ""
+                detailRatio: imageEditor.hasImage ? imageEditor.detailRatio : 1
+                detailRendering: imageEditor.detailRendering
+                onWantsDetailChanged: imageEditor.detailWanted = wantsDetail
                 imageKey: (imageEditor.imageDetails.storage || "") + "/"
                           + (imageEditor.imageDetails.name || "")
                 hasImage: imageEditor.hasImage

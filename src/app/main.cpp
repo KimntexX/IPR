@@ -31,6 +31,14 @@ int main(int argc, char *argv[])
     engine.addImageProvider(QLatin1String("gradingwheel"), new GradingWheelProvider);
 
     ImageEditor imageEditor(imageProvider, thumbnailProvider);
+    const auto applyNeuralPreferences = [&] {
+        imageEditor.setNeuralDenoisePreferences(
+            uiPreferences.value(QStringLiteral("neural/enabled")).toBool(),
+            uiPreferences.value(QStringLiteral("neural/modelPath")).toString());
+    };
+    QObject::connect(&uiPreferences, &UiPreferences::preferencesChanged,
+                     &imageEditor, applyNeuralPreferences);
+    applyNeuralPreferences();
     engine.rootContext()->setContextProperty("imageEditor", &imageEditor);
     engine.rootContext()->setContextProperty("uiPreferences", &uiPreferences);
 

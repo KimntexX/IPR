@@ -3,6 +3,8 @@
 
 #include "ColorPipeline.h"
 #include "ImageMetadata.h"
+#include "RawDevelopment.h"
+#include "RawInput.h"
 
 #include <QImage>
 #include <QSize>
@@ -55,6 +57,10 @@ struct Options
     bool retainPreLensSignal = false;
     std::shared_ptr<DcpSource> retainedDcpSource;
     std::function<bool()> cancellationRequested;
+    // The neural CFA denoiser (empty in the default opening): builds the stage for the
+    // file's sensor data (camera, ISO, levels), or an empty stage when it does not apply.
+    // Used only when IPR develops the RAW itself.
+    std::function<RawDevelopment::CfaStage(const RawInput::Input &input)> cfaStageFactory;
 };
 
 ColorPipeline::WorkingImage applyProfile(const DcpSource &source, const QString &profile,

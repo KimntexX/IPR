@@ -27,6 +27,11 @@ namespace RenderChain {
 
 namespace {
 
+int classicalLuminance(const Settings &settings)
+{
+    return settings.neuralDenoiseApplied ? 0 : settings.denoiseLuminance;
+}
+
 // What a luminance range reads: the image as it is before any edit, on the canvas. Empty when
 // no mask has a range.
 ipr::Image rangeLuminanceOf(const ColorPipeline::WorkingImage &source, const Settings &settings, double pixelScale)
@@ -77,7 +82,7 @@ RenderStageCache::Keys stageKeys(const Settings &s)
     stream << qint32(g.quarterTurns) << g.flipHorizontal << g.flipVertical << g.rotation << qint32(g.vertical)
            << qint32(g.horizontal) << qint32(g.aspect) << qint32(g.scale) << qint32(g.offsetX) << qint32(g.offsetY);
     if (s.denoiseBeforeProfile)   // the camera-signal luminance denoise belongs to the first stage then
-        stream << qint32(s.denoiseLuminance);
+        stream << qint32(classicalLuminance(s));
     keys[0] = key;
     stream << qint32(s.saturation) << qint32(s.vibrance) << qint32(s.gradingBlending) << qint32(s.gradingBalance);
     ints(s.mixerHue); ints(s.mixerSaturation); ints(s.mixerLuminance); ints(s.gradingHue); ints(s.gradingSaturation);
@@ -90,7 +95,7 @@ RenderStageCache::Keys stageKeys(const Settings &s)
                << qint32(p.luminanceShift) << qint32(p.variance) << qint32(p.range);
     }
     keys[1] = key;
-    stream << qint32(s.denoiseLuminance) << qint32(s.denoiseChrominance);
+    stream << qint32(classicalLuminance(s)) << qint32(s.denoiseChrominance);
     keys[2] = key;
     stream << qint32(s.texture) << qint32(s.clarity);
     keys[3] = key;
@@ -113,7 +118,7 @@ bool renderTones(const ColorPipeline::WorkingImage &source, const Settings &sett
     // Experimental: the luminance denoise acts on the camera signal, before the
     // profile; colour noise is removed after the tones (reduceNoise).
     const bool denoiseCamera = source.dcpContext && settings.denoiseBeforeProfile &&
-                               settings.denoiseLuminance != 0;
+                               classicalLuminance(settings) != 0;
     if (source.dcpContext && (whiteBalanceEdit || sceneExposure || denoiseCamera)) {
         QString error;
         const CameraProfileEngine::DcpWorkingContext *camera = source.dcpContext.get();
@@ -127,7 +132,7 @@ bool renderTones(const ColorPipeline::WorkingImage &source, const Settings &sett
             denoised.cameraRgb = preLens ? source.dcpContext->preLensCameraRgb.share() : source.dcpContext->cameraRgb.share();
             CameraDenoise::Context denoiseContext;
             denoiseContext.pixelScale = pixelScale;
-            if (!CameraDenoise::apply(denoised.cameraRgb, settings.denoiseLuminance, denoiseContext) ||
+            if (!CameraDenoise::apply(denoised.cameraRgb, classicalLuminance(settings), denoiseContext) ||
                 (preLens && !CameraProfileEngine::applyLcp(denoised.lcpPath, denoised.cameraRgb, denoised.capture,
                                                            &error, denoised.lensOptions))) {
                 qWarning() << "Échec du débruitage du signal caméra :" << error;
@@ -236,7 +241,7 @@ ColorPipeline::WorkingImage workingImage(const ColorPipeline::WorkingImage &sour
         settings.temperature == referenceTemperature && settings.tint == 0 &&
         settings.vibrance == 0 && settings.saturation == 0 &&
         settings.texture == 0 && settings.clarity == 0 && settings.dehaze == 0 &&
-        settings.grain == 0 && settings.denoiseLuminance == 0 &&
+        settings.grain == 0 && classicalLuminance(settings) == 0 &&
         settings.denoiseChrominance == 0 && settings.sharpeningAmount == 0 &&
         std::all_of(settings.mixerHue.cbegin(), settings.mixerHue.cend(),
                     [](int value) { return value == 0; }) &&
@@ -282,7 +287,7 @@ ColorPipeline::WorkingImage workingImage(const ColorPipeline::WorkingImage &sour
     // colour noise is removed here on both paths.
     if (runs(2)) {
         const bool cameraLuminance = settings.denoiseBeforeProfile && source.dcpContext;
-        DetailProcessing::reduceNoise(adjusted, {cameraLuminance ? 0 : settings.denoiseLuminance,
+        DetailProcessing::reduceNoise(adjusted, {cameraLuminance ? 0 : classicalLuminance(settings),
                                                  settings.denoiseChrominance}, pixelScale, local);
         reached(2, adjusted);
     }
@@ -324,7 +329,7 @@ ColorPipeline::WorkingImage workingImage(const ColorPipeline::WorkingImage &sour
 
 Preview preview(const ColorPipeline::WorkingImage &source, const Settings &settings, bool includeOriginal,
                 double pixelScale, RenderStageCache *cache, int overlayPoint, int overlayMask, bool wholeCanvas,
-                int overlayRetouch)
+                int overlayRetouch, const ColorPipeline::WorkingImage *originalSource)
 {
     Preview result;
     if (includeOriginal) {
@@ -332,7 +337,8 @@ Preview preview(const ColorPipeline::WorkingImage &source, const Settings &setti
         // white balance, but none of the editor settings (including sidecars),
         // except the framing, so that it stays comparable with the preview.
         QString error;
-        ColorPipeline::WorkingImage framed = ColorPipeline::sharedCopy(source);
+        ColorPipeline::WorkingImage framed = ColorPipeline::sharedCopy(
+            originalSource && !originalSource->isNull() ? *originalSource : source);
         framed.linearRgba = Geometry::warpRgba(std::move(framed.linearRgba), settings.geometry, geometryQuality(pixelScale));
         if (!wholeCanvas)
             framed = cropped(std::move(framed), settings.geometry);

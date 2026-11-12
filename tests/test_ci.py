@@ -1,4 +1,6 @@
 import importlib.util
+import contextlib
+import io
 import json
 from pathlib import Path
 import tempfile
@@ -12,6 +14,20 @@ spec.loader.exec_module(ci)
 
 
 class DeploymentTests(unittest.TestCase):
+    def test_neural_assets_require_both_paths(self):
+        with contextlib.redirect_stderr(io.StringIO()):
+            with self.assertRaises(SystemExit) as failure:
+                ci.main(['--action', 'build', '--neural-model', 'model.onnx'])
+        self.assertEqual(failure.exception.code, 2)
+
+    def test_neural_paths_reach_cmake(self):
+        with tempfile.TemporaryDirectory() as folder, patch.object(ci, 'run') as run:
+            self.assertEqual(ci.main(['--action', 'build', '--build-dir', folder,
+                                      '--neural-sdk-dir', folder, '--neural-model', folder+'/model.onnx']), 0)
+            command = [str(arg) for arg in run.call_args_list[0].args[0]]
+            self.assertIn('-DIPR_ENABLE_ONNX_RUNTIME=ON', command)
+            self.assertTrue(any(arg.startswith('-DIPR_NEURAL_MODEL=') for arg in command))
+            self.assertTrue(any(arg.startswith('-DIPR_ONNXRUNTIME_ROOT=') for arg in command))
     def test_version_phases(self):
         for label in ('v0.1.7-alpha', '0.2.1-beta', 'v0.3.2-beta', 'v1.0.0'):
             self.assertEqual(ci.release_version(label)[0], label.removeprefix('v'))

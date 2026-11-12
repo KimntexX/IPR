@@ -36,6 +36,18 @@ QImage ImageProvider::originalImage() const
     return m_originalImage;
 }
 
+void ImageProvider::setDetailImage(const QImage &image)
+{
+    QWriteLocker locker(&m_lock);
+    m_detailImage = image;
+}
+
+QImage ImageProvider::detailImage() const
+{
+    QReadLocker locker(&m_lock);
+    return m_detailImage;
+}
+
 void ImageProvider::setUrl(const QUrl &url)
 {
     QWriteLocker locker(&m_lock);
@@ -58,8 +70,9 @@ QImage ImageProvider::requestImage(const QString &id, QSize *size,
     // fallback was redundant (every image was decoded twice) and is no
     // longer needed; an empty transparent pixel is returned until the
     // first render completes.
-    QImage result = id.section(QLatin1Char('?'), 0, 0) == QStringLiteral("original")
-                        ? originalImage() : image();
+    const QString kind = id.section(QLatin1Char('?'), 0, 0);
+    QImage result = kind == QStringLiteral("original") ? originalImage()
+                  : kind == QStringLiteral("detail") ? detailImage() : image();
     if (result.isNull()) {
         result = QImage(1, 1, QImage::Format_RGBA8888);
         result.fill(Qt::transparent);

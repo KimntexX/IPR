@@ -118,7 +118,8 @@ QVariant UiPreferences::normalized(const QString &key, const QVariant &input, bo
         return *ok ? QVariant(static_cast<int>(number)) : QVariant{};
     }
     if (key.startsWith(QStringLiteral("sections/")) ||
-        key.startsWith(QStringLiteral("layout/show")) || key == QStringLiteral("window/positionSaved")) {
+        key.startsWith(QStringLiteral("layout/show")) || key == QStringLiteral("window/positionSaved") ||
+        key == QStringLiteral("neural/enabled")) {
         const QString text = input.toString().trimmed().toLower();
         *ok = text == QStringLiteral("true") || text == QStringLiteral("false") ||
               text == QStringLiteral("1") || text == QStringLiteral("0");
@@ -176,6 +177,7 @@ bool UiPreferences::sync()
     m_saveTimer.stop();
     if (!m_writable)
         return false;
+    m_settings.remove(QStringLiteral("neural/strength")); // Per-photo only; remove the replaced preference.
     if (!m_pending.isEmpty()) {
         const QString directory = QFileInfo(m_settings.fileName()).absolutePath();
         if (!QDir().mkpath(directory)) {
