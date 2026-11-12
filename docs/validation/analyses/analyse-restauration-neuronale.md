@@ -10885,3 +10885,47 @@ dans v002, appariés au bras E déjà terminé.
 Preuves : [étude v001](../raw/neural-loss-mean-study-v001-20261111T124928Z.json),
 [étude v002](../raw/neural-loss-mean-study-v002-20261111T134726Z.json) et les
 sondes et évaluations `neural-loss-*-20261111T*.json`.
+
+## 12 novembre 2026 — entraînement final de la bêta-1 et choix du modèle livré
+
+Bras G (`l1_plane_mean`, carte σ en entrée, augmentation de couleur), graine 71,
+150 000 pas, schéma cosinus 1e-4 → 1e-6, lots de 8. La campagne
+`final-beta1-training-v001` s'est arrêtée au pas 74 965 (23 h 05) : un relevé
+des compteurs CPU de Windows non monotone levait une erreur dans le contrôle de
+charge. Ce relevé est désormais ignoré (`load_control.py`) ; `resume_campaign.py`
+a repris l'état exact (poids, moments d'Adam, générateurs aléatoires) dans
+`final-beta1-training-v002`, sur le même schéma cosinus, jusqu'au pas global
+150 000 (fin le 12 à 6 h 41).
+
+| Critère | Modèle final (150 000 pas) | Candidat intégré (couleur, 75 000 pas) |
+| --- | --- | --- |
+| Synthétique, réseau − VST + BM3D (médiane, ISO 3200 / 6400 / 16000 / 51200) | +0,64 / +1,12 / +2,21 / +3,28 dB | +0,57 / +1,12 / +2,19 / +3,18 dB |
+| Bruit réel, réseau − BM3D (médiane, intérieur / drap / salle) | +0,40 / +0,22 / +0,52 dB | +0,45 / +0,24 / +0,68 dB |
+| Bruit réel, écart au candidat par entrée (médiane ; min à max) | −0,004 / −0,012 / −0,107 dB ; −0,19 à +0,02 dB | — |
+| Bruit réel, biais maximal d'un plan (normalisé, ordre typique) | 0,4·10⁻⁴ à 1,5·10⁻⁴ | 1·10⁻⁴ à 6·10⁻⁴ |
+| Ombres, sortie − entrée (DN, ISO 3200 / 16000 / 51200) | ±0,05 / ±0,17 / −0,55 à +0,33 | — |
+| ONNX : écart à PyTorch (CPU / DirectML) ; tuile 1408 | 1,3·10⁻⁷ / 3,3·10⁻⁷ ; 3,2 s / 0,29 s | — |
+
+**Lecture.**
+
+- Le critère de la bêta (≥ 0,5 dB médian par bande ISO face à VST + BM3D) est
+  tenu ; le réseau devance BM3D sur les 62 entrées de bruit réel, ISO entraînés
+  ou non.
+- Face au candidat de 75 000 pas, le gain est égal à 0,1 dB près (un peu moins
+  sur la salle d'escalade), mais le biais des plans est 2 à 4 fois plus faible.
+  Dans les ombres, le réseau suit le biais de l'entrée à 0,55 DN près ; l'écart
+  G1 − G2 de sortie (≤ 0,5 DN) est celui de l'entrée.
+
+**Décision de l'utilisateur (12 novembre)** : le modèle final est livré
+(`ipr-neural-denoise-final-beta1-step150000`, SHA-256 `34c19dbf…6ae`), épinglé dans
+`packaging/neural-model.json` sur `patch_noise_cfa` ; tests du cas de référence,
+du manifeste et de l'intégration éditeur passés sur RAW réel avec DirectML.
+
+Preuves : [campagne interrompue](../raw/neural-final-beta1-training-v001-20261111T220558Z.json),
+[campagne reprise](../raw/neural-final-beta1-training-v002-20261112T054103Z.json),
+[export ONNX](../raw/neural-onnx-final-v001-20261112T054125Z.json),
+[comparateurs](../raw/neural-physical-natural-comparators-final-v001-20261112T054415Z.json),
+[ombres](../raw/neural-final-dark-bias-v001-20261112T054445Z.json),
+[intérieur](../raw/neural-final-real-noise-evaluation-20261112T054522Z.json),
+[drap](../raw/neural-final-color-sheet-evaluation-20261112T054653Z.json),
+[salle d'escalade](../raw/neural-final-climbing-gym-evaluation-20261112T054820Z.json).
