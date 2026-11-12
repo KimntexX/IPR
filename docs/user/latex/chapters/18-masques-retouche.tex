@@ -15,6 +15,9 @@ s’additionnent.
 \item \emph{Dégradé linéaire} : l’effet est entier avant la première poignée et nul après la seconde.
 \item \emph{Dégradé radial} : déplacez le centre et les deux bords sur l’image. \emph{Contour
 progressif} règle la transition, \emph{Angle} tourne l’ellipse.
+\item \emph{Cône triangulaire} : déplacez la pointe et l’extrémité pour orienter le faisceau,
+puis la poignée latérale pour régler son ouverture.
+\item \emph{Cône trapézoïdal} : même principe, avec une largeur réglable aux deux extrémités.
 \item \emph{Plage} : choisit des tons de l’image, entre \emph{Tons sombres} et \emph{Tons clairs},
 tels qu’ils sont avant toute retouche. Une nouvelle plage couvre toute l’image : resserrez ces
 curseurs pour isoler des tons.
@@ -22,6 +25,20 @@ curseurs pour isoler des tons.
 \emph{Afficher la zone} montre où le masque agit : en couleur dedans, en gris dehors. Cet affichage
 n’est ni enregistré ni exporté. La zone s’affiche aussi tant que vous tenez un curseur de la plage.
 \emph{Inverser} retourne une forme.
+
+\section{Créer un effet de cône lumineux}
+Choisissez un cône, placez son départ à la source lumineuse et son arrivée dans la direction
+souhaitée. Augmentez ensuite l’\emph{Exposition} locale : la forme délimite une zone, elle
+n’éclaire pas l’image tant que ses réglages sont à zéro. Le \emph{Contour progressif} adoucit
+les côtés et les extrémités ; l’\emph{Opacité} réduit l’ensemble de l’effet. Les largeurs sont
+exprimées en pourcentage du grand côté de l’image, indépendamment du zoom et de l’export.
+
+Les poignées suivent la souris, mais le changement n’est validé qu’au relâchement : un geste
+forme une étape d’historique. Les champs numériques permettent une valeur précise ; les
+flèches ajustent un curseur qui a le focus et \emph{Entrée} confirme la saisie. Les commandes
+habituelles s’appliquent aussi : \emph{Ctrl+Z} annule et \emph{Ctrl+Maj+Z} rétablit
+(\emph{Cmd} remplace \emph{Ctrl} sur macOS). Pour déplacer
+le cône, ajustez ses deux extrémités ; les poignées latérales ne changent que les largeurs.
 
 \section{Composer une zone}
 \emph{Ajouter à la zone} combine une autre forme à la première : \emph{Ajouter}, \emph{Soustraire}

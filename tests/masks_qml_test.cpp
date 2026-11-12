@@ -371,6 +371,36 @@ int main(int argc, char **argv)
     if (!check(shapeAt(editor, 0, 0).value(QStringLiteral("strokes")).toInt() == 0, "and not to a gradient")) return 1;
     if (!check(waitFor([&] { return !editor.busy(); }), "the preview settles at the end")) return 1;
 
+    // Tapered cones are real mask kinds, with editable widths and one edit per drag.
+    auto *newTriangle = named(panel, QStringLiteral("maskNew_triangle"));
+    auto *newTrapezoid = named(panel, QStringLiteral("maskNew_trapezoid"));
+    if (!check(newTriangle && newTrapezoid, "both cone presets are offered")) return 1;
+    click(newTriangle); settle();
+    if (!check(panel->property("tool").toString() == "triangle" &&
+               named(panel, "maskEndWidth")->isVisible() && !named(panel, "maskStartWidth")->isVisible(),
+               "triangle exposes its far width")) return 1;
+    const int triangleIndex = panel->property("selectedMask").toInt();
+    overlay->setProperty("shape", shapeAt(editor, triangleIndex, 0)); settle();
+    if (!check(named(overlay,"maskHandle_start") && named(overlay,"maskHandle_endWidth") &&
+               !named(overlay,"maskHandle_startWidth"), "triangle handles")) return 1;
+    auto *widthHandle = named(overlay, "maskHandle_endWidth");
+    const auto widthAt = centreOf(widthHandle);
+    const int beforeWidthEdit = listening->property("edits").toInt();
+    mouse(window,QEvent::MouseButtonPress,widthAt,timestamp);
+    mouse(window,QEvent::MouseMove,widthAt+QPointF(-60,0),timestamp);
+    if (!check(listening->property("edits").toInt() == beforeWidthEdit, "width is previewed until release")) return 1;
+    mouse(window,QEvent::MouseButtonRelease,widthAt+QPointF(-60,0),timestamp);
+    if (!check(listening->property("edits").toInt() == beforeWidthEdit+1 &&
+               std::abs(listening->property("lastValues").toMap().value("endWidth").toDouble()-.6)<.02,
+               "width drag sends one normalized edit")) return 1;
+    click(newTrapezoid); settle();
+    const int trapezoidIndex = panel->property("selectedMask").toInt();
+    overlay->setProperty("shape", shapeAt(editor,trapezoidIndex,0)); settle();
+    if (!check(panel->property("tool").toString() == "trapezoid" &&
+               named(panel,"maskStartWidth")->isVisible() && named(overlay,"maskHandle_startWidth"),
+               "trapezoid exposes both widths")) return 1;
+    if (!check(waitFor([&] { return !editor.busy(); }), "cone preview settles")) return 1;
+
     std::cout << "masks panel: ok\n";
     return 0;
 }

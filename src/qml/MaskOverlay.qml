@@ -44,6 +44,21 @@ Item {
     readonly property real radiusX: dragging && live.radiusX !== undefined ? live.radiusX : shape ? shape.radiusX : 0.25
     readonly property real radiusY: dragging && live.radiusY !== undefined ? live.radiusY : shape ? shape.radiusY : 0.25
 
+    readonly property bool cone: kind === "triangle" || kind === "trapezoid"
+    readonly property real startWidth: kind === "triangle" ? 0
+        : dragging && live.startWidth !== undefined ? live.startWidth : shape && shape.startWidth !== undefined ? shape.startWidth : 0.12
+    readonly property real endWidth: dragging && live.endWidth !== undefined ? live.endWidth
+        : shape && shape.endWidth !== undefined ? shape.endWidth : 0.4
+    function coneCorner(atStart, side) {
+        const dx = (endPoint[0] - startPoint[0]) * canvasWidth
+        const dy = (endPoint[1] - startPoint[1]) * canvasHeight
+        const length = Math.max(1e-6, Math.hypot(dx, dy))
+        const base = atStart ? startPoint : endPoint
+        const half = (atStart ? startWidth : endWidth) * Math.max(canvasWidth, canvasHeight) * side / 2
+        return Qt.point(base[0] - dy / length * half / canvasWidth,
+                        base[1] + dx / length * half / canvasHeight)
+    }
+
     function begin(field) {
         activeField = field
         live = ({})
@@ -53,7 +68,14 @@ Item {
     function movedTo(x, y) {
         const p = toCanvas(x, y)
         const next = Object.assign({}, live)
-        if (activeField === "radiusX")
+        if (activeField === "startWidth" || activeField === "endWidth") {
+            const base = activeField === "startWidth" ? startPoint : endPoint
+            const dx = (endPoint[0] - startPoint[0]) * canvasWidth
+            const dy = (endPoint[1] - startPoint[1]) * canvasHeight
+            const length = Math.max(1e-6, Math.hypot(dx, dy))
+            const distance = ((p.x-base[0])*canvasWidth*(-dy) + (p.y-base[1])*canvasHeight*dx) / length
+            next[activeField] = 2*Math.abs(distance) / Math.max(canvasWidth,canvasHeight)
+        } else if (activeField === "radiusX")
             next.radiusX = Math.abs(p.x - centerPoint[0])
         else if (activeField === "radiusY")
             next.radiusY = Math.abs(p.y - centerPoint[1])
@@ -152,10 +174,10 @@ Item {
         id: guides
         objectName: "maskGuides"
         anchors.fill: parent
-        visible: root.kind === "linear" || root.kind === "radial"
+        visible: root.kind === "linear" || root.kind === "radial" || root.cone
         readonly property var watched: [root.startPoint, root.endPoint, root.centerPoint, root.radiusX, root.radiusY,
                                         root.imageX, root.imageY, root.imageWidth, root.imageHeight, root.kind,
-                                        root.shape ? root.shape.angle : 0]
+                                        root.shape ? root.shape.angle : 0, root.startWidth, root.endWidth]
         onWatchedChanged: requestPaint()
         onPaint: {
             const c = getContext("2d")
@@ -173,6 +195,18 @@ Item {
                 c.moveTo(bx - nx, by - ny); c.lineTo(bx + nx, by + ny)
                 c.moveTo(ax, ay); c.lineTo(bx, by)
                 c.stroke()
+            } else if (root.cone) {
+                const points = [root.coneCorner(true,1), root.coneCorner(false,1),
+                                root.coneCorner(false,-1), root.coneCorner(true,-1)]
+                c.beginPath()
+                for (let i=0; i<points.length; ++i) {
+                    const x=root.screenX(points[i].x), y=root.screenY(points[i].y)
+                    if (i===0) c.moveTo(x,y); else c.lineTo(x,y)
+                }
+                c.closePath()
+                c.moveTo(root.screenX(root.startPoint[0]),root.screenY(root.startPoint[1]))
+                c.lineTo(root.screenX(root.endPoint[0]),root.screenY(root.endPoint[1]))
+                c.stroke()
             } else if (root.kind === "radial") {
                 c.save()
                 c.translate(root.screenX(root.centerPoint[0]), root.screenY(root.centerPoint[1]))
@@ -188,13 +222,17 @@ Item {
 
     Repeater {
         // The handles depend on the kind alone: moving one must not recreate it under the hand.
-        model: root.kind === "linear" ? ["start", "end"] : root.kind === "radial" ? ["center", "radiusX", "radiusY"]
+        model: root.kind === "triangle" ? ["start", "end", "endWidth"]
+            : root.kind === "trapezoid" ? ["start", "end", "startWidth", "endWidth"]
+            : root.kind === "linear" ? ["start", "end"] : root.kind === "radial" ? ["center", "radiusX", "radiusY"]
             : root.kind === "point" ? ["center"] : []
         Rectangle {
             id: handle
             required property string modelData
             readonly property point place: modelData === "start" ? Qt.point(root.startPoint[0], root.startPoint[1])
                 : modelData === "end" ? Qt.point(root.endPoint[0], root.endPoint[1])
+                : modelData === "startWidth" ? root.coneCorner(true,1)
+                : modelData === "endWidth" ? root.coneCorner(false,1)
                 : modelData === "center" ? Qt.point(root.centerPoint[0], root.centerPoint[1])
                 : modelData === "radiusX" ? Qt.point(root.centerPoint[0] + root.radiusX, root.centerPoint[1])
                 : Qt.point(root.centerPoint[0], root.centerPoint[1] + root.radiusY)

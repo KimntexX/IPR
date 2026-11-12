@@ -402,8 +402,52 @@ void bounds()
 
 } // namespace
 
+void cones()
+{
+    Shape shape;
+    shape.kind = Kind::Triangle;
+    shape.feather = 0;
+    const auto triangle = coverage(maskOf(shape), canvas);
+    check(at(triangle, .5f, .5f) == 1, "triangle interior");
+    check(at(triangle, .65f, .5f) == 0 && at(triangle, .5f, .8f) == 0, "cone sides and end are bounded");
+    check(at(triangle, .54f, .3f) == 0, "triangle begins at a point");
+    shape.kind = Kind::Trapezoid;
+    const auto trapezoid = coverage(maskOf(shape), canvas);
+    check(at(trapezoid, .54f, .3f) == 1, "trapezoid has a finite near width");
+    shape.startWidth = 0;
+    check(worstDifference(triangle, coverage(maskOf(shape), canvas)) == 0, "zero near width becomes a triangle");
+    shape.kind = Kind::Triangle;
+    shape.feather = .5f;
+    const auto soft = coverage(maskOf(shape), canvas);
+    check(at(soft, .58f, .5f) > 0 && at(soft, .58f, .5f) < 1, "cone feather is progressive");
+    const auto large = coverage(maskOf(shape), {800, 600});
+    check(std::abs(at(soft,.58f,.5f)-at(large,.58f,.5f)) < .03, "cone feather follows resolution");
+    shape.inverted = true;
+    const auto inverse = coverage(maskOf(shape), canvas);
+    check(std::abs(at(soft,.58f,.5f)+at(inverse,.58f,.5f)-1) < 1e-6f, "cone inversion");
+    shape.inverted = false;
+    shape.start = {.25f,.5f}; shape.end = {.75f,.5f}; shape.feather = 0;
+    check(at(coverage(maskOf(shape),canvas),.5f,.6f) == 1, "rotated cone");
+    shape.end = shape.start;
+    const auto empty = coverage(maskOf(shape),canvas);
+    check(ipr::extremesOf(empty).largest == 0, "coincident endpoints produce an empty mask");
+    Masks masks{maskOf(shape)};
+    masks[0].shapes[0].endWidth = std::numeric_limits<float>::quiet_NaN();
+    check(!bound(masks), "invalid cone width rejected");
+    masks = {valued(Shape{}, LocalValues::Exposure, 1)};
+    masks[0].shapes[0].kind = Kind::Trapezoid;
+    QByteArray before, after;
+    QDataStream first(&before, QIODevice::WriteOnly);
+    appendKey(first, masks);
+    masks[0].shapes[0].endWidth += .1f;
+    QDataStream second(&after, QIODevice::WriteOnly);
+    appendKey(second, masks);
+    check(before != after, "cone width invalidates mask cache");
+}
+
 int main()
 {
+    cones();
     shapes();
     ranges();
     resolutions();

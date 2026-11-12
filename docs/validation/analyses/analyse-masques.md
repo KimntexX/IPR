@@ -1,5 +1,10 @@
 # Analyse — Masques
 
+**Bilan actuel — 12 novembre 2026.** Les cônes triangulaires et trapézoïdaux
+sont ajoutés sur `patch_masks` ; tests ciblés validés, revue visuelle utilisateur
+encore attendue. Cette extension ne requalifie pas tout le moteur des masques.
+Voir la dernière campagne en fin de rapport.
+
 Rapport évolutif du moteur des masques (lot B2,
 [ADR-0021](../../decisions/ADR-0021-socle-edition-beta.md)). Les JSON sous
 `docs/validation/raw/` font autorité ; ce rapport les interprète. Suivi des validations
@@ -97,3 +102,37 @@ poignées recréées à chaque mouvement, qui perdaient le geste au relâchement
 - 16 masques radiaux coûtent plus de 250 ms au moment où ils changent, ce qui dépasse la cible
   sur ce geste ; bouger un autre curseur ne les redessine pas.
 - Les modules ajoutent leur propre coût par carte présente, non mesuré ici sur photo.
+
+## 12 novembre 2026 — Cônes triangulaires et trapézoïdaux
+
+Deux formes vectorielles supplémentaires dans le panneau Masques : un triangle
+partant d’une pointe et un trapèze à deux largeurs. Les extrémités règlent
+l’orientation et la longueur ; les poignées latérales et champs numériques règlent
+les largeurs, relatives au grand côté du canevas. Le contour progressif est une
+transition douce intérieure aux bords ; aucun calcul de lumière diffusée ou
+modèle volumétrique n’est revendiqué. L’effet lumineux vient des réglages locaux,
+notamment de l’exposition, et reste neutre si les réglages du masque sont nuls.
+
+Le rasteriseur calcule la distance signée normalisée aux faces du polygone
+convexe. Le triangle ignore sa largeur de départ ; un trapèze de largeur initiale
+nulle donne la même couverture. Les axes dégénérés donnent une couverture vide.
+Les coordonnées restent dans le canevas avant recadrage ; les contrôles existants
+d’ajout, soustraction, intersection et inversion s’appliquent aussi à ces formes.
+
+Sept suites CTest ciblées passent sous MSVC/Qt 6.11.2 : géométrie, feather,
+résolution, inversion, cache, persistance, commandes/historique et gestes QML.
+Le déplacement d’une poignée de largeur est prévisualisé pendant le geste et
+transmis une seule fois au relâchement. Le format sidecar devient 11 pour les
+nouvelles formes ; la lecture et la migration des versions antérieures sont
+conservées. Le build de contrôle garde ONNX Runtime et le modèle épinglé de dev.
+
+Preuve canonique : [`mask-cones-validation-v001-20261112T200452Z.json`](../raw/mask-cones-validation-v001-20261112T200452Z.json). Les assertions ne sont ni une nouvelle comparaison de tout le corpus RAW,
+ni un benchmark pleine résolution. Le guide utilisateur français est mis à jour
+à la source LaTeX ; son PDF n’est pas reconstruit dans cette passe.
+
+### Conclusion actuelle et prochaine validation
+
+Extension prête pour un contrôle visuel : faisceau étroit/large, portrait et
+paysage, recadrage, exposition positive et négative, contour progressif et
+superposition. Validation partielle rattachée à l’[issue #24](https://github.com/KimntexX/IPR/issues/24).
+Aucune fusion dans dev, publication ou création de tag n’est effectuée.

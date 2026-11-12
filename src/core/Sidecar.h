@@ -17,7 +17,7 @@
 // save rewrites them at the current format. A file of a newer format is read but
 // never overwritten.
 namespace Sidecar {
-inline constexpr int FormatVersion = 10;
+inline constexpr int FormatVersion = 11;
 
 // Where a sidecar stands against this IPR.
 enum class Format { Current, Older, Newer };

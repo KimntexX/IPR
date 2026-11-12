@@ -24,7 +24,7 @@
 // resolution.
 namespace LocalAdjustments {
 
-enum class Kind { Linear, Radial, Brush, LuminanceRange };
+enum class Kind { Linear, Radial, Brush, LuminanceRange, Triangle, Trapezoid };
 enum class Combine { Add, Subtract, Intersect };
 
 struct BrushStroke
@@ -49,6 +49,10 @@ struct Shape
     float radiusY = 0.25f;
     float angle = 0.0f;      // degrees, clockwise
     float feather = 0.5f;    // share of the radius that fades, in [0, 1]
+    // Full widths perpendicular to start -> end, in shares of the canvas's
+    // long side. A triangle always has zero width at its start.
+    float startWidth = 0.12f;
+    float endWidth = 0.4f;
     std::vector<BrushStroke> strokes;
     // Luminance range: what the image shows before any edit, encoded as the eye reads it,
     // whole between low and high, fading over feather on each side. Alone it selects tones;

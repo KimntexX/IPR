@@ -246,6 +246,7 @@ QCborArray encodeMasks(const LocalAdjustments::Masks &masks)
                 {QStringLiteral("inverted"), shape.inverted}, {QStringLiteral("start"), pointArray(shape.start)},
                 {QStringLiteral("end"), pointArray(shape.end)}, {QStringLiteral("center"), pointArray(shape.center)},
                 {QStringLiteral("radiusX"), double(shape.radiusX)}, {QStringLiteral("radiusY"), double(shape.radiusY)},
+                {QStringLiteral("startWidth"), double(shape.startWidth)}, {QStringLiteral("endWidth"), double(shape.endWidth)},
                 {QStringLiteral("angle"), double(shape.angle)}, {QStringLiteral("feather"), double(shape.feather)},
                 {QStringLiteral("strokes"), strokes}, {QStringLiteral("rangeLow"), double(shape.rangeLow)},
                 {QStringLiteral("rangeHigh"), double(shape.rangeHigh)}, {QStringLiteral("rangeFeather"), double(shape.rangeFeather)}});
@@ -289,6 +290,8 @@ bool decodeMasks(const QCborArray &list, LocalAdjustments::Masks &masks)
             shape.inverted = fields.value(QStringLiteral("inverted")).toBool();
             shape.radiusX = float(fields.value(QStringLiteral("radiusX")).toDouble());
             shape.radiusY = float(fields.value(QStringLiteral("radiusY")).toDouble());
+            shape.startWidth = float(fields.value(QStringLiteral("startWidth")).toDouble(0.12));
+            shape.endWidth = float(fields.value(QStringLiteral("endWidth")).toDouble(0.4));
             shape.angle = float(fields.value(QStringLiteral("angle")).toDouble());
             shape.feather = float(fields.value(QStringLiteral("feather")).toDouble());
             shape.rangeLow = float(fields.value(QStringLiteral("rangeLow")).toDouble(0.0));

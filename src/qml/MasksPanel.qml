@@ -31,7 +31,8 @@ Item {
 
     readonly property var kinds: [
         { key: "brush", label: qsTr("Pinceau") }, { key: "linear", label: qsTr("Dégradé linéaire") },
-        { key: "radial", label: qsTr("Dégradé radial") }, { key: "luminanceRange", label: qsTr("Plage") }
+        { key: "radial", label: qsTr("Dégradé radial") }, { key: "luminanceRange", label: qsTr("Plage") },
+        { key: "triangle", label: qsTr("Cône triangulaire") }, { key: "trapezoid", label: qsTr("Cône trapézoïdal") }
     ]
     readonly property var combinations: [
         { key: "add", label: qsTr("Ajouter") }, { key: "subtract", label: qsTr("Soustraire") },
@@ -108,6 +109,8 @@ Item {
         if (shape) {
             featherControl.value = shape.feather * 100
             angleControl.value = shape.angle
+            startWidthControl.value = shape.startWidth * 100
+            endWidthControl.value = shape.endWidth * 100
             rangeLowControl.value = shape.rangeLow * 100
             rangeHighControl.value = shape.rangeHigh * 100
             rangeFeatherControl.value = shape.rangeFeather * 100
@@ -383,6 +386,7 @@ Item {
                     text: root.tool === "brush" ? qsTr("Peignez sur l'image.")
                         : root.tool === "linear" ? qsTr("Déplacez les deux poignées sur l'image : effet entier avant la première, aucun après la seconde.")
                         : root.tool === "radial" ? qsTr("Déplacez le centre et les bords sur l'image.")
+                        : root.tool === "triangle" || root.tool === "trapezoid" ? qsTr("Déplacez les extrémités pour orienter le cône et les poignées latérales pour l’élargir. Les largeurs sont relatives au grand côté de l’image.")
                         : root.tool === "luminanceRange" ? qsTr("Choisit les tons de l'image avant toute retouche.") : ""
                 }
                 AdjustmentControl {
@@ -428,9 +432,33 @@ Item {
                     onValueEdited: root.brushFlow = value / 100
                 }
                 AdjustmentControl {
+                    id: startWidthControl
+                    objectName: "maskStartWidth"
+                    visible: root.tool === "trapezoid"
+                    textColor: root.textColor
+                    secondaryTextColor: root.secondaryTextColor
+                    label: qsTr("Largeur au départ (%)")
+                    minimumValue: 0; maximumValue: 800; resetValue: 12
+                    valueText: value.toFixed(1)
+                    adjustmentEnabled: root.currentShape !== null
+                    onValueEdited: root.sendShapeField("startWidth", value / 100)
+                }
+                AdjustmentControl {
+                    id: endWidthControl
+                    objectName: "maskEndWidth"
+                    visible: root.tool === "triangle" || root.tool === "trapezoid"
+                    textColor: root.textColor
+                    secondaryTextColor: root.secondaryTextColor
+                    label: qsTr("Largeur à l’arrivée (%)")
+                    minimumValue: 0; maximumValue: 800; resetValue: 40
+                    valueText: value.toFixed(1)
+                    adjustmentEnabled: root.currentShape !== null
+                    onValueEdited: root.sendShapeField("endWidth", value / 100)
+                }
+                AdjustmentControl {
                     id: featherControl
                     objectName: "maskFeather"
-                    visible: root.tool === "radial"
+                    visible: root.tool === "radial" || root.tool === "triangle" || root.tool === "trapezoid"
                     textColor: root.textColor
                     secondaryTextColor: root.secondaryTextColor
                     label: qsTr("Contour progressif (%)")
