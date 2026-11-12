@@ -270,6 +270,15 @@ int main(int argc, char **argv)
                    near(shown->y(), canvas->y() + 512 * canvas->height() / 2000) &&
                    near(shown->width(), 512 * canvas->width() / 3200),
                    "a tile sits on its part of the preview")) return 1;
+        // At 100 % the tile is smoothed as before; beyond, each file pixel is a sharp square, while the
+        // preview standing in for finer pixels stays smoothed.
+        if (!check(shown->property("smooth").toBool() && !viewport->property("crispPixels").toBool(),
+                   "at 100 %, smoothed")) return 1;
+        key(window, Qt::Key_Plus, Qt::ControlModifier, "+");
+        for (int i = 0; i < 3; ++i) settle();
+        if (!check(viewport->property("crispPixels").toBool() && !shown->property("smooth").toBool() &&
+                   canvas->property("smooth").toBool() && viewport->property("imageReady").toBool(),
+                   "beyond 100 %, the file's pixels are sharp squares, the preview stays smoothed")) return 1;
         key(window, Qt::Key_0, Qt::ControlModifier, "0");
         for (int i = 0; i < 3; ++i) settle();
         if (!check(!shown->isVisible() || shown->parentItem() == nullptr, "back at fit, no tile shows")) return 1;

@@ -87,6 +87,13 @@ attendant.
   mise à l'échelle Windows reste un rapport supplémentaire). Le zoom maximal
   est 400 % du fichier (au moins 8× l'aperçu). Une image plus petite que
   l'aperçu garde l'ancien comportement.
+- Au-delà de 100 %, il n'existe pas de détail plus fin : les pixels du fichier
+  sont agrandis **sans lissage**, chacun en carré net (décision de
+  l'utilisateur du 12 novembre 2026), pour juger le grain, les bords et le
+  débruitage pixel par pixel ; les paliers entiers (200, 300, 400 %) donnent
+  des carrés réguliers. L'aperçu qui tient lieu de pleine résolution en
+  attendant reste lissé, et seul le lissage change (changer le mipmap
+  rechargerait l'image et la ferait clignoter).
 - Un changement de réglage masque l'image détaillée dès le nouvel aperçu
   publié : des pixels d'autres réglages ne sont jamais montrés. L'outil de
   recadrage, les surimpressions (masques, retouches, couleur de point) et la

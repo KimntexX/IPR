@@ -84,6 +84,12 @@ Item {
         && zoomScale * devicePixelRatio > 1.001 && !showingComparison && !showingOriginal
         && !cropEditing && maskShape === null
     readonly property bool showingDetail: wantsDetail && detailCanvas.shown
+    // Beyond 100 %, each pixel of the file shows as a sharp square: nothing finer exists, and
+    // smoothing would hide the grain and the edges being judged. The preview standing in for
+    // a finer image keeps its smoothing; it is not the file's pixels. Only smooth changes:
+    // changing mipmap reloads the image, and the view would blink.
+    readonly property bool crispPixels: !fitMode && zoomScale > actualScale * 1.0001
+    readonly property bool previewIsFile: detailRatio <= 1
 
     function clampPan() {
         offsetX = Math.max(-maxOffsetX, Math.min(maxOffsetX, offsetX))
@@ -270,7 +276,7 @@ Item {
             asynchronous: true
             retainWhileLoading: true
             cache: false
-            smooth: true
+            smooth: !(root.crispPixels && root.previewIsFile)
             // Mipmapped minification out of fit: a plain bilinear reduction beyond 2x
             // aliases the grain and showed more noise than the image holds.
             mipmap: true
@@ -296,7 +302,7 @@ Item {
             source: root.wantsDetail ? root.detailSource : ""
             asynchronous: true
             cache: false
-            smooth: true
+            smooth: !root.crispPixels
             mipmap: true
             visible: root.showingDetail
         }
@@ -319,7 +325,7 @@ Item {
                 source: tileSource
                 asynchronous: true
                 cache: false
-                smooth: true
+                smooth: !root.crispPixels
                 mipmap: true
                 visible: root.wantsDetail && status === Image.Ready && !fitCanvas.shown
             }
@@ -361,7 +367,7 @@ Item {
             asynchronous: true
             retainWhileLoading: true
             cache: false
-            smooth: true
+            smooth: !(root.crispPixels && root.previewIsFile)
             mipmap: true
             visible: !fitOriginal.shown
             fillMode: Image.PreserveAspectFit
