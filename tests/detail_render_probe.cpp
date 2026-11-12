@@ -64,6 +64,11 @@ std::vector<std::pair<QString, std::function<void(Settings &)>>> states()
     };
     return {
         {"neutral", [](Settings &) {}},
+        // One control at a time: which part of the tones and colour costs.
+        {"brightness_only", [](Settings &s) { s.brightness = 0.3f; }},
+        {"contrast_only", [](Settings &s) { s.contrast = 20; }},
+        {"shadows_highlights_only", [](Settings &s) { s.shadows = 30; s.highlights = -30; }},
+        {"vibrance_only", [](Settings &s) { s.vibrance = 15; }},
         {"tones_colour", base},
         {"tones_colour_denoise", [base](Settings &s) { base(s); s.denoiseLuminance = 40; s.denoiseChrominance = 30; }},
         {"tones_colour_sharpening", [base](Settings &s) { base(s); s.sharpeningAmount = 40; }},

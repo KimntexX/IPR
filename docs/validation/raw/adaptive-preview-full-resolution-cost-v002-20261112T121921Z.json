@@ -1,0 +1,182 @@
+{
+    "images": [
+        {
+            "camera": "EOS R6 Mark III",
+            "file": "6V1A9819.CR3",
+            "height": 6959,
+            "preview_height": 2048,
+            "preview_width": 1365,
+            "states": [
+                {
+                    "full_resolution_ms": 545.4254,
+                    "peak_working_set_mib": 1821.9453125,
+                    "preview_ms": 52.0615,
+                    "ratio": 10.476559453723,
+                    "state": "neutral"
+                },
+                {
+                    "full_resolution_ms": 1470.6371,
+                    "peak_working_set_mib": 2314.7421875,
+                    "preview_ms": 138.7585,
+                    "ratio": 10.598537026560535,
+                    "state": "brightness_only"
+                },
+                {
+                    "full_resolution_ms": 1080.5662,
+                    "peak_working_set_mib": 2314.7578125,
+                    "preview_ms": 98.3105,
+                    "ratio": 10.991361044852788,
+                    "state": "contrast_only"
+                },
+                {
+                    "full_resolution_ms": 828.0672,
+                    "peak_working_set_mib": 2314.8671875,
+                    "preview_ms": 75.9861,
+                    "ratio": 10.897614168907209,
+                    "state": "shadows_highlights_only"
+                },
+                {
+                    "full_resolution_ms": 1430.8759,
+                    "peak_working_set_mib": 2314.94921875,
+                    "preview_ms": 131.3349,
+                    "ratio": 10.894864198320477,
+                    "state": "vibrance_only"
+                },
+                {
+                    "full_resolution_ms": 2550.1916,
+                    "peak_working_set_mib": 2314.94921875,
+                    "preview_ms": 228.1202,
+                    "ratio": 11.179157303912586,
+                    "state": "tones_colour"
+                },
+                {
+                    "full_resolution_ms": 5100.4215,
+                    "peak_working_set_mib": 3670.13671875,
+                    "preview_ms": 453.029,
+                    "ratio": 11.258487867222629,
+                    "state": "tones_colour_denoise"
+                },
+                {
+                    "full_resolution_ms": 2947.2122,
+                    "peak_working_set_mib": 3670.13671875,
+                    "preview_ms": 255.4624,
+                    "ratio": 11.53677488350536,
+                    "state": "tones_colour_sharpening"
+                },
+                {
+                    "full_resolution_ms": 3560.352,
+                    "peak_working_set_mib": 3670.13671875,
+                    "preview_ms": 333.636,
+                    "ratio": 10.671366399309425,
+                    "state": "tones_colour_texture_clarity"
+                },
+                {
+                    "full_resolution_ms": 2976.1188,
+                    "peak_working_set_mib": 3670.13671875,
+                    "preview_ms": 503.5487,
+                    "ratio": 5.910289908404093,
+                    "state": "tones_colour_dehaze"
+                },
+                {
+                    "full_resolution_ms": 7199.7533,
+                    "peak_working_set_mib": 3670.6796875,
+                    "preview_ms": 857.4286,
+                    "ratio": 8.39691293245875,
+                    "state": "everything"
+                }
+            ],
+            "width": 4639
+        },
+        {
+            "camera": "EOS 60D",
+            "file": "IMG_3135.CR2",
+            "height": 3464,
+            "preview_height": 1364,
+            "preview_width": 2048,
+            "states": [
+                {
+                    "full_resolution_ms": 335.8367,
+                    "peak_working_set_mib": 3670.6796875,
+                    "preview_ms": 54.4394,
+                    "ratio": 6.169000760478625,
+                    "state": "neutral"
+                },
+                {
+                    "full_resolution_ms": 768.5258,
+                    "peak_working_set_mib": 3670.6796875,
+                    "preview_ms": 127.4772,
+                    "ratio": 6.028731412362368,
+                    "state": "brightness_only"
+                },
+                {
+                    "full_resolution_ms": 636.9974,
+                    "peak_working_set_mib": 3670.6796875,
+                    "preview_ms": 102.8401,
+                    "ratio": 6.19405659854473,
+                    "state": "contrast_only"
+                },
+                {
+                    "full_resolution_ms": 493.7308,
+                    "peak_working_set_mib": 3670.6796875,
+                    "preview_ms": 79.3492,
+                    "ratio": 6.22225302838592,
+                    "state": "shadows_highlights_only"
+                },
+                {
+                    "full_resolution_ms": 825.5405,
+                    "peak_working_set_mib": 3670.6796875,
+                    "preview_ms": 132.3851,
+                    "ratio": 6.235901925518808,
+                    "state": "vibrance_only"
+                },
+                {
+                    "full_resolution_ms": 1382.7801,
+                    "peak_working_set_mib": 3670.6796875,
+                    "preview_ms": 222.0012,
+                    "ratio": 6.228705520510699,
+                    "state": "tones_colour"
+                },
+                {
+                    "full_resolution_ms": 2737.14,
+                    "peak_working_set_mib": 3670.6796875,
+                    "preview_ms": 437.3822,
+                    "ratio": 6.258005012549664,
+                    "state": "tones_colour_denoise"
+                },
+                {
+                    "full_resolution_ms": 1614.3379,
+                    "peak_working_set_mib": 3670.6796875,
+                    "preview_ms": 251.6966,
+                    "ratio": 6.413824819246664,
+                    "state": "tones_colour_sharpening"
+                },
+                {
+                    "full_resolution_ms": 1953.8637,
+                    "peak_working_set_mib": 3670.6796875,
+                    "preview_ms": 347.7651,
+                    "ratio": 5.618343243758503,
+                    "state": "tones_colour_texture_clarity"
+                },
+                {
+                    "full_resolution_ms": 1655.7554,
+                    "peak_working_set_mib": 3670.6796875,
+                    "preview_ms": 317.6326,
+                    "ratio": 5.212800575255814,
+                    "state": "tones_colour_dehaze"
+                },
+                {
+                    "full_resolution_ms": 4005.3522,
+                    "peak_working_set_mib": 3670.6796875,
+                    "preview_ms": 689.3133,
+                    "ratio": 5.810641111958814,
+                    "state": "everything"
+                }
+            ],
+            "width": 5202
+        }
+    ],
+    "method": "RenderChain::preview at pixelScale 1 (the zoom's full-resolution render) and on the 2048-pixel proxy, best of 2 runs, no stage cache, no neural stage",
+    "schema_version": 1,
+    "status": "adaptive_preview_step1_full_resolution_cost",
+    "threads": 20
+}

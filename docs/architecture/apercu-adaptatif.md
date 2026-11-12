@@ -125,6 +125,28 @@ Pic de mémoire du processus : 3,7 Gio avec le RAW de 32 Mpx chargé.
   étape par pixel est anormalement lente en pleine résolution. La profiler
   avant le rendu par zone peut diviser tous les temps.
 
+### Première correction : boucles par pixel parallélisées — 12 novembre 2026
+
+Le contraste global, les ombres/hautes lumières globales, la balance des blancs
+hors DCP, le niveau de gris, la surimpression des poids et `ipr::allFinite`
+(appelé sur toute la source à chaque rendu) tournaient sur un seul thread. Ils
+passent par `ipr::parallelRows`, ligne par ligne, sans changer le calcul d'un
+pixel (80 tests CTest identiques).
+
+| Réglages (R6 III 32 Mpx) | Avant | Après |
+| --- | --- | --- |
+| Neutre | 0,92 s | 0,55 s |
+| Contraste seul | 3,54 s | 1,08 s |
+| Ombres/hautes lumières seules | 1,62 s | 0,83 s |
+| Tons et couleur | 5,7–6,1 s | 2,55 s |
+| + bruit | 8,7 s | 5,1 s |
+| Tout | 11,2 s | 7,2 s |
+
+Le 60D passe de 6,2 à 4,0 s pour « tout »
+([preuve](../validation/raw/adaptive-preview-full-resolution-cost-v002-20261112T121921Z.json)).
+Ce gain vaut aussi pour l'aperçu et l'export. Restent les plus coûteux :
+exposition de scène (≈ 0,9 s), vibrance (≈ 0,9 s) et débruitage (≈ 2,5 s).
+
 ## Étapes
 
 1. ✅ Banc de mesure (ci-dessus). Reste : profilage de « tons et couleur »
