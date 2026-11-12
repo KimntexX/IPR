@@ -9,6 +9,11 @@ Item {
 
     property url source
     property url originalSource
+    // The whole image at full resolution, once rendered: shown when the zoom enlarges the
+    // preview. detailRatio: full-resolution pixels per preview pixel (1: none to show).
+    property url detailSource
+    property real detailRatio: 1
+    property bool detailRendering: false
     property bool comparisonEnabled: false
     property bool originalHeld: false
     property real comparisonPosition: 0.5
@@ -38,7 +43,9 @@ Item {
     property real manualScale: 1
     property real offsetX: 0
     property real offsetY: 0
-    readonly property real maximumScale: 8
+    // Percentages and 100 % count the file's pixels; scales stay in preview pixels.
+    readonly property real actualScale: Math.max(1, detailRatio)
+    readonly property real maximumScale: 4 * Math.max(2, detailRatio)
     readonly property real fitScale: previewWidth > 0 && previewHeight > 0
         ? Math.min(1, width / previewWidth, height / previewHeight) : 1
     readonly property real minimumScale: Math.min(fitScale, 0.05)
@@ -64,6 +71,11 @@ Item {
     readonly property real maxOffsetX: Math.max(0, (canvas.width - width) / 2)
     readonly property real maxOffsetY: Math.max(0, (canvas.height - height) / 2)
     readonly property real toolbarHeight: zoomToolbar.visible ? zoomToolbar.height + 12 : 0
+    // The preview is enlarged on screen: its full-resolution render is asked for.
+    readonly property bool wantsDetail: imageReady && !fitMode && detailRatio > 1
+        && zoomScale * devicePixelRatio > 1.001 && !showingComparison && !showingOriginal
+        && !cropEditing && maskShape === null
+    readonly property bool showingDetail: wantsDetail && detailCanvas.shown
 
     function clampPan() {
         offsetX = Math.max(-maxOffsetX, Math.min(maxOffsetX, offsetX))
@@ -94,14 +106,14 @@ Item {
 
     function zoomIn() { setZoom(zoomScale * 1.25) }
     function zoomOut() { setZoom(zoomScale / 1.25) }
-    function actualSize() { setZoom(1) }
+    function actualSize() { setZoom(actualScale) }
 
     function toggleZoom(x, y) {
         if (!imageReady || x < imageLeft || x > imageLeft + canvas.width
                 || y < imageTop || y > imageTop + canvas.height)
             return
         if (fitMode)
-            setZoom(Math.max(1, fitScale * 2), x, y)
+            setZoom(Math.max(actualScale, fitScale * 2), x, y)
         else
             fitImage()
     }
@@ -217,6 +229,24 @@ Item {
                 root.previewHeight = sourceSize.height
                 root.clampPan()
             }
+        }
+        // Same place and size as the preview: only the pixels are finer.
+        Image {
+            id: detailCanvas
+            objectName: "detailViewportImage"
+            readonly property bool shown: status === Image.Ready
+                && Math.abs(sourceSize.width - root.previewWidth * root.detailRatio) <= root.detailRatio + 1
+                && Math.abs(sourceSize.height - root.previewHeight * root.detailRatio) <= root.detailRatio + 1
+            x: canvas.x
+            y: canvas.y
+            width: canvas.width
+            height: canvas.height
+            source: root.wantsDetail ? root.detailSource : ""
+            asynchronous: true
+            cache: false
+            smooth: true
+            mipmap: true
+            visible: root.showingDetail
         }
         Image {
             id: fitCanvas
@@ -477,6 +507,26 @@ Item {
         }
     }
 
+    // The enlarged preview stays on screen until the full-resolution render replaces it.
+    Rectangle {
+        objectName: "detailPendingIndicator"
+        anchors.left: parent.left
+        anchors.bottom: parent.bottom
+        anchors.margins: 6
+        width: detailCaption.implicitWidth + 14
+        height: detailCaption.implicitHeight + 8
+        radius: 3
+        color: Qt.rgba(root.panelColor.r, root.panelColor.g, root.panelColor.b, 0.92)
+        visible: root.wantsDetail && !root.showingDetail && root.detailRendering
+        Text {
+            id: detailCaption
+            anchors.centerIn: parent
+            text: qsTr("Rendu pleine résolution…")
+            color: root.textColor
+            font.pixelSize: 12
+        }
+    }
+
     Rectangle {
         id: zoomToolbar
         objectName: "viewportToolbar"
@@ -502,7 +552,7 @@ Item {
                 Layout.minimumWidth: 46
                 horizontalAlignment: Text.AlignHCenter
                 color: root.textColor
-                text: Math.round(root.zoomScale * 100) + " %"
+                text: Math.round(root.zoomScale / root.actualScale * 100) + " %"
                 font.pixelSize: 12
             }
             PreferenceButton {
@@ -522,7 +572,7 @@ Item {
                 model: [
                     {name: "zoomOutButton", label: "−", tip: qsTr("Réduire — Ctrl −")},
                     {name: "zoomInButton", label: "+", tip: qsTr("Agrandir — Ctrl +")},
-                    {name: "actualSizeButton", label: "100 %", tip: qsTr("100 % de l'aperçu — Ctrl 1")},
+                    {name: "actualSizeButton", label: "100 %", tip: qsTr("100 % des pixels de l'image — Ctrl 1")},
                     {name: "fitImageButton", label: qsTr("Ajuster"), tip: qsTr("Adapter à la fenêtre — Ctrl 0")},
                     {name: "compareImageButton", label: qsTr("Avant/après"), tip: qsTr("Origine à gauche / actuel à droite — Ctrl Maj Y")}
                 ]

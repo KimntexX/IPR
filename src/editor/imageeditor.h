@@ -92,6 +92,13 @@ class ImageEditor final : public QObject
     Q_PROPERTY(QString imageSource READ imageSource NOTIFY previewChanged)
     Q_PROPERTY(bool embeddedPreview READ embeddedPreview NOTIFY previewChanged)
     Q_PROPERTY(QString originalImageSource READ originalImageSource NOTIFY previewChanged)
+    // Zoomed beyond the preview: the whole image at full resolution, as exported,
+    // rendered in the background once the settings rest. Empty while it is not ready.
+    Q_PROPERTY(bool detailWanted READ detailWanted WRITE setDetailWanted NOTIFY detailChanged)
+    Q_PROPERTY(QString detailImageSource READ detailImageSource NOTIFY detailChanged)
+    Q_PROPERTY(bool detailRendering READ detailRendering NOTIFY detailChanged)
+    // Full-resolution pixels per preview pixel; 1 when no full resolution can be shown.
+    Q_PROPERTY(double detailRatio READ detailRatio NOTIFY previewChanged)
     Q_PROPERTY(QString statusMessage READ statusMessage NOTIFY statusMessageChanged)
     Q_PROPERTY(bool hasImage READ hasImage NOTIFY hasImageChanged)
     Q_PROPERTY(bool busy READ busy NOTIFY busyChanged)
@@ -202,6 +209,11 @@ public:
     QUrl folder() const;
     QString imageSource() const;
     QString originalImageSource() const;
+    bool detailWanted() const { return m_detailWanted; }
+    void setDetailWanted(bool wanted);
+    QString detailImageSource() const { return m_detailSource; }
+    bool detailRendering() const { return m_detailWatcher.isRunning(); }
+    double detailRatio() const;
     QString statusMessage() const;
     bool hasImage() const;
     bool busy() const;
@@ -387,6 +399,7 @@ signals:
     void rawDevelopmentChanged();
     void folderChanged();
     void previewChanged();
+    void detailChanged();
     void statusMessageChanged();
     // A command failed or was refused: the interface shows it where the user just acted.
     void errorReported(const QString &message);
@@ -464,6 +477,12 @@ private:
     // Develops (or finds in the cache) the "before" of a photo the network was applied to.
     void startBeforeDevelopment();
     void dropBeforeDevelopment();
+    // The full-resolution view: what it shows, when it is shown, its background render.
+    QByteArray detailKey() const;
+    bool detailShowable() const;
+    void refreshDetail();
+    void startDetailRender();
+    void dropDetail();
     void restoreBeforeEmbeddedPreview();
     void schedulePrefetch();
     void startPrefetch();
@@ -564,6 +583,15 @@ private:
     QFutureWatcher<LoadResult> m_beforeWatcher;
     std::shared_ptr<std::atomic_bool> m_beforeCancel;
     bool m_beforePending = false;
+    bool m_detailWanted = false;
+    QString m_detailSource;
+    QByteArray m_detailImageKey;           // what the provider's detail image shows
+    QByteArray m_detailRenderKey;          // what the running render will show
+    QByteArray m_detailFailedKey;          // not retried until the settings or the source change
+    quint64 m_sourceGeneration = 0;        // a new decoded source: a detail of the former is stale
+    int m_detailRevision = 0;
+    QTimer m_detailDelay;                  // the settings rest before a full-resolution render
+    QFutureWatcher<RenderChain::Preview> m_detailWatcher;
     bool m_embeddedPreview = false;
     QImage m_restorePreview, m_restoreOriginal;
     QString m_restoreImageSource, m_restoreOriginalSource;

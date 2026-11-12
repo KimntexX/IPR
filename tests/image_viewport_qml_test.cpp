@@ -195,6 +195,37 @@ int main(int argc, char **argv)
     if (!check(near(number(viewport, "zoomScale"), 1), "Ctrl 1 should select actual preview size")) return 1;
     key(window, Qt::Key_0, Qt::ControlModifier, "0");
     if (!check(viewport->property("fitMode").toBool(), "Ctrl 0 should return to fit")) return 1;
+    // A full resolution twice the preview: 100 % counts the file's pixels, and the
+    // enlarged preview asks for its detail, shown in its place once of the right size.
+    {
+        QImage fine(3200, 2000, QImage::Format_RGBA8888);
+        fine.fill(QColor("#7a8f3c"));
+        const QString finePath = directory.filePath("detail.png");
+        const QString wrongPath = directory.filePath("detail-wrong.png");
+        if (!fine.save(finePath) || !image.save(wrongPath)) return 1;
+        viewport->setProperty("detailRatio", 2.0);
+        if (!check(!viewport->property("wantsDetail").toBool(), "no detail asked at fit")) return 1;
+        key(window, Qt::Key_1, Qt::ControlModifier, "1");
+        auto *percentage = visualItem(viewport, "zoomPercentage");
+        if (!check(near(number(viewport, "zoomScale"), 2) && percentage &&
+                   percentage->property("text").toString() == QStringLiteral("100 %"),
+                   "100 % is one file pixel per unit")) return 1;
+        if (!check(viewport->property("wantsDetail").toBool(), "the enlarged preview asks for its detail")) return 1;
+        auto *detail = viewport->findChild<QQuickItem *>("detailViewportImage");
+        viewport->setProperty("detailSource", QUrl::fromLocalFile(wrongPath));
+        for (int i = 0; i < 20; ++i) settle();
+        if (!check(detail && !detail->isVisible() && !viewport->property("showingDetail").toBool(),
+                   "a detail of another size is not shown")) return 1;
+        viewport->setProperty("detailSource", QUrl::fromLocalFile(finePath));
+        for (int i = 0; i < 50 && !detail->isVisible(); ++i) settle();
+        if (!check(detail->isVisible() && near(detail->width(), canvas->width()) && near(detail->x(), canvas->x()),
+                   "the detail takes the preview's place and size")) return 1;
+        key(window, Qt::Key_0, Qt::ControlModifier, "0");
+        if (!check(!viewport->property("wantsDetail").toBool() && !detail->isVisible(),
+                   "back at fit, the detail is no longer asked")) return 1;
+        viewport->setProperty("detailSource", QUrl());
+        viewport->setProperty("detailRatio", 1.0);
+    }
     QObject *plus = visualItem(viewport, "zoomInButton");
     QObject *fit = visualItem(viewport, "fitImageButton");
     if (!check(plus && fit, "zoom toolbar should exist")) return 1;

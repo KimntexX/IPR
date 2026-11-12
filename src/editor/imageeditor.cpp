@@ -44,6 +44,7 @@
 #include <limits>
 #include <optional>
 #include <utility>
+#include <QCborValue>
 #include <vector>
 
 namespace {
@@ -381,6 +382,26 @@ ImageEditor::ImageEditor(ImageProvider *provider,
     m_sidecarDebounce.setInterval(450);
     connect(&m_sidecarDebounce, &QTimer::timeout,
             this, &ImageEditor::saveCurrentSidecar);
+    m_detailDelay.setSingleShot(true);
+    m_detailDelay.setInterval(350);
+    connect(&m_detailDelay, &QTimer::timeout, this, &ImageEditor::startDetailRender);
+    connect(&m_detailWatcher, &QFutureWatcher<RenderChain::Preview>::finished, this, [this] {
+        RenderChain::Preview rendered;
+        try { rendered = Tasks::takeResult(m_detailWatcher.future()); }
+        catch (...) { rendered.error = tr("ressources insuffisantes ou traitement interrompu"); }
+        const QByteArray key = std::exchange(m_detailRenderKey, QByteArray());
+        const bool current = m_detailWanted && detailShowable() && key == detailKey();
+        if (current && !rendered.preview.isNull()) {
+            m_provider->setDetailImage(rendered.preview);
+            m_detailImageKey = key;
+            ++m_detailRevision;
+        } else if (current) {
+            m_detailFailedKey = key;
+            setStatusMessage(tr("Vue pleine résolution indisponible : %1").arg(rendered.error));
+        }
+        emit detailChanged();
+        refreshDetail();
+    });
 
     connect(&m_renderWatcher, &QFutureWatcher<RenderChain::Preview>::finished,
             this, [this] {
@@ -407,6 +428,7 @@ ImageEditor::ImageEditor(ImageProvider *provider,
             m_histogram = rendered.histogram;
             emit previewChanged();
             emit histogramChanged();
+            refreshDetail();
             if (rendered.retouchesNotDone > 0)
                 reportNewError(tr("%n retouche(s) laissée(s) sans effet : la zone est trop grande pour être reconstruite, ou sa source sort de l'image.", nullptr, rendered.retouchesNotDone));
         }
@@ -2333,6 +2355,92 @@ void attachToneStatistics(ColorPipeline::WorkingImage &image, ColorPipeline::Wor
 }
 }
 
+double ImageEditor::detailRatio() const
+{
+    // A restored proxy has no full resolution in memory; a small image is its own preview.
+    if (m_masterIsProxy || m_original.isNull() || m_editProxy.isNull() || m_editProxy.linearRgba.width() <= 0)
+        return 1.0;
+    return std::max(1.0, double(m_original.linearRgba.width()) / double(m_editProxy.linearRgba.width()));
+}
+
+QByteArray ImageEditor::detailKey() const
+{
+    return m_currentCacheKey.toUtf8() + '|' + QByteArray::number(m_sourceGeneration) + '|'
+        + QCborValue(RecipeCodec::encodeRecipe(m_settings, {})).toCbor();
+}
+
+// The overlays and the crop tool draw on the preview: the detail hides while they show.
+bool ImageEditor::detailShowable() const
+{
+    return m_detailWanted && detailRatio() > 1.0 && !m_cropEditing && m_pointColorOverlay < 0 &&
+        m_localMaskOverlay < 0 && m_retouchOverlay < 0 && !m_embeddedPreview && !m_loadWatcher.isRunning();
+}
+
+void ImageEditor::setDetailWanted(bool wanted)
+{
+    if (wanted == m_detailWanted) return;
+    m_detailWanted = wanted;
+    if (wanted) refreshDetail();
+    else dropDetail();
+    emit detailChanged();
+}
+
+// After each published preview: show the detail of these settings, or render it once they rest.
+void ImageEditor::refreshDetail()
+{
+    const bool showable = detailShowable();
+    const QByteArray key = showable ? detailKey() : QByteArray();
+    if (showable && !m_detailImageKey.isEmpty() && m_detailImageKey != key) {
+        // Other settings: the former pixels are never shown again, free them now.
+        m_provider->setDetailImage({});
+        m_detailImageKey.clear();
+    }
+    const QString source = showable && !m_detailImageKey.isEmpty()
+        ? QStringLiteral("image://editor/detail?revision=%1").arg(m_detailRevision) : QString();
+    if (source != m_detailSource) {
+        m_detailSource = source;
+        emit detailChanged();
+    }
+    if (showable && source.isEmpty() && key != m_detailRenderKey && key != m_detailFailedKey)
+        m_detailDelay.start();
+    else
+        m_detailDelay.stop();
+}
+
+void ImageEditor::startDetailRender()
+{
+    // A running render ends in refreshDetail, which asks again when needed.
+    if (!detailShowable() || m_detailWatcher.isRunning() || m_renderWatcher.isRunning()) return;
+    const QByteArray key = detailKey();
+    if (key == m_detailImageKey || key == m_detailFailedKey) return;
+    const auto source = std::make_shared<const ColorPipeline::WorkingImage>(ColorPipeline::sharedCopy(m_original));
+    m_detailRenderKey = key;
+    m_detailWatcher.setFuture(m_tasks.submit<RenderChain::Preview>(
+        QStringLiteral("detail"), Tasks::Priority::Foreground,
+        [source, settings = m_settings, resources = m_taskResources](Tasks::Context &) {
+            ImageCacheController *controller = &resources->cache;
+            const auto admission = controller->acquire({}, SystemMemory::estimateProcessingPeak(
+                quint64(source->linearRgba.width()) * quint64(source->linearRgba.height())), false).takeResult();
+            if (!admission.reservation) { RenderChain::Preview result; result.error = admission.error; return result; }
+            const auto release = qScopeGuard([&] { controller->release(admission.reservation); });
+            // The export's render: full resolution, no stage cache, no overlay.
+            return RenderChain::preview(*source, settings, false, 1.0);
+        }).future);
+    emit detailChanged();
+}
+
+void ImageEditor::dropDetail()
+{
+    m_detailDelay.stop();
+    m_provider->setDetailImage({});
+    m_detailImageKey.clear();
+    m_detailFailedKey.clear();
+    if (!m_detailSource.isEmpty()) {
+        m_detailSource.clear();
+        emit detailChanged();
+    }
+}
+
 const ColorPipeline::WorkingImage &ImageEditor::previewSource() const
 {
     return m_editProxy.isNull() ? m_original : m_editProxy;
@@ -2834,6 +2942,7 @@ void ImageEditor::applyLoadedImage(LoadResult loaded)
     m_embeddedPreview = false;
     m_restorePreview = m_restoreOriginal = QImage();
     m_masterIsProxy = loaded.proxyOnly;
+    ++m_sourceGeneration;
     m_fullSize = loaded.proxyOnly ? loaded.fullSize
         : QSize(loaded.image.linearRgba.width(), loaded.image.linearRgba.height());
     m_original = std::move(loaded.image);
@@ -2911,6 +3020,8 @@ void ImageEditor::releaseCurrentImage()
     m_original = {};
     m_editProxy = {};
     dropBeforeDevelopment();
+    ++m_sourceGeneration;
+    dropDetail();
     m_renderStageCache.clear();
     m_sourceMetadata = {};
     m_importProvenance = {};

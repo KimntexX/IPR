@@ -15,6 +15,9 @@ public:
     QImage image() const;
     void setImages(const QImage &current, const QImage &original);
     QImage originalImage() const;
+    // The full-resolution view of the current image (null when none).
+    void setDetailImage(const QImage &image);
+    QImage detailImage() const;
     Q_INVOKABLE void setUrl(const QUrl &url);
     QUrl url() const;
 
@@ -25,6 +28,7 @@ private:
     mutable QReadWriteLock m_lock;
     QImage m_image;
     QImage m_originalImage;
+    QImage m_detailImage;
     QUrl m_url;
 };
 
