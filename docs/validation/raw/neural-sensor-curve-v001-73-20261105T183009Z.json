@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "status": "passed_sensor_curve_preflight_discarded",
+  "seed": 73,
+  "preflight": true,
+  "plan_sha256": "00dfd3e56f2185a431aeefb39bc3dac93fb5d86e503ec4bab3fdf19790634683",
+  "git_sha": "79529772e4aa8fcbc63e9718b79b76264acea13b",
+  "config": {
+    "steps": 8,
+    "checkpoints": [
+      0,
+      256,
+      1024,
+      2048
+    ],
+    "checkpoint_interval": 64,
+    "accumulation": 4,
+    "learning_rate": 0.00025,
+    "scale": 2.0,
+    "side": 256,
+    "loss_border": 112,
+    "width": 8,
+    "structure_weight": 0.0,
+    "scope": "cfa_front",
+    "statistics_trainable": true,
+    "training_seed_base": 450000000,
+    "maximum_campaign_seconds": 5400
+  },
+  "milestones": [
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\sensor-curve-preflight-seed73-v003\\checkpoint-000000.pt",
+      "sha256": "662336cba2a8c78a33abb417b734dcf4e7d8cd89ad5b687c6e04377f6dc085b9",
+      "step": 0
+    }
+  ],
+  "step_seconds": [
+    0.7835590000031516,
+    0.3074559000087902,
+    0.3510672000120394,
+    0.3363237999728881,
+    0.33874269999796525,
+    0.32532679999712855,
+    0.3308260000194423,
+    0.31400299997767434
+  ],
+  "script_sha256": "c6cacff0628294ad8fef8bdc6a8124ba2e2b75fbcf1cb8a43ffdd2178f735c9b",
+  "tools": {
+    "sensor_curve_noise.py": "9b1868ae317b9da7bee29eb9355edd27b534dc6683548e65b15f8f6cb94d3c0a",
+    "train_sensor_curve.py": "c6cacff0628294ad8fef8bdc6a8124ba2e2b75fbcf1cb8a43ffdd2178f735c9b",
+    "noisy_training_policy.py": "2717b675bf77c586d6fb5777ef59b0aa0b0a7ce51c4cee805ad05b960a26304d"
+  },
+  "torch_version": "2.9.1+cu128",
+  "training_mask": {
+    "scope": "cfa_front",
+    "trainable_parameters": 32716,
+    "frozen_parameters": 33368,
+    "statistics_trainable": true
+  },
+  "initial_checkpoint": {
+    "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\sensor-curve-preflight-seed73-v003\\resume.pt",
+    "sha256": "662336cba2a8c78a33abb417b734dcf4e7d8cd89ad5b687c6e04377f6dc085b9",
+    "step": 0
+  },
+  "checkpoint": {
+    "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\sensor-curve-preflight-seed73-v003\\resume.pt",
+    "sha256": "556ce3ad21346e08d117228e372a64e2d920c344865612c87742d61cb75bceee",
+    "step": 8
+  },
+  "last_loss": 10.825097322507014,
+  "completed_steps": 8,
+  "elapsed_seconds": 7.053782700037118,
+  "resume_bit_exact": true,
+  "frozen_reconstruction_bit_exact": true,
+  "losses": [
+    6.559781908988953,
+    16.674893379245148,
+    9.432358125435712,
+    15.568955421466338,
+    13.006492614746094,
+    22.470272060483694,
+    8.946061611175537,
+    10.825097322507014
+  ],
+  "exposure_counts": {
+    "constant/phase0/scenario0": 1,
+    "constant/phase3/scenario1": 2,
+    "weak_achromatic_wave/phase2/scenario2": 1,
+    "weak_achromatic_wave/phase2/scenario3": 1,
+    "ramp/phase2/scenario0": 1,
+    "ramp/phase0/scenario1": 1,
+    "weak_achromatic_wave/phase3/scenario2": 2,
+    "weak_achromatic_wave/phase3/scenario3": 2,
+    "weak_achromatic_wave/phase1/scenario0": 1,
+    "edge/phase3/scenario1": 1,
+    "ramp/phase1/scenario0": 1,
+    "chromatic_wave/phase3/scenario1": 1,
+    "ramp/phase3/scenario2": 1,
+    "constant/phase0/scenario3": 1,
+    "edge/phase1/scenario0": 1,
+    "constant/phase2/scenario2": 1,
+    "weak_achromatic_wave/phase1/scenario3": 2,
+    "weak_achromatic_wave/phase0/scenario0": 1,
+    "edge/phase2/scenario1": 1,
+    "edge/phase0/scenario2": 1,
+    "edge/phase3/scenario3": 1,
+    "edge/phase2/scenario0": 1,
+    "ramp/phase1/scenario1": 2,
+    "chromatic_wave/phase0/scenario2": 1,
+    "ramp/phase0/scenario3": 1,
+    "ramp/phase3/scenario0": 1,
+    "edge/phase2/scenario2": 1
+  },
+  "median_seconds_per_update": 0.3335748999961652,
+  "peak_cuda_allocated_bytes": 73092608,
+  "memory": {
+    "hard_process_commit_bytes": 6442450944,
+    "soft_process_bytes": 4831838208,
+    "system_stop_fraction": 0.92,
+    "poll_seconds": 0.25,
+    "samples": 28,
+    "peak_rss_bytes": 1734885376,
+    "peak_private_sampled_bytes": 3244527616,
+    "peak_system_used_fraction": 0.7436318939991877,
+    "os_job_peak_commit_bytes": 3246186496,
+    "reason": null,
+    "last": {
+      "system_total_bytes": 16933507072,
+      "system_available_bytes": 4343275520,
+      "system_used_fraction": 0.7435099828090709,
+      "process_rss_bytes": 1734164480,
+      "process_private_bytes": 3243479040,
+      "process_peak_rss_bytes": 1734885376,
+      "process_peak_pagefile_bytes": 3246186496
+    }
+  }
+}

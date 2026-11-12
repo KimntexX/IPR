@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "status": "completed_probe_and_analysis",
+  "started_at_utc": "2026-11-07T21:15:16.398176+00:00",
+  "stages": [
+    {
+      "name": "probe",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\venv-neural-cuda\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\probe_dru_amplitudes.py",
+        "--campaign",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-haar-convergence-v001",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-haar-convergence-transfer-v001\\probe",
+        "--arms",
+        "reference",
+        "haar",
+        "--steps",
+        "256",
+        "512",
+        "1024"
+      ],
+      "timeout_seconds": 1320,
+      "returncode": 0,
+      "elapsed_seconds": 228.40289969998412
+    },
+    {
+      "name": "analysis",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\analyse_dru_amplitudes.py",
+        "--source",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-haar-convergence-transfer-v001\\probe\\result.json",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-haar-convergence-transfer-v001\\analysis\\result.json"
+      ],
+      "timeout_seconds": 180,
+      "returncode": 0,
+      "elapsed_seconds": 2.949373800016474
+    }
+  ],
+  "tools": {
+    "run_dru_transfer_check.py": "a43d95254440c32af0726bfc9e9ad53a2b9f8e81a017fa56cea238fc0e8157e3",
+    "probe_dru_amplitudes.py": "f8ff9094908db98343e49fd59d149482605a582429cfe708c24cf9ef80193bc0",
+    "analyse_dru_amplitudes.py": "1d40b91474e6499eade20c0507d740b417d9389f89d929a2de9b39c1264ccdc1"
+  },
+  "scope": "Declared amplitude controls on saved milestones; no training or native-pipeline qualification.",
+  "finished_at_utc": "2026-11-07T21:19:07.771162+00:00"
+}

@@ -2,7 +2,131 @@
 
 # B4 — étude de préparation de la restauration neuronale locale
 
-## État du 31 octobre 2026
+## État courant du 7 novembre 2026, après deuxième revue
+
+Le DRUNet CFA 32,6 M a terminé quatre entraînements de 1 024 mises à jour.
+Haar améliore les contrôles connus sur deux initialisations mais ne valide
+pas les détails faibles ni une qualité photographique. La campagne composite
+est en cours ; elle terminera ses deux candidats et ouvrira une fois sa
+réserve prospective, sans modification pendant exécution.
+
+Après lecture de cette campagne : **gel des nouvelles variantes de pertes,
+coefficients et recettes procédurales**, même si elle progresse. Recentrer
+sur du contenu CFA naturel bas ISO comme proxy déclaré, des étalons calibrés
+et la mesure de débit sur patches/réseaux plus petits. La médiane actuelle
+est ~2,45 s/mise à jour ; le chiffre 0,327 s ci-dessous appartient à l’ancien
+petit modèle. Aucun score d’étalon CFA BM3D/DRUNet gris n’est disponible.
+
+Les seuils sinus restent historiques et diagnostiques. Le cœur sans biais
+additifs ne suffit pas à rendre le correcteur à résidu multiplié par sigma
+homogène. Pas de modèle photographique ni de bruit multi-boîtier qualifié.
+Les douze réponses à la revue sont dans le fichier commun ; le
+[rapport évolutif](../validation/analyses/analyse-restauration-neuronale.md)
+porte le bilan et la décision actuelle.
+
+## État historique du 5 novembre 2026, après comparatif réel
+
+La réplication est close (10 et 12 échecs forts/48), sans ouverture de
+réserve ni sélection de graine. Trois compositions réelles, neuf régions
+fixes chacune, ont maintenant un comparatif neutre RCD / classique
+luminance courant / correcteur CFA puis RCD, les deux graines conservées.
+DRUNet officiel est testé séparément sur le sRGB encodé ; la reconstruction
+RGB apprise est un autre diagnostic, distinct de RCD. Bénéfice photographique
+non validé : dépendance aux graines et motifs directionnels observés.
+
+CUDA est qualifié numériquement sur le modèle courant ; un essai Adam
+jetable mesure environ 0,327 s/mise à jour, soit 9,1 h pour 100 000,
+avant génération/évaluation. Aucun apprentissage long ni intégration en
+production. La limite globale physique reste 92 %, avec budgets locaux
+distincts pour natif pleine définition et runtime CUDA.
+
+Étape suivante exécutée le même jour : 105 paires disjointes des fichiers
+de calibration, codes CFA avant balance et dématriçage, indiquent une loi
+variance/signal plus juste qu'une constante. Une sensibilité à la saturation
+et un contrôle entre sessions sont conservés séparément. Ce sont des
+coefficients expérimentaux ; pas de calibration ni de nouveaux poids livrés.
+Le pont rawpy/natif retrouve exactement 27 régions DN connues, avec une
+couverture limitée aux cas contrôlés.
+
+La carte sigma locale a ensuite été comparée aux deux constantes, avec
+les mêmes poids et RCD. Le raccordement est vérifié (carte constante
+identique au scalaire, image entière rejouée au bit près), mais la
+sensibilité aux graines persiste et aucun bénéfice photo robuste n'est
+établi. Pas de balayage supplémentaire de force sur ces scènes.
+
+Prochaine preuve : courbe d'apprentissage bornée avec bruit caractérisé,
+budget GPU et points de contrôle déclarés ; compléter aussi le classique
+couleur après les tons. Les 349 RAW inventoriés ne sont pas automatiquement
+admis à l'apprentissage.
+
+Cette courbe est préparée le 5 novembre : continuation des deux poids
+courants, reconstructeur gelé, Adam neuf, +2 048 mises à jour par graine,
+contrôles à 0/256/1024/2048. Même jeu de cibles connu, bruit gaussien
+conditionnel issu de la loi expérimentale ; durée et bruit changent
+ensemble, sans attribution causale à la durée seule. Les prévols CUDA
+et reprise exacte sont vérifiés. Projection environ 23 minutes de
+calcul plus rendu, plafond global 90 minutes et garde mémoire 92 %.
+Tous les jalons doivent être présentés, sans sélection sur les photos
+de développement et sans déclarer les anciennes régressions satisfaites.
+
+La courbe est achevée à 19 h 16 UTC, après une reprise depuis 576
+interrompue par la garde mémoire globale. Deux graines à +2048 et tous
+les jalons photo sont disponibles. Les médianes de chroma se rapprochent,
+mais l'écart RGB entre graines ne baisse que modestement et la luma
+diffère encore. Aucun bénéfice photographique robuste n'est validé.
+Avant de prolonger, rejouer les contrôles de développement connus puis
+les régressions qu'ils autorisent ; pas de nouvel accès à une réserve
+sur la seule baisse de la perte. Les calculs sont terminés.
+Pas de nouvelle acquisition avant examen des noirs/aplats/rafales existants,
+pas de nouvelle micro-variante procédurale sur les mêmes seuils. Le
+[rapport unique](../validation/analyses/analyse-restauration-neuronale.md)
+conserve les méthodes, résultats par campagne et limites.
+
+## État du 3 novembre2026
+
+Le premier contrat bruité (§17) est implémenté et couvert par9 tests
+ciblés, sans intégration en production. Les deux tentatives de premier
+apprentissage sont interrompues par le seuil de mémoire physique globale,
+alors que le processus reste autour de307Mio résidents. Aucun checkpoint
+final ou gain de débruitage n'est qualifié. L'utilisateur autorise ensuite
+un seuil global 92 % pour cette campagne, en conservant les plafonds propres
+au processus. Le plan est tracé dans une nouvelle version avant reprise,
+sans modifier données, modèles ou critères photographiques.
+
+La relance à92 % est également interrompue par un pic global95,08 %,
+avec environ307Mio résidents propres. Aucun résultat final disponible,
+aucun résultat de débruitage qualifié. La reprise technique est ensuite
+implémentée et testée (§18). Le lanceur et le plan sont préparés, en
+attente du signal explicite de l'utilisateur pour son absence13h30–17h30.
+
+## État historique du 2 novembre 2026
+
+**Structure Bayer expérimentale fiabilisée sur signaux synthétiques,
+pas de débruiteur photographique intégré.** La base de poursuite est
+décrite au [§13](#13-structure-bayer-expérimentale--2-novembre-2026) :
+36 candidats d'interpolation, convolutions contraintes par transposition,
+noyaux préparés une fois pour une inférence. Deux initialisations et une
+confirmation procédurale distincte de cette première structure sont
+conservées. La [voie locale suivante (§15)](#15-voie-courte-locale--2-novembre-2026)
+réduit l'erreur de reconstruction avec deux initialisations, puis sur
+des contenus procéduraux distincts. La graine 73 de l'objectif RGB échoue
+sur les ondes chromatiques du sous-ensemble historique20. L'objectif
+relatif suivant lève cet échec pour les deux graines, puis confirme
+une meilleure fidélité des ondes sur de nouveaux contenus, au prix
+d'une hausse d'erreur sur les contours distincts. Une pondération
+intermédiaire est désormais retenue comme base de poursuite : les deux
+graines passent les contrôles historiques et améliorent les groupes
+mixtes/contours de deux cohortes distinctes, sans domination de chaque cas.
+Cela qualifie une étape de reconstruction sans bruit, pas un débruiteur.
+Les576 comparaisons de sorties qualifient la préparation
+des noyaux de cette nouvelle branche, sans qualification photographique.
+
+Le [rapport évolutif](../validation/analyses/analyse-restauration-neuronale.md)
+et ses JSON canoniques portent les résultats et limites. Les sections1à12
+ci-dessous conservent le cadrage et les premiers essais historiques.
+L'ouverture, le filtre classique et l'IHM restent inchangés.
+
+## État historique du 31 octobre 2026
 
 **Premier banc synthétique passé (§10), pas intégration ni résultat photo.**
 L'utilisateur autorise les premiers tests et l'installation de PyTorch dans un
@@ -503,3 +627,1054 @@ Fixer les tolérances et les groupes avant d'examiner les sorties du réseau.
 Si les prises sont recevables, construire une première référence avec carte
 de validité et provenance, puis qualifier l'apprentissage réel. Sinon, indiquer
 les fichiers et raisons à corriger, sans les intégrer silencieusement.
+
+## 13. Structure Bayer expérimentale — 2 novembre 2026
+
+Décision de banc prise dans l'autonomie autorisée par l'utilisateur :
+retenir une structure symétrique par construction pour poursuivre B4,
+avec poids propres entraînés par Adam. Le U-Net de largeur8 produit
+36 coefficients bornés par tanh ; les convolutions suivent explicitement
+les permutations de canaux et la transposition des noyaux. Le compteur
+de31300 paramètres stockés ne représente pas autant de degrés de liberté
+indépendants après projection. Aucun poids tiers n'est utilisé ici.
+
+Les candidats d'interpolation ont masse1, premier moment nul et ne lisent
+que des échantillons de la même couleur. La liste est fermée par
+transposition ; les homologues verticaux du vert aux sites rouges et
+bleus sont présents. Les poids appris peuvent être négatifs dans la
+combinaison effective : aucune moyenne convexe ou borne[0,1] n'est
+présumée. Les garanties affines concernent l'intérieur, hors bords réfléchis.
+
+```mermaid
+flowchart TD
+    A["Banc : CFA caméra balancé flottant signé + tags ; sigma = 0"]
+    A --> B["Échelle fixe 1/2 puis canonisation exacte"]
+    B --> C["U-Net contraint par transposition ; une passe image"]
+    C --> D["36 coefficients bornés"]
+    B --> E["Bilinéaire + candidats fermés, même couleur"]
+    D --> E
+    E --> F["RGB caméra ; sites mesurés conservés"]
+    F --> G["Inverse de coordonnées et échelle ×2"]
+```
+
+Ce graphe décrit le **prototype de banc**, pas un nouveau chemin de
+production. Le contrat présent n'accepte que sigma0 et observations
+déclarées exactes : ce modèle n'est pas encore un joint dématriçage/
+débruitage qualifié. Pour le bruit, recopier les mesures du capteur
+conserverait précisément le bruit de ces sites ; il faudra définir
+un autre contrat d'estimation et le qualifier explicitement.
+
+### Préparation de l'inférence et identité des poids
+
+La projection des petits noyaux et biais est calculée une fois sur une
+copie indépendante et figée du modèle évalué. Les convolutions préparées
+deviennent ordinaires ; cela évite de répéter la projection à chaque
+image et n'exige pas une seconde vue transposée. Le modèle source et
+l'état aléatoire ne changent pas. La copie doit être reconstruite après
+tout changement de checkpoint : une future intégration devra identifier
+le checkpoint, la configuration, le domaine et la version de structure,
+et ne pas réutiliser un modèle préparé périmé. Aucun cache moteur ou
+chargement ONNX n'est implémenté par cette étude.
+
+Les sorties préparées sont identiques au bit près sur960 cas rejoués,
+deux graines conservées. Ce résultat qualifie l'optimisation sur le banc,
+pas une latence pleine définition. Le détail des contrôles, les échecs
+historiques et les temps par répétition restent dans le
+[rapport unique](../validation/analyses/analyse-restauration-neuronale.md).
+
+### Frontière de validation et suite
+
+Les propriétés de structure, les partitions et la reproductibilité sont
+distinctes de la qualité photo. La confirmation procédurale passe les
+critères pour les deux graines, mais ne remplace pas le groupe20
+historique où le gain minimal reste insuffisant. Aucun seuil n'a été
+ajusté et aucune meilleure graine n'est sélectionnée. Les contrôles
+de confirmation sont désormais consultés et ne redeviendront pas vierges.
+
+La qualification suivante devra fixer le bruit CFA et sa propagation,
+les pertes avec observations bruitées, les données physiques propres
+et réservées, le tuilage/halo et les pics mémoire avant toute intégration.
+Le CPU fournit le témoin numérique ; un environnement GPU séparé pourra
+être qualifié pour les campagnes plus lourdes. La présence d'une RTX3060
+12Go n'est pas un résultat de compatibilité CUDA/ONNX ou de vitesse.
+Pas de modification actuelle des profils, de l'espace de travail,
+du rendu par défaut, des réglages ou des exports de production.
+
+## 14. Protection mémoire et contrat bruité — 2 novembre 2026
+
+À la demande de l'utilisateur, les nouveaux pilotes lourds de ce banc
+Windows utilisent un job propre au processus : quota dur de2Gio de
+mémoire engagée, distincte de la RAM résidente. Un moniteur échantillonne
+les compteurs privés/résidents et la disponibilité physique toutes les0,25s.
+Il demande un arrêt à1,25Gio privés/résidents ou80 % de mémoire physique
+utilisée, vérifié aux frontières de chaque micro-lot. Ce second mécanisme
+est coopératif ; il ne borne ni ne termine les autres applications.
+L'API et les mesures exactes sont tracées dans le
+[rapport](../validation/analyses/analyse-restauration-neuronale.md).
+
+L'exécution est mono-processus, sans DataLoader multiprocessus ni chargement
+du corpus entier : micro-lot1, accumulation4, cache quatre petites images,
+évaluation en flux et absence de graphes conservés dans les mesures.
+Le refus d'installer le quota provoque un refus de lancer le calcul,
+sans repli silencieux non protégé. Les erreurs, pics et abandons sont
+enregistrés. Ce mécanisme de banc ne modifie pas le contrôleur mémoire
+de l'application ou les critères de livraison multiplateforme.
+
+### Contrat préparé pour le futur joint dématriçage/débruitage
+
+Le module de données bruitées distingue explicitement : observation CFA
+en quatre plans spatiaux, vérité RGB caméra à résolution complète,
+tags Bayer, sigma dans les mêmes unités et échelle positive déclarée.
+Les valeurs signées ou supérieures au blanc restent acceptées, sans
+gamma, changement de profil, min/max par image ou borne de signal.
+Les conversions non finies ou détruisant un non-zéro par sous-flux
+sont refusées. Les sources et l'état aléatoire global ne sont pas modifiés.
+
+Le premier bruit simulé suit `variance = a × max(signal,0) + b` ;
+les coefficients et graines sont connus, mais **ne constituent pas un
+profil Canon ni une correspondance ISO**. Le conditionnement sigma est
+calculé depuis l'observation bruitée et ces coefficients, pas depuis
+la vérité propre. Le plancher de variance ne borne pas le signal bruité :
+les valeurs négatives sont conservées. Signal, vérité et sigma partagent
+la même normalisation fixe, sigma étant divisé par cette échelle.
+
+Pour un futur profil physique établi avant gains de balance, appliquer
+un gain `g` au signal multiplie sa variance par `g²`. Avec la loi affine
+`a × signal + b`, les coefficients exprimés dans le domaine balancé
+deviennent `g × a` et `g² × b`. Il faut donc identifier le domaine exact
+et l'ordre des opérations avant d'utiliser un profil de capteur. Aucun
+coefficient de boîtier n'est extrapolé par le module synthétique.
+
+La perte future supervise toutes les composantes RGB, y compris les
+positions mesurées par le capteur. En régime bruité, leur copie exacte
+conserverait le bruit : le futur modèle doit pouvoir les corriger. Le
+modèle sans bruit actuel continue de refuser sigma non nul ; le nouveau
+contrat de données, testé séparément, n'est pas un raccordement de filtre
+ni un débruiteur entraîné. Un résultat calculé par RCD ne sera pas présenté
+comme une vérité indépendante du dématriçage.
+
+Le précontrôle et l'essai8192 étapes confirment une mémoire résidente
+inférieure à300Mio sur ce banc128pixels, sous quota2Gio engagés.
+Cela ne vaut pas pour une image pleine définition. L'essai long n'a
+pas levé le critère historique de reconstruction ; le contrat bruité
+est donc préparé et testé, mais aucun entraînement bruité n'a été lancé.
+Les poids précédents restent des preuves distinctes et les seuils ne
+sont pas assouplis. Les résultats détaillés et les catégories de mémoire
+mesurées restent dans le rapport unique.
+
+Le diagnostic suivant compare les coefficients complets à leurs biais
+seuls et à leurs moyennes spatiales, sur deux checkpoints figés. Il
+révèle une adaptation locale presque supprimable sur les contrôles
+procéduraux : remplacer les coefficients par une constante par canal
+et par image change très peu la sortie. La covariance structurelle
+ne prouve donc pas une adaptation locale utile. La piste suivante est
+une connexion courte donnant à la tête une information locale explicite,
+à tester par ablation et avec le même budget mémoire ; aucun nouveau
+modèle ou correctif de production n'est validé par ce seul constat.
+
+## 15. Voie courte locale — 2 novembre 2026
+
+L'ablation suivante ajoute une route d'accès aux variations de l'observation
+pour la tête36 : quatre descripteurs par plan CFA (pentes H/V centrales
+absolues et différences secondes H/V absolues), deux convolutions
+contraintes puis une tête1×1. Ses logits s'ajoutent à ceux du tronc avant
+tanh. La permutation transforme les positions et les directions ensemble.
+La source n'est pas bornée ou changée d'espace ; aucune vérité cible
+n'est lue par cette voie. L'initialisation commune et les têtes nulles
+conservent le point de départ bilinéaire.
+
+```mermaid
+flowchart TD
+    A["Observation CFA normalisée et canonique, sigma0"]
+    A --> B["Tronc U-Net et tête principale"]
+    A --> C["16 variations locales observées"]
+    C --> D["Deux convolutions contraintes et tête locale"]
+    B --> E["Somme des logits"]
+    D --> E
+    E --> F["tanh :36 coefficients locaux"]
+    A --> G["Bilinéaire et36 candidats fermés"]
+    F --> G
+    G --> H["RGB caméra puis inverse de coordonnées/échelle"]
+```
+
+Les deux routes appartiennent à une seule évaluation du modèle, sans
+seconde vue transposée. Le graphe reste celui du banc sans bruit.
+
+Le modèle compte33368 paramètres au lieu31300. Le tronc, les règles
+d'interpolation et de symétrie restent présents ; la capacité, les
+descripteurs et la longueur de chemin changent ensemble. La campagne
+appariée à2048 étapes, avec les mêmes données, Adam, micro-lots et
+critères, retrouve une adaptation spatiale effectivement utile et passe
+les12 critères sur20 et80 contrôles de développement, sans changer les
+seuils. Le détail, les ablations et les mesures font autorité dans le
+[rapport unique](../validation/analyses/analyse-restauration-neuronale.md).
+
+La reproduction avec la graine 73 conserve les gains globaux et passe
+les12 critères sur80 contrôles historiques, mais échoue sur les ondes
+chromatiques du sous-ensemble20 (11/12). Le succès initial71 n'est donc
+pas une qualification de toutes les initialisations. Les deux graines
+passent les12 critères sur80 nouveaux cas mixtes et améliorent les128
+nouveaux contours, sur un plan figé avant le second apprentissage mais
+après le choix d'architecture. Ces contenus consultés ne sont désormais
+plus réservés. Ils partagent les générateurs du développement.
+
+La préparation des noyaux des deux routes est requalifiée :576 sorties
+identiques au bit près, sans changement des sources. Les mesures CPU
+128px restent distinctes d'une latence photographique pleine définition.
+Cette branche reste expérimentale et sans bruit, sans validation photo.
+La protection des signaux chromatiques lisses doit être étudiée avant
+le pilote bruité, sans choisir la meilleure graine ou assouplir les seuils.
+
+L'essai suivant conserve cette architecture et pondère la MSE de chaque
+exemple par `max(MSE bilinéaire,1e-6)` en unités physiques, avec référence
+détachée du gradient. Les deux graines passent alors12/12 critères sur20
+et80 contrôles consultés. L'erreur globale baisse pour 71 mais augmente
+de5,57 % pour 73 face à leurs témoins respectifs. La fidélité des ondes
+progresse fortement. La confirmation suivante sur quatre checkpoints
+et832 cas nouveaux retrouve ce gain, mais l'erreur sur128 contours
+distincts augmente de6,69 %/17,96 % pour 71/73 face à l'objectif RGB.
+Il n'y a donc pas de supériorité globale uniforme. Un seul objectif
+intermédiaire, d'exposant d'énergie1/2, est fixé avant deux nouveaux
+apprentissages, puis comparaison des six modèles sur une autre cohorte.
+Les seuils ne changent pas et aucune graine n'est sélectionnée. Ce changement ne
+modifie pas les calculs d'inférence et n'est pas intégré en production.
+Les ressources restent bornées selon le§14 et aucune production ou IHM
+n'est modifiée par cette étude.
+
+## 16. Objectif tempéré retenu pour la poursuite — 2 novembre2026
+
+L'architecture locale33368 paramètres ne change pas. Seul l'objectif
+d'apprentissage devient `MSE / sqrt(1e-6 × max(MSE bilinéaire,1e-6))`
+en unités physiques du signal. La référence est détachée du gradient,
+disponible uniquement pour l'apprentissage supervisé. Aucune vérité
+cible n'est requise à l'inférence ; aucune nouvelle opération n'y est
+ajoutée par ce changement de fonction de coût.
+
+Les deux graines71/73 passent les12 critères historiques20/80. Les six
+checkpoints (RGB/relatif/tempéré×deux graines) sont ensuite comparés sur
+deux nouvelles cohortes procédurales figées avant leur mesure. Le tempéré
+améliore les groupes mixtes et les contours distincts pour les deux
+graines ;2496 sorties des deux campagnes sont identiques au bit près
+entre modèles sources et noyaux préparés. Les cas qui régressent restent
+rapportés : il ne s'agit pas d'une domination universelle. Cette base
+est retenue pour préparer le pilote bruité, sans nouvelle recherche
+d'objectif sur les mêmes contrôles. Les preuves et limites demeurent
+dans le rapport unique et les JSON canoniques.
+
+Le contrat actuel refuse sigma non nul et préserve les sites capteur
+exacts. La transition au bruit doit donc définir explicitement son
+conditionnement et le traitement des observations bruitées, avec tests
+des invariants attendus ; ouvrir seulement cette entrée ne suffit pas
+à qualifier un débruiteur. Pas d'intégration moteur/IHM à ce stade.
+
+## 17. Premier contrat bruité — 3 novembre2026
+
+Le pilote conserve la reconstruction locale tempérée et ajoute une
+correction CFA bornée par `3 × sigma × tanh(logits)` avant l'interpolation.
+Les deux parties sont apprises ensemble. Le modèle compte36588 paramètres,
+les paramètres initiaux du tronc proviennent des témoins71/73 qualifiés.
+Le sigma estimé est une entrée explicite, en mêmes unités que le signal.
+Il ne déclenche pas une borne RGB : les valeurs signées restent permises.
+
+```mermaid
+flowchart TD
+    A["Mosaïque observée, sigma estimé, étiquettes Bayer"]
+    A --> B["Canonisation spatiale des observations et du sigma"]
+    B --> C["Petite branche équivariante de correction CFA"]
+    C --> D["Correction bornée par 3 sigma, nulle à sigma0"]
+    B --> D
+    D --> E["Reconstruction locale, mêmes contraintes de symétrie"]
+    E --> F["RGB caméra signé, coordonnées restaurées"]
+```
+
+Une projection des observations bruitées à l'identique serait contradictoire
+avec le débruitage ; elle est refusée. À sigma0, les sites observés sont
+préservés et le résultat coïncide avec la reconstruction portant le même
+tronc. L'affinage peut changer ce tronc : le parent figé et les critères
+historiques restent donc des témoins distincts. La branche commence par
+une correction nulle et les poids de reconstruction doivent correspondre
+exactement au contrat attendu, sans chargement partiel silencieux.
+
+Le premier essai est simulé, avant dématriçage, avec variance dépendant du
+signal et sigma estimé depuis l'observation. Ce n'est pas un profil de
+capteur. Données de validation propres et bruitées figées avant calcul,
+deux initialisations sans sélection, témoins parent/ablation et critères
+structurels sont décrits dans le rapport unique. Les quotas du§14 restent
+applicables. Contrat testé, apprentissage à qualifier ; aucune intégration
+en production ou promesse de qualité photographique à ce stade.
+
+La préparation a figé624 cas par modèle avant entraînement. Les tentatives
+71 initiale puis reprise sont interrompues à cause de la RAM globale ;73
+n'a pas démarré. Les preuves d'arrêt et ressources figurent dans le rapport
+et les JSON. Les limites restent inchangées, aucune relance en boucle et
+aucune conclusion photographique tirée des calculs partiels. Cette version
+ne disposait pas d'une sauvegarde de reprise ; les parents figés sont intacts.
+La version suivante ajoute cette sauvegarde technique (§18).
+
+À la demande explicite de l'utilisateur, le pilote bruité porte désormais
+son seuil physique global à92 %, déclaré dans le plan (schéma2). Les
+plafonds2Gio engagés et1,25Gio privés/résidents restent inchangés. Cette
+autorisation ne modifie pas le garde générique des autres bancs ni les
+preuves historiques à80 %. Les modèles, données et critères sont conservés.
+
+## 18. Reprise et campagne préparée — 3 novembre2026
+
+Le banc sauvegarde atomiquement un unique état technique courant toutes
+les64 étapes complètes et au terme2048 : modèle, Adam, étape, pertes,
+expositions et RNG CPU. La reprise doit correspondre au même plan, parent
+et graine. Elle ne choisit pas un état selon un score de validation.
+Le test sur le vrai cadenceur confirme l'identité au bit près entre calcul
+continu et reprise après une accumulation partielle interrompue.
+
+Le lanceur séquentiel attend une marge mémoire, exécute71 puis73, reprend
+seulement après arrêt mémoire, borne les tentatives et arrête sur erreur
+de calcul. Il ne sélectionne pas la meilleure graine et ne modifie pas les
+modèles. Le seuil physique global 92 % et les plafonds propres sont conservés.
+Le plan schéma3 fige également la politique de checkpoint.
+
+La [procédure de lancement](../validation/tools/pilote-unet-bruite.md) décrit
+les limites horaires et les étapes de qualification. Onze tests ciblés
+passent sur le périmètre reprise/lanceur/protocole ; pas de campagne
+lancée avant le signal utilisateur. Les contrôles photographiques et la
+validation sur images réelles restent à faire, sans intégration moteur/IHM.
+
+## 19. Correction CFA conditionnée — 3 novembre 2026
+
+Le pilote courant conserve le reconstructeur U-Net local appris, avec
+ses 33 368 paramètres figés, et apprend seulement une correction des
+quatre plans CFA physiques. Le prototype courant utilise un correcteur
+U-Net à deux réductions, de largeurs 8/16/32, avec connexions de saut :
+32 452 paramètres entraînés, 65 820 au total. Il remplace le correcteur
+local et l'élargissement écarté ; leurs preuves restent historiques.
+Ce choix
+maintient exactement le parent lorsque sigma vaut zéro. Il ne constitue
+pas un grand réseau photographique entièrement entraîné de bout en bout.
+
+La correction est bornée à trois sigma fournis. Son descripteur de bruit
+utilise un résidu d'ajustement quadratique 5×5, normalisé par sa variance
+propagée. Le signal reste signé ; seul ce descripteur est limité à ±8.
+La protection fixe de courbure utilise trois contrastes H/V/croisé,
+partage une confiance entre les quatre positions CFA et réduit la
+correction près des structures détectées. La composante croisée supprime
+une zone aveugle diagonale des deux premières réponses ; la borne
+d'union nominale porte sur 588 comparaisons, alpha 0,01.
+Ce facteur est une heuristique de protection, pas une probabilité calibrée.
+
+Le correcteur local a échoué sur des confirmations à fort bruit malgré
+une erreur moyenne réduite. Le nouveau contexte n'a passé qu'un prétest
+d'exécution, pas une qualification de qualité. Les cas connus doivent
+passer avant d'ouvrir de nouveaux
+contrôles. Une confirmation distincte reste nécessaire ;
+aucune valeur de sigma simulée n'est assimilée à une calibration ISO réelle.
+Les empreintes des fonctions de calcul, des poids et des entrées sont liées
+au protocole. Changer le conditionnement sans entraîner de nouveaux poids
+ou réutiliser une ancienne preuve sous un nouveau code est refusé.
+
+Le déploiement par tuiles est une qualification séparée : il faut préserver
+la phase Bayer et celle des deux réductions spatiales, utiliser un halo
+fixe vérifié et comparer au calcul sur une vue plus grande. Une évaluation
+sur de petits centres ne garantit pas à elle seule l'absence de raccords.
+Les données sources restent immuables ; la boucle de qualification n'entre
+pas dans le chemin d'ouverture de production.
+
+Les entrées/sorties de ce banc sont en signal caméra linéaire signé,
+avant profil et tons. Elles ne sont ni du sRGB d'affichage ni le Rec.2020
+de travail utilisé plus tard dans la chaîne de production. Les planches
+réelles exploratoires emploient seulement le canal vert balancé, avec un
+contraste d'affichage partagé ; elles n'ont pas de référence propre.
+
+La qualification suit plusieurs barrières : développement, rejeu des
+anciennes données et échecs avec le code courant, confirmation nouvelle,
+puis validation photographique et ressources. Une régression n'est jamais
+renommée confirmation indépendante. Aucun réglage par boîtier, niveau ISO
+réel, saturation ou défaut de capteur n'est déclaré qualifié par les
+simulations gaussiennes. Le protocole et les preuves sont dans le
+[rapport évolutif](../validation/analyses/analyse-restauration-neuronale.md).
+
+<a id="contexte-multiechelle"></a>
+
+## 20. Prochaine étape — contexte appris à plusieurs échelles
+
+Le correcteur précédent était un CNN local en amont du U-Net de reconstruction
+figé. Il voyait au plus 7×7 cellules par plan CFA, soit environ 14×14 pixels
+capteur. La confiance analytique peut
+protéger une structure détectée ; elle ne fournit pas au correcteur un
+contexte appris plus large. L'élargissement des canaux garde ce même support.
+Son échec ne prouve pas que le contexte soit l'unique cause, mais justifie
+de tester cette variable séparément de nouvelles règles de protection.
+
+```mermaid
+flowchart LR
+    A[CFA signé + sigma + phase Bayer] --> B[Encodeur à pleine résolution CFA]
+    B --> C[Échelle 1 sur 2]
+    C --> D[Échelle 1 sur 4]
+    D --> E[Décodeur avec connexions de saut]
+    C --> E
+    B --> E
+    E --> F[Correction CFA bornée à 3 sigma]
+    F --> G[Reconstruction caméra qualifiée séparément]
+    G --> H[Profil puis espace de travail]
+```
+
+Le prototype courant remplace la seule décision locale de correction
+par un petit encodeur/décodeur à deux réductions, avec connexions de saut.
+Préserver les positions CFA, la covariance D4, le signal signé, le parent
+exact à sigma nul et les interfaces courtes. Ne pas modifier le développement
+de production ou les profils pour préparer cette expérience.
+
+Avant l'entraînement, calculer le champ réceptif composé correction puis
+reconstruction. Prévoir initialement des fenêtres de 256 pixels et un
+centre mesuré de 64 pixels ; la marge définitive devra être démontrée par
+comparaison à une vue plus grande. Les anciennes fenêtres 128 ne suffisent
+pas automatiquement. Étendre analytiquement les scènes simulées, en
+conservant exactement leurs centres, labels et champs de bruit connus ;
+générer indépendamment le bruit du halo. Ne pas fabriquer ce contexte en
+redimensionnant les centres ni le présenter comme une nouvelle référence.
+
+Étapes de qualification :
+
+1. Vérifier par empreinte les centres hérités et par calcul les marges,
+   puis tester préparation des poids, finitude et symétries.
+2. Mesurer huit étapes représentatives sous les mêmes plafonds : microbatch1,
+   accumulation4, cache4,4threads,1,25Gio souple et2Gio engagés maximum.
+   Le seuil physique global92% reste coopératif ; il n'empêche pas un autre
+   programme de le dépasser. Aucun repli silencieux hors quota.
+3. Comparer les deux graines sous un budget préalablement figé, avec une
+   seule variation de contexte et une mémoire des entrées par empreinte.
+4. Rejouer toutes les régressions connues avant les cohortes encore réservées
+   classique352/3800000 et fine2. Elles n'ont pas été ouvertes après l'échec
+   de l'élargissement.
+5. Qualifier ensuite les paires CFA photographiques, la calibration sigma
+   réelle, les saturations et les défauts de capteur avant toute intégration.
+
+L'inférence GPU pourra être étudiée si le prétest CPU justifie ce besoin,
+avec sa propre qualification numérique. Le temps, la mémoire et le transfert
+des détails restent trois résultats séparés. Une réussite de l'un ne vaut
+pas validation des autres.
+
+### Préparation réalisée — 3 novembre 2026
+
+`multiscale_correction.py` calcule les dépendances pour les quatre phases
+de pooling. Le rayon composé maximal atteint 45 cellules CFA ; une marge
+conservatrice de 96 pixels couvre aussi le sous-pixel RGB. Le prétest
+compare un centre de 64 pixels entre vues 384 et 256. Pour isoler la
+variation de contexte à l'apprentissage, le centre de perte reste celui
+de 32 pixels du protocole précédent : bord 112 dans une fenêtre 256.
+La qualification classique conserve ses anciens centres et ses critères.
+
+`context_data.py` prolonge analytiquement constantes, rampes, contours et
+textures. Les centres RGB, CFA bruités et sigma sont conservés au bit près ;
+seul le bruit du halo utilise un autre générateur. Le calendrier d'indices
+et de phases continue d'utiliser la taille source128 : le changer à256
+modifierait sa consommation RNG et donc les exemples tirés.
+
+Le plan schéma4 impose ce contexte et exige une preuve de prétest réussie
+avant l'entraînement long. Les anciennes versions du correcteur ne sont
+pas conservées dans le code courant. Prétest : huit mises à jour sans
+conservation des poids, quatre contrôles sigma nul exacts, 32 symétries,
+quatre comparaisons de fenêtres et pont vers le centre du parent.
+Il ne valide ni le débruitage ni les photographies.
+
+### Supervision de structure — 4 novembre 2026
+
+L'architecture d'inférence conserve 65 820 paramètres et le reconstructeur
+figé. L'apprentissage limite à 1 la norme L2 des gradients accumulés avant
+chaque étape Adam. À l'erreur RGB tempérée et au point fixe CFA propre
+s'ajoute une supervision des variations de la cible CFA. Le code courant
+utilise au plus deux projections : détail centré et courbure des quatre
+voisins orthogonalisée dans le produit scalaire pondéré par la variance
+estimée. Les carrés d'erreur projetée sont normalisés par cette variance,
+puis moyennés sur les directions actives et les plans.
+
+Les gardes relatives 10⁻⁸/10⁻⁴ évitent de traiter l'arrondi comme une
+direction indépendante. Aucun changement de signal, profil, table ou filtre
+n'est ajouté à l'inférence ; ces cibles propres ne servent qu'à entraîner
+les poids. Les coefficients, plans et preuves d'entraînement figent le
+terme utilisé, y compris pour les modèles précédents conservés en preuves.
+La supervision simple a réduit les échecs fins de 24 à 19/48, sans validation
+globale. La version à deux projections est un nouvel essai, pas un résultat
+qualifié. Détails et limites dans le
+[rapport unique](../validation/analyses/analyse-restauration-neuronale.md).
+
+Résultat de cet essai : la graine 71 passe le développement, la graine 73
+reste presque à l'identité et échoue au gain minimal. Les gradients sont
+actifs ; la qualification s'arrête avant les nouveaux rejeux. Le code de
+supervision à deux projections reste un outil d'étude, sans validation ni
+raccordement en production. Les poids à supervision simple conservent le
+statut de référence expérimentale, avec leurs 19/48 échecs fins.
+
+La transition suivante est appariée : initialisation depuis cette référence,
+512 étapes supplémentaires avec Adam remis à zéro dans les deux bras,
+taux 0,00025 et données identiques. Le contrôle conserve la projection simple ;
+l'autre bras passe continûment vers deux projections en 256 étapes, puis
+continue jusqu'à 512. Le plan distingue les pas de stage des 2 560 pas cumulés.
+La même fonction de perte fournit cette combinaison convexe ; aucun autre
+chemin d'inférence n'est introduit. Une reprise restaure aussi la position
+dans la rampe. Les textures fines sont désormais le premier rejeu après le
+développement protégé ; leur échec interdit une qualification globale.
+
+### Entrées statistiques observées — 4 novembre 2026
+
+La transition progressive précédente reste insuffisante : 17/48 échecs
+fins forts contre 19/48 au contrôle, sans amélioration sur les deux graines.
+Le candidat courant conserve la supervision simple et ajoute aux 40 entrées
+de base 32 corrélations calculées dans le réseau, sur quatre plans physiques,
+deux axes, deux décalages et deux supports (9 et 17 cellules CFA).
+Ces statistiques utilisent uniquement le signal observé et son sigma.
+Après compression `asinh`, une projection 1×1 rejoint le premier encodeur.
+
+Cette projection ajoute 264 paramètres : 66 084 au total, dont 32 716
+entraînables dans le candidat et 33 368 figés dans le reconstructeur.
+Le contrôle fige aussi les 264 paramètres nouveaux à zéro. Les deux bras
+exécutent le même graphe ; il n'existe pas de chemin ancien d'inférence.
+L'importation explicite des poids archivés exige ces seules nouvelles clés
+et une projection nulle. Quatre-vingts empreintes de sorties initiales ont
+été vérifiées identiques avant entraînement.
+
+Le rayon composé atteint 51 cellules CFA, soit une marge conservatrice
+de 104 pixels. Les tests comparent un centre 64 entre vues 384 et 288,
+avec une marge de 112 ; l'audit exige 112 et 128, tandis que 96 est un
+témoin trop court. Le centre de perte 32 dans 256 reste inchangé.
+Les nouvelles cohortes excluent toutes les empreintes de l'ascendance,
+pas seulement celles du préfixe de données rejoué. La campagne appariée
+garde les graines 71/73, Adam neuf et 512 étapes par bras ; aucun résultat
+de ce candidat n'est encore qualifié. Le bilan du 5 novembre compte
+15/48 échecs fins forts, contre 19/48 au contrôle, avec un gain limité
+à une graine et davantage d'erreur RGB. Les ablations confirment une
+préservation de signal et de bruit. Les sondes de gradients et de biais
+ne justifient pas une nouvelle perte à ce stade. La préparation suivante
+porte sur la couverture conjointe des données d'entraînement, sans modifier
+les critères ni ouvrir de nouveau jeu réservé. Voir le rapport pour
+les nombres, les empreintes et les limites de chaque diagnostic.
+
+### Couverture stratifiée — bilan du 5 novembre 2026
+
+L'essai suivant compare deux flux de 822 textures fraîches, à perte et
+architecture identiques. Le candidat couvre chaque cellule déclarée
+famille/phase/bruit/fréquence/amplitude, tandis que le contrôle aléatoire
+en laisse 28/192 vides. Les distributions empiriques changent légèrement ;
+ce n'est pas une expérience à marges strictement égales.
+Les deux graines progressent : 12/48 échecs fins forts contre 19/48,
+avec une hausse de 1,9–3,5 % de l'erreur RGB fine. La grille descriptive
+de force confirme une indication de meilleure sélectivité à bruit fort,
+sans validation indépendante. Le candidat reste absent de la production.
+
+Les diagnostics de contenu comparent désormais les deux domaines connus
+quand les données d'apprentissage diffèrent. Chaque mesure déclare si son
+contenu a été appris par le modèle ; un contenu de l'autre domaine ne
+devient pas une validation réservée. Les dix défauts de transfert et les
+deux défauts RGB restants doivent être étudiés sans modifier les critères.
+
+La campagne chromatique suivante conserve le réseau et les pertes. La cible
+procédurale est identifiée par `texture_serial` et ses signes de contraste
+par `colour_flips`. `training_texture_data.py` reconstruit le centre et le
+halo avec la même transformation, sans écrêtage. Les coefficients absolus,
+DC et géométrie sont appariés ; seul le signe G/B peut changer. Les quotas
+regroupent les phases Bayer. Cette transformation appartient exclusivement
+au banc d'apprentissage, sans option ni traitement de production. Les
+prétests passent ; le bénéfice de ce nouvel essai reste à mesurer.
+
+Son bilan est désormais mesuré : 15/48 échecs contre 16/48 au contrôle,
+sans amélioration robuste entre les graines. La diversité des signes n'est
+pas retenue comme traitement général. Deux tirages stratifiés naturels ont
+donné 12 et 16 échecs ; la suite mesure la répétabilité sur deux autres
+tirages à paramètres fixes. Le périmètre `known_only` du plan interdit
+l'ouverture de nouvelles cohortes réservées, même après réussite des
+contrôles connus. Aucun modèle n'est sélectionné d'après le meilleur tirage.
+
+### Recentrage produit après revue — 5 novembre 2026
+
+Les contrôles synthétiques restent un banc de développement ; ils ne sont
+plus une condition préalable pour produire une planche photographique
+exploratoire non qualifiante. La réplication engagée se termine, puis les
+nouveaux réglages procéduraux sont suspendus avant comparaison sur trois
+scènes réelles. Le premier bras naturel de réplication, les deux graines,
+est fixé par rôle avant notation photo, sans sélectionner le meilleur score.
+
+Comparer le même RCD/médiane en neutre, avec classique IPR courant et après
+le correcteur CFA ; montrer séparément la reconstruction apprise. Une
+demi-pile RGB rééchantillonnée n'est pas une vérité CFA. Les seuils gelés
+reçoivent des comparateurs, pas des assouplissements. Une courbe longue
+GPU devra avoir un budget mesuré, données/points de contrôle/graines figés,
+et distinguer froid complet, correcteur froid et continuation. Le CPU et
+le GPU ont des contrats numériques distincts.
+
+Claude prépare CUDA dans un environnement séparé. Les archives CPU restent
+reproductibles et la campagne active n'est pas modifiée. Avant toute demande
+de nouvelles prises, requalifier les noirs/aplats/rafales existants avec la
+chaîne signée actuelle. Le rapport unique contient le point de décision
+en tête, les réponses factuelles à la revue et les critères d'arrêt.
+
+
+### Courbe rejetée et nouvelle architecture CFA — clôture du 5 novembre 2026
+
+La continuation de deux graines passe le développement connu mais aggrave
+la régression fine (20/48 échecs forts contre 10/48). L’atténuation est déjà
+mesurable dans le CFA corrigé avant reconstruction RGB. Aucun prolongement
+de ces poids ni assouplissement des critères n’est retenu.
+
+Le banc prépare une adaptation CFA directe de DRUNet (32,64 M paramètres,
+poids aléatoires, quatre plans + quatre cartes sigma, quatre résidus).
+Le signal reste signé, avec identité exacte à sigma nul. Le support exige
+un halo de 384 pixels CFA et un contexte de 1 024 pixels pour un centre
+utile de 256 pixels CFA. L’inférence tuilée refuse un halo insuffisant.
+La supervision future en CFA doit éviter le reconstructeur RGB gelé dans
+la perte ; elle n’est pas encore une qualification photographique.
+
+Prévol de six pas terminé, ressources bornées grâce au recalcul des
+activations pendant la rétropropagation ; calcul et gradients comparés
+à la topologie officielle. La reprise modèle + Adam a rejoué le pas
+suivant au bit près. Ce sont des contrats techniques, pas un modèle utile.
+Le lanceur long, son arrêt demandé, les données et la comparaison au même
+RCD restent à finaliser avant planification avec l’utilisateur. Aucun
+apprentissage long n’est en cours. Mesures et limites en fin du rapport.
+
+
+### Campagne amorçage CFA autorisée — nuit du 5 au 6 novembre
+
+Le lanceur interruptible est désormais vérifié sur le flux réel pour les
+deux graines : modèle, Adam et pertes rejoués au bit près après libération
+puis rechargement de l’état complet. La campagne bornée comporte 4 000
+mises à jour par graine et conserve les jalons, sans sélectionner de poids
+sur les photos. Supervision locale indépendante du chat, garde mémoire
+inchangée, sauvegarde toutes les 32 étapes, contrôles connus à support
+adapté. Les données procédurales et la loi gaussienne expérimentale restent
+une limite de validité, pas une caractérisation physique complète.
+
+L’utilisateur réserve la machine jusqu’au 6 novembre 10 h Paris ;
+l’apprentissage s’arrête au plus tard à 08 h 45 et son superviseur à
+09 h 45. Le mode `--training-only` diffère les inférences photo et leur
+analyse ; aucun rendu lourd ne commence automatiquement après 10 h.
+La disponibilité horaire prime le nombre de mises à jour cible.
+
+
+### Bilan réel de la nuit — 6 novembre 2026
+
+La campagne se termine le 5 novembre à 23 h 47 Paris après trois pointes
+RAM globale de 92,28 à 93,33 %. La graine 71 atteint 42, puis 61 et 60 pas
+en mémoire ; seul le checkpoint32 est durable. La graine 73 n’a pas démarré.
+Les prévols courts réussis ne qualifient donc pas la tenue prolongée.
+Aucune comparaison photo ni conclusion sur la capacité de l’architecture.
+
+Le garde respecte le seuil global choisi mais ne conserve pas assez de
+chronologie pour attribuer les pointes. Prévoir traces bornées par phase,
+franchissement explicite et marge d’admission, puis essai prolongé avec
+plusieurs sauvegardes avant une autre nuit. Ne pas relever les seuils.
+Les améliorations de surveillance restent à implémenter ; l’audit du
+rapport et ses JSON font foi sur les trois tentatives réellement achevées.
+
+
+### Instrumentation et qualification prolongée — 6 novembre 2026
+
+Le banc conserve désormais la première violation, une chronologie bornée
+par phase et les secondes précédant le dépassement. Les accès CUDA restent
+sur le thread principal ; le moniteur Windows ne fait qu’enregistrer les
+compteurs et le dernier contexte de phase. Les séries sont archivées avec
+le bilan canonique ; aucune attribution de mémoire aux autres applications.
+Prévol instrumenté et tests du garde passent, mais la tenue longue reste
+à vérifier. Essai deux graines de 256 pas engagé, plusieurs sauvegardes et
+trois contrôles complets par graine ; admission 60 s sous70 %, seuils actifs
+inchangés, aucune reprise automatique ni photo. L’historique des tentatives
+et références de contrôles/jalons est explicitement maintenu à la reprise.
+
+
+### Bilan de l’essai prolongé — 6 novembre 2026, 11 h Paris
+
+Les deux graines terminent 256 pas, sauvegardes et trois contrôles complets,
+sans dépassement. Pic global 75,72 %, privé 4,4852 Gio ; marge locale d’environ
+15 Mio seulement. Les pointes nocturnes ne sont pas reproduites : admission
+et charge système ont changé ensemble. La qualification porte sur environ
+17 minutes par graine, pas plusieurs heures sous charge concurrente.
+
+Le contrôle CFA révèle une perte de transfert après apprentissage (19/24
+et 21/24 groupes sous 0,95), avec MSE dégradée sur 73 malgré une perte de formation
+plus faible. Aucun bénéfice photo, capacité insuffisante ou condamnation de
+l’architecture ne peut être conclu. Avant prolongation, auditer couverture
+du bruit/fréquences et objectif à architecture fixe ; ne pas confondre ces
+contrôles CFA absolus avec les anciens ratios au parent RGB. Pas de nouvelle
+expérience ni d’apprentissage long relancé à la clôture.
+
+
+### Audit du flux et de la perte — 6 novembre 2026
+
+Reconstruction CPU des 2 048 recettes du pilote et des 864 contrôles connus,
+sans poids ni entraînement. Le flux privilégie contenus faciles à lisser,
+avec peu de détails forts à haute fréquence. Un témoin fixe diminue sa
+perte moyenne à 0,344 mais porte celle des contrôles à 5,493 ; il ne décrit
+pas nécessairement le réseau, mais montre pourquoi la perte train ne
+qualifie pas les détails. Les lois de bruit et rapports de canaux du flux
+ne couvrent pas les contrôles à luminosité égale. La normalisation de
+perte est vérifiée par dérivée/autograd, sans bug mathématique démontré.
+
+La graine actuelle change les contenus et l’initialisation ensemble.
+Avant prolongation, prévoir deux identités distinctes et des bras appariés
+à architecture/perte fixes : bruit seul puis couverture des détails seule.
+Quotas continus déclarés, aucune cible de contrôle réutilisée. Les plages
+exagérées des pentes étendues au halo restent aussi à caractériser sans
+écrêtage arbitraire. Pas de nouvel entraînement lancé ; voir les preuves
+et les limites causales dans le rapport unique.
+
+
+### Comparaison appariée autorisée — 6 novembre 2026
+
+Trois politiques du même générateur : référence, bruit seul diversifié,
+quotas de textures seuls renforcés. Graine de données 71 commune aux deux
+initialisations 71/73 ; architecture et perte inchangées. La référence est
+réentraînée pour assurer l’appariement. Plans et paramètres continus sont
+scellés ; chaque bras passe un prévol avant ses deux entraînements de 256 pas.
+L’empreinte des poids initiaux et l’égalité des contrôles initiaux sont
+exigées pour l’analyse des effets. Aucun modèle sélectionné sur le meilleur
+jalon. Quotas et bruits continus n’utilisent pas les cibles des contrôles.
+
+Huit tests de politique et d’analyse passent, prévol de référence réussi,
+comparaison lancée. Résultats encore attendus. Limites mémoire conservées,
+admission renforcée, pas de reprise automatique, pas de photo ni nouvelle
+réserve. Le rapport unique contient plans, facteurs maintenus et limites
+causales ; aucune intégration de production.
+
+
+### Reprise après l’arrêt et rôle possible d’un serveur ARM64 — 6 novembre
+
+Reprise manuelle autorisée de la comparaison : conserver le résultat256 pas
+de référence 71 et recharger référence 73 depuis 160. Les sources numériques
+et plans d’entraînement restent scellés ; un manifeste d’orchestration
+séparé identifie les empreintes antérieures et les nouveaux superviseurs.
+La réutilisation vérifie les fichiers complets, la reprise le checkpoint
+durable, et l’historique est préservé. Seuils et échéances inchangés.
+
+L’utilisateur dispose d’un Raspberry Pi 5, 16 Go, Ubuntu 24, actuellement serveur
+de stockage. Rôle possible, non raccordé : archivage des preuves et poids,
+audits CPU, préparation hors ligne et tests Linux/ARM64. Conserver les
+entraînements 32,6 M sur RTX ; le VideoCore du Pi n’est pas une carte NVIDIA
+pour cette chaîne CUDA. Ses 16 Go ne deviennent pas une extension de la RAM
+physique du PC. Les fichiers actifs peuvent rester sur SSD local et les
+copies closes être archivées pour éviter un accès réseau à chaque pas.
+
+PyTorch documente l’inférence CPU sur Pi avec OS 64 bits/aarch64 ; les outils
+IPR restent à qualifier sur cette plateforme. Notre garde mémoire Win32
+et les exécutables Windows ne sont pas transportables tels quels : adapter
+la surveillance Linux, construire les outils ARM64 et vérifier la cohérence
+numérique. Proposition initiale de budget à mesurer : deux threads CPU et
+4 Go de mémoire pour préserver le service de stockage. Aucun accès réseau,
+installation ou calcul distant réalisé dans cette étape ; adresse privée
+non publiée dans la documentation versionnée.
+
+Sources consultées : [fiche Raspberry Pi 5](https://datasheets.raspberrypi.com/rpi5/raspberry-pi-5-product-brief.pdf)
+et [PyTorch sur Raspberry Pi](https://docs.pytorch.org/tutorials/intermediate/realtime_rpi.html).
+
+
+### Ordonnancement de charge et séparation du calcul — 6 novembre 2026
+
+`dru_execution.py` sépare le contrat d’exécution du plan scientifique des
+checkpoints. Les mises à jour numériques conservent leur AST hors appels
+de surveillance et rejouent huit pas avec poids/Adam/pertes identiques.
+Les changements de sources d’exécution sont déclarés par empreintes ;
+les autres dépendances scientifiques ne sont pas modifiables tacitement.
+La limite locale passe de4,5 à 5 Gio, sous 6 Gio dur et92 % global inchangés.
+
+```mermaid
+flowchart TD
+    A[File de travaux] --> B{Créneau et charge disponibles}
+    B -->|non| A
+    B -->|oui| C[Checkpoint vérifié puis worker unique]
+    C --> D{Pression CPU ou RAM}
+    D -->|modérée et soutenue| E[Sauvegarde puis sortie et refroidissement]
+    E --> A
+    D -->|limite dure ou erreur| F[Arrêt ou reprise strictement bornée]
+    C --> G[Contrôles appariés complets]
+    G --> H{Critères prédéclarés sur les deux graines}
+    H -->|non| I[Clôture sans apprentissage long]
+    H -->|oui| J[Continuation bornée avec référence]
+    J --> K[Arrêt avant échéance du matin]
+```
+
+Les compteurs Windows distinguent CPU global et temps CPU du worker.
+Admission 60 s sous 70 % RAM et 65 % CPU extérieur, pause à 85 %RAM ou 80 % CPU extérieur
+soutenue 15 s ; quota dur92 %global conservé. La sauvegarde et le rejeu d’un
+contrôle interrompu précèdent toute reprise. Les critères de prolongation
+ne valent ni certification de qualité photo ni autorisation de production.
+Le superviseur local bloque les travaux lourds jusqu’à 14 h le 6 novembre et
+termine avant 09 h 45 le 7, avec arrêt des workers 08 h 45 pour libérer le PC
+avant 10 h. Pas d’intervention sur la machine Pi, mise de côté par l’utilisateur.
+
+La migration de production OpenCV annoncée sera intégrée après livraison
+identifiée et clôture des travaux figés. Contrôler les adaptateurs/bancs
+natifs et leurs formats de pixels après mise à jour de dev ; ne pas modifier
+les sources numériques en pleine exécution ni annoncer la nouvelle chaîne
+qualifiée sur la seule base des anciens résultats.
+
+### Supervision de fin de campagne autorisée le 6 novembre
+
+Le superviseur indépendant `study_sleep_watch.py` traite les quatre heures
+comme un point de décision flexible : les critères appariés déjà définis
+peuvent justifier la continuation, dans les échéances du lendemain. Il
+n’altère ni les sources figées du worker, ni ses seuils scientifiques.
+Campagne terminée ou non prometteuse : arrêt et sauvegarde des seuls jobs
+possédés, puis veille après trois minutes sans entrée utilisateur. Les
+fichiers `BLOCK_SLEEP` et `CANCEL_SLEEP` du dossier de suivi permettent de
+retenir ou d’annuler la veille. La surveillance expire à 10 h Paris.
+
+La suspension utilise [SetSuspendState](https://learn.microsoft.com/en-us/windows/win32/api/powrprof/nf-powrprof-setsuspendstate),
+sans hibernation ni désactivation des événements de réveil. Le privilège
+requis est activé temporairement et restauré, le jeton fermé sur toutes
+les sorties ; les erreurs de [AdjustTokenPrivileges](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-adjusttokenprivileges)
+sont vérifiées même si son retour indique un succès. Le test de capacité
+n’effectue aucune suspension. Les tests automatisés simulent cet appel.
+
+### Décision utilisateur — qualité neuronale optionnelle, 7 novembre 2026
+
+Le débruitage neuronal est prévu comme **mode qualité optionnel**, déclenché
+explicitement. Le classique reste disponible et l’ouverture par défaut ne
+reçoit pas ce coût supplémentaire. Le mode peut être plus lent sur CPU ou
+réservé aux capacités GPU appropriées ; 20,8 s n’est pas son plafond CPU
+obligatoire. Mesurer néanmoins temps, mémoire et matériel requis avant
+sélection et intégration ; conserver les garde-fous et les échéances des
+campagnes. Cette décision produit n’est pas une fonctionnalité déjà livrée.
+
+### Critères du futur banc naturel — décision rapportée le 7 novembre 2026
+
+À fixer dans le contrat de campagne avant nouveaux calculs :
+
+- Gain **médian apparié par scène >= 0,5 dB** de PSNR CFA linéaire face à un
+  étalon CFA choisi sur développement puis figé ; bandes ISO 3200–6400 et
+  16000–51200, avec détail des ISO couverts et limites de calibration.
+- Aucune régression bloquante du biais des aplats sombres ni du spectre
+  résiduel ; définitions, unités et tolérances opérationnelles à décrire
+  avant lecture des nouveaux scores.
+- Planches à 100 % acceptées par l’utilisateur ; classique RGB comparé
+  séparément dans un chemin RGB commun. Aucun score CFA imputé au classique.
+- Décision à trois sorties : progrès qualifié, régression claire ou
+  inconclusif au budget fixé. Aucun changement des verdicts historiques.
+
+**Périmètre CPU confirmé par l’utilisateur : ouverture par défaut seulement.**
+Les 20,8 s à huit threads n’incluent pas le neuronal qualité optionnel.
+Le mode qualité peut être plus lent sur CPU ou nécessiter un GPU ; le
+classique reste disponible et l’ouverture par défaut conserve son propre
+budget. Temps CPU/GPU, mémoire et matériel du neuronal seront mesurés
+séparément, sans veto automatique à 20,8 s. Ce point n’est plus en attente.
+Les critères d’acceptation sont à reporter sans modification dans le plan
+exécutable du futur banc ; son inventaire, ses partitions et ses définitions
+de métriques restent à préparer. Le composite conserve son contrat initial.
+
+## 21. Plan d'intégration en production : loi de bruit et cas des boîtiers — proposition du 9 novembre 2026
+
+**Statut : proposition à valider par l'utilisateur.** Rien n'est engagé dans
+`src/`. Le mode d'entrée du réseau (carte σ, Anscombe) dépend de l'étude
+appariée `input-mode-study-v001` en cours ; le plan ne change pas selon le
+résultat, seul le module d'entrée du réseau en dépend.
+
+### État du code de production (relevé du 9 novembre)
+
+- Deux débruiteurs, tous deux **aveugles** et après dématriçage :
+  `DetailProcessing::reduceNoise` (RGB linéaire après tons, chemin par défaut)
+  et `CameraDenoise::apply` (RGB caméra signé avant LCP et DCP, expérimental,
+  luminance seule). Aucun ne lit l'ISO ni une loi de bruit ;
+  `CameraDenoise::Context::iso` est validé mais jamais renseigné par
+  `RenderChain`.
+- **Aucune loi de bruit** (a, b) n'existe dans `src/`, `config/` ou les
+  profils. La donnée par boîtier la plus proche est
+  `config/raw-normalization.json` (noirs, blancs, mode capteur), choisie par
+  `CameraCharacterization::selectSensorMode`.
+- Le champ DNG *NoiseProfile* (balise 51041) n'est lu nulle part. Marque,
+  modèle et ISO arrivent par `RawInput::Input` (LibRaw).
+- Aucune inférence neuronale en production ; le runtime visé reste ONNX
+  Runtime C++ (§5).
+- Interface : barre unique `denoiseAmount` et sous-menu luminance/couleur ;
+  la recette stocke `denoiseLuminance`/`denoiseChrominance` et le mode de
+  développement signé.
+
+### Les cas à couvrir
+
+| Cas | Source de la loi a, b | Précision attendue | Signalé à l'utilisateur |
+| --- | --- | --- | --- |
+| 1. Boîtier calibré, ISO mesuré (R6 III aujourd'hui) | Catalogue mesuré : noirs et champs plats | Référence | Non |
+| 2. Boîtier calibré, ISO intermédiaire (12800, 25600…) | Interpolation entre ISO mesurés voisins | Bonne, bornée | « loi interpolée » dans l'info |
+| 3. DNG avec *NoiseProfile* | Balise 51041 convertie dans notre domaine | Celle de l'écrivain du DNG | « loi du fichier » |
+| 4. Boîtier inconnu, sans balise | Estimation sur l'image (méthode classique de type Foi 2008, contrainte à a·x + b) | Moindre ; échoue sur image sans zones lisses | « loi estimée », avec confiance |
+| 5. Estimation impossible ou incertaine | Repli prudent (sous-correction voulue) ou estimateur appris, option CBDNet | Faible | « débruitage limité » |
+| 6. Fichier non RAW (JPEG, TIFF) | Pas de loi capteur | — | Chemin actuel `DetailProcessing` seul |
+
+Le 60D (CR2) relève du cas 4 tant qu'il n'a pas sa campagne de noirs et de
+champs plats ; il doit passer au cas 1 avant la version stable. Le réseau
+appris sur le R6 III n'est pas qualifié pour d'autres capteurs : un boîtier
+hors corpus garde le débruiteur classique tant qu'une validation n'existe pas
+(issue GitHub au titre des validations partielles).
+
+### Modules proposés (règles C++ du projet)
+
+1. **`src/raw/NoiseLaw.h/.cpp` : donnée et résolution, fonctions libres.**
+   `struct NoiseLaw { std::array<double, 4> shotSlope, readVariance;`
+   `NoiseLawSource source; double confidence; QString provenance; }` dans le
+   domaine normalisé du capteur. `NoiseLawSource` : `Measured`,
+   `Interpolated`, `DngNoiseProfile`, `Estimated`, `Fallback`. Fonction
+   `resolveNoiseLaw(catalog, input, dngProfile, estimate)` : priorité
+   cas 1 > 2 > 3 > 4 > 5, sans état, testable seule.
+2. **`config/noise-laws.json` : catalogue versionné**, embarqué en ressource
+   comme `raw-normalization.json`. Par boîtier, mode capteur et ISO : a et b
+   par plan, avec l'empreinte et le chemin du JSON de preuve qui les a
+   mesurés. Le chargement suit le modèle de `CameraCharacterization`
+   (même clé marque/modèle/mode). Généré depuis les preuves par un outil de
+   `src/tools`, jamais recopié à la main.
+3. **Interpolation (cas 2)** : a quasi proportionnel au gain, donc
+   interpolé en log-ISO ; b interpolé séparément. Pas d'extrapolation hors
+   des ISO mesurés extrêmes : au-delà, cas 4 ou 5.
+4. **Lecture DNG (cas 3)** : vérifier d'abord si LibRaw expose la balise ;
+   sinon la lire dans le lecteur TIFF/DNG existant (`CameraDng`). Conversion
+   du domaine [0, 1] de la balise vers notre normalisation noir/blanc.
+5. **`src/raw/NoiseLawEstimator.h/.cpp` (cas 4)** : fonctions libres sur la
+   mosaïque CFA ; zones lisses, variance par niveau, ajustement robuste de
+   a et b par plan, score de confiance. Coût CPU borné et mesuré dans le
+   budget de 20,8 s à 8 threads.
+6. **`src/neural/` : module d'inférence derrière une interface courte**,
+   par exemple `NeuralRawDenoiser::denoise(mosaic, law, strength, cancelled)`.
+   Il possède la session ONNX Runtime (durée de vie de ressource, donc une
+   classe), le tuilage avec halo et l'annulation. Le mode d'entrée retenu
+   (Anscombe ou carte σ) est interne au module.
+7. **Place dans la chaîne** : le réseau travaille sur la **mosaïque CFA avant
+   dématriçage**, là où il est entraîné, en tête de chaîne comme décidé pour
+   IPR. Cela demande un étage de rendu nouveau entre décodage et
+   dématriçage (`RenderChain` et `RenderStageCache`), dont la clé de cache
+   comprend la loi, la force et l'empreinte du modèle. `ImageEditor` ne fait
+   que transmettre les réglages (rôle de cadenceur).
+8. **Force et barre unique** : force 0 contourne exactement le réseau
+   (contrat du §4). Une force réglable par un facteur λ sur σ n'est proposée
+   que si l'étude montre que le réseau suit σ ; sinon mélange
+   `entrée + t·(prédiction − entrée)`. Le débruiteur couleur actuel reste en
+   aval jusqu'à preuve du contraire.
+9. **Activation (décision de l'utilisateur, 10 novembre)** : les fonctions
+   U-Net sont optionnelles et s'activent dans les préférences. Sans GPU sur
+   l'hôte, l'utilisateur est prévenu du coût avant de les activer (mesure de
+   référence : 48 à 56 s par trame de 24 Mpx sur 8 threads CPU, sans
+   couture). Même principe pour la détection et la suppression d'objets.
+   Précision du 10 novembre : le coût CPU n'est **pas un objectif** des
+   versions bêta, au plus une piste pour de futures versions stables ;
+   l'utilisateur estime que très peu de retoucheurs travaillent sans GPU, ou
+   alors sous macOS. Conséquence : le runtime doit viser le GPU sur Windows
+   et Linux (CUDA, DirectML ou équivalent) **et** sur macOS (Metal ou Core ML,
+   par exemple via les fournisseurs d'exécution d'ONNX Runtime), le CPU
+   restant un repli lent mais fonctionnel.
+   Orientation du 10 novembre, à approfondir au moment de l'intégration :
+   un seul fichier ONNX exporté depuis PyTorch, et le moteur d'exécution
+   choisi soit par build (une configuration par plateforme), soit
+   automatiquement au démarrage. Pour NVIDIA, **détecter** les bibliothèques
+   plutôt que les embarquer : le pilote (`nvcuda.dll`) est presque toujours
+   présent, mais les bibliothèques de calcul (runtime CUDA, cuBLAS, cuDNN)
+   ne font pas partie du pilote. **Ordre retenu le 10 novembre sous
+   Windows** : DirectML ou Windows ML en chemin principal (fourni par le
+   système, pilote graphique seul, toutes marques, Tensor Cores NVIDIA
+   exploités par le pilote) ; CUDA en option si ses bibliothèques sont déjà
+   présentes, après mesure du gain de vitesse ; CPU en dernier repli.
+   Rien à installer dans le cas courant. **macOS** : Core ML (seule voie
+   publique vers l'Apple Neural Engine). Repère public : le billet d'Adobe
+   « Denoise demystified » (avril 2023) cite les Tensor Cores NVIDIA et
+   l'Apple Neural Engine sans mentionner CUDA ; les choix de DxO n'ont pas pu
+   être vérifiés (pages inaccessibles). Aucune inspection de leurs logiciels
+   (règle de boîte noire).
+   L'export ONNX et un test de concordance avec PyTorch (sortie et biais des
+   noirs) sur les tuiles de contrôle précèdent toute intégration.
+10. **Recette** : stocker la force et l'identifiant du modèle, pas la loi
+   (recalculée à l'ouverture depuis le catalogue versionné). Toute évolution
+   du format passe par la migration des recettes existantes, sans rupture de
+   l'historique des retouches.
+
+### Tests prévus dès la conception
+
+- Résolution : priorité des cas, boîtier absent, ISO hors plage, catalogue
+  invalide ou empreinte de preuve divergente, balise DNG absente ou malformée.
+- Interpolation : retrouver un ISO mesuré retiré du catalogue (validation
+  croisée sur les ISO du R6 III).
+- Estimateur : lois connues sur mosaïques synthétiques Poisson-Gauss,
+  image sans zone lisse (échec propre et confiance faible), puis comparaison
+  à la loi mesurée sur des RAW réels du R6 III.
+- Module neuronal : force 0 identique bit à bit, tuilage sans couture,
+  annulation et libération de la session sur tous les chemins, noirs non
+  biaisés, budget CPU.
+
+### Ordre de travail proposé
+
+1. Choisir le mode d'entrée du réseau selon `input-mode-study-v001`.
+2. `NoiseLaw` et catalogue depuis les preuves existantes du R6 III, avec
+   interpolation ; calibration du 60D (prises de noirs et champs plats).
+3. Lecture *NoiseProfile* et estimateur sur image, avec leur issue de
+   validation partielle.
+4. Étage CFA et module ONNX, d'abord derrière l'interrupteur expérimental
+   existant, puis barre unique et recette.
+5. Qualification : critère bêta du 7 novembre (≥ 0,5 dB médian par bande
+   ISO, noirs, budget CPU, planches à 100 % acceptées).
+
+Branches : le moteur relève de `patch_noise` (existant), le réseau de
+`patch_neural_restoration` ; à confirmer avec l'utilisateur avant tout
+commit dans `src/`. Aucune fusion, publication ni tag sans accord.
+
+## 22. Plan d'intégration de la bêta-1 du débruitage neuronal — 11 novembre 2026
+
+**Objectif fixé par l'utilisateur** : une version bêta-1 du débruitage neuronal
+d'ici le samedi 14 novembre, publiée sur `dev` le samedi après-midi.
+Périmètre volontairement réduit : R6 III seulement, option désactivée par
+défaut dans les préférences, GPU par DirectML sous Windows, CPU en repli lent.
+Ce que la bêta-1 n'est pas : le critère bêta du 7 novembre n'est pas encore
+entièrement satisfait (écart G1/G2, 60D sans loi, revue à 100 % sur scènes
+non vues) ; une issue GitHub de validation partielle en garde la trace.
+
+### Modèle livré
+
+Réseau E (carte σ en entrée, sortie `x − F`), entraîné avec l'augmentation de
+couleur. Candidat actuel : pas 75 000 de `sigma-input-color-training-v001`.
+Si l'essai des pertes (`loss-mean-study-v001`, L1 / L2 / L1 + moyenne par plan)
+montre qu'une perte visant la moyenne supprime l'assombrissement et l'écart
+G1/G2 sans perte de débruitage, un entraînement de nuit le jeudi produit le
+modèle final. **Gel du modèle vendredi midi**, quel que soit le résultat.
+
+### Répartition des tâches
+
+Les deux agents travaillent sur des fichiers disjoints pour éviter les
+conflits ; chaque tâche arrive avec ses tests.
+
+| # | Tâche | Agent | Fichiers principaux | Échéance |
+| --- | --- | --- | --- | --- |
+| 1 | Outil DNG mosaïque débruitée pour les essais réels de l'utilisateur | Claude | `tests/neural/denoise_to_dng.py` | mer. 11 |
+| 2 | Essai des pertes, analyse, choix du modèle | Claude | `tests/neural/` | jeu. 12 |
+| 3 | Export ONNX et test de concordance avec PyTorch (sortie, biais des noirs, tuiles) | Claude | `tests/neural/export_onnx.py` | jeu. 12 |
+| 4 | Dépendance ONNX Runtime (DirectML, CPU) : vcpkg ou paquet officiel, CMake, DLL au déploiement, licence | Codex | `vcpkg.json`, `CMakeLists.txt`, `cmake/`, `scripts/` | jeu. 12 |
+| 5 | Module `src/neural/NeuralRawDenoiser` : session, choix du moteur (DirectML puis CPU), tuiles avec marge de 192 cellules, annulation, libération | Codex | `src/neural/*` | ven. 13 |
+| 6 | Lois de bruit : `src/raw/NoiseLaw` et `config/noise-laws.json` généré depuis les preuves (R6 III, interpolation en log-ISO), refus propre hors catalogue | Claude | `src/raw/NoiseLaw*`, `config/`, `src/tools/` | jeu. 12 |
+| 7 | Étage CFA dans `RawDevelopment::develop` juste avant `Demosaic::interpolate` (étape `PreDemosaicCfa`), noir et loi passés au module ; clé de cache | Claude | `src/raw/RawDevelopment*`, `src/raw/RawDecoder.cpp` | ven. 13 |
+| 8 | Préférence utilisateur (désactivée par défaut, avertissement sans GPU), raccordement `ImageEditor` en cadenceur, recette (force et identifiant du modèle) et migration | Codex | `src/qml/`, `src/editor/`, `src/core/EditRecipe*`, `RecipeCodec*` | ven. 13 |
+| 9 | Tests C++ : force 0 identique bit à bit, tuiles sans couture, concordance avec les sorties Python de référence, annulation et libération | Claude + Codex | `tests/` | ven. 13 |
+| 10 | Validation dans l'application sur photos réelles, planches, issue de validation partielle | Claude, puis l'utilisateur | `docs/validation/` | sam. 14 matin |
+| 11 | Fusion `--no-ff` dans `dev`, tag, publication | Claude, **sur accord explicite** | — | sam. 14 après-midi |
+
+### Calendrier
+
+- **Mercredi 11** : plan, outil DNG, essai des pertes lancé (le soir ou dès
+  que VS Code est fermé).
+- **Jeudi 12** : analyse de l'essai ; export ONNX et concordance ; lois de
+  bruit ; dépendance ONNX Runtime. Le soir, entraînement final si la perte
+  change (suspendre Windows Update avant).
+- **Vendredi 13** : module neuronal, étage CFA, préférence et recette ;
+  gel du modèle à midi ; tests C++ ; CI complète.
+- **Samedi 14** : matin, essais de l'utilisateur dans l'application et
+  corrections ; après-midi, fusion dans `dev`, tag et publication après accord.
+
+### Décisions à prendre par l'utilisateur
+
+- **Branche de production** : proposition `patch_noise` (branche durable du
+  groupe bruit), après y avoir fusionné `dev` à jour ; le travail de
+  recherche reste sur `patch_neural_restoration`.
+- **Fichier du modèle** (environ 33 Mo en ONNX fp32) : versionné dans le dépôt,
+  via Git LFS, ou téléchargé depuis une release.
+- **Numéro de version** : la règle donne `v0.Y.X-beta` ; à confirmer si le
+  débruitage neuronal compte comme nouveau panneau (`Y` + 1) ou non, et le
+  nombre de patchs livrés pour `X`.
+- **Coordination avec Codex** : le plan lui est transmis par le fichier
+  commun et la file `codex queue` ; il reprend les tâches 4, 5, 8 et sa part
+  de la 9.
+
+### Risques
+
+- ONNX Runtime avec DirectML : intégration CMake et déploiement de DLL
+  nouveaux dans le projet (tâche 4 critique, à démarrer en premier).
+- Temps de rendu : environ 50 s par image sur CPU ; sur GPU, à mesurer avec
+  DirectML dès que la tâche 5 tourne.
+- Écart G1/G2 : s'il n'est pas résolu, la bêta-1 part avec la limite
+  documentée et une vérification visuelle du dématriçage dans les aplats.

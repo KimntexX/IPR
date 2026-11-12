@@ -1,0 +1,678 @@
+{
+  "schema_version": 1,
+  "measured_at_utc": "2026-11-08T10:08:24.757714+00:00",
+  "status": "indicative_proxy_noise_uncertainty_not_a_certified_bound",
+  "parents": [
+    {
+      "path": "docs\\validation\\raw\\neural-sensor-noise-v001-20261105T173608Z.json",
+      "sha256": "7bd94a2e752b4289f4c598faf4b61e615110105788614403c9aee7ec7e469369"
+    },
+    {
+      "path": "build-patch_neural_restoration\\native-normalized-natural-v002\\result.json",
+      "sha256": "a14160530bc19343e7e738deadc0f004130e9bc10ddcfef852c9c3367a36252f"
+    }
+  ],
+  "method": "Maximum fitted ISO100 shot slope/read intercept across planes, no refit; conditional on old exploratory DN model",
+  "a_dn": 0.22214685350846347,
+  "b_dn2": 1.29990262390893,
+  "common_fitted_span_dn": [
+    31.889129638671875,
+    4292.204498291016
+  ],
+  "rows": [
+    {
+      "source": "C:\\Users\\victo\\Pictures\\RAW\\pleneuf\\6V1A9072.CR3",
+      "crop_xy": [
+        1134,
+        670
+      ],
+      "estimated_reference_sigma_q50_q95": [
+        0.0014949366450309753,
+        0.0016735041281208396
+      ],
+      "outside_common_fit_span_fraction": 0.0,
+      "reference_to_added_variance_ratios": {
+        "0.005": 0.08939342945814133,
+        "0.01": 0.02234835736453533,
+        "0.02": 0.005587089341133833,
+        "0.04": 0.0013967723352834582
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Pictures\\RAW\\pleneuf\\6V1A9072.CR3",
+      "crop_xy": [
+        3222,
+        670
+      ],
+      "estimated_reference_sigma_q50_q95": [
+        0.0015496432897634804,
+        0.0016713120276108384
+      ],
+      "outside_common_fit_span_fraction": 0.0,
+      "reference_to_added_variance_ratios": {
+        "0.005": 0.0960654690861702,
+        "0.01": 0.02401636727154255,
+        "0.02": 0.006004091817885637,
+        "0.04": 0.0015010229544714093
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Pictures\\RAW\\pleneuf\\6V1A9072.CR3",
+      "crop_xy": [
+        5310,
+        670
+      ],
+      "estimated_reference_sigma_q50_q95": [
+        0.0008069314644671977,
+        0.0012621838191989696
+      ],
+      "outside_common_fit_span_fraction": 0.0,
+      "reference_to_added_variance_ratios": {
+        "0.005": 0.026045536622405052,
+        "0.01": 0.006511384155601263,
+        "0.02": 0.0016278460389003158,
+        "0.04": 0.00040696150972507894
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Pictures\\RAW\\pleneuf\\6V1A9072.CR3",
+      "crop_xy": [
+        1134,
+        2062
+      ],
+      "estimated_reference_sigma_q50_q95": [
+        0.0008554469677619636,
+        0.0013726342003792524
+      ],
+      "outside_common_fit_span_fraction": 0.00042724609375,
+      "reference_to_added_variance_ratios": {
+        "0.005": 0.029271580278873444,
+        "0.01": 0.007317895069718361,
+        "0.02": 0.0018294737674295902,
+        "0.04": 0.00045736844185739756
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Pictures\\RAW\\pleneuf\\6V1A9072.CR3",
+      "crop_xy": [
+        3222,
+        2062
+      ],
+      "estimated_reference_sigma_q50_q95": [
+        0.0010573258623480797,
+        0.0015300812665373087
+      ],
+      "outside_common_fit_span_fraction": 4.57763671875e-05,
+      "reference_to_added_variance_ratios": {
+        "0.005": 0.044717516750097275,
+        "0.01": 0.011179379187524319,
+        "0.02": 0.0027948447968810797,
+        "0.04": 0.0006987111992202699
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Pictures\\RAW\\pleneuf\\6V1A9072.CR3",
+      "crop_xy": [
+        5310,
+        2062
+      ],
+      "estimated_reference_sigma_q50_q95": [
+        0.0009718104847706854,
+        0.0013903251383453608
+      ],
+      "outside_common_fit_span_fraction": 0.000263214111328125,
+      "reference_to_added_variance_ratios": {
+        "0.005": 0.03777662664651871,
+        "0.01": 0.009444156661629677,
+        "0.02": 0.002361039165407419,
+        "0.04": 0.0005902597913518548
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Pictures\\RAW\\pleneuf\\6V1A9072.CR3",
+      "crop_xy": [
+        1134,
+        3454
+      ],
+      "estimated_reference_sigma_q50_q95": [
+        0.0010274319211021066,
+        0.0016283529112115502
+      ],
+      "outside_common_fit_span_fraction": 0.00016021728515625,
+      "reference_to_added_variance_ratios": {
+        "0.005": 0.04222465679049492,
+        "0.01": 0.01055616419762373,
+        "0.02": 0.0026390410494059324,
+        "0.04": 0.0006597602623514831
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Pictures\\RAW\\pleneuf\\6V1A9072.CR3",
+      "crop_xy": [
+        3222,
+        3454
+      ],
+      "estimated_reference_sigma_q50_q95": [
+        0.0011492554331198335,
+        0.0016636170912533998
+      ],
+      "outside_common_fit_span_fraction": 0.008941650390625,
+      "reference_to_added_variance_ratios": {
+        "0.005": 0.05283152684569359,
+        "0.01": 0.013207881711423397,
+        "0.02": 0.0033019704278558493,
+        "0.04": 0.0008254926069639623
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Pictures\\RAW\\pleneuf\\6V1A9072.CR3",
+      "crop_xy": [
+        5310,
+        3454
+      ],
+      "estimated_reference_sigma_q50_q95": [
+        0.00046487690997309983,
+        0.0012666055699810386
+      ],
+      "outside_common_fit_span_fraction": 0.005016326904296875,
+      "reference_to_added_variance_ratios": {
+        "0.005": 0.008644421584904194,
+        "0.01": 0.0021611053962260485,
+        "0.02": 0.0005402763490565121,
+        "0.04": 0.00013506908726412803
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Pictures\\RAW\\24-07-26\\6V1A9938.CR3",
+      "crop_xy": [
+        1134,
+        670
+      ],
+      "estimated_reference_sigma_q50_q95": [
+        0.0021542818285524845,
+        0.0023880235385149657
+      ],
+      "outside_common_fit_span_fraction": 0.18896484375,
+      "reference_to_added_variance_ratios": {
+        "0.005": 0.1856372058391571,
+        "0.01": 0.046409301459789276,
+        "0.02": 0.011602325364947319,
+        "0.04": 0.0029005813412368298
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Pictures\\RAW\\24-07-26\\6V1A9938.CR3",
+      "crop_xy": [
+        3222,
+        670
+      ],
+      "estimated_reference_sigma_q50_q95": [
+        0.002657154109328985,
+        0.0030512537341564894
+      ],
+      "outside_common_fit_span_fraction": 0.7504768371582031,
+      "reference_to_added_variance_ratios": {
+        "0.005": 0.28241872787475586,
+        "0.01": 0.07060468196868896,
+        "0.02": 0.01765117049217224,
+        "0.04": 0.00441279262304306
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Pictures\\RAW\\24-07-26\\6V1A9938.CR3",
+      "crop_xy": [
+        5310,
+        670
+      ],
+      "estimated_reference_sigma_q50_q95": [
+        0.002869421150535345,
+        0.0032064979895949364
+      ],
+      "outside_common_fit_span_fraction": 0.75,
+      "reference_to_added_variance_ratios": {
+        "0.005": 0.32934311032295227,
+        "0.01": 0.08233577758073807,
+        "0.02": 0.020583944395184517,
+        "0.04": 0.005145986098796129
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Pictures\\RAW\\24-07-26\\6V1A9938.CR3",
+      "crop_xy": [
+        1134,
+        2062
+      ],
+      "estimated_reference_sigma_q50_q95": [
+        0.0029396803583949804,
+        0.0033250844106078106
+      ],
+      "outside_common_fit_span_fraction": 0.7605628967285156,
+      "reference_to_added_variance_ratios": {
+        "0.005": 0.34566882252693176,
+        "0.01": 0.08641720563173294,
+        "0.02": 0.021604301407933235,
+        "0.04": 0.005401075351983309
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Pictures\\RAW\\24-07-26\\6V1A9938.CR3",
+      "crop_xy": [
+        3222,
+        2062
+      ],
+      "estimated_reference_sigma_q50_q95": [
+        0.003588471794500947,
+        0.004040644504129887
+      ],
+      "outside_common_fit_span_fraction": 0.9821319580078125,
+      "reference_to_added_variance_ratios": {
+        "0.005": 0.5150852203369141,
+        "0.01": 0.12877130508422852,
+        "0.02": 0.03219282627105713,
+        "0.04": 0.008048206567764282
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Pictures\\RAW\\24-07-26\\6V1A9938.CR3",
+      "crop_xy": [
+        5310,
+        2062
+      ],
+      "estimated_reference_sigma_q50_q95": [
+        0.0007609475287608802,
+        0.0040236501721665225
+      ],
+      "outside_common_fit_span_fraction": 0.3261909484863281,
+      "reference_to_added_variance_ratios": {
+        "0.005": 0.023161645978689194,
+        "0.01": 0.005790411494672298,
+        "0.02": 0.0014476028736680746,
+        "0.04": 0.00036190071841701865
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Pictures\\RAW\\24-07-26\\6V1A9938.CR3",
+      "crop_xy": [
+        1134,
+        3454
+      ],
+      "estimated_reference_sigma_q50_q95": [
+        0.0004929444985464215,
+        0.0011492554331198335
+      ],
+      "outside_common_fit_span_fraction": 0.000804901123046875,
+      "reference_to_added_variance_ratios": {
+        "0.005": 0.009719771333038807,
+        "0.01": 0.0024299428332597017,
+        "0.02": 0.0006074857083149254,
+        "0.04": 0.00015187142707873136
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Pictures\\RAW\\24-07-26\\6V1A9938.CR3",
+      "crop_xy": [
+        3222,
+        3454
+      ],
+      "estimated_reference_sigma_q50_q95": [
+        0.0010410199174657464,
+        0.0016767868073657155
+      ],
+      "outside_common_fit_span_fraction": 0.0015716552734375,
+      "reference_to_added_variance_ratios": {
+        "0.005": 0.043348900973796844,
+        "0.01": 0.010837225243449211,
+        "0.02": 0.0027093063108623028,
+        "0.04": 0.0006773265777155757
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Pictures\\RAW\\24-07-26\\6V1A9938.CR3",
+      "crop_xy": [
+        5310,
+        3454
+      ],
+      "estimated_reference_sigma_q50_q95": [
+        0.0007633525528945029,
+        0.001171893090941012
+      ],
+      "outside_common_fit_span_fraction": 0.0,
+      "reference_to_added_variance_ratios": {
+        "0.005": 0.02330828458070755,
+        "0.01": 0.0058270711451768875,
+        "0.02": 0.0014567677862942219,
+        "0.04": 0.00036419194657355547
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Pictures\\RAW\\05-08-26\\6V1A0005.CR3",
+      "crop_xy": [
+        1134,
+        670
+      ],
+      "estimated_reference_sigma_q50_q95": [
+        0.0008787008700892329,
+        0.001100367633625865
+      ],
+      "outside_common_fit_span_fraction": 0.0,
+      "reference_to_added_variance_ratios": {
+        "0.005": 0.03088461048901081,
+        "0.01": 0.007721152622252703,
+        "0.02": 0.0019302881555631757,
+        "0.04": 0.0004825720388907939
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Pictures\\RAW\\05-08-26\\6V1A0005.CR3",
+      "crop_xy": [
+        3222,
+        670
+      ],
+      "estimated_reference_sigma_q50_q95": [
+        0.0010315863182768226,
+        0.0012209195410832763
+      ],
+      "outside_common_fit_span_fraction": 0.0,
+      "reference_to_added_variance_ratios": {
+        "0.005": 0.04256681352853775,
+        "0.01": 0.010641703382134438,
+        "0.02": 0.0026604258455336094,
+        "0.04": 0.0006651064613834023
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Pictures\\RAW\\05-08-26\\6V1A0005.CR3",
+      "crop_xy": [
+        5310,
+        670
+      ],
+      "estimated_reference_sigma_q50_q95": [
+        0.0014681302709504962,
+        0.001717468723654747
+      ],
+      "outside_common_fit_span_fraction": 0.0,
+      "reference_to_added_variance_ratios": {
+        "0.005": 0.0862162634730339,
+        "0.01": 0.021554065868258476,
+        "0.02": 0.005388516467064619,
+        "0.04": 0.0013471291167661548
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Pictures\\RAW\\05-08-26\\6V1A0005.CR3",
+      "crop_xy": [
+        1134,
+        2062
+      ],
+      "estimated_reference_sigma_q50_q95": [
+        0.0009074353147298098,
+        0.001091447309590876
+      ],
+      "outside_common_fit_span_fraction": 0.0,
+      "reference_to_added_variance_ratios": {
+        "0.005": 0.03293755277991295,
+        "0.01": 0.008234388194978237,
+        "0.02": 0.0020585970487445593,
+        "0.04": 0.0005146492621861398
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Pictures\\RAW\\05-08-26\\6V1A0005.CR3",
+      "crop_xy": [
+        3222,
+        2062
+      ],
+      "estimated_reference_sigma_q50_q95": [
+        0.0009495503618381917,
+        0.0012373236240819097
+      ],
+      "outside_common_fit_span_fraction": 0.002490997314453125,
+      "reference_to_added_variance_ratios": {
+        "0.005": 0.03606583550572395,
+        "0.01": 0.009016458876430988,
+        "0.02": 0.002254114719107747,
+        "0.04": 0.0005635286797769368
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Pictures\\RAW\\05-08-26\\6V1A0005.CR3",
+      "crop_xy": [
+        5310,
+        2062
+      ],
+      "estimated_reference_sigma_q50_q95": [
+        0.0014397528138943017,
+        0.0015880813589319587
+      ],
+      "outside_common_fit_span_fraction": 0.0,
+      "reference_to_added_variance_ratios": {
+        "0.005": 0.08296575397253036,
+        "0.01": 0.02074143849313259,
+        "0.02": 0.005185359623283148,
+        "0.04": 0.001296339905820787
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Pictures\\RAW\\05-08-26\\6V1A0005.CR3",
+      "crop_xy": [
+        1134,
+        3454
+      ],
+      "estimated_reference_sigma_q50_q95": [
+        0.0009060876327566803,
+        0.0011009228182956576
+      ],
+      "outside_common_fit_span_fraction": 0.0,
+      "reference_to_added_variance_ratios": {
+        "0.005": 0.03283979371190071,
+        "0.01": 0.008209948427975178,
+        "0.02": 0.0020524871069937944,
+        "0.04": 0.0005131217767484486
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Pictures\\RAW\\05-08-26\\6V1A0005.CR3",
+      "crop_xy": [
+        3222,
+        3454
+      ],
+      "estimated_reference_sigma_q50_q95": [
+        0.0010392575059086084,
+        0.001229894463904202
+      ],
+      "outside_common_fit_span_fraction": 0.0,
+      "reference_to_added_variance_ratios": {
+        "0.005": 0.043202243745326996,
+        "0.01": 0.010800560936331749,
+        "0.02": 0.0027001402340829372,
+        "0.04": 0.0006750350585207343
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Pictures\\RAW\\05-08-26\\6V1A0005.CR3",
+      "crop_xy": [
+        5310,
+        3454
+      ],
+      "estimated_reference_sigma_q50_q95": [
+        0.0014310975093394518,
+        0.001567947561852634
+      ],
+      "outside_common_fit_span_fraction": 0.0,
+      "reference_to_added_variance_ratios": {
+        "0.005": 0.08196371793746948,
+        "0.01": 0.02049092948436737,
+        "0.02": 0.005122732371091843,
+        "0.04": 0.0012806830927729607
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base-hors-protocole\\6V1A0145.CR3",
+      "crop_xy": [
+        1134,
+        670
+      ],
+      "estimated_reference_sigma_q50_q95": [
+        0.0007972043240442872,
+        0.0008918144158087671
+      ],
+      "outside_common_fit_span_fraction": 0.0,
+      "reference_to_added_variance_ratios": {
+        "0.005": 0.025458985939621925,
+        "0.01": 0.006364746484905481,
+        "0.02": 0.0015911866212263703,
+        "0.04": 0.0003977966553065926
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base-hors-protocole\\6V1A0145.CR3",
+      "crop_xy": [
+        3222,
+        670
+      ],
+      "estimated_reference_sigma_q50_q95": [
+        0.0008107841713353992,
+        0.0009054130059666932
+      ],
+      "outside_common_fit_span_fraction": 0.0,
+      "reference_to_added_variance_ratios": {
+        "0.005": 0.026338817551732063,
+        "0.01": 0.006584704387933016,
+        "0.02": 0.001646176096983254,
+        "0.04": 0.0004115440242458135
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base-hors-protocole\\6V1A0145.CR3",
+      "crop_xy": [
+        5310,
+        670
+      ],
+      "estimated_reference_sigma_q50_q95": [
+        0.0007680184789933264,
+        0.0008653886034153402
+      ],
+      "outside_common_fit_span_fraction": 0.0,
+      "reference_to_added_variance_ratios": {
+        "0.005": 0.023625999689102173,
+        "0.01": 0.005906499922275543,
+        "0.02": 0.0014766249805688858,
+        "0.04": 0.00036915624514222145
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base-hors-protocole\\6V1A0145.CR3",
+      "crop_xy": [
+        1134,
+        2062
+      ],
+      "estimated_reference_sigma_q50_q95": [
+        0.0007033661240711808,
+        0.0008618512656539679
+      ],
+      "outside_common_fit_span_fraction": 0.0,
+      "reference_to_added_variance_ratios": {
+        "0.005": 0.01978895626962185,
+        "0.01": 0.004947239067405462,
+        "0.02": 0.0012368097668513656,
+        "0.04": 0.0003092024417128414
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base-hors-protocole\\6V1A0145.CR3",
+      "crop_xy": [
+        3222,
+        2062
+      ],
+      "estimated_reference_sigma_q50_q95": [
+        0.0007247576140798628,
+        0.0008924993453547359
+      ],
+      "outside_common_fit_span_fraction": 0.0,
+      "reference_to_added_variance_ratios": {
+        "0.005": 0.02101094461977482,
+        "0.01": 0.005252736154943705,
+        "0.02": 0.0013131840387359262,
+        "0.04": 0.00032829600968398154
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base-hors-protocole\\6V1A0145.CR3",
+      "crop_xy": [
+        5310,
+        2062
+      ],
+      "estimated_reference_sigma_q50_q95": [
+        0.0007513480086345226,
+        0.0008597217383794487
+      ],
+      "outside_common_fit_span_fraction": 0.0,
+      "reference_to_added_variance_ratios": {
+        "0.005": 0.022648412734270096,
+        "0.01": 0.005662103183567524,
+        "0.02": 0.001415525795891881,
+        "0.04": 0.00035388144897297025
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base-hors-protocole\\6V1A0145.CR3",
+      "crop_xy": [
+        1134,
+        3454
+      ],
+      "estimated_reference_sigma_q50_q95": [
+        0.0005076003726571798,
+        0.0008395867189392447
+      ],
+      "outside_common_fit_span_fraction": 0.0185394287109375,
+      "reference_to_added_variance_ratios": {
+        "0.005": 0.010306325741112232,
+        "0.01": 0.002576581435278058,
+        "0.02": 0.0006441453588195145,
+        "0.04": 0.00016103633970487863
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base-hors-protocole\\6V1A0145.CR3",
+      "crop_xy": [
+        3222,
+        3454
+      ],
+      "estimated_reference_sigma_q50_q95": [
+        0.000459589617094025,
+        0.0009482626337558031
+      ],
+      "outside_common_fit_span_fraction": 0.05835723876953125,
+      "reference_to_added_variance_ratios": {
+        "0.005": 0.008448904380202293,
+        "0.01": 0.0021122260950505733,
+        "0.02": 0.0005280565237626433,
+        "0.04": 0.00013201413094066083
+      }
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base-hors-protocole\\6V1A0145.CR3",
+      "crop_xy": [
+        5310,
+        3454
+      ],
+      "estimated_reference_sigma_q50_q95": [
+        0.00036471267230808735,
+        0.0006093464908190072
+      ],
+      "outside_common_fit_span_fraction": 0.098052978515625,
+      "reference_to_added_variance_ratios": {
+        "0.005": 0.005320613272488117,
+        "0.01": 0.0013301533181220293,
+        "0.02": 0.0003325383295305073,
+        "0.04": 8.313458238262683e-05
+      }
+    }
+  ],
+  "limits": [
+    "Fixed pattern, compression, source temperature and scene noise are not bounded by this fit",
+    "Fits are exploratory, pair difference suppresses common noise",
+    "Values outside the common fitted signal span are extrapolations, not qualified noise estimates",
+    "No neural score consulted and no source excluded"
+  ]
+}

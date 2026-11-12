@@ -1,0 +1,269 @@
+{
+  "schema_version": 1,
+  "measured_at_utc": "2026-11-08T11:34:34.601897+00:00",
+  "status": "qualified_dark_repeatability_and_full_frame_map_component_only",
+  "parents": [
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\full-dark-maps-v001\\progress.json",
+      "sha256": "a9a13c3f984ad07527b2fa1d0026a3cb672395b1ca997efb3cc36a9a41690917"
+    },
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\new-dark-qualification-v001\\progress.json",
+      "sha256": "705521eacd40ba1ffc6ec159d8ee9d89635a8bc7ba1f6e7e5dc5d0e4dc79e28f"
+    },
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\docs\\validation\\raw\\neural-sensor-noise-v001-20261105T173608Z.json",
+      "sha256": "7bd94a2e752b4289f4c598faf4b61e615110105788614403c9aee7ec7e469369"
+    }
+  ],
+  "groups": [
+    {
+      "iso": 100,
+      "shape": [
+        4639,
+        6959
+      ],
+      "sampled_active_pixels": 32282801,
+      "calibration_frames": 32,
+      "control_frames": 20,
+      "atypical_candidates": 7,
+      "replicated_candidates": 7,
+      "positive_candidates": 7,
+      "negative_candidates": 0,
+      "examples_first_coordinates_yx": [
+        [
+          1489,
+          924
+        ],
+        [
+          1663,
+          251
+        ],
+        [
+          1955,
+          6243
+        ],
+        [
+          2721,
+          2551
+        ],
+        [
+          2873,
+          1513
+        ],
+        [
+          2982,
+          6651
+        ],
+        [
+          3711,
+          2843
+        ]
+      ],
+      "old_intercept_comparison": [
+        {
+          "physical_plane": 0,
+          "old_variance_dn2": 1.1887049143810466,
+          "new_full_frame_variance_dn2": 1.1765638272747456,
+          "relative_difference": -0.010213709861393841
+        },
+        {
+          "physical_plane": 1,
+          "old_variance_dn2": 1.1671125049564288,
+          "new_full_frame_variance_dn2": 1.1412641042265168,
+          "relative_difference": -0.022147308524362867
+        },
+        {
+          "physical_plane": 2,
+          "old_variance_dn2": 1.1771445435889145,
+          "new_full_frame_variance_dn2": 1.145553506864523,
+          "relative_difference": -0.026837007312692226
+        },
+        {
+          "physical_plane": 3,
+          "old_variance_dn2": 1.29990262390893,
+          "new_full_frame_variance_dn2": 1.279131390273356,
+          "relative_difference": -0.015979068934496656
+        }
+      ]
+    },
+    {
+      "iso": 16000,
+      "shape": [
+        4639,
+        6959
+      ],
+      "sampled_active_pixels": 32282801,
+      "calibration_frames": 32,
+      "control_frames": 23,
+      "atypical_candidates": 61452,
+      "replicated_candidates": 61406,
+      "positive_candidates": 61451,
+      "negative_candidates": 1,
+      "examples_first_coordinates_yx": [
+        [
+          0,
+          106
+        ],
+        [
+          0,
+          1133
+        ],
+        [
+          0,
+          1170
+        ],
+        [
+          0,
+          1298
+        ],
+        [
+          0,
+          1735
+        ],
+        [
+          0,
+          1900
+        ],
+        [
+          0,
+          2392
+        ],
+        [
+          0,
+          2401
+        ],
+        [
+          0,
+          2413
+        ],
+        [
+          0,
+          2525
+        ],
+        [
+          0,
+          2845
+        ],
+        [
+          0,
+          2917
+        ],
+        [
+          0,
+          3123
+        ],
+        [
+          0,
+          3316
+        ],
+        [
+          0,
+          3430
+        ],
+        [
+          0,
+          3718
+        ],
+        [
+          0,
+          4703
+        ],
+        [
+          0,
+          5227
+        ],
+        [
+          0,
+          5657
+        ],
+        [
+          0,
+          6763
+        ],
+        [
+          0,
+          6784
+        ],
+        [
+          0,
+          6941
+        ],
+        [
+          1,
+          120
+        ],
+        [
+          1,
+          126
+        ],
+        [
+          1,
+          203
+        ],
+        [
+          1,
+          359
+        ],
+        [
+          1,
+          525
+        ],
+        [
+          1,
+          1989
+        ],
+        [
+          1,
+          2365
+        ],
+        [
+          1,
+          2902
+        ],
+        [
+          1,
+          3176
+        ],
+        [
+          1,
+          3359
+        ]
+      ],
+      "old_intercept_comparison": [
+        {
+          "physical_plane": 0,
+          "old_variance_dn2": 3480.1099341834397,
+          "new_full_frame_variance_dn2": 3549.3574840860806,
+          "relative_difference": 0.0198980926500211
+        },
+        {
+          "physical_plane": 1,
+          "old_variance_dn2": 3277.733147708297,
+          "new_full_frame_variance_dn2": 3347.884238711466,
+          "relative_difference": 0.021402319176659215
+        },
+        {
+          "physical_plane": 2,
+          "old_variance_dn2": 3344.871772800109,
+          "new_full_frame_variance_dn2": 3363.3101055091433,
+          "relative_difference": 0.005512418400900056
+        },
+        {
+          "physical_plane": 3,
+          "old_variance_dn2": 4261.34761805413,
+          "new_full_frame_variance_dn2": 4251.536344638324,
+          "relative_difference": -0.0023023874828324658
+        }
+      ]
+    }
+  ],
+  "whole_benchmark_qualified": false,
+  "additional_images_requested": false,
+  "limits": [
+    "This unit, RAW mode,1/200s, two ISO and current session",
+    "Map atypical-pixel rule is statistical, not a defective-sensor diagnosis",
+    "Compatibility with old intercepts is a check, not a new shot-slope fit",
+    "Full physical simulator, references and comparators remain separate gates"
+  ]
+}

@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "status": "completed_dru_checkpoint_replay_not_quality_qualification",
+  "measured_at_utc": "2026-11-05T22:08:23.327744+00:00",
+  "scope": "Engineering checkpoint only, synthetic fixture, no trained candidate or photographic benefit claimed.",
+  "tools": {
+    "dru_checkpoint.py": "d2cdd5dfb6c4bc3e4cfaa1a3b6d3f0cc295a5038a9b43ce01e84ef3c81598ca1",
+    "dru_cfa.py": "72b3b01b586316a46960173e93c515768bf8d55e38aec134215f9645d36ec3f1",
+    "probe_dru_checkpoint.py": "e2540de85eca6208259f0a612b754ce81eed3684808575850dda02451fa58f00"
+  },
+  "architecture": {
+    "repository": "https://github.com/cszn/DPIR",
+    "revision": "15bca3fcc1f3cc51a1f99ccf027691e278c19354",
+    "source_manifest_sha256": "8d945a7ac1e578eb8ff0cf6091024b7e6922be52e35423bf5cbefbedfbaac64a",
+    "pretrained_weights_loaded": false,
+    "seed": 9101,
+    "parameters": 32643840,
+    "support": {
+      "packed_radius": 185,
+      "packed_halo": 192,
+      "cfa_halo": 384,
+      "packed_core": 128,
+      "packed_context": 512,
+      "intervals": [
+        {
+          "output": 256,
+          "low": 71,
+          "high": 440
+        },
+        {
+          "output": 257,
+          "low": 79,
+          "high": 440
+        },
+        {
+          "output": 258,
+          "low": 79,
+          "high": 440
+        },
+        {
+          "output": 259,
+          "low": 79,
+          "high": 440
+        },
+        {
+          "output": 260,
+          "low": 79,
+          "high": 440
+        },
+        {
+          "output": 261,
+          "low": 79,
+          "high": 440
+        },
+        {
+          "output": 262,
+          "low": 79,
+          "high": 440
+        },
+        {
+          "output": 263,
+          "low": 79,
+          "high": 448
+        }
+      ],
+      "scope": "Deepest-path maximum, eight stride phases; residual skip paths are shorter. Pinned fourblocks/stage,strideconv2,transposeconv2 topology."
+    },
+    "activation_checkpointing": "nonreentrant perstage in training only, no stochastic layers"
+  },
+  "checkpoint_bytes": 391815547,
+  "checkpoint_sha256": "ade1831047246c3177c4d910c4078672a6c85e4f4fec1946759a0e44f7c302e7",
+  "resumed_from_step": 1,
+  "model_and_adam_bit_exact": true,
+  "next_loss_bit_exact": true,
+  "reference_loss": 9.958411828847602e-05,
+  "resumed_loss": 9.958411828847602e-05,
+  "peak_cuda_allocated_bytes": 1474409984,
+  "elapsed_seconds": 12.306795199983753,
+  "memory": {
+    "hard_process_commit_bytes": 6442450944,
+    "soft_process_bytes": 4831838208,
+    "system_stop_fraction": 0.92,
+    "poll_seconds": 0.25,
+    "samples": 49,
+    "peak_rss_bytes": 1753509888,
+    "peak_private_sampled_bytes": 4778373120,
+    "peak_system_used_fraction": 0.7305992491334993,
+    "os_job_peak_commit_bytes": 4787900416,
+    "reason": null,
+    "last": {
+      "system_total_bytes": 16933507072,
+      "system_available_bytes": 4595425280,
+      "system_used_fraction": 0.72861940173051,
+      "process_rss_bytes": 1730637824,
+      "process_private_bytes": 4765380608,
+      "process_peak_rss_bytes": 1753509888,
+      "process_peak_pagefile_bytes": 4787900416
+    }
+  }
+}

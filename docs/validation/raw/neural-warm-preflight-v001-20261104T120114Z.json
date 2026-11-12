@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "data_version": 1,
+  "campaign_id": "neural-warm-preflight-v001-20261104T120114Z",
+  "measured_at_utc": "2026-11-04T12:01:14.646103+00:00",
+  "status": "passed_paired_warm_engineering_not_quality_qualification",
+  "source_plan_sha256": "c325a96ad38afe6f0a009b50151bdf1384bb7ce767763a3a119433fbae129a27",
+  "script_sha256": "24368a30927eda0e4acb73aa0928aba9f5b174aadf0abbaf4d2869ebe20b3f7c",
+  "models": [
+    {
+      "seed": 71,
+      "folder": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-structure-campaign-v001\\seed71-attempt01",
+      "result_sha256": "13c61d72c0ca3860f25ad7573115355ed1adef366b554f64ebc1d4f2400139f4",
+      "weights_sha256": "ee8dc8b3bc2afe94fda7cbbc43d46e0f9d0d9450827d18d67493fb7034235a99"
+    },
+    {
+      "seed": 73,
+      "folder": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-structure-campaign-v001\\seed73-attempt01",
+      "result_sha256": "0fcd91523cf3fa880cfd511062a651201a5bd44eab203be488f417f4724050bf",
+      "weights_sha256": "1d02ee36a8e9c17c751bf3cddac222b2fa0710fab7c61bc73f783dab19077109"
+    }
+  ],
+  "cases": [
+    {
+      "arm": "control",
+      "seed": 71,
+      "completed_steps": 8,
+      "exposures": 32,
+      "final_loss": 7.1777297258377075,
+      "progress": {
+        "checkpoint": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\paired-warm-plan-v002\\engineering-control-71.pt",
+          "sha256": "cf3ed70d12bcd6fdd30ea10795af4de165a7499bfc23684b7e214c9700fac625",
+          "bytes": 587185,
+          "completed_step": 8
+        },
+        "last_preclip_gradient_norm": 38.77421951293945,
+        "completed_optimizer_steps": 8
+      }
+    },
+    {
+      "arm": "control",
+      "seed": 73,
+      "completed_steps": 8,
+      "exposures": 32,
+      "final_loss": 6.732718825340271,
+      "progress": {
+        "checkpoint": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\paired-warm-plan-v002\\engineering-control-73.pt",
+          "sha256": "c95ac25022c22f31b01dba2b7ac453a2f4e0c533a0e3508cfedb4e439dbb3f89",
+          "bytes": 587185,
+          "completed_step": 8
+        },
+        "last_preclip_gradient_norm": 34.557098388671875,
+        "completed_optimizer_steps": 8
+      }
+    },
+    {
+      "arm": "progressive",
+      "seed": 71,
+      "completed_steps": 8,
+      "exposures": 32,
+      "final_loss": 7.27163827419281,
+      "progress": {
+        "checkpoint": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\paired-warm-plan-v002\\engineering-progressive-71.pt",
+          "sha256": "0079268e0884c6394ccbabd9b34c4d2533cf46a52b6b1e2a1a8185eeb134f918",
+          "bytes": 587185,
+          "completed_step": 8
+        },
+        "last_preclip_gradient_norm": 37.8440055847168,
+        "completed_optimizer_steps": 8
+      }
+    },
+    {
+      "arm": "progressive",
+      "seed": 73,
+      "completed_steps": 8,
+      "exposures": 32,
+      "final_loss": 6.800084888935089,
+      "progress": {
+        "checkpoint": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\paired-warm-plan-v002\\engineering-progressive-73.pt",
+          "sha256": "8104e0820262e480bf0d5d838f316af2ba6c1ab1735fabb8c83782857a933cca",
+          "bytes": 587185,
+          "completed_step": 8
+        },
+        "last_preclip_gradient_norm": 20.572715759277344,
+        "completed_optimizer_steps": 8
+      }
+    }
+  ],
+  "policy": "Eight engineering steps per seed/arm; fresh Adam, rate0.00025, transition compressed to4steps only for engineering. Discard weights, no quality decision.",
+  "memory": {
+    "hard_process_commit_bytes": 2147483648,
+    "soft_process_bytes": 1342177280,
+    "system_stop_fraction": 0.92,
+    "poll_seconds": 0.25,
+    "samples": 36,
+    "peak_rss_bytes": 427057152,
+    "peak_private_sampled_bytes": 1136209920,
+    "peak_system_used_fraction": 0.7499625679431139,
+    "os_job_peak_commit_bytes": 1165365248,
+    "reason": null,
+    "last": {
+      "system_total_bytes": 16933507072,
+      "system_available_bytes": 4264452096,
+      "system_used_fraction": 0.748164861663454,
+      "process_rss_bytes": 427048960,
+      "process_private_bytes": 1136209920,
+      "process_peak_rss_bytes": 427057152,
+      "process_peak_pagefile_bytes": 1165365248
+    }
+  }
+}

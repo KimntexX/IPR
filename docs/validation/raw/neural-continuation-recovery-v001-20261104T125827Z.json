@@ -1,0 +1,458 @@
+{
+  "schema_version": 1,
+  "status": "completed_evaluation_recovery",
+  "started_at_utc": "2026-11-04T12:50:22.279159+00:00",
+  "script_sha256": "5eca3181d1010d5efdc310086373690f2dd64e4e01ff4604e261afa46ee7e7d9",
+  "original_run_sha256": "1cb6abc6a61fcc65ad36bcb749e62548017b7283f864dd82ef0c27250950a526",
+  "stages": [
+    {
+      "name": "qualify_progressive",
+      "started_at_utc": "2026-11-04T12:50:37.492831+00:00",
+      "admission": {
+        "system_total_bytes": 16933507072,
+        "system_available_bytes": 9345941504,
+        "system_used_fraction": 0.4480799834162079,
+        "process_rss_bytes": 36532224,
+        "process_private_bytes": 28483584,
+        "process_peak_rss_bytes": 52834304,
+        "process_peak_pagefile_bytes": 45305856
+      },
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\run_stability_qualification.py",
+        "--campaign",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\continuation-progressive-campaign-v001",
+        "--data-plan",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\paired-warm-plan-v002\\progressive\\plan.json",
+        "--prefix",
+        "continuation-progressive-recovered",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\continuation-progressive-recovered-qualification-v001"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-04T12:57:39.147529+00:00"
+    },
+    {
+      "name": "paired_followup",
+      "started_at_utc": "2026-11-04T12:57:54.156841+00:00",
+      "admission": {
+        "system_total_bytes": 16933507072,
+        "system_available_bytes": 9349697536,
+        "system_used_fraction": 0.44785817277863416,
+        "process_rss_bytes": 36196352,
+        "process_private_bytes": 28360704,
+        "process_peak_rss_bytes": 52834304,
+        "process_peak_pagefile_bytes": 45305856
+      },
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\run_neural_followup.py",
+        "--qualification",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\continuation-progressive-recovered-qualification-v001\\progress.json",
+        "--data-plan",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\paired-warm-plan-v002\\progressive\\plan.json",
+        "--campaign",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\continuation-progressive-campaign-v001",
+        "--prefix",
+        "continuation-progressive-recovered",
+        "--previous-fine",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\continuation-control-fine-v001\\result.json",
+        "--previous-campaign",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\continuation-control-campaign-v001",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\continuation-progressive-recovered-followup-v001"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-04T12:58:27.420705+00:00"
+    }
+  ],
+  "policy": "Evaluation recovery only, no training or score selection. Preserve old failure. Resume-linked final weights are immutable; all gates unchanged.",
+  "resolved_models": [
+    "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\continuation-progressive-campaign-v001\\seed71-attempt01",
+    "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\continuation-progressive-campaign-v001\\seed73-attempt02"
+  ],
+  "control_models": [
+    "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\continuation-control-campaign-v001\\seed71-attempt01",
+    "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\continuation-control-campaign-v001\\seed73-attempt01"
+  ],
+  "campaign_sha256": "cb2f12208af37b2df661ec0f68c310749cc511ee4fd8d32d259d12529a2c9c35",
+  "control_fine_sha256": "1f90384dd90e90bb64c5d346a6ef3b6ada5e34ebe2f6c66d233349915343166c",
+  "candidate_followup_status": "completed_known_failure_diagnosis_reserved_unopened",
+  "paired_fine": {
+    "previous_passed": false,
+    "current_passed": false,
+    "observation_count": 4032,
+    "comparisons": [
+      {
+        "seed": 71,
+        "noise_index": 1,
+        "current_over_previous_rgb_mse": 1.0011339418507945,
+        "previous_strong_failed": 1,
+        "current_strong_failed": 1,
+        "previous_minimum_transfer": 0.9683956970031374,
+        "current_minimum_transfer": 0.96798941893388
+      },
+      {
+        "seed": 71,
+        "noise_index": 2,
+        "current_over_previous_rgb_mse": 1.0050299258058968,
+        "previous_strong_failed": 9,
+        "current_strong_failed": 7,
+        "previous_minimum_transfer": 0.7235837010375687,
+        "current_minimum_transfer": 0.7468402532569964
+      },
+      {
+        "seed": 73,
+        "noise_index": 1,
+        "current_over_previous_rgb_mse": 1.001078361985996,
+        "previous_strong_failed": 0,
+        "current_strong_failed": 0,
+        "previous_minimum_transfer": 0.9675825009136482,
+        "current_minimum_transfer": 0.9659405927585977
+      },
+      {
+        "seed": 73,
+        "noise_index": 2,
+        "current_over_previous_rgb_mse": 1.0128469816657364,
+        "previous_strong_failed": 9,
+        "current_strong_failed": 9,
+        "previous_minimum_transfer": 0.5677379887270833,
+        "current_minimum_transfer": 0.5531907941131471
+      }
+    ],
+    "coherent_error_decomposition": {
+      "previous": [
+        {
+          "seed": 71,
+          "noise_index": 1,
+          "amplitude": 0.008,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 0.000927173702108069,
+          "bias_squared_estimate": 0.06984604316719767,
+          "mean_squared_error": 0.07077321686930574
+        },
+        {
+          "seed": 71,
+          "noise_index": 1,
+          "amplitude": 0.008,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 0.002253592124119367,
+          "bias_squared_estimate": 0.20385638303675552,
+          "mean_squared_error": 0.2061099751608749
+        },
+        {
+          "seed": 71,
+          "noise_index": 1,
+          "amplitude": 0.06,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 3.080765805155268e-05,
+          "bias_squared_estimate": 0.00866288149321313,
+          "mean_squared_error": 0.008693689151264684
+        },
+        {
+          "seed": 71,
+          "noise_index": 1,
+          "amplitude": 0.06,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 7.722902077081118e-05,
+          "bias_squared_estimate": 0.00837274004699427,
+          "mean_squared_error": 0.00844996906776508
+        },
+        {
+          "seed": 71,
+          "noise_index": 2,
+          "amplitude": 0.008,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 0.006071920645686702,
+          "bias_squared_estimate": 0.08512138793800783,
+          "mean_squared_error": 0.09119330858369454
+        },
+        {
+          "seed": 71,
+          "noise_index": 2,
+          "amplitude": 0.008,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 0.01221024403983616,
+          "bias_squared_estimate": 0.2782282657950337,
+          "mean_squared_error": 0.29043850983486985
+        },
+        {
+          "seed": 71,
+          "noise_index": 2,
+          "amplitude": 0.06,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 0.00023295550621589567,
+          "bias_squared_estimate": 0.01764084449211519,
+          "mean_squared_error": 0.017873799998331087
+        },
+        {
+          "seed": 71,
+          "noise_index": 2,
+          "amplitude": 0.06,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 0.00048538086471040234,
+          "bias_squared_estimate": 0.02169699522940647,
+          "mean_squared_error": 0.02218237609411687
+        },
+        {
+          "seed": 73,
+          "noise_index": 1,
+          "amplitude": 0.008,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 0.0009038379612635378,
+          "bias_squared_estimate": 0.07857705399325375,
+          "mean_squared_error": 0.07948089195451728
+        },
+        {
+          "seed": 73,
+          "noise_index": 1,
+          "amplitude": 0.008,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 0.0021084371075712413,
+          "bias_squared_estimate": 0.21112076629206317,
+          "mean_squared_error": 0.21322920339963441
+        },
+        {
+          "seed": 73,
+          "noise_index": 1,
+          "amplitude": 0.06,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 3.173899200811747e-05,
+          "bias_squared_estimate": 0.013905323049630368,
+          "mean_squared_error": 0.013937062041638484
+        },
+        {
+          "seed": 73,
+          "noise_index": 1,
+          "amplitude": 0.06,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 7.861112320486577e-05,
+          "bias_squared_estimate": 0.01270949879567566,
+          "mean_squared_error": 0.012788109918880526
+        },
+        {
+          "seed": 73,
+          "noise_index": 2,
+          "amplitude": 0.008,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 0.006515414259584188,
+          "bias_squared_estimate": 0.08942366388621284,
+          "mean_squared_error": 0.09593907814579702
+        },
+        {
+          "seed": 73,
+          "noise_index": 2,
+          "amplitude": 0.008,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 0.013996646151049015,
+          "bias_squared_estimate": 0.24886924408861746,
+          "mean_squared_error": 0.26286589023966644
+        },
+        {
+          "seed": 73,
+          "noise_index": 2,
+          "amplitude": 0.06,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 0.0002504648645558102,
+          "bias_squared_estimate": 0.022680292905739557,
+          "mean_squared_error": 0.022930757770295365
+        },
+        {
+          "seed": 73,
+          "noise_index": 2,
+          "amplitude": 0.06,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 0.0005029324244603055,
+          "bias_squared_estimate": 0.04404345260890558,
+          "mean_squared_error": 0.04454638503336589
+        }
+      ],
+      "current": [
+        {
+          "seed": 71,
+          "noise_index": 1,
+          "amplitude": 0.008,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 0.0009328081815110251,
+          "bias_squared_estimate": 0.07024122403445159,
+          "mean_squared_error": 0.07117403221596262
+        },
+        {
+          "seed": 71,
+          "noise_index": 1,
+          "amplitude": 0.008,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 0.002322905762736492,
+          "bias_squared_estimate": 0.19914411636702795,
+          "mean_squared_error": 0.20146702212976444
+        },
+        {
+          "seed": 71,
+          "noise_index": 1,
+          "amplitude": 0.06,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 3.082640945770868e-05,
+          "bias_squared_estimate": 0.008668472947846667,
+          "mean_squared_error": 0.008699299357304376
+        },
+        {
+          "seed": 71,
+          "noise_index": 1,
+          "amplitude": 0.06,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 7.730911694649077e-05,
+          "bias_squared_estimate": 0.008373695374746465,
+          "mean_squared_error": 0.008451004491692957
+        },
+        {
+          "seed": 71,
+          "noise_index": 2,
+          "amplitude": 0.008,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 0.005978941732011235,
+          "bias_squared_estimate": 0.08808054869777163,
+          "mean_squared_error": 0.09405949042978286
+        },
+        {
+          "seed": 71,
+          "noise_index": 2,
+          "amplitude": 0.008,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 0.011958407231344344,
+          "bias_squared_estimate": 0.28328670395974703,
+          "mean_squared_error": 0.29524511119109137
+        },
+        {
+          "seed": 71,
+          "noise_index": 2,
+          "amplitude": 0.06,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 0.00023416798764224338,
+          "bias_squared_estimate": 0.016852631910521103,
+          "mean_squared_error": 0.01708679989816335
+        },
+        {
+          "seed": 71,
+          "noise_index": 2,
+          "amplitude": 0.06,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 0.00048237319803386575,
+          "bias_squared_estimate": 0.020021071972847495,
+          "mean_squared_error": 0.02050344517088136
+        },
+        {
+          "seed": 73,
+          "noise_index": 1,
+          "amplitude": 0.008,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 0.0008957842356693463,
+          "bias_squared_estimate": 0.08257855341069482,
+          "mean_squared_error": 0.08347433764636417
+        },
+        {
+          "seed": 73,
+          "noise_index": 1,
+          "amplitude": 0.008,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 0.0020838482362971595,
+          "bias_squared_estimate": 0.21956183424137338,
+          "mean_squared_error": 0.22164568247767055
+        },
+        {
+          "seed": 73,
+          "noise_index": 1,
+          "amplitude": 0.06,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 3.172441692688599e-05,
+          "bias_squared_estimate": 0.013907290675405188,
+          "mean_squared_error": 0.013939015092332073
+        },
+        {
+          "seed": 73,
+          "noise_index": 1,
+          "amplitude": 0.06,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 7.848941565344469e-05,
+          "bias_squared_estimate": 0.012716464181882227,
+          "mean_squared_error": 0.012794953597535672
+        },
+        {
+          "seed": 73,
+          "noise_index": 2,
+          "amplitude": 0.008,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 0.006425247739660685,
+          "bias_squared_estimate": 0.09368220125530019,
+          "mean_squared_error": 0.10010744899496088
+        },
+        {
+          "seed": 73,
+          "noise_index": 2,
+          "amplitude": 0.008,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 0.01374669886374526,
+          "bias_squared_estimate": 0.255093851868705,
+          "mean_squared_error": 0.2688405507324502
+        },
+        {
+          "seed": 73,
+          "noise_index": 2,
+          "amplitude": 0.06,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 0.0002487928802217456,
+          "bias_squared_estimate": 0.02213641104578733,
+          "mean_squared_error": 0.022385203926009074
+        },
+        {
+          "seed": 73,
+          "noise_index": 2,
+          "amplitude": 0.06,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 0.000500371730393482,
+          "bias_squared_estimate": 0.04248622711386995,
+          "mean_squared_error": 0.04298659884426343
+        }
+      ],
+      "limits": "Sine/quadrature coefficient error, not total pixel noise. Three realizations per conditional series; high uncertainty individually. Finite-sample corrected squared-bias estimates are not clipped, may be negative. Descriptive, not a new gate."
+    },
+    "schema_version": 1,
+    "measured_at_utc": "2026-11-04T12:57:54.956127+00:00",
+    "previous_sha256": "1f90384dd90e90bb64c5d346a6ef3b6ada5e34ebe2f6c66d233349915343166c",
+    "current_sha256": "6517cc7aa03c7bf816159748366a3be7f4d0d77fe9995955cd1753d72278711e",
+    "tool_sha256": "de3f946ca46f22e71bfe3888cf96f7854665a1ba42df8048febfdd221b700814",
+    "status": "completed_paired_known_fine_comparison_not_qualification"
+  },
+  "finished_at_utc": "2026-11-04T12:58:27.426613+00:00"
+}

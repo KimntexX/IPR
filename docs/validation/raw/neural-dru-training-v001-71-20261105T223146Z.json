@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "status": "stopped_on_error",
+  "seed": 71,
+  "preflight": true,
+  "plan_sha256": "72ae9c475d9ca63e9ff50f06ff333458ead81a73a8e19ebce79c6c51037ec21a",
+  "started_at_utc": "2026-11-05T22:31:16.440192+00:00",
+  "losses": [
+    0.7461819648742676,
+    0.9993632584810257,
+    0.9958458244800568,
+    0.9998504966497421,
+    0.9986728876829147,
+    1.0017489790916443
+  ],
+  "milestones": [
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-overnight-preflight-v001\\checkpoint-000000.pt",
+      "sha256": "efc1dde31bddcda7b72c3929d044bed7fbb0ad45bab1787e6aab58ebe9411b63",
+      "step": 0
+    },
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-overnight-preflight-v001\\bridge.pt",
+      "sha256": "aaf76e58128a6b5406b9db5f429b5d0f231160ab2246be48afd3f7b031a2844b",
+      "step": 4
+    }
+  ],
+  "controls": [
+    {
+      "step": 0,
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-overnight-preflight-v001\\control-000000.json",
+      "sha256": "5f7ac8caaf5f4b46f5826d90fafdfc092f6329238f96d95a532c307182c056c0",
+      "observations": 2
+    }
+  ],
+  "architecture": {
+    "repository": "https://github.com/cszn/DPIR",
+    "revision": "15bca3fcc1f3cc51a1f99ccf027691e278c19354",
+    "source_manifest_sha256": "8d945a7ac1e578eb8ff0cf6091024b7e6922be52e35423bf5cbefbedfbaac64a",
+    "pretrained_weights_loaded": false,
+    "seed": 71,
+    "parameters": 32643840,
+    "support": {
+      "packed_radius": 185,
+      "packed_halo": 192,
+      "cfa_halo": 384,
+      "packed_core": 128,
+      "packed_context": 512,
+      "intervals": [
+        {
+          "output": 256,
+          "low": 71,
+          "high": 440
+        },
+        {
+          "output": 257,
+          "low": 79,
+          "high": 440
+        },
+        {
+          "output": 258,
+          "low": 79,
+          "high": 440
+        },
+        {
+          "output": 259,
+          "low": 79,
+          "high": 440
+        },
+        {
+          "output": 260,
+          "low": 79,
+          "high": 440
+        },
+        {
+          "output": 261,
+          "low": 79,
+          "high": 440
+        },
+        {
+          "output": 262,
+          "low": 79,
+          "high": 440
+        },
+        {
+          "output": 263,
+          "low": 79,
+          "high": 448
+        }
+      ],
+      "scope": "Deepest-path maximum, eight stride phases; residual skip paths are shorter. Pinned fourblocks/stage,strideconv2,transposeconv2 topology."
+    },
+    "activation_checkpointing": "nonreentrant perstage in training only, no stochastic layers"
+  },
+  "completed_steps": 6,
+  "elapsed_seconds": 30.31275400001323,
+  "step_seconds": [
+    2.3777775000198744,
+    2.801015799981542,
+    2.553239500033669,
+    2.553277999977581,
+    3.1821546999854036,
+    2.984097699983977
+  ],
+  "error": "system_physical_memory_threshold",
+  "memory": {
+    "hard_process_commit_bytes": 6442450944,
+    "soft_process_bytes": 4831838208,
+    "system_stop_fraction": 0.92,
+    "poll_seconds": 0.25,
+    "samples": 118,
+    "peak_rss_bytes": 1446379520,
+    "peak_private_sampled_bytes": 4463587328,
+    "peak_system_used_fraction": 0.9242754931658377,
+    "os_job_peak_commit_bytes": 4470083584,
+    "reason": "system_physical_memory_threshold",
+    "last": {
+      "system_total_bytes": 16933507072,
+      "system_available_bytes": 2307629056,
+      "system_used_fraction": 0.8637240917555864,
+      "process_rss_bytes": 1445507072,
+      "process_private_bytes": 4457500672,
+      "process_peak_rss_bytes": 1446379520,
+      "process_peak_pagefile_bytes": 4470083584
+    }
+  }
+}

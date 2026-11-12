@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "measured_at_utc": "2026-11-07T12:55:17.396925+00:00",
+  "deleted_caches": 102,
+  "verified_hardlink_targets": 51,
+  "preserved_checkpoint_paths": 287,
+  "logical_worktree_bytes": 41055483807,
+  "distinct_file_content_bytes": 29032991095,
+  "observed_free_space_gain_bytes": 39752409088,
+  "limits": "Distinct-file apparent bytes exclude cluster/compression overhead and shared Git/CUDA folders."
+}

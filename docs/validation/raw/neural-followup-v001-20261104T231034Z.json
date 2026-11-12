@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "started_at_utc": "2026-11-04T23:09:51.566115+00:00",
+  "status": "completed_known_failure_diagnosis_reserved_unopened",
+  "qualification": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-correlation-qualification-v001\\progress.json",
+  "data_plan": "build-patch_neural_restoration\\paired-correlation-plan-v002\\correlation\\plan.json",
+  "campaign": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-correlation-campaign-v001",
+  "prefix": "input-cues-correlation",
+  "script_sha256": "ad816a6ba41a96470e9a78fa5de541e17ab697af197e07d96ac7785f3b4b2a87",
+  "previous_fine": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-control-fine-v001\\result.json",
+  "previous_campaign": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-control-campaign-v001",
+  "policy": "No retraining or tuning. Known failure -> paired diagnostic only. All known pass -> frozen new classic cohort then fine cohort2; failure stops opening further reserved data.",
+  "stages": [
+    {
+      "name": "paired_fine_comparison",
+      "started_at_utc": "2026-11-04T23:09:51.567218+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\compare_fine_candidates.py",
+        "--previous",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-control-fine-v001\\result.json",
+        "--current",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-correlation-fine-v001\\result.json",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-correlation-followup-v001\\paired-fine.json"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-04T23:09:52.279103+00:00"
+    },
+    {
+      "name": "fine_diagnosis",
+      "started_at_utc": "2026-11-04T23:09:52.280054+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\trace_fine_attenuation.py",
+        "--proof",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-correlation-protected-v001\\result.json",
+        "--historical",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-correlation-fine-v001\\result.json",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-correlation-fine-trace-v001"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-04T23:10:24.193574+00:00"
+    },
+    {
+      "name": "multitone_diagnosis",
+      "started_at_utc": "2026-11-04T23:10:24.194485+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\diagnose_multitone_training.py",
+        "--data-plan",
+        "build-patch_neural_restoration\\paired-correlation-plan-v002\\correlation\\plan.json",
+        "--previous-campaign",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-control-campaign-v001",
+        "--campaign",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-correlation-campaign-v001",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-correlation-multitone-diagnostic-v001"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-04T23:10:34.721631+00:00"
+    }
+  ],
+  "qualification_sha256": "0efd2ba0145a6d6f91f474c99d3c84b169117276cc5cf2dcc27ef28bbbd401f0",
+  "finished_at_utc": "2026-11-04T23:10:34.722635+00:00"
+}

@@ -1,0 +1,4601 @@
+{
+  "schema_version": 1,
+  "data_version": 1,
+  "campaign_id": "neural-mosaic-inlet-v001-20261102T113314Z",
+  "measured_at_utc": "2026-11-02T11:33:14.342422+00:00",
+  "freeze": {
+    "schema_version": 1,
+    "data_version": 1,
+    "campaign_id": "neural-mosaic-inlet-v001-20261102T113314Z",
+    "measured_at_utc": "2026-11-02T11:33:14.342422+00:00",
+    "git_sha": "76d098ab7160e986f3f42481b11d96bb35d9c5e9",
+    "parents": {
+      "parent": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\docs\\validation\\raw\\neural-photo-pilot-v002-20261101T204009Z.json",
+        "sha256": "1420e26f174f1a9289676a1adb7a79c6df59a630f4499222492724f3ca1fb7e0"
+      },
+      "burst": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\docs\\validation\\raw\\neural-same-iso-burst-v001-20261101T224914Z.json",
+        "sha256": "89187c28122158fc4bbdf11435af4ea7758f54379b9d4f75547f0d81a5c11cc3"
+      }
+    },
+    "tool": {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\native\\Release\\iprNeuralMosaicCapture.exe",
+      "sha256": "fbf73e2043536e4bf4efec1b3658d66f7433c3b7c1800205111721321429a9cf"
+    },
+    "sources": [
+      {
+        "black_estimated": true,
+        "calibration_applied": true,
+        "calibration_white_dn": 13995,
+        "camera_neutral": [
+          0.5283797729618163,
+          1,
+          0.5908828620888632
+        ],
+        "decode_ms": 6418.0388,
+        "domain": "signed balanced camera RGB, post-RCD/median, before LCP/DCP; no denoise",
+        "engine_revision": "ff1432469026ebba5869c5f9366151147140822d",
+        "full_shape": [
+          4639,
+          6959,
+          3
+        ],
+        "green_proxy": {
+          "dtype": "<f4",
+          "offset_bytes": 15925248,
+          "shape": [
+            533,
+            800,
+            1
+          ]
+        },
+        "iso": 100,
+        "manifest_sha256": "c01cd196f9d35141281e8d7852de4e19e9cbacddb4c7ed29bf8196b3676fc30c",
+        "measured_at_utc": "2026-11-01T20:26:27.148Z",
+        "model": "EOS R6 Mark III",
+        "pixels": "6V1A0134.json.bin",
+        "pixels_sha256": "38f0d06ab999278c25022ccd415f97071f150096087631556ce462221ce41ba1",
+        "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+        "schema_version": 1,
+        "source": "D:/DCIM/101EOSR6/6V1A0134.CR3",
+        "source_sha256": "3a10443d1a26fb4b10467f98568fbc022aed9c67497a249505b2bf72140a49ec",
+        "tiles": [
+          {
+            "dtype": "<f4",
+            "offset_bytes": 0,
+            "origin_xy": [
+              1199,
+              735
+            ],
+            "shape": [
+              384,
+              384,
+              3
+            ]
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 1769472,
+            "origin_xy": [
+              3287,
+              735
+            ],
+            "shape": [
+              384,
+              384,
+              3
+            ]
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 3538944,
+            "origin_xy": [
+              5375,
+              735
+            ],
+            "shape": [
+              384,
+              384,
+              3
+            ]
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 5308416,
+            "origin_xy": [
+              1199,
+              2127
+            ],
+            "shape": [
+              384,
+              384,
+              3
+            ]
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 7077888,
+            "origin_xy": [
+              3287,
+              2127
+            ],
+            "shape": [
+              384,
+              384,
+              3
+            ]
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 8847360,
+            "origin_xy": [
+              5375,
+              2127
+            ],
+            "shape": [
+              384,
+              384,
+              3
+            ]
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 10616832,
+            "origin_xy": [
+              1199,
+              3519
+            ],
+            "shape": [
+              384,
+              384,
+              3
+            ]
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 12386304,
+            "origin_xy": [
+              3287,
+              3519
+            ],
+            "shape": [
+              384,
+              384,
+              3
+            ]
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 14155776,
+            "origin_xy": [
+              5375,
+              3519
+            ],
+            "shape": [
+              384,
+              384,
+              3
+            ]
+          }
+        ],
+        "group": 2,
+        "scene": "indoor",
+        "descriptor": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\photo-pilot-v001\\6V1A0134.json",
+        "descriptor_sha256": "c994794c7754f90dc54f6ffb75e7e7229f23257b320cf60f4035cffb74cc355f"
+      },
+      {
+        "black_estimated": true,
+        "calibration_applied": true,
+        "calibration_white_dn": 14351,
+        "camera_neutral": [
+          0.5283797729618163,
+          1,
+          0.5908828620888632
+        ],
+        "decode_ms": 6895.6719,
+        "domain": "signed balanced camera RGB, post-RCD/median, before LCP/DCP; no denoise",
+        "engine_revision": "ff1432469026ebba5869c5f9366151147140822d",
+        "full_shape": [
+          4639,
+          6959,
+          3
+        ],
+        "green_proxy": {
+          "dtype": "<f4",
+          "offset_bytes": 15925248,
+          "shape": [
+            533,
+            800,
+            1
+          ]
+        },
+        "iso": 12800,
+        "manifest_sha256": "c01cd196f9d35141281e8d7852de4e19e9cbacddb4c7ed29bf8196b3676fc30c",
+        "measured_at_utc": "2026-11-01T20:29:16.401Z",
+        "model": "EOS R6 Mark III",
+        "pixels": "6V1A0181.json.bin",
+        "pixels_sha256": "dad759d6ba8070cf7310a2040a1b2569751fe9e982194c8feeab52ceeae97f63",
+        "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+        "schema_version": 1,
+        "source": "D:/DCIM/101EOSR6/6V1A0181.CR3",
+        "source_sha256": "fb1ee4491d2fc3e004a37f20304ef028e6c7b8f28d726115f04b6fa071ea54a9",
+        "tiles": [
+          {
+            "dtype": "<f4",
+            "offset_bytes": 0,
+            "origin_xy": [
+              1199,
+              735
+            ],
+            "shape": [
+              384,
+              384,
+              3
+            ]
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 1769472,
+            "origin_xy": [
+              3287,
+              735
+            ],
+            "shape": [
+              384,
+              384,
+              3
+            ]
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 3538944,
+            "origin_xy": [
+              5375,
+              735
+            ],
+            "shape": [
+              384,
+              384,
+              3
+            ]
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 5308416,
+            "origin_xy": [
+              1199,
+              2127
+            ],
+            "shape": [
+              384,
+              384,
+              3
+            ]
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 7077888,
+            "origin_xy": [
+              3287,
+              2127
+            ],
+            "shape": [
+              384,
+              384,
+              3
+            ]
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 8847360,
+            "origin_xy": [
+              5375,
+              2127
+            ],
+            "shape": [
+              384,
+              384,
+              3
+            ]
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 10616832,
+            "origin_xy": [
+              1199,
+              3519
+            ],
+            "shape": [
+              384,
+              384,
+              3
+            ]
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 12386304,
+            "origin_xy": [
+              3287,
+              3519
+            ],
+            "shape": [
+              384,
+              384,
+              3
+            ]
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 14155776,
+            "origin_xy": [
+              5375,
+              3519
+            ],
+            "shape": [
+              384,
+              384,
+              3
+            ]
+          }
+        ],
+        "group": 4,
+        "scene": "indoor",
+        "descriptor": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\photo-pilot-v001\\6V1A0181.json",
+        "descriptor_sha256": "51bbf2a92b6aba6cc595fcee9ffb26dd5cce388c543ad80a84a368eadb9a4b41"
+      },
+      {
+        "black_estimated": true,
+        "calibration_applied": true,
+        "calibration_white_dn": 14351,
+        "camera_neutral": [
+          0.5283797729618163,
+          1,
+          0.5908828620888632
+        ],
+        "decode_ms": 7014.5229,
+        "domain": "signed balanced camera RGB, post-RCD/median, before LCP/DCP; no denoise",
+        "engine_revision": "d0b155b1c33d72ee6d5bbf2cfcb91720a14add45",
+        "full_shape": [
+          6959,
+          4639,
+          3
+        ],
+        "green_proxy": {
+          "dtype": "<f4",
+          "offset_bytes": 15925248,
+          "shape": [
+            1200,
+            800,
+            1
+          ]
+        },
+        "iso": 4000,
+        "manifest_sha256": "c01cd196f9d35141281e8d7852de4e19e9cbacddb4c7ed29bf8196b3676fc30c",
+        "measured_at_utc": "2026-11-01T22:49:21.824Z",
+        "model": "EOS R6 Mark III",
+        "pixels": "6V1A9819.json.bin",
+        "pixels_sha256": "a2594b47115aa1252bf551366086bf15308c96b9ad20ff262202f482822a1f02",
+        "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+        "schema_version": 1,
+        "source": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/colorim\u00e9trie/rafale/6V1A9819.CR3",
+        "source_sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165",
+        "tiles": [
+          {
+            "dtype": "<f4",
+            "offset_bytes": 0,
+            "origin_xy": [
+              735,
+              1199
+            ],
+            "shape": [
+              384,
+              384,
+              3
+            ]
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 1769472,
+            "origin_xy": [
+              2127,
+              1199
+            ],
+            "shape": [
+              384,
+              384,
+              3
+            ]
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 3538944,
+            "origin_xy": [
+              3519,
+              1199
+            ],
+            "shape": [
+              384,
+              384,
+              3
+            ]
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 5308416,
+            "origin_xy": [
+              735,
+              3287
+            ],
+            "shape": [
+              384,
+              384,
+              3
+            ]
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 7077888,
+            "origin_xy": [
+              2127,
+              3287
+            ],
+            "shape": [
+              384,
+              384,
+              3
+            ]
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 8847360,
+            "origin_xy": [
+              3519,
+              3287
+            ],
+            "shape": [
+              384,
+              384,
+              3
+            ]
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 10616832,
+            "origin_xy": [
+              735,
+              5375
+            ],
+            "shape": [
+              384,
+              384,
+              3
+            ]
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 12386304,
+            "origin_xy": [
+              2127,
+              5375
+            ],
+            "shape": [
+              384,
+              384,
+              3
+            ]
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 14155776,
+            "origin_xy": [
+              3519,
+              5375
+            ],
+            "shape": [
+              384,
+              384,
+              3
+            ]
+          }
+        ],
+        "group": 1,
+        "scene": "burst_4000_training_candidate",
+        "descriptor": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\same-iso-4000-v001\\6V1A9819.json",
+        "descriptor_sha256": "06a79c8a5e51a428015b2dfaa943d2c0183b988b7fe0b87ace78f023c61de412"
+      }
+    ],
+    "policy": "Three frozen training-side Bayer sources; no control-dependent selection or neural fitting.",
+    "tools": {
+      "qualify_mosaic_inlet.py": "1e121670ad5f09913c3ac5f29f593a449b92afdab98c99008b42b0a7977f7f19",
+      "mosaic_data.py": "cf4e448f22133765126514652df222ef3e6b8844b487a4c80bf66ff65b650da4",
+      "capture_mosaic.cpp": "f07ea1a203879f897ae0bdd19b80bbd4a07e75fcddfc8b282e63cae0ddeb9936"
+    }
+  },
+  "freeze_sha256": "e756bc1300c814c925a4246769c22cb2569548c9cb9493b71dfd780ac379a27c",
+  "records": [
+    {
+      "capture": {
+        "black": [
+          512,
+          512,
+          512,
+          512
+        ],
+        "black_estimated": true,
+        "camera_proof": "C:/Users/victo/Documents/Projet/Programmation/IPR/.worktrees/patch_neural_restoration/build-patch_neural_restoration/photo-pilot-v001/6V1A0134.json",
+        "camera_proof_sha256": "c994794c7754f90dc54f6ffb75e7e7229f23257b320cf60f4035cffb74cc355f",
+        "divisor": 13483,
+        "gains": [
+          1.892578125,
+          1,
+          1.6923828125,
+          1
+        ],
+        "iso": 100,
+        "measured_at_utc": "2026-11-02T11:33:17.018Z",
+        "model": "EOS R6 Mark III",
+        "orientation_flip": 0,
+        "pixels": "6V1A0134-mosaic.json.bin",
+        "pixels_sha256": "5a136d7fa29007dc4ef3bb75061aeae854eaea3116dd69200a733f6431516c61",
+        "rgb_regions_compared": 9,
+        "rgb_replay_bit_exact": true,
+        "schema_version": 1,
+        "scope": "Bench only; frozen production calibration; signed mosaics; no new training or clean-target claim",
+        "sensor_origin_xy": [
+          172,
+          108
+        ],
+        "source": "D:/DCIM/101EOSR6/6V1A0134.CR3",
+        "source_sha256": "3a10443d1a26fb4b10467f98568fbc022aed9c67497a249505b2bf72140a49ec",
+        "stages": [
+          {
+            "dtype": "<f4",
+            "offset_bytes": 0,
+            "origin_xy": [
+              1199,
+              735
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 0,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 589824,
+            "origin_xy": [
+              3287,
+              735
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 1,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 1179648,
+            "origin_xy": [
+              5375,
+              735
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 2,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 1769472,
+            "origin_xy": [
+              1199,
+              2127
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 3,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 2359296,
+            "origin_xy": [
+              3287,
+              2127
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 4,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 2949120,
+            "origin_xy": [
+              5375,
+              2127
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 5,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 3538944,
+            "origin_xy": [
+              1199,
+              3519
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 6,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 4128768,
+            "origin_xy": [
+              3287,
+              3519
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 7,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 4718592,
+            "origin_xy": [
+              5375,
+              3519
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 8,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 5308416,
+            "origin_xy": [
+              1199,
+              735
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 0,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 5898240,
+            "origin_xy": [
+              3287,
+              735
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 1,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 6488064,
+            "origin_xy": [
+              5375,
+              735
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 2,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 7077888,
+            "origin_xy": [
+              1199,
+              2127
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 3,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 7667712,
+            "origin_xy": [
+              3287,
+              2127
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 4,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 8257536,
+            "origin_xy": [
+              5375,
+              2127
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 5,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 8847360,
+            "origin_xy": [
+              1199,
+              3519
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 6,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 9437184,
+            "origin_xy": [
+              3287,
+              3519
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 7,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 10027008,
+            "origin_xy": [
+              5375,
+              3519
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 8,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          }
+        ],
+        "tool_revision": "76d098ab7160e986f3f42481b11d96bb35d9c5e9",
+        "white": 13995,
+        "descriptor": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\mosaic-inlet-v001\\6V1A0134-mosaic.json",
+        "descriptor_sha256": "b7d2479aa364e1d4c70d55d1387a381e61e74ba1eb9a89366ab247c8c1cb06fc"
+      },
+      "measurements": [
+        {
+          "roi": 0,
+          "origin_xy": [
+            1199,
+            735
+          ],
+          "pattern": [
+            [
+              2,
+              3
+            ],
+            [
+              1,
+              0
+            ]
+          ],
+          "packed_shape": [
+            4,
+            192,
+            192
+          ],
+          "roundtrip_exact": true,
+          "wb_relation_max_abs_error": 1.4901161193847656e-08,
+          "stages": [
+            {
+              "stage": "normalized_cfa_before_wb_unclipped",
+              "negative_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  0.024401096627116203,
+                  0.04494548588991165,
+                  0.04539049044251442,
+                  0.027219459414482117
+                ],
+                [
+                  0.03708373382687569,
+                  0.06660238653421402,
+                  0.06660238653421402,
+                  0.03923458978533745
+                ],
+                [
+                  0.05124972015619278,
+                  0.08914929628372192,
+                  0.0892234593629837,
+                  0.051027216017246246
+                ]
+              ]
+            },
+            {
+              "stage": "balanced_cfa_pre_rcd_white_clipped",
+              "negative_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  0.04129600152373314,
+                  0.04494548588991165,
+                  0.04539049044251442,
+                  0.05151495710015297
+                ],
+                [
+                  0.0627598762512207,
+                  0.06660238653421402,
+                  0.06660238653421402,
+                  0.07425452768802643
+                ],
+                [
+                  0.08673415333032608,
+                  0.08914929628372192,
+                  0.0892234593629837,
+                  0.09657299518585205
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "roi": 1,
+          "origin_xy": [
+            3287,
+            735
+          ],
+          "pattern": [
+            [
+              2,
+              3
+            ],
+            [
+              1,
+              0
+            ]
+          ],
+          "packed_shape": [
+            4,
+            192,
+            192
+          ],
+          "roundtrip_exact": true,
+          "wb_relation_max_abs_error": 2.9802322387695312e-08,
+          "stages": [
+            {
+              "stage": "normalized_cfa_before_wb_unclipped",
+              "negative_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  0.043017130345106125,
+                  0.08432841300964355,
+                  0.0841800719499588,
+                  0.05132388696074486
+                ],
+                [
+                  0.06452569365501404,
+                  0.12363716959953308,
+                  0.1235629990696907,
+                  0.07394496351480484
+                ],
+                [
+                  0.08781427890062332,
+                  0.16747014224529266,
+                  0.16717347502708435,
+                  0.09893940389156342
+                ]
+              ]
+            },
+            {
+              "stage": "balanced_cfa_pre_rcd_white_clipped",
+              "negative_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  0.07280145585536957,
+                  0.08432841300964355,
+                  0.0841800719499588,
+                  0.09713447093963623
+                ],
+                [
+                  0.10920219123363495,
+                  0.12363716959953308,
+                  0.1235629990696907,
+                  0.13994662463665009
+                ],
+                [
+                  0.14861539006233215,
+                  0.16747014224529266,
+                  0.16717347502708435,
+                  0.187250554561615
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "roi": 2,
+          "origin_xy": [
+            5375,
+            735
+          ],
+          "pattern": [
+            [
+              2,
+              3
+            ],
+            [
+              1,
+              0
+            ]
+          ],
+          "packed_shape": [
+            4,
+            192,
+            192
+          ],
+          "roundtrip_exact": true,
+          "wb_relation_max_abs_error": 5.960464477539063e-08,
+          "stages": [
+            {
+              "stage": "normalized_cfa_before_wb_unclipped",
+              "negative_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  0.001112511963583529,
+                  0.0020766891539096832,
+                  0.0020766891539096832,
+                  0.0012608469696715474
+                ],
+                [
+                  0.004820885136723518,
+                  0.0087517611682415,
+                  0.0087517611682415,
+                  0.005933397449553013
+                ],
+                [
+                  0.23859673738479614,
+                  0.4145494082570078,
+                  0.4135577976703644,
+                  0.2174864539504053
+                ]
+              ]
+            },
+            {
+              "stage": "balanced_cfa_pre_rcd_white_clipped",
+              "negative_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  0.0018827964086085558,
+                  0.0020766891539096832,
+                  0.0020766891539096832,
+                  0.002386251464486122
+                ],
+                [
+                  0.008158784359693527,
+                  0.0087517611682415,
+                  0.0087517611682415,
+                  0.011229418218135834
+                ],
+                [
+                  0.40379706025123596,
+                  0.4145494082570078,
+                  0.4135577976703644,
+                  0.411610117554665
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "roi": 3,
+          "origin_xy": [
+            1199,
+            2127
+          ],
+          "pattern": [
+            [
+              2,
+              3
+            ],
+            [
+              1,
+              0
+            ]
+          ],
+          "packed_shape": [
+            4,
+            192,
+            192
+          ],
+          "roundtrip_exact": true,
+          "wb_relation_max_abs_error": 7.450580596923828e-09,
+          "stages": [
+            {
+              "stage": "normalized_cfa_before_wb_unclipped",
+              "negative_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  0.011495957151055336,
+                  0.01980271376669407,
+                  0.019876880571246147,
+                  0.014388488605618477
+                ],
+                [
+                  0.015130163170397282,
+                  0.02558777667582035,
+                  0.02558777667582035,
+                  0.018022693693637848
+                ],
+                [
+                  0.018467700108885765,
+                  0.030927833169698715,
+                  0.030927833169698715,
+                  0.021805236116051674
+                ]
+              ]
+            },
+            {
+              "stage": "balanced_cfa_pre_rcd_white_clipped",
+              "negative_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  0.019455561414361,
+                  0.01980271376669407,
+                  0.019876880571246147,
+                  0.027231339365243912
+                ],
+                [
+                  0.025606030598282814,
+                  0.02558777667582035,
+                  0.02558777667582035,
+                  0.03410935774445534
+                ],
+                [
+                  0.031254418194293976,
+                  0.030927833169698715,
+                  0.030927833169698715,
+                  0.04126811400055885
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "roi": 4,
+          "origin_xy": [
+            3287,
+            2127
+          ],
+          "pattern": [
+            [
+              2,
+              3
+            ],
+            [
+              1,
+              0
+            ]
+          ],
+          "packed_shape": [
+            4,
+            192,
+            192
+          ],
+          "roundtrip_exact": true,
+          "wb_relation_max_abs_error": 1.4901161193847656e-08,
+          "stages": [
+            {
+              "stage": "normalized_cfa_before_wb_unclipped",
+              "negative_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  0.001705851755104959,
+                  0.007565081585198641,
+                  0.007565081585198641,
+                  0.01787436008453369
+                ],
+                [
+                  0.009122597984969616,
+                  0.029073646292090416,
+                  0.029073646292090416,
+                  0.05332640931010246
+                ],
+                [
+                  0.014759325422346592,
+                  0.04442631080746651,
+                  0.04420381039381027,
+                  0.07590075843036194
+                ]
+              ]
+            },
+            {
+              "stage": "balanced_cfa_pre_rcd_white_clipped",
+              "negative_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  0.0028869544621556997,
+                  0.007565081585198641,
+                  0.007565081585198641,
+                  0.033828623592853546
+                ],
+                [
+                  0.015438930131494999,
+                  0.029073646292090416,
+                  0.029073646292090416,
+                  0.10092439502477646
+                ],
+                [
+                  0.024978430941700935,
+                  0.04442631080746651,
+                  0.04420381039381027,
+                  0.14364812374115027
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "roi": 5,
+          "origin_xy": [
+            5375,
+            2127
+          ],
+          "pattern": [
+            [
+              2,
+              3
+            ],
+            [
+              1,
+              0
+            ]
+          ],
+          "packed_shape": [
+            4,
+            192,
+            192
+          ],
+          "roundtrip_exact": true,
+          "wb_relation_max_abs_error": 2.9802322387695312e-08,
+          "stages": [
+            {
+              "stage": "normalized_cfa_before_wb_unclipped",
+              "negative_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  0.0015575167490169406,
+                  0.0031892010010778904,
+                  0.0031892010010778904,
+                  0.003337536007165909
+                ],
+                [
+                  0.006378402002155781,
+                  0.012905139476060867,
+                  0.012979306280612946,
+                  0.009493435733020306
+                ],
+                [
+                  0.06281984597444534,
+                  0.10682859532535095,
+                  0.10515018329024353,
+                  0.054540531076491074
+                ]
+              ]
+            },
+            {
+              "stage": "balanced_cfa_pre_rcd_white_clipped",
+              "negative_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  0.002635914832353592,
+                  0.0031892010010778904,
+                  0.0031892010010778904,
+                  0.0063165477477014065
+                ],
+                [
+                  0.01079469919204712,
+                  0.012905139476060867,
+                  0.012979306280612946,
+                  0.017967069521546364
+                ],
+                [
+                  0.1063152328133583,
+                  0.10682859532535095,
+                  0.10515018329024353,
+                  0.10322221964597739
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "roi": 6,
+          "origin_xy": [
+            1199,
+            3519
+          ],
+          "pattern": [
+            [
+              2,
+              3
+            ],
+            [
+              1,
+              0
+            ]
+          ],
+          "packed_shape": [
+            4,
+            192,
+            192
+          ],
+          "roundtrip_exact": true,
+          "wb_relation_max_abs_error": 2.9802322387695312e-08,
+          "stages": [
+            {
+              "stage": "normalized_cfa_before_wb_unclipped",
+              "negative_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  0.006304234731942415,
+                  0.010680114850401878,
+                  0.010680114850401878,
+                  0.00823258887976408
+                ],
+                [
+                  0.04872802644968033,
+                  0.091596819460392,
+                  0.08592300862073898,
+                  0.05099013261497021
+                ],
+                [
+                  0.07891418784856796,
+                  0.1352347357571127,
+                  0.1353556215763092,
+                  0.07134909927845001
+                ]
+              ]
+            },
+            {
+              "stage": "balanced_cfa_pre_rcd_white_clipped",
+              "negative_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  0.010669179260730743,
+                  0.010680114850401878,
+                  0.010680114850401878,
+                  0.015580818057060242
+                ],
+                [
+                  0.0824664831161499,
+                  0.091596819460392,
+                  0.08592300862073898,
+                  0.09650281444191933
+                ],
+                [
+                  0.13355302810668945,
+                  0.1352347357571127,
+                  0.1353556215763092,
+                  0.1350337564945221
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "roi": 7,
+          "origin_xy": [
+            3287,
+            3519
+          ],
+          "pattern": [
+            [
+              2,
+              3
+            ],
+            [
+              1,
+              0
+            ]
+          ],
+          "packed_shape": [
+            4,
+            192,
+            192
+          ],
+          "roundtrip_exact": true,
+          "wb_relation_max_abs_error": 2.2351741790771484e-08,
+          "stages": [
+            {
+              "stage": "normalized_cfa_before_wb_unclipped",
+              "negative_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  0.006823407020419836,
+                  0.011421789415180683,
+                  0.011421789415180683,
+                  0.006155899725854397
+                ],
+                [
+                  0.04880219325423241,
+                  0.08395757526159286,
+                  0.08395757526159286,
+                  0.0467996709048748
+                ],
+                [
+                  0.07246161252260208,
+                  0.12504634261131287,
+                  0.12512052059173584,
+                  0.06786323338747025
+                ]
+              ]
+            },
+            {
+              "stage": "balanced_cfa_pre_rcd_white_clipped",
+              "negative_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  0.011547817848622799,
+                  0.011421789415180683,
+                  0.011421789415180683,
+                  0.01165052130818367
+                ],
+                [
+                  0.08259200304746628,
+                  0.08395757526159286,
+                  0.08395757526159286,
+                  0.08857204020023346
+                ],
+                [
+                  0.12263280153274536,
+                  0.12504634261131287,
+                  0.12512052059173584,
+                  0.12843647599220276
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "roi": 8,
+          "origin_xy": [
+            5375,
+            3519
+          ],
+          "pattern": [
+            [
+              2,
+              3
+            ],
+            [
+              1,
+              0
+            ]
+          ],
+          "packed_shape": [
+            4,
+            192,
+            192
+          ],
+          "roundtrip_exact": true,
+          "wb_relation_max_abs_error": 1.4901161193847656e-08,
+          "stages": [
+            {
+              "stage": "normalized_cfa_before_wb_unclipped",
+              "negative_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  0.009790105745196342,
+                  0.015797670930624008,
+                  0.01572350226342678,
+                  0.008427649093791843
+                ],
+                [
+                  0.036045387387275696,
+                  0.0680115669965744,
+                  0.06808573752641678,
+                  0.04027293622493744
+                ],
+                [
+                  0.05317807197570801,
+                  0.09137431532144547,
+                  0.09115181863307953,
+                  0.05169472470879555
+                ]
+              ]
+            },
+            {
+              "stage": "balanced_cfa_pre_rcd_white_clipped",
+              "negative_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  0.016568608582019806,
+                  0.015797670930624008,
+                  0.01572350226342678,
+                  0.015949985329061746
+                ],
+                [
+                  0.06100260093808174,
+                  0.0680115669965744,
+                  0.06808573752641678,
+                  0.07621967792510986
+                ],
+                [
+                  0.08999766409397125,
+                  0.09137431532144547,
+                  0.09115181863307953,
+                  0.09783630818128586
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "capture": {
+        "black": [
+          2047,
+          2048,
+          2047,
+          2047
+        ],
+        "black_estimated": true,
+        "camera_proof": "C:/Users/victo/Documents/Projet/Programmation/IPR/.worktrees/patch_neural_restoration/build-patch_neural_restoration/photo-pilot-v001/6V1A0181.json",
+        "camera_proof_sha256": "51bbf2a92b6aba6cc595fcee9ffb26dd5cce388c543ad80a84a368eadb9a4b41",
+        "divisor": 12304,
+        "gains": [
+          1.892578125,
+          1,
+          1.6923828125,
+          1
+        ],
+        "iso": 12800,
+        "measured_at_utc": "2026-11-02T11:33:20.206Z",
+        "model": "EOS R6 Mark III",
+        "orientation_flip": 0,
+        "pixels": "6V1A0181-mosaic.json.bin",
+        "pixels_sha256": "0f0cb8b299c469c06bca61e0e80dd7a4e192cfa9997ef789639f255c5ae4d65e",
+        "rgb_regions_compared": 9,
+        "rgb_replay_bit_exact": true,
+        "schema_version": 1,
+        "scope": "Bench only; frozen production calibration; signed mosaics; no new training or clean-target claim",
+        "sensor_origin_xy": [
+          172,
+          108
+        ],
+        "source": "D:/DCIM/101EOSR6/6V1A0181.CR3",
+        "source_sha256": "fb1ee4491d2fc3e004a37f20304ef028e6c7b8f28d726115f04b6fa071ea54a9",
+        "stages": [
+          {
+            "dtype": "<f4",
+            "offset_bytes": 0,
+            "origin_xy": [
+              1199,
+              735
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 0,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 589824,
+            "origin_xy": [
+              3287,
+              735
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 1,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 1179648,
+            "origin_xy": [
+              5375,
+              735
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 2,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 1769472,
+            "origin_xy": [
+              1199,
+              2127
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 3,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 2359296,
+            "origin_xy": [
+              3287,
+              2127
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 4,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 2949120,
+            "origin_xy": [
+              5375,
+              2127
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 5,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 3538944,
+            "origin_xy": [
+              1199,
+              3519
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 6,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 4128768,
+            "origin_xy": [
+              3287,
+              3519
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 7,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 4718592,
+            "origin_xy": [
+              5375,
+              3519
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 8,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 5308416,
+            "origin_xy": [
+              1199,
+              735
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 0,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 5898240,
+            "origin_xy": [
+              3287,
+              735
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 1,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 6488064,
+            "origin_xy": [
+              5375,
+              735
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 2,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 7077888,
+            "origin_xy": [
+              1199,
+              2127
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 3,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 7667712,
+            "origin_xy": [
+              3287,
+              2127
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 4,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 8257536,
+            "origin_xy": [
+              5375,
+              2127
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 5,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 8847360,
+            "origin_xy": [
+              1199,
+              3519
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 6,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 9437184,
+            "origin_xy": [
+              3287,
+              3519
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 7,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 10027008,
+            "origin_xy": [
+              5375,
+              3519
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 8,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          }
+        ],
+        "tool_revision": "76d098ab7160e986f3f42481b11d96bb35d9c5e9",
+        "white": 14351,
+        "descriptor": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\mosaic-inlet-v001\\6V1A0181-mosaic.json",
+        "descriptor_sha256": "622b3295f9d4ff93bbf9da77e57356a72100bd8de5df7bd7509a11c23fdac3a1"
+      },
+      "measurements": [
+        {
+          "roi": 0,
+          "origin_xy": [
+            1199,
+            735
+          ],
+          "pattern": [
+            [
+              2,
+              3
+            ],
+            [
+              1,
+              0
+            ]
+          ],
+          "packed_shape": [
+            4,
+            192,
+            192
+          ],
+          "roundtrip_exact": true,
+          "wb_relation_max_abs_error": 2.9802322387695312e-08,
+          "stages": [
+            {
+              "stage": "normalized_cfa_before_wb_unclipped",
+              "negative_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  0.03340376913547516,
+                  0.07327942304313183,
+                  0.07249674946069717,
+                  0.03893042728304863
+                ],
+                [
+                  0.06875813007354736,
+                  0.12467490136623383,
+                  0.12475617974996567,
+                  0.07322821766138077
+                ],
+                [
+                  0.11324528574943564,
+                  0.18492929607629796,
+                  0.1856306940317154,
+                  0.11394668370485306
+                ]
+              ]
+            },
+            {
+              "stage": "balanced_cfa_pre_rcd_white_clipped",
+              "negative_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  0.05653196573257446,
+                  0.07327942304313183,
+                  0.07249674946069717,
+                  0.0736788809299469
+                ],
+                [
+                  0.11636507511138916,
+                  0.12467490136623383,
+                  0.12475617974996567,
+                  0.13859012722969055
+                ],
+                [
+                  0.1916543762385849,
+                  0.18492929607629796,
+                  0.1856306940317154,
+                  0.21565301716327667
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "roi": 1,
+          "origin_xy": [
+            3287,
+            735
+          ],
+          "pattern": [
+            [
+              2,
+              3
+            ],
+            [
+              1,
+              0
+            ]
+          ],
+          "packed_shape": [
+            4,
+            192,
+            192
+          ],
+          "roundtrip_exact": true,
+          "wb_relation_max_abs_error": 5.960464477539063e-08,
+          "stages": [
+            {
+              "stage": "normalized_cfa_before_wb_unclipped",
+              "negative_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  0.06859558075666428,
+                  0.14743173122406006,
+                  0.14813312917947768,
+                  0.08417019002139568
+                ],
+                [
+                  0.12207411974668503,
+                  0.23447659611701965,
+                  0.23407022655010223,
+                  0.13938556611537933
+                ],
+                [
+                  0.18294863402843475,
+                  0.32729193568229675,
+                  0.3283273681998257,
+                  0.20196683704853058
+                ]
+              ]
+            },
+            {
+              "stage": "balanced_cfa_pre_rcd_white_clipped",
+              "negative_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  0.11608997732400894,
+                  0.14743173122406006,
+                  0.14813312917947768,
+                  0.15929866567254067
+                ],
+                [
+                  0.20659613609313965,
+                  0.23447659611701965,
+                  0.23407022655010223,
+                  0.2637980878353119
+                ],
+                [
+                  0.30961912870407104,
+                  0.32729193568229675,
+                  0.3283273681998257,
+                  0.3822380304336548
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "roi": 2,
+          "origin_xy": [
+            5375,
+            735
+          ],
+          "pattern": [
+            [
+              2,
+              3
+            ],
+            [
+              1,
+              0
+            ]
+          ],
+          "packed_shape": [
+            4,
+            192,
+            192
+          ],
+          "roundtrip_exact": true,
+          "wb_relation_max_abs_error": 5.960464477539063e-08,
+          "stages": [
+            {
+              "stage": "normalized_cfa_before_wb_unclipped",
+              "negative_fraction_per_position": [
+                0.1074490017361111,
+                0.04188368055555555,
+                0.042046440972222224,
+                0.09000651041666667
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  -0.006339401938021183,
+                  -0.0034135240130126476,
+                  -0.0031697009690105915,
+                  -0.0054453834891319275
+                ],
+                [
+                  0.011540962383151054,
+                  0.01918075419962406,
+                  0.019018204882740974,
+                  0.012516254559159279
+                ],
+                [
+                  0.45427259773016,
+                  0.7588076996803286,
+                  0.7579949682950976,
+                  0.38242603421211263
+                ]
+              ]
+            },
+            {
+              "stage": "balanced_cfa_pre_rcd_white_clipped",
+              "negative_fraction_per_position": [
+                0.1074490017361111,
+                0.04188368055555555,
+                0.042046440972222224,
+                0.09000651041666667
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  -0.010728694498538971,
+                  -0.0034135240130126476,
+                  -0.0031697009690105915,
+                  -0.010305814445018768
+                ],
+                [
+                  0.019531726837158203,
+                  0.01918075419962406,
+                  0.019018204882740974,
+                  0.02368799038231373
+                ],
+                [
+                  0.7688031172752384,
+                  0.7588076996803286,
+                  0.7579949682950976,
+                  0.723771190643311
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "roi": 3,
+          "origin_xy": [
+            1199,
+            2127
+          ],
+          "pattern": [
+            [
+              2,
+              3
+            ],
+            [
+              1,
+              0
+            ]
+          ],
+          "packed_shape": [
+            4,
+            192,
+            192
+          ],
+          "roundtrip_exact": true,
+          "wb_relation_max_abs_error": 1.4901161193847656e-08,
+          "stages": [
+            {
+              "stage": "normalized_cfa_before_wb_unclipped",
+              "negative_fraction_per_position": [
+                0.0004069010416666667,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  0.007802340667694807,
+                  0.022269180044531822,
+                  0.021862808614969254,
+                  0.01243498083204031
+                ],
+                [
+                  0.027552016079425812,
+                  0.04648894816637039,
+                  0.04648894816637039,
+                  0.03283485025167465
+                ],
+                [
+                  0.05144668370485306,
+                  0.07509753108024597,
+                  0.07485370337963104,
+                  0.057135891169309616
+                ]
+              ]
+            },
+            {
+              "stage": "balanced_cfa_pre_rcd_white_clipped",
+              "negative_fraction_per_position": [
+                0.0004069010416666667,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  0.013204546645283699,
+                  0.022269180044531822,
+                  0.021862808614969254,
+                  0.023534173145890236
+                ],
+                [
+                  0.04662855714559555,
+                  0.04648894816637039,
+                  0.04648894816637039,
+                  0.062142521142959595
+                ],
+                [
+                  0.08706748485565186,
+                  0.07509753108024597,
+                  0.07485370337963104,
+                  0.10813414305448532
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "roi": 4,
+          "origin_xy": [
+            3287,
+            2127
+          ],
+          "pattern": [
+            [
+              2,
+              3
+            ],
+            [
+              1,
+              0
+            ]
+          ],
+          "packed_shape": [
+            4,
+            192,
+            192
+          ],
+          "roundtrip_exact": true,
+          "wb_relation_max_abs_error": 2.9802322387695312e-08,
+          "stages": [
+            {
+              "stage": "normalized_cfa_before_wb_unclipped",
+              "negative_fraction_per_position": [
+                0.040608723958333336,
+                0.0005154079861111111,
+                0.00048828125,
+                0.0
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  -0.0039824447594583035,
+                  0.007203348469920456,
+                  0.006908322684466839,
+                  0.025002437494695186
+                ],
+                [
+                  0.015035760588943958,
+                  0.04990246891975403,
+                  0.04949609935283661,
+                  0.091514952480793
+                ],
+                [
+                  0.04050471369177124,
+                  0.09495855093002341,
+                  0.09447090297937415,
+                  0.1531810809671883
+                ]
+              ]
+            },
+            {
+              "stage": "balanced_cfa_pre_rcd_white_clipped",
+              "negative_fraction_per_position": [
+                0.040608723958333336,
+                0.0005154079861111111,
+                0.00048828125,
+                0.0
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  -0.006739820819348097,
+                  0.007203348469920456,
+                  0.006908322684466839,
+                  0.04731906838715076
+                ],
+                [
+                  0.02544626221060753,
+                  0.04990246891975403,
+                  0.04949609935283661,
+                  0.17319920659065247
+                ],
+                [
+                  0.06854948081076181,
+                  0.09495855093002341,
+                  0.09447090297937415,
+                  0.2899071726202973
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "roi": 5,
+          "origin_xy": [
+            5375,
+            2127
+          ],
+          "pattern": [
+            [
+              2,
+              3
+            ],
+            [
+              1,
+              0
+            ]
+          ],
+          "packed_shape": [
+            4,
+            192,
+            192
+          ],
+          "roundtrip_exact": true,
+          "wb_relation_max_abs_error": 2.9802322387695312e-08,
+          "stages": [
+            {
+              "stage": "normalized_cfa_before_wb_unclipped",
+              "negative_fraction_per_position": [
+                0.0822482638888889,
+                0.019070095486111112,
+                0.019829644097222224,
+                0.014377170138888888
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  -0.005526658147573471,
+                  -0.0016254875808954239,
+                  -0.0015742847661022101,
+                  -0.0009752925834618509
+                ],
+                [
+                  0.012272431515157223,
+                  0.02356957085430622,
+                  0.02356957085430622,
+                  0.019099479541182518
+                ],
+                [
+                  0.14223016798496246,
+                  0.2429080003499989,
+                  0.23889547556638738,
+                  0.12286573119461579
+                ]
+              ]
+            },
+            {
+              "stage": "balanced_cfa_pre_rcd_white_clipped",
+              "negative_fraction_per_position": [
+                0.0822482638888889,
+                0.019070095486111112,
+                0.019829644097222224,
+                0.014377170138888888
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  -0.009353220462799072,
+                  -0.0016254875808954239,
+                  -0.0015742847661022101,
+                  -0.0018458175472915173
+                ],
+                [
+                  0.020769651979207993,
+                  0.02356957085430622,
+                  0.02356957085430622,
+                  0.036147259175777435
+                ],
+                [
+                  0.2407078891992569,
+                  0.2429080003499989,
+                  0.23889547556638738,
+                  0.2325330175459393
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "roi": 6,
+          "origin_xy": [
+            1199,
+            3519
+          ],
+          "pattern": [
+            [
+              2,
+              3
+            ],
+            [
+              1,
+              0
+            ]
+          ],
+          "packed_shape": [
+            4,
+            192,
+            192
+          ],
+          "roundtrip_exact": true,
+          "wb_relation_max_abs_error": 2.9802322387695312e-08,
+          "stages": [
+            {
+              "stage": "normalized_cfa_before_wb_unclipped",
+              "negative_fraction_per_position": [
+                0.00634765625,
+                0.00021701388888888888,
+                0.00010850694444444444,
+                0.0008409288194444445
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  0.0011378413764759898,
+                  0.0099967485293746,
+                  0.00959037709981203,
+                  0.0054453834891319275
+                ],
+                [
+                  0.08119310438632965,
+                  0.16019180417060852,
+                  0.1575503945350647,
+                  0.08033972606062889
+                ],
+                [
+                  0.16864433884620667,
+                  0.2734370824694636,
+                  0.2717815339565277,
+                  0.1528771072626114
+                ]
+              ]
+            },
+            {
+              "stage": "balanced_cfa_pre_rcd_white_clipped",
+              "negative_fraction_per_position": [
+                0.00634765625,
+                0.00021701388888888888,
+                0.00010850694444444444,
+                0.0008409288194444445
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  0.0019256630912423134,
+                  0.0099967485293746,
+                  0.00959037709981203,
+                  0.010305814445018768
+                ],
+                [
+                  0.13740982115268707,
+                  0.16019180417060852,
+                  0.1575503945350647,
+                  0.1520492136478424
+                ],
+                [
+                  0.2854107916355133,
+                  0.2734370824694636,
+                  0.2717815339565277,
+                  0.2893318831920624
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "roi": 7,
+          "origin_xy": [
+            3287,
+            3519
+          ],
+          "pattern": [
+            [
+              2,
+              3
+            ],
+            [
+              1,
+              0
+            ]
+          ],
+          "packed_shape": [
+            4,
+            192,
+            192
+          ],
+          "roundtrip_exact": true,
+          "wb_relation_max_abs_error": 2.9802322387695312e-08,
+          "stages": [
+            {
+              "stage": "normalized_cfa_before_wb_unclipped",
+              "negative_fraction_per_position": [
+                0.0007866753472222222,
+                2.712673611111111e-05,
+                5.425347222222222e-05,
+                0.0006239149305555555
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  0.007639791816473007,
+                  0.017230169847607613,
+                  0.016549902819097042,
+                  0.007070871070027351
+                ],
+                [
+                  0.0907834842801094,
+                  0.1558842658996582,
+                  0.15539662539958954,
+                  0.08582574874162674
+                ],
+                [
+                  0.15843383938074132,
+                  0.2586963474750519,
+                  0.25815752118825935,
+                  0.14702536165714264
+                ]
+              ]
+            },
+            {
+              "stage": "balanced_cfa_pre_rcd_white_clipped",
+              "negative_fraction_per_position": [
+                0.0007866753472222222,
+                2.712673611111111e-05,
+                5.425347222222222e-05,
+                0.0006239149305555555
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  0.012929452583193779,
+                  0.017230169847607613,
+                  0.016549902819097042,
+                  0.013382176868617535
+                ],
+                [
+                  0.15364040434360504,
+                  0.1558842658996582,
+                  0.15539662539958954,
+                  0.16243194043636322
+                ],
+                [
+                  0.2681307062506679,
+                  0.2586963474750519,
+                  0.25815752118825935,
+                  0.27825698256492615
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "roi": 8,
+          "origin_xy": [
+            5375,
+            3519
+          ],
+          "pattern": [
+            [
+              2,
+              3
+            ],
+            [
+              1,
+              0
+            ]
+          ],
+          "packed_shape": [
+            4,
+            192,
+            192
+          ],
+          "roundtrip_exact": true,
+          "wb_relation_max_abs_error": 2.9802322387695312e-08,
+          "stages": [
+            {
+              "stage": "normalized_cfa_before_wb_unclipped",
+              "negative_fraction_per_position": [
+                8.138020833333333e-05,
+                0.0,
+                0.0,
+                8.138020833333333e-05
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  0.013735370710492134,
+                  0.02552015520632267,
+                  0.02552015520632267,
+                  0.01178478542715311
+                ],
+                [
+                  0.06705136597156525,
+                  0.12491872161626816,
+                  0.12483745068311691,
+                  0.07200910151004791
+                ],
+                [
+                  0.11549089848995209,
+                  0.18717490136623383,
+                  0.18741872906684875,
+                  0.11549089848995209
+                ]
+              ]
+            },
+            {
+              "stage": "balanced_cfa_pre_rcd_white_clipped",
+              "negative_fraction_per_position": [
+                8.138020833333333e-05,
+                0.0,
+                0.0,
+                8.138020833333333e-05
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  0.02324550412595272,
+                  0.02552015520632267,
+                  0.02552015520632267,
+                  0.0223036278039217
+                ],
+                [
+                  0.11347657442092896,
+                  0.12491872161626816,
+                  0.12483745068311691,
+                  0.13628286123275757
+                ],
+                [
+                  0.19545480608940125,
+                  0.18717490136623383,
+                  0.18741872906684875,
+                  0.21857555210590363
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "capture": {
+        "black": [
+          2048,
+          2048,
+          2048,
+          2048
+        ],
+        "black_estimated": true,
+        "camera_proof": "C:/Users/victo/Documents/Projet/Programmation/IPR/.worktrees/patch_neural_restoration/build-patch_neural_restoration/same-iso-4000-v001/6V1A9819.json",
+        "camera_proof_sha256": "06a79c8a5e51a428015b2dfaa943d2c0183b988b7fe0b87ace78f023c61de412",
+        "divisor": 12303,
+        "gains": [
+          1.892578125,
+          1,
+          1.6923828125,
+          1
+        ],
+        "iso": 4000,
+        "measured_at_utc": "2026-11-02T11:33:22.378Z",
+        "model": "EOS R6 Mark III",
+        "orientation_flip": 5,
+        "pixels": "6V1A9819-mosaic.json.bin",
+        "pixels_sha256": "2eda50ac5366a71d9333bd4c53b1c783538d06ceb5ac1bc7f8b5a9a22ed03cff",
+        "rgb_regions_compared": 9,
+        "rgb_replay_bit_exact": true,
+        "schema_version": 1,
+        "scope": "Bench only; frozen production calibration; signed mosaics; no new training or clean-target claim",
+        "sensor_origin_xy": [
+          172,
+          108
+        ],
+        "source": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/colorim\u00e9trie/rafale/6V1A9819.CR3",
+        "source_sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165",
+        "stages": [
+          {
+            "dtype": "<f4",
+            "offset_bytes": 0,
+            "origin_xy": [
+              735,
+              1199
+            ],
+            "pattern": [
+              [
+                2,
+                1
+              ],
+              [
+                3,
+                0
+              ]
+            ],
+            "roi": 0,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 589824,
+            "origin_xy": [
+              2127,
+              1199
+            ],
+            "pattern": [
+              [
+                2,
+                1
+              ],
+              [
+                3,
+                0
+              ]
+            ],
+            "roi": 1,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 1179648,
+            "origin_xy": [
+              3519,
+              1199
+            ],
+            "pattern": [
+              [
+                2,
+                1
+              ],
+              [
+                3,
+                0
+              ]
+            ],
+            "roi": 2,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 1769472,
+            "origin_xy": [
+              735,
+              3287
+            ],
+            "pattern": [
+              [
+                2,
+                1
+              ],
+              [
+                3,
+                0
+              ]
+            ],
+            "roi": 3,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 2359296,
+            "origin_xy": [
+              2127,
+              3287
+            ],
+            "pattern": [
+              [
+                2,
+                1
+              ],
+              [
+                3,
+                0
+              ]
+            ],
+            "roi": 4,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 2949120,
+            "origin_xy": [
+              3519,
+              3287
+            ],
+            "pattern": [
+              [
+                2,
+                1
+              ],
+              [
+                3,
+                0
+              ]
+            ],
+            "roi": 5,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 3538944,
+            "origin_xy": [
+              735,
+              5375
+            ],
+            "pattern": [
+              [
+                2,
+                1
+              ],
+              [
+                3,
+                0
+              ]
+            ],
+            "roi": 6,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 4128768,
+            "origin_xy": [
+              2127,
+              5375
+            ],
+            "pattern": [
+              [
+                2,
+                1
+              ],
+              [
+                3,
+                0
+              ]
+            ],
+            "roi": 7,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 4718592,
+            "origin_xy": [
+              3519,
+              5375
+            ],
+            "pattern": [
+              [
+                2,
+                1
+              ],
+              [
+                3,
+                0
+              ]
+            ],
+            "roi": 8,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 5308416,
+            "origin_xy": [
+              735,
+              1199
+            ],
+            "pattern": [
+              [
+                2,
+                1
+              ],
+              [
+                3,
+                0
+              ]
+            ],
+            "roi": 0,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 5898240,
+            "origin_xy": [
+              2127,
+              1199
+            ],
+            "pattern": [
+              [
+                2,
+                1
+              ],
+              [
+                3,
+                0
+              ]
+            ],
+            "roi": 1,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 6488064,
+            "origin_xy": [
+              3519,
+              1199
+            ],
+            "pattern": [
+              [
+                2,
+                1
+              ],
+              [
+                3,
+                0
+              ]
+            ],
+            "roi": 2,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 7077888,
+            "origin_xy": [
+              735,
+              3287
+            ],
+            "pattern": [
+              [
+                2,
+                1
+              ],
+              [
+                3,
+                0
+              ]
+            ],
+            "roi": 3,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 7667712,
+            "origin_xy": [
+              2127,
+              3287
+            ],
+            "pattern": [
+              [
+                2,
+                1
+              ],
+              [
+                3,
+                0
+              ]
+            ],
+            "roi": 4,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 8257536,
+            "origin_xy": [
+              3519,
+              3287
+            ],
+            "pattern": [
+              [
+                2,
+                1
+              ],
+              [
+                3,
+                0
+              ]
+            ],
+            "roi": 5,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 8847360,
+            "origin_xy": [
+              735,
+              5375
+            ],
+            "pattern": [
+              [
+                2,
+                1
+              ],
+              [
+                3,
+                0
+              ]
+            ],
+            "roi": 6,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 9437184,
+            "origin_xy": [
+              2127,
+              5375
+            ],
+            "pattern": [
+              [
+                2,
+                1
+              ],
+              [
+                3,
+                0
+              ]
+            ],
+            "roi": 7,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 10027008,
+            "origin_xy": [
+              3519,
+              5375
+            ],
+            "pattern": [
+              [
+                2,
+                1
+              ],
+              [
+                3,
+                0
+              ]
+            ],
+            "roi": 8,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          }
+        ],
+        "tool_revision": "76d098ab7160e986f3f42481b11d96bb35d9c5e9",
+        "white": 14351,
+        "descriptor": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\mosaic-inlet-v001\\6V1A9819-mosaic.json",
+        "descriptor_sha256": "6373f8ae5e078f2d0d3949d27103095b4f874e73f8171f7ce3adac7ba9119210"
+      },
+      "measurements": [
+        {
+          "roi": 0,
+          "origin_xy": [
+            735,
+            1199
+          ],
+          "pattern": [
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              0
+            ]
+          ],
+          "packed_shape": [
+            4,
+            192,
+            192
+          ],
+          "roundtrip_exact": true,
+          "wb_relation_max_abs_error": 7.450580596923828e-09,
+          "stages": [
+            {
+              "stage": "normalized_cfa_before_wb_unclipped",
+              "negative_fraction_per_position": [
+                0.23380533854166666,
+                0.0004069010416666667,
+                0.0004069010416666667,
+                0.0
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  -0.0026009916327893734,
+                  0.002032024785876274,
+                  0.0021133057307451963,
+                  0.0134926438331604
+                ],
+                [
+                  0.0012192148715257645,
+                  0.007640413008630276,
+                  0.007721693720668554,
+                  0.02275867760181427
+                ],
+                [
+                  0.005852231290191412,
+                  0.01430545374751091,
+                  0.014386734925210476,
+                  0.03365032747387886
+                ]
+              ]
+            },
+            {
+              "stage": "balanced_cfa_pre_rcd_white_clipped",
+              "negative_fraction_per_position": [
+                0.23380533854166666,
+                0.0004069010416666667,
+                0.0004069010416666667,
+                0.0
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  -0.004401873331516981,
+                  0.002032024785876274,
+                  0.0021133057307451963,
+                  0.025535883381962776
+                ],
+                [
+                  0.0020633782260119915,
+                  0.007640413008630276,
+                  0.007721693720668554,
+                  0.043072573840618134
+                ],
+                [
+                  0.00990421511232853,
+                  0.01430545374751091,
+                  0.014386734925210476,
+                  0.06368587911128998
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "roi": 1,
+          "origin_xy": [
+            2127,
+            1199
+          ],
+          "pattern": [
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              0
+            ]
+          ],
+          "packed_shape": [
+            4,
+            192,
+            192
+          ],
+          "roundtrip_exact": true,
+          "wb_relation_max_abs_error": 1.4901161193847656e-08,
+          "stages": [
+            {
+              "stage": "normalized_cfa_before_wb_unclipped",
+              "negative_fraction_per_position": [
+                0.017252604166666668,
+                0.0,
+                2.712673611111111e-05,
+                2.712673611111111e-05
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  -0.0006502479081973433,
+                  0.007477851118892431,
+                  0.007396569941192865,
+                  0.011054214090108871
+                ],
+                [
+                  0.03267495706677437,
+                  0.09168495237827301,
+                  0.09160367399454117,
+                  0.06665041297674179
+                ],
+                [
+                  0.04714297503232956,
+                  0.11379338055849075,
+                  0.11371210217475891,
+                  0.08534503728151321
+                ]
+              ]
+            },
+            {
+              "stage": "balanced_cfa_pre_rcd_white_clipped",
+              "negative_fraction_per_position": [
+                0.017252604166666668,
+                0.0,
+                2.712673611111111e-05,
+                2.712673611111111e-05
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  -0.0011004683328792453,
+                  0.007477851118892431,
+                  0.007396569941192865,
+                  0.02092096582055092
+                ],
+                [
+                  0.05529853329062462,
+                  0.09168495237827301,
+                  0.09160367399454117,
+                  0.12614111602306366
+                ],
+                [
+                  0.07978395372629166,
+                  0.11379338055849075,
+                  0.11371210217475891,
+                  0.16152215003967285
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "roi": 2,
+          "origin_xy": [
+            3519,
+            1199
+          ],
+          "pattern": [
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              0
+            ]
+          ],
+          "packed_shape": [
+            4,
+            192,
+            192
+          ],
+          "roundtrip_exact": true,
+          "wb_relation_max_abs_error": 1.4901161193847656e-08,
+          "stages": [
+            {
+              "stage": "normalized_cfa_before_wb_unclipped",
+              "negative_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  0.016256198287010193,
+                  0.057709500193595886,
+                  0.05795334652066231,
+                  0.040854263938963416
+                ],
+                [
+                  0.026578882709145546,
+                  0.07469722628593445,
+                  0.0746159479022026,
+                  0.05527107045054436
+                ],
+                [
+                  0.038445908576250076,
+                  0.0930667296051979,
+                  0.0930667296051979,
+                  0.0710395872592926
+                ]
+              ]
+            },
+            {
+              "stage": "balanced_cfa_pre_rcd_white_clipped",
+              "negative_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  0.027511708438396454,
+                  0.057709500193595886,
+                  0.05795334652066231,
+                  0.07731988735496997
+                ],
+                [
+                  0.04498164355754852,
+                  0.07469722628593445,
+                  0.0746159479022026,
+                  0.1046048253774643
+                ],
+                [
+                  0.06506519019603729,
+                  0.0930667296051979,
+                  0.0930667296051979,
+                  0.13444796204566956
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "roi": 3,
+          "origin_xy": [
+            735,
+            3287
+          ],
+          "pattern": [
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              0
+            ]
+          ],
+          "packed_shape": [
+            4,
+            192,
+            192
+          ],
+          "roundtrip_exact": true,
+          "wb_relation_max_abs_error": 3.725290298461914e-09,
+          "stages": [
+            {
+              "stage": "normalized_cfa_before_wb_unclipped",
+              "negative_fraction_per_position": [
+                0.3188747829861111,
+                0.014865451388888888,
+                0.015435112847222222,
+                0.002468532986111111
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  -0.0030073965899646282,
+                  -0.0003251239540986717,
+                  -0.0004064049571752548,
+                  0.0015443387674167752
+                ],
+                [
+                  0.0007315289112739265,
+                  0.004226611461490393,
+                  0.004226611461490393,
+                  0.011867024004459381
+                ],
+                [
+                  0.005039421375840902,
+                  0.009702511830255603,
+                  0.009916280396282673,
+                  0.02002519683912418
+                ]
+              ]
+            },
+            {
+              "stage": "balanced_cfa_pre_rcd_white_clipped",
+              "negative_fraction_per_position": [
+                0.3188747829861111,
+                0.014865451388888888,
+                0.015435112847222222,
+                0.002468532986111111
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  -0.005089666228741407,
+                  -0.0003251239540986717,
+                  -0.0004064049571752548,
+                  0.0029227817431092262
+                ],
+                [
+                  0.0012380268890410662,
+                  0.004226611461490393,
+                  0.004226611461490393,
+                  0.02245927043259144
+                ],
+                [
+                  0.008528629317879677,
+                  0.009702511830255603,
+                  0.009916280396282673,
+                  0.03789925120770971
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "roi": 4,
+          "origin_xy": [
+            2127,
+            3287
+          ],
+          "pattern": [
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              0
+            ]
+          ],
+          "packed_shape": [
+            4,
+            192,
+            192
+          ],
+          "roundtrip_exact": true,
+          "wb_relation_max_abs_error": 1.4901161193847656e-08,
+          "stages": [
+            {
+              "stage": "normalized_cfa_before_wb_unclipped",
+              "negative_fraction_per_position": [
+                0.00035264756944444444,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  0.0030886775348335505,
+                  0.01674388349056244,
+                  0.01674388349056244,
+                  0.013004958629608154
+                ],
+                [
+                  0.015199544839560986,
+                  0.043322768062353134,
+                  0.04307892546057701,
+                  0.03267495706677437
+                ],
+                [
+                  0.04966268315911293,
+                  0.125822976231575,
+                  0.12463382877409479,
+                  0.08870763108134291
+                ]
+              ]
+            },
+            {
+              "stage": "balanced_cfa_pre_rcd_white_clipped",
+              "negative_fraction_per_position": [
+                0.00035264756944444444,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  0.005227224435657263,
+                  0.01674388349056244,
+                  0.01674388349056244,
+                  0.024612899869680405
+                ],
+                [
+                  0.025723448023200035,
+                  0.043322768062353134,
+                  0.04307892546057701,
+                  0.061839912086725235
+                ],
+                [
+                  0.08404827117919922,
+                  0.125822976231575,
+                  0.12463382877409479,
+                  0.16788613066077274
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "roi": 5,
+          "origin_xy": [
+            3519,
+            3287
+          ],
+          "pattern": [
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              0
+            ]
+          ],
+          "packed_shape": [
+            4,
+            192,
+            192
+          ],
+          "roundtrip_exact": true,
+          "wb_relation_max_abs_error": 7.450580596923828e-09,
+          "stages": [
+            {
+              "stage": "normalized_cfa_before_wb_unclipped",
+              "negative_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  0.009184751659631729,
+                  0.0373079739511013,
+                  0.03722669184207916,
+                  0.027554254978895187
+                ],
+                [
+                  0.01755669340491295,
+                  0.05112574249505997,
+                  0.05112574249505997,
+                  0.03966512158513069
+                ],
+                [
+                  0.027554254978895187,
+                  0.06632528454065323,
+                  0.06640657037496567,
+                  0.052670080214738846
+                ]
+              ]
+            },
+            {
+              "stage": "balanced_cfa_pre_rcd_white_clipped",
+              "negative_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  0.01554411556571722,
+                  0.0373079739511013,
+                  0.03722669184207916,
+                  0.05214858055114746
+                ],
+                [
+                  0.029712645336985588,
+                  0.05112574249505997,
+                  0.05112574249505997,
+                  0.07506934553384781
+                ],
+                [
+                  0.046632345765829086,
+                  0.06632528454065323,
+                  0.06640657037496567,
+                  0.09968224167823792
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "roi": 6,
+          "origin_xy": [
+            735,
+            5375
+          ],
+          "pattern": [
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              0
+            ]
+          ],
+          "packed_shape": [
+            4,
+            192,
+            192
+          ],
+          "roundtrip_exact": true,
+          "wb_relation_max_abs_error": 7.450580596923828e-09,
+          "stages": [
+            {
+              "stage": "normalized_cfa_before_wb_unclipped",
+              "negative_fraction_per_position": [
+                0.011610243055555556,
+                0.001003689236111111,
+                0.0010308159722222222,
+                0.0020345052083333335
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  -0.00024384296557400376,
+                  0.003465008542407304,
+                  0.003332520602270961,
+                  0.0021133057307451963
+                ],
+                [
+                  0.007152726873755455,
+                  0.022270990535616875,
+                  0.022270990535616875,
+                  0.017475413158535957
+                ],
+                [
+                  0.01511826366186142,
+                  0.0351133868098259,
+                  0.03527594730257988,
+                  0.02861090749502182
+                ]
+              ]
+            },
+            {
+              "stage": "balanced_cfa_pre_rcd_white_clipped",
+              "negative_fraction_per_position": [
+                0.011610243055555556,
+                0.001003689236111111,
+                0.0010308159722222222,
+                0.0020345052083333335
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  -0.00041267561027780175,
+                  0.003465008542407304,
+                  0.003332520602270961,
+                  0.003999596461653709
+                ],
+                [
+                  0.012105152010917664,
+                  0.022270990535616875,
+                  0.022270990535616875,
+                  0.033073585480451584
+                ],
+                [
+                  0.02558588795363903,
+                  0.0351133868098259,
+                  0.03527594730257988,
+                  0.05414837971329689
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "roi": 7,
+          "origin_xy": [
+            2127,
+            5375
+          ],
+          "pattern": [
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              0
+            ]
+          ],
+          "packed_shape": [
+            4,
+            192,
+            192
+          ],
+          "roundtrip_exact": true,
+          "wb_relation_max_abs_error": 7.450580596923828e-09,
+          "stages": [
+            {
+              "stage": "normalized_cfa_before_wb_unclipped",
+              "negative_fraction_per_position": [
+                0.01318359375,
+                0.0005425347222222222,
+                0.0007052951388888889,
+                0.0005967881944444445
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  -0.0003251239540986717,
+                  0.002763553522527218,
+                  0.0026822725776582956,
+                  0.0026009916327893734
+                ],
+                [
+                  0.0125985536724329,
+                  0.03974640369415283,
+                  0.03974640369415283,
+                  0.03283751755952835
+                ],
+                [
+                  0.024140452966094017,
+                  0.0620986744761467,
+                  0.06217995658516884,
+                  0.05161342769861221
+                ]
+              ]
+            },
+            {
+              "stage": "balanced_cfa_pre_rcd_white_clipped",
+              "negative_fraction_per_position": [
+                0.01318359375,
+                0.0005425347222222222,
+                0.0007052951388888889,
+                0.0005967881944444445
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  -0.0005502341664396226,
+                  0.002763553522527218,
+                  0.0026822725776582956,
+                  0.004922579973936081
+                ],
+                [
+                  0.021321574226021767,
+                  0.03974640369415283,
+                  0.03974640369415283,
+                  0.06214757263660431
+                ],
+                [
+                  0.040854886174201965,
+                  0.0620986744761467,
+                  0.06217995658516884,
+                  0.09768244624137878
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "roi": 8,
+          "origin_xy": [
+            3519,
+            5375
+          ],
+          "pattern": [
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              0
+            ]
+          ],
+          "packed_shape": [
+            4,
+            192,
+            192
+          ],
+          "roundtrip_exact": true,
+          "wb_relation_max_abs_error": 1.4901161193847656e-08,
+          "stages": [
+            {
+              "stage": "normalized_cfa_before_wb_unclipped",
+              "negative_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  0.005770950112491846,
+                  0.02763553522527218,
+                  0.02763553522527218,
+                  0.02394781809300184
+                ],
+                [
+                  0.01511826366186142,
+                  0.047630660235881805,
+                  0.04771193861961365,
+                  0.040071528404951096
+                ],
+                [
+                  0.025684792548418045,
+                  0.06681296974420547,
+                  0.06673169136047363,
+                  0.05624644458293915
+                ]
+              ]
+            },
+            {
+              "stage": "balanced_cfa_pre_rcd_white_clipped",
+              "negative_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "at_or_above_white_fraction_per_position": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "q01_q50_q99_per_position": [
+                [
+                  0.009766656905412674,
+                  0.02763553522527218,
+                  0.02763553522527218,
+                  0.04532311704009771
+                ],
+                [
+                  0.02558588795363903,
+                  0.047630660235881805,
+                  0.04771193861961365,
+                  0.07583849877119064
+                ],
+                [
+                  0.043468497693538666,
+                  0.06681296974420547,
+                  0.06673169136047363,
+                  0.10645078867673874
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "status": "qualified_signed_mosaic_inlet_not_joint_model",
+  "limits": [
+    "Input-contract qualification on three R6III RAWs, not joint-model quality or other-camera qualification.",
+    "Balanced pre-RCD stage already clips at white; unbalanced normalized stage preserves pre-gain over-white values.",
+    "Packing uses spatial TL/TR/BL/BR positions with explicit CFA colour tags, not assumed RGGB order.",
+    "Existing RGB burst targets inherit RCD/median; not independent demosaicking ground truth.",
+    "No new photos, source modification, training, default behavior change or production integration."
+  ],
+  "elapsed_seconds": 8.165691299999708
+}

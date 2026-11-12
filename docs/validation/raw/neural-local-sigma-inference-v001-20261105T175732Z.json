@@ -1,0 +1,475 @@
+{
+  "schema_version": 1,
+  "status": "completed_local_sigma_inference_not_qualification",
+  "started_at_utc": "2026-11-05T17:56:48.435343+00:00",
+  "plan": {
+    "schema_version": 1,
+    "status": "sealed_local_sigma_photo_exploration",
+    "parent_sha256": "39921d07663bf46a7d84f1e29de0b6e15e7a5a6ac511714c57ab71c86fc70172",
+    "law_sha256": "3c2b3180ee5411aa7c763d0547b59749994db4334bcb7242929f5a81b16b5514",
+    "created_at_utc": "2026-11-05T17:55:59.086892+00:00",
+    "models": [
+      {
+        "seed": 71,
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\repeatability-control-campaign-v001\\seed71-attempt01\\weights.pt",
+        "weights_sha256": "9c56ed03f933c7570ea9a3d49506395963183bb6dc7667807163192427ca81c0",
+        "result_sha256": "e469febd60ab6c5f866219b8dac49189536d28d95c6b247914101c75576b895f"
+      },
+      {
+        "seed": 73,
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\repeatability-control-campaign-v001\\seed73-attempt01\\weights.pt",
+        "weights_sha256": "2d9be227402a9bc41fa9237f61fe6559a88fc3c281ef34d4c3c4e2df6c39ef83",
+        "result_sha256": "741fb5702ead1254af236337e7b77d01d8db4ec578284dcaeb27f9b917f3bc6f"
+      }
+    ],
+    "native": {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_cfa_path_bench\\build\\raw_bench\\Release\\iprCfaPathBench.exe",
+      "sha256": "41f9216b7008d05dabf6a07ad4c939184b1ec02649e8c49829f3d84386a683bb",
+      "revision": "473a1a1",
+      "dev_parent": "8b776bc"
+    },
+    "scenes": [
+      {
+        "name": "6V1A0181",
+        "scene": "indoor",
+        "iso": 12800,
+        "source_sha256": "fb1ee4491d2fc3e004a37f20304ef028e6c7b8f28d726115f04b6fa071ea54a9",
+        "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\photo-comparison-v001\\full-cfa-sensor-v002\\6V1A0181.json",
+        "capture_sha256": "71540f76b2d5f0bc42b5c1b60d4efdef0c5cca8d73135dea19c17cb66e558616",
+        "input": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\photo-comparison-v001\\full-cfa-sensor-v002\\6V1A0181.json.full.f32",
+        "input_sha256": "da1d9f3ae608610163ba5856bfd6eec9bbd2768a3300fd33758680e1d32aa42c",
+        "sensor_shape": [
+          4639,
+          6959,
+          1
+        ],
+        "pattern": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "orientation": 0,
+        "context": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\photo-comparison-v001\\contexts-v002\\6V1A0181.json",
+        "context_sha256": "9f1fb1dd550e9cc271d43d5379433121bc4d318a709bf885212da337bf66378e",
+        "sigma_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-plan-v001\\6V1A0181-sigma.npy",
+        "sigma_sha256": "b2b939ce577fef4484fd61a4def61ba41122567ed24942f8fcdf4d1c47451cd9",
+        "parameters": [
+          {
+            "plane": 0,
+            "colour": 0,
+            "a": 25.94543770721369,
+            "b": 2254.5334195291466,
+            "gain": 1.892578125,
+            "divisor": 12304
+          },
+          {
+            "plane": 1,
+            "colour": 1,
+            "a": 25.464665834123632,
+            "b": 2152.393079288158,
+            "gain": 1,
+            "divisor": 12304
+          },
+          {
+            "plane": 2,
+            "colour": 3,
+            "a": 25.482128748366616,
+            "b": 2171.835544107686,
+            "gain": 1,
+            "divisor": 12304
+          },
+          {
+            "plane": 3,
+            "colour": 2,
+            "a": 28.738137033399198,
+            "b": 2753.397026517922,
+            "gain": 1.6923828125,
+            "divisor": 12304
+          }
+        ],
+        "plane_sampled_sigma_q05_q50_q95": [
+          [
+            0.012109932489693165,
+            0.023385751992464066,
+            0.04131714254617691
+          ],
+          [
+            0.006439510732889175,
+            0.015177757479250431,
+            0.029578312393277784
+          ],
+          [
+            0.006489944644272327,
+            0.01521455217152834,
+            0.02967381477355957
+          ],
+          [
+            0.00940853450447321,
+            0.020604128018021584,
+            0.04337809234857559
+          ]
+        ]
+      },
+      {
+        "name": "6V1A0263",
+        "scene": "vegetation",
+        "iso": 6400,
+        "source_sha256": "6fa8bec6b072ef5d761c91629b96525bdecff01776f93b1a05a83816a44c37d3",
+        "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\photo-comparison-v001\\full-cfa-sensor-v002\\6V1A0263.json",
+        "capture_sha256": "9351dd62f713e2118e05155a8ae682d62765e6eb40d21b3df6113441e4f08a34",
+        "input": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\photo-comparison-v001\\full-cfa-sensor-v002\\6V1A0263.json.full.f32",
+        "input_sha256": "d5e97c85e01d023f6a16c60968f16452725c1488ca1185b4984ceefaf303f448",
+        "sensor_shape": [
+          4639,
+          6959,
+          1
+        ],
+        "pattern": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "orientation": 0,
+        "context": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\photo-comparison-v001\\contexts-v002\\6V1A0263.json",
+        "context_sha256": "0b0a8fbacedaeeff4a90372640894fd577191ed85af0605eec9f1f30d025faa8",
+        "sigma_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-plan-v001\\6V1A0263-sigma.npy",
+        "sigma_sha256": "2f464a650566ba99b1910ffd8476270cb89efe98795181b5adb610069849fe71",
+        "parameters": [
+          {
+            "plane": 0,
+            "colour": 0,
+            "a": 12.900328492613967,
+            "b": 564.0277124197792,
+            "gain": 1.892578125,
+            "divisor": 12303
+          },
+          {
+            "plane": 1,
+            "colour": 1,
+            "a": 12.829895950041836,
+            "b": 538.2170179453569,
+            "gain": 1,
+            "divisor": 12303
+          },
+          {
+            "plane": 2,
+            "colour": 3,
+            "a": 12.857455082853402,
+            "b": 540.2550990545858,
+            "gain": 1,
+            "divisor": 12303
+          },
+          {
+            "plane": 3,
+            "colour": 2,
+            "a": 14.27127494486302,
+            "b": 687.670370470173,
+            "gain": 1.6923828125,
+            "divisor": 12303
+          }
+        ],
+        "plane_sampled_sigma_q05_q50_q95": [
+          [
+            0.009644840843975544,
+            0.01904948800802231,
+            0.03634316101670265
+          ],
+          [
+            0.006689552217721939,
+            0.013236268423497677,
+            0.02320353128015995
+          ],
+          [
+            0.00670350668951869,
+            0.013266712427139282,
+            0.023257803171873093
+          ],
+          [
+            0.007533911615610123,
+            0.01482793502509594,
+            0.02749871090054512
+          ]
+        ]
+      },
+      {
+        "name": "6V1A9819",
+        "scene": "burst_room",
+        "iso": 4000,
+        "source_sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165",
+        "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\photo-comparison-v001\\full-cfa-sensor-v002\\6V1A9819.json",
+        "capture_sha256": "bb4d2095665eebfbb52218c24e65f684f32f47e4a36de5b228cd3cd8c68b77bc",
+        "input": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\photo-comparison-v001\\full-cfa-sensor-v002\\6V1A9819.json.full.f32",
+        "input_sha256": "fc1f4840d3cc32d76da8fae0f762099343ae765b2234da4958bc1ea5eff6b115",
+        "sensor_shape": [
+          4639,
+          6959,
+          1
+        ],
+        "pattern": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "orientation": 5,
+        "context": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\photo-comparison-v001\\contexts-v002\\6V1A9819.json",
+        "context_sha256": "a572c93bf1ff592d2db702753d6a018e834329cefccb06a840fac6da8daf473a",
+        "sigma_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-plan-v001\\6V1A9819-sigma.npy",
+        "sigma_sha256": "15a9f7c03f20cbbb8e72f9277195f000eb4f3507af703c612b7020424dfa3715",
+        "parameters": [
+          {
+            "plane": 0,
+            "colour": 0,
+            "a": 8.22917697689477,
+            "b": 246.7724515436267,
+            "gain": 1.892578125,
+            "divisor": 12303
+          },
+          {
+            "plane": 1,
+            "colour": 1,
+            "a": 8.02761964905031,
+            "b": 232.30731915427253,
+            "gain": 1,
+            "divisor": 12303
+          },
+          {
+            "plane": 2,
+            "colour": 3,
+            "a": 8.010302887540652,
+            "b": 233.70229159647528,
+            "gain": 1,
+            "divisor": 12303
+          },
+          {
+            "plane": 3,
+            "colour": 2,
+            "a": 8.998215455752897,
+            "b": 299.23767830326545,
+            "gain": 1.6923828125,
+            "divisor": 12303
+          }
+        ],
+        "plane_sampled_sigma_q05_q50_q95": [
+          [
+            0.0032122379634529352,
+            0.008770263753831387,
+            0.013341083191335201
+          ],
+          [
+            0.0016110450960695744,
+            0.004938922822475433,
+            0.008148428052663803
+          ],
+          [
+            0.0016295138048008084,
+            0.004940221551805735,
+            0.008150150068104267
+          ],
+          [
+            0.0023795547895133495,
+            0.00530448742210865,
+            0.00911778211593628
+          ]
+        ]
+      }
+    ],
+    "protocol": "Same frozen both-seed weights, whole sensor CFA, fixed core256/halo128/batch4. Compare .01/.03 existing constant states against plug-in per-pixel sigma. No strength fitting or training.",
+    "limits": [
+      "Exploratory noise law, pooled sessions; no camera calibration or clean truth.",
+      "Raw noisy signal plug-in max(signal,0), no smoothing, no demosaic covariance model.",
+      "Interpolated ISO parameters, no extrapolation; a12800 and a/b4000 not directly characterized."
+    ],
+    "tools": {
+      "prepare_sensor_sigma.py": "0dde941f56a855dcb8ff522ebc03d0112521764637e39284459efdcc20c6e01b",
+      "camera_noise_sigma.py": "7563d44201ff5e733cafab1660e0664d224262c6e59be2deeef58357dc83e9ed"
+    },
+    "memory": {
+      "hard_process_commit_bytes": 2147483648,
+      "soft_process_bytes": 1342177280,
+      "system_stop_fraction": 0.92,
+      "poll_seconds": 0.25,
+      "samples": 19,
+      "peak_rss_bytes": 369262592,
+      "peak_private_sampled_bytes": 902504448,
+      "peak_system_used_fraction": 0.7029928955286411,
+      "os_job_peak_commit_bytes": 903340032,
+      "reason": null,
+      "last": {
+        "system_total_bytes": 16933507072,
+        "system_available_bytes": 5271703552,
+        "system_used_fraction": 0.6886821182649812,
+        "process_rss_bytes": 108642304,
+        "process_private_bytes": 772120576,
+        "process_peak_rss_bytes": 369262592,
+        "process_peak_pagefile_bytes": 903340032
+      }
+    }
+  },
+  "plan_sha256": "4adc19f9d0e1b796eb422033159802c0a6b1f6a2d3e854c9fca86576c288d1f1",
+  "records": [
+    {
+      "scene": "6V1A0181",
+      "seed": 71,
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-inference-v001\\6V1A0181-seed71-local.f32",
+      "sha256": "2d04ce8d5cad23fadb857440f53b86c99956ec682f6c417c07c9a578acc8fbf6",
+      "geometry": {
+        "tiles": 532,
+        "core": 256,
+        "halo": 128,
+        "batch": 4,
+        "virtual_extension": [
+          225,
+          209
+        ],
+        "scope": "Sensor-frame CFA, original extent preserved; virtual reflection only outside image, no resampling."
+      },
+      "elapsed_seconds": 5.062485700007528,
+      "peak_cuda_allocated_bytes": 243776000
+    },
+    {
+      "scene": "6V1A0263",
+      "seed": 71,
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-inference-v001\\6V1A0263-seed71-local.f32",
+      "sha256": "6db11c40df09a9c35e318ea533c87a0c736d1bdc3d5a9622f299bd1675cdaefb",
+      "geometry": {
+        "tiles": 532,
+        "core": 256,
+        "halo": 128,
+        "batch": 4,
+        "virtual_extension": [
+          225,
+          209
+        ],
+        "scope": "Sensor-frame CFA, original extent preserved; virtual reflection only outside image, no resampling."
+      },
+      "elapsed_seconds": 5.109787499997765,
+      "peak_cuda_allocated_bytes": 243776000
+    },
+    {
+      "scene": "6V1A9819",
+      "seed": 71,
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-inference-v001\\6V1A9819-seed71-local.f32",
+      "sha256": "903b285b0323f1ef32b426bd7a0cc8801784971d93a060e5e7a7afb83015db18",
+      "geometry": {
+        "tiles": 532,
+        "core": 256,
+        "halo": 128,
+        "batch": 4,
+        "virtual_extension": [
+          225,
+          209
+        ],
+        "scope": "Sensor-frame CFA, original extent preserved; virtual reflection only outside image, no resampling."
+      },
+      "elapsed_seconds": 5.07981889997609,
+      "peak_cuda_allocated_bytes": 243776000
+    },
+    {
+      "scene": "6V1A0181",
+      "seed": 73,
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-inference-v001\\6V1A0181-seed73-local.f32",
+      "sha256": "15839738426a6946b830b7b35b030ebebbf8362897ac247015a3380f552f2314",
+      "geometry": {
+        "tiles": 532,
+        "core": 256,
+        "halo": 128,
+        "batch": 4,
+        "virtual_extension": [
+          225,
+          209
+        ],
+        "scope": "Sensor-frame CFA, original extent preserved; virtual reflection only outside image, no resampling."
+      },
+      "elapsed_seconds": 5.095410800015088,
+      "peak_cuda_allocated_bytes": 243776000
+    },
+    {
+      "scene": "6V1A0263",
+      "seed": 73,
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-inference-v001\\6V1A0263-seed73-local.f32",
+      "sha256": "6ea4a420f612a912a037a802e371803292445467ac539a9a2d40a80b33e73179",
+      "geometry": {
+        "tiles": 532,
+        "core": 256,
+        "halo": 128,
+        "batch": 4,
+        "virtual_extension": [
+          225,
+          209
+        ],
+        "scope": "Sensor-frame CFA, original extent preserved; virtual reflection only outside image, no resampling."
+      },
+      "elapsed_seconds": 5.0628651000442915,
+      "peak_cuda_allocated_bytes": 243776000
+    },
+    {
+      "scene": "6V1A9819",
+      "seed": 73,
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-inference-v001\\6V1A9819-seed73-local.f32",
+      "sha256": "d5597bafbd8721fb0593c2e8ff20bb667f6e235a4b6897f87aaab4ae54d899c5",
+      "geometry": {
+        "tiles": 532,
+        "core": 256,
+        "halo": 128,
+        "batch": 4,
+        "virtual_extension": [
+          225,
+          209
+        ],
+        "scope": "Sensor-frame CFA, original extent preserved; virtual reflection only outside image, no resampling."
+      },
+      "elapsed_seconds": 5.079348300001584,
+      "peak_cuda_allocated_bytes": 243776000
+    }
+  ],
+  "engineering": [
+    {
+      "cpu_gpu_map_max_error": 4.470348358154297e-08,
+      "constant_map_window_bit_exact": true,
+      "constant_whole_output_bit_exact": true,
+      "expected_sha256": "09a0eaac8358bbc5447e2e82cbd118abdb39bef05bd13d2950addc1c814ff395"
+    }
+  ],
+  "tools": {
+    "infer_sensor_sigma.py": "12a52a385670258ec04305ca8197875b6ad5c287d91954053da247e3634ce76b",
+    "photo_cfa_tiling.py": "0fbb29632e63f483e957d3ec90f61ac92cd05fd666ff0332273c8adcb707b140",
+    "camera_noise_sigma.py": "7563d44201ff5e733cafab1660e0664d224262c6e59be2deeef58357dc83e9ed"
+  },
+  "torch_version": "2.9.1+cu128",
+  "memory": {
+    "hard_process_commit_bytes": 6442450944,
+    "soft_process_bytes": 4831838208,
+    "system_stop_fraction": 0.92,
+    "poll_seconds": 0.25,
+    "samples": 177,
+    "peak_rss_bytes": 2116837376,
+    "peak_private_sampled_bytes": 3448836096,
+    "peak_system_used_fraction": 0.7859686993019375,
+    "os_job_peak_commit_bytes": 3448909824,
+    "reason": null,
+    "last": {
+      "system_total_bytes": 16933507072,
+      "system_available_bytes": 4035063808,
+      "system_used_fraction": 0.7617112751160635,
+      "process_rss_bytes": 1673072640,
+      "process_private_bytes": 3094470656,
+      "process_peak_rss_bytes": 2116837376,
+      "process_peak_pagefile_bytes": 3448909824
+    }
+  }
+}

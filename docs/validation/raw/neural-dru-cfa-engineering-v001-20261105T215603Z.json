@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "status": "stopped_on_error",
+  "plan": {
+    "schema_version": 1,
+    "created_at_utc": "2026-11-05T21:55:52.680453+00:00",
+    "source_sha256": "4adc19f9d0e1b796eb422033159802c0a6b1f6a2d3e854c9fca86576c288d1f1",
+    "seed": 9101,
+    "steps": 6,
+    "accumulation": 4,
+    "packed_context": 512,
+    "packed_core": 128,
+    "learning_rate": 0.0001,
+    "dtype": "float32",
+    "input_channels": 8,
+    "output_channels": 4,
+    "pretrained_weights": false,
+    "policy": "Official topology from pinned source, RANDOM weights, direct camera-CFA residual; no frozenRGB reconstruction in loss. One synthetic engineering fixture, not a learning experiment. All updated weights discarded.",
+    "tools": {
+      "dru_cfa.py": "6b2de01de6ca81ce6dd42b26b0bb0040257ebf1a4cfa4f6b6849964509c0b83e",
+      "probe_dru_cfa.py": "d0c615a6ecf47bbc6dfca1be39f41bc7eb8f8124b4edb3e94443c57945a407b8",
+      "sensor_curve_noise.py": "9b1868ae317b9da7bee29eb9355edd27b534dc6683548e65b15f8f6cb94d3c0a"
+    }
+  },
+  "updates": [
+    {
+      "step": 1,
+      "seconds": 1.653452099999413,
+      "fixture_loss": 0.00012086097194696777
+    }
+  ],
+  "architecture": {
+    "repository": "https://github.com/cszn/DPIR",
+    "revision": "15bca3fcc1f3cc51a1f99ccf027691e278c19354",
+    "source_manifest_sha256": "8d945a7ac1e578eb8ff0cf6091024b7e6922be52e35423bf5cbefbedfbaac64a",
+    "pretrained_weights_loaded": false,
+    "seed": 9101,
+    "parameters": 32643840,
+    "support": {
+      "packed_radius": 185,
+      "packed_halo": 192,
+      "cfa_halo": 384,
+      "packed_core": 128,
+      "packed_context": 512,
+      "intervals": [
+        {
+          "output": 256,
+          "low": 71,
+          "high": 440
+        },
+        {
+          "output": 257,
+          "low": 79,
+          "high": 440
+        },
+        {
+          "output": 258,
+          "low": 79,
+          "high": 440
+        },
+        {
+          "output": 259,
+          "low": 79,
+          "high": 440
+        },
+        {
+          "output": 260,
+          "low": 79,
+          "high": 440
+        },
+        {
+          "output": 261,
+          "low": 79,
+          "high": 440
+        },
+        {
+          "output": 262,
+          "low": 79,
+          "high": 440
+        },
+        {
+          "output": 263,
+          "low": 79,
+          "high": 448
+        }
+      ],
+      "scope": "Deepest-path maximum, eight stride phases; residual skip paths are shorter. Pinned fourblocks/stage,strideconv2,transposeconv2 topology."
+    }
+  },
+  "torch_version": "2.9.1+cu128",
+  "initial_positive_sigma_identity_bit_exact": true,
+  "error": "process_soft_memory_limit",
+  "elapsed_seconds": 11.06916650000494,
+  "memory": {
+    "hard_process_commit_bytes": 6442450944,
+    "soft_process_bytes": 4831838208,
+    "system_stop_fraction": 0.92,
+    "poll_seconds": 0.25,
+    "samples": 44,
+    "peak_rss_bytes": 1270951936,
+    "peak_private_sampled_bytes": 5319299072,
+    "peak_system_used_fraction": 0.7479084611445574,
+    "os_job_peak_commit_bytes": 5549981696,
+    "reason": "process_soft_memory_limit",
+    "last": {
+      "system_total_bytes": 16933507072,
+      "system_available_bytes": 4291874816,
+      "system_used_fraction": 0.7465454263106118,
+      "process_rss_bytes": 1270951936,
+      "process_private_bytes": 5319299072,
+      "process_peak_rss_bytes": 1270951936,
+      "process_peak_pagefile_bytes": 5320085504
+    }
+  }
+}

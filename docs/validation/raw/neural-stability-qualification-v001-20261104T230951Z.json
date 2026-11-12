@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "started_at_utc": "2026-11-04T23:02:15.721132+00:00",
+  "status": "completed_known_regressions_failed_reserved_unopened",
+  "tools_sha256": "ab8b5c5db4daba3d704dba2b10dec850e9f07cd6c5fbeea1c1e4f680acce2b93",
+  "campaign": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-correlation-campaign-v001",
+  "data_plan": "build-patch_neural_restoration\\paired-correlation-plan-v002\\correlation\\plan.json",
+  "prefix": "input-cues-correlation",
+  "policy": "Both seeds, fixed gates, sequential jobs. Fine regression first; failure skips classics and forbids overall qualification. Reserved cohorts remain unopened.",
+  "stages": [
+    {
+      "name": "prepare_development",
+      "started_at_utc": "2026-11-04T23:02:15.772142+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\run_edge_protected_probe.py",
+        "--prepare",
+        "--data-plan",
+        "build-patch_neural_restoration\\paired-correlation-plan-v002\\correlation\\plan.json",
+        "--models",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-correlation-campaign-v001\\seed71-attempt01",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-correlation-campaign-v001\\seed73-attempt01",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-correlation-protected-plan-v001"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-04T23:02:17.493882+00:00"
+    },
+    {
+      "name": "development",
+      "started_at_utc": "2026-11-04T23:02:17.495028+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\run_edge_protected_probe.py",
+        "--plan",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-correlation-protected-plan-v001\\plan.json",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-correlation-protected-v001"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-04T23:04:45.955727+00:00"
+    },
+    {
+      "name": "prepare_fine",
+      "started_at_utc": "2026-11-04T23:04:45.990345+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\prepare_neural_regression.py",
+        "--source",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-correlation-protected-v001\\result.json",
+        "--historical",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\fixed-point-fine-v001\\result.json",
+        "--kind",
+        "fine",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-correlation-fine-plan-v001"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-04T23:04:47.862791+00:00"
+    },
+    {
+      "name": "fine",
+      "started_at_utc": "2026-11-04T23:04:47.863873+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\confirm_fine_noise.py",
+        "--plan",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-correlation-fine-plan-v001\\plan.json",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-correlation-fine-v001"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-04T23:09:51.361305+00:00"
+    }
+  ],
+  "resolved_model_folders": [
+    "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-correlation-campaign-v001\\seed71-attempt01",
+    "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-correlation-campaign-v001\\seed73-attempt01"
+  ],
+  "development_passed": true,
+  "regressions": [
+    {
+      "name": "fine",
+      "passed": false,
+      "result": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-correlation-fine-v001\\result.json",
+      "sha256": "ce6e74884d01af1e61e35dca3b2f77ad1d15fa4a3a0b0936cc69bc8e3158079c"
+    }
+  ],
+  "skipped_classic_regressions": "Fine prerequisite failed; no overall qualification claim.",
+  "finished_at_utc": "2026-11-04T23:09:51.423476+00:00"
+}

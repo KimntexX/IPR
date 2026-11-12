@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "started_at_utc": "2026-11-05T12:00:21.425574+00:00",
+  "status": "completed_known_failure_diagnosis_reserved_unopened",
+  "qualification": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\colour-signs-colour_balanced-qualification-v001\\progress.json",
+  "data_plan": "build-patch_neural_restoration\\paired-colour-signs-plan-v001\\colour_balanced\\plan.json",
+  "campaign": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\colour-signs-colour_balanced-campaign-v001",
+  "prefix": "colour-signs-colour_balanced",
+  "script_sha256": "ad816a6ba41a96470e9a78fa5de541e17ab697af197e07d96ac7785f3b4b2a87",
+  "previous_fine": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\colour-signs-control-fine-v001\\result.json",
+  "previous_campaign": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\colour-signs-control-campaign-v001",
+  "policy": "No retraining or tuning. Known failure -> paired diagnostic only. All known pass -> frozen new classic cohort then fine cohort2; failure stops opening further reserved data.",
+  "stages": [
+    {
+      "name": "paired_fine_comparison",
+      "started_at_utc": "2026-11-05T12:00:21.426751+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\compare_fine_candidates.py",
+        "--previous",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\colour-signs-control-fine-v001\\result.json",
+        "--current",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\colour-signs-colour_balanced-fine-v001\\result.json",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\colour-signs-colour_balanced-followup-v001\\paired-fine.json"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-05T12:00:22.165474+00:00"
+    },
+    {
+      "name": "fine_diagnosis",
+      "started_at_utc": "2026-11-05T12:00:22.166397+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\trace_fine_attenuation.py",
+        "--proof",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\colour-signs-colour_balanced-protected-v001\\result.json",
+        "--historical",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\colour-signs-colour_balanced-fine-v001\\result.json",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\colour-signs-colour_balanced-fine-trace-v001"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-05T12:00:55.437479+00:00"
+    },
+    {
+      "name": "multitone_diagnosis",
+      "started_at_utc": "2026-11-05T12:00:55.438552+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\diagnose_multitone_training.py",
+        "--data-plan",
+        "build-patch_neural_restoration\\paired-colour-signs-plan-v001\\colour_balanced\\plan.json",
+        "--previous-campaign",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\colour-signs-control-campaign-v001",
+        "--campaign",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\colour-signs-colour_balanced-campaign-v001",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\colour-signs-colour_balanced-multitone-diagnostic-v001"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-05T12:01:09.376065+00:00"
+    }
+  ],
+  "qualification_sha256": "62a8b887ef60bc0547a9370691059ef2574ff7c6f9e261ef37ba35c4ab61319b",
+  "finished_at_utc": "2026-11-05T12:01:09.377024+00:00"
+}

@@ -1,0 +1,164 @@
+"""Freeze fresh-random vs stratified texture continuation, then engineering checks."""
+import argparse
+import copy
+from datetime import datetime,timezone
+import json
+from pathlib import Path
+
+import torch
+
+from audit_texture_coverage import coverage
+from continuation_initialization import initialize_continuation
+from diagnose_train_learnability import digest,save
+from memory_budget import MemoryGuard
+from multiscale_correction import composed_support
+from noisy_moment_unet import NoisyMomentUNet,FORWARD_TOOLS
+from noisy_training_policy import configure_trainable
+from prepare_warm_continuation import prefix_source,check_embedding
+from run_noisy_moment_pilot import train,TOOLS,MEMORY_POLICY,runtime_versions
+from run_synthetic_joint_pilot import tensor_hash
+from texture_sampling import sample_events
+from colour_texture_sampling import sample_colour_pair
+
+
+def prepare(root,output,design='coverage'):
+    if design not in ('coverage','colour_signs','repeatability'):
+        raise ValueError('Declared paired texture design required')
+    arms={'coverage':('control','stratified'),'colour_signs':('control','colour_balanced'),
+        'repeatability':('control','replicate')}[design]
+    base=root/'build-patch_neural_restoration'
+    if not output.resolve().is_relative_to(base.resolve()):
+        raise ValueError('Dedicated neural output required')
+    template_path=base/({'coverage':'paired-correlation-plan-v002/control/plan.json',
+        'colour_signs':'paired-coverage-plan-v001/stratified/plan.json',
+        'repeatability':'paired-colour-signs-plan-v001/control/plan.json'}[design])
+    template=json.loads(template_path.read_text(encoding='utf-8'))
+    source_path=Path(template['source'])/'result.json'
+    if digest(source_path)!=template['source_result_sha256']:
+        raise ValueError('Original replay source changed')
+    engineering_path=base/'correlation-engineering-v001/result.json'
+    engineering=json.loads(engineering_path.read_text(encoding='utf-8'))
+    if (engineering['status']!='passed_multiscale_engineering_preflight_not_quality_qualification'
+            or engineering['support']!=composed_support() or engineering['runtime']!=runtime_versions()
+            or any(digest(Path(__file__).with_name(n))!=engineering['tools'][n] for n in FORWARD_TOOLS)):
+        raise ValueError('Current inference engineering required')
+    source=json.loads(source_path.read_text(encoding='utf-8'))
+    now=datetime.now(timezone.utc)
+    identity='neural-'+{'coverage':'coverage','colour_signs':'colour-signs','repeatability':'repeatability'}[design]+'-preflight-v001-'+now.strftime('%Y%m%dT%H%M%SZ')
+    result=dict(schema_version=1,campaign_id=identity,measured_at_utc=now.isoformat(),status='incomplete',
+        template_sha256=digest(template_path),source_sha256=digest(source_path),
+        script_sha256=digest(Path(__file__)),architecture_engineering_sha256=digest(engineering_path),
+        cases=[],embedding_checks=[],coverage={},sampling={},design=design,
+        policy='Both arms learn the same observed correlation branch from identical2048-step initializers, fresh Adam0.00025,512steps, fixed losses and replayed nontexture exposures. '+
+            {'coverage':'Only fresh texture sampling differs.',
+             'colour_signs':'Matched fresh stratified carriers and magnitudes; only declared G/B contrast signs differ. Achromatic targets unchanged.',
+             'repeatability':'Same natural-sign frequency/amplitude stratification in both arms, independent fresh content streams16000000/20000000. Replication study, no winner selection, known controls only.'}[design]+
+            ' No scores used to select data or weights.')
+    output.mkdir(parents=True,exist_ok=False)
+    guard=MemoryGuard(**MEMORY_POLICY)
+    try:
+        with guard:
+            torch.set_num_threads(4)
+            torch.set_num_interop_threads(1)
+            torch.use_deterministic_algorithms(True)
+            excluded=set(template['lineage_exclusions']['target_sha256'])
+            excluded.update(e['target_sha256'] for e in template['edges']+template['mixed'])
+            # Only hashes of already-consulted targets; never generate a reserved cohort.
+            known=base/'fixed-point-fine-plan-v001/plan.json'
+            known_plan=json.loads(known.read_text(encoding='utf-8'))
+            excluded.update(c['target_sha256'] for c in known_plan['cases'])
+            events={}
+            if design=='colour_signs':
+                events,selection=sample_colour_pair(template['texture_augmentation']['events'],excluded,guard,tensor_hash)
+                result['colour_sampling']=selection
+                if selection['candidate_colour_coverage']['missing_cells']:
+                    raise ValueError('Conditional colour sign coverage incomplete')
+            for arm in arms:
+                if design in ('coverage','repeatability'):
+                    rows,selection=sample_events(template['texture_augmentation']['events'],
+                        arm if design=='coverage' else 'stratified',excluded,guard,tensor_hash,
+                        identity_start=(16000000 if arm=='control' else 20000000) if design=='repeatability' else None)
+                    events[arm]=rows
+                else:
+                    rows=events[arm]
+                    selection=dict(paired_design='colour_signs',arm=arm,policy=result['colour_sampling']['policy'])
+                result['sampling'][arm]=selection
+                result['coverage'][arm]=coverage(rows)
+                excluded.update(e['target_sha256'] for e in rows)
+                print('DATA',arm,len(rows),'missing',result['coverage'][arm]['missing_cells'],flush=True)
+            if result['coverage'][arms[1]]['missing_cells'] or (design=='repeatability' and result['coverage']['control']['missing_cells']):
+                raise ValueError('Stratified positive joint coverage incomplete')
+            original_source_path=Path(source['origin']['path'])
+            if digest(original_source_path)!=source['origin']['sha256']:
+                raise ValueError('Ancestor source changed')
+            original_source=json.loads(original_source_path.read_text(encoding='utf-8'))
+            small=prefix_source(original_source,8)
+            for arm in arms:
+                for ref in template['warm_start']['models']:
+                    guard.check()
+                    torch.manual_seed(ref['seed'])
+                    parent=next(r for r in template['parents'] if r['seed']==ref['seed'])
+                    path=Path(parent['folder'])/'weights.pt'
+                    if digest(path)!=parent['weights_sha256']:
+                        raise ValueError('Frozen reconstruction changed')
+                    clean=torch.load(path,weights_only=True)['state_dict']
+                    model=NoisyMomentUNet(8)
+                    initialize_continuation(root,model,clean,ref)
+                    configure_trainable(model,'cfa_front',True)
+                    if arm=='control':
+                        result['embedding_checks'].extend(check_embedding(model,template,ref,guard))
+                    config=dict(template['config'],steps=8,learning_rate=.00025,statistics_trainable=True)
+                    context=dict(plan_sha256='coverage-engineering-'+digest(template_path),seed=ref['seed'],
+                        config=config,parent_weights_sha256=ref['weights_sha256'],source_result_sha256=digest(original_source_path))
+                    progress={}
+                    losses,counts=train(model,small,config,guard,output/f'engineering-{arm}-{ref["seed"]}.pt',
+                        context,progress,8,texture_events=[e for e in events[arm] if e['serial']<32])
+                    if any(not torch.equal(v,model.state_dict()[n]) for n,v in clean.items()):
+                        raise ValueError('Frozen reconstruction changed in preflight')
+                    if float(model.noise_features.statistics.weight.detach().norm())==0.:
+                        raise ValueError('Correlation branch did not learn in preflight')
+                    result['cases'].append(dict(arm=arm,seed=ref['seed'],completed_steps=len(losses),
+                        exposures=sum(counts.values()),final_loss=losses[-1],progress=progress))
+                    print('ENGINEERING',arm,ref['seed'],flush=True)
+                    del model,clean
+            result['lineage_exclusions']=sorted(excluded)
+            result['status']='passed_paired_texture_engineering_not_quality_qualification'
+    except Exception as error:
+        result.update(status='failed_coverage_preparation',error=str(error))
+        raise
+    finally:
+        result['memory']=guard.stats()
+        save(output/'preflight.json',result)
+        save(root/'docs/validation/raw'/f'{identity}.json',result)
+    tools={n:digest(Path(__file__).with_name(n)) for n in TOOLS+('prepare_coverage_continuation.py','colour_texture_sampling.py')}
+    for arm in arms:
+        plan=copy.deepcopy(template)
+        plan.update(frozen_at_utc=datetime.now(timezone.utc).isoformat(),tools=tools,
+            engineering_preflight=dict(path=str((output/'preflight.json').resolve()),sha256=digest(output/'preflight.json'),campaign_id=identity),
+            continuation=dict(arm=arm,experiment=design,stage_steps=512,total_optimizer_steps=2560,
+                data=result['policy']),
+            training_policy=result['policy'])
+        plan['config']['statistics_trainable']=True
+        if design=='repeatability':
+            plan['qualification_scope']='known_only'
+        plan['texture_augmentation'].update(events=events[arm],sampling=result['sampling'][arm],
+            coverage=result['coverage'][arm],
+            policy_scope='Base generator parameter law; quotas and any colour flips recorded separately; no independent new data claim for matched carriers.')
+        if design=='colour_signs':
+            plan['texture_augmentation']['colour_sampling']=result['colour_sampling']
+        else:
+            plan['texture_augmentation'].pop('colour_sampling',None)
+        plan['lineage_exclusions']['target_sha256']=result['lineage_exclusions']
+        plan['lineage_exclusions']['scope']='All initializer contents, all fresh training contents of both arms and consulted fine truths; no reserved generation.'
+        plan['conditioning']='Same40base features and32observed correlation cues, both branches trainable in both arms.'
+        (output/arm).mkdir()
+        save(output/arm/'plan.json',plan)
+    print('PREPARED',output,flush=True)
+
+
+if __name__=='__main__':
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--output',type=Path,required=True)
+    parser.add_argument('--design',choices=('coverage','colour_signs','repeatability'),default='coverage')
+    args=parser.parse_args()
+    prepare(Path(__file__).resolve().parents[2],args.output,args.design)

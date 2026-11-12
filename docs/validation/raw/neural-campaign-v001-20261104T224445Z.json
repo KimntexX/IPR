@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "data_version": 1,
+  "campaign_id": "neural-campaign-v001-20261104T224445Z",
+  "started_at_utc": "2026-11-04T22:44:45.813585+00:00",
+  "until_latest_start": "2026-11-05T00:34:21.353250+00:00",
+  "status": "completed_both_seeds",
+  "plan_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\paired-correlation-plan-v002\\correlation\\plan.json",
+  "plan_sha256": "b3922912061fcaa1586ef9e068ef772335083fa60edce732e0241863d8c67c9c",
+  "launcher_sha256": "246a29c03c12a4b27cf71b0ff19fde5663b40b710bb3552316b7ad58a19bfaac",
+  "admission_fraction": 0.9,
+  "poll_seconds": 15,
+  "max_attempts_per_seed": 8,
+  "attempt_timeout_seconds": 1800,
+  "attempts": [
+    {
+      "seed": 71,
+      "number": 1,
+      "output": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-correlation-campaign-v001\\seed71-attempt01",
+      "admission_memory": {
+        "system_total_bytes": 16933507072,
+        "system_available_bytes": 7236567040,
+        "system_used_fraction": 0.5726480634383262,
+        "process_rss_bytes": 24313856,
+        "process_private_bytes": 15835136,
+        "process_peak_rss_bytes": 26345472,
+        "process_peak_pagefile_bytes": 17948672
+      },
+      "resumed_from": null,
+      "returncode": 0,
+      "result_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-correlation-campaign-v001\\seed71-attempt01\\result.json",
+      "result_sha256": "bfac1e99e5700a4983f096bef059c85dcac0f9a7db3ad8d02b8db76c0564461a",
+      "status": "completed_synthetic_noise_pilot_not_photographic_qualification",
+      "pilot_gates_passed": true,
+      "training_progress": {
+        "completed_optimizer_steps": 512,
+        "checkpoint": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-correlation-campaign-v001\\seed71-attempt01\\training-latest.pt",
+          "sha256": "b37f026cc36c9dc6ba57bf492457693195958a548bd313498f5d8b82d37a9ded",
+          "bytes": 599261,
+          "completed_step": 512
+        },
+        "last_preclip_gradient_norm": 22.399415969848633,
+        "total_optimizer_steps": 2560
+      },
+      "campaign_id": "neural-noisy-moment-v001-20261104T224502Z"
+    },
+    {
+      "seed": 73,
+      "number": 1,
+      "output": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-correlation-campaign-v001\\seed73-attempt01",
+      "admission_memory": {
+        "system_total_bytes": 16933507072,
+        "system_available_bytes": 7377309696,
+        "system_used_fraction": 0.5643365745422828,
+        "process_rss_bytes": 29847552,
+        "process_private_bytes": 21786624,
+        "process_peak_rss_bytes": 34844672,
+        "process_peak_pagefile_bytes": 26165248
+      },
+      "resumed_from": null,
+      "returncode": 0,
+      "result_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-correlation-campaign-v001\\seed73-attempt01\\result.json",
+      "result_sha256": "aef2a80a86dfd552b454b3c3016afa6177bcbd5ced134a982d7131d756a5294f",
+      "status": "completed_synthetic_noise_pilot_not_photographic_qualification",
+      "pilot_gates_passed": true,
+      "training_progress": {
+        "completed_optimizer_steps": 512,
+        "checkpoint": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\input-cues-correlation-campaign-v001\\seed73-attempt01\\training-latest.pt",
+          "sha256": "17755db4f0f072eb26cc10aa82060687469ea088a494c85c28d4337562803f58",
+          "bytes": 599261,
+          "completed_step": 512
+        },
+        "last_preclip_gradient_norm": 42.95779800415039,
+        "total_optimizer_steps": 2560
+      },
+      "campaign_id": "neural-noisy-moment-v001-20261104T225013Z"
+    }
+  ],
+  "policy": "Both seeds evaluated even after quality failure. Retry only memory stops; latest technical checkpoint, no score selection. No new attempt after deadline; active attempt may finish normally.",
+  "pilot_gates_passed": true,
+  "finished_at_utc": "2026-11-04T22:54:38.384283+00:00"
+}

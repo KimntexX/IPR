@@ -1,0 +1,687 @@
+{
+  "schema_version": 1,
+  "status": "completed_local_sigma_display_not_qualification",
+  "inference_sha256": "7fcb9c5e95f4e7ce0de2f3e95afbd95d960faec6d98f012624b9213fc1ad8469",
+  "renderer_sha256": "d2ca843f8c628c47f442028c5808d980c2560b66724b3f34d7f401208bbb02d4",
+  "records": [
+    {
+      "scene": "6V1A0181",
+      "seed": 71,
+      "display": {
+        "context_sha256": "9f1fb1dd550e9cc271d43d5379433121bc4d318a709bf885212da337bf66378e",
+        "dcp_options": {
+          "camera_baseline_exposure_ev": 0.28,
+          "preserve_tone_curve_hue": true,
+          "profile_exposure_compensation_ev": 0
+        },
+        "engine_revision": "a9414c04fc530202721f4c43b00478646a4e0c72",
+        "input": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A0181-seed71-local.rcd.f32",
+        "input_sha256": "b89d1ff5cd79ad3f29735bd8d03e57b3db3854d81e7a2757d5d89101f56d0f05",
+        "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+        "rois": [
+          {
+            "halo": 0,
+            "origin_xy": [
+              1199,
+              735
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A0181-seed71-local-srgb-roi0.png",
+            "roi": 0,
+            "sha256": "59e681d9fd145edc1bc6a6afdcb31646eba4ffe5d3236fbf29efb88fc3da8f85"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              3287,
+              735
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A0181-seed71-local-srgb-roi1.png",
+            "roi": 1,
+            "sha256": "14df8303f7e4336fba4305222b685bb1e913c7e7e99de7438c4fbd764c34c382"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              5375,
+              735
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A0181-seed71-local-srgb-roi2.png",
+            "roi": 2,
+            "sha256": "a6a8b110e2e7efcf4429e0e90dd81917cb7d834bcb8bb2a32362c75c24f08c19"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              1199,
+              2127
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A0181-seed71-local-srgb-roi3.png",
+            "roi": 3,
+            "sha256": "9920fc36c78b7360d55936bc5856862dd0baf3226b24fba1a5f984914f8cf5d8"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              3287,
+              2127
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A0181-seed71-local-srgb-roi4.png",
+            "roi": 4,
+            "sha256": "66cf26c96797b9d2fc6d94a6e927722e2038b686a16fe0ab2218761eb3178a63"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              5375,
+              2127
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A0181-seed71-local-srgb-roi5.png",
+            "roi": 5,
+            "sha256": "dbfc01af1701bd8b4878019f3845ba406a20607c22d6e99a555cdfad15053fc7"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              1199,
+              3519
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A0181-seed71-local-srgb-roi6.png",
+            "roi": 6,
+            "sha256": "bfcbf4410ecc715837552042d3f418b286952b34ae9797cdff74f7668843f865"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              3287,
+              3519
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A0181-seed71-local-srgb-roi7.png",
+            "roi": 7,
+            "sha256": "0cb5aef531282cb5bc2448f3d81d597ad618f214b7e5e45cdda18614c6ec8490"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              5375,
+              3519
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A0181-seed71-local-srgb-roi8.png",
+            "roi": 8,
+            "sha256": "2852d292226c3ec639623a131666cad962e3cc219e37cf143647ff18cbf7ffa9"
+          }
+        ],
+        "schema_version": 1,
+        "scope": "Shared frozen DCP/Rec2020-to-sRGB display; no independent stretching, optics or additional edits",
+        "source_kelvin": 4924.211272770631,
+        "tile_diagnostic_only": false
+      },
+      "rcd_proof": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A0181-seed71-local.json"
+    },
+    {
+      "scene": "6V1A0263",
+      "seed": 71,
+      "display": {
+        "context_sha256": "0b0a8fbacedaeeff4a90372640894fd577191ed85af0605eec9f1f30d025faa8",
+        "dcp_options": {
+          "camera_baseline_exposure_ev": 0.28,
+          "preserve_tone_curve_hue": true,
+          "profile_exposure_compensation_ev": 0
+        },
+        "engine_revision": "a9414c04fc530202721f4c43b00478646a4e0c72",
+        "input": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A0263-seed71-local.rcd.f32",
+        "input_sha256": "23bb90454b397bf20e0d7b763ec836453ea3b8b7fb80905c128265eddba26b71",
+        "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+        "rois": [
+          {
+            "halo": 0,
+            "origin_xy": [
+              1199,
+              735
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A0263-seed71-local-srgb-roi0.png",
+            "roi": 0,
+            "sha256": "6c6436d2ae07c82746a4fab5ea727e1e5ac5a64699c4d4fdf59014b6e3fb0157"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              3287,
+              735
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A0263-seed71-local-srgb-roi1.png",
+            "roi": 1,
+            "sha256": "88336dac013af612e60bbc8516a95b488dbb0d264b19a204d11985035259dc20"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              5375,
+              735
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A0263-seed71-local-srgb-roi2.png",
+            "roi": 2,
+            "sha256": "8a17ed9c3c39e1eebcdcb26372bd5ff7ee30d6e9f94540906c95810e15351ec2"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              1199,
+              2127
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A0263-seed71-local-srgb-roi3.png",
+            "roi": 3,
+            "sha256": "3748a04e7c0993735302de700ed8f6e31cb8a02601d68019362a8847d2e6e284"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              3287,
+              2127
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A0263-seed71-local-srgb-roi4.png",
+            "roi": 4,
+            "sha256": "d425dd61a2fdc5f53ecd947b2678df45fa5561f8c9d7039c8419247a6b017264"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              5375,
+              2127
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A0263-seed71-local-srgb-roi5.png",
+            "roi": 5,
+            "sha256": "348d5c680eef10b5529f53c9d03fc3817e2eb4bf91d1df972aaa42f914277db4"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              1199,
+              3519
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A0263-seed71-local-srgb-roi6.png",
+            "roi": 6,
+            "sha256": "32e40d7462d8c18b26ee4330aa07bfe5f614f00fc84636c9cde8b704e2b3bc73"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              3287,
+              3519
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A0263-seed71-local-srgb-roi7.png",
+            "roi": 7,
+            "sha256": "a3042230be16e0bfb7a9c091bf65fb7e59ebe6bd4728018da83eb5a59eea5ea5"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              5375,
+              3519
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A0263-seed71-local-srgb-roi8.png",
+            "roi": 8,
+            "sha256": "cfa357f656214b08baa360bc29c4584b9de121e4cf7d56785be0b507962b222b"
+          }
+        ],
+        "schema_version": 1,
+        "scope": "Shared frozen DCP/Rec2020-to-sRGB display; no independent stretching, optics or additional edits",
+        "source_kelvin": 4924.211272770631,
+        "tile_diagnostic_only": false
+      },
+      "rcd_proof": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A0263-seed71-local.json"
+    },
+    {
+      "scene": "6V1A9819",
+      "seed": 71,
+      "display": {
+        "context_sha256": "a572c93bf1ff592d2db702753d6a018e834329cefccb06a840fac6da8daf473a",
+        "dcp_options": {
+          "camera_baseline_exposure_ev": 0.28,
+          "preserve_tone_curve_hue": true,
+          "profile_exposure_compensation_ev": 0
+        },
+        "engine_revision": "a9414c04fc530202721f4c43b00478646a4e0c72",
+        "input": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A9819-seed71-local-oriented.f32",
+        "input_sha256": "afcffa2dd8cc6f9f14c437483705dd3c1c21a3ef33a2348ce0344a247dd5f0ce",
+        "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+        "rois": [
+          {
+            "halo": 0,
+            "origin_xy": [
+              735,
+              1199
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A9819-seed71-local-srgb-roi0.png",
+            "roi": 0,
+            "sha256": "3cda954dfc7b3894539d4063f294b34b7c43b3a9414fc7f098b862940959aeb9"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              2127,
+              1199
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A9819-seed71-local-srgb-roi1.png",
+            "roi": 1,
+            "sha256": "afb0658f84f349811c85e969090c2362309c2240597cd66f6d9b66fee84f38d7"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              3519,
+              1199
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A9819-seed71-local-srgb-roi2.png",
+            "roi": 2,
+            "sha256": "95a212e85c0fd0ad4f391d22886f8c2f28ba34b01232ec910b8dc6e4fef3f131"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              735,
+              3287
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A9819-seed71-local-srgb-roi3.png",
+            "roi": 3,
+            "sha256": "26781682951c1ed5025512046a32be03eff6534b0e58daa7e0997a0f48500f7a"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              2127,
+              3287
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A9819-seed71-local-srgb-roi4.png",
+            "roi": 4,
+            "sha256": "8c4109b29c73052cec5d04a55b0f6cf8c4144f5d0b65c2fd57ab75e3015d1bac"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              3519,
+              3287
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A9819-seed71-local-srgb-roi5.png",
+            "roi": 5,
+            "sha256": "209920972a4951375cf786caee5ae9793d9b094bd8c029aa890636a0bfc7576a"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              735,
+              5375
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A9819-seed71-local-srgb-roi6.png",
+            "roi": 6,
+            "sha256": "78690d45ccabdd4cc6216e59567d42b9faaf5823a3199d622ddc8d4641ff93b6"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              2127,
+              5375
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A9819-seed71-local-srgb-roi7.png",
+            "roi": 7,
+            "sha256": "32191a26a56d26059d57127e0944762fb072139418d6cf38250d4c26bdb97e3d"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              3519,
+              5375
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A9819-seed71-local-srgb-roi8.png",
+            "roi": 8,
+            "sha256": "0d0396b309a8836e35359a45954e7030c7ccab9cf7924adb473e8b2ee5fcc63a"
+          }
+        ],
+        "schema_version": 1,
+        "scope": "Shared frozen DCP/Rec2020-to-sRGB display; no independent stretching, optics or additional edits",
+        "source_kelvin": 4924.211272770631,
+        "tile_diagnostic_only": false
+      },
+      "rcd_proof": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A9819-seed71-local.json"
+    },
+    {
+      "scene": "6V1A0181",
+      "seed": 73,
+      "display": {
+        "context_sha256": "9f1fb1dd550e9cc271d43d5379433121bc4d318a709bf885212da337bf66378e",
+        "dcp_options": {
+          "camera_baseline_exposure_ev": 0.28,
+          "preserve_tone_curve_hue": true,
+          "profile_exposure_compensation_ev": 0
+        },
+        "engine_revision": "a9414c04fc530202721f4c43b00478646a4e0c72",
+        "input": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A0181-seed73-local.rcd.f32",
+        "input_sha256": "e629b4ea2f5260621c7697cf35e4fb69548a48fa6d8eb0e6d6697b969af4303f",
+        "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+        "rois": [
+          {
+            "halo": 0,
+            "origin_xy": [
+              1199,
+              735
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A0181-seed73-local-srgb-roi0.png",
+            "roi": 0,
+            "sha256": "9c72e2cf74d7256ae3a2eb7c639473dac54d731e567fb4fe0499b6dec7960646"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              3287,
+              735
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A0181-seed73-local-srgb-roi1.png",
+            "roi": 1,
+            "sha256": "9a2045363b90d2df92a3d98fc75e2ee6a5a33674af68fdd87aea1c6772b18b81"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              5375,
+              735
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A0181-seed73-local-srgb-roi2.png",
+            "roi": 2,
+            "sha256": "4f2883968bd0c800cf287647e76429e1ed85dd6a120e7d0bd9d4c1494b7538ca"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              1199,
+              2127
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A0181-seed73-local-srgb-roi3.png",
+            "roi": 3,
+            "sha256": "2f9932a59cba28021462177143bd624fdb26d3039292770f793ee655fe822b3c"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              3287,
+              2127
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A0181-seed73-local-srgb-roi4.png",
+            "roi": 4,
+            "sha256": "4c6a5567227e8613ccd3bef0e1c7f7421d0abd5fc0c8ae38db1e2ca43b963670"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              5375,
+              2127
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A0181-seed73-local-srgb-roi5.png",
+            "roi": 5,
+            "sha256": "8d04176dd702e4a84a63750c0250399d39e06f4bf2f406b24520c139e7eadab9"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              1199,
+              3519
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A0181-seed73-local-srgb-roi6.png",
+            "roi": 6,
+            "sha256": "c182e13c59b1330524f873b0646308e5e5ad49d2a82f54be51a3cf8a8b7d7fcc"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              3287,
+              3519
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A0181-seed73-local-srgb-roi7.png",
+            "roi": 7,
+            "sha256": "49919637b5d684be522d3063c3fb4ee267c28c4458b567357e22d717b0541858"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              5375,
+              3519
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A0181-seed73-local-srgb-roi8.png",
+            "roi": 8,
+            "sha256": "2bae1784e8a319661325810a4dbe5c6ba3a6b1e8e217907cc35a8c997c40df6b"
+          }
+        ],
+        "schema_version": 1,
+        "scope": "Shared frozen DCP/Rec2020-to-sRGB display; no independent stretching, optics or additional edits",
+        "source_kelvin": 4924.211272770631,
+        "tile_diagnostic_only": false
+      },
+      "rcd_proof": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A0181-seed73-local.json"
+    },
+    {
+      "scene": "6V1A0263",
+      "seed": 73,
+      "display": {
+        "context_sha256": "0b0a8fbacedaeeff4a90372640894fd577191ed85af0605eec9f1f30d025faa8",
+        "dcp_options": {
+          "camera_baseline_exposure_ev": 0.28,
+          "preserve_tone_curve_hue": true,
+          "profile_exposure_compensation_ev": 0
+        },
+        "engine_revision": "a9414c04fc530202721f4c43b00478646a4e0c72",
+        "input": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A0263-seed73-local.rcd.f32",
+        "input_sha256": "63a82cb8763627b67caf146078f49269c5a6aa37e2954f4392bb375540ffbac6",
+        "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+        "rois": [
+          {
+            "halo": 0,
+            "origin_xy": [
+              1199,
+              735
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A0263-seed73-local-srgb-roi0.png",
+            "roi": 0,
+            "sha256": "5453838820e0598362dde3bbef4926053f8463f209c219e7186c0c21fc76bbb8"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              3287,
+              735
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A0263-seed73-local-srgb-roi1.png",
+            "roi": 1,
+            "sha256": "915be1bda5024882c7f4055cd48752b2e729772509fcd0146d5e311cc4dbe8e1"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              5375,
+              735
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A0263-seed73-local-srgb-roi2.png",
+            "roi": 2,
+            "sha256": "7da7e3596ae4c16cee86eac09a557d09bb434e03c7ada6e582829d25f2f488ee"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              1199,
+              2127
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A0263-seed73-local-srgb-roi3.png",
+            "roi": 3,
+            "sha256": "44263a14d16235a2678f1f0334c0f65b8f3f7824aa3f70978910b7743563f66e"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              3287,
+              2127
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A0263-seed73-local-srgb-roi4.png",
+            "roi": 4,
+            "sha256": "9180aa08c10db35bad21496e32bb967a2de2efe617348f15452715d928530b0e"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              5375,
+              2127
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A0263-seed73-local-srgb-roi5.png",
+            "roi": 5,
+            "sha256": "287e432473bc59a5974dd233c12056b2fb47a50835760da56ee468cdf691f708"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              1199,
+              3519
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A0263-seed73-local-srgb-roi6.png",
+            "roi": 6,
+            "sha256": "0468a1f84ecf7bf2a6a86f64fbedf3b5e8bb05a31e166386353cafcd4af90fbf"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              3287,
+              3519
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A0263-seed73-local-srgb-roi7.png",
+            "roi": 7,
+            "sha256": "19a42f37fc9bae822145aae1fdbcf7887ac40bf9c5c0c36a8a773615e5f28c1a"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              5375,
+              3519
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A0263-seed73-local-srgb-roi8.png",
+            "roi": 8,
+            "sha256": "d45ab64f702fd2af0b11ebb9f48194266042d7e7a0982449e29adedfda009003"
+          }
+        ],
+        "schema_version": 1,
+        "scope": "Shared frozen DCP/Rec2020-to-sRGB display; no independent stretching, optics or additional edits",
+        "source_kelvin": 4924.211272770631,
+        "tile_diagnostic_only": false
+      },
+      "rcd_proof": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A0263-seed73-local.json"
+    },
+    {
+      "scene": "6V1A9819",
+      "seed": 73,
+      "display": {
+        "context_sha256": "a572c93bf1ff592d2db702753d6a018e834329cefccb06a840fac6da8daf473a",
+        "dcp_options": {
+          "camera_baseline_exposure_ev": 0.28,
+          "preserve_tone_curve_hue": true,
+          "profile_exposure_compensation_ev": 0
+        },
+        "engine_revision": "a9414c04fc530202721f4c43b00478646a4e0c72",
+        "input": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A9819-seed73-local-oriented.f32",
+        "input_sha256": "721bad3ef90106c69c72ef616996513faa6b9bcd8693f8302b52eca1497300e5",
+        "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+        "rois": [
+          {
+            "halo": 0,
+            "origin_xy": [
+              735,
+              1199
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A9819-seed73-local-srgb-roi0.png",
+            "roi": 0,
+            "sha256": "826d308f24aed38f1137339f01d7f2a6503ae22ccb91d3b48df16764868950b3"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              2127,
+              1199
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A9819-seed73-local-srgb-roi1.png",
+            "roi": 1,
+            "sha256": "2313e7a2d8bc07848b1d9de781e755dd0b357c9fb03cf48f67c160e4d50221e8"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              3519,
+              1199
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A9819-seed73-local-srgb-roi2.png",
+            "roi": 2,
+            "sha256": "a697c022cb0b65e71ad4ed1a873186f57da6f6d8a307d9e435afe5663943a7d9"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              735,
+              3287
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A9819-seed73-local-srgb-roi3.png",
+            "roi": 3,
+            "sha256": "c720d2421e754bcdd1d94d5929bf1dd701aecd0cb41080b83bbf3623adafa4d6"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              2127,
+              3287
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A9819-seed73-local-srgb-roi4.png",
+            "roi": 4,
+            "sha256": "22fc13c21ea4948ac41d2920a3bbb0d28dda5bb1ff58bc472cf2e542a5a03669"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              3519,
+              3287
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A9819-seed73-local-srgb-roi5.png",
+            "roi": 5,
+            "sha256": "01227e818deb7a203b3012ce1a8cfad3e6c941ba36ceb494e6daf8a43faf9d63"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              735,
+              5375
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A9819-seed73-local-srgb-roi6.png",
+            "roi": 6,
+            "sha256": "3a3c152a38063937971cbec427b86fef222b253c9cf98f52472b3e4f3700295c"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              2127,
+              5375
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A9819-seed73-local-srgb-roi7.png",
+            "roi": 7,
+            "sha256": "6b12f10c0bd781e2ca7c064f01f06774fca525de733ad18784e6bed4a0bab54e"
+          },
+          {
+            "halo": 0,
+            "origin_xy": [
+              3519,
+              5375
+            ],
+            "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A9819-seed73-local-srgb-roi8.png",
+            "roi": 8,
+            "sha256": "742bc085cc625177fe6c4dabfda49423f1f952d535484491d0674989b6ee3917"
+          }
+        ],
+        "schema_version": 1,
+        "scope": "Shared frozen DCP/Rec2020-to-sRGB display; no independent stretching, optics or additional edits",
+        "source_kelvin": 4924.211272770631,
+        "tile_diagnostic_only": false
+      },
+      "rcd_proof": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\local-sigma-display-v001\\6V1A9819-seed73-local.json"
+    }
+  ],
+  "scope": "Same whole sensor RCD, orientation and frozen shared CameraNeutral/DCP display. Known photos, no clean truth or full-current-production claim."
+}

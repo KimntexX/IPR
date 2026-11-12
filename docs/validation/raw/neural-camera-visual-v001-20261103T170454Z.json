@@ -1,0 +1,5135 @@
+{
+  "schema_version": 1,
+  "data_version": 1,
+  "campaign_id": "neural-camera-visual-v001-20261103T170454Z",
+  "measured_at_utc": "2026-11-03T17:04:54.991248+00:00",
+  "freeze": {
+    "source_proof_sha256": "f4b23c9f9481a57b4e9713611b9fd72fb7d44c9fa728b0999da56b110e6adc9d",
+    "source_quality_passed": true,
+    "inlet_sha256": "ed7aad80e167f823e47ac1784e881334184c3e2496bc33edcc5a78ada13d877c",
+    "models": [
+      {
+        "seed": 71,
+        "folder": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-broadband-campaign-v001\\seed71-attempt01",
+        "result_sha256": "de5f84ab9f209ae4d3c618c5aa9d392742563181ca615f5232e24f9d79401887",
+        "weights_sha256": "1edda387a33a2d45bef79341f2606021f4163e2cee4c91267e866fb5582f9c0b"
+      },
+      {
+        "seed": 73,
+        "folder": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-broadband-campaign-v001\\seed73-attempt03",
+        "result_sha256": "3ee667d4576a9f2ccb072b34c0dfdb2f23c6fd916a38f834d5c69075921932b1",
+        "weights_sha256": "5c7f633d7c39539e944723458537f47a0ca6781ffb47c6c5e2d72f66fbde6a77"
+      }
+    ],
+    "sources": [
+      {
+        "black": [
+          512,
+          512,
+          512,
+          512
+        ],
+        "black_estimated": true,
+        "camera_proof": "C:/Users/victo/Documents/Projet/Programmation/IPR/.worktrees/patch_neural_restoration/build-patch_neural_restoration/photo-pilot-v001/6V1A0134.json",
+        "camera_proof_sha256": "c994794c7754f90dc54f6ffb75e7e7229f23257b320cf60f4035cffb74cc355f",
+        "divisor": 13483,
+        "gains": [
+          1.892578125,
+          1,
+          1.6923828125,
+          1
+        ],
+        "iso": 100,
+        "measured_at_utc": "2026-11-02T11:33:17.018Z",
+        "model": "EOS R6 Mark III",
+        "orientation_flip": 0,
+        "pixels": "6V1A0134-mosaic.json.bin",
+        "pixels_sha256": "5a136d7fa29007dc4ef3bb75061aeae854eaea3116dd69200a733f6431516c61",
+        "rgb_regions_compared": 9,
+        "rgb_replay_bit_exact": true,
+        "schema_version": 1,
+        "scope": "Bench only; frozen production calibration; signed mosaics; no new training or clean-target claim",
+        "sensor_origin_xy": [
+          172,
+          108
+        ],
+        "source": "D:/DCIM/101EOSR6/6V1A0134.CR3",
+        "source_sha256": "3a10443d1a26fb4b10467f98568fbc022aed9c67497a249505b2bf72140a49ec",
+        "stages": [
+          {
+            "dtype": "<f4",
+            "offset_bytes": 0,
+            "origin_xy": [
+              1199,
+              735
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 0,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 589824,
+            "origin_xy": [
+              3287,
+              735
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 1,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 1179648,
+            "origin_xy": [
+              5375,
+              735
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 2,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 1769472,
+            "origin_xy": [
+              1199,
+              2127
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 3,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 2359296,
+            "origin_xy": [
+              3287,
+              2127
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 4,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 2949120,
+            "origin_xy": [
+              5375,
+              2127
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 5,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 3538944,
+            "origin_xy": [
+              1199,
+              3519
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 6,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 4128768,
+            "origin_xy": [
+              3287,
+              3519
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 7,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 4718592,
+            "origin_xy": [
+              5375,
+              3519
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 8,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 5308416,
+            "origin_xy": [
+              1199,
+              735
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 0,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 5898240,
+            "origin_xy": [
+              3287,
+              735
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 1,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 6488064,
+            "origin_xy": [
+              5375,
+              735
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 2,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 7077888,
+            "origin_xy": [
+              1199,
+              2127
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 3,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 7667712,
+            "origin_xy": [
+              3287,
+              2127
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 4,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 8257536,
+            "origin_xy": [
+              5375,
+              2127
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 5,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 8847360,
+            "origin_xy": [
+              1199,
+              3519
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 6,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 9437184,
+            "origin_xy": [
+              3287,
+              3519
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 7,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 10027008,
+            "origin_xy": [
+              5375,
+              3519
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 8,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          }
+        ],
+        "tool_revision": "76d098ab7160e986f3f42481b11d96bb35d9c5e9",
+        "white": 13995,
+        "descriptor": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\mosaic-inlet-v001\\6V1A0134-mosaic.json",
+        "descriptor_sha256": "b7d2479aa364e1d4c70d55d1387a381e61e74ba1eb9a89366ab247c8c1cb06fc"
+      },
+      {
+        "black": [
+          2047,
+          2048,
+          2047,
+          2047
+        ],
+        "black_estimated": true,
+        "camera_proof": "C:/Users/victo/Documents/Projet/Programmation/IPR/.worktrees/patch_neural_restoration/build-patch_neural_restoration/photo-pilot-v001/6V1A0181.json",
+        "camera_proof_sha256": "51bbf2a92b6aba6cc595fcee9ffb26dd5cce388c543ad80a84a368eadb9a4b41",
+        "divisor": 12304,
+        "gains": [
+          1.892578125,
+          1,
+          1.6923828125,
+          1
+        ],
+        "iso": 12800,
+        "measured_at_utc": "2026-11-02T11:33:20.206Z",
+        "model": "EOS R6 Mark III",
+        "orientation_flip": 0,
+        "pixels": "6V1A0181-mosaic.json.bin",
+        "pixels_sha256": "0f0cb8b299c469c06bca61e0e80dd7a4e192cfa9997ef789639f255c5ae4d65e",
+        "rgb_regions_compared": 9,
+        "rgb_replay_bit_exact": true,
+        "schema_version": 1,
+        "scope": "Bench only; frozen production calibration; signed mosaics; no new training or clean-target claim",
+        "sensor_origin_xy": [
+          172,
+          108
+        ],
+        "source": "D:/DCIM/101EOSR6/6V1A0181.CR3",
+        "source_sha256": "fb1ee4491d2fc3e004a37f20304ef028e6c7b8f28d726115f04b6fa071ea54a9",
+        "stages": [
+          {
+            "dtype": "<f4",
+            "offset_bytes": 0,
+            "origin_xy": [
+              1199,
+              735
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 0,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 589824,
+            "origin_xy": [
+              3287,
+              735
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 1,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 1179648,
+            "origin_xy": [
+              5375,
+              735
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 2,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 1769472,
+            "origin_xy": [
+              1199,
+              2127
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 3,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 2359296,
+            "origin_xy": [
+              3287,
+              2127
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 4,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 2949120,
+            "origin_xy": [
+              5375,
+              2127
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 5,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 3538944,
+            "origin_xy": [
+              1199,
+              3519
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 6,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 4128768,
+            "origin_xy": [
+              3287,
+              3519
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 7,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 4718592,
+            "origin_xy": [
+              5375,
+              3519
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 8,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 5308416,
+            "origin_xy": [
+              1199,
+              735
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 0,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 5898240,
+            "origin_xy": [
+              3287,
+              735
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 1,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 6488064,
+            "origin_xy": [
+              5375,
+              735
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 2,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 7077888,
+            "origin_xy": [
+              1199,
+              2127
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 3,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 7667712,
+            "origin_xy": [
+              3287,
+              2127
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 4,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 8257536,
+            "origin_xy": [
+              5375,
+              2127
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 5,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 8847360,
+            "origin_xy": [
+              1199,
+              3519
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 6,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 9437184,
+            "origin_xy": [
+              3287,
+              3519
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 7,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 10027008,
+            "origin_xy": [
+              5375,
+              3519
+            ],
+            "pattern": [
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "roi": 8,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          }
+        ],
+        "tool_revision": "76d098ab7160e986f3f42481b11d96bb35d9c5e9",
+        "white": 14351,
+        "descriptor": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\mosaic-inlet-v001\\6V1A0181-mosaic.json",
+        "descriptor_sha256": "622b3295f9d4ff93bbf9da77e57356a72100bd8de5df7bd7509a11c23fdac3a1"
+      },
+      {
+        "black": [
+          2048,
+          2048,
+          2048,
+          2048
+        ],
+        "black_estimated": true,
+        "camera_proof": "C:/Users/victo/Documents/Projet/Programmation/IPR/.worktrees/patch_neural_restoration/build-patch_neural_restoration/same-iso-4000-v001/6V1A9819.json",
+        "camera_proof_sha256": "06a79c8a5e51a428015b2dfaa943d2c0183b988b7fe0b87ace78f023c61de412",
+        "divisor": 12303,
+        "gains": [
+          1.892578125,
+          1,
+          1.6923828125,
+          1
+        ],
+        "iso": 4000,
+        "measured_at_utc": "2026-11-02T11:33:22.378Z",
+        "model": "EOS R6 Mark III",
+        "orientation_flip": 5,
+        "pixels": "6V1A9819-mosaic.json.bin",
+        "pixels_sha256": "2eda50ac5366a71d9333bd4c53b1c783538d06ceb5ac1bc7f8b5a9a22ed03cff",
+        "rgb_regions_compared": 9,
+        "rgb_replay_bit_exact": true,
+        "schema_version": 1,
+        "scope": "Bench only; frozen production calibration; signed mosaics; no new training or clean-target claim",
+        "sensor_origin_xy": [
+          172,
+          108
+        ],
+        "source": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/colorim\u00e9trie/rafale/6V1A9819.CR3",
+        "source_sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165",
+        "stages": [
+          {
+            "dtype": "<f4",
+            "offset_bytes": 0,
+            "origin_xy": [
+              735,
+              1199
+            ],
+            "pattern": [
+              [
+                2,
+                1
+              ],
+              [
+                3,
+                0
+              ]
+            ],
+            "roi": 0,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 589824,
+            "origin_xy": [
+              2127,
+              1199
+            ],
+            "pattern": [
+              [
+                2,
+                1
+              ],
+              [
+                3,
+                0
+              ]
+            ],
+            "roi": 1,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 1179648,
+            "origin_xy": [
+              3519,
+              1199
+            ],
+            "pattern": [
+              [
+                2,
+                1
+              ],
+              [
+                3,
+                0
+              ]
+            ],
+            "roi": 2,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 1769472,
+            "origin_xy": [
+              735,
+              3287
+            ],
+            "pattern": [
+              [
+                2,
+                1
+              ],
+              [
+                3,
+                0
+              ]
+            ],
+            "roi": 3,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 2359296,
+            "origin_xy": [
+              2127,
+              3287
+            ],
+            "pattern": [
+              [
+                2,
+                1
+              ],
+              [
+                3,
+                0
+              ]
+            ],
+            "roi": 4,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 2949120,
+            "origin_xy": [
+              3519,
+              3287
+            ],
+            "pattern": [
+              [
+                2,
+                1
+              ],
+              [
+                3,
+                0
+              ]
+            ],
+            "roi": 5,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 3538944,
+            "origin_xy": [
+              735,
+              5375
+            ],
+            "pattern": [
+              [
+                2,
+                1
+              ],
+              [
+                3,
+                0
+              ]
+            ],
+            "roi": 6,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 4128768,
+            "origin_xy": [
+              2127,
+              5375
+            ],
+            "pattern": [
+              [
+                2,
+                1
+              ],
+              [
+                3,
+                0
+              ]
+            ],
+            "roi": 7,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 4718592,
+            "origin_xy": [
+              3519,
+              5375
+            ],
+            "pattern": [
+              [
+                2,
+                1
+              ],
+              [
+                3,
+                0
+              ]
+            ],
+            "roi": 8,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "normalized_cfa_before_wb_unclipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 5308416,
+            "origin_xy": [
+              735,
+              1199
+            ],
+            "pattern": [
+              [
+                2,
+                1
+              ],
+              [
+                3,
+                0
+              ]
+            ],
+            "roi": 0,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 5898240,
+            "origin_xy": [
+              2127,
+              1199
+            ],
+            "pattern": [
+              [
+                2,
+                1
+              ],
+              [
+                3,
+                0
+              ]
+            ],
+            "roi": 1,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 6488064,
+            "origin_xy": [
+              3519,
+              1199
+            ],
+            "pattern": [
+              [
+                2,
+                1
+              ],
+              [
+                3,
+                0
+              ]
+            ],
+            "roi": 2,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 7077888,
+            "origin_xy": [
+              735,
+              3287
+            ],
+            "pattern": [
+              [
+                2,
+                1
+              ],
+              [
+                3,
+                0
+              ]
+            ],
+            "roi": 3,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 7667712,
+            "origin_xy": [
+              2127,
+              3287
+            ],
+            "pattern": [
+              [
+                2,
+                1
+              ],
+              [
+                3,
+                0
+              ]
+            ],
+            "roi": 4,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 8257536,
+            "origin_xy": [
+              3519,
+              3287
+            ],
+            "pattern": [
+              [
+                2,
+                1
+              ],
+              [
+                3,
+                0
+              ]
+            ],
+            "roi": 5,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 8847360,
+            "origin_xy": [
+              735,
+              5375
+            ],
+            "pattern": [
+              [
+                2,
+                1
+              ],
+              [
+                3,
+                0
+              ]
+            ],
+            "roi": 6,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 9437184,
+            "origin_xy": [
+              2127,
+              5375
+            ],
+            "pattern": [
+              [
+                2,
+                1
+              ],
+              [
+                3,
+                0
+              ]
+            ],
+            "roi": 7,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          },
+          {
+            "dtype": "<f4",
+            "offset_bytes": 10027008,
+            "origin_xy": [
+              3519,
+              5375
+            ],
+            "pattern": [
+              [
+                2,
+                1
+              ],
+              [
+                3,
+                0
+              ]
+            ],
+            "roi": 8,
+            "shape": [
+              384,
+              384,
+              1
+            ],
+            "stage": "balanced_cfa_pre_rcd_white_clipped"
+          }
+        ],
+        "tool_revision": "76d098ab7160e986f3f42481b11d96bb35d9c5e9",
+        "white": 14351,
+        "descriptor": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\mosaic-inlet-v001\\6V1A9819-mosaic.json",
+        "descriptor_sha256": "6373f8ae5e078f2d0d3949d27103095b4f874e73f8171f7ce3adac7ba9119210"
+      }
+    ],
+    "sigma_scenarios": [
+      0.0,
+      0.01,
+      0.03
+    ],
+    "domain": "Signed balanced camera RGB, same pre-RCD white bound as cached RCD/median; no LCP/DCP/tones.",
+    "display": "Green channel only, shared contrast window per ROI, gamma2.2; not an sRGB colour rendering.",
+    "limits": [
+      "RCD is a current-process comparison, not clean truth or an AI quality target.",
+      "Constant supplied sigma is not calibrated camera noise or an ISO-specific denoising setting.",
+      "Cached training-side sources only, no independent photographic validation.",
+      "These diagnostic PNGs do not enter production or replace the canonical numerical JSON."
+    ],
+    "tools": {
+      "local_moment_unet.py": "b029a2d267449dd8f2749885cb89ccdc5cd0be1fc10a9c28f738c3aacd5b9063",
+      "closed_moment_unet.py": "26675cf00094bd4b75ae22447b701719e6a2734df1f24a4cd9caefe6d2de8cfa",
+      "closed_moment_operator.py": "b387304fe441a2ba1c698b365541394879720d6f566c9ddc7346651590c83d8b",
+      "bayer_canonical.py": "a759c19f855f53dc96b8631e6f3d7817d99eb28a7da766fd74c5c91f6c9016f8",
+      "joint_bayer_unet.py": "c4899cbbdd27d8065a5c2e1eb981806e8a2f848f14b43052863d81c573c22e3f",
+      "camera_unet.py": "14a3c27c47cfa3aeba7fbcbc64139cc1817b52e4adfbf3108c9850ad75a79529",
+      "synthetic_bayer_data.py": "112a7476980f2144da9d6d2665245815fa33badce0c24a25b2db2d69240d9095",
+      "run_memory_bounded_reconstruction.py": "51d57d371694f5bac0b2fbd8dd1440dbd60c58d53510fc8a5ee61f6873571a4b",
+      "run_balanced_moment_pilot.py": "7dfc5095b8ebfb06c54e034e5fe942feb564064a8af75dc6e6fa52d579a56d9f",
+      "run_diverse_moment_pilot.py": "a898f7eb503fa39e3bf56bf4ba4b3d317a2a00689b4ecd0d77e7e070a90fe43a",
+      "noisy_moment_unet.py": "1c7e06bb93386fefbc15ba8ffa37fb5cff7d53f5be8f2f382da4e91b4e1d71c3",
+      "noise_conditioning.py": "00b66817c1fcfa32c2966da780cd00af0d82cfc9abd13bdb8b0ba7da1c04c7e8",
+      "polynomial_residual.py": "980fb5bb40f28c6aa8a3bcbcc9ced190d11bf74f896d98d96954dd428b1713b5",
+      "moment_bayer_unet.py": "7bc161d651ffcbf0460b713a38116c21ee0ae68f0b4d6341412d3d35ff0828d0",
+      "run_noisy_moment_pilot.py": "3e4a1f96b8f4e4fb460184d02873c88d2e26bd9feae35c14cfecb1c624e8bdff",
+      "memory_budget.py": "b8d74cb457c1ebb252a475f7258dba7adf10c4423778eb1e341852dfece7606d",
+      "prepare_closed_inference.py": "67f0645a4da2926c19abcf4eceac952e901dda904117313b77e9aa9b3d43b96c",
+      "reconstruction_loss.py": "17669eafaecc5ea441ac769b94e70afc785f27bf5807fe0e03196fa79bc28c67",
+      "compare_reconstruction_objectives.py": "ef79f874b703bdc1ec2a27662de1ff0a1347a4f7f96a1eb92122c300f3d25abc",
+      "confirm_local_route.py": "887cf9a157ce7fd5679f208c3893fc8e9d33a8d26f21f5d7acaa9a0222916a50",
+      "run_synthetic_joint_pilot.py": "203195ee2da92e10b265da32e0dfa591ef67a5305119ecb8904f61b9302fe8d6",
+      "reconstruction_gates.py": "5876f920bd73a64d0a49602b062bb13cf9f71be2688b0af6401485f9fcee4fe5",
+      "audit_bayer_symmetries.py": "fea1ce6dd979547a9f0a69dad424bc917a1f96978808e009fa1f65cbaf53fcbf",
+      "training_resume.py": "3a5b64a7e03ed360cef3f7d51a5e3edb10a27afbb0e5e8f6d7b9ceb400e470df",
+      "noisy_training_policy.py": "9724b1d9e9f61da547e763d32efa649e3ecc2f3ba25ab3dba2070ff612d759b4",
+      "fine_texture_training.py": "ecb0c2716c7555110dc472a2c2a7fbe45c5002344e09e04981fa0f0847d12e14",
+      "run_edge_protected_probe.py": "25e5c16f89db39ef4ee504f226151691ce6f813339765214a5c9fdb6f2ecae36",
+      "edge_protected_noise.py": "7c921c6e24bdaedd1918bb856bda63fde37dbf3245f8314906acdaeae445a846",
+      "preview_camera_neural.py": "8da5304cb080edc4a9db3db9703250690ee218741a52540b63e2bc9e17482909",
+      "mosaic_data.py": "cf4e448f22133765126514652df222ef3e6b8844b487a4c80bf66ff65b650da4",
+      "audit_neural_tiles.py": "a12f6b360c8337a70f5298c11b3a49c39cb73750c624cfafdd46fa9ea914ab59",
+      "audit_spectral_noise.py": "8a36c77659e8240b4b4c03ef4f0ce48e3d597770067d28c1007a715ec02b531c"
+    }
+  },
+  "freeze_sha256": "c4f48b86627c5acfa92c40c124da9bd5f318d2af726b4c90ea57c88f804ce025",
+  "status": "completed_unreferenced_camera_visual_probe_not_photographic_qualification",
+  "records": [
+    {
+      "seed": 71,
+      "source_sha256": "3a10443d1a26fb4b10467f98568fbc022aed9c67497a249505b2bf72140a49ec",
+      "iso": 100,
+      "roi": 0,
+      "origin_xy": [
+        1199,
+        735
+      ],
+      "pattern": [
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.046057524438947436,
+        "high": 0.09106072075664993,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.07730379986321623,
+            0.0698494664655982,
+            0.06607650926019915
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0010116566092454224,
+          "display_low_fraction": 0.0047454833984375,
+          "display_high_fraction": 0.004241943359375,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.07696126818268567,
+            0.07014024182285539,
+            0.0661683371994286
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0014259998972354314,
+          "display_low_fraction": 0.003875732421875,
+          "display_high_fraction": 0.003326416015625,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.07599531688538264,
+            0.07043383476963072,
+            0.06606705128655221
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0016778648273662988,
+          "display_low_fraction": 0.0035400390625,
+          "display_high_fraction": 0.0036468505859375,
+          "negative_fraction": 0.0
+        }
+      ],
+      "sheet": "seed71-6V1A0134-roi0.png",
+      "sheet_sha256": "400f61418cdd4b844ee4b8fac50fb104e2777fb45435215b7fec9025a1caf1c7"
+    },
+    {
+      "seed": 71,
+      "source_sha256": "3a10443d1a26fb4b10467f98568fbc022aed9c67497a249505b2bf72140a49ec",
+      "iso": 100,
+      "roi": 1,
+      "origin_xy": [
+        3287,
+        735
+      ],
+      "pattern": [
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.07696600928902628,
+        "high": 0.1536052096635103,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.13721598466213436,
+            0.1205916506343101,
+            0.10614084294309123
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0013880591911053812,
+          "display_low_fraction": 0.0048828125,
+          "display_high_fraction": 0.004638671875,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.136875844722681,
+            0.12089282845158777,
+            0.10627236846573851
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0017955293808896383,
+          "display_low_fraction": 0.004364013671875,
+          "display_high_fraction": 0.00390625,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.13591049812782785,
+            0.12120316948471554,
+            0.1062464090716162
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0020471490437025397,
+          "display_low_fraction": 0.0039825439453125,
+          "display_high_fraction": 0.0041046142578125,
+          "negative_fraction": 0.0
+        }
+      ],
+      "sheet": "seed71-6V1A0134-roi1.png",
+      "sheet_sha256": "d62398f3ee9a312f9357d29a823c1f5dc96a1cd80e8cf07ca8651a940b525f9f"
+    },
+    {
+      "seed": 71,
+      "source_sha256": "3a10443d1a26fb4b10467f98568fbc022aed9c67497a249505b2bf72140a49ec",
+      "iso": 100,
+      "roi": 2,
+      "origin_xy": [
+        5375,
+        735
+      ],
+      "pattern": [
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.001872703121625796,
+        "high": 0.3454219974577425,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.03340249261503381,
+            0.033730366283219126,
+            0.0330565675594805
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.001700445193644451,
+          "display_low_fraction": 0.0041351318359375,
+          "display_high_fraction": 0.0049591064453125,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.033068494062527876,
+            0.03398252950354497,
+            0.03310317412235442
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0017340397252383383,
+          "display_low_fraction": 0.0,
+          "display_high_fraction": 0.004974365234375,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.03216974645347381,
+            0.034368219285216384,
+            0.03297648739898573
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.003239160651405597,
+          "display_low_fraction": 0.0,
+          "display_high_fraction": 0.0046539306640625,
+          "negative_fraction": 0.0
+        }
+      ],
+      "sheet": "seed71-6V1A0134-roi2.png",
+      "sheet_sha256": "943e6f2737df2c3bf6b129becaab04c534ad88e7bb5cc1b47b4d979e2e6d22b4"
+    },
+    {
+      "seed": 71,
+      "source_sha256": "3a10443d1a26fb4b10467f98568fbc022aed9c67497a249505b2bf72140a49ec",
+      "iso": 100,
+      "roi": 3,
+      "origin_xy": [
+        1199,
+        2127
+      ],
+      "pattern": [
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.01566010942682624,
+        "high": 0.035660109426826236,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.034258260892954695,
+            0.025711093250208705,
+            0.025776803104122337
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0008100631422801653,
+          "display_low_fraction": 0.0,
+          "display_high_fraction": 9.1552734375e-05,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.03391007357521403,
+            0.02598961270010136,
+            0.02584321622975949
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0010528018195538125,
+          "display_low_fraction": 0.0,
+          "display_high_fraction": 0.0,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.03293865157937148,
+            0.02626004057245268,
+            0.02569405740658226
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0013332677611607006,
+          "display_low_fraction": 0.0,
+          "display_high_fraction": 0.0,
+          "negative_fraction": 0.0
+        }
+      ],
+      "sheet": "seed71-6V1A0134-roi3.png",
+      "sheet_sha256": "1ca4314b375142712efe6ee65b3115641c6eff47884a8f767029c0574cf3f6f5"
+    },
+    {
+      "seed": 71,
+      "source_sha256": "3a10443d1a26fb4b10467f98568fbc022aed9c67497a249505b2bf72140a49ec",
+      "iso": 100,
+      "roi": 4,
+      "origin_xy": [
+        3287,
+        2127
+      ],
+      "pattern": [
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.011347622610628605,
+        "high": 0.0452346169389784,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.11102318725170335,
+            0.032490477640607196,
+            0.017515783292658682
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0015565969679588437,
+          "display_low_fraction": 0.0047760009765625,
+          "display_high_fraction": 0.0035400390625,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.11067192783622204,
+            0.032783604189404514,
+            0.017629110542017656
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0019535337658071025,
+          "display_low_fraction": 0.003265380859375,
+          "display_high_fraction": 0.00103759765625,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.10967919906369161,
+            0.03308250110785593,
+            0.01756999646784152
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0021651049369666555,
+          "display_low_fraction": 0.001983642578125,
+          "display_high_fraction": 0.0011749267578125,
+          "negative_fraction": 0.0
+        }
+      ],
+      "sheet": "seed71-6V1A0134-roi4.png",
+      "sheet_sha256": "1da77610a0f584692d7254683fd6f2c1130384072543c20b6cf5eb61b2db0faa"
+    },
+    {
+      "seed": 71,
+      "source_sha256": "3a10443d1a26fb4b10467f98568fbc022aed9c67497a249505b2bf72140a49ec",
+      "iso": 100,
+      "roi": 5,
+      "origin_xy": [
+        5375,
+        2127
+      ],
+      "pattern": [
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.002766381058609114,
+        "high": 0.03033449314534664,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.015840149462349018,
+            0.00995428652032615,
+            0.008328428379995145
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.00041684276308359117,
+          "display_low_fraction": 0.0042572021484375,
+          "display_high_fraction": 0.004730224609375,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.015486437588471347,
+            0.010225583048512732,
+            0.008379781620853066
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0006002502824343589,
+          "display_low_fraction": 4.57763671875e-05,
+          "display_high_fraction": 0.0048828125,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.014506725340599047,
+            0.010482831117396785,
+            0.00820205810441621
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0010062215589763115,
+          "display_low_fraction": 0.0,
+          "display_high_fraction": 0.0055694580078125,
+          "negative_fraction": 0.0
+        }
+      ],
+      "sheet": "seed71-6V1A0134-roi5.png",
+      "sheet_sha256": "b32a66e7c3e0cc5639fc947db6e69b829c73256bdc57cada3805ccea1904460d"
+    },
+    {
+      "seed": 71,
+      "source_sha256": "3a10443d1a26fb4b10467f98568fbc022aed9c67497a249505b2bf72140a49ec",
+      "iso": 100,
+      "roi": 6,
+      "origin_xy": [
+        1199,
+        3519
+      ],
+      "pattern": [
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.010642735334113244,
+        "high": 0.13542979955673218,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.07216436412973337,
+            0.06814598495745372,
+            0.06570785054307748
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.001391487569409565,
+          "display_low_fraction": 0.00396728515625,
+          "display_high_fraction": 0.0039520263671875,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.07182743041559547,
+            0.06843595116885126,
+            0.06579116530146223
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0020215006699384284,
+          "display_low_fraction": 0.001190185546875,
+          "display_high_fraction": 0.0009307861328125,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.07087230696848223,
+            0.06873883988848917,
+            0.06569159905137667
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0023096440776032502,
+          "display_low_fraction": 0.001678466796875,
+          "display_high_fraction": 0.001251220703125,
+          "negative_fraction": 0.0
+        }
+      ],
+      "sheet": "seed71-6V1A0134-roi6.png",
+      "sheet_sha256": "8a1ae76a4a3e6909ecdc62a61594ddabfaec0144f1b5ea571c9f346d6020f396"
+    },
+    {
+      "seed": 71,
+      "source_sha256": "3a10443d1a26fb4b10467f98568fbc022aed9c67497a249505b2bf72140a49ec",
+      "iso": 100,
+      "roi": 7,
+      "origin_xy": [
+        3287,
+        3519
+      ],
+      "pattern": [
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.010531780309975147,
+        "high": 0.1246013417840004,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.07769938852719349,
+            0.07400179432289633,
+            0.0724971518055213
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0019141152832318088,
+          "display_low_fraction": 0.0040740966796875,
+          "display_high_fraction": 0.0038299560546875,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.07738257559510942,
+            0.07430156351773576,
+            0.0726199731695516
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0027687505142954473,
+          "display_low_fraction": 0.0028533935546875,
+          "display_high_fraction": 0.000732421875,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.07646783251770017,
+            0.07462077441174131,
+            0.0725845331706978
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.003018986438930984,
+          "display_low_fraction": 0.002716064453125,
+          "display_high_fraction": 0.001129150390625,
+          "negative_fraction": 0.0
+        }
+      ],
+      "sheet": "seed71-6V1A0134-roi7.png",
+      "sheet_sha256": "7ac08cbd1dada099cc0a52cd7615c6266961ed45d88bd096b40afe9745652f66"
+    },
+    {
+      "seed": 71,
+      "source_sha256": "3a10443d1a26fb4b10467f98568fbc022aed9c67497a249505b2bf72140a49ec",
+      "iso": 100,
+      "roi": 8,
+      "origin_xy": [
+        5375,
+        3519
+      ],
+      "pattern": [
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.014353752601891756,
+        "high": 0.08813194241374718,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.06697424249246353,
+            0.060426848983617276,
+            0.05581096442228528
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.001527376611464669,
+          "display_low_fraction": 0.0046844482421875,
+          "display_high_fraction": 0.004241943359375,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.06665223151384225,
+            0.060722837789668915,
+            0.05592367601052217
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.002466312864572787,
+          "display_low_fraction": 0.0027618408203125,
+          "display_high_fraction": 0.00201416015625,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.06571822800843563,
+            0.061023818563811005,
+            0.055858150357806835
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0026839875272417096,
+          "display_low_fraction": 0.0021514892578125,
+          "display_high_fraction": 0.002227783203125,
+          "negative_fraction": 0.0
+        }
+      ],
+      "sheet": "seed71-6V1A0134-roi8.png",
+      "sheet_sha256": "80ce804081646aa3cd67c0612b76f58c0e3f1176228b47ecebc6a75a695fe1b3"
+    },
+    {
+      "seed": 71,
+      "source_sha256": "fb1ee4491d2fc3e004a37f20304ef028e6c7b8f28d726115f04b6fa071ea54a9",
+      "iso": 12800,
+      "roi": 0,
+      "origin_xy": [
+        1199,
+        735
+      ],
+      "pattern": [
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.07544884663075208,
+        "high": 0.1911634866148233,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.14463619913817638,
+            0.130988418212155,
+            0.12288666477851962
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.013696942167062331,
+          "display_low_fraction": 0.0041656494140625,
+          "display_high_fraction": 0.0041351318359375,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.14464624819993332,
+            0.13107522101705626,
+            0.12296504224070759
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.013108680125980885,
+          "display_low_fraction": 0.0025787353515625,
+          "display_high_fraction": 0.0036163330078125,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.14415643615984663,
+            0.13202824836901073,
+            0.12389948743094692
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.013510555440849437,
+          "display_low_fraction": 0.0006103515625,
+          "display_high_fraction": 3.0517578125e-05,
+          "negative_fraction": 0.0
+        }
+      ],
+      "sheet": "seed71-6V1A0181-roi0.png",
+      "sheet_sha256": "9b9c458cc53ec3c40a19bf9132730e8a6ae6546f3db4f10ca073e470b97c3345"
+    },
+    {
+      "seed": 71,
+      "source_sha256": "fb1ee4491d2fc3e004a37f20304ef028e6c7b8f28d726115f04b6fa071ea54a9",
+      "iso": 12800,
+      "roi": 1,
+      "origin_xy": [
+        3287,
+        735
+      ],
+      "pattern": [
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.13783697597682476,
+        "high": 0.31298765540122986,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.25845277284724943,
+            0.2283768386448628,
+            0.20157694295505735
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.01777202779238143,
+          "display_low_fraction": 0.004364013671875,
+          "display_high_fraction": 0.0039825439453125,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.25845412488331476,
+            0.22838050130792453,
+            0.2015831935353276
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.017724147894833325,
+          "display_low_fraction": 0.0041961669921875,
+          "display_high_fraction": 0.00396728515625,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.2582140692586563,
+            0.22961023303435013,
+            0.2030199648861526
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.017097937315271806,
+          "display_low_fraction": 0.00146484375,
+          "display_high_fraction": 7.62939453125e-05,
+          "negative_fraction": 0.0
+        }
+      ],
+      "sheet": "seed71-6V1A0181-roi1.png",
+      "sheet_sha256": "efe460e8e99589cee3f6d9faa8fb1b7175abe657b42e0b8d88e3b5f472eb984e"
+    },
+    {
+      "seed": 71,
+      "source_sha256": "fb1ee4491d2fc3e004a37f20304ef028e6c7b8f28d726115f04b6fa071ea54a9",
+      "iso": 12800,
+      "roi": 2,
+      "origin_xy": [
+        5375,
+        735
+      ],
+      "pattern": [
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": -0.0046326396986842155,
+        "high": 0.6641646429896354,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.06503829460444477,
+            0.06868559159380494,
+            0.06842324521536813
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.011692814894082375,
+          "display_low_fraction": 0.004608154296875,
+          "display_high_fraction": 0.00445556640625,
+          "negative_fraction": 0.10521952311197917
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.06485945373752433,
+            0.06896393765475706,
+            0.0685951879959098
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.011448270049379894,
+          "display_low_fraction": 1.52587890625e-05,
+          "display_high_fraction": 0.00445556640625,
+          "negative_fraction": 0.024175008138020832
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.06414372170100602,
+            0.06940315015589293,
+            0.06878153661894493
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.010975716321070987,
+          "display_low_fraction": 0.0,
+          "display_high_fraction": 0.00311279296875,
+          "negative_fraction": 0.024042765299479168
+        }
+      ],
+      "sheet": "seed71-6V1A0181-roi2.png",
+      "sheet_sha256": "a8a942d3363ea1173962d353690fe99855903f282b78de75636c455e0e2b5496"
+    },
+    {
+      "seed": 71,
+      "source_sha256": "fb1ee4491d2fc3e004a37f20304ef028e6c7b8f28d726115f04b6fa071ea54a9",
+      "iso": 12800,
+      "roi": 3,
+      "origin_xy": [
+        1199,
+        2127
+      ],
+      "pattern": [
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.022029743343591687,
+        "high": 0.07562623862177127,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.06301283538019575,
+            0.04713227772078454,
+            0.04756385750249059
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.009275605923452423,
+          "display_low_fraction": 0.0043182373046875,
+          "display_high_fraction": 0.0043792724609375,
+          "negative_fraction": 4.57763671875e-05
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.06295429201931313,
+            0.04747377512896378,
+            0.04785384223853839
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.008226871477554139,
+          "display_low_fraction": 6.103515625e-05,
+          "display_high_fraction": 0.0001068115234375,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.062217001414751394,
+            0.04796581827491764,
+            0.04813420688270753
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.008702839804988297,
+          "display_low_fraction": 0.0,
+          "display_high_fraction": 0.0,
+          "negative_fraction": 0.0
+        }
+      ],
+      "sheet": "seed71-6V1A0181-roi3.png",
+      "sheet_sha256": "5cabf941a549dda4ddb15428e73adf35707765526c0038441439736301cbe231"
+    },
+    {
+      "seed": 71,
+      "source_sha256": "fb1ee4491d2fc3e004a37f20304ef028e6c7b8f28d726115f04b6fa071ea54a9",
+      "iso": 12800,
+      "roi": 4,
+      "origin_xy": [
+        3287,
+        2127
+      ],
+      "pattern": [
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.015604681335389614,
+        "high": 0.09893186818808299,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.19747403732213797,
+            0.058566204259802745,
+            0.03225842272176749
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.011487344085674731,
+          "display_low_fraction": 0.0038604736328125,
+          "display_high_fraction": 0.003814697265625,
+          "negative_fraction": 0.0017852783203125
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.1974565099284291,
+            0.058608838668604335,
+            0.03230735919916937
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.011168524223834774,
+          "display_low_fraction": 0.0014495849609375,
+          "display_high_fraction": 0.00341796875,
+          "negative_fraction": 0.0008392333984375
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.19675386870414968,
+            0.05950513085572595,
+            0.0331048810331076
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.010639575710203642,
+          "display_low_fraction": 0.0001373291015625,
+          "display_high_fraction": 0.0,
+          "negative_fraction": 1.0172526041666666e-05
+        }
+      ],
+      "sheet": "seed71-6V1A0181-roi4.png",
+      "sheet_sha256": "40a5906708874300529c575ce855aa16406ded074c4c467cfeca235146ebf026"
+    },
+    {
+      "seed": 71,
+      "source_sha256": "fb1ee4491d2fc3e004a37f20304ef028e6c7b8f28d726115f04b6fa071ea54a9",
+      "iso": 12800,
+      "roi": 5,
+      "origin_xy": [
+        5375,
+        2127
+      ],
+      "pattern": [
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": -0.0025195057969540358,
+        "high": 0.06561484262347198,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.030328228512420896,
+            0.019255176117990214,
+            0.01646755583301629
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.006718220792146395,
+          "display_low_fraction": 0.0038604736328125,
+          "display_high_fraction": 0.0043182373046875,
+          "negative_fraction": 0.032648722330729164
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.03017892432584457,
+            0.019595411171647648,
+            0.016692833919683125
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.005976516312156122,
+          "display_low_fraction": 0.0,
+          "display_high_fraction": 0.00225830078125,
+          "negative_fraction": 0.0030924479166666665
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.029365996888012447,
+            0.019982695714158005,
+            0.01679129782290567
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.006230298598303436,
+          "display_low_fraction": 0.0,
+          "display_high_fraction": 0.0018463134765625,
+          "negative_fraction": 0.0020955403645833335
+        }
+      ],
+      "sheet": "seed71-6V1A0181-roi5.png",
+      "sheet_sha256": "eb63935ab50707ac6ae8cc4abd70a38e4724a2786c71e9a50c7a97033b531f96"
+    },
+    {
+      "seed": 71,
+      "source_sha256": "fb1ee4491d2fc3e004a37f20304ef028e6c7b8f28d726115f04b6fa071ea54a9",
+      "iso": 12800,
+      "roi": 6,
+      "origin_xy": [
+        1199,
+        3519
+      ],
+      "pattern": [
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.009427828714251518,
+        "high": 0.2733004346489905,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.1329507243365653,
+            0.12574495724659873,
+            0.12194911343841275
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.013092734261883683,
+          "display_low_fraction": 0.004058837890625,
+          "display_high_fraction": 0.0040435791015625,
+          "negative_fraction": 0.0008544921875
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.13289022734041156,
+            0.12589964438223689,
+            0.12206286334180838
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.012839611435973659,
+          "display_low_fraction": 0.00048828125,
+          "display_high_fraction": 0.00396728515625,
+          "negative_fraction": 0.00011189778645833333
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.1324693795714893,
+            0.1267963460206829,
+            0.12286718183442247
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.01379337238498448,
+          "display_low_fraction": 4.57763671875e-05,
+          "display_high_fraction": 4.57763671875e-05,
+          "negative_fraction": 0.0
+        }
+      ],
+      "sheet": "seed71-6V1A0181-roi6.png",
+      "sheet_sha256": "869e83e28831a79382c1353fda5cbe9c41830bb6104a34059667fe5f9fa2eeed"
+    },
+    {
+      "seed": 71,
+      "source_sha256": "fb1ee4491d2fc3e004a37f20304ef028e6c7b8f28d726115f04b6fa071ea54a9",
+      "iso": 12800,
+      "roi": 7,
+      "origin_xy": [
+        3287,
+        3519
+      ],
+      "pattern": [
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.01397919375449419,
+        "high": 0.25235694646835327,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.1416770221103547,
+            0.13612947336517944,
+            0.13378437487614825
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.01417683833997111,
+          "display_low_fraction": 0.003997802734375,
+          "display_high_fraction": 0.00390625,
+          "negative_fraction": 0.0002593994140625
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.14166779785782513,
+            0.13620475930959852,
+            0.13384950741448742
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.013918897172764521,
+          "display_low_fraction": 0.001251220703125,
+          "display_high_fraction": 0.0038299560546875,
+          "negative_fraction": 7.120768229166667e-05
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.14128428910541402,
+            0.13719286703684475,
+            0.13489070544284232
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.01450439971532724,
+          "display_low_fraction": 0.0001220703125,
+          "display_high_fraction": 1.52587890625e-05,
+          "negative_fraction": 0.0
+        }
+      ],
+      "sheet": "seed71-6V1A0181-roi7.png",
+      "sheet_sha256": "ba62dbb919e15e98796d881d3faae3170d8ba2bfcc87c77028f81a6bbee957d1"
+    },
+    {
+      "seed": 71,
+      "source_sha256": "fb1ee4491d2fc3e004a37f20304ef028e6c7b8f28d726115f04b6fa071ea54a9",
+      "iso": 12800,
+      "roi": 8,
+      "origin_xy": [
+        5375,
+        3519
+      ],
+      "pattern": [
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.021293887868523598,
+        "high": 0.18216230794787383,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.12441394001521999,
+            0.113040834326263,
+            0.10500037104380144
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.013020668779347983,
+          "display_low_fraction": 0.0038299560546875,
+          "display_high_fraction": 0.0038604736328125,
+          "negative_fraction": 2.5431315104166668e-05
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.12441643568867278,
+            0.11314605548177781,
+            0.10510364258930238
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.01250102337352995,
+          "display_low_fraction": 0.00054931640625,
+          "display_high_fraction": 0.003387451171875,
+          "negative_fraction": 5.086263020833333e-06
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.1239400234436232,
+            0.1140716523949834,
+            0.10599664379407159
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.013131414943491954,
+          "display_low_fraction": 0.000152587890625,
+          "display_high_fraction": 0.0003204345703125,
+          "negative_fraction": 0.0
+        }
+      ],
+      "sheet": "seed71-6V1A0181-roi8.png",
+      "sheet_sha256": "fcaf8ecfff221b026b0d71426190a4519a59fc93846196d5f5c369f92da9491a"
+    },
+    {
+      "seed": 71,
+      "source_sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165",
+      "iso": 4000,
+      "roi": 0,
+      "origin_xy": [
+        735,
+        1199
+      ],
+      "pattern": [
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": -0.0016966022690758312,
+        "high": 0.018303397730924167,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.0433850622850116,
+            0.0077775003791054065,
+            0.0021370327503095615
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0029355261252827533,
+          "display_low_fraction": 3.0517578125e-05,
+          "display_high_fraction": 0.0001373291015625,
+          "negative_fraction": 0.0635986328125
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.04309018626057082,
+            0.00807164080250189,
+            0.0022507607983012906
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.002412616444100871,
+          "display_low_fraction": 0.0,
+          "display_high_fraction": 0.0,
+          "negative_fraction": 0.0164947509765625
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.04214848472238941,
+            0.00836813144334414,
+            0.002182926339393959
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0025573302067211745,
+          "display_low_fraction": 0.0,
+          "display_high_fraction": 0.0,
+          "negative_fraction": 0.014490763346354166
+        }
+      ],
+      "sheet": "seed71-6V1A9819-roi0.png",
+      "sheet_sha256": "c22736363cca50dfe1167e5b5564b308030619aad5768f5b7cb7b7528f04b9dc"
+    },
+    {
+      "seed": 71,
+      "source_sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165",
+      "iso": 4000,
+      "roi": 1,
+      "origin_xy": [
+        2127,
+        1199
+      ],
+      "pattern": [
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.009184751659631729,
+        "high": 0.11379338055849075,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.12195903676695252,
+            0.08681896092958397,
+            0.052868941751275655
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0061402428791932535,
+          "display_low_fraction": 0.0038909912109375,
+          "display_high_fraction": 0.00439453125,
+          "negative_fraction": 0.001861572265625
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.1217340531649711,
+            0.08714686821893736,
+            0.05309927498549938
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.005829690778328922,
+          "display_low_fraction": 0.000152587890625,
+          "display_high_fraction": 0.0001983642578125,
+          "negative_fraction": 0.00011189778645833333
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.12088458348077324,
+            0.08751844908501027,
+            0.05325717372339933
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.006038199128896276,
+          "display_low_fraction": 4.57763671875e-05,
+          "display_high_fraction": 0.00018310546875,
+          "negative_fraction": 6.103515625e-05
+        }
+      ],
+      "sheet": "seed71-6V1A9819-roi1.png",
+      "sheet_sha256": "00c1cc947a32987cb705e451560b81ea7371173f761e0638bbb2592fb971d6f1"
+    },
+    {
+      "seed": 71,
+      "source_sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165",
+      "iso": 4000,
+      "roi": 2,
+      "origin_xy": [
+        3519,
+        1199
+      ],
+      "pattern": [
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.05787206441164017,
+        "high": 0.09296687357127659,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.10471965988256215,
+            0.07469781966455002,
+            0.045114690330393614
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.005917345268518705,
+          "display_low_fraction": 0.004364013671875,
+          "display_high_fraction": 0.0046234130859375,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.10449668181593097,
+            0.0750185371583143,
+            0.045329345307891344
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.005469664934170184,
+          "display_low_fraction": 0.0,
+          "display_high_fraction": 0.0,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.10363286294489171,
+            0.07537655814672917,
+            0.04545442199656691
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.005640699200177544,
+          "display_low_fraction": 0.0,
+          "display_high_fraction": 0.0,
+          "negative_fraction": 0.0
+        }
+      ],
+      "sheet": "seed71-6V1A9819-roi2.png",
+      "sheet_sha256": "2034676a61738f5587163a12e35d284eab085243b4563cdc94950bf1cd81b327"
+    },
+    {
+      "seed": 71,
+      "source_sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165",
+      "iso": 4000,
+      "roi": 3,
+      "origin_xy": [
+        735,
+        3287
+      ],
+      "pattern": [
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": -0.005278349609725431,
+        "high": 0.014721650390274569,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.023354276214455183,
+            0.004329435746220245,
+            0.001213037617117621
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.002288592064146891,
+          "display_low_fraction": 0.0,
+          "display_high_fraction": 9.1552734375e-05,
+          "negative_fraction": 0.10152689615885417
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.02304214987454145,
+            0.004615766364770124,
+            0.0013065562672798237
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0019381263753828636,
+          "display_low_fraction": 0.0,
+          "display_high_fraction": 0.0,
+          "negative_fraction": 0.046844482421875
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.02210201657388211,
+            0.004899962673388103,
+            0.001202936740055548
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.002099961792985192,
+          "display_low_fraction": 0.0,
+          "display_high_fraction": 0.0,
+          "negative_fraction": 0.048512776692708336
+        }
+      ],
+      "sheet": "seed71-6V1A9819-roi3.png",
+      "sheet_sha256": "cdd6543331678b525e12ba557a468d564b86c98db3ada7dc95cb3c6e7d7dc348"
+    },
+    {
+      "seed": 71,
+      "source_sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165",
+      "iso": 4000,
+      "roi": 4,
+      "origin_xy": [
+        2127,
+        3287
+      ],
+      "pattern": [
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.014955702237784863,
+        "high": 0.10658402647823091,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.06314715197572696,
+            0.044633344695469646,
+            0.026581923499659377
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.004380017302413331,
+          "display_low_fraction": 0.00396728515625,
+          "display_high_fraction": 0.0045318603515625,
+          "negative_fraction": 6.612141927083333e-05
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.06289048105563211,
+            0.04494261775197117,
+            0.026765617114222096
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0044879383214309005,
+          "display_low_fraction": 0.0005035400390625,
+          "display_high_fraction": 0.0031280517578125,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.06202379734222063,
+            0.04527383546373187,
+            0.026816600480856323
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.00468339916293171,
+          "display_low_fraction": 0.000213623046875,
+          "display_high_fraction": 0.003326416015625,
+          "negative_fraction": 0.0
+        }
+      ],
+      "sheet": "seed71-6V1A9819-roi4.png",
+      "sheet_sha256": "394d3e2b890bd80fcf5619ea7142116802c705b790156cf6e36a0bb101a6dbab"
+    },
+    {
+      "seed": 71,
+      "source_sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165",
+      "iso": 4000,
+      "roi": 5,
+      "origin_xy": [
+        3519,
+        3287
+      ],
+      "pattern": [
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.03698284924030304,
+        "high": 0.06591888517141342,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.07479424886122388,
+            0.05092044562999831,
+            0.029743123204731603
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.004914381328814921,
+          "display_low_fraction": 0.0044708251953125,
+          "display_high_fraction": 0.00433349609375,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.07454577533724205,
+            0.05122846855425678,
+            0.029924096344643658
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.004574308757430269,
+          "display_low_fraction": 0.0,
+          "display_high_fraction": 0.0,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.07366710372087937,
+            0.05156143162543003,
+            0.02997919922668757
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.004717545866409276,
+          "display_low_fraction": 0.0,
+          "display_high_fraction": 0.0,
+          "negative_fraction": 0.0
+        }
+      ],
+      "sheet": "seed71-6V1A9819-roi5.png",
+      "sheet_sha256": "8ba71d2d9eaff6bcf2b8357df82aa143e79ce7801f4c0114de9d6992f4145c5a"
+    },
+    {
+      "seed": 71,
+      "source_sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165",
+      "iso": 4000,
+      "roi": 6,
+      "origin_xy": [
+        735,
+        5375
+      ],
+      "pattern": [
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.011216776445508003,
+        "high": 0.03599953530356285,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.03483654067304798,
+            0.023311571781910345,
+            0.013121528383971404
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.003479563170728825,
+          "display_low_fraction": 0.0038604736328125,
+          "display_high_fraction": 0.00421142578125,
+          "negative_fraction": 0.00017293294270833334
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.03456265714169149,
+            0.023608664908493893,
+            0.013252350790818213
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0034767641896739226,
+          "display_low_fraction": 7.62939453125e-05,
+          "display_high_fraction": 0.0,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.033660641967983906,
+            0.023913932936636684,
+            0.013217971201239465
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0036121894942460877,
+          "display_low_fraction": 3.0517578125e-05,
+          "display_high_fraction": 0.0,
+          "negative_fraction": 0.0
+        }
+      ],
+      "sheet": "seed71-6V1A9819-roi6.png",
+      "sheet_sha256": "2ae2140db217ecfa1f2aa57c25532105fe58412d68e16cf20338cb2d86c75e7d"
+    },
+    {
+      "seed": 71,
+      "source_sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165",
+      "iso": 4000,
+      "roi": 7,
+      "origin_xy": [
+        2127,
+        5375
+      ],
+      "pattern": [
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.0017069007735699415,
+        "high": 0.06425185706466433,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.060606570880675115,
+            0.038713695780594026,
+            0.021027184272975175
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.004386712823214814,
+          "display_low_fraction": 0.0039215087890625,
+          "display_high_fraction": 0.00372314453125,
+          "negative_fraction": 0.005650838216145833
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.060349277173001425,
+            0.039021534333880226,
+            0.021195866127228402
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.004522877423781286,
+          "display_low_fraction": 0.000396728515625,
+          "display_high_fraction": 1.52587890625e-05,
+          "negative_fraction": 0.0016937255859375
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.059469246015883215,
+            0.0393529824246901,
+            0.021226985972698537
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.004715117781415732,
+          "display_low_fraction": 0.000213623046875,
+          "display_high_fraction": 1.52587890625e-05,
+          "negative_fraction": 0.0015360514322916667
+        }
+      ],
+      "sheet": "seed71-6V1A9819-roi7.png",
+      "sheet_sha256": "9f0296888ee89f9fec9cd77d98fa0bbda2df860b7314953bc4f7a9ed3611904c"
+    },
+    {
+      "seed": 71,
+      "source_sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165",
+      "iso": 4000,
+      "roi": 8,
+      "origin_xy": [
+        3519,
+        5375
+      ],
+      "pattern": [
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.026660164818167686,
+        "high": 0.06770706176757812,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.07643768800673456,
+            0.04813086404045919,
+            0.026084703418835842
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.004919249792458526,
+          "display_low_fraction": 0.003448486328125,
+          "display_high_fraction": 0.0039520263671875,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.07618945748635042,
+            0.04843827690783087,
+            0.026273823066063073
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0052277633938808184,
+          "display_low_fraction": 1.52587890625e-05,
+          "display_high_fraction": 1.52587890625e-05,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.07533103852421164,
+            0.04878366575891846,
+            0.026353276452908858
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.005453555664348746,
+          "display_low_fraction": 1.52587890625e-05,
+          "display_high_fraction": 1.52587890625e-05,
+          "negative_fraction": 0.0
+        }
+      ],
+      "sheet": "seed71-6V1A9819-roi8.png",
+      "sheet_sha256": "a62d8e4217fecf81f647c933a041915f1964c93ca40342f7ddf2b1001164c15b"
+    },
+    {
+      "seed": 73,
+      "source_sha256": "3a10443d1a26fb4b10467f98568fbc022aed9c67497a249505b2bf72140a49ec",
+      "iso": 100,
+      "roi": 0,
+      "origin_xy": [
+        1199,
+        735
+      ],
+      "pattern": [
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.046057524438947436,
+        "high": 0.09106072075664993,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.07730451541249295,
+            0.06984944705897078,
+            0.06607638532423721
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0011718845350848473,
+          "display_low_fraction": 0.0047454833984375,
+          "display_high_fraction": 0.0042266845703125,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.07623761174005494,
+            0.06918648912466097,
+            0.06556847014161349
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0016216200264714976,
+          "display_low_fraction": 0.0058135986328125,
+          "display_high_fraction": 0.0020599365234375,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.07224654607813363,
+            0.06604814627445421,
+            0.06375080610982309
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.004188873583714624,
+          "display_low_fraction": 0.01507568359375,
+          "display_high_fraction": 7.62939453125e-05,
+          "negative_fraction": 0.0
+        }
+      ],
+      "sheet": "seed73-6V1A0134-roi0.png",
+      "sheet_sha256": "c4a067b3ecfbc0922896c1d0b0fe9670041ceb7ff2772b8609c7d58dce88c597"
+    },
+    {
+      "seed": 73,
+      "source_sha256": "3a10443d1a26fb4b10467f98568fbc022aed9c67497a249505b2bf72140a49ec",
+      "iso": 100,
+      "roi": 1,
+      "origin_xy": [
+        3287,
+        735
+      ],
+      "pattern": [
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.07696600928902628,
+        "high": 0.1536052096635103,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.13721541528582293,
+            0.120591225223734,
+            0.10614251693357346
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.001552043599346272,
+          "display_low_fraction": 0.004913330078125,
+          "display_high_fraction": 0.004638671875,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.13619648923929617,
+            0.11995850823677756,
+            0.10567339996589453
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.001961941439190264,
+          "display_low_fraction": 0.0052032470703125,
+          "display_high_fraction": 0.0028228759765625,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.13230730491670784,
+            0.11688610490807605,
+            0.10394368609917137
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.004297211279605932,
+          "display_low_fraction": 0.0083770751953125,
+          "display_high_fraction": 0.000518798828125,
+          "negative_fraction": 0.0
+        }
+      ],
+      "sheet": "seed73-6V1A0134-roi1.png",
+      "sheet_sha256": "791320a90aa1c1101e88130e3192e363905bada92b118a88b378dfed32b7d972"
+    },
+    {
+      "seed": 73,
+      "source_sha256": "3a10443d1a26fb4b10467f98568fbc022aed9c67497a249505b2bf72140a49ec",
+      "iso": 100,
+      "roi": 2,
+      "origin_xy": [
+        5375,
+        735
+      ],
+      "pattern": [
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.001872703121625796,
+        "high": 0.3454219974577425,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.03349488676323453,
+            0.03372827542528256,
+            0.03289424515276895
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0016640575613387275,
+          "display_low_fraction": 0.004119873046875,
+          "display_high_fraction": 0.0047760009765625,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.032394601312448756,
+            0.03301917725079129,
+            0.032369128519908585
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0018493301316913333,
+          "display_low_fraction": 0.1120758056640625,
+          "display_high_fraction": 0.0044708251953125,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.02825736391708046,
+            0.029815613723163735,
+            0.030441214563894484
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.005155657049309391,
+          "display_low_fraction": 0.685272216796875,
+          "display_high_fraction": 0.0025787353515625,
+          "negative_fraction": 0.4478607177734375
+        }
+      ],
+      "sheet": "seed73-6V1A0134-roi2.png",
+      "sheet_sha256": "37baa3dd4ec2601c1ff6ac2e4a9df931d665e66181aad60a4ccc57d235c8ae04"
+    },
+    {
+      "seed": 73,
+      "source_sha256": "3a10443d1a26fb4b10467f98568fbc022aed9c67497a249505b2bf72140a49ec",
+      "iso": 100,
+      "roi": 3,
+      "origin_xy": [
+        1199,
+        2127
+      ],
+      "pattern": [
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.01566010942682624,
+        "high": 0.035660109426826236,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.03425740646176223,
+            0.025710895248352017,
+            0.025777500113065344
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0009157301494687923,
+          "display_low_fraction": 0.0,
+          "display_high_fraction": 9.1552734375e-05,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.0331230777983933,
+            0.02499645099393888,
+            0.025246944054373444
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0013316703168105295,
+          "display_low_fraction": 0.0,
+          "display_high_fraction": 0.0,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.028984991400847093,
+            0.021740666425841937,
+            0.02338364107123425
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0041984089249493565,
+          "display_low_fraction": 0.0,
+          "display_high_fraction": 0.0,
+          "negative_fraction": 0.0
+        }
+      ],
+      "sheet": "seed73-6V1A0134-roi3.png",
+      "sheet_sha256": "c15bd70dcacb35881c7b816719e156bb0a47a32b71fe4641742babd9ea94e90e"
+    },
+    {
+      "seed": 73,
+      "source_sha256": "3a10443d1a26fb4b10467f98568fbc022aed9c67497a249505b2bf72140a49ec",
+      "iso": 100,
+      "roi": 4,
+      "origin_xy": [
+        3287,
+        2127
+      ],
+      "pattern": [
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.011347622610628605,
+        "high": 0.0452346169389784,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.11102602175208176,
+            0.03249051563076932,
+            0.017515529641432437
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.001617192732901566,
+          "display_low_fraction": 0.0047760009765625,
+          "display_high_fraction": 0.0035247802734375,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.10991257541485311,
+            0.03179455736758996,
+            0.017083821750532024
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0021168130707089586,
+          "display_low_fraction": 0.007415771484375,
+          "display_high_fraction": 0.000518798828125,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.10579110493927146,
+            0.02857199612157757,
+            0.01544276485304863
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.004448776256278336,
+          "display_low_fraction": 0.0343475341796875,
+          "display_high_fraction": 1.52587890625e-05,
+          "negative_fraction": 0.0
+        }
+      ],
+      "sheet": "seed73-6V1A0134-roi4.png",
+      "sheet_sha256": "2c1fa31f89741c2ecd37abe6a554ef920cca820aed38f4b9abda0c72a1fb9ed7"
+    },
+    {
+      "seed": 73,
+      "source_sha256": "3a10443d1a26fb4b10467f98568fbc022aed9c67497a249505b2bf72140a49ec",
+      "iso": 100,
+      "roi": 5,
+      "origin_xy": [
+        5375,
+        2127
+      ],
+      "pattern": [
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.002766381058609114,
+        "high": 0.03033449314534664,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.01584036613920148,
+            0.009954302507608759,
+            0.008328088518524623
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.00044957207831528343,
+          "display_low_fraction": 0.00433349609375,
+          "display_high_fraction": 0.004730224609375,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.014669863186032472,
+            0.009207831658107679,
+            0.007780835402407149
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0010222539527711676,
+          "display_low_fraction": 0.0298919677734375,
+          "display_high_fraction": 0.003173828125,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.010453159557423208,
+            0.005881863441323907,
+            0.005879981309543633
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.004193997749574408,
+          "display_low_fraction": 0.4444732666015625,
+          "display_high_fraction": 0.0001678466796875,
+          "negative_fraction": 0.032201131184895836
+        }
+      ],
+      "sheet": "seed73-6V1A0134-roi5.png",
+      "sheet_sha256": "bc3312099508934b2c213f3d9239cb291f536b7339ac27a9e3307704aeab84a6"
+    },
+    {
+      "seed": 73,
+      "source_sha256": "3a10443d1a26fb4b10467f98568fbc022aed9c67497a249505b2bf72140a49ec",
+      "iso": 100,
+      "roi": 6,
+      "origin_xy": [
+        1199,
+        3519
+      ],
+      "pattern": [
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.010642735334113244,
+        "high": 0.13542979955673218,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.07218014518709026,
+            0.06815079657445722,
+            0.06569009374488388
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0015763958011531939,
+          "display_low_fraction": 0.0037841796875,
+          "display_high_fraction": 0.0039215087890625,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.07110417801041535,
+            0.06747700288545389,
+            0.0651738421757102
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.002201515891522105,
+          "display_low_fraction": 0.01226806640625,
+          "display_high_fraction": 0.0002899169921875,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.06709771024132749,
+            0.06432436791611451,
+            0.06334333881831355
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.004567431865984525,
+          "display_low_fraction": 0.3194580078125,
+          "display_high_fraction": 0.0,
+          "negative_fraction": 0.0
+        }
+      ],
+      "sheet": "seed73-6V1A0134-roi6.png",
+      "sheet_sha256": "078662a6e503e6c032af898ff5fa633d3e45e3450c9a1a011f058904ab7e5ac9"
+    },
+    {
+      "seed": 73,
+      "source_sha256": "3a10443d1a26fb4b10467f98568fbc022aed9c67497a249505b2bf72140a49ec",
+      "iso": 100,
+      "roi": 7,
+      "origin_xy": [
+        3287,
+        3519
+      ],
+      "pattern": [
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.010531780309975147,
+        "high": 0.1246013417840004,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.0776854842694874,
+            0.07399806846763113,
+            0.07251418022170242
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0021723326475065288,
+          "display_low_fraction": 0.004302978515625,
+          "display_high_fraction": 0.0038299560546875,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.07673470874725297,
+            0.07344726007416114,
+            0.07206279965245699
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0028949107976883265,
+          "display_low_fraction": 0.0083770751953125,
+          "display_high_fraction": 7.62939453125e-05,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.07299572468458138,
+            0.07055794721225084,
+            0.07039337873243312
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.004774362707598411,
+          "display_low_fraction": 0.0543212890625,
+          "display_high_fraction": 0.0,
+          "negative_fraction": 0.0
+        }
+      ],
+      "sheet": "seed73-6V1A0134-roi7.png",
+      "sheet_sha256": "3e75475de7cc8eb215f124051a1f9ab13d7f596e4806dfb2ba53e30da4b9b120"
+    },
+    {
+      "seed": 73,
+      "source_sha256": "3a10443d1a26fb4b10467f98568fbc022aed9c67497a249505b2bf72140a49ec",
+      "iso": 100,
+      "roi": 8,
+      "origin_xy": [
+        5375,
+        3519
+      ],
+      "pattern": [
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.014353752601891756,
+        "high": 0.08813194241374718,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.06697427239279818,
+            0.06042586500095126,
+            0.055812300997317266
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.001648627744762188,
+          "display_low_fraction": 0.0047607421875,
+          "display_high_fraction": 0.00421142578125,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.0659714760011525,
+            0.05983274964226837,
+            0.05535395901553386
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0025794686220233882,
+          "display_low_fraction": 0.0052337646484375,
+          "display_high_fraction": 0.0015716552734375,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.062118834951661484,
+            0.05683793340945442,
+            0.053645954071157576
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.004621126712129638,
+          "display_low_fraction": 0.025543212890625,
+          "display_high_fraction": 0.0005645751953125,
+          "negative_fraction": 0.0
+        }
+      ],
+      "sheet": "seed73-6V1A0134-roi8.png",
+      "sheet_sha256": "e864b9aa69b6c21f8d80c56ccb78ca8adc00b7fd387630f8350977f4ad737429"
+    },
+    {
+      "seed": 73,
+      "source_sha256": "fb1ee4491d2fc3e004a37f20304ef028e6c7b8f28d726115f04b6fa071ea54a9",
+      "iso": 12800,
+      "roi": 0,
+      "origin_xy": [
+        1199,
+        735
+      ],
+      "pattern": [
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.07544884663075208,
+        "high": 0.1911634866148233,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.14465195842245748,
+            0.13098997637297316,
+            0.12288642444369202
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.014723696674294606,
+          "display_low_fraction": 0.0042724609375,
+          "display_high_fraction": 0.0041961669921875,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.14463880493514125,
+            0.1310338392204926,
+            0.12290628689879668
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.013959433955142908,
+          "display_low_fraction": 0.002655029296875,
+          "display_high_fraction": 0.003692626953125,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.14259556540343965,
+            0.1301223882855993,
+            0.12240811317406042
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.013642994485269865,
+          "display_low_fraction": 0.000885009765625,
+          "display_high_fraction": 1.52587890625e-05,
+          "negative_fraction": 0.0
+        }
+      ],
+      "sheet": "seed73-6V1A0181-roi0.png",
+      "sheet_sha256": "9bc2ce00e232e6b257fd71878e8e034acfa19ab98541f9107ff463fc51a16d54"
+    },
+    {
+      "seed": 73,
+      "source_sha256": "fb1ee4491d2fc3e004a37f20304ef028e6c7b8f28d726115f04b6fa071ea54a9",
+      "iso": 12800,
+      "roi": 1,
+      "origin_xy": [
+        3287,
+        735
+      ],
+      "pattern": [
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.13783697597682476,
+        "high": 0.31298765540122986,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.25847283577354574,
+            0.22838398124963533,
+            0.20158509915324885
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.01908805404031784,
+          "display_low_fraction": 0.004364013671875,
+          "display_high_fraction": 0.0040740966796875,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.2584735275181629,
+            0.22838703571824226,
+            0.20158832304383623
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.019029309123396693,
+          "display_low_fraction": 0.004150390625,
+          "display_high_fraction": 0.0040740966796875,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.25718399635843525,
+            0.2282260112971244,
+            0.2016236088734331
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.01721310002429299,
+          "display_low_fraction": 0.002044677734375,
+          "display_high_fraction": 7.62939453125e-05,
+          "negative_fraction": 0.0
+        }
+      ],
+      "sheet": "seed73-6V1A0181-roi1.png",
+      "sheet_sha256": "8e7ea867d1b259b4e4946d32d647098652c33cb01cbb135e21fba10cdb9db21a"
+    },
+    {
+      "seed": 73,
+      "source_sha256": "fb1ee4491d2fc3e004a37f20304ef028e6c7b8f28d726115f04b6fa071ea54a9",
+      "iso": 12800,
+      "roi": 2,
+      "origin_xy": [
+        5375,
+        735
+      ],
+      "pattern": [
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": -0.0046326396986842155,
+        "high": 0.6641646429896354,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.06510293341594253,
+            0.06863601862373758,
+            0.06817806665119841
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.012442718208066677,
+          "display_low_fraction": 0.0045623779296875,
+          "display_high_fraction": 0.004638671875,
+          "negative_fraction": 0.1128997802734375
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.06447815716744307,
+            0.06833458100978018,
+            0.06795402351924174
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.012036949774262947,
+          "display_low_fraction": 0.0,
+          "display_high_fraction": 0.004638671875,
+          "negative_fraction": 0.032582600911458336
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.061531264418904594,
+            0.06629664584195735,
+            0.06674907830850799
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.011435702206201681,
+          "display_low_fraction": 0.000152587890625,
+          "display_high_fraction": 0.0030059814453125,
+          "negative_fraction": 0.09757486979166667
+        }
+      ],
+      "sheet": "seed73-6V1A0181-roi2.png",
+      "sheet_sha256": "d5e3d47ccf8f3948fb8570fb02cc62fcf69450585b3017aab6cd5eead503150a"
+    },
+    {
+      "seed": 73,
+      "source_sha256": "fb1ee4491d2fc3e004a37f20304ef028e6c7b8f28d726115f04b6fa071ea54a9",
+      "iso": 12800,
+      "roi": 3,
+      "origin_xy": [
+        1199,
+        2127
+      ],
+      "pattern": [
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.022029743343591687,
+        "high": 0.07562623862177127,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.06302202247114863,
+            0.04713056500396107,
+            0.047562529672708465
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.009982625149431667,
+          "display_low_fraction": 0.0043182373046875,
+          "display_high_fraction": 0.00439453125,
+          "negative_fraction": 6.612141927083333e-05
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.06269417774558406,
+            0.047085127461315324,
+            0.047519432027257835
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0083317758862547,
+          "display_low_fraction": 6.103515625e-05,
+          "display_high_fraction": 0.0001068115234375,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.0598592475184887,
+            0.0452316382735205,
+            0.046479502064556755
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.009007827719619468,
+          "display_low_fraction": 0.0,
+          "display_high_fraction": 0.0,
+          "negative_fraction": 0.0
+        }
+      ],
+      "sheet": "seed73-6V1A0181-roi3.png",
+      "sheet_sha256": "9cdaf4f7a23cafa0b9007662495021dedb349b335f33f712f4f1569fe5ab8f13"
+    },
+    {
+      "seed": 73,
+      "source_sha256": "fb1ee4491d2fc3e004a37f20304ef028e6c7b8f28d726115f04b6fa071ea54a9",
+      "iso": 12800,
+      "roi": 4,
+      "origin_xy": [
+        3287,
+        2127
+      ],
+      "pattern": [
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.015604681335389614,
+        "high": 0.09893186818808299,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.19749784258385716,
+            0.058566470314600494,
+            0.032256606058862936
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.01228138170698311,
+          "display_low_fraction": 0.003875732421875,
+          "display_high_fraction": 0.00384521484375,
+          "negative_fraction": 0.0024312337239583335
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.1974473697636654,
+            0.058555787200262444,
+            0.0322680943901493
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.011887108045615845,
+          "display_low_fraction": 0.00152587890625,
+          "display_high_fraction": 0.003448486328125,
+          "negative_fraction": 0.0011342366536458333
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.19460462305437431,
+            0.05686676722936568,
+            0.031761756152131504
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.010861698629800512,
+          "display_low_fraction": 0.0009307861328125,
+          "display_high_fraction": 0.0,
+          "negative_fraction": 2.5431315104166668e-05
+        }
+      ],
+      "sheet": "seed73-6V1A0181-roi4.png",
+      "sheet_sha256": "3dee7e21ff338030cb8f34688b9ecaa5292c65155af8aedeae06828b937b86b7"
+    },
+    {
+      "seed": 73,
+      "source_sha256": "fb1ee4491d2fc3e004a37f20304ef028e6c7b8f28d726115f04b6fa071ea54a9",
+      "iso": 12800,
+      "roi": 5,
+      "origin_xy": [
+        5375,
+        2127
+      ],
+      "pattern": [
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": -0.0025195057969540358,
+        "high": 0.06561484262347198,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.030334265577195207,
+            0.019252855486733278,
+            0.01646340432093818
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.007240498754743695,
+          "display_low_fraction": 0.0038604736328125,
+          "display_high_fraction": 0.004364013671875,
+          "negative_fraction": 0.038126627604166664
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.02975513978382338,
+            0.01900720732304695,
+            0.016270419804325864
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.006028662679699843,
+          "display_low_fraction": 0.0,
+          "display_high_fraction": 0.0021209716796875,
+          "negative_fraction": 0.004236857096354167
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.026519786609256357,
+            0.016719532688994176,
+            0.01498867799959519
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.006813935785378577,
+          "display_low_fraction": 7.62939453125e-05,
+          "display_high_fraction": 0.000885009765625,
+          "negative_fraction": 0.006683349609375
+        }
+      ],
+      "sheet": "seed73-6V1A0181-roi5.png",
+      "sheet_sha256": "94450160e0a02e123c503c6230e86d78d596177c96af91e6a929e05341a1fa39"
+    },
+    {
+      "seed": 73,
+      "source_sha256": "fb1ee4491d2fc3e004a37f20304ef028e6c7b8f28d726115f04b6fa071ea54a9",
+      "iso": 12800,
+      "roi": 6,
+      "origin_xy": [
+        1199,
+        3519
+      ],
+      "pattern": [
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.009427828714251518,
+        "high": 0.2733004346489905,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.13301859050224096,
+            0.12575691456600002,
+            0.1219035438796765
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.014158117000853888,
+          "display_low_fraction": 0.0040283203125,
+          "display_high_fraction": 0.004180908203125,
+          "negative_fraction": 0.0012766520182291667
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.13278543518679076,
+            0.12567445971885505,
+            0.12183640520140315
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.013775154545811814,
+          "display_low_fraction": 0.0004730224609375,
+          "display_high_fraction": 0.0040740966796875,
+          "negative_fraction": 0.0001983642578125
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.13070897108394774,
+            0.12464393038388266,
+            0.12123806282166072
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.014027593536388097,
+          "display_low_fraction": 1.52587890625e-05,
+          "display_high_fraction": 4.57763671875e-05,
+          "negative_fraction": 0.0
+        }
+      ],
+      "sheet": "seed73-6V1A0181-roi6.png",
+      "sheet_sha256": "35e1f3b28834270d12cd036f92e5daf6507c777f00d18c3a72c5cc384ac66141"
+    },
+    {
+      "seed": 73,
+      "source_sha256": "fb1ee4491d2fc3e004a37f20304ef028e6c7b8f28d726115f04b6fa071ea54a9",
+      "iso": 12800,
+      "roi": 7,
+      "origin_xy": [
+        3287,
+        3519
+      ],
+      "pattern": [
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.01397919375449419,
+        "high": 0.25235694646835327,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.14166874306424648,
+            0.13611411376492466,
+            0.13382350114887132
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.015283566481702976,
+          "display_low_fraction": 0.0040283203125,
+          "display_high_fraction": 0.00408935546875,
+          "negative_fraction": 0.0003560384114583333
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.14161321222412154,
+            0.13611539100158065,
+            0.1338236436101936
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.014932265385214517,
+          "display_low_fraction": 0.0013275146484375,
+          "display_high_fraction": 0.0040130615234375,
+          "negative_fraction": 8.138020833333333e-05
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.139844253286455,
+            0.13547598087865254,
+            0.13345313956396865
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.014700459421545157,
+          "display_low_fraction": 0.000640869140625,
+          "display_high_fraction": 3.0517578125e-05,
+          "negative_fraction": 0.0
+        }
+      ],
+      "sheet": "seed73-6V1A0181-roi7.png",
+      "sheet_sha256": "1a9a4234570de514569ec58afe4d7b2faaa82d797905d6603d3fc530ac3168a3"
+    },
+    {
+      "seed": 73,
+      "source_sha256": "fb1ee4491d2fc3e004a37f20304ef028e6c7b8f28d726115f04b6fa071ea54a9",
+      "iso": 12800,
+      "roi": 8,
+      "origin_xy": [
+        5375,
+        3519
+      ],
+      "pattern": [
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.021293887868523598,
+        "high": 0.18216230794787383,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.12443354457305844,
+            0.11304003196283219,
+            0.10501274681033923
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.013975173837742966,
+          "display_low_fraction": 0.00396728515625,
+          "display_high_fraction": 0.0039520263671875,
+          "negative_fraction": 2.5431315104166668e-05
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.12438672964889008,
+            0.11306930097074996,
+            0.1050279466311963
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.013274436418654445,
+          "display_low_fraction": 0.0005950927734375,
+          "display_high_fraction": 0.0034332275390625,
+          "negative_fraction": 5.086263020833333e-06
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.12230534834534978,
+            0.11212243471749161,
+            0.10452720202675891
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.013336860224877478,
+          "display_low_fraction": 0.0006103515625,
+          "display_high_fraction": 0.0002593994140625,
+          "negative_fraction": 0.0
+        }
+      ],
+      "sheet": "seed73-6V1A0181-roi8.png",
+      "sheet_sha256": "b7f92fafda3fc235a97bd63ab0fa7a5a69cfdbda9733546f8940c26071df00bc"
+    },
+    {
+      "seed": 73,
+      "source_sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165",
+      "iso": 4000,
+      "roi": 0,
+      "origin_xy": [
+        735,
+        1199
+      ],
+      "pattern": [
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": -0.0016966022690758312,
+        "high": 0.018303397730924167,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.04338795730132006,
+            0.007777502256067992,
+            0.002137648526127134
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0030749860832182496,
+          "display_low_fraction": 3.0517578125e-05,
+          "display_high_fraction": 0.0001373291015625,
+          "negative_fraction": 0.073577880859375
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.04241117258754912,
+            0.007186645731213304,
+            0.0017222504432404112
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0025125142333928202,
+          "display_low_fraction": 0.0,
+          "display_high_fraction": 0.0,
+          "negative_fraction": 0.034901936848958336
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.03849118124236384,
+            0.004192702083327227,
+            0.00010589261471681544
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.004397760703762888,
+          "display_low_fraction": 0.0,
+          "display_high_fraction": 0.0,
+          "negative_fraction": 0.1564483642578125
+        }
+      ],
+      "sheet": "seed73-6V1A9819-roi0.png",
+      "sheet_sha256": "24aa63e778a04d5342a5660437382f5a279dc98dab9d2b997abe4a0b40b02a0b"
+    },
+    {
+      "seed": 73,
+      "source_sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165",
+      "iso": 4000,
+      "roi": 1,
+      "origin_xy": [
+        2127,
+        1199
+      ],
+      "pattern": [
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.009184751659631729,
+        "high": 0.11379338055849075,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.12196187986256746,
+            0.08681957543106478,
+            0.05286644985070543
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.006523099412571356,
+          "display_low_fraction": 0.00384521484375,
+          "display_high_fraction": 0.0043792724609375,
+          "negative_fraction": 0.0023193359375
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.12125619174196345,
+            0.08646324741465605,
+            0.0526326345550967
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.005871980336008937,
+          "display_low_fraction": 0.0008087158203125,
+          "display_high_fraction": 0.0001068115234375,
+          "negative_fraction": 0.0003814697265625
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.11787912860665983,
+            0.08395762336922274,
+            0.05137152072267509
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.006741432115473913,
+          "display_low_fraction": 0.0226287841796875,
+          "display_high_fraction": 1.52587890625e-05,
+          "negative_fraction": 0.0026906331380208335
+        }
+      ],
+      "sheet": "seed73-6V1A9819-roi1.png",
+      "sheet_sha256": "3e453e05c4c72b97993f31ccfd5b9effef2331f6dc8618d35af995bef0df235f"
+    },
+    {
+      "seed": 73,
+      "source_sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165",
+      "iso": 4000,
+      "roi": 2,
+      "origin_xy": [
+        3519,
+        1199
+      ],
+      "pattern": [
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.05787206441164017,
+        "high": 0.09296687357127659,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.1047232276006298,
+            0.0746984160398938,
+            0.045114383456706264
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0062451225605851405,
+          "display_low_fraction": 0.004364013671875,
+          "display_high_fraction": 0.0046234130859375,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.10400126974775503,
+            0.07431875310970781,
+            0.04485656589037035
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.005502280780112949,
+          "display_low_fraction": 0.0,
+          "display_high_fraction": 0.0,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.10056336098216434,
+            0.07176644597149107,
+            0.04354842243890289
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0063945339877241264,
+          "display_low_fraction": 0.0,
+          "display_high_fraction": 0.0,
+          "negative_fraction": 0.0
+        }
+      ],
+      "sheet": "seed73-6V1A9819-roi2.png",
+      "sheet_sha256": "64fbbd18387adf5a412c46f655c5df43f5e76f28c10e8c95e6f4778330d138f0"
+    },
+    {
+      "seed": 73,
+      "source_sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165",
+      "iso": 4000,
+      "roi": 3,
+      "origin_xy": [
+        735,
+        3287
+      ],
+      "pattern": [
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": -0.005278349609725431,
+        "high": 0.014721650390274569,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.02335546976545544,
+            0.004329552411212134,
+            0.0012121339548248067
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.002426004285818069,
+          "display_low_fraction": 0.0,
+          "display_high_fraction": 9.1552734375e-05,
+          "negative_fraction": 0.10931396484375
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.022327348047568307,
+            0.0037054021835369877,
+            0.0007580845855315391
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0020701695913663467,
+          "display_low_fraction": 0.0,
+          "display_high_fraction": 0.0,
+          "negative_fraction": 0.09006245930989583
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.018353967060434684,
+            0.0006440704251510568,
+            -0.0009441878560502576
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.004251551977037605,
+          "display_low_fraction": 0.0,
+          "display_high_fraction": 0.0,
+          "negative_fraction": 0.3414510091145833
+        }
+      ],
+      "sheet": "seed73-6V1A9819-roi3.png",
+      "sheet_sha256": "49688f2bf82f5adc8eca4bc848c6042b2c6cbae956411b1e433789215f927b8b"
+    },
+    {
+      "seed": 73,
+      "source_sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165",
+      "iso": 4000,
+      "roi": 4,
+      "origin_xy": [
+        2127,
+        3287
+      ],
+      "pattern": [
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.014955702237784863,
+        "high": 0.10658402647823091,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.06314999582407665,
+            0.0446317603361166,
+            0.026583073677622915
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.004680209342491792,
+          "display_low_fraction": 0.0039825439453125,
+          "display_high_fraction": 0.0045166015625,
+          "negative_fraction": 0.0001068115234375
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.06235384560838497,
+            0.04422135925446469,
+            0.026284709662370176
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.004539205407067153,
+          "display_low_fraction": 0.0010986328125,
+          "display_high_fraction": 0.0028076171875,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.058857445124004926,
+            0.04161326870067228,
+            0.02489096732579199
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.005669624258989939,
+          "display_low_fraction": 0.0101470947265625,
+          "display_high_fraction": 0.00146484375,
+          "negative_fraction": 0.0
+        }
+      ],
+      "sheet": "seed73-6V1A9819-roi4.png",
+      "sheet_sha256": "6b239e3f07b37bdf83049872fada95285140697afd7c23e8efe363bdf061a05c"
+    },
+    {
+      "seed": 73,
+      "source_sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165",
+      "iso": 4000,
+      "roi": 5,
+      "origin_xy": [
+        3519,
+        3287
+      ],
+      "pattern": [
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.03698284924030304,
+        "high": 0.06591888517141342,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.07479628902166269,
+            0.05092060267421061,
+            0.02974336231256558
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.005194143388825671,
+          "display_low_fraction": 0.004486083984375,
+          "display_high_fraction": 0.00433349609375,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.07399140465446408,
+            0.05047811387379397,
+            0.029432212711952843
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.004621416786172262,
+          "display_low_fraction": 0.0,
+          "display_high_fraction": 0.0,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.07041954118398053,
+            0.047796562135602016,
+            0.028016104992218516
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.005701994557658037,
+          "display_low_fraction": 6.103515625e-05,
+          "display_high_fraction": 0.0,
+          "negative_fraction": 0.0
+        }
+      ],
+      "sheet": "seed73-6V1A9819-roi5.png",
+      "sheet_sha256": "d1761ac0d63a4bfd4bf01e045513e4e66503b1c9dd3fb09d3badcd1fd9bdc53d"
+    },
+    {
+      "seed": 73,
+      "source_sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165",
+      "iso": 4000,
+      "roi": 6,
+      "origin_xy": [
+        735,
+        5375
+      ],
+      "pattern": [
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.011216776445508003,
+        "high": 0.03599953530356285,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.03483764909003639,
+            0.02331204098326367,
+            0.013120849901640641
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0037047887632544706,
+          "display_low_fraction": 0.00384521484375,
+          "display_high_fraction": 0.004241943359375,
+          "negative_fraction": 0.000335693359375
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.033937903343385756,
+            0.02279892824752494,
+            0.012735204003028855
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0035453723051997506,
+          "display_low_fraction": 0.0002288818359375,
+          "display_high_fraction": 0.0,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.03020684394171269,
+            0.01996999903369101,
+            0.011174283085082948
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.004973403348002154,
+          "display_low_fraction": 0.0022125244140625,
+          "display_high_fraction": 0.0,
+          "negative_fraction": 0.0
+        }
+      ],
+      "sheet": "seed73-6V1A9819-roi6.png",
+      "sheet_sha256": "e6dc82f6872a5b58940e965f7bc061c8c361c463f33b5d58047f4e75c4aaf9c5"
+    },
+    {
+      "seed": 73,
+      "source_sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165",
+      "iso": 4000,
+      "roi": 7,
+      "origin_xy": [
+        2127,
+        5375
+      ],
+      "pattern": [
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.0017069007735699415,
+        "high": 0.06425185706466433,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.06060421625752799,
+            0.03871375078229233,
+            0.021029195822082625
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.004657047774677736,
+          "display_low_fraction": 0.00390625,
+          "display_high_fraction": 0.0037689208984375,
+          "negative_fraction": 0.006525675455729167
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.05978732043258539,
+            0.03827216853908544,
+            0.020707118857665748
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.004576009280169208,
+          "display_low_fraction": 0.002166748046875,
+          "display_high_fraction": 0.0,
+          "negative_fraction": 0.0030466715494791665
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.05621122190794381,
+            0.03559689573100219,
+            0.019276223797696994
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.0057357207309995046,
+          "display_low_fraction": 0.0442962646484375,
+          "display_high_fraction": 0.0,
+          "negative_fraction": 0.019266764322916668
+        }
+      ],
+      "sheet": "seed73-6V1A9819-roi7.png",
+      "sheet_sha256": "f245a42028c6bc99f652ef24e7234797cda31343791b64eb1ad33c3f51e35b80"
+    },
+    {
+      "seed": 73,
+      "source_sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165",
+      "iso": 4000,
+      "roi": 8,
+      "origin_xy": [
+        3519,
+        5375
+      ],
+      "pattern": [
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "display_window": {
+        "low": 0.026660164818167686,
+        "high": 0.06770706176757812,
+        "gamma": 2.2,
+        "policy": "Shared RCD-only0.5/99.5percentile window, minimum span0.02, no independent panel normalization."
+      },
+      "measurements": [
+        {
+          "supplied_sigma": 0.0,
+          "rgb_mean": [
+            0.07643412238419955,
+            0.048130488158605544,
+            0.02608404460067315
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.005206819905310678,
+          "display_low_fraction": 0.0034637451171875,
+          "display_high_fraction": 0.00396728515625,
+          "negative_fraction": 5.086263020833333e-06
+        },
+        {
+          "supplied_sigma": 0.01,
+          "rgb_mean": [
+            0.07567517608248409,
+            0.0477375854453328,
+            0.025804058716431655
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.005273098655858441,
+          "display_low_fraction": 4.57763671875e-05,
+          "display_high_fraction": 0.0,
+          "negative_fraction": 0.0
+        },
+        {
+          "supplied_sigma": 0.03,
+          "rgb_mean": [
+            0.07221788001129426,
+            0.04517533131124196,
+            0.024469391609031277
+          ],
+          "rgb_rms_disagreement_to_rcd": 0.006303439036395049,
+          "display_low_fraction": 0.0001068115234375,
+          "display_high_fraction": 0.0,
+          "negative_fraction": 0.0
+        }
+      ],
+      "sheet": "seed73-6V1A9819-roi8.png",
+      "sheet_sha256": "40d24d07e5c37b0675ec3fba6d79a6108e0338875ede7ee69bfb626d3f72668c"
+    }
+  ],
+  "index_sha256": "152012645c1cfd0805ed346abbdc118febfebeda28e245746f91e811b9e345e5",
+  "memory": {
+    "hard_process_commit_bytes": 2147483648,
+    "soft_process_bytes": 1342177280,
+    "system_stop_fraction": 0.92,
+    "poll_seconds": 0.25,
+    "samples": 25,
+    "peak_rss_bytes": 288546816,
+    "peak_private_sampled_bytes": 964939776,
+    "peak_system_used_fraction": 0.4650362818828603,
+    "os_job_peak_commit_bytes": 967630848,
+    "reason": null,
+    "last": {
+      "system_total_bytes": 16933507072,
+      "system_available_bytes": 9063350272,
+      "system_used_fraction": 0.4647682707744287,
+      "process_rss_bytes": 285392896,
+      "process_private_bytes": 964411392,
+      "process_peak_rss_bytes": 288546816,
+      "process_peak_pagefile_bytes": 967630848
+    }
+  },
+  "elapsed_seconds": 6.212316200006171
+}

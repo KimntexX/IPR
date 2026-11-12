@@ -1,0 +1,347 @@
+{
+  "schema_version": 1,
+  "status": "qualified_new_dark_archived_ROI_input_bridge",
+  "started_at_utc": "2026-11-08T11:37:48.262154+00:00",
+  "parent": {
+    "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\new-dark-qualification-v001\\progress.json",
+    "sha256": "705521eacd40ba1ffc6ec159d8ee9d89635a8bc7ba1f6e7e5dc5d0e4dc79e28f"
+  },
+  "tools": [
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\native\\Release\\iprNeuralCameraCapture.exe",
+      "sha256": "f6555f6ddae6c5d6801570e7918e0ffc2512c93b565413b45b0ac1de3c1ef754"
+    },
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\native\\Release\\iprNeuralMosaicCapture.exe",
+      "sha256": "33cd5dfa062a3bcbb2842dc8fa1adc8307f2d8696e3a7e0f46e6a37f4f9a8920"
+    }
+  ],
+  "records": [
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\protocole\\blacks\\6V1A0367.CR3",
+      "sha256": "bae4a9eefe62de1bd466a5780038e1b815aa4e5412da0b8371122e95fee08141",
+      "iso": 100,
+      "role": "calibration",
+      "black": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "white": 13995,
+      "divisor": 13483,
+      "native_descriptor_sha256": "b4fa20eeb13879fabba704685d4b0e251c786eea0b324350893fa8d9790061f4",
+      "rgb_replay_bit_exact": true,
+      "rois": [
+        {
+          "samples": 147456,
+          "integer_dn_mismatches": 0,
+          "maximum_integer_dn_error": 0.0,
+          "maximum_normalized_error": 0.0,
+          "negative_fraction": 0.2724202473958333
+        },
+        {
+          "samples": 147456,
+          "integer_dn_mismatches": 0,
+          "maximum_integer_dn_error": 0.0,
+          "maximum_normalized_error": 0.0,
+          "negative_fraction": 0.2814466688368056
+        },
+        {
+          "samples": 147456,
+          "integer_dn_mismatches": 0,
+          "maximum_integer_dn_error": 0.0,
+          "maximum_normalized_error": 0.0,
+          "negative_fraction": 0.3039822048611111
+        },
+        {
+          "samples": 147456,
+          "integer_dn_mismatches": 0,
+          "maximum_integer_dn_error": 0.0,
+          "maximum_normalized_error": 0.0,
+          "negative_fraction": 0.2715996636284722
+        },
+        {
+          "samples": 147456,
+          "integer_dn_mismatches": 0,
+          "maximum_integer_dn_error": 0.0,
+          "maximum_normalized_error": 0.0,
+          "negative_fraction": 0.2761637369791667
+        },
+        {
+          "samples": 147456,
+          "integer_dn_mismatches": 0,
+          "maximum_integer_dn_error": 0.0,
+          "maximum_normalized_error": 0.0,
+          "negative_fraction": 0.2836846245659722
+        },
+        {
+          "samples": 147456,
+          "integer_dn_mismatches": 0,
+          "maximum_integer_dn_error": 0.0,
+          "maximum_normalized_error": 0.0,
+          "negative_fraction": 0.273193359375
+        },
+        {
+          "samples": 147456,
+          "integer_dn_mismatches": 0,
+          "maximum_integer_dn_error": 0.0,
+          "maximum_normalized_error": 0.0,
+          "negative_fraction": 0.2720540364583333
+        },
+        {
+          "samples": 147456,
+          "integer_dn_mismatches": 0,
+          "maximum_integer_dn_error": 0.0,
+          "maximum_normalized_error": 0.0,
+          "negative_fraction": 0.2594943576388889
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\protocole\\blacks\\6V1A0418.CR3",
+      "sha256": "e232d16dbbcdbde7e62ddc21838c78fc297029f3906e9b75e5cbc29aa394e3e0",
+      "iso": 100,
+      "role": "control",
+      "black": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "white": 13995,
+      "divisor": 13483,
+      "native_descriptor_sha256": "08627f4b2f6b721fc0afff30cdfde6fc07fc03d41ecc9b24ca7f52eb96291368",
+      "rgb_replay_bit_exact": true,
+      "rois": [
+        {
+          "samples": 147456,
+          "integer_dn_mismatches": 0,
+          "maximum_integer_dn_error": 0.0,
+          "maximum_normalized_error": 0.0,
+          "negative_fraction": 0.2790256076388889
+        },
+        {
+          "samples": 147456,
+          "integer_dn_mismatches": 0,
+          "maximum_integer_dn_error": 0.0,
+          "maximum_normalized_error": 0.0,
+          "negative_fraction": 0.2868855794270833
+        },
+        {
+          "samples": 147456,
+          "integer_dn_mismatches": 0,
+          "maximum_integer_dn_error": 0.0,
+          "maximum_normalized_error": 0.0,
+          "negative_fraction": 0.3146497938368056
+        },
+        {
+          "samples": 147456,
+          "integer_dn_mismatches": 0,
+          "maximum_integer_dn_error": 0.0,
+          "maximum_normalized_error": 0.0,
+          "negative_fraction": 0.2777506510416667
+        },
+        {
+          "samples": 147456,
+          "integer_dn_mismatches": 0,
+          "maximum_integer_dn_error": 0.0,
+          "maximum_normalized_error": 0.0,
+          "negative_fraction": 0.2815212673611111
+        },
+        {
+          "samples": 147456,
+          "integer_dn_mismatches": 0,
+          "maximum_integer_dn_error": 0.0,
+          "maximum_normalized_error": 0.0,
+          "negative_fraction": 0.2907375759548611
+        },
+        {
+          "samples": 147456,
+          "integer_dn_mismatches": 0,
+          "maximum_integer_dn_error": 0.0,
+          "maximum_normalized_error": 0.0,
+          "negative_fraction": 0.2666490342881944
+        },
+        {
+          "samples": 147456,
+          "integer_dn_mismatches": 0,
+          "maximum_integer_dn_error": 0.0,
+          "maximum_normalized_error": 0.0,
+          "negative_fraction": 0.2668728298611111
+        },
+        {
+          "samples": 147456,
+          "integer_dn_mismatches": 0,
+          "maximum_integer_dn_error": 0.0,
+          "maximum_normalized_error": 0.0,
+          "negative_fraction": 0.2570732964409722
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\protocole\\blacks\\6V1A0419.CR3",
+      "sha256": "9366f1adc4cbb0fc72dd3e7ca79056d60cdaa37673b70c22647b6d51a152c935",
+      "iso": 16000,
+      "role": "calibration",
+      "black": [
+        2046,
+        2047,
+        2046,
+        2047
+      ],
+      "white": 14351,
+      "divisor": 12305,
+      "native_descriptor_sha256": "f52ed1479fdd99df658b25ce1c21b1276a5f24d6e44eb6b5f974c45de980e301",
+      "rgb_replay_bit_exact": true,
+      "rois": [
+        {
+          "samples": 147456,
+          "integer_dn_mismatches": 0,
+          "maximum_integer_dn_error": 0.0,
+          "maximum_normalized_error": 0.0,
+          "negative_fraction": 0.4847073025173611
+        },
+        {
+          "samples": 147456,
+          "integer_dn_mismatches": 0,
+          "maximum_integer_dn_error": 0.0,
+          "maximum_normalized_error": 0.0,
+          "negative_fraction": 0.4878200954861111
+        },
+        {
+          "samples": 147456,
+          "integer_dn_mismatches": 0,
+          "maximum_integer_dn_error": 0.0,
+          "maximum_normalized_error": 0.0,
+          "negative_fraction": 0.4983995225694444
+        },
+        {
+          "samples": 147456,
+          "integer_dn_mismatches": 0,
+          "maximum_integer_dn_error": 0.0,
+          "maximum_normalized_error": 0.0,
+          "negative_fraction": 0.4898885091145833
+        },
+        {
+          "samples": 147456,
+          "integer_dn_mismatches": 0,
+          "maximum_integer_dn_error": 0.0,
+          "maximum_normalized_error": 0.0,
+          "negative_fraction": 0.4906548394097222
+        },
+        {
+          "samples": 147456,
+          "integer_dn_mismatches": 0,
+          "maximum_integer_dn_error": 0.0,
+          "maximum_normalized_error": 0.0,
+          "negative_fraction": 0.4889187282986111
+        },
+        {
+          "samples": 147456,
+          "integer_dn_mismatches": 0,
+          "maximum_integer_dn_error": 0.0,
+          "maximum_normalized_error": 0.0,
+          "negative_fraction": 0.5056084526909722
+        },
+        {
+          "samples": 147456,
+          "integer_dn_mismatches": 0,
+          "maximum_integer_dn_error": 0.0,
+          "maximum_normalized_error": 0.0,
+          "negative_fraction": 0.4940253363715278
+        },
+        {
+          "samples": 147456,
+          "integer_dn_mismatches": 0,
+          "maximum_integer_dn_error": 0.0,
+          "maximum_normalized_error": 0.0,
+          "negative_fraction": 0.4820014105902778
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorim\u00e9trie\\protocole\\blacks\\6V1A0473.CR3",
+      "sha256": "6f45e5430a9d8d40681f3bdd7984e5143fdda064dc53e961b03d10e2f12f6ed9",
+      "iso": 16000,
+      "role": "control",
+      "black": [
+        2046,
+        2046,
+        2046,
+        2047
+      ],
+      "white": 14351,
+      "divisor": 12305,
+      "native_descriptor_sha256": "cee8330f9aee0a2b2ba151fb1dc473e22b8f66afcc77204827fdd766d4fb9901",
+      "rgb_replay_bit_exact": true,
+      "rois": [
+        {
+          "samples": 147456,
+          "integer_dn_mismatches": 0,
+          "maximum_integer_dn_error": 0.0,
+          "maximum_normalized_error": 0.0,
+          "negative_fraction": 0.4869927300347222
+        },
+        {
+          "samples": 147456,
+          "integer_dn_mismatches": 0,
+          "maximum_integer_dn_error": 0.0,
+          "maximum_normalized_error": 0.0,
+          "negative_fraction": 0.4930148654513889
+        },
+        {
+          "samples": 147456,
+          "integer_dn_mismatches": 0,
+          "maximum_integer_dn_error": 0.0,
+          "maximum_normalized_error": 0.0,
+          "negative_fraction": 0.5003526475694444
+        },
+        {
+          "samples": 147456,
+          "integer_dn_mismatches": 0,
+          "maximum_integer_dn_error": 0.0,
+          "maximum_normalized_error": 0.0,
+          "negative_fraction": 0.4879964192708333
+        },
+        {
+          "samples": 147456,
+          "integer_dn_mismatches": 0,
+          "maximum_integer_dn_error": 0.0,
+          "maximum_normalized_error": 0.0,
+          "negative_fraction": 0.4909871419270833
+        },
+        {
+          "samples": 147456,
+          "integer_dn_mismatches": 0,
+          "maximum_integer_dn_error": 0.0,
+          "maximum_normalized_error": 0.0,
+          "negative_fraction": 0.4885592990451389
+        },
+        {
+          "samples": 147456,
+          "integer_dn_mismatches": 0,
+          "maximum_integer_dn_error": 0.0,
+          "maximum_normalized_error": 0.0,
+          "negative_fraction": 0.5018039279513888
+        },
+        {
+          "samples": 147456,
+          "integer_dn_mismatches": 0,
+          "maximum_integer_dn_error": 0.0,
+          "maximum_normalized_error": 0.0,
+          "negative_fraction": 0.4961886935763889
+        },
+        {
+          "samples": 147456,
+          "integer_dn_mismatches": 0,
+          "maximum_integer_dn_error": 0.0,
+          "maximum_normalized_error": 0.0,
+          "negative_fraction": 0.4819675021701389
+        }
+      ]
+    }
+  ],
+  "scope": "Four new dark sources, 36ROI, native archived renderer/input contract; not a latest-HEAD rebuild",
+  "finished_at_utc": "2026-11-08T11:38:18.890246+00:00"
+}

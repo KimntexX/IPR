@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "started_at_utc": "2026-11-04T07:55:05.733493+00:00",
+  "status": "completed_known_failure_diagnosis_reserved_unopened",
+  "qualification": "build-patch_neural_restoration\\structure-qualification-v001\\progress.json",
+  "data_plan": "build-patch_neural_restoration\\noisy-structure-plan-v001\\plan.json",
+  "campaign": "build-patch_neural_restoration\\noisy-structure-campaign-v001",
+  "prefix": "structure",
+  "script_sha256": "e33774674d411091f507cc907717714e345d40c790990a270ff687d81dd69e20",
+  "policy": "No retraining or tuning. Known failure -> paired diagnostic only. All known pass -> frozen new classic cohort then fine cohort2; failure stops opening further reserved data.",
+  "stages": [
+    {
+      "name": "paired_fine_comparison",
+      "started_at_utc": "2026-11-04T08:19:05.884791+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\compare_fine_candidates.py",
+        "--previous",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\stability-fine-v001\\result.json",
+        "--current",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\structure-fine-v001\\result.json",
+        "--output",
+        "build-patch_neural_restoration\\structure-followup-v001\\paired-fine.json"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-04T08:19:06.650517+00:00"
+    },
+    {
+      "name": "fine_diagnosis",
+      "started_at_utc": "2026-11-04T08:19:06.651803+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\trace_fine_attenuation.py",
+        "--proof",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\structure-protected-v001\\result.json",
+        "--historical",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\structure-fine-v001\\result.json",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\structure-fine-trace-v001"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-04T08:19:30.782416+00:00"
+    }
+  ],
+  "qualification_sha256": "0ec0292dbd4ab84ab0f826c3e1519ebfb172cacceef8e48e4916de4dbc032426",
+  "finished_at_utc": "2026-11-04T08:19:30.783729+00:00"
+}

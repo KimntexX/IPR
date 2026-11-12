@@ -1,0 +1,2238 @@
+{
+  "schema_version": 1,
+  "status": "completed_sustained_memory_review_not_photographic_qualification",
+  "measured_at_utc": "2026-11-06T10:08:41.301481+00:00",
+  "campaign_sha256": "99026ffda652e0739d3405f731a9f91b28b71bf87d234f8a38c86e02f15ac6a4",
+  "started_at_utc": "2026-11-06T09:24:20.487845+00:00",
+  "finished_at_utc": "2026-11-06T10:00:07.136390+00:00",
+  "seeds": [
+    {
+      "seed": 71,
+      "training_sha256": "f5ea54f497622b326ff58e5b3908aff95cd8eb3aa6ba6c1b4e953612fd782cef",
+      "status": "completed_dru_bootstrap_not_photographic_qualification",
+      "steps": 256,
+      "elapsed_seconds": 1007.9579560999991,
+      "median_seconds_per_update": 2.330843850009842,
+      "memory": {
+        "hard_process_commit_bytes": 6442450944,
+        "soft_process_bytes": 4831838208,
+        "system_stop_fraction": 0.92,
+        "poll_seconds": 0.25,
+        "samples": 3939,
+        "peak_rss_bytes": 1705664512,
+        "peak_private_sampled_bytes": 4815994880,
+        "peak_system_used_fraction": 0.7525541482822253,
+        "os_job_peak_commit_bytes": 4815994880,
+        "reason": null,
+        "last": {
+          "system_total_bytes": 16933507072,
+          "system_available_bytes": 5945700352,
+          "system_used_fraction": 0.6488795660155142,
+          "process_rss_bytes": 1559293952,
+          "process_private_bytes": 3748540416,
+          "process_peak_rss_bytes": 1705664512,
+          "process_peak_pagefile_bytes": 4815994880
+        },
+        "first_violation": null
+      },
+      "peak_sample": {
+        "at_utc": "2026-11-06T09:34:55.594149+00:00",
+        "elapsed_seconds": 574.9350367000443,
+        "counters": {
+          "system_total_bytes": 16933507072,
+          "system_available_bytes": 5207580672,
+          "system_used_fraction": 0.6924688636643457,
+          "process_rss_bytes": 1527623680,
+          "process_private_bytes": 4815994880,
+          "process_peak_rss_bytes": 1705664512,
+          "process_peak_pagefile_bytes": 4815994880
+        },
+        "reason": null,
+        "phase": "data-generation",
+        "step": 129,
+        "micro": 2,
+        "gpu": {
+          "allocated_bytes": 527282176,
+          "reserved_bytes": 1669332992,
+          "peak_allocated_bytes": 1475720704,
+          "peak_reserved_bytes": 1679818752
+        }
+      },
+      "phase_summary": {
+        "initialization": {
+          "samples": 1,
+          "maximum_process_private_bytes": 14970880,
+          "maximum_system_used_fraction": 0.636237085335656
+        },
+        "torch-import": {
+          "samples": 6,
+          "maximum_process_private_bytes": 1668947968,
+          "maximum_system_used_fraction": 0.6743442496257399
+        },
+        "model-initialization": {
+          "samples": 4,
+          "maximum_process_private_bytes": 2203754496,
+          "maximum_system_used_fraction": 0.6876141859150486
+        },
+        "checkpoint-save": {
+          "samples": 35,
+          "maximum_process_private_bytes": 4670693376,
+          "maximum_system_used_fraction": 0.7525541482822253
+        },
+        "known-control": {
+          "samples": 1583,
+          "maximum_process_private_bytes": 4668899328,
+          "maximum_system_used_fraction": 0.7370803769668157
+        },
+        "forward": {
+          "samples": 508,
+          "maximum_process_private_bytes": 4798132224,
+          "maximum_system_used_fraction": 0.7374233731326605
+        },
+        "backward": {
+          "samples": 1649,
+          "maximum_process_private_bytes": 4815929344,
+          "maximum_system_used_fraction": 0.7374763464474137
+        },
+        "data-generation": {
+          "samples": 134,
+          "maximum_process_private_bytes": 4815994880,
+          "maximum_system_used_fraction": 0.7374952136554078
+        },
+        "optimizer-update": {
+          "samples": 9,
+          "maximum_process_private_bytes": 4661190656,
+          "maximum_system_used_fraction": 0.7340560602802457
+        },
+        "host-to-device": {
+          "samples": 10,
+          "maximum_process_private_bytes": 4661465088,
+          "maximum_system_used_fraction": 0.7358128876092513
+        }
+      },
+      "trace_sha256": "d5a8e5f7e3cb489bd0d998989e690da70011fbd5d1fff9606dddbab7b27ff28b",
+      "trace_samples": 3939,
+      "trace_bytes": 2247557,
+      "controls": [
+        {
+          "step": 0,
+          "source_sha256": "cf1c374c75c1b129670a5e782a39790a16a0721f83a211e0c07a82b4f32af395",
+          "observations": 864,
+          "groups": [
+            {
+              "frequency": 6,
+              "chromatic": false,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9992489509644713,
+                0.9986213289292676,
+                0.999493379729165,
+                0.9994327254616326
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 6,
+              "chromatic": false,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9936327616693911,
+                1.0023076002856843,
+                1.001914328964159,
+                1.003696915101197
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 6,
+              "chromatic": true,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9993144998661962,
+                0.9996100683428631,
+                1.00007485803932,
+                1.0010130881170534
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 6,
+              "chromatic": true,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9983914689293025,
+                0.9993934716387957,
+                0.9966514507011774,
+                1.0040499363847935
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 10,
+              "chromatic": false,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                1.0007829672890443,
+                1.0019912921632654,
+                0.9986744491984764,
+                1.0002797264072507
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 10,
+              "chromatic": false,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                1.0054020803769714,
+                1.0012659238798345,
+                0.9955208519165727,
+                0.9980650586811876
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 10,
+              "chromatic": true,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.997676894785096,
+                0.9997445842773344,
+                1.0024211669440817,
+                1.0005300971560447
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 10,
+              "chromatic": true,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                1.0006035827455222,
+                1.0045386134210075,
+                1.0017159535791016,
+                1.0026527476655784
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 14,
+              "chromatic": false,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9998555207310572,
+                1.0010011712483753,
+                0.9990452284940076,
+                1.002350431089708
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 14,
+              "chromatic": false,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9966721530396188,
+                1.001065246565075,
+                0.9942024993067873,
+                0.999766398948259
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 14,
+              "chromatic": true,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                1.0007565100088283,
+                1.0008637893412122,
+                1.0011809372612233,
+                1.0000007307489511
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 14,
+              "chromatic": true,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9974288121295777,
+                0.9946122899623505,
+                1.0016207764043528,
+                0.998854591597829
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 18,
+              "chromatic": false,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9997230675872285,
+                0.9995327225780234,
+                0.9990965567231004,
+                1.0006676327684254
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 18,
+              "chromatic": false,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9962294746121511,
+                0.9969714133528973,
+                1.0039715163262284,
+                0.994770814540892
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 18,
+              "chromatic": true,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9994029189505818,
+                1.0001649446550962,
+                0.9996452373931137,
+                0.9993705287762986
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 18,
+              "chromatic": true,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.998991038002054,
+                1.0033480115365787,
+                1.0022027393284758,
+                0.9957315005801897
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 22,
+              "chromatic": false,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                1.0009851814498845,
+                0.9994740322622082,
+                0.9993536162591631,
+                0.9998152926613462
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 22,
+              "chromatic": false,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9997627031808572,
+                1.0040539388554417,
+                1.0011889113225483,
+                0.9958639399062515
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 22,
+              "chromatic": true,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9997048577540042,
+                0.9994924306247273,
+                0.9973606577317562,
+                1.000840177032954
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 22,
+              "chromatic": true,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9982562091335344,
+                1.0013689427633052,
+                1.0033575863227722,
+                0.998276142324418
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 26,
+              "chromatic": false,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9992027106493251,
+                0.9977855910304938,
+                1.000117577521526,
+                1.00133278186458
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 26,
+              "chromatic": false,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9986146904195091,
+                1.000914737113016,
+                1.000105824483648,
+                1.0005960509598604
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 26,
+              "chromatic": true,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9986806474374355,
+                1.0014922723503838,
+                1.0014273921840244,
+                1.00230380853258
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 26,
+              "chromatic": true,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                1.0019373610157867,
+                1.004366377242985,
+                1.0003977823247883,
+                1.0011435225889604
+              ],
+              "sensor_mse_ratio": 1.0
+            }
+          ],
+          "sensor_transfer_below095_groups": 0,
+          "minimum_group_channel_gain": 0.9936327616693911,
+          "median_group_sensor_mse_ratio": 1.0
+        },
+        {
+          "step": 128,
+          "source_sha256": "6e56b1d34453dd1ba6e3a9f5a175f631f4931e4abd66d410296ee9a0d26be019",
+          "observations": 864,
+          "groups": [
+            {
+              "frequency": 6,
+              "chromatic": false,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9974745333391852,
+                0.9978382479744963,
+                0.9978909320545265,
+                0.9979666390539297
+              ],
+              "sensor_mse_ratio": 0.9564970257521893
+            },
+            {
+              "frequency": 6,
+              "chromatic": false,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9891226285866269,
+                1.0003132066245204,
+                0.9977678983368862,
+                1.000012712667494
+              ],
+              "sensor_mse_ratio": 0.93203923160993
+            },
+            {
+              "frequency": 6,
+              "chromatic": true,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9980170117518838,
+                0.9991757403195322,
+                0.9984960079608486,
+                1.000758701527601
+              ],
+              "sensor_mse_ratio": 0.9569902348955824
+            },
+            {
+              "frequency": 6,
+              "chromatic": true,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9951539267063443,
+                0.9982589853437087,
+                0.9930804667533205,
+                1.0035451141482512
+              ],
+              "sensor_mse_ratio": 0.9297450775725637
+            },
+            {
+              "frequency": 10,
+              "chromatic": false,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9978481752189379,
+                1.000632856195937,
+                0.9961951734524638,
+                0.9979326708776769
+              ],
+              "sensor_mse_ratio": 0.9575833893170048
+            },
+            {
+              "frequency": 10,
+              "chromatic": false,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9980855894179766,
+                0.9978025326163311,
+                0.9884918763779894,
+                0.991846716725367
+              ],
+              "sensor_mse_ratio": 0.9310311720353521
+            },
+            {
+              "frequency": 10,
+              "chromatic": true,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9952988200536724,
+                0.9987550294769325,
+                1.0012001309728322,
+                1.0000880435916961
+              ],
+              "sensor_mse_ratio": 0.9576969540758971
+            },
+            {
+              "frequency": 10,
+              "chromatic": true,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9942284479332967,
+                1.001994416531566,
+                0.9989279799640121,
+                1.001674070735178
+              ],
+              "sensor_mse_ratio": 0.9312031721348051
+            },
+            {
+              "frequency": 14,
+              "chromatic": false,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9937834014032426,
+                0.9982109051689656,
+                0.9907382872831507,
+                0.9977891447937783
+              ],
+              "sensor_mse_ratio": 0.9761931532829811
+            },
+            {
+              "frequency": 14,
+              "chromatic": false,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.980690815044052,
+                0.9936908542427365,
+                0.9723497705338833,
+                0.987800560050938
+              ],
+              "sensor_mse_ratio": 0.9469285919058172
+            },
+            {
+              "frequency": 14,
+              "chromatic": true,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9923857944244427,
+                0.9976811524537081,
+                1.0036722323443807,
+                1.0000372088788085
+              ],
+              "sensor_mse_ratio": 0.9692834363419526
+            },
+            {
+              "frequency": 14,
+              "chromatic": true,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9755727743374032,
+                0.9862347780372418,
+                1.0083299078567969,
+                0.999164840190864
+              ],
+              "sensor_mse_ratio": 0.9407074192562969
+            },
+            {
+              "frequency": 18,
+              "chromatic": false,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9844661206040605,
+                0.9936692396505976,
+                0.9659033496244243,
+                0.9919440634660587
+              ],
+              "sensor_mse_ratio": 1.0419085460895654
+            },
+            {
+              "frequency": 18,
+              "chromatic": false,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9533550311557758,
+                0.9823266019917819,
+                0.9143792028599587,
+                0.9711113993459433
+              ],
+              "sensor_mse_ratio": 1.0141294052868526
+            },
+            {
+              "frequency": 18,
+              "chromatic": true,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9724204815294534,
+                0.9906376324850628,
+                1.0070946259987958,
+                1.001483001829024
+              ],
+              "sensor_mse_ratio": 1.0080699970557179
+            },
+            {
+              "frequency": 18,
+              "chromatic": true,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9247205706507725,
+                0.9767131783720173,
+                1.024486404456577,
+                1.0022582138095304
+              ],
+              "sensor_mse_ratio": 0.9804422180406136
+            },
+            {
+              "frequency": 22,
+              "chromatic": false,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.979791762383952,
+                0.9935069451517425,
+                0.943229863075882,
+                0.9915404072570873
+              ],
+              "sensor_mse_ratio": 1.1091817828249784
+            },
+            {
+              "frequency": 22,
+              "chromatic": false,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9410390648297979,
+                0.9873174968751807,
+                0.8446686886598143,
+                0.9739871557217776
+              ],
+              "sensor_mse_ratio": 1.0800009528675785
+            },
+            {
+              "frequency": 22,
+              "chromatic": true,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9609563476613828,
+                0.9848574076135258,
+                0.988904295588802,
+                1.003582132642612
+              ],
+              "sensor_mse_ratio": 1.0630795515555753
+            },
+            {
+              "frequency": 22,
+              "chromatic": true,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.8929142826982402,
+                0.9612629603152387,
+                0.9819804774678285,
+                1.0064418706368228
+              ],
+              "sensor_mse_ratio": 1.034201146760954
+            },
+            {
+              "frequency": 26,
+              "chromatic": false,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9724557667196314,
+                0.9927133743256555,
+                0.9447413015207279,
+                0.9988335802176572
+              ],
+              "sensor_mse_ratio": 1.0965437621875314
+            },
+            {
+              "frequency": 26,
+              "chromatic": false,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9241172223609249,
+                0.9873000927584094,
+                0.8475637821505552,
+                0.9945308424929612
+              ],
+              "sensor_mse_ratio": 1.07346112233168
+            },
+            {
+              "frequency": 26,
+              "chromatic": true,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9587954852890402,
+                0.9878905888624714,
+                0.9604230781305164,
+                1.0010874794872653
+              ],
+              "sensor_mse_ratio": 1.0852913151519292
+            },
+            {
+              "frequency": 26,
+              "chromatic": true,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.892067583034822,
+                0.967061896535058,
+                0.8903238630818523,
+                0.9987243963872974
+              ],
+              "sensor_mse_ratio": 1.0606094976346474
+            }
+          ],
+          "sensor_transfer_below095_groups": 8,
+          "minimum_group_channel_gain": 0.8446686886598143,
+          "median_group_sensor_mse_ratio": 0.9783176856617973
+        },
+        {
+          "step": 256,
+          "source_sha256": "c4e9283a2b701ec9620be5814d2190e86d072b9c1254e3f0ecfc0bd2350f290d",
+          "observations": 864,
+          "groups": [
+            {
+              "frequency": 6,
+              "chromatic": false,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.987365436062966,
+                0.9971639018746904,
+                0.9950121578056321,
+                0.9959049054836915
+              ],
+              "sensor_mse_ratio": 0.8752752744092989
+            },
+            {
+              "frequency": 6,
+              "chromatic": false,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9630015363285328,
+                0.9986423527670212,
+                0.9904378340565487,
+                0.9943006026591336
+              ],
+              "sensor_mse_ratio": 0.761858682701786
+            },
+            {
+              "frequency": 6,
+              "chromatic": true,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9910012904143155,
+                0.9978607809358296,
+                0.999377542396291,
+                1.001499123909504
+              ],
+              "sensor_mse_ratio": 0.8714131084295588
+            },
+            {
+              "frequency": 6,
+              "chromatic": true,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9773406319557816,
+                0.9947477536213566,
+                0.995861306713467,
+                1.0051315007725459
+              ],
+              "sensor_mse_ratio": 0.7566770417746178
+            },
+            {
+              "frequency": 10,
+              "chromatic": false,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9469835957233431,
+                0.9923985617005852,
+                0.9791688102570508,
+                0.985046428575559
+              ],
+              "sensor_mse_ratio": 0.9231087749815462
+            },
+            {
+              "frequency": 10,
+              "chromatic": false,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.8579808958396734,
+                0.9758241368193425,
+                0.943699283902927,
+                0.9565444527241023
+              ],
+              "sensor_mse_ratio": 0.8024292919620463
+            },
+            {
+              "frequency": 10,
+              "chromatic": true,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.951647834792044,
+                0.9922933848975308,
+                1.0045168736447083,
+                1.003846790645705
+              ],
+              "sensor_mse_ratio": 0.9073855672921501
+            },
+            {
+              "frequency": 10,
+              "chromatic": true,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.8764604350523275,
+                0.9841197010809373,
+                1.0096426904797853,
+                1.0109807943522295
+              ],
+              "sensor_mse_ratio": 0.7876587911760464
+            },
+            {
+              "frequency": 14,
+              "chromatic": false,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9112704781697878,
+                0.9713772973612314,
+                0.952492491713579,
+                0.9705665726547625
+              ],
+              "sensor_mse_ratio": 1.008983435336915
+            },
+            {
+              "frequency": 14,
+              "chromatic": false,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.7417903542992849,
+                0.9184208928525699,
+                0.8641735718586389,
+                0.9090482905191433
+              ],
+              "sensor_mse_ratio": 0.8981070687737019
+            },
+            {
+              "frequency": 14,
+              "chromatic": true,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9277815491682616,
+                0.9874194247629637,
+                1.008337253125079,
+                0.9998153560546901
+              ],
+              "sensor_mse_ratio": 0.9652371251563175
+            },
+            {
+              "frequency": 14,
+              "chromatic": true,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.7937572988295668,
+                0.957921391588937,
+                1.020934389339947,
+                0.9973516692732094
+              ],
+              "sensor_mse_ratio": 0.8491055914522657
+            },
+            {
+              "frequency": 18,
+              "chromatic": false,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9034769053622667,
+                0.9466764532418471,
+                0.9226463193713857,
+                0.957230266886138
+              ],
+              "sensor_mse_ratio": 1.0890814992171038
+            },
+            {
+              "frequency": 18,
+              "chromatic": false,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.716169554388902,
+                0.8452819431855869,
+                0.7829547585979948,
+                0.8701713698667553
+              ],
+              "sensor_mse_ratio": 0.9907280161772315
+            },
+            {
+              "frequency": 18,
+              "chromatic": true,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9223378698831161,
+                0.9789846389471444,
+                1.0146435139664414,
+                0.9838757995934854
+              ],
+              "sensor_mse_ratio": 1.0042612771674753
+            },
+            {
+              "frequency": 18,
+              "chromatic": true,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.7801294298754653,
+                0.9444552798849843,
+                1.0387032480768137,
+                0.954509483408527
+              ],
+              "sensor_mse_ratio": 0.8903443838286061
+            },
+            {
+              "frequency": 22,
+              "chromatic": false,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9188491072164187,
+                0.9303658396653608,
+                0.8957768723962055,
+                0.9504392279096712
+              ],
+              "sensor_mse_ratio": 1.1564496092523449
+            },
+            {
+              "frequency": 22,
+              "chromatic": false,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.7587896705765479,
+                0.8024043098335889,
+                0.6989247447578417,
+                0.8541117545265516
+              ],
+              "sensor_mse_ratio": 1.0662033806303595
+            },
+            {
+              "frequency": 22,
+              "chromatic": true,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9186703626577992,
+                0.9683034844561355,
+                1.0296836386070465,
+                0.962136362881343
+              ],
+              "sensor_mse_ratio": 1.0517299937877722
+            },
+            {
+              "frequency": 22,
+              "chromatic": true,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.7692650964157461,
+                0.9146461028310497,
+                1.0867748390898033,
+                0.8897786881471741
+              ],
+              "sensor_mse_ratio": 0.9401716238819674
+            },
+            {
+              "frequency": 26,
+              "chromatic": false,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9425299491298103,
+                0.9279011550655044,
+                0.8892320305917857,
+                0.9591375093051759
+              ],
+              "sensor_mse_ratio": 1.1708083985151716
+            },
+            {
+              "frequency": 26,
+              "chromatic": false,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.8327888112214483,
+                0.7960640571344944,
+                0.6789648187252482,
+                0.8764954714681154
+              ],
+              "sensor_mse_ratio": 1.0858809262315985
+            },
+            {
+              "frequency": 26,
+              "chromatic": true,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9161199786867046,
+                0.9673077856108466,
+                1.0326634340022778,
+                0.9508243205694513
+              ],
+              "sensor_mse_ratio": 1.0848416236854839
+            },
+            {
+              "frequency": 26,
+              "chromatic": true,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.7653820674454844,
+                0.9060750503285568,
+                1.0925271676318327,
+                0.8523965805340918
+              ],
+              "sensor_mse_ratio": 0.9796313647116935
+            }
+          ],
+          "sensor_transfer_below095_groups": 19,
+          "minimum_group_channel_gain": 0.6789648187252482,
+          "median_group_sensor_mse_ratio": 0.9527043745191425
+        }
+      ],
+      "milestones": [
+        {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-memory-campaign-v001\\seed71\\checkpoint-000000.pt",
+          "sha256": "c4f267a35267d95086a51d043cc58019727b81b776a13bede67283788ab2c68c",
+          "step": 0,
+          "sha256_verified": true
+        },
+        {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-memory-campaign-v001\\seed71\\checkpoint-000128.pt",
+          "sha256": "a54938ad387cb0d0fd5e60c6cee359faa2dd0eb2b094756a85aaea6a3eedbb92",
+          "step": 128,
+          "sha256_verified": true
+        },
+        {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-memory-campaign-v001\\seed71\\checkpoint-000256.pt",
+          "sha256": "4f855b327f0aa6c1830c2ea9924a1795df6b2d6d9cb08a962be913783effb0ac",
+          "step": 256,
+          "sha256_verified": true
+        },
+        {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-memory-campaign-v001\\seed71\\weights.pt",
+          "sha256": "4f855b327f0aa6c1830c2ea9924a1795df6b2d6d9cb08a962be913783effb0ac",
+          "step": 256,
+          "sha256_verified": true
+        }
+      ],
+      "resume": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-memory-campaign-v001\\seed71\\resume.pt",
+        "sha256": "4f855b327f0aa6c1830c2ea9924a1795df6b2d6d9cb08a962be913783effb0ac",
+        "step": 256,
+        "sha256_verified": true
+      },
+      "training_loss_first64_mean": 0.9856986419763416,
+      "training_loss_last64_mean": 0.8084086594171822
+    },
+    {
+      "seed": 73,
+      "training_sha256": "8719f540542751160e4146b4f780804cb1f3a9d4637c8ac01d1da957f558ec26",
+      "status": "completed_dru_bootstrap_not_photographic_qualification",
+      "steps": 256,
+      "elapsed_seconds": 1017.1457811000291,
+      "median_seconds_per_update": 2.357480750011746,
+      "memory": {
+        "hard_process_commit_bytes": 6442450944,
+        "soft_process_bytes": 4831838208,
+        "system_stop_fraction": 0.92,
+        "poll_seconds": 0.25,
+        "samples": 3966,
+        "peak_rss_bytes": 1706737664,
+        "peak_private_sampled_bytes": 4806148096,
+        "peak_system_used_fraction": 0.7571616172293408,
+        "os_job_peak_commit_bytes": 4806148096,
+        "reason": null,
+        "last": {
+          "system_total_bytes": 16933507072,
+          "system_available_bytes": 5799440384,
+          "system_used_fraction": 0.6575168770803819,
+          "process_rss_bytes": 1563279360,
+          "process_private_bytes": 3753439232,
+          "process_peak_rss_bytes": 1706737664,
+          "process_peak_pagefile_bytes": 4806148096
+        },
+        "first_violation": null
+      },
+      "peak_sample": {
+        "at_utc": "2026-11-06T09:52:46.376707+00:00",
+        "elapsed_seconds": 577.1142917000107,
+        "counters": {
+          "system_total_bytes": 16933507072,
+          "system_available_bytes": 5721468928,
+          "system_used_fraction": 0.6621214433801135,
+          "process_rss_bytes": 1667850240,
+          "process_private_bytes": 4806148096,
+          "process_peak_rss_bytes": 1706737664,
+          "process_peak_pagefile_bytes": 4806148096
+        },
+        "reason": null,
+        "phase": "backward",
+        "step": 129,
+        "micro": 1,
+        "gpu": {
+          "allocated_bytes": 805942784,
+          "reserved_bytes": 1602224128,
+          "peak_allocated_bytes": 1475720704,
+          "peak_reserved_bytes": 1679818752
+        }
+      },
+      "phase_summary": {
+        "initialization": {
+          "samples": 1,
+          "maximum_process_private_bytes": 14974976,
+          "maximum_system_used_fraction": 0.565352984901154
+        },
+        "torch-import": {
+          "samples": 5,
+          "maximum_process_private_bytes": 1567596544,
+          "maximum_system_used_fraction": 0.5975469726960054
+        },
+        "model-initialization": {
+          "samples": 4,
+          "maximum_process_private_bytes": 2189770752,
+          "maximum_system_used_fraction": 0.6168157135783667
+        },
+        "checkpoint-save": {
+          "samples": 35,
+          "maximum_process_private_bytes": 4672999424,
+          "maximum_system_used_fraction": 0.7071291680504634
+        },
+        "known-control": {
+          "samples": 1580,
+          "maximum_process_private_bytes": 4670885888,
+          "maximum_system_used_fraction": 0.7571616172293408
+        },
+        "forward": {
+          "samples": 511,
+          "maximum_process_private_bytes": 4806148096,
+          "maximum_system_used_fraction": 0.7499325739201487
+        },
+        "backward": {
+          "samples": 1675,
+          "maximum_process_private_bytes": 4806148096,
+          "maximum_system_used_fraction": 0.7533847892085376
+        },
+        "data-generation": {
+          "samples": 138,
+          "maximum_process_private_bytes": 4668235776,
+          "maximum_system_used_fraction": 0.7503270920770546
+        },
+        "optimizer-update": {
+          "samples": 9,
+          "maximum_process_private_bytes": 4667445248,
+          "maximum_system_used_fraction": 0.7471496607409926
+        },
+        "host-to-device": {
+          "samples": 8,
+          "maximum_process_private_bytes": 4667686912,
+          "maximum_system_used_fraction": 0.678002794765656
+        }
+      },
+      "trace_sha256": "b854beb559de6ae5f9cc160c4905401563a069ae38da4158aec661d4dd6d7433",
+      "trace_samples": 3966,
+      "trace_bytes": 2263087,
+      "controls": [
+        {
+          "step": 0,
+          "source_sha256": "cf1c374c75c1b129670a5e782a39790a16a0721f83a211e0c07a82b4f32af395",
+          "observations": 864,
+          "groups": [
+            {
+              "frequency": 6,
+              "chromatic": false,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9992489509644713,
+                0.9986213289292676,
+                0.999493379729165,
+                0.9994327254616326
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 6,
+              "chromatic": false,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9936327616693911,
+                1.0023076002856843,
+                1.001914328964159,
+                1.003696915101197
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 6,
+              "chromatic": true,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9993144998661962,
+                0.9996100683428631,
+                1.00007485803932,
+                1.0010130881170534
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 6,
+              "chromatic": true,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9983914689293025,
+                0.9993934716387957,
+                0.9966514507011774,
+                1.0040499363847935
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 10,
+              "chromatic": false,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                1.0007829672890443,
+                1.0019912921632654,
+                0.9986744491984764,
+                1.0002797264072507
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 10,
+              "chromatic": false,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                1.0054020803769714,
+                1.0012659238798345,
+                0.9955208519165727,
+                0.9980650586811876
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 10,
+              "chromatic": true,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.997676894785096,
+                0.9997445842773344,
+                1.0024211669440817,
+                1.0005300971560447
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 10,
+              "chromatic": true,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                1.0006035827455222,
+                1.0045386134210075,
+                1.0017159535791016,
+                1.0026527476655784
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 14,
+              "chromatic": false,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9998555207310572,
+                1.0010011712483753,
+                0.9990452284940076,
+                1.002350431089708
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 14,
+              "chromatic": false,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9966721530396188,
+                1.001065246565075,
+                0.9942024993067873,
+                0.999766398948259
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 14,
+              "chromatic": true,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                1.0007565100088283,
+                1.0008637893412122,
+                1.0011809372612233,
+                1.0000007307489511
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 14,
+              "chromatic": true,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9974288121295777,
+                0.9946122899623505,
+                1.0016207764043528,
+                0.998854591597829
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 18,
+              "chromatic": false,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9997230675872285,
+                0.9995327225780234,
+                0.9990965567231004,
+                1.0006676327684254
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 18,
+              "chromatic": false,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9962294746121511,
+                0.9969714133528973,
+                1.0039715163262284,
+                0.994770814540892
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 18,
+              "chromatic": true,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9994029189505818,
+                1.0001649446550962,
+                0.9996452373931137,
+                0.9993705287762986
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 18,
+              "chromatic": true,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.998991038002054,
+                1.0033480115365787,
+                1.0022027393284758,
+                0.9957315005801897
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 22,
+              "chromatic": false,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                1.0009851814498845,
+                0.9994740322622082,
+                0.9993536162591631,
+                0.9998152926613462
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 22,
+              "chromatic": false,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9997627031808572,
+                1.0040539388554417,
+                1.0011889113225483,
+                0.9958639399062515
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 22,
+              "chromatic": true,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9997048577540042,
+                0.9994924306247273,
+                0.9973606577317562,
+                1.000840177032954
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 22,
+              "chromatic": true,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9982562091335344,
+                1.0013689427633052,
+                1.0033575863227722,
+                0.998276142324418
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 26,
+              "chromatic": false,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9992027106493251,
+                0.9977855910304938,
+                1.000117577521526,
+                1.00133278186458
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 26,
+              "chromatic": false,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9986146904195091,
+                1.000914737113016,
+                1.000105824483648,
+                1.0005960509598604
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 26,
+              "chromatic": true,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9986806474374355,
+                1.0014922723503838,
+                1.0014273921840244,
+                1.00230380853258
+              ],
+              "sensor_mse_ratio": 1.0
+            },
+            {
+              "frequency": 26,
+              "chromatic": true,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                1.0019373610157867,
+                1.004366377242985,
+                1.0003977823247883,
+                1.0011435225889604
+              ],
+              "sensor_mse_ratio": 1.0
+            }
+          ],
+          "sensor_transfer_below095_groups": 0,
+          "minimum_group_channel_gain": 0.9936327616693911,
+          "median_group_sensor_mse_ratio": 1.0
+        },
+        {
+          "step": 128,
+          "source_sha256": "c4c5abf36fd5e3876260745078fe2bcb2ef569f016551d386c41f81aa1eebb98",
+          "observations": 864,
+          "groups": [
+            {
+              "frequency": 6,
+              "chromatic": false,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9977198998401795,
+                0.9978828761384284,
+                0.9982077650730129,
+                0.998708001395068
+              ],
+              "sensor_mse_ratio": 0.9205432129217967
+            },
+            {
+              "frequency": 6,
+              "chromatic": false,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9896379857944511,
+                1.0000216125424124,
+                0.9985238141277102,
+                1.001484657835187
+              ],
+              "sensor_mse_ratio": 0.8563761587398848
+            },
+            {
+              "frequency": 6,
+              "chromatic": true,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.997905908685783,
+                0.9986843754945437,
+                0.9981052505190018,
+                1.0004220655288956
+              ],
+              "sensor_mse_ratio": 0.9197989021207856
+            },
+            {
+              "frequency": 6,
+              "chromatic": true,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9948085978545836,
+                0.9966800205780925,
+                0.9913642648149801,
+                1.0023968198601774
+              ],
+              "sensor_mse_ratio": 0.8524659614965838
+            },
+            {
+              "frequency": 10,
+              "chromatic": false,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9962263817126517,
+                1.0013700734386768,
+                0.9942405832941719,
+                0.9989638694293141
+              ],
+              "sensor_mse_ratio": 0.9213483825384194
+            },
+            {
+              "frequency": 10,
+              "chromatic": false,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9929564862010102,
+                0.9993764106364412,
+                0.983525224430971,
+                0.9943432890185662
+              ],
+              "sensor_mse_ratio": 0.8562988266918168
+            },
+            {
+              "frequency": 10,
+              "chromatic": true,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9932462153721144,
+                0.9973719588471588,
+                0.9944236286297217,
+                0.9998698700260878
+              ],
+              "sensor_mse_ratio": 0.9225891698303021
+            },
+            {
+              "frequency": 10,
+              "chromatic": true,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9887087797485528,
+                0.9979730484001106,
+                0.9807581501882956,
+                1.0006662559974384
+              ],
+              "sensor_mse_ratio": 0.8564078166417747
+            },
+            {
+              "frequency": 14,
+              "chromatic": false,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9814336509663142,
+                1.000971532826892,
+                0.9776751840862965,
+                0.9988100142091307
+              ],
+              "sensor_mse_ratio": 0.944831354677703
+            },
+            {
+              "frequency": 14,
+              "chromatic": false,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9465643773751042,
+                1.0010839749307725,
+                0.9364000133846047,
+                0.9902697330632501
+              ],
+              "sensor_mse_ratio": 0.8795272918372062
+            },
+            {
+              "frequency": 14,
+              "chromatic": true,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9842523151882029,
+                0.9948382346105237,
+                0.9658387686168644,
+                1.0003972695195145
+              ],
+              "sensor_mse_ratio": 0.9320297606518892
+            },
+            {
+              "frequency": 14,
+              "chromatic": true,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9528511520768834,
+                0.9782939672119214,
+                0.906497080942169,
+                0.9998912236443085
+              ],
+              "sensor_mse_ratio": 0.8675406383956641
+            },
+            {
+              "frequency": 18,
+              "chromatic": false,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9365290891234728,
+                1.000984338031613,
+                0.916130937528275,
+                0.9922995872940502
+              ],
+              "sensor_mse_ratio": 1.1060653000237493
+            },
+            {
+              "frequency": 18,
+              "chromatic": false,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.8229148492348828,
+                1.0016632890509083,
+                0.7763222067812185,
+                0.9719329828988688
+              ],
+              "sensor_mse_ratio": 1.0412162168129906
+            },
+            {
+              "frequency": 18,
+              "chromatic": true,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9450267611453308,
+                0.9854512144403839,
+                0.8679772470527211,
+                1.003590714991902
+              ],
+              "sensor_mse_ratio": 1.0163047204806814
+            },
+            {
+              "frequency": 18,
+              "chromatic": true,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.8506240727472936,
+                0.9633216989092307,
+                0.6445416122630259,
+                1.00784512362297
+              ],
+              "sensor_mse_ratio": 0.9486952226105365
+            },
+            {
+              "frequency": 22,
+              "chromatic": false,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9029152140858768,
+                1.0011348120354904,
+                0.8574293628547907,
+                0.9909660247823849
+              ],
+              "sensor_mse_ratio": 1.317374567407263
+            },
+            {
+              "frequency": 22,
+              "chromatic": false,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.7284494774858421,
+                1.0086329166047943,
+                0.6087342504784043,
+                0.9716230574938748
+              ],
+              "sensor_mse_ratio": 1.2528935825770886
+            },
+            {
+              "frequency": 22,
+              "chromatic": true,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9075525991318804,
+                0.9721623739722447,
+                0.7710078401576834,
+                1.0064949428426686
+              ],
+              "sensor_mse_ratio": 1.176235160204514
+            },
+            {
+              "frequency": 22,
+              "chromatic": true,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.7465946108633209,
+                0.9276876855405285,
+                0.3840080087179071,
+                1.0141905562259066
+              ],
+              "sensor_mse_ratio": 1.103789538151225
+            },
+            {
+              "frequency": 26,
+              "chromatic": false,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.8954813522636026,
+                0.9962121970198178,
+                0.8590876036733728,
+                0.9923513804935544
+              ],
+              "sensor_mse_ratio": 1.252158338831103
+            },
+            {
+              "frequency": 26,
+              "chromatic": false,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.7135643652920791,
+                0.9972433643977846,
+                0.6120956013637182,
+                0.976239471267748
+              ],
+              "sensor_mse_ratio": 1.1923901999407083
+            },
+            {
+              "frequency": 26,
+              "chromatic": true,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9005896522589247,
+                0.9702680058719879,
+                0.7942079594267626,
+                1.0051283016362274
+              ],
+              "sensor_mse_ratio": 1.1581531115187826
+            },
+            {
+              "frequency": 26,
+              "chromatic": true,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.7334257132612194,
+                0.9202783690651533,
+                0.43213415072590633,
+                1.0094038457087695
+              ],
+              "sensor_mse_ratio": 1.0935859789528035
+            }
+          ],
+          "sensor_transfer_below095_groups": 14,
+          "minimum_group_channel_gain": 0.3840080087179071,
+          "median_group_sensor_mse_ratio": 0.9467632886441197
+        },
+        {
+          "step": 256,
+          "source_sha256": "2fe4e11e0cd67ff588748b407eb94f639f1063af256c6c5344a4320ec875c98f",
+          "observations": 864,
+          "groups": [
+            {
+              "frequency": 6,
+              "chromatic": false,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9860591499753357,
+                1.000189550476348,
+                0.9855457517505395,
+                1.0024449577859644
+              ],
+              "sensor_mse_ratio": 0.8706396837995579
+            },
+            {
+              "frequency": 6,
+              "chromatic": false,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.958884395356622,
+                1.0069865671680096,
+                0.965355716385307,
+                1.0110850119704904
+              ],
+              "sensor_mse_ratio": 0.752065692588064
+            },
+            {
+              "frequency": 6,
+              "chromatic": true,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9790369910725052,
+                0.9916276503371427,
+                0.9566528896250079,
+                0.9970755317821332
+              ],
+              "sensor_mse_ratio": 0.8748049123233687
+            },
+            {
+              "frequency": 6,
+              "chromatic": true,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9455084152377979,
+                0.9788401100352007,
+                0.8834709040865704,
+                0.9938244198476264
+              ],
+              "sensor_mse_ratio": 0.751665918244297
+            },
+            {
+              "frequency": 10,
+              "chromatic": false,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9392253817107754,
+                1.0186321096486162,
+                0.9314954731154632,
+                1.0110027632013205
+              ],
+              "sensor_mse_ratio": 0.9274349839823414
+            },
+            {
+              "frequency": 10,
+              "chromatic": false,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.8370674900640934,
+                1.047279542706076,
+                0.8127770005364723,
+                1.0266042437572138
+              ],
+              "sensor_mse_ratio": 0.8024780412498987
+            },
+            {
+              "frequency": 10,
+              "chromatic": true,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.9011771366613464,
+                0.9611782880285027,
+                0.7969065197614298,
+                0.9842623259671256
+              ],
+              "sensor_mse_ratio": 1.0141525812865955
+            },
+            {
+              "frequency": 10,
+              "chromatic": true,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.7254653131956104,
+                0.893968676968007,
+                0.41730301957407046,
+                0.956639589538406
+              ],
+              "sensor_mse_ratio": 0.8919271789621198
+            },
+            {
+              "frequency": 14,
+              "chromatic": false,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.8840558037687973,
+                1.0345810563920441,
+                0.8748685002591231,
+                1.0163650626191627
+              ],
+              "sensor_mse_ratio": 1.0722032469215517
+            },
+            {
+              "frequency": 14,
+              "chromatic": false,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.6673345498487867,
+                1.0972460271231397,
+                0.6426630945303717,
+                1.039062565251672
+              ],
+              "sensor_mse_ratio": 0.9618634934800744
+            },
+            {
+              "frequency": 14,
+              "chromatic": true,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.824773743811545,
+                0.9315817779329012,
+                0.6310074395142626,
+                0.9751486752130726
+              ],
+              "sensor_mse_ratio": 1.312227757772325
+            },
+            {
+              "frequency": 14,
+              "chromatic": true,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.47486494345194163,
+                0.7882008750593872,
+                -0.09770007553174292,
+                0.9255087127958114
+              ],
+              "sensor_mse_ratio": 1.266001413020714
+            },
+            {
+              "frequency": 18,
+              "chromatic": false,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.8579068273905119,
+                1.0343498010107914,
+                0.847290581371621,
+                1.011007591851295
+              ],
+              "sensor_mse_ratio": 1.1709263997343604
+            },
+            {
+              "frequency": 18,
+              "chromatic": false,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.5825808391186258,
+                1.0993554026219874,
+                0.5604089017037871,
+                1.025280025964846
+              ],
+              "sensor_mse_ratio": 1.077678189474661
+            },
+            {
+              "frequency": 18,
+              "chromatic": true,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.8066811012769733,
+                0.9272717098909019,
+                0.5867687133485892,
+                0.9788638335485724
+              ],
+              "sensor_mse_ratio": 1.4206404014355696
+            },
+            {
+              "frequency": 18,
+              "chromatic": true,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.41817709075756987,
+                0.7830818057253777,
+                -0.24381436004544982,
+                0.9343486288830918
+              ],
+              "sensor_mse_ratio": 1.3949348197674556
+            },
+            {
+              "frequency": 22,
+              "chromatic": false,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.8382868167663564,
+                1.0244923365361485,
+                0.8210347083078572,
+                1.0015184572895608
+              ],
+              "sensor_mse_ratio": 1.278665148709428
+            },
+            {
+              "frequency": 22,
+              "chromatic": false,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.5180524894924327,
+                1.07705609687363,
+                0.47259720301919017,
+                1.001738038796692
+              ],
+              "sensor_mse_ratio": 1.2178643041798247
+            },
+            {
+              "frequency": 22,
+              "chromatic": true,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.8161588822979243,
+                0.9362440140311414,
+                0.5952432302242052,
+                0.990546128731039
+              ],
+              "sensor_mse_ratio": 1.4072607941252135
+            },
+            {
+              "frequency": 22,
+              "chromatic": true,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.44942477994657487,
+                0.8117718064348562,
+                -0.20307971879224793,
+                0.967336517493815
+              ],
+              "sensor_mse_ratio": 1.3729898543541488
+            },
+            {
+              "frequency": 26,
+              "chromatic": false,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.8103904017602417,
+                1.0050377028380924,
+                0.7894308012496117,
+                0.9922912313084787
+              ],
+              "sensor_mse_ratio": 1.463940963208916
+            },
+            {
+              "frequency": 26,
+              "chromatic": false,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.4288282522759418,
+                1.0229549413385683,
+                0.36442256422672814,
+                0.9730637091178268
+              ],
+              "sensor_mse_ratio": 1.4617543433860782
+            },
+            {
+              "frequency": 26,
+              "chromatic": true,
+              "noise_index": 1,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.8186963085417855,
+                0.9519960012763646,
+                0.6251024254098274,
+                0.9971750692252797
+              ],
+              "sensor_mse_ratio": 1.3940157362339858
+            },
+            {
+              "frequency": 26,
+              "chromatic": true,
+              "noise_index": 2,
+              "fields": 36,
+              "mean_sensor_gain_by_colour": [
+                0.46429949431037554,
+                0.8570643469496676,
+                -0.1259021879364554,
+                0.9856707372699671
+              ],
+              "sensor_mse_ratio": 1.3744263485979225
+            }
+          ],
+          "sensor_transfer_below095_groups": 21,
+          "minimum_group_channel_gain": -0.24381436004544982,
+          "median_group_sensor_mse_ratio": 1.1943953519570925
+        }
+      ],
+      "milestones": [
+        {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-memory-campaign-v001\\seed73\\checkpoint-000000.pt",
+          "sha256": "20046cec662b150aab16dda7c0d496d3319e684bbc8ed6a5d2839e79f90a7900",
+          "step": 0,
+          "sha256_verified": true
+        },
+        {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-memory-campaign-v001\\seed73\\checkpoint-000128.pt",
+          "sha256": "cfc6243a9d3c1f02329945d9db4bcd20bfda6de2386d193cbb2742750f8f8fc4",
+          "step": 128,
+          "sha256_verified": true
+        },
+        {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-memory-campaign-v001\\seed73\\checkpoint-000256.pt",
+          "sha256": "20f19dc718a53cab1fe9e463289335b8c92dbe1cacbad8b279f77e0b04649ad5",
+          "step": 256,
+          "sha256_verified": true
+        },
+        {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-memory-campaign-v001\\seed73\\weights.pt",
+          "sha256": "20f19dc718a53cab1fe9e463289335b8c92dbe1cacbad8b279f77e0b04649ad5",
+          "step": 256,
+          "sha256_verified": true
+        }
+      ],
+      "resume": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-memory-campaign-v001\\seed73\\resume.pt",
+        "sha256": "20f19dc718a53cab1fe9e463289335b8c92dbe1cacbad8b279f77e0b04649ad5",
+        "step": 256,
+        "sha256_verified": true
+      },
+      "training_loss_first64_mean": 0.9855834888294339,
+      "training_loss_last64_mean": 0.8029939951375127
+    }
+  ],
+  "limits": [
+    "Two256step runs, not an hourslong or tenhour guarantee; environment/admission both changed.",
+    "Sensor gain is absolute versus clean periodic target; counts cannot be equated to former RGB-parent regression.",
+    "No GPU photo inference or further training launched in this review. Trained signal quality not validated.",
+    "Trace phases correlate with samples; CUDA allocation counters do not identify shared driver/system RAM."
+  ],
+  "memory_qualification_passed": true,
+  "trained_sensor_transfer_passed": false
+}

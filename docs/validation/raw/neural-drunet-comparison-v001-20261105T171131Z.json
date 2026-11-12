@@ -1,0 +1,564 @@
+{
+  "schema_version": 1,
+  "status": "completed_official_srgb_comparator_not_qualification",
+  "manifest": {
+    "schema_version": 1,
+    "measured_at_utc": "2026-11-05T16:53:04.714618+00:00",
+    "source_repository": "https://github.com/cszn/DPIR",
+    "source_commit": "15bca3fcc1f3cc51a1f99ccf027691e278c19354",
+    "files": [
+      {
+        "path": "models/network_unet.py",
+        "url": "https://raw.githubusercontent.com/cszn/DPIR/15bca3fcc1f3cc51a1f99ccf027691e278c19354/models/network_unet.py",
+        "sha256": "41c3cc38b2eac3b239aec6a723aefef6c138e5dd8ceb6cd9e18f825248261e91"
+      },
+      {
+        "path": "models/basicblock.py",
+        "url": "https://raw.githubusercontent.com/cszn/DPIR/15bca3fcc1f3cc51a1f99ccf027691e278c19354/models/basicblock.py",
+        "sha256": "aab51f43fee655fda5c499a0481fffd45bf390bdb8229944262c41e0a900cec1"
+      },
+      {
+        "path": "LICENSE",
+        "url": "https://raw.githubusercontent.com/cszn/DPIR/15bca3fcc1f3cc51a1f99ccf027691e278c19354/LICENSE",
+        "sha256": "afd973a2b98d60d178342477feed2c5673640288b0663e83e33e0e63ece9634c"
+      },
+      {
+        "path": "main_dpir_denoising.py",
+        "url": "https://raw.githubusercontent.com/cszn/DPIR/15bca3fcc1f3cc51a1f99ccf027691e278c19354/main_dpir_denoising.py",
+        "sha256": "3c192e472b0b29ddf81f9416a8bc5cf7f81f6a6c2469016c14f3420586a963fb"
+      },
+      {
+        "path": "main_download_pretrained_models.py",
+        "url": "https://raw.githubusercontent.com/cszn/DPIR/15bca3fcc1f3cc51a1f99ccf027691e278c19354/main_download_pretrained_models.py",
+        "sha256": "465e8e3557a41c4cb43d870acce9b4037703dce6306a2df81244488962723e1d"
+      }
+    ],
+    "weight": {
+      "url": "https://github.com/cszn/KAIR/releases/download/v1.0/drunet_color.pth",
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\third-party-drunet-v001\\drunet_color.pth",
+      "bytes": 130579305,
+      "sha256": "479abe3c5327dfd10ff54a80ec7d4098ca80752a5c9492cdff31cee430bec4b4"
+    },
+    "scope": "Official local comparator, not IPR training data or production weights. License preserved; redistribution not qualified."
+  },
+  "records": [
+    {
+      "scene": "6V1A0181",
+      "roi": 0,
+      "sigma_8bit": 15,
+      "source_sha256": "212849be8c0544bdaf013144917fadf63b9b64fcc7d32483a78f0f46207545e0",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A0181-roi0-sigma15.png",
+      "sha256": "8b6c944c2e4f6084dccdd66386407bf3f788dc5b8f918ad6d8f0ba9ce19bcdfa",
+      "elapsed_seconds": 0.46852359996410087
+    },
+    {
+      "scene": "6V1A0181",
+      "roi": 0,
+      "sigma_8bit": 25,
+      "source_sha256": "212849be8c0544bdaf013144917fadf63b9b64fcc7d32483a78f0f46207545e0",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A0181-roi0-sigma25.png",
+      "sha256": "ace9d0048ae2479ddf4164f061df1a078fefb10df1d1584a6419aaf2d4edd789",
+      "elapsed_seconds": 0.29182199999922886
+    },
+    {
+      "scene": "6V1A0181",
+      "roi": 1,
+      "sigma_8bit": 15,
+      "source_sha256": "8dc383e81ddbd2d2e5e1bfeead6918b5e95e73ad5f5a8f89866fc92ee94d100e",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A0181-roi1-sigma15.png",
+      "sha256": "ec174025234b3cdd5750ef96e9db50c1f344ed3725a62c8e3fd7eeaeb73a9f7f",
+      "elapsed_seconds": 0.29229379998287186
+    },
+    {
+      "scene": "6V1A0181",
+      "roi": 1,
+      "sigma_8bit": 25,
+      "source_sha256": "8dc383e81ddbd2d2e5e1bfeead6918b5e95e73ad5f5a8f89866fc92ee94d100e",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A0181-roi1-sigma25.png",
+      "sha256": "7fbd162def8b816cf45c86e0d34a19227fa348feb0b0ed43934b129adfc55db2",
+      "elapsed_seconds": 0.29191490000812337
+    },
+    {
+      "scene": "6V1A0181",
+      "roi": 2,
+      "sigma_8bit": 15,
+      "source_sha256": "c2a6428548b4faa2c8245c35eb01e1fd0662fc14e204539c957e2e4629fe2563",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A0181-roi2-sigma15.png",
+      "sha256": "dbffc3222ef58a25aea5f2592855c2e4f582b947127486ccb2e295e4a21a5c30",
+      "elapsed_seconds": 0.2919263999792747
+    },
+    {
+      "scene": "6V1A0181",
+      "roi": 2,
+      "sigma_8bit": 25,
+      "source_sha256": "c2a6428548b4faa2c8245c35eb01e1fd0662fc14e204539c957e2e4629fe2563",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A0181-roi2-sigma25.png",
+      "sha256": "cd4af0505c03c91999ba63e12da26775d8262be201b0480711fd256c4df43ca2",
+      "elapsed_seconds": 0.2918906000559218
+    },
+    {
+      "scene": "6V1A0181",
+      "roi": 3,
+      "sigma_8bit": 15,
+      "source_sha256": "9fed1c2643a1641a5daba1fbba4822bd27bb28964c0c6eb822621935d1c73efc",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A0181-roi3-sigma15.png",
+      "sha256": "69602be864cadc092525fe61ace3b3e40434538769ebf81fa75ee5f232da3159",
+      "elapsed_seconds": 0.29236620001029223
+    },
+    {
+      "scene": "6V1A0181",
+      "roi": 3,
+      "sigma_8bit": 25,
+      "source_sha256": "9fed1c2643a1641a5daba1fbba4822bd27bb28964c0c6eb822621935d1c73efc",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A0181-roi3-sigma25.png",
+      "sha256": "9ec2fa19351bacc23997502525a0e0a277ca05379dd152052b6caa3d29d3f888",
+      "elapsed_seconds": 0.2917660000384785
+    },
+    {
+      "scene": "6V1A0181",
+      "roi": 4,
+      "sigma_8bit": 15,
+      "source_sha256": "ad6319d8ab336f0f1c4830a5f19fa68f6b3770a35dd2eb745e94b2e647cf7152",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A0181-roi4-sigma15.png",
+      "sha256": "2074b680f07cb6547d1ecc70e71664b95030b64fb9f4d44beb137d025eae9b45",
+      "elapsed_seconds": 0.2922592000104487
+    },
+    {
+      "scene": "6V1A0181",
+      "roi": 4,
+      "sigma_8bit": 25,
+      "source_sha256": "ad6319d8ab336f0f1c4830a5f19fa68f6b3770a35dd2eb745e94b2e647cf7152",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A0181-roi4-sigma25.png",
+      "sha256": "3c5cfc7fb1df9c063c6abc3937680cd801143e04e4415b39f79f1143db83bca2",
+      "elapsed_seconds": 0.29132690001279116
+    },
+    {
+      "scene": "6V1A0181",
+      "roi": 5,
+      "sigma_8bit": 15,
+      "source_sha256": "61b473b6011cf05c501996596753202d1ebb2ddddcf53c9f480c26987cfcc93a",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A0181-roi5-sigma15.png",
+      "sha256": "ba762e9e854c11650219769840b6b43f008a3769cbb22e85837cc497c5b61bcb",
+      "elapsed_seconds": 0.291655000008177
+    },
+    {
+      "scene": "6V1A0181",
+      "roi": 5,
+      "sigma_8bit": 25,
+      "source_sha256": "61b473b6011cf05c501996596753202d1ebb2ddddcf53c9f480c26987cfcc93a",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A0181-roi5-sigma25.png",
+      "sha256": "7cf06edeabf737b3f606a92d571baf19ea51243d37c2bed6be56831573f1e704",
+      "elapsed_seconds": 0.2913278000196442
+    },
+    {
+      "scene": "6V1A0181",
+      "roi": 6,
+      "sigma_8bit": 15,
+      "source_sha256": "a32adf14fda9854fa5b241882686fe91ec1c9f9aa64488731e94e89927f57dfc",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A0181-roi6-sigma15.png",
+      "sha256": "b8a66dce5918b0bf14de7a51db1c567b9b13ee4792573c859bb7f2a35f191ec7",
+      "elapsed_seconds": 0.29293980001239106
+    },
+    {
+      "scene": "6V1A0181",
+      "roi": 6,
+      "sigma_8bit": 25,
+      "source_sha256": "a32adf14fda9854fa5b241882686fe91ec1c9f9aa64488731e94e89927f57dfc",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A0181-roi6-sigma25.png",
+      "sha256": "27d926aaa0088eaa9559a1cd596aa3e62f514a27bce6d8f084759945668d8771",
+      "elapsed_seconds": 0.29385720001300797
+    },
+    {
+      "scene": "6V1A0181",
+      "roi": 7,
+      "sigma_8bit": 15,
+      "source_sha256": "dcbd10a51f0777e40b1f70a1cacbc149256a75fdcc9af2344bf2935a8fe62b32",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A0181-roi7-sigma15.png",
+      "sha256": "59cbd876718a89a0ead2e37550b68c43a13fbec5fad00673e555e04bad2a3e7c",
+      "elapsed_seconds": 0.2920801999862306
+    },
+    {
+      "scene": "6V1A0181",
+      "roi": 7,
+      "sigma_8bit": 25,
+      "source_sha256": "dcbd10a51f0777e40b1f70a1cacbc149256a75fdcc9af2344bf2935a8fe62b32",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A0181-roi7-sigma25.png",
+      "sha256": "008de97e5e73cab5d4800ffc6a8edf7fede4cae61aaf475b075b0507def2ddb7",
+      "elapsed_seconds": 0.2926958000170998
+    },
+    {
+      "scene": "6V1A0181",
+      "roi": 8,
+      "sigma_8bit": 15,
+      "source_sha256": "2a57e1163810874f31d57a158d32ae6cc2cfb9cd42e49f57e3d56baacd96e223",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A0181-roi8-sigma15.png",
+      "sha256": "1287c50a041b64c39a6bd8fb6c0dff699daa142093cecabfbd4ec78229d9dc29",
+      "elapsed_seconds": 0.29346700001042336
+    },
+    {
+      "scene": "6V1A0181",
+      "roi": 8,
+      "sigma_8bit": 25,
+      "source_sha256": "2a57e1163810874f31d57a158d32ae6cc2cfb9cd42e49f57e3d56baacd96e223",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A0181-roi8-sigma25.png",
+      "sha256": "d76578f8931ca7fbf7d470d8f36897dd8c170b964b6709d7b17b36c1aba5a7b8",
+      "elapsed_seconds": 0.29290990001754835
+    },
+    {
+      "scene": "6V1A0263",
+      "roi": 0,
+      "sigma_8bit": 15,
+      "source_sha256": "2e89878c5489d282d3cc39f53b9c04253fea860450b5ea87d93c60925909cf1c",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A0263-roi0-sigma15.png",
+      "sha256": "8c1c395a94df1aa5b7cb77d92b5905853e0104caa137736e39d2edbe699faf89",
+      "elapsed_seconds": 0.29233009996823967
+    },
+    {
+      "scene": "6V1A0263",
+      "roi": 0,
+      "sigma_8bit": 25,
+      "source_sha256": "2e89878c5489d282d3cc39f53b9c04253fea860450b5ea87d93c60925909cf1c",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A0263-roi0-sigma25.png",
+      "sha256": "5231e75cb52e50b0434e4e3879c93b608c97cf460876011e3970d5920fdab898",
+      "elapsed_seconds": 0.29184859996894374
+    },
+    {
+      "scene": "6V1A0263",
+      "roi": 1,
+      "sigma_8bit": 15,
+      "source_sha256": "5d84fd920917d6a2a72bf564305ed61eaed8dbbc2f6ca13f680cecd10fdbbced",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A0263-roi1-sigma15.png",
+      "sha256": "30f60384d98c3d6988518c575262dac577f52f7a5de3ef4915e1072065806b84",
+      "elapsed_seconds": 0.29290770000079647
+    },
+    {
+      "scene": "6V1A0263",
+      "roi": 1,
+      "sigma_8bit": 25,
+      "source_sha256": "5d84fd920917d6a2a72bf564305ed61eaed8dbbc2f6ca13f680cecd10fdbbced",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A0263-roi1-sigma25.png",
+      "sha256": "1dcecd063bccf04d3b941e0764a1a0be3f882730aebca10ebad0a78d564c03ac",
+      "elapsed_seconds": 0.2933002000208944
+    },
+    {
+      "scene": "6V1A0263",
+      "roi": 2,
+      "sigma_8bit": 15,
+      "source_sha256": "f280ac7083bd63c73a6f95d3cec93cd63291f49a81ee26ff0cab8c4f9364a124",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A0263-roi2-sigma15.png",
+      "sha256": "f56f5e2f14170b96c892f57826e362f63f659c6474d5da01f2fd8ae632c65d61",
+      "elapsed_seconds": 0.2945512000005692
+    },
+    {
+      "scene": "6V1A0263",
+      "roi": 2,
+      "sigma_8bit": 25,
+      "source_sha256": "f280ac7083bd63c73a6f95d3cec93cd63291f49a81ee26ff0cab8c4f9364a124",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A0263-roi2-sigma25.png",
+      "sha256": "2d37b3aa294cd8872723935f13384ce5f686f6d2fb6667773db022f4e30111e2",
+      "elapsed_seconds": 0.2926691000466235
+    },
+    {
+      "scene": "6V1A0263",
+      "roi": 3,
+      "sigma_8bit": 15,
+      "source_sha256": "5ae1679c599366a914ca8c41d28d12ea5b260f82cf8a4e0a80f01515ef60b5d3",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A0263-roi3-sigma15.png",
+      "sha256": "e2159d3e5bc701a5b182e5bf2d1c42a5423f8b1fbc2cdb28f5590f5f3dbd83a0",
+      "elapsed_seconds": 0.2946385000250302
+    },
+    {
+      "scene": "6V1A0263",
+      "roi": 3,
+      "sigma_8bit": 25,
+      "source_sha256": "5ae1679c599366a914ca8c41d28d12ea5b260f82cf8a4e0a80f01515ef60b5d3",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A0263-roi3-sigma25.png",
+      "sha256": "d8a81503d17e074f3ac701cf616501ac7981683051e5a19dea3fc8506db24dea",
+      "elapsed_seconds": 0.29296200000680983
+    },
+    {
+      "scene": "6V1A0263",
+      "roi": 4,
+      "sigma_8bit": 15,
+      "source_sha256": "4dd726e1d83adb04c91b38835cfbf2aabff097ae373b3e494695da9a0ac9fd5f",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A0263-roi4-sigma15.png",
+      "sha256": "03d4c4b167ed2edc50325a6747e746609c00c40d7ade9a06f8d1036f0f09416d",
+      "elapsed_seconds": 0.293804100016132
+    },
+    {
+      "scene": "6V1A0263",
+      "roi": 4,
+      "sigma_8bit": 25,
+      "source_sha256": "4dd726e1d83adb04c91b38835cfbf2aabff097ae373b3e494695da9a0ac9fd5f",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A0263-roi4-sigma25.png",
+      "sha256": "eab15e78d2227b5c45aa4db19e5711884908899a44790909ee3d59e77fe80d04",
+      "elapsed_seconds": 0.29244790005031973
+    },
+    {
+      "scene": "6V1A0263",
+      "roi": 5,
+      "sigma_8bit": 15,
+      "source_sha256": "df87cc126cab7cac4c5ac4580e309a85742d94a06e8d85a8378820c91dd6970e",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A0263-roi5-sigma15.png",
+      "sha256": "dd2ecb2f829a8cf55590beb7f644189f0c360bc75ecf9a2a65e2c2a5332433f5",
+      "elapsed_seconds": 0.2935208000126295
+    },
+    {
+      "scene": "6V1A0263",
+      "roi": 5,
+      "sigma_8bit": 25,
+      "source_sha256": "df87cc126cab7cac4c5ac4580e309a85742d94a06e8d85a8378820c91dd6970e",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A0263-roi5-sigma25.png",
+      "sha256": "51fe2970f3e8eee006aa1771c2d8bca6dc9b5f226513d622956cec2437f9ead7",
+      "elapsed_seconds": 0.2939939000061713
+    },
+    {
+      "scene": "6V1A0263",
+      "roi": 6,
+      "sigma_8bit": 15,
+      "source_sha256": "0eec18d1a7733e686dc0d59b287653eafebe59782d9a926a846bb162bb04bfa3",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A0263-roi6-sigma15.png",
+      "sha256": "b5c688d5f54611854a1a091e5f49d95cd5a3dff101f71655cd263cfe76e853d8",
+      "elapsed_seconds": 0.2950186999514699
+    },
+    {
+      "scene": "6V1A0263",
+      "roi": 6,
+      "sigma_8bit": 25,
+      "source_sha256": "0eec18d1a7733e686dc0d59b287653eafebe59782d9a926a846bb162bb04bfa3",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A0263-roi6-sigma25.png",
+      "sha256": "bbe157d7471d070e8663a28f0c84ae088a27b6fdc5a834863abe7932a46f37d6",
+      "elapsed_seconds": 0.293399500020314
+    },
+    {
+      "scene": "6V1A0263",
+      "roi": 7,
+      "sigma_8bit": 15,
+      "source_sha256": "9172fb830bb00f1701bde4edc077b13b2c67efb3e172aa9f4a77526089c9223f",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A0263-roi7-sigma15.png",
+      "sha256": "1e9ef617076abbc7a4d17fc3b1905b355f44b3d374c8634f06e11cde517660a0",
+      "elapsed_seconds": 0.2951274999650195
+    },
+    {
+      "scene": "6V1A0263",
+      "roi": 7,
+      "sigma_8bit": 25,
+      "source_sha256": "9172fb830bb00f1701bde4edc077b13b2c67efb3e172aa9f4a77526089c9223f",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A0263-roi7-sigma25.png",
+      "sha256": "2dbea24d12108407dab41bf3c5c22300f5338e97bfd7d25775e50b9749f3b08f",
+      "elapsed_seconds": 0.2947791999904439
+    },
+    {
+      "scene": "6V1A0263",
+      "roi": 8,
+      "sigma_8bit": 15,
+      "source_sha256": "781e709ecea2e681ffdd40b7c7c048f9e7891a8e3af0ac1a8ac1b7ea1caedb52",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A0263-roi8-sigma15.png",
+      "sha256": "153c157484d53550597da18b082704fdd170366011987ca76e8e0901ecec857e",
+      "elapsed_seconds": 0.2933459999621846
+    },
+    {
+      "scene": "6V1A0263",
+      "roi": 8,
+      "sigma_8bit": 25,
+      "source_sha256": "781e709ecea2e681ffdd40b7c7c048f9e7891a8e3af0ac1a8ac1b7ea1caedb52",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A0263-roi8-sigma25.png",
+      "sha256": "89d7894e916199e35c38a45fade3bcdc02a084e641ccdd41d1b652dbb12d68aa",
+      "elapsed_seconds": 0.29353189998073503
+    },
+    {
+      "scene": "6V1A9819",
+      "roi": 0,
+      "sigma_8bit": 15,
+      "source_sha256": "dfaafeeeb259a4fed5da7b1459c57e2e8ec3f746dcb3a437ab4e4a91eb73553f",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A9819-roi0-sigma15.png",
+      "sha256": "9bf9160736de15176ba0bf6e2ee8159ed973556dbc7e3c790470e1a8f3e074f2",
+      "elapsed_seconds": 0.2939831000403501
+    },
+    {
+      "scene": "6V1A9819",
+      "roi": 0,
+      "sigma_8bit": 25,
+      "source_sha256": "dfaafeeeb259a4fed5da7b1459c57e2e8ec3f746dcb3a437ab4e4a91eb73553f",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A9819-roi0-sigma25.png",
+      "sha256": "dae744777ab063f58b506ce7dc38fd41bbfa1c4d58801006d8edcee78dd70a02",
+      "elapsed_seconds": 0.2932905000052415
+    },
+    {
+      "scene": "6V1A9819",
+      "roi": 1,
+      "sigma_8bit": 15,
+      "source_sha256": "7e65d7c2c6ae2de3f973b0df37bc0096702dd59320be618f5f15c61c23766dad",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A9819-roi1-sigma15.png",
+      "sha256": "3d80e03a980f0d8e5d120392256c38c39b63e31e696b4a6725e8d49054df05db",
+      "elapsed_seconds": 0.29366540000773966
+    },
+    {
+      "scene": "6V1A9819",
+      "roi": 1,
+      "sigma_8bit": 25,
+      "source_sha256": "7e65d7c2c6ae2de3f973b0df37bc0096702dd59320be618f5f15c61c23766dad",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A9819-roi1-sigma25.png",
+      "sha256": "bd4e012ea10530b8f8b9d6a5df183551b836cc31d39ab71778a7a3efec661b33",
+      "elapsed_seconds": 0.2946553999790922
+    },
+    {
+      "scene": "6V1A9819",
+      "roi": 2,
+      "sigma_8bit": 15,
+      "source_sha256": "4085c6b431a9afa0421d3887181a44d00cf514c579435ab35bb73a782ae23e68",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A9819-roi2-sigma15.png",
+      "sha256": "5a6bc00c644bd24717c1831f4ad31210373e6b3d1cd32240da70ca409ecd4ef3",
+      "elapsed_seconds": 0.2938603000366129
+    },
+    {
+      "scene": "6V1A9819",
+      "roi": 2,
+      "sigma_8bit": 25,
+      "source_sha256": "4085c6b431a9afa0421d3887181a44d00cf514c579435ab35bb73a782ae23e68",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A9819-roi2-sigma25.png",
+      "sha256": "32846d88e96ca0ac9ef4bf8779319a00e50ba4f0b662396ee25854bdffbf5236",
+      "elapsed_seconds": 0.2935719999950379
+    },
+    {
+      "scene": "6V1A9819",
+      "roi": 3,
+      "sigma_8bit": 15,
+      "source_sha256": "a3b15a89b307dfbe6100704a7eec26e0da82929f3bf174ba56cf060a2fba1e6f",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A9819-roi3-sigma15.png",
+      "sha256": "cb282e361c964dc48758f61ee531b5ed6696598bcc7bfe0b00381d1155a3ae1b",
+      "elapsed_seconds": 0.2927905999822542
+    },
+    {
+      "scene": "6V1A9819",
+      "roi": 3,
+      "sigma_8bit": 25,
+      "source_sha256": "a3b15a89b307dfbe6100704a7eec26e0da82929f3bf174ba56cf060a2fba1e6f",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A9819-roi3-sigma25.png",
+      "sha256": "bb96bf1317ee70b44b4f59d24cef0cb2f6bb3e34e0479a6a1787b4a8740981ce",
+      "elapsed_seconds": 0.2919508999912068
+    },
+    {
+      "scene": "6V1A9819",
+      "roi": 4,
+      "sigma_8bit": 15,
+      "source_sha256": "67454d2bb8a93ae061ea4b0e99763fdbb8a5483b55a8dbd080dfb198dacd0f68",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A9819-roi4-sigma15.png",
+      "sha256": "7af9ba1a3fb56d94f21af92bfdd3bd9740d207ba20fe350f89e56ae17bb09d12",
+      "elapsed_seconds": 0.2931983000016771
+    },
+    {
+      "scene": "6V1A9819",
+      "roi": 4,
+      "sigma_8bit": 25,
+      "source_sha256": "67454d2bb8a93ae061ea4b0e99763fdbb8a5483b55a8dbd080dfb198dacd0f68",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A9819-roi4-sigma25.png",
+      "sha256": "61a26aec22e0b2e2093eeb0a25e0409186c9ba44a6a504444c6f368fd4ab33d7",
+      "elapsed_seconds": 0.293849199952092
+    },
+    {
+      "scene": "6V1A9819",
+      "roi": 5,
+      "sigma_8bit": 15,
+      "source_sha256": "fa14c36e9e368d9e239b286bf6b9cba97468c32ffbc9f1d1edf8b64d3da34a9a",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A9819-roi5-sigma15.png",
+      "sha256": "761c014f36e332972d4445081accf78cba16436538e9510412054fcb82a5fe4b",
+      "elapsed_seconds": 0.29469169996446
+    },
+    {
+      "scene": "6V1A9819",
+      "roi": 5,
+      "sigma_8bit": 25,
+      "source_sha256": "fa14c36e9e368d9e239b286bf6b9cba97468c32ffbc9f1d1edf8b64d3da34a9a",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A9819-roi5-sigma25.png",
+      "sha256": "5551e7cfad6f9ff1b63c69f0c5fcdbbc2e93916845ac3c2e7eec3a287b7f39a9",
+      "elapsed_seconds": 0.2938323999987915
+    },
+    {
+      "scene": "6V1A9819",
+      "roi": 6,
+      "sigma_8bit": 15,
+      "source_sha256": "db9c6a2877c0276fed22704c2ed7eaac09069b3d0cf12472cd3948e6d134d75f",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A9819-roi6-sigma15.png",
+      "sha256": "f71c849eb07818badea863404e8b7968fb66bb3c2d46aa1c81ee78ca4ff120d7",
+      "elapsed_seconds": 0.29323090001707897
+    },
+    {
+      "scene": "6V1A9819",
+      "roi": 6,
+      "sigma_8bit": 25,
+      "source_sha256": "db9c6a2877c0276fed22704c2ed7eaac09069b3d0cf12472cd3948e6d134d75f",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A9819-roi6-sigma25.png",
+      "sha256": "d7af6a1b4fa1d7abb44a451afdc18ced408a1d3569f7158e0e7b61afa033a615",
+      "elapsed_seconds": 0.2935367000172846
+    },
+    {
+      "scene": "6V1A9819",
+      "roi": 7,
+      "sigma_8bit": 15,
+      "source_sha256": "b8cbe1593fa038e4dd4f51e79e561c304d6914d58c02893adc8ddd349e4ecc06",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A9819-roi7-sigma15.png",
+      "sha256": "299df842706b307987203a73f3244e96bafd84a4267ae3afac655ebea0c55335",
+      "elapsed_seconds": 0.29252389998873696
+    },
+    {
+      "scene": "6V1A9819",
+      "roi": 7,
+      "sigma_8bit": 25,
+      "source_sha256": "b8cbe1593fa038e4dd4f51e79e561c304d6914d58c02893adc8ddd349e4ecc06",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A9819-roi7-sigma25.png",
+      "sha256": "8cf70d57f1d58257859de84a3b78d11c9a3e3168b36aa647d4a05be1ec4c5f94",
+      "elapsed_seconds": 0.29369899997254834
+    },
+    {
+      "scene": "6V1A9819",
+      "roi": 8,
+      "sigma_8bit": 15,
+      "source_sha256": "2d392e3dc1b07150d0adc9b2261ec771707ded85d3b8e8b4ddce3180652329ca",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A9819-roi8-sigma15.png",
+      "sha256": "59d4421ffd9fa34b4e9d6a9c6ca44ca1bca22e0bc8d649649e5ad8a99a9d0e95",
+      "elapsed_seconds": 0.29234939999878407
+    },
+    {
+      "scene": "6V1A9819",
+      "roi": 8,
+      "sigma_8bit": 25,
+      "source_sha256": "2d392e3dc1b07150d0adc9b2261ec771707ded85d3b8e8b4ddce3180652329ca",
+      "path": "build-patch_neural_restoration\\drunet-photo-v001\\6V1A9819-roi8-sigma25.png",
+      "sha256": "b0343a7b1761d9206b3a787af1dbe91d996050a3037208ccb4ad5ad7e1b4031a",
+      "elapsed_seconds": 0.2935414999956265
+    }
+  ],
+  "display_proof_sha256": "4debefa82c91e67c162a81622a73a037fe0f98f5c288d21b92ae541f52361614",
+  "scope": "Official AWGN sRGB comparator on known development photos, not sensor-calibrated or ground truth; no training.",
+  "sigma_8bit": [
+    15,
+    25
+  ],
+  "halo": 192,
+  "output_side": 384,
+  "torch_version": "2.9.1+cu128",
+  "parameters": 32640960,
+  "peak_cuda_allocated_bytes": 1044021760,
+  "memory": {
+    "hard_process_commit_bytes": 6442450944,
+    "soft_process_bytes": 4831838208,
+    "system_stop_fraction": 0.92,
+    "poll_seconds": 0.25,
+    "samples": 121,
+    "peak_rss_bytes": 1060102144,
+    "peak_private_sampled_bytes": 3412185088,
+    "peak_system_used_fraction": 0.5945860304773137,
+    "os_job_peak_commit_bytes": 3434496000,
+    "reason": null,
+    "last": {
+      "system_total_bytes": 16933507072,
+      "system_available_bytes": 7357755392,
+      "system_used_fraction": 0.5654913444264453,
+      "process_rss_bytes": 970059776,
+      "process_private_bytes": 3410362368,
+      "process_peak_rss_bytes": 1060102144,
+      "process_peak_pagefile_bytes": 3434496000
+    }
+  }
+}

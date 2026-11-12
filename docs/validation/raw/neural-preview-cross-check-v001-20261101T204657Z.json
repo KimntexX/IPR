@@ -1,0 +1,212 @@
+{
+  "schema_version": 1,
+  "data_version": 1,
+  "campaign_id": "neural-preview-cross-check-v001-20261101T204657Z",
+  "measured_at_utc": "2026-11-01T20:46:57.834973+00:00",
+  "captures_sha256": "06b14a6129425c0e95d2173ff909367222f4c5c80bdad6e9a13af3b959f4b598",
+  "source_hashes": {
+    "audit_cross_preview.py": "e4abaa0ba269f715b875ca919c92c2242bd74214e412c446ff8accaced26128c",
+    "photo_pair_math.py": "1eef9c3a4feb2ac681985905c79da9b9af5b3359d465b5d9bd9836ccda0449e6",
+    "audit_capture_series.py": "dd41a59f45745a845fde1d44061c5a2b51259d63a68bd374ed99168c6cda0305"
+  },
+  "versions": {
+    "python": "3.14.3",
+    "numpy": "2.4.2",
+    "opencv": "5.0.0"
+  },
+  "protocol": "Fixed 8 previews; max800 pixels; encoded cv2 RGB-to-gray /255, not linear RAW; ECC translation, common crop8, Gaussian1.5+5; no JPEG saturation exclusion.",
+  "units": {
+    "ecc": "dimensionless",
+    "translation": "preview pixels"
+  },
+  "records": [
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0134.CR3",
+      "source_sha256": "3a10443d1a26fb4b10467f98568fbc022aed9c67497a249505b2bf72140a49ec",
+      "scene": "indoor",
+      "iso": 100,
+      "preview_size_wh": [
+        800,
+        533
+      ],
+      "embedded_size_wh": [
+        6960,
+        4640
+      ],
+      "registration": {
+        "accepted": true,
+        "ecc": 1.0000000034775898,
+        "shift_xy": [
+          0.0,
+          0.0
+        ],
+        "reason": "measured_translation_only_no_local_motion_proof"
+      }
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0152.CR3",
+      "source_sha256": "2751b6935981abb4566eb96740e0927db00a64143463276c294952d62b758662",
+      "scene": "indoor",
+      "iso": 3200,
+      "preview_size_wh": [
+        800,
+        533
+      ],
+      "embedded_size_wh": [
+        6960,
+        4640
+      ],
+      "registration": {
+        "accepted": false,
+        "ecc": 0.9660911996594341,
+        "shift_xy": [
+          0.1885732114315033,
+          -0.29141953587532043
+        ],
+        "reason": "measured_translation_only_no_local_motion_proof"
+      }
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0187.CR3",
+      "source_sha256": "4323ef4dff7b4cf586b7fb652ebccaca0a6d26c2046bfe58e6a67e77ad0772cf",
+      "scene": "indoor",
+      "iso": 12800,
+      "preview_size_wh": [
+        800,
+        533
+      ],
+      "embedded_size_wh": [
+        6960,
+        4640
+      ],
+      "registration": {
+        "accepted": true,
+        "ecc": 0.9957800651981285,
+        "shift_xy": [
+          -0.178130641579628,
+          -0.11487139016389847
+        ],
+        "reason": "measured_translation_only_no_local_motion_proof"
+      }
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0195.CR3",
+      "source_sha256": "122583825dc321c95be072cf47b7841f5cecacc733fde999e79fbde20c1d178d",
+      "scene": "indoor",
+      "iso": 51200,
+      "preview_size_wh": [
+        800,
+        533
+      ],
+      "embedded_size_wh": [
+        6960,
+        4640
+      ],
+      "registration": {
+        "accepted": true,
+        "ecc": 0.9812624891555844,
+        "shift_xy": [
+          -0.06745470315217972,
+          -0.4021941125392914
+        ],
+        "reason": "measured_translation_only_no_local_motion_proof"
+      }
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0211.CR3",
+      "source_sha256": "ad4c55baf446d983eb567737549970fee0915433e6552e60d2e1c452e369402e",
+      "scene": "vegetation",
+      "iso": 100,
+      "preview_size_wh": [
+        800,
+        533
+      ],
+      "embedded_size_wh": [
+        6960,
+        4640
+      ],
+      "registration": {
+        "accepted": true,
+        "ecc": 0.9999999959671989,
+        "shift_xy": [
+          0.0,
+          0.0
+        ],
+        "reason": "measured_translation_only_no_local_motion_proof"
+      }
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0244.CR3",
+      "source_sha256": "2a34f3ba2abd7200b0125fb771f451056aaecaa3c85a60f65829e250e6b1167c",
+      "scene": "vegetation",
+      "iso": 1600,
+      "preview_size_wh": [
+        800,
+        533
+      ],
+      "embedded_size_wh": [
+        6960,
+        4640
+      ],
+      "registration": {
+        "accepted": false,
+        "ecc": 0.9240985326483583,
+        "shift_xy": [
+          0.027311058714985847,
+          -0.25185880064964294
+        ],
+        "reason": "measured_translation_only_no_local_motion_proof"
+      }
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0263.CR3",
+      "source_sha256": "6fa8bec6b072ef5d761c91629b96525bdecff01776f93b1a05a83816a44c37d3",
+      "scene": "vegetation",
+      "iso": 6400,
+      "preview_size_wh": [
+        800,
+        533
+      ],
+      "embedded_size_wh": [
+        6960,
+        4640
+      ],
+      "registration": {
+        "accepted": false,
+        "ecc": 0.8651444953303197,
+        "shift_xy": [
+          0.21877272427082062,
+          -0.17858712375164032
+        ],
+        "reason": "measured_translation_only_no_local_motion_proof"
+      }
+    },
+    {
+      "source": "D:\\DCIM\\101EOSR6\\6V1A0281.CR3",
+      "source_sha256": "54f0f45fd43a534d793b3c11759c57a3ac4334aecc4d02921a338bbfdccc5c9a",
+      "scene": "vegetation",
+      "iso": 12800,
+      "preview_size_wh": [
+        800,
+        533
+      ],
+      "embedded_size_wh": [
+        6960,
+        4640
+      ],
+      "registration": {
+        "accepted": false,
+        "ecc": 0.8464591420028347,
+        "shift_xy": [
+          0.20195342600345612,
+          -0.26800137758255005
+        ],
+        "reason": "measured_translation_only_no_local_motion_proof"
+      }
+    }
+  ],
+  "limits": [
+    "Diagnostic of cross-ISO visual correspondence only, never RAW truth or noise calibration.",
+    "Does not establish motion vs lighting vs focus; no training or pair admission based on JPEG scores."
+  ]
+}

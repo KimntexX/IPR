@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "measured_at_utc": "2026-11-08T11:57:58.763294+00:00",
+  "status": "dark_components_passed_physical_benchmark_not_yet_qualified",
+  "user_decision": "Wait for full physical qualification before 2048 steps per seed",
+  "parents": {
+    "inventory": {
+      "path": "docs\\validation\\raw\\neural-physical-dark-inventory-v001-20261108T111650Z.json",
+      "sha256": "d2da35c9e66e5ce22d97aff97c1c8a056c67a388ea306ca3b66a4d26ac32a377"
+    },
+    "repeatability": {
+      "path": "docs\\validation\\raw\\neural-new-dark-qualification-v001-20261108T112301Z.json",
+      "sha256": "fb2aecf34ef27dff7b6134fb816b53789e7ea86bbea938cd634bc8263b1da69d"
+    },
+    "maps": {
+      "path": "docs\\validation\\raw\\neural-full-dark-maps-v001-20261108T114544Z.json",
+      "sha256": "374657e301cdbc7786af8831d08d517c4d2e1788d23fd23e5996407ed51ca46c"
+    },
+    "native": {
+      "path": "docs\\validation\\raw\\neural-new-dark-native-bridge-v001-20261108T113818Z.json",
+      "sha256": "9d3dd83b6b3685870533bcb08a64c7353eedbe7258f9234c6e8b0250bc9d4380"
+    },
+    "assessment": {
+      "path": "docs\\validation\\raw\\neural-dark-component-assessment-v001-20261108T113434Z.json",
+      "sha256": "b2dfe083f29638ba8e8395580ef5e23103be59d55b2c97e943707e1422bf58c0"
+    },
+    "other_component": {
+      "path": "docs\\validation\\raw\\neural-remaining-dark-component-v001-20261108T114521Z.json",
+      "sha256": "e3de035c21db390b6188237453ca97cc9646ee977d99ff8a7adcc1193f14d621"
+    },
+    "replay": {
+      "path": "docs\\validation\\raw\\neural-physical-replay-probe-v001-20261108T115152Z.json",
+      "sha256": "37f1d0808bb401193df48d87167b25555c6c43b296fa98ed58f4894209fd71e7"
+    },
+    "null": {
+      "path": "docs\\validation\\raw\\neural-physical-replay-null-v001-20261108T115350Z.json",
+      "sha256": "44a2e1410efba8a875a211bde198431a871c4f3f8a3d4909810b282bfa504c05"
+    },
+    "other_maps": {
+      "path": "build-patch_neural_restoration\\full-dark-maps-other-iso-v001\\progress.json",
+      "sha256": "1da96729e7e2f18938b9d9c69b2ce2f7d71c10c3a5885b138c3145843ea4c1bb"
+    }
+  },
+  "dark_shortage_resolved": true,
+  "additional_photos_requested_this_stage": false,
+  "new_dark_frames": {
+    "100": 52,
+    "16000": 55
+  },
+  "passed": [
+    "Chronological32calibration/20or23control, unique SHA256, same RAW mode/exposure",
+    "Variance and PSD/correlation dark repeatability guards for both new ISO",
+    "Full visible sensor maps for ISO100/3200/6400/16000/51200 constructed",
+    "Four new dark RAWs, native signed-CFA/RGB archived input bridge passed"
+  ],
+  "remaining": [
+    "Full shot+read+fixed/joint physical surrogate validation, beyond marginal paired differences",
+    "Calibrated spectral measurement uncertainty: null already crosses10percent at6400",
+    "Resolve remaining51200 spatial-correlation discrepancy without post-hoc threshold relaxation",
+    "Photographic reference uncertainty, comparators and final reserved scene/session decision"
+  ],
+  "next_training": {
+    "steps_per_seed": 2048,
+    "seeds": [
+      71,
+      73
+    ],
+    "precision": "fp32",
+    "parameters": 8162688,
+    "maximum_seconds": 2400,
+    "status": "not_launched_qualification_gate_closed"
+  },
+  "no_training_started": true,
+  "issue": "https://github.com/KimntexX/IPR/issues/14"
+}

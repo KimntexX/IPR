@@ -1,0 +1,525 @@
+{
+  "schema_version": 1,
+  "started_at_utc": "2026-11-05T12:10:11.364680+00:00",
+  "script_sha256": "886aa3b27175668d4472e8b5ee150cf752736b8b758648a2a45fbc5da21dff8c",
+  "status": "completed_paired_continuation",
+  "stages": [
+    {
+      "name": "train_control",
+      "started_at_utc": "2026-11-05T12:10:11.368244+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\run_noisy_campaign.py",
+        "--plan",
+        "build-patch_neural_restoration\\paired-repeatability-plan-v001\\control\\plan.json",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\repeatability-control-campaign-v001",
+        "--until",
+        "2026-11-05T14:10:11.365648+00:00"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-05T12:19:25.188573+00:00"
+    },
+    {
+      "name": "train_replicate",
+      "started_at_utc": "2026-11-05T12:19:25.195960+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\run_noisy_campaign.py",
+        "--plan",
+        "build-patch_neural_restoration\\paired-repeatability-plan-v001\\replicate\\plan.json",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\repeatability-replicate-campaign-v001",
+        "--until",
+        "2026-11-05T14:10:11.365648+00:00"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-05T12:28:27.332895+00:00"
+    },
+    {
+      "name": "qualify_control",
+      "started_at_utc": "2026-11-05T12:28:27.343265+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\run_stability_qualification.py",
+        "--campaign",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\repeatability-control-campaign-v001",
+        "--data-plan",
+        "build-patch_neural_restoration\\paired-repeatability-plan-v001\\control\\plan.json",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\repeatability-control-qualification-v001",
+        "--prefix",
+        "repeatability-control"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-05T12:36:23.057504+00:00"
+    },
+    {
+      "name": "qualify_replicate",
+      "started_at_utc": "2026-11-05T12:36:23.068457+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\run_stability_qualification.py",
+        "--campaign",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\repeatability-replicate-campaign-v001",
+        "--data-plan",
+        "build-patch_neural_restoration\\paired-repeatability-plan-v001\\replicate\\plan.json",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\repeatability-replicate-qualification-v001",
+        "--prefix",
+        "repeatability-replicate"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-05T12:44:02.430899+00:00"
+    },
+    {
+      "name": "candidate_followup",
+      "started_at_utc": "2026-11-05T12:44:02.440305+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\run_neural_followup.py",
+        "--qualification",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\repeatability-replicate-qualification-v001\\progress.json",
+        "--data-plan",
+        "build-patch_neural_restoration\\paired-repeatability-plan-v001\\replicate\\plan.json",
+        "--campaign",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\repeatability-replicate-campaign-v001",
+        "--prefix",
+        "repeatability-replicate",
+        "--previous-fine",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\repeatability-control-fine-v001\\result.json",
+        "--previous-campaign",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\repeatability-control-campaign-v001",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\repeatability-replicate-followup-v001"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-05T12:44:53.645309+00:00"
+    }
+  ],
+  "prefix": "repeatability",
+  "candidate": "replicate",
+  "policy": "Both arms and seeds predeclared, both trainings before evaluation.512additional steps, same data, no selection. Fine-first qualification; control failure remains visible.",
+  "plans_sha256": {
+    "control": "fd92335c082860bed9e880c9caf29d24a5f3f9b6d8c96f212dbb5c606befa7a9",
+    "replicate": "66a33793f0f396d48f996d222e99aae280cb7af3bc7d55b610de83f4ce371532"
+  },
+  "qualification": {
+    "control": {
+      "status": "completed_known_regressions_failed_reserved_unopened",
+      "regressions": [
+        {
+          "name": "fine",
+          "passed": false,
+          "result": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\repeatability-control-fine-v001\\result.json",
+          "sha256": "11f73f062c4e885ebd856c1c2cabe2e706deb72a3f231d171115dcb7fa70c5d0"
+        }
+      ]
+    },
+    "replicate": {
+      "status": "completed_known_regressions_failed_reserved_unopened",
+      "regressions": [
+        {
+          "name": "fine",
+          "passed": false,
+          "result": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\repeatability-replicate-fine-v001\\result.json",
+          "sha256": "76d2cd0dc0200420ea62b6b60bd5121a91d9d161b8e0633a64c5e87dd465d6cc"
+        }
+      ]
+    }
+  },
+  "candidate_followup_status": "completed_known_failure_diagnosis_reserved_unopened",
+  "paired_fine": {
+    "previous_passed": false,
+    "current_passed": false,
+    "observation_count": 4032,
+    "comparisons": [
+      {
+        "seed": 71,
+        "noise_index": 1,
+        "current_over_previous_rgb_mse": 0.9815621613527725,
+        "previous_strong_failed": 1,
+        "current_strong_failed": 1,
+        "previous_minimum_transfer": 0.9747086487844514,
+        "current_minimum_transfer": 0.9754564260428281,
+        "previous_strong_rgb_over_parent": 0.9517767823402598,
+        "current_strong_rgb_over_parent": 0.9520358738332699,
+        "previous_strong_sensor_over_noisy": 0.9229132925631529,
+        "current_strong_sensor_over_noisy": 0.9233538885738509
+      },
+      {
+        "seed": 71,
+        "noise_index": 2,
+        "current_over_previous_rgb_mse": 0.986782560676839,
+        "previous_strong_failed": 4,
+        "current_strong_failed": 4,
+        "previous_minimum_transfer": 0.8346377183548778,
+        "current_minimum_transfer": 0.8193257715267394,
+        "previous_strong_rgb_over_parent": 0.8362813454184135,
+        "current_strong_rgb_over_parent": 0.8246646783458946,
+        "previous_strong_sensor_over_noisy": 0.8401862875633245,
+        "current_strong_sensor_over_noisy": 0.8276487897263597
+      },
+      {
+        "seed": 73,
+        "noise_index": 1,
+        "current_over_previous_rgb_mse": 0.9705496623652727,
+        "previous_strong_failed": 0,
+        "current_strong_failed": 0,
+        "previous_minimum_transfer": 0.9917433358281552,
+        "current_minimum_transfer": 0.9905099910736119,
+        "previous_strong_rgb_over_parent": 0.9537178203716178,
+        "current_strong_rgb_over_parent": 0.9485628581023756,
+        "previous_strong_sensor_over_noisy": 0.8878609209051918,
+        "current_strong_sensor_over_noisy": 0.8757665505748222
+      },
+      {
+        "seed": 73,
+        "noise_index": 2,
+        "current_over_previous_rgb_mse": 0.9769252231785355,
+        "previous_strong_failed": 5,
+        "current_strong_failed": 7,
+        "previous_minimum_transfer": 0.8211817872203099,
+        "current_minimum_transfer": 0.81353650486542,
+        "previous_strong_rgb_over_parent": 0.7590046313409773,
+        "current_strong_rgb_over_parent": 0.7459950186566301,
+        "previous_strong_sensor_over_noisy": 0.7195124709578334,
+        "current_strong_sensor_over_noisy": 0.7065969103878063
+      }
+    ],
+    "coherent_error_decomposition": {
+      "previous": [
+        {
+          "seed": 71,
+          "noise_index": 1,
+          "amplitude": 0.008,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 0.0012679814229064243,
+          "bias_squared_estimate": 0.025784441300195922,
+          "mean_squared_error": 0.02705242272310235
+        },
+        {
+          "seed": 71,
+          "noise_index": 1,
+          "amplitude": 0.008,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 0.0032354552127169204,
+          "bias_squared_estimate": 0.05191191624373448,
+          "mean_squared_error": 0.0551473714564514
+        },
+        {
+          "seed": 71,
+          "noise_index": 1,
+          "amplitude": 0.06,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 3.084247595425077e-05,
+          "bias_squared_estimate": 0.008640135959466758,
+          "mean_squared_error": 0.00867097843542101
+        },
+        {
+          "seed": 71,
+          "noise_index": 1,
+          "amplitude": 0.06,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 7.826565005459964e-05,
+          "bias_squared_estimate": 0.008269613264029703,
+          "mean_squared_error": 0.008347878914084303
+        },
+        {
+          "seed": 71,
+          "noise_index": 2,
+          "amplitude": 0.008,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 0.006282024021560542,
+          "bias_squared_estimate": 0.08182112211712514,
+          "mean_squared_error": 0.08810314613868568
+        },
+        {
+          "seed": 71,
+          "noise_index": 2,
+          "amplitude": 0.008,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 0.01290428759204636,
+          "bias_squared_estimate": 0.24444838368617633,
+          "mean_squared_error": 0.2573526712782227
+        },
+        {
+          "seed": 71,
+          "noise_index": 2,
+          "amplitude": 0.06,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 0.0002292010600612037,
+          "bias_squared_estimate": 0.01077798498174114,
+          "mean_squared_error": 0.011007186041802345
+        },
+        {
+          "seed": 71,
+          "noise_index": 2,
+          "amplitude": 0.06,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 0.0005002042124652294,
+          "bias_squared_estimate": 0.011811660795304569,
+          "mean_squared_error": 0.012311865007769799
+        },
+        {
+          "seed": 73,
+          "noise_index": 1,
+          "amplitude": 0.008,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 0.0012637838688438988,
+          "bias_squared_estimate": 0.03125154640133908,
+          "mean_squared_error": 0.032515330270182975
+        },
+        {
+          "seed": 73,
+          "noise_index": 1,
+          "amplitude": 0.008,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 0.0030315703040255247,
+          "bias_squared_estimate": 0.060399412862398257,
+          "mean_squared_error": 0.06343098316642377
+        },
+        {
+          "seed": 73,
+          "noise_index": 1,
+          "amplitude": 0.06,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 3.17376281712855e-05,
+          "bias_squared_estimate": 0.013909760285169107,
+          "mean_squared_error": 0.013941497913340392
+        },
+        {
+          "seed": 73,
+          "noise_index": 1,
+          "amplitude": 0.06,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 8.002827726932488e-05,
+          "bias_squared_estimate": 0.012627269478670674,
+          "mean_squared_error": 0.01270729775594
+        },
+        {
+          "seed": 73,
+          "noise_index": 2,
+          "amplitude": 0.008,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 0.006869832904581734,
+          "bias_squared_estimate": 0.07767247441771159,
+          "mean_squared_error": 0.08454230732229333
+        },
+        {
+          "seed": 73,
+          "noise_index": 2,
+          "amplitude": 0.008,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 0.015499013883400178,
+          "bias_squared_estimate": 0.19408179356112903,
+          "mean_squared_error": 0.20958080744452923
+        },
+        {
+          "seed": 73,
+          "noise_index": 2,
+          "amplitude": 0.06,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 0.00023757124802280892,
+          "bias_squared_estimate": 0.017252902773190193,
+          "mean_squared_error": 0.017490474021213
+        },
+        {
+          "seed": 73,
+          "noise_index": 2,
+          "amplitude": 0.06,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 0.0005226384825869282,
+          "bias_squared_estimate": 0.020438193755078302,
+          "mean_squared_error": 0.020960832237665233
+        }
+      ],
+      "current": [
+        {
+          "seed": 71,
+          "noise_index": 1,
+          "amplitude": 0.008,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 0.0011600799311031495,
+          "bias_squared_estimate": 0.03609973411680454,
+          "mean_squared_error": 0.03725981404790769
+        },
+        {
+          "seed": 71,
+          "noise_index": 1,
+          "amplitude": 0.008,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 0.0030483235304778217,
+          "bias_squared_estimate": 0.07910683555998836,
+          "mean_squared_error": 0.0821551590904662
+        },
+        {
+          "seed": 71,
+          "noise_index": 1,
+          "amplitude": 0.06,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 3.0853490632143654e-05,
+          "bias_squared_estimate": 0.008639904198003347,
+          "mean_squared_error": 0.00867075768863549
+        },
+        {
+          "seed": 71,
+          "noise_index": 1,
+          "amplitude": 0.06,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 7.819640154873093e-05,
+          "bias_squared_estimate": 0.008271106691879476,
+          "mean_squared_error": 0.008349303093428207
+        },
+        {
+          "seed": 71,
+          "noise_index": 2,
+          "amplitude": 0.008,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 0.006122325566174476,
+          "bias_squared_estimate": 0.089379511113356,
+          "mean_squared_error": 0.09550183667953048
+        },
+        {
+          "seed": 71,
+          "noise_index": 2,
+          "amplitude": 0.008,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 0.012348271204791466,
+          "bias_squared_estimate": 0.2687274516172092,
+          "mean_squared_error": 0.28107572282200066
+        },
+        {
+          "seed": 71,
+          "noise_index": 2,
+          "amplitude": 0.06,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 0.00022670516332692165,
+          "bias_squared_estimate": 0.011659746445643583,
+          "mean_squared_error": 0.011886451608970505
+        },
+        {
+          "seed": 71,
+          "noise_index": 2,
+          "amplitude": 0.06,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 0.0004937631719937147,
+          "bias_squared_estimate": 0.012753445145434618,
+          "mean_squared_error": 0.013247208317428334
+        },
+        {
+          "seed": 73,
+          "noise_index": 1,
+          "amplitude": 0.008,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 0.0011417149889970005,
+          "bias_squared_estimate": 0.04166016333707542,
+          "mean_squared_error": 0.04280187832607242
+        },
+        {
+          "seed": 73,
+          "noise_index": 1,
+          "amplitude": 0.008,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 0.0027250053093704927,
+          "bias_squared_estimate": 0.09392947245962233,
+          "mean_squared_error": 0.09665447776899282
+        },
+        {
+          "seed": 73,
+          "noise_index": 1,
+          "amplitude": 0.06,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 3.173294234174925e-05,
+          "bias_squared_estimate": 0.013907462758783197,
+          "mean_squared_error": 0.013939195701124946
+        },
+        {
+          "seed": 73,
+          "noise_index": 1,
+          "amplitude": 0.06,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 7.94290251399357e-05,
+          "bias_squared_estimate": 0.012631620454599557,
+          "mean_squared_error": 0.012711049479739493
+        },
+        {
+          "seed": 73,
+          "noise_index": 2,
+          "amplitude": 0.008,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 0.006656921836006064,
+          "bias_squared_estimate": 0.08564359823635774,
+          "mean_squared_error": 0.0923005200723638
+        },
+        {
+          "seed": 73,
+          "noise_index": 2,
+          "amplitude": 0.008,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 0.014631445756016754,
+          "bias_squared_estimate": 0.22908169844727094,
+          "mean_squared_error": 0.24371314420328768
+        },
+        {
+          "seed": 73,
+          "noise_index": 2,
+          "amplitude": 0.06,
+          "chromatic": false,
+          "coefficient_series": 432,
+          "sample_variance": 0.00023630376998284484,
+          "bias_squared_estimate": 0.017406692447615828,
+          "mean_squared_error": 0.017642996217598673
+        },
+        {
+          "seed": 73,
+          "noise_index": 2,
+          "amplitude": 0.06,
+          "chromatic": true,
+          "coefficient_series": 432,
+          "sample_variance": 0.0005163233305031217,
+          "bias_squared_estimate": 0.021773578118333296,
+          "mean_squared_error": 0.022289901448836417
+        }
+      ],
+      "limits": "Sine/quadrature coefficient error, not total pixel noise. Three realizations per conditional series; high uncertainty individually. Finite-sample corrected squared-bias estimates are not clipped, may be negative. Descriptive, not a new gate."
+    },
+    "schema_version": 1,
+    "measured_at_utc": "2026-11-05T12:44:03.232783+00:00",
+    "previous_sha256": "11f73f062c4e885ebd856c1c2cabe2e706deb72a3f231d171115dcb7fa70c5d0",
+    "current_sha256": "76d2cd0dc0200420ea62b6b60bd5121a91d9d161b8e0633a64c5e87dd465d6cc",
+    "tool_sha256": "e7dcee7cdc775f3b24f6f7cec45859e2558909774c509a4f94d650fba09b8ed9",
+    "status": "completed_paired_known_fine_comparison_not_qualification"
+  },
+  "finished_at_utc": "2026-11-05T12:44:53.656154+00:00"
+}

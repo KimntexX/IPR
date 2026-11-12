@@ -1,0 +1,831 @@
+{
+  "schema_version": 1,
+  "created_at_utc": "2026-11-07T12:52:29.345328+00:00",
+  "root": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration",
+  "script_sha256": "1d1692d1d4b9b92f2398498916ac881f8a67f38f40fe141d0283a649d60f565d",
+  "delete": [
+    {
+      "path": "sensor-learning-campaign-v001\\photo-display-1024\\6V1A0181-seed71-local.rcd.f32",
+      "bytes": 387393612,
+      "sha256": "dfcf27cac248f6bd8e40add23359821e3177e191c93561e25375967d90c27e8c"
+    },
+    {
+      "path": "sensor-learning-campaign-v001\\photo-display-1024\\6V1A0181-seed73-local.rcd.f32",
+      "bytes": 387393612,
+      "sha256": "a071209090b135c2814d3f734e57bd70831f526dec0765d5179d239d4b028401"
+    },
+    {
+      "path": "sensor-learning-campaign-v001\\photo-display-1024\\6V1A0263-seed71-local.rcd.f32",
+      "bytes": 387393612,
+      "sha256": "ac89bab71b48050bc768662d16a01e935c90d1c233e35c9b69b6bb97a0f75f4d"
+    },
+    {
+      "path": "sensor-learning-campaign-v001\\photo-display-1024\\6V1A0263-seed73-local.rcd.f32",
+      "bytes": 387393612,
+      "sha256": "1238520189b57ae8d97036fed58acf79ccfae7b8f2c486b9e9e4a4080e8d3e8d"
+    },
+    {
+      "path": "sensor-learning-campaign-v001\\photo-display-1024\\6V1A9819-seed71-local-oriented.f32",
+      "bytes": 387393612,
+      "sha256": "a196bfb2e2fd0b389a1ca9a257f17122b8ae75af5f8519bface71d666156d52d"
+    },
+    {
+      "path": "sensor-learning-campaign-v001\\photo-display-1024\\6V1A9819-seed71-local.rcd.f32",
+      "bytes": 387393612,
+      "sha256": "e06608c870a5334cf1ccc75346f41c90bcd5d22347ea7ef995db986ebb74ee20"
+    },
+    {
+      "path": "sensor-learning-campaign-v001\\photo-display-1024\\6V1A9819-seed73-local-oriented.f32",
+      "bytes": 387393612,
+      "sha256": "2a200fcc362f70774f20be574faf76b82fd128cc3fb69ea02c16f15f8ac66d6b"
+    },
+    {
+      "path": "sensor-learning-campaign-v001\\photo-display-1024\\6V1A9819-seed73-local.rcd.f32",
+      "bytes": 387393612,
+      "sha256": "678a3821fad88c662bb976cce5575001adaba6c5f1954bc31318928cc883214c"
+    },
+    {
+      "path": "sensor-learning-campaign-v001\\photo-display-2048\\6V1A0181-seed71-local.rcd.f32",
+      "bytes": 387393612,
+      "sha256": "d719701b997a49074dd36894b5a6c0e726250d2aeb0117fdfee92e4969a1ec09"
+    },
+    {
+      "path": "sensor-learning-campaign-v001\\photo-display-2048\\6V1A0181-seed73-local.rcd.f32",
+      "bytes": 387393612,
+      "sha256": "21b5040b5ac43f35079ef8c6dd890fbebff063e997025c1baa6c2adb55ebc1e2"
+    },
+    {
+      "path": "sensor-learning-campaign-v001\\photo-display-2048\\6V1A0263-seed71-local.rcd.f32",
+      "bytes": 387393612,
+      "sha256": "aba87b574274cb4cbc9d01685fd3da1b8bf8abe1b564b9fcee84beb5823ace7a"
+    },
+    {
+      "path": "sensor-learning-campaign-v001\\photo-display-2048\\6V1A0263-seed73-local.rcd.f32",
+      "bytes": 387393612,
+      "sha256": "9fe0e329d44c3468db3c5bd07175b5d6677cfb83634404c735b50d181ccab282"
+    },
+    {
+      "path": "sensor-learning-campaign-v001\\photo-display-2048\\6V1A9819-seed71-local-oriented.f32",
+      "bytes": 387393612,
+      "sha256": "537fb09ade84d28f8e212cbc381aeeda3d807e86c0e041d9d6799e9b0e27ea93"
+    },
+    {
+      "path": "sensor-learning-campaign-v001\\photo-display-2048\\6V1A9819-seed71-local.rcd.f32",
+      "bytes": 387393612,
+      "sha256": "684e78dad716ca54aa76d86c507f93950579cbc3b80500cad980928351463af7"
+    },
+    {
+      "path": "sensor-learning-campaign-v001\\photo-display-2048\\6V1A9819-seed73-local-oriented.f32",
+      "bytes": 387393612,
+      "sha256": "0c92ca795f2ed6f2a2744e7259b584676f929933c6f0193ed6033cb4ef054151"
+    },
+    {
+      "path": "sensor-learning-campaign-v001\\photo-display-2048\\6V1A9819-seed73-local.rcd.f32",
+      "bytes": 387393612,
+      "sha256": "3a4a6a81b833d526b23b963ff0e62c0ff08a5b26452df62e7691348226e5d8b7"
+    },
+    {
+      "path": "sensor-learning-campaign-v001\\photo-display-256\\6V1A0181-seed71-local.rcd.f32",
+      "bytes": 387393612,
+      "sha256": "604948c827acd6055f0ce83cce2ceec7717182887bd547e7d1943e77766f2fd9"
+    },
+    {
+      "path": "sensor-learning-campaign-v001\\photo-display-256\\6V1A0181-seed73-local.rcd.f32",
+      "bytes": 387393612,
+      "sha256": "03bab35845745682a0c03e36be79e8efd276a04aeac2effc36e6a6ffdabc02e7"
+    },
+    {
+      "path": "sensor-learning-campaign-v001\\photo-display-256\\6V1A0263-seed71-local.rcd.f32",
+      "bytes": 387393612,
+      "sha256": "d56a3f5da9a745c6a0b254b32def469adeb0a22add0934466b11a91bfdc00893"
+    },
+    {
+      "path": "sensor-learning-campaign-v001\\photo-display-256\\6V1A0263-seed73-local.rcd.f32",
+      "bytes": 387393612,
+      "sha256": "2c8d11c807b5238e68a2a6fd53a1c1af5624fc271f084ad168788f6f2ff58957"
+    },
+    {
+      "path": "sensor-learning-campaign-v001\\photo-display-256\\6V1A9819-seed71-local-oriented.f32",
+      "bytes": 387393612,
+      "sha256": "087b709cbf176ea00d0d7672932547d778622beb78b38085a2388fe467cab4a8"
+    },
+    {
+      "path": "sensor-learning-campaign-v001\\photo-display-256\\6V1A9819-seed71-local.rcd.f32",
+      "bytes": 387393612,
+      "sha256": "370123ad5480876b95a8f5aefd4977141e2683fc5f59817a36626b42b827714f"
+    },
+    {
+      "path": "sensor-learning-campaign-v001\\photo-display-256\\6V1A9819-seed73-local-oriented.f32",
+      "bytes": 387393612,
+      "sha256": "99efaa5dc8c7030bec29d665b6a64d59cf0ed8ad88c04c52ab9ef4f3d60fbb77"
+    },
+    {
+      "path": "sensor-learning-campaign-v001\\photo-display-256\\6V1A9819-seed73-local.rcd.f32",
+      "bytes": 387393612,
+      "sha256": "a0c9d519e509a1865fe6f3e4a213ceae9a520d562036b4e4c00075188fda2e8d"
+    },
+    {
+      "path": "sensor-learning-campaign-v001\\photo-inference-1024\\6V1A0181-seed71-local.f32",
+      "bytes": 129131204,
+      "sha256": "3c6b8a501bc8ffdf026ff9247c913e4c73071ddadd096fc9c07b39b72a5b9e79"
+    },
+    {
+      "path": "sensor-learning-campaign-v001\\photo-inference-1024\\6V1A0181-seed73-local.f32",
+      "bytes": 129131204,
+      "sha256": "377d20f1a6ddb322295f81ca798fc932c59fe56b991f8365922f7195cc69eb98"
+    },
+    {
+      "path": "sensor-learning-campaign-v001\\photo-inference-1024\\6V1A0263-seed71-local.f32",
+      "bytes": 129131204,
+      "sha256": "90dca6d641f97855a961585acceba597dfa65f7b34a1b80ab6222160c3d6809f"
+    },
+    {
+      "path": "sensor-learning-campaign-v001\\photo-inference-1024\\6V1A0263-seed73-local.f32",
+      "bytes": 129131204,
+      "sha256": "60b09132f54b7990a6a02de8f0781cfad58821ee8911a51cf8006db2aef9eeee"
+    },
+    {
+      "path": "sensor-learning-campaign-v001\\photo-inference-1024\\6V1A9819-seed71-local.f32",
+      "bytes": 129131204,
+      "sha256": "2eb74a1a3832ed02064005353cfc173bbb6a9b104d904881c04e977d781bef0a"
+    },
+    {
+      "path": "sensor-learning-campaign-v001\\photo-inference-1024\\6V1A9819-seed73-local.f32",
+      "bytes": 129131204,
+      "sha256": "079b88ac8081290db3373400ca0b7f4bea23afff28d405a8468d3dda0d684aa4"
+    },
+    {
+      "path": "sensor-learning-campaign-v001\\photo-inference-2048\\6V1A0181-seed71-local.f32",
+      "bytes": 129131204,
+      "sha256": "bd9b47251d9c58e8020ece898e42028bfe66d58bd5456909563ff7b037dd00f7"
+    },
+    {
+      "path": "sensor-learning-campaign-v001\\photo-inference-2048\\6V1A0181-seed73-local.f32",
+      "bytes": 129131204,
+      "sha256": "f714798fdb2bd113c72337ec0df3354651febb58ca2f9a78e81fa0431b14e23a"
+    },
+    {
+      "path": "sensor-learning-campaign-v001\\photo-inference-2048\\6V1A0263-seed71-local.f32",
+      "bytes": 129131204,
+      "sha256": "95dc837d737a59db256dbcfa52728dddffa03477399447112edc8099a031d12d"
+    },
+    {
+      "path": "sensor-learning-campaign-v001\\photo-inference-2048\\6V1A0263-seed73-local.f32",
+      "bytes": 129131204,
+      "sha256": "a8618b92b13fa39113969e4b5c79e16c74e2b05915cfcdbdc5543c8fd2ca4edc"
+    },
+    {
+      "path": "sensor-learning-campaign-v001\\photo-inference-2048\\6V1A9819-seed71-local.f32",
+      "bytes": 129131204,
+      "sha256": "6fbad6bf83e6b3d69f26f0938ed2699f8b1c36c75a92eac12eda30a32fe4ffb0"
+    },
+    {
+      "path": "sensor-learning-campaign-v001\\photo-inference-2048\\6V1A9819-seed73-local.f32",
+      "bytes": 129131204,
+      "sha256": "34573eff22e6255634e7c3e44cce9b47e287043331ebe17aa5ca4acf6c4215d7"
+    },
+    {
+      "path": "sensor-learning-campaign-v001\\photo-inference-256\\6V1A0181-seed71-local.f32",
+      "bytes": 129131204,
+      "sha256": "c4f366dfd494945ce778633b3fc043630fbbafc71c4692b5ca3c54c319340c65"
+    },
+    {
+      "path": "sensor-learning-campaign-v001\\photo-inference-256\\6V1A0181-seed73-local.f32",
+      "bytes": 129131204,
+      "sha256": "e3562194d797ea5c7e32ef158c0ddb49099c22bc8e074aed4e49d5bbfced781d"
+    },
+    {
+      "path": "sensor-learning-campaign-v001\\photo-inference-256\\6V1A0263-seed71-local.f32",
+      "bytes": 129131204,
+      "sha256": "36f7c66bbbb79657040091346f6ae058f11f64dbc8d64907bf24c660bdb75afb"
+    },
+    {
+      "path": "sensor-learning-campaign-v001\\photo-inference-256\\6V1A0263-seed73-local.f32",
+      "bytes": 129131204,
+      "sha256": "c900a89fc411600f7587211286cb53a0cdc608983e0fc6b8dd294d241b2424dc"
+    },
+    {
+      "path": "sensor-learning-campaign-v001\\photo-inference-256\\6V1A9819-seed71-local.f32",
+      "bytes": 129131204,
+      "sha256": "779c64ba07769f6407a094f9a845ab4d7c9d426b324ac0a23f444e277653447c"
+    },
+    {
+      "path": "sensor-learning-campaign-v001\\photo-inference-256\\6V1A9819-seed73-local.f32",
+      "bytes": 129131204,
+      "sha256": "29c30c7474ba882280ccac3f7ef7707bd89bf616b50bb8c5eaea110e0aeb2ba5"
+    },
+    {
+      "path": "real-photo-display-v002\\6V1A0181\\neural-seed71-sigma0.01.rcd.f32",
+      "bytes": 387393612,
+      "sha256": "f9579ad7b3a42f5846e81149b526623e96646e0861c8a3aca67100deb267c913"
+    },
+    {
+      "path": "real-photo-display-v002\\6V1A0181\\neural-seed71-sigma0.03.rcd.f32",
+      "bytes": 387393612,
+      "sha256": "0c77fbf4ab7ac1bca23e7fec0dc48cf140a4b6b17da9f36f72418ea2e418d5ff"
+    },
+    {
+      "path": "real-photo-display-v002\\6V1A0181\\neural-seed73-sigma0.01.rcd.f32",
+      "bytes": 387393612,
+      "sha256": "eb07d8d7ae9f0dd77bee9df150d1ed994165bcbc0d820dcfa3dc2b6555b59437"
+    },
+    {
+      "path": "real-photo-display-v002\\6V1A0181\\neural-seed73-sigma0.03.rcd.f32",
+      "bytes": 387393612,
+      "sha256": "7eb92d9eca6a14c225eab533c3b0a24409a2b892f15593a7ad75219c1fa91368"
+    },
+    {
+      "path": "real-photo-display-v002\\6V1A0263\\neural-seed71-sigma0.01.rcd.f32",
+      "bytes": 387393612,
+      "sha256": "ae62ef63caadf89d5c864b4e967cfc82a7a95e981a9f94466f493583b2d6995c"
+    },
+    {
+      "path": "real-photo-display-v002\\6V1A0263\\neural-seed71-sigma0.03.rcd.f32",
+      "bytes": 387393612,
+      "sha256": "e2e6221f3d16d1f32c868cf463a09170219142545efbc8590885b26650d6e673"
+    },
+    {
+      "path": "real-photo-display-v002\\6V1A0263\\neural-seed73-sigma0.01.rcd.f32",
+      "bytes": 387393612,
+      "sha256": "74ce93daba6de2874756c50495a56c06cd141d79e92f390f50025817c3b5c3d4"
+    },
+    {
+      "path": "real-photo-display-v002\\6V1A0263\\neural-seed73-sigma0.03.rcd.f32",
+      "bytes": 387393612,
+      "sha256": "0b3b1165225722b9314ff327a4b0a8e966f8881612ccfc84f9d9327fcdcdcc0e"
+    },
+    {
+      "path": "real-photo-display-v002\\6V1A9819\\neural-seed71-sigma0.01-oriented.f32",
+      "bytes": 387393612,
+      "sha256": "6fdc76c2a2ee08c8d0bdb67a7fa40a9650d8e7bf6e0918fa60c90e7c01efbf04"
+    },
+    {
+      "path": "real-photo-display-v002\\6V1A9819\\neural-seed71-sigma0.01.rcd.f32",
+      "bytes": 387393612,
+      "sha256": "035a6f4b1062cd7e578cd80e36b980841e7a5eeff3bd85ce249f674c47720f5a"
+    },
+    {
+      "path": "real-photo-display-v002\\6V1A9819\\neural-seed71-sigma0.03-oriented.f32",
+      "bytes": 387393612,
+      "sha256": "bf5adbf4c6fc20d5da3089bd425b4bff862227f7073396f36b15ee012f488691"
+    },
+    {
+      "path": "real-photo-display-v002\\6V1A9819\\neural-seed71-sigma0.03.rcd.f32",
+      "bytes": 387393612,
+      "sha256": "7c8e5fcd8fbce25c3d77b6355e4ff042fff4f42cf6defe4c4ce1626890c0a7b4"
+    },
+    {
+      "path": "real-photo-display-v002\\6V1A9819\\neural-seed73-sigma0.01-oriented.f32",
+      "bytes": 387393612,
+      "sha256": "b432d1acb811578734486a095c9a0f05c034ea8d9f81dbe9568f661ff2a7348d"
+    },
+    {
+      "path": "real-photo-display-v002\\6V1A9819\\neural-seed73-sigma0.01.rcd.f32",
+      "bytes": 387393612,
+      "sha256": "9de22618c645ee20d551900b39f56c573fb23448a2ab94b65fb2708cb0aa316c"
+    },
+    {
+      "path": "real-photo-display-v002\\6V1A9819\\neural-seed73-sigma0.03-oriented.f32",
+      "bytes": 387393612,
+      "sha256": "d39fa3e605d5c1e5a7e846a550e260c9fb89a44603ad95016e13395286950969"
+    },
+    {
+      "path": "real-photo-display-v002\\6V1A9819\\neural-seed73-sigma0.03.rcd.f32",
+      "bytes": 387393612,
+      "sha256": "f2b05d3b457c9f073f43dfcc2def47593d1d2c0a43e0290129f6dcb2dfc9ff01"
+    },
+    {
+      "path": "real-photo-baselines-v001\\6V1A0181\\classic.denoise-30.f32",
+      "bytes": 387393612,
+      "sha256": "b6a1ab2109126250bf7f691cfe21018a4b63fc78df6c5b8659ff4227d1637592"
+    },
+    {
+      "path": "real-photo-baselines-v001\\6V1A0181\\classic.denoise-60.f32",
+      "bytes": 387393612,
+      "sha256": "da9d5b042825eeeed08d8529bf61301a4614543aca0431f4d05bbf7e9e5c8402"
+    },
+    {
+      "path": "real-photo-baselines-v001\\6V1A0181\\parent.rcd.f32",
+      "bytes": 387393612,
+      "sha256": "74a8188df7b95b28a7aeac34ce3fec355e021496c1a1895593d0f035cddada6d"
+    },
+    {
+      "path": "real-photo-baselines-v001\\6V1A0263\\classic.denoise-30.f32",
+      "bytes": 387393612,
+      "sha256": "1570038126a5a9508bebd82aba36f2b3716e49de3c05f2f8686ede01ea6b2681"
+    },
+    {
+      "path": "real-photo-baselines-v001\\6V1A0263\\classic.denoise-60.f32",
+      "bytes": 387393612,
+      "sha256": "6b3bd671887a336e0a7bea7c17137fe1c4d41ba15ca1fdf0ad77317f029dea27"
+    },
+    {
+      "path": "real-photo-baselines-v001\\6V1A0263\\parent.rcd.f32",
+      "bytes": 387393612,
+      "sha256": "6cfa69f48e39766c9e719ab49afe0359278d628bfc02fe840b3e8cf8b4d5767d"
+    },
+    {
+      "path": "real-photo-baselines-v001\\6V1A9819\\classic.denoise-30.f32",
+      "bytes": 387393612,
+      "sha256": "ab135b742793b811ccd3280808354e7df4381fa2bf796b92806c2f0ac3ad4a03"
+    },
+    {
+      "path": "real-photo-baselines-v001\\6V1A9819\\classic.denoise-60.f32",
+      "bytes": 387393612,
+      "sha256": "8eb0b798ca7363331ddb540c3e2279a4dcf1d2b6dfb284f5953bdd58b0a268d2"
+    },
+    {
+      "path": "real-photo-baselines-v001\\6V1A9819\\parent-oriented.f32",
+      "bytes": 387393612,
+      "sha256": "66425a225b41e0b9b8f407c773f66dd145b91b2baab5d57a99f2fdc57c6f210c"
+    },
+    {
+      "path": "real-photo-baselines-v001\\6V1A9819\\parent.rcd.f32",
+      "bytes": 387393612,
+      "sha256": "25ea6dd7c751a76b23c9571ace8d5a751f431fa5b338e37a2fea0188ab05f4fc"
+    },
+    {
+      "path": "local-sigma-display-v001\\6V1A0181-seed71-local.rcd.f32",
+      "bytes": 387393612,
+      "sha256": "b89d1ff5cd79ad3f29735bd8d03e57b3db3854d81e7a2757d5d89101f56d0f05"
+    },
+    {
+      "path": "local-sigma-display-v001\\6V1A0181-seed73-local.rcd.f32",
+      "bytes": 387393612,
+      "sha256": "e629b4ea2f5260621c7697cf35e4fb69548a48fa6d8eb0e6d6697b969af4303f"
+    },
+    {
+      "path": "local-sigma-display-v001\\6V1A0263-seed71-local.rcd.f32",
+      "bytes": 387393612,
+      "sha256": "23bb90454b397bf20e0d7b763ec836453ea3b8b7fb80905c128265eddba26b71"
+    },
+    {
+      "path": "local-sigma-display-v001\\6V1A0263-seed73-local.rcd.f32",
+      "bytes": 387393612,
+      "sha256": "63a82cb8763627b67caf146078f49269c5a6aa37e2954f4392bb375540ffbac6"
+    },
+    {
+      "path": "local-sigma-display-v001\\6V1A9819-seed71-local-oriented.f32",
+      "bytes": 387393612,
+      "sha256": "afcffa2dd8cc6f9f14c437483705dd3c1c21a3ef33a2348ce0344a247dd5f0ce"
+    },
+    {
+      "path": "local-sigma-display-v001\\6V1A9819-seed71-local.rcd.f32",
+      "bytes": 387393612,
+      "sha256": "81e6378376e932d81c92ae86337b5a810cc56bd358ada10788d9478fdbf85d40"
+    },
+    {
+      "path": "local-sigma-display-v001\\6V1A9819-seed73-local-oriented.f32",
+      "bytes": 387393612,
+      "sha256": "721bad3ef90106c69c72ef616996513faa6b9bcd8693f8302b52eca1497300e5"
+    },
+    {
+      "path": "local-sigma-display-v001\\6V1A9819-seed73-local.rcd.f32",
+      "bytes": 387393612,
+      "sha256": "a28f1674736680d8c330331b345ac5d7f3cda5458a5640ddf7d763bb6b660767"
+    },
+    {
+      "path": "real-photo-neural-v001\\6V1A0181-seed71-sigma0.01.f32",
+      "bytes": 129131204,
+      "sha256": "09a0eaac8358bbc5447e2e82cbd118abdb39bef05bd13d2950addc1c814ff395"
+    },
+    {
+      "path": "real-photo-neural-v001\\6V1A0181-seed71-sigma0.03.f32",
+      "bytes": 129131204,
+      "sha256": "2842edf4c8c3de41ae7808e0156d8254a3b7c79f07aea557a3320f3854e9927c"
+    },
+    {
+      "path": "real-photo-neural-v001\\6V1A0181-seed73-sigma0.01.f32",
+      "bytes": 129131204,
+      "sha256": "ddf4149133263510349b7545245e87b2f55d0044ec14eb58b73708913f165c32"
+    },
+    {
+      "path": "real-photo-neural-v001\\6V1A0181-seed73-sigma0.03.f32",
+      "bytes": 129131204,
+      "sha256": "9c99dfdeb8f143c99143ed0a95411a38df968db7fa7407f78e46672e04d46fe1"
+    },
+    {
+      "path": "real-photo-neural-v001\\6V1A0263-seed71-sigma0.01.f32",
+      "bytes": 129131204,
+      "sha256": "c2e9f84e5e456c064085ce230503e6742752b5e770687f0a37599ecc3f956495"
+    },
+    {
+      "path": "real-photo-neural-v001\\6V1A0263-seed71-sigma0.03.f32",
+      "bytes": 129131204,
+      "sha256": "5a25237251358ddacddde2a59c6a03259b7b4ba94b8b7679794e629670627a9c"
+    },
+    {
+      "path": "real-photo-neural-v001\\6V1A0263-seed73-sigma0.01.f32",
+      "bytes": 129131204,
+      "sha256": "dc888677384ff443c9a32037d24aebb93cc0a10d6839ca0cf733c0a90764b476"
+    },
+    {
+      "path": "real-photo-neural-v001\\6V1A0263-seed73-sigma0.03.f32",
+      "bytes": 129131204,
+      "sha256": "4e77b3ad9d304c70b944100e5f1d40eb00df77e174db5da127cf5664f1689cb8"
+    },
+    {
+      "path": "real-photo-neural-v001\\6V1A9819-seed71-sigma0.01.f32",
+      "bytes": 129131204,
+      "sha256": "5141344ee66b192383fce10523419637afc72ac87e1924d7fd3034e6709badb8"
+    },
+    {
+      "path": "real-photo-neural-v001\\6V1A9819-seed71-sigma0.03.f32",
+      "bytes": 129131204,
+      "sha256": "ecd76623ee1a4394579ba86ace0687587726ea110e56c1fd735fba3bc699bb70"
+    },
+    {
+      "path": "real-photo-neural-v001\\6V1A9819-seed73-sigma0.01.f32",
+      "bytes": 129131204,
+      "sha256": "0beef4949277a8b26f146d64f356d55c57d917d03a671cdddc01413e2ab1ac88"
+    },
+    {
+      "path": "real-photo-neural-v001\\6V1A9819-seed73-sigma0.03.f32",
+      "bytes": 129131204,
+      "sha256": "f3c80ccc7b6f926b7d4d1bb4b12ac02341e2c0ba7eba5a736b13e89682a0600f"
+    },
+    {
+      "path": "local-sigma-inference-v001\\6V1A0181-seed71-local.f32",
+      "bytes": 129131204,
+      "sha256": "2d04ce8d5cad23fadb857440f53b86c99956ec682f6c417c07c9a578acc8fbf6"
+    },
+    {
+      "path": "local-sigma-inference-v001\\6V1A0181-seed73-local.f32",
+      "bytes": 129131204,
+      "sha256": "15839738426a6946b830b7b35b030ebebbf8362897ac247015a3380f552f2314"
+    },
+    {
+      "path": "local-sigma-inference-v001\\6V1A0263-seed71-local.f32",
+      "bytes": 129131204,
+      "sha256": "6db11c40df09a9c35e318ea533c87a0c736d1bdc3d5a9622f299bd1675cdaefb"
+    },
+    {
+      "path": "local-sigma-inference-v001\\6V1A0263-seed73-local.f32",
+      "bytes": 129131204,
+      "sha256": "6ea4a420f612a912a037a802e371803292445467ac539a9a2d40a80b33e73179"
+    },
+    {
+      "path": "local-sigma-inference-v001\\6V1A9819-seed71-local.f32",
+      "bytes": 129131204,
+      "sha256": "903b285b0323f1ef32b426bd7a0cc8801784971d93a060e5e7a7afb83015db18"
+    },
+    {
+      "path": "local-sigma-inference-v001\\6V1A9819-seed73-local.f32",
+      "bytes": 129131204,
+      "sha256": "d5597bafbd8721fb0593c2e8ff20bb667f6e235a4b6897f87aaab4ae54d899c5"
+    },
+    {
+      "path": "local-sigma-inference-v001\\constant-bridge.f32",
+      "bytes": 129131204,
+      "sha256": "09a0eaac8358bbc5447e2e82cbd118abdb39bef05bd13d2950addc1c814ff395"
+    },
+    {
+      "path": "real-photo-display-v001\\6V1A0181\\neural-seed71-sigma0.01.rcd.f32",
+      "bytes": 387393612,
+      "sha256": "f9579ad7b3a42f5846e81149b526623e96646e0861c8a3aca67100deb267c913"
+    },
+    {
+      "path": "learned-photo-diagnostic-v001\\6V1A0181-learned-rgb-seed71.f32",
+      "bytes": 15925248,
+      "sha256": "8ae3ccf505c281aa7608bd1ba715acc730a8dc462b3a7d09180b375061a50572"
+    },
+    {
+      "path": "learned-photo-diagnostic-v001\\6V1A0181-learned-rgb-seed73.f32",
+      "bytes": 15925248,
+      "sha256": "76dfd0ab68bff5b8c82000ae43ade24e68c0148f5225f50229a14c706b5e9039"
+    },
+    {
+      "path": "learned-photo-diagnostic-v001\\6V1A0263-learned-rgb-seed71.f32",
+      "bytes": 15925248,
+      "sha256": "7f9cfdc0c134a8c545764dfd402bb0214ab578d60e42a4f3db93ee49400e98b3"
+    },
+    {
+      "path": "learned-photo-diagnostic-v001\\6V1A0263-learned-rgb-seed73.f32",
+      "bytes": 15925248,
+      "sha256": "3113757ece95c3b18982b4f2e95ef297e16e5036b13fadb632418bda6911be07"
+    },
+    {
+      "path": "learned-photo-diagnostic-v001\\6V1A9819-learned-rgb-seed71.f32",
+      "bytes": 15925248,
+      "sha256": "6a399fba0a6a01c5ee0e059ed0bbc895c1c944bb3395366cbab5a35834cef537"
+    },
+    {
+      "path": "learned-photo-diagnostic-v001\\6V1A9819-learned-rgb-seed73.f32",
+      "bytes": 15925248,
+      "sha256": "4cd56b953802280e564d42bbeb1aed588da111f64eef16d2a925db4ba3e640ba"
+    }
+  ],
+  "deduplicate": [
+    {
+      "bytes": 391815227,
+      "sha256": "aaf76e58128a6b5406b9db5f429b5d0f231160ab2246be48afd3f7b031a2844b",
+      "keeper": "dru-overnight-preflight-v001\\bridge.pt",
+      "targets": [
+        "dru-overnight-preflight-v002\\bridge.pt"
+      ]
+    },
+    {
+      "bytes": 391815227,
+      "sha256": "daa3076a0c414f6ced95c0536f31b1dee9cdf08f408f51666b92da21a0e96969",
+      "keeper": "dru-data-comparison-v001\\reference-preflight\\bridge.pt",
+      "targets": [
+        "neural-load-campaign-v001\\execution-qualification\\bridge.pt"
+      ]
+    },
+    {
+      "bytes": 130609181,
+      "sha256": "c4f267a35267d95086a51d043cc58019727b81b776a13bede67283788ab2c68c",
+      "keeper": "dru-memory-campaign-v001\\seed71\\checkpoint-000000.pt",
+      "targets": [
+        "dru-memory-preflight-v001\\checkpoint-000000.pt"
+      ]
+    },
+    {
+      "bytes": 130609181,
+      "sha256": "efc1dde31bddcda7b72c3929d044bed7fbb0ad45bab1787e6aab58ebe9411b63",
+      "keeper": "dru-overnight-preflight-v001\\checkpoint-000000.pt",
+      "targets": [
+        "dru-overnight-preflight-v002\\checkpoint-000000.pt"
+      ]
+    },
+    {
+      "bytes": 130609181,
+      "sha256": "6d7f62991528289fdc3cd0c40992c4b09ccbb652667f6982677d46dd9ce94426",
+      "keeper": "dru-overnight-campaign-v001\\seed71\\checkpoint-000000.pt",
+      "targets": [
+        "dru-overnight-campaign-v002\\seed71\\checkpoint-000000.pt",
+        "dru-overnight-preflight-v003\\checkpoint-000000.pt",
+        "dru-overnight-campaign-v001\\seed71\\resume.pt"
+      ]
+    },
+    {
+      "bytes": 130609181,
+      "sha256": "e26cfd3de790623563b56c40e667acdc31b2748529b63f1c531d465e09cbb5e2",
+      "keeper": "dru-data-comparison-v001\\details\\seed71\\checkpoint-000000.pt",
+      "targets": [
+        "neural-load-campaign-v001\\details-preflight\\checkpoint-000000.pt"
+      ]
+    },
+    {
+      "bytes": 130609181,
+      "sha256": "0d3be8158b3b7167d61c03004401da0551cbb67dedd4c2b0763e29daf3cdb3c6",
+      "keeper": "dru-data-comparison-v001\\reference-preflight\\checkpoint-000000.pt",
+      "targets": [
+        "dru-data-comparison-v001\\reference\\seed71\\checkpoint-000000.pt",
+        "neural-load-campaign-v001\\execution-qualification\\checkpoint-000000.pt"
+      ]
+    },
+    {
+      "bytes": 130609181,
+      "sha256": "6fa9c92de48e78cc0f637d31d3fb2d6e3f8677005241eda5bb1de12d1474fbf2",
+      "keeper": "dru-data-comparison-v001\\noise\\seed71\\checkpoint-000000.pt",
+      "targets": [
+        "neural-load-campaign-v001\\noise-preflight\\checkpoint-000000.pt"
+      ]
+    },
+    {
+      "bytes": 130609181,
+      "sha256": "67b6ffba5e5bf6520241ce23242d512e561d12c3e50f8ea5b77db5a73f04d573",
+      "keeper": "dru-objective-study-v001\\reference-preflight\\checkpoint-000000.pt",
+      "targets": [
+        "dru-objective-study-v001\\reference\\seed71\\checkpoint-000000.pt"
+      ]
+    },
+    {
+      "bytes": 130609181,
+      "sha256": "c0bf4cf9f4dcb5425d52267bf745896f0a58e8f43fb6d85edcfd228582abe20f",
+      "keeper": "dru-objective-study-v001\\structured-preflight\\checkpoint-000000.pt",
+      "targets": [
+        "dru-objective-study-v001\\structured\\seed71\\checkpoint-000000.pt"
+      ]
+    },
+    {
+      "bytes": 391815291,
+      "sha256": "b434b23b920e87e6f722f50ef0fd7651196b76b38c4d2c69aed0f4b69040a1b2",
+      "keeper": "dru-data-comparison-v001\\reference-preflight\\resume.pt",
+      "targets": [
+        "neural-load-campaign-v001\\execution-qualification\\resume.pt"
+      ]
+    },
+    {
+      "bytes": 593565,
+      "sha256": "526d7048e448fa2e4659e993f73dae2bedf05ad4d9a22355b9989cde866cda11",
+      "keeper": "paired-correlation-plan-v001\\engineering-correlation-71.pt",
+      "targets": [
+        "paired-correlation-plan-v002\\engineering-correlation-71.pt"
+      ]
+    },
+    {
+      "bytes": 593565,
+      "sha256": "d3d3e8b0fdf67f1bebcfb001d8205fe1b5df3912eef16571ffa16e1831569aff",
+      "keeper": "paired-correlation-plan-v001\\engineering-correlation-73.pt",
+      "targets": [
+        "paired-correlation-plan-v002\\engineering-correlation-73.pt"
+      ]
+    },
+    {
+      "bytes": 589865,
+      "sha256": "88510d716c9630018d1a6deb47346f85e467bf7381701b208eb6391e9a99fc6d",
+      "keeper": "paired-correlation-plan-v001\\engineering-control-71.pt",
+      "targets": [
+        "paired-correlation-plan-v002\\engineering-control-71.pt"
+      ]
+    },
+    {
+      "bytes": 589865,
+      "sha256": "153eca9bd4650b1a1cc488c59b62ece68800d7d03ddbdb3ead8e8f6d0d4658f7",
+      "keeper": "paired-correlation-plan-v001\\engineering-control-73.pt",
+      "targets": [
+        "paired-correlation-plan-v002\\engineering-control-73.pt"
+      ]
+    },
+    {
+      "bytes": 587185,
+      "sha256": "cf3ed70d12bcd6fdd30ea10795af4de165a7499bfc23684b7e214c9700fac625",
+      "keeper": "paired-warm-plan-v001\\engineering-control-71.pt",
+      "targets": [
+        "paired-warm-plan-v002\\engineering-control-71.pt"
+      ]
+    },
+    {
+      "bytes": 587185,
+      "sha256": "c95ac25022c22f31b01dba2b7ac453a2f4e0c533a0e3508cfedb4e439dbb3f89",
+      "keeper": "paired-warm-plan-v001\\engineering-control-73.pt",
+      "targets": [
+        "paired-warm-plan-v002\\engineering-control-73.pt"
+      ]
+    },
+    {
+      "bytes": 587185,
+      "sha256": "0079268e0884c6394ccbabd9b34c4d2533cf46a52b6b1e2a1a8185eeb134f918",
+      "keeper": "paired-warm-plan-v001\\engineering-progressive-71.pt",
+      "targets": [
+        "paired-warm-plan-v002\\engineering-progressive-71.pt"
+      ]
+    },
+    {
+      "bytes": 587185,
+      "sha256": "8104e0820262e480bf0d5d838f316af2ba6c1ab1735fabb8c83782857a933cca",
+      "keeper": "paired-warm-plan-v001\\engineering-progressive-73.pt",
+      "targets": [
+        "paired-warm-plan-v002\\engineering-progressive-73.pt"
+      ]
+    },
+    {
+      "bytes": 611869,
+      "sha256": "14aaa1c03d587c3ff84ce0f5a3ee162e0b6cf8c0344e38cf7a483d3b24b0bcc0",
+      "keeper": "sensor-learning-campaign-v001\\seed71\\checkpoint-002048.pt",
+      "targets": [
+        "sensor-learning-campaign-v001\\seed71\\resume.pt"
+      ]
+    },
+    {
+      "bytes": 611869,
+      "sha256": "9f23c1f08541c65081e4c063ea8945864319755caa1b8e2d9700019cf14698bb",
+      "keeper": "sensor-learning-campaign-v001\\seed73\\checkpoint-002048.pt",
+      "targets": [
+        "sensor-learning-campaign-v001\\seed73\\resume.pt"
+      ]
+    },
+    {
+      "bytes": 302511,
+      "sha256": "a1f98ce6d7f367469e403bc3eb0aa50256b092b7dc23761e06b79b91b8ac3efd",
+      "keeper": "curve-known-development-plan-v001\\seed71\\weights.pt",
+      "targets": [
+        "sensor-learning-campaign-v001\\photo-plans\\step2048\\seed71-weights.pt"
+      ]
+    },
+    {
+      "bytes": 302511,
+      "sha256": "88e62cb29db8a634bf25ff81890f1f1e16556cad85a2d209a12bf92e9ef4b69b",
+      "keeper": "curve-known-development-plan-v001\\seed73\\weights.pt",
+      "targets": [
+        "sensor-learning-campaign-v001\\photo-plans\\step2048\\seed73-weights.pt"
+      ]
+    },
+    {
+      "bytes": 180872,
+      "sha256": "7c27bd35c672a490ebf9eda2d7fc7e71c048c17daf8797670e10e18c3e98032b",
+      "keeper": "noisy-quadratic-campaign-v001\\seed71-attempt01\\training-latest.pt",
+      "targets": [
+        "noisy-quadratic-campaign-v001\\seed71-attempt02\\training-latest.pt"
+      ]
+    },
+    {
+      "bytes": 391817531,
+      "sha256": "fca3db6e814250fccbc309930a470efe51225674b1004879af3d4368364e170b",
+      "keeper": "dru-objective-study-v001\\structured\\seed71\\checkpoint-000256.pt",
+      "targets": [
+        "dru-objective-study-v001\\structured\\seed71\\resume.pt",
+        "dru-objective-study-v001\\structured\\seed71\\weights.pt"
+      ]
+    },
+    {
+      "bytes": 391817531,
+      "sha256": "eee588c08fa75657334bda6c522f768e7a49be0d1489ea73a353a9f0307ebbc0",
+      "keeper": "dru-objective-study-v001\\structured\\seed73\\checkpoint-000256.pt",
+      "targets": [
+        "dru-objective-study-v001\\structured\\seed73\\resume.pt",
+        "dru-objective-study-v001\\structured\\seed73\\weights.pt"
+      ]
+    },
+    {
+      "bytes": 391817531,
+      "sha256": "1f7061dedf89d3b9da9971895256f335446266147badf5124f0381de370bf390",
+      "keeper": "dru-objective-study-v001\\reference\\seed71\\checkpoint-000256.pt",
+      "targets": [
+        "dru-objective-study-v001\\reference\\seed71\\resume.pt",
+        "dru-objective-study-v001\\reference\\seed71\\weights.pt"
+      ]
+    },
+    {
+      "bytes": 391817531,
+      "sha256": "80153e1055845ee0b12d74af4c899cd5230b786cb54e4554e3d0e544d103e9d5",
+      "keeper": "dru-objective-study-v001\\reference\\seed73\\checkpoint-000256.pt",
+      "targets": [
+        "dru-objective-study-v001\\reference\\seed73\\resume.pt",
+        "dru-objective-study-v001\\reference\\seed73\\weights.pt"
+      ]
+    },
+    {
+      "bytes": 391817531,
+      "sha256": "4f855b327f0aa6c1830c2ea9924a1795df6b2d6d9cb08a962be913783effb0ac",
+      "keeper": "dru-memory-campaign-v001\\seed71\\checkpoint-000256.pt",
+      "targets": [
+        "dru-memory-campaign-v001\\seed71\\resume.pt",
+        "dru-memory-campaign-v001\\seed71\\weights.pt"
+      ]
+    },
+    {
+      "bytes": 391817531,
+      "sha256": "20f19dc718a53cab1fe9e463289335b8c92dbe1cacbad8b279f77e0b04649ad5",
+      "keeper": "dru-memory-campaign-v001\\seed73\\checkpoint-000256.pt",
+      "targets": [
+        "dru-memory-campaign-v001\\seed73\\resume.pt",
+        "dru-memory-campaign-v001\\seed73\\weights.pt"
+      ]
+    },
+    {
+      "bytes": 391817531,
+      "sha256": "110a0ee7cd4427de141a667109ca077750476fe41eb789e423eded5ad627e685",
+      "keeper": "dru-data-comparison-v001\\reference\\seed71\\checkpoint-000256.pt",
+      "targets": [
+        "dru-data-comparison-v001\\reference\\seed71\\resume.pt",
+        "dru-data-comparison-v001\\reference\\seed71\\weights.pt"
+      ]
+    },
+    {
+      "bytes": 391817531,
+      "sha256": "3bbe31256ce6afd6d0e83acbde50495dcfb7bbba6c1967f90e540b9ccd8bd730",
+      "keeper": "dru-data-comparison-v001\\reference\\seed73\\checkpoint-000256.pt",
+      "targets": [
+        "dru-data-comparison-v001\\reference\\seed73\\resume.pt",
+        "dru-data-comparison-v001\\reference\\seed73\\weights.pt"
+      ]
+    },
+    {
+      "bytes": 391817531,
+      "sha256": "4dce261212b4d7e3db387ce795ecc7a10c5997e7364947eb0ffc5f75d93b80db",
+      "keeper": "dru-data-comparison-v001\\noise\\seed71\\checkpoint-000256.pt",
+      "targets": [
+        "dru-data-comparison-v001\\noise\\seed71\\resume.pt",
+        "dru-data-comparison-v001\\noise\\seed71\\weights.pt"
+      ]
+    },
+    {
+      "bytes": 391817531,
+      "sha256": "65f19bea550e5d9e26efa7ab1e604016163dcf668432f21d0127b273f53e0767",
+      "keeper": "dru-data-comparison-v001\\noise\\seed73\\checkpoint-000256.pt",
+      "targets": [
+        "dru-data-comparison-v001\\noise\\seed73\\resume.pt",
+        "dru-data-comparison-v001\\noise\\seed73\\weights.pt"
+      ]
+    },
+    {
+      "bytes": 391817531,
+      "sha256": "0b22cbabf47e91e394eb23b2f419d1a31b2093894986d29b5a5168c192336a2c",
+      "keeper": "dru-data-comparison-v001\\details\\seed71\\checkpoint-000256.pt",
+      "targets": [
+        "dru-data-comparison-v001\\details\\seed71\\resume.pt",
+        "dru-data-comparison-v001\\details\\seed71\\weights.pt"
+      ]
+    },
+    {
+      "bytes": 391817531,
+      "sha256": "425d9c2b3a0720f70ce0076b48037a3bff48d301667038e7d90e635502368321",
+      "keeper": "dru-data-comparison-v001\\details\\seed73\\checkpoint-000256.pt",
+      "targets": [
+        "dru-data-comparison-v001\\details\\seed73\\resume.pt",
+        "dru-data-comparison-v001\\details\\seed73\\weights.pt"
+      ]
+    }
+  ],
+  "policy": "Delete only generated float render caches in explicit folders; preserve all JSON, source captures, targets, unique checkpoints and previews. Replace only bit-identical checkpoint copies by hardlinks, preserving all paths.",
+  "kept_source_caches": [
+    "sensor-learning-plan-v001/targets.f32",
+    "photo-comparison-v001/full-cfa",
+    "photo-comparison-v001/full-cfa-sensor-v002"
+  ],
+  "delete_bytes": 27729629144,
+  "deduplicate_bytes_upper_bound": 12022492712
+}

@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "data_version": 1,
+  "campaign_id": "neural-edge-protection-v001-20261103T130836Z",
+  "measured_at_utc": "2026-11-03T13:08:36.226101+00:00",
+  "status": "aborted_for_memory_budget",
+  "plan": {
+    "schema_version": 1,
+    "frozen_at_utc": "2026-11-03T13:08:34.122796+00:00",
+    "data_plan_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-frozen-plan-v001\\plan.json",
+    "data_plan_sha256": "45560586d452a8c5bb8688a4eba45bfe15a0d7a99138229e91132aa18317b404",
+    "models": [
+      {
+        "seed": 71,
+        "folder": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-frozen-campaign-v001\\seed71-attempt01",
+        "result_sha256": "f8bf09c0c7ba3bc2c638d6fc5221ec1b5b7c1ee6d88558ede602bebbc1aa0f50",
+        "weights_sha256": "525ff9e5ae631d8b83db2d4043d35f355ba70e8a816dd0caf39f2d18948d40f6"
+      },
+      {
+        "seed": 73,
+        "folder": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-frozen-campaign-v001\\seed73-attempt01",
+        "result_sha256": "a2eda57bba23307ea9eb995ef8d82f69e1ec71c10176f3c08215423f858ca42a",
+        "weights_sha256": "aa49e45d93d6ee0dc5707fd7b07009d711695b0680731fd53d2024ffbab888aa"
+      }
+    ],
+    "memory_policy": {
+      "hard_bytes": 2147483648,
+      "soft_bytes": 1342177280,
+      "system_fraction": 0.92,
+      "interval": 0.25
+    },
+    "policy": "Fixed second-order contrast excluding centre, correct variance weights, nominal Gaussian union bound across local tests; no fitted score threshold or learned-weight change.",
+    "protection": {
+      "score_onset": 4.747542355016646,
+      "nominal_family_alpha": 0.01,
+      "comparison_count": 392,
+      "halo_radius": 3
+    },
+    "limits": [
+      "Consulted development controls; independent noisy confirmation remains required.",
+      "Estimated Gaussian contrast scale is a heuristic, not a calibrated edge probability.",
+      "Protection may reduce denoising and fail on weak structures; all original gates retained."
+    ],
+    "tools": {
+      "local_moment_unet.py": "b029a2d267449dd8f2749885cb89ccdc5cd0be1fc10a9c28f738c3aacd5b9063",
+      "closed_moment_unet.py": "26675cf00094bd4b75ae22447b701719e6a2734df1f24a4cd9caefe6d2de8cfa",
+      "closed_moment_operator.py": "b387304fe441a2ba1c698b365541394879720d6f566c9ddc7346651590c83d8b",
+      "bayer_canonical.py": "a759c19f855f53dc96b8631e6f3d7817d99eb28a7da766fd74c5c91f6c9016f8",
+      "joint_bayer_unet.py": "c4899cbbdd27d8065a5c2e1eb981806e8a2f848f14b43052863d81c573c22e3f",
+      "camera_unet.py": "14a3c27c47cfa3aeba7fbcbc64139cc1817b52e4adfbf3108c9850ad75a79529",
+      "synthetic_bayer_data.py": "112a7476980f2144da9d6d2665245815fa33badce0c24a25b2db2d69240d9095",
+      "run_memory_bounded_reconstruction.py": "51d57d371694f5bac0b2fbd8dd1440dbd60c58d53510fc8a5ee61f6873571a4b",
+      "run_balanced_moment_pilot.py": "7dfc5095b8ebfb06c54e034e5fe942feb564064a8af75dc6e6fa52d579a56d9f",
+      "run_diverse_moment_pilot.py": "a898f7eb503fa39e3bf56bf4ba4b3d317a2a00689b4ecd0d77e7e070a90fe43a",
+      "run_noisy_moment_pilot.py": "77040ad49b32e7261b4cadf78fe5b809099838dedf95656d2eeda7d82e3b6679",
+      "noisy_moment_unet.py": "f2661625b9a22087dced63850fff5e88b91bb03ea8976701356c5ef220239218",
+      "memory_budget.py": "b8d74cb457c1ebb252a475f7258dba7adf10c4423778eb1e341852dfece7606d",
+      "prepare_closed_inference.py": "67f0645a4da2926c19abcf4eceac952e901dda904117313b77e9aa9b3d43b96c",
+      "reconstruction_loss.py": "17669eafaecc5ea441ac769b94e70afc785f27bf5807fe0e03196fa79bc28c67",
+      "compare_reconstruction_objectives.py": "ef79f874b703bdc1ec2a27662de1ff0a1347a4f7f96a1eb92122c300f3d25abc",
+      "confirm_local_route.py": "887cf9a157ce7fd5679f208c3893fc8e9d33a8d26f21f5d7acaa9a0222916a50",
+      "run_synthetic_joint_pilot.py": "203195ee2da92e10b265da32e0dfa591ef67a5305119ecb8904f61b9302fe8d6",
+      "reconstruction_gates.py": "5876f920bd73a64d0a49602b062bb13cf9f71be2688b0af6401485f9fcee4fe5",
+      "audit_bayer_symmetries.py": "fea1ce6dd979547a9f0a69dad424bc917a1f96978808e009fa1f65cbaf53fcbf",
+      "training_resume.py": "3a5b64a7e03ed360cef3f7d51a5e3edb10a27afbb0e5e8f6d7b9ceb400e470df",
+      "noisy_training_policy.py": "755a3d28264015416eed0d8bed4d48315ad752f19409272a8afeab1855e1f1da",
+      "run_edge_protected_probe.py": "b4ba0194c62db72b84fa955bf6a842b9a93fefd4ea44fb744ec6d799fb6a3920",
+      "edge_protected_noise.py": "7c921c6e24bdaedd1918bb856bda63fde37dbf3245f8314906acdaeae445a846"
+    }
+  },
+  "plan_sha256": "efac77b5554b2c51ab5125295a828bc326a21eebba036080fcf5b050318590b2",
+  "models": [],
+  "git_sha": "a51e4999b9dd584d1af3aa6eeb4a1882fa51381f",
+  "error": "system_physical_memory_threshold",
+  "memory": {
+    "hard_process_commit_bytes": 2147483648,
+    "soft_process_bytes": 1342177280,
+    "system_stop_fraction": 0.92,
+    "poll_seconds": 0.25,
+    "samples": 33,
+    "peak_rss_bytes": 239247360,
+    "peak_private_sampled_bytes": 896458752,
+    "peak_system_used_fraction": 0.9266288145322009,
+    "os_job_peak_commit_bytes": 905519104,
+    "reason": "system_physical_memory_threshold",
+    "last": {
+      "system_total_bytes": 16933507072,
+      "system_available_bytes": 1242431488,
+      "system_used_fraction": 0.9266288145322009,
+      "process_rss_bytes": 239017984,
+      "process_private_bytes": 895668224,
+      "process_peak_rss_bytes": 239247360,
+      "process_peak_pagefile_bytes": 905519104
+    }
+  },
+  "elapsed_seconds": 8.248538200001349
+}

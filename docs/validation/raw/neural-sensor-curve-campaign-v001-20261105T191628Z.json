@@ -1,0 +1,189 @@
+{
+  "schema_version": 1,
+  "status": "completed_bounded_sensor_curve_known_only",
+  "started_at_utc": "2026-11-05T18:54:21.895258+00:00",
+  "plan_sha256": "00dfd3e56f2185a431aeefb39bc3dac93fb5d86e503ec4bab3fdf19790634683",
+  "stages": [
+    {
+      "name": "train-71",
+      "started_at_utc": "2026-11-05T18:54:21.902987+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\venv-neural-cuda\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\train_sensor_curve.py",
+        "--seed",
+        "71",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\sensor-learning-campaign-v001\\seed71",
+        "--resume"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-05T19:01:39.132854+00:00"
+    },
+    {
+      "name": "train-73",
+      "started_at_utc": "2026-11-05T19:01:39.140135+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\venv-neural-cuda\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\train_sensor_curve.py",
+        "--seed",
+        "73",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\sensor-learning-campaign-v001\\seed73"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-05T19:11:40.021196+00:00"
+    },
+    {
+      "name": "prepare-all-photo-milestones",
+      "started_at_utc": "2026-11-05T19:11:40.026322+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\prepare_curve_photos.py"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-05T19:11:42.022066+00:00"
+    },
+    {
+      "name": "infer-256",
+      "started_at_utc": "2026-11-05T19:11:42.026408+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\venv-neural-cuda\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\infer_sensor_sigma.py",
+        "--plan",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\sensor-learning-campaign-v001\\photo-plans\\step256\\plan.json",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\sensor-learning-campaign-v001\\photo-inference-256"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-05T19:12:17.377831+00:00"
+    },
+    {
+      "name": "display-256",
+      "started_at_utc": "2026-11-05T19:12:17.381932+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\display_local_sigma.py",
+        "--source",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\sensor-learning-campaign-v001\\photo-inference-256\\result.json",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\sensor-learning-campaign-v001\\photo-display-256"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-05T19:13:11.270110+00:00"
+    },
+    {
+      "name": "infer-1024",
+      "started_at_utc": "2026-11-05T19:13:11.274691+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\venv-neural-cuda\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\infer_sensor_sigma.py",
+        "--plan",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\sensor-learning-campaign-v001\\photo-plans\\step1024\\plan.json",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\sensor-learning-campaign-v001\\photo-inference-1024"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-05T19:13:47.435212+00:00"
+    },
+    {
+      "name": "display-1024",
+      "started_at_utc": "2026-11-05T19:13:47.439418+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\display_local_sigma.py",
+        "--source",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\sensor-learning-campaign-v001\\photo-inference-1024\\result.json",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\sensor-learning-campaign-v001\\photo-display-1024"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-05T19:14:43.049965+00:00"
+    },
+    {
+      "name": "infer-2048",
+      "started_at_utc": "2026-11-05T19:14:43.054173+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\venv-neural-cuda\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\infer_sensor_sigma.py",
+        "--plan",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\sensor-learning-campaign-v001\\photo-plans\\step2048\\plan.json",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\sensor-learning-campaign-v001\\photo-inference-2048"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-05T19:15:22.634584+00:00"
+    },
+    {
+      "name": "display-2048",
+      "started_at_utc": "2026-11-05T19:15:22.638983+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\display_local_sigma.py",
+        "--source",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\sensor-learning-campaign-v001\\photo-inference-2048\\result.json",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\sensor-learning-campaign-v001\\photo-display-2048"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-05T19:16:19.944293+00:00"
+    },
+    {
+      "name": "all-known-photo-descriptors",
+      "started_at_utc": "2026-11-05T19:16:19.950505+00:00",
+      "command": [
+        "C:\\Users\\victo\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\summarize_sensor_curve.py"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-05T19:16:28.767884+00:00"
+    }
+  ],
+  "script_sha256": "15a9eebf3299ba21baa837c14b1c1689885465c0bad86f4fe316731be58ce377",
+  "tools": {
+    "train_sensor_curve.py": "c6cacff0628294ad8fef8bdc6a8124ba2e2b75fbcf1cb8a43ffdd2178f735c9b",
+    "sensor_curve_noise.py": "9b1868ae317b9da7bee29eb9355edd27b534dc6683548e65b15f8f6cb94d3c0a",
+    "infer_sensor_sigma.py": "7b026ca36c50495ed35ad00b8e1d9fc4356fdcf5d0157211a8540e846844cfc2",
+    "display_local_sigma.py": "52f55ca87f021bab48bd63d02f84cbd46a9061970e29068521d85252be534866",
+    "prepare_curve_photos.py": "8960fef134dee08e1ad66f0c9776b0857c42f34334d083e37f1696606b6eb74f",
+    "summarize_sensor_curve.py": "54e2e406b8c45b949855703fe1964b3ab32e5ebb67b31fca2d57f031fd4472a2"
+  },
+  "policy": "Two seeds sequentially, all declared milestones, same known photo controls. No gate relaxation, new reserve, publication, merge, tag or sleep.",
+  "prior_attempt": {
+    "schema_version": 1,
+    "status": "stopped_on_error",
+    "started_at_utc": "2026-11-05T18:31:58.331121+00:00",
+    "plan_sha256": "00dfd3e56f2185a431aeefb39bc3dac93fb5d86e503ec4bab3fdf19790634683",
+    "stages": [
+      {
+        "name": "train-71",
+        "started_at_utc": "2026-11-05T18:31:58.337041+00:00",
+        "command": [
+          "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\venv-neural-cuda\\Scripts\\python.exe",
+          "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\train_sensor_curve.py",
+          "--seed",
+          "71",
+          "--output",
+          "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\sensor-learning-campaign-v001\\seed71"
+        ],
+        "returncode": 1,
+        "finished_at_utc": "2026-11-05T18:35:04.145168+00:00"
+      }
+    ],
+    "script_sha256": "3e1f490e344e5bd36f7bd2d4f3f03d276fc9df274b70a32ae291c6b2637a0788",
+    "tools": {
+      "train_sensor_curve.py": "c6cacff0628294ad8fef8bdc6a8124ba2e2b75fbcf1cb8a43ffdd2178f735c9b",
+      "sensor_curve_noise.py": "9b1868ae317b9da7bee29eb9355edd27b534dc6683548e65b15f8f6cb94d3c0a",
+      "infer_sensor_sigma.py": "7b026ca36c50495ed35ad00b8e1d9fc4356fdcf5d0157211a8540e846844cfc2",
+      "display_local_sigma.py": "52f55ca87f021bab48bd63d02f84cbd46a9061970e29068521d85252be534866",
+      "prepare_curve_photos.py": "199f8657cda10a8520f797b4a016f912492b367cc0e0b3fdb994c046332c679e",
+      "summarize_sensor_curve.py": "c74850efda8806aee85d8d2f136387aa59cbf831f024f211ba0ce4dd8f6ebca4"
+    },
+    "policy": "Two seeds sequentially, all declared milestones, same known photo controls. No gate relaxation, new reserve, publication, merge, tag or sleep.",
+    "error": "Stage failed: train-71",
+    "finished_at_utc": "2026-11-05T18:35:04.146326+00:00"
+  },
+  "prior_active_seconds": 185.815205,
+  "prior_progress_sha256": "7e3a801400af527ae3b48d7f5d41cdcb69a323b00844e30fceb524b75c373aa8",
+  "finished_at_utc": "2026-11-05T19:16:28.769666+00:00",
+  "attempt_active_seconds": 1326.8698101000045
+}

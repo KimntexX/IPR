@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "status": "completed_probe_and_analysis",
+  "started_at_utc": "2026-11-07T12:15:46.212579+00:00",
+  "stages": [
+    {
+      "name": "probe",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\venv-neural-cuda\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\probe_dru_amplitudes.py",
+        "--campaign",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-objective-study-v001",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-structure-amplitude-retry-v001",
+        "--arms",
+        "reference",
+        "structured"
+      ],
+      "timeout_seconds": 1320,
+      "returncode": 0,
+      "elapsed_seconds": 152.99770309997257
+    },
+    {
+      "name": "analysis",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\analyse_dru_amplitudes.py",
+        "--source",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-structure-amplitude-retry-v001\\result.json",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-structure-amplitude-analysis-v001\\result.json"
+      ],
+      "timeout_seconds": 180,
+      "returncode": 0,
+      "elapsed_seconds": 2.191233800025657
+    }
+  ],
+  "tools": {
+    "run_dru_transfer_check.py": "36ce5af8913c01ef7c46fcf1c71cae78c498b647f6c777eac9b2b6140885e5bc",
+    "probe_dru_amplitudes.py": "9cb4702658057dd52d3aca0c21307a192d67a15725fbffb448f1a312df743066",
+    "analyse_dru_amplitudes.py": "1d40b91474e6499eade20c0507d740b417d9389f89d929a2de9b39c1264ccdc1"
+  },
+  "scope": "Retry of memory-limited synthetic control after dev image-layer merge; not native-pipeline qualification.",
+  "finished_at_utc": "2026-11-07T12:18:21.410716+00:00"
+}

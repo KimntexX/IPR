@@ -1,0 +1,370 @@
+{
+  "schema_version": 1,
+  "status": "completed_real_cfa_inference_not_photographic_qualification",
+  "started_at_utc": "2026-11-05T17:00:49.350888+00:00",
+  "plan_sha256": "39921d07663bf46a7d84f1e29de0b6e15e7a5a6ac511714c57ab71c86fc70172",
+  "cuda_probe_sha256": "50025afa057f336904a5526fd837b624e3df66226285b02683161a469a544841",
+  "script_sha256": "e0a5b957b4429a14af7197ad6e315f44cb2c8323955f613937229797b3e51e70",
+  "records": [
+    {
+      "scene": "6V1A0181",
+      "seed": 71,
+      "sigma": 0.01,
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\real-photo-neural-v001\\6V1A0181-seed71-sigma0.01.f32",
+      "sha256": "09a0eaac8358bbc5447e2e82cbd118abdb39bef05bd13d2950addc1c814ff395",
+      "shape": [
+        4639,
+        6959,
+        1
+      ],
+      "geometry": {
+        "tiles": 532,
+        "core": 256,
+        "halo": 128,
+        "batch": 4,
+        "virtual_extension": [
+          225,
+          209
+        ],
+        "scope": "Sensor-frame CFA, original extent preserved; virtual reflection only outside image, no resampling."
+      },
+      "elapsed_seconds": 4.876539899967611,
+      "peak_cuda_allocated_bytes": 243776000
+    },
+    {
+      "scene": "6V1A0181",
+      "seed": 71,
+      "sigma": 0.03,
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\real-photo-neural-v001\\6V1A0181-seed71-sigma0.03.f32",
+      "sha256": "2842edf4c8c3de41ae7808e0156d8254a3b7c79f07aea557a3320f3854e9927c",
+      "shape": [
+        4639,
+        6959,
+        1
+      ],
+      "geometry": {
+        "tiles": 532,
+        "core": 256,
+        "halo": 128,
+        "batch": 4,
+        "virtual_extension": [
+          225,
+          209
+        ],
+        "scope": "Sensor-frame CFA, original extent preserved; virtual reflection only outside image, no resampling."
+      },
+      "elapsed_seconds": 5.28549760003807,
+      "peak_cuda_allocated_bytes": 243776000
+    },
+    {
+      "scene": "6V1A0263",
+      "seed": 71,
+      "sigma": 0.01,
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\real-photo-neural-v001\\6V1A0263-seed71-sigma0.01.f32",
+      "sha256": "c2e9f84e5e456c064085ce230503e6742752b5e770687f0a37599ecc3f956495",
+      "shape": [
+        4639,
+        6959,
+        1
+      ],
+      "geometry": {
+        "tiles": 532,
+        "core": 256,
+        "halo": 128,
+        "batch": 4,
+        "virtual_extension": [
+          225,
+          209
+        ],
+        "scope": "Sensor-frame CFA, original extent preserved; virtual reflection only outside image, no resampling."
+      },
+      "elapsed_seconds": 7.051127299957443,
+      "peak_cuda_allocated_bytes": 243776000
+    },
+    {
+      "scene": "6V1A0263",
+      "seed": 71,
+      "sigma": 0.03,
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\real-photo-neural-v001\\6V1A0263-seed71-sigma0.03.f32",
+      "sha256": "5a25237251358ddacddde2a59c6a03259b7b4ba94b8b7679794e629670627a9c",
+      "shape": [
+        4639,
+        6959,
+        1
+      ],
+      "geometry": {
+        "tiles": 532,
+        "core": 256,
+        "halo": 128,
+        "batch": 4,
+        "virtual_extension": [
+          225,
+          209
+        ],
+        "scope": "Sensor-frame CFA, original extent preserved; virtual reflection only outside image, no resampling."
+      },
+      "elapsed_seconds": 7.87693730002502,
+      "peak_cuda_allocated_bytes": 243776000
+    },
+    {
+      "scene": "6V1A9819",
+      "seed": 71,
+      "sigma": 0.01,
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\real-photo-neural-v001\\6V1A9819-seed71-sigma0.01.f32",
+      "sha256": "5141344ee66b192383fce10523419637afc72ac87e1924d7fd3034e6709badb8",
+      "shape": [
+        4639,
+        6959,
+        1
+      ],
+      "geometry": {
+        "tiles": 532,
+        "core": 256,
+        "halo": 128,
+        "batch": 4,
+        "virtual_extension": [
+          225,
+          209
+        ],
+        "scope": "Sensor-frame CFA, original extent preserved; virtual reflection only outside image, no resampling."
+      },
+      "elapsed_seconds": 7.907406299957074,
+      "peak_cuda_allocated_bytes": 243776000
+    },
+    {
+      "scene": "6V1A9819",
+      "seed": 71,
+      "sigma": 0.03,
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\real-photo-neural-v001\\6V1A9819-seed71-sigma0.03.f32",
+      "sha256": "ecd76623ee1a4394579ba86ace0687587726ea110e56c1fd735fba3bc699bb70",
+      "shape": [
+        4639,
+        6959,
+        1
+      ],
+      "geometry": {
+        "tiles": 532,
+        "core": 256,
+        "halo": 128,
+        "batch": 4,
+        "virtual_extension": [
+          225,
+          209
+        ],
+        "scope": "Sensor-frame CFA, original extent preserved; virtual reflection only outside image, no resampling."
+      },
+      "elapsed_seconds": 7.855329599988181,
+      "peak_cuda_allocated_bytes": 243776000
+    },
+    {
+      "scene": "6V1A0181",
+      "seed": 73,
+      "sigma": 0.01,
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\real-photo-neural-v001\\6V1A0181-seed73-sigma0.01.f32",
+      "sha256": "ddf4149133263510349b7545245e87b2f55d0044ec14eb58b73708913f165c32",
+      "shape": [
+        4639,
+        6959,
+        1
+      ],
+      "geometry": {
+        "tiles": 532,
+        "core": 256,
+        "halo": 128,
+        "batch": 4,
+        "virtual_extension": [
+          225,
+          209
+        ],
+        "scope": "Sensor-frame CFA, original extent preserved; virtual reflection only outside image, no resampling."
+      },
+      "elapsed_seconds": 8.181661500013433,
+      "peak_cuda_allocated_bytes": 243776000
+    },
+    {
+      "scene": "6V1A0181",
+      "seed": 73,
+      "sigma": 0.03,
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\real-photo-neural-v001\\6V1A0181-seed73-sigma0.03.f32",
+      "sha256": "9c99dfdeb8f143c99143ed0a95411a38df968db7fa7407f78e46672e04d46fe1",
+      "shape": [
+        4639,
+        6959,
+        1
+      ],
+      "geometry": {
+        "tiles": 532,
+        "core": 256,
+        "halo": 128,
+        "batch": 4,
+        "virtual_extension": [
+          225,
+          209
+        ],
+        "scope": "Sensor-frame CFA, original extent preserved; virtual reflection only outside image, no resampling."
+      },
+      "elapsed_seconds": 6.18407949997345,
+      "peak_cuda_allocated_bytes": 243776000
+    },
+    {
+      "scene": "6V1A0263",
+      "seed": 73,
+      "sigma": 0.01,
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\real-photo-neural-v001\\6V1A0263-seed73-sigma0.01.f32",
+      "sha256": "dc888677384ff443c9a32037d24aebb93cc0a10d6839ca0cf733c0a90764b476",
+      "shape": [
+        4639,
+        6959,
+        1
+      ],
+      "geometry": {
+        "tiles": 532,
+        "core": 256,
+        "halo": 128,
+        "batch": 4,
+        "virtual_extension": [
+          225,
+          209
+        ],
+        "scope": "Sensor-frame CFA, original extent preserved; virtual reflection only outside image, no resampling."
+      },
+      "elapsed_seconds": 4.628787699970417,
+      "peak_cuda_allocated_bytes": 243776000
+    },
+    {
+      "scene": "6V1A0263",
+      "seed": 73,
+      "sigma": 0.03,
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\real-photo-neural-v001\\6V1A0263-seed73-sigma0.03.f32",
+      "sha256": "4e77b3ad9d304c70b944100e5f1d40eb00df77e174db5da127cf5664f1689cb8",
+      "shape": [
+        4639,
+        6959,
+        1
+      ],
+      "geometry": {
+        "tiles": 532,
+        "core": 256,
+        "halo": 128,
+        "batch": 4,
+        "virtual_extension": [
+          225,
+          209
+        ],
+        "scope": "Sensor-frame CFA, original extent preserved; virtual reflection only outside image, no resampling."
+      },
+      "elapsed_seconds": 6.615139800007455,
+      "peak_cuda_allocated_bytes": 243776000
+    },
+    {
+      "scene": "6V1A9819",
+      "seed": 73,
+      "sigma": 0.01,
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\real-photo-neural-v001\\6V1A9819-seed73-sigma0.01.f32",
+      "sha256": "0beef4949277a8b26f146d64f356d55c57d917d03a671cdddc01413e2ab1ac88",
+      "shape": [
+        4639,
+        6959,
+        1
+      ],
+      "geometry": {
+        "tiles": 532,
+        "core": 256,
+        "halo": 128,
+        "batch": 4,
+        "virtual_extension": [
+          225,
+          209
+        ],
+        "scope": "Sensor-frame CFA, original extent preserved; virtual reflection only outside image, no resampling."
+      },
+      "elapsed_seconds": 7.3865299000171944,
+      "peak_cuda_allocated_bytes": 243776000
+    },
+    {
+      "scene": "6V1A9819",
+      "seed": 73,
+      "sigma": 0.03,
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\real-photo-neural-v001\\6V1A9819-seed73-sigma0.03.f32",
+      "sha256": "f3c80ccc7b6f926b7d4d1bb4b12ac02341e2c0ba7eba5a736b13e89682a0600f",
+      "shape": [
+        4639,
+        6959,
+        1
+      ],
+      "geometry": {
+        "tiles": 532,
+        "core": 256,
+        "halo": 128,
+        "batch": 4,
+        "virtual_extension": [
+          225,
+          209
+        ],
+        "scope": "Sensor-frame CFA, original extent preserved; virtual reflection only outside image, no resampling."
+      },
+      "elapsed_seconds": 7.309119899990037,
+      "peak_cuda_allocated_bytes": 243776000
+    }
+  ],
+  "engineering": [
+    {
+      "source": "6V1A0181",
+      "cpu_gpu_max_error": 2.514570951461792e-08,
+      "batch_max_error": 0.0,
+      "zero_sigma_bit_exact": true
+    }
+  ],
+  "limits": [
+    "Exploratory known real images, no clean reference or photographic qualification.",
+    "Constant supplied balanced-camera sigma, not ISO calibration or an equivalent UI strength.",
+    "CFA correction only; RCD and common display applied separately. Both seeds retained."
+  ],
+  "inference_tools": {
+    "noisy_moment_unet.py": "c9b86b2b0c1d210d20ad8c0694674ef85fbef9273f5dba1111463f4720e0f6e3",
+    "noise_conditioning.py": "00b66817c1fcfa32c2966da780cd00af0d82cfc9abd13bdb8b0ba7da1c04c7e8",
+    "polynomial_residual.py": "980fb5bb40f28c6aa8a3bcbcc9ced190d11bf74f896d98d96954dd428b1713b5",
+    "local_moment_unet.py": "b029a2d267449dd8f2749885cb89ccdc5cd0be1fc10a9c28f738c3aacd5b9063",
+    "closed_moment_unet.py": "26675cf00094bd4b75ae22447b701719e6a2734df1f24a4cd9caefe6d2de8cfa",
+    "closed_moment_operator.py": "b387304fe441a2ba1c698b365541394879720d6f566c9ddc7346651590c83d8b",
+    "moment_bayer_unet.py": "7bc161d651ffcbf0460b713a38116c21ee0ae68f0b4d6341412d3d35ff0828d0",
+    "joint_bayer_unet.py": "c4899cbbdd27d8065a5c2e1eb981806e8a2f848f14b43052863d81c573c22e3f",
+    "camera_unet.py": "14a3c27c47cfa3aeba7fbcbc64139cc1817b52e4adfbf3108c9850ad75a79529",
+    "bayer_canonical.py": "a759c19f855f53dc96b8631e6f3d7817d99eb28a7da766fd74c5c91f6c9016f8",
+    "multiscale_correction.py": "b981a9d1c3b57d2d40ed0cda69eead8be1bec017e2829149c6f294d9a563da5b",
+    "cfa_correlation.py": "225e38e234b5ff4d5ad8af33180c9bd25ca6b3e290b47264a6c6be3d2c3a734e",
+    "edge_protected_noise.py": "e0f15682413e70049e5aefd012b5a0b89a15674c6da915d53600728d8348a07f",
+    "prepare_closed_inference.py": "67f0645a4da2926c19abcf4eceac952e901dda904117313b77e9aa9b3d43b96c",
+    "photo_cfa_tiling.py": "ba1b94bb10f1634ca4c5de56671107dd902fe6c156d09ff07f4dcca5224bad08",
+    "infer_real_cfa.py": "e0a5b957b4429a14af7197ad6e315f44cb2c8323955f613937229797b3e51e70"
+  },
+  "active": {
+    "scene": "6V1A9819",
+    "seed": 73,
+    "sigma": 0.03,
+    "tiles_done": 532,
+    "tiles_total": 532
+  },
+  "finished_at_utc": "2026-11-05T17:02:13.005916+00:00",
+  "memory": {
+    "hard_process_commit_bytes": 6442450944,
+    "soft_process_bytes": 4831838208,
+    "system_stop_fraction": 0.92,
+    "poll_seconds": 0.25,
+    "samples": 332,
+    "peak_rss_bytes": 1814888448,
+    "peak_private_sampled_bytes": 3240947712,
+    "peak_system_used_fraction": 0.6641051609796145,
+    "os_job_peak_commit_bytes": 3245219840,
+    "reason": null,
+    "last": {
+      "system_total_bytes": 16933507072,
+      "system_available_bytes": 6008098816,
+      "system_used_fraction": 0.6451946551618626,
+      "process_rss_bytes": 1503195136,
+      "process_private_bytes": 3026939904,
+      "process_peak_rss_bytes": 1814888448,
+      "process_peak_pagefile_bytes": 3245219840
+    }
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "data_version": 1,
+  "campaign_id": "neural-campaign-v001-20261103T184526Z",
+  "started_at_utc": "2026-11-03T18:45:26.728766+00:00",
+  "until_latest_start": "2026-11-03T22:00:00+01:00",
+  "status": "completed_both_seeds",
+  "plan_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-context-plan-v001\\plan.json",
+  "plan_sha256": "e02a43e51a0c352e434ee30d30c31c749311eeb6bfcfe1a1a3519e5533832ce0",
+  "launcher_sha256": "246a29c03c12a4b27cf71b0ff19fde5663b40b710bb3552316b7ad58a19bfaac",
+  "admission_fraction": 0.9,
+  "poll_seconds": 15,
+  "max_attempts_per_seed": 8,
+  "attempt_timeout_seconds": 1800,
+  "attempts": [
+    {
+      "seed": 71,
+      "number": 1,
+      "output": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-context-campaign-v001\\seed71-attempt01",
+      "admission_memory": {
+        "system_total_bytes": 16933507072,
+        "system_available_bytes": 7312703488,
+        "system_used_fraction": 0.5681518626409205,
+        "process_rss_bytes": 26828800,
+        "process_private_bytes": 19070976,
+        "process_peak_rss_bytes": 29859840,
+        "process_peak_pagefile_bytes": 22265856
+      },
+      "resumed_from": null,
+      "returncode": 0,
+      "result_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-context-campaign-v001\\seed71-attempt01\\result.json",
+      "result_sha256": "97e1ccea9fa806bd476fddcefed736c194e5be3360480243110c6fc5269e66a2",
+      "status": "completed_synthetic_noise_pilot_not_photographic_qualification",
+      "pilot_gates_passed": false,
+      "training_progress": {
+        "completed_optimizer_steps": 2048,
+        "checkpoint": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-context-campaign-v001\\seed71-attempt01\\training-latest.pt",
+          "sha256": "64094414a39748a36aae7fa83c8f86495810cbf6dc4ab98646b65e96cfe1ae39",
+          "bytes": 606641,
+          "completed_step": 2048
+        }
+      },
+      "campaign_id": "neural-noisy-moment-v001-20261103T184543Z"
+    },
+    {
+      "seed": 73,
+      "number": 1,
+      "output": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-context-campaign-v001\\seed73-attempt01",
+      "admission_memory": {
+        "system_total_bytes": 16933507072,
+        "system_available_bytes": 7189479424,
+        "system_used_fraction": 0.5754287996319443,
+        "process_rss_bytes": 34697216,
+        "process_private_bytes": 26877952,
+        "process_peak_rss_bytes": 41738240,
+        "process_peak_pagefile_bytes": 33775616
+      },
+      "resumed_from": null,
+      "returncode": 0,
+      "result_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-context-campaign-v001\\seed73-attempt01\\result.json",
+      "result_sha256": "fdb4e2fdf635fbbb525f3a21f4333de0757164920a55484eb6725d1c5a9be8bf",
+      "status": "completed_synthetic_noise_pilot_not_photographic_qualification",
+      "pilot_gates_passed": true,
+      "training_progress": {
+        "completed_optimizer_steps": 2048,
+        "checkpoint": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\noisy-context-campaign-v001\\seed73-attempt01\\training-latest.pt",
+          "sha256": "d673eb3f1bbd44340a62bfd4c4f02fb920f9a7f07843eb8e30ae453858ae5040",
+          "bytes": 606641,
+          "completed_step": 2048
+        }
+      },
+      "campaign_id": "neural-noisy-moment-v001-20261103T185530Z"
+    }
+  ],
+  "policy": "Both seeds evaluated even after quality failure. Retry only memory stops; latest technical checkpoint, no score selection. No new attempt after deadline; active attempt may finish normally.",
+  "pilot_gates_passed": false,
+  "finished_at_utc": "2026-11-03T19:05:00.092822+00:00"
+}

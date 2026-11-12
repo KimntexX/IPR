@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "measured_at_utc": "2026-11-07T12:45:15.510941+00:00",
+  "scope": "Current neural-restoration worktree only, excludes shared Git storage and external CUDA environment; apparent file sizes, not allocated clusters.",
+  "total_bytes": 68785031593,
+  "top_bytes": {
+    ".git": 98,
+    ".gitattributes": 83,
+    ".gitignore": 5926,
+    "AGENTS.md": 14216,
+    "CMakeLists.txt": 33386,
+    "CMakeLists.txt.user": 121620,
+    "LICENSE": 35184,
+    "README.md": 12893,
+    "README_en.md": 10291,
+    "vcpkg.json": 175,
+    ".github": 27218,
+    ".venv-neural": 640410327,
+    "build-patch_neural_restoration": 66791535121,
+    "cmake": 3182,
+    "config": 6050,
+    "docs": 1340599614,
+    "licenses": 136220,
+    "packaging": 8245,
+    "profiles": 44,
+    "scripts": 328615,
+    "src": 4849743,
+    "tests": 6893342
+  },
+  "checkpoint_count": 287,
+  "checkpoint_bytes": 31337864003,
+  "tracked_raw_json_bytes": 1313400891,
+  "branch_added_raw_json_count": 391,
+  "branch_added_raw_json_bytes": 840635608,
+  "deletion_performed": false,
+  "limits": [
+    "Checkpoint deletion loses replay/resumption unless an equivalent artifact is retained.",
+    "Canonical JSON measurements must be preserved; deleting tracked copies does not remove published Git history.",
+    "No checkpoint content deduplication inventory or cleanup authorization inferred from the question."
+  ]
+}

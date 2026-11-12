@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "status": "completed_known_regression_failed_remaining_not_started",
+  "started_at_utc": "2026-11-05T21:30:47.078152+00:00",
+  "development_plan_sha256": "ef538a693666dfa1fbb24f6f199cf44db51203abc6ed50b10acb07922701b702",
+  "stages": [
+    {
+      "name": "development",
+      "started_at_utc": "2026-11-05T21:30:47.118912+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\qualify_sensor_curve.py",
+        "--plan",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\curve-known-development-plan-v001\\plan.json"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-05T21:34:22.965153+00:00"
+    },
+    {
+      "name": "prepare-fine",
+      "started_at_utc": "2026-11-05T21:34:23.029639+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\prepare_neural_regression.py",
+        "--source",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\curve-known-development-v001\\result.json",
+        "--historical",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\fixed-point-fine-v001\\result.json",
+        "--kind",
+        "fine",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\curve-known-fine-plan-v001"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-05T21:34:25.408234+00:00"
+    },
+    {
+      "name": "fine",
+      "started_at_utc": "2026-11-05T21:34:25.413204+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\confirm_fine_noise.py",
+        "--plan",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\curve-known-fine-plan-v001\\plan.json",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\curve-known-fine-v001"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-05T21:40:09.981114+00:00"
+    }
+  ],
+  "regressions": [
+    {
+      "name": "fine",
+      "passed": false,
+      "result": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\curve-known-fine-v001\\result.json",
+      "sha256": "163d54c8e8a404c18c03073eb126aacba49fa11e30e5fb8d17e1919ed2996f29"
+    }
+  ],
+  "policy": "Both final curve seeds on exact known observations, unchanged criteria. Development -> fine -> classics; failure stops following stages. No new reserve or fitting.",
+  "tools": {
+    "run_curve_controls.py": "5ce42bb891c4d7de1c186d62af9553c503a8c537b6897022ff930d669c689c33",
+    "qualify_sensor_curve.py": "b3e2a36fb9197eb4a0ed9eb69d110be9cb30299a2390bde0bc293798e215977c",
+    "prepare_neural_regression.py": "2e2664b3c4d25829702f965b6a3cf123adb542efd00022714e68286474f90bbf",
+    "confirm_fine_noise.py": "9ea605a17227c7dbb2ec3938dd21a51918dfc07788ab7ff505455252452194cf",
+    "confirm_noisy_model.py": "9461df784c08f6c09b045e5ce6b030727124b421fcefaccdb1db4be7e66db86d"
+  },
+  "development_result_sha256": "4257fcf117b944ba21cef7d41ec6711726b9ae9c23b522b9c6f50e20ba493afe",
+  "development_passed": true,
+  "finished_at_utc": "2026-11-05T21:40:10.050448+00:00"
+}

@@ -1,0 +1,378 @@
+{
+  "previous_passed": false,
+  "current_passed": false,
+  "observation_count": 4032,
+  "comparisons": [
+    {
+      "seed": 71,
+      "noise_index": 1,
+      "current_over_previous_rgb_mse": 1.0005066641074696,
+      "previous_strong_failed": 3,
+      "current_strong_failed": 1,
+      "previous_minimum_transfer": 0.9466367555342146,
+      "current_minimum_transfer": 0.9713501578883651
+    },
+    {
+      "seed": 71,
+      "noise_index": 2,
+      "current_over_previous_rgb_mse": 0.9948086475330018,
+      "previous_strong_failed": 11,
+      "current_strong_failed": 9,
+      "previous_minimum_transfer": 0.6834165164767178,
+      "current_minimum_transfer": 0.7189494444350555
+    },
+    {
+      "seed": 73,
+      "noise_index": 1,
+      "current_over_previous_rgb_mse": 1.010197979395207,
+      "previous_strong_failed": 0,
+      "current_strong_failed": 0,
+      "previous_minimum_transfer": 0.9546913572543358,
+      "current_minimum_transfer": 0.9750718487047253
+    },
+    {
+      "seed": 73,
+      "noise_index": 2,
+      "current_over_previous_rgb_mse": 1.0356591100184238,
+      "previous_strong_failed": 10,
+      "current_strong_failed": 9,
+      "previous_minimum_transfer": 0.46808253581067255,
+      "current_minimum_transfer": 0.6526109784883626
+    }
+  ],
+  "coherent_error_decomposition": {
+    "previous": [
+      {
+        "seed": 71,
+        "noise_index": 1,
+        "amplitude": 0.008,
+        "chromatic": false,
+        "coefficient_series": 432,
+        "sample_variance": 0.0008292030252681552,
+        "bias_squared_estimate": 0.11331790856290143,
+        "mean_squared_error": 0.11414711158816959
+      },
+      {
+        "seed": 71,
+        "noise_index": 1,
+        "amplitude": 0.008,
+        "chromatic": true,
+        "coefficient_series": 432,
+        "sample_variance": 0.0017303202584468835,
+        "bias_squared_estimate": 0.20353478475248818,
+        "mean_squared_error": 0.20526510501093506
+      },
+      {
+        "seed": 71,
+        "noise_index": 1,
+        "amplitude": 0.06,
+        "chromatic": false,
+        "coefficient_series": 432,
+        "sample_variance": 3.114372919633157e-05,
+        "bias_squared_estimate": 0.008741389463887392,
+        "mean_squared_error": 0.008772533193083723
+      },
+      {
+        "seed": 71,
+        "noise_index": 1,
+        "amplitude": 0.06,
+        "chromatic": true,
+        "coefficient_series": 432,
+        "sample_variance": 7.757240811649043e-05,
+        "bias_squared_estimate": 0.008475590075105495,
+        "mean_squared_error": 0.008553162483221985
+      },
+      {
+        "seed": 71,
+        "noise_index": 2,
+        "amplitude": 0.008,
+        "chromatic": false,
+        "coefficient_series": 432,
+        "sample_variance": 0.005678877551509099,
+        "bias_squared_estimate": 0.12951015277108663,
+        "mean_squared_error": 0.13518903032259572
+      },
+      {
+        "seed": 71,
+        "noise_index": 2,
+        "amplitude": 0.008,
+        "chromatic": true,
+        "coefficient_series": 432,
+        "sample_variance": 0.010834683782060676,
+        "bias_squared_estimate": 0.24217430272457416,
+        "mean_squared_error": 0.25300898650663484
+      },
+      {
+        "seed": 71,
+        "noise_index": 2,
+        "amplitude": 0.06,
+        "chromatic": false,
+        "coefficient_series": 432,
+        "sample_variance": 0.0002693023578392362,
+        "bias_squared_estimate": 0.02694722483712778,
+        "mean_squared_error": 0.027216527194967016
+      },
+      {
+        "seed": 71,
+        "noise_index": 2,
+        "amplitude": 0.06,
+        "chromatic": true,
+        "coefficient_series": 432,
+        "sample_variance": 0.0005017791225329739,
+        "bias_squared_estimate": 0.040025790565723675,
+        "mean_squared_error": 0.04052756968825665
+      },
+      {
+        "seed": 73,
+        "noise_index": 1,
+        "amplitude": 0.008,
+        "chromatic": false,
+        "coefficient_series": 432,
+        "sample_variance": 0.0008258275517226497,
+        "bias_squared_estimate": 0.08785475370950119,
+        "mean_squared_error": 0.08868058126122384
+      },
+      {
+        "seed": 73,
+        "noise_index": 1,
+        "amplitude": 0.008,
+        "chromatic": true,
+        "coefficient_series": 432,
+        "sample_variance": 0.0018493881471776808,
+        "bias_squared_estimate": 0.17996186237431278,
+        "mean_squared_error": 0.18181125052149044
+      },
+      {
+        "seed": 73,
+        "noise_index": 1,
+        "amplitude": 0.06,
+        "chromatic": false,
+        "coefficient_series": 432,
+        "sample_variance": 3.1662208157747125e-05,
+        "bias_squared_estimate": 0.013978078207912813,
+        "mean_squared_error": 0.014009740416070561
+      },
+      {
+        "seed": 73,
+        "noise_index": 1,
+        "amplitude": 0.06,
+        "chromatic": true,
+        "coefficient_series": 432,
+        "sample_variance": 8.027266688954491e-05,
+        "bias_squared_estimate": 0.012887007363174925,
+        "mean_squared_error": 0.01296728003006447
+      },
+      {
+        "seed": 73,
+        "noise_index": 2,
+        "amplitude": 0.008,
+        "chromatic": false,
+        "coefficient_series": 432,
+        "sample_variance": 0.006011962808549064,
+        "bias_squared_estimate": 0.09538906721498754,
+        "mean_squared_error": 0.10140103002353659
+      },
+      {
+        "seed": 73,
+        "noise_index": 2,
+        "amplitude": 0.008,
+        "chromatic": true,
+        "coefficient_series": 432,
+        "sample_variance": 0.012065678459678519,
+        "bias_squared_estimate": 0.1963142066762226,
+        "mean_squared_error": 0.2083798851359011
+      },
+      {
+        "seed": 73,
+        "noise_index": 2,
+        "amplitude": 0.06,
+        "chromatic": false,
+        "coefficient_series": 432,
+        "sample_variance": 0.00025865591530946434,
+        "bias_squared_estimate": 0.031106420416903223,
+        "mean_squared_error": 0.03136507633221269
+      },
+      {
+        "seed": 73,
+        "noise_index": 2,
+        "amplitude": 0.06,
+        "chromatic": true,
+        "coefficient_series": 432,
+        "sample_variance": 0.0004851545875198343,
+        "bias_squared_estimate": 0.059429836461460106,
+        "mean_squared_error": 0.05991499104897994
+      }
+    ],
+    "current": [
+      {
+        "seed": 71,
+        "noise_index": 1,
+        "amplitude": 0.008,
+        "chromatic": false,
+        "coefficient_series": 432,
+        "sample_variance": 0.0009774434596574646,
+        "bias_squared_estimate": 0.05995978003313594,
+        "mean_squared_error": 0.06093722349279341
+      },
+      {
+        "seed": 71,
+        "noise_index": 1,
+        "amplitude": 0.008,
+        "chromatic": true,
+        "coefficient_series": 432,
+        "sample_variance": 0.0023412403459077344,
+        "bias_squared_estimate": 0.16615963515827548,
+        "mean_squared_error": 0.16850087550418322
+      },
+      {
+        "seed": 71,
+        "noise_index": 1,
+        "amplitude": 0.06,
+        "chromatic": false,
+        "coefficient_series": 432,
+        "sample_variance": 3.084542144813298e-05,
+        "bias_squared_estimate": 0.008649007606109213,
+        "mean_squared_error": 0.008679853027557347
+      },
+      {
+        "seed": 71,
+        "noise_index": 1,
+        "amplitude": 0.06,
+        "chromatic": true,
+        "coefficient_series": 432,
+        "sample_variance": 7.724263042349036e-05,
+        "bias_squared_estimate": 0.008328294800528558,
+        "mean_squared_error": 0.008405537430952048
+      },
+      {
+        "seed": 71,
+        "noise_index": 2,
+        "amplitude": 0.008,
+        "chromatic": false,
+        "coefficient_series": 432,
+        "sample_variance": 0.006485751047363119,
+        "bias_squared_estimate": 0.07619711814423713,
+        "mean_squared_error": 0.08268286919160024
+      },
+      {
+        "seed": 71,
+        "noise_index": 2,
+        "amplitude": 0.008,
+        "chromatic": true,
+        "coefficient_series": 432,
+        "sample_variance": 0.013487512212354131,
+        "bias_squared_estimate": 0.23571128557998872,
+        "mean_squared_error": 0.24919879779234283
+      },
+      {
+        "seed": 71,
+        "noise_index": 2,
+        "amplitude": 0.06,
+        "chromatic": false,
+        "coefficient_series": 432,
+        "sample_variance": 0.00022927596517184837,
+        "bias_squared_estimate": 0.017069127115366577,
+        "mean_squared_error": 0.017298403080538427
+      },
+      {
+        "seed": 71,
+        "noise_index": 2,
+        "amplitude": 0.06,
+        "chromatic": true,
+        "coefficient_series": 432,
+        "sample_variance": 0.0004914152511885332,
+        "bias_squared_estimate": 0.020956573313538833,
+        "mean_squared_error": 0.021447988564727367
+      },
+      {
+        "seed": 73,
+        "noise_index": 1,
+        "amplitude": 0.008,
+        "chromatic": false,
+        "coefficient_series": 432,
+        "sample_variance": 0.0010086632098774912,
+        "bias_squared_estimate": 0.057556915621951824,
+        "mean_squared_error": 0.058565578831829314
+      },
+      {
+        "seed": 73,
+        "noise_index": 1,
+        "amplitude": 0.008,
+        "chromatic": true,
+        "coefficient_series": 432,
+        "sample_variance": 0.0023846501545622834,
+        "bias_squared_estimate": 0.14336044054169828,
+        "mean_squared_error": 0.14574509069626057
+      },
+      {
+        "seed": 73,
+        "noise_index": 1,
+        "amplitude": 0.06,
+        "chromatic": false,
+        "coefficient_series": 432,
+        "sample_variance": 3.1734285935598656e-05,
+        "bias_squared_estimate": 0.013904332992145765,
+        "mean_squared_error": 0.013936067278081363
+      },
+      {
+        "seed": 73,
+        "noise_index": 1,
+        "amplitude": 0.06,
+        "chromatic": true,
+        "coefficient_series": 432,
+        "sample_variance": 7.884581989546517e-05,
+        "bias_squared_estimate": 0.012671342733114006,
+        "mean_squared_error": 0.01275018855300947
+      },
+      {
+        "seed": 73,
+        "noise_index": 2,
+        "amplitude": 0.008,
+        "chromatic": false,
+        "coefficient_series": 432,
+        "sample_variance": 0.007027583287426491,
+        "bias_squared_estimate": 0.07429110820778144,
+        "mean_squared_error": 0.08131869149520793
+      },
+      {
+        "seed": 73,
+        "noise_index": 2,
+        "amplitude": 0.008,
+        "chromatic": true,
+        "coefficient_series": 432,
+        "sample_variance": 0.015738479101525364,
+        "bias_squared_estimate": 0.20236930246090434,
+        "mean_squared_error": 0.21810778156242971
+      },
+      {
+        "seed": 73,
+        "noise_index": 2,
+        "amplitude": 0.06,
+        "chromatic": false,
+        "coefficient_series": 432,
+        "sample_variance": 0.00024188984370793459,
+        "bias_squared_estimate": 0.020725729821563055,
+        "mean_squared_error": 0.02096761966527099
+      },
+      {
+        "seed": 73,
+        "noise_index": 2,
+        "amplitude": 0.06,
+        "chromatic": true,
+        "coefficient_series": 432,
+        "sample_variance": 0.0004983020771955125,
+        "bias_squared_estimate": 0.03187690238753768,
+        "mean_squared_error": 0.032375204464733194
+      }
+    ],
+    "limits": "Sine/quadrature coefficient error, not total pixel noise. Three realizations per conditional series; high uncertainty individually. Finite-sample corrected squared-bias estimates are not clipped, may be negative. Descriptive, not a new gate."
+  },
+  "schema_version": 1,
+  "measured_at_utc": "2026-11-04T08:19:06.622801+00:00",
+  "previous_sha256": "4981d536fe8bc72bf1d91d07debf24801081721999ffccef397840b0064f93fe",
+  "current_sha256": "35eac7fee7aa067186376f89e26127e4ba1919b9d29f219ad523cc01a01718a5",
+  "tool_sha256": "de3f946ca46f22e71bfe3888cf96f7854665a1ba42df8048febfdd221b700814",
+  "status": "completed_paired_known_fine_comparison_not_qualification",
+  "campaign_id": "neural-fine-comparison-v001-20261104T082947Z",
+  "data_version": 1
+}

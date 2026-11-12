@@ -1,0 +1,3649 @@
+{
+  "schema_version": 1,
+  "data_version": 2,
+  "campaign_id": "neural-synthetic-joint-v002-20261102T114800Z",
+  "measured_at_utc": "2026-11-02T11:48:00.856384+00:00",
+  "freeze": {
+    "schema_version": 1,
+    "data_version": 2,
+    "campaign_id": "neural-synthetic-joint-v002-20261102T114800Z",
+    "measured_at_utc": "2026-11-02T11:48:00.856384+00:00",
+    "git_sha": "1fdf23dd7dfdefa1f5619dde9ca8efcf5cda76c5",
+    "parent": {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\docs\\validation\\raw\\neural-synthetic-joint-v001-20261102T114401Z.json",
+      "sha256": "f17d838572d132c88b3c55a8b56ee79b13eaa309b9ea2c8ddc042ccd1118bff0",
+      "freeze_sha256": "82bbe03220d741a002f1ce789dfc02e82e9ae6967e1973ebd64216d296fdfd0f"
+    },
+    "correction": "Suppress relative MSE/opponent error when baseline MSE<=1e-12; absolute errors and predictions unchanged.",
+    "tools": {
+      "recompute_synthetic_joint_metrics.py": "7b2103e2fdc311d8780c66e6d558d5631f0665e7b37e615b6904beac4c0f63f9",
+      "run_synthetic_joint_pilot.py": "c5f4f86a8358d00fbcbe1d9f190002707d3fd71f96f1f5e1f808dc68b860b2e8"
+    }
+  },
+  "freeze_sha256": "2a7ef139faf5ab031f5feb5330832cc1bb269d9e908eeb3281f0794219762baf",
+  "records": [
+    {
+      "family": "constant",
+      "seed": 8400,
+      "pattern": [
+        0,
+        1,
+        3,
+        2
+      ],
+      "noise_index": 0,
+      "noise_seed": 95000,
+      "target_sha256": "74fb0ef38b17d238967f3a43210ec800e13fc2481139dd9ff4f39ac4e6e5b0d8",
+      "noisy_sha256": "adc24a9526a92ebc4e5a72246988c9fa4241e6ff34600f3d8c64ac7ae6cfab85",
+      "sigma_sha256": "de2f256064a0af797747c2b97505dc0b9f3df0de4f489eac731c23ae9ca9cc31",
+      "output_sha256": "f91eeb877feb266fa4461fe0780d258b32f4a277cfe9ef838941f0cecb092e25",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.0,
+        "output_sse": 0.005048579536378384,
+        "baseline_opponent_sse": 0.0,
+        "output_opponent_sse": 0.002847866155207157,
+        "channel_bias_sum": [
+          1.8646259307861328,
+          0.5320892333984375,
+          -0.15265655517578125
+        ],
+        "reference_gradient_energy": 0.0,
+        "baseline_gradient_projection": 0.0,
+        "output_gradient_projection": 0.0,
+        "output_gradient_sse": 0.0
+      },
+      "output_min": -0.3456891179084778,
+      "output_max": 0.8277183771133423
+    },
+    {
+      "family": "constant",
+      "seed": 8400,
+      "pattern": [
+        0,
+        1,
+        3,
+        2
+      ],
+      "noise_index": 1,
+      "noise_seed": 95001,
+      "target_sha256": "74fb0ef38b17d238967f3a43210ec800e13fc2481139dd9ff4f39ac4e6e5b0d8",
+      "noisy_sha256": "f7ba3a1bdd756efefed9f3052a7bdb5975193e5117e704087a74e695da925d78",
+      "sigma_sha256": "7f482d995ff3cf7c5b8d497df12ecada78a8f5bea19767343d414b05e6bb26d6",
+      "output_sha256": "5b65dc5d21fe5a5a3f8698f3ad8d59e8cbe90a3246f90371666cdc689fc5ff0d",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.1533706784248352,
+        "output_sse": 0.13509224355220795,
+        "baseline_opponent_sse": 0.22898051142692566,
+        "output_opponent_sse": 0.2328195869922638,
+        "channel_bias_sum": [
+          1.60470449924469,
+          1.0039223432540894,
+          -0.24825534224510193
+        ],
+        "reference_gradient_energy": 0.0,
+        "baseline_gradient_projection": 0.0,
+        "output_gradient_projection": 0.0,
+        "output_gradient_sse": 0.06126764789223671
+      },
+      "output_min": -0.3433392345905304,
+      "output_max": 0.8256803154945374
+    },
+    {
+      "family": "constant",
+      "seed": 8400,
+      "pattern": [
+        0,
+        1,
+        3,
+        2
+      ],
+      "noise_index": 2,
+      "noise_seed": 95002,
+      "target_sha256": "74fb0ef38b17d238967f3a43210ec800e13fc2481139dd9ff4f39ac4e6e5b0d8",
+      "noisy_sha256": "68f95da3a1d513cd0b7519dcc17c60fe536ea310056bbffd8dd3ed85658c745c",
+      "sigma_sha256": "ffdd32f7f26aabd31d79702080e14879f943395969d5b11409c9e2c51bffcb4d",
+      "output_sha256": "d2a79152f6fe318dffeca7c0a1d257ad5c9f3be53f4d4c3049957adaf706869f",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 1.1011626720428467,
+        "output_sse": 0.9484256505966187,
+        "baseline_opponent_sse": 1.5109111070632935,
+        "output_opponent_sse": 1.528613805770874,
+        "channel_bias_sum": [
+          1.3727437257766724,
+          0.3957512676715851,
+          -1.506369709968567
+        ],
+        "reference_gradient_energy": 0.0,
+        "baseline_gradient_projection": 0.0,
+        "output_gradient_projection": 0.0,
+        "output_gradient_sse": 0.34607839584350586
+      },
+      "output_min": -0.3323071599006653,
+      "output_max": 0.8668217658996582
+    },
+    {
+      "family": "constant",
+      "seed": 8401,
+      "pattern": [
+        1,
+        0,
+        2,
+        3
+      ],
+      "noise_index": 0,
+      "noise_seed": 95100,
+      "target_sha256": "452975f89d555bc484883fcfa7bcd08bf097e801e8c274c42ea66a8450d7d560",
+      "noisy_sha256": "7e9633595d7c8ebbaf571654e91171f0b762af5cf0d8f7978e4c0cf7610c077c",
+      "sigma_sha256": "de2f256064a0af797747c2b97505dc0b9f3df0de4f489eac731c23ae9ca9cc31",
+      "output_sha256": "616c27b849137ff1c6ce0297cc2b068ced395c5f674498bd1f1e5a243b8bfdae",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.0,
+        "output_sse": 0.00435007456690073,
+        "baseline_opponent_sse": 0.0,
+        "output_opponent_sse": 0.003600343829020858,
+        "channel_bias_sum": [
+          1.6667289733886719,
+          0.1264190673828125,
+          -0.140960693359375
+        ],
+        "reference_gradient_energy": 0.0,
+        "baseline_gradient_projection": 0.0,
+        "output_gradient_projection": 0.0,
+        "output_gradient_sse": 0.0
+      },
+      "output_min": -0.03815224766731262,
+      "output_max": 0.7469428181648254
+    },
+    {
+      "family": "constant",
+      "seed": 8401,
+      "pattern": [
+        1,
+        0,
+        2,
+        3
+      ],
+      "noise_index": 1,
+      "noise_seed": 95101,
+      "target_sha256": "452975f89d555bc484883fcfa7bcd08bf097e801e8c274c42ea66a8450d7d560",
+      "noisy_sha256": "37cc7f1b87df499e9b41ac7adfc81131b8605dc6956e464da420caddf83a020d",
+      "sigma_sha256": "c2332a27f06988da3fcb133a6969881b9f24218c6998365c3c3efba3971e0b17",
+      "output_sha256": "857c23ebef6d61db7e807da90947942cbf156721fe614113de6dff2e91c0e539",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.1174095869064331,
+        "output_sse": 0.1005067378282547,
+        "baseline_opponent_sse": 0.14204944670200348,
+        "output_opponent_sse": 0.14729192852973938,
+        "channel_bias_sum": [
+          1.4099684953689575,
+          0.5528350472450256,
+          -1.201755404472351
+        ],
+        "reference_gradient_energy": 0.0,
+        "baseline_gradient_projection": 0.0,
+        "output_gradient_projection": 0.0,
+        "output_gradient_sse": 0.021344440057873726
+      },
+      "output_min": -0.039150819182395935,
+      "output_max": 0.7469056844711304
+    },
+    {
+      "family": "constant",
+      "seed": 8401,
+      "pattern": [
+        1,
+        0,
+        2,
+        3
+      ],
+      "noise_index": 2,
+      "noise_seed": 95102,
+      "target_sha256": "452975f89d555bc484883fcfa7bcd08bf097e801e8c274c42ea66a8450d7d560",
+      "noisy_sha256": "5a142976335b0c990ce5a2f258117fffd453b886f46ed86ce3f14c6d7981611e",
+      "sigma_sha256": "9f2f9a06a91f51fc8c64a816a218dac4f0d1b0973c559c4e5cf50f94745c637c",
+      "output_sha256": "28c62fcac451a82cf6b4255ff7d2c89ef059f8e1008d6bc214a5ebc161299643",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 1.120826244354248,
+        "output_sse": 0.9519522190093994,
+        "baseline_opponent_sse": 1.460202932357788,
+        "output_opponent_sse": 1.479491949081421,
+        "channel_bias_sum": [
+          2.9424991607666016,
+          0.7294543981552124,
+          2.4076521396636963
+        ],
+        "reference_gradient_energy": 0.0,
+        "baseline_gradient_projection": 0.0,
+        "output_gradient_projection": 0.0,
+        "output_gradient_sse": 0.2724881172180176
+      },
+      "output_min": -0.05773378908634186,
+      "output_max": 0.7557685375213623
+    },
+    {
+      "family": "constant",
+      "seed": 8402,
+      "pattern": [
+        3,
+        2,
+        0,
+        1
+      ],
+      "noise_index": 0,
+      "noise_seed": 95200,
+      "target_sha256": "acac9abaaee71a415dc9646d938b7ce98fcb95bc19d350fe115a63cd927a8510",
+      "noisy_sha256": "6ff989337802a3239bfe8363db08af8b730a217a7cb158c8f956dcdbdf440c2a",
+      "sigma_sha256": "de2f256064a0af797747c2b97505dc0b9f3df0de4f489eac731c23ae9ca9cc31",
+      "output_sha256": "366966f006ba054ba558f23c8713ee9fb6f2f12149f14fd33183009e4c982a42",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.0,
+        "output_sse": 0.0031846589408814907,
+        "baseline_opponent_sse": 0.0,
+        "output_opponent_sse": 0.002162165241315961,
+        "channel_bias_sum": [
+          1.2416610717773438,
+          -0.0052051544189453125,
+          -0.11473846435546875
+        ],
+        "reference_gradient_energy": 0.0,
+        "baseline_gradient_projection": 0.0,
+        "output_gradient_projection": 0.0,
+        "output_gradient_sse": 0.0
+      },
+      "output_min": -0.03998752683401108,
+      "output_max": 0.46726492047309875
+    },
+    {
+      "family": "constant",
+      "seed": 8402,
+      "pattern": [
+        3,
+        2,
+        0,
+        1
+      ],
+      "noise_index": 1,
+      "noise_seed": 95201,
+      "target_sha256": "acac9abaaee71a415dc9646d938b7ce98fcb95bc19d350fe115a63cd927a8510",
+      "noisy_sha256": "5619b209c9f90106b8769ff0a55759f2db20851acd3d07800197b10a14d67a82",
+      "sigma_sha256": "49ec0cf8de96fe1f0dc28204f37bb27a17d4b92cca91fc20dbf1c7a12b506c43",
+      "output_sha256": "0c4a824b58575270e341f36bdeb385a2bd4a64c3bd01ea1f66a78a0c9e9526fb",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.11920396983623505,
+        "output_sse": 0.1031508818268776,
+        "baseline_opponent_sse": 0.14881443977355957,
+        "output_opponent_sse": 0.15005984902381897,
+        "channel_bias_sum": [
+          1.9055551290512085,
+          0.4847486615180969,
+          -1.3624097108840942
+        ],
+        "reference_gradient_energy": 0.0,
+        "baseline_gradient_projection": 0.0,
+        "output_gradient_projection": 0.0,
+        "output_gradient_sse": 0.02237730100750923
+      },
+      "output_min": -0.038301482796669006,
+      "output_max": 0.4827483296394348
+    },
+    {
+      "family": "constant",
+      "seed": 8402,
+      "pattern": [
+        3,
+        2,
+        0,
+        1
+      ],
+      "noise_index": 2,
+      "noise_seed": 95202,
+      "target_sha256": "acac9abaaee71a415dc9646d938b7ce98fcb95bc19d350fe115a63cd927a8510",
+      "noisy_sha256": "f1860fa341e5aeaffe2a56cccf916584e931051022eaf80767b6f8e27a6227a9",
+      "sigma_sha256": "f96850ad06afe0ebab249c1261d1da0afdb89c24c2177f94ddda7fc1a6228574",
+      "output_sha256": "e3231fe350c42db8dab6ad0db26aa9b0441c7476c9005b0990ce74a1805a0eac",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 1.0983006954193115,
+        "output_sse": 0.9342066645622253,
+        "baseline_opponent_sse": 1.3470759391784668,
+        "output_opponent_sse": 1.3929758071899414,
+        "channel_bias_sum": [
+          2.7811319828033447,
+          0.2284184843301773,
+          0.06516425311565399
+        ],
+        "reference_gradient_energy": 0.0,
+        "baseline_gradient_projection": 0.0,
+        "output_gradient_projection": 0.0,
+        "output_gradient_sse": 0.22759415209293365
+      },
+      "output_min": -0.06804357469081879,
+      "output_max": 0.5414291024208069
+    },
+    {
+      "family": "constant",
+      "seed": 8403,
+      "pattern": [
+        2,
+        3,
+        1,
+        0
+      ],
+      "noise_index": 0,
+      "noise_seed": 95300,
+      "target_sha256": "dc8b15d607c4a4df801d4426fd35451090e95b4d63f9bbf649429d60a82ab781",
+      "noisy_sha256": "c5a847ca111473fdc07e7aed1acc9283d50a8a976c17f9451eaefe066b622b4a",
+      "sigma_sha256": "de2f256064a0af797747c2b97505dc0b9f3df0de4f489eac731c23ae9ca9cc31",
+      "output_sha256": "875290f023befba6f41d710a3674938399c34c1d8c45bc0087041a815f4c9c6b",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.0,
+        "output_sse": 0.0019916957244277,
+        "baseline_opponent_sse": 0.0,
+        "output_opponent_sse": 0.001629998441785574,
+        "channel_bias_sum": [
+          1.0496826171875,
+          0.011199951171875,
+          -0.1320209503173828
+        ],
+        "reference_gradient_energy": 0.0,
+        "baseline_gradient_projection": 0.0,
+        "output_gradient_projection": 0.0,
+        "output_gradient_sse": 0.0
+      },
+      "output_min": -0.19388419389724731,
+      "output_max": 0.6049405336380005
+    },
+    {
+      "family": "constant",
+      "seed": 8403,
+      "pattern": [
+        2,
+        3,
+        1,
+        0
+      ],
+      "noise_index": 1,
+      "noise_seed": 95301,
+      "target_sha256": "dc8b15d607c4a4df801d4426fd35451090e95b4d63f9bbf649429d60a82ab781",
+      "noisy_sha256": "8209b5049d971c5b7cc1ea0b22af84167c25438e3b14d675a35689bc8f4b49df",
+      "sigma_sha256": "8e02757d75f9da8a785f828fab7d6f8d7be81b81d9b716cfa75e876ea6581eee",
+      "output_sha256": "e5c87f9b075ffaa0541c22b2708b46d42d9223f5f669c6126e63d7ac99903402",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.13602487742900848,
+        "output_sse": 0.11397838592529297,
+        "baseline_opponent_sse": 0.19682100415229797,
+        "output_opponent_sse": 0.19035078585147858,
+        "channel_bias_sum": [
+          1.4280205965042114,
+          0.16912326216697693,
+          -0.13253915309906006
+        ],
+        "reference_gradient_energy": 0.0,
+        "baseline_gradient_projection": 0.0,
+        "output_gradient_projection": 0.0,
+        "output_gradient_sse": 0.04900168627500534
+      },
+      "output_min": -0.1986893266439438,
+      "output_max": 0.6082905530929565
+    },
+    {
+      "family": "constant",
+      "seed": 8403,
+      "pattern": [
+        2,
+        3,
+        1,
+        0
+      ],
+      "noise_index": 2,
+      "noise_seed": 95302,
+      "target_sha256": "dc8b15d607c4a4df801d4426fd35451090e95b4d63f9bbf649429d60a82ab781",
+      "noisy_sha256": "c95c3e6f998ac9f96a4e4474055c96ca44d713fb3c7a1329eed9c7547b4bd8b2",
+      "sigma_sha256": "9d2abb7b9c37885959e004f8c1efb830a0e52a34a20b5787a36fd5bce1568861",
+      "output_sha256": "5f3a5437c2c9c6ac93a2acdb6b27ea91600db32793397d898781775d027c31d3",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 1.113853931427002,
+        "output_sse": 0.8970591425895691,
+        "baseline_opponent_sse": 1.5953024625778198,
+        "output_opponent_sse": 1.5286448001861572,
+        "channel_bias_sum": [
+          0.8745496273040771,
+          -0.9953244924545288,
+          1.036522388458252
+        ],
+        "reference_gradient_energy": 0.0,
+        "baseline_gradient_projection": 0.0,
+        "output_gradient_projection": 0.0,
+        "output_gradient_sse": 0.3760145306587219
+      },
+      "output_min": -0.17141830921173096,
+      "output_max": 0.6220625638961792
+    },
+    {
+      "family": "ramp",
+      "seed": 8500,
+      "pattern": [
+        0,
+        1,
+        3,
+        2
+      ],
+      "noise_index": 0,
+      "noise_seed": 96000,
+      "target_sha256": "7dca8925432d1f4d14ceb230638189767fc6052dcf49073cd439e3e17a45f702",
+      "noisy_sha256": "699acac39ce70badf0aa03283681b565bd0c61e21fe76a299ec43e1e56db3fca",
+      "sigma_sha256": "de2f256064a0af797747c2b97505dc0b9f3df0de4f489eac731c23ae9ca9cc31",
+      "output_sha256": "565ad9167bda562fe372b541ab7cf9a4c08eca89a4ed8c0fdd1bf5f6423dd634",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 1.1269041255701495e-12,
+        "output_sse": 0.004361589904874563,
+        "baseline_opponent_sse": 1.7415235920026362e-12,
+        "output_opponent_sse": 0.0024378953967243433,
+        "channel_bias_sum": [
+          1.7571383714675903,
+          0.4922395944595337,
+          -0.17685487866401672
+        ],
+        "reference_gradient_energy": 0.039398081600666046,
+        "baseline_gradient_projection": 0.03939807787537575,
+        "output_gradient_projection": 0.03939849138259888,
+        "output_gradient_sse": 2.030421519805259e-08
+      },
+      "output_min": -0.5737941265106201,
+      "output_max": 1.2806861400604248
+    },
+    {
+      "family": "ramp",
+      "seed": 8500,
+      "pattern": [
+        0,
+        1,
+        3,
+        2
+      ],
+      "noise_index": 1,
+      "noise_seed": 96001,
+      "target_sha256": "7dca8925432d1f4d14ceb230638189767fc6052dcf49073cd439e3e17a45f702",
+      "noisy_sha256": "9076e86a9b439fcfcea7a8610981054a1c498d1c523ad872696157d4fad056cb",
+      "sigma_sha256": "0b408085540564059ddda9b6bcc37d0105c83eacd9062f9f5588e6a69c7e8c9e",
+      "output_sha256": "7a3d341da2d3b0b3b8038905d17df224663271322ba54aaf83dd06e54b1e0f58",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.22260929644107819,
+        "output_sse": 0.1881651133298874,
+        "baseline_opponent_sse": 0.3220468759536743,
+        "output_opponent_sse": 0.3301736116409302,
+        "channel_bias_sum": [
+          1.845130443572998,
+          -0.29080456495285034,
+          -1.5782899856567383
+        ],
+        "reference_gradient_energy": 0.039398081600666046,
+        "baseline_gradient_projection": 0.03936687484383583,
+        "output_gradient_projection": 0.03945966809988022,
+        "output_gradient_sse": 0.07794814556837082
+      },
+      "output_min": -0.5762045383453369,
+      "output_max": 1.2901701927185059
+    },
+    {
+      "family": "ramp",
+      "seed": 8500,
+      "pattern": [
+        0,
+        1,
+        3,
+        2
+      ],
+      "noise_index": 2,
+      "noise_seed": 96002,
+      "target_sha256": "7dca8925432d1f4d14ceb230638189767fc6052dcf49073cd439e3e17a45f702",
+      "noisy_sha256": "d41d65507fde564f8146c79d8ae3ed0433c71657f37635973617b4174cb92775",
+      "sigma_sha256": "923f5fc4ce84bb03df29871d26543a62b8a3571d0852d9a335ed9e17675daf50",
+      "output_sha256": "9be55d279fb36d4a226bcc3a9db3f6521e032d73a5c3ef49ff9e12ad8ffd7257",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 1.3848986625671387,
+        "output_sse": 1.169925570487976,
+        "baseline_opponent_sse": 1.9549249410629272,
+        "output_opponent_sse": 1.9770090579986572,
+        "channel_bias_sum": [
+          0.9662984013557434,
+          0.32856619358062744,
+          1.8473557233810425
+        ],
+        "reference_gradient_energy": 0.039398081600666046,
+        "baseline_gradient_projection": 0.03922601789236069,
+        "output_gradient_projection": 0.03969782218337059,
+        "output_gradient_sse": 0.48768535256385803
+      },
+      "output_min": -0.5789996385574341,
+      "output_max": 1.325932264328003
+    },
+    {
+      "family": "ramp",
+      "seed": 8501,
+      "pattern": [
+        1,
+        0,
+        2,
+        3
+      ],
+      "noise_index": 0,
+      "noise_seed": 96100,
+      "target_sha256": "fba8ca9aba048d482214ccd4a3ed2b00c58cb9d140182c0f382d9608ad9c8ce5",
+      "noisy_sha256": "c4445652da24d87e721c25a5e06d95c9261fbe3a008031eadb5a7c537eecb9a7",
+      "sigma_sha256": "de2f256064a0af797747c2b97505dc0b9f3df0de4f489eac731c23ae9ca9cc31",
+      "output_sha256": "0a422c50edae1c8192be481787e430f841f89c4f797fb8ec0e19631c31e975a0",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 1.1901590823981678e-12,
+        "output_sse": 0.0038891229778528214,
+        "baseline_opponent_sse": 1.375788372115494e-12,
+        "output_opponent_sse": 0.003398349042981863,
+        "channel_bias_sum": [
+          1.5746220350265503,
+          0.02512308955192566,
+          -0.15148413181304932
+        ],
+        "reference_gradient_energy": 0.005666013341397047,
+        "baseline_gradient_projection": 0.005666013341397047,
+        "output_gradient_projection": 0.005664825439453125,
+        "output_gradient_sse": 5.494365851177463e-09
+      },
+      "output_min": -0.09612227976322174,
+      "output_max": 1.2805066108703613
+    },
+    {
+      "family": "ramp",
+      "seed": 8501,
+      "pattern": [
+        1,
+        0,
+        2,
+        3
+      ],
+      "noise_index": 1,
+      "noise_seed": 96101,
+      "target_sha256": "fba8ca9aba048d482214ccd4a3ed2b00c58cb9d140182c0f382d9608ad9c8ce5",
+      "noisy_sha256": "e774e50f23b6e241d274f82020e35c6863f4025c2a349e3bf3147ff0eedb68c8",
+      "sigma_sha256": "14912f768c8cf4c4dd060f4633b7adbe59d0107ce8c27a8d48d26ce2882e8c0d",
+      "output_sha256": "f302bfdcffd5c22bd4429eaa8212e80962cf0fe6430a8d7a8c4fa380b7d6feff",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.20214125514030457,
+        "output_sse": 0.17245624959468842,
+        "baseline_opponent_sse": 0.2747901380062103,
+        "output_opponent_sse": 0.29330557584762573,
+        "channel_bias_sum": [
+          1.5603361129760742,
+          -0.6885970830917358,
+          0.43531203269958496
+        ],
+        "reference_gradient_energy": 0.005666013341397047,
+        "baseline_gradient_projection": 0.005461054854094982,
+        "output_gradient_projection": 0.005523037631064653,
+        "output_gradient_sse": 0.05404609814286232
+      },
+      "output_min": -0.09981493651866913,
+      "output_max": 1.279517412185669
+    },
+    {
+      "family": "ramp",
+      "seed": 8501,
+      "pattern": [
+        1,
+        0,
+        2,
+        3
+      ],
+      "noise_index": 2,
+      "noise_seed": 96102,
+      "target_sha256": "fba8ca9aba048d482214ccd4a3ed2b00c58cb9d140182c0f382d9608ad9c8ce5",
+      "noisy_sha256": "b7b72225f6ac17caf16c83ccc1998c0ec8fb9f44dbf58ef8590e80994d687bcf",
+      "sigma_sha256": "9e4f5472f7609230f45d0c9b01f90a3ff96649a1fa876f5b2c18259e295b2bf3",
+      "output_sha256": "2fd633f35b1ffad85b9d11de2ad7b2da6980b47117a9fd704961cfdf227c1cfb",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 1.3499979972839355,
+        "output_sse": 1.171356439590454,
+        "baseline_opponent_sse": 1.8854355812072754,
+        "output_opponent_sse": 1.9728081226348877,
+        "channel_bias_sum": [
+          2.431924343109131,
+          0.07319971919059753,
+          2.9836902618408203
+        ],
+        "reference_gradient_energy": 0.005666013341397047,
+        "baseline_gradient_projection": 0.005110681988298893,
+        "output_gradient_projection": 0.005282718688249588,
+        "output_gradient_sse": 0.36294984817504883
+      },
+      "output_min": -0.09987141191959381,
+      "output_max": 1.300152063369751
+    },
+    {
+      "family": "ramp",
+      "seed": 8502,
+      "pattern": [
+        3,
+        2,
+        0,
+        1
+      ],
+      "noise_index": 0,
+      "noise_seed": 96200,
+      "target_sha256": "aa589f0b314164bae808f04cc0cdd7def594b8416b746833580062b83c34c620",
+      "noisy_sha256": "76c88b8df153db64fa2ff715f6c9e3cf830d34dac02ebf22bbfb969a97a0314f",
+      "sigma_sha256": "de2f256064a0af797747c2b97505dc0b9f3df0de4f489eac731c23ae9ca9cc31",
+      "output_sha256": "5f0139b8f02e1a3f1b9243a14f5543f9458d30059d5fb6b89fecadb4f5d016d5",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 1.8002960233687304e-13,
+        "output_sse": 0.003315791953355074,
+        "baseline_opponent_sse": 2.3687302119768106e-13,
+        "output_opponent_sse": 0.0023324049543589354,
+        "channel_bias_sum": [
+          1.262475848197937,
+          -0.08048364520072937,
+          -0.19947373867034912
+        ],
+        "reference_gradient_energy": 0.029654577374458313,
+        "baseline_gradient_projection": 0.029654575511813164,
+        "output_gradient_projection": 0.029650026932358742,
+        "output_gradient_sse": 2.0995686966784888e-08
+      },
+      "output_min": -0.4774894714355469,
+      "output_max": 0.7130970358848572
+    },
+    {
+      "family": "ramp",
+      "seed": 8502,
+      "pattern": [
+        3,
+        2,
+        0,
+        1
+      ],
+      "noise_index": 1,
+      "noise_seed": 96201,
+      "target_sha256": "aa589f0b314164bae808f04cc0cdd7def594b8416b746833580062b83c34c620",
+      "noisy_sha256": "33ba86ebf88c3e3b6ea2efba8f14627d72e1bb9424bf0d3fbe959916340c78b3",
+      "sigma_sha256": "2f7ab04651d9c664459671b26af53d1ce716320cd209d6b54ccb9274a83eb65e",
+      "output_sha256": "1ededbf071d96b8d5b45421d1c329e9f1cfa521fa6e336035903eeff94931d0f",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.11453653872013092,
+        "output_sse": 0.10222862660884857,
+        "baseline_opponent_sse": 0.16441673040390015,
+        "output_opponent_sse": 0.17568345367908478,
+        "channel_bias_sum": [
+          1.0383762121200562,
+          -0.22830963134765625,
+          -0.3865595757961273
+        ],
+        "reference_gradient_energy": 0.029654577374458313,
+        "baseline_gradient_projection": 0.029946986585855484,
+        "output_gradient_projection": 0.029711876064538956,
+        "output_gradient_sse": 0.03860732167959213
+      },
+      "output_min": -0.47658786177635193,
+      "output_max": 0.7187803983688354
+    },
+    {
+      "family": "ramp",
+      "seed": 8502,
+      "pattern": [
+        3,
+        2,
+        0,
+        1
+      ],
+      "noise_index": 2,
+      "noise_seed": 96202,
+      "target_sha256": "aa589f0b314164bae808f04cc0cdd7def594b8416b746833580062b83c34c620",
+      "noisy_sha256": "2f2fd01fb9ebe7fd25a3f8ee20113772383ee0d03b4ab19bf61575cb52193f0d",
+      "sigma_sha256": "603305061658a9e3daace69e0347161d1dc2eb86fe38b82932dfcf4c67e9227e",
+      "output_sha256": "3c575c13ed1715426f927b2b14b934d56e504c1c8f6af6d774c9064d3a41ba84",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.930280327796936,
+        "output_sse": 0.7885112166404724,
+        "baseline_opponent_sse": 1.2402762174606323,
+        "output_opponent_sse": 1.3159618377685547,
+        "channel_bias_sum": [
+          1.3653565645217896,
+          1.8260996341705322,
+          0.7656040787696838
+        ],
+        "reference_gradient_energy": 0.029654577374458313,
+        "baseline_gradient_projection": 0.030137356370687485,
+        "output_gradient_projection": 0.029928313568234444,
+        "output_gradient_sse": 0.3039768636226654
+      },
+      "output_min": -0.4910662770271301,
+      "output_max": 0.7618234157562256
+    },
+    {
+      "family": "ramp",
+      "seed": 8503,
+      "pattern": [
+        2,
+        3,
+        1,
+        0
+      ],
+      "noise_index": 0,
+      "noise_seed": 96300,
+      "target_sha256": "254da388a2cc1ef5c72f86d889287c74b78d6da82eede5472cb53886fbae4ff0",
+      "noisy_sha256": "e2379418e6330694fa3ff4abf7b863fd1c0a883c93ddee9f6f2c0f37ff7c5633",
+      "sigma_sha256": "de2f256064a0af797747c2b97505dc0b9f3df0de4f489eac731c23ae9ca9cc31",
+      "output_sha256": "6c5bc857b9ad2551c93c93de07955e02ee51d6e7be96fa560227fdca3e6cb46c",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 6.773401284299041e-13,
+        "output_sse": 0.0023474255576729774,
+        "baseline_opponent_sse": 6.756678549990625e-13,
+        "output_opponent_sse": 0.0017296335427090526,
+        "channel_bias_sum": [
+          1.025881290435791,
+          -0.02863488346338272,
+          -0.0967620313167572
+        ],
+        "reference_gradient_energy": 0.007790167350322008,
+        "baseline_gradient_projection": 0.007790167350322008,
+        "output_gradient_projection": 0.007788934279233217,
+        "output_gradient_sse": 3.9957339659224544e-09
+      },
+      "output_min": -0.2719990015029907,
+      "output_max": 1.153201699256897
+    },
+    {
+      "family": "ramp",
+      "seed": 8503,
+      "pattern": [
+        2,
+        3,
+        1,
+        0
+      ],
+      "noise_index": 1,
+      "noise_seed": 96301,
+      "target_sha256": "254da388a2cc1ef5c72f86d889287c74b78d6da82eede5472cb53886fbae4ff0",
+      "noisy_sha256": "d809c0ef45c2449dbfcd0e6c20c883af2d8622065bc8da3e38f5c1dd1d4688bf",
+      "sigma_sha256": "52ee2eacc7b2a512df29308b2ae964adb12bde8fd80d41043ddb87a52ab96d5a",
+      "output_sha256": "cff01c481012a510b9071c411c36e0206cbb41b2c082293765de480708e15649",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.19324809312820435,
+        "output_sse": 0.14939984679222107,
+        "baseline_opponent_sse": 0.23546019196510315,
+        "output_opponent_sse": 0.21004165709018707,
+        "channel_bias_sum": [
+          1.6418497562408447,
+          0.18451586365699768,
+          -0.386373907327652
+        ],
+        "reference_gradient_energy": 0.007790167350322008,
+        "baseline_gradient_projection": 0.0076363179832696915,
+        "output_gradient_projection": 0.007689077872782946,
+        "output_gradient_sse": 0.02600618451833725
+      },
+      "output_min": -0.28167086839675903,
+      "output_max": 1.1444804668426514
+    },
+    {
+      "family": "ramp",
+      "seed": 8503,
+      "pattern": [
+        2,
+        3,
+        1,
+        0
+      ],
+      "noise_index": 2,
+      "noise_seed": 96302,
+      "target_sha256": "254da388a2cc1ef5c72f86d889287c74b78d6da82eede5472cb53886fbae4ff0",
+      "noisy_sha256": "a969927e43749e2261bbe3d29ffc1253ac248d8b143dbd72f1356233ff07880a",
+      "sigma_sha256": "3b936b0c6a290d2fce5c5e87015742f455a14e774a1bb728cd092fff7e77d9ae",
+      "output_sha256": "0b5d765dcd6eac4fad1d1470d7df378fd032f893517927f5578f372e56f78d9b",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 1.304559588432312,
+        "output_sse": 0.9541282653808594,
+        "baseline_opponent_sse": 1.6077675819396973,
+        "output_opponent_sse": 1.4304323196411133,
+        "channel_bias_sum": [
+          -1.7601497173309326,
+          -0.36307966709136963,
+          -1.379939079284668
+        ],
+        "reference_gradient_energy": 0.007790167350322008,
+        "baseline_gradient_projection": 0.007834848947823048,
+        "output_gradient_projection": 0.007806235458701849,
+        "output_gradient_sse": 0.25348255038261414
+      },
+      "output_min": -0.305216521024704,
+      "output_max": 1.1591218709945679
+    },
+    {
+      "family": "edge",
+      "seed": 8600,
+      "pattern": [
+        0,
+        1,
+        3,
+        2
+      ],
+      "noise_index": 0,
+      "noise_seed": 97000,
+      "target_sha256": "e36a3c6245ed039773815b95642005d64c22ec37a819a41e25668d3d9d3d5e65",
+      "noisy_sha256": "19291903a1233ecc34d89b559b35169fbd7b40e7ae7e6db433e3521f83ff6bdb",
+      "sigma_sha256": "de2f256064a0af797747c2b97505dc0b9f3df0de4f489eac731c23ae9ca9cc31",
+      "output_sha256": "13ba9ef7d6dbadbf447c6f884757084c0de4e837bfad61bd86b37a809f6684fa",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 1.038280725479126,
+        "output_sse": 1.5096155405044556,
+        "baseline_opponent_sse": 1.0590788125991821,
+        "output_opponent_sse": 1.2411012649536133,
+        "channel_bias_sum": [
+          3.6556005477905273,
+          0.5348370671272278,
+          -4.32652473449707
+        ],
+        "reference_gradient_energy": 0.0018315608613193035,
+        "baseline_gradient_projection": 0.0015804592985659838,
+        "output_gradient_projection": 0.006128333508968353,
+        "output_gradient_sse": 0.03494632616639137
+      },
+      "output_min": -0.09514355659484863,
+      "output_max": 0.9808575510978699
+    },
+    {
+      "family": "edge",
+      "seed": 8600,
+      "pattern": [
+        0,
+        1,
+        3,
+        2
+      ],
+      "noise_index": 1,
+      "noise_seed": 97001,
+      "target_sha256": "e36a3c6245ed039773815b95642005d64c22ec37a819a41e25668d3d9d3d5e65",
+      "noisy_sha256": "fdc0bbe94dd6b1563b4b0a191b7249f909955f161c218b0e1a5c0beb122b6702",
+      "sigma_sha256": "454ee1f9deebcf78bc82be9c33fcac1c360f82fc2c08d5d77a1fcde69b3f7e50",
+      "output_sha256": "8e55c9dbaab709221d754cb3b10944e4a4c470162d1641d12dd1643794aff6f2",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 1.1856536865234375,
+        "output_sse": 1.6143798828125,
+        "baseline_opponent_sse": 1.2571094036102295,
+        "output_opponent_sse": 1.42080819606781,
+        "channel_bias_sum": [
+          3.012038230895996,
+          0.5558422803878784,
+          -4.12382173538208
+        ],
+        "reference_gradient_energy": 0.0018315608613193035,
+        "baseline_gradient_projection": 0.0015847741160541773,
+        "output_gradient_projection": 0.0062356144189834595,
+        "output_gradient_sse": 0.06786243617534637
+      },
+      "output_min": -0.08992338180541992,
+      "output_max": 0.9804196953773499
+    },
+    {
+      "family": "edge",
+      "seed": 8600,
+      "pattern": [
+        0,
+        1,
+        3,
+        2
+      ],
+      "noise_index": 2,
+      "noise_seed": 97002,
+      "target_sha256": "e36a3c6245ed039773815b95642005d64c22ec37a819a41e25668d3d9d3d5e65",
+      "noisy_sha256": "e5c2c6dfcc1a284f9c204fc1f5862166a2e691c45a5c8e5a44adc4a7d57536a8",
+      "sigma_sha256": "1df3861a3727501529d434e0761db42655d9c75ee5628e984a484a2eb67c6c93",
+      "output_sha256": "00e06ee424267011347e8de3b82c532771baefd09b329bd37cad85211cfe8a7d",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 2.2210018634796143,
+        "output_sse": 2.4738121032714844,
+        "baseline_opponent_sse": 2.638645648956299,
+        "output_opponent_sse": 2.7794277667999268,
+        "channel_bias_sum": [
+          5.631887435913086,
+          2.2661805152893066,
+          -5.967144012451172
+        ],
+        "reference_gradient_energy": 0.0018315608613193035,
+        "baseline_gradient_projection": 0.0014785844832658768,
+        "output_gradient_projection": 0.005998215172439814,
+        "output_gradient_sse": 0.30937716364860535
+      },
+      "output_min": -0.10267046838998795,
+      "output_max": 0.9980419874191284
+    },
+    {
+      "family": "edge",
+      "seed": 8601,
+      "pattern": [
+        1,
+        0,
+        2,
+        3
+      ],
+      "noise_index": 0,
+      "noise_seed": 97100,
+      "target_sha256": "5526a1bd99ffd417b66a27c117c6d60f9a73027fe28a845b1b785de893db4969",
+      "noisy_sha256": "a7ac9fca10684dd5dfc70070273fbdc69ce046813813a526dfb9f8adee8e5bfd",
+      "sigma_sha256": "de2f256064a0af797747c2b97505dc0b9f3df0de4f489eac731c23ae9ca9cc31",
+      "output_sha256": "0a86923c2468d62d990341cf4b072c57f620b77e3c40b25edfb46a6103cac60b",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.7795867919921875,
+        "output_sse": 0.6587809920310974,
+        "baseline_opponent_sse": 1.1193547248840332,
+        "output_opponent_sse": 1.014206051826477,
+        "channel_bias_sum": [
+          1.6376103162765503,
+          0.19023098051548004,
+          0.1967681646347046
+        ],
+        "reference_gradient_energy": 0.464612752199173,
+        "baseline_gradient_projection": 0.3484596312046051,
+        "output_gradient_projection": 0.3680383265018463,
+        "output_gradient_sse": 0.07988574355840683
+      },
+      "output_min": -0.05117860436439514,
+      "output_max": 1.1258050203323364
+    },
+    {
+      "family": "edge",
+      "seed": 8601,
+      "pattern": [
+        1,
+        0,
+        2,
+        3
+      ],
+      "noise_index": 1,
+      "noise_seed": 97101,
+      "target_sha256": "5526a1bd99ffd417b66a27c117c6d60f9a73027fe28a845b1b785de893db4969",
+      "noisy_sha256": "3f4a03a06dd169930c6539219199a2c6d316da3bc234a12ad19136296556d30e",
+      "sigma_sha256": "e894526dc166c06cc32bdb9c41450914284b687c65fba793adceef8efbce5e1d",
+      "output_sha256": "d2fe5d252365a8d9c94c1eb22b7b6c41e5bf46479073ca91878a36d3ae500e2f",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.9134791493415833,
+        "output_sse": 0.7708122730255127,
+        "baseline_opponent_sse": 1.2971837520599365,
+        "output_opponent_sse": 1.2053711414337158,
+        "channel_bias_sum": [
+          3.1265828609466553,
+          0.28701531887054443,
+          0.22666189074516296
+        ],
+        "reference_gradient_energy": 0.464612752199173,
+        "baseline_gradient_projection": 0.34831440448760986,
+        "output_gradient_projection": 0.368135929107666,
+        "output_gradient_sse": 0.11386419832706451
+      },
+      "output_min": -0.0616394579410553,
+      "output_max": 1.1219691038131714
+    },
+    {
+      "family": "edge",
+      "seed": 8601,
+      "pattern": [
+        1,
+        0,
+        2,
+        3
+      ],
+      "noise_index": 2,
+      "noise_seed": 97102,
+      "target_sha256": "5526a1bd99ffd417b66a27c117c6d60f9a73027fe28a845b1b785de893db4969",
+      "noisy_sha256": "c9d2930d948f9814479642a7c5240cb839a68360f25c180e5f0965f1806b0dcf",
+      "sigma_sha256": "676fb5e954c398fa39c6ff3050142e5587a5feb33610e1e4ef11b8b89f89c8e5",
+      "output_sha256": "88f6e585c59cda73b85a87a22e64174ce9b69ef412baf4fba78941983f1bf129",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 2.0322110652923584,
+        "output_sse": 1.724181056022644,
+        "baseline_opponent_sse": 2.8541762828826904,
+        "output_opponent_sse": 2.8062195777893066,
+        "channel_bias_sum": [
+          4.665735244750977,
+          -0.8437356948852539,
+          0.4383692443370819
+        ],
+        "reference_gradient_energy": 0.464612752199173,
+        "baseline_gradient_projection": 0.34147071838378906,
+        "output_gradient_projection": 0.35426226258277893,
+        "output_gradient_sse": 0.34730038046836853
+      },
+      "output_min": -0.05703628063201904,
+      "output_max": 1.1471375226974487
+    },
+    {
+      "family": "edge",
+      "seed": 8602,
+      "pattern": [
+        3,
+        2,
+        0,
+        1
+      ],
+      "noise_index": 0,
+      "noise_seed": 97200,
+      "target_sha256": "a683c8b2e9b35f2f51eb76c543bf5b8d8ebefaa327c8280722dc23e698f5de69",
+      "noisy_sha256": "b89c0aaa3bc0b8f474a2e7839a92a964ba67694db729bade11668056bf64f4e6",
+      "sigma_sha256": "de2f256064a0af797747c2b97505dc0b9f3df0de4f489eac731c23ae9ca9cc31",
+      "output_sha256": "809baafcb258c99c738787d79aad2ba40a30a0687b4820a9917f3d8b92a04c1a",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 2.1562914848327637,
+        "output_sse": 7.491847038269043,
+        "baseline_opponent_sse": 2.1391592025756836,
+        "output_opponent_sse": 4.091032028198242,
+        "channel_bias_sum": [
+          3.789623737335205,
+          1.8753312826156616,
+          3.270921468734741
+        ],
+        "reference_gradient_energy": 6.589306354522705,
+        "baseline_gradient_projection": 5.298159122467041,
+        "output_gradient_projection": 4.197700500488281,
+        "output_gradient_sse": 1.873723030090332
+      },
+      "output_min": -0.0796598270535469,
+      "output_max": 0.9428916573524475
+    },
+    {
+      "family": "edge",
+      "seed": 8602,
+      "pattern": [
+        3,
+        2,
+        0,
+        1
+      ],
+      "noise_index": 1,
+      "noise_seed": 97201,
+      "target_sha256": "a683c8b2e9b35f2f51eb76c543bf5b8d8ebefaa327c8280722dc23e698f5de69",
+      "noisy_sha256": "18845cf18ca0f3d56e9aa73fed07fc5aac8623acb7b33e710bd9f94e24879f9a",
+      "sigma_sha256": "b61f6201f5a90057267acec66a3582cd9105338841ac7bd5a1e101312b1486e5",
+      "output_sha256": "a26a0f36c489eef6c64d854c2c2e562f657baa1c9556e0b6c10ff397e33dbcfd",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 2.3380074501037598,
+        "output_sse": 7.648586273193359,
+        "baseline_opponent_sse": 2.3587331771850586,
+        "output_opponent_sse": 4.302204608917236,
+        "channel_bias_sum": [
+          3.916743516921997,
+          2.084397554397583,
+          4.0013747215271
+        ],
+        "reference_gradient_energy": 6.589306354522705,
+        "baseline_gradient_projection": 5.314239978790283,
+        "output_gradient_projection": 4.213547706604004,
+        "output_gradient_sse": 1.9167358875274658
+      },
+      "output_min": -0.07305362820625305,
+      "output_max": 0.947788417339325
+    },
+    {
+      "family": "edge",
+      "seed": 8602,
+      "pattern": [
+        3,
+        2,
+        0,
+        1
+      ],
+      "noise_index": 2,
+      "noise_seed": 97202,
+      "target_sha256": "a683c8b2e9b35f2f51eb76c543bf5b8d8ebefaa327c8280722dc23e698f5de69",
+      "noisy_sha256": "7bff67a3b8db0544adceb128948f06e88872af2fc7f5ab5744ab067df626dd7d",
+      "sigma_sha256": "32a46beeeb7e07f13de3c4f3b4e2a0249aef985e658d7c7930699ec96af3ef7e",
+      "output_sha256": "29950ab84a711aa53c25b5afab0009c4fb24582efa6a7d999a090687c7fe5f52",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 3.466113567352295,
+        "output_sse": 8.587541580200195,
+        "baseline_opponent_sse": 3.7301759719848633,
+        "output_opponent_sse": 5.57166862487793,
+        "channel_bias_sum": [
+          3.549959421157837,
+          3.256293535232544,
+          1.822431206703186
+        ],
+        "reference_gradient_energy": 6.589306354522705,
+        "baseline_gradient_projection": 5.177331924438477,
+        "output_gradient_projection": 4.115440845489502,
+        "output_gradient_sse": 2.1989567279815674
+      },
+      "output_min": -0.06444878876209259,
+      "output_max": 0.979163408279419
+    },
+    {
+      "family": "edge",
+      "seed": 8603,
+      "pattern": [
+        2,
+        3,
+        1,
+        0
+      ],
+      "noise_index": 0,
+      "noise_seed": 97300,
+      "target_sha256": "ec2e65567568eb6e1bbcd202425cccc2824d55ab06b365fac7f30f5b71a8ad62",
+      "noisy_sha256": "bdb9206d26d42c1e8add41aea028a94500b649ffd88aff6cc7aef01d2889a47a",
+      "sigma_sha256": "de2f256064a0af797747c2b97505dc0b9f3df0de4f489eac731c23ae9ca9cc31",
+      "output_sha256": "fb430302e34c8c29de20c393f5e0e8a86c5fd93aa989ee3c429fa779056b87ac",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 1.4942834377288818,
+        "output_sse": 2.335909128189087,
+        "baseline_opponent_sse": 1.5429537296295166,
+        "output_opponent_sse": 1.6054372787475586,
+        "channel_bias_sum": [
+          1.560088872909546,
+          1.1394126415252686,
+          -0.9140657782554626
+        ],
+        "reference_gradient_energy": 3.7572882175445557,
+        "baseline_gradient_projection": 3.0527968406677246,
+        "output_gradient_projection": 2.803529739379883,
+        "output_gradient_sse": 0.6582187414169312
+      },
+      "output_min": -0.01846429705619812,
+      "output_max": 1.09153151512146
+    },
+    {
+      "family": "edge",
+      "seed": 8603,
+      "pattern": [
+        2,
+        3,
+        1,
+        0
+      ],
+      "noise_index": 1,
+      "noise_seed": 97301,
+      "target_sha256": "ec2e65567568eb6e1bbcd202425cccc2824d55ab06b365fac7f30f5b71a8ad62",
+      "noisy_sha256": "007caba5ebae8071899f25ffc2fd1236556782010b4631ddfeeda44c1429df52",
+      "sigma_sha256": "f0518496d5161cd92a78cc2c91caa8b126f78c31ca6b71d4b93e5508b9f01ce5",
+      "output_sha256": "ed6e50d410be1a6c38c19d0d8826053c6bddc3d9ed7bee7acf16ea65668f66be",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 1.7045999765396118,
+        "output_sse": 2.5099871158599854,
+        "baseline_opponent_sse": 1.9144279956817627,
+        "output_opponent_sse": 1.9453411102294922,
+        "channel_bias_sum": [
+          1.1331443786621094,
+          0.9142972230911255,
+          -0.7711774110794067
+        ],
+        "reference_gradient_energy": 3.7572882175445557,
+        "baseline_gradient_projection": 3.0693893432617188,
+        "output_gradient_projection": 2.821537733078003,
+        "output_gradient_sse": 0.7417742013931274
+      },
+      "output_min": -0.01618903875350952,
+      "output_max": 1.0928704738616943
+    },
+    {
+      "family": "edge",
+      "seed": 8603,
+      "pattern": [
+        2,
+        3,
+        1,
+        0
+      ],
+      "noise_index": 2,
+      "noise_seed": 97302,
+      "target_sha256": "ec2e65567568eb6e1bbcd202425cccc2824d55ab06b365fac7f30f5b71a8ad62",
+      "noisy_sha256": "a226e1c50c9d9d656f1f3a6c205f3905321758cee1823eb73ef93648f0ca3f4b",
+      "sigma_sha256": "bf4ca62f742802402c1b09b9588bd463f868fc3651843328ea547d80fc8effcf",
+      "output_sha256": "c8f15b71b71e40b5d902295fc45ecf08ed23f1ac7f3fd4c1c6f560351eb41c45",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 2.861435651779175,
+        "output_sse": 3.423415184020996,
+        "baseline_opponent_sse": 3.49365496635437,
+        "output_opponent_sse": 3.3859317302703857,
+        "channel_bias_sum": [
+          0.8429211378097534,
+          1.1696090698242188,
+          0.17505860328674316
+        ],
+        "reference_gradient_energy": 3.7572882175445557,
+        "baseline_gradient_projection": 3.020691394805908,
+        "output_gradient_projection": 2.7476696968078613,
+        "output_gradient_sse": 1.0973281860351562
+      },
+      "output_min": -0.04069297015666962,
+      "output_max": 1.1270345449447632
+    },
+    {
+      "family": "weak_achromatic_wave",
+      "seed": 8700,
+      "pattern": [
+        0,
+        1,
+        3,
+        2
+      ],
+      "noise_index": 0,
+      "noise_seed": 98000,
+      "target_sha256": "ff919ba6e8459b953570c8d431e366848d26e40732eead18482b226a354333b7",
+      "noisy_sha256": "80b7baa41292e2f3e93ae5cc80e5c25f8ab7ead114fe954a95cd67c980416b0a",
+      "sigma_sha256": "de2f256064a0af797747c2b97505dc0b9f3df0de4f489eac731c23ae9ca9cc31",
+      "output_sha256": "57636455975629321665fd550d714868d1a91b901a064f02ebbd2d1ea5f29c67",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.00011751528654713184,
+        "output_sse": 0.008491089567542076,
+        "baseline_opponent_sse": 7.834013376850635e-05,
+        "output_opponent_sse": 0.003574637696146965,
+        "channel_bias_sum": [
+          1.766113042831421,
+          0.3708299696445465,
+          -0.30925124883651733
+        ],
+        "reference_gradient_energy": 0.006820369977504015,
+        "baseline_gradient_projection": 0.006766713690012693,
+        "output_gradient_projection": 0.006340928375720978,
+        "output_gradient_sse": 3.840311546809971e-05
+      },
+      "output_min": -0.28708112239837646,
+      "output_max": 0.8873825073242188
+    },
+    {
+      "family": "weak_achromatic_wave",
+      "seed": 8700,
+      "pattern": [
+        0,
+        1,
+        3,
+        2
+      ],
+      "noise_index": 1,
+      "noise_seed": 98001,
+      "target_sha256": "ff919ba6e8459b953570c8d431e366848d26e40732eead18482b226a354333b7",
+      "noisy_sha256": "31f7988d30283a63b028c0d0a126d1e9e24012894b63f41f8881894add5298c3",
+      "sigma_sha256": "927a56f873c25739e224ac3b9d3a33cf3bec538555b7800c816b385d13ad8b82",
+      "output_sha256": "576bb5c044858b4f52833253503c1f510e237c89f31de5392efc2eb81c887bec",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.15169742703437805,
+        "output_sse": 0.13277599215507507,
+        "baseline_opponent_sse": 0.18524542450904846,
+        "output_opponent_sse": 0.18186302483081818,
+        "channel_bias_sum": [
+          1.8291120529174805,
+          -0.08015082776546478,
+          1.3843493461608887
+        ],
+        "reference_gradient_energy": 0.006820369977504015,
+        "baseline_gradient_projection": 0.006934552453458309,
+        "output_gradient_projection": 0.006434897892177105,
+        "output_gradient_sse": 0.025835778564214706
+      },
+      "output_min": -0.2877653241157532,
+      "output_max": 0.8889864683151245
+    },
+    {
+      "family": "weak_achromatic_wave",
+      "seed": 8700,
+      "pattern": [
+        0,
+        1,
+        3,
+        2
+      ],
+      "noise_index": 2,
+      "noise_seed": 98002,
+      "target_sha256": "ff919ba6e8459b953570c8d431e366848d26e40732eead18482b226a354333b7",
+      "noisy_sha256": "86cc6b2243aa22f7355966457995a181c32fd94540b3f4f7a1e15ebe2c5a7100",
+      "sigma_sha256": "30dceb9e6918e2fc2d2c72dd50dc26160e87181cc058872a3986db74fe8864a7",
+      "output_sha256": "1c1f7da64f18d2843eafa8927de230f8f00e7f0a080d87d512ee4c3eef4466f6",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 1.1047214269638062,
+        "output_sse": 0.9164605140686035,
+        "baseline_opponent_sse": 1.4196163415908813,
+        "output_opponent_sse": 1.3852647542953491,
+        "channel_bias_sum": [
+          0.6029347777366638,
+          -0.704113245010376,
+          1.8162673711776733
+        ],
+        "reference_gradient_energy": 0.006820369977504015,
+        "baseline_gradient_projection": 0.006101930979639292,
+        "output_gradient_projection": 0.005568644497543573,
+        "output_gradient_sse": 0.2761898338794708
+      },
+      "output_min": -0.2832667827606201,
+      "output_max": 0.9089155197143555
+    },
+    {
+      "family": "weak_achromatic_wave",
+      "seed": 8701,
+      "pattern": [
+        1,
+        0,
+        2,
+        3
+      ],
+      "noise_index": 0,
+      "noise_seed": 98100,
+      "target_sha256": "f535416acee81edfeed074be229d9b3c23b88390c484127bf5ffc4a5f39d8208",
+      "noisy_sha256": "9b9cdeb51be0ad707acf4496c261c7b29150408ec74d93d2a048c617f0756c5b",
+      "sigma_sha256": "de2f256064a0af797747c2b97505dc0b9f3df0de4f489eac731c23ae9ca9cc31",
+      "output_sha256": "11e040b049d7930fe9ecb4e8b3978697499d69058b1e0673478bc51f52e2d06a",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.00015370732580777258,
+        "output_sse": 0.008809485472738743,
+        "baseline_opponent_sse": 8.796720067039132e-05,
+        "output_opponent_sse": 0.0049046739004552364,
+        "channel_bias_sum": [
+          1.613956093788147,
+          0.12132757902145386,
+          -0.1306045651435852
+        ],
+        "reference_gradient_energy": 0.00788983516395092,
+        "baseline_gradient_projection": 0.007812386378645897,
+        "output_gradient_projection": 0.007344643585383892,
+        "output_gradient_sse": 4.3424530304037035e-05
+      },
+      "output_min": -0.12685668468475342,
+      "output_max": 1.152117133140564
+    },
+    {
+      "family": "weak_achromatic_wave",
+      "seed": 8701,
+      "pattern": [
+        1,
+        0,
+        2,
+        3
+      ],
+      "noise_index": 1,
+      "noise_seed": 98101,
+      "target_sha256": "f535416acee81edfeed074be229d9b3c23b88390c484127bf5ffc4a5f39d8208",
+      "noisy_sha256": "92edb3c8bfe0c47d020a7a97943d65ea71df8ba7f86f715d9490ccf0a186c481",
+      "sigma_sha256": "adb712e982f2bbce0d19c1bf919e10617fa4b17e4beecc104850b65bc60e5996",
+      "output_sha256": "4f45940be6fa300c273397dc54dd86853e16853b1a75836f1ba91ddd04aefa01",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.24113383889198303,
+        "output_sse": 0.21127067506313324,
+        "baseline_opponent_sse": 0.3129769563674927,
+        "output_opponent_sse": 0.33375826478004456,
+        "channel_bias_sum": [
+          1.526111364364624,
+          0.030273258686065674,
+          -1.061016321182251
+        ],
+        "reference_gradient_energy": 0.00788983516395092,
+        "baseline_gradient_projection": 0.006828854791820049,
+        "output_gradient_projection": 0.006454542279243469,
+        "output_gradient_sse": 0.05213858559727669
+      },
+      "output_min": -0.12749448418617249,
+      "output_max": 1.156804084777832
+    },
+    {
+      "family": "weak_achromatic_wave",
+      "seed": 8701,
+      "pattern": [
+        1,
+        0,
+        2,
+        3
+      ],
+      "noise_index": 2,
+      "noise_seed": 98102,
+      "target_sha256": "f535416acee81edfeed074be229d9b3c23b88390c484127bf5ffc4a5f39d8208",
+      "noisy_sha256": "c26eb1727076c0719d5b105b071b07dd7582552a5154cb6e170751de6ca327c8",
+      "sigma_sha256": "33b4372829ca7a6a96b3d9ca5a84c824cadcffde6d39558ee3af56c83423fabc",
+      "output_sha256": "a3d8a1883244cfc7c70a5e18f01c4dcc17eadce52560adaa141886e9ae64ab67",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 1.3713726997375488,
+        "output_sse": 1.1920872926712036,
+        "baseline_opponent_sse": 1.7393982410430908,
+        "output_opponent_sse": 1.8626083135604858,
+        "channel_bias_sum": [
+          3.303615093231201,
+          1.6961628198623657,
+          -0.7728403210639954
+        ],
+        "reference_gradient_energy": 0.00788983516395092,
+        "baseline_gradient_projection": 0.009158646687865257,
+        "output_gradient_projection": 0.008354850113391876,
+        "output_gradient_sse": 0.2821101248264313
+      },
+      "output_min": -0.10504207015037537,
+      "output_max": 1.1641292572021484
+    },
+    {
+      "family": "weak_achromatic_wave",
+      "seed": 8702,
+      "pattern": [
+        3,
+        2,
+        0,
+        1
+      ],
+      "noise_index": 0,
+      "noise_seed": 98200,
+      "target_sha256": "d28c40e50e7dee5950ce1216f8e9cf6d7f9943c13e0d8d296db6e1fd1cedaf4a",
+      "noisy_sha256": "a8cf8a42e96556098e582de8069729c0cc39344141f5a60f7f6e43f5d8c08363",
+      "sigma_sha256": "de2f256064a0af797747c2b97505dc0b9f3df0de4f489eac731c23ae9ca9cc31",
+      "output_sha256": "e1b455a598f67ca938578fe1cbb0388c1e30b49f59319dcdc3a9d106a4309068",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.0001675911044003442,
+        "output_sse": 0.008988234214484692,
+        "baseline_opponent_sse": 0.00010070260032080114,
+        "output_opponent_sse": 0.00454456964507699,
+        "channel_bias_sum": [
+          1.2583004236221313,
+          -0.016767486929893494,
+          -0.14488673210144043
+        ],
+        "reference_gradient_energy": 0.0076099056750535965,
+        "baseline_gradient_projection": 0.00753568671643734,
+        "output_gradient_projection": 0.007049670442938805,
+        "output_gradient_sse": 5.412031532614492e-05
+      },
+      "output_min": -0.0620124489068985,
+      "output_max": 0.5798484086990356
+    },
+    {
+      "family": "weak_achromatic_wave",
+      "seed": 8702,
+      "pattern": [
+        3,
+        2,
+        0,
+        1
+      ],
+      "noise_index": 1,
+      "noise_seed": 98201,
+      "target_sha256": "d28c40e50e7dee5950ce1216f8e9cf6d7f9943c13e0d8d296db6e1fd1cedaf4a",
+      "noisy_sha256": "166e0913b1933db7de3dcd459ae3c572343c6963fee8e89408060c6595585502",
+      "sigma_sha256": "74dc4fc5db85d6b7a77852b83f5856cf9ee91c13c9a6e9b4db37dd4b3adb90af",
+      "output_sha256": "c3bfbc797aeedfddf8f7c7961d92c40af79c1f808934574ddbf5325e2465bd66",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.13926322758197784,
+        "output_sse": 0.12624596059322357,
+        "baseline_opponent_sse": 0.18506163358688354,
+        "output_opponent_sse": 0.18658162653446198,
+        "channel_bias_sum": [
+          1.092128038406372,
+          -0.0973535031080246,
+          -0.09065832197666168
+        ],
+        "reference_gradient_energy": 0.0076099056750535965,
+        "baseline_gradient_projection": 0.00684838742017746,
+        "output_gradient_projection": 0.006424867082387209,
+        "output_gradient_sse": 0.031190400943160057
+      },
+      "output_min": -0.06549079716205597,
+      "output_max": 0.5895732045173645
+    },
+    {
+      "family": "weak_achromatic_wave",
+      "seed": 8702,
+      "pattern": [
+        3,
+        2,
+        0,
+        1
+      ],
+      "noise_index": 2,
+      "noise_seed": 98202,
+      "target_sha256": "d28c40e50e7dee5950ce1216f8e9cf6d7f9943c13e0d8d296db6e1fd1cedaf4a",
+      "noisy_sha256": "6287ede5f1ec8df7956b6f1d33b2f8356c6d704aad904a8c751cec9d05312166",
+      "sigma_sha256": "50f2b11fbc2f2ef79067842e7f66db44c58671b0bf94b8b6e491ee09143d04bb",
+      "output_sha256": "89c905508b8a90e45336f665fa831f2e340cd77f84cccd89c7f671031edde730",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 1.1492547988891602,
+        "output_sse": 0.9472967386245728,
+        "baseline_opponent_sse": 1.5230896472930908,
+        "output_opponent_sse": 1.5383172035217285,
+        "channel_bias_sum": [
+          -0.10723444819450378,
+          -0.42831382155418396,
+          -0.2997876703739166
+        ],
+        "reference_gradient_energy": 0.0076099056750535965,
+        "baseline_gradient_projection": 0.007597852032631636,
+        "output_gradient_projection": 0.006957619450986385,
+        "output_gradient_sse": 0.25808045268058777
+      },
+      "output_min": -0.034730032086372375,
+      "output_max": 0.6294229626655579
+    },
+    {
+      "family": "weak_achromatic_wave",
+      "seed": 8703,
+      "pattern": [
+        2,
+        3,
+        1,
+        0
+      ],
+      "noise_index": 0,
+      "noise_seed": 98300,
+      "target_sha256": "b93d228578541cd18fc995fd0abdcc36649f6ab21ca13908c7ad001af582ec88",
+      "noisy_sha256": "b4524de3ece397ffb26acd3b1f2ac51857a8f5c70fb5c04dd89a61b3981c82cb",
+      "sigma_sha256": "de2f256064a0af797747c2b97505dc0b9f3df0de4f489eac731c23ae9ca9cc31",
+      "output_sha256": "d5e70d022116a2a99542e41d0183d0ee5c55637291ab1925e63d690e4f57e486",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 4.7805799113120884e-05,
+        "output_sse": 0.002640622202306986,
+        "baseline_opponent_sse": 2.7401201805332676e-05,
+        "output_opponent_sse": 0.0016953375888988376,
+        "channel_bias_sum": [
+          1.048818588256836,
+          0.027007997035980225,
+          -0.07570403069257736
+        ],
+        "reference_gradient_energy": 0.004381134174764156,
+        "baseline_gradient_projection": 0.004357264842838049,
+        "output_gradient_projection": 0.004258739296346903,
+        "output_gradient_sse": 3.548648237483576e-06
+      },
+      "output_min": -0.16907945275306702,
+      "output_max": 0.7888073921203613
+    },
+    {
+      "family": "weak_achromatic_wave",
+      "seed": 8703,
+      "pattern": [
+        2,
+        3,
+        1,
+        0
+      ],
+      "noise_index": 1,
+      "noise_seed": 98301,
+      "target_sha256": "b93d228578541cd18fc995fd0abdcc36649f6ab21ca13908c7ad001af582ec88",
+      "noisy_sha256": "6981c84e5ae7920551ae16fb77ae44c5b2f6fc3a991bc8eead8c42e21608bef4",
+      "sigma_sha256": "fcb52f31013bc5364bd862066900a1bf70a7a00a5914419a53572b8a0bfe6667",
+      "output_sha256": "402b62cadb6fad605417352af668f29f53624013ba87897c8fe6177abd67a3da",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.16463713347911835,
+        "output_sse": 0.13355103135108948,
+        "baseline_opponent_sse": 0.23289309442043304,
+        "output_opponent_sse": 0.2236669957637787,
+        "channel_bias_sum": [
+          2.1494202613830566,
+          -0.5612690448760986,
+          0.32811951637268066
+        ],
+        "reference_gradient_energy": 0.004381134174764156,
+        "baseline_gradient_projection": 0.00446498254314065,
+        "output_gradient_projection": 0.00433768006041646,
+        "output_gradient_sse": 0.049114882946014404
+      },
+      "output_min": -0.17950040102005005,
+      "output_max": 0.7792009711265564
+    },
+    {
+      "family": "weak_achromatic_wave",
+      "seed": 8703,
+      "pattern": [
+        2,
+        3,
+        1,
+        0
+      ],
+      "noise_index": 2,
+      "noise_seed": 98302,
+      "target_sha256": "b93d228578541cd18fc995fd0abdcc36649f6ab21ca13908c7ad001af582ec88",
+      "noisy_sha256": "1c4a8fdd6365af39790a9ff7cad55d2ac11b4adbd8b5a4ce307b86d44f617b3b",
+      "sigma_sha256": "b855a2cccc25144cf718c54f02fa743ce7d0c1e7dddcb6e4bd7f64fb3dcfb18a",
+      "output_sha256": "a519026cefd535cab028eb375ac99f003838b7739f65c580808d4c76926de63b",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 1.2686830759048462,
+        "output_sse": 0.9787222743034363,
+        "baseline_opponent_sse": 1.708727478981018,
+        "output_opponent_sse": 1.6130599975585938,
+        "channel_bias_sum": [
+          2.97560977935791,
+          1.754178762435913,
+          1.4927688837051392
+        ],
+        "reference_gradient_energy": 0.004381134174764156,
+        "baseline_gradient_projection": 0.004282328765839338,
+        "output_gradient_projection": 0.004378253594040871,
+        "output_gradient_sse": 0.35252636671066284
+      },
+      "output_min": -0.153384268283844,
+      "output_max": 0.8032091856002808
+    },
+    {
+      "family": "chromatic_wave",
+      "seed": 8800,
+      "pattern": [
+        0,
+        1,
+        3,
+        2
+      ],
+      "noise_index": 0,
+      "noise_seed": 99000,
+      "target_sha256": "7d8048ccaabcad1c5d268db5fa712e62953cbc12b65c33381b16a434ab8631d9",
+      "noisy_sha256": "35a8ae5333491eb121647540443ed2698d7d917c0b5f7b67a0b622b57addb58f",
+      "sigma_sha256": "de2f256064a0af797747c2b97505dc0b9f3df0de4f489eac731c23ae9ca9cc31",
+      "output_sha256": "2452f5d7e4698797e5b9d9fd96909878d47a2a53a035a728b3fb653fb64f34cc",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.013634228147566319,
+        "output_sse": 0.06102079525589943,
+        "baseline_opponent_sse": 0.01802862249314785,
+        "output_opponent_sse": 0.04873459413647652,
+        "channel_bias_sum": [
+          2.0237717628479004,
+          0.5796673893928528,
+          0.7104393839836121
+        ],
+        "reference_gradient_energy": 0.5501197576522827,
+        "baseline_gradient_projection": 0.5445470213890076,
+        "output_gradient_projection": 0.5557668209075928,
+        "output_gradient_sse": 0.00018432483193464577
+      },
+      "output_min": -0.16592396795749664,
+      "output_max": 1.1378889083862305
+    },
+    {
+      "family": "chromatic_wave",
+      "seed": 8800,
+      "pattern": [
+        0,
+        1,
+        3,
+        2
+      ],
+      "noise_index": 1,
+      "noise_seed": 99001,
+      "target_sha256": "7d8048ccaabcad1c5d268db5fa712e62953cbc12b65c33381b16a434ab8631d9",
+      "noisy_sha256": "338a6284723f24db30998461997bef9c8a0c04100ff421b6653112116cdfe6a7",
+      "sigma_sha256": "02ed6ca33ebc8a56556ec85bbdafe607c4298b7d2653895b0138340ccaebfaf4",
+      "output_sha256": "de9c410b16af31c65de05fa8e8a7c405c365e310d30311f22f86340578a80df4",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.20109623670578003,
+        "output_sse": 0.22626163065433502,
+        "baseline_opponent_sse": 0.272908478975296,
+        "output_opponent_sse": 0.30099251866340637,
+        "channel_bias_sum": [
+          3.0520081520080566,
+          0.984245777130127,
+          0.5055014491081238
+        ],
+        "reference_gradient_energy": 0.5501197576522827,
+        "baseline_gradient_projection": 0.544150173664093,
+        "output_gradient_projection": 0.5552867650985718,
+        "output_gradient_sse": 0.0437345877289772
+      },
+      "output_min": -0.1641942709684372,
+      "output_max": 1.1656379699707031
+    },
+    {
+      "family": "chromatic_wave",
+      "seed": 8800,
+      "pattern": [
+        0,
+        1,
+        3,
+        2
+      ],
+      "noise_index": 2,
+      "noise_seed": 99002,
+      "target_sha256": "7d8048ccaabcad1c5d268db5fa712e62953cbc12b65c33381b16a434ab8631d9",
+      "noisy_sha256": "b1f3399e735db01253128852b97a8c7e7299f8ca091310cd85522f0a989bd9ad",
+      "sigma_sha256": "674b5310eff184b3ba0ce5af03a42584e00c3e435b2c7c3331dcab9bb71c69ee",
+      "output_sha256": "445d907383229798f10b696c4f9dc6e29ecc77df78be0042271018f8dbba0fb1",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 1.2146120071411133,
+        "output_sse": 1.0442912578582764,
+        "baseline_opponent_sse": 1.6114059686660767,
+        "output_opponent_sse": 1.616873860359192,
+        "channel_bias_sum": [
+          -0.0676003098487854,
+          0.2296861708164215,
+          -1.9993000030517578
+        ],
+        "reference_gradient_energy": 0.5501197576522827,
+        "baseline_gradient_projection": 0.5423315763473511,
+        "output_gradient_projection": 0.5529682636260986,
+        "output_gradient_sse": 0.30174317955970764
+      },
+      "output_min": -0.17586098611354828,
+      "output_max": 1.2079890966415405
+    },
+    {
+      "family": "chromatic_wave",
+      "seed": 8801,
+      "pattern": [
+        1,
+        0,
+        2,
+        3
+      ],
+      "noise_index": 0,
+      "noise_seed": 99100,
+      "target_sha256": "e2142a1130ef9ac3ecbf298e497f293baba725993c76f696bec37d0dd0ae6f2d",
+      "noisy_sha256": "2b7728ae19146fe0884fea921563cab555d251cf754ad315e7da9929f9b99391",
+      "sigma_sha256": "de2f256064a0af797747c2b97505dc0b9f3df0de4f489eac731c23ae9ca9cc31",
+      "output_sha256": "0fc1f31ce58a992b69f4b550355f586cb512bf515e8ff5bf7cca43261aff37a7",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.00823034904897213,
+        "output_sse": 0.014223752543330193,
+        "baseline_opponent_sse": 0.011717273853719234,
+        "output_opponent_sse": 0.015385682694613934,
+        "channel_bias_sum": [
+          1.693395972251892,
+          0.04270169138908386,
+          -0.18200677633285522
+        ],
+        "reference_gradient_energy": 0.4534892141819,
+        "baseline_gradient_projection": 0.44946521520614624,
+        "output_gradient_projection": 0.44583314657211304,
+        "output_gradient_sse": 0.0001613220665603876
+      },
+      "output_min": -0.35128098726272583,
+      "output_max": 0.9890209436416626
+    },
+    {
+      "family": "chromatic_wave",
+      "seed": 8801,
+      "pattern": [
+        1,
+        0,
+        2,
+        3
+      ],
+      "noise_index": 1,
+      "noise_seed": 99101,
+      "target_sha256": "e2142a1130ef9ac3ecbf298e497f293baba725993c76f696bec37d0dd0ae6f2d",
+      "noisy_sha256": "e1a8162761dd3d82de7e65d434790e55408cf07d544e3f5e9b79431889948a95",
+      "sigma_sha256": "07712d535b7c6303a0b9f5c67256102fde1d35d911410824a17ea3a014dcfde6",
+      "output_sha256": "dd6f39d1b933905c339910aa3bad30f9ea90583c9a5aff60dbfa7bc240257fa5",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.18263909220695496,
+        "output_sse": 0.17183588445186615,
+        "baseline_opponent_sse": 0.27774035930633545,
+        "output_opponent_sse": 0.3083643913269043,
+        "channel_bias_sum": [
+          2.446432113647461,
+          0.3627581298351288,
+          0.47873812913894653
+        ],
+        "reference_gradient_energy": 0.4534892141819,
+        "baseline_gradient_projection": 0.452644407749176,
+        "output_gradient_projection": 0.4486596882343292,
+        "output_gradient_sse": 0.06348849087953568
+      },
+      "output_min": -0.34810543060302734,
+      "output_max": 1.0046608448028564
+    },
+    {
+      "family": "chromatic_wave",
+      "seed": 8801,
+      "pattern": [
+        1,
+        0,
+        2,
+        3
+      ],
+      "noise_index": 2,
+      "noise_seed": 99102,
+      "target_sha256": "e2142a1130ef9ac3ecbf298e497f293baba725993c76f696bec37d0dd0ae6f2d",
+      "noisy_sha256": "61b99a9ee3b3f17421d9220cf8e19785f8ee71c9b3b0f1e77ddea45ea2fb5b26",
+      "sigma_sha256": "92ce268647326c3e2977d8d6ea728fb6645e65ec70a2de10d721f2969a4125c9",
+      "output_sha256": "4d10479ac9ccd00c771e62ea7a4a7d0e8893e8de34c61803751f367200af97a4",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 1.1841429471969604,
+        "output_sse": 1.0311813354492188,
+        "baseline_opponent_sse": 1.6662092208862305,
+        "output_opponent_sse": 1.8279709815979004,
+        "channel_bias_sum": [
+          0.9440001249313354,
+          0.843216061592102,
+          -0.32259082794189453
+        ],
+        "reference_gradient_energy": 0.4534892141819,
+        "baseline_gradient_projection": 0.44940614700317383,
+        "output_gradient_projection": 0.4446601867675781,
+        "output_gradient_sse": 0.4080299139022827
+      },
+      "output_min": -0.36719614267349243,
+      "output_max": 1.0073943138122559
+    },
+    {
+      "family": "chromatic_wave",
+      "seed": 8802,
+      "pattern": [
+        3,
+        2,
+        0,
+        1
+      ],
+      "noise_index": 0,
+      "noise_seed": 99200,
+      "target_sha256": "882779f5745312121c8cb90b5918ec0183406eb16c16684589826bc372e15f66",
+      "noisy_sha256": "06ce0131db3a19a3f62217e56d4fe4a00906492669f842334cd3f264f2e6a4bc",
+      "sigma_sha256": "de2f256064a0af797747c2b97505dc0b9f3df0de4f489eac731c23ae9ca9cc31",
+      "output_sha256": "eac21c6a9a0402ff671829ee0045fea154fcd82708b99314b810a5acf1af5922",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.007104750722646713,
+        "output_sse": 0.017796872183680534,
+        "baseline_opponent_sse": 0.0096700144931674,
+        "output_opponent_sse": 0.011732563376426697,
+        "channel_bias_sum": [
+          0.5397462844848633,
+          -0.227253258228302,
+          -0.2350882887840271
+        ],
+        "reference_gradient_energy": 0.3893531858921051,
+        "baseline_gradient_projection": 0.3863880932331085,
+        "output_gradient_projection": 0.3917081654071808,
+        "output_gradient_sse": 4.879761399934068e-05
+      },
+      "output_min": 0.03077360987663269,
+      "output_max": 0.9166423082351685
+    },
+    {
+      "family": "chromatic_wave",
+      "seed": 8802,
+      "pattern": [
+        3,
+        2,
+        0,
+        1
+      ],
+      "noise_index": 1,
+      "noise_seed": 99201,
+      "target_sha256": "882779f5745312121c8cb90b5918ec0183406eb16c16684589826bc372e15f66",
+      "noisy_sha256": "543cce1622634388a8022a8f0dd5deb63126e8fc5fc3cf35ad98608a02c64335",
+      "sigma_sha256": "b8864745e3df2f6155800803934c820a5fd554121177c1488888168e3e779485",
+      "output_sha256": "4010d170f961d029943e74f8225f3d3995290aab7dd28b4c8a2cb1c120917a66",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.2475423961877823,
+        "output_sse": 0.22853323817253113,
+        "baseline_opponent_sse": 0.37141960859298706,
+        "output_opponent_sse": 0.3913198411464691,
+        "channel_bias_sum": [
+          1.6678670644760132,
+          -0.9780046343803406,
+          -0.11197352409362793
+        ],
+        "reference_gradient_energy": 0.3893531858921051,
+        "baseline_gradient_projection": 0.3864348232746124,
+        "output_gradient_projection": 0.39179524779319763,
+        "output_gradient_sse": 0.08043719828128815
+      },
+      "output_min": 0.026870444416999817,
+      "output_max": 0.9254770874977112
+    },
+    {
+      "family": "chromatic_wave",
+      "seed": 8802,
+      "pattern": [
+        3,
+        2,
+        0,
+        1
+      ],
+      "noise_index": 2,
+      "noise_seed": 99202,
+      "target_sha256": "882779f5745312121c8cb90b5918ec0183406eb16c16684589826bc372e15f66",
+      "noisy_sha256": "d7945231454baeb332467ef649172d4e457719d33421ebb705efd4045e789c4e",
+      "sigma_sha256": "2b2aa22bd549302f4c4cc5827ad21019885a956f39001ed94e37f3c901225af5",
+      "output_sha256": "8be56e9faea7d2dd98b988ac696549ba8ff3a1ff044a738141710c95d06705f9",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 1.5270791053771973,
+        "output_sse": 1.319409728050232,
+        "baseline_opponent_sse": 2.0489208698272705,
+        "output_opponent_sse": 2.149470567703247,
+        "channel_bias_sum": [
+          2.0307869911193848,
+          0.8174329996109009,
+          -1.044420599937439
+        ],
+        "reference_gradient_energy": 0.3893531858921051,
+        "baseline_gradient_projection": 0.3838851749897003,
+        "output_gradient_projection": 0.39085179567337036,
+        "output_gradient_sse": 0.4643619954586029
+      },
+      "output_min": 0.05531206727027893,
+      "output_max": 0.975065290927887
+    },
+    {
+      "family": "chromatic_wave",
+      "seed": 8803,
+      "pattern": [
+        2,
+        3,
+        1,
+        0
+      ],
+      "noise_index": 0,
+      "noise_seed": 99300,
+      "target_sha256": "a03ffb8ea04f3cbd1b249780e17abeab33f6d6046e77687f500eaf60f1aa3aa5",
+      "noisy_sha256": "30a62ea814677ba25383240f959e3c42d398ba645680ee0c7a8e8866db8d5441",
+      "sigma_sha256": "de2f256064a0af797747c2b97505dc0b9f3df0de4f489eac731c23ae9ca9cc31",
+      "output_sha256": "57f6588995be9a16a71a5651264dc35799a814a8bdf6107c9da68da26bba22ad",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.013184307143092155,
+        "output_sse": 0.02446136623620987,
+        "baseline_opponent_sse": 0.017970850691199303,
+        "output_opponent_sse": 0.01978093944489956,
+        "channel_bias_sum": [
+          1.1383774280548096,
+          -0.4939667582511902,
+          -0.5023649334907532
+        ],
+        "reference_gradient_energy": 0.5081059336662292,
+        "baseline_gradient_projection": 0.5028700828552246,
+        "output_gradient_projection": 0.49572399258613586,
+        "output_gradient_sse": 0.00043690198799595237
+      },
+      "output_min": -0.031245365738868713,
+      "output_max": 0.9504747986793518
+    },
+    {
+      "family": "chromatic_wave",
+      "seed": 8803,
+      "pattern": [
+        2,
+        3,
+        1,
+        0
+      ],
+      "noise_index": 1,
+      "noise_seed": 99301,
+      "target_sha256": "a03ffb8ea04f3cbd1b249780e17abeab33f6d6046e77687f500eaf60f1aa3aa5",
+      "noisy_sha256": "312aa3788f9e32737b2d917256303ace207523ac80b240cb6e3d47aeb23fe847",
+      "sigma_sha256": "706876b3f5851eb06d18c3cbb08becaf6b2c2cb88b02dc44fa88a4f5186c10e7",
+      "output_sha256": "c477917ce410564c9e345cda85bcbcde30fd82290d95f76ca99eb8badb52f94a",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 0.2211586833000183,
+        "output_sse": 0.20092549920082092,
+        "baseline_opponent_sse": 0.33007997274398804,
+        "output_opponent_sse": 0.3210025429725647,
+        "channel_bias_sum": [
+          1.2845776081085205,
+          -1.4036768674850464,
+          0.30663812160491943
+        ],
+        "reference_gradient_energy": 0.5081059336662292,
+        "baseline_gradient_projection": 0.504523515701294,
+        "output_gradient_projection": 0.49732667207717896,
+        "output_gradient_sse": 0.07098154723644257
+      },
+      "output_min": -0.02333313226699829,
+      "output_max": 0.9580949544906616
+    },
+    {
+      "family": "chromatic_wave",
+      "seed": 8803,
+      "pattern": [
+        2,
+        3,
+        1,
+        0
+      ],
+      "noise_index": 2,
+      "noise_seed": 99302,
+      "target_sha256": "a03ffb8ea04f3cbd1b249780e17abeab33f6d6046e77687f500eaf60f1aa3aa5",
+      "noisy_sha256": "53dfefd5d515baa2e4c80d2ae5a44f25a7d4e73bc28abd635ffcbad0c5bcc168",
+      "sigma_sha256": "e9f9326ef507babf08c3dcb2e9afbc7c7a12516aea0da9b2eeac0f1a0de133fb",
+      "output_sha256": "07ad9c9d9445d06c2dc12183152fae68056e6f102db2137bfeddd7283b91f9b6",
+      "metrics": {
+        "pixels": 1024,
+        "baseline_sse": 1.459657907485962,
+        "output_sse": 1.1853493452072144,
+        "baseline_opponent_sse": 2.1790573596954346,
+        "output_opponent_sse": 2.0767221450805664,
+        "channel_bias_sum": [
+          -0.7727304697036743,
+          -0.7011803388595581,
+          -2.9033362865448
+        ],
+        "reference_gradient_energy": 0.5081059336662292,
+        "baseline_gradient_projection": 0.49111905694007874,
+        "output_gradient_projection": 0.485390841960907,
+        "output_gradient_sse": 0.477748304605484
+      },
+      "output_min": -0.04268300533294678,
+      "output_max": 0.9893078804016113
+    }
+  ],
+  "training_freeze": {
+    "schema_version": 1,
+    "data_version": 1,
+    "campaign_id": "neural-synthetic-joint-v001-20261102T114401Z",
+    "measured_at_utc": "2026-11-02T11:44:01.240213+00:00",
+    "git_sha": "6a4d6e9c74660657fe5887cea22a4c0597365691",
+    "config": {
+      "seed": 71,
+      "width": 8,
+      "batch": 4,
+      "steps": 2048,
+      "learning_rate": 0.001,
+      "scale": 2.0,
+      "side": 128,
+      "loss_border": 48
+    },
+    "train_cases": [
+      {
+        "family": "constant",
+        "seed": 7300,
+        "pattern": [
+          0,
+          1,
+          3,
+          2
+        ]
+      },
+      {
+        "family": "constant",
+        "seed": 7301,
+        "pattern": [
+          1,
+          0,
+          2,
+          3
+        ]
+      },
+      {
+        "family": "constant",
+        "seed": 7302,
+        "pattern": [
+          3,
+          2,
+          0,
+          1
+        ]
+      },
+      {
+        "family": "constant",
+        "seed": 7303,
+        "pattern": [
+          2,
+          3,
+          1,
+          0
+        ]
+      },
+      {
+        "family": "constant",
+        "seed": 7304,
+        "pattern": [
+          0,
+          1,
+          3,
+          2
+        ]
+      },
+      {
+        "family": "constant",
+        "seed": 7305,
+        "pattern": [
+          1,
+          0,
+          2,
+          3
+        ]
+      },
+      {
+        "family": "constant",
+        "seed": 7306,
+        "pattern": [
+          3,
+          2,
+          0,
+          1
+        ]
+      },
+      {
+        "family": "constant",
+        "seed": 7307,
+        "pattern": [
+          2,
+          3,
+          1,
+          0
+        ]
+      },
+      {
+        "family": "ramp",
+        "seed": 7400,
+        "pattern": [
+          0,
+          1,
+          3,
+          2
+        ]
+      },
+      {
+        "family": "ramp",
+        "seed": 7401,
+        "pattern": [
+          1,
+          0,
+          2,
+          3
+        ]
+      },
+      {
+        "family": "ramp",
+        "seed": 7402,
+        "pattern": [
+          3,
+          2,
+          0,
+          1
+        ]
+      },
+      {
+        "family": "ramp",
+        "seed": 7403,
+        "pattern": [
+          2,
+          3,
+          1,
+          0
+        ]
+      },
+      {
+        "family": "ramp",
+        "seed": 7404,
+        "pattern": [
+          0,
+          1,
+          3,
+          2
+        ]
+      },
+      {
+        "family": "ramp",
+        "seed": 7405,
+        "pattern": [
+          1,
+          0,
+          2,
+          3
+        ]
+      },
+      {
+        "family": "ramp",
+        "seed": 7406,
+        "pattern": [
+          3,
+          2,
+          0,
+          1
+        ]
+      },
+      {
+        "family": "ramp",
+        "seed": 7407,
+        "pattern": [
+          2,
+          3,
+          1,
+          0
+        ]
+      },
+      {
+        "family": "edge",
+        "seed": 7500,
+        "pattern": [
+          0,
+          1,
+          3,
+          2
+        ]
+      },
+      {
+        "family": "edge",
+        "seed": 7501,
+        "pattern": [
+          1,
+          0,
+          2,
+          3
+        ]
+      },
+      {
+        "family": "edge",
+        "seed": 7502,
+        "pattern": [
+          3,
+          2,
+          0,
+          1
+        ]
+      },
+      {
+        "family": "edge",
+        "seed": 7503,
+        "pattern": [
+          2,
+          3,
+          1,
+          0
+        ]
+      },
+      {
+        "family": "edge",
+        "seed": 7504,
+        "pattern": [
+          0,
+          1,
+          3,
+          2
+        ]
+      },
+      {
+        "family": "edge",
+        "seed": 7505,
+        "pattern": [
+          1,
+          0,
+          2,
+          3
+        ]
+      },
+      {
+        "family": "edge",
+        "seed": 7506,
+        "pattern": [
+          3,
+          2,
+          0,
+          1
+        ]
+      },
+      {
+        "family": "edge",
+        "seed": 7507,
+        "pattern": [
+          2,
+          3,
+          1,
+          0
+        ]
+      },
+      {
+        "family": "weak_achromatic_wave",
+        "seed": 7600,
+        "pattern": [
+          0,
+          1,
+          3,
+          2
+        ]
+      },
+      {
+        "family": "weak_achromatic_wave",
+        "seed": 7601,
+        "pattern": [
+          1,
+          0,
+          2,
+          3
+        ]
+      },
+      {
+        "family": "weak_achromatic_wave",
+        "seed": 7602,
+        "pattern": [
+          3,
+          2,
+          0,
+          1
+        ]
+      },
+      {
+        "family": "weak_achromatic_wave",
+        "seed": 7603,
+        "pattern": [
+          2,
+          3,
+          1,
+          0
+        ]
+      },
+      {
+        "family": "weak_achromatic_wave",
+        "seed": 7604,
+        "pattern": [
+          0,
+          1,
+          3,
+          2
+        ]
+      },
+      {
+        "family": "weak_achromatic_wave",
+        "seed": 7605,
+        "pattern": [
+          1,
+          0,
+          2,
+          3
+        ]
+      },
+      {
+        "family": "weak_achromatic_wave",
+        "seed": 7606,
+        "pattern": [
+          3,
+          2,
+          0,
+          1
+        ]
+      },
+      {
+        "family": "weak_achromatic_wave",
+        "seed": 7607,
+        "pattern": [
+          2,
+          3,
+          1,
+          0
+        ]
+      },
+      {
+        "family": "chromatic_wave",
+        "seed": 7700,
+        "pattern": [
+          0,
+          1,
+          3,
+          2
+        ]
+      },
+      {
+        "family": "chromatic_wave",
+        "seed": 7701,
+        "pattern": [
+          1,
+          0,
+          2,
+          3
+        ]
+      },
+      {
+        "family": "chromatic_wave",
+        "seed": 7702,
+        "pattern": [
+          3,
+          2,
+          0,
+          1
+        ]
+      },
+      {
+        "family": "chromatic_wave",
+        "seed": 7703,
+        "pattern": [
+          2,
+          3,
+          1,
+          0
+        ]
+      },
+      {
+        "family": "chromatic_wave",
+        "seed": 7704,
+        "pattern": [
+          0,
+          1,
+          3,
+          2
+        ]
+      },
+      {
+        "family": "chromatic_wave",
+        "seed": 7705,
+        "pattern": [
+          1,
+          0,
+          2,
+          3
+        ]
+      },
+      {
+        "family": "chromatic_wave",
+        "seed": 7706,
+        "pattern": [
+          3,
+          2,
+          0,
+          1
+        ]
+      },
+      {
+        "family": "chromatic_wave",
+        "seed": 7707,
+        "pattern": [
+          2,
+          3,
+          1,
+          0
+        ]
+      }
+    ],
+    "evaluation_cases": [
+      {
+        "family": "constant",
+        "seed": 8400,
+        "pattern": [
+          0,
+          1,
+          3,
+          2
+        ],
+        "noise_index": 0,
+        "noise_seed": 95000
+      },
+      {
+        "family": "constant",
+        "seed": 8400,
+        "pattern": [
+          0,
+          1,
+          3,
+          2
+        ],
+        "noise_index": 1,
+        "noise_seed": 95001
+      },
+      {
+        "family": "constant",
+        "seed": 8400,
+        "pattern": [
+          0,
+          1,
+          3,
+          2
+        ],
+        "noise_index": 2,
+        "noise_seed": 95002
+      },
+      {
+        "family": "constant",
+        "seed": 8401,
+        "pattern": [
+          1,
+          0,
+          2,
+          3
+        ],
+        "noise_index": 0,
+        "noise_seed": 95100
+      },
+      {
+        "family": "constant",
+        "seed": 8401,
+        "pattern": [
+          1,
+          0,
+          2,
+          3
+        ],
+        "noise_index": 1,
+        "noise_seed": 95101
+      },
+      {
+        "family": "constant",
+        "seed": 8401,
+        "pattern": [
+          1,
+          0,
+          2,
+          3
+        ],
+        "noise_index": 2,
+        "noise_seed": 95102
+      },
+      {
+        "family": "constant",
+        "seed": 8402,
+        "pattern": [
+          3,
+          2,
+          0,
+          1
+        ],
+        "noise_index": 0,
+        "noise_seed": 95200
+      },
+      {
+        "family": "constant",
+        "seed": 8402,
+        "pattern": [
+          3,
+          2,
+          0,
+          1
+        ],
+        "noise_index": 1,
+        "noise_seed": 95201
+      },
+      {
+        "family": "constant",
+        "seed": 8402,
+        "pattern": [
+          3,
+          2,
+          0,
+          1
+        ],
+        "noise_index": 2,
+        "noise_seed": 95202
+      },
+      {
+        "family": "constant",
+        "seed": 8403,
+        "pattern": [
+          2,
+          3,
+          1,
+          0
+        ],
+        "noise_index": 0,
+        "noise_seed": 95300
+      },
+      {
+        "family": "constant",
+        "seed": 8403,
+        "pattern": [
+          2,
+          3,
+          1,
+          0
+        ],
+        "noise_index": 1,
+        "noise_seed": 95301
+      },
+      {
+        "family": "constant",
+        "seed": 8403,
+        "pattern": [
+          2,
+          3,
+          1,
+          0
+        ],
+        "noise_index": 2,
+        "noise_seed": 95302
+      },
+      {
+        "family": "ramp",
+        "seed": 8500,
+        "pattern": [
+          0,
+          1,
+          3,
+          2
+        ],
+        "noise_index": 0,
+        "noise_seed": 96000
+      },
+      {
+        "family": "ramp",
+        "seed": 8500,
+        "pattern": [
+          0,
+          1,
+          3,
+          2
+        ],
+        "noise_index": 1,
+        "noise_seed": 96001
+      },
+      {
+        "family": "ramp",
+        "seed": 8500,
+        "pattern": [
+          0,
+          1,
+          3,
+          2
+        ],
+        "noise_index": 2,
+        "noise_seed": 96002
+      },
+      {
+        "family": "ramp",
+        "seed": 8501,
+        "pattern": [
+          1,
+          0,
+          2,
+          3
+        ],
+        "noise_index": 0,
+        "noise_seed": 96100
+      },
+      {
+        "family": "ramp",
+        "seed": 8501,
+        "pattern": [
+          1,
+          0,
+          2,
+          3
+        ],
+        "noise_index": 1,
+        "noise_seed": 96101
+      },
+      {
+        "family": "ramp",
+        "seed": 8501,
+        "pattern": [
+          1,
+          0,
+          2,
+          3
+        ],
+        "noise_index": 2,
+        "noise_seed": 96102
+      },
+      {
+        "family": "ramp",
+        "seed": 8502,
+        "pattern": [
+          3,
+          2,
+          0,
+          1
+        ],
+        "noise_index": 0,
+        "noise_seed": 96200
+      },
+      {
+        "family": "ramp",
+        "seed": 8502,
+        "pattern": [
+          3,
+          2,
+          0,
+          1
+        ],
+        "noise_index": 1,
+        "noise_seed": 96201
+      },
+      {
+        "family": "ramp",
+        "seed": 8502,
+        "pattern": [
+          3,
+          2,
+          0,
+          1
+        ],
+        "noise_index": 2,
+        "noise_seed": 96202
+      },
+      {
+        "family": "ramp",
+        "seed": 8503,
+        "pattern": [
+          2,
+          3,
+          1,
+          0
+        ],
+        "noise_index": 0,
+        "noise_seed": 96300
+      },
+      {
+        "family": "ramp",
+        "seed": 8503,
+        "pattern": [
+          2,
+          3,
+          1,
+          0
+        ],
+        "noise_index": 1,
+        "noise_seed": 96301
+      },
+      {
+        "family": "ramp",
+        "seed": 8503,
+        "pattern": [
+          2,
+          3,
+          1,
+          0
+        ],
+        "noise_index": 2,
+        "noise_seed": 96302
+      },
+      {
+        "family": "edge",
+        "seed": 8600,
+        "pattern": [
+          0,
+          1,
+          3,
+          2
+        ],
+        "noise_index": 0,
+        "noise_seed": 97000
+      },
+      {
+        "family": "edge",
+        "seed": 8600,
+        "pattern": [
+          0,
+          1,
+          3,
+          2
+        ],
+        "noise_index": 1,
+        "noise_seed": 97001
+      },
+      {
+        "family": "edge",
+        "seed": 8600,
+        "pattern": [
+          0,
+          1,
+          3,
+          2
+        ],
+        "noise_index": 2,
+        "noise_seed": 97002
+      },
+      {
+        "family": "edge",
+        "seed": 8601,
+        "pattern": [
+          1,
+          0,
+          2,
+          3
+        ],
+        "noise_index": 0,
+        "noise_seed": 97100
+      },
+      {
+        "family": "edge",
+        "seed": 8601,
+        "pattern": [
+          1,
+          0,
+          2,
+          3
+        ],
+        "noise_index": 1,
+        "noise_seed": 97101
+      },
+      {
+        "family": "edge",
+        "seed": 8601,
+        "pattern": [
+          1,
+          0,
+          2,
+          3
+        ],
+        "noise_index": 2,
+        "noise_seed": 97102
+      },
+      {
+        "family": "edge",
+        "seed": 8602,
+        "pattern": [
+          3,
+          2,
+          0,
+          1
+        ],
+        "noise_index": 0,
+        "noise_seed": 97200
+      },
+      {
+        "family": "edge",
+        "seed": 8602,
+        "pattern": [
+          3,
+          2,
+          0,
+          1
+        ],
+        "noise_index": 1,
+        "noise_seed": 97201
+      },
+      {
+        "family": "edge",
+        "seed": 8602,
+        "pattern": [
+          3,
+          2,
+          0,
+          1
+        ],
+        "noise_index": 2,
+        "noise_seed": 97202
+      },
+      {
+        "family": "edge",
+        "seed": 8603,
+        "pattern": [
+          2,
+          3,
+          1,
+          0
+        ],
+        "noise_index": 0,
+        "noise_seed": 97300
+      },
+      {
+        "family": "edge",
+        "seed": 8603,
+        "pattern": [
+          2,
+          3,
+          1,
+          0
+        ],
+        "noise_index": 1,
+        "noise_seed": 97301
+      },
+      {
+        "family": "edge",
+        "seed": 8603,
+        "pattern": [
+          2,
+          3,
+          1,
+          0
+        ],
+        "noise_index": 2,
+        "noise_seed": 97302
+      },
+      {
+        "family": "weak_achromatic_wave",
+        "seed": 8700,
+        "pattern": [
+          0,
+          1,
+          3,
+          2
+        ],
+        "noise_index": 0,
+        "noise_seed": 98000
+      },
+      {
+        "family": "weak_achromatic_wave",
+        "seed": 8700,
+        "pattern": [
+          0,
+          1,
+          3,
+          2
+        ],
+        "noise_index": 1,
+        "noise_seed": 98001
+      },
+      {
+        "family": "weak_achromatic_wave",
+        "seed": 8700,
+        "pattern": [
+          0,
+          1,
+          3,
+          2
+        ],
+        "noise_index": 2,
+        "noise_seed": 98002
+      },
+      {
+        "family": "weak_achromatic_wave",
+        "seed": 8701,
+        "pattern": [
+          1,
+          0,
+          2,
+          3
+        ],
+        "noise_index": 0,
+        "noise_seed": 98100
+      },
+      {
+        "family": "weak_achromatic_wave",
+        "seed": 8701,
+        "pattern": [
+          1,
+          0,
+          2,
+          3
+        ],
+        "noise_index": 1,
+        "noise_seed": 98101
+      },
+      {
+        "family": "weak_achromatic_wave",
+        "seed": 8701,
+        "pattern": [
+          1,
+          0,
+          2,
+          3
+        ],
+        "noise_index": 2,
+        "noise_seed": 98102
+      },
+      {
+        "family": "weak_achromatic_wave",
+        "seed": 8702,
+        "pattern": [
+          3,
+          2,
+          0,
+          1
+        ],
+        "noise_index": 0,
+        "noise_seed": 98200
+      },
+      {
+        "family": "weak_achromatic_wave",
+        "seed": 8702,
+        "pattern": [
+          3,
+          2,
+          0,
+          1
+        ],
+        "noise_index": 1,
+        "noise_seed": 98201
+      },
+      {
+        "family": "weak_achromatic_wave",
+        "seed": 8702,
+        "pattern": [
+          3,
+          2,
+          0,
+          1
+        ],
+        "noise_index": 2,
+        "noise_seed": 98202
+      },
+      {
+        "family": "weak_achromatic_wave",
+        "seed": 8703,
+        "pattern": [
+          2,
+          3,
+          1,
+          0
+        ],
+        "noise_index": 0,
+        "noise_seed": 98300
+      },
+      {
+        "family": "weak_achromatic_wave",
+        "seed": 8703,
+        "pattern": [
+          2,
+          3,
+          1,
+          0
+        ],
+        "noise_index": 1,
+        "noise_seed": 98301
+      },
+      {
+        "family": "weak_achromatic_wave",
+        "seed": 8703,
+        "pattern": [
+          2,
+          3,
+          1,
+          0
+        ],
+        "noise_index": 2,
+        "noise_seed": 98302
+      },
+      {
+        "family": "chromatic_wave",
+        "seed": 8800,
+        "pattern": [
+          0,
+          1,
+          3,
+          2
+        ],
+        "noise_index": 0,
+        "noise_seed": 99000
+      },
+      {
+        "family": "chromatic_wave",
+        "seed": 8800,
+        "pattern": [
+          0,
+          1,
+          3,
+          2
+        ],
+        "noise_index": 1,
+        "noise_seed": 99001
+      },
+      {
+        "family": "chromatic_wave",
+        "seed": 8800,
+        "pattern": [
+          0,
+          1,
+          3,
+          2
+        ],
+        "noise_index": 2,
+        "noise_seed": 99002
+      },
+      {
+        "family": "chromatic_wave",
+        "seed": 8801,
+        "pattern": [
+          1,
+          0,
+          2,
+          3
+        ],
+        "noise_index": 0,
+        "noise_seed": 99100
+      },
+      {
+        "family": "chromatic_wave",
+        "seed": 8801,
+        "pattern": [
+          1,
+          0,
+          2,
+          3
+        ],
+        "noise_index": 1,
+        "noise_seed": 99101
+      },
+      {
+        "family": "chromatic_wave",
+        "seed": 8801,
+        "pattern": [
+          1,
+          0,
+          2,
+          3
+        ],
+        "noise_index": 2,
+        "noise_seed": 99102
+      },
+      {
+        "family": "chromatic_wave",
+        "seed": 8802,
+        "pattern": [
+          3,
+          2,
+          0,
+          1
+        ],
+        "noise_index": 0,
+        "noise_seed": 99200
+      },
+      {
+        "family": "chromatic_wave",
+        "seed": 8802,
+        "pattern": [
+          3,
+          2,
+          0,
+          1
+        ],
+        "noise_index": 1,
+        "noise_seed": 99201
+      },
+      {
+        "family": "chromatic_wave",
+        "seed": 8802,
+        "pattern": [
+          3,
+          2,
+          0,
+          1
+        ],
+        "noise_index": 2,
+        "noise_seed": 99202
+      },
+      {
+        "family": "chromatic_wave",
+        "seed": 8803,
+        "pattern": [
+          2,
+          3,
+          1,
+          0
+        ],
+        "noise_index": 0,
+        "noise_seed": 99300
+      },
+      {
+        "family": "chromatic_wave",
+        "seed": 8803,
+        "pattern": [
+          2,
+          3,
+          1,
+          0
+        ],
+        "noise_index": 1,
+        "noise_seed": 99301
+      },
+      {
+        "family": "chromatic_wave",
+        "seed": 8803,
+        "pattern": [
+          2,
+          3,
+          1,
+          0
+        ],
+        "noise_index": 2,
+        "noise_seed": 99302
+      }
+    ],
+    "noise_coefficients_a_b": [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0002,
+        2.5e-05
+      ],
+      [
+        0.0008,
+        0.0004
+      ]
+    ],
+    "domain": "Signed balanced camera RGB/mosaic, unclipped; packing TL/TR/BL/BR, explicit Bayer tags.",
+    "conditioning": "Sigma from noisy observation and known simulation coefficients, not clean-target sigma.",
+    "selection": "One seed, Adam, fixed2048 steps, final checkpoint; no evaluation-dependent tuning.",
+    "tools": {
+      "run_synthetic_joint_pilot.py": "809d9644339fc8238daa67fbee7a48a43fd5798e62194c85ba1034459d37b8cd",
+      "joint_bayer_unet.py": "cca085ea82dca51e6c4b3a2b46a27d438a105872b84863a9b39a24626169ba6f",
+      "synthetic_bayer_data.py": "112a7476980f2144da9d6d2665245815fa33badce0c24a25b2db2d69240d9095",
+      "camera_unet.py": "14a3c27c47cfa3aeba7fbcbc64139cc1817b52e4adfbf3108c9850ad75a79529"
+    }
+  },
+  "original_weights_sha256": "01a39539906e5ddb4880f3774182090a672d2bd2d355228660a9d5f0d7c19f45",
+  "summary": {
+    "cases": 60,
+    "pixels": 61440,
+    "baseline_mse": 0.00024264703518045064,
+    "output_mse": 0.0003247099119814973,
+    "mse_ratio": 1.3381985555274496,
+    "opponent_mse_ratio": 1.113361620708486,
+    "relative_error_mse_floor": 1e-12,
+    "baseline_gradient_gain": 0.8302371082621849,
+    "output_gradient_gain": 0.7274691543173358,
+    "channel_bias": [
+      0.0017319753411963272,
+      0.0003268297083801978,
+      -0.00014551267995557282
+    ]
+  },
+  "by_family": {
+    "constant": {
+      "cases": 12,
+      "pixels": 12288,
+      "baseline_mse": 0.00013455275216579644,
+      "output_mse": 0.00011390372544105453,
+      "mse_ratio": 0.8465358278268578,
+      "opponent_mse_ratio": 1.0045747090458532,
+      "relative_error_mse_floor": 1e-12,
+      "baseline_gradient_gain": null,
+      "output_gradient_gain": null,
+      "channel_bias": [
+        0.0016391497241177906,
+        0.000263137375441147,
+        -0.00012063535177730955
+      ]
+    },
+    "ramp": {
+      "cases": 12,
+      "pixels": 12288,
+      "baseline_mse": 0.00015468402125415622,
+      "output_mse": 0.0001277692398768219,
+      "mse_ratio": 0.8260015406949403,
+      "opponent_mse_ratio": 1.003929108208962,
+      "relative_error_mse_floor": 1e-12,
+      "baseline_gradient_gain": 0.9987979249391232,
+      "output_gradient_gain": 1.00030101259549,
+      "channel_bias": [
+        0.0011970409880935524,
+        0.00010171180171406984,
+        0.00013641152084649852
+      ]
+    },
+    "edge": {
+      "cases": 12,
+      "pixels": 12288,
+      "baseline_mse": 0.000601967905014236,
+      "output_mse": 0.0011053837936035255,
+      "mse_ratio": 1.8362836031555274,
+      "opponent_mse_ratio": 1.2347639054464166,
+      "relative_error_mse_floor": 1e-12,
+      "baseline_gradient_gain": 0.8007461316642979,
+      "output_gradient_gain": 0.6784471086850006,
+      "channel_bias": [
+        0.0029721627361141145,
+        0.0010929127420240548,
+        -0.000485933298477903
+      ]
+    },
+    "weak_achromatic_wave": {
+      "cases": 12,
+      "pixels": 12288,
+      "baseline_mse": 0.00015167237000864495,
+      "output_mse": 0.00012660969808722357,
+      "mse_ratio": 0.8347578275463563,
+      "opponent_mse_ratio": 1.0044525551667993,
+      "relative_error_mse_floor": 1e-12,
+      "baseline_gradient_gain": 0.9823460457646037,
+      "output_gradient_gain": 0.9226203583981885,
+      "channel_bias": [
+        0.0015510160374105908,
+        0.00017185973774758168,
+        0.00017388964079145808
+      ]
+    },
+    "chromatic_wave": {
+      "cases": 12,
+      "pixels": 12288,
+      "baseline_mse": 0.00017035812745941966,
+      "output_mse": 0.00014988310289886108,
+      "mse_ratio": 0.8798118712273598,
+      "opponent_mse_ratio": 1.03099467298422,
+      "relative_error_mse_floor": 1e-12,
+      "baseline_gradient_gain": 0.9885259263602264,
+      "output_gradient_gain": 0.9917182192320986,
+      "channel_bias": [
+        0.0013005072202455874,
+        4.526884974135707e-06,
+        -0.0004312959111606081
+      ]
+    }
+  },
+  "by_noise": {
+    "0": {
+      "cases": 20,
+      "pixels": 20480,
+      "baseline_mse": 8.969861156598761e-05,
+      "output_mse": 0.00019809690520560251,
+      "mse_ratio": 2.208472369272636,
+      "opponent_mse_ratio": 1.3656568768939252,
+      "relative_error_mse_floor": 1e-12,
+      "baseline_gradient_gain": 0.8338908958588613,
+      "output_gradient_gain": 0.730850312783642,
+      "channel_bias": [
+        0.0016195419535506516,
+        0.00025469269276072736,
+        -0.00018590427316667046
+      ]
+    },
+    "1": {
+      "cases": 20,
+      "pixels": 20480,
+      "baseline_mse": 0.00014566166331254256,
+      "output_mse": 0.0002447940029621047,
+      "mse_ratio": 1.6805657535082263,
+      "opponent_mse_ratio": 1.200000903601665,
+      "relative_error_mse_floor": 1e-12,
+      "baseline_gradient_gain": 0.8366610122275635,
+      "output_gradient_gain": 0.7337072739063846,
+      "channel_bias": [
+        0.0018881888128817082,
+        0.0001604398712515831,
+        -0.00018496753837098366
+      ]
+    },
+    "2": {
+      "cases": 20,
+      "pixels": 20480,
+      "baseline_mse": 0.0004925808306628217,
+      "output_mse": 0.0005312388277767847,
+      "mse_ratio": 1.0784805146841472,
+      "opponent_mse_ratio": 1.051625647473065,
+      "relative_error_mse_floor": 1e-12,
+      "baseline_gradient_gain": 0.8201594167001299,
+      "output_gradient_gain": 0.717849876261981,
+      "channel_bias": [
+        0.0016881952571566217,
+        0.0005653565611282829,
+        -6.566622832906432e-05
+      ]
+    }
+  },
+  "by_family_and_noise": {
+    "constant": {
+      "0": {
+        "cases": 4,
+        "pixels": 4096,
+        "baseline_mse": 0.0,
+        "output_mse": 1.1861172500478763e-06,
+        "mse_ratio": null,
+        "opponent_mse_ratio": null,
+        "relative_error_mse_floor": 1e-12,
+        "baseline_gradient_gain": null,
+        "output_gradient_gain": null,
+        "channel_bias": [
+          0.0014215572737157345,
+          0.0001622322015464306,
+          -0.00013192789629101753
+        ]
+      },
+      "1": {
+        "cases": 4,
+        "pixels": 4096,
+        "baseline_mse": 4.280673116833592e-05,
+        "output_mse": 3.6843119232798927e-05,
+        "mse_ratio": 0.860685182615666,
+        "opponent_mse_ratio": 1.0053815188112278,
+        "relative_error_mse_floor": 1e-12,
+        "baseline_gradient_gain": null,
+        "output_gradient_gain": null,
+        "channel_bias": [
+          0.0015498654101975262,
+          0.0005397044224082492,
+          -0.000718984279956203
+        ]
+      },
+      "2": {
+        "cases": 4,
+        "pixels": 4096,
+        "baseline_mse": 0.0003608515253290534,
+        "output_mse": 0.00030368193984031677,
+        "mse_ratio": 0.8415703371723181,
+        "opponent_mse_ratio": 1.0027452340917837,
+        "relative_error_mse_floor": 1e-12,
+        "baseline_gradient_gain": null,
+        "output_gradient_gain": null,
+        "channel_bias": [
+          0.0019460264884401113,
+          8.747550236876123e-05,
+          0.0004890061209152918
+        ]
+      }
+    },
+    "ramp": {
+      "0": {
+        "cases": 4,
+        "pixels": 4096,
+        "baseline_mse": 2.5833601389445754e-16,
+        "output_mse": 1.1323185541793161e-06,
+        "mse_ratio": null,
+        "opponent_mse_ratio": null,
+        "relative_error_mse_floor": 1e-12,
+        "baseline_gradient_gain": 0.9999999322747057,
+        "output_gradient_gain": 0.9999204735731838,
+        "channel_bias": [
+          0.0013720990100409836,
+          9.966898323909845e-05,
+          -0.00015248407726176083
+        ]
+      },
+      "1": {
+        "cases": 4,
+        "pixels": 4096,
+        "baseline_mse": 5.9613865839007e-05,
+        "output_mse": 4.982501923223026e-05,
+        "mse_ratio": 0.8357958090956144,
+        "opponent_mse_ratio": 1.0125315413717846,
+        "relative_error_mse_floor": 1e-12,
+        "baseline_gradient_gain": 0.9988170309971448,
+        "output_gradient_gain": 0.9984828292449379,
+        "channel_bias": [
+          0.001485764776589349,
+          -0.0002498035682947375,
+          -0.00046775181544944644
+        ]
+      },
+      "2": {
+        "cases": 4,
+        "pixels": 4096,
+        "baseline_mse": 0.0004044381979232033,
+        "output_mse": 0.00033235038184405613,
+        "mse_ratio": 0.8217581414185918,
+        "opponent_mse_ratio": 1.001167246475723,
+        "relative_error_mse_floor": 1e-12,
+        "baseline_gradient_gain": 0.9975768115455192,
+        "output_gradient_gain": 1.0024997349683484,
+        "channel_bias": [
+          0.000733259177650325,
+          0.00045526999019784853,
+          0.0010294704552507028
+        ]
+      }
+    },
+    "edge": {
+      "0": {
+        "cases": 4,
+        "pixels": 4096,
+        "baseline_mse": 0.0004450229850287239,
+        "output_mse": 0.0009762494058425849,
+        "mse_ratio": 2.1937055808017942,
+        "opponent_mse_ratio": 1.3568319379180112,
+        "relative_error_mse_floor": 1e-12,
+        "baseline_gradient_gain": 0.804676293692542,
+        "output_gradient_gain": 0.6820836379330046,
+        "channel_bias": [
+          0.0025983699888456613,
+          0.0009130400321737397,
+          -0.0004328371287556365
+        ]
+      },
+      "1": {
+        "cases": 4,
+        "pixels": 4096,
+        "baseline_mse": 0.0004998161020921543,
+        "output_mse": 0.0010208142533277471,
+        "mse_ratio": 2.042379685357822,
+        "opponent_mse_ratio": 1.2997121078581788,
+        "relative_error_mse_floor": 1e-12,
+        "baseline_gradient_gain": 0.8076849249721793,
+        "output_gradient_gain": 0.6852335464546991,
+        "channel_bias": [
+          0.002731569577008486,
+          0.0009378789982292801,
+          -0.00016283264994854107
+        ]
+      },
+      "2": {
+        "cases": 4,
+        "pixels": 4096,
+        "baseline_mse": 0.0008610646279218296,
+        "output_mse": 0.0013190877216402441,
+        "mse_ratio": 1.5319264999003017,
+        "opponent_mse_ratio": 1.1436380192340445,
+        "relative_error_mse_floor": 1e-12,
+        "baseline_gradient_gain": 0.7898771763281724,
+        "output_gradient_gain": 0.6680241416672978,
+        "channel_bias": [
+          0.0035865486424881965,
+          0.0014278191956691444,
+          -0.0008621301167295314
+        ]
+      }
+    },
+    "weak_achromatic_wave": {
+      "0": {
+        "cases": 4,
+        "pixels": 4096,
+        "baseline_mse": 3.960119758043371e-08,
+        "output_mse": 2.354283158941447e-06,
+        "mse_ratio": 59.449797046154444,
+        "opponent_mse_ratio": 49.995455342861156,
+        "relative_error_mse_floor": 1e-12,
+        "baseline_gradient_gain": 0.9914163791458556,
+        "output_gradient_gain": 0.9360605360746238,
+        "channel_bias": [
+          0.0013884736690670252,
+          0.00012265577606740408,
+          -0.00016124184003274422
+        ]
+      },
+      "1": {
+        "cases": 4,
+        "pixels": 4096,
+        "baseline_mse": 5.670016495666156e-05,
+        "output_mse": 4.9140922783408314e-05,
+        "mse_ratio": 0.8666804200828849,
+        "opponent_mse_ratio": 1.0105796171190677,
+        "relative_error_mse_floor": 1e-12,
+        "baseline_gradient_gain": 0.9391613468507862,
+        "output_gradient_gain": 0.8858009175959737,
+        "channel_bias": [
+          0.0016105399699881673,
+          -0.0001729736613924615,
+          0.0001369126512145158
+        ]
+      },
+      "2": {
+        "cases": 4,
+        "pixels": 4096,
+        "baseline_mse": 0.00039827734387169283,
+        "output_mse": 0.000328333888319321,
+        "mse_ratio": 0.8243850506974745,
+        "opponent_mse_ratio": 1.0013172870780405,
+        "relative_error_mse_floor": 1e-12,
+        "baseline_gradient_gain": 1.0164604112971696,
+        "output_gradient_gain": 0.9459996215239679,
+        "channel_bias": [
+          0.00165403447317658,
+          0.0005658970985678025,
+          0.0005459981111926027
+        ]
+      }
+    },
+    "chromatic_wave": {
+      "0": {
+        "cases": 4,
+        "pixels": 4096,
+        "baseline_mse": 3.4304716033754326e-06,
+        "output_mse": 9.562401222259117e-06,
+        "mse_ratio": 2.7874888143222454,
+        "opponent_mse_ratio": 1.6664780709112899,
+        "relative_error_mse_floor": 1e-12,
+        "baseline_gradient_gain": 0.9906380635235461,
+        "output_gradient_gain": 0.993668840177798,
+        "channel_bias": [
+          0.0013172098260838538,
+          -2.413352922303602e-05,
+          -5.103042349219322e-05
+        ]
+      },
+      "1": {
+        "cases": 4,
+        "pixels": 4096,
+        "baseline_mse": 6.937145250655401e-05,
+        "output_mse": 6.734670023433864e-05,
+        "mse_ratio": 0.9708128891776618,
+        "opponent_mse_ratio": 1.055529259472225,
+        "relative_error_mse_floor": 1e-12,
+        "baseline_gradient_gain": 0.9929959526102042,
+        "output_gradient_gain": 0.9957919875540178,
+        "channel_bias": [
+          0.0020632043306250125,
+          -0.00025260683469241485,
+          0.0002878184022847563
+        ]
+      },
+      "2": {
+        "cases": 4,
+        "pixels": 4096,
+        "baseline_mse": 0.0004382724582683295,
+        "output_mse": 0.00037274020723998547,
+        "mse_ratio": 0.8504760000496715,
+        "opponent_mse_ratio": 1.0220427788221818,
+        "relative_error_mse_floor": 1e-12,
+        "baseline_gradient_gain": 0.9819437629469286,
+        "output_gradient_gain": 0.98569382996448,
+        "channel_bias": [
+          0.0005211075040278956,
+          0.000290321018837858,
+          -0.0015306757122743875
+        ]
+      }
+    }
+  },
+  "ambiguity_witness": {
+    "distinct_targets": true,
+    "identical_mosaics": true,
+    "first_target_sha256": "f3cc103136423a57975750907ebc1d367e2985ac6338976d4d5a439f50323f4a",
+    "second_target_sha256": "ce62cffe7cd686ec5339df50dae890a810c5bee0e28449c54af47af97d5d5865",
+    "mosaic_sha256": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7",
+    "interpretation": "No deterministic single-image reconstruction can recover both targets from this same observation."
+  },
+  "status": "completed_metric_reanalysis_no_training",
+  "limits": [
+    "Procedural train/evaluation families share construction rules; not natural-scene generalization.",
+    "Signal-dependent Gaussian CFA noise is uncalibrated; no Canon noise-profile or ISO claim.",
+    "Synthetic RGB is already camera RGB; no physical spectral response, optics, PRNU or real compression model.",
+    "Evaluation against own bilinear baseline only, not RCD, Lightroom or another trained network.",
+    "An ambiguous same-mosaic pair is a limitation witness, excluded from quality aggregate.",
+    "No RAW training, camera-level validation, visual approval, default change or production hook.",
+    "Baseline-near-zero ratios are undefined; inspect absolute errors instead."
+  ]
+}

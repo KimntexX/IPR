@@ -1,0 +1,531 @@
+{
+  "schema_version": 1,
+  "campaign_id": "neural-texture-repeatability-audit-v001-20261105T120437Z",
+  "measured_at_utc": "2026-11-05T12:04:37.815229+00:00",
+  "status": "completed_read_only_known_texture_trial_audit_not_qualification",
+  "checks": {
+    "config_equal": true,
+    "warm_start_equal": true,
+    "fine_cases_equal": true,
+    "fine_observations_equal": true,
+    "fine_criteria_equal": true
+  },
+  "method": "Extract all 48 amplitude0.06 groups, each archived strong_passed and transfer minima; no model execution, new observations, selection or threshold change.",
+  "trials": [
+    {
+      "name": "prior_stratified",
+      "plan_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\paired-coverage-plan-v001\\stratified\\plan.json",
+      "plan_sha256": "cdef42f826db62e106ea264e79ada4efea9a888b010d66ddc4f55963dc7cf1cd",
+      "fine_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\coverage-stratified-fine-v001\\result.json",
+      "fine_sha256": "77bd76e242421b18f6cc154826f58ef2b65c920146d02d9a9bc039704b7ae6fb",
+      "total_strong_failures": 12,
+      "groups": [
+        {
+          "seed": 71,
+          "noise_index": 1,
+          "strong_failures": 1,
+          "minimum_transfer": 0.970503560766408,
+          "failure_details": [
+            {
+              "frequency": 14,
+              "chromatic": true,
+              "checks": {
+                "channel_transfer": true,
+                "rgb_not_worse": false,
+                "sensor_not_worse": true
+              }
+            }
+          ]
+        },
+        {
+          "seed": 71,
+          "noise_index": 2,
+          "strong_failures": 4,
+          "minimum_transfer": 0.827298806067715,
+          "failure_details": [
+            {
+              "frequency": 10,
+              "chromatic": false,
+              "checks": {
+                "channel_transfer": false,
+                "rgb_not_worse": true,
+                "sensor_not_worse": true
+              }
+            },
+            {
+              "frequency": 10,
+              "chromatic": true,
+              "checks": {
+                "channel_transfer": false,
+                "rgb_not_worse": true,
+                "sensor_not_worse": true
+              }
+            },
+            {
+              "frequency": 14,
+              "chromatic": true,
+              "checks": {
+                "channel_transfer": false,
+                "rgb_not_worse": true,
+                "sensor_not_worse": true
+              }
+            },
+            {
+              "frequency": 22,
+              "chromatic": true,
+              "checks": {
+                "channel_transfer": true,
+                "rgb_not_worse": false,
+                "sensor_not_worse": true
+              }
+            }
+          ]
+        },
+        {
+          "seed": 73,
+          "noise_index": 1,
+          "strong_failures": 0,
+          "minimum_transfer": 0.9887353536758878,
+          "failure_details": []
+        },
+        {
+          "seed": 73,
+          "noise_index": 2,
+          "strong_failures": 7,
+          "minimum_transfer": 0.8047356889846026,
+          "failure_details": [
+            {
+              "frequency": 10,
+              "chromatic": true,
+              "checks": {
+                "channel_transfer": false,
+                "rgb_not_worse": true,
+                "sensor_not_worse": true
+              }
+            },
+            {
+              "frequency": 14,
+              "chromatic": false,
+              "checks": {
+                "channel_transfer": false,
+                "rgb_not_worse": true,
+                "sensor_not_worse": true
+              }
+            },
+            {
+              "frequency": 14,
+              "chromatic": true,
+              "checks": {
+                "channel_transfer": false,
+                "rgb_not_worse": true,
+                "sensor_not_worse": true
+              }
+            },
+            {
+              "frequency": 18,
+              "chromatic": false,
+              "checks": {
+                "channel_transfer": false,
+                "rgb_not_worse": true,
+                "sensor_not_worse": true
+              }
+            },
+            {
+              "frequency": 18,
+              "chromatic": true,
+              "checks": {
+                "channel_transfer": false,
+                "rgb_not_worse": true,
+                "sensor_not_worse": true
+              }
+            },
+            {
+              "frequency": 22,
+              "chromatic": true,
+              "checks": {
+                "channel_transfer": false,
+                "rgb_not_worse": true,
+                "sensor_not_worse": true
+              }
+            },
+            {
+              "frequency": 26,
+              "chromatic": true,
+              "checks": {
+                "channel_transfer": false,
+                "rgb_not_worse": true,
+                "sensor_not_worse": true
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "matched_control",
+      "plan_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\paired-colour-signs-plan-v001\\control\\plan.json",
+      "plan_sha256": "9598e8a03b12b94a691f9e5f1e72be58a265301cae0765b699b0ebc33d09dbc8",
+      "fine_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\colour-signs-control-fine-v001\\result.json",
+      "fine_sha256": "f4642c06e2a8b9af21efa13d66b45baf528bdd773064539bd73e6f22d9a9703b",
+      "total_strong_failures": 16,
+      "groups": [
+        {
+          "seed": 71,
+          "noise_index": 1,
+          "strong_failures": 1,
+          "minimum_transfer": 0.9624857224471136,
+          "failure_details": [
+            {
+              "frequency": 14,
+              "chromatic": true,
+              "checks": {
+                "channel_transfer": true,
+                "rgb_not_worse": false,
+                "sensor_not_worse": true
+              }
+            }
+          ]
+        },
+        {
+          "seed": 71,
+          "noise_index": 2,
+          "strong_failures": 6,
+          "minimum_transfer": 0.7737041787619332,
+          "failure_details": [
+            {
+              "frequency": 10,
+              "chromatic": false,
+              "checks": {
+                "channel_transfer": false,
+                "rgb_not_worse": true,
+                "sensor_not_worse": true
+              }
+            },
+            {
+              "frequency": 10,
+              "chromatic": true,
+              "checks": {
+                "channel_transfer": false,
+                "rgb_not_worse": true,
+                "sensor_not_worse": true
+              }
+            },
+            {
+              "frequency": 14,
+              "chromatic": false,
+              "checks": {
+                "channel_transfer": false,
+                "rgb_not_worse": true,
+                "sensor_not_worse": true
+              }
+            },
+            {
+              "frequency": 14,
+              "chromatic": true,
+              "checks": {
+                "channel_transfer": false,
+                "rgb_not_worse": true,
+                "sensor_not_worse": true
+              }
+            },
+            {
+              "frequency": 18,
+              "chromatic": false,
+              "checks": {
+                "channel_transfer": false,
+                "rgb_not_worse": true,
+                "sensor_not_worse": true
+              }
+            },
+            {
+              "frequency": 26,
+              "chromatic": true,
+              "checks": {
+                "channel_transfer": false,
+                "rgb_not_worse": true,
+                "sensor_not_worse": true
+              }
+            }
+          ]
+        },
+        {
+          "seed": 73,
+          "noise_index": 1,
+          "strong_failures": 0,
+          "minimum_transfer": 0.9786959268953186,
+          "failure_details": []
+        },
+        {
+          "seed": 73,
+          "noise_index": 2,
+          "strong_failures": 9,
+          "minimum_transfer": 0.6463454194150069,
+          "failure_details": [
+            {
+              "frequency": 10,
+              "chromatic": true,
+              "checks": {
+                "channel_transfer": false,
+                "rgb_not_worse": true,
+                "sensor_not_worse": true
+              }
+            },
+            {
+              "frequency": 14,
+              "chromatic": false,
+              "checks": {
+                "channel_transfer": false,
+                "rgb_not_worse": true,
+                "sensor_not_worse": true
+              }
+            },
+            {
+              "frequency": 14,
+              "chromatic": true,
+              "checks": {
+                "channel_transfer": false,
+                "rgb_not_worse": true,
+                "sensor_not_worse": true
+              }
+            },
+            {
+              "frequency": 18,
+              "chromatic": false,
+              "checks": {
+                "channel_transfer": false,
+                "rgb_not_worse": true,
+                "sensor_not_worse": true
+              }
+            },
+            {
+              "frequency": 18,
+              "chromatic": true,
+              "checks": {
+                "channel_transfer": false,
+                "rgb_not_worse": true,
+                "sensor_not_worse": true
+              }
+            },
+            {
+              "frequency": 22,
+              "chromatic": false,
+              "checks": {
+                "channel_transfer": false,
+                "rgb_not_worse": true,
+                "sensor_not_worse": true
+              }
+            },
+            {
+              "frequency": 22,
+              "chromatic": true,
+              "checks": {
+                "channel_transfer": false,
+                "rgb_not_worse": true,
+                "sensor_not_worse": true
+              }
+            },
+            {
+              "frequency": 26,
+              "chromatic": false,
+              "checks": {
+                "channel_transfer": false,
+                "rgb_not_worse": true,
+                "sensor_not_worse": true
+              }
+            },
+            {
+              "frequency": 26,
+              "chromatic": true,
+              "checks": {
+                "channel_transfer": false,
+                "rgb_not_worse": true,
+                "sensor_not_worse": true
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "colour_balanced",
+      "plan_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\paired-colour-signs-plan-v001\\colour_balanced\\plan.json",
+      "plan_sha256": "0352a97b0e3be0be1511418c8903ea9b4730cc66b027f372965cef15c0d85491",
+      "fine_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\colour-signs-colour_balanced-fine-v001\\result.json",
+      "fine_sha256": "31a95b7afc0ea3b8a6d86aacfa1fcc3c69b6aaeeb180ffe4798b876f80f5e701",
+      "total_strong_failures": 15,
+      "groups": [
+        {
+          "seed": 71,
+          "noise_index": 1,
+          "strong_failures": 1,
+          "minimum_transfer": 0.9711555662914538,
+          "failure_details": [
+            {
+              "frequency": 14,
+              "chromatic": true,
+              "checks": {
+                "channel_transfer": true,
+                "rgb_not_worse": false,
+                "sensor_not_worse": true
+              }
+            }
+          ]
+        },
+        {
+          "seed": 71,
+          "noise_index": 2,
+          "strong_failures": 7,
+          "minimum_transfer": 0.7921170159548921,
+          "failure_details": [
+            {
+              "frequency": 10,
+              "chromatic": false,
+              "checks": {
+                "channel_transfer": false,
+                "rgb_not_worse": true,
+                "sensor_not_worse": true
+              }
+            },
+            {
+              "frequency": 10,
+              "chromatic": true,
+              "checks": {
+                "channel_transfer": false,
+                "rgb_not_worse": true,
+                "sensor_not_worse": true
+              }
+            },
+            {
+              "frequency": 14,
+              "chromatic": false,
+              "checks": {
+                "channel_transfer": false,
+                "rgb_not_worse": true,
+                "sensor_not_worse": true
+              }
+            },
+            {
+              "frequency": 14,
+              "chromatic": true,
+              "checks": {
+                "channel_transfer": false,
+                "rgb_not_worse": true,
+                "sensor_not_worse": true
+              }
+            },
+            {
+              "frequency": 18,
+              "chromatic": false,
+              "checks": {
+                "channel_transfer": false,
+                "rgb_not_worse": true,
+                "sensor_not_worse": true
+              }
+            },
+            {
+              "frequency": 18,
+              "chromatic": true,
+              "checks": {
+                "channel_transfer": false,
+                "rgb_not_worse": true,
+                "sensor_not_worse": true
+              }
+            },
+            {
+              "frequency": 26,
+              "chromatic": true,
+              "checks": {
+                "channel_transfer": false,
+                "rgb_not_worse": true,
+                "sensor_not_worse": true
+              }
+            }
+          ]
+        },
+        {
+          "seed": 73,
+          "noise_index": 1,
+          "strong_failures": 0,
+          "minimum_transfer": 0.9835721612626543,
+          "failure_details": []
+        },
+        {
+          "seed": 73,
+          "noise_index": 2,
+          "strong_failures": 7,
+          "minimum_transfer": 0.7224196055153401,
+          "failure_details": [
+            {
+              "frequency": 10,
+              "chromatic": true,
+              "checks": {
+                "channel_transfer": false,
+                "rgb_not_worse": true,
+                "sensor_not_worse": true
+              }
+            },
+            {
+              "frequency": 14,
+              "chromatic": false,
+              "checks": {
+                "channel_transfer": false,
+                "rgb_not_worse": true,
+                "sensor_not_worse": true
+              }
+            },
+            {
+              "frequency": 14,
+              "chromatic": true,
+              "checks": {
+                "channel_transfer": false,
+                "rgb_not_worse": true,
+                "sensor_not_worse": true
+              }
+            },
+            {
+              "frequency": 18,
+              "chromatic": false,
+              "checks": {
+                "channel_transfer": false,
+                "rgb_not_worse": true,
+                "sensor_not_worse": true
+              }
+            },
+            {
+              "frequency": 18,
+              "chromatic": true,
+              "checks": {
+                "channel_transfer": false,
+                "rgb_not_worse": true,
+                "sensor_not_worse": true
+              }
+            },
+            {
+              "frequency": 22,
+              "chromatic": true,
+              "checks": {
+                "channel_transfer": false,
+                "rgb_not_worse": true,
+                "sensor_not_worse": true
+              }
+            },
+            {
+              "frequency": 26,
+              "chromatic": true,
+              "checks": {
+                "channel_transfer": false,
+                "rgb_not_worse": true,
+                "sensor_not_worse": true
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "Two fresh stratified datasets only; cannot estimate population variability or confidence interval.",
+    "Prior trial vs new control is a dataset-repeatability comparison, not the matched colour treatment effect.",
+    "Implementation hashes differ across bench revisions and are preserved in plans; config/initializers/evaluation inputs are explicitly equal."
+  ]
+}

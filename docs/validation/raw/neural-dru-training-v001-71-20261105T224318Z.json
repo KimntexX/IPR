@@ -1,0 +1,194 @@
+{
+  "schema_version": 1,
+  "status": "stopped_on_error",
+  "seed": 71,
+  "preflight": false,
+  "plan_sha256": "964d9584b898f17011daf91baeb03b276a1395baef1d2c0f2f2c6d5dd01aea54",
+  "started_at_utc": "2026-11-05T22:38:40.835952+00:00",
+  "losses": [
+    0.7461819648742676,
+    0.9993632584810257,
+    0.9958458244800568,
+    0.9998504966497421,
+    0.9986728876829147,
+    1.0017489790916443,
+    0.9977790266275406,
+    0.9949692338705063,
+    0.9984230250120163,
+    1.0013758838176727,
+    0.9988812804222107,
+    1.000269278883934,
+    1.0003207176923752,
+    1.0006583034992218,
+    0.9866312146186829,
+    1.0008041560649872,
+    0.9989527761936188,
+    1.0012644082307816,
+    0.998984232544899,
+    0.99787737429142,
+    0.9987459182739258,
+    0.9975527375936508,
+    0.9763595759868622,
+    0.9950057566165924,
+    0.9975831806659698,
+    0.9990188330411911,
+    0.9962919503450394,
+    0.9961455166339874,
+    0.998392716050148,
+    0.9991761147975922,
+    0.9948503822088242,
+    0.7486942112445831,
+    0.995936393737793,
+    0.9967509806156158,
+    0.995953693985939,
+    0.9917145520448685,
+    1.001441091299057,
+    1.0030196160078049,
+    0.9948110431432724,
+    0.9972750395536423,
+    0.9983542859554291,
+    0.9996713995933533
+  ],
+  "milestones": [
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-overnight-campaign-v002\\seed71\\checkpoint-000000.pt",
+      "sha256": "6d7f62991528289fdc3cd0c40992c4b09ccbb652667f6982677d46dd9ce94426",
+      "step": 0
+    }
+  ],
+  "controls": [
+    {
+      "step": 0,
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-overnight-campaign-v002\\seed71\\control-000000.json",
+      "sha256": "cf1c374c75c1b129670a5e782a39790a16a0721f83a211e0c07a82b4f32af395",
+      "observations": 864
+    }
+  ],
+  "architecture": {
+    "repository": "https://github.com/cszn/DPIR",
+    "revision": "15bca3fcc1f3cc51a1f99ccf027691e278c19354",
+    "source_manifest_sha256": "8d945a7ac1e578eb8ff0cf6091024b7e6922be52e35423bf5cbefbedfbaac64a",
+    "pretrained_weights_loaded": false,
+    "seed": 71,
+    "parameters": 32643840,
+    "support": {
+      "packed_radius": 185,
+      "packed_halo": 192,
+      "cfa_halo": 384,
+      "packed_core": 128,
+      "packed_context": 512,
+      "intervals": [
+        {
+          "output": 256,
+          "low": 71,
+          "high": 440
+        },
+        {
+          "output": 257,
+          "low": 79,
+          "high": 440
+        },
+        {
+          "output": 258,
+          "low": 79,
+          "high": 440
+        },
+        {
+          "output": 259,
+          "low": 79,
+          "high": 440
+        },
+        {
+          "output": 260,
+          "low": 79,
+          "high": 440
+        },
+        {
+          "output": 261,
+          "low": 79,
+          "high": 440
+        },
+        {
+          "output": 262,
+          "low": 79,
+          "high": 440
+        },
+        {
+          "output": 263,
+          "low": 79,
+          "high": 448
+        }
+      ],
+      "scope": "Deepest-path maximum, eight stride phases; residual skip paths are shorter. Pinned fourblocks/stage,strideconv2,transposeconv2 topology."
+    },
+    "activation_checkpointing": "nonreentrant perstage in training only, no stochastic layers"
+  },
+  "completed_steps": 42,
+  "elapsed_seconds": 278.04393749998417,
+  "step_seconds": [
+    2.1805112999863923,
+    2.4735144000151195,
+    2.452125800016802,
+    2.450030500011053,
+    2.4436359999817796,
+    2.440933700010646,
+    2.4785967000061646,
+    2.4376338999718428,
+    2.4507872000103816,
+    2.4386532999924384,
+    2.4715804000152275,
+    2.5094802000094205,
+    2.790787599980831,
+    2.6998879999737255,
+    2.891651700017974,
+    2.592160000000149,
+    2.65056810004171,
+    2.6687609999789856,
+    2.785788399982266,
+    2.656919699977152,
+    2.561788399994839,
+    2.5181173000019044,
+    2.591699599986896,
+    2.5368501999764703,
+    2.80434770003194,
+    2.5448005000362173,
+    2.5657075000344776,
+    2.753111900005024,
+    2.6510369000025094,
+    2.6576934999902733,
+    2.54739459999837,
+    1.937682899995707,
+    2.7980028999736533,
+    2.6525400999817066,
+    2.4788054999662563,
+    2.971769099996891,
+    2.6792279999936,
+    2.538540599984117,
+    2.4779295999906026,
+    2.4656966000329703,
+    2.4980597000103444,
+    2.6597600000095554
+  ],
+  "error": "system_physical_memory_threshold",
+  "memory": {
+    "hard_process_commit_bytes": 6442450944,
+    "soft_process_bytes": 4831838208,
+    "system_stop_fraction": 0.92,
+    "poll_seconds": 0.25,
+    "samples": 1088,
+    "peak_rss_bytes": 1498972160,
+    "peak_private_sampled_bytes": 4531605504,
+    "peak_system_used_fraction": 0.9228166709682288,
+    "os_job_peak_commit_bytes": 4531605504,
+    "reason": "system_physical_memory_threshold",
+    "last": {
+      "system_total_bytes": 16933507072,
+      "system_available_bytes": 3777032192,
+      "system_used_fraction": 0.7769492063315447,
+      "process_rss_bytes": 1492844544,
+      "process_private_bytes": 4486819840,
+      "process_peak_rss_bytes": 1498972160,
+      "process_peak_pagefile_bytes": 4531605504
+    }
+  }
+}

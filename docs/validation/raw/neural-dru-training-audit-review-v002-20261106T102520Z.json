@@ -1,0 +1,213 @@
+{
+  "schema_version": 2,
+  "status": "completed_training_audit_review_no_model_verdict",
+  "measured_at_utc": "2026-11-06T10:23:53.984076+00:00",
+  "audit_sha256": "4898fa425359080cf2f1199490b768159761fcaa42f28cd20d8af22471f9668c",
+  "script_sha256": "abb0288177456827db8c17d14c0f978e1b9a66e2288f3d9721f50237f840b747",
+  "training_exposures": 2048,
+  "texture_exposures": 512,
+  "zero_noise_exposures": 18,
+  "high_frequency_counts": [
+    {
+      "seed": 71,
+      "minimum_primary_frequency": 18,
+      "minimum_effective_primary_amplitude": 0.04,
+      "exposures": 14,
+      "scope": "Primary component before per-colour coefficient; secondary amplitude <=.12*.35/1.35 <.04. Not a count of all signal energy."
+    },
+    {
+      "seed": 71,
+      "minimum_primary_frequency": 18,
+      "minimum_effective_primary_amplitude": 0.06,
+      "exposures": 9,
+      "scope": "Primary component before per-colour coefficient; secondary amplitude <=.12*.35/1.35 <.04. Not a count of all signal energy."
+    },
+    {
+      "seed": 71,
+      "minimum_primary_frequency": 22,
+      "minimum_effective_primary_amplitude": 0.04,
+      "exposures": 8,
+      "scope": "Primary component before per-colour coefficient; secondary amplitude <=.12*.35/1.35 <.04. Not a count of all signal energy."
+    },
+    {
+      "seed": 71,
+      "minimum_primary_frequency": 22,
+      "minimum_effective_primary_amplitude": 0.06,
+      "exposures": 6,
+      "scope": "Primary component before per-colour coefficient; secondary amplitude <=.12*.35/1.35 <.04. Not a count of all signal energy."
+    },
+    {
+      "seed": 73,
+      "minimum_primary_frequency": 18,
+      "minimum_effective_primary_amplitude": 0.04,
+      "exposures": 5,
+      "scope": "Primary component before per-colour coefficient; secondary amplitude <=.12*.35/1.35 <.04. Not a count of all signal energy."
+    },
+    {
+      "seed": 73,
+      "minimum_primary_frequency": 18,
+      "minimum_effective_primary_amplitude": 0.06,
+      "exposures": 1,
+      "scope": "Primary component before per-colour coefficient; secondary amplitude <=.12*.35/1.35 <.04. Not a count of all signal energy."
+    },
+    {
+      "seed": 73,
+      "minimum_primary_frequency": 22,
+      "minimum_effective_primary_amplitude": 0.04,
+      "exposures": 4,
+      "scope": "Primary component before per-colour coefficient; secondary amplitude <=.12*.35/1.35 <.04. Not a count of all signal energy."
+    },
+    {
+      "seed": 73,
+      "minimum_primary_frequency": 22,
+      "minimum_effective_primary_amplitude": 0.06,
+      "exposures": 1,
+      "scope": "Primary component before per-colour coefficient; secondary amplitude <=.12*.35/1.35 <.04. Not a count of all signal energy."
+    }
+  ],
+  "training_witness_losses": {
+    "exposures": 2030,
+    "mean_losses": {
+      "identity": 0.9996621462805518,
+      "0.25": 0.6254204243274745,
+      "0.5": 0.39131835613931926,
+      "1.0": 0.34353316835141534
+    }
+  },
+  "control_witness_losses": {
+    "exposures": 864,
+    "mean_losses": {
+      "identity": 1.0005695512863222,
+      "0.25": 0.9478312789428013,
+      "0.5": 1.6790495062315907,
+      "1.0": 5.493355512938082
+    }
+  },
+  "analytic_sigma_at_signal03": [
+    {
+      "scene": "6V1A0181",
+      "parameters": [
+        {
+          "colour": 0,
+          "a": 0.003990878401188457,
+          "b": 5.3342291036895706e-05,
+          "sigma": 0.035363905488413366
+        },
+        {
+          "colour": 1,
+          "a": 0.002069624986518501,
+          "b": 1.4217686769958395e-05,
+          "sigma": 0.025201293274860093
+        },
+        {
+          "colour": 2,
+          "a": 0.003952855102291494,
+          "b": 5.209228480324043e-05,
+          "sigma": 0.03518449680598954
+        },
+        {
+          "colour": 3,
+          "a": 0.0020710442740870137,
+          "b": 1.43461144616751e-05,
+          "sigma": 0.025212286621561702
+        }
+      ]
+    },
+    {
+      "scene": "6V1A0263",
+      "parameters": [
+        {
+          "colour": 0,
+          "a": 0.0019844655377091293,
+          "b": 1.3347072725884984e-05,
+          "sigma": 0.02467157745339004
+        },
+        {
+          "colour": 1,
+          "a": 0.0010428266235911433,
+          "b": 3.5557840510300377e-06,
+          "sigma": 0.01778774215937405
+        },
+        {
+          "colour": 2,
+          "a": 0.001963135855413156,
+          "b": 1.3012342218781001e-05,
+          "sigma": 0.02453473249992198
+        },
+        {
+          "colour": 3,
+          "a": 0.0010450666571448753,
+          "b": 3.569248835793936e-06,
+          "sigma": 0.01780699991518101
+        }
+      ]
+    },
+    {
+      "scene": "6V1A9819",
+      "parameters": [
+        {
+          "colour": 0,
+          "a": 0.0012658994012212203,
+          "b": 5.839588702773483e-06,
+          "sigma": 0.019636939911023294
+        },
+        {
+          "colour": 1,
+          "a": 0.0006524928593879794,
+          "b": 1.5347613190301818e-06,
+          "sigma": 0.014045733129154348
+        },
+        {
+          "colour": 2,
+          "a": 0.0012377814500925024,
+          "b": 5.662281293540882e-06,
+          "sigma": 0.01941640327973468
+        },
+        {
+          "colour": 3,
+          "a": 0.0006510853358969886,
+          "b": 1.543977342671624e-06,
+          "sigma": 0.014031021990994392
+        }
+      ]
+    }
+  ],
+  "control_sigma_at_signal03": [
+    {
+      "noise_index": 1,
+      "a": 0.0002,
+      "b": 2.5e-05,
+      "sigma": 0.009219544457292887
+    },
+    {
+      "noise_index": 2,
+      "a": 0.0008,
+      "b": 0.0004,
+      "sigma": 0.025298221281347035
+    }
+  ],
+  "findings": [
+    "Fixed blur witness lowers average training loss while harming known strong control loss; does not prove the network applies that kernel.",
+    "Only25percent of exposures use broad2..28cycle random textures; phase/family joint cycle covers all four physical phases.",
+    "Identity depends on both serial and model seed, so dataset and initialization effects are confounded.",
+    "Matched0.3DC control low sigma.00922 is below all three training-law sigmas at that DC; old control noise is equal across colours unlike training.",
+    "Analytic ramp extension exceeds balanced camera [-8,9] in halo and [-1.8,3.1] in core; signed/HDR legality does not demonstrate representative photo distribution.",
+    "Noise-normalization derivative is checked against autograd; standardized residual parametrization compensates sigma, so inverse variance alone does not establish an exploding-gradient bug."
+  ],
+  "limits": [
+    "Read-only known development audit, no independent confirmation, no new reserve or photo truth.",
+    "Uniform averaging of exposures/groups is not a perceptual quality metric.",
+    "Coverage mismatch, loss, and weak training duration are not causally separated here.",
+    "Sigma quantiles use declared stride4 spatial samples; loss denominators and ranges use full core/context."
+  ],
+  "next_proposal": "Keep architecture fixed, separate data seed from initialization, predeclare broad noise/colour-ratio coverage and detail quotas; compare noise-only and coverage-only changes with matched budgets and fixed controls. Do not train on exact test targets or select best seed.",
+  "supersedes_sha256": "314908118c669c4c467545a34e03bddcf088e5fc4b4c84c65edd4f4787ea6994",
+  "runtime_verification": {
+    "queried_at_utc": "2026-11-06T10:25:20.988405+00:00",
+    "executable": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+    "python_version": "3.14.3",
+    "torch_version": "2.9.1+cpu",
+    "device": "CPU only",
+    "scope": "Runtime queried immediately after read-only audit in same pinned environment; no package changes performed. No GPU/model weights loaded."
+  }
+}

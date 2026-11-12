@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "started_at_utc": "2026-11-04T08:33:45.756959+00:00",
+  "status": "completed_known_failure_diagnosis_reserved_unopened",
+  "qualification": "build-patch_neural_restoration\\rank2-qualification-v001\\progress.json",
+  "data_plan": "build-patch_neural_restoration\\noisy-rank2-plan-v001\\plan.json",
+  "campaign": "build-patch_neural_restoration\\noisy-rank2-campaign-v001",
+  "prefix": "rank2",
+  "script_sha256": "81e557946b80b779946d13766c2d296d808a8a34f57294d7865d8a87a86c37fa",
+  "previous_fine": "build-patch_neural_restoration\\structure-fine-v001\\result.json",
+  "previous_campaign": "build-patch_neural_restoration\\noisy-structure-campaign-v001",
+  "policy": "No retraining or tuning. Known failure -> paired diagnostic only. All known pass -> frozen new classic cohort then fine cohort2; failure stops opening further reserved data.",
+  "stages": [
+    {
+      "name": "learning_diagnosis",
+      "started_at_utc": "2026-11-04T08:55:15.813890+00:00",
+      "command": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\.venv-neural\\Scripts\\python.exe",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\tests\\neural\\diagnose_context_learning.py",
+        "--data-plan",
+        "build-patch_neural_restoration\\noisy-rank2-plan-v001\\plan.json",
+        "--campaign",
+        "build-patch_neural_restoration\\noisy-rank2-campaign-v001",
+        "--output",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\rank2-learning-diagnostic-v001\\result.json"
+      ],
+      "returncode": 0,
+      "finished_at_utc": "2026-11-04T08:55:22.119360+00:00"
+    }
+  ],
+  "qualification_sha256": "87a5c3844d43d55245fde0077d09e11c5a90c3d5ad538971c17a027c2a014fbb",
+  "finished_at_utc": "2026-11-04T08:55:22.120989+00:00"
+}

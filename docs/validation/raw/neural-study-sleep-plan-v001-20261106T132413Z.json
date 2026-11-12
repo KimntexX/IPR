@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "created_at_utc": "2026-11-06T13:24:13.250586+00:00",
+  "scheduler": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\neural-load-campaign-v001",
+  "comparison": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_neural_restoration\\build-patch_neural_restoration\\dru-data-comparison-v001",
+  "decision_utc": "2026-11-06T17:14:05+00:00",
+  "watch_end_utc": "2026-11-07T09:00:00+00:00",
+  "minimum_idle_seconds": 180,
+  "authorization": "User authorizes sleep after finished/nonpromising work; four hours is a flexible decision point; promising paired evidence permits continuation. Claude is on standby.",
+  "source_sha256": {
+    "tests\\neural\\study_sleep_watch.py": "f4d43cffdcd7d7f53fa8806b8f339546acb334b61539d54c5aeef45c79e91e6a",
+    "tests\\neural\\windows_sleep.py": "598fb19f0868b57a82040f3f301a0ccd3e8558f78c3dd80195fe16567d7f5398",
+    "tests\\neural\\scheduled_comparison_results.py": "8d5cf1489974d85bdd735842f10b594fd3444fc90569124f0642b5b67eb9fc27"
+  }
+}
