@@ -10929,3 +10929,50 @@ Preuves : [campagne interrompue](../raw/neural-final-beta1-training-v001-2026111
 [intérieur](../raw/neural-final-real-noise-evaluation-20261112T054522Z.json),
 [drap](../raw/neural-final-color-sheet-evaluation-20261112T054653Z.json),
 [salle d'escalade](../raw/neural-final-climbing-gym-evaluation-20261112T054820Z.json).
+
+## 12 novembre 2026 — loi de bruit estimée sur un seul RAW (boîtier inconnu)
+
+Question de l'utilisateur : peut-on donner au réseau une loi de bruit sans
+calibration, pour un boîtier absent du catalogue, et que coûte l'erreur ?
+
+**Estimateur** (`tests/neural/estimate_single_raw_law.py`, exploratoire) : par
+position CFA, *b* = variance robuste des colonnes masquées (motif de colonnes
+retiré), noir = leur médiane ; *a* = pente des blocs 16×16 les plus lisses d'un
+résidu de même plan, *b* fixé, quantile 10 % corrigé de son biais pour un bruit
+gaussien pur, moitié basse des estimations par tranche de signal (la texture ne
+fait qu'ajouter). L'ajustement libre de *a* et *b* est biaisé par la texture
+(*b* négatif) et écarté.
+
+**Sensibilité du modèle livré** (`tests/neural/law_sensitivity.py`), 62 entrées
+de bruit réel (intérieur, drap, salle d'escalade), écart de gain au calibré :
+
+| Loi donnée au réseau | Médiane | Pire |
+| --- | --- | --- |
+| *a* ×0,8 / ×0,9 | −0,24 / −0,08 dB | −1,30 / −0,39 dB |
+| *a* ×1,1 / ×1,2 | +0,03 / +0,04 dB | −0,01 / −0,08 dB |
+| *b* ×0,8 à ×1,2 | ±0,01 dB | −0,36 dB |
+| Loi estimée | −0,04 dB | −0,60 dB |
+| Loi estimée, *a* ×1,1 / ×1,15 / ×1,2 | +0,01 / +0,03 / +0,04 dB | −0,17 / −0,02 / **0,00** dB |
+
+Rapports estimé/calibré : *a* médiane 0,95 (p10 0,87, p90 1,02), *b* médiane
+1,06 (p10 0,91, p90 1,15). Pires cas : plans verts de la salle d'escalade à
+12 800–25 600 ISO (*a* ×0,73–0,85).
+
+**Lecture.**
+
+- La pente *a* compte, *b* presque pas ; le réseau tolère une surestimation et
+  perd sur une sous-estimation (il débruite alors trop peu).
+- **Loi estimée avec *a* majorée de 20 % : jamais moins bonne que la loi
+  calibrée** sur ces 62 entrées (+0,04 dB médian). Un petit réseau estimateur
+  n'est pas nécessaire à ce stade.
+- La surestimation de *a* faisant légèrement gagner le réseau même avec la loi
+  calibrée, l'écart entre loi calibrée et bruit réel est à étudier pour un futur
+  réglage.
+- Limites : un seul boîtier (R6 III), scènes déjà vues par les évaluations ;
+  pas de vérité pour le R7 et le 60D (estimations seulement stables) ; sans
+  pixels masqués, *b* n'a pas de source fiable. Prochaine étape : prises noires
+  et aplats au 60D, puis porter l'estimateur en C++ (source de bruit commune
+  sur `patch_noise`).
+
+Preuves : [sensibilité](../raw/neural-law-sensitivity-v001-20261112T183100Z.json),
+[marges](../raw/neural-law-sensitivity-margin-v001-20261112T184200Z.json).
