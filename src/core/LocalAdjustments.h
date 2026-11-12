@@ -53,6 +53,7 @@ struct Shape
     // long side. A triangle always has zero width at its start.
     float startWidth = 0.12f;
     float endWidth = 0.4f;
+    float diffusion = 0.0f;  // cone: axial attenuation towards end, in [0, 1]
     std::vector<BrushStroke> strokes;
     // Luminance range: what the image shows before any edit, encoded as the eye reads it,
     // whole between low and high, fading over feather on each side. Alone it selects tones;

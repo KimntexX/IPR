@@ -159,6 +159,7 @@ Item {
             angleControl.value = shape.angle
             startWidthControl.value = shape.startWidth * 100
             endWidthControl.value = shape.endWidth * 100
+            diffusionControl.value = shape.diffusion * 100
             rangeLowControl.value = shape.rangeLow * 100
             rangeHighControl.value = shape.rangeHigh * 100
             rangeFeatherControl.value = shape.rangeFeather * 100
@@ -546,6 +547,18 @@ Item {
                     valueText: value.toFixed(1)
                     adjustmentEnabled: root.currentShape !== null
                     onValueEdited: root.sendShapeField("endWidth", value / 100)
+                }
+                AdjustmentControl {
+                    id: diffusionControl
+                    objectName: "maskDiffusion"
+                    visible: root.tool === "triangle" || root.tool === "trapezoid"
+                    textColor: root.textColor
+                    secondaryTextColor: root.secondaryTextColor
+                    label: qsTr("Diffusion du spot (%)")
+                    minimumValue: 0; maximumValue: 100; resetValue: 70
+                    valueText: Math.round(value)
+                    adjustmentEnabled: root.currentShape !== null
+                    onValueEdited: root.sendShapeField("diffusion", value / 100)
                 }
                 AdjustmentControl {
                     id: featherControl

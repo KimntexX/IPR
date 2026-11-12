@@ -443,6 +443,39 @@ void cones()
     QDataStream second(&after, QIODevice::WriteOnly);
     appendKey(second, masks);
     check(before != after, "cone width invalidates mask cache");
+    Shape spot;
+    spot.kind = Kind::Triangle;
+    spot.diffusion = 1;
+    spot.feather = .5f;
+    const auto beam = coverage(maskOf(spot), canvas);
+    check(at(beam,.5f,.3f) > .95f && at(beam,.5f,.5f) > .45f && at(beam,.5f,.5f) < .55f &&
+          at(beam,.5f,.7f) < .05f, "spot fades from bright tip to base despite side feather");
+    float previous = 1;
+    for (int y = 90; y < 225; ++y) {
+        const float value = imagetest::at<float>(beam, y, 200);
+        check(std::isfinite(value) && value >= 0 && value <= previous + 1e-6f, "axial falloff is finite bounded and monotone");
+        previous = value;
+    }
+    const auto bigBeam = coverage(maskOf(spot), {800, 600});
+    check(std::abs(at(beam,.5f,.4f)-at(bigBeam,.5f,.4f)) < .03f, "spot follows resolution");
+    spot.start = {.25f,.5f}; spot.end = {.75f,.5f};
+    const auto horizontal = coverage(maskOf(spot), canvas);
+    check(at(horizontal,.3f,.5f) > at(horizontal,.7f,.5f), "falloff follows rotated beam axis");
+    spot.inverted = true;
+    check(std::abs(at(horizontal,.4f,.5f)+at(coverage(maskOf(spot),canvas),.4f,.5f)-1) < 1e-6f,
+          "inversion applies to the full diffused beam");
+    masks = {valued(spot, LocalValues::Exposure, 1)};
+    before.clear(); after.clear();
+    QDataStream third(&before, QIODevice::WriteOnly);
+    appendKey(third, masks);
+    masks[0].shapes[0].diffusion = .5f;
+    QDataStream fourth(&after, QIODevice::WriteOnly);
+    appendKey(fourth, masks);
+    check(before != after, "diffusion invalidates cache");
+    masks[0].shapes[0].diffusion = 2;
+    check(bound(masks) && masks[0].shapes[0].diffusion == 1, "diffusion bounded");
+    masks[0].shapes[0].diffusion = std::numeric_limits<float>::quiet_NaN();
+    check(!bound(masks), "nonfinite diffusion refused");
 }
 
 int main()

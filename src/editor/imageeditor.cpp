@@ -1946,6 +1946,8 @@ int ImageEditor::addLocalMask(const QString &kind)
     LocalAdjustments::Shape shape;
     if (!LocalAdjustments::kindNamed(kind, shape.kind))
         return -1;
+    if (shape.kind == LocalAdjustments::Kind::Triangle || shape.kind == LocalAdjustments::Kind::Trapezoid)
+        shape.diffusion = 0.7f;
     LocalAdjustments::Masks next = m_settings.localMasks;
     LocalAdjustments::Mask mask;
     mask.name = tr("Masque %1").arg(next.size() + 1);
@@ -2031,6 +2033,8 @@ int ImageEditor::addLocalMaskShape(int mask, const QString &kind, const QString 
     if (mask < 0 || mask >= int(m_settings.localMasks.size()) || !LocalAdjustments::kindNamed(kind, shape.kind) ||
         !LocalAdjustments::combineNamed(combine, shape.combine))
         return -1;
+    if (shape.kind == LocalAdjustments::Kind::Triangle || shape.kind == LocalAdjustments::Kind::Trapezoid)
+        shape.diffusion = 0.7f;
     LocalAdjustments::Masks next = m_settings.localMasks;
     next[size_t(mask)].shapes.push_back(shape);
     const int index = int(next[size_t(mask)].shapes.size()) - 1;

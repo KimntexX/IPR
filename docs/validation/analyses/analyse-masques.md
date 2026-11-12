@@ -169,3 +169,40 @@ Build `build-patch_masks/Release/appIPR.exe` prêt pour validation visuelle du
 clic droit et du déplacement par la poignée. Validation partielle suivie par
 l’[issue #24](https://github.com/KimntexX/IPR/issues/24). Aucune fusion,
 publication ou création de tag.
+
+## 12 novembre 2026 — Diffusion axiale d’un spot
+
+Les cônes disposent d’un réglage **Diffusion du spot**, de 0 à 100 %. L’effet
+est plus intense près du départ et s’atténue vers l’arrivée. Avec la position
+axiale normalisée `t` et la diffusion `d`, la couverture est multipliée par
+`1 - d * (3*t*t - 2*t*t*t)`, sur `[0,1]`. À zéro, pas d’atténuation axiale ;
+à 100 %, la couverture décroît jusqu’à zéro à la base. Le préréglage des
+nouveaux cônes utilise 70 %. L’effet lumineux nécessite toujours une exposition
+locale positive ; la géométrie seule ne change pas l’image.
+
+Le contour utilise désormais la largeur locale du faisceau, au lieu de la
+distance aux faces normalisée au centre du polygone. Cela conserve une pointe
+triangulaire intense malgré les bords doux. L’arrivée reste adoucie ; le départ
+d’un trapèze de largeur non nulle l’est aussi. Cette règle remplace le contour
+précédent pour tous les cônes, sans second moteur. Il s’agit d’un masque
+artistique, pas d’une simulation photométrique ou volumétrique.
+
+La diffusion participe à la recette, à son égalité et à la clé de cache. Le
+format sidecar devient 12 ; les fichiers plus anciens restent lisibles, avec
+diffusion absente égale à zéro. Cela conserve leur absence d’atténuation axiale,
+mais pas l’ancienne loi de contour. Le curseur est propre à chaque forme et
+utilise les commandes existantes d’historique et de sauvegarde.
+
+Sept suites ciblées passent, ainsi que le build et le lancement de contrôle.
+Les assertions couvrent décroissance monotone, pointe avec contour doux,
+rotation, résolution, inversion, bornes/finitude, cache, persistance et réglage
+QML. Preuve : [mask-spot-validation-v001-20261112T213730Z.json](../raw/mask-spot-validation-v001-20261112T213730Z.json).
+Pas de nouvelle comparaison du corpus RAW ; le PDF du guide n’est pas reconstruit.
+
+### Conclusion actuelle
+
+Prêt pour un contrôle visuel sur `build-patch_masks/Release/appIPR.exe` :
+choisir un nouveau cône ou régler la diffusion d’un cône existant à 70–100 %,
+puis augmenter son exposition. Validation visuelle en attente, suivie dans
+l’[issue #24](https://github.com/KimntexX/IPR/issues/24). Aucune publication,
+fusion ou création de tag.

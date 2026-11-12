@@ -82,32 +82,29 @@ void paintCone(const Shape &shape, ipr::Image &out)
     const float farHalf = shape.endWidth * scale * 0.5f;
     if (length < 1e-4f || nearHalf + farHalf < 1e-4f) return;
     const ipr::Point2f normal{-axis.y / length, axis.x / length};
-    const std::array<ipr::Point2f, 4> corners{{start + normal * nearHalf, end + normal * farHalf,
-                                             end - normal * farHalf, start - normal * nearHalf}};
-    const auto center = (start + end) * 0.5f;
-    struct Face { float nx, ny, x, y; };
-    std::array<Face, 4> faces{};
-    size_t count = 0;
-    for (size_t i = 0; i < corners.size(); ++i) {
-        const auto a = corners[i], b = corners[(i + 1) % corners.size()];
-        const auto edge = b - a;
-        const float nx = -edge.y, ny = edge.x;
-        const float distance = nx * (center.x-a.x) + ny * (center.y-a.y);
-        if (std::abs(distance) < 1e-8f) continue; // duplicate tip of a triangle
-        faces[count++] = {nx/distance, ny/distance, a.x, a.y};
-    }
-    if (count < 3) return;
+    const float inverseLength = 1.0f / length;
     ipr::parallelRows(out.height(), [&](int first, int last) {
         for (int y = first; y < last; ++y) {
             float *row = out.mutableRow<float>(y);
             for (int x = 0; x < out.width(); ++x) {
-                float distance = 1.0f;
-                for (size_t i = 0; i < count; ++i) {
-                    const auto &f = faces[i];
-                    distance = std::min(distance, f.nx*(float(x)-f.x) + f.ny*(float(y)-f.y));
+                const ipr::Point2f offset{float(x) - start.x, float(y) - start.y};
+                const float along = offset.dot(axis) * inverseLength * inverseLength;
+                const float halfWidth = nearHalf + along * (farHalf - nearHalf);
+                const float across = std::abs(offset.dot(normal));
+                if (along < 0 || along > 1 || halfWidth <= 0 || across > halfWidth) {
+                    row[x] = 0;
+                    continue;
                 }
-                row[x] = distance < 0 ? 0.0f : shape.feather <= 0 ? 1.0f
-                    : ImageMath::smoothStep(0.0f, shape.feather, distance);
+                // Soften the sides relative to the local beam width: the tip stays
+                // bright, rather than fading in like the near cap of a rectangle.
+                float edge = 1.0f;
+                if (shape.feather > 0) {
+                    edge = ImageMath::smoothStep(0.0f, shape.feather, 1.0f - across / halfWidth);
+                    edge *= ImageMath::smoothStep(0.0f, shape.feather * 0.5f, 1.0f - along);
+                    if (nearHalf > 0)
+                        edge *= ImageMath::smoothStep(0.0f, shape.feather * 0.5f, along);
+                }
+                row[x] = edge * (1.0f - shape.diffusion * ImageMath::smoothStep(0.0f, 1.0f, along));
             }
         }
     });
@@ -332,7 +329,7 @@ bool operator==(const Shape &a, const Shape &b)
            a.center == b.center && a.radiusX == b.radiusX && a.radiusY == b.radiusY && a.angle == b.angle &&
            a.feather == b.feather && a.strokes == b.strokes && a.rangeLow == b.rangeLow &&
             a.rangeHigh == b.rangeHigh && a.rangeFeather == b.rangeFeather &&
-            a.startWidth == b.startWidth && a.endWidth == b.endWidth;
+            a.startWidth == b.startWidth && a.endWidth == b.endWidth && a.diffusion == b.diffusion;
 }
 
 bool operator==(const Mask &a, const Mask &b)
@@ -364,7 +361,7 @@ bool bound(Masks &masks)
             if (!place(shape.start) || !place(shape.end) || !place(shape.center) || !std::isfinite(shape.radiusX) ||
                 !std::isfinite(shape.radiusY) || !std::isfinite(shape.angle) || !std::isfinite(shape.feather) ||
                 !std::isfinite(shape.rangeLow) || !std::isfinite(shape.rangeHigh) || !std::isfinite(shape.rangeFeather) ||
-                !std::isfinite(shape.startWidth) || !std::isfinite(shape.endWidth) ||
+                !std::isfinite(shape.startWidth) || !std::isfinite(shape.endWidth) || !std::isfinite(shape.diffusion) ||
                 int(shape.strokes.size()) > largestStrokeCount)
                 return false;
             shape.rangeLow = std::clamp(shape.rangeLow, 0.0f, 1.0f);
@@ -374,6 +371,7 @@ bool bound(Masks &masks)
             shape.radiusY = std::clamp(shape.radiusY, 0.0f, 8.0f);
             shape.startWidth = std::clamp(shape.startWidth, 0.0f, 8.0f);
             shape.endWidth = std::clamp(shape.endWidth, 0.0f, 8.0f);
+            shape.diffusion = std::clamp(shape.diffusion, 0.0f, 1.0f);
             shape.angle = std::clamp(shape.angle, -360.0f, 360.0f);
             shape.feather = std::clamp(shape.feather, 0.0f, 1.0f);
             for (BrushStroke &stroke : shape.strokes) {
@@ -494,7 +492,7 @@ void appendKey(QDataStream &stream, const Masks &masks)
                    << shape.angle << shape.feather << shape.rangeLow << shape.rangeHigh << shape.rangeFeather
                    << qint32(shape.strokes.size());
             if (shape.kind == Kind::Triangle || shape.kind == Kind::Trapezoid)
-                stream << shape.startWidth << shape.endWidth;
+                stream << shape.startWidth << shape.endWidth << shape.diffusion;
             for (const BrushStroke &stroke : shape.strokes) {
                 stream << stroke.size << stroke.feather << stroke.flow << qint32(stroke.points.size());
                 for (const ipr::Point2f &point : stroke.points)
@@ -575,6 +573,7 @@ QVariantList describe(const Masks &masks)
                 {QStringLiteral("end"), pointValue(shape.end)}, {QStringLiteral("center"), pointValue(shape.center)},
                 {QStringLiteral("radiusX"), double(shape.radiusX)}, {QStringLiteral("radiusY"), double(shape.radiusY)},
                 {QStringLiteral("startWidth"), double(shape.startWidth)}, {QStringLiteral("endWidth"), double(shape.endWidth)},
+                {QStringLiteral("diffusion"), double(shape.diffusion)},
                 {QStringLiteral("angle"), double(shape.angle)}, {QStringLiteral("feather"), double(shape.feather)},
                 {QStringLiteral("strokes"), int(shape.strokes.size())},
                 {QStringLiteral("rangeLow"), double(shape.rangeLow)}, {QStringLiteral("rangeHigh"), double(shape.rangeHigh)},
@@ -599,6 +598,7 @@ bool setShapeFields(Shape &shape, const QVariantMap &values)
         else if (key == QStringLiteral("radiusY")) ok = readFloat(value, shape.radiusY);
         else if (key == QStringLiteral("startWidth")) ok = readFloat(value, shape.startWidth);
         else if (key == QStringLiteral("endWidth")) ok = readFloat(value, shape.endWidth);
+        else if (key == QStringLiteral("diffusion")) ok = readFloat(value, shape.diffusion);
         else if (key == QStringLiteral("angle")) ok = readFloat(value, shape.angle);
         else if (key == QStringLiteral("feather")) ok = readFloat(value, shape.feather);
         else if (key == QStringLiteral("rangeLow")) ok = readFloat(value, shape.rangeLow);

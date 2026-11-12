@@ -89,10 +89,21 @@ int main(int argc, char **argv)
         LocalAdjustments::Shape shape;
         shape.kind = LocalAdjustments::Kind::Trapezoid;
         shape.startWidth = .17f; shape.endWidth = .51f;
+        shape.diffusion = .73f;
         mask.shapes.push_back(shape); cones.localMasks.push_back(mask);
         EditRecipe::Settings restored;
         if (!check(RecipeCodec::decodeSettings(RecipeCodec::encodeSettings(cones), restored) &&
                    restored.localMasks == cones.localMasks, "cone widths and kind round trip")) return 1;
+        auto old = RecipeCodec::encodeSettings(cones);
+        auto masks = old.value(QStringLiteral("localMasks")).toArray();
+        auto oldMask = masks[0].toMap();
+        auto shapes = oldMask.value(QStringLiteral("shapes")).toArray();
+        auto oldShape = shapes[0].toMap();
+        oldShape.remove(QStringLiteral("diffusion"));
+        shapes[0] = oldShape; oldMask.insert(QStringLiteral("shapes"), shapes);
+        masks[0] = oldMask; old.insert(QStringLiteral("localMasks"), masks);
+        if (!check(RecipeCodec::decodeSettings(old, restored) && restored.localMasks[0].shapes[0].diffusion == 0,
+                   "missing diffusion migrates to no axial attenuation")) return 1;
     }
     {
         EditRecipe::RawDevelopment neural;

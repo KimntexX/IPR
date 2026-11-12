@@ -381,6 +381,15 @@ int main(int argc, char **argv)
                named(panel, "maskEndWidth")->isVisible() && !named(panel, "maskStartWidth")->isVisible(),
                "triangle exposes its far width")) return 1;
     const int triangleIndex = panel->property("selectedMask").toInt();
+    auto *diffusion = named(panel, QStringLiteral("maskDiffusion"));
+    if (!check(diffusion && diffusion->isVisible() &&
+               std::abs(diffusion->property("value").toDouble() - 70) < .01,
+               "new cones offer a default spot falloff")) return 1;
+    diffusion->setProperty("value", 95.0);
+    QMetaObject::invokeMethod(diffusion, "valueEdited", Q_ARG(double, 95.0));
+    settle();
+    if (!check(std::abs(shapeAt(editor, triangleIndex, 0).value("diffusion").toDouble() - .95) < .001,
+               "diffusion slider updates the recipe")) return 1;
     overlay->setProperty("shape", shapeAt(editor, triangleIndex, 0)); settle();
     if (!check(named(overlay,"maskHandle_start") && named(overlay,"maskHandle_endWidth") &&
                !named(overlay,"maskHandle_startWidth"), "triangle handles")) return 1;
