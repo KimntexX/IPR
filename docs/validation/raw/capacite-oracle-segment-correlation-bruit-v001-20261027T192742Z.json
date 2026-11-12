@@ -1,0 +1,482 @@
+{
+ "schema_version": 1,
+ "data_version": 1,
+ "completed_at_utc": "2026-10-27T19:27:42.322210+00:00",
+ "records": [
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "lower": "training_100",
+   "upper": "dataset1_100",
+   "predicted_y_weight": 0.11964654500161032,
+   "oracle_shape_weight": 0.9083652208447273,
+   "oracle_shape_loss": 0.00042816483224449996,
+   "oracle_hh": {
+    "weight": 1.0,
+    "loss": 0.01635459858256354,
+    "stationary_candidates": [
+     0.0,
+     0.5157459721832757,
+     1.0
+    ]
+   }
+  },
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "lower": "training_100",
+   "upper": "dataset1_100",
+   "predicted_y_weight": 0.11826152222488207,
+   "oracle_shape_weight": 1.0,
+   "oracle_shape_loss": 0.0004332748322336959,
+   "oracle_hh": {
+    "weight": 0.9453644380164998,
+    "loss": 0.014459467018600054,
+    "stationary_candidates": [
+     0.0,
+     0.0756643490090539,
+     0.9453644380164998,
+     1.0
+    ]
+   }
+  },
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "lower": "training_100",
+   "upper": "dataset1_100",
+   "predicted_y_weight": 0.10167391250840671,
+   "oracle_shape_weight": 0.8601897668291264,
+   "oracle_shape_loss": 0.0003877543352779902,
+   "oracle_hh": {
+    "weight": 0.6800457727106262,
+    "loss": 0.00307349255680738,
+    "stationary_candidates": [
+     0.0,
+     0.6407376057488051,
+     0.6800457727106262,
+     1.0
+    ]
+   }
+  },
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "lower": "training_100",
+   "upper": "dataset1_100",
+   "predicted_y_weight": 0.0999942347801553,
+   "oracle_shape_weight": 0.939343475546518,
+   "oracle_shape_loss": 0.0002660698243032233,
+   "oracle_hh": {
+    "weight": 0.8902157753260334,
+    "loss": 0.019573106988281002,
+    "stationary_candidates": [
+     0.0,
+     0.8902157753260334,
+     1.0
+    ]
+   }
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "lower": "training_6400",
+   "upper": "dataset2_6400",
+   "predicted_y_weight": 0.1157642013399048,
+   "oracle_shape_weight": 1.0,
+   "oracle_shape_loss": 0.0003488347221802124,
+   "oracle_hh": {
+    "weight": 1.0,
+    "loss": 0.04572645573943643,
+    "stationary_candidates": [
+     0.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "lower": "training_6400",
+   "upper": "dataset2_6400",
+   "predicted_y_weight": 0.13599089369409176,
+   "oracle_shape_weight": 0.9856450934900629,
+   "oracle_shape_loss": 0.0003997790493771759,
+   "oracle_hh": {
+    "weight": 1.0,
+    "loss": 0.046485681205956565,
+    "stationary_candidates": [
+     0.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "lower": "training_6400",
+   "upper": "dataset2_6400",
+   "predicted_y_weight": 0.024661742703176868,
+   "oracle_shape_weight": 0.8690868000173304,
+   "oracle_shape_loss": 0.00036455291479002035,
+   "oracle_hh": {
+    "weight": 0.09195978836896314,
+    "loss": 0.017459028320925534,
+    "stationary_candidates": [
+     0.0,
+     0.09195978836896314,
+     0.36193613822738935,
+     1.0
+    ]
+   }
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "lower": "training_6400",
+   "upper": "dataset2_6400",
+   "predicted_y_weight": 0.04904753748538043,
+   "oracle_shape_weight": 0.9426498821452757,
+   "oracle_shape_loss": 0.0003826767013450432,
+   "oracle_hh": {
+    "weight": 0.8135045244956235,
+    "loss": 0.03366761120136539,
+    "stationary_candidates": [
+     0.0,
+     0.8135045244956235,
+     1.0
+    ]
+   }
+  },
+  {
+   "dataset": 0,
+   "iso": 51200,
+   "a": "6V1A9815.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "lower": "dataset2_51200",
+   "upper": "training_51200",
+   "predicted_y_weight": 0.26936299283835596,
+   "oracle_shape_weight": 0.10118732943019158,
+   "oracle_shape_loss": 0.0006833279095286836,
+   "oracle_hh": {
+    "weight": 0.499505317839319,
+    "loss": 0.00653676023262208,
+    "stationary_candidates": [
+     0.0,
+     0.2471912314890555,
+     0.499505317839319,
+     0.7504432632068453,
+     1.0
+    ]
+   }
+  },
+  {
+   "dataset": 0,
+   "iso": 51200,
+   "a": "6V1A9815.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "lower": "dataset2_51200",
+   "upper": "training_51200",
+   "predicted_y_weight": 0.2549861964310797,
+   "oracle_shape_weight": 0.006624320775174345,
+   "oracle_shape_loss": 0.00030808416994672306,
+   "oracle_hh": {
+    "weight": 0.0,
+    "loss": 0.00924040106589528,
+    "stationary_candidates": [
+     0.0,
+     0.2541726737326517,
+     1.0
+    ]
+   }
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "lower": "dataset0_6400",
+   "upper": "dataset1_6400",
+   "predicted_y_weight": 0.12834739397218212,
+   "oracle_shape_weight": 0.04450696386429104,
+   "oracle_shape_loss": 0.00042298370204981145,
+   "oracle_hh": {
+    "weight": 0.0,
+    "loss": 0.03650596291599082,
+    "stationary_candidates": [
+     0.0,
+     0.03745878545792076,
+     1.0
+    ]
+   }
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "lower": "dataset0_6400",
+   "upper": "dataset1_6400",
+   "predicted_y_weight": 0.13343489043333298,
+   "oracle_shape_weight": 0.05947311221820092,
+   "oracle_shape_loss": 0.00039590440545278743,
+   "oracle_hh": {
+    "weight": 0.0002802744713359553,
+    "loss": 0.03219412134581765,
+    "stationary_candidates": [
+     0.0,
+     0.0002802744713359553,
+     1.0
+    ]
+   }
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "lower": "dataset0_6400",
+   "upper": "dataset1_6400",
+   "predicted_y_weight": 0.09941900827141167,
+   "oracle_shape_weight": 0.12728326454326583,
+   "oracle_shape_loss": 0.00043695460602645187,
+   "oracle_hh": {
+    "weight": 0.11026663218269679,
+    "loss": 0.022736810515372737,
+    "stationary_candidates": [
+     0.0,
+     0.11026663218269679,
+     1.0
+    ]
+   }
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "lower": "dataset0_6400",
+   "upper": "dataset1_6400",
+   "predicted_y_weight": 0.1069712924813912,
+   "oracle_shape_weight": 0.04582233370843557,
+   "oracle_shape_loss": 0.00030323111158850737,
+   "oracle_hh": {
+    "weight": 0.0666756987472874,
+    "loss": 0.019476079673689268,
+    "stationary_candidates": [
+     0.0,
+     0.00915308982060728,
+     0.0666756987472874,
+     1.0
+    ]
+   }
+  }
+ ],
+ "summaries": [
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "quadrants": 4,
+   "oracle_shape_lower_bound": 0.00037881595601485236,
+   "oracle_hh_lower_bound": 0.013365166286562993,
+   "required_hh_limit": 0.04800077974264717,
+   "hh_screen_impossible_for_this_segment": false,
+   "shape_only_metrics": {
+    "normalized_covariance_squared_error": 0.0013783897209697078,
+    "mean_abs_log_hh_factor_error": 0.04323960525674632
+   },
+   "fixed_metrics": {
+    "normalized_covariance_squared_error": 0.001658795891184364,
+    "mean_abs_log_hh_factor_error": 0.04800077974264717
+   },
+   "nearest_metrics": {
+    "normalized_covariance_squared_error": 0.001658795891184364,
+    "mean_abs_log_hh_factor_error": 0.04800077974264717
+   }
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "quadrants": 4,
+   "oracle_shape_lower_bound": 0.00037396084692311297,
+   "oracle_hh_lower_bound": 0.03583469411692098,
+   "required_hh_limit": 0.04091977755570719,
+   "hh_screen_impossible_for_this_segment": false,
+   "shape_only_metrics": {
+    "normalized_covariance_squared_error": 0.0010551966064764463,
+    "mean_abs_log_hh_factor_error": 0.04037029916147847
+   },
+   "fixed_metrics": {
+    "normalized_covariance_squared_error": 0.001190106502846297,
+    "mean_abs_log_hh_factor_error": 0.04091977755570719
+   },
+   "nearest_metrics": {
+    "normalized_covariance_squared_error": 0.001190106502846297,
+    "mean_abs_log_hh_factor_error": 0.04091977755570719
+   }
+  },
+  {
+   "dataset": 0,
+   "iso": 51200,
+   "a": "6V1A9815.CR3",
+   "quadrants": 2,
+   "oracle_shape_lower_bound": 0.0004957060397377033,
+   "oracle_hh_lower_bound": 0.00788858064925868,
+   "required_hh_limit": 0.016624178152623258,
+   "hh_screen_impossible_for_this_segment": false,
+   "shape_only_metrics": {
+    "normalized_covariance_squared_error": 0.0005452360491116405,
+    "mean_abs_log_hh_factor_error": 0.010141560238006726
+   },
+   "fixed_metrics": {
+    "normalized_covariance_squared_error": 0.0014837329917099025,
+    "mean_abs_log_hh_factor_error": 0.039077968211123595
+   },
+   "nearest_metrics": {
+    "normalized_covariance_squared_error": 0.0005013670810442243,
+    "mean_abs_log_hh_factor_error": 0.016624178152623258
+   }
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "quadrants": 4,
+   "oracle_shape_lower_bound": 0.00038976845627938957,
+   "oracle_hh_lower_bound": 0.02772824361271762,
+   "required_hh_limit": 0.03204602996359927,
+   "hh_screen_impossible_for_this_segment": false,
+   "shape_only_metrics": {
+    "normalized_covariance_squared_error": 0.0003978565490666893,
+    "mean_abs_log_hh_factor_error": 0.0481004195054265
+   },
+   "fixed_metrics": {
+    "normalized_covariance_squared_error": 0.001130502982884058,
+    "mean_abs_log_hh_factor_error": 0.03204602996359927
+   },
+   "nearest_metrics": {
+    "normalized_covariance_squared_error": 0.0004010905467633608,
+    "mean_abs_log_hh_factor_error": 0.03764866895163136
+   }
+  }
+ ],
+ "verdict": "separate_bounds_do_not_rule_out_segment_no_predictor_validated",
+ "parents": [
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\prediction-covariance-luminance-bruit-v001-20261027T192134Z.json",
+   "sha256": "45371018c270d8c350f051c4dfc881398123d197c5156cd434dd683fcabaa1e0"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\prediction-correlation-separee-bruit-v001-20261027T192606Z.json",
+   "sha256": "ab53388d789f935564d5b7cf8b7c9354fd0fffc663c7625692fa4279d92376fe"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\transport-psd-gaussien-filtre-spectral-bruit-v002-20261027T190615Z.json",
+   "sha256": "20811ce8fafd75cc7d59438602e408e574fc7b189a49ac104b9913c3698433ac"
+  }
+ ],
+ "numpy_version": "2.4.2",
+ "commit": "2a40c5c6cff78d40294393a68827f4a24555c724",
+ "runner_sha256": "52d67f25c3b59f3f211037514eb25c123d7ec25f14d084184cc0c8d5297e7fd2",
+ "runner_source": "\"\"\"Oracle capacity diagnosis for fixed convex correlation segment; NEVER an image estimator.\"\"\"\nfrom datetime import datetime,timezone\nimport json\nfrom pathlib import Path\nimport numpy as np\nfrom numpy.polynomial import Polynomial\nfrom study_noise_neighbourhoods import ROOT,sha256,git\nfrom study_noise_signal_covariance_prediction import normalized,physical\nfrom study_noise_haar_factor_transport import hh_variances\n\n\ndef hh_loss(weight,low,high,actual):\n    return float(np.mean(abs(np.log(((1-weight)*low+weight*high)/actual)))/2)\n\n\ndef minimum_hh(low,high,actual):\n    \"\"\"Exact piecewise stationary candidates of sum |log affine|, no weight grid/tuning.\"\"\"\n    low,high,actual=[np.asarray(v,dtype=float) for v in (low,high,actual)]\n    if any(v.shape!=(3,) or not np.isfinite(v).all() or np.min(v)<=0 for v in (low,high,actual)):\n        raise ValueError('Three positive finite HH variances required')\n    delta=high-low;breaks=[0.,1.]\n    for a,d,t in zip(low,delta,actual):\n        if d!=0 and 0<(t-a)/d<1:breaks.append(float((t-a)/d))\n    breaks=sorted(set(breaks));candidates=list(breaks)\n    terms=[Polynomial([a,d]) for a,d in zip(low,delta)]\n    for left,right in zip(breaks[:-1],breaks[1:]):\n        signs=np.sign(low+((left+right)/2)*delta-actual);numerator=Polynomial([0.])\n        for axis in range(3):\n            term=Polynomial([signs[axis]*delta[axis]])\n            for other in range(3):\n                if other!=axis:term*=terms[other]\n            numerator+=term\n        for root in numerator.roots():\n            if abs(root.imag)<1e-10 and left<float(root.real)<right:\n                candidates.append(float(root.real))\n    weight=min(candidates,key=lambda w:hh_loss(w,low,high,actual))\n    return dict(weight=weight,loss=hh_loss(weight,low,high,actual),stationary_candidates=candidates)\n\n\ndef shape_weight(low,high,actual):\n    delta=high-low;energy=float(np.sum(delta*delta))\n    return float(np.clip(np.sum(delta*(actual-low))/energy,0,1)) if energy>0 else 0.\n\n\ndef run():\n    names=('prediction-covariance-luminance-bruit-v001-20261027T192134Z.json',\n        'prediction-correlation-separee-bruit-v001-20261027T192606Z.json',\n        'transport-psd-gaussien-filtre-spectral-bruit-v002-20261027T190615Z.json')\n    paths=[ROOT/'docs/validation/raw'/n for n in names];hashes=[sha256(p) for p in paths]\n    parent,separated,spectral=[json.loads(p.read_text(encoding='utf-8')) for p in paths]\n    anchors={a['id']:a for a in parent['anchors']};records=[]\n    for row in parent['records']:\n        if row['status']!='predicted_held_capture':continue\n        low,high=[normalized(np.asarray(anchors[row[k]]['physical_covariance'])) for k in ('lower','upper')]\n        target=next(r for r in spectral['records'] if r['dataset']==row['dataset'] and r['a']==row['a'] and r['rect']==row['rect'])\n        actual=normalized(physical(target));wshape=shape_weight(low,high,actual)\n        hh=minimum_hh(hh_variances(low),hh_variances(high),hh_variances(actual))\n        shape_lower_bound=float(np.mean(((1-wshape)*low+wshape*high-actual)**2))\n        records.append(dict(dataset=row['dataset'],iso=row['iso'],a=row['a'],rect=row['rect'],\n            lower=row['lower'],upper=row['upper'],predicted_y_weight=row['upper_weight'],\n            oracle_shape_weight=wshape,oracle_shape_loss=shape_lower_bound,oracle_hh=hh))\n    summaries=[]\n    for previous in separated['summaries']:\n        rows=[r for r in records if r['dataset']==previous['dataset'] and r['a']==previous['a']]\n        if not rows:continue\n        shape_bound=float(np.mean([r['oracle_shape_loss'] for r in rows]));hh_bound=float(np.mean([r['oracle_hh']['loss'] for r in rows]))\n        means=previous['mean_metrics']\n        hh_required=min(means['fixed']['mean_abs_log_hh_factor_error'],means['nearest']['mean_abs_log_hh_factor_error'])\n        impossible=hh_bound>hh_required+1e-12\n        summary=dict(dataset=previous['dataset'],iso=previous['iso'],a=previous['a'],quadrants=len(rows),\n            oracle_shape_lower_bound=shape_bound,oracle_hh_lower_bound=hh_bound,\n            required_hh_limit=hh_required,hh_screen_impossible_for_this_segment=impossible,\n            shape_only_metrics=means['shape_only'],fixed_metrics=means['fixed'],nearest_metrics=means['nearest'])\n        summaries.append(summary)\n        print('Capacity',previous['dataset'],previous['iso'],'HH lower bound',hh_bound,'limit',hh_required,\n              'impossible',impossible,'shape bound',shape_bound,flush=True)\n    if len(records)!=14 or [sha256(p) for p in paths]!=hashes:raise ValueError('Incomplete/changed capacity audit')\n    now=datetime.now(timezone.utc)\n    output=ROOT/'docs/validation/raw'/f'capacite-oracle-segment-correlation-bruit-v001-{now.strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n    result=dict(schema_version=1,data_version=1,completed_at_utc=now.isoformat(),records=records,summaries=summaries,\n        verdict='convex_segment_insufficient_on_at_least_one_fold' if any(s['hh_screen_impossible_for_this_segment'] for s in summaries) else 'separate_bounds_do_not_rule_out_segment_no_predictor_validated',\n        parents=[dict(path=str(p),sha256=h) for p,h in zip(paths,hashes)],numpy_version=np.__version__,commit=git('rev-parse','HEAD'),\n        runner_sha256=sha256(Path(__file__)),runner_source=Path(__file__).read_text(encoding='utf-8'),\n        dependencies={n:dict(sha256=sha256(ROOT/'tests'/n),source=(ROOT/'tests'/n).read_text(encoding='utf-8')) for n in\n            ('study_noise_signal_covariance_prediction.py','study_noise_haar_factor_transport.py')},\n        rules='ORACLE usesheldDreference solelyforcapacitybound,NOTprediction. Same14targets/bracketinganchors fromparent;no alternateanchors/fitting onactualphotos. Shapeoptimum analyticprojection onsegment. GlobalHHminimum evaluatedatallpiecewiseboundary/stationarycandidates fromquadraticpolynomialderivative. Independentperquadrantoracleweights giveoptimisticcapturemean lowerbounds. NOdenoising,weight-grid,training or production.',\n        limitations='Separate minima may use differentweights,so jointlymeeting screens NOTproved. Impossibility only ifHHlowerbound exceedscapturelimit;conditional onestimatedcovariance and fixedanchors/segment. Doesnotrejectallcorrelationmodels or nonlinearprofiles. Reusedexploratory4captures,nocleanphoto truth. Oracleweights mustnever beappliedasuserimageparameters.')\n    with output.open('x',encoding='utf-8') as handle:json.dump(result,handle,ensure_ascii=False,indent=1,allow_nan=False)\n    print('VERDICT',result['verdict'],output,flush=True)\n\n\nif __name__=='__main__':run()\n",
+ "dependencies": {
+  "study_noise_signal_covariance_prediction.py": {
+   "sha256": "9b2c2e4eb65628cd7e8ee7f7294b68401046f39cdf3c7945e31088ac4e859b0c",
+   "source": "\"\"\"Whole-capture held-out linear-light covariance interpolation; analytic go/no-go before new gates.\"\"\"\nfrom datetime import datetime, timezone\nimport json\nfrom pathlib import Path\nimport numpy as np\nfrom study_noise_neighbourhoods import ROOT, sha256, git\nfrom study_noise_haar_factor_transport import hh_variances\n\n\nCRITERIA = dict(minimum_quiet_stable_tiles_per_quadrant=8, minimum_quadrants_per_anchor=2,\n    no_extrapolation=True,\n    screen='Each held capture must improve mean normalized covariance error vs fixed and not worsen vs nearest; same requirement for mean absolute log HH-factor error. No averaging hides failed capture. Research screen,not product validation.')\n\n\ndef normalized(covariance):\n    variance = np.diag(covariance[:,:,8,8])\n    if np.min(variance) <= 1e-24 or not np.isfinite(covariance).all():\n        raise ValueError('Finite covariance with positive marginal variance required')\n    return covariance/np.sqrt(variance[:,None,None,None]*variance[None,:,None,None])\n\n\ndef interpolate(anchors, value, held_names):\n    if any(set(a['raw_names']) & set(held_names) for a in anchors):\n        raise ValueError('Held capture leaked into prediction anchors')\n    ordered = sorted(anchors, key=lambda a:a['mean_a_y'])\n    lower = [a for a in ordered if a['mean_a_y'] <= value]\n    upper = [a for a in ordered if a['mean_a_y'] >= value]\n    if not lower or not upper: return None\n    lo, hi = lower[-1], upper[0]\n    if lo['id'] == hi['id']:\n        weight = 0.\n    else:\n        weight = (value-lo['mean_a_y'])/(hi['mean_a_y']-lo['mean_a_y'])\n    if not 0 <= weight <= 1: raise ValueError('Prediction would extrapolate')\n    predicted = (1-weight)*np.asarray(lo['physical_covariance'])+weight*np.asarray(hi['physical_covariance'])\n    nearest = min(ordered, key=lambda a:abs(a['mean_a_y']-value))\n    return dict(covariance=predicted, lower=lo['id'], upper=hi['id'], upper_weight=weight,\n        nearest_id=nearest['id'], nearest_covariance=np.asarray(nearest['physical_covariance']))\n\n\ndef errors(predicted, actual):\n    predicted_shape, actual_shape = normalized(predicted), normalized(actual)\n    sigma_ratio = np.sqrt(np.diag(predicted[:,:,8,8])/np.diag(actual[:,:,8,8]))\n    hh_factor_ratio = np.sqrt(hh_variances(actual_shape)/hh_variances(predicted_shape))\n    return dict(normalized_covariance_squared_error=float(np.mean((predicted_shape-actual_shape)**2)),\n        sigma_prediction_ratio=sigma_ratio.tolist(),\n        gaussian_hh_factor_ratio=hh_factor_ratio.tolist(),\n        mean_abs_log_hh_factor_error=float(np.mean(abs(np.log(hh_factor_ratio)))),\n        mean_abs_log_sigma_error=float(np.mean(abs(np.log(sigma_ratio)))))\n\n\ndef opening_contract(native):\n    declaration = native['declaration']\n    return dict(camera=native['camera'], opening_chroma_median=native['opening_chroma_median'],\n        **{k:declaration[k] for k in ('settings','dcp_profile','lcp_profile','raw_normalization',\n            'lens_geometry_applied','lens_vignetting_applied','chromatic_aberration_applied')})\n\n\ndef physical(record):\n    sigma = np.asarray(record['sigma_before_unit_scaling'])\n    return np.asarray(record['prepared_covariance_lag8'])*sigma[:,None,None,None]*sigma[None,:,None,None]\n\n\ndef run():\n    names = ('transport-psd-gaussien-filtre-spectral-bruit-v002-20261027T190615Z.json',\n        'origine-rejets-spectraux-paires-bruit-v001-20261027T190151Z.json',\n        'extraction-paires-profils-bruit-v001-20261026T174656Z.json',\n        'contextes-abstention-axes-bruit-v001-20261026T221702Z.json',\n        'paires-supplementaires-axes-bruit-v001-20261026T222302Z.json',\n        'paires-supplementaires-axes-bruit-v002-20261026T222833Z.json')\n    paths = [ROOT/'docs/validation/raw'/n for n in names]; hashes = [sha256(p) for p in paths]\n    spectral, audit, training = [json.loads(p.read_text(encoding='utf-8')) for p in paths[:3]]\n    started = datetime.now(timezone.utc); contracts = {}; anchors = []; baseline = {}; records = []\n    for pair in training['native']['pairs']:\n        iso = pair['a']['iso']; control = next(c for c in spectral['controls'] if c['iso'] == iso)\n        contract = opening_contract(pair['a'])\n        if opening_contract(pair['b']) != contract: raise ValueError('Training pair opening mismatch')\n        contracts[iso] = contract\n        a = next(s for s in pair['a']['samples'] if s['kind']=='flat')\n        baseline[iso] = physical(control)\n        anchors.append(dict(id='training_'+str(iso), iso=iso, raw_names=[pair[k]['raw'] for k in ('a','b')],\n            mean_a_y=float(np.mean(a['original_y_co_cg'][0])), physical_covariance=baseline[iso].tolist(),\n            source_kind='original_training64', source_quadrants=[]))\n    for dataset, path in enumerate(paths[3:]):\n        metadata = json.loads(path.read_text(encoding='utf-8'))\n        for pair in metadata['records']:\n            if any(opening_contract(pair[k]['native']) != contracts[pair['iso']] for k in ('a','b')):\n                raise ValueError('Do not mix opening settings/profiles in a light-level model')\n        del metadata\n    pairs = audit['records']\n    for pair in pairs:\n        usable = [r for r in spectral['records'] if r['dataset']==pair['dataset'] and r['a']==pair['a']\n            and r['status']=='generated' and r['quiet_stable_tiles'] >= CRITERIA['minimum_quiet_stable_tiles_per_quadrant']]\n        if len(usable) >= CRITERIA['minimum_quadrants_per_anchor']:\n            selected_tiles = [t for t in pair['tiles'] if any(\n                r['rect'][0] <= t['x'] < r['rect'][0]+128 and r['rect'][1] <= t['y'] < r['rect'][1]+128 for r in usable)]\n            anchors.append(dict(id=f\"dataset{pair['dataset']}_{pair['iso']}\", iso=pair['iso'],\n                raw_names=[pair['a'],pair['b']], mean_a_y=float(np.mean([t['mean_a_y'] for t in selected_tiles])),\n                physical_covariance=np.mean([physical(r) for r in usable],axis=0).tolist(),\n                source_kind='capture_mean_of_eligible128', source_quadrants=[r['rect'] for r in usable]))\n    for pair in pairs:\n        held_names = [pair['a'],pair['b']]\n        candidates = [a for a in anchors if a['iso']==pair['iso'] and not set(a['raw_names'])&set(held_names)]\n        for target in [r for r in spectral['records'] if r['dataset']==pair['dataset'] and r['a']==pair['a']]:\n            row = dict(dataset=pair['dataset'],iso=pair['iso'],a=pair['a'],b=pair['b'],rect=target['rect'],\n                quiet_stable_tiles=target['quiet_stable_tiles'], available_anchors=[a['id'] for a in candidates])\n            if target['status'] != 'generated' or target['quiet_stable_tiles'] < CRITERIA['minimum_quiet_stable_tiles_per_quadrant']:\n                row['status']='reference_unmeasurable_or_not_quiet_stable'; records.append(row); continue\n            x,y,_,_=target['rect']\n            feature = float(np.mean([t['mean_a_y'] for t in pair['tiles'] if x <= t['x'] < x+128 and y <= t['y'] < y+128]))\n            row['input_mean_a_y'] = feature\n            prediction = interpolate(candidates, feature, held_names)\n            if prediction is None:\n                row['status']='outside_characterized_light_range'; records.append(row); continue\n            actual = physical(target)\n            row.update(status='predicted_held_capture', lower=prediction['lower'], upper=prediction['upper'],\n                upper_weight=prediction['upper_weight'], nearest_id=prediction['nearest_id'],\n                metrics=dict(fixed=errors(baseline[pair['iso']],actual),\n                    nearest=errors(prediction['nearest_covariance'],actual),\n                    interpolated=errors(prediction['covariance'],actual)))\n            records.append(row)\n    summaries = []\n    for pair in pairs:\n        rows = [r for r in records if r['dataset']==pair['dataset'] and r['a']==pair['a'] and r['status']=='predicted_held_capture']\n        means = {mode:{metric:float(np.mean([r['metrics'][mode][metric] for r in rows]))\n            for metric in ('normalized_covariance_squared_error','mean_abs_log_hh_factor_error','mean_abs_log_sigma_error')}\n            for mode in ('fixed','nearest','interpolated')} if rows else {}\n        passed = bool(rows) and all(means['interpolated'][metric] < means['fixed'][metric]\n            and means['interpolated'][metric] <= means['nearest'][metric]\n            for metric in ('normalized_covariance_squared_error','mean_abs_log_hh_factor_error'))\n        summary = dict(dataset=pair['dataset'],iso=pair['iso'],a=pair['a'],predicted_quadrants=len(rows),\n            mean_metrics=means, screen_passed=passed if rows else None)\n        summaries.append(summary)\n        print('Held capture',pair['dataset'],pair['iso'],'quadrants',len(rows),'screen',summary['screen_passed'],\n            'shape errors',{m:v['normalized_covariance_squared_error'] for m,v in means.items()},flush=True)\n    tested = [r for r in summaries if r['predicted_quadrants']]\n    verdict = 'promising_on_available_folds_not_production_validated' if tested and all(r['screen_passed'] for r in tested) else 'simple_linear_light_interpolation_not_retained'\n    if len(records)!=48 or [sha256(p) for p in paths]!=hashes: raise ValueError('Incomplete/changed prediction study')\n    now = datetime.now(timezone.utc)\n    output = ROOT/'docs/validation/raw'/f'prediction-covariance-luminance-bruit-v001-{now.strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n    dependencies = ('study_noise_haar_factor_transport.py',)\n    result = dict(schema_version=1,data_version=1,started_at_utc=started.isoformat(),completed_at_utc=now.isoformat(),\n        criteria=CRITERIA,verdict=verdict,anchors=anchors,records=records,summaries=summaries,\n        tested_capture_folds=len(tested),opening_contracts=contracts,numpy_version=np.__version__,commit=git('rev-parse','HEAD'),\n        runner_sha256=sha256(Path(__file__)),runner_source=Path(__file__).read_text(encoding='utf-8'),\n        parents=[dict(path=str(p),sha256=h) for p,h in zip(paths,hashes)],\n        dependencies={n:dict(sha256=sha256(ROOT/'tests'/n),source=(ROOT/'tests'/n).read_text(encoding='utf-8')) for n in dependencies},\n        rules='One hypothesis: convex interpolation of PHYSICALcovariance in linearAmeanY between bracketingsameISOcaptureanchors;normalizeONLYafterblend. EntiretargetA/BcaptureremovedfromALLanchors. Fixed and nearestanchor controls. Eligibility>=8quiet/stable32tiles/128;anchor>=2eligiblequadrants. Noextrapolation,no fittingonheldD,thresholds or denoising. HeldDusedforeligibility/evaluationONLY,notweights;AmeanYfeatureonly.',\n        limitations='Reusedsmallpairedcorpus,no cleanphototruth;D/quiet/stableconditional. Physicallinearlevelrule is hypothesis after nonlinear RCD/profile/median opening.64trainingvs128captureanchors have unequal uncertainty. Fewbracketedcaptures,ISOcoverageincomplete;not newcamera/session. Target referenceeligibility usesB,so this is offlinecharacterization not completeblindestimator. Lag8score not fullPSD/perceptual/detailquality.')\n    with output.open('x',encoding='utf-8') as handle:json.dump(result,handle,ensure_ascii=False,indent=1,allow_nan=False)\n    print('VERDICT',verdict,output,flush=True)\n\n\nif __name__=='__main__':run()\n"
+  },
+  "study_noise_haar_factor_transport.py": {
+   "sha256": "df389d663d001b28b99bdd79feef14c50bfa0b12e78ab532012489f0da28f02b",
+   "source": "\"\"\"Analytic HH variance-factor transport from archived PSD lags, no new simulation or tuning.\"\"\"\nfrom datetime import datetime, timezone\nimport json\nfrom pathlib import Path\nimport numpy as np\nfrom study_noise_neighbourhoods import ROOT, sha256, git\n\n\ndef hh_variances(lags):\n    lags = np.asarray(lags, dtype=float)\n    if lags.shape != (3,3,17,17) or not np.isfinite(lags).all():\n        raise ValueError('Finite signed lag8 cross covariance required')\n    positions = np.array([[0,0],[1,0],[0,1],[1,1]])\n    weights = np.array([.5,-.5,-.5,.5]); delta = positions[:,None]-positions[None,:]\n    values = np.array([weights @ lags[c,c,delta[:,:,0]+8,delta[:,:,1]+8] @ weights for c in range(3)])\n    if np.min(values) <= 0: raise ValueError('Unmeasurable HH variance')\n    return values\n\n\ndef run():\n    path = ROOT/'docs/validation/raw/transport-psd-gaussien-filtre-spectral-bruit-v002-20261027T190615Z.json'\n    digest = sha256(path); data = json.loads(path.read_text(encoding='utf-8'))\n    reference = {c['iso']:hh_variances(c['prepared_covariance_lag8']) for c in data['controls']}\n    records = []\n    for source in data['records']:\n        row = {k:source[k] for k in ('dataset','iso','a','b','rect','mean_physical_y','quiet_stable_tiles','status')}\n        if source['status'] == 'generated':\n            variance = hh_variances(source['prepared_covariance_lag8'])\n            row.update(hh_variance=variance.tolist(), baseline_hh_variance=reference[source['iso']].tolist(),\n                gaussian_marginal_scale_factor_ratio=np.sqrt(variance/reference[source['iso']]).tolist(),\n                independent_of_marginal_noise_amplitude=True)\n        records.append(row)\n    if sha256(path) != digest: raise ValueError('Changed spectral evidence')\n    now = datetime.now(timezone.utc)\n    output = ROOT/'docs/validation/raw'/f'transport-facteur-haar-spectral-bruit-v001-{now.strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n    result = dict(schema_version=1,data_version=1,completed_at_utc=now.isoformat(),records=records,\n        parent=dict(path=str(path),sha256=digest),commit=git('rev-parse','HEAD'),numpy_version=np.__version__,\n        runner_sha256=sha256(Path(__file__)),runner_source=Path(__file__).read_text(encoding='utf-8'),\n        rules='Exact hCh for2x2orthonormalHH,normalizedmarginalPSD covariances archivedlag8;4training controls vs44measurable/48quadrantrecords. Square-root variance ratio is theoreticalGaussian marginal HH-MAD factor mismatch,not fitted correction. No redraw,thresholdfit,images or production.',\n        limitations='Not observed finite-sample MAD bias,selectedpopulation bias,nonGaussian/nativecleantruth or confidenceinterval. HH coefficients correlated;subtracting empirical median and16x16finiteMAD change estimatorlaw. No coefficient toapplytoactualphoto without validatedPSDmodel.')\n    with output.open('x',encoding='utf-8') as handle: json.dump(result,handle,ensure_ascii=False,indent=1,allow_nan=False)\n    print(output)\n    for dataset in range(3):\n        for iso in reference:\n            selected = [r for r in records if r['dataset']==dataset and r['iso']==iso and r['status']=='generated']\n            if selected:\n                ratios = np.array([r['gaussian_marginal_scale_factor_ratio'] for r in selected])\n                print(dataset,iso,'factor ratios min',ratios.min(axis=0).round(4),'max',ratios.max(axis=0).round(4))\n\n\nif __name__ == '__main__': run()\n"
+  }
+ },
+ "rules": "ORACLE usesheldDreference solelyforcapacitybound,NOTprediction. Same14targets/bracketinganchors fromparent;no alternateanchors/fitting onactualphotos. Shapeoptimum analyticprojection onsegment. GlobalHHminimum evaluatedatallpiecewiseboundary/stationarycandidates fromquadraticpolynomialderivative. Independentperquadrantoracleweights giveoptimisticcapturemean lowerbounds. NOdenoising,weight-grid,training or production.",
+ "limitations": "Separate minima may use differentweights,so jointlymeeting screens NOTproved. Impossibility only ifHHlowerbound exceedscapturelimit;conditional onestimatedcovariance and fixedanchors/segment. Doesnotrejectallcorrelationmodels or nonlinearprofiles. Reusedexploratory4captures,nocleanphoto truth. Oracleweights mustnever beappliedasuserimageparameters."
+}

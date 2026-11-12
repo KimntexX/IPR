@@ -1,0 +1,907 @@
+{
+ "schema_version": 1,
+ "data_version": 1,
+ "completed_at_utc": "2026-10-27T08:11:57.570368+00:00",
+ "commit": "2a40c5c6cff78d40294393a68827f4a24555c724",
+ "numpy_version": "2.4.2",
+ "records": [
+  {
+   "model": "white_gaussian",
+   "selection": "largest_absolute_known_residual",
+   "seed": 271127233,
+   "raw_plane": 0,
+   "raw_coefficient": 1,
+   "analytic_target_derivative": 0.02694840890141403,
+   "errors": [
+    {
+     "epsilon": 0.001,
+     "max_absolute_error": 1.7734951919788373e-06,
+     "rms_error": 8.580691244860791e-07
+    },
+    {
+     "epsilon": 0.0001,
+     "max_absolute_error": 1.5449343193640885e-12,
+     "rms_error": 2.696029384016007e-13
+    },
+    {
+     "epsilon": 1e-05,
+     "max_absolute_error": 4.079199489043922e-12,
+     "rms_error": 1.750755944259163e-12
+    },
+    {
+     "epsilon": 1e-06,
+     "max_absolute_error": 4.308311728749327e-11,
+     "rms_error": 1.515099431292054e-11
+    },
+    {
+     "epsilon": 1e-07,
+     "max_absolute_error": 4.498280573982799e-10,
+     "rms_error": 1.7615139717370165e-10
+    }
+   ]
+  },
+  {
+   "model": "white_gaussian",
+   "selection": "largest_absolute_known_residual",
+   "seed": 271127233,
+   "raw_plane": 1,
+   "raw_coefficient": 7,
+   "analytic_target_derivative": 0.029060919427493143,
+   "errors": [
+    {
+     "epsilon": 0.001,
+     "max_absolute_error": 2.7872386184897395e-06,
+     "rms_error": 1.1223236936790431e-06
+    },
+    {
+     "epsilon": 0.0001,
+     "max_absolute_error": 5.171696404460135e-13,
+     "rms_error": 1.670842504448816e-13
+    },
+    {
+     "epsilon": 1e-05,
+     "max_absolute_error": 5.328762387943331e-12,
+     "rms_error": 1.7125692019424333e-12
+    },
+    {
+     "epsilon": 1e-06,
+     "max_absolute_error": 4.709816564529845e-11,
+     "rms_error": 1.7093853476270493e-11
+    },
+    {
+     "epsilon": 1e-07,
+     "max_absolute_error": 3.657497599869521e-10,
+     "rms_error": 1.5663195967699132e-10
+    }
+   ]
+  },
+  {
+   "model": "white_gaussian",
+   "selection": "largest_absolute_known_residual",
+   "seed": 271127233,
+   "raw_plane": 2,
+   "raw_coefficient": 24,
+   "analytic_target_derivative": 0.03993542361377541,
+   "errors": [
+    {
+     "epsilon": 0.001,
+     "max_absolute_error": 3.1942858757768103e-06,
+     "rms_error": 1.2862187867388766e-06
+    },
+    {
+     "epsilon": 0.0001,
+     "max_absolute_error": 1.795122861122933e-12,
+     "rms_error": 3.7048568510400613e-13
+    },
+    {
+     "epsilon": 1e-05,
+     "max_absolute_error": 4.12267485774831e-12,
+     "rms_error": 1.6991323915443375e-12
+    },
+    {
+     "epsilon": 1e-06,
+     "max_absolute_error": 3.5085694115657984e-11,
+     "rms_error": 1.6624566459032306e-11
+    },
+    {
+     "epsilon": 1e-07,
+     "max_absolute_error": 4.766613492801497e-10,
+     "rms_error": 1.6450809047833488e-10
+    }
+   ]
+  },
+  {
+   "model": "white_gaussian",
+   "selection": "fresh_operator_control",
+   "seed": 273127000,
+   "raw_plane": 0,
+   "raw_coefficient": 1,
+   "analytic_target_derivative": 0.02243091979338311,
+   "errors": [
+    {
+     "epsilon": 0.001,
+     "max_absolute_error": 1.833125864370488e-07,
+     "rms_error": 8.282902019016559e-08
+    },
+    {
+     "epsilon": 0.0001,
+     "max_absolute_error": 1.1598708105076128e-12,
+     "rms_error": 2.272544865579098e-13
+    },
+    {
+     "epsilon": 1e-05,
+     "max_absolute_error": 4.648842942545084e-12,
+     "rms_error": 1.408335328881709e-12
+    },
+    {
+     "epsilon": 1e-06,
+     "max_absolute_error": 3.268923559575018e-11,
+     "rms_error": 1.341750287819754e-11
+    },
+    {
+     "epsilon": 1e-07,
+     "max_absolute_error": 5.385214774111802e-10,
+     "rms_error": 1.3733981885445638e-10
+    }
+   ]
+  },
+  {
+   "model": "white_gaussian",
+   "selection": "fresh_operator_control",
+   "seed": 273127000,
+   "raw_plane": 1,
+   "raw_coefficient": 7,
+   "analytic_target_derivative": 0.019209344080913168,
+   "errors": [
+    {
+     "epsilon": 0.001,
+     "max_absolute_error": 1.5219783815425452e-06,
+     "rms_error": 6.877274940603217e-07
+    },
+    {
+     "epsilon": 0.0001,
+     "max_absolute_error": 7.174627645462062e-13,
+     "rms_error": 1.722033539620628e-13
+    },
+    {
+     "epsilon": 1e-05,
+     "max_absolute_error": 8.719432971872679e-12,
+     "rms_error": 1.8299783067877573e-12
+    },
+    {
+     "epsilon": 1e-06,
+     "max_absolute_error": 3.9454976070128767e-11,
+     "rms_error": 1.3638246044208285e-11
+    },
+    {
+     "epsilon": 1e-07,
+     "max_absolute_error": 3.5523910896229083e-10,
+     "rms_error": 1.3105659646123548e-10
+    }
+   ]
+  },
+  {
+   "model": "white_gaussian",
+   "selection": "fresh_operator_control",
+   "seed": 273127000,
+   "raw_plane": 2,
+   "raw_coefficient": 24,
+   "analytic_target_derivative": 0.02106201952879386,
+   "errors": [
+    {
+     "epsilon": 0.001,
+     "max_absolute_error": 8.970618345371939e-11,
+     "rms_error": 1.6941915972731118e-11
+    },
+    {
+     "epsilon": 0.0001,
+     "max_absolute_error": 7.148691361091863e-13,
+     "rms_error": 2.105666402582967e-13
+    },
+    {
+     "epsilon": 1e-05,
+     "max_absolute_error": 3.0907504203550595e-12,
+     "rms_error": 1.4179933457747138e-12
+    },
+    {
+     "epsilon": 1e-06,
+     "max_absolute_error": 4.607756179646899e-11,
+     "rms_error": 1.68775924461689e-11
+    },
+    {
+     "epsilon": 1e-07,
+     "max_absolute_error": 4.67020871302605e-10,
+     "rms_error": 1.517846174959871e-10
+    }
+   ]
+  },
+  {
+   "model": "binomial_gaussian",
+   "selection": "largest_absolute_known_residual",
+   "seed": 271137090,
+   "raw_plane": 0,
+   "raw_coefficient": 1,
+   "analytic_target_derivative": 0.3280297812000738,
+   "errors": [
+    {
+     "epsilon": 0.001,
+     "max_absolute_error": 3.716045875321386e-05,
+     "rms_error": 1.1493766359478693e-05
+    },
+    {
+     "epsilon": 0.0001,
+     "max_absolute_error": 3.973802190082587e-11,
+     "rms_error": 1.0350356591497185e-11
+    },
+    {
+     "epsilon": 1e-05,
+     "max_absolute_error": 1.1982442815750005e-11,
+     "rms_error": 3.832106708999255e-12
+    },
+    {
+     "epsilon": 1e-06,
+     "max_absolute_error": 1.425202282578919e-10,
+     "rms_error": 3.919398170619549e-11
+    },
+    {
+     "epsilon": 1e-07,
+     "max_absolute_error": 1.2536718017874815e-09,
+     "rms_error": 3.8976162584894483e-10
+    }
+   ]
+  },
+  {
+   "model": "binomial_gaussian",
+   "selection": "largest_absolute_known_residual",
+   "seed": 271137090,
+   "raw_plane": 1,
+   "raw_coefficient": 7,
+   "analytic_target_derivative": 0.06974743595735572,
+   "errors": [
+    {
+     "epsilon": 0.001,
+     "max_absolute_error": 7.768119961726327e-07,
+     "rms_error": 2.279103009812143e-07
+    },
+    {
+     "epsilon": 0.0001,
+     "max_absolute_error": 3.5244585028237907e-12,
+     "rms_error": 8.255597930944459e-13
+    },
+    {
+     "epsilon": 1e-05,
+     "max_absolute_error": 1.108003098992949e-11,
+     "rms_error": 3.4975446995872994e-12
+    },
+    {
+     "epsilon": 1e-06,
+     "max_absolute_error": 1.348129810910259e-10,
+     "rms_error": 4.0008266937148394e-11
+    },
+    {
+     "epsilon": 1e-07,
+     "max_absolute_error": 3.2059649761329023e-09,
+     "rms_error": 5.438099188222849e-10
+    }
+   ]
+  },
+  {
+   "model": "binomial_gaussian",
+   "selection": "largest_absolute_known_residual",
+   "seed": 271137090,
+   "raw_plane": 2,
+   "raw_coefficient": 24,
+   "analytic_target_derivative": 8.787184508582696e-06,
+   "errors": [
+    {
+     "epsilon": 0.001,
+     "max_absolute_error": 1.1780431331791585e-13,
+     "rms_error": 4.8109017740562477e-14
+    },
+    {
+     "epsilon": 0.0001,
+     "max_absolute_error": 1.7306894476841906e-12,
+     "rms_error": 4.4015474431465e-13
+    },
+    {
+     "epsilon": 1e-05,
+     "max_absolute_error": 2.060448086292372e-11,
+     "rms_error": 4.613431251956755e-12
+    },
+    {
+     "epsilon": 1e-06,
+     "max_absolute_error": 1.1262228208870693e-10,
+     "rms_error": 3.8696195466735065e-11
+    },
+    {
+     "epsilon": 1e-07,
+     "max_absolute_error": 1.7779568190264417e-09,
+     "rms_error": 3.984245182556603e-10
+    }
+   ]
+  },
+  {
+   "model": "binomial_gaussian",
+   "selection": "fresh_operator_control",
+   "seed": 273128000,
+   "raw_plane": 0,
+   "raw_coefficient": 1,
+   "analytic_target_derivative": 0.2253924241752437,
+   "errors": [
+    {
+     "epsilon": 0.001,
+     "max_absolute_error": 5.082396541282799e-05,
+     "rms_error": 1.518328740608092e-05
+    },
+    {
+     "epsilon": 0.0001,
+     "max_absolute_error": 1.0427997354511831e-10,
+     "rms_error": 1.8261094795037713e-11
+    },
+    {
+     "epsilon": 1e-05,
+     "max_absolute_error": 7.703473275944006e-12,
+     "rms_error": 2.1407811120133124e-12
+    },
+    {
+     "epsilon": 1e-06,
+     "max_absolute_error": 1.5203246647721436e-10,
+     "rms_error": 2.6903918279445785e-11
+    },
+    {
+     "epsilon": 1e-07,
+     "max_absolute_error": 1.4189494787486545e-09,
+     "rms_error": 3.487681826711819e-10
+    }
+   ]
+  },
+  {
+   "model": "binomial_gaussian",
+   "selection": "fresh_operator_control",
+   "seed": 273128000,
+   "raw_plane": 1,
+   "raw_coefficient": 7,
+   "analytic_target_derivative": 0.04643725489594833,
+   "errors": [
+    {
+     "epsilon": 0.001,
+     "max_absolute_error": 6.375737765199063e-06,
+     "rms_error": 1.4930386416274765e-06
+    },
+    {
+     "epsilon": 0.0001,
+     "max_absolute_error": 2.8529539841670726e-12,
+     "rms_error": 6.68605403833274e-13
+    },
+    {
+     "epsilon": 1e-05,
+     "max_absolute_error": 7.989205651204312e-12,
+     "rms_error": 2.7825038282330343e-12
+    },
+    {
+     "epsilon": 1e-06,
+     "max_absolute_error": 8.647027364971915e-11,
+     "rms_error": 2.6670916578973692e-11
+    },
+    {
+     "epsilon": 1e-07,
+     "max_absolute_error": 1.0469402003318584e-09,
+     "rms_error": 2.8419181542226603e-10
+    }
+   ]
+  },
+  {
+   "model": "binomial_gaussian",
+   "selection": "fresh_operator_control",
+   "seed": 273128000,
+   "raw_plane": 2,
+   "raw_coefficient": 24,
+   "analytic_target_derivative": 6.03103177495435e-06,
+   "errors": [
+    {
+     "epsilon": 0.001,
+     "max_absolute_error": 1.146674240477298e-13,
+     "rms_error": 3.1286330947550844e-14
+    },
+    {
+     "epsilon": 0.0001,
+     "max_absolute_error": 9.875060974018704e-13,
+     "rms_error": 2.6554888140341527e-13
+    },
+    {
+     "epsilon": 1e-05,
+     "max_absolute_error": 8.759067263001703e-12,
+     "rms_error": 2.7227173398789884e-12
+    },
+    {
+     "epsilon": 1e-06,
+     "max_absolute_error": 7.089797278853885e-11,
+     "rms_error": 2.191143494658991e-11
+    },
+    {
+     "epsilon": 1e-07,
+     "max_absolute_error": 1.235555509480576e-09,
+     "rms_error": 3.4331873206074755e-10
+    }
+   ]
+  },
+  {
+   "model": "training_axes_iso1600_gaussian",
+   "selection": "largest_absolute_known_residual",
+   "seed": 271147127,
+   "raw_plane": 0,
+   "raw_coefficient": 1,
+   "analytic_target_derivative": 1.1599250309387004,
+   "errors": [
+    {
+     "epsilon": 0.001,
+     "max_absolute_error": 0.00015364571192932885,
+     "rms_error": 3.236266364392711e-05
+    },
+    {
+     "epsilon": 0.0001,
+     "max_absolute_error": 5.674887226803094e-10,
+     "rms_error": 7.814977778546123e-11
+    },
+    {
+     "epsilon": 1e-05,
+     "max_absolute_error": 2.235425733410068e-11,
+     "rms_error": 7.098160886104244e-12
+    },
+    {
+     "epsilon": 1e-06,
+     "max_absolute_error": 3.5191743963380873e-10,
+     "rms_error": 8.12807636495008e-11
+    },
+    {
+     "epsilon": 1e-07,
+     "max_absolute_error": 1.5794570096261396e-09,
+     "rms_error": 5.392717251989191e-10
+    }
+   ]
+  },
+  {
+   "model": "training_axes_iso1600_gaussian",
+   "selection": "largest_absolute_known_residual",
+   "seed": 271147127,
+   "raw_plane": 1,
+   "raw_coefficient": 7,
+   "analytic_target_derivative": 0.04603797100333594,
+   "errors": [
+    {
+     "epsilon": 0.001,
+     "max_absolute_error": 1.178042316474226e-10,
+     "rms_error": 2.8458157217568367e-11
+    },
+    {
+     "epsilon": 0.0001,
+     "max_absolute_error": 6.2134394851476316e-12,
+     "rms_error": 1.0160047189875802e-12
+    },
+    {
+     "epsilon": 1e-05,
+     "max_absolute_error": 3.1965749491824624e-11,
+     "rms_error": 6.807708893094233e-12
+    },
+    {
+     "epsilon": 1e-06,
+     "max_absolute_error": 2.762148114399121e-10,
+     "rms_error": 7.82644806123068e-11
+    },
+    {
+     "epsilon": 1e-07,
+     "max_absolute_error": 3.3848392803903504e-09,
+     "rms_error": 7.258776790146215e-10
+    }
+   ]
+  },
+  {
+   "model": "training_axes_iso1600_gaussian",
+   "selection": "largest_absolute_known_residual",
+   "seed": 271147127,
+   "raw_plane": 2,
+   "raw_coefficient": 24,
+   "analytic_target_derivative": 0.00039049030879648004,
+   "errors": [
+    {
+     "epsilon": 0.001,
+     "max_absolute_error": 5.843453433802825e-13,
+     "rms_error": 1.0811397365129428e-13
+    },
+    {
+     "epsilon": 0.0001,
+     "max_absolute_error": 5.308623983110716e-12,
+     "rms_error": 9.825048683880231e-13
+    },
+    {
+     "epsilon": 1e-05,
+     "max_absolute_error": 2.2319261408943348e-11,
+     "rms_error": 7.304195308994904e-12
+    },
+    {
+     "epsilon": 1e-06,
+     "max_absolute_error": 3.921512188326953e-10,
+     "rms_error": 7.72267717672296e-11
+    },
+    {
+     "epsilon": 1e-07,
+     "max_absolute_error": 2.15317235743829e-09,
+     "rms_error": 5.720580937894356e-10
+    }
+   ]
+  },
+  {
+   "model": "training_axes_iso1600_gaussian",
+   "selection": "fresh_operator_control",
+   "seed": 273129000,
+   "raw_plane": 0,
+   "raw_coefficient": 1,
+   "analytic_target_derivative": 0.30674887456403616,
+   "errors": [
+    {
+     "epsilon": 0.001,
+     "max_absolute_error": 0.00011306530363118517,
+     "rms_error": 2.0876146702522348e-05
+    },
+    {
+     "epsilon": 0.0001,
+     "max_absolute_error": 3.278848859089578e-10,
+     "rms_error": 5.070889038533965e-11
+    },
+    {
+     "epsilon": 1e-05,
+     "max_absolute_error": 2.791057673607461e-11,
+     "rms_error": 4.669706380778632e-12
+    },
+    {
+     "epsilon": 1e-06,
+     "max_absolute_error": 1.313906969335754e-10,
+     "rms_error": 4.5680920818880015e-11
+    },
+    {
+     "epsilon": 1e-07,
+     "max_absolute_error": 1.1156191387362568e-09,
+     "rms_error": 4.0792194462507377e-10
+    }
+   ]
+  },
+  {
+   "model": "training_axes_iso1600_gaussian",
+   "selection": "fresh_operator_control",
+   "seed": 273129000,
+   "raw_plane": 1,
+   "raw_coefficient": 7,
+   "analytic_target_derivative": 0.021311640401205575,
+   "errors": [
+    {
+     "epsilon": 0.001,
+     "max_absolute_error": 1.8453178659333293e-06,
+     "rms_error": 8.01939964063791e-07
+    },
+    {
+     "epsilon": 0.0001,
+     "max_absolute_error": 3.072587323460496e-12,
+     "rms_error": 5.810879826836096e-13
+    },
+    {
+     "epsilon": 1e-05,
+     "max_absolute_error": 1.128267986851006e-11,
+     "rms_error": 3.832877513440927e-12
+    },
+    {
+     "epsilon": 1e-06,
+     "max_absolute_error": 1.1392989676672904e-10,
+     "rms_error": 3.5602371752736565e-11
+    },
+    {
+     "epsilon": 1e-07,
+     "max_absolute_error": 1.1547955575726826e-09,
+     "rms_error": 3.609196183047917e-10
+    }
+   ]
+  },
+  {
+   "model": "training_axes_iso1600_gaussian",
+   "selection": "fresh_operator_control",
+   "seed": 273129000,
+   "raw_plane": 2,
+   "raw_coefficient": 24,
+   "analytic_target_derivative": 0.000209449651882748,
+   "errors": [
+    {
+     "epsilon": 0.001,
+     "max_absolute_error": 1.4575840534547524e-13,
+     "rms_error": 4.4564419938517924e-14
+    },
+    {
+     "epsilon": 0.0001,
+     "max_absolute_error": 1.478026034895663e-12,
+     "rms_error": 3.798317681277614e-13
+    },
+    {
+     "epsilon": 1e-05,
+     "max_absolute_error": 1.4673207581698128e-11,
+     "rms_error": 4.094000858278785e-12
+    },
+    {
+     "epsilon": 1e-06,
+     "max_absolute_error": 1.2430773126343234e-10,
+     "rms_error": 4.378877944054276e-11
+    },
+    {
+     "epsilon": 1e-07,
+     "max_absolute_error": 1.379113380496982e-09,
+     "rms_error": 4.543622267047636e-10
+    }
+   ]
+  },
+  {
+   "model": "training_axes_iso51200_gaussian",
+   "selection": "largest_absolute_known_residual",
+   "seed": 271157095,
+   "raw_plane": 0,
+   "raw_coefficient": 1,
+   "analytic_target_derivative": 0.34545050482101314,
+   "errors": [
+    {
+     "epsilon": 0.001,
+     "max_absolute_error": 7.27590057275837e-05,
+     "rms_error": 2.162668498505026e-05
+    },
+    {
+     "epsilon": 0.0001,
+     "max_absolute_error": 3.5639063922232594e-10,
+     "rms_error": 5.920445813615025e-11
+    },
+    {
+     "epsilon": 1e-05,
+     "max_absolute_error": 2.878941529615986e-11,
+     "rms_error": 7.29021379856733e-12
+    },
+    {
+     "epsilon": 1e-06,
+     "max_absolute_error": 2.1118695681110466e-10,
+     "rms_error": 5.553593172292699e-11
+    },
+    {
+     "epsilon": 1e-07,
+     "max_absolute_error": 2.8974375121393336e-09,
+     "rms_error": 5.915531625449784e-10
+    }
+   ]
+  },
+  {
+   "model": "training_axes_iso51200_gaussian",
+   "selection": "largest_absolute_known_residual",
+   "seed": 271157095,
+   "raw_plane": 1,
+   "raw_coefficient": 7,
+   "analytic_target_derivative": 0.030031264045561556,
+   "errors": [
+    {
+     "epsilon": 0.001,
+     "max_absolute_error": 7.382301397788893e-07,
+     "rms_error": 2.3452086324060687e-07
+    },
+    {
+     "epsilon": 0.0001,
+     "max_absolute_error": 3.3191713266766953e-12,
+     "rms_error": 6.689616157567429e-13
+    },
+    {
+     "epsilon": 1e-05,
+     "max_absolute_error": 1.4641190603653653e-11,
+     "rms_error": 4.859833873842776e-12
+    },
+    {
+     "epsilon": 1e-06,
+     "max_absolute_error": 2.8109471608001035e-10,
+     "rms_error": 7.278805079954584e-11
+    },
+    {
+     "epsilon": 1e-07,
+     "max_absolute_error": 1.4896706177630614e-09,
+     "rms_error": 5.081437325720192e-10
+    }
+   ]
+  },
+  {
+   "model": "training_axes_iso51200_gaussian",
+   "selection": "largest_absolute_known_residual",
+   "seed": 271157095,
+   "raw_plane": 2,
+   "raw_coefficient": 24,
+   "analytic_target_derivative": 0.000492462210248969,
+   "errors": [
+    {
+     "epsilon": 0.001,
+     "max_absolute_error": 3.166162163448661e-13,
+     "rms_error": 7.032516397676913e-14
+    },
+    {
+     "epsilon": 0.0001,
+     "max_absolute_error": 1.648883845895054e-12,
+     "rms_error": 5.164025683987492e-13
+    },
+    {
+     "epsilon": 1e-05,
+     "max_absolute_error": 1.4503968338852591e-11,
+     "rms_error": 4.89209461952251e-12
+    },
+    {
+     "epsilon": 1e-06,
+     "max_absolute_error": 2.2472079890824802e-10,
+     "rms_error": 7.679242990209243e-11
+    },
+    {
+     "epsilon": 1e-07,
+     "max_absolute_error": 3.100281345574707e-09,
+     "rms_error": 6.624520825610229e-10
+    }
+   ]
+  },
+  {
+   "model": "training_axes_iso51200_gaussian",
+   "selection": "fresh_operator_control",
+   "seed": 273130000,
+   "raw_plane": 0,
+   "raw_coefficient": 1,
+   "analytic_target_derivative": 0.4694088005189565,
+   "errors": [
+    {
+     "epsilon": 0.001,
+     "max_absolute_error": 0.00016609114406033326,
+     "rms_error": 4.274376487794435e-05
+    },
+    {
+     "epsilon": 0.0001,
+     "max_absolute_error": 8.965407674580567e-05,
+     "rms_error": 2.3314202527317966e-05
+    },
+    {
+     "epsilon": 1e-05,
+     "max_absolute_error": 1.807334837344854e-11,
+     "rms_error": 3.670115206601474e-12
+    },
+    {
+     "epsilon": 1e-06,
+     "max_absolute_error": 1.8202099549835538e-10,
+     "rms_error": 3.847478298003951e-11
+    },
+    {
+     "epsilon": 1e-07,
+     "max_absolute_error": 4.067801581686403e-09,
+     "rms_error": 5.506282551433648e-10
+    }
+   ]
+  },
+  {
+   "model": "training_axes_iso51200_gaussian",
+   "selection": "fresh_operator_control",
+   "seed": 273130000,
+   "raw_plane": 1,
+   "raw_coefficient": 7,
+   "analytic_target_derivative": 0.019330088163994365,
+   "errors": [
+    {
+     "epsilon": 0.001,
+     "max_absolute_error": 2.483107832393361e-06,
+     "rms_error": 8.073410348977384e-07
+    },
+    {
+     "epsilon": 0.0001,
+     "max_absolute_error": 1.3524710865131517e-12,
+     "rms_error": 4.000905326500916e-13
+    },
+    {
+     "epsilon": 1e-05,
+     "max_absolute_error": 2.8235918811403415e-11,
+     "rms_error": 4.507321650588258e-12
+    },
+    {
+     "epsilon": 1e-06,
+     "max_absolute_error": 2.835872144751894e-10,
+     "rms_error": 4.842466642395508e-11
+    },
+    {
+     "epsilon": 1e-07,
+     "max_absolute_error": 1.3577161300619423e-09,
+     "rms_error": 3.879056422605873e-10
+    }
+   ]
+  },
+  {
+   "model": "training_axes_iso51200_gaussian",
+   "selection": "fresh_operator_control",
+   "seed": 273130000,
+   "raw_plane": 2,
+   "raw_coefficient": 24,
+   "analytic_target_derivative": 0.0004310154830220126,
+   "errors": [
+    {
+     "epsilon": 0.001,
+     "max_absolute_error": 3.1210564731612433e-13,
+     "rms_error": 5.615698267794204e-14
+    },
+    {
+     "epsilon": 0.0001,
+     "max_absolute_error": 1.089261764553734e-12,
+     "rms_error": 3.5806145155203677e-13
+    },
+    {
+     "epsilon": 1e-05,
+     "max_absolute_error": 1.778452968117898e-11,
+     "rms_error": 3.674282374097193e-12
+    },
+    {
+     "epsilon": 1e-06,
+     "max_absolute_error": 2.509313648253568e-10,
+     "rms_error": 4.404341201987003e-11
+    },
+    {
+     "epsilon": 1e-07,
+     "max_absolute_error": 9.270231724895211e-10,
+     "rms_error": 3.524708353577154e-10
+    }
+   ]
+  }
+ ],
+ "covariance_checks": [
+  {
+   "model": "white_gaussian",
+   "exact_scalar_entries": 864,
+   "max_absolute_error": 5.551115123125783e-16
+  },
+  {
+   "model": "binomial_gaussian",
+   "exact_scalar_entries": 864,
+   "max_absolute_error": 4.884981308350689e-15
+  },
+  {
+   "model": "training_axes_iso1600_gaussian",
+   "exact_scalar_entries": 864,
+   "max_absolute_error": 5.329070518200751e-15
+  },
+  {
+   "model": "training_axes_iso51200_gaussian",
+   "exact_scalar_entries": 864,
+   "max_absolute_error": 4.884981308350689e-15
+  }
+ ],
+ "runner_sha256": "38df2d6850f2320ed9cede5e781bdde26566b91267fd00ed7b5ad8b1f726d24f",
+ "runner_source": "\"\"\"Deterministic cross-plane covariance and tangent audit, not extra quality sampling.\"\"\"\nfrom datetime import datetime, timezone\nimport json\nfrom pathlib import Path\nimport numpy as np\nfrom study_noise_neighbourhoods import ROOT, git, sha256\nfrom study_noise_pilot_cross_power import model_definitions\nfrom study_noise_profile_covariance_wiener import spectrum_root, draw\nfrom study_noise_collaborative_wiener import PATCH, SPATIAL\nfrom noise_pilot_transport import pilot_model, pilot_kernel, pilot_jvp, coefficient_covariance_directions\n\n\ndef run():\n    names = ('extraction-paires-profils-bruit-v001-20261026T174656Z.json',\n             'melange-fixe-covariances-bruit-v001-20261026T175757Z.json',\n             'derivee-exacte-pilote-bruit-v002-20261027T080805Z.json')\n    paths = [ROOT/'docs/validation/raw'/n for n in names]; hashes = [sha256(p) for p in paths]\n    training, axes, replication = [json.loads(p.read_text(encoding='utf-8')) for p in paths]\n    records = []; covariance_checks = []\n    for index, (name, covariance) in enumerate(model_definitions(training, axes)):\n        spectrum = np.fft.fft2(covariance, axes=(-2, -1)).transpose(2, 3, 0, 1)\n        root, _ = spectrum_root(spectrum)\n        generated_cov = np.fft.ifft2((root@root.swapaxes(-1, -2).conj()).transpose(2, 3, 0, 1), axes=(-2, -1)).real\n        targets, directions = coefficient_covariance_directions(spectrum)\n        maximum_error = 0.\n        for plane in range(3):\n            for guide_plane in range(3):\n                for dy, dx in ((0, 0), (1, 0), (0, 1), (2, -1)):\n                    delta = PATCH[:, None]-PATCH[None, :]-[dy, dx]\n                    cov = generated_cov[plane, guide_plane, delta[:, :, 0]%128, delta[:, :, 1]%128]\n                    expected = np.einsum('qi,ij,qj->q', SPATIAL, cov, SPATIAL)\n                    for coefficient in range(1, 25):\n                        target = targets.index((plane, coefficient))\n                        actual = directions[target, guide_plane, 30+dy:35+dy, 30+dx:35+dx].ravel()@SPATIAL[coefficient]\n                        maximum_error = max(maximum_error, float(abs(actual-expected[coefficient])))\n        if maximum_error > 1e-10:\n            raise ValueError('Cross-plane/lag covariance direction mismatch')\n        covariance_checks.append(dict(model=name, exact_scalar_entries=864, max_absolute_error=maximum_error))\n        known = max((r for r in replication['records'] if r['model'] == name), key=lambda r: abs(r['non_dc_mean_stein']))\n        for selection, seed in (('largest_absolute_known_residual', known['noise_seed']), ('fresh_operator_control', 273127000+index*1000)):\n            noise = draw(root, seed)[:, 32:96, 32:96]\n            guide, full, frozen = pilot_jvp(noise, directions, pilot_model(covariance))\n            if selection == 'largest_absolute_known_residual':\n                diagonal = np.array([full[i, c, q] for i, (c, q) in enumerate(targets)])\n                saved = np.array([known['full_stein_correction'][c][q] for c, q in targets])\n                np.testing.assert_allclose(diagonal, saved, atol=1e-12, rtol=1e-12)\n            for plane, coefficient in ((0, 1), (1, 7), (2, 24)):\n                target = targets.index((plane, coefficient)); direction = directions[target]\n                errors = []\n                for epsilon in (1e-3, 1e-4, 1e-5, 1e-6, 1e-7):\n                    outputs = []\n                    for sign in (1, -1):\n                        changed = noise+sign*epsilon*direction\n                        kernel = pilot_kernel(changed, pilot_model(covariance))\n                        outputs.append(changed[:, 20:45, 20:45].reshape(3, 625)@kernel.T@SPATIAL.T)\n                    difference = (outputs[0]-outputs[1])/(2*epsilon)\n                    errors.append(dict(epsilon=epsilon, max_absolute_error=float(np.max(abs(difference-full[target]))),\n                        rms_error=float(np.sqrt(np.mean((difference-full[target])**2)))))\n                records.append(dict(model=name, selection=selection, seed=seed, raw_plane=plane,\n                    raw_coefficient=coefficient, analytic_target_derivative=float(full[target, plane, coefficient]), errors=errors))\n            print('Cross covariance and analytic tangent audited', name, selection, flush=True)\n    if [sha256(p) for p in paths] != hashes:\n        raise ValueError('Parents changed')\n    now = datetime.now(timezone.utc)\n    output = ROOT/'docs/validation/raw'/f\"audit-tangente-pilote-bruit-v001-{now.strftime('%Y%m%dT%H%M%SZ')}.json\"\n    dependencies = ('noise_pilot_transport.py', 'study_noise_pilot_cross_power.py',\n                    'study_noise_profile_covariance_wiener.py', 'study_noise_collaborative_wiener.py')\n    result = dict(schema_version=1, data_version=1, completed_at_utc=now.isoformat(), commit=git('rev-parse', 'HEAD'),\n        numpy_version=np.__version__, records=records, covariance_checks=covariance_checks,\n        runner_sha256=sha256(Path(__file__)), runner_source=Path(__file__).read_text(encoding='utf-8'),\n        parents=[dict(path=str(p), sha256=h) for p, h in zip(paths, hashes)],\n        dependencies={n: dict(sha256=sha256(ROOT/'tests'/n), source=(ROOT/'tests'/n).read_text(encoding='utf-8')) for n in dependencies},\n        rules='DeterministicoperatorauditAFTERknownnullresidual,notsamplinguntilpassing.864linearentries/model compareC*BcovariancedirectionswithACTUALrootspectrumspatialcovariance,including3x3planes/4lags/24coefficients. Per model replayknownlargestabsresidualplus1freshfield onlyforoperatorchecks;notnewqualityobservations. Checkexactprioranalyticdiagonal;3fixedcovariancedirections and5FDsteps,recordALLerrorswithoutchoosingFDfortheestimator. No formula/thresholdfit.',\n        limitations='DirectionalFDchecksnotallJacobianentriesorproofGaussianpopulationunbiasedness;coarseFDcantraversecontinuouskinks. Selectedknowncasesnotindependentvalidation. PrimarySteinmeasuresremainanalyticwithnoparameterchanged. No denoising orproduction.')\n    with output.open('x', encoding='utf-8') as handle:\n        json.dump(result, handle, ensure_ascii=False, indent=1, allow_nan=False)\n    print(output, flush=True)\n\n\nif __name__ == '__main__': run()\n",
+ "parents": [
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\extraction-paires-profils-bruit-v001-20261026T174656Z.json",
+   "sha256": "61a789c32b76eb9bcfa46e358a169dfe8e9cc73c30bb9fec3557352b3eac4770"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\melange-fixe-covariances-bruit-v001-20261026T175757Z.json",
+   "sha256": "b242bf674ef8bda8a71a8cba594eb2059ddca0d74bb5056c03c300ab538f6cb5"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\derivee-exacte-pilote-bruit-v002-20261027T080805Z.json",
+   "sha256": "8d87b2ce3910bdc85c2dcab6877e5e853dfa08da9c14abdbf67cdbd615f5c793"
+  }
+ ],
+ "dependencies": {
+  "noise_pilot_transport.py": {
+   "sha256": "6d37e8742dd7df120fb526c9d66d58edcf35042b93b4b7473a0ea166bc26f8e5",
+   "source": "\"\"\"Exact local scalar transport of the existing joint overlapping NLM pilot.\"\"\"\nimport numpy as np\nfrom study_noise_nonlocal_directional import mean_patch5\nfrom study_noise_collaborative_wiener import PATCH, SPATIAL\n\n\nSUPPORT = np.array([(y, x) for y in range(-12, 13) for x in range(-12, 13)])\n\n\ndef pilot_model(covariance):\n    covariance = np.asarray(covariance, dtype=float)\n    if covariance.shape != (3, 3, 128, 128) or not np.isfinite(covariance).all():\n        raise ValueError('Finite prepared three-plane covariance required')\n    marginal = np.asarray([covariance[c, c] for c in range(3)])\n    if not np.allclose(marginal[:, 0, 0], 1., atol=1e-10):\n        raise ValueError('Unit noise axes required')\n    offsets = []\n    for y in range(-10, 11):\n        for x in range(-10, 11):\n            if y or x:\n                floor = 2*(1-float(np.mean(marginal[:, y%128, x%128])))\n                if floor < -1e-8:\n                    raise ValueError('Invalid distance covariance')\n                offsets.append((y, x, max(0., floor)))\n    return dict(variance=1., offsets=offsets)\n\n\ndef box5(values):\n    padding = [(0, 0)]*values.ndim\n    padding[-2:] = [(1, 0), (1, 0)]\n    integral = np.pad(values, padding).cumsum(axis=-2).cumsum(axis=-1)\n    return (integral[..., 5:, 5:]-integral[..., :-5, 5:]-integral[..., 5:, :-5]+integral[..., :-5, :-5])/25.\n\n\ndef _transport_kernel(observed, model, h, directions):\n    observed = np.asarray(observed, dtype=float)\n    if observed.shape != (3, 64, 64) or not np.isfinite(observed).all() or not np.isfinite(h) or h <= 0:\n        raise ValueError('Finite64 observation and positive pilot strength required')\n    expected = {(y, x) for y in range(-10, 11) for x in range(-10, 11) if y or x}\n    offsets = model['offsets']\n    if len(offsets) != 440 or {(dy, dx) for dy, dx, _ in offsets} != expected or model['variance'] <= 0:\n        raise ValueError('Complete existing21search model required')\n    if directions is not None and (directions.ndim != 4 or directions.shape[1:] != observed.shape\n            or not 1 <= len(directions) <= 72 or not np.isfinite(directions).all()):\n        raise ValueError('One to72 finite tangent fields required')\n    reference = observed[:, 26:39, 26:39]\n    weights = []; maximum = np.zeros((9, 9)); total = np.zeros((9, 9))\n    if directions is not None:\n        tangent_weights = []; tangent_max = np.zeros((len(directions), 9, 9)); tangent_total = np.zeros_like(tangent_max)\n        direction_reference = directions[:, :, 26:39, 26:39]\n    for dy, dx, floor in offsets:\n        delta = reference-observed[:, 26+dy:39+dy, 26+dx:39+dx]\n        distance = mean_patch5(np.mean(delta*delta, axis=0))\n        weight = np.exp(-np.maximum(distance-floor, 0.)/(h*h*model['variance']))\n        if directions is not None:\n            tangent_delta = direction_reference-directions[:, :, 26+dy:39+dy, 26+dx:39+dx]\n            tangent_distance = 2*box5(np.mean(delta[None]*tangent_delta, axis=1))\n            tangent_weight = -weight[None]*tangent_distance/(h*h*model['variance'])*(distance > floor)[None]\n            tangent_max = np.where((weight > maximum)[None], tangent_weight, tangent_max)\n            tangent_weights.append(tangent_weight); tangent_total += tangent_weight\n        weights.append(weight); total += weight; maximum = np.maximum(maximum, weight)\n    total += maximum\n    own = np.ones_like(total)\n    np.divide(maximum, total, out=own, where=total > 0)\n    effective = [mean_patch5(own)]\n    if directions is not None:\n        tangent_total += tangent_max\n        own_tangent = np.zeros_like(tangent_total)\n        np.divide(tangent_max*total[None]-maximum[None]*tangent_total, total[None]**2,\n                  out=own_tangent, where=total[None] > 0)\n        tangent_effective = [box5(own_tangent)]\n    for index, weight in enumerate(weights):\n        normalized = np.zeros_like(total)\n        np.divide(weight, total, out=normalized, where=total > 0)\n        effective.append(mean_patch5(normalized))\n        if directions is not None:\n            tangent = np.zeros_like(tangent_total)\n            np.divide(tangent_weights[index]*total[None]-weight[None]*tangent_total,\n                      total[None]**2, out=tangent, where=total[None] > 0)\n            tangent_effective.append(box5(tangent))\n    effective = np.asarray(effective).reshape(441, 25)\n    positions = np.array([(0, 0)]+[(dy, dx) for dy, dx, _ in offsets])\n    indices = (PATCH[:, 0, None]+positions[None, :, 0]+12)*25+(PATCH[:, 1, None]+positions[None, :, 1]+12)\n    kernel = np.zeros((25, 625))\n    np.put_along_axis(kernel, indices, effective.T, axis=1)\n    if not np.isfinite(kernel).all() or not np.allclose(kernel.sum(axis=1), 1., atol=1e-12):\n        raise ValueError('Pilot transport is not finite constant-preserving')\n    tangent_kernel = None\n    if directions is not None:\n        tangent_values = np.asarray(tangent_effective).reshape(441, len(directions), 25).transpose(1, 2, 0)\n        tangent_kernel = np.zeros((len(directions), 25, 625))\n        np.put_along_axis(tangent_kernel, indices[None], tangent_values, axis=2)\n        if not np.isfinite(tangent_kernel).all() or not np.allclose(tangent_kernel.sum(axis=2), 0., atol=1e-10):\n            raise ValueError('Tangent transport fails constant-preservation derivative')\n    return kernel, tangent_kernel\n\n\ndef pilot_kernel(observed, model, h=.8):\n    return _transport_kernel(observed, model, h, None)[0]\n\n\ndef pilot_jvp(observed, directions, model, h=.8):\n    kernel, tangent_kernel = _transport_kernel(observed, model, h, directions)\n    original = observed[:, 20:45, 20:45].reshape(3, 625)\n    tangent = directions[:, :, 20:45, 20:45].reshape(len(directions), 3, 625)\n    value = original@kernel.T@SPATIAL.T\n    frozen = np.einsum('pck,jk->pcj', tangent, kernel, optimize=True)@SPATIAL.T\n    full = frozen+np.einsum('ck,pjk->pcj', original, tangent_kernel, optimize=True)@SPATIAL.T\n    if not all(np.isfinite(a).all() for a in (value, full, frozen)):\n        raise ValueError('Nonfinite pilot directional response')\n    return value, full, frozen\n\n\ndef coefficient_covariance_directions(spectrum):\n    if spectrum.shape != (128, 128, 3, 3) or not np.isfinite(spectrum).all():\n        raise ValueError('Finite three-plane spectrum128 required')\n    targets = [(c, q) for c in range(3) for q in range(1, 25)]\n    result = []\n    for first in range(0, len(targets), 12):\n        selected = targets[first:first+12]\n        impulses = np.zeros((len(selected), 3, 128, 128))\n        for index, (plane, coefficient) in enumerate(selected):\n            impulses[index, plane, 62:67, 62:67] = SPATIAL[coefficient].reshape(5, 5)\n        fourier = np.fft.fft2(impulses, axes=(-2, -1)).transpose(0, 2, 3, 1)\n        response = np.fft.ifft2(np.einsum('yxab,pyxb->pyxa', spectrum, fourier, optimize=True).transpose(0, 3, 1, 2), axes=(-2, -1))\n        if np.max(abs(response.imag)) > 1e-9:\n            raise ValueError('Covariance directions are not real')\n        result.extend(response.real[:, :, 32:96, 32:96])\n    return targets, np.asarray(result)\n\n\ndef noise_matrices(covariance):\n    covariance = np.asarray(covariance, dtype=float)\n    if covariance.shape != (3, 3, 128, 128) or not np.isfinite(covariance).all():\n        raise ValueError('Finite three-plane covariance128 required')\n    marginal = np.asarray([covariance[c, c] for c in range(3)])\n    support_delta = SUPPORT[:, None]-SUPPORT[None, :]\n    patch_delta = PATCH[:, None]-PATCH[None, :]\n    cross_delta = PATCH[:, None]-SUPPORT[None, :]\n    full = marginal[:, support_delta[:, :, 0]%128, support_delta[:, :, 1]%128]\n    patch = marginal[:, patch_delta[:, :, 0]%128, patch_delta[:, :, 1]%128]\n    cross = marginal[:, cross_delta[:, :, 0]%128, cross_delta[:, :, 1]%128]\n    raw_variance = np.einsum('qi,cij,qj->cq', SPATIAL, patch, SPATIAL, optimize=True)\n    return full, cross, raw_variance\n\n\ndef coefficient_powers(observed, truth, kernel, matrices):\n    if observed.shape != (3, 64, 64) or truth.shape != observed.shape or kernel.shape != (25, 625):\n        raise ValueError('Finite matched64 fields and25x625 transport required')\n    if not all(np.isfinite(a).all() for a in (observed, truth, kernel)):\n        raise ValueError('Nonfinite pilot data')\n    effective = SPATIAL@kernel\n    raw = observed[:, 30:35, 30:35].reshape(3, 25)@SPATIAL.T\n    guide = observed[:, 20:45, 20:45].reshape(3, 625)@effective.T\n    signal = truth[:, 30:35, 30:35].reshape(3, 25)@SPATIAL.T\n    transported = truth[:, 20:45, 20:45].reshape(3, 625)@effective.T\n    full, cross, raw_variance = matrices\n    guide_variance = np.einsum('qk,ckl,ql->cq', effective, full, effective, optimize=True)\n    cross_variance = np.einsum('qi,cik,qk->cq', SPATIAL, cross, effective, optimize=True)\n    if np.min(guide_variance) < -1e-9:\n        raise ValueError('Negative fixed-geometry pilot variance')\n    values = dict(guide_squared=guide**2, guide_variance_subtracted=guide**2-guide_variance,\n        raw_guide_cross_subtracted=raw*guide-cross_variance, raw_variance_subtracted=raw**2-raw_variance)\n    return dict(estimates={k: v.tolist() for k, v in values.items()},\n        desired_signal_power=(signal**2).tolist(), transported_signal_power=(transported**2).tolist(),\n        signal_cross_product=(signal*transported).tolist(), raw_noise_variance=raw_variance.tolist(),\n        guide_noise_variance=guide_variance.tolist(), raw_guide_noise_covariance=cross_variance.tolist())\n"
+  },
+  "study_noise_pilot_cross_power.py": {
+   "sha256": "bc87f56cdeeb488aaa927b65beadd24e0005967fa478e6834aa6f9a0f0ec88b2",
+   "source": "\"\"\"Prospective local pilot power diagnostic: exact frozen covariance versus blind selection bias.\"\"\"\nfrom datetime import datetime, timezone\nimport json\nimport os\nfrom pathlib import Path\nimport numpy as np\nfrom analysis.render import available_memory\nfrom study_noise_neighbourhoods import ROOT, git, sha256\nfrom study_noise_profile_capture_transfer import flat_planes\nfrom study_noise_empirical_cross_spectrum import fit\nfrom study_noise_profile_covariance_wiener import binomial_covariance, spectrum_root, draw\nfrom noise_pilot_transport import pilot_model, pilot_kernel, noise_matrices, coefficient_powers\n\n\ndef model_definitions(training, axes):\n    white = np.zeros((3, 3, 128, 128))\n    for c in range(3): white[c, c, 0, 0] = 1.\n    models = [('white_gaussian', white), ('binomial_gaussian', binomial_covariance())]\n    matrix = np.asarray(axes['fixed_transform'])\n    for iso in (1600, 51200):\n        pair = next(p for p in training['native']['pairs'] if p['a']['iso'] == iso)\n        difference = (flat_planes(pair, 'a')-flat_planes(pair, 'b'))/np.sqrt(2)\n        cov, _, _, _, _ = fit(np.einsum('ab,byx->ayx', matrix, difference))\n        models.append((f'training_axes_iso{iso}_gaussian', cov))\n    return models\n\n\ndef summaries(records):\n    result = []\n    targets = dict(guide_squared='transported_signal_power', guide_variance_subtracted='transported_signal_power',\n                   raw_guide_cross_subtracted='signal_cross_product', raw_variance_subtracted='desired_signal_power')\n    for model in sorted({r['model'] for r in records}):\n        for mode in ('blind_weights', 'independent_scout_weights'):\n            for kind in ('flat', 'structured'):\n                selected = [r for r in records if r['model'] == model and r['mode'] == mode and r['kind'] == kind]\n                for estimator, target in targets.items():\n                    clusters = {}\n                    squared_errors = []; desired_errors = []; clipped = []\n                    for row in selected:\n                        value = np.asarray(row['powers']['estimates'][estimator])[:, 1:]\n                        own = np.asarray(row['powers'][target])[:, 1:]\n                        desired = np.asarray(row['powers']['desired_signal_power'])[:, 1:]\n                        clusters.setdefault(row['trial'], []).append(float(np.mean(value-own)))\n                        squared_errors.append(float(np.mean((value-own)**2)))\n                        desired_errors.append(float(np.mean((value-desired)**2)))\n                        clipped.append(float(np.mean(np.maximum(value, 0.))))\n                    cluster_means = np.array([np.mean(values) for values in clusters.values()])\n                    result.append(dict(model=model, mode=mode, kind=kind, estimator=estimator, own_estimand=target,\n                        records=len(selected), independent_observation_clusters=len(cluster_means),\n                        mean_bias_own_estimand=float(cluster_means.mean()),\n                        standard_error_cluster_mean=float(cluster_means.std(ddof=1)/np.sqrt(len(cluster_means))),\n                        mean_square_error_own_estimand=float(np.mean(squared_errors)),\n                        mean_square_error_desired_raw_power=float(np.mean(desired_errors)),\n                        mean_positive_part=float(np.mean(clipped))))\n    return result\n\n\ndef run():\n    free = available_memory()\n    if free is None or free < 512*1024**2:\n        raise ValueError('Need512MiB available for bounded local transport study')\n    names = ('extraction-paires-profils-bruit-v001-20261026T174656Z.json',\n             'melange-fixe-covariances-bruit-v001-20261026T175757Z.json')\n    paths = [ROOT/'docs/validation/raw'/n for n in names]; hashes = [sha256(p) for p in paths]\n    training, axes = [json.loads(p.read_text(encoding='utf-8')) for p in paths]\n    if axes['parents'][0]['sha256'] != hashes[0]:\n        raise ValueError('Frozen axes provenance mismatch')\n    started = datetime.now(timezone.utc); records = []; audits = []\n    yy, xx = np.mgrid[:64, :64]\n    directions = (np.array([1., 0., 0.]), np.array([0., 1., 0.]), np.array([0., 0., 1.]), np.ones(3)/np.sqrt(3))\n    configurations = [(v, 'gaussian', a, w) for v in directions for a in (3., 6.) for w in (1., 1.5, 2.5)]\n    configurations += [(v, 'step', a, None) for v in directions for a in (3., 6.)]\n    for index, (name, covariance) in enumerate(model_definitions(training, axes)):\n        spectrum = np.fft.fft2(covariance, axes=(-2, -1)).transpose(2, 3, 0, 1)\n        root, root_error = spectrum_root(spectrum)\n        model = pilot_model(covariance); matrices = noise_matrices(covariance)\n        audits.append(dict(model=name, root_max_covariance_error=root_error,\n            unit_marginal_variance=np.diag(covariance[:, :, 0, 0]).tolist()))\n        for kind, trials in (('flat', 64), ('structured', 4)):\n            configs = [(directions[0], 'flat', 0., None)] if kind == 'flat' else configurations\n            for trial in range(trials):\n                seed = 270127000+index*10000+(0 if kind == 'flat' else 1000)+trial*2\n                noise = draw(root, seed)[:, 32:96, 32:96]\n                scout_noise = draw(root, seed+1)[:, 32:96, 32:96]\n                for vector, shape, amplitude, width in configs:\n                    scalar = (amplitude*np.exp(-((xx-32)**2+(yy-32)**2)/(2*width*width)) if shape == 'gaussian'\n                              else amplitude*np.where(xx >= 32, 1., -1.) if shape == 'step' else np.zeros((64, 64)))\n                    truth = vector[:, None, None]*scalar\n                    observed = truth+noise\n                    for mode, guide in (('blind_weights', observed), ('independent_scout_weights', truth+scout_noise)):\n                        kernel = pilot_kernel(guide, model)\n                        powers = coefficient_powers(observed, truth, kernel, matrices)\n                        records.append(dict(model=name, mode=mode, kind=kind, trial=trial, noise_seed=seed,\n                            scout_seed=seed+1, shape=shape, amplitude=amplitude, width=width,\n                            direction=vector.tolist(), powers=powers))\n                if trial % 16 == 15 or kind == 'structured':\n                    print(name, kind, 'trial', trial, 'records', len(records), flush=True)\n    if [sha256(p) for p in paths] != hashes:\n        raise ValueError('Parents changed')\n    now = datetime.now(timezone.utc)\n    output = ROOT/'docs/validation/raw'/f\"puissance-croisee-pilote-bruit-v001-{now.strftime('%Y%m%dT%H%M%SZ')}.json\"\n    dependencies = ('noise_pilot_transport.py', 'study_noise_profile_capture_transfer.py',\n        'study_noise_empirical_cross_spectrum.py', 'study_noise_profile_covariance_wiener.py',\n        'study_noise_collaborative_wiener.py', 'study_noise_nonlocal_directional.py')\n    result = dict(schema_version=1, data_version=1, started_at_utc=started.isoformat(), completed_at_utc=now.isoformat(),\n        commit=git('rev-parse', 'HEAD'), numpy_version=np.__version__, records=records, summaries=summaries(records), audits=audits,\n        numeric_thread_limits={n: os.environ.get(n) for n in ('OPENBLAS_NUM_THREADS', 'OMP_NUM_THREADS', 'MKL_NUM_THREADS')},\n        runner_sha256=sha256(Path(__file__)), runner_source=Path(__file__).read_text(encoding='utf-8'),\n        parents=[dict(path=str(p), sha256=h) for p, h in zip(paths, hashes)],\n        dependencies={n: dict(sha256=sha256(ROOT/'tests'/n), source=(ROOT/'tests'/n).read_text(encoding='utf-8')) for n in dependencies},\n        rules='ProspectiveLOCALpowerdiagnostic,notnewdenoiser:EXACTexistingoverlapNLMpilotpatch5/search21/h.8kernel,verifiedagainstreference. FixedspatialDCT5only,NOcollaborativegroupselectionornewthresholds. Analyticalmarginalcovariance raw/guide/guide withobservedfrozenkernel. Compare guideSquared,guideSquared-VarGuide,raw*guide-CovRawGuide,rawSquared-VarRaw;negativevaluesUNCLIPPED. Independent scout provides unavailable2-observationcontrol ofunbiasedness,notonephotoimplementation. 4Gaussianmodels,64freshflatobservation/scoutpairsand4structuredpairs/model;32structuresreuseeachstructuredpair. 544drawnfields,1536relatedmode-records,NOT1536independentphotos. SummariesexcludeDC;clusterbyobservationtrial,ownestimandvsdesiredrawsignalpowersseparate.',\n        limitations='OnlyGaussianstationarylaw,trainingprofileaxesnotnativecameranoisevalidation. Fixed-kernelcovariance isNOTconditionalunbiasednesswhenweightscomputedfromsameobservation. Scoutneedsindependentobservation,notavailableblind. Correctedcrossestimatesx*(Wx),notx^2;cannotlabelunbiaseddesiredsignalpowerwithoutadditionalassumptions. No groupselection,render/MSEqualitymatch,production,thresholdfit orneuralmodel.')\n    with output.open('x', encoding='utf-8') as handle:\n        json.dump(result, handle, ensure_ascii=False, indent=1, allow_nan=False)\n    print(output, flush=True)\n\n\nif __name__ == '__main__':\n    run()\n"
+  },
+  "study_noise_profile_covariance_wiener.py": {
+   "sha256": "317d546846b89eb70f092e1bc3f20b6e57863d15bcd1aacfdb42e12fc2e7e385",
+   "source": "\"\"\"Spatially held empirical-profile Gaussian transfer; no native-camera denoising claim.\"\"\"\nfrom datetime import datetime, timezone\nimport json\nfrom pathlib import Path\nimport numpy as np\nfrom study_noise_neighbourhoods import ROOT, git, sha256\nfrom study_noise_patch_aggregation import aggregate\nfrom study_noise_wiener_search_context import signal_field, offsets, PATCH, SPATIAL, GROUP\nfrom study_noise_empirical_cross_spectrum import fit, GRID\nfrom study_noise_wiener_edge_profiles import decompose\n\n\ndef prepare(cov):\n    if cov.shape != (3, 3, GRID, GRID) or not np.isfinite(cov).all():\n        raise ValueError('Finite prepared cross covariance required')\n    marginal = np.asarray([cov[c, c] for c in range(3)])\n    if not np.allclose(marginal[:, 0, 0], 1., atol=1e-9):\n        raise ValueError('Unit marginal variance required')\n    model = dict(variance=1., offsets=[])\n    for y, x in offsets(10)[1:]:\n        floor = 2*(1-float(np.mean(marginal[:, y % GRID, x % GRID])))\n        if floor < -1e-8:\n            raise ValueError('Invalid distance variance')\n        model['offsets'].append((int(y), int(x), max(0., floor)))\n    difference = PATCH[:, None]-PATCH[None, :]\n    table = np.empty((3, 41, 41, 25))\n    for dy in range(-20, 21):\n        for dx in range(-20, 21):\n            delta = difference+[dy, dx]\n            noise_cov = marginal[:, delta[:, :, 0] % GRID, delta[:, :, 1] % GRID]\n            table[:, dy+20, dx+20] = np.einsum('pi,cij,pj->cp', SPATIAL, noise_cov, SPATIAL)\n    return model, table\n\n\ndef reconstruct(observed, truth, prepared, gain_policy='per_plane'):\n    if observed.shape not in ((3, 64, 64), (3, 128, 128)) or truth.shape != observed.shape or not all(np.isfinite(a).all() for a in (observed, truth)):\n        raise ValueError('Finite three-plane64/128 fields required')\n    if gain_policy not in ('per_plane', 'shared'):\n        raise ValueError('Unknown gain policy')\n    model, covariance_table = prepared\n    size = observed.shape[1]; core_size = 12 if size==64 else 24\n    first = (size-core_size)//2; last = first+core_size\n    pilot = aggregate(observed, truth, model, .8)\n    search = offsets(10); sums = np.zeros_like(observed); signals = np.zeros_like(observed)\n    counts = np.zeros((size, size))\n    for cy in tuple(range(first, last, 3))+(last-1,):\n        for cx in tuple(range(first, last, 3))+(last-1,):\n            ys = cy+search[:, 0, None]+PATCH[None, :, 0]\n            xs = cx+search[:, 1, None]+PATCH[None, :, 1]\n            pg = pilot[0][:, ys-14, xs-14]\n            distance = np.mean((pg-pg[:, :1])**2, axis=(0, 2))\n            indices = np.r_[0, np.argsort(distance[1:], kind='stable')[:16]+1]\n            y, x = ys[indices], xs[indices]\n            positions = search[indices]; delta = positions[:, None]-positions[None, :]\n            cov = covariance_table[:, delta[:, :, 0]+20, delta[:, :, 1]+20]\n            variance = np.einsum('ka,cabp,kb->cpk', GROUP, cov, GROUP, optimize=True)\n            if variance.min() < -1e-8:\n                raise ValueError('Non-positive group noise model')\n            variance = np.maximum(variance, 0.)\n            raw, guide, clean, pilot_signal = [SPATIAL @ a.swapaxes(-1, -2) @ GROUP.T for a in\n                (observed[:, y, x], pg[:, indices], truth[:, y, x], pilot[1][:, y-14, x-14])]\n            power = guide*guide; gains = np.ones_like(power)\n            if gain_policy == 'shared':\n                total_power = np.sum(power, axis=0)\n                total_variance = np.sum(variance, axis=0)\n                common_gain = np.ones_like(total_power)\n                np.divide(total_power, total_power+total_variance, out=common_gain, where=total_variance>0)\n                gains[:] = common_gain\n            else:\n                np.divide(power, power+variance, out=gains, where=variance>0)\n            filtered = gains*raw; transported = gains*clean\n            filtered[:, 0, 0] = guide[:, 0, 0]; transported[:, 0, 0] = pilot_signal[:, 0, 0]\n            out = SPATIAL.T @ filtered @ GROUP; signal = SPATIAL.T @ transported @ GROUP\n            for c in range(3):\n                np.add.at(sums[c], (y, x), out[c].T)\n                np.add.at(signals[c], (y, x), signal[c].T)\n            np.add.at(counts, (y, x), 1.)\n    count = counts[first:last, first:last]\n    if np.any(count <= 0):\n        raise ValueError('Incomplete output')\n    out = sums[:, first:last, first:last]/count\n    signal = signals[:, first:last, first:last]/count\n    return dict(joint_overlap=tuple(a[:, first-14:last-14, first-14:last-14] for a in pilot),\n                dc_wiener=(out, signal, out-signal))\n\n\ndef binomial_covariance():\n    d = np.minimum(np.arange(GRID), GRID-np.arange(GRID))\n    axis = np.where(d==0, 1., np.where(d==1, 2/3, np.where(d==2, 1/6, 0.)))\n    return np.eye(3)[:, :, None, None]*(axis[:, None]*axis[None, :])[None, None]\n\n\ndef zero_lag_whitener(cov):\n    values, vectors = np.linalg.eigh(cov[:, :, 0, 0])\n    if values.min() <= 1e-6:\n        raise ValueError('Cross-plane covariance too ill-conditioned for this study')\n    whitening = (vectors/np.sqrt(values)) @ vectors.T\n    inverse = (vectors*np.sqrt(values)) @ vectors.T\n    transformed = np.einsum('ai,ijyx,bj->abyx', whitening, cov, whitening)\n    return whitening, inverse, transformed\n\n\ndef draw(sqrt_spectrum, seed):\n    white = np.random.default_rng(seed).standard_normal((3, GRID, GRID))\n    transformed = np.fft.fft2(white, axes=(-2, -1)).transpose(1, 2, 0)\n    noise_fft = np.einsum('yxij,yxj->yxi', sqrt_spectrum, transformed)\n    noise = np.fft.ifft2(noise_fft.transpose(2, 0, 1), axes=(-2, -1))\n    if np.max(np.abs(noise.imag)) > 1e-9:\n        raise ValueError('Generated noise is not real')\n    return noise.real\n\n\ndef spectrum_root(spectrum):\n    values, vectors = np.linalg.eigh(spectrum)\n    root = (vectors*np.sqrt(np.maximum(values, 0.))[..., None, :]) @ vectors.swapaxes(-1, -2).conj()\n    # Square root is sensitive near zero eigenvalues. Enforce REAL-field pairing,\n    # not a relaxed imaginary-output tolerance, then audit the actual covariance.\n    reverse = (-np.arange(GRID)) % GRID\n    root = (root+root[reverse][:, reverse].conj())*.5\n    error = float(np.max(np.abs(root @ root.swapaxes(-1, -2).conj()-spectrum)))\n    if error > 1e-8*max(1., float(np.max(np.abs(spectrum)))):\n        raise ValueError('Real-spectrum projection changes the generating covariance')\n    return root, error\n\n\ndef run():\n    parent = ROOT/'docs/validation/raw/etude-reelle-bornee-nonlocal-bruit-v001-20261025T222336Z.json'\n    digest = sha256(parent); data = json.loads(parent.read_text(encoding='utf-8'))\n    start = datetime.now(timezone.utc); records = []; folds = []; serial = 0\n    common = prepare(binomial_covariance())\n    configs = [dict(shape='flat', channel=None, amplitude=0.)]\n    configs += [dict(shape=shape, channel=c, amplitude=a)\n                for shape in ('gaussian', 'step') for c in range(3) for a in (3., 6.)]\n    for pair in data['native']['pairs']:\n        arrays = [np.asarray(next(s for s in pair[key]['samples'] if s['kind']=='flat')['original_y_co_cg'], dtype=float).reshape(3, 64, 64)\n                  for key in ('a', 'b')]\n        difference = (arrays[0]-arrays[1])/np.sqrt(2)\n        halves = (difference[:, :, :24], difference[:, :, 40:])\n        fits = [fit(tile) for tile in halves]\n        for side in (0, 1):\n            cov, _, _, _, fit_audit = fits[side]\n            actual_cov, actual_spectrum, _, _, _ = fits[1-side]\n            marginal = prepare(cov)\n            whitening, inverse, white_cov = zero_lag_whitener(cov)\n            cross = prepare(white_cov)\n            sqrt_spectrum, root_error = spectrum_root(actual_spectrum)\n            fold = len(folds)\n            folds.append(dict(iso=pair['a']['iso'], a=pair['a']['raw'], b=pair['b']['raw'],\n                training_side=side, generating_side=1-side, fit_audit=fit_audit,\n                zero_lag_whitening=whitening.tolist(), inverse_whitening=inverse.tolist(),\n                generating_covariance_root_max_error=root_error,\n                generating_zero_lag_covariance=actual_cov[:, :, 0, 0].tolist()))\n            for config in configs:\n                for trial in range(8 if config['shape']=='flat' else 2):\n                    seed = 2610262200000+serial; serial += 1\n                    truth = signal_field(**config, size=128)\n                    observed = truth+draw(sqrt_spectrum, seed)\n                    outputs = {}\n                    for mode, prepared in (('common', common), ('marginal', marginal)):\n                        outputs.update({mode+'_'+m: result for m, result in reconstruct(observed, truth, prepared).items()})\n                    transformed_obs = np.einsum('ab,byx->ayx', whitening, observed)\n                    transformed_truth = np.einsum('ab,byx->ayx', whitening, truth)\n                    outputs.update({'cross_'+m: tuple(np.einsum('ab,byx->ayx', inverse, value) for value in result)\n                                    for m, result in reconstruct(transformed_obs, transformed_truth, cross).items()})\n                    core = truth[:, 52:76, 52:76]\n                    metrics = {m: decompose(*result, core) for m, result in outputs.items()}\n                    if config['shape']=='gaussian':\n                        c = config['channel']\n                        for m, (_, signal, _) in outputs.items():\n                            metrics[m]['peak_signal_ratio'] = float(signal[c, 12, 12]/config['amplitude'])\n                    records.append(dict(**config, fold=fold, trial=trial, seed=seed, metrics=metrics))\n            print('Completed profile fold', fold, 'ISO', pair['a']['iso'], 'records', len(records), flush=True)\n    if sha256(parent) != digest:\n        raise ValueError('Parent changed')\n    now = datetime.now(timezone.utc)\n    output = ROOT/'docs/validation/raw'/f\"transfert-profils-covariance-wiener-bruit-v001-{now.strftime('%Y%m%dT%H%M%SZ')}.json\"\n    names = ('study_noise_empirical_cross_spectrum.py', 'study_noise_wiener_search_context.py',\n             'study_noise_collaborative_wiener.py', 'study_noise_patch_aggregation.py',\n             'study_noise_wiener_edge_profiles.py')\n    result = dict(schema_version=1, data_version=1, started_at_utc=start.isoformat(), completed_at_utc=now.isoformat(),\n        commit=git('rev-parse', 'HEAD'), runner_sha256=sha256(Path(__file__)), runner_source=Path(__file__).read_text(encoding='utf-8'),\n        numpy_version=np.__version__, parent=dict(path=str(parent), sha256=digest), folds=folds, records=records,\n        dependencies={n: dict(sha256=sha256(ROOT/'tests'/n), source=(ROOT/'tests'/n).read_text(encoding='utf-8')) for n in names},\n        rules='8spatial folds from4storedpairs,32Gaussianfields/fold=256fields. Fit covariance on one64x24half,GENERATE Gaussian noise from OTHER half fitted crossspectrum,unit own marginal variances. No same-model inverse crime,though halves not independent captures. Common binomial vs learned per-plane marginals vs zero-lag cross-plane symmetric whitening+per-plane marginals then EXACT inverse transform. Same h.8/search21/group17/DCpilot. Model shape only,no native sigma fitting,threshold tuning or oracle grouping. Full covariance between planes beyond zero lag still not whitened.',\n        limitations='Held spectral fit is a synthetic generating model,not true RCD camera noise or clean-photo truth. 8foldsNOT8independentpairs/cameras;all same R6III context. Only2draws/structuredconfiguration/fold,8flat. Spectral PSD projection/lagcut8,periodic128. Native marginal variance differences normalized away intentionally. No native denoising,production or universal camera calibration.')\n    with output.open('x', encoding='utf-8') as handle:\n        json.dump(result, handle, ensure_ascii=False, indent=1, allow_nan=False)\n    print(output, flush=True)\n\n\nif __name__ == '__main__':\n    run()\n"
+  },
+  "study_noise_collaborative_wiener.py": {
+   "sha256": "6b878e850c8e76d8557d2d29770d2c60b520cd8970385792fffdd56c9b7ddd35",
+   "source": "\"\"\"Two-stage collaborative plug-in Wiener prototype with common spatial measurement.\"\"\"\nimport argparse\nfrom datetime import datetime,timezone\nfrom functools import lru_cache\nimport json\nfrom pathlib import Path\nimport numpy as np\nfrom study_noise_neighbourhoods import ROOT,git,sha256\nfrom study_noise_sure_feasibility import color\nfrom study_noise_semantic_comparison import noise_model,measures\nfrom study_noise_patch_aggregation import aggregate\nfrom study_noise_connected_reconstruction import cases\nfrom study_noise_collaborative_rank import PATCH\n\n\nOFFSETS=np.array([(0,0)]+[(y,x) for y in range(-4,5) for x in range(-4,5) if y or x])\n\n\ndef dct(n):\n    k=np.arange(n)[:,None];x=np.arange(n)[None,:]\n    matrix=np.sqrt(2/n)*np.cos(np.pi*k*(x+.5)/n);matrix[0]/=np.sqrt(2)\n    return matrix\n\n\nSPATIAL=np.kron(dct(5),dct(5));GROUP=dct(17)\n\n\n@lru_cache(maxsize=2)\ndef covariance_table(colored):\n    difference=PATCH[:,None,:]-PATCH[None,:,:]\n    table=np.empty((17,17,25))\n    for dy in range(-8,9):\n        for dx in range(-8,9):\n            delta=np.abs(difference+[dy,dx])\n            if colored:\n                axis=np.where(delta==0,1.,np.where(delta==1,2/3,np.where(delta==2,1/6,0.)))\n                cov=np.prod(axis,axis=2)\n            else:cov=np.all(delta==0,axis=2).astype(float)\n            table[dy+8,dx+8]=np.einsum('pi,ij,pj->p',SPATIAL,cov,SPATIAL,optimize=True)\n    return table\n\n\ndef coefficient_variance(indices,table):\n    pos=OFFSETS[indices];delta=pos[:,None,:]-pos[None,:,:]\n    cov=table[delta[:,:,0]+8,delta[:,:,1]+8]\n    variance=np.einsum('ka,abp,kb->pk',GROUP,cov,GROUP,optimize=True)\n    if np.min(variance)<-1e-8:raise ValueError('Negative transformed variance')\n    return np.maximum(variance,0.)\n\n\ndef filter_group(observed,pilot,truth,variance):\n    if observed.shape!=(3,25,17) or pilot.shape!=observed.shape or truth.shape!=observed.shape or variance.shape!=(25,17):raise ValueError('Fixed group shapes required')\n    if not all(np.isfinite(a).all() for a in (observed,pilot,truth,variance)) or np.any(variance<0):raise ValueError('Finite data/nonnegative variance required')\n    raw=SPATIAL@observed@GROUP.T;guide=SPATIAL@pilot@GROUP.T\n    clean=SPATIAL@truth@GROUP.T\n    power=guide*guide;gain=np.ones_like(power)\n    np.divide(power,power+variance[None],out=gain,where=variance[None]>0)\n    output=SPATIAL.T@(gain*raw)@GROUP;signal=SPATIAL.T@(gain*clean)@GROUP\n    return output,signal,dict(mean_gain=float(np.mean(gain)),dc_gains=gain[:,0,0].tolist())\n\n\ndef reconstruct(observed,truth,colored):\n    if observed.shape!=(3,64,64) or truth.shape!=observed.shape or not np.isfinite(observed).all() or not np.isfinite(truth).all():raise ValueError('Finite three-plane64 fields required')\n    base,base_signal,_=aggregate(observed,truth,noise_model(colored,False),.8)\n    # Full valid pilot support14:50;no extrapolated or periodic pilot boundary.\n    sums={m:np.zeros_like(observed) for m in ('raw_group','pilot_group')}\n    signals={m:np.zeros_like(observed) for m in sums};counts={m:np.zeros((64,64)) for m in sums}\n    gain_means={m:[] for m in sums};dc={m:[] for m in sums};cache={}\n    centres=tuple(range(20,44,3))+(43,)\n    for cy in centres:\n        for cx in centres:\n            ys=cy+OFFSETS[:,0,None]+PATCH[None,:,0];xs=cx+OFFSETS[:,1,None]+PATCH[None,:,1]\n            raw_patches=observed[:,ys,xs];pilot_patches=base[:,ys-14,xs-14]\n            for mode,guide in (('raw_group',raw_patches),('pilot_group',pilot_patches)):\n                distance=np.mean((guide-guide[:,0:1,:])**2,axis=(0,2))\n                indices=np.r_[0,np.argsort(distance[1:],kind='stable')[:16]+1]\n                key=tuple(indices)\n                if key not in cache:cache[key]=coefficient_variance(indices,covariance_table(colored))\n                y=ys[indices];x=xs[indices]\n                raw=raw_patches[:,indices,:].swapaxes(-1,-2)\n                pg=pilot_patches[:,indices,:].swapaxes(-1,-2)\n                clean=truth[:,y,x].swapaxes(-1,-2)\n                output,signal,audit=filter_group(raw,pg,clean,cache[key])\n                for c in range(3):\n                    np.add.at(sums[mode][c],(y,x),output[c].T)\n                    np.add.at(signals[mode][c],(y,x),signal[c].T)\n                np.add.at(counts[mode],(y,x),1.)\n                gain_means[mode].append(audit['mean_gain']);dc[mode].append(audit['dc_gains'])\n    result={'joint_overlap':(base[:,6:30,6:30],base_signal[:,6:30,6:30],(base-base_signal)[:,6:30,6:30]),\n            'identity':(observed[:,20:44,20:44].copy(),truth[:,20:44,20:44].copy(),(observed-truth)[:,20:44,20:44])}\n    audits={}\n    for mode in sums:\n        count=counts[mode][20:44,20:44]\n        if np.any(count<=0):raise ValueError('Uncovered output pixel')\n        out=sums[mode][:,20:44,20:44]/count[None]\n        signal=signals[mode][:,20:44,20:44]/count[None]\n        result[mode]=(out,signal,out-signal)\n        audits[mode]=dict(group_count=len(gain_means[mode]),mean_gain=float(np.mean(gain_means[mode])),\n            mean_dc_gains=np.mean(dc[mode],axis=0).tolist(),min_contributions=float(count.min()),max_contributions=float(count.max()))\n    return result,audits\n\n\ndef metrics(outputs,truth,identity):\n    core=truth[:,20:44,20:44];results={}\n    peak=None\n    if identity is not None and identity['shape'] in ('gaussian','gaussian_shifted'):\n        peak=np.unravel_index(np.argmax(core[identity['channel']]),(24,24))\n    for mode,(out,signal,residual) in outputs.items():\n        row=dict(planes=[measures(out[c],signal[c],residual[c],core[c]) for c in range(3)],\n            abs_q999_per_plane=np.quantile(np.abs(out-core),.999,axis=(1,2)).tolist(),\n            max_abs_error_per_plane=np.max(np.abs(out-core),axis=(1,2)).tolist())\n        if identity is not None:\n            c=identity['channel'];energy=float(np.mean(core[c]**2))\n            row['signal_projection']=float(np.mean(signal[c]*core[c])/energy)\n            if peak is not None:\n                py,px=peak;target=float(core[c,py,px])\n                row['sampled_peak']=dict(original_yx=[int(py+20),int(px+20)],target=target,\n                    output=float(out[c,py,px]),signal=float(signal[c,py,px]),squared_error=float((out[c,py,px]-target)**2))\n        results[mode]=row\n    return results\n\n\ndef main():\n    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--data-version',type=int,required=True)\n    args=parser.parse_args()\n    if args.data_version<1:parser.error('Positive version required')\n    path=ROOT/'docs/validation/raw/controle-biais-selection-bruit-v001-20261026T130217Z.json'\n    digest=sha256(path);parent=json.loads(path.read_text(encoding='utf-8'))\n    start=datetime.now(timezone.utc);records=[];controls=[];challenges=[];serial=0\n    for colored in (False,True):\n        configurations=[(None,np.full((3,64,64),level),8,level) for level in (0.,5.,20.)]\n        configurations.extend((identity,truth,1,None) for identity,truth in cases())\n        for identity,truth,trials,level in configurations:\n            for trial in range(trials):\n                seed=261026700000+serial;serial+=1\n                noise=np.random.default_rng(seed).standard_normal((3,64,64))\n                if colored:noise=color(noise)\n                outputs,audit=reconstruct(truth+noise,truth,colored)\n                row=dict(noise='binomial_correlated' if colored else 'white',seed=seed,trial=trial,audit=audit,metrics=metrics(outputs,truth,identity))\n                if identity is None:controls.append(dict(level=level,**row))\n                else:records.append(dict(**identity,**row))\n        print('Model',colored,'54forms+24constantfields completed',flush=True)\n    for r in parent['records']:\n        if r['noise']!='binomial_correlated' or r['configuration']['family']!='flat':continue\n        stream,_=np.random.SeedSequence(r['seed']).spawn(2)\n        observed=color(np.random.default_rng(stream).standard_normal((3,64,64)));truth=np.zeros_like(observed)\n        outputs,audit=reconstruct(observed,truth,True)\n        challenges.append(dict(source_seed=r['seed'],audit=audit,metrics=metrics(outputs,truth,None),\n            centre_squared_error={m:(out[:,12,12]**2).tolist() for m,(out,_,_) in outputs.items()}))\n    if len(records)!=108 or len(controls)!=48 or len(challenges)!=9 or sha256(path)!=digest:raise ValueError('Incomplete/changed inputs')\n    now=datetime.now(timezone.utc);output=ROOT/'docs/validation/raw'/f\"collaboratif-wiener-deux-etapes-bruit-v{args.data_version:03d}-{now.strftime('%Y%m%dT%H%M%SZ')}.json\"\n    result=dict(schema_version=1,data_version=args.data_version,campaign_id=output.stem,\n        started_at_utc=start.isoformat(),completed_at_utc=now.isoformat(),commit=git('rev-parse','HEAD'),\n        local_changes=git('status','--short').splitlines(),runner_sha256=sha256(Path(__file__)),numpy_version=np.__version__,\n        dependencies={n:sha256(ROOT/'tests'/n) for n in ('study_noise_sure_feasibility.py','study_noise_semantic_comparison.py','study_noise_patch_aggregation.py','study_noise_connected_reconstruction.py','study_noise_collaborative_rank.py')},\n        challenge_parent=dict(path=str(path),sha256=digest),records=records,noise_controls=controls,challenges=challenges,\n        rules='Pilot=jointoverlap h.8 fromSAMEobservation,valid14:50.5x5patches,17nearest rawSSD jointplanes in9x9search,raw-guide orpilot-guide ablation. Fixedorthonormal DCTspatial25/group17,perplane transforms. Wiener g=pilotcoeff^2/(pilotcoeff^2+rawcoefficientvariance),ALLcoefficientsincludingDC/no preservedgroupmean. Exactfixedgeometryvariance fromstationaryknowncovariance includespatchoverlap via spatialDCTcrosscovarianceandgroupDCT,notiidcolumns. Pilotresidualnoise NOTsubtracted or independent. AggregateALL17filteredpatches equally across81referencecentres20:43,step3+edge,output20:44(common24),positivecoveragechecked. Samegains/groups truthtransport forerror decomposition.108forms+48constantfields levels0/5/20+9knownchallenges. Peakmetrics followmaxsampledtruthinsamecore,notfixed32.',\n        limitations='ExperimentalprototypeNOTfullBM3D.9search differsfromprevious21;24core differsfromprevious36/centralpoint,usecurrentcomparatorsonly.1draw per form/model exploratory,controls8perlevel/model notlargevalidation. Fixedgeometryknownvariance doesNOTcondition on observed grouping orpilotbasis/gains. Pilotsharesnoise;notindependent orclean. KnownGaussians/independentplanes notRCD. No finalnoisematching,no hyperparameterfit,production,networktraining ornewRAW.')\n    with output.open('x',encoding='utf-8') as handle:json.dump(result,handle,ensure_ascii=False,indent=1,allow_nan=False)\n    print(output,flush=True);print(len(records),'forms,',len(controls),'constantcontrols,',len(challenges),'knownchallenges',flush=True)\n\n\nif __name__=='__main__':main()\n"
+  }
+ },
+ "rules": "DeterministicoperatorauditAFTERknownnullresidual,notsamplinguntilpassing.864linearentries/model compareC*BcovariancedirectionswithACTUALrootspectrumspatialcovariance,including3x3planes/4lags/24coefficients. Per model replayknownlargestabsresidualplus1freshfield onlyforoperatorchecks;notnewqualityobservations. Checkexactprioranalyticdiagonal;3fixedcovariancedirections and5FDsteps,recordALLerrorswithoutchoosingFDfortheestimator. No formula/thresholdfit.",
+ "limitations": "DirectionalFDchecksnotallJacobianentriesorproofGaussianpopulationunbiasedness;coarseFDcantraversecontinuouskinks. Selectedknowncasesnotindependentvalidation. PrimarySteinmeasuresremainanalyticwithnoparameterchanged. No denoising orproduction."
+}

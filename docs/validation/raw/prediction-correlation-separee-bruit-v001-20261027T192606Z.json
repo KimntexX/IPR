@@ -1,0 +1,1420 @@
+{
+ "schema_version": 1,
+ "data_version": 1,
+ "started_at_utc": "2026-10-27T19:26:06.836073+00:00",
+ "completed_at_utc": "2026-10-27T19:26:06.853694+00:00",
+ "verdict": "shape_only_linear_light_interpolation_not_retained",
+ "records": [
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "b": "6V1A9661.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "status": "predicted_held_capture",
+   "lower": "training_100",
+   "upper": "dataset1_100",
+   "upper_weight": 0.11964654500161032,
+   "nearest_id": "training_100",
+   "metrics": {
+    "fixed": {
+     "normalized_covariance_squared_error": 0.0016100754629843233,
+     "mean_abs_log_hh_factor_error": 0.06058599023229225,
+     "gaussian_hh_factor_ratio": [
+      0.8658801044434999,
+      1.0195592364721953,
+      0.9817891285788135
+     ]
+    },
+    "nearest": {
+     "normalized_covariance_squared_error": 0.0016100754629843233,
+     "mean_abs_log_hh_factor_error": 0.06058599023229225,
+     "gaussian_hh_factor_ratio": [
+      0.8658801044434999,
+      1.0195592364721953,
+      0.9817891285788135
+     ]
+    },
+    "physical_interpolation": {
+     "normalized_covariance_squared_error": 0.00068925421882985,
+     "mean_abs_log_hh_factor_error": 0.04876602153383235,
+     "gaussian_hh_factor_ratio": [
+      0.8880459996578278,
+      0.9909513496643696,
+      0.9816931532746674
+     ]
+    },
+    "shape_only": {
+     "normalized_covariance_squared_error": 0.001319226768929534,
+     "mean_abs_log_hh_factor_error": 0.05441183816825717,
+     "gaussian_hh_factor_ratio": [
+      0.8780828471045754,
+      1.0149196110379453,
+      0.9817566860721985
+     ]
+    }
+   }
+  },
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "b": "6V1A9661.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "status": "predicted_held_capture",
+   "lower": "training_100",
+   "upper": "dataset1_100",
+   "upper_weight": 0.11826152222488207,
+   "nearest_id": "training_100",
+   "metrics": {
+    "fixed": {
+     "normalized_covariance_squared_error": 0.0020475156010448963,
+     "mean_abs_log_hh_factor_error": 0.04564909503261205,
+     "gaussian_hh_factor_ratio": [
+      0.884260422324636,
+      1.0028933842723229,
+      0.9890064612507237
+     ]
+    },
+    "nearest": {
+     "normalized_covariance_squared_error": 0.0020475156010448963,
+     "mean_abs_log_hh_factor_error": 0.04564909503261205,
+     "gaussian_hh_factor_ratio": [
+      0.884260422324636,
+      1.0028933842723229,
+      0.9890064612507237
+     ]
+    },
+    "physical_interpolation": {
+     "normalized_covariance_squared_error": 0.0009273975844332255,
+     "mean_abs_log_hh_factor_error": 0.044876987294182574,
+     "gaussian_hh_factor_ratio": [
+      0.9066535300605132,
+      0.974837271568866,
+      0.988910604092344
+     ]
+    },
+    "shape_only": {
+     "normalized_covariance_squared_error": 0.0017072486983216225,
+     "mean_abs_log_hh_factor_error": 0.040626580862388746,
+     "gaussian_hh_factor_ratio": [
+      0.8965749121271887,
+      0.9983820730137131,
+      0.9889741585477702
+     ]
+    }
+   }
+  },
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "b": "6V1A9661.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "status": "predicted_held_capture",
+   "lower": "training_100",
+   "upper": "dataset1_100",
+   "upper_weight": 0.10167391250840671,
+   "nearest_id": "training_100",
+   "metrics": {
+    "fixed": {
+     "normalized_covariance_squared_error": 0.0014476233282743286,
+     "mean_abs_log_hh_factor_error": 0.03895853090788289,
+     "gaussian_hh_factor_ratio": [
+      0.9182168169923572,
+      1.0242432126474044,
+      0.9924289560431546
+     ]
+    },
+    "nearest": {
+     "normalized_covariance_squared_error": 0.0014476233282743286,
+     "mean_abs_log_hh_factor_error": 0.03895853090788289,
+     "gaussian_hh_factor_ratio": [
+      0.9182168169923572,
+      1.0242432126474044,
+      0.9924289560431546
+     ]
+    },
+    "physical_interpolation": {
+     "normalized_covariance_squared_error": 0.0005856639226660177,
+     "mean_abs_log_hh_factor_error": 0.02483687183548249,
+     "gaussian_hh_factor_ratio": [
+      0.9384108168711248,
+      0.9967485230283251,
+      0.9923430785078936
+     ]
+    },
+    "shape_only": {
+     "normalized_covariance_squared_error": 0.0012118791078592484,
+     "mean_abs_log_hh_factor_error": 0.033719329847278136,
+     "gaussian_hh_factor_ratio": [
+      0.929178354091562,
+      1.020278352861807,
+      0.9924010878881419
+     ]
+    }
+   }
+  },
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "b": "6V1A9661.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "status": "predicted_held_capture",
+   "lower": "training_100",
+   "upper": "dataset1_100",
+   "upper_weight": 0.0999942347801553,
+   "nearest_id": "training_100",
+   "metrics": {
+    "fixed": {
+     "normalized_covariance_squared_error": 0.0015299691724339078,
+     "mean_abs_log_hh_factor_error": 0.046809502797801494,
+     "gaussian_hh_factor_ratio": [
+      0.8914250315301714,
+      0.9911819974673713,
+      0.9835001786772837
+     ]
+    },
+    "nearest": {
+     "normalized_covariance_squared_error": 0.0015299691724339078,
+     "mean_abs_log_hh_factor_error": 0.046809502797801494,
+     "gaussian_hh_factor_ratio": [
+      0.8914250315301714,
+      0.9911819974673713,
+      0.9835001786772837
+     ]
+    },
+    "physical_interpolation": {
+     "normalized_covariance_squared_error": 0.0006354487271115438,
+     "mean_abs_log_hh_factor_error": 0.04872378242851514,
+     "gaussian_hh_factor_ratio": [
+      0.9107257360722556,
+      0.9647030326737278,
+      0.9834161525098356
+     ]
+    },
+    "shape_only": {
+     "normalized_covariance_squared_error": 0.0012752043087684258,
+     "mean_abs_log_hh_factor_error": 0.044200672149061225,
+     "gaussian_hh_factor_ratio": [
+      0.9018878214000857,
+      0.9874081427422609,
+      0.9834730174768073
+     ]
+    }
+   }
+  },
+  {
+   "dataset": 0,
+   "iso": 1600,
+   "a": "6V1A9676.CR3",
+   "b": "6V1A9677.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "status": "outside_characterized_light_range"
+  },
+  {
+   "dataset": 0,
+   "iso": 1600,
+   "a": "6V1A9676.CR3",
+   "b": "6V1A9677.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "status": "outside_characterized_light_range"
+  },
+  {
+   "dataset": 0,
+   "iso": 1600,
+   "a": "6V1A9676.CR3",
+   "b": "6V1A9677.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "status": "outside_characterized_light_range"
+  },
+  {
+   "dataset": 0,
+   "iso": 1600,
+   "a": "6V1A9676.CR3",
+   "b": "6V1A9677.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "status": "outside_characterized_light_range"
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "b": "6V1A9703.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "status": "predicted_held_capture",
+   "lower": "training_6400",
+   "upper": "dataset2_6400",
+   "upper_weight": 0.1157642013399048,
+   "nearest_id": "training_6400",
+   "metrics": {
+    "fixed": {
+     "normalized_covariance_squared_error": 0.001283071766319,
+     "mean_abs_log_hh_factor_error": 0.05275280200318035,
+     "gaussian_hh_factor_ratio": [
+      0.902632728064133,
+      1.04235973352334,
+      0.9857704546780474
+     ]
+    },
+    "nearest": {
+     "normalized_covariance_squared_error": 0.001283071766319,
+     "mean_abs_log_hh_factor_error": 0.05275280200318035,
+     "gaussian_hh_factor_ratio": [
+      0.902632728064133,
+      1.04235973352334,
+      0.9857704546780474
+     ]
+    },
+    "physical_interpolation": {
+     "normalized_covariance_squared_error": 0.0007593703239431673,
+     "mean_abs_log_hh_factor_error": 0.04771163324544555,
+     "gaussian_hh_factor_ratio": [
+      0.9212329625588617,
+      1.051300891329004,
+      0.9889967546387325
+     ]
+    },
+    "shape_only": {
+     "normalized_covariance_squared_error": 0.0010837142068974544,
+     "mean_abs_log_hh_factor_error": 0.05197074881540195,
+     "gaussian_hh_factor_ratio": [
+      0.9073318541278139,
+      1.0466873656178077,
+      0.9870496423591175
+     ]
+    }
+   }
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "b": "6V1A9703.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "status": "predicted_held_capture",
+   "lower": "training_6400",
+   "upper": "dataset2_6400",
+   "upper_weight": 0.13599089369409176,
+   "nearest_id": "training_6400",
+   "metrics": {
+    "fixed": {
+     "normalized_covariance_squared_error": 0.0012653922104713725,
+     "mean_abs_log_hh_factor_error": 0.05351202746970044,
+     "gaussian_hh_factor_ratio": [
+      0.9011253341246543,
+      1.0408979616064438,
+      0.9837914044995958
+     ]
+    },
+    "nearest": {
+     "normalized_covariance_squared_error": 0.0012653922104713725,
+     "mean_abs_log_hh_factor_error": 0.05351202746970044,
+     "gaussian_hh_factor_ratio": [
+      0.9011253341246543,
+      1.0408979616064438,
+      0.9837914044995958
+     ]
+    },
+    "physical_interpolation": {
+     "normalized_covariance_squared_error": 0.0007058658240677629,
+     "mean_abs_log_hh_factor_error": 0.04803385900184421,
+     "gaussian_hh_factor_ratio": [
+      0.9216609356437103,
+      1.0511595169279933,
+      0.9874495733512942
+     ]
+    },
+    "shape_only": {
+     "normalized_covariance_squared_error": 0.0010430103048133554,
+     "mean_abs_log_hh_factor_error": 0.0525925417467594,
+     "gaussian_hh_factor_ratio": [
+      0.9066438316490142,
+      1.0459801404554065,
+      0.9852915895685228
+     ]
+    }
+   }
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "b": "6V1A9703.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "status": "predicted_held_capture",
+   "lower": "training_6400",
+   "upper": "dataset2_6400",
+   "upper_weight": 0.024661742703176868,
+   "nearest_id": "training_6400",
+   "metrics": {
+    "fixed": {
+     "normalized_covariance_squared_error": 0.0010375435636919743,
+     "mean_abs_log_hh_factor_error": 0.01807964264200761,
+     "gaussian_hh_factor_ratio": [
+      0.9837170609888477,
+      1.037477296204615,
+      0.998970654843347
+     ]
+    },
+    "nearest": {
+     "normalized_covariance_squared_error": 0.0010375435636919743,
+     "mean_abs_log_hh_factor_error": 0.01807964264200761,
+     "gaussian_hh_factor_ratio": [
+      0.9837170609888477,
+      1.037477296204615,
+      0.998970654843347
+     ]
+    },
+    "physical_interpolation": {
+     "normalized_covariance_squared_error": 0.0008989010871315639,
+     "mean_abs_log_hh_factor_error": 0.01645406579406779,
+     "gaussian_hh_factor_ratio": [
+      0.989717846355682,
+      1.0395830766501881,
+      0.9997929491515938
+     ]
+    },
+    "shape_only": {
+     "normalized_covariance_squared_error": 0.0009998910826289715,
+     "mean_abs_log_hh_factor_error": 0.01791367842603211,
+     "gaussian_hh_factor_ratio": [
+      0.9848013926945447,
+      1.0383904328290148,
+      0.9992463922975381
+     ]
+    }
+   }
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "b": "6V1A9703.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "status": "predicted_held_capture",
+   "lower": "training_6400",
+   "upper": "dataset2_6400",
+   "upper_weight": 0.04904753748538043,
+   "nearest_id": "training_6400",
+   "metrics": {
+    "fixed": {
+     "normalized_covariance_squared_error": 0.0011744184709028412,
+     "mean_abs_log_hh_factor_error": 0.03933463810794037,
+     "gaussian_hh_factor_ratio": [
+      0.9243368417139327,
+      1.0305989312191621,
+      0.9908569858853039
+     ]
+    },
+    "nearest": {
+     "normalized_covariance_squared_error": 0.0011744184709028412,
+     "mean_abs_log_hh_factor_error": 0.03933463810794037,
+     "gaussian_hh_factor_ratio": [
+      0.9243368417139327,
+      1.0305989312191621,
+      0.9908569858853039
+     ]
+    },
+    "physical_interpolation": {
+     "normalized_covariance_squared_error": 0.0009027329890520925,
+     "mean_abs_log_hh_factor_error": 0.03647669453847671,
+     "gaussian_hh_factor_ratio": [
+      0.9344917964201365,
+      1.034639396074522,
+      0.9924042977657391
+     ]
+    },
+    "shape_only": {
+     "normalized_covariance_squared_error": 0.0010941708315660033,
+     "mean_abs_log_hh_factor_error": 0.03900422765772041,
+     "gaussian_hh_factor_ratio": [
+      0.9263665174974534,
+      1.0324053060128486,
+      0.991401144253909
+     ]
+    }
+   }
+  },
+  {
+   "dataset": 0,
+   "iso": 51200,
+   "a": "6V1A9815.CR3",
+   "b": "6V1A9816.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "status": "predicted_held_capture",
+   "lower": "dataset2_51200",
+   "upper": "training_51200",
+   "upper_weight": 0.26936299283835596,
+   "nearest_id": "dataset2_51200",
+   "metrics": {
+    "fixed": {
+     "normalized_covariance_squared_error": 0.0015728466610242203,
+     "mean_abs_log_hh_factor_error": 0.028946670819195414,
+     "gaussian_hh_factor_ratio": [
+      1.043334557136274,
+      0.9627297468155389,
+      0.9935850837083852
+     ]
+    },
+    "nearest": {
+     "normalized_covariance_squared_error": 0.0006946016751991943,
+     "mean_abs_log_hh_factor_error": 0.024007955239351286,
+     "gaussian_hh_factor_ratio": [
+      0.9617236870901308,
+      1.0132152592625463,
+      1.0200657327481113
+     ]
+    },
+    "physical_interpolation": {
+     "normalized_covariance_squared_error": 0.0007458205763633954,
+     "mean_abs_log_hh_factor_error": 0.01227325713845132,
+     "gaussian_hh_factor_ratio": [
+      0.982630846926631,
+      0.993295564756363,
+      1.0126503409976932
+     ]
+    },
+    "shape_only": {
+     "normalized_covariance_squared_error": 0.0007144696610125171,
+     "mean_abs_log_hh_factor_error": 0.010722237183128024,
+     "gaussian_hh_factor_ratio": [
+      0.9818065819501154,
+      0.9988397722102051,
+      1.0127251409943807
+     ]
+    }
+   }
+  },
+  {
+   "dataset": 0,
+   "iso": 51200,
+   "a": "6V1A9815.CR3",
+   "b": "6V1A9816.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "status": "predicted_held_capture",
+   "lower": "dataset2_51200",
+   "upper": "training_51200",
+   "upper_weight": 0.2549861964310797,
+   "nearest_id": "dataset2_51200",
+   "metrics": {
+    "fixed": {
+     "normalized_covariance_squared_error": 0.0013946193223955848,
+     "mean_abs_log_hh_factor_error": 0.049209265603051784,
+     "gaussian_hh_factor_ratio": [
+      1.0639318559476023,
+      0.9443393961267798,
+      0.9720123144195447
+     ]
+    },
+    "nearest": {
+     "normalized_covariance_squared_error": 0.0003081324868892544,
+     "mean_abs_log_hh_factor_error": 0.00924040106589523,
+     "gaussian_hh_factor_ratio": [
+      0.9807098406891249,
+      0.9938605192613418,
+      0.9979180142760359
+     ]
+    },
+    "physical_interpolation": {
+     "normalized_covariance_squared_error": 0.00041971863232961876,
+     "mean_abs_log_hh_factor_error": 0.011662267008779587,
+     "gaussian_hh_factor_ratio": [
+      1.0008727752666597,
+      0.975193348271707,
+      0.9910454482725989
+     ]
+    },
+    "shape_only": {
+     "normalized_covariance_squared_error": 0.0003760024372107638,
+     "mean_abs_log_hh_factor_error": 0.00956088329288543,
+     "gaussian_hh_factor_ratio": [
+      1.0000635810721348,
+      0.9804971384856112,
+      0.991116177377047
+     ]
+    }
+   }
+  },
+  {
+   "dataset": 0,
+   "iso": 51200,
+   "a": "6V1A9815.CR3",
+   "b": "6V1A9816.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "status": "reference_unmeasurable_or_not_quiet_stable"
+  },
+  {
+   "dataset": 0,
+   "iso": 51200,
+   "a": "6V1A9815.CR3",
+   "b": "6V1A9816.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "status": "reference_unmeasurable_or_not_quiet_stable"
+  },
+  {
+   "dataset": 1,
+   "iso": 100,
+   "a": "6V1A9658.CR3",
+   "b": "6V1A9659.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "status": "outside_characterized_light_range"
+  },
+  {
+   "dataset": 1,
+   "iso": 100,
+   "a": "6V1A9658.CR3",
+   "b": "6V1A9659.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "status": "outside_characterized_light_range"
+  },
+  {
+   "dataset": 1,
+   "iso": 100,
+   "a": "6V1A9658.CR3",
+   "b": "6V1A9659.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "status": "outside_characterized_light_range"
+  },
+  {
+   "dataset": 1,
+   "iso": 100,
+   "a": "6V1A9658.CR3",
+   "b": "6V1A9659.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "status": "outside_characterized_light_range"
+  },
+  {
+   "dataset": 1,
+   "iso": 1600,
+   "a": "6V1A9664.CR3",
+   "b": "6V1A9665.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "status": "reference_unmeasurable_or_not_quiet_stable"
+  },
+  {
+   "dataset": 1,
+   "iso": 1600,
+   "a": "6V1A9664.CR3",
+   "b": "6V1A9665.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "status": "reference_unmeasurable_or_not_quiet_stable"
+  },
+  {
+   "dataset": 1,
+   "iso": 1600,
+   "a": "6V1A9664.CR3",
+   "b": "6V1A9665.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "status": "reference_unmeasurable_or_not_quiet_stable"
+  },
+  {
+   "dataset": 1,
+   "iso": 1600,
+   "a": "6V1A9664.CR3",
+   "b": "6V1A9665.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "status": "reference_unmeasurable_or_not_quiet_stable"
+  },
+  {
+   "dataset": 1,
+   "iso": 6400,
+   "a": "6V1A9694.CR3",
+   "b": "6V1A9695.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "status": "outside_characterized_light_range"
+  },
+  {
+   "dataset": 1,
+   "iso": 6400,
+   "a": "6V1A9694.CR3",
+   "b": "6V1A9695.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "status": "outside_characterized_light_range"
+  },
+  {
+   "dataset": 1,
+   "iso": 6400,
+   "a": "6V1A9694.CR3",
+   "b": "6V1A9695.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "status": "outside_characterized_light_range"
+  },
+  {
+   "dataset": 1,
+   "iso": 6400,
+   "a": "6V1A9694.CR3",
+   "b": "6V1A9695.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "status": "outside_characterized_light_range"
+  },
+  {
+   "dataset": 1,
+   "iso": 51200,
+   "a": "6V1A9716.CR3",
+   "b": "6V1A9717.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "status": "reference_unmeasurable_or_not_quiet_stable"
+  },
+  {
+   "dataset": 1,
+   "iso": 51200,
+   "a": "6V1A9716.CR3",
+   "b": "6V1A9717.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "status": "reference_unmeasurable_or_not_quiet_stable"
+  },
+  {
+   "dataset": 1,
+   "iso": 51200,
+   "a": "6V1A9716.CR3",
+   "b": "6V1A9717.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "status": "reference_unmeasurable_or_not_quiet_stable"
+  },
+  {
+   "dataset": 1,
+   "iso": 51200,
+   "a": "6V1A9716.CR3",
+   "b": "6V1A9717.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "status": "reference_unmeasurable_or_not_quiet_stable"
+  },
+  {
+   "dataset": 2,
+   "iso": 100,
+   "a": "6V1A9749.CR3",
+   "b": "6V1A9750.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "status": "reference_unmeasurable_or_not_quiet_stable"
+  },
+  {
+   "dataset": 2,
+   "iso": 100,
+   "a": "6V1A9749.CR3",
+   "b": "6V1A9750.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "status": "reference_unmeasurable_or_not_quiet_stable"
+  },
+  {
+   "dataset": 2,
+   "iso": 100,
+   "a": "6V1A9749.CR3",
+   "b": "6V1A9750.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "status": "reference_unmeasurable_or_not_quiet_stable"
+  },
+  {
+   "dataset": 2,
+   "iso": 100,
+   "a": "6V1A9749.CR3",
+   "b": "6V1A9750.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "status": "reference_unmeasurable_or_not_quiet_stable"
+  },
+  {
+   "dataset": 2,
+   "iso": 1600,
+   "a": "6V1A9672.CR3",
+   "b": "6V1A9673.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "status": "outside_characterized_light_range"
+  },
+  {
+   "dataset": 2,
+   "iso": 1600,
+   "a": "6V1A9672.CR3",
+   "b": "6V1A9673.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "status": "outside_characterized_light_range"
+  },
+  {
+   "dataset": 2,
+   "iso": 1600,
+   "a": "6V1A9672.CR3",
+   "b": "6V1A9673.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "status": "outside_characterized_light_range"
+  },
+  {
+   "dataset": 2,
+   "iso": 1600,
+   "a": "6V1A9672.CR3",
+   "b": "6V1A9673.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "status": "outside_characterized_light_range"
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "b": "6V1A9701.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "status": "predicted_held_capture",
+   "lower": "dataset0_6400",
+   "upper": "dataset1_6400",
+   "upper_weight": 0.12834739397218212,
+   "nearest_id": "dataset0_6400",
+   "metrics": {
+    "fixed": {
+     "normalized_covariance_squared_error": 0.001551015917006364,
+     "mean_abs_log_hh_factor_error": 0.050311791523136466,
+     "gaussian_hh_factor_ratio": [
+      0.9150859431726491,
+      0.946101892973227,
+      0.9932299438303493
+     ]
+    },
+    "nearest": {
+     "normalized_covariance_squared_error": 0.0004267500952062505,
+     "mean_abs_log_hh_factor_error": 0.03650596291599082,
+     "gaussian_hh_factor_ratio": [
+      0.9871864291090294,
+      0.9113776598109035,
+      1.0038309228692344
+     ]
+    },
+    "physical_interpolation": {
+     "normalized_covariance_squared_error": 0.0004518249188955816,
+     "mean_abs_log_hh_factor_error": 0.08121779269524552,
+     "gaussian_hh_factor_ratio": [
+      0.8645976394742091,
+      0.9114649820996167,
+      0.9945546423476224
+     ]
+    },
+    "shape_only": {
+     "normalized_covariance_squared_error": 0.0004363489404339845,
+     "mean_abs_log_hh_factor_error": 0.06897050389112049,
+     "gaussian_hh_factor_ratio": [
+      0.8987951000447612,
+      0.9129687452341619,
+      0.9908841146198314
+     ]
+    }
+   }
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "b": "6V1A9701.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "status": "predicted_held_capture",
+   "lower": "dataset0_6400",
+   "upper": "dataset1_6400",
+   "upper_weight": 0.13343489043333298,
+   "nearest_id": "dataset0_6400",
+   "metrics": {
+    "fixed": {
+     "normalized_covariance_squared_error": 0.0009901774330473684,
+     "mean_abs_log_hh_factor_error": 0.04846562540523588,
+     "gaussian_hh_factor_ratio": [
+      0.9271724940128426,
+      0.9493265935835938,
+      0.9823782823384319
+     ]
+    },
+    "nearest": {
+     "normalized_covariance_squared_error": 0.00040262969590452015,
+     "mean_abs_log_hh_factor_error": 0.032260904639735154,
+     "gaussian_hh_factor_ratio": [
+      1.0002252907079823,
+      0.9144840060910394,
+      0.9928634390174219
+     ]
+    },
+    "physical_interpolation": {
+     "normalized_covariance_squared_error": 0.0004241576931732978,
+     "mean_abs_log_hh_factor_error": 0.08091903775659987,
+     "gaussian_hh_factor_ratio": [
+      0.8722881578580816,
+      0.9145756049377366,
+      0.9833142563537165
+     ]
+    },
+    "shape_only": {
+     "normalized_covariance_squared_error": 0.0004063056283226686,
+     "mean_abs_log_hh_factor_error": 0.06839675517994608,
+     "gaussian_hh_factor_ratio": [
+      0.9075946762318685,
+      0.9161439701709082,
+      0.9795606543778018
+     ]
+    }
+   }
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "b": "6V1A9701.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "status": "predicted_held_capture",
+   "lower": "dataset0_6400",
+   "upper": "dataset1_6400",
+   "upper_weight": 0.09941900827141167,
+   "nearest_id": "dataset0_6400",
+   "metrics": {
+    "fixed": {
+     "normalized_covariance_squared_error": 0.0010325592986994924,
+     "mean_abs_log_hh_factor_error": 0.012508658054079122,
+     "gaussian_hh_factor_ratio": [
+      1.0057830767406388,
+      0.9793618489056056,
+      0.989153787758745
+     ]
+    },
+    "nearest": {
+     "normalized_covariance_squared_error": 0.00046775897559396984,
+     "mean_abs_log_hh_factor_error": 0.04671437265046499,
+     "gaussian_hh_factor_ratio": [
+      1.0850296755116418,
+      0.9434168947265055,
+      0.9997112610159702
+     ]
+    },
+    "physical_interpolation": {
+     "normalized_covariance_squared_error": 0.0004545327862766802,
+     "mean_abs_log_hh_factor_error": 0.030378687094589938,
+     "gaussian_hh_factor_ratio": [
+      0.97478970684652,
+      0.9434847816412674,
+      0.9926000149564588
+     ]
+    },
+    "shape_only": {
+     "normalized_covariance_squared_error": 0.00043843087205351665,
+     "mean_abs_log_hh_factor_error": 0.02491086625205183,
+     "gaussian_hh_factor_ratio": [
+      1.0074906334551161,
+      0.944691937480917,
+      0.9896801349598972
+     ]
+    }
+   }
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "b": "6V1A9701.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "status": "predicted_held_capture",
+   "lower": "dataset0_6400",
+   "upper": "dataset1_6400",
+   "upper_weight": 0.1069712924813912,
+   "nearest_id": "dataset0_6400",
+   "metrics": {
+    "fixed": {
+     "normalized_covariance_squared_error": 0.0009482592827830077,
+     "mean_abs_log_hh_factor_error": 0.01689804487194561,
+     "gaussian_hh_factor_ratio": [
+      0.9753855112651124,
+      0.9840368157178715,
+      0.9903670209042803
+     ]
+    },
+    "nearest": {
+     "normalized_covariance_squared_error": 0.0003072234203487028,
+     "mean_abs_log_hh_factor_error": 0.03511343560033447,
+     "gaussian_hh_factor_ratio": [
+      1.0522370571359803,
+      0.9479202789229654,
+      1.0009374432869573
+     ]
+    },
+    "physical_interpolation": {
+     "normalized_covariance_squared_error": 0.0003228967023085802,
+     "mean_abs_log_hh_factor_error": 0.04107927489335475,
+     "gaussian_hh_factor_ratio": [
+      0.9388756001524063,
+      0.9479942594622308,
+      0.9932640858981261
+     ]
+    },
+    "shape_only": {
+     "normalized_covariance_squared_error": 0.00031034075545658725,
+     "mean_abs_log_hh_factor_error": 0.030123552698587616,
+     "gaussian_hh_factor_ratio": [
+      0.9719668239196294,
+      0.9492989404204836,
+      0.9901433711876738
+     ]
+    }
+   }
+  },
+  {
+   "dataset": 2,
+   "iso": 51200,
+   "a": "6V1A9817.CR3",
+   "b": "6V1A9818.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "status": "outside_characterized_light_range"
+  },
+  {
+   "dataset": 2,
+   "iso": 51200,
+   "a": "6V1A9817.CR3",
+   "b": "6V1A9818.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "status": "outside_characterized_light_range"
+  },
+  {
+   "dataset": 2,
+   "iso": 51200,
+   "a": "6V1A9817.CR3",
+   "b": "6V1A9818.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "status": "reference_unmeasurable_or_not_quiet_stable"
+  },
+  {
+   "dataset": 2,
+   "iso": 51200,
+   "a": "6V1A9817.CR3",
+   "b": "6V1A9818.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "status": "outside_characterized_light_range"
+  }
+ ],
+ "summaries": [
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "predicted_quadrants": 4,
+   "mean_metrics": {
+    "fixed": {
+     "normalized_covariance_squared_error": 0.001658795891184364,
+     "mean_abs_log_hh_factor_error": 0.04800077974264717
+    },
+    "nearest": {
+     "normalized_covariance_squared_error": 0.001658795891184364,
+     "mean_abs_log_hh_factor_error": 0.04800077974264717
+    },
+    "physical_interpolation": {
+     "normalized_covariance_squared_error": 0.0007094411132601594,
+     "mean_abs_log_hh_factor_error": 0.04180091577300314
+    },
+    "shape_only": {
+     "normalized_covariance_squared_error": 0.0013783897209697078,
+     "mean_abs_log_hh_factor_error": 0.04323960525674632
+    }
+   },
+   "screen_passed": true
+  },
+  {
+   "dataset": 0,
+   "iso": 1600,
+   "a": "6V1A9676.CR3",
+   "predicted_quadrants": 0,
+   "mean_metrics": {},
+   "screen_passed": null
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "predicted_quadrants": 4,
+   "mean_metrics": {
+    "fixed": {
+     "normalized_covariance_squared_error": 0.001190106502846297,
+     "mean_abs_log_hh_factor_error": 0.04091977755570719
+    },
+    "nearest": {
+     "normalized_covariance_squared_error": 0.001190106502846297,
+     "mean_abs_log_hh_factor_error": 0.04091977755570719
+    },
+    "physical_interpolation": {
+     "normalized_covariance_squared_error": 0.0008167175560486466,
+     "mean_abs_log_hh_factor_error": 0.03716906314495856
+    },
+    "shape_only": {
+     "normalized_covariance_squared_error": 0.0010551966064764463,
+     "mean_abs_log_hh_factor_error": 0.04037029916147847
+    }
+   },
+   "screen_passed": true
+  },
+  {
+   "dataset": 0,
+   "iso": 51200,
+   "a": "6V1A9815.CR3",
+   "predicted_quadrants": 2,
+   "mean_metrics": {
+    "fixed": {
+     "normalized_covariance_squared_error": 0.0014837329917099025,
+     "mean_abs_log_hh_factor_error": 0.039077968211123595
+    },
+    "nearest": {
+     "normalized_covariance_squared_error": 0.0005013670810442243,
+     "mean_abs_log_hh_factor_error": 0.016624178152623258
+    },
+    "physical_interpolation": {
+     "normalized_covariance_squared_error": 0.0005827696043465071,
+     "mean_abs_log_hh_factor_error": 0.011967762073615454
+    },
+    "shape_only": {
+     "normalized_covariance_squared_error": 0.0005452360491116405,
+     "mean_abs_log_hh_factor_error": 0.010141560238006726
+    }
+   },
+   "screen_passed": false
+  },
+  {
+   "dataset": 1,
+   "iso": 100,
+   "a": "6V1A9658.CR3",
+   "predicted_quadrants": 0,
+   "mean_metrics": {},
+   "screen_passed": null
+  },
+  {
+   "dataset": 1,
+   "iso": 1600,
+   "a": "6V1A9664.CR3",
+   "predicted_quadrants": 0,
+   "mean_metrics": {},
+   "screen_passed": null
+  },
+  {
+   "dataset": 1,
+   "iso": 6400,
+   "a": "6V1A9694.CR3",
+   "predicted_quadrants": 0,
+   "mean_metrics": {},
+   "screen_passed": null
+  },
+  {
+   "dataset": 1,
+   "iso": 51200,
+   "a": "6V1A9716.CR3",
+   "predicted_quadrants": 0,
+   "mean_metrics": {},
+   "screen_passed": null
+  },
+  {
+   "dataset": 2,
+   "iso": 100,
+   "a": "6V1A9749.CR3",
+   "predicted_quadrants": 0,
+   "mean_metrics": {},
+   "screen_passed": null
+  },
+  {
+   "dataset": 2,
+   "iso": 1600,
+   "a": "6V1A9672.CR3",
+   "predicted_quadrants": 0,
+   "mean_metrics": {},
+   "screen_passed": null
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "predicted_quadrants": 4,
+   "mean_metrics": {
+    "fixed": {
+     "normalized_covariance_squared_error": 0.001130502982884058,
+     "mean_abs_log_hh_factor_error": 0.03204602996359927
+    },
+    "nearest": {
+     "normalized_covariance_squared_error": 0.0004010905467633608,
+     "mean_abs_log_hh_factor_error": 0.03764866895163136
+    },
+    "physical_interpolation": {
+     "normalized_covariance_squared_error": 0.000413353025163535,
+     "mean_abs_log_hh_factor_error": 0.05839869810994752
+    },
+    "shape_only": {
+     "normalized_covariance_squared_error": 0.0003978565490666893,
+     "mean_abs_log_hh_factor_error": 0.0481004195054265
+    }
+   },
+   "screen_passed": false
+  },
+  {
+   "dataset": 2,
+   "iso": 51200,
+   "a": "6V1A9817.CR3",
+   "predicted_quadrants": 0,
+   "mean_metrics": {},
+   "screen_passed": null
+  }
+ ],
+ "tested_capture_folds": 4,
+ "criteria": {
+  "minimum_quiet_stable_tiles_per_quadrant": 8,
+  "minimum_quadrants_per_anchor": 2,
+  "no_extrapolation": true,
+  "screen": "Each held capture must improve mean normalized covariance error vs fixed and not worsen vs nearest; same requirement for mean absolute log HH-factor error. No averaging hides failed capture. Research screen,not product validation."
+ },
+ "numpy_version": "2.4.2",
+ "commit": "2a40c5c6cff78d40294393a68827f4a24555c724",
+ "runner_sha256": "24591d29343697b29c37153cad6f41c902738864587d966ffed8a09b98a7622b",
+ "runner_source": "\"\"\"Ablation: normalize covariance anchors BEFORE interpolation, predict shape only, no sigma.\"\"\"\nfrom datetime import datetime, timezone\nimport json\nfrom pathlib import Path\nimport numpy as np\nfrom study_noise_neighbourhoods import ROOT,sha256,git\nfrom study_noise_signal_covariance_prediction import normalized,physical,errors\n\n\ndef shape_blend(low,high,weight):\n    if not np.isfinite(weight) or not 0<=weight<=1:\n        raise ValueError('Convex interpolation without extrapolation required')\n    return (1-weight)*normalized(np.asarray(low))+weight*normalized(np.asarray(high))\n\n\ndef shape_errors(prediction,reference):\n    measured=errors(prediction,reference)\n    return {k:measured[k] for k in ('normalized_covariance_squared_error',\n        'mean_abs_log_hh_factor_error','gaussian_hh_factor_ratio')}\n\n\ndef run():\n    names=('prediction-covariance-luminance-bruit-v001-20261027T192134Z.json',\n        'transport-psd-gaussien-filtre-spectral-bruit-v002-20261027T190615Z.json')\n    paths=[ROOT/'docs/validation/raw'/n for n in names];hashes=[sha256(p) for p in paths]\n    parent,spectral=[json.loads(p.read_text(encoding='utf-8')) for p in paths]\n    anchors={a['id']:a for a in parent['anchors']};records=[];started=datetime.now(timezone.utc)\n    for row in parent['records']:\n        item={k:row[k] for k in ('dataset','iso','a','b','rect','status')}\n        if row['status']!='predicted_held_capture':records.append(item);continue\n        for key in ('lower','upper','nearest_id'):\n            if set(anchors[row[key]]['raw_names'])&{row['a'],row['b']}:\n                raise ValueError('Held capture leaked into parent prediction')\n        target=next(r for r in spectral['records'] if r['dataset']==row['dataset'] and r['a']==row['a'] and r['rect']==row['rect'])\n        truth=physical(target);low=np.asarray(anchors[row['lower']]['physical_covariance'])\n        high=np.asarray(anchors[row['upper']]['physical_covariance']);w=row['upper_weight']\n        reference=np.asarray(anchors['training_'+str(row['iso'])]['physical_covariance'])\n        nearest=np.asarray(anchors[row['nearest_id']]['physical_covariance'])\n        predictions=dict(fixed=reference,nearest=nearest,physical_interpolation=(1-w)*low+w*high,\n            shape_only=shape_blend(low,high,w))\n        measured={k:shape_errors(v,truth) for k,v in predictions.items()}\n        for mode,old_mode in (('fixed','fixed'),('nearest','nearest'),('physical_interpolation','interpolated')):\n            for metric in ('normalized_covariance_squared_error','mean_abs_log_hh_factor_error'):\n                if abs(measured[mode][metric]-row['metrics'][old_mode][metric])>1e-14:\n                    raise ValueError('Previous prediction controls do not replay exactly')\n        item.update(lower=row['lower'],upper=row['upper'],upper_weight=w,nearest_id=row['nearest_id'],metrics=measured)\n        records.append(item)\n    summaries=[]\n    for previous in parent['summaries']:\n        rows=[r for r in records if r['dataset']==previous['dataset'] and r['a']==previous['a'] and r['status']=='predicted_held_capture']\n        means={mode:{metric:float(np.mean([r['metrics'][mode][metric] for r in rows]))\n            for metric in ('normalized_covariance_squared_error','mean_abs_log_hh_factor_error')}\n            for mode in ('fixed','nearest','physical_interpolation','shape_only')} if rows else {}\n        passed=bool(rows) and all(means['shape_only'][metric]<means['fixed'][metric]\n            and means['shape_only'][metric]<=means['nearest'][metric]\n            for metric in ('normalized_covariance_squared_error','mean_abs_log_hh_factor_error'))\n        summary=dict(dataset=previous['dataset'],iso=previous['iso'],a=previous['a'],predicted_quadrants=len(rows),\n            mean_metrics=means,screen_passed=passed if rows else None)\n        summaries.append(summary)\n        if rows:print('Shape-only fold',previous['dataset'],previous['iso'],'screen',passed,means,flush=True)\n    tested=[r for r in summaries if r['predicted_quadrants']]\n    verdict='shape_only_promising_requires_new_validation' if tested and all(r['screen_passed'] for r in tested) else 'shape_only_linear_light_interpolation_not_retained'\n    if len(records)!=48 or [sha256(p) for p in paths]!=hashes:raise ValueError('Incomplete/changed shape-only study')\n    now=datetime.now(timezone.utc)\n    output=ROOT/'docs/validation/raw'/f'prediction-correlation-separee-bruit-v001-{now.strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n    dependencies=('study_noise_signal_covariance_prediction.py','study_noise_haar_factor_transport.py')\n    result=dict(schema_version=1,data_version=1,started_at_utc=started.isoformat(),completed_at_utc=now.isoformat(),\n        verdict=verdict,records=records,summaries=summaries,tested_capture_folds=len(tested),\n        criteria=parent['criteria'],numpy_version=np.__version__,commit=git('rev-parse','HEAD'),\n        runner_sha256=sha256(Path(__file__)),runner_source=Path(__file__).read_text(encoding='utf-8'),\n        parents=[dict(path=str(p),sha256=h) for p,h in zip(paths,hashes)],\n        dependencies={n:dict(sha256=sha256(ROOT/'tests'/n),source=(ROOT/'tests'/n).read_text(encoding='utf-8')) for n in dependencies},\n        rules='Singleablation: normalizeEACHanchor to unitmarginalvariance before samefrozenconvexweight blend. All14targets/4heldcapturefolds/34abstentions andbrackets fromparent retained. Fixed/nearest/physicalcontrols replayed to1e-14. PredictNOsigma,doNOTusetruesigmatochooseweights;Donlyevaluation. Sameperfoldshape+HHscreen vsfixed/nearest,no tuning.',\n        limitations='Sequentialhypothesis onpreviouslyexploredfourcaptures,notindependentvalidation. CorrelationnowdecoupledfromamplitudebutstillonlylinearY;no completeblindestimator,denoising or perceptionclaim. No production,camerauniversalvalidation or export.')\n    with output.open('x',encoding='utf-8') as handle:json.dump(result,handle,ensure_ascii=False,indent=1,allow_nan=False)\n    print('VERDICT',verdict,output,flush=True)\n\n\nif __name__=='__main__':run()\n",
+ "parents": [
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\prediction-covariance-luminance-bruit-v001-20261027T192134Z.json",
+   "sha256": "45371018c270d8c350f051c4dfc881398123d197c5156cd434dd683fcabaa1e0"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\transport-psd-gaussien-filtre-spectral-bruit-v002-20261027T190615Z.json",
+   "sha256": "20811ce8fafd75cc7d59438602e408e574fc7b189a49ac104b9913c3698433ac"
+  }
+ ],
+ "dependencies": {
+  "study_noise_signal_covariance_prediction.py": {
+   "sha256": "9b2c2e4eb65628cd7e8ee7f7294b68401046f39cdf3c7945e31088ac4e859b0c",
+   "source": "\"\"\"Whole-capture held-out linear-light covariance interpolation; analytic go/no-go before new gates.\"\"\"\nfrom datetime import datetime, timezone\nimport json\nfrom pathlib import Path\nimport numpy as np\nfrom study_noise_neighbourhoods import ROOT, sha256, git\nfrom study_noise_haar_factor_transport import hh_variances\n\n\nCRITERIA = dict(minimum_quiet_stable_tiles_per_quadrant=8, minimum_quadrants_per_anchor=2,\n    no_extrapolation=True,\n    screen='Each held capture must improve mean normalized covariance error vs fixed and not worsen vs nearest; same requirement for mean absolute log HH-factor error. No averaging hides failed capture. Research screen,not product validation.')\n\n\ndef normalized(covariance):\n    variance = np.diag(covariance[:,:,8,8])\n    if np.min(variance) <= 1e-24 or not np.isfinite(covariance).all():\n        raise ValueError('Finite covariance with positive marginal variance required')\n    return covariance/np.sqrt(variance[:,None,None,None]*variance[None,:,None,None])\n\n\ndef interpolate(anchors, value, held_names):\n    if any(set(a['raw_names']) & set(held_names) for a in anchors):\n        raise ValueError('Held capture leaked into prediction anchors')\n    ordered = sorted(anchors, key=lambda a:a['mean_a_y'])\n    lower = [a for a in ordered if a['mean_a_y'] <= value]\n    upper = [a for a in ordered if a['mean_a_y'] >= value]\n    if not lower or not upper: return None\n    lo, hi = lower[-1], upper[0]\n    if lo['id'] == hi['id']:\n        weight = 0.\n    else:\n        weight = (value-lo['mean_a_y'])/(hi['mean_a_y']-lo['mean_a_y'])\n    if not 0 <= weight <= 1: raise ValueError('Prediction would extrapolate')\n    predicted = (1-weight)*np.asarray(lo['physical_covariance'])+weight*np.asarray(hi['physical_covariance'])\n    nearest = min(ordered, key=lambda a:abs(a['mean_a_y']-value))\n    return dict(covariance=predicted, lower=lo['id'], upper=hi['id'], upper_weight=weight,\n        nearest_id=nearest['id'], nearest_covariance=np.asarray(nearest['physical_covariance']))\n\n\ndef errors(predicted, actual):\n    predicted_shape, actual_shape = normalized(predicted), normalized(actual)\n    sigma_ratio = np.sqrt(np.diag(predicted[:,:,8,8])/np.diag(actual[:,:,8,8]))\n    hh_factor_ratio = np.sqrt(hh_variances(actual_shape)/hh_variances(predicted_shape))\n    return dict(normalized_covariance_squared_error=float(np.mean((predicted_shape-actual_shape)**2)),\n        sigma_prediction_ratio=sigma_ratio.tolist(),\n        gaussian_hh_factor_ratio=hh_factor_ratio.tolist(),\n        mean_abs_log_hh_factor_error=float(np.mean(abs(np.log(hh_factor_ratio)))),\n        mean_abs_log_sigma_error=float(np.mean(abs(np.log(sigma_ratio)))))\n\n\ndef opening_contract(native):\n    declaration = native['declaration']\n    return dict(camera=native['camera'], opening_chroma_median=native['opening_chroma_median'],\n        **{k:declaration[k] for k in ('settings','dcp_profile','lcp_profile','raw_normalization',\n            'lens_geometry_applied','lens_vignetting_applied','chromatic_aberration_applied')})\n\n\ndef physical(record):\n    sigma = np.asarray(record['sigma_before_unit_scaling'])\n    return np.asarray(record['prepared_covariance_lag8'])*sigma[:,None,None,None]*sigma[None,:,None,None]\n\n\ndef run():\n    names = ('transport-psd-gaussien-filtre-spectral-bruit-v002-20261027T190615Z.json',\n        'origine-rejets-spectraux-paires-bruit-v001-20261027T190151Z.json',\n        'extraction-paires-profils-bruit-v001-20261026T174656Z.json',\n        'contextes-abstention-axes-bruit-v001-20261026T221702Z.json',\n        'paires-supplementaires-axes-bruit-v001-20261026T222302Z.json',\n        'paires-supplementaires-axes-bruit-v002-20261026T222833Z.json')\n    paths = [ROOT/'docs/validation/raw'/n for n in names]; hashes = [sha256(p) for p in paths]\n    spectral, audit, training = [json.loads(p.read_text(encoding='utf-8')) for p in paths[:3]]\n    started = datetime.now(timezone.utc); contracts = {}; anchors = []; baseline = {}; records = []\n    for pair in training['native']['pairs']:\n        iso = pair['a']['iso']; control = next(c for c in spectral['controls'] if c['iso'] == iso)\n        contract = opening_contract(pair['a'])\n        if opening_contract(pair['b']) != contract: raise ValueError('Training pair opening mismatch')\n        contracts[iso] = contract\n        a = next(s for s in pair['a']['samples'] if s['kind']=='flat')\n        baseline[iso] = physical(control)\n        anchors.append(dict(id='training_'+str(iso), iso=iso, raw_names=[pair[k]['raw'] for k in ('a','b')],\n            mean_a_y=float(np.mean(a['original_y_co_cg'][0])), physical_covariance=baseline[iso].tolist(),\n            source_kind='original_training64', source_quadrants=[]))\n    for dataset, path in enumerate(paths[3:]):\n        metadata = json.loads(path.read_text(encoding='utf-8'))\n        for pair in metadata['records']:\n            if any(opening_contract(pair[k]['native']) != contracts[pair['iso']] for k in ('a','b')):\n                raise ValueError('Do not mix opening settings/profiles in a light-level model')\n        del metadata\n    pairs = audit['records']\n    for pair in pairs:\n        usable = [r for r in spectral['records'] if r['dataset']==pair['dataset'] and r['a']==pair['a']\n            and r['status']=='generated' and r['quiet_stable_tiles'] >= CRITERIA['minimum_quiet_stable_tiles_per_quadrant']]\n        if len(usable) >= CRITERIA['minimum_quadrants_per_anchor']:\n            selected_tiles = [t for t in pair['tiles'] if any(\n                r['rect'][0] <= t['x'] < r['rect'][0]+128 and r['rect'][1] <= t['y'] < r['rect'][1]+128 for r in usable)]\n            anchors.append(dict(id=f\"dataset{pair['dataset']}_{pair['iso']}\", iso=pair['iso'],\n                raw_names=[pair['a'],pair['b']], mean_a_y=float(np.mean([t['mean_a_y'] for t in selected_tiles])),\n                physical_covariance=np.mean([physical(r) for r in usable],axis=0).tolist(),\n                source_kind='capture_mean_of_eligible128', source_quadrants=[r['rect'] for r in usable]))\n    for pair in pairs:\n        held_names = [pair['a'],pair['b']]\n        candidates = [a for a in anchors if a['iso']==pair['iso'] and not set(a['raw_names'])&set(held_names)]\n        for target in [r for r in spectral['records'] if r['dataset']==pair['dataset'] and r['a']==pair['a']]:\n            row = dict(dataset=pair['dataset'],iso=pair['iso'],a=pair['a'],b=pair['b'],rect=target['rect'],\n                quiet_stable_tiles=target['quiet_stable_tiles'], available_anchors=[a['id'] for a in candidates])\n            if target['status'] != 'generated' or target['quiet_stable_tiles'] < CRITERIA['minimum_quiet_stable_tiles_per_quadrant']:\n                row['status']='reference_unmeasurable_or_not_quiet_stable'; records.append(row); continue\n            x,y,_,_=target['rect']\n            feature = float(np.mean([t['mean_a_y'] for t in pair['tiles'] if x <= t['x'] < x+128 and y <= t['y'] < y+128]))\n            row['input_mean_a_y'] = feature\n            prediction = interpolate(candidates, feature, held_names)\n            if prediction is None:\n                row['status']='outside_characterized_light_range'; records.append(row); continue\n            actual = physical(target)\n            row.update(status='predicted_held_capture', lower=prediction['lower'], upper=prediction['upper'],\n                upper_weight=prediction['upper_weight'], nearest_id=prediction['nearest_id'],\n                metrics=dict(fixed=errors(baseline[pair['iso']],actual),\n                    nearest=errors(prediction['nearest_covariance'],actual),\n                    interpolated=errors(prediction['covariance'],actual)))\n            records.append(row)\n    summaries = []\n    for pair in pairs:\n        rows = [r for r in records if r['dataset']==pair['dataset'] and r['a']==pair['a'] and r['status']=='predicted_held_capture']\n        means = {mode:{metric:float(np.mean([r['metrics'][mode][metric] for r in rows]))\n            for metric in ('normalized_covariance_squared_error','mean_abs_log_hh_factor_error','mean_abs_log_sigma_error')}\n            for mode in ('fixed','nearest','interpolated')} if rows else {}\n        passed = bool(rows) and all(means['interpolated'][metric] < means['fixed'][metric]\n            and means['interpolated'][metric] <= means['nearest'][metric]\n            for metric in ('normalized_covariance_squared_error','mean_abs_log_hh_factor_error'))\n        summary = dict(dataset=pair['dataset'],iso=pair['iso'],a=pair['a'],predicted_quadrants=len(rows),\n            mean_metrics=means, screen_passed=passed if rows else None)\n        summaries.append(summary)\n        print('Held capture',pair['dataset'],pair['iso'],'quadrants',len(rows),'screen',summary['screen_passed'],\n            'shape errors',{m:v['normalized_covariance_squared_error'] for m,v in means.items()},flush=True)\n    tested = [r for r in summaries if r['predicted_quadrants']]\n    verdict = 'promising_on_available_folds_not_production_validated' if tested and all(r['screen_passed'] for r in tested) else 'simple_linear_light_interpolation_not_retained'\n    if len(records)!=48 or [sha256(p) for p in paths]!=hashes: raise ValueError('Incomplete/changed prediction study')\n    now = datetime.now(timezone.utc)\n    output = ROOT/'docs/validation/raw'/f'prediction-covariance-luminance-bruit-v001-{now.strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n    dependencies = ('study_noise_haar_factor_transport.py',)\n    result = dict(schema_version=1,data_version=1,started_at_utc=started.isoformat(),completed_at_utc=now.isoformat(),\n        criteria=CRITERIA,verdict=verdict,anchors=anchors,records=records,summaries=summaries,\n        tested_capture_folds=len(tested),opening_contracts=contracts,numpy_version=np.__version__,commit=git('rev-parse','HEAD'),\n        runner_sha256=sha256(Path(__file__)),runner_source=Path(__file__).read_text(encoding='utf-8'),\n        parents=[dict(path=str(p),sha256=h) for p,h in zip(paths,hashes)],\n        dependencies={n:dict(sha256=sha256(ROOT/'tests'/n),source=(ROOT/'tests'/n).read_text(encoding='utf-8')) for n in dependencies},\n        rules='One hypothesis: convex interpolation of PHYSICALcovariance in linearAmeanY between bracketingsameISOcaptureanchors;normalizeONLYafterblend. EntiretargetA/BcaptureremovedfromALLanchors. Fixed and nearestanchor controls. Eligibility>=8quiet/stable32tiles/128;anchor>=2eligiblequadrants. Noextrapolation,no fittingonheldD,thresholds or denoising. HeldDusedforeligibility/evaluationONLY,notweights;AmeanYfeatureonly.',\n        limitations='Reusedsmallpairedcorpus,no cleanphototruth;D/quiet/stableconditional. Physicallinearlevelrule is hypothesis after nonlinear RCD/profile/median opening.64trainingvs128captureanchors have unequal uncertainty. Fewbracketedcaptures,ISOcoverageincomplete;not newcamera/session. Target referenceeligibility usesB,so this is offlinecharacterization not completeblindestimator. Lag8score not fullPSD/perceptual/detailquality.')\n    with output.open('x',encoding='utf-8') as handle:json.dump(result,handle,ensure_ascii=False,indent=1,allow_nan=False)\n    print('VERDICT',verdict,output,flush=True)\n\n\nif __name__=='__main__':run()\n"
+  },
+  "study_noise_haar_factor_transport.py": {
+   "sha256": "df389d663d001b28b99bdd79feef14c50bfa0b12e78ab532012489f0da28f02b",
+   "source": "\"\"\"Analytic HH variance-factor transport from archived PSD lags, no new simulation or tuning.\"\"\"\nfrom datetime import datetime, timezone\nimport json\nfrom pathlib import Path\nimport numpy as np\nfrom study_noise_neighbourhoods import ROOT, sha256, git\n\n\ndef hh_variances(lags):\n    lags = np.asarray(lags, dtype=float)\n    if lags.shape != (3,3,17,17) or not np.isfinite(lags).all():\n        raise ValueError('Finite signed lag8 cross covariance required')\n    positions = np.array([[0,0],[1,0],[0,1],[1,1]])\n    weights = np.array([.5,-.5,-.5,.5]); delta = positions[:,None]-positions[None,:]\n    values = np.array([weights @ lags[c,c,delta[:,:,0]+8,delta[:,:,1]+8] @ weights for c in range(3)])\n    if np.min(values) <= 0: raise ValueError('Unmeasurable HH variance')\n    return values\n\n\ndef run():\n    path = ROOT/'docs/validation/raw/transport-psd-gaussien-filtre-spectral-bruit-v002-20261027T190615Z.json'\n    digest = sha256(path); data = json.loads(path.read_text(encoding='utf-8'))\n    reference = {c['iso']:hh_variances(c['prepared_covariance_lag8']) for c in data['controls']}\n    records = []\n    for source in data['records']:\n        row = {k:source[k] for k in ('dataset','iso','a','b','rect','mean_physical_y','quiet_stable_tiles','status')}\n        if source['status'] == 'generated':\n            variance = hh_variances(source['prepared_covariance_lag8'])\n            row.update(hh_variance=variance.tolist(), baseline_hh_variance=reference[source['iso']].tolist(),\n                gaussian_marginal_scale_factor_ratio=np.sqrt(variance/reference[source['iso']]).tolist(),\n                independent_of_marginal_noise_amplitude=True)\n        records.append(row)\n    if sha256(path) != digest: raise ValueError('Changed spectral evidence')\n    now = datetime.now(timezone.utc)\n    output = ROOT/'docs/validation/raw'/f'transport-facteur-haar-spectral-bruit-v001-{now.strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n    result = dict(schema_version=1,data_version=1,completed_at_utc=now.isoformat(),records=records,\n        parent=dict(path=str(path),sha256=digest),commit=git('rev-parse','HEAD'),numpy_version=np.__version__,\n        runner_sha256=sha256(Path(__file__)),runner_source=Path(__file__).read_text(encoding='utf-8'),\n        rules='Exact hCh for2x2orthonormalHH,normalizedmarginalPSD covariances archivedlag8;4training controls vs44measurable/48quadrantrecords. Square-root variance ratio is theoreticalGaussian marginal HH-MAD factor mismatch,not fitted correction. No redraw,thresholdfit,images or production.',\n        limitations='Not observed finite-sample MAD bias,selectedpopulation bias,nonGaussian/nativecleantruth or confidenceinterval. HH coefficients correlated;subtracting empirical median and16x16finiteMAD change estimatorlaw. No coefficient toapplytoactualphoto without validatedPSDmodel.')\n    with output.open('x',encoding='utf-8') as handle: json.dump(result,handle,ensure_ascii=False,indent=1,allow_nan=False)\n    print(output)\n    for dataset in range(3):\n        for iso in reference:\n            selected = [r for r in records if r['dataset']==dataset and r['iso']==iso and r['status']=='generated']\n            if selected:\n                ratios = np.array([r['gaussian_marginal_scale_factor_ratio'] for r in selected])\n                print(dataset,iso,'factor ratios min',ratios.min(axis=0).round(4),'max',ratios.max(axis=0).round(4))\n\n\nif __name__ == '__main__': run()\n"
+  }
+ },
+ "rules": "Singleablation: normalizeEACHanchor to unitmarginalvariance before samefrozenconvexweight blend. All14targets/4heldcapturefolds/34abstentions andbrackets fromparent retained. Fixed/nearest/physicalcontrols replayed to1e-14. PredictNOsigma,doNOTusetruesigmatochooseweights;Donlyevaluation. Sameperfoldshape+HHscreen vsfixed/nearest,no tuning.",
+ "limitations": "Sequentialhypothesis onpreviouslyexploredfourcaptures,notindependentvalidation. CorrelationnowdecoupledfromamplitudebutstillonlylinearY;no completeblindestimator,denoising or perceptionclaim. No production,camerauniversalvalidation or export."
+}

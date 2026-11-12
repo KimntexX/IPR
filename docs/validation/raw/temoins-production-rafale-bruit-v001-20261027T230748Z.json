@@ -1,0 +1,762 @@
+{
+ "schema_version": 1,
+ "data_version": 1,
+ "started_at_utc": "2026-10-27T23:04:51.038351+00:00",
+ "completed_at_utc": "2026-10-27T23:07:48.677914+00:00",
+ "parent": {
+  "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\extraction-native-rafale-bruit-v001-20261027T230112Z.json",
+  "sha256": "8210edb40b25bd41817a6fbba589dc329ea7148f5772e37adfd3a845818a7528"
+ },
+ "records": [
+  {
+   "index": 0,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9819.CR3",
+   "sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165",
+   "native": {
+    "declaration": {
+     "chromatic_aberration_applied": false,
+     "created_at_utc": "2026-10-27T23:05:54.300Z",
+     "dcp_profile": "Canon EOS R6 Mark III Camera Neutral",
+     "executable_sha256": "2c4a06e27be60c9be75b69a9b5885607b3a0da2e4037c9650df8358e328fba63",
+     "feature": "neutral",
+     "group": "bruit",
+     "ipr_test_schema": 1,
+     "lcp_profile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+     "lcp_sha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+     "lens_geometry_applied": false,
+     "lens_vignetting_applied": false,
+     "qt_version": "6.11.2",
+     "raw_normalization": true,
+     "reference": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9819.CR3",
+     "scene": "6V1A9819",
+     "settings": {
+      "automaticWhiteBalance": false,
+      "blacks": 0,
+      "blur": 0,
+      "clarity": 0,
+      "contrast": 0,
+      "dehaze": 0,
+      "denoiseChrominance": 0,
+      "denoiseLuminance": 0,
+      "exposure": 0,
+      "grading": [
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       }
+      ],
+      "grain": 0,
+      "grayscale": false,
+      "highlights": 0,
+      "mixerHue": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerLuminance": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerSaturation": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "saturation": 0,
+      "shadows": 0,
+      "sharpeningAmount": 0,
+      "sharpeningMasking": 0,
+      "sharpeningRadius": 1,
+      "temperature": 4924,
+      "texture": 0,
+      "tint": 0,
+      "toneCurves": [
+       [],
+       [],
+       [],
+       []
+      ],
+      "vibrance": 0,
+      "whites": 0
+     },
+     "source_sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165",
+     "value": 0
+    },
+    "height": 6959,
+    "layout": "native-endian IEEEfloat32 stages3/ROIs9/planesYCoCg3/rows256/cols256",
+    "raw": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9819.CR3",
+    "rectangles": [
+     [
+      800,
+      1264,
+      256,
+      256
+     ],
+     [
+      2192,
+      1264,
+      256,
+      256
+     ],
+     [
+      3583,
+      1264,
+      256,
+      256
+     ],
+     [
+      800,
+      3352,
+      256,
+      256
+     ],
+     [
+      2192,
+      3352,
+      256,
+      256
+     ],
+     [
+      3583,
+      3352,
+      256,
+      256
+     ],
+     [
+      800,
+      5439,
+      256,
+      256
+     ],
+     [
+      2192,
+      5439,
+      256,
+      256
+     ],
+     [
+      3583,
+      5439,
+      256,
+      256
+     ]
+    ],
+    "rules": "Production DetailProcessing::reduceNoise fullframe 0/50/100, optics off, CameraNeutral RAW calibrated; no experimental filter",
+    "sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165",
+    "stages": [
+     {
+      "denoise_ms": 58.6527,
+      "strength": 0
+     },
+     {
+      "denoise_ms": 1969.2102,
+      "strength": 50
+     },
+     {
+      "denoise_ms": 2104.5113,
+      "strength": 100
+     }
+    ],
+    "width": 4639
+   },
+   "baseline_max_abs_delta": 0.0,
+   "binary_pixels_sha256": "e7258ed8ee562288db137030ccc9ef76dce902496ad5ed3cd29eb6deaffbf727"
+  },
+  {
+   "index": 4,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9823.CR3",
+   "sha256": "72a8c5475af764b5f2fe125234367e3a1c13f7e6efa2d3fd03b38d30f2809894",
+   "native": {
+    "declaration": {
+     "chromatic_aberration_applied": false,
+     "created_at_utc": "2026-10-27T23:06:34.108Z",
+     "dcp_profile": "Canon EOS R6 Mark III Camera Neutral",
+     "executable_sha256": "2c4a06e27be60c9be75b69a9b5885607b3a0da2e4037c9650df8358e328fba63",
+     "feature": "neutral",
+     "group": "bruit",
+     "ipr_test_schema": 1,
+     "lcp_profile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+     "lcp_sha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+     "lens_geometry_applied": false,
+     "lens_vignetting_applied": false,
+     "qt_version": "6.11.2",
+     "raw_normalization": true,
+     "reference": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9823.CR3",
+     "scene": "6V1A9823",
+     "settings": {
+      "automaticWhiteBalance": false,
+      "blacks": 0,
+      "blur": 0,
+      "clarity": 0,
+      "contrast": 0,
+      "dehaze": 0,
+      "denoiseChrominance": 0,
+      "denoiseLuminance": 0,
+      "exposure": 0,
+      "grading": [
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       }
+      ],
+      "grain": 0,
+      "grayscale": false,
+      "highlights": 0,
+      "mixerHue": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerLuminance": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerSaturation": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "saturation": 0,
+      "shadows": 0,
+      "sharpeningAmount": 0,
+      "sharpeningMasking": 0,
+      "sharpeningRadius": 1,
+      "temperature": 4924,
+      "texture": 0,
+      "tint": 0,
+      "toneCurves": [
+       [],
+       [],
+       [],
+       []
+      ],
+      "vibrance": 0,
+      "whites": 0
+     },
+     "source_sha256": "72a8c5475af764b5f2fe125234367e3a1c13f7e6efa2d3fd03b38d30f2809894",
+     "value": 0
+    },
+    "height": 6959,
+    "layout": "native-endian IEEEfloat32 stages3/ROIs9/planesYCoCg3/rows256/cols256",
+    "raw": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9823.CR3",
+    "rectangles": [
+     [
+      800,
+      1264,
+      256,
+      256
+     ],
+     [
+      2192,
+      1264,
+      256,
+      256
+     ],
+     [
+      3583,
+      1264,
+      256,
+      256
+     ],
+     [
+      800,
+      3352,
+      256,
+      256
+     ],
+     [
+      2192,
+      3352,
+      256,
+      256
+     ],
+     [
+      3583,
+      3352,
+      256,
+      256
+     ],
+     [
+      800,
+      5439,
+      256,
+      256
+     ],
+     [
+      2192,
+      5439,
+      256,
+      256
+     ],
+     [
+      3583,
+      5439,
+      256,
+      256
+     ]
+    ],
+    "rules": "Production DetailProcessing::reduceNoise fullframe 0/50/100, optics off, CameraNeutral RAW calibrated; no experimental filter",
+    "sha256": "72a8c5475af764b5f2fe125234367e3a1c13f7e6efa2d3fd03b38d30f2809894",
+    "stages": [
+     {
+      "denoise_ms": 54.6803,
+      "strength": 0
+     },
+     {
+      "denoise_ms": 1899.5673,
+      "strength": 50
+     },
+     {
+      "denoise_ms": 2075.519,
+      "strength": 100
+     }
+    ],
+    "width": 4639
+   },
+   "baseline_max_abs_delta": 0.0,
+   "binary_pixels_sha256": "b298609feba245e143daabf89d29ad9b55527bdda464414ef310a4f24b87e10d"
+  },
+  {
+   "index": 8,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9827.CR3",
+   "sha256": "4444028085b4c4a42a42c6bdcd20f0e6dc6d4a182028e23969bf4f7e766a7d3e",
+   "native": {
+    "declaration": {
+     "chromatic_aberration_applied": false,
+     "created_at_utc": "2026-10-27T23:07:10.640Z",
+     "dcp_profile": "Canon EOS R6 Mark III Camera Neutral",
+     "executable_sha256": "2c4a06e27be60c9be75b69a9b5885607b3a0da2e4037c9650df8358e328fba63",
+     "feature": "neutral",
+     "group": "bruit",
+     "ipr_test_schema": 1,
+     "lcp_profile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+     "lcp_sha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+     "lens_geometry_applied": false,
+     "lens_vignetting_applied": false,
+     "qt_version": "6.11.2",
+     "raw_normalization": true,
+     "reference": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9827.CR3",
+     "scene": "6V1A9827",
+     "settings": {
+      "automaticWhiteBalance": false,
+      "blacks": 0,
+      "blur": 0,
+      "clarity": 0,
+      "contrast": 0,
+      "dehaze": 0,
+      "denoiseChrominance": 0,
+      "denoiseLuminance": 0,
+      "exposure": 0,
+      "grading": [
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       }
+      ],
+      "grain": 0,
+      "grayscale": false,
+      "highlights": 0,
+      "mixerHue": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerLuminance": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerSaturation": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "saturation": 0,
+      "shadows": 0,
+      "sharpeningAmount": 0,
+      "sharpeningMasking": 0,
+      "sharpeningRadius": 1,
+      "temperature": 4924,
+      "texture": 0,
+      "tint": 0,
+      "toneCurves": [
+       [],
+       [],
+       [],
+       []
+      ],
+      "vibrance": 0,
+      "whites": 0
+     },
+     "source_sha256": "4444028085b4c4a42a42c6bdcd20f0e6dc6d4a182028e23969bf4f7e766a7d3e",
+     "value": 0
+    },
+    "height": 6959,
+    "layout": "native-endian IEEEfloat32 stages3/ROIs9/planesYCoCg3/rows256/cols256",
+    "raw": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9827.CR3",
+    "rectangles": [
+     [
+      800,
+      1264,
+      256,
+      256
+     ],
+     [
+      2192,
+      1264,
+      256,
+      256
+     ],
+     [
+      3583,
+      1264,
+      256,
+      256
+     ],
+     [
+      800,
+      3352,
+      256,
+      256
+     ],
+     [
+      2192,
+      3352,
+      256,
+      256
+     ],
+     [
+      3583,
+      3352,
+      256,
+      256
+     ],
+     [
+      800,
+      5439,
+      256,
+      256
+     ],
+     [
+      2192,
+      5439,
+      256,
+      256
+     ],
+     [
+      3583,
+      5439,
+      256,
+      256
+     ]
+    ],
+    "rules": "Production DetailProcessing::reduceNoise fullframe 0/50/100, optics off, CameraNeutral RAW calibrated; no experimental filter",
+    "sha256": "4444028085b4c4a42a42c6bdcd20f0e6dc6d4a182028e23969bf4f7e766a7d3e",
+    "stages": [
+     {
+      "denoise_ms": 54.7542,
+      "strength": 0
+     },
+     {
+      "denoise_ms": 1820.1341,
+      "strength": 50
+     },
+     {
+      "denoise_ms": 1775.1739,
+      "strength": 100
+     }
+    ],
+    "width": 4639
+   },
+   "baseline_max_abs_delta": 0.0,
+   "binary_pixels_sha256": "792efd62edacf1473598754725820ddacecef800fdda6f70fabcdbb8dd52728b"
+  },
+  {
+   "index": 13,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9832.CR3",
+   "sha256": "48a9d34e3a63f84fedd3609d0dedddc9fd67d038753713be267d811a59f8de36",
+   "native": {
+    "declaration": {
+     "chromatic_aberration_applied": false,
+     "created_at_utc": "2026-10-27T23:07:46.813Z",
+     "dcp_profile": "Canon EOS R6 Mark III Camera Neutral",
+     "executable_sha256": "2c4a06e27be60c9be75b69a9b5885607b3a0da2e4037c9650df8358e328fba63",
+     "feature": "neutral",
+     "group": "bruit",
+     "ipr_test_schema": 1,
+     "lcp_profile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+     "lcp_sha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+     "lens_geometry_applied": false,
+     "lens_vignetting_applied": false,
+     "qt_version": "6.11.2",
+     "raw_normalization": true,
+     "reference": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9832.CR3",
+     "scene": "6V1A9832",
+     "settings": {
+      "automaticWhiteBalance": false,
+      "blacks": 0,
+      "blur": 0,
+      "clarity": 0,
+      "contrast": 0,
+      "dehaze": 0,
+      "denoiseChrominance": 0,
+      "denoiseLuminance": 0,
+      "exposure": 0,
+      "grading": [
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       }
+      ],
+      "grain": 0,
+      "grayscale": false,
+      "highlights": 0,
+      "mixerHue": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerLuminance": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerSaturation": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "saturation": 0,
+      "shadows": 0,
+      "sharpeningAmount": 0,
+      "sharpeningMasking": 0,
+      "sharpeningRadius": 1,
+      "temperature": 4924,
+      "texture": 0,
+      "tint": 0,
+      "toneCurves": [
+       [],
+       [],
+       [],
+       []
+      ],
+      "vibrance": 0,
+      "whites": 0
+     },
+     "source_sha256": "48a9d34e3a63f84fedd3609d0dedddc9fd67d038753713be267d811a59f8de36",
+     "value": 0
+    },
+    "height": 6959,
+    "layout": "native-endian IEEEfloat32 stages3/ROIs9/planesYCoCg3/rows256/cols256",
+    "raw": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9832.CR3",
+    "rectangles": [
+     [
+      800,
+      1264,
+      256,
+      256
+     ],
+     [
+      2192,
+      1264,
+      256,
+      256
+     ],
+     [
+      3583,
+      1264,
+      256,
+      256
+     ],
+     [
+      800,
+      3352,
+      256,
+      256
+     ],
+     [
+      2192,
+      3352,
+      256,
+      256
+     ],
+     [
+      3583,
+      3352,
+      256,
+      256
+     ],
+     [
+      800,
+      5439,
+      256,
+      256
+     ],
+     [
+      2192,
+      5439,
+      256,
+      256
+     ],
+     [
+      3583,
+      5439,
+      256,
+      256
+     ]
+    ],
+    "rules": "Production DetailProcessing::reduceNoise fullframe 0/50/100, optics off, CameraNeutral RAW calibrated; no experimental filter",
+    "sha256": "48a9d34e3a63f84fedd3609d0dedddc9fd67d038753713be267d811a59f8de36",
+    "stages": [
+     {
+      "denoise_ms": 59.4764,
+      "strength": 0
+     },
+     {
+      "denoise_ms": 1863.3169,
+      "strength": 50
+     },
+     {
+      "denoise_ms": 1773.8962,
+      "strength": 100
+     }
+    ],
+    "width": 4639
+   },
+   "baseline_max_abs_delta": 0.0,
+   "binary_pixels_sha256": "26b87ebfcf3e981bd77f925f86a2b1cb11744697c9008156d804041875f2e3e1"
+  }
+ ],
+ "binary": {
+  "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-tools\\Release\\iprBurstControls.exe",
+  "sha256": "2c4a06e27be60c9be75b69a9b5885607b3a0da2e4037c9650df8358e328fba63",
+  "engine_sha256": "d47121e08fb2aa5293b995fcf38f44b8fb419d026bf91d8cd69ba827f6aa4971"
+ },
+ "sources": {
+  "tests\\burst_tools\\burst_controls.cpp": {
+   "sha256": "88f51abdc087862e4604ac7eb726f8cf954a5e3194f086df3e48ec5a20c10980",
+   "source": "#include \"TestRecipes.h\"\n#include \"DetailProcessing.h\"\n#include \"WorkingColorSpace.h\"\n#include <QCoreApplication>\n#include <QFile>\n#include <QJsonArray>\n#include <QJsonDocument>\n#include <opencv2/imgproc.hpp>\n#include <array>\n#include <chrono>\n#include <cmath>\n#include <exception>\n#include <iostream>\n#include <stdexcept>\n\nnamespace {\nvoid require(bool value,const char *message) { if (!value) throw std::runtime_error(message); }\n\nQJsonArray writeCrops(const cv::Mat &rgb,QFile &pixels)\n{\n    require(!rgb.empty() && rgb.type()==CV_32FC3,\"Invalid RGB image\");\n    QJsonArray rectangles;\n    for (const double fy:{.2,.5,.8}) for (const double fx:{.2,.5,.8}) {\n        const cv::Rect r(int(std::lround(fx*rgb.cols))-128,int(std::lround(fy*rgb.rows))-128,256,256);\n        require((r&cv::Rect(0,0,rgb.cols,rgb.rows))==r,\"Outside RGB crop\");\n        std::array<cv::Mat,3> planes;\n        for (auto &p:planes) p.create(256,256,CV_32F);\n        for(int y=0;y<256;++y) {\n            const auto *source=rgb.ptr<cv::Vec3f>(y+r.y)+r.x;\n            for(int x=0;x<256;++x) {\n                planes[0].at<float>(y,x)=WorkingColor::luminance(source[x]);\n                planes[1].at<float>(y,x)=source[x][0]-source[x][2];\n                planes[2].at<float>(y,x)=source[x][1]-.5f*(source[x][0]+source[x][2]);\n            }\n        }\n        for(const auto &p:planes) {\n            require(cv::checkRange(p) && p.isContinuous(),\"Invalid output plane\");\n            const qint64 count=qint64(p.total()*p.elemSize());\n            require(pixels.write(reinterpret_cast<const char *>(p.data),count)==count,\"Incomplete plane output\");\n        }\n        rectangles.append(QJsonArray{r.x,r.y,r.width,r.height});\n    }\n    return rectangles;\n}\n}\n\nint main(int argc,char **argv)\n{\n    QCoreApplication app(argc,argv);\n    try {\n        require(argc==3,\"Usage: iprBurstControls output-prefix input-raw\");\n        cv::setNumThreads(4);\n        const auto args=app.arguments();const QString prefix=args[1],path=args[2];\n        const auto loaded=TestRecipes::load(path);\n        const auto settings=TestRecipes::neutral(loaded);\n        const auto image=ImageEditor::renderLinear(loaded.image,settings);\n        require(!image.isNull(),\"Native opening failed\");\n        cv::Mat original;cv::cvtColor(image.linearRgba,original,cv::COLOR_RGBA2RGB);\n        QFile pixels(prefix+\".f32\");require(pixels.open(QIODevice::WriteOnly|QIODevice::NewOnly),\"Cannot create pixels\");\n        QJsonArray stages;QJsonArray rectangles;\n        for (const int strength:{0,50,100}) {\n            const auto start=std::chrono::steady_clock::now();\n            cv::Mat rgb=original.clone();\n            DetailProcessing::reduceNoise(rgb,{strength,strength});\n            const double ms=std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-start).count();\n            rectangles=writeCrops(rgb,pixels);\n            stages.append(QJsonObject{{\"strength\",strength},{\"denoise_ms\",ms}});\n        }\n        pixels.close();\n        const QJsonObject result{{\"raw\",path},{\"sha256\",TestRecipes::sha256(path)},\n            {\"declaration\",TestRecipes::declaration(loaded,settings,path,\"bruit\",\"neutral\",0.,path)},\n            {\"width\",original.cols},{\"height\",original.rows},{\"rectangles\",rectangles},{\"stages\",stages},\n            {\"layout\",\"native-endian IEEEfloat32 stages3/ROIs9/planesYCoCg3/rows256/cols256\"},\n            {\"rules\",\"Production DetailProcessing::reduceNoise fullframe 0/50/100, optics off, CameraNeutral RAW calibrated; no experimental filter\"}};\n        QFile metadata(prefix+\".json\");require(metadata.open(QIODevice::WriteOnly|QIODevice::NewOnly),\"Cannot create metadata\");\n        const auto bytes=QJsonDocument(result).toJson(QJsonDocument::Compact);\n        require(metadata.write(bytes)==bytes.size(),\"Incomplete metadata\");return 0;\n    } catch(const std::exception &e) {std::cerr<<e.what()<<'\\n';return 1;}\n}\n"
+  },
+  "tests\\burst_tools\\CMakeLists.txt": {
+   "sha256": "d80193df586802e257dda37754062af7e5d6306ae05ffe643f6c322507348c05",
+   "source": "cmake_minimum_required(VERSION 3.24)\nproject(IPRBurstControls LANGUAGES CXX)\nset(CMAKE_CXX_STANDARD 17)\nset(CMAKE_CXX_STANDARD_REQUIRED ON)\nset(CMAKE_CXX_EXTENSIONS OFF)\nget_filename_component(IPR_ROOT \"${CMAKE_CURRENT_SOURCE_DIR}/../..\" ABSOLUTE)\nfind_package(Qt6 6.8 REQUIRED COMPONENTS Core Gui Quick Concurrent)\nfind_package(OpenCV REQUIRED COMPONENTS core imgproc imgcodecs)\nfind_package(TIFF REQUIRED)\nif(NOT IPR_ENGINE_BUILD OR NOT LIBRAW_LIBRARY)\n    message(FATAL_ERROR \"IPR_ENGINE_BUILD and LIBRAW_LIBRARY are required\")\nendif()\nadd_library(iprEngine STATIC IMPORTED)\nset_target_properties(iprEngine PROPERTIES IMPORTED_LOCATION \"${IPR_ENGINE_BUILD}/Release/iprEngine.lib\")\nadd_executable(iprBurstControls burst_controls.cpp \"${IPR_ROOT}/src/tools/TestRecipes.cpp\")\nforeach(folder app cache core editor profiles providers raw tools)\n    target_include_directories(iprBurstControls PRIVATE \"${IPR_ROOT}/src/${folder}\")\nendforeach()\ntarget_include_directories(iprBurstControls PRIVATE ${OpenCV_INCLUDE_DIRS})\ntarget_link_libraries(iprBurstControls PRIVATE iprEngine Qt6::Core Qt6::Gui Qt6::Quick Qt6::Concurrent TIFF::TIFF ${OpenCV_LIBS} \"${LIBRAW_LIBRARY}\")\nqt_add_resources(iprBurstControls ipr_ui_defaults PREFIX \"/\" BASE \"${IPR_ROOT}\"\n    FILES \"${IPR_ROOT}/config/ipr-ui.ini\" \"${IPR_ROOT}/config/raw-normalization.json\")\n"
+  },
+  "src\\tools\\TestRecipes.cpp": {
+   "sha256": "84dbd1fd04e838ca450970fabd32dc7b3cc1751025719dd77a5571c4dcabac20",
+   "source": "#include \"TestRecipes.h\"\n\n#include <QCoreApplication>\n#include <QCryptographicHash>\n#include <QDateTime>\n#include <QDir>\n#include <QFile>\n#include <QFileInfo>\n#include <QHash>\n#include <QJsonArray>\n\n#include <cmath>\n#include <mutex>\n#include <stdexcept>\n\nnamespace TestRecipes {\nnamespace {\nconst QStringList bands{\"red\", \"orange\", \"yellow\", \"green\", \"cyan\", \"blue\", \"violet\", \"magenta\"};\nconst QStringList components{\"hue\", \"saturation\", \"luminance\"};\nconst QStringList zones{\"shadows\", \"midtones\", \"highlights\"};\nconst QStringList channels{\"luminance\", \"red\", \"green\", \"blue\"};\n\nvoid require(bool condition, const QString &message)\n{\n    if (!condition) throw std::runtime_error(message.toUtf8().constData());\n}\n}\n\nconst QStringList &groups()\n{\n    static const QStringList names{\"raw\", \"lumiere\", \"courbes\", \"couleur\", \"melangeur\",\n                                   \"grading\", \"effets\", \"bruit\", \"nettete\", \"optique\"};\n    return names;\n}\n\nQFileInfoList sources(const QString &base)\n{\n    QStringList extensions = RawDecoder::supportedExtensions();\n    extensions.append(QStringList{\"tif\", \"tiff\", \"png\", \"jpg\", \"jpeg\", \"bmp\", \"webp\"});\n    QFileInfoList result;\n    for (const QFileInfo &file : QDir(base).entryInfoList(QDir::Files | QDir::NoSymLinks, QDir::Name))\n        if (extensions.contains(file.suffix().toLower())) result.append(file);\n    return result;\n}\n\nQList<Feature> features()\n{\n    QList<Feature> result{{\"auto-wb\", {0, 1}}, {\"exposure\", {-1, -0.5, 0, 0.5, 1}},\n        {\"temperature\", {2000, 3500, 5200, 6500, 9000, 50000}},\n        {\"tint\", {-150, -100, -50, -25, 0, 25, 50, 100, 150}},\n        {\"blur\", {0, 5, 20}}, {\"grayscale\", {0, 1}},\n        {\"sharpening-amount\", {0, 25, 50, 100, 200}},\n        {\"sharpening-radius\", {0.3, 1, 2, 3}}, {\"sharpening-masking\", {0, 25, 50, 100}},\n        {\"lens-correction\", {0, 1}}, {\"chromatic-aberration\", {0, 1}}};\n    for (const QString &name : QStringList{\"contrast\", \"shadows\", \"blacks\", \"highlights\", \"whites\"})\n        result.append({name, {-100, -75, -50, -25, 0, 25, 50, 75, 100}});\n    for (const QString &name : QStringList{\"vibrance\", \"saturation\", \"texture\", \"clarity\", \"dehaze\"})\n        result.append({name, {-100, -50, -25, 0, 25, 50, 100}});\n    for (const QString &name : QStringList{\"grain\", \"denoise-luminance\", \"denoise-chrominance\"})\n        result.append({name, {0, 25, 50, 100}});\n    for (const QString &band : bands)\n        for (const QString &component : components)\n            result.append({\"mixer-\" + band + \"-\" + component, {-100, -50, -25, 0, 25, 50, 100}});\n    for (const QString &zone : zones) {\n        result.append({\"grading-\" + zone + \"-hue\", {0, 60, 120, 180, 240, 300}});\n        result.append({\"grading-\" + zone + \"-saturation\", {0, 25, 50, 100}});\n    }\n    for (const QString &channel : channels)\n        result.append({\"curve-\" + channel, {-100, -50, 0, 50, 100}});\n    return result;\n}\n\nQString featureGroup(const QString &name)\n{\n    if (name == \"auto-wb\") return \"raw\";\n    if (name == \"lens-correction\" || name == \"chromatic-aberration\") return \"optique\";\n    if (QStringList{\"exposure\", \"contrast\", \"shadows\", \"blacks\", \"highlights\", \"whites\"}.contains(name)) return \"lumiere\";\n    if (name.startsWith(\"curve-\")) return \"courbes\";\n    if (name.startsWith(\"mixer-\")) return \"melangeur\";\n    if (name.startsWith(\"grading-\")) return \"grading\";\n    if (name.startsWith(\"denoise-\")) return \"bruit\";\n    if (name.startsWith(\"sharpening-\")) return \"nettete\";\n    if (QStringList{\"temperature\", \"tint\", \"vibrance\", \"saturation\", \"grayscale\"}.contains(name)) return \"couleur\";\n    return \"effets\";\n}\n\nQString featureFolder(const QString &name)\n{\n    if (name == \"temperature\") return \"couleur/temperature\";\n    if (name == \"tint\") return \"couleur/nuance\";\n    if (name == \"grayscale\") return \"couleur/niveaux_gris\";\n    if (name == \"vibrance\" || name == \"saturation\") return \"couleur/\" + name;\n    if (name == \"texture\") return name;\n    if (name == \"clarity\") return \"clarte\";\n    if (name == \"dehaze\") return \"correction_de_voile\";\n    if (name.startsWith(\"mixer-\")) return \"color-mixer/\" + name.split('-').at(1);\n    if (name == \"denoise-luminance\") return \"bruit/luminance\";\n    if (name == \"denoise-chrominance\") return \"bruit/couleur\";\n    if (name.startsWith(\"grading-\")) return \"grading/\" + name.split('-').at(1);\n    return featureGroup(name) + '/' + name;\n}\n\nQString fileName(const QString &stem, const QString &feature, double value)\n{\n    return stem + \"-IPR-\" + feature + '-' + QString::number(value, 'g', 12) + \".tiff\";\n}\n\nbool rawOnly(const QString &name)\n{\n    return name == \"auto-wb\" || featureGroup(name) == \"optique\";\n}\n\nbool eligible(const QString &feature, const QString &sourcePath)\n{\n    return !rawOnly(feature) || RawDecoder::supportedExtensions().contains(QFileInfo(sourcePath).suffix().toLower());\n}\n\nDecode decodeFor(const QString &feature, double value)\n{\n    Decode decode;\n    decode.automaticWhiteBalance = feature == \"auto-wb\" && value == 1;\n    decode.lensCorrection = feature == \"lens-correction\" && value == 1;\n    decode.chromaticAberration = feature == \"chromatic-aberration\" && value == 1;\n    return decode;\n}\n\nReference referenceFor(const QString &feature)\n{\n    if (feature == \"temperature\") return {feature, 5200};\n    if (feature == \"tint\" || feature == \"sharpening-masking\" || feature.startsWith(\"grading-\")\n        || featureGroup(feature) == \"optique\")\n        return {feature, 0};\n    if (feature == \"sharpening-radius\") return {feature, 1};\n    return {\"neutral\", 0};\n}\n\nLoadResult load(const QString &path, const Decode &decode)\n{\n    RawDecoder::Options options;\n    options.preferCameraNeutral = true;\n    options.useNormalizationEnvironment = false;\n    options.normalizationManifest = ImageEditor::defaultCalibrationManifest();\n    options.lensCorrectionEnabled = decode.lensCorrection;\n    options.chromaticAberrationEnabled = decode.chromaticAberration;\n    LoadResult result = ImageEditor::loadFromDisk(path, decode.automaticWhiteBalance, options);\n    require(!result.image.isNull(), \"Decode failed for \" + path + \": \" + result.error);\n    result.editProxy = {};\n    return result;\n}\n\nSettings neutral(const LoadResult &loaded)\n{\n    Settings settings;\n    settings.temperature = static_cast<int>(std::lround(loaded.image.referenceWhiteBalanceKelvin.value_or(5200.0)));\n    return settings;\n}\n\nSettings adjusted(Settings settings, const QString &name, double value)\n{\n    const int integer = static_cast<int>(value);\n    if (name == \"exposure\") settings.brightness = static_cast<float>(value);\n    else if (name == \"contrast\") settings.contrast = integer;\n    else if (name == \"blur\") settings.blur = integer;\n    else if (name == \"grayscale\") settings.grayscale = integer != 0;\n    else if (name == \"shadows\") settings.shadows = integer;\n    else if (name == \"blacks\") settings.blacks = integer;\n    else if (name == \"highlights\") settings.highlights = integer;\n    else if (name == \"whites\") settings.whites = integer;\n    else if (name == \"temperature\") settings.temperature = integer;\n    else if (name == \"tint\") settings.tint = integer;\n    else if (name == \"vibrance\") settings.vibrance = integer;\n    else if (name == \"saturation\") settings.saturation = integer;\n    else if (name == \"texture\") settings.texture = integer;\n    else if (name == \"clarity\") settings.clarity = integer;\n    else if (name == \"dehaze\") settings.dehaze = integer;\n    else if (name == \"grain\") settings.grain = integer;\n    else if (name == \"denoise-luminance\") settings.denoiseLuminance = integer;\n    else if (name == \"denoise-chrominance\") settings.denoiseChrominance = integer;\n    else if (name == \"sharpening-amount\") settings.sharpeningAmount = integer;\n    else if (name == \"sharpening-radius\") {\n        settings.sharpeningAmount = 50;\n        settings.sharpeningRadius = static_cast<float>(value);\n    } else if (name == \"sharpening-masking\") {\n        settings.sharpeningAmount = 50;\n        settings.sharpeningMasking = integer;\n    } else if (name == \"auto-wb\") settings.automaticWhiteBalance = integer != 0;\n    else if (name.startsWith(\"mixer-\")) {\n        const QStringList parts = name.split('-');\n        const int band = bands.indexOf(parts.at(1));\n        if (parts.at(2) == \"hue\") settings.mixerHue.at(band) = integer;\n        else if (parts.at(2) == \"saturation\") settings.mixerSaturation.at(band) = integer;\n        else settings.mixerLuminance.at(band) = integer;\n    } else if (name.startsWith(\"grading-\")) {\n        const QStringList parts = name.split('-');\n        const int zone = zones.indexOf(parts.at(1));\n        settings.gradingHue.at(zone) = parts.at(2) == \"hue\" ? integer : 30;\n        settings.gradingSaturation.at(zone) = parts.at(2) == \"saturation\" ? integer : 25;\n    } else if (name.startsWith(\"curve-\")) {\n        const int channel = channels.indexOf(name.mid(6));\n        settings.toneCurves.at(channel) = {{0, 0}, {0.5f, float(0.5 + value * 0.004)}, {1, 1}};\n    } else require(name == \"lens-correction\" || name == \"chromatic-aberration\",\n                   \"Unsupported feature: \" + name);\n    return settings;\n}\n\nSettings settingsFor(const LoadResult &loaded, const QString &feature, double value)\n{\n    Settings settings = neutral(loaded);\n    if (feature == \"neutral\") return settings;\n    // Both manual WB axes use the fixed 5200 K / tint 0 anchor.\n    if (feature == \"temperature\" || feature == \"tint\") settings.temperature = 5200;\n    return adjusted(settings, feature, value);\n}\n\nQJsonObject declaredSettings(const Settings &s)\n{\n    QJsonObject result{{\"exposure\", s.brightness}, {\"contrast\", s.contrast}, {\"blur\", s.blur},\n        {\"grayscale\", s.grayscale}, {\"shadows\", s.shadows}, {\"blacks\", s.blacks},\n        {\"highlights\", s.highlights}, {\"whites\", s.whites}, {\"temperature\", s.temperature},\n        {\"tint\", s.tint}, {\"vibrance\", s.vibrance}, {\"saturation\", s.saturation},\n        {\"texture\", s.texture}, {\"clarity\", s.clarity}, {\"dehaze\", s.dehaze}, {\"grain\", s.grain},\n        {\"denoiseLuminance\", s.denoiseLuminance}, {\"denoiseChrominance\", s.denoiseChrominance},\n        {\"sharpeningAmount\", s.sharpeningAmount}, {\"sharpeningRadius\", s.sharpeningRadius},\n        {\"sharpeningMasking\", s.sharpeningMasking}, {\"automaticWhiteBalance\", s.automaticWhiteBalance}};\n    QJsonArray hue, sat, lum, grading, curves;\n    for (int i = 0; i < ColorMixer::BandCount; ++i) {\n        hue.append(s.mixerHue.at(i)); sat.append(s.mixerSaturation.at(i)); lum.append(s.mixerLuminance.at(i));\n    }\n    for (int i = 0; i < 3; ++i)\n        grading.append(QJsonObject{{\"hue\", s.gradingHue.at(i)}, {\"saturation\", s.gradingSaturation.at(i)}});\n    for (const auto &curve : s.toneCurves) {\n        QJsonArray points;\n        for (const auto &point : curve) points.append(QJsonArray{point.x, point.y});\n        curves.append(points);\n    }\n    result.insert(\"mixerHue\", hue); result.insert(\"mixerSaturation\", sat); result.insert(\"mixerLuminance\", lum);\n    result.insert(\"grading\", grading); result.insert(\"toneCurves\", curves);\n    return result;\n}\n\nQString sha256(const QString &path)\n{\n    static QHash<QString, QString> hashes;\n    static std::mutex lock;\n    const std::lock_guard<std::mutex> guard(lock);\n    if (!hashes.contains(path)) {\n        QFile file(path);\n        require(file.open(QIODevice::ReadOnly), \"Cannot hash: \" + path);\n        QCryptographicHash hash(QCryptographicHash::Sha256);\n        require(hash.addData(&file), \"Cannot hash: \" + path);\n        hashes.insert(path, QString::fromLatin1(hash.result().toHex()));\n    }\n    return hashes.value(path);\n}\n\nQJsonObject declaration(const LoadResult &source, const Settings &settings, const QString &input,\n                        const QString &group, const QString &feature, double value,\n                        const QString &reference)\n{\n    return {{\"ipr_test_schema\", 1}, {\"scene\", QFileInfo(input).completeBaseName()},\n        {\"group\", group}, {\"feature\", feature}, {\"value\", value}, {\"reference\", reference},\n        {\"settings\", declaredSettings(settings)},\n        {\"source_sha256\", sha256(input)}, {\"executable_sha256\", sha256(QCoreApplication::applicationFilePath())},\n        {\"qt_version\", qVersion()}, {\"created_at_utc\", QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs)},\n        {\"dcp_profile\", source.metadata.dcpProfile}, {\"lcp_profile\", source.metadata.lcpProfile},\n        {\"lcp_sha256\", source.metadata.lcpSha256}, {\"raw_normalization\", source.metadata.rawNormalizationApplied},\n        {\"lens_geometry_applied\", source.metadata.lensGeometryApplied},\n        {\"lens_vignetting_applied\", source.metadata.lensVignettingApplied},\n        {\"chromatic_aberration_applied\", source.metadata.chromaticAberrationApplied}};\n}\n}\n"
+  }
+ },
+ "runner_sha256": "fd73ef357009038a73ed0e64b4559ac3a798cf8908685ce9ef2461300f728faf",
+ "runner_source": "\"\"\"Four predefined development frames, full-frame production denoising controls.\"\"\"\nfrom datetime import datetime,timezone\nimport json\nfrom pathlib import Path\nimport subprocess\nimport sys\nimport numpy as np\nfrom analysis.render import available_memory,runtime_env\nfrom study_noise_neighbourhoods import ROOT,sha256,git\n\nINDICES=(0,4,8,13)\n\n\ndef run():\n    if sys.byteorder!='little':raise ValueError('This isolated native archive contract requires little-endian')\n    parent=ROOT/'docs/validation/raw/extraction-native-rafale-bruit-v001-20261027T230112Z.json'\n    original=json.loads(parent.read_text(encoding='utf-8'));digest=sha256(parent)\n    binary=ROOT/'build-patch_noise/burst-tools/Release/iprBurstControls.exe';binary_hash=sha256(binary)\n    p=Path(original['pixels']['path'])\n    if sha256(p)!=original['pixels']['sha256']:raise ValueError('Native baseline changed')\n    with np.load(p,allow_pickle=False) as saved:baseline=saved['planes'].copy()\n    started=datetime.now(timezone.utc);folder=ROOT/'build-patch_noise/burst-production'/started.strftime('%Y%m%dT%H%M%SZ')\n    folder.mkdir(parents=True,exist_ok=False);records=[];pixels=[]\n    for index in INDICES:\n        if (available_memory() or 0)<5*1024**3:raise ValueError('Need5GiB before fullframe denoising')\n        record=original['records'][index];raw=Path(record['path']);prefix=folder/raw.stem\n        if sha256(raw)!=record['sha256']:raise ValueError('Changed source')\n        subprocess.run([str(binary),str(prefix),str(raw)],env=runtime_env(binary),check=True,timeout=240)\n        data=np.fromfile(prefix.with_suffix('.f32'),dtype='<f4').reshape(3,9,3,256,256)\n        native=json.loads(prefix.with_suffix('.json').read_text(encoding='utf-8'))\n        delta=float(np.max(abs(data[0]-baseline[index])))\n        if not np.isfinite(data).all() or delta>2e-7 or native['sha256']!=record['sha256']:raise ValueError('Different baseline/native contract')\n        pixels.append(data);records.append(dict(index=index,path=str(raw),sha256=record['sha256'],\n            native=native,baseline_max_abs_delta=delta,binary_pixels_sha256=sha256(prefix.with_suffix('.f32'))))\n        print('PRODUCTION',raw.name,'baseline-delta',delta,flush=True)\n    stack=np.stack(pixels);archive=folder/'production-controls.npz'\n    with archive.open('xb') as handle:np.savez_compressed(handle,planes=stack)\n    if sha256(binary)!=binary_hash or sha256(parent)!=digest:raise ValueError('Changed dependencies')\n    now=datetime.now(timezone.utc);output=ROOT/'docs/validation/raw'/f'temoins-production-rafale-bruit-v001-{now.strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n    sources=[ROOT/'tests/burst_tools/burst_controls.cpp',ROOT/'tests/burst_tools/CMakeLists.txt',ROOT/'src/tools/TestRecipes.cpp']\n    result=dict(schema_version=1,data_version=1,started_at_utc=started.isoformat(),completed_at_utc=now.isoformat(),\n        parent=dict(path=str(parent),sha256=digest),records=records,\n        binary=dict(path=str(binary),sha256=binary_hash,engine_sha256=sha256(ROOT/'build-patch_noise/Release/iprEngine.lib')),\n        sources={str(p.relative_to(ROOT)):dict(sha256=sha256(p),source=p.read_text(encoding='utf-8')) for p in sources},\n        runner_sha256=sha256(Path(__file__)),runner_source=Path(__file__).read_text(encoding='utf-8'),commit=git('rev-parse','HEAD'),\n        pixels=dict(path=str(archive),sha256=sha256(archive),shape=list(stack.shape),dtype=str(stack.dtype)),\n        rules='Frozendevelopmentindices0/4/8/13;productionfullframe0/50/100luma+chroma;sequential5GiBguard240s/file;baselineequalityagainstexistingnativeprobe2e-7max;no engine/sourcefilterchange.',\n        limitations='Same scene ISO4000;not new noise algorithm or visual validation. Native binary engine prebuilt,source hashes do not certify reproducible build. No LR or clean reference claim. Validation/sealed remain closed.',\n        verdict='production_controls_extracted_for_real_burst_evaluation')\n    with output.open('x',encoding='utf-8') as handle:json.dump(result,handle,ensure_ascii=False,indent=1,allow_nan=False)\n    print('RESULT',output,flush=True)\n\n\nif __name__=='__main__':run()\n",
+ "commit": "2a40c5c6cff78d40294393a68827f4a24555c724",
+ "pixels": {
+  "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-production\\20261027T230451Z\\production-controls.npz",
+  "sha256": "f9f43a77aae4136572786204e097ef70493f16a94c8efe7a91e1da17742ace14",
+  "shape": [
+   4,
+   3,
+   9,
+   3,
+   256,
+   256
+  ],
+  "dtype": "float32"
+ },
+ "rules": "Frozendevelopmentindices0/4/8/13;productionfullframe0/50/100luma+chroma;sequential5GiBguard240s/file;baselineequalityagainstexistingnativeprobe2e-7max;no engine/sourcefilterchange.",
+ "limitations": "Same scene ISO4000;not new noise algorithm or visual validation. Native binary engine prebuilt,source hashes do not certify reproducible build. No LR or clean reference claim. Validation/sealed remain closed.",
+ "verdict": "production_controls_extracted_for_real_burst_evaluation"
+}

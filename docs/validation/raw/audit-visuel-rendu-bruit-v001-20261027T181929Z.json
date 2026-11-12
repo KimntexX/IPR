@@ -1,0 +1,442 @@
+{
+ "schema_version": 1,
+ "data_version": 1,
+ "completed_at_utc": "2026-10-27T18:19:29.873023+00:00",
+ "commit": "2a40c5c6cff78d40294393a68827f4a24555c724",
+ "parent": {
+  "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\rendu-experimental-cible-equilibree-bruit-v003-20261027T175652Z.json",
+  "sha256": "2391d7fc709ce9c473f11ce81a9a47f633278365a85ab9665462edf38141dcc5"
+ },
+ "records": [
+  {
+   "raw": "6V1A9426.CR3",
+   "label": "floor",
+   "render_audit": {
+    "calls": 210,
+    "graphs": 152,
+    "abstentions": 15,
+    "stride": 6,
+    "rect": [
+     80,
+     80,
+     96,
+     96
+    ],
+    "minimum_weight": 0.0032800805147895455
+   },
+   "user_observation": "Utilisateur : lissage plus propre pour candidate que pilot.",
+   "sources": [
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\bruit\\proto\\6V1A9426-IPR-research-balanced-v003-floor-original.tiff",
+     "sha256": "107d92d871199c03a94c3fa423f403204ae38ecae110b38e5ef3257526c59299"
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\bruit\\proto\\6V1A9426-IPR-research-balanced-v003-floor-pilot.tiff",
+     "sha256": "089decfd9217d5af04d5d60ad692e62ac8a5015e48b86f23be0dd5af87e64527"
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\bruit\\proto\\6V1A9426-IPR-research-balanced-v003-floor-candidate.tiff",
+     "sha256": "f9c09930827d5ce5be1431d8692a4f08b12b6b26318a5ea91c53d4947c20fe32"
+    }
+   ],
+   "original_to_pilot": {
+    "whole": {
+     "changed_pixel_fraction": 0.984375,
+     "mean_abs_code16": 784.1659071180555,
+     "maximum_abs_code16": 5234,
+     "mean_abs_equivalent_code8": 3.0512292105760914,
+     "maximum_abs_equivalent_code8": 20.365758754863812
+    },
+    "top_left": {
+     "changed_pixel_fraction": 0.984375,
+     "mean_abs_code16": 802.4730902777778,
+     "maximum_abs_code16": 4472,
+     "mean_abs_equivalent_code8": 3.1224633862948554,
+     "maximum_abs_equivalent_code8": 17.40077821011673
+    },
+    "top_right": {
+     "changed_pixel_fraction": 1.0,
+     "mean_abs_code16": 831.710792824074,
+     "maximum_abs_code16": 5234,
+     "mean_abs_equivalent_code8": 3.2362287658524282,
+     "maximum_abs_equivalent_code8": 20.365758754863812
+    },
+    "bottom_left": {
+     "changed_pixel_fraction": 0.96875,
+     "mean_abs_code16": 742.4338831018518,
+     "maximum_abs_code16": 4157,
+     "mean_abs_equivalent_code8": 2.88884779417063,
+     "maximum_abs_equivalent_code8": 16.17509727626459
+    },
+    "bottom_right": {
+     "changed_pixel_fraction": 0.984375,
+     "mean_abs_code16": 760.0458622685185,
+     "maximum_abs_code16": 4415,
+     "mean_abs_equivalent_code8": 2.957376895986453,
+     "maximum_abs_equivalent_code8": 17.17898832684825
+    }
+   },
+   "pilot_to_candidate": {
+    "whole": {
+     "changed_pixel_fraction": 0.3011067708333333,
+     "mean_abs_code16": 1.6634476273148149,
+     "maximum_abs_code16": 132,
+     "mean_abs_equivalent_code8": 0.0064725588611471395,
+     "maximum_abs_equivalent_code8": 0.5136186770428015
+    },
+    "top_left": {
+     "changed_pixel_fraction": 0.37890625,
+     "mean_abs_code16": 3.4380787037037037,
+     "maximum_abs_code16": 129,
+     "mean_abs_equivalent_code8": 0.013377738146707018,
+     "maximum_abs_equivalent_code8": 0.5019455252918288
+    },
+    "top_right": {
+     "changed_pixel_fraction": 0.4735243055555556,
+     "mean_abs_code16": 2.5776909722222223,
+     "maximum_abs_code16": 132,
+     "mean_abs_equivalent_code8": 0.010029925961954173,
+     "maximum_abs_equivalent_code8": 0.5136186770428015
+    },
+    "bottom_left": {
+     "changed_pixel_fraction": 0.12456597222222222,
+     "mean_abs_code16": 0.09866898148148148,
+     "maximum_abs_code16": 7,
+     "mean_abs_equivalent_code8": 0.00038392599798241824,
+     "maximum_abs_equivalent_code8": 0.027237354085603113
+    },
+    "bottom_right": {
+     "changed_pixel_fraction": 0.22743055555555555,
+     "mean_abs_code16": 0.5393518518518519,
+     "maximum_abs_code16": 28,
+     "mean_abs_equivalent_code8": 0.002098645337944949,
+     "maximum_abs_equivalent_code8": 0.10894941634241245
+    }
+   }
+  },
+  {
+   "raw": "6V1A9426.CR3",
+   "label": "joint",
+   "render_audit": {
+    "calls": 166,
+    "graphs": 141,
+    "abstentions": 59,
+    "stride": 6,
+    "rect": [
+     80,
+     80,
+     96,
+     96
+    ],
+    "minimum_weight": 0.0032800805147895455
+   },
+   "user_observation": "Utilisateur : coin haut droit semble meilleur ; perception incertaine.",
+   "sources": [
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\bruit\\proto\\6V1A9426-IPR-research-balanced-v003-joint-original.tiff",
+     "sha256": "13eb429cd0a9b2f4b0f7752f914361659075ae114e4a9146dd3bad430c5b6bd8"
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\bruit\\proto\\6V1A9426-IPR-research-balanced-v003-joint-pilot.tiff",
+     "sha256": "303d8367810e298c12cb8c3988af53b9c7cd54268cb86e3499dc9dc5b0b0629f"
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\bruit\\proto\\6V1A9426-IPR-research-balanced-v003-joint-candidate.tiff",
+     "sha256": "a7952b41ea45dea16f4ec7d45fe82a5afe34b1ed48850cc96f461691a66960e1"
+    }
+   ],
+   "original_to_pilot": {
+    "whole": {
+     "changed_pixel_fraction": 0.875,
+     "mean_abs_code16": 629.4473017939815,
+     "maximum_abs_code16": 5239,
+     "mean_abs_equivalent_code8": 2.4492112910271655,
+     "maximum_abs_equivalent_code8": 20.3852140077821
+    },
+    "top_left": {
+     "changed_pixel_fraction": 0.953125,
+     "mean_abs_code16": 650.5652488425926,
+     "maximum_abs_code16": 4225,
+     "mean_abs_equivalent_code8": 2.5313822912163135,
+     "maximum_abs_equivalent_code8": 16.439688715953306
+    },
+    "top_right": {
+     "changed_pixel_fraction": 0.703125,
+     "mean_abs_code16": 441.02879050925924,
+     "maximum_abs_code16": 4731,
+     "mean_abs_equivalent_code8": 1.716065332720853,
+     "maximum_abs_equivalent_code8": 18.408560311284045
+    },
+    "bottom_left": {
+     "changed_pixel_fraction": 0.84375,
+     "mean_abs_code16": 567.0694444444445,
+     "maximum_abs_code16": 5097,
+     "mean_abs_equivalent_code8": 2.2064958927799396,
+     "maximum_abs_equivalent_code8": 19.832684824902724
+    },
+    "bottom_right": {
+     "changed_pixel_fraction": 1.0,
+     "mean_abs_code16": 859.1257233796297,
+     "maximum_abs_code16": 5239,
+     "mean_abs_equivalent_code8": 3.3429016473915554,
+     "maximum_abs_equivalent_code8": 20.3852140077821
+    }
+   },
+   "pilot_to_candidate": {
+    "whole": {
+     "changed_pixel_fraction": 0.4455295138888889,
+     "mean_abs_code16": 6.416847511574074,
+     "maximum_abs_code16": 253,
+     "mean_abs_equivalent_code8": 0.024968278255152042,
+     "maximum_abs_equivalent_code8": 0.9844357976653697
+    },
+    "top_left": {
+     "changed_pixel_fraction": 0.4223090277777778,
+     "mean_abs_code16": 3.767071759259259,
+     "maximum_abs_code16": 114,
+     "mean_abs_equivalent_code8": 0.014657866767545755,
+     "maximum_abs_equivalent_code8": 0.44357976653696496
+    },
+    "top_right": {
+     "changed_pixel_fraction": 0.2595486111111111,
+     "mean_abs_code16": 4.328125,
+     "maximum_abs_code16": 153,
+     "mean_abs_equivalent_code8": 0.016840953307392995,
+     "maximum_abs_equivalent_code8": 0.5953307392996109
+    },
+    "bottom_left": {
+     "changed_pixel_fraction": 0.4370659722222222,
+     "mean_abs_code16": 6.01490162037037,
+     "maximum_abs_code16": 253,
+     "mean_abs_equivalent_code8": 0.023404286460585098,
+     "maximum_abs_equivalent_code8": 0.9844357976653697
+    },
+    "bottom_right": {
+     "changed_pixel_fraction": 0.6631944444444444,
+     "mean_abs_code16": 11.557291666666666,
+     "maximum_abs_code16": 133,
+     "mean_abs_equivalent_code8": 0.044970006485084306,
+     "maximum_abs_equivalent_code8": 0.5175097276264592
+    }
+   }
+  },
+  {
+   "raw": "6V1A0195.CR3",
+   "label": "sky_points",
+   "render_audit": {
+    "calls": 0,
+    "graphs": 0,
+    "abstentions": 225,
+    "stride": 6,
+    "rect": [
+     80,
+     80,
+     96,
+     96
+    ],
+    "minimum_weight": 0.0032800805147895455
+   },
+   "user_observation": "Utilisateur : aucune différence perçue.",
+   "sources": [
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\bruit\\proto\\6V1A0195-IPR-research-balanced-v003-sky_points-original.tiff",
+     "sha256": "567e8ec62f1651f3916f2ee1033278f28fa825100a6e17ceb7818ccec0b05937"
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\bruit\\proto\\6V1A0195-IPR-research-balanced-v003-sky_points-pilot.tiff",
+     "sha256": "567e8ec62f1651f3916f2ee1033278f28fa825100a6e17ceb7818ccec0b05937"
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\bruit\\proto\\6V1A0195-IPR-research-balanced-v003-sky_points-candidate.tiff",
+     "sha256": "567e8ec62f1651f3916f2ee1033278f28fa825100a6e17ceb7818ccec0b05937"
+    }
+   ],
+   "original_to_pilot": {
+    "whole": {
+     "changed_pixel_fraction": 0.0,
+     "mean_abs_code16": 0.0,
+     "maximum_abs_code16": 0,
+     "mean_abs_equivalent_code8": 0.0,
+     "maximum_abs_equivalent_code8": 0.0
+    },
+    "top_left": {
+     "changed_pixel_fraction": 0.0,
+     "mean_abs_code16": 0.0,
+     "maximum_abs_code16": 0,
+     "mean_abs_equivalent_code8": 0.0,
+     "maximum_abs_equivalent_code8": 0.0
+    },
+    "top_right": {
+     "changed_pixel_fraction": 0.0,
+     "mean_abs_code16": 0.0,
+     "maximum_abs_code16": 0,
+     "mean_abs_equivalent_code8": 0.0,
+     "maximum_abs_equivalent_code8": 0.0
+    },
+    "bottom_left": {
+     "changed_pixel_fraction": 0.0,
+     "mean_abs_code16": 0.0,
+     "maximum_abs_code16": 0,
+     "mean_abs_equivalent_code8": 0.0,
+     "maximum_abs_equivalent_code8": 0.0
+    },
+    "bottom_right": {
+     "changed_pixel_fraction": 0.0,
+     "mean_abs_code16": 0.0,
+     "maximum_abs_code16": 0,
+     "mean_abs_equivalent_code8": 0.0,
+     "maximum_abs_equivalent_code8": 0.0
+    }
+   },
+   "pilot_to_candidate": {
+    "whole": {
+     "changed_pixel_fraction": 0.0,
+     "mean_abs_code16": 0.0,
+     "maximum_abs_code16": 0,
+     "mean_abs_equivalent_code8": 0.0,
+     "maximum_abs_equivalent_code8": 0.0
+    },
+    "top_left": {
+     "changed_pixel_fraction": 0.0,
+     "mean_abs_code16": 0.0,
+     "maximum_abs_code16": 0,
+     "mean_abs_equivalent_code8": 0.0,
+     "maximum_abs_equivalent_code8": 0.0
+    },
+    "top_right": {
+     "changed_pixel_fraction": 0.0,
+     "mean_abs_code16": 0.0,
+     "maximum_abs_code16": 0,
+     "mean_abs_equivalent_code8": 0.0,
+     "maximum_abs_equivalent_code8": 0.0
+    },
+    "bottom_left": {
+     "changed_pixel_fraction": 0.0,
+     "mean_abs_code16": 0.0,
+     "maximum_abs_code16": 0,
+     "mean_abs_equivalent_code8": 0.0,
+     "maximum_abs_equivalent_code8": 0.0
+    },
+    "bottom_right": {
+     "changed_pixel_fraction": 0.0,
+     "mean_abs_code16": 0.0,
+     "maximum_abs_code16": 0,
+     "mean_abs_equivalent_code8": 0.0,
+     "maximum_abs_equivalent_code8": 0.0
+    }
+   }
+  },
+  {
+   "raw": "6V1A0195.CR3",
+   "label": "horizon",
+   "render_audit": {
+    "calls": 171,
+    "graphs": 17,
+    "abstentions": 54,
+    "stride": 6,
+    "rect": [
+     80,
+     80,
+     96,
+     96
+    ],
+    "minimum_weight": 0.0032800805147895455
+   },
+   "user_observation": "Utilisateur : candidate semble plus lisse que pilot.",
+   "sources": [
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\bruit\\proto\\6V1A0195-IPR-research-balanced-v003-horizon-original.tiff",
+     "sha256": "a043040a179693acb077ed527e61f689078466b9a484889b2950e04a1b23507a"
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\bruit\\proto\\6V1A0195-IPR-research-balanced-v003-horizon-pilot.tiff",
+     "sha256": "e5579e092c12d87a62e1064ccfd06976baec36bdf908e824d68ba584656834b4"
+    },
+    {
+     "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\bruit\\proto\\6V1A0195-IPR-research-balanced-v003-horizon-candidate.tiff",
+     "sha256": "2f1c2a0d66577205a8d14480d74344a3e5c139e7a102b2999b32844ce7a9340b"
+    }
+   ],
+   "original_to_pilot": {
+    "whole": {
+     "changed_pixel_fraction": 0.88671875,
+     "mean_abs_code16": 612.9381872106482,
+     "maximum_abs_code16": 4584,
+     "mean_abs_equivalent_code8": 2.384973491092016,
+     "maximum_abs_equivalent_code8": 17.836575875486382
+    },
+    "top_left": {
+     "changed_pixel_fraction": 0.640625,
+     "mean_abs_code16": 359.8488136574074,
+     "maximum_abs_code16": 3468,
+     "mean_abs_equivalent_code8": 1.4001899364101456,
+     "maximum_abs_equivalent_code8": 13.494163424124514
+    },
+    "top_right": {
+     "changed_pixel_fraction": 0.921875,
+     "mean_abs_code16": 587.8369502314815,
+     "maximum_abs_code16": 4110,
+     "mean_abs_equivalent_code8": 2.287303308293702,
+     "maximum_abs_equivalent_code8": 15.992217898832685
+    },
+    "bottom_left": {
+     "changed_pixel_fraction": 1.0,
+     "mean_abs_code16": 769.1966145833334,
+     "maximum_abs_code16": 4148,
+     "mean_abs_equivalent_code8": 2.9929829361219196,
+     "maximum_abs_equivalent_code8": 16.140077821011673
+    },
+    "bottom_right": {
+     "changed_pixel_fraction": 0.984375,
+     "mean_abs_code16": 734.8703703703703,
+     "maximum_abs_code16": 4584,
+     "mean_abs_equivalent_code8": 2.859417783542297,
+     "maximum_abs_equivalent_code8": 17.836575875486382
+    }
+   },
+   "pilot_to_candidate": {
+    "whole": {
+     "changed_pixel_fraction": 0.028103298611111112,
+     "mean_abs_code16": 0.07132523148148148,
+     "maximum_abs_code16": 33,
+     "mean_abs_equivalent_code8": 0.0002775300835855311,
+     "maximum_abs_equivalent_code8": 0.12840466926070038
+    },
+    "top_left": {
+     "changed_pixel_fraction": 0.04383680555555555,
+     "mean_abs_code16": 0.02922453703703704,
+     "maximum_abs_code16": 3,
+     "mean_abs_equivalent_code8": 0.00011371415189508576,
+     "maximum_abs_equivalent_code8": 0.011673151750972763
+    },
+    "top_right": {
+     "changed_pixel_fraction": 0.023003472222222224,
+     "mean_abs_code16": 0.1361400462962963,
+     "maximum_abs_code16": 33,
+     "mean_abs_equivalent_code8": 0.0005297278066003747,
+     "maximum_abs_equivalent_code8": 0.12840466926070038
+    },
+    "bottom_left": {
+     "changed_pixel_fraction": 0.015625,
+     "mean_abs_code16": 0.008246527777777778,
+     "maximum_abs_code16": 2,
+     "mean_abs_equivalent_code8": 3.208765672287073e-05,
+     "maximum_abs_equivalent_code8": 0.007782101167315175
+    },
+    "bottom_right": {
+     "changed_pixel_fraction": 0.029947916666666668,
+     "mean_abs_code16": 0.11168981481481481,
+     "maximum_abs_code16": 16,
+     "mean_abs_equivalent_code8": 0.00043459071912379306,
+     "maximum_abs_equivalent_code8": 0.0622568093385214
+    }
+   }
+  }
+ ],
+ "runner_sha256": "c4ca1dcca4658272bea25dba0e9cdf65bd88636dcc454f8b9e8a407547075b7d",
+ "runner_source": "\"\"\"Audit visual-render differences, NOT functional TIFF measurements or noise-quality scores.\"\"\"\nfrom datetime import datetime, timezone\nimport json\nfrom pathlib import Path\n\nimport cv2\nimport numpy as np\nfrom study_noise_neighbourhoods import ROOT, sha256, git\n\n\ndef differences(a, b):\n    if a.shape != b.shape or a.shape != (96, 96, 3) or a.dtype != np.uint16 or b.dtype != np.uint16:\n        raise ValueError('Matched native96 RGB16 render artifacts required')\n    # OpenCV BGR order is irrelevant to these channel-pooled distances.\n    delta = np.abs(a.astype(float)-b.astype(float))\n    areas = {'whole': np.s_[:, :], 'top_left': np.s_[:48, :48],\n             'top_right': np.s_[:48, 48:], 'bottom_left': np.s_[48:, :48],\n             'bottom_right': np.s_[48:, 48:]}\n    return {name: dict(changed_pixel_fraction=float(np.mean(np.any(delta[area] > 0, axis=2))),\n            mean_abs_code16=float(delta[area].mean()), maximum_abs_code16=int(delta[area].max()),\n            mean_abs_equivalent_code8=float(delta[area].mean()/257.),\n            maximum_abs_equivalent_code8=float(delta[area].max()/257.)) for name, area in areas.items()}\n\n\ndef run():\n    parent = ROOT/'docs/validation/raw/rendu-experimental-cible-equilibree-bruit-v003-20261027T175652Z.json'\n    digest = sha256(parent); data = json.loads(parent.read_text(encoding='utf-8'))\n    observations = dict(floor='Utilisateur : lissage plus propre pour candidate que pilot.',\n        joint='Utilisateur : coin haut droit semble meilleur ; perception incertaine.',\n        sky_points='Utilisateur : aucune différence perçue.',\n        horizon='Utilisateur : candidate semble plus lisse que pilot.')\n    records = []\n    for row in data['records']:\n        arrays = {}; sources = []\n        for export in row['exports']:\n            path = Path(export['path'])\n            if sha256(path) != export['sha256']: raise ValueError('Changed export '+str(path))\n            array = cv2.imread(str(path), cv2.IMREAD_UNCHANGED)\n            if array is None: raise ValueError('Unreadable render artifact')\n            arrays[export['kind']] = array\n            sources.append(dict(path=str(path), sha256=export['sha256']))\n        records.append(dict(raw=row['raw'], label=row['label'], render_audit=row['audit'],\n            user_observation=observations[row['label']], sources=sources,\n            original_to_pilot=differences(arrays['original'], arrays['pilot']),\n            pilot_to_candidate=differences(arrays['pilot'], arrays['candidate'])))\n    if sha256(parent) != digest: raise ValueError('Changed parent evidence')\n    now = datetime.now(timezone.utc)\n    target = ROOT/'docs/validation/raw'/f'audit-visuel-rendu-bruit-v001-{now.strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n    result = dict(schema_version=1, data_version=1, completed_at_utc=now.isoformat(),\n        commit=git('rev-parse', 'HEAD'), parent=dict(path=str(parent), sha256=digest), records=records,\n        runner_sha256=sha256(Path(__file__)), runner_source=Path(__file__).read_text(encoding='utf-8'),\n        numpy_version=np.__version__, opencv_version=cv2.__version__,\n        rules='Only sanity-check actual visual exports/identity/location;not functional analyzer campaign. Rows have original memory-render provenance;no TIFF IPR promoted to cleantruth or functional input. No new denoising or tuning.',\n        limitations='Code-value distance after fixed clipped sRGB encoding/quantization,not noise reduction,perceptual deltaE,detail preservation or objective quality. More difference is not better;only verifies existence/location of correction. Quoted subjective feedback is not blind validation.')\n    with target.open('x', encoding='utf-8') as handle: json.dump(result, handle, ensure_ascii=False, indent=1, allow_nan=False)\n    print(target)\n    for row in records:\n        print(row['label'], json.dumps(row['pilot_to_candidate'], ensure_ascii=False))\n\n\nif __name__ == '__main__': run()\n",
+ "numpy_version": "2.4.2",
+ "opencv_version": "5.0.0",
+ "rules": "Only sanity-check actual visual exports/identity/location;not functional analyzer campaign. Rows have original memory-render provenance;no TIFF IPR promoted to cleantruth or functional input. No new denoising or tuning.",
+ "limitations": "Code-value distance after fixed clipped sRGB encoding/quantization,not noise reduction,perceptual deltaE,detail preservation or objective quality. More difference is not better;only verifies existence/location of correction. Quoted subjective feedback is not blind validation."
+}

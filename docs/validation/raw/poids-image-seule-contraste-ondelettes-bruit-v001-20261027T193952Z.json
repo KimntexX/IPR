@@ -1,0 +1,4158 @@
+{
+ "schema_version": 1,
+ "data_version": 1,
+ "started_at_utc": "2026-10-27T19:39:51.700259+00:00",
+ "completed_at_utc": "2026-10-27T19:39:52.134295+00:00",
+ "settings": {
+  "grid_points": 257,
+  "refinement_iterations": 48,
+  "minimum_ratio_identifiability": 0.0001,
+  "texture_sigma_inflation_limit": 1.1,
+  "screen": "All four capture means improve covariance and HH vs fixed and do not worsen vs nearest; all native estimates available. Weak-stripe challenge sigma estimates <=1.10 times same original A estimates. No tuning after result."
+ },
+ "records": [
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "b": "6V1A9661.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "status": "predicted_held_capture",
+   "input_band_energy": [
+    [
+     1.468665319863447e-06,
+     1.3084232530316513e-06,
+     3.89027219444889e-07
+    ],
+    [
+     5.530803381734761e-06,
+     4.792646382589657e-06,
+     1.7193179067974292e-06
+    ],
+    [
+     9.78133736547481e-06,
+     9.1415082664744e-06,
+     3.7196361996018678e-06
+    ]
+   ],
+   "prediction": {
+    "status": "estimated_not_confidence_calibrated",
+    "weight": 1.0,
+    "sigma": [
+     0.0019943315568439215,
+     0.0035151852815639936,
+     0.003464674624037828
+    ],
+    "contrast": -114.99306251803645,
+    "endpoint_identifiability": 0.06878779883527648,
+    "grid_contrast_range": 0.016714405905020158
+   },
+   "lower": "training_100",
+   "upper": "dataset1_100",
+   "metrics": {
+    "normalized_covariance_squared_error": 0.0004401925801913572,
+    "mean_abs_log_hh_factor_error": 0.01635459858256356,
+    "gaussian_hh_factor_ratio": [
+     0.9872026005116021,
+     0.9826237844357862,
+     0.9815180745377518
+    ]
+   },
+   "sigma_ratio_to_differential": [
+    0.9783117508144493,
+    1.0819237631790086,
+    1.2048299388818586
+   ],
+   "subregion_weight_diagnostic": [
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 1.0,
+     "sigma": [
+      0.002065897160027662,
+      0.003655469019633861,
+      0.0035026795981442237
+     ],
+     "contrast": -114.48127823972098,
+     "endpoint_identifiability": 0.06878779883527648,
+     "grid_contrast_range": 0.016090144732430645
+    },
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 1.0,
+     "sigma": [
+      0.0019794925200027004,
+      0.0035835988061337187,
+      0.003472586225185935
+     ],
+     "contrast": -114.90853578726056,
+     "endpoint_identifiability": 0.06878779883527648,
+     "grid_contrast_range": 0.027722239850319852
+    },
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 1.0,
+     "sigma": [
+      0.001988562984172467,
+      0.003425688343877215,
+      0.0033987939318439837
+     ],
+     "contrast": -115.28036990915516,
+     "endpoint_identifiability": 0.06878779883527648,
+     "grid_contrast_range": 0.01339856272062434
+    },
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 1.0,
+     "sigma": [
+      0.0019765157137056886,
+      0.003425225848380979,
+      0.0034745076742667435
+     ],
+     "contrast": -115.1854473459664,
+     "endpoint_identifiability": 0.06878779883527648,
+     "grid_contrast_range": 0.011400325408644107
+    }
+   ],
+   "challenges": [
+    {
+     "kind": "weak_stripes",
+     "axis": 0,
+     "angle": 0.0,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.8062297525141945,
+      "sigma": [
+       0.0025308331621070683,
+       0.0035173395308644114,
+       0.0034725198421897974
+      ],
+      "contrast": -113.41787724127812,
+      "endpoint_identifiability": 0.06878779883527648,
+      "grid_contrast_range": 0.0049554767372228525
+     },
+     "sigma_ratio_to_same_original": [
+      1.2690132457775345,
+      1.0006128408968131,
+      1.0022643448529163
+     ]
+    },
+    {
+     "kind": "weak_stripes",
+     "axis": 0,
+     "angle": 0.7853981633974483,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 1.0,
+      "sigma": [
+       0.002422260813602106,
+       0.0035151852815639936,
+       0.003464674624037828
+      ],
+      "contrast": -113.82670818054373,
+      "endpoint_identifiability": 0.06878779883527648,
+      "grid_contrast_range": 0.008555555548269922
+     },
+     "sigma_ratio_to_same_original": [
+      1.2145727751685347,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "kind": "weak_stripes",
+     "axis": 1,
+     "angle": 0.0,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.0,
+      "sigma": [
+       0.0017825562650048126,
+       0.004189117178746606,
+       0.003506792477231114
+      ],
+      "contrast": -113.94948832985989,
+      "endpoint_identifiability": 0.06878779883527648,
+      "grid_contrast_range": 0.038111836716211656
+     },
+     "sigma_ratio_to_same_original": [
+      0.8938113920364132,
+      1.191720163576346,
+      1.0121563661133064
+     ]
+    },
+    {
+     "kind": "weak_stripes",
+     "axis": 1,
+     "angle": 0.7853981633974483,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 1.0,
+      "sigma": [
+       0.0019943315568439215,
+       0.003961632907349127,
+       0.003464674624037828
+      ],
+      "contrast": -114.27567818768773,
+      "endpoint_identifiability": 0.06878779883527648,
+      "grid_contrast_range": 0.018331343479246698
+     },
+     "sigma_ratio_to_same_original": [
+      1.0,
+      1.1270054321536354,
+      1.0
+     ]
+    },
+    {
+     "kind": "localized_gaussian",
+     "axis": 0,
+     "width": 1.5,
+     "amplitude_sigma": 3.0,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 1.0,
+      "sigma": [
+       0.0019932590486852154,
+       0.0035151852815639936,
+       0.003464674624037828
+      ],
+      "contrast": -114.99629005553666,
+      "endpoint_identifiability": 0.06878779883527648,
+      "grid_contrast_range": 0.016781368905498084
+     },
+     "sigma_ratio_to_same_original": [
+      0.9994622217378923,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "kind": "localized_gaussian",
+     "axis": 1,
+     "width": 1.5,
+     "amplitude_sigma": 3.0,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 1.0,
+      "sigma": [
+       0.0019943315568439215,
+       0.00351585916962431,
+       0.003464674624037828
+      ],
+      "contrast": -114.99191238212072,
+      "endpoint_identifiability": 0.06878779883527648,
+      "grid_contrast_range": 0.01634891870898514
+     },
+     "sigma_ratio_to_same_original": [
+      1.0,
+      1.0001917076928635,
+      1.0
+     ]
+    }
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "b": "6V1A9661.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "status": "predicted_held_capture",
+   "input_band_energy": [
+    [
+     1.4167914145558774e-06,
+     1.2764489266568495e-06,
+     3.958996349896131e-07
+    ],
+    [
+     5.101024271235748e-06,
+     4.581761590421936e-06,
+     1.6088689320090176e-06
+    ],
+    [
+     8.69749278872591e-06,
+     8.741783558041611e-06,
+     3.9508065518510336e-06
+    ]
+   ],
+   "prediction": {
+    "status": "estimated_not_confidence_calibrated",
+    "weight": 1.0,
+    "sigma": [
+     0.001980298041522402,
+     0.003402875347683385,
+     0.003411158032403684
+    ],
+    "contrast": -115.32366214873792,
+    "endpoint_identifiability": 0.06878779883527648,
+    "grid_contrast_range": 0.008346330445448302
+   },
+   "lower": "training_100",
+   "upper": "dataset1_100",
+   "metrics": {
+    "normalized_covariance_squared_error": 0.0004332748322336959,
+    "mean_abs_log_hh_factor_error": 0.017821955310704178,
+    "gaussian_hh_factor_ratio": [
+     1.00815827037556,
+     0.9665616840951036,
+     0.9887334146359722
+    ]
+   },
+   "sigma_ratio_to_differential": [
+    1.028055355527132,
+    1.0624418080652898,
+    1.2030138967930613
+   ],
+   "subregion_weight_diagnostic": [
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 1.0,
+     "sigma": [
+      0.0018622577239818772,
+      0.00338664377457218,
+      0.003330557284222627
+     ],
+     "contrast": -115.8645701790977,
+     "endpoint_identifiability": 0.06878779883527648,
+     "grid_contrast_range": 0.007252651767089446
+    },
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 1.0,
+     "sigma": [
+      0.002084269011582283,
+      0.003426828096041035,
+      0.0034695049781566767
+     ],
+     "contrast": -114.87279065305925,
+     "endpoint_identifiability": 0.06878779883527648,
+     "grid_contrast_range": 0.009338428495084372
+    },
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 0.8748823500290098,
+     "sigma": [
+      0.0020075213851744604,
+      0.0034049756944678285,
+      0.0034824123262265348
+     ],
+     "contrast": -115.03016710368,
+     "endpoint_identifiability": 0.06878779883527648,
+     "grid_contrast_range": 0.005177725762862906
+    },
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 1.0,
+     "sigma": [
+      0.0019515739779211198,
+      0.003411739284322916,
+      0.0033506207316774074
+     ],
+     "contrast": -115.50315757592509,
+     "endpoint_identifiability": 0.06878779883527648,
+     "grid_contrast_range": 0.011036136128822704
+    }
+   ],
+   "challenges": [
+    {
+     "kind": "weak_stripes",
+     "axis": 0,
+     "angle": 0.0,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.3746880982484874,
+      "sigma": [
+       0.0023288509938345593,
+       0.003410496045821306,
+       0.0034347425294612034
+      ],
+      "contrast": -113.90644517154703,
+      "endpoint_identifiability": 0.06878779883527648,
+      "grid_contrast_range": 0.003021481304529061
+     },
+     "sigma_ratio_to_same_original": [
+      1.1760103504643165,
+      1.002239487891647,
+      1.0069139268346652
+     ]
+    },
+    {
+     "kind": "weak_stripes",
+     "axis": 0,
+     "angle": 0.7853981633974483,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.6183874743930494,
+      "sigma": [
+       0.002214187321506614,
+       0.003407094175330103,
+       0.0034253814138986067
+      ],
+      "contrast": -114.37524552001119,
+      "endpoint_identifiability": 0.06878779883527648,
+      "grid_contrast_range": 0.0029520575380246328
+     },
+     "sigma_ratio_to_same_original": [
+      1.1181081206364292,
+      1.0012397831879414,
+      1.004169663603917
+     ]
+    },
+    {
+     "kind": "weak_stripes",
+     "axis": 1,
+     "angle": 0.0,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.0,
+      "sigma": [
+       0.0017693887515956917,
+       0.004028901750982907,
+       0.0034495822278109655
+      ],
+      "contrast": -114.32664322065014,
+      "endpoint_identifiability": 0.06878779883527648,
+      "grid_contrast_range": 0.04449235414213604
+     },
+     "sigma_ratio_to_same_original": [
+      0.8934961881977277,
+      1.183969831197522,
+      1.0112642671615557
+     ]
+    },
+    {
+     "kind": "weak_stripes",
+     "axis": 1,
+     "angle": 0.7853981633974483,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 1.0,
+      "sigma": [
+       0.001980298041522402,
+       0.003830940692526087,
+       0.003411158032403684
+      ],
+      "contrast": -114.61272442910953,
+      "endpoint_identifiability": 0.06878779883527648,
+      "grid_contrast_range": 0.014678064083057052
+     },
+     "sigma_ratio_to_same_original": [
+      1.0,
+      1.1257951882175528,
+      1.0
+     ]
+    },
+    {
+     "kind": "localized_gaussian",
+     "axis": 0,
+     "width": 1.5,
+     "amplitude_sigma": 3.0,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 1.0,
+      "sigma": [
+       0.0019827217574669154,
+       0.003402875347683385,
+       0.003411158032403684
+      ],
+      "contrast": -115.31632315059116,
+      "endpoint_identifiability": 0.06878779883527648,
+      "grid_contrast_range": 0.00829439420724043
+     },
+     "sigma_ratio_to_same_original": [
+      1.0012239147308604,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "kind": "localized_gaussian",
+     "axis": 1,
+     "width": 1.5,
+     "amplitude_sigma": 3.0,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.9999999999998184,
+      "sigma": [
+       0.001980298041522356,
+       0.0034030453707830292,
+       0.0034111580324036905
+      ],
+      "contrast": -115.32336236899017,
+      "endpoint_identifiability": 0.06878779883527648,
+      "grid_contrast_range": 0.007974048686946844
+     },
+     "sigma_ratio_to_same_original": [
+      0.9999999999999768,
+      1.000049964539477,
+      1.000000000000002
+     ]
+    }
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "b": "6V1A9661.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "status": "predicted_held_capture",
+   "input_band_energy": [
+    [
+     1.4990434587339242e-06,
+     1.3085949908316715e-06,
+     3.984520438506641e-07
+    ],
+    [
+     4.5982979559897715e-06,
+     4.2628661330944935e-06,
+     1.4906654866688703e-06
+    ],
+    [
+     8.7028113518097e-06,
+     8.322351711430131e-06,
+     3.384189666574176e-06
+    ]
+   ],
+   "prediction": {
+    "status": "estimated_not_confidence_calibrated",
+    "weight": 1.0,
+    "sigma": [
+     0.0020096255504439787,
+     0.0032621037036117038,
+     0.003292549336435767
+    ],
+    "contrast": -115.70128481582177,
+    "endpoint_identifiability": 0.06878779883527648,
+    "grid_contrast_range": 0.015098685475990692
+   },
+   "lower": "training_100",
+   "upper": "dataset1_100",
+   "metrics": {
+    "normalized_covariance_squared_error": 0.0004157532735744308,
+    "mean_abs_log_hh_factor_error": 0.022209476455423687,
+    "gaussian_hh_factor_ratio": [
+     1.046872453722592,
+     0.9871380747593348,
+     0.9921549645401202
+    ]
+   },
+   "sigma_ratio_to_differential": [
+    1.0533937419912978,
+    1.0532369279857137,
+    1.1849490461302907
+   ],
+   "subregion_weight_diagnostic": [
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 1.0,
+     "sigma": [
+      0.00200757568172913,
+      0.0033151168546721546,
+      0.00327549334911628
+     ],
+     "contrast": -115.64184646336591,
+     "endpoint_identifiability": 0.06878779883527648,
+     "grid_contrast_range": 0.018132761650491602
+    },
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 1.0,
+     "sigma": [
+      0.0020558740647689325,
+      0.003335072654042319,
+      0.0034228759376839666
+     ],
+     "contrast": -115.19912185235788,
+     "endpoint_identifiability": 0.06878779883527648,
+     "grid_contrast_range": 0.01288879269795018
+    },
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 1.0,
+     "sigma": [
+      0.002013868296253654,
+      0.003185474032113219,
+      0.0032590666811607113
+     ],
+     "contrast": -115.89258567532471,
+     "endpoint_identifiability": 0.06878779883527648,
+     "grid_contrast_range": 0.007194646670157567
+    },
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 1.0,
+     "sigma": [
+      0.0019485975367916804,
+      0.0032575665137899866,
+      0.003260081967636701
+     ],
+     "contrast": -115.95412575563549,
+     "endpoint_identifiability": 0.06878779883527648,
+     "grid_contrast_range": 0.021803418283809606
+    }
+   ],
+   "challenges": [
+    {
+     "kind": "weak_stripes",
+     "axis": 0,
+     "angle": 0.0,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.8034049601039575,
+      "sigma": [
+       0.002443851143584064,
+       0.00326403758044471,
+       0.0033000234714917203
+      ],
+      "contrast": -114.38004459241084,
+      "endpoint_identifiability": 0.06878779883527648,
+      "grid_contrast_range": 0.004871345614915867
+     },
+     "sigma_ratio_to_same_original": [
+      1.2160728863365384,
+      1.000592831193829,
+      1.0022700145972738
+     ]
+    },
+    {
+     "kind": "weak_stripes",
+     "axis": 0,
+     "angle": 0.7853981633974483,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 1.0,
+      "sigma": [
+       0.0023608684444875795,
+       0.0032621037036117038,
+       0.003292549336435767
+      ],
+      "contrast": -114.73479806645027,
+      "endpoint_identifiability": 0.06878779883527648,
+      "grid_contrast_range": 0.009483890832484576
+     },
+     "sigma_ratio_to_same_original": [
+      1.1747802688744686,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "kind": "weak_stripes",
+     "axis": 1,
+     "angle": 0.0,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.0,
+      "sigma": [
+       0.0017962434124688684,
+       0.0039054613385142824,
+       0.003332091337151422
+      ],
+      "contrast": -114.63088855541626,
+      "endpoint_identifiability": 0.06878779883527648,
+      "grid_contrast_range": 0.0407345716752161
+     },
+     "sigma_ratio_to_same_original": [
+      0.8938199517178866,
+      1.1972216990496876,
+      1.0120095393189947
+     ]
+    },
+    {
+     "kind": "weak_stripes",
+     "axis": 1,
+     "angle": 0.7853981633974483,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 1.0,
+      "sigma": [
+       0.0020096255504439787,
+       0.0036787213741450984,
+       0.003292549336435767
+      ],
+      "contrast": -114.98012715173881,
+      "endpoint_identifiability": 0.06878779883527648,
+      "grid_contrast_range": 0.01771376116366241
+     },
+     "sigma_ratio_to_same_original": [
+      1.0,
+      1.1277144163357309,
+      1.0
+     ]
+    },
+    {
+     "kind": "localized_gaussian",
+     "axis": 0,
+     "width": 1.5,
+     "amplitude_sigma": 3.0,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 1.0,
+      "sigma": [
+       0.002011128374203206,
+       0.0032621037036117038,
+       0.003292549336435767
+      ],
+      "contrast": -115.69679961571042,
+      "endpoint_identifiability": 0.06878779883527648,
+      "grid_contrast_range": 0.0152527243516829
+     },
+     "sigma_ratio_to_same_original": [
+      1.0007478128245808,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "kind": "localized_gaussian",
+     "axis": 1,
+     "width": 1.5,
+     "amplitude_sigma": 3.0,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 1.0,
+      "sigma": [
+       0.0020096255504439787,
+       0.003269355337303641,
+       0.003292549336435767
+      ],
+      "contrast": -115.68796166099311,
+      "endpoint_identifiability": 0.06878779883527648,
+      "grid_contrast_range": 0.014709459677533232
+     },
+     "sigma_ratio_to_same_original": [
+      1.0,
+      1.002222992998018,
+      1.0
+     ]
+    }
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "b": "6V1A9661.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "status": "predicted_held_capture",
+   "input_band_energy": [
+    [
+     1.442761953245758e-06,
+     1.2589146618802426e-06,
+     3.7952102140597156e-07
+    ],
+    [
+     4.701553947507043e-06,
+     4.218485867117561e-06,
+     1.4315223381477445e-06
+    ],
+    [
+     8.140004608874351e-06,
+     8.123514642506337e-06,
+     3.290015374859536e-06
+    ]
+   ],
+   "prediction": {
+    "status": "estimated_not_confidence_calibrated",
+    "weight": 1.0,
+    "sigma": [
+     0.0019679306719960587,
+     0.003246983724319175,
+     0.003227657004290269
+    ],
+    "contrast": -115.97438865326669,
+    "endpoint_identifiability": 0.06878779883527648,
+    "grid_contrast_range": 0.011422785797748247
+   },
+   "lower": "training_100",
+   "upper": "dataset1_100",
+   "metrics": {
+    "normalized_covariance_squared_error": 0.0002713399222606366,
+    "mean_abs_log_hh_factor_error": 0.026288318482777243,
+    "gaussian_hh_factor_ratio": [
+     1.0163267463609271,
+     0.9552745643166674,
+     0.9832286522465508
+    ]
+   },
+   "sigma_ratio_to_differential": [
+    1.0246839445833817,
+    1.0477250923077406,
+    1.1739611758759052
+   ],
+   "subregion_weight_diagnostic": [
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 1.0,
+     "sigma": [
+      0.0020322404758538978,
+      0.003265829336443064,
+      0.0032498974933806075
+     ],
+     "contrast": -115.70552552271887,
+     "endpoint_identifiability": 0.06878779883527648,
+     "grid_contrast_range": 0.014381578954825613
+    },
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 0.8513355967103551,
+     "sigma": [
+      0.0018975290035384057,
+      0.003203887776702558,
+      0.0033033991506477983
+     ],
+     "contrast": -116.03470883488161,
+     "endpoint_identifiability": 0.06878779883527648,
+     "grid_contrast_range": 0.004736507030344228
+    },
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 1.0,
+     "sigma": [
+      0.001999864475885836,
+      0.0031971192272180066,
+      0.003243312270055911
+     ],
+     "contrast": -115.94163373559701,
+     "endpoint_identifiability": 0.06878779883527648,
+     "grid_contrast_range": 0.01920723370093924
+    },
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 1.0,
+     "sigma": [
+      0.0019257772111661178,
+      0.003361962739590326,
+      0.003157685129879446
+     ],
+     "contrast": -116.02701915054115,
+     "endpoint_identifiability": 0.06878779883527648,
+     "grid_contrast_range": 0.010333978384664988
+    }
+   ],
+   "challenges": [
+    {
+     "kind": "weak_stripes",
+     "axis": 0,
+     "angle": 0.0,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.5438508148845735,
+      "sigma": [
+       0.0023332334417547284,
+       0.0032513679829955333,
+       0.003244500687801076
+      ],
+      "contrast": -114.62229066749263,
+      "endpoint_identifiability": 0.06878779883527648,
+      "grid_contrast_range": 0.002096358593789205
+     },
+     "sigma_ratio_to_same_original": [
+      1.185627865329293,
+      1.0013502558215863,
+      1.0052185481568885
+     ]
+    },
+    {
+     "kind": "weak_stripes",
+     "axis": 0,
+     "angle": 0.7853981633974483,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.8263491687819294,
+      "sigma": [
+       0.0022568851686707394,
+       0.00324843995908431,
+       0.00323398294657504
+      ],
+      "contrast": -115.02242711818963,
+      "endpoint_identifiability": 0.06878779883527648,
+      "grid_contrast_range": 0.005147104886361831
+     },
+     "sigma_ratio_to_same_original": [
+      1.1468316444204796,
+      1.0004484884707698,
+      1.0019599177596512
+     ]
+    },
+    {
+     "kind": "weak_stripes",
+     "axis": 1,
+     "angle": 0.0,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.0,
+      "sigma": [
+       0.0017590920502011814,
+       0.003824679235044079,
+       0.0032655843280789444
+      ],
+      "contrast": -115.00266314057987,
+      "endpoint_identifiability": 0.06878779883527648,
+      "grid_contrast_range": 0.03945963883973036
+     },
+     "sigma_ratio_to_same_original": [
+      0.8938790757384488,
+      1.177917587451423,
+      1.0117507293179733
+     ]
+    },
+    {
+     "kind": "weak_stripes",
+     "axis": 1,
+     "angle": 0.7853981633974483,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.9999999999998184,
+      "sigma": [
+       0.0019679306719960136,
+       0.0037053849041514273,
+       0.003227657004290276
+      ],
+      "contrast": -115.18202469006955,
+      "endpoint_identifiability": 0.06878779883527648,
+      "grid_contrast_range": 0.016948626997645988
+     },
+     "sigma_ratio_to_same_original": [
+      0.9999999999999771,
+      1.1411775416054386,
+      1.0000000000000022
+     ]
+    },
+    {
+     "kind": "localized_gaussian",
+     "axis": 0,
+     "width": 1.5,
+     "amplitude_sigma": 3.0,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 1.0,
+      "sigma": [
+       0.001970882064460159,
+       0.003246983724319175,
+       0.003227657004290269
+      ],
+      "contrast": -115.96539692947391,
+      "endpoint_identifiability": 0.06878779883527648,
+      "grid_contrast_range": 0.011531038469087207
+     },
+     "sigma_ratio_to_same_original": [
+      1.0014997441251865,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "kind": "localized_gaussian",
+     "axis": 1,
+     "width": 1.5,
+     "amplitude_sigma": 3.0,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 1.0,
+      "sigma": [
+       0.0019679306719960587,
+       0.003252463219112756,
+       0.003227657004290269
+      ],
+      "contrast": -115.96427179968299,
+      "endpoint_identifiability": 0.06878779883527648,
+      "grid_contrast_range": 0.011222924269503665
+     },
+     "sigma_ratio_to_same_original": [
+      1.0,
+      1.001687564601122,
+      1.0
+     ]
+    }
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 1600,
+   "a": "6V1A9676.CR3",
+   "b": "6V1A9677.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "status": "outside_characterized_light_range"
+  },
+  {
+   "dataset": 0,
+   "iso": 1600,
+   "a": "6V1A9676.CR3",
+   "b": "6V1A9677.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "status": "outside_characterized_light_range"
+  },
+  {
+   "dataset": 0,
+   "iso": 1600,
+   "a": "6V1A9676.CR3",
+   "b": "6V1A9677.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "status": "outside_characterized_light_range"
+  },
+  {
+   "dataset": 0,
+   "iso": 1600,
+   "a": "6V1A9676.CR3",
+   "b": "6V1A9677.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "status": "outside_characterized_light_range"
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "b": "6V1A9703.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "status": "predicted_held_capture",
+   "input_band_energy": [
+    [
+     8.326220374552642e-05,
+     9.024894479428814e-05,
+     2.2384303819247783e-05
+    ],
+    [
+     0.00029603212942666204,
+     0.0003082909221963767,
+     9.743956309351649e-05
+    ],
+    [
+     0.00045046951908305226,
+     0.0004247224896355783,
+     0.0001761133482818006
+    ]
+   ],
+   "prediction": {
+    "status": "estimated_not_confidence_calibrated",
+    "weight": 1.0,
+    "sigma": [
+     0.014322019867411008,
+     0.02898921670388356,
+     0.023751433981696213
+    ],
+    "contrast": -78.94984422158095,
+    "endpoint_identifiability": 0.05192601464908036,
+    "grid_contrast_range": 0.005179473441330629
+   },
+   "lower": "training_6400",
+   "upper": "dataset2_6400",
+   "metrics": {
+    "normalized_covariance_squared_error": 0.0003488347221802124,
+    "mean_abs_log_hh_factor_error": 0.04572645573943648,
+    "gaussian_hh_factor_ratio": [
+     0.9458235683035027,
+     1.0816234529237325,
+     0.9969875192276525
+    ]
+   },
+   "sigma_ratio_to_differential": [
+    0.8238846308619406,
+    0.9257750249333705,
+    0.9589952255297537
+   ],
+   "subregion_weight_diagnostic": [
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 1.0,
+     "sigma": [
+      0.013937213744129312,
+      0.029192002087967513,
+      0.02404813872971184
+     ],
+     "contrast": -78.99694512555457,
+     "endpoint_identifiability": 0.05192601464908036,
+     "grid_contrast_range": 0.01001727661279972
+    },
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 0.5458421658060649,
+     "sigma": [
+      0.014375593712114842,
+      0.03033352587193756,
+      0.02445691032185751
+     ],
+     "contrast": -78.26470956448414,
+     "endpoint_identifiability": 0.05192601464908036,
+     "grid_contrast_range": 0.0010299289355373276
+    },
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 1.0,
+     "sigma": [
+      0.013941489809166136,
+      0.028514277528948768,
+      0.02368635667276794
+     ],
+     "contrast": -79.22699393401379,
+     "endpoint_identifiability": 0.05192601464908036,
+     "grid_contrast_range": 0.009175744791392049
+    },
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 0.2292815135553055,
+     "sigma": [
+      0.014409942586276436,
+      0.027013110469963644,
+      0.022392981704873076
+     ],
+     "contrast": -79.32994522701611,
+     "endpoint_identifiability": 0.05192601464908036,
+     "grid_contrast_range": 0.002214568204763623
+    }
+   ],
+   "challenges": [
+    {
+     "kind": "weak_stripes",
+     "axis": 0,
+     "angle": 0.0,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 1.0,
+      "sigma": [
+       0.019372445378976963,
+       0.02898921670388356,
+       0.023751433981696213
+      ],
+      "contrast": -77.13752315342379,
+      "endpoint_identifiability": 0.05192601464908036,
+      "grid_contrast_range": 0.07336408979811893
+     },
+     "sigma_ratio_to_same_original": [
+      1.3526336060361102,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "kind": "weak_stripes",
+     "axis": 0,
+     "angle": 0.7853981633974483,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.8282434494640961,
+      "sigma": [
+       0.01787010229081785,
+       0.02883670295576301,
+       0.02372636387618593
+      ],
+      "contrast": -77.5774641779324,
+      "endpoint_identifiability": 0.05192601464908036,
+      "grid_contrast_range": 0.002456909903131077
+     },
+     "sigma_ratio_to_same_original": [
+      1.247736175222066,
+      0.9947389489796004,
+      0.9989444803404458
+     ]
+    },
+    {
+     "kind": "weak_stripes",
+     "axis": 1,
+     "angle": 0.0,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 1.0,
+      "sigma": [
+       0.014322019867411008,
+       0.03788220852009061,
+       0.023751433981696213
+      ],
+      "contrast": -77.34449834172611,
+      "endpoint_identifiability": 0.05192601464908036,
+      "grid_contrast_range": 0.05535270187374408
+     },
+     "sigma_ratio_to_same_original": [
+      1.0,
+      1.3067689585077922,
+      1.0
+     ]
+    },
+    {
+     "kind": "weak_stripes",
+     "axis": 1,
+     "angle": 0.7853981633974483,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.8024275514233635,
+      "sigma": [
+       0.0142018198904713,
+       0.03476582499078735,
+       0.02372261922722726
+      ],
+      "contrast": -77.82277632869018,
+      "endpoint_identifiability": 0.05192601464908036,
+      "grid_contrast_range": 0.002389690069861672
+     },
+     "sigma_ratio_to_same_original": [
+      0.9916073306661711,
+      1.1992674843860103,
+      0.9987868204298251
+     ]
+    },
+    {
+     "kind": "localized_gaussian",
+     "axis": 0,
+     "width": 1.5,
+     "amplitude_sigma": 3.0,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.9999999999998184,
+      "sigma": [
+       0.014365680182614313,
+       0.028989216703883398,
+       0.023751433981696185
+      ],
+      "contrast": -78.93158119645041,
+      "endpoint_identifiability": 0.05192601464908036,
+      "grid_contrast_range": 0.004834707493046153
+     },
+     "sigma_ratio_to_same_original": [
+      1.0030484746989252,
+      0.9999999999999943,
+      0.9999999999999988
+     ]
+    },
+    {
+     "kind": "localized_gaussian",
+     "axis": 1,
+     "width": 1.5,
+     "amplitude_sigma": 3.0,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 1.0,
+      "sigma": [
+       0.014322019867411008,
+       0.028934900380583366,
+       0.023751433981696213
+      ],
+      "contrast": -78.96109680691939,
+      "endpoint_identifiability": 0.05192601464908036,
+      "grid_contrast_range": 0.004961816155329757
+     },
+     "sigma_ratio_to_same_original": [
+      1.0,
+      0.9981263266318984,
+      1.0
+     ]
+    }
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "b": "6V1A9703.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "status": "predicted_held_capture",
+   "input_band_energy": [
+    [
+     7.87326780053348e-05,
+     8.40866329253208e-05,
+     2.328924507761857e-05
+    ],
+    [
+     0.000339241743642698,
+     0.00032440144519214464,
+     0.00010324006931379455
+    ],
+    [
+     0.0004507270506312691,
+     0.0004488662860082734,
+     0.00017624655087987353
+    ]
+   ],
+   "prediction": {
+    "status": "estimated_not_confidence_calibrated",
+    "weight": 0.8381026167337423,
+    "sigma": [
+     0.01399713104065979,
+     0.030032918896836246,
+     0.023944141656509745
+    ],
+    "contrast": -78.74912711966326,
+    "endpoint_identifiability": 0.05192601464908036,
+    "grid_contrast_range": 0.00263525560171729
+   },
+   "lower": "training_6400",
+   "upper": "dataset2_6400",
+   "metrics": {
+    "normalized_covariance_squared_error": 0.0004191752586587143,
+    "mean_abs_log_hh_factor_error": 0.047667078664090264,
+    "gaussian_hh_factor_ratio": [
+     0.9368421550897257,
+     1.0734575774019675,
+     0.9931476374639858
+    ]
+   },
+   "sigma_ratio_to_differential": [
+    0.7690173615599737,
+    0.9026741858344708,
+    0.9471803717354854
+   ],
+   "subregion_weight_diagnostic": [
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 0.17520087029132378,
+     "sigma": [
+      0.013949119079309855,
+      0.030512165425275902,
+      0.02399793168475255
+     ],
+     "contrast": -78.3544267247532,
+     "endpoint_identifiability": 0.05192601464908036,
+     "grid_contrast_range": 0.0027304338081677315
+    },
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 0.9831488704276243,
+     "sigma": [
+      0.013942275725575968,
+      0.031067395434913138,
+      0.024503839080181024
+     ],
+     "contrast": -78.50040943614556,
+     "endpoint_identifiability": 0.05192601464908036,
+     "grid_contrast_range": 0.003791002413493061
+    },
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 0.0035839153165985104,
+     "sigma": [
+      0.013360781527106761,
+      0.028424851098223222,
+      0.02389996355444687
+     ],
+     "contrast": -78.9860106876382,
+     "endpoint_identifiability": 0.05192601464908036,
+     "grid_contrast_range": 0.0035747129371088704
+    },
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 1.0,
+     "sigma": [
+      0.014156393704526371,
+      0.02890232000938463,
+      0.0230889809344401
+     ],
+     "contrast": -79.20737203824459,
+     "endpoint_identifiability": 0.05192601464908036,
+     "grid_contrast_range": 0.006463536198467068
+    }
+   ],
+   "challenges": [
+    {
+     "kind": "weak_stripes",
+     "axis": 0,
+     "angle": 0.0,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 1.0,
+      "sigma": [
+       0.020052154654647762,
+       0.030184453256033476,
+       0.023967171369331592
+      ],
+      "contrast": -76.63394255112648,
+      "endpoint_identifiability": 0.05192601464908036,
+      "grid_contrast_range": 0.07945718711145844
+     },
+     "sigma_ratio_to_same_original": [
+      1.4325903355765508,
+      1.0050456087774136,
+      1.000961809913766
+     ]
+    },
+    {
+     "kind": "weak_stripes",
+     "axis": 0,
+     "angle": 0.7853981633974483,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.2930009015127126,
+      "sigma": [
+       0.017699187171030112,
+       0.029543487039733092,
+       0.023868371111380796
+      ],
+      "contrast": -77.2051383573263,
+      "endpoint_identifiability": 0.05192601464908036,
+      "grid_contrast_range": 0.001961119506646014
+     },
+     "sigma_ratio_to_same_original": [
+      1.2644867808707618,
+      0.9837034868710443,
+      0.9968355288648091
+     ]
+    },
+    {
+     "kind": "weak_stripes",
+     "axis": 1,
+     "angle": 0.0,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 1.0,
+      "sigma": [
+       0.014095059049066187,
+       0.03953489975996379,
+       0.023967171369331592
+      ],
+      "contrast": -77.12987541354688,
+      "endpoint_identifiability": 0.05192601464908036,
+      "grid_contrast_range": 0.05390931680021538
+     },
+     "sigma_ratio_to_same_original": [
+      1.0069962914630097,
+      1.316385526687135,
+      1.000961809913766
+     ]
+    },
+    {
+     "kind": "weak_stripes",
+     "axis": 1,
+     "angle": 0.7853981633974483,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.9117378985050074,
+      "sigma": [
+       0.01404133638321429,
+       0.0365232309736113,
+       0.02395458606740982
+      ],
+      "contrast": -77.58885839954894,
+      "endpoint_identifiability": 0.05192601464908036,
+      "grid_contrast_range": 0.003140906058703763
+     },
+     "sigma_ratio_to_same_original": [
+      1.0031581716586127,
+      1.2161066028603287,
+      1.0004361990105934
+     ]
+    },
+    {
+     "kind": "localized_gaussian",
+     "axis": 0,
+     "width": 1.5,
+     "amplitude_sigma": 3.0,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.8499937934958011,
+      "sigma": [
+       0.014005665615648283,
+       0.03004394901557042,
+       0.02394582490316326
+      ],
+      "contrast": -78.74851251296157,
+      "endpoint_identifiability": 0.05192601464908036,
+      "grid_contrast_range": 0.0027136510528720237
+     },
+     "sigma_ratio_to_same_original": [
+      1.0006097374500318,
+      1.0003672676229727,
+      1.0000702988930512
+     ]
+    },
+    {
+     "kind": "localized_gaussian",
+     "axis": 1,
+     "width": 1.5,
+     "amplitude_sigma": 3.0,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.83488342848879,
+      "sigma": [
+       0.013995211005276868,
+       0.03003403635404482,
+       0.023943686191386274
+      ],
+      "contrast": -78.74830778107946,
+      "endpoint_identifiability": 0.05192601464908036,
+      "grid_contrast_range": 0.0026133388849274297
+     },
+     "sigma_ratio_to_same_original": [
+      0.9998628265051357,
+      1.0000372077456878,
+      0.999980978014163
+     ]
+    }
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "b": "6V1A9703.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "status": "predicted_held_capture",
+   "input_band_energy": [
+    [
+     8.792086550159189e-05,
+     8.565561076773705e-05,
+     2.9227832166904216e-05
+    ],
+    [
+     0.0002365509941226462,
+     0.00023203616691784077,
+     7.367765252188237e-05
+    ],
+    [
+     0.00039396358011663935,
+     0.0003853568433128594,
+     0.00016110495839171218
+    ]
+   ],
+   "prediction": {
+    "status": "estimated_not_confidence_calibrated",
+    "weight": 0.0,
+    "sigma": [
+     0.014343853647268673,
+     0.024663619169028952,
+     0.022386246551933768
+    ],
+    "contrast": -79.80262172003407,
+    "endpoint_identifiability": 0.05192601464908036,
+    "grid_contrast_range": 0.003828970030298251
+   },
+   "lower": "training_6400",
+   "upper": "dataset2_6400",
+   "metrics": {
+    "normalized_covariance_squared_error": 0.0010375435636919743,
+    "mean_abs_log_hh_factor_error": 0.01807964264200761,
+    "gaussian_hh_factor_ratio": [
+     0.9837170609888477,
+     1.037477296204615,
+     0.998970654843347
+    ]
+   },
+   "sigma_ratio_to_differential": [
+    0.8534092781095687,
+    0.8580491841996849,
+    0.9729362500227986
+   ],
+   "subregion_weight_diagnostic": [
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 0.0,
+     "sigma": [
+      0.013999386293760427,
+      0.02475272390535366,
+      0.022712882131838738
+     ],
+     "contrast": -79.83991933649224,
+     "endpoint_identifiability": 0.05192601464908036,
+     "grid_contrast_range": 0.01844088616920203
+    },
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 0.965378708867009,
+     "sigma": [
+      0.015262660063355492,
+      0.026416619975245092,
+      0.023169316180049377
+     ],
+     "contrast": -79.25793700254845,
+     "endpoint_identifiability": 0.05192601464908036,
+     "grid_contrast_range": 0.0035604707661462953
+    },
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 0.0,
+     "sigma": [
+      0.013980113046781196,
+      0.023017498873097602,
+      0.021543368694906383
+     ],
+     "contrast": -80.60145534578442,
+     "endpoint_identifiability": 0.05192601464908036,
+     "grid_contrast_range": 0.00594853846864396
+    },
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 0.6811481228995202,
+     "sigma": [
+      0.0151837510103566,
+      0.025504354718883744,
+      0.022454741382469678
+     ],
+     "contrast": -79.55263463682604,
+     "endpoint_identifiability": 0.05192601464908036,
+     "grid_contrast_range": 0.0016338813313581113
+    }
+   ],
+   "challenges": [
+    {
+     "kind": "weak_stripes",
+     "axis": 0,
+     "angle": 0.0,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 1.0,
+      "sigma": [
+       0.019988052346869248,
+       0.025411713658353246,
+       0.022519784133504517
+      ],
+      "contrast": -78.05959943084265,
+      "endpoint_identifiability": 0.05192601464908036,
+      "grid_contrast_range": 0.06592382147050557
+     },
+     "sigma_ratio_to_same_original": [
+      1.3934924908185558,
+      1.0303319023942643,
+      1.0059651617461174
+     ]
+    },
+    {
+     "kind": "weak_stripes",
+     "axis": 0,
+     "angle": 0.7853981633974483,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.6934066610749845,
+      "sigma": [
+       0.01750981921605327,
+       0.025173027915889695,
+       0.022477928307691034
+      ],
+      "contrast": -78.775445396184,
+      "endpoint_identifiability": 0.05192601464908036,
+      "grid_contrast_range": 0.0016697252255539752
+     },
+     "sigma_ratio_to_same_original": [
+      1.220719316206036,
+      1.020654257729556,
+      1.004095450103463
+     ]
+    },
+    {
+     "kind": "weak_stripes",
+     "axis": 1,
+     "angle": 0.0,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 1.0,
+      "sigma": [
+       0.014958342324184182,
+       0.03384642545572546,
+       0.022519784133504517
+      ],
+      "contrast": -78.07905379674928,
+      "endpoint_identifiability": 0.05192601464908036,
+      "grid_contrast_range": 0.049621992957995076
+     },
+     "sigma_ratio_to_same_original": [
+      1.0428398596378958,
+      1.372321929874254,
+      1.0059651617461174
+     ]
+    },
+    {
+     "kind": "weak_stripes",
+     "axis": 1,
+     "angle": 0.7853981633974483,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.15620281761140903,
+      "sigma": [
+       0.014433524949767507,
+       0.03039367719258696,
+       0.022406543318404373
+      ],
+      "contrast": -78.5760934288696,
+      "endpoint_identifiability": 0.05192601464908036,
+      "grid_contrast_range": 0.0026590731310562887
+     },
+     "sigma_ratio_to_same_original": [
+      1.0062515489005919,
+      1.2323283531215672,
+      1.0009066623305305
+     ]
+    },
+    {
+     "kind": "localized_gaussian",
+     "axis": 0,
+     "width": 1.5,
+     "amplitude_sigma": 3.0,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.0,
+      "sigma": [
+       0.01437025747018579,
+       0.024663619169028952,
+       0.022386246551933768
+      ],
+      "contrast": -79.79158721637091,
+      "endpoint_identifiability": 0.05192601464908036,
+      "grid_contrast_range": 0.0037946336173604323
+     },
+     "sigma_ratio_to_same_original": [
+      1.0018407760959096,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "kind": "localized_gaussian",
+     "axis": 1,
+     "width": 1.5,
+     "amplitude_sigma": 3.0,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.0,
+      "sigma": [
+       0.014343853647268673,
+       0.02467465870047351,
+       0.022386246551933768
+      ],
+      "contrast": -79.79993669766876,
+      "endpoint_identifiability": 0.05192601464908036,
+      "grid_contrast_range": 0.003774432769091618
+     },
+     "sigma_ratio_to_same_original": [
+      1.0,
+      1.0004476038722825,
+      1.0
+     ]
+    }
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "b": "6V1A9703.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "status": "predicted_held_capture",
+   "input_band_energy": [
+    [
+     8.648033344900502e-05,
+     8.77582110402531e-05,
+     2.5896547458676253e-05
+    ],
+    [
+     0.0002710833129442326,
+     0.0002460700598413115,
+     7.944892461036255e-05
+    ],
+    [
+     0.00038790737523607756,
+     0.0004307930128486912,
+     0.00014770934063139605
+    ]
+   ],
+   "prediction": {
+    "status": "estimated_not_confidence_calibrated",
+    "weight": 0.6575963913951438,
+    "sigma": [
+     0.014457137556211017,
+     0.026306093398044756,
+     0.022505402386706112
+    ],
+    "contrast": -79.63657661577848,
+    "endpoint_identifiability": 0.05192601464908036,
+    "grid_contrast_range": 0.0016515380294919169
+   },
+   "lower": "training_6400",
+   "upper": "dataset2_6400",
+   "metrics": {
+    "normalized_covariance_squared_error": 0.0004550761818091676,
+    "mean_abs_log_hh_factor_error": 0.034785908268317955,
+    "gaussian_hh_factor_ratio": [
+     0.9527153781324625,
+     1.0556378786761902,
+     0.9982281341281497
+    ]
+   },
+   "sigma_ratio_to_differential": [
+    0.8142286714749831,
+    0.8740951803846299,
+    0.9626642253414909
+   ],
+   "subregion_weight_diagnostic": [
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 0.0,
+     "sigma": [
+      0.014050540006048044,
+      0.026478907943300337,
+      0.022635287065507836
+     ],
+     "contrast": -79.43409078647815,
+     "endpoint_identifiability": 0.05192601464908036,
+     "grid_contrast_range": 0.009263230408379286
+    },
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 0.9999999999998184,
+     "sigma": [
+      0.014567726882952102,
+      0.02762155077210404,
+      0.023380961349521365
+     ],
+     "contrast": -79.23207265582052,
+     "endpoint_identifiability": 0.05192601464908036,
+     "grid_contrast_range": 0.006297915623278527
+    },
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 1.0,
+     "sigma": [
+      0.014660922018641453,
+      0.025923836657537707,
+      0.021584397237855293
+     ],
+     "contrast": -80.05411939587546,
+     "endpoint_identifiability": 0.05192601464908036,
+     "grid_contrast_range": 0.008532283391048168
+    },
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 0.608859917174419,
+     "sigma": [
+      0.014619826310945237,
+      0.02540147250683749,
+      0.02205126945087909
+     ],
+     "contrast": -79.87890474279536,
+     "endpoint_identifiability": 0.05192601464908036,
+     "grid_contrast_range": 0.001489216175869501
+    }
+   ],
+   "challenges": [
+    {
+     "kind": "weak_stripes",
+     "axis": 0,
+     "angle": 0.0,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 1.0,
+      "sigma": [
+       0.020094854606482495,
+       0.02658760978897924,
+       0.02254719460233582
+      ],
+      "contrast": -77.74891590694006,
+      "endpoint_identifiability": 0.05192601464908036,
+      "grid_contrast_range": 0.07359379770602459
+     },
+     "sigma_ratio_to_same_original": [
+      1.3899608085176878,
+      1.0107015658568068,
+      1.0018569859321598
+     ]
+    },
+    {
+     "kind": "weak_stripes",
+     "axis": 0,
+     "angle": 0.7853981633974483,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.4733870235322992,
+      "sigma": [
+       0.017847525720450775,
+       0.026159294279907673,
+       0.02248333206368869
+      ],
+      "contrast": -78.32629845047902,
+      "endpoint_identifiability": 0.05192601464908036,
+      "grid_contrast_range": 0.00111427345774473
+     },
+     "sigma_ratio_to_same_original": [
+      1.2345131013008308,
+      0.9944195773992046,
+      0.9990193322190739
+     ]
+    },
+    {
+     "kind": "weak_stripes",
+     "axis": 1,
+     "angle": 0.0,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 1.0,
+      "sigma": [
+       0.014671949320373356,
+       0.036238171034287926,
+       0.02254719460233582
+      ],
+      "contrast": -77.778067682997,
+      "endpoint_identifiability": 0.05192601464908036,
+      "grid_contrast_range": 0.05865778445254932
+     },
+     "sigma_ratio_to_same_original": [
+      1.0148585266846308,
+      1.3775580617752003,
+      1.0018569859321598
+     ]
+    },
+    {
+     "kind": "weak_stripes",
+     "axis": 1,
+     "angle": 0.7853981633974483,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.6919272419264637,
+      "sigma": [
+       0.014478123189809991,
+       0.032937266132443535,
+       0.022509547432226933
+      ],
+      "contrast": -78.29406410686852,
+      "endpoint_identifiability": 0.05192601464908036,
+      "grid_contrast_range": 0.0018247418344543576
+     },
+     "sigma_ratio_to_same_original": [
+      1.0014515759788118,
+      1.252077442061072,
+      1.0001841800226272
+     ]
+    },
+    {
+     "kind": "localized_gaussian",
+     "axis": 0,
+     "width": 1.5,
+     "amplitude_sigma": 3.0,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.6690822875649736,
+      "sigma": [
+       0.014490039435531028,
+       0.02631535204563828,
+       0.022506788056879598
+      ],
+      "contrast": -79.62584432670823,
+      "endpoint_identifiability": 0.05192601464908036,
+      "grid_contrast_range": 0.001710311092310235
+     },
+     "sigma_ratio_to_same_original": [
+      1.0022758225265607,
+      1.0003519582878928,
+      1.0000615705575788
+     ]
+    },
+    {
+     "kind": "localized_gaussian",
+     "axis": 1,
+     "width": 1.5,
+     "amplitude_sigma": 3.0,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.6822039803538594,
+      "sigma": [
+       0.014472167495589104,
+       0.02635162399123618,
+       0.02250837244481673
+      ],
+      "contrast": -79.63072433599794,
+      "endpoint_identifiability": 0.05192601464908036,
+      "grid_contrast_range": 0.0017842433996122509
+     },
+     "sigma_ratio_to_same_original": [
+      1.0010396206939063,
+      1.0017308002561418,
+      1.0001319708956802
+     ]
+    }
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 51200,
+   "a": "6V1A9815.CR3",
+   "b": "6V1A9816.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "status": "predicted_held_capture",
+   "input_band_energy": [
+    [
+     0.006107940913490724,
+     0.0061783119477175266,
+     0.0017873592827641464
+    ],
+    [
+     0.0034144087108950566,
+     0.003546361168191217,
+     0.00129700092873179
+    ],
+    [
+     0.012802693912603382,
+     0.012957430123485532,
+     0.0049900487217848025
+    ]
+   ],
+   "prediction": {
+    "status": "estimated_not_confidence_calibrated",
+    "weight": 0.03326111435034613,
+    "sigma": [
+     0.12871774748562348,
+     0.0943945229535334,
+     0.1290449458952414
+    ],
+    "contrast": -48.48000865574909,
+    "endpoint_identifiability": 0.09008901659967293,
+    "grid_contrast_range": 0.010136379806027662
+   },
+   "lower": "dataset2_51200",
+   "upper": "training_51200",
+   "metrics": {
+    "normalized_covariance_squared_error": 0.0006884082353642471,
+    "mean_abs_log_hh_factor_error": 0.022277802700263638,
+    "gaussian_hh_factor_ratio": [
+     0.9641370201193694,
+     1.0114065147537608,
+     1.0191506656770863
+    ]
+   },
+   "sigma_ratio_to_differential": [
+    0.8269398487856076,
+    0.8774034839557444,
+    0.9851421611803018
+   ],
+   "subregion_weight_diagnostic": [
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 0.03730500717538114,
+     "sigma": [
+      0.13305811734438203,
+      0.09022980455044967,
+      0.13065893943361032
+     ],
+     "contrast": -48.47615200227821,
+     "endpoint_identifiability": 0.09008901659967293,
+     "grid_contrast_range": 0.009466845436747917
+    },
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 0.46495628313424897,
+     "sigma": [
+      0.12437886748242387,
+      0.09674691707520594,
+      0.13006329398035998
+     ],
+     "contrast": -48.38875501633767,
+     "endpoint_identifiability": 0.09008901659967293,
+     "grid_contrast_range": 0.00349910925303476
+    },
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 0.0,
+     "sigma": [
+      0.1273757343592415,
+      0.09411478995816004,
+      0.127004736556658
+     ],
+     "contrast": -48.66488203475464,
+     "endpoint_identifiability": 0.09008901659967293,
+     "grid_contrast_range": 0.017952986755688016
+    },
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 0.0,
+     "sigma": [
+      0.12894060454739747,
+      0.09519372916339734,
+      0.1283623087574992
+     ],
+     "contrast": -48.45943066318195,
+     "endpoint_identifiability": 0.09008901659967293,
+     "grid_contrast_range": 0.012001040513965222
+    }
+   ],
+   "challenges": [
+    {
+     "kind": "weak_stripes",
+     "axis": 0,
+     "angle": 0.0,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 1.0,
+      "sigma": [
+       0.1809478720803011,
+       0.08878423225625938,
+       0.12799685719676993
+      ],
+      "contrast": -46.64671374996736,
+      "endpoint_identifiability": 0.09008901659967293,
+      "grid_contrast_range": 0.017818144091179988
+     },
+     "sigma_ratio_to_same_original": [
+      1.4057725186692784,
+      0.9405655061148438,
+      0.9918781112177588
+     ]
+    },
+    {
+     "kind": "weak_stripes",
+     "axis": 0,
+     "angle": 0.7853981633974483,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.0,
+      "sigma": [
+       0.1633647876316352,
+       0.09460999793853715,
+       0.12908291898634083
+      ],
+      "contrast": -47.042944313725684,
+      "endpoint_identifiability": 0.09008901659967293,
+      "grid_contrast_range": 0.017999610780819353
+     },
+     "sigma_ratio_to_same_original": [
+      1.269170653020334,
+      1.0022827064353068,
+      1.0002942625209843
+     ]
+    },
+    {
+     "kind": "weak_stripes",
+     "axis": 1,
+     "angle": 0.0,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 1.0,
+      "sigma": [
+       0.13353308064646024,
+       0.11647961167080022,
+       0.12799685719676993
+      ],
+      "contrast": -46.84082915171632,
+      "endpoint_identifiability": 0.09008901659967293,
+      "grid_contrast_range": 0.06583766947221648
+     },
+     "sigma_ratio_to_same_original": [
+      1.037410017304526,
+      1.2339657855799369,
+      0.9918781112177588
+     ]
+    },
+    {
+     "kind": "weak_stripes",
+     "axis": 1,
+     "angle": 0.7853981633974483,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.10521077463317535,
+      "sigma": [
+       0.1290400986146732,
+       0.11233519941309626,
+       0.12896325786403914
+      ],
+      "contrast": -47.406596677577944,
+      "endpoint_identifiability": 0.09008901659967293,
+      "grid_contrast_range": 0.008892831543732882
+     },
+     "sigma_ratio_to_same_original": [
+      1.0025043254356647,
+      1.1900605659969734,
+      0.9993669800034743
+     ]
+    },
+    {
+     "kind": "localized_gaussian",
+     "axis": 0,
+     "width": 1.5,
+     "amplitude_sigma": 3.0,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.050353235559878196,
+      "sigma": [
+       0.12899116443390266,
+       0.09428445721611091,
+       0.12902548420654425
+      ],
+      "contrast": -48.47082114519589,
+      "endpoint_identifiability": 0.09008901659967293,
+      "grid_contrast_range": 0.009758758779454979
+     },
+     "sigma_ratio_to_same_original": [
+      1.0021241588951026,
+      0.9988339817398445,
+      0.9998491867421685
+     ]
+    },
+    {
+     "kind": "localized_gaussian",
+     "axis": 1,
+     "width": 1.5,
+     "amplitude_sigma": 3.0,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.046609824258492645,
+      "sigma": [
+       0.12877716918472332,
+       0.09434911773609501,
+       0.12902974358476443
+      ],
+      "contrast": -48.4774247714158,
+      "endpoint_identifiability": 0.09008901659967293,
+      "grid_contrast_range": 0.00990244653283412
+     },
+     "sigma_ratio_to_same_original": [
+      1.000461643403964,
+      0.9995189846188349,
+      0.9998821936777802
+     ]
+    }
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 51200,
+   "a": "6V1A9815.CR3",
+   "b": "6V1A9816.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "status": "predicted_held_capture",
+   "input_band_energy": [
+    [
+     0.006021180130541997,
+     0.006041002872203926,
+     0.0015963489723792676
+    ],
+    [
+     0.0031886899171496993,
+     0.003396752372168089,
+     0.0012203916940361915
+    ],
+    [
+     0.012452103183294164,
+     0.012044647004960852,
+     0.004671051623843427
+    ]
+   ],
+   "prediction": {
+    "status": "estimated_not_confidence_calibrated",
+    "weight": 0.47158634581792735,
+    "sigma": [
+     0.12748235538979813,
+     0.08910675610959623,
+     0.12504405390180998
+    ],
+    "contrast": -48.96915061842391,
+    "endpoint_identifiability": 0.09008901659967293,
+    "grid_contrast_range": 0.0029168613180985403
+   },
+   "lower": "dataset2_51200",
+   "upper": "training_51200",
+   "metrics": {
+    "normalized_covariance_squared_error": 0.0005461251358111873,
+    "mean_abs_log_hh_factor_error": 0.02095339681405048,
+    "gaussian_hh_factor_ratio": [
+     1.017436048414257,
+     0.9695592147702577,
+     0.9854462672268246
+    ]
+   },
+   "sigma_ratio_to_differential": [
+    0.8441224259356539,
+    0.8225100749971725,
+    0.9512478266682028
+   ],
+   "subregion_weight_diagnostic": [
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 0.7425679011637772,
+     "sigma": [
+      0.12810246080726742,
+      0.08791836587730184,
+      0.12467410291561304
+     ],
+     "contrast": -48.98271275846114,
+     "endpoint_identifiability": 0.09008901659967293,
+     "grid_contrast_range": 0.005708057243339226
+    },
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 0.24497286006658836,
+     "sigma": [
+      0.1262383192663403,
+      0.09012914594831309,
+      0.12137995003702046
+     ],
+     "contrast": -49.18940141123083,
+     "endpoint_identifiability": 0.09008901659967293,
+     "grid_contrast_range": 0.007153973077080877
+    },
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 0.7845230811984054,
+     "sigma": [
+      0.1314554139111576,
+      0.08792150810922236,
+      0.12594949896643054
+     ],
+     "contrast": -48.75834852849377,
+     "endpoint_identifiability": 0.09008901659967293,
+     "grid_contrast_range": 0.005722897708807295
+    },
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 0.19140999603856088,
+     "sigma": [
+      0.12466487999572155,
+      0.09002411919222016,
+      0.13011850023002042
+     ],
+     "contrast": -48.86734746297068,
+     "endpoint_identifiability": 0.09008901659967293,
+     "grid_contrast_range": 0.005759242289876454
+    }
+   ],
+   "challenges": [
+    {
+     "kind": "weak_stripes",
+     "axis": 0,
+     "angle": 0.0,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 1.0,
+      "sigma": [
+       0.17667646750335664,
+       0.08626030098975326,
+       0.12450727264189833
+      ],
+      "contrast": -47.12893355758167,
+      "endpoint_identifiability": 0.09008901659967293,
+      "grid_contrast_range": 0.023294760977861984
+     },
+     "sigma_ratio_to_same_original": [
+      1.3858895763506995,
+      0.9680556756398809,
+      0.9957072628152863
+     ]
+    },
+    {
+     "kind": "weak_stripes",
+     "axis": 0,
+     "angle": 0.7853981633974483,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.0,
+      "sigma": [
+       0.16012571159205113,
+       0.09193973156559851,
+       0.1255487058877238
+      ],
+      "contrast": -47.501449589542574,
+      "endpoint_identifiability": 0.09008901659967293,
+      "grid_contrast_range": 0.01355641920637396
+     },
+     "sigma_ratio_to_same_original": [
+      1.2560617593112444,
+      1.0317930489189606,
+      1.0040357935476891
+     ]
+    },
+    {
+     "kind": "weak_stripes",
+     "axis": 1,
+     "angle": 0.0,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 1.0,
+      "sigma": [
+       0.13007399681501433,
+       0.11515793402447212,
+       0.12450727264189833
+      ],
+      "contrast": -47.2326234755319,
+      "endpoint_identifiability": 0.09008901659967293,
+      "grid_contrast_range": 0.07826324812342733
+     },
+     "sigma_ratio_to_same_original": [
+      1.0203294127825913,
+      1.292359177376342,
+      0.9957072628152863
+     ]
+    },
+    {
+     "kind": "weak_stripes",
+     "axis": 1,
+     "angle": 0.7853981633974483,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.5085574485273748,
+      "sigma": [
+       0.12765311145201966,
+       0.10844894416515519,
+       0.12500553518034904
+      ],
+      "contrast": -47.77633706245274,
+      "endpoint_identifiability": 0.09008901659967293,
+      "grid_contrast_range": 0.00263262884584492
+     },
+     "sigma_ratio_to_same_original": [
+      1.0013394485981955,
+      1.2170675816294914,
+      0.9996919587916497
+     ]
+    },
+    {
+     "kind": "localized_gaussian",
+     "axis": 0,
+     "width": 1.5,
+     "amplitude_sigma": 3.0,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.46290901252936256,
+      "sigma": [
+       0.12745544976905873,
+       0.08915620841150937,
+       0.1250531159879491
+      ],
+      "contrast": -48.9685397999906,
+      "endpoint_identifiability": 0.09008901659967293,
+      "grid_contrast_range": 0.0030027777677474887
+     },
+     "sigma_ratio_to_same_original": [
+      0.9997889463160833,
+      1.0005549781416385,
+      1.0000724711480182
+     ]
+    },
+    {
+     "kind": "localized_gaussian",
+     "axis": 1,
+     "width": 1.5,
+     "amplitude_sigma": 3.0,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.4424064100633319,
+      "sigma": [
+       0.127348620485171,
+       0.08945125514904469,
+       0.12507456027856625
+      ],
+      "contrast": -48.957202213590755,
+      "endpoint_identifiability": 0.09008901659967293,
+      "grid_contrast_range": 0.003210671506550966
+     },
+     "sigma_ratio_to_same_original": [
+      0.998950953610653,
+      1.0038661382648106,
+      1.0002439650331574
+     ]
+    }
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 51200,
+   "a": "6V1A9815.CR3",
+   "b": "6V1A9816.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "status": "reference_unmeasurable_or_not_quiet_stable"
+  },
+  {
+   "dataset": 0,
+   "iso": 51200,
+   "a": "6V1A9815.CR3",
+   "b": "6V1A9816.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "status": "reference_unmeasurable_or_not_quiet_stable"
+  },
+  {
+   "dataset": 1,
+   "iso": 100,
+   "a": "6V1A9658.CR3",
+   "b": "6V1A9659.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "status": "outside_characterized_light_range"
+  },
+  {
+   "dataset": 1,
+   "iso": 100,
+   "a": "6V1A9658.CR3",
+   "b": "6V1A9659.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "status": "outside_characterized_light_range"
+  },
+  {
+   "dataset": 1,
+   "iso": 100,
+   "a": "6V1A9658.CR3",
+   "b": "6V1A9659.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "status": "outside_characterized_light_range"
+  },
+  {
+   "dataset": 1,
+   "iso": 100,
+   "a": "6V1A9658.CR3",
+   "b": "6V1A9659.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "status": "outside_characterized_light_range"
+  },
+  {
+   "dataset": 1,
+   "iso": 1600,
+   "a": "6V1A9664.CR3",
+   "b": "6V1A9665.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "status": "reference_unmeasurable_or_not_quiet_stable"
+  },
+  {
+   "dataset": 1,
+   "iso": 1600,
+   "a": "6V1A9664.CR3",
+   "b": "6V1A9665.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "status": "reference_unmeasurable_or_not_quiet_stable"
+  },
+  {
+   "dataset": 1,
+   "iso": 1600,
+   "a": "6V1A9664.CR3",
+   "b": "6V1A9665.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "status": "reference_unmeasurable_or_not_quiet_stable"
+  },
+  {
+   "dataset": 1,
+   "iso": 1600,
+   "a": "6V1A9664.CR3",
+   "b": "6V1A9665.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "status": "reference_unmeasurable_or_not_quiet_stable"
+  },
+  {
+   "dataset": 1,
+   "iso": 6400,
+   "a": "6V1A9694.CR3",
+   "b": "6V1A9695.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "status": "outside_characterized_light_range"
+  },
+  {
+   "dataset": 1,
+   "iso": 6400,
+   "a": "6V1A9694.CR3",
+   "b": "6V1A9695.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "status": "outside_characterized_light_range"
+  },
+  {
+   "dataset": 1,
+   "iso": 6400,
+   "a": "6V1A9694.CR3",
+   "b": "6V1A9695.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "status": "outside_characterized_light_range"
+  },
+  {
+   "dataset": 1,
+   "iso": 6400,
+   "a": "6V1A9694.CR3",
+   "b": "6V1A9695.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "status": "outside_characterized_light_range"
+  },
+  {
+   "dataset": 1,
+   "iso": 51200,
+   "a": "6V1A9716.CR3",
+   "b": "6V1A9717.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "status": "reference_unmeasurable_or_not_quiet_stable"
+  },
+  {
+   "dataset": 1,
+   "iso": 51200,
+   "a": "6V1A9716.CR3",
+   "b": "6V1A9717.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "status": "reference_unmeasurable_or_not_quiet_stable"
+  },
+  {
+   "dataset": 1,
+   "iso": 51200,
+   "a": "6V1A9716.CR3",
+   "b": "6V1A9717.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "status": "reference_unmeasurable_or_not_quiet_stable"
+  },
+  {
+   "dataset": 1,
+   "iso": 51200,
+   "a": "6V1A9716.CR3",
+   "b": "6V1A9717.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "status": "reference_unmeasurable_or_not_quiet_stable"
+  },
+  {
+   "dataset": 2,
+   "iso": 100,
+   "a": "6V1A9749.CR3",
+   "b": "6V1A9750.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "status": "reference_unmeasurable_or_not_quiet_stable"
+  },
+  {
+   "dataset": 2,
+   "iso": 100,
+   "a": "6V1A9749.CR3",
+   "b": "6V1A9750.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "status": "reference_unmeasurable_or_not_quiet_stable"
+  },
+  {
+   "dataset": 2,
+   "iso": 100,
+   "a": "6V1A9749.CR3",
+   "b": "6V1A9750.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "status": "reference_unmeasurable_or_not_quiet_stable"
+  },
+  {
+   "dataset": 2,
+   "iso": 100,
+   "a": "6V1A9749.CR3",
+   "b": "6V1A9750.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "status": "reference_unmeasurable_or_not_quiet_stable"
+  },
+  {
+   "dataset": 2,
+   "iso": 1600,
+   "a": "6V1A9672.CR3",
+   "b": "6V1A9673.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "status": "outside_characterized_light_range"
+  },
+  {
+   "dataset": 2,
+   "iso": 1600,
+   "a": "6V1A9672.CR3",
+   "b": "6V1A9673.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "status": "outside_characterized_light_range"
+  },
+  {
+   "dataset": 2,
+   "iso": 1600,
+   "a": "6V1A9672.CR3",
+   "b": "6V1A9673.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "status": "outside_characterized_light_range"
+  },
+  {
+   "dataset": 2,
+   "iso": 1600,
+   "a": "6V1A9672.CR3",
+   "b": "6V1A9673.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "status": "outside_characterized_light_range"
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "b": "6V1A9701.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "status": "predicted_held_capture",
+   "input_band_energy": [
+    [
+     0.00043961620787074296,
+     0.0004679840955298908,
+     0.00013232688885706284
+    ],
+    [
+     0.000583889860316903,
+     0.000611321927033308,
+     0.000166938637263006
+    ],
+    [
+     0.0013202163798781926,
+     0.0012951683798146673,
+     0.0004988380864411141
+    ]
+   ],
+   "prediction": {
+    "status": "estimated_not_confidence_calibrated",
+    "weight": 0.0,
+    "sigma": [
+     0.03382780772114637,
+     0.037804891661302666,
+     0.04083432858220316
+    ],
+    "contrast": -68.7499584326866,
+    "endpoint_identifiability": 0.21815396709175072,
+    "grid_contrast_range": 0.03614379758245434
+   },
+   "lower": "dataset0_6400",
+   "upper": "dataset1_6400",
+   "metrics": {
+    "normalized_covariance_squared_error": 0.0004267500952062505,
+    "mean_abs_log_hh_factor_error": 0.03650596291599082,
+    "gaussian_hh_factor_ratio": [
+     0.9871864291090294,
+     0.9113776598109035,
+     1.0038309228692344
+    ]
+   },
+   "sigma_ratio_to_differential": [
+    0.8798730323929196,
+    0.8085241049093507,
+    0.9748918246970103
+   ],
+   "subregion_weight_diagnostic": [
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 0.05564764978326206,
+     "sigma": [
+      0.03182046031860172,
+      0.03893490219201774,
+      0.0412495654260142
+     ],
+     "contrast": -68.67492833110042,
+     "endpoint_identifiability": 0.21815396709175072,
+     "grid_contrast_range": 0.027982431390313423
+    },
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 0.0,
+     "sigma": [
+      0.0344172582989308,
+      0.039770722789484785,
+      0.041265890865591515
+     ],
+     "contrast": -68.27907457665032,
+     "endpoint_identifiability": 0.21815396709175072,
+     "grid_contrast_range": 0.04202866650146575
+    },
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 0.0,
+     "sigma": [
+      0.034443516667468026,
+      0.03660079550701909,
+      0.04010485368060969
+     ],
+     "contrast": -68.94409845012291,
+     "endpoint_identifiability": 0.21815396709175072,
+     "grid_contrast_range": 0.05087057613700097
+    },
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 0.03869641383304017,
+     "sigma": [
+      0.033025800883747874,
+      0.03656979697525902,
+      0.040425279184432436
+     ],
+     "contrast": -69.01003262508054,
+     "endpoint_identifiability": 0.21815396709175072,
+     "grid_contrast_range": 0.0297862468574408
+    }
+   ],
+   "challenges": [
+    {
+     "kind": "weak_stripes",
+     "axis": 0,
+     "angle": 0.0,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.0,
+      "sigma": [
+       0.04421293447085244,
+       0.037804891661302666,
+       0.04083432858220316
+      ],
+      "contrast": -67.14355321185145,
+      "endpoint_identifiability": 0.21815396709175072,
+      "grid_contrast_range": 0.15390652828634188
+     },
+     "sigma_ratio_to_same_original": [
+      1.3069996978614178,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "kind": "weak_stripes",
+     "axis": 0,
+     "angle": 0.7853981633974483,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.15118979582306352,
+      "sigma": [
+       0.03773747693156274,
+       0.037895646270783616,
+       0.04031288535295787
+      ],
+      "contrast": -67.62628721907167,
+      "endpoint_identifiability": 0.21815396709175072,
+      "grid_contrast_range": 0.018443692703598913
+     },
+     "sigma_ratio_to_same_original": [
+      1.1155756010748625,
+      1.00240060493478,
+      0.9872302729749658
+     ]
+    },
+    {
+     "kind": "weak_stripes",
+     "axis": 1,
+     "angle": 0.0,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.0,
+      "sigma": [
+       0.03382780772114637,
+       0.052049921215889805,
+       0.04083432858220316
+      ],
+      "contrast": -66.83136976376193,
+      "endpoint_identifiability": 0.21815396709175072,
+      "grid_contrast_range": 0.04550333011779628
+     },
+     "sigma_ratio_to_same_original": [
+      1.0,
+      1.3768038718959865,
+      1.0
+     ]
+    },
+    {
+     "kind": "weak_stripes",
+     "axis": 1,
+     "angle": 0.7853981633974483,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.0,
+      "sigma": [
+       0.03382780772114637,
+       0.04782845959754961,
+       0.04083432858220316
+      ],
+      "contrast": -67.33886434401671,
+      "endpoint_identifiability": 0.21815396709175072,
+      "grid_contrast_range": 0.03529852988411619
+     },
+     "sigma_ratio_to_same_original": [
+      1.0,
+      1.265139443489191,
+      1.0
+     ]
+    },
+    {
+     "kind": "localized_gaussian",
+     "axis": 0,
+     "width": 1.5,
+     "amplitude_sigma": 3.0,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.0,
+      "sigma": [
+       0.03387698220472563,
+       0.037804891661302666,
+       0.04083432858220316
+      ],
+      "contrast": -68.74124274348115,
+      "endpoint_identifiability": 0.21815396709175072,
+      "grid_contrast_range": 0.03659902883579491
+     },
+     "sigma_ratio_to_same_original": [
+      1.0014536704235941,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "kind": "localized_gaussian",
+     "axis": 1,
+     "width": 1.5,
+     "amplitude_sigma": 3.0,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.0,
+      "sigma": [
+       0.03382780772114637,
+       0.03788003729195345,
+       0.04083432858220316
+      ],
+      "contrast": -68.73804393561835,
+      "endpoint_identifiability": 0.21815396709175072,
+      "grid_contrast_range": 0.036152453250196004
+     },
+     "sigma_ratio_to_same_original": [
+      1.0,
+      1.001987722417618,
+      1.0
+     ]
+    }
+   ]
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "b": "6V1A9701.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "status": "predicted_held_capture",
+   "input_band_energy": [
+    [
+     0.0004910425789341947,
+     0.0004778440678387259,
+     0.00014394984355233306
+    ],
+    [
+     0.0006105487136399972,
+     0.0006364049446899148,
+     0.00018112268607901728
+    ],
+    [
+     0.0013364814079113154,
+     0.0011680403946889482,
+     0.0005099646169421065
+    ]
+   ],
+   "prediction": {
+    "status": "estimated_not_confidence_calibrated",
+    "weight": 0.020663215301447956,
+    "sigma": [
+     0.03466204689395889,
+     0.03887347565176114,
+     0.04033543230522835
+    ],
+    "contrast": -68.43287599607802,
+    "endpoint_identifiability": 0.21815396709175072,
+    "grid_contrast_range": 0.031484567630059246
+   },
+   "lower": "dataset0_6400",
+   "upper": "dataset1_6400",
+   "metrics": {
+    "normalized_covariance_squared_error": 0.000398768284634668,
+    "mean_abs_log_hh_factor_error": 0.03816867424031583,
+    "gaussian_hh_factor_ratio": [
+     0.9840129994147931,
+     0.9147404713906342,
+     0.9907679200398805
+    ]
+   },
+   "sigma_ratio_to_differential": [
+    0.8865199524918554,
+    0.8190950065990943,
+    0.9521224461727505
+   ],
+   "subregion_weight_diagnostic": [
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 0.158829240512618,
+     "sigma": [
+      0.031352343167309955,
+      0.0384201175820834,
+      0.03940648354969095
+     ],
+     "contrast": -68.76767018431299,
+     "endpoint_identifiability": 0.21815396709175072,
+     "grid_contrast_range": 0.017310672150259165
+    },
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 0.0,
+     "sigma": [
+      0.036362303204743845,
+      0.03894634791460382,
+      0.04115568193025946
+     ],
+     "contrast": -68.09094953235339,
+     "endpoint_identifiability": 0.21815396709175072,
+     "grid_contrast_range": 0.03570958188738871
+    },
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 0.010199003720473169,
+     "sigma": [
+      0.03415534878017455,
+      0.039874658384540386,
+      0.04026864652755128
+     ],
+     "contrast": -68.41759201181371,
+     "endpoint_identifiability": 0.21815396709175072,
+     "grid_contrast_range": 0.03388508320199435
+    },
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 0.0,
+     "sigma": [
+      0.03581376784649961,
+      0.03874589643002276,
+      0.04065161780648879
+     ],
+     "contrast": -68.28705191781127,
+     "endpoint_identifiability": 0.21815396709175072,
+     "grid_contrast_range": 0.06230365476577049
+    }
+   ],
+   "challenges": [
+    {
+     "kind": "weak_stripes",
+     "axis": 0,
+     "angle": 0.0,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.0,
+      "sigma": [
+       0.04576943647597301,
+       0.038860791938819236,
+       0.040407362758630216
+      ],
+      "contrast": -66.83374092413165,
+      "endpoint_identifiability": 0.21815396709175072,
+      "grid_contrast_range": 0.15024209462148974
+     },
+     "sigma_ratio_to_same_original": [
+      1.3204481724923747,
+      0.9996737180627858,
+      1.001783306866716
+     ]
+    },
+    {
+     "kind": "weak_stripes",
+     "axis": 0,
+     "angle": 0.7853981633974483,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.14727949482653163,
+      "sigma": [
+       0.039191485644540516,
+       0.03895147699103072,
+       0.03990311250504779
+      ],
+      "contrast": -67.30862102840354,
+      "endpoint_identifiability": 0.21815396709175072,
+      "grid_contrast_range": 0.018309640742273814
+     },
+     "sigma_ratio_to_same_original": [
+      1.1306743010428228,
+      1.0020065439984924,
+      0.9892818850456571
+     ]
+    },
+    {
+     "kind": "weak_stripes",
+     "axis": 1,
+     "angle": 0.0,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.0,
+      "sigma": [
+       0.03506158018033905,
+       0.052262004692219206,
+       0.040407362758630216
+      ],
+      "contrast": -66.65510170598351,
+      "endpoint_identifiability": 0.21815396709175072,
+      "grid_contrast_range": 0.040359312084319754
+     },
+     "sigma_ratio_to_same_original": [
+      1.0115265347024212,
+      1.3444129658072266,
+      1.001783306866716
+     ]
+    },
+    {
+     "kind": "weak_stripes",
+     "axis": 1,
+     "angle": 0.7853981633974483,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.022867965957337585,
+      "sigma": [
+       0.03462031362253288,
+       0.04818653499808253,
+       0.04032778063019597
+      ],
+      "contrast": -67.14447942312248,
+      "endpoint_identifiability": 0.21815396709175072,
+      "grid_contrast_range": 0.03078184793066896
+     },
+     "sigma_ratio_to_same_original": [
+      0.9987959951830403,
+      1.2395736216064195,
+      0.9998102989209469
+     ]
+    },
+    {
+     "kind": "localized_gaussian",
+     "axis": 0,
+     "width": 1.5,
+     "amplitude_sigma": 3.0,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.015784794180189323,
+      "sigma": [
+       0.034772976725927274,
+       0.038870479974192296,
+       0.0403523789596588
+      ],
+      "contrast": -68.42976831155282,
+      "endpoint_identifiability": 0.21815396709175072,
+      "grid_contrast_range": 0.032149038585032486
+     },
+     "sigma_ratio_to_same_original": [
+      1.0032003254830204,
+      0.9999229377482044,
+      1.0004201431213682
+     ]
+    },
+    {
+     "kind": "localized_gaussian",
+     "axis": 1,
+     "width": 1.5,
+     "amplitude_sigma": 3.0,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.020461133758809567,
+      "sigma": [
+       0.03466588050322695,
+       0.038948656016443685,
+       0.040336133860912796
+      ],
+      "contrast": -68.42126418522231,
+      "endpoint_identifiability": 0.21815396709175072,
+      "grid_contrast_range": 0.031549874618619356
+     },
+     "sigma_ratio_to_same_original": [
+      1.0001105996215338,
+      1.0019339758902968,
+      1.0000173930374452
+     ]
+    }
+   ]
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "b": "6V1A9701.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "status": "predicted_held_capture",
+   "input_band_energy": [
+    [
+     0.0004704527326545654,
+     0.000460186400178797,
+     0.00013565198955254443
+    ],
+    [
+     0.0005296388881931404,
+     0.0005173020993352336,
+     0.00015364293709384488
+    ],
+    [
+     0.0013109801135876295,
+     0.001273793399709092,
+     0.0004848588721529447
+    ]
+   ],
+   "prediction": {
+    "status": "estimated_not_confidence_calibrated",
+    "weight": 0.0,
+    "sigma": [
+     0.03425320596313112,
+     0.03566783915248926,
+     0.04048114869542382
+    ],
+    "contrast": -69.07623129517248,
+    "endpoint_identifiability": 0.21815396709175072,
+    "grid_contrast_range": 0.03665255831998593
+   },
+   "lower": "dataset0_6400",
+   "upper": "dataset1_6400",
+   "metrics": {
+    "normalized_covariance_squared_error": 0.00046775897559396984,
+    "mean_abs_log_hh_factor_error": 0.04671437265046499,
+    "gaussian_hh_factor_ratio": [
+     1.0850296755116418,
+     0.9434168947265055,
+     0.9997112610159702
+    ]
+   },
+   "sigma_ratio_to_differential": [
+    0.9570924609593275,
+    0.8251217617072338,
+    0.9880010387169716
+   ],
+   "subregion_weight_diagnostic": [
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 0.0,
+     "sigma": [
+      0.03449154402869227,
+      0.036375646204456984,
+      0.039415803481568645
+     ],
+     "contrast": -69.07674406692759,
+     "endpoint_identifiability": 0.21815396709175072,
+     "grid_contrast_range": 0.0470116130875482
+    },
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 0.07035276177874325,
+     "sigma": [
+      0.03290028149943716,
+      0.03641898237737683,
+      0.04193270177462465
+     ],
+     "contrast": -68.72483961563374,
+     "endpoint_identifiability": 0.21815396709175072,
+     "grid_contrast_range": 0.025501863613001774
+    },
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 0.0,
+     "sigma": [
+      0.034279702553923035,
+      0.03395865235510105,
+      0.0405098479532274
+     ],
+     "contrast": -69.36197401858303,
+     "endpoint_identifiability": 0.21815396709175072,
+     "grid_contrast_range": 0.04862411880266393
+    },
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 0.05142289296450898,
+     "sigma": [
+      0.03315238473940408,
+      0.03604848643272252,
+      0.04052170996996842
+     ],
+     "contrast": -69.01298815280589,
+     "endpoint_identifiability": 0.21815396709175072,
+     "grid_contrast_range": 0.028695614451777374
+    }
+   ],
+   "challenges": [
+    {
+     "kind": "weak_stripes",
+     "axis": 0,
+     "angle": 0.0,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.0,
+      "sigma": [
+       0.04313640566699326,
+       0.03566783915248926,
+       0.04048114869542382
+      ],
+      "contrast": -67.69270836800959,
+      "endpoint_identifiability": 0.21815396709175072,
+      "grid_contrast_range": 0.1416065599241847
+     },
+     "sigma_ratio_to_same_original": [
+      1.2593392196170978,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "kind": "weak_stripes",
+     "axis": 0,
+     "angle": 0.7853981633974483,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.07242078742080263,
+      "sigma": [
+       0.038111242003719036,
+       0.035708549540707686,
+       0.04023127816079318
+      ],
+      "contrast": -68.2021320447463,
+      "endpoint_identifiability": 0.21815396709175072,
+      "grid_contrast_range": 0.025620119581134304
+     },
+     "sigma_ratio_to_same_original": [
+      1.1126328450755987,
+      1.001141375232864,
+      0.9938274840837488
+     ]
+    },
+    {
+     "kind": "weak_stripes",
+     "axis": 1,
+     "angle": 0.0,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.0,
+      "sigma": [
+       0.03425320596313112,
+       0.04832551929717501,
+       0.04048114869542382
+      ],
+      "contrast": -67.25396918148569,
+      "endpoint_identifiability": 0.21815396709175072,
+      "grid_contrast_range": 0.04591800001082902
+     },
+     "sigma_ratio_to_same_original": [
+      1.0,
+      1.3548765623443262,
+      1.0
+     ]
+    },
+    {
+     "kind": "weak_stripes",
+     "axis": 1,
+     "angle": 0.7853981633974483,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.0,
+      "sigma": [
+       0.03425320596313112,
+       0.044450255617971085,
+       0.04048114869542382
+      ],
+      "contrast": -67.75550353152565,
+      "endpoint_identifiability": 0.21815396709175072,
+      "grid_contrast_range": 0.03621634169344645
+     },
+     "sigma_ratio_to_same_original": [
+      1.0,
+      1.246227881311641,
+      1.0
+     ]
+    },
+    {
+     "kind": "localized_gaussian",
+     "axis": 0,
+     "width": 1.5,
+     "amplitude_sigma": 3.0,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.0,
+      "sigma": [
+       0.034290030287942926,
+       0.03566783915248926,
+       0.04048114869542382
+      ],
+      "contrast": -69.0697843871415,
+      "endpoint_identifiability": 0.21815396709175072,
+      "grid_contrast_range": 0.03557913045402472
+     },
+     "sigma_ratio_to_same_original": [
+      1.0010750621372915,
+      1.0,
+      1.0
+     ]
+    },
+    {
+     "kind": "localized_gaussian",
+     "axis": 1,
+     "width": 1.5,
+     "amplitude_sigma": 3.0,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.0,
+      "sigma": [
+       0.03425320596313112,
+       0.0356934167459676,
+       0.04048114869542382
+      ],
+      "contrast": -69.07193020586261,
+      "endpoint_identifiability": 0.21815396709175072,
+      "grid_contrast_range": 0.0366231410706348
+     },
+     "sigma_ratio_to_same_original": [
+      1.0,
+      1.0007171052154011,
+      1.0
+     ]
+    }
+   ]
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "b": "6V1A9701.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "status": "predicted_held_capture",
+   "input_band_energy": [
+    [
+     0.00047729599239558664,
+     0.00043849833447489093,
+     0.00014614443561631035
+    ],
+    [
+     0.000527045312292183,
+     0.0005226125976560959,
+     0.00015631049932252771
+    ],
+    [
+     0.0012399465773438039,
+     0.0012859895044236233,
+     0.0005192475232459207
+    ]
+   ],
+   "prediction": {
+    "status": "estimated_not_confidence_calibrated",
+    "weight": 0.1458865788561534,
+    "sigma": [
+     0.03199169028455701,
+     0.035883735374604465,
+     0.04015070693439751
+    ],
+    "contrast": -68.98615503897774,
+    "endpoint_identifiability": 0.21815396709175072,
+    "grid_contrast_range": 0.017869125300180144
+   },
+   "lower": "dataset0_6400",
+   "upper": "dataset1_6400",
+   "metrics": {
+    "normalized_covariance_squared_error": 0.0003222693850730735,
+    "mean_abs_log_hh_factor_error": 0.03991099944893051,
+    "gaussian_hh_factor_ratio": [
+     0.9470163738334768,
+     0.9498019805349753,
+     0.9863023336504069
+    ]
+   },
+   "sigma_ratio_to_differential": [
+    0.850921628917981,
+    0.8058851860341211,
+    0.9591101415853936
+   ],
+   "subregion_weight_diagnostic": [
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 0.6755546541282555,
+     "sigma": [
+      0.025891040528100318,
+      0.037406580226339234,
+      0.03914448642102191
+     ],
+     "contrast": -68.73774276695117,
+     "endpoint_identifiability": 0.21815396709175072,
+     "grid_contrast_range": 0.023106007137982942
+    },
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 0.03603152095282364,
+     "sigma": [
+      0.034824737124985496,
+      0.03876721213193586,
+      0.04132055341572392
+     ],
+     "contrast": -68.21995629838332,
+     "endpoint_identifiability": 0.21815396709175072,
+     "grid_contrast_range": 0.03007326095881524
+    },
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 0.5783143690948002,
+     "sigma": [
+      0.026808645603526717,
+      0.035341131408579265,
+      0.03839481006344657
+     ],
+     "contrast": -69.20969548344443,
+     "endpoint_identifiability": 0.21815396709175072,
+     "grid_contrast_range": 0.019371794552711208
+    },
+    {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 0.0,
+     "sigma": [
+      0.034008896600039244,
+      0.03352773017888044,
+      0.03936310815407455
+     ],
+     "contrast": -69.65848287980893,
+     "endpoint_identifiability": 0.21815396709175072,
+     "grid_contrast_range": 0.04692639602926363
+    }
+   ],
+   "challenges": [
+    {
+     "kind": "weak_stripes",
+     "axis": 0,
+     "angle": 0.0,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.0,
+      "sigma": [
+       0.044826227718516326,
+       0.03580127020573827,
+       0.04065471493974705
+      ],
+      "contrast": -67.4140776089236,
+      "endpoint_identifiability": 0.21815396709175072,
+      "grid_contrast_range": 0.13867522297488222
+     },
+     "sigma_ratio_to_same_original": [
+      1.4011834735770365,
+      0.9977018789151879,
+      1.0125529048884006
+     ]
+    },
+    {
+     "kind": "weak_stripes",
+     "axis": 0,
+     "angle": 0.7853981633974483,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.24913752967687797,
+      "sigma": [
+       0.03681191545897362,
+       0.03594245598364405,
+       0.0398053809897793
+      ],
+      "contrast": -67.86331793440968,
+      "endpoint_identifiability": 0.21815396709175072,
+      "grid_contrast_range": 0.011278686574868857
+     },
+     "sigma_ratio_to_same_original": [
+      1.1506711627782735,
+      1.0016364129438193,
+      0.9913992561779188
+     ]
+    },
+    {
+     "kind": "weak_stripes",
+     "axis": 1,
+     "angle": 0.0,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.09942682198742689,
+      "sigma": [
+       0.03272675537579873,
+       0.05016018252740193,
+       0.04030912582292509
+      ],
+      "contrast": -66.97191354023653,
+      "endpoint_identifiability": 0.21815396709175072,
+      "grid_contrast_range": 0.026641830723619364
+     },
+     "sigma_ratio_to_same_original": [
+      1.0229767506719252,
+      1.39785287132903,
+      1.0039456064568533
+     ]
+    },
+    {
+     "kind": "weak_stripes",
+     "axis": 1,
+     "angle": 0.7853981633974483,
+     "period": 4.0,
+     "amplitude_sigma": 0.5,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.14635252350781042,
+      "sigma": [
+       0.03198458956205148,
+       0.04497565730439076,
+       0.040149127830511666
+      ],
+      "contrast": -67.63117568391266,
+      "endpoint_identifiability": 0.21815396709175072,
+      "grid_contrast_range": 0.017796130313811886
+     },
+     "sigma_ratio_to_same_original": [
+      0.9997780447846809,
+      1.2533716692220622,
+      0.9999606705832496
+     ]
+    },
+    {
+     "kind": "localized_gaussian",
+     "axis": 0,
+     "width": 1.5,
+     "amplitude_sigma": 3.0,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.14236904744049428,
+      "sigma": [
+       0.032055929693322376,
+       0.03588174011223636,
+       0.04016263414313473
+      ],
+      "contrast": -68.98419436548647,
+      "endpoint_identifiability": 0.21815396709175072,
+      "grid_contrast_range": 0.01814879964805982
+     },
+     "sigma_ratio_to_same_original": [
+      1.0020080029593301,
+      0.9999443964696743,
+      1.0002970609896533
+     ]
+    },
+    {
+     "kind": "localized_gaussian",
+     "axis": 1,
+     "width": 1.5,
+     "amplitude_sigma": 3.0,
+     "prediction": {
+      "status": "estimated_not_confidence_calibrated",
+      "weight": 0.14560182837298621,
+      "sigma": [
+       0.031996032250710085,
+       0.035863484793676154,
+       0.04015167205843035
+      ],
+      "contrast": -68.98951501035833,
+      "endpoint_identifiability": 0.21815396709175072,
+      "grid_contrast_range": 0.01791407963790448
+     },
+     "sigma_ratio_to_same_original": [
+      1.000135721686302,
+      0.9994356612900829,
+      1.0000240375352398
+     ]
+    }
+   ]
+  },
+  {
+   "dataset": 2,
+   "iso": 51200,
+   "a": "6V1A9817.CR3",
+   "b": "6V1A9818.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "status": "outside_characterized_light_range"
+  },
+  {
+   "dataset": 2,
+   "iso": 51200,
+   "a": "6V1A9817.CR3",
+   "b": "6V1A9818.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "status": "outside_characterized_light_range"
+  },
+  {
+   "dataset": 2,
+   "iso": 51200,
+   "a": "6V1A9817.CR3",
+   "b": "6V1A9818.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "status": "reference_unmeasurable_or_not_quiet_stable"
+  },
+  {
+   "dataset": 2,
+   "iso": 51200,
+   "a": "6V1A9817.CR3",
+   "b": "6V1A9818.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "status": "outside_characterized_light_range"
+  }
+ ],
+ "summaries": [
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "expected_quadrants": 4,
+   "estimated_quadrants": 4,
+   "mean_metrics": {
+    "normalized_covariance_squared_error": 0.0003901401520650301,
+    "mean_abs_log_hh_factor_error": 0.020668587207867167
+   },
+   "original_controls": {
+    "fixed": {
+     "normalized_covariance_squared_error": 0.001658795891184364,
+     "mean_abs_log_hh_factor_error": 0.04800077974264717,
+     "mean_abs_log_sigma_error": 0.525351741353079
+    },
+    "nearest": {
+     "normalized_covariance_squared_error": 0.001658795891184364,
+     "mean_abs_log_hh_factor_error": 0.04800077974264717,
+     "mean_abs_log_sigma_error": 0.525351741353079
+    },
+    "interpolated": {
+     "normalized_covariance_squared_error": 0.0007094411132601594,
+     "mean_abs_log_hh_factor_error": 0.04180091577300314,
+     "mean_abs_log_sigma_error": 0.2854440424867328
+    }
+   },
+   "prediction_screen_passed": true,
+   "texture_screen_passed": false,
+   "maximum_weak_texture_sigma_inflation": 1.2690132457775345
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "expected_quadrants": 4,
+   "estimated_quadrants": 4,
+   "mean_metrics": {
+    "normalized_covariance_squared_error": 0.0005651574315850171,
+    "mean_abs_log_hh_factor_error": 0.03656477132846307
+   },
+   "original_controls": {
+    "fixed": {
+     "normalized_covariance_squared_error": 0.001190106502846297,
+     "mean_abs_log_hh_factor_error": 0.04091977755570719,
+     "mean_abs_log_sigma_error": 0.0797247816384767
+    },
+    "nearest": {
+     "normalized_covariance_squared_error": 0.001190106502846297,
+     "mean_abs_log_hh_factor_error": 0.04091977755570719,
+     "mean_abs_log_sigma_error": 0.0797247816384767
+    },
+    "interpolated": {
+     "normalized_covariance_squared_error": 0.0008167175560486466,
+     "mean_abs_log_hh_factor_error": 0.03716906314495856,
+     "mean_abs_log_sigma_error": 0.050356032469005954
+    }
+   },
+   "prediction_screen_passed": true,
+   "texture_screen_passed": false,
+   "maximum_weak_texture_sigma_inflation": 1.4325903355765508
+  },
+  {
+   "dataset": 0,
+   "iso": 51200,
+   "a": "6V1A9815.CR3",
+   "expected_quadrants": 2,
+   "estimated_quadrants": 2,
+   "mean_metrics": {
+    "normalized_covariance_squared_error": 0.0006172666855877172,
+    "mean_abs_log_hh_factor_error": 0.02161559975715706
+   },
+   "original_controls": {
+    "fixed": {
+     "normalized_covariance_squared_error": 0.0014837329917099025,
+     "mean_abs_log_hh_factor_error": 0.039077968211123595,
+     "mean_abs_log_sigma_error": 0.06240904066069149
+    },
+    "nearest": {
+     "normalized_covariance_squared_error": 0.0005013670810442243,
+     "mean_abs_log_hh_factor_error": 0.016624178152623258,
+     "mean_abs_log_sigma_error": 0.061599681930687655
+    },
+    "interpolated": {
+     "normalized_covariance_squared_error": 0.0005827696043465071,
+     "mean_abs_log_hh_factor_error": 0.011967762073615454,
+     "mean_abs_log_sigma_error": 0.03284412815278149
+    }
+   },
+   "prediction_screen_passed": false,
+   "texture_screen_passed": false,
+   "maximum_weak_texture_sigma_inflation": 1.4057725186692784
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "expected_quadrants": 4,
+   "estimated_quadrants": 4,
+   "mean_metrics": {
+    "normalized_covariance_squared_error": 0.00040388668512699046,
+    "mean_abs_log_hh_factor_error": 0.04032500231392554
+   },
+   "original_controls": {
+    "fixed": {
+     "normalized_covariance_squared_error": 0.001130502982884058,
+     "mean_abs_log_hh_factor_error": 0.03204602996359927,
+     "mean_abs_log_sigma_error": 0.6382144621797657
+    },
+    "nearest": {
+     "normalized_covariance_squared_error": 0.0004010905467633608,
+     "mean_abs_log_hh_factor_error": 0.03764866895163136,
+     "mean_abs_log_sigma_error": 0.5667080946451843
+    },
+    "interpolated": {
+     "normalized_covariance_squared_error": 0.000413353025163535,
+     "mean_abs_log_hh_factor_error": 0.05839869810994752,
+     "mean_abs_log_sigma_error": 0.5817342950105845
+    }
+   },
+   "prediction_screen_passed": false,
+   "texture_screen_passed": false,
+   "maximum_weak_texture_sigma_inflation": 1.4011834735770365
+  }
+ ],
+ "verdict": "a_only_wavelet_contrast_not_retained",
+ "numpy_version": "2.4.2",
+ "commit": "2a40c5c6cff78d40294393a68827f4a24555c724",
+ "runner_sha256": "8956accc755e92a7a6bd5360d36b1bc66a6803600a58e86a7e416bbd8012f1d0",
+ "runner_source": "\"\"\"A-only robust wavelet contrast for correlation weights; paired D used only for evaluation.\"\"\"\nfrom datetime import datetime,timezone\nimport json\nfrom pathlib import Path\nfrom statistics import NormalDist\nimport numpy as np\nfrom study_noise_neighbourhoods import ROOT,sha256,git\nfrom study_noise_signal_covariance_prediction import normalized,physical\nfrom study_noise_shape_only_prediction import shape_errors\n\n\nGAUSSIAN_MAD=NormalDist().inv_cdf(.75)\nSETTINGS=dict(grid_points=257,refinement_iterations=48,minimum_ratio_identifiability=1e-4,\n    texture_sigma_inflation_limit=1.10,\n    screen='All four capture means improve covariance and HH vs fixed and do not worsen vs nearest; all native estimates available. Weak-stripe challenge sigma estimates <=1.10 times same original A estimates. No tuning after result.')\n\n\ndef band_variances(covariance):\n    c=np.asarray(covariance,dtype=float)\n    if c.shape!=(3,3,17,17) or not np.isfinite(c).all():raise ValueError('Finite lag8 covariance required')\n    p=np.array([[0,0],[0,1],[1,0],[1,1]]);delta=p[:,None]-p[None,:]\n    filters=np.array([[.5,.5,-.5,-.5],[.5,-.5,.5,-.5],[.5,-.5,-.5,.5]])\n    out=np.array([[h@c[a,a,delta[:,:,0]+8,delta[:,:,1]+8]@h for h in filters] for a in range(3)])\n    if np.min(out)<=0:raise ValueError('Positive LH/HL/HH variances required')\n    return out\n\n\ndef band_energy(planes):\n    if planes.ndim!=3 or planes.shape[0]!=3 or min(planes.shape[1:])<4 or any(n%2 for n in planes.shape[1:]) or not np.isfinite(planes).all():\n        raise ValueError('Finite three-axis even field required')\n    a,b,c,d=planes[:,::2,::2],planes[:,::2,1::2],planes[:,1::2,::2],planes[:,1::2,1::2]\n    bands=np.stack(((a+b-c-d)*.5,(a-b+c-d)*.5,(a-b-c+d)*.5),axis=1)\n    med=np.median(bands,axis=(-2,-1),keepdims=True)\n    return (np.median(abs(bands-med),axis=(-2,-1))/GAUSSIAN_MAD)**2\n\n\ndef estimate_from_energy(energy,low,high):\n    energy,low,high=[np.asarray(v,dtype=float) for v in (energy,low,high)]\n    if any(v.shape!=(3,3) or not np.isfinite(v).all() for v in (energy,low,high)) or np.min(low)<=0 or np.min(high)<=0:\n        raise ValueError('Finite three-axis three-band moments and positive model variances required')\n    if np.min(energy)<=1e-24:return dict(status='unmeasurable_axis',weight=None)\n    logratio=np.log(high/low);contrast=float(np.max(abs(logratio-logratio.mean(axis=1,keepdims=True))))\n    if contrast<SETTINGS['minimum_ratio_identifiability']:return dict(status='unidentifiable_band_ratios',weight=None)\n    def objective(weights):\n        weights=np.atleast_1d(weights)\n        variance=low[None]*(1-weights[:,None,None])+high[None]*weights[:,None,None]\n        nuisance=np.mean(energy[None]/variance,axis=2)\n        return np.sum(3*np.log(nuisance)+np.log(variance).sum(axis=2),axis=1)\n    grid=np.linspace(0,1,SETTINGS['grid_points']);values=objective(grid);best=int(np.argmin(values))\n    left,right=grid[max(0,best-1)],grid[min(len(grid)-1,best+1)]\n    golden=(np.sqrt(5)-1)/2\n    for _ in range(SETTINGS['refinement_iterations']):\n        x=right-golden*(right-left);y=left+golden*(right-left)\n        if objective(x)[0]<objective(y)[0]:right=y\n        else:left=x\n    candidates=np.array([0.,1.,grid[best],(left+right)/2]);costs=objective(candidates)\n    w=float(candidates[int(np.argmin(costs))]);variance=(1-w)*low+w*high\n    sigma=np.sqrt(np.mean(energy/variance,axis=1))\n    return dict(status='estimated_not_confidence_calibrated',weight=w,sigma=sigma.tolist(),\n        contrast=float(np.min(costs)),endpoint_identifiability=contrast,grid_contrast_range=float(np.ptp(values)))\n\n\ndef estimate(planes,low,high):return estimate_from_energy(band_energy(planes),low,high)\n\n\ndef run():\n    names=('prediction-covariance-luminance-bruit-v001-20261027T192134Z.json',\n        'transport-psd-gaussien-filtre-spectral-bruit-v002-20261027T190615Z.json',\n        'melange-fixe-covariances-bruit-v001-20261026T175757Z.json',\n        'contextes-abstention-axes-bruit-v001-20261026T221702Z.json',\n        'paires-supplementaires-axes-bruit-v001-20261026T222302Z.json',\n        'paires-supplementaires-axes-bruit-v002-20261026T222833Z.json')\n    paths=[ROOT/'docs/validation/raw'/n for n in names];hashes=[sha256(p) for p in paths]\n    parent,spectral,axes=[json.loads(p.read_text(encoding='utf-8')) for p in paths[:3]]\n    matrix=np.asarray(axes['fixed_transform']);anchors={a['id']:a for a in parent['anchors']}\n    inputs={};targets=[r for r in parent['records'] if r['status']=='predicted_held_capture']\n    for dataset,path in enumerate(paths[3:]):\n        wanted=[r for r in targets if r['dataset']==dataset]\n        if not wanted:continue\n        data=json.loads(path.read_text(encoding='utf-8'))\n        for pair in data['records']:\n            # No B pixels are used here: paired reference enters evaluation below, never estimate().\n            matching=[r for r in wanted if r['a']==pair['a']['native']['raw']]\n            if not matching:continue\n            a=np.asarray(pair['a']['native']['original_y_co_cg']).reshape(3,256,256)\n            transformed=np.einsum('ab,byx->ayx',matrix,a)\n            for r in matching:\n                x,y,_,_=r['rect'];inputs[(dataset,r['a'],x,y)]=transformed[:,y:y+128,x:x+128].copy()\n        del data\n    records=[];started=datetime.now(timezone.utc)\n    yy,xx=np.mgrid[:128,:128]\n    for r in parent['records']:\n        row={k:r[k] for k in ('dataset','iso','a','b','rect','status')}\n        if r['status']!='predicted_held_capture':records.append(row);continue\n        for key in ('lower','upper','nearest_id'):\n            if set(anchors[r[key]]['raw_names'])&{r['a'],r['b']}:raise ValueError('Held capture leaked into model')\n        low,high=[normalized(np.asarray(anchors[r[k]]['physical_covariance'])) for k in ('lower','upper')]\n        vl,vh=band_variances(low),band_variances(high);x,y,_,_=r['rect']\n        source=inputs[(r['dataset'],r['a'],x,y)];energy=band_energy(source)\n        prediction=estimate_from_energy(energy,vl,vh)\n        row.update(input_band_energy=energy.tolist(),prediction=prediction,lower=r['lower'],upper=r['upper'])\n        if prediction['weight'] is not None:\n            model=(1-prediction['weight'])*low+prediction['weight']*high\n            reference=next(v for v in spectral['records'] if v['dataset']==r['dataset'] and v['a']==r['a'] and v['rect']==r['rect'])\n            actual=physical(reference)\n            row['metrics']=shape_errors(model,actual)\n            row['sigma_ratio_to_differential']= (np.asarray(prediction['sigma'])/np.asarray(reference['sigma_before_unit_scaling'])).tolist()\n            row['subregion_weight_diagnostic']=[estimate(source[:,sy:sy+64,sx:sx+64],vl,vh)\n                for sy,sx in ((0,0),(0,64),(64,0),(64,64))]\n            # Known reference sigma is used ONLY to specify challenge amplitude, never inside estimator.\n            sigma=np.asarray(reference['sigma_before_unit_scaling']);challenges=[]\n            for axis in (0,1):\n                for angle in (0.,np.pi/4):\n                    pattern=.5*np.cos(2*np.pi*(xx*np.cos(angle)+yy*np.sin(angle))/4+.37)\n                    observed=source.copy();observed[axis]+=sigma[axis]*pattern\n                    measured=estimate(observed,vl,vh)\n                    challenges.append(dict(kind='weak_stripes',axis=axis,angle=float(angle),period=4.,amplitude_sigma=.5,\n                        prediction=measured,sigma_ratio_to_same_original=(np.asarray(measured['sigma'])/prediction['sigma']).tolist()\n                        if measured['weight'] is not None else None))\n            for axis in (0,1):\n                observed=source.copy();observed[axis]+=3*sigma[axis]*np.exp(-((xx-63.5)**2+(yy-63.5)**2)/(2*1.5**2))\n                measured=estimate(observed,vl,vh)\n                challenges.append(dict(kind='localized_gaussian',axis=axis,width=1.5,amplitude_sigma=3.,prediction=measured,\n                    sigma_ratio_to_same_original=(np.asarray(measured['sigma'])/prediction['sigma']).tolist() if measured['weight'] is not None else None))\n            row['challenges']=challenges\n        records.append(row)\n        print('A-only',r['dataset'],r['iso'],r['rect'],prediction['status'],'weight',prediction['weight'],flush=True)\n    summaries=[]\n    for prior in parent['summaries']:\n        if not prior['predicted_quadrants']:continue\n        rows=[r for r in records if r['dataset']==prior['dataset'] and r['a']==prior['a'] and 'metrics' in r]\n        means={k:float(np.mean([r['metrics'][k] for r in rows])) for k in\n            ('normalized_covariance_squared_error','mean_abs_log_hh_factor_error')} if rows else {}\n        passed=len(rows)==prior['predicted_quadrants'] and all(means[k]<prior['mean_metrics']['fixed'][k]\n            and means[k]<=prior['mean_metrics']['nearest'][k] for k in means)\n        inflations=[max(c['sigma_ratio_to_same_original']) for r in rows for c in r['challenges']\n                    if c['kind']=='weak_stripes' and c['sigma_ratio_to_same_original'] is not None]\n        robust=bool(inflations) and max(inflations)<=SETTINGS['texture_sigma_inflation_limit']\n        summary=dict(dataset=prior['dataset'],iso=prior['iso'],a=prior['a'],expected_quadrants=prior['predicted_quadrants'],\n            estimated_quadrants=len(rows),mean_metrics=means,original_controls=prior['mean_metrics'],\n            prediction_screen_passed=passed,texture_screen_passed=robust,\n            maximum_weak_texture_sigma_inflation=max(inflations) if inflations else None)\n        summaries.append(summary);print('SCREEN',summary,flush=True)\n    if len(records)!=48 or [sha256(p) for p in paths]!=hashes:raise ValueError('Incomplete/changed A-only study')\n    now=datetime.now(timezone.utc)\n    output=ROOT/'docs/validation/raw'/f'poids-image-seule-contraste-ondelettes-bruit-v001-{now.strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n    dependencies=('study_noise_signal_covariance_prediction.py','study_noise_shape_only_prediction.py','study_noise_haar_factor_transport.py')\n    result=dict(schema_version=1,data_version=1,started_at_utc=started.isoformat(),completed_at_utc=now.isoformat(),\n        settings=SETTINGS,records=records,summaries=summaries,\n        verdict='a_only_wavelet_weights_promising_requires_new_validation' if all(s['prediction_screen_passed'] and s['texture_screen_passed'] for s in summaries) else 'a_only_wavelet_contrast_not_retained',\n        numpy_version=np.__version__,commit=git('rev-parse','HEAD'),runner_sha256=sha256(Path(__file__)),\n        runner_source=Path(__file__).read_text(encoding='utf-8'),parents=[dict(path=str(p),sha256=h) for p,h in zip(paths,hashes)],\n        dependencies={n:dict(sha256=sha256(ROOT/'tests'/n),source=(ROOT/'tests'/n).read_text(encoding='utf-8')) for n in dependencies},\n        rules='14originalA128fields in4heldcaptures,34parentabstentions retained. CenteredMAD²/Gaussianfactor² inLH/HL/HH;sharedw and3amplitudenuisances fittedbyprofiledGaussian-stylecontrast. It is ROBUSTCONTRAST,not exactlikelihood for finitecorrelatedMADs. 257grid+48goldenrefinement optimizeinputcontrast ONLY,neverDerrors. NoisetruereferenceONLYevaluation/challengeamplitude. NoBpixelsinsideestimator. Sixknowntextures/field and4subregiondiagnostics;neverselectmostfavourable tile/model.',\n        limitations='Knownfamily/brackets useAmeanY andpreviousofflinecharacterization;not arbitrarycamera blindprofile. Calibrationcontrols dependonpair eligibility andsources alreadyexplored. Subregiondisagreement not calibratedconfidence. Texture compatiblewithnoise remainsunidentifiable. No perceptualgain,noise-removal percentage,production or TIFF export.')\n    with output.open('x',encoding='utf-8') as handle:json.dump(result,handle,ensure_ascii=False,indent=1,allow_nan=False)\n    print('VERDICT',result['verdict'],output,flush=True)\n\n\nif __name__=='__main__':run()\n",
+ "parents": [
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\prediction-covariance-luminance-bruit-v001-20261027T192134Z.json",
+   "sha256": "45371018c270d8c350f051c4dfc881398123d197c5156cd434dd683fcabaa1e0"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\transport-psd-gaussien-filtre-spectral-bruit-v002-20261027T190615Z.json",
+   "sha256": "20811ce8fafd75cc7d59438602e408e574fc7b189a49ac104b9913c3698433ac"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\melange-fixe-covariances-bruit-v001-20261026T175757Z.json",
+   "sha256": "b242bf674ef8bda8a71a8cba594eb2059ddca0d74bb5056c03c300ab538f6cb5"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\contextes-abstention-axes-bruit-v001-20261026T221702Z.json",
+   "sha256": "93c538e3b0d1a76a0d8a007fba7d6964cd4e0b0fe9cdcde73c8ad1cb65cd5d90"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\paires-supplementaires-axes-bruit-v001-20261026T222302Z.json",
+   "sha256": "ef585b35e3572418874cf55d1791d41834c40c7cccc1b61c0e89421d82f2a285"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\paires-supplementaires-axes-bruit-v002-20261026T222833Z.json",
+   "sha256": "131f27c54de91a50e8789c154fb5c67eb0a89d9bcb743808f3d58154b449ea39"
+  }
+ ],
+ "dependencies": {
+  "study_noise_signal_covariance_prediction.py": {
+   "sha256": "9b2c2e4eb65628cd7e8ee7f7294b68401046f39cdf3c7945e31088ac4e859b0c",
+   "source": "\"\"\"Whole-capture held-out linear-light covariance interpolation; analytic go/no-go before new gates.\"\"\"\nfrom datetime import datetime, timezone\nimport json\nfrom pathlib import Path\nimport numpy as np\nfrom study_noise_neighbourhoods import ROOT, sha256, git\nfrom study_noise_haar_factor_transport import hh_variances\n\n\nCRITERIA = dict(minimum_quiet_stable_tiles_per_quadrant=8, minimum_quadrants_per_anchor=2,\n    no_extrapolation=True,\n    screen='Each held capture must improve mean normalized covariance error vs fixed and not worsen vs nearest; same requirement for mean absolute log HH-factor error. No averaging hides failed capture. Research screen,not product validation.')\n\n\ndef normalized(covariance):\n    variance = np.diag(covariance[:,:,8,8])\n    if np.min(variance) <= 1e-24 or not np.isfinite(covariance).all():\n        raise ValueError('Finite covariance with positive marginal variance required')\n    return covariance/np.sqrt(variance[:,None,None,None]*variance[None,:,None,None])\n\n\ndef interpolate(anchors, value, held_names):\n    if any(set(a['raw_names']) & set(held_names) for a in anchors):\n        raise ValueError('Held capture leaked into prediction anchors')\n    ordered = sorted(anchors, key=lambda a:a['mean_a_y'])\n    lower = [a for a in ordered if a['mean_a_y'] <= value]\n    upper = [a for a in ordered if a['mean_a_y'] >= value]\n    if not lower or not upper: return None\n    lo, hi = lower[-1], upper[0]\n    if lo['id'] == hi['id']:\n        weight = 0.\n    else:\n        weight = (value-lo['mean_a_y'])/(hi['mean_a_y']-lo['mean_a_y'])\n    if not 0 <= weight <= 1: raise ValueError('Prediction would extrapolate')\n    predicted = (1-weight)*np.asarray(lo['physical_covariance'])+weight*np.asarray(hi['physical_covariance'])\n    nearest = min(ordered, key=lambda a:abs(a['mean_a_y']-value))\n    return dict(covariance=predicted, lower=lo['id'], upper=hi['id'], upper_weight=weight,\n        nearest_id=nearest['id'], nearest_covariance=np.asarray(nearest['physical_covariance']))\n\n\ndef errors(predicted, actual):\n    predicted_shape, actual_shape = normalized(predicted), normalized(actual)\n    sigma_ratio = np.sqrt(np.diag(predicted[:,:,8,8])/np.diag(actual[:,:,8,8]))\n    hh_factor_ratio = np.sqrt(hh_variances(actual_shape)/hh_variances(predicted_shape))\n    return dict(normalized_covariance_squared_error=float(np.mean((predicted_shape-actual_shape)**2)),\n        sigma_prediction_ratio=sigma_ratio.tolist(),\n        gaussian_hh_factor_ratio=hh_factor_ratio.tolist(),\n        mean_abs_log_hh_factor_error=float(np.mean(abs(np.log(hh_factor_ratio)))),\n        mean_abs_log_sigma_error=float(np.mean(abs(np.log(sigma_ratio)))))\n\n\ndef opening_contract(native):\n    declaration = native['declaration']\n    return dict(camera=native['camera'], opening_chroma_median=native['opening_chroma_median'],\n        **{k:declaration[k] for k in ('settings','dcp_profile','lcp_profile','raw_normalization',\n            'lens_geometry_applied','lens_vignetting_applied','chromatic_aberration_applied')})\n\n\ndef physical(record):\n    sigma = np.asarray(record['sigma_before_unit_scaling'])\n    return np.asarray(record['prepared_covariance_lag8'])*sigma[:,None,None,None]*sigma[None,:,None,None]\n\n\ndef run():\n    names = ('transport-psd-gaussien-filtre-spectral-bruit-v002-20261027T190615Z.json',\n        'origine-rejets-spectraux-paires-bruit-v001-20261027T190151Z.json',\n        'extraction-paires-profils-bruit-v001-20261026T174656Z.json',\n        'contextes-abstention-axes-bruit-v001-20261026T221702Z.json',\n        'paires-supplementaires-axes-bruit-v001-20261026T222302Z.json',\n        'paires-supplementaires-axes-bruit-v002-20261026T222833Z.json')\n    paths = [ROOT/'docs/validation/raw'/n for n in names]; hashes = [sha256(p) for p in paths]\n    spectral, audit, training = [json.loads(p.read_text(encoding='utf-8')) for p in paths[:3]]\n    started = datetime.now(timezone.utc); contracts = {}; anchors = []; baseline = {}; records = []\n    for pair in training['native']['pairs']:\n        iso = pair['a']['iso']; control = next(c for c in spectral['controls'] if c['iso'] == iso)\n        contract = opening_contract(pair['a'])\n        if opening_contract(pair['b']) != contract: raise ValueError('Training pair opening mismatch')\n        contracts[iso] = contract\n        a = next(s for s in pair['a']['samples'] if s['kind']=='flat')\n        baseline[iso] = physical(control)\n        anchors.append(dict(id='training_'+str(iso), iso=iso, raw_names=[pair[k]['raw'] for k in ('a','b')],\n            mean_a_y=float(np.mean(a['original_y_co_cg'][0])), physical_covariance=baseline[iso].tolist(),\n            source_kind='original_training64', source_quadrants=[]))\n    for dataset, path in enumerate(paths[3:]):\n        metadata = json.loads(path.read_text(encoding='utf-8'))\n        for pair in metadata['records']:\n            if any(opening_contract(pair[k]['native']) != contracts[pair['iso']] for k in ('a','b')):\n                raise ValueError('Do not mix opening settings/profiles in a light-level model')\n        del metadata\n    pairs = audit['records']\n    for pair in pairs:\n        usable = [r for r in spectral['records'] if r['dataset']==pair['dataset'] and r['a']==pair['a']\n            and r['status']=='generated' and r['quiet_stable_tiles'] >= CRITERIA['minimum_quiet_stable_tiles_per_quadrant']]\n        if len(usable) >= CRITERIA['minimum_quadrants_per_anchor']:\n            selected_tiles = [t for t in pair['tiles'] if any(\n                r['rect'][0] <= t['x'] < r['rect'][0]+128 and r['rect'][1] <= t['y'] < r['rect'][1]+128 for r in usable)]\n            anchors.append(dict(id=f\"dataset{pair['dataset']}_{pair['iso']}\", iso=pair['iso'],\n                raw_names=[pair['a'],pair['b']], mean_a_y=float(np.mean([t['mean_a_y'] for t in selected_tiles])),\n                physical_covariance=np.mean([physical(r) for r in usable],axis=0).tolist(),\n                source_kind='capture_mean_of_eligible128', source_quadrants=[r['rect'] for r in usable]))\n    for pair in pairs:\n        held_names = [pair['a'],pair['b']]\n        candidates = [a for a in anchors if a['iso']==pair['iso'] and not set(a['raw_names'])&set(held_names)]\n        for target in [r for r in spectral['records'] if r['dataset']==pair['dataset'] and r['a']==pair['a']]:\n            row = dict(dataset=pair['dataset'],iso=pair['iso'],a=pair['a'],b=pair['b'],rect=target['rect'],\n                quiet_stable_tiles=target['quiet_stable_tiles'], available_anchors=[a['id'] for a in candidates])\n            if target['status'] != 'generated' or target['quiet_stable_tiles'] < CRITERIA['minimum_quiet_stable_tiles_per_quadrant']:\n                row['status']='reference_unmeasurable_or_not_quiet_stable'; records.append(row); continue\n            x,y,_,_=target['rect']\n            feature = float(np.mean([t['mean_a_y'] for t in pair['tiles'] if x <= t['x'] < x+128 and y <= t['y'] < y+128]))\n            row['input_mean_a_y'] = feature\n            prediction = interpolate(candidates, feature, held_names)\n            if prediction is None:\n                row['status']='outside_characterized_light_range'; records.append(row); continue\n            actual = physical(target)\n            row.update(status='predicted_held_capture', lower=prediction['lower'], upper=prediction['upper'],\n                upper_weight=prediction['upper_weight'], nearest_id=prediction['nearest_id'],\n                metrics=dict(fixed=errors(baseline[pair['iso']],actual),\n                    nearest=errors(prediction['nearest_covariance'],actual),\n                    interpolated=errors(prediction['covariance'],actual)))\n            records.append(row)\n    summaries = []\n    for pair in pairs:\n        rows = [r for r in records if r['dataset']==pair['dataset'] and r['a']==pair['a'] and r['status']=='predicted_held_capture']\n        means = {mode:{metric:float(np.mean([r['metrics'][mode][metric] for r in rows]))\n            for metric in ('normalized_covariance_squared_error','mean_abs_log_hh_factor_error','mean_abs_log_sigma_error')}\n            for mode in ('fixed','nearest','interpolated')} if rows else {}\n        passed = bool(rows) and all(means['interpolated'][metric] < means['fixed'][metric]\n            and means['interpolated'][metric] <= means['nearest'][metric]\n            for metric in ('normalized_covariance_squared_error','mean_abs_log_hh_factor_error'))\n        summary = dict(dataset=pair['dataset'],iso=pair['iso'],a=pair['a'],predicted_quadrants=len(rows),\n            mean_metrics=means, screen_passed=passed if rows else None)\n        summaries.append(summary)\n        print('Held capture',pair['dataset'],pair['iso'],'quadrants',len(rows),'screen',summary['screen_passed'],\n            'shape errors',{m:v['normalized_covariance_squared_error'] for m,v in means.items()},flush=True)\n    tested = [r for r in summaries if r['predicted_quadrants']]\n    verdict = 'promising_on_available_folds_not_production_validated' if tested and all(r['screen_passed'] for r in tested) else 'simple_linear_light_interpolation_not_retained'\n    if len(records)!=48 or [sha256(p) for p in paths]!=hashes: raise ValueError('Incomplete/changed prediction study')\n    now = datetime.now(timezone.utc)\n    output = ROOT/'docs/validation/raw'/f'prediction-covariance-luminance-bruit-v001-{now.strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n    dependencies = ('study_noise_haar_factor_transport.py',)\n    result = dict(schema_version=1,data_version=1,started_at_utc=started.isoformat(),completed_at_utc=now.isoformat(),\n        criteria=CRITERIA,verdict=verdict,anchors=anchors,records=records,summaries=summaries,\n        tested_capture_folds=len(tested),opening_contracts=contracts,numpy_version=np.__version__,commit=git('rev-parse','HEAD'),\n        runner_sha256=sha256(Path(__file__)),runner_source=Path(__file__).read_text(encoding='utf-8'),\n        parents=[dict(path=str(p),sha256=h) for p,h in zip(paths,hashes)],\n        dependencies={n:dict(sha256=sha256(ROOT/'tests'/n),source=(ROOT/'tests'/n).read_text(encoding='utf-8')) for n in dependencies},\n        rules='One hypothesis: convex interpolation of PHYSICALcovariance in linearAmeanY between bracketingsameISOcaptureanchors;normalizeONLYafterblend. EntiretargetA/BcaptureremovedfromALLanchors. Fixed and nearestanchor controls. Eligibility>=8quiet/stable32tiles/128;anchor>=2eligiblequadrants. Noextrapolation,no fittingonheldD,thresholds or denoising. HeldDusedforeligibility/evaluationONLY,notweights;AmeanYfeatureonly.',\n        limitations='Reusedsmallpairedcorpus,no cleanphototruth;D/quiet/stableconditional. Physicallinearlevelrule is hypothesis after nonlinear RCD/profile/median opening.64trainingvs128captureanchors have unequal uncertainty. Fewbracketedcaptures,ISOcoverageincomplete;not newcamera/session. Target referenceeligibility usesB,so this is offlinecharacterization not completeblindestimator. Lag8score not fullPSD/perceptual/detailquality.')\n    with output.open('x',encoding='utf-8') as handle:json.dump(result,handle,ensure_ascii=False,indent=1,allow_nan=False)\n    print('VERDICT',verdict,output,flush=True)\n\n\nif __name__=='__main__':run()\n"
+  },
+  "study_noise_shape_only_prediction.py": {
+   "sha256": "24591d29343697b29c37153cad6f41c902738864587d966ffed8a09b98a7622b",
+   "source": "\"\"\"Ablation: normalize covariance anchors BEFORE interpolation, predict shape only, no sigma.\"\"\"\nfrom datetime import datetime, timezone\nimport json\nfrom pathlib import Path\nimport numpy as np\nfrom study_noise_neighbourhoods import ROOT,sha256,git\nfrom study_noise_signal_covariance_prediction import normalized,physical,errors\n\n\ndef shape_blend(low,high,weight):\n    if not np.isfinite(weight) or not 0<=weight<=1:\n        raise ValueError('Convex interpolation without extrapolation required')\n    return (1-weight)*normalized(np.asarray(low))+weight*normalized(np.asarray(high))\n\n\ndef shape_errors(prediction,reference):\n    measured=errors(prediction,reference)\n    return {k:measured[k] for k in ('normalized_covariance_squared_error',\n        'mean_abs_log_hh_factor_error','gaussian_hh_factor_ratio')}\n\n\ndef run():\n    names=('prediction-covariance-luminance-bruit-v001-20261027T192134Z.json',\n        'transport-psd-gaussien-filtre-spectral-bruit-v002-20261027T190615Z.json')\n    paths=[ROOT/'docs/validation/raw'/n for n in names];hashes=[sha256(p) for p in paths]\n    parent,spectral=[json.loads(p.read_text(encoding='utf-8')) for p in paths]\n    anchors={a['id']:a for a in parent['anchors']};records=[];started=datetime.now(timezone.utc)\n    for row in parent['records']:\n        item={k:row[k] for k in ('dataset','iso','a','b','rect','status')}\n        if row['status']!='predicted_held_capture':records.append(item);continue\n        for key in ('lower','upper','nearest_id'):\n            if set(anchors[row[key]]['raw_names'])&{row['a'],row['b']}:\n                raise ValueError('Held capture leaked into parent prediction')\n        target=next(r for r in spectral['records'] if r['dataset']==row['dataset'] and r['a']==row['a'] and r['rect']==row['rect'])\n        truth=physical(target);low=np.asarray(anchors[row['lower']]['physical_covariance'])\n        high=np.asarray(anchors[row['upper']]['physical_covariance']);w=row['upper_weight']\n        reference=np.asarray(anchors['training_'+str(row['iso'])]['physical_covariance'])\n        nearest=np.asarray(anchors[row['nearest_id']]['physical_covariance'])\n        predictions=dict(fixed=reference,nearest=nearest,physical_interpolation=(1-w)*low+w*high,\n            shape_only=shape_blend(low,high,w))\n        measured={k:shape_errors(v,truth) for k,v in predictions.items()}\n        for mode,old_mode in (('fixed','fixed'),('nearest','nearest'),('physical_interpolation','interpolated')):\n            for metric in ('normalized_covariance_squared_error','mean_abs_log_hh_factor_error'):\n                if abs(measured[mode][metric]-row['metrics'][old_mode][metric])>1e-14:\n                    raise ValueError('Previous prediction controls do not replay exactly')\n        item.update(lower=row['lower'],upper=row['upper'],upper_weight=w,nearest_id=row['nearest_id'],metrics=measured)\n        records.append(item)\n    summaries=[]\n    for previous in parent['summaries']:\n        rows=[r for r in records if r['dataset']==previous['dataset'] and r['a']==previous['a'] and r['status']=='predicted_held_capture']\n        means={mode:{metric:float(np.mean([r['metrics'][mode][metric] for r in rows]))\n            for metric in ('normalized_covariance_squared_error','mean_abs_log_hh_factor_error')}\n            for mode in ('fixed','nearest','physical_interpolation','shape_only')} if rows else {}\n        passed=bool(rows) and all(means['shape_only'][metric]<means['fixed'][metric]\n            and means['shape_only'][metric]<=means['nearest'][metric]\n            for metric in ('normalized_covariance_squared_error','mean_abs_log_hh_factor_error'))\n        summary=dict(dataset=previous['dataset'],iso=previous['iso'],a=previous['a'],predicted_quadrants=len(rows),\n            mean_metrics=means,screen_passed=passed if rows else None)\n        summaries.append(summary)\n        if rows:print('Shape-only fold',previous['dataset'],previous['iso'],'screen',passed,means,flush=True)\n    tested=[r for r in summaries if r['predicted_quadrants']]\n    verdict='shape_only_promising_requires_new_validation' if tested and all(r['screen_passed'] for r in tested) else 'shape_only_linear_light_interpolation_not_retained'\n    if len(records)!=48 or [sha256(p) for p in paths]!=hashes:raise ValueError('Incomplete/changed shape-only study')\n    now=datetime.now(timezone.utc)\n    output=ROOT/'docs/validation/raw'/f'prediction-correlation-separee-bruit-v001-{now.strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n    dependencies=('study_noise_signal_covariance_prediction.py','study_noise_haar_factor_transport.py')\n    result=dict(schema_version=1,data_version=1,started_at_utc=started.isoformat(),completed_at_utc=now.isoformat(),\n        verdict=verdict,records=records,summaries=summaries,tested_capture_folds=len(tested),\n        criteria=parent['criteria'],numpy_version=np.__version__,commit=git('rev-parse','HEAD'),\n        runner_sha256=sha256(Path(__file__)),runner_source=Path(__file__).read_text(encoding='utf-8'),\n        parents=[dict(path=str(p),sha256=h) for p,h in zip(paths,hashes)],\n        dependencies={n:dict(sha256=sha256(ROOT/'tests'/n),source=(ROOT/'tests'/n).read_text(encoding='utf-8')) for n in dependencies},\n        rules='Singleablation: normalizeEACHanchor to unitmarginalvariance before samefrozenconvexweight blend. All14targets/4heldcapturefolds/34abstentions andbrackets fromparent retained. Fixed/nearest/physicalcontrols replayed to1e-14. PredictNOsigma,doNOTusetruesigmatochooseweights;Donlyevaluation. Sameperfoldshape+HHscreen vsfixed/nearest,no tuning.',\n        limitations='Sequentialhypothesis onpreviouslyexploredfourcaptures,notindependentvalidation. CorrelationnowdecoupledfromamplitudebutstillonlylinearY;no completeblindestimator,denoising or perceptionclaim. No production,camerauniversalvalidation or export.')\n    with output.open('x',encoding='utf-8') as handle:json.dump(result,handle,ensure_ascii=False,indent=1,allow_nan=False)\n    print('VERDICT',verdict,output,flush=True)\n\n\nif __name__=='__main__':run()\n"
+  },
+  "study_noise_haar_factor_transport.py": {
+   "sha256": "df389d663d001b28b99bdd79feef14c50bfa0b12e78ab532012489f0da28f02b",
+   "source": "\"\"\"Analytic HH variance-factor transport from archived PSD lags, no new simulation or tuning.\"\"\"\nfrom datetime import datetime, timezone\nimport json\nfrom pathlib import Path\nimport numpy as np\nfrom study_noise_neighbourhoods import ROOT, sha256, git\n\n\ndef hh_variances(lags):\n    lags = np.asarray(lags, dtype=float)\n    if lags.shape != (3,3,17,17) or not np.isfinite(lags).all():\n        raise ValueError('Finite signed lag8 cross covariance required')\n    positions = np.array([[0,0],[1,0],[0,1],[1,1]])\n    weights = np.array([.5,-.5,-.5,.5]); delta = positions[:,None]-positions[None,:]\n    values = np.array([weights @ lags[c,c,delta[:,:,0]+8,delta[:,:,1]+8] @ weights for c in range(3)])\n    if np.min(values) <= 0: raise ValueError('Unmeasurable HH variance')\n    return values\n\n\ndef run():\n    path = ROOT/'docs/validation/raw/transport-psd-gaussien-filtre-spectral-bruit-v002-20261027T190615Z.json'\n    digest = sha256(path); data = json.loads(path.read_text(encoding='utf-8'))\n    reference = {c['iso']:hh_variances(c['prepared_covariance_lag8']) for c in data['controls']}\n    records = []\n    for source in data['records']:\n        row = {k:source[k] for k in ('dataset','iso','a','b','rect','mean_physical_y','quiet_stable_tiles','status')}\n        if source['status'] == 'generated':\n            variance = hh_variances(source['prepared_covariance_lag8'])\n            row.update(hh_variance=variance.tolist(), baseline_hh_variance=reference[source['iso']].tolist(),\n                gaussian_marginal_scale_factor_ratio=np.sqrt(variance/reference[source['iso']]).tolist(),\n                independent_of_marginal_noise_amplitude=True)\n        records.append(row)\n    if sha256(path) != digest: raise ValueError('Changed spectral evidence')\n    now = datetime.now(timezone.utc)\n    output = ROOT/'docs/validation/raw'/f'transport-facteur-haar-spectral-bruit-v001-{now.strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n    result = dict(schema_version=1,data_version=1,completed_at_utc=now.isoformat(),records=records,\n        parent=dict(path=str(path),sha256=digest),commit=git('rev-parse','HEAD'),numpy_version=np.__version__,\n        runner_sha256=sha256(Path(__file__)),runner_source=Path(__file__).read_text(encoding='utf-8'),\n        rules='Exact hCh for2x2orthonormalHH,normalizedmarginalPSD covariances archivedlag8;4training controls vs44measurable/48quadrantrecords. Square-root variance ratio is theoreticalGaussian marginal HH-MAD factor mismatch,not fitted correction. No redraw,thresholdfit,images or production.',\n        limitations='Not observed finite-sample MAD bias,selectedpopulation bias,nonGaussian/nativecleantruth or confidenceinterval. HH coefficients correlated;subtracting empirical median and16x16finiteMAD change estimatorlaw. No coefficient toapplytoactualphoto without validatedPSDmodel.')\n    with output.open('x',encoding='utf-8') as handle: json.dump(result,handle,ensure_ascii=False,indent=1,allow_nan=False)\n    print(output)\n    for dataset in range(3):\n        for iso in reference:\n            selected = [r for r in records if r['dataset']==dataset and r['iso']==iso and r['status']=='generated']\n            if selected:\n                ratios = np.array([r['gaussian_marginal_scale_factor_ratio'] for r in selected])\n                print(dataset,iso,'factor ratios min',ratios.min(axis=0).round(4),'max',ratios.max(axis=0).round(4))\n\n\nif __name__ == '__main__': run()\n"
+  }
+ },
+ "rules": "14originalA128fields in4heldcaptures,34parentabstentions retained. CenteredMAD²/Gaussianfactor² inLH/HL/HH;sharedw and3amplitudenuisances fittedbyprofiledGaussian-stylecontrast. It is ROBUSTCONTRAST,not exactlikelihood for finitecorrelatedMADs. 257grid+48goldenrefinement optimizeinputcontrast ONLY,neverDerrors. NoisetruereferenceONLYevaluation/challengeamplitude. NoBpixelsinsideestimator. Sixknowntextures/field and4subregiondiagnostics;neverselectmostfavourable tile/model.",
+ "limitations": "Knownfamily/brackets useAmeanY andpreviousofflinecharacterization;not arbitrarycamera blindprofile. Calibrationcontrols dependonpair eligibility andsources alreadyexplored. Subregiondisagreement not calibratedconfidence. Texture compatiblewithnoise remainsunidentifiable. No perceptualgain,noise-removal percentage,production or TIFF export."
+}

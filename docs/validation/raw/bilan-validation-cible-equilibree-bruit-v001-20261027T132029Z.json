@@ -1,0 +1,3361 @@
+{
+ "schema_version": 1,
+ "data_version": 1,
+ "completed_at_utc": "2026-10-27T13:20:29.982022+00:00",
+ "commit": "2a40c5c6cff78d40294393a68827f4a24555c724",
+ "branch": "patch_noise",
+ "status": "experimental_screen_passed",
+ "product_release": false,
+ "checks": [
+  {
+   "name": "fresh_streams_disjoint",
+   "passed": true,
+   "null_fields": 1024,
+   "structure_fields": 48
+  },
+  {
+   "name": "fixed_population",
+   "passed": true
+  },
+  {
+   "name": "null_mean_source0_sigma0.8",
+   "passed": true,
+   "scope": "null",
+   "source": 0,
+   "ratio": 0.8,
+   "count": 128,
+   "mean_ratio": 1.0001550267278572,
+   "maximum_paired_ratio": 1.01625665218781,
+   "q99_ratio": 1.0,
+   "active_fields": 3
+  },
+  {
+   "name": "null_every_field_source0_sigma0.8",
+   "passed": true,
+   "scope": "null",
+   "source": 0,
+   "ratio": 0.8,
+   "count": 128,
+   "mean_ratio": 1.0001550267278572,
+   "maximum_paired_ratio": 1.01625665218781,
+   "q99_ratio": 1.0,
+   "active_fields": 3
+  },
+  {
+   "name": "null_mean_source0_sigma0.9",
+   "passed": true,
+   "scope": "null",
+   "source": 0,
+   "ratio": 0.9,
+   "count": 128,
+   "mean_ratio": 1.0001330288939616,
+   "maximum_paired_ratio": 1.015062322005069,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "name": "null_every_field_source0_sigma0.9",
+   "passed": true,
+   "scope": "null",
+   "source": 0,
+   "ratio": 0.9,
+   "count": 128,
+   "mean_ratio": 1.0001330288939616,
+   "maximum_paired_ratio": 1.015062322005069,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "name": "null_mean_source0_sigma1.0",
+   "passed": true,
+   "scope": "null",
+   "source": 0,
+   "ratio": 1.0,
+   "count": 128,
+   "mean_ratio": 1.0000606448124678,
+   "maximum_paired_ratio": 1.0069052485363816,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "name": "null_every_field_source0_sigma1.0",
+   "passed": true,
+   "scope": "null",
+   "source": 0,
+   "ratio": 1.0,
+   "count": 128,
+   "mean_ratio": 1.0000606448124678,
+   "maximum_paired_ratio": 1.0069052485363816,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "name": "null_mean_source0_sigma1.1",
+   "passed": true,
+   "scope": "null",
+   "source": 0,
+   "ratio": 1.1,
+   "count": 128,
+   "mean_ratio": 1.0000127213585492,
+   "maximum_paired_ratio": 1.0014331927251932,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "name": "null_every_field_source0_sigma1.1",
+   "passed": true,
+   "scope": "null",
+   "source": 0,
+   "ratio": 1.1,
+   "count": 128,
+   "mean_ratio": 1.0000127213585492,
+   "maximum_paired_ratio": 1.0014331927251932,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "name": "null_mean_source0_sigma1.2",
+   "passed": true,
+   "scope": "null",
+   "source": 0,
+   "ratio": 1.2,
+   "count": 128,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_every_field_source0_sigma1.2",
+   "passed": true,
+   "scope": "null",
+   "source": 0,
+   "ratio": 1.2,
+   "count": 128,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_mean_source1_sigma0.8",
+   "passed": true,
+   "scope": "null",
+   "source": 1,
+   "ratio": 0.8,
+   "count": 128,
+   "mean_ratio": 1.0001401476722491,
+   "maximum_paired_ratio": 1.0131653595574983,
+   "q99_ratio": 1.0,
+   "active_fields": 5
+  },
+  {
+   "name": "null_every_field_source1_sigma0.8",
+   "passed": true,
+   "scope": "null",
+   "source": 1,
+   "ratio": 0.8,
+   "count": 128,
+   "mean_ratio": 1.0001401476722491,
+   "maximum_paired_ratio": 1.0131653595574983,
+   "q99_ratio": 1.0,
+   "active_fields": 5
+  },
+  {
+   "name": "null_mean_source1_sigma0.9",
+   "passed": true,
+   "scope": "null",
+   "source": 1,
+   "ratio": 0.9,
+   "count": 128,
+   "mean_ratio": 1.0002482307468143,
+   "maximum_paired_ratio": 1.0085699439788256,
+   "q99_ratio": 1.0,
+   "active_fields": 4
+  },
+  {
+   "name": "null_every_field_source1_sigma0.9",
+   "passed": true,
+   "scope": "null",
+   "source": 1,
+   "ratio": 0.9,
+   "count": 128,
+   "mean_ratio": 1.0002482307468143,
+   "maximum_paired_ratio": 1.0085699439788256,
+   "q99_ratio": 1.0,
+   "active_fields": 4
+  },
+  {
+   "name": "null_mean_source1_sigma1.0",
+   "passed": true,
+   "scope": "null",
+   "source": 1,
+   "ratio": 1.0,
+   "count": 128,
+   "mean_ratio": 1.0002240319048523,
+   "maximum_paired_ratio": 1.011593261236176,
+   "q99_ratio": 1.0,
+   "active_fields": 3
+  },
+  {
+   "name": "null_every_field_source1_sigma1.0",
+   "passed": true,
+   "scope": "null",
+   "source": 1,
+   "ratio": 1.0,
+   "count": 128,
+   "mean_ratio": 1.0002240319048523,
+   "maximum_paired_ratio": 1.011593261236176,
+   "q99_ratio": 1.0,
+   "active_fields": 3
+  },
+  {
+   "name": "null_mean_source1_sigma1.1",
+   "passed": true,
+   "scope": "null",
+   "source": 1,
+   "ratio": 1.1,
+   "count": 128,
+   "mean_ratio": 1.0000692004974499,
+   "maximum_paired_ratio": 1.0039330398340114,
+   "q99_ratio": 1.0,
+   "active_fields": 3
+  },
+  {
+   "name": "null_every_field_source1_sigma1.1",
+   "passed": true,
+   "scope": "null",
+   "source": 1,
+   "ratio": 1.1,
+   "count": 128,
+   "mean_ratio": 1.0000692004974499,
+   "maximum_paired_ratio": 1.0039330398340114,
+   "q99_ratio": 1.0,
+   "active_fields": 3
+  },
+  {
+   "name": "null_mean_source1_sigma1.2",
+   "passed": true,
+   "scope": "null",
+   "source": 1,
+   "ratio": 1.2,
+   "count": 128,
+   "mean_ratio": 1.0000007007048892,
+   "maximum_paired_ratio": 1.0000531176401688,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "name": "null_every_field_source1_sigma1.2",
+   "passed": true,
+   "scope": "null",
+   "source": 1,
+   "ratio": 1.2,
+   "count": 128,
+   "mean_ratio": 1.0000007007048892,
+   "maximum_paired_ratio": 1.0000531176401688,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "name": "null_mean_source2_sigma0.8",
+   "passed": true,
+   "scope": "null",
+   "source": 2,
+   "ratio": 0.8,
+   "count": 128,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_every_field_source2_sigma0.8",
+   "passed": true,
+   "scope": "null",
+   "source": 2,
+   "ratio": 0.8,
+   "count": 128,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_mean_source2_sigma0.9",
+   "passed": true,
+   "scope": "null",
+   "source": 2,
+   "ratio": 0.9,
+   "count": 128,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_every_field_source2_sigma0.9",
+   "passed": true,
+   "scope": "null",
+   "source": 2,
+   "ratio": 0.9,
+   "count": 128,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_mean_source2_sigma1.0",
+   "passed": true,
+   "scope": "null",
+   "source": 2,
+   "ratio": 1.0,
+   "count": 128,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_every_field_source2_sigma1.0",
+   "passed": true,
+   "scope": "null",
+   "source": 2,
+   "ratio": 1.0,
+   "count": 128,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_mean_source2_sigma1.1",
+   "passed": true,
+   "scope": "null",
+   "source": 2,
+   "ratio": 1.1,
+   "count": 128,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_every_field_source2_sigma1.1",
+   "passed": true,
+   "scope": "null",
+   "source": 2,
+   "ratio": 1.1,
+   "count": 128,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_mean_source2_sigma1.2",
+   "passed": true,
+   "scope": "null",
+   "source": 2,
+   "ratio": 1.2,
+   "count": 128,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_every_field_source2_sigma1.2",
+   "passed": true,
+   "scope": "null",
+   "source": 2,
+   "ratio": 1.2,
+   "count": 128,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_mean_source3_sigma0.8",
+   "passed": true,
+   "scope": "null",
+   "source": 3,
+   "ratio": 0.8,
+   "count": 128,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_every_field_source3_sigma0.8",
+   "passed": true,
+   "scope": "null",
+   "source": 3,
+   "ratio": 0.8,
+   "count": 128,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_mean_source3_sigma0.9",
+   "passed": true,
+   "scope": "null",
+   "source": 3,
+   "ratio": 0.9,
+   "count": 128,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_every_field_source3_sigma0.9",
+   "passed": true,
+   "scope": "null",
+   "source": 3,
+   "ratio": 0.9,
+   "count": 128,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_mean_source3_sigma1.0",
+   "passed": true,
+   "scope": "null",
+   "source": 3,
+   "ratio": 1.0,
+   "count": 128,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_every_field_source3_sigma1.0",
+   "passed": true,
+   "scope": "null",
+   "source": 3,
+   "ratio": 1.0,
+   "count": 128,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_mean_source3_sigma1.1",
+   "passed": true,
+   "scope": "null",
+   "source": 3,
+   "ratio": 1.1,
+   "count": 128,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_every_field_source3_sigma1.1",
+   "passed": true,
+   "scope": "null",
+   "source": 3,
+   "ratio": 1.1,
+   "count": 128,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_mean_source3_sigma1.2",
+   "passed": true,
+   "scope": "null",
+   "source": 3,
+   "ratio": 1.2,
+   "count": 128,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_every_field_source3_sigma1.2",
+   "passed": true,
+   "scope": "null",
+   "source": 3,
+   "ratio": 1.2,
+   "count": 128,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_mean_source4_sigma0.8",
+   "passed": true,
+   "scope": "null",
+   "source": 4,
+   "ratio": 0.8,
+   "count": 64,
+   "mean_ratio": 1.0000337650846667,
+   "maximum_paired_ratio": 1.00101427468488,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "name": "null_every_field_source4_sigma0.8",
+   "passed": true,
+   "scope": "null",
+   "source": 4,
+   "ratio": 0.8,
+   "count": 64,
+   "mean_ratio": 1.0000337650846667,
+   "maximum_paired_ratio": 1.00101427468488,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "name": "null_mean_source4_sigma0.9",
+   "passed": true,
+   "scope": "null",
+   "source": 4,
+   "ratio": 0.9,
+   "count": 64,
+   "mean_ratio": 1.0001187902165956,
+   "maximum_paired_ratio": 1.0033216424108207,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "name": "null_every_field_source4_sigma0.9",
+   "passed": true,
+   "scope": "null",
+   "source": 4,
+   "ratio": 0.9,
+   "count": 64,
+   "mean_ratio": 1.0001187902165956,
+   "maximum_paired_ratio": 1.0033216424108207,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "name": "null_mean_source4_sigma1.0",
+   "passed": true,
+   "scope": "null",
+   "source": 4,
+   "ratio": 1.0,
+   "count": 64,
+   "mean_ratio": 1.0000586223388146,
+   "maximum_paired_ratio": 1.0016034166090007,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "name": "null_every_field_source4_sigma1.0",
+   "passed": true,
+   "scope": "null",
+   "source": 4,
+   "ratio": 1.0,
+   "count": 64,
+   "mean_ratio": 1.0000586223388146,
+   "maximum_paired_ratio": 1.0016034166090007,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "name": "null_mean_source4_sigma1.1",
+   "passed": true,
+   "scope": "null",
+   "source": 4,
+   "ratio": 1.1,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_every_field_source4_sigma1.1",
+   "passed": true,
+   "scope": "null",
+   "source": 4,
+   "ratio": 1.1,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_mean_source4_sigma1.2",
+   "passed": true,
+   "scope": "null",
+   "source": 4,
+   "ratio": 1.2,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_every_field_source4_sigma1.2",
+   "passed": true,
+   "scope": "null",
+   "source": 4,
+   "ratio": 1.2,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_mean_source5_sigma0.8",
+   "passed": true,
+   "scope": "null",
+   "source": 5,
+   "ratio": 0.8,
+   "count": 64,
+   "mean_ratio": 1.0000570335704606,
+   "maximum_paired_ratio": 1.0067658811834133,
+   "q99_ratio": 1.0,
+   "active_fields": 2
+  },
+  {
+   "name": "null_every_field_source5_sigma0.8",
+   "passed": true,
+   "scope": "null",
+   "source": 5,
+   "ratio": 0.8,
+   "count": 64,
+   "mean_ratio": 1.0000570335704606,
+   "maximum_paired_ratio": 1.0067658811834133,
+   "q99_ratio": 1.0,
+   "active_fields": 2
+  },
+  {
+   "name": "null_mean_source5_sigma0.9",
+   "passed": true,
+   "scope": "null",
+   "source": 5,
+   "ratio": 0.9,
+   "count": 64,
+   "mean_ratio": 1.0000424001396515,
+   "maximum_paired_ratio": 1.0013858864119627,
+   "q99_ratio": 1.0,
+   "active_fields": 3
+  },
+  {
+   "name": "null_every_field_source5_sigma0.9",
+   "passed": true,
+   "scope": "null",
+   "source": 5,
+   "ratio": 0.9,
+   "count": 64,
+   "mean_ratio": 1.0000424001396515,
+   "maximum_paired_ratio": 1.0013858864119627,
+   "q99_ratio": 1.0,
+   "active_fields": 3
+  },
+  {
+   "name": "null_mean_source5_sigma1.0",
+   "passed": true,
+   "scope": "null",
+   "source": 5,
+   "ratio": 1.0,
+   "count": 64,
+   "mean_ratio": 1.000026976422162,
+   "maximum_paired_ratio": 1.0008814146497274,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "name": "null_every_field_source5_sigma1.0",
+   "passed": true,
+   "scope": "null",
+   "source": 5,
+   "ratio": 1.0,
+   "count": 64,
+   "mean_ratio": 1.000026976422162,
+   "maximum_paired_ratio": 1.0008814146497274,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "name": "null_mean_source5_sigma1.1",
+   "passed": true,
+   "scope": "null",
+   "source": 5,
+   "ratio": 1.1,
+   "count": 64,
+   "mean_ratio": 1.0000038628451815,
+   "maximum_paired_ratio": 1.0001269983924816,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "name": "null_every_field_source5_sigma1.1",
+   "passed": true,
+   "scope": "null",
+   "source": 5,
+   "ratio": 1.1,
+   "count": 64,
+   "mean_ratio": 1.0000038628451815,
+   "maximum_paired_ratio": 1.0001269983924816,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "name": "null_mean_source5_sigma1.2",
+   "passed": true,
+   "scope": "null",
+   "source": 5,
+   "ratio": 1.2,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_every_field_source5_sigma1.2",
+   "passed": true,
+   "scope": "null",
+   "source": 5,
+   "ratio": 1.2,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_mean_source6_sigma0.8",
+   "passed": true,
+   "scope": "null",
+   "source": 6,
+   "ratio": 0.8,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_every_field_source6_sigma0.8",
+   "passed": true,
+   "scope": "null",
+   "source": 6,
+   "ratio": 0.8,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_mean_source6_sigma0.9",
+   "passed": true,
+   "scope": "null",
+   "source": 6,
+   "ratio": 0.9,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_every_field_source6_sigma0.9",
+   "passed": true,
+   "scope": "null",
+   "source": 6,
+   "ratio": 0.9,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_mean_source6_sigma1.0",
+   "passed": true,
+   "scope": "null",
+   "source": 6,
+   "ratio": 1.0,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_every_field_source6_sigma1.0",
+   "passed": true,
+   "scope": "null",
+   "source": 6,
+   "ratio": 1.0,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_mean_source6_sigma1.1",
+   "passed": true,
+   "scope": "null",
+   "source": 6,
+   "ratio": 1.1,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_every_field_source6_sigma1.1",
+   "passed": true,
+   "scope": "null",
+   "source": 6,
+   "ratio": 1.1,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_mean_source6_sigma1.2",
+   "passed": true,
+   "scope": "null",
+   "source": 6,
+   "ratio": 1.2,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_every_field_source6_sigma1.2",
+   "passed": true,
+   "scope": "null",
+   "source": 6,
+   "ratio": 1.2,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_mean_source7_sigma0.8",
+   "passed": true,
+   "scope": "null",
+   "source": 7,
+   "ratio": 0.8,
+   "count": 64,
+   "mean_ratio": 1.0000276352137596,
+   "maximum_paired_ratio": 1.0010511787998444,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "name": "null_every_field_source7_sigma0.8",
+   "passed": true,
+   "scope": "null",
+   "source": 7,
+   "ratio": 0.8,
+   "count": 64,
+   "mean_ratio": 1.0000276352137596,
+   "maximum_paired_ratio": 1.0010511787998444,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "name": "null_mean_source7_sigma0.9",
+   "passed": true,
+   "scope": "null",
+   "source": 7,
+   "ratio": 0.9,
+   "count": 64,
+   "mean_ratio": 1.0000180630825684,
+   "maximum_paired_ratio": 1.0007947521911114,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "name": "null_every_field_source7_sigma0.9",
+   "passed": true,
+   "scope": "null",
+   "source": 7,
+   "ratio": 0.9,
+   "count": 64,
+   "mean_ratio": 1.0000180630825684,
+   "maximum_paired_ratio": 1.0007947521911114,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "name": "null_mean_source7_sigma1.0",
+   "passed": true,
+   "scope": "null",
+   "source": 7,
+   "ratio": 1.0,
+   "count": 64,
+   "mean_ratio": 1.00001251231781,
+   "maximum_paired_ratio": 1.000643267320518,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "name": "null_every_field_source7_sigma1.0",
+   "passed": true,
+   "scope": "null",
+   "source": 7,
+   "ratio": 1.0,
+   "count": 64,
+   "mean_ratio": 1.00001251231781,
+   "maximum_paired_ratio": 1.000643267320518,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "name": "null_mean_source7_sigma1.1",
+   "passed": true,
+   "scope": "null",
+   "source": 7,
+   "ratio": 1.1,
+   "count": 64,
+   "mean_ratio": 1.000016881505785,
+   "maximum_paired_ratio": 1.0009678509322035,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "name": "null_every_field_source7_sigma1.1",
+   "passed": true,
+   "scope": "null",
+   "source": 7,
+   "ratio": 1.1,
+   "count": 64,
+   "mean_ratio": 1.000016881505785,
+   "maximum_paired_ratio": 1.0009678509322035,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "name": "null_mean_source7_sigma1.2",
+   "passed": true,
+   "scope": "null",
+   "source": 7,
+   "ratio": 1.2,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_every_field_source7_sigma1.2",
+   "passed": true,
+   "scope": "null",
+   "source": 7,
+   "ratio": 1.2,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_mean_source8_sigma0.8",
+   "passed": true,
+   "scope": "null",
+   "source": 8,
+   "ratio": 0.8,
+   "count": 64,
+   "mean_ratio": 1.0001730859156956,
+   "maximum_paired_ratio": 1.00763571011719,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "name": "null_every_field_source8_sigma0.8",
+   "passed": true,
+   "scope": "null",
+   "source": 8,
+   "ratio": 0.8,
+   "count": 64,
+   "mean_ratio": 1.0001730859156956,
+   "maximum_paired_ratio": 1.00763571011719,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "name": "null_mean_source8_sigma0.9",
+   "passed": true,
+   "scope": "null",
+   "source": 8,
+   "ratio": 0.9,
+   "count": 64,
+   "mean_ratio": 1.0001401893920705,
+   "maximum_paired_ratio": 1.0046034997959026,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "name": "null_every_field_source8_sigma0.9",
+   "passed": true,
+   "scope": "null",
+   "source": 8,
+   "ratio": 0.9,
+   "count": 64,
+   "mean_ratio": 1.0001401893920705,
+   "maximum_paired_ratio": 1.0046034997959026,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "name": "null_mean_source8_sigma1.0",
+   "passed": true,
+   "scope": "null",
+   "source": 8,
+   "ratio": 1.0,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_every_field_source8_sigma1.0",
+   "passed": true,
+   "scope": "null",
+   "source": 8,
+   "ratio": 1.0,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_mean_source8_sigma1.1",
+   "passed": true,
+   "scope": "null",
+   "source": 8,
+   "ratio": 1.1,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_every_field_source8_sigma1.1",
+   "passed": true,
+   "scope": "null",
+   "source": 8,
+   "ratio": 1.1,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_mean_source8_sigma1.2",
+   "passed": true,
+   "scope": "null",
+   "source": 8,
+   "ratio": 1.2,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_every_field_source8_sigma1.2",
+   "passed": true,
+   "scope": "null",
+   "source": 8,
+   "ratio": 1.2,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_mean_source9_sigma0.8",
+   "passed": true,
+   "scope": "null",
+   "source": 9,
+   "ratio": 0.8,
+   "count": 64,
+   "mean_ratio": 1.0000533163098482,
+   "maximum_paired_ratio": 1.002072181946641,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "name": "null_every_field_source9_sigma0.8",
+   "passed": true,
+   "scope": "null",
+   "source": 9,
+   "ratio": 0.8,
+   "count": 64,
+   "mean_ratio": 1.0000533163098482,
+   "maximum_paired_ratio": 1.002072181946641,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "name": "null_mean_source9_sigma0.9",
+   "passed": true,
+   "scope": "null",
+   "source": 9,
+   "ratio": 0.9,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_every_field_source9_sigma0.9",
+   "passed": true,
+   "scope": "null",
+   "source": 9,
+   "ratio": 0.9,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_mean_source9_sigma1.0",
+   "passed": true,
+   "scope": "null",
+   "source": 9,
+   "ratio": 1.0,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_every_field_source9_sigma1.0",
+   "passed": true,
+   "scope": "null",
+   "source": 9,
+   "ratio": 1.0,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_mean_source9_sigma1.1",
+   "passed": true,
+   "scope": "null",
+   "source": 9,
+   "ratio": 1.1,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_every_field_source9_sigma1.1",
+   "passed": true,
+   "scope": "null",
+   "source": 9,
+   "ratio": 1.1,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_mean_source9_sigma1.2",
+   "passed": true,
+   "scope": "null",
+   "source": 9,
+   "ratio": 1.2,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_every_field_source9_sigma1.2",
+   "passed": true,
+   "scope": "null",
+   "source": 9,
+   "ratio": 1.2,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_mean_source10_sigma0.8",
+   "passed": true,
+   "scope": "null",
+   "source": 10,
+   "ratio": 0.8,
+   "count": 64,
+   "mean_ratio": 1.000435145693658,
+   "maximum_paired_ratio": 1.0172960842020478,
+   "q99_ratio": 1.0,
+   "active_fields": 4
+  },
+  {
+   "name": "null_every_field_source10_sigma0.8",
+   "passed": true,
+   "scope": "null",
+   "source": 10,
+   "ratio": 0.8,
+   "count": 64,
+   "mean_ratio": 1.000435145693658,
+   "maximum_paired_ratio": 1.0172960842020478,
+   "q99_ratio": 1.0,
+   "active_fields": 4
+  },
+  {
+   "name": "null_mean_source10_sigma0.9",
+   "passed": true,
+   "scope": "null",
+   "source": 10,
+   "ratio": 0.9,
+   "count": 64,
+   "mean_ratio": 1.0003720166325925,
+   "maximum_paired_ratio": 1.015912150996876,
+   "q99_ratio": 1.0,
+   "active_fields": 3
+  },
+  {
+   "name": "null_every_field_source10_sigma0.9",
+   "passed": true,
+   "scope": "null",
+   "source": 10,
+   "ratio": 0.9,
+   "count": 64,
+   "mean_ratio": 1.0003720166325925,
+   "maximum_paired_ratio": 1.015912150996876,
+   "q99_ratio": 1.0,
+   "active_fields": 3
+  },
+  {
+   "name": "null_mean_source10_sigma1.0",
+   "passed": true,
+   "scope": "null",
+   "source": 10,
+   "ratio": 1.0,
+   "count": 64,
+   "mean_ratio": 1.0001848185971167,
+   "maximum_paired_ratio": 1.008076878370571,
+   "q99_ratio": 1.0,
+   "active_fields": 3
+  },
+  {
+   "name": "null_every_field_source10_sigma1.0",
+   "passed": true,
+   "scope": "null",
+   "source": 10,
+   "ratio": 1.0,
+   "count": 64,
+   "mean_ratio": 1.0001848185971167,
+   "maximum_paired_ratio": 1.008076878370571,
+   "q99_ratio": 1.0,
+   "active_fields": 3
+  },
+  {
+   "name": "null_mean_source10_sigma1.1",
+   "passed": true,
+   "scope": "null",
+   "source": 10,
+   "ratio": 1.1,
+   "count": 64,
+   "mean_ratio": 1.0000208495709548,
+   "maximum_paired_ratio": 1.0009283457972287,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "name": "null_every_field_source10_sigma1.1",
+   "passed": true,
+   "scope": "null",
+   "source": 10,
+   "ratio": 1.1,
+   "count": 64,
+   "mean_ratio": 1.0000208495709548,
+   "maximum_paired_ratio": 1.0009283457972287,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "name": "null_mean_source10_sigma1.2",
+   "passed": true,
+   "scope": "null",
+   "source": 10,
+   "ratio": 1.2,
+   "count": 64,
+   "mean_ratio": 1.0000018899109326,
+   "maximum_paired_ratio": 1.0000794342106203,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "name": "null_every_field_source10_sigma1.2",
+   "passed": true,
+   "scope": "null",
+   "source": 10,
+   "ratio": 1.2,
+   "count": 64,
+   "mean_ratio": 1.0000018899109326,
+   "maximum_paired_ratio": 1.0000794342106203,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "name": "null_mean_source11_sigma0.8",
+   "passed": true,
+   "scope": "null",
+   "source": 11,
+   "ratio": 0.8,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_every_field_source11_sigma0.8",
+   "passed": true,
+   "scope": "null",
+   "source": 11,
+   "ratio": 0.8,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_mean_source11_sigma0.9",
+   "passed": true,
+   "scope": "null",
+   "source": 11,
+   "ratio": 0.9,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_every_field_source11_sigma0.9",
+   "passed": true,
+   "scope": "null",
+   "source": 11,
+   "ratio": 0.9,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_mean_source11_sigma1.0",
+   "passed": true,
+   "scope": "null",
+   "source": 11,
+   "ratio": 1.0,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_every_field_source11_sigma1.0",
+   "passed": true,
+   "scope": "null",
+   "source": 11,
+   "ratio": 1.0,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_mean_source11_sigma1.1",
+   "passed": true,
+   "scope": "null",
+   "source": 11,
+   "ratio": 1.1,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_every_field_source11_sigma1.1",
+   "passed": true,
+   "scope": "null",
+   "source": 11,
+   "ratio": 1.1,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_mean_source11_sigma1.2",
+   "passed": true,
+   "scope": "null",
+   "source": 11,
+   "ratio": 1.2,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "null_every_field_source11_sigma1.2",
+   "passed": true,
+   "scope": "null",
+   "source": 11,
+   "ratio": 1.2,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "name": "shape_every_state_source0_gaussian",
+   "passed": true,
+   "scope": "structures",
+   "source": 0,
+   "shape": "gaussian",
+   "count": 128,
+   "mean_ratio": 0.9600203126993662,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_mean_source0_gaussian",
+   "passed": true,
+   "scope": "structures",
+   "source": 0,
+   "shape": "gaussian",
+   "count": 128,
+   "mean_ratio": 0.9600203126993662,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source0_diagonal_step",
+   "passed": true,
+   "scope": "structures",
+   "source": 0,
+   "shape": "diagonal_step",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_mean_source0_diagonal_step",
+   "passed": true,
+   "scope": "structures",
+   "source": 0,
+   "shape": "diagonal_step",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source0_diagonal_sinusoid",
+   "passed": true,
+   "scope": "structures",
+   "source": 0,
+   "shape": "diagonal_sinusoid",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_mean_source0_diagonal_sinusoid",
+   "passed": true,
+   "scope": "structures",
+   "source": 0,
+   "shape": "diagonal_sinusoid",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source0_flat",
+   "passed": true,
+   "scope": "structures",
+   "source": 0,
+   "shape": "flat",
+   "count": 4,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source1_gaussian",
+   "passed": true,
+   "scope": "structures",
+   "source": 1,
+   "shape": "gaussian",
+   "count": 128,
+   "mean_ratio": 0.9512133883494628,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_mean_source1_gaussian",
+   "passed": true,
+   "scope": "structures",
+   "source": 1,
+   "shape": "gaussian",
+   "count": 128,
+   "mean_ratio": 0.9512133883494628,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source1_diagonal_step",
+   "passed": true,
+   "scope": "structures",
+   "source": 1,
+   "shape": "diagonal_step",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_mean_source1_diagonal_step",
+   "passed": true,
+   "scope": "structures",
+   "source": 1,
+   "shape": "diagonal_step",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source1_diagonal_sinusoid",
+   "passed": true,
+   "scope": "structures",
+   "source": 1,
+   "shape": "diagonal_sinusoid",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_mean_source1_diagonal_sinusoid",
+   "passed": true,
+   "scope": "structures",
+   "source": 1,
+   "shape": "diagonal_sinusoid",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source1_flat",
+   "passed": true,
+   "scope": "structures",
+   "source": 1,
+   "shape": "flat",
+   "count": 4,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source2_gaussian",
+   "passed": true,
+   "scope": "structures",
+   "source": 2,
+   "shape": "gaussian",
+   "count": 128,
+   "mean_ratio": 0.9752017820462422,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_mean_source2_gaussian",
+   "passed": true,
+   "scope": "structures",
+   "source": 2,
+   "shape": "gaussian",
+   "count": 128,
+   "mean_ratio": 0.9752017820462422,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source2_diagonal_step",
+   "passed": true,
+   "scope": "structures",
+   "source": 2,
+   "shape": "diagonal_step",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_mean_source2_diagonal_step",
+   "passed": true,
+   "scope": "structures",
+   "source": 2,
+   "shape": "diagonal_step",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source2_diagonal_sinusoid",
+   "passed": true,
+   "scope": "structures",
+   "source": 2,
+   "shape": "diagonal_sinusoid",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_mean_source2_diagonal_sinusoid",
+   "passed": true,
+   "scope": "structures",
+   "source": 2,
+   "shape": "diagonal_sinusoid",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source2_flat",
+   "passed": true,
+   "scope": "structures",
+   "source": 2,
+   "shape": "flat",
+   "count": 4,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source3_gaussian",
+   "passed": true,
+   "scope": "structures",
+   "source": 3,
+   "shape": "gaussian",
+   "count": 128,
+   "mean_ratio": 0.9618115095906568,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_mean_source3_gaussian",
+   "passed": true,
+   "scope": "structures",
+   "source": 3,
+   "shape": "gaussian",
+   "count": 128,
+   "mean_ratio": 0.9618115095906568,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source3_diagonal_step",
+   "passed": true,
+   "scope": "structures",
+   "source": 3,
+   "shape": "diagonal_step",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_mean_source3_diagonal_step",
+   "passed": true,
+   "scope": "structures",
+   "source": 3,
+   "shape": "diagonal_step",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source3_diagonal_sinusoid",
+   "passed": true,
+   "scope": "structures",
+   "source": 3,
+   "shape": "diagonal_sinusoid",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_mean_source3_diagonal_sinusoid",
+   "passed": true,
+   "scope": "structures",
+   "source": 3,
+   "shape": "diagonal_sinusoid",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source3_flat",
+   "passed": true,
+   "scope": "structures",
+   "source": 3,
+   "shape": "flat",
+   "count": 4,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source4_gaussian",
+   "passed": true,
+   "scope": "structures",
+   "source": 4,
+   "shape": "gaussian",
+   "count": 128,
+   "mean_ratio": 0.9587345016406792,
+   "maximum_paired_ratio": 1.0006416058773566
+  },
+  {
+   "name": "shape_mean_source4_gaussian",
+   "passed": true,
+   "scope": "structures",
+   "source": 4,
+   "shape": "gaussian",
+   "count": 128,
+   "mean_ratio": 0.9587345016406792,
+   "maximum_paired_ratio": 1.0006416058773566
+  },
+  {
+   "name": "shape_every_state_source4_diagonal_step",
+   "passed": true,
+   "scope": "structures",
+   "source": 4,
+   "shape": "diagonal_step",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_mean_source4_diagonal_step",
+   "passed": true,
+   "scope": "structures",
+   "source": 4,
+   "shape": "diagonal_step",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source4_diagonal_sinusoid",
+   "passed": true,
+   "scope": "structures",
+   "source": 4,
+   "shape": "diagonal_sinusoid",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_mean_source4_diagonal_sinusoid",
+   "passed": true,
+   "scope": "structures",
+   "source": 4,
+   "shape": "diagonal_sinusoid",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source4_flat",
+   "passed": true,
+   "scope": "structures",
+   "source": 4,
+   "shape": "flat",
+   "count": 4,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source5_gaussian",
+   "passed": true,
+   "scope": "structures",
+   "source": 5,
+   "shape": "gaussian",
+   "count": 128,
+   "mean_ratio": 0.9457212900850698,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_mean_source5_gaussian",
+   "passed": true,
+   "scope": "structures",
+   "source": 5,
+   "shape": "gaussian",
+   "count": 128,
+   "mean_ratio": 0.9457212900850698,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source5_diagonal_step",
+   "passed": true,
+   "scope": "structures",
+   "source": 5,
+   "shape": "diagonal_step",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_mean_source5_diagonal_step",
+   "passed": true,
+   "scope": "structures",
+   "source": 5,
+   "shape": "diagonal_step",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source5_diagonal_sinusoid",
+   "passed": true,
+   "scope": "structures",
+   "source": 5,
+   "shape": "diagonal_sinusoid",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_mean_source5_diagonal_sinusoid",
+   "passed": true,
+   "scope": "structures",
+   "source": 5,
+   "shape": "diagonal_sinusoid",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source5_flat",
+   "passed": true,
+   "scope": "structures",
+   "source": 5,
+   "shape": "flat",
+   "count": 4,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source6_gaussian",
+   "passed": true,
+   "scope": "structures",
+   "source": 6,
+   "shape": "gaussian",
+   "count": 128,
+   "mean_ratio": 0.967163533604741,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_mean_source6_gaussian",
+   "passed": true,
+   "scope": "structures",
+   "source": 6,
+   "shape": "gaussian",
+   "count": 128,
+   "mean_ratio": 0.967163533604741,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source6_diagonal_step",
+   "passed": true,
+   "scope": "structures",
+   "source": 6,
+   "shape": "diagonal_step",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_mean_source6_diagonal_step",
+   "passed": true,
+   "scope": "structures",
+   "source": 6,
+   "shape": "diagonal_step",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source6_diagonal_sinusoid",
+   "passed": true,
+   "scope": "structures",
+   "source": 6,
+   "shape": "diagonal_sinusoid",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_mean_source6_diagonal_sinusoid",
+   "passed": true,
+   "scope": "structures",
+   "source": 6,
+   "shape": "diagonal_sinusoid",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source6_flat",
+   "passed": true,
+   "scope": "structures",
+   "source": 6,
+   "shape": "flat",
+   "count": 4,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source7_gaussian",
+   "passed": true,
+   "scope": "structures",
+   "source": 7,
+   "shape": "gaussian",
+   "count": 128,
+   "mean_ratio": 0.9665495856291423,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_mean_source7_gaussian",
+   "passed": true,
+   "scope": "structures",
+   "source": 7,
+   "shape": "gaussian",
+   "count": 128,
+   "mean_ratio": 0.9665495856291423,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source7_diagonal_step",
+   "passed": true,
+   "scope": "structures",
+   "source": 7,
+   "shape": "diagonal_step",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_mean_source7_diagonal_step",
+   "passed": true,
+   "scope": "structures",
+   "source": 7,
+   "shape": "diagonal_step",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source7_diagonal_sinusoid",
+   "passed": true,
+   "scope": "structures",
+   "source": 7,
+   "shape": "diagonal_sinusoid",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_mean_source7_diagonal_sinusoid",
+   "passed": true,
+   "scope": "structures",
+   "source": 7,
+   "shape": "diagonal_sinusoid",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source7_flat",
+   "passed": true,
+   "scope": "structures",
+   "source": 7,
+   "shape": "flat",
+   "count": 4,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source8_gaussian",
+   "passed": true,
+   "scope": "structures",
+   "source": 8,
+   "shape": "gaussian",
+   "count": 128,
+   "mean_ratio": 0.9605481535779145,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_mean_source8_gaussian",
+   "passed": true,
+   "scope": "structures",
+   "source": 8,
+   "shape": "gaussian",
+   "count": 128,
+   "mean_ratio": 0.9605481535779145,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source8_diagonal_step",
+   "passed": true,
+   "scope": "structures",
+   "source": 8,
+   "shape": "diagonal_step",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_mean_source8_diagonal_step",
+   "passed": true,
+   "scope": "structures",
+   "source": 8,
+   "shape": "diagonal_step",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source8_diagonal_sinusoid",
+   "passed": true,
+   "scope": "structures",
+   "source": 8,
+   "shape": "diagonal_sinusoid",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_mean_source8_diagonal_sinusoid",
+   "passed": true,
+   "scope": "structures",
+   "source": 8,
+   "shape": "diagonal_sinusoid",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source8_flat",
+   "passed": true,
+   "scope": "structures",
+   "source": 8,
+   "shape": "flat",
+   "count": 4,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source9_gaussian",
+   "passed": true,
+   "scope": "structures",
+   "source": 9,
+   "shape": "gaussian",
+   "count": 128,
+   "mean_ratio": 0.9634103173777394,
+   "maximum_paired_ratio": 1.0003760517627887
+  },
+  {
+   "name": "shape_mean_source9_gaussian",
+   "passed": true,
+   "scope": "structures",
+   "source": 9,
+   "shape": "gaussian",
+   "count": 128,
+   "mean_ratio": 0.9634103173777394,
+   "maximum_paired_ratio": 1.0003760517627887
+  },
+  {
+   "name": "shape_every_state_source9_diagonal_step",
+   "passed": true,
+   "scope": "structures",
+   "source": 9,
+   "shape": "diagonal_step",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_mean_source9_diagonal_step",
+   "passed": true,
+   "scope": "structures",
+   "source": 9,
+   "shape": "diagonal_step",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source9_diagonal_sinusoid",
+   "passed": true,
+   "scope": "structures",
+   "source": 9,
+   "shape": "diagonal_sinusoid",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_mean_source9_diagonal_sinusoid",
+   "passed": true,
+   "scope": "structures",
+   "source": 9,
+   "shape": "diagonal_sinusoid",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source9_flat",
+   "passed": true,
+   "scope": "structures",
+   "source": 9,
+   "shape": "flat",
+   "count": 4,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source10_gaussian",
+   "passed": true,
+   "scope": "structures",
+   "source": 10,
+   "shape": "gaussian",
+   "count": 128,
+   "mean_ratio": 0.9571564727203796,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_mean_source10_gaussian",
+   "passed": true,
+   "scope": "structures",
+   "source": 10,
+   "shape": "gaussian",
+   "count": 128,
+   "mean_ratio": 0.9571564727203796,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source10_diagonal_step",
+   "passed": true,
+   "scope": "structures",
+   "source": 10,
+   "shape": "diagonal_step",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_mean_source10_diagonal_step",
+   "passed": true,
+   "scope": "structures",
+   "source": 10,
+   "shape": "diagonal_step",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source10_diagonal_sinusoid",
+   "passed": true,
+   "scope": "structures",
+   "source": 10,
+   "shape": "diagonal_sinusoid",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_mean_source10_diagonal_sinusoid",
+   "passed": true,
+   "scope": "structures",
+   "source": 10,
+   "shape": "diagonal_sinusoid",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source10_flat",
+   "passed": true,
+   "scope": "structures",
+   "source": 10,
+   "shape": "flat",
+   "count": 4,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source11_gaussian",
+   "passed": true,
+   "scope": "structures",
+   "source": 11,
+   "shape": "gaussian",
+   "count": 128,
+   "mean_ratio": 0.9700060512705504,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_mean_source11_gaussian",
+   "passed": true,
+   "scope": "structures",
+   "source": 11,
+   "shape": "gaussian",
+   "count": 128,
+   "mean_ratio": 0.9700060512705504,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source11_diagonal_step",
+   "passed": true,
+   "scope": "structures",
+   "source": 11,
+   "shape": "diagonal_step",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_mean_source11_diagonal_step",
+   "passed": true,
+   "scope": "structures",
+   "source": 11,
+   "shape": "diagonal_step",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source11_diagonal_sinusoid",
+   "passed": true,
+   "scope": "structures",
+   "source": 11,
+   "shape": "diagonal_sinusoid",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_mean_source11_diagonal_sinusoid",
+   "passed": true,
+   "scope": "structures",
+   "source": 11,
+   "shape": "diagonal_sinusoid",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "shape_every_state_source11_flat",
+   "passed": true,
+   "scope": "structures",
+   "source": 11,
+   "shape": "flat",
+   "count": 4,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "name": "fresh_pooled_gaussian_gain_at_least_1percent",
+   "passed": true,
+   "mean_ratio": 0.9617802215554001
+  },
+  {
+   "name": "real_exploratory_pooled_gaussian_gain_at_least_1percent",
+   "passed": true,
+   "mean_ratio": 0.9803676308621151
+  }
+ ],
+ "summaries": [
+  {
+   "scope": "null",
+   "source": 0,
+   "ratio": 0.8,
+   "count": 128,
+   "mean_ratio": 1.0001550267278572,
+   "maximum_paired_ratio": 1.01625665218781,
+   "q99_ratio": 1.0,
+   "active_fields": 3
+  },
+  {
+   "scope": "null",
+   "source": 0,
+   "ratio": 0.9,
+   "count": 128,
+   "mean_ratio": 1.0001330288939616,
+   "maximum_paired_ratio": 1.015062322005069,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "scope": "null",
+   "source": 0,
+   "ratio": 1.0,
+   "count": 128,
+   "mean_ratio": 1.0000606448124678,
+   "maximum_paired_ratio": 1.0069052485363816,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "scope": "null",
+   "source": 0,
+   "ratio": 1.1,
+   "count": 128,
+   "mean_ratio": 1.0000127213585492,
+   "maximum_paired_ratio": 1.0014331927251932,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "scope": "null",
+   "source": 0,
+   "ratio": 1.2,
+   "count": 128,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "scope": "null",
+   "source": 1,
+   "ratio": 0.8,
+   "count": 128,
+   "mean_ratio": 1.0001401476722491,
+   "maximum_paired_ratio": 1.0131653595574983,
+   "q99_ratio": 1.0,
+   "active_fields": 5
+  },
+  {
+   "scope": "null",
+   "source": 1,
+   "ratio": 0.9,
+   "count": 128,
+   "mean_ratio": 1.0002482307468143,
+   "maximum_paired_ratio": 1.0085699439788256,
+   "q99_ratio": 1.0,
+   "active_fields": 4
+  },
+  {
+   "scope": "null",
+   "source": 1,
+   "ratio": 1.0,
+   "count": 128,
+   "mean_ratio": 1.0002240319048523,
+   "maximum_paired_ratio": 1.011593261236176,
+   "q99_ratio": 1.0,
+   "active_fields": 3
+  },
+  {
+   "scope": "null",
+   "source": 1,
+   "ratio": 1.1,
+   "count": 128,
+   "mean_ratio": 1.0000692004974499,
+   "maximum_paired_ratio": 1.0039330398340114,
+   "q99_ratio": 1.0,
+   "active_fields": 3
+  },
+  {
+   "scope": "null",
+   "source": 1,
+   "ratio": 1.2,
+   "count": 128,
+   "mean_ratio": 1.0000007007048892,
+   "maximum_paired_ratio": 1.0000531176401688,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "scope": "null",
+   "source": 2,
+   "ratio": 0.8,
+   "count": 128,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "scope": "null",
+   "source": 2,
+   "ratio": 0.9,
+   "count": 128,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "scope": "null",
+   "source": 2,
+   "ratio": 1.0,
+   "count": 128,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "scope": "null",
+   "source": 2,
+   "ratio": 1.1,
+   "count": 128,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "scope": "null",
+   "source": 2,
+   "ratio": 1.2,
+   "count": 128,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "scope": "null",
+   "source": 3,
+   "ratio": 0.8,
+   "count": 128,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "scope": "null",
+   "source": 3,
+   "ratio": 0.9,
+   "count": 128,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "scope": "null",
+   "source": 3,
+   "ratio": 1.0,
+   "count": 128,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "scope": "null",
+   "source": 3,
+   "ratio": 1.1,
+   "count": 128,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "scope": "null",
+   "source": 3,
+   "ratio": 1.2,
+   "count": 128,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "scope": "null",
+   "source": 4,
+   "ratio": 0.8,
+   "count": 64,
+   "mean_ratio": 1.0000337650846667,
+   "maximum_paired_ratio": 1.00101427468488,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "scope": "null",
+   "source": 4,
+   "ratio": 0.9,
+   "count": 64,
+   "mean_ratio": 1.0001187902165956,
+   "maximum_paired_ratio": 1.0033216424108207,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "scope": "null",
+   "source": 4,
+   "ratio": 1.0,
+   "count": 64,
+   "mean_ratio": 1.0000586223388146,
+   "maximum_paired_ratio": 1.0016034166090007,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "scope": "null",
+   "source": 4,
+   "ratio": 1.1,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "scope": "null",
+   "source": 4,
+   "ratio": 1.2,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "scope": "null",
+   "source": 5,
+   "ratio": 0.8,
+   "count": 64,
+   "mean_ratio": 1.0000570335704606,
+   "maximum_paired_ratio": 1.0067658811834133,
+   "q99_ratio": 1.0,
+   "active_fields": 2
+  },
+  {
+   "scope": "null",
+   "source": 5,
+   "ratio": 0.9,
+   "count": 64,
+   "mean_ratio": 1.0000424001396515,
+   "maximum_paired_ratio": 1.0013858864119627,
+   "q99_ratio": 1.0,
+   "active_fields": 3
+  },
+  {
+   "scope": "null",
+   "source": 5,
+   "ratio": 1.0,
+   "count": 64,
+   "mean_ratio": 1.000026976422162,
+   "maximum_paired_ratio": 1.0008814146497274,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "scope": "null",
+   "source": 5,
+   "ratio": 1.1,
+   "count": 64,
+   "mean_ratio": 1.0000038628451815,
+   "maximum_paired_ratio": 1.0001269983924816,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "scope": "null",
+   "source": 5,
+   "ratio": 1.2,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "scope": "null",
+   "source": 6,
+   "ratio": 0.8,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "scope": "null",
+   "source": 6,
+   "ratio": 0.9,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "scope": "null",
+   "source": 6,
+   "ratio": 1.0,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "scope": "null",
+   "source": 6,
+   "ratio": 1.1,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "scope": "null",
+   "source": 6,
+   "ratio": 1.2,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "scope": "null",
+   "source": 7,
+   "ratio": 0.8,
+   "count": 64,
+   "mean_ratio": 1.0000276352137596,
+   "maximum_paired_ratio": 1.0010511787998444,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "scope": "null",
+   "source": 7,
+   "ratio": 0.9,
+   "count": 64,
+   "mean_ratio": 1.0000180630825684,
+   "maximum_paired_ratio": 1.0007947521911114,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "scope": "null",
+   "source": 7,
+   "ratio": 1.0,
+   "count": 64,
+   "mean_ratio": 1.00001251231781,
+   "maximum_paired_ratio": 1.000643267320518,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "scope": "null",
+   "source": 7,
+   "ratio": 1.1,
+   "count": 64,
+   "mean_ratio": 1.000016881505785,
+   "maximum_paired_ratio": 1.0009678509322035,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "scope": "null",
+   "source": 7,
+   "ratio": 1.2,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "scope": "null",
+   "source": 8,
+   "ratio": 0.8,
+   "count": 64,
+   "mean_ratio": 1.0001730859156956,
+   "maximum_paired_ratio": 1.00763571011719,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "scope": "null",
+   "source": 8,
+   "ratio": 0.9,
+   "count": 64,
+   "mean_ratio": 1.0001401893920705,
+   "maximum_paired_ratio": 1.0046034997959026,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "scope": "null",
+   "source": 8,
+   "ratio": 1.0,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "scope": "null",
+   "source": 8,
+   "ratio": 1.1,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "scope": "null",
+   "source": 8,
+   "ratio": 1.2,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "scope": "null",
+   "source": 9,
+   "ratio": 0.8,
+   "count": 64,
+   "mean_ratio": 1.0000533163098482,
+   "maximum_paired_ratio": 1.002072181946641,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "scope": "null",
+   "source": 9,
+   "ratio": 0.9,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "scope": "null",
+   "source": 9,
+   "ratio": 1.0,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "scope": "null",
+   "source": 9,
+   "ratio": 1.1,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "scope": "null",
+   "source": 9,
+   "ratio": 1.2,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "scope": "null",
+   "source": 10,
+   "ratio": 0.8,
+   "count": 64,
+   "mean_ratio": 1.000435145693658,
+   "maximum_paired_ratio": 1.0172960842020478,
+   "q99_ratio": 1.0,
+   "active_fields": 4
+  },
+  {
+   "scope": "null",
+   "source": 10,
+   "ratio": 0.9,
+   "count": 64,
+   "mean_ratio": 1.0003720166325925,
+   "maximum_paired_ratio": 1.015912150996876,
+   "q99_ratio": 1.0,
+   "active_fields": 3
+  },
+  {
+   "scope": "null",
+   "source": 10,
+   "ratio": 1.0,
+   "count": 64,
+   "mean_ratio": 1.0001848185971167,
+   "maximum_paired_ratio": 1.008076878370571,
+   "q99_ratio": 1.0,
+   "active_fields": 3
+  },
+  {
+   "scope": "null",
+   "source": 10,
+   "ratio": 1.1,
+   "count": 64,
+   "mean_ratio": 1.0000208495709548,
+   "maximum_paired_ratio": 1.0009283457972287,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "scope": "null",
+   "source": 10,
+   "ratio": 1.2,
+   "count": 64,
+   "mean_ratio": 1.0000018899109326,
+   "maximum_paired_ratio": 1.0000794342106203,
+   "q99_ratio": 1.0,
+   "active_fields": 1
+  },
+  {
+   "scope": "null",
+   "source": 11,
+   "ratio": 0.8,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "scope": "null",
+   "source": 11,
+   "ratio": 0.9,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "scope": "null",
+   "source": 11,
+   "ratio": 1.0,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "scope": "null",
+   "source": 11,
+   "ratio": 1.1,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "scope": "null",
+   "source": 11,
+   "ratio": 1.2,
+   "count": 64,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0,
+   "q99_ratio": 1.0,
+   "active_fields": 0
+  },
+  {
+   "scope": "structures",
+   "source": 0,
+   "shape": "gaussian",
+   "count": 128,
+   "mean_ratio": 0.9600203126993662,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 0,
+   "shape": "diagonal_step",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 0,
+   "shape": "diagonal_sinusoid",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 0,
+   "shape": "flat",
+   "count": 4,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 1,
+   "shape": "gaussian",
+   "count": 128,
+   "mean_ratio": 0.9512133883494628,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 1,
+   "shape": "diagonal_step",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 1,
+   "shape": "diagonal_sinusoid",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 1,
+   "shape": "flat",
+   "count": 4,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 2,
+   "shape": "gaussian",
+   "count": 128,
+   "mean_ratio": 0.9752017820462422,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 2,
+   "shape": "diagonal_step",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 2,
+   "shape": "diagonal_sinusoid",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 2,
+   "shape": "flat",
+   "count": 4,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 3,
+   "shape": "gaussian",
+   "count": 128,
+   "mean_ratio": 0.9618115095906568,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 3,
+   "shape": "diagonal_step",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 3,
+   "shape": "diagonal_sinusoid",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 3,
+   "shape": "flat",
+   "count": 4,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 4,
+   "shape": "gaussian",
+   "count": 128,
+   "mean_ratio": 0.9587345016406792,
+   "maximum_paired_ratio": 1.0006416058773566
+  },
+  {
+   "scope": "structures",
+   "source": 4,
+   "shape": "diagonal_step",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 4,
+   "shape": "diagonal_sinusoid",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 4,
+   "shape": "flat",
+   "count": 4,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 5,
+   "shape": "gaussian",
+   "count": 128,
+   "mean_ratio": 0.9457212900850698,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 5,
+   "shape": "diagonal_step",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 5,
+   "shape": "diagonal_sinusoid",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 5,
+   "shape": "flat",
+   "count": 4,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 6,
+   "shape": "gaussian",
+   "count": 128,
+   "mean_ratio": 0.967163533604741,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 6,
+   "shape": "diagonal_step",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 6,
+   "shape": "diagonal_sinusoid",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 6,
+   "shape": "flat",
+   "count": 4,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 7,
+   "shape": "gaussian",
+   "count": 128,
+   "mean_ratio": 0.9665495856291423,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 7,
+   "shape": "diagonal_step",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 7,
+   "shape": "diagonal_sinusoid",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 7,
+   "shape": "flat",
+   "count": 4,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 8,
+   "shape": "gaussian",
+   "count": 128,
+   "mean_ratio": 0.9605481535779145,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 8,
+   "shape": "diagonal_step",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 8,
+   "shape": "diagonal_sinusoid",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 8,
+   "shape": "flat",
+   "count": 4,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 9,
+   "shape": "gaussian",
+   "count": 128,
+   "mean_ratio": 0.9634103173777394,
+   "maximum_paired_ratio": 1.0003760517627887
+  },
+  {
+   "scope": "structures",
+   "source": 9,
+   "shape": "diagonal_step",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 9,
+   "shape": "diagonal_sinusoid",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 9,
+   "shape": "flat",
+   "count": 4,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 10,
+   "shape": "gaussian",
+   "count": 128,
+   "mean_ratio": 0.9571564727203796,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 10,
+   "shape": "diagonal_step",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 10,
+   "shape": "diagonal_sinusoid",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 10,
+   "shape": "flat",
+   "count": 4,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 11,
+   "shape": "gaussian",
+   "count": 128,
+   "mean_ratio": 0.9700060512705504,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 11,
+   "shape": "diagonal_step",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 11,
+   "shape": "diagonal_sinusoid",
+   "count": 32,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  },
+  {
+   "scope": "structures",
+   "source": 11,
+   "shape": "flat",
+   "count": 4,
+   "mean_ratio": 1.0,
+   "maximum_paired_ratio": 1.0
+  }
+ ],
+ "frozen_candidate_dependencies": {
+  "noise_balanced_validation_inputs.py": {
+   "sha256": "f4c21569a0befa16032248628e17371d4e30562796a6f597774efa959d2f5066",
+   "source": "\"\"\"Frozen assumed models and independent-validation generation PSDs, one explicit FFT convention.\"\"\"\nimport json\nimport numpy as np\nfrom study_noise_neighbourhoods import ROOT, sha256\nfrom study_noise_empirical_cross_spectrum import fit\nfrom study_noise_profile_capture_transfer import flat_planes\nfrom study_noise_profile_covariance_wiener import prepare, spectrum_root\nfrom noise_pilot_transport import pilot_model\n\n\nNAMES = ('correction-moyenne-calibree-axes-bruit-v001-20261027T120806Z.json',\n    'extraction-paires-profils-bruit-v001-20261026T174656Z.json',\n    'melange-fixe-covariances-bruit-v001-20261026T175757Z.json',\n    'transfert-spectres-moyenne-calibree-bruit-v001-20261027T122643Z.json',\n    'contextes-abstention-axes-bruit-v001-20261026T221702Z.json',\n    'paires-supplementaires-axes-bruit-v001-20261026T222302Z.json',\n    'paires-supplementaires-axes-bruit-v002-20261026T222833Z.json',\n    'cible-moyenne-pilote-equilibre-bruit-v001-20261027T130013Z.json',\n    'cible-equilibree-residus-reels-bruit-v001-20261027T130438Z.json')\n\n\ndef load():\n    paths = [ROOT/'docs/validation/raw'/n for n in NAMES]; hashes = [sha256(p) for p in paths]\n    parent, training, axes, held = [json.loads(p.read_text(encoding='utf-8')) for p in paths[:4]]\n    matrix = np.asarray(axes['fixed_transform']); assumed = {}; models = []; metadata = []\n    for train in training['native']['pairs']:\n        iso = train['a']['iso']\n        covariance, _, _, _, audit = fit(np.einsum('ab,byx->ayx', matrix, (flat_planes(train, 'a')-flat_planes(train, 'b'))/np.sqrt(2)))\n        frozen = next(c for c in parent['calibrations'] if c['iso'] == iso)\n        assumed[iso] = dict(prepared=prepare(covariance), model=pilot_model(covariance),\n            calibration={k: frozen[k] for k in ('precision', 'threshold')})\n        root, error = spectrum_root(np.fft.fft2(covariance, axes=(-2, -1)).transpose(2, 3, 0, 1))\n        models.append(dict(**assumed[iso], root=root, iso=iso, kind='matched'))\n        metadata.append(dict(index=len(metadata), iso=iso, kind='matched', a=train['a']['raw'], b=train['b']['raw'],\n            fit_audit=audit, generator_covariance_max_error=error))\n    for dataset in range(3):\n        contexts = json.loads(paths[dataset+4].read_text(encoding='utf-8'))\n        for source in (s for s in held['sources'] if s['dataset'] == dataset):\n            pair = next(p for p in contexts['records'] if p['a']['native']['raw'] == source['a'])\n            y, x = source['y'], source['x']\n            a, b = [np.asarray(pair[k]['native']['original_y_co_cg']).reshape(3, 256, 256)[:, y:y+64, x:x+64] for k in ('a', 'b')]\n            covariance, _, _, _, audit = fit(np.einsum('ab,byx->ayx', matrix, (a-b)/np.sqrt(2)))\n            root, error = spectrum_root(np.fft.fft2(covariance, axes=(-2, -1)).transpose(2, 3, 0, 1))\n            models.append(dict(**assumed[source['iso']], root=root, iso=source['iso'], kind='cross_capture'))\n            metadata.append(dict(index=len(metadata), iso=source['iso'], kind='cross_capture', a=source['a'], b=source['b'],\n                dataset=dataset, x=x, y=y, fit_audit=audit, generator_covariance_max_error=error))\n        del contexts\n    if len(models) != 12: raise ValueError('Expected4 matched +8 different-capture generation PSDs')\n    return models, metadata, paths, hashes\n"
+  },
+  "noise_balanced_target.py": {
+   "sha256": "836b7cad551a49fe857832f85ffe424f680f3c38f81935fba5f4139b4a17ce11",
+   "source": "\"\"\"Experimental frozen DC evidence plus balanced-denoised target, lazy graph when gate closed.\"\"\"\nfrom study_noise_group_mean_gate import evaluate as reference_evaluate\nfrom study_noise_profile_covariance_wiener import reconstruct\nfrom noise_pilot_transport import pilot_output\nfrom noise_balanced_pilot import pilots\n\n\ndef evaluate(observed, truth, prepared, model, calibration):\n    reference, audit = reference_evaluate(observed, truth, prepared, model, calibration)\n    result = dict(pilot=reference['pilot'], raw_gated=reference['gated'])\n    active = any(row['gain'] > 0. for row in audit)\n    if not active:\n        result['balanced_target'] = reference['pilot']\n        return result, dict(graph_constructed=False, gains=[r['gain'] for r in audit])\n    candidates, graph = pilots(observed, truth, model)\n    pilot = pilot_output(observed, truth, model, self_policy='unit')\n    result['balanced_target'] = reconstruct(observed, truth, prepared, 'shared', pilot,\n        dc_source='gated', dc_gate=calibration, dc_target=candidates['balanced_overlap'])['dc_wiener']\n    return result, dict(graph_constructed=True, gains=[r['gain'] for r in audit], graph=graph)\n"
+  },
+  "noise_balanced_pilot.py": {
+   "sha256": "6a8c31f28257abd5b62b8a372962ea42fb7be6bb84a0cf41ed9bbd11614c41f3",
+   "source": "\"\"\"Finite valid60 symmetric pixel graph; positive balanced pilot, no periodic padding.\"\"\"\nimport numpy as np\nfrom noise_pilot_transport import box5\n\n\ndef multiply(vector, source, target, weights):\n    size = len(vector)\n    return (vector+np.bincount(source, weights*vector[target], minlength=size)\n            +np.bincount(target, weights*vector[source], minlength=size))\n\n\ndef balance(size, source, target, weights, tolerance=1e-8, maximum_iterations=1000):\n    source = np.asarray(source); target = np.asarray(target); weights = np.asarray(weights, dtype=float)\n    if (size < 1 or source.shape != target.shape or source.shape != weights.shape or source.ndim != 1\n            or not np.issubdtype(source.dtype, np.integer) or not np.issubdtype(target.dtype, np.integer)\n            or np.any(source < 0) or np.any(target >= size) or np.any(source >= target)\n            or not np.isfinite(weights).all() or np.any(weights < 0) or tolerance <= 0 or maximum_iterations < 1):\n        raise ValueError('Unique oriented nonnegative symmetric edges required')\n    degree = multiply(np.ones(size), source, target, weights)\n    scale = 1./np.sqrt(degree)\n    for iteration in range(maximum_iterations):\n        rows = scale*multiply(scale, source, target, weights)\n        error = float(np.max(abs(rows-1.)))\n        if error <= tolerance: return scale, degree, dict(iterations=iteration, max_row_column_error=error)\n        if not np.isfinite(rows).all() or np.any(rows <= 0): raise ValueError('Non-finite balance iteration')\n        scale /= np.sqrt(rows)\n    raise ValueError('Balanced graph failed to converge within fixed numerical budget')\n\n\ndef pilots(observed, truth, model, h=.8):\n    if observed.shape != (3, 64, 64) or truth.shape != observed.shape or not all(np.isfinite(a).all() for a in (observed, truth)):\n        raise ValueError('Finite three-plane64 fields required')\n    if not np.isfinite(h) or h <= 0: raise ValueError('Positive fixed strength required')\n    patches = np.lib.stride_tricks.sliding_window_view(observed, (5, 5), axis=(-2, -1))\n    index = np.arange(3600).reshape(60, 60); sources = []; targets = []; weights = []\n    for dy, dx, floor in model['offsets']:\n        if dy < 0 or (dy == 0 and dx < 0): continue\n        y0, y1 = max(0, -dy), min(60, 60-dy); x0, x1 = max(0, -dx), min(60, 60-dx)\n        delta = patches[:, y0:y1, x0:x1]-patches[:, y0+dy:y1+dy, x0+dx:x1+dx]\n        distance = np.mean(delta*delta, axis=(0, 3, 4))\n        sources.append(index[y0:y1, x0:x1].ravel())\n        targets.append(index[y0+dy:y1+dy, x0+dx:x1+dx].ravel())\n        weights.append(np.exp(-np.maximum(distance-floor, 0.)/(h*h*model['variance'])).ravel())\n    source = np.concatenate(sources); target = np.concatenate(targets); weight = np.concatenate(weights)\n    scale, degree, audit = balance(3600, source, target, weight)\n    result = {}; mass_errors = {}\n    for policy in ('row', 'balanced'):\n        arrays = []\n        for array in (observed, truth):\n            valid = array[:, 2:62, 2:62].reshape(3, 3600); output = np.empty_like(valid)\n            for plane in range(3):\n                output[plane] = (multiply(valid[plane], source, target, weight)/degree if policy == 'row'\n                    else scale*multiply(scale*valid[plane], source, target, weight))\n            arrays.append(output.reshape(3, 60, 60))\n        mass_errors[policy] = [float(np.max(abs(arr.sum(axis=(1, 2))-original[:, 2:62, 2:62].sum(axis=(1, 2)))))\n                               for arr, original in zip(arrays, (observed, truth))]\n        output, signal = [a[:, 12:48, 12:48] for a in arrays]\n        result[policy] = output, signal, output-signal\n        # SAME5 patch aggregation as the reference: average corresponding\n        # weights, not already displaced output pixels (which would blur twice).\n        averaged = [np.zeros((3, 36, 36)), np.zeros((3, 36, 36))]\n        self_weight = (1./degree if policy == 'row' else scale*scale).reshape(60, 60)\n        effective = box5(self_weight)[10:46, 10:46]\n        for output, original in zip(averaged, (observed, truth)):\n            output += effective[None]*original[:, 14:50, 14:50]\n        cursor = 0\n        for dy, dx, _ in model['offsets']:\n            if dy < 0 or (dy == 0 and dx < 0): continue\n            y0, y1 = max(0, -dy), min(60, 60-dy); x0, x1 = max(0, -dx), min(60, 60-dx)\n            count = (y1-y0)*(x1-x0); sl = slice(cursor, cursor+count); cursor += count\n            i, j, w = source[sl], target[sl], weight[sl]\n            forward = w/degree[i] if policy == 'row' else scale[i]*w*scale[j]\n            backward = w/degree[j] if policy == 'row' else forward\n            for sy, sx, yslice, xslice, coefficient in (\n                    (dy, dx, slice(y0, y1), slice(x0, x1), forward),\n                    (-dy, -dx, slice(y0+dy, y1+dy), slice(x0+dx, x1+dx), backward)):\n                field = np.zeros((60, 60)); field[yslice, xslice] = coefficient.reshape(y1-y0, x1-x0)\n                effective = box5(field)[10:46, 10:46]\n                for output, original in zip(averaged, (observed, truth)):\n                    output += effective[None]*original[:, 14+sy:50+sy, 14+sx:50+sx]\n        result[policy+'_overlap'] = averaged[0], averaged[1], averaged[0]-averaged[1]\n    audit.update(full60_mass_errors=mass_errors, edges=len(weight), domain='physical2:62 validpatchcentres; cropped14:50; overlap5 mass claim NOTextendedtofinitecroppedoutput')\n    return result, audit\n"
+  },
+  "noise_group_mean_gate.py": {
+   "sha256": "4551d96eff2dc20c5014a9588f0b9fc9a0876d07075eae797e81a338881d0764",
+   "source": "\"\"\"Research-only shared DC innovation gate with independent empirical null calibration.\"\"\"\nimport numpy as np\n\n\ndef precision_matrix(fields):\n    fields = np.asarray(fields, dtype=float)\n    if fields.ndim != 3 or fields.shape[1:] != (25, 3) or len(fields) < 2 or not np.isfinite(fields).all():\n        raise ValueError('Independent fields with25 finite three-plane innovations required')\n    moment = np.einsum('fga,fgb->ab', fields, fields)/(len(fields)*25)\n    eigenvalues = np.linalg.eigvalsh(moment)\n    if eigenvalues.min() <= 1e-12 or eigenvalues.max()/eigenvalues.min() > 1e8:\n        raise ValueError('Ill-conditioned null moment; abstain, do not regularize to fit quality')\n    return moment, np.linalg.inv(moment)\n\n\ndef score(innovation, precision):\n    innovation = np.asarray(innovation, dtype=float); precision = np.asarray(precision, dtype=float)\n    if innovation.shape[-1:] != (3,) or precision.shape != (3, 3) or not all(np.isfinite(x).all() for x in (innovation, precision)):\n        raise ValueError('Finite three-plane innovation and precision required')\n    return np.maximum(np.einsum('...a,ab,...b->...', innovation, precision, innovation), 0.)\n\n\ndef gain(innovation, calibration):\n    threshold = calibration['threshold']\n    if not np.isfinite(threshold) or threshold <= 0: raise ValueError('Positive frozen null threshold required')\n    value = score(innovation, calibration['precision'])\n    return np.maximum(0., 1.-threshold/np.maximum(value, threshold))\n"
+  },
+  "noise_pilot_transport.py": {
+   "sha256": "ff1a12068245ad805ca1ea1953a1e5872c064b7a4ca5d609a0b98d6b6a548601",
+   "source": "\"\"\"Exact local scalar transport of the existing joint overlapping NLM pilot.\"\"\"\nimport numpy as np\nfrom study_noise_nonlocal_directional import mean_patch5\nfrom study_noise_collaborative_wiener import PATCH, SPATIAL\n\n\nSUPPORT = np.array([(y, x) for y in range(-12, 13) for x in range(-12, 13)])\n\n\ndef pilot_model(covariance):\n    covariance = np.asarray(covariance, dtype=float)\n    if covariance.shape != (3, 3, 128, 128) or not np.isfinite(covariance).all():\n        raise ValueError('Finite prepared three-plane covariance required')\n    marginal = np.asarray([covariance[c, c] for c in range(3)])\n    if not np.allclose(marginal[:, 0, 0], 1., atol=1e-10):\n        raise ValueError('Unit noise axes required')\n    offsets = []\n    for y in range(-10, 11):\n        for x in range(-10, 11):\n            if y or x:\n                floor = 2*(1-float(np.mean(marginal[:, y%128, x%128])))\n                if floor < -1e-8:\n                    raise ValueError('Invalid distance covariance')\n                offsets.append((y, x, max(0., floor)))\n    return dict(variance=1., offsets=offsets)\n\n\ndef box_mean(values, size):\n    if size not in (3, 5):\n        raise ValueError('Experimental matching window must be3 or5')\n    padding = [(0, 0)]*values.ndim\n    padding[-2:] = [(1, 0), (1, 0)]\n    integral = np.pad(values, padding).cumsum(axis=-2).cumsum(axis=-1)\n    return (integral[..., size:, size:]-integral[..., :-size, size:]-integral[..., size:, :-size]+integral[..., :-size, :-size])/(size*size)\n\n\ndef box5(values):\n    return box_mean(values, 5)\n\n\ndef _transport_weights(observed, model, h, directions, self_policy, first, last, matching_size=5):\n    observed = np.asarray(observed, dtype=float)\n    if observed.shape != (3, 64, 64) or not np.isfinite(observed).all() or not np.isfinite(h) or h <= 0:\n        raise ValueError('Finite64 observation and positive pilot strength required')\n    if self_policy not in ('neighbor_max', 'unit'):\n        raise ValueError('Unknown experimental self-weight hypothesis')\n    if matching_size not in (3, 5):\n        raise ValueError('Experimental matching window must be3 or5')\n    if not 14 <= first < last <= 50:\n        raise ValueError('Pilot output requires complete valid context')\n    expected = {(y, x) for y in range(-10, 11) for x in range(-10, 11) if y or x}\n    offsets = model['offsets']\n    if len(offsets) != 440 or {(dy, dx) for dy, dx, _ in offsets} != expected or model['variance'] <= 0:\n        raise ValueError('Complete existing21search model required')\n    if directions is not None and (directions.ndim != 4 or directions.shape[1:] != observed.shape\n            or not 1 <= len(directions) <= 72 or not np.isfinite(directions).all()):\n        raise ValueError('One to72 finite tangent fields required')\n    extent = 2+matching_size//2  # Fixed5 aggregation plus variable matching radius.\n    reference = observed[:, first-extent:last+extent, first-extent:last+extent]\n    wide = last-first+4\n    weights = []; maximum = np.zeros((wide, wide)); total = np.zeros((wide, wide))\n    if directions is not None:\n        tangent_weights = []; tangent_max = np.zeros((len(directions), wide, wide)); tangent_total = np.zeros_like(tangent_max)\n        direction_reference = directions[:, :, first-extent:last+extent, first-extent:last+extent]\n    for dy, dx, floor in offsets:\n        delta = reference-observed[:, first-extent+dy:last+extent+dy, first-extent+dx:last+extent+dx]\n        distance = (mean_patch5(np.mean(delta*delta, axis=0)) if matching_size == 5\n                    else box_mean(np.mean(delta*delta, axis=0), matching_size))\n        weight = np.exp(-np.maximum(distance-floor, 0.)/(h*h*model['variance']))\n        if directions is not None:\n            tangent_delta = direction_reference-directions[:, :, first-extent+dy:last+extent+dy, first-extent+dx:last+extent+dx]\n            tangent_distance = 2*box_mean(np.mean(delta[None]*tangent_delta, axis=1), matching_size)\n            tangent_weight = -weight[None]*tangent_distance/(h*h*model['variance'])*(distance > floor)[None]\n            tangent_max = np.where((weight > maximum)[None], tangent_weight, tangent_max)\n            tangent_weights.append(tangent_weight); tangent_total += tangent_weight\n        weights.append(weight); total += weight; maximum = np.maximum(maximum, weight)\n    if self_policy == 'unit':\n        maximum.fill(1.)\n        if directions is not None:\n            tangent_max.fill(0.)\n    total += maximum\n    own = np.ones_like(total)\n    np.divide(maximum, total, out=own, where=total > 0)\n    effective = [mean_patch5(own)]\n    if directions is not None:\n        tangent_total += tangent_max\n        own_tangent = np.zeros_like(tangent_total)\n        np.divide(tangent_max*total[None]-maximum[None]*tangent_total, total[None]**2,\n                  out=own_tangent, where=total[None] > 0)\n        tangent_effective = [box5(own_tangent)]\n    for index, weight in enumerate(weights):\n        normalized = np.zeros_like(total)\n        np.divide(weight, total, out=normalized, where=total > 0)\n        effective.append(mean_patch5(normalized))\n        if directions is not None:\n            tangent = np.zeros_like(tangent_total)\n            np.divide(tangent_weights[index]*total[None]-weight[None]*tangent_total,\n                      total[None]**2, out=tangent, where=total[None] > 0)\n            tangent_effective.append(box5(tangent))\n    positions = np.array([(0, 0)]+[(dy, dx) for dy, dx, _ in offsets])\n    return positions, np.asarray(effective), np.asarray(tangent_effective) if directions is not None else None\n\n\ndef _transport_kernel(observed, model, h, directions, self_policy):\n    positions, effective, tangent_effective = _transport_weights(observed, model, h, directions, self_policy, 30, 35)\n    effective = effective.reshape(441, 25)\n    indices = (PATCH[:, 0, None]+positions[None, :, 0]+12)*25+(PATCH[:, 1, None]+positions[None, :, 1]+12)\n    kernel = np.zeros((25, 625))\n    np.put_along_axis(kernel, indices, effective.T, axis=1)\n    if not np.isfinite(kernel).all() or not np.allclose(kernel.sum(axis=1), 1., atol=1e-12):\n        raise ValueError('Pilot transport is not finite constant-preserving')\n    tangent_kernel = None\n    if directions is not None:\n        tangent_values = np.asarray(tangent_effective).reshape(441, len(directions), 25).transpose(1, 2, 0)\n        tangent_kernel = np.zeros((len(directions), 25, 625))\n        np.put_along_axis(tangent_kernel, indices[None], tangent_values, axis=2)\n        if not np.isfinite(tangent_kernel).all() or not np.allclose(tangent_kernel.sum(axis=2), 0., atol=1e-10):\n            raise ValueError('Tangent transport fails constant-preservation derivative')\n    return kernel, tangent_kernel\n\n\ndef pilot_output(observed, truth, model, h=.8, self_policy='neighbor_max', matching_size=5):\n    observed = np.asarray(observed, dtype=float); truth = np.asarray(truth, dtype=float)\n    if truth.shape != observed.shape or not np.isfinite(truth).all():\n        raise ValueError('Matched finite truth used only for conditional transport required')\n    positions, weights, _ = _transport_weights(observed, model, h, None, self_policy, 14, 50, matching_size)\n    output = np.zeros((3, 36, 36)); signal = np.zeros_like(output)\n    for (dy, dx), weight in zip(positions, weights):\n        output += weight[None]*observed[:, 14+dy:50+dy, 14+dx:50+dx]\n        signal += weight[None]*truth[:, 14+dy:50+dy, 14+dx:50+dx]\n    if not np.isfinite(output).all() or not np.isfinite(signal).all():\n        raise ValueError('Nonfinite pilot output')\n    return output, signal, output-signal\n\n\ndef pilot_kernel(observed, model, h=.8, self_policy='neighbor_max'):\n    return _transport_kernel(observed, model, h, None, self_policy)[0]\n\n\ndef pilot_jvp(observed, directions, model, h=.8, self_policy='neighbor_max'):\n    kernel, tangent_kernel = _transport_kernel(observed, model, h, directions, self_policy)\n    original = observed[:, 20:45, 20:45].reshape(3, 625)\n    tangent = directions[:, :, 20:45, 20:45].reshape(len(directions), 3, 625)\n    value = original@kernel.T@SPATIAL.T\n    frozen = np.einsum('pck,jk->pcj', tangent, kernel, optimize=True)@SPATIAL.T\n    full = frozen+np.einsum('ck,pjk->pcj', original, tangent_kernel, optimize=True)@SPATIAL.T\n    if not all(np.isfinite(a).all() for a in (value, full, frozen)):\n        raise ValueError('Nonfinite pilot directional response')\n    return value, full, frozen\n\n\ndef coefficient_covariance_directions(spectrum):\n    if spectrum.shape != (128, 128, 3, 3) or not np.isfinite(spectrum).all():\n        raise ValueError('Finite three-plane spectrum128 required')\n    targets = [(c, q) for c in range(3) for q in range(1, 25)]\n    result = []\n    for first in range(0, len(targets), 12):\n        selected = targets[first:first+12]\n        impulses = np.zeros((len(selected), 3, 128, 128))\n        for index, (plane, coefficient) in enumerate(selected):\n            impulses[index, plane, 62:67, 62:67] = SPATIAL[coefficient].reshape(5, 5)\n        fourier = np.fft.fft2(impulses, axes=(-2, -1)).transpose(0, 2, 3, 1)\n        response = np.fft.ifft2(np.einsum('yxab,pyxb->pyxa', spectrum, fourier, optimize=True).transpose(0, 3, 1, 2), axes=(-2, -1))\n        if np.max(abs(response.imag)) > 1e-9:\n            raise ValueError('Covariance directions are not real')\n        result.extend(response.real[:, :, 32:96, 32:96])\n    return targets, np.asarray(result)\n\n\ndef noise_matrices(covariance):\n    covariance = np.asarray(covariance, dtype=float)\n    if covariance.shape != (3, 3, 128, 128) or not np.isfinite(covariance).all():\n        raise ValueError('Finite three-plane covariance128 required')\n    marginal = np.asarray([covariance[c, c] for c in range(3)])\n    support_delta = SUPPORT[:, None]-SUPPORT[None, :]\n    patch_delta = PATCH[:, None]-PATCH[None, :]\n    cross_delta = PATCH[:, None]-SUPPORT[None, :]\n    full = marginal[:, support_delta[:, :, 0]%128, support_delta[:, :, 1]%128]\n    patch = marginal[:, patch_delta[:, :, 0]%128, patch_delta[:, :, 1]%128]\n    cross = marginal[:, cross_delta[:, :, 0]%128, cross_delta[:, :, 1]%128]\n    raw_variance = np.einsum('qi,cij,qj->cq', SPATIAL, patch, SPATIAL, optimize=True)\n    return full, cross, raw_variance\n\n\ndef coefficient_powers(observed, truth, kernel, matrices):\n    if observed.shape != (3, 64, 64) or truth.shape != observed.shape or kernel.shape != (25, 625):\n        raise ValueError('Finite matched64 fields and25x625 transport required')\n    if not all(np.isfinite(a).all() for a in (observed, truth, kernel)):\n        raise ValueError('Nonfinite pilot data')\n    effective = SPATIAL@kernel\n    raw = observed[:, 30:35, 30:35].reshape(3, 25)@SPATIAL.T\n    guide = observed[:, 20:45, 20:45].reshape(3, 625)@effective.T\n    signal = truth[:, 30:35, 30:35].reshape(3, 25)@SPATIAL.T\n    transported = truth[:, 20:45, 20:45].reshape(3, 625)@effective.T\n    full, cross, raw_variance = matrices\n    guide_variance = np.einsum('qk,ckl,ql->cq', effective, full, effective, optimize=True)\n    cross_variance = np.einsum('qi,cik,qk->cq', SPATIAL, cross, effective, optimize=True)\n    if np.min(guide_variance) < -1e-9:\n        raise ValueError('Negative fixed-geometry pilot variance')\n    values = dict(guide_squared=guide**2, guide_variance_subtracted=guide**2-guide_variance,\n        raw_guide_cross_subtracted=raw*guide-cross_variance, raw_variance_subtracted=raw**2-raw_variance)\n    return dict(estimates={k: v.tolist() for k, v in values.items()},\n        desired_signal_power=(signal**2).tolist(), transported_signal_power=(transported**2).tolist(),\n        signal_cross_product=(signal*transported).tolist(), raw_noise_variance=raw_variance.tolist(),\n        guide_noise_variance=guide_variance.tolist(), raw_guide_noise_covariance=cross_variance.tolist())\n"
+  },
+  "study_noise_group_mean_gate.py": {
+   "sha256": "5a5dd3c36ce605f7784bd8be7c850edd47f6c697ed2b1c6b9a813173bf36bca2",
+   "source": "\"\"\"Independent null-calibrated shared DC correction; no clean truth in gate or calibration.\"\"\"\nfrom datetime import datetime, timezone\nimport json\nfrom pathlib import Path\nimport numpy as np\nfrom study_noise_neighbourhoods import ROOT, git, sha256\nfrom study_noise_empirical_cross_spectrum import fit\nfrom study_noise_profile_capture_transfer import flat_planes\nfrom study_noise_profile_covariance_wiener import prepare, reconstruct, spectrum_root, draw\nfrom study_noise_profile_real_residuals import measures\nfrom study_noise_single_frame_axes_transfer import axis_transform\nfrom noise_pilot_transport import pilot_model, pilot_output\nfrom noise_group_mean_gate import precision_matrix, score\n\n\ndef evaluate(observed, truth, prepared, model, calibration=None):\n    pilot = pilot_output(observed, truth, model, self_policy='unit'); audit = []\n    baseline = reconstruct(observed, truth, prepared, 'shared', pilot, dc_audit=audit)['dc_wiener']\n    if len(audit) != 25: raise ValueError('Fixed25 reference groups required')\n    outputs = dict(pilot=baseline)\n    if calibration is not None:\n        gated_audit = []\n        outputs['gated'] = reconstruct(observed, truth, prepared, 'shared', pilot, dc_source='gated',\n            dc_gate=calibration, dc_audit=gated_audit)['dc_wiener']\n        audit = gated_audit\n    return outputs, audit\n\n\ndef run():\n    names = ('contextes-abstention-axes-bruit-v001-20261026T221702Z.json',\n        'paires-supplementaires-axes-bruit-v001-20261026T222302Z.json',\n        'paires-supplementaires-axes-bruit-v002-20261026T222833Z.json',\n        'queues-reelles-poids-propre-pilote-bruit-v001-20261027T082913Z.json',\n        'extraction-paires-profils-bruit-v001-20261026T174656Z.json',\n        'melange-fixe-covariances-bruit-v001-20261026T175757Z.json',\n        'moyenne-brute-groupes-axes-bruit-v001-20261027T115626Z.json')\n    paths = [ROOT/'docs/validation/raw'/n for n in names]; hashes = [sha256(p) for p in paths]\n    nulls, training, axes, prior = [json.loads(p.read_text(encoding='utf-8')) for p in paths[3:]]\n    matrix = np.asarray(axes['fixed_transform']); models = {}; calibrations = []; records = []\n    started = datetime.now(timezone.utc)\n    for index, train in enumerate(training['native']['pairs']):\n        iso = train['a']['iso']\n        covariance, _, _, _, _ = fit(np.einsum('ab,byx->ayx', matrix, (flat_planes(train, 'a')-flat_planes(train, 'b'))/np.sqrt(2)))\n        prepared, model = prepare(covariance), pilot_model(covariance)\n        root, _ = spectrum_root(np.fft.fft2(covariance, axes=(-2, -1)).transpose(2, 3, 0, 1))\n        fit_fields = []; cal_fields = []\n        for stage, count in ((0, 64), (1, 128)):\n            for trial in range(count):\n                seed = 274427000+index*10000+stage*1000+trial\n                observed = draw(root, seed)[:, 32:96, 32:96]\n                _, audit = evaluate(observed, np.zeros_like(observed), prepared, model)\n                item = dict(seed=seed, innovations=[a['innovation'] for a in audit])\n                (fit_fields if stage == 0 else cal_fields).append(item)\n            if stage == 0:\n                moment, precision = precision_matrix([r['innovations'] for r in fit_fields])\n        for row in cal_fields:\n            row['maximum_group_score'] = float(np.max(score(row['innovations'], precision)))\n        threshold = max(r['maximum_group_score'] for r in cal_fields)\n        calibration = dict(precision=precision.tolist(), threshold=threshold)\n        models[iso] = prepared, model, calibration\n        calibrations.append(dict(iso=iso, uncentred_null_moment=moment.tolist(), **calibration,\n            moment_fields=fit_fields, threshold_fields=cal_fields))\n        print('DC gate frozen calibration', iso, 'threshold', threshold, flush=True)\n        for trial in range(128):\n            seed = 274427000+index*10000+2000+trial\n            observed = draw(root, seed)[:, 32:96, 32:96]; truth = np.zeros_like(observed)\n            values, audit = evaluate(observed, truth, prepared, model, calibration)\n            metrics = {k: measures(v, truth[:, 26:38, 26:38], np.array([1., 0., 0.])) for k, v in values.items()}\n            records.append(dict(scope='independent_gaussian_flat', iso=iso, seed=seed, trial=trial,\n                metrics=metrics, gains=[a['gain'] for a in audit]))\n        print('DC gate independent null', iso, flush=True)\n    outside = np.ones((64, 64), dtype=bool); outside[16:49, 16:49] = False\n    blocks = {}\n    for dataset in range(3):\n        contexts = json.loads(paths[dataset].read_text(encoding='utf-8'))\n        for pair in contexts['records']:\n            raw = pair['a']['native']['raw']\n            a, b = [np.asarray(pair[k]['native']['original_y_co_cg']).reshape(3, 256, 256) for k in ('a', 'b')]\n            for source in (r for r in nulls['records'] if r['dataset'] == dataset and r['a'] == raw):\n                y, x = source['y'], source['x']; differential = (a[:, y:y+64, x:x+64]-b[:, y:y+64, x:x+64])/np.sqrt(2)\n                sigma = np.asarray(source['outer_y_co_cg_sigma'])\n                if not np.allclose(np.std(differential[:, outside], axis=1), sigma, rtol=1e-12, atol=1e-12):\n                    raise ValueError('Fixed real block calibration changed')\n                noise = (differential-differential[:, outside].mean(axis=1)[:, None, None])/sigma[:, None, None]\n                transform, inverse = axis_transform(matrix, sigma, source['outer_axis_sigma'])\n                blocks[(raw, x, y)] = noise, transform, inverse\n        del contexts\n    cases = [dict(r, scope='real_differential_forms') for r in prior['records'] if r['scope'] == 'real_differential_forms']\n    cases += [dict(r, scope='real_differential_flat', shape='flat', amplitude=0., width=None, direction=[1., 0., 0.]) for r in nulls['records']]\n    yy, xx = np.mgrid[:64, :64]; replays = 0; max_replay_error = 0.\n    for parent in cases:\n        noise, transform, inverse = blocks[(parent['a'], parent['x'], parent['y'])]\n        shape, amplitude, width = parent['shape'], parent['amplitude'], parent['width']; vector = np.asarray(parent['direction'])\n        scalar = (amplitude*np.exp(-((xx-32.5)**2+(yy-32.5)**2)/(2*width*width)) if shape == 'gaussian'\n            else amplitude*np.where(xx >= 32.5, 1., -1.) if shape == 'step' else np.zeros((64, 64)))\n        truth = vector[:, None, None]*scalar\n        prepared, model, calibration = models[parent['iso']]\n        values, audit = evaluate(np.einsum('ab,byx->ayx', transform, truth+noise),\n            np.einsum('ab,byx->ayx', transform, truth), prepared, model, calibration)\n        metrics = {}\n        for key, value in values.items():\n            restored = tuple(np.einsum('ab,byx->ayx', inverse, v) for v in value)\n            metrics[key] = measures(restored, truth[:, 26:38, 26:38], vector)\n            if shape == 'gaussian': metrics[key]['peak_directional_signal_ratio'] = float(vector@restored[1][:, 6, 6]/scalar[32, 32])\n            leak = metrics[key]['color_direction']['relative_orthogonal_rms']\n            if leak is not None and leak > 1e-9: raise ValueError('Conditional colour transport fails')\n        if parent['scope'] == 'real_differential_forms':\n            for key in ('mse', 'signal_distortion', 'residual_noise', 'cross'):\n                error = float(np.max(abs(np.asarray(metrics['pilot']['full'][key])-parent['metrics']['pilot']['full'][key])))\n                max_replay_error = max(max_replay_error, error)\n                if error > 1e-12: raise ValueError('Blind reference replay failed')\n            replays += 1\n        records.append(dict(**{k: parent[k] for k in ('scope', 'iso', 'a', 'b', 'x', 'y', 'shape', 'amplitude', 'width', 'direction')},\n            metrics=metrics, gains=[a['gain'] for a in audit]))\n    if len(records) != 802 or replays != 200 or [sha256(p) for p in paths] != hashes: raise ValueError('Incomplete or changed study')\n    now = datetime.now(timezone.utc)\n    output = ROOT/'docs/validation/raw'/f\"correction-moyenne-calibree-axes-bruit-v001-{now.strftime('%Y%m%dT%H%M%SZ')}.json\"\n    dependencies = ('noise_group_mean_gate.py', 'noise_pilot_transport.py', 'study_noise_profile_covariance_wiener.py',\n        'study_noise_empirical_cross_spectrum.py', 'study_noise_profile_capture_transfer.py',\n        'study_noise_profile_real_residuals.py', 'study_noise_single_frame_axes_transfer.py')\n    result = dict(schema_version=1, data_version=1, started_at_utc=started.isoformat(), completed_at_utc=now.isoformat(),\n        commit=git('rev-parse', 'HEAD'), numpy_version=np.__version__, records=records, calibrations=calibrations,\n        replay=dict(states=replays, maximum_budget_absolute_error=max_replay_error),\n        runner_sha256=sha256(Path(__file__)), runner_source=Path(__file__).read_text(encoding='utf-8'),\n        parents=[dict(path=str(p), sha256=h) for p, h in zip(paths, hashes)],\n        dependencies={n: dict(sha256=sha256(ROOT/'tests'/n), source=(ROOT/'tests'/n).read_text(encoding='utf-8')) for n in dependencies},\n        rules='FOURfrozentrainingPSDs/axes. PerPSD64freshGaussianfieldsfit3x3uncentredinnovationmoment;128DISJOINTfieldsfreezethresholdMAXof25groupquadraticsperfield;128MOREfieldsevaluate. Deltamean=(rawDC-guideDC)/sqrt425;sharedgain=max(0,1-threshold/q). ChangeDConly,observedgroups/power/sigmafixed. Calibrationincludesadaptiveweights/selectionbyrerunningthem,notfixedgeometryvarianceclaim.200realformsreplayedand90eligiblerealnullblocks;NOtruthinweights/gate,NOqualityfit.',\n        limitations='NullcalibrationassumesmatchedGaussianPSD/unitvariance,notdistributionfreeforrealRCD. Max128fieldsnotguaranteeexacttailrateorMSEsafety;fewheldtailactivationsuncertain. Related25groupsnotindependent;usefieldwiseactivation. RealDandoraclevariance/quietlabelsconditional,notnativecleantruth. No neuraltraining,productionorconstantblendfit.')\n    with output.open('x', encoding='utf-8') as handle: json.dump(result, handle, ensure_ascii=False, indent=1, allow_nan=False)\n    print(output, flush=True)\n\n\nif __name__ == '__main__': run()\n"
+  },
+  "study_noise_empirical_cross_spectrum.py": {
+   "sha256": "81f9720be471787e8db0777cbd43bc38e1b2f27e8f48567829a4c5e81bad34bb",
+   "source": "\"\"\"Prepare PSD-valid three-plane stationary noise models from stored disjoint pair halves.\"\"\"\nfrom datetime import datetime, timezone\nimport json\nfrom pathlib import Path\nimport numpy as np\nfrom study_noise_neighbourhoods import ROOT, git, sha256\n\n\nGRID = 128\nFIT_RADIUS = 8\n\n\ndef covariance(tile):\n    if tile.ndim != 3 or tile.shape[0] != 3 or min(tile.shape[1:]) < 17 or not np.isfinite(tile).all():\n        raise ValueError('Finite three-plane tile with valid lag context required')\n    transformed = np.fft.fft2(tile, s=(GRID, GRID), axes=(-2, -1))\n    spectrum = transformed[:, None]*transformed[None].conj()/np.prod(tile.shape[1:])\n    return np.fft.ifft2(spectrum, axes=(-2, -1)).real\n\n\ndef fit(tile):\n    mean = np.mean(tile, axis=(1, 2)); std = np.std(tile, axis=(1, 2))\n    if np.any(std < 1e-12) or not np.isfinite(std).all():\n        raise ValueError('Positive measurable marginal noise required')\n    normalized = (tile-mean[:, None, None])/std[:, None, None]\n    cov = covariance(normalized)\n    lag = np.minimum(np.arange(GRID), GRID-np.arange(GRID))\n    cov *= ((lag[:, None] <= FIT_RADIUS) & (lag[None, :] <= FIT_RADIUS))[None, None]\n    raw = np.fft.fft2(cov, axes=(-2, -1)).transpose(2, 3, 0, 1)\n    raw = (raw+raw.swapaxes(-1, -2).conj())*.5\n    values, vectors = np.linalg.eigh(raw)\n    clipped = np.maximum(values, 0.)\n    projected = (vectors*clipped[..., None, :]) @ vectors.swapaxes(-1, -2).conj()\n    cov_before = np.fft.ifft2(projected.transpose(2, 3, 0, 1), axes=(-2, -1)).real\n    scales = np.sqrt(np.diag(cov_before[:, :, 0, 0]))\n    if np.any(scales <= 0):\n        raise ValueError('Degenerate projected spectrum')\n    projected /= scales[None, None, :, None]*scales[None, None, None, :]\n    prepared = np.fft.ifft2(projected.transpose(2, 3, 0, 1), axes=(-2, -1)).real\n    eigen = np.linalg.eigvalsh(projected)\n    if eigen.min() < -1e-9 or not np.allclose(np.diag(prepared[:, :, 0, 0]), 1., atol=1e-10):\n        raise ValueError('Invalid prepared covariance')\n    reverse = (-np.arange(GRID)) % GRID\n    conjugate_error = float(np.max(np.abs(projected-projected[reverse][:, reverse].conj())))\n    if conjugate_error > 1e-9:\n        raise ValueError('Spectrum does not generate real-valued fields')\n    audit = dict(raw_min_eigenvalue=float(values.min()), prepared_min_eigenvalue=float(eigen.min()),\n        removed_negative_eigenmass_fraction=float(-np.minimum(values, 0.).sum()/np.maximum(values, 0.).sum()),\n        zero_lag_variance_before_renormalization=(scales*scales).tolist(),\n        conjugate_symmetry_max_error=conjugate_error)\n    return prepared, projected, mean, std, audit\n\n\ndef lag_block(cov, radius):\n    index = np.arange(-radius, radius+1) % GRID\n    return cov[:, :, index][:, :, :, index]\n\n\ndef run():\n    parent = ROOT/'docs/validation/raw/etude-reelle-bornee-nonlocal-bruit-v001-20261025T222336Z.json'\n    digest = sha256(parent); data = json.loads(parent.read_text(encoding='utf-8'))\n    start = datetime.now(timezone.utc); records = []\n    for pair in data['native']['pairs']:\n        sources = [np.asarray(next(s for s in pair[key]['samples'] if s['kind']=='flat')['original_y_co_cg'], dtype=float).reshape(3, 64, 64)\n                   for key in ('a', 'b')]\n        residual = (sources[0]-sources[1])/np.sqrt(2)\n        halves = (residual[:, :, :24], residual[:, :, 40:])\n        for training_side in (0, 1):\n            prepared, spectrum, mean, std, audit = fit(halves[training_side])\n            held = halves[1-training_side]; held_mean = held.mean(axis=(1, 2))\n            normalized_held = (held-held_mean[:, None, None])/std[:, None, None]\n            actual = covariance(normalized_held)\n            diagonal = prepared.copy()\n            for i in range(3):\n                for j in range(3):\n                    if i != j:\n                        diagonal[i, j] = 0.\n            index = np.arange(-4, 5); dy, dx = np.meshgrid(index, index, indexing='ij')\n            axis_y = np.where(dy==0, 1., np.where(np.abs(dy)==1, 2/3, np.where(np.abs(dy)==2, 1/6, 0.)))\n            axis_x = np.where(dx==0, 1., np.where(np.abs(dx)==1, 2/3, np.where(np.abs(dx)==2, 1/6, 0.)))\n            binomial = np.eye(3)[:, :, None, None]*(axis_y*axis_x)[None, None]\n            reference = lag_block(actual, 4)\n            scores = {name: float(np.mean((block-reference)**2)) for name, block in\n                      (('common_binomial', binomial), ('marginal_only', lag_block(diagonal, 4)),\n                       ('full_cross', lag_block(prepared, 4)))}\n            records.append(dict(a=pair['a']['raw'], b=pair['b']['raw'], camera=pair['a']['camera'], iso=pair['a']['iso'],\n                training_x=[0, 24] if training_side==0 else [40, 64],\n                held_x=[40, 64] if training_side==0 else [0, 24], gap_pixels=16,\n                training_mean_original_units=mean.tolist(), training_std_original_units=std.tolist(),\n                held_mean_original_units=held_mean.tolist(),\n                held_variance_relative_to_training=np.diag(actual[:, :, 0, 0]).tolist(),\n                audit=audit, held_covariance_radius4=reference.tolist(),\n                prepared_cross_covariance_radius24=lag_block(prepared, 24).tolist(),\n                held_mean_squared_covariance_error=scores))\n            print(pair['a']['iso'], training_side, scores, audit['removed_negative_eigenmass_fraction'], flush=True)\n    if sha256(parent) != digest:\n        raise ValueError('Parent changed')\n    now = datetime.now(timezone.utc)\n    output = ROOT/'docs/validation/raw'/f\"preparation-spectres-croises-bruit-v001-{now.strftime('%Y%m%dT%H%M%SZ')}.json\"\n    result = dict(schema_version=1, data_version=1, started_at_utc=start.isoformat(), completed_at_utc=now.isoformat(),\n        commit=git('rev-parse', 'HEAD'), runner_sha256=sha256(Path(__file__)),\n        runner_source=Path(__file__).read_text(encoding='utf-8'), numpy_version=np.__version__,\n        parent=dict(path=str(parent), sha256=digest), records=records,\n        rules='Same stored four RCD pair differences;two disjoint64x24halves separated16px,swap roles (NOT8independentpairs). Biased zero-padded covariance denominator1536,own halfmeans,normalize training marginalstd. Lag cut8,128FFT,perfrequency Hermitian PSD projection by clipping negative eigenvalues,renormalize marginalvariance1. Preserve crossplanes. Compare commonbinomial,marginals-only,fullcross onheld covariance lags+-4;fixed hyperparameters,not tuned toheldhalf. Storepreparedcovlags+-24 for groupcontext,fullspectrum reproducible fromsources.',\n        limitations='One patch/pair/ISO,not population camera calibration. Pair differences may contain motion/scene artifacts;halves only spatial holdout,not independent capture. Gaussian stationary periodic128 model;PSD projection changes estimatedcovariance,trace/mass audited. Not native denoising or proofGaussian law. Mean subtraction removes finite-regionDC. No noise generation,production or learnedneural model.')\n    with output.open('x', encoding='utf-8') as handle:\n        json.dump(result, handle, ensure_ascii=False, indent=1, allow_nan=False)\n    print(output, flush=True)\n\n\nif __name__ == '__main__':\n    run()\n"
+  },
+  "study_noise_profile_capture_transfer.py": {
+   "sha256": "58ce49c9aa5b6e9112b2330128c1e797c1f4a27b4532a5e84e4355119529e7c2",
+   "source": "\"\"\"Profile covariance prepared on a distinct capture pair, not the tested residual field.\"\"\"\nfrom datetime import datetime, timezone\nimport json\nfrom pathlib import Path\nimport numpy as np\nfrom study_noise_neighbourhoods import ROOT, git, sha256\nfrom study_noise_empirical_cross_spectrum import fit\nfrom study_noise_profile_covariance_wiener import prepare, reconstruct, binomial_covariance, zero_lag_whitener\nfrom study_noise_profile_color_invariance import DIRECTIONS\nfrom study_noise_profile_real_residuals import measures\n\n\ndef flat_planes(pair, key):\n    return np.asarray(next(s for s in pair[key]['samples'] if s['kind']=='flat')['original_y_co_cg'], dtype=float).reshape(3,64,64)\n\n\ndef run():\n    paths = [ROOT/'docs/validation/raw'/name for name in (\n        'extraction-paires-profils-bruit-v001-20261026T174656Z.json',\n        'etude-reelle-bornee-nonlocal-bruit-v001-20261025T222336Z.json',\n        'formes-residus-reels-bruit-v001-20261026T120043Z.json')]\n    hashes = [sha256(p) for p in paths]\n    training, heldout, calibration = [json.loads(p.read_text(encoding='utf-8')) for p in paths]\n    start = datetime.now(timezone.utc); records = []; folds = []\n    common = prepare(binomial_covariance()); yy, xx = np.mgrid[:64, :64]\n    training_names = {p[k]['raw'] for p in training['native']['pairs'] for k in ('a','b')}\n    heldout_names = {p[k]['raw'] for p in heldout['native']['pairs'] for k in ('a','b')}\n    if training_names & heldout_names:\n        raise ValueError('Capture profile/test identities overlap')\n    for train in training['native']['pairs']:\n        test = next(p for p in heldout['native']['pairs'] if p['a']['iso']==train['a']['iso'])\n        if train['a']['camera'] != test['a']['camera']:\n            raise ValueError('Camera mismatch')\n        for key in ('dcp_profile', 'raw_normalization'):\n            if train['a']['declaration'][key] != test['a']['declaration'][key]:\n                raise ValueError('Opening declaration mismatch:'+key)\n        if train['a']['opening_chroma_median'] != test['a']['opening_chroma_median']:\n            raise ValueError('Opening chroma policy mismatch')\n        train_a, train_b = [flat_planes(train, k) for k in ('a','b')]\n        test_a, test_b = [flat_planes(test, k) for k in ('a','b')]\n        cov, _, _, training_std, audit = fit((train_a-train_b)/np.sqrt(2))\n        whitening, inverse, white_cov = zero_lag_whitener(cov); cross = prepare(white_cov)\n        old = next(c for c in calibration['calibrations'] if c['a']==test['a']['raw'])['noise_calibration']\n        mean = np.asarray(old['outer_mean_y_co_cg']); sigma = np.asarray(old['sigma_y_co_cg'])\n        normalized = ((test_a-test_b)/np.sqrt(2)-mean[:,None,None])/sigma[:,None,None]\n        fold = len(folds)\n        folds.append(dict(iso=train['a']['iso'], camera=train['a']['camera'],\n            training_pair=[train[k]['raw'] for k in ('a','b')], test_pair=[test[k]['raw'] for k in ('a','b')],\n            training_mean_y_co_cg=((train_a+train_b)*.5).mean(axis=(1,2)).tolist(),\n            test_mean_y_co_cg=((test_a+test_b)*.5).mean(axis=(1,2)).tolist(),\n            training_diff_std=training_std.tolist(), test_outer_diff_std=sigma.tolist(), fit_audit=audit,\n            profile_calibration_independent_capture=True, known_test_noise_amplitude=True))\n        configs = [(None,'flat',0.,None)]\n        configs += [(direction,'gaussian',a,w) for direction in DIRECTIONS for a in (3.,6.) for w in (1.,1.5,2.5)]\n        configs += [(direction,'step',a,None) for direction in DIRECTIONS for a in (3.,6.)]\n        for direction, shape, amplitude, width in configs:\n            vector = np.asarray(direction or (1.,0.,0.));vector=vector/np.linalg.norm(vector)\n            scalar = (amplitude*np.exp(-((xx-32)**2+(yy-32)**2)/(2*width*width)) if shape=='gaussian'\n                      else amplitude*np.where(xx>=32,1.,-1.) if shape=='step' else np.zeros((64,64)))\n            truth = vector[:,None,None]*scalar; observed=truth+normalized;outputs={}\n            for mode, prepared, transform, restore, policy in (\n                    ('common',common,np.eye(3),np.eye(3),'per_plane'),\n                    ('common_shared',common,np.eye(3),np.eye(3),'shared'),\n                    ('cross_per_plane',cross,whitening,inverse,'per_plane'),\n                    ('cross_shared',cross,whitening,inverse,'shared')):\n                values=reconstruct(np.einsum('ab,byx->ayx',transform,observed),\n                    np.einsum('ab,byx->ayx',transform,truth),prepared,policy)['dc_wiener']\n                outputs[mode]=tuple(np.einsum('ab,byx->ayx',restore,v) for v in values)\n            core=truth[:,26:38,26:38];metrics={m:measures(v,core,vector) for m,v in outputs.items()}\n            for m in ('common_shared','cross_shared'):\n                leak=metrics[m]['color_direction']['relative_orthogonal_rms']\n                if leak is not None and leak>1e-9:raise ValueError('Shared transport invariant fails')\n            if shape=='gaussian':\n                for m,(_,signal,_) in outputs.items():\n                    metrics[m]['peak_directional_signal_ratio']=float(vector@signal[:,6,6]/amplitude)\n            records.append(dict(fold=fold,shape=shape,amplitude=amplitude,width=width,direction=vector.tolist(),metrics=metrics))\n        print('Completed distinct capture transfer',fold,train['a']['iso'],len(records),flush=True)\n    if [sha256(p) for p in paths] != hashes:raise ValueError('Parents changed')\n    now=datetime.now(timezone.utc)\n    output=ROOT/'docs/validation/raw'/f\"transfert-captures-profils-bruit-v001-{now.strftime('%Y%m%dT%H%M%SZ')}.json\"\n    names=('study_noise_empirical_cross_spectrum.py','study_noise_profile_covariance_wiener.py',\n           'study_noise_profile_real_residuals.py','study_noise_profile_color_invariance.py',\n           'study_noise_wiener_search_context.py','study_noise_patch_aggregation.py','study_noise_collaborative_wiener.py')\n    result=dict(schema_version=1,data_version=1,started_at_utc=start.isoformat(),completed_at_utc=now.isoformat(),\n        commit=git('rev-parse','HEAD'),runner_sha256=sha256(Path(__file__)),runner_source=Path(__file__).read_text(encoding='utf-8'),\n        numpy_version=np.__version__,parents=[dict(path=str(p),sha256=h) for p,h in zip(paths,hashes)],folds=folds,records=records,\n        dependencies={n:dict(sha256=sha256(ROOT/'tests'/n),source=(ROOT/'tests'/n).read_text(encoding='utf-8')) for n in names},\n        rules='4trainingcapturepairs distinct from4heldcapturepairs,ISOmatched,camera/DCP/normalization/chromamedianchecked. Fitfulltraining64,NOtestpixels inprofilefit. Test residual normalizedbyalreadyrecordedheldoutermean/sigma (known amplitude still).196relatedstates=49formsper4realheldfields. Samevalid12ROI/25refs. Level/chromaticity oftrainingandtestflatregions differ,means recorded;doNOTclaimsameconditionorfitISOexception.',\n        limitations='Historically explored heldcaptures,NOTuntouchedfinaltest. Paired differential maycontainmotion/scene artifacts. Known heldnoiseamplitude,not estimationintegration. One training/testpair perISO;colour/flux/readout influence profiletransfer,notuniversal ISOprofile. No nativewholeimage,LR,production orcasegating.')\n    with output.open('x',encoding='utf-8') as handle:json.dump(result,handle,ensure_ascii=False,indent=1,allow_nan=False)\n    print(output,flush=True)\n\n\nif __name__=='__main__':run()\n"
+  },
+  "study_noise_profile_covariance_wiener.py": {
+   "sha256": "776bab9d2c896fd9e3ba16c3f202947e71d5b63a9e030d128d4cb734ad54f156",
+   "source": "\"\"\"Spatially held empirical-profile Gaussian transfer; no native-camera denoising claim.\"\"\"\nfrom datetime import datetime, timezone\nimport json\nfrom pathlib import Path\nimport numpy as np\nfrom study_noise_neighbourhoods import ROOT, git, sha256\nfrom study_noise_patch_aggregation import aggregate\nfrom study_noise_wiener_search_context import signal_field, offsets, PATCH, SPATIAL, GROUP\nfrom study_noise_empirical_cross_spectrum import fit, GRID\nfrom study_noise_wiener_edge_profiles import decompose\nfrom noise_group_mean_gate import gain as dc_innovation_gain\n\n\ndef prepare(cov):\n    if cov.shape != (3, 3, GRID, GRID) or not np.isfinite(cov).all():\n        raise ValueError('Finite prepared cross covariance required')\n    marginal = np.asarray([cov[c, c] for c in range(3)])\n    if not np.allclose(marginal[:, 0, 0], 1., atol=1e-9):\n        raise ValueError('Unit marginal variance required')\n    model = dict(variance=1., offsets=[])\n    for y, x in offsets(10)[1:]:\n        floor = 2*(1-float(np.mean(marginal[:, y % GRID, x % GRID])))\n        if floor < -1e-8:\n            raise ValueError('Invalid distance variance')\n        model['offsets'].append((int(y), int(x), max(0., floor)))\n    difference = PATCH[:, None]-PATCH[None, :]\n    table = np.empty((3, 41, 41, 25))\n    for dy in range(-20, 21):\n        for dx in range(-20, 21):\n            delta = difference+[dy, dx]\n            noise_cov = marginal[:, delta[:, :, 0] % GRID, delta[:, :, 1] % GRID]\n            table[:, dy+20, dx+20] = np.einsum('pi,cij,pj->cp', SPATIAL, noise_cov, SPATIAL)\n    return model, table\n\n\ndef reconstruct(observed, truth, prepared, gain_policy='per_plane', pilot_data=None, oracle_diagnostic=None, dc_source='pilot', dc_gate=None, dc_audit=None, dc_target=None):\n    if observed.shape not in ((3, 64, 64), (3, 128, 128)) or truth.shape != observed.shape or not all(np.isfinite(a).all() for a in (observed, truth)):\n        raise ValueError('Finite three-plane64/128 fields required')\n    if gain_policy not in ('per_plane', 'shared'):\n        raise ValueError('Unknown gain policy')\n    if oracle_diagnostic not in (None, 'transported_power', 'clean_power', 'clean_dc', 'clean_power_dc'):\n        raise ValueError('Unknown truth-only diagnostic; never a blind estimator')\n    if dc_source not in ('pilot', 'raw', 'gated') or (oracle_diagnostic is not None and dc_source != 'pilot'):\n        raise ValueError('Use one isolated blind DC source or an oracle diagnostic, not both')\n    if (dc_source == 'gated') != (dc_gate is not None) or (dc_audit is not None and not isinstance(dc_audit, list)):\n        raise ValueError('Matched gate configuration and optional list audit required')\n    model, covariance_table = prepared\n    size = observed.shape[1]; core_size = 12 if size==64 else 24\n    first = (size-core_size)//2; last = first+core_size\n    pilot = aggregate(observed, truth, model, .8) if pilot_data is None else pilot_data\n    pilot_shape = (3, size-28, size-28)\n    if (len(pilot) != 3 or any(a.shape != pilot_shape or not np.isfinite(a).all() for a in pilot)\n            or not np.allclose(pilot[0], pilot[1]+pilot[2], atol=1e-10, rtol=1e-10)):\n        raise ValueError('Complete finite pilot transport with matching geometry required')\n    if dc_target is not None:\n        if (dc_source != 'gated' or len(dc_target) != 3 or any(a.shape != pilot_shape or not np.isfinite(a).all() for a in dc_target)\n                or not np.allclose(dc_target[0], dc_target[1]+dc_target[2], atol=1e-10, rtol=1e-10)):\n            raise ValueError('Blind target pilot requires gated DC and complete matching transport')\n    search = offsets(10); sums = np.zeros_like(observed); signals = np.zeros_like(observed)\n    counts = np.zeros((size, size))\n    for cy in tuple(range(first, last, 3))+(last-1,):\n        for cx in tuple(range(first, last, 3))+(last-1,):\n            ys = cy+search[:, 0, None]+PATCH[None, :, 0]\n            xs = cx+search[:, 1, None]+PATCH[None, :, 1]\n            pg = pilot[0][:, ys-14, xs-14]\n            distance = np.mean((pg-pg[:, :1])**2, axis=(0, 2))\n            indices = np.r_[0, np.argsort(distance[1:], kind='stable')[:16]+1]\n            y, x = ys[indices], xs[indices]\n            positions = search[indices]; delta = positions[:, None]-positions[None, :]\n            cov = covariance_table[:, delta[:, :, 0]+20, delta[:, :, 1]+20]\n            variance = np.einsum('ka,cabp,kb->cpk', GROUP, cov, GROUP, optimize=True)\n            if variance.min() < -1e-8:\n                raise ValueError('Non-positive group noise model')\n            variance = np.maximum(variance, 0.)\n            raw, guide, clean, pilot_signal = [SPATIAL @ a.swapaxes(-1, -2) @ GROUP.T for a in\n                (observed[:, y, x], pg[:, indices], truth[:, y, x], pilot[1][:, y-14, x-14])]\n            power_source = (pilot_signal if oracle_diagnostic == 'transported_power' else clean\n                            if oracle_diagnostic in ('clean_power', 'clean_power_dc') else guide)\n            power = power_source*power_source; gains = np.ones_like(power)\n            if gain_policy == 'shared':\n                total_power = np.sum(power, axis=0)\n                total_variance = np.sum(variance, axis=0)\n                common_gain = np.ones_like(total_power)\n                np.divide(total_power, total_power+total_variance, out=common_gain, where=total_variance>0)\n                gains[:] = common_gain\n            else:\n                np.divide(power, power+variance, out=gains, where=variance>0)\n            filtered = gains*raw; transported = gains*clean\n            filtered[:, 0, 0] = guide[:, 0, 0]; transported[:, 0, 0] = pilot_signal[:, 0, 0]\n            innovation = (raw[:, 0, 0]-guide[:, 0, 0])/np.sqrt(425.)\n            dc_gain = float(dc_innovation_gain(innovation, dc_gate)) if dc_source == 'gated' else 0.\n            if dc_audit is not None:\n                dc_audit.append(dict(centre=[cy, cx], innovation=innovation.tolist(), gain=dc_gain))\n            if dc_source == 'gated':\n                target_dc = raw[:, 0, 0] if dc_target is None else dc_target[0][:, y-14, x-14].sum(axis=(1, 2))/np.sqrt(425.)\n                target_signal_dc = clean[:, 0, 0] if dc_target is None else dc_target[1][:, y-14, x-14].sum(axis=(1, 2))/np.sqrt(425.)\n                filtered[:, 0, 0] += dc_gain*(target_dc-guide[:, 0, 0])\n                transported[:, 0, 0] += dc_gain*(target_signal_dc-pilot_signal[:, 0, 0])\n            if dc_source == 'raw':\n                filtered[:, 0, 0] = raw[:, 0, 0]; transported[:, 0, 0] = clean[:, 0, 0]\n            if oracle_diagnostic in ('clean_dc', 'clean_power_dc'):\n                filtered[:, 0, 0] = clean[:, 0, 0]; transported[:, 0, 0] = clean[:, 0, 0]\n            out = SPATIAL.T @ filtered @ GROUP; signal = SPATIAL.T @ transported @ GROUP\n            for c in range(3):\n                np.add.at(sums[c], (y, x), out[c].T)\n                np.add.at(signals[c], (y, x), signal[c].T)\n            np.add.at(counts, (y, x), 1.)\n    count = counts[first:last, first:last]\n    if np.any(count <= 0):\n        raise ValueError('Incomplete output')\n    out = sums[:, first:last, first:last]/count\n    signal = signals[:, first:last, first:last]/count\n    return dict(joint_overlap=tuple(a[:, first-14:last-14, first-14:last-14] for a in pilot),\n                dc_wiener=(out, signal, out-signal))\n\n\ndef binomial_covariance():\n    d = np.minimum(np.arange(GRID), GRID-np.arange(GRID))\n    axis = np.where(d==0, 1., np.where(d==1, 2/3, np.where(d==2, 1/6, 0.)))\n    return np.eye(3)[:, :, None, None]*(axis[:, None]*axis[None, :])[None, None]\n\n\ndef zero_lag_whitener(cov):\n    values, vectors = np.linalg.eigh(cov[:, :, 0, 0])\n    if values.min() <= 1e-6:\n        raise ValueError('Cross-plane covariance too ill-conditioned for this study')\n    whitening = (vectors/np.sqrt(values)) @ vectors.T\n    inverse = (vectors*np.sqrt(values)) @ vectors.T\n    transformed = np.einsum('ai,ijyx,bj->abyx', whitening, cov, whitening)\n    return whitening, inverse, transformed\n\n\ndef draw(sqrt_spectrum, seed):\n    white = np.random.default_rng(seed).standard_normal((3, GRID, GRID))\n    transformed = np.fft.fft2(white, axes=(-2, -1)).transpose(1, 2, 0)\n    noise_fft = np.einsum('yxij,yxj->yxi', sqrt_spectrum, transformed)\n    noise = np.fft.ifft2(noise_fft.transpose(2, 0, 1), axes=(-2, -1))\n    if np.max(np.abs(noise.imag)) > 1e-9:\n        raise ValueError('Generated noise is not real')\n    return noise.real\n\n\ndef spectrum_root(spectrum):\n    values, vectors = np.linalg.eigh(spectrum)\n    root = (vectors*np.sqrt(np.maximum(values, 0.))[..., None, :]) @ vectors.swapaxes(-1, -2).conj()\n    # Square root is sensitive near zero eigenvalues. Enforce REAL-field pairing,\n    # not a relaxed imaginary-output tolerance, then audit the actual covariance.\n    reverse = (-np.arange(GRID)) % GRID\n    root = (root+root[reverse][:, reverse].conj())*.5\n    error = float(np.max(np.abs(root @ root.swapaxes(-1, -2).conj()-spectrum)))\n    if error > 1e-8*max(1., float(np.max(np.abs(spectrum)))):\n        raise ValueError('Real-spectrum projection changes the generating covariance')\n    return root, error\n\n\ndef run():\n    parent = ROOT/'docs/validation/raw/etude-reelle-bornee-nonlocal-bruit-v001-20261025T222336Z.json'\n    digest = sha256(parent); data = json.loads(parent.read_text(encoding='utf-8'))\n    start = datetime.now(timezone.utc); records = []; folds = []; serial = 0\n    common = prepare(binomial_covariance())\n    configs = [dict(shape='flat', channel=None, amplitude=0.)]\n    configs += [dict(shape=shape, channel=c, amplitude=a)\n                for shape in ('gaussian', 'step') for c in range(3) for a in (3., 6.)]\n    for pair in data['native']['pairs']:\n        arrays = [np.asarray(next(s for s in pair[key]['samples'] if s['kind']=='flat')['original_y_co_cg'], dtype=float).reshape(3, 64, 64)\n                  for key in ('a', 'b')]\n        difference = (arrays[0]-arrays[1])/np.sqrt(2)\n        halves = (difference[:, :, :24], difference[:, :, 40:])\n        fits = [fit(tile) for tile in halves]\n        for side in (0, 1):\n            cov, _, _, _, fit_audit = fits[side]\n            actual_cov, actual_spectrum, _, _, _ = fits[1-side]\n            marginal = prepare(cov)\n            whitening, inverse, white_cov = zero_lag_whitener(cov)\n            cross = prepare(white_cov)\n            sqrt_spectrum, root_error = spectrum_root(actual_spectrum)\n            fold = len(folds)\n            folds.append(dict(iso=pair['a']['iso'], a=pair['a']['raw'], b=pair['b']['raw'],\n                training_side=side, generating_side=1-side, fit_audit=fit_audit,\n                zero_lag_whitening=whitening.tolist(), inverse_whitening=inverse.tolist(),\n                generating_covariance_root_max_error=root_error,\n                generating_zero_lag_covariance=actual_cov[:, :, 0, 0].tolist()))\n            for config in configs:\n                for trial in range(8 if config['shape']=='flat' else 2):\n                    seed = 2610262200000+serial; serial += 1\n                    truth = signal_field(**config, size=128)\n                    observed = truth+draw(sqrt_spectrum, seed)\n                    outputs = {}\n                    for mode, prepared in (('common', common), ('marginal', marginal)):\n                        outputs.update({mode+'_'+m: result for m, result in reconstruct(observed, truth, prepared).items()})\n                    transformed_obs = np.einsum('ab,byx->ayx', whitening, observed)\n                    transformed_truth = np.einsum('ab,byx->ayx', whitening, truth)\n                    outputs.update({'cross_'+m: tuple(np.einsum('ab,byx->ayx', inverse, value) for value in result)\n                                    for m, result in reconstruct(transformed_obs, transformed_truth, cross).items()})\n                    core = truth[:, 52:76, 52:76]\n                    metrics = {m: decompose(*result, core) for m, result in outputs.items()}\n                    if config['shape']=='gaussian':\n                        c = config['channel']\n                        for m, (_, signal, _) in outputs.items():\n                            metrics[m]['peak_signal_ratio'] = float(signal[c, 12, 12]/config['amplitude'])\n                    records.append(dict(**config, fold=fold, trial=trial, seed=seed, metrics=metrics))\n            print('Completed profile fold', fold, 'ISO', pair['a']['iso'], 'records', len(records), flush=True)\n    if sha256(parent) != digest:\n        raise ValueError('Parent changed')\n    now = datetime.now(timezone.utc)\n    output = ROOT/'docs/validation/raw'/f\"transfert-profils-covariance-wiener-bruit-v001-{now.strftime('%Y%m%dT%H%M%SZ')}.json\"\n    names = ('study_noise_empirical_cross_spectrum.py', 'study_noise_wiener_search_context.py',\n             'study_noise_collaborative_wiener.py', 'study_noise_patch_aggregation.py',\n             'study_noise_wiener_edge_profiles.py')\n    result = dict(schema_version=1, data_version=1, started_at_utc=start.isoformat(), completed_at_utc=now.isoformat(),\n        commit=git('rev-parse', 'HEAD'), runner_sha256=sha256(Path(__file__)), runner_source=Path(__file__).read_text(encoding='utf-8'),\n        numpy_version=np.__version__, parent=dict(path=str(parent), sha256=digest), folds=folds, records=records,\n        dependencies={n: dict(sha256=sha256(ROOT/'tests'/n), source=(ROOT/'tests'/n).read_text(encoding='utf-8')) for n in names},\n        rules='8spatial folds from4storedpairs,32Gaussianfields/fold=256fields. Fit covariance on one64x24half,GENERATE Gaussian noise from OTHER half fitted crossspectrum,unit own marginal variances. No same-model inverse crime,though halves not independent captures. Common binomial vs learned per-plane marginals vs zero-lag cross-plane symmetric whitening+per-plane marginals then EXACT inverse transform. Same h.8/search21/group17/DCpilot. Model shape only,no native sigma fitting,threshold tuning or oracle grouping. Full covariance between planes beyond zero lag still not whitened.',\n        limitations='Held spectral fit is a synthetic generating model,not true RCD camera noise or clean-photo truth. 8foldsNOT8independentpairs/cameras;all same R6III context. Only2draws/structuredconfiguration/fold,8flat. Spectral PSD projection/lagcut8,periodic128. Native marginal variance differences normalized away intentionally. No native denoising,production or universal camera calibration.')\n    with output.open('x', encoding='utf-8') as handle:\n        json.dump(result, handle, ensure_ascii=False, indent=1, allow_nan=False)\n    print(output, flush=True)\n\n\nif __name__ == '__main__':\n    run()\n"
+  },
+  "study_noise_profile_real_residuals.py": {
+   "sha256": "39d4d88242d6ad535e287b4aaeef10f29d9635db45bb52296ac726c2d97259ec",
+   "source": "\"\"\"Bounded real RCD differential residuals + known forms, valid64 input/12 output.\"\"\"\nfrom datetime import datetime, timezone\nimport json\nfrom pathlib import Path\nimport numpy as np\nfrom study_noise_neighbourhoods import ROOT, git, sha256\nfrom study_noise_empirical_cross_spectrum import fit\nfrom study_noise_profile_covariance_wiener import prepare, reconstruct, binomial_covariance, zero_lag_whitener\nfrom study_noise_profile_color_invariance import DIRECTIONS, color_metrics\n\n\ndef measures(values, truth, vector):\n    out, signal, noise = values\n    if out.shape != (3, 12, 12) or not all(np.isfinite(a).all() for a in (out, signal, noise, truth)):\n        raise ValueError('Finite three-plane12 common ROI required')\n    distortion = signal-truth\n    result = dict(full=dict(mse=np.mean((out-truth)**2, axis=(1, 2)).tolist(),\n        signal_distortion=np.mean(distortion**2, axis=(1, 2)).tolist(),\n        residual_noise=np.mean(noise**2, axis=(1, 2)).tolist(),\n        cross=np.mean(2*distortion*noise, axis=(1, 2)).tolist()),\n        mean_error=np.mean(out-truth, axis=(1, 2)).tolist())\n    if not np.allclose(result['full']['mse'], np.asarray(result['full']['signal_distortion'])+\n            result['full']['residual_noise']+np.asarray(result['full']['cross']), atol=1e-10):\n        raise ValueError('Empirical residual budget fails')\n    result['color_direction'] = color_metrics(signal, truth, vector)\n    return result\n\n\ndef run():\n    paths = [ROOT/'docs/validation/raw'/name for name in (\n        'etude-reelle-bornee-nonlocal-bruit-v001-20261025T222336Z.json',\n        'formes-residus-reels-bruit-v001-20261026T120043Z.json')]\n    hashes = [sha256(p) for p in paths]\n    original, calibration = [json.loads(p.read_text(encoding='utf-8')) for p in paths]\n    start = datetime.now(timezone.utc); records = []; folds = []\n    common = prepare(binomial_covariance()); yy, xx = np.mgrid[:64, :64]\n    for pair in original['native']['pairs']:\n        arrays = [np.asarray(next(s for s in pair[key]['samples'] if s['kind']=='flat')['original_y_co_cg'], dtype=float).reshape(3, 64, 64)\n                  for key in ('a', 'b')]\n        differential = (arrays[0]-arrays[1])/np.sqrt(2)\n        old = next(c for c in calibration['calibrations'] if c['a']==pair['a']['raw'])['noise_calibration']\n        mean = np.asarray(old['outer_mean_y_co_cg']); sigma = np.asarray(old['sigma_y_co_cg'])\n        normalized = (differential-mean[:, None, None])/sigma[:, None, None]\n        for side, tile in enumerate((normalized[:, :, :24], normalized[:, :, 40:])):\n            cov, _, _, _, fit_audit = fit(tile)\n            whitening, inverse, white_cov = zero_lag_whitener(cov)\n            cross = prepare(white_cov)\n            fold = len(folds)\n            folds.append(dict(iso=pair['a']['iso'], a=pair['a']['raw'], b=pair['b']['raw'], training_side=side,\n                fit_audit=fit_audit, normalized_central12_std=np.std(normalized[:, 26:38, 26:38], axis=(1, 2)).tolist(),\n                calibration_overlaps_filter_context=True, calibration_overlaps_measurement_core=False))\n            configs = [(None, 'flat', 0., None)]\n            configs += [(direction, 'gaussian', amplitude, width) for direction in DIRECTIONS\n                        for amplitude in (3., 6.) for width in (1., 1.5, 2.5)]\n            configs += [(direction, 'step', amplitude, None) for direction in DIRECTIONS for amplitude in (3., 6.)]\n            for direction, shape, amplitude, width in configs:\n                vector = np.asarray(direction or (1., 0., 0.)); vector = vector/np.linalg.norm(vector)\n                if shape=='gaussian':\n                    scalar = amplitude*np.exp(-((xx-32)**2+(yy-32)**2)/(2*width*width))\n                elif shape=='step':\n                    scalar = amplitude*np.where(xx>=32, 1., -1.)\n                else:\n                    scalar = np.zeros((64, 64))\n                truth = vector[:, None, None]*scalar\n                observed = truth+normalized\n                outputs = {}\n                for mode, prepared, transform, restore, policy in (\n                        ('common', common, np.eye(3), np.eye(3), 'per_plane'),\n                        ('cross_per_plane', cross, whitening, inverse, 'per_plane'),\n                        ('cross_shared', cross, whitening, inverse, 'shared')):\n                    result = reconstruct(np.einsum('ab,byx->ayx', transform, observed),\n                        np.einsum('ab,byx->ayx', transform, truth), prepared, policy)['dc_wiener']\n                    outputs[mode] = tuple(np.einsum('ab,byx->ayx', restore, a) for a in result)\n                core = truth[:, 26:38, 26:38]\n                metrics = {m: measures(values, core, vector) for m, values in outputs.items()}\n                if shape=='gaussian':\n                    for m, (_, signal, _) in outputs.items():\n                        metrics[m]['peak_directional_signal_ratio'] = float(vector @ signal[:, 6, 6]/amplitude)\n                leak = metrics['cross_shared']['color_direction']['relative_orthogonal_rms']\n                if leak is not None and leak > 1e-9:\n                    raise ValueError('Empirical shared colour contract fails')\n                records.append(dict(fold=fold, shape=shape, amplitude=amplitude, width=width, direction=vector.tolist(), metrics=metrics))\n            print('Completed empirical residual fold', fold, 'records', len(records), flush=True)\n    if [sha256(p) for p in paths] != hashes:\n        raise ValueError('Parent changed')\n    now = datetime.now(timezone.utc)\n    output = ROOT/'docs/validation/raw'/f\"profils-residus-rcd-wiener-bruit-v001-{now.strftime('%Y%m%dT%H%M%SZ')}.json\"\n    names = ('study_noise_profile_covariance_wiener.py', 'study_noise_empirical_cross_spectrum.py',\n             'study_noise_profile_color_invariance.py', 'study_noise_patch_aggregation.py',\n             'study_noise_wiener_search_context.py', 'study_noise_collaborative_wiener.py')\n    result = dict(schema_version=1, data_version=1, started_at_utc=start.isoformat(), completed_at_utc=now.isoformat(),\n        commit=git('rev-parse', 'HEAD'), runner_sha256=sha256(Path(__file__)), runner_source=Path(__file__).read_text(encoding='utf-8'),\n        numpy_version=np.__version__, parents=[dict(path=str(p), sha256=h) for p,h in zip(paths, hashes)], folds=folds, records=records,\n        dependencies={n: dict(sha256=sha256(ROOT/'tests'/n), source=(ROOT/'tests'/n).read_text(encoding='utf-8')) for n in names},\n        rules='Only4originalREAL post-RCD differential fields,NOT392independentimages. Normalize by previously stored outermean/sigma,doNOTrescale centralvariance. Profiles from left/right sides before any knownsignal injected. Trueform independent of noiseprofilefit,but calibration pixels AREinfiltercontext;centre12 disjoint. Commoncore26:38,input64,pilot14:50,search21,group17,25referencecentres,no padding. 49forms/fold*8=392relatedstates. All comparators recomputed on12,NOThistorical24/36 MSE.',\n        limitations='Paired differential contains possible scene/motion/demosaic artifacts,NOTpure camera noise truth. Samefields reused acrossforms andtwoprofiles,model/data dependence persists;not independent capture validation. Small12ROI sees localfeatures not largeimagequality. ProfilePSD stationary approximation onactualnonGaussianresidual. No nativewholephoto denoising,production or LRcomparison.')\n    with output.open('x', encoding='utf-8') as handle:\n        json.dump(result, handle, ensure_ascii=False, indent=1, allow_nan=False)\n    print(output, flush=True)\n\n\nif __name__ == '__main__':\n    run()\n"
+  },
+  "study_noise_group_mean_gate_transfer.py": {
+   "sha256": "6eb976fc8b19e62a5d3a8e7ef45177fcd5436705d9619074fdeb451b003789eb",
+   "source": "\"\"\"Frozen DC gate: fresh Gaussian draws, new phases, diagonal edges and periodic textures.\"\"\"\nfrom datetime import datetime, timezone\nimport json\nfrom pathlib import Path\nimport numpy as np\nfrom study_noise_neighbourhoods import ROOT, git, sha256\nfrom study_noise_empirical_cross_spectrum import fit\nfrom study_noise_profile_capture_transfer import flat_planes\nfrom study_noise_profile_covariance_wiener import prepare, spectrum_root, draw\nfrom study_noise_profile_real_residuals import measures\nfrom study_noise_group_mean_gate import evaluate\nfrom noise_pilot_transport import pilot_model\n\n\ndef configurations():\n    directions = ((1., 0., 0.), (0., 1., 0.), (0., 0., 1.), (1., -1., 1.))\n    result = [dict(shape='flat', direction=[1., 0., 0.], amplitude=0., phase=0., width=None)]\n    for direction in directions:\n        vector = np.asarray(direction); vector /= np.linalg.norm(vector)\n        for amplitude in (3., 6.):\n            for width in (1., 2.5):\n                for phase in (0., .5):\n                    result.append(dict(shape='gaussian', direction=vector.tolist(), amplitude=amplitude, phase=phase, width=width))\n            for shape in ('diagonal_step', 'diagonal_sinusoid'):\n                result.append(dict(shape=shape, direction=vector.tolist(), amplitude=amplitude, phase=.5, width=None))\n    return result\n\n\ndef truth_field(configuration):\n    yy, xx = np.mgrid[:64, :64]; a, phase = configuration['amplitude'], configuration['phase']\n    if configuration['shape'] == 'flat': scalar = np.zeros((64, 64))\n    elif configuration['shape'] == 'gaussian':\n        scalar = a*np.exp(-((xx-32-phase)**2+(yy-32-phase)**2)/(2*configuration['width']**2))\n    elif configuration['shape'] == 'diagonal_step': scalar = a*np.where(xx+yy >= 64+2*phase, 1., -1.)\n    elif configuration['shape'] == 'diagonal_sinusoid':\n        scalar = a*np.sin(2*np.pi*((xx+yy-64)/np.sqrt(2)-phase)/8.)\n    else: raise ValueError('Unknown prospective signal')\n    return np.asarray(configuration['direction'])[:, None, None]*scalar\n\n\ndef run():\n    names = ('correction-moyenne-calibree-axes-bruit-v001-20261027T120806Z.json',\n        'extraction-paires-profils-bruit-v001-20261026T174656Z.json',\n        'melange-fixe-covariances-bruit-v001-20261026T175757Z.json')\n    paths = [ROOT/'docs/validation/raw'/n for n in names]; hashes = [sha256(p) for p in paths]\n    parent, training, axes = [json.loads(p.read_text(encoding='utf-8')) for p in paths]\n    for name, metadata in parent['dependencies'].items():\n        if sha256(ROOT/'tests'/name) != metadata['sha256']:\n            raise ValueError('Frozen experiment dependency changed: '+name)\n    matrix = np.asarray(axes['fixed_transform']); records = []; started = datetime.now(timezone.utc)\n    configs = configurations()\n    if len(configs) != 49: raise ValueError('Expected49 fixed configurations')\n    for index, train in enumerate(training['native']['pairs']):\n        iso = train['a']['iso']\n        covariance, _, _, _, _ = fit(np.einsum('ab,byx->ayx', matrix, (flat_planes(train, 'a')-flat_planes(train, 'b'))/np.sqrt(2)))\n        prepared, model = prepare(covariance), pilot_model(covariance)\n        root, _ = spectrum_root(np.fft.fft2(covariance, axes=(-2, -1)).transpose(2, 3, 0, 1))\n        frozen = next(c for c in parent['calibrations'] if c['iso'] == iso)\n        calibration = {k: frozen[k] for k in ('precision', 'threshold')}\n        for trial in range(8):\n            seed = 274527000+index*10000+trial\n            noise = draw(root, seed)[:, 32:96, 32:96]\n            for config in configs:\n                truth = truth_field(config); values, audit = evaluate(truth+noise, truth, prepared, model, calibration)\n                metrics = {key: measures(value, truth[:, 26:38, 26:38], np.asarray(config['direction'])) for key, value in values.items()}\n                for key, value in values.items():\n                    if config['shape'] == 'gaussian':\n                        target = float(np.asarray(config['direction'])@truth[:, 32, 32])\n                        metrics[key]['peak_directional_signal_ratio'] = float(np.asarray(config['direction'])@value[1][:, 6, 6]/target)\n                    leak = metrics[key]['color_direction']['relative_orthogonal_rms']\n                    if leak is not None and leak > 1e-9: raise ValueError('Conditional colour transport fails')\n                records.append(dict(iso=iso, trial=trial, seed=seed, **config, metrics=metrics, gains=[a['gain'] for a in audit]))\n            print('Frozen DC gate transfer', iso, 'draw', trial+1, 'of8', flush=True)\n    if len(records) != 1568 or [sha256(p) for p in paths] != hashes: raise ValueError('Incomplete or changed transfer')\n    now = datetime.now(timezone.utc)\n    output = ROOT/'docs/validation/raw'/f\"transfert-structures-moyenne-calibree-bruit-v001-{now.strftime('%Y%m%dT%H%M%SZ')}.json\"\n    dependencies = ('study_noise_group_mean_gate.py', 'noise_group_mean_gate.py', 'noise_pilot_transport.py',\n        'study_noise_empirical_cross_spectrum.py', 'study_noise_profile_capture_transfer.py',\n        'study_noise_profile_covariance_wiener.py', 'study_noise_profile_real_residuals.py')\n    result = dict(schema_version=1, data_version=1, started_at_utc=started.isoformat(), completed_at_utc=now.isoformat(),\n        commit=git('rev-parse', 'HEAD'), numpy_version=np.__version__, records=records,\n        runner_sha256=sha256(Path(__file__)), runner_source=Path(__file__).read_text(encoding='utf-8'),\n        parents=[dict(path=str(p), sha256=h) for p, h in zip(paths, hashes)],\n        dependencies={n: dict(sha256=sha256(ROOT/'tests'/n), source=(ROOT/'tests'/n).read_text(encoding='utf-8')) for n in dependencies},\n        rules='ALLprecision/thresholdsfrozenfromparent,nullcalibrationNOTrerun.32NEWindependentGaussianfields,8/model,49relatedsignals/field:32Gaussians,8diagonalsteps,8period8diagonalsines,1flat. UnitvariancepreparedAXESnotoriginalstandardizedYCoCg. Noisefieldreusedwithinconfigs,clusterbyISO/trialforuncertainty,not1568independentimages. Sameblindpilot/sharedreconstructor,gatedDConly,truthforevaluationonly. No coefficientfit,thresholdlowering,selectionorproduction.',\n        limitations='MatchedstationaryGaussianPSDs,notnewRAWcapture,nativecleantruthorunknowncamera.32independentnoisecontextsinsufficientraretails;flats32ONLYsupplementprior512,notnewprecisefalsepositiverate. Directions/SNRinpreparedaxesdifferfromrealpairbenchmark;comparepairedmethodswithinthisstudy,notabsoluteoldMSE. Signal-dependentnoise,PSD/sigmaerrorandphotographictexturesnotvalidated.')\n    with output.open('x', encoding='utf-8') as handle: json.dump(result, handle, ensure_ascii=False, indent=1, allow_nan=False)\n    print(output, flush=True)\n\n\nif __name__ == '__main__': run()\n"
+  }
+ },
+ "runner_sha256": "785988077e833450180debb8bef5a6cce129dc12f491103eb5125e043b8bfd25",
+ "runner_source": "\"\"\"Fixed prospective screen for a frozen research candidate, NOT product release approval.\"\"\"\nfrom datetime import datetime, timezone\nimport json\nfrom pathlib import Path\nimport numpy as np\nfrom study_noise_neighbourhoods import ROOT, git, sha256\n\n\ndef unique(raw, prefix):\n    paths = list(raw.glob(prefix+'-v001-*.json'))\n    if len(paths) != 1: raise ValueError('Require exactly one complete fixed validation proof: '+prefix)\n    return paths[0]\n\n\ndef run():\n    raw = ROOT/'docs/validation/raw'\n    paths = [unique(raw, n) for n in ('validation-independante-cible-equilibree-nuls-bruit',\n        'validation-independante-cible-equilibree-structures-bruit', 'cible-equilibree-residus-reels-bruit')]\n    hashes = [sha256(p) for p in paths]\n    nulls, shapes, real = [json.loads(p.read_text(encoding='utf-8')) for p in paths]\n    checks = []; summaries = []\n    def check(name, passed, **detail): checks.append(dict(name=name, passed=bool(passed), **detail))\n    null_seeds = {r['seed'] for r in nulls['records']}; shape_seeds = {r['seed'] for r in shapes['records']}\n    check('fresh_streams_disjoint', not null_seeds.intersection(shape_seeds), null_fields=len(null_seeds), structure_fields=len(shape_seeds))\n    check('fixed_population', len(nulls['records']) == 5120 and len(shapes['records']) == 2352 and len(null_seeds) == 1024 and len(shape_seeds) == 48)\n    for source in range(12):\n        for ratio in (.8, .9, 1., 1.1, 1.2):\n            selected = [r for r in nulls['records'] if r['source'] == source and r['estimated_to_true_sigma'] == ratio]\n            a = np.array([np.mean(r['metrics']['pilot']['full']['mse']) for r in selected])\n            b = np.array([np.mean(r['metrics']['balanced_target']['full']['mse']) for r in selected])\n            if not len(a) or np.min(a) <= 0: raise ValueError('Missing/degenerate null population')\n            detail = dict(scope='null', source=source, ratio=ratio, count=len(a), mean_ratio=float(b.mean()/a.mean()),\n                maximum_paired_ratio=float(np.max(b/a)), q99_ratio=float(np.quantile(b,.99)/np.quantile(a,.99)),\n                active_fields=sum(r['execution']['graph_constructed'] for r in selected))\n            summaries.append(detail)\n            check(f'null_mean_source{source}_sigma{ratio}', b.mean() <= 1.01*a.mean()+1e-12, **detail)\n            check(f'null_every_field_source{source}_sigma{ratio}', np.all(b <= 1.10*a+1e-12), **detail)\n    for source in range(12):\n        for shape in ('gaussian', 'diagonal_step', 'diagonal_sinusoid', 'flat'):\n            selected = [r for r in shapes['records'] if r['source'] == source and r['shape'] == shape]\n            a = np.array([np.mean(r['metrics']['pilot']['full']['mse']) for r in selected])\n            b = np.array([np.mean(r['metrics']['balanced_target']['full']['mse']) for r in selected])\n            if not len(a) or np.min(a) <= 0: raise ValueError('Missing/degenerate shape population')\n            detail = dict(scope='structures', source=source, shape=shape, count=len(a),\n                mean_ratio=float(b.mean()/a.mean()), maximum_paired_ratio=float(np.max(b/a)))\n            summaries.append(detail)\n            check(f'shape_every_state_source{source}_{shape}', np.all(b <= 1.10*a+1e-12), **detail)\n            if shape != 'flat': check(f'shape_mean_source{source}_{shape}', b.mean() <= a.mean()+1e-12, **detail)\n    for label, data in (('fresh', shapes), ('real_exploratory', real)):\n        selected = [r for r in data['records'] if r['shape'] == 'gaussian']\n        a = np.mean([r['metrics']['pilot']['full']['mse'] for r in selected])\n        b = np.mean([r['metrics']['balanced_target']['full']['mse'] for r in selected])\n        check(label+'_pooled_gaussian_gain_at_least_1percent', b <= .99*a+1e-12, mean_ratio=float(b/a))\n    frozen = {}\n    for data in (nulls, shapes):\n        started_timestamp = datetime.fromisoformat(data['started_at_utc']).timestamp()\n        for name, metadata in data['dependencies'].items():\n            if name in frozen and frozen[name]['sha256'] != metadata['sha256']: raise ValueError('Candidate changed between validations')\n            if sha256(ROOT/'tests'/name) != metadata['sha256']: raise ValueError('Candidate source changed after validation')\n            if (ROOT/'tests'/name).stat().st_mtime > started_timestamp:\n                raise ValueError('Candidate source was touched after validation started: '+name)\n            frozen[name] = metadata\n    if [sha256(p) for p in paths] != hashes: raise ValueError('Parents changed')\n    passed = all(c['passed'] for c in checks); now = datetime.now(timezone.utc)\n    output = raw/f\"bilan-validation-cible-equilibree-bruit-v001-{now.strftime('%Y%m%dT%H%M%SZ')}.json\"\n    result = dict(schema_version=1, data_version=1, completed_at_utc=now.isoformat(), commit=git('rev-parse', 'HEAD'),\n        branch=git('branch', '--show-current'), status='experimental_screen_passed' if passed else 'experimental_screen_failed',\n        product_release=False, checks=checks, summaries=summaries, frozen_candidate_dependencies=frozen,\n        runner_sha256=sha256(Path(__file__)), runner_source=Path(__file__).read_text(encoding='utf-8'),\n        parents=[dict(path=str(p), sha256=h) for p,h in zip(paths, hashes)],\n        rules='ProspectivescreenFROZENbeforevalidationresults:meanflat+1%,EVERYnull/structuredstate+10%maximum,nonflatfamilymeannotworseperPSD,pooledgaussiangain>=1%inFRESHandreusedrealbenchmark. No hiddenexclusions,criteriarelaxationorbest-runselection. FrozenSHAsofactualcandidate,notGitpublication/tag.',\n        limitations='PassingfiniteSCREENisNOTuniversalstability,riskboundorproductionrelease. Core12/graph60,onebody/localPSDsession,matchedGaussian/sigmaerrorfixtures. RealDqualityreusesexploration;nativefullimage/visualreview,seams/performance/othercamerasremainunvalidated. No production,push,mergeortag.')\n    with output.open('x', encoding='utf-8') as handle: json.dump(result, handle, ensure_ascii=False, indent=1, allow_nan=False)\n    print(output, flush=True); print(result['status'], sum(not c['passed'] for c in checks), 'failed checks of', len(checks), flush=True)\n\n\nif __name__ == '__main__': run()\n",
+ "parents": [
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\validation-independante-cible-equilibree-nuls-bruit-v001-20261027T131636Z.json",
+   "sha256": "cef5aff02fd69fafbd82008719ce44251630080a553c77a928e3aa2cb2bdd634"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\validation-independante-cible-equilibree-structures-bruit-v001-20261027T131956Z.json",
+   "sha256": "cbf9ac76085ae7adb718ef7a5e9134e115a3f35a96776a47d0705bab97330c5c"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\cible-equilibree-residus-reels-bruit-v001-20261027T130438Z.json",
+   "sha256": "adb7378378fdb1ec750b18a63511cbe9285d821108dabf107d440ac578d1e9a2"
+  }
+ ],
+ "rules": "ProspectivescreenFROZENbeforevalidationresults:meanflat+1%,EVERYnull/structuredstate+10%maximum,nonflatfamilymeannotworseperPSD,pooledgaussiangain>=1%inFRESHandreusedrealbenchmark. No hiddenexclusions,criteriarelaxationorbest-runselection. FrozenSHAsofactualcandidate,notGitpublication/tag.",
+ "limitations": "PassingfiniteSCREENisNOTuniversalstability,riskboundorproductionrelease. Core12/graph60,onebody/localPSDsession,matchedGaussian/sigmaerrorfixtures. RealDqualityreusesexploration;nativefullimage/visualreview,seams/performance/othercamerasremainunvalidated. No production,push,mergeortag."
+}

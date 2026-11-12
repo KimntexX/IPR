@@ -1,0 +1,397 @@
+{
+ "schema_version": 1,
+ "data_version": 1,
+ "started_at_utc": "2026-10-27T22:56:28.249268+00:00",
+ "completed_at_utc": "2026-10-27T22:56:32.160684+00:00",
+ "records": [
+  {
+   "reference_to_frame_preview_affine": [
+    [
+     1.0,
+     -0.0,
+     0.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0
+    ]
+   ],
+   "tracked_points": 188,
+   "inliers": 188,
+   "inlier_fraction": 1.0,
+   "median_inlier_residual_preview_pixels": 0.0,
+   "rotation_degrees": 0.0,
+   "scale": 1.0,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9819.CR3",
+   "sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165",
+   "index": 0,
+   "preview_to_cfa_plane_scale": [
+    4.34875,
+    4.350844277673546
+   ]
+  },
+  {
+   "reference_to_frame_preview_affine": [
+    [
+     1.0018272513429252,
+     0.0017933035430673105,
+     -0.8800726161668907
+    ],
+    [
+     -0.0017933035430673105,
+     1.0018272513429252,
+     0.6615225414181235
+    ]
+   ],
+   "tracked_points": 188,
+   "inliers": 187,
+   "inlier_fraction": 0.9946808510638298,
+   "median_inlier_residual_preview_pixels": 0.0689963549375534,
+   "rotation_degrees": -0.1025612095528649,
+   "scale": 1.001828856377634,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9820.CR3",
+   "sha256": "5ae412958614f0782133ab8bde605496e411ab7dcfb5d8fd62ea927681a965d3",
+   "index": 1,
+   "preview_to_cfa_plane_scale": [
+    4.34875,
+    4.350844277673546
+   ]
+  },
+  {
+   "reference_to_frame_preview_affine": [
+    [
+     1.0037324321561123,
+     0.004224557673510427,
+     -1.4623193673101842
+    ],
+    [
+     -0.004224557673510427,
+     1.0037324321561123,
+     0.5923475110614455
+    ]
+   ],
+   "tracked_points": 188,
+   "inliers": 187,
+   "inlier_fraction": 0.9946808510638298,
+   "median_inlier_residual_preview_pixels": 0.08463634550571442,
+   "rotation_degrees": -0.2411478278566078,
+   "scale": 1.003741322378212,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9821.CR3",
+   "sha256": "1ce0b3885a317a6fdaaa8b40d4d399545f187080592c2ad78f81821865668bd2",
+   "index": 2,
+   "preview_to_cfa_plane_scale": [
+    4.34875,
+    4.350844277673546
+   ]
+  },
+  {
+   "reference_to_frame_preview_affine": [
+    [
+     1.0043863685842283,
+     0.006115097059387679,
+     -2.641957439633713
+    ],
+    [
+     -0.006115097059387679,
+     1.0043863685842283,
+     0.9915326148662964
+    ]
+   ],
+   "tracked_points": 188,
+   "inliers": 187,
+   "inlier_fraction": 0.9946808510638298,
+   "median_inlier_residual_preview_pixels": 0.07613010704517365,
+   "rotation_degrees": -0.3488348056577856,
+   "scale": 1.004404983963072,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9822.CR3",
+   "sha256": "299d0a9013836d3e2ea53c8d23856c02b4573011a7eb0a19992897e03b63f680",
+   "index": 3,
+   "preview_to_cfa_plane_scale": [
+    4.34875,
+    4.350844277673546
+   ]
+  },
+  {
+   "reference_to_frame_preview_affine": [
+    [
+     1.0045538135864185,
+     0.0065957126087154575,
+     -4.3025879498967505
+    ],
+    [
+     -0.0065957126087154575,
+     1.0045538135864185,
+     0.7100407050058344
+    ]
+   ],
+   "tracked_points": 188,
+   "inliers": 187,
+   "inlier_fraction": 0.9946808510638298,
+   "median_inlier_residual_preview_pixels": 0.06616421043872833,
+   "rotation_degrees": -0.37618797508510515,
+   "scale": 1.0045754664612476,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9823.CR3",
+   "sha256": "72a8c5475af764b5f2fe125234367e3a1c13f7e6efa2d3fd03b38d30f2809894",
+   "index": 4,
+   "preview_to_cfa_plane_scale": [
+    4.34875,
+    4.350844277673546
+   ]
+  },
+  {
+   "reference_to_frame_preview_affine": [
+    [
+     1.0042611630896354,
+     0.007484973152789517,
+     -5.02891140841936
+    ],
+    [
+     -0.007484973152789517,
+     1.0042611630896354,
+     0.7626137913060796
+    ]
+   ],
+   "tracked_points": 188,
+   "inliers": 187,
+   "inlier_fraction": 0.9946808510638298,
+   "median_inlier_residual_preview_pixels": 0.08714007586240768,
+   "rotation_degrees": -0.42702978705587685,
+   "scale": 1.004289056254844,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9824.CR3",
+   "sha256": "28899c86ad3850f4fa699a6001fcb7b68af4d6a3d4adbab7cfb2acac2c1120c4",
+   "index": 5,
+   "preview_to_cfa_plane_scale": [
+    4.34875,
+    4.350844277673546
+   ]
+  },
+  {
+   "reference_to_frame_preview_affine": [
+    [
+     1.0042059365890945,
+     0.006954538436996648,
+     -5.180455526949667
+    ],
+    [
+     -0.006954538436996648,
+     1.0042059365890945,
+     0.3671806547524452
+    ]
+   ],
+   "tracked_points": 188,
+   "inliers": 187,
+   "inlier_fraction": 0.9946808510638298,
+   "median_inlier_residual_preview_pixels": 0.10143385082483292,
+   "rotation_degrees": -0.3967904552780731,
+   "scale": 1.0042300178174581,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9825.CR3",
+   "sha256": "cb5c9016211a340e38ec707ec8ee9d5bf834a644958d394eb7f41ab565dd4245",
+   "index": 6,
+   "preview_to_cfa_plane_scale": [
+    4.34875,
+    4.350844277673546
+   ]
+  },
+  {
+   "reference_to_frame_preview_affine": [
+    [
+     1.0040069359214405,
+     0.006059662274127254,
+     -4.754820515608661
+    ],
+    [
+     -0.006059662274127254,
+     1.0040069359214405,
+     -0.20630046067427735
+    ]
+   ],
+   "tracked_points": 188,
+   "inliers": 187,
+   "inlier_fraction": 0.9946808510638298,
+   "median_inlier_residual_preview_pixels": 0.13601526618003845,
+   "rotation_degrees": -0.3458032464900518,
+   "scale": 1.004025222235595,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9826.CR3",
+   "sha256": "e810101cf640a035dd2a3147b9edb76e2d0ad60d8870f9af8394220fcf334bc1",
+   "index": 7,
+   "preview_to_cfa_plane_scale": [
+    4.34875,
+    4.350844277673546
+   ]
+  },
+  {
+   "reference_to_frame_preview_affine": [
+    [
+     1.0037989765543887,
+     0.005209781956686594,
+     -3.9755419258181215
+    ],
+    [
+     -0.005209781956686594,
+     1.0037989765543887,
+     -0.7429792313453611
+    ]
+   ],
+   "tracked_points": 188,
+   "inliers": 188,
+   "inlier_fraction": 1.0,
+   "median_inlier_residual_preview_pixels": 0.14903409779071808,
+   "rotation_degrees": -0.2973661511129185,
+   "scale": 1.0038124960168977,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9827.CR3",
+   "sha256": "4444028085b4c4a42a42c6bdcd20f0e6dc6d4a182028e23969bf4f7e766a7d3e",
+   "index": 8,
+   "preview_to_cfa_plane_scale": [
+    4.34875,
+    4.350844277673546
+   ]
+  },
+  {
+   "reference_to_frame_preview_affine": [
+    [
+     1.0035384753192909,
+     0.004678407008229868,
+     -3.545954084538042
+    ],
+    [
+     -0.004678407008229868,
+     1.0035384753192909,
+     -1.091189169212875
+    ]
+   ],
+   "tracked_points": 188,
+   "inliers": 188,
+   "inlier_fraction": 1.0,
+   "median_inlier_residual_preview_pixels": 0.16220009326934814,
+   "rotation_degrees": -0.2671058869506293,
+   "scale": 1.0035493804184732,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9828.CR3",
+   "sha256": "00ffa5dd689ed880485b83f16a69347ff37fcae9073ddd0d7cb9d257947b97a5",
+   "index": 9,
+   "preview_to_cfa_plane_scale": [
+    4.34875,
+    4.350844277673546
+   ]
+  },
+  {
+   "reference_to_frame_preview_affine": [
+    [
+     1.0032972679142218,
+     0.004308055589654277,
+     -3.2157947207852047
+    ],
+    [
+     -0.004308055589654277,
+     1.0032972679142218,
+     -1.301640214653514
+    ]
+   ],
+   "tracked_points": 188,
+   "inliers": 188,
+   "inlier_fraction": 1.0,
+   "median_inlier_residual_preview_pixels": 0.1801033318042755,
+   "rotation_degrees": -0.24602069008255642,
+   "scale": 1.0033065170460647,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9829.CR3",
+   "sha256": "8e7ac253d543a458dbaff3dc7dafc675c91ce6feffa4f16e6f9bc673f9831298",
+   "index": 10,
+   "preview_to_cfa_plane_scale": [
+    4.34875,
+    4.350844277673546
+   ]
+  },
+  {
+   "reference_to_frame_preview_affine": [
+    [
+     1.0031347729240645,
+     0.0038102307617922486,
+     -3.268233516701041
+    ],
+    [
+     -0.0038102307617922486,
+     1.0031347729240645,
+     -1.6697275260419953
+    ]
+   ],
+   "tracked_points": 188,
+   "inliers": 187,
+   "inlier_fraction": 0.9946808510638298,
+   "median_inlier_residual_preview_pixels": 0.19713148474693298,
+   "rotation_degrees": -0.21762688090418988,
+   "scale": 1.0031420091432082,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9830.CR3",
+   "sha256": "f4ad3c2bfc7260358b49736bea8ed1105220d19bf40ede2324ec9d248f75df49",
+   "index": 11,
+   "preview_to_cfa_plane_scale": [
+    4.34875,
+    4.350844277673546
+   ]
+  },
+  {
+   "reference_to_frame_preview_affine": [
+    [
+     1.002911847242946,
+     0.0036619505294722783,
+     -3.148552897522923
+    ],
+    [
+     -0.0036619505294722783,
+     1.002911847242946,
+     -1.9022095917049224
+    ]
+   ],
+   "tracked_points": 188,
+   "inliers": 185,
+   "inlier_fraction": 0.9840425531914894,
+   "median_inlier_residual_preview_pixels": 0.20933076739311218,
+   "rotation_degrees": -0.2092042070148735,
+   "scale": 1.0029185326944248,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9831.CR3",
+   "sha256": "975973a6bc5559ec84449b71c8f3823f0f31897ae7f3935f3aa5c539fbdaea73",
+   "index": 12,
+   "preview_to_cfa_plane_scale": [
+    4.34875,
+    4.350844277673546
+   ]
+  },
+  {
+   "reference_to_frame_preview_affine": [
+    [
+     1.0030718203239617,
+     0.0025960548799883764,
+     -3.119476857504574
+    ],
+    [
+     -0.0025960548799883764,
+     1.0030718203239617,
+     -2.535248447191417
+    ]
+   ],
+   "tracked_points": 188,
+   "inliers": 186,
+   "inlier_fraction": 0.9893617021276596,
+   "median_inlier_residual_preview_pixels": 0.20738649368286133,
+   "rotation_degrees": -0.14828714443726043,
+   "scale": 1.0030751797492379,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9832.CR3",
+   "sha256": "48a9d34e3a63f84fedd3609d0dedddc9fd67d038753713be267d811a59f8de36",
+   "index": 13,
+   "preview_to_cfa_plane_scale": [
+    4.34875,
+    4.350844277673546
+   ]
+  }
+ ],
+ "parent": {
+  "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\audit-rafale-reelle-bruit-v001-20261027T225328Z.json",
+  "sha256": "a6d74a68af1b28b8da241069942adf227bda151e62f7dd89f8ac1bb4dbbd2574"
+ },
+ "runner_sha256": "db5d37acab547d626ac323cbc588f9228e8d4fd403c5c1a49395b99e7b2d6fc4",
+ "runner_source": "\"\"\"Development-only global burst motion audit; estimates transforms, does not resample RAW pixels.\"\"\"\nfrom datetime import datetime,timezone\nimport json\nfrom pathlib import Path\nimport numpy as np\nimport rawpy\nimport cv2\nfrom analysis.render import available_memory\nfrom study_noise_neighbourhoods import ROOT,sha256,git\n\n\ndef preview(raw):\n    h,w=raw.shape;image=raw[:h//2*2,:w//2*2].reshape(h//2,2,w//2,2).mean(axis=(1,3)).astype(np.float32)\n    target=(800,round(image.shape[0]*800/image.shape[1]))\n    small=cv2.resize(image,target,interpolation=cv2.INTER_AREA)\n    a,b=np.quantile(small,[.01,.99])\n    if b<=a:raise ValueError('Unmeasurable scene preview')\n    return np.clip((small-a)/(b-a),0,1),[image.shape[1]/target[0],image.shape[0]/target[1]]\n\n\ndef estimate(reference,current):\n    a=(reference*255).astype(np.uint8);b=(current*255).astype(np.uint8)\n    points=cv2.goodFeaturesToTrack(a,maxCorners=500,qualityLevel=.01,minDistance=8,blockSize=5)\n    if points is None or len(points)<12:raise ValueError('Insufficient global scene features')\n    tracked,status,error=cv2.calcOpticalFlowPyrLK(a,b,points,None,winSize=(21,21),maxLevel=3)\n    if tracked is None or status is None:raise ValueError('Optical flow failed')\n    valid=status.ravel()!=0\n    if valid.sum()<12:raise ValueError('Insufficient tracked features')\n    matrix,inliers=cv2.estimateAffinePartial2D(points[valid],tracked[valid],method=cv2.RANSAC,ransacReprojThreshold=1.5,maxIters=2000,confidence=.99,refineIters=10)\n    if matrix is None or inliers is None:raise ValueError('Global motion fit failed')\n    projected=cv2.transform(points[valid],matrix);residual=np.linalg.norm(projected-tracked[valid],axis=2).ravel()\n    chosen=inliers.ravel()!=0\n    return dict(reference_to_frame_preview_affine=matrix.tolist(),tracked_points=int(valid.sum()),inliers=int(chosen.sum()),\n        inlier_fraction=float(chosen.mean()),median_inlier_residual_preview_pixels=float(np.median(residual[chosen])),\n        rotation_degrees=float(np.degrees(np.arctan2(matrix[1,0],matrix[0,0]))),scale=float(np.hypot(matrix[0,0],matrix[1,0])))\n\n\ndef run():\n    source=ROOT/'docs/validation/raw/audit-rafale-reelle-bruit-v001-20261027T225328Z.json';digest=sha256(source)\n    parent=json.loads(source.read_text(encoding='utf-8'));started=datetime.now(timezone.utc);records=[];reference=None\n    cv2.setRNGSeed(440)\n    for item in parent['identities']:\n        if item['split']!='development':continue\n        if (available_memory() or 0)<2*1024**3:raise ValueError('Need2GiB per RAW motion audit')\n        p=Path(item['path'])\n        if sha256(p)!=item['sha256']:raise ValueError('Source changed')\n        with rawpy.imread(str(p)) as raw:current,scale=preview(raw.raw_image_visible)\n        if reference is None:reference=current.copy()\n        result=estimate(reference,current);result.update(path=str(p),sha256=item['sha256'],index=item['index'],preview_to_cfa_plane_scale=scale)\n        records.append(result);print('MOTION',p.name,'rotation',result['rotation_degrees'],'inliers',result['inliers'],flush=True)\n    if len(records)!=14 or sha256(source)!=digest:raise ValueError('Incomplete/changed motion audit')\n    now=datetime.now(timezone.utc);output=ROOT/'docs/validation/raw'/f'mouvement-rafale-bruit-v001-{now.strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n    result=dict(schema_version=1,data_version=1,started_at_utc=started.isoformat(),completed_at_utc=now.isoformat(),records=records,\n        parent=dict(path=str(source),sha256=digest),runner_sha256=sha256(Path(__file__)),runner_source=Path(__file__).read_text(encoding='utf-8'),\n        commit=git('rev-parse','HEAD'),opencv_version=cv2.__version__,verdict='development_global_motion_only',\n        rules='First14ONLY,no validation/sealed decode. CFA2x2meanthen800widepreview,own1/99percentilerange.500ShiTomasi,LK21x21pyramid3,RANSACpartialaffine1.5previewpx. Estimateglobalgeometryonly,no RAWresampling/registrationbasednoisecalibration.',\n        limitations='Singleaffinecannotmodelparallax/nonrigidmotion/rollingreadout. Previewquantization/noiseaffectsfeaturepositions. MotionfitnotguaranteealignedcleantruthorvalidphysicalPTC. Inlierselectionnotnoisepixelselection. No production.')\n    with output.open('x',encoding='utf-8') as handle:json.dump(result,handle,ensure_ascii=False,indent=1,allow_nan=False)\n    print('RESULT',output,flush=True)\n\n\nif __name__=='__main__':run()\n",
+ "commit": "2a40c5c6cff78d40294393a68827f4a24555c724",
+ "opencv_version": "5.0.0",
+ "verdict": "development_global_motion_only",
+ "rules": "First14ONLY,no validation/sealed decode. CFA2x2meanthen800widepreview,own1/99percentilerange.500ShiTomasi,LK21x21pyramid3,RANSACpartialaffine1.5previewpx. Estimateglobalgeometryonly,no RAWresampling/registrationbasednoisecalibration.",
+ "limitations": "Singleaffinecannotmodelparallax/nonrigidmotion/rollingreadout. Previewquantization/noiseaffectsfeaturepositions. MotionfitnotguaranteealignedcleantruthorvalidphysicalPTC. Inlierselectionnotnoisepixelselection. No production."
+}

@@ -1,0 +1,226 @@
+{
+ "schema_version": 1,
+ "data_version": 1,
+ "completed_at_utc": "20261027T195111Z",
+ "record": {
+  "dataset": 2,
+  "iso": 6400,
+  "a": "6V1A9700.CR3",
+  "b": "6V1A9701.CR3",
+  "rect": [
+   128,
+   128,
+   128,
+   128
+  ],
+  "status": "predicted_held_capture",
+  "lower": "dataset0_6400",
+  "upper": "dataset1_6400",
+  "prediction": {
+   "status": "estimated_not_confidence_calibrated",
+   "weight": 0.3058138816330045,
+   "sigma": [
+    0.030384408806427975,
+    0.04129479219288748,
+    0.04111407894361897
+   ],
+   "robust_log_spectral_dispersion": 2.3096178246948496,
+   "endpoint_shape_contrast": 1.906788050372052,
+   "frequency_count": 6028,
+   "zero_clamped_frequency_count": 0
+  },
+  "estimate_seconds": 0.11789229998248629,
+  "metrics": {
+   "normalized_covariance_squared_error": 0.00043175627759466475,
+   "mean_abs_log_hh_factor_error": 0.07593756215148802,
+   "gaussian_hh_factor_ratio": [
+    0.8615362715261264,
+    0.951877715988048,
+    0.9709737322925367
+   ]
+  },
+  "sigma_ratio_to_differential": [
+   0.8081708220261219,
+   0.9274079451649707,
+   0.98212293350643
+  ],
+  "challenges": [
+   {
+    "kind": "weak_stripes",
+    "axis": 0,
+    "angle": 0.0,
+    "prediction": {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 0.30349039524914934,
+     "sigma": [
+      0.0304693782173852,
+      0.04128502551249905,
+      0.04111833687882641
+     ],
+     "robust_log_spectral_dispersion": 2.31036800213217,
+     "endpoint_shape_contrast": 1.906788050372052,
+     "frequency_count": 6028,
+     "zero_clamped_frequency_count": 0
+    },
+    "sigma_ratio_to_same_original": [
+     1.0027964806390852,
+     0.9997634888113056,
+     1.0001035639206044
+    ]
+   },
+   {
+    "kind": "weak_stripes",
+    "axis": 0,
+    "angle": 0.7853981633974483,
+    "prediction": {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 0.2906943294760955,
+     "sigma": [
+      0.030691329535469783,
+      0.041253245357215355,
+      0.041171550374557
+     ],
+     "robust_log_spectral_dispersion": 2.3104147432613105,
+     "endpoint_shape_contrast": 1.906788050372052,
+     "frequency_count": 6028,
+     "zero_clamped_frequency_count": 0
+    },
+    "sigma_ratio_to_same_original": [
+     1.0101012572269261,
+     0.9989938964826833,
+     1.0013978528137975
+    ]
+   },
+   {
+    "kind": "weak_stripes",
+    "axis": 1,
+    "angle": 0.0,
+    "prediction": {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 0.29333016720464844,
+     "sigma": [
+      0.030627158062397394,
+      0.04131921897793189,
+      0.04115767295404166
+     ],
+     "robust_log_spectral_dispersion": 2.3098964087410376,
+     "endpoint_shape_contrast": 1.906788050372052,
+     "frequency_count": 6028,
+     "zero_clamped_frequency_count": 0
+    },
+    "sigma_ratio_to_same_original": [
+     1.0079892703365045,
+     1.0005915221689532,
+     1.0010603183031892
+    ]
+   },
+   {
+    "kind": "weak_stripes",
+    "axis": 1,
+    "angle": 0.7853981633974483,
+    "prediction": {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 0.3046302637913282,
+     "sigma": [
+      0.03040672342959871,
+      0.04131178142541916,
+      0.041116247830213615
+     ],
+     "robust_log_spectral_dispersion": 2.3145956205029816,
+     "endpoint_shape_contrast": 1.906788050372052,
+     "frequency_count": 6028,
+     "zero_clamped_frequency_count": 0
+    },
+    "sigma_ratio_to_same_original": [
+     1.0007344103126343,
+     1.000411413440521,
+     1.000052752892692
+    ]
+   },
+   {
+    "kind": "localized_gaussian",
+    "axis": 0,
+    "angle": null,
+    "prediction": {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 0.2072178470727596,
+     "sigma": [
+      0.03238990415261678,
+      0.041157989537536986,
+      0.041504115626005054
+     ],
+     "robust_log_spectral_dispersion": 2.306711530390982,
+     "endpoint_shape_contrast": 1.906788050372052,
+     "frequency_count": 6028,
+     "zero_clamped_frequency_count": 0
+    },
+    "sigma_ratio_to_same_original": [
+     1.0660040930519776,
+     0.9966871692994242,
+     1.0094866939113716
+    ]
+   },
+   {
+    "kind": "localized_gaussian",
+    "axis": 1,
+    "angle": null,
+    "prediction": {
+     "status": "estimated_not_confidence_calibrated",
+     "weight": 0.21875,
+     "sigma": [
+      0.032069175164361245,
+      0.04116796737797945,
+      0.04145487236852786
+     ],
+     "robust_log_spectral_dispersion": 2.317108757101928,
+     "endpoint_shape_contrast": 1.906788050372052,
+     "frequency_count": 6028,
+     "zero_clamped_frequency_count": 0
+    },
+    "sigma_ratio_to_same_original": [
+     1.0554483836979198,
+     0.9969287939671514,
+     1.0082889714099208
+    ]
+   }
+  ]
+ },
+ "runner_sha256": "ab2135134888484aa20e2d99aa742eace3b96c457b469bc71cdfb415a89dc707",
+ "runner_source": "\"\"\"Detailed robust spectral A-only weights, same held captures and 84 texture challenges.\"\"\"\nfrom datetime import datetime,timezone\nimport json\nfrom pathlib import Path\nimport time\nimport numpy as np\nfrom study_noise_neighbourhoods import ROOT,sha256,git\nfrom analysis.render import available_memory\nfrom study_noise_profile_capture_transfer import flat_planes\nfrom study_noise_empirical_cross_spectrum import fit,lag_block\nfrom study_noise_signal_covariance_prediction import normalized,physical\nfrom study_noise_shape_only_prediction import shape_errors\nfrom noise_robust_spectral_weights import estimate,template,SETTINGS\n\n\ndef full_physical(field):\n    covariance,_,_,sigma,_=fit(field)\n    return covariance*sigma[:,None,None,None]*sigma[None,:,None,None]\n\n\ndef run():\n    names=('prediction-covariance-luminance-bruit-v001-20261027T192134Z.json',\n        'transport-psd-gaussien-filtre-spectral-bruit-v002-20261027T190615Z.json',\n        'melange-fixe-covariances-bruit-v001-20261026T175757Z.json',\n        'extraction-paires-profils-bruit-v001-20261026T174656Z.json',\n        'poids-image-seule-contraste-ondelettes-bruit-v001-20261027T193952Z.json',\n        'contextes-abstention-axes-bruit-v001-20261026T221702Z.json',\n        'paires-supplementaires-axes-bruit-v001-20261026T222302Z.json',\n        'paires-supplementaires-axes-bruit-v002-20261026T222833Z.json')\n    paths=[ROOT/'docs/validation/raw'/n for n in names];hashes=[sha256(p) for p in paths]\n    free=available_memory()\n    if free is None or free<2*1024**3:raise ValueError('At least2GiB available before spectral study')\n    parent,spectral,axes,training,previous=[json.loads(p.read_text(encoding='utf-8')) for p in paths[:5]]\n    anchors={a['id']:a for a in parent['anchors']};matrix=np.asarray(axes['fixed_transform'])\n    targets=[r for r in parent['records'] if r['status']=='predicted_held_capture']\n    needed={r[k] for r in targets for k in ('lower','upper')};models={};inputs={}\n    started=datetime.now(timezone.utc);preparation=time.perf_counter()\n    for pair in training['native']['pairs']:\n        name='training_'+str(pair['a']['iso'])\n        if name in needed:\n            field=np.einsum('ab,byx->ayx',matrix,(flat_planes(pair,'a')-flat_planes(pair,'b'))/np.sqrt(2))\n            models[name]=full_physical(field)\n    for dataset,path in enumerate(paths[5:]):\n        data=json.loads(path.read_text(encoding='utf-8'))\n        for pair in data['records']:\n            matching=[r for r in targets if r['dataset']==dataset and r['a']==pair['a']['native']['raw']]\n            name=f\"dataset{dataset}_{pair['iso']}\"\n            if not matching and name not in needed:continue\n            a=np.asarray(pair['a']['native']['original_y_co_cg']).reshape(3,256,256)\n            transformed=np.einsum('ab,byx->ayx',matrix,a)\n            for row in matching:\n                x,y,_,_=row['rect'];inputs[(dataset,row['a'],x,y)]=transformed[:,y:y+128,x:x+128].copy()\n            if name in needed:\n                b=np.asarray(pair['b']['native']['original_y_co_cg']).reshape(3,256,256)\n                difference=np.einsum('ab,byx->ayx',matrix,(a-b)/np.sqrt(2))\n                models[name]=np.mean([full_physical(difference[:,y:y+128,x:x+128])\n                    for x,y,_,_ in anchors[name]['source_quadrants']],axis=0)\n        del data\n    if set(models)!=needed or len(inputs)!=14:raise ValueError('Incomplete full spectral templates/inputs')\n    reconstruction=[]\n    for name,model in models.items():\n        expected=np.asarray(anchors[name]['physical_covariance'])\n        relative=float(np.max(abs(lag_block(model,8)-expected))/np.max(abs(expected)))\n        if relative>1e-10:raise ValueError('Full covariance does not reconstruct archived anchor '+name)\n        reconstruction.append(dict(id=name,lag8_relative_max_error=relative))\n    templates={name:template(model) for name,model in models.items()}\n    preparation_seconds=time.perf_counter()-preparation\n    print('Prepared',len(models),'full spectral templates; archived lag8 controls replayed',flush=True)\n    records=[];yy,xx=np.mgrid[:128,:128]\n    for r in parent['records']:\n        row={k:r[k] for k in ('dataset','iso','a','b','rect','status')}\n        if r['status']!='predicted_held_capture':records.append(row);continue\n        free=available_memory()\n        if free is None or free<1024**3:raise ValueError('At least1GiB available before each target')\n        for key in ('lower','upper'):\n            if set(anchors[r[key]]['raw_names'])&{r['a'],r['b']}:raise ValueError('Held capture leaked into spectral template')\n        low,high=[templates[r[k]] for k in ('lower','upper')];x,y,_,_=r['rect']\n        source=inputs[(r['dataset'],r['a'],x,y)]\n        before=time.perf_counter();prediction=estimate(source,low,high);elapsed=time.perf_counter()-before\n        row.update(lower=r['lower'],upper=r['upper'],prediction=prediction,estimate_seconds=elapsed)\n        if prediction['weight'] is not None:\n            w=prediction['weight'];lo,hi=[normalized(np.asarray(anchors[r[k]]['physical_covariance'])) for k in ('lower','upper')]\n            reference=next(s for s in spectral['records'] if s['dataset']==r['dataset'] and s['a']==r['a'] and s['rect']==r['rect'])\n            row['metrics']=shape_errors((1-w)*lo+w*hi,physical(reference))\n            sigma=np.asarray(reference['sigma_before_unit_scaling'])\n            row['sigma_ratio_to_differential']=(np.asarray(prediction['sigma'])/sigma).tolist()\n            prior=next(s for s in previous['records'] if s['dataset']==r['dataset'] and s['a']==r['a'] and s['rect']==r['rect'])\n            challenges=[]\n            for challenge in prior['challenges']:\n                observed=source.copy();axis=challenge['axis']\n                if challenge['kind']=='weak_stripes':\n                    pattern=.5*np.cos(2*np.pi*(xx*np.cos(challenge['angle'])+yy*np.sin(challenge['angle']))/4+.37)\n                elif challenge['kind']=='localized_gaussian':\n                    pattern=3*np.exp(-((xx-63.5)**2+(yy-63.5)**2)/(2*1.5**2))\n                else:raise ValueError('Unsupported old challenge')\n                observed[axis]+=sigma[axis]*pattern\n                changed=estimate(observed,low,high)\n                challenges.append(dict(kind=challenge['kind'],axis=axis,angle=challenge.get('angle'),prediction=changed,\n                    sigma_ratio_to_same_original=(np.asarray(changed['sigma'])/prediction['sigma']).tolist()\n                    if changed['weight'] is not None else None))\n            row['challenges']=challenges\n        records.append(row)\n        print('Spectrum A-only',r['dataset'],r['iso'],r['rect'],prediction['status'],\n            'weight',prediction['weight'],'seconds',round(elapsed,3),flush=True)\n        stamp=datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')\n        checkpoint=ROOT/'docs/validation/raw'/f'poids-spectre-zone-bruit-v001-{Path(r[\"a\"]).stem}-{x}-{y}-{stamp}.json'\n        with checkpoint.open('x',encoding='utf-8') as handle:\n            json.dump(dict(schema_version=1,data_version=1,completed_at_utc=stamp,record=row,\n                runner_sha256=sha256(Path(__file__)),runner_source=Path(__file__).read_text(encoding='utf-8'),\n                estimator_sha256=sha256(ROOT/'tests/noise_robust_spectral_weights.py'),\n                estimator_source=(ROOT/'tests/noise_robust_spectral_weights.py').read_text(encoding='utf-8'),\n                parents=[dict(path=str(p),sha256=h) for p,h in zip(paths,hashes)]),handle,ensure_ascii=False,indent=1,allow_nan=False)\n    summaries=[]\n    for prior in parent['summaries']:\n        if not prior['predicted_quadrants']:continue\n        rows=[r for r in records if r['dataset']==prior['dataset'] and r['a']==prior['a'] and 'metrics' in r]\n        means={k:float(np.mean([r['metrics'][k] for r in rows])) for k in\n            ('normalized_covariance_squared_error','mean_abs_log_hh_factor_error')} if rows else {}\n        passed=len(rows)==prior['predicted_quadrants'] and all(means[k]<prior['mean_metrics']['fixed'][k]\n            and means[k]<=prior['mean_metrics']['nearest'][k] for k in means)\n        weak=[c for row in rows for c in row['challenges'] if c['kind']=='weak_stripes']\n        valid=[c for c in weak if c['sigma_ratio_to_same_original'] is not None]\n        maximum=max((max(c['sigma_ratio_to_same_original']) for c in valid),default=None)\n        robust=len(valid)==4*prior['predicted_quadrants'] and maximum is not None and maximum<=1.10\n        summary=dict(dataset=prior['dataset'],iso=prior['iso'],a=prior['a'],expected_quadrants=prior['predicted_quadrants'],\n            estimated_quadrants=len(rows),mean_metrics=means,original_controls=prior['mean_metrics'],\n            prediction_screen_passed=passed,texture_screen_passed=robust,available_weak_challenges=len(valid),\n            maximum_weak_texture_sigma_inflation=maximum)\n        summaries.append(summary);print('SCREEN',summary,flush=True)\n    if len(records)!=48 or len(summaries)!=4 or [sha256(p) for p in paths]!=hashes:raise ValueError('Incomplete/changed spectral study')\n    now=datetime.now(timezone.utc)\n    output=ROOT/'docs/validation/raw'/f'poids-image-seule-spectre-robuste-bruit-v001-{now.strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n    dependencies=('noise_robust_spectral_weights.py','study_noise_empirical_cross_spectrum.py',\n        'study_noise_signal_covariance_prediction.py','study_noise_shape_only_prediction.py','study_noise_haar_factor_transport.py')\n    result=dict(schema_version=1,data_version=1,started_at_utc=started.isoformat(),completed_at_utc=now.isoformat(),\n        settings=SETTINGS,texture_limit=1.10,records=records,summaries=summaries,\n        template_reconstruction=reconstruction,template_preparation_seconds=preparation_seconds,\n        verdict='a_only_robust_spectrum_promising_requires_new_validation' if all(s['prediction_screen_passed'] and s['texture_screen_passed'] for s in summaries) else 'a_only_robust_spectrum_not_retained',\n        numpy_version=np.__version__,commit=git('rev-parse','HEAD'),runner_sha256=sha256(Path(__file__)),runner_source=Path(__file__).read_text(encoding='utf-8'),\n        parents=[dict(path=str(p),sha256=h) for p,h in zip(paths,hashes)],\n        dependencies={n:dict(sha256=sha256(ROOT/'tests'/n),source=(ROOT/'tests'/n).read_text(encoding='utf-8')) for n in dependencies},\n        rules='Same14originalAfields/4heldcapturefolds/84injections/34abstentions. ReconstructFULL128PSDanchors fromothercaptureDONLY,lag8checkedrelative1e-10. Exact expectedwindowedpower for stationaryperiodicPSD afterconstant+planeprojection andperiodicHann. Halfplane complexfrequencies radial1/8..1/2,positivecommonsupport. Fitsharedw minimizing sum axisMAD(centeredlogperiodogram/model),amplitude frommedianratio/ln2. InputonlyA/templates;Donlyevaluation/challengeamplitude. SameHH/covariance and10%texture screens,no thresholdretuning.',\n        limitations='Robustcontrast not exactWhittlelikelihood for correlatedwindowedfrequencyordinates;ln2 exponentialmedian proxy approximates finiteimproper/nonGaussian/nativeRCDdata. ModelPSDfiniteperiodicapprox. Sparsepeaks maybe ignored but broadtexture canremain. No calibratedconfidence or globaloptimizerformalguarantee. 128crop timingNOTfullimageUX. No denoising,TIFFexport or production.')\n    with output.open('x',encoding='utf-8') as handle:json.dump(result,handle,ensure_ascii=False,indent=1,allow_nan=False)\n    print('VERDICT',result['verdict'],output,flush=True)\n\n\nif __name__=='__main__':run()\n",
+ "estimator_sha256": "b1cacf67019c2cd84d06bf7ac4286ec399b0e11efcaa7992933eae49e844a37b",
+ "estimator_source": "\"\"\"Research-only robust log-periodogram weight fit with amplitude nuisances, no truth input.\"\"\"\nimport numpy as np\n\n\nSETTINGS=dict(grid_points=129,refinement_iterations=32,minimum_shape_contrast=1e-4,\n    minimum_frequency_count=512,minimum_radius=.125,maximum_radius=.5)\n\n\ndef geometry(size):\n    if size<8 or size%2:raise ValueError('Even square size >=8 required')\n    y,x=np.mgrid[:size,:size];x=x-x.mean();y=y-y.mean()\n    basis=np.stack((np.ones_like(x,dtype=float)/size,x/np.linalg.norm(x),y/np.linalg.norm(y)))\n    hann=np.hanning(size+1)[:-1];window=hann[:,None]*hann[None,:]\n    fy=np.fft.fftfreq(size)[:,None];fx=np.fft.fftfreq(size)[None,:];radius=np.sqrt(fy*fy+fx*fx)\n    mask=(radius>=SETTINGS['minimum_radius'])&(radius<=SETTINGS['maximum_radius'])&((fy>0)|((fy==0)&(fx>0)))\n    return basis,window,mask\n\n\ndef expected_periodogram(spectrum):\n    \"\"\"Exact stationary periodic covariance expectation after plane projection + Hann window.\"\"\"\n    spectrum=np.asarray(spectrum,dtype=float)\n    if spectrum.ndim!=2 or spectrum.shape[0]!=spectrum.shape[1] or not np.isfinite(spectrum).all():\n        raise ValueError('Finite square marginal PSD required')\n    if spectrum.min() < -1e-10*max(1.,float(spectrum.max())):raise ValueError('Negative PSD')\n    spectrum=np.maximum(spectrum,0);n=len(spectrum);basis,window,_=geometry(n)\n    power=np.fft.ifft2(np.fft.fft2(spectrum)*np.fft.fft2(abs(np.fft.fft2(window))**2)).real/(n*n)\n    projected=np.array([np.fft.ifft2(spectrum*np.fft.fft2(u)).real for u in basis])\n    g=np.fft.fft2(window[None]*basis,axes=(-2,-1))\n    cross=np.fft.fft2(window[None]*projected,axes=(-2,-1))\n    trend_covariance=np.einsum('iyx,jyx->ij',basis,projected)\n    power-=2*np.sum((g.conj()*cross).real,axis=0)\n    power+=np.einsum('iyx,jyx,ij->yx',g,g.conj(),trend_covariance).real\n    return power/np.sum(window*window)\n\n\ndef template(covariance):\n    c=np.asarray(covariance,dtype=float)\n    if c.shape!=(3,3,128,128) or not np.isfinite(c).all():raise ValueError('Finite full128 covariance required')\n    variance=np.diag(c[:,:,0,0])\n    if np.min(variance)<=1e-24:raise ValueError('Positive marginal covariance required')\n    return np.array([expected_periodogram(np.fft.fft2(c[a,a]/variance[a]).real) for a in range(3)])\n\n\ndef observed_periodogram(planes):\n    planes=np.asarray(planes,dtype=float)\n    if planes.shape!=(3,128,128) or not np.isfinite(planes).all():raise ValueError('Finite native three-axis128 field required')\n    basis,window,_=geometry(128)\n    coefficients=np.einsum('cyx,jyx->cj',planes,basis)\n    residual=planes-np.einsum('cj,jyx->cyx',coefficients,basis)\n    return abs(np.fft.fft2(residual*window,axes=(-2,-1)))**2/np.sum(window*window)\n\n\ndef fit_log_power(logpower,low,high):\n    logpower,low,high=[np.asarray(v,dtype=float) for v in (logpower,low,high)]\n    if logpower.ndim!=2 or logpower.shape[0]!=3 or low.shape!=logpower.shape or high.shape!=logpower.shape or not all(np.isfinite(v).all() for v in (logpower,low,high)) or min(low.min(),high.min())<=0:\n        raise ValueError('Finite three-axis supported log-power and positive templates required')\n    ratio=np.log(high/low);contrast=float(np.max(abs(ratio-np.median(ratio,axis=1,keepdims=True))))\n    if contrast<SETTINGS['minimum_shape_contrast']:return dict(status='unidentifiable_spectral_shapes',weight=None)\n    def objective(weights):\n        weights=np.atleast_1d(weights)\n        model=(1-weights[:,None,None])*low[None]+weights[:,None,None]*high[None]\n        residual=logpower[None]-np.log(model)\n        center=np.median(residual,axis=2,keepdims=True)\n        return np.median(abs(residual-center),axis=2).sum(axis=1)\n    grid=np.linspace(0,1,SETTINGS['grid_points']);values=objective(grid);best=int(np.argmin(values))\n    left,right=grid[max(0,best-1)],grid[min(len(grid)-1,best+1)];golden=(np.sqrt(5)-1)/2\n    for _ in range(SETTINGS['refinement_iterations']):\n        x=right-golden*(right-left);y=left+golden*(right-left)\n        if objective(x)[0]<objective(y)[0]:right=y\n        else:left=x\n    candidates=np.array([0.,1.,grid[best],(left+right)/2]);costs=objective(candidates)\n    weight=float(candidates[int(np.argmin(costs))]);model=(1-weight)*low+weight*high\n    sigma=np.sqrt(np.exp(np.median(logpower-np.log(model),axis=1))/np.log(2))\n    return dict(status='estimated_not_confidence_calibrated',weight=weight,sigma=sigma.tolist(),\n        robust_log_spectral_dispersion=float(np.min(costs)),endpoint_shape_contrast=contrast,\n        frequency_count=logpower.shape[1],zero_clamped_frequency_count=0)\n\n\ndef estimate(planes,low,high):\n    if np.min(np.std(planes,axis=(1,2)))<1e-12:return dict(status='unmeasurable_axis',weight=None)\n    _,_,mask=geometry(128)\n    support=mask & np.all((low>1e-10)&(high>1e-10)&np.isfinite(low)&np.isfinite(high),axis=0)\n    count=int(support.sum())\n    if count<SETTINGS['minimum_frequency_count']:return dict(status='insufficient_spectral_support',weight=None)\n    power=observed_periodogram(planes)[:,support]\n    result=fit_log_power(np.log(np.maximum(power,np.finfo(float).tiny)),low[:,support],high[:,support])\n    result['zero_clamped_frequency_count']=int(np.sum(power<=0))\n    return result\n",
+ "parents": [
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\prediction-covariance-luminance-bruit-v001-20261027T192134Z.json",
+   "sha256": "45371018c270d8c350f051c4dfc881398123d197c5156cd434dd683fcabaa1e0"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\transport-psd-gaussien-filtre-spectral-bruit-v002-20261027T190615Z.json",
+   "sha256": "20811ce8fafd75cc7d59438602e408e574fc7b189a49ac104b9913c3698433ac"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\melange-fixe-covariances-bruit-v001-20261026T175757Z.json",
+   "sha256": "b242bf674ef8bda8a71a8cba594eb2059ddca0d74bb5056c03c300ab538f6cb5"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\extraction-paires-profils-bruit-v001-20261026T174656Z.json",
+   "sha256": "61a789c32b76eb9bcfa46e358a169dfe8e9cc73c30bb9fec3557352b3eac4770"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\poids-image-seule-contraste-ondelettes-bruit-v001-20261027T193952Z.json",
+   "sha256": "2199b9be483a639321436902455349acb55aff79d34cd0b4a89b1c640fe5a164"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\contextes-abstention-axes-bruit-v001-20261026T221702Z.json",
+   "sha256": "93c538e3b0d1a76a0d8a007fba7d6964cd4e0b0fe9cdcde73c8ad1cb65cd5d90"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\paires-supplementaires-axes-bruit-v001-20261026T222302Z.json",
+   "sha256": "ef585b35e3572418874cf55d1791d41834c40c7cccc1b61c0e89421d82f2a285"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\paires-supplementaires-axes-bruit-v002-20261026T222833Z.json",
+   "sha256": "131f27c54de91a50e8789c154fb5c67eb0a89d9bcb743808f3d58154b449ea39"
+  }
+ ]
+}

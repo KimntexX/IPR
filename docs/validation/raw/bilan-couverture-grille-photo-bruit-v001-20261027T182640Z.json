@@ -1,0 +1,1181 @@
+{
+ "schema_version": 1,
+ "data_version": 1,
+ "completed_at_utc": "2026-10-27T18:26:40.401619+00:00",
+ "records": [
+  {
+   "raw": "6V1A0513.CR3",
+   "actual_iso": 400,
+   "assumed_psd_iso": 100,
+   "grid_contexts": 25,
+   "excluded_grid_contexts": 0,
+   "maximum_replay_error": 0.0,
+   "coverage": [
+    {
+     "label": "rock",
+     "before": 0,
+     "after": 40,
+     "total": 225
+    },
+    {
+     "label": "fabric",
+     "before": 0,
+     "after": 9,
+     "total": 225
+    }
+   ],
+   "stability": [
+    {
+     "bin": 1,
+     "sigma": [
+      0.00016551923104912358,
+      0.00015153082798457262,
+      0.00020411845439366268
+     ],
+     "ratio_to_baseline": null,
+     "axes": [
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 34,
+       "distinct_contributing_contexts": 1,
+       "context_exclusions_losing_availability": [
+        "grid_20"
+       ],
+       "minimum_ratio": 1.0,
+       "maximum_ratio": 1.0
+      },
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 23,
+       "distinct_contributing_contexts": 1,
+       "context_exclusions_losing_availability": [
+        "grid_20"
+       ],
+       "minimum_ratio": 1.0,
+       "maximum_ratio": 1.0
+      },
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 40,
+       "distinct_contributing_contexts": 1,
+       "context_exclusions_losing_availability": [
+        "grid_20"
+       ],
+       "minimum_ratio": 1.0,
+       "maximum_ratio": 1.0
+      }
+     ]
+    },
+    {
+     "bin": 10,
+     "sigma": [
+      0.006156515288299263,
+      0.0044553933483121875,
+      0.005530103149613085
+     ],
+     "ratio_to_baseline": null,
+     "axes": [
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 77,
+       "distinct_contributing_contexts": 10,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.9872312417282264,
+       "maximum_ratio": 1.7346051784629595
+      },
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 51,
+       "distinct_contributing_contexts": 10,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.9759407220821479,
+       "maximum_ratio": 1.42364084243647
+      },
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 55,
+       "distinct_contributing_contexts": 2,
+       "context_exclusions_losing_availability": [
+        "grid_11"
+       ],
+       "minimum_ratio": 1.0,
+       "maximum_ratio": 1.0062136105899069
+      }
+     ]
+    },
+    {
+     "bin": 15,
+     "sigma": [
+      0.010344745470618453,
+      0.002108263469712919,
+      0.009286837803213037
+     ],
+     "ratio_to_baseline": null,
+     "axes": [
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 16,
+       "distinct_contributing_contexts": 3,
+       "context_exclusions_losing_availability": [
+        "grid_00",
+        "grid_02",
+        "grid_04"
+       ],
+       "minimum_ratio": 1.0,
+       "maximum_ratio": 1.0
+      },
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 190,
+       "distinct_contributing_contexts": 5,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.9684438325505104,
+       "maximum_ratio": 1.0427381979129395
+      },
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 247,
+       "distinct_contributing_contexts": 5,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.9489497904317887,
+       "maximum_ratio": 1.0706110064171757
+      }
+     ]
+    }
+   ],
+   "shortages": [
+    {
+     "bin": 4,
+     "candidates": 60,
+     "accepted": [
+      16,
+      33,
+      4
+     ],
+     "cause": "spectral_rejection_or_unmeasurable_axis"
+    },
+    {
+     "bin": 5,
+     "candidates": 151,
+     "accepted": [
+      46,
+      50,
+      10
+     ],
+     "cause": "spectral_rejection_or_unmeasurable_axis"
+    },
+    {
+     "bin": 6,
+     "candidates": 183,
+     "accepted": [
+      60,
+      65,
+      4
+     ],
+     "cause": "spectral_rejection_or_unmeasurable_axis"
+    },
+    {
+     "bin": 7,
+     "candidates": 208,
+     "accepted": [
+      80,
+      61,
+      5
+     ],
+     "cause": "spectral_rejection_or_unmeasurable_axis"
+    },
+    {
+     "bin": 8,
+     "candidates": 177,
+     "accepted": [
+      54,
+      44,
+      2
+     ],
+     "cause": "spectral_rejection_or_unmeasurable_axis"
+    },
+    {
+     "bin": 9,
+     "candidates": 197,
+     "accepted": [
+      54,
+      45,
+      1
+     ],
+     "cause": "spectral_rejection_or_unmeasurable_axis"
+    },
+    {
+     "bin": 10,
+     "candidates": 157,
+     "accepted": [
+      77,
+      51,
+      55
+     ],
+     "cause": "available"
+    },
+    {
+     "bin": 11,
+     "candidates": 48,
+     "accepted": [
+      20,
+      20,
+      12
+     ],
+     "cause": "spectral_rejection_or_unmeasurable_axis"
+    }
+   ]
+  },
+  {
+   "raw": "6V1A9890.CR3",
+   "actual_iso": 25600,
+   "assumed_psd_iso": 51200,
+   "grid_contexts": 23,
+   "excluded_grid_contexts": 2,
+   "maximum_replay_error": 0.0,
+   "coverage": [
+    {
+     "label": "hair",
+     "before": 0,
+     "after": 0,
+     "total": 225
+    },
+    {
+     "label": "blue_hold",
+     "before": 0,
+     "after": 3,
+     "total": 225
+    },
+    {
+     "label": "letters",
+     "before": 212,
+     "after": 225,
+     "total": 225
+    }
+   ],
+   "stability": [
+    {
+     "bin": 11,
+     "sigma": [
+      0.08207163165639453,
+      0.029708429839945014,
+      0.06034628596255123
+     ],
+     "ratio_to_baseline": null,
+     "axes": [
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 31,
+       "distinct_contributing_contexts": 8,
+       "context_exclusions_losing_availability": [
+        "grid_20"
+       ],
+       "minimum_ratio": 0.9850138903782383,
+       "maximum_ratio": 1.0021472660502753
+      },
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 55,
+       "distinct_contributing_contexts": 10,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.9824560541783125,
+       "maximum_ratio": 1.0074316389741957
+      },
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 86,
+       "distinct_contributing_contexts": 11,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.9527077381021468,
+       "maximum_ratio": 1.0168134147723553
+      }
+     ]
+    },
+    {
+     "bin": 12,
+     "sigma": [
+      0.10289808425947482,
+      0.03461619921697727,
+      0.07818295626362176
+     ],
+     "ratio_to_baseline": [
+      0.987224828892511,
+      1.8031647993399822,
+      2.094050429574313
+     ],
+     "axes": [
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 159,
+       "distinct_contributing_contexts": 11,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.9591127613470358,
+       "maximum_ratio": 1.0080094842182292
+      },
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 181,
+       "distinct_contributing_contexts": 12,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.9490680320247779,
+       "maximum_ratio": 1.163493030384129
+      },
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 259,
+       "distinct_contributing_contexts": 11,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.9861053380927545,
+       "maximum_ratio": 1.0144158664552285
+      }
+     ]
+    },
+    {
+     "bin": 13,
+     "sigma": [
+      0.08715069898576579,
+      0.07562067665044235,
+      0.08554665347497896
+     ],
+     "ratio_to_baseline": null,
+     "axes": [
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 233,
+       "distinct_contributing_contexts": 12,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.9936267798001419,
+       "maximum_ratio": 1.0046618686159
+      },
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 264,
+       "distinct_contributing_contexts": 12,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.9739636926296603,
+       "maximum_ratio": 1.0199973470212123
+      },
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 248,
+       "distinct_contributing_contexts": 11,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.9933852131625295,
+       "maximum_ratio": 1.0016108725884685
+      }
+     ]
+    },
+    {
+     "bin": 14,
+     "sigma": [
+      0.08349824664635672,
+      0.0875300998322008,
+      0.08594993133125382
+     ],
+     "ratio_to_baseline": null,
+     "axes": [
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 109,
+       "distinct_contributing_contexts": 6,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.9817337663808547,
+       "maximum_ratio": 1.0285221180181088
+      },
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 115,
+       "distinct_contributing_contexts": 6,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.9898487522306753,
+       "maximum_ratio": 1.0110476552752181
+      },
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 111,
+       "distinct_contributing_contexts": 6,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.9877084522214489,
+       "maximum_ratio": 1.0029479249164932
+      }
+     ]
+    }
+   ],
+   "shortages": [
+    {
+     "bin": 4,
+     "candidates": 0,
+     "accepted": [
+      0,
+      0,
+      0
+     ],
+     "cause": "insufficient_population"
+    },
+    {
+     "bin": 5,
+     "candidates": 90,
+     "accepted": [
+      0,
+      5,
+      0
+     ],
+     "cause": "spectral_rejection_or_unmeasurable_axis"
+    },
+    {
+     "bin": 6,
+     "candidates": 218,
+     "accepted": [
+      0,
+      32,
+      3
+     ],
+     "cause": "spectral_rejection_or_unmeasurable_axis"
+    },
+    {
+     "bin": 7,
+     "candidates": 89,
+     "accepted": [
+      1,
+      16,
+      9
+     ],
+     "cause": "spectral_rejection_or_unmeasurable_axis"
+    },
+    {
+     "bin": 8,
+     "candidates": 56,
+     "accepted": [
+      0,
+      21,
+      14
+     ],
+     "cause": "spectral_rejection_or_unmeasurable_axis"
+    },
+    {
+     "bin": 9,
+     "candidates": 67,
+     "accepted": [
+      5,
+      25,
+      41
+     ],
+     "cause": "spectral_rejection_or_unmeasurable_axis"
+    },
+    {
+     "bin": 10,
+     "candidates": 85,
+     "accepted": [
+      12,
+      48,
+      73
+     ],
+     "cause": "spectral_rejection_or_unmeasurable_axis"
+    },
+    {
+     "bin": 11,
+     "candidates": 102,
+     "accepted": [
+      31,
+      55,
+      86
+     ],
+     "cause": "available"
+    },
+    {
+     "bin": 12,
+     "candidates": 306,
+     "accepted": [
+      159,
+      181,
+      259
+     ],
+     "cause": "available"
+    }
+   ]
+  },
+  {
+   "raw": "6V1A9426.CR3",
+   "actual_iso": 1000,
+   "assumed_psd_iso": 1600,
+   "grid_contexts": 25,
+   "excluded_grid_contexts": 0,
+   "maximum_replay_error": 0.0,
+   "coverage": [
+    {
+     "label": "wall",
+     "before": 218,
+     "after": 225,
+     "total": 225
+    },
+    {
+     "label": "floor",
+     "before": 210,
+     "after": 225,
+     "total": 225
+    },
+    {
+     "label": "joint",
+     "before": 166,
+     "after": 225,
+     "total": 225
+    }
+   ],
+   "stability": [
+    {
+     "bin": 9,
+     "sigma": [
+      0.007817988186646878,
+      0.0017584738048050637,
+      0.006172917353410741
+     ],
+     "ratio_to_baseline": null,
+     "axes": [
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 55,
+       "distinct_contributing_contexts": 9,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.9718904079826023,
+       "maximum_ratio": 1.0202775350761244
+      },
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 122,
+       "distinct_contributing_contexts": 9,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.9917240615608921,
+       "maximum_ratio": 1.0128063329307497
+      },
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 114,
+       "distinct_contributing_contexts": 8,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.9709845181544424,
+       "maximum_ratio": 1.0300754607540832
+      }
+     ]
+    },
+    {
+     "bin": 10,
+     "sigma": [
+      0.010800374187990316,
+      0.002783112536279049,
+      0.008207167047349856
+     ],
+     "ratio_to_baseline": [
+      1.0088438942291107,
+      0.7622223713381611,
+      0.9925213256251755
+     ],
+     "axes": [
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 125,
+       "distinct_contributing_contexts": 13,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.9730929967267532,
+       "maximum_ratio": 1.0470585982379976
+      },
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 216,
+       "distinct_contributing_contexts": 17,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.9454436550876331,
+       "maximum_ratio": 1.078011897952374
+      },
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 180,
+       "distinct_contributing_contexts": 11,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.9942492514292609,
+       "maximum_ratio": 1.0011850817660197
+      }
+     ]
+    },
+    {
+     "bin": 11,
+     "sigma": [
+      0.014796170612202845,
+      0.005495897172096499,
+      0.010852323748328774
+     ],
+     "ratio_to_baseline": null,
+     "axes": [
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 128,
+       "distinct_contributing_contexts": 12,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.9870724113171804,
+       "maximum_ratio": 1.0219413052135145
+      },
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 251,
+       "distinct_contributing_contexts": 14,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.9883104310173088,
+       "maximum_ratio": 1.0091099713972957
+      },
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 38,
+       "distinct_contributing_contexts": 9,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.9567250926819908,
+       "maximum_ratio": 1.0117842012383589
+      }
+     ]
+    },
+    {
+     "bin": 12,
+     "sigma": [
+      0.016309620482451905,
+      0.008492198530108259,
+      0.015384914627704494
+     ],
+     "ratio_to_baseline": [
+      1.1044796750205295,
+      0.8457761040221026,
+      0.9940594361916321
+     ],
+     "axes": [
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 132,
+       "distinct_contributing_contexts": 10,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.9422047410529747,
+       "maximum_ratio": 1.044308884772689
+      },
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 170,
+       "distinct_contributing_contexts": 10,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.8832925972555676,
+       "maximum_ratio": 1.0866160970469114
+      },
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 103,
+       "distinct_contributing_contexts": 7,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.9949442920648683,
+       "maximum_ratio": 1.0043197026535116
+      }
+     ]
+    },
+    {
+     "bin": 13,
+     "sigma": [
+      0.018846368485899056,
+      0.012266259391711337,
+      0.016997324922056585
+     ],
+     "ratio_to_baseline": null,
+     "axes": [
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 51,
+       "distinct_contributing_contexts": 5,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.978858938463725,
+       "maximum_ratio": 1.0741550180909074
+      },
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 57,
+       "distinct_contributing_contexts": 5,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.8436311558471978,
+       "maximum_ratio": 1.0687751212910273
+      },
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 32,
+       "distinct_contributing_contexts": 4,
+       "context_exclusions_losing_availability": [
+        "grid_07"
+       ],
+       "minimum_ratio": 1.0,
+       "maximum_ratio": 1.0124957645717036
+      }
+     ]
+    }
+   ],
+   "shortages": [
+    {
+     "bin": 9,
+     "candidates": 191,
+     "accepted": [
+      55,
+      122,
+      114
+     ],
+     "cause": "available"
+    },
+    {
+     "bin": 10,
+     "candidates": 354,
+     "accepted": [
+      125,
+      216,
+      180
+     ],
+     "cause": "available"
+    },
+    {
+     "bin": 11,
+     "candidates": 385,
+     "accepted": [
+      128,
+      251,
+      38
+     ],
+     "cause": "available"
+    },
+    {
+     "bin": 12,
+     "candidates": 301,
+     "accepted": [
+      132,
+      170,
+      103
+     ],
+     "cause": "available"
+    },
+    {
+     "bin": 13,
+     "candidates": 133,
+     "accepted": [
+      51,
+      57,
+      32
+     ],
+     "cause": "available"
+    }
+   ]
+  },
+  {
+   "raw": "6V1A0195.CR3",
+   "actual_iso": 1000,
+   "assumed_psd_iso": 1600,
+   "grid_contexts": 25,
+   "excluded_grid_contexts": 0,
+   "maximum_replay_error": 0.0,
+   "coverage": [
+    {
+     "label": "sky_points",
+     "before": 0,
+     "after": 225,
+     "total": 225
+    },
+    {
+     "label": "horizon",
+     "before": 171,
+     "after": 54,
+     "total": 225
+    }
+   ],
+   "stability": [
+    {
+     "bin": 1,
+     "sigma": [
+      0.00023332690073241282,
+      0.0001892657120938831,
+      0.000250803459503361
+     ],
+     "ratio_to_baseline": null,
+     "axes": [
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 54,
+       "distinct_contributing_contexts": 4,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.9879150972606544,
+       "maximum_ratio": 1.0191635141522564
+      },
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 46,
+       "distinct_contributing_contexts": 4,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.9809828599427711,
+       "maximum_ratio": 1.0171352010860149
+      },
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 87,
+       "distinct_contributing_contexts": 4,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.9747767000191415,
+       "maximum_ratio": 1.0316472899284275
+      }
+     ]
+    },
+    {
+     "bin": 2,
+     "sigma": [
+      0.0002843669654697353,
+      0.00022282323300890807,
+      0.0003136535085266982
+     ],
+     "ratio_to_baseline": null,
+     "axes": [
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 64,
+       "distinct_contributing_contexts": 3,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.9848060490003764,
+       "maximum_ratio": 1.0002974794703277
+      },
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 63,
+       "distinct_contributing_contexts": 3,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.9814183624284619,
+       "maximum_ratio": 1.0123893018905394
+      },
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 98,
+       "distinct_contributing_contexts": 3,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.9613324714897189,
+       "maximum_ratio": 1.0104865706616117
+      }
+     ]
+    },
+    {
+     "bin": 3,
+     "sigma": [
+      0.00037346001296482577,
+      0.0003017369186106556,
+      0.00043647575580632624
+     ],
+     "ratio_to_baseline": null,
+     "axes": [
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 26,
+       "distinct_contributing_contexts": 2,
+       "context_exclusions_losing_availability": [
+        "grid_00"
+       ],
+       "minimum_ratio": 0.9965680226438559,
+       "maximum_ratio": 1.0
+      },
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 35,
+       "distinct_contributing_contexts": 3,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.9803558046495103,
+       "maximum_ratio": 1.0093393225692235
+      },
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 52,
+       "distinct_contributing_contexts": 3,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.9929591049666023,
+       "maximum_ratio": 1.0041951678552083
+      }
+     ]
+    },
+    {
+     "bin": 4,
+     "sigma": [
+      0.00045541376743912115,
+      0.00034903953576554146,
+      0.0004862761152999687
+     ],
+     "ratio_to_baseline": null,
+     "axes": [
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 23,
+       "distinct_contributing_contexts": 4,
+       "context_exclusions_losing_availability": [
+        "grid_04"
+       ],
+       "minimum_ratio": 0.9586202091751889,
+       "maximum_ratio": 1.0039915649003666
+      },
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 35,
+       "distinct_contributing_contexts": 4,
+       "context_exclusions_losing_availability": [
+        "grid_04"
+       ],
+       "minimum_ratio": 0.978578081938567,
+       "maximum_ratio": 1.000292359973586
+      },
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 54,
+       "distinct_contributing_contexts": 4,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.9817236306225914,
+       "maximum_ratio": 1.018682718390088
+      }
+     ]
+    },
+    {
+     "bin": 5,
+     "sigma": [
+      0.0006514151152061919,
+      0.00045953042944329526,
+      0.000743761655243965
+     ],
+     "ratio_to_baseline": null,
+     "axes": [
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 45,
+       "distinct_contributing_contexts": 6,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.9897129461050939,
+       "maximum_ratio": 1.0170827549677557
+      },
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 160,
+       "distinct_contributing_contexts": 7,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.9887179913071976,
+       "maximum_ratio": 1.019127794390614
+      },
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 170,
+       "distinct_contributing_contexts": 7,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.9768800912298717,
+       "maximum_ratio": 1.0175194073523928
+      }
+     ]
+    },
+    {
+     "bin": 6,
+     "sigma": [
+      0.001972695955478714,
+      0.0006662816985619123,
+      0.0016677339236284958
+     ],
+     "ratio_to_baseline": null,
+     "axes": [
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 36,
+       "distinct_contributing_contexts": 5,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.8298198428992075,
+       "maximum_ratio": 1.0676010799876636
+      },
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 158,
+       "distinct_contributing_contexts": 5,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.9402286442113931,
+       "maximum_ratio": 1.0315108267904916
+      },
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 192,
+       "distinct_contributing_contexts": 5,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.9670933376476701,
+       "maximum_ratio": 1.0414402254079063
+      }
+     ]
+    },
+    {
+     "bin": 7,
+     "sigma": [
+      0.0034769926941721962,
+      0.001243328618071725,
+      0.002952209603445843
+     ],
+     "ratio_to_baseline": null,
+     "axes": [
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 57,
+       "distinct_contributing_contexts": 6,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.9898952502062216,
+       "maximum_ratio": 1.0439372715519106
+      },
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 170,
+       "distinct_contributing_contexts": 6,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.9236005665053703,
+       "maximum_ratio": 1.0690125479479193
+      },
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 183,
+       "distinct_contributing_contexts": 5,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.96068976615576,
+       "maximum_ratio": 1.0373634926022788
+      }
+     ]
+    },
+    {
+     "bin": 8,
+     "sigma": [
+      0.0052507986851536475,
+      0.0014468946615146883,
+      0.004178788296645319
+     ],
+     "ratio_to_baseline": null,
+     "axes": [
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 36,
+       "distinct_contributing_contexts": 5,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.9487913865897246,
+       "maximum_ratio": 1.0241663614746417
+      },
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 107,
+       "distinct_contributing_contexts": 4,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.8967355652051582,
+       "maximum_ratio": 1.0407858570548414
+      },
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 110,
+       "distinct_contributing_contexts": 4,
+       "context_exclusions_losing_availability": [],
+       "minimum_ratio": 0.8872922200730687,
+       "maximum_ratio": 1.0561318189719695
+      }
+     ]
+    },
+    {
+     "bin": 10,
+     "sigma": [
+      0.010745710847502346,
+      0.002623545203330462,
+      0.007943208390623424
+     ],
+     "ratio_to_baseline": null,
+     "axes": [
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 20,
+       "distinct_contributing_contexts": 1,
+       "context_exclusions_losing_availability": [
+        "grid_18"
+       ],
+       "minimum_ratio": 1.0,
+       "maximum_ratio": 1.0
+      },
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 36,
+       "distinct_contributing_contexts": 1,
+       "context_exclusions_losing_availability": [
+        "grid_18"
+       ],
+       "minimum_ratio": 1.0,
+       "maximum_ratio": 1.0
+      },
+      {
+       "status": "measured_not_confidence_interval",
+       "accepted": 43,
+       "distinct_contributing_contexts": 1,
+       "context_exclusions_losing_availability": [
+        "grid_18"
+       ],
+       "minimum_ratio": 1.0,
+       "maximum_ratio": 1.0
+      }
+     ]
+    }
+   ],
+   "shortages": [
+    {
+     "bin": 5,
+     "candidates": 309,
+     "accepted": [
+      45,
+      160,
+      170
+     ],
+     "cause": "available"
+    },
+    {
+     "bin": 6,
+     "candidates": 310,
+     "accepted": [
+      36,
+      158,
+      192
+     ],
+     "cause": "available"
+    },
+    {
+     "bin": 8,
+     "candidates": 142,
+     "accepted": [
+      36,
+      107,
+      110
+     ],
+     "cause": "available"
+    },
+    {
+     "bin": 9,
+     "candidates": 81,
+     "accepted": [
+      15,
+      64,
+      68
+     ],
+     "cause": "spectral_rejection_or_unmeasurable_axis"
+    }
+   ]
+  }
+ ],
+ "parents": [
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\couverture-grille-photo-bruit-v002-6V1A0513-20261027T182547Z.json",
+   "sha256": "cb14d3b04db464f146d68f1da7d263ab12eac920690b3b1b87879c297a4a8ca2"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\couverture-grille-photo-bruit-v002-6V1A9890-20261027T182559Z.json",
+   "sha256": "abf12065a007f0bcd5f1a072fb31a93e0d5b3d782c756cecb1db9c5ff06c6182"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\couverture-grille-photo-bruit-v002-6V1A9426-20261027T182611Z.json",
+   "sha256": "c3b7d70c773eb18e79ce7f5207c6657518ef270e3f90da3e154bb46bfd2d88f6"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\couverture-grille-photo-bruit-v002-6V1A0195-20261027T182622Z.json",
+   "sha256": "7dabf2f5571d93fb80f8bb6afb01c474f670671b631685fd3c07cb7b830ea612"
+  }
+ ],
+ "commit": "2a40c5c6cff78d40294393a68827f4a24555c724",
+ "runner_sha256": "f61c36ba6e5fa9e619d95a8a4fbc464aa26bc1b928102ed2e0cce369d2977dd6",
+ "runner_source": "\"\"\"Summarize spatial sampling coverage and leave-one-context stability, not noise truth.\"\"\"\nfrom datetime import datetime, timezone\nimport json\nfrom pathlib import Path\nimport numpy as np\nfrom study_noise_neighbourhoods import ROOT, sha256, git\n\n\ndef leave_one_context(tiles, tone, axis):\n    accepted = [t for t in tiles if t['bin'] == tone and t['accepted'][axis]]\n    if len(accepted) < 16: return dict(status='unavailable', accepted=len(accepted))\n    median = float(np.median([t['mad'][axis] for t in accepted]))\n    if median <= 1e-12: return dict(status='unmeasurable', accepted=len(accepted))\n    ratios = []; lost = []\n    for label in sorted({t['label'] for t in tiles}):\n        remaining = [t['mad'][axis] for t in accepted if t['label'] != label]\n        if len(remaining) < 16: lost.append(label)\n        else: ratios.append(float(np.median(remaining)/median))\n    return dict(status='measured_not_confidence_interval', accepted=len(accepted),\n        distinct_contributing_contexts=len({t['label'] for t in accepted}),\n        context_exclusions_losing_availability=lost,\n        minimum_ratio=min(ratios) if ratios else None, maximum_ratio=max(ratios) if ratios else None)\n\n\ndef run():\n    records = []; parents = []\n    for name in ('6V1A0513', '6V1A9890', '6V1A9426', '6V1A0195'):\n        matches = list((ROOT/'docs/validation/raw').glob('couverture-grille-photo-bruit-v002-'+name+'-*.json'))\n        if len(matches) != 1: raise ValueError('Require exactly one completed evidence per scene: '+name)\n        path = matches[0]; digest = sha256(path); data = json.loads(path.read_text(encoding='utf-8'))\n        row = data['record']; grid = row['grid']; baseline = row['baseline']\n        stability = []\n        for estimate in grid['sigma_rows']:\n            if not estimate['usable']: continue\n            previous = next((r for r in baseline['sigma_rows'] if r['bin'] == estimate['bin'] and r['usable']), None)\n            stability.append(dict(bin=estimate['bin'], sigma=estimate['sigma'],\n                ratio_to_baseline=(np.asarray(estimate['sigma'])/previous['sigma']).tolist() if previous else None,\n                axes=[leave_one_context(grid['tiles'], estimate['bin'], axis) for axis in range(3)]))\n        comparison = [dict(label=label, before=before['covered_blocks'], after=grid['coverage'][label]['covered_blocks'],\n                           total=225) for label, before in baseline['coverage'].items()]\n        records.append(dict(raw=row['raw'], actual_iso=row['actual_iso'], assumed_psd_iso=row['assumed_psd_iso'],\n            grid_contexts=len(row['grid_samples']), excluded_grid_contexts=len(row['excluded_grid_samples']),\n            maximum_replay_error=max(r['maximum_pixel_absolute_error'] for r in row['replay']),\n            coverage=comparison, stability=stability, shortages=grid['shortage']))\n        parents.append(dict(path=str(path), sha256=digest))\n        for r in comparison: print(name, r['label'], r['before'], '->', r['after'], '/225', flush=True)\n    now = datetime.now(timezone.utc)\n    target = ROOT/'docs/validation/raw'/f'bilan-couverture-grille-photo-bruit-v001-{now.strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n    if any(sha256(Path(p['path'])) != p['sha256'] for p in parents): raise ValueError('Changed evidence')\n    result = dict(schema_version=1, data_version=1, completed_at_utc=now.isoformat(), records=records,\n        parents=parents, commit=git('rev-parse', 'HEAD'), runner_sha256=sha256(Path(__file__)),\n        runner_source=Path(__file__).read_text(encoding='utf-8'),\n        rules='Exactly4completed native-coverage scenes. Leaveoneestimationcontext diagnostic uses unchanged16tile rule;selectedtile decisions unchanged,no tuning or denoising.',\n        limitations='Spatial medians stability is NOT confidence interval or validation of true sigma. Consistently biased textures may pass. Context/tone populations differ from baseline;coverage is not noise/detail quality. No pooling across scenes or filling absent axes/tones.')\n    with target.open('x', encoding='utf-8') as handle: json.dump(result, handle, ensure_ascii=False, indent=1, allow_nan=False)\n    print(target)\n\n\nif __name__ == '__main__': run()\n",
+ "rules": "Exactly4completed native-coverage scenes. Leaveoneestimationcontext diagnostic uses unchanged16tile rule;selectedtile decisions unchanged,no tuning or denoising.",
+ "limitations": "Spatial medians stability is NOT confidence interval or validation of true sigma. Consistently biased textures may pass. Context/tone populations differ from baseline;coverage is not noise/detail quality. No pooling across scenes or filling absent axes/tones."
+}

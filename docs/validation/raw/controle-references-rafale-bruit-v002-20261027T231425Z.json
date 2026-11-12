@@ -1,0 +1,1145 @@
+{
+ "schema_version": 1,
+ "data_version": 2,
+ "started_at_utc": "2026-10-27T23:14:23.078432+00:00",
+ "completed_at_utc": "2026-10-27T23:14:25.091570+00:00",
+ "correction": {
+  "parent": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\controle-references-rafale-bruit-v001-20261027T231257Z.json",
+  "sha256": "c08fe8216fae9cf21473112c91c6d241c37e9be7744e77338f6133a057eaafb0",
+  "reason": "Canvas240instead220perrow:previouspreviewcropped12bottompixels. Sameanalyticalcontrolsnotnewindependentstudy."
+ },
+ "parent": {
+  "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\references-croisees-rafale-bruit-v001-20261027T230909Z.json",
+  "sha256": "99e3b38d8ff00ffc372357b21d66475f72cf2794da57bc1270dc06d013eb35d2"
+ },
+ "records": [
+  {
+   "target_index": 0,
+   "region": 0,
+   "common_overlap_fraction": 0.9775119357638888,
+   "original_crossrisk": [
+    1.5831292957429523e-05,
+    0.0001033527339238093,
+    1.6647169305183945e-05
+   ],
+   "blur4_crossrisk": [
+    9.452033773721718e-07,
+    7.863491876553721e-06,
+    1.3770796258889981e-06
+   ],
+   "blur16_crossrisk": [
+    1.6314732118098434e-07,
+    1.257452563362534e-06,
+    1.9485525428976325e-07
+   ],
+   "blur4_delta": [
+    -1.488608958005735e-05,
+    -9.548924204725558e-05,
+    -1.5270089679294946e-05
+   ],
+   "blur16_delta": [
+    -1.5668145636248537e-05,
+    -0.00010209528136044676,
+    -1.645231405089418e-05
+   ],
+   "warning": "Blurringcanreducescoreevenifdetailislost;notproofoptimaldenoising"
+  },
+  {
+   "target_index": 0,
+   "region": 1,
+   "common_overlap_fraction": 1.0,
+   "original_crossrisk": [
+    0.0003200059230521431,
+    0.0003786029397201646,
+    0.00024833695455743883
+   ],
+   "blur4_crossrisk": [
+    5.475463695257487e-05,
+    7.456728650162065e-05,
+    2.764547297198874e-05
+   ],
+   "blur16_crossrisk": [
+    0.00029702909754777626,
+    0.00019710602779746326,
+    2.4152564670843224e-05
+   ],
+   "blur4_delta": [
+    -0.0002652512860995683,
+    -0.00030403565321854395,
+    -0.00022069148158545009
+   ],
+   "blur16_delta": [
+    -2.2976825504366868e-05,
+    -0.00018149691192270135,
+    -0.0002241843898865956
+   ],
+   "warning": "Blurringcanreducescoreevenifdetailislost;notproofoptimaldenoising"
+  },
+  {
+   "target_index": 0,
+   "region": 2,
+   "common_overlap_fraction": 1.0,
+   "original_crossrisk": [
+    0.000331186640614335,
+    0.00034003482733890254,
+    0.00018186532894617273
+   ],
+   "blur4_crossrisk": [
+    8.988181562728056e-06,
+    3.2774124564736985e-05,
+    1.654267802698713e-05
+   ],
+   "blur16_crossrisk": [
+    5.678848255264632e-06,
+    7.1301508808950255e-06,
+    1.4399012321302292e-06
+   ],
+   "blur4_delta": [
+    -0.00032219845905160694,
+    -0.00030726070277416553,
+    -0.0001653226509191856
+   ],
+   "blur16_delta": [
+    -0.00032550779235907034,
+    -0.0003329046764580075,
+    -0.0001804254277140425
+   ],
+   "warning": "Blurringcanreducescoreevenifdetailislost;notproofoptimaldenoising"
+  },
+  {
+   "target_index": 0,
+   "region": 3,
+   "common_overlap_fraction": 1.0,
+   "original_crossrisk": [
+    4.469096351170307e-06,
+    2.7834647432166857e-05,
+    4.474960683555702e-06
+   ],
+   "blur4_crossrisk": [
+    2.748640320344842e-07,
+    2.1799906174115234e-06,
+    3.7432779681988283e-07
+   ],
+   "blur16_crossrisk": [
+    7.332930206908246e-08,
+    5.597955427502385e-07,
+    9.274880678737085e-08
+   ],
+   "blur4_delta": [
+    -4.194232319135823e-06,
+    -2.5654656814755334e-05,
+    -4.1006328867358195e-06
+   ],
+   "blur16_delta": [
+    -4.395767049101224e-06,
+    -2.7274851889416617e-05,
+    -4.382211876768331e-06
+   ],
+   "warning": "Blurringcanreducescoreevenifdetailislost;notproofoptimaldenoising"
+  },
+  {
+   "target_index": 0,
+   "region": 4,
+   "common_overlap_fraction": 1.0,
+   "original_crossrisk": [
+    0.0001903359546782464,
+    0.00025943259041109044,
+    9.919491962755346e-05
+   ],
+   "blur4_crossrisk": [
+    0.0002528208231876898,
+    0.00015341856792257613,
+    1.8333394977187108e-05
+   ],
+   "blur16_crossrisk": [
+    0.0010270300092622376,
+    0.0006309059443680629,
+    3.7818213310231576e-05
+   ],
+   "blur4_delta": [
+    6.24848685094434e-05,
+    -0.00010601402248851431,
+    -8.086152465036635e-05
+   ],
+   "blur16_delta": [
+    0.0008366940545839912,
+    0.00037147335395697244,
+    -6.137670631732188e-05
+   ],
+   "warning": "Blurringcanreducescoreevenifdetailislost;notproofoptimaldenoising"
+  },
+  {
+   "target_index": 0,
+   "region": 5,
+   "common_overlap_fraction": 1.0,
+   "original_crossrisk": [
+    0.0002454310179373086,
+    0.0003007640125186561,
+    0.00010659314737336416
+   ],
+   "blur4_crossrisk": [
+    6.8785635182035705e-06,
+    2.9586928527256806e-05,
+    1.0501971485064433e-05
+   ],
+   "blur16_crossrisk": [
+    3.38464851780834e-06,
+    6.1156953297651435e-06,
+    2.3402970337407095e-07
+   ],
+   "blur4_delta": [
+    -0.00023855245441910502,
+    -0.0002711770839913993,
+    -9.609117588829973e-05
+   ],
+   "blur16_delta": [
+    -0.00024204636941950025,
+    -0.000294648317188891,
+    -0.00010635911766999009
+   ],
+   "warning": "Blurringcanreducescoreevenifdetailislost;notproofoptimaldenoising"
+  },
+  {
+   "target_index": 0,
+   "region": 6,
+   "common_overlap_fraction": 0.9874403211805556,
+   "original_crossrisk": [
+    6.136173175827287e-05,
+    8.604738534691806e-05,
+    2.22944195556792e-05
+   ],
+   "blur4_crossrisk": [
+    1.0780251594336543e-05,
+    1.3515989119507225e-05,
+    2.4229292690093393e-06
+   ],
+   "blur16_crossrisk": [
+    1.9783747666626646e-05,
+    1.8065247357279066e-05,
+    8.765678068212887e-07
+   ],
+   "blur4_delta": [
+    -5.058148016393633e-05,
+    -7.253139622741083e-05,
+    -1.987149028666986e-05
+   ],
+   "blur16_delta": [
+    -4.1577984091646224e-05,
+    -6.798213798963899e-05,
+    -2.141785174885791e-05
+   ],
+   "warning": "Blurringcanreducescoreevenifdetailislost;notproofoptimaldenoising"
+  },
+  {
+   "target_index": 0,
+   "region": 7,
+   "common_overlap_fraction": 1.0,
+   "original_crossrisk": [
+    0.00017172865237517922,
+    0.000271936085218869,
+    8.737600815012845e-05
+   ],
+   "blur4_crossrisk": [
+    9.888035872823844e-05,
+    9.677942129586847e-05,
+    1.227443987594507e-05
+   ],
+   "blur16_crossrisk": [
+    0.00023130083989646296,
+    0.00024591604416302853,
+    8.07690280350646e-06
+   ],
+   "blur4_delta": [
+    -7.284829364694078e-05,
+    -0.0001751566639230005,
+    -7.510156827418338e-05
+   ],
+   "blur16_delta": [
+    5.9572187521283744e-05,
+    -2.6020041055840448e-05,
+    -7.9299105346622e-05
+   ],
+   "warning": "Blurringcanreducescoreevenifdetailislost;notproofoptimaldenoising"
+  },
+  {
+   "target_index": 0,
+   "region": 8,
+   "common_overlap_fraction": 1.0,
+   "original_crossrisk": [
+    0.00025294251479653996,
+    0.0003633350189827635,
+    0.00012335126049555726
+   ],
+   "blur4_crossrisk": [
+    0.00015285536577613567,
+    0.00013745833869442854,
+    1.8730810651162552e-05
+   ],
+   "blur16_crossrisk": [
+    0.00024573635574247317,
+    0.0002084416638323455,
+    1.4301572428319871e-05
+   ],
+   "blur4_delta": [
+    -0.00010008714902040429,
+    -0.00022587668028833496,
+    -0.00010462044984439471
+   ],
+   "blur16_delta": [
+    -7.206159054066791e-06,
+    -0.000154893355150418,
+    -0.00010904968806723739
+   ],
+   "warning": "Blurringcanreducescoreevenifdetailislost;notproofoptimaldenoising"
+  },
+  {
+   "target_index": 4,
+   "region": 0,
+   "common_overlap_fraction": 1.0,
+   "original_crossrisk": [
+    1.518320188782916e-05,
+    9.847584758238498e-05,
+    1.5790686999195524e-05
+   ],
+   "blur4_crossrisk": [
+    7.619688748902356e-07,
+    6.491718287096752e-06,
+    1.1642996140383773e-06
+   ],
+   "blur16_crossrisk": [
+    1.0730162763062838e-07,
+    8.891994677600627e-07,
+    1.591335487313607e-07
+   ],
+   "blur4_delta": [
+    -1.4421233012938923e-05,
+    -9.198412929528823e-05,
+    -1.4626387385157147e-05
+   ],
+   "blur16_delta": [
+    -1.507590026019853e-05,
+    -9.758664811462491e-05,
+    -1.5631553450464162e-05
+   ],
+   "warning": "Blurringcanreducescoreevenifdetailislost;notproofoptimaldenoising"
+  },
+  {
+   "target_index": 4,
+   "region": 1,
+   "common_overlap_fraction": 1.0,
+   "original_crossrisk": [
+    0.0002965418873935826,
+    0.00036084088816309414,
+    0.0002456958499267931
+   ],
+   "blur4_crossrisk": [
+    2.5196794674464566e-05,
+    4.833191358415836e-05,
+    2.4013518417814497e-05
+   ],
+   "blur16_crossrisk": [
+    0.00018851460346877298,
+    0.00011272464874036559,
+    1.3208849471417703e-05
+   ],
+   "blur4_delta": [
+    -0.000271345092719118,
+    -0.0003125089745789358,
+    -0.0002216823315089786
+   ],
+   "blur16_delta": [
+    -0.00010802728392480962,
+    -0.00024811623942272854,
+    -0.0002324870004553754
+   ],
+   "warning": "Blurringcanreducescoreevenifdetailislost;notproofoptimaldenoising"
+  },
+  {
+   "target_index": 4,
+   "region": 2,
+   "common_overlap_fraction": 1.0,
+   "original_crossrisk": [
+    0.00031929021590480056,
+    0.0003486640644303163,
+    0.00017472415400569645
+   ],
+   "blur4_crossrisk": [
+    6.293776879418456e-06,
+    2.990819707097513e-05,
+    1.8059999161802162e-05
+   ],
+   "blur16_crossrisk": [
+    3.895301579333891e-06,
+    3.791673854650638e-06,
+    2.297382049031808e-06
+   ],
+   "blur4_delta": [
+    -0.0003129964390253821,
+    -0.00031875586735934114,
+    -0.0001566641548438943
+   ],
+   "blur16_delta": [
+    -0.00031539491432546667,
+    -0.00034487239057566564,
+    -0.00017242677195666465
+   ],
+   "warning": "Blurringcanreducescoreevenifdetailislost;notproofoptimaldenoising"
+  },
+  {
+   "target_index": 4,
+   "region": 3,
+   "common_overlap_fraction": 1.0,
+   "original_crossrisk": [
+    4.143215817907667e-06,
+    2.545605548668149e-05,
+    4.082911127313138e-06
+   ],
+   "blur4_crossrisk": [
+    2.1197270869597387e-07,
+    1.7036134300307226e-06,
+    3.035441933412908e-07
+   ],
+   "blur16_crossrisk": [
+    2.4138370414417784e-08,
+    1.9090424529241111e-07,
+    3.43983812080238e-08
+   ],
+   "blur4_delta": [
+    -3.931243109211693e-06,
+    -2.3752442056650768e-05,
+    -3.7793669339718466e-06
+   ],
+   "blur16_delta": [
+    -4.119077447493249e-06,
+    -2.526515124138908e-05,
+    -4.048512746105114e-06
+   ],
+   "warning": "Blurringcanreducescoreevenifdetailislost;notproofoptimaldenoising"
+  },
+  {
+   "target_index": 4,
+   "region": 4,
+   "common_overlap_fraction": 1.0,
+   "original_crossrisk": [
+    0.00017918785081165795,
+    0.000248195220025443,
+    0.00010542004113099943
+   ],
+   "blur4_crossrisk": [
+    0.00024594822595543585,
+    0.00014698643095118692,
+    1.8577562718595575e-05
+   ],
+   "blur16_crossrisk": [
+    0.0010526927115250132,
+    0.0006421114824833593,
+    3.864446437923433e-05
+   ],
+   "blur4_delta": [
+    6.67603751437779e-05,
+    -0.00010120878907425609,
+    -8.684247841240386e-05
+   ],
+   "blur16_delta": [
+    0.0008735048607133553,
+    0.00039391626245791625,
+    -6.67755767517651e-05
+   ],
+   "warning": "Blurringcanreducescoreevenifdetailislost;notproofoptimaldenoising"
+  },
+  {
+   "target_index": 4,
+   "region": 5,
+   "common_overlap_fraction": 1.0,
+   "original_crossrisk": [
+    0.00024415733225689875,
+    0.00029693261763332466,
+    0.00010903843748603077
+   ],
+   "blur4_crossrisk": [
+    5.1868391563176545e-06,
+    2.3810087948376918e-05,
+    1.1392555645609034e-05
+   ],
+   "blur16_crossrisk": [
+    2.2770808846015614e-06,
+    3.846380516439299e-06,
+    8.072089200085841e-07
+   ],
+   "blur4_delta": [
+    -0.0002389704931005811,
+    -0.00027312252968494775,
+    -9.764588184042173e-05
+   ],
+   "blur16_delta": [
+    -0.0002418802513722972,
+    -0.00029308623711688534,
+    -0.00010823122856602219
+   ],
+   "warning": "Blurringcanreducescoreevenifdetailislost;notproofoptimaldenoising"
+  },
+  {
+   "target_index": 4,
+   "region": 6,
+   "common_overlap_fraction": 1.0,
+   "original_crossrisk": [
+    5.834441442295215e-05,
+    8.120373115364101e-05,
+    2.057259252696663e-05
+   ],
+   "blur4_crossrisk": [
+    1.036336795197032e-05,
+    1.2758405708347057e-05,
+    2.1132259185772938e-06
+   ],
+   "blur16_crossrisk": [
+    1.980703059888491e-05,
+    1.81333506189888e-05,
+    8.105093808734242e-07
+   ],
+   "blur4_delta": [
+    -4.798104647098183e-05,
+    -6.844532544529395e-05,
+    -1.8459366608389334e-05
+   ],
+   "blur16_delta": [
+    -3.853738382406724e-05,
+    -6.307038053465221e-05,
+    -1.9762083146093206e-05
+   ],
+   "warning": "Blurringcanreducescoreevenifdetailislost;notproofoptimaldenoising"
+  },
+  {
+   "target_index": 4,
+   "region": 7,
+   "common_overlap_fraction": 1.0,
+   "original_crossrisk": [
+    0.00017146148387899788,
+    0.0002607943746453266,
+    8.238080207474083e-05
+   ],
+   "blur4_crossrisk": [
+    9.202612929348379e-05,
+    9.345480853059513e-05,
+    1.2237758662073196e-05
+   ],
+   "blur16_crossrisk": [
+    0.00023392877356058427,
+    0.0002599889366383399,
+    7.398614604549037e-06
+   ],
+   "blur4_delta": [
+    -7.94353545855141e-05,
+    -0.00016733956611473147,
+    -7.014304341266764e-05
+   ],
+   "blur16_delta": [
+    6.246728968158639e-05,
+    -8.054380069866815e-07,
+    -7.498218747019179e-05
+   ],
+   "warning": "Blurringcanreducescoreevenifdetailislost;notproofoptimaldenoising"
+  },
+  {
+   "target_index": 4,
+   "region": 8,
+   "common_overlap_fraction": 1.0,
+   "original_crossrisk": [
+    0.0002301526323982846,
+    0.00035867751353385873,
+    0.00012118517630250753
+   ],
+   "blur4_crossrisk": [
+    0.00014755114944428062,
+    0.00013078460699058843,
+    1.9033515811384567e-05
+   ],
+   "blur16_crossrisk": [
+    0.00024504711724077425,
+    0.0002060076757278169,
+    1.4001391916916103e-05
+   ],
+   "blur4_delta": [
+    -8.260148295400398e-05,
+    -0.0002278929065432703,
+    -0.00010215166049112297
+   ],
+   "blur16_delta": [
+    1.489448484248964e-05,
+    -0.00015266983780604183,
+    -0.00010718378438559143
+   ],
+   "warning": "Blurringcanreducescoreevenifdetailislost;notproofoptimaldenoising"
+  },
+  {
+   "target_index": 8,
+   "region": 0,
+   "common_overlap_fraction": 0.9955512152777778,
+   "original_crossrisk": [
+    1.607169107778643e-05,
+    0.00010610695385868868,
+    1.724309201660526e-05
+   ],
+   "blur4_crossrisk": [
+    9.388520831445263e-07,
+    7.886008251514447e-06,
+    1.4235431892109397e-06
+   ],
+   "blur16_crossrisk": [
+    1.0722317587546205e-07,
+    8.713713367766553e-07,
+    1.5607519595032787e-07
+   ],
+   "blur4_delta": [
+    -1.5132838994641904e-05,
+    -9.822094560717423e-05,
+    -1.581954882739432e-05
+   ],
+   "blur16_delta": [
+    -1.5964467901910968e-05,
+    -0.00010523558252191202,
+    -1.7087016820654933e-05
+   ],
+   "warning": "Blurringcanreducescoreevenifdetailislost;notproofoptimaldenoising"
+  },
+  {
+   "target_index": 8,
+   "region": 1,
+   "common_overlap_fraction": 1.0,
+   "original_crossrisk": [
+    0.0003007456849329172,
+    0.0003776181328943554,
+    0.00023050058653412874
+   ],
+   "blur4_crossrisk": [
+    1.8686386424707666e-05,
+    4.418165282170583e-05,
+    2.085669933254876e-05
+   ],
+   "blur16_crossrisk": [
+    0.00011655605832479863,
+    6.681765170237197e-05,
+    7.951634172743294e-06
+   ],
+   "blur4_delta": [
+    -0.0002820592985082095,
+    -0.00033343648007264955,
+    -0.00020964388720157997
+   ],
+   "blur16_delta": [
+    -0.00018418962660811855,
+    -0.0003108004811919834,
+    -0.00022254895236138546
+   ],
+   "warning": "Blurringcanreducescoreevenifdetailislost;notproofoptimaldenoising"
+  },
+  {
+   "target_index": 8,
+   "region": 2,
+   "common_overlap_fraction": 1.0,
+   "original_crossrisk": [
+    0.00031556824389624284,
+    0.00033453621029446036,
+    0.00017206496964008685
+   ],
+   "blur4_crossrisk": [
+    5.602921745559794e-06,
+    2.6917633787229668e-05,
+    1.7393373429905458e-05
+   ],
+   "blur16_crossrisk": [
+    3.6556592914976986e-06,
+    3.234108724643206e-06,
+    1.5937102167932782e-06
+   ],
+   "blur4_delta": [
+    -0.000309965322150683,
+    -0.0003076185765072307,
+    -0.0001546715962101814
+   ],
+   "blur16_delta": [
+    -0.00031191258460474517,
+    -0.0003313021015698172,
+    -0.00017047125942329356
+   ],
+   "warning": "Blurringcanreducescoreevenifdetailislost;notproofoptimaldenoising"
+  },
+  {
+   "target_index": 8,
+   "region": 3,
+   "common_overlap_fraction": 1.0,
+   "original_crossrisk": [
+    4.38062289817204e-06,
+    2.7346570678350162e-05,
+    4.39784458263156e-06
+   ],
+   "blur4_crossrisk": [
+    2.582079998954049e-07,
+    2.0400567601278978e-06,
+    3.486837301744474e-07
+   ],
+   "blur16_crossrisk": [
+    2.6030444898382435e-08,
+    1.885322007850323e-07,
+    2.759573921360292e-08
+   ],
+   "blur4_delta": [
+    -4.122414898276635e-06,
+    -2.5306513918222266e-05,
+    -4.049160852457113e-06
+   ],
+   "blur16_delta": [
+    -4.354592453273657e-06,
+    -2.715803847756513e-05,
+    -4.370248843417958e-06
+   ],
+   "warning": "Blurringcanreducescoreevenifdetailislost;notproofoptimaldenoising"
+  },
+  {
+   "target_index": 8,
+   "region": 4,
+   "common_overlap_fraction": 1.0,
+   "original_crossrisk": [
+    0.00017865705597950706,
+    0.0002516495160282481,
+    0.00010190090061675455
+   ],
+   "blur4_crossrisk": [
+    0.00024937768984856375,
+    0.00014624705010918707,
+    1.7307831509275495e-05
+   ],
+   "blur16_crossrisk": [
+    0.001065508080629469,
+    0.0006423573666306452,
+    3.941019181584419e-05
+   ],
+   "blur4_delta": [
+    7.072063386905669e-05,
+    -0.000105402465919061,
+    -8.459306910747905e-05
+   ],
+   "blur16_delta": [
+    0.0008868510246499619,
+    0.0003907078506023971,
+    -6.249070880091036e-05
+   ],
+   "warning": "Blurringcanreducescoreevenifdetailislost;notproofoptimaldenoising"
+  },
+  {
+   "target_index": 8,
+   "region": 5,
+   "common_overlap_fraction": 1.0,
+   "original_crossrisk": [
+    0.00024548061067801663,
+    0.00029956810618587265,
+    0.00010787092364040351
+   ],
+   "blur4_crossrisk": [
+    4.8362711528829185e-06,
+    2.313674287580185e-05,
+    1.0318575568982923e-05
+   ],
+   "blur16_crossrisk": [
+    2.297908562409606e-06,
+    2.811084517499752e-06,
+    8.466391285893467e-07
+   ],
+   "blur4_delta": [
+    -0.0002406443395251337,
+    -0.0002764313633100708,
+    -9.755234807142058e-05
+   ],
+   "blur16_delta": [
+    -0.00024318270211560702,
+    -0.0002967570216683729,
+    -0.00010702428451181416
+   ],
+   "warning": "Blurringcanreducescoreevenifdetailislost;notproofoptimaldenoising"
+  },
+  {
+   "target_index": 8,
+   "region": 6,
+   "common_overlap_fraction": 1.0,
+   "original_crossrisk": [
+    5.470671451261034e-05,
+    8.014597423607701e-05,
+    2.0656764666149678e-05
+   ],
+   "blur4_crossrisk": [
+    9.753125311376e-06,
+    1.3131501912150486e-05,
+    2.0495203801277858e-06
+   ],
+   "blur16_crossrisk": [
+    1.9454818419868694e-05,
+    1.7949881751414163e-05,
+    7.376349079257391e-07
+   ],
+   "blur4_delta": [
+    -4.495358920123434e-05,
+    -6.701447232392653e-05,
+    -1.8607244286021892e-05
+   ],
+   "blur16_delta": [
+    -3.525189609274165e-05,
+    -6.219609248466284e-05,
+    -1.9919129758223938e-05
+   ],
+   "warning": "Blurringcanreducescoreevenifdetailislost;notproofoptimaldenoising"
+  },
+  {
+   "target_index": 8,
+   "region": 7,
+   "common_overlap_fraction": 1.0,
+   "original_crossrisk": [
+    0.00015691177490081184,
+    0.00025091437132000326,
+    8.217556905640152e-05
+   ],
+   "blur4_crossrisk": [
+    9.130988484480298e-05,
+    9.14307325401703e-05,
+    1.1171753223956833e-05
+   ],
+   "blur16_crossrisk": [
+    0.00022995394110144943,
+    0.00025631377630130664,
+    7.545757580901373e-06
+   ],
+   "blur4_delta": [
+    -6.560189005600886e-05,
+    -0.00015948363877983296,
+    -7.100381583244469e-05
+   ],
+   "blur16_delta": [
+    7.304216620063759e-05,
+    5.399404981303382e-06,
+    -7.462981147550015e-05
+   ],
+   "warning": "Blurringcanreducescoreevenifdetailislost;notproofoptimaldenoising"
+  },
+  {
+   "target_index": 8,
+   "region": 8,
+   "common_overlap_fraction": 1.0,
+   "original_crossrisk": [
+    0.0002275174635042802,
+    0.0003385521868795835,
+    0.00012335792541821574
+   ],
+   "blur4_crossrisk": [
+    0.00014544701088478425,
+    0.00012810011235143853,
+    1.90173967228685e-05
+   ],
+   "blur16_crossrisk": [
+    0.00024032094988222532,
+    0.0002035686602689313,
+    1.3486503187955058e-05
+   ],
+   "blur4_delta": [
+    -8.207045261949595e-05,
+    -0.000210452074528145,
+    -0.00010434052869534723
+   ],
+   "blur16_delta": [
+    1.2803486377945114e-05,
+    -0.00013498352661065223,
+    -0.00010987142223026068
+   ],
+   "warning": "Blurringcanreducescoreevenifdetailislost;notproofoptimaldenoising"
+  },
+  {
+   "target_index": 13,
+   "region": 0,
+   "common_overlap_fraction": 0.984375,
+   "original_crossrisk": [
+    1.5969558115612566e-05,
+    0.00010530272094609497,
+    1.701798068062451e-05
+   ],
+   "blur4_crossrisk": [
+    9.99449231613661e-07,
+    8.550481902722667e-06,
+    1.528870833227401e-06
+   ],
+   "blur16_crossrisk": [
+    6.92854896270642e-08,
+    6.491977041217182e-07,
+    1.1578819614819891e-07
+   ],
+   "blur4_delta": [
+    -1.4970108883998904e-05,
+    -9.675223904337231e-05,
+    -1.548910984739711e-05
+   ],
+   "blur16_delta": [
+    -1.59002726259855e-05,
+    -0.00010465352324197324,
+    -1.690219248447631e-05
+   ],
+   "warning": "Blurringcanreducescoreevenifdetailislost;notproofoptimaldenoising"
+  },
+  {
+   "target_index": 13,
+   "region": 1,
+   "common_overlap_fraction": 1.0,
+   "original_crossrisk": [
+    0.0003238747742029627,
+    0.00035876485160414194,
+    0.0002386761749125471
+   ],
+   "blur4_crossrisk": [
+    2.6951273033895372e-05,
+    4.6778271988484576e-05,
+    2.5373905179066453e-05
+   ],
+   "blur16_crossrisk": [
+    8.579961808722838e-05,
+    4.803934130085157e-05,
+    5.993833058471025e-06
+   ],
+   "blur4_delta": [
+    -0.00029692350116906734,
+    -0.0003119865796156574,
+    -0.00021330226973348065
+   ],
+   "blur16_delta": [
+    -0.0002380751561157343,
+    -0.0003107255103032904,
+    -0.00023268234185407606
+   ],
+   "warning": "Blurringcanreducescoreevenifdetailislost;notproofoptimaldenoising"
+  },
+  {
+   "target_index": 13,
+   "region": 2,
+   "common_overlap_fraction": 1.0,
+   "original_crossrisk": [
+    0.0003206493594581456,
+    0.0003351878777775687,
+    0.00016958424239674945
+   ],
+   "blur4_crossrisk": [
+    7.036302625211205e-06,
+    3.3093658141619047e-05,
+    1.6087116732401957e-05
+   ],
+   "blur16_crossrisk": [
+    3.729149319176437e-06,
+    3.918489743311377e-06,
+    1.4828167542308923e-06
+   ],
+   "blur4_delta": [
+    -0.0003136130568329344,
+    -0.00030209421963594966,
+    -0.0001534971256643475
+   ],
+   "blur16_delta": [
+    -0.00031692021013896915,
+    -0.0003312693880342573,
+    -0.00016810142564251855
+   ],
+   "warning": "Blurringcanreducescoreevenifdetailislost;notproofoptimaldenoising"
+  },
+  {
+   "target_index": 13,
+   "region": 3,
+   "common_overlap_fraction": 1.0,
+   "original_crossrisk": [
+    4.290614444741635e-06,
+    2.6663665669410258e-05,
+    4.274350493895934e-06
+   ],
+   "blur4_crossrisk": [
+    2.71591505824528e-07,
+    2.183206959413142e-06,
+    3.8020006473682755e-07
+   ],
+   "blur16_crossrisk": [
+    3.2085696742537804e-08,
+    2.544544057317265e-07,
+    4.303980862738855e-08
+   ],
+   "blur4_delta": [
+    -4.019022938917107e-06,
+    -2.4480458709997117e-05,
+    -3.894150429159106e-06
+   ],
+   "blur16_delta": [
+    -4.2585287479990976e-06,
+    -2.6409211263678532e-05,
+    -4.231310685268545e-06
+   ],
+   "warning": "Blurringcanreducescoreevenifdetailislost;notproofoptimaldenoising"
+  },
+  {
+   "target_index": 13,
+   "region": 4,
+   "common_overlap_fraction": 1.0,
+   "original_crossrisk": [
+    0.00019743223527587194,
+    0.0002651569239257566,
+    0.00010844446835683133
+   ],
+   "blur4_crossrisk": [
+    0.00025520130989174344,
+    0.00015024554696312496,
+    1.8302453183753397e-05
+   ],
+   "blur16_crossrisk": [
+    0.0010594563192508984,
+    0.0006412295989220388,
+    3.978875078581677e-05
+   ],
+   "blur4_delta": [
+    5.77690746158715e-05,
+    -0.00011491137696263164,
+    -9.014201517307793e-05
+   ],
+   "blur16_delta": [
+    0.0008620240839750264,
+    0.0003760726749962822,
+    -6.865571757101456e-05
+   ],
+   "warning": "Blurringcanreducescoreevenifdetailislost;notproofoptimaldenoising"
+  },
+  {
+   "target_index": 13,
+   "region": 5,
+   "common_overlap_fraction": 1.0,
+   "original_crossrisk": [
+    0.0002443777988516351,
+    0.00029467744039829885,
+    0.00010374189814026818
+   ],
+   "blur4_crossrisk": [
+    5.604760453627565e-06,
+    2.3704986759837332e-05,
+    1.0504771156816658e-05
+   ],
+   "blur16_crossrisk": [
+    2.806725960973582e-06,
+    4.1240022270210026e-06,
+    1.3842890332615377e-06
+   ],
+   "blur4_delta": [
+    -0.00023877303839800755,
+    -0.0002709724536384615,
+    -9.323712698345152e-05
+   ],
+   "blur16_delta": [
+    -0.00024157107289066155,
+    -0.00029055343817127783,
+    -0.00010235760910700664
+   ],
+   "warning": "Blurringcanreducescoreevenifdetailislost;notproofoptimaldenoising"
+  },
+  {
+   "target_index": 13,
+   "region": 6,
+   "common_overlap_fraction": 1.0,
+   "original_crossrisk": [
+    6.80107004584674e-05,
+    9.103316651937901e-05,
+    2.0561489204543308e-05
+   ],
+   "blur4_crossrisk": [
+    1.2913257699328327e-05,
+    1.591150324231354e-05,
+    2.384710792031585e-06
+   ],
+   "blur16_crossrisk": [
+    2.1675822148851306e-05,
+    2.0532636538519163e-05,
+    9.690369334155868e-07
+   ],
+   "blur4_delta": [
+    -5.5097442759139076e-05,
+    -7.512166327706547e-05,
+    -1.817677841251172e-05
+   ],
+   "blur16_delta": [
+    -4.63348783096161e-05,
+    -7.050052998085985e-05,
+    -1.9592452271127723e-05
+   ],
+   "warning": "Blurringcanreducescoreevenifdetailislost;notproofoptimaldenoising"
+  },
+  {
+   "target_index": 13,
+   "region": 7,
+   "common_overlap_fraction": 1.0,
+   "original_crossrisk": [
+    0.00018462307639727866,
+    0.0002696575791813968,
+    8.288946571167358e-05
+   ],
+   "blur4_crossrisk": [
+    9.349459011875949e-05,
+    9.678688707617923e-05,
+    1.1685116949492917e-05
+   ],
+   "blur16_crossrisk": [
+    0.00022315666248257386,
+    0.00024540906820563725,
+    7.631390760425682e-06
+   ],
+   "blur4_delta": [
+    -9.112848627851917e-05,
+    -0.00017287069210521758,
+    -7.120434876218067e-05
+   ],
+   "blur16_delta": [
+    3.8533586085295196e-05,
+    -2.4248510975759577e-05,
+    -7.52580749512479e-05
+   ],
+   "warning": "Blurringcanreducescoreevenifdetailislost;notproofoptimaldenoising"
+  },
+  {
+   "target_index": 13,
+   "region": 8,
+   "common_overlap_fraction": 1.0,
+   "original_crossrisk": [
+    0.00025144505303217,
+    0.00036025419731394216,
+    0.00012465791819738718
+   ],
+   "blur4_crossrisk": [
+    0.00014883521753489436,
+    0.0001306816141913204,
+    1.8541622247389622e-05
+   ],
+   "blur16_crossrisk": [
+    0.0002442671177815463,
+    0.00020666561496090384,
+    1.4076866132689804e-05
+   ],
+   "blur4_delta": [
+    -0.00010260983549727565,
+    -0.00022957258312262177,
+    -0.00010611629594999755
+   ],
+   "blur16_delta": [
+    -7.1779352506237204e-06,
+    -0.00015358858235303832,
+    -0.00011058105206469738
+   ],
+   "warning": "Blurringcanreducescoreevenifdetailislost;notproofoptimaldenoising"
+  }
+ ],
+ "preview": {
+  "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-review\\20261027T231423Z\\production-reference-controls.png",
+  "sha256": "b93ba076091b7199a3712c47b9c5323520c21a74b708f369d9d15e43f0f59850",
+  "display": "Rec2020linear->linearSRGBmatrixfromWorkingColorSpace.h,clip[0,1]thenIEC sRGB,8bitICC. No auto exposure/gain. Native192px crops,not resized.",
+  "working_color_source_sha256": "353365f56eb3223ec64cbc3e5504ba3484d02e34a3dc22fb6b4ebf320c7ec163"
+ },
+ "runner_source": "\"\"\"Heavy-blur controls and diagnostic contact sheet for the frozen burst references.\"\"\"\nfrom datetime import datetime,timezone\nimport json\nfrom pathlib import Path\nimport numpy as np\nimport cv2\nfrom PIL import Image,ImageDraw,ImageCms\nfrom study_noise_burst_reference import align\nfrom study_noise_neighbourhoods import ROOT,sha256,git\n\n\ndef display(planes):\n    y,co,cg=planes;wy,wg,wb=.2627002120112671,.6779980715188708,.0593017164698620\n    k=wy+.5*wg\n    rgb=np.stack((y+(1-k)*co-wg*cg,y+(.5-k)*co+(1-wg)*cg,y-k*co-wg*cg),axis=-1)\n    r2020=np.array([[.6369580483012914,.1446169035862083,.1688809751641721],\n        [wy,wg,wb],[0.,.0280726930490874,1.060985057710791]])\n    srgb=np.array([[.4123907992659595,.3575843393838779,.1804807884018343],\n        [.2126390058715104,.7151686787677559,.0721923153607337],\n        [.0193308187155919,.1191947797946259,.9505321522496606]])\n    linear=np.clip(rgb@(np.linalg.inv(srgb)@r2020).T,0,1)\n    encoded=np.where(linear<=.0031308,12.92*linear,1.055*linear**(1/2.4)-.055)\n    return np.clip(np.rint(encoded*255),0,255).astype(np.uint8)\n\n\ndef run():\n    started=datetime.now(timezone.utc)\n    source=ROOT/'docs/validation/raw/references-croisees-rafale-bruit-v001-20261027T230909Z.json'\n    witness=json.loads(source.read_text(encoding='utf-8'));parents=witness['parents']\n    data=[json.loads(Path(p['path']).read_text(encoding='utf-8')) for p in parents]\n    native,production=data;arrays=[]\n    for item in data:\n        p=Path(item['pixels']['path'])\n        if sha256(p)!=item['pixels']['sha256']:raise ValueError('Changed pixels')\n        with np.load(p,allow_pickle=False) as saved:arrays.append(saved['planes'].copy())\n    planes,controls=arrays;rows=[];contact=Image.new('RGB',(5*256,4*240),(35,35,35));draw=ImageDraw.Draw(contact)\n    labels=('Original','IPR 50','IPR 100','Reference 13 (imperfect)','Blur sigma16 (control)')\n    for column,label in enumerate(labels):draw.text((column*256+8,5),label,fill='white')\n    shown=(0,2,4,8)\n    for record in witness['records']:\n        if record['status']!='measured':continue\n        target=record['target_index'];roi=record['region'];ki=next(i for i,r in enumerate(production['records']) if r['index']==target)\n        others=sorted(record['reference_indices_first']+record['reference_indices_second'])\n        aligned=np.stack([align(planes[index,roi],np.asarray(matrix)) for index,matrix in zip(others,record['local_target_to_source_affines'])])[:,:,:,32:-32][:,:,32:-32,:]\n        valid=np.isfinite(aligned).all(axis=(0,1));ra=aligned[::2].mean(axis=0);rb=aligned[1::2].mean(axis=0)\n        original=planes[target,roi].astype(float)\n        blur4=np.stack([cv2.GaussianBlur(p,(0,0),4,borderType=cv2.BORDER_REPLICATE) for p in original])[:,32:-32,32:-32]\n        blur16=np.stack([cv2.GaussianBlur(p,(0,0),16,borderType=cv2.BORDER_REPLICATE) for p in original])[:,32:-32,32:-32]\n        baseline=original[:,32:-32,32:-32]\n        risk=lambda x:np.mean((x[...,valid]-ra[...,valid])*(x[...,valid]-rb[...,valid]),axis=-1)\n        r0=risk(baseline);r4=risk(blur4);r16=risk(blur16)\n        rows.append(dict(target_index=target,region=roi,common_overlap_fraction=float(valid.mean()),\n            original_crossrisk=r0.tolist(),blur4_crossrisk=r4.tolist(),blur16_crossrisk=r16.tolist(),\n            blur4_delta=(r4-r0).tolist(),blur16_delta=(r16-r0).tolist(),\n            warning='Blurringcanreducescoreevenifdetailislost;notproofoptimaldenoising'))\n        if target==0 and roi in shown:\n            row=shown.index(roi);draw.text((8,row*240+23),f'ROI {roi}, native pixels, same exposure',fill='white')\n            ref=(ra+rb)*.5\n            ref=np.where(np.isfinite(ref),ref,baseline)\n            pictures=[controls[0,s,roi,:,32:-32,32:-32] for s in range(3)]+[ref,blur16]\n            for column,picture in enumerate(pictures):contact.paste(Image.fromarray(display(picture)),(column*256+32,row*240+40))\n    folder=ROOT/'build-patch_noise/burst-review'/started.strftime('%Y%m%dT%H%M%SZ');folder.mkdir(parents=True,exist_ok=False)\n    picture=folder/'production-reference-controls.png'\n    profile=ImageCms.ImageCmsProfile(ImageCms.createProfile('sRGB')).tobytes()\n    contact.save(picture,icc_profile=profile)\n    now=datetime.now(timezone.utc);output=ROOT/'docs/validation/raw'/f'controle-references-rafale-bruit-v002-{now.strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n    previous=ROOT/'docs/validation/raw/controle-references-rafale-bruit-v001-20261027T231257Z.json'\n    result=dict(schema_version=1,data_version=2,started_at_utc=started.isoformat(),completed_at_utc=now.isoformat(),\n        correction=dict(parent=str(previous),sha256=sha256(previous),reason='Canvas240instead220perrow:previouspreviewcropped12bottompixels. Sameanalyticalcontrolsnotnewindependentstudy.'),\n        parent=dict(path=str(source),sha256=sha256(source)),records=rows,\n        preview=dict(path=str(picture),sha256=sha256(picture),display='Rec2020linear->linearSRGBmatrixfromWorkingColorSpace.h,clip[0,1]thenIEC sRGB,8bitICC. No auto exposure/gain. Native192px crops,not resized.',working_color_source_sha256=sha256(ROOT/'src/core/WorkingColorSpace.h')),\n        runner_source=Path(__file__).read_text(encoding='utf-8'),runner_sha256=sha256(Path(__file__)),commit=git('rev-parse','HEAD'),\n        rules='Readonly existingdevelopmentpixels. Fixed Gaussian sigma4/16 diagnostic overblurcontrols,not candidates or truth. No refit/reference reselection/holdout opening.',\n        limitations='Negative controls probe metric selectivity,not universal badfilters:blurmaylegitimatelyhelpstronglynoisyflats. No exactclean reference,visualuserrevieworLRcomparison. No production change.',\n        verdict='reference_metric_selectivity_audit')\n    with output.open('x',encoding='utf-8') as handle:json.dump(result,handle,ensure_ascii=False,indent=1,allow_nan=False)\n    print('RESULT',output,'PREVIEW',picture,flush=True)\n    for roi in range(9):\n        rs=[r for r in rows if r['region']==roi]\n        if rs:print('ROI',roi,'BLUR16delta%',(100*np.mean([r['blur16_delta'] for r in rs],axis=0)/np.maximum(np.mean([r['original_crossrisk'] for r in rs],axis=0),1e-20)).round(1).tolist(),flush=True)\n\n\nif __name__=='__main__':run()\n",
+ "runner_sha256": "e93e61bbfe2ecb303e20a1eb915f7cb017b0300974156d2ec619a4f80a27855b",
+ "commit": "2a40c5c6cff78d40294393a68827f4a24555c724",
+ "rules": "Readonly existingdevelopmentpixels. Fixed Gaussian sigma4/16 diagnostic overblurcontrols,not candidates or truth. No refit/reference reselection/holdout opening.",
+ "limitations": "Negative controls probe metric selectivity,not universal badfilters:blurmaylegitimatelyhelpstronglynoisyflats. No exactclean reference,visualuserrevieworLRcomparison. No production change.",
+ "verdict": "reference_metric_selectivity_audit"
+}

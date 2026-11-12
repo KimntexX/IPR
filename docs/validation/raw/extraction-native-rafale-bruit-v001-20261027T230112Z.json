@@ -1,0 +1,4385 @@
+{
+ "schema_version": 1,
+ "data_version": 1,
+ "started_at_utc": "2026-10-27T22:59:52.249052+00:00",
+ "completed_at_utc": "2026-10-27T23:01:12.346751+00:00",
+ "parent": {
+  "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\audit-rafale-reelle-bruit-v001-20261027T225328Z.json",
+  "sha256": "a6d74a68af1b28b8da241069942adf227bda151e62f7dd89f8ac1bb4dbbd2574"
+ },
+ "probe": {
+  "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\Release\\noiseNeighbourhoodProbe.exe",
+  "sha256": "4071c6301b6ff34ec7c54b0d1018ca4a054bd1156c8f17010d4fd93d3e7ae10c"
+ },
+ "records": [
+  {
+   "index": 0,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9819.CR3",
+   "sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165",
+   "native": {
+    "camera": "EOS R6 Mark III",
+    "declaration": {
+     "chromatic_aberration_applied": false,
+     "created_at_utc": "2026-10-27T22:59:57.200Z",
+     "dcp_profile": "Canon EOS R6 Mark III Camera Neutral",
+     "executable_sha256": "4071c6301b6ff34ec7c54b0d1018ca4a054bd1156c8f17010d4fd93d3e7ae10c",
+     "feature": "neutral",
+     "group": "bruit",
+     "ipr_test_schema": 1,
+     "lcp_profile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+     "lcp_sha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+     "lens_geometry_applied": false,
+     "lens_vignetting_applied": false,
+     "qt_version": "6.11.2",
+     "raw_normalization": true,
+     "reference": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9819.CR3",
+     "scene": "6V1A9819",
+     "settings": {
+      "automaticWhiteBalance": false,
+      "blacks": 0,
+      "blur": 0,
+      "clarity": 0,
+      "contrast": 0,
+      "dehaze": 0,
+      "denoiseChrominance": 0,
+      "denoiseLuminance": 0,
+      "exposure": 0,
+      "grading": [
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       }
+      ],
+      "grain": 0,
+      "grayscale": false,
+      "highlights": 0,
+      "mixerHue": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerLuminance": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerSaturation": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "saturation": 0,
+      "shadows": 0,
+      "sharpeningAmount": 0,
+      "sharpeningMasking": 0,
+      "sharpeningRadius": 1,
+      "temperature": 4924,
+      "texture": 0,
+      "tint": 0,
+      "toneCurves": [
+       [],
+       [],
+       [],
+       []
+      ],
+      "vibrance": 0,
+      "whites": 0
+     },
+     "source_sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165",
+     "value": 0
+    },
+    "height": 6959,
+    "iso": 4000,
+    "neutral_settings": {
+     "automaticWhiteBalance": false,
+     "blacks": 0,
+     "blur": 0,
+     "clarity": 0,
+     "contrast": 0,
+     "dehaze": 0,
+     "denoiseChrominance": 0,
+     "denoiseLuminance": 0,
+     "exposure": 0,
+     "grading": [
+      {
+       "hue": 0,
+       "saturation": 0
+      },
+      {
+       "hue": 0,
+       "saturation": 0
+      },
+      {
+       "hue": 0,
+       "saturation": 0
+      }
+     ],
+     "grain": 0,
+     "grayscale": false,
+     "highlights": 0,
+     "mixerHue": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "mixerLuminance": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "mixerSaturation": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "saturation": 0,
+     "shadows": 0,
+     "sharpeningAmount": 0,
+     "sharpeningMasking": 0,
+     "sharpeningRadius": 1,
+     "temperature": 4924,
+     "texture": 0,
+     "tint": 0,
+     "toneCurves": [
+      [],
+      [],
+      [],
+      []
+     ],
+     "vibrance": 0,
+     "whites": 0
+    },
+    "opening_chroma_median": "FlatOnly",
+    "preview": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-native\\20261027T225952Z\\6V1A9819-geometry.png",
+    "preview_height": 1200,
+    "preview_note": "Derived from actual master;existing diagnostic display helper,not colour-managed quality reference",
+    "preview_width": 800,
+    "raw": "6V1A9819.CR3",
+    "samples": [
+     {
+      "anchor": [
+       0.2,
+       0.2
+      ],
+      "label": "grid-0",
+      "rect": [
+       800,
+       1264,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.5,
+       0.2
+      ],
+      "label": "grid-1",
+      "rect": [
+       2192,
+       1264,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.8,
+       0.2
+      ],
+      "label": "grid-2",
+      "rect": [
+       3583,
+       1264,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.2,
+       0.5
+      ],
+      "label": "grid-3",
+      "rect": [
+       800,
+       3352,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.5,
+       0.5
+      ],
+      "label": "grid-4",
+      "rect": [
+       2192,
+       3352,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.8,
+       0.5
+      ],
+      "label": "grid-5",
+      "rect": [
+       3583,
+       3352,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.2,
+       0.8
+      ],
+      "label": "grid-6",
+      "rect": [
+       800,
+       5439,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.5,
+       0.8
+      ],
+      "label": "grid-7",
+      "rect": [
+       2192,
+       5439,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.8,
+       0.8
+      ],
+      "label": "grid-8",
+      "rect": [
+       3583,
+       5439,
+       256,
+       256
+      ]
+     }
+    ],
+    "sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165",
+    "width": 4639
+   },
+   "extraction_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-native\\20261027T225952Z\\6V1A9819.json",
+   "extraction_sha256": "7748b9325a531edd3fc7593618967d9b59e2c10b88e8619e465ef9c0a3fe69cb",
+   "preview_sha256": "fe9ba21b3d5e3b043aacc714986488e4165d8de0b42187e2dd650ead024ac40e"
+  },
+  {
+   "index": 1,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9820.CR3",
+   "sha256": "5ae412958614f0782133ab8bde605496e411ab7dcfb5d8fd62ea927681a965d3",
+   "native": {
+    "camera": "EOS R6 Mark III",
+    "declaration": {
+     "chromatic_aberration_applied": false,
+     "created_at_utc": "2026-10-27T23:00:02.897Z",
+     "dcp_profile": "Canon EOS R6 Mark III Camera Neutral",
+     "executable_sha256": "4071c6301b6ff34ec7c54b0d1018ca4a054bd1156c8f17010d4fd93d3e7ae10c",
+     "feature": "neutral",
+     "group": "bruit",
+     "ipr_test_schema": 1,
+     "lcp_profile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+     "lcp_sha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+     "lens_geometry_applied": false,
+     "lens_vignetting_applied": false,
+     "qt_version": "6.11.2",
+     "raw_normalization": true,
+     "reference": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9820.CR3",
+     "scene": "6V1A9820",
+     "settings": {
+      "automaticWhiteBalance": false,
+      "blacks": 0,
+      "blur": 0,
+      "clarity": 0,
+      "contrast": 0,
+      "dehaze": 0,
+      "denoiseChrominance": 0,
+      "denoiseLuminance": 0,
+      "exposure": 0,
+      "grading": [
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       }
+      ],
+      "grain": 0,
+      "grayscale": false,
+      "highlights": 0,
+      "mixerHue": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerLuminance": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerSaturation": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "saturation": 0,
+      "shadows": 0,
+      "sharpeningAmount": 0,
+      "sharpeningMasking": 0,
+      "sharpeningRadius": 1,
+      "temperature": 4924,
+      "texture": 0,
+      "tint": 0,
+      "toneCurves": [
+       [],
+       [],
+       [],
+       []
+      ],
+      "vibrance": 0,
+      "whites": 0
+     },
+     "source_sha256": "5ae412958614f0782133ab8bde605496e411ab7dcfb5d8fd62ea927681a965d3",
+     "value": 0
+    },
+    "height": 6959,
+    "iso": 4000,
+    "neutral_settings": {
+     "automaticWhiteBalance": false,
+     "blacks": 0,
+     "blur": 0,
+     "clarity": 0,
+     "contrast": 0,
+     "dehaze": 0,
+     "denoiseChrominance": 0,
+     "denoiseLuminance": 0,
+     "exposure": 0,
+     "grading": [
+      {
+       "hue": 0,
+       "saturation": 0
+      },
+      {
+       "hue": 0,
+       "saturation": 0
+      },
+      {
+       "hue": 0,
+       "saturation": 0
+      }
+     ],
+     "grain": 0,
+     "grayscale": false,
+     "highlights": 0,
+     "mixerHue": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "mixerLuminance": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "mixerSaturation": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "saturation": 0,
+     "shadows": 0,
+     "sharpeningAmount": 0,
+     "sharpeningMasking": 0,
+     "sharpeningRadius": 1,
+     "temperature": 4924,
+     "texture": 0,
+     "tint": 0,
+     "toneCurves": [
+      [],
+      [],
+      [],
+      []
+     ],
+     "vibrance": 0,
+     "whites": 0
+    },
+    "opening_chroma_median": "FlatOnly",
+    "preview": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-native\\20261027T225952Z\\6V1A9820-geometry.png",
+    "preview_height": 1200,
+    "preview_note": "Derived from actual master;existing diagnostic display helper,not colour-managed quality reference",
+    "preview_width": 800,
+    "raw": "6V1A9820.CR3",
+    "samples": [
+     {
+      "anchor": [
+       0.2,
+       0.2
+      ],
+      "label": "grid-0",
+      "rect": [
+       800,
+       1264,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.5,
+       0.2
+      ],
+      "label": "grid-1",
+      "rect": [
+       2192,
+       1264,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.8,
+       0.2
+      ],
+      "label": "grid-2",
+      "rect": [
+       3583,
+       1264,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.2,
+       0.5
+      ],
+      "label": "grid-3",
+      "rect": [
+       800,
+       3352,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.5,
+       0.5
+      ],
+      "label": "grid-4",
+      "rect": [
+       2192,
+       3352,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.8,
+       0.5
+      ],
+      "label": "grid-5",
+      "rect": [
+       3583,
+       3352,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.2,
+       0.8
+      ],
+      "label": "grid-6",
+      "rect": [
+       800,
+       5439,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.5,
+       0.8
+      ],
+      "label": "grid-7",
+      "rect": [
+       2192,
+       5439,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.8,
+       0.8
+      ],
+      "label": "grid-8",
+      "rect": [
+       3583,
+       5439,
+       256,
+       256
+      ]
+     }
+    ],
+    "sha256": "5ae412958614f0782133ab8bde605496e411ab7dcfb5d8fd62ea927681a965d3",
+    "width": 4639
+   },
+   "extraction_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-native\\20261027T225952Z\\6V1A9820.json",
+   "extraction_sha256": "870f98a9bc9de2ed54a026f8450f61888294dc8751b24deb6ff718f2cb707895",
+   "preview_sha256": "63e0ae59f9839a230102bb0f8a87e089c1378599a36c1ac30aa875f98c0bf7f6"
+  },
+  {
+   "index": 2,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9821.CR3",
+   "sha256": "1ce0b3885a317a6fdaaa8b40d4d399545f187080592c2ad78f81821865668bd2",
+   "native": {
+    "camera": "EOS R6 Mark III",
+    "declaration": {
+     "chromatic_aberration_applied": false,
+     "created_at_utc": "2026-10-27T23:00:08.365Z",
+     "dcp_profile": "Canon EOS R6 Mark III Camera Neutral",
+     "executable_sha256": "4071c6301b6ff34ec7c54b0d1018ca4a054bd1156c8f17010d4fd93d3e7ae10c",
+     "feature": "neutral",
+     "group": "bruit",
+     "ipr_test_schema": 1,
+     "lcp_profile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+     "lcp_sha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+     "lens_geometry_applied": false,
+     "lens_vignetting_applied": false,
+     "qt_version": "6.11.2",
+     "raw_normalization": true,
+     "reference": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9821.CR3",
+     "scene": "6V1A9821",
+     "settings": {
+      "automaticWhiteBalance": false,
+      "blacks": 0,
+      "blur": 0,
+      "clarity": 0,
+      "contrast": 0,
+      "dehaze": 0,
+      "denoiseChrominance": 0,
+      "denoiseLuminance": 0,
+      "exposure": 0,
+      "grading": [
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       }
+      ],
+      "grain": 0,
+      "grayscale": false,
+      "highlights": 0,
+      "mixerHue": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerLuminance": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerSaturation": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "saturation": 0,
+      "shadows": 0,
+      "sharpeningAmount": 0,
+      "sharpeningMasking": 0,
+      "sharpeningRadius": 1,
+      "temperature": 4924,
+      "texture": 0,
+      "tint": 0,
+      "toneCurves": [
+       [],
+       [],
+       [],
+       []
+      ],
+      "vibrance": 0,
+      "whites": 0
+     },
+     "source_sha256": "1ce0b3885a317a6fdaaa8b40d4d399545f187080592c2ad78f81821865668bd2",
+     "value": 0
+    },
+    "height": 6959,
+    "iso": 4000,
+    "neutral_settings": {
+     "automaticWhiteBalance": false,
+     "blacks": 0,
+     "blur": 0,
+     "clarity": 0,
+     "contrast": 0,
+     "dehaze": 0,
+     "denoiseChrominance": 0,
+     "denoiseLuminance": 0,
+     "exposure": 0,
+     "grading": [
+      {
+       "hue": 0,
+       "saturation": 0
+      },
+      {
+       "hue": 0,
+       "saturation": 0
+      },
+      {
+       "hue": 0,
+       "saturation": 0
+      }
+     ],
+     "grain": 0,
+     "grayscale": false,
+     "highlights": 0,
+     "mixerHue": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "mixerLuminance": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "mixerSaturation": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "saturation": 0,
+     "shadows": 0,
+     "sharpeningAmount": 0,
+     "sharpeningMasking": 0,
+     "sharpeningRadius": 1,
+     "temperature": 4924,
+     "texture": 0,
+     "tint": 0,
+     "toneCurves": [
+      [],
+      [],
+      [],
+      []
+     ],
+     "vibrance": 0,
+     "whites": 0
+    },
+    "opening_chroma_median": "FlatOnly",
+    "preview": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-native\\20261027T225952Z\\6V1A9821-geometry.png",
+    "preview_height": 1200,
+    "preview_note": "Derived from actual master;existing diagnostic display helper,not colour-managed quality reference",
+    "preview_width": 800,
+    "raw": "6V1A9821.CR3",
+    "samples": [
+     {
+      "anchor": [
+       0.2,
+       0.2
+      ],
+      "label": "grid-0",
+      "rect": [
+       800,
+       1264,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.5,
+       0.2
+      ],
+      "label": "grid-1",
+      "rect": [
+       2192,
+       1264,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.8,
+       0.2
+      ],
+      "label": "grid-2",
+      "rect": [
+       3583,
+       1264,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.2,
+       0.5
+      ],
+      "label": "grid-3",
+      "rect": [
+       800,
+       3352,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.5,
+       0.5
+      ],
+      "label": "grid-4",
+      "rect": [
+       2192,
+       3352,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.8,
+       0.5
+      ],
+      "label": "grid-5",
+      "rect": [
+       3583,
+       3352,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.2,
+       0.8
+      ],
+      "label": "grid-6",
+      "rect": [
+       800,
+       5439,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.5,
+       0.8
+      ],
+      "label": "grid-7",
+      "rect": [
+       2192,
+       5439,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.8,
+       0.8
+      ],
+      "label": "grid-8",
+      "rect": [
+       3583,
+       5439,
+       256,
+       256
+      ]
+     }
+    ],
+    "sha256": "1ce0b3885a317a6fdaaa8b40d4d399545f187080592c2ad78f81821865668bd2",
+    "width": 4639
+   },
+   "extraction_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-native\\20261027T225952Z\\6V1A9821.json",
+   "extraction_sha256": "98e483c5d03a1a7ba39464982f1b968900f666727bb0ae0f5882a45bd3c70440",
+   "preview_sha256": "19dddb44a8ebb8cc78cedb4df1abba55880e23cbf3a04983c224155bc97b244a"
+  },
+  {
+   "index": 3,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9822.CR3",
+   "sha256": "299d0a9013836d3e2ea53c8d23856c02b4573011a7eb0a19992897e03b63f680",
+   "native": {
+    "camera": "EOS R6 Mark III",
+    "declaration": {
+     "chromatic_aberration_applied": false,
+     "created_at_utc": "2026-10-27T23:00:14.093Z",
+     "dcp_profile": "Canon EOS R6 Mark III Camera Neutral",
+     "executable_sha256": "4071c6301b6ff34ec7c54b0d1018ca4a054bd1156c8f17010d4fd93d3e7ae10c",
+     "feature": "neutral",
+     "group": "bruit",
+     "ipr_test_schema": 1,
+     "lcp_profile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+     "lcp_sha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+     "lens_geometry_applied": false,
+     "lens_vignetting_applied": false,
+     "qt_version": "6.11.2",
+     "raw_normalization": true,
+     "reference": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9822.CR3",
+     "scene": "6V1A9822",
+     "settings": {
+      "automaticWhiteBalance": false,
+      "blacks": 0,
+      "blur": 0,
+      "clarity": 0,
+      "contrast": 0,
+      "dehaze": 0,
+      "denoiseChrominance": 0,
+      "denoiseLuminance": 0,
+      "exposure": 0,
+      "grading": [
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       }
+      ],
+      "grain": 0,
+      "grayscale": false,
+      "highlights": 0,
+      "mixerHue": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerLuminance": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerSaturation": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "saturation": 0,
+      "shadows": 0,
+      "sharpeningAmount": 0,
+      "sharpeningMasking": 0,
+      "sharpeningRadius": 1,
+      "temperature": 4924,
+      "texture": 0,
+      "tint": 0,
+      "toneCurves": [
+       [],
+       [],
+       [],
+       []
+      ],
+      "vibrance": 0,
+      "whites": 0
+     },
+     "source_sha256": "299d0a9013836d3e2ea53c8d23856c02b4573011a7eb0a19992897e03b63f680",
+     "value": 0
+    },
+    "height": 6959,
+    "iso": 4000,
+    "neutral_settings": {
+     "automaticWhiteBalance": false,
+     "blacks": 0,
+     "blur": 0,
+     "clarity": 0,
+     "contrast": 0,
+     "dehaze": 0,
+     "denoiseChrominance": 0,
+     "denoiseLuminance": 0,
+     "exposure": 0,
+     "grading": [
+      {
+       "hue": 0,
+       "saturation": 0
+      },
+      {
+       "hue": 0,
+       "saturation": 0
+      },
+      {
+       "hue": 0,
+       "saturation": 0
+      }
+     ],
+     "grain": 0,
+     "grayscale": false,
+     "highlights": 0,
+     "mixerHue": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "mixerLuminance": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "mixerSaturation": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "saturation": 0,
+     "shadows": 0,
+     "sharpeningAmount": 0,
+     "sharpeningMasking": 0,
+     "sharpeningRadius": 1,
+     "temperature": 4924,
+     "texture": 0,
+     "tint": 0,
+     "toneCurves": [
+      [],
+      [],
+      [],
+      []
+     ],
+     "vibrance": 0,
+     "whites": 0
+    },
+    "opening_chroma_median": "FlatOnly",
+    "preview": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-native\\20261027T225952Z\\6V1A9822-geometry.png",
+    "preview_height": 1200,
+    "preview_note": "Derived from actual master;existing diagnostic display helper,not colour-managed quality reference",
+    "preview_width": 800,
+    "raw": "6V1A9822.CR3",
+    "samples": [
+     {
+      "anchor": [
+       0.2,
+       0.2
+      ],
+      "label": "grid-0",
+      "rect": [
+       800,
+       1264,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.5,
+       0.2
+      ],
+      "label": "grid-1",
+      "rect": [
+       2192,
+       1264,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.8,
+       0.2
+      ],
+      "label": "grid-2",
+      "rect": [
+       3583,
+       1264,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.2,
+       0.5
+      ],
+      "label": "grid-3",
+      "rect": [
+       800,
+       3352,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.5,
+       0.5
+      ],
+      "label": "grid-4",
+      "rect": [
+       2192,
+       3352,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.8,
+       0.5
+      ],
+      "label": "grid-5",
+      "rect": [
+       3583,
+       3352,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.2,
+       0.8
+      ],
+      "label": "grid-6",
+      "rect": [
+       800,
+       5439,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.5,
+       0.8
+      ],
+      "label": "grid-7",
+      "rect": [
+       2192,
+       5439,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.8,
+       0.8
+      ],
+      "label": "grid-8",
+      "rect": [
+       3583,
+       5439,
+       256,
+       256
+      ]
+     }
+    ],
+    "sha256": "299d0a9013836d3e2ea53c8d23856c02b4573011a7eb0a19992897e03b63f680",
+    "width": 4639
+   },
+   "extraction_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-native\\20261027T225952Z\\6V1A9822.json",
+   "extraction_sha256": "2c1b889203b80dad894bc7fe6fb8beead9db0793822dacc175c6b972e5573fd2",
+   "preview_sha256": "a20f56e223f6050319e868e32bdbac4047adae96d29f1f8f81757bd598c10668"
+  },
+  {
+   "index": 4,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9823.CR3",
+   "sha256": "72a8c5475af764b5f2fe125234367e3a1c13f7e6efa2d3fd03b38d30f2809894",
+   "native": {
+    "camera": "EOS R6 Mark III",
+    "declaration": {
+     "chromatic_aberration_applied": false,
+     "created_at_utc": "2026-10-27T23:00:19.519Z",
+     "dcp_profile": "Canon EOS R6 Mark III Camera Neutral",
+     "executable_sha256": "4071c6301b6ff34ec7c54b0d1018ca4a054bd1156c8f17010d4fd93d3e7ae10c",
+     "feature": "neutral",
+     "group": "bruit",
+     "ipr_test_schema": 1,
+     "lcp_profile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+     "lcp_sha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+     "lens_geometry_applied": false,
+     "lens_vignetting_applied": false,
+     "qt_version": "6.11.2",
+     "raw_normalization": true,
+     "reference": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9823.CR3",
+     "scene": "6V1A9823",
+     "settings": {
+      "automaticWhiteBalance": false,
+      "blacks": 0,
+      "blur": 0,
+      "clarity": 0,
+      "contrast": 0,
+      "dehaze": 0,
+      "denoiseChrominance": 0,
+      "denoiseLuminance": 0,
+      "exposure": 0,
+      "grading": [
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       }
+      ],
+      "grain": 0,
+      "grayscale": false,
+      "highlights": 0,
+      "mixerHue": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerLuminance": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerSaturation": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "saturation": 0,
+      "shadows": 0,
+      "sharpeningAmount": 0,
+      "sharpeningMasking": 0,
+      "sharpeningRadius": 1,
+      "temperature": 4924,
+      "texture": 0,
+      "tint": 0,
+      "toneCurves": [
+       [],
+       [],
+       [],
+       []
+      ],
+      "vibrance": 0,
+      "whites": 0
+     },
+     "source_sha256": "72a8c5475af764b5f2fe125234367e3a1c13f7e6efa2d3fd03b38d30f2809894",
+     "value": 0
+    },
+    "height": 6959,
+    "iso": 4000,
+    "neutral_settings": {
+     "automaticWhiteBalance": false,
+     "blacks": 0,
+     "blur": 0,
+     "clarity": 0,
+     "contrast": 0,
+     "dehaze": 0,
+     "denoiseChrominance": 0,
+     "denoiseLuminance": 0,
+     "exposure": 0,
+     "grading": [
+      {
+       "hue": 0,
+       "saturation": 0
+      },
+      {
+       "hue": 0,
+       "saturation": 0
+      },
+      {
+       "hue": 0,
+       "saturation": 0
+      }
+     ],
+     "grain": 0,
+     "grayscale": false,
+     "highlights": 0,
+     "mixerHue": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "mixerLuminance": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "mixerSaturation": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "saturation": 0,
+     "shadows": 0,
+     "sharpeningAmount": 0,
+     "sharpeningMasking": 0,
+     "sharpeningRadius": 1,
+     "temperature": 4924,
+     "texture": 0,
+     "tint": 0,
+     "toneCurves": [
+      [],
+      [],
+      [],
+      []
+     ],
+     "vibrance": 0,
+     "whites": 0
+    },
+    "opening_chroma_median": "FlatOnly",
+    "preview": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-native\\20261027T225952Z\\6V1A9823-geometry.png",
+    "preview_height": 1200,
+    "preview_note": "Derived from actual master;existing diagnostic display helper,not colour-managed quality reference",
+    "preview_width": 800,
+    "raw": "6V1A9823.CR3",
+    "samples": [
+     {
+      "anchor": [
+       0.2,
+       0.2
+      ],
+      "label": "grid-0",
+      "rect": [
+       800,
+       1264,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.5,
+       0.2
+      ],
+      "label": "grid-1",
+      "rect": [
+       2192,
+       1264,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.8,
+       0.2
+      ],
+      "label": "grid-2",
+      "rect": [
+       3583,
+       1264,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.2,
+       0.5
+      ],
+      "label": "grid-3",
+      "rect": [
+       800,
+       3352,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.5,
+       0.5
+      ],
+      "label": "grid-4",
+      "rect": [
+       2192,
+       3352,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.8,
+       0.5
+      ],
+      "label": "grid-5",
+      "rect": [
+       3583,
+       3352,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.2,
+       0.8
+      ],
+      "label": "grid-6",
+      "rect": [
+       800,
+       5439,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.5,
+       0.8
+      ],
+      "label": "grid-7",
+      "rect": [
+       2192,
+       5439,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.8,
+       0.8
+      ],
+      "label": "grid-8",
+      "rect": [
+       3583,
+       5439,
+       256,
+       256
+      ]
+     }
+    ],
+    "sha256": "72a8c5475af764b5f2fe125234367e3a1c13f7e6efa2d3fd03b38d30f2809894",
+    "width": 4639
+   },
+   "extraction_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-native\\20261027T225952Z\\6V1A9823.json",
+   "extraction_sha256": "a585e91c7408ee3ed376c2b98d720878c2742c98a21095c6c1654d8731310175",
+   "preview_sha256": "b7cc4dc5120a35ca3571621d69d8f1df9fec64bf8305230e9088009ddf89c5ff"
+  },
+  {
+   "index": 5,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9824.CR3",
+   "sha256": "28899c86ad3850f4fa699a6001fcb7b68af4d6a3d4adbab7cfb2acac2c1120c4",
+   "native": {
+    "camera": "EOS R6 Mark III",
+    "declaration": {
+     "chromatic_aberration_applied": false,
+     "created_at_utc": "2026-10-27T23:00:24.987Z",
+     "dcp_profile": "Canon EOS R6 Mark III Camera Neutral",
+     "executable_sha256": "4071c6301b6ff34ec7c54b0d1018ca4a054bd1156c8f17010d4fd93d3e7ae10c",
+     "feature": "neutral",
+     "group": "bruit",
+     "ipr_test_schema": 1,
+     "lcp_profile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+     "lcp_sha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+     "lens_geometry_applied": false,
+     "lens_vignetting_applied": false,
+     "qt_version": "6.11.2",
+     "raw_normalization": true,
+     "reference": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9824.CR3",
+     "scene": "6V1A9824",
+     "settings": {
+      "automaticWhiteBalance": false,
+      "blacks": 0,
+      "blur": 0,
+      "clarity": 0,
+      "contrast": 0,
+      "dehaze": 0,
+      "denoiseChrominance": 0,
+      "denoiseLuminance": 0,
+      "exposure": 0,
+      "grading": [
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       }
+      ],
+      "grain": 0,
+      "grayscale": false,
+      "highlights": 0,
+      "mixerHue": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerLuminance": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerSaturation": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "saturation": 0,
+      "shadows": 0,
+      "sharpeningAmount": 0,
+      "sharpeningMasking": 0,
+      "sharpeningRadius": 1,
+      "temperature": 4924,
+      "texture": 0,
+      "tint": 0,
+      "toneCurves": [
+       [],
+       [],
+       [],
+       []
+      ],
+      "vibrance": 0,
+      "whites": 0
+     },
+     "source_sha256": "28899c86ad3850f4fa699a6001fcb7b68af4d6a3d4adbab7cfb2acac2c1120c4",
+     "value": 0
+    },
+    "height": 6959,
+    "iso": 4000,
+    "neutral_settings": {
+     "automaticWhiteBalance": false,
+     "blacks": 0,
+     "blur": 0,
+     "clarity": 0,
+     "contrast": 0,
+     "dehaze": 0,
+     "denoiseChrominance": 0,
+     "denoiseLuminance": 0,
+     "exposure": 0,
+     "grading": [
+      {
+       "hue": 0,
+       "saturation": 0
+      },
+      {
+       "hue": 0,
+       "saturation": 0
+      },
+      {
+       "hue": 0,
+       "saturation": 0
+      }
+     ],
+     "grain": 0,
+     "grayscale": false,
+     "highlights": 0,
+     "mixerHue": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "mixerLuminance": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "mixerSaturation": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "saturation": 0,
+     "shadows": 0,
+     "sharpeningAmount": 0,
+     "sharpeningMasking": 0,
+     "sharpeningRadius": 1,
+     "temperature": 4924,
+     "texture": 0,
+     "tint": 0,
+     "toneCurves": [
+      [],
+      [],
+      [],
+      []
+     ],
+     "vibrance": 0,
+     "whites": 0
+    },
+    "opening_chroma_median": "FlatOnly",
+    "preview": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-native\\20261027T225952Z\\6V1A9824-geometry.png",
+    "preview_height": 1200,
+    "preview_note": "Derived from actual master;existing diagnostic display helper,not colour-managed quality reference",
+    "preview_width": 800,
+    "raw": "6V1A9824.CR3",
+    "samples": [
+     {
+      "anchor": [
+       0.2,
+       0.2
+      ],
+      "label": "grid-0",
+      "rect": [
+       800,
+       1264,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.5,
+       0.2
+      ],
+      "label": "grid-1",
+      "rect": [
+       2192,
+       1264,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.8,
+       0.2
+      ],
+      "label": "grid-2",
+      "rect": [
+       3583,
+       1264,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.2,
+       0.5
+      ],
+      "label": "grid-3",
+      "rect": [
+       800,
+       3352,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.5,
+       0.5
+      ],
+      "label": "grid-4",
+      "rect": [
+       2192,
+       3352,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.8,
+       0.5
+      ],
+      "label": "grid-5",
+      "rect": [
+       3583,
+       3352,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.2,
+       0.8
+      ],
+      "label": "grid-6",
+      "rect": [
+       800,
+       5439,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.5,
+       0.8
+      ],
+      "label": "grid-7",
+      "rect": [
+       2192,
+       5439,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.8,
+       0.8
+      ],
+      "label": "grid-8",
+      "rect": [
+       3583,
+       5439,
+       256,
+       256
+      ]
+     }
+    ],
+    "sha256": "28899c86ad3850f4fa699a6001fcb7b68af4d6a3d4adbab7cfb2acac2c1120c4",
+    "width": 4639
+   },
+   "extraction_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-native\\20261027T225952Z\\6V1A9824.json",
+   "extraction_sha256": "3b157b674d21234baa5390e80b279de2099dc6c567be2aa804abf24b555d1b26",
+   "preview_sha256": "58ca22cb6a370a5dec80bfb6bef5d78fa804fff6a3571e1717dd633d2859b5e9"
+  },
+  {
+   "index": 6,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9825.CR3",
+   "sha256": "cb5c9016211a340e38ec707ec8ee9d5bf834a644958d394eb7f41ab565dd4245",
+   "native": {
+    "camera": "EOS R6 Mark III",
+    "declaration": {
+     "chromatic_aberration_applied": false,
+     "created_at_utc": "2026-10-27T23:00:30.687Z",
+     "dcp_profile": "Canon EOS R6 Mark III Camera Neutral",
+     "executable_sha256": "4071c6301b6ff34ec7c54b0d1018ca4a054bd1156c8f17010d4fd93d3e7ae10c",
+     "feature": "neutral",
+     "group": "bruit",
+     "ipr_test_schema": 1,
+     "lcp_profile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+     "lcp_sha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+     "lens_geometry_applied": false,
+     "lens_vignetting_applied": false,
+     "qt_version": "6.11.2",
+     "raw_normalization": true,
+     "reference": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9825.CR3",
+     "scene": "6V1A9825",
+     "settings": {
+      "automaticWhiteBalance": false,
+      "blacks": 0,
+      "blur": 0,
+      "clarity": 0,
+      "contrast": 0,
+      "dehaze": 0,
+      "denoiseChrominance": 0,
+      "denoiseLuminance": 0,
+      "exposure": 0,
+      "grading": [
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       }
+      ],
+      "grain": 0,
+      "grayscale": false,
+      "highlights": 0,
+      "mixerHue": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerLuminance": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerSaturation": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "saturation": 0,
+      "shadows": 0,
+      "sharpeningAmount": 0,
+      "sharpeningMasking": 0,
+      "sharpeningRadius": 1,
+      "temperature": 4924,
+      "texture": 0,
+      "tint": 0,
+      "toneCurves": [
+       [],
+       [],
+       [],
+       []
+      ],
+      "vibrance": 0,
+      "whites": 0
+     },
+     "source_sha256": "cb5c9016211a340e38ec707ec8ee9d5bf834a644958d394eb7f41ab565dd4245",
+     "value": 0
+    },
+    "height": 6959,
+    "iso": 4000,
+    "neutral_settings": {
+     "automaticWhiteBalance": false,
+     "blacks": 0,
+     "blur": 0,
+     "clarity": 0,
+     "contrast": 0,
+     "dehaze": 0,
+     "denoiseChrominance": 0,
+     "denoiseLuminance": 0,
+     "exposure": 0,
+     "grading": [
+      {
+       "hue": 0,
+       "saturation": 0
+      },
+      {
+       "hue": 0,
+       "saturation": 0
+      },
+      {
+       "hue": 0,
+       "saturation": 0
+      }
+     ],
+     "grain": 0,
+     "grayscale": false,
+     "highlights": 0,
+     "mixerHue": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "mixerLuminance": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "mixerSaturation": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "saturation": 0,
+     "shadows": 0,
+     "sharpeningAmount": 0,
+     "sharpeningMasking": 0,
+     "sharpeningRadius": 1,
+     "temperature": 4924,
+     "texture": 0,
+     "tint": 0,
+     "toneCurves": [
+      [],
+      [],
+      [],
+      []
+     ],
+     "vibrance": 0,
+     "whites": 0
+    },
+    "opening_chroma_median": "FlatOnly",
+    "preview": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-native\\20261027T225952Z\\6V1A9825-geometry.png",
+    "preview_height": 1200,
+    "preview_note": "Derived from actual master;existing diagnostic display helper,not colour-managed quality reference",
+    "preview_width": 800,
+    "raw": "6V1A9825.CR3",
+    "samples": [
+     {
+      "anchor": [
+       0.2,
+       0.2
+      ],
+      "label": "grid-0",
+      "rect": [
+       800,
+       1264,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.5,
+       0.2
+      ],
+      "label": "grid-1",
+      "rect": [
+       2192,
+       1264,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.8,
+       0.2
+      ],
+      "label": "grid-2",
+      "rect": [
+       3583,
+       1264,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.2,
+       0.5
+      ],
+      "label": "grid-3",
+      "rect": [
+       800,
+       3352,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.5,
+       0.5
+      ],
+      "label": "grid-4",
+      "rect": [
+       2192,
+       3352,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.8,
+       0.5
+      ],
+      "label": "grid-5",
+      "rect": [
+       3583,
+       3352,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.2,
+       0.8
+      ],
+      "label": "grid-6",
+      "rect": [
+       800,
+       5439,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.5,
+       0.8
+      ],
+      "label": "grid-7",
+      "rect": [
+       2192,
+       5439,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.8,
+       0.8
+      ],
+      "label": "grid-8",
+      "rect": [
+       3583,
+       5439,
+       256,
+       256
+      ]
+     }
+    ],
+    "sha256": "cb5c9016211a340e38ec707ec8ee9d5bf834a644958d394eb7f41ab565dd4245",
+    "width": 4639
+   },
+   "extraction_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-native\\20261027T225952Z\\6V1A9825.json",
+   "extraction_sha256": "646318ad5716c72c31009067927640c0f4d2cd570c96aebae782f3282a559d70",
+   "preview_sha256": "7879a86aef63b3ea47cfd77413a1b031ec739b27d30538186c5d6d50d5c4f7b9"
+  },
+  {
+   "index": 7,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9826.CR3",
+   "sha256": "e810101cf640a035dd2a3147b9edb76e2d0ad60d8870f9af8394220fcf334bc1",
+   "native": {
+    "camera": "EOS R6 Mark III",
+    "declaration": {
+     "chromatic_aberration_applied": false,
+     "created_at_utc": "2026-10-27T23:00:35.999Z",
+     "dcp_profile": "Canon EOS R6 Mark III Camera Neutral",
+     "executable_sha256": "4071c6301b6ff34ec7c54b0d1018ca4a054bd1156c8f17010d4fd93d3e7ae10c",
+     "feature": "neutral",
+     "group": "bruit",
+     "ipr_test_schema": 1,
+     "lcp_profile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+     "lcp_sha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+     "lens_geometry_applied": false,
+     "lens_vignetting_applied": false,
+     "qt_version": "6.11.2",
+     "raw_normalization": true,
+     "reference": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9826.CR3",
+     "scene": "6V1A9826",
+     "settings": {
+      "automaticWhiteBalance": false,
+      "blacks": 0,
+      "blur": 0,
+      "clarity": 0,
+      "contrast": 0,
+      "dehaze": 0,
+      "denoiseChrominance": 0,
+      "denoiseLuminance": 0,
+      "exposure": 0,
+      "grading": [
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       }
+      ],
+      "grain": 0,
+      "grayscale": false,
+      "highlights": 0,
+      "mixerHue": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerLuminance": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerSaturation": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "saturation": 0,
+      "shadows": 0,
+      "sharpeningAmount": 0,
+      "sharpeningMasking": 0,
+      "sharpeningRadius": 1,
+      "temperature": 4924,
+      "texture": 0,
+      "tint": 0,
+      "toneCurves": [
+       [],
+       [],
+       [],
+       []
+      ],
+      "vibrance": 0,
+      "whites": 0
+     },
+     "source_sha256": "e810101cf640a035dd2a3147b9edb76e2d0ad60d8870f9af8394220fcf334bc1",
+     "value": 0
+    },
+    "height": 6959,
+    "iso": 4000,
+    "neutral_settings": {
+     "automaticWhiteBalance": false,
+     "blacks": 0,
+     "blur": 0,
+     "clarity": 0,
+     "contrast": 0,
+     "dehaze": 0,
+     "denoiseChrominance": 0,
+     "denoiseLuminance": 0,
+     "exposure": 0,
+     "grading": [
+      {
+       "hue": 0,
+       "saturation": 0
+      },
+      {
+       "hue": 0,
+       "saturation": 0
+      },
+      {
+       "hue": 0,
+       "saturation": 0
+      }
+     ],
+     "grain": 0,
+     "grayscale": false,
+     "highlights": 0,
+     "mixerHue": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "mixerLuminance": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "mixerSaturation": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "saturation": 0,
+     "shadows": 0,
+     "sharpeningAmount": 0,
+     "sharpeningMasking": 0,
+     "sharpeningRadius": 1,
+     "temperature": 4924,
+     "texture": 0,
+     "tint": 0,
+     "toneCurves": [
+      [],
+      [],
+      [],
+      []
+     ],
+     "vibrance": 0,
+     "whites": 0
+    },
+    "opening_chroma_median": "FlatOnly",
+    "preview": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-native\\20261027T225952Z\\6V1A9826-geometry.png",
+    "preview_height": 1200,
+    "preview_note": "Derived from actual master;existing diagnostic display helper,not colour-managed quality reference",
+    "preview_width": 800,
+    "raw": "6V1A9826.CR3",
+    "samples": [
+     {
+      "anchor": [
+       0.2,
+       0.2
+      ],
+      "label": "grid-0",
+      "rect": [
+       800,
+       1264,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.5,
+       0.2
+      ],
+      "label": "grid-1",
+      "rect": [
+       2192,
+       1264,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.8,
+       0.2
+      ],
+      "label": "grid-2",
+      "rect": [
+       3583,
+       1264,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.2,
+       0.5
+      ],
+      "label": "grid-3",
+      "rect": [
+       800,
+       3352,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.5,
+       0.5
+      ],
+      "label": "grid-4",
+      "rect": [
+       2192,
+       3352,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.8,
+       0.5
+      ],
+      "label": "grid-5",
+      "rect": [
+       3583,
+       3352,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.2,
+       0.8
+      ],
+      "label": "grid-6",
+      "rect": [
+       800,
+       5439,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.5,
+       0.8
+      ],
+      "label": "grid-7",
+      "rect": [
+       2192,
+       5439,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.8,
+       0.8
+      ],
+      "label": "grid-8",
+      "rect": [
+       3583,
+       5439,
+       256,
+       256
+      ]
+     }
+    ],
+    "sha256": "e810101cf640a035dd2a3147b9edb76e2d0ad60d8870f9af8394220fcf334bc1",
+    "width": 4639
+   },
+   "extraction_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-native\\20261027T225952Z\\6V1A9826.json",
+   "extraction_sha256": "1f7c516c03b749ac2844a2abbf47a685fcf850b0fd9327a246043b1e6f95f29d",
+   "preview_sha256": "7279c2e304e44535de1874d197df5964969e55460447f1c943087dd6d043c2f8"
+  },
+  {
+   "index": 8,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9827.CR3",
+   "sha256": "4444028085b4c4a42a42c6bdcd20f0e6dc6d4a182028e23969bf4f7e766a7d3e",
+   "native": {
+    "camera": "EOS R6 Mark III",
+    "declaration": {
+     "chromatic_aberration_applied": false,
+     "created_at_utc": "2026-10-27T23:00:41.447Z",
+     "dcp_profile": "Canon EOS R6 Mark III Camera Neutral",
+     "executable_sha256": "4071c6301b6ff34ec7c54b0d1018ca4a054bd1156c8f17010d4fd93d3e7ae10c",
+     "feature": "neutral",
+     "group": "bruit",
+     "ipr_test_schema": 1,
+     "lcp_profile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+     "lcp_sha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+     "lens_geometry_applied": false,
+     "lens_vignetting_applied": false,
+     "qt_version": "6.11.2",
+     "raw_normalization": true,
+     "reference": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9827.CR3",
+     "scene": "6V1A9827",
+     "settings": {
+      "automaticWhiteBalance": false,
+      "blacks": 0,
+      "blur": 0,
+      "clarity": 0,
+      "contrast": 0,
+      "dehaze": 0,
+      "denoiseChrominance": 0,
+      "denoiseLuminance": 0,
+      "exposure": 0,
+      "grading": [
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       }
+      ],
+      "grain": 0,
+      "grayscale": false,
+      "highlights": 0,
+      "mixerHue": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerLuminance": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerSaturation": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "saturation": 0,
+      "shadows": 0,
+      "sharpeningAmount": 0,
+      "sharpeningMasking": 0,
+      "sharpeningRadius": 1,
+      "temperature": 4924,
+      "texture": 0,
+      "tint": 0,
+      "toneCurves": [
+       [],
+       [],
+       [],
+       []
+      ],
+      "vibrance": 0,
+      "whites": 0
+     },
+     "source_sha256": "4444028085b4c4a42a42c6bdcd20f0e6dc6d4a182028e23969bf4f7e766a7d3e",
+     "value": 0
+    },
+    "height": 6959,
+    "iso": 4000,
+    "neutral_settings": {
+     "automaticWhiteBalance": false,
+     "blacks": 0,
+     "blur": 0,
+     "clarity": 0,
+     "contrast": 0,
+     "dehaze": 0,
+     "denoiseChrominance": 0,
+     "denoiseLuminance": 0,
+     "exposure": 0,
+     "grading": [
+      {
+       "hue": 0,
+       "saturation": 0
+      },
+      {
+       "hue": 0,
+       "saturation": 0
+      },
+      {
+       "hue": 0,
+       "saturation": 0
+      }
+     ],
+     "grain": 0,
+     "grayscale": false,
+     "highlights": 0,
+     "mixerHue": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "mixerLuminance": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "mixerSaturation": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "saturation": 0,
+     "shadows": 0,
+     "sharpeningAmount": 0,
+     "sharpeningMasking": 0,
+     "sharpeningRadius": 1,
+     "temperature": 4924,
+     "texture": 0,
+     "tint": 0,
+     "toneCurves": [
+      [],
+      [],
+      [],
+      []
+     ],
+     "vibrance": 0,
+     "whites": 0
+    },
+    "opening_chroma_median": "FlatOnly",
+    "preview": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-native\\20261027T225952Z\\6V1A9827-geometry.png",
+    "preview_height": 1200,
+    "preview_note": "Derived from actual master;existing diagnostic display helper,not colour-managed quality reference",
+    "preview_width": 800,
+    "raw": "6V1A9827.CR3",
+    "samples": [
+     {
+      "anchor": [
+       0.2,
+       0.2
+      ],
+      "label": "grid-0",
+      "rect": [
+       800,
+       1264,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.5,
+       0.2
+      ],
+      "label": "grid-1",
+      "rect": [
+       2192,
+       1264,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.8,
+       0.2
+      ],
+      "label": "grid-2",
+      "rect": [
+       3583,
+       1264,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.2,
+       0.5
+      ],
+      "label": "grid-3",
+      "rect": [
+       800,
+       3352,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.5,
+       0.5
+      ],
+      "label": "grid-4",
+      "rect": [
+       2192,
+       3352,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.8,
+       0.5
+      ],
+      "label": "grid-5",
+      "rect": [
+       3583,
+       3352,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.2,
+       0.8
+      ],
+      "label": "grid-6",
+      "rect": [
+       800,
+       5439,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.5,
+       0.8
+      ],
+      "label": "grid-7",
+      "rect": [
+       2192,
+       5439,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.8,
+       0.8
+      ],
+      "label": "grid-8",
+      "rect": [
+       3583,
+       5439,
+       256,
+       256
+      ]
+     }
+    ],
+    "sha256": "4444028085b4c4a42a42c6bdcd20f0e6dc6d4a182028e23969bf4f7e766a7d3e",
+    "width": 4639
+   },
+   "extraction_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-native\\20261027T225952Z\\6V1A9827.json",
+   "extraction_sha256": "99e8b2afff81c5ca246cc3cc8db2e8192fef303be0dd0def3162973dc83c7cf0",
+   "preview_sha256": "536e48ac370e70138a16afe5d2752caf8367374c55797349e981a3cde7368dc4"
+  },
+  {
+   "index": 9,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9828.CR3",
+   "sha256": "00ffa5dd689ed880485b83f16a69347ff37fcae9073ddd0d7cb9d257947b97a5",
+   "native": {
+    "camera": "EOS R6 Mark III",
+    "declaration": {
+     "chromatic_aberration_applied": false,
+     "created_at_utc": "2026-10-27T23:00:47.231Z",
+     "dcp_profile": "Canon EOS R6 Mark III Camera Neutral",
+     "executable_sha256": "4071c6301b6ff34ec7c54b0d1018ca4a054bd1156c8f17010d4fd93d3e7ae10c",
+     "feature": "neutral",
+     "group": "bruit",
+     "ipr_test_schema": 1,
+     "lcp_profile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+     "lcp_sha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+     "lens_geometry_applied": false,
+     "lens_vignetting_applied": false,
+     "qt_version": "6.11.2",
+     "raw_normalization": true,
+     "reference": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9828.CR3",
+     "scene": "6V1A9828",
+     "settings": {
+      "automaticWhiteBalance": false,
+      "blacks": 0,
+      "blur": 0,
+      "clarity": 0,
+      "contrast": 0,
+      "dehaze": 0,
+      "denoiseChrominance": 0,
+      "denoiseLuminance": 0,
+      "exposure": 0,
+      "grading": [
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       }
+      ],
+      "grain": 0,
+      "grayscale": false,
+      "highlights": 0,
+      "mixerHue": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerLuminance": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerSaturation": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "saturation": 0,
+      "shadows": 0,
+      "sharpeningAmount": 0,
+      "sharpeningMasking": 0,
+      "sharpeningRadius": 1,
+      "temperature": 4924,
+      "texture": 0,
+      "tint": 0,
+      "toneCurves": [
+       [],
+       [],
+       [],
+       []
+      ],
+      "vibrance": 0,
+      "whites": 0
+     },
+     "source_sha256": "00ffa5dd689ed880485b83f16a69347ff37fcae9073ddd0d7cb9d257947b97a5",
+     "value": 0
+    },
+    "height": 6959,
+    "iso": 4000,
+    "neutral_settings": {
+     "automaticWhiteBalance": false,
+     "blacks": 0,
+     "blur": 0,
+     "clarity": 0,
+     "contrast": 0,
+     "dehaze": 0,
+     "denoiseChrominance": 0,
+     "denoiseLuminance": 0,
+     "exposure": 0,
+     "grading": [
+      {
+       "hue": 0,
+       "saturation": 0
+      },
+      {
+       "hue": 0,
+       "saturation": 0
+      },
+      {
+       "hue": 0,
+       "saturation": 0
+      }
+     ],
+     "grain": 0,
+     "grayscale": false,
+     "highlights": 0,
+     "mixerHue": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "mixerLuminance": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "mixerSaturation": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "saturation": 0,
+     "shadows": 0,
+     "sharpeningAmount": 0,
+     "sharpeningMasking": 0,
+     "sharpeningRadius": 1,
+     "temperature": 4924,
+     "texture": 0,
+     "tint": 0,
+     "toneCurves": [
+      [],
+      [],
+      [],
+      []
+     ],
+     "vibrance": 0,
+     "whites": 0
+    },
+    "opening_chroma_median": "FlatOnly",
+    "preview": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-native\\20261027T225952Z\\6V1A9828-geometry.png",
+    "preview_height": 1200,
+    "preview_note": "Derived from actual master;existing diagnostic display helper,not colour-managed quality reference",
+    "preview_width": 800,
+    "raw": "6V1A9828.CR3",
+    "samples": [
+     {
+      "anchor": [
+       0.2,
+       0.2
+      ],
+      "label": "grid-0",
+      "rect": [
+       800,
+       1264,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.5,
+       0.2
+      ],
+      "label": "grid-1",
+      "rect": [
+       2192,
+       1264,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.8,
+       0.2
+      ],
+      "label": "grid-2",
+      "rect": [
+       3583,
+       1264,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.2,
+       0.5
+      ],
+      "label": "grid-3",
+      "rect": [
+       800,
+       3352,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.5,
+       0.5
+      ],
+      "label": "grid-4",
+      "rect": [
+       2192,
+       3352,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.8,
+       0.5
+      ],
+      "label": "grid-5",
+      "rect": [
+       3583,
+       3352,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.2,
+       0.8
+      ],
+      "label": "grid-6",
+      "rect": [
+       800,
+       5439,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.5,
+       0.8
+      ],
+      "label": "grid-7",
+      "rect": [
+       2192,
+       5439,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.8,
+       0.8
+      ],
+      "label": "grid-8",
+      "rect": [
+       3583,
+       5439,
+       256,
+       256
+      ]
+     }
+    ],
+    "sha256": "00ffa5dd689ed880485b83f16a69347ff37fcae9073ddd0d7cb9d257947b97a5",
+    "width": 4639
+   },
+   "extraction_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-native\\20261027T225952Z\\6V1A9828.json",
+   "extraction_sha256": "b00f057475e085eb9e7746de0d802d1eb16da47075f8320a579684436846d76b",
+   "preview_sha256": "5ae2fe4ef0faa9832f5d9db4bd9119da0dd6838f35fc0e4d52c99c46143fa63e"
+  },
+  {
+   "index": 10,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9829.CR3",
+   "sha256": "8e7ac253d543a458dbaff3dc7dafc675c91ce6feffa4f16e6f9bc673f9831298",
+   "native": {
+    "camera": "EOS R6 Mark III",
+    "declaration": {
+     "chromatic_aberration_applied": false,
+     "created_at_utc": "2026-10-27T23:00:52.630Z",
+     "dcp_profile": "Canon EOS R6 Mark III Camera Neutral",
+     "executable_sha256": "4071c6301b6ff34ec7c54b0d1018ca4a054bd1156c8f17010d4fd93d3e7ae10c",
+     "feature": "neutral",
+     "group": "bruit",
+     "ipr_test_schema": 1,
+     "lcp_profile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+     "lcp_sha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+     "lens_geometry_applied": false,
+     "lens_vignetting_applied": false,
+     "qt_version": "6.11.2",
+     "raw_normalization": true,
+     "reference": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9829.CR3",
+     "scene": "6V1A9829",
+     "settings": {
+      "automaticWhiteBalance": false,
+      "blacks": 0,
+      "blur": 0,
+      "clarity": 0,
+      "contrast": 0,
+      "dehaze": 0,
+      "denoiseChrominance": 0,
+      "denoiseLuminance": 0,
+      "exposure": 0,
+      "grading": [
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       }
+      ],
+      "grain": 0,
+      "grayscale": false,
+      "highlights": 0,
+      "mixerHue": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerLuminance": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerSaturation": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "saturation": 0,
+      "shadows": 0,
+      "sharpeningAmount": 0,
+      "sharpeningMasking": 0,
+      "sharpeningRadius": 1,
+      "temperature": 4924,
+      "texture": 0,
+      "tint": 0,
+      "toneCurves": [
+       [],
+       [],
+       [],
+       []
+      ],
+      "vibrance": 0,
+      "whites": 0
+     },
+     "source_sha256": "8e7ac253d543a458dbaff3dc7dafc675c91ce6feffa4f16e6f9bc673f9831298",
+     "value": 0
+    },
+    "height": 6959,
+    "iso": 4000,
+    "neutral_settings": {
+     "automaticWhiteBalance": false,
+     "blacks": 0,
+     "blur": 0,
+     "clarity": 0,
+     "contrast": 0,
+     "dehaze": 0,
+     "denoiseChrominance": 0,
+     "denoiseLuminance": 0,
+     "exposure": 0,
+     "grading": [
+      {
+       "hue": 0,
+       "saturation": 0
+      },
+      {
+       "hue": 0,
+       "saturation": 0
+      },
+      {
+       "hue": 0,
+       "saturation": 0
+      }
+     ],
+     "grain": 0,
+     "grayscale": false,
+     "highlights": 0,
+     "mixerHue": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "mixerLuminance": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "mixerSaturation": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "saturation": 0,
+     "shadows": 0,
+     "sharpeningAmount": 0,
+     "sharpeningMasking": 0,
+     "sharpeningRadius": 1,
+     "temperature": 4924,
+     "texture": 0,
+     "tint": 0,
+     "toneCurves": [
+      [],
+      [],
+      [],
+      []
+     ],
+     "vibrance": 0,
+     "whites": 0
+    },
+    "opening_chroma_median": "FlatOnly",
+    "preview": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-native\\20261027T225952Z\\6V1A9829-geometry.png",
+    "preview_height": 1200,
+    "preview_note": "Derived from actual master;existing diagnostic display helper,not colour-managed quality reference",
+    "preview_width": 800,
+    "raw": "6V1A9829.CR3",
+    "samples": [
+     {
+      "anchor": [
+       0.2,
+       0.2
+      ],
+      "label": "grid-0",
+      "rect": [
+       800,
+       1264,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.5,
+       0.2
+      ],
+      "label": "grid-1",
+      "rect": [
+       2192,
+       1264,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.8,
+       0.2
+      ],
+      "label": "grid-2",
+      "rect": [
+       3583,
+       1264,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.2,
+       0.5
+      ],
+      "label": "grid-3",
+      "rect": [
+       800,
+       3352,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.5,
+       0.5
+      ],
+      "label": "grid-4",
+      "rect": [
+       2192,
+       3352,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.8,
+       0.5
+      ],
+      "label": "grid-5",
+      "rect": [
+       3583,
+       3352,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.2,
+       0.8
+      ],
+      "label": "grid-6",
+      "rect": [
+       800,
+       5439,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.5,
+       0.8
+      ],
+      "label": "grid-7",
+      "rect": [
+       2192,
+       5439,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.8,
+       0.8
+      ],
+      "label": "grid-8",
+      "rect": [
+       3583,
+       5439,
+       256,
+       256
+      ]
+     }
+    ],
+    "sha256": "8e7ac253d543a458dbaff3dc7dafc675c91ce6feffa4f16e6f9bc673f9831298",
+    "width": 4639
+   },
+   "extraction_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-native\\20261027T225952Z\\6V1A9829.json",
+   "extraction_sha256": "a766af82d97d5c857273190aebb94bcb328ec908dee1ac47ccc351ca2ecb69a3",
+   "preview_sha256": "3140cabe5265474cf09af97c5d4d5361100164e1327a8eb8970ba5a036015122"
+  },
+  {
+   "index": 11,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9830.CR3",
+   "sha256": "f4ad3c2bfc7260358b49736bea8ed1105220d19bf40ede2324ec9d248f75df49",
+   "native": {
+    "camera": "EOS R6 Mark III",
+    "declaration": {
+     "chromatic_aberration_applied": false,
+     "created_at_utc": "2026-10-27T23:00:58.297Z",
+     "dcp_profile": "Canon EOS R6 Mark III Camera Neutral",
+     "executable_sha256": "4071c6301b6ff34ec7c54b0d1018ca4a054bd1156c8f17010d4fd93d3e7ae10c",
+     "feature": "neutral",
+     "group": "bruit",
+     "ipr_test_schema": 1,
+     "lcp_profile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+     "lcp_sha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+     "lens_geometry_applied": false,
+     "lens_vignetting_applied": false,
+     "qt_version": "6.11.2",
+     "raw_normalization": true,
+     "reference": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9830.CR3",
+     "scene": "6V1A9830",
+     "settings": {
+      "automaticWhiteBalance": false,
+      "blacks": 0,
+      "blur": 0,
+      "clarity": 0,
+      "contrast": 0,
+      "dehaze": 0,
+      "denoiseChrominance": 0,
+      "denoiseLuminance": 0,
+      "exposure": 0,
+      "grading": [
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       }
+      ],
+      "grain": 0,
+      "grayscale": false,
+      "highlights": 0,
+      "mixerHue": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerLuminance": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerSaturation": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "saturation": 0,
+      "shadows": 0,
+      "sharpeningAmount": 0,
+      "sharpeningMasking": 0,
+      "sharpeningRadius": 1,
+      "temperature": 4924,
+      "texture": 0,
+      "tint": 0,
+      "toneCurves": [
+       [],
+       [],
+       [],
+       []
+      ],
+      "vibrance": 0,
+      "whites": 0
+     },
+     "source_sha256": "f4ad3c2bfc7260358b49736bea8ed1105220d19bf40ede2324ec9d248f75df49",
+     "value": 0
+    },
+    "height": 6959,
+    "iso": 4000,
+    "neutral_settings": {
+     "automaticWhiteBalance": false,
+     "blacks": 0,
+     "blur": 0,
+     "clarity": 0,
+     "contrast": 0,
+     "dehaze": 0,
+     "denoiseChrominance": 0,
+     "denoiseLuminance": 0,
+     "exposure": 0,
+     "grading": [
+      {
+       "hue": 0,
+       "saturation": 0
+      },
+      {
+       "hue": 0,
+       "saturation": 0
+      },
+      {
+       "hue": 0,
+       "saturation": 0
+      }
+     ],
+     "grain": 0,
+     "grayscale": false,
+     "highlights": 0,
+     "mixerHue": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "mixerLuminance": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "mixerSaturation": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "saturation": 0,
+     "shadows": 0,
+     "sharpeningAmount": 0,
+     "sharpeningMasking": 0,
+     "sharpeningRadius": 1,
+     "temperature": 4924,
+     "texture": 0,
+     "tint": 0,
+     "toneCurves": [
+      [],
+      [],
+      [],
+      []
+     ],
+     "vibrance": 0,
+     "whites": 0
+    },
+    "opening_chroma_median": "FlatOnly",
+    "preview": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-native\\20261027T225952Z\\6V1A9830-geometry.png",
+    "preview_height": 1200,
+    "preview_note": "Derived from actual master;existing diagnostic display helper,not colour-managed quality reference",
+    "preview_width": 800,
+    "raw": "6V1A9830.CR3",
+    "samples": [
+     {
+      "anchor": [
+       0.2,
+       0.2
+      ],
+      "label": "grid-0",
+      "rect": [
+       800,
+       1264,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.5,
+       0.2
+      ],
+      "label": "grid-1",
+      "rect": [
+       2192,
+       1264,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.8,
+       0.2
+      ],
+      "label": "grid-2",
+      "rect": [
+       3583,
+       1264,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.2,
+       0.5
+      ],
+      "label": "grid-3",
+      "rect": [
+       800,
+       3352,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.5,
+       0.5
+      ],
+      "label": "grid-4",
+      "rect": [
+       2192,
+       3352,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.8,
+       0.5
+      ],
+      "label": "grid-5",
+      "rect": [
+       3583,
+       3352,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.2,
+       0.8
+      ],
+      "label": "grid-6",
+      "rect": [
+       800,
+       5439,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.5,
+       0.8
+      ],
+      "label": "grid-7",
+      "rect": [
+       2192,
+       5439,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.8,
+       0.8
+      ],
+      "label": "grid-8",
+      "rect": [
+       3583,
+       5439,
+       256,
+       256
+      ]
+     }
+    ],
+    "sha256": "f4ad3c2bfc7260358b49736bea8ed1105220d19bf40ede2324ec9d248f75df49",
+    "width": 4639
+   },
+   "extraction_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-native\\20261027T225952Z\\6V1A9830.json",
+   "extraction_sha256": "10da2820b9a29af203050ed0a2e544908eb3d2a40a3075feecc13d7953eafe6a",
+   "preview_sha256": "b31f54aea8cd57808dcf66801a76c92508bbc2c285f1d50728b5c4a3861ae98e"
+  },
+  {
+   "index": 12,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9831.CR3",
+   "sha256": "975973a6bc5559ec84449b71c8f3823f0f31897ae7f3935f3aa5c539fbdaea73",
+   "native": {
+    "camera": "EOS R6 Mark III",
+    "declaration": {
+     "chromatic_aberration_applied": false,
+     "created_at_utc": "2026-10-27T23:01:03.863Z",
+     "dcp_profile": "Canon EOS R6 Mark III Camera Neutral",
+     "executable_sha256": "4071c6301b6ff34ec7c54b0d1018ca4a054bd1156c8f17010d4fd93d3e7ae10c",
+     "feature": "neutral",
+     "group": "bruit",
+     "ipr_test_schema": 1,
+     "lcp_profile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+     "lcp_sha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+     "lens_geometry_applied": false,
+     "lens_vignetting_applied": false,
+     "qt_version": "6.11.2",
+     "raw_normalization": true,
+     "reference": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9831.CR3",
+     "scene": "6V1A9831",
+     "settings": {
+      "automaticWhiteBalance": false,
+      "blacks": 0,
+      "blur": 0,
+      "clarity": 0,
+      "contrast": 0,
+      "dehaze": 0,
+      "denoiseChrominance": 0,
+      "denoiseLuminance": 0,
+      "exposure": 0,
+      "grading": [
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       }
+      ],
+      "grain": 0,
+      "grayscale": false,
+      "highlights": 0,
+      "mixerHue": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerLuminance": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerSaturation": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "saturation": 0,
+      "shadows": 0,
+      "sharpeningAmount": 0,
+      "sharpeningMasking": 0,
+      "sharpeningRadius": 1,
+      "temperature": 4924,
+      "texture": 0,
+      "tint": 0,
+      "toneCurves": [
+       [],
+       [],
+       [],
+       []
+      ],
+      "vibrance": 0,
+      "whites": 0
+     },
+     "source_sha256": "975973a6bc5559ec84449b71c8f3823f0f31897ae7f3935f3aa5c539fbdaea73",
+     "value": 0
+    },
+    "height": 6959,
+    "iso": 4000,
+    "neutral_settings": {
+     "automaticWhiteBalance": false,
+     "blacks": 0,
+     "blur": 0,
+     "clarity": 0,
+     "contrast": 0,
+     "dehaze": 0,
+     "denoiseChrominance": 0,
+     "denoiseLuminance": 0,
+     "exposure": 0,
+     "grading": [
+      {
+       "hue": 0,
+       "saturation": 0
+      },
+      {
+       "hue": 0,
+       "saturation": 0
+      },
+      {
+       "hue": 0,
+       "saturation": 0
+      }
+     ],
+     "grain": 0,
+     "grayscale": false,
+     "highlights": 0,
+     "mixerHue": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "mixerLuminance": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "mixerSaturation": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "saturation": 0,
+     "shadows": 0,
+     "sharpeningAmount": 0,
+     "sharpeningMasking": 0,
+     "sharpeningRadius": 1,
+     "temperature": 4924,
+     "texture": 0,
+     "tint": 0,
+     "toneCurves": [
+      [],
+      [],
+      [],
+      []
+     ],
+     "vibrance": 0,
+     "whites": 0
+    },
+    "opening_chroma_median": "FlatOnly",
+    "preview": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-native\\20261027T225952Z\\6V1A9831-geometry.png",
+    "preview_height": 1200,
+    "preview_note": "Derived from actual master;existing diagnostic display helper,not colour-managed quality reference",
+    "preview_width": 800,
+    "raw": "6V1A9831.CR3",
+    "samples": [
+     {
+      "anchor": [
+       0.2,
+       0.2
+      ],
+      "label": "grid-0",
+      "rect": [
+       800,
+       1264,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.5,
+       0.2
+      ],
+      "label": "grid-1",
+      "rect": [
+       2192,
+       1264,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.8,
+       0.2
+      ],
+      "label": "grid-2",
+      "rect": [
+       3583,
+       1264,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.2,
+       0.5
+      ],
+      "label": "grid-3",
+      "rect": [
+       800,
+       3352,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.5,
+       0.5
+      ],
+      "label": "grid-4",
+      "rect": [
+       2192,
+       3352,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.8,
+       0.5
+      ],
+      "label": "grid-5",
+      "rect": [
+       3583,
+       3352,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.2,
+       0.8
+      ],
+      "label": "grid-6",
+      "rect": [
+       800,
+       5439,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.5,
+       0.8
+      ],
+      "label": "grid-7",
+      "rect": [
+       2192,
+       5439,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.8,
+       0.8
+      ],
+      "label": "grid-8",
+      "rect": [
+       3583,
+       5439,
+       256,
+       256
+      ]
+     }
+    ],
+    "sha256": "975973a6bc5559ec84449b71c8f3823f0f31897ae7f3935f3aa5c539fbdaea73",
+    "width": 4639
+   },
+   "extraction_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-native\\20261027T225952Z\\6V1A9831.json",
+   "extraction_sha256": "a63adb3505080d3fee8d395b608a8dbdd55718c422bd21f9a8a5ea9bc1746298",
+   "preview_sha256": "a88e6e0f8fdb66485ea6a010b68787c91fdd344af5724add1d52729cbdcc7c9d"
+  },
+  {
+   "index": 13,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9832.CR3",
+   "sha256": "48a9d34e3a63f84fedd3609d0dedddc9fd67d038753713be267d811a59f8de36",
+   "native": {
+    "camera": "EOS R6 Mark III",
+    "declaration": {
+     "chromatic_aberration_applied": false,
+     "created_at_utc": "2026-10-27T23:01:09.327Z",
+     "dcp_profile": "Canon EOS R6 Mark III Camera Neutral",
+     "executable_sha256": "4071c6301b6ff34ec7c54b0d1018ca4a054bd1156c8f17010d4fd93d3e7ae10c",
+     "feature": "neutral",
+     "group": "bruit",
+     "ipr_test_schema": 1,
+     "lcp_profile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+     "lcp_sha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+     "lens_geometry_applied": false,
+     "lens_vignetting_applied": false,
+     "qt_version": "6.11.2",
+     "raw_normalization": true,
+     "reference": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9832.CR3",
+     "scene": "6V1A9832",
+     "settings": {
+      "automaticWhiteBalance": false,
+      "blacks": 0,
+      "blur": 0,
+      "clarity": 0,
+      "contrast": 0,
+      "dehaze": 0,
+      "denoiseChrominance": 0,
+      "denoiseLuminance": 0,
+      "exposure": 0,
+      "grading": [
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       }
+      ],
+      "grain": 0,
+      "grayscale": false,
+      "highlights": 0,
+      "mixerHue": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerLuminance": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerSaturation": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "saturation": 0,
+      "shadows": 0,
+      "sharpeningAmount": 0,
+      "sharpeningMasking": 0,
+      "sharpeningRadius": 1,
+      "temperature": 4924,
+      "texture": 0,
+      "tint": 0,
+      "toneCurves": [
+       [],
+       [],
+       [],
+       []
+      ],
+      "vibrance": 0,
+      "whites": 0
+     },
+     "source_sha256": "48a9d34e3a63f84fedd3609d0dedddc9fd67d038753713be267d811a59f8de36",
+     "value": 0
+    },
+    "height": 6959,
+    "iso": 4000,
+    "neutral_settings": {
+     "automaticWhiteBalance": false,
+     "blacks": 0,
+     "blur": 0,
+     "clarity": 0,
+     "contrast": 0,
+     "dehaze": 0,
+     "denoiseChrominance": 0,
+     "denoiseLuminance": 0,
+     "exposure": 0,
+     "grading": [
+      {
+       "hue": 0,
+       "saturation": 0
+      },
+      {
+       "hue": 0,
+       "saturation": 0
+      },
+      {
+       "hue": 0,
+       "saturation": 0
+      }
+     ],
+     "grain": 0,
+     "grayscale": false,
+     "highlights": 0,
+     "mixerHue": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "mixerLuminance": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "mixerSaturation": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "saturation": 0,
+     "shadows": 0,
+     "sharpeningAmount": 0,
+     "sharpeningMasking": 0,
+     "sharpeningRadius": 1,
+     "temperature": 4924,
+     "texture": 0,
+     "tint": 0,
+     "toneCurves": [
+      [],
+      [],
+      [],
+      []
+     ],
+     "vibrance": 0,
+     "whites": 0
+    },
+    "opening_chroma_median": "FlatOnly",
+    "preview": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-native\\20261027T225952Z\\6V1A9832-geometry.png",
+    "preview_height": 1200,
+    "preview_note": "Derived from actual master;existing diagnostic display helper,not colour-managed quality reference",
+    "preview_width": 800,
+    "raw": "6V1A9832.CR3",
+    "samples": [
+     {
+      "anchor": [
+       0.2,
+       0.2
+      ],
+      "label": "grid-0",
+      "rect": [
+       800,
+       1264,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.5,
+       0.2
+      ],
+      "label": "grid-1",
+      "rect": [
+       2192,
+       1264,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.8,
+       0.2
+      ],
+      "label": "grid-2",
+      "rect": [
+       3583,
+       1264,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.2,
+       0.5
+      ],
+      "label": "grid-3",
+      "rect": [
+       800,
+       3352,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.5,
+       0.5
+      ],
+      "label": "grid-4",
+      "rect": [
+       2192,
+       3352,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.8,
+       0.5
+      ],
+      "label": "grid-5",
+      "rect": [
+       3583,
+       3352,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.2,
+       0.8
+      ],
+      "label": "grid-6",
+      "rect": [
+       800,
+       5439,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.5,
+       0.8
+      ],
+      "label": "grid-7",
+      "rect": [
+       2192,
+       5439,
+       256,
+       256
+      ]
+     },
+     {
+      "anchor": [
+       0.8,
+       0.8
+      ],
+      "label": "grid-8",
+      "rect": [
+       3583,
+       5439,
+       256,
+       256
+      ]
+     }
+    ],
+    "sha256": "48a9d34e3a63f84fedd3609d0dedddc9fd67d038753713be267d811a59f8de36",
+    "width": 4639
+   },
+   "extraction_path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-native\\20261027T225952Z\\6V1A9832.json",
+   "extraction_sha256": "984355ca993353818f1ec56998c0c0e006a237689ac9f6d44ea33b85e6168817",
+   "preview_sha256": "33b200274db50fe24c90ba2751a559fcecd314e63c056a8417e38c2d891fd749"
+  }
+ ],
+ "pixels": {
+  "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-native\\20261027T225952Z\\development-linear-planes.npz",
+  "sha256": "e0eb32f872d1c7b7c8f0d38b9c09e2b0ef84a52ad1cf7743a21e41d1bcfdaa20",
+  "shape": [
+   14,
+   9,
+   3,
+   256,
+   256
+  ],
+  "dtype": "float32"
+ },
+ "runner_source": "\"\"\"Frozen development burst crops through the existing native IPR opening probe.\"\"\"\nfrom datetime import datetime, timezone\nimport json\nfrom pathlib import Path\nimport subprocess\nimport numpy as np\nfrom analysis.render import available_memory, runtime_env\nfrom study_noise_neighbourhoods import ROOT, sha256, git\n\n\ndef run():\n    parent=ROOT/'docs/validation/raw/audit-rafale-reelle-bruit-v001-20261027T225328Z.json'\n    audit=json.loads(parent.read_text(encoding='utf-8'));digest=sha256(parent)\n    probe=ROOT/'build-patch_noise/Release/noiseNeighbourhoodProbe.exe';binary=sha256(probe)\n    started=datetime.now(timezone.utc);stamp=started.strftime('%Y%m%dT%H%M%SZ')\n    folder=ROOT/'build-patch_noise/burst-native'/stamp;folder.mkdir(parents=True,exist_ok=False)\n    anchors=[f'grid-{i}:{x}:{y}' for i,(y,x) in enumerate(( (y,x) for y in (.2,.5,.8) for x in (.2,.5,.8) ))]\n    records=[];pixels=[]\n    for item in audit['identities']:\n        if item['split']!='development':continue\n        if (available_memory() or 0)<5*1024**3:raise ValueError('Need5GiB before native opening; do not close user applications')\n        raw=Path(item['path'])\n        if sha256(raw)!=item['sha256']:raise ValueError('Changed RAW')\n        target=folder/(raw.stem+'.json');preview=folder/(raw.stem+'-geometry.png')\n        subprocess.run([str(probe),'--original-context',str(target),str(raw),str(preview),*anchors],\n            env=runtime_env(probe),check=True,timeout=180)\n        native=json.loads(target.read_text(encoding='utf-8'))\n        if native['sha256']!=item['sha256'] or len(native['samples'])!=9 or native['opening_chroma_median']!='FlatOnly':\n            raise ValueError('Native extraction contract mismatch')\n        array=np.array([s.pop('original_y_co_cg') for s in native['samples']],dtype=np.float32).reshape(9,3,256,256)\n        if not np.isfinite(array).all():raise ValueError('Nonfinite master crop')\n        pixels.append(array);records.append(dict(index=item['index'],path=str(raw),sha256=item['sha256'],native=native,\n            extraction_path=str(target),extraction_sha256=sha256(target),preview_sha256=sha256(preview)))\n        print('NATIVE',raw.name,len(pixels),'/14',flush=True)\n    if len(pixels)!=14 or sha256(probe)!=binary or sha256(parent)!=digest:raise ValueError('Incomplete or changed extraction')\n    data=np.stack(pixels);archive=folder/'development-linear-planes.npz'\n    with archive.open('xb') as handle:np.savez_compressed(handle,planes=data)\n    now=datetime.now(timezone.utc);output=ROOT/'docs/validation/raw'/f'extraction-native-rafale-bruit-v001-{now.strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n    result=dict(schema_version=1,data_version=1,started_at_utc=started.isoformat(),completed_at_utc=now.isoformat(),\n        parent=dict(path=str(parent),sha256=digest),probe=dict(path=str(probe),sha256=binary),records=records,\n        pixels=dict(path=str(archive),sha256=sha256(archive),shape=list(data.shape),dtype=str(data.dtype)),\n        runner_source=Path(__file__).read_text(encoding='utf-8'),runner_sha256=sha256(Path(__file__)),commit=git('rev-parse','HEAD'),\n        opening_sources={str(p.relative_to(ROOT)):sha256(p) for root in ('src/raw','src/core','src/profiles') for p in sorted((ROOT/root).glob('*')) if p.is_file()},\n        rules='First14developmentonly. Nine256squaregridfixedbeforeopening. Existingnativeprobe TestRecipes neutral linear Rec2020 Y/Co/Cg, RCD+FlatOnly median. No estimator/denoiser, resampling or TIFF analysis. Geometry previews diagnostic only. Middle14validation/last14sealed not decoded.',\n        limitations='Current source hashes record worktree, not independently certified binary reproducible build. Metadata declaration and binary hash anchored. One scene/camera/ISO; motion makes raw temporal differences biased on detail. No clean truth claim or production change.')\n    with output.open('x',encoding='utf-8') as handle:json.dump(result,handle,ensure_ascii=False,indent=1,allow_nan=False)\n    print('RESULT',output,flush=True)\n\n\nif __name__=='__main__':run()\n",
+ "runner_sha256": "b22c7aab50258a6b8197eede1d1155d56acda64bc7cbd47c16d67df6f384e7d8",
+ "commit": "2a40c5c6cff78d40294393a68827f4a24555c724",
+ "opening_sources": {
+  "src\\raw\\CameraCharacterization.cpp": "a0c719c7f4eee79572ab20d211433d8f522cac8fea136d293da758cb071aab5c",
+  "src\\raw\\CameraCharacterization.h": "041419949cf8f77d853b9fc4f6eaf16f79779b41c20913e85786d8f42f5ae87a",
+  "src\\raw\\CameraSignal.cpp": "08a83c79d8baa2b11f3a6fb13ce67eb711fe21770ecbf099a535601f5a2d3d58",
+  "src\\raw\\CameraSignal.h": "890674f71b482012ccd782f74b1b347d3e439540a99bf2777ab361a0d67efd27",
+  "src\\raw\\Demosaic.cpp": "be100b15b2a32e23f487ae877605e8a9ae2b598cb984ee5bff2c17b5c1a75b7b",
+  "src\\raw\\Demosaic.h": "89e91acd5251ff529bbbd3dc03be08295b583df0273b2eeff586c0146d6ef0ff",
+  "src\\raw\\RawBlackLevelEstimator.cpp": "8e9d6eae3c33636d64683d0372048db4fe6c637c811c390853aa1bdd8419404d",
+  "src\\raw\\RawBlackLevelEstimator.h": "1ea58b1c6e0f06679ac2be7ac212972ad959dfe0f2daea16c6e7b0d7d25583a0",
+  "src\\raw\\RawDecoder.cpp": "fb2a6904fe36da1fb2dbe14031068a85564d360b0a5fc78256437991bdd5a4eb",
+  "src\\raw\\RawDecoder.h": "634a1bd72ba576c05dd1c168eb6c5e3d0a1b7410269fd46eb7a93dbf9f2b1cb5",
+  "src\\raw\\RawNormalization.cpp": "e56195e1c142d7c9508a6c62fd8eab4db542eb6aca6273f0585560299c041967",
+  "src\\raw\\RawNormalization.h": "cc6506fa6a660ef89cf494037a3141e1ab31acdcd7e8c9b8335f0f03f4a0b870",
+  "src\\core\\ColorAdjustments.cpp": "6b8320027b706e3098f87e59b1af21bbd643801ccf483b76d78b2132de08ee6a",
+  "src\\core\\ColorAdjustments.h": "94dde855d990f62fb204d3df62a3fe3b15c00322599cfd41d43552829ed66a72",
+  "src\\core\\ColorMixer.cpp": "521ac12dc615524bd7be6e50a7a3a0b721de36a629ef78fd56189d71be7c138e",
+  "src\\core\\ColorMixer.h": "5121a79b25394c19d298686a446fae733aa15a75aee699b2e61d7056c5434a37",
+  "src\\core\\ColorMixerModel.h": "d6d97de885476d147641a01828c12bbd00ceb83717bfe7e51a76895b2ecbd68f",
+  "src\\core\\ColorPipeline.cpp": "cfb1d95384d9bde45a7f880a71ceeb405c4b37958eee991a94342f87108f4878",
+  "src\\core\\ColorPipeline.h": "4b7cddf749a4218da6cb795bda526a01ab5d09ccacdddf2a04b58d4e6f5f5c2b",
+  "src\\core\\Contrast.cpp": "8438dda1beeec6ca2f0fe9fcab397579c9b466a993a6d15e774c9c3b7f65cc92",
+  "src\\core\\Contrast.h": "b87450e3f7ff770d7e37849b6f3d463afa4aee41e7152823a4da34d959a4d458",
+  "src\\core\\DetailProcessing.cpp": "a9e01b312baadbd3912dee6447115bb4d529fa1692ee24956b0ebbee0aa3b20d",
+  "src\\core\\DetailProcessing.h": "d49853bd47b8db83928b101cb1c6dcb436431a1cd68a602cfcab318e5be882d8",
+  "src\\core\\EditRecipe.h": "956771347dc75c120e59cafb8884d31b36117b44bb0d4320afeb61efefb349c5",
+  "src\\core\\Histogram.cpp": "b063a0b7efe7ececc13a5cb3c9ae57787bfbd940d6c5693d819ff4e7a510da95",
+  "src\\core\\Histogram.h": "50bb95626105445653c84f3834742dcf8516c9cd1868c307fef91d2de0aab13d",
+  "src\\core\\ImageExporter.cpp": "f4beef4c251cccb4533bf260a27b3f828aca3513d4b1cd738831015a76fd3e1a",
+  "src\\core\\ImageExporter.h": "e4fb72a9fa824a56e391301ec55ad24a58127081dd354520d83c98f29dc511c3",
+  "src\\core\\ImageImporter.cpp": "131328b0dc1b4c4fdb99496fba86fcbe23d772217a502b0c69341df8be3ec45b",
+  "src\\core\\ImageImporter.h": "baa9f413f483795c19d158464a3980b7450cd02fe5dcafbdbedbf7178a8aec93",
+  "src\\core\\ImageMath.h": "c3e16295d0a484057a1007f348f908e3a5450bf68a6a72b56fa86cd0ac27cf2f",
+  "src\\core\\ImageMetadata.h": "35e5a1b065b0f6f8f05b0961228d241afbeef0420517786f9929f0c33e613a9c",
+  "src\\core\\NoiseEstimation.cpp": "cee243943c7fb0ed9486ebb091c330a913f97716be639cf684c1f74784615566",
+  "src\\core\\NoiseEstimation.h": "f3e740be398c209820304f0e404758c2e0ed8cdcf6f272ee34c5c492c072aa92",
+  "src\\core\\Sidecar.cpp": "a9f385ac5e07c105b7a9e60fa42749a9b8e666aa0596f86769cf7f3ecbabdfae",
+  "src\\core\\Sidecar.h": "570b95e87f4e9b5b5d34daa8b3018e53773e8ca9bf4a916592e075e9de36537b",
+  "src\\core\\ToneCurve.cpp": "656607445dcd53c308c58b5d35fb7a70567bc35f85388c0863510a3a85306b86",
+  "src\\core\\ToneCurve.h": "07a5447d8379e2d16efd617d25e698a364b006dcee6a46e1a947289757244d8f",
+  "src\\core\\ToneRecovery.cpp": "a62de198fc39b77ec12219761700368bbb31bad746bd2380187df93e076507cf",
+  "src\\core\\ToneRecovery.h": "7e2b3b2aa5f9297b52c0727ec60905a9f58d4d7fa0dea9f8b8b07edddf5a6618",
+  "src\\core\\ToneRecoveryHighlights.h": "39812d16cee3e826578cf7c73ec6bfe81d472251171d88a3cd53a9192f09aa0c",
+  "src\\core\\ToneRecoveryModel.h": "5e5e656e70d1364d6039fa865d1de8a1f7d0165ba0ea1067a26e9d6f05141872",
+  "src\\core\\ToneStatistics.cpp": "4ce59e5eea5330c2273de3736f1cb4602d294ee4169fd6e0287bb8eb3f5a3533",
+  "src\\core\\ToneStatistics.h": "2b72e6345c342629b22d5ba9955dac07dcede664d0542a12056ce35148781325",
+  "src\\core\\Vibrance.cpp": "54fa5bf925a1f00c2d14597f7ccb402c4102847d254e2a67b4171a78d7f928a1",
+  "src\\core\\Vibrance.h": "05b71a4d1ffe3008ba1fe01dfa80eda8d761687a6f58b0733c69d1ba28f64d94",
+  "src\\core\\VibranceModel.h": "8f660786204d024e03c561c6935b050772c194a98bb81b9f9f1e8c87cf34bbfb",
+  "src\\core\\WorkingColorSpace.h": "353365f56eb3223ec64cbc3e5504ba3484d02e34a3dc22fb6b4ebf320c7ec163",
+  "src\\profiles\\CameraProfileEngine.cpp": "25fdd3c7f2d716448280c8c73c81f2aff2c90455742681b44a1db32be39e889a",
+  "src\\profiles\\CameraProfileEngine.h": "978c5337ff09e28d151c010b4433b48b3da2d9aae686f35b56b9611bb472e846",
+  "src\\profiles\\PreparedProfileCache.cpp": "21f5958a307f5feffc6cd189a556f87fd10ae103ebe31ee05fc523a54ab2bdad",
+  "src\\profiles\\PreparedProfileCache.h": "29b9c41c8935b49c887c7a6d2a113550d9d41388530e138522e51d3f67611e07"
+ },
+ "rules": "First14developmentonly. Nine256squaregridfixedbeforeopening. Existingnativeprobe TestRecipes neutral linear Rec2020 Y/Co/Cg, RCD+FlatOnly median. No estimator/denoiser, resampling or TIFF analysis. Geometry previews diagnostic only. Middle14validation/last14sealed not decoded.",
+ "limitations": "Current source hashes record worktree, not independently certified binary reproducible build. Metadata declaration and binary hash anchored. One scene/camera/ISO; motion makes raw temporal differences biased on detail. No clean truth claim or production change."
+}

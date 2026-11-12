@@ -1,0 +1,2437 @@
+{
+ "schema_version": 1,
+ "data_version": 1,
+ "started_at_utc": "2026-10-27T23:18:50.068656+00:00",
+ "completed_at_utc": "2026-10-27T23:26:45.901735+00:00",
+ "parent": {
+  "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\extraction-native-rafale-validation-bruit-v001-20261027T231306Z.json",
+  "sha256": "7f9be20dd9232f9246b27583df45b32c7337810410cacc0af5113b413bb44839"
+ },
+ "records": [
+  {
+   "index": 14,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9833.CR3",
+   "sha256": "527d4c5045b058c8a19d0c2a0d5c39e1b2ccae482b415e32c441112458b4e462",
+   "native": {
+    "declaration": {
+     "chromatic_aberration_applied": false,
+     "created_at_utc": "2026-10-27T23:19:23.887Z",
+     "dcp_profile": "Canon EOS R6 Mark III Camera Neutral",
+     "executable_sha256": "5eec7b8e701e6c07b2835b056f30c64017c243b9e4fb536d8fe554e90929e6c2",
+     "feature": "neutral",
+     "group": "bruit",
+     "ipr_test_schema": 1,
+     "lcp_profile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+     "lcp_sha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+     "lens_geometry_applied": false,
+     "lens_vignetting_applied": false,
+     "qt_version": "6.11.2",
+     "raw_normalization": true,
+     "reference": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9833.CR3",
+     "scene": "6V1A9833",
+     "settings": {
+      "automaticWhiteBalance": false,
+      "blacks": 0,
+      "blur": 0,
+      "clarity": 0,
+      "contrast": 0,
+      "dehaze": 0,
+      "denoiseChrominance": 0,
+      "denoiseLuminance": 0,
+      "exposure": 0,
+      "grading": [
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       }
+      ],
+      "grain": 0,
+      "grayscale": false,
+      "highlights": 0,
+      "mixerHue": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerLuminance": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerSaturation": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "saturation": 0,
+      "shadows": 0,
+      "sharpeningAmount": 0,
+      "sharpeningMasking": 0,
+      "sharpeningRadius": 1,
+      "temperature": 4924,
+      "texture": 0,
+      "tint": 0,
+      "toneCurves": [
+       [],
+       [],
+       [],
+       []
+      ],
+      "vibrance": 0,
+      "whites": 0
+     },
+     "source_sha256": "527d4c5045b058c8a19d0c2a0d5c39e1b2ccae482b415e32c441112458b4e462",
+     "value": 0
+    },
+    "height": 6959,
+    "layout": "native-endian IEEEfloat32 stages/ROIs9/planesYCoCg3/rowsSide/colsSide",
+    "raw": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9833.CR3",
+    "rectangles": [
+     [
+      672,
+      1136,
+      512,
+      512
+     ],
+     [
+      2064,
+      1136,
+      512,
+      512
+     ],
+     [
+      3455,
+      1136,
+      512,
+      512
+     ],
+     [
+      672,
+      3224,
+      512,
+      512
+     ],
+     [
+      2064,
+      3224,
+      512,
+      512
+     ],
+     [
+      3455,
+      3224,
+      512,
+      512
+     ],
+     [
+      672,
+      5311,
+      512,
+      512
+     ],
+     [
+      2064,
+      5311,
+      512,
+      512
+     ],
+     [
+      3455,
+      5311,
+      512,
+      512
+     ]
+    ],
+    "rules": "Neutral native reference context512 only; no denoising or pixel resampling",
+    "sha256": "527d4c5045b058c8a19d0c2a0d5c39e1b2ccae482b415e32c441112458b4e462",
+    "side": 512,
+    "stages": [
+     {
+      "denoise_ms": 63.2776,
+      "strength": 0
+     }
+    ],
+    "width": 4639
+   },
+   "baseline_max_abs_delta": 0.0,
+   "pixel_sha256": "9e0ed5c349ec630829d7cd08d010ede922bf84b01c74c90eafee842d27902efe"
+  },
+  {
+   "index": 15,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9834.CR3",
+   "sha256": "8ab9b619d15c4b1c50bd11705a876219ac907dd9db79152ae21e3f971457098b",
+   "native": {
+    "declaration": {
+     "chromatic_aberration_applied": false,
+     "created_at_utc": "2026-10-27T23:19:57.177Z",
+     "dcp_profile": "Canon EOS R6 Mark III Camera Neutral",
+     "executable_sha256": "5eec7b8e701e6c07b2835b056f30c64017c243b9e4fb536d8fe554e90929e6c2",
+     "feature": "neutral",
+     "group": "bruit",
+     "ipr_test_schema": 1,
+     "lcp_profile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+     "lcp_sha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+     "lens_geometry_applied": false,
+     "lens_vignetting_applied": false,
+     "qt_version": "6.11.2",
+     "raw_normalization": true,
+     "reference": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9834.CR3",
+     "scene": "6V1A9834",
+     "settings": {
+      "automaticWhiteBalance": false,
+      "blacks": 0,
+      "blur": 0,
+      "clarity": 0,
+      "contrast": 0,
+      "dehaze": 0,
+      "denoiseChrominance": 0,
+      "denoiseLuminance": 0,
+      "exposure": 0,
+      "grading": [
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       }
+      ],
+      "grain": 0,
+      "grayscale": false,
+      "highlights": 0,
+      "mixerHue": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerLuminance": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerSaturation": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "saturation": 0,
+      "shadows": 0,
+      "sharpeningAmount": 0,
+      "sharpeningMasking": 0,
+      "sharpeningRadius": 1,
+      "temperature": 4924,
+      "texture": 0,
+      "tint": 0,
+      "toneCurves": [
+       [],
+       [],
+       [],
+       []
+      ],
+      "vibrance": 0,
+      "whites": 0
+     },
+     "source_sha256": "8ab9b619d15c4b1c50bd11705a876219ac907dd9db79152ae21e3f971457098b",
+     "value": 0
+    },
+    "height": 6959,
+    "layout": "native-endian IEEEfloat32 stages/ROIs9/planesYCoCg3/rowsSide/colsSide",
+    "raw": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9834.CR3",
+    "rectangles": [
+     [
+      672,
+      1136,
+      512,
+      512
+     ],
+     [
+      2064,
+      1136,
+      512,
+      512
+     ],
+     [
+      3455,
+      1136,
+      512,
+      512
+     ],
+     [
+      672,
+      3224,
+      512,
+      512
+     ],
+     [
+      2064,
+      3224,
+      512,
+      512
+     ],
+     [
+      3455,
+      3224,
+      512,
+      512
+     ],
+     [
+      672,
+      5311,
+      512,
+      512
+     ],
+     [
+      2064,
+      5311,
+      512,
+      512
+     ],
+     [
+      3455,
+      5311,
+      512,
+      512
+     ]
+    ],
+    "rules": "Neutral native reference context512 only; no denoising or pixel resampling",
+    "sha256": "8ab9b619d15c4b1c50bd11705a876219ac907dd9db79152ae21e3f971457098b",
+    "side": 512,
+    "stages": [
+     {
+      "denoise_ms": 59.9493,
+      "strength": 0
+     }
+    ],
+    "width": 4639
+   },
+   "baseline_max_abs_delta": 0.0,
+   "pixel_sha256": "4d9918c3fe892570ff989ec46f297fefd02f15f305a0ac4d7f5656d2d5b0bf6e"
+  },
+  {
+   "index": 16,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9835.CR3",
+   "sha256": "4f17ae6cf170331bf6ddc4b1812d81f4faa040bd9ee8f0ad4b252d40a6beec8b",
+   "native": {
+    "declaration": {
+     "chromatic_aberration_applied": false,
+     "created_at_utc": "2026-10-27T23:20:30.546Z",
+     "dcp_profile": "Canon EOS R6 Mark III Camera Neutral",
+     "executable_sha256": "5eec7b8e701e6c07b2835b056f30c64017c243b9e4fb536d8fe554e90929e6c2",
+     "feature": "neutral",
+     "group": "bruit",
+     "ipr_test_schema": 1,
+     "lcp_profile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+     "lcp_sha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+     "lens_geometry_applied": false,
+     "lens_vignetting_applied": false,
+     "qt_version": "6.11.2",
+     "raw_normalization": true,
+     "reference": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9835.CR3",
+     "scene": "6V1A9835",
+     "settings": {
+      "automaticWhiteBalance": false,
+      "blacks": 0,
+      "blur": 0,
+      "clarity": 0,
+      "contrast": 0,
+      "dehaze": 0,
+      "denoiseChrominance": 0,
+      "denoiseLuminance": 0,
+      "exposure": 0,
+      "grading": [
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       }
+      ],
+      "grain": 0,
+      "grayscale": false,
+      "highlights": 0,
+      "mixerHue": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerLuminance": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerSaturation": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "saturation": 0,
+      "shadows": 0,
+      "sharpeningAmount": 0,
+      "sharpeningMasking": 0,
+      "sharpeningRadius": 1,
+      "temperature": 4924,
+      "texture": 0,
+      "tint": 0,
+      "toneCurves": [
+       [],
+       [],
+       [],
+       []
+      ],
+      "vibrance": 0,
+      "whites": 0
+     },
+     "source_sha256": "4f17ae6cf170331bf6ddc4b1812d81f4faa040bd9ee8f0ad4b252d40a6beec8b",
+     "value": 0
+    },
+    "height": 6959,
+    "layout": "native-endian IEEEfloat32 stages/ROIs9/planesYCoCg3/rowsSide/colsSide",
+    "raw": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9835.CR3",
+    "rectangles": [
+     [
+      672,
+      1136,
+      512,
+      512
+     ],
+     [
+      2064,
+      1136,
+      512,
+      512
+     ],
+     [
+      3455,
+      1136,
+      512,
+      512
+     ],
+     [
+      672,
+      3224,
+      512,
+      512
+     ],
+     [
+      2064,
+      3224,
+      512,
+      512
+     ],
+     [
+      3455,
+      3224,
+      512,
+      512
+     ],
+     [
+      672,
+      5311,
+      512,
+      512
+     ],
+     [
+      2064,
+      5311,
+      512,
+      512
+     ],
+     [
+      3455,
+      5311,
+      512,
+      512
+     ]
+    ],
+    "rules": "Neutral native reference context512 only; no denoising or pixel resampling",
+    "sha256": "4f17ae6cf170331bf6ddc4b1812d81f4faa040bd9ee8f0ad4b252d40a6beec8b",
+    "side": 512,
+    "stages": [
+     {
+      "denoise_ms": 58.5933,
+      "strength": 0
+     }
+    ],
+    "width": 4639
+   },
+   "baseline_max_abs_delta": 0.0,
+   "pixel_sha256": "5cc613c4420808c2b54c4a125ec6e250b45826bd777e5476fcf4549f7d0c89ce"
+  },
+  {
+   "index": 17,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9836.CR3",
+   "sha256": "678a584753602293305bb358c15fa4e69715a3526b4f98b631e449c782450b6a",
+   "native": {
+    "declaration": {
+     "chromatic_aberration_applied": false,
+     "created_at_utc": "2026-10-27T23:21:03.958Z",
+     "dcp_profile": "Canon EOS R6 Mark III Camera Neutral",
+     "executable_sha256": "5eec7b8e701e6c07b2835b056f30c64017c243b9e4fb536d8fe554e90929e6c2",
+     "feature": "neutral",
+     "group": "bruit",
+     "ipr_test_schema": 1,
+     "lcp_profile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+     "lcp_sha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+     "lens_geometry_applied": false,
+     "lens_vignetting_applied": false,
+     "qt_version": "6.11.2",
+     "raw_normalization": true,
+     "reference": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9836.CR3",
+     "scene": "6V1A9836",
+     "settings": {
+      "automaticWhiteBalance": false,
+      "blacks": 0,
+      "blur": 0,
+      "clarity": 0,
+      "contrast": 0,
+      "dehaze": 0,
+      "denoiseChrominance": 0,
+      "denoiseLuminance": 0,
+      "exposure": 0,
+      "grading": [
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       }
+      ],
+      "grain": 0,
+      "grayscale": false,
+      "highlights": 0,
+      "mixerHue": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerLuminance": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerSaturation": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "saturation": 0,
+      "shadows": 0,
+      "sharpeningAmount": 0,
+      "sharpeningMasking": 0,
+      "sharpeningRadius": 1,
+      "temperature": 4924,
+      "texture": 0,
+      "tint": 0,
+      "toneCurves": [
+       [],
+       [],
+       [],
+       []
+      ],
+      "vibrance": 0,
+      "whites": 0
+     },
+     "source_sha256": "678a584753602293305bb358c15fa4e69715a3526b4f98b631e449c782450b6a",
+     "value": 0
+    },
+    "height": 6959,
+    "layout": "native-endian IEEEfloat32 stages/ROIs9/planesYCoCg3/rowsSide/colsSide",
+    "raw": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9836.CR3",
+    "rectangles": [
+     [
+      672,
+      1136,
+      512,
+      512
+     ],
+     [
+      2064,
+      1136,
+      512,
+      512
+     ],
+     [
+      3455,
+      1136,
+      512,
+      512
+     ],
+     [
+      672,
+      3224,
+      512,
+      512
+     ],
+     [
+      2064,
+      3224,
+      512,
+      512
+     ],
+     [
+      3455,
+      3224,
+      512,
+      512
+     ],
+     [
+      672,
+      5311,
+      512,
+      512
+     ],
+     [
+      2064,
+      5311,
+      512,
+      512
+     ],
+     [
+      3455,
+      5311,
+      512,
+      512
+     ]
+    ],
+    "rules": "Neutral native reference context512 only; no denoising or pixel resampling",
+    "sha256": "678a584753602293305bb358c15fa4e69715a3526b4f98b631e449c782450b6a",
+    "side": 512,
+    "stages": [
+     {
+      "denoise_ms": 63.9645,
+      "strength": 0
+     }
+    ],
+    "width": 4639
+   },
+   "baseline_max_abs_delta": 0.0,
+   "pixel_sha256": "858c04e1f7db3c5c416e0ecd9ca5b0d00f7b015dabefe1d76bc45f62ef3091fc"
+  },
+  {
+   "index": 18,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9837.CR3",
+   "sha256": "9283f27afdc648bc2df11e508eeb8ebabbc4ed9294f639da30aa4f090dba4e7e",
+   "native": {
+    "declaration": {
+     "chromatic_aberration_applied": false,
+     "created_at_utc": "2026-10-27T23:21:37.522Z",
+     "dcp_profile": "Canon EOS R6 Mark III Camera Neutral",
+     "executable_sha256": "5eec7b8e701e6c07b2835b056f30c64017c243b9e4fb536d8fe554e90929e6c2",
+     "feature": "neutral",
+     "group": "bruit",
+     "ipr_test_schema": 1,
+     "lcp_profile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+     "lcp_sha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+     "lens_geometry_applied": false,
+     "lens_vignetting_applied": false,
+     "qt_version": "6.11.2",
+     "raw_normalization": true,
+     "reference": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9837.CR3",
+     "scene": "6V1A9837",
+     "settings": {
+      "automaticWhiteBalance": false,
+      "blacks": 0,
+      "blur": 0,
+      "clarity": 0,
+      "contrast": 0,
+      "dehaze": 0,
+      "denoiseChrominance": 0,
+      "denoiseLuminance": 0,
+      "exposure": 0,
+      "grading": [
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       }
+      ],
+      "grain": 0,
+      "grayscale": false,
+      "highlights": 0,
+      "mixerHue": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerLuminance": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerSaturation": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "saturation": 0,
+      "shadows": 0,
+      "sharpeningAmount": 0,
+      "sharpeningMasking": 0,
+      "sharpeningRadius": 1,
+      "temperature": 4924,
+      "texture": 0,
+      "tint": 0,
+      "toneCurves": [
+       [],
+       [],
+       [],
+       []
+      ],
+      "vibrance": 0,
+      "whites": 0
+     },
+     "source_sha256": "9283f27afdc648bc2df11e508eeb8ebabbc4ed9294f639da30aa4f090dba4e7e",
+     "value": 0
+    },
+    "height": 6959,
+    "layout": "native-endian IEEEfloat32 stages/ROIs9/planesYCoCg3/rowsSide/colsSide",
+    "raw": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9837.CR3",
+    "rectangles": [
+     [
+      672,
+      1136,
+      512,
+      512
+     ],
+     [
+      2064,
+      1136,
+      512,
+      512
+     ],
+     [
+      3455,
+      1136,
+      512,
+      512
+     ],
+     [
+      672,
+      3224,
+      512,
+      512
+     ],
+     [
+      2064,
+      3224,
+      512,
+      512
+     ],
+     [
+      3455,
+      3224,
+      512,
+      512
+     ],
+     [
+      672,
+      5311,
+      512,
+      512
+     ],
+     [
+      2064,
+      5311,
+      512,
+      512
+     ],
+     [
+      3455,
+      5311,
+      512,
+      512
+     ]
+    ],
+    "rules": "Neutral native reference context512 only; no denoising or pixel resampling",
+    "sha256": "9283f27afdc648bc2df11e508eeb8ebabbc4ed9294f639da30aa4f090dba4e7e",
+    "side": 512,
+    "stages": [
+     {
+      "denoise_ms": 63.1989,
+      "strength": 0
+     }
+    ],
+    "width": 4639
+   },
+   "baseline_max_abs_delta": 0.0,
+   "pixel_sha256": "3e032cd9a60ea303bc8871749027fe531f74072cbaa299228244f10f7f6a4035"
+  },
+  {
+   "index": 19,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9838.CR3",
+   "sha256": "c194f65325441bdc28267559dafe25164cde50fc15f8e109374470bc12d7d10a",
+   "native": {
+    "declaration": {
+     "chromatic_aberration_applied": false,
+     "created_at_utc": "2026-10-27T23:22:10.611Z",
+     "dcp_profile": "Canon EOS R6 Mark III Camera Neutral",
+     "executable_sha256": "5eec7b8e701e6c07b2835b056f30c64017c243b9e4fb536d8fe554e90929e6c2",
+     "feature": "neutral",
+     "group": "bruit",
+     "ipr_test_schema": 1,
+     "lcp_profile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+     "lcp_sha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+     "lens_geometry_applied": false,
+     "lens_vignetting_applied": false,
+     "qt_version": "6.11.2",
+     "raw_normalization": true,
+     "reference": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9838.CR3",
+     "scene": "6V1A9838",
+     "settings": {
+      "automaticWhiteBalance": false,
+      "blacks": 0,
+      "blur": 0,
+      "clarity": 0,
+      "contrast": 0,
+      "dehaze": 0,
+      "denoiseChrominance": 0,
+      "denoiseLuminance": 0,
+      "exposure": 0,
+      "grading": [
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       }
+      ],
+      "grain": 0,
+      "grayscale": false,
+      "highlights": 0,
+      "mixerHue": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerLuminance": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerSaturation": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "saturation": 0,
+      "shadows": 0,
+      "sharpeningAmount": 0,
+      "sharpeningMasking": 0,
+      "sharpeningRadius": 1,
+      "temperature": 4924,
+      "texture": 0,
+      "tint": 0,
+      "toneCurves": [
+       [],
+       [],
+       [],
+       []
+      ],
+      "vibrance": 0,
+      "whites": 0
+     },
+     "source_sha256": "c194f65325441bdc28267559dafe25164cde50fc15f8e109374470bc12d7d10a",
+     "value": 0
+    },
+    "height": 6959,
+    "layout": "native-endian IEEEfloat32 stages/ROIs9/planesYCoCg3/rowsSide/colsSide",
+    "raw": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9838.CR3",
+    "rectangles": [
+     [
+      672,
+      1136,
+      512,
+      512
+     ],
+     [
+      2064,
+      1136,
+      512,
+      512
+     ],
+     [
+      3455,
+      1136,
+      512,
+      512
+     ],
+     [
+      672,
+      3224,
+      512,
+      512
+     ],
+     [
+      2064,
+      3224,
+      512,
+      512
+     ],
+     [
+      3455,
+      3224,
+      512,
+      512
+     ],
+     [
+      672,
+      5311,
+      512,
+      512
+     ],
+     [
+      2064,
+      5311,
+      512,
+      512
+     ],
+     [
+      3455,
+      5311,
+      512,
+      512
+     ]
+    ],
+    "rules": "Neutral native reference context512 only; no denoising or pixel resampling",
+    "sha256": "c194f65325441bdc28267559dafe25164cde50fc15f8e109374470bc12d7d10a",
+    "side": 512,
+    "stages": [
+     {
+      "denoise_ms": 58.4598,
+      "strength": 0
+     }
+    ],
+    "width": 4639
+   },
+   "baseline_max_abs_delta": 0.0,
+   "pixel_sha256": "783f28ad8180845ce0d9999802bb4c67cf935696656653f1ec54a34175ef2f7b"
+  },
+  {
+   "index": 20,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9839.CR3",
+   "sha256": "b6751c2d04e1326600f687429c583babcd07d7fc6d4e5d672d5340dfac980e42",
+   "native": {
+    "declaration": {
+     "chromatic_aberration_applied": false,
+     "created_at_utc": "2026-10-27T23:22:44.078Z",
+     "dcp_profile": "Canon EOS R6 Mark III Camera Neutral",
+     "executable_sha256": "5eec7b8e701e6c07b2835b056f30c64017c243b9e4fb536d8fe554e90929e6c2",
+     "feature": "neutral",
+     "group": "bruit",
+     "ipr_test_schema": 1,
+     "lcp_profile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+     "lcp_sha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+     "lens_geometry_applied": false,
+     "lens_vignetting_applied": false,
+     "qt_version": "6.11.2",
+     "raw_normalization": true,
+     "reference": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9839.CR3",
+     "scene": "6V1A9839",
+     "settings": {
+      "automaticWhiteBalance": false,
+      "blacks": 0,
+      "blur": 0,
+      "clarity": 0,
+      "contrast": 0,
+      "dehaze": 0,
+      "denoiseChrominance": 0,
+      "denoiseLuminance": 0,
+      "exposure": 0,
+      "grading": [
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       }
+      ],
+      "grain": 0,
+      "grayscale": false,
+      "highlights": 0,
+      "mixerHue": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerLuminance": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerSaturation": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "saturation": 0,
+      "shadows": 0,
+      "sharpeningAmount": 0,
+      "sharpeningMasking": 0,
+      "sharpeningRadius": 1,
+      "temperature": 4924,
+      "texture": 0,
+      "tint": 0,
+      "toneCurves": [
+       [],
+       [],
+       [],
+       []
+      ],
+      "vibrance": 0,
+      "whites": 0
+     },
+     "source_sha256": "b6751c2d04e1326600f687429c583babcd07d7fc6d4e5d672d5340dfac980e42",
+     "value": 0
+    },
+    "height": 6959,
+    "layout": "native-endian IEEEfloat32 stages/ROIs9/planesYCoCg3/rowsSide/colsSide",
+    "raw": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9839.CR3",
+    "rectangles": [
+     [
+      672,
+      1136,
+      512,
+      512
+     ],
+     [
+      2064,
+      1136,
+      512,
+      512
+     ],
+     [
+      3455,
+      1136,
+      512,
+      512
+     ],
+     [
+      672,
+      3224,
+      512,
+      512
+     ],
+     [
+      2064,
+      3224,
+      512,
+      512
+     ],
+     [
+      3455,
+      3224,
+      512,
+      512
+     ],
+     [
+      672,
+      5311,
+      512,
+      512
+     ],
+     [
+      2064,
+      5311,
+      512,
+      512
+     ],
+     [
+      3455,
+      5311,
+      512,
+      512
+     ]
+    ],
+    "rules": "Neutral native reference context512 only; no denoising or pixel resampling",
+    "sha256": "b6751c2d04e1326600f687429c583babcd07d7fc6d4e5d672d5340dfac980e42",
+    "side": 512,
+    "stages": [
+     {
+      "denoise_ms": 58.9489,
+      "strength": 0
+     }
+    ],
+    "width": 4639
+   },
+   "baseline_max_abs_delta": 0.0,
+   "pixel_sha256": "27dc72aa4c5df20272236971c57ccabf2754d22d22d99673dbb0da0c519a5c3e"
+  },
+  {
+   "index": 21,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9840.CR3",
+   "sha256": "7f2452a03022dbd4793fadc96fe50d07321b0886bec20fe66d6d85ce971c7f3e",
+   "native": {
+    "declaration": {
+     "chromatic_aberration_applied": false,
+     "created_at_utc": "2026-10-27T23:23:17.571Z",
+     "dcp_profile": "Canon EOS R6 Mark III Camera Neutral",
+     "executable_sha256": "5eec7b8e701e6c07b2835b056f30c64017c243b9e4fb536d8fe554e90929e6c2",
+     "feature": "neutral",
+     "group": "bruit",
+     "ipr_test_schema": 1,
+     "lcp_profile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+     "lcp_sha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+     "lens_geometry_applied": false,
+     "lens_vignetting_applied": false,
+     "qt_version": "6.11.2",
+     "raw_normalization": true,
+     "reference": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9840.CR3",
+     "scene": "6V1A9840",
+     "settings": {
+      "automaticWhiteBalance": false,
+      "blacks": 0,
+      "blur": 0,
+      "clarity": 0,
+      "contrast": 0,
+      "dehaze": 0,
+      "denoiseChrominance": 0,
+      "denoiseLuminance": 0,
+      "exposure": 0,
+      "grading": [
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       }
+      ],
+      "grain": 0,
+      "grayscale": false,
+      "highlights": 0,
+      "mixerHue": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerLuminance": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerSaturation": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "saturation": 0,
+      "shadows": 0,
+      "sharpeningAmount": 0,
+      "sharpeningMasking": 0,
+      "sharpeningRadius": 1,
+      "temperature": 4924,
+      "texture": 0,
+      "tint": 0,
+      "toneCurves": [
+       [],
+       [],
+       [],
+       []
+      ],
+      "vibrance": 0,
+      "whites": 0
+     },
+     "source_sha256": "7f2452a03022dbd4793fadc96fe50d07321b0886bec20fe66d6d85ce971c7f3e",
+     "value": 0
+    },
+    "height": 6959,
+    "layout": "native-endian IEEEfloat32 stages/ROIs9/planesYCoCg3/rowsSide/colsSide",
+    "raw": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9840.CR3",
+    "rectangles": [
+     [
+      672,
+      1136,
+      512,
+      512
+     ],
+     [
+      2064,
+      1136,
+      512,
+      512
+     ],
+     [
+      3455,
+      1136,
+      512,
+      512
+     ],
+     [
+      672,
+      3224,
+      512,
+      512
+     ],
+     [
+      2064,
+      3224,
+      512,
+      512
+     ],
+     [
+      3455,
+      3224,
+      512,
+      512
+     ],
+     [
+      672,
+      5311,
+      512,
+      512
+     ],
+     [
+      2064,
+      5311,
+      512,
+      512
+     ],
+     [
+      3455,
+      5311,
+      512,
+      512
+     ]
+    ],
+    "rules": "Neutral native reference context512 only; no denoising or pixel resampling",
+    "sha256": "7f2452a03022dbd4793fadc96fe50d07321b0886bec20fe66d6d85ce971c7f3e",
+    "side": 512,
+    "stages": [
+     {
+      "denoise_ms": 70.4033,
+      "strength": 0
+     }
+    ],
+    "width": 4639
+   },
+   "baseline_max_abs_delta": 0.0,
+   "pixel_sha256": "7ad161faaabd5f27224bf39ba305c3399e5d6677bfb54c140a96cfbc179ccce0"
+  },
+  {
+   "index": 22,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9841.CR3",
+   "sha256": "0debbc1ae2d6e44981c7e3ffac2a344dbdef2ddb7375362a5cecb1a9f77e24cb",
+   "native": {
+    "declaration": {
+     "chromatic_aberration_applied": false,
+     "created_at_utc": "2026-10-27T23:23:50.780Z",
+     "dcp_profile": "Canon EOS R6 Mark III Camera Neutral",
+     "executable_sha256": "5eec7b8e701e6c07b2835b056f30c64017c243b9e4fb536d8fe554e90929e6c2",
+     "feature": "neutral",
+     "group": "bruit",
+     "ipr_test_schema": 1,
+     "lcp_profile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+     "lcp_sha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+     "lens_geometry_applied": false,
+     "lens_vignetting_applied": false,
+     "qt_version": "6.11.2",
+     "raw_normalization": true,
+     "reference": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9841.CR3",
+     "scene": "6V1A9841",
+     "settings": {
+      "automaticWhiteBalance": false,
+      "blacks": 0,
+      "blur": 0,
+      "clarity": 0,
+      "contrast": 0,
+      "dehaze": 0,
+      "denoiseChrominance": 0,
+      "denoiseLuminance": 0,
+      "exposure": 0,
+      "grading": [
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       }
+      ],
+      "grain": 0,
+      "grayscale": false,
+      "highlights": 0,
+      "mixerHue": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerLuminance": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerSaturation": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "saturation": 0,
+      "shadows": 0,
+      "sharpeningAmount": 0,
+      "sharpeningMasking": 0,
+      "sharpeningRadius": 1,
+      "temperature": 4924,
+      "texture": 0,
+      "tint": 0,
+      "toneCurves": [
+       [],
+       [],
+       [],
+       []
+      ],
+      "vibrance": 0,
+      "whites": 0
+     },
+     "source_sha256": "0debbc1ae2d6e44981c7e3ffac2a344dbdef2ddb7375362a5cecb1a9f77e24cb",
+     "value": 0
+    },
+    "height": 6959,
+    "layout": "native-endian IEEEfloat32 stages/ROIs9/planesYCoCg3/rowsSide/colsSide",
+    "raw": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9841.CR3",
+    "rectangles": [
+     [
+      672,
+      1136,
+      512,
+      512
+     ],
+     [
+      2064,
+      1136,
+      512,
+      512
+     ],
+     [
+      3455,
+      1136,
+      512,
+      512
+     ],
+     [
+      672,
+      3224,
+      512,
+      512
+     ],
+     [
+      2064,
+      3224,
+      512,
+      512
+     ],
+     [
+      3455,
+      3224,
+      512,
+      512
+     ],
+     [
+      672,
+      5311,
+      512,
+      512
+     ],
+     [
+      2064,
+      5311,
+      512,
+      512
+     ],
+     [
+      3455,
+      5311,
+      512,
+      512
+     ]
+    ],
+    "rules": "Neutral native reference context512 only; no denoising or pixel resampling",
+    "sha256": "0debbc1ae2d6e44981c7e3ffac2a344dbdef2ddb7375362a5cecb1a9f77e24cb",
+    "side": 512,
+    "stages": [
+     {
+      "denoise_ms": 60.8078,
+      "strength": 0
+     }
+    ],
+    "width": 4639
+   },
+   "baseline_max_abs_delta": 0.0,
+   "pixel_sha256": "8683d9cb4097f29254dc613d6721d8d9c950db409f0a13dd4573cecba78b1135"
+  },
+  {
+   "index": 23,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9842.CR3",
+   "sha256": "e9ba642a24a01ed32c12cc8bca0946b3be8359d1bd3130433bca9a0b685d3e34",
+   "native": {
+    "declaration": {
+     "chromatic_aberration_applied": false,
+     "created_at_utc": "2026-10-27T23:24:23.904Z",
+     "dcp_profile": "Canon EOS R6 Mark III Camera Neutral",
+     "executable_sha256": "5eec7b8e701e6c07b2835b056f30c64017c243b9e4fb536d8fe554e90929e6c2",
+     "feature": "neutral",
+     "group": "bruit",
+     "ipr_test_schema": 1,
+     "lcp_profile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+     "lcp_sha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+     "lens_geometry_applied": false,
+     "lens_vignetting_applied": false,
+     "qt_version": "6.11.2",
+     "raw_normalization": true,
+     "reference": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9842.CR3",
+     "scene": "6V1A9842",
+     "settings": {
+      "automaticWhiteBalance": false,
+      "blacks": 0,
+      "blur": 0,
+      "clarity": 0,
+      "contrast": 0,
+      "dehaze": 0,
+      "denoiseChrominance": 0,
+      "denoiseLuminance": 0,
+      "exposure": 0,
+      "grading": [
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       }
+      ],
+      "grain": 0,
+      "grayscale": false,
+      "highlights": 0,
+      "mixerHue": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerLuminance": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerSaturation": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "saturation": 0,
+      "shadows": 0,
+      "sharpeningAmount": 0,
+      "sharpeningMasking": 0,
+      "sharpeningRadius": 1,
+      "temperature": 4924,
+      "texture": 0,
+      "tint": 0,
+      "toneCurves": [
+       [],
+       [],
+       [],
+       []
+      ],
+      "vibrance": 0,
+      "whites": 0
+     },
+     "source_sha256": "e9ba642a24a01ed32c12cc8bca0946b3be8359d1bd3130433bca9a0b685d3e34",
+     "value": 0
+    },
+    "height": 6959,
+    "layout": "native-endian IEEEfloat32 stages/ROIs9/planesYCoCg3/rowsSide/colsSide",
+    "raw": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9842.CR3",
+    "rectangles": [
+     [
+      672,
+      1136,
+      512,
+      512
+     ],
+     [
+      2064,
+      1136,
+      512,
+      512
+     ],
+     [
+      3455,
+      1136,
+      512,
+      512
+     ],
+     [
+      672,
+      3224,
+      512,
+      512
+     ],
+     [
+      2064,
+      3224,
+      512,
+      512
+     ],
+     [
+      3455,
+      3224,
+      512,
+      512
+     ],
+     [
+      672,
+      5311,
+      512,
+      512
+     ],
+     [
+      2064,
+      5311,
+      512,
+      512
+     ],
+     [
+      3455,
+      5311,
+      512,
+      512
+     ]
+    ],
+    "rules": "Neutral native reference context512 only; no denoising or pixel resampling",
+    "sha256": "e9ba642a24a01ed32c12cc8bca0946b3be8359d1bd3130433bca9a0b685d3e34",
+    "side": 512,
+    "stages": [
+     {
+      "denoise_ms": 61.8883,
+      "strength": 0
+     }
+    ],
+    "width": 4639
+   },
+   "baseline_max_abs_delta": 0.0,
+   "pixel_sha256": "b08c38dcec4a37a5040e2792dd2946f7d8c9508ebb499fe5651661815802eafa"
+  },
+  {
+   "index": 24,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9843.CR3",
+   "sha256": "3f0fb2c3a8e36c378756b37ce04949a3fd9248c50dc5d0008e8d76e1e611fa3b",
+   "native": {
+    "declaration": {
+     "chromatic_aberration_applied": false,
+     "created_at_utc": "2026-10-27T23:24:57.428Z",
+     "dcp_profile": "Canon EOS R6 Mark III Camera Neutral",
+     "executable_sha256": "5eec7b8e701e6c07b2835b056f30c64017c243b9e4fb536d8fe554e90929e6c2",
+     "feature": "neutral",
+     "group": "bruit",
+     "ipr_test_schema": 1,
+     "lcp_profile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+     "lcp_sha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+     "lens_geometry_applied": false,
+     "lens_vignetting_applied": false,
+     "qt_version": "6.11.2",
+     "raw_normalization": true,
+     "reference": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9843.CR3",
+     "scene": "6V1A9843",
+     "settings": {
+      "automaticWhiteBalance": false,
+      "blacks": 0,
+      "blur": 0,
+      "clarity": 0,
+      "contrast": 0,
+      "dehaze": 0,
+      "denoiseChrominance": 0,
+      "denoiseLuminance": 0,
+      "exposure": 0,
+      "grading": [
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       }
+      ],
+      "grain": 0,
+      "grayscale": false,
+      "highlights": 0,
+      "mixerHue": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerLuminance": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerSaturation": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "saturation": 0,
+      "shadows": 0,
+      "sharpeningAmount": 0,
+      "sharpeningMasking": 0,
+      "sharpeningRadius": 1,
+      "temperature": 4924,
+      "texture": 0,
+      "tint": 0,
+      "toneCurves": [
+       [],
+       [],
+       [],
+       []
+      ],
+      "vibrance": 0,
+      "whites": 0
+     },
+     "source_sha256": "3f0fb2c3a8e36c378756b37ce04949a3fd9248c50dc5d0008e8d76e1e611fa3b",
+     "value": 0
+    },
+    "height": 6959,
+    "layout": "native-endian IEEEfloat32 stages/ROIs9/planesYCoCg3/rowsSide/colsSide",
+    "raw": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9843.CR3",
+    "rectangles": [
+     [
+      672,
+      1136,
+      512,
+      512
+     ],
+     [
+      2064,
+      1136,
+      512,
+      512
+     ],
+     [
+      3455,
+      1136,
+      512,
+      512
+     ],
+     [
+      672,
+      3224,
+      512,
+      512
+     ],
+     [
+      2064,
+      3224,
+      512,
+      512
+     ],
+     [
+      3455,
+      3224,
+      512,
+      512
+     ],
+     [
+      672,
+      5311,
+      512,
+      512
+     ],
+     [
+      2064,
+      5311,
+      512,
+      512
+     ],
+     [
+      3455,
+      5311,
+      512,
+      512
+     ]
+    ],
+    "rules": "Neutral native reference context512 only; no denoising or pixel resampling",
+    "sha256": "3f0fb2c3a8e36c378756b37ce04949a3fd9248c50dc5d0008e8d76e1e611fa3b",
+    "side": 512,
+    "stages": [
+     {
+      "denoise_ms": 52.7807,
+      "strength": 0
+     }
+    ],
+    "width": 4639
+   },
+   "baseline_max_abs_delta": 0.0,
+   "pixel_sha256": "b3c8279509d0a644a3e9fe918204af6f18f64e3bed7cddb930cb3d71a8bbeda7"
+  },
+  {
+   "index": 25,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9844.CR3",
+   "sha256": "27ea69f59e9a196832cedb13a7f5147869fe2f75c80dcc88ce2ff39ca7ef3ff7",
+   "native": {
+    "declaration": {
+     "chromatic_aberration_applied": false,
+     "created_at_utc": "2026-10-27T23:25:30.733Z",
+     "dcp_profile": "Canon EOS R6 Mark III Camera Neutral",
+     "executable_sha256": "5eec7b8e701e6c07b2835b056f30c64017c243b9e4fb536d8fe554e90929e6c2",
+     "feature": "neutral",
+     "group": "bruit",
+     "ipr_test_schema": 1,
+     "lcp_profile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+     "lcp_sha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+     "lens_geometry_applied": false,
+     "lens_vignetting_applied": false,
+     "qt_version": "6.11.2",
+     "raw_normalization": true,
+     "reference": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9844.CR3",
+     "scene": "6V1A9844",
+     "settings": {
+      "automaticWhiteBalance": false,
+      "blacks": 0,
+      "blur": 0,
+      "clarity": 0,
+      "contrast": 0,
+      "dehaze": 0,
+      "denoiseChrominance": 0,
+      "denoiseLuminance": 0,
+      "exposure": 0,
+      "grading": [
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       }
+      ],
+      "grain": 0,
+      "grayscale": false,
+      "highlights": 0,
+      "mixerHue": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerLuminance": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerSaturation": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "saturation": 0,
+      "shadows": 0,
+      "sharpeningAmount": 0,
+      "sharpeningMasking": 0,
+      "sharpeningRadius": 1,
+      "temperature": 4924,
+      "texture": 0,
+      "tint": 0,
+      "toneCurves": [
+       [],
+       [],
+       [],
+       []
+      ],
+      "vibrance": 0,
+      "whites": 0
+     },
+     "source_sha256": "27ea69f59e9a196832cedb13a7f5147869fe2f75c80dcc88ce2ff39ca7ef3ff7",
+     "value": 0
+    },
+    "height": 6959,
+    "layout": "native-endian IEEEfloat32 stages/ROIs9/planesYCoCg3/rowsSide/colsSide",
+    "raw": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9844.CR3",
+    "rectangles": [
+     [
+      672,
+      1136,
+      512,
+      512
+     ],
+     [
+      2064,
+      1136,
+      512,
+      512
+     ],
+     [
+      3455,
+      1136,
+      512,
+      512
+     ],
+     [
+      672,
+      3224,
+      512,
+      512
+     ],
+     [
+      2064,
+      3224,
+      512,
+      512
+     ],
+     [
+      3455,
+      3224,
+      512,
+      512
+     ],
+     [
+      672,
+      5311,
+      512,
+      512
+     ],
+     [
+      2064,
+      5311,
+      512,
+      512
+     ],
+     [
+      3455,
+      5311,
+      512,
+      512
+     ]
+    ],
+    "rules": "Neutral native reference context512 only; no denoising or pixel resampling",
+    "sha256": "27ea69f59e9a196832cedb13a7f5147869fe2f75c80dcc88ce2ff39ca7ef3ff7",
+    "side": 512,
+    "stages": [
+     {
+      "denoise_ms": 62.0153,
+      "strength": 0
+     }
+    ],
+    "width": 4639
+   },
+   "baseline_max_abs_delta": 0.0,
+   "pixel_sha256": "90f513ee6d6a6e18c744dc2bf63151fc64a43674d8275ad03b151c61907a22f1"
+  },
+  {
+   "index": 26,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9845.CR3",
+   "sha256": "befbc9dd5e7e9bd6a8fccfb1caf397db2b2390c55cbd7b9f55bc13593f3f742b",
+   "native": {
+    "declaration": {
+     "chromatic_aberration_applied": false,
+     "created_at_utc": "2026-10-27T23:26:04.089Z",
+     "dcp_profile": "Canon EOS R6 Mark III Camera Neutral",
+     "executable_sha256": "5eec7b8e701e6c07b2835b056f30c64017c243b9e4fb536d8fe554e90929e6c2",
+     "feature": "neutral",
+     "group": "bruit",
+     "ipr_test_schema": 1,
+     "lcp_profile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+     "lcp_sha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+     "lens_geometry_applied": false,
+     "lens_vignetting_applied": false,
+     "qt_version": "6.11.2",
+     "raw_normalization": true,
+     "reference": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9845.CR3",
+     "scene": "6V1A9845",
+     "settings": {
+      "automaticWhiteBalance": false,
+      "blacks": 0,
+      "blur": 0,
+      "clarity": 0,
+      "contrast": 0,
+      "dehaze": 0,
+      "denoiseChrominance": 0,
+      "denoiseLuminance": 0,
+      "exposure": 0,
+      "grading": [
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       }
+      ],
+      "grain": 0,
+      "grayscale": false,
+      "highlights": 0,
+      "mixerHue": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerLuminance": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerSaturation": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "saturation": 0,
+      "shadows": 0,
+      "sharpeningAmount": 0,
+      "sharpeningMasking": 0,
+      "sharpeningRadius": 1,
+      "temperature": 4924,
+      "texture": 0,
+      "tint": 0,
+      "toneCurves": [
+       [],
+       [],
+       [],
+       []
+      ],
+      "vibrance": 0,
+      "whites": 0
+     },
+     "source_sha256": "befbc9dd5e7e9bd6a8fccfb1caf397db2b2390c55cbd7b9f55bc13593f3f742b",
+     "value": 0
+    },
+    "height": 6959,
+    "layout": "native-endian IEEEfloat32 stages/ROIs9/planesYCoCg3/rowsSide/colsSide",
+    "raw": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9845.CR3",
+    "rectangles": [
+     [
+      672,
+      1136,
+      512,
+      512
+     ],
+     [
+      2064,
+      1136,
+      512,
+      512
+     ],
+     [
+      3455,
+      1136,
+      512,
+      512
+     ],
+     [
+      672,
+      3224,
+      512,
+      512
+     ],
+     [
+      2064,
+      3224,
+      512,
+      512
+     ],
+     [
+      3455,
+      3224,
+      512,
+      512
+     ],
+     [
+      672,
+      5311,
+      512,
+      512
+     ],
+     [
+      2064,
+      5311,
+      512,
+      512
+     ],
+     [
+      3455,
+      5311,
+      512,
+      512
+     ]
+    ],
+    "rules": "Neutral native reference context512 only; no denoising or pixel resampling",
+    "sha256": "befbc9dd5e7e9bd6a8fccfb1caf397db2b2390c55cbd7b9f55bc13593f3f742b",
+    "side": 512,
+    "stages": [
+     {
+      "denoise_ms": 59.8541,
+      "strength": 0
+     }
+    ],
+    "width": 4639
+   },
+   "baseline_max_abs_delta": 0.0,
+   "pixel_sha256": "f10dab08e2a8b35890e5456aac8a239b95f5372956d09b7f5cb41a52fcd2b071"
+  },
+  {
+   "index": 27,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9846.CR3",
+   "sha256": "ddd5e55464e089cf384b8dca05b48618cb6064c8a97d5cbbd553734df9f09b32",
+   "native": {
+    "declaration": {
+     "chromatic_aberration_applied": false,
+     "created_at_utc": "2026-10-27T23:26:37.645Z",
+     "dcp_profile": "Canon EOS R6 Mark III Camera Neutral",
+     "executable_sha256": "5eec7b8e701e6c07b2835b056f30c64017c243b9e4fb536d8fe554e90929e6c2",
+     "feature": "neutral",
+     "group": "bruit",
+     "ipr_test_schema": 1,
+     "lcp_profile": "Canon (Canon RF 24-105mm F2.8 L IS USM Z) - RAW",
+     "lcp_sha256": "31113b856ac473b71b549dd85d93ce14217d5207c1136df3601e46036355243d",
+     "lens_geometry_applied": false,
+     "lens_vignetting_applied": false,
+     "qt_version": "6.11.2",
+     "raw_normalization": true,
+     "reference": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9846.CR3",
+     "scene": "6V1A9846",
+     "settings": {
+      "automaticWhiteBalance": false,
+      "blacks": 0,
+      "blur": 0,
+      "clarity": 0,
+      "contrast": 0,
+      "dehaze": 0,
+      "denoiseChrominance": 0,
+      "denoiseLuminance": 0,
+      "exposure": 0,
+      "grading": [
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       },
+       {
+        "hue": 0,
+        "saturation": 0
+       }
+      ],
+      "grain": 0,
+      "grayscale": false,
+      "highlights": 0,
+      "mixerHue": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerLuminance": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "mixerSaturation": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "saturation": 0,
+      "shadows": 0,
+      "sharpeningAmount": 0,
+      "sharpeningMasking": 0,
+      "sharpeningRadius": 1,
+      "temperature": 4924,
+      "texture": 0,
+      "tint": 0,
+      "toneCurves": [
+       [],
+       [],
+       [],
+       []
+      ],
+      "vibrance": 0,
+      "whites": 0
+     },
+     "source_sha256": "ddd5e55464e089cf384b8dca05b48618cb6064c8a97d5cbbd553734df9f09b32",
+     "value": 0
+    },
+    "height": 6959,
+    "layout": "native-endian IEEEfloat32 stages/ROIs9/planesYCoCg3/rowsSide/colsSide",
+    "raw": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9846.CR3",
+    "rectangles": [
+     [
+      672,
+      1136,
+      512,
+      512
+     ],
+     [
+      2064,
+      1136,
+      512,
+      512
+     ],
+     [
+      3455,
+      1136,
+      512,
+      512
+     ],
+     [
+      672,
+      3224,
+      512,
+      512
+     ],
+     [
+      2064,
+      3224,
+      512,
+      512
+     ],
+     [
+      3455,
+      3224,
+      512,
+      512
+     ],
+     [
+      672,
+      5311,
+      512,
+      512
+     ],
+     [
+      2064,
+      5311,
+      512,
+      512
+     ],
+     [
+      3455,
+      5311,
+      512,
+      512
+     ]
+    ],
+    "rules": "Neutral native reference context512 only; no denoising or pixel resampling",
+    "sha256": "ddd5e55464e089cf384b8dca05b48618cb6064c8a97d5cbbd553734df9f09b32",
+    "side": 512,
+    "stages": [
+     {
+      "denoise_ms": 55.3656,
+      "strength": 0
+     }
+    ],
+    "width": 4639
+   },
+   "baseline_max_abs_delta": 0.0,
+   "pixel_sha256": "684cd834594ccfe136bb3330b1ec0cfde5c3b92d0f89c68e5434b67ef9747858"
+  }
+ ],
+ "tool": {
+  "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-tools\\Release\\iprBurstReference.exe",
+  "sha256": "5eec7b8e701e6c07b2835b056f30c64017c243b9e4fb536d8fe554e90929e6c2"
+ },
+ "pixels": {
+  "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-reference512\\20261027T231850Z\\validation-reference-contexts.npz",
+  "sha256": "4f2a89197797796207827b4f5ca9d573dec6e2c2012e029af8a7d0d52766aed5",
+  "shape": [
+   14,
+   9,
+   3,
+   512,
+   512
+  ]
+ },
+ "sources": {
+  "tests\\burst_tools\\burst_controls.cpp": {
+   "sha256": "f7a480e21210e77fef1a70851cb55f3d92ee4ebd122ed13d61f67920a6f2fbe4",
+   "source": "#include \"TestRecipes.h\"\n#include \"DetailProcessing.h\"\n#include \"WorkingColorSpace.h\"\n#include <QCoreApplication>\n#include <QFile>\n#include <QJsonArray>\n#include <QJsonDocument>\n#include <opencv2/imgproc.hpp>\n#include <array>\n#include <chrono>\n#include <cmath>\n#include <exception>\n#include <iostream>\n#include <stdexcept>\n\nnamespace {\n#ifdef IPR_REFERENCE_CONTEXT\nconstexpr int Side=512;\nconstexpr const char *Rules=\"Neutral native reference context512 only; no denoising or pixel resampling\";\n#else\nconstexpr int Side=256;\nconstexpr const char *Rules=\"Production DetailProcessing::reduceNoise fullframe 0/50/100, optics off, CameraNeutral RAW calibrated; no experimental filter\";\n#endif\nvoid require(bool value,const char *message) { if (!value) throw std::runtime_error(message); }\n\nQJsonArray writeCrops(const cv::Mat &rgb,QFile &pixels)\n{\n    require(!rgb.empty() && rgb.type()==CV_32FC3,\"Invalid RGB image\");\n    QJsonArray rectangles;\n    for (const double fy:{.2,.5,.8}) for (const double fx:{.2,.5,.8}) {\n        const cv::Rect r(int(std::lround(fx*rgb.cols))-Side/2,int(std::lround(fy*rgb.rows))-Side/2,Side,Side);\n        require((r&cv::Rect(0,0,rgb.cols,rgb.rows))==r,\"Outside RGB crop\");\n        std::array<cv::Mat,3> planes;\n        for (auto &p:planes) p.create(Side,Side,CV_32F);\n        for(int y=0;y<Side;++y) {\n            const auto *source=rgb.ptr<cv::Vec3f>(y+r.y)+r.x;\n            for(int x=0;x<Side;++x) {\n                planes[0].at<float>(y,x)=WorkingColor::luminance(source[x]);\n                planes[1].at<float>(y,x)=source[x][0]-source[x][2];\n                planes[2].at<float>(y,x)=source[x][1]-.5f*(source[x][0]+source[x][2]);\n            }\n        }\n        for(const auto &p:planes) {\n            require(cv::checkRange(p) && p.isContinuous(),\"Invalid output plane\");\n            const qint64 count=qint64(p.total()*p.elemSize());\n            require(pixels.write(reinterpret_cast<const char *>(p.data),count)==count,\"Incomplete plane output\");\n        }\n        rectangles.append(QJsonArray{r.x,r.y,r.width,r.height});\n    }\n    return rectangles;\n}\n}\n\nint main(int argc,char **argv)\n{\n    QCoreApplication app(argc,argv);\n    try {\n        require(argc==3,\"Usage: iprBurstControls output-prefix input-raw\");\n        cv::setNumThreads(4);\n        const auto args=app.arguments();const QString prefix=args[1],path=args[2];\n        const auto loaded=TestRecipes::load(path);\n        const auto settings=TestRecipes::neutral(loaded);\n        const auto image=ImageEditor::renderLinear(loaded.image,settings);\n        require(!image.isNull(),\"Native opening failed\");\n        cv::Mat original;cv::cvtColor(image.linearRgba,original,cv::COLOR_RGBA2RGB);\n        QFile pixels(prefix+\".f32\");require(pixels.open(QIODevice::WriteOnly|QIODevice::NewOnly),\"Cannot create pixels\");\n        QJsonArray stages;QJsonArray rectangles;\n        for (const int strength:{0,50,100}) {\n#ifdef IPR_REFERENCE_CONTEXT\n            if (strength!=0) continue;\n#endif\n            const auto start=std::chrono::steady_clock::now();\n            cv::Mat rgb=original.clone();\n            DetailProcessing::reduceNoise(rgb,{strength,strength});\n            const double ms=std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-start).count();\n            rectangles=writeCrops(rgb,pixels);\n            stages.append(QJsonObject{{\"strength\",strength},{\"denoise_ms\",ms}});\n        }\n        pixels.close();\n        const QJsonObject result{{\"raw\",path},{\"sha256\",TestRecipes::sha256(path)},\n            {\"declaration\",TestRecipes::declaration(loaded,settings,path,\"bruit\",\"neutral\",0.,path)},\n            {\"width\",original.cols},{\"height\",original.rows},{\"rectangles\",rectangles},{\"stages\",stages},\n            {\"side\",Side},{\"layout\",\"native-endian IEEEfloat32 stages/ROIs9/planesYCoCg3/rowsSide/colsSide\"},\n            {\"rules\",Rules}};\n        QFile metadata(prefix+\".json\");require(metadata.open(QIODevice::WriteOnly|QIODevice::NewOnly),\"Cannot create metadata\");\n        const auto bytes=QJsonDocument(result).toJson(QJsonDocument::Compact);\n        require(metadata.write(bytes)==bytes.size(),\"Incomplete metadata\");return 0;\n    } catch(const std::exception &e) {std::cerr<<e.what()<<'\\n';return 1;}\n}\n"
+  },
+  "tests\\burst_tools\\CMakeLists.txt": {
+   "sha256": "1054a84dbd94ad8533057c8ac40e809acb4a29b7eaf03cb959b6f22a2056bff3",
+   "source": "cmake_minimum_required(VERSION 3.24)\nproject(IPRBurstControls LANGUAGES CXX)\nset(CMAKE_CXX_STANDARD 17)\nset(CMAKE_CXX_STANDARD_REQUIRED ON)\nset(CMAKE_CXX_EXTENSIONS OFF)\nget_filename_component(IPR_ROOT \"${CMAKE_CURRENT_SOURCE_DIR}/../..\" ABSOLUTE)\nfind_package(Qt6 6.8 REQUIRED COMPONENTS Core Gui Quick Concurrent)\nfind_package(OpenCV REQUIRED COMPONENTS core imgproc imgcodecs)\nfind_package(TIFF REQUIRED)\nif(NOT IPR_ENGINE_BUILD OR NOT LIBRAW_LIBRARY)\n    message(FATAL_ERROR \"IPR_ENGINE_BUILD and LIBRAW_LIBRARY are required\")\nendif()\nadd_library(iprEngine STATIC IMPORTED)\nset_target_properties(iprEngine PROPERTIES IMPORTED_LOCATION \"${IPR_ENGINE_BUILD}/Release/iprEngine.lib\")\nadd_executable(iprBurstControls burst_controls.cpp \"${IPR_ROOT}/src/tools/TestRecipes.cpp\")\nforeach(folder app cache core editor profiles providers raw tools)\n    target_include_directories(iprBurstControls PRIVATE \"${IPR_ROOT}/src/${folder}\")\nendforeach()\ntarget_include_directories(iprBurstControls PRIVATE ${OpenCV_INCLUDE_DIRS})\ntarget_link_libraries(iprBurstControls PRIVATE iprEngine Qt6::Core Qt6::Gui Qt6::Quick Qt6::Concurrent TIFF::TIFF ${OpenCV_LIBS} \"${LIBRAW_LIBRARY}\")\nqt_add_resources(iprBurstControls ipr_ui_defaults PREFIX \"/\" BASE \"${IPR_ROOT}\"\n    FILES \"${IPR_ROOT}/config/ipr-ui.ini\" \"${IPR_ROOT}/config/raw-normalization.json\")\nadd_executable(iprBurstReference burst_controls.cpp \"${IPR_ROOT}/src/tools/TestRecipes.cpp\")\ntarget_compile_definitions(iprBurstReference PRIVATE IPR_REFERENCE_CONTEXT=1)\nforeach(folder app cache core editor profiles providers raw tools)\n    target_include_directories(iprBurstReference PRIVATE \"${IPR_ROOT}/src/${folder}\")\nendforeach()\ntarget_include_directories(iprBurstReference PRIVATE ${OpenCV_INCLUDE_DIRS})\ntarget_link_libraries(iprBurstReference PRIVATE iprEngine Qt6::Core Qt6::Gui Qt6::Quick Qt6::Concurrent TIFF::TIFF ${OpenCV_LIBS} \"${LIBRAW_LIBRARY}\")\nqt_add_resources(iprBurstReference ipr_ui_defaults_reference PREFIX \"/\" BASE \"${IPR_ROOT}\"\n    FILES \"${IPR_ROOT}/config/ipr-ui.ini\" \"${IPR_ROOT}/config/raw-normalization.json\")\n"
+  }
+ },
+ "runner_sha256": "286ecb37a671e35a5357fc3072ef0677153b64de759991805acb6de796ba0544",
+ "runner_source": "\"\"\"Expand existing validation reference contexts only; no sealed data or filter retuning.\"\"\"\nfrom datetime import datetime,timezone\nimport json\nfrom pathlib import Path\nimport subprocess\nimport numpy as np\nfrom analysis.render import available_memory,runtime_env\nfrom study_noise_neighbourhoods import ROOT,sha256,git\n\n\ndef run():\n    started=datetime.now(timezone.utc)\n    parent=ROOT/'docs/validation/raw/extraction-native-rafale-validation-bruit-v001-20261027T231306Z.json'\n    source=json.loads(parent.read_text(encoding='utf-8'));digest=sha256(parent)\n    p=Path(source['pixels']['path'])\n    if sha256(p)!=source['pixels']['sha256']:raise ValueError('Changed baseline')\n    with np.load(p,allow_pickle=False) as saved:baseline=saved['planes'].copy()\n    tool=ROOT/'build-patch_noise/burst-tools/Release/iprBurstReference.exe';binary_hash=sha256(tool)\n    folder=ROOT/'build-patch_noise/burst-reference512'/started.strftime('%Y%m%dT%H%M%SZ');folder.mkdir(parents=True,exist_ok=False)\n    records=[];pixels=[]\n    for index,item in enumerate(source['records']):\n        if (available_memory() or 0)<5*1024**3:raise ValueError('Need5GiB before RAW opening')\n        raw=Path(item['path']);prefix=folder/raw.stem\n        if sha256(raw)!=item['sha256']:raise ValueError('Changed RAW')\n        subprocess.run([str(tool),str(prefix),str(raw)],env=runtime_env(tool),check=True,timeout=180)\n        data=np.fromfile(prefix.with_suffix('.f32'),dtype='<f4').reshape(9,3,512,512)\n        metadata=json.loads(prefix.with_suffix('.json').read_text(encoding='utf-8'))\n        delta=float(np.max(abs(data[:,:,128:384,128:384]-baseline[index])))\n        if not np.isfinite(data).all() or delta>2e-7 or metadata['sha256']!=item['sha256']:raise ValueError('Context centre differs from frozen baseline')\n        pixels.append(data);records.append(dict(index=item['index'],path=str(raw),sha256=item['sha256'],native=metadata,\n            baseline_max_abs_delta=delta,pixel_sha256=sha256(prefix.with_suffix('.f32'))))\n        print('REFERENCE512',raw.name,index+1,'/14','delta',delta,flush=True)\n    data=np.stack(pixels);archive=folder/'validation-reference-contexts.npz'\n    with archive.open('xb') as handle:np.savez_compressed(handle,planes=data)\n    if sha256(parent)!=digest or sha256(tool)!=binary_hash:raise ValueError('Changed dependencies')\n    now=datetime.now(timezone.utc);output=ROOT/'docs/validation/raw'/f'contextes-reference-rafale-bruit-v001-{now.strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n    result=dict(schema_version=1,data_version=1,started_at_utc=started.isoformat(),completed_at_utc=now.isoformat(),\n        parent=dict(path=str(parent),sha256=digest),records=records,\n        tool=dict(path=str(tool),sha256=binary_hash),pixels=dict(path=str(archive),sha256=sha256(archive),shape=list(data.shape)),\n        sources={str(p.relative_to(ROOT)):dict(sha256=sha256(p),source=p.read_text(encoding='utf-8')) for p in (ROOT/'tests/burst_tools/burst_controls.cpp',ROOT/'tests/burst_tools/CMakeLists.txt')},\n        runner_sha256=sha256(Path(__file__)),runner_source=Path(__file__).read_text(encoding='utf-8'),commit=git('rev-parse','HEAD'),\n        rules='Same14validationframesonly,512contextsaroundexisting256centres,nativepixelsnoresampling. Allcentral256comparedtoexistingnativebaseline2e-7. Geometrycorrectionforreferenceoverlap,notnewindependentstudy/newcandidate. Final14sealedremainunopened.',\n        limitations='Samecamera/scene/ISO,globalregistrationnotcleantruth. Additionalcontextdoesnotcorrectparallax/blur/fixedpattern. No noiseprofileorfilterparameterchanges.',\n        verdict='expanded_native_reference_context_geometry_only')\n    with output.open('x',encoding='utf-8') as handle:json.dump(result,handle,ensure_ascii=False,indent=1,allow_nan=False)\n    print('RESULT',output,flush=True)\n\n\nif __name__=='__main__':run()\n",
+ "commit": "2a40c5c6cff78d40294393a68827f4a24555c724",
+ "rules": "Same14validationframesonly,512contextsaroundexisting256centres,nativepixelsnoresampling. Allcentral256comparedtoexistingnativebaseline2e-7. Geometrycorrectionforreferenceoverlap,notnewindependentstudy/newcandidate. Final14sealedremainunopened.",
+ "limitations": "Samecamera/scene/ISO,globalregistrationnotcleantruth. Additionalcontextdoesnotcorrectparallax/blur/fixedpattern. No noiseprofileorfilterparameterchanges.",
+ "verdict": "expanded_native_reference_context_geometry_only"
+}

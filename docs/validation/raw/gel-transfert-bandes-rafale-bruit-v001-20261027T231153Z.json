@@ -1,0 +1,160 @@
+{
+ "schema_version": 1,
+ "data_version": 1,
+ "created_at_utc": "2026-10-27T23:11:53.051411+00:00",
+ "parent": {
+  "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\bandes-reelles-rafale-bruit-v001-20261027T230949Z.json",
+  "sha256": "b400e965b934dfd7840cfc5f8849f0e6ea1a0ddd4028250a55d0965f48bfaa97"
+ },
+ "audit": {
+  "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\audit-rafale-reelle-bruit-v001-20261027T225328Z.json",
+  "sha256": "a6d74a68af1b28b8da241069942adf227bda151e62f7dd89f8ac1bb4dbbd2574"
+ },
+ "validation_partition": "validation",
+ "indices": [
+  14,
+  15,
+  16,
+  17,
+  18,
+  19,
+  20,
+  21,
+  22,
+  23,
+  24,
+  25,
+  26,
+  27
+ ],
+ "sealed_indices": [
+  28,
+  29,
+  30,
+  31,
+  32,
+  33,
+  34,
+  35,
+  36,
+  37,
+  38,
+  39,
+  40,
+  41
+ ],
+ "native_extractor_sha256": "da914303a2c85807cab8be92266bc9a20e3922b7055617796cba06f41965eed5",
+ "validator_sha256": "dea9d51e8fca0038c1704e77f5a360350c70b296e9d14855845f1ac11bb318e7",
+ "validator_source": "\"\"\"Freeze band-transfer diagnostic on development, then open validation exactly once.\"\"\"\nfrom datetime import datetime,timezone\nimport json\nfrom pathlib import Path\nimport numpy as np\nimport rawpy\nimport cv2\nfrom analysis.render import available_memory\nfrom extract_noise_burst_native import run as extract_native\nfrom study_noise_burst_motion import preview,estimate\nfrom study_noise_burst_residuals import temporal_basis\nfrom study_noise_burst_bands import bands\nfrom study_noise_neighbourhoods import ROOT,sha256,git\n\nROIS=(0,2,5)\nMETRICS=('sigma_haar_to_pixel','sigma_fine_to_haar','sigma_medium_to_fine')\n\n\ndef run():\n    started=datetime.now(timezone.utc);cv2.setNumThreads(2);cv2.setRNGSeed(440)\n    parent=ROOT/'docs/validation/raw/bandes-reelles-rafale-bruit-v001-20261027T230949Z.json'\n    audit=ROOT/'docs/validation/raw/audit-rafale-reelle-bruit-v001-20261027T225328Z.json'\n    develop=json.loads(parent.read_text(encoding='utf-8'));raw_audit=json.loads(audit.read_text(encoding='utf-8'))\n    existing=list((ROOT/'docs/validation/raw').glob('gel-transfert-bandes-rafale-bruit-v001-*.json'))\n    if existing:raise ValueError('Validation freeze already exists: inspect it, do NOT rerun or retune')\n    freeze=ROOT/'docs/validation/raw'/f'gel-transfert-bandes-rafale-bruit-v001-{started.strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n    frozen=dict(schema_version=1,data_version=1,created_at_utc=started.isoformat(),\n        parent=dict(path=str(parent),sha256=sha256(parent)),audit=dict(path=str(audit),sha256=sha256(audit)),\n        validation_partition='validation',indices=list(range(14,28)),sealed_indices=list(range(28,42)),\n        native_extractor_sha256=sha256(ROOT/'tests/extract_noise_burst_native.py'),\n        validator_sha256=sha256(Path(__file__)),validator_source=Path(__file__).read_text(encoding='utf-8'),\n        roi_indices=list(ROIS),metrics=list(METRICS),relative_error_limit=.10,\n        predictions=[dict(region=r,channels=develop['records'][r]['native_linear']) for r in ROIS],\n        criterion='Exploratorywithinburstrepeatabilityonly:27metrics(3ROIs*3planes*3ratios),allabsrelativeerror<=10%. Not productquality threshold or population coverage. No refit after opening validation. Sealed14 remainclosed.',\n        rules='Freeze complete BEFORE validation pixel decode. Nativegrid0/2/5fromscenegeometry. Same rawpreviewmotiondesignandnativebands as development. OnecameraISO4000sameburst;not independentcamera/scene validation.')\n    with freeze.open('x',encoding='utf-8') as handle:json.dump(frozen,handle,ensure_ascii=False,indent=1,allow_nan=False)\n    freeze_hash=sha256(freeze);print('FREEZE',freeze,flush=True)\n    native_path=extract_native('validation',freeze);native=json.loads(native_path.read_text(encoding='utf-8'))\n    archive=Path(native['pixels']['path'])\n    if sha256(archive)!=native['pixels']['sha256']:raise ValueError('Changed validation pixels')\n    with np.load(archive,allow_pickle=False) as data:planes=data['planes'].copy()\n    motion=[];reference=None\n    for item in raw_audit['identities']:\n        if item['split']!='validation':continue\n        if (available_memory() or 0)<2*1024**3:raise ValueError('Need2GiB for RAW preview motion audit')\n        p=Path(item['path'])\n        if sha256(p)!=item['sha256']:raise ValueError('Changed validation source')\n        with rawpy.imread(str(p)) as raw:current,scale=preview(raw.raw_image_visible)\n        if reference is None:reference=current.copy()\n        m=estimate(reference,current);m.update(index=item['index'],sha256=item['sha256'],preview_to_cfa_plane_scale=scale)\n        motion.append(m)\n    basis=temporal_basis([r['reference_to_frame_preview_affine'] for r in motion]);records=[];failures=[]\n    for prediction in frozen['predictions']:\n        roi=prediction['region'];measured=bands(planes[:,roi],basis);errors=[]\n        for channel in range(3):\n            errors.append({name:measured[channel][name]/prediction['channels'][channel][name]-1 for name in METRICS})\n            for name in METRICS:\n                if abs(errors[-1][name])>.10:failures.append(dict(region=roi,channel=channel,metric=name,error=errors[-1][name]))\n        records.append(dict(region=roi,measured=measured,predicted=prediction['channels'],relative_errors=errors))\n    if sha256(freeze)!=freeze_hash:raise ValueError('Freeze changed')\n    now=datetime.now(timezone.utc);output=ROOT/'docs/validation/raw'/f'validation-transfert-bandes-rafale-bruit-v001-{now.strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n    result=dict(schema_version=1,data_version=1,started_at_utc=started.isoformat(),completed_at_utc=now.isoformat(),\n        freeze=dict(path=str(freeze),sha256=freeze_hash),native=dict(path=str(native_path),sha256=sha256(native_path)),\n        motion=motion,basis=basis.tolist(),records=records,failures=failures,tests=27,\n        runner_source=Path(__file__).read_text(encoding='utf-8'),runner_sha256=sha256(Path(__file__)),commit=git('rev-parse','HEAD'),\n        verdict='within_burst_band_repeatability_pass' if not failures else 'within_burst_band_repeatability_fail_no_retuning',\n        limitations='SamecameraISO4000samescene/temporallynearframes. Motionprojectionisdiagnosticnottruth. 10% exploratoryprecisioncriterionnotcalibratedconfidenceorvisualvalidation. Not new denoiser validation. Last14sealedstillunopened. No production/push/merge/tag.')\n    with output.open('x',encoding='utf-8') as handle:json.dump(result,handle,ensure_ascii=False,indent=1,allow_nan=False)\n    print('RESULT',output,'FAILURES',len(failures),flush=True)\n\n\nif __name__=='__main__':run()\n",
+ "roi_indices": [
+  0,
+  2,
+  5
+ ],
+ "metrics": [
+  "sigma_haar_to_pixel",
+  "sigma_fine_to_haar",
+  "sigma_medium_to_fine"
+ ],
+ "relative_error_limit": 0.1,
+ "predictions": [
+  {
+   "region": 0,
+   "channels": [
+    {
+     "variance_pixel": 1.5484143562754837e-05,
+     "variance_haar_hh": 3.68020892767043e-06,
+     "variance_fine": 3.6180357572875176e-06,
+     "variance_medium": 1.967645495488165e-06,
+     "sigma_haar_to_pixel": 0.4875202309689496,
+     "sigma_fine_to_haar": 0.9915170577838991,
+     "sigma_medium_to_fine": 0.7374575062697917
+    },
+    {
+     "variance_pixel": 0.00010165864151528941,
+     "variance_haar_hh": 1.6368684510375837e-05,
+     "variance_fine": 1.6549159640642807e-05,
+     "variance_medium": 1.3203022783550476e-05,
+     "sigma_haar_to_pixel": 0.4012681948008036,
+     "sigma_fine_to_haar": 1.0054977047979645,
+     "sigma_medium_to_fine": 0.8931999984944058
+    },
+    {
+     "variance_pixel": 1.6431914102281325e-05,
+     "variance_haar_hh": 2.169205584554607e-06,
+     "variance_fine": 2.213991507187206e-06,
+     "variance_medium": 2.1245202132851914e-06,
+     "sigma_haar_to_pixel": 0.36333419981269066,
+     "sigma_fine_to_haar": 1.010270375891941,
+     "sigma_medium_to_fine": 0.979585749073058
+    }
+   ]
+  },
+  {
+   "region": 2,
+   "channels": [
+    {
+     "variance_pixel": 0.0003156005088851426,
+     "variance_haar_hh": 0.00011268133857599079,
+     "variance_fine": 0.00012430161156060996,
+     "variance_medium": 3.890751102202073e-05,
+     "sigma_haar_to_pixel": 0.5975264732210487,
+     "sigma_fine_to_haar": 1.050297618891235,
+     "sigma_medium_to_fine": 0.5594719855077671
+    },
+    {
+     "variance_pixel": 0.0003408131463625387,
+     "variance_haar_hh": 3.135105153011189e-05,
+     "variance_fine": 3.484692736659354e-05,
+     "variance_medium": 4.365815509560919e-05,
+     "sigma_haar_to_pixel": 0.3032968407683405,
+     "sigma_fine_to_haar": 1.0542805370557946,
+     "sigma_medium_to_fine": 1.119310156741717
+    },
+    {
+     "variance_pixel": 0.0001716235867757984,
+     "variance_haar_hh": 1.0999261997905329e-05,
+     "variance_fine": 1.380793979787387e-05,
+     "variance_medium": 2.234709157159227e-05,
+     "sigma_haar_to_pixel": 0.2531589503902595,
+     "sigma_fine_to_haar": 1.1204246861181961,
+     "sigma_medium_to_fine": 1.272172671310129
+    }
+   ]
+  },
+  {
+   "region": 5,
+   "channels": [
+    {
+     "variance_pixel": 0.00024209920502672069,
+     "variance_haar_hh": 8.643217449920807e-05,
+     "variance_fine": 9.468526237848391e-05,
+     "variance_medium": 2.9923133385636074e-05,
+     "sigma_haar_to_pixel": 0.5975043039867043,
+     "sigma_fine_to_haar": 1.0466548104846423,
+     "sigma_medium_to_fine": 0.5621631069255244
+    },
+    {
+     "variance_pixel": 0.00028696094828591903,
+     "variance_haar_hh": 4.2623297176210664e-05,
+     "variance_fine": 4.6383683444223564e-05,
+     "variance_medium": 3.641735612889227e-05,
+     "sigma_haar_to_pixel": 0.38540036498418184,
+     "sigma_fine_to_haar": 1.0431796250627903,
+     "sigma_medium_to_fine": 0.8860772568107523
+    },
+    {
+     "variance_pixel": 0.00010340481466583361,
+     "variance_haar_hh": 6.751943433203488e-06,
+     "variance_fine": 8.554369861271015e-06,
+     "variance_medium": 1.3478570382037222e-05,
+     "sigma_haar_to_pixel": 0.2555312487510719,
+     "sigma_fine_to_haar": 1.125588414348231,
+     "sigma_medium_to_fine": 1.2552432756311636
+    }
+   ]
+  }
+ ],
+ "criterion": "Exploratorywithinburstrepeatabilityonly:27metrics(3ROIs*3planes*3ratios),allabsrelativeerror<=10%. Not productquality threshold or population coverage. No refit after opening validation. Sealed14 remainclosed.",
+ "rules": "Freeze complete BEFORE validation pixel decode. Nativegrid0/2/5fromscenegeometry. Same rawpreviewmotiondesignandnativebands as development. OnecameraISO4000sameburst;not independentcamera/scene validation."
+}

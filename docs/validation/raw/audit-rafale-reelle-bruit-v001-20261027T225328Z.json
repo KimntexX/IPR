@@ -1,0 +1,3312 @@
+{
+ "schema_version": 1,
+ "data_version": 1,
+ "started_at_utc": "2026-10-27T22:53:25.138582+00:00",
+ "completed_at_utc": "2026-10-27T22:53:28.986852+00:00",
+ "partition": {
+  "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\partition-rafale-bruit-v001-20261027T225326Z.json",
+  "sha256": "0c83f67ece4dc89d0d6036772ae0f80eb645a1ee9fe58fe273f9b62cc55e3518"
+ },
+ "identities": [
+  {
+   "index": 0,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9819.CR3",
+   "bytes": 39358676,
+   "mtime_ns": 1793140426000000000,
+   "sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165",
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:27 23:33:44",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 4000,
+    "recommended_iso": 4000,
+    "focal_mm": 26.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   },
+   "split": "development"
+  },
+  {
+   "index": 1,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9820.CR3",
+   "bytes": 39359188,
+   "mtime_ns": 1793140428000000000,
+   "sha256": "5ae412958614f0782133ab8bde605496e411ab7dcfb5d8fd62ea927681a965d3",
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:27 23:33:44",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 4000,
+    "recommended_iso": 4000,
+    "focal_mm": 26.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   },
+   "split": "development"
+  },
+  {
+   "index": 2,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9821.CR3",
+   "bytes": 39358676,
+   "mtime_ns": 1793140430000000000,
+   "sha256": "1ce0b3885a317a6fdaaa8b40d4d399545f187080592c2ad78f81821865668bd2",
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:27 23:33:44",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 4000,
+    "recommended_iso": 4000,
+    "focal_mm": 26.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   },
+   "split": "development"
+  },
+  {
+   "index": 3,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9822.CR3",
+   "bytes": 39352532,
+   "mtime_ns": 1793140432000000000,
+   "sha256": "299d0a9013836d3e2ea53c8d23856c02b4573011a7eb0a19992897e03b63f680",
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:27 23:33:44",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 4000,
+    "recommended_iso": 4000,
+    "focal_mm": 26.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   },
+   "split": "development"
+  },
+  {
+   "index": 4,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9823.CR3",
+   "bytes": 39356116,
+   "mtime_ns": 1793140436000000000,
+   "sha256": "72a8c5475af764b5f2fe125234367e3a1c13f7e6efa2d3fd03b38d30f2809894",
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:27 23:33:44",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 4000,
+    "recommended_iso": 4000,
+    "focal_mm": 26.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   },
+   "split": "development"
+  },
+  {
+   "index": 5,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9824.CR3",
+   "bytes": 39359700,
+   "mtime_ns": 1793140438000000000,
+   "sha256": "28899c86ad3850f4fa699a6001fcb7b68af4d6a3d4adbab7cfb2acac2c1120c4",
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:27 23:33:44",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 4000,
+    "recommended_iso": 4000,
+    "focal_mm": 26.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   },
+   "split": "development"
+  },
+  {
+   "index": 6,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9825.CR3",
+   "bytes": 39359188,
+   "mtime_ns": 1793140440000000000,
+   "sha256": "cb5c9016211a340e38ec707ec8ee9d5bf834a644958d394eb7f41ab565dd4245",
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:27 23:33:44",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 4000,
+    "recommended_iso": 4000,
+    "focal_mm": 26.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   },
+   "split": "development"
+  },
+  {
+   "index": 7,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9826.CR3",
+   "bytes": 39359700,
+   "mtime_ns": 1793140442000000000,
+   "sha256": "e810101cf640a035dd2a3147b9edb76e2d0ad60d8870f9af8394220fcf334bc1",
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:27 23:33:44",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 4000,
+    "recommended_iso": 4000,
+    "focal_mm": 26.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   },
+   "split": "development"
+  },
+  {
+   "index": 8,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9827.CR3",
+   "bytes": 39365844,
+   "mtime_ns": 1793140444000000000,
+   "sha256": "4444028085b4c4a42a42c6bdcd20f0e6dc6d4a182028e23969bf4f7e766a7d3e",
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:27 23:33:44",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 4000,
+    "recommended_iso": 4000,
+    "focal_mm": 26.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   },
+   "split": "development"
+  },
+  {
+   "index": 9,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9828.CR3",
+   "bytes": 39368916,
+   "mtime_ns": 1793140446000000000,
+   "sha256": "00ffa5dd689ed880485b83f16a69347ff37fcae9073ddd0d7cb9d257947b97a5",
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:27 23:33:45",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 4000,
+    "recommended_iso": 4000,
+    "focal_mm": 26.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   },
+   "split": "development"
+  },
+  {
+   "index": 10,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9829.CR3",
+   "bytes": 39362260,
+   "mtime_ns": 1793140450000000000,
+   "sha256": "8e7ac253d543a458dbaff3dc7dafc675c91ce6feffa4f16e6f9bc673f9831298",
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:27 23:33:45",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 4000,
+    "recommended_iso": 4000,
+    "focal_mm": 26.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   },
+   "split": "development"
+  },
+  {
+   "index": 11,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9830.CR3",
+   "bytes": 39361236,
+   "mtime_ns": 1793140452000000000,
+   "sha256": "f4ad3c2bfc7260358b49736bea8ed1105220d19bf40ede2324ec9d248f75df49",
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:27 23:33:45",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 4000,
+    "recommended_iso": 4000,
+    "focal_mm": 26.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   },
+   "split": "development"
+  },
+  {
+   "index": 12,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9831.CR3",
+   "bytes": 39354068,
+   "mtime_ns": 1793140454000000000,
+   "sha256": "975973a6bc5559ec84449b71c8f3823f0f31897ae7f3935f3aa5c539fbdaea73",
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:27 23:33:45",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 4000,
+    "recommended_iso": 4000,
+    "focal_mm": 26.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   },
+   "split": "development"
+  },
+  {
+   "index": 13,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9832.CR3",
+   "bytes": 39359188,
+   "mtime_ns": 1793140456000000000,
+   "sha256": "48a9d34e3a63f84fedd3609d0dedddc9fd67d038753713be267d811a59f8de36",
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:27 23:33:45",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 4000,
+    "recommended_iso": 4000,
+    "focal_mm": 26.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   },
+   "split": "development"
+  },
+  {
+   "index": 14,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9833.CR3",
+   "bytes": 39354580,
+   "mtime_ns": 1793140458000000000,
+   "sha256": "527d4c5045b058c8a19d0c2a0d5c39e1b2ccae482b415e32c441112458b4e462",
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:27 23:33:45",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 4000,
+    "recommended_iso": 4000,
+    "focal_mm": 26.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   },
+   "split": "validation"
+  },
+  {
+   "index": 15,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9834.CR3",
+   "bytes": 39364308,
+   "mtime_ns": 1793140462000000000,
+   "sha256": "8ab9b619d15c4b1c50bd11705a876219ac907dd9db79152ae21e3f971457098b",
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:27 23:33:45",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 4000,
+    "recommended_iso": 4000,
+    "focal_mm": 26.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   },
+   "split": "validation"
+  },
+  {
+   "index": 16,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9835.CR3",
+   "bytes": 39359700,
+   "mtime_ns": 1793140464000000000,
+   "sha256": "4f17ae6cf170331bf6ddc4b1812d81f4faa040bd9ee8f0ad4b252d40a6beec8b",
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:27 23:33:45",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 4000,
+    "recommended_iso": 4000,
+    "focal_mm": 26.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   },
+   "split": "validation"
+  },
+  {
+   "index": 17,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9836.CR3",
+   "bytes": 39355092,
+   "mtime_ns": 1793140466000000000,
+   "sha256": "678a584753602293305bb358c15fa4e69715a3526b4f98b631e449c782450b6a",
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:27 23:33:45",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 4000,
+    "recommended_iso": 4000,
+    "focal_mm": 26.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   },
+   "split": "validation"
+  },
+  {
+   "index": 18,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9837.CR3",
+   "bytes": 39356628,
+   "mtime_ns": 1793140468000000000,
+   "sha256": "9283f27afdc648bc2df11e508eeb8ebabbc4ed9294f639da30aa4f090dba4e7e",
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:27 23:33:45",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 4000,
+    "recommended_iso": 4000,
+    "focal_mm": 26.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   },
+   "split": "validation"
+  },
+  {
+   "index": 19,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9838.CR3",
+   "bytes": 39362260,
+   "mtime_ns": 1793140470000000000,
+   "sha256": "c194f65325441bdc28267559dafe25164cde50fc15f8e109374470bc12d7d10a",
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:27 23:33:46",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 4000,
+    "recommended_iso": 4000,
+    "focal_mm": 26.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   },
+   "split": "validation"
+  },
+  {
+   "index": 20,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9839.CR3",
+   "bytes": 39369940,
+   "mtime_ns": 1793140472000000000,
+   "sha256": "b6751c2d04e1326600f687429c583babcd07d7fc6d4e5d672d5340dfac980e42",
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:27 23:33:46",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 4000,
+    "recommended_iso": 4000,
+    "focal_mm": 26.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   },
+   "split": "validation"
+  },
+  {
+   "index": 21,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9840.CR3",
+   "bytes": 39375060,
+   "mtime_ns": 1793140476000000000,
+   "sha256": "7f2452a03022dbd4793fadc96fe50d07321b0886bec20fe66d6d85ce971c7f3e",
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:27 23:33:46",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 4000,
+    "recommended_iso": 4000,
+    "focal_mm": 26.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   },
+   "split": "validation"
+  },
+  {
+   "index": 22,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9841.CR3",
+   "bytes": 39374036,
+   "mtime_ns": 1793140478000000000,
+   "sha256": "0debbc1ae2d6e44981c7e3ffac2a344dbdef2ddb7375362a5cecb1a9f77e24cb",
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:27 23:33:46",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 4000,
+    "recommended_iso": 4000,
+    "focal_mm": 26.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   },
+   "split": "validation"
+  },
+  {
+   "index": 23,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9842.CR3",
+   "bytes": 39378644,
+   "mtime_ns": 1793140480000000000,
+   "sha256": "e9ba642a24a01ed32c12cc8bca0946b3be8359d1bd3130433bca9a0b685d3e34",
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:27 23:33:46",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 4000,
+    "recommended_iso": 4000,
+    "focal_mm": 26.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   },
+   "split": "validation"
+  },
+  {
+   "index": 24,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9843.CR3",
+   "bytes": 39384276,
+   "mtime_ns": 1793140482000000000,
+   "sha256": "3f0fb2c3a8e36c378756b37ce04949a3fd9248c50dc5d0008e8d76e1e611fa3b",
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:27 23:33:46",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 4000,
+    "recommended_iso": 4000,
+    "focal_mm": 26.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   },
+   "split": "validation"
+  },
+  {
+   "index": 25,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9844.CR3",
+   "bytes": 39378644,
+   "mtime_ns": 1793140484000000000,
+   "sha256": "27ea69f59e9a196832cedb13a7f5147869fe2f75c80dcc88ce2ff39ca7ef3ff7",
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:27 23:33:46",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 4000,
+    "recommended_iso": 4000,
+    "focal_mm": 26.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   },
+   "split": "validation"
+  },
+  {
+   "index": 26,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9845.CR3",
+   "bytes": 39376084,
+   "mtime_ns": 1793140486000000000,
+   "sha256": "befbc9dd5e7e9bd6a8fccfb1caf397db2b2390c55cbd7b9f55bc13593f3f742b",
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:27 23:33:46",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 4000,
+    "recommended_iso": 4000,
+    "focal_mm": 26.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   },
+   "split": "validation"
+  },
+  {
+   "index": 27,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9846.CR3",
+   "bytes": 39391956,
+   "mtime_ns": 1793140490000000000,
+   "sha256": "ddd5e55464e089cf384b8dca05b48618cb6064c8a97d5cbbd553734df9f09b32",
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:27 23:33:46",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 4000,
+    "recommended_iso": 4000,
+    "focal_mm": 26.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   },
+   "split": "validation"
+  },
+  {
+   "index": 28,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9847.CR3",
+   "bytes": 39384788,
+   "mtime_ns": 1793140492000000000,
+   "sha256": "61bf2d43039ae94dee192d186100c7760fa07d71dae14c385f6ac3f2dc07b119",
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:27 23:33:46",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 4000,
+    "recommended_iso": 4000,
+    "focal_mm": 26.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   },
+   "split": "sealed"
+  },
+  {
+   "index": 29,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9848.CR3",
+   "bytes": 39386324,
+   "mtime_ns": 1793140494000000000,
+   "sha256": "9d7adf98c8b9308467a64af9f48f2bc21114f3ea993c8ec8a055d0942359a01a",
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:27 23:33:47",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 4000,
+    "recommended_iso": 4000,
+    "focal_mm": 26.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   },
+   "split": "sealed"
+  },
+  {
+   "index": 30,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9849.CR3",
+   "bytes": 39391444,
+   "mtime_ns": 1793140496000000000,
+   "sha256": "118abd77642f2e01614979ca5ec742bd80e6ac6e297c6aa8782613254c8e3bab",
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:27 23:33:47",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 4000,
+    "recommended_iso": 4000,
+    "focal_mm": 26.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   },
+   "split": "sealed"
+  },
+  {
+   "index": 31,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9850.CR3",
+   "bytes": 39401684,
+   "mtime_ns": 1793140498000000000,
+   "sha256": "f10aca785ede26d10f7e0fa01e6e858f24e5e413a73f3e19ec6c3b437a10da79",
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:27 23:33:47",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 4000,
+    "recommended_iso": 4000,
+    "focal_mm": 26.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   },
+   "split": "sealed"
+  },
+  {
+   "index": 32,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9851.CR3",
+   "bytes": 39401172,
+   "mtime_ns": 1793140500000000000,
+   "sha256": "0306acec0a43414588ec5eb4ca2f6f2fe4d8ef32b29a1fbf69b283a12f707aad",
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:27 23:33:47",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 4000,
+    "recommended_iso": 4000,
+    "focal_mm": 26.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   },
+   "split": "sealed"
+  },
+  {
+   "index": 33,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9852.CR3",
+   "bytes": 39399636,
+   "mtime_ns": 1793140504000000000,
+   "sha256": "3b005e471e40eec316e7974acf6357922003a24f59fd958be28ffc0c76efea85",
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:27 23:33:47",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 4000,
+    "recommended_iso": 4000,
+    "focal_mm": 26.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   },
+   "split": "sealed"
+  },
+  {
+   "index": 34,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9853.CR3",
+   "bytes": 39398612,
+   "mtime_ns": 1793140506000000000,
+   "sha256": "90b93dfefc1b2edd3dc91728e9b1ee568ad850a8cb359a5fddf35b312f832bb0",
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:27 23:33:47",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 4000,
+    "recommended_iso": 4000,
+    "focal_mm": 26.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   },
+   "split": "sealed"
+  },
+  {
+   "index": 35,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9854.CR3",
+   "bytes": 39388884,
+   "mtime_ns": 1793140508000000000,
+   "sha256": "2f0445c306faf012e5731b1411c195496c3ec85e7d8e511646a5084de2525553",
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:27 23:33:47",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 4000,
+    "recommended_iso": 4000,
+    "focal_mm": 26.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   },
+   "split": "sealed"
+  },
+  {
+   "index": 36,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9855.CR3",
+   "bytes": 39396564,
+   "mtime_ns": 1793140512000000000,
+   "sha256": "f16dce7773934ea5188b5dbd3a26061b43695a61f45a2068deff5c0f27512b59",
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:27 23:33:47",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 4000,
+    "recommended_iso": 4000,
+    "focal_mm": 26.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   },
+   "split": "sealed"
+  },
+  {
+   "index": 37,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9856.CR3",
+   "bytes": 39394516,
+   "mtime_ns": 1793140512000000000,
+   "sha256": "3c8637204cd259dcb0faf0efc719a2daa0888cd5dab6759c847d99376fb816e3",
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:27 23:33:47",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 4000,
+    "recommended_iso": 4000,
+    "focal_mm": 26.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   },
+   "split": "sealed"
+  },
+  {
+   "index": 38,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9857.CR3",
+   "bytes": 39392980,
+   "mtime_ns": 1793140514000000000,
+   "sha256": "8f5842a4cc0c8e0f7ba094ce71a4774f1062c321cc2ffb86de4a5b2d8613e209",
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:27 23:33:47",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 4000,
+    "recommended_iso": 4000,
+    "focal_mm": 26.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   },
+   "split": "sealed"
+  },
+  {
+   "index": 39,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9858.CR3",
+   "bytes": 39397076,
+   "mtime_ns": 1793140518000000000,
+   "sha256": "c1ea790d03b43d5947b1c7fb50e0aba6511b3be55998ec8579bc9ed3c3f880b1",
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:27 23:33:48",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 4000,
+    "recommended_iso": 4000,
+    "focal_mm": 26.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   },
+   "split": "sealed"
+  },
+  {
+   "index": 40,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9859.CR3",
+   "bytes": 39396564,
+   "mtime_ns": 1793140520000000000,
+   "sha256": "ad880863354a51bb4061761a2f06b0ff9aaa37ea88e2e895fe610f55f751e735",
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:27 23:33:48",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 4000,
+    "recommended_iso": 4000,
+    "focal_mm": 26.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   },
+   "split": "sealed"
+  },
+  {
+   "index": 41,
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9860.CR3",
+   "bytes": 39411924,
+   "mtime_ns": 1793140522000000000,
+   "sha256": "a560c9db1a3da02483e563fff6030d1817c7d67e7bd009bf5754daed117cfbe0",
+   "metadata": {
+    "make": "Canon",
+    "model": "Canon EOS R6 Mark III",
+    "datetime": "2026:10:27 23:33:48",
+    "exposure_s": 0.005,
+    "aperture": 5.6,
+    "iso": 4000,
+    "recommended_iso": 4000,
+    "focal_mm": 26.0,
+    "lens": "RF24-105mm F2.8 L IS USM Z"
+   },
+   "split": "sealed"
+  }
+ ],
+ "rois": [
+  {
+   "x": 1262,
+   "y": 798,
+   "width": 256,
+   "height": 256,
+   "fx": 0.2,
+   "fy": 0.2
+  },
+  {
+   "x": 3350,
+   "y": 798,
+   "width": 256,
+   "height": 256,
+   "fx": 0.5,
+   "fy": 0.2
+  },
+  {
+   "x": 5438,
+   "y": 798,
+   "width": 256,
+   "height": 256,
+   "fx": 0.8,
+   "fy": 0.2
+  },
+  {
+   "x": 1262,
+   "y": 2190,
+   "width": 256,
+   "height": 256,
+   "fx": 0.2,
+   "fy": 0.5
+  },
+  {
+   "x": 3350,
+   "y": 2190,
+   "width": 256,
+   "height": 256,
+   "fx": 0.5,
+   "fy": 0.5
+  },
+  {
+   "x": 5438,
+   "y": 2190,
+   "width": 256,
+   "height": 256,
+   "fx": 0.8,
+   "fy": 0.5
+  },
+  {
+   "x": 1262,
+   "y": 3582,
+   "width": 256,
+   "height": 256,
+   "fx": 0.2,
+   "fy": 0.8
+  },
+  {
+   "x": 3350,
+   "y": 3582,
+   "width": 256,
+   "height": 256,
+   "fx": 0.5,
+   "fy": 0.8
+  },
+  {
+   "x": 5438,
+   "y": 3582,
+   "width": 256,
+   "height": 256,
+   "fx": 0.8,
+   "fy": 0.8
+  }
+ ],
+ "decoder": [
+  {
+   "file": "6V1A9819.CR3",
+   "active_shape": [
+    4639,
+    6959
+   ],
+   "cfa": [
+    [
+     0,
+     1
+    ],
+    [
+     3,
+     2
+    ]
+   ],
+   "color_desc": "RGBG",
+   "declared_black": [
+    0,
+    35,
+    105,
+    72
+   ],
+   "declared_white": 16383,
+   "raw_sizes": "ImageSizes(raw_height=4760, raw_width=7144, height=4639, width=6959, top_margin=108, left_margin=172, iheight=4639, iwidth=6959, pixel_aspect=1.0, flip=5, crop_left_margin=172, crop_top_margin=108, crop_width=6960, crop_height=4640)"
+  },
+  {
+   "file": "6V1A9820.CR3",
+   "active_shape": [
+    4639,
+    6959
+   ],
+   "cfa": [
+    [
+     0,
+     1
+    ],
+    [
+     3,
+     2
+    ]
+   ],
+   "color_desc": "RGBG",
+   "declared_black": [
+    0,
+    35,
+    105,
+    72
+   ],
+   "declared_white": 16383,
+   "raw_sizes": "ImageSizes(raw_height=4760, raw_width=7144, height=4639, width=6959, top_margin=108, left_margin=172, iheight=4639, iwidth=6959, pixel_aspect=1.0, flip=5, crop_left_margin=172, crop_top_margin=108, crop_width=6960, crop_height=4640)"
+  },
+  {
+   "file": "6V1A9821.CR3",
+   "active_shape": [
+    4639,
+    6959
+   ],
+   "cfa": [
+    [
+     0,
+     1
+    ],
+    [
+     3,
+     2
+    ]
+   ],
+   "color_desc": "RGBG",
+   "declared_black": [
+    0,
+    35,
+    105,
+    72
+   ],
+   "declared_white": 16383,
+   "raw_sizes": "ImageSizes(raw_height=4760, raw_width=7144, height=4639, width=6959, top_margin=108, left_margin=172, iheight=4639, iwidth=6959, pixel_aspect=1.0, flip=5, crop_left_margin=172, crop_top_margin=108, crop_width=6960, crop_height=4640)"
+  },
+  {
+   "file": "6V1A9822.CR3",
+   "active_shape": [
+    4639,
+    6959
+   ],
+   "cfa": [
+    [
+     0,
+     1
+    ],
+    [
+     3,
+     2
+    ]
+   ],
+   "color_desc": "RGBG",
+   "declared_black": [
+    0,
+    35,
+    105,
+    72
+   ],
+   "declared_white": 16383,
+   "raw_sizes": "ImageSizes(raw_height=4760, raw_width=7144, height=4639, width=6959, top_margin=108, left_margin=172, iheight=4639, iwidth=6959, pixel_aspect=1.0, flip=5, crop_left_margin=172, crop_top_margin=108, crop_width=6960, crop_height=4640)"
+  },
+  {
+   "file": "6V1A9823.CR3",
+   "active_shape": [
+    4639,
+    6959
+   ],
+   "cfa": [
+    [
+     0,
+     1
+    ],
+    [
+     3,
+     2
+    ]
+   ],
+   "color_desc": "RGBG",
+   "declared_black": [
+    0,
+    35,
+    105,
+    72
+   ],
+   "declared_white": 16383,
+   "raw_sizes": "ImageSizes(raw_height=4760, raw_width=7144, height=4639, width=6959, top_margin=108, left_margin=172, iheight=4639, iwidth=6959, pixel_aspect=1.0, flip=5, crop_left_margin=172, crop_top_margin=108, crop_width=6960, crop_height=4640)"
+  },
+  {
+   "file": "6V1A9824.CR3",
+   "active_shape": [
+    4639,
+    6959
+   ],
+   "cfa": [
+    [
+     0,
+     1
+    ],
+    [
+     3,
+     2
+    ]
+   ],
+   "color_desc": "RGBG",
+   "declared_black": [
+    0,
+    35,
+    105,
+    72
+   ],
+   "declared_white": 16383,
+   "raw_sizes": "ImageSizes(raw_height=4760, raw_width=7144, height=4639, width=6959, top_margin=108, left_margin=172, iheight=4639, iwidth=6959, pixel_aspect=1.0, flip=5, crop_left_margin=172, crop_top_margin=108, crop_width=6960, crop_height=4640)"
+  },
+  {
+   "file": "6V1A9825.CR3",
+   "active_shape": [
+    4639,
+    6959
+   ],
+   "cfa": [
+    [
+     0,
+     1
+    ],
+    [
+     3,
+     2
+    ]
+   ],
+   "color_desc": "RGBG",
+   "declared_black": [
+    0,
+    35,
+    105,
+    72
+   ],
+   "declared_white": 16383,
+   "raw_sizes": "ImageSizes(raw_height=4760, raw_width=7144, height=4639, width=6959, top_margin=108, left_margin=172, iheight=4639, iwidth=6959, pixel_aspect=1.0, flip=5, crop_left_margin=172, crop_top_margin=108, crop_width=6960, crop_height=4640)"
+  },
+  {
+   "file": "6V1A9826.CR3",
+   "active_shape": [
+    4639,
+    6959
+   ],
+   "cfa": [
+    [
+     0,
+     1
+    ],
+    [
+     3,
+     2
+    ]
+   ],
+   "color_desc": "RGBG",
+   "declared_black": [
+    0,
+    35,
+    105,
+    72
+   ],
+   "declared_white": 16383,
+   "raw_sizes": "ImageSizes(raw_height=4760, raw_width=7144, height=4639, width=6959, top_margin=108, left_margin=172, iheight=4639, iwidth=6959, pixel_aspect=1.0, flip=5, crop_left_margin=172, crop_top_margin=108, crop_width=6960, crop_height=4640)"
+  },
+  {
+   "file": "6V1A9827.CR3",
+   "active_shape": [
+    4639,
+    6959
+   ],
+   "cfa": [
+    [
+     0,
+     1
+    ],
+    [
+     3,
+     2
+    ]
+   ],
+   "color_desc": "RGBG",
+   "declared_black": [
+    0,
+    35,
+    105,
+    72
+   ],
+   "declared_white": 16383,
+   "raw_sizes": "ImageSizes(raw_height=4760, raw_width=7144, height=4639, width=6959, top_margin=108, left_margin=172, iheight=4639, iwidth=6959, pixel_aspect=1.0, flip=5, crop_left_margin=172, crop_top_margin=108, crop_width=6960, crop_height=4640)"
+  },
+  {
+   "file": "6V1A9828.CR3",
+   "active_shape": [
+    4639,
+    6959
+   ],
+   "cfa": [
+    [
+     0,
+     1
+    ],
+    [
+     3,
+     2
+    ]
+   ],
+   "color_desc": "RGBG",
+   "declared_black": [
+    0,
+    35,
+    105,
+    72
+   ],
+   "declared_white": 16383,
+   "raw_sizes": "ImageSizes(raw_height=4760, raw_width=7144, height=4639, width=6959, top_margin=108, left_margin=172, iheight=4639, iwidth=6959, pixel_aspect=1.0, flip=5, crop_left_margin=172, crop_top_margin=108, crop_width=6960, crop_height=4640)"
+  },
+  {
+   "file": "6V1A9829.CR3",
+   "active_shape": [
+    4639,
+    6959
+   ],
+   "cfa": [
+    [
+     0,
+     1
+    ],
+    [
+     3,
+     2
+    ]
+   ],
+   "color_desc": "RGBG",
+   "declared_black": [
+    0,
+    35,
+    105,
+    72
+   ],
+   "declared_white": 16383,
+   "raw_sizes": "ImageSizes(raw_height=4760, raw_width=7144, height=4639, width=6959, top_margin=108, left_margin=172, iheight=4639, iwidth=6959, pixel_aspect=1.0, flip=5, crop_left_margin=172, crop_top_margin=108, crop_width=6960, crop_height=4640)"
+  },
+  {
+   "file": "6V1A9830.CR3",
+   "active_shape": [
+    4639,
+    6959
+   ],
+   "cfa": [
+    [
+     0,
+     1
+    ],
+    [
+     3,
+     2
+    ]
+   ],
+   "color_desc": "RGBG",
+   "declared_black": [
+    0,
+    35,
+    105,
+    72
+   ],
+   "declared_white": 16383,
+   "raw_sizes": "ImageSizes(raw_height=4760, raw_width=7144, height=4639, width=6959, top_margin=108, left_margin=172, iheight=4639, iwidth=6959, pixel_aspect=1.0, flip=5, crop_left_margin=172, crop_top_margin=108, crop_width=6960, crop_height=4640)"
+  },
+  {
+   "file": "6V1A9831.CR3",
+   "active_shape": [
+    4639,
+    6959
+   ],
+   "cfa": [
+    [
+     0,
+     1
+    ],
+    [
+     3,
+     2
+    ]
+   ],
+   "color_desc": "RGBG",
+   "declared_black": [
+    0,
+    35,
+    105,
+    72
+   ],
+   "declared_white": 16383,
+   "raw_sizes": "ImageSizes(raw_height=4760, raw_width=7144, height=4639, width=6959, top_margin=108, left_margin=172, iheight=4639, iwidth=6959, pixel_aspect=1.0, flip=5, crop_left_margin=172, crop_top_margin=108, crop_width=6960, crop_height=4640)"
+  },
+  {
+   "file": "6V1A9832.CR3",
+   "active_shape": [
+    4639,
+    6959
+   ],
+   "cfa": [
+    [
+     0,
+     1
+    ],
+    [
+     3,
+     2
+    ]
+   ],
+   "color_desc": "RGBG",
+   "declared_black": [
+    0,
+    35,
+    105,
+    72
+   ],
+   "declared_white": 16383,
+   "raw_sizes": "ImageSizes(raw_height=4760, raw_width=7144, height=4639, width=6959, top_margin=108, left_margin=172, iheight=4639, iwidth=6959, pixel_aspect=1.0, flip=5, crop_left_margin=172, crop_top_margin=108, crop_width=6960, crop_height=4640)"
+  }
+ ],
+ "statistics": [
+  {
+   "region": 0,
+   "planes": [
+    {
+     "offset": [
+      0,
+      0
+     ],
+     "frame_means_dn": [
+      2274.859375,
+      2274.7012329101562,
+      2274.54638671875,
+      2272.9509887695312,
+      2271.936767578125,
+      2270.3594360351562,
+      2269.9658203125,
+      2268.5624389648438,
+      2268.824951171875,
+      2268.5823974609375,
+      2267.10595703125,
+      2266.2847900390625,
+      2265.2103271484375,
+      2262.7703247070312
+     ],
+     "mean_dn": 2269.761513846261,
+     "temporal_variance_dn2_mean": 2651.357436295394,
+     "temporal_variance_dn2_median": 2474.142857142857,
+     "spatial_variance_of_mean_dn2": 395.06421779307095,
+     "half_stack_difference_variance_dn2": 677.8270825834147,
+     "mean_relative_range": 0.005326132379645056,
+     "lag1_temporal_residual_correlation": 0.003121908518870641,
+     "zeros_fraction": 0.0,
+     "quantiles_dn": [
+      2019.0,
+      2144.0,
+      2269.0,
+      2398.0,
+      2543.0
+     ]
+    },
+    {
+     "offset": [
+      0,
+      1
+     ],
+     "frame_means_dn": [
+      2334.9383544921875,
+      2334.0266723632812,
+      2334.1823120117188,
+      2332.4658813476562,
+      2330.3536376953125,
+      2330.4767456054688,
+      2328.1224975585938,
+      2327.2255859375,
+      2327.3824462890625,
+      2326.989990234375,
+      2326.1195678710938,
+      2324.2384033203125,
+      2323.4407958984375,
+      2320.9830322265625
+     ],
+     "mean_dn": 2328.638994489397,
+     "temporal_variance_dn2_mean": 3784.987999549279,
+     "temporal_variance_dn2_median": 3542.054945054945,
+     "spatial_variance_of_mean_dn2": 593.4134459476537,
+     "half_stack_difference_variance_dn2": 951.4291753914893,
+     "mean_relative_range": 0.005992909291070683,
+     "lag1_temporal_residual_correlation": 0.020489312576733018,
+     "zeros_fraction": 0.0,
+     "quantiles_dn": [
+      2050.0,
+      2178.0,
+      2328.0,
+      2482.0,
+      2660.0
+     ]
+    },
+    {
+     "offset": [
+      1,
+      0
+     ],
+     "frame_means_dn": [
+      2335.1656494140625,
+      2334.7164916992188,
+      2334.1255493164062,
+      2332.345947265625,
+      2330.7267456054688,
+      2328.9165649414062,
+      2328.049072265625,
+      2327.7626342773438,
+      2326.7637939453125,
+      2325.9161376953125,
+      2325.113525390625,
+      2324.5281982421875,
+      2322.0785522460938,
+      2320.0301513671875
+     ],
+     "mean_dn": 2328.3027866908483,
+     "temporal_variance_dn2_mean": 3791.706386691921,
+     "temporal_variance_dn2_median": 3565.8489010989015,
+     "spatial_variance_of_mean_dn2": 607.5709234813646,
+     "half_stack_difference_variance_dn2": 950.8095232415565,
+     "mean_relative_range": 0.006500657102415215,
+     "lag1_temporal_residual_correlation": 0.024492506239771325,
+     "zeros_fraction": 0.0,
+     "quantiles_dn": [
+      2024.0,
+      2177.0,
+      2328.0,
+      2480.0,
+      2619.0
+     ]
+    },
+    {
+     "offset": [
+      1,
+      1
+     ],
+     "frame_means_dn": [
+      2143.4811401367188,
+      2143.0680541992188,
+      2142.7379150390625,
+      2141.896240234375,
+      2141.1647338867188,
+      2140.5497436523438,
+      2140.6797485351562,
+      2141.0200805664062,
+      2140.3510131835938,
+      2140.1410522460938,
+      2139.7803344726562,
+      2139.7978515625,
+      2138.4754028320312,
+      2137.9044189453125
+     ],
+     "mean_dn": 2140.7891235351562,
+     "temporal_variance_dn2_mean": 1309.9722632104222,
+     "temporal_variance_dn2_median": 1233.4203296703297,
+     "spatial_variance_of_mean_dn2": 160.06949122698637,
+     "half_stack_difference_variance_dn2": 358.3612819396112,
+     "mean_relative_range": 0.002604983895937039,
+     "lag1_temporal_residual_correlation": -0.038177036496386554,
+     "zeros_fraction": 0.0,
+     "quantiles_dn": [
+      1973.0,
+      2062.0,
+      2139.0,
+      2234.0,
+      2404.0
+     ]
+    }
+   ],
+   "phase_shifts": [
+    {
+     "x_cfa_plane_pixels": 0.0,
+     "y_cfa_plane_pixels": 0.0,
+     "response": 1.0
+    },
+    {
+     "x_cfa_plane_pixels": -1.66249371273247,
+     "y_cfa_plane_pixels": 2.5348376101581565,
+     "response": 0.7226654565893114
+    },
+    {
+     "x_cfa_plane_pixels": -1.9514377239129175,
+     "y_cfa_plane_pixels": 1.8211764317646697,
+     "response": 0.8039423385635018
+    },
+    {
+     "x_cfa_plane_pixels": -5.740257657080875,
+     "y_cfa_plane_pixels": 2.4104946803260887,
+     "response": 0.6319160774582997
+    },
+    {
+     "x_cfa_plane_pixels": -12.649271983648106,
+     "y_cfa_plane_pixels": 0.6854378011841362,
+     "response": 0.5666653082007542
+    },
+    {
+     "x_cfa_plane_pixels": -15.586344502275963,
+     "y_cfa_plane_pixels": 0.16914274695774623,
+     "response": 0.5344538588542491
+    },
+    {
+     "x_cfa_plane_pixels": -16.74090665735703,
+     "y_cfa_plane_pixels": -1.6013469315958417,
+     "response": 0.5265899223741144
+    },
+    {
+     "x_cfa_plane_pixels": -15.70953274216032,
+     "y_cfa_plane_pixels": -3.44471670618222,
+     "response": 0.4548830515705049
+    },
+    {
+     "x_cfa_plane_pixels": -13.339563268786122,
+     "y_cfa_plane_pixels": -5.498102568530982,
+     "response": 0.4705807331483811
+    },
+    {
+     "x_cfa_plane_pixels": -12.178659273688709,
+     "y_cfa_plane_pixels": -6.592560273602729,
+     "response": 0.4894988771993667
+    },
+    {
+     "x_cfa_plane_pixels": -11.177800438493492,
+     "y_cfa_plane_pixels": -7.607500697821294,
+     "response": 0.49386667157523334
+    },
+    {
+     "x_cfa_plane_pixels": -12.085364000884695,
+     "y_cfa_plane_pixels": -9.104108748543212,
+     "response": 0.5107157435268164
+    },
+    {
+     "x_cfa_plane_pixels": -12.090506960351249,
+     "y_cfa_plane_pixels": -10.44868971113182,
+     "response": 0.5125703639350832
+    },
+    {
+     "x_cfa_plane_pixels": -12.489741763224117,
+     "y_cfa_plane_pixels": -12.5330150143119,
+     "response": 0.5154993843170814
+    }
+   ]
+  },
+  {
+   "region": 1,
+   "planes": [
+    {
+     "offset": [
+      0,
+      0
+     ],
+     "frame_means_dn": [
+      2199.7064208984375,
+      2198.5374755859375,
+      2197.6976318359375,
+      2197.79638671875,
+      2197.9196166992188,
+      2198.4905395507812,
+      2198.3145141601562,
+      2198.2357788085938,
+      2197.8516845703125,
+      2197.7959594726562,
+      2197.802978515625,
+      2197.2921752929688,
+      2196.83056640625,
+      2197.5001831054688
+     ],
+     "mean_dn": 2197.9837079729355,
+     "temporal_variance_dn2_mean": 1472.6080305497726,
+     "temporal_variance_dn2_median": 1386.5631868131868,
+     "spatial_variance_of_mean_dn2": 137.78071146867035,
+     "half_stack_difference_variance_dn2": 425.8356580958531,
+     "mean_relative_range": 0.0013084057364736897,
+     "lag1_temporal_residual_correlation": -0.07705385163170059,
+     "zeros_fraction": 0.0,
+     "quantiles_dn": [
+      2039.0,
+      2113.0,
+      2196.0,
+      2294.0,
+      2445.0
+     ]
+    },
+    {
+     "offset": [
+      0,
+      1
+     ],
+     "frame_means_dn": [
+      2101.3842163085938,
+      2100.9517211914062,
+      2101.1109008789062,
+      2101.3160400390625,
+      2101.0242919921875,
+      2101.195068359375,
+      2100.7465209960938,
+      2100.5889282226562,
+      2100.551513671875,
+      2101.1817016601562,
+      2100.8445434570312,
+      2100.5852661132812,
+      2100.4844970703125,
+      2100.2293090820312
+     ],
+     "mean_dn": 2100.871037074498,
+     "temporal_variance_dn2_mean": 670.9891468090016,
+     "temporal_variance_dn2_median": 626.5631868131869,
+     "spatial_variance_of_mean_dn2": 65.4421028815476,
+     "half_stack_difference_variance_dn2": 190.98149289578504,
+     "mean_relative_range": 0.000549727806315389,
+     "lag1_temporal_residual_correlation": -0.07560181972427674,
+     "zeros_fraction": 0.0,
+     "quantiles_dn": [
+      1936.0,
+      2045.0,
+      2100.0,
+      2166.0,
+      2304.0
+     ]
+    },
+    {
+     "offset": [
+      1,
+      0
+     ],
+     "frame_means_dn": [
+      2101.0825805664062,
+      2101.3554077148438,
+      2101.1690063476562,
+      2101.2855224609375,
+      2101.3087158203125,
+      2100.7711791992188,
+      2100.8161010742188,
+      2101.0603637695312,
+      2101.0714111328125,
+      2100.9488525390625,
+      2101.0110473632812,
+      2100.9568481445312,
+      2100.8026123046875,
+      2100.388427734375
+     ],
+     "mean_dn": 2101.002005440848,
+     "temporal_variance_dn2_mean": 671.628641987895,
+     "temporal_variance_dn2_median": 629.0906593406592,
+     "spatial_variance_of_mean_dn2": 72.87878140350995,
+     "half_stack_difference_variance_dn2": 193.04015312267808,
+     "mean_relative_range": 0.0004602470525799669,
+     "lag1_temporal_residual_correlation": -0.07835366115887893,
+     "zeros_fraction": 0.0,
+     "quantiles_dn": [
+      1952.0,
+      2044.0,
+      2100.0,
+      2168.0,
+      2276.0
+     ]
+    },
+    {
+     "offset": [
+      1,
+      1
+     ],
+     "frame_means_dn": [
+      2056.7952880859375,
+      2056.7625732421875,
+      2056.6818237304688,
+      2056.74951171875,
+      2056.620849609375,
+      2056.5628662109375,
+      2056.615234375,
+      2056.7079467773438,
+      2056.7828979492188,
+      2056.6344604492188,
+      2056.8729248046875,
+      2056.7213134765625,
+      2056.6947021484375,
+      2056.7540283203125
+     ],
+     "mean_dn": 2056.711172921317,
+     "temporal_variance_dn2_mean": 395.18147428743134,
+     "temporal_variance_dn2_median": 361.0164835164836,
+     "spatial_variance_of_mean_dn2": 59.174293015000146,
+     "half_stack_difference_variance_dn2": 113.79663683899804,
+     "mean_relative_range": 0.00015075456283421564,
+     "lag1_temporal_residual_correlation": -0.07639583231943065,
+     "zeros_fraction": 0.0,
+     "quantiles_dn": [
+      1895.0,
+      2011.0,
+      2056.0,
+      2109.0,
+      2262.0
+     ]
+    }
+   ],
+   "phase_shifts": [
+    {
+     "x_cfa_plane_pixels": 0.0,
+     "y_cfa_plane_pixels": 0.0,
+     "response": 1.0
+    },
+    {
+     "x_cfa_plane_pixels": -0.04881951972146226,
+     "y_cfa_plane_pixels": 0.19514238485573543,
+     "response": 0.5943293669261038
+    },
+    {
+     "x_cfa_plane_pixels": -0.08624153990292882,
+     "y_cfa_plane_pixels": -0.07679184730568522,
+     "response": 0.5093999786768109
+    },
+    {
+     "x_cfa_plane_pixels": 0.9106459500783117,
+     "y_cfa_plane_pixels": -5.68935234311931,
+     "response": 0.16639701393432915
+    },
+    {
+     "x_cfa_plane_pixels": 0.03849872792218889,
+     "y_cfa_plane_pixels": -0.06777508182773317,
+     "response": 0.553778430679813
+    },
+    {
+     "x_cfa_plane_pixels": 0.09145283538570936,
+     "y_cfa_plane_pixels": 0.0023857569798408917,
+     "response": 0.5513317871373147
+    },
+    {
+     "x_cfa_plane_pixels": 0.025590176143452936,
+     "y_cfa_plane_pixels": 0.060411853757472045,
+     "response": 0.5294012872036546
+    },
+    {
+     "x_cfa_plane_pixels": 0.10433614418194281,
+     "y_cfa_plane_pixels": 0.10716999064278099,
+     "response": 0.5613530536647886
+    },
+    {
+     "x_cfa_plane_pixels": 0.017154140320052136,
+     "y_cfa_plane_pixels": -0.12962176415433646,
+     "response": 0.4630216299556196
+    },
+    {
+     "x_cfa_plane_pixels": -0.046594839665871746,
+     "y_cfa_plane_pixels": 0.21834926571606417,
+     "response": 0.5396802932955325
+    },
+    {
+     "x_cfa_plane_pixels": 0.007994538992740274,
+     "y_cfa_plane_pixels": 0.04246549147546119,
+     "response": 0.5533034461550415
+    },
+    {
+     "x_cfa_plane_pixels": 0.14886952032292555,
+     "y_cfa_plane_pixels": 0.01413036567194581,
+     "response": 0.5769590123090893
+    },
+    {
+     "x_cfa_plane_pixels": 1.2854260233566208,
+     "y_cfa_plane_pixels": 0.08038357475678737,
+     "response": 0.48588169319555163
+    },
+    {
+     "x_cfa_plane_pixels": 0.1968551810545378,
+     "y_cfa_plane_pixels": -0.2384788509347544,
+     "response": 0.5692812057677656
+    }
+   ]
+  },
+  {
+   "region": 2,
+   "planes": [
+    {
+     "offset": [
+      0,
+      0
+     ],
+     "frame_means_dn": [
+      2329.7337036132812,
+      2328.1170654296875,
+      2326.0938110351562,
+      2327.0186767578125,
+      2327.9046630859375,
+      2328.915283203125,
+      2328.9342041015625,
+      2328.9561767578125,
+      2328.8058471679688,
+      2328.2710571289062,
+      2328.090087890625,
+      2327.8709716796875,
+      2329.2386474609375,
+      2328.8325805664062
+     ],
+     "mean_dn": 2328.3416268484934,
+     "temporal_variance_dn2_mean": 2599.2943527724715,
+     "temporal_variance_dn2_median": 2454.53021978022,
+     "spatial_variance_of_mean_dn2": 284.2255074323858,
+     "half_stack_difference_variance_dn2": 748.1867989051555,
+     "mean_relative_range": 0.0015632983305167915,
+     "lag1_temporal_residual_correlation": -0.07636559505541805,
+     "zeros_fraction": 0.0,
+     "quantiles_dn": [
+      2086.0,
+      2214.0,
+      2327.0,
+      2455.0,
+      2594.0
+     ]
+    },
+    {
+     "offset": [
+      0,
+      1
+     ],
+     "frame_means_dn": [
+      2143.3156127929688,
+      2142.3372802734375,
+      2142.1112670898438,
+      2142.2647705078125,
+      2143.017333984375,
+      2143.3623046875,
+      2143.6048583984375,
+      2143.5311279296875,
+      2142.8052368164062,
+      2143.2999267578125,
+      2142.991455078125,
+      2143.7384643554688,
+      2143.0191040039062,
+      2142.9288330078125
+     ],
+     "mean_dn": 2143.0233982631134,
+     "temporal_variance_dn2_mean": 1009.2825293907753,
+     "temporal_variance_dn2_median": 946.6620879120878,
+     "spatial_variance_of_mean_dn2": 93.3079089421817,
+     "half_stack_difference_variance_dn2": 291.59772496252344,
+     "mean_relative_range": 0.0007592998130322876,
+     "lag1_temporal_residual_correlation": -0.08136876885868612,
+     "zeros_fraction": 0.0,
+     "quantiles_dn": [
+      1984.0,
+      2073.0,
+      2142.0,
+      2223.0,
+      2330.0
+     ]
+    },
+    {
+     "offset": [
+      1,
+      0
+     ],
+     "frame_means_dn": [
+      2143.920654296875,
+      2143.0779418945312,
+      2142.06689453125,
+      2141.7247924804688,
+      2143.2398071289062,
+      2142.8571166992188,
+      2143.5214233398438,
+      2143.7484741210938,
+      2143.02099609375,
+      2143.1571044921875,
+      2143.2691650390625,
+      2143.5075073242188,
+      2143.4935913085938,
+      2143.4541625976562
+     ],
+     "mean_dn": 2143.1471165248327,
+     "temporal_variance_dn2_mean": 1007.8771560165908,
+     "temporal_variance_dn2_median": 948.5274725274727,
+     "spatial_variance_of_mean_dn2": 103.16027543676675,
+     "half_stack_difference_variance_dn2": 291.2067105246289,
+     "mean_relative_range": 0.0010245968648045476,
+     "lag1_temporal_residual_correlation": -0.07592597595584295,
+     "zeros_fraction": 0.0,
+     "quantiles_dn": [
+      1997.0,
+      2073.0,
+      2142.0,
+      2224.0,
+      2340.0
+     ]
+    },
+    {
+     "offset": [
+      1,
+      1
+     ],
+     "frame_means_dn": [
+      2063.531005859375,
+      2063.560546875,
+      2063.4566040039062,
+      2062.8929443359375,
+      2063.203857421875,
+      2063.5863647460938,
+      2063.66064453125,
+      2063.865966796875,
+      2063.5218505859375,
+      2063.80078125,
+      2063.7968139648438,
+      2063.6388549804688,
+      2063.1853637695312,
+      2063.8794555664062
+     ],
+     "mean_dn": 2063.54150390625,
+     "temporal_variance_dn2_mean": 457.85536076472357,
+     "temporal_variance_dn2_median": 418.9230769230769,
+     "spatial_variance_of_mean_dn2": 64.30658779825487,
+     "half_stack_difference_variance_dn2": 129.2646034271741,
+     "mean_relative_range": 0.0004780670650923669,
+     "lag1_temporal_residual_correlation": -0.07814646216284078,
+     "zeros_fraction": 0.0,
+     "quantiles_dn": [
+      1921.0,
+      2016.0,
+      2063.0,
+      2119.0,
+      2306.0
+     ]
+    }
+   ],
+   "phase_shifts": [
+    {
+     "x_cfa_plane_pixels": 0.0,
+     "y_cfa_plane_pixels": 0.0,
+     "response": 1.0
+    },
+    {
+     "x_cfa_plane_pixels": -0.009586309284415506,
+     "y_cfa_plane_pixels": -0.17861120219291138,
+     "response": 0.5473238048143685
+    },
+    {
+     "x_cfa_plane_pixels": -0.041743280011516504,
+     "y_cfa_plane_pixels": 0.029387285828441634,
+     "response": 0.535360474139452
+    },
+    {
+     "x_cfa_plane_pixels": 0.04124638410148407,
+     "y_cfa_plane_pixels": 0.21733778727254816,
+     "response": 0.4966943087056279
+    },
+    {
+     "x_cfa_plane_pixels": -0.014570784984272223,
+     "y_cfa_plane_pixels": -0.02872483725643349,
+     "response": 0.48849197081290185
+    },
+    {
+     "x_cfa_plane_pixels": 0.04109662470435893,
+     "y_cfa_plane_pixels": -0.05193174309997062,
+     "response": 0.4766165039036423
+    },
+    {
+     "x_cfa_plane_pixels": -0.2640599263462917,
+     "y_cfa_plane_pixels": 0.07753847138539527,
+     "response": 0.49177949025761336
+    },
+    {
+     "x_cfa_plane_pixels": 0.008546780568579493,
+     "y_cfa_plane_pixels": 0.15188754235428803,
+     "response": 0.5380942856427282
+    },
+    {
+     "x_cfa_plane_pixels": 0.027774084800171295,
+     "y_cfa_plane_pixels": -0.03199808798200365,
+     "response": 0.4711999755818397
+    },
+    {
+     "x_cfa_plane_pixels": 0.04792466133425677,
+     "y_cfa_plane_pixels": -0.14719734617554536,
+     "response": 0.5430591627955437
+    },
+    {
+     "x_cfa_plane_pixels": 0.5841526096202827,
+     "y_cfa_plane_pixels": 0.6496022357990725,
+     "response": 0.5374157531186938
+    },
+    {
+     "x_cfa_plane_pixels": -0.07425488922841339,
+     "y_cfa_plane_pixels": 0.07105374846892687,
+     "response": 0.5675437063910067
+    },
+    {
+     "x_cfa_plane_pixels": 0.025714009448385866,
+     "y_cfa_plane_pixels": -1.5772813262494054,
+     "response": 0.4500334719195962
+    },
+    {
+     "x_cfa_plane_pixels": 0.09870408470825964,
+     "y_cfa_plane_pixels": -0.03019813630068313,
+     "response": 0.4904674955178052
+    }
+   ]
+  },
+  {
+   "region": 3,
+   "planes": [
+    {
+     "offset": [
+      0,
+      0
+     ],
+     "frame_means_dn": [
+      2443.3974609375,
+      2441.333251953125,
+      2441.7736206054688,
+      2439.529541015625,
+      2432.14013671875,
+      2428.828369140625,
+      2429.2391967773438,
+      2428.6740112304688,
+      2431.5696411132812,
+      2432.6500244140625,
+      2435.0631713867188,
+      2434.2031860351562,
+      2431.9885864257812,
+      2432.9324340820312
+     ],
+     "mean_dn": 2434.523045131138,
+     "temporal_variance_dn2_mean": 6824.87798334478,
+     "temporal_variance_dn2_median": 5629.395604395604,
+     "spatial_variance_of_mean_dn2": 15106.601025193853,
+     "half_stack_difference_variance_dn2": 1365.7954210894447,
+     "mean_relative_range": 0.006047775861673207,
+     "lag1_temporal_residual_correlation": 0.21637479776965296,
+     "zeros_fraction": 0.0,
+     "quantiles_dn": [
+      2013.0,
+      2075.0,
+      2459.0,
+      2691.0,
+      2867.0
+     ]
+    },
+    {
+     "offset": [
+      0,
+      1
+     ],
+     "frame_means_dn": [
+      2525.516357421875,
+      2522.7794799804688,
+      2522.7233276367188,
+      2519.9927368164062,
+      2511.5570068359375,
+      2507.1256103515625,
+      2507.6213989257812,
+      2507.5831298828125,
+      2510.5661010742188,
+      2510.524658203125,
+      2512.408935546875,
+      2511.2164916992188,
+      2508.8595581054688,
+      2508.9677734375
+     ],
+     "mean_dn": 2513.3887547084264,
+     "temporal_variance_dn2_mean": 10190.127215710314,
+     "temporal_variance_dn2_median": 8312.134615384615,
+     "spatial_variance_of_mean_dn2": 22644.784403884114,
+     "half_stack_difference_variance_dn2": 1951.934062566608,
+     "mean_relative_range": 0.0073171120209161505,
+     "lag1_temporal_residual_correlation": 0.25145835925852383,
+     "zeros_fraction": 0.0,
+     "quantiles_dn": [
+      2014.0,
+      2075.0,
+      2545.0,
+      2820.0,
+      3018.0
+     ]
+    },
+    {
+     "offset": [
+      1,
+      0
+     ],
+     "frame_means_dn": [
+      2525.7620849609375,
+      2522.4645385742188,
+      2524.3739624023438,
+      2520.043701171875,
+      2511.4200439453125,
+      2509.3189697265625,
+      2508.7739868164062,
+      2506.365234375,
+      2510.5491943359375,
+      2510.7713623046875,
+      2513.748291015625,
+      2511.469482421875,
+      2509.7189331054688,
+      2510.0897827148438
+     ],
+     "mean_dn": 2513.9192548479355,
+     "temporal_variance_dn2_mean": 10241.250579163268,
+     "temporal_variance_dn2_median": 8273.554945054946,
+     "spatial_variance_of_mean_dn2": 22732.517107988177,
+     "half_stack_difference_variance_dn2": 1967.192069128384,
+     "mean_relative_range": 0.007715781065176175,
+     "lag1_temporal_residual_correlation": 0.24850560753800896,
+     "zeros_fraction": 0.0,
+     "quantiles_dn": [
+      1997.0,
+      2074.0,
+      2546.0,
+      2821.0,
+      3035.0
+     ]
+    },
+    {
+     "offset": [
+      1,
+      1
+     ],
+     "frame_means_dn": [
+      2201.2562866210938,
+      2200.4666137695312,
+      2200.5640258789062,
+      2200.0169067382812,
+      2197.3408813476562,
+      2195.477294921875,
+      2195.5142211914062,
+      2195.8335571289062,
+      2196.4027099609375,
+      2196.3026123046875,
+      2197.0211181640625,
+      2196.5803833007812,
+      2195.8701782226562,
+      2196.0552368164062
+     ],
+     "mean_dn": 2197.4787161690847,
+     "temporal_variance_dn2_mean": 2418.724350478623,
+     "temporal_variance_dn2_median": 2231.7170329670325,
+     "spatial_variance_of_mean_dn2": 2611.937723367722,
+     "half_stack_difference_variance_dn2": 579.4703807003644,
+     "mean_relative_range": 0.002629828292168126,
+     "lag1_temporal_residual_correlation": 0.08365619055065969,
+     "zeros_fraction": 0.0,
+     "quantiles_dn": [
+      1982.0,
+      2038.0,
+      2204.0,
+      2345.0,
+      2486.0
+     ]
+    }
+   ],
+   "phase_shifts": [
+    {
+     "x_cfa_plane_pixels": 0.0,
+     "y_cfa_plane_pixels": 0.0,
+     "response": 1.0
+    },
+    {
+     "x_cfa_plane_pixels": -0.39798381559472773,
+     "y_cfa_plane_pixels": 3.684476377243996,
+     "response": 0.7928851030301303
+    },
+    {
+     "x_cfa_plane_pixels": 1.0334420655094405,
+     "y_cfa_plane_pixels": 4.07283509856245,
+     "response": 0.8063502436270937
+    },
+    {
+     "x_cfa_plane_pixels": -1.1797912754857833,
+     "y_cfa_plane_pixels": 5.365380006402901,
+     "response": 0.773430428467691
+    },
+    {
+     "x_cfa_plane_pixels": -7.722040239881565,
+     "y_cfa_plane_pixels": 3.9249226627068907,
+     "response": 0.6212726588128135
+    },
+    {
+     "x_cfa_plane_pixels": -10.21669391682012,
+     "y_cfa_plane_pixels": 3.1490183848587066,
+     "response": 0.6717372601851821
+    },
+    {
+     "x_cfa_plane_pixels": -11.447861931333705,
+     "y_cfa_plane_pixels": 1.5584539724813808,
+     "response": 0.7223592621739954
+    },
+    {
+     "x_cfa_plane_pixels": -10.983420445735575,
+     "y_cfa_plane_pixels": -0.06033738362053498,
+     "response": 0.7041692362399772
+    },
+    {
+     "x_cfa_plane_pixels": -8.925694437509264,
+     "y_cfa_plane_pixels": -1.8387761045753876,
+     "response": 0.6762979961931705
+    },
+    {
+     "x_cfa_plane_pixels": -7.951176947743932,
+     "y_cfa_plane_pixels": -3.501272733868646,
+     "response": 0.6036931029520929
+    },
+    {
+     "x_cfa_plane_pixels": -7.1085766314934205,
+     "y_cfa_plane_pixels": -4.345798332992004,
+     "response": 0.6117204341571778
+    },
+    {
+     "x_cfa_plane_pixels": -8.2844283663689,
+     "y_cfa_plane_pixels": -5.8949742843230695,
+     "response": 0.606568749062717
+    },
+    {
+     "x_cfa_plane_pixels": -8.324993482486278,
+     "y_cfa_plane_pixels": -7.044842173907654,
+     "response": 0.5745959268533625
+    },
+    {
+     "x_cfa_plane_pixels": -9.22993315753007,
+     "y_cfa_plane_pixels": -8.92432856688744,
+     "response": 0.559363990672864
+    }
+   ]
+  },
+  {
+   "region": 4,
+   "planes": [
+    {
+     "offset": [
+      0,
+      0
+     ],
+     "frame_means_dn": [
+      2453.4852905273438,
+      2446.6516723632812,
+      2434.0069580078125,
+      2440.7426147460938,
+      2462.837890625,
+      2474.27783203125,
+      2479.90380859375,
+      2478.3472290039062,
+      2470.9156494140625,
+      2467.19921875,
+      2466.5077514648438,
+      2469.872802734375,
+      2469.6939697265625,
+      2473.03564453125
+     ],
+     "mean_dn": 2463.391309465681,
+     "temporal_variance_dn2_mean": 11141.952088408418,
+     "temporal_variance_dn2_median": 8804.972527472528,
+     "spatial_variance_of_mean_dn2": 20773.38438643103,
+     "half_stack_difference_variance_dn2": 1433.5357973459272,
+     "mean_relative_range": 0.018631571204127007,
+     "lag1_temporal_residual_correlation": 0.4110693916444872,
+     "zeros_fraction": 0.0,
+     "quantiles_dn": [
+      2088.0,
+      2197.0,
+      2424.0,
+      2950.0,
+      3264.0
+     ]
+    },
+    {
+     "offset": [
+      0,
+      1
+     ],
+     "frame_means_dn": [
+      2592.4656982421875,
+      2580.6104125976562,
+      2564.1097412109375,
+      2573.0032348632812,
+      2607.1141357421875,
+      2621.102783203125,
+      2628.1800537109375,
+      2626.0926513671875,
+      2616.458251953125,
+      2612.4864501953125,
+      2609.3938598632812,
+      2614.7620239257812,
+      2613.5984497070312,
+      2618.8740234375
+     ],
+     "mean_dn": 2605.589412144252,
+     "temporal_variance_dn2_mean": 22115.445717277107,
+     "temporal_variance_dn2_median": 16785.57417582418,
+     "spatial_variance_of_mean_dn2": 43970.279079032014,
+     "half_stack_difference_variance_dn2": 2281.8756486103703,
+     "mean_relative_range": 0.02458956587763909,
+     "lag1_temporal_residual_correlation": 0.4920092379474075,
+     "zeros_fraction": 0.0,
+     "quantiles_dn": [
+      2123.0,
+      2243.0,
+      2544.0,
+      3309.0,
+      3785.0
+     ]
+    },
+    {
+     "offset": [
+      1,
+      0
+     ],
+     "frame_means_dn": [
+      2590.859130859375,
+      2578.6390991210938,
+      2562.375244140625,
+      2571.447998046875,
+      2605.2318725585938,
+      2619.0543212890625,
+      2627.0704956054688,
+      2623.9758911132812,
+      2614.7999267578125,
+      2609.1696166992188,
+      2607.9102172851562,
+      2613.3770141601562,
+      2611.7490234375,
+      2616.236083984375
+     ],
+     "mean_dn": 2603.7068525041855,
+     "temporal_variance_dn2_mean": 22032.161957457825,
+     "temporal_variance_dn2_median": 16787.84065934066,
+     "spatial_variance_of_mean_dn2": 43220.7746748848,
+     "half_stack_difference_variance_dn2": 2236.5874127604975,
+     "mean_relative_range": 0.024847363827698705,
+     "lag1_temporal_residual_correlation": 0.49485281314084484,
+     "zeros_fraction": 0.0,
+     "quantiles_dn": [
+      2127.0,
+      2243.0,
+      2543.0,
+      3300.0,
+      3760.0
+     ]
+    },
+    {
+     "offset": [
+      1,
+      1
+     ],
+     "frame_means_dn": [
+      2239.6448974609375,
+      2235.2708129882812,
+      2228.5875854492188,
+      2232.5769653320312,
+      2245.8261108398438,
+      2251.0025634765625,
+      2255.2122802734375,
+      2253.7844848632812,
+      2249.2476806640625,
+      2247.235107421875,
+      2246.242431640625,
+      2248.7869262695312,
+      2248.2111206054688,
+      2249.6861572265625
+     ],
+     "mean_dn": 2245.093937465123,
+     "temporal_variance_dn2_mean": 5218.047978663182,
+     "temporal_variance_dn2_median": 4168.101648351649,
+     "spatial_variance_of_mean_dn2": 7125.838273655528,
+     "half_stack_difference_variance_dn2": 770.5253494898124,
+     "mean_relative_range": 0.01185905604211822,
+     "lag1_temporal_residual_correlation": 0.3479657455749206,
+     "zeros_fraction": 0.0,
+     "quantiles_dn": [
+      1998.0,
+      2082.0,
+      2220.0,
+      2557.0,
+      2780.0
+     ]
+    }
+   ],
+   "phase_shifts": [
+    {
+     "x_cfa_plane_pixels": 0.0,
+     "y_cfa_plane_pixels": 0.0,
+     "response": 1.0
+    },
+    {
+     "x_cfa_plane_pixels": 1.6460646552269083,
+     "y_cfa_plane_pixels": 1.9944313525854795,
+     "response": 1.1177391314413399
+    },
+    {
+     "x_cfa_plane_pixels": 5.270136846935323,
+     "y_cfa_plane_pixels": -0.34077670915864644,
+     "response": 1.065348617383279
+    },
+    {
+     "x_cfa_plane_pixels": 3.4140314604039403,
+     "y_cfa_plane_pixels": -1.3860975950090193,
+     "response": 1.0183933400548995
+    },
+    {
+     "x_cfa_plane_pixels": -2.939580645659362,
+     "y_cfa_plane_pixels": -3.0604646354123304,
+     "response": 1.0394603528548032
+    },
+    {
+     "x_cfa_plane_pixels": -5.46355251044649,
+     "y_cfa_plane_pixels": -4.889711783390268,
+     "response": 0.9424400504212826
+    },
+    {
+     "x_cfa_plane_pixels": -6.902832978341891,
+     "y_cfa_plane_pixels": -5.478384569897585,
+     "response": 0.9467211752198637
+    },
+    {
+     "x_cfa_plane_pixels": -6.1077194163949855,
+     "y_cfa_plane_pixels": -6.973514234882799,
+     "response": 0.9280964054632932
+    },
+    {
+     "x_cfa_plane_pixels": -3.8887354172649395,
+     "y_cfa_plane_pixels": -8.055468433469557,
+     "response": 0.9296098678605631
+    },
+    {
+     "x_cfa_plane_pixels": -3.046442458466899,
+     "y_cfa_plane_pixels": -8.644685510654867,
+     "response": 0.9407309019006789
+    },
+    {
+     "x_cfa_plane_pixels": -2.3987574417780877,
+     "y_cfa_plane_pixels": -9.354654063678964,
+     "response": 0.935567878477741
+    },
+    {
+     "x_cfa_plane_pixels": -3.620572926175825,
+     "y_cfa_plane_pixels": -10.178970061454521,
+     "response": 0.8961473107337952
+    },
+    {
+     "x_cfa_plane_pixels": -3.347549751036155,
+     "y_cfa_plane_pixels": -11.315064067246297,
+     "response": 0.8720672357594594
+    },
+    {
+     "x_cfa_plane_pixels": -4.400050634278728,
+     "y_cfa_plane_pixels": -11.746333569007277,
+     "response": 0.8882830552756786
+    }
+   ]
+  },
+  {
+   "region": 5,
+   "planes": [
+    {
+     "offset": [
+      0,
+      0
+     ],
+     "frame_means_dn": [
+      2837.7507934570312,
+      2829.645751953125,
+      2825.5991821289062,
+      2831.892822265625,
+      2845.1864013671875,
+      2851.767822265625,
+      2854.8115234375,
+      2855.0180053710938,
+      2851.9201049804688,
+      2851.4099731445312,
+      2852.1641235351562,
+      2852.51806640625,
+      2854.1455078125,
+      2855.3269653320312
+     ],
+     "mean_dn": 2846.368360246931,
+     "temporal_variance_dn2_mean": 9530.009983272343,
+     "temporal_variance_dn2_median": 6771.4285714285725,
+     "spatial_variance_of_mean_dn2": 16519.535517144395,
+     "half_stack_difference_variance_dn2": 2118.056053876193,
+     "mean_relative_range": 0.01044410963047173,
+     "lag1_temporal_residual_correlation": 0.14936938258892982,
+     "zeros_fraction": 0.0,
+     "quantiles_dn": [
+      2122.0,
+      2245.0,
+      2873.0,
+      3089.0,
+      3329.0
+     ]
+    },
+    {
+     "offset": [
+      0,
+      1
+     ],
+     "frame_means_dn": [
+      3111.9865112304688,
+      3100.7941284179688,
+      3096.4866333007812,
+      3108.0397338867188,
+      3130.2664794921875,
+      3139.9940185546875,
+      3145.6434936523438,
+      3144.4230346679688,
+      3141.9580688476562,
+      3140.8123168945312,
+      3141.5045166015625,
+      3144.414794921875,
+      3146.68310546875,
+      3146.5453491210938
+     ],
+     "mean_dn": 3131.3965846470423,
+     "temporal_variance_dn2_mean": 16099.938617077503,
+     "temporal_variance_dn2_median": 8953.354395604396,
+     "spatial_variance_of_mean_dn2": 45500.741049437784,
+     "half_stack_difference_variance_dn2": 2901.8936836293005,
+     "mean_relative_range": 0.01603005905227002,
+     "lag1_temporal_residual_correlation": 0.2846209738430935,
+     "zeros_fraction": 0.0,
+     "quantiles_dn": [
+      2071.0,
+      2182.0,
+      3181.0,
+      3432.0,
+      3724.0
+     ]
+    },
+    {
+     "offset": [
+      1,
+      0
+     ],
+     "frame_means_dn": [
+      3112.2086181640625,
+      3101.4631958007812,
+      3097.4609985351562,
+      3108.0294189453125,
+      3129.55078125,
+      3141.3942260742188,
+      3145.994384765625,
+      3145.64013671875,
+      3142.5908203125,
+      3140.5474243164062,
+      3140.5960693359375,
+      3144.4706420898438,
+      3144.3472290039062,
+      3146.535400390625
+     ],
+     "mean_dn": 3131.487810407366,
+     "temporal_variance_dn2_mean": 16081.974762298247,
+     "temporal_variance_dn2_median": 9000.04945054945,
+     "spatial_variance_of_mean_dn2": 45041.91416428252,
+     "half_stack_difference_variance_dn2": 2933.1176347489254,
+     "mean_relative_range": 0.01567127347338606,
+     "lag1_temporal_residual_correlation": 0.28535060340602475,
+     "zeros_fraction": 0.0,
+     "quantiles_dn": [
+      2071.0,
+      2183.0,
+      3181.0,
+      3432.0,
+      3660.0
+     ]
+    },
+    {
+     "offset": [
+      1,
+      1
+     ],
+     "frame_means_dn": [
+      2431.2890014648438,
+      2426.5062255859375,
+      2425.3504028320312,
+      2430.42724609375,
+      2438.8629760742188,
+      2444.4605102539062,
+      2446.4591064453125,
+      2444.8975830078125,
+      2444.62451171875,
+      2444.351806640625,
+      2443.7164306640625,
+      2446.4669189453125,
+      2445.59228515625,
+      2445.6698608398438
+     ],
+     "mean_dn": 2439.9053475516184,
+     "temporal_variance_dn2_mean": 5072.7764560573705,
+     "temporal_variance_dn2_median": 3962.0824175824173,
+     "spatial_variance_of_mean_dn2": 7557.489271205888,
+     "half_stack_difference_variance_dn2": 1189.1193099854402,
+     "mean_relative_range": 0.0086546456133928,
+     "lag1_temporal_residual_correlation": 0.10944859934586024,
+     "zeros_fraction": 0.0,
+     "quantiles_dn": [
+      1987.0,
+      2058.0,
+      2457.0,
+      2623.0,
+      2800.0
+     ]
+    }
+   ],
+   "phase_shifts": [
+    {
+     "x_cfa_plane_pixels": 0.0,
+     "y_cfa_plane_pixels": 0.0,
+     "response": 1.0
+    },
+    {
+     "x_cfa_plane_pixels": 3.5458670936410783,
+     "y_cfa_plane_pixels": -0.32284606000453664,
+     "response": 0.6900005871430039
+    },
+    {
+     "x_cfa_plane_pixels": 9.182417524323732,
+     "y_cfa_plane_pixels": -4.784264032980616,
+     "response": 0.5951505159027874
+    },
+    {
+     "x_cfa_plane_pixels": -0.07001627673790267,
+     "y_cfa_plane_pixels": 0.33083637096713403,
+     "response": 0.19774923811201006
+    },
+    {
+     "x_cfa_plane_pixels": 0.7850200950415953,
+     "y_cfa_plane_pixels": -9.339468306417402,
+     "response": 0.6158619052730501
+    },
+    {
+     "x_cfa_plane_pixels": -1.9463684861137551,
+     "y_cfa_plane_pixels": -11.72887908400503,
+     "response": 0.39250938466284424
+    },
+    {
+     "x_cfa_plane_pixels": -3.6294458520162323,
+     "y_cfa_plane_pixels": -11.672955898719621,
+     "response": 0.3944254107773304
+    },
+    {
+     "x_cfa_plane_pixels": -8.079396583713859,
+     "y_cfa_plane_pixels": -0.3482470781060414,
+     "response": 0.224271239945665
+    },
+    {
+     "x_cfa_plane_pixels": -1.2137398382066635,
+     "y_cfa_plane_pixels": -12.71770981592276,
+     "response": 0.5596657837741077
+    },
+    {
+     "x_cfa_plane_pixels": -0.31687422607662086,
+     "y_cfa_plane_pixels": -12.783392726910535,
+     "response": 0.5188933261670172
+    },
+    {
+     "x_cfa_plane_pixels": -0.6750238597107909,
+     "y_cfa_plane_pixels": -12.827426255849389,
+     "response": 0.5493025472387671
+    },
+    {
+     "x_cfa_plane_pixels": -1.7717026653636623,
+     "y_cfa_plane_pixels": -12.775909190791083,
+     "response": 0.5470398319885135
+    },
+    {
+     "x_cfa_plane_pixels": -2.678459220823541,
+     "y_cfa_plane_pixels": -13.549818661402469,
+     "response": 0.39062332187313586
+    },
+    {
+     "x_cfa_plane_pixels": -3.089512131694377,
+     "y_cfa_plane_pixels": -13.541796945583144,
+     "response": 0.4234361071139574
+    }
+   ]
+  },
+  {
+   "region": 6,
+   "planes": [
+    {
+     "offset": [
+      0,
+      0
+     ],
+     "frame_means_dn": [
+      2544.61474609375,
+      2541.3661499023438,
+      2542.5804443359375,
+      2542.6170043945312,
+      2542.9207763671875,
+      2543.6903686523438,
+      2544.0603637695312,
+      2543.8040771484375,
+      2543.0838623046875,
+      2543.819580078125,
+      2542.2116088867188,
+      2541.546875,
+      2541.7509765625,
+      2542.1954956054688
+     ],
+     "mean_dn": 2542.875880650112,
+     "temporal_variance_dn2_mean": 6650.729421091603,
+     "temporal_variance_dn2_median": 6308.252747252748,
+     "spatial_variance_of_mean_dn2": 813.2164632087307,
+     "half_stack_difference_variance_dn2": 1695.5297676565087,
+     "mean_relative_range": 0.001277528414236134,
+     "lag1_temporal_residual_correlation": -0.005088153230541135,
+     "zeros_fraction": 0.0,
+     "quantiles_dn": [
+      2180.0,
+      2348.0,
+      2543.0,
+      2739.0,
+      2906.0
+     ]
+    },
+    {
+     "offset": [
+      0,
+      1
+     ],
+     "frame_means_dn": [
+      2639.723388671875,
+      2637.1737670898438,
+      2638.2711791992188,
+      2638.869384765625,
+      2638.1275634765625,
+      2640.1883544921875,
+      2638.8252563476562,
+      2638.4112548828125,
+      2639.0178833007812,
+      2638.0398559570312,
+      2636.233642578125,
+      2636.7540283203125,
+      2636.9010620117188,
+      2636.3340454101562
+     ],
+     "mean_dn": 2638.062190464565,
+     "temporal_variance_dn2_mean": 9998.950235890818,
+     "temporal_variance_dn2_median": 9450.697802197801,
+     "spatial_variance_of_mean_dn2": 1258.0915492909712,
+     "half_stack_difference_variance_dn2": 2396.2976603720113,
+     "mean_relative_range": 0.0014990973026932594,
+     "lag1_temporal_residual_correlation": 0.019929538243878345,
+     "zeros_fraction": 0.0,
+     "quantiles_dn": [
+      2180.0,
+      2393.0,
+      2640.0,
+      2871.0,
+      3098.0
+     ]
+    },
+    {
+     "offset": [
+      1,
+      0
+     ],
+     "frame_means_dn": [
+      2639.8738403320312,
+      2637.0293579101562,
+      2637.9208984375,
+      2637.9273071289062,
+      2637.3505249023438,
+      2639.302734375,
+      2637.6697998046875,
+      2638.352294921875,
+      2637.2813110351562,
+      2637.8719482421875,
+      2636.3030395507812,
+      2635.7020874023438,
+      2636.1123046875,
+      2636.3265380859375
+     ],
+     "mean_dn": 2637.5017133440288,
+     "temporal_variance_dn2_mean": 9963.039071554667,
+     "temporal_variance_dn2_median": 9450.071428571428,
+     "spatial_variance_of_mean_dn2": 1264.3248787932669,
+     "half_stack_difference_variance_dn2": 2410.958106209961,
+     "mean_relative_range": 0.0015817062444286446,
+     "lag1_temporal_residual_correlation": 0.018742129833536212,
+     "zeros_fraction": 0.0,
+     "quantiles_dn": [
+      2163.0,
+      2392.0,
+      2639.0,
+      2869.0,
+      3075.0
+     ]
+    },
+    {
+     "offset": [
+      1,
+      1
+     ],
+     "frame_means_dn": [
+      2237.521728515625,
+      2237.5037841796875,
+      2236.1762084960938,
+      2237.3626098632812,
+      2236.4063720703125,
+      2238.2291259765625,
+      2237.6766967773438,
+      2237.7319946289062,
+      2236.7952880859375,
+      2236.632568359375,
+      2236.4829711914062,
+      2236.9284057617188,
+      2236.655517578125,
+      2236.61767578125
+     ],
+     "mean_dn": 2237.051496233259,
+     "temporal_variance_dn2_mean": 2662.306806291853,
+     "temporal_variance_dn2_median": 2507.9010989010985,
+     "spatial_variance_of_mean_dn2": 286.6555282190746,
+     "half_stack_difference_variance_dn2": 690.3656764976224,
+     "mean_relative_range": 0.0009176889686828608,
+     "lag1_temporal_residual_correlation": -0.025818156161277195,
+     "zeros_fraction": 0.0,
+     "quantiles_dn": [
+      1999.0,
+      2122.0,
+      2235.0,
+      2366.0,
+      2536.0
+     ]
+    }
+   ],
+   "phase_shifts": [
+    {
+     "x_cfa_plane_pixels": 0.0,
+     "y_cfa_plane_pixels": 0.0,
+     "response": 1.0
+    },
+    {
+     "x_cfa_plane_pixels": 0.4540241877342126,
+     "y_cfa_plane_pixels": 4.726404152825175,
+     "response": 0.7801977044437081
+    },
+    {
+     "x_cfa_plane_pixels": 4.046272628086946,
+     "y_cfa_plane_pixels": 6.3701312937163905,
+     "response": 0.6757433430757374
+    },
+    {
+     "x_cfa_plane_pixels": 3.001244907781839,
+     "y_cfa_plane_pixels": 7.968136143337155,
+     "response": 0.664788396563381
+    },
+    {
+     "x_cfa_plane_pixels": -2.9284344939328406,
+     "y_cfa_plane_pixels": 6.901427889892915,
+     "response": 0.6437153535662219
+    },
+    {
+     "x_cfa_plane_pixels": -4.443189947230792,
+     "y_cfa_plane_pixels": 6.196532820530024,
+     "response": 0.6524704301264137
+    },
+    {
+     "x_cfa_plane_pixels": -6.288088612180346,
+     "y_cfa_plane_pixels": 4.671449717883419,
+     "response": 0.6243825886631384
+    },
+    {
+     "x_cfa_plane_pixels": -6.394555393140308,
+     "y_cfa_plane_pixels": 2.4294175007483005,
+     "response": 0.7300568697974086
+    },
+    {
+     "x_cfa_plane_pixels": -4.699748428097635,
+     "y_cfa_plane_pixels": 0.28903757835406907,
+     "response": 0.813491178676486
+    },
+    {
+     "x_cfa_plane_pixels": -4.085359134592224,
+     "y_cfa_plane_pixels": -1.2458427920634563,
+     "response": 0.8048927439376712
+    },
+    {
+     "x_cfa_plane_pixels": -3.4522879504903017,
+     "y_cfa_plane_pixels": -2.2756728618004445,
+     "response": 0.8108545008581132
+    },
+    {
+     "x_cfa_plane_pixels": -4.669245848858679,
+     "y_cfa_plane_pixels": -3.740318083496817,
+     "response": 0.6670223325490952
+    },
+    {
+     "x_cfa_plane_pixels": -4.488456941362784,
+     "y_cfa_plane_pixels": -5.1674597907537105,
+     "response": 0.655837451457046
+    },
+    {
+     "x_cfa_plane_pixels": -6.073209718095555,
+     "y_cfa_plane_pixels": -7.01630129370578,
+     "response": 0.6229899727040902
+    }
+   ]
+  },
+  {
+   "region": 7,
+   "planes": [
+    {
+     "offset": [
+      0,
+      0
+     ],
+     "frame_means_dn": [
+      2534.2424926757812,
+      2530.6516723632812,
+      2529.42822265625,
+      2530.15673828125,
+      2530.1781005859375,
+      2531.2255859375,
+      2531.2185668945312,
+      2530.9746704101562,
+      2531.3541259765625,
+      2531.441162109375,
+      2530.4430541992188,
+      2531.0392456054688,
+      2530.8999633789062,
+      2531.3546142578125
+     ],
+     "mean_dn": 2531.043443952288,
+     "temporal_variance_dn2_mean": 4203.0331471202135,
+     "temporal_variance_dn2_median": 3977.967032967033,
+     "spatial_variance_of_mean_dn2": 466.5031215540723,
+     "half_stack_difference_variance_dn2": 1186.623361176298,
+     "mean_relative_range": 0.0019020890498875225,
+     "lag1_temporal_residual_correlation": -0.07260553834036834,
+     "zeros_fraction": 0.0,
+     "quantiles_dn": [
+      2254.0,
+      2384.0,
+      2529.0,
+      2691.0,
+      2837.0
+     ]
+    },
+    {
+     "offset": [
+      0,
+      1
+     ],
+     "frame_means_dn": [
+      2674.5975341796875,
+      2671.8190307617188,
+      2669.6985473632812,
+      2669.8321533203125,
+      2670.5006713867188,
+      2671.5850830078125,
+      2672.2138671875,
+      2672.5203247070312,
+      2672.8896484375,
+      2672.9107055664062,
+      2670.5563354492188,
+      2670.6468505859375,
+      2672.0956420898438,
+      2669.7001953125
+     ],
+     "mean_dn": 2671.540470668248,
+     "temporal_variance_dn2_mean": 5255.479736663483,
+     "temporal_variance_dn2_median": 4977.892857142857,
+     "spatial_variance_of_mean_dn2": 689.6726607812417,
+     "half_stack_difference_variance_dn2": 1488.5010643314797,
+     "mean_relative_range": 0.0018337685205198624,
+     "lag1_temporal_residual_correlation": -0.07578424774030698,
+     "zeros_fraction": 0.0,
+     "quantiles_dn": [
+      2361.0,
+      2505.0,
+      2670.0,
+      2853.0,
+      3045.0
+     ]
+    },
+    {
+     "offset": [
+      1,
+      0
+     ],
+     "frame_means_dn": [
+      2673.829833984375,
+      2670.8629760742188,
+      2668.086669921875,
+      2669.046875,
+      2669.5418090820312,
+      2671.4869995117188,
+      2672.1595458984375,
+      2672.67236328125,
+      2671.64306640625,
+      2672.0800170898438,
+      2670.75390625,
+      2670.5619506835938,
+      2669.8519287109375,
+      2669.4275512695312
+     ],
+     "mean_dn": 2670.857535226004,
+     "temporal_variance_dn2_mean": 5281.4251058389855,
+     "temporal_variance_dn2_median": 5004.978021978022,
+     "spatial_variance_of_mean_dn2": 683.8884381681528,
+     "half_stack_difference_variance_dn2": 1488.9516677418533,
+     "mean_relative_range": 0.0021503071529474227,
+     "lag1_temporal_residual_correlation": -0.07601217309289805,
+     "zeros_fraction": 0.0,
+     "quantiles_dn": [
+      2349.0,
+      2504.0,
+      2670.0,
+      2852.0,
+      3026.0
+     ]
+    },
+    {
+     "offset": [
+      1,
+      1
+     ],
+     "frame_means_dn": [
+      2264.1209106445312,
+      2263.39453125,
+      2261.9561157226562,
+      2263.7628784179688,
+      2263.4700317382812,
+      2263.536865234375,
+      2263.8592529296875,
+      2263.938720703125,
+      2264.3200073242188,
+      2264.0759887695312,
+      2263.8502197265625,
+      2263.6189575195312,
+      2263.0511474609375,
+      2264.2685546875
+     ],
+     "mean_dn": 2263.658870152065,
+     "temporal_variance_dn2_mean": 2244.4676121303014,
+     "temporal_variance_dn2_median": 2116.9175824175823,
+     "spatial_variance_of_mean_dn2": 235.18184539765042,
+     "half_stack_difference_variance_dn2": 626.7098750678101,
+     "mean_relative_range": 0.0010442790796493565,
+     "lag1_temporal_residual_correlation": -0.07706197024662818,
+     "zeros_fraction": 0.0,
+     "quantiles_dn": [
+      2064.0,
+      2158.0,
+      2262.0,
+      2382.0,
+      2575.0
+     ]
+    }
+   ],
+   "phase_shifts": [
+    {
+     "x_cfa_plane_pixels": 0.0,
+     "y_cfa_plane_pixels": 0.0,
+     "response": 1.0
+    },
+    {
+     "x_cfa_plane_pixels": -0.14388088139102706,
+     "y_cfa_plane_pixels": -0.7317554080678974,
+     "response": 0.4163896783720702
+    },
+    {
+     "x_cfa_plane_pixels": 0.14879431324282422,
+     "y_cfa_plane_pixels": -0.05682008838834918,
+     "response": 0.49801986617967486
+    },
+    {
+     "x_cfa_plane_pixels": 0.14819644074560046,
+     "y_cfa_plane_pixels": 0.02186039811542173,
+     "response": 0.489246791228652
+    },
+    {
+     "x_cfa_plane_pixels": -0.012079951557907975,
+     "y_cfa_plane_pixels": 0.07741209460396448,
+     "response": 0.4585930542089045
+    },
+    {
+     "x_cfa_plane_pixels": -0.11903478845584914,
+     "y_cfa_plane_pixels": 0.029778753219176224,
+     "response": 0.4854056956246495
+    },
+    {
+     "x_cfa_plane_pixels": -0.009460774532740857,
+     "y_cfa_plane_pixels": -0.39548920985065195,
+     "response": 0.47238946659490466
+    },
+    {
+     "x_cfa_plane_pixels": 2.7408430622806677,
+     "y_cfa_plane_pixels": 0.9400472955855292,
+     "response": 0.2591895053628832
+    },
+    {
+     "x_cfa_plane_pixels": -0.8719939716533531,
+     "y_cfa_plane_pixels": 0.17900502148584252,
+     "response": 0.45072277332656085
+    },
+    {
+     "x_cfa_plane_pixels": -1.3217559297859367,
+     "y_cfa_plane_pixels": 0.7648241725502629,
+     "response": 0.34403297607786953
+    },
+    {
+     "x_cfa_plane_pixels": -1.2788917590366822,
+     "y_cfa_plane_pixels": 0.7783420790821793,
+     "response": 0.3101056596497074
+    },
+    {
+     "x_cfa_plane_pixels": 0.10287680747085659,
+     "y_cfa_plane_pixels": 0.09213422954113071,
+     "response": 0.48228957992978394
+    },
+    {
+     "x_cfa_plane_pixels": -0.6661173494420183,
+     "y_cfa_plane_pixels": 0.6132491186841946,
+     "response": 0.4075579046038911
+    },
+    {
+     "x_cfa_plane_pixels": -0.5422557364199463,
+     "y_cfa_plane_pixels": -0.6619585167304791,
+     "response": 0.46792299556545913
+    }
+   ]
+  },
+  {
+   "region": 8,
+   "planes": [
+    {
+     "offset": [
+      0,
+      0
+     ],
+     "frame_means_dn": [
+      2729.0599975585938,
+      2725.221923828125,
+      2721.4223022460938,
+      2720.045654296875,
+      2721.9312133789062,
+      2722.3196411132812,
+      2721.4515380859375,
+      2721.1458740234375,
+      2722.5478515625,
+      2723.4892578125,
+      2721.1009521484375,
+      2722.4204711914062,
+      2722.2833251953125,
+      2721.2745361328125
+     ],
+     "mean_dn": 2722.551038469587,
+     "temporal_variance_dn2_mean": 5806.832843822437,
+     "temporal_variance_dn2_median": 5486.714285714284,
+     "spatial_variance_of_mean_dn2": 672.0045140782295,
+     "half_stack_difference_variance_dn2": 1693.9481803664594,
+     "mean_relative_range": 0.0033109914687902173,
+     "lag1_temporal_residual_correlation": -0.0772948418775296,
+     "zeros_fraction": 0.0,
+     "quantiles_dn": [
+      2387.0,
+      2547.0,
+      2721.0,
+      2911.0,
+      3148.0
+     ]
+    },
+    {
+     "offset": [
+      0,
+      1
+     ],
+     "frame_means_dn": [
+      2967.41162109375,
+      2961.1744384765625,
+      2956.7328491210938,
+      2955.2532348632812,
+      2956.6095581054688,
+      2958.7254028320312,
+      2956.8240356445312,
+      2957.60205078125,
+      2958.0924682617188,
+      2959.581298828125,
+      2956.28466796875,
+      2956.3345947265625,
+      2956.3803100585938,
+      2957.4692993164062
+     ],
+     "mean_dn": 2958.17684500558,
+     "temporal_variance_dn2_mean": 7592.386139251374,
+     "temporal_variance_dn2_median": 7212.708791208792,
+     "spatial_variance_of_mean_dn2": 1067.9236358109176,
+     "half_stack_difference_variance_dn2": 2173.60880672658,
+     "mean_relative_range": 0.004110094449220062,
+     "lag1_temporal_residual_correlation": -0.07420622203249382,
+     "zeros_fraction": 0.0,
+     "quantiles_dn": [
+      2581.0,
+      2755.0,
+      2957.0,
+      3173.0,
+      3406.0
+     ]
+    },
+    {
+     "offset": [
+      1,
+      0
+     ],
+     "frame_means_dn": [
+      2966.6472778320312,
+      2961.1641845703125,
+      2956.38720703125,
+      2955.0938720703125,
+      2955.1328125,
+      2957.2423095703125,
+      2956.7461547851562,
+      2957.07177734375,
+      2955.7918701171875,
+      2957.8546752929688,
+      2955.9253540039062,
+      2955.8705444335938,
+      2957.0430908203125,
+      2956.5687255859375
+     ],
+     "mean_dn": 2957.4671325683594,
+     "temporal_variance_dn2_mean": 7514.016939938723,
+     "temporal_variance_dn2_median": 7121.947802197803,
+     "spatial_variance_of_mean_dn2": 1064.3758812648416,
+     "half_stack_difference_variance_dn2": 2137.3734467101795,
+     "mean_relative_range": 0.0039065204257013675,
+     "lag1_temporal_residual_correlation": -0.07243681204561529,
+     "zeros_fraction": 0.0,
+     "quantiles_dn": [
+      2583.0,
+      2755.0,
+      2956.0,
+      3172.0,
+      3383.0
+     ]
+    },
+    {
+     "offset": [
+      1,
+      1
+     ],
+     "frame_means_dn": [
+      2375.9038696289062,
+      2373.5350341796875,
+      2371.5986938476562,
+      2372.22216796875,
+      2372.4489135742188,
+      2372.1685791015625,
+      2372.7048950195312,
+      2372.7392578125,
+      2371.3619384765625,
+      2372.848876953125,
+      2372.2747192382812,
+      2372.187255859375,
+      2372.700927734375,
+      2373.4662475585938
+     ],
+     "mean_dn": 2372.725812639509,
+     "temporal_variance_dn2_mean": 3215.2125901442305,
+     "temporal_variance_dn2_median": 3042.552197802198,
+     "spatial_variance_of_mean_dn2": 343.00430650340047,
+     "half_stack_difference_variance_dn2": 904.4555851169388,
+     "mean_relative_range": 0.0019142250352522342,
+     "lag1_temporal_residual_correlation": -0.07024305416942551,
+     "zeros_fraction": 0.0,
+     "quantiles_dn": [
+      2132.0,
+      2246.0,
+      2371.0,
+      2514.0,
+      2675.0
+     ]
+    }
+   ],
+   "phase_shifts": [
+    {
+     "x_cfa_plane_pixels": 0.0,
+     "y_cfa_plane_pixels": 0.0,
+     "response": 1.0
+    },
+    {
+     "x_cfa_plane_pixels": 0.0344897872880523,
+     "y_cfa_plane_pixels": -0.16274499430168987,
+     "response": 0.36807398370001465
+    },
+    {
+     "x_cfa_plane_pixels": -6.759960539361288,
+     "y_cfa_plane_pixels": -0.06892820008339129,
+     "response": 0.15808272175490856
+    },
+    {
+     "x_cfa_plane_pixels": 0.37996967448005137,
+     "y_cfa_plane_pixels": -0.2850919076262812,
+     "response": 0.3719460463616997
+    },
+    {
+     "x_cfa_plane_pixels": -0.6229537900103139,
+     "y_cfa_plane_pixels": -0.18241134483690757,
+     "response": 0.33286480931565166
+    },
+    {
+     "x_cfa_plane_pixels": -0.040238576345061006,
+     "y_cfa_plane_pixels": -0.09489385209536749,
+     "response": 0.4187885830178857
+    },
+    {
+     "x_cfa_plane_pixels": -0.8877284860330121,
+     "y_cfa_plane_pixels": -1.20978890829754,
+     "response": 0.27164906077086926
+    },
+    {
+     "x_cfa_plane_pixels": -0.43160274529873277,
+     "y_cfa_plane_pixels": -0.4750868955904366,
+     "response": 0.4029137121979147
+    },
+    {
+     "x_cfa_plane_pixels": 0.22745988309088716,
+     "y_cfa_plane_pixels": -28.144717714132142,
+     "response": 0.019585485104471445
+    },
+    {
+     "x_cfa_plane_pixels": -0.008229085673164604,
+     "y_cfa_plane_pixels": -0.10991102375643891,
+     "response": 0.431667763274163
+    },
+    {
+     "x_cfa_plane_pixels": -0.45448034032501994,
+     "y_cfa_plane_pixels": -0.2389314957555655,
+     "response": 0.40957639110274613
+    },
+    {
+     "x_cfa_plane_pixels": -0.4522514475111876,
+     "y_cfa_plane_pixels": 0.14513294094081886,
+     "response": 0.3679748878348619
+    },
+    {
+     "x_cfa_plane_pixels": -11.086441546860527,
+     "y_cfa_plane_pixels": 6.204404124534008,
+     "response": -0.046748914290219545
+    },
+    {
+     "x_cfa_plane_pixels": 5.686907037593059,
+     "y_cfa_plane_pixels": -0.17866515405407313,
+     "response": 0.33547118259593844
+    }
+   ]
+  }
+ ],
+ "pixels": {
+  "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-audit\\development-cfa-v001-20261027T225326Z.npz",
+  "sha256": "2e86a6cde0d3198d28ab642ca2e43f84e588faabebfbd3ce94d31bf72e68faf0",
+  "shape": [
+   14,
+   9,
+   256,
+   256
+  ],
+  "dtype": "uint16"
+ },
+ "numpy_version": "2.4.2",
+ "rawpy_version": "0.27.1",
+ "libraw_version": [
+  0,
+  22,
+  1
+ ],
+ "opencv_version": "5.0.0",
+ "commit": "2a40c5c6cff78d40294393a68827f4a24555c724",
+ "runner_sha256": "d28fd2f161fd42d0a9084c9c550a093358e8f5e579f880265bc3856befc849e7",
+ "runner_source": "\"\"\"Read-only real burst audit, predefined frame split; no production render or fitted denoiser.\"\"\"\nfrom datetime import datetime,timezone\nimport hashlib\nimport json\nfrom pathlib import Path\nimport time\nimport numpy as np\nimport rawpy\nimport cv2\nfrom audit_noise_pairs import metadata\nfrom analysis.render import available_memory\nfrom study_noise_neighbourhoods import ROOT,sha256,git\n\n\nSOURCE=Path('C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/colorimétrie/rafale')\nSIZE=256\nFRACTIONS=(.2,.5,.8)\nSPLIT=dict(development=range(0,14),validation=range(14,28),sealed=range(28,42))\n\n\ndef statistics(stack):\n    if stack.ndim!=4 or stack.shape[0]<4 or stack.shape[2:]!=(256,256):raise ValueError('At least4 frames,ROIs256 required')\n    results=[]\n    for region in range(stack.shape[1]):\n        original=stack[:,region].astype(float)\n        intensity=original.reshape(len(stack),128,2,128,2).mean(axis=(2,4))\n        first=intensity[0].astype(np.float32);window=cv2.createHanningWindow((128,128),cv2.CV_32F)\n        shifts=[]\n        for frame in intensity:\n            shift,response=cv2.phaseCorrelate(first.copy(),frame.astype(np.float32).copy(),window)\n            shifts.append(dict(x_cfa_plane_pixels=float(shift[0]),y_cfa_plane_pixels=float(shift[1]),response=float(response)))\n        planes=[]\n        for y,x in ((0,0),(0,1),(1,0),(1,1)):\n            p=original[:,y::2,x::2];mean=p.mean(axis=0);variance=p.var(axis=0,ddof=1)\n            # Spatial variance in an averaged image is NOT fixed sensor noise: scene texture remains.\n            means=p.mean(axis=(1,2));frame_noise=p-mean\n            odd=p[::2].mean(axis=0);even=p[1::2].mean(axis=0)\n            planes.append(dict(offset=[y,x],frame_means_dn=means.tolist(),mean_dn=float(mean.mean()),\n                temporal_variance_dn2_mean=float(variance.mean()),temporal_variance_dn2_median=float(np.median(variance)),\n                spatial_variance_of_mean_dn2=float(mean.var()),half_stack_difference_variance_dn2=float(np.var(odd-even)),\n                mean_relative_range=float(np.ptp(means)/max(abs(means.mean()),1)),\n                lag1_temporal_residual_correlation=float(np.sum(frame_noise[:-1]*frame_noise[1:])/max(np.sqrt(np.sum(frame_noise[:-1]**2)*np.sum(frame_noise[1:]**2)),1e-20)),\n                zeros_fraction=float(np.mean(p==0)),quantiles_dn=np.quantile(p,[0,.01,.5,.99,1]).tolist()))\n        results.append(dict(region=region,planes=planes,phase_shifts=shifts))\n    return results\n\n\ndef run():\n    if (available_memory() or 0)<3*1024**3:raise ValueError('Need3GiB before RAW burst audit')\n    started=datetime.now(timezone.utc);files=sorted(SOURCE.glob('*.CR3'))\n    if len(files)!=42:raise ValueError('Expected EXACT42 CR3 sources')\n    # Immutable split BEFORE any new source pixel inspection. Sealed frames metadata+SHA only.\n    identities=[]\n    for index,p in enumerate(files):\n        stat=p.stat();data=p.read_bytes();info=metadata(data);digest=hashlib.sha256(data).hexdigest();del data\n        group=next(name for name,indices in SPLIT.items() if index in indices)\n        identities.append(dict(index=index,path=str(p),bytes=stat.st_size,mtime_ns=stat.st_mtime_ns,sha256=digest,metadata=info,split=group))\n    keys=('model','iso','exposure_s','aperture','focal_mm','lens')\n    if any(any(r['metadata'].get(k)!=identities[0]['metadata'].get(k) for k in keys) for r in identities):raise ValueError('Burst exposure/camera contracts mismatch')\n    stamp=datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')\n    split_path=ROOT/'docs/validation/raw'/f'partition-rafale-bruit-v001-{stamp}.json'\n    with split_path.open('x',encoding='utf-8') as handle:json.dump(dict(schema_version=1,data_version=1,created_at_utc=stamp,\n        identities=identities,rules='14dev/14validation/14sealed chronologicalsplit BEFOREpixelanalysis;sealedlast14 METADATAandhashONLY.'),handle,ensure_ascii=False,indent=1,allow_nan=False)\n    print('SPLIT',split_path,flush=True)\n    stack=[];decoders=[];rois=None\n    for record in identities[:14]:\n        if (available_memory() or 0)<2*1024**3:raise ValueError('Need2GiB per RAW decode')\n        p=Path(record['path']);before=p.stat()\n        with rawpy.imread(str(p)) as raw:\n            image=raw.raw_image_visible;h,w=image.shape\n            if raw.raw_pattern is None or raw.raw_pattern.shape!=(2,2):raise ValueError('Bayer2x2 required')\n            if rois is None:\n                rois=[dict(x=int(w*fx-128)//2*2,y=int(h*fy-128)//2*2,width=256,height=256,fx=fx,fy=fy) for fy in FRACTIONS for fx in FRACTIONS]\n            if any(r['x']<0 or r['y']<0 or r['x']+256>w or r['y']+256>h for r in rois):raise ValueError('ROI outside active mosaic')\n            stack.append(np.stack([image[r['y']:r['y']+256,r['x']:r['x']+256].copy() for r in rois]))\n            decoders.append(dict(file=p.name,active_shape=[h,w],cfa=raw.raw_pattern.tolist(),color_desc=raw.color_desc.decode('ascii'),\n                declared_black=raw.black_level_per_channel,declared_white=int(raw.white_level),raw_sizes=str(raw.sizes)))\n        if (p.stat().st_size,p.stat().st_mtime_ns)!=(before.st_size,before.st_mtime_ns):raise ValueError('Source changed during audit')\n        print('RAW DEV',p.name,len(stack),'/14',flush=True)\n    data=np.stack(stack);del stack\n    folder=ROOT/'build-patch_noise/burst-audit';folder.mkdir(parents=True,exist_ok=True)\n    pixels=folder/f'development-cfa-v001-{stamp}.npz'\n    with pixels.open('xb') as handle:np.savez_compressed(handle,mosaic=data)\n    measures=statistics(data)\n    now=datetime.now(timezone.utc);output=ROOT/'docs/validation/raw'/f'audit-rafale-reelle-bruit-v001-{now.strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n    result=dict(schema_version=1,data_version=1,started_at_utc=started.isoformat(),completed_at_utc=now.isoformat(),\n        partition=dict(path=str(split_path),sha256=sha256(split_path)),identities=identities,rois=rois,decoder=decoders,statistics=measures,\n        pixels=dict(path=str(pixels),sha256=sha256(pixels),shape=list(data.shape),dtype=str(data.dtype)),\n        numpy_version=np.__version__,rawpy_version=rawpy.__version__,libraw_version=rawpy.libraw_version,opencv_version=cv2.__version__,commit=git('rev-parse','HEAD'),\n        runner_sha256=sha256(Path(__file__)),runner_source=Path(__file__).read_text(encoding='utf-8'),\n        dependencies={name:dict(sha256=sha256(ROOT/'tests'/name),source=(ROOT/'tests'/name).read_text(encoding='utf-8')) for name in ('audit_noise_pairs.py','audit_canon_metadata.py')},\n        verdict='raw_burst_development_audit_not_sensor_calibration',\n        rules='42hashedmetadata,first14decodedONLY,ninefixedgrid256mosaicROIs,no motioncorrection/no resampling.14validationand14sealedpixelsNOTdecoded. Plane4offsetsnotassumedidenticalgreens. Temporal/spatial/meansplitandphase diagnosticsstored;no image denoising/modelretuning.',\n        limitations='OnecameraISO4000oneburstscene,temporallyrelatedframesnotindependentscene/cameraholdout. Temporalvarianceincludesmotion/flicker. CommonmeancontainsfixedpatternANDscene;notcleantruth. RawpyLibRawdecodernotproductionopeningcontract,blackdomainnotcertified. No physicala,b/productionorvisualqualityclaim.')\n    with output.open('x',encoding='utf-8') as handle:json.dump(result,handle,ensure_ascii=False,indent=1,allow_nan=False)\n    print('AUDIT',output,flush=True)\n\n\nif __name__=='__main__':run()\n",
+ "dependencies": {
+  "audit_noise_pairs.py": {
+   "sha256": "bca91aa4aadf70f10810bba87f5933a9323203b6f4b8d00200c36e56a907c576",
+   "source": "\"\"\"Read-only CR3 exposure-pair audit; diagnostic DN, no physical calibration.\"\"\"\nimport argparse\nfrom functools import lru_cache\nfrom datetime import datetime, timezone\nimport hashlib\nimport json\nfrom pathlib import Path\nimport struct\nimport subprocess\n\nimport numpy as np\nimport rawpy\n\nfrom audit_canon_metadata import boxes, CANON_UUID\n\nTAGS = {0x10f: 'make', 0x110: 'model', 0x132: 'datetime', 0x829a: 'exposure_s',\n        0x829d: 'aperture', 0x8827: 'iso', 0x8832: 'recommended_iso',\n        0x920a: 'focal_mm', 0xa434: 'lens'}\n\n\ndef tiff_fields(data):\n    if len(data) < 8 or data[:2] not in (b'II', b'MM'):\n        raise ValueError('Invalid TIFF header')\n    e = '<' if data[:2] == b'II' else '>'\n    if struct.unpack_from(e + 'H', data, 2)[0] != 42:\n        raise ValueError('Not classic TIFF')\n    offset = struct.unpack_from(e + 'I', data, 4)[0]\n    if offset + 2 > len(data):\n        raise ValueError('IFD outside buffer')\n    count = struct.unpack_from(e + 'H', data, offset)[0]\n    if offset + 2 + 12 * count + 4 > len(data):\n        raise ValueError('Truncated IFD')\n    result = {}\n    for i in range(count):\n        entry = offset + 2 + 12 * i\n        tag, kind, n, pointer = struct.unpack_from(e + 'HHII', data, entry)\n        if tag not in TAGS or kind not in (2, 3, 4, 5) or n > 1024:\n            continue\n        size = {2: 1, 3: 2, 4: 4, 5: 8}[kind] * n\n        start = entry + 8 if size <= 4 else pointer\n        if start + size > len(data) or n == 0:\n            raise ValueError('Invalid field extent')\n        payload = data[start:start + size]\n        if kind == 2:\n            value = payload.split(b'\\0')[0].decode('ascii', 'replace')\n        elif kind in (3, 4):\n            value = struct.unpack_from(e + ('H' if kind == 3 else 'I'), payload)[0]\n        else:\n            a, b = struct.unpack_from(e + 'II', payload)\n            value = a / b if b else None\n        result[TAGS[tag]] = value\n    return result\n\n\ndef metadata(data):\n    result = {}\n    def walk(a, b):\n        for kind, first, last in boxes(data, a, b):\n            if kind in (b'CMT1', b'CMT2'):\n                result.update(tiff_fields(data[first:last]))\n            elif kind in (b'moov', b'trak', b'mdia', b'minf', b'stbl'):\n                walk(first, last)\n            elif kind == b'uuid' and data[first:first + 16] == CANON_UUID:\n                walk(first + 16, last)\n    walk(0, len(data))\n    return result\n\n\ndef matching(a, b):\n    required = ('model', 'iso', 'exposure_s', 'aperture', 'focal_mm', 'lens')\n    return all(a.get(k) is not None and a.get(k) == b.get(k) for k in required)\n\n\ndef pair_stats(a, b):\n    difference = (a - b) / np.sqrt(2)\n    variance = float(np.var(difference, ddof=1))\n    means = [float(a.mean()), float(b.mean())]\n    relative_drift = abs(means[0] - means[1]) / max(abs(np.mean(means)), 1)\n    # Compare observed large-scale difference to expected white-noise block mean variance.\n    block_means = difference.reshape(8, 16, 8, 16).mean(axis=(1, 3))\n    structure_ratio = float(np.var(block_means, ddof=1) * 256 / max(variance, 1e-20))\n    lag = float(np.mean((difference[:, 1:] - difference.mean()) *\n                        (difference[:, :-1] - difference.mean())) / max(variance, 1e-20))\n    return dict(means_dn=means, signal_mean_dn=float(np.mean(means)),\n                noise_variance_dn2=variance, mean_difference_dn=means[0] - means[1],\n                relative_drift=relative_drift, difference_block_structure_ratio=structure_ratio,\n                difference_horizontal_lag1=lag,\n                status='candidate_stable' if relative_drift <= .01 and structure_ratio <= 4 else 'reject_drift_or_structure')\n\n\ndef read_frame(path, root, declared_dark=False):\n    before = path.stat()\n    data = path.read_bytes()\n    item = dict(path=str(path.relative_to(root)), sha256=hashlib.sha256(data).hexdigest(),\n                metadata=metadata(data), declared_dark=declared_dark)\n    del data\n    with rawpy.imread(str(path)) as raw:\n        if raw.raw_pattern is None or raw.raw_pattern.shape != (2, 2):\n            raise ValueError('Only Bayer 2x2 supported')\n        m = raw.raw_image_visible\n        h, w = m.shape\n        if h < 256 or w < 256:\n            raise ValueError('Insufficient native dimensions for audit')\n        desc = raw.color_desc.decode('ascii')\n        pattern = raw.raw_pattern.copy()\n        item.update(shape=[h, w], black=list(raw.black_level_per_channel),\n                    white=int(raw.white_level), cfa=pattern.tolist(), rois=[])\n        crops = []\n        for fx in (.2, .5, .8):\n            y, x = (h // 2 - 128) // 2 * 2, (int(w * fx) - 128) // 2 * 2\n            crop = m[y:y + 256, x:x + 256].copy().astype(float)\n            crops.append(crop)\n            item['rois'].append(dict(mosaic_yx=[y, x], size=[256, 256],\n                planes=[dict(name=desc[int(pattern[dy, dx])], offset=[dy, dx],\n                             mean_dn=float(crop[dy::2, dx::2].mean()),\n                             sd_dn=float(crop[dy::2, dx::2].std()),\n                             saturation_fraction=float((crop[dy::2, dx::2] >= .98 * raw.white_level).mean()))\n                        for dy, dx in ((0, 0), (0, 1), (1, 0), (1, 1))]))\n    after = path.stat()\n    if (before.st_size, before.st_mtime_ns) != (after.st_size, after.st_mtime_ns):\n        raise ValueError('Source changed during audit: ' + str(path))\n    means = [p['mean_dn'] for roi in item['rois'] for p in roi['planes']]\n    tolerance = max(.01 * float(np.median(means)), 8)\n    item['dark_like_not_confirmed'] = max(means) - min(means) <= tolerance\n    return item, crops\n\n\n@lru_cache(maxsize=512)\ndef capture_metadata(path, size, modified_ns):\n    return metadata(path.read_bytes())\n\n\ndef input_paths(root, directory):\n    iso = int(directory.name.split('-')[1])\n    paths = []\n    # Group logically by actual ISO without moving incorrectly stored sources.\n    for folder in sorted((root / 'protocole').glob('iso-*')):\n        for path in sorted(folder.glob('*.CR3')):\n            stat = path.stat()\n            if capture_metadata(path, stat.st_size, stat.st_mtime_ns).get('iso') == iso:\n                paths.append((path, False))\n    for path in sorted((root / 'protocole' / 'blacks').glob('*.CR3')):\n        stat = path.stat()\n        if capture_metadata(path, stat.st_size, stat.st_mtime_ns).get('iso') == iso:\n            paths.append((path, True))\n    return paths\n\n\ndef audit(root):\n    groups = []\n    for directory in sorted((root / 'protocole').glob('iso-*')):\n        if not directory.is_dir():\n            continue\n        frames, pixels = [], {}\n        for path, declared_dark in input_paths(root, directory):\n            item, crops = read_frame(path, root, declared_dark)\n            item['folder_iso_matches'] = item['metadata'].get('iso') == int(directory.name.split('-')[1])\n            item['storage_folder_iso_matches'] = (None if declared_dark else\n                item['metadata'].get('iso') == int(path.parent.name.split('-')[1]))\n            pixels[item['path']] = crops\n            frames.append(item)\n        # Neighboring pairs plus all matching-exposure alternatives (including distant darks).\n        pairs = []\n        candidates = [(a, b) for i, a in enumerate(frames) for j, b in enumerate(frames)\n                      if j > i and (j == i + 1 or matching(a['metadata'], b['metadata']))]\n        for left, right in candidates:\n            same = matching(left['metadata'], right['metadata'])\n            pair = dict(left=left['path'], right=right['path'], matching_exposure_metadata=same,\n                        matching_geometry=left['shape'] == right['shape'] and left['cfa'] == right['cfa'],\n                        matching_decoder_levels=left['black'] == right['black'] and left['white'] == right['white'])\n            pair['measurements'] = []\n            pair['declared_dark_pair'] = left['declared_dark'] and right['declared_dark']\n            pair['mixed_capture_roles'] = left['declared_dark'] != right['declared_dark']\n            pair['both_dark_like_not_confirmed'] = left['dark_like_not_confirmed'] and right['dark_like_not_confirmed']\n            if same and pair['matching_geometry'] and left['white'] == right['white']:\n                for roi, (a, b) in enumerate(zip(pixels[left['path']], pixels[right['path']])):\n                    for dy, dx in ((0, 0), (0, 1), (1, 0), (1, 1)):\n                        stats = pair_stats(a[dy::2, dx::2], b[dy::2, dx::2])\n                        sat = max(left['rois'][roi]['planes'][2*dy+dx]['saturation_fraction'],\n                                  right['rois'][roi]['planes'][2*dy+dx]['saturation_fraction'])\n                        if sat > .001:\n                            stats['status'] = 'reject_saturation'\n                        pair['measurements'].append(dict(roi=roi, offset=[dy, dx], **stats))\n            pair['status'] = ('candidate_not_certified_dark_or_flat' if pair['measurements'] and\n                              any(s['status'] == 'candidate_stable' for s in pair['measurements'])\n                              else 'rejected')\n            pairs.append(pair)\n        groups.append(dict(folder=directory.name, frames=frames, pair_candidates=pairs))\n        print(directory.name, len(frames), 'frames;', sum(p['status'] != 'rejected' for p in pairs), 'candidate pairs', flush=True)\n    return groups\n\n\ndef main():\n    parser = argparse.ArgumentParser(description=__doc__)\n    parser.add_argument('--corpus', type=Path, required=True)\n    parser.add_argument('--output', type=Path, required=True)\n    parser.add_argument('--previous', type=Path, help='Previous immutable audit for relocation tracking')\n    args = parser.parse_args()\n    if not args.corpus.is_dir() or args.output.exists():\n        parser.error('Missing corpus or output already exists')\n    now = datetime.now(timezone.utc)\n    previous = json.loads(args.previous.read_text(encoding='utf8')) if args.previous else None\n    result = dict(campaign_id='noise-pairs-v005-' + now.strftime('%Y%m%dT%H%M%SZ'),\n                  schema_version=1, data_version=5, measured_at_utc=now.isoformat(),\n                  supersedes_campaign_id=previous['campaign_id'] if previous else None,\n                  revision_reason='Group captures by actual metadata ISO and include shared declared blacks; no physical moves',\n                  revision=subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(),\n                  source_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),\n                  metadata_reader_sha256=hashlib.sha256(Path(__file__).with_name('audit_canon_metadata.py').read_bytes()).hexdigest(),\n                  versions=dict(numpy=np.__version__, rawpy=rawpy.__version__, libraw=list(rawpy.libraw_version)),\n                  configuration=dict(iso_assignment='CR3 metadata, not storage folder; mismatches recorded without moving sources',\n                                     shared_black_folder='protocole/blacks; user-declared cap-on, ISO from CR3 metadata; declaration is not physical certification',\n                                     pairing='adjacent plus non-adjacent exact-exposure metadata matches within each folder; alternatives overlap, not independent',\n                                     crops='three 256x256 central-height mosaic squares at x=20/50/80%',\n                                     noise_variance='sample variance of (A-B)/sqrt(2), no bias subtraction needed for this statistic',\n                                     drift_limit=.01, structure_ratio_limit=4, saturation_fraction_limit=.001,\n                                     saturation_reference='>=98% of rawpy.white_level; conservative near-white exclusion, not a certified clipping threshold',\n                                     dark_like='all 12 ROI/plane means differ by <=max(1% median,8DN); not proof of cap-on capture'),\n                  audit=dict(production_modified=False, physical_coefficients_fitted=False,\n                             dark_frame_identity_confirmed=False, flat_field_identity_confirmed=False,\n                             actual_saturation_threshold_validated=False, images_modified=False),\n                  groups=audit(args.corpus))\n    result['relocations_since_previous'] = []\n    if previous:\n        old_by_hash = {f['sha256']: f['path'] for g in previous['groups'] for f in g['frames']}\n        for group in result['groups']:\n            for frame in group['frames']:\n                old_path = old_by_hash.get(frame['sha256'])\n                if old_path and old_path != frame['path']:\n                    result['relocations_since_previous'].append(dict(source=old_path, destination=frame['path'],\n                                                                     sha256=frame['sha256']))\n    args.output.parent.mkdir(parents=True, exist_ok=True)\n    with args.output.open('x', encoding='utf8') as stream:\n        json.dump(result, stream, indent=2, allow_nan=False, ensure_ascii=False)\n    print(args.output)\n\n\nif __name__ == '__main__':\n    main()\n"
+  },
+  "audit_canon_metadata.py": {
+   "sha256": "637784e5366bf2afd9ad00cd1f00b419be5356c38f46ec39e9be86322f6e1dcb",
+   "source": "#!/usr/bin/env python3\n\"\"\"Bounded read-only CR3 CMT3/CTMD audit, not a general RAW decoder.\n\nOffsets follow Clévy's CR3 description; ColorData candidates are raw words,\nnot certified field interpretations for an unknown camera/version.\n\"\"\"\nimport argparse\nimport hashlib\nimport json\nimport struct\nfrom pathlib import Path\n\nCANON_UUID = bytes.fromhex('85c0b687820f11e08111f4ce462b6a48')\n\n\ndef boxes(data, start, end):\n    while start < end:\n        if end - start < 8:\n            raise ValueError('Truncated BMFF box header')\n        size, kind = struct.unpack_from('>I4s', data, start)\n        header = 8\n        if size == 1:\n            if end - start < 16:\n                raise ValueError('Truncated extended box')\n            size = struct.unpack_from('>Q', data, start + 8)[0]\n            header = 16\n        elif size == 0:\n            size = end - start\n        if size < header or start + size > end:\n            raise ValueError('Invalid box extent')\n        yield kind, start + header, start + size\n        start += size\n\n\ndef tiff_color_data(data):\n    if len(data) < 8 or data[:2] not in (b'II', b'MM'):\n        raise ValueError('Not a TIFF header')\n    endian = '<' if data[:2] == b'II' else '>'\n    if struct.unpack_from(endian + 'H', data, 2)[0] != 42:\n        raise ValueError('Not a classic TIFF')\n    offset = struct.unpack_from(endian + 'I', data, 4)[0]\n    if offset + 2 > len(data):\n        raise ValueError('IFD outside TIFF')\n    count = struct.unpack_from(endian + 'H', data, offset)[0]\n    if offset + 2 + 12 * count + 4 > len(data):\n        raise ValueError('Truncated IFD')\n    for i in range(count):\n        entry = offset + 2 + 12 * i\n        tag, kind, length, location = struct.unpack_from(endian + 'HHII', data, entry)\n        if tag != 0x4001:\n            continue\n        if kind != 3 or length < 4:\n            raise ValueError('Unexpected ColorData type/length')\n        location = entry + 8 if length * 2 <= 4 else location\n        if location + length * 2 > len(data):\n            raise ValueError('ColorData outside TIFF')\n        words = struct.unpack_from(endian + str(length) + 'H', data, location)\n        return {'word_count': length, 'version_word': words[0],\n                'payload_sha256': hashlib.sha256(data[location:location + length * 2]).hexdigest(),\n                'candidate_words_not_certified': {\n                    hex(index): list(words[index:index + width])\n                    for index, width in [(0x69, 5), (0x6e, 5), (0xcd, 5),\n                                         (0x16b, 4), (0x17f, 4), (0x27c, 7), (0x290, 7)]\n                    if index + width <= length}}\n    return None\n\n\ndef audit(path):\n    data = path.read_bytes()\n    results = []\n    def record(payload, source):\n        value = tiff_color_data(payload)\n        if value is not None:\n            results.append({'source': source, **value})\n    def walk(start, end, prefix):\n        for kind, first, last in boxes(data, start, end):\n            name = prefix + '/' + kind.decode('ascii', 'replace')\n            if kind == b'CMT3':\n                record(data[first:last], name)\n            elif kind in (b'moov', b'mdia', b'minf', b'stbl'):\n                walk(first, last, name)\n            elif kind == b'uuid' and data[first:first + 16] == CANON_UUID:\n                walk(first + 16, last, name)\n            elif kind == b'trak':\n                # Static CMT3 is also searched; timed metadata is read by tables.\n                walk(first, last, name)\n                tables = {}\n                def collect(a, b):\n                    for k, p, q in boxes(data, a, b):\n                        if k in (b'mdia', b'minf', b'stbl'):\n                            collect(p, q)\n                        else:\n                            tables[k] = data[p:q]\n                collect(first, last)\n                sd = tables.get(b'stsd', b'')\n                if len(sd) < 16 or sd[12:16] != b'CTMD':\n                    continue\n                chunk = tables.get(b'co64') or tables.get(b'stco')\n                sizes, mapping = tables[b'stsz'], tables[b'stsc']\n                wide = b'co64' in tables\n                n = struct.unpack_from('>I', chunk, 4)[0]\n                offsets = struct.unpack_from('>' + ('Q' if wide else 'I') * n, chunk, 8)\n                uniform, total = struct.unpack_from('>II', sizes, 4)\n                lengths = [uniform] * total if uniform else struct.unpack_from('>' + 'I' * total, sizes, 12)\n                nmap = struct.unpack_from('>I', mapping, 4)[0]\n                maps = [struct.unpack_from('>III', mapping, 8 + 12 * j) for j in range(nmap)]\n                index = 0\n                for c, position in enumerate(offsets, 1):\n                    valid = [m for m in maps if m[0] <= c]\n                    if not valid:\n                        raise ValueError('Missing chunk mapping')\n                    for _ in range(valid[-1][1]):\n                        if index >= total:\n                            raise ValueError('Sample count overflow')\n                        limit = position + lengths[index]\n                        if limit > len(data):\n                            raise ValueError('Sample outside file')\n                        cursor = position\n                        while cursor < limit:\n                            if cursor + 12 > limit:\n                                raise ValueError('Truncated CTMD record')\n                            length, record_type = struct.unpack_from('<IH', data, cursor)\n                            if length < 12 or cursor + length > limit:\n                                raise ValueError('Invalid CTMD extent')\n                            if record_type in (7, 8, 9):\n                                part = cursor + 12\n                                while part < cursor + length:\n                                    size, tag = struct.unpack_from('<II', data, part)\n                                    if size < 8 or part + size > cursor + length:\n                                        raise ValueError('Invalid CTMD TIFF extent')\n                                    if tag == 0x927c:\n                                        record(data[part + 8:part + size], f'{name}/CTMD/sample{index}/record{record_type}')\n                                    part += size\n                            cursor += length\n                        position = limit\n                        index += 1\n                if index != total:\n                    raise ValueError('Incomplete CTMD sample map')\n    walk(0, len(data), '')\n    return {'raw': str(path), 'raw_sha256': hashlib.sha256(data).hexdigest(),\n            'color_data_records': results, 'limitations': 'Known offsets exposed as candidates; no full MakerNotes semantics or RAW pixel decoding.'}\n\n\ndef main():\n    parser = argparse.ArgumentParser(description=__doc__)\n    parser.add_argument('--output', type=Path, required=True)\n    parser.add_argument('raws', nargs='+', type=Path)\n    args = parser.parse_args()\n    if args.output.exists():\n        parser.error('Refuse to overwrite existing measurements')\n    result = {'schema': 1, 'script_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),\n              'images': [audit(path) for path in args.raws]}\n    with args.output.open('x', encoding='utf-8') as stream:\n        json.dump(result, stream, indent=2)\n    for entry in result['images']:\n        print(Path(entry['raw']).stem, entry['color_data_records'], flush=True)\n\n\nif __name__ == '__main__':\n    main()\n"
+  }
+ },
+ "verdict": "raw_burst_development_audit_not_sensor_calibration",
+ "rules": "42hashedmetadata,first14decodedONLY,ninefixedgrid256mosaicROIs,no motioncorrection/no resampling.14validationand14sealedpixelsNOTdecoded. Plane4offsetsnotassumedidenticalgreens. Temporal/spatial/meansplitandphase diagnosticsstored;no image denoising/modelretuning.",
+ "limitations": "OnecameraISO4000oneburstscene,temporallyrelatedframesnotindependentscene/cameraholdout. Temporalvarianceincludesmotion/flicker. CommonmeancontainsfixedpatternANDscene;notcleantruth. RawpyLibRawdecodernotproductionopeningcontract,blackdomainnotcertified. No physicala,b/productionorvisualqualityclaim."
+}

@@ -1,0 +1,1815 @@
+{
+ "campaign_id": "noise-real-burst-20261028-v001",
+ "schema_version": 1,
+ "data_version": 1,
+ "measured_at_utc": "2026-10-27T23:35:18.512556+00:00",
+ "analyser_version": "noise-real-burst-research-v001",
+ "started_at_utc": "2026-10-27T23:35:16.159691+00:00",
+ "completed_at_utc": "2026-10-27T23:35:18.512556+00:00",
+ "proofs": [
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\audit-rafale-reelle-bruit-v001-20261027T225328Z.json",
+   "sha256": "a6d74a68af1b28b8da241069942adf227bda151e62f7dd89f8ac1bb4dbbd2574"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\bandes-reelles-rafale-bruit-v001-20261027T230949Z.json",
+   "sha256": "b400e965b934dfd7840cfc5f8849f0e6ea1a0ddd4028250a55d0965f48bfaa97"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\chroma-partagee-rafale-bruit-v001-20261027T232722Z.json",
+   "sha256": "54f1980e50f695bb59b6f831029201105ccda16776ddd3e9f6cfde9ead26fd41"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\contextes-reference-rafale-bruit-v001-20261027T232645Z.json",
+   "sha256": "54ec6efc71f96eb1074f4cf0297e14dd809934a7c3fdd3eacf7ff5dde671f2ac"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\contrat-chroma-partagee-rafale-bruit-v001-20261027T232945Z.json",
+   "sha256": "2a0b41b3f2dc170960c8a144a643ad0b92b181cf4c15aedc52f09b67a48f70d4"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\contrat-chroma-partagee-rafale-bruit-v002-20261027T233348Z.json",
+   "sha256": "05c36aecd89a0cf447c7b5b76fa3dc3c4bb69287049e5aa6bfea981c1ca1ab67"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\controle-references-rafale-bruit-v001-20261027T231257Z.json",
+   "sha256": "c08fe8216fae9cf21473112c91c6d241c37e9be7744e77338f6133a057eaafb0"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\controle-references-rafale-bruit-v002-20261027T231425Z.json",
+   "sha256": "e4bdb650bd71c7083024950786ce82fe9b5c23e6c2aa8e53c4c20b21c225170b"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\extraction-native-rafale-bruit-v001-20261027T230112Z.json",
+   "sha256": "8210edb40b25bd41817a6fbba589dc329ea7148f5772e37adfd3a845818a7528"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\extraction-native-rafale-validation-bruit-v001-20261027T231306Z.json",
+   "sha256": "7f9be20dd9232f9246b27583df45b32c7337810410cacc0af5113b413bb44839"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\gel-chroma-partagee-rafale-bruit-v001-20261027T232717Z.json",
+   "sha256": "101bd3879842d7c11df31830796178f6d70abb505a01d62038cb56c7b1834ad9"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\gel-transfert-bandes-rafale-bruit-v001-20261027T231153Z.json",
+   "sha256": "159ac4e59a1730c91779a22f6fac0fd2c9c962b1454ceaccd04b258afa894f09"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\gel-wiener-bandes-rafale-bruit-v001-20261027T231607Z.json",
+   "sha256": "03358e94be1b1563d106bce42f30456aca5dab68c30cd7798ffc9fcada3fec0e"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\mouvement-rafale-bruit-v001-20261027T225632Z.json",
+   "sha256": "aeaaf9197f3cda6f6dfbffd6ed9f5e768164fca0a77566bd2b2b85d16f601616"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\partition-rafale-bruit-v001-20261027T225326Z.json",
+   "sha256": "0c83f67ece4dc89d0d6036772ae0f80eb645a1ee9fe58fe273f9b62cc55e3518"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\references-croisees-rafale-bruit-v001-20261027T230909Z.json",
+   "sha256": "99e3b38d8ff00ffc372357b21d66475f72cf2794da57bc1270dc06d013eb35d2"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\residus-rafale-bruit-v001-20261027T230219Z.json",
+   "sha256": "0017f8d5016afb85db0b813e6e14e3ae6463e5442574680fdedece391bd497b2"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\temoins-production-rafale-bruit-v001-20261027T230748Z.json",
+   "sha256": "7ef3bb548c4af2d49352c27bc6e7d9b7e1ce15576e9760417c613c314f36bc98"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\validation-transfert-bandes-rafale-bruit-v001-20261027T231311Z.json",
+   "sha256": "b71c2f1f616fedd96a6261fcf378569059185e87a7b0c5d21bc3a5694fec449d"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\wiener-bandes-rafale-bruit-v001-20261027T231611Z.json",
+   "sha256": "498cd92939b26e0061c15ea7423b7aac6a1e1aac172b51d292cf22f4e408b80d"
+  }
+ ],
+ "file_checks": [
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\partition-rafale-bruit-v001-20261027T225326Z.json",
+   "expected_sha256": "0c83f67ece4dc89d0d6036772ae0f80eb645a1ee9fe58fe273f9b62cc55e3518",
+   "actual_sha256": "0c83f67ece4dc89d0d6036772ae0f80eb645a1ee9fe58fe273f9b62cc55e3518",
+   "match": true,
+   "origin": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9819.CR3",
+   "expected_sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165",
+   "actual_sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165",
+   "match": true,
+   "origin": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9820.CR3",
+   "expected_sha256": "5ae412958614f0782133ab8bde605496e411ab7dcfb5d8fd62ea927681a965d3",
+   "actual_sha256": "5ae412958614f0782133ab8bde605496e411ab7dcfb5d8fd62ea927681a965d3",
+   "match": true,
+   "origin": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9821.CR3",
+   "expected_sha256": "1ce0b3885a317a6fdaaa8b40d4d399545f187080592c2ad78f81821865668bd2",
+   "actual_sha256": "1ce0b3885a317a6fdaaa8b40d4d399545f187080592c2ad78f81821865668bd2",
+   "match": true,
+   "origin": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9822.CR3",
+   "expected_sha256": "299d0a9013836d3e2ea53c8d23856c02b4573011a7eb0a19992897e03b63f680",
+   "actual_sha256": "299d0a9013836d3e2ea53c8d23856c02b4573011a7eb0a19992897e03b63f680",
+   "match": true,
+   "origin": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9823.CR3",
+   "expected_sha256": "72a8c5475af764b5f2fe125234367e3a1c13f7e6efa2d3fd03b38d30f2809894",
+   "actual_sha256": "72a8c5475af764b5f2fe125234367e3a1c13f7e6efa2d3fd03b38d30f2809894",
+   "match": true,
+   "origin": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9824.CR3",
+   "expected_sha256": "28899c86ad3850f4fa699a6001fcb7b68af4d6a3d4adbab7cfb2acac2c1120c4",
+   "actual_sha256": "28899c86ad3850f4fa699a6001fcb7b68af4d6a3d4adbab7cfb2acac2c1120c4",
+   "match": true,
+   "origin": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9825.CR3",
+   "expected_sha256": "cb5c9016211a340e38ec707ec8ee9d5bf834a644958d394eb7f41ab565dd4245",
+   "actual_sha256": "cb5c9016211a340e38ec707ec8ee9d5bf834a644958d394eb7f41ab565dd4245",
+   "match": true,
+   "origin": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9826.CR3",
+   "expected_sha256": "e810101cf640a035dd2a3147b9edb76e2d0ad60d8870f9af8394220fcf334bc1",
+   "actual_sha256": "e810101cf640a035dd2a3147b9edb76e2d0ad60d8870f9af8394220fcf334bc1",
+   "match": true,
+   "origin": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9827.CR3",
+   "expected_sha256": "4444028085b4c4a42a42c6bdcd20f0e6dc6d4a182028e23969bf4f7e766a7d3e",
+   "actual_sha256": "4444028085b4c4a42a42c6bdcd20f0e6dc6d4a182028e23969bf4f7e766a7d3e",
+   "match": true,
+   "origin": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9828.CR3",
+   "expected_sha256": "00ffa5dd689ed880485b83f16a69347ff37fcae9073ddd0d7cb9d257947b97a5",
+   "actual_sha256": "00ffa5dd689ed880485b83f16a69347ff37fcae9073ddd0d7cb9d257947b97a5",
+   "match": true,
+   "origin": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9829.CR3",
+   "expected_sha256": "8e7ac253d543a458dbaff3dc7dafc675c91ce6feffa4f16e6f9bc673f9831298",
+   "actual_sha256": "8e7ac253d543a458dbaff3dc7dafc675c91ce6feffa4f16e6f9bc673f9831298",
+   "match": true,
+   "origin": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9830.CR3",
+   "expected_sha256": "f4ad3c2bfc7260358b49736bea8ed1105220d19bf40ede2324ec9d248f75df49",
+   "actual_sha256": "f4ad3c2bfc7260358b49736bea8ed1105220d19bf40ede2324ec9d248f75df49",
+   "match": true,
+   "origin": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9831.CR3",
+   "expected_sha256": "975973a6bc5559ec84449b71c8f3823f0f31897ae7f3935f3aa5c539fbdaea73",
+   "actual_sha256": "975973a6bc5559ec84449b71c8f3823f0f31897ae7f3935f3aa5c539fbdaea73",
+   "match": true,
+   "origin": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9832.CR3",
+   "expected_sha256": "48a9d34e3a63f84fedd3609d0dedddc9fd67d038753713be267d811a59f8de36",
+   "actual_sha256": "48a9d34e3a63f84fedd3609d0dedddc9fd67d038753713be267d811a59f8de36",
+   "match": true,
+   "origin": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9833.CR3",
+   "expected_sha256": "527d4c5045b058c8a19d0c2a0d5c39e1b2ccae482b415e32c441112458b4e462",
+   "actual_sha256": "527d4c5045b058c8a19d0c2a0d5c39e1b2ccae482b415e32c441112458b4e462",
+   "match": true,
+   "origin": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9834.CR3",
+   "expected_sha256": "8ab9b619d15c4b1c50bd11705a876219ac907dd9db79152ae21e3f971457098b",
+   "actual_sha256": "8ab9b619d15c4b1c50bd11705a876219ac907dd9db79152ae21e3f971457098b",
+   "match": true,
+   "origin": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9835.CR3",
+   "expected_sha256": "4f17ae6cf170331bf6ddc4b1812d81f4faa040bd9ee8f0ad4b252d40a6beec8b",
+   "actual_sha256": "4f17ae6cf170331bf6ddc4b1812d81f4faa040bd9ee8f0ad4b252d40a6beec8b",
+   "match": true,
+   "origin": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9836.CR3",
+   "expected_sha256": "678a584753602293305bb358c15fa4e69715a3526b4f98b631e449c782450b6a",
+   "actual_sha256": "678a584753602293305bb358c15fa4e69715a3526b4f98b631e449c782450b6a",
+   "match": true,
+   "origin": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9837.CR3",
+   "expected_sha256": "9283f27afdc648bc2df11e508eeb8ebabbc4ed9294f639da30aa4f090dba4e7e",
+   "actual_sha256": "9283f27afdc648bc2df11e508eeb8ebabbc4ed9294f639da30aa4f090dba4e7e",
+   "match": true,
+   "origin": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9838.CR3",
+   "expected_sha256": "c194f65325441bdc28267559dafe25164cde50fc15f8e109374470bc12d7d10a",
+   "actual_sha256": "c194f65325441bdc28267559dafe25164cde50fc15f8e109374470bc12d7d10a",
+   "match": true,
+   "origin": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9839.CR3",
+   "expected_sha256": "b6751c2d04e1326600f687429c583babcd07d7fc6d4e5d672d5340dfac980e42",
+   "actual_sha256": "b6751c2d04e1326600f687429c583babcd07d7fc6d4e5d672d5340dfac980e42",
+   "match": true,
+   "origin": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9840.CR3",
+   "expected_sha256": "7f2452a03022dbd4793fadc96fe50d07321b0886bec20fe66d6d85ce971c7f3e",
+   "actual_sha256": "7f2452a03022dbd4793fadc96fe50d07321b0886bec20fe66d6d85ce971c7f3e",
+   "match": true,
+   "origin": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9841.CR3",
+   "expected_sha256": "0debbc1ae2d6e44981c7e3ffac2a344dbdef2ddb7375362a5cecb1a9f77e24cb",
+   "actual_sha256": "0debbc1ae2d6e44981c7e3ffac2a344dbdef2ddb7375362a5cecb1a9f77e24cb",
+   "match": true,
+   "origin": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9842.CR3",
+   "expected_sha256": "e9ba642a24a01ed32c12cc8bca0946b3be8359d1bd3130433bca9a0b685d3e34",
+   "actual_sha256": "e9ba642a24a01ed32c12cc8bca0946b3be8359d1bd3130433bca9a0b685d3e34",
+   "match": true,
+   "origin": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9843.CR3",
+   "expected_sha256": "3f0fb2c3a8e36c378756b37ce04949a3fd9248c50dc5d0008e8d76e1e611fa3b",
+   "actual_sha256": "3f0fb2c3a8e36c378756b37ce04949a3fd9248c50dc5d0008e8d76e1e611fa3b",
+   "match": true,
+   "origin": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9844.CR3",
+   "expected_sha256": "27ea69f59e9a196832cedb13a7f5147869fe2f75c80dcc88ce2ff39ca7ef3ff7",
+   "actual_sha256": "27ea69f59e9a196832cedb13a7f5147869fe2f75c80dcc88ce2ff39ca7ef3ff7",
+   "match": true,
+   "origin": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9845.CR3",
+   "expected_sha256": "befbc9dd5e7e9bd6a8fccfb1caf397db2b2390c55cbd7b9f55bc13593f3f742b",
+   "actual_sha256": "befbc9dd5e7e9bd6a8fccfb1caf397db2b2390c55cbd7b9f55bc13593f3f742b",
+   "match": true,
+   "origin": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9846.CR3",
+   "expected_sha256": "ddd5e55464e089cf384b8dca05b48618cb6064c8a97d5cbbd553734df9f09b32",
+   "actual_sha256": "ddd5e55464e089cf384b8dca05b48618cb6064c8a97d5cbbd553734df9f09b32",
+   "match": true,
+   "origin": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9847.CR3",
+   "expected_sha256": "61bf2d43039ae94dee192d186100c7760fa07d71dae14c385f6ac3f2dc07b119",
+   "actual_sha256": "61bf2d43039ae94dee192d186100c7760fa07d71dae14c385f6ac3f2dc07b119",
+   "match": true,
+   "origin": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9848.CR3",
+   "expected_sha256": "9d7adf98c8b9308467a64af9f48f2bc21114f3ea993c8ec8a055d0942359a01a",
+   "actual_sha256": "9d7adf98c8b9308467a64af9f48f2bc21114f3ea993c8ec8a055d0942359a01a",
+   "match": true,
+   "origin": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9849.CR3",
+   "expected_sha256": "118abd77642f2e01614979ca5ec742bd80e6ac6e297c6aa8782613254c8e3bab",
+   "actual_sha256": "118abd77642f2e01614979ca5ec742bd80e6ac6e297c6aa8782613254c8e3bab",
+   "match": true,
+   "origin": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9850.CR3",
+   "expected_sha256": "f10aca785ede26d10f7e0fa01e6e858f24e5e413a73f3e19ec6c3b437a10da79",
+   "actual_sha256": "f10aca785ede26d10f7e0fa01e6e858f24e5e413a73f3e19ec6c3b437a10da79",
+   "match": true,
+   "origin": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9851.CR3",
+   "expected_sha256": "0306acec0a43414588ec5eb4ca2f6f2fe4d8ef32b29a1fbf69b283a12f707aad",
+   "actual_sha256": "0306acec0a43414588ec5eb4ca2f6f2fe4d8ef32b29a1fbf69b283a12f707aad",
+   "match": true,
+   "origin": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9852.CR3",
+   "expected_sha256": "3b005e471e40eec316e7974acf6357922003a24f59fd958be28ffc0c76efea85",
+   "actual_sha256": "3b005e471e40eec316e7974acf6357922003a24f59fd958be28ffc0c76efea85",
+   "match": true,
+   "origin": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9853.CR3",
+   "expected_sha256": "90b93dfefc1b2edd3dc91728e9b1ee568ad850a8cb359a5fddf35b312f832bb0",
+   "actual_sha256": "90b93dfefc1b2edd3dc91728e9b1ee568ad850a8cb359a5fddf35b312f832bb0",
+   "match": true,
+   "origin": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9854.CR3",
+   "expected_sha256": "2f0445c306faf012e5731b1411c195496c3ec85e7d8e511646a5084de2525553",
+   "actual_sha256": "2f0445c306faf012e5731b1411c195496c3ec85e7d8e511646a5084de2525553",
+   "match": true,
+   "origin": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9855.CR3",
+   "expected_sha256": "f16dce7773934ea5188b5dbd3a26061b43695a61f45a2068deff5c0f27512b59",
+   "actual_sha256": "f16dce7773934ea5188b5dbd3a26061b43695a61f45a2068deff5c0f27512b59",
+   "match": true,
+   "origin": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9856.CR3",
+   "expected_sha256": "3c8637204cd259dcb0faf0efc719a2daa0888cd5dab6759c847d99376fb816e3",
+   "actual_sha256": "3c8637204cd259dcb0faf0efc719a2daa0888cd5dab6759c847d99376fb816e3",
+   "match": true,
+   "origin": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9857.CR3",
+   "expected_sha256": "8f5842a4cc0c8e0f7ba094ce71a4774f1062c321cc2ffb86de4a5b2d8613e209",
+   "actual_sha256": "8f5842a4cc0c8e0f7ba094ce71a4774f1062c321cc2ffb86de4a5b2d8613e209",
+   "match": true,
+   "origin": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9858.CR3",
+   "expected_sha256": "c1ea790d03b43d5947b1c7fb50e0aba6511b3be55998ec8579bc9ed3c3f880b1",
+   "actual_sha256": "c1ea790d03b43d5947b1c7fb50e0aba6511b3be55998ec8579bc9ed3c3f880b1",
+   "match": true,
+   "origin": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9859.CR3",
+   "expected_sha256": "ad880863354a51bb4061761a2f06b0ff9aaa37ea88e2e895fe610f55f751e735",
+   "actual_sha256": "ad880863354a51bb4061761a2f06b0ff9aaa37ea88e2e895fe610f55f751e735",
+   "match": true,
+   "origin": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9860.CR3",
+   "expected_sha256": "a560c9db1a3da02483e563fff6030d1817c7d67e7bd009bf5754daed117cfbe0",
+   "actual_sha256": "a560c9db1a3da02483e563fff6030d1817c7d67e7bd009bf5754daed117cfbe0",
+   "match": true,
+   "origin": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-audit\\development-cfa-v001-20261027T225326Z.npz",
+   "expected_sha256": "2e86a6cde0d3198d28ab642ca2e43f84e588faabebfbd3ce94d31bf72e68faf0",
+   "actual_sha256": "2e86a6cde0d3198d28ab642ca2e43f84e588faabebfbd3ce94d31bf72e68faf0",
+   "match": true,
+   "origin": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\audit-rafale-reelle-bruit-v001-20261027T225328Z.json",
+   "expected_sha256": "a6d74a68af1b28b8da241069942adf227bda151e62f7dd89f8ac1bb4dbbd2574",
+   "actual_sha256": "a6d74a68af1b28b8da241069942adf227bda151e62f7dd89f8ac1bb4dbbd2574",
+   "match": true,
+   "origin": "bandes-reelles-rafale-bruit-v001-20261027T230949Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\extraction-native-rafale-bruit-v001-20261027T230112Z.json",
+   "expected_sha256": "8210edb40b25bd41817a6fbba589dc329ea7148f5772e37adfd3a845818a7528",
+   "actual_sha256": "8210edb40b25bd41817a6fbba589dc329ea7148f5772e37adfd3a845818a7528",
+   "match": true,
+   "origin": "bandes-reelles-rafale-bruit-v001-20261027T230949Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\residus-rafale-bruit-v001-20261027T230219Z.json",
+   "expected_sha256": "0017f8d5016afb85db0b813e6e14e3ae6463e5442574680fdedece391bd497b2",
+   "actual_sha256": "0017f8d5016afb85db0b813e6e14e3ae6463e5442574680fdedece391bd497b2",
+   "match": true,
+   "origin": "bandes-reelles-rafale-bruit-v001-20261027T230949Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\gel-chroma-partagee-rafale-bruit-v001-20261027T232717Z.json",
+   "expected_sha256": "101bd3879842d7c11df31830796178f6d70abb505a01d62038cb56c7b1834ad9",
+   "actual_sha256": "101bd3879842d7c11df31830796178f6d70abb505a01d62038cb56c7b1834ad9",
+   "match": true,
+   "origin": "chroma-partagee-rafale-bruit-v001-20261027T232722Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-shared-chroma\\20261027T232717Z\\shared-chroma-linear-planes.npz",
+   "expected_sha256": "55dbd649141750bc50af481c4ffeddbac01adcaceba3242f3fad27f0cdb58f07",
+   "actual_sha256": "55dbd649141750bc50af481c4ffeddbac01adcaceba3242f3fad27f0cdb58f07",
+   "match": true,
+   "origin": "chroma-partagee-rafale-bruit-v001-20261027T232722Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-shared-chroma\\20261027T232717Z\\shared-chroma-feasibility.png",
+   "expected_sha256": "914ae88ea85fe648cd6527adcb04c4c1b55bb7344e5d0780f750e85c1d4a13f1",
+   "actual_sha256": "914ae88ea85fe648cd6527adcb04c4c1b55bb7344e5d0780f750e85c1d4a13f1",
+   "match": true,
+   "origin": "chroma-partagee-rafale-bruit-v001-20261027T232722Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\extraction-native-rafale-validation-bruit-v001-20261027T231306Z.json",
+   "expected_sha256": "7f9be20dd9232f9246b27583df45b32c7337810410cacc0af5113b413bb44839",
+   "actual_sha256": "7f9be20dd9232f9246b27583df45b32c7337810410cacc0af5113b413bb44839",
+   "match": true,
+   "origin": "contextes-reference-rafale-bruit-v001-20261027T232645Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9833.CR3",
+   "expected_sha256": "527d4c5045b058c8a19d0c2a0d5c39e1b2ccae482b415e32c441112458b4e462",
+   "actual_sha256": "527d4c5045b058c8a19d0c2a0d5c39e1b2ccae482b415e32c441112458b4e462",
+   "match": true,
+   "origin": "contextes-reference-rafale-bruit-v001-20261027T232645Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9834.CR3",
+   "expected_sha256": "8ab9b619d15c4b1c50bd11705a876219ac907dd9db79152ae21e3f971457098b",
+   "actual_sha256": "8ab9b619d15c4b1c50bd11705a876219ac907dd9db79152ae21e3f971457098b",
+   "match": true,
+   "origin": "contextes-reference-rafale-bruit-v001-20261027T232645Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9835.CR3",
+   "expected_sha256": "4f17ae6cf170331bf6ddc4b1812d81f4faa040bd9ee8f0ad4b252d40a6beec8b",
+   "actual_sha256": "4f17ae6cf170331bf6ddc4b1812d81f4faa040bd9ee8f0ad4b252d40a6beec8b",
+   "match": true,
+   "origin": "contextes-reference-rafale-bruit-v001-20261027T232645Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9836.CR3",
+   "expected_sha256": "678a584753602293305bb358c15fa4e69715a3526b4f98b631e449c782450b6a",
+   "actual_sha256": "678a584753602293305bb358c15fa4e69715a3526b4f98b631e449c782450b6a",
+   "match": true,
+   "origin": "contextes-reference-rafale-bruit-v001-20261027T232645Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9837.CR3",
+   "expected_sha256": "9283f27afdc648bc2df11e508eeb8ebabbc4ed9294f639da30aa4f090dba4e7e",
+   "actual_sha256": "9283f27afdc648bc2df11e508eeb8ebabbc4ed9294f639da30aa4f090dba4e7e",
+   "match": true,
+   "origin": "contextes-reference-rafale-bruit-v001-20261027T232645Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9838.CR3",
+   "expected_sha256": "c194f65325441bdc28267559dafe25164cde50fc15f8e109374470bc12d7d10a",
+   "actual_sha256": "c194f65325441bdc28267559dafe25164cde50fc15f8e109374470bc12d7d10a",
+   "match": true,
+   "origin": "contextes-reference-rafale-bruit-v001-20261027T232645Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9839.CR3",
+   "expected_sha256": "b6751c2d04e1326600f687429c583babcd07d7fc6d4e5d672d5340dfac980e42",
+   "actual_sha256": "b6751c2d04e1326600f687429c583babcd07d7fc6d4e5d672d5340dfac980e42",
+   "match": true,
+   "origin": "contextes-reference-rafale-bruit-v001-20261027T232645Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9840.CR3",
+   "expected_sha256": "7f2452a03022dbd4793fadc96fe50d07321b0886bec20fe66d6d85ce971c7f3e",
+   "actual_sha256": "7f2452a03022dbd4793fadc96fe50d07321b0886bec20fe66d6d85ce971c7f3e",
+   "match": true,
+   "origin": "contextes-reference-rafale-bruit-v001-20261027T232645Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9841.CR3",
+   "expected_sha256": "0debbc1ae2d6e44981c7e3ffac2a344dbdef2ddb7375362a5cecb1a9f77e24cb",
+   "actual_sha256": "0debbc1ae2d6e44981c7e3ffac2a344dbdef2ddb7375362a5cecb1a9f77e24cb",
+   "match": true,
+   "origin": "contextes-reference-rafale-bruit-v001-20261027T232645Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9842.CR3",
+   "expected_sha256": "e9ba642a24a01ed32c12cc8bca0946b3be8359d1bd3130433bca9a0b685d3e34",
+   "actual_sha256": "e9ba642a24a01ed32c12cc8bca0946b3be8359d1bd3130433bca9a0b685d3e34",
+   "match": true,
+   "origin": "contextes-reference-rafale-bruit-v001-20261027T232645Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9843.CR3",
+   "expected_sha256": "3f0fb2c3a8e36c378756b37ce04949a3fd9248c50dc5d0008e8d76e1e611fa3b",
+   "actual_sha256": "3f0fb2c3a8e36c378756b37ce04949a3fd9248c50dc5d0008e8d76e1e611fa3b",
+   "match": true,
+   "origin": "contextes-reference-rafale-bruit-v001-20261027T232645Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9844.CR3",
+   "expected_sha256": "27ea69f59e9a196832cedb13a7f5147869fe2f75c80dcc88ce2ff39ca7ef3ff7",
+   "actual_sha256": "27ea69f59e9a196832cedb13a7f5147869fe2f75c80dcc88ce2ff39ca7ef3ff7",
+   "match": true,
+   "origin": "contextes-reference-rafale-bruit-v001-20261027T232645Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9845.CR3",
+   "expected_sha256": "befbc9dd5e7e9bd6a8fccfb1caf397db2b2390c55cbd7b9f55bc13593f3f742b",
+   "actual_sha256": "befbc9dd5e7e9bd6a8fccfb1caf397db2b2390c55cbd7b9f55bc13593f3f742b",
+   "match": true,
+   "origin": "contextes-reference-rafale-bruit-v001-20261027T232645Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9846.CR3",
+   "expected_sha256": "ddd5e55464e089cf384b8dca05b48618cb6064c8a97d5cbbd553734df9f09b32",
+   "actual_sha256": "ddd5e55464e089cf384b8dca05b48618cb6064c8a97d5cbbd553734df9f09b32",
+   "match": true,
+   "origin": "contextes-reference-rafale-bruit-v001-20261027T232645Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-tools\\Release\\iprBurstReference.exe",
+   "expected_sha256": "5eec7b8e701e6c07b2835b056f30c64017c243b9e4fb536d8fe554e90929e6c2",
+   "actual_sha256": "5eec7b8e701e6c07b2835b056f30c64017c243b9e4fb536d8fe554e90929e6c2",
+   "match": true,
+   "origin": "contextes-reference-rafale-bruit-v001-20261027T232645Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-reference512\\20261027T231850Z\\validation-reference-contexts.npz",
+   "expected_sha256": "4f2a89197797796207827b4f5ca9d573dec6e2c2012e029af8a7d0d52766aed5",
+   "actual_sha256": "4f2a89197797796207827b4f5ca9d573dec6e2c2012e029af8a7d0d52766aed5",
+   "match": true,
+   "origin": "contextes-reference-rafale-bruit-v001-20261027T232645Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\chroma-partagee-rafale-bruit-v001-20261027T232722Z.json",
+   "expected_sha256": "54f1980e50f695bb59b6f831029201105ccda16776ddd3e9f6cfde9ead26fd41",
+   "actual_sha256": "54f1980e50f695bb59b6f831029201105ccda16776ddd3e9f6cfde9ead26fd41",
+   "match": true,
+   "origin": "contrat-chroma-partagee-rafale-bruit-v001-20261027T232945Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\temoins-production-rafale-bruit-v001-20261027T230748Z.json",
+   "expected_sha256": "7ef3bb548c4af2d49352c27bc6e7d9b7e1ce15576e9760417c613c314f36bc98",
+   "actual_sha256": "7ef3bb548c4af2d49352c27bc6e7d9b7e1ce15576e9760417c613c314f36bc98",
+   "match": true,
+   "origin": "contrat-chroma-partagee-rafale-bruit-v001-20261027T232945Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\wiener-bandes-rafale-bruit-v001-20261027T231611Z.json",
+   "expected_sha256": "498cd92939b26e0061c15ea7423b7aac6a1e1aac172b51d292cf22f4e408b80d",
+   "actual_sha256": "498cd92939b26e0061c15ea7423b7aac6a1e1aac172b51d292cf22f4e408b80d",
+   "match": true,
+   "origin": "contrat-chroma-partagee-rafale-bruit-v001-20261027T232945Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\contextes-reference-rafale-bruit-v001-20261027T232645Z.json",
+   "expected_sha256": "54ec6efc71f96eb1074f4cf0297e14dd809934a7c3fdd3eacf7ff5dde671f2ac",
+   "actual_sha256": "54ec6efc71f96eb1074f4cf0297e14dd809934a7c3fdd3eacf7ff5dde671f2ac",
+   "match": true,
+   "origin": "contrat-chroma-partagee-rafale-bruit-v001-20261027T232945Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-shared-chroma-safe\\20261027T232941Z\\projected-shared-chroma.npz",
+   "expected_sha256": "a94e23a0aa4a675265497a157090042aa78c871f54f14da972143fdc56b579c4",
+   "actual_sha256": "a94e23a0aa4a675265497a157090042aa78c871f54f14da972143fdc56b579c4",
+   "match": true,
+   "origin": "contrat-chroma-partagee-rafale-bruit-v001-20261027T232945Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-shared-chroma-safe\\20261027T232941Z\\shared-chroma-output-contract.png",
+   "expected_sha256": "f1b87a160b6c9f1cb48d2388315fae3a6e6dd53e96aa668da7853523a9ab1813",
+   "actual_sha256": "f1b87a160b6c9f1cb48d2388315fae3a6e6dd53e96aa668da7853523a9ab1813",
+   "match": true,
+   "origin": "contrat-chroma-partagee-rafale-bruit-v001-20261027T232945Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\contrat-chroma-partagee-rafale-bruit-v001-20261027T232945Z.json",
+   "expected_sha256": "2a0b41b3f2dc170960c8a144a643ad0b92b181cf4c15aedc52f09b67a48f70d4",
+   "actual_sha256": "2a0b41b3f2dc170960c8a144a643ad0b92b181cf4c15aedc52f09b67a48f70d4",
+   "match": true,
+   "origin": "contrat-chroma-partagee-rafale-bruit-v002-20261027T233348Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\chroma-partagee-rafale-bruit-v001-20261027T232722Z.json",
+   "expected_sha256": "54f1980e50f695bb59b6f831029201105ccda16776ddd3e9f6cfde9ead26fd41",
+   "actual_sha256": "54f1980e50f695bb59b6f831029201105ccda16776ddd3e9f6cfde9ead26fd41",
+   "match": true,
+   "origin": "contrat-chroma-partagee-rafale-bruit-v002-20261027T233348Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\temoins-production-rafale-bruit-v001-20261027T230748Z.json",
+   "expected_sha256": "7ef3bb548c4af2d49352c27bc6e7d9b7e1ce15576e9760417c613c314f36bc98",
+   "actual_sha256": "7ef3bb548c4af2d49352c27bc6e7d9b7e1ce15576e9760417c613c314f36bc98",
+   "match": true,
+   "origin": "contrat-chroma-partagee-rafale-bruit-v002-20261027T233348Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\wiener-bandes-rafale-bruit-v001-20261027T231611Z.json",
+   "expected_sha256": "498cd92939b26e0061c15ea7423b7aac6a1e1aac172b51d292cf22f4e408b80d",
+   "actual_sha256": "498cd92939b26e0061c15ea7423b7aac6a1e1aac172b51d292cf22f4e408b80d",
+   "match": true,
+   "origin": "contrat-chroma-partagee-rafale-bruit-v002-20261027T233348Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\contextes-reference-rafale-bruit-v001-20261027T232645Z.json",
+   "expected_sha256": "54ec6efc71f96eb1074f4cf0297e14dd809934a7c3fdd3eacf7ff5dde671f2ac",
+   "actual_sha256": "54ec6efc71f96eb1074f4cf0297e14dd809934a7c3fdd3eacf7ff5dde671f2ac",
+   "match": true,
+   "origin": "contrat-chroma-partagee-rafale-bruit-v002-20261027T233348Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-shared-chroma-safe\\20261027T233345Z\\projected-shared-chroma.npz",
+   "expected_sha256": "a94e23a0aa4a675265497a157090042aa78c871f54f14da972143fdc56b579c4",
+   "actual_sha256": "a94e23a0aa4a675265497a157090042aa78c871f54f14da972143fdc56b579c4",
+   "match": true,
+   "origin": "contrat-chroma-partagee-rafale-bruit-v002-20261027T233348Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-shared-chroma-safe\\20261027T233345Z\\shared-chroma-output-contract.png",
+   "expected_sha256": "f20e1d29b5a9826209bc1b037dbe15f56d1ed517438e01671a76b6dfe0dc250d",
+   "actual_sha256": "f20e1d29b5a9826209bc1b037dbe15f56d1ed517438e01671a76b6dfe0dc250d",
+   "match": true,
+   "origin": "contrat-chroma-partagee-rafale-bruit-v002-20261027T233348Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\references-croisees-rafale-bruit-v001-20261027T230909Z.json",
+   "expected_sha256": "99e3b38d8ff00ffc372357b21d66475f72cf2794da57bc1270dc06d013eb35d2",
+   "actual_sha256": "99e3b38d8ff00ffc372357b21d66475f72cf2794da57bc1270dc06d013eb35d2",
+   "match": true,
+   "origin": "controle-references-rafale-bruit-v001-20261027T231257Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-review\\20261027T231254Z\\production-reference-controls.png",
+   "expected_sha256": "08393a8f9c04d4114d2b4d37050e036a1f864962f5f9c31af1d394e01952b554",
+   "actual_sha256": "08393a8f9c04d4114d2b4d37050e036a1f864962f5f9c31af1d394e01952b554",
+   "match": true,
+   "origin": "controle-references-rafale-bruit-v001-20261027T231257Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\references-croisees-rafale-bruit-v001-20261027T230909Z.json",
+   "expected_sha256": "99e3b38d8ff00ffc372357b21d66475f72cf2794da57bc1270dc06d013eb35d2",
+   "actual_sha256": "99e3b38d8ff00ffc372357b21d66475f72cf2794da57bc1270dc06d013eb35d2",
+   "match": true,
+   "origin": "controle-references-rafale-bruit-v002-20261027T231425Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-review\\20261027T231423Z\\production-reference-controls.png",
+   "expected_sha256": "b93ba076091b7199a3712c47b9c5323520c21a74b708f369d9d15e43f0f59850",
+   "actual_sha256": "b93ba076091b7199a3712c47b9c5323520c21a74b708f369d9d15e43f0f59850",
+   "match": true,
+   "origin": "controle-references-rafale-bruit-v002-20261027T231425Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\audit-rafale-reelle-bruit-v001-20261027T225328Z.json",
+   "expected_sha256": "a6d74a68af1b28b8da241069942adf227bda151e62f7dd89f8ac1bb4dbbd2574",
+   "actual_sha256": "a6d74a68af1b28b8da241069942adf227bda151e62f7dd89f8ac1bb4dbbd2574",
+   "match": true,
+   "origin": "extraction-native-rafale-bruit-v001-20261027T230112Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\Release\\noiseNeighbourhoodProbe.exe",
+   "expected_sha256": "4071c6301b6ff34ec7c54b0d1018ca4a054bd1156c8f17010d4fd93d3e7ae10c",
+   "actual_sha256": "4071c6301b6ff34ec7c54b0d1018ca4a054bd1156c8f17010d4fd93d3e7ae10c",
+   "match": true,
+   "origin": "extraction-native-rafale-bruit-v001-20261027T230112Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9819.CR3",
+   "expected_sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165",
+   "actual_sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165",
+   "match": true,
+   "origin": "extraction-native-rafale-bruit-v001-20261027T230112Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9820.CR3",
+   "expected_sha256": "5ae412958614f0782133ab8bde605496e411ab7dcfb5d8fd62ea927681a965d3",
+   "actual_sha256": "5ae412958614f0782133ab8bde605496e411ab7dcfb5d8fd62ea927681a965d3",
+   "match": true,
+   "origin": "extraction-native-rafale-bruit-v001-20261027T230112Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9821.CR3",
+   "expected_sha256": "1ce0b3885a317a6fdaaa8b40d4d399545f187080592c2ad78f81821865668bd2",
+   "actual_sha256": "1ce0b3885a317a6fdaaa8b40d4d399545f187080592c2ad78f81821865668bd2",
+   "match": true,
+   "origin": "extraction-native-rafale-bruit-v001-20261027T230112Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9822.CR3",
+   "expected_sha256": "299d0a9013836d3e2ea53c8d23856c02b4573011a7eb0a19992897e03b63f680",
+   "actual_sha256": "299d0a9013836d3e2ea53c8d23856c02b4573011a7eb0a19992897e03b63f680",
+   "match": true,
+   "origin": "extraction-native-rafale-bruit-v001-20261027T230112Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9823.CR3",
+   "expected_sha256": "72a8c5475af764b5f2fe125234367e3a1c13f7e6efa2d3fd03b38d30f2809894",
+   "actual_sha256": "72a8c5475af764b5f2fe125234367e3a1c13f7e6efa2d3fd03b38d30f2809894",
+   "match": true,
+   "origin": "extraction-native-rafale-bruit-v001-20261027T230112Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9824.CR3",
+   "expected_sha256": "28899c86ad3850f4fa699a6001fcb7b68af4d6a3d4adbab7cfb2acac2c1120c4",
+   "actual_sha256": "28899c86ad3850f4fa699a6001fcb7b68af4d6a3d4adbab7cfb2acac2c1120c4",
+   "match": true,
+   "origin": "extraction-native-rafale-bruit-v001-20261027T230112Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9825.CR3",
+   "expected_sha256": "cb5c9016211a340e38ec707ec8ee9d5bf834a644958d394eb7f41ab565dd4245",
+   "actual_sha256": "cb5c9016211a340e38ec707ec8ee9d5bf834a644958d394eb7f41ab565dd4245",
+   "match": true,
+   "origin": "extraction-native-rafale-bruit-v001-20261027T230112Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9826.CR3",
+   "expected_sha256": "e810101cf640a035dd2a3147b9edb76e2d0ad60d8870f9af8394220fcf334bc1",
+   "actual_sha256": "e810101cf640a035dd2a3147b9edb76e2d0ad60d8870f9af8394220fcf334bc1",
+   "match": true,
+   "origin": "extraction-native-rafale-bruit-v001-20261027T230112Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9827.CR3",
+   "expected_sha256": "4444028085b4c4a42a42c6bdcd20f0e6dc6d4a182028e23969bf4f7e766a7d3e",
+   "actual_sha256": "4444028085b4c4a42a42c6bdcd20f0e6dc6d4a182028e23969bf4f7e766a7d3e",
+   "match": true,
+   "origin": "extraction-native-rafale-bruit-v001-20261027T230112Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9828.CR3",
+   "expected_sha256": "00ffa5dd689ed880485b83f16a69347ff37fcae9073ddd0d7cb9d257947b97a5",
+   "actual_sha256": "00ffa5dd689ed880485b83f16a69347ff37fcae9073ddd0d7cb9d257947b97a5",
+   "match": true,
+   "origin": "extraction-native-rafale-bruit-v001-20261027T230112Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9829.CR3",
+   "expected_sha256": "8e7ac253d543a458dbaff3dc7dafc675c91ce6feffa4f16e6f9bc673f9831298",
+   "actual_sha256": "8e7ac253d543a458dbaff3dc7dafc675c91ce6feffa4f16e6f9bc673f9831298",
+   "match": true,
+   "origin": "extraction-native-rafale-bruit-v001-20261027T230112Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9830.CR3",
+   "expected_sha256": "f4ad3c2bfc7260358b49736bea8ed1105220d19bf40ede2324ec9d248f75df49",
+   "actual_sha256": "f4ad3c2bfc7260358b49736bea8ed1105220d19bf40ede2324ec9d248f75df49",
+   "match": true,
+   "origin": "extraction-native-rafale-bruit-v001-20261027T230112Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9831.CR3",
+   "expected_sha256": "975973a6bc5559ec84449b71c8f3823f0f31897ae7f3935f3aa5c539fbdaea73",
+   "actual_sha256": "975973a6bc5559ec84449b71c8f3823f0f31897ae7f3935f3aa5c539fbdaea73",
+   "match": true,
+   "origin": "extraction-native-rafale-bruit-v001-20261027T230112Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9832.CR3",
+   "expected_sha256": "48a9d34e3a63f84fedd3609d0dedddc9fd67d038753713be267d811a59f8de36",
+   "actual_sha256": "48a9d34e3a63f84fedd3609d0dedddc9fd67d038753713be267d811a59f8de36",
+   "match": true,
+   "origin": "extraction-native-rafale-bruit-v001-20261027T230112Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-native\\20261027T225952Z\\development-linear-planes.npz",
+   "expected_sha256": "e0eb32f872d1c7b7c8f0d38b9c09e2b0ef84a52ad1cf7743a21e41d1bcfdaa20",
+   "actual_sha256": "e0eb32f872d1c7b7c8f0d38b9c09e2b0ef84a52ad1cf7743a21e41d1bcfdaa20",
+   "match": true,
+   "origin": "extraction-native-rafale-bruit-v001-20261027T230112Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\audit-rafale-reelle-bruit-v001-20261027T225328Z.json",
+   "expected_sha256": "a6d74a68af1b28b8da241069942adf227bda151e62f7dd89f8ac1bb4dbbd2574",
+   "actual_sha256": "a6d74a68af1b28b8da241069942adf227bda151e62f7dd89f8ac1bb4dbbd2574",
+   "match": true,
+   "origin": "extraction-native-rafale-validation-bruit-v001-20261027T231306Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\Release\\noiseNeighbourhoodProbe.exe",
+   "expected_sha256": "4071c6301b6ff34ec7c54b0d1018ca4a054bd1156c8f17010d4fd93d3e7ae10c",
+   "actual_sha256": "4071c6301b6ff34ec7c54b0d1018ca4a054bd1156c8f17010d4fd93d3e7ae10c",
+   "match": true,
+   "origin": "extraction-native-rafale-validation-bruit-v001-20261027T231306Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9833.CR3",
+   "expected_sha256": "527d4c5045b058c8a19d0c2a0d5c39e1b2ccae482b415e32c441112458b4e462",
+   "actual_sha256": "527d4c5045b058c8a19d0c2a0d5c39e1b2ccae482b415e32c441112458b4e462",
+   "match": true,
+   "origin": "extraction-native-rafale-validation-bruit-v001-20261027T231306Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9834.CR3",
+   "expected_sha256": "8ab9b619d15c4b1c50bd11705a876219ac907dd9db79152ae21e3f971457098b",
+   "actual_sha256": "8ab9b619d15c4b1c50bd11705a876219ac907dd9db79152ae21e3f971457098b",
+   "match": true,
+   "origin": "extraction-native-rafale-validation-bruit-v001-20261027T231306Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9835.CR3",
+   "expected_sha256": "4f17ae6cf170331bf6ddc4b1812d81f4faa040bd9ee8f0ad4b252d40a6beec8b",
+   "actual_sha256": "4f17ae6cf170331bf6ddc4b1812d81f4faa040bd9ee8f0ad4b252d40a6beec8b",
+   "match": true,
+   "origin": "extraction-native-rafale-validation-bruit-v001-20261027T231306Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9836.CR3",
+   "expected_sha256": "678a584753602293305bb358c15fa4e69715a3526b4f98b631e449c782450b6a",
+   "actual_sha256": "678a584753602293305bb358c15fa4e69715a3526b4f98b631e449c782450b6a",
+   "match": true,
+   "origin": "extraction-native-rafale-validation-bruit-v001-20261027T231306Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9837.CR3",
+   "expected_sha256": "9283f27afdc648bc2df11e508eeb8ebabbc4ed9294f639da30aa4f090dba4e7e",
+   "actual_sha256": "9283f27afdc648bc2df11e508eeb8ebabbc4ed9294f639da30aa4f090dba4e7e",
+   "match": true,
+   "origin": "extraction-native-rafale-validation-bruit-v001-20261027T231306Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9838.CR3",
+   "expected_sha256": "c194f65325441bdc28267559dafe25164cde50fc15f8e109374470bc12d7d10a",
+   "actual_sha256": "c194f65325441bdc28267559dafe25164cde50fc15f8e109374470bc12d7d10a",
+   "match": true,
+   "origin": "extraction-native-rafale-validation-bruit-v001-20261027T231306Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9839.CR3",
+   "expected_sha256": "b6751c2d04e1326600f687429c583babcd07d7fc6d4e5d672d5340dfac980e42",
+   "actual_sha256": "b6751c2d04e1326600f687429c583babcd07d7fc6d4e5d672d5340dfac980e42",
+   "match": true,
+   "origin": "extraction-native-rafale-validation-bruit-v001-20261027T231306Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9840.CR3",
+   "expected_sha256": "7f2452a03022dbd4793fadc96fe50d07321b0886bec20fe66d6d85ce971c7f3e",
+   "actual_sha256": "7f2452a03022dbd4793fadc96fe50d07321b0886bec20fe66d6d85ce971c7f3e",
+   "match": true,
+   "origin": "extraction-native-rafale-validation-bruit-v001-20261027T231306Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9841.CR3",
+   "expected_sha256": "0debbc1ae2d6e44981c7e3ffac2a344dbdef2ddb7375362a5cecb1a9f77e24cb",
+   "actual_sha256": "0debbc1ae2d6e44981c7e3ffac2a344dbdef2ddb7375362a5cecb1a9f77e24cb",
+   "match": true,
+   "origin": "extraction-native-rafale-validation-bruit-v001-20261027T231306Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9842.CR3",
+   "expected_sha256": "e9ba642a24a01ed32c12cc8bca0946b3be8359d1bd3130433bca9a0b685d3e34",
+   "actual_sha256": "e9ba642a24a01ed32c12cc8bca0946b3be8359d1bd3130433bca9a0b685d3e34",
+   "match": true,
+   "origin": "extraction-native-rafale-validation-bruit-v001-20261027T231306Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9843.CR3",
+   "expected_sha256": "3f0fb2c3a8e36c378756b37ce04949a3fd9248c50dc5d0008e8d76e1e611fa3b",
+   "actual_sha256": "3f0fb2c3a8e36c378756b37ce04949a3fd9248c50dc5d0008e8d76e1e611fa3b",
+   "match": true,
+   "origin": "extraction-native-rafale-validation-bruit-v001-20261027T231306Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9844.CR3",
+   "expected_sha256": "27ea69f59e9a196832cedb13a7f5147869fe2f75c80dcc88ce2ff39ca7ef3ff7",
+   "actual_sha256": "27ea69f59e9a196832cedb13a7f5147869fe2f75c80dcc88ce2ff39ca7ef3ff7",
+   "match": true,
+   "origin": "extraction-native-rafale-validation-bruit-v001-20261027T231306Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9845.CR3",
+   "expected_sha256": "befbc9dd5e7e9bd6a8fccfb1caf397db2b2390c55cbd7b9f55bc13593f3f742b",
+   "actual_sha256": "befbc9dd5e7e9bd6a8fccfb1caf397db2b2390c55cbd7b9f55bc13593f3f742b",
+   "match": true,
+   "origin": "extraction-native-rafale-validation-bruit-v001-20261027T231306Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9846.CR3",
+   "expected_sha256": "ddd5e55464e089cf384b8dca05b48618cb6064c8a97d5cbbd553734df9f09b32",
+   "actual_sha256": "ddd5e55464e089cf384b8dca05b48618cb6064c8a97d5cbbd553734df9f09b32",
+   "match": true,
+   "origin": "extraction-native-rafale-validation-bruit-v001-20261027T231306Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\gel-transfert-bandes-rafale-bruit-v001-20261027T231153Z.json",
+   "expected_sha256": "159ac4e59a1730c91779a22f6fac0fd2c9c962b1454ceaccd04b258afa894f09",
+   "actual_sha256": "159ac4e59a1730c91779a22f6fac0fd2c9c962b1454ceaccd04b258afa894f09",
+   "match": true,
+   "origin": "extraction-native-rafale-validation-bruit-v001-20261027T231306Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-native\\20261027T231153Z\\development-linear-planes.npz",
+   "expected_sha256": "f4dc90989c716a25a308d82e8c9f9b377dd56165423e6da7f4747ccddd29d323",
+   "actual_sha256": "f4dc90989c716a25a308d82e8c9f9b377dd56165423e6da7f4747ccddd29d323",
+   "match": true,
+   "origin": "extraction-native-rafale-validation-bruit-v001-20261027T231306Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\extraction-native-rafale-bruit-v001-20261027T230112Z.json",
+   "expected_sha256": "8210edb40b25bd41817a6fbba589dc329ea7148f5772e37adfd3a845818a7528",
+   "actual_sha256": "8210edb40b25bd41817a6fbba589dc329ea7148f5772e37adfd3a845818a7528",
+   "match": true,
+   "origin": "gel-chroma-partagee-rafale-bruit-v001-20261027T232717Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\temoins-production-rafale-bruit-v001-20261027T230748Z.json",
+   "expected_sha256": "7ef3bb548c4af2d49352c27bc6e7d9b7e1ce15576e9760417c613c314f36bc98",
+   "actual_sha256": "7ef3bb548c4af2d49352c27bc6e7d9b7e1ce15576e9760417c613c314f36bc98",
+   "match": true,
+   "origin": "gel-chroma-partagee-rafale-bruit-v001-20261027T232717Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\residus-rafale-bruit-v001-20261027T230219Z.json",
+   "expected_sha256": "0017f8d5016afb85db0b813e6e14e3ae6463e5442574680fdedece391bd497b2",
+   "actual_sha256": "0017f8d5016afb85db0b813e6e14e3ae6463e5442574680fdedece391bd497b2",
+   "match": true,
+   "origin": "gel-chroma-partagee-rafale-bruit-v001-20261027T232717Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\wiener-bandes-rafale-bruit-v001-20261027T231611Z.json",
+   "expected_sha256": "498cd92939b26e0061c15ea7423b7aac6a1e1aac172b51d292cf22f4e408b80d",
+   "actual_sha256": "498cd92939b26e0061c15ea7423b7aac6a1e1aac172b51d292cf22f4e408b80d",
+   "match": true,
+   "origin": "gel-chroma-partagee-rafale-bruit-v001-20261027T232717Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\contextes-reference-rafale-bruit-v001-20261027T232645Z.json",
+   "expected_sha256": "54ec6efc71f96eb1074f4cf0297e14dd809934a7c3fdd3eacf7ff5dde671f2ac",
+   "actual_sha256": "54ec6efc71f96eb1074f4cf0297e14dd809934a7c3fdd3eacf7ff5dde671f2ac",
+   "match": true,
+   "origin": "gel-chroma-partagee-rafale-bruit-v001-20261027T232717Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\bandes-reelles-rafale-bruit-v001-20261027T230949Z.json",
+   "expected_sha256": "b400e965b934dfd7840cfc5f8849f0e6ea1a0ddd4028250a55d0965f48bfaa97",
+   "actual_sha256": "b400e965b934dfd7840cfc5f8849f0e6ea1a0ddd4028250a55d0965f48bfaa97",
+   "match": true,
+   "origin": "gel-transfert-bandes-rafale-bruit-v001-20261027T231153Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\audit-rafale-reelle-bruit-v001-20261027T225328Z.json",
+   "expected_sha256": "a6d74a68af1b28b8da241069942adf227bda151e62f7dd89f8ac1bb4dbbd2574",
+   "actual_sha256": "a6d74a68af1b28b8da241069942adf227bda151e62f7dd89f8ac1bb4dbbd2574",
+   "match": true,
+   "origin": "gel-transfert-bandes-rafale-bruit-v001-20261027T231153Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\extraction-native-rafale-bruit-v001-20261027T230112Z.json",
+   "expected_sha256": "8210edb40b25bd41817a6fbba589dc329ea7148f5772e37adfd3a845818a7528",
+   "actual_sha256": "8210edb40b25bd41817a6fbba589dc329ea7148f5772e37adfd3a845818a7528",
+   "match": true,
+   "origin": "gel-wiener-bandes-rafale-bruit-v001-20261027T231607Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\extraction-native-rafale-validation-bruit-v001-20261027T231306Z.json",
+   "expected_sha256": "7f9be20dd9232f9246b27583df45b32c7337810410cacc0af5113b413bb44839",
+   "actual_sha256": "7f9be20dd9232f9246b27583df45b32c7337810410cacc0af5113b413bb44839",
+   "match": true,
+   "origin": "gel-wiener-bandes-rafale-bruit-v001-20261027T231607Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\temoins-production-rafale-bruit-v001-20261027T230748Z.json",
+   "expected_sha256": "7ef3bb548c4af2d49352c27bc6e7d9b7e1ce15576e9760417c613c314f36bc98",
+   "actual_sha256": "7ef3bb548c4af2d49352c27bc6e7d9b7e1ce15576e9760417c613c314f36bc98",
+   "match": true,
+   "origin": "gel-wiener-bandes-rafale-bruit-v001-20261027T231607Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\residus-rafale-bruit-v001-20261027T230219Z.json",
+   "expected_sha256": "0017f8d5016afb85db0b813e6e14e3ae6463e5442574680fdedece391bd497b2",
+   "actual_sha256": "0017f8d5016afb85db0b813e6e14e3ae6463e5442574680fdedece391bd497b2",
+   "match": true,
+   "origin": "gel-wiener-bandes-rafale-bruit-v001-20261027T231607Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9819.CR3",
+   "expected_sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165",
+   "actual_sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165",
+   "match": true,
+   "origin": "mouvement-rafale-bruit-v001-20261027T225632Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9820.CR3",
+   "expected_sha256": "5ae412958614f0782133ab8bde605496e411ab7dcfb5d8fd62ea927681a965d3",
+   "actual_sha256": "5ae412958614f0782133ab8bde605496e411ab7dcfb5d8fd62ea927681a965d3",
+   "match": true,
+   "origin": "mouvement-rafale-bruit-v001-20261027T225632Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9821.CR3",
+   "expected_sha256": "1ce0b3885a317a6fdaaa8b40d4d399545f187080592c2ad78f81821865668bd2",
+   "actual_sha256": "1ce0b3885a317a6fdaaa8b40d4d399545f187080592c2ad78f81821865668bd2",
+   "match": true,
+   "origin": "mouvement-rafale-bruit-v001-20261027T225632Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9822.CR3",
+   "expected_sha256": "299d0a9013836d3e2ea53c8d23856c02b4573011a7eb0a19992897e03b63f680",
+   "actual_sha256": "299d0a9013836d3e2ea53c8d23856c02b4573011a7eb0a19992897e03b63f680",
+   "match": true,
+   "origin": "mouvement-rafale-bruit-v001-20261027T225632Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9823.CR3",
+   "expected_sha256": "72a8c5475af764b5f2fe125234367e3a1c13f7e6efa2d3fd03b38d30f2809894",
+   "actual_sha256": "72a8c5475af764b5f2fe125234367e3a1c13f7e6efa2d3fd03b38d30f2809894",
+   "match": true,
+   "origin": "mouvement-rafale-bruit-v001-20261027T225632Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9824.CR3",
+   "expected_sha256": "28899c86ad3850f4fa699a6001fcb7b68af4d6a3d4adbab7cfb2acac2c1120c4",
+   "actual_sha256": "28899c86ad3850f4fa699a6001fcb7b68af4d6a3d4adbab7cfb2acac2c1120c4",
+   "match": true,
+   "origin": "mouvement-rafale-bruit-v001-20261027T225632Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9825.CR3",
+   "expected_sha256": "cb5c9016211a340e38ec707ec8ee9d5bf834a644958d394eb7f41ab565dd4245",
+   "actual_sha256": "cb5c9016211a340e38ec707ec8ee9d5bf834a644958d394eb7f41ab565dd4245",
+   "match": true,
+   "origin": "mouvement-rafale-bruit-v001-20261027T225632Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9826.CR3",
+   "expected_sha256": "e810101cf640a035dd2a3147b9edb76e2d0ad60d8870f9af8394220fcf334bc1",
+   "actual_sha256": "e810101cf640a035dd2a3147b9edb76e2d0ad60d8870f9af8394220fcf334bc1",
+   "match": true,
+   "origin": "mouvement-rafale-bruit-v001-20261027T225632Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9827.CR3",
+   "expected_sha256": "4444028085b4c4a42a42c6bdcd20f0e6dc6d4a182028e23969bf4f7e766a7d3e",
+   "actual_sha256": "4444028085b4c4a42a42c6bdcd20f0e6dc6d4a182028e23969bf4f7e766a7d3e",
+   "match": true,
+   "origin": "mouvement-rafale-bruit-v001-20261027T225632Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9828.CR3",
+   "expected_sha256": "00ffa5dd689ed880485b83f16a69347ff37fcae9073ddd0d7cb9d257947b97a5",
+   "actual_sha256": "00ffa5dd689ed880485b83f16a69347ff37fcae9073ddd0d7cb9d257947b97a5",
+   "match": true,
+   "origin": "mouvement-rafale-bruit-v001-20261027T225632Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9829.CR3",
+   "expected_sha256": "8e7ac253d543a458dbaff3dc7dafc675c91ce6feffa4f16e6f9bc673f9831298",
+   "actual_sha256": "8e7ac253d543a458dbaff3dc7dafc675c91ce6feffa4f16e6f9bc673f9831298",
+   "match": true,
+   "origin": "mouvement-rafale-bruit-v001-20261027T225632Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9830.CR3",
+   "expected_sha256": "f4ad3c2bfc7260358b49736bea8ed1105220d19bf40ede2324ec9d248f75df49",
+   "actual_sha256": "f4ad3c2bfc7260358b49736bea8ed1105220d19bf40ede2324ec9d248f75df49",
+   "match": true,
+   "origin": "mouvement-rafale-bruit-v001-20261027T225632Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9831.CR3",
+   "expected_sha256": "975973a6bc5559ec84449b71c8f3823f0f31897ae7f3935f3aa5c539fbdaea73",
+   "actual_sha256": "975973a6bc5559ec84449b71c8f3823f0f31897ae7f3935f3aa5c539fbdaea73",
+   "match": true,
+   "origin": "mouvement-rafale-bruit-v001-20261027T225632Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9832.CR3",
+   "expected_sha256": "48a9d34e3a63f84fedd3609d0dedddc9fd67d038753713be267d811a59f8de36",
+   "actual_sha256": "48a9d34e3a63f84fedd3609d0dedddc9fd67d038753713be267d811a59f8de36",
+   "match": true,
+   "origin": "mouvement-rafale-bruit-v001-20261027T225632Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\audit-rafale-reelle-bruit-v001-20261027T225328Z.json",
+   "expected_sha256": "a6d74a68af1b28b8da241069942adf227bda151e62f7dd89f8ac1bb4dbbd2574",
+   "actual_sha256": "a6d74a68af1b28b8da241069942adf227bda151e62f7dd89f8ac1bb4dbbd2574",
+   "match": true,
+   "origin": "mouvement-rafale-bruit-v001-20261027T225632Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9819.CR3",
+   "expected_sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165",
+   "actual_sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165",
+   "match": true,
+   "origin": "partition-rafale-bruit-v001-20261027T225326Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9820.CR3",
+   "expected_sha256": "5ae412958614f0782133ab8bde605496e411ab7dcfb5d8fd62ea927681a965d3",
+   "actual_sha256": "5ae412958614f0782133ab8bde605496e411ab7dcfb5d8fd62ea927681a965d3",
+   "match": true,
+   "origin": "partition-rafale-bruit-v001-20261027T225326Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9821.CR3",
+   "expected_sha256": "1ce0b3885a317a6fdaaa8b40d4d399545f187080592c2ad78f81821865668bd2",
+   "actual_sha256": "1ce0b3885a317a6fdaaa8b40d4d399545f187080592c2ad78f81821865668bd2",
+   "match": true,
+   "origin": "partition-rafale-bruit-v001-20261027T225326Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9822.CR3",
+   "expected_sha256": "299d0a9013836d3e2ea53c8d23856c02b4573011a7eb0a19992897e03b63f680",
+   "actual_sha256": "299d0a9013836d3e2ea53c8d23856c02b4573011a7eb0a19992897e03b63f680",
+   "match": true,
+   "origin": "partition-rafale-bruit-v001-20261027T225326Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9823.CR3",
+   "expected_sha256": "72a8c5475af764b5f2fe125234367e3a1c13f7e6efa2d3fd03b38d30f2809894",
+   "actual_sha256": "72a8c5475af764b5f2fe125234367e3a1c13f7e6efa2d3fd03b38d30f2809894",
+   "match": true,
+   "origin": "partition-rafale-bruit-v001-20261027T225326Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9824.CR3",
+   "expected_sha256": "28899c86ad3850f4fa699a6001fcb7b68af4d6a3d4adbab7cfb2acac2c1120c4",
+   "actual_sha256": "28899c86ad3850f4fa699a6001fcb7b68af4d6a3d4adbab7cfb2acac2c1120c4",
+   "match": true,
+   "origin": "partition-rafale-bruit-v001-20261027T225326Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9825.CR3",
+   "expected_sha256": "cb5c9016211a340e38ec707ec8ee9d5bf834a644958d394eb7f41ab565dd4245",
+   "actual_sha256": "cb5c9016211a340e38ec707ec8ee9d5bf834a644958d394eb7f41ab565dd4245",
+   "match": true,
+   "origin": "partition-rafale-bruit-v001-20261027T225326Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9826.CR3",
+   "expected_sha256": "e810101cf640a035dd2a3147b9edb76e2d0ad60d8870f9af8394220fcf334bc1",
+   "actual_sha256": "e810101cf640a035dd2a3147b9edb76e2d0ad60d8870f9af8394220fcf334bc1",
+   "match": true,
+   "origin": "partition-rafale-bruit-v001-20261027T225326Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9827.CR3",
+   "expected_sha256": "4444028085b4c4a42a42c6bdcd20f0e6dc6d4a182028e23969bf4f7e766a7d3e",
+   "actual_sha256": "4444028085b4c4a42a42c6bdcd20f0e6dc6d4a182028e23969bf4f7e766a7d3e",
+   "match": true,
+   "origin": "partition-rafale-bruit-v001-20261027T225326Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9828.CR3",
+   "expected_sha256": "00ffa5dd689ed880485b83f16a69347ff37fcae9073ddd0d7cb9d257947b97a5",
+   "actual_sha256": "00ffa5dd689ed880485b83f16a69347ff37fcae9073ddd0d7cb9d257947b97a5",
+   "match": true,
+   "origin": "partition-rafale-bruit-v001-20261027T225326Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9829.CR3",
+   "expected_sha256": "8e7ac253d543a458dbaff3dc7dafc675c91ce6feffa4f16e6f9bc673f9831298",
+   "actual_sha256": "8e7ac253d543a458dbaff3dc7dafc675c91ce6feffa4f16e6f9bc673f9831298",
+   "match": true,
+   "origin": "partition-rafale-bruit-v001-20261027T225326Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9830.CR3",
+   "expected_sha256": "f4ad3c2bfc7260358b49736bea8ed1105220d19bf40ede2324ec9d248f75df49",
+   "actual_sha256": "f4ad3c2bfc7260358b49736bea8ed1105220d19bf40ede2324ec9d248f75df49",
+   "match": true,
+   "origin": "partition-rafale-bruit-v001-20261027T225326Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9831.CR3",
+   "expected_sha256": "975973a6bc5559ec84449b71c8f3823f0f31897ae7f3935f3aa5c539fbdaea73",
+   "actual_sha256": "975973a6bc5559ec84449b71c8f3823f0f31897ae7f3935f3aa5c539fbdaea73",
+   "match": true,
+   "origin": "partition-rafale-bruit-v001-20261027T225326Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9832.CR3",
+   "expected_sha256": "48a9d34e3a63f84fedd3609d0dedddc9fd67d038753713be267d811a59f8de36",
+   "actual_sha256": "48a9d34e3a63f84fedd3609d0dedddc9fd67d038753713be267d811a59f8de36",
+   "match": true,
+   "origin": "partition-rafale-bruit-v001-20261027T225326Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9833.CR3",
+   "expected_sha256": "527d4c5045b058c8a19d0c2a0d5c39e1b2ccae482b415e32c441112458b4e462",
+   "actual_sha256": "527d4c5045b058c8a19d0c2a0d5c39e1b2ccae482b415e32c441112458b4e462",
+   "match": true,
+   "origin": "partition-rafale-bruit-v001-20261027T225326Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9834.CR3",
+   "expected_sha256": "8ab9b619d15c4b1c50bd11705a876219ac907dd9db79152ae21e3f971457098b",
+   "actual_sha256": "8ab9b619d15c4b1c50bd11705a876219ac907dd9db79152ae21e3f971457098b",
+   "match": true,
+   "origin": "partition-rafale-bruit-v001-20261027T225326Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9835.CR3",
+   "expected_sha256": "4f17ae6cf170331bf6ddc4b1812d81f4faa040bd9ee8f0ad4b252d40a6beec8b",
+   "actual_sha256": "4f17ae6cf170331bf6ddc4b1812d81f4faa040bd9ee8f0ad4b252d40a6beec8b",
+   "match": true,
+   "origin": "partition-rafale-bruit-v001-20261027T225326Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9836.CR3",
+   "expected_sha256": "678a584753602293305bb358c15fa4e69715a3526b4f98b631e449c782450b6a",
+   "actual_sha256": "678a584753602293305bb358c15fa4e69715a3526b4f98b631e449c782450b6a",
+   "match": true,
+   "origin": "partition-rafale-bruit-v001-20261027T225326Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9837.CR3",
+   "expected_sha256": "9283f27afdc648bc2df11e508eeb8ebabbc4ed9294f639da30aa4f090dba4e7e",
+   "actual_sha256": "9283f27afdc648bc2df11e508eeb8ebabbc4ed9294f639da30aa4f090dba4e7e",
+   "match": true,
+   "origin": "partition-rafale-bruit-v001-20261027T225326Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9838.CR3",
+   "expected_sha256": "c194f65325441bdc28267559dafe25164cde50fc15f8e109374470bc12d7d10a",
+   "actual_sha256": "c194f65325441bdc28267559dafe25164cde50fc15f8e109374470bc12d7d10a",
+   "match": true,
+   "origin": "partition-rafale-bruit-v001-20261027T225326Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9839.CR3",
+   "expected_sha256": "b6751c2d04e1326600f687429c583babcd07d7fc6d4e5d672d5340dfac980e42",
+   "actual_sha256": "b6751c2d04e1326600f687429c583babcd07d7fc6d4e5d672d5340dfac980e42",
+   "match": true,
+   "origin": "partition-rafale-bruit-v001-20261027T225326Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9840.CR3",
+   "expected_sha256": "7f2452a03022dbd4793fadc96fe50d07321b0886bec20fe66d6d85ce971c7f3e",
+   "actual_sha256": "7f2452a03022dbd4793fadc96fe50d07321b0886bec20fe66d6d85ce971c7f3e",
+   "match": true,
+   "origin": "partition-rafale-bruit-v001-20261027T225326Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9841.CR3",
+   "expected_sha256": "0debbc1ae2d6e44981c7e3ffac2a344dbdef2ddb7375362a5cecb1a9f77e24cb",
+   "actual_sha256": "0debbc1ae2d6e44981c7e3ffac2a344dbdef2ddb7375362a5cecb1a9f77e24cb",
+   "match": true,
+   "origin": "partition-rafale-bruit-v001-20261027T225326Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9842.CR3",
+   "expected_sha256": "e9ba642a24a01ed32c12cc8bca0946b3be8359d1bd3130433bca9a0b685d3e34",
+   "actual_sha256": "e9ba642a24a01ed32c12cc8bca0946b3be8359d1bd3130433bca9a0b685d3e34",
+   "match": true,
+   "origin": "partition-rafale-bruit-v001-20261027T225326Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9843.CR3",
+   "expected_sha256": "3f0fb2c3a8e36c378756b37ce04949a3fd9248c50dc5d0008e8d76e1e611fa3b",
+   "actual_sha256": "3f0fb2c3a8e36c378756b37ce04949a3fd9248c50dc5d0008e8d76e1e611fa3b",
+   "match": true,
+   "origin": "partition-rafale-bruit-v001-20261027T225326Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9844.CR3",
+   "expected_sha256": "27ea69f59e9a196832cedb13a7f5147869fe2f75c80dcc88ce2ff39ca7ef3ff7",
+   "actual_sha256": "27ea69f59e9a196832cedb13a7f5147869fe2f75c80dcc88ce2ff39ca7ef3ff7",
+   "match": true,
+   "origin": "partition-rafale-bruit-v001-20261027T225326Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9845.CR3",
+   "expected_sha256": "befbc9dd5e7e9bd6a8fccfb1caf397db2b2390c55cbd7b9f55bc13593f3f742b",
+   "actual_sha256": "befbc9dd5e7e9bd6a8fccfb1caf397db2b2390c55cbd7b9f55bc13593f3f742b",
+   "match": true,
+   "origin": "partition-rafale-bruit-v001-20261027T225326Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9846.CR3",
+   "expected_sha256": "ddd5e55464e089cf384b8dca05b48618cb6064c8a97d5cbbd553734df9f09b32",
+   "actual_sha256": "ddd5e55464e089cf384b8dca05b48618cb6064c8a97d5cbbd553734df9f09b32",
+   "match": true,
+   "origin": "partition-rafale-bruit-v001-20261027T225326Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9847.CR3",
+   "expected_sha256": "61bf2d43039ae94dee192d186100c7760fa07d71dae14c385f6ac3f2dc07b119",
+   "actual_sha256": "61bf2d43039ae94dee192d186100c7760fa07d71dae14c385f6ac3f2dc07b119",
+   "match": true,
+   "origin": "partition-rafale-bruit-v001-20261027T225326Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9848.CR3",
+   "expected_sha256": "9d7adf98c8b9308467a64af9f48f2bc21114f3ea993c8ec8a055d0942359a01a",
+   "actual_sha256": "9d7adf98c8b9308467a64af9f48f2bc21114f3ea993c8ec8a055d0942359a01a",
+   "match": true,
+   "origin": "partition-rafale-bruit-v001-20261027T225326Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9849.CR3",
+   "expected_sha256": "118abd77642f2e01614979ca5ec742bd80e6ac6e297c6aa8782613254c8e3bab",
+   "actual_sha256": "118abd77642f2e01614979ca5ec742bd80e6ac6e297c6aa8782613254c8e3bab",
+   "match": true,
+   "origin": "partition-rafale-bruit-v001-20261027T225326Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9850.CR3",
+   "expected_sha256": "f10aca785ede26d10f7e0fa01e6e858f24e5e413a73f3e19ec6c3b437a10da79",
+   "actual_sha256": "f10aca785ede26d10f7e0fa01e6e858f24e5e413a73f3e19ec6c3b437a10da79",
+   "match": true,
+   "origin": "partition-rafale-bruit-v001-20261027T225326Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9851.CR3",
+   "expected_sha256": "0306acec0a43414588ec5eb4ca2f6f2fe4d8ef32b29a1fbf69b283a12f707aad",
+   "actual_sha256": "0306acec0a43414588ec5eb4ca2f6f2fe4d8ef32b29a1fbf69b283a12f707aad",
+   "match": true,
+   "origin": "partition-rafale-bruit-v001-20261027T225326Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9852.CR3",
+   "expected_sha256": "3b005e471e40eec316e7974acf6357922003a24f59fd958be28ffc0c76efea85",
+   "actual_sha256": "3b005e471e40eec316e7974acf6357922003a24f59fd958be28ffc0c76efea85",
+   "match": true,
+   "origin": "partition-rafale-bruit-v001-20261027T225326Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9853.CR3",
+   "expected_sha256": "90b93dfefc1b2edd3dc91728e9b1ee568ad850a8cb359a5fddf35b312f832bb0",
+   "actual_sha256": "90b93dfefc1b2edd3dc91728e9b1ee568ad850a8cb359a5fddf35b312f832bb0",
+   "match": true,
+   "origin": "partition-rafale-bruit-v001-20261027T225326Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9854.CR3",
+   "expected_sha256": "2f0445c306faf012e5731b1411c195496c3ec85e7d8e511646a5084de2525553",
+   "actual_sha256": "2f0445c306faf012e5731b1411c195496c3ec85e7d8e511646a5084de2525553",
+   "match": true,
+   "origin": "partition-rafale-bruit-v001-20261027T225326Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9855.CR3",
+   "expected_sha256": "f16dce7773934ea5188b5dbd3a26061b43695a61f45a2068deff5c0f27512b59",
+   "actual_sha256": "f16dce7773934ea5188b5dbd3a26061b43695a61f45a2068deff5c0f27512b59",
+   "match": true,
+   "origin": "partition-rafale-bruit-v001-20261027T225326Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9856.CR3",
+   "expected_sha256": "3c8637204cd259dcb0faf0efc719a2daa0888cd5dab6759c847d99376fb816e3",
+   "actual_sha256": "3c8637204cd259dcb0faf0efc719a2daa0888cd5dab6759c847d99376fb816e3",
+   "match": true,
+   "origin": "partition-rafale-bruit-v001-20261027T225326Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9857.CR3",
+   "expected_sha256": "8f5842a4cc0c8e0f7ba094ce71a4774f1062c321cc2ffb86de4a5b2d8613e209",
+   "actual_sha256": "8f5842a4cc0c8e0f7ba094ce71a4774f1062c321cc2ffb86de4a5b2d8613e209",
+   "match": true,
+   "origin": "partition-rafale-bruit-v001-20261027T225326Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9858.CR3",
+   "expected_sha256": "c1ea790d03b43d5947b1c7fb50e0aba6511b3be55998ec8579bc9ed3c3f880b1",
+   "actual_sha256": "c1ea790d03b43d5947b1c7fb50e0aba6511b3be55998ec8579bc9ed3c3f880b1",
+   "match": true,
+   "origin": "partition-rafale-bruit-v001-20261027T225326Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9859.CR3",
+   "expected_sha256": "ad880863354a51bb4061761a2f06b0ff9aaa37ea88e2e895fe610f55f751e735",
+   "actual_sha256": "ad880863354a51bb4061761a2f06b0ff9aaa37ea88e2e895fe610f55f751e735",
+   "match": true,
+   "origin": "partition-rafale-bruit-v001-20261027T225326Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9860.CR3",
+   "expected_sha256": "a560c9db1a3da02483e563fff6030d1817c7d67e7bd009bf5754daed117cfbe0",
+   "actual_sha256": "a560c9db1a3da02483e563fff6030d1817c7d67e7bd009bf5754daed117cfbe0",
+   "match": true,
+   "origin": "partition-rafale-bruit-v001-20261027T225326Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\extraction-native-rafale-bruit-v001-20261027T230112Z.json",
+   "expected_sha256": "8210edb40b25bd41817a6fbba589dc329ea7148f5772e37adfd3a845818a7528",
+   "actual_sha256": "8210edb40b25bd41817a6fbba589dc329ea7148f5772e37adfd3a845818a7528",
+   "match": true,
+   "origin": "references-croisees-rafale-bruit-v001-20261027T230909Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\temoins-production-rafale-bruit-v001-20261027T230748Z.json",
+   "expected_sha256": "7ef3bb548c4af2d49352c27bc6e7d9b7e1ce15576e9760417c613c314f36bc98",
+   "actual_sha256": "7ef3bb548c4af2d49352c27bc6e7d9b7e1ce15576e9760417c613c314f36bc98",
+   "match": true,
+   "origin": "references-croisees-rafale-bruit-v001-20261027T230909Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\audit-rafale-reelle-bruit-v001-20261027T225328Z.json",
+   "expected_sha256": "a6d74a68af1b28b8da241069942adf227bda151e62f7dd89f8ac1bb4dbbd2574",
+   "actual_sha256": "a6d74a68af1b28b8da241069942adf227bda151e62f7dd89f8ac1bb4dbbd2574",
+   "match": true,
+   "origin": "residus-rafale-bruit-v001-20261027T230219Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\mouvement-rafale-bruit-v001-20261027T225632Z.json",
+   "expected_sha256": "aeaaf9197f3cda6f6dfbffd6ed9f5e768164fca0a77566bd2b2b85d16f601616",
+   "actual_sha256": "aeaaf9197f3cda6f6dfbffd6ed9f5e768164fca0a77566bd2b2b85d16f601616",
+   "match": true,
+   "origin": "residus-rafale-bruit-v001-20261027T230219Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\extraction-native-rafale-bruit-v001-20261027T230112Z.json",
+   "expected_sha256": "8210edb40b25bd41817a6fbba589dc329ea7148f5772e37adfd3a845818a7528",
+   "actual_sha256": "8210edb40b25bd41817a6fbba589dc329ea7148f5772e37adfd3a845818a7528",
+   "match": true,
+   "origin": "residus-rafale-bruit-v001-20261027T230219Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\extraction-native-rafale-bruit-v001-20261027T230112Z.json",
+   "expected_sha256": "8210edb40b25bd41817a6fbba589dc329ea7148f5772e37adfd3a845818a7528",
+   "actual_sha256": "8210edb40b25bd41817a6fbba589dc329ea7148f5772e37adfd3a845818a7528",
+   "match": true,
+   "origin": "temoins-production-rafale-bruit-v001-20261027T230748Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9819.CR3",
+   "expected_sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165",
+   "actual_sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165",
+   "match": true,
+   "origin": "temoins-production-rafale-bruit-v001-20261027T230748Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9823.CR3",
+   "expected_sha256": "72a8c5475af764b5f2fe125234367e3a1c13f7e6efa2d3fd03b38d30f2809894",
+   "actual_sha256": "72a8c5475af764b5f2fe125234367e3a1c13f7e6efa2d3fd03b38d30f2809894",
+   "match": true,
+   "origin": "temoins-production-rafale-bruit-v001-20261027T230748Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9827.CR3",
+   "expected_sha256": "4444028085b4c4a42a42c6bdcd20f0e6dc6d4a182028e23969bf4f7e766a7d3e",
+   "actual_sha256": "4444028085b4c4a42a42c6bdcd20f0e6dc6d4a182028e23969bf4f7e766a7d3e",
+   "match": true,
+   "origin": "temoins-production-rafale-bruit-v001-20261027T230748Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9832.CR3",
+   "expected_sha256": "48a9d34e3a63f84fedd3609d0dedddc9fd67d038753713be267d811a59f8de36",
+   "actual_sha256": "48a9d34e3a63f84fedd3609d0dedddc9fd67d038753713be267d811a59f8de36",
+   "match": true,
+   "origin": "temoins-production-rafale-bruit-v001-20261027T230748Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-tools\\Release\\iprBurstControls.exe",
+   "expected_sha256": "2c4a06e27be60c9be75b69a9b5885607b3a0da2e4037c9650df8358e328fba63",
+   "actual_sha256": "2c4a06e27be60c9be75b69a9b5885607b3a0da2e4037c9650df8358e328fba63",
+   "match": true,
+   "origin": "temoins-production-rafale-bruit-v001-20261027T230748Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-production\\20261027T230451Z\\production-controls.npz",
+   "expected_sha256": "f9f43a77aae4136572786204e097ef70493f16a94c8efe7a91e1da17742ace14",
+   "actual_sha256": "f9f43a77aae4136572786204e097ef70493f16a94c8efe7a91e1da17742ace14",
+   "match": true,
+   "origin": "temoins-production-rafale-bruit-v001-20261027T230748Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\gel-transfert-bandes-rafale-bruit-v001-20261027T231153Z.json",
+   "expected_sha256": "159ac4e59a1730c91779a22f6fac0fd2c9c962b1454ceaccd04b258afa894f09",
+   "actual_sha256": "159ac4e59a1730c91779a22f6fac0fd2c9c962b1454ceaccd04b258afa894f09",
+   "match": true,
+   "origin": "validation-transfert-bandes-rafale-bruit-v001-20261027T231311Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\extraction-native-rafale-validation-bruit-v001-20261027T231306Z.json",
+   "expected_sha256": "7f9be20dd9232f9246b27583df45b32c7337810410cacc0af5113b413bb44839",
+   "actual_sha256": "7f9be20dd9232f9246b27583df45b32c7337810410cacc0af5113b413bb44839",
+   "match": true,
+   "origin": "validation-transfert-bandes-rafale-bruit-v001-20261027T231311Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\gel-wiener-bandes-rafale-bruit-v001-20261027T231607Z.json",
+   "expected_sha256": "03358e94be1b1563d106bce42f30456aca5dab68c30cd7798ffc9fcada3fec0e",
+   "actual_sha256": "03358e94be1b1563d106bce42f30456aca5dab68c30cd7798ffc9fcada3fec0e",
+   "match": true,
+   "origin": "wiener-bandes-rafale-bruit-v001-20261027T231611Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-band-wiener\\20261027T231607Z\\candidate-linear-planes.npz",
+   "expected_sha256": "17c2011e2abdf5360d8b268941313e2238c467837b0b8d0553a0c4ac60d477fc",
+   "actual_sha256": "17c2011e2abdf5360d8b268941313e2238c467837b0b8d0553a0c4ac60d477fc",
+   "match": true,
+   "origin": "wiener-bandes-rafale-bruit-v001-20261027T231611Z.json"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-band-wiener\\20261027T231607Z\\reference-conditioned-wiener.png",
+   "expected_sha256": "66f4e849ed148bed7b4a7f10c3a552b3d115b1351d77da79f474487b3f660840",
+   "actual_sha256": "66f4e849ed148bed7b4a7f10c3a552b3d115b1351d77da79f474487b3f660840",
+   "match": true,
+   "origin": "wiener-bandes-rafale-bruit-v001-20261027T231611Z.json"
+  }
+ ],
+ "unique_files_checked": 76,
+ "report_links": [
+  {
+   "name": "audit-paires-bruit-v005-20261022T173747Z.json",
+   "exists": true
+  },
+  {
+   "name": "etude-ptc-exploratoire-v003-20261022T173823Z.json",
+   "exists": true
+  },
+  {
+   "name": "audit-rafale-reelle-bruit-v001-20261027T225328Z.json",
+   "exists": true
+  },
+  {
+   "name": "mouvement-rafale-bruit-v001-20261027T225632Z.json",
+   "exists": true
+  },
+  {
+   "name": "extraction-native-rafale-bruit-v001-20261027T230112Z.json",
+   "exists": true
+  },
+  {
+   "name": "residus-rafale-bruit-v001-20261027T230219Z.json",
+   "exists": true
+  },
+  {
+   "name": "temoins-production-rafale-bruit-v001-20261027T230748Z.json",
+   "exists": true
+  },
+  {
+   "name": "references-croisees-rafale-bruit-v001-20261027T230909Z.json",
+   "exists": true
+  },
+  {
+   "name": "controle-references-rafale-bruit-v002-20261027T231425Z.json",
+   "exists": true
+  },
+  {
+   "name": "bandes-reelles-rafale-bruit-v001-20261027T230949Z.json",
+   "exists": true
+  },
+  {
+   "name": "gel-transfert-bandes-rafale-bruit-v001-20261027T231153Z.json",
+   "exists": true
+  },
+  {
+   "name": "validation-transfert-bandes-rafale-bruit-v001-20261027T231311Z.json",
+   "exists": true
+  },
+  {
+   "name": "gel-wiener-bandes-rafale-bruit-v001-20261027T231607Z.json",
+   "exists": true
+  },
+  {
+   "name": "wiener-bandes-rafale-bruit-v001-20261027T231611Z.json",
+   "exists": true
+  },
+  {
+   "name": "contextes-reference-rafale-bruit-v001-20261027T232645Z.json",
+   "exists": true
+  },
+  {
+   "name": "gel-chroma-partagee-rafale-bruit-v001-20261027T232717Z.json",
+   "exists": true
+  },
+  {
+   "name": "chroma-partagee-rafale-bruit-v001-20261027T232722Z.json",
+   "exists": true
+  },
+  {
+   "name": "contrat-chroma-partagee-rafale-bruit-v002-20261027T233348Z.json",
+   "exists": true
+  }
+ ],
+ "jobs": [
+  {
+   "name": "real-burst-audit-20261027-v001",
+   "pid": 32112,
+   "status": "succeeded",
+   "started_at_utc": "2026-10-27T22:53:24.880525+00:00",
+   "exit_code": 0,
+   "finished_at_utc": "2026-10-27T22:53:29.075890+00:00",
+   "notification": "Windows sound requested; may be disabled in system settings"
+  },
+  {
+   "name": "real-burst-band-wiener-20261028-v001",
+   "pid": 31412,
+   "status": "succeeded",
+   "started_at_utc": "2026-10-27T23:16:06.820123+00:00",
+   "exit_code": 0,
+   "finished_at_utc": "2026-10-27T23:16:12.103554+00:00",
+   "notification": "Windows sound requested; may be disabled in system settings"
+  },
+  {
+   "name": "real-burst-bands-20261028-v001",
+   "pid": 9728,
+   "status": "succeeded",
+   "started_at_utc": "2026-10-27T23:09:47.653268+00:00",
+   "exit_code": 0,
+   "finished_at_utc": "2026-10-27T23:09:49.416043+00:00",
+   "notification": "Windows sound requested; may be disabled in system settings"
+  },
+  {
+   "name": "real-burst-motion-20261027-v001",
+   "pid": 6584,
+   "status": "succeeded",
+   "started_at_utc": "2026-10-27T22:56:27.965933+00:00",
+   "exit_code": 0,
+   "finished_at_utc": "2026-10-27T22:56:32.209898+00:00",
+   "notification": "Windows sound requested; may be disabled in system settings"
+  },
+  {
+   "name": "real-burst-native-20261027-v001",
+   "pid": 25492,
+   "status": "succeeded",
+   "started_at_utc": "2026-10-27T22:59:51.980055+00:00",
+   "exit_code": 0,
+   "finished_at_utc": "2026-10-27T23:01:12.707551+00:00",
+   "notification": "Windows sound requested; may be disabled in system settings"
+  },
+  {
+   "name": "real-burst-output-contract-20261028-v001",
+   "pid": 25080,
+   "status": "succeeded",
+   "started_at_utc": "2026-10-27T23:29:41.680261+00:00",
+   "exit_code": 0,
+   "finished_at_utc": "2026-10-27T23:29:45.502629+00:00",
+   "notification": "Windows sound requested; may be disabled in system settings"
+  },
+  {
+   "name": "real-burst-output-metadata-20261028-v002",
+   "pid": 30656,
+   "status": "succeeded",
+   "started_at_utc": "2026-10-27T23:33:44.938324+00:00",
+   "exit_code": 0,
+   "finished_at_utc": "2026-10-27T23:33:48.787892+00:00",
+   "notification": "Windows sound requested; may be disabled in system settings"
+  },
+  {
+   "name": "real-burst-production-20261027-v001",
+   "pid": 22700,
+   "status": "succeeded",
+   "started_at_utc": "2026-10-27T23:04:50.344115+00:00",
+   "exit_code": 0,
+   "finished_at_utc": "2026-10-27T23:07:48.800190+00:00",
+   "notification": "Windows sound requested; may be disabled in system settings"
+  },
+  {
+   "name": "real-burst-reference-20261028-v001",
+   "pid": 9604,
+   "status": "failed",
+   "started_at_utc": "2026-10-27T23:08:04.955463+00:00",
+   "exit_code": 1,
+   "finished_at_utc": "2026-10-27T23:08:06.569519+00:00",
+   "notification": "Windows sound requested; may be disabled in system settings"
+  },
+  {
+   "name": "real-burst-reference-20261028-v002",
+   "pid": 13912,
+   "status": "succeeded",
+   "started_at_utc": "2026-10-27T23:09:07.021193+00:00",
+   "exit_code": 0,
+   "finished_at_utc": "2026-10-27T23:09:09.878952+00:00",
+   "notification": "Windows sound requested; may be disabled in system settings"
+  },
+  {
+   "name": "real-burst-reference-audit-20261028-v001",
+   "pid": 19172,
+   "status": "succeeded",
+   "started_at_utc": "2026-10-27T23:12:54.461989+00:00",
+   "exit_code": 0,
+   "finished_at_utc": "2026-10-27T23:12:57.103958+00:00",
+   "notification": "Windows sound requested; may be disabled in system settings"
+  },
+  {
+   "name": "real-burst-reference-context-20261028-v001",
+   "pid": 9256,
+   "status": "succeeded",
+   "started_at_utc": "2026-10-27T23:18:49.820181+00:00",
+   "exit_code": 0,
+   "finished_at_utc": "2026-10-27T23:26:46.231392+00:00",
+   "notification": "Windows sound requested; may be disabled in system settings"
+  },
+  {
+   "name": "real-burst-reference-layout-20261028-v002",
+   "pid": 32168,
+   "status": "succeeded",
+   "started_at_utc": "2026-10-27T23:14:22.715433+00:00",
+   "exit_code": 0,
+   "finished_at_utc": "2026-10-27T23:14:25.159661+00:00",
+   "notification": "Windows sound requested; may be disabled in system settings"
+  },
+  {
+   "name": "real-burst-residuals-20261027-v001",
+   "pid": 13396,
+   "status": "succeeded",
+   "started_at_utc": "2026-10-27T23:02:16.981846+00:00",
+   "exit_code": 0,
+   "finished_at_utc": "2026-10-27T23:02:19.236163+00:00",
+   "notification": "Windows sound requested; may be disabled in system settings"
+  },
+  {
+   "name": "real-burst-shared-chroma-20261028-v001",
+   "pid": 6260,
+   "status": "succeeded",
+   "started_at_utc": "2026-10-27T23:27:17.249539+00:00",
+   "exit_code": 0,
+   "finished_at_utc": "2026-10-27T23:27:23.010282+00:00",
+   "notification": "Windows sound requested; may be disabled in system settings"
+  },
+  {
+   "name": "real-burst-validation-20261028-v001",
+   "pid": 27352,
+   "status": "succeeded",
+   "started_at_utc": "2026-10-27T23:11:52.789495+00:00",
+   "exit_code": 0,
+   "finished_at_utc": "2026-10-27T23:13:11.516065+00:00",
+   "notification": "Windows sound requested; may be disabled in system settings"
+  }
+ ],
+ "unit_tests": {
+  "command": [
+   "C:\\Users\\victo\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe",
+   "-m",
+   "unittest",
+   "discover",
+   "-s",
+   "tests",
+   "-p",
+   "test_noise_burst*.py"
+  ],
+  "exit_code": 0,
+  "stdout": "",
+  "stderr": "..........................\n----------------------------------------------------------------------\nRan 26 tests in 0.230s\n\nOK\n"
+ },
+ "production_diff_paths": [],
+ "failures": [],
+ "protocol": {
+  "path": "docs/validation/protocols/protocole-bruit-voisinages-adaptatifs.md",
+  "sha256": "8fdaaa16500a9b7d37a387781291c20be3936555c7aecc413be3f9de408350b0"
+ },
+ "decoded_source_indices": [
+  0,
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13,
+  14,
+  15,
+  16,
+  17,
+  18,
+  19,
+  20,
+  21,
+  22,
+  23,
+  24,
+  25,
+  26,
+  27
+ ],
+ "final_sealed_source_indices": [
+  28,
+  29,
+  30,
+  31,
+  32,
+  33,
+  34,
+  35,
+  36,
+  37,
+  38,
+  39,
+  40,
+  41
+ ],
+ "runner_sha256": "0897a210b392660fc8d331e93a5a01b92a65341a40e9fada0bd6e2382df8b8e8",
+ "runner_source": "\"\"\"Close the real-burst research campaign without opening new pixels or Git writes.\"\"\"\nfrom datetime import datetime,timezone\nimport json\nfrom pathlib import Path\nimport re\nimport subprocess\nimport sys\nfrom study_noise_neighbourhoods import ROOT,sha256,git\n\n\ndef run():\n    started=datetime.now(timezone.utc);proofs=sorted((ROOT/'docs/validation/raw').glob('*rafale*bruit-v*-*.json'))\n    cache={};checks=[];failures=[]\n    def verify(path,digest,origin):\n        p=Path(path)\n        if not p.is_absolute():p=ROOT/p\n        key=str(p)\n        if not p.is_file():failures.append(dict(origin=origin,path=key,error='missing_file'));return\n        current=cache.setdefault(key,sha256(p)) if key not in cache else cache[key]\n        good=current==digest;checks.append(dict(path=key,expected_sha256=digest,actual_sha256=current,match=good,origin=origin))\n        if not good:failures.append(checks[-1])\n    def walk(value,origin):\n        if isinstance(value,dict):\n            # Only explicit filesystem contracts; ordinary SHA identity records have no file path.\n            if isinstance(value.get('path'),str) and isinstance(value.get('sha256'),str):verify(value['path'],value['sha256'],origin)\n            for v in value.values():walk(v,origin)\n        elif isinstance(value,list):\n            for v in value:walk(v,origin)\n    loaded=[];decoded=set()\n    for p in proofs:\n        if p.name.startswith('cloture-'):continue\n        data=json.loads(p.read_text(encoding='utf-8'));loaded.append(dict(path=str(p),sha256=sha256(p)))\n        walk(data,p.name)\n        if p.name.startswith(('extraction-native-rafale','contextes-reference-rafale')):\n            decoded.update(r['index'] for r in data['records'])\n    report=ROOT/'docs/validation/analyses/analyse-bruit.md';text=report.read_text(encoding='utf-8');latest=text[text.index('## 439.'):]\n    links=[]\n    for name in re.findall(r'\\]\\(\\.\\./raw/([^\\)]+)\\)',latest):\n        p=ROOT/'docs/validation/raw'/name;links.append(dict(name=name,exists=p.is_file()))\n        if not p.is_file():failures.append(dict(error='missing_report_link',path=str(p)))\n    tests=subprocess.run([sys.executable,'-m','unittest','discover','-s','tests','-p','test_noise_burst*.py'],cwd=ROOT,capture_output=True,text=True,timeout=90)\n    if tests.returncode:failures.append(dict(error='targeted_unit_tests_failed',stderr=tests.stderr))\n    jobs=[]\n    for folder in sorted((ROOT/'build-patch_noise/jobs').glob('real-burst-*')):\n        p=folder/'status.json'\n        if p.is_file():\n            state=json.loads(p.read_text(encoding='utf-8'));jobs.append(state)\n            if state['status']=='running':failures.append(dict(error='unfinished_job',job=folder.name))\n    if not any(Path(p['path']).name.startswith('chroma-partagee-rafale-bruit-v001-') for p in loaded):failures.append(dict(error='missing_shared_chroma_result'))\n    if decoded!=set(range(28)):failures.append(dict(error='unexpected_decoded_partition',indices=sorted(decoded)))\n    now=datetime.now(timezone.utc);output=ROOT/'docs/validation/raw'/f'cloture-rafale-bruit-v001-{now.strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n    result=dict(campaign_id='noise-real-burst-20261028-v001',schema_version=1,data_version=1,measured_at_utc=now.isoformat(),\n        analyser_version='noise-real-burst-research-v001',started_at_utc=started.isoformat(),completed_at_utc=now.isoformat(),\n        proofs=loaded,file_checks=checks,unique_files_checked=len(cache),report_links=links,jobs=jobs,\n        unit_tests=dict(command=tests.args,exit_code=tests.returncode,stdout=tests.stdout,stderr=tests.stderr),\n        production_diff_paths=git('diff','--name-only','--','src').splitlines(),failures=failures,\n        protocol=dict(path='docs/validation/protocols/protocole-bruit-voisinages-adaptatifs.md',sha256=sha256(ROOT/'docs/validation/protocols/protocole-bruit-voisinages-adaptatifs.md')),\n        decoded_source_indices=sorted(decoded),final_sealed_source_indices=list(range(28,42)),\n        runner_sha256=sha256(Path(__file__)),runner_source=Path(__file__).read_text(encoding='utf-8'),commit=git('rev-parse','HEAD'),\n        rules='Verify existing JSON/files/SHA and targeted unit tests; no new source pixel decoding, Git writes, image cleanup or final holdout opening. Failed geometry job kept, not silently removed.',\n        limitations='Integrity audit is not scientific quality validation, noise calibration or product stability. Source hash does not reconstruct missing images. Data remain reference-conditioned/single burst.',\n        verdict='integrity_pass' if not failures else 'integrity_fail')\n    with output.open('x',encoding='utf-8') as handle:json.dump(result,handle,ensure_ascii=False,indent=1,allow_nan=False)\n    print('AUDIT',output,'FAILURES',len(failures),'UNIQUE_FILES',len(cache),flush=True)\n    if failures:raise SystemExit(1)\n\n\nif __name__=='__main__':run()\n",
+ "commit": "2a40c5c6cff78d40294393a68827f4a24555c724",
+ "rules": "Verify existing JSON/files/SHA and targeted unit tests; no new source pixel decoding, Git writes, image cleanup or final holdout opening. Failed geometry job kept, not silently removed.",
+ "limitations": "Integrity audit is not scientific quality validation, noise calibration or product stability. Source hash does not reconstruct missing images. Data remain reference-conditioned/single burst.",
+ "verdict": "integrity_pass"
+}

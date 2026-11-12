@@ -1,0 +1,1441 @@
+{
+ "schema_version": 1,
+ "data_version": 1,
+ "completed_at_utc": "2026-10-27T19:10:31.456000+00:00",
+ "records": [
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "b": "6V1A9661.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.0639463283985151,
+   "quiet_stable_tiles": 16,
+   "status": "generated",
+   "hh_variance": [
+    0.09424481936302403,
+    0.13081362850309103,
+    0.2919063007631787
+   ],
+   "baseline_hh_variance": [
+    0.12570193545666133,
+    0.12584271096200317,
+    0.30283567259178185
+   ],
+   "gaussian_marginal_scale_factor_ratio": [
+    0.8658801044434997,
+    1.019559236472195,
+    0.9817891285788136
+   ],
+   "independent_of_marginal_noise_amplitude": true
+  },
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "b": "6V1A9661.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.06385596489144518,
+   "quiet_stable_tiles": 16,
+   "status": "generated",
+   "hh_variance": [
+    0.09828841672284863,
+    0.12657198711733955,
+    0.29621380127086766
+   ],
+   "baseline_hh_variance": [
+    0.12570193545666133,
+    0.12584271096200317,
+    0.30283567259178185
+   ],
+   "gaussian_marginal_scale_factor_ratio": [
+    0.884260422324636,
+    1.0028933842723224,
+    0.9890064612507236
+   ],
+   "independent_of_marginal_noise_amplitude": true
+  },
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "b": "6V1A9661.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.061603882771237295,
+   "quiet_stable_tiles": 16,
+   "status": "generated",
+   "hh_variance": [
+    0.10598208268838155,
+    0.13201833612523653,
+    0.298267466968731
+   ],
+   "baseline_hh_variance": [
+    0.12570193545666133,
+    0.12584271096200317,
+    0.30283567259178185
+   ],
+   "gaussian_marginal_scale_factor_ratio": [
+    0.918216816992357,
+    1.0242432126474037,
+    0.9924289560431546
+   ],
+   "independent_of_marginal_noise_amplitude": true
+  },
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "b": "6V1A9661.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.0614499252440055,
+   "quiet_stable_tiles": 16,
+   "status": "generated",
+   "hh_variance": [
+    0.09988760835415408,
+    0.12363313344695304,
+    0.2929246488422114
+   ],
+   "baseline_hh_variance": [
+    0.12570193545666133,
+    0.12584271096200317,
+    0.30283567259178185
+   ],
+   "gaussian_marginal_scale_factor_ratio": [
+    0.8914250315301712,
+    0.9911819974673708,
+    0.9835001786772838
+   ],
+   "independent_of_marginal_noise_amplitude": true
+  },
+  {
+   "dataset": 0,
+   "iso": 1600,
+   "a": "6V1A9676.CR3",
+   "b": "6V1A9677.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.022237946113762064,
+   "quiet_stable_tiles": 11,
+   "status": "generated",
+   "hh_variance": [
+    0.09101646888587692,
+    0.15139025972329892,
+    0.31737950706388063
+   ],
+   "baseline_hh_variance": [
+    0.09736591486094337,
+    0.1341679571096717,
+    0.2888622723401024
+   ],
+   "gaussian_marginal_scale_factor_ratio": [
+    0.9668442456028293,
+    1.0622446769907454,
+    1.0481996949730645
+   ],
+   "independent_of_marginal_noise_amplitude": true
+  },
+  {
+   "dataset": 0,
+   "iso": 1600,
+   "a": "6V1A9676.CR3",
+   "b": "6V1A9677.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.021472170526294576,
+   "quiet_stable_tiles": 10,
+   "status": "generated",
+   "hh_variance": [
+    0.08522951476530749,
+    0.13655059136775755,
+    0.3036233909140865
+   ],
+   "baseline_hh_variance": [
+    0.09736591486094337,
+    0.1341679571096717,
+    0.2888622723401024
+   ],
+   "gaussian_marginal_scale_factor_ratio": [
+    0.9356028444693977,
+    1.0088402221614075,
+    1.0252321141180514
+   ],
+   "independent_of_marginal_noise_amplitude": true
+  },
+  {
+   "dataset": 0,
+   "iso": 1600,
+   "a": "6V1A9676.CR3",
+   "b": "6V1A9677.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.01909858604383885,
+   "quiet_stable_tiles": 16,
+   "status": "generated",
+   "hh_variance": [
+    0.07665701862076382,
+    0.14806385820449433,
+    0.31817799171679717
+   ],
+   "baseline_hh_variance": [
+    0.09736591486094337,
+    0.1341679571096717,
+    0.2888622723401024
+   ],
+   "gaussian_marginal_scale_factor_ratio": [
+    0.8873040989947755,
+    1.050509846436059,
+    1.0495174322324081
+   ],
+   "independent_of_marginal_noise_amplitude": true
+  },
+  {
+   "dataset": 0,
+   "iso": 1600,
+   "a": "6V1A9676.CR3",
+   "b": "6V1A9677.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.018266755345550223,
+   "quiet_stable_tiles": 10,
+   "status": "generated",
+   "hh_variance": [
+    0.08314078003374653,
+    0.14697793846224105,
+    0.31470585396764705
+   ],
+   "baseline_hh_variance": [
+    0.09736591486094337,
+    0.1341679571096717,
+    0.2888622723401024
+   ],
+   "gaussian_marginal_scale_factor_ratio": [
+    0.9240672379181022,
+    1.0466504686679463,
+    1.0437752606475548
+   ],
+   "independent_of_marginal_noise_amplitude": true
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "b": "6V1A9703.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.061847889632190345,
+   "quiet_stable_tiles": 12,
+   "status": "generated",
+   "hh_variance": [
+    0.11016326818432653,
+    0.12252054928581418,
+    0.2936813907167324
+   ],
+   "baseline_hh_variance": [
+    0.13521182009921492,
+    0.11276483345091162,
+    0.30222113568830355
+   ],
+   "gaussian_marginal_scale_factor_ratio": [
+    0.9026327280641329,
+    1.042359733523341,
+    0.9857704546780472
+   ],
+   "independent_of_marginal_noise_amplitude": true
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "b": "6V1A9703.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.06398286064029435,
+   "quiet_stable_tiles": 12,
+   "status": "generated",
+   "hh_variance": [
+    0.10979563076487417,
+    0.12217715244801464,
+    0.29250337451223096
+   ],
+   "baseline_hh_variance": [
+    0.13521182009921492,
+    0.11276483345091162,
+    0.30222113568830355
+   ],
+   "gaussian_marginal_scale_factor_ratio": [
+    0.9011253341246539,
+    1.040897961606443,
+    0.9837914044995959
+   ],
+   "independent_of_marginal_noise_amplitude": true
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "b": "6V1A9703.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.05253929008011937,
+   "quiet_stable_tiles": 14,
+   "status": "generated",
+   "hh_variance": [
+    0.13084437772330543,
+    0.12137545917125778,
+    0.30159927618262894
+   ],
+   "baseline_hh_variance": [
+    0.13521182009921492,
+    0.11276483345091162,
+    0.30222113568830355
+   ],
+   "gaussian_marginal_scale_factor_ratio": [
+    0.983717060988847,
+    1.0374772962046146,
+    0.9989706548433473
+   ],
+   "independent_of_marginal_noise_amplitude": true
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "b": "6V1A9703.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.05514021420509607,
+   "quiet_stable_tiles": 13,
+   "status": "generated",
+   "hh_variance": [
+    0.11552478938378291,
+    0.11977138132002108,
+    0.29671997555690605
+   ],
+   "baseline_hh_variance": [
+    0.13521182009921492,
+    0.11276483345091162,
+    0.30222113568830355
+   ],
+   "gaussian_marginal_scale_factor_ratio": [
+    0.924336841713933,
+    1.0305989312191612,
+    0.9908569858853039
+   ],
+   "independent_of_marginal_noise_amplitude": true
+  },
+  {
+   "dataset": 0,
+   "iso": 51200,
+   "a": "6V1A9815.CR3",
+   "b": "6V1A9816.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.22263178266261896,
+   "quiet_stable_tiles": 11,
+   "status": "generated",
+   "hh_variance": [
+    0.09801654674113769,
+    0.13972926743105657,
+    0.3006677914057301
+   ],
+   "baseline_hh_variance": [
+    0.0900434679539723,
+    0.15075738653188067,
+    0.304562747357805
+   ],
+   "gaussian_marginal_scale_factor_ratio": [
+    1.0433345571362733,
+    0.9627297468155398,
+    0.9935850837083853
+   ],
+   "independent_of_marginal_noise_amplitude": true
+  },
+  {
+   "dataset": 0,
+   "iso": 51200,
+   "a": "6V1A9815.CR3",
+   "b": "6V1A9816.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.22062821088524975,
+   "quiet_stable_tiles": 9,
+   "status": "generated",
+   "hh_variance": [
+    0.1019247930627204,
+    0.13444195407133766,
+    0.2877533017440261
+   ],
+   "baseline_hh_variance": [
+    0.0900434679539723,
+    0.15075738653188067,
+    0.304562747357805
+   ],
+   "gaussian_marginal_scale_factor_ratio": [
+    1.0639318559476028,
+    0.9443393961267806,
+    0.9720123144195448
+   ],
+   "independent_of_marginal_noise_amplitude": true
+  },
+  {
+   "dataset": 0,
+   "iso": 51200,
+   "a": "6V1A9815.CR3",
+   "b": "6V1A9816.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.22112660852206112,
+   "quiet_stable_tiles": 6,
+   "status": "generated",
+   "hh_variance": [
+    0.10162825114853291,
+    0.13986400941248534,
+    0.2913372879786559
+   ],
+   "baseline_hh_variance": [
+    0.0900434679539723,
+    0.15075738653188067,
+    0.304562747357805
+   ],
+   "gaussian_marginal_scale_factor_ratio": [
+    1.0623830168733637,
+    0.9631938187261708,
+    0.9780468210662122
+   ],
+   "independent_of_marginal_noise_amplitude": true
+  },
+  {
+   "dataset": 0,
+   "iso": 51200,
+   "a": "6V1A9815.CR3",
+   "b": "6V1A9816.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.22044716258636932,
+   "quiet_stable_tiles": 7,
+   "status": "generated",
+   "hh_variance": [
+    0.09380531215480306,
+    0.13577894099637122,
+    0.2910199196118786
+   ],
+   "baseline_hh_variance": [
+    0.0900434679539723,
+    0.15075738653188067,
+    0.304562747357805
+   ],
+   "gaussian_marginal_scale_factor_ratio": [
+    1.020675311266967,
+    0.9490233728384317,
+    0.9775139581011714
+   ],
+   "independent_of_marginal_noise_amplitude": true
+  },
+  {
+   "dataset": 1,
+   "iso": 100,
+   "a": "6V1A9658.CR3",
+   "b": "6V1A9659.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.18416355099498105,
+   "quiet_stable_tiles": 16,
+   "status": "generated",
+   "hh_variance": [
+    0.09739740548685799,
+    0.13769377416945233,
+    0.30457456562721064
+   ],
+   "baseline_hh_variance": [
+    0.12570193545666133,
+    0.12584271096200317,
+    0.30283567259178185
+   ],
+   "gaussian_marginal_scale_factor_ratio": [
+    0.880243266804407,
+    1.046027541008182,
+    1.0028669079263364
+   ],
+   "independent_of_marginal_noise_amplitude": true
+  },
+  {
+   "dataset": 1,
+   "iso": 100,
+   "a": "6V1A9658.CR3",
+   "b": "6V1A9659.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.18397492845497254,
+   "quiet_stable_tiles": 16,
+   "status": "generated",
+   "hh_variance": [
+    0.09597348668963379,
+    0.12995960499389125,
+    0.30411340487823424
+   ],
+   "baseline_hh_variance": [
+    0.12570193545666133,
+    0.12584271096200317,
+    0.30283567259178185
+   ],
+   "gaussian_marginal_scale_factor_ratio": [
+    0.8737851389864009,
+    1.0162256642274523,
+    1.0021073926840165
+   ],
+   "independent_of_marginal_noise_amplitude": true
+  },
+  {
+   "dataset": 1,
+   "iso": 100,
+   "a": "6V1A9658.CR3",
+   "b": "6V1A9659.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.17893515537161875,
+   "quiet_stable_tiles": 16,
+   "status": "generated",
+   "hh_variance": [
+    0.09805809998258883,
+    0.1382014348776199,
+    0.2991156171219708
+   ],
+   "baseline_hh_variance": [
+    0.12570193545666133,
+    0.12584271096200317,
+    0.30283567259178185
+   ],
+   "gaussian_marginal_scale_factor_ratio": [
+    0.8832237822372091,
+    1.047954057029285,
+    0.9938389845089637
+   ],
+   "independent_of_marginal_noise_amplitude": true
+  },
+  {
+   "dataset": 1,
+   "iso": 100,
+   "a": "6V1A9658.CR3",
+   "b": "6V1A9659.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.17854358013028104,
+   "quiet_stable_tiles": 16,
+   "status": "generated",
+   "hh_variance": [
+    0.09543022312696667,
+    0.13640659516642345,
+    0.3039360955069193
+   ],
+   "baseline_hh_variance": [
+    0.12570193545666133,
+    0.12584271096200317,
+    0.30283567259178185
+   ],
+   "gaussian_marginal_scale_factor_ratio": [
+    0.871308573256338,
+    1.0411268614853713,
+    1.0018152172398647
+   ],
+   "independent_of_marginal_noise_amplitude": true
+  },
+  {
+   "dataset": 1,
+   "iso": 1600,
+   "a": "6V1A9664.CR3",
+   "b": "6V1A9665.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.9899051785469055,
+   "quiet_stable_tiles": 0,
+   "status": "unmeasurable_axis"
+  },
+  {
+   "dataset": 1,
+   "iso": 1600,
+   "a": "6V1A9664.CR3",
+   "b": "6V1A9665.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.9899051785469055,
+   "quiet_stable_tiles": 0,
+   "status": "unmeasurable_axis"
+  },
+  {
+   "dataset": 1,
+   "iso": 1600,
+   "a": "6V1A9664.CR3",
+   "b": "6V1A9665.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.9899051785469055,
+   "quiet_stable_tiles": 0,
+   "status": "unmeasurable_axis"
+  },
+  {
+   "dataset": 1,
+   "iso": 1600,
+   "a": "6V1A9664.CR3",
+   "b": "6V1A9665.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.9899051785469055,
+   "quiet_stable_tiles": 0,
+   "status": "unmeasurable_axis"
+  },
+  {
+   "dataset": 1,
+   "iso": 6400,
+   "a": "6V1A9694.CR3",
+   "b": "6V1A9695.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.8832818417849921,
+   "quiet_stable_tiles": 16,
+   "status": "generated",
+   "hh_variance": [
+    0.31794974959974404,
+    0.15601765319657218,
+    0.361362183891194
+   ],
+   "baseline_hh_variance": [
+    0.13521182009921492,
+    0.11276483345091162,
+    0.30222113568830355
+   ],
+   "gaussian_marginal_scale_factor_ratio": [
+    1.5334581011092387,
+    1.17625106348289,
+    1.093475191934092
+   ],
+   "independent_of_marginal_noise_amplitude": true
+  },
+  {
+   "dataset": 1,
+   "iso": 6400,
+   "a": "6V1A9694.CR3",
+   "b": "6V1A9695.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.8899216467998485,
+   "quiet_stable_tiles": 16,
+   "status": "generated",
+   "hh_variance": [
+    0.3143208318537527,
+    0.18144300392524856,
+    0.3669803275632463
+   ],
+   "baseline_hh_variance": [
+    0.13521182009921492,
+    0.11276483345091162,
+    0.30222113568830355
+   ],
+   "gaussian_marginal_scale_factor_ratio": [
+    1.5246819296807583,
+    1.2684789722774696,
+    1.1019426065730782
+   ],
+   "independent_of_marginal_noise_amplitude": true
+  },
+  {
+   "dataset": 1,
+   "iso": 6400,
+   "a": "6V1A9694.CR3",
+   "b": "6V1A9695.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.8476758458000404,
+   "quiet_stable_tiles": 16,
+   "status": "generated",
+   "hh_variance": [
+    0.2956844835982559,
+    0.07846384053804967,
+    0.3568830267204215
+   ],
+   "baseline_hh_variance": [
+    0.13521182009921492,
+    0.11276483345091162,
+    0.30222113568830355
+   ],
+   "gaussian_marginal_scale_factor_ratio": [
+    1.478791474229095,
+    0.8341572703447848,
+    1.0866771376327706
+   ],
+   "independent_of_marginal_noise_amplitude": true
+  },
+  {
+   "dataset": 1,
+   "iso": 6400,
+   "a": "6V1A9694.CR3",
+   "b": "6V1A9695.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.8575844711558602,
+   "quiet_stable_tiles": 16,
+   "status": "generated",
+   "hh_variance": [
+    0.29513097516926856,
+    0.08424890071330537,
+    0.34466104576358075
+   ],
+   "baseline_hh_variance": [
+    0.13521182009921492,
+    0.11276483345091162,
+    0.30222113568830355
+   ],
+   "gaussian_marginal_scale_factor_ratio": [
+    1.4774067093696646,
+    0.8643612323837975,
+    1.0679076167431463
+   ],
+   "independent_of_marginal_noise_amplitude": true
+  },
+  {
+   "dataset": 1,
+   "iso": 51200,
+   "a": "6V1A9716.CR3",
+   "b": "6V1A9717.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.9899027642059082,
+   "quiet_stable_tiles": 0,
+   "status": "generated",
+   "hh_variance": [
+    0.6317743144901447,
+    0.6239198346286883,
+    0.5650836329127702
+   ],
+   "baseline_hh_variance": [
+    0.0900434679539723,
+    0.15075738653188067,
+    0.304562747357805
+   ],
+   "gaussian_marginal_scale_factor_ratio": [
+    2.648834815452421,
+    2.0343472962534803,
+    1.3621281666985634
+   ],
+   "independent_of_marginal_noise_amplitude": true
+  },
+  {
+   "dataset": 1,
+   "iso": 51200,
+   "a": "6V1A9716.CR3",
+   "b": "6V1A9717.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.9899035012240347,
+   "quiet_stable_tiles": 0,
+   "status": "generated",
+   "hh_variance": [
+    0.8072726830160116,
+    0.8226668890332882,
+    0.7571941714594539
+   ],
+   "baseline_hh_variance": [
+    0.0900434679539723,
+    0.15075738653188067,
+    0.304562747357805
+   ],
+   "gaussian_marginal_scale_factor_ratio": [
+    2.9942221710813604,
+    2.335999303597558,
+    1.5767587162296781
+   ],
+   "independent_of_marginal_noise_amplitude": true
+  },
+  {
+   "dataset": 1,
+   "iso": 51200,
+   "a": "6V1A9716.CR3",
+   "b": "6V1A9717.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.9899048564002442,
+   "quiet_stable_tiles": 0,
+   "status": "generated",
+   "hh_variance": [
+    0.9999286817939089,
+    1.0000006554411534,
+    0.9997357234763824
+   ],
+   "baseline_hh_variance": [
+    0.0900434679539723,
+    0.15075738653188067,
+    0.304562747357805
+   ],
+   "gaussian_marginal_scale_factor_ratio": [
+    3.3324098255873924,
+    2.575495778006991,
+    1.8117748000733787
+   ],
+   "independent_of_marginal_noise_amplitude": true
+  },
+  {
+   "dataset": 1,
+   "iso": 51200,
+   "a": "6V1A9716.CR3",
+   "b": "6V1A9717.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.9899048066345131,
+   "quiet_stable_tiles": 0,
+   "status": "generated",
+   "hh_variance": [
+    0.39723737447145974,
+    0.3522403667114123,
+    0.4249341438064016
+   ],
+   "baseline_hh_variance": [
+    0.0900434679539723,
+    0.15075738653188067,
+    0.304562747357805
+   ],
+   "gaussian_marginal_scale_factor_ratio": [
+    2.1003851775538065,
+    1.5285521570343508,
+    1.1811972399020638
+   ],
+   "independent_of_marginal_noise_amplitude": true
+  },
+  {
+   "dataset": 2,
+   "iso": 100,
+   "a": "6V1A9749.CR3",
+   "b": "6V1A9750.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.17441551230376717,
+   "quiet_stable_tiles": 0,
+   "status": "generated",
+   "hh_variance": [
+    0.10756352394089183,
+    0.1395955820051706,
+    0.3224292529739562
+   ],
+   "baseline_hh_variance": [
+    0.12570193545666133,
+    0.12584271096200317,
+    0.30283567259178185
+   ],
+   "gaussian_marginal_scale_factor_ratio": [
+    0.9250421640600299,
+    1.0532265639213165,
+    1.0318431911121082
+   ],
+   "independent_of_marginal_noise_amplitude": true
+  },
+  {
+   "dataset": 2,
+   "iso": 100,
+   "a": "6V1A9749.CR3",
+   "b": "6V1A9750.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.1741594538661957,
+   "quiet_stable_tiles": 0,
+   "status": "generated",
+   "hh_variance": [
+    0.10853568552741494,
+    0.13631768312023182,
+    0.31551968728516744
+   ],
+   "baseline_hh_variance": [
+    0.12570193545666133,
+    0.12584271096200317,
+    0.30283567259178185
+   ],
+   "gaussian_marginal_scale_factor_ratio": [
+    0.9292130372514468,
+    1.0407874944303703,
+    1.0207272651686496
+   ],
+   "independent_of_marginal_noise_amplitude": true
+  },
+  {
+   "dataset": 2,
+   "iso": 100,
+   "a": "6V1A9749.CR3",
+   "b": "6V1A9750.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.16901606438841554,
+   "quiet_stable_tiles": 0,
+   "status": "generated",
+   "hh_variance": [
+    0.11094367331010163,
+    0.13753666318850136,
+    0.3185430139392559
+   ],
+   "baseline_hh_variance": [
+    0.12570193545666133,
+    0.12584271096200317,
+    0.30283567259178185
+   ],
+   "gaussian_marginal_scale_factor_ratio": [
+    0.9394643148094789,
+    1.0454306029105442,
+    1.0256059379476197
+   ],
+   "independent_of_marginal_noise_amplitude": true
+  },
+  {
+   "dataset": 2,
+   "iso": 100,
+   "a": "6V1A9749.CR3",
+   "b": "6V1A9750.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.1685292330930679,
+   "quiet_stable_tiles": 0,
+   "status": "generated",
+   "hh_variance": [
+    0.11064816330060046,
+    0.12968407184886088,
+    0.31490413680690355
+   ],
+   "baseline_hh_variance": [
+    0.12570193545666133,
+    0.12584271096200317,
+    0.30283567259178185
+   ],
+   "gaussian_marginal_scale_factor_ratio": [
+    0.9382123000929228,
+    1.0151478199887216,
+    1.0197311056190128
+   ],
+   "independent_of_marginal_noise_amplitude": true
+  },
+  {
+   "dataset": 2,
+   "iso": 1600,
+   "a": "6V1A9672.CR3",
+   "b": "6V1A9673.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.2042254276843778,
+   "quiet_stable_tiles": 16,
+   "status": "generated",
+   "hh_variance": [
+    0.11808243087640352,
+    0.09606351915026573,
+    0.282420024283417
+   ],
+   "baseline_hh_variance": [
+    0.09736591486094337,
+    0.1341679571096717,
+    0.2888622723401024
+   ],
+   "gaussian_marginal_scale_factor_ratio": [
+    1.101258232692466,
+    0.8461645811462375,
+    0.9887860515716393
+   ],
+   "independent_of_marginal_noise_amplitude": true
+  },
+  {
+   "dataset": 2,
+   "iso": 1600,
+   "a": "6V1A9672.CR3",
+   "b": "6V1A9673.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.20049718602285793,
+   "quiet_stable_tiles": 16,
+   "status": "generated",
+   "hh_variance": [
+    0.11895142707116518,
+    0.09618867942854548,
+    0.28115873821732595
+   ],
+   "baseline_hh_variance": [
+    0.09736591486094337,
+    0.1341679571096717,
+    0.2888622723401024
+   ],
+   "gaussian_marginal_scale_factor_ratio": [
+    1.1053030130155939,
+    0.8467156317520491,
+    0.9865756247038246
+   ],
+   "independent_of_marginal_noise_amplitude": true
+  },
+  {
+   "dataset": 2,
+   "iso": 1600,
+   "a": "6V1A9672.CR3",
+   "b": "6V1A9673.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.18757488346682294,
+   "quiet_stable_tiles": 16,
+   "status": "generated",
+   "hh_variance": [
+    0.1092363054826807,
+    0.0984986832751778,
+    0.2855845452639487
+   ],
+   "baseline_hh_variance": [
+    0.09736591486094337,
+    0.1341679571096717,
+    0.2888622723401024
+   ],
+   "gaussian_marginal_scale_factor_ratio": [
+    1.0592050122182086,
+    0.8568223943321187,
+    0.9943103017722513
+   ],
+   "independent_of_marginal_noise_amplitude": true
+  },
+  {
+   "dataset": 2,
+   "iso": 1600,
+   "a": "6V1A9672.CR3",
+   "b": "6V1A9673.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.18328373798385655,
+   "quiet_stable_tiles": 16,
+   "status": "generated",
+   "hh_variance": [
+    0.10129226898503454,
+    0.10790236043848836,
+    0.2920311129448123
+   ],
+   "baseline_hh_variance": [
+    0.09736591486094337,
+    0.1341679571096717,
+    0.2888622723401024
+   ],
+   "gaussian_marginal_scale_factor_ratio": [
+    1.019963605226464,
+    0.896790644760262,
+    1.0054700763079887
+   ],
+   "independent_of_marginal_noise_amplitude": true
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "b": "6V1A9701.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.161456579638525,
+   "quiet_stable_tiles": 13,
+   "status": "generated",
+   "hh_variance": [
+    0.11322398265629247,
+    0.10093679383764337,
+    0.298142879460714
+   ],
+   "baseline_hh_variance": [
+    0.13521182009921492,
+    0.11276483345091162,
+    0.30222113568830355
+   ],
+   "gaussian_marginal_scale_factor_ratio": [
+    0.9150859431726477,
+    0.9461018929732273,
+    0.9932299438303495
+   ],
+   "independent_of_marginal_noise_amplitude": true
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "b": "6V1A9701.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.1661470337476203,
+   "quiet_stable_tiles": 16,
+   "status": "generated",
+   "hh_variance": [
+    0.1162346834445239,
+    0.10162603385707347,
+    0.29166367183740305
+   ],
+   "baseline_hh_variance": [
+    0.13521182009921492,
+    0.11276483345091162,
+    0.30222113568830355
+   ],
+   "gaussian_marginal_scale_factor_ratio": [
+    0.9271724940128427,
+    0.9493265935835935,
+    0.9823782823384323
+   ],
+   "independent_of_marginal_noise_amplitude": true
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "b": "6V1A9701.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.13831173515654882,
+   "quiet_stable_tiles": 14,
+   "status": "generated",
+   "hh_variance": [
+    0.13678022278391108,
+    0.10815834840457092,
+    0.29570077991647437
+   ],
+   "baseline_hh_variance": [
+    0.13521182009921492,
+    0.11276483345091162,
+    0.30222113568830355
+   ],
+   "gaussian_marginal_scale_factor_ratio": [
+    1.0057830767406384,
+    0.9793618489056058,
+    0.9891537877587449
+   ],
+   "independent_of_marginal_noise_amplitude": true
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "b": "6V1A9701.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.14471705413313884,
+   "quiet_stable_tiles": 16,
+   "status": "generated",
+   "hh_variance": [
+    0.12863740165251086,
+    0.10919339691868984,
+    0.29642660031814205
+   ],
+   "baseline_hh_variance": [
+    0.13521182009921492,
+    0.11276483345091162,
+    0.30222113568830355
+   ],
+   "gaussian_marginal_scale_factor_ratio": [
+    0.9753855112651122,
+    0.9840368157178713,
+    0.9903670209042806
+   ],
+   "independent_of_marginal_noise_amplitude": true
+  },
+  {
+   "dataset": 2,
+   "iso": 51200,
+   "a": "6V1A9817.CR3",
+   "b": "6V1A9818.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.1810836053627014,
+   "quiet_stable_tiles": 8,
+   "status": "generated",
+   "hh_variance": [
+    0.10725556150439766,
+    0.13824121463322847,
+    0.28509239544987813
+   ],
+   "baseline_hh_variance": [
+    0.0900434679539723,
+    0.15075738653188067,
+    0.304562747357805
+   ],
+   "gaussian_marginal_scale_factor_ratio": [
+    1.0913996340765066,
+    0.9575897096585095,
+    0.9675076905278132
+   ],
+   "independent_of_marginal_noise_amplitude": true
+  },
+  {
+   "dataset": 2,
+   "iso": 51200,
+   "a": "6V1A9817.CR3",
+   "b": "6V1A9818.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.1789819678260156,
+   "quiet_stable_tiles": 9,
+   "status": "generated",
+   "hh_variance": [
+    0.102531903502974,
+    0.1352164474032371,
+    0.2908310652819863
+   ],
+   "baseline_hh_variance": [
+    0.0900434679539723,
+    0.15075738653188067,
+    0.304562747357805
+   ],
+   "gaussian_marginal_scale_factor_ratio": [
+    1.0670957825918244,
+    0.9470555655447954,
+    0.9771967329034922
+   ],
+   "independent_of_marginal_noise_amplitude": true
+  },
+  {
+   "dataset": 2,
+   "iso": 51200,
+   "a": "6V1A9817.CR3",
+   "b": "6V1A9818.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.1799320503410362,
+   "quiet_stable_tiles": 7,
+   "status": "generated",
+   "hh_variance": [
+    0.10349555202578747,
+    0.1419648373214192,
+    0.2978414826352308
+   ],
+   "baseline_hh_variance": [
+    0.0900434679539723,
+    0.15075738653188067,
+    0.304562747357805
+   ],
+   "gaussian_marginal_scale_factor_ratio": [
+    1.0720986177557255,
+    0.9704006851923009,
+    0.988904155438522
+   ],
+   "independent_of_marginal_noise_amplitude": true
+  },
+  {
+   "dataset": 2,
+   "iso": 51200,
+   "a": "6V1A9817.CR3",
+   "b": "6V1A9818.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "mean_physical_y": 0.17876487607611313,
+   "quiet_stable_tiles": 8,
+   "status": "generated",
+   "hh_variance": [
+    0.10824015734318518,
+    0.1348665560237534,
+    0.29104265194339113
+   ],
+   "baseline_hh_variance": [
+    0.0900434679539723,
+    0.15075738653188067,
+    0.304562747357805
+   ],
+   "gaussian_marginal_scale_factor_ratio": [
+    1.0963976622687472,
+    0.945829452794724,
+    0.9775521354490685
+   ],
+   "independent_of_marginal_noise_amplitude": true
+  }
+ ],
+ "parent": {
+  "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\transport-psd-gaussien-filtre-spectral-bruit-v002-20261027T190615Z.json",
+  "sha256": "20811ce8fafd75cc7d59438602e408e574fc7b189a49ac104b9913c3698433ac"
+ },
+ "commit": "2a40c5c6cff78d40294393a68827f4a24555c724",
+ "numpy_version": "2.4.2",
+ "runner_sha256": "df389d663d001b28b99bdd79feef14c50bfa0b12e78ab532012489f0da28f02b",
+ "runner_source": "\"\"\"Analytic HH variance-factor transport from archived PSD lags, no new simulation or tuning.\"\"\"\nfrom datetime import datetime, timezone\nimport json\nfrom pathlib import Path\nimport numpy as np\nfrom study_noise_neighbourhoods import ROOT, sha256, git\n\n\ndef hh_variances(lags):\n    lags = np.asarray(lags, dtype=float)\n    if lags.shape != (3,3,17,17) or not np.isfinite(lags).all():\n        raise ValueError('Finite signed lag8 cross covariance required')\n    positions = np.array([[0,0],[1,0],[0,1],[1,1]])\n    weights = np.array([.5,-.5,-.5,.5]); delta = positions[:,None]-positions[None,:]\n    values = np.array([weights @ lags[c,c,delta[:,:,0]+8,delta[:,:,1]+8] @ weights for c in range(3)])\n    if np.min(values) <= 0: raise ValueError('Unmeasurable HH variance')\n    return values\n\n\ndef run():\n    path = ROOT/'docs/validation/raw/transport-psd-gaussien-filtre-spectral-bruit-v002-20261027T190615Z.json'\n    digest = sha256(path); data = json.loads(path.read_text(encoding='utf-8'))\n    reference = {c['iso']:hh_variances(c['prepared_covariance_lag8']) for c in data['controls']}\n    records = []\n    for source in data['records']:\n        row = {k:source[k] for k in ('dataset','iso','a','b','rect','mean_physical_y','quiet_stable_tiles','status')}\n        if source['status'] == 'generated':\n            variance = hh_variances(source['prepared_covariance_lag8'])\n            row.update(hh_variance=variance.tolist(), baseline_hh_variance=reference[source['iso']].tolist(),\n                gaussian_marginal_scale_factor_ratio=np.sqrt(variance/reference[source['iso']]).tolist(),\n                independent_of_marginal_noise_amplitude=True)\n        records.append(row)\n    if sha256(path) != digest: raise ValueError('Changed spectral evidence')\n    now = datetime.now(timezone.utc)\n    output = ROOT/'docs/validation/raw'/f'transport-facteur-haar-spectral-bruit-v001-{now.strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n    result = dict(schema_version=1,data_version=1,completed_at_utc=now.isoformat(),records=records,\n        parent=dict(path=str(path),sha256=digest),commit=git('rev-parse','HEAD'),numpy_version=np.__version__,\n        runner_sha256=sha256(Path(__file__)),runner_source=Path(__file__).read_text(encoding='utf-8'),\n        rules='Exact hCh for2x2orthonormalHH,normalizedmarginalPSD covariances archivedlag8;4training controls vs44measurable/48quadrantrecords. Square-root variance ratio is theoreticalGaussian marginal HH-MAD factor mismatch,not fitted correction. No redraw,thresholdfit,images or production.',\n        limitations='Not observed finite-sample MAD bias,selectedpopulation bias,nonGaussian/nativecleantruth or confidenceinterval. HH coefficients correlated;subtracting empirical median and16x16finiteMAD change estimatorlaw. No coefficient toapplytoactualphoto without validatedPSDmodel.')\n    with output.open('x',encoding='utf-8') as handle: json.dump(result,handle,ensure_ascii=False,indent=1,allow_nan=False)\n    print(output)\n    for dataset in range(3):\n        for iso in reference:\n            selected = [r for r in records if r['dataset']==dataset and r['iso']==iso and r['status']=='generated']\n            if selected:\n                ratios = np.array([r['gaussian_marginal_scale_factor_ratio'] for r in selected])\n                print(dataset,iso,'factor ratios min',ratios.min(axis=0).round(4),'max',ratios.max(axis=0).round(4))\n\n\nif __name__ == '__main__': run()\n",
+ "rules": "Exact hCh for2x2orthonormalHH,normalizedmarginalPSD covariances archivedlag8;4training controls vs44measurable/48quadrantrecords. Square-root variance ratio is theoreticalGaussian marginal HH-MAD factor mismatch,not fitted correction. No redraw,thresholdfit,images or production.",
+ "limitations": "Not observed finite-sample MAD bias,selectedpopulation bias,nonGaussian/nativecleantruth or confidenceinterval. HH coefficients correlated;subtracting empirical median and16x16finiteMAD change estimatorlaw. No coefficient toapplytoactualphoto without validatedPSDmodel."
+}

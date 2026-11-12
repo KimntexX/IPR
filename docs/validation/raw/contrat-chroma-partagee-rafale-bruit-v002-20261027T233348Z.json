@@ -1,0 +1,1595 @@
+{
+ "schema_version": 1,
+ "data_version": 2,
+ "started_at_utc": "2026-10-27T23:33:45.221211+00:00",
+ "completed_at_utc": "2026-10-27T23:33:48.693660+00:00",
+ "correction": {
+  "parent": {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\contrat-chroma-partagee-rafale-bruit-v001-20261027T232945Z.json",
+   "sha256": "2a0b41b3f2dc170960c8a144a643ad0b92b181cf4c15aedc52f09b67a48f70d4"
+  },
+  "reason": "Clarify numericthresholdfieldnames:explicit -1e-7. Same reconstruction/scores verified exactly;not new independent study."
+ },
+ "parents": [
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\chroma-partagee-rafale-bruit-v001-20261027T232722Z.json",
+   "sha256": "54f1980e50f695bb59b6f831029201105ccda16776ddd3e9f6cfde9ead26fd41"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\temoins-production-rafale-bruit-v001-20261027T230748Z.json",
+   "sha256": "7ef3bb548c4af2d49352c27bc6e7d9b7e1ce15576e9760417c613c314f36bc98"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\wiener-bandes-rafale-bruit-v001-20261027T231611Z.json",
+   "sha256": "498cd92939b26e0061c15ea7423b7aac6a1e1aac172b51d292cf22f4e408b80d"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\contextes-reference-rafale-bruit-v001-20261027T232645Z.json",
+   "sha256": "54ec6efc71f96eb1074f4cf0297e14dd809934a7c3fdd3eacf7ff5dde671f2ac"
+  }
+ ],
+ "records": [
+  {
+   "target_index": 0,
+   "region": 0,
+   "cross_reference_risk": [
+    [
+     2.9515633741539204e-06,
+     3.4524156944826245e-05,
+     6.403855422831839e-06
+    ],
+    [
+     2.9515633741539204e-06,
+     5.332115051714936e-06,
+     8.382348823943175e-07
+    ],
+    [
+     2.9515633741539204e-06,
+     5.50333243154455e-06,
+     8.66386471898295e-07
+    ]
+   ],
+   "projected_delta_vs_production100": [
+    0.0,
+    -2.9020824513281696e-05,
+    -5.537468950933544e-06
+   ],
+   "projection_delta_vs_frozen": [
+    0.0,
+    1.712173798296135e-07,
+    2.8151589503977448e-08
+   ],
+   "luminance_max_abs_delta_vs_production100": 0.0,
+   "compressed_pixel_fraction": 0.03965928819444445,
+   "minimum_scale": 0.8695431933498807,
+   "rgb_min_before": -0.0023549720644950867,
+   "rgb_min_after": 6.51925802230835e-09,
+   "negative_rgb_test_threshold": -1e-07,
+   "rgb_negative_fraction_before": 0.013201678240740741,
+   "rgb_negative_fraction_after": 0.0,
+   "chroma_mean_change_due_projection": [
+    -6.194817979121581e-05,
+    2.4047765691648237e-05
+   ]
+  },
+  {
+   "target_index": 0,
+   "region": 1,
+   "cross_reference_risk": [
+    [
+     0.00029205798637121916,
+     0.0003507691144477576,
+     0.0002194296394009143
+    ],
+    [
+     0.00029205798637121916,
+     0.00012724791304208338,
+     2.3440958102582954e-05
+    ],
+    [
+     0.00029205798637121916,
+     0.00012477979180403054,
+     2.3528366000391543e-05
+    ]
+   ],
+   "projected_delta_vs_production100": [
+    0.0,
+    -0.00022598932264372706,
+    -0.00019590127340052277
+   ],
+   "projection_delta_vs_frozen": [
+    0.0,
+    -2.468121238052845e-06,
+    8.740789780858904e-08
+   ],
+   "luminance_max_abs_delta_vs_production100": 0.0,
+   "compressed_pixel_fraction": 0.015652126736111112,
+   "minimum_scale": 0.39708514863309574,
+   "rgb_min_before": -0.01757795363664627,
+   "rgb_min_after": 6.51925802230835e-09,
+   "negative_rgb_test_threshold": -1e-07,
+   "rgb_negative_fraction_before": 0.005217375578703704,
+   "rgb_negative_fraction_after": 0.0,
+   "chroma_mean_change_due_projection": [
+    -0.00011229628580622375,
+    1.6197824152186513e-05
+   ]
+  },
+  {
+   "target_index": 0,
+   "region": 2,
+   "cross_reference_risk": [
+    [
+     0.00014803350495640188,
+     0.00021638158068526536,
+     0.00014979238039813936
+    ],
+    [
+     0.00014803350495640188,
+     1.6919551853789017e-05,
+     6.2734002312936354e-06
+    ],
+    [
+     0.00014803350495640188,
+     1.693064405117184e-05,
+     6.272684004215989e-06
+    ]
+   ],
+   "projected_delta_vs_production100": [
+    0.0,
+    -0.00019945093663409352,
+    -0.00014351969002746046
+   ],
+   "projection_delta_vs_frozen": [
+    0.0,
+    1.1092197382822633e-08,
+    -7.16227077646181e-10
+   ],
+   "luminance_max_abs_delta_vs_production100": 0.0,
+   "compressed_pixel_fraction": 0.000244140625,
+   "minimum_scale": 0.8974416224265052,
+   "rgb_min_before": -0.012765435501933098,
+   "rgb_min_after": 5.4016709327697754e-08,
+   "negative_rgb_test_threshold": -1e-07,
+   "rgb_negative_fraction_before": 8.138020833333333e-05,
+   "rgb_negative_fraction_after": 0.0,
+   "chroma_mean_change_due_projection": [
+    -1.2677058975896216e-06,
+    -2.08573453619465e-07
+   ]
+  },
+  {
+   "target_index": 0,
+   "region": 3,
+   "cross_reference_risk": [
+    [
+     8.614379112259485e-07,
+     7.148276836232981e-06,
+     1.2671940794461989e-06
+    ],
+    [
+     8.614379112259485e-07,
+     2.062585508610937e-06,
+     3.360657956363866e-07
+    ],
+    [
+     8.614379112259485e-07,
+     2.070288246613927e-06,
+     3.3744103689059557e-07
+    ]
+   ],
+   "projected_delta_vs_production100": [
+    0.0,
+    -5.0779885896190535e-06,
+    -9.297530141338939e-07
+   ],
+   "projection_delta_vs_frozen": [
+    0.0,
+    7.702738002990372e-09,
+    1.3752412542089587e-09
+   ],
+   "luminance_max_abs_delta_vs_production100": 0.0,
+   "compressed_pixel_fraction": 0.06306966145833333,
+   "minimum_scale": 0.7725244341100698,
+   "rgb_min_before": -0.0021082693710923195,
+   "rgb_min_after": 1.6298145055770874e-09,
+   "negative_rgb_test_threshold": -1e-07,
+   "rgb_negative_fraction_before": 0.02101417824074074,
+   "rgb_negative_fraction_after": 0.0,
+   "chroma_mean_change_due_projection": [
+    -4.574154081637971e-05,
+    1.7205944459419698e-05
+   ]
+  },
+  {
+   "target_index": 0,
+   "region": 4,
+   "cross_reference_risk": [
+    [
+     0.0001363139454042539,
+     0.00018464807362761348,
+     7.898316835053265e-05
+    ],
+    [
+     0.0001363139454042539,
+     0.00017224266775883734,
+     2.387018503213767e-05
+    ],
+    [
+     0.0001363139454042539,
+     0.00016895397857297212,
+     2.3797609173925593e-05
+    ]
+   ],
+   "projected_delta_vs_production100": [
+    0.0,
+    -1.5694095054641366e-05,
+    -5.518555917660706e-05
+   ],
+   "projection_delta_vs_frozen": [
+    0.0,
+    -3.2886891858652234e-06,
+    -7.257585821207613e-08
+   ],
+   "luminance_max_abs_delta_vs_production100": 0.0,
+   "compressed_pixel_fraction": 0.055474175347222224,
+   "minimum_scale": 0.4774594170040395,
+   "rgb_min_before": -0.02454303577542305,
+   "rgb_min_after": 5.180481821298599e-09,
+   "negative_rgb_test_threshold": -1e-07,
+   "rgb_negative_fraction_before": 0.01849139178240741,
+   "rgb_negative_fraction_after": 0.0,
+   "chroma_mean_change_due_projection": [
+    -0.0001951062004081905,
+    -1.1118037946289405e-05
+   ]
+  },
+  {
+   "target_index": 0,
+   "region": 5,
+   "cross_reference_risk": [
+    [
+     8.103645086521283e-05,
+     0.0001714354002615437,
+     8.092288044281304e-05
+    ],
+    [
+     8.103645086521283e-05,
+     1.5186593373073265e-05,
+     4.776232799486024e-06
+    ],
+    [
+     8.103645086521283e-05,
+     1.535192313895095e-05,
+     4.776270088768797e-06
+    ]
+   ],
+   "projected_delta_vs_production100": [
+    0.0,
+    -0.00015608347894158214,
+    -7.614660717081279e-05
+   ],
+   "projection_delta_vs_frozen": [
+    0.0,
+    1.6532976587768644e-07,
+    3.728928277269006e-11
+   ],
+   "luminance_max_abs_delta_vs_production100": 0.0,
+   "compressed_pixel_fraction": 0.0023600260416666665,
+   "minimum_scale": 0.7757811720678445,
+   "rgb_min_before": -0.017782794311642647,
+   "rgb_min_after": 2.9336661100387573e-08,
+   "negative_rgb_test_threshold": -1e-07,
+   "rgb_negative_fraction_before": 0.0007866753472222222,
+   "rgb_negative_fraction_after": 0.0,
+   "chroma_mean_change_due_projection": [
+    -1.4400387954083271e-05,
+    -8.767018471189658e-07
+   ]
+  },
+  {
+   "target_index": 0,
+   "region": 6,
+   "cross_reference_risk": [
+    [
+     3.067635771003552e-05,
+     4.9569192924536765e-05,
+     1.217873978021089e-05
+    ],
+    [
+     3.067635771003552e-05,
+     2.2375139451469295e-05,
+     1.8649817548066494e-06
+    ],
+    [
+     3.067635771003552e-05,
+     2.2370984879671596e-05,
+     1.864507794380188e-06
+    ]
+   ],
+   "projected_delta_vs_production100": [
+    0.0,
+    -2.719820804486517e-05,
+    -1.0314231985830702e-05
+   ],
+   "projection_delta_vs_frozen": [
+    0.0,
+    -4.154571797698736e-09,
+    -4.739604264614172e-10
+   ],
+   "luminance_max_abs_delta_vs_production100": 0.0,
+   "compressed_pixel_fraction": 0.009250217013888888,
+   "minimum_scale": 0.5703860690856665,
+   "rgb_min_before": -0.00766879552975297,
+   "rgb_min_after": 5.310539563652128e-09,
+   "negative_rgb_test_threshold": -1e-07,
+   "rgb_negative_fraction_before": 0.0030834056712962963,
+   "rgb_negative_fraction_after": 0.0,
+   "chroma_mean_change_due_projection": [
+    -1.4158759768179152e-05,
+    -1.92501701690162e-07
+   ]
+  },
+  {
+   "target_index": 0,
+   "region": 7,
+   "cross_reference_risk": [
+    [
+     0.00012836517998948693,
+     0.00021129968808963895,
+     7.081094372551888e-05
+    ],
+    [
+     0.00012836517998948693,
+     0.0001142347464337945,
+     1.539251024951227e-05
+    ],
+    [
+     0.00012836517998948693,
+     0.00011044157145079225,
+     1.5363606507889926e-05
+    ]
+   ],
+   "projected_delta_vs_production100": [
+    0.0,
+    -0.0001008581166388467,
+    -5.5447337217628956e-05
+   ],
+   "projection_delta_vs_frozen": [
+    0.0,
+    -3.7931749830022454e-06,
+    -2.890374162234366e-08
+   ],
+   "luminance_max_abs_delta_vs_production100": 0.0,
+   "compressed_pixel_fraction": 0.14119466145833334,
+   "minimum_scale": 0.14504810232241513,
+   "rgb_min_before": -0.0339888259768486,
+   "rgb_min_after": 4.001776687800884e-10,
+   "negative_rgb_test_threshold": -1e-07,
+   "rgb_negative_fraction_before": 0.04855685763888889,
+   "rgb_negative_fraction_after": 0.0,
+   "chroma_mean_change_due_projection": [
+    -0.0007562920800410211,
+    1.197920755657833e-05
+   ]
+  },
+  {
+   "target_index": 0,
+   "region": 8,
+   "cross_reference_risk": [
+    [
+     0.00023639638675376773,
+     0.00032422729418613017,
+     0.00010331530211260542
+    ],
+    [
+     0.00023639638675376773,
+     0.00014270223618950695,
+     1.3847151421941817e-05
+    ],
+    [
+     0.00023639638675376773,
+     0.00013668558676727116,
+     1.3792471690976527e-05
+    ]
+   ],
+   "projected_delta_vs_production100": [
+    0.0,
+    -0.000187541707418859,
+    -8.95228295121342e-05
+   ],
+   "projection_delta_vs_frozen": [
+    0.0,
+    -6.016649422235787e-06,
+    -5.467973096529022e-08
+   ],
+   "luminance_max_abs_delta_vs_production100": 0.0,
+   "compressed_pixel_fraction": 0.06781684027777778,
+   "minimum_scale": 0.2537682440836482,
+   "rgb_min_before": -0.05127100646495819,
+   "rgb_min_after": 1.146690919995308e-08,
+   "negative_rgb_test_threshold": -1e-07,
+   "rgb_negative_fraction_before": 0.022605613425925927,
+   "rgb_negative_fraction_after": 0.0,
+   "chroma_mean_change_due_projection": [
+    -0.00104767014272511,
+    -4.821052698389394e-06
+   ]
+  },
+  {
+   "target_index": 4,
+   "region": 0,
+   "cross_reference_risk": [
+    [
+     2.529748371671303e-06,
+     3.151784767396748e-05,
+     5.735218110203277e-06
+    ],
+    [
+     2.529748371671303e-06,
+     2.094294586640899e-06,
+     3.6626101973524783e-07
+    ],
+    [
+     2.529748371671303e-06,
+     2.302892653460731e-06,
+     4.000606850240729e-07
+    ]
+   ],
+   "projected_delta_vs_production100": [
+    0.0,
+    -2.9214954338385724e-05,
+    -5.335157311492367e-06
+   ],
+   "projection_delta_vs_frozen": [
+    0.0,
+    2.0859806681983173e-07,
+    3.3799665288825054e-08
+   ],
+   "luminance_max_abs_delta_vs_production100": 0.0,
+   "compressed_pixel_fraction": 0.040852864583333336,
+   "minimum_scale": 0.780022443639369,
+   "rgb_min_before": -0.002902612090110779,
+   "rgb_min_after": 6.51925802230835e-09,
+   "negative_rgb_test_threshold": -1e-07,
+   "rgb_negative_fraction_before": 0.013608579282407407,
+   "rgb_negative_fraction_after": 0.0,
+   "chroma_mean_change_due_projection": [
+    -5.528540350496769e-05,
+    2.1474816094269045e-05
+   ]
+  },
+  {
+   "target_index": 4,
+   "region": 1,
+   "cross_reference_risk": [
+    [
+     0.0002153417735826224,
+     0.0003039885777980089,
+     0.00021131629182491452
+    ],
+    [
+     0.0002153417735826224,
+     7.435416046064347e-05,
+     1.5864352462813258e-05
+    ],
+    [
+     0.0002153417735826224,
+     7.253358489833772e-05,
+     1.5942092431942e-05
+    ]
+   ],
+   "projected_delta_vs_production100": [
+    0.0,
+    -0.0002314549928996712,
+    -0.00019537420303095132
+   ],
+   "projection_delta_vs_frozen": [
+    0.0,
+    -1.8205755623057485e-06,
+    7.773996912874281e-08
+   ],
+   "luminance_max_abs_delta_vs_production100": 0.0,
+   "compressed_pixel_fraction": 0.007731119791666667,
+   "minimum_scale": 0.509965182208505,
+   "rgb_min_before": -0.01845717243850231,
+   "rgb_min_after": 8.847564458847046e-09,
+   "negative_rgb_test_threshold": -1e-07,
+   "rgb_negative_fraction_before": 0.0025770399305555555,
+   "rgb_negative_fraction_after": 0.0,
+   "chroma_mean_change_due_projection": [
+    -6.552305421791971e-05,
+    8.318092113768216e-06
+   ]
+  },
+  {
+   "target_index": 4,
+   "region": 2,
+   "cross_reference_risk": [
+    [
+     0.00013683282304555178,
+     0.000234028251725249,
+     0.00014555749658029526
+    ],
+    [
+     0.00013683282304555178,
+     1.4664750779047608e-05,
+     8.77553793543484e-06
+    ],
+    [
+     0.00013683282304555178,
+     1.4692139302496798e-05,
+     8.775531568971928e-06
+    ]
+   ],
+   "projected_delta_vs_production100": [
+    0.0,
+    -0.0002193361142417416,
+    -0.00013678196410182863
+   ],
+   "projection_delta_vs_frozen": [
+    0.0,
+    2.738852344918996e-08,
+    -6.366462912410498e-12
+   ],
+   "luminance_max_abs_delta_vs_production100": 0.0,
+   "compressed_pixel_fraction": 0.00016276041666666666,
+   "minimum_scale": 0.9073869255728729,
+   "rgb_min_before": -0.010287346318364143,
+   "rgb_min_after": 4.936009645462036e-08,
+   "negative_rgb_test_threshold": -1e-07,
+   "rgb_negative_fraction_before": 5.425347222222222e-05,
+   "rgb_negative_fraction_after": 0.0,
+   "chroma_mean_change_due_projection": [
+    -1.0324571348974132e-06,
+    -1.4830665406861954e-07
+   ]
+  },
+  {
+   "target_index": 4,
+   "region": 3,
+   "cross_reference_risk": [
+    [
+     7.040588911877421e-07,
+     5.7786469369602855e-06,
+     1.01867397006572e-06
+    ],
+    [
+     7.040588911877421e-07,
+     9.155606335298216e-07,
+     1.558508415655524e-07
+    ],
+    [
+     7.040588911877421e-07,
+     1.0053180403701845e-06,
+     1.7002264485199703e-07
+    ]
+   ],
+   "projected_delta_vs_production100": [
+    0.0,
+    -4.773328782903263e-06,
+    -8.486513252137229e-07
+   ],
+   "projection_delta_vs_frozen": [
+    0.0,
+    8.975740684036282e-08,
+    1.4171803286444629e-08
+   ],
+   "luminance_max_abs_delta_vs_production100": 0.0,
+   "compressed_pixel_fraction": 0.071044921875,
+   "minimum_scale": 0.7317243633671829,
+   "rgb_min_before": -0.00244348356500268,
+   "rgb_min_after": 1.6298145055770874e-09,
+   "negative_rgb_test_threshold": -1e-07,
+   "rgb_negative_fraction_before": 0.02367259837962963,
+   "rgb_negative_fraction_after": 0.0,
+   "chroma_mean_change_due_projection": [
+    -5.2734983910340816e-05,
+    1.9777238776441664e-05
+   ]
+  },
+  {
+   "target_index": 4,
+   "region": 4,
+   "cross_reference_risk": [
+    [
+     0.00011503435234772041,
+     0.00016549664724152535,
+     8.422642713412642e-05
+    ],
+    [
+     0.00011503435234772041,
+     0.00015376016381196678,
+     2.642018807819113e-05
+    ],
+    [
+     0.00011503435234772041,
+     0.0001508462883066386,
+     2.6340583644923754e-05
+    ]
+   ],
+   "projected_delta_vs_production100": [
+    0.0,
+    -1.4650358934886754e-05,
+    -5.7885845308192074e-05
+   ],
+   "projection_delta_vs_frozen": [
+    0.0,
+    -2.9138755053281784e-06,
+    -7.960443326737732e-08
+   ],
+   "luminance_max_abs_delta_vs_production100": 0.0,
+   "compressed_pixel_fraction": 0.04945203993055555,
+   "minimum_scale": 0.42835374136998217,
+   "rgb_min_before": -0.019110433757305145,
+   "rgb_min_after": 5.369656719267368e-09,
+   "negative_rgb_test_threshold": -1e-07,
+   "rgb_negative_fraction_before": 0.016484013310185185,
+   "rgb_negative_fraction_after": 0.0,
+   "chroma_mean_change_due_projection": [
+    -0.0001703065645415336,
+    -1.0736835974967107e-05
+   ]
+  },
+  {
+   "target_index": 4,
+   "region": 5,
+   "cross_reference_risk": [
+    [
+     7.521643419750035e-05,
+     0.00016527267871424556,
+     8.305568189825863e-05
+    ],
+    [
+     7.521643419750035e-05,
+     1.074621468433179e-05,
+     4.62298521597404e-06
+    ],
+    [
+     7.521643419750035e-05,
+     1.0991110684699379e-05,
+     4.62122034150525e-06
+    ]
+   ],
+   "projected_delta_vs_production100": [
+    0.0,
+    -0.0001542815734865144,
+    -7.843445928301662e-05
+   ],
+   "projection_delta_vs_frozen": [
+    0.0,
+    2.448960003675893e-07,
+    -1.7648744687903672e-09
+   ],
+   "luminance_max_abs_delta_vs_production100": 0.0,
+   "compressed_pixel_fraction": 0.002414279513888889,
+   "minimum_scale": 0.7086726331128439,
+   "rgb_min_before": -0.0122721828520298,
+   "rgb_min_after": 2.7474015951156616e-08,
+   "negative_rgb_test_threshold": -1e-07,
+   "rgb_negative_fraction_before": 0.000804759837962963,
+   "rgb_negative_fraction_after": 0.0,
+   "chroma_mean_change_due_projection": [
+    -1.5501134839723818e-05,
+    -9.94000743048673e-07
+   ]
+  },
+  {
+   "target_index": 4,
+   "region": 6,
+   "cross_reference_risk": [
+    [
+     2.707064777496271e-05,
+     4.481293217395432e-05,
+     1.0499855306989048e-05
+    ],
+    [
+     2.707064777496271e-05,
+     2.0535320800263435e-05,
+     1.567338472341362e-06
+    ],
+    [
+     2.707064777496271e-05,
+     2.051087358267978e-05,
+     1.5665941646147985e-06
+    ]
+   ],
+   "projected_delta_vs_production100": [
+    0.0,
+    -2.4302058591274545e-05,
+    -8.933260687626898e-06
+   ],
+   "projection_delta_vs_frozen": [
+    0.0,
+    -2.444721758365631e-08,
+    -7.443077265634201e-10
+   ],
+   "luminance_max_abs_delta_vs_production100": 0.0,
+   "compressed_pixel_fraction": 0.011121961805555556,
+   "minimum_scale": 0.6300753125199576,
+   "rgb_min_before": -0.005766788963228464,
+   "rgb_min_after": 4.802132025361061e-09,
+   "negative_rgb_test_threshold": -1e-07,
+   "rgb_negative_fraction_before": 0.003707320601851852,
+   "rgb_negative_fraction_after": 0.0,
+   "chroma_mean_change_due_projection": [
+    -1.6257326933555305e-05,
+    -3.7723418699897593e-07
+   ]
+  },
+  {
+   "target_index": 4,
+   "region": 7,
+   "cross_reference_risk": [
+    [
+     0.0001415336155332625,
+     0.00021953723626211286,
+     6.779827526770532e-05
+    ],
+    [
+     0.0001415336155332625,
+     0.00012014215462841094,
+     1.5006600733613595e-05
+    ],
+    [
+     0.0001415336155332625,
+     0.00012034766405122355,
+     1.5002899999672081e-05
+    ]
+   ],
+   "projected_delta_vs_production100": [
+    0.0,
+    -9.918957221088931e-05,
+    -5.279537435853854e-05
+   ],
+   "projection_delta_vs_frozen": [
+    0.0,
+    2.0550942281261086e-07,
+    -3.700733941514045e-09
+   ],
+   "luminance_max_abs_delta_vs_production100": 0.0,
+   "compressed_pixel_fraction": 0.16685655381944445,
+   "minimum_scale": 0.15410790732145002,
+   "rgb_min_before": -0.026635129004716873,
+   "rgb_min_after": 4.147295840084553e-10,
+   "negative_rgb_test_threshold": -1e-07,
+   "rgb_negative_fraction_before": 0.05663158275462963,
+   "rgb_negative_fraction_after": 0.0,
+   "chroma_mean_change_due_projection": [
+    -0.0008415954653173685,
+    2.07170560315717e-05
+   ]
+  },
+  {
+   "target_index": 4,
+   "region": 8,
+   "cross_reference_risk": [
+    [
+     0.00017377178301103413,
+     0.00028162423404864967,
+     0.00010100685176439583
+    ],
+    [
+     0.00017377178301103413,
+     0.00012900150613859296,
+     1.4228314284991939e-05
+    ],
+    [
+     0.00017377178301103413,
+     0.00011732446000678465,
+     1.4158782505546696e-05
+    ]
+   ],
+   "projected_delta_vs_production100": [
+    0.0,
+    -0.0001642997667659074,
+    -8.684807107783854e-05
+   ],
+   "projection_delta_vs_frozen": [
+    0.0,
+    -1.167704613180831e-05,
+    -6.953177944524214e-08
+   ],
+   "luminance_max_abs_delta_vs_production100": 0.0,
+   "compressed_pixel_fraction": 0.06700303819444445,
+   "minimum_scale": 0.3541338320559649,
+   "rgb_min_before": -0.04843825474381447,
+   "rgb_min_after": 1.1990778148174286e-08,
+   "negative_rgb_test_threshold": -1e-07,
+   "rgb_negative_fraction_before": 0.022334346064814815,
+   "rgb_negative_fraction_after": 0.0,
+   "chroma_mean_change_due_projection": [
+    -0.001004667952656746,
+    -5.661166142090224e-06
+   ]
+  },
+  {
+   "target_index": 8,
+   "region": 0,
+   "cross_reference_risk": [
+    [
+     2.9457619348249864e-06,
+     3.662975723273121e-05,
+     6.56334987070295e-06
+    ],
+    [
+     2.9457619348249864e-06,
+     4.037360213260399e-06,
+     6.884945378260454e-07
+    ],
+    [
+     2.9457619348249864e-06,
+     4.315769274398917e-06,
+     7.320134045585291e-07
+    ]
+   ],
+   "projected_delta_vs_production100": [
+    0.0,
+    -3.231398659409024e-05,
+    -5.831336238770746e-06
+   ],
+   "projection_delta_vs_frozen": [
+    0.0,
+    2.7840906113851815e-07,
+    4.351886673248373e-08
+   ],
+   "luminance_max_abs_delta_vs_production100": 0.0,
+   "compressed_pixel_fraction": 0.03591579861111111,
+   "minimum_scale": 0.8202981307376133,
+   "rgb_min_before": -0.0030513890087604523,
+   "rgb_min_after": 5.587935447692871e-09,
+   "negative_rgb_test_threshold": -1e-07,
+   "rgb_negative_fraction_before": 0.01197193287037037,
+   "rgb_negative_fraction_after": 0.0,
+   "chroma_mean_change_due_projection": [
+    -5.450831667985767e-05,
+    2.1151341570657678e-05
+   ]
+  },
+  {
+   "target_index": 8,
+   "region": 1,
+   "cross_reference_risk": [
+    [
+     0.00018057457054965198,
+     0.00028634892078116536,
+     0.00019911053823307157
+    ],
+    [
+     0.00018057457054965198,
+     4.4577547669177875e-05,
+     1.3191736798034981e-05
+    ],
+    [
+     0.00018057457054965198,
+     4.2550262151053175e-05,
+     1.3256952115625609e-05
+    ]
+   ],
+   "projected_delta_vs_production100": [
+    0.0,
+    -0.00024379865499213338,
+    -0.00018585358338896185
+   ],
+   "projection_delta_vs_frozen": [
+    0.0,
+    -2.0272855181246996e-06,
+    6.521531759062782e-08
+   ],
+   "luminance_max_abs_delta_vs_production100": 0.0,
+   "compressed_pixel_fraction": 0.004964192708333333,
+   "minimum_scale": 0.4337227420865584,
+   "rgb_min_before": -0.025147920474410057,
+   "rgb_min_after": 8.847564458847046e-09,
+   "negative_rgb_test_threshold": -1e-07,
+   "rgb_negative_fraction_before": 0.0016547309027777778,
+   "rgb_negative_fraction_after": 0.0,
+   "chroma_mean_change_due_projection": [
+    -5.771227370132692e-05,
+    6.9292386797314975e-06
+   ]
+  },
+  {
+   "target_index": 8,
+   "region": 2,
+   "cross_reference_risk": [
+    [
+     0.00013478982145898044,
+     0.00022152153542265296,
+     0.0001374603307340294
+    ],
+    [
+     0.00013478982145898044,
+     1.3779917935607955e-05,
+     6.127439064584905e-06
+    ],
+    [
+     0.00013478982145898044,
+     1.3816191312798765e-05,
+     6.1249484133441e-06
+    ]
+   ],
+   "projected_delta_vs_production100": [
+    0.0,
+    -0.0002077053504763171,
+    -0.00013133538595866412
+   ],
+   "projection_delta_vs_frozen": [
+    0.0,
+    3.62733771908097e-08,
+    -2.490651240805164e-09
+   ],
+   "luminance_max_abs_delta_vs_production100": 0.0,
+   "compressed_pixel_fraction": 0.00018988715277777778,
+   "minimum_scale": 0.8897095348260422,
+   "rgb_min_before": -0.013684459030628204,
+   "rgb_min_after": 5.4016709327697754e-08,
+   "negative_rgb_test_threshold": -1e-07,
+   "rgb_negative_fraction_before": 6.329571759259259e-05,
+   "rgb_negative_fraction_after": 0.0,
+   "chroma_mean_change_due_projection": [
+    -1.3576710671259207e-06,
+    -2.1562320284829184e-07
+   ]
+  },
+  {
+   "target_index": 8,
+   "region": 3,
+   "cross_reference_risk": [
+    [
+     8.002944014151581e-07,
+     6.647917871305253e-06,
+     1.170825839835743e-06
+    ],
+    [
+     8.002944014151581e-07,
+     1.1330781717333593e-06,
+     1.8846964167096303e-07
+    ],
+    [
+     8.002944014151581e-07,
+     1.278796958104067e-06,
+     2.1034627195604116e-07
+    ]
+   ],
+   "projected_delta_vs_production100": [
+    0.0,
+    -5.369121026888024e-06,
+    -9.60479610512266e-07
+   ],
+   "projection_delta_vs_frozen": [
+    0.0,
+    1.4571878637070768e-07,
+    2.1876630285078136e-08
+   ],
+   "luminance_max_abs_delta_vs_production100": 0.0,
+   "compressed_pixel_fraction": 0.083251953125,
+   "minimum_scale": 0.7131994160474173,
+   "rgb_min_before": -0.0024802638217806816,
+   "rgb_min_after": 1.6298145055770874e-09,
+   "negative_rgb_test_threshold": -1e-07,
+   "rgb_negative_fraction_before": 0.027723524305555556,
+   "rgb_negative_fraction_after": 0.0,
+   "chroma_mean_change_due_projection": [
+    -6.772366759832948e-05,
+    2.543731352488976e-05
+   ]
+  },
+  {
+   "target_index": 8,
+   "region": 4,
+   "cross_reference_risk": [
+    [
+     0.00010589181329123676,
+     0.00016653529019095004,
+     8.09681077953428e-05
+    ],
+    [
+     0.00010589181329123676,
+     0.00016273379151243716,
+     2.4965735065052286e-05
+    ],
+    [
+     0.00010589181329123676,
+     0.00015864407760091126,
+     2.4832517738104798e-05
+    ]
+   ],
+   "projected_delta_vs_production100": [
+    0.0,
+    -7.891212590038776e-06,
+    -5.613559187622741e-05
+   ],
+   "projection_delta_vs_frozen": [
+    0.0,
+    -4.089713911525905e-06,
+    -1.332173269474879e-07
+   ],
+   "luminance_max_abs_delta_vs_production100": 0.0,
+   "compressed_pixel_fraction": 0.06228298611111111,
+   "minimum_scale": 0.4808249819036773,
+   "rgb_min_before": -0.02554372511804104,
+   "rgb_min_after": 4.976755008101463e-09,
+   "negative_rgb_test_threshold": -1e-07,
+   "rgb_negative_fraction_before": 0.02076099537037037,
+   "rgb_negative_fraction_after": 0.0,
+   "chroma_mean_change_due_projection": [
+    -0.0002393197937635705,
+    -1.6978649000520818e-05
+   ]
+  },
+  {
+   "target_index": 8,
+   "region": 5,
+   "cross_reference_risk": [
+    [
+     7.672690117033198e-05,
+     0.000169141567312181,
+     8.112013892969117e-05
+    ],
+    [
+     7.672690117033198e-05,
+     1.0772350833576638e-05,
+     4.418361641000956e-06
+    ],
+    [
+     7.672690117033198e-05,
+     1.103126305679325e-05,
+     4.417442141857464e-06
+    ]
+   ],
+   "projected_delta_vs_production100": [
+    0.0,
+    -0.00015811029879841954,
+    -7.67026940593496e-05
+   ],
+   "projection_delta_vs_frozen": [
+    0.0,
+    2.589122232166119e-07,
+    -9.194991434924304e-10
+   ],
+   "luminance_max_abs_delta_vs_production100": 0.0,
+   "compressed_pixel_fraction": 0.0023600260416666665,
+   "minimum_scale": 0.7158160454051211,
+   "rgb_min_before": -0.0199135672301054,
+   "rgb_min_after": 2.2817403078079224e-08,
+   "negative_rgb_test_threshold": -1e-07,
+   "rgb_negative_fraction_before": 0.0007866753472222222,
+   "rgb_negative_fraction_after": 0.0,
+   "chroma_mean_change_due_projection": [
+    -1.6479727491969243e-05,
+    -1.0726083701229072e-06
+   ]
+  },
+  {
+   "target_index": 8,
+   "region": 6,
+   "cross_reference_risk": [
+    [
+     1.947327473317273e-05,
+     3.82053003704641e-05,
+     1.0483087862667162e-05
+    ],
+    [
+     1.947327473317273e-05,
+     1.8904145690612495e-05,
+     1.577094280946767e-06
+    ],
+    [
+     1.947327473317273e-05,
+     1.8860506315832026e-05,
+     1.576624185872788e-06
+    ]
+   ],
+   "projected_delta_vs_production100": [
+    0.0,
+    -1.9344794054632075e-05,
+    -8.90646333573386e-06
+   ],
+   "projection_delta_vs_frozen": [
+    0.0,
+    -4.363937478046864e-08,
+    -4.700950739788823e-10
+   ],
+   "luminance_max_abs_delta_vs_production100": 0.0,
+   "compressed_pixel_fraction": 0.008382161458333334,
+   "minimum_scale": 0.3961129012972824,
+   "rgb_min_before": -0.006352593656629324,
+   "rgb_min_after": 5.238689482212067e-09,
+   "negative_rgb_test_threshold": -1e-07,
+   "rgb_negative_fraction_before": 0.0027940538194444445,
+   "rgb_negative_fraction_after": 0.0,
+   "chroma_mean_change_due_projection": [
+    -1.0974983524647541e-05,
+    -1.191415606172086e-07
+   ]
+  },
+  {
+   "target_index": 8,
+   "region": 7,
+   "cross_reference_risk": [
+    [
+     9.056821727426723e-05,
+     0.0001725236652418971,
+     6.255562766455114e-05
+    ],
+    [
+     9.056821727426723e-05,
+     0.0001001954879029654,
+     1.2922597306896932e-05
+    ],
+    [
+     9.056821727426723e-05,
+     9.34664931264706e-05,
+     1.2935116501466837e-05
+    ]
+   ],
+   "projected_delta_vs_production100": [
+    0.0,
+    -7.905717211542651e-05,
+    -4.96205102535896e-05
+   ],
+   "projection_delta_vs_frozen": [
+    0.0,
+    -6.728994776494801e-06,
+    1.2519194569904357e-08
+   ],
+   "luminance_max_abs_delta_vs_production100": 0.0,
+   "compressed_pixel_fraction": 0.164794921875,
+   "minimum_scale": 0.16015987058783238,
+   "rgb_min_before": -0.028214015066623688,
+   "rgb_min_after": 4.0745362639427185e-10,
+   "negative_rgb_test_threshold": -1e-07,
+   "rgb_negative_fraction_before": 0.056939019097222224,
+   "rgb_negative_fraction_after": 0.0,
+   "chroma_mean_change_due_projection": [
+    -0.000873502460308373,
+    2.88074734271504e-05
+   ]
+  },
+  {
+   "target_index": 8,
+   "region": 8,
+   "cross_reference_risk": [
+    [
+     0.00018811359768733382,
+     0.00027271718136034906,
+     0.00010166044376092032
+    ],
+    [
+     0.00018811359768733382,
+     0.00013396868598647416,
+     1.3636435141961556e-05
+    ],
+    [
+     0.00018811359768733382,
+     0.00012276368215680122,
+     1.3548462447943166e-05
+    ]
+   ],
+   "projected_delta_vs_production100": [
+    0.0,
+    -0.00014995349920354784,
+    -8.811197767499834e-05
+   ],
+   "projection_delta_vs_frozen": [
+    0.0,
+    -1.1205003829672933e-05,
+    -8.797269401839003e-08
+   ],
+   "luminance_max_abs_delta_vs_production100": 0.0,
+   "compressed_pixel_fraction": 0.06778971354166667,
+   "minimum_scale": 0.15730540172842047,
+   "rgb_min_before": -0.05743594840168953,
+   "rgb_min_after": 5.587935447692871e-09,
+   "negative_rgb_test_threshold": -1e-07,
+   "rgb_negative_fraction_before": 0.022605613425925927,
+   "rgb_negative_fraction_after": 0.0,
+   "chroma_mean_change_due_projection": [
+    -0.0010528413113206625,
+    -9.331764886155725e-06
+   ]
+  },
+  {
+   "target_index": 13,
+   "region": 0,
+   "cross_reference_risk": [
+    [
+     3.092557562922593e-06,
+     3.584045771276578e-05,
+     6.499514256574912e-06
+    ],
+    [
+     3.092557562922593e-06,
+     4.0240374801214784e-06,
+     7.03607668128825e-07
+    ],
+    [
+     3.092557562922593e-06,
+     4.45323667008779e-06,
+     7.698479862483509e-07
+    ]
+   ],
+   "projected_delta_vs_production100": [
+    0.0,
+    -3.1387222406920046e-05,
+    -5.7296660997963045e-06
+   ],
+   "projection_delta_vs_frozen": [
+    0.0,
+    4.291991899663117e-07,
+    6.624031811952591e-08
+   ],
+   "luminance_max_abs_delta_vs_production100": 0.0,
+   "compressed_pixel_fraction": 0.04554578993055555,
+   "minimum_scale": 0.8514541955709267,
+   "rgb_min_before": -0.002758607268333435,
+   "rgb_min_after": 6.51925802230835e-09,
+   "negative_rgb_test_threshold": -1e-07,
+   "rgb_negative_fraction_before": 0.015181929976851851,
+   "rgb_negative_fraction_after": 0.0,
+   "chroma_mean_change_due_projection": [
+    -7.972997264005244e-05,
+    3.100746835116297e-05
+   ]
+  },
+  {
+   "target_index": 13,
+   "region": 1,
+   "cross_reference_risk": [
+    [
+     0.00014469659072346985,
+     0.00023815868189558387,
+     0.00020255403069313616
+    ],
+    [
+     0.00014469659072346985,
+     2.7696361939888448e-05,
+     1.3004926586290821e-05
+    ],
+    [
+     0.00014469659072346985,
+     2.5710334739414975e-05,
+     1.3042201317148283e-05
+    ]
+   ],
+   "projected_delta_vs_production100": [
+    0.0,
+    -0.00021244834351819009,
+    -0.00018951183301396668
+   ],
+   "projection_delta_vs_frozen": [
+    0.0,
+    -1.9860272004734725e-06,
+    3.727473085746169e-08
+   ],
+   "luminance_max_abs_delta_vs_production100": 0.0,
+   "compressed_pixel_fraction": 0.002875434027777778,
+   "minimum_scale": 0.4581861566409549,
+   "rgb_min_before": -0.022039536386728287,
+   "rgb_min_after": 1.210719347000122e-08,
+   "negative_rgb_test_threshold": -1e-07,
+   "rgb_negative_fraction_before": 0.0009584780092592593,
+   "rgb_negative_fraction_after": 0.0,
+   "chroma_mean_change_due_projection": [
+    -4.330715455580503e-05,
+    3.329030505483388e-06
+   ]
+  },
+  {
+   "target_index": 13,
+   "region": 2,
+   "cross_reference_risk": [
+    [
+     0.00012824503937736154,
+     0.00020991420024074614,
+     0.00013662321725860238
+    ],
+    [
+     0.00012824503937736154,
+     1.6671054254402407e-05,
+     6.069087248761207e-06
+    ],
+    [
+     0.00012824503937736154,
+     1.667104515945539e-05,
+     6.069124083296629e-06
+    ]
+   ],
+   "projected_delta_vs_production100": [
+    0.0,
+    -0.00019324314780533314,
+    -0.0001305540936300531
+   ],
+   "projection_delta_vs_frozen": [
+    0.0,
+    -9.094947017729282e-12,
+    3.6834535421803594e-11
+   ],
+   "luminance_max_abs_delta_vs_production100": 0.0,
+   "compressed_pixel_fraction": 5.425347222222222e-05,
+   "minimum_scale": 0.9611525111077803,
+   "rgb_min_before": -0.0012162942439317703,
+   "rgb_min_after": 5.774199962615967e-08,
+   "negative_rgb_test_threshold": -1e-07,
+   "rgb_negative_fraction_before": 1.808449074074074e-05,
+   "rgb_negative_fraction_after": 0.0,
+   "chroma_mean_change_due_projection": [
+    -6.492094684062977e-08,
+    -9.131984057830778e-09
+   ]
+  },
+  {
+   "target_index": 13,
+   "region": 3,
+   "cross_reference_risk": [
+    [
+     8.032814093894558e-07,
+     6.551576007041149e-06,
+     1.1290075008218992e-06
+    ],
+    [
+     8.032814093894558e-07,
+     1.1832673862954834e-06,
+     2.0617478924123134e-07
+    ],
+    [
+     8.032814093894558e-07,
+     1.2926252566103358e-06,
+     2.2201136573585245e-07
+    ]
+   ],
+   "projected_delta_vs_production100": [
+    0.0,
+    -5.258950750430813e-06,
+    -9.069961492969014e-07
+   ],
+   "projection_delta_vs_frozen": [
+    0.0,
+    1.0935787031485233e-07,
+    1.5836576494621113e-08
+   ],
+   "luminance_max_abs_delta_vs_production100": 0.0,
+   "compressed_pixel_fraction": 0.0766330295138889,
+   "minimum_scale": 0.7243477324645604,
+   "rgb_min_before": -0.0018570059910416603,
+   "rgb_min_after": 1.6298145055770874e-09,
+   "negative_rgb_test_threshold": -1e-07,
+   "rgb_negative_fraction_before": 0.025544343171296297,
+   "rgb_negative_fraction_after": 0.0,
+   "chroma_mean_change_due_projection": [
+    -5.4523246944881976e-05,
+    2.0557114112307318e-05
+   ]
+  },
+  {
+   "target_index": 13,
+   "region": 4,
+   "cross_reference_risk": [
+    [
+     0.00010049202683148906,
+     0.00015987525694072247,
+     8.52009397931397e-05
+    ],
+    [
+     0.00010049202683148906,
+     0.00014532088243868202,
+     2.7633928766590543e-05
+    ],
+    [
+     0.00010049202683148906,
+     0.0001416662271367386,
+     2.753456101345364e-05
+    ]
+   ],
+   "projected_delta_vs_production100": [
+    0.0,
+    -1.8209029803983867e-05,
+    -5.766638059867546e-05
+   ],
+   "projection_delta_vs_frozen": [
+    0.0,
+    -3.6546553019434214e-06,
+    -9.936775313690305e-08
+   ],
+   "luminance_max_abs_delta_vs_production100": 0.0,
+   "compressed_pixel_fraction": 0.05666775173611111,
+   "minimum_scale": 0.5287452142215952,
+   "rgb_min_before": -0.017880059778690338,
+   "rgb_min_after": 4.94765117764473e-09,
+   "negative_rgb_test_threshold": -1e-07,
+   "rgb_negative_fraction_before": 0.018889250578703703,
+   "rgb_negative_fraction_after": 0.0,
+   "chroma_mean_change_due_projection": [
+    -0.00021501793526113033,
+    -1.354973665002035e-05
+   ]
+  },
+  {
+   "target_index": 13,
+   "region": 5,
+   "cross_reference_risk": [
+    [
+     7.461791392415762e-05,
+     0.00016380143642891198,
+     7.732241647318006e-05
+    ],
+    [
+     7.461791392415762e-05,
+     1.0282956282026134e-05,
+     3.938245299650589e-06
+    ],
+    [
+     7.461791392415762e-05,
+     1.0549839316809084e-05,
+     3.940306669392157e-06
+    ]
+   ],
+   "projected_delta_vs_production100": [
+    0.0,
+    -0.0001532516034785658,
+    -7.338210707530379e-05
+   ],
+   "projection_delta_vs_frozen": [
+    0.0,
+    2.6688303478294984e-07,
+    2.061369741568342e-09
+   ],
+   "luminance_max_abs_delta_vs_production100": 0.0,
+   "compressed_pixel_fraction": 0.0025227864583333335,
+   "minimum_scale": 0.7368632625152381,
+   "rgb_min_before": -0.01874592900276184,
+   "rgb_min_after": 2.468004822731018e-08,
+   "negative_rgb_test_threshold": -1e-07,
+   "rgb_negative_fraction_before": 0.0008409288194444445,
+   "rgb_negative_fraction_after": 0.0,
+   "chroma_mean_change_due_projection": [
+    -1.639910988160409e-05,
+    -8.656788850203156e-07
+   ]
+  },
+  {
+   "target_index": 13,
+   "region": 6,
+   "cross_reference_risk": [
+    [
+     1.0164278137381189e-05,
+     2.8064539947081357e-05,
+     9.684003998700064e-06
+    ],
+    [
+     1.0164278137381189e-05,
+     1.6073865481303073e-05,
+     1.5228988559101708e-06
+    ],
+    [
+     1.0164278137381189e-05,
+     1.5834393707336858e-05,
+     1.5218397493299562e-06
+    ]
+   ],
+   "projected_delta_vs_production100": [
+    0.0,
+    -1.22301462397445e-05,
+    -8.162163794622757e-06
+   ],
+   "projection_delta_vs_frozen": [
+    0.0,
+    -2.3947177396621555e-07,
+    -1.059106580214575e-09
+   ],
+   "luminance_max_abs_delta_vs_production100": 0.0,
+   "compressed_pixel_fraction": 0.013943142361111112,
+   "minimum_scale": 0.33977468937920635,
+   "rgb_min_before": -0.005764679051935673,
+   "rgb_min_after": 5.180481821298599e-09,
+   "negative_rgb_test_threshold": -1e-07,
+   "rgb_negative_fraction_before": 0.004647714120370371,
+   "rgb_negative_fraction_after": 0.0,
+   "chroma_mean_change_due_projection": [
+    -2.0500514438026585e-05,
+    -1.5575443512716447e-07
+   ]
+  },
+  {
+   "target_index": 13,
+   "region": 7,
+   "cross_reference_risk": [
+    [
+     8.195557893486694e-05,
+     0.00015750252350699157,
+     5.995288665872067e-05
+    ],
+    [
+     8.195557893486694e-05,
+     9.362984565086663e-05,
+     1.181854349852074e-05
+    ],
+    [
+     8.195557893486694e-05,
+     8.479969983454794e-05,
+     1.1795195860031527e-05
+    ]
+   ],
+   "projected_delta_vs_production100": [
+    0.0,
+    -7.270282367244363e-05,
+    -4.8157689889194444e-05
+   ],
+   "projection_delta_vs_frozen": [
+    0.0,
+    -8.83014581631869e-06,
+    -2.334763848921284e-08
+   ],
+   "luminance_max_abs_delta_vs_production100": 0.0,
+   "compressed_pixel_fraction": 0.1533745659722222,
+   "minimum_scale": 0.13908151588055007,
+   "rgb_min_before": -0.029274852946400642,
+   "rgb_min_after": 4.0745362639427185e-10,
+   "negative_rgb_test_threshold": -1e-07,
+   "rgb_negative_fraction_before": 0.05293330439814815,
+   "rgb_negative_fraction_after": 0.0,
+   "chroma_mean_change_due_projection": [
+    -0.0007883933722041547,
+    2.6080429961439222e-05
+   ]
+  },
+  {
+   "target_index": 13,
+   "region": 8,
+   "cross_reference_risk": [
+    [
+     0.00015076802810654044,
+     0.0002528616169001907,
+     0.00010194255446549505
+    ],
+    [
+     0.00015076802810654044,
+     0.00012435537064448,
+     1.3532227967516519e-05
+    ],
+    [
+     0.00015076802810654044,
+     0.00011102289863629267,
+     1.3476600543071982e-05
+    ]
+   ],
+   "projected_delta_vs_production100": [
+    0.0,
+    -0.00014183871098794043,
+    -8.846595301292837e-05
+   ],
+   "projection_delta_vs_frozen": [
+    0.0,
+    -1.3332472008187324e-05,
+    -5.562742444453761e-08
+   ],
+   "luminance_max_abs_delta_vs_production100": 0.0,
+   "compressed_pixel_fraction": 0.06895616319444445,
+   "minimum_scale": 0.27155042103683213,
+   "rgb_min_before": -0.049987439066171646,
+   "rgb_min_after": 9.807990863919258e-09,
+   "negative_rgb_test_threshold": -1e-07,
+   "rgb_negative_fraction_before": 0.022985387731481483,
+   "rgb_negative_fraction_after": 0.0,
+   "chroma_mean_change_due_projection": [
+    -0.001027819700539112,
+    -2.2211597752175294e-06
+   ]
+  }
+ ],
+ "pixels": {
+  "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-shared-chroma-safe\\20261027T233345Z\\projected-shared-chroma.npz",
+  "sha256": "a94e23a0aa4a675265497a157090042aa78c871f54f14da972143fdc56b579c4"
+ },
+ "preview": {
+  "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\build-patch_noise\\burst-shared-chroma-safe\\20261027T233345Z\\shared-chroma-output-contract.png",
+  "sha256": "f20e1d29b5a9826209bc1b037dbe15f56d1ed517438e01671a76b6dfe0dc250d"
+ },
+ "runner_source": "\"\"\"Parameter-free output-contract audit of the frozen shared-chroma experiment.\"\"\"\nfrom datetime import datetime,timezone\nimport json\nfrom pathlib import Path\nimport numpy as np\nfrom PIL import Image,ImageDraw,ImageCms\nfrom study_noise_burst_shared_chroma import rgb\nfrom study_noise_burst_reference import align\nfrom audit_noise_burst_reference import display\nfrom analysis.render import available_memory\nfrom study_noise_neighbourhoods import ROOT,sha256,git\n\n\ndef project(planes):\n    \"\"\"Compress toward same-Y grey only where working RGB would be negative; HDR retained.\"\"\"\n    p=np.asarray(planes,float)\n    if not np.isfinite(p).all() or np.min(p[0])<0:raise ValueError('Finite nonnegative luminance required')\n    minimum=rgb(p).min(axis=-1);y=p[0]\n    scale=np.ones_like(y);bad=minimum<0\n    scale[bad]=y[bad]/np.maximum(y[bad]-minimum[bad],1e-30)\n    # Numerical margin for the final float32 archive, not a quality parameter.\n    scale[bad]*=1-4*np.finfo(np.float32).eps\n    out=p.copy();out[1:]*=scale\n    return out.astype(np.float32),scale\n\n\ndef run():\n    started=datetime.now(timezone.utc)\n    if (available_memory() or 0)<2*1024**3:raise ValueError('Need2GiB for reference-conditioned crop audit')\n    names=('chroma-partagee-rafale-bruit-v001-20261027T232722Z.json',\n        'temoins-production-rafale-bruit-v001-20261027T230748Z.json',\n        'wiener-bandes-rafale-bruit-v001-20261027T231611Z.json',\n        'contextes-reference-rafale-bruit-v001-20261027T232645Z.json')\n    paths=[ROOT/'docs/validation/raw'/name for name in names];hashes=[sha256(p) for p in paths]\n    data=[json.loads(p.read_text(encoding='utf-8')) for p in paths];arrays=[]\n    for parent in (data[0],data[1],data[3]):\n        p=Path(parent['pixels']['path'])\n        if sha256(p)!=parent['pixels']['sha256']:raise ValueError('Changed archive')\n        with np.load(p,allow_pickle=False) as saved:arrays.append(saved['planes'].copy())\n    candidate,production,reference=arrays;records=[];outputs=[]\n    folder=ROOT/'build-patch_noise/burst-shared-chroma-safe'/started.strftime('%Y%m%dT%H%M%SZ');folder.mkdir(parents=True,exist_ok=False)\n    contact=Image.new('RGB',(5*224,4*240),(35,35,35));draw=ImageDraw.Draw(contact)\n    for col,label in enumerate(('Original','Production100','Shared before*','Shared constrained*','Reference14*')):draw.text((col*224+5,5),label,fill='white')\n    for ki,target in enumerate((0,4,8,13)):\n        group=[]\n        for roi in range(9):\n            before=candidate[ki,roi];after,scale=project(before);group.append(after)\n            if not np.array_equal(after[0],production[ki,2,roi,0]):raise ValueError('Y invariant broken')\n            old=next(r for r in data[2]['records'] if r['target_index']==target and r['region']==roi)\n            sampled=[]\n            for j,matrix in enumerate(old['target_to_reference_affines']):\n                m=np.asarray(matrix,float);m[:,2]+=128;sampled.append(align(reference[j,roi],m))\n            sampled=np.stack(sampled)[:,:,:,32:-32][:,:,32:-32,:];valid=np.isfinite(sampled).all(axis=(0,1))\n            if valid.mean()<.8:raise ValueError('Reference overlap no longer valid')\n            a=sampled[::2].mean(axis=0);b=sampled[1::2].mean(axis=0)\n            variants=np.stack((production[ki,2,roi],before,after))[:,:,32:-32,32:-32]\n            risk=np.mean((variants[...,valid]-a[...,valid])*(variants[...,valid]-b[...,valid]),axis=-1)\n            record=dict(target_index=target,region=roi,cross_reference_risk=risk.tolist(),\n                projected_delta_vs_production100=(risk[2]-risk[0]).tolist(),projection_delta_vs_frozen=(risk[2]-risk[1]).tolist(),\n                luminance_max_abs_delta_vs_production100=float(np.max(abs(after[0]-production[ki,2,roi,0]))),\n                compressed_pixel_fraction=float(np.mean(scale[32:-32,32:-32]<1)),minimum_scale=float(scale.min()),\n                rgb_min_before=float(rgb(before[:,32:-32,32:-32]).min()),rgb_min_after=float(rgb(after[:,32:-32,32:-32]).min()),\n                negative_rgb_test_threshold=-1e-7,\n                rgb_negative_fraction_before=float(np.mean(rgb(before[:,32:-32,32:-32]) < -1e-7)),\n                rgb_negative_fraction_after=float(np.mean(rgb(after[:,32:-32,32:-32]) < -1e-7)),\n                chroma_mean_change_due_projection=np.mean(after[1:,32:-32,32:-32]-before[1:,32:-32,32:-32],axis=(-2,-1)).tolist())\n            if record['rgb_negative_fraction_after']!=0:raise ValueError('Working RGB nonnegative contract failed')\n            records.append(record)\n            if target==0 and roi in (0,2,4,8):\n                row=(0,2,4,8).index(roi);draw.text((5,row*240+25),f'ROI{roi}: *reference-conditioned, not single-image deployable',fill='white')\n                ref=np.where(np.isfinite((a+b)/2),(a+b)/2,production[ki,0,roi,:,32:-32,32:-32])\n                pictures=[production[ki,0,roi,:,32:-32,32:-32],variants[0],variants[1],variants[2],ref]\n                for col,picture in enumerate(pictures):contact.paste(Image.fromarray(display(picture)),(col*224+16,row*240+40))\n        outputs.append(group)\n    archive=folder/'projected-shared-chroma.npz'\n    with archive.open('xb') as handle:np.savez_compressed(handle,planes=np.asarray(outputs,np.float32))\n    picture=folder/'shared-chroma-output-contract.png';contact.save(picture,icc_profile=ImageCms.ImageCmsProfile(ImageCms.createProfile('sRGB')).tobytes())\n    if hashes!=[sha256(p) for p in paths]:raise ValueError('Changed parents')\n    now=datetime.now(timezone.utc);output=ROOT/'docs/validation/raw'/f'contrat-chroma-partagee-rafale-bruit-v002-{now.strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n    previous=ROOT/'docs/validation/raw/contrat-chroma-partagee-rafale-bruit-v001-20261027T232945Z.json'\n    prior=json.loads(previous.read_text(encoding='utf-8'))\n    numerical_keys=('cross_reference_risk','projected_delta_vs_production100','projection_delta_vs_frozen',\n        'luminance_max_abs_delta_vs_production100','compressed_pixel_fraction','minimum_scale','rgb_min_before','rgb_min_after')\n    if any(new[k]!=old[k] for new,old in zip(records,prior['records']) for k in numerical_keys):raise ValueError('Metadata correction changed numerical results')\n    result=dict(schema_version=1,data_version=2,started_at_utc=started.isoformat(),completed_at_utc=now.isoformat(),\n        correction=dict(parent=dict(path=str(previous),sha256=sha256(previous)),reason='Clarify numericthresholdfieldnames:explicit -1e-7. Same reconstruction/scores verified exactly;not new independent study.'),\n        parents=[dict(path=str(p),sha256=h) for p,h in zip(paths,hashes)],records=records,\n        pixels=dict(path=str(archive),sha256=sha256(archive)),preview=dict(path=str(picture),sha256=sha256(picture)),\n        runner_source=Path(__file__).read_text(encoding='utf-8'),runner_sha256=sha256(Path(__file__)),commit=git('rev-parse','HEAD'),\n        rules='Fixed deterministic physicaloutputconstraint after frozen sharedchroma,NOvariance/gain/windowretuning. SameYgreycompressionCoCgscalaronlyifnegativeworkingRGB. PreserveYandHDR;no upper1clip. Numericalmargin4float32eps. Reportprojectionrisk/DCimpact;no DC restoration after projection since that could breaknonnegativity.',\n        limitations='Feasibility remainsreference-conditioned on samecamera/sceneISO4000;notdeployable singleimage or independentfinalvalidation. WorkingRec2020nonnegativitynotdisplay sRGBgamutmapping. Referencealignmentimperfect. No production/merge/push/tag or sealed decode.',\n        verdict='bounded_reference_conditioned_chroma_experiment_not_stable_product')\n    with output.open('x',encoding='utf-8') as handle:json.dump(result,handle,ensure_ascii=False,indent=1,allow_nan=False)\n    print('RESULT',output,'PREVIEW',picture,flush=True)\n\n\nif __name__=='__main__':run()\n",
+ "runner_sha256": "b241da88fc546dc868751c8af58c015aefad51aafd1e8109b05d0ff3ee911e20",
+ "commit": "2a40c5c6cff78d40294393a68827f4a24555c724",
+ "rules": "Fixed deterministic physicaloutputconstraint after frozen sharedchroma,NOvariance/gain/windowretuning. SameYgreycompressionCoCgscalaronlyifnegativeworkingRGB. PreserveYandHDR;no upper1clip. Numericalmargin4float32eps. Reportprojectionrisk/DCimpact;no DC restoration after projection since that could breaknonnegativity.",
+ "limitations": "Feasibility remainsreference-conditioned on samecamera/sceneISO4000;notdeployable singleimage or independentfinalvalidation. WorkingRec2020nonnegativitynotdisplay sRGBgamutmapping. Referencealignmentimperfect. No production/merge/push/tag or sealed decode.",
+ "verdict": "bounded_reference_conditioned_chroma_experiment_not_stable_product"
+}

@@ -1,0 +1,723 @@
+{
+ "schema_version": 1,
+ "data_version": 1,
+ "started_at_utc": "2026-10-27T23:11:53.051411+00:00",
+ "completed_at_utc": "2026-10-27T23:13:11.464827+00:00",
+ "freeze": {
+  "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\gel-transfert-bandes-rafale-bruit-v001-20261027T231153Z.json",
+  "sha256": "159ac4e59a1730c91779a22f6fac0fd2c9c962b1454ceaccd04b258afa894f09"
+ },
+ "native": {
+  "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\extraction-native-rafale-validation-bruit-v001-20261027T231306Z.json",
+  "sha256": "7f9be20dd9232f9246b27583df45b32c7337810410cacc0af5113b413bb44839"
+ },
+ "motion": [
+  {
+   "reference_to_frame_preview_affine": [
+    [
+     1.0,
+     -0.0,
+     0.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.0
+    ]
+   ],
+   "tracked_points": 191,
+   "inliers": 191,
+   "inlier_fraction": 1.0,
+   "median_inlier_residual_preview_pixels": 0.0,
+   "rotation_degrees": 0.0,
+   "scale": 1.0,
+   "index": 14,
+   "sha256": "527d4c5045b058c8a19d0c2a0d5c39e1b2ccae482b415e32c441112458b4e462",
+   "preview_to_cfa_plane_scale": [
+    4.34875,
+    4.350844277673546
+   ]
+  },
+  {
+   "reference_to_frame_preview_affine": [
+    [
+     1.0001567915756189,
+     -0.0003095502664673146,
+     -0.00173877773691003
+    ],
+    [
+     0.0003095502664673146,
+     1.0001567915756189,
+     -0.4463059074046345
+    ]
+   ],
+   "tracked_points": 191,
+   "inliers": 191,
+   "inlier_fraction": 1.0,
+   "median_inlier_residual_preview_pixels": 0.024800729006528854,
+   "rotation_degrees": 0.017733142842004408,
+   "scale": 1.0001568394787907,
+   "index": 15,
+   "sha256": "8ab9b619d15c4b1c50bd11705a876219ac907dd9db79152ae21e3f971457098b",
+   "preview_to_cfa_plane_scale": [
+    4.34875,
+    4.350844277673546
+   ]
+  },
+  {
+   "reference_to_frame_preview_affine": [
+    [
+     1.000423084865443,
+     -0.00039250010175594725,
+     -0.1259882567540481
+    ],
+    [
+     0.00039250010175594725,
+     1.000423084865443,
+     -0.7241512703205285
+    ]
+   ],
+   "tracked_points": 191,
+   "inliers": 191,
+   "inlier_fraction": 1.0,
+   "median_inlier_residual_preview_pixels": 0.02757297456264496,
+   "rotation_degrees": 0.02247908757346948,
+   "scale": 1.0004231618610293,
+   "index": 16,
+   "sha256": "4f17ae6cf170331bf6ddc4b1812d81f4faa040bd9ee8f0ad4b252d40a6beec8b",
+   "preview_to_cfa_plane_scale": [
+    4.34875,
+    4.350844277673546
+   ]
+  },
+  {
+   "reference_to_frame_preview_affine": [
+    [
+     1.0006769123733168,
+     1.6011657180714754e-05,
+     -0.3525469581242918
+    ],
+    [
+     -1.6011657180714754e-05,
+     1.0006769123733168,
+     -0.8470238335510025
+    ]
+   ],
+   "tracked_points": 191,
+   "inliers": 191,
+   "inlier_fraction": 1.0,
+   "median_inlier_residual_preview_pixels": 0.041039880365133286,
+   "rotation_degrees": -0.0009167797997969116,
+   "scale": 1.0006769125014168,
+   "index": 17,
+   "sha256": "678a584753602293305bb358c15fa4e69715a3526b4f98b631e449c782450b6a",
+   "preview_to_cfa_plane_scale": [
+    4.34875,
+    4.350844277673546
+   ]
+  },
+  {
+   "reference_to_frame_preview_affine": [
+    [
+     1.0008654752277666,
+     0.0006001625911498166,
+     -0.5893669573323339
+    ],
+    [
+     -0.0006001625911498166,
+     1.0008654752277666,
+     -0.9170881006968554
+    ]
+   ],
+   "tracked_points": 191,
+   "inliers": 191,
+   "inlier_fraction": 1.0,
+   "median_inlier_residual_preview_pixels": 0.046020667999982834,
+   "rotation_degrees": -0.03435704420235104,
+   "scale": 1.0008656551695831,
+   "index": 18,
+   "sha256": "9283f27afdc648bc2df11e508eeb8ebabbc4ed9294f639da30aa4f090dba4e7e",
+   "preview_to_cfa_plane_scale": [
+    4.34875,
+    4.350844277673546
+   ]
+  },
+  {
+   "reference_to_frame_preview_affine": [
+    [
+     1.0010538376700262,
+     0.0010414468634824228,
+     -0.48939754136952235
+    ],
+    [
+     -0.0010414468634824228,
+     1.0010538376700262,
+     -1.1385925933181194
+    ]
+   ],
+   "tracked_points": 191,
+   "inliers": 191,
+   "inlier_fraction": 1.0,
+   "median_inlier_residual_preview_pixels": 0.07757353037595749,
+   "rotation_degrees": -0.05960767152730489,
+   "scale": 1.0010543794047637,
+   "index": 19,
+   "sha256": "c194f65325441bdc28267559dafe25164cde50fc15f8e109374470bc12d7d10a",
+   "preview_to_cfa_plane_scale": [
+    4.34875,
+    4.350844277673546
+   ]
+  },
+  {
+   "reference_to_frame_preview_affine": [
+    [
+     1.0014485471366086,
+     0.002144122020792402,
+     -0.7132121241502839
+    ],
+    [
+     -0.002144122020792402,
+     1.0014485471366086,
+     -1.4543926803031824
+    ]
+   ],
+   "tracked_points": 191,
+   "inliers": 191,
+   "inlier_fraction": 1.0,
+   "median_inlier_residual_preview_pixels": 0.08204827457666397,
+   "rotation_degrees": -0.12267125973870562,
+   "scale": 1.001450842438741,
+   "index": 20,
+   "sha256": "b6751c2d04e1326600f687429c583babcd07d7fc6d4e5d672d5340dfac980e42",
+   "preview_to_cfa_plane_scale": [
+    4.34875,
+    4.350844277673546
+   ]
+  },
+  {
+   "reference_to_frame_preview_affine": [
+    [
+     1.001765764176977,
+     0.0030853268264183597,
+     -0.9995582549340232
+    ],
+    [
+     -0.0030853268264183597,
+     1.001765764176977,
+     -1.778555869039753
+    ]
+   ],
+   "tracked_points": 191,
+   "inliers": 191,
+   "inlier_fraction": 1.0,
+   "median_inlier_residual_preview_pixels": 0.09817498922348022,
+   "rotation_degrees": -0.1764640527231732,
+   "scale": 1.001770515396969,
+   "index": 21,
+   "sha256": "7f2452a03022dbd4793fadc96fe50d07321b0886bec20fe66d6d85ce971c7f3e",
+   "preview_to_cfa_plane_scale": [
+    4.34875,
+    4.350844277673546
+   ]
+  },
+  {
+   "reference_to_frame_preview_affine": [
+    [
+     1.0020530012419595,
+     0.003930567693756045,
+     -1.3510791162760036
+    ],
+    [
+     -0.003930567693756045,
+     1.0020530012419595,
+     -2.0251111793447407
+    ]
+   ],
+   "tracked_points": 191,
+   "inliers": 191,
+   "inlier_fraction": 1.0,
+   "median_inlier_residual_preview_pixels": 0.10490940511226654,
+   "rotation_degrees": -0.2247423885403254,
+   "scale": 1.0020607100672163,
+   "index": 22,
+   "sha256": "0debbc1ae2d6e44981c7e3ffac2a344dbdef2ddb7375362a5cecb1a9f77e24cb",
+   "preview_to_cfa_plane_scale": [
+    4.34875,
+    4.350844277673546
+   ]
+  },
+  {
+   "reference_to_frame_preview_affine": [
+    [
+     1.0024520947292532,
+     0.00463388405959174,
+     -1.5954366509463345
+    ],
+    [
+     -0.00463388405959174,
+     1.0024520947292532,
+     -2.3073852398800785
+    ]
+   ],
+   "tracked_points": 191,
+   "inliers": 191,
+   "inlier_fraction": 1.0,
+   "median_inlier_residual_preview_pixels": 0.12040654569864273,
+   "rotation_degrees": -0.26485066938262514,
+   "scale": 1.0024628048504072,
+   "index": 23,
+   "sha256": "e9ba642a24a01ed32c12cc8bca0946b3be8359d1bd3130433bca9a0b685d3e34",
+   "preview_to_cfa_plane_scale": [
+    4.34875,
+    4.350844277673546
+   ]
+  },
+  {
+   "reference_to_frame_preview_affine": [
+    [
+     1.0029479000050816,
+     0.005306697340750619,
+     -1.7353643693630676
+    ],
+    [
+     -0.005306697340750619,
+     1.0029479000050816,
+     -2.490006878584018
+    ]
+   ],
+   "tracked_points": 191,
+   "inliers": 191,
+   "inlier_fraction": 1.0,
+   "median_inlier_residual_preview_pixels": 0.15148517489433289,
+   "rotation_degrees": -0.3031548532519712,
+   "scale": 1.0029619390391988,
+   "index": 24,
+   "sha256": "3f0fb2c3a8e36c378756b37ce04949a3fd9248c50dc5d0008e8d76e1e611fa3b",
+   "preview_to_cfa_plane_scale": [
+    4.34875,
+    4.350844277673546
+   ]
+  },
+  {
+   "reference_to_frame_preview_affine": [
+    [
+     1.0034729403011762,
+     0.006209804747968012,
+     -1.7422478159274108
+    ],
+    [
+     -0.006209804747968012,
+     1.0034729403011762,
+     -2.6112705923248436
+    ]
+   ],
+   "tracked_points": 191,
+   "inliers": 191,
+   "inlier_fraction": 1.0,
+   "median_inlier_residual_preview_pixels": 0.1602083444595337,
+   "rotation_degrees": -0.3545596973442755,
+   "scale": 1.0034921542252813,
+   "index": 25,
+   "sha256": "27ea69f59e9a196832cedb13a7f5147869fe2f75c80dcc88ce2ff39ca7ef3ff7",
+   "preview_to_cfa_plane_scale": [
+    4.34875,
+    4.350844277673546
+   ]
+  },
+  {
+   "reference_to_frame_preview_affine": [
+    [
+     1.0038429977526764,
+     0.007009538037524363,
+     -1.8734500209319138
+    ],
+    [
+     -0.007009538037524363,
+     1.0038429977526764,
+     -2.9437082775865266
+    ]
+   ],
+   "tracked_points": 191,
+   "inliers": 189,
+   "inlier_fraction": 0.9895287958115183,
+   "median_inlier_residual_preview_pixels": 0.19716008007526398,
+   "rotation_degrees": -0.4000729393046271,
+   "scale": 1.0038674702173487,
+   "index": 26,
+   "sha256": "befbc9dd5e7e9bd6a8fccfb1caf397db2b2390c55cbd7b9f55bc13593f3f742b",
+   "preview_to_cfa_plane_scale": [
+    4.34875,
+    4.350844277673546
+   ]
+  },
+  {
+   "reference_to_frame_preview_affine": [
+    [
+     1.0043090361380653,
+     0.007640107522265044,
+     -1.8090429327253779
+    ],
+    [
+     -0.007640107522265044,
+     1.0043090361380653,
+     -3.3221437320382363
+    ]
+   ],
+   "tracked_points": 191,
+   "inliers": 187,
+   "inlier_fraction": 0.9790575916230366,
+   "median_inlier_residual_preview_pixels": 0.21273557841777802,
+   "rotation_degrees": -0.4358593383778304,
+   "scale": 1.0043380961168016,
+   "index": 27,
+   "sha256": "ddd5e55464e089cf384b8dca05b48618cb6064c8a97d5cbbd553734df9f09b32",
+   "preview_to_cfa_plane_scale": [
+    4.34875,
+    4.350844277673546
+   ]
+  }
+ ],
+ "basis": [
+  [
+   -0.2672612419124243,
+   0.3689231217121327,
+   0.11094671489915846,
+   -0.7921679052354387,
+   0.04860014850490586
+  ],
+  [
+   -0.2672612419124244,
+   0.3374784940539894,
+   0.20608919393664932,
+   -0.04791591538096093,
+   0.2577695369981793
+  ],
+  [
+   -0.2672612419124244,
+   0.2948497384069003,
+   0.16144737247428148,
+   0.33781169827779894,
+   -0.03351757485140557
+  ],
+  [
+   -0.2672612419124244,
+   0.24168526678031674,
+   -0.019628171623969192,
+   0.27701122940219297,
+   -0.3417516828079476
+  ],
+  [
+   -0.2672612419124244,
+   0.19016306287715676,
+   -0.2368315506725972,
+   0.06675560556768267,
+   -0.4953547241180917
+  ],
+  [
+   -0.2672612419124244,
+   0.16435709983181548,
+   0.09979568226047551,
+   0.2138546894149083,
+   -0.05047260333372442
+  ],
+  [
+   -0.2672612419124244,
+   0.07412160862231677,
+   0.09749097843308956,
+   0.1287126706597782,
+   0.18592415598482942
+  ],
+  [
+   -0.2672612419124244,
+   -0.014980039844325013,
+   -0.06402176334888794,
+   0.10580412139835005,
+   0.391889504434036
+  ],
+  [
+   -0.2672612419124244,
+   -0.10119477149463511,
+   -0.3679309217149105,
+   -0.0010074550174101137,
+   0.37220046705629095
+  ],
+  [
+   -0.2672612419124244,
+   -0.18158492984468444,
+   -0.4515209965654181,
+   0.02991339736101541,
+   0.2291642253816193
+  ],
+  [
+   -0.2672612419124244,
+   -0.2489717181618531,
+   -0.3305750727033876,
+   -0.03519397676279795,
+   -0.15711564455460808
+  ],
+  [
+   -0.2672612419124244,
+   -0.30622756990594663,
+   0.042173621254960866,
+   -0.24594498700093786,
+   -0.36216804412077264
+  ],
+  [
+   -0.2672612419124244,
+   -0.38000389379857374,
+   0.14646070857244212,
+   -0.15672779097291714,
+   -0.14359168716182116
+  ],
+  [
+   -0.2672612419124244,
+   -0.43861546923461014,
+   0.6061042047981133,
+   0.11909461828873569,
+   0.09842392258851039
+  ]
+ ],
+ "records": [
+  {
+   "region": 0,
+   "measured": [
+    {
+     "variance_pixel": 1.5537767171800933e-05,
+     "variance_haar_hh": 3.6537065282674047e-06,
+     "variance_fine": 3.6025929844874497e-06,
+     "variance_medium": 1.9658511115120643e-06,
+     "sigma_haar_to_pixel": 0.48492271259242486,
+     "sigma_fine_to_haar": 0.9929806118641099,
+     "sigma_medium_to_fine": 0.7386993412317514
+    },
+    {
+     "variance_pixel": 0.00010209286230920578,
+     "variance_haar_hh": 1.6233762219966846e-05,
+     "variance_fine": 1.646523743880479e-05,
+     "variance_medium": 1.3168896472831309e-05,
+     "sigma_haar_to_pixel": 0.3987602872954464,
+     "sigma_fine_to_haar": 1.0071042036482247,
+     "sigma_medium_to_fine": 0.8943153659869405
+    },
+    {
+     "variance_pixel": 1.6493722699576716e-05,
+     "variance_haar_hh": 2.1505970164634583e-06,
+     "variance_fine": 2.201270266444489e-06,
+     "variance_medium": 2.1174582826720547e-06,
+     "sigma_haar_to_pixel": 0.36109391930711005,
+     "sigma_fine_to_haar": 1.0117126126625346,
+     "sigma_medium_to_fine": 0.9807780725769718
+    }
+   ],
+   "predicted": [
+    {
+     "variance_pixel": 1.5484143562754837e-05,
+     "variance_haar_hh": 3.68020892767043e-06,
+     "variance_fine": 3.6180357572875176e-06,
+     "variance_medium": 1.967645495488165e-06,
+     "sigma_haar_to_pixel": 0.4875202309689496,
+     "sigma_fine_to_haar": 0.9915170577838991,
+     "sigma_medium_to_fine": 0.7374575062697917
+    },
+    {
+     "variance_pixel": 0.00010165864151528941,
+     "variance_haar_hh": 1.6368684510375837e-05,
+     "variance_fine": 1.6549159640642807e-05,
+     "variance_medium": 1.3203022783550476e-05,
+     "sigma_haar_to_pixel": 0.4012681948008036,
+     "sigma_fine_to_haar": 1.0054977047979645,
+     "sigma_medium_to_fine": 0.8931999984944058
+    },
+    {
+     "variance_pixel": 1.6431914102281325e-05,
+     "variance_haar_hh": 2.169205584554607e-06,
+     "variance_fine": 2.213991507187206e-06,
+     "variance_medium": 2.1245202132851914e-06,
+     "sigma_haar_to_pixel": 0.36333419981269066,
+     "sigma_fine_to_haar": 1.010270375891941,
+     "sigma_medium_to_fine": 0.979585749073058
+    }
+   ],
+   "relative_errors": [
+    {
+     "sigma_haar_to_pixel": -0.005328021713810971,
+     "sigma_fine_to_haar": 0.0014760755437550621,
+     "sigma_medium_to_fine": 0.0016839410425708579
+    },
+    {
+     "sigma_haar_to_pixel": -0.006249953367478356,
+     "sigma_fine_to_haar": 0.0015977150843751176,
+     "sigma_medium_to_fine": 0.001248732080625592
+    },
+    {
+     "sigma_haar_to_pixel": -0.006165894943926387,
+     "sigma_fine_to_haar": 0.0014275750383361263,
+     "sigma_medium_to_fine": 0.0012171711410073893
+    }
+   ]
+  },
+  {
+   "region": 2,
+   "measured": [
+    {
+     "variance_pixel": 0.00031585499679797604,
+     "variance_haar_hh": 0.00011217675920765339,
+     "variance_fine": 0.00012389982389009508,
+     "variance_medium": 3.8914199689254336e-05,
+     "sigma_haar_to_pixel": 0.5959469049929366,
+     "sigma_fine_to_haar": 1.0509544658916676,
+     "sigma_medium_to_fine": 0.5604265569711873
+    },
+    {
+     "variance_pixel": 0.0003385977589370858,
+     "variance_haar_hh": 3.125336579287261e-05,
+     "variance_fine": 3.471151979620702e-05,
+     "variance_medium": 4.3276918854728263e-05,
+     "sigma_haar_to_pixel": 0.3038130032726516,
+     "sigma_fine_to_haar": 1.053873337082716,
+     "sigma_medium_to_fine": 1.11658387573425
+    },
+    {
+     "variance_pixel": 0.00017447595351292828,
+     "variance_haar_hh": 1.1016452509985995e-05,
+     "variance_fine": 1.3873904046486576e-05,
+     "variance_medium": 2.262488755911886e-05,
+     "sigma_haar_to_pixel": 0.25127720523915326,
+     "sigma_fine_to_haar": 1.1222211772908421,
+     "sigma_medium_to_fine": 1.2770087454609649
+    }
+   ],
+   "predicted": [
+    {
+     "variance_pixel": 0.0003156005088851426,
+     "variance_haar_hh": 0.00011268133857599079,
+     "variance_fine": 0.00012430161156060996,
+     "variance_medium": 3.890751102202073e-05,
+     "sigma_haar_to_pixel": 0.5975264732210487,
+     "sigma_fine_to_haar": 1.050297618891235,
+     "sigma_medium_to_fine": 0.5594719855077671
+    },
+    {
+     "variance_pixel": 0.0003408131463625387,
+     "variance_haar_hh": 3.135105153011189e-05,
+     "variance_fine": 3.484692736659354e-05,
+     "variance_medium": 4.365815509560919e-05,
+     "sigma_haar_to_pixel": 0.3032968407683405,
+     "sigma_fine_to_haar": 1.0542805370557946,
+     "sigma_medium_to_fine": 1.119310156741717
+    },
+    {
+     "variance_pixel": 0.0001716235867757984,
+     "variance_haar_hh": 1.0999261997905329e-05,
+     "variance_fine": 1.380793979787387e-05,
+     "variance_medium": 2.234709157159227e-05,
+     "sigma_haar_to_pixel": 0.2531589503902595,
+     "sigma_fine_to_haar": 1.1204246861181961,
+     "sigma_medium_to_fine": 1.272172671310129
+    }
+   ],
+   "relative_errors": [
+    {
+     "sigma_haar_to_pixel": -0.0026435117085227278,
+     "sigma_fine_to_haar": 0.0006253913068241523,
+     "sigma_medium_to_fine": 0.001706200646585998
+    },
+    {
+     "sigma_haar_to_pixel": 0.0017018393696535128,
+     "sigma_fine_to_haar": -0.00038623493346068294,
+     "sigma_medium_to_fine": -0.0024356796827458282
+    },
+    {
+     "sigma_haar_to_pixel": -0.007433057959062461,
+     "sigma_fine_to_haar": 0.0016034019911415065,
+     "sigma_medium_to_fine": 0.003801429051180305
+    }
+   ]
+  },
+  {
+   "region": 5,
+   "measured": [
+    {
+     "variance_pixel": 0.00024121532858532385,
+     "variance_haar_hh": 8.584900078891441e-05,
+     "variance_fine": 9.444694013492666e-05,
+     "variance_medium": 2.97589509397054e-05,
+     "sigma_haar_to_pixel": 0.5965751664041105,
+     "sigma_fine_to_haar": 1.0488812545123536,
+     "sigma_medium_to_fine": 0.5613256171862471
+    },
+    {
+     "variance_pixel": 0.00028873607072855343,
+     "variance_haar_hh": 4.264266372033921e-05,
+     "variance_fine": 4.650248638597774e-05,
+     "variance_medium": 3.6614821943442974e-05,
+     "sigma_haar_to_pixel": 0.3843011125399233,
+     "sigma_fine_to_haar": 1.0442775085931768,
+     "sigma_medium_to_fine": 0.8873406472623155
+    },
+    {
+     "variance_pixel": 0.00010322274358653689,
+     "variance_haar_hh": 6.740375490476486e-06,
+     "variance_fine": 8.546721920324953e-06,
+     "variance_medium": 1.3569657764294463e-05,
+     "sigma_haar_to_pixel": 0.2555373262231364,
+     "sigma_fine_to_haar": 1.1260501727160923,
+     "sigma_medium_to_fine": 1.260040952731521
+    }
+   ],
+   "predicted": [
+    {
+     "variance_pixel": 0.00024209920502672069,
+     "variance_haar_hh": 8.643217449920807e-05,
+     "variance_fine": 9.468526237848391e-05,
+     "variance_medium": 2.9923133385636074e-05,
+     "sigma_haar_to_pixel": 0.5975043039867043,
+     "sigma_fine_to_haar": 1.0466548104846423,
+     "sigma_medium_to_fine": 0.5621631069255244
+    },
+    {
+     "variance_pixel": 0.00028696094828591903,
+     "variance_haar_hh": 4.2623297176210664e-05,
+     "variance_fine": 4.6383683444223564e-05,
+     "variance_medium": 3.641735612889227e-05,
+     "sigma_haar_to_pixel": 0.38540036498418184,
+     "sigma_fine_to_haar": 1.0431796250627903,
+     "sigma_medium_to_fine": 0.8860772568107523
+    },
+    {
+     "variance_pixel": 0.00010340481466583361,
+     "variance_haar_hh": 6.751943433203488e-06,
+     "variance_fine": 8.554369861271015e-06,
+     "variance_medium": 1.3478570382037222e-05,
+     "sigma_haar_to_pixel": 0.2555312487510719,
+     "sigma_fine_to_haar": 1.125588414348231,
+     "sigma_medium_to_fine": 1.2552432756311636
+    }
+   ],
+   "relative_errors": [
+    {
+     "sigma_haar_to_pixel": -0.0015550307778444683,
+     "sigma_fine_to_haar": 0.0021271999186440738,
+     "sigma_medium_to_fine": -0.0014897628979204658
+    },
+    {
+     "sigma_haar_to_pixel": -0.0028522350888372516,
+     "sigma_fine_to_haar": 0.0010524395837585576,
+     "sigma_medium_to_fine": 0.0014258242628983897
+    },
+    {
+     "sigma_haar_to_pixel": 2.3783674576671743e-05,
+     "sigma_fine_to_haar": 0.00041023731407952013,
+     "sigma_medium_to_fine": 0.00382210938190064
+    }
+   ]
+  }
+ ],
+ "failures": [],
+ "tests": 27,
+ "runner_source": "\"\"\"Freeze band-transfer diagnostic on development, then open validation exactly once.\"\"\"\nfrom datetime import datetime,timezone\nimport json\nfrom pathlib import Path\nimport numpy as np\nimport rawpy\nimport cv2\nfrom analysis.render import available_memory\nfrom extract_noise_burst_native import run as extract_native\nfrom study_noise_burst_motion import preview,estimate\nfrom study_noise_burst_residuals import temporal_basis\nfrom study_noise_burst_bands import bands\nfrom study_noise_neighbourhoods import ROOT,sha256,git\n\nROIS=(0,2,5)\nMETRICS=('sigma_haar_to_pixel','sigma_fine_to_haar','sigma_medium_to_fine')\n\n\ndef run():\n    started=datetime.now(timezone.utc);cv2.setNumThreads(2);cv2.setRNGSeed(440)\n    parent=ROOT/'docs/validation/raw/bandes-reelles-rafale-bruit-v001-20261027T230949Z.json'\n    audit=ROOT/'docs/validation/raw/audit-rafale-reelle-bruit-v001-20261027T225328Z.json'\n    develop=json.loads(parent.read_text(encoding='utf-8'));raw_audit=json.loads(audit.read_text(encoding='utf-8'))\n    existing=list((ROOT/'docs/validation/raw').glob('gel-transfert-bandes-rafale-bruit-v001-*.json'))\n    if existing:raise ValueError('Validation freeze already exists: inspect it, do NOT rerun or retune')\n    freeze=ROOT/'docs/validation/raw'/f'gel-transfert-bandes-rafale-bruit-v001-{started.strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n    frozen=dict(schema_version=1,data_version=1,created_at_utc=started.isoformat(),\n        parent=dict(path=str(parent),sha256=sha256(parent)),audit=dict(path=str(audit),sha256=sha256(audit)),\n        validation_partition='validation',indices=list(range(14,28)),sealed_indices=list(range(28,42)),\n        native_extractor_sha256=sha256(ROOT/'tests/extract_noise_burst_native.py'),\n        validator_sha256=sha256(Path(__file__)),validator_source=Path(__file__).read_text(encoding='utf-8'),\n        roi_indices=list(ROIS),metrics=list(METRICS),relative_error_limit=.10,\n        predictions=[dict(region=r,channels=develop['records'][r]['native_linear']) for r in ROIS],\n        criterion='Exploratorywithinburstrepeatabilityonly:27metrics(3ROIs*3planes*3ratios),allabsrelativeerror<=10%. Not productquality threshold or population coverage. No refit after opening validation. Sealed14 remainclosed.',\n        rules='Freeze complete BEFORE validation pixel decode. Nativegrid0/2/5fromscenegeometry. Same rawpreviewmotiondesignandnativebands as development. OnecameraISO4000sameburst;not independentcamera/scene validation.')\n    with freeze.open('x',encoding='utf-8') as handle:json.dump(frozen,handle,ensure_ascii=False,indent=1,allow_nan=False)\n    freeze_hash=sha256(freeze);print('FREEZE',freeze,flush=True)\n    native_path=extract_native('validation',freeze);native=json.loads(native_path.read_text(encoding='utf-8'))\n    archive=Path(native['pixels']['path'])\n    if sha256(archive)!=native['pixels']['sha256']:raise ValueError('Changed validation pixels')\n    with np.load(archive,allow_pickle=False) as data:planes=data['planes'].copy()\n    motion=[];reference=None\n    for item in raw_audit['identities']:\n        if item['split']!='validation':continue\n        if (available_memory() or 0)<2*1024**3:raise ValueError('Need2GiB for RAW preview motion audit')\n        p=Path(item['path'])\n        if sha256(p)!=item['sha256']:raise ValueError('Changed validation source')\n        with rawpy.imread(str(p)) as raw:current,scale=preview(raw.raw_image_visible)\n        if reference is None:reference=current.copy()\n        m=estimate(reference,current);m.update(index=item['index'],sha256=item['sha256'],preview_to_cfa_plane_scale=scale)\n        motion.append(m)\n    basis=temporal_basis([r['reference_to_frame_preview_affine'] for r in motion]);records=[];failures=[]\n    for prediction in frozen['predictions']:\n        roi=prediction['region'];measured=bands(planes[:,roi],basis);errors=[]\n        for channel in range(3):\n            errors.append({name:measured[channel][name]/prediction['channels'][channel][name]-1 for name in METRICS})\n            for name in METRICS:\n                if abs(errors[-1][name])>.10:failures.append(dict(region=roi,channel=channel,metric=name,error=errors[-1][name]))\n        records.append(dict(region=roi,measured=measured,predicted=prediction['channels'],relative_errors=errors))\n    if sha256(freeze)!=freeze_hash:raise ValueError('Freeze changed')\n    now=datetime.now(timezone.utc);output=ROOT/'docs/validation/raw'/f'validation-transfert-bandes-rafale-bruit-v001-{now.strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n    result=dict(schema_version=1,data_version=1,started_at_utc=started.isoformat(),completed_at_utc=now.isoformat(),\n        freeze=dict(path=str(freeze),sha256=freeze_hash),native=dict(path=str(native_path),sha256=sha256(native_path)),\n        motion=motion,basis=basis.tolist(),records=records,failures=failures,tests=27,\n        runner_source=Path(__file__).read_text(encoding='utf-8'),runner_sha256=sha256(Path(__file__)),commit=git('rev-parse','HEAD'),\n        verdict='within_burst_band_repeatability_pass' if not failures else 'within_burst_band_repeatability_fail_no_retuning',\n        limitations='SamecameraISO4000samescene/temporallynearframes. Motionprojectionisdiagnosticnottruth. 10% exploratoryprecisioncriterionnotcalibratedconfidenceorvisualvalidation. Not new denoiser validation. Last14sealedstillunopened. No production/push/merge/tag.')\n    with output.open('x',encoding='utf-8') as handle:json.dump(result,handle,ensure_ascii=False,indent=1,allow_nan=False)\n    print('RESULT',output,'FAILURES',len(failures),flush=True)\n\n\nif __name__=='__main__':run()\n",
+ "runner_sha256": "dea9d51e8fca0038c1704e77f5a360350c70b296e9d14855845f1ac11bb318e7",
+ "commit": "2a40c5c6cff78d40294393a68827f4a24555c724",
+ "verdict": "within_burst_band_repeatability_pass",
+ "limitations": "SamecameraISO4000samescene/temporallynearframes. Motionprojectionisdiagnosticnottruth. 10% exploratoryprecisioncriterionnotcalibratedconfidenceorvisualvalidation. Not new denoiser validation. Last14sealedstillunopened. No production/push/merge/tag."
+}

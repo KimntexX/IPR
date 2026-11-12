@@ -1,0 +1,1160 @@
+{
+ "schema_version": 1,
+ "data_version": 1,
+ "completed_at_utc": "2026-10-27T19:32:02.557247+00:00",
+ "records": [
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "shape_limit": 0.001658795891184364,
+   "hh_limit": 0.04800077974264717,
+   "all_saved_trials": [
+    {
+     "penalty": 0.0,
+     "mean_shape_error": 0.0003978608858879068,
+     "mean_hh_error": 0.013365166286562993,
+     "simultaneously_beats_both_controls": true,
+     "oracle_weights": [
+      {
+       "rect": [
+        0,
+        0,
+        128,
+        128
+       ],
+       "weight": 1.0
+      },
+      {
+       "rect": [
+        128,
+        0,
+        128,
+        128
+       ],
+       "weight": 0.9453644380164998
+      },
+      {
+       "rect": [
+        0,
+        128,
+        128,
+        128
+       ],
+       "weight": 0.6800457727106262
+      },
+      {
+       "rect": [
+        128,
+        128,
+        128,
+        128
+       ],
+       "weight": 0.8902157753260334
+      }
+     ]
+    },
+    {
+     "penalty": 1.0,
+     "mean_shape_error": 0.0003978608858879068,
+     "mean_hh_error": 0.013365166286562993,
+     "simultaneously_beats_both_controls": true,
+     "oracle_weights": [
+      {
+       "rect": [
+        0,
+        0,
+        128,
+        128
+       ],
+       "weight": 1.0
+      },
+      {
+       "rect": [
+        128,
+        0,
+        128,
+        128
+       ],
+       "weight": 0.9453644380164998
+      },
+      {
+       "rect": [
+        0,
+        128,
+        128,
+        128
+       ],
+       "weight": 0.6800457727106262
+      },
+      {
+       "rect": [
+        128,
+        128,
+        128,
+        128
+       ],
+       "weight": 0.8902157753260334
+      }
+     ]
+    },
+    {
+     "penalty": 10.0,
+     "mean_shape_error": 0.0003978608858879068,
+     "mean_hh_error": 0.013365166286562993,
+     "simultaneously_beats_both_controls": true,
+     "oracle_weights": [
+      {
+       "rect": [
+        0,
+        0,
+        128,
+        128
+       ],
+       "weight": 1.0
+      },
+      {
+       "rect": [
+        128,
+        0,
+        128,
+        128
+       ],
+       "weight": 0.9453644380164998
+      },
+      {
+       "rect": [
+        0,
+        128,
+        128,
+        128
+       ],
+       "weight": 0.6800457727106262
+      },
+      {
+       "rect": [
+        128,
+        128,
+        128,
+        128
+       ],
+       "weight": 0.8902157753260334
+      }
+     ]
+    },
+    {
+     "penalty": 100.0,
+     "mean_shape_error": 0.0003978608858879068,
+     "mean_hh_error": 0.013365166286562988,
+     "simultaneously_beats_both_controls": true,
+     "oracle_weights": [
+      {
+       "rect": [
+        0,
+        0,
+        128,
+        128
+       ],
+       "weight": 1.0
+      },
+      {
+       "rect": [
+        128,
+        0,
+        128,
+        128
+       ],
+       "weight": 0.9453644380164998
+      },
+      {
+       "rect": [
+        0,
+        128,
+        128,
+        128
+       ],
+       "weight": 0.6800457727106262
+      },
+      {
+       "rect": [
+        128,
+        128,
+        128,
+        128
+       ],
+       "weight": 0.8902157753260334
+      }
+     ]
+    },
+    {
+     "penalty": 1000.0,
+     "mean_shape_error": 0.0003791922090655409,
+     "mean_hh_error": 0.01770622409431999,
+     "simultaneously_beats_both_controls": true,
+     "oracle_weights": [
+      {
+       "rect": [
+        0,
+        0,
+        128,
+        128
+       ],
+       "weight": 0.9212135035654948
+      },
+      {
+       "rect": [
+        128,
+        0,
+        128,
+        128
+       ],
+       "weight": 1.0
+      },
+      {
+       "rect": [
+        0,
+        128,
+        128,
+        128
+       ],
+       "weight": 0.839327636428709
+      },
+      {
+       "rect": [
+        128,
+        128,
+        128,
+        128
+       ],
+       "weight": 0.9181211417889563
+      }
+     ]
+    },
+    {
+     "penalty": 10000.0,
+     "mean_shape_error": 0.00037881973925678997,
+     "mean_hh_error": 0.018384198833518384,
+     "simultaneously_beats_both_controls": true,
+     "oracle_weights": [
+      {
+       "rect": [
+        0,
+        0,
+        128,
+        128
+       ],
+       "weight": 0.9096439477597449
+      },
+      {
+       "rect": [
+        128,
+        0,
+        128,
+        128
+       ],
+       "weight": 1.0
+      },
+      {
+       "rect": [
+        0,
+        128,
+        128,
+        128
+       ],
+       "weight": 0.8580951345124178
+      },
+      {
+       "rect": [
+        128,
+        128,
+        128,
+        128
+       ],
+       "weight": 0.9372122427893033
+      }
+     ]
+    }
+   ],
+   "verified_witness": {
+    "penalty": 0.0,
+    "mean_shape_error": 0.0003978608858879068,
+    "mean_hh_error": 0.013365166286562993,
+    "simultaneously_beats_both_controls": true,
+    "oracle_weights": [
+     {
+      "rect": [
+       0,
+       0,
+       128,
+       128
+      ],
+      "weight": 1.0
+     },
+     {
+      "rect": [
+       128,
+       0,
+       128,
+       128
+      ],
+      "weight": 0.9453644380164998
+     },
+     {
+      "rect": [
+       0,
+       128,
+       128,
+       128
+      ],
+      "weight": 0.6800457727106262
+     },
+     {
+      "rect": [
+       128,
+       128,
+       128,
+       128
+      ],
+      "weight": 0.8902157753260334
+     }
+    ]
+   }
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "shape_limit": 0.001190106502846297,
+   "hh_limit": 0.04091977755570719,
+   "all_saved_trials": [
+    {
+     "penalty": 0.0,
+     "mean_shape_error": 0.0005122480903830299,
+     "mean_hh_error": 0.03583469411692098,
+     "simultaneously_beats_both_controls": true,
+     "oracle_weights": [
+      {
+       "rect": [
+        0,
+        0,
+        128,
+        128
+       ],
+       "weight": 1.0
+      },
+      {
+       "rect": [
+        128,
+        0,
+        128,
+        128
+       ],
+       "weight": 1.0
+      },
+      {
+       "rect": [
+        0,
+        128,
+        128,
+        128
+       ],
+       "weight": 0.09195978836896314
+      },
+      {
+       "rect": [
+        128,
+        128,
+        128,
+        128
+       ],
+       "weight": 0.8135045244956235
+      }
+     ]
+    },
+    {
+     "penalty": 1.0,
+     "mean_shape_error": 0.0004350142936442836,
+     "mean_hh_error": 0.03587804763480167,
+     "simultaneously_beats_both_controls": true,
+     "oracle_weights": [
+      {
+       "rect": [
+        0,
+        0,
+        128,
+        128
+       ],
+       "weight": 1.0
+      },
+      {
+       "rect": [
+        128,
+        0,
+        128,
+        128
+       ],
+       "weight": 1.0
+      },
+      {
+       "rect": [
+        0,
+        128,
+        128,
+        128
+       ],
+       "weight": 0.36193613822738935
+      },
+      {
+       "rect": [
+        128,
+        128,
+        128,
+        128
+       ],
+       "weight": 0.8135045244956235
+      }
+     ]
+    },
+    {
+     "penalty": 10.0,
+     "mean_shape_error": 0.000431368686185797,
+     "mean_hh_error": 0.035887622334653785,
+     "simultaneously_beats_both_controls": true,
+     "oracle_weights": [
+      {
+       "rect": [
+        0,
+        0,
+        128,
+        128
+       ],
+       "weight": 1.0
+      },
+      {
+       "rect": [
+        128,
+        0,
+        128,
+        128
+       ],
+       "weight": 1.0
+      },
+      {
+       "rect": [
+        0,
+        128,
+        128,
+        128
+       ],
+       "weight": 0.36193613822738935
+      },
+      {
+       "rect": [
+        128,
+        128,
+        128,
+        128
+       ],
+       "weight": 0.924976482249857
+      }
+     ]
+    },
+    {
+     "penalty": 100.0,
+     "mean_shape_error": 0.00038124870530635666,
+     "mean_hh_error": 0.03848111161571788,
+     "simultaneously_beats_both_controls": true,
+     "oracle_weights": [
+      {
+       "rect": [
+        0,
+        0,
+        128,
+        128
+       ],
+       "weight": 1.0
+      },
+      {
+       "rect": [
+        128,
+        0,
+        128,
+        128
+       ],
+       "weight": 1.0
+      },
+      {
+       "rect": [
+        0,
+        128,
+        128,
+        128
+       ],
+       "weight": 0.6887863397763923
+      },
+      {
+       "rect": [
+        128,
+        128,
+        128,
+        128
+       ],
+       "weight": 0.9409291458275373
+      }
+     ]
+    },
+    {
+     "penalty": 1000.0,
+     "mean_shape_error": 0.00037403893779023364,
+     "mean_hh_error": 0.039809971983021566,
+     "simultaneously_beats_both_controls": true,
+     "oracle_weights": [
+      {
+       "rect": [
+        0,
+        0,
+        128,
+        128
+       ],
+       "weight": 1.0
+      },
+      {
+       "rect": [
+        128,
+        0,
+        128,
+        128
+       ],
+       "weight": 0.9897676023706428
+      },
+      {
+       "rect": [
+        0,
+        128,
+        128,
+        128
+       ],
+       "weight": 0.850823511714184
+      },
+      {
+       "rect": [
+        128,
+        128,
+        128,
+        128
+       ],
+       "weight": 0.9424782622494874
+      }
+     ]
+    },
+    {
+     "penalty": 10000.0,
+     "mean_shape_error": 0.0003739616297606537,
+     "mean_hh_error": 0.0399506029543466,
+     "simultaneously_beats_both_controls": true,
+     "oracle_weights": [
+      {
+       "rect": [
+        0,
+        0,
+        128,
+        128
+       ],
+       "weight": 1.0
+      },
+      {
+       "rect": [
+        128,
+        0,
+        128,
+        128
+       ],
+       "weight": 0.9860571978544037
+      },
+      {
+       "rect": [
+        0,
+        128,
+        128,
+        128
+       ],
+       "weight": 0.8672580689854357
+      },
+      {
+       "rect": [
+        128,
+        128,
+        128,
+        128
+       ],
+       "weight": 0.9426327246810455
+      }
+     ]
+    }
+   ],
+   "verified_witness": {
+    "penalty": 0.0,
+    "mean_shape_error": 0.0005122480903830299,
+    "mean_hh_error": 0.03583469411692098,
+    "simultaneously_beats_both_controls": true,
+    "oracle_weights": [
+     {
+      "rect": [
+       0,
+       0,
+       128,
+       128
+      ],
+      "weight": 1.0
+     },
+     {
+      "rect": [
+       128,
+       0,
+       128,
+       128
+      ],
+      "weight": 1.0
+     },
+     {
+      "rect": [
+       0,
+       128,
+       128,
+       128
+      ],
+      "weight": 0.09195978836896314
+     },
+     {
+      "rect": [
+       128,
+       128,
+       128,
+       128
+      ],
+      "weight": 0.8135045244956235
+     }
+    ]
+   }
+  },
+  {
+   "dataset": 0,
+   "iso": 51200,
+   "a": "6V1A9815.CR3",
+   "shape_limit": 0.0005013670810442243,
+   "hh_limit": 0.016624178152623258,
+   "all_saved_trials": [
+    {
+     "penalty": 0.0,
+     "mean_shape_error": 0.0005830769139204492,
+     "mean_hh_error": 0.00788858064925868,
+     "simultaneously_beats_both_controls": false,
+     "oracle_weights": [
+      {
+       "rect": [
+        0,
+        0,
+        128,
+        128
+       ],
+       "weight": 0.499505317839319
+      },
+      {
+       "rect": [
+        128,
+        0,
+        128,
+        128
+       ],
+       "weight": 0.0
+      }
+     ]
+    },
+    {
+     "penalty": 1.0,
+     "mean_shape_error": 0.0005830769139204492,
+     "mean_hh_error": 0.00788858064925868,
+     "simultaneously_beats_both_controls": false,
+     "oracle_weights": [
+      {
+       "rect": [
+        0,
+        0,
+        128,
+        128
+       ],
+       "weight": 0.499505317839319
+      },
+      {
+       "rect": [
+        128,
+        0,
+        128,
+        128
+       ],
+       "weight": 0.0
+      }
+     ]
+    },
+    {
+     "penalty": 10.0,
+     "mean_shape_error": 0.0005830769139204492,
+     "mean_hh_error": 0.00788858064925868,
+     "simultaneously_beats_both_controls": false,
+     "oracle_weights": [
+      {
+       "rect": [
+        0,
+        0,
+        128,
+        128
+       ],
+       "weight": 0.499505317839319
+      },
+      {
+       "rect": [
+        128,
+        0,
+        128,
+        128
+       ],
+       "weight": 0.0
+      }
+     ]
+    },
+    {
+     "penalty": 100.0,
+     "mean_shape_error": 0.0005074660783515495,
+     "mean_hh_error": 0.010175225171261104,
+     "simultaneously_beats_both_controls": false,
+     "oracle_weights": [
+      {
+       "rect": [
+        0,
+        0,
+        128,
+        128
+       ],
+       "weight": 0.2471912314890555
+      },
+      {
+       "rect": [
+        128,
+        0,
+        128,
+        128
+       ],
+       "weight": 0.0
+      }
+     ]
+    },
+    {
+     "penalty": 1000.0,
+     "mean_shape_error": 0.0004960154786968601,
+     "mean_hh_error": 0.013377511108635443,
+     "simultaneously_beats_both_controls": true,
+     "oracle_weights": [
+      {
+       "rect": [
+        0,
+        0,
+        128,
+        128
+       ],
+       "weight": 0.12488038397410296
+      },
+      {
+       "rect": [
+        128,
+        0,
+        128,
+        128
+       ],
+       "weight": 0.005783857525687219
+      }
+     ]
+    },
+    {
+     "penalty": 10000.0,
+     "mean_shape_error": 0.0004957091302320927,
+     "mean_hh_error": 0.013934364182548897,
+     "simultaneously_beats_both_controls": true,
+     "oracle_weights": [
+      {
+       "rect": [
+        0,
+        0,
+        128,
+        128
+       ],
+       "weight": 0.10355514883867689
+      },
+      {
+       "rect": [
+        128,
+        0,
+        128,
+        128
+       ],
+       "weight": 0.006540487036212794
+      }
+     ]
+    }
+   ],
+   "verified_witness": {
+    "penalty": 1000.0,
+    "mean_shape_error": 0.0004960154786968601,
+    "mean_hh_error": 0.013377511108635443,
+    "simultaneously_beats_both_controls": true,
+    "oracle_weights": [
+     {
+      "rect": [
+       0,
+       0,
+       128,
+       128
+      ],
+      "weight": 0.12488038397410296
+     },
+     {
+      "rect": [
+       128,
+       0,
+       128,
+       128
+      ],
+      "weight": 0.005783857525687219
+     }
+    ]
+   }
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "shape_limit": 0.0004010905467633608,
+   "hh_limit": 0.03204602996359927,
+   "all_saved_trials": [
+    {
+     "penalty": 0.0,
+     "mean_shape_error": 0.00039271992178222453,
+     "mean_hh_error": 0.02772824361271762,
+     "simultaneously_beats_both_controls": true,
+     "oracle_weights": [
+      {
+       "rect": [
+        0,
+        0,
+        128,
+        128
+       ],
+       "weight": 0.0
+      },
+      {
+       "rect": [
+        128,
+        0,
+        128,
+        128
+       ],
+       "weight": 0.0002802744713359553
+      },
+      {
+       "rect": [
+        0,
+        128,
+        128,
+        128
+       ],
+       "weight": 0.11026663218269679
+      },
+      {
+       "rect": [
+        128,
+        128,
+        128,
+        128
+       ],
+       "weight": 0.0666756987472874
+      }
+     ]
+    },
+    {
+     "penalty": 1.0,
+     "mean_shape_error": 0.00039271992178222453,
+     "mean_hh_error": 0.02772824361271762,
+     "simultaneously_beats_both_controls": true,
+     "oracle_weights": [
+      {
+       "rect": [
+        0,
+        0,
+        128,
+        128
+       ],
+       "weight": 0.0
+      },
+      {
+       "rect": [
+        128,
+        0,
+        128,
+        128
+       ],
+       "weight": 0.0002802744713359553
+      },
+      {
+       "rect": [
+        0,
+        128,
+        128,
+        128
+       ],
+       "weight": 0.11026663218269679
+      },
+      {
+       "rect": [
+        128,
+        128,
+        128,
+        128
+       ],
+       "weight": 0.0666756987472874
+      }
+     ]
+    },
+    {
+     "penalty": 10.0,
+     "mean_shape_error": 0.00039271992178222453,
+     "mean_hh_error": 0.02772824361271762,
+     "simultaneously_beats_both_controls": true,
+     "oracle_weights": [
+      {
+       "rect": [
+        0,
+        0,
+        128,
+        128
+       ],
+       "weight": 0.0
+      },
+      {
+       "rect": [
+        128,
+        0,
+        128,
+        128
+       ],
+       "weight": 0.0002802744713359553
+      },
+      {
+       "rect": [
+        0,
+        128,
+        128,
+        128
+       ],
+       "weight": 0.11026663218269679
+      },
+      {
+       "rect": [
+        128,
+        128,
+        128,
+        128
+       ],
+       "weight": 0.0666756987472874
+      }
+     ]
+    },
+    {
+     "penalty": 100.0,
+     "mean_shape_error": 0.00039271992178222453,
+     "mean_hh_error": 0.027728243612717626,
+     "simultaneously_beats_both_controls": true,
+     "oracle_weights": [
+      {
+       "rect": [
+        0,
+        0,
+        128,
+        128
+       ],
+       "weight": 0.0
+      },
+      {
+       "rect": [
+        128,
+        0,
+        128,
+        128
+       ],
+       "weight": 0.0002802744713359553
+      },
+      {
+       "rect": [
+        0,
+        128,
+        128,
+        128
+       ],
+       "weight": 0.11026663218269679
+      },
+      {
+       "rect": [
+        128,
+        128,
+        128,
+        128
+       ],
+       "weight": 0.0666756987472874
+      }
+     ]
+    },
+    {
+     "penalty": 1000.0,
+     "mean_shape_error": 0.00039271992178222453,
+     "mean_hh_error": 0.02772824361271764,
+     "simultaneously_beats_both_controls": true,
+     "oracle_weights": [
+      {
+       "rect": [
+        0,
+        0,
+        128,
+        128
+       ],
+       "weight": 0.0
+      },
+      {
+       "rect": [
+        128,
+        0,
+        128,
+        128
+       ],
+       "weight": 0.0002802744713359553
+      },
+      {
+       "rect": [
+        0,
+        128,
+        128,
+        128
+       ],
+       "weight": 0.11026663218269679
+      },
+      {
+       "rect": [
+        128,
+        128,
+        128,
+        128
+       ],
+       "weight": 0.0666756987472874
+      }
+     ]
+    },
+    {
+     "penalty": 10000.0,
+     "mean_shape_error": 0.0003898539258471006,
+     "mean_hh_error": 0.034999933452554366,
+     "simultaneously_beats_both_controls": false,
+     "oracle_weights": [
+      {
+       "rect": [
+        0,
+        0,
+        128,
+        128
+       ],
+       "weight": 0.03745878545792076
+      },
+      {
+       "rect": [
+        128,
+        0,
+        128,
+        128
+       ],
+       "weight": 0.052202454257436415
+      },
+      {
+       "rect": [
+        0,
+        128,
+        128,
+        128
+       ],
+       "weight": 0.12062399798708712
+      },
+      {
+       "rect": [
+        128,
+        128,
+        128,
+        128
+       ],
+       "weight": 0.051559919549899136
+      }
+     ]
+    }
+   ],
+   "verified_witness": {
+    "penalty": 0.0,
+    "mean_shape_error": 0.00039271992178222453,
+    "mean_hh_error": 0.02772824361271762,
+    "simultaneously_beats_both_controls": true,
+    "oracle_weights": [
+     {
+      "rect": [
+       0,
+       0,
+       128,
+       128
+      ],
+      "weight": 0.0
+     },
+     {
+      "rect": [
+       128,
+       0,
+       128,
+       128
+      ],
+      "weight": 0.0002802744713359553
+     },
+     {
+      "rect": [
+       0,
+       128,
+       128,
+       128
+      ],
+      "weight": 0.11026663218269679
+     },
+     {
+      "rect": [
+       128,
+       128,
+       128,
+       128
+      ],
+      "weight": 0.0666756987472874
+     }
+    ]
+   }
+  }
+ ],
+ "verdict": "joint_oracle_witness_on_all_four_folds_not_a_predictor",
+ "parent": {
+  "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\capacite-jointe-segment-correlation-bruit-v001-20261027T193011Z.json",
+  "sha256": "a71140c65eaec86e91b2ec8a68581365d61a1ebbaa172874bb91c2acb05ccc4f"
+ },
+ "runner_sha256": "e071fa50e1567adfcd185acd0d622017f2518fbf93b989d4fe2ec1ab7c71f488",
+ "runner_source": "\"\"\"Verify simultaneous oracle witnesses from saved capacity trials, without rerunning or fitting.\"\"\"\nfrom datetime import datetime,timezone\nimport json\nfrom pathlib import Path\nimport numpy as np\nfrom study_noise_neighbourhoods import ROOT,sha256,git\n\n\ndef run():\n    path=ROOT/'docs/validation/raw/capacite-jointe-segment-correlation-bruit-v001-20261027T193011Z.json'\n    digest=sha256(path);parent=json.loads(path.read_text(encoding='utf-8'));records=[]\n    for row in parent['records']:\n        trials=[]\n        for trial in row['trials']:\n            q=[sum(c*e['weight']**i for i,c in enumerate(e['shape_quadratic'])) for e in trial['evaluations']]\n            h=[e['penalized_minimum']-trial['penalty']*v for e,v in zip(trial['evaluations'],q)]\n            shape,hh=float(np.mean(q)),float(np.mean(h))\n            passed=shape<row['shape_budget']-1e-12 and hh<row['hh_limit']-1e-12\n            trials.append(dict(penalty=trial['penalty'],mean_shape_error=shape,mean_hh_error=hh,\n                simultaneously_beats_both_controls=passed,\n                oracle_weights=[dict(rect=e['rect'],weight=e['weight']) for e in trial['evaluations']]))\n        witness=next((t for t in trials if t['simultaneously_beats_both_controls']),None)\n        records.append(dict(dataset=row['dataset'],iso=row['iso'],a=row['a'],shape_limit=row['shape_budget'],\n            hh_limit=row['hh_limit'],all_saved_trials=trials,verified_witness=witness))\n        print('Joint witness',row['dataset'],row['iso'],'found',witness is not None,\n            'penalty',witness['penalty'] if witness else None,flush=True)\n    if sha256(path)!=digest:raise ValueError('Changed capacity evidence')\n    now=datetime.now(timezone.utc)\n    output=ROOT/'docs/validation/raw'/f'temoins-oracle-joints-correlation-bruit-v001-{now.strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n    result=dict(schema_version=1,data_version=1,completed_at_utc=now.isoformat(),records=records,\n        verdict='joint_oracle_witness_on_all_four_folds_not_a_predictor' if all(r['verified_witness'] is not None for r in records) else 'joint_oracle_witnesses_incomplete',\n        parent=dict(path=str(path),sha256=digest),runner_sha256=sha256(Path(__file__)),\n        runner_source=Path(__file__).read_text(encoding='utf-8'),numpy_version=np.__version__,commit=git('rev-parse','HEAD'),\n        rules='Arithmetic verification ONLY of ALLsavedcapacitytrials;no newmodels/weightfitting. For a given savedweight vector,checkshape and HH jointlystrictlybelow minimum(fixed,nearest)capturelimits. Firstpassing trial retained asoracleexistencewitness;not a selectedimagealgorithm or regularizationparameter.',\n        limitations='UsesheldDtruth inORACLEcapacity stage;not blindnoiseestimation,independentvalidation or proof ofperceptualgain. Floatingpointnot formalintervalcertificate. Fourreusedcaptures/14quadrants only. Oracleweights and penalties mustnot becomeproductionsettings.')\n    with output.open('x',encoding='utf-8') as handle:json.dump(result,handle,ensure_ascii=False,indent=1,allow_nan=False)\n    print('VERDICT',result['verdict'],output,flush=True)\n\n\nif __name__=='__main__':run()\n",
+ "numpy_version": "2.4.2",
+ "commit": "2a40c5c6cff78d40294393a68827f4a24555c724",
+ "rules": "Arithmetic verification ONLY of ALLsavedcapacitytrials;no newmodels/weightfitting. For a given savedweight vector,checkshape and HH jointlystrictlybelow minimum(fixed,nearest)capturelimits. Firstpassing trial retained asoracleexistencewitness;not a selectedimagealgorithm or regularizationparameter.",
+ "limitations": "UsesheldDtruth inORACLEcapacity stage;not blindnoiseestimation,independentvalidation or proof ofperceptualgain. Floatingpointnot formalintervalcertificate. Fourreusedcaptures/14quadrants only. Oracleweights and penalties mustnot becomeproductionsettings."
+}

@@ -1,0 +1,2514 @@
+{
+ "schema_version": 1,
+ "data_version": 1,
+ "completed_at_utc": "2026-10-27T19:42:35.386611+00:00",
+ "records": [
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 0,
+   "angle": 0.0,
+   "original_weight": 1.0,
+   "adaptive_weight": 0.8062297525141945,
+   "fixed_weight_sigma_ratio": [
+    1.300282772218129,
+    1.0,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.2690132457775345,
+    1.0006128408968131,
+    1.0022643448529163
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 0,
+   "angle": 0.7853981633974483,
+   "original_weight": 1.0,
+   "adaptive_weight": 1.0,
+   "fixed_weight_sigma_ratio": [
+    1.2145727751685347,
+    1.0,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.2145727751685347,
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 1,
+   "angle": 0.0,
+   "original_weight": 1.0,
+   "adaptive_weight": 0.0,
+   "fixed_weight_sigma_ratio": [
+    1.0,
+    1.1975538334404248,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    0.8938113920364132,
+    1.191720163576346,
+    1.0121563661133064
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 1,
+   "angle": 0.7853981633974483,
+   "original_weight": 1.0,
+   "adaptive_weight": 1.0,
+   "fixed_weight_sigma_ratio": [
+    1.0,
+    1.1270054321536354,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.0,
+    1.1270054321536354,
+    1.0
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "kind": "localized_gaussian",
+   "injection_axis": 0,
+   "angle": null,
+   "original_weight": 1.0,
+   "adaptive_weight": 1.0,
+   "fixed_weight_sigma_ratio": [
+    0.9994622217378923,
+    1.0,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    0.9994622217378923,
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "kind": "localized_gaussian",
+   "injection_axis": 1,
+   "angle": null,
+   "original_weight": 1.0,
+   "adaptive_weight": 1.0,
+   "fixed_weight_sigma_ratio": [
+    1.0,
+    1.0001917076928635,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.0,
+    1.0001917076928635,
+    1.0
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 0,
+   "angle": 0.0,
+   "original_weight": 1.0,
+   "adaptive_weight": 0.3746880982484874,
+   "fixed_weight_sigma_ratio": [
+    1.2670690641909026,
+    1.0,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.1760103504643165,
+    1.002239487891647,
+    1.0069139268346652
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 0,
+   "angle": 0.7853981633974483,
+   "original_weight": 1.0,
+   "adaptive_weight": 0.6183874743930494,
+   "fixed_weight_sigma_ratio": [
+    1.1714917899911492,
+    1.0,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.1181081206364292,
+    1.0012397831879414,
+    1.004169663603917
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 1,
+   "angle": 0.0,
+   "original_weight": 1.0,
+   "adaptive_weight": 0.0,
+   "fixed_weight_sigma_ratio": [
+    1.0,
+    1.1895620494403427,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    0.8934961881977277,
+    1.183969831197522,
+    1.0112642671615557
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 1,
+   "angle": 0.7853981633974483,
+   "original_weight": 1.0,
+   "adaptive_weight": 1.0,
+   "fixed_weight_sigma_ratio": [
+    1.0,
+    1.1257951882175528,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.0,
+    1.1257951882175528,
+    1.0
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "kind": "localized_gaussian",
+   "injection_axis": 0,
+   "angle": null,
+   "original_weight": 1.0,
+   "adaptive_weight": 1.0,
+   "fixed_weight_sigma_ratio": [
+    1.0012239147308604,
+    1.0,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.0012239147308604,
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "kind": "localized_gaussian",
+   "injection_axis": 1,
+   "angle": null,
+   "original_weight": 1.0,
+   "adaptive_weight": 0.9999999999998184,
+   "fixed_weight_sigma_ratio": [
+    1.0,
+    1.0000499645394765,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    0.9999999999999768,
+    1.000049964539477,
+    1.000000000000002
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 0,
+   "angle": 0.0,
+   "original_weight": 1.0,
+   "adaptive_weight": 0.8034049601039575,
+   "fixed_weight_sigma_ratio": [
+    1.246399076634515,
+    1.0,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.2160728863365384,
+    1.000592831193829,
+    1.0022700145972738
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 0,
+   "angle": 0.7853981633974483,
+   "original_weight": 1.0,
+   "adaptive_weight": 1.0,
+   "fixed_weight_sigma_ratio": [
+    1.1747802688744686,
+    1.0,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.1747802688744686,
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 1,
+   "angle": 0.0,
+   "original_weight": 1.0,
+   "adaptive_weight": 0.0,
+   "fixed_weight_sigma_ratio": [
+    1.0,
+    1.2034452345012545,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    0.8938199517178866,
+    1.1972216990496876,
+    1.0120095393189947
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 1,
+   "angle": 0.7853981633974483,
+   "original_weight": 1.0,
+   "adaptive_weight": 1.0,
+   "fixed_weight_sigma_ratio": [
+    1.0,
+    1.1277144163357309,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.0,
+    1.1277144163357309,
+    1.0
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "kind": "localized_gaussian",
+   "injection_axis": 0,
+   "angle": null,
+   "original_weight": 1.0,
+   "adaptive_weight": 1.0,
+   "fixed_weight_sigma_ratio": [
+    1.0007478128245808,
+    1.0,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.0007478128245808,
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "kind": "localized_gaussian",
+   "injection_axis": 1,
+   "angle": null,
+   "original_weight": 1.0,
+   "adaptive_weight": 1.0,
+   "fixed_weight_sigma_ratio": [
+    1.0,
+    1.002222992998018,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.0,
+    1.002222992998018,
+    1.0
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 0,
+   "angle": 0.0,
+   "original_weight": 1.0,
+   "adaptive_weight": 0.5438508148845735,
+   "fixed_weight_sigma_ratio": [
+    1.2530862082591643,
+    1.0,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.185627865329293,
+    1.0013502558215863,
+    1.0052185481568885
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 0,
+   "angle": 0.7853981633974483,
+   "original_weight": 1.0,
+   "adaptive_weight": 0.8263491687819294,
+   "fixed_weight_sigma_ratio": [
+    1.171989491266216,
+    1.0,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.1468316444204796,
+    1.0004484884707698,
+    1.0019599177596512
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 1,
+   "angle": 0.0,
+   "original_weight": 1.0,
+   "adaptive_weight": 0.0,
+   "fixed_weight_sigma_ratio": [
+    1.0,
+    1.1835647494180255,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    0.8938790757384488,
+    1.177917587451423,
+    1.0117507293179733
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 1,
+   "angle": 0.7853981633974483,
+   "original_weight": 1.0,
+   "adaptive_weight": 0.9999999999998184,
+   "fixed_weight_sigma_ratio": [
+    1.0,
+    1.141177541605438,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    0.9999999999999771,
+    1.1411775416054386,
+    1.0000000000000022
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "kind": "localized_gaussian",
+   "injection_axis": 0,
+   "angle": null,
+   "original_weight": 1.0,
+   "adaptive_weight": 1.0,
+   "fixed_weight_sigma_ratio": [
+    1.0014997441251865,
+    1.0,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.0014997441251865,
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "kind": "localized_gaussian",
+   "injection_axis": 1,
+   "angle": null,
+   "original_weight": 1.0,
+   "adaptive_weight": 1.0,
+   "fixed_weight_sigma_ratio": [
+    1.0,
+    1.001687564601122,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.0,
+    1.001687564601122,
+    1.0
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 0,
+   "angle": 0.0,
+   "original_weight": 1.0,
+   "adaptive_weight": 1.0,
+   "fixed_weight_sigma_ratio": [
+    1.3526336060361102,
+    1.0,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.3526336060361102,
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 0,
+   "angle": 0.7853981633974483,
+   "original_weight": 1.0,
+   "adaptive_weight": 0.8282434494640961,
+   "fixed_weight_sigma_ratio": [
+    1.2570275326614948,
+    1.0,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.247736175222066,
+    0.9947389489796004,
+    0.9989444803404458
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 1,
+   "angle": 0.0,
+   "original_weight": 1.0,
+   "adaptive_weight": 1.0,
+   "fixed_weight_sigma_ratio": [
+    1.0,
+    1.3067689585077922,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.0,
+    1.3067689585077922,
+    1.0
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 1,
+   "angle": 0.7853981633974483,
+   "original_weight": 1.0,
+   "adaptive_weight": 0.8024275514233635,
+   "fixed_weight_sigma_ratio": [
+    1.0,
+    1.206678949782688,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    0.9916073306661711,
+    1.1992674843860103,
+    0.9987868204298251
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "kind": "localized_gaussian",
+   "injection_axis": 0,
+   "angle": null,
+   "original_weight": 1.0,
+   "adaptive_weight": 0.9999999999998184,
+   "fixed_weight_sigma_ratio": [
+    1.003048474698933,
+    1.0,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.0030484746989252,
+    0.9999999999999943,
+    0.9999999999999988
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "kind": "localized_gaussian",
+   "injection_axis": 1,
+   "angle": null,
+   "original_weight": 1.0,
+   "adaptive_weight": 1.0,
+   "fixed_weight_sigma_ratio": [
+    1.0,
+    0.9981263266318984,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.0,
+    0.9981263266318984,
+    1.0
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 0,
+   "angle": 0.0,
+   "original_weight": 0.8381026167337423,
+   "adaptive_weight": 1.0,
+   "fixed_weight_sigma_ratio": [
+    1.4257872270183023,
+    1.0,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.4325903355765508,
+    1.0050456087774136,
+    1.000961809913766
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 0,
+   "angle": 0.7853981633974483,
+   "original_weight": 0.8381026167337423,
+   "adaptive_weight": 0.2930009015127126,
+   "fixed_weight_sigma_ratio": [
+    1.293720258367747,
+    1.0,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.2644867808707618,
+    0.9837034868710443,
+    0.9968355288648091
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 1,
+   "angle": 0.0,
+   "original_weight": 0.8381026167337423,
+   "adaptive_weight": 1.0,
+   "fixed_weight_sigma_ratio": [
+    1.0,
+    1.3116672024310143,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.0069962914630097,
+    1.316385526687135,
+    1.000961809913766
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 1,
+   "angle": 0.7853981633974483,
+   "original_weight": 0.8381026167337423,
+   "adaptive_weight": 0.9117378985050074,
+   "fixed_weight_sigma_ratio": [
+    1.0,
+    1.213346070868036,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.0031581716586127,
+    1.2161066028603287,
+    1.0004361990105934
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "kind": "localized_gaussian",
+   "injection_axis": 0,
+   "angle": null,
+   "original_weight": 0.8381026167337423,
+   "adaptive_weight": 0.8499937934958011,
+   "fixed_weight_sigma_ratio": [
+    1.0001025374066794,
+    1.0,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.0006097374500318,
+    1.0003672676229727,
+    1.0000702988930512
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "kind": "localized_gaussian",
+   "injection_axis": 1,
+   "angle": null,
+   "original_weight": 0.8381026167337423,
+   "adaptive_weight": 0.83488342848879,
+   "fixed_weight_sigma_ratio": [
+    1.0,
+    1.0001365729115053,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    0.9998628265051357,
+    1.0000372077456878,
+    0.999980978014163
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 0,
+   "angle": 0.0,
+   "original_weight": 0.0,
+   "adaptive_weight": 1.0,
+   "fixed_weight_sigma_ratio": [
+    1.3518729731602952,
+    1.0,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.3934924908185558,
+    1.0303319023942643,
+    1.0059651617461174
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 0,
+   "angle": 0.7853981633974483,
+   "original_weight": 0.0,
+   "adaptive_weight": 0.6934066610749845,
+   "fixed_weight_sigma_ratio": [
+    1.1870536870466475,
+    1.0,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.220719316206036,
+    1.020654257729556,
+    1.004095450103463
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 1,
+   "angle": 0.0,
+   "original_weight": 0.0,
+   "adaptive_weight": 1.0,
+   "fixed_weight_sigma_ratio": [
+    1.0,
+    1.3438406253049522,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.0428398596378958,
+    1.372321929874254,
+    1.0059651617461174
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 1,
+   "angle": 0.7853981633974483,
+   "original_weight": 0.0,
+   "adaptive_weight": 0.15620281761140903,
+   "fixed_weight_sigma_ratio": [
+    1.0,
+    1.2268316157297632,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.0062515489005919,
+    1.2323283531215672,
+    1.0009066623305305
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "kind": "localized_gaussian",
+   "injection_axis": 0,
+   "angle": null,
+   "original_weight": 0.0,
+   "adaptive_weight": 0.0,
+   "fixed_weight_sigma_ratio": [
+    1.0018407760959096,
+    1.0,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.0018407760959096,
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "kind": "localized_gaussian",
+   "injection_axis": 1,
+   "angle": null,
+   "original_weight": 0.0,
+   "adaptive_weight": 0.0,
+   "fixed_weight_sigma_ratio": [
+    1.0,
+    1.0004476038722825,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.0,
+    1.0004476038722825,
+    1.0
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 0,
+   "angle": 0.0,
+   "original_weight": 0.6575963913951438,
+   "adaptive_weight": 1.0,
+   "fixed_weight_sigma_ratio": [
+    1.3755654360586915,
+    1.0,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.3899608085176878,
+    1.0107015658568068,
+    1.0018569859321598
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 0,
+   "angle": 0.7853981633974483,
+   "original_weight": 0.6575963913951438,
+   "adaptive_weight": 0.4733870235322992,
+   "fixed_weight_sigma_ratio": [
+    1.2440865056544892,
+    1.0,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.2345131013008308,
+    0.9944195773992046,
+    0.9990193322190739
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 1,
+   "angle": 0.0,
+   "original_weight": 0.6575963913951438,
+   "adaptive_weight": 1.0,
+   "fixed_weight_sigma_ratio": [
+    1.0,
+    1.3675946351550639,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.0148585266846308,
+    1.3775580617752003,
+    1.0018569859321598
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 1,
+   "angle": 0.7853981633974483,
+   "original_weight": 0.6575963913951438,
+   "adaptive_weight": 0.6919272419264637,
+   "fixed_weight_sigma_ratio": [
+    1.0,
+    1.2507619074717362,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.0014515759788118,
+    1.252077442061072,
+    1.0001841800226272
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "kind": "localized_gaussian",
+   "injection_axis": 0,
+   "angle": null,
+   "original_weight": 0.6575963913951438,
+   "adaptive_weight": 0.6690822875649736,
+   "fixed_weight_sigma_ratio": [
+    1.0017904062263472,
+    1.0,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.0022758225265607,
+    1.0003519582878928,
+    1.0000615705575788
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "kind": "localized_gaussian",
+   "injection_axis": 1,
+   "angle": null,
+   "original_weight": 0.6575963913951438,
+   "adaptive_weight": 0.6822039803538594,
+   "fixed_weight_sigma_ratio": [
+    1.0,
+    1.0009762731181806,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.0010396206939063,
+    1.0017308002561418,
+    1.0001319708956802
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 51200,
+   "a": "6V1A9815.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 0,
+   "angle": 0.0,
+   "original_weight": 0.03326111435034613,
+   "adaptive_weight": 1.0,
+   "fixed_weight_sigma_ratio": [
+    1.3612490938832984,
+    1.0,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.4057725186692784,
+    0.9405655061148438,
+    0.9918781112177588
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 51200,
+   "a": "6V1A9815.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 0,
+   "angle": 0.7853981633974483,
+   "original_weight": 0.03326111435034613,
+   "adaptive_weight": 0.0,
+   "fixed_weight_sigma_ratio": [
+    1.270674862373923,
+    1.0,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.269170653020334,
+    1.0022827064353068,
+    1.0002942625209843
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 51200,
+   "a": "6V1A9815.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 1,
+   "angle": 0.0,
+   "original_weight": 0.03326111435034613,
+   "adaptive_weight": 1.0,
+   "fixed_weight_sigma_ratio": [
+    1.0,
+    1.3280120192346787,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.037410017304526,
+    1.2339657855799369,
+    0.9918781112177588
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 51200,
+   "a": "6V1A9815.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 1,
+   "angle": 0.7853981633974483,
+   "original_weight": 0.03326111435034613,
+   "adaptive_weight": 0.10521077463317535,
+   "fixed_weight_sigma_ratio": [
+    1.0,
+    1.1959147261450294,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.0025043254356647,
+    1.1900605659969734,
+    0.9993669800034743
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 51200,
+   "a": "6V1A9815.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "kind": "localized_gaussian",
+   "injection_axis": 0,
+   "angle": null,
+   "original_weight": 0.03326111435034613,
+   "adaptive_weight": 0.050353235559878196,
+   "fixed_weight_sigma_ratio": [
+    1.0015329400371822,
+    1.0,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.0021241588951026,
+    0.9988339817398445,
+    0.9998491867421685
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 51200,
+   "a": "6V1A9815.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "kind": "localized_gaussian",
+   "injection_axis": 1,
+   "angle": null,
+   "original_weight": 0.03326111435034613,
+   "adaptive_weight": 0.046609824258492645,
+   "fixed_weight_sigma_ratio": [
+    1.0,
+    1.000431056467246,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.000461643403964,
+    0.9995189846188349,
+    0.9998821936777802
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 51200,
+   "a": "6V1A9815.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 0,
+   "angle": 0.0,
+   "original_weight": 0.47158634581792735,
+   "adaptive_weight": 1.0,
+   "fixed_weight_sigma_ratio": [
+    1.361584577742136,
+    1.0,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.3858895763506995,
+    0.9680556756398809,
+    0.9957072628152863
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 51200,
+   "a": "6V1A9815.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 0,
+   "angle": 0.7853981633974483,
+   "original_weight": 0.47158634581792735,
+   "adaptive_weight": 0.0,
+   "fixed_weight_sigma_ratio": [
+    1.2778724478704442,
+    1.0,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.2560617593112444,
+    1.0317930489189606,
+    1.0040357935476891
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 51200,
+   "a": "6V1A9815.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 1,
+   "angle": 0.0,
+   "original_weight": 0.47158634581792735,
+   "adaptive_weight": 1.0,
+   "fixed_weight_sigma_ratio": [
+    1.0,
+    1.343681888206655,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.0203294127825913,
+    1.292359177376342,
+    0.9957072628152863
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 51200,
+   "a": "6V1A9815.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 1,
+   "angle": 0.7853981633974483,
+   "original_weight": 0.47158634581792735,
+   "adaptive_weight": 0.5085574485273748,
+   "fixed_weight_sigma_ratio": [
+    1.0,
+    1.2199435706159532,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.0013394485981955,
+    1.2170675816294914,
+    0.9996919587916497
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 51200,
+   "a": "6V1A9815.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "kind": "localized_gaussian",
+   "injection_axis": 0,
+   "angle": null,
+   "original_weight": 0.47158634581792735,
+   "adaptive_weight": 0.46290901252936256,
+   "fixed_weight_sigma_ratio": [
+    1.0001019349907085,
+    1.0,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    0.9997889463160833,
+    1.0005549781416385,
+    1.0000724711480182
+   ]
+  },
+  {
+   "dataset": 0,
+   "iso": 51200,
+   "a": "6V1A9815.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "kind": "localized_gaussian",
+   "injection_axis": 1,
+   "angle": null,
+   "original_weight": 0.47158634581792735,
+   "adaptive_weight": 0.4424064100633319,
+   "fixed_weight_sigma_ratio": [
+    1.0,
+    1.001994808855573,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    0.998950953610653,
+    1.0038661382648106,
+    1.0002439650331574
+   ]
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 0,
+   "angle": 0.0,
+   "original_weight": 0.0,
+   "adaptive_weight": 0.0,
+   "fixed_weight_sigma_ratio": [
+    1.3069996978614178,
+    1.0,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.3069996978614178,
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 0,
+   "angle": 0.7853981633974483,
+   "original_weight": 0.0,
+   "adaptive_weight": 0.15118979582306352,
+   "fixed_weight_sigma_ratio": [
+    1.2065507224681604,
+    1.0,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.1155756010748625,
+    1.00240060493478,
+    0.9872302729749658
+   ]
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 1,
+   "angle": 0.0,
+   "original_weight": 0.0,
+   "adaptive_weight": 0.0,
+   "fixed_weight_sigma_ratio": [
+    1.0,
+    1.3768038718959865,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.0,
+    1.3768038718959865,
+    1.0
+   ]
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 1,
+   "angle": 0.7853981633974483,
+   "original_weight": 0.0,
+   "adaptive_weight": 0.0,
+   "fixed_weight_sigma_ratio": [
+    1.0,
+    1.265139443489191,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.0,
+    1.265139443489191,
+    1.0
+   ]
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "kind": "localized_gaussian",
+   "injection_axis": 0,
+   "angle": null,
+   "original_weight": 0.0,
+   "adaptive_weight": 0.0,
+   "fixed_weight_sigma_ratio": [
+    1.0014536704235941,
+    1.0,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.0014536704235941,
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "kind": "localized_gaussian",
+   "injection_axis": 1,
+   "angle": null,
+   "original_weight": 0.0,
+   "adaptive_weight": 0.0,
+   "fixed_weight_sigma_ratio": [
+    1.0,
+    1.001987722417618,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.0,
+    1.001987722417618,
+    1.0
+   ]
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 0,
+   "angle": 0.0,
+   "original_weight": 0.020663215301447956,
+   "adaptive_weight": 0.0,
+   "fixed_weight_sigma_ratio": [
+    1.3066728196279593,
+    1.0,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.3204481724923747,
+    0.9996737180627858,
+    1.001783306866716
+   ]
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 0,
+   "angle": 0.7853981633974483,
+   "original_weight": 0.020663215301447956,
+   "adaptive_weight": 0.14727949482653163,
+   "fixed_weight_sigma_ratio": [
+    1.2064698534938814,
+    1.0,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.1306743010428228,
+    1.0020065439984924,
+    0.9892818850456571
+   ]
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 1,
+   "angle": 0.0,
+   "original_weight": 0.020663215301447956,
+   "adaptive_weight": 0.0,
+   "fixed_weight_sigma_ratio": [
+    1.0,
+    1.3448918568359358,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.0115265347024212,
+    1.3444129658072266,
+    1.001783306866716
+   ]
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 1,
+   "angle": 0.7853981633974483,
+   "original_weight": 0.020663215301447956,
+   "adaptive_weight": 0.022867965957337585,
+   "fixed_weight_sigma_ratio": [
+    1.0,
+    1.2395307610727315,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    0.9987959951830403,
+    1.2395736216064195,
+    0.9998102989209469
+   ]
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "kind": "localized_gaussian",
+   "injection_axis": 0,
+   "angle": null,
+   "original_weight": 0.020663215301447956,
+   "adaptive_weight": 0.015784794180189323,
+   "fixed_weight_sigma_ratio": [
+    1.000518719624808,
+    1.0,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.0032003254830204,
+    0.9999229377482044,
+    1.0004201431213682
+   ]
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "kind": "localized_gaussian",
+   "injection_axis": 1,
+   "angle": null,
+   "original_weight": 0.020663215301447956,
+   "adaptive_weight": 0.020461133758809567,
+   "fixed_weight_sigma_ratio": [
+    1.0,
+    1.0019371768035648,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.0001105996215338,
+    1.0019339758902968,
+    1.0000173930374452
+   ]
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 0,
+   "angle": 0.0,
+   "original_weight": 0.0,
+   "adaptive_weight": 0.0,
+   "fixed_weight_sigma_ratio": [
+    1.2593392196170978,
+    1.0,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.2593392196170978,
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 0,
+   "angle": 0.7853981633974483,
+   "original_weight": 0.0,
+   "adaptive_weight": 0.07242078742080263,
+   "fixed_weight_sigma_ratio": [
+    1.1569815305179831,
+    1.0,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.1126328450755987,
+    1.001141375232864,
+    0.9938274840837488
+   ]
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 1,
+   "angle": 0.0,
+   "original_weight": 0.0,
+   "adaptive_weight": 0.0,
+   "fixed_weight_sigma_ratio": [
+    1.0,
+    1.3548765623443262,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.0,
+    1.3548765623443262,
+    1.0
+   ]
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 1,
+   "angle": 0.7853981633974483,
+   "original_weight": 0.0,
+   "adaptive_weight": 0.0,
+   "fixed_weight_sigma_ratio": [
+    1.0,
+    1.246227881311641,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.0,
+    1.246227881311641,
+    1.0
+   ]
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "kind": "localized_gaussian",
+   "injection_axis": 0,
+   "angle": null,
+   "original_weight": 0.0,
+   "adaptive_weight": 0.0,
+   "fixed_weight_sigma_ratio": [
+    1.0010750621372915,
+    1.0,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.0010750621372915,
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "kind": "localized_gaussian",
+   "injection_axis": 1,
+   "angle": null,
+   "original_weight": 0.0,
+   "adaptive_weight": 0.0,
+   "fixed_weight_sigma_ratio": [
+    1.0,
+    1.0007171052154011,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.0,
+    1.0007171052154011,
+    1.0
+   ]
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 0,
+   "angle": 0.0,
+   "original_weight": 0.1458865788561534,
+   "adaptive_weight": 0.0,
+   "fixed_weight_sigma_ratio": [
+    1.306853665330793,
+    1.0,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.4011834735770365,
+    0.9977018789151879,
+    1.0125529048884006
+   ]
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 0,
+   "angle": 0.7853981633974483,
+   "original_weight": 0.1458865788561534,
+   "adaptive_weight": 0.24913752967687797,
+   "fixed_weight_sigma_ratio": [
+    1.205951365429216,
+    1.0,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.1506711627782735,
+    1.0016364129438193,
+    0.9913992561779188
+   ]
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 1,
+   "angle": 0.0,
+   "original_weight": 0.1458865788561534,
+   "adaptive_weight": 0.09942682198742689,
+   "fixed_weight_sigma_ratio": [
+    1.0,
+    1.3989841792423447,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.0229767506719252,
+    1.39785287132903,
+    1.0039456064568533
+   ]
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "kind": "weak_stripes",
+   "injection_axis": 1,
+   "angle": 0.7853981633974483,
+   "original_weight": 0.1458865788561534,
+   "adaptive_weight": 0.14635252350781042,
+   "fixed_weight_sigma_ratio": [
+    1.0,
+    1.25336244484262,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    0.9997780447846809,
+    1.2533716692220622,
+    0.9999606705832496
+   ]
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "kind": "localized_gaussian",
+   "injection_axis": 0,
+   "angle": null,
+   "original_weight": 0.1458865788561534,
+   "adaptive_weight": 0.14236904744049428,
+   "fixed_weight_sigma_ratio": [
+    1.0003270179410122,
+    1.0,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.0020080029593301,
+    0.9999443964696743,
+    1.0002970609896533
+   ]
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "kind": "localized_gaussian",
+   "injection_axis": 1,
+   "angle": null,
+   "original_weight": 0.1458865788561534,
+   "adaptive_weight": 0.14560182837298621,
+   "fixed_weight_sigma_ratio": [
+    1.0,
+    0.9994401627503748,
+    1.0
+   ],
+   "adaptive_sigma_ratio": [
+    1.000135721686302,
+    0.9994356612900829,
+    1.0000240375352398
+   ]
+  }
+ ],
+ "weak_texture_counts": {
+  "adaptive_only_over_10_percent": 0,
+  "both_over_10_percent": 56,
+  "fixed_only_over_10_percent": 0,
+  "neither_over_10_percent": 0
+ },
+ "subregion_stability": [
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "original_weight": 1.0,
+   "subregion_weights": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "weight_range": 0.0
+  },
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "original_weight": 1.0,
+   "subregion_weights": [
+    1.0,
+    1.0,
+    0.8748823500290098,
+    1.0
+   ],
+   "weight_range": 0.12511764997099017
+  },
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "original_weight": 1.0,
+   "subregion_weights": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "weight_range": 0.0
+  },
+  {
+   "dataset": 0,
+   "iso": 100,
+   "a": "6V1A9660.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "original_weight": 1.0,
+   "subregion_weights": [
+    1.0,
+    0.8513355967103551,
+    1.0,
+    1.0
+   ],
+   "weight_range": 0.14866440328964492
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "original_weight": 1.0,
+   "subregion_weights": [
+    1.0,
+    0.5458421658060649,
+    1.0,
+    0.2292815135553055
+   ],
+   "weight_range": 0.7707184864446945
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "original_weight": 0.8381026167337423,
+   "subregion_weights": [
+    0.17520087029132378,
+    0.9831488704276243,
+    0.0035839153165985104,
+    1.0
+   ],
+   "weight_range": 0.9964160846834015
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "original_weight": 0.0,
+   "subregion_weights": [
+    0.0,
+    0.965378708867009,
+    0.0,
+    0.6811481228995202
+   ],
+   "weight_range": 0.965378708867009
+  },
+  {
+   "dataset": 0,
+   "iso": 6400,
+   "a": "6V1A9702.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "original_weight": 0.6575963913951438,
+   "subregion_weights": [
+    0.0,
+    0.9999999999998184,
+    1.0,
+    0.608859917174419
+   ],
+   "weight_range": 1.0
+  },
+  {
+   "dataset": 0,
+   "iso": 51200,
+   "a": "6V1A9815.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "original_weight": 0.03326111435034613,
+   "subregion_weights": [
+    0.03730500717538114,
+    0.46495628313424897,
+    0.0,
+    0.0
+   ],
+   "weight_range": 0.46495628313424897
+  },
+  {
+   "dataset": 0,
+   "iso": 51200,
+   "a": "6V1A9815.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "original_weight": 0.47158634581792735,
+   "subregion_weights": [
+    0.7425679011637772,
+    0.24497286006658836,
+    0.7845230811984054,
+    0.19140999603856088
+   ],
+   "weight_range": 0.5931130851598445
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "rect": [
+    0,
+    0,
+    128,
+    128
+   ],
+   "original_weight": 0.0,
+   "subregion_weights": [
+    0.05564764978326206,
+    0.0,
+    0.0,
+    0.03869641383304017
+   ],
+   "weight_range": 0.05564764978326206
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "rect": [
+    128,
+    0,
+    128,
+    128
+   ],
+   "original_weight": 0.020663215301447956,
+   "subregion_weights": [
+    0.158829240512618,
+    0.0,
+    0.010199003720473169,
+    0.0
+   ],
+   "weight_range": 0.158829240512618
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "rect": [
+    0,
+    128,
+    128,
+    128
+   ],
+   "original_weight": 0.0,
+   "subregion_weights": [
+    0.0,
+    0.07035276177874325,
+    0.0,
+    0.05142289296450898
+   ],
+   "weight_range": 0.07035276177874325
+  },
+  {
+   "dataset": 2,
+   "iso": 6400,
+   "a": "6V1A9700.CR3",
+   "rect": [
+    128,
+    128,
+    128,
+    128
+   ],
+   "original_weight": 0.1458865788561534,
+   "subregion_weights": [
+    0.6755546541282555,
+    0.03603152095282364,
+    0.5783143690948002,
+    0.0
+   ],
+   "weight_range": 0.6755546541282555
+  }
+ ],
+ "maximum_sigma_replay_error": 0.0,
+ "maximum_fixed_weight_inflation": 1.4257872270183023,
+ "maximum_adaptive_inflation": 1.4325903355765508,
+ "parents": [
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\poids-image-seule-contraste-ondelettes-bruit-v001-20261027T193952Z.json",
+   "sha256": "2199b9be483a639321436902455349acb55aff79d34cd0b4a89b1c640fe5a164"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\prediction-covariance-luminance-bruit-v001-20261027T192134Z.json",
+   "sha256": "45371018c270d8c350f051c4dfc881398123d197c5156cd434dd683fcabaa1e0"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\transport-psd-gaussien-filtre-spectral-bruit-v002-20261027T190615Z.json",
+   "sha256": "20811ce8fafd75cc7d59438602e408e574fc7b189a49ac104b9913c3698433ac"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\melange-fixe-covariances-bruit-v001-20261026T175757Z.json",
+   "sha256": "b242bf674ef8bda8a71a8cba594eb2059ddca0d74bb5056c03c300ab538f6cb5"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\contextes-abstention-axes-bruit-v001-20261026T221702Z.json",
+   "sha256": "93c538e3b0d1a76a0d8a007fba7d6964cd4e0b0fe9cdcde73c8ad1cb65cd5d90"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\paires-supplementaires-axes-bruit-v001-20261026T222302Z.json",
+   "sha256": "ef585b35e3572418874cf55d1791d41834c40c7cccc1b61c0e89421d82f2a285"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\paires-supplementaires-axes-bruit-v002-20261026T222833Z.json",
+   "sha256": "131f27c54de91a50e8789c154fb5c67eb0a89d9bcb743808f3d58154b449ea39"
+  }
+ ],
+ "numpy_version": "2.4.2",
+ "commit": "2a40c5c6cff78d40294393a68827f4a24555c724",
+ "runner_sha256": "3bfa9d49a39dc7da05e0da35e4d048540c8014c0995c28364db94b36f10219b1",
+ "runner_source": "\"\"\"Decompose known texture bias with ORIGINAL weight frozen; diagnostic, not alternative estimator.\"\"\"\nfrom datetime import datetime,timezone\nimport json\nfrom pathlib import Path\nimport numpy as np\nfrom study_noise_neighbourhoods import ROOT,sha256,git\nfrom study_noise_signal_covariance_prediction import normalized\nfrom study_noise_single_image_weights import band_energy,band_variances\n\n\ndef nuisance_sigma(energy,variance):\n    energy,variance=np.asarray(energy),np.asarray(variance)\n    if energy.shape!=(3,3) or variance.shape!=(3,3) or not np.isfinite(energy).all() or not np.isfinite(variance).all() or np.min(variance)<=0 or np.min(energy)<0:\n        raise ValueError('Finite nonnegative energies and positive band variances required')\n    return np.sqrt(np.mean(energy/variance,axis=1))\n\n\ndef run():\n    names=('poids-image-seule-contraste-ondelettes-bruit-v001-20261027T193952Z.json',\n        'prediction-covariance-luminance-bruit-v001-20261027T192134Z.json',\n        'transport-psd-gaussien-filtre-spectral-bruit-v002-20261027T190615Z.json',\n        'melange-fixe-covariances-bruit-v001-20261026T175757Z.json',\n        'contextes-abstention-axes-bruit-v001-20261026T221702Z.json',\n        'paires-supplementaires-axes-bruit-v001-20261026T222302Z.json',\n        'paires-supplementaires-axes-bruit-v002-20261026T222833Z.json')\n    paths=[ROOT/'docs/validation/raw'/n for n in names];hashes=[sha256(p) for p in paths]\n    measured,definition,spectral,axes=[json.loads(p.read_text(encoding='utf-8')) for p in paths[:4]]\n    anchors={a['id']:a for a in definition['anchors']};inputs={};matrix=np.asarray(axes['fixed_transform'])\n    for dataset,path in enumerate(paths[4:]):\n        wanted=[r for r in measured['records'] if r['dataset']==dataset and 'challenges' in r]\n        if not wanted:continue\n        data=json.loads(path.read_text(encoding='utf-8'))\n        for pair in data['records']:\n            matching=[r for r in wanted if r['a']==pair['a']['native']['raw']]\n            if not matching:continue\n            planes=np.asarray(pair['a']['native']['original_y_co_cg']).reshape(3,256,256)\n            transformed=np.einsum('ab,byx->ayx',matrix,planes)\n            for row in matching:\n                x,y,_,_=row['rect'];inputs[(dataset,row['a'],x,y)]=transformed[:,y:y+128,x:x+128].copy()\n        del data\n    yy,xx=np.mgrid[:128,:128];records=[];max_replay_error=0.\n    for row in measured['records']:\n        if 'challenges' not in row:continue\n        x,y,_,_=row['rect'];source=inputs[(row['dataset'],row['a'],x,y)]\n        np.testing.assert_allclose(band_energy(source),row['input_band_energy'],rtol=1e-12,atol=1e-24)\n        low,high=[band_variances(normalized(np.asarray(anchors[row[k]]['physical_covariance']))) for k in ('lower','upper')]\n        weight=row['prediction']['weight'];original_variance=(1-weight)*low+weight*high\n        original_sigma=np.asarray(row['prediction']['sigma'])\n        reference=next(r for r in spectral['records'] if r['dataset']==row['dataset'] and r['a']==row['a'] and r['rect']==row['rect'])\n        sigma=np.asarray(reference['sigma_before_unit_scaling'])\n        for challenge in row['challenges']:\n            observed=source.copy();axis=challenge['axis']\n            if challenge['kind']=='weak_stripes':\n                pattern=.5*np.cos(2*np.pi*(xx*np.cos(challenge['angle'])+yy*np.sin(challenge['angle']))/4+.37)\n            else:pattern=3*np.exp(-((xx-63.5)**2+(yy-63.5)**2)/(2*1.5**2))\n            observed[axis]+=sigma[axis]*pattern;energy=band_energy(observed)\n            adaptive=challenge['prediction'];w=adaptive['weight']\n            if w is None:raise ValueError('Preserve unavailable adaptive challenge before decomposition')\n            replay=nuisance_sigma(energy,(1-w)*low+w*high)\n            error=float(np.max(abs(replay-np.asarray(adaptive['sigma']))));max_replay_error=max(max_replay_error,error)\n            np.testing.assert_allclose(replay,adaptive['sigma'],rtol=1e-12,atol=1e-24)\n            records.append(dict(dataset=row['dataset'],iso=row['iso'],a=row['a'],rect=row['rect'],kind=challenge['kind'],\n                injection_axis=axis,angle=challenge.get('angle'),original_weight=weight,adaptive_weight=w,\n                fixed_weight_sigma_ratio=(nuisance_sigma(energy,original_variance)/original_sigma).tolist(),\n                adaptive_sigma_ratio=(replay/original_sigma).tolist()))\n    weak=[r for r in records if r['kind']=='weak_stripes']\n    counts=dict(adaptive_only_over_10_percent=sum(max(r['adaptive_sigma_ratio'])>1.1 and max(r['fixed_weight_sigma_ratio'])<=1.1 for r in weak),\n        both_over_10_percent=sum(max(r['adaptive_sigma_ratio'])>1.1 and max(r['fixed_weight_sigma_ratio'])>1.1 for r in weak),\n        fixed_only_over_10_percent=sum(max(r['adaptive_sigma_ratio'])<=1.1 and max(r['fixed_weight_sigma_ratio'])>1.1 for r in weak),\n        neither_over_10_percent=sum(max(r['adaptive_sigma_ratio'])<=1.1 and max(r['fixed_weight_sigma_ratio'])<=1.1 for r in weak))\n    stability=[]\n    for row in measured['records']:\n        if 'subregion_weight_diagnostic' not in row:continue\n        weights=[v['weight'] for v in row['subregion_weight_diagnostic'] if v['weight'] is not None]\n        stability.append(dict(dataset=row['dataset'],iso=row['iso'],a=row['a'],rect=row['rect'],\n            original_weight=row['prediction']['weight'],subregion_weights=weights,\n            weight_range=max(weights)-min(weights) if weights else None))\n    if len(records)!=84 or len(weak)!=56 or [sha256(p) for p in paths]!=hashes:raise ValueError('Incomplete/changed feedback study')\n    now=datetime.now(timezone.utc)\n    output=ROOT/'docs/validation/raw'/f'decomposition-poids-amplitude-textures-bruit-v001-{now.strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n    result=dict(schema_version=1,data_version=1,completed_at_utc=now.isoformat(),records=records,\n        weak_texture_counts=counts,subregion_stability=stability,maximum_sigma_replay_error=max_replay_error,\n        maximum_fixed_weight_inflation=max(max(r['fixed_weight_sigma_ratio']) for r in weak),\n        maximum_adaptive_inflation=max(max(r['adaptive_sigma_ratio']) for r in weak),\n        parents=[dict(path=str(p),sha256=h) for p,h in zip(paths,hashes)],numpy_version=np.__version__,commit=git('rev-parse','HEAD'),\n        runner_sha256=sha256(Path(__file__)),runner_source=Path(__file__).read_text(encoding='utf-8'),\n        dependencies={n:dict(sha256=sha256(ROOT/'tests'/n),source=(ROOT/'tests'/n).read_text(encoding='utf-8')) for n in\n            ('study_noise_single_image_weights.py','study_noise_signal_covariance_prediction.py')},\n        rules='ReplayALL84existinginjections andMADenergies/sigma beforedecomposition,no newmodel or optimization. Compareonly amplitude withORIGINALimageweightheldfixed toadaptiveweight. 10%threshold inherited,not optimized. Four64subregionweights copiedverbatim,not selected or turnedintoconfidence.',\n        limitations='Frozenweight usesestimatefromunperturbedoriginalA,not availableascleanreferenceina normalphoto;diagnosticablationONLY,notdeployableguard. FinitecorrelatedMAD canreacttotexture evenifweightfixed. Knownsynthetictextures/reused4captures,not visualquality or universalnoise test.')\n    with output.open('x',encoding='utf-8') as handle:json.dump(result,handle,ensure_ascii=False,indent=1,allow_nan=False)\n    print(output,flush=True);print(counts,flush=True)\n    print('MAXfixed',result['maximum_fixed_weight_inflation'],'MAXadaptive',result['maximum_adaptive_inflation'],flush=True)\n    print('Subregion weight ranges',min(s['weight_range'] for s in stability),float(np.median([s['weight_range'] for s in stability])),max(s['weight_range'] for s in stability),flush=True)\n\n\nif __name__=='__main__':run()\n",
+ "dependencies": {
+  "study_noise_single_image_weights.py": {
+   "sha256": "8956accc755e92a7a6bd5360d36b1bc66a6803600a58e86a7e416bbd8012f1d0",
+   "source": "\"\"\"A-only robust wavelet contrast for correlation weights; paired D used only for evaluation.\"\"\"\nfrom datetime import datetime,timezone\nimport json\nfrom pathlib import Path\nfrom statistics import NormalDist\nimport numpy as np\nfrom study_noise_neighbourhoods import ROOT,sha256,git\nfrom study_noise_signal_covariance_prediction import normalized,physical\nfrom study_noise_shape_only_prediction import shape_errors\n\n\nGAUSSIAN_MAD=NormalDist().inv_cdf(.75)\nSETTINGS=dict(grid_points=257,refinement_iterations=48,minimum_ratio_identifiability=1e-4,\n    texture_sigma_inflation_limit=1.10,\n    screen='All four capture means improve covariance and HH vs fixed and do not worsen vs nearest; all native estimates available. Weak-stripe challenge sigma estimates <=1.10 times same original A estimates. No tuning after result.')\n\n\ndef band_variances(covariance):\n    c=np.asarray(covariance,dtype=float)\n    if c.shape!=(3,3,17,17) or not np.isfinite(c).all():raise ValueError('Finite lag8 covariance required')\n    p=np.array([[0,0],[0,1],[1,0],[1,1]]);delta=p[:,None]-p[None,:]\n    filters=np.array([[.5,.5,-.5,-.5],[.5,-.5,.5,-.5],[.5,-.5,-.5,.5]])\n    out=np.array([[h@c[a,a,delta[:,:,0]+8,delta[:,:,1]+8]@h for h in filters] for a in range(3)])\n    if np.min(out)<=0:raise ValueError('Positive LH/HL/HH variances required')\n    return out\n\n\ndef band_energy(planes):\n    if planes.ndim!=3 or planes.shape[0]!=3 or min(planes.shape[1:])<4 or any(n%2 for n in planes.shape[1:]) or not np.isfinite(planes).all():\n        raise ValueError('Finite three-axis even field required')\n    a,b,c,d=planes[:,::2,::2],planes[:,::2,1::2],planes[:,1::2,::2],planes[:,1::2,1::2]\n    bands=np.stack(((a+b-c-d)*.5,(a-b+c-d)*.5,(a-b-c+d)*.5),axis=1)\n    med=np.median(bands,axis=(-2,-1),keepdims=True)\n    return (np.median(abs(bands-med),axis=(-2,-1))/GAUSSIAN_MAD)**2\n\n\ndef estimate_from_energy(energy,low,high):\n    energy,low,high=[np.asarray(v,dtype=float) for v in (energy,low,high)]\n    if any(v.shape!=(3,3) or not np.isfinite(v).all() for v in (energy,low,high)) or np.min(low)<=0 or np.min(high)<=0:\n        raise ValueError('Finite three-axis three-band moments and positive model variances required')\n    if np.min(energy)<=1e-24:return dict(status='unmeasurable_axis',weight=None)\n    logratio=np.log(high/low);contrast=float(np.max(abs(logratio-logratio.mean(axis=1,keepdims=True))))\n    if contrast<SETTINGS['minimum_ratio_identifiability']:return dict(status='unidentifiable_band_ratios',weight=None)\n    def objective(weights):\n        weights=np.atleast_1d(weights)\n        variance=low[None]*(1-weights[:,None,None])+high[None]*weights[:,None,None]\n        nuisance=np.mean(energy[None]/variance,axis=2)\n        return np.sum(3*np.log(nuisance)+np.log(variance).sum(axis=2),axis=1)\n    grid=np.linspace(0,1,SETTINGS['grid_points']);values=objective(grid);best=int(np.argmin(values))\n    left,right=grid[max(0,best-1)],grid[min(len(grid)-1,best+1)]\n    golden=(np.sqrt(5)-1)/2\n    for _ in range(SETTINGS['refinement_iterations']):\n        x=right-golden*(right-left);y=left+golden*(right-left)\n        if objective(x)[0]<objective(y)[0]:right=y\n        else:left=x\n    candidates=np.array([0.,1.,grid[best],(left+right)/2]);costs=objective(candidates)\n    w=float(candidates[int(np.argmin(costs))]);variance=(1-w)*low+w*high\n    sigma=np.sqrt(np.mean(energy/variance,axis=1))\n    return dict(status='estimated_not_confidence_calibrated',weight=w,sigma=sigma.tolist(),\n        contrast=float(np.min(costs)),endpoint_identifiability=contrast,grid_contrast_range=float(np.ptp(values)))\n\n\ndef estimate(planes,low,high):return estimate_from_energy(band_energy(planes),low,high)\n\n\ndef run():\n    names=('prediction-covariance-luminance-bruit-v001-20261027T192134Z.json',\n        'transport-psd-gaussien-filtre-spectral-bruit-v002-20261027T190615Z.json',\n        'melange-fixe-covariances-bruit-v001-20261026T175757Z.json',\n        'contextes-abstention-axes-bruit-v001-20261026T221702Z.json',\n        'paires-supplementaires-axes-bruit-v001-20261026T222302Z.json',\n        'paires-supplementaires-axes-bruit-v002-20261026T222833Z.json')\n    paths=[ROOT/'docs/validation/raw'/n for n in names];hashes=[sha256(p) for p in paths]\n    parent,spectral,axes=[json.loads(p.read_text(encoding='utf-8')) for p in paths[:3]]\n    matrix=np.asarray(axes['fixed_transform']);anchors={a['id']:a for a in parent['anchors']}\n    inputs={};targets=[r for r in parent['records'] if r['status']=='predicted_held_capture']\n    for dataset,path in enumerate(paths[3:]):\n        wanted=[r for r in targets if r['dataset']==dataset]\n        if not wanted:continue\n        data=json.loads(path.read_text(encoding='utf-8'))\n        for pair in data['records']:\n            # No B pixels are used here: paired reference enters evaluation below, never estimate().\n            matching=[r for r in wanted if r['a']==pair['a']['native']['raw']]\n            if not matching:continue\n            a=np.asarray(pair['a']['native']['original_y_co_cg']).reshape(3,256,256)\n            transformed=np.einsum('ab,byx->ayx',matrix,a)\n            for r in matching:\n                x,y,_,_=r['rect'];inputs[(dataset,r['a'],x,y)]=transformed[:,y:y+128,x:x+128].copy()\n        del data\n    records=[];started=datetime.now(timezone.utc)\n    yy,xx=np.mgrid[:128,:128]\n    for r in parent['records']:\n        row={k:r[k] for k in ('dataset','iso','a','b','rect','status')}\n        if r['status']!='predicted_held_capture':records.append(row);continue\n        for key in ('lower','upper','nearest_id'):\n            if set(anchors[r[key]]['raw_names'])&{r['a'],r['b']}:raise ValueError('Held capture leaked into model')\n        low,high=[normalized(np.asarray(anchors[r[k]]['physical_covariance'])) for k in ('lower','upper')]\n        vl,vh=band_variances(low),band_variances(high);x,y,_,_=r['rect']\n        source=inputs[(r['dataset'],r['a'],x,y)];energy=band_energy(source)\n        prediction=estimate_from_energy(energy,vl,vh)\n        row.update(input_band_energy=energy.tolist(),prediction=prediction,lower=r['lower'],upper=r['upper'])\n        if prediction['weight'] is not None:\n            model=(1-prediction['weight'])*low+prediction['weight']*high\n            reference=next(v for v in spectral['records'] if v['dataset']==r['dataset'] and v['a']==r['a'] and v['rect']==r['rect'])\n            actual=physical(reference)\n            row['metrics']=shape_errors(model,actual)\n            row['sigma_ratio_to_differential']= (np.asarray(prediction['sigma'])/np.asarray(reference['sigma_before_unit_scaling'])).tolist()\n            row['subregion_weight_diagnostic']=[estimate(source[:,sy:sy+64,sx:sx+64],vl,vh)\n                for sy,sx in ((0,0),(0,64),(64,0),(64,64))]\n            # Known reference sigma is used ONLY to specify challenge amplitude, never inside estimator.\n            sigma=np.asarray(reference['sigma_before_unit_scaling']);challenges=[]\n            for axis in (0,1):\n                for angle in (0.,np.pi/4):\n                    pattern=.5*np.cos(2*np.pi*(xx*np.cos(angle)+yy*np.sin(angle))/4+.37)\n                    observed=source.copy();observed[axis]+=sigma[axis]*pattern\n                    measured=estimate(observed,vl,vh)\n                    challenges.append(dict(kind='weak_stripes',axis=axis,angle=float(angle),period=4.,amplitude_sigma=.5,\n                        prediction=measured,sigma_ratio_to_same_original=(np.asarray(measured['sigma'])/prediction['sigma']).tolist()\n                        if measured['weight'] is not None else None))\n            for axis in (0,1):\n                observed=source.copy();observed[axis]+=3*sigma[axis]*np.exp(-((xx-63.5)**2+(yy-63.5)**2)/(2*1.5**2))\n                measured=estimate(observed,vl,vh)\n                challenges.append(dict(kind='localized_gaussian',axis=axis,width=1.5,amplitude_sigma=3.,prediction=measured,\n                    sigma_ratio_to_same_original=(np.asarray(measured['sigma'])/prediction['sigma']).tolist() if measured['weight'] is not None else None))\n            row['challenges']=challenges\n        records.append(row)\n        print('A-only',r['dataset'],r['iso'],r['rect'],prediction['status'],'weight',prediction['weight'],flush=True)\n    summaries=[]\n    for prior in parent['summaries']:\n        if not prior['predicted_quadrants']:continue\n        rows=[r for r in records if r['dataset']==prior['dataset'] and r['a']==prior['a'] and 'metrics' in r]\n        means={k:float(np.mean([r['metrics'][k] for r in rows])) for k in\n            ('normalized_covariance_squared_error','mean_abs_log_hh_factor_error')} if rows else {}\n        passed=len(rows)==prior['predicted_quadrants'] and all(means[k]<prior['mean_metrics']['fixed'][k]\n            and means[k]<=prior['mean_metrics']['nearest'][k] for k in means)\n        inflations=[max(c['sigma_ratio_to_same_original']) for r in rows for c in r['challenges']\n                    if c['kind']=='weak_stripes' and c['sigma_ratio_to_same_original'] is not None]\n        robust=bool(inflations) and max(inflations)<=SETTINGS['texture_sigma_inflation_limit']\n        summary=dict(dataset=prior['dataset'],iso=prior['iso'],a=prior['a'],expected_quadrants=prior['predicted_quadrants'],\n            estimated_quadrants=len(rows),mean_metrics=means,original_controls=prior['mean_metrics'],\n            prediction_screen_passed=passed,texture_screen_passed=robust,\n            maximum_weak_texture_sigma_inflation=max(inflations) if inflations else None)\n        summaries.append(summary);print('SCREEN',summary,flush=True)\n    if len(records)!=48 or [sha256(p) for p in paths]!=hashes:raise ValueError('Incomplete/changed A-only study')\n    now=datetime.now(timezone.utc)\n    output=ROOT/'docs/validation/raw'/f'poids-image-seule-contraste-ondelettes-bruit-v001-{now.strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n    dependencies=('study_noise_signal_covariance_prediction.py','study_noise_shape_only_prediction.py','study_noise_haar_factor_transport.py')\n    result=dict(schema_version=1,data_version=1,started_at_utc=started.isoformat(),completed_at_utc=now.isoformat(),\n        settings=SETTINGS,records=records,summaries=summaries,\n        verdict='a_only_wavelet_weights_promising_requires_new_validation' if all(s['prediction_screen_passed'] and s['texture_screen_passed'] for s in summaries) else 'a_only_wavelet_contrast_not_retained',\n        numpy_version=np.__version__,commit=git('rev-parse','HEAD'),runner_sha256=sha256(Path(__file__)),\n        runner_source=Path(__file__).read_text(encoding='utf-8'),parents=[dict(path=str(p),sha256=h) for p,h in zip(paths,hashes)],\n        dependencies={n:dict(sha256=sha256(ROOT/'tests'/n),source=(ROOT/'tests'/n).read_text(encoding='utf-8')) for n in dependencies},\n        rules='14originalA128fields in4heldcaptures,34parentabstentions retained. CenteredMAD²/Gaussianfactor² inLH/HL/HH;sharedw and3amplitudenuisances fittedbyprofiledGaussian-stylecontrast. It is ROBUSTCONTRAST,not exactlikelihood for finitecorrelatedMADs. 257grid+48goldenrefinement optimizeinputcontrast ONLY,neverDerrors. NoisetruereferenceONLYevaluation/challengeamplitude. NoBpixelsinsideestimator. Sixknowntextures/field and4subregiondiagnostics;neverselectmostfavourable tile/model.',\n        limitations='Knownfamily/brackets useAmeanY andpreviousofflinecharacterization;not arbitrarycamera blindprofile. Calibrationcontrols dependonpair eligibility andsources alreadyexplored. Subregiondisagreement not calibratedconfidence. Texture compatiblewithnoise remainsunidentifiable. No perceptualgain,noise-removal percentage,production or TIFF export.')\n    with output.open('x',encoding='utf-8') as handle:json.dump(result,handle,ensure_ascii=False,indent=1,allow_nan=False)\n    print('VERDICT',result['verdict'],output,flush=True)\n\n\nif __name__=='__main__':run()\n"
+  },
+  "study_noise_signal_covariance_prediction.py": {
+   "sha256": "9b2c2e4eb65628cd7e8ee7f7294b68401046f39cdf3c7945e31088ac4e859b0c",
+   "source": "\"\"\"Whole-capture held-out linear-light covariance interpolation; analytic go/no-go before new gates.\"\"\"\nfrom datetime import datetime, timezone\nimport json\nfrom pathlib import Path\nimport numpy as np\nfrom study_noise_neighbourhoods import ROOT, sha256, git\nfrom study_noise_haar_factor_transport import hh_variances\n\n\nCRITERIA = dict(minimum_quiet_stable_tiles_per_quadrant=8, minimum_quadrants_per_anchor=2,\n    no_extrapolation=True,\n    screen='Each held capture must improve mean normalized covariance error vs fixed and not worsen vs nearest; same requirement for mean absolute log HH-factor error. No averaging hides failed capture. Research screen,not product validation.')\n\n\ndef normalized(covariance):\n    variance = np.diag(covariance[:,:,8,8])\n    if np.min(variance) <= 1e-24 or not np.isfinite(covariance).all():\n        raise ValueError('Finite covariance with positive marginal variance required')\n    return covariance/np.sqrt(variance[:,None,None,None]*variance[None,:,None,None])\n\n\ndef interpolate(anchors, value, held_names):\n    if any(set(a['raw_names']) & set(held_names) for a in anchors):\n        raise ValueError('Held capture leaked into prediction anchors')\n    ordered = sorted(anchors, key=lambda a:a['mean_a_y'])\n    lower = [a for a in ordered if a['mean_a_y'] <= value]\n    upper = [a for a in ordered if a['mean_a_y'] >= value]\n    if not lower or not upper: return None\n    lo, hi = lower[-1], upper[0]\n    if lo['id'] == hi['id']:\n        weight = 0.\n    else:\n        weight = (value-lo['mean_a_y'])/(hi['mean_a_y']-lo['mean_a_y'])\n    if not 0 <= weight <= 1: raise ValueError('Prediction would extrapolate')\n    predicted = (1-weight)*np.asarray(lo['physical_covariance'])+weight*np.asarray(hi['physical_covariance'])\n    nearest = min(ordered, key=lambda a:abs(a['mean_a_y']-value))\n    return dict(covariance=predicted, lower=lo['id'], upper=hi['id'], upper_weight=weight,\n        nearest_id=nearest['id'], nearest_covariance=np.asarray(nearest['physical_covariance']))\n\n\ndef errors(predicted, actual):\n    predicted_shape, actual_shape = normalized(predicted), normalized(actual)\n    sigma_ratio = np.sqrt(np.diag(predicted[:,:,8,8])/np.diag(actual[:,:,8,8]))\n    hh_factor_ratio = np.sqrt(hh_variances(actual_shape)/hh_variances(predicted_shape))\n    return dict(normalized_covariance_squared_error=float(np.mean((predicted_shape-actual_shape)**2)),\n        sigma_prediction_ratio=sigma_ratio.tolist(),\n        gaussian_hh_factor_ratio=hh_factor_ratio.tolist(),\n        mean_abs_log_hh_factor_error=float(np.mean(abs(np.log(hh_factor_ratio)))),\n        mean_abs_log_sigma_error=float(np.mean(abs(np.log(sigma_ratio)))))\n\n\ndef opening_contract(native):\n    declaration = native['declaration']\n    return dict(camera=native['camera'], opening_chroma_median=native['opening_chroma_median'],\n        **{k:declaration[k] for k in ('settings','dcp_profile','lcp_profile','raw_normalization',\n            'lens_geometry_applied','lens_vignetting_applied','chromatic_aberration_applied')})\n\n\ndef physical(record):\n    sigma = np.asarray(record['sigma_before_unit_scaling'])\n    return np.asarray(record['prepared_covariance_lag8'])*sigma[:,None,None,None]*sigma[None,:,None,None]\n\n\ndef run():\n    names = ('transport-psd-gaussien-filtre-spectral-bruit-v002-20261027T190615Z.json',\n        'origine-rejets-spectraux-paires-bruit-v001-20261027T190151Z.json',\n        'extraction-paires-profils-bruit-v001-20261026T174656Z.json',\n        'contextes-abstention-axes-bruit-v001-20261026T221702Z.json',\n        'paires-supplementaires-axes-bruit-v001-20261026T222302Z.json',\n        'paires-supplementaires-axes-bruit-v002-20261026T222833Z.json')\n    paths = [ROOT/'docs/validation/raw'/n for n in names]; hashes = [sha256(p) for p in paths]\n    spectral, audit, training = [json.loads(p.read_text(encoding='utf-8')) for p in paths[:3]]\n    started = datetime.now(timezone.utc); contracts = {}; anchors = []; baseline = {}; records = []\n    for pair in training['native']['pairs']:\n        iso = pair['a']['iso']; control = next(c for c in spectral['controls'] if c['iso'] == iso)\n        contract = opening_contract(pair['a'])\n        if opening_contract(pair['b']) != contract: raise ValueError('Training pair opening mismatch')\n        contracts[iso] = contract\n        a = next(s for s in pair['a']['samples'] if s['kind']=='flat')\n        baseline[iso] = physical(control)\n        anchors.append(dict(id='training_'+str(iso), iso=iso, raw_names=[pair[k]['raw'] for k in ('a','b')],\n            mean_a_y=float(np.mean(a['original_y_co_cg'][0])), physical_covariance=baseline[iso].tolist(),\n            source_kind='original_training64', source_quadrants=[]))\n    for dataset, path in enumerate(paths[3:]):\n        metadata = json.loads(path.read_text(encoding='utf-8'))\n        for pair in metadata['records']:\n            if any(opening_contract(pair[k]['native']) != contracts[pair['iso']] for k in ('a','b')):\n                raise ValueError('Do not mix opening settings/profiles in a light-level model')\n        del metadata\n    pairs = audit['records']\n    for pair in pairs:\n        usable = [r for r in spectral['records'] if r['dataset']==pair['dataset'] and r['a']==pair['a']\n            and r['status']=='generated' and r['quiet_stable_tiles'] >= CRITERIA['minimum_quiet_stable_tiles_per_quadrant']]\n        if len(usable) >= CRITERIA['minimum_quadrants_per_anchor']:\n            selected_tiles = [t for t in pair['tiles'] if any(\n                r['rect'][0] <= t['x'] < r['rect'][0]+128 and r['rect'][1] <= t['y'] < r['rect'][1]+128 for r in usable)]\n            anchors.append(dict(id=f\"dataset{pair['dataset']}_{pair['iso']}\", iso=pair['iso'],\n                raw_names=[pair['a'],pair['b']], mean_a_y=float(np.mean([t['mean_a_y'] for t in selected_tiles])),\n                physical_covariance=np.mean([physical(r) for r in usable],axis=0).tolist(),\n                source_kind='capture_mean_of_eligible128', source_quadrants=[r['rect'] for r in usable]))\n    for pair in pairs:\n        held_names = [pair['a'],pair['b']]\n        candidates = [a for a in anchors if a['iso']==pair['iso'] and not set(a['raw_names'])&set(held_names)]\n        for target in [r for r in spectral['records'] if r['dataset']==pair['dataset'] and r['a']==pair['a']]:\n            row = dict(dataset=pair['dataset'],iso=pair['iso'],a=pair['a'],b=pair['b'],rect=target['rect'],\n                quiet_stable_tiles=target['quiet_stable_tiles'], available_anchors=[a['id'] for a in candidates])\n            if target['status'] != 'generated' or target['quiet_stable_tiles'] < CRITERIA['minimum_quiet_stable_tiles_per_quadrant']:\n                row['status']='reference_unmeasurable_or_not_quiet_stable'; records.append(row); continue\n            x,y,_,_=target['rect']\n            feature = float(np.mean([t['mean_a_y'] for t in pair['tiles'] if x <= t['x'] < x+128 and y <= t['y'] < y+128]))\n            row['input_mean_a_y'] = feature\n            prediction = interpolate(candidates, feature, held_names)\n            if prediction is None:\n                row['status']='outside_characterized_light_range'; records.append(row); continue\n            actual = physical(target)\n            row.update(status='predicted_held_capture', lower=prediction['lower'], upper=prediction['upper'],\n                upper_weight=prediction['upper_weight'], nearest_id=prediction['nearest_id'],\n                metrics=dict(fixed=errors(baseline[pair['iso']],actual),\n                    nearest=errors(prediction['nearest_covariance'],actual),\n                    interpolated=errors(prediction['covariance'],actual)))\n            records.append(row)\n    summaries = []\n    for pair in pairs:\n        rows = [r for r in records if r['dataset']==pair['dataset'] and r['a']==pair['a'] and r['status']=='predicted_held_capture']\n        means = {mode:{metric:float(np.mean([r['metrics'][mode][metric] for r in rows]))\n            for metric in ('normalized_covariance_squared_error','mean_abs_log_hh_factor_error','mean_abs_log_sigma_error')}\n            for mode in ('fixed','nearest','interpolated')} if rows else {}\n        passed = bool(rows) and all(means['interpolated'][metric] < means['fixed'][metric]\n            and means['interpolated'][metric] <= means['nearest'][metric]\n            for metric in ('normalized_covariance_squared_error','mean_abs_log_hh_factor_error'))\n        summary = dict(dataset=pair['dataset'],iso=pair['iso'],a=pair['a'],predicted_quadrants=len(rows),\n            mean_metrics=means, screen_passed=passed if rows else None)\n        summaries.append(summary)\n        print('Held capture',pair['dataset'],pair['iso'],'quadrants',len(rows),'screen',summary['screen_passed'],\n            'shape errors',{m:v['normalized_covariance_squared_error'] for m,v in means.items()},flush=True)\n    tested = [r for r in summaries if r['predicted_quadrants']]\n    verdict = 'promising_on_available_folds_not_production_validated' if tested and all(r['screen_passed'] for r in tested) else 'simple_linear_light_interpolation_not_retained'\n    if len(records)!=48 or [sha256(p) for p in paths]!=hashes: raise ValueError('Incomplete/changed prediction study')\n    now = datetime.now(timezone.utc)\n    output = ROOT/'docs/validation/raw'/f'prediction-covariance-luminance-bruit-v001-{now.strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n    dependencies = ('study_noise_haar_factor_transport.py',)\n    result = dict(schema_version=1,data_version=1,started_at_utc=started.isoformat(),completed_at_utc=now.isoformat(),\n        criteria=CRITERIA,verdict=verdict,anchors=anchors,records=records,summaries=summaries,\n        tested_capture_folds=len(tested),opening_contracts=contracts,numpy_version=np.__version__,commit=git('rev-parse','HEAD'),\n        runner_sha256=sha256(Path(__file__)),runner_source=Path(__file__).read_text(encoding='utf-8'),\n        parents=[dict(path=str(p),sha256=h) for p,h in zip(paths,hashes)],\n        dependencies={n:dict(sha256=sha256(ROOT/'tests'/n),source=(ROOT/'tests'/n).read_text(encoding='utf-8')) for n in dependencies},\n        rules='One hypothesis: convex interpolation of PHYSICALcovariance in linearAmeanY between bracketingsameISOcaptureanchors;normalizeONLYafterblend. EntiretargetA/BcaptureremovedfromALLanchors. Fixed and nearestanchor controls. Eligibility>=8quiet/stable32tiles/128;anchor>=2eligiblequadrants. Noextrapolation,no fittingonheldD,thresholds or denoising. HeldDusedforeligibility/evaluationONLY,notweights;AmeanYfeatureonly.',\n        limitations='Reusedsmallpairedcorpus,no cleanphototruth;D/quiet/stableconditional. Physicallinearlevelrule is hypothesis after nonlinear RCD/profile/median opening.64trainingvs128captureanchors have unequal uncertainty. Fewbracketedcaptures,ISOcoverageincomplete;not newcamera/session. Target referenceeligibility usesB,so this is offlinecharacterization not completeblindestimator. Lag8score not fullPSD/perceptual/detailquality.')\n    with output.open('x',encoding='utf-8') as handle:json.dump(result,handle,ensure_ascii=False,indent=1,allow_nan=False)\n    print('VERDICT',verdict,output,flush=True)\n\n\nif __name__=='__main__':run()\n"
+  }
+ },
+ "rules": "ReplayALL84existinginjections andMADenergies/sigma beforedecomposition,no newmodel or optimization. Compareonly amplitude withORIGINALimageweightheldfixed toadaptiveweight. 10%threshold inherited,not optimized. Four64subregionweights copiedverbatim,not selected or turnedintoconfidence.",
+ "limitations": "Frozenweight usesestimatefromunperturbedoriginalA,not availableascleanreferenceina normalphoto;diagnosticablationONLY,notdeployableguard. FinitecorrelatedMAD canreacttotexture evenifweightfixed. Knownsynthetictextures/reused4captures,not visualquality or universalnoise test."
+}

@@ -1,0 +1,930 @@
+{
+ "record": {
+  "dataset": 0,
+  "iso": 6400,
+  "a": "6V1A9702.CR3",
+  "rect": [
+   0,
+   0,
+   128,
+   128
+  ],
+  "lower": "training_6400",
+  "upper": "dataset2_6400",
+  "oracle_weight_diagnostic_only": 1.0,
+  "original_a": {
+   "status": "estimated_not_confidence_calibrated",
+   "weight": 0.9806076684043883,
+   "sigma": [
+    0.015088717999733863,
+    0.03276203615536463,
+    0.02441791708988534
+   ],
+   "robust_log_spectral_dispersion": 2.3519726524303426,
+   "endpoint_shape_contrast": 2.5530330795422453,
+   "frequency_count": 6028,
+   "zero_clamped_frequency_count": 0
+  },
+  "differential_d": {
+   "status": "estimated_not_confidence_calibrated",
+   "weight": 0.9011600995288298,
+   "sigma": [
+    0.015559828842227882,
+    0.03291543194995676,
+    0.025025137934460928
+   ],
+   "robust_log_spectral_dispersion": 2.3290675741156446,
+   "endpoint_shape_contrast": 2.5530330795422453,
+   "frequency_count": 6028,
+   "zero_clamped_frequency_count": 0
+  },
+  "ideal_segment": {
+   "status": "estimated_not_confidence_calibrated",
+   "weight": 1.0,
+   "sigma": [
+    1.2011224087864498,
+    1.2011224087864498,
+    1.2011224087864498
+   ],
+   "robust_log_spectral_dispersion": 0.0,
+   "endpoint_shape_contrast": 2.5530330795422453,
+   "frequency_count": 6028,
+   "zero_clamped_frequency_count": 0
+  },
+  "ideal_reference": {
+   "status": "estimated_not_confidence_calibrated",
+   "weight": 0.9062165338120081,
+   "sigma": [
+    1.1270439012608795,
+    1.2767794240107018,
+    1.1898228823759425
+   ],
+   "robust_log_spectral_dispersion": 0.5748644735238162,
+   "endpoint_shape_contrast": 2.5530330795422453,
+   "frequency_count": 6028,
+   "zero_clamped_frequency_count": 0
+  },
+  "simulations": {
+   "exact_segment": {
+    "draws": [
+     {
+      "replicate": 0,
+      "prediction": {
+       "status": "estimated_not_confidence_calibrated",
+       "weight": 0.9917330928205212,
+       "sigma": [
+        0.9828439617770253,
+        0.9757008262850551,
+        1.0087915229216526
+       ],
+       "robust_log_spectral_dispersion": 2.307879301160445,
+       "endpoint_shape_contrast": 2.5530330795422453,
+       "frequency_count": 6028,
+       "zero_clamped_frequency_count": 0
+      },
+      "metrics_to_held_d": {
+       "normalized_covariance_squared_error": 0.00034925296690543016,
+       "mean_abs_log_hh_factor_error": 0.04578722323705198,
+       "gaussian_hh_factor_ratio": [
+        0.9454407099508697,
+        1.081280456333963,
+        0.996893213408241
+       ]
+      }
+     },
+     {
+      "replicate": 1,
+      "prediction": {
+       "status": "estimated_not_confidence_calibrated",
+       "weight": 1.0,
+       "sigma": [
+        1.0070617219335887,
+        0.994833075699575,
+        1.0080173716872187
+       ],
+       "robust_log_spectral_dispersion": 2.33146434167653,
+       "endpoint_shape_contrast": 2.5530330795422453,
+       "frequency_count": 6028,
+       "zero_clamped_frequency_count": 0
+      },
+      "metrics_to_held_d": {
+       "normalized_covariance_squared_error": 0.0003488347221802124,
+       "mean_abs_log_hh_factor_error": 0.04572645573943648,
+       "gaussian_hh_factor_ratio": [
+        0.9458235683035027,
+        1.0816234529237325,
+        0.9969875192276525
+       ]
+      }
+     },
+     {
+      "replicate": 2,
+      "prediction": {
+       "status": "estimated_not_confidence_calibrated",
+       "weight": 1.0,
+       "sigma": [
+        1.019162314608643,
+        0.9820433156264569,
+        1.0071005316732569
+       ],
+       "robust_log_spectral_dispersion": 2.294728795178716,
+       "endpoint_shape_contrast": 2.5530330795422453,
+       "frequency_count": 6028,
+       "zero_clamped_frequency_count": 0
+      },
+      "metrics_to_held_d": {
+       "normalized_covariance_squared_error": 0.0003488347221802124,
+       "mean_abs_log_hh_factor_error": 0.04572645573943648,
+       "gaussian_hh_factor_ratio": [
+        0.9458235683035027,
+        1.0816234529237325,
+        0.9969875192276525
+       ]
+      }
+     },
+     {
+      "replicate": 3,
+      "prediction": {
+       "status": "estimated_not_confidence_calibrated",
+       "weight": 1.0,
+       "sigma": [
+        0.9944852935674093,
+        1.0007611794255709,
+        0.9948391460968973
+       ],
+       "robust_log_spectral_dispersion": 2.280515852967193,
+       "endpoint_shape_contrast": 2.5530330795422453,
+       "frequency_count": 6028,
+       "zero_clamped_frequency_count": 0
+      },
+      "metrics_to_held_d": {
+       "normalized_covariance_squared_error": 0.0003488347221802124,
+       "mean_abs_log_hh_factor_error": 0.04572645573943648,
+       "gaussian_hh_factor_ratio": [
+        0.9458235683035027,
+        1.0816234529237325,
+        0.9969875192276525
+       ]
+      }
+     },
+     {
+      "replicate": 4,
+      "prediction": {
+       "status": "estimated_not_confidence_calibrated",
+       "weight": 0.9562190186193054,
+       "sigma": [
+        0.9952604225604846,
+        0.9776807771621425,
+        1.0007612859244985
+       ],
+       "robust_log_spectral_dispersion": 2.3116256535972446,
+       "endpoint_shape_contrast": 2.5530330795422453,
+       "frequency_count": 6028,
+       "zero_clamped_frequency_count": 0
+      },
+      "metrics_to_held_d": {
+       "normalized_covariance_squared_error": 0.00035243509731948283,
+       "mean_abs_log_hh_factor_error": 0.04604772988898753,
+       "gaussian_hh_factor_ratio": [
+        0.943801249168955,
+        1.0798106692670537,
+        0.996488386193431
+       ]
+      }
+     },
+     {
+      "replicate": 5,
+      "prediction": {
+       "status": "estimated_not_confidence_calibrated",
+       "weight": 0.9834976895058015,
+       "sigma": [
+        0.9806421348952848,
+        0.9832903476472278,
+        0.9947716831567431
+       ],
+       "robust_log_spectral_dispersion": 2.3059842534290684,
+       "endpoint_shape_contrast": 2.5530330795422453,
+       "frequency_count": 6028,
+       "zero_clamped_frequency_count": 0
+      },
+      "metrics_to_held_d": {
+       "normalized_covariance_squared_error": 0.0003497907089015475,
+       "mean_abs_log_hh_factor_error": 0.04584771129727305,
+       "gaussian_hh_factor_ratio": [
+        0.9450597725131176,
+        1.0809390910874093,
+        0.9967992935768494
+       ]
+      }
+     },
+     {
+      "replicate": 6,
+      "prediction": {
+       "status": "estimated_not_confidence_calibrated",
+       "weight": 0.9718701494691703,
+       "sigma": [
+        0.9998924049781847,
+        1.004952797231777,
+        0.9848536211917408
+       ],
+       "robust_log_spectral_dispersion": 2.3444585910719375,
+       "endpoint_shape_contrast": 2.5530330795422453,
+       "frequency_count": 6028,
+       "zero_clamped_frequency_count": 0
+      },
+      "metrics_to_held_d": {
+       "normalized_covariance_squared_error": 0.0003507557303499252,
+       "mean_abs_log_hh_factor_error": 0.04593303304102401,
+       "gaussian_hh_factor_ratio": [
+        0.9445227113131481,
+        1.0804576685978353,
+        0.996666733648854
+       ]
+      }
+     },
+     {
+      "replicate": 7,
+      "prediction": {
+       "status": "estimated_not_confidence_calibrated",
+       "weight": 0.9062232074127554,
+       "sigma": [
+        0.9992713791586825,
+        0.9757842055816734,
+        1.0104160141703225
+       ],
+       "robust_log_spectral_dispersion": 2.2713432338462907,
+       "endpoint_shape_contrast": 2.5530330795422453,
+       "frequency_count": 6028,
+       "zero_clamped_frequency_count": 0
+      },
+      "metrics_to_held_d": {
+       "normalized_covariance_squared_error": 0.00036072400992313917,
+       "mean_abs_log_hh_factor_error": 0.04641297316050261,
+       "gaussian_hh_factor_ratio": [
+        0.9415076457640753,
+        1.0777516615825191,
+        0.9959193156740884
+       ]
+      }
+     },
+     {
+      "replicate": 8,
+      "prediction": {
+       "status": "estimated_not_confidence_calibrated",
+       "weight": 0.8799988487329945,
+       "sigma": [
+        0.992861104843635,
+        0.9965727443990425,
+        1.010518863049281
+       ],
+       "robust_log_spectral_dispersion": 2.3256706224298984,
+       "endpoint_shape_contrast": 2.5530330795422453,
+       "frequency_count": 6028,
+       "zero_clamped_frequency_count": 0
+      },
+      "metrics_to_held_d": {
+       "normalized_covariance_squared_error": 0.00036685277622654656,
+       "mean_abs_log_hh_factor_error": 0.04660386340676765,
+       "gaussian_hh_factor_ratio": [
+        0.9403112456699391,
+        1.0766763465804414,
+        0.9956212100256709
+       ]
+      }
+     },
+     {
+      "replicate": 9,
+      "prediction": {
+       "status": "estimated_not_confidence_calibrated",
+       "weight": 1.0,
+       "sigma": [
+        1.0312057520985567,
+        1.0312145997347366,
+        1.0267561427022798
+       ],
+       "robust_log_spectral_dispersion": 2.260374100402534,
+       "endpoint_shape_contrast": 2.5530330795422453,
+       "frequency_count": 6028,
+       "zero_clamped_frequency_count": 0
+      },
+      "metrics_to_held_d": {
+       "normalized_covariance_squared_error": 0.0003488347221802124,
+       "mean_abs_log_hh_factor_error": 0.04572645573943648,
+       "gaussian_hh_factor_ratio": [
+        0.9458235683035027,
+        1.0816234529237325,
+        0.9969875192276525
+       ]
+      }
+     },
+     {
+      "replicate": 10,
+      "prediction": {
+       "status": "estimated_not_confidence_calibrated",
+       "weight": 0.9487590735865679,
+       "sigma": [
+        1.0129107028810564,
+        0.9947548646713431,
+        1.0030427276246072
+       ],
+       "robust_log_spectral_dispersion": 2.266652029764214,
+       "endpoint_shape_contrast": 2.5530330795422453,
+       "frequency_count": 6028,
+       "zero_clamped_frequency_count": 0
+      },
+      "metrics_to_held_d": {
+       "normalized_covariance_squared_error": 0.0003533891664504568,
+       "mean_abs_log_hh_factor_error": 0.04610233867114218,
+       "gaussian_hh_factor_ratio": [
+        0.9434579532070683,
+        1.0795026926727003,
+        0.9964034124621377
+       ]
+      }
+     },
+     {
+      "replicate": 11,
+      "prediction": {
+       "status": "estimated_not_confidence_calibrated",
+       "weight": 0.8517301256373511,
+       "sigma": [
+        0.9970923141699023,
+        1.0159566056997062,
+        1.0185651722937235
+       ],
+       "robust_log_spectral_dispersion": 2.296474809476103,
+       "endpoint_shape_contrast": 2.5530330795422453,
+       "frequency_count": 6028,
+       "zero_clamped_frequency_count": 0
+      },
+      "metrics_to_held_d": {
+       "normalized_covariance_squared_error": 0.0003748318775817731,
+       "mean_abs_log_hh_factor_error": 0.04680910644610436,
+       "gaussian_hh_factor_ratio": [
+        0.9390266724730677,
+        1.0755208007325834,
+        0.9953001646636169
+       ]
+      }
+     },
+     {
+      "replicate": 12,
+      "prediction": {
+       "status": "estimated_not_confidence_calibrated",
+       "weight": 0.9615727019950815,
+       "sigma": [
+        0.9849450785178889,
+        1.0183701786592776,
+        1.0259478977752745
+       ],
+       "robust_log_spectral_dispersion": 2.2591686849309847,
+       "endpoint_shape_contrast": 2.5530330795422453,
+       "frequency_count": 6028,
+       "zero_clamped_frequency_count": 0
+      },
+      "metrics_to_held_d": {
+       "normalized_covariance_squared_error": 0.00035181152612783466,
+       "mean_abs_log_hh_factor_error": 0.046008515548507885,
+       "gaussian_hh_factor_ratio": [
+        0.944047849093643,
+        1.0800318534267068,
+        0.9965493816057255
+       ]
+      }
+     },
+     {
+      "replicate": 13,
+      "prediction": {
+       "status": "estimated_not_confidence_calibrated",
+       "weight": 0.7926804745391229,
+       "sigma": [
+        1.005166043527594,
+        0.9845604478937657,
+        0.9885423017482499
+       ],
+       "robust_log_spectral_dispersion": 2.275886338326734,
+       "endpoint_shape_contrast": 2.5530330795422453,
+       "frequency_count": 6028,
+       "zero_clamped_frequency_count": 0
+      },
+      "metrics_to_held_d": {
+       "normalized_covariance_squared_error": 0.00039609332830980234,
+       "mean_abs_log_hh_factor_error": 0.04723607914678782,
+       "gaussian_hh_factor_ratio": [
+        0.9363602640005046,
+        1.073118971272165,
+        0.9946305437592116
+       ]
+      }
+     },
+     {
+      "replicate": 14,
+      "prediction": {
+       "status": "estimated_not_confidence_calibrated",
+       "weight": 0.7492804574257809,
+       "sigma": [
+        0.9924508085222843,
+        0.975153038280425,
+        1.0028596088474937
+       ],
+       "robust_log_spectral_dispersion": 2.237359716124427,
+       "endpoint_shape_contrast": 2.5530330795422453,
+       "frequency_count": 6028,
+       "zero_clamped_frequency_count": 0
+      },
+      "metrics_to_held_d": {
+       "normalized_covariance_squared_error": 0.0004156816775249321,
+       "mean_abs_log_hh_factor_error": 0.047548396865295516,
+       "gaussian_hh_factor_ratio": [
+        0.934414938782499,
+        1.0713639105119368,
+        0.9941392499445416
+       ]
+      }
+     },
+     {
+      "replicate": 15,
+      "prediction": {
+       "status": "estimated_not_confidence_calibrated",
+       "weight": 0.8408349685393811,
+       "sigma": [
+        1.0151519024928206,
+        1.0303058488004462,
+        1.0150458804595122
+       ],
+       "robust_log_spectral_dispersion": 2.274343453917478,
+       "endpoint_shape_contrast": 2.5530330795422453,
+       "frequency_count": 6028,
+       "zero_clamped_frequency_count": 0
+      },
+      "metrics_to_held_d": {
+       "normalized_covariance_squared_error": 0.00037828732475653443,
+       "mean_abs_log_hh_factor_error": 0.046888064337348684,
+       "gaussian_hh_factor_ratio": [
+        0.9385329838575526,
+        1.0750764296475024,
+        0.9951765122276823
+       ]
+      }
+     }
+    ],
+    "mean_weight": 0.9271499880177396,
+    "weight_quantiles": [
+     0.8167577215392521,
+     0.9588958603071934,
+     1.0
+    ],
+    "mean_abs_error_to_oracle_weight": 0.0728500119822604
+   },
+   "held_reference_model": {
+    "draws": [
+     {
+      "replicate": 0,
+      "prediction": {
+       "status": "estimated_not_confidence_calibrated",
+       "weight": 0.6247108182324558,
+       "sigma": [
+        0.01547754474244199,
+        0.032263435457672636,
+        0.024155322822085445
+       ],
+       "robust_log_spectral_dispersion": 2.429360723716822,
+       "endpoint_shape_contrast": 2.5530330795422453,
+       "frequency_count": 6028,
+       "zero_clamped_frequency_count": 0
+      },
+      "metrics_to_held_d": {
+       "normalized_covariance_squared_error": 0.0004905488985683811,
+       "mean_abs_log_hh_factor_error": 0.04843791105423256,
+       "gaussian_hh_factor_ratio": [
+        0.928897971451474,
+        1.0663738496215889,
+        0.9927331389679569
+       ]
+      }
+     },
+     {
+      "replicate": 1,
+      "prediction": {
+       "status": "estimated_not_confidence_calibrated",
+       "weight": 0.8139227408644985,
+       "sigma": [
+        0.015878000880461964,
+        0.033588641601182904,
+        0.02429041123661378
+       ],
+       "robust_log_spectral_dispersion": 2.3854642447326504,
+       "endpoint_shape_contrast": 2.5530330795422453,
+       "frequency_count": 6028,
+       "zero_clamped_frequency_count": 0
+      },
+      "metrics_to_held_d": {
+       "normalized_covariance_squared_error": 0.0003877292425777841,
+       "mean_abs_log_hh_factor_error": 0.04708275349385085,
+       "gaussian_hh_factor_ratio": [
+        0.937316848456671,
+        1.07398114081945,
+        0.9948712746159619
+       ]
+      }
+     },
+     {
+      "replicate": 2,
+      "prediction": {
+       "status": "estimated_not_confidence_calibrated",
+       "weight": 0.9876327090847073,
+       "sigma": [
+        0.016043676590603056,
+        0.033432520478294266,
+        0.024703037342482463
+       ],
+       "robust_log_spectral_dispersion": 2.3777339264775863,
+       "endpoint_shape_contrast": 2.5530330795422453,
+       "frequency_count": 6028,
+       "zero_clamped_frequency_count": 0
+      },
+      "metrics_to_held_d": {
+       "normalized_covariance_squared_error": 0.0003495055998775772,
+       "mean_abs_log_hh_factor_error": 0.045817346034511826,
+       "gaussian_hh_factor_ratio": [
+        0.945250984722608,
+        1.0811104511352123,
+        0.9968464476747869
+       ]
+      }
+     },
+     {
+      "replicate": 3,
+      "prediction": {
+       "status": "estimated_not_confidence_calibrated",
+       "weight": 0.9167393829496814,
+       "sigma": [
+        0.015768878801710285,
+        0.03228042124753805,
+        0.024396623938427568
+       ],
+       "robust_log_spectral_dispersion": 2.4177257200931948,
+       "endpoint_shape_contrast": 2.5530330795422453,
+       "frequency_count": 6028,
+       "zero_clamped_frequency_count": 0
+      },
+      "metrics_to_held_d": {
+       "normalized_covariance_squared_error": 0.00035861058565858525,
+       "mean_abs_log_hh_factor_error": 0.046336291461059824,
+       "gaussian_hh_factor_ratio": [
+        0.941988696135652,
+        1.0781837773683318,
+        0.996038933642383
+       ]
+      }
+     },
+     {
+      "replicate": 4,
+      "prediction": {
+       "status": "estimated_not_confidence_calibrated",
+       "weight": 0.93283807926787,
+       "sigma": [
+        0.016090409560160973,
+        0.03328640207338168,
+        0.02460435032713647
+       ],
+       "robust_log_spectral_dispersion": 2.3310492821832813,
+       "endpoint_shape_contrast": 2.5530330795422453,
+       "frequency_count": 6028,
+       "zero_clamped_frequency_count": 0
+      },
+      "metrics_to_held_d": {
+       "normalized_covariance_squared_error": 0.0003557570148091777,
+       "mean_abs_log_hh_factor_error": 0.046218754894850334,
+       "gaussian_hh_factor_ratio": [
+        0.9427265430109523,
+        1.0788462902220786,
+        0.9962221344352206
+       ]
+      }
+     },
+     {
+      "replicate": 5,
+      "prediction": {
+       "status": "estimated_not_confidence_calibrated",
+       "weight": 0.8714891760394269,
+       "sigma": [
+        0.01578080818051126,
+        0.032685062515832405,
+        0.023783151364079616
+       ],
+       "robust_log_spectral_dispersion": 2.3963117943169436,
+       "endpoint_shape_contrast": 2.5530330795422453,
+       "frequency_count": 6028,
+       "zero_clamped_frequency_count": 0
+      },
+      "metrics_to_held_d": {
+       "normalized_covariance_squared_error": 0.0003691048906939442,
+       "mean_abs_log_hh_factor_error": 0.04666570479384575,
+       "gaussian_hh_factor_ratio": [
+        0.9399239988785607,
+        1.076328103334987,
+        0.9955245337510052
+       ]
+      }
+     },
+     {
+      "replicate": 6,
+      "prediction": {
+       "status": "estimated_not_confidence_calibrated",
+       "weight": 0.7031181834837121,
+       "sigma": [
+        0.01574936723983918,
+        0.03246769662026858,
+        0.024724358396857347
+       ],
+       "robust_log_spectral_dispersion": 2.3431871398613517,
+       "endpoint_shape_contrast": 2.5530330795422453,
+       "frequency_count": 6028,
+       "zero_clamped_frequency_count": 0
+      },
+      "metrics_to_held_d": {
+       "normalized_covariance_squared_error": 0.00044020054763076834,
+       "mean_abs_log_hh_factor_error": 0.04787921676081203,
+       "gaussian_hh_factor_ratio": [
+        0.9323590491161096,
+        1.069506564556659,
+        0.9936174851906096
+       ]
+      }
+     },
+     {
+      "replicate": 7,
+      "prediction": {
+       "status": "estimated_not_confidence_calibrated",
+       "weight": 0.9455855799533194,
+       "sigma": [
+        0.015605247030027972,
+        0.03286390075927671,
+        0.024026581479554443
+       ],
+       "robust_log_spectral_dispersion": 2.358260800637118,
+       "endpoint_shape_contrast": 2.5530330795422453,
+       "frequency_count": 6028,
+       "zero_clamped_frequency_count": 0
+      },
+      "metrics_to_held_d": {
+       "normalized_covariance_squared_error": 0.0003538250989572948,
+       "mean_abs_log_hh_factor_error": 0.04612555772030336,
+       "gaussian_hh_factor_ratio": [
+        0.9433120271189008,
+        1.079371757937592,
+        0.9963672708508355
+       ]
+      }
+     },
+     {
+      "replicate": 8,
+      "prediction": {
+       "status": "estimated_not_confidence_calibrated",
+       "weight": 1.0,
+       "sigma": [
+        0.015914430333328712,
+        0.033610921540073266,
+        0.024976494940496727
+       ],
+       "robust_log_spectral_dispersion": 2.3672744623263706,
+       "endpoint_shape_contrast": 2.5530330795422453,
+       "frequency_count": 6028,
+       "zero_clamped_frequency_count": 0
+      },
+      "metrics_to_held_d": {
+       "normalized_covariance_squared_error": 0.0003488347221802124,
+       "mean_abs_log_hh_factor_error": 0.04572645573943648,
+       "gaussian_hh_factor_ratio": [
+        0.9458235683035027,
+        1.0816234529237325,
+        0.9969875192276525
+       ]
+      }
+     },
+     {
+      "replicate": 9,
+      "prediction": {
+       "status": "estimated_not_confidence_calibrated",
+       "weight": 0.9299363874571143,
+       "sigma": [
+        0.01610190439364499,
+        0.03266120320419979,
+        0.02440272465247619
+       ],
+       "robust_log_spectral_dispersion": 2.368141549909702,
+       "endpoint_shape_contrast": 2.5530330795422453,
+       "frequency_count": 6028,
+       "zero_clamped_frequency_count": 0
+      },
+      "metrics_to_held_d": {
+       "normalized_covariance_squared_error": 0.0003562372335208493,
+       "mean_abs_log_hh_factor_error": 0.046239953424583986,
+       "gaussian_hh_factor_ratio": [
+        0.9425934225168077,
+        1.0787267860935115,
+        0.9961891061415928
+       ]
+      }
+     },
+     {
+      "replicate": 10,
+      "prediction": {
+       "status": "estimated_not_confidence_calibrated",
+       "weight": 0.8806419513126429,
+       "sigma": [
+        0.0157137673153474,
+        0.03341014703166087,
+        0.024248910855171148
+       ],
+       "robust_log_spectral_dispersion": 2.3846121443973076,
+       "endpoint_shape_contrast": 2.5530330795422453,
+       "frequency_count": 6028,
+       "zero_clamped_frequency_count": 0
+      },
+      "metrics_to_held_d": {
+       "normalized_covariance_squared_error": 0.00036668782153379686,
+       "mean_abs_log_hh_factor_error": 0.04659918784167957,
+       "gaussian_hh_factor_ratio": [
+        0.9403405305775405,
+        1.0767026781515483,
+        0.9956285172988419
+       ]
+      }
+     },
+     {
+      "replicate": 11,
+      "prediction": {
+       "status": "estimated_not_confidence_calibrated",
+       "weight": 0.4667303477488187,
+       "sigma": [
+        0.015723633050916962,
+        0.03252189243099314,
+        0.025125828418268804
+       ],
+       "robust_log_spectral_dispersion": 2.3685531610781903,
+       "endpoint_shape_contrast": 2.5530330795422453,
+       "frequency_count": 6028,
+       "zero_clamped_frequency_count": 0
+      },
+      "metrics_to_held_d": {
+       "normalized_covariance_squared_error": 0.0006252686443012857,
+       "mean_abs_log_hh_factor_error": 0.04955159739041212,
+       "gaussian_hh_factor_ratio": [
+        0.9220398463016328,
+        1.060144560675384,
+        0.9909584466698668
+       ]
+      }
+     },
+     {
+      "replicate": 12,
+      "prediction": {
+       "status": "estimated_not_confidence_calibrated",
+       "weight": 0.9938945600406989,
+       "sigma": [
+        0.016422795659221605,
+        0.034567134947867686,
+        0.02505215908758432
+       ],
+       "robust_log_spectral_dispersion": 2.406629599330801,
+       "endpoint_shape_contrast": 2.5530330795422453,
+       "frequency_count": 6028,
+       "zero_clamped_frequency_count": 0
+      },
+      "metrics_to_held_d": {
+       "normalized_covariance_squared_error": 0.00034913185415213897,
+       "mean_abs_log_hh_factor_error": 0.0457713396062579,
+       "gaussian_hh_factor_ratio": [
+        0.9455407672825004,
+        1.0813701047859288,
+        0.9969178680430042
+       ]
+      }
+     },
+     {
+      "replicate": 13,
+      "prediction": {
+       "status": "estimated_not_confidence_calibrated",
+       "weight": 0.8862670051690766,
+       "sigma": [
+        0.015731561726999486,
+        0.03414790752822602,
+        0.02437190539995928
+       ],
+       "robust_log_spectral_dispersion": 2.4241518105240565,
+       "endpoint_shape_contrast": 2.5530330795422453,
+       "frequency_count": 6028,
+       "zero_clamped_frequency_count": 0
+      },
+      "metrics_to_held_d": {
+       "normalized_covariance_squared_error": 0.0003652764208869467,
+       "mean_abs_log_hh_factor_error": 0.04655827976690268,
+       "gaussian_hh_factor_ratio": [
+        0.9405967948627263,
+        1.076933076052839,
+        0.9956924390081887
+       ]
+      }
+     },
+     {
+      "replicate": 14,
+      "prediction": {
+       "status": "estimated_not_confidence_calibrated",
+       "weight": 0.6897955541481694,
+       "sigma": [
+        0.016019994560924754,
+        0.03323242579405287,
+        0.0248467550290982
+       ],
+       "robust_log_spectral_dispersion": 2.410263382240879,
+       "endpoint_shape_contrast": 2.5530330795422453,
+       "frequency_count": 6028,
+       "zero_clamped_frequency_count": 0
+      },
+      "metrics_to_held_d": {
+       "normalized_covariance_squared_error": 0.00044798291970618933,
+       "mean_abs_log_hh_factor_error": 0.04797443116014893,
+       "gaussian_hh_factor_ratio": [
+        0.9317682293939775,
+        1.0689723202829269,
+        0.9934670543520178
+       ]
+      }
+     },
+     {
+      "replicate": 15,
+      "prediction": {
+       "status": "estimated_not_confidence_calibrated",
+       "weight": 0.9020149047784682,
+       "sigma": [
+        0.015513391083394584,
+        0.03261028592725175,
+        0.024370814298604167
+       ],
+       "robust_log_spectral_dispersion": 2.383413553310883,
+       "endpoint_shape_contrast": 2.5530330795422453,
+       "frequency_count": 6028,
+       "zero_clamped_frequency_count": 0
+      },
+      "metrics_to_held_d": {
+       "normalized_covariance_squared_error": 0.0003616249593949702,
+       "mean_abs_log_hh_factor_error": 0.04644363780311975,
+       "gaussian_hh_factor_ratio": [
+        0.9413153481585479,
+        1.0775788854706236,
+        0.9958714597158251
+       ]
+      }
+     }
+    ],
+    "mean_weight": 0.8465823362831663,
+    "weight_quantiles": [
+     0.6572531861903126,
+     0.8941409549737724,
+     0.9907636345627031
+    ],
+    "mean_abs_error_to_oracle_weight": 0.15341766371683374
+   }
+  },
+  "seconds": 7.830543200019747
+ },
+ "seed": 20261027405,
+ "replicates": 16,
+ "runner_sha256": "73a4b2a3b204873e7d669927384c8347b1ffac8bdeaa37eef7bdb7bd6509b871",
+ "parents": [
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\prediction-covariance-luminance-bruit-v001-20261027T192134Z.json",
+   "sha256": "45371018c270d8c350f051c4dfc881398123d197c5156cd434dd683fcabaa1e0"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\poids-image-seule-spectre-robuste-bruit-v001-20261027T195112Z.json",
+   "sha256": "c1a08eacb5501ae0d00c1f697f3b4fdc8587465a9e9c9bd67ddcf222282cf7a5"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\temoins-oracle-joints-correlation-bruit-v001-20261027T193202Z.json",
+   "sha256": "f18f5c2794155b3469b5d6c09c906ba442c720b90c9f8cb53380122c1bd32906"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\melange-fixe-covariances-bruit-v001-20261026T175757Z.json",
+   "sha256": "b242bf674ef8bda8a71a8cba594eb2059ddca0d74bb5056c03c300ab538f6cb5"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\extraction-paires-profils-bruit-v001-20261026T174656Z.json",
+   "sha256": "61a789c32b76eb9bcfa46e358a169dfe8e9cc73c30bb9fec3557352b3eac4770"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\contextes-abstention-axes-bruit-v001-20261026T221702Z.json",
+   "sha256": "93c538e3b0d1a76a0d8a007fba7d6964cd4e0b0fe9cdcde73c8ad1cb65cd5d90"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\paires-supplementaires-axes-bruit-v001-20261026T222302Z.json",
+   "sha256": "ef585b35e3572418874cf55d1791d41834c40c7cccc1b61c0e89421d82f2a285"
+  },
+  {
+   "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\paires-supplementaires-axes-bruit-v002-20261026T222833Z.json",
+   "sha256": "131f27c54de91a50e8789c154fb5c67eb0a89d9bcb743808f3d58154b449ea39"
+  }
+ ]
+}
