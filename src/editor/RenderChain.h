@@ -7,6 +7,7 @@
 #include "RenderStageCache.h"
 #include "ToneRecovery.h"
 
+#include <QByteArray>
 #include <QImage>
 #include <QString>
 #include <QVariantList>
@@ -53,6 +54,8 @@ bool rendersByRegion(const Settings &settings);
 // The measures a region of this recipe needs, on the whole source at full resolution. False on an
 // invalid source, a failed stage or a recipe that does not render by region.
 bool measureWhole(const ColorPipeline::WorkingImage &source, const Settings &settings, WholeMeasures &measures);
+// The settings those measures depend on: two recipes of one key share the measures of a source.
+QByteArray wholeMeasuresKey(const Settings &settings);
 // The region, in pixels of the full-resolution canvas (before the crop), of workingImage(source,
 // settings): the same pixels, bit for bit. Null when the recipe does not render by region, when
 // the region leaves the canvas, on measures of another source's size or recipe's shape, or on a

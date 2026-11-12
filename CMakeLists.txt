@@ -147,6 +147,8 @@ set(IPR_ENGINE_SOURCES
     src/editor/AdjustmentTable.cpp
     src/editor/RenderChain.h
     src/editor/RenderChain.cpp
+    src/editor/DetailTiles.h
+    src/editor/DetailTiles.cpp
     src/profiles/CameraProfileEngine.h
     src/profiles/CameraProfileEngine.cpp
     src/profiles/PreparedProfileCache.h
@@ -562,6 +564,8 @@ if(BUILD_TESTING)
     set_tests_properties(editorHistoryTests PROPERTIES LABELS "unit;history" TIMEOUT 120)
     ipr_add_test(editorDetailTests tests/editor_detail_test.cpp)
     set_tests_properties(editorDetailTests PROPERTIES LABELS "unit;zoom" TIMEOUT 180)
+    ipr_add_test(detailTilesTests tests/detail_tiles_test.cpp)
+    set_tests_properties(detailTilesTests PROPERTIES LABELS "unit;zoom" TIMEOUT 30)
     ipr_add_test(folderRefreshTests tests/folder_refresh_test.cpp)
     set_tests_properties(folderRefreshTests PROPERTIES LABELS "unit;batch" TIMEOUT 120)
     ipr_add_test(toneRecoveryTests tests/tone_recovery_test.cpp)

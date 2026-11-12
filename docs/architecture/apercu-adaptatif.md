@@ -186,6 +186,25 @@ Sur le 60D (18 Mpx), une tuile coûte 28 à 38 ms et l'image entière 1,2 à
 l'image ; elle ne dépend que des réglages en amont de la géométrie
 (signal caméra, noir et blanc) et se met en cache sur eux.
 
+### Tuiles dans l'éditeur et la vue — 12 novembre 2026
+
+`DetailTiles` (fonctions libres, sans état) donne la grille de 512 pixels sur
+l'image affichée (le recadrage en pleine résolution), l'ordre des rendus
+(spirale depuis le point de départ, puis couronne de 512 pixels triée le long
+du déplacement : droit devant, puis sur le côté, derrière en dernier) et les
+tuiles à garder. `ImageEditor` orchestre : une tuile à la fois, chacune
+courte (30 à 50 ms), de sorte qu'un déplacement ou un réglage n'attend jamais
+plus d'une tuile ; une tuile revenue alors qu'elle n'est plus voulue est jetée
+plutôt qu'interrompue. Les mesures de l'image entière sont prises par la
+première tuile et gardées sous la clé `RenderChain::wholeMeasuresKey`
+(réglages en amont de la géométrie et géométrie). La vue QML garde les
+tuiles chargées d'un réglage à l'autre de la liste (adresse stable par
+réglages) et annonce sa partie visible.
+
+Mémoire : une tuile occupe 1 Mio (8 bits) ; une vue 2560 × 1440 et sa couronne
+en gardent une quarantaine, environ 40 Mio, contre 96 à 128 Mio pour l'image
+détaillée entière.
+
 ## Étapes
 
 1. ✅ Banc de mesure (ci-dessus). Reste : profilage de « tons et couleur »
@@ -196,8 +215,9 @@ l'image ; elle ne dépend que des réglages en amont de la géométrie
 3. ✅ Rendu de région pour les étapes « direct » et la géométrie, repli pour les
    autres ; invariant testé (ci-dessus).
 4. Clarté, voile, débruitage, netteté par zone ; puis masques et retouches.
-5. Vue et ordonnanceur : tuiles en spirale, couronne de 512 px, libération et
-   annulation du côté opposé au déplacement, annulation au changement de réglage.
+5. ✅ Vue et ordonnanceur : tuiles en spirale, couronne de 512 px, libération et
+   abandon du côté opposé au déplacement, masquage au changement de réglage
+   (pour les recettes rendues par zone ; les autres gardent l'image entière).
 6. Proxy adapté aux ressources.
 
 ## Décisions de l'utilisateur

@@ -391,6 +391,19 @@ bool rendersByRegion(const Settings &settings)
            settings.grain == 0;
 }
 
+QByteArray wholeMeasuresKey(const Settings &s)
+{
+    // What the stages before the geometry read (renderCamera), and the geometry itself.
+    QByteArray key;
+    QDataStream stream(&key, QIODevice::WriteOnly);
+    stream << qint32(s.temperature) << qint32(s.tint) << s.brightness << s.grayscale << s.denoiseBeforeProfile
+           << qint32(classicalLuminance(s));
+    const Geometry::Settings &g = s.geometry;
+    stream << qint32(g.quarterTurns) << g.flipHorizontal << g.flipVertical << g.rotation << qint32(g.vertical)
+           << qint32(g.horizontal) << qint32(g.aspect) << qint32(g.scale) << qint32(g.offsetX) << qint32(g.offsetY);
+    return key;
+}
+
 bool measureWhole(const ColorPipeline::WorkingImage &source, const Settings &settings, WholeMeasures &measures)
 {
     measures = {};

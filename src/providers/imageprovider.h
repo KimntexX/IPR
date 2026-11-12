@@ -1,6 +1,7 @@
 #ifndef IPR_PROVIDERS_IMAGEPROVIDER_H
 #define IPR_PROVIDERS_IMAGEPROVIDER_H
 
+#include <QHash>
 #include <QImage>
 #include <QQuickImageProvider>
 #include <QReadWriteLock>
@@ -18,6 +19,11 @@ public:
     // The full-resolution view of the current image (null when none).
     void setDetailImage(const QImage &image);
     QImage detailImage() const;
+    // The zoom's full-resolution tiles, by name ("tile-<column>-<row>"); a null image removes one.
+    void setDetailTile(const QString &name, const QImage &image);
+    QImage detailTile(const QString &name) const;
+    void clearDetailTiles();
+    int detailTileCount() const;
     Q_INVOKABLE void setUrl(const QUrl &url);
     QUrl url() const;
 
@@ -29,6 +35,7 @@ private:
     QImage m_image;
     QImage m_originalImage;
     QImage m_detailImage;
+    QHash<QString, QImage> m_detailTiles;
     QUrl m_url;
 };
 
