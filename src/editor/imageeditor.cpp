@@ -1964,6 +1964,21 @@ void ImageEditor::removeLocalMask(int mask)
     commitLocalMasks(std::move(next));
 }
 
+bool ImageEditor::moveLocalMask(int from, int to)
+{
+    const int count = int(m_settings.localMasks.size());
+    if (from < 0 || to < 0 || from >= count || to >= count)
+        return false;
+    if (from == to)
+        return true;
+    LocalAdjustments::Masks next = m_settings.localMasks;
+    if (from < to)
+        std::rotate(next.begin() + from, next.begin() + from + 1, next.begin() + to + 1);
+    else
+        std::rotate(next.begin() + to, next.begin() + from, next.begin() + from + 1);
+    return commitLocalMasks(std::move(next));
+}
+
 int ImageEditor::duplicateLocalMask(int mask)
 {
     if (mask < 0 || mask >= int(m_settings.localMasks.size()))

@@ -17,7 +17,7 @@
 // The masks of an image (ADR-0021, B2). A mask is not an image laid over another: it is a
 // zone, made of shapes, that carries its own values of the existing settings. They act in
 // the processing chain: at each stage, a pixel takes the global value plus the masks' values
-// weighted by their coverage. Masks have neither order nor blend mode: they add up.
+// weighted by their coverage. List order is organizational: masks add up, without blend modes.
 //
 // Shapes are vectors, in the normalized canvas of Geometry: the image as straightened, before
 // the crop, u and v in [0, 1] across the pixels' outer edges. They render the same at every

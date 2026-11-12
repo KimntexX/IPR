@@ -64,11 +64,12 @@ void click(QQuickItem *button)
     QCoreApplication::processEvents();
 }
 
-void mouse(QQuickWindow &window, QEvent::Type type, const QPointF &point, unsigned long &timestamp)
+void mouse(QQuickWindow &window, QEvent::Type type, const QPointF &point, unsigned long &timestamp,
+           Qt::MouseButton button = Qt::LeftButton)
 {
     QMouseEvent event(type, point, QPointF(window.mapToGlobal(point.toPoint())),
-                      type == QEvent::MouseMove ? Qt::NoButton : Qt::LeftButton,
-                      type == QEvent::MouseButtonRelease ? Qt::NoButton : Qt::MouseButtons(Qt::LeftButton),
+                      type == QEvent::MouseMove ? Qt::NoButton : button,
+                      type == QEvent::MouseButtonRelease ? Qt::NoButton : Qt::MouseButtons(button),
                       Qt::NoModifier);
     event.setTimestamp(timestamp);
     timestamp += 50;
@@ -400,6 +401,42 @@ int main(int argc, char **argv)
                named(panel,"maskStartWidth")->isVisible() && named(overlay,"maskHandle_startWidth"),
                "trapezoid exposes both widths")) return 1;
     if (!check(waitFor([&] { return !editor.busy(); }), "cone preview settles")) return 1;
+
+    // Reordering commits on release, preserves the selected mask and supports both directions.
+    const QVariantList beforeOrder = editor.localMasks();
+    const int last = int(beforeOrder.size()) - 1;
+    const qsizetype historyBefore = editor.historySteps().size();
+    auto *drag = named(panel, "maskDrag_" + QString::number(last));
+    auto *firstDrag = named(panel, "maskDrag_0");
+    if (!check(drag && firstDrag, "reorder handles exist")) return 1;
+    const QPointF dragFrom = centreOf(drag), dragTo = centreOf(firstDrag);
+    mouse(window, QEvent::MouseButtonPress, dragFrom, timestamp);
+    mouse(window, QEvent::MouseMove, dragTo, timestamp);
+    if (!check(editor.localMasks() == beforeOrder, "drag does not edit before release")) return 1;
+    mouse(window, QEvent::MouseButtonRelease, dragTo, timestamp);
+    settle();
+    if (!check(waitFor([&] { return !editor.busy(); }) && editor.localMasks()[0] == beforeOrder[last] &&
+               panel->property("selectedMask").toInt() == 0 && editor.historySteps().size() == historyBefore + 1,
+               "drop moves the selected mask in one step")) return 1;
+    // Right-clicking the name opens the actual context menu, respecting list boundaries.
+    const auto rightAt = centreOf(named(panel, "maskSelect_0"));
+    mouse(window, QEvent::MouseButtonPress, rightAt, timestamp, Qt::RightButton);
+    mouse(window, QEvent::MouseButtonRelease, rightAt, timestamp, Qt::RightButton);
+    settle();
+    auto *menu = panelObject->findChild<QObject *>(QStringLiteral("maskOrderMenu"));
+    auto *forward = panelObject->findChild<QObject *>(QStringLiteral("maskMoveForward"));
+    auto *backward = panelObject->findChild<QObject *>(QStringLiteral("maskMoveBackward"));
+    if (!check(menu && forward && backward && menu->property("visible").toBool() &&
+               !forward->property("enabled").toBool() && backward->property("enabled").toBool(),
+               "context menu opens and disables movement above the first row")) return 1;
+    QMetaObject::invokeMethod(backward, "triggered");
+    QMetaObject::invokeMethod(menu, "close");
+    settle();
+    if (!check(waitFor([&] { return !editor.busy(); }) && editor.localMasks()[1] == beforeOrder[last] &&
+               panel->property("selectedMask").toInt() == 1, "context action moves behind and follows selection")) return 1;
+    editor.undo();
+    if (!check(waitFor([&] { return !editor.busy(); }) && editor.localMasks()[0] == beforeOrder[last],
+               "context movement can be undone")) return 1;
 
     std::cout << "masks panel: ok\n";
     return 0;

@@ -475,6 +475,39 @@ QString writePng(const QString &directory, const QString &name, int width, int h
     return image.save(path, "PNG") ? QFileInfo(path).canonicalFilePath() : QString();
 }
 
+void reordering(const QDir &folder)
+{
+    const QString photo = writePng(folder.path(), QStringLiteral("order.png"), 120, 80);
+    ImageProvider provider;
+    ImageEditor editor(&provider, nullptr, nullptr, controlledMemory);
+    editor.loadImage(QUrl::fromLocalFile(photo));
+    const auto settled = [&] { return waitFor([&] { return editor.hasImage() && !editor.busy(); }); };
+    const bool loaded = settled();
+    check(loaded, "reorder source loads");
+    if (!loaded) return;
+    for (const QString &kind : {QStringLiteral("radial"), QStringLiteral("triangle"), QStringLiteral("trapezoid")}) {
+        check(editor.addLocalMask(kind) >= 0 && settled(), "reorder mask added");
+    }
+    editor.setLocalMaskValue(1, QStringLiteral("exposure"), 0.5);
+    check(settled(), "reorder value recorded");
+    const QVariantList original = editor.localMasks();
+    const qsizetype steps = editor.historySteps().size();
+    check(!editor.moveLocalMask(-1, 0) && !editor.moveLocalMask(0, 3), "invalid moves refused");
+    check(editor.moveLocalMask(1, 1) && settled() && editor.historySteps().size() == steps,
+          "same-position move leaves history alone");
+    check(editor.moveLocalMask(2, 0) && settled(), "move to the front");
+    check(editor.localMasks() == QVariantList{original[2], original[0], original[1]}, "all mask data follows order");
+    check(editor.historySteps().size() == steps + 1, "one move is one history step");
+    editor.undo();
+    check(settled() && editor.localMasks() == original, "undo restores exact mask list");
+    editor.redo();
+    check(settled() && editor.localMasks()[0] == original[2], "redo restores order");
+    editor.saveCurrentAdjustments();
+    const auto saved = Sidecar::read(photo);
+    check(saved && LocalAdjustments::describe(saved->settings.localMasks) == editor.localMasks(), "sidecar retains order");
+    check(editor.moveLocalMask(0, 2) && settled() && editor.localMasks() == original, "move back to the end");
+}
+
 void commands(const QDir &folder)
 {
     const QString photo = writePng(folder.path(), QStringLiteral("photo.png"), 120, 80);
@@ -647,6 +680,7 @@ int main(int argc, char **argv)
     }
     codec();
     commands(folder);
+    reordering(folder);
     if (passed)
         std::cout << "editor masks: ok\n";
     return passed ? 0 : 1;

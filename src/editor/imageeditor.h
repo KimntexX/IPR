@@ -383,6 +383,7 @@ public:
     Q_INVOKABLE int addLocalMask(const QString &kind);
     Q_INVOKABLE void removeLocalMask(int mask);
     Q_INVOKABLE int duplicateLocalMask(int mask);
+    Q_INVOKABLE bool moveLocalMask(int from, int to);
     Q_INVOKABLE void setLocalMaskName(int mask, const QString &name);
     Q_INVOKABLE void setLocalMaskVisible(int mask, bool visible);
     Q_INVOKABLE void setLocalMaskOpacity(int mask, double opacity);

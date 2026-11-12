@@ -136,3 +136,36 @@ Extension prête pour un contrôle visuel : faisceau étroit/large, portrait et
 paysage, recadrage, exposition positive et négative, contour progressif et
 superposition. Validation partielle rattachée à l’[issue #24](https://github.com/KimntexX/IPR/issues/24).
 Aucune fusion dans dev, publication ou création de tag n’est effectuée.
+
+## 12 novembre 2026 — Ordre des masques dans la liste
+
+Le clic droit sur une ligne propose **Passer devant** (une place vers le haut)
+et **Passer derrière** (une place vers le bas). La commande impossible à une
+extrémité est grisée. La poignée pointillée à gauche permet de glisser vers une
+autre ligne ; la destination se colore et aucun changement de recette n’est
+envoyé avant le relâchement. Le masque sélectionné conserve ses formes et ses
+réglages, même quand son indice change.
+
+La commande `ImageEditor::moveLocalMask` ne fait que réordonner la recette et
+utilise le chemin existant de validation, historique et sauvegarde. Les indices
+invalides sont refusés ; un déplacement sur place n’ajoute aucune étape.
+L’ordre étant déjà enregistré dans le tableau des masques, le format reste 11.
+L’ordre est organisationnel : les réglages locaux restent additifs, sans nouveau
+mode de fusion ni recouvrement opaque des calques.
+
+Les sept suites ciblées passent sous MSVC/Qt 6.11.2. Les nouveaux contrôles
+couvrent le geste souris réel et le menu contextuel, la sélection, une seule
+étape par déplacement, annulation/rétablissement, limites et persistance des
+données. Le build de l’application et son lancement de contrôle hors écran
+passent également ; le test QML ne signale aucun avertissement.
+
+Preuve canonique : [mask-order-validation-v001-20261112T202454Z.json](../raw/mask-order-validation-v001-20261112T202454Z.json).
+Le guide français est mis à jour dans sa source LaTeX ; son PDF n’est pas
+reconstruit. Ces contrôles ne valent pas nouvelle comparaison du corpus RAW.
+
+### Conclusion actuelle
+
+Build `build-patch_masks/Release/appIPR.exe` prêt pour validation visuelle du
+clic droit et du déplacement par la poignée. Validation partielle suivie par
+l’[issue #24](https://github.com/KimntexX/IPR/issues/24). Aucune fusion,
+publication ou création de tag.
