@@ -1,6 +1,25 @@
 # Réduction de bruit — rapport consolidé
 
-## Bilan actuel — 28 octobre 2026
+## Bilan actuel — 12 novembre 2026
+
+**Débruitage livré : classique inchangé, neuronal en bêta-1.** Les études
+d'octobre ci-dessous (voisinages adaptatifs, Wiener, transports DCP, rafales)
+se sont arrêtées au §473 sans nouveau modèle retenu ; le débruitage classique
+de `DetailProcessing` reste celui de `dev`. Le débruitage neuronal (U-Net sur
+la mosaïque CFA, R6 Mark III, DirectML) est livré en pre-release
+`v0.8.128-beta` ; son analyse est dans le
+[rapport de restauration neuronale](analyse-restauration-neuronale.md) et sa
+validation partielle dans l'[issue #32](https://github.com/KimntexX/IPR/issues/32).
+
+Tri du 12 novembre (décision de l'utilisateur) : toutes les preuves JSON des
+études sont commitées sur `patch_noise`, dont le contexte Wiener de 112 Mio
+compressé sans perte ; le code de recherche est archivé hors du dépôt ; un
+petit banc de validation et de reprise est retenu pour l'amélioration
+continue du U-Net, à porter sur la couche image actuelle (plan de Codex,
+§8.2). Le groupe Bruit s'organise en `patch_noise` (commun) et deux branches
+filles, `patch_noise_algorithm` et `patch_noise_neural`.
+
+## Bilan du 28 octobre 2026 (historique)
 
 **Recentrage sur de nouvelles données réelles, production inchangée.**
 Dernière campagne terminée : §464, décomposition du transport DCP. Le profil
@@ -21856,3 +21875,11 @@ les branches d'intégration ou les décisions de livraison. Aucun calcul actif.
   Aucune transition moteur ni livraison lancée ; aucun calcul actif.
 - Aucune nouvelle référence LR nécessaire pour les contrôles physiques de
   cette nuit ; une comparaison LR actuelle sera une campagne distincte.
+
+## Conclusion actuelle — 12 novembre 2026
+
+Les campagnes de recherche classique sont closes et conservées comme
+historique ; elles ne valident pas le moteur courant. Prochaines actions :
+porter le petit banc retenu (référence des rafales, noirs, bruit résiduel,
+validité des zones), puis l'utiliser pour affiner le U-Net sur bruit réel
+(voir le [rapport de restauration neuronale](analyse-restauration-neuronale.md)).

@@ -43,24 +43,15 @@ la suppression conditionnelle historique du 10 octobre. Les JSON versionnés et 
 mesures restent la source de vérité. Décrire le générateur courant seulement,
 sans maintenir les anciens modes ou leurs tests de compatibilité.
 
-## Ordre de lecture des rapports — règle du 20 octobre 2026
+## Ordre temporel des rapports — règle du 22 octobre 2026
 
-- Présenter les campagnes dans l’ordre chronologique croissant : de la plus
-  ancienne à la plus récente, y compris les étapes d’une même journée. Ajouter
-  les nouvelles analyses à la suite, sans les empiler en tête du rapport.
-- Dater clairement chaque campagne et identifier sa version, son périmètre et
-  son verdict. Si l’heure n’est pas connue, ne pas l’inventer ; expliciter
-  l’ordre des étapes à partir des preuves disponibles.
-- Ouvrir le rapport par un bref **bilan actuel**, daté, avec un lien vers la
-  dernière campagne et les points encore ouverts. Ce résumé ne constitue pas
-  une campagne supplémentaire et ne recopie pas tout l’historique.
-- Terminer par la conclusion actuelle et les prochaines actions, afin qu’une
-  lecture jusqu’au bout aboutisse aux derniers résultats, pas à d’anciens tests.
-- Identifier les résultats remplacés comme historiques ; préserver leurs
-  conclusions d’origine et les JSON canoniques, sans les présenter comme la
-  validation de l’état courant.
-- Appliquer cette structure aux futurs rapports et aux prochaines reprises
-  des rapports existants ; conserver un seul rapport par famille de fonctionnalités.
+- Présenter les campagnes d'un rapport évolutif dans l'ordre chronologique,
+  de la plus ancienne à la plus récente.
+- Un bref état courant daté peut ouvrir le rapport ; placer la conclusion
+  actuelle et les prochaines actions à la fin, sans laisser une ancienne
+  recommandation se présenter comme l'action courante.
+- Conserver les mesures et verdicts historiques avec leurs conditions.
+  Une relecture documentaire ne constitue pas une nouvelle validation.
 
 ## Protocoles fonctionnels — consolidation du 10 octobre 2026
 

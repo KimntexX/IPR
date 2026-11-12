@@ -1,7 +1,10 @@
 # Préparation de l'intégration de Rec.2020 linéaire
 
-Étude puis port local du 15 octobre 2026, sur `patch_raw_opening`. **Master
-Rec.2020 linéaire implémenté ; qualification visuelle/multi-OS à compléter.** Décision :
+Étude puis port du 15 octobre 2026, initialement sur `patch_raw_opening`.
+**Relecture du 22 octobre : master Rec.2020 intégré dans `dev` ; qualification
+photographique détaillée et multi-OS à lire par campagne.**
+Les lots de préparation ci-dessous gardent leur rôle de checklist ; les
+étapes déjà implémentées ne sont pas de nouveaux travaux à effectuer. Décision :
 [ADR-0009](../decisions/ADR-0009-espace-travail-rec2020-lineaire.md).
 Les résultats photographiques restent dans le seul
 [rapport RAW/profils, §44–45](../validation/analyses/analyse-base-colorimetrique.md).
@@ -93,7 +96,7 @@ préparation comme le contrat actuel.
 | --- | --- | --- |
 | `ColorPipeline::WorkingImage` | `CV_32FC4`, étiquette sRGB linéaire | Identité Rec.2020 centrale, contrôles aux frontières ; bloquant si pixels et étiquette divergent |
 | `ColorPipeline::fromSourceImage` | ICC converti via RGBA64 entier vers sRGB | Conversion float vers le master, alpha/ICC absent/ICC LUT testés ; risque de bornage préalable |
-| `fromLinearRgb16`, `RawDecoder::decode`, `applyProfile` | Sorties marquées sRGB linéaire | Convertir une seule fois tous les chemins, y compris sans DCP et changement de profil à chaud |
+| `fromLinearSrgb`, `RawDecoder::decode`, `applyProfile` | Sorties marquées sRGB linéaire | Convertir une seule fois tous les chemins, y compris sans DCP et changement de profil à chaud |
 | `CameraProfileEngine` | Tables dans ProPhoto D50 ; matrice finale vers sRGB | Conserver le domaine des tables ; changer la matrice finale et le contrat de `renderFromCameraSignal` ensemble |
 | `renderWorkingImage` : WB RAW | Recalcule depuis `dcpContext` | Retour dans le master même après température/nuance, sans double application DCP ni redécodage |
 | WB des images non RAW | Matrices Bradford et normalisation en sRGB | Conjuguer les matrices par les changements de base ; même blanc de référence, aucun gain arbitraire |

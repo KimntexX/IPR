@@ -1,6 +1,7 @@
 #include "ImageExporter.h"
 
 #include "WorkingColorSpace.h"
+#include "Types.h"
 
 #include <QColorSpace>
 #include <QCoreApplication>
@@ -13,7 +14,7 @@
 #include <QScopeGuard>
 #include <QTemporaryFile>
 
-#include <opencv2/core.hpp>
+#include "Image.h"
 #include <tiffio.h>
 
 #include <algorithm>
@@ -65,18 +66,20 @@ bool writeLinearDng(const ColorPipeline::WorkingImage &image,
     constexpr float asShotNeutral[] = {1.0f, 1.0f, 1.0f};
     // DNG ColorMatrix maps XYZ at CalibrationIlluminant1 (D65) to the
     // stored linear RGB, not RGB to XYZ. ICC must describe linear samples.
-    const cv::Matx33f xyzToStoredRgb(WorkingColor::srgbToXyz().inv());
+    const ipr::Matrix33f xyzToStoredRgb(WorkingColor::srgbToXyz().inv());
     const QByteArray uniqueCameraModel =
         QByteArrayLiteral("IPR Rendered Linear DNG");
     const QByteArray software = QByteArrayLiteral("IPR");
     const QByteArray iccProfile =
         QColorSpace(QColorSpace::SRgbLinear).iccProfile();
 
+    // NewSubfileType 0 marks the main image; Adobe readers reject an IFD without it.
     bool configured =
+        TIFFSetField(tiff, TIFFTAG_SUBFILETYPE, 0) == 1 &&
         TIFFSetField(tiff, TIFFTAG_IMAGEWIDTH,
-                     static_cast<uint32_t>(gamutMapped.linearRgba.cols)) == 1 &&
+                     static_cast<uint32_t>(gamutMapped.linearRgba.width())) == 1 &&
         TIFFSetField(tiff, TIFFTAG_IMAGELENGTH,
-                     static_cast<uint32_t>(gamutMapped.linearRgba.rows)) == 1 &&
+                     static_cast<uint32_t>(gamutMapped.linearRgba.height())) == 1 &&
         TIFFSetField(tiff, TIFFTAG_BITSPERSAMPLE, 16) == 1 &&
         TIFFSetField(tiff, TIFFTAG_SAMPLESPERPIXEL, 3) == 1 &&
         TIFFSetField(tiff, TIFFTAG_SAMPLEFORMAT, SAMPLEFORMAT_UINT) == 1 &&
@@ -96,7 +99,7 @@ bool writeLinearDng(const ColorPipeline::WorkingImage &image,
                      uniqueCameraModel.constData()) == 1 &&
         TIFFSetField(tiff, TIFFTAG_BLACKLEVEL, 3, blackLevel) == 1 &&
         TIFFSetField(tiff, TIFFTAG_WHITELEVEL, 3, whiteLevel) == 1 &&
-        TIFFSetField(tiff, TIFFTAG_COLORMATRIX1, 9, xyzToStoredRgb.val) == 1 &&
+        TIFFSetField(tiff, TIFFTAG_COLORMATRIX1, 9, xyzToStoredRgb.values.data()) == 1 &&
         TIFFSetField(tiff, TIFFTAG_ASSHOTNEUTRAL, 3, asShotNeutral) == 1 &&
         TIFFSetField(tiff, TIFFTAG_CALIBRATIONILLUMINANT1, 21) == 1;
     if (!iccProfile.isEmpty()) {
@@ -114,10 +117,10 @@ bool writeLinearDng(const ColorPipeline::WorkingImage &image,
     }
 
     std::vector<quint16> row(
-        static_cast<size_t>(gamutMapped.linearRgba.cols) * 3);
-    for (int y = 0; y < gamutMapped.linearRgba.rows; ++y) {
-        const cv::Vec4f *source = gamutMapped.linearRgba.ptr<cv::Vec4f>(y);
-        for (int x = 0; x < gamutMapped.linearRgba.cols; ++x) {
+        static_cast<size_t>(gamutMapped.linearRgba.width()) * 3);
+    for (int y = 0; y < gamutMapped.linearRgba.height(); ++y) {
+        const ipr::Vec4f *source = gamutMapped.linearRgba.row<ipr::Vec4f>(y);
+        for (int x = 0; x < gamutMapped.linearRgba.width(); ++x) {
             for (int channel = 0; channel < 3; ++channel) {
                 row[static_cast<size_t>(x) * 3 + channel] =
                     static_cast<quint16>(std::lround(
@@ -133,7 +136,15 @@ bool writeLinearDng(const ColorPipeline::WorkingImage &image,
         }
     }
 
+    // The directory is written at the flush: a full disk shows here, not at TIFFClose.
+    const bool flushed = TIFFFlush(tiff) == 1;
     TIFFClose(tiff);
+    if (!flushed) {
+        QFile::remove(fileName);
+        if (error)
+            *error = QStringLiteral("Impossible de terminer l'écriture du DNG.");
+        return false;
+    }
     return true;
 }
 }
@@ -238,7 +249,7 @@ Result publish(const QString &stagedPath, const QString &normalizedTarget, const
         if (completed.rename(finalPath))
             return {true, normalized == QStringLiteral("DNG")
                 ? tr("Image exportée (DNG linéaire) : %1").arg(finalPath)
-                : tr("Image exportée : %1").arg(finalPath)};
+                : tr("Image exportée : %1").arg(finalPath), finalPath};
         const QFileInfo collision(finalPath);
         if (!collision.exists() && !collision.isSymLink())
             return {false, tr("Échec de l'export (publication de %1) : %2")
@@ -249,6 +260,30 @@ Result publish(const QString &stagedPath, const QString &normalizedTarget, const
 }
 
 bool supports(const QString &format) { return !suffix(normalizedFormat(format)).isEmpty(); }
+
+Result publishEncoded(const QString &target, const QString &format,
+                      const std::function<bool(const QString &staged, QString *error)> &encode)
+{
+    const QString normalized = normalizedFormat(format);
+    const QString normalizedTarget = normalizedPath(target, normalized);
+    QString stagedPath;
+    {
+        QTemporaryFile reservation(QFileInfo(normalizedTarget).dir().filePath(QStringLiteral(".ipr-export-XXXXXX")));
+        if (!reservation.open())
+            return {false, tr("Échec de l'export (création du temporaire) : %1").arg(reservation.errorString())};
+        stagedPath = reservation.fileName();
+        reservation.setAutoRemove(false);
+        // Destroyed here: its open handle would lock the path on Windows.
+    }
+    auto cleanup = qScopeGuard([&] { QFile::remove(stagedPath); });
+    QString error;
+    if (!encode(stagedPath, &error))
+        return {false, tr("Échec de l'export %1 : %2").arg(normalized, error)};
+    Result published = publish(stagedPath, normalizedTarget, normalized);
+    if (published.success)
+        cleanup.dismiss();
+    return published;
+}
 
 Result write(const ColorPipeline::WorkingImage &rendered, const QString &target,
              const QString &format, int quality)

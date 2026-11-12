@@ -1,4 +1,6 @@
 #include "RawDecoder.h"
+#include "image_testing.h"
+#include "Image.h"
 
 #include <QCoreApplication>
 
@@ -49,8 +51,8 @@ int main(int argc, char **argv)
                            metadata->lensModel = QStringLiteral("Test Lens");
                        }
                        ColorPipeline::WorkingImage result;
-                       result.linearRgba = cv::Mat::zeros(1, 1, CV_32FC4);
-                       result.linearRgba.at<cv::Vec4f>(0, 0)[3] = 1.0f;
+                       result.linearRgba = ipr::Image::zeros({1, 1}, ipr::Depth::F32, 4);
+                       imagetest::at<ipr::Vec4f>(result.linearRgba, 0, 0)[3] = 1.0f;
                        return result;
                    },
                    &error, futureFormat),
@@ -105,7 +107,7 @@ int main(int argc, char **argv)
     if (!RawDecoder::registerFormatHandler({QStringLiteral("wrongmaster")},
         [](const QString &, const RawDecoder::Options &, ImageMetadata *, QString *) {
             ColorPipeline::WorkingImage result;
-            result.linearRgba = cv::Mat(1,1,CV_32FC4,cv::Scalar(.2,.3,.4,1));
+            result.linearRgba = imagetest::filledWith({1,1},{.2,.3,.4,1});
             result.colorSpace = QColorSpace(QColorSpace::SRgbLinear);
             return result;
         }, &error)) return 1;

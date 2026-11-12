@@ -1,7 +1,7 @@
 # Tester les fonctionnalités d'IPR en autonomie
 
-Procédure alignée le 12 octobre 2026 avec `patch_validation`. Recompiler la
-branche qui contient les outils avant de générer. Un build réussi n'est pas
+Procédure relue le 22 octobre 2026 sur `dev`. Recompiler la
+référence de code à étudier avant de mesurer ou de générer. Un build réussi n'est pas
 une validation photographique.
 
 ## 1. Choisir le périmètre et compiler
@@ -26,10 +26,12 @@ Choisir les scènes et critères du [protocole du groupe](protocols/README.md),
 avant mesure. Même RAW et état de développement dans les deux moteurs ;
 pas de TIFF Lightroom à la place du RAW pour IPR.
 
-## 2. Préparer et générer
+## 2. Préparer les sources et, si nécessaire, les aperçus de revue
 
 Les sources sont les images à la racine de `tests/image/base`. Les références
-et exports sont dans ses sous-dossiers existants. Le générateur ne supprime
+Lightroom sont dans les sous-dossiers existants. **La génération TIFF IPR est
+facultative pour la revue visuelle** : les analyseurs rendent IPR en mémoire.
+Le générateur ne supprime
 ni n'écrase rien : retirer manuellement les anciens exports IPR à régénérer.
 Ne pas créer une campagne datée ou un nouveau dossier par photo.
 
@@ -49,7 +51,8 @@ Les TIFF contiennent les réglages/provenance ; aucun fichier auxiliaire
 de génération n'est produit. Une erreur conserve les exports déjà écrits.
 
 Vérifier la console DCP/LCP : Camera Neutral est préféré, pas garanti si absent.
-La normalisation expérimentale est désactivée. Les sources et sidecars restent
+La calibration par défaut de l'IHM est demandée ; vérifier si elle est
+réellement appliquée au boîtier/profil/mode. Les sources et sidecars restent
 inchangés ; le générateur ne restaure pas leurs retouches.
 
 ## 3. Préparer les références Lightroom
@@ -71,6 +74,12 @@ pour grading teinte, saturation 25 ; respecter les supports du générateur.
 
 ## 4. Lancer les mesures
 
+Compiler d'abord `iprRenderServer` pour la référence étudiée :
+
+```powershell
+cmake --build build-windows-msvc --config Release --target iprRenderServer
+```
+
 Python 3 avec NumPy/Pillow, depuis la racine, sous Windows ou WSL :
 
 ```bash
@@ -80,10 +89,13 @@ python tests/analyse_couleur.py --base tests/image/base --strict --data-version 
 python tests/analyse_lumiere.py --base tests/image/base --feature shadows --data-version 2
 ```
 
-Sous WSL remplacer `python` par `python3` si nécessaire. Le code lit les
-déclarations IPR et XMP LR ; il ne devine pas un état LR d'après un suffixe.
-Une association ambiguë ou une ancienne image IPR non déclarée exige une
-correction ou un mapping explicite selon le [guide des analyseurs](tools/analyseurs-groupes.md).
+Sous WSL remplacer `python` par `python3` et utiliser un serveur compilé pour
+Linux. Si le serveur n'est pas découvert, fournir `--render-server CHEMIN`
+ou `IPR_RENDER_SERVER_BIN`. Ne pas confondre un binaire Windows et un binaire
+Linux. Le code rend les recettes IPR en mémoire et lit le XMP LR ; les TIFF
+IPR déjà présents ne sont pas ses entrées en mode `--base`. Il ne devine pas
+un état LR d'après un suffixe. Une association ambiguë demande une correction
+ou un mapping explicite selon le [guide des analyseurs](tools/analyseurs-groupes.md).
 Les contrôles LR sans audit automatique demandent également ce mapping.
 
 Les sorties sont des JSON versionnés/horodatés immuables sous

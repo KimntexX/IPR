@@ -1,0 +1,51 @@
+#ifndef IPR_CORE_PERCEPTUALCOLOUR_H
+#define IPR_CORE_PERCEPTUALCOLOUR_H
+
+#include "ColorMixer.h"
+#include "LocalValues.h"
+#include "PointColor.h"
+#include "Types.h"
+
+#include "Image.h"
+
+#include <array>
+#include <optional>
+
+// The perceptual colour stage: saturation and vibrance, the colour mixer, the
+// point colour and the colour grading, in this order, in Oklab. Each pixel goes to Oklab once and back
+// once, instead of once per adjustment; the adjustments themselves (Vibrance,
+// ColorMixer, PointColor, ColorGrading) work on one Oklab colour.
+namespace PerceptualColour {
+
+struct Parameters {
+    int saturation = 0;                       // [-100, 100]
+    int vibrance = 0;                         // [-100, 100]
+    ColorMixer::Parameters mixer;
+    PointColor::Parameters pointColor;
+    std::array<int, 4> gradingHue{};          // shadows, midtones, highlights, global; degrees
+    std::array<int, 4> gradingSaturation{};   // [0, 100]
+    std::array<int, 4> gradingLuminance{};    // [-100, 100]
+    int gradingBlending = 50;                 // [0, 100]
+    int gradingBalance = 0;                   // [-100, 100]
+};
+
+// Linear Rec.2020 image (F32 of three channels), in place. No clipping: the output handles gamut.
+// local: per-pixel saturation and vibrance added to the global ones (LocalValues);
+// maps that do not fit the image are ignored.
+void apply(ipr::Image &linearRgb, const Parameters &parameters, const LocalValues::Maps &local = {});
+
+// The colour the point colour sees at a place of the stage's input (the tones'
+// output, F32 of three channels): the mean over a square of the given radius around (x, y), in
+// [0, 1] of the image, after saturation, vibrance and the mixer. Empty outside the
+// image or on an empty input.
+std::optional<ipr::Vec3d> colourBeforePointColour(const ipr::Image &linearRgb, double x, double y, int radius,
+                                                 const Parameters &parameters);
+
+// Weight (F32 of one channel, [0, 1]) of every pixel of the stage's input in the
+// neighbourhood of one point, as the point colour sees it (after saturation,
+// vibrance and the mixer): the range overlay. Empty for an invalid point or input.
+ipr::Image pointWeights(const ipr::Image &linearRgb, const Parameters &parameters, int point);
+
+} // namespace PerceptualColour
+
+#endif // IPR_CORE_PERCEPTUALCOLOUR_H

@@ -1,4 +1,6 @@
 import importlib.util
+import contextlib
+import io
 import json
 from pathlib import Path
 import tempfile
@@ -12,6 +14,20 @@ spec.loader.exec_module(ci)
 
 
 class DeploymentTests(unittest.TestCase):
+    def test_neural_assets_require_both_paths(self):
+        with contextlib.redirect_stderr(io.StringIO()):
+            with self.assertRaises(SystemExit) as failure:
+                ci.main(['--action', 'build', '--neural-model', 'model.onnx'])
+        self.assertEqual(failure.exception.code, 2)
+
+    def test_neural_paths_reach_cmake(self):
+        with tempfile.TemporaryDirectory() as folder, patch.object(ci, 'run') as run:
+            self.assertEqual(ci.main(['--action', 'build', '--build-dir', folder,
+                                      '--neural-sdk-dir', folder, '--neural-model', folder+'/model.onnx']), 0)
+            command = [str(arg) for arg in run.call_args_list[0].args[0]]
+            self.assertIn('-DIPR_ENABLE_ONNX_RUNTIME=ON', command)
+            self.assertTrue(any(arg.startswith('-DIPR_NEURAL_MODEL=') for arg in command))
+            self.assertTrue(any(arg.startswith('-DIPR_ONNXRUNTIME_ROOT=') for arg in command))
     def test_version_phases(self):
         for label in ('v0.1.7-alpha', '0.2.1-beta', 'v0.3.2-beta', 'v1.0.0'):
             self.assertEqual(ci.release_version(label)[0], label.removeprefix('v'))
@@ -36,6 +52,56 @@ class DeploymentTests(unittest.TestCase):
             ci.assert_public(stage)
             file.write_bytes(file.read_bytes()+b' ')
             with self.assertRaises(ValueError):ci.assert_public(stage)
+
+    def test_macdeployqt_errors_tolerated_only_for_unused_sql_drivers(self):
+        output = ('WARNING: Plugin "libqsqlodbc.dylib" uses private API\n'
+                  'ERROR: no file at "/usr/local/lib/libmimerapi.dylib"\n'
+                  'ERROR: no file at "/usr/local/opt/libiodbc/lib/libiodbc.2.dylib"\n')
+        drivers = {'/usr/local/lib/libmimerapi.dylib', '/usr/local/opt/libiodbc/lib/libiodbc.2.dylib'}
+        self.assertEqual(ci.unexplained_deploy_errors(output, drivers), [])
+        # A missing file that no SQL driver links to, or any other error, still fails.
+        self.assertEqual(ci.unexplained_deploy_errors(output, {'/usr/local/lib/libmimerapi.dylib'}),
+                         ['ERROR: no file at "/usr/local/opt/libiodbc/lib/libiodbc.2.dylib"'])
+        self.assertEqual(ci.unexplained_deploy_errors('ERROR: Could not find framework\n', drivers),
+                         ['ERROR: Could not find framework'])
+        self.assertEqual(ci.unexplained_deploy_errors('Log: deployed\n', set()), [])
+
+    def test_bundled_libraries_are_referenced_inside_the_bundle(self):
+        with tempfile.TemporaryDirectory() as directory:
+            bundle = Path(directory) / 'appIPR.app'
+            library = bundle / 'Contents/Frameworks/libraw.24.dylib'
+            executable = bundle / 'Contents/MacOS/appIPR'
+            framework = bundle / 'Contents/Frameworks/QtConcurrent.framework/Versions/A/QtConcurrent'
+            for binary in (library, executable, framework):
+                binary.parent.mkdir(parents=True, exist_ok=True)
+                binary.write_bytes(b'\xcf\xfa\xed\xfe' + b'\0' * 12)
+            brew = '/opt/homebrew/opt/libraw/lib/'
+            staging = '/runner/dist/.staging/appIPR.app/Contents/Frameworks/QtConcurrent.framework/Versions/A/QtConcurrent'
+            outputs = {
+                ('-D', library): f'{library}:\n{brew}libraw.24.dylib\n',
+                ('-D', executable): f'{executable}:\n',
+                # A framework whose id still names the staging folder.
+                ('-D', framework): f'{framework}:\n{staging}\n',
+                ('-L', framework): f'{framework}:\n\t{staging} (compatibility)\n',
+                ('-L', library): (f'{library}:\n\t{brew}libraw.24.dylib (compatibility)\n'
+                                  f'\t{brew}libjpeg.8.dylib (compatibility)\n'),
+                ('-L', executable): f'{executable}:\n\t{brew}libraw.24.dylib (compatibility)\n'
+                                    '\t/usr/lib/libSystem.B.dylib (compatibility)\n',
+            }
+            with patch.object(ci.subprocess, 'check_output',
+                              side_effect=lambda command, text: outputs[(command[1], Path(command[2]))]), \
+                    patch.object(ci, 'run') as run:
+                ci.relocate_bundled_references(bundle)
+            calls = [call.args[0] for call in run.call_args_list]
+            target = '@executable_path/../Frameworks/libraw.24.dylib'
+            self.assertIn(['install_name_tool', '-id', target, library], calls)
+            self.assertIn(['install_name_tool', '-change', brew + 'libraw.24.dylib', target, executable],
+                          calls)
+            self.assertIn(['install_name_tool', '-id',
+                           '@executable_path/../Frameworks/QtConcurrent.framework/Versions/A/QtConcurrent', framework],
+                          calls)
+            # A library the bundle does not carry is left for the portability check to refuse.
+            self.assertEqual(len(calls), 3)
 
     def test_offscreen_runtime(self):
         env = ci.runtime_environment()
@@ -74,8 +140,8 @@ class DeploymentTests(unittest.TestCase):
                         self.assertRegex(action, r'@[a-f0-9]{40}$')
         delivery = yaml.load((ROOT / '.github/workflows/delivery.yml').read_text(), Loader=yaml.BaseLoader)
         matrix = delivery['jobs']['archives']['strategy']['matrix']
-        self.assertEqual(set(matrix['mode']), {'system', 'standalone'})
-        self.assertEqual(len(matrix['os']), 4)
+        self.assertEqual(matrix, '${{ fromJSON(needs.approval.outputs.matrix) }}')
+        self.assertEqual(delivery['jobs']['approval']['outputs']['matrix'], '${{ steps.approval.outputs.package_matrix }}')
 
 
 if __name__ == '__main__': unittest.main()

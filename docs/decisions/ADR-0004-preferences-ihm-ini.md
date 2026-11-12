@@ -1,3 +1,5 @@
+*[Français](ADR-0004-preferences-ihm-ini.md) | [English](ADR-0004-preferences-ihm-ini_en.md)*
+
 # ADR-0004 — Préférences globales d’IHM dans un INI utilisateur
 
 - **Date :** 4 octobre 2026.

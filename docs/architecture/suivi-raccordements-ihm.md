@@ -1,22 +1,5 @@
 # IHM — suivi des raccordements au moteur
 
-## Complément courant — 23 octobre 2026
-
-La PR #8 est maintenant fusionnée dans `dev`, commit `5549946` ; les ajouts
-de copier/coller, sauvegarde et Ctrl+clic ne sont donc plus en attente de livraison.
-Le bilan daté du 22 octobre ci-dessous reste la trace de la préparation.
-
-**IHM-CONN-010 — raccordé sur `patch_noise`, validation visuelle attendue :**
-`estimateImageNoise()` lance une estimation asynchrone du signal développé
-entrant dans le débruitage. `noiseAnalysisRunning`, `noiseAnalysisReady` et
-`noiseAnalysisSummary` exposent son état, sans décoder des messages traduits.
-`setDenoiseGlobal(0…100)` modifie les deux intensités dans une seule commande ;
-les contrôles séparés restent disponibles en avancé. Le bouton n'applique pas
-de correction. L'état d'analyse périmé est invalidé après édition amont,
-navigation ou développement. Les intensités restent dans le sidecar existant.
-Ce raccordement appartient au chantier Bruit, pas à une modification moteur
-effectuée depuis le worktree IHM. Les autres contrats ouverts restent ouverts.
-
 ## État actuel — 22 octobre 2026
 
 La première livraison IHM est déjà intégrée dans `dev` par la
@@ -55,12 +38,93 @@ recompilé localement. Les traductions restent sur le chantier documentaire déd
 | IHM-CONN-002 | À spécifier | Histogramme analytique en amont des courbes, distinct de l'aperçu sRGB |
 | IHM-CONN-003 | En attente moteur | États typés des traitements et révisions de rendu |
 | IHM-CONN-004 | En attente moteur | Comparaison canonique des recettes par groupe |
+| IHM-CONN-012 | Raccordé sur `patch_ui_history`, validé visuellement par l'utilisateur le 2 novembre 2026 | Historique et instantanés : voir ci-dessous |
+| IHM-CONN-013 | Raccordé et validé par l'utilisateur, intégré à `dev` | Panneau Géométrie : voir ci-dessous |
+| IHM-CONN-014 | Raccordé et validé par l'utilisateur | Panneau Assembler : voir ci-dessous |
+| IHM-CONN-015 | Raccordé (`v0.5.110-beta`) ; fonctions validées par l'utilisateur, design à revoir | Panneau Masques : voir ci-dessous |
+| IHM-CONN-016 | Raccordé et assemblage validé par l'utilisateur | Mode Panorama de l'onglet Assembler : voir ci-dessous |
+| IHM-CONN-017 | Raccordé sur `patch_ui_object_removal`, à valider | Onglet Retouche : voir ci-dessous |
+
+#### IHM-CONN-017 — onglet Retouche (B3)
+
+Le moteur expose sur `editor` : `retouches` (genre, visibilité, opacité, nombre de coups, source,
+centre), `addRetouch(genre)`, `removeRetouch`, `setRetouchVisible`, `setRetouchOpacity`,
+`setRetouchSource(retouche, décalageX, décalageY)`, `addRetouchStroke(retouche, points, taille,
+contour)`, `retouchOverlay`. `MaskOverlay` reçoit un genre `point` pour la poignée de la source.
+Une retouche sans effet est signalée par `statusMessage`.
+
+#### IHM-CONN-016 — mode Panorama de l'onglet Assembler (B8)
+
+`editor.stacking` (`StackSession`) ajoute `startPanorama(urls, projection, garderLesBords)` ;
+`projection` vaut `automatic`, `cylindrical`, `spherical` ou `rectilinear`. Progression, aperçu,
+annulation, export et réouverture sont ceux de l'empilement. Le panneau ne calcule rien.
+
+#### IHM-CONN-015 — panneau Masques (B2)
+
+Le moteur expose sur `editor` : `localMasks` (masques, formes, valeurs), `addLocalMask(type)`,
+`removeLocalMask`, `duplicateLocalMask`, `setLocalMaskName`, `setLocalMaskVisible`,
+`setLocalMaskOpacity`, `setLocalMaskValue(masque, réglage, valeur)`,
+`addLocalMaskShape(masque, type, combinaison)`, `removeLocalMaskShape`,
+`setLocalMaskShape(masque, forme, champs)`, `addLocalMaskStroke(masque, forme, points, taille, contour, flux)`.
+Coordonnées : canevas normalisé ; `MaskOverlay` passe de l'écran, recadré ou non, au canevas.
+`localMaskOverlay` montre la zone d'un masque dans l'aperçu, sans l'enregistrer ni l'exporter.
+
+#### IHM-CONN-014 — panneau Assembler (B7)
+
+Le moteur expose `editor.stacking` (`StackSession`) : `running`, `exporting`, `hasResult`,
+`progress`, `status`, `preview`, `exportedFile`, `start(urls, référence)`, `cancel()`,
+`exportResult(cible, format)`, `suggestedExport(format)`, `discard()`. Le panneau lit la
+sélection du ruban (`selectedImageUrls`) et ne calcule rien : il ouvre le résultat exporté
+par `editor.loadImage`.
+
+#### IHM-CONN-013 — panneau Géométrie (B1)
+
+Le moteur expose sur `editor` : `geometry` (valeurs, taille du cadre, `hasCrop`,
+`identity`, `emptyZones`), `cropEditing`, `setGeometryValue(nom, valeur)`,
+`turnGeometry()`, `mirrorGeometry(horizontal)`, `setGeometryCrop(x, y, l, h)`,
+`setGeometryCropRatio(ratio)`, `setGeometryConstrain(actif)`, `resetGeometryCrop()`,
+`resetGeometry()`. L'onglet Géométrie met `cropEditing` à vrai : l'aperçu montre le
+cadre entier ; un glissement du rectangle reste local et n'est envoyé qu'au relâchement.
+
+#### IHM-CONN-012 — historique des retouches (ADR-0021)
+
+Le moteur expose sur `editor` (contrat C++ dans `src/editor/imageeditor.h`) :
+
+- `beginAdjustmentGesture()` / `endAdjustmentGesture()` : à appeler à l'appui
+  et au relâchement de chaque curseur, roue ou point de courbe glissé
+  (`onPressedChanged`). Tout le geste devient une seule étape ; un changement
+  hors geste (bouton, coller, réinitialiser) est une étape à lui seul.
+  Sans ce raccordement, chaque valeur intermédiaire d'un glissement est une étape.
+- `undo()`, `redo()`, `canUndo`, `canRedo` : raccourcis `Ctrl+Z` et
+  `Ctrl+Maj+Z` (ou `Ctrl+Y`), boutons grisés selon `canUndo` / `canRedo`.
+- `historySteps` (liste de `{changes}`, noms techniques des champs de la recette
+  modifiés, la première étape étant l'ouverture), `historyPosition`,
+  `goToHistoryStep(i)` : liste de l'historique ; l'IHM traduit les noms de
+  champs en libellés de réglages.
+- `snapshots` (`{name, created}`), `addSnapshot(nom)`, `removeSnapshot(i)`,
+  `restoreSnapshot(i)` : instantanés nommés ; restaurer crée une nouvelle étape.
+- Signal `historyChanged` pour tout ce qui précède.
+
+Raccordement réalisé sur la branche locale `patch_ui_history`, créée depuis
+`patch_editing_core` parce que ce contrat n'est pas encore dans `dev` ; elle
+rejoindra `patch_ui` une fois le moteur intégré. Curseurs et champs de saisie
+(`AdjustmentControl`) et roues d'étalonnage encadrent leur geste ; la courbe ne
+s'applique qu'au relâchement et fait déjà une étape. Menu Édition, `Ctrl+Z`,
+`Ctrl+Maj+Z` et `Ctrl+Y`, partie Historique (`HistoryModule`) dans le panneau
+d'informations à gauche, sous les libellés, à la demande de l'utilisateur, test `historyQmlTests`
+avec de vrais glissements. `removeHistoryStep(i)` retire la retouche d'une étape,
+les suivantes étant rejouées sans elle : touche Suppr sur l'étape courante de la
+liste, ou clic droit sur une étape. Tous les menus dérivent désormais du modèle
+`AppMenu`, qui reprend la palette de l'interface. Validé visuellement par
+l'utilisateur le 2 novembre 2026 ; les flèches du clavier font encore une étape par
+pression.
 | IHM-CONN-005 | En attente moteur | Rôles légers des vignettes : classement et présence de retouches |
 | IHM-CONN-006 | En attente moteur | Descripteur d'export et résultat typé avec destination réellement publiée |
 | IHM-CONN-007 | Raccordé et validé sur Windows | Compléter la qualification des permissions et des plateformes cibles |
 | IHM-CONN-008 | En attente moteur | Duplication physique source et réglages ; `Ctrl+D` désactivé |
 | IHM-CONN-009 | Raccordé, tests portables réussis | Qualification réelle des alias `/var` et `/private/var` sur macOS |
 | IHM-CONN-010 | Raccordé, tests réussis (23 octobre 2026) | Revue visuelle des pistes du mélangeur : `ImageEditor::colorMixerTrackColor(bande, composante, valeur)` renvoie la couleur atteinte par le modèle Lightroom (`ColorMixer::trackColour`), échantillonnée à −100, −50, 0, +50, +100 |
+| IHM-CONN-011 | Raccordé (28 octobre 2026, `patch_point_color`) | Couleur du point (`PointColorModule`). Moteur `PointColor` calé sur des exports Lightroom dans le TSV du ProPhoto linéaire ([analyse](../validation/analyses/analyse-couleur-point.md)) ; points portés par la recette, le `.ipr` (version 9), la clé de l'étape perceptuelle du cache d'aperçu et le serveur de rendu. Commandes `ImageEditor` : `pointColors`, `addPointColorAt(x, y)` (couleur vue par l'étape, lue sur la sortie des tons gardée par le cache, `RenderStageCache::peek`), `setPointColorValue`, `removePointColor`. Pipette : mode `picking` de `ImageViewport` (clic placé en [0, 1] de l'image, Échap annule), relié par `Main` à `Setting.pointColorPicking`. Visualisation des plages : `pointColorOverlay` (point sélectionné), aperçu seulement, couleur selon le poids du point (`PerceptualColour::pointWeights`), gris ailleurs (`ColorAdjustments::showWeights`) ; jamais enregistrée ni exportée |
 
 Les mémos au survol prolongé restent **reportés à la bêta**. Le livre utilisateur
 français est créé et décrit déjà les commandes disponibles ; il n'est plus

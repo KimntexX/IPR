@@ -1,0 +1,178 @@
+{
+ "question": "What the modules write and cost with the image layer Sobel, Laplacian, median, box mean and morphology instead of OpenCV",
+ "revisions": {
+  "opencv": "6ae1792",
+  "image_layer": "bfc5497",
+  "faster": "deae94a"
+ },
+ "settings": "dehaze 40, sharpening 60, luminance denoise 40, colour denoise 40; 16-bit TIFF; median of three; fresh copies. Stacking on D:/DCIM/101EOSR6 6V1A0016 to 6V1A0023; panorama on Oliana _MG_7596 to _MG_7601 with filled edges.",
+ "results_at_bfc5497": {
+  "exports": {
+   "6V1A0007.CR3": {
+    "neutral_identical": true,
+    "neutral_gap_16bit": {
+     "largest": 0,
+     "share_differing": 0.0
+    },
+    "effect_gap_16bit": {
+     "largest": 1,
+     "share_differing": 0.000534
+    },
+    "effect_ms": [
+     5080.4451,
+     6569.3481
+    ],
+    "neutral_ms": [
+     835.8597,
+     834.4303
+    ],
+    "preview_ms": [
+     740.7445,
+     835.082
+    ]
+   },
+   "IMG_6858.CR2": {
+    "neutral_identical": true,
+    "neutral_gap_16bit": {
+     "largest": 0,
+     "share_differing": 0.0
+    },
+    "effect_gap_16bit": {
+     "largest": 1,
+     "share_differing": 0.000177
+    },
+    "effect_ms": [
+     2864.818,
+     3674.5829
+    ],
+    "neutral_ms": [
+     453.4132,
+     458.4951
+    ],
+    "preview_ms": [
+     550.1537,
+     665.5064
+    ]
+   }
+  },
+  "stack": {
+   "frames_identical": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "noise": [
+    [
+     0.3526625451440232,
+     0.350391140065009,
+     0.35303821496967386
+    ],
+    [
+     0.3526625451440232,
+     0.350391140065009,
+     0.35303821496967386
+    ]
+   ],
+   "rejected_share": [
+    0.02090538031101446,
+    0.02090538031101446
+   ],
+   "seconds_stack_from_decoded": [
+    10.843,
+    11.002
+   ],
+   "images": {
+    "stack-flat-ev0.png": {
+     "largest": 0,
+     "share_differing": 0.0
+    },
+    "stack-flat-ev2.png": {
+     "largest": 0,
+     "share_differing": 0.0
+    },
+    "stack-textured-ev0.png": {
+     "largest": 0,
+     "share_differing": 0.0
+    },
+    "stack-textured-ev2.png": {
+     "largest": 0,
+     "share_differing": 0.0
+    },
+    "stack-textured2-ev0.png": {
+     "largest": 0,
+     "share_differing": 0.0
+    },
+    "stack-textured2-ev2.png": {
+     "largest": 0,
+     "share_differing": 0.0
+    },
+    "stack-textured3-ev0.png": {
+     "largest": 0,
+     "share_differing": 0.0
+    },
+    "stack-textured3-ev2.png": {
+     "largest": 0,
+     "share_differing": 0.0
+    }
+   }
+  },
+  "panorama": {
+   "success": [
+    true,
+    true
+   ],
+   "canvas_width": [
+    18448,
+    18448
+   ],
+   "canvas_height": [
+    4224,
+    4224
+   ],
+   "kept_width": [
+    18448,
+    18448
+   ],
+   "kept_height": [
+    4224,
+    4224
+   ],
+   "residual_pixels": [
+    1.8466130710708217,
+    1.8458879935061003
+   ],
+   "worst_pair_pixels": [
+    3.777140811227731,
+    3.779485113492902
+   ],
+   "filled_share": [
+    0.15178627343606266,
+    0.15178814704804988
+   ],
+   "job_seconds": [
+    10.852,
+    10.886
+   ],
+   "image": {
+    "largest": 168,
+    "share_differing": 0.559394
+   }
+  }
+ },
+ "colour_denoise_alone_6V1A0007": {
+  "opencv_effect_ms": 4094.08,
+  "image_layer_effect_ms_at_bfc5497": 5269.44,
+  "image_layer_effect_ms_at_deae94a": 4474.68,
+  "other_settings_alone": "dehaze, sharpening and luminance denoise within the noise of the measure"
+ },
+ "notes": [
+  "Exports move by one level of 65,535 at most, on under 0.06 % of values; neutral exports are identical.",
+  "Stacking is identical to the bit. The panorama keeps its frame and filled share; its alignment moves by a fraction of a pixel through the gradients its features read, as with the pyramid.",
+  "What remains slower: the 5 x 5 median, about 2.5 to 4.5 times OpenCV, and minimum and maximum, about 4 to 20 times, bound by memory."
+ ]
+}

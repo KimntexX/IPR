@@ -1,0 +1,1041 @@
+{
+ "campaign_id": "etude-couleur-point-tsv-v002-20261028T092522Z",
+ "runner": "tests/study_point_color_hsv.py",
+ "commit": "1715206646941c025abf493a1c4289271f3b514f",
+ "local_changes": [
+  "M tests/study_point_color_hsv.py",
+  " M tests/study_point_color_ipr.py"
+ ],
+ "space": "HSV of linear ProPhoto RGB (D50, Bradford from sRGB D65); hue in radians",
+ "model": "w = k T_h(dH) T_s(dS) T_v(dV), symmetric trapezoids around a fitted centre; dV on V^(1/2.2)",
+ "sample_stride": 12,
+ "sample_pixels": 120000,
+ "seed": 20261028,
+ "duration_seconds": 520.1,
+ "python": "3.14.3",
+ "sources": {
+  "0.0691/0.6897/0.2087": {
+   "lightroom_source": [
+    0.0691,
+    0.689713,
+    0.208665
+   ],
+   "saturation_minus_100_amplitude": 0.3912,
+   "core_pixels_hsv_median": [
+    0.218,
+    0.6095,
+    0.2185
+   ],
+   "ranges": {
+    "0": {
+     "scenes": 28,
+     "scale": 0.9374,
+     "centre_offsets": [
+      -0.0315,
+      -0.0352,
+      0.0019
+     ],
+     "hue_plateau_ramp": [
+      0.1551,
+      0.494
+     ],
+     "saturation_plateau_ramp": [
+      0.1215,
+      0.1646
+     ],
+     "value_plateau_ramp": [
+      0.1194,
+      0.2606
+     ],
+     "rms": 0.03258,
+     "held_out_rms_median": 0.00201
+    },
+    "25": {
+     "scenes": 28,
+     "scale": 0.9958,
+     "centre_offsets": [
+      -0.0125,
+      -0.0596,
+      0.0067
+     ],
+     "hue_plateau_ramp": [
+      0.1718,
+      0.5376
+     ],
+     "saturation_plateau_ramp": [
+      0.1318,
+      0.2747
+     ],
+     "value_plateau_ramp": [
+      0.166,
+      0.2436
+     ],
+     "rms": 0.04136,
+     "held_out_rms_median": 0.00754
+    },
+    "50": {
+     "scenes": 28,
+     "scale": 0.999,
+     "centre_offsets": [
+      -0.02,
+      -0.0442,
+      0.0118
+     ],
+     "hue_plateau_ramp": [
+      0.2411,
+      0.541
+     ],
+     "saturation_plateau_ramp": [
+      0.1687,
+      0.4163
+     ],
+     "value_plateau_ramp": [
+      0.2019,
+      0.2389
+     ],
+     "rms": 0.05015,
+     "held_out_rms_median": 0.01391
+    },
+    "75": {
+     "scenes": 28,
+     "scale": 1.0395,
+     "centre_offsets": [
+      -0.0253,
+      -0.0244,
+      0.0107
+     ],
+     "hue_plateau_ramp": [
+      0.2592,
+      0.5367
+     ],
+     "saturation_plateau_ramp": [
+      0.2094,
+      0.4047
+     ],
+     "value_plateau_ramp": [
+      0.2147,
+      0.2277
+     ],
+     "rms": 0.05372,
+     "held_out_rms_median": 0.01521
+    },
+    "100": {
+     "scenes": 28,
+     "scale": 1.0433,
+     "centre_offsets": [
+      -0.024,
+      -0.0169,
+      0.0086
+     ],
+     "hue_plateau_ramp": [
+      0.2756,
+      0.5295
+     ],
+     "saturation_plateau_ramp": [
+      0.2534,
+      0.3766
+     ],
+     "value_plateau_ramp": [
+      0.2309,
+      0.2089
+     ],
+     "rms": 0.05981,
+     "held_out_rms_median": 0.01382
+    }
+   },
+   "responses": {
+    "luminance": {
+     "50": {
+      "scenes": 28,
+      "log_value": 0.3519157364475349,
+      "log_saturation": 0.01880663327248699
+     }
+    },
+    "saturation": {
+     "50": {
+      "scenes": 28,
+      "log_saturation": 0.30463755063575326
+     }
+    },
+    "hue": {
+     "50": {
+      "scenes": 28,
+      "hue_radians": 0.26025917207277194
+     }
+    }
+   },
+   "centre_hsv": [
+    0.0491,
+    0.64551,
+    0.21987
+   ]
+  },
+  "0.5481/0.5023/0.1617": {
+   "lightroom_source": [
+    0.548111,
+    0.502314,
+    0.161747
+   ],
+   "saturation_minus_100_amplitude": 0.4738,
+   "core_pixels_hsv_median": [
+    0.6576,
+    0.431,
+    0.1622
+   ],
+   "ranges": {
+    "0": {
+     "scenes": 28,
+     "scale": 0.9468,
+     "centre_offsets": [
+      0.0252,
+      0.0012,
+      0.0342
+     ],
+     "hue_plateau_ramp": [
+      0.1561,
+      0.4791
+     ],
+     "saturation_plateau_ramp": [
+      0.0685,
+      0.211
+     ],
+     "value_plateau_ramp": [
+      0.1408,
+      0.2071
+     ],
+     "rms": 0.0497,
+     "held_out_rms_median": 0.01591
+    },
+    "25": {
+     "scenes": 28,
+     "scale": 0.958,
+     "centre_offsets": [
+      0.0237,
+      -0.0032,
+      0.0403
+     ],
+     "hue_plateau_ramp": [
+      0.1854,
+      0.5118
+     ],
+     "saturation_plateau_ramp": [
+      0.1126,
+      0.264
+     ],
+     "value_plateau_ramp": [
+      0.169,
+      0.2193
+     ],
+     "rms": 0.05451,
+     "held_out_rms_median": 0.0284
+    },
+    "50": {
+     "scenes": 28,
+     "scale": 0.9619,
+     "centre_offsets": [
+      0.013,
+      -0.0044,
+      0.0453
+     ],
+     "hue_plateau_ramp": [
+      0.2202,
+      0.5458
+     ],
+     "saturation_plateau_ramp": [
+      0.1643,
+      0.3107
+     ],
+     "value_plateau_ramp": [
+      0.1956,
+      0.2253
+     ],
+     "rms": 0.05798,
+     "held_out_rms_median": 0.02624
+    },
+    "75": {
+     "scenes": 28,
+     "scale": 0.9629,
+     "centre_offsets": [
+      0.0085,
+      -0.0036,
+      0.0458
+     ],
+     "hue_plateau_ramp": [
+      0.2397,
+      0.5385
+     ],
+     "saturation_plateau_ramp": [
+      0.2022,
+      0.2836
+     ],
+     "value_plateau_ramp": [
+      0.2098,
+      0.2135
+     ],
+     "rms": 0.06001,
+     "held_out_rms_median": 0.03127
+    },
+    "100": {
+     "scenes": 28,
+     "scale": 0.9614,
+     "centre_offsets": [
+      0.0051,
+      -0.0013,
+      0.0468
+     ],
+     "hue_plateau_ramp": [
+      0.2562,
+      0.5352
+     ],
+     "saturation_plateau_ramp": [
+      0.2439,
+      0.2539
+     ],
+     "value_plateau_ramp": [
+      0.223,
+      0.2043
+     ],
+     "rms": 0.06322,
+     "held_out_rms_median": 0.02876
+    }
+   },
+   "responses": {
+    "hue": {
+     "-100": {
+      "scenes": 28,
+      "hue_radians": -0.6123700232043477
+     },
+     "-50": {
+      "scenes": 28,
+      "hue_radians": -0.3065154959174404
+     },
+     "-25": {
+      "scenes": 28,
+      "hue_radians": -0.15314421181253252
+     },
+     "25": {
+      "scenes": 28,
+      "hue_radians": 0.1528106716611915
+     },
+     "50": {
+      "scenes": 28,
+      "hue_radians": 0.3052011964778404
+     },
+     "100": {
+      "scenes": 28,
+      "hue_radians": 0.6103593526491721
+     }
+    },
+    "saturation": {
+     "-50": {
+      "scenes": 28,
+      "log_saturation": -0.3579628893651637
+     },
+     "-25": {
+      "scenes": 28,
+      "log_saturation": -0.1995475711834755
+     },
+     "25": {
+      "scenes": 28,
+      "log_saturation": 0.20914146209720424
+     },
+     "50": {
+      "scenes": 28,
+      "log_saturation": 0.38249328594209536
+     },
+     "100": {
+      "scenes": 28,
+      "log_saturation": 0.6298935934178981
+     }
+    },
+    "luminance": {
+     "-100": {
+      "scenes": 28,
+      "log_value": -0.6955289897794615,
+      "log_saturation": -0.022881477204915936
+     },
+     "-50": {
+      "scenes": 28,
+      "log_value": -0.392152133980298,
+      "log_saturation": -0.012528553925106716
+     },
+     "-25": {
+      "scenes": 28,
+      "log_value": -0.20965968036285754,
+      "log_saturation": -0.0065515061765375115
+     },
+     "25": {
+      "scenes": 15,
+      "log_value": 0.2224469817998342,
+      "log_saturation": 0.005723255799633363
+     },
+     "50": {
+      "scenes": 28,
+      "log_value": 0.4208296050751384,
+      "log_saturation": 0.01216227794317636
+     },
+     "100": {
+      "scenes": 28,
+      "log_value": 0.7870490659809284,
+      "log_saturation": 0.021449651508538958
+     }
+    },
+    "variance": {
+     "-100": {
+      "scenes": 28,
+      "hue_deviation_gain": -0.8529921444868105,
+      "saturation_deviation_gain": -0.494264260418876,
+      "value_deviation_gain": -0.04983747320045586
+     },
+     "-50": {
+      "scenes": 28,
+      "hue_deviation_gain": -0.42717433787738945,
+      "saturation_deviation_gain": -0.24698468353850797,
+      "value_deviation_gain": -0.024982964577711604
+     },
+     "50": {
+      "scenes": 28,
+      "hue_deviation_gain": 0.43366496246225744,
+      "saturation_deviation_gain": 0.33582785996274916,
+      "value_deviation_gain": 0.08255976027802628
+     },
+     "100": {
+      "scenes": 28,
+      "hue_deviation_gain": 0.8684935936142916,
+      "saturation_deviation_gain": 0.6727400747837006,
+      "value_deviation_gain": 0.16616980877670853
+     }
+    }
+   },
+   "centre_hsv": [
+    0.56111,
+    0.49791,
+    0.20095
+   ]
+  },
+  "0.7629/0.4816/0.0763": {
+   "lightroom_source": [
+    0.762872,
+    0.481555,
+    0.076343
+   ],
+   "saturation_minus_100_amplitude": 0.4738,
+   "core_pixels_hsv_median": [
+    0.7428,
+    0.4435,
+    0.0937
+   ],
+   "ranges": {
+    "0": {
+     "scenes": 28,
+     "scale": 0.868,
+     "centre_offsets": [
+      0.0215,
+      0.0037,
+      0.078
+     ],
+     "hue_plateau_ramp": [
+      0.1844,
+      0.4356
+     ],
+     "saturation_plateau_ramp": [
+      0.0715,
+      0.2161
+     ],
+     "value_plateau_ramp": [
+      0.1643,
+      0.1498
+     ],
+     "rms": 0.05842,
+     "held_out_rms_median": 0.03117
+    },
+    "25": {
+     "scenes": 28,
+     "scale": 0.9112,
+     "centre_offsets": [
+      0.0224,
+      0.0036,
+      0.0856
+     ],
+     "hue_plateau_ramp": [
+      0.2042,
+      0.4797
+     ],
+     "saturation_plateau_ramp": [
+      0.1203,
+      0.2626
+     ],
+     "value_plateau_ramp": [
+      0.1936,
+      0.1442
+     ],
+     "rms": 0.06697,
+     "held_out_rms_median": 0.03381
+    },
+    "50": {
+     "scenes": 28,
+     "scale": 0.9351,
+     "centre_offsets": [
+      0.0211,
+      0.001,
+      0.0987
+     ],
+     "hue_plateau_ramp": [
+      0.2259,
+      0.5277
+     ],
+     "saturation_plateau_ramp": [
+      0.1659,
+      0.3102
+     ],
+     "value_plateau_ramp": [
+      0.2213,
+      0.1498
+     ],
+     "rms": 0.07403,
+     "held_out_rms_median": 0.03952
+    },
+    "75": {
+     "scenes": 28,
+     "scale": 0.9443,
+     "centre_offsets": [
+      0.019,
+      0.0017,
+      0.0993
+     ],
+     "hue_plateau_ramp": [
+      0.2355,
+      0.5314
+     ],
+     "saturation_plateau_ramp": [
+      0.1997,
+      0.2933
+     ],
+     "value_plateau_ramp": [
+      0.2338,
+      0.1413
+     ],
+     "rms": 0.07934,
+     "held_out_rms_median": 0.04262
+    },
+    "100": {
+     "scenes": 28,
+     "scale": 0.9474,
+     "centre_offsets": [
+      0.0186,
+      0.0015,
+      0.1028
+     ],
+     "hue_plateau_ramp": [
+      0.2487,
+      0.5313
+     ],
+     "saturation_plateau_ramp": [
+      0.2348,
+      0.2755
+     ],
+     "value_plateau_ramp": [
+      0.247,
+      0.1359
+     ],
+     "rms": 0.08382,
+     "held_out_rms_median": 0.04085
+    }
+   },
+   "responses": {
+    "luminance": {
+     "50": {
+      "scenes": 28,
+      "log_value": 0.4064841929163676,
+      "log_saturation": 0.011525029947938257
+     }
+    },
+    "saturation": {
+     "50": {
+      "scenes": 28,
+      "log_saturation": 0.38218024147547536
+     }
+    },
+    "hue": {
+     "50": {
+      "scenes": 28,
+      "hue_radians": 0.30499072977840797
+     }
+    }
+   },
+   "centre_hsv": [
+    0.78397,
+    0.48256,
+    0.1401
+   ]
+  },
+  "0.9282/0.8759/0.5468": {
+   "lightroom_source": [
+    0.928229,
+    0.875937,
+    0.546766
+   ],
+   "saturation_minus_100_amplitude": 0.4662,
+   "core_pixels_hsv_median": [
+    0.9005,
+    0.8112,
+    0.5277
+   ],
+   "ranges": {
+    "0": {
+     "scenes": 28,
+     "scale": 0.9363,
+     "centre_offsets": [
+      0.0078,
+      0.0875,
+      0.0564
+     ],
+     "hue_plateau_ramp": [
+      0.1788,
+      0.4478
+     ],
+     "saturation_plateau_ramp": [
+      0.15,
+      0.3038
+     ],
+     "value_plateau_ramp": [
+      0.129,
+      0.4773
+     ],
+     "rms": 0.01891,
+     "held_out_rms_median": 0.00171
+    },
+    "25": {
+     "scenes": 28,
+     "scale": 0.9525,
+     "centre_offsets": [
+      0.0047,
+      0.0415,
+      0.0257
+     ],
+     "hue_plateau_ramp": [
+      0.1939,
+      0.4978
+     ],
+     "saturation_plateau_ramp": [
+      0.1703,
+      0.379
+     ],
+     "value_plateau_ramp": [
+      0.1486,
+      0.4516
+     ],
+     "rms": 0.02265,
+     "held_out_rms_median": 0.0021
+    },
+    "50": {
+     "scenes": 28,
+     "scale": 0.9668,
+     "centre_offsets": [
+      0.0292,
+      0.0011,
+      -0.0088
+     ],
+     "hue_plateau_ramp": [
+      0.2554,
+      0.4722
+     ],
+     "saturation_plateau_ramp": [
+      0.1878,
+      0.4711
+     ],
+     "value_plateau_ramp": [
+      0.1472,
+      0.4636
+     ],
+     "rms": 0.02697,
+     "held_out_rms_median": 0.00829
+    },
+    "75": {
+     "scenes": 28,
+     "scale": 0.97,
+     "centre_offsets": [
+      0.0397,
+      -0.0208,
+      -0.0225
+     ],
+     "hue_plateau_ramp": [
+      0.2749,
+      0.4573
+     ],
+     "saturation_plateau_ramp": [
+      0.232,
+      0.5048
+     ],
+     "value_plateau_ramp": [
+      0.1777,
+      0.4356
+     ],
+     "rms": 0.03035,
+     "held_out_rms_median": 0.01082
+    },
+    "100": {
+     "scenes": 28,
+     "scale": 0.9725,
+     "centre_offsets": [
+      0.0417,
+      -0.0354,
+      -0.0294
+     ],
+     "hue_plateau_ramp": [
+      0.2955,
+      0.4422
+     ],
+     "saturation_plateau_ramp": [
+      0.2606,
+      0.4691
+     ],
+     "value_plateau_ramp": [
+      0.188,
+      0.4191
+     ],
+     "rms": 0.0316,
+     "held_out_rms_median": 0.01059
+    }
+   },
+   "responses": {
+    "luminance": {
+     "50": {
+      "scenes": 28,
+      "log_value": 0.4300594441022313,
+      "log_saturation": 0.004860438535361675
+     }
+    },
+    "saturation": {
+     "50": {
+      "scenes": 28,
+      "log_saturation": 0.24507136607918484
+     }
+    },
+    "hue": {
+     "50": {
+      "scenes": 27,
+      "hue_radians": 0.30129638340566783
+     }
+    }
+   },
+   "centre_hsv": [
+    0.95743,
+    0.87704,
+    0.53293
+   ]
+  },
+  "1.4559/0.7631/0.0218": {
+   "lightroom_source": [
+    1.455872,
+    0.763139,
+    0.021796
+   ],
+   "saturation_minus_100_amplitude": 0.4736,
+   "core_pixels_hsv_median": [
+    1.4716,
+    0.589,
+    0.0388
+   ],
+   "ranges": {
+    "0": {
+     "scenes": 28,
+     "scale": 0.9242,
+     "centre_offsets": [
+      0.0127,
+      0.1115,
+      0.0973
+     ],
+     "hue_plateau_ramp": [
+      0.0862,
+      0.6126
+     ],
+     "saturation_plateau_ramp": [
+      0.196,
+      0.2489
+     ],
+     "value_plateau_ramp": [
+      0.1651,
+      0.0637
+     ],
+     "rms": 0.03092,
+     "held_out_rms_median": 0.00368
+    },
+    "25": {
+     "scenes": 28,
+     "scale": 0.9436,
+     "centre_offsets": [
+      0.0994,
+      0.0361,
+      0.1171
+     ],
+     "hue_plateau_ramp": [
+      0.1764,
+      0.6372
+     ],
+     "saturation_plateau_ramp": [
+      0.1801,
+      0.3702
+     ],
+     "value_plateau_ramp": [
+      0.1766,
+      0.1019
+     ],
+     "rms": 0.04417,
+     "held_out_rms_median": 0.00354
+    },
+    "50": {
+     "scenes": 28,
+     "scale": 0.7683,
+     "centre_offsets": [
+      0.0822,
+      -0.006,
+      0.0276
+     ],
+     "hue_plateau_ramp": [
+      0.2328,
+      0.6059
+     ],
+     "saturation_plateau_ramp": [
+      0.2133,
+      0.5024
+     ],
+     "value_plateau_ramp": [
+      0.2266,
+      0.3457
+     ],
+     "rms": 0.07077,
+     "held_out_rms_median": 0.0098
+    },
+    "75": {
+     "scenes": 28,
+     "scale": 0.7875,
+     "centre_offsets": [
+      0.0951,
+      -0.0175,
+      0.0388
+     ],
+     "hue_plateau_ramp": [
+      0.2714,
+      0.5819
+     ],
+     "saturation_plateau_ramp": [
+      0.2258,
+      0.5049
+     ],
+     "value_plateau_ramp": [
+      0.2458,
+      0.3716
+     ],
+     "rms": 0.07445,
+     "held_out_rms_median": 0.01303
+    },
+    "100": {
+     "scenes": 28,
+     "scale": 0.7899,
+     "centre_offsets": [
+      0.0933,
+      -0.0271,
+      0.0469
+     ],
+     "hue_plateau_ramp": [
+      0.2885,
+      0.5655
+     ],
+     "saturation_plateau_ramp": [
+      0.2452,
+      0.4882
+     ],
+     "value_plateau_ramp": [
+      0.2648,
+      0.373
+     ],
+     "rms": 0.07725,
+     "held_out_rms_median": 0.01276
+    }
+   },
+   "responses": {
+    "luminance": {
+     "50": {
+      "scenes": 28,
+      "log_value": 0.3422024337052996,
+      "log_saturation": 0.012318767822307812
+     }
+    },
+    "saturation": {
+     "50": {
+      "scenes": 28,
+      "log_saturation": 0.34139781241828043
+     }
+    },
+    "hue": {
+     "50": {
+      "scenes": 28,
+      "hue_radians": 0.3038625245712167
+     }
+    }
+   },
+   "centre_hsv": [
+    1.53807,
+    0.75714,
+    0.03005
+   ]
+  },
+  "3.9090/0.5864/0.4321": {
+   "lightroom_source": [
+    3.908962,
+    0.586369,
+    0.432142
+   ],
+   "saturation_minus_100_amplitude": 0.4737,
+   "core_pixels_hsv_median": [
+    4.0808,
+    0.5917,
+    0.4372
+   ],
+   "ranges": {
+    "0": {
+     "scenes": 28,
+     "scale": 0.9995,
+     "centre_offsets": [
+      0.1611,
+      -0.0036,
+      -0.0164
+     ],
+     "hue_plateau_ramp": [
+      0.1725,
+      0.378
+     ],
+     "saturation_plateau_ramp": [
+      0.0661,
+      0.2101
+     ],
+     "value_plateau_ramp": [
+      0.1265,
+      0.3598
+     ],
+     "rms": 0.02719,
+     "held_out_rms_median": 0.0266
+    },
+    "25": {
+     "scenes": 28,
+     "scale": 0.9981,
+     "centre_offsets": [
+      0.1947,
+      -0.0339,
+      -0.016
+     ],
+     "hue_plateau_ramp": [
+      0.2242,
+      0.4184
+     ],
+     "saturation_plateau_ramp": [
+      0.0859,
+      0.271
+     ],
+     "value_plateau_ramp": [
+      0.1507,
+      0.3884
+     ],
+     "rms": 0.03508,
+     "held_out_rms_median": 0.03061
+    },
+    "50": {
+     "scenes": 28,
+     "scale": 0.9939,
+     "centre_offsets": [
+      0.197,
+      -0.0209,
+      -0.023
+     ],
+     "hue_plateau_ramp": [
+      0.247,
+      0.4779
+     ],
+     "saturation_plateau_ramp": [
+      0.1591,
+      0.3233
+     ],
+     "value_plateau_ramp": [
+      0.1696,
+      0.4008
+     ],
+     "rms": 0.04167,
+     "held_out_rms_median": 0.02952
+    },
+    "75": {
+     "scenes": 28,
+     "scale": 0.9938,
+     "centre_offsets": [
+      0.1923,
+      -0.0166,
+      -0.0216
+     ],
+     "hue_plateau_ramp": [
+      0.2496,
+      0.5028
+     ],
+     "saturation_plateau_ramp": [
+      0.204,
+      0.2945
+     ],
+     "value_plateau_ramp": [
+      0.1828,
+      0.393
+     ],
+     "rms": 0.04384,
+     "held_out_rms_median": 0.0339
+    },
+    "100": {
+     "scenes": 28,
+     "scale": 0.9929,
+     "centre_offsets": [
+      0.1898,
+      -0.024,
+      -0.0193
+     ],
+     "hue_plateau_ramp": [
+      0.2561,
+      0.523
+     ],
+     "saturation_plateau_ramp": [
+      0.2343,
+      0.2714
+     ],
+     "value_plateau_ramp": [
+      0.1974,
+      0.3847
+     ],
+     "rms": 0.0466,
+     "held_out_rms_median": 0.03919
+    }
+   },
+   "responses": {
+    "luminance": {
+     "50": {
+      "scenes": 28,
+      "log_value": 0.4480367840544965,
+      "log_saturation": 0.006451840129326976
+     }
+    },
+    "saturation": {
+     "50": {
+      "scenes": 28,
+      "log_saturation": 0.33967789194454195
+     }
+    },
+    "hue": {
+     "50": {
+      "scenes": 28,
+      "hue_radians": 0.30568924290651706
+     }
+    }
+   },
+   "centre_hsv": [
+    4.10596,
+    0.56547,
+    0.40077
+   ]
+  }
+ }
+}

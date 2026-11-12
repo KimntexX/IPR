@@ -5,7 +5,7 @@
 #include <QTemporaryDir>
 #include <QFileInfo>
 
-QJsonObject runHeadroomExperiment(const cv::Mat &camera,
+QJsonObject runHeadroomExperiment(const ipr::Image &camera,
         const CameraProfileEngine::DcpWorkingContext &context,
         const QByteArray &profileBytes, const QDir &out, QTemporaryDir &temporary)
 {
@@ -20,7 +20,7 @@ QJsonObject runHeadroomExperiment(const cv::Mat &camera,
     const QString hue=profile("hue",{50981,50982,50940});
     const QString look=profile("look",{50937,50938,50939,50940});
     const QString curve=profile("curve",{50937,50938,50939,50981,50982});
-    const auto apply=[&](cv::Mat rgb,const QString &path) {
+    const auto apply=[&](ipr::Image rgb,const QString &path) {
         QString error;
         if(!applyDcpForSrgbAnalysis(path,rgb,context.sourceKelvin,&error,context.options))
             throw std::runtime_error(error.toStdString());
@@ -28,31 +28,31 @@ QJsonObject runHeadroomExperiment(const cv::Mat &camera,
     };
     // Recover the exact matrix/exposure operator from basis vectors, then query
     // isolated real DCP stages through its inverse. No proprietary LUT copy in JSON.
-    cv::Mat basis=cv::Mat::zeros(1,3,CV_32FC3);
-    for(int c=0;c<3;++c)basis.at<cv::Vec3f>(0,c)[c]=1;
-    const auto mappedBasis=apply(basis,matrix);
-    cv::Matx33d cameraToSrgb;
-    for(int c=0;c<3;++c)for(int r=0;r<3;++r)cameraToSrgb(r,c)=mappedBasis.at<cv::Vec3f>(0,c)[r];
-    if(std::abs(cv::determinant(cameraToSrgb))<1e-12)throw std::runtime_error("Singular study matrix");
+    ipr::Image basis=ipr::Image::zeros({3,1},ipr::Depth::F32,3);
+    for(int c=0;c<3;++c)imagetest::at<ipr::Vec3f>(basis, 0,c)[c]=1;
+    const auto mappedBasis=apply(std::move(basis),matrix);
+    ipr::Matrix33d cameraToSrgb;
+    for(int c=0;c<3;++c)for(int r=0;r<3;++r)cameraToSrgb(r,c)=imagetest::at<ipr::Vec3f>(mappedBasis, 0,c)[r];
+    if(std::abs(ipr::determinant(cameraToSrgb))<1e-12)throw std::runtime_error("Singular study matrix");
     const auto proToCamera=cameraToSrgb.inv()*proToSrgb;
     const auto srgbToPro=proToSrgb.inv();
-    const auto transform=[](const cv::Mat &rgb,const cv::Matx33d &matrix) {
-        cv::Mat result;cv::transform(rgb,result,matrix);return result;
+    const auto transform=[](const ipr::Image &rgb,const ipr::Matrix33d &matrix) {
+        ipr::Image result=rgb.clone();WorkingColor::transform(result,matrix);return result;
     };
     const auto input=transform(apply(camera.clone(),matrix),srgbToPro);
-    const auto stage=[&](const cv::Mat &signal,const QString &path,bool extended) {
+    const auto stage=[&](const ipr::Image &signal,const QString &path,bool extended) {
         auto query=signal.clone();
-        if(extended)for(int y=0;y<query.rows;++y)for(int x=0;x<query.cols;++x) {
-            auto &v=query.at<cv::Vec3f>(y,x);const float s=std::max(1.f,std::max({v[0],v[1],v[2]}));
+        if(extended)for(int y=0;y<query.height();++y)for(int x=0;x<query.width();++x) {
+            auto &v=imagetest::at<ipr::Vec3f>(query, y,x);const float s=std::max(1.f,std::max({v[0],v[1],v[2]}));
             for(int c=0;c<3;++c)v[c]=std::clamp(v[c]/s,0.f,1.f);
         }
         auto result=transform(apply(transform(query,proToCamera),path),srgbToPro);
-        if(extended)for(int y=0;y<result.rows;++y)for(int x=0;x<result.cols;++x) {
-            const auto p=signal.at<cv::Vec3f>(y,x),q=query.at<cv::Vec3f>(y,x);
+        if(extended)for(int y=0;y<result.height();++y)for(int x=0;x<result.width();++x) {
+            const auto p=imagetest::at<ipr::Vec3f>(signal, y,x),q=imagetest::at<ipr::Vec3f>(std::as_const(query), y,x);
             const float s=std::max(1.f,std::max({p[0],p[1],p[2]}));
-            auto &v=result.at<cv::Vec3f>(y,x);v=p+s*(v-q);
+            auto &v=imagetest::at<ipr::Vec3f>(result, y,x);v=p+s*(v-q);
         }
-        if(!cv::checkRange(result,true,nullptr,-1e10,1e10))throw std::runtime_error("Nonfinite study stage");
+        if(!imagetest::within(result,-1e10,1e10))throw std::runtime_error("Nonfinite study stage");
         return result;
     };
     // All current study profiles have no HueSat map. A matrix-only isolated
@@ -68,56 +68,56 @@ QJsonObject runHeadroomExperiment(const cv::Mat &camera,
     const auto witnessPro=stage(tables(false),curve,false);
     const auto witness=transform(witnessPro,proToSrgb);
     const auto direct=apply(camera.clone(),context.profilePath);
-    const double error=cv::norm(witness,direct,cv::NORM_INF);
+    const double error=ipr::largestDifference(witness,direct);
     if(error>2e-5)throw std::runtime_error("Isolated-table replay witness diverged: "+std::to_string(error));
     auto extended=tables(true);
     auto shoulder=extended.clone();
-    for(int y=0;y<shoulder.rows;++y)for(int x=0;x<shoulder.cols;++x) {
-        auto &p=shoulder.at<cv::Vec3f>(y,x);const double peak=std::max({p[0],p[1],p[2]});
+    for(int y=0;y<shoulder.height();++y)for(int x=0;x<shoulder.width();++x) {
+        auto &p=imagetest::at<ipr::Vec3f>(shoulder, y,x);const double peak=std::max({p[0],p[1],p[2]});
         if(peak>.85)p*=float(RawHighlightStudy::softShoulder(peak,.85)/peak);
     }
     const auto boundedCurve=transform(stage(extended,curve,false),proToSrgb);
     const auto extendedCurve=transform(stage(extended,curve,true),proToSrgb);
     const auto shoulderCurve=transform(stage(shoulder,curve,false),proToSrgb);
-    const auto softGamut=[](const cv::Mat &source) {
+    const auto softGamut=[](const ipr::Image &source) {
         auto result=source.clone();
-        for(int y=0;y<result.rows;++y)for(int x=0;x<result.cols;++x) {
-            auto &p=result.at<cv::Vec3f>(y,x);const double Y=.2126*p[0]+.7152*p[1]+.0722*p[2];
+        for(int y=0;y<result.height();++y)for(int x=0;x<result.width();++x) {
+            auto &p=imagetest::at<ipr::Vec3f>(result, y,x);const double Y=.2126*p[0]+.7152*p[1]+.0722*p[2];
             if(Y<=0){p={0,0,0};continue;}if(Y>=1){p={1,1,1};continue;}
             double extent=0;for(int c=0;c<3;++c)extent=std::max(extent,p[c]>=Y?(p[c]-Y)/(1-Y):(Y-p[c])/Y);
             const double scale=extent>.85?RawHighlightStudy::softShoulder(extent,.85)/extent:1;
             for(int c=0;c<3;++c)p[c]=float(Y+scale*(p[c]-Y));
         }return result;
     };
-    const auto currentGamut=[](const cv::Mat &source) {
+    const auto currentGamut=[](const ipr::Image &source) {
         auto mapped=ColorPipeline::mapToSrgbGamut(working(source));
         if(mapped.isNull())throw std::runtime_error("Study gamut failed");
-        std::vector<cv::Mat> parts;cv::split(mapped.linearRgba,parts);parts.resize(3);
-        cv::Mat rgb;cv::merge(parts,rgb);return rgb;
+        return ipr::withoutAlpha(mapped.linearRgba);
     };
     const auto baseline=currentGamut(direct);
-    const auto gated=[&](const cv::Mat &source) {
+    const auto gated=[&](const ipr::Image &source) {
         const auto hard=currentGamut(source),soft=softGamut(source);auto result=hard.clone();
-        for(int y=0;y<result.rows;++y)for(int x=0;x<result.cols;++x) {
-            const auto b=hard.at<cv::Vec3f>(y,x),s=soft.at<cv::Vec3f>(y,x);
+        for(int y=0;y<result.height();++y)for(int x=0;x<result.width();++x) {
+            const auto b=imagetest::at<ipr::Vec3f>(hard, y,x),s=imagetest::at<ipr::Vec3f>(soft, y,x);
             const double Y=.2126*b[0]+.7152*b[1]+.0722*b[2];
             const float w=float(RawHighlightStudy::highlightWeight(Y,.25,.75));
-            result.at<cv::Vec3f>(y,x)=w==0?b:b+w*(s-b);
+            imagetest::at<ipr::Vec3f>(result, y,x)=w==0?b:b+w*(s-b);
         }return result;
     };
     QJsonObject models;
-    const std::vector<std::pair<QString,cv::Mat>> variants{
-        {"current",baseline},{"table_extended_curve_bounded",currentGamut(boundedCurve)},
-        {"table_and_curve_extended",currentGamut(extendedCurve)},
-        {"table_extended_precurve_shoulder",currentGamut(shoulderCurve)},
-        {"soft_gamut_only",softGamut(direct)},
-        {"table_shoulder_soft_gamut",softGamut(shoulderCurve)},
-        {"highlight_gated_soft_gamut",gated(direct)},
-        {"table_shoulder_highlight_gated_gamut",gated(shoulderCurve)}};
+    std::vector<std::pair<QString,ipr::Image>> variants;
+    variants.emplace_back("current",baseline.clone());
+    variants.emplace_back("table_extended_curve_bounded",currentGamut(boundedCurve));
+    variants.emplace_back("table_and_curve_extended",currentGamut(extendedCurve));
+    variants.emplace_back("table_extended_precurve_shoulder",currentGamut(shoulderCurve));
+    variants.emplace_back("soft_gamut_only",softGamut(direct));
+    variants.emplace_back("table_shoulder_soft_gamut",softGamut(shoulderCurve));
+    variants.emplace_back("highlight_gated_soft_gamut",gated(direct));
+    variants.emplace_back("table_shoulder_highlight_gated_gamut",gated(shoulderCurve));
     for(const auto &variant:variants) {
         auto stats=metrics(variant.second);
-        stats.insert("linear_mean_abs_change_to_current",cv::norm(variant.second,baseline,cv::NORM_L1)/(3*baseline.total()));
-        stats.insert("linear_max_abs_change_to_current",cv::norm(variant.second,baseline,cv::NORM_INF));
+        stats.insert("linear_mean_abs_change_to_current",imagetest::sumOfDifferences(variant.second,baseline)/(3.0*double(baseline.size().area())));
+        stats.insert("linear_max_abs_change_to_current",ipr::largestDifference(variant.second,baseline));
         const auto encoded=ColorPipeline::toSrgb(working(variant.second),ColorPipeline::OutputFormat::HighBitDepth);
         const QString path=out.filePath(variant.first+".png");
         if(QFileInfo::exists(path)||!encoded.save(path,"PNG"))throw std::runtime_error("Cannot save study preview");

@@ -1,8 +1,10 @@
 #ifndef IPR_CORE_COLORMIXER_H
 #define IPR_CORE_COLORMIXER_H
 
+#include "Types.h"
+
 #include <array>
-#include <opencv2/core.hpp>
+#include "Image.h"
 
 // Colour mixer following the Lightroom response tables (ColorMixerModel.h):
 // for each band (red, orange, yellow, green, cyan, blue, violet, magenta) and
@@ -18,16 +20,24 @@ struct Parameters {
     std::array<int, BandCount> luminance{};
 };
 
-// Input/output: linear Rec.2020 D65 RGB, slider values in [-100, 100]
-// (clamped). Zero settings and greys are returned unchanged; no clipping.
-cv::Vec3f apply(const cv::Vec3f &rgb, const Parameters &parameters);
+// True when a slider is not at zero.
+bool active(const Parameters &parameters);
+
+// One Oklab colour, in place, given the linear ProPhoto saturation of its pixel;
+// slider values in [-100, 100] (clamped). Greys are left unchanged; no clipping.
+// The image loop is PerceptualColour's.
+void adjust(ipr::Vec3d &lab, double proPhotoSaturation, const Parameters &parameters);
+
+// Input/output: linear Rec.2020 D65 RGB: adjust() with its conversions. Zero
+// settings and greys are returned unchanged.
+ipr::Vec3f apply(const ipr::Vec3f &rgb, const Parameters &parameters);
 
 // Encoded sRGB colour (channels in [0, 1]) that one slider (component 0 hue,
 // 1 saturation, 2 luminance) of a band reaches at a value, applied by apply()
 // to the band's reference colour at its response peak; the chroma is reduced
 // to fit sRGB, the hue kept. For the UI slider tracks; neutral grey when the
 // band or component is invalid.
-cv::Vec3f trackColour(int band, int component, int value);
+ipr::Vec3f trackColour(int band, int component, int value);
 }
 
 #endif // IPR_CORE_COLORMIXER_H

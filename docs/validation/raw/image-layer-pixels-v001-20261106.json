@@ -1,0 +1,167 @@
+{
+ "question": "What the modules write and cost with the image layer pixel arithmetic instead of OpenCV",
+ "revisions": {
+  "opencv": "bbb9735",
+  "image_layer": "93e5ace"
+ },
+ "settings": "dehaze 30, texture 40, clarity 20, colour denoise 30, sharpening 40, rotation 2; 16-bit TIFF; fresh copies. Stacking on D:/DCIM/101EOSR6 6V1A0016 to 6V1A0023; panorama on Oliana _MG_7596 to _MG_7601 with filled edges. Audits run from the repository root, where config/raw-normalization.json is read.",
+ "timing": "one run per side on a machine busy with other work: durations do not separate the two versions",
+ "results": {
+  "exports": {
+   "6V1A0007.CR3": {
+    "neutral_identical": false,
+    "neutral_gap_16bit": {
+     "largest": 6,
+     "share_differing": 2e-06
+    },
+    "effect_gap_16bit": {
+     "largest": 2,
+     "share_differing": 0.000679
+    },
+    "effect_ms": [
+     6424.7699,
+     6814.7808
+    ],
+    "neutral_ms": [
+     828.1268,
+     1010.3019
+    ],
+    "preview_ms": [
+     965.7042,
+     1050.3956
+    ]
+   },
+   "IMG_6858.CR2": {
+    "neutral_identical": false,
+    "neutral_gap_16bit": {
+     "largest": 24,
+     "share_differing": 0.0
+    },
+    "effect_gap_16bit": {
+     "largest": 5,
+     "share_differing": 0.000625
+    },
+    "effect_ms": [
+     3734.5534,
+     3933.5972
+    ],
+    "neutral_ms": [
+     477.0047,
+     574.5596
+    ],
+    "preview_ms": [
+     816.6186,
+     865.4092
+    ]
+   }
+  },
+  "stack": {
+   "frames_identical": [
+    false,
+    false,
+    false,
+    false,
+    true,
+    false,
+    false,
+    false
+   ],
+   "noise": [
+    [
+     0.3526625451440232,
+     0.350391140065009,
+     0.35303821496967386
+    ],
+    [
+     0.3526625364427288,
+     0.3503927879808801,
+     0.3530380028068512
+    ]
+   ],
+   "rejected_share": [
+    0.02090538031101446,
+    0.02090529423805714
+   ],
+   "seconds_stack_from_decoded": [
+    12.083,
+    11.835
+   ],
+   "images": {
+    "stack-flat-ev0.png": {
+     "largest": 5,
+     "share_differing": 9.4e-05
+    },
+    "stack-flat-ev2.png": {
+     "largest": 19,
+     "share_differing": 0.000188
+    },
+    "stack-textured-ev0.png": {
+     "largest": 70,
+     "share_differing": 0.000292
+    },
+    "stack-textured-ev2.png": {
+     "largest": 82,
+     "share_differing": 0.00027
+    },
+    "stack-textured2-ev0.png": {
+     "largest": 11,
+     "share_differing": 0.000135
+    },
+    "stack-textured2-ev2.png": {
+     "largest": 41,
+     "share_differing": 0.000307
+    },
+    "stack-textured3-ev0.png": {
+     "largest": 9,
+     "share_differing": 0.000344
+    },
+    "stack-textured3-ev2.png": {
+     "largest": 36,
+     "share_differing": 0.000751
+    }
+   }
+  },
+  "panorama": {
+   "success": [
+    true,
+    true
+   ],
+   "canvas_width": [
+    18448,
+    18448
+   ],
+   "canvas_height": [
+    4224,
+    4224
+   ],
+   "kept_width": [
+    18448,
+    18448
+   ],
+   "kept_height": [
+    4224,
+    4224
+   ],
+   "residual_pixels": [
+    1.8458879935061003,
+    1.8458880001596962
+   ],
+   "worst_pair_pixels": [
+    3.779485113492902,
+    3.779485577096896
+   ],
+   "filled_share": [
+    0.15178814704804988,
+    0.15178814704804988
+   ],
+   "job_seconds": [
+    11.182,
+    12.019
+   ],
+   "image": {
+    "largest": 7,
+    "share_differing": 0.002151
+   }
+  }
+ }
+}

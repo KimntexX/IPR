@@ -1,24 +1,28 @@
 \chapter{Réduction du bruit}
-\section{Estimer puis corriger globalement}
-Dans le panneau Réduction du bruit, cliquer sur \emph{Estimer le bruit}.
-L'analyse se déroule en arrière-plan et ne modifie pas l'image.
-Une fois terminée, le curseur \emph{Réduction globale}, de 0 à 100, apparaît.
-Zéro n'applique aucune correction ; augmenter progressivement l'intensité.
-Cent correspond à la correction maximale prévue, pas à une suppression garantie
-de tout le bruit. L'intensité est conservée dans le compagnon de l'image.
-
-Ce premier prototype est expérimental. Les retouches de lumière et de couleur,
-ou un changement de développement, rendent l'estimation affichée périmée :
-relancer le bouton si nécessaire. Les statistiques sont réutilisées lorsque
-leur signal d'entrée est inchangé. L'export est estimé séparément à pleine
-résolution ; il ne faut pas assimiler son bruit à celui du seul aperçu.
+\section{Commande globale et réglages avancés}
+Le curseur \emph{Réduction du bruit} va de 0 à 100, avec zéro comme référence.
+Il commande ensemble luminance et couleur, avec une progression différente
+pour chaque composante. Ce n'est pas une échelle équivalente à celle de Lightroom.
+Ouvrir \emph{Avancé} pour régler séparément les deux composantes.
+Une combinaison indépendante peut afficher \emph{Perso.} sur la commande globale.
 
 \section{Séparer deux composantes}
-L'option \emph{Réglages séparés (avancé)} révèle les deux commandes.
 \emph{Bruit de luminance} agit sur les fluctuations de clarté ;
 \emph{Bruit de couleur} vise les variations chromatiques parasites.
 Les deux contrôles vont de 0 à 100, référence zéro. Leur présence ne signifie
 pas que le moteur utilise une IA équivalente à celle d’un autre logiciel.
+
+\section{Chemin RAW expérimental}
+La case \emph{Signal RAW signé, avant les profils (expérimental)} est désactivée
+par défaut. Elle sélectionne, pour un RAW et un contexte caméra compatibles,
+un débruitage avant les corrections optiques et le rendu DCP. Le changement
+peut nécessiter un redécodage. Sans contexte compatible, le chemin classique
+reste utilisé ; la case seule n'atteste donc pas du chemin effectif.
+Cette sélection est un état de session, pas une option garantie persistée
+dans le sidecar. Les forces et cette sélection ne doivent pas être confondues.
+Le prototype courant n'est pas neuronal. Sa stabilisation ne signifie pas
+qu'il préserve parfaitement tous les détails ; la piste neuronale est prévue
+pour la bêta, pas disponible dans cette version.
 
 \section{Méthode d’utilisation}
 Corriger d’abord l’exposition utile et examiner une zone sombre relativement

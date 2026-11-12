@@ -1,8 +1,8 @@
 #ifndef IPR_CORE_DETAILPROCESSING_H
 #define IPR_CORE_DETAILPROCESSING_H
 
-#include <opencv2/core.hpp>
-#include "NoiseEstimation.h"
+#include "Image.h"
+#include "LocalValues.h"
 
 namespace DetailProcessing {
 
@@ -12,6 +12,12 @@ struct DenoiseSettings
     int chrominance = 0;
 };
 
+// The law of the editor's single noise reduction slider. Amount is an integer in
+// [0,100]; invalid input leaves settings unchanged and returns false.
+// L=amount; C=round(100*(1-(1-amount/100)^6)). Zero is exact identity.
+// An ergonomic mapping, NOT a Lightroom-equivalent strength calibration.
+bool denoiseFromAmount(int amount, DenoiseSettings &settings);
+
 struct SharpenSettings
 {
     int amount = 0;
@@ -19,25 +25,21 @@ struct SharpenSettings
     int masking = 0;
 };
 
-// Both operations require a CV_32FC3 RGB image in linear Rec.2020 D65.
+// Both operations require a F32 of three channels RGB image in linear Rec.2020 D65.
 // HDR values are preserved. Denoising compresses chroma toward neutral when
 // needed to keep RGB nonnegative without independently lifting its luminance.
-void reduceNoise(cv::Mat &linearRgb, const DenoiseSettings &settings);
-NoiseEstimation::Result estimateNoise(const cv::Mat &linearRgb);
-void sharpen(cv::Mat &linearRgb, const SharpenSettings &settings);
-
-// Local contrast on luminance, slider values in [-100, 100]: texture targets
-// fine details; clarity uses a wider neighbourhood and protects the deepest
-// shadows and brightest highlights.
-void applyTexture(cv::Mat &linearRgb, int texture);
-void applyClarity(cv::Mat &linearRgb, int clarity);
-
-// Dehaze from the dark channel and the 99th percentile airlight, slider value
-// in [-100, 100]; RGB stays nonnegative.
-void dehaze(cv::Mat &linearRgb, int amount);
-
-// Deterministic monochrome grain, stronger in shadows, slider value in [0, 100].
-void addGrain(cv::Mat &linearRgb, int amount);
+// pixelScale: pixels of this image per pixel of the full image (1 for the master).
+// local: per-pixel DenoiseLuminance and DenoiseChrominance added to the settings
+// (LocalValues), the sums within [0, 100]. The filters depend on the strength and
+// look at the whole image: each runs at the few values the map needs (at most 5,
+// so up to 60 bytes a pixel while it renders), then the results mix per pixel; a
+// pixel at zero stays untouched.
+void reduceNoise(ipr::Image &linearRgb, const DenoiseSettings &settings, double pixelScale = 1.0,
+                 const LocalValues::Maps &local = {});
+// The sharpening radius is in pixels of the full image. local: per-pixel Sharpening
+// added to the amount (LocalValues), the sum within [0, 200].
+void sharpen(ipr::Image &linearRgb, const SharpenSettings &settings, double pixelScale = 1.0,
+             const LocalValues::Maps &local = {});
 
 }
 

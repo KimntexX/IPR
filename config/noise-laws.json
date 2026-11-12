@@ -1,0 +1,185 @@
+{
+  "schema_version": 1,
+  "cameras": [
+    {
+      "make": "Canon",
+      "model": "EOS R6 Mark III",
+      "positions": "raster order of the 2x2 CFA cell: (0,0), (0,1), (1,0), (1,1)",
+      "isos": [
+        {
+          "iso": 100,
+          "positions": [
+            {
+              "shot_slope_dn": 0.2012699580876443,
+              "read_variance_dn2": 1.1887049143810466
+            },
+            {
+              "shot_slope_dn": 0.19390340568133993,
+              "read_variance_dn2": 1.1671125049564288
+            },
+            {
+              "shot_slope_dn": 0.1942930534559484,
+              "read_variance_dn2": 1.1771445435889145
+            },
+            {
+              "shot_slope_dn": 0.22214685350846347,
+              "read_variance_dn2": 1.29990262390893
+            }
+          ]
+        },
+        {
+          "iso": 1600,
+          "positions": [
+            {
+              "shot_slope_dn": 3.347874195300251,
+              "read_variance_dn2": 38.77085800371145
+            },
+            {
+              "shot_slope_dn": 3.2482264235080374,
+              "read_variance_dn2": 37.2383637404126
+            },
+            {
+              "shot_slope_dn": 3.2525131753962855,
+              "read_variance_dn2": 37.36238390690808
+            },
+            {
+              "shot_slope_dn": 3.6062616384821746,
+              "read_variance_dn2": 48.802400134592524
+            }
+          ]
+        },
+        {
+          "iso": 3200,
+          "positions": [
+            {
+              "shot_slope_dn": 6.647529359350087,
+              "read_variance_dn2": 166.66811048173207
+            },
+            {
+              "shot_slope_dn": 6.425492040317794,
+              "read_variance_dn2": 155.89133330846175
+            },
+            {
+              "shot_slope_dn": 6.398539405135708,
+              "read_variance_dn2": 156.99187541245206
+            },
+            {
+              "shot_slope_dn": 7.228645979205867,
+              "read_variance_dn2": 201.5818972487171
+            }
+          ]
+        },
+        {
+          "iso": 6400,
+          "positions": [
+            {
+              "shot_slope_dn": 12.90032849261397,
+              "read_variance_dn2": 564.0277124197792
+            },
+            {
+              "shot_slope_dn": 12.829895950041838,
+              "read_variance_dn2": 538.2170179453567
+            },
+            {
+              "shot_slope_dn": 12.857455082853404,
+              "read_variance_dn2": 540.2550990545858
+            },
+            {
+              "shot_slope_dn": 14.271274944863018,
+              "read_variance_dn2": 687.6703704701729
+            }
+          ]
+        },
+        {
+          "iso": 12800,
+          "positions": [
+            {
+              "shot_slope_dn": null,
+              "read_variance_dn2": 2254.533419529146
+            },
+            {
+              "shot_slope_dn": null,
+              "read_variance_dn2": 2152.393079288159
+            },
+            {
+              "shot_slope_dn": null,
+              "read_variance_dn2": 2171.8355441076856
+            },
+            {
+              "shot_slope_dn": null,
+              "read_variance_dn2": 2753.3970265179223
+            }
+          ]
+        },
+        {
+          "iso": 16000,
+          "positions": [
+            {
+              "shot_slope_dn": 32.49027417946931,
+              "read_variance_dn2": 3480.1099341834397
+            },
+            {
+              "shot_slope_dn": 31.75270693077845,
+              "read_variance_dn2": 3277.733147708297
+            },
+            {
+              "shot_slope_dn": 31.759548966537825,
+              "read_variance_dn2": 3344.871772800109
+            },
+            {
+              "shot_slope_dn": 36.0017334663982,
+              "read_variance_dn2": 4261.34761805413
+            }
+          ]
+        },
+        {
+          "iso": 25600,
+          "positions": [
+            {
+              "shot_slope_dn": null,
+              "read_variance_dn2": 8726.537585935772
+            },
+            {
+              "shot_slope_dn": null,
+              "read_variance_dn2": 8334.396549467245
+            },
+            {
+              "shot_slope_dn": null,
+              "read_variance_dn2": 8378.140355523992
+            },
+            {
+              "shot_slope_dn": null,
+              "read_variance_dn2": 10615.876480639945
+            }
+          ]
+        },
+        {
+          "iso": 51200,
+          "positions": [
+            {
+              "shot_slope_dn": 91.01115999598865,
+              "read_variance_dn2": 32856.3913217873
+            },
+            {
+              "shot_slope_dn": 92.90953509900288,
+              "read_variance_dn2": 31963.66174703022
+            },
+            {
+              "shot_slope_dn": 93.84037738210031,
+              "read_variance_dn2": 32203.025324182257
+            },
+            {
+              "shot_slope_dn": 102.04268939536537,
+              "read_variance_dn2": 39407.47766480896
+            }
+          ]
+        }
+      ],
+      "provenance": {
+        "proof": "docs/validation/raw/neural-sensor-noise-v001-20261105T173608Z.json",
+        "sha256": "7bd94a2e752b4289f4c598faf4b61e615110105788614403c9aee7ec7e469369",
+        "status": "descriptive fits of lit pairs and darks, R6 III, 5 November 2026"
+      }
+    }
+  ]
+}

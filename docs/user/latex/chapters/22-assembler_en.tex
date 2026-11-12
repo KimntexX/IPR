@@ -1,0 +1,77 @@
+% translation-source: docs/user/latex/chapters/22-assembler.tex; sha256: b74ee6fa2877dd8f8dcd907849cbcae38b55ff53588a797353fc5bd1438bdafe
+\chapter{Assembling several photos}
+The \emph{Assemble} tab, at the top of the right panel, makes a new image from the
+photos ticked in the ribbon. The original photos do not change. The work runs in the
+background and can be cancelled; you can keep browsing your images meanwhile.
+
+\section{Stacking to reduce noise}
+Stacking averages several views of the same scene, at the same exposure. Noise falls
+with the square root of the number of views: four views halve it, sixteen divide it by
+four. Details remain, because they are the same from one view to the next.
+
+\begin{enumerate}
+\item Tick at least two photos in the ribbon.
+\item Choose the \emph{Reference}: the final image keeps its framing. The middle photo
+is proposed, as it stays the closest to the others.
+\item Click \emph{Assemble}.
+\item Look at the preview, choose the format, then \emph{Export}.
+\item \emph{Open the result} brings it into the editor, for further editing.
+\end{enumerate}
+
+The views are registered automatically: a tripod is not needed. The result is cropped to
+the area common to all views. What moves from one view to the next, like a passer-by, is
+left out if it appears in only a minority of views. A view that cannot be registered or
+whose exposure differs too much is left out, and the message says so.
+
+\section{Choosing the format}
+\begin{itemize}
+\item \emph{DNG}: the camera's signal, already corrected for the lens, with no profile
+applied. The file reopens like a RAW: profile, balance and settings stay free.
+\item \emph{TIFF}: the image rendered in 16 bits with the reference's profile, readable
+everywhere.
+\end{itemize}
+An existing file is never replaced: the name receives a number.
+
+\section{Assembling a panorama}
+Choose \emph{Panorama} at the top of the tab. Photos taken from the same place make one wide
+view, on one row, horizontal or vertical, or on several rows. Tick them in the ribbon, in any
+order, then click \emph{Assemble}.
+
+Let neighbouring photos overlap by a quarter to a third, and keep the same shooting settings.
+A photo that overlaps no other, or taken at another focal length, is left out, and the message
+says so.
+
+\begin{itemize}
+\item \emph{The bottom of the view} is what the panorama leans on: it stays level, and the
+crop rather takes from the top.
+\item \emph{Projection}: \emph{Automatic} chooses from the field covered. \emph{Flat} keeps
+lines straight over a narrow field, \emph{Cylindrical} suits a long sweep, \emph{Spherical} a
+field wide in both directions.
+\item \emph{Edges}: a panorama seldom has straight edges. \emph{Crop} keeps the largest
+rectangle of real pixels; it is the default, and nothing is invented. \emph{Fill} keeps the
+whole surface and completes the corners with pixels invented from the rest of the image.
+\emph{Leave empty} keeps the empty corners, to crop later in the Geometry tab.
+\end{itemize}
+Filling is convincing on a sky. On rock or vegetation, look at the result at 100~\%: some blocks
+may be out of place. The final message tells the share of invented pixels.
+
+Hand-held, a close foreground moves from one photo to the next: the seams run where it shows
+least as far as they can, but turn around the camera rather than around yourself.
+
+\section{Photographing the Moon}
+A small subject on an empty background, like the Moon, gets one more treatment. The
+deformations of the atmosphere are corrected on the subject, and only the sharpest half
+of the views is merged there. The rest of the sky keeps all the views. The message tells
+when this correction took place. In our measurements at 200~mm, the choice of the sharp
+views brings most of the gain: the longer the series, the more good views to choose from.
+
+\section{Limits}
+\begin{itemize}
+\item The capture settings must stay the same: stacking is not HDR.
+\item A near object shot hand-held may keep a slightly soft edge: it does not move like
+the background.
+\item The work needs about 400~MB of temporary disk per 32~Mpx photo for a stack, and twice
+that for a panorama.
+\item A panorama does not warp its edges to fill the frame.
+\item A colour profile for the camera is required.
+\end{itemize}

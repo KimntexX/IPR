@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-10-28T16:02:55.135585+00:00",
+  "verdict": "failed_harness_not_engine",
+  "freeze": {
+    "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\gel-banc-raw-signe-v001-20261028T155917Z.json",
+    "sha256": "612de277d140c3f29636f90a6abe02c396e533848bbb5d4481ac68e4f9c1efa2"
+  },
+  "status": {
+    "started_at_utc": "2026-10-28T15:59:17.863729+00:00",
+    "updated_at_utc": "2026-10-28T15:59:26.608739+00:00",
+    "status": "failed",
+    "phase": "error",
+    "completed_pairs": 0,
+    "error": "'records'"
+  },
+  "partial": {
+    "error": "'records'",
+    "records": []
+  },
+  "cause": "Previous-study JSON variable shadowed by native baseline record in the runner; KeyError records. No global measurement verdict; engine captures succeeded. Fixed before the next immutable campaign."
+}

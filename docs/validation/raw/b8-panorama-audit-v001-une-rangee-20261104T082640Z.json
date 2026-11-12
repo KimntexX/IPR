@@ -1,0 +1,168 @@
+{
+    "band_rows": 3003,
+    "canvas_height": 3978,
+    "canvas_width": 16444,
+    "commit": "5535384d59756ec513a185b45b2ef1898fc54d27",
+    "covered_share": 0.8803691864225134,
+    "created_utc": "2026-11-04T08:26:37Z",
+    "decode_seconds": 2.253,
+    "distortion": 0,
+    "error": "",
+    "focal_mm": 70,
+    "focal_pixels": 16909.82104364417,
+    "frame_height": 3464,
+    "frame_width": 5202,
+    "frames": [
+        {
+            "exclusion": "",
+            "features": 4511,
+            "gain_b": 0.9968402297705803,
+            "gain_g": 1.002712736367175,
+            "gain_r": 1.025865330984358,
+            "height": 3663,
+            "name": "_MG_7597.CR2",
+            "used": true,
+            "width": 5316,
+            "x": 11128,
+            "y": 240
+        },
+        {
+            "exclusion": "",
+            "features": 4548,
+            "gain_b": 0.9985666076118884,
+            "gain_g": 0.9996779687879275,
+            "gain_r": 1.0085525435315488,
+            "height": 3561,
+            "name": "_MG_7598.CR2",
+            "used": true,
+            "width": 5251,
+            "x": 8778,
+            "y": 190
+        },
+        {
+            "exclusion": "",
+            "features": 4495,
+            "gain_b": 1.000323141730942,
+            "gain_g": 1.0012321382519098,
+            "gain_r": 1.00821542830081,
+            "height": 3558,
+            "name": "_MG_7599.CR2",
+            "used": true,
+            "width": 5249,
+            "x": 7676,
+            "y": 0
+        },
+        {
+            "exclusion": "",
+            "features": 4456,
+            "gain_b": 1.0032249185500193,
+            "gain_g": 1.002657135017485,
+            "gain_r": 0.9947783276627248,
+            "height": 3546,
+            "name": "_MG_7600.CR2",
+            "used": true,
+            "width": 5241,
+            "x": 4016,
+            "y": 4
+        },
+        {
+            "exclusion": "",
+            "features": 4006,
+            "gain_b": 1.0010569324969032,
+            "gain_g": 0.9937476564246724,
+            "gain_r": 0.9636769333038493,
+            "height": 3788,
+            "name": "_MG_7601.CR2",
+            "used": true,
+            "width": 5392,
+            "x": 0,
+            "y": 190
+        }
+    ],
+    "free_lens": false,
+    "job_seconds": 6.842,
+    "kept_height": 3003,
+    "kept_width": 16027,
+    "kept_x": 242,
+    "kept_y": 462,
+    "label": "une-rangee",
+    "layout": "horizontal",
+    "lens_geometry_applied": true,
+    "lens_profile": "Canon (SIGMA 70-200mm F2.8 DG OS HSM S018) - RAW",
+    "no_lens_profile": false,
+    "pairs": [
+        {
+            "a": "_MG_7597.CR2",
+            "b": "_MG_7598.CR2",
+            "points": 2281,
+            "residual_pixels": 1.7341442751176324
+        },
+        {
+            "a": "_MG_7597.CR2",
+            "b": "_MG_7599.CR2",
+            "points": 1243,
+            "residual_pixels": 1.1820478251990623
+        },
+        {
+            "a": "_MG_7598.CR2",
+            "b": "_MG_7599.CR2",
+            "points": 2499,
+            "residual_pixels": 1.2034760823706288
+        },
+        {
+            "a": "_MG_7598.CR2",
+            "b": "_MG_7600.CR2",
+            "points": 40,
+            "residual_pixels": 3.7337961125885335
+        },
+        {
+            "a": "_MG_7599.CR2",
+            "b": "_MG_7600.CR2",
+            "points": 547,
+            "residual_pixels": 3.447907922700035
+        },
+        {
+            "a": "_MG_7600.CR2",
+            "b": "_MG_7601.CR2",
+            "points": 559,
+            "residual_pixels": 1.2983423068560442
+        }
+    ],
+    "peak_memory_gb": 2.954190848,
+    "projection": "cylindrical",
+    "render_seconds": 1.866,
+    "requested_projection": "automatic",
+    "residual_pixels": 1.6793645192019557,
+    "rows": 1,
+    "schema": "ipr-panorama-audit-v001",
+    "scratch_gb": 2.327321339,
+    "seam_cell_pixels": 11,
+    "sensor_width_mm": 22.3,
+    "sources": [
+        {
+            "name": "_MG_7597.CR2",
+            "sha256": "9a566271402efa3c393c5fff4e893d7c69f219d96d6f5a15546b8460e9b89a35"
+        },
+        {
+            "name": "_MG_7598.CR2",
+            "sha256": "b0f99d125e86a67b5b0d90983ffc7834951a14e45ccb5eb07fb6e3d46db6f6fd"
+        },
+        {
+            "name": "_MG_7599.CR2",
+            "sha256": "fc43ef7336d2e9cedc5a8ac8a05e992589fbecb0f67ac89552c2f0b783cf8212"
+        },
+        {
+            "name": "_MG_7600.CR2",
+            "sha256": "e803554745de81520df561b7af0ab8555495bbae134fe72ac32a6fae77b2b271"
+        },
+        {
+            "name": "_MG_7601.CR2",
+            "sha256": "474372a59679323ec235c06d38221a06a57b0340a277dc450cc9ebadecab50fb"
+        }
+    ],
+    "span_across_degrees": 12.732901871981513,
+    "span_along_degrees": 55.008291183039375,
+    "success": true,
+    "used_frames": 5,
+    "worst_pair_pixels": 3.7337961125885335
+}

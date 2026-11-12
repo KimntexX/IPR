@@ -14,8 +14,8 @@ ColumnLayout {
     required property var evaluateCurve
     property color textColor: "#edf2f8"
     property color secondaryTextColor: "#d7dfeb"
-    // Display reference only: these are the current sRGB preview counts,
-    // not the linear Rec.2020 signal entering the tone-curve operation.
+    // Display reference: the current sRGB preview counts. The curves act on ProPhoto
+    // encoded with the same sRGB transfer, so the two scales nearly match.
     property var histogram: []
     readonly property var luminanceHistogram: histogram && histogram.length === 4 &&
         histogram[0].length === 256 ? histogram[0] : []
@@ -52,7 +52,8 @@ ColumnLayout {
 
     Rectangle {
         Layout.fillWidth: true
-        Layout.preferredHeight: 196
+        // Taller than wide: more room for the output scale.
+        Layout.preferredHeight: Math.round(width * 1.25)
         color: "#171b21"
         border.color: "#3d4654"
         radius: 4
@@ -165,19 +166,23 @@ ColumnLayout {
             }
         }
 
+        // Over the drawing itself, so that mouse and point coordinates agree; a drag
+        // is kept from the settings scroll view.
         MouseArea {
-            anchors.fill: parent
+            objectName: "toneCurveMouseArea"
+            anchors.fill: toneCanvas
             hoverEnabled: true
+            preventStealing: true
             enabled: module.editor.hasImage
             acceptedButtons: Qt.LeftButton | Qt.RightButton
             property int draggedIndex: -1
             ToolTip.visible: containsMouse && pressedButtons === Qt.NoButton
             ToolTip.delay: 900
-            ToolTip.text: qsTr("Fond monochrome : luminance de l’aperçu sRGB, repère visuel après rendu (pas le signal linéaire d’entrée des courbes).")
+            ToolTip.text: qsTr("Fond monochrome : luminance de l’aperçu sRGB, sur une échelle proche de celle des courbes.")
 
             function nearestPoint(mouse) {
                 let nearest = -1
-                let distance = 11
+                let distance = 14
                 for (let index = 0; index < module.curvePoints.length; ++index) {
                     const point = module.curvePoints[index]
                     const dx = toneCanvas.curveX(point) - mouse.x
@@ -191,17 +196,16 @@ ColumnLayout {
                 return nearest
             }
 
+            // Every point moves, the end points too (raised black, clipped whites, as
+            // Lightroom); a point stays between its neighbours.
             function updateDraggedPoint(mouse) {
-                if (draggedIndex <= 0 ||
-                    draggedIndex >= module.curvePoints.length - 1)
+                if (draggedIndex < 0 || draggedIndex >= module.curvePoints.length)
                     return
                 const points = module.curvePoints.slice()
-                const previous = points[draggedIndex - 1]
-                const next = points[draggedIndex + 1]
+                const low = draggedIndex > 0 ? points[draggedIndex - 1].x + 0.001 : 0
+                const high = draggedIndex < points.length - 1 ? points[draggedIndex + 1].x - 0.001 : 1
                 points[draggedIndex] = {
-                    "x": Math.max(previous.x + 0.001,
-                                  Math.min(next.x - 0.001,
-                                           toneCanvas.normalizedX(mouse.x))),
+                    "x": Math.max(low, Math.min(high, toneCanvas.normalizedX(mouse.x))),
                     "y": toneCanvas.normalizedY(mouse.y)
                 }
                 module.curvePointsEdited(points)
@@ -249,13 +253,8 @@ ColumnLayout {
         }
     }
 
-    Label {
-        Layout.fillWidth: true
-        Layout.minimumWidth: 0
-        color: "#aeb8c8"
-        wrapMode: Text.WordWrap
-        font.pixelSize: 12
-        text: qsTr("Double-cliquez pour ajouter une poignée, faites-la glisser pour modifier la courbe et utilisez le clic droit pour supprimer une poignée.")
+    SectionNote {
+        text: qsTr("Double-cliquez pour ajouter une poignée, faites-la glisser pour modifier la courbe et utilisez le clic droit pour supprimer une poignée. Les extrémités se déplacent aussi : noir relevé ou blancs coupés.")
     }
 
     RowLayout {
@@ -297,32 +296,52 @@ ColumnLayout {
                 module.activeCurveRequested(requestedChannel)
             }
         }
-        Item { Layout.fillWidth: true }
         Label {
             Layout.fillWidth: true
             Layout.minimumWidth: 0
+            horizontalAlignment: Text.AlignHCenter
             elide: Text.ElideRight
-            color: module.activeCurve === 0 ? module.textColor : module.curveColor(module.activeCurve)
+            color: module.textColor
+            font.pixelSize: 12
             text: module.curveName(module.activeCurve)
         }
-    }
-
-    ColumnLayout {
-        Layout.fillWidth: true
-        Layout.minimumWidth: 0
         PreferenceButton {
-            text: qsTr("Réinitialiser cette courbe")
-            Layout.fillWidth: true
-            Layout.minimumWidth: 0
+            id: resetCurveButton
+            objectName: "resetCurveButton"
+            Layout.preferredWidth: 21
+            Layout.preferredHeight: 21
+            text: "↺"
+            font.pixelSize: 14
+            padding: 0
+            hoverEnabled: true
             enabled: module.editor.hasImage
+            Accessible.name: qsTr("Réinitialiser cette courbe")
+            ToolTip.visible: hovered
+            ToolTip.text: qsTr("Réinitialiser cette courbe")
             onClicked: module.editor.resetToneCurve(module.activeCurve)
+            background: Rectangle {
+                radius: 3
+                color: resetCurveButton.hovered ? resetCurveButton.palette.mid : "transparent"
+            }
         }
         PreferenceButton {
-            text: qsTr("Réinitialiser les 4 courbes")
-            Layout.fillWidth: true
-            Layout.minimumWidth: 0
+            id: resetCurvesButton
+            objectName: "resetCurvesButton"
+            Layout.preferredHeight: 21
+            text: qsTr("Toutes")
+            font.pixelSize: 11
+            hoverEnabled: true
             enabled: module.editor.hasImage
+            Accessible.name: qsTr("Réinitialiser les 4 courbes")
+            ToolTip.visible: hovered
+            ToolTip.text: qsTr("Réinitialiser les 4 courbes")
             onClicked: module.editor.resetToneCurves()
+            background: Rectangle {
+                radius: 3
+                color: resetCurvesButton.hovered ? resetCurvesButton.palette.mid : "transparent"
+                border.width: 1
+                border.color: resetCurvesButton.palette.mid
+            }
         }
     }
 }

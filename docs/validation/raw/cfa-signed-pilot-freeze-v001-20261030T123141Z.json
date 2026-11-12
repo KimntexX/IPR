@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "created_utc": "20261030T123141Z",
+  "study": "signed_cfa_module_pilot_freeze",
+  "revision": "b6c3c4108a8ab2d63a592194aec688781fd9724c",
+  "inventory_sha256": "c7409fa7c885a2a211c932f721c6698ea6aae2de66dd7d610b2e39cdceaa7eda",
+  "tool_sha256": "3489833a597be374b4cc032d876fdbb1d3ccd105d66872855579a27303debb6c",
+  "selection": [
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9819.CR3",
+      "sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165",
+      "category": "burst42",
+      "split": "development",
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "datetime": "2026:10:27 23:33:44",
+        "exposure_s": 0.005,
+        "aperture": 5.6,
+        "iso": 4000,
+        "recommended_iso": 4000,
+        "focal_mm": 26.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      }
+    },
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\rafale\\6V1A9820.CR3",
+      "sha256": "5ae412958614f0782133ab8bde605496e411ab7dcfb5d8fd62ea927681a965d3",
+      "category": "burst42",
+      "split": "development",
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "datetime": "2026:10:27 23:33:44",
+        "exposure_s": 0.005,
+        "aperture": 5.6,
+        "iso": 4000,
+        "recommended_iso": 4000,
+        "focal_mm": 26.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      }
+    },
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0003.CR3",
+      "sha256": "172231741d16ea44e6bc0f509d39a9d6482aa52dbab2eea0246e06d125668b6e",
+      "category": "confirmed_dark",
+      "split": "development",
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "datetime": "2026:10:28 11:58:56",
+        "exposure_s": 0.005,
+        "aperture": 5.6,
+        "iso": 1600,
+        "recommended_iso": 1600,
+        "focal_mm": 90.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      }
+    },
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0004.CR3",
+      "sha256": "6df877e9085f8d939cfd99fdc4dbc10f5b8e7bb1f97d9ad6a06835432ae34742",
+      "category": "confirmed_dark",
+      "split": "development",
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "datetime": "2026:10:28 11:58:56",
+        "exposure_s": 0.005,
+        "aperture": 5.6,
+        "iso": 1600,
+        "recommended_iso": 1600,
+        "focal_mm": 90.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      }
+    },
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9950.CR3",
+      "sha256": "8f7eba49f50e1cc2e1c4b892053a238ec82063408337670810eeb0cd4f9b9b16",
+      "category": "confirmed_dark",
+      "split": "development",
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "datetime": "2026:10:28 11:57:07",
+        "exposure_s": 0.005,
+        "aperture": 5.6,
+        "iso": 51200,
+        "recommended_iso": 51200,
+        "focal_mm": 90.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      }
+    },
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9951.CR3",
+      "sha256": "05043c4ec89b26b4b7fbfbf11f6903e540d10918e45819bc68e261394183f47c",
+      "category": "confirmed_dark",
+      "split": "development",
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "datetime": "2026:10:28 11:57:07",
+        "exposure_s": 0.005,
+        "aperture": 5.6,
+        "iso": 51200,
+        "recommended_iso": 51200,
+        "focal_mm": 90.0,
+        "lens": "RF24-105mm F2.8 L IS USM Z"
+      }
+    }
+  ],
+  "sources": {
+    "src/raw/RawDevelopment.cpp": {
+      "sha256": "0c75872fb2eea5a26ccd51789a64870a9e12269a79aee91b8397497f5f045f75"
+    },
+    "src/raw/Demosaic.cpp": {
+      "sha256": "51530300dbfa93c61b4c94e6c820dda7e1239b3cba12ca51d57adae2b0a5b68a"
+    },
+    "src/raw/LibRawInput.cpp": {
+      "sha256": "84d4bbffc6346177d710bccb515284d570593d9c83164aa000731cb3fd489c6f"
+    },
+    "tests/raw_bench/development_capture.cpp": {
+      "sha256": "049c8e8d2d796b243b4b53390ad2f5fe6fe87da4c5b0b01634b8fb932940f25f"
+    },
+    "tests/raw_bench/pilot_signed_cfa.py": {
+      "sha256": "4e8edf3644b3d652171e4b41182d7775d2e26337cc959286b40474fc2960385d"
+    }
+  },
+  "source": "\"\"\"Qualify signed module captures on development-only corpus; not production calibration or a denoiser.\"\"\"\nimport argparse\nfrom datetime import datetime, timezone\nimport json\nfrom pathlib import Path\nimport subprocess\nimport os\nimport numpy as np\nfrom audit_dark_mean import sha256\nfrom capture import load_capture\nfrom signed_measurement import moments, planes, REQUIRED_STAGES\n\n\ndef neighbour_correlations(values):\n    out={}\n    for name,a,b in (('x',values[:,:-1],values[:,1:]),('y',values[:-1],values[1:])):\n        correlations=[]\n        for c in range(values.shape[2]):\n            left=a[...,c].ravel();right=b[...,c].ravel()\n            correlations.append(float(np.corrcoef(left,right)[0,1]) if left.std()>0 and right.std()>0 else None)\n        out[name]=correlations\n    return out\n\n\ndef main():\n    p=argparse.ArgumentParser(description=__doc__)\n    p.add_argument('--inventory',type=Path,required=True)\n    p.add_argument('--tool',type=Path,required=True)\n    p.add_argument('--runtime-dir',type=Path,action='append',required=True)\n    args=p.parse_args()\n    root=Path(__file__).resolve().parents[2]\n    inventory=json.loads(args.inventory.read_text(encoding='utf-8'))\n    selection=inventory['pilot']\n    if len(selection)!=6 or any(r['split']!='development' for r in selection):\n        raise ValueError('Expected six development-only inputs, never validation or sealed')\n    groups={}\n    for r in selection:\n        if sha256(r['path'])!=r['sha256']:\n            raise ValueError('Input hash mismatch before pixels')\n        key=f\"{r['category']}_ISO{r['metadata']['iso']}\"\n        groups.setdefault(key,[]).append(r)\n    if len(groups)!=3 or any(len(v)!=2 for v in groups.values()):\n        raise ValueError('Expected three declared pairs')\n    stamp=datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')\n    sources=['src/raw/RawDevelopment.cpp','src/raw/Demosaic.cpp','src/raw/LibRawInput.cpp',\n             'tests/raw_bench/development_capture.cpp','tests/raw_bench/pilot_signed_cfa.py']\n    freeze=dict(schema_version=1,created_utc=stamp,study='signed_cfa_module_pilot_freeze',\n        revision=subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip(),\n        inventory_sha256=sha256(args.inventory),tool_sha256=sha256(args.tool),selection=selection,\n        sources={name:dict(sha256=sha256(root/name)) for name in sources},\n        source=Path(__file__).read_text(encoding='utf-8'),\n        policy='signed',black_dn_rg_bg2=[2048]*4,white_dn=16383,\n        scope='Explicit fixed DN levels for module qualification, NOT production black/white selection or DCP.',\n        limits=['ROI positions from existing capture tool, not cherry-picked after measurement.',\n                'Old noise campaign already measured these sources; not a new holdout.',\n                'No sealed or historical control frames decoded.',\n                'CFA phases separate; pair difference cancels common structure, not a total noise oracle.',\n                'No a*signal+b fitting, VST, image denoiser or quality improvement tested.'])\n    frozen=root/'docs/validation/raw'/f'cfa-signed-pilot-freeze-v001-{stamp}.json'\n    with frozen.open('x',encoding='utf-8') as handle:\n        json.dump(freeze,handle,ensure_ascii=False,indent=2,allow_nan=False)\n    env=os.environ.copy()\n    env['PATH']=os.pathsep.join(str(v.resolve()) for v in args.runtime_dir)+os.pathsep+env.get('PATH','')\n    folder=root/'build-patch_raw_bench'/f'cfa-signed-pilot-{stamp}'\n    folder.mkdir()\n    result=dict(schema_version=1,created_utc=stamp,study='signed_cfa_module_pilot',freeze_sha256=sha256(frozen),\n                freeze_path=str(frozen.relative_to(root)),scope=freeze['scope'],pairs=[],commands=[])\n    failed=False\n    try:\n        for label,pair in groups.items():\n            loaded=[]\n            for i,record in enumerate(pair):\n                target=folder/f'{label}-{i}.json'\n                command=[str(args.tool.resolve()),'--input',record['path'],'--output',str(target),\n                         '--path','candidate','--mode','signed','--black','2048,2048,2048,2048','--white','16383']\n                run=subprocess.run(command,cwd=root,env=env,capture_output=True,text=True,\n                                   encoding='utf-8',errors='replace',timeout=180)\n                result['commands'].append(dict(argv=command,returncode=run.returncode,stdout=run.stdout,stderr=run.stderr))\n                if run.returncode:\n                    raise RuntimeError('Capture failed')\n                manifest,stages=load_capture(target)\n                if manifest['source']['sha256']!=record['sha256'] or manifest['mode']!='signed':\n                    raise ValueError('Captured input/policy mismatch')\n                if {k[0] for k in stages}!=REQUIRED_STAGES:\n                    raise ValueError('Missing intermediate stage')\n                for key in stages:\n                    if key[0]=='pre_output_camera_rgb':\n                        x=stages[key][1]\n                        for stage in ('post_median_camera_rgb','pre_dcp_camera_rgb'):\n                            if stages[(stage,key[1])][1].tobytes()!=x.tobytes():\n                                raise ValueError('Signed float output changed after pre-output capture')\n                loaded.append((manifest,stages,target))\n            if set(loaded[0][1])!=set(loaded[1][1]):\n                raise ValueError('Pair stages/geometries differ')\n            row=dict(label=label,captures=[dict(path=str(v[2]),sha256=sha256(v[2]),\n                source=v[0]['source'],applied=v[0]['applied'],metadata=v[0]['metadata'],libraw_version=v[0]['libraw_version']) for v in loaded],measurements=[])\n            for key in sorted(loaded[0][1]):\n                da,a=loaded[0][1][key];db,b=loaded[1][1][key]\n                for field in ('shape','dtype','unit','layout','origin_yx','context'):\n                    if da[field]!=db[field]:\n                        raise ValueError('Pair geometry/units/input metadata differ')\n                for (name,x),(name2,y) in zip(planes(da,a),planes(db,b)):\n                    if name!=name2:\n                        raise ValueError('CFA plane mismatch')\n                    difference=(x.astype(np.float64)-y.astype(np.float64))/np.sqrt(2.)\n                    row['measurements'].append(dict(stage=key[0],origin_yx=list(key[1]),plane=name,unit=da['unit'],\n                        first=moments(x),second=moments(y),difference_over_sqrt2=moments(difference),\n                        differential_neighbour_correlations=neighbour_correlations(difference)))\n            result['pairs'].append(row)\n            print(label,'measured',flush=True)\n    except Exception as exc:\n        failed=True;result['error']=f'{type(exc).__name__}: {exc}'\n    result['verdict']='fail' if failed else 'pass_signed_module_contract_not_production_or_quality'\n    output=root/'docs/validation/raw'/f'cfa-signed-pilot-v001-{stamp}.json'\n    with output.open('x',encoding='utf-8') as handle:\n        json.dump(result,handle,ensure_ascii=False,indent=2,allow_nan=False)\n    print(output,result['verdict'],result.get('error',''))\n    return int(failed)\n\n\nif __name__=='__main__':\n    raise SystemExit(main())\n",
+  "policy": "signed",
+  "black_dn_rg_bg2": [
+    2048,
+    2048,
+    2048,
+    2048
+  ],
+  "white_dn": 16383,
+  "scope": "Explicit fixed DN levels for module qualification, NOT production black/white selection or DCP.",
+  "limits": [
+    "ROI positions from existing capture tool, not cherry-picked after measurement.",
+    "Old noise campaign already measured these sources; not a new holdout.",
+    "No sealed or historical control frames decoded.",
+    "CFA phases separate; pair difference cancels common structure, not a total noise oracle.",
+    "No a*signal+b fitting, VST, image denoiser or quality improvement tested."
+  ]
+}

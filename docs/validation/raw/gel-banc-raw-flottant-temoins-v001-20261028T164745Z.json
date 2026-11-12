@@ -1,0 +1,230 @@
+{
+  "schema_version": 1,
+  "started_at_utc": "2026-10-28T16:47:45.511499+00:00",
+  "inputs": [
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9153.CR3",
+      "source_sha256": "7f5e0baf7f9722401cc269a1b01deee35db9eba0d122ea88e98f638266f32b30",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\11-6V1A9153.json",
+      "capture_sha256": "17e3b4dfa0204331a6664d6c1c122bcc897427877eaa79a7197969143c36f714",
+      "model": "EOS R6 Mark III",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\7Y6A7599.CR3",
+      "source_sha256": "9c1426494accc3fb6efa2c5b0f8c7c4faac70d65fa9a26721f1de86d011f078e",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\15-7Y6A7599.json",
+      "capture_sha256": "850c81a44d06b358897738df1a18c917af22c8238f0a92e349b192989c8e3bd8",
+      "model": "EOS R7",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            2202,
+            1268
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2202,
+            3364
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2202,
+            5458
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_3135.CR2",
+      "source_sha256": "7bf4440bcdafc359762d0db40e92dcbf1948886b6aa3ca250cecb96496309165",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\16-IMG_3135.json",
+      "capture_sha256": "905196419bd72fd7804e49ee706fa13b87cc7c78d5d8b771901c52ed51a61130",
+      "model": "EOS 60D",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            1604,
+            912
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            2472
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            4032
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    }
+  ],
+  "parents": {
+    "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\banc-raw-production-v001-20261028T154842Z.json": "68db7e7e1065097a8939f670042868f9907ff8f12a3407d56574642abdec02ab",
+    "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\gel-banc-raw-production-v001-20261028T163154Z.json": "079d81eac8726112bf2d42a85cfa77356b02f5dac9720829c1aada0b599d0be9"
+  },
+  "tool": {
+    "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\f1-guard\\Release\\iprProductionRawCapture.exe",
+    "sha256": "8d9c39f40b7bf87c52c6fab424a896f49cf0f4ed1f31d96b42a16e9d54bd6aa5"
+  },
+  "engine_revision": "0adefe76e109e0cdb5e76a39d269d30d6b5f627b",
+  "engine_source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\f1-guard-snapshot\\source",
+  "engine_hashes": {
+    "src\\app\\main.cpp": "3f6d7f0be149b451cf2556345b4e78dae30ffd7a5033150017031420d5129784",
+    "src\\app\\UiPreferences.cpp": "860835075e6e8fe0d0454e1f574e58e82d016bca895006b126cfeb3d671c51e7",
+    "src\\app\\UiPreferences.h": "e161f7b0c0f70b8269e10589de89cf3c8b223fdd4f7fd0b438dff508b6331649",
+    "src\\cache\\DecodedImageCache.cpp": "6a6b0d79c8a76d20174d0c7271e8c00030c4770e17d43e354f78dbdc42f1f66c",
+    "src\\cache\\DecodedImageCache.h": "daa1aca18c9c8b0b86299c3cc02f4825cf76e1838ccca37f87ca5d9016f1d880",
+    "src\\cache\\ImageCacheController.cpp": "35ad92e1b537f92b045377a8007f868c7a9f707b7b69da8383c38c0a481ec04d",
+    "src\\cache\\ImageCacheController.h": "1e56e35b090c15009037a9b2b677a4b7d4a9036bd371f5e04fb8d8b17a79f741",
+    "src\\cache\\RenderStageCache.cpp": "8651f8b8c09b210b0ca085c5a6662fd69736d2601153db44e0007071a55e1b14",
+    "src\\cache\\RenderStageCache.h": "5d1a98ff86ed86d0a62d1087beb4fcfa83b83f752ada42b614c58ed5e16ddba6",
+    "src\\cache\\SystemMemory.cpp": "b27d9c5547014dc661cfd445330c2528b29c2ed8d9e58ea13691abe546bb82dd",
+    "src\\cache\\SystemMemory.h": "dea93bcaa70a4ff29d73485f3a0ec6c773808b6f4253503941799094c0a2c409",
+    "src\\core\\ColorAdjustments.cpp": "0408a8328b78799122f5689db50d9f0b0a40d1a9cb09638ba488ef7a557beb82",
+    "src\\core\\ColorAdjustments.h": "1046f1c4b5d1e608aabef7620fba3ba57936313c2f25f0b894ca006a41a2ebd2",
+    "src\\core\\ColorGrading.cpp": "fb7c665383a064b11e664bbb59adbc4b92377c13b4f6f181f541b9fc1efd9331",
+    "src\\core\\ColorGrading.h": "9028270008a44fad1a6ff0ab6a034d1f62ae1596ee1e710cd3a5c1e4e5e2e929",
+    "src\\core\\ColorMixer.cpp": "5ac9d81d521fae9e2a049e3e35c0a69d13eb9b6cb4bd9b5e5f0a01d4314f719e",
+    "src\\core\\ColorMixer.h": "9500a4cbe3b97fe1ddcefc8d771a155f46b65b795da089806cd41f5d694c3faf",
+    "src\\core\\ColorMixerModel.h": "d6d97de885476d147641a01828c12bbd00ceb83717bfe7e51a76895b2ecbd68f",
+    "src\\core\\ColorPipeline.cpp": "88570718069554462a4887f2305dd966497a235fd80d474b6c7ccf5ccea7482c",
+    "src\\core\\ColorPipeline.h": "f78450a16101927f00e82001650726e49881d7bbd94768a209e2f4ebb0ebf5d2",
+    "src\\core\\Contrast.cpp": "8438dda1beeec6ca2f0fe9fcab397579c9b466a993a6d15e774c9c3b7f65cc92",
+    "src\\core\\Contrast.h": "b87450e3f7ff770d7e37849b6f3d463afa4aee41e7152823a4da34d959a4d458",
+    "src\\core\\Dehaze.cpp": "8cdc6770f7d04fc30abb5c59cf549875445803478ab4d56e1a0d3602e9961028",
+    "src\\core\\Dehaze.h": "b2ed5d75389f4c0009fccd15b4d0a5370accb4e193639b85a4f7f0f2194dad1d",
+    "src\\core\\DetailProcessing.cpp": "78aa94397b49002b18758ce7f042a05cbbdedb93dc3d569923439b2dfd3209e9",
+    "src\\core\\DetailProcessing.h": "a04e80ea42d7a63377983313feb82c19cca4bcdaea01339f26af12e564a30023",
+    "src\\core\\EditRecipe.h": "69ae01c2f42ca55288cd1256d4ab8a3e753d0fe8d5578845947f67a690fc86db",
+    "src\\core\\Grain.cpp": "9113512bf063f11d0e25edb33671e5fdc5d6ae9213d4a5caf294ea9ef6de874f",
+    "src\\core\\Grain.h": "492e75f01ef6a593a868e538f6585f766a42264d967280a3ed9e55a3baf46cc0",
+    "src\\core\\Histogram.cpp": "b063a0b7efe7ececc13a5cb3c9ae57787bfbd940d6c5693d819ff4e7a510da95",
+    "src\\core\\Histogram.h": "50bb95626105445653c84f3834742dcf8516c9cd1868c307fef91d2de0aab13d",
+    "src\\core\\ImageExporter.cpp": "f4beef4c251cccb4533bf260a27b3f828aca3513d4b1cd738831015a76fd3e1a",
+    "src\\core\\ImageExporter.h": "e4fb72a9fa824a56e391301ec55ad24a58127081dd354520d83c98f29dc511c3",
+    "src\\core\\ImageImporter.cpp": "d5e4ef061369b63ce5256cf38921f9cdfa24bcfa4fb0f9e470974177d2acaa7d",
+    "src\\core\\ImageImporter.h": "59870a5baa2b08d5964464fc92d1a953509ade8defa7103a05f18a9402724e97",
+    "src\\core\\ImageMath.h": "c3e16295d0a484057a1007f348f908e3a5450bf68a6a72b56fa86cd0ac27cf2f",
+    "src\\core\\ImageMetadata.h": "35e5a1b065b0f6f8f05b0961228d241afbeef0420517786f9929f0c33e613a9c",
+    "src\\core\\LocalContrast.cpp": "a5a96284bb633f27af7e0b19f4050cce2a4ccfc63ccdcca6568006d32f8daa92",
+    "src\\core\\LocalContrast.h": "fc23fbb343f6de6a7df4f753b861895c915b39bde823089e7b390727c64ca637",
+    "src\\core\\PerceptualColour.cpp": "808efbef5aa94f4b1bdd83bcaca7b9190de54e984ae75f5444f395753fa94c7a",
+    "src\\core\\PerceptualColour.h": "951467a6d087265ccff4db9086adc5f287ff8cd241c286a469b8ebbba699b2d6",
+    "src\\core\\PointColor.cpp": "31726a63de279ed7519a7d740e81c0640f1628b76261ebcf51c0f2e311676658",
+    "src\\core\\PointColor.h": "4da2b8e046b995afd468fa87056b4626fc99d10acc78816542d76e8d3a50641b",
+    "src\\core\\Sidecar.cpp": "2462883d89ecbedbbb60472d2bde9c2831dd8243d89e1d5dcd5073e4694845d3",
+    "src\\core\\Sidecar.h": "570b95e87f4e9b5b5d34daa8b3018e53773e8ca9bf4a916592e075e9de36537b",
+    "src\\core\\ToneCurve.cpp": "b53a31e0c7d2d414a4c309980cb051a0c63377c35cb536dddf87bcc754f1048b",
+    "src\\core\\ToneCurve.h": "2f46a98e36e20ff11f59d29561af394f0899d76347e960d0d6619c7bb0f73cdf",
+    "src\\core\\ToneRecovery.cpp": "a62de198fc39b77ec12219761700368bbb31bad746bd2380187df93e076507cf",
+    "src\\core\\ToneRecovery.h": "7e2b3b2aa5f9297b52c0727ec60905a9f58d4d7fa0dea9f8b8b07edddf5a6618",
+    "src\\core\\ToneRecoveryHighlights.h": "39812d16cee3e826578cf7c73ec6bfe81d472251171d88a3cd53a9192f09aa0c",
+    "src\\core\\ToneRecoveryModel.h": "5e5e656e70d1364d6039fa865d1de8a1f7d0165ba0ea1067a26e9d6f05141872",
+    "src\\core\\ToneStatistics.cpp": "4ce59e5eea5330c2273de3736f1cb4602d294ee4169fd6e0287bb8eb3f5a3533",
+    "src\\core\\ToneStatistics.h": "2b72e6345c342629b22d5ba9955dac07dcede664d0542a12056ce35148781325",
+    "src\\core\\Vibrance.cpp": "0d7e03638484891a7af4796ca3c2514749a792243276703d5b9b67c1edce58b9",
+    "src\\core\\Vibrance.h": "eff62b0810ba26f4fa30c22f99fcbe151fa90244038f215fc83bba8827865dd1",
+    "src\\core\\VibranceModel.h": "8f660786204d024e03c561c6935b050772c194a98bb81b9f9f1e8c87cf34bbfb",
+    "src\\core\\WorkingColorSpace.h": "55e437b8eb894bcc5438ff3f8ed55699ec1480adb17668a149f3f1c5a15775fb",
+    "src\\editor\\imageeditor.cpp": "95c4144ac68f695850336bccbf175fd8e63ca6a86359438d4c71b8a191426c81",
+    "src\\editor\\imageeditor.h": "ace3108b7f3e25d828566d0fa15562fffba2b6f954aa3c2a13c59ec7608c1ba0",
+    "src\\profiles\\CameraProfileEngine.cpp": "25fdd3c7f2d716448280c8c73c81f2aff2c90455742681b44a1db32be39e889a",
+    "src\\profiles\\CameraProfileEngine.h": "978c5337ff09e28d151c010b4433b48b3da2d9aae686f35b56b9611bb472e846",
+    "src\\profiles\\PreparedProfileCache.cpp": "21f5958a307f5feffc6cd189a556f87fd10ae103ebe31ee05fc523a54ab2bdad",
+    "src\\profiles\\PreparedProfileCache.h": "29b9c41c8935b49c887c7a6d2a113550d9d41388530e138522e51d3f67611e07",
+    "src\\providers\\GradingWheelProvider.cpp": "fe3205359bd8615ee55f2ea436f28cf75e1f094d30dfb78cb35a339e6b1e4122",
+    "src\\providers\\GradingWheelProvider.h": "7ab6736cefad26e4c39025191766d9c25bc3538b89cfcd6395d7441dc3269a05",
+    "src\\providers\\imageprovider.cpp": "6faa75d9fac6663f6ed66da4d4d9ea3d959a984c344d3d95579efa7c840f278e",
+    "src\\providers\\imageprovider.h": "3d6679f125eae296effe0b8c6d0f0defecb7724cc785e2a5188fe40605d43f40",
+    "src\\providers\\ThumbnailProvider.cpp": "a4da92b5ea1e43c949aaaebbf14a9271c83da4cfa5e40f63467922c8c12428a4",
+    "src\\providers\\ThumbnailProvider.h": "e8becb12edb63230a9f17f8bcd7eb417db2688b35923badcc2d82de988ca9647",
+    "src\\raw\\CameraCharacterization.cpp": "a0c719c7f4eee79572ab20d211433d8f522cac8fea136d293da758cb071aab5c",
+    "src\\raw\\CameraCharacterization.h": "041419949cf8f77d853b9fc4f6eaf16f79779b41c20913e85786d8f42f5ae87a",
+    "src\\raw\\CameraSignal.cpp": "08a83c79d8baa2b11f3a6fb13ce67eb711fe21770ecbf099a535601f5a2d3d58",
+    "src\\raw\\CameraSignal.h": "890674f71b482012ccd782f74b1b347d3e439540a99bf2777ab361a0d67efd27",
+    "src\\raw\\Demosaic.cpp": "51530300dbfa93c61b4c94e6c820dda7e1239b3cba12ca51d57adae2b0a5b68a",
+    "src\\raw\\Demosaic.h": "52d2f42281b6584765eb1644ebb5a05f5327d508e8d96ee8567d71288a9218dc",
+    "src\\raw\\LibRawInput.cpp": "84d4bbffc6346177d710bccb515284d570593d9c83164aa000731cb3fd489c6f",
+    "src\\raw\\LibRawInput.h": "5f0e418d689c22a4c556a7e2365ecddbfbafedc44a630953a67d6f4b243c16ed",
+    "src\\raw\\RawBlackLevelEstimator.cpp": "8e9d6eae3c33636d64683d0372048db4fe6c637c811c390853aa1bdd8419404d",
+    "src\\raw\\RawBlackLevelEstimator.h": "1ea58b1c6e0f06679ac2be7ac212972ad959dfe0f2daea16c6e7b0d7d25583a0",
+    "src\\raw\\RawDecoder.cpp": "af624523caeb0f9e3166fbf77a7d6fb882e193f1b262d4b2a57260b9be492f4e",
+    "src\\raw\\RawDecoder.h": "94a230dcc5d329a8e147579497d40a5634039a679e7ea4a71447418d7125798c",
+    "src\\raw\\RawDevelopment.cpp": "0c75872fb2eea5a26ccd51789a64870a9e12269a79aee91b8397497f5f045f75",
+    "src\\raw\\RawDevelopment.h": "19ec47d02307be84eddad7e268b739fabbd5794eb128ec063506e8a915c941dc",
+    "src\\raw\\RawInput.cpp": "2b11cc5e64dd9b2f3c4e0663523da86567c458835765ee857d7c14d8aef1bb8b",
+    "src\\raw\\RawInput.h": "8525277ebdbba28396378f3564f22b87dd4e2e3046a39703a16f1d7d97a754a7",
+    "src\\raw\\RawNormalization.cpp": "e56195e1c142d7c9508a6c62fd8eab4db542eb6aca6273f0585560299c041967",
+    "src\\raw\\RawNormalization.h": "cc6506fa6a660ef89cf494037a3141e1ab31acdcd7e8c9b8335f0f03f4a0b870",
+    "src\\tools\\generate_test_images.cpp": "406a2b4a1dd733a2f5dba9babd6cd77cb0e4a9160d65f20549b51920deca09e9",
+    "src\\tools\\render_server.cpp": "80031f5eb5100caa66a34e99297452001d02f472c361d30026a6a4f2e21f37d8",
+    "src\\tools\\TestRecipes.cpp": "cd21493d9ddda38ea768f5e7339d2617e8461406ae552aa5decc8ea0a681b577",
+    "src\\tools\\TestRecipes.h": "dc727585b015742fd585c5cbc657923e8b7df7ac564e3bc4b71f44fd5a17f907"
+  },
+  "sources": {
+    "tests/raw_bench/float_witnesses.py": {
+      "sha256": "b484646c81e88867360b07fa7a62daee7ff6f786841ed3fcdca08197eda6190c",
+      "text": "\"\"\"Targeted F1 guard regression: three Canon models, A/B, with/without DCP.\"\"\"\nimport argparse\nfrom datetime import datetime, timezone\nimport json\nimport os\nfrom pathlib import Path\nimport subprocess\nfrom capture import load_capture, sha256\nfrom float_qualification import qualify_inlet\nfrom production_campaign import full_equal\n\n\ndef save(path, data):\n    with path.open('x', encoding='utf-8') as handle:\n        json.dump(data, handle, ensure_ascii=False, indent=2, allow_nan=False)\n\n\ndef main():\n    p = argparse.ArgumentParser(description=__doc__)\n    for name in ('reference-study', 'production-freeze', 'manifest', 'tool', 'engine-source'):\n        p.add_argument('--'+name, type=Path, required=True)\n    p.add_argument('--engine-revision', required=True)\n    p.add_argument('--runtime-dir', action='append', type=Path, required=True)\n    a = p.parse_args(); root = Path(__file__).resolve().parents[2]\n    stamp = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')\n    work = root/'build-patch_raw_bench/float-witnesses'/stamp; work.mkdir(parents=True)\n    ref = json.loads(a.reference_study.read_text(encoding='utf-8'))\n    settings = json.loads(a.production_freeze.read_text(encoding='utf-8'))\n    names = {'6V1A9153.CR3', '7Y6A7599.CR3', 'IMG_3135.CR2'}\n    inputs = [r for r in settings['inputs'] if Path(r['source']).name in names]\n    if len(inputs) != 3 or sha256(a.manifest) != settings['manifest']['sha256']:\n        raise ValueError('Missing witnesses or changed calibration')\n    sources = {n: dict(sha256=sha256(root/n), text=(root/n).read_text(encoding='utf-8'))\n               for n in ('tests/raw_bench/float_witnesses.py', 'tests/raw_bench/production_capture.cpp',\n                         'tests/raw_bench/float_qualification.py', 'tests/raw_bench/capture.py')}\n    tool_hash = sha256(a.tool)\n    hashes = {str(f.relative_to(a.engine_source)): sha256(f) for f in (a.engine_source/'src').rglob('*') if f.is_file() and f.suffix in ('.h', '.cpp')}\n    freeze = root/'docs/validation/raw'/f'gel-banc-raw-flottant-temoins-v001-{stamp}.json'\n    save(freeze, dict(schema_version=1, started_at_utc=datetime.now(timezone.utc).isoformat(), inputs=inputs,\n                      parents={str(v.resolve()): sha256(v) for v in (a.reference_study, a.production_freeze)},\n                      tool=dict(path=str(a.tool.resolve()), sha256=tool_hash), engine_revision=a.engine_revision,\n                      engine_source=str(a.engine_source.resolve()), engine_hashes=hashes, sources=sources,\n                      scope='Three Canon models; 12 decodes A/B with/without DCP. A full master/metadata against C3, B finite master and actual signed DCP inlet; 9153 overshoot above1 required. No optics/noise benefit or nonlinear DCP range qualification.'))\n    env = dict(os.environ); env['OMP_NUM_THREADS'] = '8'\n    env['PATH'] = os.pathsep.join([str(v) for v in a.runtime_dir]+[env.get('PATH', '')])\n    empty = work/'empty-profiles'; empty.mkdir(); records = []\n    print('FROZEN', freeze, flush=True)\n    try:\n        for item in inputs:\n            source = Path(item['source']); profile = settings['profiles'][item['model']]\n            if sha256(source) != item['source_sha256'] or sha256(Path(profile['path'])) != profile['sha256']:\n                raise ValueError('Witness source/profile changed')\n            for mode in ('dcp', 'matrix'):\n                for policy in ('parity', 'signed'):\n                    out = work/f'{source.stem}-{mode}-{policy}.json'\n                    command = [str(a.tool.resolve()), '--input', str(source), '--output', str(out),\n                               '--profile-root', str(empty), '--manifest', str(a.manifest.resolve()), '--development', policy]\n                    if mode == 'dcp':\n                        command += ['--profile', profile['path'], '--capture-camera']\n                    with out.with_suffix('.log').open('x', encoding='utf-8') as log:\n                        subprocess.run(command, cwd=root, env=env, stdout=log, stderr=subprocess.STDOUT, check=True, timeout=240)\n                    capture, _ = load_capture(out)\n                    if capture['engine_revision'] != a.engine_revision or capture['mode'] != policy:\n                        raise ValueError('Wrong engine/policy')\n                    row = dict(source=item, mode=mode, policy=policy, capture=dict(path=str(out), sha256=sha256(out)),\n                               full_image=capture['full_image'], decode_ms=capture['decode_ms'], peak_bytes=capture['decode_peak_working_set_bytes'])\n                    if policy == 'parity':\n                        previous = [r for r in ref['records'] if r['mode'] == mode and r['source']['source_sha256'] == item['source_sha256']]\n                        if len(previous) != 1 or not full_equal(capture['full_image'], previous[0]['full_images']['candidate']) or capture['metadata'] != previous[0]['metadata']['candidate']:\n                            raise ValueError('Guard changes finite A render')\n                        row['A_unchanged'] = True\n                    if mode == 'dcp':\n                        row['inlet'] = qualify_inlet(out)\n                        if policy == 'signed' and source.name == '6V1A9153.CR3':\n                            if max(row['inlet']['full_camera']['maximum']) <= 1:\n                                raise ValueError('9153 signed overshoot was bounded before DCP')\n                            row['above_one_preserved'] = True\n                    if capture['decode_ms'] > 20800 or capture['rcd_workers'] > 8 or capture['opencv_threads'] > 1:\n                        raise ValueError('Witness resource budget exceeded')\n                    records.append(row)\n                    print(len(records), '/12', source.name, mode, policy, 'pass', flush=True)\n        if sha256(a.tool) != tool_hash or any(sha256(root/n) != v['sha256'] for n, v in sources.items()):\n            raise ValueError('Bench changed')\n        if any(sha256(a.engine_source/n) != v for n, v in hashes.items()):\n            raise ValueError('Engine changed')\n        result = root/'docs/validation/raw'/f'banc-raw-flottant-temoins-v001-{datetime.now(timezone.utc).strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n        save(result, dict(schema_version=1, measured_at_utc=datetime.now(timezone.utc).isoformat(),\n                          freeze=dict(path=str(freeze), sha256=sha256(freeze)), records=records,\n                          verdict='pass_scoped_guard_witnesses', limitations='Three models only, optics off, no malformed RAW corpus or denoising/visual-quality validation; resources exploratory.'))\n        print('RESULT', result, flush=True)\n    except Exception as error:\n        save(work/'partial.json', dict(error=str(error), records=records))\n        raise\n\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    "tests/raw_bench/production_capture.cpp": {
+      "sha256": "27608fa7d8771b32488e3e865b3a65ee20ff4f0e16b5fb02a29afa1dddc6c8bf",
+      "text": "#include \"RawDecoder.h\"\n#include \"Demosaic.h\"\n#include \"CameraProfileEngine.h\"\n#include <QCoreApplication>\n#include <QCommandLineParser>\n#include <QCommandLineOption>\n#include <QCryptographicHash>\n#include <QDateTime>\n#include <QElapsedTimer>\n#include <QFile>\n#include <QFileInfo>\n#include <QDir>\n#include <QJsonObject>\n#include <QJsonArray>\n#include <QJsonDocument>\n#include <opencv2/core.hpp>\n#include <algorithm>\n#include <array>\n#include <cmath>\n#include <iostream>\n#include <stdexcept>\n#ifdef _WIN32\n#include <windows.h>\n#include <psapi.h>\n#else\n#include <sys/resource.h>\n#endif\n\nnamespace {\nvoid require(bool v,const char *message){if(!v)throw std::runtime_error(message);}\nQString hash(const QString &path){QFile f(path);require(f.open(QIODevice::ReadOnly),\"Cannot hash file\");QCryptographicHash h(QCryptographicHash::Sha256);require(h.addData(&f),\"File hash failed\");return QString::fromLatin1(h.result().toHex());}\nquint64 peakBytes(){\n#ifdef _WIN32\n    PROCESS_MEMORY_COUNTERS info{};info.cb=sizeof(info);\n    require(GetProcessMemoryInfo(GetCurrentProcess(),&info,sizeof(info))!=0,\"Cannot measure memory peak\");return quint64(info.PeakWorkingSetSize);\n#else\n    struct rusage info{};require(getrusage(RUSAGE_SELF,&info)==0,\"Cannot measure memory peak\");\n#ifdef __APPLE__\n    return quint64(info.ru_maxrss);\n#else\n    return quint64(info.ru_maxrss)*1024;\n#endif\n#endif\n}\nQString imageHash(const cv::Mat &m){\n    QCryptographicHash h(QCryptographicHash::Sha256);for(int y=0;y<m.rows;++y)h.addData(QByteArrayView(reinterpret_cast<const char *>(m.ptr(y)),qsizetype(m.cols*m.elemSize())));\n    return QString::fromLatin1(h.result().toHex());\n}\nQJsonObject cameraSummary(const cv::Mat &m){\n    require(m.type()==CV_32FC3&&cv::checkRange(m),\"Invalid pre-DCP camera image\");\n    std::array<double,3> sums{},negative{},zero{},minimum{},maximum{};\n    for(int c=0;c<3;++c)minimum[size_t(c)]=maximum[size_t(c)]=m.at<cv::Vec3f>(0,0)[c];\n    for(int y=0;y<m.rows;++y){\n        const auto *row=m.ptr<cv::Vec3f>(y);\n        for(int x=0;x<m.cols;++x)for(int c=0;c<3;++c){\n            const double v=row[x][c];const auto k=size_t(c);\n            sums[k]+=v;negative[k]+=v<0;zero[k]+=v==0;\n            minimum[k]=(std::min)(minimum[k],v);maximum[k]=(std::max)(maximum[k],v);\n        }\n    }\n    const double count=double(m.total());QJsonArray means,negatives,zeros,lows,highs;\n    for(int c=0;c<3;++c){const auto k=size_t(c);means.append(sums[k]/count);negatives.append(negative[k]/count);zeros.append(zero[k]/count);lows.append(minimum[k]);highs.append(maximum[k]);}\n    return QJsonObject{{\"shape\",QJsonArray{m.rows,m.cols,3}},{\"dtype\",\"f32\"},{\"sha256\",imageHash(m)},\n        {\"finite\",true},{\"unit\",\"linear_camera_white_1\"},{\"orientation\",\"display\"},\n        {\"mean\",means},{\"negative_fraction\",negatives},{\"zero_fraction\",zeros},{\"minimum\",lows},{\"maximum\",highs}};\n}\n}\n\nint main(int argc,char **argv){\n    QCoreApplication app(argc,argv);app.setApplicationName(\"iprRawBench\");QCommandLineParser p;p.addHelpOption();\n    for(auto key:{\"input\",\"output\",\"profile-root\",\"profile\",\"manifest\"})p.addOption(QCommandLineOption(key,key,\"path\"));\n    p.addOption(QCommandLineOption(\"capture-camera\",\"Capture the retained, actually used pre-DCP camera buffer; requires an explicit DCP\"));\n    p.addOption(QCommandLineOption(\"development\",\"Requested development policy: parity or signed (F1 engine required)\",\"policy\",\"parity\"));\n    p.process(app);\n    try{\n        require(p.isSet(\"input\")&&p.isSet(\"output\")&&p.isSet(\"profile-root\")&&p.isSet(\"manifest\"),\"Need input, output, explicit profile-root and manifest\");\n        const auto source=QFileInfo(p.value(\"input\")).absoluteFilePath(),output=QFileInfo(p.value(\"output\")).absoluteFilePath();\n        const auto mode=p.value(\"development\");\n        require(mode==\"parity\"||mode==\"signed\",\"Unknown development policy\");\n        require(!QFile::exists(output)&&!QFile::exists(output+\".bin\"),\"Output exists\");\n        const auto sourceHash=hash(source),manifestHash=hash(p.value(\"manifest\"));\n        const auto profile=p.value(\"profile\");const auto profileHash=profile.isEmpty()?QString():hash(profile);\n        require(!p.isSet(\"capture-camera\")||!profile.isEmpty(),\"Camera inlet capture requires explicit DCP; no fabricated no-profile inlet\");\n        cv::setNumThreads(1);\n        RawDecoder::Options options;options.automaticWhiteBalance=false;options.profileDirectories=QStringList{p.value(\"profile-root\")};\n        options.dcpProfileOverride=profile;options.preferCameraNeutral=false;options.automaticLcpSelection=false;\n        options.lensCorrectionEnabled=false;options.chromaticAberrationEnabled=false;options.useNormalizationEnvironment=false;options.normalizationManifest=p.value(\"manifest\");\n        bool signedCapability=false;\n#ifdef IPR_BENCH_SIGNED_DEVELOPMENT\n        signedCapability=true;\n        options.signedDevelopment=mode==\"signed\";\n#else\n        require(mode!=\"signed\",\"This immutable reference predates the F1 signedDevelopment API; refusing to substitute A\");\n#endif\n        QString error;ImageMetadata metadata;QElapsedTimer timer;timer.start();\n        auto image=RawDecoder::decode(source,options,&metadata,&error);\n        const double elapsed=double(timer.nsecsElapsed())/1e6;const auto memory=peakBytes();\n        if(image.isNull())throw std::runtime_error((\"Decode failed: \"+error).toStdString());\n        require(image.linearRgba.type()==CV_32FC4&&cv::checkRange(image.linearRgba),\"Invalid working image\");\n        require(metadata.lensGeometryApplied==false&&metadata.lensVignettingApplied==false&&metadata.chromaticAberrationApplied==false,\"Unexpected optics\");\n        if(profile.isEmpty())require(metadata.dcpProfile.isEmpty()&&!image.dcpContext,\"Unexpected implicit DCP\");\n        else require(image.dcpContext&&hash(image.dcpContext->profilePath)==profileHash,\"Requested DCP not applied\");\n        QJsonObject full{{\"shape\",QJsonArray{image.linearRgba.rows,image.linearRgba.cols,4}},{\"dtype\",\"f32\"},{\"sha256\",imageHash(image.linearRgba)}};\n        QJsonObject camera;\n        if(p.isSet(\"capture-camera\")){\n            require(image.dcpContext&&!image.dcpContext->cameraRgb.empty(),\"Missing retained pre-DCP camera buffer\");\n            camera=cameraSummary(image.dcpContext->cameraRgb);\n            camera.insert(\"scope\",\"Actual retained CameraSignal input after optics/WB, before DCP; not inferred from working output\");\n        }\n        QFile binary(output+\".bin\");require(binary.open(QIODevice::WriteOnly|QIODevice::NewOnly),\"Cannot create pixels\");QJsonArray stages;\n        const quint16 endian=1;require(*reinterpret_cast<const unsigned char *>(&endian)==1,\"Float binary requires little-endian host\");\n        for(double f:{.2,.5,.8}){\n            const auto &m=image.linearRgba;const int x=(int(m.cols*f)-128)/2*2,y=(m.rows/2-128)/2*2;\n            require(x>=0&&y>=0&&x+256<=m.cols&&y+256<=m.rows,\"Image too small\");\n            const auto offset=binary.pos();for(int yy=0;yy<256;++yy){const char *row=reinterpret_cast<const char *>(m.ptr<float>(y+yy)+x*4);require(binary.write(row,256*4*4)==256*4*4,\"Incomplete capture\");}\n            QJsonObject context{{\"profile_sha256\",profileHash},{\"calibration_applied\",metadata.rawNormalizationApplied},{\"white\",int(metadata.normalizationWhiteLevel)},\n                {\"baseline_ev\",metadata.normalizationBaselineExposureEv},{\"profile_compensation_ev\",metadata.profileExposureCompensationEv}};\n            stages.append(QJsonObject{{\"stage\",\"working_rec2020\"},{\"dtype\",\"f32\"},{\"shape\",QJsonArray{256,256,4}},{\"offset_bytes\",double(offset)},\n                {\"stride_bytes\",256*4*4},{\"origin_yx\",QJsonArray{y,x}},{\"orientation\",\"display\"},{\"unit\",\"linear_rec2020_d65\"},{\"layout\",\"rgba\"},{\"context\",context}});\n        }\n        if(p.isSet(\"capture-camera\"))for(double f:{.2,.5,.8}){\n            const auto &m=image.dcpContext->cameraRgb;\n            const int x=(int(m.cols*f)-128)/2*2,y=(m.rows/2-128)/2*2;\n            require(x>=0&&y>=0&&x+256<=m.cols&&y+256<=m.rows,\"Camera image too small\");\n            const auto offset=binary.pos();\n            for(int yy=0;yy<256;++yy){const char *row=reinterpret_cast<const char *>(m.ptr<float>(y+yy)+x*3);require(binary.write(row,256*3*4)==256*3*4,\"Incomplete camera capture\");}\n            stages.append(QJsonObject{{\"stage\",\"pre_dcp_camera_rgb\"},{\"dtype\",\"f32\"},{\"shape\",QJsonArray{256,256,3}},{\"offset_bytes\",double(offset)},\n                {\"stride_bytes\",256*3*4},{\"origin_yx\",QJsonArray{y,x}},{\"orientation\",\"display\"},{\"unit\",\"linear_camera_white_1\"},{\"layout\",\"rgb\"},\n                {\"context\",QJsonObject{{\"profile_sha256\",profileHash},{\"calibration_applied\",metadata.rawNormalizationApplied},\n                    {\"white\",int(metadata.normalizationWhiteLevel)},{\"optics_applied\",false}}}});\n        }\n        binary.close();require(hash(source)==sourceHash&&hash(p.value(\"manifest\"))==manifestHash,\"Input changed during measurement\");\n        QJsonObject data{{\"schema_version\",1},{\"mode\",mode},{\"capabilities\",QJsonObject{{\"signed_development\",signedCapability}}},\n            {\"engine_revision\",IPR_ENGINE_REVISION},{\"measured_at_utc\",QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs)},\n            {\"source\",QJsonObject{{\"path\",source},{\"sha256\",sourceHash}}},{\"pixels\",QJsonObject{{\"path\",QFileInfo(binary.fileName()).fileName()},{\"sha256\",hash(binary.fileName())}}},\n            {\"stages\",stages},{\"full_image\",full},{\"decode_ms\",elapsed},{\"decode_peak_working_set_bytes\",double(memory)},{\"rcd_workers\",Demosaic::workerThreads()},{\"opencv_threads\",cv::getNumThreads()},\n            {\"manifest_sha256\",manifestHash},{\"profile_sha256\",profileHash},{\"metadata\",QJsonObject{{\"model\",metadata.cameraModel},{\"iso\",metadata.iso},{\"format\",metadata.format},\n                {\"profile\",metadata.dcpProfile},{\"normalization_applied\",metadata.rawNormalizationApplied},{\"white\",int(metadata.normalizationWhiteLevel)},\n                {\"baseline_ev\",metadata.normalizationBaselineExposureEv},{\"profile_compensation_ev\",metadata.profileExposureCompensationEv},{\"black_estimated\",metadata.opticalBlackLevelEstimated},\n                {\"white_balance_kelvin\",image.referenceWhiteBalanceKelvin.value_or(0.)},{\"development_warning\",metadata.developmentWarning}}}};\n        if(!camera.isEmpty())data.insert(\"full_camera\",camera);\n        QFile out(output);require(out.open(QIODevice::WriteOnly|QIODevice::NewOnly),\"Cannot create manifest\");auto bytes=QJsonDocument(data).toJson();require(out.write(bytes)==bytes.size(),\"Incomplete manifest\");\n        std::cout<<\"decode_ms=\"<<elapsed<<\" peak_bytes=\"<<memory<<\" revision=\"<<IPR_ENGINE_REVISION<<'\\n';\n    }catch(const std::exception &e){std::cerr<<e.what()<<'\\n';return 1;}return 0;\n}\n"
+    },
+    "tests/raw_bench/float_qualification.py": {
+      "sha256": "4d050e17833a100f8e764bac4d3f571b47c6bc1aee2c7e32fadc8d22b51a65ae",
+      "text": "\"\"\"F1 pre-DCP signed inlet checks. These do not qualify nonlinear DCP handling.\"\"\"\nimport numpy as np\nfrom capture import load_capture\n\n\ndef compare_module_inlet(decoder_capture, module_capture):\n    decoder, ds = load_capture(decoder_capture); module, ms = load_capture(module_capture)\n    if (decoder['source']['sha256'] != module['source']['sha256'] or\n            decoder['engine_revision'] != module['engine_revision'] or\n            decoder['mode'] != 'signed' or module['mode'] != 'signed'):\n        raise ValueError('Module/decoder source, revision or policy mismatch')\n    if module['metadata']['orientation_flip'] != 0:\n        return dict(verdict='not_compared_rotated_sparse_ROIs', reason='Sensor/display ROIs are different locations after rotation; no fabricated comparison')\n    dk = {origin for stage, origin in ds if stage == 'pre_dcp_camera_rgb'}\n    mk = {origin for stage, origin in ms if stage == 'pre_output_camera_rgb'}\n    if len(dk) != 3 or dk != mk:\n        raise ValueError('Module/decoder inlet ROI geometry mismatch')\n    rows = []\n    for origin in sorted(dk):\n        dd, actual = ds[('pre_dcp_camera_rgb', origin)]\n        md, expected = ms[('pre_output_camera_rgb', origin)]\n        if any(dd[k] != md[k] for k in ('shape', 'dtype', 'unit', 'layout')):\n            raise ValueError('Module/decoder domain mismatch')\n        if (not np.isfinite(actual).all() or not np.isfinite(expected).all() or\n                actual.tobytes() != expected.tobytes()):\n            raise ValueError('Signed module output changed before DCP inlet')\n        rows.append(dict(origin_yx=list(origin), bitwise_equal=True, values=int(actual.size)))\n    return dict(verdict='pass_exact_module_to_decoder_inlet', orientation_flip=0, rois=rows)\n\n\ndef qualify_inlet(path, require_negatives=False):\n    manifest, stages = load_capture(path)\n    summary = manifest.get('full_camera')\n    if not summary or summary.get('dtype') != 'f32' or summary.get('finite') is not True:\n        raise ValueError('Missing finite float32 camera inlet evidence')\n    shape = summary.get('shape', [])\n    if len(shape) != 3 or shape[-1] != 3 or any(type(v) != int or v <= 0 for v in shape):\n        raise ValueError('Invalid inlet geometry')\n    if summary.get('unit') != 'linear_camera_white_1' or summary.get('orientation') != 'display':\n        raise ValueError('Wrong camera inlet domain')\n    negatives = np.asarray(summary.get('negative_fraction'), dtype=float)\n    minima = np.asarray(summary.get('minimum'), dtype=float)\n    if negatives.shape != (3,) or minima.shape != (3,) or not np.isfinite([negatives, minima]).all():\n        raise ValueError('Incomplete inlet statistics')\n    if np.any(negatives < 0) or np.any(negatives > 1) or np.any((negatives > 0) != (minima < 0)):\n        raise ValueError('Inconsistent signed inlet statistics')\n    roi = [(key, desc, values) for key, (desc, values) in stages.items() if key[0] == 'pre_dcp_camera_rgb']\n    if len(roi) != 3:\n        raise ValueError('Expected three observed inlet ROIs')\n    rows = []\n    for key, desc, values in roi:\n        if (desc['dtype'] != 'f32' or desc['layout'] != 'rgb' or values.shape[-1] != 3 or\n                desc['unit'] != summary['unit'] or desc['orientation'] != summary['orientation'] or\n                not np.isfinite(values).all()):\n            raise ValueError('Invalid inlet ROI contract')\n        rows.append(dict(origin_yx=list(key[1]), minimum=values.min(axis=(0, 1)).tolist(),\n                         negative_fraction=np.mean(values < 0, axis=(0, 1)).tolist()))\n    # Negative presence is required only on black witnesses, never on every\n    # normally illuminated photo. Lack of negatives is not a generic failure.\n    if require_negatives and (not np.all(negatives > 0) or\n                              not all(all(v < 0 for v in row['minimum']) for row in rows)):\n        raise ValueError('Signed black witness lost negative values at DCP inlet')\n    return dict(verdict='pass_scoped_float_inlet', source=manifest['source'],\n                engine_revision=manifest['engine_revision'], full_camera=summary, rois=rows,\n                negative_witness_required=require_negatives,\n                limitations='Observed DCP inlet only; no proof of fully signed DCP tables/curves, CFA/no-profile inlet or absence of intermediate quantization from negative presence alone.')\n"
+    },
+    "tests/raw_bench/capture.py": {
+      "sha256": "e14d237a4ac86f7ac6a938cf6efc4efe98d200e6538d15e399d7f25c91c08425",
+      "text": "\"\"\"Versioned RAW bench captures and fail-closed stage comparisons (I3).\"\"\"\nimport argparse\nfrom datetime import datetime, timezone\nimport hashlib\nimport json\nfrom pathlib import Path\n\nimport numpy as np\n\nDTYPES={'u16':np.dtype('<u2'),'f32':np.dtype('<f4'),'f64':np.dtype('<f8')}\nREQUIRED=('unpacked_cfa','pre_demosaic_cfa','post_median_camera_rgb','working_rec2020')\n\n\ndef sha256(path):\n    h=hashlib.sha256()\n    with Path(path).open('rb') as f:\n        for block in iter(lambda:f.read(1024*1024),b''):h.update(block)\n    return h.hexdigest()\n\n\ndef load_capture(path):\n    path=Path(path);manifest=json.loads(path.read_text(encoding='utf-8'))\n    if manifest.get('schema_version')!=1 or not manifest.get('stages') or not manifest.get('source',{}).get('sha256'):\n        raise ValueError('Missing capture contract or unsupported schema')\n    pixels=Path(manifest['pixels']['path'])\n    if not pixels.is_absolute():pixels=path.parent/pixels\n    if sha256(pixels)!=manifest['pixels']['sha256']:raise ValueError('Capture pixel hash mismatch')\n    size=pixels.stat().st_size;stages={};extents=[]\n    with pixels.open('rb') as handle:\n        for stage in manifest['stages']:\n            shape=stage['shape'];dtype=DTYPES[stage['dtype']]\n            if len(shape)!=3 or any(type(n)!=int or n<=0 for n in shape):raise ValueError('Invalid stage shape')\n            offset=stage['offset_bytes'];count=int(np.prod(shape,dtype=object));nbytes=count*dtype.itemsize\n            if type(offset)!=int or offset<0 or offset%dtype.itemsize or offset+nbytes>size:raise ValueError('Invalid stage extent')\n            if stage['stride_bytes']!=shape[1]*shape[2]*dtype.itemsize:raise ValueError('Capture must be packed')\n            if any(offset<end and offset+nbytes>start for start,end in extents):raise ValueError('Overlapping stage extents')\n            extents.append((offset,offset+nbytes))\n            key=(stage['stage'],tuple(stage['origin_yx']))\n            if key in stages:raise ValueError('Duplicate stage/ROI')\n            for required in ('unit','layout','orientation','context'):\n                if required not in stage:raise ValueError('Incomplete stage descriptor')\n            handle.seek(offset);array=np.frombuffer(handle.read(nbytes),dtype=dtype).reshape(shape)\n            stages[key]=(stage,array)\n    return manifest,stages\n\n\ndef compare_captures(reference,candidate,required=REQUIRED,tolerances=None,purpose='parity'):\n    if purpose not in ('parity','measurement'):raise ValueError('Unknown comparison purpose')\n    tolerances=tolerances or {}\n    a,aa=load_capture(reference);b,bb=load_capture(candidate)\n    if a['source']['sha256']!=b['source']['sha256']:raise ValueError('Different RAW sources')\n    if purpose=='parity' and (a['mode']!='parity' or b['mode']!='parity'):raise ValueError('Signed mode cannot certify parity')\n    rows=[];missing=[];contract=[]\n    for name in required:\n        left={k for k in aa if k[0]==name};right={k for k in bb if k[0]==name}\n        if not left or not right or left!=right:missing.append(name)\n    for key in sorted(set(aa)|set(bb)):\n        if key[0] not in required:continue\n        if key not in aa or key not in bb:\n            missing.append(str(key));continue\n        sa,x=aa[key];sb,y=bb[key]\n        fields=('shape','dtype','origin_yx','layout','orientation','unit','context')\n        mismatch=[f for f in fields if sa[f]!=sb[f]]\n        if mismatch:\n            contract.append(dict(stage=key[0],origin_yx=list(key[1]),fields=mismatch));continue\n        finite=bool(np.isfinite(x).all() and np.isfinite(y).all())\n        row=dict(stage=key[0],origin_yx=list(key[1]),finite=finite,bitwise_equal=x.tobytes()==y.tobytes())\n        if finite:\n            tol=tolerances.get(key[0],{'atol':0.,'rtol':0.});atol=float(tol['atol']);rtol=float(tol['rtol'])\n            if not np.isfinite([atol,rtol]).all() or min(atol,rtol)<0:raise ValueError('Invalid tolerances')\n            if sa['dtype']=='u16' and (atol or rtol):raise ValueError('Integer boundaries require exact equality')\n            delta=x.astype(float)-y.astype(float);absolute=abs(delta)\n            row.update(max_abs=float(absolute.max()),mae=float(absolute.mean()),rmse=float(np.sqrt(np.mean(delta**2))),\n                unequal_values=int(np.count_nonzero(x!=y)),outside_tolerance=int(np.count_nonzero(absolute>atol+rtol*abs(x.astype(float)))),tolerance=tol,\n                reference_negative_fraction=float(np.mean(x<0)),candidate_negative_fraction=float(np.mean(y<0)),\n                reference_zero_fraction=float(np.mean(x==0)),candidate_zero_fraction=float(np.mean(y==0)),\n                reference_mean=x.mean(axis=(0,1),dtype=float).tolist(),candidate_mean=y.mean(axis=(0,1),dtype=float).tolist(),\n                reference_variance=x.var(axis=(0,1),dtype=float).tolist(),candidate_variance=y.var(axis=(0,1),dtype=float).tolist(),\n                reference_covariance=np.atleast_2d(np.cov(x.astype(float).reshape(-1,x.shape[-1]),rowvar=False)).tolist(),\n                candidate_covariance=np.atleast_2d(np.cov(y.astype(float).reshape(-1,y.shape[-1]),rowvar=False)).tolist())\n        rows.append(row)\n    valid=not missing and not contract and all(r['finite'] for r in rows)\n    passed=valid and all(r['outside_tolerance']==0 for r in rows)\n    return dict(schema_version=1,measured_at_utc=datetime.now(timezone.utc).isoformat(),purpose=purpose,\n        reference=dict(path=str(reference),sha256=sha256(reference)),candidate=dict(path=str(candidate),sha256=sha256(candidate)),\n        required_stages=list(required),uncompared_reference_stages=sorted({k[0] for k in aa if k[0] not in required}),\n        uncompared_candidate_stages=sorted({k[0] for k in bb if k[0] not in required}),\n        missing=missing,contract_mismatches=contract,stages=rows,\n        verdict=('pass' if passed else 'fail') if purpose=='parity' else ('measured_not_parity' if valid else 'invalid_measurement'))\n\n\ndef main():\n    p=argparse.ArgumentParser(description=__doc__);p.add_argument('reference',type=Path);p.add_argument('candidate',type=Path)\n    p.add_argument('--output',type=Path,required=True);p.add_argument('--require-stage',action='append');p.add_argument('--tolerances',type=Path)\n    p.add_argument('--purpose',choices=('parity','measurement'),default='parity');args=p.parse_args()\n    result=compare_captures(args.reference,args.candidate,args.require_stage or REQUIRED,\n        json.loads(args.tolerances.read_text(encoding='utf-8')) if args.tolerances else None,args.purpose)\n    with args.output.open('x',encoding='utf-8') as f:json.dump(result,f,ensure_ascii=False,indent=2,allow_nan=False)\n    print(result['verdict'])\n    return 0 if result['verdict'] in ('pass','measured_not_parity') else 1\n\n\nif __name__=='__main__':raise SystemExit(main())\n"
+    }
+  },
+  "scope": "Three Canon models; 12 decodes A/B with/without DCP. A full master/metadata against C3, B finite master and actual signed DCP inlet; 9153 overshoot above1 required. No optics/noise benefit or nonlinear DCP range qualification."
+}

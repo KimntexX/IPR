@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "created_utc": "2026-10-31T13:45:11Z",
+  "revision": "200d28b",
+  "study": "B4 training corpus gap assessment and acquisition proposal, not a training or quality benchmark",
+  "historical_evidence": {
+    "path": "docs/validation/raw/cfa-corpus-inventory-v001-20261030T122935Z.json",
+    "sha256_bytes": "c7409fa7c885a2a211c932f721c6698ea6aae2de66dd7d610b2e39cdceaa7eda",
+    "metadata_inherited_not_reextracted": true,
+    "model_counts": {"Canon EOS R6 Mark III": 179},
+    "illuminated_burst": {"frames": 42, "iso": 4000, "independent_scenes_not_inferred_from_frame_count": true},
+    "confirmed_dark_iso_frame_counts": {"1600": 13, "3200": 11, "6400": 12, "12800": 9, "25600": 10, "51200": 10},
+    "unclassified_files_in_that_inventory": 12,
+    "no_claim_that_current_black_folder_is_fully_qualified": true
+  },
+  "storage_size_sample": {
+    "method": "File sizes only, RAW files directly at main-worktree tests/image/base root",
+    "cr3": {"files": 14, "median_bytes": 38026452, "min_bytes": 22877396, "max_bytes": 55460186},
+    "cr2": {"files": 14, "median_bytes": 23806981, "min_bytes": 22170308, "max_bytes": 29724921},
+    "pilot_192_raw_estimate_bytes_from_cr3_median": 7301078784,
+    "initial_768_raw_estimate_bytes_from_cr3_median": 29204315136,
+    "these_are_not_storage_reservations_or_prediction_of_future_raw_sizes": true
+  },
+  "moon_candidate": {
+    "user_statement": "Moon bursts captured last night, on tripod, available on SD card D:",
+    "directory": "D:/DCIM/101EOSR6",
+    "method": "Filename, size and filesystem write-time listing; no EXIF extraction or RAW demosaic",
+    "files": 115,
+    "groups_by_filesystem_write_minute_not_proven_burst_boundaries": [
+      {"minute_local": "2026-10-30 22:44", "first": "6V1A0016.CR3", "last": "6V1A0049.CR3", "count": 34, "bytes": 859809832},
+      {"minute_local": "2026-10-30 22:46", "first": "6V1A0050.CR3", "last": "6V1A0087.CR3", "count": 38, "bytes": 823756664},
+      {"minute_local": "2026-10-30 22:47", "first": "6V1A0088.CR3", "last": "6V1A0130.CR3", "count": 43, "bytes": 933790620}
+    ],
+    "preview_checked": "6V1A0016.CR3 embedded JPEG, reduced in memory for inspection; shows Moon against dark sky",
+    "all_files_subject_or_settings_verified": false,
+    "proposed_role": "Exploratory detail/halo/noise validation, not paired-clean training truth and not a sealed holdout",
+    "copied_or_modified": false,
+    "pixel_metrics": null,
+    "risks": ["lunar drift", "atmospheric variations", "vibration", "clipping", "exposure changes", "filename collisions with existing corpus"]
+  },
+  "proposed_capture_not_executed": {
+    "first_camera": "Canon EOS R6 Mark III",
+    "pilot_scenes": 3,
+    "per_scene": {"low_iso_reference_frames": 16, "noisy_frames_per_iso": 16, "noisy_iso": [3200, 12800, 51200]},
+    "pilot_frames": 192,
+    "provisional_expansion": {"independent_scenes": 12, "development_scenes": 8, "validation_scenes": 2, "sealed_test_scenes": 2, "frames": 768},
+    "full_training_or_cross_camera_sufficiency_claimed": false,
+    "secondary_camera": "60D phase deferred; ISO and RAW-specific acquisition to be specified separately"
+  },
+  "public_sources_reviewed_not_downloaded": [
+    {"name": "SIDD", "url": "https://abdokamel.github.io/sidd/", "declared_dataset_license": "MIT", "role": "Public noisy/reference pairs; smartphone domain and normalized RAW do not qualify Canon signed data"},
+    {"name": "raw.pixls.us", "url": "https://raw.pixls.us/", "license_rule": "Verify CC0 on each selected file; historical non-CC0 items exist", "role": "Scene and format diversity, not paired-clean noise truth"},
+    {"name": "RENOIR", "url": "https://ani.stat.fsu.edu/~abarbu/Renoir.html", "license_status": "Dataset reuse terms not established in this review", "role": "Canon paired-data candidate pending rights review"},
+    {"name": "ELD", "url": "https://github.com/Vandermode/ELD", "license_status": "Code MIT; dataset described as evaluation only", "role": "Not proposed as training corpus without further clarification"},
+    {"name": "MIT-Adobe FiveK", "url": "https://data.csail.mit.edu/graphics/fivek/", "license_status": "Research licenses explicitly limit commercial-purpose use", "role": "Not selected as unrestricted training foundation"},
+    {"name": "HDR+", "url": "https://hdrplusdata.org/dataset.html", "declared_dataset_license": "CC-BY-SA", "role": "Possible later burst/stacking study; no blanket weight-rights clearance", "published_subset_gib": 37, "published_full_gib": 765}
+  ],
+  "ssd": {"user_reported_capacity_gb": 500, "not_formatted_or_mounted_by_assistant": true, "measured_free_space": null},
+  "limitations": [
+    "Historical metadata does not replace a fresh per-series audit; camera, ISO and burst boundaries of moon files remain unverified.",
+    "A tripod does not make lunar frames identical or guarantee an unbiased temporal mean.",
+    "Proposed counts are a staged pilot plan, not a demonstrated minimum for training a robust network.",
+    "No corpus downloaded, copied, deleted, trained or exported; no SSD action.",
+    "Web research used public dataset/license queries, not user photographs or local metadata."
+  ]
+}

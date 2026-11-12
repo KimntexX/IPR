@@ -1,0 +1,552 @@
+{
+  "schema_version": 1,
+  "measured_at_utc": "2026-10-28T16:23:54.135771+00:00",
+  "freeze": {
+    "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\gel-banc-raw-entree-dcp-reference-v001-20261028T162257Z.json",
+    "sha256": "6e3bba8556f8a32a9d6a959ae07e69498ab90ba11ad41399f31a905b6a5353ef"
+  },
+  "records": [
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0043.CR3",
+      "capture": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\float-reference\\20261028T162257Z\\00-6V1A0043.json",
+        "sha256": "efe5c208e3242ec0798c43418b5ae13dd67338782f8a6f39c70e5a832894b681"
+      },
+      "inlet": {
+        "verdict": "pass_scoped_float_inlet",
+        "source": {
+          "path": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0043.CR3",
+          "sha256": "403fc63b37987862c8fc30735bdb9c5c1f793758ed6c46fe13f02f5d4b5a4bfe"
+        },
+        "engine_revision": "ee8f26d4af6e2b3c4edaf71ca62951c13f0187c2",
+        "full_camera": {
+          "dtype": "f32",
+          "finite": true,
+          "maximum": [
+            1,
+            1,
+            1
+          ],
+          "mean": [
+            0.017055501109123457,
+            0.014762845508458095,
+            0.010576499469565258
+          ],
+          "minimum": [
+            0,
+            0,
+            0
+          ],
+          "negative_fraction": [
+            0,
+            0,
+            0
+          ],
+          "orientation": "display",
+          "scope": "Actual retained CameraSignal input after optics/WB, before DCP; not inferred from working output",
+          "sha256": "746d4f08b720344c8fa082bf7710caf715ac0ee937f5a5e9d9eefc51dd1b590c",
+          "shape": [
+            4639,
+            6959,
+            3
+          ],
+          "unit": "linear_camera_white_1",
+          "zero_fraction": [
+            3.097624645395547e-08,
+            5.265961897172429e-07,
+            0.00012220129226085433
+          ]
+        },
+        "rois": [
+          {
+            "origin_yx": [
+              2190,
+              1262
+            ],
+            "minimum": [
+              0.003616388188675046,
+              0.0042267488315701485,
+              0.0006408789195120335
+            ],
+            "negative_fraction": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "origin_yx": [
+              2190,
+              3350
+            ],
+            "minimum": [
+              0.0030518043786287308,
+              0.0006561379414051771,
+              0.0005645838100463152
+            ],
+            "negative_fraction": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "origin_yx": [
+              2190,
+              5438
+            ],
+            "minimum": [
+              0.001632715342566371,
+              0.0008087281603366137,
+              0.00038147554732859135
+            ],
+            "negative_fraction": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        ],
+        "negative_witness_required": false,
+        "limitations": "Observed DCP inlet only; no proof of fully signed DCP tables/curves, CFA/no-profile inlet or absence of intermediate quantization from negative presence alone."
+      },
+      "full_working_image_unchanged": true,
+      "decode_ms": 5967.603,
+      "peak_bytes": 1899687936
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\7Y6A7599.CR3",
+      "capture": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\float-reference\\20261028T162257Z\\01-7Y6A7599.json",
+        "sha256": "f9e47e1757747f94fdea58e3b12ecb6ec34df787c092cae96ed12654001ac48b"
+      },
+      "inlet": {
+        "verdict": "pass_scoped_float_inlet",
+        "source": {
+          "path": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/7Y6A7599.CR3",
+          "sha256": "9c1426494accc3fb6efa2c5b0f8c7c4faac70d65fa9a26721f1de86d011f078e"
+        },
+        "engine_revision": "ee8f26d4af6e2b3c4edaf71ca62951c13f0187c2",
+        "full_camera": {
+          "dtype": "f32",
+          "finite": true,
+          "maximum": [
+            1,
+            1,
+            1
+          ],
+          "mean": [
+            0.2553362821537017,
+            0.17584132248806708,
+            0.10604481757790424
+          ],
+          "minimum": [
+            0,
+            0,
+            0
+          ],
+          "negative_fraction": [
+            0,
+            0,
+            0
+          ],
+          "orientation": "display",
+          "scope": "Actual retained CameraSignal input after optics/WB, before DCP; not inferred from working output",
+          "sha256": "c72ac0a0f55e8b4999de1a7b7d5c0687c3a5a425e40b9b8dafbc9132e483ff3e",
+          "shape": [
+            4660,
+            6984,
+            3
+          ],
+          "unit": "linear_camera_white_1",
+          "zero_fraction": [
+            0.014857196584221938,
+            0.030134390562856116,
+            0.04764437045558456
+          ]
+        },
+        "rois": [
+          {
+            "origin_yx": [
+              2202,
+              1268
+            ],
+            "minimum": [
+              0.21878385543823242,
+              0.11815060675144196,
+              0.0
+            ],
+            "negative_fraction": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "origin_yx": [
+              2202,
+              3364
+            ],
+            "minimum": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "negative_fraction": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "origin_yx": [
+              2202,
+              5458
+            ],
+            "minimum": [
+              0.05239948257803917,
+              0.0,
+              0.0
+            ],
+            "negative_fraction": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        ],
+        "negative_witness_required": false,
+        "limitations": "Observed DCP inlet only; no proof of fully signed DCP tables/curves, CFA/no-profile inlet or absence of intermediate quantization from negative presence alone."
+      },
+      "full_working_image_unchanged": true,
+      "decode_ms": 7763.853,
+      "peak_bytes": 1911861248
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_3135.CR2",
+      "capture": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\float-reference\\20261028T162257Z\\02-IMG_3135.json",
+        "sha256": "d455fb7473f226a05ee4f3bb87b8d7e71ad86aec6a407a23a646a17b322467c6"
+      },
+      "inlet": {
+        "verdict": "pass_scoped_float_inlet",
+        "source": {
+          "path": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/IMG_3135.CR2",
+          "sha256": "7bf4440bcdafc359762d0db40e92dcbf1948886b6aa3ca250cecb96496309165"
+        },
+        "engine_revision": "ee8f26d4af6e2b3c4edaf71ca62951c13f0187c2",
+        "full_camera": {
+          "dtype": "f32",
+          "finite": true,
+          "maximum": [
+            1,
+            1,
+            1
+          ],
+          "mean": [
+            0.1549031924884491,
+            0.13328217621451013,
+            0.1009853690997738
+          ],
+          "minimum": [
+            0.00862134713679552,
+            0.007080186158418655,
+            0.007049668114632368
+          ],
+          "negative_fraction": [
+            0,
+            0,
+            0
+          ],
+          "orientation": "display",
+          "scope": "Actual retained CameraSignal input after optics/WB, before DCP; not inferred from working output",
+          "sha256": "b37f132a82ea025b08a073c7cb6b083bec1694f1647383b8ce0954432b3f41b1",
+          "shape": [
+            3464,
+            5202,
+            3
+          ],
+          "unit": "linear_camera_white_1",
+          "zero_fraction": [
+            0,
+            0,
+            0
+          ]
+        },
+        "rois": [
+          {
+            "origin_yx": [
+              1604,
+              912
+            ],
+            "minimum": [
+              0.00862134713679552,
+              0.00860608834773302,
+              0.010894941166043282
+            ],
+            "negative_fraction": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "origin_yx": [
+              1604,
+              2472
+            ],
+            "minimum": [
+              0.010605020448565483,
+              0.007080186158418655,
+              0.007049668114632368
+            ],
+            "negative_fraction": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "origin_yx": [
+              1604,
+              4032
+            ],
+            "minimum": [
+              0.04074158892035484,
+              0.03041123040020466,
+              0.023361561819911003
+            ],
+            "negative_fraction": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        ],
+        "negative_witness_required": false,
+        "limitations": "Observed DCP inlet only; no proof of fully signed DCP tables/curves, CFA/no-profile inlet or absence of intermediate quantization from negative presence alone."
+      },
+      "full_working_image_unchanged": true,
+      "decode_ms": 3134.1289,
+      "peak_bytes": 1068527616
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0003.CR3",
+      "capture": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\float-reference\\20261028T162257Z\\03-6V1A0003.json",
+        "sha256": "1de7f1d31ab5b57590350a5fc595c45b0a22881ed2e992d3f4aa669c3e669c23"
+      },
+      "inlet": {
+        "verdict": "pass_scoped_float_inlet",
+        "source": {
+          "path": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/colorimétrie/protocole/blacks/6V1A0003.CR3",
+          "sha256": "172231741d16ea44e6bc0f509d39a9d6482aa52dbab2eea0246e06d125668b6e"
+        },
+        "engine_revision": "ee8f26d4af6e2b3c4edaf71ca62951c13f0187c2",
+        "full_camera": {
+          "dtype": "f32",
+          "finite": true,
+          "maximum": [
+            0.18112458288669586,
+            0.18197908997535706,
+            0.34233614802360535
+          ],
+          "mean": [
+            0.00034430436733313686,
+            0.0002089787998982434,
+            0.00034291204094765625
+          ],
+          "minimum": [
+            0,
+            0,
+            0
+          ],
+          "negative_fraction": [
+            0,
+            0,
+            0
+          ],
+          "orientation": "display",
+          "scope": "Actual retained CameraSignal input after optics/WB, before DCP; not inferred from working output",
+          "sha256": "8c1c4fe90c7c17521180c3791436e9945d2fd74d981db0ecc09e100107d95ef6",
+          "shape": [
+            4639,
+            6959,
+            3
+          ],
+          "unit": "linear_camera_white_1",
+          "zero_fraction": [
+            0.13657616016652335,
+            0.37071597349932556,
+            0.14008208271642847
+          ]
+        },
+        "rois": [
+          {
+            "origin_yx": [
+              2190,
+              1262
+            ],
+            "minimum": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "negative_fraction": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "origin_yx": [
+              2190,
+              3350
+            ],
+            "minimum": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "negative_fraction": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "origin_yx": [
+              2190,
+              5438
+            ],
+            "minimum": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "negative_fraction": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        ],
+        "negative_witness_required": false,
+        "limitations": "Observed DCP inlet only; no proof of fully signed DCP tables/curves, CFA/no-profile inlet or absence of intermediate quantization from negative presence alone."
+      },
+      "full_working_image_unchanged": true,
+      "decode_ms": 5294.3408,
+      "peak_bytes": 1897943040
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9950.CR3",
+      "capture": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\float-reference\\20261028T162257Z\\04-6V1A9950.json",
+        "sha256": "1706e97ac5ab4ec8e1bfeec74eec735721e513c8bb7594476d794c1e51fe07a0"
+      },
+      "inlet": {
+        "verdict": "pass_scoped_float_inlet",
+        "source": {
+          "path": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/colorimétrie/protocole/blacks/6V1A9950.CR3",
+          "sha256": "8f7eba49f50e1cc2e1c4b892053a238ec82063408337670810eeb0cd4f9b9b16"
+        },
+        "engine_revision": "ee8f26d4af6e2b3c4edaf71ca62951c13f0187c2",
+        "full_camera": {
+          "dtype": "f32",
+          "finite": true,
+          "maximum": [
+            0.1573205143213272,
+            0.0960708037018776,
+            0.17747768759727478
+          ],
+          "mean": [
+            0.009833670156005786,
+            0.006446946785435005,
+            0.009682391138199237
+          ],
+          "minimum": [
+            0,
+            0,
+            0
+          ],
+          "negative_fraction": [
+            0,
+            0,
+            0
+          ],
+          "orientation": "display",
+          "scope": "Actual retained CameraSignal input after optics/WB, before DCP; not inferred from working output",
+          "sha256": "9320f077c0fb44b0cb76c202ffdbbadb4b18a78ff0d11603cf212f73d3d6b078",
+          "shape": [
+            4639,
+            6959,
+            3
+          ],
+          "unit": "linear_camera_white_1",
+          "zero_fraction": [
+            0.13797297204787157,
+            0.3184436195607686,
+            0.14161562374962444
+          ]
+        },
+        "rois": [
+          {
+            "origin_yx": [
+              2190,
+              1262
+            ],
+            "minimum": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "negative_fraction": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "origin_yx": [
+              2190,
+              3350
+            ],
+            "minimum": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "negative_fraction": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "origin_yx": [
+              2190,
+              5438
+            ],
+            "minimum": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "negative_fraction": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        ],
+        "negative_witness_required": false,
+        "limitations": "Observed DCP inlet only; no proof of fully signed DCP tables/curves, CFA/no-profile inlet or absence of intermediate quantization from negative presence alone."
+      },
+      "full_working_image_unchanged": true,
+      "decode_ms": 6854.522,
+      "peak_bytes": 1897410560
+    }
+  ],
+  "verdict": "pass_reference_probe_not_F1",
+  "limitations": "Only A reference. No F1, B, no-profile inlet, optics or nonlinear-DCP signed behavior validation."
+}

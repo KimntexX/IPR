@@ -28,13 +28,13 @@ class SelectionTests(unittest.TestCase):
     def test_tone_recovery_selects_production_and_export_regressions(self):
         plan = build.select_tests(["src/core/ToneRecovery.h"], RULES)
         self.assertFalse(plan["full"])
-        self.assertEqual(set(plan["tests"]), {"toneRecoveryTests", "imageExportTests"})
+        self.assertEqual(set(plan["tests"]), {"toneRecoveryTests", "localValuesTests", "imageExportTests"})
         self.assertIn("toneRecoveryTests", build.select_tests(["src/editor/imageeditor.cpp"], RULES)["tests"])
 
     def test_generator_is_targeted_and_registered(self):
         plan = build.select_tests(["src/tools/generate_test_images.cpp"], RULES)
         self.assertFalse(plan["full"])
-        self.assertEqual(set(plan["tests"]), {"testImageGeneratorTests", "imageExportTests"})
+        self.assertEqual(set(plan["tests"]), {"testImageGeneratorTests", "imageExportTests", "parallelJobsTests"})
         isolated = build.select_tests(["tests/test_image_generator_test.cpp"], RULES)
         self.assertEqual(isolated["targets"], ["testImageGeneratorTests"])
 
@@ -50,8 +50,7 @@ class SelectionTests(unittest.TestCase):
     def test_detail_processing_selects_native_regressions_and_noise_analysis(self):
         plan = build.select_tests(["src/core/DetailProcessing.cpp"], RULES)
         self.assertFalse(plan["full"])
-        self.assertEqual(set(plan["tests"]), {"detailProcessingTests", "noiseEstimationTests", "editorNoiseTests",
-                                             "settingsQmlTests", "editorLifecycleTests", "colorPipelineTests", "imageExportTests"})
+        self.assertEqual(set(plan["tests"]), {"detailProcessingTests", "localValuesTests", "colorPipelineTests", "imageExportTests"})
         self.assertEqual(plan["python"], ["noise_analysis"])
         isolated = build.select_tests(["tests/detail_processing_test.cpp"], RULES)
         self.assertEqual(isolated["tests"], ["detailProcessingTests"])

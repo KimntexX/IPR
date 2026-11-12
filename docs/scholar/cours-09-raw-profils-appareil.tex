@@ -4,7 +4,7 @@
 \coursmeta{3 octobre 2026}{Approche appareil utilisée en amont du moteur de rendu éditable.}
 
 \section{Du capteur à l'image}
-Un RAW enregistre des mesures photosite par photosite derrière une mosaïque colorée, typiquement Bayer. Il faut soustraire le niveau noir, normaliser par le niveau blanc, estimer la balance des blancs, dématricer et transformer l'espace caméra vers un espace de travail. \IPR{} délègue le décodage et le dématriçage à LibRaw~\cite{libraw}; l'application reçoit une image RGB 16~bits linéaire puis la convertit en flottants.
+Un RAW mosaïqué enregistre des mesures photosite par photosite derrière une mosaïque colorée, typiquement Bayer ; certains RAW linéaires contiennent déjà des données dématricées. Il faut soustraire le niveau noir, normaliser par le niveau blanc, estimer la balance des blancs, dématricer et transformer l'espace caméra vers un espace de travail. \IPR{} délègue le décodage et le dématriçage à LibRaw~\cite{libraw}; l'application reçoit une image RGB 16~bits linéaire puis la convertit en flottants.
 
 \section{Balance de prise de vue}
 Les multiplicateurs \texttt{cam\_mul} de LibRaw représentent la balance mesurée ou choisie lors de la prise de vue. La matrice \texttt{cam\_xyz} exprime $RGB_{cam}=M\,XYZ$; retrouver un blanc XYZ demande donc $M^{-1}RGB_{cam}$. Cette inversion est essentielle : employer $M$ directement inverse le sens du modèle et donne une température quasi constante par appareil.
@@ -16,7 +16,7 @@ Un DCP est un conteneur TIFF décrivant notamment une ou deux matrices caméra--
 Un LCP décrit des modèles optiques dépendant de focale, ouverture et distance. Les corrections principales sont la distorsion radiale/tangentielle et le vignetage. Pour une coordonnée normalisée de rayon $r$, une distorsion radiale s'exprime souvent sous forme polynomiale $r'=r(1+k_1r^2+k_2r^4+\cdots)$. \IPR{} sélectionne le modèle le plus proche des métadonnées de prise de vue et interpole les modèles voisins si nécessaire.
 
 \section{Exemple}
-À l'ouverture d'un CR3, le moteur cherche d'abord les profils dans l'index local \path{profiles/index.json}. S'il trouve un DCP, LibRaw livre l'espace caméra, LCP corrige la géométrie et DCP produit le RGB linéaire de travail. Sans DCP, LibRaw fournit directement sa matrice couleur vers sRGB linéaire.
+À l'ouverture d'un CR3, le moteur cherche d'abord les profils dans l'index local \path{profiles/index.json}. S'il trouve un DCP, LibRaw livre l'espace caméra, LCP corrige la géométrie et DCP produit le RGB linéaire de travail. Sans DCP, LibRaw fournit sa matrice couleur vers sRGB linéaire ; ce résultat est ensuite converti vers le master commun Rec.~2020 D65. Les matrices et tables DCP rejoignent elles aussi ce master après leur domaine ProPhoto. Relecture : 22 octobre 2026.
 
 \resultat{Le RAW n'est pas encore une photographie RGB; profils et dématriçage déterminent la base sur laquelle tous les réglages ultérieurs opèrent.}
 \bibliographystyle{plain}\bibliography{references}

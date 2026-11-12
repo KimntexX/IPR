@@ -1,5 +1,6 @@
 #include "TestRecipes.h"
 #include "SystemMemory.h"
+#include "ParallelJobs.h"
 
 #include <QCoreApplication>
 #include <QDir>
@@ -61,7 +62,7 @@ void write(const LoadResult &source, const Settings &settings, const QString &pa
 {
     require(!QFileInfo::exists(path) && !QFileInfo(path).isSymLink(), "Output already exists: " + path);
     QStorageInfo disk(QFileInfo(path).absolutePath());
-    const qint64 needed = qint64(source.image.linearRgba.cols) * source.image.linearRgba.rows * 6
+    const qint64 needed = qint64(source.image.linearRgba.width()) * source.image.linearRgba.height() * 6
         + 512LL * 1024 * 1024;
     require(!disk.isValid() || disk.bytesAvailable() < 0 || disk.bytesAvailable() >= needed,
             "Not enough disk space (512 MiB reserve); stopped without deleting files.");
@@ -97,30 +98,6 @@ int workerCount(quint64 pixels, quint64 *freeBytes)
     return std::clamp(std::min(byMemory, byCores), 1, 4);
 }
 
-// Runs jobs on `workers` threads; the first failure stops new jobs and is
-// rethrown once running ones have finished (no file is deleted).
-void runParallel(const std::vector<std::function<void()>> &jobs, int workers)
-{
-    std::atomic<size_t> next{0};
-    std::atomic<bool> failed{false};
-    std::exception_ptr error;
-    std::mutex errorLock;
-    const auto work = [&] {
-        for (size_t i = 0; !failed && (i = next++) < jobs.size();) {
-            try { jobs[i](); }
-            catch (...) {
-                const std::lock_guard<std::mutex> guard(errorLock);
-                if (!error) error = std::current_exception();
-                failed = true;
-            }
-        }
-    };
-    std::vector<std::thread> threads;
-    for (int t = 1; t < workers; ++t) threads.emplace_back(work);
-    work();
-    for (auto &thread : threads) thread.join();
-    if (error) std::rethrow_exception(error);
-}
 } // namespace
 
 int main(int argc, char **argv)
@@ -174,7 +151,7 @@ int main(int argc, char **argv)
             qint64 count = 1; // neutral
             for (const Feature &feature : selected)
                 if (eligible(feature.name, input.filePath())) count += feature.values.size();
-            estimate += count * (qint64(probe.image.linearRgba.cols) * probe.image.linearRgba.rows * 7 + 65536);
+            estimate += count * (qint64(probe.image.linearRgba.width()) * probe.image.linearRgba.height() * 7 + 65536);
         }
         out << "Estimated storage incl. safety margin: " << estimate / (1024 * 1024)
             << " MiB (optical geometry/metadata can vary; checked again per image)." << Qt::endl;
@@ -235,11 +212,11 @@ int main(int argc, char **argv)
                 }
             }
             quint64 freeBytes = 0;
-            const int workers = workerCount(quint64(loaded.image.linearRgba.total()), &freeBytes);
+            const int workers = workerCount(quint64(loaded.image.linearRgba.width()) * quint64(loaded.image.linearRgba.height()), &freeBytes);
             out << "Parallel renders: " << workers << " (free memory " << freeBytes / (1024 * 1024)
                 << " MiB, 2 GiB reserve)" << Qt::endl;
-            runParallel(parallel, workers);
-            runParallel(sequential, 1);
+            ParallelJobs::run(parallel, workers);
+            ParallelJobs::run(sequential, 1);
         }
         out << "Complete. Only TIFF images written; remove them manually after analysis." << Qt::endl;
         return 0;

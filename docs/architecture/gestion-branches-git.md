@@ -18,13 +18,15 @@ branche permanente issue de `dev` : la branche existante `patch_light` suit les
 Lumières (exposition, contraste, ombres, noirs, blancs et hautes lumières).
 `patch_color` suit la couleur, `patch_ci_cd` l'intégration/livraison continue
 et `patch_documentation` la documentation ; ces branches existent et sont
-conservées après intégration. Un prochain groupe pourra utiliser un nom tel
-que `patch_noise`, qui reste ici un exemple et non une branche annoncée créée.
+conservées après intégration. `patch_noise` et `patch_ui` existent également
+(relecture du 22 octobre 2026). Leur existence ne signifie pas que tous leurs
+travaux locaux sont livrés dans `dev`.
 
 Depuis le 14 octobre 2026, `patch_raw_opening` est la branche locale dédiée
-au rendu initial RAW/base colorimétrique, créée depuis `dev`. Le prototype
-Couleur non validé reste sauvegardé sur `patch_color` (commit `8abcd12`),
-sans fusion dans `dev` ni publication implicite.
+au rendu initial RAW/base colorimétrique, créée depuis `dev`. Le point de sauvegarde
+Couleur du 14 octobre est `8abcd12` ; il ne désigne pas la tête courante de
+`patch_color`. Vérifier les références Git avant chaque reprise, sans déduire
+une livraison des travaux récents de ce seul repère historique.
 
 Le 21 octobre 2026, `patch_color` reprend le travail Couleur après fusion de
 `dev` à jour. L'ancienne branche locale `patch_couleur`, au nom non uniforme et
@@ -37,6 +39,16 @@ figés. `main` reste distinct et sa mise à jour nécessite une livraison explic
 
 ## Créer ou reprendre un groupe
 
+Convention adoptée le 12 octobre 2026 : **noms de branches en anglais par
+défaut**, y compris le groupe après le préfixe `patch_`. Par exemple :
+`patch_color`, `patch_light`, `patch_noise`, `patch_documentation`.
+Le groupe Couleur utilise `patch_color` ; `patch_couleur` est une ancienne
+branche locale, pas une seconde branche de travail à reprendre.
+Vérifier l'existence d'une branche avant d'en créer une autre pour le même
+groupe. Les branches historiques ne sont pas renommées ni supprimées
+automatiquement ; un tel changement nécessite un accord explicite et ne
+doit pas réécrire l'historique publié.
+
 Exécuter les commandes avec un état de travail compatible avec le changement de
 branche. Préserver les modifications locales sans rapport avec le groupe ; ne
 pas les ajouter automatiquement ni les effacer.
@@ -46,8 +58,8 @@ Pour un nouveau groupe, actualiser `dev`, puis créer sa branche :
 ```bash
 git switch dev
 git pull --ff-only origin dev
-git switch -c patch_nom_du_groupe
-git push -u origin patch_nom_du_groupe
+git switch -c patch_feature_group
+git push -u origin patch_feature_group
 ```
 
 Pour reprendre un groupe existant, actualiser `dev`, puis fusionner celle-ci dans
@@ -70,16 +82,21 @@ Les commits propres à la branche distante `dev` doivent aussi être conservés.
 
 ### Versions de prototypage
 
-Règle précisée le 11 octobre 2026 : le projet est en alpha. Les prochaines
-fusions validées dans `dev` sont identifiées par `v0.1.X-alpha`. Le compteur
-`X` augmente du nombre de patchs livrés, et non du nombre de commits. Examiner
-les tags existants et identifier les patchs de la livraison avant de choisir
-le prochain numéro ; ne pas créer de tag sur une fusion non validée.
+Règle précisée le 2 novembre 2026 : le projet est en bêta, sur décision de
+l'utilisateur, avec des limites connues suivies par la
+[matrice de validation](../validation/matrice-validation.md) et les issues
+([bilan du passage](socle-edition-b0.md#b05--passage-en-bêta-2-novembre-2026)).
+Les fusions validées dans `dev` sont identifiées par `v0.Y.X-beta`.
 
-Après validation de toutes les fonctionnalités de réglages implémentées, la
-première série beta utilise `v0.2.X-beta`. La version mineure évolue ensuite
-à chaque intégration d'un autre panneau de fonctionnalités : `v0.3.X-beta`,
-`v0.4.X-beta`, etc.
+La version mineure `Y` part de 2 et évolue à chaque intégration d'un autre
+panneau de fonctionnalités : `v0.3.X-beta`, `v0.4.X-beta`, etc. Un lot technique
+interne ne la fait pas monter.
+
+Le compteur `X` augmente du nombre de patchs livrés, et non du nombre de commits.
+Il continue depuis l'alpha et ne revient pas à zéro quand la mineure monte :
+`v0.1.92-alpha`, puis `v0.2.97-beta` avec cinq patchs. Examiner les tags existants
+et identifier les patchs de la livraison avant de choisir le prochain numéro ; ne
+pas créer de tag sur une fusion non validée.
 
 Le passage en version stable **`v1.Y.X`** intervient après validation de tous
 les panneaux de fonctionnalités sur les boîtiers que l'utilisateur possède
@@ -94,7 +111,8 @@ Poser le tag de version sur le commit de fusion validé de `dev` ; publier ce
 tag seulement dans le cadre d'une livraison autorisée. Cette règle documentaire
 ne crée pas elle-même de tag et n'autorise aucune fusion ou publication.
 
-Pendant le prototypage, aucun legacy n'est conservé, même dans les tests.
+Pendant le prototypage (alpha et bêta), aucun legacy n'est conservé, même dans
+les tests.
 Un remplacement supprime l'ancienne implémentation, ses options de compatibilité
 et les tests qui ne concernent que celle-ci ; les tests de l'implémentation
 courante sont maintenus. L'historique Git et les preuves d'analyse JSON restent
@@ -121,6 +139,28 @@ prochaine évolution, reprendre cette même branche et y intégrer `dev` à jour
 Ne pas utiliser de squash, de rebase de commits publiés ou de push forcé : le
 graphe des fusions sert de suivi par arborescence. Les tags de validation ne sont
 ni déplacés ni réutilisés.
+
+### Promotion vers `main` et release
+
+Règle du 1er novembre 2026 : `main` ne porte que le code de production et la
+documentation ; `dev` n'y est pas fusionnée. Après validation de l'utilisateur
+et CI complète verte d'un commit de `dev` :
+
+```bash
+# Contrôle à blanc : classement de tous les chemins, aucun écrit.
+python scripts/promote_main.py --source <sha-dev> --label v0.Y.X-beta
+# Commit d'instantané sur main_promotion (parent : main, jamais dev).
+git switch main_promotion && git pull --ff-only origin main_promotion
+python scripts/promote_main.py --source <sha-dev> --parent main_promotion --label v0.Y.X-beta --write
+git push origin main_promotion
+gh pr create --base main --head main_promotion
+```
+
+Un chemin non classé dans `packaging/main-allowlist.txt` bloque la promotion :
+le classer sur `dev`, requalifier ce commit, puis recommencer. La release est
+construite depuis le commit de `dev` testé, en profil production, et publiée
+telle quelle après les deux barrières de CI. Voir la règle dans
+[AGENTS.md](../../AGENTS.md).
 
 ## Première intégration
 

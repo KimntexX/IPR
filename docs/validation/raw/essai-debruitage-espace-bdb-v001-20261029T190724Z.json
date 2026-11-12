@@ -1,0 +1,1191 @@
+{
+ "schema": "ipr-noise-probe-v001",
+ "created_utc": "20261029T190724Z",
+ "author": "Claude",
+ "question": "Does the camera-signal denoise (B) inject chroma when it removes luminance noise, because its opponent decomposition is done in raw sensor units (signal divided by the applied WB gains) while the residual noise after demosaicing (done after WB) is common-mode in WB space?",
+ "base": {
+  "commit": "ff836660fb7edd5e538470c004d9f0c56e4b240b",
+  "reference": "docs/validation/raw/loi-force-bruit-v001-20261029T185322Z.json",
+  "masks_and_alignment": "those of the reference (common_area, fixed masks from the Lightroom neutral)",
+  "metrics": "luma Rec.709 (8-bit scale); luma_noise = std of luma - Gaussian sigma 2 in the mask; chroma_noise = mean of the same for R-G and B-G; luma = mean in the mask"
+ },
+ "variants": {
+  "B_measured": "CameraDenoise of 7e367b0 unchanged (values from the reference)",
+  "V1_wb_space": {
+   "change": "gains forced to (1,1,1) in CameraDenoise::apply: estimation, decomposition and reconstruction in the white-balanced camera space",
+   "diff": "--- a/src/raw/CameraDenoise.cpp (apply)\n-        const cv::Vec3f gains(float(context.gains[0]), float(.5 * context.gains[1] + .5 * context.gains[3]), float(context.gains[2]));\n+        const cv::Vec3f gains(1.f, 1.f, 1.f); // PROBE V1: decomposition in WB space",
+   "executable_sha256": "8e96958d00612276cf4d0d38aa1f21646736486fa688490abc339e3442cd2fdb",
+   "scenes": [
+    "6V1A9539",
+    "7Y6A7599",
+    "IMG_8473"
+   ]
+  },
+  "V2_neutral_luma_reconstruction": {
+   "change": "estimation and filtering in raw units unchanged; at reconstruction the luminance delta becomes neutral in WB space, chroma deltas unchanged",
+   "diff": "--- a/src/raw/CameraDenoise.cpp (apply, reconstruction)\n-                out[x] = in[x] + cv::Vec3f(d[0] + d[1] - .5f * d[2], d[0] + .5f * d[2], d[0] - d[1] - .5f * d[2]).mul(gains);\n+                const float neutral = d[0] / (.25f * inverseGains[0] + .5f * inverseGains[1] + .25f * inverseGains[2]);\n+                out[x] = in[x] + cv::Vec3f(neutral, neutral, neutral) + cv::Vec3f(d[1] - .5f * d[2], .5f * d[2], -d[1] - .5f * d[2]).mul(gains);",
+   "executable_sha256": "not recorded (overwritten by V1)",
+   "scenes": [
+    "6V1A0544",
+    "6V1A9539",
+    "7Y6A7599",
+    "IMG_8473"
+   ]
+  }
+ },
+ "reading": [
+  "V1 and V2 remove the chroma increase of luminance 100 alone (7599 dark 19.5 -> 15.4/15.2, mid_flat 26.5 -> 19.4/19.2, edges 28.9 -> 22.9/22.8): mechanism confirmed, likely source of the red/green dots reported by the user",
+  "V2 breaks 100/100 (7599 mid_flat chroma 6.5 -> 19.9): the chroma stages, still on raw axes, also remove part of the WB-neutral noise; the basis is then inconsistent",
+  "V1 keeps 100/100 (6.5 -> 6.7) and improves chrominance 100 alone (7599 dark 6.8 -> 4.2, mid_flat 17.3 -> 11.9, edges 18.6 -> 14.6; IMG_8473 dark 2.2 -> 1.1; 6V1A9539 dark 2.2 -> 1.3)",
+  "three scenes for V1 and four for V2, two of them noisy; not a qualification; no code kept (source restored)"
+ ],
+ "scripts_sha256": {
+  "neutral_luma_probe.py": "a29a91200dd22cc529a65c7a1b5f42ee58d67189a08b7cc4d40e7b930f41acff",
+  "strength_law.py": "6a2908cc02c68eef0648855ecacaa702935c61c275c363b4a7303b671a03f914",
+  "probe_evidence.py": "943f7b0ef8d8fdfa8b22fd61bb1c87b32d06cd735633f5ba12d8b6df0aa9fcb8"
+ },
+ "scripts_source": {
+  "neutral_luma_probe.py": "\"\"\"Probe: camera-signal denoise with the luminance delta neutral in WB space (V2), against the\nmeasured B values of the strength-law JSON. Usage: python neutral_luma_probe.py EXE JSON OUT scene...\"\"\"\nimport json, sys\nfrom pathlib import Path\nimport numpy as np\nsys.path.insert(0, str(Path(__file__).parent))\nfrom strength_law import BASE, RenderServer, masks, metrics, read8  # noqa: E402\n\nexe, doc, out = Path(sys.argv[1]), json.loads(Path(sys.argv[2]).read_text(encoding=\"utf-8\")), Path(sys.argv[3])\nreport = {}\nwith RenderServer(exe, timeout=900) as server:\n    for scene in sys.argv[4:]:\n        s = doc[\"scenes\"][scene]\n        ca = s[\"masks\"][\"common_area\"]\n        (lx, ly), (ix, iy), (w, h) = ca[\"lr_origin_xy\"], ca[\"ipr_origin_xy\"], ca[\"size_wh\"]\n        m = masks(read8(BASE / \"neutre\" / f\"{scene}.tif\")[ly:ly + h, lx:lx + w])\n        raw = next(p for p in BASE.iterdir() if p.stem == scene and p.suffix.upper() in (\".CR3\", \".CR2\"))\n        report[scene] = {}\n        for key in (\"100/0/0\", \"0/100/0\", \"100/100/0\"):\n            lum, col, _ = map(int, key.split(\"/\"))\n            im = server.render(raw, \"neutral\", 0, camera_denoise={\"luminance\": lum, \"chrominance\": col})[0]\n            report[scene][key] = metrics(im[iy:iy + h, ix:ix + w].astype(np.float32) / 257.0, m)\n            for z, v in report[scene][key].items():\n                b, b0, lr = s[\"measures\"][\"B\"][key][z], s[\"measures\"][\"B\"][\"0/0/0\"][z], s[\"measures\"][\"LR\"][key][z]\n                print(f\"{scene} {key} {z:11s} B0 {b0['luma_noise']:5.1f}/{b0['chroma_noise']:5.1f}  B {b['luma_noise']:5.1f}/{b['chroma_noise']:5.1f}\"\n                      f\"  V2 {v['luma_noise']:5.1f}/{v['chroma_noise']:5.1f}  LR {lr['luma_noise']:5.1f}/{lr['chroma_noise']:5.1f}\", flush=True)\nout.write_text(json.dumps(report, indent=1))\n"
+ },
+ "scenes": {
+  "7Y6A7599": {
+   "100/0/0": {
+    "B_measured": {
+     "dark": {
+      "luma": 15.556,
+      "luma_noise": 3.247,
+      "chroma_noise": 19.525
+     },
+     "mid_flat": {
+      "luma": 54.063,
+      "luma_noise": 7.953,
+      "chroma_noise": 26.516
+     },
+     "bright_flat": {
+      "luma": 202.229,
+      "luma_noise": 6.911,
+      "chroma_noise": 14.565
+     },
+     "edges": {
+      "luma": 92.369,
+      "luma_noise": 8.716,
+      "chroma_noise": 28.924
+     }
+    },
+    "V1_wb_space": {
+     "dark": {
+      "luma": 15.84,
+      "luma_noise": 3.388,
+      "chroma_noise": 15.352
+     },
+     "mid_flat": {
+      "luma": 52.922,
+      "luma_noise": 6.871,
+      "chroma_noise": 19.407
+     },
+     "bright_flat": {
+      "luma": 202.276,
+      "luma_noise": 6.699,
+      "chroma_noise": 14.164
+     },
+     "edges": {
+      "luma": 92.287,
+      "luma_noise": 8.514,
+      "chroma_noise": 22.931
+     }
+    },
+    "V2_neutral_luma_reconstruction": {
+     "dark": {
+      "luma": 15.696,
+      "luma_noise": 2.928,
+      "chroma_noise": 15.22
+     },
+     "mid_flat": {
+      "luma": 52.94,
+      "luma_noise": 6.369,
+      "chroma_noise": 19.166
+     },
+     "bright_flat": {
+      "luma": 202.291,
+      "luma_noise": 6.576,
+      "chroma_noise": 14.098
+     },
+     "edges": {
+      "luma": 92.303,
+      "luma_noise": 7.961,
+      "chroma_noise": 22.755
+     }
+    },
+    "LR": {
+     "dark": {
+      "luma": 15.586,
+      "luma_noise": 4.003,
+      "chroma_noise": 20.533
+     },
+     "mid_flat": {
+      "luma": 54.375,
+      "luma_noise": 4.722,
+      "chroma_noise": 29.707
+     },
+     "bright_flat": {
+      "luma": 198.918,
+      "luma_noise": 1.806,
+      "chroma_noise": 16.602
+     },
+     "edges": {
+      "luma": 91.077,
+      "luma_noise": 5.055,
+      "chroma_noise": 29.33
+     }
+    }
+   },
+   "0/100/0": {
+    "B_measured": {
+     "dark": {
+      "luma": 7.486,
+      "luma_noise": 10.628,
+      "chroma_noise": 6.758
+     },
+     "mid_flat": {
+      "luma": 61.194,
+      "luma_noise": 23.605,
+      "chroma_noise": 17.301
+     },
+     "bright_flat": {
+      "luma": 202.122,
+      "luma_noise": 9.316,
+      "chroma_noise": 15.686
+     },
+     "edges": {
+      "luma": 91.236,
+      "luma_noise": 20.586,
+      "chroma_noise": 18.572
+     }
+    },
+    "V1_wb_space": {
+     "dark": {
+      "luma": 7.47,
+      "luma_noise": 10.71,
+      "chroma_noise": 4.224
+     },
+     "mid_flat": {
+      "luma": 60.817,
+      "luma_noise": 24.727,
+      "chroma_noise": 11.92
+     },
+     "bright_flat": {
+      "luma": 202.034,
+      "luma_noise": 9.703,
+      "chroma_noise": 14.421
+     },
+     "edges": {
+      "luma": 91.095,
+      "luma_noise": 21.406,
+      "chroma_noise": 14.633
+     }
+    },
+    "V2_neutral_luma_reconstruction": {
+     "dark": {
+      "luma": 7.486,
+      "luma_noise": 10.628,
+      "chroma_noise": 6.758
+     },
+     "mid_flat": {
+      "luma": 61.194,
+      "luma_noise": 23.605,
+      "chroma_noise": 17.301
+     },
+     "bright_flat": {
+      "luma": 202.122,
+      "luma_noise": 9.316,
+      "chroma_noise": 15.686
+     },
+     "edges": {
+      "luma": 91.236,
+      "luma_noise": 20.586,
+      "chroma_noise": 18.572
+     }
+    },
+    "LR": {
+     "dark": {
+      "luma": 6.15,
+      "luma_noise": 9.096,
+      "chroma_noise": 3.922
+     },
+     "mid_flat": {
+      "luma": 59.841,
+      "luma_noise": 22.152,
+      "chroma_noise": 8.041
+     },
+     "bright_flat": {
+      "luma": 198.675,
+      "luma_noise": 7.951,
+      "chroma_noise": 7.368
+     },
+     "edges": {
+      "luma": 90.407,
+      "luma_noise": 19.648,
+      "chroma_noise": 7.667
+     }
+    }
+   },
+   "100/100/0": {
+    "B_measured": {
+     "dark": {
+      "luma": 12.659,
+      "luma_noise": 1.136,
+      "chroma_noise": 1.358
+     },
+     "mid_flat": {
+      "luma": 50.884,
+      "luma_noise": 5.476,
+      "chroma_noise": 6.454
+     },
+     "bright_flat": {
+      "luma": 202.294,
+      "luma_noise": 6.45,
+      "chroma_noise": 11.5
+     },
+     "edges": {
+      "luma": 91.629,
+      "luma_noise": 7.294,
+      "chroma_noise": 11.068
+     }
+    },
+    "V1_wb_space": {
+     "dark": {
+      "luma": 12.631,
+      "luma_noise": 1.237,
+      "chroma_noise": 1.524
+     },
+     "mid_flat": {
+      "luma": 50.82,
+      "luma_noise": 5.691,
+      "chroma_noise": 6.684
+     },
+     "bright_flat": {
+      "luma": 202.292,
+      "luma_noise": 6.534,
+      "chroma_noise": 11.661
+     },
+     "edges": {
+      "luma": 91.573,
+      "luma_noise": 7.697,
+      "chroma_noise": 11.46
+     }
+    },
+    "V2_neutral_luma_reconstruction": {
+     "dark": {
+      "luma": 14.765,
+      "luma_noise": 2.746,
+      "chroma_noise": 12.268
+     },
+     "mid_flat": {
+      "luma": 51.69,
+      "luma_noise": 4.993,
+      "chroma_noise": 19.883
+     },
+     "bright_flat": {
+      "luma": 202.356,
+      "luma_noise": 6.138,
+      "chroma_noise": 13.316
+     },
+     "edges": {
+      "luma": 91.957,
+      "luma_noise": 6.913,
+      "chroma_noise": 21.061
+     }
+    },
+    "LR": {
+     "dark": {
+      "luma": 11.46,
+      "luma_noise": 0.504,
+      "chroma_noise": 1.239
+     },
+     "mid_flat": {
+      "luma": 50.987,
+      "luma_noise": 0.561,
+      "chroma_noise": 2.006
+     },
+     "bright_flat": {
+      "luma": 198.666,
+      "luma_noise": 0.225,
+      "chroma_noise": 1.269
+     },
+     "edges": {
+      "luma": 89.864,
+      "luma_noise": 2.576,
+      "chroma_noise": 2.544
+     }
+    }
+   },
+   "0/0/0": {
+    "B_measured": {
+     "dark": {
+      "luma": 9.481,
+      "luma_noise": 11.016,
+      "chroma_noise": 14.199
+     },
+     "mid_flat": {
+      "luma": 61.737,
+      "luma_noise": 24.604,
+      "chroma_noise": 25.013
+     },
+     "bright_flat": {
+      "luma": 201.984,
+      "luma_noise": 9.883,
+      "chroma_noise": 16.425
+     },
+     "edges": {
+      "luma": 91.476,
+      "luma_noise": 21.568,
+      "chroma_noise": 24.398
+     }
+    },
+    "LR": {
+     "dark": {
+      "luma": 8.626,
+      "luma_noise": 9.692,
+      "chroma_noise": 18.006
+     },
+     "mid_flat": {
+      "luma": 61.721,
+      "luma_noise": 23.075,
+      "chroma_noise": 35.909
+     },
+     "bright_flat": {
+      "luma": 198.689,
+      "luma_noise": 8.566,
+      "chroma_noise": 16.964
+     },
+     "edges": {
+      "luma": 91.029,
+      "luma_noise": 20.388,
+      "chroma_noise": 30.272
+     }
+    }
+   }
+  },
+  "6V1A9539": {
+   "100/0/0": {
+    "B_measured": {
+     "dark": {
+      "luma": 9.527,
+      "luma_noise": 1.477,
+      "chroma_noise": 3.136
+     },
+     "mid_flat": {
+      "luma": 56.802,
+      "luma_noise": 3.931,
+      "chroma_noise": 5.0
+     },
+     "edges": {
+      "luma": 47.353,
+      "luma_noise": 5.138,
+      "chroma_noise": 6.259
+     }
+    },
+    "V1_wb_space": {
+     "dark": {
+      "luma": 9.478,
+      "luma_noise": 1.483,
+      "chroma_noise": 2.242
+     },
+     "mid_flat": {
+      "luma": 56.798,
+      "luma_noise": 3.916,
+      "chroma_noise": 4.462
+     },
+     "edges": {
+      "luma": 47.342,
+      "luma_noise": 5.187,
+      "chroma_noise": 6.035
+     }
+    },
+    "V2_neutral_luma_reconstruction": {
+     "dark": {
+      "luma": 9.49,
+      "luma_noise": 1.422,
+      "chroma_noise": 2.237
+     },
+     "mid_flat": {
+      "luma": 56.794,
+      "luma_noise": 3.836,
+      "chroma_noise": 4.461
+     },
+     "edges": {
+      "luma": 47.346,
+      "luma_noise": 5.079,
+      "chroma_noise": 6.034
+     }
+    },
+    "LR": {
+     "dark": {
+      "luma": 9.672,
+      "luma_noise": 0.579,
+      "chroma_noise": 3.086
+     },
+     "mid_flat": {
+      "luma": 56.46,
+      "luma_noise": 0.766,
+      "chroma_noise": 6.133
+     },
+     "edges": {
+      "luma": 47.289,
+      "luma_noise": 2.576,
+      "chroma_noise": 5.967
+     }
+    }
+   },
+   "0/100/0": {
+    "B_measured": {
+     "dark": {
+      "luma": 9.23,
+      "luma_noise": 3.131,
+      "chroma_noise": 2.192
+     },
+     "mid_flat": {
+      "luma": 56.88,
+      "luma_noise": 5.397,
+      "chroma_noise": 3.635
+     },
+     "edges": {
+      "luma": 47.29,
+      "luma_noise": 6.222,
+      "chroma_noise": 5.112
+     }
+    },
+    "V1_wb_space": {
+     "dark": {
+      "luma": 9.204,
+      "luma_noise": 3.166,
+      "chroma_noise": 1.255
+     },
+     "mid_flat": {
+      "luma": 56.892,
+      "luma_noise": 5.484,
+      "chroma_noise": 3.31
+     },
+     "edges": {
+      "luma": 47.296,
+      "luma_noise": 6.289,
+      "chroma_noise": 4.992
+     }
+    },
+    "V2_neutral_luma_reconstruction": {
+     "dark": {
+      "luma": 9.23,
+      "luma_noise": 3.131,
+      "chroma_noise": 2.192
+     },
+     "mid_flat": {
+      "luma": 56.88,
+      "luma_noise": 5.397,
+      "chroma_noise": 3.635
+     },
+     "edges": {
+      "luma": 47.29,
+      "luma_noise": 6.222,
+      "chroma_noise": 5.112
+     }
+    },
+    "LR": {
+     "dark": {
+      "luma": 9.087,
+      "luma_noise": 3.125,
+      "chroma_noise": 1.042
+     },
+     "mid_flat": {
+      "luma": 56.788,
+      "luma_noise": 5.344,
+      "chroma_noise": 0.781
+     },
+     "edges": {
+      "luma": 47.126,
+      "luma_noise": 6.068,
+      "chroma_noise": 1.479
+     }
+    }
+   },
+   "100/100/0": {
+    "B_measured": {
+     "dark": {
+      "luma": 9.436,
+      "luma_noise": 1.373,
+      "chroma_noise": 0.977
+     },
+     "mid_flat": {
+      "luma": 56.792,
+      "luma_noise": 3.814,
+      "chroma_noise": 3.159
+     },
+     "edges": {
+      "luma": 47.333,
+      "luma_noise": 5.046,
+      "chroma_noise": 4.841
+     }
+    },
+    "V1_wb_space": {
+     "dark": {
+      "luma": 9.42,
+      "luma_noise": 1.428,
+      "chroma_noise": 1.056
+     },
+     "mid_flat": {
+      "luma": 56.798,
+      "luma_noise": 3.882,
+      "chroma_noise": 3.282
+     },
+     "edges": {
+      "luma": 47.33,
+      "luma_noise": 5.155,
+      "chroma_noise": 4.977
+     }
+    },
+    "V2_neutral_luma_reconstruction": {
+     "dark": {
+      "luma": 9.476,
+      "luma_noise": 1.348,
+      "chroma_noise": 2.178
+     },
+     "mid_flat": {
+      "luma": 56.784,
+      "luma_noise": 3.72,
+      "chroma_noise": 3.613
+     },
+     "edges": {
+      "luma": 47.331,
+      "luma_noise": 4.989,
+      "chroma_noise": 5.111
+     }
+    },
+    "LR": {
+     "dark": {
+      "luma": 9.567,
+      "luma_noise": 0.273,
+      "chroma_noise": 0.255
+     },
+     "mid_flat": {
+      "luma": 56.41,
+      "luma_noise": 0.182,
+      "chroma_noise": 0.439
+     },
+     "edges": {
+      "luma": 47.198,
+      "luma_noise": 2.418,
+      "chroma_noise": 1.139
+     }
+    }
+   },
+   "0/0/0": {
+    "B_measured": {
+     "dark": {
+      "luma": 9.262,
+      "luma_noise": 3.201,
+      "chroma_noise": 2.362
+     },
+     "mid_flat": {
+      "luma": 56.89,
+      "luma_noise": 5.512,
+      "chroma_noise": 4.479
+     },
+     "edges": {
+      "luma": 47.307,
+      "luma_noise": 6.315,
+      "chroma_noise": 6.04
+     }
+    },
+    "LR": {
+     "dark": {
+      "luma": 9.197,
+      "luma_noise": 3.189,
+      "chroma_noise": 3.184
+     },
+     "mid_flat": {
+      "luma": 56.837,
+      "luma_noise": 5.497,
+      "chroma_noise": 6.229
+     },
+     "edges": {
+      "luma": 47.218,
+      "luma_noise": 6.226,
+      "chroma_noise": 6.089
+     }
+    }
+   }
+  },
+  "IMG_8473": {
+   "100/0/0": {
+    "B_measured": {
+     "dark": {
+      "luma": 7.931,
+      "luma_noise": 1.127,
+      "chroma_noise": 3.576
+     },
+     "mid_flat": {
+      "luma": 100.386,
+      "luma_noise": 2.804,
+      "chroma_noise": 2.553
+     },
+     "bright_flat": {
+      "luma": 159.109,
+      "luma_noise": 2.161,
+      "chroma_noise": 2.252
+     },
+     "edges": {
+      "luma": 94.272,
+      "luma_noise": 5.262,
+      "chroma_noise": 4.144
+     }
+    },
+    "V1_wb_space": {
+     "dark": {
+      "luma": 7.869,
+      "luma_noise": 1.062,
+      "chroma_noise": 2.599
+     },
+     "mid_flat": {
+      "luma": 100.387,
+      "luma_noise": 2.795,
+      "chroma_noise": 2.488
+     },
+     "bright_flat": {
+      "luma": 159.108,
+      "luma_noise": 2.156,
+      "chroma_noise": 2.227
+     },
+     "edges": {
+      "luma": 94.268,
+      "luma_noise": 5.26,
+      "chroma_noise": 4.033
+     }
+    },
+    "V2_neutral_luma_reconstruction": {
+     "dark": {
+      "luma": 7.87,
+      "luma_noise": 1.016,
+      "chroma_noise": 2.589
+     },
+     "mid_flat": {
+      "luma": 100.387,
+      "luma_noise": 2.794,
+      "chroma_noise": 2.487
+     },
+     "bright_flat": {
+      "luma": 159.108,
+      "luma_noise": 2.155,
+      "chroma_noise": 2.226
+     },
+     "edges": {
+      "luma": 94.271,
+      "luma_noise": 5.252,
+      "chroma_noise": 4.031
+     }
+    },
+    "LR": {
+     "dark": {
+      "luma": 5.238,
+      "luma_noise": 0.469,
+      "chroma_noise": 3.357
+     },
+     "mid_flat": {
+      "luma": 97.729,
+      "luma_noise": 0.297,
+      "chroma_noise": 4.039
+     },
+     "bright_flat": {
+      "luma": 157.152,
+      "luma_noise": 0.338,
+      "chroma_noise": 3.138
+     },
+     "edges": {
+      "luma": 91.813,
+      "luma_noise": 4.304,
+      "chroma_noise": 4.217
+     }
+    }
+   },
+   "0/100/0": {
+    "B_measured": {
+     "dark": {
+      "luma": 7.807,
+      "luma_noise": 2.509,
+      "chroma_noise": 2.181
+     },
+     "mid_flat": {
+      "luma": 100.381,
+      "luma_noise": 2.975,
+      "chroma_noise": 2.291
+     },
+     "bright_flat": {
+      "luma": 159.12,
+      "luma_noise": 2.22,
+      "chroma_noise": 2.162
+     },
+     "edges": {
+      "luma": 94.233,
+      "luma_noise": 5.436,
+      "chroma_noise": 3.779
+     }
+    },
+    "V1_wb_space": {
+     "dark": {
+      "luma": 7.714,
+      "luma_noise": 2.68,
+      "chroma_noise": 1.058
+     },
+     "mid_flat": {
+      "luma": 100.38,
+      "luma_noise": 2.983,
+      "chroma_noise": 2.334
+     },
+     "bright_flat": {
+      "luma": 159.121,
+      "luma_noise": 2.225,
+      "chroma_noise": 2.183
+     },
+     "edges": {
+      "luma": 94.219,
+      "luma_noise": 5.459,
+      "chroma_noise": 3.679
+     }
+    },
+    "V2_neutral_luma_reconstruction": {
+     "dark": {
+      "luma": 7.807,
+      "luma_noise": 2.509,
+      "chroma_noise": 2.181
+     },
+     "mid_flat": {
+      "luma": 100.381,
+      "luma_noise": 2.975,
+      "chroma_noise": 2.291
+     },
+     "bright_flat": {
+      "luma": 159.12,
+      "luma_noise": 2.22,
+      "chroma_noise": 2.162
+     },
+     "edges": {
+      "luma": 94.233,
+      "luma_noise": 5.436,
+      "chroma_noise": 3.779
+     }
+    },
+    "LR": {
+     "dark": {
+      "luma": 5.103,
+      "luma_noise": 2.154,
+      "chroma_noise": 0.394
+     },
+     "mid_flat": {
+      "luma": 97.63,
+      "luma_noise": 2.83,
+      "chroma_noise": 0.286
+     },
+     "bright_flat": {
+      "luma": 157.481,
+      "luma_noise": 2.145,
+      "chroma_noise": 0.589
+     },
+     "edges": {
+      "luma": 91.885,
+      "luma_noise": 5.344,
+      "chroma_noise": 1.619
+     }
+    }
+   },
+   "100/100/0": {
+    "B_measured": {
+     "dark": {
+      "luma": 7.73,
+      "luma_noise": 1.009,
+      "chroma_noise": 1.069
+     },
+     "mid_flat": {
+      "luma": 100.388,
+      "luma_noise": 2.793,
+      "chroma_noise": 2.335
+     },
+     "bright_flat": {
+      "luma": 159.108,
+      "luma_noise": 2.155,
+      "chroma_noise": 2.175
+     },
+     "edges": {
+      "luma": 94.243,
+      "luma_noise": 5.253,
+      "chroma_noise": 3.674
+     }
+    },
+    "V1_wb_space": {
+     "dark": {
+      "luma": 7.723,
+      "luma_noise": 1.036,
+      "chroma_noise": 1.037
+     },
+     "mid_flat": {
+      "luma": 100.388,
+      "luma_noise": 2.793,
+      "chroma_noise": 2.325
+     },
+     "bright_flat": {
+      "luma": 159.108,
+      "luma_noise": 2.155,
+      "chroma_noise": 2.173
+     },
+     "edges": {
+      "luma": 94.242,
+      "luma_noise": 5.261,
+      "chroma_noise": 3.681
+     }
+    },
+    "V2_neutral_luma_reconstruction": {
+     "dark": {
+      "luma": 7.817,
+      "luma_noise": 0.927,
+      "chroma_noise": 2.56
+     },
+     "mid_flat": {
+      "luma": 100.388,
+      "luma_noise": 2.783,
+      "chroma_noise": 2.283
+     },
+     "bright_flat": {
+      "luma": 159.107,
+      "luma_noise": 2.149,
+      "chroma_noise": 2.153
+     },
+     "edges": {
+      "luma": 94.254,
+      "luma_noise": 5.243,
+      "chroma_noise": 3.811
+     }
+    },
+    "LR": {
+     "dark": {
+      "luma": 4.871,
+      "luma_noise": 0.165,
+      "chroma_noise": 0.3
+     },
+     "mid_flat": {
+      "luma": 97.739,
+      "luma_noise": 0.076,
+      "chroma_noise": 0.221
+     },
+     "bright_flat": {
+      "luma": 157.141,
+      "luma_noise": 0.231,
+      "chroma_noise": 0.226
+     },
+     "edges": {
+      "luma": 91.727,
+      "luma_noise": 4.28,
+      "chroma_noise": 1.547
+     }
+    }
+   },
+   "0/0/0": {
+    "B_measured": {
+     "dark": {
+      "luma": 7.861,
+      "luma_noise": 2.623,
+      "chroma_noise": 2.559
+     },
+     "mid_flat": {
+      "luma": 100.379,
+      "luma_noise": 2.985,
+      "chroma_noise": 2.497
+     },
+     "bright_flat": {
+      "luma": 159.121,
+      "luma_noise": 2.226,
+      "chroma_noise": 2.236
+     },
+     "edges": {
+      "luma": 94.248,
+      "luma_noise": 5.449,
+      "chroma_noise": 4.019
+     }
+    },
+    "LR": {
+     "dark": {
+      "luma": 5.417,
+      "luma_noise": 2.065,
+      "chroma_noise": 3.264
+     },
+     "mid_flat": {
+      "luma": 97.622,
+      "luma_noise": 2.81,
+      "chroma_noise": 4.018
+     },
+     "bright_flat": {
+      "luma": 157.492,
+      "luma_noise": 2.147,
+      "chroma_noise": 3.115
+     },
+     "edges": {
+      "luma": 91.964,
+      "luma_noise": 5.336,
+      "chroma_noise": 4.184
+     }
+    }
+   }
+  },
+  "6V1A0544": {
+   "100/0/0": {
+    "B_measured": {
+     "dark": {
+      "luma": 8.662,
+      "luma_noise": 2.895,
+      "chroma_noise": 1.521
+     },
+     "mid_flat": {
+      "luma": 54.775,
+      "luma_noise": 4.283,
+      "chroma_noise": 2.148
+     },
+     "bright_flat": {
+      "luma": 232.197,
+      "luma_noise": 0.671,
+      "chroma_noise": 0.452
+     },
+     "edges": {
+      "luma": 55.077,
+      "luma_noise": 11.15,
+      "chroma_noise": 5.305
+     }
+    },
+    "V1_wb_space": null,
+    "V2_neutral_luma_reconstruction": {
+     "dark": {
+      "luma": 8.659,
+      "luma_noise": 2.894,
+      "chroma_noise": 1.5
+     },
+     "mid_flat": {
+      "luma": 54.773,
+      "luma_noise": 4.277,
+      "chroma_noise": 2.109
+     },
+     "bright_flat": {
+      "luma": 232.197,
+      "luma_noise": 0.671,
+      "chroma_noise": 0.452
+     },
+     "edges": {
+      "luma": 55.076,
+      "luma_noise": 11.148,
+      "chroma_noise": 5.299
+     }
+    },
+    "LR": {
+     "dark": {
+      "luma": 8.799,
+      "luma_noise": 1.872,
+      "chroma_noise": 1.697
+     },
+     "mid_flat": {
+      "luma": 54.225,
+      "luma_noise": 2.614,
+      "chroma_noise": 3.057
+     },
+     "bright_flat": {
+      "luma": 230.68,
+      "luma_noise": 0.123,
+      "chroma_noise": 0.566
+     },
+     "edges": {
+      "luma": 54.966,
+      "luma_noise": 8.68,
+      "chroma_noise": 4.944
+     }
+    }
+   },
+   "0/100/0": {
+    "B_measured": {
+     "dark": {
+      "luma": 8.645,
+      "luma_noise": 3.022,
+      "chroma_noise": 1.422
+     },
+     "mid_flat": {
+      "luma": 54.821,
+      "luma_noise": 4.424,
+      "chroma_noise": 1.975
+     },
+     "bright_flat": {
+      "luma": 232.197,
+      "luma_noise": 0.676,
+      "chroma_noise": 0.449
+     },
+     "edges": {
+      "luma": 55.065,
+      "luma_noise": 11.202,
+      "chroma_noise": 5.254
+     }
+    },
+    "V1_wb_space": null,
+    "V2_neutral_luma_reconstruction": {
+     "dark": {
+      "luma": 8.645,
+      "luma_noise": 3.022,
+      "chroma_noise": 1.422
+     },
+     "mid_flat": {
+      "luma": 54.821,
+      "luma_noise": 4.424,
+      "chroma_noise": 1.975
+     },
+     "bright_flat": {
+      "luma": 232.197,
+      "luma_noise": 0.676,
+      "chroma_noise": 0.449
+     },
+     "edges": {
+      "luma": 55.065,
+      "luma_noise": 11.202,
+      "chroma_noise": 5.254
+     }
+    },
+    "LR": {
+     "dark": {
+      "luma": 8.592,
+      "luma_noise": 2.814,
+      "chroma_noise": 0.562
+     },
+     "mid_flat": {
+      "luma": 54.723,
+      "luma_noise": 4.096,
+      "chroma_noise": 0.576
+     },
+     "bright_flat": {
+      "luma": 230.685,
+      "luma_noise": 0.541,
+      "chroma_noise": 0.166
+     },
+     "edges": {
+      "luma": 54.992,
+      "luma_noise": 10.562,
+      "chroma_noise": 2.092
+     }
+    }
+   },
+   "100/100/0": {
+    "B_measured": {
+     "dark": {
+      "luma": 8.647,
+      "luma_noise": 2.89,
+      "chroma_noise": 1.39
+     },
+     "mid_flat": {
+      "luma": 54.767,
+      "luma_noise": 4.276,
+      "chroma_noise": 1.967
+     },
+     "bright_flat": {
+      "luma": 232.197,
+      "luma_noise": 0.671,
+      "chroma_noise": 0.448
+     },
+     "edges": {
+      "luma": 55.073,
+      "luma_noise": 11.147,
+      "chroma_noise": 5.257
+     }
+    },
+    "V1_wb_space": null,
+    "V2_neutral_luma_reconstruction": {
+     "dark": {
+      "luma": 8.649,
+      "luma_noise": 2.889,
+      "chroma_noise": 1.414
+     },
+     "mid_flat": {
+      "luma": 54.765,
+      "luma_noise": 4.27,
+      "chroma_noise": 1.973
+     },
+     "bright_flat": {
+      "luma": 232.197,
+      "luma_noise": 0.671,
+      "chroma_noise": 0.448
+     },
+     "edges": {
+      "luma": 55.072,
+      "luma_noise": 11.145,
+      "chroma_noise": 5.254
+     }
+    },
+    "LR": {
+     "dark": {
+      "luma": 8.753,
+      "luma_noise": 1.821,
+      "chroma_noise": 0.404
+     },
+     "mid_flat": {
+      "luma": 54.185,
+      "luma_noise": 2.554,
+      "chroma_noise": 0.508
+     },
+     "bright_flat": {
+      "luma": 230.685,
+      "luma_noise": 0.089,
+      "chroma_noise": 0.056
+     },
+     "edges": {
+      "luma": 54.897,
+      "luma_noise": 8.627,
+      "chroma_noise": 2.047
+     }
+    }
+   },
+   "0/0/0": {
+    "B_measured": {
+     "dark": {
+      "luma": 8.655,
+      "luma_noise": 3.027,
+      "chroma_noise": 1.507
+     },
+     "mid_flat": {
+      "luma": 54.828,
+      "luma_noise": 4.432,
+      "chroma_noise": 2.111
+     },
+     "bright_flat": {
+      "luma": 232.197,
+      "luma_noise": 0.676,
+      "chroma_noise": 0.453
+     },
+     "edges": {
+      "luma": 55.069,
+      "luma_noise": 11.205,
+      "chroma_noise": 5.299
+     }
+    },
+    "LR": {
+     "dark": {
+      "luma": 8.643,
+      "luma_noise": 2.862,
+      "chroma_noise": 1.738
+     },
+     "mid_flat": {
+      "luma": 54.765,
+      "luma_noise": 4.156,
+      "chroma_noise": 3.086
+     },
+     "bright_flat": {
+      "luma": 230.68,
+      "luma_noise": 0.542,
+      "chroma_noise": 0.588
+     },
+     "edges": {
+      "luma": 55.064,
+      "luma_noise": 10.62,
+      "chroma_noise": 4.955
+     }
+    }
+   }
+  }
+ }
+}

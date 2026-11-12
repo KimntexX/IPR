@@ -10,19 +10,15 @@
 #include <algorithm>
 #include <array>
 #include <cmath>
-#include <opencv2/core.hpp>
+
+#include "Pixels.h"
 
 namespace {
 
 std::array<double, 3> channelMean(const ColorPipeline::WorkingImage &image)
 {
-    std::array<double, 3> means{};
-    for (int channel = 0; channel < 3; ++channel) {
-        cv::Mat plane;
-        cv::extractChannel(image.linearRgba, plane, channel);
-        means[channel] = cv::mean(plane)[0];
-    }
-    return means;
+    const std::vector<double> all = ipr::meanOf(image.linearRgba);
+    return {all[0], all[1], all[2]};
 }
 
 }
@@ -112,8 +108,8 @@ int main(int argc, char **argv)
                           ? QStringLiteral("<none>")
                           : metadata.lcpProfile)
         << Qt::endl
-        << "dimensions=" << image.linearRgba.cols << 'x'
-        << image.linearRgba.rows << Qt::endl
+        << "dimensions=" << image.linearRgba.width() << 'x'
+        << image.linearRgba.height() << Qt::endl
         << "linear_rgb_mean=" << means[0] << ',' << means[1] << ','
         << means[2] << Qt::endl;
 
@@ -137,9 +133,8 @@ int main(int argc, char **argv)
     }
     const auto baselineMeans = channelMean(baseline);
     out << "unprofiled_color_transform=" << baseline.sourceProfile << Qt::endl;
-    cv::Mat pixelDelta;
-    cv::absdiff(image.linearRgba, baseline.linearRgba, pixelDelta);
-    const cv::Scalar deltaMean = cv::mean(pixelDelta);
+    const std::vector<double> deltaMean = ipr::meanOf(ipr::mapped(image.linearRgba, baseline.linearRgba,
+                                                                  [](float a, float b) { return std::abs(a - b); }));
     out << "unprofiled_rgb_mean=" << baselineMeans[0] << ','
         << baselineMeans[1] << ',' << baselineMeans[2] << Qt::endl
         << "profiled_unprofiled_mean_abs_rgb_delta="
@@ -169,7 +164,8 @@ int main(int argc, char **argv)
                                   QDir::Files, QDirIterator::Subdirectories);
             while (profiles.hasNext()) {
                 const QString path = profiles.next();
-                cv::Mat sample(1, 1, CV_32FC3, cv::Scalar(0.2f, 0.3f, 0.4f));
+                ipr::Image sample = ipr::Image::create({1, 1}, ipr::Depth::F32, 3);
+                ipr::fill(sample, {0.2, 0.3, 0.4});
                 QString profileError;
                 const bool loaded = CameraProfileEngine::applyDcp(
                     path, sample, 5500.0, &profileError);
@@ -188,7 +184,8 @@ int main(int argc, char **argv)
                 QDir::Files, QDirIterator::Subdirectories);
             while (profiles.hasNext()) {
                 const QString path = profiles.next();
-                cv::Mat sample(32, 32, CV_32FC3, cv::Scalar(0.2f, 0.3f, 0.4f));
+                ipr::Image sample = ipr::Image::create({32, 32}, ipr::Depth::F32, 3);
+                ipr::fill(sample, {0.2, 0.3, 0.4});
                 CameraProfileEngine::CaptureSettings capture;
                 capture.focalLengthMm = 135.0;
                 capture.aperture = 2.8;

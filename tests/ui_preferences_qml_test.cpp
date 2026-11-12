@@ -24,6 +24,7 @@
 #include <QUrl>
 #include <QWindow>
 #include <QtQml>
+#include <functional>
 #include <iostream>
 #include <cmath>
 
@@ -116,7 +117,7 @@ int main(int argc, char **argv)
         preferences.setSectionExpanded("export", true);
         preferences.setValue("selection/toneCurveChannel", 3);
         preferences.setValue("selection/mixerBand", 7);
-        preferences.setValue("selection/gradingZone", 2);
+        preferences.setValue("selection/gradingZone", 3);
         preferences.setValue("export/format", "TIFF");
         preferences.setValue("export/quality", 83);
         QScopedPointer<QObject> root(component.createWithInitialProperties({
@@ -135,7 +136,7 @@ int main(int argc, char **argv)
         if (!check(!light->property("expanded").toBool() && noise->property("expanded").toBool() &&
                    exportGroup->property("expanded").toBool() &&
                    root->property("activeCurve").toInt() == 3 &&
-                   mixer->property("band").toInt() == 7 && grading->property("zone").toInt() == 2 &&
+                   mixer->property("band").toInt() == 7 && grading->property("zone").toInt() == 3 &&
                    format->property("currentText").toString() == "TIFF" &&
                    quality->property("value").toInt() == 83,
                    "stored state should override QML defaults without startup writes")) return 1;
@@ -202,6 +203,91 @@ int main(int argc, char **argv)
                    !histogram->property("visible").toBool() &&
                    root->property("color").value<QColor>() == QColor("#112233"),
                    "Main should restore the window, theme and hidden panels")) return 1;
+        auto *footer = root->property("footer").value<QObject *>();
+        if (!check(footer && footer->property("font").value<QFont>().pointSize() == 12,
+                   "the message area is written at 12 points")) return 1;
+
+        // A failed command shows where the user acted, two seconds, then fades.
+        auto *errorPopup = root->findChild<QObject *>(QStringLiteral("commandErrorPopup"));
+        if (!check(errorPopup != nullptr, "the window has its error message")) return 1;
+        const auto settle = [](int milliseconds) {
+            QEventLoop loop;
+            QTimer::singleShot(milliseconds, &loop, &QEventLoop::quit);
+            loop.exec();
+        };
+        const auto until = [&](const std::function<bool()> &done, int milliseconds) {
+            QElapsedTimer clock;
+            clock.start();
+            while (!done() && clock.elapsed() < milliseconds)
+                settle(5);
+            return done();
+        };
+        // Without a click, above the footer, and no button touched.
+        emit editor.errorReported(QStringLiteral("no button"));
+        if (!check(until([&] { return errorPopup->property("opened").toBool(); }, 1000) &&
+                   errorPopup->property("shownOn").value<QObject *>() == nullptr &&
+                   errorPopup->property("detail").toString() == QStringLiteral("no button"),
+                   "an error without a click shows by itself")) return 1;
+        QMetaObject::invokeMethod(errorPopup, "close");
+        if (!check(until([&] { return !errorPopup->property("visible").toBool(); }, 2000), "it can be closed")) return 1;
+
+        QQmlComponent buttonComponent(&engine, QUrl(QStringLiteral("qrc:/IPR/PreferenceButton.qml")));
+        auto *probeWindow = qobject_cast<QQuickWindow *>(window);
+        QScopedPointer<QObject> buttonObject(buttonComponent.createWithInitialProperties(
+            {{QStringLiteral("width"), 120}, {QStringLiteral("x"), 200}, {QStringLiteral("y"), 200}}));
+        auto *probeButton = qobject_cast<QQuickItem *>(buttonObject.data());
+        if (!check(probeWindow && probeButton, "a button to press")) return 1;
+        probeButton->setParentItem(probeWindow->contentItem());
+        probeButton->setZ(1000);
+        const QPointF inside = probeButton->mapToScene(QPointF(60, 15));
+        const auto press = [&](QEvent::Type type, const QPointF &point) {
+            QMouseEvent event(type, point, QPointF(probeWindow->mapToGlobal(point.toPoint())), Qt::LeftButton,
+                              type == QEvent::MouseButtonRelease ? Qt::NoButton : Qt::MouseButtons(Qt::LeftButton),
+                              Qt::NoModifier);
+            QCoreApplication::sendEvent(probeWindow, &event);
+            QCoreApplication::processEvents();
+        };
+        settle(50);
+        press(QEvent::MouseButtonPress, inside);
+        press(QEvent::MouseButtonRelease, inside);
+        emit editor.errorReported(QStringLiteral("this button"));
+        QElapsedTimer shown;
+        shown.start();
+        if (!check(until([&] { return errorPopup->property("opened").toBool(); }, 1000) &&
+                   errorPopup->property("shownOn").value<QObject *>() == probeButton &&
+                   probeButton->property("errorShown").toBool(), "the error shows on the button just released")) return 1;
+        if (!check(until([&] { return probeButton->scale() > 1.05; }, 1000), "the button grows")) return 1;
+        if (!check(errorPopup->property("y").toReal() >= inside.y(), "the message is under the button")) return 1;
+        settle(1000);
+        if (!check(errorPopup->property("opened").toBool() && errorPopup->property("opacity").toReal() == 1.0,
+                   "it stays fully visible for the first second")) return 1;
+        if (!check(until([&] { const qreal o = errorPopup->property("opacity").toReal(); return o > 0.0 && o < 1.0; }, 2500),
+                   "then it fades")) return 1;
+        if (!check(shown.elapsed() >= 1900, "not before two seconds")) return 1;
+        if (!check(!probeButton->property("errorShown").toBool(), "the button lets go as it fades")) return 1;
+        if (!check(until([&] { return !errorPopup->property("visible").toBool(); }, 1500), "and it leaves by itself")) return 1;
+        if (!check(until([&] { return probeButton->scale() == 1.0; }, 1000), "the button returns to its size")) return 1;
+
+        // A release long ago does not answer for a later failure, and a press elsewhere takes it away.
+        press(QEvent::MouseButtonPress, inside);
+        press(QEvent::MouseButtonRelease, inside);
+        settle(1100);
+        emit editor.errorReported(QStringLiteral("much later"));
+        if (!check(until([&] { return errorPopup->property("opened").toBool(); }, 1000) &&
+                   errorPopup->property("shownOn").value<QObject *>() == nullptr &&
+                   !probeButton->property("errorShown").toBool(), "a late failure is not the button's")) return 1;
+        press(QEvent::MouseButtonPress, inside);
+        press(QEvent::MouseButtonRelease, inside);
+        if (!check(until([&] { return !errorPopup->property("visible").toBool(); }, 1500), "a press takes it away")) return 1;
+        // A button that goes away while its error shows leaves nothing behind.
+        press(QEvent::MouseButtonPress, inside);
+        press(QEvent::MouseButtonRelease, inside);
+        emit editor.errorReported(QStringLiteral("gone"));
+        if (!check(until([&] { return errorPopup->property("shownOn").value<QObject *>() == probeButton; }, 1000), "shown on it")) return 1;
+        buttonObject.reset();
+        if (!check(errorPopup->property("shownOn").value<QObject *>() == nullptr, "the message forgets a button that left")) return 1;
+        QMetaObject::invokeMethod(errorPopup, "close");
+        if (!check(until([&] { return !errorPopup->property("visible").toBool(); }, 1500), "and closes")) return 1;
         preferences.setValue("layout/showImageInfo", true);
         preferences.setValue("layout/showHistogram", true);
         preferences.setValue("layout/showFilmstrip", true);
@@ -245,6 +331,13 @@ int main(int argc, char **argv)
                        "each preferences page must fit and use a slim scrollbar")) return 1;
         }
         tabs->setProperty("currentIndex", 0);
+        {
+            auto *neural = dialog->findChild<QObject *>("neuralDenoiseCheckBox");
+            auto *strength = dialog->findChild<QObject *>("neuralDenoiseStrength");
+            if (!check(neural && !strength && !neural->property("checked").toBool() &&
+                       neural->property("text").toString().contains(QStringLiteral("U-Net")),
+                       "neural preference is permission only, with no strength")) return 1;
+        }
         QObject *background = dialog->findChild<QObject *>("preference_canvasBackground");
         QObject *infoSize = dialog->findChild<QObject *>("preference_imageInfoFontSize");
         if (!check(infoSize, "preferences must expose information text sizing")) return 1;
@@ -392,7 +485,7 @@ int main(int argc, char **argv)
         if (!check(image.save(first) && image.save(second), "navigation fixtures should save")) return 1;
         editor.openImage(QUrl::fromLocalFile(first));
         settleEditor(editor);
-        editor.setBrightness(1);
+        editor.setAdjustment(QStringLiteral("brightness"), 1);
         settleEditor(editor);
         shortcut(Qt::Key_R, Qt::ControlModifier | Qt::ShiftModifier, "R");
         auto *resetConfirmation = root->findChild<QObject *>("resetAdjustmentsDialog");
@@ -407,7 +500,7 @@ int main(int argc, char **argv)
         if (!check(editor.adjustmentValue("brightness") == 0, "confirmed reset must update the engine")) return 1;
         if (!check(!root->findChild<QObject *>("pasteAdjustmentsAction")->property("enabled").toBool(),
                    "paste must be unavailable before copying a recipe")) return 1;
-        editor.setBrightness(.75f);
+        editor.setAdjustment(QStringLiteral("brightness"), .75f);
         settleEditor(editor);
         shortcut(Qt::Key_C, Qt::ControlModifier | Qt::ShiftModifier, "C");
         if (!check(editor.hasCopiedAdjustments(), "copy shortcut must capture current edits")) return 1;
@@ -601,6 +694,20 @@ int main(int argc, char **argv)
         settleEditor(editor);
         if (!check(editor.imageDetails().value("name").toString() == "02.png" && editor.selectedImageCount() == 1,
                    "normal clicking must still open the target without clearing batch selection")) return 1;
+        // Then another image opens: the guarded items of the next menu must not follow their actions.
+        rightClick(firstThumbnail);
+        QObject *exportSelection = photoMenu->findChild<QObject *>("contextExportSelection");
+        if (!check(photoMenu->property("visible").toBool() && exportSelection &&
+                   exportSelection->property("visible").toBool() && exportSelection->property("enabled").toBool() &&
+                   exportSelection->property("text").toString().contains("(1)"),
+                   "right-clicking a thumbnail must offer the export of the batch selection")) return 1;
+        QObject *applySelection = photoMenu->findChild<QObject *>("contextApplySelection");
+        if (!check(applySelection && applySelection->property("visible").toBool() &&
+                   applySelection->property("enabled").toBool() &&
+                   applySelection->property("text").toString().contains("(1)"),
+                   "right-clicking a thumbnail must offer to apply the open image's settings to the selection")) return 1;
+        QMetaObject::invokeMethod(photoMenu, "close");
+        QCoreApplication::processEvents();
         editor.loadImage(firstUrl);
         settleEditor(editor);
         editor.clearImageSelection();
@@ -609,6 +716,8 @@ int main(int argc, char **argv)
                    photoMenu->property("targetName").toString() == "02.png" &&
                    !photoMenu->findChild<QObject *>("contextResetAdjustments")->property("enabled").toBool() &&
                    !photoMenu->findChild<QObject *>("contextExportImage")->property("enabled").toBool() &&
+                   !photoMenu->findChild<QObject *>("contextExportSelection")->property("visible").toBool() &&
+                   !photoMenu->findChild<QObject *>("contextApplySelection")->property("visible").toBool() &&
                    editor.imageDetails().value("name").toString() == "01.png",
                    "another thumbnail's context must not silently open it or mutate the current photo")) return 1;
         QMetaObject::invokeMethod(photoMenu, "close");

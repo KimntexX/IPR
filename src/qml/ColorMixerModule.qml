@@ -96,31 +96,51 @@ ColumnLayout {
                     background: Rectangle {
                         radius: width / 2
                         color: root.bandColors[swatchButton.index]
-                        border.width: root.band === swatchButton.index ? 3 : 1
+                        // One ring: thin, or thicker and light on the selected band.
+                        border.width: root.band === swatchButton.index ? 2 : 1
                         border.color: root.band === swatchButton.index ? swatchButton.palette.text : swatchButton.palette.mid
                         opacity: swatchButton.enabled ? 1 : 0.35
-
-                        Rectangle {
-                            anchors.centerIn: parent
-                            width: parent.width - 9
-                            height: width
-                            radius: width / 2
-                            color: "transparent"
-                            border.width: 1
-                            border.color: "#ffffff"
-                            opacity: root.band === swatchButton.index ? 0.65 : 0.18
-                        }
                     }
                 }
             }
         }
     }
 
-    Label {
-        text: root.bandNames[root.band]
-        color: root.bandColors[root.band]
-        font.pixelSize: 12
-        font.bold: true
+    RowLayout {
+        Layout.fillWidth: true
+
+        Label {
+            objectName: "mixerBandName"
+            Layout.fillWidth: true
+            horizontalAlignment: Text.AlignHCenter
+            text: qsTr("%1 · %2 · %3 · %4").arg(root.bandNames[root.band]).arg(Math.round(hueControl.value))
+                  .arg(Math.round(saturationControl.value)).arg(Math.round(luminanceControl.value))
+            color: palette.windowText
+            font.pixelSize: 12
+        }
+
+        PreferenceButton {
+            id: resetBandButton
+            Layout.preferredWidth: 21
+            Layout.preferredHeight: 21
+            text: "↺"
+            font.pixelSize: 14
+            padding: 0
+            hoverEnabled: true
+            enabled: root.editor.hasImage
+            Accessible.name: qsTr("Réinitialiser la bande")
+            ToolTip.visible: hovered
+            ToolTip.text: qsTr("Réinitialiser la bande %1").arg(root.bandNames[root.band])
+            onClicked: {
+                root.editor.setColorMixer(root.band, 0, 0, 0)
+                root.reload()
+            }
+
+            background: Rectangle {
+                radius: 3
+                color: resetBandButton.hovered ? resetBandButton.palette.mid : "transparent"
+            }
+        }
     }
 
     AdjustmentControl {

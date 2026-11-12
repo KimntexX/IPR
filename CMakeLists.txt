@@ -15,10 +15,12 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 option(IPR_ENABLE_LIBRAW "Enable CR2/CR3/DNG decoding through LibRaw" ON)
 option(IPR_BUILD_RAW_BENCHMARK "Build the command-line RAW loading benchmark" OFF)
+# Analysis tools (test image generator, in-memory render server): development
+# only. The production profile builds IPR with them and the tests OFF.
+option(IPR_BUILD_TOOLS "Build the analysis tools of src/tools" ON)
 
 find_package(Qt6 6.8 REQUIRED COMPONENTS Core Gui Quick Concurrent)
 find_package(TIFF REQUIRED)
-find_package(OpenCV REQUIRED COMPONENTS core imgproc imgcodecs)
 qt_standard_project_setup()
 
 set(IPR_SOURCE_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/src")
@@ -30,6 +32,10 @@ set(IPR_INCLUDE_DIRECTORIES
     "${IPR_SOURCE_ROOT}/profiles"
     "${IPR_SOURCE_ROOT}/providers"
     "${IPR_SOURCE_ROOT}/raw"
+    "${IPR_SOURCE_ROOT}/stack"
+    "${IPR_SOURCE_ROOT}/detect"
+    "${IPR_SOURCE_ROOT}/panorama"
+    "${IPR_SOURCE_ROOT}/tasks"
 )
 
 set(IPR_ENGINE_SOURCES
@@ -41,6 +47,10 @@ set(IPR_ENGINE_SOURCES
     src/cache/SystemMemory.cpp
     src/cache/ImageCacheController.h
     src/cache/ImageCacheController.cpp
+    src/cache/RenderStageCache.h
+    src/cache/RenderStageCache.cpp
+    src/tasks/TaskRunner.h
+    src/tasks/TaskRunner.cpp
     src/core/ColorPipeline.h
     src/core/ImageMetadata.h
     src/core/ImageImporter.h
@@ -48,6 +58,16 @@ set(IPR_ENGINE_SOURCES
     src/core/ImageExporter.h
     src/core/ImageExporter.cpp
     src/core/EditRecipe.h
+    src/core/Exposure.h
+    src/core/Exposure.cpp
+    src/core/LocalAdjustments.h
+    src/core/LocalAdjustments.cpp
+    src/core/LocalValues.h
+    src/core/LocalValues.cpp
+    src/core/RecipeCodec.h
+    src/core/RecipeCodec.cpp
+    src/core/EditHistory.h
+    src/core/EditHistory.cpp
     src/core/Sidecar.h
     src/core/Sidecar.cpp
     src/core/WorkingColorSpace.h
@@ -56,12 +76,54 @@ set(IPR_ENGINE_SOURCES
     src/core/ColorMixer.h
     src/core/ColorMixer.cpp
     src/core/ColorMixerModel.h
+    src/core/PointColor.h
+    src/core/PointColor.cpp
     src/core/DetailProcessing.h
     src/core/DetailProcessing.cpp
-    src/core/NoiseEstimation.h
-    src/core/NoiseEstimation.cpp
+    src/core/Geometry.h
+    src/core/Geometry.cpp
+    src/core/Dehaze.h
+    src/core/Dehaze.cpp
+    src/core/Grain.h
+    src/core/Grain.cpp
+    src/core/LocalContrast.h
+    src/core/LocalContrast.cpp
     src/core/ColorAdjustments.h
     src/core/ColorAdjustments.cpp
+    src/core/ColorGrading.h
+    src/core/ColorGrading.cpp
+    src/detect/LineDetection.h
+    src/detect/LineDetection.cpp
+    src/detect/Straightening.h
+    src/detect/Straightening.cpp
+    src/stack/FrameSpool.h
+    src/stack/FrameSpool.cpp
+    src/core/Retouch.h
+    src/core/Retouch.cpp
+    src/panorama/PanoramaFeatures.h
+    src/panorama/PanoramaFeatures.cpp
+    src/panorama/PanoramaGeometry.h
+    src/panorama/PanoramaGeometry.cpp
+    src/panorama/PanoramaBlend.h
+    src/panorama/PanoramaBlend.cpp
+    src/panorama/PanoramaFill.h
+    src/panorama/PanoramaFill.cpp
+    src/panorama/PanoramaJob.h
+    src/panorama/PanoramaJob.cpp
+    src/stack/StackAlignment.h
+    src/stack/StackAlignment.cpp
+    src/stack/StackMerge.h
+    src/stack/StackMerge.cpp
+    src/stack/StackTurbulence.h
+    src/stack/StackTurbulence.cpp
+    src/stack/StackJob.h
+    src/stack/StackJob.cpp
+    src/stack/StackSession.h
+    src/stack/StackSession.cpp
+    src/raw/CameraDng.h
+    src/raw/CameraDng.cpp
+    src/core/PerceptualColour.h
+    src/core/PerceptualColour.cpp
     src/core/Contrast.h
     src/core/Contrast.cpp
     src/core/Histogram.h
@@ -79,6 +141,12 @@ set(IPR_ENGINE_SOURCES
     src/core/VibranceModel.h
     src/editor/imageeditor.h
     src/editor/imageeditor.cpp
+    src/editor/NeuralDevelopment.h
+    src/editor/NeuralDevelopment.cpp
+    src/editor/AdjustmentTable.h
+    src/editor/AdjustmentTable.cpp
+    src/editor/RenderChain.h
+    src/editor/RenderChain.cpp
     src/profiles/CameraProfileEngine.h
     src/profiles/CameraProfileEngine.cpp
     src/profiles/PreparedProfileCache.h
@@ -87,16 +155,32 @@ set(IPR_ENGINE_SOURCES
     src/providers/imageprovider.cpp
     src/providers/ThumbnailProvider.h
     src/providers/ThumbnailProvider.cpp
+    src/providers/GradingWheelProvider.h
+    src/providers/GradingWheelProvider.cpp
     src/raw/Demosaic.h
     src/raw/Demosaic.cpp
     src/raw/RawBlackLevelEstimator.h
     src/raw/RawBlackLevelEstimator.cpp
     src/raw/RawDecoder.h
     src/raw/RawDecoder.cpp
+    src/raw/RawInput.h
+    src/raw/RawInput.cpp
+    src/raw/LibRawInput.h
+    src/raw/LibRawInput.cpp
+    src/raw/RawDevelopment.h
+    src/raw/RawDevelopment.cpp
+    src/raw/CameraDenoise.h
+    src/raw/CameraDenoise.cpp
     src/raw/RawNormalization.h
     src/raw/RawNormalization.cpp
     src/raw/CameraCharacterization.h
     src/raw/CameraCharacterization.cpp
+    src/raw/NoiseLaw.h
+    src/raw/NoiseLaw.cpp
+    src/raw/CfaNoiseStage.h
+    src/raw/CfaNoiseStage.cpp
+    src/raw/NeuralCfa.h
+    src/raw/NeuralCfa.cpp
     src/raw/CameraSignal.h
     src/raw/CameraSignal.cpp
 )
@@ -121,6 +205,7 @@ set(IPR_QML_FILES
     src/qml/RawCalibrationModule.qml
     src/qml/PreferencesDialog.qml
     src/qml/PreferenceButton.qml
+    src/qml/CommandErrorPopup.qml
     src/qml/PreferenceCheckBox.qml
     src/qml/PreferenceSpinBox.qml
     src/qml/PreferenceComboBox.qml
@@ -131,12 +216,24 @@ set(IPR_QML_FILES
     src/qml/ImageCanvasBackground.qml
     src/qml/AdvancedRawPreferencesPane.qml
     src/qml/InterfacePaletteSelector.qml
+    src/qml/AppMenu.qml
+    src/qml/HistoryModule.qml
+    src/qml/GeometryPanel.qml
+    src/qml/AssemblePanel.qml
+    src/qml/RetouchPanel.qml
+    src/qml/MasksPanel.qml
+    src/qml/MaskOverlay.qml
+    src/qml/CropOverlay.qml
+    src/qml/PanelTabBar.qml
+    src/qml/PanelScrollBar.qml
     src/qml/SettingsSection.qml
     src/qml/AdjustmentControl.qml
     src/qml/CurveChannelButton.qml
     src/qml/ToneCurveModule.qml
     src/qml/ColorMixerModule.qml
     src/qml/ColorGradingModule.qml
+    src/qml/PointColorModule.qml
+    src/qml/SectionNote.qml
     src/qml/ImageInfoPanel.qml
     src/qml/ThumbnailRibbon.qml
 )
@@ -148,20 +245,36 @@ foreach(qml_file IN LISTS IPR_QML_FILES)
     set_source_files_properties("${qml_file}" PROPERTIES QT_RESOURCE_ALIAS "${qml_alias}")
 endforeach()
 
+# The image layer: standard C++ only, no Qt (roadmap-couche-image-sans-opencv.md).
+find_package(Threads REQUIRED)
+add_library(iprImage STATIC src/image/Types.h src/image/Image.h src/image/Image.cpp
+    src/image/Parallel.h src/image/Parallel.cpp src/image/Filters.h src/image/Filters.cpp
+    src/image/Resize.h src/image/Resize.cpp src/image/Warp.h src/image/Warp.cpp src/image/Arrange.h src/image/Arrange.cpp
+    src/image/Neighbourhood.h src/image/Neighbourhood.cpp src/image/Pixels.h src/image/Pixels.cpp
+    src/image/Analysis.h src/image/Analysis.cpp src/image/Random.h)
+target_include_directories(iprImage PUBLIC src/image)
+target_link_libraries(iprImage PUBLIC Threads::Threads)
+set_target_properties(iprImage PROPERTIES AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)
+
+# Optional neural RAW denoising (preferences, off by default): the module always builds and
+# reports itself unavailable without IPR_ENABLE_ONNX_RUNTIME; see src/neural/README.md.
+add_subdirectory(src/neural)
+
 add_library(iprEngine STATIC ${IPR_ENGINE_SOURCES})
 qt_add_resources(iprEngine ipr_ui_defaults
     PREFIX "/"
-    FILES config/ipr-ui.ini config/raw-normalization.json
+    FILES config/ipr-ui.ini config/raw-normalization.json config/noise-laws.json packaging/neural-model.json
 )
 target_include_directories(iprEngine PUBLIC ${IPR_INCLUDE_DIRECTORIES})
 target_link_libraries(iprEngine
     PUBLIC
+        iprImage
         Qt6::Core
         Qt6::Gui
         Qt6::Quick
         Qt6::Concurrent
         TIFF::TIFF
-        ${OpenCV_LIBS}
+        iprNeural
 )
 
 if(IPR_ENABLE_LIBRAW)
@@ -194,18 +307,34 @@ qt_add_qml_module(appIPR
 )
 
 target_link_libraries(appIPR PRIVATE iprEngine)
+if(WIN32 AND IPR_ENABLE_ONNX_RUNTIME)
+    # The runtime DLLs beside the executable for development runs; install() deploys them in packages.
+    foreach(runtime IN LISTS IPR_NEURAL_RUNTIME_FILES)
+        add_custom_command(TARGET appIPR POST_BUILD COMMAND ${CMAKE_COMMAND}
+            -E copy_if_different "${runtime}" "$<TARGET_FILE_DIR:appIPR>")
+    endforeach()
+endif()
 target_compile_definitions(appIPR PRIVATE IPR_RELEASE_LABEL="${IPR_RELEASE_LABEL}")
 
 # Console tools, intentionally independent of the QML application/sidecar
 # lifecycle: TIFF exports for visual review and in-memory renders for analysis,
 # from the same test recipes.
-add_library(iprTestRecipes STATIC src/tools/TestRecipes.cpp)
-target_include_directories(iprTestRecipes PUBLIC src/tools)
-target_link_libraries(iprTestRecipes PUBLIC iprEngine)
-add_executable(iprGenerateTests src/tools/generate_test_images.cpp)
-target_link_libraries(iprGenerateTests PRIVATE iprTestRecipes)
-add_executable(iprRenderServer src/tools/render_server.cpp)
-target_link_libraries(iprRenderServer PRIVATE iprTestRecipes)
+if(IPR_BUILD_TOOLS)
+    if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/tools/TestRecipes.cpp")
+        message(FATAL_ERROR "IPR_BUILD_TOOLS=ON needs src/tools, absent from this tree (main carries production code only): configure with -DIPR_BUILD_TOOLS=OFF")
+    endif()
+    add_library(iprTestRecipes STATIC src/tools/TestRecipes.cpp)
+    target_include_directories(iprTestRecipes PUBLIC src/tools)
+    target_link_libraries(iprTestRecipes PUBLIC iprEngine)
+    add_executable(iprGenerateTests src/tools/generate_test_images.cpp src/tools/ParallelJobs.cpp)
+    target_link_libraries(iprGenerateTests PRIVATE iprTestRecipes)
+    add_executable(iprRenderServer src/tools/render_server.cpp)
+    target_link_libraries(iprRenderServer PRIVATE iprTestRecipes)
+    add_executable(iprSidecarDump src/tools/sidecar_dump.cpp src/tools/SidecarJson.cpp)
+    target_link_libraries(iprSidecarDump PRIVATE iprEngine)
+    add_executable(iprSidecarAudit src/tools/sidecar_audit.cpp)
+    target_link_libraries(iprSidecarAudit PRIVATE iprEngine)
+endif()
 
 set_target_properties(appIPR PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER org.ipr.ImageProcessingRoom
@@ -220,6 +349,29 @@ install(TARGETS appIPR
     BUNDLE DESTINATION .
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+if(IPR_ENABLE_ONNX_RUNTIME AND IPR_NEURAL_MODEL)
+    file(READ "${CMAKE_CURRENT_SOURCE_DIR}/packaging/neural-model.json" ipr_model_manifest)
+    string(JSON ipr_model_id GET "${ipr_model_manifest}" model_id)
+    string(JSON ipr_model_sha GET "${ipr_model_manifest}" sha256)
+    if(NOT ipr_model_id MATCHES "^[A-Za-z0-9][A-Za-z0-9._-]*$")
+        message(FATAL_ERROR "Invalid neural model identifier")
+    endif()
+    file(SHA256 "${IPR_NEURAL_MODEL}" ipr_actual_model_sha)
+    if(NOT ipr_actual_model_sha STREQUAL ipr_model_sha)
+        message(FATAL_ERROR "Neural model SHA-256 does not match packaging/neural-model.json")
+    endif()
+    if(APPLE)
+        set(ipr_model_destination "appIPR.app/Contents/MacOS/models")
+    else()
+        set(ipr_model_destination "${CMAKE_INSTALL_BINDIR}/models")
+    endif()
+    install(FILES "${IPR_NEURAL_MODEL}" DESTINATION "${ipr_model_destination}"
+        RENAME "${ipr_model_id}.onnx" COMPONENT NeuralModel)
+    add_custom_command(TARGET appIPR POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:appIPR>/models"
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${IPR_NEURAL_MODEL}"
+            "$<TARGET_FILE_DIR:appIPR>/models/${ipr_model_id}.onnx")
+endif()
 if(APPLE)
     set(IPR_TOOL_DESTINATION "appIPR.app/Contents/MacOS")
     set(IPR_DATA_DESTINATION "appIPR.app/Contents/Resources")
@@ -227,12 +379,15 @@ else()
     set(IPR_TOOL_DESTINATION "${CMAKE_INSTALL_BINDIR}")
     set(IPR_DATA_DESTINATION "${CMAKE_INSTALL_DATADIR}/IPR")
 endif()
-install(TARGETS iprGenerateTests RUNTIME DESTINATION "${IPR_TOOL_DESTINATION}")
-install(FILES config/ipr-ui.ini config/raw-normalization.json DESTINATION "${IPR_DATA_DESTINATION}/config")
+if(IPR_BUILD_TOOLS)
+    install(TARGETS iprGenerateTests RUNTIME DESTINATION "${IPR_TOOL_DESTINATION}")
+endif()
+install(FILES config/ipr-ui.ini config/raw-normalization.json config/noise-laws.json DESTINATION "${IPR_DATA_DESTINATION}/config")
 install(FILES packaging/profiles-index.json DESTINATION "${IPR_DATA_DESTINATION}/profiles" RENAME index.json)
 install(DIRECTORY DESTINATION "${IPR_DATA_DESTINATION}/profiles/dcp")
 install(DIRECTORY DESTINATION "${IPR_DATA_DESTINATION}/profiles/lcp")
 install(DIRECTORY licenses/ DESTINATION "${IPR_DATA_DESTINATION}/licenses")
+install(FILES LICENSE DESTINATION "${IPR_DATA_DESTINATION}/licenses" RENAME IPR-AGPL-3.0.txt)
 install(FILES packaging/README.md DESTINATION "${IPR_DATA_DESTINATION}")
 qt_finalize_executable(appIPR)
 include(cmake/Deployment.cmake)
@@ -244,6 +399,13 @@ if(IPR_BUILD_RAW_BENCHMARK AND IPR_ENABLE_LIBRAW AND
 endif()
 
 include(CTest)
+# The tests exercise the tools and live under tests/: both must be present.
+if(BUILD_TESTING AND NOT IPR_BUILD_TOOLS)
+    message(FATAL_ERROR "BUILD_TESTING=ON needs IPR_BUILD_TOOLS=ON (the tests use the analysis tools)")
+endif()
+if(BUILD_TESTING AND NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tests")
+    message(FATAL_ERROR "BUILD_TESTING=ON needs tests/, absent from this tree (main carries production code only): configure with -DBUILD_TESTING=OFF")
+endif()
 if(BUILD_TESTING AND IPR_ENABLE_LIBRAW AND LIBRAW_INCLUDE_DIR AND LIBRAW_LIBRARY)
     add_executable(editorLifecycleTests tests/editor_lifecycle_test.cpp)
     target_link_libraries(editorLifecycleTests PRIVATE iprEngine)
@@ -252,9 +414,6 @@ if(BUILD_TESTING AND IPR_ENABLE_LIBRAW AND LIBRAW_INCLUDE_DIR AND LIBRAW_LIBRARY
     # Manual corpus diagnostic, never part of the default build or CTest.
     add_executable(tonalBaseProbe EXCLUDE_FROM_ALL tests/tonal_base_probe.cpp)
     target_link_libraries(tonalBaseProbe PRIVATE iprEngine)
-    # Experimental adaptive-neighbourhood denoising study (manual, not in CTest).
-    add_executable(noiseNeighbourhoodProbe EXCLUDE_FROM_ALL tests/noise_neighbourhood_probe.cpp tests/noise_impulse_filter.cpp tests/noise_spectral_signature.cpp)
-    target_link_libraries(noiseNeighbourhoodProbe PRIVATE iprTestRecipes)
     add_executable(rawNormalizationCorpusProbe EXCLUDE_FROM_ALL tests/raw_normalization_corpus_probe.cpp)
     target_link_libraries(rawNormalizationCorpusProbe PRIVATE iprEngine)
     # Demosaicing study: LibRaw algorithms and IPR's RCD on the same RAW (manual, not in CTest).
@@ -292,19 +451,116 @@ if(BUILD_TESTING)
     ipr_add_test(colorPipelineTests tests/color_pipeline_test.cpp)
     ipr_add_test(rec2020PipelineTests tests/rec2020_pipeline_test.cpp)
     set_tests_properties(rec2020PipelineTests PROPERTIES LABELS "unit;pipeline;colour" TIMEOUT 60)
+    ipr_add_test(renderStageCacheTests tests/render_stage_cache_test.cpp)
+    set_tests_properties(renderStageCacheTests PROPERTIES LABELS "unit;pipeline;cache" TIMEOUT 120)
     ipr_add_test(vibranceMathTests tests/vibrance_math_test.cpp)
     set_tests_properties(vibranceMathTests PROPERTIES LABELS "unit;pipeline;colour")
+    # The image layer without Qt: only the standard library.
+    add_executable(imageCoreTests tests/image_core_test.cpp)
+    target_link_libraries(imageCoreTests PRIVATE iprImage)
+    add_test(NAME imageCoreTests COMMAND imageCoreTests)
+    set_tests_properties(imageCoreTests PROPERTIES LABELS "unit;image")
+    add_executable(imageFiltersTests tests/image_filters_test.cpp)
+    target_link_libraries(imageFiltersTests PRIVATE iprImage)
+    add_test(NAME imageFiltersTests COMMAND imageFiltersTests)
+    set_tests_properties(imageFiltersTests PROPERTIES LABELS "unit;image")
+    add_executable(iprExportModuleProbe EXCLUDE_FROM_ALL tests/export_module_probe.cpp)
+    target_link_libraries(iprExportModuleProbe PRIVATE iprEngine)
+    add_executable(imageResizeTests tests/image_resize_test.cpp)
+    target_link_libraries(imageResizeTests PRIVATE iprImage)
+    add_test(NAME imageResizeTests COMMAND imageResizeTests)
+    set_tests_properties(imageResizeTests PROPERTIES LABELS "unit;image")
+    add_executable(imageArrangeTests tests/image_arrange_test.cpp)
+    target_link_libraries(imageArrangeTests PRIVATE iprImage)
+    add_test(NAME imageArrangeTests COMMAND imageArrangeTests)
+    set_tests_properties(imageArrangeTests PROPERTIES LABELS "unit;image")
+    add_executable(imageWarpTests tests/image_warp_test.cpp)
+    target_link_libraries(imageWarpTests PRIVATE iprImage)
+    add_test(NAME imageWarpTests COMMAND imageWarpTests)
+    set_tests_properties(imageWarpTests PROPERTIES LABELS "unit;image")
+    add_executable(imageNeighbourhoodTests tests/image_neighbourhood_test.cpp)
+    target_link_libraries(imageNeighbourhoodTests PRIVATE iprImage)
+    add_test(NAME imageNeighbourhoodTests COMMAND imageNeighbourhoodTests)
+    set_tests_properties(imageNeighbourhoodTests PROPERTIES LABELS "unit;image")
+    add_executable(imagePixelsTests tests/image_pixels_test.cpp)
+    target_link_libraries(imagePixelsTests PRIVATE iprImage)
+    add_test(NAME imagePixelsTests COMMAND imagePixelsTests)
+    set_tests_properties(imagePixelsTests PROPERTIES LABELS "unit;image")
+    add_executable(imageAnalysisTests tests/image_analysis_test.cpp)
+    target_link_libraries(imageAnalysisTests PRIVATE iprImage)
+    add_test(NAME imageAnalysisTests COMMAND imageAnalysisTests)
+    set_tests_properties(imageAnalysisTests PROPERTIES LABELS "unit;image")
+    ipr_add_test(adjustmentTableTests tests/adjustment_table_test.cpp)
+    set_tests_properties(adjustmentTableTests PROPERTIES LABELS "unit")
+    ipr_add_test(renderChainTests tests/render_chain_test.cpp)
+    set_tests_properties(renderChainTests PROPERTIES LABELS "unit;pipeline")
+    ipr_add_test(lineDetectionTests tests/line_detection_test.cpp)
+    set_tests_properties(lineDetectionTests PROPERTIES LABELS "unit;detection")
     ipr_add_test(detailProcessingTests tests/detail_processing_test.cpp)
-    ipr_add_test(noiseEstimationTests tests/noise_estimation_test.cpp)
-    ipr_add_test(noiseImpulseTests tests/noise_impulse_test.cpp)
-    target_sources(noiseImpulseTests PRIVATE tests/noise_impulse_filter.cpp)
-    set_tests_properties(noiseImpulseTests PROPERTIES LABELS "unit;noise;study" TIMEOUT 30)
-    ipr_add_test(noiseSpectralTests tests/noise_spectral_test.cpp)
-    target_sources(noiseSpectralTests PRIVATE tests/noise_spectral_signature.cpp)
-    set_tests_properties(noiseSpectralTests PROPERTIES LABELS "unit;noise;study" TIMEOUT 30)
-    ipr_add_test(editorNoiseTests tests/editor_noise_test.cpp)
-    set_tests_properties(noiseEstimationTests editorNoiseTests PROPERTIES LABELS "unit;noise;estimation" TIMEOUT 60)
+    add_executable(iprGeometryAudit tests/geometry_audit.cpp)
+    target_link_libraries(iprGeometryAudit PRIVATE iprEngine)
+    add_executable(iprLineAudit tests/line_audit.cpp)
+    target_link_libraries(iprLineAudit PRIVATE iprEngine)
+    add_executable(iprStackAudit tests/stack_audit.cpp)
+    target_link_libraries(iprStackAudit PRIVATE iprEngine)
+    if(WIN32)
+        target_link_libraries(iprStackAudit PRIVATE psapi)
+    endif()
+    ipr_add_test(cameraDngTests tests/camera_dng_test.cpp)
+    ipr_add_test(noiseLawTests tests/noise_law_test.cpp)
+    ipr_add_test(cfaNoiseStageTests tests/cfa_noise_stage_test.cpp)
+    ipr_add_test(neuralCfaTests tests/neural_cfa_test.cpp)
+    set_tests_properties(neuralCfaTests PROPERTIES LABELS "unit;raw;noise" TIMEOUT 60)
+    if(IPR_ENABLE_ONNX_RUNTIME AND IPR_NEURAL_MODEL)
+        add_test(NAME neuralCfaModelTests COMMAND neuralCfaTests "${IPR_NEURAL_MODEL}" "${CMAKE_SOURCE_DIR}/packaging/neural-model.json")
+        set_tests_properties(neuralCfaModelTests PROPERTIES LABELS "integration;raw;noise" TIMEOUT 300)
+    endif()
+    set_tests_properties(cfaNoiseStageTests PROPERTIES LABELS "unit;raw;noise" TIMEOUT 30)
+    set_tests_properties(noiseLawTests PROPERTIES LABELS "unit;raw;noise" TIMEOUT 30)
+    set_tests_properties(cameraDngTests PROPERTIES LABELS "unit;stack;export" TIMEOUT 60)
+    add_executable(iprPanoramaAudit tests/panorama_audit.cpp)
+    target_link_libraries(iprPanoramaAudit PRIVATE iprEngine)
+    if(WIN32)
+        target_link_libraries(iprPanoramaAudit PRIVATE psapi)
+    endif()
+    ipr_add_test(retouchTests tests/retouch_test.cpp)
+    set_tests_properties(retouchTests PROPERTIES LABELS "unit;retouch" TIMEOUT 120)
+    ipr_add_test(editorRetouchTests tests/editor_retouch_test.cpp)
+    set_tests_properties(editorRetouchTests PROPERTIES LABELS "unit;retouch" TIMEOUT 180)
+    ipr_add_test(panoramaTests tests/panorama_test.cpp)
+    set_tests_properties(panoramaTests PROPERTIES LABELS "unit;panorama" TIMEOUT 180)
+    ipr_add_test(stackSessionTests tests/stack_session_test.cpp)
+    set_tests_properties(stackSessionTests PROPERTIES LABELS "unit;stack" TIMEOUT 180)
+    ipr_add_test(stackTests tests/stack_test.cpp)
+    set_tests_properties(stackTests PROPERTIES LABELS "unit;stack" TIMEOUT 180)
+    ipr_add_test(geometryTests tests/geometry_test.cpp)
+    set_tests_properties(geometryTests PROPERTIES LABELS "unit;geometry" TIMEOUT 60)
+    ipr_add_test(localContrastTests tests/local_contrast_test.cpp)
+    ipr_add_test(dehazeTests tests/dehaze_test.cpp)
+    ipr_add_test(grainTests tests/grain_test.cpp)
+    ipr_add_test(colorGradingTests tests/color_grading_test.cpp)
     ipr_add_test(imageExportTests tests/image_export_test.cpp)
+    ipr_add_test(editorBatchTests tests/batch_test.cpp)
+    set_tests_properties(editorBatchTests PROPERTIES LABELS "unit;export;batch" TIMEOUT 180)
+    ipr_add_test(sidecarTests tests/sidecar_test.cpp)
+    ipr_add_test(sidecarJsonTests tests/sidecar_json_test.cpp)
+    target_sources(sidecarJsonTests PRIVATE src/tools/SidecarJson.cpp)
+    target_include_directories(sidecarJsonTests PRIVATE src/tools)
+    ipr_add_test(editHistoryTests tests/edit_history_test.cpp)
+    ipr_add_test(localAdjustmentsTests tests/local_adjustments_test.cpp)
+    add_executable(iprMasksAudit tests/masks_audit.cpp)
+    target_link_libraries(iprMasksAudit PRIVATE iprEngine)
+    ipr_add_test(localValuesTests tests/local_values_test.cpp)
+    ipr_add_test(editorGeometryTests tests/editor_geometry_test.cpp)
+    set_tests_properties(editorGeometryTests PROPERTIES LABELS "unit;geometry" TIMEOUT 120)
+    ipr_add_test(editorMasksTests tests/editor_masks_test.cpp)
+    set_tests_properties(editorMasksTests PROPERTIES LABELS "unit;masks" TIMEOUT 180)
+    ipr_add_test(editorHistoryTests tests/editor_history_test.cpp)
+    set_tests_properties(editorHistoryTests PROPERTIES LABELS "unit;history" TIMEOUT 120)
+    ipr_add_test(editorDetailTests tests/editor_detail_test.cpp)
+    set_tests_properties(editorDetailTests PROPERTIES LABELS "unit;zoom" TIMEOUT 180)
+    ipr_add_test(folderRefreshTests tests/folder_refresh_test.cpp)
+    set_tests_properties(folderRefreshTests PROPERTIES LABELS "unit;batch" TIMEOUT 120)
     ipr_add_test(toneRecoveryTests tests/tone_recovery_test.cpp)
     set_tests_properties(toneRecoveryTests PROPERTIES LABELS "unit;pipeline;lighting")
     add_executable(testImageGeneratorTests tests/test_image_generator_test.cpp)
@@ -315,6 +571,19 @@ if(BUILD_TESTING)
     set_tests_properties(testImageGeneratorTests PROPERTIES
         LABELS "unit;export;generator" TIMEOUT 120)
     ipr_add_test(colorMixerMathTests tests/color_mixer_math_test.cpp)
+    ipr_add_test(pointColorTests tests/point_color_test.cpp)
+    ipr_add_test(toneCurveTests tests/tone_curve_test.cpp)
+    ipr_add_test(rawInputTests tests/raw_input_test.cpp)
+    ipr_add_test(rawDevelopmentTests tests/raw_development_test.cpp)
+    ipr_add_test(parallelJobsTests tests/parallel_jobs_test.cpp)
+    target_sources(parallelJobsTests PRIVATE src/tools/ParallelJobs.cpp)
+    target_include_directories(parallelJobsTests PRIVATE src/tools)
+    set_tests_properties(parallelJobsTests PROPERTIES LABELS "unit;generator;thread" TIMEOUT 20)
+    ipr_add_test(taskRunnerTests tests/task_runner_test.cpp)
+    set_tests_properties(taskRunnerTests PROPERTIES LABELS "unit;thread" TIMEOUT 30)
+    set_tests_properties(rawInputTests rawDevelopmentTests PROPERTIES LABELS "unit;raw")
+    set_tests_properties(toneCurveTests PROPERTIES LABELS "unit;pipeline;curves")
+    set_tests_properties(pointColorTests PROPERTIES LABELS "unit;pipeline;colour")
     add_executable(colorMixerNeutralProbe tests/color_mixer_neutral_probe.cpp)
     target_link_libraries(colorMixerNeutralProbe PRIVATE iprEngine)
     add_test(NAME colorMixerNeutralTests COMMAND colorMixerNeutralProbe)
@@ -328,12 +597,48 @@ if(BUILD_TESTING)
         IPR_QML_DIRECTORY="${IPR_SOURCE_ROOT}/qml")
     set_tests_properties(settingsQmlTests PROPERTIES
         ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Basic")
+    ipr_add_test(historyQmlTests tests/history_qml_test.cpp)
+    target_compile_definitions(historyQmlTests PRIVATE
+        IPR_QML_DIRECTORY="${IPR_SOURCE_ROOT}/qml")
+    set_tests_properties(historyQmlTests PROPERTIES
+        LABELS "unit;history;qml" TIMEOUT 60
+        ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Basic")
+    ipr_add_test(assembleQmlTests tests/assemble_qml_test.cpp)
+    target_compile_definitions(assembleQmlTests PRIVATE
+        IPR_QML_DIRECTORY="${IPR_SOURCE_ROOT}/qml")
+    set_tests_properties(assembleQmlTests PROPERTIES
+        LABELS "unit;stack;qml" TIMEOUT 120
+        ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Basic")
+    ipr_add_test(retouchQmlTests tests/retouch_qml_test.cpp)
+    target_compile_definitions(retouchQmlTests PRIVATE
+        IPR_QML_DIRECTORY="${IPR_SOURCE_ROOT}/qml")
+    set_tests_properties(retouchQmlTests PROPERTIES
+        LABELS "unit;retouch;qml" TIMEOUT 120
+        ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Basic")
+    ipr_add_test(masksQmlTests tests/masks_qml_test.cpp)
+    target_compile_definitions(masksQmlTests PRIVATE
+        IPR_QML_DIRECTORY="${IPR_SOURCE_ROOT}/qml")
+    set_tests_properties(masksQmlTests PROPERTIES
+        LABELS "unit;masks;qml" TIMEOUT 120
+        ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Basic")
+    ipr_add_test(geometryQmlTests tests/geometry_qml_test.cpp)
+    target_compile_definitions(geometryQmlTests PRIVATE
+        IPR_QML_DIRECTORY="${IPR_SOURCE_ROOT}/qml")
+    set_tests_properties(geometryQmlTests PROPERTIES
+        LABELS "unit;geometry;qml" TIMEOUT 60
+        ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Basic")
     ipr_add_test(imageViewportQmlTests tests/image_viewport_qml_test.cpp)
     target_compile_definitions(imageViewportQmlTests PRIVATE
         IPR_QML_DIRECTORY="${IPR_SOURCE_ROOT}/qml")
     set_tests_properties(imageViewportQmlTests PROPERTIES
         ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Basic"
         LABELS "unit;viewport;qml")
+    ipr_add_test(toneCurveQmlTests tests/tone_curve_qml_test.cpp)
+    target_compile_definitions(toneCurveQmlTests PRIVATE
+        IPR_QML_DIRECTORY="${IPR_SOURCE_ROOT}/qml")
+    set_tests_properties(toneCurveQmlTests PROPERTIES
+        ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_BACKEND=software;QT_QUICK_CONTROLS_STYLE=Basic"
+        LABELS "unit;curves;qml")
     ipr_add_test(uiPreferencesTests tests/ui_preferences_test.cpp)
     ipr_add_test(uiPreferencesQmlTests tests/ui_preferences_qml_test.cpp)
     qt_add_resources(uiPreferencesQmlTests ipr_ui_test_qml
@@ -356,6 +661,15 @@ if(BUILD_TESTING)
     set_tests_properties(imageImportTests PROPERTIES LABELS "unit;import;pipeline")
     ipr_add_test(rawNormalizationTests tests/raw_normalization_test.cpp)
     ipr_add_test(editorRawDevelopmentTests tests/editor_raw_development_test.cpp)
+    add_executable(editorNeuralTests tests/editor_neural_test.cpp)
+    target_link_libraries(editorNeuralTests PRIVATE iprEngine)
+    target_compile_definitions(editorNeuralTests PRIVATE IPR_QML_DIRECTORY="${CMAKE_CURRENT_SOURCE_DIR}/src/qml")
+    set(IPR_NEURAL_TEST_RAW "" CACHE FILEPATH "Private R6 III RAW for optional editor integration test")
+    if(IPR_ENABLE_ONNX_RUNTIME AND IPR_NEURAL_MODEL AND IPR_NEURAL_TEST_RAW)
+        add_test(NAME editorNeuralIntegration COMMAND editorNeuralTests "${IPR_NEURAL_TEST_RAW}" "${IPR_NEURAL_MODEL}")
+        set_tests_properties(editorNeuralIntegration PROPERTIES LABELS "integration;raw;neural"
+            RUN_SERIAL TRUE TIMEOUT 300)
+    endif()
     set_tests_properties(editorRawDevelopmentTests PROPERTIES LABELS "unit;raw;settings" TIMEOUT 60)
     ipr_add_test(rawBlackLevelEstimatorTests tests/raw_black_level_estimator_test.cpp)
     ipr_add_test(cameraProfileEngineTests tests/camera_profile_engine_test.cpp)

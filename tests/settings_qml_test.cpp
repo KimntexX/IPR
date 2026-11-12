@@ -1,6 +1,7 @@
 #include "imageeditor.h"
 #include "controlled_memory.h"
 #include "imageprovider.h"
+#include "GradingWheelProvider.h"
 #include "Sidecar.h"
 
 #include <QEventLoop>
@@ -85,6 +86,7 @@ int main(int argc, char **argv)
     editor.pasteAdjustments();
     if (!check(!editor.hasCopiedAdjustments(), "copy without an image must leave the clipboard empty")) return 1;
     QQmlEngine engine;
+    engine.addImageProvider(QStringLiteral("gradingwheel"), new GradingWheelProvider);
     QQmlComponent component(&engine,
         QUrl::fromLocalFile(QStringLiteral(IPR_QML_DIRECTORY "/Setting.qml")));
     QScopedPointer<QObject> root(component.createWithInitialProperties(
@@ -107,11 +109,11 @@ int main(int argc, char **argv)
 
     const QStringList names{
         "rawDevelopmentSection", "opticsSection", "lightSection", "curveSection", "colorSection", "mixerSection",
-        "gradingSection", "effectsSection", "denoiseSection", "sharpeningSection",
+        "pointColorSection", "gradingSection", "effectsSection", "denoiseSection", "sharpeningSection",
         "exportSection"};
     for (const QString &name : names) {
         auto *section = root->findChild<QQuickItem *>(name);
-        if (!check(section != nullptr, "all eleven independent settings sections should exist"))
+        if (!check(section != nullptr, "all twelve independent settings sections should exist"))
             return 1;
         auto *body = section->property("body").value<QQuickItem *>();
         auto *header = section->findChild<QQuickItem *>(QStringLiteral("sectionToggle"));
@@ -182,9 +184,6 @@ int main(int argc, char **argv)
                    "a RAW development checkbox must show the engine state after a click")) return 1;
     }
     QObject *noiseSection = root->findChild<QObject *>(QStringLiteral("denoiseSection"));
-    QObject *estimateButton = root->findChild<QObject *>(QStringLiteral("estimateNoiseButton"));
-    QObject *globalNoise = root->findChild<QObject *>(QStringLiteral("denoiseGlobalControl"));
-    if (!check(estimateButton && globalNoise, "noise analysis button and global control exist")) return 1;
     QObject *sharpSection = root->findChild<QObject *>(QStringLiteral("sharpeningSection"));
     QObject *exportSection = root->findChild<QObject *>(QStringLiteral("exportSection"));
     auto *exportHeader = exportSection->findChild<QQuickItem *>(QStringLiteral("sectionToggle"));
@@ -323,7 +322,7 @@ int main(int argc, char **argv)
         const QString stableText = profileStatus->property("text").toString();
         const qreal stableHeight = profileStatus->height();
         const qreal stableLightY = lightSection->y();
-        editor.setBrightness(width / 1000.0);
+        editor.setAdjustment(QStringLiteral("brightness"), width / 1000.0);
         if (!check(editor.busy() && profileStatus->property("text").toString() == stableText,
                    "processing must not replace the RAW profile description")) return 1;
         settleLayout();
@@ -336,7 +335,42 @@ int main(int argc, char **argv)
                    "finishing a render must preserve profile text and control positions")) return 1;
     }
     panel->setWidth(320);
-    editor.setBrightness(0);
+    editor.setAdjustment(QStringLiteral("brightness"), 0);
+    // Point colour: a picked point becomes a selected swatch; removal keeps a valid selection.
+    auto *pointModule = root->findChild<QQuickItem *>("pointColorModule");
+    for (int attempt = 0; attempt < 100 && editor.busy(); ++attempt) settleLayout();
+    if (!check(pointModule && editor.addPointColorAt(0.5, 0.5) && editor.addPointColorAt(0.2, 0.7),
+               "the eyedropper command must add points on a loaded image")) return 1;
+    settleLayout();
+    if (!check(editor.pointColors().size() == 2 && pointModule->property("selected").toInt() == 1 &&
+               visualItemNamed(pointModule, QStringLiteral("pointColorSwatch1")) != nullptr,
+               "each point must show a swatch and the newest must be selected")) return 1;
+    editor.setPointColorValue(0, 1, -60);
+    editor.setPointColorValue(0, 4, 140);
+    editor.removePointColor(1);
+    settleLayout();
+    const QVariantMap kept = editor.pointColors().value(0).toMap();
+    if (!check(editor.pointColors().size() == 1 && pointModule->property("selected").toInt() == 0 &&
+               kept.value("saturation").toInt() == -60 && kept.value("range").toInt() == 100 &&
+               !editor.addPointColorAt(1.5, 0.5),
+               "slider values must be clamped and a removal must keep the selection valid")) return 1;
+    auto *overlayBox = visualItemNamed(pointModule, QStringLiteral("pointColorRangeOverlay"));
+    if (!check(overlayBox && overlayBox->property("enabled").toBool(), "the range overlay needs a selected point")) return 1;
+    overlayBox->setProperty("checked", true);
+    settleLayout();
+    if (!check(editor.pointColorOverlay() == 0, "ticking the overlay shows the selected point's range")) return 1;
+    overlayBox->setProperty("checked", false);
+    settleLayout();
+    if (!check(editor.pointColorOverlay() == -1, "unticking the overlay removes it")) return 1;
+    overlayBox->setProperty("checked", true);
+    settleLayout();
+    editor.resetAdjustments();
+    for (int attempt = 0; attempt < 100 && editor.busy(); ++attempt) settleLayout();
+    if (!check(!overlayBox->property("checked").toBool() && editor.pointColorOverlay() == -1 &&
+               editor.pointColors().isEmpty(), "resetting the adjustments unticks the range overlay")) return 1;
+    // The point the later copy and paste carry.
+    if (!check(editor.addPointColorAt(0.5, 0.5), "a point is picked again after the reset")) return 1;
+    editor.setPointColorValue(0, 1, -60);
     noiseSection->setProperty("expanded", true);
     sharpSection->setProperty("expanded", true);
     exportSection->setProperty("expanded", true);
@@ -358,6 +392,36 @@ int main(int argc, char **argv)
                editor.adjustmentValue(QStringLiteral("denoiseLuminance")) == 43,
                "folding sections should retain controls, adjustments and export options"))
         return 1;
+    // Single noise reduction slider: the engine's law sets both strengths; an
+    // advanced edit leaves a custom pair that the slider shows without replacing.
+    QObject *noiseAmount = controlWithLabel(noiseSection, QStringLiteral("Réduction du bruit"));
+    QObject *noiseColor = controlWithLabel(noiseSection, QStringLiteral("Bruit de couleur"));
+    if (!check(noiseAmount && noiseColor, "the noise section should hold the single slider and the advanced ones"))
+        return 1;
+    noiseAmount->setProperty("value", 25);
+    if (!check(editor.adjustmentValue(QStringLiteral("denoiseLuminance")) == 25 &&
+               editor.adjustmentValue(QStringLiteral("denoiseChrominance")) == 82 &&
+               noise->property("value").toInt() == 25 && noiseColor->property("value").toInt() == 82 &&
+               editor.adjustmentValue(QStringLiteral("denoiseAmount")) == 25 &&
+               !noiseAmount->property("custom").toBool(),
+               "the single slider should set both strengths and show them in the advanced controls"))
+        return 1;
+    noise->setProperty("value", 30);
+    if (!check(editor.adjustmentValue(QStringLiteral("denoiseLuminance")) == 30 &&
+               editor.adjustmentValue(QStringLiteral("denoiseChrominance")) == 82 &&
+               editor.adjustmentValue(QStringLiteral("denoiseAmount")) == -1 &&
+               noiseAmount->property("custom").toBool() &&
+               noiseAmount->property("valueText").toString() == QStringLiteral("Perso.") &&
+               noiseAmount->property("value").toInt() == 30,
+               "an advanced edit should keep its custom pair and mark the single slider as custom"))
+        return 1;
+    noiseAmount->setProperty("value", 0);
+    if (!check(editor.adjustmentValue(QStringLiteral("denoiseLuminance")) == 0 &&
+               editor.adjustmentValue(QStringLiteral("denoiseChrominance")) == 0 &&
+               !noiseAmount->property("custom").toBool(),
+               "the single slider at zero should return both strengths to neutral"))
+        return 1;
+    noise->setProperty("value", 43);
     format->setProperty("currentIndex", 0); // JPEG
     if (!check(quality->property("visible").toBool(),
                "JPEG quality should reappear for JPEG"))
@@ -367,6 +431,10 @@ int main(int argc, char **argv)
     for (int attempt = 0; attempt < 100 && editor.busy(); ++attempt) settleLayout();
     editor.setColorMixer(2, 12, 23, -34);
     editor.setColorGrading(1, 150, 20);
+    editor.setColorGradingBlending(80);
+    editor.setColorGradingBalance(-30);
+    editor.setColorGrading(3, 60, 15);
+    editor.setColorGradingLuminance(2, -40);
     const QVariantList copiedCurve{QVariantMap{{"x", 0.0}, {"y", 0.0}},
                                   QVariantMap{{"x", .5}, {"y", .6}},
                                   QVariantMap{{"x", 1.0}, {"y", 1.0}}};
@@ -375,7 +443,7 @@ int main(int argc, char **argv)
     for (int attempt = 0; attempt < 100 && editor.busy(); ++attempt) settleLayout();
     editor.copyAdjustments();
     if (!check(editor.hasCopiedAdjustments(), "copy must retain a complete settings snapshot")) return 1;
-    editor.setDenoiseLuminance(7); // Editing the source must not change the snapshot.
+    editor.setAdjustment(QStringLiteral("denoiseLuminance"), 7); // Editing the source must not change the snapshot.
     for (int attempt = 0; attempt < 100 && editor.busy(); ++attempt) settleLayout();
     if (!check(awaitLoad(editor, QUrl::fromLocalFile(second)) &&
                noise->property("value").toInt() == 0 && sharp->property("value").toInt() == 0 &&
@@ -393,10 +461,15 @@ int main(int argc, char **argv)
     const bool targetWhiteBalance = editor.automaticWhiteBalance();
     editor.pasteAdjustments();
     for (int attempt = 0; attempt < 100 && editor.busy(); ++attempt) settleLayout();
+    if (!check(editor.pointColors().size() == 1 &&
+               editor.pointColors().value(0).toMap().value("saturation").toInt() == -60,
+               "pasting a recipe must bring its point colours")) return 1;
     if (!check(!editor.busy() && noise->property("value").toInt() == 43 &&
                sharp->property("value").toInt() == 51 &&
                std::abs(radius->property("value").toDouble() - 1.7) < .001 &&
                editor.colorMixerValue(2, 2) == -34 && editor.colorGradingValue(1, 0) == 150 &&
+               editor.colorGradingBlending() == 80 && editor.colorGradingBalance() == -30 &&
+               editor.colorGradingValue(3, 0) == 60 && editor.colorGradingValue(2, 2) == -40 &&
                editor.toneCurve(ImageEditor::LuminanceCurve) == normalizedCurve &&
                editor.imageRating() == 2 && editor.imageColorLabel() == "blue" && editor.imageFlagged() &&
                editor.selectedCameraProfile() == targetProfile &&
@@ -405,24 +478,13 @@ int main(int argc, char **argv)
                editor.automaticWhiteBalance() == targetWhiteBalance,
                "paste must restore the snapshot and UI while preserving target metadata and development")) return 1;
     editor.saveCurrentAdjustments();
-    EditRecipe::Settings saved;
-    EditRecipe::UserImageMetadata savedMetadata;
-    if (!check(Sidecar::read(second, &saved, &savedMetadata) && saved.denoiseLuminance == 43 &&
-               savedMetadata.rating == 2 && savedMetadata.colorLabel == "blue" &&
+    const auto saved = Sidecar::read(second);
+    if (!check(saved && saved->settings.denoiseLuminance == 43 &&
+               saved->settings.gradingBlending == 80 && saved->settings.gradingBalance == -30 &&
+               saved->settings.gradingSaturation[3] == 15 && saved->settings.gradingLuminance[2] == -40 &&
+               saved->metadata.rating == 2 && saved->metadata.colorLabel == "blue" &&
                editor.statusMessage().startsWith(QStringLiteral("Réglages enregistrés")),
                "manual save must persist the latest recipe and metadata and report success")) return 1;
-    editor.resetAdjustments();
-    for (int attempt = 0; attempt < 100 && editor.busy(); ++attempt) settleLayout();
-
-    editor.setDenoiseGlobal(75);
-    if (!check(globalNoise->property("value").toInt()==75,
-               "global amount updates the visible control and both engine components")) return 1;
-    editor.setDenoiseLuminance(43);
-    editor.setDenoiseChrominance(12);
-    editor.adjustmentsReset(5200,0);
-    if (!check(editor.adjustmentValue("denoiseLuminance")==43 &&
-               editor.adjustmentValue("denoiseChrominance")==12 && globalNoise->property("value").toInt()==12,
-               "restoring unequal advanced amounts must not overwrite them through the global control")) return 1;
     editor.resetAdjustments();
     for (int attempt = 0; attempt < 100 && editor.busy(); ++attempt) settleLayout();
 

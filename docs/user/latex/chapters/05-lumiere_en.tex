@@ -1,0 +1,41 @@
+% translation-source: docs/user/latex/chapters/05-lumiere.tex; sha256: 20046c985a406213c2f06ec61857c03dcac1c7cd28fcd7f27adae0d8386db34a
+\chapter{Light and histogram}
+\section{Read the fixed histogram}
+The histogram stays at the top of Adjustments while scrolling. It describes
+the processed current sRGB preview, not raw sensor values. End indicators
+flag preview values at their limits; they do not directly measure sensor
+saturation.
+
+Reading zones are Blacks(0--10\,\%), Shadows(10--33\,\%),
+Exposure(33--66\,\%), Highlights(66--90\,\%) and Whites(90--100\,\%).
+These are visual references, not hard slider influence boundaries.
+
+\section{Controls}
+\begin{longtable}{@{}L{3cm}L{2.8cm}L{7.8cm}@{}}
+\toprule Setting & Range & Usage\\\midrule\endhead
+Exposure & $-5$ to $+5$ EV & Adjust overall brightness; begin with small changes.\\
+Contrast & $-100$ to $+100$ & Strengthen or soften tonal separation.\\
+Shadows & $-100$ to $+100$ & Brighten or darken dark regions, not just the black endpoint.\\
+Blacks & $-100$ to $+100$ & Adjust the darkest tones and the image's tonal foundation.\\
+Highlights & $-100$ to $+100$ & Moderate or strengthen bright tones.\\
+Whites & $-100$ to $+100$ & Adjust tones nearest white.\\
+\bottomrule
+\end{longtable}
+Zero is the reference for all six controls. On a RAW with camera signal and
+DCP, exposure operates before the profile: $+1$EV doubles the linear signal
+there, not necessarily TIFF values after the curve. Without that camera
+context, the gain is applied to the linear master. The \emph{Grayscale}
+checkbox in this group toggles monochrome rendering.
+
+\section{Suggested procedure}
+Set exposure first, then shadows and highlights, followed by blacks, whites
+and contrast. Revisit earlier steps as needed: these controls interact
+visually. Raising shadows also reveals existing noise. A highlight adjustment
+cannot recreate information absent from the source.
+
+\paragraph{Example.}
+For backlighting, try slightly lowering highlights and moderately raising
+shadows rather than immediately pushing both sliders to their extremes.
+Hold \touche{Space} in the image view to compare, then inspect transitions
+using \touche{Ctrl + 1}.
+\gestesreglages

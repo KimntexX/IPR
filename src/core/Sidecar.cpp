@@ -1,17 +1,71 @@
 #include "Sidecar.h"
 
+#include "RecipeCodec.h"
+
+#include <QCborMap>
+#include <QCborValue>
+#include <QCoreApplication>
 #include <QDataStream>
 #include <QFile>
 #include <QFileInfo>
 #include <QSaveFile>
 
-#include <cmath>
+#include <algorithm>
 
 namespace Sidecar {
 namespace {
 using EditRecipe::RawDevelopment;
 using EditRecipe::Settings;
 using EditRecipe::UserImageMetadata;
+
+constexpr quint32 BinaryMagic = 0x49505231u;   // "IPR1", the former binary sidecars
+constexpr qint64 MaxBytes = 16 * 1024 * 1024;
+
+// The state of the photo a sidecar belongs to.
+struct Identity
+{
+    qint64 size = -1;
+    qint64 modified = -1;
+};
+
+Identity identityOf(const QFileInfo &source)
+{
+    return {source.size(), source.lastModified().toMSecsSinceEpoch()};
+}
+
+std::optional<Document> readCbor(const QByteArray &bytes, const Identity &photo)
+{
+    QCborParserError error;
+    QCborValue value = QCborValue::fromCbor(bytes, &error);
+    if (error.error != QCborError::NoError)
+        return std::nullopt;
+    if (value.isTag() && value.tag() == QCborTag(QCborKnownTags::Signature))
+        value = value.taggedValue();
+    const QCborMap map = value.toMap();
+    const QCborMap header = map.value(QStringLiteral("ipr")).toMap();
+    const QCborMap identity = header.value(QStringLiteral("photo")).toMap();
+    const qint64 format = header.value(QStringLiteral("format")).toInteger(-1);
+    if (format < 1 || identity.value(QStringLiteral("size")).toInteger(-2) != photo.size ||
+        identity.value(QStringLiteral("modified")).toInteger(-2) != photo.modified)
+        return std::nullopt;
+    Document document;
+    document.format = format > FormatVersion ? Format::Newer
+        : format < FormatVersion ? Format::Older : Format::Current;
+    if (!RecipeCodec::decodeSettings(map.value(QStringLiteral("settings")).toMap(), document.settings))
+        return std::nullopt;
+    RecipeCodec::decodeMetadata(map.value(QStringLiteral("metadata")).toMap(), document.metadata);
+    RecipeCodec::decodeRaw(map.value(QStringLiteral("raw")).toMap(), document.raw);
+    // The history is secondary: a damaged one is dropped, the recipe still opens.
+    const QCborValue history = map.value(QStringLiteral("history"));
+    if (history.isByteArray()) {
+        const QCborValue steps = QCborValue::fromCbor(qUncompress(history.toByteArray()));
+        if (auto restored = EditHistory::fromCbor(steps.toMap()))
+            document.history = std::move(*restored);
+    }
+    return document;
+}
+
+// ---- Former binary format (versions 1 to 9), converted on reading.
 
 void readInt(QDataStream &stream, int &target)
 {
@@ -20,35 +74,22 @@ void readInt(QDataStream &stream, int &target)
     target = value;
 }
 
-void writeInt(QDataStream &stream, int value) { stream << qint32(value); }
-}
-
-QString path(const QString &fileName)
+std::optional<Document> readBinary(const QByteArray &bytes, const Identity &photo)
 {
-    return fileName + QStringLiteral(".ipr");
-}
-
-bool read(const QString &fileName, Settings *settings, UserImageMetadata *metadata, RawDevelopment *raw)
-{
-    if (!settings || !metadata)
-        return false;
-    const QFileInfo sourceInfo(fileName);
-    QFile file(path(fileName));
-    if (!sourceInfo.exists() || !file.open(QIODevice::ReadOnly))
-        return false;
-    QDataStream stream(&file);
+    QDataStream stream(bytes);
     stream.setVersion(QDataStream::Qt_6_4);
     quint32 magic = 0;
     quint16 version = 0;
     qint64 sourceSize = -1;
     qint64 sourceModified = -1;
     stream >> magic >> version >> sourceSize >> sourceModified;
-    if (magic != 0x49505231u || version < 1 || version > 6 || file.size() > 1024 * 1024 ||
-        sourceSize != sourceInfo.size() ||
-        sourceModified != sourceInfo.lastModified().toMSecsSinceEpoch())
-        return false;
+    if (magic != BinaryMagic || version < 1 || version > 9 || sourceSize != photo.size ||
+        sourceModified != photo.modified)
+        return std::nullopt;
 
-    Settings loaded;
+    Document document;
+    document.format = Format::Older;
+    Settings &loaded = document.settings;
     stream >> loaded.brightness;
     readInt(stream, loaded.contrast); readInt(stream, loaded.blur); stream >> loaded.grayscale;
     readInt(stream, loaded.shadows); readInt(stream, loaded.blacks); readInt(stream, loaded.highlights);
@@ -61,25 +102,18 @@ bool read(const QString &fileName, Settings *settings, UserImageMetadata *metada
         readInt(stream, loaded.sharpeningAmount);
         stream >> loaded.sharpeningRadius;
         readInt(stream, loaded.sharpeningMasking);
-        if (loaded.denoiseLuminance < 0 || loaded.denoiseLuminance > 100 ||
-            loaded.denoiseChrominance < 0 || loaded.denoiseChrominance > 100 ||
-            loaded.sharpeningAmount < 0 || loaded.sharpeningAmount > 200 ||
-            !std::isfinite(loaded.sharpeningRadius) ||
-            loaded.sharpeningRadius < 0.3f || loaded.sharpeningRadius > 3.0f ||
-            loaded.sharpeningMasking < 0 || loaded.sharpeningMasking > 100)
-            return false;
     }
     const size_t storedMixerBands = version >= 4 ? 8 : (version == 3 ? 7 : 6);
     for (size_t storedIndex = 0; storedIndex < storedMixerBands; ++storedIndex) {
-        // Preserve technical band identity: legacy last band was magenta at
-        // 300 degrees, not violet. Newly inserted bands start neutral.
+        // Preserve technical band identity: the last band of versions 1-3 was
+        // magenta at 300 degrees, not violet. Newly inserted bands start neutral.
         const size_t oldIndex = version >= 3 || storedIndex == 0
             ? storedIndex : storedIndex + 1;
         const size_t index = version < 4 && oldIndex == 6 ? 7 : oldIndex;
         readInt(stream, loaded.mixerHue[index]); readInt(stream, loaded.mixerSaturation[index]);
         readInt(stream, loaded.mixerLuminance[index]);
     }
-    for (size_t index = 0; index < loaded.gradingHue.size(); ++index) {
+    for (size_t index = 0; index < 3; ++index) {   // the zones; the global wheel follows in v8
         readInt(stream, loaded.gradingHue[index]); readInt(stream, loaded.gradingSaturation[index]);
     }
     stream >> loaded.automaticWhiteBalance;
@@ -87,78 +121,115 @@ bool read(const QString &fileName, Settings *settings, UserImageMetadata *metada
         qint32 count = 0;
         stream >> count;
         if (count < 0 || count > 64)
-            return false;
+            return std::nullopt;
         for (qint32 index = 0; index < count; ++index) {
             ToneCurve::Point point;
             stream >> point.x >> point.y;
-            if (!std::isfinite(point.x) || !std::isfinite(point.y))
-                return false;
             curve.append(point);
         }
     }
-    UserImageMetadata loadedMetadata;
-    stream >> loadedMetadata.rating >> loadedMetadata.colorLabel >> loadedMetadata.flagged
-           >> loadedMetadata.ratingSet >> loadedMetadata.colorLabelSet;
-    RawDevelopment loadedRaw;
+    UserImageMetadata &metadata = document.metadata;
+    stream >> metadata.rating >> metadata.colorLabel >> metadata.flagged
+           >> metadata.ratingSet >> metadata.colorLabelSet;
+    RawDevelopment &raw = document.raw;
     if (version >= 5) {
-        stream >> loadedRaw.profile >> loadedRaw.profileSha256 >> loadedRaw.manifest
-               >> loadedRaw.manifestSha256 >> loadedRaw.normalizationEnabled >> loadedRaw.engineVersion;
+        stream >> raw.profile >> raw.profileSha256 >> raw.manifest
+               >> raw.manifestSha256 >> raw.normalizationEnabled >> raw.engineVersion;
     }
     if (version >= 6) {
-        stream >> loadedRaw.lensProfile >> loadedRaw.lensProfileSha256 >> loadedRaw.lensProfileResolved
-               >> loadedRaw.lensCorrectionEnabled >> loadedRaw.chromaticAberrationEnabled;
+        stream >> raw.lensProfile >> raw.lensProfileSha256 >> raw.lensProfileResolved
+               >> raw.lensCorrectionEnabled >> raw.chromaticAberrationEnabled;
     }
-    if (stream.status() != QDataStream::Ok)
-        return false;
-    *settings = std::move(loaded);
-    *metadata = std::move(loadedMetadata);
-    if (raw) *raw = std::move(loadedRaw);
-    return true;
+    if (version >= 7) {
+        readInt(stream, loaded.gradingBlending);
+        readInt(stream, loaded.gradingBalance);
+    }
+    if (version >= 8) {
+        readInt(stream, loaded.gradingHue[3]);
+        readInt(stream, loaded.gradingSaturation[3]);
+        for (int &luminance : loaded.gradingLuminance) readInt(stream, luminance);
+    }
+    if (version >= 9) {
+        qint32 count = 0;
+        stream >> count;
+        if (count < 0 || count > qint32(PointColor::MaxPoints))
+            return std::nullopt;
+        loaded.pointColor.count = size_t(count);
+        for (qint32 index = 0; index < count; ++index) {
+            PointColor::Point &point = loaded.pointColor.points[size_t(index)];
+            stream >> point.source[0] >> point.source[1] >> point.source[2];
+            readInt(stream, point.hueShift); readInt(stream, point.saturationShift);
+            readInt(stream, point.luminanceShift); readInt(stream, point.variance); readInt(stream, point.range);
+        }
+    }
+    if (stream.status() != QDataStream::Ok || !RecipeCodec::bound(loaded))
+        return std::nullopt;
+    metadata.rating = std::clamp(metadata.rating, 0, 5);
+    return document;
 }
 
-bool write(const QString &fileName, const Settings &settings, const UserImageMetadata &metadata,
-           const RawDevelopment &raw)
+std::optional<QByteArray> readSidecarBytes(const QString &sidecar)
+{
+    QFile file(sidecar);
+    if (!file.open(QIODevice::ReadOnly) || file.size() > MaxBytes)
+        return std::nullopt;
+    return file.readAll();
+}
+
+std::optional<Document> parse(const QByteArray &bytes, const Identity &photo)
+{
+    QDataStream magic(bytes);
+    quint32 first = 0;
+    magic >> first;
+    return first == BinaryMagic ? readBinary(bytes, photo) : readCbor(bytes, photo);
+}
+}
+
+QString path(const QString &fileName)
+{
+    return fileName + QStringLiteral(".ipr");
+}
+
+std::optional<Document> read(const QString &fileName)
+{
+    const QFileInfo sourceInfo(fileName);
+    if (!sourceInfo.exists())
+        return std::nullopt;
+    const std::optional<QByteArray> bytes = readSidecarBytes(path(fileName));
+    if (!bytes)
+        return std::nullopt;
+    return parse(*bytes, identityOf(sourceInfo));
+}
+
+bool write(const QString &fileName, const Document &document)
 {
     const QFileInfo sourceInfo(fileName);
     if (!sourceInfo.exists() || !sourceInfo.isFile())
         return false;
+    const Identity photo = identityOf(sourceInfo);
+    // A newer IPR's file keeps what this version cannot represent: never overwritten.
+    if (const std::optional<QByteArray> existing = readSidecarBytes(path(fileName))) {
+        const std::optional<Document> previous = parse(*existing, photo);
+        if (previous && previous->format == Format::Newer)
+            return false;
+    }
+    QCborMap map{
+        {QStringLiteral("ipr"), QCborMap{
+            {QStringLiteral("format"), FormatVersion},
+            {QStringLiteral("writer"), QCoreApplication::applicationVersion()},
+            {QStringLiteral("photo"), QCborMap{{QStringLiteral("size"), photo.size},
+                                               {QStringLiteral("modified"), photo.modified}}}}},
+        {QStringLiteral("settings"), RecipeCodec::encodeSettings(document.settings)},
+        {QStringLiteral("metadata"), RecipeCodec::encodeMetadata(document.metadata)},
+        {QStringLiteral("raw"), RecipeCodec::encodeRaw(document.raw)}};
+    // Successive steps differ by a few fields: compressed together they stay small.
+    if (!document.history.isEmpty())
+        map.insert(QStringLiteral("history"),
+                   qCompress(QCborValue(document.history.toCbor()).toCbor()));
     QSaveFile file(path(fileName));
     if (!file.open(QIODevice::WriteOnly))
         return false;
-    QDataStream stream(&file);
-    stream.setVersion(QDataStream::Qt_6_4);
-    stream << quint32(0x49505231u) << quint16(6) << qint64(sourceInfo.size())
-           << qint64(sourceInfo.lastModified().toMSecsSinceEpoch());
-    stream << settings.brightness;
-    writeInt(stream, settings.contrast); writeInt(stream, settings.blur); stream << settings.grayscale;
-    writeInt(stream, settings.shadows); writeInt(stream, settings.blacks); writeInt(stream, settings.highlights);
-    writeInt(stream, settings.whites); writeInt(stream, settings.temperature); writeInt(stream, settings.tint);
-    writeInt(stream, settings.vibrance); writeInt(stream, settings.saturation); writeInt(stream, settings.texture);
-    writeInt(stream, settings.clarity); writeInt(stream, settings.dehaze); writeInt(stream, settings.grain);
-    writeInt(stream, settings.denoiseLuminance);
-    writeInt(stream, settings.denoiseChrominance);
-    writeInt(stream, settings.sharpeningAmount);
-    stream << settings.sharpeningRadius;
-    writeInt(stream, settings.sharpeningMasking);
-    for (size_t index = 0; index < settings.mixerHue.size(); ++index) {
-        writeInt(stream, settings.mixerHue[index]); writeInt(stream, settings.mixerSaturation[index]);
-        writeInt(stream, settings.mixerLuminance[index]);
-    }
-    for (size_t index = 0; index < settings.gradingHue.size(); ++index) {
-        writeInt(stream, settings.gradingHue[index]); writeInt(stream, settings.gradingSaturation[index]);
-    }
-    stream << settings.automaticWhiteBalance;
-    for (const QVector<ToneCurve::Point> &curve : settings.toneCurves) {
-        stream << qint32(curve.size());
-        for (const ToneCurve::Point &point : curve)
-            stream << point.x << point.y;
-    }
-    stream << metadata.rating << metadata.colorLabel << metadata.flagged
-           << metadata.ratingSet << metadata.colorLabelSet;
-    stream << raw.profile << raw.profileSha256 << raw.manifest << raw.manifestSha256
-           << raw.normalizationEnabled << raw.engineVersion;
-    stream << raw.lensProfile << raw.lensProfileSha256 << raw.lensProfileResolved
-           << raw.lensCorrectionEnabled << raw.chromaticAberrationEnabled;
-    return stream.status() == QDataStream::Ok && file.commit();
+    const QByteArray bytes = QCborValue(QCborKnownTags::Signature, map).toCbor();
+    return file.write(bytes) == bytes.size() && file.commit();
 }
 }

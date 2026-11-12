@@ -6,6 +6,7 @@
 
 #include "imageeditor.h"
 #include "imageprovider.h"
+#include "GradingWheelProvider.h"
 #include "ThumbnailProvider.h"
 #include "UiPreferences.h"
 
@@ -27,8 +28,17 @@ int main(int argc, char *argv[])
     auto *thumbnailProvider = new ThumbnailProvider;
     engine.addImageProvider(QLatin1String("editor"), imageProvider);
     engine.addImageProvider(QLatin1String("thumbnail"), thumbnailProvider);
+    engine.addImageProvider(QLatin1String("gradingwheel"), new GradingWheelProvider);
 
     ImageEditor imageEditor(imageProvider, thumbnailProvider);
+    const auto applyNeuralPreferences = [&] {
+        imageEditor.setNeuralDenoisePreferences(
+            uiPreferences.value(QStringLiteral("neural/enabled")).toBool(),
+            uiPreferences.value(QStringLiteral("neural/modelPath")).toString());
+    };
+    QObject::connect(&uiPreferences, &UiPreferences::preferencesChanged,
+                     &imageEditor, applyNeuralPreferences);
+    applyNeuralPreferences();
     engine.rootContext()->setContextProperty("imageEditor", &imageEditor);
     engine.rootContext()->setContextProperty("uiPreferences", &uiPreferences);
 

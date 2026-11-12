@@ -1,0 +1,91 @@
+#include "Grain.h"
+
+#include "Filters.h"
+#include "Parallel.h"
+
+
+#include <algorithm>
+#include <cmath>
+#include <cstdint>
+
+namespace Grain {
+namespace {
+
+constexpr float StandardDeviation = 0.062f;   // encoded values, at 100
+constexpr double Sigma = 0.75;                // grain size, pixels
+
+std::uint32_t hash(std::uint32_t x, std::uint32_t y, std::uint32_t salt)
+{
+    std::uint32_t h = x * 0x9e3779b9u + y * 0x85ebca6bu + salt * 0xc2b2ae35u;
+    h ^= h >> 16;
+    h *= 0x7feb352du;
+    h ^= h >> 15;
+    h *= 0x846ca68bu;
+    h ^= h >> 16;
+    return h;
+}
+
+// Unit Gaussian from two hashes (Box-Muller).
+float gaussian(int x, int y)
+{
+    const float u = (float(hash(std::uint32_t(x), std::uint32_t(y), 1u) >> 8) + 0.5f) / 16777216.0f;
+    const float v = float(hash(std::uint32_t(x), std::uint32_t(y), 2u) >> 8) / 16777216.0f;
+    return std::sqrt(-2.0f * std::log(u)) * std::cos(6.2831853f * v);
+}
+
+// Share of the grain's deviation left by averaging it over blocks of n x n pixels:
+// per axis, (1/n^2) integral over |u| < n of (n - |u|) rho(u), with the grain's
+// correlation rho(u) = exp(-u^2 / (4 Sigma^2)); the 2D variance is its square.
+double reducedDeviation(double n)
+{
+    const double s2 = 4.0 * Sigma * Sigma;
+    const double integral = 2.0 * (n * std::sqrt(3.14159265358979 * s2) / 2.0 * std::erf(n / std::sqrt(s2))
+                                   - s2 / 2.0 * (1.0 - std::exp(-n * n / s2)));
+    return std::min(1.0, integral / (n * n));
+}
+
+float encode(float v)
+{
+    return v <= 0.0031308f ? 12.92f * v : 1.055f * std::pow(v, 1.0f / 2.4f) - 0.055f;
+}
+
+float decode(float e)
+{
+    return e <= 0.04045f ? e / 12.92f : std::pow((e + 0.055f) / 1.055f, 2.4f);
+}
+
+} // namespace
+
+void apply(ipr::Image &linearRgb, int amount, double pixelScale)
+{
+    if (amount <= 0 || linearRgb.empty() || !(linearRgb.depth() == ipr::Depth::F32 && linearRgb.channels() == 3)) return;
+    ipr::Image noise = ipr::Image::create(linearRgb.size(), ipr::Depth::F32, 1);
+    ipr::parallelRows(noise.height(), [&](int first, int last) {
+        for (int y = first; y < last; ++y) {
+            float *row = noise.mutableRow<float>(y);
+            for (int x = 0; x < noise.width(); ++x) row[x] = gaussian(x, y);
+        }
+    });
+    float deviation = StandardDeviation * float(std::min(amount, 100)) / 100.0f;
+    if (pixelScale >= 1.0) {
+        noise = ipr::gaussianBlurred(noise, Sigma, ipr::BlurBorder::MirrorEdge);
+        // The blur lowers the deviation of unit white noise to the norm of its kernel.
+        double norm = 0.0;
+        for (const float tap : ipr::gaussianKernel(2 * int(std::ceil(4 * Sigma)) + 1, Sigma))
+            norm += double(tap) * double(tap);
+        deviation /= float(norm);
+    } else {
+        deviation *= float(reducedDeviation(1.0 / pixelScale));
+    }
+    ipr::parallelRows(linearRgb.height(), [&](int first, int last) {
+        for (int y = first; y < last; ++y) {
+            auto *row = linearRgb.mutableRow<ipr::Vec3f>(y);
+            const float *n = noise.row<float>(y);
+            for (int x = 0; x < linearRgb.width(); ++x)
+                for (int c = 0; c < 3; ++c)
+                    row[x][c] = decode(std::max(0.0f, encode(std::max(0.0f, row[x][c])) + deviation * n[x]));
+        }
+    });
+}
+
+} // namespace Grain

@@ -25,6 +25,7 @@ struct ImageMetadata
     QString location;
     int iso = 0;
     double focalLengthMm = 0.0;
+    double sensorWidthMm = 0.0;     // long side, 0 when unknown; the format's, not a measure of this body
     double exposureSeconds = 0.0;
     int rating = 0;
     QString colorLabel;

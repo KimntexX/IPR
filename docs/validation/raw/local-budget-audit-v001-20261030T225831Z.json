@@ -1,0 +1,659 @@
+{
+  "schema_version": 1,
+  "data_version": 1,
+  "created_utc": "20261030T225831Z",
+  "parent_path": "docs\\validation\\raw\\local-budget-v001-20261030T225231Z.json",
+  "parent_sha256": "346f5238a1417a6f8e5970f02ef94ba74c0d7f50808c6966e76f609755e673db",
+  "tool_sha256": "e846c0861155024c0796d206045979acfd5ed848938530a3ab4f0d5c6bb0cb6a",
+  "gates": {
+    "cap": {
+      "spectral_internal": {
+        "spectral": {
+          "checks": {
+            "median_mse_better": false,
+            "p95_mse_le_110": true,
+            "worst_mse_le_125": true,
+            "worst_chroma_mse_le_125": true,
+            "clean_gain_loss_le_002": true,
+            "mean_color_bias_excess_le_010_input_rms": true,
+            "noisy_gain_loss_le_002": true
+          },
+          "passed": false,
+          "mse_ratio_p50_p95_max": [
+            1.0,
+            1.0041130477037372,
+            1.0073534310788468
+          ],
+          "chroma_mse_ratio_p50_p95_max": [
+            1.0,
+            1.0024527217453978,
+            1.0074268927726298
+          ],
+          "worst_clean_gain_loss": 0,
+          "worst_bias_excess_input_rms": 4.0654608947850485e-05,
+          "worst_noisy_gain_loss": 6.568915298543754e-05
+        },
+        "bank": {
+          "checks": {
+            "median_mse_better": false,
+            "p95_mse_le_110": true,
+            "worst_mse_le_125": true,
+            "worst_chroma_mse_le_125": true,
+            "clean_gain_loss_le_002": true,
+            "mean_color_bias_excess_le_010_input_rms": true,
+            "noisy_gain_loss_le_002": true
+          },
+          "passed": false,
+          "mse_ratio_p50_p95_max": [
+            1.0,
+            1.0010831663501945,
+            1.002261055087595
+          ],
+          "chroma_mse_ratio_p50_p95_max": [
+            1.0,
+            1.0001360478722132,
+            1.0084200454543608
+          ],
+          "worst_clean_gain_loss": 0,
+          "worst_bias_excess_input_rms": 4.189815984687293e-05,
+          "worst_noisy_gain_loss": 7.3281831818317045e-06
+        }
+      },
+      "real_read_replay": {
+        "spectral": {
+          "checks": {
+            "median_mse_better": false,
+            "p95_mse_le_110": true,
+            "worst_mse_le_125": true,
+            "worst_chroma_mse_le_125": true,
+            "clean_gain_loss_le_002": true,
+            "mean_color_bias_excess_le_010_input_rms": true,
+            "noisy_gain_loss_le_002": true
+          },
+          "passed": false,
+          "mse_ratio_p50_p95_max": [
+            1.0016020450943355,
+            1.014273654917227,
+            1.0174150965843272
+          ],
+          "chroma_mse_ratio_p50_p95_max": [
+            1.0000752751223185,
+            1.0141279959752083,
+            1.0213263360894256
+          ],
+          "worst_clean_gain_loss": 0,
+          "worst_bias_excess_input_rms": 0.0003115983506803769,
+          "worst_noisy_gain_loss": 0.0009002135662706801
+        },
+        "bank": {
+          "checks": {
+            "median_mse_better": false,
+            "p95_mse_le_110": true,
+            "worst_mse_le_125": true,
+            "worst_chroma_mse_le_125": true,
+            "clean_gain_loss_le_002": true,
+            "mean_color_bias_excess_le_010_input_rms": true,
+            "noisy_gain_loss_le_002": true
+          },
+          "passed": false,
+          "mse_ratio_p50_p95_max": [
+            1.0,
+            1.0074155365984818,
+            1.0115198819426705
+          ],
+          "chroma_mse_ratio_p50_p95_max": [
+            1.0,
+            1.007575143638627,
+            1.0127343097374335
+          ],
+          "worst_clean_gain_loss": 0,
+          "worst_bias_excess_input_rms": 0.00024800688894746446,
+          "worst_noisy_gain_loss": 0.0005067101741719204
+        }
+      }
+    },
+    "fallback": {
+      "spectral_internal": {
+        "spectral": {
+          "checks": {
+            "median_mse_better": false,
+            "p95_mse_le_110": true,
+            "worst_mse_le_125": true,
+            "worst_chroma_mse_le_125": true,
+            "clean_gain_loss_le_002": false,
+            "mean_color_bias_excess_le_010_input_rms": true,
+            "noisy_gain_loss_le_002": true
+          },
+          "passed": false,
+          "mse_ratio_p50_p95_max": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "chroma_mse_ratio_p50_p95_max": [
+            1.0,
+            1.0,
+            1.0000001674327907
+          ],
+          "worst_clean_gain_loss": 0.3924983905838285,
+          "worst_bias_excess_input_rms": 4.582747228233495e-06,
+          "worst_noisy_gain_loss": 2.5738694739430024e-05
+        },
+        "bank": {
+          "checks": {
+            "median_mse_better": false,
+            "p95_mse_le_110": true,
+            "worst_mse_le_125": true,
+            "worst_chroma_mse_le_125": true,
+            "clean_gain_loss_le_002": false,
+            "mean_color_bias_excess_le_010_input_rms": true,
+            "noisy_gain_loss_le_002": true
+          },
+          "passed": false,
+          "mse_ratio_p50_p95_max": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "chroma_mse_ratio_p50_p95_max": [
+            1.0,
+            1.0,
+            1.0000001927618716
+          ],
+          "worst_clean_gain_loss": 0.3924983905838285,
+          "worst_bias_excess_input_rms": 4.747295103147944e-06,
+          "worst_noisy_gain_loss": 2.7051032150393617e-05
+        }
+      },
+      "real_read_replay": {
+        "spectral": {
+          "checks": {
+            "median_mse_better": false,
+            "p95_mse_le_110": true,
+            "worst_mse_le_125": true,
+            "worst_chroma_mse_le_125": true,
+            "clean_gain_loss_le_002": false,
+            "mean_color_bias_excess_le_010_input_rms": true,
+            "noisy_gain_loss_le_002": true
+          },
+          "passed": false,
+          "mse_ratio_p50_p95_max": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "chroma_mse_ratio_p50_p95_max": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "worst_clean_gain_loss": 0.3924983905838285,
+          "worst_bias_excess_input_rms": 0.0,
+          "worst_noisy_gain_loss": 0.0
+        },
+        "bank": {
+          "checks": {
+            "median_mse_better": false,
+            "p95_mse_le_110": true,
+            "worst_mse_le_125": true,
+            "worst_chroma_mse_le_125": true,
+            "clean_gain_loss_le_002": false,
+            "mean_color_bias_excess_le_010_input_rms": true,
+            "noisy_gain_loss_le_002": true
+          },
+          "passed": false,
+          "mse_ratio_p50_p95_max": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "chroma_mse_ratio_p50_p95_max": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "worst_clean_gain_loss": 0.3924983905838285,
+          "worst_bias_excess_input_rms": 0.0,
+          "worst_noisy_gain_loss": 0.0
+        }
+      }
+    }
+  },
+  "threads": {
+    "host_logical_hint": 20,
+    "process_available_hint": 20,
+    "current_policy": "max(1,min(8,host>1?host-1:1)), caller included; tile count further reduces actual workers; not a global budget across jobs.",
+    "nested_blas_threads": 1
+  },
+  "limits": [
+    "Adaptive study after prior results; motifs and seeds new, not independent physical validation.",
+    "Real replay reuses two already-seen black frames per ISO; independent photon draws do not multiply acquisitions.",
+    "Same empirical law generates and predicts shot noise; internal spectral domain is self-model consistency, not truth.",
+    "Clean stress applies a nonzero noisy-image budget to clean truth; diagnostic, not a realistic zero-noise model.",
+    "Fixed100/100, one ROI, same session R6III1600/51200, no DCP/LCP or real-photo quality claim. Final reserve sealed.",
+    "Paired ablation of already-seen64cases, not fresh data or independent validation.",
+    "This preserves conditional routing but still uses a constant external ROI profile; not a full pixelwise physical noise map.",
+    "Cap is diagonal only, retains current correlation; it does not inject cross-spectrum as a new correlation model.",
+    "Hardware concurrency is a hint, not idle cores; cap8 retained for scientific comparability, no production thread policy changed."
+  ],
+  "seconds": 332.90105929999845,
+  "groups": [
+    {
+      "domain": "spectral_internal",
+      "route": "cap",
+      "candidate": "spectral",
+      "pattern": "flat",
+      "cases": 8,
+      "mse_ratio_p50_p95_max": [
+        1.0,
+        1.0037633861065092,
+        1.004561402633114
+      ],
+      "changed_noisy_output_hashes": 3
+    },
+    {
+      "domain": "spectral_internal",
+      "route": "cap",
+      "candidate": "spectral",
+      "pattern": "weak_luma",
+      "cases": 8,
+      "mse_ratio_p50_p95_max": [
+        1.0,
+        1.0028091739056009,
+        1.003746211852429
+      ],
+      "changed_noisy_output_hashes": 2
+    },
+    {
+      "domain": "spectral_internal",
+      "route": "cap",
+      "candidate": "spectral",
+      "pattern": "weak_color",
+      "cases": 8,
+      "mse_ratio_p50_p95_max": [
+        1.0,
+        1.0055919944029432,
+        1.0073534310788468
+      ],
+      "changed_noisy_output_hashes": 3
+    },
+    {
+      "domain": "spectral_internal",
+      "route": "cap",
+      "candidate": "spectral",
+      "pattern": "curved_edge",
+      "cases": 8,
+      "mse_ratio_p50_p95_max": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "changed_noisy_output_hashes": 0
+    },
+    {
+      "domain": "spectral_internal",
+      "route": "cap",
+      "candidate": "bank",
+      "pattern": "flat",
+      "cases": 8,
+      "mse_ratio_p50_p95_max": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "changed_noisy_output_hashes": 0
+    },
+    {
+      "domain": "spectral_internal",
+      "route": "cap",
+      "candidate": "bank",
+      "pattern": "weak_luma",
+      "cases": 8,
+      "mse_ratio_p50_p95_max": [
+        1.0,
+        1.0015095798775875,
+        1.0022558035505251
+      ],
+      "changed_noisy_output_hashes": 2
+    },
+    {
+      "domain": "spectral_internal",
+      "route": "cap",
+      "candidate": "bank",
+      "pattern": "weak_color",
+      "cases": 8,
+      "mse_ratio_p50_p95_max": [
+        1.0,
+        1.0014696858069367,
+        1.002261055087595
+      ],
+      "changed_noisy_output_hashes": 1
+    },
+    {
+      "domain": "spectral_internal",
+      "route": "cap",
+      "candidate": "bank",
+      "pattern": "curved_edge",
+      "cases": 8,
+      "mse_ratio_p50_p95_max": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "changed_noisy_output_hashes": 0
+    },
+    {
+      "domain": "spectral_internal",
+      "route": "fallback",
+      "candidate": "spectral",
+      "pattern": "flat",
+      "cases": 8,
+      "mse_ratio_p50_p95_max": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "changed_noisy_output_hashes": 0
+    },
+    {
+      "domain": "spectral_internal",
+      "route": "fallback",
+      "candidate": "spectral",
+      "pattern": "weak_luma",
+      "cases": 8,
+      "mse_ratio_p50_p95_max": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "changed_noisy_output_hashes": 0
+    },
+    {
+      "domain": "spectral_internal",
+      "route": "fallback",
+      "candidate": "spectral",
+      "pattern": "weak_color",
+      "cases": 8,
+      "mse_ratio_p50_p95_max": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "changed_noisy_output_hashes": 1
+    },
+    {
+      "domain": "spectral_internal",
+      "route": "fallback",
+      "candidate": "spectral",
+      "pattern": "curved_edge",
+      "cases": 8,
+      "mse_ratio_p50_p95_max": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "changed_noisy_output_hashes": 1
+    },
+    {
+      "domain": "spectral_internal",
+      "route": "fallback",
+      "candidate": "bank",
+      "pattern": "flat",
+      "cases": 8,
+      "mse_ratio_p50_p95_max": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "changed_noisy_output_hashes": 0
+    },
+    {
+      "domain": "spectral_internal",
+      "route": "fallback",
+      "candidate": "bank",
+      "pattern": "weak_luma",
+      "cases": 8,
+      "mse_ratio_p50_p95_max": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "changed_noisy_output_hashes": 0
+    },
+    {
+      "domain": "spectral_internal",
+      "route": "fallback",
+      "candidate": "bank",
+      "pattern": "weak_color",
+      "cases": 8,
+      "mse_ratio_p50_p95_max": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "changed_noisy_output_hashes": 1
+    },
+    {
+      "domain": "spectral_internal",
+      "route": "fallback",
+      "candidate": "bank",
+      "pattern": "curved_edge",
+      "cases": 8,
+      "mse_ratio_p50_p95_max": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "changed_noisy_output_hashes": 1
+    },
+    {
+      "domain": "real_read_replay",
+      "route": "cap",
+      "candidate": "spectral",
+      "pattern": "flat",
+      "cases": 8,
+      "mse_ratio_p50_p95_max": [
+        1.0034583437461746,
+        1.0130671840046654,
+        1.0147491372727748
+      ],
+      "changed_noisy_output_hashes": 8
+    },
+    {
+      "domain": "real_read_replay",
+      "route": "cap",
+      "candidate": "spectral",
+      "pattern": "weak_luma",
+      "cases": 8,
+      "mse_ratio_p50_p95_max": [
+        1.0054728052847168,
+        1.0122695793151448,
+        1.0138846238990518
+      ],
+      "changed_noisy_output_hashes": 8
+    },
+    {
+      "domain": "real_read_replay",
+      "route": "cap",
+      "candidate": "spectral",
+      "pattern": "weak_color",
+      "cases": 8,
+      "mse_ratio_p50_p95_max": [
+        1.0075195528033105,
+        1.0146963619111122,
+        1.0174150965843272
+      ],
+      "changed_noisy_output_hashes": 7
+    },
+    {
+      "domain": "real_read_replay",
+      "route": "cap",
+      "candidate": "spectral",
+      "pattern": "curved_edge",
+      "cases": 8,
+      "mse_ratio_p50_p95_max": [
+        1.0,
+        1.0000333168062074,
+        1.0000512566249347
+      ],
+      "changed_noisy_output_hashes": 1
+    },
+    {
+      "domain": "real_read_replay",
+      "route": "cap",
+      "candidate": "bank",
+      "pattern": "flat",
+      "cases": 8,
+      "mse_ratio_p50_p95_max": [
+        1.0014671510814332,
+        1.0066602869209589,
+        1.0073283500778516
+      ],
+      "changed_noisy_output_hashes": 5
+    },
+    {
+      "domain": "real_read_replay",
+      "route": "cap",
+      "candidate": "bank",
+      "pattern": "weak_luma",
+      "cases": 8,
+      "mse_ratio_p50_p95_max": [
+        1.0017135961884107,
+        1.010120657528252,
+        1.0115198819426705
+      ],
+      "changed_noisy_output_hashes": 4
+    },
+    {
+      "domain": "real_read_replay",
+      "route": "cap",
+      "candidate": "bank",
+      "pattern": "weak_color",
+      "cases": 8,
+      "mse_ratio_p50_p95_max": [
+        1.0,
+        1.0055925162819122,
+        1.0057499612275806
+      ],
+      "changed_noisy_output_hashes": 3
+    },
+    {
+      "domain": "real_read_replay",
+      "route": "cap",
+      "candidate": "bank",
+      "pattern": "curved_edge",
+      "cases": 8,
+      "mse_ratio_p50_p95_max": [
+        1.0,
+        1.0006945629157296,
+        1.0010685583318917
+      ],
+      "changed_noisy_output_hashes": 1
+    },
+    {
+      "domain": "real_read_replay",
+      "route": "fallback",
+      "candidate": "spectral",
+      "pattern": "flat",
+      "cases": 8,
+      "mse_ratio_p50_p95_max": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "changed_noisy_output_hashes": 1
+    },
+    {
+      "domain": "real_read_replay",
+      "route": "fallback",
+      "candidate": "spectral",
+      "pattern": "weak_luma",
+      "cases": 8,
+      "mse_ratio_p50_p95_max": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "changed_noisy_output_hashes": 0
+    },
+    {
+      "domain": "real_read_replay",
+      "route": "fallback",
+      "candidate": "spectral",
+      "pattern": "weak_color",
+      "cases": 8,
+      "mse_ratio_p50_p95_max": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "changed_noisy_output_hashes": 0
+    },
+    {
+      "domain": "real_read_replay",
+      "route": "fallback",
+      "candidate": "spectral",
+      "pattern": "curved_edge",
+      "cases": 8,
+      "mse_ratio_p50_p95_max": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "changed_noisy_output_hashes": 0
+    },
+    {
+      "domain": "real_read_replay",
+      "route": "fallback",
+      "candidate": "bank",
+      "pattern": "flat",
+      "cases": 8,
+      "mse_ratio_p50_p95_max": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "changed_noisy_output_hashes": 1
+    },
+    {
+      "domain": "real_read_replay",
+      "route": "fallback",
+      "candidate": "bank",
+      "pattern": "weak_luma",
+      "cases": 8,
+      "mse_ratio_p50_p95_max": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "changed_noisy_output_hashes": 0
+    },
+    {
+      "domain": "real_read_replay",
+      "route": "fallback",
+      "candidate": "bank",
+      "pattern": "weak_color",
+      "cases": 8,
+      "mse_ratio_p50_p95_max": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "changed_noisy_output_hashes": 0
+    },
+    {
+      "domain": "real_read_replay",
+      "route": "fallback",
+      "candidate": "bank",
+      "pattern": "curved_edge",
+      "cases": 8,
+      "mse_ratio_p50_p95_max": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "changed_noisy_output_hashes": 0
+    }
+  ],
+  "decision": "Paired ablation only. Retain all failed gates; no production promotion or independent data claim."
+}

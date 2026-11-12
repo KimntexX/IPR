@@ -1,0 +1,71 @@
+#include "ToneCurve.h"
+#include "image_testing.h"
+#include "WorkingColorSpace.h"
+#include "Pixels.h"
+
+#include <cmath>
+#include <iostream>
+
+namespace {
+bool check(bool condition, const char *message)
+{
+    if (!condition) std::cerr << "FAILED: " << message << '\n';
+    return condition;
+}
+
+QVector<ToneCurve::Point> curve(std::initializer_list<ToneCurve::Point> points) { return QVector<ToneCurve::Point>(points); }
+
+bool evaluation()
+{
+    const auto s = curve({{0, 0}, {0.25f, 0.4f}, {0.75f, 0.7f}, {1, 1}});
+    bool ok = check(std::abs(ToneCurve::evaluate(s, 0.25f) - 0.4f) < 1e-6f &&
+                    std::abs(ToneCurve::evaluate(s, 0.75f) - 0.7f) < 1e-6f, "the spline passes through its points");
+    // Natural spline of (0,0), (.5,.75), (1,1): second derivative -3 at the middle.
+    const float expected = float(-0.25 * 0.25 * 0.25 + (1.5 + 0.25) * 0.25);   // -x^3 + 1.75 x
+    ok &= check(std::abs(ToneCurve::evaluate(curve({{0, 0}, {0.5f, 0.75f}, {1, 1}}), 0.25f) - expected) < 1e-5f,
+                "three points give the natural spline");
+    const auto clipped = curve({{32 / 255.f, 0}, {223 / 255.f, 1}});
+    ok &= check(ToneCurve::evaluate(clipped, 0.05f) == 0.0f && ToneCurve::evaluate(clipped, 0.95f) == 1.0f,
+                "flat before the first point and after a last point below 1");
+    ok &= check(std::abs(ToneCurve::evaluate(curve({{0, 0}, {1, 1}}), 1.5f) - 1.5f) < 1e-6f,
+                "past a last point at 1 the curve follows its end slope");
+    ok &= check(ToneCurve::isIdentity(ToneCurve::Curves{{curve({{0, 0}, {1, 1}}), {}, {}, {}}}) &&
+                !ToneCurve::isIdentity(ToneCurve::Curves{{{}, clipped, {}, {}}}), "a linear curve is the identity");
+    return ok;
+}
+
+bool application()
+{
+    ipr::Image image = ipr::Image::create({2, 1}, ipr::Depth::F32, 3);
+    imagetest::at<ipr::Vec3f>(image, 0, 0) = {0.2f, 0.3f, 0.1f};
+    imagetest::at<ipr::Vec3f>(image, 0, 1) = {0.5f, 0.5f, 0.5f};
+    const ipr::Image before = image.clone();
+    const ToneCurve::Curves identity{{curve({{0, 0}, {1, 1}}), curve({{0, 0}, {1, 1}}), {}, {}}};
+    ToneCurve::apply(image, identity);
+    bool ok = check(ipr::largestDifference(image, before) == 0, "linear curves leave the image untouched");
+
+    // A blue curve changes the blue of ProPhoto only.
+    const ToneCurve::Curves blue{{{}, {}, {}, curve({{0, 0}, {0.5f, 0.75f}, {1, 1}})}};
+    ToneCurve::apply(image, blue);
+    const ipr::Vec3d p0 = WorkingColor::toProPhoto() * ipr::Vec3d(imagetest::at<ipr::Vec3f>(before, 0, 0));
+    const ipr::Vec3d p1 = WorkingColor::toProPhoto() * ipr::Vec3d(imagetest::at<ipr::Vec3f>(image, 0, 0));
+    ok &= check(std::abs(p1[0] - p0[0]) < 1e-5 && std::abs(p1[1] - p0[1]) < 1e-5 && p1[2] > p0[2] * 1.2,
+                "a channel curve acts on its ProPhoto channel alone");
+    // The RGB curve acts on every channel: a grey stays grey and brightens.
+    image = before.clone();
+    ToneCurve::apply(image, ToneCurve::Curves{{curve({{0, 0}, {0.5f, 0.75f}, {1, 1}}), {}, {}, {}}});
+    const ipr::Vec3f grey = imagetest::at<ipr::Vec3f>(image, 0, 1);
+    // The published matrices map D65 white to D50 white within about 1e-4.
+    ok &= check(grey[0] > 0.6f && std::abs(grey[0] - grey[1]) < 1e-3f && std::abs(grey[1] - grey[2]) < 1e-3f,
+                "the RGB curve brightens a grey and keeps it grey");
+    return ok;
+}
+} // namespace
+
+int main()
+{
+    bool ok = evaluation();
+    ok &= application();
+    if (ok) std::cout << "toneCurveTests passed\n";
+    return ok ? 0 : 1;
+}
