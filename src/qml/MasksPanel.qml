@@ -5,7 +5,7 @@ import QtQuick.Layouts
 
 // The Masks tab: every value goes through the engine (editor.*LocalMask*), which bounds it and
 // answers through editor.localMasks. A mask is a zone with its own values of the settings,
-// added to the global ones: masks have neither order nor blend mode.
+// added to the global ones: list order organizes masks, without compositing blend modes.
 Item {
     id: root
     objectName: "masksPanel"
@@ -28,10 +28,59 @@ Item {
     property real brushFlow: 1
     property alias showZone: zoneCheck.checked
     property bool syncing: false
+    property int draggedMask: -1
+    property int dropMask: -1
+
+    function moveMask(from, to) {
+        const selected = selectedMask
+        const shape = selectedShape
+        if (!editor.moveLocalMask(from, to))
+            return
+        if (selected === from)
+            selectedMask = to
+        else if (from < selected && selected <= to)
+            selectedMask = selected - 1
+        else if (to <= selected && selected < from)
+            selectedMask = selected + 1
+        selectedShape = shape
+    }
+
+    function updateDrop(y) {
+        let distance = Infinity
+        dropMask = -1
+        for (let i = 0; i < maskRows.count; ++i) {
+            const row = maskRows.itemAt(i)
+            const delta = row ? Math.abs(y - row.mapToItem(root, 0, row.height / 2).y) : Infinity
+            if (delta < distance) {
+                distance = delta
+                dropMask = i
+            }
+        }
+    }
+
+    AppMenu {
+        id: orderMenu
+        parent: scroll
+        objectName: "maskOrderMenu"
+        property int maskIndex: -1
+        ActionMenuItem {
+            objectName: "maskMoveForward"
+            text: qsTr("Passer devant")
+            enabled: orderMenu.maskIndex > 0 && orderMenu.maskIndex < root.masks.length
+            onTriggered: root.moveMask(orderMenu.maskIndex, orderMenu.maskIndex - 1)
+        }
+        ActionMenuItem {
+            objectName: "maskMoveBackward"
+            text: qsTr("Passer derrière")
+            enabled: orderMenu.maskIndex >= 0 && orderMenu.maskIndex < root.masks.length - 1
+            onTriggered: root.moveMask(orderMenu.maskIndex, orderMenu.maskIndex + 1)
+        }
+    }
 
     readonly property var kinds: [
         { key: "brush", label: qsTr("Pinceau") }, { key: "linear", label: qsTr("Dégradé linéaire") },
-        { key: "radial", label: qsTr("Dégradé radial") }, { key: "luminanceRange", label: qsTr("Plage") }
+        { key: "radial", label: qsTr("Dégradé radial") }, { key: "luminanceRange", label: qsTr("Plage") },
+        { key: "triangle", label: qsTr("Cône triangulaire") }, { key: "trapezoid", label: qsTr("Cône trapézoïdal") }
     ]
     readonly property var combinations: [
         { key: "add", label: qsTr("Ajouter") }, { key: "subtract", label: qsTr("Soustraire") },
@@ -108,6 +157,9 @@ Item {
         if (shape) {
             featherControl.value = shape.feather * 100
             angleControl.value = shape.angle
+            startWidthControl.value = shape.startWidth * 100
+            endWidthControl.value = shape.endWidth * 100
+            diffusionControl.value = shape.diffusion * 100
             rangeLowControl.value = shape.rangeLow * 100
             rangeHighControl.value = shape.rangeHigh * 100
             rangeFeatherControl.value = shape.rangeFeather * 100
@@ -219,6 +271,7 @@ Item {
             // The masks of the photo. A row follows the count, not the values: a slider must not
             // rebuild the list, nor a click remove the button it runs in.
             Repeater {
+                id: maskRows
                 model: root.masks.length
                 RowLayout {
                     id: maskRow
@@ -227,6 +280,49 @@ Item {
                     objectName: "maskRow_" + index
                     Layout.fillWidth: true
                     spacing: 4
+                    TapHandler {
+                        acceptedButtons: Qt.RightButton
+                        onTapped: (eventPoint) => {
+                            orderMenu.maskIndex = maskRow.index
+                            orderMenu.popup(maskRow, eventPoint.position.x, eventPoint.position.y)
+                        }
+                    }
+                    Rectangle {
+                        Layout.preferredWidth: 22
+                        Layout.fillHeight: true
+                        color: root.dropMask === maskRow.index ? dragGlyph.palette.highlight : "transparent"
+                        radius: 3
+                        Label {
+                            id: dragGlyph
+                            anchors.centerIn: parent
+                            text: "⠿"
+                            color: root.textColor
+                        }
+                        MouseArea {
+                            objectName: "maskDrag_" + maskRow.index
+                            anchors.fill: parent
+                            preventStealing: true
+                            cursorShape: pressed ? Qt.ClosedHandCursor : Qt.OpenHandCursor
+                            property real pressY: 0
+                            onPressed: (mouse) => { pressY = mouse.y }
+                            onPositionChanged: (mouse) => {
+                                if (pressed && (root.draggedMask >= 0 || Math.abs(mouse.y - pressY) > 6)) {
+                                    root.draggedMask = maskRow.index
+                                    root.updateDrop(mapToItem(root, mouse.x, mouse.y).y)
+                                }
+                            }
+                            onReleased: {
+                                const from = root.draggedMask
+                                const to = root.dropMask
+                                root.draggedMask = -1
+                                root.dropMask = -1
+                                if (from >= 0 && to >= 0)
+                                    root.moveMask(from, to)
+                            }
+                            onCanceled: { root.draggedMask = -1; root.dropMask = -1 }
+                            Accessible.name: qsTr("Déplacer %1").arg(maskRow.modelData.name)
+                        }
+                    }
                     PreferenceCheckBox {
                         objectName: "maskVisible_" + maskRow.index
                         textColor: root.textColor
@@ -383,6 +479,7 @@ Item {
                     text: root.tool === "brush" ? qsTr("Peignez sur l'image.")
                         : root.tool === "linear" ? qsTr("Déplacez les deux poignées sur l'image : effet entier avant la première, aucun après la seconde.")
                         : root.tool === "radial" ? qsTr("Déplacez le centre et les bords sur l'image.")
+                        : root.tool === "triangle" || root.tool === "trapezoid" ? qsTr("Déplacez les extrémités pour orienter le cône et les poignées latérales pour l’élargir. Les largeurs sont relatives au grand côté de l’image.")
                         : root.tool === "luminanceRange" ? qsTr("Choisit les tons de l'image avant toute retouche.") : ""
                 }
                 AdjustmentControl {
@@ -428,9 +525,45 @@ Item {
                     onValueEdited: root.brushFlow = value / 100
                 }
                 AdjustmentControl {
+                    id: startWidthControl
+                    objectName: "maskStartWidth"
+                    visible: root.tool === "trapezoid"
+                    textColor: root.textColor
+                    secondaryTextColor: root.secondaryTextColor
+                    label: qsTr("Largeur au départ (%)")
+                    minimumValue: 0; maximumValue: 800; resetValue: 12
+                    valueText: value.toFixed(1)
+                    adjustmentEnabled: root.currentShape !== null
+                    onValueEdited: root.sendShapeField("startWidth", value / 100)
+                }
+                AdjustmentControl {
+                    id: endWidthControl
+                    objectName: "maskEndWidth"
+                    visible: root.tool === "triangle" || root.tool === "trapezoid"
+                    textColor: root.textColor
+                    secondaryTextColor: root.secondaryTextColor
+                    label: qsTr("Largeur à l’arrivée (%)")
+                    minimumValue: 0; maximumValue: 800; resetValue: 40
+                    valueText: value.toFixed(1)
+                    adjustmentEnabled: root.currentShape !== null
+                    onValueEdited: root.sendShapeField("endWidth", value / 100)
+                }
+                AdjustmentControl {
+                    id: diffusionControl
+                    objectName: "maskDiffusion"
+                    visible: root.tool === "triangle" || root.tool === "trapezoid"
+                    textColor: root.textColor
+                    secondaryTextColor: root.secondaryTextColor
+                    label: qsTr("Diffusion du spot (%)")
+                    minimumValue: 0; maximumValue: 100; resetValue: 70
+                    valueText: Math.round(value)
+                    adjustmentEnabled: root.currentShape !== null
+                    onValueEdited: root.sendShapeField("diffusion", value / 100)
+                }
+                AdjustmentControl {
                     id: featherControl
                     objectName: "maskFeather"
-                    visible: root.tool === "radial"
+                    visible: root.tool === "radial" || root.tool === "triangle" || root.tool === "trapezoid"
                     textColor: root.textColor
                     secondaryTextColor: root.secondaryTextColor
                     label: qsTr("Contour progressif (%)")

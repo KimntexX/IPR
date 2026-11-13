@@ -71,6 +71,45 @@ void paintLinear(const Shape &shape, ipr::Image &out)
     });
 }
 
+void paintCone(const Shape &shape, ipr::Image &out)
+{
+    const auto start = pixelOf(shape.start, out.size());
+    const auto end = pixelOf(shape.end, out.size());
+    const auto axis = end - start;
+    const float length = std::sqrt(axis.dot(axis));
+    const float scale = float(std::max(out.width(), out.height()));
+    const float nearHalf = shape.kind == Kind::Triangle ? 0.0f : shape.startWidth * scale * 0.5f;
+    const float farHalf = shape.endWidth * scale * 0.5f;
+    if (length < 1e-4f || nearHalf + farHalf < 1e-4f) return;
+    const ipr::Point2f normal{-axis.y / length, axis.x / length};
+    const float inverseLength = 1.0f / length;
+    ipr::parallelRows(out.height(), [&](int first, int last) {
+        for (int y = first; y < last; ++y) {
+            float *row = out.mutableRow<float>(y);
+            for (int x = 0; x < out.width(); ++x) {
+                const ipr::Point2f offset{float(x) - start.x, float(y) - start.y};
+                const float along = offset.dot(axis) * inverseLength * inverseLength;
+                const float halfWidth = nearHalf + along * (farHalf - nearHalf);
+                const float across = std::abs(offset.dot(normal));
+                if (along < 0 || along > 1 || halfWidth <= 0 || across > halfWidth) {
+                    row[x] = 0;
+                    continue;
+                }
+                // Independent axial and transverse limits keep equal-coverage sides
+                // straight. Multiplying these ramps rounds the beam into a bulb.
+                float edge = 1.0f;
+                if (shape.feather > 0) {
+                    edge = ImageMath::smoothStep(0.0f, shape.feather, 1.0f - across / halfWidth);
+                    edge = std::min(edge, std::clamp((1.0f - along) / (shape.feather * 0.5f), 0.0f, 1.0f));
+                    if (nearHalf > 0)
+                        edge = std::min(edge, std::clamp(along / (shape.feather * 0.5f), 0.0f, 1.0f));
+                }
+                row[x] = std::min(edge, 1.0f - shape.diffusion * along);
+            }
+        }
+    });
+}
+
 void paintRadial(const Shape &shape, ipr::Image &out)
 {
     const ipr::Point2f centre = pixelOf(shape.center, out.size());
@@ -221,6 +260,10 @@ ipr::Image shapeCoverage(const Shape &shape, const ipr::Size &canvas, const ipr:
     case Kind::Radial:
         paintRadial(shape, out);
         break;
+    case Kind::Triangle:
+    case Kind::Trapezoid:
+        paintCone(shape, out);
+        break;
     case Kind::Brush:
         for (const BrushStroke &stroke : shape.strokes)
             paintStroke(stroke, out);
@@ -285,7 +328,8 @@ bool operator==(const Shape &a, const Shape &b)
     return a.kind == b.kind && a.combine == b.combine && a.inverted == b.inverted && a.start == b.start && a.end == b.end &&
            a.center == b.center && a.radiusX == b.radiusX && a.radiusY == b.radiusY && a.angle == b.angle &&
            a.feather == b.feather && a.strokes == b.strokes && a.rangeLow == b.rangeLow &&
-           a.rangeHigh == b.rangeHigh && a.rangeFeather == b.rangeFeather;
+            a.rangeHigh == b.rangeHigh && a.rangeFeather == b.rangeFeather &&
+            a.startWidth == b.startWidth && a.endWidth == b.endWidth && a.diffusion == b.diffusion;
 }
 
 bool operator==(const Mask &a, const Mask &b)
@@ -317,6 +361,7 @@ bool bound(Masks &masks)
             if (!place(shape.start) || !place(shape.end) || !place(shape.center) || !std::isfinite(shape.radiusX) ||
                 !std::isfinite(shape.radiusY) || !std::isfinite(shape.angle) || !std::isfinite(shape.feather) ||
                 !std::isfinite(shape.rangeLow) || !std::isfinite(shape.rangeHigh) || !std::isfinite(shape.rangeFeather) ||
+                !std::isfinite(shape.startWidth) || !std::isfinite(shape.endWidth) || !std::isfinite(shape.diffusion) ||
                 int(shape.strokes.size()) > largestStrokeCount)
                 return false;
             shape.rangeLow = std::clamp(shape.rangeLow, 0.0f, 1.0f);
@@ -324,6 +369,9 @@ bool bound(Masks &masks)
             shape.rangeFeather = std::clamp(shape.rangeFeather, 0.0f, 1.0f);
             shape.radiusX = std::clamp(shape.radiusX, 0.0f, 8.0f);
             shape.radiusY = std::clamp(shape.radiusY, 0.0f, 8.0f);
+            shape.startWidth = std::clamp(shape.startWidth, 0.0f, 8.0f);
+            shape.endWidth = std::clamp(shape.endWidth, 0.0f, 8.0f);
+            shape.diffusion = std::clamp(shape.diffusion, 0.0f, 1.0f);
             shape.angle = std::clamp(shape.angle, -360.0f, 360.0f);
             shape.feather = std::clamp(shape.feather, 0.0f, 1.0f);
             for (BrushStroke &stroke : shape.strokes) {
@@ -443,6 +491,8 @@ void appendKey(QDataStream &stream, const Masks &masks)
                    << shape.end.x << shape.end.y << shape.center.x << shape.center.y << shape.radiusX << shape.radiusY
                    << shape.angle << shape.feather << shape.rangeLow << shape.rangeHigh << shape.rangeFeather
                    << qint32(shape.strokes.size());
+            if (shape.kind == Kind::Triangle || shape.kind == Kind::Trapezoid)
+                stream << shape.startWidth << shape.endWidth << shape.diffusion;
             for (const BrushStroke &stroke : shape.strokes) {
                 stream << stroke.size << stroke.feather << stroke.flow << qint32(stroke.points.size());
                 for (const ipr::Point2f &point : stroke.points)
@@ -472,6 +522,8 @@ QString kindName(Kind kind)
     case Kind::Radial: return QStringLiteral("radial");
     case Kind::Brush: return QStringLiteral("brush");
     case Kind::LuminanceRange: return QStringLiteral("luminanceRange");
+    case Kind::Triangle: return QStringLiteral("triangle");
+    case Kind::Trapezoid: return QStringLiteral("trapezoid");
     }
     return {};
 }
@@ -488,7 +540,7 @@ QString combineName(Combine combine)
 
 bool kindNamed(const QString &name, Kind &kind)
 {
-    for (const Kind candidate : {Kind::Linear, Kind::Radial, Kind::Brush, Kind::LuminanceRange})
+    for (const Kind candidate : {Kind::Linear, Kind::Radial, Kind::Brush, Kind::LuminanceRange, Kind::Triangle, Kind::Trapezoid})
         if (name == kindName(candidate)) {
             kind = candidate;
             return true;
@@ -520,6 +572,8 @@ QVariantList describe(const Masks &masks)
                 {QStringLiteral("inverted"), shape.inverted}, {QStringLiteral("start"), pointValue(shape.start)},
                 {QStringLiteral("end"), pointValue(shape.end)}, {QStringLiteral("center"), pointValue(shape.center)},
                 {QStringLiteral("radiusX"), double(shape.radiusX)}, {QStringLiteral("radiusY"), double(shape.radiusY)},
+                {QStringLiteral("startWidth"), double(shape.startWidth)}, {QStringLiteral("endWidth"), double(shape.endWidth)},
+                {QStringLiteral("diffusion"), double(shape.diffusion)},
                 {QStringLiteral("angle"), double(shape.angle)}, {QStringLiteral("feather"), double(shape.feather)},
                 {QStringLiteral("strokes"), int(shape.strokes.size())},
                 {QStringLiteral("rangeLow"), double(shape.rangeLow)}, {QStringLiteral("rangeHigh"), double(shape.rangeHigh)},
@@ -542,6 +596,9 @@ bool setShapeFields(Shape &shape, const QVariantMap &values)
         else if (key == QStringLiteral("center")) ok = readPoint(value, shape.center);
         else if (key == QStringLiteral("radiusX")) ok = readFloat(value, shape.radiusX);
         else if (key == QStringLiteral("radiusY")) ok = readFloat(value, shape.radiusY);
+        else if (key == QStringLiteral("startWidth")) ok = readFloat(value, shape.startWidth);
+        else if (key == QStringLiteral("endWidth")) ok = readFloat(value, shape.endWidth);
+        else if (key == QStringLiteral("diffusion")) ok = readFloat(value, shape.diffusion);
         else if (key == QStringLiteral("angle")) ok = readFloat(value, shape.angle);
         else if (key == QStringLiteral("feather")) ok = readFloat(value, shape.feather);
         else if (key == QStringLiteral("rangeLow")) ok = readFloat(value, shape.rangeLow);

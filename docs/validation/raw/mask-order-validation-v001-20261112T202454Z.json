@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "data_version": "v001",
+  "campaign": "local-mask-list-reordering",
+  "created_utc": "2026-11-12T20:24:54.968668+00:00",
+  "branch": "patch_masks",
+  "base_commit": "a9613cba35ede884eef01b4fca53b0a3cf9fed87",
+  "verdict": "automated_checks_passed_visual_validation_pending",
+  "source_sha256": {
+    "src/editor/imageeditor.h": "eb039925949d74fb5b7822fd0f0056d92fccc4fe727fb82166da427ba462bd60",
+    "src/editor/imageeditor.cpp": "c1e117a47edae73c7f8416a3a05dfa369fc98cc79dbb3336c8c46a2581b1a544",
+    "src/qml/MasksPanel.qml": "e9e9b2b60c036ff0fbae7ed26978f4f634251274fda6d63160b2891543e9f7d7",
+    "tests/editor_masks_test.cpp": "eb1dcdf0016bdeebe2c787a69731988cf72cffaa23718b96ec9ff7bbed83347e",
+    "tests/masks_qml_test.cpp": "2a6d3206a9e801795f56bd518108c23fa84799ab042fffeba8f7e0e3ebb2ccc6"
+  },
+  "semantics": {
+    "front": "previous list position (top)",
+    "behind": "next list position (bottom)",
+    "drag": "drop on nearest row via left handle; one edit on release",
+    "rendering": "existing additive local settings; no opaque compositing introduced",
+    "sidecar_version": 11,
+    "format_change_required": false
+  },
+  "checks": {
+    "ctest_passed": [
+      "renderChainTests",
+      "sidecarTests",
+      "sidecarJsonTests",
+      "localAdjustmentsTests",
+      "editorMasksTests",
+      "editorHistoryTests",
+      "masksQmlTests"
+    ],
+    "editor": [
+      "invalid indices refused",
+      "same position leaves history unchanged",
+      "front and end moves preserve all mask data",
+      "one move one history entry",
+      "undo and redo",
+      "sidecar order persistence"
+    ],
+    "qml": [
+      "real mouse drag",
+      "no edits before release",
+      "selection follows moved mask",
+      "real right click on name opens menu",
+      "front action disabled at first row",
+      "move behind and undo"
+    ],
+    "application_build": "MSVC Release with existing pinned ONNX Runtime and model",
+    "application_offscreen_smoke": "passed",
+    "qml_warnings": []
+  },
+  "log_sha256": {
+    "build-patch_masks/test-reorder.log": "e1b93c9bde9bf2ce918c0b3c66f60b14e721cb38ea8553198d8de3b56699887a",
+    "build-patch_masks/qml-reorder.log": "910061a4e3c6a323863d55acc4b961c062a36a0dceee67123c21b9ee9703cb92",
+    "build-patch_masks/smoke-reorder.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "limits": [
+    "User visual acceptance pending",
+    "No new full RAW corpus comparison or performance benchmark",
+    "User manual source updated; PDF not rebuilt"
+  ],
+  "tracking_issue": "https://github.com/KimntexX/IPR/issues/24"
+}

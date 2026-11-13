@@ -84,6 +84,28 @@ int main(int argc, char **argv)
 {
     QCoreApplication app(argc, argv);
     {
+        EditRecipe::Settings cones;
+        LocalAdjustments::Mask mask;
+        LocalAdjustments::Shape shape;
+        shape.kind = LocalAdjustments::Kind::Trapezoid;
+        shape.startWidth = .17f; shape.endWidth = .51f;
+        shape.diffusion = .73f;
+        mask.shapes.push_back(shape); cones.localMasks.push_back(mask);
+        EditRecipe::Settings restored;
+        if (!check(RecipeCodec::decodeSettings(RecipeCodec::encodeSettings(cones), restored) &&
+                   restored.localMasks == cones.localMasks, "cone widths and kind round trip")) return 1;
+        auto old = RecipeCodec::encodeSettings(cones);
+        auto masks = old.value(QStringLiteral("localMasks")).toArray();
+        auto oldMask = masks[0].toMap();
+        auto shapes = oldMask.value(QStringLiteral("shapes")).toArray();
+        auto oldShape = shapes[0].toMap();
+        oldShape.remove(QStringLiteral("diffusion"));
+        shapes[0] = oldShape; oldMask.insert(QStringLiteral("shapes"), shapes);
+        masks[0] = oldMask; old.insert(QStringLiteral("localMasks"), masks);
+        if (!check(RecipeCodec::decodeSettings(old, restored) && restored.localMasks[0].shapes[0].diffusion == 0,
+                   "missing diffusion migrates to no axial attenuation")) return 1;
+    }
+    {
         EditRecipe::RawDevelopment neural;
         neural.neuralStrength = 75;
         neural.neuralModelId = QStringLiteral("model-test");
@@ -186,6 +208,21 @@ int main(int argc, char **argv)
         if (!check(in && in->format == Sidecar::Format::Current && in->settings.contrast == 0 &&
                    in->settings.temperature == 4800,
                    "unknown sections and fields are skipped, missing ones take their default")) return 1;
+    }
+
+    // Version 10 still reads and is rewritten in the sole current format.
+    {
+        QCborMap map = documentOf(source);
+        QCborMap header = map.value(QStringLiteral("ipr")).toMap();
+        header.insert(QStringLiteral("format"), 10);
+        map.insert(QStringLiteral("ipr"), header);
+        if (!check(writeDocument(source,map), "version 10 fixture written")) return 1;
+        const auto in = Sidecar::read(source);
+        if (!check(in && in->format == Sidecar::Format::Older && in->settings.temperature == 4800 &&
+                   Sidecar::write(source,*in), "version 10 settings are retained")) return 1;
+        const auto rewritten = Sidecar::read(source);
+        if (!check(rewritten && rewritten->format == Sidecar::Format::Current,
+                   "version 10 migrates to the current format")) return 1;
     }
 
     // A file written by a newer IPR opens read-only: it is read, never overwritten.

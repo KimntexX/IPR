@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "data_version": "v001",
+  "campaign": "linear-widening-cone-diffusion",
+  "created_utc": "2026-11-13T12:59:44.138668+00:00",
+  "branch": "patch_masks",
+  "base_commit": "cd283c6c2c21a833f3fd27153503cd4f6fa1a5bb",
+  "verdict": "automated_checks_passed_visual_validation_pending",
+  "source_sha256": {
+    "src/core/LocalAdjustments.cpp": "f3bff3c80005612e1acdcf29c40e81c3447ce1689b45a1d68a2ff9641e6765a5",
+    "tests/local_adjustments_test.cpp": "0a3b2a27a2ddcf0edcc18dff3010d61b0af1b344d404b3d509b8e3f4e759f92f"
+  },
+  "diagnosis": "Prior product of lateral feather, axial smoothstep falloff and base fade curved equal-coverage contours; not a radial renderer being invoked.",
+  "current_model": {
+    "axial": "1 - diffusion * t",
+    "lateral": "smoothstep(0, feather, 1 - abs(across)/local_half_width)",
+    "base": "clamp((1-t)/(feather/2), 0, 1) when feather > 0",
+    "near_cap": "clamp(t/(feather/2), 0, 1) for nonzero start width and feather > 0",
+    "combination": "minimum of independent limits; zero outside cone",
+    "geometry": "local width interpolated linearly between start and end widths",
+    "artistic_mask_not_physical_simulation": true
+  },
+  "contour_measurement": {
+    "canvas_px": [
+      400,
+      300
+    ],
+    "normalized_start": [
+      0.5,
+      0.25
+    ],
+    "normalized_end": [
+      0.5,
+      0.75
+    ],
+    "full_widths_long_side_fraction": {
+      "triangle": [
+        0,
+        0.4
+      ],
+      "trapezoid": [
+        0.12,
+        0.4
+      ]
+    },
+    "feather": 0.5,
+    "diffusion": 0.7,
+    "coverage_threshold": 0.5,
+    "half_width_tolerance_px": 1,
+    "results": []
+  },
+  "validation": {
+    "ctest_passed": [
+      "renderChainTests",
+      "sidecarTests",
+      "sidecarJsonTests",
+      "localAdjustmentsTests",
+      "editorMasksTests",
+      "editorHistoryTests",
+      "masksQmlTests"
+    ],
+    "smoke_test": "passed",
+    "build": "MSVC Release; existing pinned ONNX model/runtime preserved",
+    "tests": "linear axial values at t near 0.1/0.5/0.9; straight widening half-coverage contours; existing bounds, inversion, rotation, resolution, cache, recipe and QML tests",
+    "log_sha256": "4ae6ff2964f03588fd69706c3437595ffc92e22801708b1d182b7b6e4f9d204f"
+  },
+  "illustration": {
+    "path": "build-patch_masks/cone-linear-comparison.png",
+    "sha256": "80c4b39d9147b8f2926aec5d1096a703b497e74ab4883c67a9fbe41db16e0c3c",
+    "provenance": "analytical illustration of previous and corrected equations; not an application capture or physical lighting measurement"
+  },
+  "limits": [
+    "User visual acceptance pending",
+    "No new full RAW corpus comparison",
+    "No format change (sidecar 12); current cone law replaced without legacy renderer",
+    "French manual source updated; PDF not rebuilt"
+  ],
+  "tracking_issue": "https://github.com/KimntexX/IPR/issues/24"
+}

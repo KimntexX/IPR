@@ -64,11 +64,12 @@ void click(QQuickItem *button)
     QCoreApplication::processEvents();
 }
 
-void mouse(QQuickWindow &window, QEvent::Type type, const QPointF &point, unsigned long &timestamp)
+void mouse(QQuickWindow &window, QEvent::Type type, const QPointF &point, unsigned long &timestamp,
+           Qt::MouseButton button = Qt::LeftButton)
 {
     QMouseEvent event(type, point, QPointF(window.mapToGlobal(point.toPoint())),
-                      type == QEvent::MouseMove ? Qt::NoButton : Qt::LeftButton,
-                      type == QEvent::MouseButtonRelease ? Qt::NoButton : Qt::MouseButtons(Qt::LeftButton),
+                      type == QEvent::MouseMove ? Qt::NoButton : button,
+                      type == QEvent::MouseButtonRelease ? Qt::NoButton : Qt::MouseButtons(button),
                       Qt::NoModifier);
     event.setTimestamp(timestamp);
     timestamp += 50;
@@ -370,6 +371,81 @@ int main(int argc, char **argv)
     settle();
     if (!check(shapeAt(editor, 0, 0).value(QStringLiteral("strokes")).toInt() == 0, "and not to a gradient")) return 1;
     if (!check(waitFor([&] { return !editor.busy(); }), "the preview settles at the end")) return 1;
+
+    // Tapered cones are real mask kinds, with editable widths and one edit per drag.
+    auto *newTriangle = named(panel, QStringLiteral("maskNew_triangle"));
+    auto *newTrapezoid = named(panel, QStringLiteral("maskNew_trapezoid"));
+    if (!check(newTriangle && newTrapezoid, "both cone presets are offered")) return 1;
+    click(newTriangle); settle();
+    if (!check(panel->property("tool").toString() == "triangle" &&
+               named(panel, "maskEndWidth")->isVisible() && !named(panel, "maskStartWidth")->isVisible(),
+               "triangle exposes its far width")) return 1;
+    const int triangleIndex = panel->property("selectedMask").toInt();
+    auto *diffusion = named(panel, QStringLiteral("maskDiffusion"));
+    if (!check(diffusion && diffusion->isVisible() &&
+               std::abs(diffusion->property("value").toDouble() - 70) < .01,
+               "new cones offer a default spot falloff")) return 1;
+    diffusion->setProperty("value", 95.0);
+    QMetaObject::invokeMethod(diffusion, "valueEdited", Q_ARG(double, 95.0));
+    settle();
+    if (!check(std::abs(shapeAt(editor, triangleIndex, 0).value("diffusion").toDouble() - .95) < .001,
+               "diffusion slider updates the recipe")) return 1;
+    overlay->setProperty("shape", shapeAt(editor, triangleIndex, 0)); settle();
+    if (!check(named(overlay,"maskHandle_start") && named(overlay,"maskHandle_endWidth") &&
+               !named(overlay,"maskHandle_startWidth"), "triangle handles")) return 1;
+    auto *widthHandle = named(overlay, "maskHandle_endWidth");
+    const auto widthAt = centreOf(widthHandle);
+    const int beforeWidthEdit = listening->property("edits").toInt();
+    mouse(window,QEvent::MouseButtonPress,widthAt,timestamp);
+    mouse(window,QEvent::MouseMove,widthAt+QPointF(-60,0),timestamp);
+    if (!check(listening->property("edits").toInt() == beforeWidthEdit, "width is previewed until release")) return 1;
+    mouse(window,QEvent::MouseButtonRelease,widthAt+QPointF(-60,0),timestamp);
+    if (!check(listening->property("edits").toInt() == beforeWidthEdit+1 &&
+               std::abs(listening->property("lastValues").toMap().value("endWidth").toDouble()-.6)<.02,
+               "width drag sends one normalized edit")) return 1;
+    click(newTrapezoid); settle();
+    const int trapezoidIndex = panel->property("selectedMask").toInt();
+    overlay->setProperty("shape", shapeAt(editor,trapezoidIndex,0)); settle();
+    if (!check(panel->property("tool").toString() == "trapezoid" &&
+               named(panel,"maskStartWidth")->isVisible() && named(overlay,"maskHandle_startWidth"),
+               "trapezoid exposes both widths")) return 1;
+    if (!check(waitFor([&] { return !editor.busy(); }), "cone preview settles")) return 1;
+
+    // Reordering commits on release, preserves the selected mask and supports both directions.
+    const QVariantList beforeOrder = editor.localMasks();
+    const int last = int(beforeOrder.size()) - 1;
+    const qsizetype historyBefore = editor.historySteps().size();
+    auto *drag = named(panel, "maskDrag_" + QString::number(last));
+    auto *firstDrag = named(panel, "maskDrag_0");
+    if (!check(drag && firstDrag, "reorder handles exist")) return 1;
+    const QPointF dragFrom = centreOf(drag), dragTo = centreOf(firstDrag);
+    mouse(window, QEvent::MouseButtonPress, dragFrom, timestamp);
+    mouse(window, QEvent::MouseMove, dragTo, timestamp);
+    if (!check(editor.localMasks() == beforeOrder, "drag does not edit before release")) return 1;
+    mouse(window, QEvent::MouseButtonRelease, dragTo, timestamp);
+    settle();
+    if (!check(waitFor([&] { return !editor.busy(); }) && editor.localMasks()[0] == beforeOrder[last] &&
+               panel->property("selectedMask").toInt() == 0 && editor.historySteps().size() == historyBefore + 1,
+               "drop moves the selected mask in one step")) return 1;
+    // Right-clicking the name opens the actual context menu, respecting list boundaries.
+    const auto rightAt = centreOf(named(panel, "maskSelect_0"));
+    mouse(window, QEvent::MouseButtonPress, rightAt, timestamp, Qt::RightButton);
+    mouse(window, QEvent::MouseButtonRelease, rightAt, timestamp, Qt::RightButton);
+    settle();
+    auto *menu = panelObject->findChild<QObject *>(QStringLiteral("maskOrderMenu"));
+    auto *forward = panelObject->findChild<QObject *>(QStringLiteral("maskMoveForward"));
+    auto *backward = panelObject->findChild<QObject *>(QStringLiteral("maskMoveBackward"));
+    if (!check(menu && forward && backward && menu->property("visible").toBool() &&
+               !forward->property("enabled").toBool() && backward->property("enabled").toBool(),
+               "context menu opens and disables movement above the first row")) return 1;
+    QMetaObject::invokeMethod(backward, "triggered");
+    QMetaObject::invokeMethod(menu, "close");
+    settle();
+    if (!check(waitFor([&] { return !editor.busy(); }) && editor.localMasks()[1] == beforeOrder[last] &&
+               panel->property("selectedMask").toInt() == 1, "context action moves behind and follows selection")) return 1;
+    editor.undo();
+    if (!check(waitFor([&] { return !editor.busy(); }) && editor.localMasks()[0] == beforeOrder[last],
+               "context movement can be undone")) return 1;
 
     std::cout << "masks panel: ok\n";
     return 0;

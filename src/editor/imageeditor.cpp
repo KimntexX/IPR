@@ -1946,6 +1946,8 @@ int ImageEditor::addLocalMask(const QString &kind)
     LocalAdjustments::Shape shape;
     if (!LocalAdjustments::kindNamed(kind, shape.kind))
         return -1;
+    if (shape.kind == LocalAdjustments::Kind::Triangle || shape.kind == LocalAdjustments::Kind::Trapezoid)
+        shape.diffusion = 0.7f;
     LocalAdjustments::Masks next = m_settings.localMasks;
     LocalAdjustments::Mask mask;
     mask.name = tr("Masque %1").arg(next.size() + 1);
@@ -1962,6 +1964,21 @@ void ImageEditor::removeLocalMask(int mask)
     LocalAdjustments::Masks next = m_settings.localMasks;
     next.erase(next.begin() + mask);
     commitLocalMasks(std::move(next));
+}
+
+bool ImageEditor::moveLocalMask(int from, int to)
+{
+    const int count = int(m_settings.localMasks.size());
+    if (from < 0 || to < 0 || from >= count || to >= count)
+        return false;
+    if (from == to)
+        return true;
+    LocalAdjustments::Masks next = m_settings.localMasks;
+    if (from < to)
+        std::rotate(next.begin() + from, next.begin() + from + 1, next.begin() + to + 1);
+    else
+        std::rotate(next.begin() + to, next.begin() + from, next.begin() + from + 1);
+    return commitLocalMasks(std::move(next));
 }
 
 int ImageEditor::duplicateLocalMask(int mask)
@@ -2016,6 +2033,8 @@ int ImageEditor::addLocalMaskShape(int mask, const QString &kind, const QString 
     if (mask < 0 || mask >= int(m_settings.localMasks.size()) || !LocalAdjustments::kindNamed(kind, shape.kind) ||
         !LocalAdjustments::combineNamed(combine, shape.combine))
         return -1;
+    if (shape.kind == LocalAdjustments::Kind::Triangle || shape.kind == LocalAdjustments::Kind::Trapezoid)
+        shape.diffusion = 0.7f;
     LocalAdjustments::Masks next = m_settings.localMasks;
     next[size_t(mask)].shapes.push_back(shape);
     const int index = int(next[size_t(mask)].shapes.size()) - 1;

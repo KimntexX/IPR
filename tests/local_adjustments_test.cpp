@@ -402,8 +402,114 @@ void bounds()
 
 } // namespace
 
+void cones()
+{
+    Shape shape;
+    shape.kind = Kind::Triangle;
+    shape.feather = 0;
+    const auto triangle = coverage(maskOf(shape), canvas);
+    check(at(triangle, .5f, .5f) == 1, "triangle interior");
+    check(at(triangle, .65f, .5f) == 0 && at(triangle, .5f, .8f) == 0, "cone sides and end are bounded");
+    check(at(triangle, .54f, .3f) == 0, "triangle begins at a point");
+    shape.kind = Kind::Trapezoid;
+    const auto trapezoid = coverage(maskOf(shape), canvas);
+    check(at(trapezoid, .54f, .3f) == 1, "trapezoid has a finite near width");
+    shape.startWidth = 0;
+    check(worstDifference(triangle, coverage(maskOf(shape), canvas)) == 0, "zero near width becomes a triangle");
+    shape.kind = Kind::Triangle;
+    shape.feather = .5f;
+    const auto soft = coverage(maskOf(shape), canvas);
+    check(at(soft, .58f, .5f) > 0 && at(soft, .58f, .5f) < 1, "cone feather is progressive");
+    const auto large = coverage(maskOf(shape), {800, 600});
+    check(std::abs(at(soft,.58f,.5f)-at(large,.58f,.5f)) < .03, "cone feather follows resolution");
+    shape.inverted = true;
+    const auto inverse = coverage(maskOf(shape), canvas);
+    check(std::abs(at(soft,.58f,.5f)+at(inverse,.58f,.5f)-1) < 1e-6f, "cone inversion");
+    shape.inverted = false;
+    shape.start = {.25f,.5f}; shape.end = {.75f,.5f}; shape.feather = 0;
+    check(at(coverage(maskOf(shape),canvas),.5f,.6f) == 1, "rotated cone");
+    shape.end = shape.start;
+    const auto empty = coverage(maskOf(shape),canvas);
+    check(ipr::extremesOf(empty).largest == 0, "coincident endpoints produce an empty mask");
+    Masks masks{maskOf(shape)};
+    masks[0].shapes[0].endWidth = std::numeric_limits<float>::quiet_NaN();
+    check(!bound(masks), "invalid cone width rejected");
+    masks = {valued(Shape{}, LocalValues::Exposure, 1)};
+    masks[0].shapes[0].kind = Kind::Trapezoid;
+    QByteArray before, after;
+    QDataStream first(&before, QIODevice::WriteOnly);
+    appendKey(first, masks);
+    masks[0].shapes[0].endWidth += .1f;
+    QDataStream second(&after, QIODevice::WriteOnly);
+    appendKey(second, masks);
+    check(before != after, "cone width invalidates mask cache");
+    Shape spot;
+    spot.kind = Kind::Triangle;
+    spot.diffusion = 1;
+    spot.feather = .5f;
+    const auto beam = coverage(maskOf(spot), canvas);
+    check(std::abs(at(beam,.5f,.3f) - .9f) < .01f && std::abs(at(beam,.5f,.5f) - .5f) < .01f &&
+          std::abs(at(beam,.5f,.7f) - .1f) < .01f, "spot follows a linear axial falloff despite side feather");
+    // An intermediate contour must widen along straight sides, rather than
+    // closing into a rounded lobe as the axial strength falls.
+    Shape widening = spot;
+    widening.diffusion = .7f;
+    const auto wedge = coverage(maskOf(widening), canvas);
+    for (const int y : {105, 135, 165}) {
+        const float along = (float(y) - 74.5f) / 150.0f;
+        const float expectedHalfWidth = 80.0f * along * .75f;
+        int count = 0;
+        for (int x = 0; x < canvas.width; ++x)
+            count += imagetest::at<float>(wedge, y, x) >= .5f;
+        std::cout << "cone-contour triangle y=" << y << " halfWidth=" << float(count) * .5f
+                  << " expected=" << expectedHalfWidth << '\n';
+        check(std::abs(float(count) * .5f - expectedHalfWidth) <= 1,
+              "half-coverage width grows linearly towards the base");
+    }
+    widening.kind = Kind::Trapezoid;
+    const auto broad = coverage(maskOf(widening), canvas);
+    for (const int y : {135, 165}) {
+        const float along = (float(y) - 74.5f) / 150.0f;
+        const float expectedHalfWidth = (24.0f + 56.0f * along) * .75f;
+        int count = 0;
+        for (int x = 0; x < canvas.width; ++x)
+            count += imagetest::at<float>(broad, y, x) >= .5f;
+        std::cout << "cone-contour trapezoid y=" << y << " halfWidth=" << float(count) * .5f
+                  << " expected=" << expectedHalfWidth << '\n';
+        check(std::abs(float(count) * .5f - expectedHalfWidth) <= 1,
+              "trapezoid keeps straight widening intensity contours");
+    }
+    float previous = 1;
+    for (int y = 90; y < 225; ++y) {
+        const float value = imagetest::at<float>(beam, y, 200);
+        check(std::isfinite(value) && value >= 0 && value <= previous + 1e-6f, "axial falloff is finite bounded and monotone");
+        previous = value;
+    }
+    const auto bigBeam = coverage(maskOf(spot), {800, 600});
+    check(std::abs(at(beam,.5f,.4f)-at(bigBeam,.5f,.4f)) < .03f, "spot follows resolution");
+    spot.start = {.25f,.5f}; spot.end = {.75f,.5f};
+    const auto horizontal = coverage(maskOf(spot), canvas);
+    check(at(horizontal,.3f,.5f) > at(horizontal,.7f,.5f), "falloff follows rotated beam axis");
+    spot.inverted = true;
+    check(std::abs(at(horizontal,.4f,.5f)+at(coverage(maskOf(spot),canvas),.4f,.5f)-1) < 1e-6f,
+          "inversion applies to the full diffused beam");
+    masks = {valued(spot, LocalValues::Exposure, 1)};
+    before.clear(); after.clear();
+    QDataStream third(&before, QIODevice::WriteOnly);
+    appendKey(third, masks);
+    masks[0].shapes[0].diffusion = .5f;
+    QDataStream fourth(&after, QIODevice::WriteOnly);
+    appendKey(fourth, masks);
+    check(before != after, "diffusion invalidates cache");
+    masks[0].shapes[0].diffusion = 2;
+    check(bound(masks) && masks[0].shapes[0].diffusion == 1, "diffusion bounded");
+    masks[0].shapes[0].diffusion = std::numeric_limits<float>::quiet_NaN();
+    check(!bound(masks), "nonfinite diffusion refused");
+}
+
 int main()
 {
+    cones();
     shapes();
     ranges();
     resolutions();
