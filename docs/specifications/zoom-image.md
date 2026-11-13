@@ -117,7 +117,7 @@ attendant.
 
 Quand toutes les étapes actives savent se rendre par zone
 (`RenderChain::rendersByRegion` : signal caméra et DCP, tons, couleur,
-courbes, géométrie complète), le zoom ne rend plus l'image entière mais des
+courbes, géométrie complète, flou, netteté et grain), le zoom ne rend plus l'image entière mais des
 **tuiles de 512 × 512 pixels du fichier**, posées sur l'aperçu agrandi dès
 qu'elles sont prêtes ([conception](../architecture/apercu-adaptatif.md)) :
 
@@ -137,11 +137,13 @@ qu'elles sont prêtes ([conception](../architecture/apercu-adaptatif.md)) :
   entier (et donc de l'export) ;
 - la première tuile après un changement de signal caméra ou de géométrie
   mesure aussi le plancher de la déformation sur toute l'image (environ 1 s
-  sur 32 Mpx, seulement si la géométrie rééchantillonne) ; cette mesure est
-  gardée tant que ces réglages ne changent pas.
+  sur 32 Mpx, seulement si la géométrie rééchantillonne) ; avec la netteté,
+  elle mesure aussi le bruit de toute son entrée, par bandes de lignes
+  (environ 1,1 s sur 32 Mpx). Ces mesures sont gardées tant que les réglages
+  en amont ne changent pas : changer la netteté elle-même ne les refait pas.
 
-Les autres réglages (masques, retouches, bruit, texture, clarté, voile,
-flou, netteté, grain) gardent le rendu de l'image entière décrit ci-dessus ;
+Les autres réglages (masques, retouches, bruit, texture, clarté, voile)
+gardent le rendu de l'image entière décrit ci-dessus ;
 ils passeront aux tuiles étape par étape. L'outil de recadrage et les
 surimpressions masquent les tuiles et les libèrent.
 

@@ -4,6 +4,8 @@
 #include "Image.h"
 #include "LocalValues.h"
 
+#include <vector>
+
 namespace DetailProcessing {
 
 struct DenoiseSettings
@@ -37,9 +39,24 @@ struct SharpenSettings
 void reduceNoise(ipr::Image &linearRgb, const DenoiseSettings &settings, double pixelScale = 1.0,
                  const LocalValues::Maps &local = {});
 // The sharpening radius is in pixels of the full image. local: per-pixel Sharpening
-// added to the amount (LocalValues), the sum within [0, 200].
+// added to the amount (LocalValues), the sum within [0, 200]. noiseSigma: the noise the
+// sharpening measures on its whole input (sharpenNoiseSigma), given when this image is a part
+// of it; measured on this image otherwise.
 void sharpen(ipr::Image &linearRgb, const SharpenSettings &settings, double pixelScale = 1.0,
-             const LocalValues::Maps &local = {});
+             const LocalValues::Maps &local = {}, const float *noiseSigma = nullptr);
+// How far around a pixel the sharpening reads, in pixels of this image.
+int sharpenReach(const SharpenSettings &settings, double pixelScale = 1.0);
+
+// The sharpening's noise measure, taken in parts: samples on the rows of the input that are
+// multiples of sharpenNoiseStep of its size, each read with sharpenNoiseReach rows around it.
+// A band holds the full width of its rows, from bandTop of an input of planeHeight rows; a
+// sampled row whose neighbourhood the band does not hold whole is left to another band. The
+// samples of all bands give sharpenNoiseSigma, equal to the measure on the whole input.
+int sharpenNoiseStep(const ipr::Size &plane);
+int sharpenNoiseReach();
+void appendSharpenNoiseSamples(const ipr::Image &linearRgbBand, int bandTop, int planeHeight, int step,
+                               std::vector<float> &samples);
+float sharpenNoiseSigma(std::vector<float> samples);
 
 }
 

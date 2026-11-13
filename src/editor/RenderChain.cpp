@@ -267,6 +267,16 @@ ipr::Image withCoverage(const ipr::Image &rgb, ipr::Image coverage, const Geomet
     return rgbaOutput;
 }
 
+double blurSigma(const Settings &settings, double pixelScale)
+{
+    return static_cast<double>(settings.blur) / 2.0 * pixelScale;
+}
+
+DetailProcessing::SharpenSettings sharpenSettings(const Settings &settings)
+{
+    return {settings.sharpeningAmount, settings.sharpeningRadius, settings.sharpeningMasking};
+}
+
 } // namespace
 
 Geometry::Quality geometryQuality(double pixelScale)
@@ -358,18 +368,14 @@ ColorPipeline::WorkingImage workingImage(const ColorPipeline::WorkingImage &sour
     }
     ToneCurve::apply(adjusted, settings.toneCurves);
 
-    if (settings.blur > 0) {
-        const double sigma = static_cast<double>(settings.blur) / 2.0 * pixelScale;
-        adjusted = ipr::gaussianBlurred(adjusted, sigma);
-    }
+    if (settings.blur > 0)
+        adjusted = ipr::gaussianBlurred(adjusted, blurSigma(settings, pixelScale));
 
     // Capture/output sharpening follows denoise and all contrast operations.
     // Its adaptive mask suppresses low-contrast noise and the local bound
     // limits the bright/dark halos produced by a naive unsharp mask.
     if (settings.sharpeningAmount > 0 || !local[LocalValues::Sharpening].empty()) {
-        DetailProcessing::sharpen(adjusted, {settings.sharpeningAmount,
-                                              settings.sharpeningRadius,
-                                              settings.sharpeningMasking}, pixelScale, local);
+        DetailProcessing::sharpen(adjusted, sharpenSettings(settings), pixelScale, local);
     }
 
     Grain::apply(adjusted, settings.grain, pixelScale);
@@ -381,69 +387,48 @@ ColorPipeline::WorkingImage workingImage(const ColorPipeline::WorkingImage &sour
             source.referenceWhiteBalanceKelvin};
 }
 
-bool rendersByRegion(const Settings &settings)
+namespace {
+
+int blurReach(const Settings &settings)
 {
-    // The stages that read neighbours or measure the whole image come one by one; until then,
-    // their recipes render whole.
-    return !LocalAdjustments::active(settings.localMasks) && !Retouch::active(settings.retouches) &&
-           classicalLuminance(settings) == 0 && settings.denoiseChrominance == 0 && settings.texture == 0 &&
-           settings.clarity == 0 && settings.dehaze == 0 && settings.blur == 0 && settings.sharpeningAmount == 0 &&
-           settings.grain == 0;
+    return settings.blur > 0 ? int(ipr::gaussianHalfKernel(blurSigma(settings, 1.0)).size()) - 1 : 0;
 }
 
-QByteArray wholeMeasuresKey(const Settings &s)
+// How far the stages after the curves read around a pixel, at full resolution: a region renders
+// what comes before them on itself grown by this much.
+int localReach(const Settings &settings)
 {
-    // What the stages before the geometry read (renderCamera), and the geometry itself.
-    QByteArray key;
-    QDataStream stream(&key, QIODevice::WriteOnly);
-    stream << qint32(s.temperature) << qint32(s.tint) << s.brightness << s.grayscale << s.denoiseBeforeProfile
-           << qint32(classicalLuminance(s));
-    const Geometry::Settings &g = s.geometry;
-    stream << qint32(g.quarterTurns) << g.flipHorizontal << g.flipVertical << g.rotation << qint32(g.vertical)
-           << qint32(g.horizontal) << qint32(g.aspect) << qint32(g.scale) << qint32(g.offsetX) << qint32(g.offsetY);
-    return key;
+    return blurReach(settings) +
+           (settings.sharpeningAmount > 0 ? DetailProcessing::sharpenReach(sharpenSettings(settings), 1.0) : 0) +
+           Grain::reach(settings.grain, 1.0);
 }
 
-bool measureWhole(const ColorPipeline::WorkingImage &source, const Settings &settings, WholeMeasures &measures)
+ipr::Recti grownWithin(const ipr::Recti &area, int by, const ipr::Size &canvas)
 {
-    measures = {};
-    if (!validSource(source) || !rendersByRegion(settings))
-        return false;
-    if (Geometry::resamples(settings.geometry)) {
-        ipr::Image camera = ipr::withoutAlpha(source.linearRgba);
-        if (!renderCamera(source, settings, referenceTemperatureOf(source), 1.0, camera, {}))
-            return false;
-        measures.warpFloor = Geometry::warpFloor(camera);
-    }
-    measures.toneStatistics = toneStatisticsOf(source);
-    measures.sourceSize = source.linearRgba.size();
-    measures.valid = true;
-    return true;
+    return ipr::Recti(area.x - by, area.y - by, area.width + 2 * by, area.height + 2 * by) &
+           ipr::Recti(0, 0, canvas.width, canvas.height);
 }
 
-ColorPipeline::WorkingImage workingRegion(const ColorPipeline::WorkingImage &source, const Settings &settings,
-                                          const ipr::Recti &region, const WholeMeasures &measures)
+// The pixel-by-pixel stages, camera signal to curves, on one area of the canvas, from the window
+// of the source it reads. camera: the camera stage of the whole source already rendered
+// (renderCamera), read instead of rendering the window's. Empty on a failed stage.
+ipr::Image regionBeforeLocal(const ColorPipeline::WorkingImage &source, const Settings &settings,
+                             const ipr::Recti &area, const WholeMeasures &measures, const ipr::Image *camera = nullptr)
 {
-    // The whole source was checked when measured: each region skips that pass over every pixel.
-    if (!measures.valid || !validFormat(source) || measures.sourceSize != source.linearRgba.size() ||
-        !rendersByRegion(settings) || region.empty())
-        return {};
     const ipr::Size sourceSize = source.linearRgba.size();
-    const ipr::Size canvas = Geometry::canvasSize(settings.geometry, sourceSize);
-    if ((region & ipr::Recti(0, 0, canvas.width, canvas.height)) != region ||
-        (Geometry::resamples(settings.geometry) && measures.warpFloor.size() != 3))
-        return {};
-    const int referenceTemperature = referenceTemperatureOf(source);
-    if (isNeutral(settings, referenceTemperature)) {
-        ColorPipeline::WorkingImage part = ColorPipeline::sharedCopy(source);
-        part.linearRgba = source.linearRgba.view(region);
-        return part;
-    }
-
-    // The window of the source the region reads, through the stages before the warp: they act
-    // pixel by pixel, on the source's grid.
     const Geometry::Quality quality = geometryQuality(1.0);
-    const ipr::Recti window = Geometry::sourceWindow(settings.geometry, sourceSize, region, quality);
+    const ipr::Recti window = Geometry::sourceWindow(settings.geometry, sourceSize, area, quality);
+    const int referenceTemperature = referenceTemperatureOf(source);
+    if (camera) {
+        ipr::Image adjusted = Geometry::warpRgbRegion(camera->view(window), window.tl(), sourceSize, settings.geometry,
+                                                      quality, area, measures.warpFloor);
+        if (adjusted.empty() ||
+            !renderCanvasTones(source, settings, referenceTemperature, measures.toneStatistics, adjusted, {}))
+            return {};
+        PerceptualColour::apply(adjusted, perceptualParameters(settings), {});
+        ToneCurve::apply(adjusted, settings.toneCurves);
+        return adjusted;
+    }
     ColorPipeline::WorkingImage windowSource = ColorPipeline::sharedCopy(source);
     windowSource.linearRgba = source.linearRgba.view(window);
     if (source.dcpContext) {
@@ -460,17 +445,148 @@ ColorPipeline::WorkingImage workingRegion(const ColorPipeline::WorkingImage &sou
     ipr::Image adjusted = ipr::withoutAlpha(windowSource.linearRgba);
     if (!renderCamera(windowSource, settings, referenceTemperature, 1.0, adjusted, {}))
         return {};
-    adjusted = Geometry::warpRgbRegion(adjusted, window.tl(), sourceSize, settings.geometry, quality, region,
+    adjusted = Geometry::warpRgbRegion(adjusted, window.tl(), sourceSize, settings.geometry, quality, area,
                                        measures.warpFloor);
     if (adjusted.empty() ||
         !renderCanvasTones(source, settings, referenceTemperature, measures.toneStatistics, adjusted, {}))
         return {};
     PerceptualColour::apply(adjusted, perceptualParameters(settings), {});
     ToneCurve::apply(adjusted, settings.toneCurves);
+    return adjusted;
+}
 
+// The noise the sharpening measures on its whole input, from bands of rows around the rows it
+// samples: each band rendered alone (with the blur's reach above and below), the same samples
+// as the whole canvas. When the bands would cover most of it, the whole canvas at once. camera:
+// the camera stage of the whole source, rendered once for every band.
+bool measureSharpenNoise(const ColorPipeline::WorkingImage &source, const Settings &settings,
+                         WholeMeasures &measures, const ipr::Size &canvas, const ipr::Image &camera)
+{
+    const int step = DetailProcessing::sharpenNoiseStep(canvas);
+    const int reach = DetailProcessing::sharpenNoiseReach(), blur = blurReach(settings);
+    const double sigma = blurSigma(settings, 1.0);
+    std::vector<float> samples;
+    const auto add = [&](const ipr::Recti &rows) {
+        const ipr::Recti read = grownWithin(rows, blur, canvas) & ipr::Recti(0, rows.y - blur, canvas.width,
+                                                                             rows.height + 2 * blur);
+        ipr::Image rgb = regionBeforeLocal(source, settings, read, measures, &camera);
+        if (rgb.empty())
+            return false;
+        if (settings.blur > 0)
+            rgb = ipr::gaussianBlurred(rgb, sigma);
+        DetailProcessing::appendSharpenNoiseSamples(rgb.view(rows - read.tl()), rows.y, canvas.height, step, samples);
+        return true;
+    };
+    if (2 * (reach + blur) + 1 >= step) {
+        if (!add(ipr::Recti(0, 0, canvas.width, canvas.height)))
+            return false;
+    } else {
+        for (int y = 0; y < canvas.height; y += step) {
+            const int top = std::max(0, y - reach), bottom = std::min(canvas.height, y + reach + 1);
+            if (!add(ipr::Recti(0, top, canvas.width, bottom - top)))
+                return false;
+        }
+    }
+    measures.sharpenNoiseSigma = DetailProcessing::sharpenNoiseSigma(std::move(samples));
+    return true;
+}
+
+} // namespace
+
+bool rendersByRegion(const Settings &settings)
+{
+    // The stages that read far around a pixel or measure the whole image come one by one; until
+    // then, their recipes render whole.
+    return !LocalAdjustments::active(settings.localMasks) && !Retouch::active(settings.retouches) &&
+           classicalLuminance(settings) == 0 && settings.denoiseChrominance == 0 && settings.texture == 0 &&
+           settings.clarity == 0 && settings.dehaze == 0;
+}
+
+QByteArray wholeMeasuresKey(const Settings &s)
+{
+    // What the stages before the geometry read (renderCamera), and the geometry itself; with
+    // the sharpening, every setting before it (its noise measure reads its whole input).
+    QByteArray key;
+    QDataStream stream(&key, QIODevice::WriteOnly);
+    stream << qint32(s.temperature) << qint32(s.tint) << s.brightness << s.grayscale << s.denoiseBeforeProfile
+           << qint32(classicalLuminance(s));
+    const Geometry::Settings &g = s.geometry;
+    stream << qint32(g.quarterTurns) << g.flipHorizontal << g.flipVertical << g.rotation << qint32(g.vertical)
+           << qint32(g.horizontal) << qint32(g.aspect) << qint32(g.scale) << qint32(g.offsetX) << qint32(g.offsetY);
+    if (s.sharpeningAmount > 0) {
+        stream << stageKeys(s)[4] << qint32(s.blur);
+        for (const auto &curve : s.toneCurves) {
+            stream << qint32(curve.size());
+            for (const auto &point : curve)
+                stream << point.x << point.y;
+        }
+    }
+    return key;
+}
+
+bool measureWhole(const ColorPipeline::WorkingImage &source, const Settings &settings, WholeMeasures &measures)
+{
+    measures = {};
+    if (!validSource(source) || !rendersByRegion(settings))
+        return false;
+    const bool sharpens = settings.sharpeningAmount > 0 && !isNeutral(settings, referenceTemperatureOf(source));
+    // The camera stage of the whole source, when a measure reads it: once for all of them.
+    ipr::Image camera;
+    if (Geometry::resamples(settings.geometry) || sharpens) {
+        camera = ipr::withoutAlpha(source.linearRgba);
+        if (!renderCamera(source, settings, referenceTemperatureOf(source), 1.0, camera, {}))
+            return false;
+    }
+    if (Geometry::resamples(settings.geometry))
+        measures.warpFloor = Geometry::warpFloor(camera);
+    measures.toneStatistics = toneStatisticsOf(source);
+    measures.sourceSize = source.linearRgba.size();
+    const ipr::Size canvas = Geometry::canvasSize(settings.geometry, measures.sourceSize);
+    if (sharpens && !measureSharpenNoise(source, settings, measures, canvas, camera)) {
+        measures = {};
+        return false;
+    }
+    measures.valid = true;
+    return true;
+}
+
+ColorPipeline::WorkingImage workingRegion(const ColorPipeline::WorkingImage &source, const Settings &settings,
+                                          const ipr::Recti &region, const WholeMeasures &measures)
+{
+    // The whole source was checked when measured: each region skips that pass over every pixel.
+    if (!measures.valid || !validFormat(source) || measures.sourceSize != source.linearRgba.size() ||
+        !rendersByRegion(settings) || region.empty())
+        return {};
+    const ipr::Size sourceSize = source.linearRgba.size();
+    const ipr::Size canvas = Geometry::canvasSize(settings.geometry, sourceSize);
+    if ((region & ipr::Recti(0, 0, canvas.width, canvas.height)) != region ||
+        (Geometry::resamples(settings.geometry) && measures.warpFloor.size() != 3) ||
+        (settings.sharpeningAmount > 0 && !measures.sharpenNoiseSigma))
+        return {};
+    if (isNeutral(settings, referenceTemperatureOf(source))) {
+        ColorPipeline::WorkingImage part = ColorPipeline::sharedCopy(source);
+        part.linearRgba = source.linearRgba.view(region);
+        return part;
+    }
+
+    // The pixel-by-pixel stages on the region grown by what the local stages read, those stages,
+    // then the region: a pixel near the edge of the grown area is wrong only within the margin.
+    const ipr::Recti area = grownWithin(region, localReach(settings), canvas);
+    ipr::Image adjusted = regionBeforeLocal(source, settings, area, measures);
+    if (adjusted.empty())
+        return {};
+    if (settings.blur > 0)
+        adjusted = ipr::gaussianBlurred(adjusted, blurSigma(settings, 1.0));
+    if (settings.sharpeningAmount > 0)
+        DetailProcessing::sharpen(adjusted, sharpenSettings(settings), 1.0, {}, &*measures.sharpenNoiseSigma);
+    Grain::apply(adjusted, settings.grain, 1.0, area.tl());
+    adjusted = adjusted.copy(region - area.tl());
+
+    const Geometry::Quality quality = geometryQuality(1.0);
+    const ipr::Recti window = Geometry::sourceWindow(settings.geometry, sourceSize, region, quality);
     ipr::Image rgbaOutput = withCoverage(
-        adjusted, Geometry::warpCoverageRegion(ipr::channel(windowSource.linearRgba, 3), window.tl(), sourceSize,
-                                               settings.geometry, quality, region),
+        adjusted, Geometry::warpCoverageRegion(ipr::channel(source.linearRgba.view(window), 3), window.tl(),
+                                               sourceSize, settings.geometry, quality, region),
         settings.geometry);
     return {std::move(rgbaOutput), source.colorSpace, source.sourceProfile, source.referenceWhiteBalanceKelvin};
 }

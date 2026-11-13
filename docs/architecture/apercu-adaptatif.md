@@ -205,6 +205,38 @@ Mémoire : une tuile occupe 1 Mio (8 bits) ; une vue 2560 × 1440 et sa couronne
 en gardent une quarantaine, environ 40 Mio, contre 96 à 128 Mio pour l'image
 détaillée entière.
 
+### Netteté, flou et grain par zone — 13 novembre 2026
+
+Ces trois étapes lisent quelques pixels autour de chacun : la zone rend les
+étapes pixel par pixel sur elle-même agrandie de leur portée cumulée (flou du
+curseur, flou et minimum/maximum de la netteté, flou du grain), les applique,
+puis garde la zone. Le grain, tiré par position, reçoit l'origine de la zone.
+
+La netteté mesure le bruit de **toute** son entrée (un échantillon par pas de
+`√(pixels/16384)` sur des lignes régulières, lu à 3 lignes près). Comme vous
+l'avez demandé (export inchangé), cette mesure reste celle de l'image entière,
+mais elle est prise **par bandes** : seules les lignes échantillonnées et leurs
+voisines sont rendues, avec la même fonction d'échantillonnage que le rendu
+entier (`DetailProcessing::appendSharpenNoiseSamples`), d'où la même valeur.
+Le signal caméra de toute la source est rendu une seule fois pour toutes les
+bandes (et pour le plancher de la géométrie). La mesure est gardée tant que les
+réglages en amont de la netteté ne changent pas (`wholeMeasuresKey`) : changer
+le gain, le rayon ou le masque de netteté ne la refait pas.
+
+Égalité stricte : `renderChainTests` (netteté, flou, grain, combinaison avec
+rotation ; mesure par bandes sur une image de 1100 × 960) et sonde sur RAW
+réels ([preuve](../validation/raw/adaptive-preview-region-render-v002-20261113T161558Z.json)),
+toutes zones identiques à l'octet près.
+
+| Recette (R6 III 32 Mpx) | Image entière | Mesures globales | Tuile 512 |
+| --- | --- | --- | --- |
+| Tons et couleur + netteté 40 | 2,4 s | 1,1 s | 33–34 ms |
+| + rotation 2,5° | 3,3 s | 1,4 s | 37–39 ms |
+| Tons et couleur + grain 25 + flou 2 | 2,5 s | 21 ms | 35–38 ms |
+
+Restent rendus en image entière : bruit (luminance et couleur), texture et
+clarté, voile, masques, retouches.
+
 ## Étapes
 
 1. ✅ Banc de mesure (ci-dessus). Reste : profilage de « tons et couleur »
@@ -214,7 +246,8 @@ détaillée entière.
    d'égalité stricte avec la version actuelle).
 3. ✅ Rendu de région pour les étapes « direct » et la géométrie, repli pour les
    autres ; invariant testé (ci-dessus).
-4. Clarté, voile, débruitage, netteté par zone ; puis masques et retouches.
+4. Clarté, voile, débruitage par zone ; puis masques et retouches. Netteté,
+   flou et grain ✅ (13 novembre 2026).
 5. ✅ Vue et ordonnanceur : tuiles en spirale, couronne de 512 px, libération et
    abandon du côté opposé au déplacement, masquage au changement de réglage
    (pour les recettes rendues par zone ; les autres gardent l'image entière).

@@ -335,6 +335,12 @@ void aRegionIsThatPartOfTheWholeRender()
         {"rotation", [](Settings &s) { s.geometry.rotation = 5.0f; s.brightness = 0.3f; }},
         {"perspective", [](Settings &s) { s.geometry.vertical = 35; s.geometry.scale = 70; s.geometry.aspect = 20; }},
         {"crop", [](Settings &s) { s = withCrop(); s.contrast = 25; }},
+        {"sharpening", [](Settings &s) { s.sharpeningAmount = 60; s.sharpeningRadius = 1.5f; s.sharpeningMasking = 20; }},
+        {"blur", [](Settings &s) { s.blur = 6; }},
+        {"grain", [](Settings &s) { s.grain = 40; }},
+        {"local stages", [](Settings &s) {
+             s.contrast = 20; s.blur = 3; s.sharpeningAmount = 120; s.sharpeningRadius = 3.0f; s.grain = 30;
+             s.geometry.rotation = 3.0f; }},
         {"together", [](Settings &s) {
              s.brightness = -0.4f; s.contrast = -15; s.temperature = 4300; s.shadows = 40; s.saturation = 20;
              s.toneCurves[0] = {{0.0f, 0.05f}, {0.5f, 0.55f}, {1.0f, 0.95f}};
@@ -370,6 +376,26 @@ void aRegionIsThatPartOfTheWholeRender()
         check(!RenderChain::rendersByRegion(settings) && !RenderChain::measureWhole(source, settings, measures) &&
                   RenderChain::workingRegion(source, settings, ipr::Recti(0, 0, 10, 10), measures).isNull(), name);
     }
+    // Large enough for the sharpening's noise measure to sample one row in eight: it reads
+    // bands of rows instead of the whole canvas, and gives the same pixels.
+    const WorkingImage large = scene(1100, 960);
+    for (const auto &[name, edit] : std::vector<std::pair<const char *, std::function<void(Settings &)>>>{
+             {"sharpening by bands", [](Settings &s) { s.sharpeningAmount = 80; s.contrast = 15; }},
+             {"sharpening after a blur, rotated", [](Settings &s) {
+                  s.sharpeningAmount = 50; s.blur = 2; s.geometry.rotation = -2.0f; }}}) {
+        Settings settings = neutral();
+        edit(settings);
+        const WorkingImage whole = RenderChain::workingImage(large, settings);
+        RenderChain::WholeMeasures measures;
+        check(RenderChain::measureWhole(large, settings, measures) && measures.sharpenNoiseSigma.has_value(), name);
+        const ipr::Size canvas = whole.linearRgba.size();
+        for (const ipr::Recti &region : {ipr::Recti(0, 0, 64, 64), ipr::Recti(canvas.width / 2 - 40, canvas.height / 2 - 40, 80, 80),
+                                         ipr::Recti(canvas.width - 50, canvas.height - 70, 50, 70)}) {
+            const WorkingImage part = RenderChain::workingRegion(large, settings, region, measures);
+            check(!part.isNull() && same(part.linearRgba, whole.linearRgba.view(region)), name);
+        }
+    }
+
     Settings rotated = neutral();
     rotated.geometry.rotation = 4.0f;
     check(RenderChain::workingRegion(source, rotated, ipr::Recti(0, 0, 10, 10), RenderChain::WholeMeasures{}).isNull(),

@@ -12,6 +12,7 @@
 #include <QString>
 #include <QVariantList>
 
+#include <optional>
 #include <vector>
 #include "Image.h"
 
@@ -46,6 +47,7 @@ struct WholeMeasures
     bool valid = false;
     ipr::Size sourceSize;                     // of the source measured, checked whole there
     std::vector<float> warpFloor;            // before the geometry, when it resamples
+    std::optional<float> sharpenNoiseSigma;  // the sharpening's input, when it sharpens
     ToneRecovery::Statistics toneStatistics;  // the source's
 };
 // Whether this recipe renders a region by itself; otherwise a caller renders the whole image and

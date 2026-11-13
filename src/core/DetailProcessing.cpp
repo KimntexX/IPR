@@ -56,24 +56,48 @@ ipr::Image extractLuminance(const ipr::Image &linearRgb)
     return result;
 }
 
-float estimateNoiseSigma(const ipr::Image &plane)
+constexpr double kSharpenNoiseBlur = 0.8;
+
+int sharpenNoiseReachOf()
 {
-    const ipr::Image base = ipr::gaussianBlurred(plane, 0.8, ipr::BlurBorder::LastPixel);
-    const double total = double(plane.width()) * double(plane.height());
-    const int step = std::max(1, static_cast<int>(std::sqrt(total / 16384.0)));
-    std::vector<float> samples;
-    samples.reserve(static_cast<size_t>(total / (step * step)));
-    for (int y = 0; y < plane.height(); y += step) {
-        const float *values = plane.row<float>(y);
-        const float *smoothed = base.row<float>(y);
-        for (int x = 0; x < plane.width(); x += step)
+    return int(ipr::gaussianHalfKernel(kSharpenNoiseBlur).size()) - 1;
+}
+
+// The samples of the sharpening's noise measure in rows of a plane of planeHeight rows,
+// lumaBand holding the full width of rows bandTop onwards. Only the rows multiple of step
+// whose blur the band holds whole (or reaching the plane's edge) are taken: the same values
+// as in the whole plane, whatever band they come from.
+void appendLumaNoiseSamples(const ipr::Image &lumaBand, int bandTop, int planeHeight, int step,
+                            std::vector<float> &samples)
+{
+    if (lumaBand.empty() || step < 1)
+        return;
+    const ipr::Image base = ipr::gaussianBlurred(lumaBand, kSharpenNoiseBlur, ipr::BlurBorder::LastPixel);
+    const int reach = sharpenNoiseReachOf(), bandEnd = bandTop + lumaBand.height();
+    for (int y = (bandTop + step - 1) / step * step; y < bandEnd; y += step) {
+        if ((y - reach < bandTop && bandTop > 0) || (y + reach >= bandEnd && bandEnd < planeHeight))
+            continue;
+        const float *values = lumaBand.row<float>(y - bandTop);
+        const float *smoothed = base.row<float>(y - bandTop);
+        for (int x = 0; x < lumaBand.width(); x += step)
             samples.push_back(std::abs(values[x] - smoothed[x]));
     }
+}
+
+float noiseSigmaOfSamples(std::vector<float> samples)
+{
     if (samples.empty())
         return kNoiseFloor;
     const size_t middle = samples.size() / 2;
     std::nth_element(samples.begin(), samples.begin() + middle, samples.end());
     return std::max(kNoiseFloor, samples[middle] / 0.67449f);
+}
+
+float estimateNoiseSigma(const ipr::Image &plane)
+{
+    std::vector<float> samples;
+    appendLumaNoiseSamples(plane, 0, plane.height(), sharpenNoiseStep(plane.size()), samples);
+    return noiseSigmaOfSamples(std::move(samples));
 }
 
 float smoothStep(float edge0, float edge1, float value)
@@ -490,6 +514,37 @@ void reduceNoiseLocally(ipr::Image &linearRgb, const DenoiseSettings &settings, 
 
 }
 
+int sharpenNoiseStep(const ipr::Size &plane)
+{
+    const double total = double(plane.width) * double(plane.height);
+    return std::max(1, static_cast<int>(std::sqrt(total / 16384.0)));
+}
+
+int sharpenNoiseReach()
+{
+    return sharpenNoiseReachOf();
+}
+
+void appendSharpenNoiseSamples(const ipr::Image &linearRgbBand, int bandTop, int planeHeight, int step,
+                               std::vector<float> &samples)
+{
+    if (linearRgbBand.empty() || linearRgbBand.depth() != ipr::Depth::F32 || linearRgbBand.channels() != 3)
+        return;
+    appendLumaNoiseSamples(extractLuminance(linearRgbBand), bandTop, planeHeight, step, samples);
+}
+
+float sharpenNoiseSigma(std::vector<float> samples)
+{
+    return noiseSigmaOfSamples(std::move(samples));
+}
+
+int sharpenReach(const SharpenSettings &settings, double pixelScale)
+{
+    const double radius = std::clamp(static_cast<double>(settings.radius), 0.3, 3.0) * pixelScale;
+    const int kernelSize = std::max(3, static_cast<int>(std::ceil(radius * 2.0)) * 2 + 1);
+    return std::max(int(ipr::gaussianHalfKernel(radius).size()) - 1, kernelSize / 2);
+}
+
 bool denoiseFromAmount(int amount, DenoiseSettings &settings)
 {
     if (amount < 0 || amount > 100)
@@ -546,7 +601,7 @@ void reduceNoise(ipr::Image &linearRgb, const DenoiseSettings &settings, double 
 }
 
 void sharpen(ipr::Image &linearRgb, const SharpenSettings &settings, double pixelScale,
-             const LocalValues::Maps &local)
+             const LocalValues::Maps &local, const float *noiseSigma)
 {
     if (linearRgb.empty() || linearRgb.depth() != ipr::Depth::F32 || linearRgb.channels() != 3) return;
     const ipr::Image &map = local[LocalValues::Sharpening];
@@ -561,8 +616,7 @@ void sharpen(ipr::Image &linearRgb, const SharpenSettings &settings, double pixe
     const ipr::Image localMinimum = ipr::minimum(luma, ipr::Size(kernelSize, kernelSize), ipr::Beyond::Nothing);
     const ipr::Image localMaximum = ipr::maximum(luma, ipr::Size(kernelSize, kernelSize), ipr::Beyond::Nothing);
 
-    const float noiseSigma = estimateNoiseSigma(luma);
-    const float threshold = noiseSigma *
+    const float threshold = (noiseSigma ? *noiseSigma : estimateNoiseSigma(luma)) *
         (0.35f + 5.5f * static_cast<float>(std::clamp(settings.masking, 0, 100)) / 100.0f);
     const float amount = static_cast<float>(std::clamp(settings.amount, 0, 200)) / 100.0f;
     for (int y = 0; y < linearRgb.height(); ++y) {
