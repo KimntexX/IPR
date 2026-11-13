@@ -132,4 +132,8 @@ comparables aux latences IHM du tableau historique ci-dessus. [Preuve](../raw/ma
 Le 13 novembre 2026, l’utilisateur confirme après `4d2ab6e` que les masques suivent
 la géométrie et que celle-ci est plus rapide. Ce retour valide le suivi et le
 gain de réactivité à l’usage, sans chronométrage ni détail par transformation.
-Le correctif reste local, non publié.
+Le correctif est ensuite publié dans `dev` (`97841ff`). L’utilisateur accepte
+aussi la passe poignées, annulation/rétablissement, réouverture et export après
+transformation (« ok, tout est bon »). Aucun chronométrage ou corpus nouveau
+n’est attribué à cette confirmation. La CI de livraison est encore en cours
+lors de cette mise à jour ; le tag reste en attente.

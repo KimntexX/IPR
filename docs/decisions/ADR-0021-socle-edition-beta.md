@@ -209,5 +209,7 @@ construction des proxies est transférée dans `RenderChain::editProxy`.
 
 État : correctif local `4d2ab6e` sur `patch_masks`. Le 13 novembre 2026,
 l’utilisateur accepte le suivi des masques et constate la géométrie plus rapide.
-La livraison n’est pas effectuée. Les détails et la portée de la validation
-sont dans le rapport évolutif des masques.
+Le correctif est publié dans `dev` (`97841ff`) ; la passe de restauration,
+poignées et export après transformation est ensuite acceptée par l’utilisateur.
+La CI de livraison et le tag restent à confirmer. Les détails et la portée de
+la validation sont dans le rapport évolutif des masques.
