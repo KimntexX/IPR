@@ -21876,10 +21876,66 @@ les branches d'intégration ou les décisions de livraison. Aucun calcul actif.
 - Aucune nouvelle référence LR nécessaire pour les contrôles physiques de
   cette nuit ; une comparaison LR actuelle sera une campagne distincte.
 
-## Conclusion actuelle — 12 novembre 2026
+## 474. Qualification du bruit de l'EOS 60D — 13 novembre 2026
+
+Premier boîtier qualifié après le R6 Mark III, et premier CR2. Prise de vue
+de l'utilisateur le 13 novembre 2026 (`tests/image/colorimétrie/protocole/eos-60d`,
+`IMG_9225` à `IMG_9360`, 136 RAW) : f/5,6, ISO pleins 100, 400, 800, 1600,
+3200 et 6400 (pas de 12800), priorité hautes lumières et ALO coupés,
+**à main levée** (pas de trépied disponible).
+
+- Noirs bouchon fermé à 1/200 s : 8 à 11 prises par ISO (`9225`–`9278`).
+- Aplats par paires de deux prises identiques, 5 à 7 niveaux de temps de pose
+  par ISO (un stop entre niveaux), deux séries à 100 ISO (`9279`–`9360`).
+
+Outil : `tests/qualify_camera_noise.py <dossier> <sortie>` (rawpy, hors CI).
+Méthode décrite dans son en-tête et dans la preuve. La main levée est absorbée
+par le calcul : différence des deux prises par tuile de 64 pixels de chaque
+plan CFA, après égalisation de leur signal et retrait d'un plan (pente
+d'éclairage, déplacement de quelques pixels) ; tuiles saturées, texturées ou
+dont le signal diffère de plus de 15 % écartées. Un recalage préalable n'a
+pas été nécessaire : aucune paire ne se décale de 8 pixels de plan ou plus.
+
+[Preuve](../raw/camera-noise-qualification-eos60d-v001-20261113T134737Z.json)
+(inventaire avec empreintes SHA-256, rôles, toutes les paires et classes de
+signal). Variance = a · signal + b, en DN du RAW, b fixé aux noirs ; les
+quatre positions CFA concordent à 2 % près, la moyenne est donnée ici.
+
+| ISO | Pente a (DN) | Lecture b (DN²) | Écart du modèle aux classes | Signal couvert (DN) |
+| ---: | ---: | ---: | ---: | --- |
+| 100 | 0,432 | 49 | 1,4–2,5 % | 100 à 1 500 |
+| 400 | 1,757 | 77 | 2,5–3,4 % | 380 à 6 100 |
+| 800 | 3,43 | 137 | 2,2–3,1 % | 110 à 7 500 |
+| 1600 | 6,82 | 341 | 1,6–1,9 % | 110 à 5 900 |
+| 3200 | 13,2 | 1 037 | 1,4–1,6 % | 80 à 5 400 |
+| 6400 | 26,9 | 3 503 | 1,0–1,6 % | 170 à 5 500 |
+
+**Lecture.**
+
+- La pente double à chaque stop (rapport 4,07 de 100 à 400, puis 1,95 à 2,01) :
+  le gain analogique suit l'ISO, comme attendu.
+- L'ajustement libre de b donne la même pente à 1–4 % près ; son b est plus
+  bas aux faibles ISO (b pèse peu face à a · signal sur la plage couverte).
+  Le b des noirs est retenu.
+- À 100 ISO, la plage de signal reste basse (1 500 DN sur 10 200) : la série
+  ne montait pas plus haut. La pente y est mesurée sur 4 500 à 5 700 tuiles
+  par position et reste cohérente avec les autres ISO.
+- Limites : pas de 12800 ; une seule séance (température non contrôlée) ;
+  ISO intermédiaires (1/3 de stop) non mesurés, obtenus par traitement
+  numérique sur ce boîtier.
+
+Cette loi n'entre pas encore dans `config/noise-laws.json` : l'ajout ouvrirait
+le chemin du débruitage neuronal au 60D, décision réservée à l'utilisateur
+(suivi : [issue #34](https://github.com/KimntexX/IPR/issues/34)). Elle sert
+d'abord de référence à l'estimateur sur une seule photo (rapport de
+restauration neuronale, même date).
+
+## Conclusion actuelle — 13 novembre 2026
 
 Les campagnes de recherche classique sont closes et conservées comme
 historique ; elles ne valident pas le moteur courant. Prochaines actions :
 porter le petit banc retenu (référence des rafales, noirs, bruit résiduel,
 validité des zones), puis l'utiliser pour affiner le U-Net sur bruit réel
 (voir le [rapport de restauration neuronale](analyse-restauration-neuronale.md)).
+Le 60D est qualifié sur six ISO (§474) ; reste à décider son entrée au
+catalogue et à valider l'estimateur hors des ISO moyens et hauts.
