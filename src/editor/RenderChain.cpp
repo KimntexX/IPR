@@ -398,7 +398,7 @@ int blurReach(const Settings &settings)
 // what comes before them on itself grown by this much.
 int localReach(const Settings &settings)
 {
-    return blurReach(settings) +
+    return LocalContrast::regionReach(settings.texture, settings.clarity) + blurReach(settings) +
            (settings.sharpeningAmount > 0 ? DetailProcessing::sharpenReach(sharpenSettings(settings), 1.0) : 0) +
            Grain::reach(settings.grain, 1.0);
 }
@@ -491,6 +491,11 @@ bool measureSharpenNoise(const ColorPipeline::WorkingImage &source, const Settin
     return true;
 }
 
+bool contrastActive(const Settings &settings)
+{
+    return settings.texture != 0 || settings.clarity != 0;
+}
+
 } // namespace
 
 bool rendersByRegion(const Settings &settings)
@@ -498,8 +503,7 @@ bool rendersByRegion(const Settings &settings)
     // The stages that read far around a pixel or measure the whole image come one by one; until
     // then, their recipes render whole.
     return !LocalAdjustments::active(settings.localMasks) && !Retouch::active(settings.retouches) &&
-           classicalLuminance(settings) == 0 && settings.denoiseChrominance == 0 && settings.texture == 0 &&
-           settings.clarity == 0 && settings.dehaze == 0;
+           classicalLuminance(settings) == 0 && settings.denoiseChrominance == 0 && settings.dehaze == 0;
 }
 
 QByteArray wholeMeasuresKey(const Settings &s)
@@ -513,6 +517,10 @@ QByteArray wholeMeasuresKey(const Settings &s)
     const Geometry::Settings &g = s.geometry;
     stream << qint32(g.quarterTurns) << g.flipHorizontal << g.flipVertical << g.rotation << qint32(g.vertical)
            << qint32(g.horizontal) << qint32(g.aspect) << qint32(g.scale) << qint32(g.offsetX) << qint32(g.offsetY);
+    // Texture and clarity: their layers read every setting before them, and the clarity's the
+    // texture's output; not their own slider values.
+    if (contrastActive(s))
+        stream << stageKeys(s)[2] << (s.texture != 0) << (s.clarity != 0) << qint32(s.clarity != 0 ? s.texture : 0);
     if (s.sharpeningAmount > 0) {
         stream << stageKeys(s)[4] << qint32(s.blur);
         for (const auto &curve : s.toneCurves) {
@@ -529,10 +537,12 @@ bool measureWhole(const ColorPipeline::WorkingImage &source, const Settings &set
     measures = {};
     if (!validSource(source) || !rendersByRegion(settings))
         return false;
-    const bool sharpens = settings.sharpeningAmount > 0 && !isNeutral(settings, referenceTemperatureOf(source));
+    const bool neutral = isNeutral(settings, referenceTemperatureOf(source));
+    const bool sharpens = settings.sharpeningAmount > 0 && !neutral;
+    const bool contrast = contrastActive(settings) && !neutral;
     // The camera stage of the whole source, when a measure reads it: once for all of them.
     ipr::Image camera;
-    if (Geometry::resamples(settings.geometry) || sharpens) {
+    if (Geometry::resamples(settings.geometry) || sharpens || contrast) {
         camera = ipr::withoutAlpha(source.linearRgba);
         if (!renderCamera(source, settings, referenceTemperatureOf(source), 1.0, camera, {}))
             return false;
@@ -542,7 +552,27 @@ bool measureWhole(const ColorPipeline::WorkingImage &source, const Settings &set
     measures.toneStatistics = toneStatisticsOf(source);
     measures.sourceSize = source.linearRgba.size();
     const ipr::Size canvas = Geometry::canvasSize(settings.geometry, measures.sourceSize);
-    if (sharpens && !measureSharpenNoise(source, settings, measures, canvas, camera)) {
+    if (contrast) {
+        // Texture and clarity read up to 256 pixels around: their coarse layers come from the whole
+        // canvas once, and the sharpening's noise from that same render.
+        ipr::Image whole = regionBeforeLocal(source, settings, ipr::Recti(0, 0, canvas.width, canvas.height), measures,
+                                             &camera);
+        if (whole.empty()) {
+            measures = {};
+            return false;
+        }
+        auto layers = std::make_shared<LocalContrast::Layers>();
+        LocalContrast::apply(whole, settings.texture, settings.clarity, 1.0, {}, layers.get());
+        measures.contrastLayers = std::move(layers);
+        if (sharpens) {
+            if (settings.blur > 0)
+                whole = ipr::gaussianBlurred(whole, blurSigma(settings, 1.0));
+            std::vector<float> samples;
+            DetailProcessing::appendSharpenNoiseSamples(whole, 0, canvas.height, DetailProcessing::sharpenNoiseStep(canvas),
+                                                        samples);
+            measures.sharpenNoiseSigma = DetailProcessing::sharpenNoiseSigma(std::move(samples));
+        }
+    } else if (sharpens && !measureSharpenNoise(source, settings, measures, canvas, camera)) {
         measures = {};
         return false;
     }
@@ -561,7 +591,8 @@ ColorPipeline::WorkingImage workingRegion(const ColorPipeline::WorkingImage &sou
     const ipr::Size canvas = Geometry::canvasSize(settings.geometry, sourceSize);
     if ((region & ipr::Recti(0, 0, canvas.width, canvas.height)) != region ||
         (Geometry::resamples(settings.geometry) && measures.warpFloor.size() != 3) ||
-        (settings.sharpeningAmount > 0 && !measures.sharpenNoiseSigma))
+        (settings.sharpeningAmount > 0 && !measures.sharpenNoiseSigma) ||
+        (contrastActive(settings) && (!measures.contrastLayers || measures.contrastLayers->canvas != canvas)))
         return {};
     if (isNeutral(settings, referenceTemperatureOf(source))) {
         ColorPipeline::WorkingImage part = ColorPipeline::sharedCopy(source);
@@ -574,6 +605,9 @@ ColorPipeline::WorkingImage workingRegion(const ColorPipeline::WorkingImage &sou
     const ipr::Recti area = grownWithin(region, localReach(settings), canvas);
     ipr::Image adjusted = regionBeforeLocal(source, settings, area, measures);
     if (adjusted.empty())
+        return {};
+    if (contrastActive(settings) &&
+        !LocalContrast::applyRegion(adjusted, settings.texture, settings.clarity, area.tl(), *measures.contrastLayers))
         return {};
     if (settings.blur > 0)
         adjusted = ipr::gaussianBlurred(adjusted, blurSigma(settings, 1.0));

@@ -135,10 +135,10 @@ int main(int argc, char **argv)
     if (!check(tilesMatch(editor, provider) && provider.detailTile(QStringLiteral("tile-0-0")) != firstTile,
                "the new tiles show the new settings")) return 1;
 
-    // Clarity reads far around each pixel: the whole image, as before, and no tile.
+    // The dehaze measures its airlight on the whole image and renders whole: no tile.
     const QString previewBefore = editor.imageSource();
-    editor.setAdjustment(QStringLiteral("clarity"), 30);
-    if (!check(waitFor([&] { return editor.imageSource() != previewBefore; }), "the clarity preview is published")) return 1;
+    editor.setAdjustment(QStringLiteral("dehaze"), 30);
+    if (!check(waitFor([&] { return editor.imageSource() != previewBefore; }), "the dehaze preview is published")) return 1;
     if (!check(waitFor([&] { return !editor.detailImageSource().isEmpty() && settled(editor); }),
                "the whole detail is rendered")) return 1;
     if (!check(editor.detailTiles().isEmpty() && provider.detailTileCount() == 0, "no tile with the whole image")) return 1;
@@ -149,7 +149,7 @@ int main(int argc, char **argv)
     // Changed settings: the former detail is hidden at the next preview, then rendered again.
     const QString first = editor.detailImageSource();
     const QString previewOfDetail = editor.imageSource();
-    editor.setAdjustment(QStringLiteral("clarity"), 50);
+    editor.setAdjustment(QStringLiteral("dehaze"), 50);
     if (!check(waitFor([&] { return editor.imageSource() != previewOfDetail; }), "the new preview is published")) return 1;
     if (!check(editor.detailImageSource() != first, "a detail of other settings is never shown")) return 1;
     if (!check(waitFor([&] { return !editor.detailImageSource().isEmpty() && settled(editor); }),

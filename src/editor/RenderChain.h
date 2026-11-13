@@ -3,6 +3,7 @@
 
 #include "ColorPipeline.h"
 #include "EditRecipe.h"
+#include "LocalContrast.h"
 #include "PerceptualColour.h"
 #include "RenderStageCache.h"
 #include "ToneRecovery.h"
@@ -12,6 +13,7 @@
 #include <QString>
 #include <QVariantList>
 
+#include <memory>
 #include <optional>
 #include <vector>
 #include "Image.h"
@@ -48,6 +50,8 @@ struct WholeMeasures
     ipr::Size sourceSize;                     // of the source measured, checked whole there
     std::vector<float> warpFloor;            // before the geometry, when it resamples
     std::optional<float> sharpenNoiseSigma;  // the sharpening's input, when it sharpens
+    // Texture and clarity's coarse bands, when active; shared, as every copy of the measures reads them.
+    std::shared_ptr<const LocalContrast::Layers> contrastLayers;
     ToneRecovery::Statistics toneStatistics;  // the source's
 };
 // Whether this recipe renders a region by itself; otherwise a caller renders the whole image and

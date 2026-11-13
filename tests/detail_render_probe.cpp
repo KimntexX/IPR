@@ -151,6 +151,8 @@ std::vector<std::pair<QString, std::function<void(Settings &)>>> regionStates()
         {"tones_colour_sharpening_40", [base](Settings &s) { base(s); s.sharpeningAmount = 40; }},
         {"tones_colour_sharpening_rotation", [base](Settings &s) { base(s); s.sharpeningAmount = 40; s.geometry.rotation = 2.5f; }},
         {"tones_colour_grain_blur", [base](Settings &s) { base(s); s.grain = 25; s.blur = 2; }},
+        {"tones_colour_texture_clarity", [base](Settings &s) { base(s); s.texture = 20; s.clarity = 30; }},
+        {"tones_colour_clarity_sharpening", [base](Settings &s) { base(s); s.clarity = 30; s.sharpeningAmount = 40; }},
     };
 }
 

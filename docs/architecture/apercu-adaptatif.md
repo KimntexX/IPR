@@ -234,8 +234,42 @@ toutes zones identiques à l'octet près.
 | + rotation 2,5° | 3,3 s | 1,4 s | 37–39 ms |
 | Tons et couleur + grain 25 + flou 2 | 2,5 s | 21 ms | 35–38 ms |
 
-Restent rendus en image entière : bruit (luminance et couleur), texture et
-clarté, voile, masques, retouches.
+Restent rendus en image entière à cette date : bruit (luminance et couleur),
+texture et clarté (traitées ci-dessous), voile, masques, retouches.
+
+### Texture et clarté par zone — 13 novembre 2026
+
+Les deux effets découpent la luminance en bandes de σ = 1 à 256 pixels ; à
+partir de σ = 4, chaque bande passe par un plan réduit (réduction de zone,
+flou, agrandissement bilinéaire). Ces bandes ne dépendent pas des curseurs.
+
+- **Couches réduites partagées** : la mesure globale rend une fois le canevas
+  entier jusqu'aux effets et enregistre, pour chaque bande réduite, son plan
+  réduit flouté (`LocalContrast::Layers`, environ un tiers des pixels du
+  canevas par effet). Chaque zone calcule elle-même les bandes fines (σ = 1 et 2,
+  portée 8 pixels par effet) et agrandit sur sa zone les plans réduits
+  (`ipr::resizeRegionInto`, même liste de prélèvements que le redimensionnement
+  entier, mêmes sommes dans le même ordre).
+- **Clé** : réglages en amont des effets, effets actifs et, sous une clarté, la
+  texture (la clarté lit la sortie de la texture). Bouger la clarté, ou la
+  texture seule, ne refait pas la mesure.
+- La netteté prend sa mesure de bruit sur ce même rendu entier.
+
+Égalité stricte : `imageResizeTests` (réductions de zone aux rapports
+irréguliers et agrandissement, parties aux bords), `renderChainTests` (texture,
+clarté négative et positive, combinaisons avec netteté, grain, flou et rotation,
+image de 1100 × 960, mesure prise à une clarté servant à une autre) et sonde
+sur RAW réels ([preuve](../validation/raw/adaptive-preview-region-render-v003-20261113T164357Z.json)).
+
+| Recette (R6 III 32 Mpx) | Image entière | Mesures globales | Tuile 512 |
+| --- | --- | --- | --- |
+| Tons et couleur + texture 20, clarté 30 | 3,5 s | 3,4 s | 49–56 ms |
+| + netteté 40 (clarté 30) | 3,3 s | 3,0 s | 46–50 ms |
+
+La première vue après un changement en amont coûte donc autant que l'image
+entière ; ensuite, déplacements et curseurs de texture et de clarté ne coûtent
+que des tuiles. Restent rendus en image entière : bruit, voile, masques,
+retouches.
 
 ## Étapes
 
@@ -246,8 +280,8 @@ clarté, voile, masques, retouches.
    d'égalité stricte avec la version actuelle).
 3. ✅ Rendu de région pour les étapes « direct » et la géométrie, repli pour les
    autres ; invariant testé (ci-dessus).
-4. Clarté, voile, débruitage par zone ; puis masques et retouches. Netteté,
-   flou et grain ✅ (13 novembre 2026).
+4. Voile, débruitage par zone ; puis masques et retouches. Netteté, flou,
+   grain, texture et clarté ✅ (13 novembre 2026).
 5. ✅ Vue et ordonnanceur : tuiles en spirale, couronne de 512 px, libération et
    abandon du côté opposé au déplacement, masquage au changement de réglage
    (pour les recettes rendues par zone ; les autres gardent l'image entière).

@@ -2,6 +2,7 @@
 #define IPR_IMAGE_RESIZE_H
 
 #include "Image.h"
+#include "Types.h"
 
 namespace ipr {
 
@@ -24,6 +25,15 @@ Size scaledSize(Size size, double scaleX, double scaleY);
 void resizeInto(const Image &image, Image &out, Interpolation interpolation, int threads = 0);
 void resizeInto(const Image &image, Image &out, double scaleX, double scaleY, Interpolation interpolation,
                 int threads = 0);
+
+// A part of resize: out is the part at outOrigin of resizing a whole image of imageSize to outSize,
+// read from window, the part of that image at windowOrigin. Every pixel is the whole resize's,
+// provided the window holds resizeRegionSource of the part (a missing pixel reads the window's
+// nearest). std::invalid_argument on a part outside outSize.
+void resizeRegionInto(const Image &window, Point2i windowOrigin, Size imageSize, Image &out, Point2i outOrigin,
+                      Size outSize, Interpolation interpolation, int threads = 0);
+// The pixels of the whole image that a part of its resize reads.
+Recti resizeRegionSource(Size imageSize, Size outSize, const Recti &part, Interpolation interpolation);
 
 } // namespace ipr
 
