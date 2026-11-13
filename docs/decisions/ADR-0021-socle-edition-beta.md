@@ -236,5 +236,7 @@ le calcul existant. Ce sont deux espaces de calcul, pas deux moteurs maintenus.
 Le format `.ipr` devient 14. Sans cadre de retouche enregistré, la géométrie
 sauvegardée devient son cadre de création ; la migration conserve le placement
 enregistré, sans deviner l’objet initial d’une ancienne retouche déjà décalée.
-État local sur `patch_object_removal`, sans publication ; les preuves et limites
-sont dans le rapport évolutif Retouche.
+État sur `patch_object_removal` : suppression acceptée visuellement par
+l’utilisateur le 13 novembre 2026 (`3ecf58f`), publication de la branche autorisée.
+La fusion dans `dev` et le tag ne sont pas effectués par cette publication.
+Les preuves et la portée de la validation sont dans le rapport évolutif Retouche.

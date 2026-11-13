@@ -158,13 +158,16 @@ reconstruction du PDF.
 
 ### Conclusion actuelle
 
-Correctif disponible localement dans
-`build-patch_object_removal/Release/appIPR.exe`. Créer une **nouvelle** suppression
-d’une petite prise, puis rotation, miroir/quart de tour, recadrage, annulation,
-réouverture et export. Vérifier aussi le déplacement de la source sur un tampon
-ou correcteur. Les anciens fichiers déjà décalés ne constituent pas un test
-de récupération automatique de leur cible.
+Le 13 novembre 2026, après le correctif `3ecf58f`, l’utilisateur confirme :
+« c'est tout bon pour la suppression, tu peux valider et pousser ».
+Le correctif de suppression est donc accepté visuellement et la publication
+de `patch_object_removal` est autorisée. Aucun détail de scène ou de valeur
+supplémentaire n’est déduit de cet accord ; les cas tampon/correcteur sont
+couverts par les tests, sans confirmation utilisateur distincte de chacun.
 
-Validation visuelle en attente ; l’[issue #28](https://github.com/KimntexX/IPR/issues/28)
-reste ouverte, notamment pour la qualité de reconstruction et le détail
-aperçu/export sur photo réelle. Aucune publication, fusion dans `dev` ou tag.
+Le build reste disponible dans `build-patch_object_removal/Release/appIPR.exe`.
+Les anciens fichiers déjà décalés ne constituent pas un test de récupération
+automatique de leur cible. L’[issue #28](https://github.com/KimntexX/IPR/issues/28)
+reste ouverte pour les autres limites, notamment la reconstruction et le détail
+aperçu/export sur photo réelle. Cette livraison publie la branche seulement :
+pas de fusion dans `dev` ni de tag ; résultat de CI à confirmer après publication.
