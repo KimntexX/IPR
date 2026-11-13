@@ -213,3 +213,28 @@ Le correctif est publié dans `dev` (`97841ff`) ; la passe de restauration,
 poignées et export après transformation est ensuite acceptée par l’utilisateur.
 La CI de livraison et le tag restent à confirmer. Les détails et la portée de
 la validation sont dans le rapport évolutif des masques.
+
+## Révision locale du 13 novembre 2026 — ancrage des retouches B3
+
+`Retouch::Operation` conserve à son tour un canevas de création, fixe par
+rapport à la source. Les traits et le décalage source du tampon/correcteur sont
+définis dans ce cadre. La couverture et la poignée source utilisent la même
+projection directe que les masques ; les gestes utilisent son inverse.
+
+La retouche reste après les tons : l’ordre photographique n’est pas déplacé
+pour corriger l’ancrage. Si les cadres diffèrent, l’image courante est lue dans
+le cadre de création, l’opération y est évaluée, puis seul son delta RGB est
+reprojeté et ajouté à l’image courante. Cela préserve les pixels hors de la
+zone corrigée ; aucune image entière rééchantillonnée ne remplace le résultat.
+Une source vide est refusée. La reprojection linéaire du delta peut adoucir
+les détails de la zone après transformation : à qualifier visuellement.
+
+La reprojection partagée est centralisée dans `Geometry::reframe`, utilisée par
+les masques et la retouche. La voie sans changement de repère utilise directement
+le calcul existant. Ce sont deux espaces de calcul, pas deux moteurs maintenus.
+
+Le format `.ipr` devient 14. Sans cadre de retouche enregistré, la géométrie
+sauvegardée devient son cadre de création ; la migration conserve le placement
+enregistré, sans deviner l’objet initial d’une ancienne retouche déjà décalée.
+État local sur `patch_object_removal`, sans publication ; les preuves et limites
+sont dans le rapport évolutif Retouche.

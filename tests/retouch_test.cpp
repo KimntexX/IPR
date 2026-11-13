@@ -264,9 +264,63 @@ void boundsAndNames()
 
 } // namespace
 
+void geometryFollowing()
+{
+    const ipr::Size size(400,300);
+    auto scene = ipr::filled(size, ipr::Depth::F32, 3, .3);
+    auto object = scene.mutableView({112,112,16,16});
+    ipr::fill(object, .95);
+    // An identifiable source patch, away from the target and the borders.
+    for (int y=190; y<230; ++y)
+        for (int x=240; x<280; ++x) imagetest::at<ipr::Vec3f>(scene,y,x) = {.65f,.12f,.08f};
+    for (const auto kind : {Kind::Remove,Kind::Heal,Kind::Clone}) {
+        auto operation = dot(kind,.3f,.4f,.055f);
+        operation.source = {.35f,.3f};
+        auto reference = scene.clone();
+        check(Retouch::apply(reference,{operation})==0, "reference correction succeeds");
+        for (const int mode : {0,1,2,3,4}) {
+            Geometry::Settings geometry;
+            if (mode==0) geometry.rotation=19;
+            if (mode==1) geometry.quarterTurns=1;
+            if (mode==2) geometry.flipHorizontal=true;
+            if (mode==3) geometry.vertical=20;
+            if (mode==4) { geometry.aspect=15; geometry.horizontal=12; }
+            auto changed = Geometry::warpRgb(scene.clone(),geometry,Geometry::Quality::Preview);
+            const auto before=changed.clone();
+            const auto expected=Geometry::warpRgb(reference.clone(),geometry,Geometry::Quality::Preview);
+            check(Retouch::applyOnCanvas(changed,{operation},geometry,size)==0,"anchored correction succeeds");
+            const auto target=Geometry::toCanvas(geometry,size,{.3,.4});
+            const int x=int(target->x*changed.width()), y=int(target->y*changed.height());
+            const auto got=imagetest::at<ipr::Vec3f>(changed,y,x), want=imagetest::at<ipr::Vec3f>(expected,y,x);
+            check(std::abs(got[0]-want[0])<.04f && std::abs(got[1]-want[1])<.04f &&
+                  std::abs(got[2]-want[2])<.04f, "target and sampled source follow the photo");
+            const auto zone=Retouch::canvasCoverage(operation,geometry,size);
+            check(largestChangeOutside(before,changed,zone)==0,"pixels outside the projected correction are unchanged");
+        }
+    }
+    auto operation=dot(Kind::Clone,.3f,.4f,.04f);
+    operation.source={.35f,.3f}; operation.frame.rotation=17;
+    const auto targetInFrame=Geometry::toCanvas(operation.frame,size,{.3,.4});
+    const auto sourceInFrame=Geometry::toCanvas(operation.frame,size,{.65,.7});
+    operation.strokes[0].points[0]={float(targetInFrame->x),float(targetInFrame->y)};
+    operation.source={float(sourceInFrame->x-targetInFrame->x),float(sourceInFrame->y-targetInFrame->y)};
+    auto reset=scene.clone();
+    check(Retouch::applyOnCanvas(reset,{operation},{},size)==0 && imagetest::at<ipr::Vec3f>(reset,120,120)[1]<.2f,
+          "a correction created after rotation remains attached when geometry resets");
+    Operations bad{operation};bad[0].frame.rotation=std::numeric_limits<float>::quiet_NaN();
+    check(!Retouch::bound(bad),"nonfinite frame refused");
+    auto missingSource = ipr::filled(size,ipr::Depth::F32,3,.3);
+    auto empty = missingSource.mutableView({220,170,80,80}); ipr::fill(empty,0);
+    const auto unchanged = missingSource.clone();
+    auto copy = dot(Kind::Clone,.3f,.4f,.04f); copy.source={.35f,.3f};
+    check(Retouch::applyOnCanvas(missingSource,{copy},{},size)==1 &&
+          ipr::largestDifference(missingSource,unchanged)==0,"unavailable source is refused without a black patch");
+}
+
 int main(int argc, char **argv)
 {
     QCoreApplication application(argc, argv);
+    geometryFollowing();
     removingAnObject();
     previewAndExportAgree();
     cloneAndHeal();

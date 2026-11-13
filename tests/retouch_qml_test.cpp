@@ -189,6 +189,20 @@ int main(int argc, char **argv)
     if (!check(waitFor([&] { return !editor.busy(); }), "the moved source renders")) return 1;
     settle();
     if (!check(std::abs(editor.retouches().at(1).toMap().value(QStringLiteral("sourceX")).toDouble() - 0.5) < 1e-5, "the handle moves the source")) return 1;
+    editor.setGeometryValue(QStringLiteral("rotation"),20);
+    if (!check(waitFor([&] { return !editor.busy(); }), "rotated source renders")) return 1;
+    settle();
+    const auto projected = panel->property("currentShape").toMap();
+    const auto forward = projected.value(QStringLiteral("frameToCanvas")).toList();
+    const auto inverse = projected.value(QStringLiteral("canvasToFrame")).toList();
+    if (!check(forward.size()==9 && inverse.size()==9 && std::abs(forward[1].toDouble())>.01,
+               "source handle receives the same rotated frame and inverse as the correction")) return 1;
+    QMetaObject::invokeMethod(panel, "applyShape", Q_ARG(QVariant, QVariant(movedTo)));
+    if (!check(waitFor([&] { return !editor.busy(); }) &&
+               std::abs(editor.retouches().at(1).toMap().value("sourceX").toDouble()-.5)<1e-5,
+               "source edit remains expressed in the fixed reference frame")) return 1;
+    editor.setGeometryValue(QStringLiteral("rotation"),0);
+    if (!check(waitFor([&] { return !editor.busy(); }), "reset geometry after source test")) return 1;
     click(source);
     settle();
 

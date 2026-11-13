@@ -348,7 +348,7 @@ ColorPipeline::WorkingImage workingImage(const ColorPipeline::WorkingImage &sour
         adjusted = ipr::withoutAlpha(source.linearRgba);
         if (!renderTones(source, settings, referenceTemperature, pixelScale, adjusted, local, cache)) return {};
         // On the canvas, once the tones are set; what follows treats the zone as the rest.
-        const int notDone = Retouch::apply(adjusted, settings.retouches);
+        const int notDone = Retouch::applyOnCanvas(adjusted, settings.retouches, settings.geometry, source.linearRgba.size());
         if (retouchesNotDone)
             *retouchesNotDone = notDone;
         reached(0, adjusted);
@@ -450,7 +450,8 @@ Preview preview(const ColorPipeline::WorkingImage &source, const Settings &setti
     }
 
     if (overlayRetouch >= 0 && overlayRetouch < int(settings.retouches.size())) {
-        const ipr::Image weights = Retouch::coverage(settings.retouches[size_t(overlayRetouch)], rendered.linearRgba.size());
+        const ipr::Image weights = Retouch::canvasCoverage(settings.retouches[size_t(overlayRetouch)], settings.geometry,
+                                                         source.linearRgba.size());
         rendered.linearRgba = rendered.linearRgba.clone();
         ColorAdjustments::showWeights(rendered.linearRgba, weights);
     }

@@ -75,6 +75,7 @@ void codec()
     Retouch::Operation operation;
     operation.kind = Retouch::Kind::Heal;
     operation.opacity = 0.75f;
+    operation.frame.rotation = 17;
     operation.visible = false;
     operation.source = {0.25f, -0.125f};
     LocalAdjustments::BrushStroke stroke;
@@ -89,6 +90,16 @@ void codec()
     check(read.retouches.size() == 1 && read.retouches[0] == operation, "the same retouch");
     EditRecipe::Settings throughBytes;
     check(RecipeCodec::decodeSettings(QCborValue::fromCbor(QCborValue(map).toCbor()).toMap(), throughBytes) && throughBytes.retouches == settings.retouches, "through its bytes too");
+    auto old = map;
+    auto oldList = old.value(QStringLiteral("retouches")).toArray();
+    auto oldEntry = oldList[0].toMap(); oldEntry.remove(QStringLiteral("frame")); oldList[0] = oldEntry;
+    old.insert(QStringLiteral("retouches"),oldList);
+    old.insert(QStringLiteral("geometry"),QCborMap{{QStringLiteral("rotation"),13.0}});
+    check(RecipeCodec::decodeSettings(old,throughBytes) && throughBytes.retouches[0].frame.rotation==13,
+          "older recipes retain their saved geometry as creation frame");
+    oldEntry.insert(QStringLiteral("frame"),QStringLiteral("invalid"));oldList[0]=oldEntry;
+    old.insert(QStringLiteral("retouches"),oldList);
+    check(!RecipeCodec::decodeSettings(old,throughBytes),"invalid retouch frame refused");
 
     // What this version cannot do is refused: dropping it would bring back what was removed.
     QCborMap unknown = map;
@@ -141,6 +152,31 @@ void commands(const QDir &folder)
     check(spot() < 150, "the spot is gone");
     check(removed.pixel(10, 10) == before.pixel(10, 10), "nothing moves elsewhere");
     check(editor.historySteps().size() == steps + 1, "a stroke is one step");
+    editor.beginAdjustmentGesture();
+    editor.setGeometryValue(QStringLiteral("rotation"),19);
+    editor.setGeometryValue(QStringLiteral("offsetX"),20);
+    editor.endAdjustmentGesture();
+    check(settled(),"the transformed correction renders");
+    Geometry::Settings geometry; geometry.rotation=19; geometry.offsetX=20;
+    const auto target = Geometry::toCanvas(geometry,{400,300},{.5,.5});
+    check(target && qRed(provider.image().pixel(int(target->x*400),int(target->y*300)))<160,
+          "the removed object stays removed at its transformed position");
+    editor.saveCurrentAdjustments();
+    const auto anchored = Sidecar::read(photo);
+    check(anchored && anchored->settings.retouches[0].frame.rotation==0,
+          "the sidecar retains the creation frame rather than the current geometry");
+    const QImage transformed = provider.image();
+    const QString exported = folder.filePath(QStringLiteral("transformed-retouch.png"));
+    editor.exportImage(QUrl::fromLocalFile(exported),QStringLiteral("PNG"),100);
+    check(waitFor([&] { return QFile::exists(exported) && !editor.busy(); }),"transformed correction exports");
+    const QImage written(exported);
+    check(!written.isNull() && written.convertToFormat(transformed.format())==transformed,
+          "full-resolution export matches the transformed preview on this full-size fixture");
+    check(load(other) && load(photo) && provider.image()==transformed,
+          "reopening preserves the transformed correction and its geometry");
+    editor.undo();
+    check(settled() && provider.image()==removed,"one undo restores geometry and correction");
+
     editor.addRetouchStroke(remove, {}, 0.05, 0.3);
     editor.addRetouchStroke(remove, {0.5}, 0.05, 0.3);
     editor.addRetouchStroke(7, {0.5, 0.5}, 0.05, 0.3);

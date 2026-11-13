@@ -195,6 +195,25 @@ ipr::Recti cropRect(const Settings &s, const ipr::Size &canvas)
     return {left, top, right - left, bottom - top};
 }
 
+ipr::Image reframe(const ipr::Image &image, const Geometry::Settings &from,
+                   const Geometry::Settings &to, const ipr::Size &source)
+{
+    if (image.empty() || source.empty()) return {};
+    const auto output = Geometry::canvasSize(to, source);
+    const auto input = image.size();
+    const auto a = Geometry::homography(from, source);
+    const auto b = Geometry::homography(to, source);
+    if (a == b && output == input) return image.share();
+    bool invertible = false;
+    const auto inverse = b.inv(&invertible);
+    if (!invertible) return {};
+    const ipr::Matrix33d pixelToNormal(1.0/output.width, 0, .5/output.width,
+                                     0, 1.0/output.height, .5/output.height, 0, 0, 1);
+    const ipr::Matrix33d normalToPixel(input.width, 0, -.5, 0, input.height, -.5, 0, 0, 1);
+    return ipr::warpedPerspective(image, normalToPixel * a * inverse * pixelToNormal,
+                                 output, ipr::Resampling::Linear, ipr::Outside::Zero);
+}
+
 ipr::Matrix33d homography(const Settings &s, const ipr::Size &source)
 {
     const ipr::Size canvas = canvasSize(s, source);

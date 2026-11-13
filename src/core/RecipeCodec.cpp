@@ -184,6 +184,10 @@ QCborArray encodeRetouches(const Retouch::Operations &operations)
         entry.insert(QStringLiteral("sourceX"), double(operation.source.x));
         entry.insert(QStringLiteral("sourceY"), double(operation.source.y));
         entry.insert(QStringLiteral("strokes"), strokes);
+        QCborMap frame;
+        store(frame, operation.frame, GeometryInts); store(frame, operation.frame, GeometryFloats);
+        store(frame, operation.frame, GeometryDoubles); store(frame, operation.frame, GeometryBools);
+        entry.insert(QStringLiteral("frame"), frame);
         list.append(entry);
     }
     return list;
@@ -191,7 +195,7 @@ QCborArray encodeRetouches(const Retouch::Operations &operations)
 
 // An unknown kind is refused with the recipe, as an unknown shape is: dropping it would bring
 // back what the user had removed.
-bool decodeRetouches(const QCborArray &list, Retouch::Operations &operations)
+bool decodeRetouches(const QCborArray &list, Retouch::Operations &operations, const Geometry::Settings &current)
 {
     operations.clear();
     for (const QCborValue &value : list) {
@@ -199,6 +203,14 @@ bool decodeRetouches(const QCborArray &list, Retouch::Operations &operations)
             return false;
         const QCborMap entry = value.toMap();
         Retouch::Operation operation;
+        operation.frame = current;
+        if (entry.contains(QStringLiteral("frame"))) {
+            if (!entry.value(QStringLiteral("frame")).isMap()) return false;
+            const auto frame = entry.value(QStringLiteral("frame")).toMap();
+            operation.frame = {};
+            load(frame, operation.frame, GeometryInts); load(frame, operation.frame, GeometryFloats);
+            load(frame, operation.frame, GeometryDoubles); load(frame, operation.frame, GeometryBools);
+        }
         if (!Retouch::kindNamed(entry.value(QStringLiteral("kind")).toString(), operation.kind))
             return false;
         operation.visible = entry.value(QStringLiteral("visible")).toBool(true);
@@ -417,8 +429,6 @@ bool decodeSettings(const QCborMap &map, Settings &settings)
     const QCborValue localMasks = map.value(QStringLiteral("localMasks"));
     settings.retouches.clear();
     const QCborValue retouches = map.value(QStringLiteral("retouches"));
-    if (retouches.isArray() && !decodeRetouches(retouches.toArray(), settings.retouches))
-        return false;
     load(map, settings, SettingFloats);
     load(map, settings, SettingInts);
     load(map, settings, SettingBools);
@@ -430,6 +440,8 @@ bool decodeSettings(const QCborMap &map, Settings &settings)
     load(geometry, settings.geometry, GeometryDoubles);
     load(geometry, settings.geometry, GeometryBools);
     if (localMasks.isArray() && !decodeMasks(localMasks.toArray(), settings.localMasks, settings.geometry))
+        return false;
+    if (retouches.isArray() && !decodeRetouches(retouches.toArray(), settings.retouches, settings.geometry))
         return false;
     const QCborValue pointColor = map.value(QStringLiteral("pointColor"));
     if (pointColor.isArray()) {

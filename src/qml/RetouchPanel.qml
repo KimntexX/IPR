@@ -53,9 +53,11 @@ Item {
     readonly property var currentShape: {
         if (current === null)
             return null
+        const frame = { frameToCanvas: current.frameToCanvas, canvasToFrame: current.canvasToFrame,
+                        frameAspect: current.frameAspect }
         if (placingSource && hasSource)
-            return { kind: "point", center: [current.centerX + current.sourceX, current.centerY + current.sourceY] }
-        return { kind: "brush" }
+            return Object.assign(frame, { kind: "point", center: [current.centerX + current.sourceX, current.centerY + current.sourceY] })
+        return Object.assign(frame, { kind: "brush" })
     }
 
     function addRetouch(kind) {

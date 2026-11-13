@@ -72,8 +72,9 @@ les retouches de la photo cible, recette avec un genre inconnu refusée, fichier
 - **Pas de reconstruction intelligente** : Effacer recopie l'image et ne sait pas ce qu'elle montre.
   Un objet sur une ligne ou une structure ne sera pas prolongé proprement, et de petits objets peuvent
   être recopiés. Le U-Net génératif reste un besoin futur ([issue #27](https://github.com/KimntexX/IPR/issues/27)).
-- **La zone suit le canevas, pas la photo** : elle ne suit pas l'image si le
-  redressement change ensuite. Faire la géométrie d'abord.
+- **Limite de la version livrée avant le correctif du 13 novembre** : la zone
+  suivait le canevas, pas la photo. Le correctif local décrit ci-dessous change
+  cet ancrage ; sa validation visuelle reste à faire.
 - **Pas de clic sur objet** : c'est le lot B6, après la détection B5.
 - La portée de l'échantillonnage est la composition courante, une fois les tons posés ; un masque ou
   un autre réglage local peut donc être recopié avec sa source.
@@ -106,3 +107,64 @@ Inutile de poursuivre la recette complète sur le comportement actuel ; reprendr
 rotation, miroir/quart de tour, recadrage, historique, réouverture et export après
 le correctif. Aucun code photographique n’est modifié par cette consignation.
 La validation reste partielle, suivie par l’[issue #28](https://github.com/KimntexX/IPR/issues/28).
+
+## 13 novembre 2026 — Correctif local du suivi géométrique
+
+Branche `patch_object_removal`, créée depuis `dev` `97841ff` dans un worktree
+isolé. Chaque opération conserve sa géométrie de création dans
+`Retouch::Operation::frame`. Traits et décalage de la source restent dans ce
+cadre ; les transformations suivantes projettent ensemble cible, source,
+couverture et poignées. Les gestes du pinceau et de la source passent par la
+transformation inverse, déjà utilisée par les masques.
+
+La retouche reste après les tons. Lorsque le cadre diffère de la géométrie
+courante, l’image est lue dans le cadre de création et l’opération y est calculée.
+Seul le delta RGB de correction est ensuite reprojeté et ajouté à l’image
+courante ; le reste de l’image n’est pas remplacé par une copie rééchantillonnée.
+Les pixels hors de la couverture projetée restent inchangés. Cette reprojection
+peut adoucir le détail corrigé après transformation : ce point reste à juger
+visuellement, sans revendiquer une identité de pixels dans la zone interpolée.
+La primitive partagée `Geometry::reframe` remplace le helper privé des masques,
+sans changer leur calcul. Une source de tampon/correcteur vide est refusée,
+plutôt que copiée comme une tache noire.
+
+Le format du compagnon devient **14**. Une opération sans cadre enregistré
+reprend la géométrie sauvegardée ; son placement initial est conservé à la
+migration. Une ancienne suppression déjà enregistrée avec un décalage ne peut
+pas retrouver automatiquement son objet initial et doit être recréée.
+
+### Qualification
+
+Build complet Release MSVC/Qt 6.11.2 et lancement de contrôle réussis, avec le
+modèle neuronal et ONNX Runtime conservés. **80 tests natifs et 355 Python**
+passent. Le test éditeur est ensuite renforcé et rejoué seul, sans modification
+du code de production : après transformation, export PNG identique aux pixels
+de l’aperçu sur la fixture de 400 × 300 pixels, réouverture identique, puis
+annulation cohérente de la géométrie et de la correction.
+
+Les tests synthétiques couvrent Effacer, Corriger et Tampon sur une cible hors
+du centre, en rotation, miroir, quart de tour, perspective et changement
+d’aspect. La couleur au centre transformé est comparée à la correction de
+référence transformée (tolérance fixée à 0,04 par canal linéaire). Hors de la
+zone projetée, l’écart maximal exigé est zéro. Sont également contrôlés :
+création après rotation puis remise à zéro, refus d’un cadre non fini,
+source indisponible, invalidation de cache, persistance/migration, et
+transformation de la poignée source dans le panneau QML.
+
+Preuve canonique : [retouch-geometry-following-v001-20261113T162729Z.json](../raw/retouch-geometry-following-v001-20261113T162729Z.json).
+Il ne s’agit pas d’une campagne sur de nouvelles photos RAW ni d’une mesure
+de latence IHM. Le guide français et l’ADR sont actualisés à la source, sans
+reconstruction du PDF.
+
+### Conclusion actuelle
+
+Correctif disponible localement dans
+`build-patch_object_removal/Release/appIPR.exe`. Créer une **nouvelle** suppression
+d’une petite prise, puis rotation, miroir/quart de tour, recadrage, annulation,
+réouverture et export. Vérifier aussi le déplacement de la source sur un tampon
+ou correcteur. Les anciens fichiers déjà décalés ne constituent pas un test
+de récupération automatique de leur cible.
+
+Validation visuelle en attente ; l’[issue #28](https://github.com/KimntexX/IPR/issues/28)
+reste ouverte, notamment pour la qualité de reconstruction et le détail
+aperçu/export sur photo réelle. Aucune publication, fusion dans `dev` ou tag.

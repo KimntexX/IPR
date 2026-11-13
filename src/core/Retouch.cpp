@@ -4,6 +4,7 @@
 
 #include "Filters.h"
 #include "Pixels.h"
+#include "Parallel.h"
 
 #include <QStringLiteral>
 #include <QVariantMap>
@@ -96,6 +97,14 @@ bool copyZone(ipr::Image &rgb, const ipr::Image &zone, const ipr::Recti &box, co
     if ((shiftX == 0 && shiftY == 0) || (box + ipr::Point2i(shiftX, shiftY) & image) != box + ipr::Point2i(shiftX, shiftY))
         return false;
     ipr::Image result = rgb.copy(box + ipr::Point2i(shiftX, shiftY));
+    // Reprojection can leave the sampled area outside the available canvas.
+    // Refuse that correction instead of copying its empty pixels as black.
+    for (int y = 0; y < box.height; ++y) {
+        const auto *pixels = result.row<ipr::Vec3f>(y);
+        const auto *weights = zone.row<float>(box.y + y) + box.x;
+        for (int x = 0; x < box.width; ++x)
+            if (weights[x] > 0 && emptyPixel(pixels[x])) return false;
+    }
     if (operation.kind == Kind::Heal) {
         // What separates this place from the source, measured around the zone, and carried
         // smoothly across it.
@@ -142,7 +151,7 @@ bool copyZone(ipr::Image &rgb, const ipr::Image &zone, const ipr::Recti &box, co
 
 bool operator==(const Operation &a, const Operation &b)
 {
-    return a.kind == b.kind && a.visible == b.visible && a.opacity == b.opacity && a.source == b.source && a.strokes == b.strokes;
+    return a.frame == b.frame && a.kind == b.kind && a.visible == b.visible && a.opacity == b.opacity && a.source == b.source && a.strokes == b.strokes;
 }
 
 bool bound(Operations &operations)
@@ -150,7 +159,7 @@ bool bound(Operations &operations)
     if (int(operations.size()) > mostOperations)
         return false;
     for (Operation &operation : operations) {
-        if (!std::isfinite(operation.opacity) || !std::isfinite(operation.source.x) || !std::isfinite(operation.source.y) ||
+        if (!Geometry::bound(operation.frame) || !std::isfinite(operation.opacity) || !std::isfinite(operation.source.x) || !std::isfinite(operation.source.y) ||
             int(operation.strokes.size()) > mostStrokesPerOperation)
             return false;
         operation.opacity = std::clamp(operation.opacity, 0.0f, 1.0f);
@@ -189,6 +198,61 @@ ipr::Image coverage(const Operation &operation, const ipr::Size &canvas)
     LocalAdjustments::Mask mask;
     mask.shapes.push_back(std::move(shape));
     return LocalAdjustments::coverage(mask, canvas);
+}
+
+namespace {
+LocalAdjustments::Mask asMask(const Operation &operation)
+{
+    LocalAdjustments::Mask mask;
+    mask.frame = operation.frame;
+    LocalAdjustments::Shape shape;
+    shape.kind = LocalAdjustments::Kind::Brush;
+    shape.strokes = operation.strokes;
+    mask.shapes.push_back(std::move(shape));
+    return mask;
+}
+}
+
+ipr::Image canvasCoverage(const Operation &operation, const Geometry::Settings &geometry, const ipr::Size &source)
+{
+    return LocalAdjustments::canvasCoverage(asMask(operation), geometry, source);
+}
+
+int applyOnCanvas(ipr::Image &rgb, const Operations &operations, const Geometry::Settings &geometry, const ipr::Size &source)
+{
+    if (rgb.empty() || rgb.depth() != ipr::Depth::F32 || rgb.channels() != 3 || source.empty()) return 0;
+    int notDone = 0;
+    const auto current = Geometry::homography(geometry, source);
+    for (const auto &operation : operations) {
+        if (!operation.visible || operation.opacity <= 0 || operation.strokes.empty()) continue;
+        if (current == Geometry::homography(operation.frame, source)) {
+            notDone += apply(rgb, {operation});
+            continue;
+        }
+        const auto before = Geometry::reframe(rgb, geometry, operation.frame, source);
+        if (before.empty()) { ++notDone; continue; }
+        auto corrected = before.clone();
+        const int failed = apply(corrected, {operation});
+        if (failed) { notDone += failed; continue; }
+        const auto delta = ipr::mapped(corrected, before, [](float a, float b) { return a-b; });
+        const auto projected = Geometry::reframe(delta, operation.frame, geometry, source);
+        if (projected.empty() || projected.size() != rgb.size()) { ++notDone; continue; }
+        ipr::parallelRows(rgb.height(), [&](int first, int last) {
+            for (int y=first; y<last; ++y) {
+                auto *out = rgb.mutableRow<ipr::Vec3f>(y);
+                const auto *change = projected.row<ipr::Vec3f>(y);
+                for (int x=0; x<rgb.width(); ++x)
+                    if (change[x] != ipr::Vec3f(0,0,0) && !emptyPixel(out[x])) out[x] += change[x];
+            }
+        });
+    }
+    return notDone;
+}
+
+ipr::Point2f suggestSourceOnCanvas(const ipr::Image &rgb, const Operation &operation,
+                                  const Geometry::Settings &geometry, const ipr::Size &source)
+{
+    return suggestSource(Geometry::reframe(rgb, geometry, operation.frame, source), operation);
 }
 
 int apply(ipr::Image &rgb, const Operations &operations)
@@ -283,6 +347,10 @@ void appendKey(QDataStream &stream, const Operations &operations)
     for (const Operation &operation : operations) {
         if (!operation.visible || operation.opacity <= 0.0f)
             continue;
+        const auto &g = operation.frame;
+        stream << qint32(g.quarterTurns) << g.flipHorizontal << g.flipVertical << g.rotation
+               << qint32(g.vertical) << qint32(g.horizontal) << qint32(g.aspect) << qint32(g.scale)
+               << qint32(g.offsetX) << qint32(g.offsetY);
         stream << qint32(operation.kind) << operation.opacity << operation.source.x << operation.source.y << qint32(operation.strokes.size());
         for (const LocalAdjustments::BrushStroke &stroke : operation.strokes) {
             stream << stroke.size << stroke.feather << qint32(stroke.points.size());
@@ -338,6 +406,21 @@ QVariantList describe(const Operations &operations)
         entry.insert(QStringLiteral("centerX"), double(centre.x));
         entry.insert(QStringLiteral("centerY"), double(centre.y));
         list.append(entry);
+    }
+    return list;
+}
+
+QVariantList describeOnCanvas(const Operations &operations, const Geometry::Settings &geometry, const ipr::Size &source)
+{
+    auto list = describe(operations);
+    LocalAdjustments::Masks masks;
+    for (const auto &operation : operations) masks.push_back(asMask(operation));
+    const auto frames = LocalAdjustments::describeOnCanvas(masks, geometry, source);
+    for (qsizetype i=0; i<list.size(); ++i) {
+        auto entry = list[i].toMap(); const auto frame = frames[i].toMap();
+        for (const auto &key : {QStringLiteral("frameToCanvas"),QStringLiteral("canvasToFrame"),QStringLiteral("frameAspect")})
+            if (frame.contains(key)) entry.insert(key, frame.value(key));
+        list[i] = entry;
     }
     return list;
 }

@@ -1920,6 +1920,7 @@ void ImageEditor::commitGeometry(Geometry::Settings next)
     m_settings.geometry = next;
     emit geometryChanged();
     emit localMasksChanged(); // frame-to-canvas handles move with the photo
+    emit retouchesChanged();
     scheduleRender();
 }
 
@@ -2093,7 +2094,8 @@ void ImageEditor::addLocalMaskStroke(int mask, int shape, const QVariantList &po
 
 QVariantList ImageEditor::retouches() const
 {
-    return Retouch::describe(m_settings.retouches);
+    return Retouch::describeOnCanvas(m_settings.retouches, m_settings.geometry,
+        m_original.isNull() ? ipr::Size() : m_original.linearRgba.size());
 }
 
 void ImageEditor::setRetouchOverlay(int retouch)
@@ -2123,6 +2125,7 @@ int ImageEditor::addRetouch(const QString &kind)
     Retouch::Operation operation;
     if (!Retouch::kindNamed(kind, operation.kind) || m_original.isNull())
         return -1;
+    operation.frame = m_settings.geometry;
     Retouch::Operations next = m_settings.retouches;
     next.push_back(operation);
     return commitRetouches(std::move(next)) ? int(m_settings.retouches.size()) - 1 : -1;
@@ -2185,7 +2188,7 @@ void ImageEditor::addRetouchStroke(int retouch, const QVariantList &points, doub
         if (!source.isNull()) {
             const ipr::Image rgb = Geometry::warpRgb(ipr::withoutAlpha(source.linearRgba), m_settings.geometry,
                                                      RenderChain::geometryQuality(previewPixelScale()));
-            target.source = Retouch::suggestSource(rgb, target);
+            target.source = Retouch::suggestSourceOnCanvas(rgb, target, m_settings.geometry, source.linearRgba.size());
         }
     }
     commitRetouches(std::move(next));

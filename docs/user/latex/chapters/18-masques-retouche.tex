@@ -92,8 +92,16 @@ Pour \emph{Corriger} et \emph{Tampon}, une source est proposée au premier coup 
 pour être reconstruite, ou si sa source sort de l’image, l’image reste telle quelle et le message
 l’indique.
 
-Faites le redressement d’abord : la zone de retouche ne suit pas l’image si la géométrie
-change ensuite.
+La zone corrigée reste attachée à la photo après rotation, miroir, perspective
+ou recadrage. Pour le correcteur et le tampon, la source et sa poignée suivent
+aussi ces transformations. Le pinceau et le choix de source restent modifiables.
+\emph{Ctrl+Z} annule le changement, \emph{Ctrl+Maj+Z} le rétablit
+(\emph{Cmd} sur macOS).
+
+Les anciens compagnons sont repris dans la géométrie qu’ils ont enregistrée.
+Une retouche déjà enregistrée avec un décalage ne peut pas retrouver sa cible
+automatiquement : recréez cette retouche. Si la source choisie n’est plus
+disponible, IPR laisse la zone intacte et signale une retouche sans effet.
 
 \section{Limites}
 \begin{itemize}

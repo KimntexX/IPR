@@ -77,6 +77,10 @@ void clearTransparent(ipr::Image &rgba);
 // The crop of a canvas-sized image, of any type, as new pixels; the image itself without a crop.
 ipr::Image crop(ipr::Image canvasImage, const Settings &settings);
 
+// F32 image or coverage between two canvases of the same source. Zero outside;
+// identity shares the buffer. Callers clone before modifying a shared result.
+ipr::Image reframe(const ipr::Image &image, const Settings &from, const Settings &to, const ipr::Size &source);
+
 // Commands, as the panel gives them; the crop follows the image.
 void turn(Settings &settings, const ipr::Size &source);         // a quarter turn, clockwise
 void mirror(Settings &settings, bool horizontal, const ipr::Size &source);

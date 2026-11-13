@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "data_version": "v001",
+  "campaign": "source-anchored-object-removal",
+  "created_utc": "2026-11-13T16:27:29.689556+00:00",
+  "branch": "patch_object_removal",
+  "base_commit": "93222a41c2e96dc2e2434f96e215c35e784be043",
+  "dev_base": "97841ff668040c5d8bd54d8e281a800c729082e2",
+  "candidate_dirty": true,
+  "source_sha256": {
+    "src/core/Geometry.cpp": "bb03a321db41d3a43a81d9c1bd6014ec3e4423decd8db9e9bd9ca7f8454cd7f7",
+    "src/core/Geometry.h": "bfdcb46f04f430fb4c1f88a4377ba5aec85f6a62e70bfcb8f1a356e5b268d005",
+    "src/core/LocalAdjustments.cpp": "1bff9a7a77fd7a6b1520eeb32617bbee757b26bede63d3d2e50b4b66a4103f68",
+    "src/core/RecipeCodec.cpp": "02e9f9bd1ed1e5c08e3ac26d7b055605f84afd1f4d41dce3f33cbc83c044ac59",
+    "src/core/Retouch.cpp": "19d59a25887e58941241fe2f384fb4c7d5205dfda97d237faaef80e55cc5c664",
+    "src/core/Retouch.h": "f71bfa9eac6506fab76e712d1f586123af093cadefd2d5afe10b5a8d59f435e8",
+    "src/core/Sidecar.h": "34eba90b9b6dc2237e5bc469a17a454fb43148e93b7db087136747fd75ccc269",
+    "src/editor/RenderChain.cpp": "df1c0ea5ea8f800ab018108f0af704553f98b7087664c4bc452b4cbf4871d996",
+    "src/editor/imageeditor.cpp": "f9f95126fb1cc88c75707043b6267a5a7f4a651d22f3e881b6aa78dde2db7ce9",
+    "src/qml/RetouchPanel.qml": "6f18f3a934b116fb75b74be77ac92c739f4da7aa9296dbbfd1732c15d83101af",
+    "tests/editor_retouch_test.cpp": "631dce24476e5ee48949e4da305e4278323a09187b42493648dfdc8ea42d521e",
+    "tests/retouch_qml_test.cpp": "1a422b178274df1b312b553c9d822a279daf25bc6e8ca6f9053ad5306c774c93",
+    "tests/retouch_test.cpp": "8895daf0b0f199cfec2a97052a039e6b140d461f593148aa6a6ced54cc0ceb7a"
+  },
+  "design": {
+    "frame": "fixed creation geometry for brush strokes and source offset of every retouch",
+    "pipeline": "retouch remains after tones; reframe current RGB into creation frame, evaluate correction, reproject RGB delta only, retain current pixels outside correction",
+    "shared_geometry": "Geometry::reframe shared with masks",
+    "ui": "frame transforms for brush and source handle; inverse mapping for edits",
+    "invalid_source": "refused without painting black",
+    "migration": "sidecar 14; missing operation frame uses saved recipe geometry, without inferring the original target"
+  },
+  "qualification": {
+    "compiler": "MSVC 2022",
+    "qt": "6.11.2",
+    "configuration": "Release with pinned ONNX model and runtime retained",
+    "native_full": {
+      "name": "Win32-MSBuild",
+      "tests": "80",
+      "failures": "0",
+      "disabled": "0",
+      "skipped": "0",
+      "hostname": "DESKTOP-1RE5RVU",
+      "time": "258",
+      "timestamp": "2026-11-13T17:20:44"
+    },
+    "python_full": {
+      "tests": 355,
+      "result": "OK",
+      "seconds": 24.256
+    },
+    "supplemental_roundtrip": {
+      "reason": "strengthened export/reopen assertions after full run; no production code changed",
+      "suite": {
+        "name": "Win32-MSBuild",
+        "tests": "1",
+        "failures": "0",
+        "disabled": "0",
+        "skipped": "0",
+        "hostname": "DESKTOP-1RE5RVU",
+        "time": "3",
+        "timestamp": "2026-11-13T17:26:48"
+      }
+    },
+    "smoke": "passed"
+  },
+  "cases": {
+    "synthetic_source_px": [
+      400,
+      300
+    ],
+    "target_normalized": [
+      0.3,
+      0.4
+    ],
+    "source_offset": [
+      0.35,
+      0.3
+    ],
+    "kinds": [
+      "remove",
+      "heal",
+      "clone"
+    ],
+    "transforms": [
+      "rotation 19 degrees",
+      "quarter turn",
+      "horizontal mirror",
+      "vertical perspective 20",
+      "aspect 15 + horizontal perspective 12"
+    ],
+    "reference": "correction computed before geometry, then warped; comparison at transformed target",
+    "center_tolerance_per_linear_rgb_channel": 0.04,
+    "outside_projected_zone_max_difference": 0,
+    "other_cases": [
+      "correction created at rotation 17 then geometry reset",
+      "nonfinite frame refused",
+      "unavailable clone source refused with exact unchanged image",
+      "frame codec roundtrip and missing-field migration",
+      "malformed frame rejected",
+      "source-handle transforms update after rotation",
+      "source edits in fixed frame",
+      "rotation+offset undo grouped in one gesture",
+      "saved frame differs from current geometry",
+      "400x300 full-size fixture PNG export equals preview pixels",
+      "reopen restores transformed preview"
+    ]
+  },
+  "limits": [
+    "Visual validation pending",
+    "Reprojection can soften corrected details",
+    "Previously shifted recipes without a frame cannot recover an unknown original target",
+    "No new real RAW corpus measurement",
+    "No push merge or tag for this corrective batch"
+  ],
+  "log_sha256": {
+    "build-patch_object_removal/tests-retouch-final.log": "82a40b9ebf080dc12ea7accc194c72f3fd6173c5a3b7d4067088c3ae53ce0204",
+    "build-patch_object_removal/tests-retouch-roundtrip.log": "c973d971c287b0a803e8bee923930afe67f062e7511636908d762dfe52bf8fe6",
+    "build-patch_object_removal/smoke-retouch-final.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "tracking_issue": "https://github.com/KimntexX/IPR/issues/28",
+  "verdict": "automated_checks_passed_visual_validation_pending"
+}

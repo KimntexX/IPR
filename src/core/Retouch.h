@@ -11,7 +11,7 @@
 #include <vector>
 
 // Removing what should not be in a photo (lot B3). A retouch is a zone painted on the normalized
-// canvas, as a mask's, and what fills it is worked out at each render: the source never changes,
+// creation canvas, attached to the photo as a mask is, and what fills it is worked out at each render: the source never changes,
 // and a retouch can be turned off, changed or removed at any time. What it puts in the zone is
 // reconstructed, not recovered: the recipe says where.
 namespace Retouch {
@@ -24,6 +24,7 @@ enum class Kind {
 
 struct Operation
 {
+    Geometry::Settings frame; // fixed creation canvas, attached to the oriented source
     Kind kind = Kind::Remove;
     bool visible = true;
     float opacity = 1.0f;       // in [0, 1]
@@ -50,6 +51,14 @@ ipr::Image coverage(const Operation &operation, const ipr::Size &canvas);
 // where a transform left nothing, is never taken as a source. Returns how many could not be done:
 // a zone that takes too much of what surrounds it to be invented is left as it is.
 int apply(ipr::Image &rgb, const Operations &operations);
+// Apply fixed-frame operations on the current canvas, preserving pixels outside
+// the projected correction. The raw source size defines normalized geometry.
+int applyOnCanvas(ipr::Image &rgb, const Operations &operations, const Geometry::Settings &geometry,
+                  const ipr::Size &source);
+ipr::Image canvasCoverage(const Operation &operation, const Geometry::Settings &geometry, const ipr::Size &source);
+ipr::Point2f suggestSourceOnCanvas(const ipr::Image &rgb, const Operation &operation,
+                                  const Geometry::Settings &geometry, const ipr::Size &source);
+QVariantList describeOnCanvas(const Operations &operations, const Geometry::Settings &geometry, const ipr::Size &source);
 
 // Where to take a zone from: the place nearby whose surroundings best match the zone's. Shares of
 // the canvas's sides, or (0, 0) when there is none. rgb: linear F32 of three channels, on the canvas.
