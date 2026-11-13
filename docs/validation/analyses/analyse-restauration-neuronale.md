@@ -11121,3 +11121,42 @@ de 512 × 512 par plan (centre, haut gauche, bas droite).
   (texture plus forte) reste à borner.
 - Limites : une seule scène, peu éclairée (pas de hautes lumières) ; 400 ISO
   sur une seule rafale de trois prises ; 100 ISO sur deux rafales de trois.
+
+## 13 novembre 2026 — surestimation à 100 ISO : du bruit fixe, pas un défaut
+
+Question : faut-il borner l'estimateur à bas ISO (×1,6 à ×1,7 en médiane sur
+les photos de jour du 60D à 100 ISO) ?
+[Preuve](../raw/estimator-low-iso-study-v001-20261113T162616Z.json).
+
+**Variantes de l'estimateur** (`tests/neural/estimator_variants.py`), sur
+146 photos ordinaires (60D, loi qualifiée ; R6 III, loi du catalogue) : quantile
+plus bas, blocs de 8, minimum ou quart inférieur des classes, rejet des blocs
+à texture basse fréquence, et différence des deux verts d'une cellule Bayer
+(presque sans texture). **Aucune ne ramène le 100 ISO du 60D sous ×1,3** sans
+sous-estimer ailleurs (le minimum des classes descend à ×0,86 entre 125 et
+640 ISO) ; même la différence des verts donne ×1,64.
+
+**Cause : le bruit fixe.** Sur les aplats du 60D, la part identique dans les deux
+prises d'une paire (non-uniformité de réponse des pixels, PRNU, et motif fixe)
+vaut, rapportée au bruit temporel, 0,72 à 100 ISO, 0,47 à 400, 0,37 à 800, 0,17
+à 1600, 0,10 à 3200 et 0,06 à 6400 (signal 5 000 à 7 000 DN). Une photo seule
+porte les deux : 1 + 0,72 ≈ ×1,7 à 100 ISO, ce que l'estimateur mesure. La
+qualification, faite de différences de paires, n'en garde que la part
+temporelle. L'estimateur n'est donc pas trompé par la texture : il mesure un
+bruit réel que la loi qualifiée ignore, et qui ne pèse qu'à bas ISO.
+
+**Effet visible.** Sur deux photos à 100 ISO (IMG_6222, pente ×2,6 à ×3,5 ;
+IMG_6954, ×1,4 à ×1,5), le débruitage avec la loi estimée ne se distingue pas
+de celui avec la loi qualifiée à l'œil (découpes de 256 × 256 par plan) : à
+100 ISO, le bruit total reste très faible devant l'image. Les rafales réelles
+le chiffrent à −0,06 dB (section précédente), mesure qui compte d'ailleurs le
+bruit fixe enlevé comme une erreur, puisque la moyenne de la rafale le garde.
+
+**Images sans signal.** Les pentes négatives du R6 III viennent de prises
+presque noires (bouchon, pièce sans lumière : médiane au niveau du noir) ; la
+pente n'y est pas mesurable. Le portage doit borner la pente à zéro et
+s'appuyer sur le bruit de lecture seul quand le signal manque.
+
+**Conséquence.** Pas de borne à bas ISO pour la qualité : l'estimateur peut être
+porté tel quel, avec la garde des images sans signal. Retirer aussi le bruit
+fixe à bas ISO est un choix de rendu, à confirmer par l'utilisateur.
