@@ -49,6 +49,12 @@ void policy()
     RenderStageCache::Keys keys{"a", "ab", "abc", "abcd", "abcde"};
     RenderStageCache cache;
     auto start = cache.begin(source, 0.5, keys);
+    cache.storeCameraOutput(source, .5, "camera", rgb);
+    auto camera = cache.cameraOutput(source, .5, "camera");
+    check(!camera.empty() && ipr::largestDifference(camera,rgb) == 0 && camera.block() != rgb.block(),
+          "camera cache returns independent pixels");
+    check(cache.cameraOutput(source,.25,"camera").empty() && cache.cameraOutput(source,.5,"other").empty(),
+          "camera cache requires source scale and key");
     check(start.stage == -1 && start.keep[0] && !start.keep[1] && !start.keep[4], "first render keeps the tones");
     for (int stage = 0; stage < RenderStageCache::StageCount; ++stage) cache.store(start, stage, rgb);
     check(cache.count() == 1, "only the requested output is stored");

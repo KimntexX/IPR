@@ -12,6 +12,7 @@
 #include "LocalContrast.h"
 #include "Filters.h"
 #include "Pixels.h"
+#include "Resize.h"
 #include "ToneCurve.h"
 #include "ToneRecovery.h"
 
@@ -59,8 +60,7 @@ LocalValues::Maps maskValues(const ColorPipeline::WorkingImage &source, const Se
         if (cache->maskMaps(source.linearRgba, pixelScale, key, kept))
             return kept;
     }
-    const ipr::Size canvas = Geometry::canvasSize(settings.geometry, source.linearRgba.size());
-    LocalValues::Maps maps = LocalAdjustments::valueMaps(settings.localMasks, canvas, rangeLuminanceOf(source, settings, pixelScale));
+    LocalValues::Maps maps = LocalAdjustments::canvasValueMaps(settings.localMasks, settings.geometry, source.linearRgba.size(), rangeLuminanceOf(source, settings, pixelScale));
     if (cache)
         cache->storeMaskMaps(source.linearRgba, pixelScale, key, maps);
     return maps;
@@ -108,7 +108,7 @@ RenderStageCache::Keys stageKeys(const Settings &s)
 // the four tone controls, in place on the source's RGB. local: what the masks
 // add, on the canvas (LocalAdjustments::valueMaps).
 bool renderTones(const ColorPipeline::WorkingImage &source, const Settings &settings, int referenceTemperature,
-                 double pixelScale, ipr::Image &adjusted, const LocalValues::Maps &local)
+                 double pixelScale, ipr::Image &adjusted, const LocalValues::Maps &local, RenderStageCache *cache)
 {
     const bool whiteBalanceEdit = settings.temperature != referenceTemperature || settings.tint != 0 ||
                                   !local[LocalValues::Temperature].empty() || !local[LocalValues::Tint].empty();
@@ -120,35 +120,54 @@ bool renderTones(const ColorPipeline::WorkingImage &source, const Settings &sett
     const bool denoiseCamera = source.dcpContext && settings.denoiseBeforeProfile &&
                                classicalLuminance(settings) != 0;
     if (source.dcpContext && (whiteBalanceEdit || sceneExposure || denoiseCamera)) {
-        QString error;
-        const CameraProfileEngine::DcpWorkingContext *camera = source.dcpContext.get();
-        CameraProfileEngine::DcpWorkingContext denoised;
-        if (denoiseCamera) {
-            // From the retained source each time: never denoised twice.
-            // Before the lens corrections when the decode kept that signal, then them again.
-            // CameraDenoise publishes a new buffer and never writes the retained one.
-            denoised = CameraProfileEngine::sharedCopy(*source.dcpContext);
-            const bool preLens = !source.dcpContext->preLensCameraRgb.empty();
-            denoised.cameraRgb = preLens ? source.dcpContext->preLensCameraRgb.share() : source.dcpContext->cameraRgb.share();
-            CameraDenoise::Context denoiseContext;
-            denoiseContext.pixelScale = pixelScale;
-            if (!CameraDenoise::apply(denoised.cameraRgb, classicalLuminance(settings), denoiseContext) ||
-                (preLens && !CameraProfileEngine::applyLcp(denoised.lcpPath, denoised.cameraRgb, denoised.capture,
-                                                           &error, denoised.lensOptions))) {
-                qWarning() << "Échec du débruitage du signal caméra :" << error;
+        QByteArray cameraKey;
+        if (cache) {
+            QDataStream key(&cameraKey, QIODevice::WriteOnly);
+            key << settings.brightness << qint32(settings.temperature) << qint32(settings.tint)
+                << denoiseCamera << qint32(denoiseCamera ? classicalLuminance(settings) : 0);
+            LocalAdjustments::appendKey(key, settings.localMasks);
+        }
+        ipr::Image cachedCamera = cache ? cache->cameraOutput(source.linearRgba, pixelScale, cameraKey) : ipr::Image{};
+        if (!cachedCamera.empty()) adjusted = std::move(cachedCamera);
+        else {
+
+            QString error;
+            const CameraProfileEngine::DcpWorkingContext *camera = source.dcpContext.get();
+            CameraProfileEngine::DcpWorkingContext denoised;
+            if (denoiseCamera) {
+                // From the retained source each time: never denoised twice.
+                // Before the lens corrections when the decode kept that signal, then them again.
+                // CameraDenoise publishes a new buffer and never writes the retained one.
+                denoised = CameraProfileEngine::sharedCopy(*source.dcpContext);
+                const bool preLens = !source.dcpContext->preLensCameraRgb.empty();
+                denoised.cameraRgb = preLens ? source.dcpContext->preLensCameraRgb.share() : source.dcpContext->cameraRgb.share();
+                CameraDenoise::Context denoiseContext;
+                denoiseContext.pixelScale = pixelScale;
+                if (!CameraDenoise::apply(denoised.cameraRgb, classicalLuminance(settings), denoiseContext) ||
+                    (preLens && !CameraProfileEngine::applyLcp(denoised.lcpPath, denoised.cameraRgb, denoised.capture,
+                                                               &error, denoised.lensOptions))) {
+                    qWarning() << "Échec du débruitage du signal caméra :" << error;
+                    return false;
+                }
+                camera = &denoised;
+            }
+            // The camera signal comes before the geometry: there, the maps follow the source's pixels.
+            LocalValues::Maps onSource;
+            LocalAdjustments::Masks cameraMasks = settings.localMasks;
+            for (auto &mask : cameraMasks)
+                for (size_t i = 0; i < mask.values.size(); ++i)
+                    if (i != LocalValues::Exposure && i != LocalValues::Temperature && i != LocalValues::Tint)
+                        mask.values[i] = 0;
+            onSource = LocalAdjustments::canvasValueMaps(cameraMasks, {}, adjusted.size(),
+                LocalAdjustments::usesLuminance(cameraMasks)
+                    ? LocalAdjustments::rangeLuminance(ipr::withoutAlpha(source.linearRgba)) : ipr::Image{});
+            if (camera->cameraRgb.size() != adjusted.size() ||
+                !CameraProfileEngine::renderFromCameraSignal(*camera, settings.temperature, settings.tint,
+                                                             settings.brightness, adjusted, &error, onSource)) {
+                qWarning() << "Échec du rendu capteur avant DCP :" << error;
                 return false;
             }
-            camera = &denoised;
-        }
-        // The camera signal comes before the geometry: there, the maps follow the source's pixels.
-        LocalValues::Maps onSource;
-        for (const LocalValues::Parameter parameter : {LocalValues::Exposure, LocalValues::Temperature, LocalValues::Tint})
-            onSource[parameter] = LocalAdjustments::toSource(local[parameter], settings.geometry, adjusted.size());
-        if (camera->cameraRgb.size() != adjusted.size() ||
-            !CameraProfileEngine::renderFromCameraSignal(*camera, settings.temperature, settings.tint,
-                                                         settings.brightness, adjusted, &error, onSource)) {
-            qWarning() << "Échec du rendu capteur avant DCP :" << error;
-            return false;
+            if (cache) cache->storeCameraOutput(source.linearRgba, pixelScale, cameraKey, adjusted);
         }
     }
 
@@ -190,6 +209,64 @@ bool renderTones(const ColorPipeline::WorkingImage &source, const Settings &sett
 
 } // namespace
 
+ColorPipeline::WorkingImage editProxy(
+    const ColorPipeline::WorkingImage &source, int maximumExtent)
+{
+    // Interactive preview rendering (every slider drag) re-applies the
+    // pipeline from the last cached stage before the edited one
+    // (RenderStageCache), so its cost scales directly with pixel count. Camera RAW files routinely
+    // exceed 24-50 Mpx while the on-screen preview (Main.qml's "canvas"
+    // Image, fitted inside the editor pane) is at most a few Mpx, so editing
+    // on a capped-resolution proxy removes most of that redundant work
+    // without any visible quality loss, while export keeps using the full
+    // resolution m_original untouched.
+    if (source.isNull())
+        return {};
+
+    const int kEditProxyMaxDimension = std::max(1, maximumExtent);
+    const int longestSide =
+        std::max(source.linearRgba.width(), source.linearRgba.height());
+    if (longestSide <= kEditProxyMaxDimension)
+        return ColorPipeline::sharedCopy(source); // The same pixels, shared: nothing is allocated.
+
+    const double scale =
+        static_cast<double>(kEditProxyMaxDimension) / static_cast<double>(longestSide);
+    const ipr::Size proxySize(
+        std::max(1, static_cast<int>(std::lround(source.linearRgba.width() * scale))),
+        std::max(1, static_cast<int>(std::lround(source.linearRgba.height() * scale))));
+
+    ColorPipeline::WorkingImage proxy;
+    proxy.linearRgba = ipr::resized(source.linearRgba, proxySize, ipr::Interpolation::Area);
+    // Area averaging rounds alpha slightly above 1; a proxy restored from the
+    // cache is revalidated as a master, which requires alpha within [0, 1].
+    for (int y = 0; y < proxy.linearRgba.height(); ++y) {
+        auto *row = proxy.linearRgba.mutableRow<ipr::Vec4f>(y);
+        for (int x = 0; x < proxy.linearRgba.width(); ++x)
+            row[x][3] = std::clamp(row[x][3], 0.f, 1.f);
+    }
+    proxy.toneStatistics = source.toneStatistics;
+    proxy.colorSpace = source.colorSpace;
+    proxy.sourceProfile = source.sourceProfile;
+    proxy.referenceWhiteBalanceKelvin = source.referenceWhiteBalanceKelvin;
+    if (source.dcpContext) {
+        auto context = std::make_shared<CameraProfileEngine::DcpWorkingContext>(CameraProfileEngine::sharedCopy(*source.dcpContext));
+        context->cameraRgb = ipr::resized(source.dcpContext->cameraRgb, proxySize, ipr::Interpolation::Area);
+        if (!source.dcpContext->preLensCameraRgb.empty())
+            context->preLensCameraRgb = ipr::resized(source.dcpContext->preLensCameraRgb, proxySize, ipr::Interpolation::Area);
+        proxy.dcpContext = context;
+    }
+    return proxy;
+}
+
+Preview displaySized(Preview result, const ipr::Size &size)
+{
+    if (!result.preview.isNull())
+        result.preview = result.preview.scaled(size.width, size.height, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+    if (!result.originalPreview.isNull())
+        result.originalPreview = result.originalPreview.scaled(size.width, size.height, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+    return result;
+}
+
 Geometry::Quality geometryQuality(double pixelScale)
 {
     return pixelScale < 1 ? Geometry::Quality::Preview : Geometry::Quality::Export;
@@ -218,7 +295,7 @@ ipr::Image tonesOutput(const ColorPipeline::WorkingImage &source, const Settings
         return tones;
     tones = ipr::withoutAlpha(source.linearRgba);
     const int reference = static_cast<int>(std::lround(source.referenceWhiteBalanceKelvin.value_or(5200.0)));
-    if (!renderTones(source, settings, reference, pixelScale, tones, maskValues(source, settings, pixelScale, cache)))
+    if (!renderTones(source, settings, reference, pixelScale, tones, maskValues(source, settings, pixelScale, cache), cache))
         tones = {};
     return tones;
 }
@@ -269,7 +346,7 @@ ColorPipeline::WorkingImage workingImage(const ColorPipeline::WorkingImage &sour
     ipr::Image adjusted = std::move(start.rgb);
     if (runs(0)) {
         adjusted = ipr::withoutAlpha(source.linearRgba);
-        if (!renderTones(source, settings, referenceTemperature, pixelScale, adjusted, local)) return {};
+        if (!renderTones(source, settings, referenceTemperature, pixelScale, adjusted, local, cache)) return {};
         // On the canvas, once the tones are set; what follows treats the zone as the rest.
         const int notDone = Retouch::apply(adjusted, settings.retouches);
         if (retouchesNotDone)
@@ -365,7 +442,7 @@ Preview preview(const ColorPipeline::WorkingImage &source, const Settings &setti
         }
     }
     if (overlayMask >= 0 && overlayMask < int(settings.localMasks.size())) {
-        const ipr::Image weights = LocalAdjustments::coverage(settings.localMasks[size_t(overlayMask)], rendered.linearRgba.size(),
+        const ipr::Image weights = LocalAdjustments::canvasCoverage(settings.localMasks[size_t(overlayMask)], settings.geometry, source.linearRgba.size(),
                                                            rangeLuminanceOf(source, settings, pixelScale));
         // A neutral pipeline hands back the source buffer itself: overlay a copy.
         rendered.linearRgba = rendered.linearRgba.clone();

@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "data_version": "v001",
+  "campaign": "mask-user-workflow-feedback",
+  "created_utc": "2026-11-13T14:47:07.733652+00:00",
+  "base_commit": "e971f94d3a469adff5fb6e658bb0d40069e33248",
+  "delivered_commit": "4df1b7f4415591753de331c30f95d6d37a985e1c",
+  "method": "User feedback plus source inspection; no new rendering, latency benchmark or raw corpus measurement",
+  "user_feedback": "Combiner cône et autre masque : la rotation prend un temps fou au point que j'ai cru que cela ne marchait pas et les calques ne suivent pas le changement géométrique. Après je ne connais pas le comportement sur les autres logiciels. Pour le reste, tout est bon.",
+  "accepted_scope": [
+    "context menu and drag reordering",
+    "undo and redo",
+    "save and reopen",
+    "export check from the suggested workflow"
+  ],
+  "rejected_scope": [
+    "rotation latency with combined masks",
+    "masks staying attached to photo content after geometry changes"
+  ],
+  "capture_details": {
+    "photo": null,
+    "zoom": null,
+    "timings_ms": null,
+    "mask_settings": null
+  },
+  "code_findings": [
+    {
+      "file": "src/core/LocalAdjustments.h",
+      "finding": "Shapes are defined in normalized transformed canvas coordinates."
+    },
+    {
+      "file": "src/editor/imageeditor.cpp",
+      "symbol": "ImageEditor::commitGeometry",
+      "finding": "Geometry update does not reanchor local masks."
+    },
+    {
+      "file": "src/editor/RenderChain.cpp",
+      "symbols": [
+        "maskValues",
+        "stageKeys",
+        "renderTones"
+      ],
+      "finding": "Geometry changes invalidate mask and tone keys; local camera exposure can trigger DCP rerendering."
+    },
+    {
+      "file": "src/editor/imageeditor.cpp",
+      "symbol": "ImageEditor::startDetailRender",
+      "finding": "When detailed view is requested, a full resolution render can follow preview; its contribution to reported delay is not measured."
+    }
+  ],
+  "verdict": "partial_user_acceptance_geometry_following_and_latency_open",
+  "next_validation": [
+    "Source anchored mask coordinates with consistent overlay and edit mapping",
+    "Fixed object landmarks through rotation perspective mirrors quarter turns and crop",
+    "One coherent undo step for geometry and mask mapping",
+    "Preview and export alignment; sidecar migration",
+    "Timing breakdown with and without masks at fit view and detailed zoom"
+  ],
+  "tracking_issues": [
+    22,
+    24
+  ],
+  "production_code_changed": false
+}

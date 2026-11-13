@@ -24,15 +24,36 @@ Item {
 
     readonly property string kind: shape ? shape.kind : ""
     // The whole canvas on the screen, of which the image shows the crop.
-    readonly property real canvasWidth: imageWidth / Math.max(1e-6, cropWidth)
+    readonly property real canvasWidth: shape && shape.frameAspect ? canvasHeight * shape.frameAspect : imageWidth / Math.max(1e-6, cropWidth)
     readonly property real canvasHeight: imageHeight / Math.max(1e-6, cropHeight)
 
-    function toCanvas(x, y) {
-        return Qt.point(cropX + (x - imageX) / Math.max(1e-6, imageWidth) * cropWidth,
-                        cropY + (y - imageY) / Math.max(1e-6, imageHeight) * cropHeight)
+    function project(point, matrix) {
+        if (!matrix || matrix.length !== 9) return point
+        const w = matrix[6] * point.x + matrix[7] * point.y + matrix[8]
+        if (w <= 1e-9) return Qt.point(NaN, NaN)
+        return Qt.point((matrix[0]*point.x + matrix[1]*point.y + matrix[2])/w,
+                        (matrix[3]*point.x + matrix[4]*point.y + matrix[5])/w)
     }
-    function screenX(u) { return imageX + (u - cropX) / Math.max(1e-6, cropWidth) * imageWidth }
-    function screenY(v) { return imageY + (v - cropY) / Math.max(1e-6, cropHeight) * imageHeight }
+    // Input edits stay in the creation frame; display uses the current geometry.
+    function toCanvas(x, y) {
+        const point = Qt.point(cropX + (x-imageX)/Math.max(1e-6,imageWidth)*cropWidth,
+                               cropY + (y-imageY)/Math.max(1e-6,imageHeight)*cropHeight)
+        return project(point, shape ? shape.canvasToFrame : null)
+    }
+    function screenPoint(point) {
+        const p = project(point, shape ? shape.frameToCanvas : null)
+        return Qt.point(imageX + (p.x-cropX)/Math.max(1e-6,cropWidth)*imageWidth,
+                        imageY + (p.y-cropY)/Math.max(1e-6,cropHeight)*imageHeight)
+    }
+    function screenX(u, v) { return screenPoint(Qt.point(u,v)).x }
+    function screenY(v, u) { return screenPoint(Qt.point(u,v)).y }
+    function radialPoint(angle) {
+        const theta = (shape ? shape.angle : 0) * Math.PI / 180
+        const x = radiusX * canvasWidth * Math.cos(angle)
+        const y = radiusY * canvasHeight * Math.sin(angle)
+        return Qt.point(centerPoint[0] + (Math.cos(theta)*x-Math.sin(theta)*y)/canvasWidth,
+                        centerPoint[1] + (Math.sin(theta)*x+Math.cos(theta)*y)/canvasHeight)
+    }
 
     // The gesture in progress; its values replace the engine's until the release.
     property var live: ({})
@@ -67,6 +88,7 @@ Item {
     property string activeField: ""
     function movedTo(x, y) {
         const p = toCanvas(x, y)
+        if (!Number.isFinite(p.x) || !Number.isFinite(p.y)) return
         const next = Object.assign({}, live)
         if (activeField === "startWidth" || activeField === "endWidth") {
             const base = activeField === "startWidth" ? startPoint : endPoint
@@ -75,10 +97,12 @@ Item {
             const length = Math.max(1e-6, Math.hypot(dx, dy))
             const distance = ((p.x-base[0])*canvasWidth*(-dy) + (p.y-base[1])*canvasHeight*dx) / length
             next[activeField] = 2*Math.abs(distance) / Math.max(canvasWidth,canvasHeight)
-        } else if (activeField === "radiusX")
-            next.radiusX = Math.abs(p.x - centerPoint[0])
-        else if (activeField === "radiusY")
-            next.radiusY = Math.abs(p.y - centerPoint[1])
+        } else if (activeField === "radiusX" || activeField === "radiusY") {
+            const theta = (shape ? shape.angle : 0) * Math.PI / 180
+            const dx = (p.x-centerPoint[0])*canvasWidth, dy = (p.y-centerPoint[1])*canvasHeight
+            if (activeField === "radiusX") next.radiusX = Math.abs(dx*Math.cos(theta)+dy*Math.sin(theta))/canvasWidth
+            else next.radiusY = Math.abs(-dx*Math.sin(theta)+dy*Math.cos(theta))/canvasHeight
+        }
         else
             next[activeField] = [p.x, p.y]
         live = next
@@ -120,7 +144,7 @@ Item {
             const flat = []
             for (const point of points) {
                 const onCanvas = root.toCanvas(point.x, point.y)
-                flat.push(onCanvas.x, onCanvas.y)
+                if (Number.isFinite(onCanvas.x) && Number.isFinite(onCanvas.y)) flat.push(onCanvas.x, onCanvas.y)
             }
             points = []
             stroke.requestPaint()
@@ -155,18 +179,28 @@ Item {
         }
     }
     // The brush's size under the hand.
-    Rectangle {
+    Canvas {
+        id: brushRing
         objectName: "maskBrushRing"
+        anchors.fill: parent
         visible: root.kind === "brush" && painter.containsMouse
-        readonly property real radius2: root.brushSize * Math.max(root.canvasWidth, root.canvasHeight)
-        x: painter.mouseX - radius2
-        y: painter.mouseY - radius2
-        width: 2 * radius2
-        height: 2 * radius2
-        radius: radius2
-        color: "transparent"
-        border.color: "#ffffff"
-        border.width: 1
+        readonly property var watched: [painter.mouseX, painter.mouseY, root.brushSize, root.shape,
+                                        root.imageWidth, root.imageHeight, root.cropX, root.cropY]
+        onWatchedChanged: requestPaint()
+        onPaint: {
+            const c = getContext("2d"); c.reset()
+            const center = root.toCanvas(painter.mouseX,painter.mouseY)
+            if (!Number.isFinite(center.x) || !Number.isFinite(center.y)) return
+            const radius = root.brushSize * Math.max(root.canvasWidth,root.canvasHeight)
+            c.strokeStyle = "#ffffff"; c.lineWidth = 1; c.beginPath()
+            for (let i=0; i<=64; ++i) {
+                const angle = i*2*Math.PI/64
+                const p = root.screenPoint(Qt.point(center.x+radius*Math.cos(angle)/root.canvasWidth,
+                                                   center.y+radius*Math.sin(angle)/root.canvasHeight))
+                if (i===0) c.moveTo(p.x,p.y); else c.lineTo(p.x,p.y)
+            }
+            c.stroke()
+        }
     }
 
     // Gradients: what their handles mean, drawn under them.
@@ -177,7 +211,7 @@ Item {
         visible: root.kind === "linear" || root.kind === "radial" || root.cone
         readonly property var watched: [root.startPoint, root.endPoint, root.centerPoint, root.radiusX, root.radiusY,
                                         root.imageX, root.imageY, root.imageWidth, root.imageHeight, root.kind,
-                                        root.shape ? root.shape.angle : 0, root.startWidth, root.endWidth]
+                                        root.shape ? root.shape.angle : 0, root.startWidth, root.endWidth, root.shape ? root.shape.frameToCanvas : null, root.canvasWidth, root.canvasHeight]
         onWatchedChanged: requestPaint()
         onPaint: {
             const c = getContext("2d")
@@ -185,14 +219,19 @@ Item {
             c.strokeStyle = "#ffffff"
             c.lineWidth = 1
             if (root.kind === "linear") {
-                const ax = root.screenX(root.startPoint[0]), ay = root.screenY(root.startPoint[1])
-                const bx = root.screenX(root.endPoint[0]), by = root.screenY(root.endPoint[1])
-                const length = Math.max(1, Math.hypot(bx - ax, by - ay))
-                // Two lines across the axis, as far as the view goes.
-                const nx = -(by - ay) / length * 4000, ny = (bx - ax) / length * 4000
+                const ax = root.screenX(root.startPoint[0], root.startPoint[1]), ay = root.screenY(root.startPoint[1], root.startPoint[0])
+                const bx = root.screenX(root.endPoint[0], root.endPoint[1]), by = root.screenY(root.endPoint[1], root.endPoint[0])
+                const dx=(root.endPoint[0]-root.startPoint[0])*root.canvasWidth
+                const dy=(root.endPoint[1]-root.startPoint[1])*root.canvasHeight
+                const length=Math.max(1e-6,Math.hypot(dx,dy))
+                const reach=2*Math.max(root.canvasWidth,root.canvasHeight)
+                const nx=-dy/length*reach/root.canvasWidth, ny=dx/length*reach/root.canvasHeight
                 c.beginPath()
-                c.moveTo(ax - nx, ay - ny); c.lineTo(ax + nx, ay + ny)
-                c.moveTo(bx - nx, by - ny); c.lineTo(bx + nx, by + ny)
+                for (const point of [root.startPoint,root.endPoint]) {
+                    const a=root.screenPoint(Qt.point(point[0]-nx,point[1]-ny))
+                    const b=root.screenPoint(Qt.point(point[0]+nx,point[1]+ny))
+                    if (Number.isFinite(a.x) && Number.isFinite(b.x)) { c.moveTo(a.x,a.y); c.lineTo(b.x,b.y) }
+                }
                 c.moveTo(ax, ay); c.lineTo(bx, by)
                 c.stroke()
             } else if (root.cone) {
@@ -200,21 +239,19 @@ Item {
                                 root.coneCorner(false,-1), root.coneCorner(true,-1)]
                 c.beginPath()
                 for (let i=0; i<points.length; ++i) {
-                    const x=root.screenX(points[i].x), y=root.screenY(points[i].y)
+                    const x=root.screenX(points[i].x, points[i].y), y=root.screenY(points[i].y, points[i].x)
                     if (i===0) c.moveTo(x,y); else c.lineTo(x,y)
                 }
                 c.closePath()
-                c.moveTo(root.screenX(root.startPoint[0]),root.screenY(root.startPoint[1]))
-                c.lineTo(root.screenX(root.endPoint[0]),root.screenY(root.endPoint[1]))
+                c.moveTo(root.screenX(root.startPoint[0], root.startPoint[1]),root.screenY(root.startPoint[1], root.startPoint[0]))
+                c.lineTo(root.screenX(root.endPoint[0], root.endPoint[1]),root.screenY(root.endPoint[1], root.endPoint[0]))
                 c.stroke()
             } else if (root.kind === "radial") {
-                c.save()
-                c.translate(root.screenX(root.centerPoint[0]), root.screenY(root.centerPoint[1]))
-                c.rotate((root.shape ? root.shape.angle : 0) * Math.PI / 180)
-                c.scale(Math.max(1, root.radiusX * root.canvasWidth), Math.max(1, root.radiusY * root.canvasHeight))
                 c.beginPath()
-                c.arc(0, 0, 1, 0, 2 * Math.PI)
-                c.restore()
+                for (let i=0; i<=128; ++i) {
+                    const p = root.screenPoint(root.radialPoint(i*2*Math.PI/128))
+                    if (i===0) c.moveTo(p.x,p.y); else c.lineTo(p.x,p.y)
+                }
                 c.stroke()
             }
         }
@@ -234,11 +271,13 @@ Item {
                 : modelData === "startWidth" ? root.coneCorner(true,1)
                 : modelData === "endWidth" ? root.coneCorner(false,1)
                 : modelData === "center" ? Qt.point(root.centerPoint[0], root.centerPoint[1])
-                : modelData === "radiusX" ? Qt.point(root.centerPoint[0] + root.radiusX, root.centerPoint[1])
-                : Qt.point(root.centerPoint[0], root.centerPoint[1] + root.radiusY)
+                : modelData === "radiusX" ? root.radialPoint(0)
+                : root.radialPoint(Math.PI/2)
             objectName: "maskHandle_" + modelData
-            x: root.screenX(place.x) - width / 2
-            y: root.screenY(place.y) - height / 2
+            readonly property point displayPlace: root.screenPoint(place)
+            visible: Number.isFinite(displayPlace.x) && Number.isFinite(displayPlace.y)
+            x: visible ? displayPlace.x - width / 2 : 0
+            y: visible ? displayPlace.y - height / 2 : 0
             width: 13
             height: 13
             radius: width / 2

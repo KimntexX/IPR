@@ -447,6 +447,39 @@ int main(int argc, char **argv)
     if (!check(waitFor([&] { return !editor.busy(); }) && editor.localMasks()[0] == beforeOrder[last],
                "context movement can be undone")) return 1;
 
+    // The handles and inverse edit coordinates share the mask's creation frame.
+    overlay->setProperty("cropX", 0.0); overlay->setProperty("cropY", 0.0);
+    overlay->setProperty("cropWidth", 1.0); overlay->setProperty("cropHeight", 1.0);
+    panel->setProperty("selectedMask", 0);
+    editor.setGeometryValue(QStringLiteral("rotation"), 20);
+    settle();
+    overlay->setProperty("shape", panel->property("currentShape"));
+    settle();
+    auto *startHandle = named(overlay, QStringLiteral("maskHandle_start"));
+    if (!check(startHandle != nullptr, "anchored cone has its start handle")) return 1;
+    const auto anchored = panel->property("currentShape").toMap();
+    const auto frameForward = anchored.value("frameToCanvas").toList();
+    const auto point = anchored.value("start").toList();
+    const auto project = [](const QVariantList &m, double x, double y) {
+        const double w = m[6].toDouble()*x + m[7].toDouble()*y + m[8].toDouble();
+        return QPointF((m[0].toDouble()*x + m[1].toDouble()*y + m[2].toDouble())/w,
+                       (m[3].toDouble()*x + m[4].toDouble()*y + m[5].toDouble())/w);
+    };
+    const auto expected = project(frameForward, point[0].toDouble(), point[1].toDouble());
+    const auto actual = centreOf(startHandle);
+    if (!check(std::abs(actual.x()-(360+600*expected.x())) < .01 &&
+               std::abs(actual.y()-400*expected.y()) < .01, "handle follows the geometry projection")) return 1;
+    mouse(window, QEvent::MouseButtonPress, actual, timestamp);
+    mouse(window, QEvent::MouseMove, actual+QPointF(20,10), timestamp);
+    mouse(window, QEvent::MouseButtonRelease, actual+QPointF(20,10), timestamp);
+    const auto editedStart = listening->property("lastValues").toMap().value("start").toList();
+    const auto inverse = anchored.value("canvasToFrame").toList();
+    const auto expectedEdit = project(inverse, expected.x()+20.0/600, expected.y()+10.0/400);
+    if (!check(editedStart.size()==2 && std::abs(editedStart[0].toDouble()-expectedEdit.x()) < .01 &&
+               std::abs(editedStart[1].toDouble()-expectedEdit.y()) < .01,
+               "drag edits return through the inverse frame map")) return 1;
+    if (!check(waitFor([&] { return !editor.busy(); }), "geometry preview settles")) return 1;
+
     std::cout << "masks panel: ok\n";
     return 0;
 }

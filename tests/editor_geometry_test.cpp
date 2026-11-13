@@ -279,6 +279,17 @@ int main(int argc, char **argv)
     editor.resetGeometry();
     if (!check(settled(editor), "reset")) return 1;
 
+    editor.beginAdjustmentGesture();
+    editor.setGeometryValue(QStringLiteral("rotation"), 11);
+    if (!check(editor.geometryPreviewActive() && settled(editor), "geometry gesture publishes a fast preview")) return 1;
+    const auto displaySize = provider.image().size();
+    editor.endAdjustmentGesture();
+    if (!check(!editor.geometryPreviewActive() && settled(editor), "release restores normal rendering")) return 1;
+    if (!check(provider.image().size() == displaySize, "fast geometry keeps displayed pixel dimensions stable")) return 1;
+    editor.undo();
+    if (!check(settled(editor) && editor.geometry().value("rotation").toDouble()==0,
+               "geometry gesture has one history step")) return 1;
+
     if (!check(bytesOf(photo) == photoBytes, "the photo is never written")) return 1;
     std::cout << "editor geometry: ok\n";
     return 0;

@@ -90,6 +90,7 @@ int main(int argc, char **argv)
         shape.kind = LocalAdjustments::Kind::Trapezoid;
         shape.startWidth = .17f; shape.endWidth = .51f;
         shape.diffusion = .73f;
+        mask.frame.rotation = 19;
         mask.shapes.push_back(shape); cones.localMasks.push_back(mask);
         EditRecipe::Settings restored;
         if (!check(RecipeCodec::decodeSettings(RecipeCodec::encodeSettings(cones), restored) &&
@@ -104,6 +105,14 @@ int main(int argc, char **argv)
         masks[0] = oldMask; old.insert(QStringLiteral("localMasks"), masks);
         if (!check(RecipeCodec::decodeSettings(old, restored) && restored.localMasks[0].shapes[0].diffusion == 0,
                    "missing diffusion migrates to no axial attenuation")) return 1;
+        oldMask.remove(QStringLiteral("frame"));
+        masks[0] = oldMask; old.insert(QStringLiteral("localMasks"), masks);
+        old.insert(QStringLiteral("geometry"), QCborMap{{QStringLiteral("rotation"), 13.0}});
+        if (!check(RecipeCodec::decodeSettings(old, restored) && restored.localMasks[0].frame.rotation == 13,
+                   "older masks anchor to their saved geometry without moving on migration")) return 1;
+        oldMask.insert(QStringLiteral("frame"), QStringLiteral("invalid"));
+        masks[0] = oldMask; old.insert(QStringLiteral("localMasks"), masks);
+        if (!check(!RecipeCodec::decodeSettings(old, restored), "invalid frame refused")) return 1;
     }
     {
         EditRecipe::RawDevelopment neural;
