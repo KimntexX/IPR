@@ -241,6 +241,7 @@ ApplicationWindow {
                 width: Math.max(0, Math.min(implicitWidth, parent.width - 40))
                 height: implicitHeight
                 busy: imageEditor.busy
+                geometryPreview: imageEditor.geometryPreviewActive
                 embeddedPreview: imageEditor.hasImage && imageEditor.embeddedPreview
                 detail: imageEditor.statusMessage
             }

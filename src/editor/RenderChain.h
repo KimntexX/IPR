@@ -19,6 +19,8 @@ using Settings = EditRecipe::Settings;
 
 // The preview's proxy takes the fast filter; a full-resolution render, the fine one.
 Geometry::Quality geometryQuality(double pixelScale);
+// Area proxy retaining camera signal and tone statistics; export never uses it.
+ColorPipeline::WorkingImage editProxy(const ColorPipeline::WorkingImage &source, int maximumExtent = 2048);
 
 // The crop of the geometry, when it has one; a null image stays null.
 ColorPipeline::WorkingImage cropped(ColorPipeline::WorkingImage image, const Geometry::Settings &geometry);
@@ -49,6 +51,9 @@ struct Preview
     QString error;
     int retouchesNotDone = -1;             // -1: the render did not reach them, a cache had them
 };
+
+// Keep the displayed pixel grid stable during a lower-resolution geometry gesture.
+Preview displaySized(Preview result, const ipr::Size &size);
 
 // The render for the screen, in 8-bit sRGB. overlayPoint, overlayMask, overlayRetouch: an
 // element whose coverage the preview shows (colour where it acts, grey elsewhere), -1 for none.

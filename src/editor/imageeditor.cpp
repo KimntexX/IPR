@@ -1744,9 +1744,13 @@ void ImageEditor::beginAdjustmentGesture()
 
 void ImageEditor::endAdjustmentGesture()
 {
+    const bool hadFastGeometry = m_geometryGesture;
+    m_geometryGesture = false;
+    m_geometryProxy = {};
     m_inAdjustmentGesture = false;
+    if (hadFastGeometry) emit geometryPreviewChanged();
     recordHistory();
-    if (!m_original.isNull() && originalFramingStale()) {
+    if (!m_original.isNull() && (hadFastGeometry || originalFramingStale())) {
         ++m_requestedRevision;
         setBusy(true);
         m_renderDebounce.start();
@@ -1909,8 +1913,13 @@ void ImageEditor::commitGeometry(Geometry::Settings next)
     Geometry::applyConstraint(next, m_original.linearRgba.size());
     if (next == m_settings.geometry)
         return;
+    if (m_inAdjustmentGesture && !m_geometryGesture) {
+        m_geometryGesture = true;
+        emit geometryPreviewChanged();
+    }
     m_settings.geometry = next;
     emit geometryChanged();
+    emit localMasksChanged(); // frame-to-canvas handles move with the photo
     scheduleRender();
 }
 
@@ -1926,7 +1935,8 @@ void ImageEditor::setLocalMaskOverlay(int mask)
 
 QVariantList ImageEditor::localMasks() const
 {
-    return LocalAdjustments::describe(m_settings.localMasks);
+    return LocalAdjustments::describeOnCanvas(m_settings.localMasks, m_settings.geometry,
+        m_original.isNull() ? ipr::Size() : m_original.linearRgba.size());
 }
 
 bool ImageEditor::commitLocalMasks(LocalAdjustments::Masks next)
@@ -1950,6 +1960,7 @@ int ImageEditor::addLocalMask(const QString &kind)
         shape.diffusion = 0.7f;
     LocalAdjustments::Masks next = m_settings.localMasks;
     LocalAdjustments::Mask mask;
+    mask.frame = m_settings.geometry;
     mask.name = tr("Masque %1").arg(next.size() + 1);
     mask.shapes.push_back(shape);
     next.push_back(std::move(mask));
@@ -2391,7 +2402,7 @@ QByteArray ImageEditor::detailKey() const
 // The overlays and the crop tool draw on the preview: the detail hides while they show.
 bool ImageEditor::detailShowable() const
 {
-    return m_detailWanted && detailRatio() > 1.0 && !m_cropEditing && m_pointColorOverlay < 0 &&
+    return m_detailWanted && !m_geometryGesture && detailRatio() > 1.0 && !m_cropEditing && m_pointColorOverlay < 0 &&
         m_localMaskOverlay < 0 && m_retouchOverlay < 0 && !m_embeddedPreview && !m_loadWatcher.isRunning();
 }
 
@@ -2520,7 +2531,7 @@ ImageEditor::LoadResult ImageEditor::loadFromDisk(const QString &fileName,
             result.neuralReason = tr("Le débruitage IA ne s’est pas appliqué à ce développement.");
     }
     if (!result.image.isNull()) {
-        result.editProxy = buildEditProxy(result.image);
+        result.editProxy = RenderChain::editProxy(result.image);
         attachToneStatistics(result.image, result.editProxy);
     }
     return result;
@@ -2604,53 +2615,6 @@ DecodedImageCache::Entry ImageEditor::retainedCurrentEntry() const
     return retainedEntry(m_original, m_editProxy, m_sourceMetadata, m_dcpSource, m_fullSize, m_masterIsProxy);
 }
 
-ColorPipeline::WorkingImage ImageEditor::buildEditProxy(
-    const ColorPipeline::WorkingImage &source)
-{
-    // Interactive preview rendering (every slider drag) re-applies the
-    // pipeline from the last cached stage before the edited one
-    // (RenderStageCache), so its cost scales directly with pixel count. Camera RAW files routinely
-    // exceed 24-50 Mpx while the on-screen preview (Main.qml's "canvas"
-    // Image, fitted inside the editor pane) is at most a few Mpx, so editing
-    // on a capped-resolution proxy removes most of that redundant work
-    // without any visible quality loss, while export keeps using the full
-    // resolution m_original untouched.
-    if (source.isNull())
-        return {};
-
-    constexpr int kEditProxyMaxDimension = 2048;
-    const int longestSide =
-        std::max(source.linearRgba.width(), source.linearRgba.height());
-    if (longestSide <= kEditProxyMaxDimension)
-        return ColorPipeline::sharedCopy(source); // The same pixels, shared: nothing is allocated.
-
-    const double scale =
-        static_cast<double>(kEditProxyMaxDimension) / static_cast<double>(longestSide);
-    const ipr::Size proxySize(
-        std::max(1, static_cast<int>(std::lround(source.linearRgba.width() * scale))),
-        std::max(1, static_cast<int>(std::lround(source.linearRgba.height() * scale))));
-
-    ColorPipeline::WorkingImage proxy;
-    proxy.linearRgba = ipr::resized(source.linearRgba, proxySize, ipr::Interpolation::Area);
-    // Area averaging rounds alpha slightly above 1; a proxy restored from the
-    // cache is revalidated as a master, which requires alpha within [0, 1].
-    for (int y = 0; y < proxy.linearRgba.height(); ++y) {
-        auto *row = proxy.linearRgba.mutableRow<ipr::Vec4f>(y);
-        for (int x = 0; x < proxy.linearRgba.width(); ++x)
-            row[x][3] = std::clamp(row[x][3], 0.f, 1.f);
-    }
-    proxy.colorSpace = source.colorSpace;
-    proxy.sourceProfile = source.sourceProfile;
-    proxy.referenceWhiteBalanceKelvin = source.referenceWhiteBalanceKelvin;
-    if (source.dcpContext) {
-        auto context = std::make_shared<CameraProfileEngine::DcpWorkingContext>(CameraProfileEngine::sharedCopy(*source.dcpContext));
-        context->cameraRgb = ipr::resized(source.dcpContext->cameraRgb, proxySize, ipr::Interpolation::Area);
-        if (!source.dcpContext->preLensCameraRgb.empty())
-            context->preLensCameraRgb = ipr::resized(source.dcpContext->preLensCameraRgb, proxySize, ipr::Interpolation::Area);
-        proxy.dcpContext = context;
-    }
-    return proxy;
-}
 
 QString ImageEditor::cacheKeyForFile(const QString &fileName,
                                      bool automaticWhiteBalance,
@@ -2872,7 +2836,7 @@ void ImageEditor::beginLoad(const QString &fileName, const QString &extension,
                 loaded.image = RawDecoder::applyProfile(*source, options.dcpProfileOverride, &loaded.metadata, &loaded.error);
                 ImageImport::complete(loaded);
                 if (!loaded.image.isNull()) {
-                    loaded.editProxy = buildEditProxy(loaded.image);
+                    loaded.editProxy = RenderChain::editProxy(loaded.image);
                     attachToneStatistics(loaded.image, loaded.editProxy);
                 }
             } else {
@@ -2966,6 +2930,7 @@ void ImageEditor::applyLoadedImage(LoadResult loaded)
         : QSize(loaded.image.linearRgba.width(), loaded.image.linearRgba.height());
     m_original = std::move(loaded.image);
     m_editProxy = std::move(loaded.editProxy);
+    m_geometryProxy = {};
     m_renderStageCache.clear();
     m_displayedFile = m_currentFile;
     // Refresh comparison without blanking the displayed pair while rendering.
@@ -2980,6 +2945,7 @@ void ImageEditor::applyLoadedImage(LoadResult loaded)
         m_sidecarReadOnly = false;
         m_history = {};
         m_inAdjustmentGesture = false;
+        if (m_geometryGesture) { m_geometryGesture = false; emit geometryPreviewChanged(); }
         if (std::optional<Sidecar::Document> saved = Sidecar::read(m_currentFile.toLocalFile())) {
             m_settings = std::move(saved->settings);
             m_userImageMetadata.insert(currentFileKey(), std::move(saved->metadata));
@@ -3038,6 +3004,8 @@ void ImageEditor::releaseCurrentImage()
     // pixels and is safe while background workers retain their own ipr::Image.
     m_original = {};
     m_editProxy = {};
+    m_geometryProxy = {};
+    if (m_geometryGesture) { m_geometryGesture = false; emit geometryPreviewChanged(); }
     dropBeforeDevelopment();
     ++m_sourceGeneration;
     dropDetail();
@@ -3116,10 +3084,17 @@ void ImageEditor::startRender()
     }
 
     // Use the capped-resolution edit proxy for the interactive preview (see
-    // buildEditProxy()); m_original is reserved for exportImage()/writeImage()
+    // RenderChain::editProxy()); m_original is reserved for exportImage()/writeImage()
     // so exports are never affected by this optimization.
-    const auto sourceCopy = std::make_shared<const ColorPipeline::WorkingImage>(ColorPipeline::sharedCopy(previewSource()));
-    const double pixelScale = previewPixelScale();
+    const bool fastGeometry = m_geometryGesture && m_inAdjustmentGesture;
+    const auto &normal = previewSource();
+    if (fastGeometry && m_geometryProxy.isNull()) m_geometryProxy = RenderChain::editProxy(normal, 1024);
+    const auto &input = fastGeometry ? m_geometryProxy : normal;
+    const auto sourceCopy = std::make_shared<const ColorPipeline::WorkingImage>(ColorPipeline::sharedCopy(input));
+    const double pixelScale = previewPixelScale() * double(input.linearRgba.width()) / normal.linearRgba.width();
+    const auto canvas = Geometry::canvasSize(m_settings.geometry, normal.linearRgba.size());
+    const auto rectangle = Geometry::cropRect(m_settings.geometry, canvas);
+    const ipr::Size displaySize = m_cropEditing ? canvas : ipr::Size(rectangle.width, rectangle.height);
     const Settings settings = m_settings;
     // A point removed or replaced since the overlay was asked shows nothing.
     const int overlay = m_pointColorOverlay < int(std::min(settings.pointColor.count, PointColor::MaxPoints))
@@ -3138,14 +3113,15 @@ void ImageEditor::startRender()
     m_renderWatcher.setFuture(m_tasks.submit<RenderChain::Preview>(
         QStringLiteral("render"), Tasks::Priority::Interactive,
         [sourceCopy, originalCopy, settings, includeOriginal, pixelScale, resources = m_taskResources, overlay,
-         maskOverlay = m_localMaskOverlay, retouchOverlay = m_retouchOverlay, wholeCanvas](Tasks::Context &) {
+         maskOverlay = m_localMaskOverlay, retouchOverlay = m_retouchOverlay, wholeCanvas, fastGeometry, displaySize](Tasks::Context &) {
             ImageCacheController *controller = &resources->cache;
             const auto admission = controller->acquire({}, SystemMemory::estimateProcessingPeak(
                 quint64(sourceCopy->linearRgba.width()) * quint64(sourceCopy->linearRgba.height())), false).takeResult();
             if (!admission.reservation) { RenderChain::Preview result; result.error = admission.error; return result; }
             const auto release = qScopeGuard([&] { controller->release(admission.reservation); });
-            return RenderChain::preview(*sourceCopy, settings, includeOriginal, pixelScale, &resources->stages, overlay,
-                                        maskOverlay, wholeCanvas, retouchOverlay, originalCopy.get());
+            auto result = RenderChain::preview(*sourceCopy, settings, includeOriginal, pixelScale, &resources->stages, overlay,
+                                               maskOverlay, wholeCanvas, retouchOverlay, originalCopy.get());
+            return fastGeometry ? RenderChain::displaySized(std::move(result), displaySize) : result;
         }).future);
 }
 

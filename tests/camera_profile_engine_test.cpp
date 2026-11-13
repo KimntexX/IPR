@@ -41,7 +41,7 @@ public:
         return RenderChain::workingImage(source, settings);
     }
     static ColorPipeline::WorkingImage proxy(const ColorPipeline::WorkingImage &source) {
-        return ImageEditor::buildEditProxy(source);
+        return RenderChain::editProxy(source);
     }
 };
 

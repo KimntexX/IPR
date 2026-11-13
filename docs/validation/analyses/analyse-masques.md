@@ -314,3 +314,68 @@ Cette passe n’ajoute aucun changement de calcul photographique. Le cône reste
 accepté ; les parcours hors géométrie sont acceptés ; le groupe reste partiel,
 avec défauts de suivi et de réactivité liés aux issues #24 et #22. Ces défauts
 ne sont pas annoncés corrigés.
+
+## 13 novembre 2026 — Correctif local : ancrage source et geste géométrique
+
+Les masques conservent désormais leur **canevas de création** dans `Mask::frame`.
+Le rendu projette la couverture complète de ce cadre vers la géométrie courante ;
+il ne déplace pas seulement les extrémités du cône. Pinceau, ellipse, largeurs,
+inversion et combinaisons restent définis dans le même repère. Le cadre est fixe
+par rapport à la source orientée/corrigée optiquement. L’affichage des poignées,
+de l’ellipse et du cercle du pinceau utilise la projection directe ; les gestes
+utilisent son inverse. Les coordonnées ne sont pas réécrites à chaque rotation,
+ce qui évite une dérive cumulative.
+
+La recette devient **format 13**. Sans cadre enregistré, la migration utilise
+la géométrie sauvegardée comme cadre du masque : le placement à l’ouverture est
+conservé, puis le masque suit les transformations suivantes. Ce choix ne prétend
+pas retrouver automatiquement un objet sélectionné avant le changement de
+contrat. Une étape d’historique de géométrie suffit à retrouver le rendu et ses
+poignées ; le cadre fait partie de la recette et du round-trip.
+
+Le profil caméra et les corrections précoces ne sont plus relancés à chaque
+rotation : une entrée de cache RGB supplémentaire, bornée à un résultat avant
+géométrie, porte une clé source/échelle/réglages caméra/masques. Source ou échelle
+différente, purge et modification des réglages l’invalident. Le contrôle compare
+le résultat avec et sans ce cache **au bit près**. L’ancien trajet des cartes
+du canevas courant vers la source et ses tests spécifiques sont retirés ; les
+cartes caméra sont calculées directement depuis le repère fixe des masques.
+
+Pendant un geste de géométrie, l’éditeur utilise un proxy plafonné à 1024 pixels
+sur son grand côté, explicitement signalé par « Aperçu géométrique rapide ».
+Les dimensions de l’image affichée restent stables. Au relâchement, le proxy
+provisoire est libéré et le rendu normal est redemandé, y compris si l’angle
+revient à la valeur initiale. L’export reste sur le master pleine définition.
+La construction des proxies est déplacée hors d’`ImageEditor`, dans le module
+`RenderChain::editProxy` ; l’éditeur reste le cadenceur.
+
+### Qualification et portée des mesures
+
+Build Release complet et lancement de contrôle réussis : **80/80 tests natifs**
+et **355 tests Python** passent. Les nouveaux contrôles couvrent les repères à
+travers rotation, miroir, quart de tour, perspective, aspect/décalage, la création
+d’un masque après rotation puis remise à zéro, les gestes QML inverses, la
+migration et les entrées invalides, l’historique et les dimensions de l’affichage
+pendant/après le mode rapide.
+
+Banc synthétique caméra de 1024 × 682 pixels, cône exposition +1 EV et radial
+ombres +25, quatre rotations (2, 4, 6 et 8°), caches préparés : médiane du rendu
+`workingImage` **72,52 ms sans cache caméra**, **51,13 ms avec**, et **17,33 ms**
+sur un proxy de 512 × 341 pixels représentant la réduction par deux pendant le
+geste. La comparaison du cache conserve exactement les pixels ; le proxy réduit
+est un aperçu provisoire distinct. Ces chiffres excluent temporisation IHM,
+histogramme, redimensionnement d’affichage, décodage et disque ; ce n’est ni
+un benchmark sur RAW réel ni une mesure de l’attente vécue par l’utilisateur.
+
+Preuve canonique : [mask-geometry-following-v001-20261113T151522Z.json](../raw/mask-geometry-following-v001-20261113T151522Z.json).
+Le guide français et l’ADR-0021 décrivent le contrat révisé ; PDF non reconstruit.
+
+### Conclusion actuelle
+
+Correctif disponible localement dans `build-patch_masks/Release/appIPR.exe`.
+À recontrôler : cône et autre masque sur un objet, rotation puis miroir/quart de
+tour/perspective, déplacement des poignées, relâchement du curseur, annulation,
+réouverture et export. Le confort réel reste à confirmer par l’utilisateur.
+Les zones de retouche B3 restent ancrées au canevas : ce lot corrige les masques,
+pas la suppression d’objet. Les changements d’optique ne sont pas qualifiés ici.
+Aucune publication, fusion ou création de tag de ce correctif.

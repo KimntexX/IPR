@@ -18,6 +18,8 @@
 // stage and of every stage before it; the entries belong to one source and one
 // pixel scale. At most two outputs are kept (about 34 MB each on the 2048-pixel
 // proxy): the one just before the stage being edited and the tones' one.
+// One additional RGB entry retains the camera render before geometry; it shares
+// the same source/scale identity and is released on clear or a source change.
 class RenderStageCache final
 {
 public:
@@ -43,8 +45,11 @@ public:
     // that moves another slider does not draw the masks again. One entry, under its own key.
     bool maskMaps(const ipr::Image &source, double pixelScale, const QByteArray &key, LocalValues::Maps &maps) const;
     void storeMaskMaps(const ipr::Image &source, double pixelScale, const QByteArray &key, const LocalValues::Maps &maps);
+    // One bounded pre-geometry camera result: moving geometry does not rerun DCP.
+    ipr::Image cameraOutput(const ipr::Image &source, double pixelScale, const QByteArray &key) const;
+    void storeCameraOutput(const ipr::Image &source, double pixelScale, const QByteArray &key, const ipr::Image &rgb);
     void clear();
-    int count() const;
+    int count() const; // kept pipeline stages, excluding the camera and mask entries
 
 private:
     struct Entry { QByteArray key; ipr::Image rgb; };
@@ -54,6 +59,7 @@ private:
     double m_pixelScale = 0.0;
     std::optional<Keys> m_previous;
     std::array<std::optional<Entry>, StageCount> m_entries;
+    std::optional<Entry> m_camera;
     QByteArray m_maskKey;
     const void *m_maskSource = nullptr;
     double m_maskScale = 0.0;

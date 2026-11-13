@@ -17,6 +17,7 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QImage>
+#include <QElapsedTimer>
 #include <QTemporaryDir>
 #include <QTimer>
 
@@ -329,6 +330,7 @@ void withGeometry(const ColorPipeline::WorkingImage &source)
         const ColorPipeline::WorkingImage plain = IprTestImageGenerator::render(source, framed);
         Settings masked = framed;
         Mask top;
+        top.frame = framed.geometry; // created on this already transformed canvas
         Shape gradient;
         gradient.kind = Kind::Linear;
         gradient.start = {0.5f, 0.45f};
@@ -475,6 +477,48 @@ QString writePng(const QString &directory, const QString &name, int width, int h
     return image.save(path, "PNG") ? QFileInfo(path).canonicalFilePath() : QString();
 }
 
+void anchoredRotation(const ColorPipeline::WorkingImage &source)
+{
+    Settings settings;
+    Mask cone;
+    Shape shape; shape.kind = Kind::Triangle; shape.diffusion = .7f;
+    cone.shapes.push_back(shape); cone.values[size_t(LocalValues::Exposure)] = 1;
+    settings.localMasks.push_back(cone);
+    Mask round;
+    shape.kind = Kind::Radial; shape.center = {.3f,.4f};
+    round.shapes.push_back(shape); round.values[size_t(LocalValues::Shadows)] = 25;
+    settings.localMasks.push_back(round);
+    RenderStageCache cache;
+    RenderStageCache fastCache;
+    const auto gestureSource = RenderChain::editProxy(source, 512);
+    QElapsedTimer timer;
+    // The warm-up pays for camera development once, as opening the masked photo does.
+    check(!RenderChain::workingImage(source, settings, .5, &cache).isNull(), "masked camera warm-up");
+    check(!RenderChain::workingImage(gestureSource, settings, .25, &fastCache).isNull(), "gesture proxy warm-up");
+    for (int angle : {2,4,6,8}) {
+        settings.geometry.rotation = float(angle);
+        timer.start();
+        const auto reused = RenderChain::workingImage(source,settings,.5,&cache);
+        const double cachedMs = double(timer.nsecsElapsed())/1e6;
+        timer.restart();
+        const auto fresh = RenderChain::workingImage(source,settings,.5);
+        const double freshMs = double(timer.nsecsElapsed())/1e6;
+        check(!fresh.isNull() && !reused.isNull() && ipr::largestDifference(fresh.linearRgba,reused.linearRgba) == 0,
+              "camera reuse is bit identical after a masked rotation");
+        timer.restart();
+        const auto gesture = RenderChain::workingImage(gestureSource,settings,.25,&fastCache);
+        const double gestureMs = double(timer.nsecsElapsed())/1e6;
+        check(!gesture.isNull() && gesture.linearRgba.width() == 512, "geometry gesture uses the explicit reduced proxy");
+        std::cout << "mask-rotation angle=" << angle << " cached_ms=" << cachedMs << " uncached_ms=" << freshMs
+                  << " gesture_ms=" << gestureMs << '\n';
+    }
+    settings.localMasks[0].values[size_t(LocalValues::Exposure)] = -.5f;
+    auto changed = RenderChain::workingImage(source,settings,.5,&cache);
+    auto plain = RenderChain::workingImage(source,settings,.5);
+    check(!changed.isNull() && !plain.isNull() && ipr::largestDifference(changed.linearRgba,plain.linearRgba) == 0,
+          "changing mask exposure invalidates the pre-geometry camera cache");
+}
+
 void reordering(const QDir &folder)
 {
     const QString photo = writePng(folder.path(), QStringLiteral("order.png"), 120, 80);
@@ -504,8 +548,17 @@ void reordering(const QDir &folder)
     check(settled() && editor.localMasks()[0] == original[2], "redo restores order");
     editor.saveCurrentAdjustments();
     const auto saved = Sidecar::read(photo);
-    check(saved && LocalAdjustments::describe(saved->settings.localMasks) == editor.localMasks(), "sidecar retains order");
+    check(saved && LocalAdjustments::describeOnCanvas(saved->settings.localMasks, saved->settings.geometry, {120,80}) == editor.localMasks(), "sidecar retains order");
     check(editor.moveLocalMask(0, 2) && settled() && editor.localMasks() == original, "move back to the end");
+    editor.setGeometryValue(QStringLiteral("rotation"), 19);
+    check(settled(), "anchored geometry change renders");
+    editor.saveCurrentAdjustments();
+    const auto rotated = Sidecar::read(photo);
+    check(rotated && rotated->settings.geometry.rotation == 19 && rotated->settings.localMasks[0].frame.rotation == 0,
+          "rotation keeps the original creation frame in the saved recipe");
+    editor.undo();
+    check(settled() && editor.geometry().value("rotation").toDouble() == 0 && editor.localMasks() == original,
+          "one undo restores geometry and mask projection together");
 }
 
 void commands(const QDir &folder)
@@ -674,6 +727,7 @@ int main(int argc, char **argv)
     const ColorPipeline::WorkingImage camera = cameraSource(size, dcp);
     check(!camera.isNull() && camera.dcpContext != nullptr, "a source with a camera signal");
     if (!camera.isNull()) {
+        anchoredRotation(cameraSource({1024,682}, dcp));
         rendering(camera, "camera");
         withRange(camera);
         withGeometry(camera);

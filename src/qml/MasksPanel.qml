@@ -20,7 +20,10 @@ Item {
     property int selectedShape: 0
     readonly property var currentMask: selectedMask >= 0 && selectedMask < masks.length ? masks[selectedMask] : null
     readonly property var currentShape: currentMask && selectedShape >= 0 && selectedShape < currentMask.shapes.length
-                                        ? currentMask.shapes[selectedShape] : null
+                                        ? Object.assign({}, currentMask.shapes[selectedShape], {
+                                            frameToCanvas: currentMask.frameToCanvas,
+                                            canvasToFrame: currentMask.canvasToFrame,
+                                            frameAspect: currentMask.frameAspect }) : null
     readonly property string tool: currentShape ? currentShape.kind : ""
     // The next stroke's brush: a tool, not part of the recipe.
     property real brushSize: 0.05

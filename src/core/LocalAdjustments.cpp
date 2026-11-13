@@ -334,7 +334,7 @@ bool operator==(const Shape &a, const Shape &b)
 
 bool operator==(const Mask &a, const Mask &b)
 {
-    return a.name == b.name && a.visible == b.visible && a.opacity == b.opacity && a.shapes == b.shapes && a.values == b.values;
+    return a.frame == b.frame && a.name == b.name && a.visible == b.visible && a.opacity == b.opacity && a.shapes == b.shapes && a.values == b.values;
 }
 
 bool bound(Masks &masks)
@@ -349,7 +349,7 @@ bool bound(Masks &masks)
         return true;
     };
     for (Mask &mask : masks) {
-        if (!std::isfinite(mask.opacity) || int(mask.shapes.size()) > largestShapeCount)
+        if (!Geometry::bound(mask.frame) || !std::isfinite(mask.opacity) || int(mask.shapes.size()) > largestShapeCount)
             return false;
         mask.opacity = std::clamp(mask.opacity, 0.0f, 1.0f);
         for (size_t i = 0; i < mask.values.size(); ++i) {
@@ -441,7 +441,39 @@ ipr::Image coverage(const Mask &mask, const ipr::Size &canvas, const ipr::Image 
     return combined;
 }
 
-LocalValues::Maps valueMaps(const Masks &masks, const ipr::Size &canvas, const ipr::Image &luminance)
+namespace {
+ipr::Image reframe(const ipr::Image &image, const Geometry::Settings &from,
+                   const Geometry::Settings &to, const ipr::Size &source)
+{
+    if (image.empty() || source.empty()) return {};
+    const auto output = Geometry::canvasSize(to, source);
+    const auto input = image.size();
+    const auto a = Geometry::homography(from, source);
+    const auto b = Geometry::homography(to, source);
+    if (a == b && output == input) return image.share();
+    bool invertible = false;
+    const auto inverse = b.inv(&invertible);
+    if (!invertible) return {};
+    const ipr::Matrix33d pixelToNormal(1.0/output.width, 0, .5/output.width,
+                                     0, 1.0/output.height, .5/output.height, 0, 0, 1);
+    const ipr::Matrix33d normalToPixel(input.width, 0, -.5, 0, input.height, -.5, 0, 0, 1);
+    return ipr::warpedPerspective(image, normalToPixel * a * inverse * pixelToNormal,
+                                 output, ipr::Resampling::Linear, ipr::Outside::Zero);
+}
+}
+
+ipr::Image canvasCoverage(const Mask &mask, const Geometry::Settings &geometry,
+                         const ipr::Size &source, const ipr::Image &luminance)
+{
+    if (source.empty()) return {};
+    const auto inFrame = reframe(luminance, geometry, mask.frame, source);
+    return reframe(coverage(mask, Geometry::canvasSize(mask.frame, source), inFrame),
+                   mask.frame, geometry, source);
+}
+
+static LocalValues::Maps calculateValueMaps(const Masks &masks, const ipr::Size &canvas,
+                                          const ipr::Image &luminance,
+                                          const Geometry::Settings *geometry, const ipr::Size &source)
 {
     LocalValues::Maps maps;
     if (!active(masks) || canvas.empty())
@@ -451,7 +483,10 @@ LocalValues::Maps valueMaps(const Masks &masks, const ipr::Size &canvas, const i
             std::all_of(mask.values.cbegin(), mask.values.cend(), [](float value) { return value == 0.0f; }))
             continue;
         // As OpenCV scaled a Mat: the product plus a zero shift.
-        const ipr::Image weight = ipr::mapped(coverage(mask, canvas, luminance),
+        const auto covered = geometry ? canvasCoverage(mask, *geometry, source, luminance)
+                                      : coverage(mask, canvas, luminance);
+        if (covered.empty()) continue;
+        const ipr::Image weight = ipr::mapped(covered,
                                               [opacity = mask.opacity](float v) { return v * opacity + 0.0f; });
         for (size_t i = 0; i < mask.values.size(); ++i) {
             if (mask.values[i] == 0.0f)
@@ -465,17 +500,15 @@ LocalValues::Maps valueMaps(const Masks &masks, const ipr::Size &canvas, const i
     return maps;
 }
 
-ipr::Image toSource(const ipr::Image &canvasMap, const Geometry::Settings &geometry, const ipr::Size &source)
+LocalValues::Maps valueMaps(const Masks &masks, const ipr::Size &canvas, const ipr::Image &luminance)
 {
-    if (canvasMap.empty() || !Geometry::transformsPixels(geometry))
-        return canvasMap.share();
-    const ipr::Size canvas = canvasMap.size();
-    // From a source pixel's index to a canvas pixel's: normalized at their outer edges in between.
-    const ipr::Matrix33d sourceToNormal(1.0 / source.width, 0, 0.5 / source.width, 0, 1.0 / source.height, 0.5 / source.height, 0, 0, 1);
-    const ipr::Matrix33d normalToCanvas(canvas.width, 0, -0.5, 0, canvas.height, -0.5, 0, 0, 1);
-    const ipr::Matrix33d sourceToCanvas = normalToCanvas * Geometry::homography(geometry, source) * sourceToNormal;
-    ipr::Image out = ipr::warpedPerspective(canvasMap, sourceToCanvas, source, ipr::Resampling::Linear, ipr::Outside::LastPixel);
-    return out;
+    return calculateValueMaps(masks, canvas, luminance, nullptr, {});
+}
+
+LocalValues::Maps canvasValueMaps(const Masks &masks, const Geometry::Settings &geometry,
+                                const ipr::Size &source, const ipr::Image &luminance)
+{
+    return calculateValueMaps(masks, Geometry::canvasSize(geometry, source), luminance, &geometry, source);
 }
 
 void appendKey(QDataStream &stream, const Masks &masks)
@@ -484,6 +517,10 @@ void appendKey(QDataStream &stream, const Masks &masks)
         return;
     stream << qint32(masks.size());
     for (const Mask &mask : masks) {
+        const auto &g = mask.frame;
+        stream << qint32(g.quarterTurns) << g.flipHorizontal << g.flipVertical << g.rotation
+               << qint32(g.vertical) << qint32(g.horizontal) << qint32(g.aspect) << qint32(g.scale)
+               << qint32(g.offsetX) << qint32(g.offsetY);
         stream << mask.visible << mask.opacity << qint32(mask.shapes.size());
         writeFloats(stream, mask.values);
         for (const Shape &shape : mask.shapes) {
@@ -581,6 +618,31 @@ QVariantList describe(const Masks &masks)
         list.append(QVariantMap{{QStringLiteral("name"), mask.name}, {QStringLiteral("visible"), mask.visible},
                                 {QStringLiteral("opacity"), double(mask.opacity)}, {QStringLiteral("values"), values},
                                 {QStringLiteral("shapes"), shapes}});
+    }
+    return list;
+}
+
+QVariantList describeOnCanvas(const Masks &masks, const Geometry::Settings &geometry, const ipr::Size &source)
+{
+    QVariantList list = describe(masks);
+    if (source.empty()) return list;
+    const auto current = Geometry::homography(geometry, source);
+    for (size_t i = 0; i < masks.size(); ++i) {
+        const auto frame = Geometry::homography(masks[i].frame, source);
+        bool valid = false;
+        const auto toCanvas = current * frame.inv(&valid);
+        if (!valid) continue;
+        const auto toFrame = toCanvas.inv(&valid);
+        if (!valid) continue;
+        QVariantList forward, inverse;
+        for (int y = 0; y < 3; ++y)
+            for (int x = 0; x < 3; ++x) { forward.append(toCanvas(y,x)); inverse.append(toFrame(y,x)); }
+        QVariantMap item = list[qsizetype(i)].toMap();
+        item.insert(QStringLiteral("frameToCanvas"), forward);
+        item.insert(QStringLiteral("canvasToFrame"), inverse);
+        const auto size = Geometry::canvasSize(masks[i].frame, source);
+        item.insert(QStringLiteral("frameAspect"), double(size.width) / size.height);
+        list[qsizetype(i)] = item;
     }
     return list;
 }

@@ -1,0 +1,132 @@
+{
+  "schema_version": 1,
+  "data_version": "v001",
+  "campaign": "source-anchored-masks-and-geometry-gesture",
+  "created_utc": "2026-11-13T15:15:22.643253+00:00",
+  "branch": "patch_masks",
+  "base_commit": "d504d593d31e34b7297014392b15cbf990be4d75",
+  "candidate_dirty": true,
+  "source_sha256": {
+    "src/cache/RenderStageCache.cpp": "c0c414492e4ab0af2d329179d7dc9e9e5e07f53ed479e002a223fa05695086e7",
+    "src/cache/RenderStageCache.h": "3b71761a2e2ea4b838fe496880a6a26bf77d60b6c804992a9fc74910c672994e",
+    "src/core/LocalAdjustments.cpp": "c8c3f0605ce3192f797cac3fbc98a690bedc6ab772b2f29e8d984674aef25851",
+    "src/core/LocalAdjustments.h": "00ba3d1441fdcc1225e49de54b5cf0f7c8f957b7df4da74630241c4a3d6c44ea",
+    "src/core/RecipeCodec.cpp": "3c901c70c6ed35e44000a43d0996c4d68d9e9963afd8344dfbb7b3ff5cc73996",
+    "src/core/Sidecar.h": "4c9e913df3e7aa0a44e1bf4fbafb212db13e803d488f8b1f3f5b57ad39283c15",
+    "src/editor/RenderChain.cpp": "36c2c39c71d56fd59b429912dbe0c7a881fc4479e478f17c592d397c1a13fb48",
+    "src/editor/RenderChain.h": "7ac7bf337260b9300e015787d6befac8c1a0c41f761115ee6f5c3548be178268",
+    "src/editor/imageeditor.cpp": "8be307b47f641aba73a4d9c674922e6ef708635b7e11220265826d923c0ba70e",
+    "src/editor/imageeditor.h": "b2bdc9cae20511ddd616a750303e833bf876612cb9ae283725c1c8e965f318a3",
+    "src/qml/Main.qml": "1ba28404c0bd206462d93ee35f1239080f6824a014bb9e63175e30655f2fdb7b",
+    "src/qml/MaskOverlay.qml": "51ff432d82335262e9ac3f9fe7edc5d6dcd63526fec3bc94c4c4a7c9de347ead",
+    "src/qml/MasksPanel.qml": "8d824fc3a00cce43d460bec57959c28e5cb0d5cf73ac51619e0f8eb7011cf49d",
+    "src/qml/ProcessingStatus.qml": "b86aa8a84bd75ae93a0b6b42e176750cd0cc0b6ef14d7b552462fc6b2b0dec99",
+    "tests/camera_profile_engine_test.cpp": "606e34bfdbfdf6a4c083edec2f797e865c56f21e036272d77e20c51307bdcf41",
+    "tests/editor_geometry_test.cpp": "f5dad8e06f77f413c5f7a74f2de69177946aad5d71704b02db1bc1547633fac4",
+    "tests/editor_image_cache_test.cpp": "fec29bca188a0c4c325acf6d485084441d3e3e995a78fab1eeb82a2dbbefce30",
+    "tests/editor_masks_test.cpp": "2e04a2f0785ac17dc3441c6ebc03cf5ac055ee7982234dda9bf22965d56fb0a1",
+    "tests/image_export_test.cpp": "ef1f6163a209aa62cf2d607629b355bfc95e57c3bcfcd33522277d69e6ec80bd",
+    "tests/local_adjustments_test.cpp": "c367b70a91e431fe69ac8d394ecd9f05c04d2121acd764b9fdb6f88687b6269e",
+    "tests/masks_qml_test.cpp": "f4fec4f13466fa3726f2cd0bd6e70238cb4194cd91f8eb06b0a3f21ed1f91560",
+    "tests/opening_latency_probe.cpp": "1dcf404829ef01a7c655f4225bc0ae5e11510d3ebe70c2f1b56c64aa772873c7",
+    "tests/render_stage_cache_test.cpp": "3c546c3a5d54375316921e9a3c031c6ed0123163250520f981eb3305f18dd1d6",
+    "tests/sidecar_test.cpp": "d2f6338b5a9176b657e99222133c7f6a1bc1273ff23963c654a198439fc13760"
+  },
+  "design": {
+    "mask_frame": "fixed normalized creation canvas stored per mask; direct/inverse maps for rendering and editing",
+    "migration": "sidecar 13; absent frame takes saved recipe geometry",
+    "cache": "one bounded pre-geometry camera RGB; source, scale, camera settings and masks in key; compared bit for bit to uncached path",
+    "gesture": "1024-pixel long side temporary proxy, explicitly indicated; displayed dimensions unchanged; normal 2048 proxy restored on release",
+    "export": "full source; no gesture proxy"
+  },
+  "tests": {
+    "native": {
+      "name": "Win32-MSBuild",
+      "tests": "80",
+      "failures": "0",
+      "disabled": "0",
+      "skipped": "0",
+      "hostname": "DESKTOP-1RE5RVU",
+      "time": "186",
+      "timestamp": "2026-11-13T16:09:38"
+    },
+    "python": {
+      "count": 355,
+      "status": "OK",
+      "seconds": 22.824
+    },
+    "smoke": "passed",
+    "targeted": [
+      "landmark following through rotation, turns, mirrors, perspective and aspect/offset",
+      "mask created after rotation and geometry reset",
+      "direct/inverse QML handle mapping",
+      "frame roundtrip, absent-frame migration, invalid frame rejection",
+      "undo restores geometry and mask mapping in one step",
+      "fast-preview flag, stable display dimensions and restoration on release",
+      "camera cache validity and exposure invalidation",
+      "camera reuse output bit identical"
+    ]
+  },
+  "timing": {
+    "method": "single post-suite synthetic fixture run; not a real RAW or complete UI benchmark",
+    "source_size_px": [
+      1024,
+      682
+    ],
+    "gesture_size_px": [
+      512,
+      341
+    ],
+    "pixel_scales": [
+      0.5,
+      0.25
+    ],
+    "masks": "triangle exposure +1 EV and radial shadows +25",
+    "profile": "tests/synthetic_dcp.h",
+    "scope": "RenderChain::workingImage only; excludes debounce, display upscale, histogram, disk/decode; caches warmed",
+    "rows": [
+      {
+        "angle_deg": 2,
+        "cached_ms": 50.9622,
+        "uncached_ms": 72.9698,
+        "gesture_ms": 17.6527
+      },
+      {
+        "angle_deg": 4,
+        "cached_ms": 51.2955,
+        "uncached_ms": 73.7862,
+        "gesture_ms": 17.6391
+      },
+      {
+        "angle_deg": 6,
+        "cached_ms": 51.8123,
+        "uncached_ms": 72.0794,
+        "gesture_ms": 17.0288
+      },
+      {
+        "angle_deg": 8,
+        "cached_ms": 49.5888,
+        "uncached_ms": 72.0387,
+        "gesture_ms": 16.8251
+      }
+    ],
+    "medians_ms": {
+      "cached_ms": 51.12885,
+      "uncached_ms": 72.5246,
+      "gesture_ms": 17.33395
+    }
+  },
+  "log_sha256": {
+    "build-patch_masks/tests-geometry-final.log": "1928e4a66586ce1800cd4ca689da874438fb5b9b635fc6d524ac22dd15fb9d5d",
+    "build-patch_masks/anchored-measures-final.log": "afc7a6359caf0b834e662ffd2611af63bf0447170b92c931d2ee7e1067f9eafe",
+    "build-patch_masks/smoke-geometry-final.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "verdict": "automated_checks_passed_visual_validation_pending",
+  "limits": [
+    "User visual validation and actual rotation comfort pending",
+    "Retouch B3 zones stay canvas anchored",
+    "Changes of lens corrections outside geometry qualification",
+    "No full real RAW corpus parity campaign",
+    "No push merge or tag for this batch"
+  ]
+}

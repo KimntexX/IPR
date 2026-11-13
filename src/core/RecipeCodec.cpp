@@ -229,6 +229,9 @@ QCborArray encodeMasks(const LocalAdjustments::Masks &masks)
         for (size_t i = 0; i < mask.values.size(); ++i)
             if (mask.values[i] != 0.0f)
                 values.insert(LocalAdjustments::parameterName(int(i)), double(mask.values[i]));
+        QCborMap frame;
+        store(frame, mask.frame, GeometryInts); store(frame, mask.frame, GeometryFloats);
+        store(frame, mask.frame, GeometryDoubles); store(frame, mask.frame, GeometryBools);
         QCborArray shapes;
         for (const LocalAdjustments::Shape &shape : mask.shapes) {
             QCborArray strokes;
@@ -254,13 +257,13 @@ QCborArray encodeMasks(const LocalAdjustments::Masks &masks)
         }
         list.append(QCborMap{{QStringLiteral("name"), mask.name}, {QStringLiteral("visible"), mask.visible},
                              {QStringLiteral("opacity"), double(mask.opacity)}, {QStringLiteral("values"), values},
-                             {QStringLiteral("shapes"), shapes}});
+                             {QStringLiteral("shapes"), shapes}, {QStringLiteral("frame"), frame}});
     }
     return list;
 }
 
 // False on what cannot be a mask; a value of an unknown setting, from a later version, is skipped.
-bool decodeMasks(const QCborArray &list, LocalAdjustments::Masks &masks)
+bool decodeMasks(const QCborArray &list, LocalAdjustments::Masks &masks, const Geometry::Settings &current)
 {
     masks.clear();
     for (const QCborValue &entry : list) {
@@ -268,6 +271,14 @@ bool decodeMasks(const QCborArray &list, LocalAdjustments::Masks &masks)
             return false;
         const QCborMap map = entry.toMap();
         LocalAdjustments::Mask mask;
+        mask.frame = current; // older files: preserve the appearance at the saved geometry
+        if (map.contains(QStringLiteral("frame"))) {
+            if (!map.value(QStringLiteral("frame")).isMap()) return false;
+            const auto frame = map.value(QStringLiteral("frame")).toMap();
+            mask.frame = {};
+            load(frame, mask.frame, GeometryInts); load(frame, mask.frame, GeometryFloats);
+            load(frame, mask.frame, GeometryDoubles); load(frame, mask.frame, GeometryBools);
+        }
         mask.name = map.value(QStringLiteral("name")).toString();
         mask.visible = map.value(QStringLiteral("visible")).toBool(true);
         mask.opacity = float(map.value(QStringLiteral("opacity")).toDouble(1.0));
@@ -404,8 +415,6 @@ bool decodeSettings(const QCborMap &map, Settings &settings)
 {
     settings.localMasks.clear();
     const QCborValue localMasks = map.value(QStringLiteral("localMasks"));
-    if (localMasks.isArray() && !decodeMasks(localMasks.toArray(), settings.localMasks))
-        return false;
     settings.retouches.clear();
     const QCborValue retouches = map.value(QStringLiteral("retouches"));
     if (retouches.isArray() && !decodeRetouches(retouches.toArray(), settings.retouches))
@@ -420,6 +429,8 @@ bool decodeSettings(const QCborMap &map, Settings &settings)
     load(geometry, settings.geometry, GeometryFloats);
     load(geometry, settings.geometry, GeometryDoubles);
     load(geometry, settings.geometry, GeometryBools);
+    if (localMasks.isArray() && !decodeMasks(localMasks.toArray(), settings.localMasks, settings.geometry))
+        return false;
     const QCborValue pointColor = map.value(QStringLiteral("pointColor"));
     if (pointColor.isArray()) {
         const QCborArray points = pointColor.toArray();

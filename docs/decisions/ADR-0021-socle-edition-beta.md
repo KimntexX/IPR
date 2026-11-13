@@ -175,3 +175,37 @@ détail et les mesures sont dans l'[analyse de la géométrie](../validation/ana
 - Historique de session seulement : on ne retrouve pas son travail le lendemain.
 - Copie de sauvegarde de chaque `.ipr` mis à jour : remplacée par la règle
   d'évolution testée en CI.
+
+## Révision locale du 13 novembre 2026 — masques attachés à la photo
+
+Après le retour utilisateur sur la rotation, le repère du masque devient son
+**canevas de création**, conservé dans `Mask::frame`. Ce cadre est rattaché à
+la source orientée et corrigée optiquement. L’homographie entre ce cadre et le
+canevas courant transforme le masque complet, sans réécrire ses points, rayons
+ou largeurs à chaque rotation. Les poignées utilisent la transformation directe,
+les gestes la transformation inverse. Le recadrage reste une découpe finale.
+Cette règle remplace l’ancrage fixe au canevas courant décrit dans la première
+mise en œuvre B2 ; elle ne modifie pas encore les opérations de retouche B3.
+
+Le format `.ipr` passe à 13. Pour une recette sans cadre de masque, la migration
+retient la géométrie enregistrée comme cadre de création, pour conserver le
+placement à la première ouverture ; elle ne tente pas de deviner l’objet visé
+dans l’image. L’historique et la recette enregistrent ce cadre avec le masque.
+Une rotation change seulement la géométrie, en une étape annulable.
+
+Le rendu caméra pré-géométrie dispose d’une entrée de cache supplémentaire
+bornée à une image, indexée par source, échelle, réglages caméra et masques.
+Elle est libérée au changement de source ou à la purge. Une rotation seule
+peut la réutiliser ; une modification de masque ou d’exposition l’invalide.
+Le rendu sans cache reste le contrôle numérique, notamment pour l’export.
+
+Pendant un geste de géométrie, un proxy plafonné à 1024 pixels sur son grand
+côté remplace temporairement le proxy normal de 2048 pixels. L’indication
+« Aperçu géométrique rapide » apparaît sur l’image ; les dimensions affichées
+restent inchangées. Le relâchement invalide le résultat provisoire et redemande
+le rendu normal, même si l’angle final revient à sa valeur initiale. L’export
+reste sur la source pleine définition. L’éditeur cadence les modules ; la
+construction des proxies est transférée dans `RenderChain::editProxy`.
+
+État : correctif local sur `patch_masks`, à contrôler visuellement avant
+livraison. Les détails et preuves sont dans le rapport évolutif des masques.

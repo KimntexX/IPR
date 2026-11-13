@@ -193,7 +193,7 @@ public:
             const double importMs = elapsed(t);
             if (loaded.image.isNull()) return {{"error", loaded.error}};
             t.restart();
-            auto proxy = ImageEditor::buildEditProxy(loaded.image);
+            auto proxy = RenderChain::editProxy(loaded.image);
             const double proxyMs = elapsed(t);
             ImageEditor::Settings settings;
             settings.temperature = int(std::lround(loaded.image.referenceWhiteBalanceKelvin.value_or(5200.0)));
