@@ -213,8 +213,8 @@ curseur, flou et minimum/maximum de la netteté, flou du grain), les applique,
 puis garde la zone. Le grain, tiré par position, reçoit l'origine de la zone.
 
 La netteté mesure le bruit de **toute** son entrée (un échantillon par pas de
-`√(pixels/16384)` sur des lignes régulières, lu à 3 lignes près). Comme vous
-l'avez demandé (export inchangé), cette mesure reste celle de l'image entière,
+`√(pixels/16384)` sur des lignes régulières, lu à 3 lignes près). Selon la
+décision de l'utilisateur (export inchangé), cette mesure reste celle de l'image entière,
 mais elle est prise **par bandes** : seules les lignes échantillonnées et leurs
 voisines sont rendues, avec la même fonction d'échantillonnage que le rendu
 entier (`DetailProcessing::appendSharpenNoiseSamples`), d'où la même valeur.
