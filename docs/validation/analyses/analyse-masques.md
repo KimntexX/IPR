@@ -240,8 +240,13 @@ comparaison du corpus RAW ni de reconstruction du PDF du guide.
 
 ### Conclusion actuelle
 
-Correction prête dans `build-patch_masks/Release/appIPR.exe`. Le contrôle visuel
-utilisateur doit confirmer un faisceau qui s’élargit vers la base, à diffusion
-70 puis 100 %, avec exposition locale positive et contour 50 %. Validation
-partielle suivie par l’[issue #24](https://github.com/KimntexX/IPR/issues/24).
-Aucune publication, fusion ou création de tag.
+Le 13 novembre 2026, après la correction `352ec21`, l’utilisateur confirme :
+« ok, le cône me convient ». Le rendu du cône est donc accepté visuellement
+dans son état courant. Les scènes et valeurs exactes de ce contrôle ne sont
+pas précisées ; ne pas lui attribuer les valeurs suggérées dans la procédure.
+Cette validation ne vaut pas validation des autres fonctions du panneau,
+notamment du réordonnancement, ni qualification de tout le corpus.
+Le groupe Masques reste partiellement validé, suivi par
+l’[issue #24](https://github.com/KimntexX/IPR/issues/24).
+L’état accepté reste sur `patch_masks` ; aucune publication, fusion ou création
+de tag n’est effectuée par cette consignation.
