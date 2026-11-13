@@ -11077,3 +11077,47 @@ Deux corrections sont à mesurer avant le portage en C++ : une borne à bas ISO
 (surestimation) et une marge adaptée (la marge fixe de +20 % paie en médiane ce
 qu'elle protège dans les pires cas). Une validation sur de vraies rafales du
 60D (ou des 2000D et 6D Mark II annoncés) remplacerait la simulation.
+
+## 13 novembre 2026 — vraies rafales du 60D : loi estimée contre loi qualifiée
+
+Rafales de l'utilisateur, 13 novembre 2026 (`IMG_9361` à `IMG_9534`, 174 CR2,
+copiés de la carte avec empreintes identiques dans
+`tests/image/colorimétrie/protocole/eos-60d/rafales`) : boîtier immobile, scène
+d'intérieur peu éclairée (mur uni, sweat orange plissé, peluche noire et blanche,
+parquet), f/5,6, 100 à 6400 ISO, plusieurs temps de pose par ISO, 2 à 7 prises
+par rafale ; signal moyen au centre de 20 à 700 DN.
+[Inventaire](../raw/eos60d-bursts-inventory-v001-20261113T154102Z.json).
+
+Outil : `tests/neural/burst_estimated_against_qualified.py` ;
+[preuve](../raw/burst-estimated-against-qualified-eos60d-v001-20261113T154102Z.json).
+Chaque prise d'une rafale d'au moins trois est débruitée (loi qualifiée, loi
+estimée sur cette prise, estimée ×1,2) et comparée à la moyenne des autres
+prises ; le bruit propre à cette moyenne, donné par la loi qualifiée, est
+retranché, ce qui estime l'erreur à la scène sans biais. Cette correction est
+la même pour les trois lois : leurs écarts n'en dépendent pas. Trois découpes
+de 512 × 512 par plan (centre, haut gauche, bas droite).
+
+| ISO | Prises évaluées | Gain, loi qualifiée | Pente estimée / qualifiée | Estimée − qualifiée (médiane / pire) | Estimée ×1,2 − qualifiée (médiane / pire) |
+| ---: | ---: | ---: | ---: | --- | --- |
+| 100 | 6 | 3,25 dB | ×1,35 | −0,06 / −0,26 dB | −0,14 / −0,22 dB |
+| 400 | 3 | 8,08 dB | ×1,06 | −0,04 / −0,05 dB | −0,02 / −0,02 dB |
+| 800 | 15 | 9,86 dB | ×0,93 | 0,00 / 0,00 dB | 0,00 / −0,01 dB |
+| 1600 | 32 | 8,31 dB | ×0,95 | +0,01 / −0,01 dB | −0,01 / −0,09 dB |
+| 3200 | 39 | 8,42 dB | ×1,00 | 0,00 / 0,00 dB | −0,03 / −0,06 dB |
+| 6400 | 35 | 7,63 dB | ×0,96 | −0,05 / −0,13 dB | −0,06 / −0,14 dB |
+
+**Lecture.**
+
+- **Sur vrai bruit, la loi estimée vaut la loi qualifiée** : écart médian
+  de −0,06 à +0,01 dB à tous les ISO, pire cas −0,26 dB (100 ISO).
+- La simulation du matin (pires cas jusqu'à −1,29 dB) était donc pessimiste :
+  le bruit gaussien ajouté à une photo déjà bruitée trompe davantage
+  l'estimateur que le vrai bruit, comme pressenti.
+- **La marge de +20 % n'apporte rien sur vrai bruit** au 60D (−0,01 à −0,14 dB) ;
+  sur le R6 III, elle ne coûtait rien et protégeait des pires cas. Elle reste
+  un choix de prudence, pas un gain.
+- À 100 ISO, la pente est surestimée (×1,35) et coûte 0,06 dB en médiane sur
+  cette scène sombre ; le lissage excessif mesuré sur les photos de jour
+  (texture plus forte) reste à borner.
+- Limites : une seule scène, peu éclairée (pas de hautes lumières) ; 400 ISO
+  sur une seule rafale de trois prises ; 100 ISO sur deux rafales de trois.
