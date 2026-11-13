@@ -250,3 +250,28 @@ Le groupe Masques reste partiellement validé, suivi par
 l’[issue #24](https://github.com/KimntexX/IPR/issues/24).
 L’état accepté reste sur `patch_masks` ; aucune publication, fusion ou création
 de tag n’est effectuée par cette consignation.
+
+## 13 novembre 2026 — Qualification de livraison
+
+L’utilisateur autorise la publication de `patch_masks` et sa fusion dans `dev`.
+La branche part de `b7a4b14`, toujours tête de `dev` à la vérification distante.
+Le périmètre regroupe trois lots fonctionnels : cônes triangle/trapèze,
+réordonnancement de la liste et diffusion linéaire du spot. Les corrections
+visuelles de diffusion appartiennent au troisième lot ; les commits de preuves
+et d’accord utilisateur ne sont pas de nouveaux patchs fonctionnels.
+
+La construction complète Release sous MSVC/Qt 6.11.2 réussit, en conservant
+ONNX Runtime et le modèle neuronal épinglé. Les **80 tests natifs** passent,
+sans test ignoré ni échec (189,69 s), suivis de **355 tests Python** réussis
+(23,072 s), dont les fixtures d’intégration générateur/serveur de rendu.
+Le contrôle documentaire retourne zéro erreur et un avertissement préexistant :
+le rapport de restauration neuronale est sur sa branche de recherche, pas dans
+ce worktree. Aucune nouvelle campagne photographique n’est attribuée à ces tests.
+
+Preuve canonique : [mask-delivery-validation-v001-20261113T132439Z.json](../raw/mask-delivery-validation-v001-20261113T132439Z.json).
+La publication de la branche déclenche la CI GitHub ; ses résultats multi-OS
+ne sont pas encore connus. La fusion autorisée est préparée sans squash dans
+un worktree d’intégration isolé, sans modifier les espaces des autres agents.
+Le tag de validation reste à poser après la CI de livraison verte. L’issue #24
+reste ouverte : cet ajout ne clôt ni les limites du groupe ni la validation
+visuelle propre au réordonnancement.

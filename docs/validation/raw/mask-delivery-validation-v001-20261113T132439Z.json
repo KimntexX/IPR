@@ -1,0 +1,618 @@
+{
+  "schema_version": 1,
+  "data_version": "v001",
+  "campaign": "mask-delivery-local-qualification",
+  "created_utc": "2026-11-13T13:24:39.266204+00:00",
+  "branch": "patch_masks",
+  "tested_commit": "f2a220cb5ef3295197e7e76f980fa7b02b4bab24",
+  "base_dev": "b7a4b14d8cc89fe24f5846007f6b510721356635",
+  "functional_lots": [
+    "triangle/trapezoid masks",
+    "list reordering by menu and drag",
+    "linear spot diffusion including visual corrections"
+  ],
+  "native_suite": {
+    "name": "Win32-MSBuild",
+    "tests": "80",
+    "failures": "0",
+    "disabled": "0",
+    "skipped": "0",
+    "hostname": "DESKTOP-1RE5RVU",
+    "time": "189",
+    "timestamp": "2026-11-13T14:20:38"
+  },
+  "native_cases": [
+    {
+      "name": "editorLifecycleTests",
+      "status": "run",
+      "seconds": "0.856772",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "rawOpeningSplineTests",
+      "status": "run",
+      "seconds": "0.0463624",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "rawOpeningProbeTests",
+      "status": "run",
+      "seconds": "0.0469107",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "rawHighlightHeadroomTests",
+      "status": "run",
+      "seconds": "0.0244458",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "colorPipelineTests",
+      "status": "run",
+      "seconds": "0.0575014",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "rec2020PipelineTests",
+      "status": "run",
+      "seconds": "0.124753",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "renderStageCacheTests",
+      "status": "run",
+      "seconds": "9.85518",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "vibranceMathTests",
+      "status": "run",
+      "seconds": "0.0334514",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "imageCoreTests",
+      "status": "run",
+      "seconds": "0.0274877",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "imageFiltersTests",
+      "status": "run",
+      "seconds": "1.38087",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "imageResizeTests",
+      "status": "run",
+      "seconds": "0.0470377",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "imageArrangeTests",
+      "status": "run",
+      "seconds": "0.0368399",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "imageWarpTests",
+      "status": "run",
+      "seconds": "0.0541585",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "imageNeighbourhoodTests",
+      "status": "run",
+      "seconds": "0.0653078",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "imagePixelsTests",
+      "status": "run",
+      "seconds": "0.0365473",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "imageAnalysisTests",
+      "status": "run",
+      "seconds": "0.0277126",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "adjustmentTableTests",
+      "status": "run",
+      "seconds": "0.0407889",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "renderChainTests",
+      "status": "run",
+      "seconds": "0.406791",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "lineDetectionTests",
+      "status": "run",
+      "seconds": "1.74844",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "detailProcessingTests",
+      "status": "run",
+      "seconds": "0.857662",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "cameraDngTests",
+      "status": "run",
+      "seconds": "0.30217",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "noiseLawTests",
+      "status": "run",
+      "seconds": "0.0459771",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "cfaNoiseStageTests",
+      "status": "run",
+      "seconds": "0.0497959",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "neuralCfaTests",
+      "status": "run",
+      "seconds": "0.0524692",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "neuralCfaModelTests",
+      "status": "run",
+      "seconds": "1.53261",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "retouchTests",
+      "status": "run",
+      "seconds": "0.877935",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "editorRetouchTests",
+      "status": "run",
+      "seconds": "2.79557",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "panoramaTests",
+      "status": "run",
+      "seconds": "23.7744",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "stackSessionTests",
+      "status": "run",
+      "seconds": "8.74176",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "stackTests",
+      "status": "run",
+      "seconds": "33.7105",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "geometryTests",
+      "status": "run",
+      "seconds": "0.820411",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "localContrastTests",
+      "status": "run",
+      "seconds": "0.244181",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "dehazeTests",
+      "status": "run",
+      "seconds": "0.101165",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "grainTests",
+      "status": "run",
+      "seconds": "0.0583686",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "colorGradingTests",
+      "status": "run",
+      "seconds": "0.0587829",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "imageExportTests",
+      "status": "run",
+      "seconds": "4.56754",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "editorBatchTests",
+      "status": "run",
+      "seconds": "0.774308",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "sidecarTests",
+      "status": "run",
+      "seconds": "0.117449",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "sidecarJsonTests",
+      "status": "run",
+      "seconds": "0.0386219",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "editHistoryTests",
+      "status": "run",
+      "seconds": "0.0306668",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "localAdjustmentsTests",
+      "status": "run",
+      "seconds": "0.0916402",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "localValuesTests",
+      "status": "run",
+      "seconds": "0.248065",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "editorGeometryTests",
+      "status": "run",
+      "seconds": "3.66776",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "editorMasksTests",
+      "status": "run",
+      "seconds": "4.00235",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "editorHistoryTests",
+      "status": "run",
+      "seconds": "0.843476",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "editorDetailTests",
+      "status": "run",
+      "seconds": "3.74059",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "folderRefreshTests",
+      "status": "run",
+      "seconds": "2.04189",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "toneRecoveryTests",
+      "status": "run",
+      "seconds": "0.111714",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "testImageGeneratorTests",
+      "status": "run",
+      "seconds": "2.32902",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "colorMixerMathTests",
+      "status": "run",
+      "seconds": "0.0379021",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "pointColorTests",
+      "status": "run",
+      "seconds": "0.0450105",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "toneCurveTests",
+      "status": "run",
+      "seconds": "0.0293403",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "rawInputTests",
+      "status": "run",
+      "seconds": "0.0286964",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "rawDevelopmentTests",
+      "status": "run",
+      "seconds": "0.0357546",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "parallelJobsTests",
+      "status": "run",
+      "seconds": "0.0289297",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "taskRunnerTests",
+      "status": "run",
+      "seconds": "1.58556",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "colorMixerNeutralTests",
+      "status": "run",
+      "seconds": "0.304287",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "colorMixerQmlTests",
+      "status": "run",
+      "seconds": "0.0953937",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "settingsQmlTests",
+      "status": "run",
+      "seconds": "5.56787",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "historyQmlTests",
+      "status": "run",
+      "seconds": "1.27284",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "assembleQmlTests",
+      "status": "run",
+      "seconds": "9.42752",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "retouchQmlTests",
+      "status": "run",
+      "seconds": "2.07065",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "masksQmlTests",
+      "status": "run",
+      "seconds": "3.45457",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "geometryQmlTests",
+      "status": "run",
+      "seconds": "1.47269",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "imageViewportQmlTests",
+      "status": "run",
+      "seconds": "3.60777",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "toneCurveQmlTests",
+      "status": "run",
+      "seconds": "0.184216",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "uiPreferencesTests",
+      "status": "run",
+      "seconds": "0.130911",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "uiPreferencesQmlTests",
+      "status": "run",
+      "seconds": "8.67306",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "uiPreferencesWindowsStyleTests",
+      "status": "run",
+      "seconds": "8.49249",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "rawDecoderTests",
+      "status": "run",
+      "seconds": "0.14854",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "demosaicTests",
+      "status": "run",
+      "seconds": "0.21089",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "imageImportTests",
+      "status": "run",
+      "seconds": "0.115814",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "rawNormalizationTests",
+      "status": "run",
+      "seconds": "0.238111",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "editorRawDevelopmentTests",
+      "status": "run",
+      "seconds": "12.3677",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "rawBlackLevelEstimatorTests",
+      "status": "run",
+      "seconds": "0.0362383",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "cameraProfileEngineTests",
+      "status": "run",
+      "seconds": "1.14409",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "preparedProfileCacheTests",
+      "status": "run",
+      "seconds": "0.214324",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "imageCacheControllerTests",
+      "status": "run",
+      "seconds": "8.31474",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "editorImageCacheTests",
+      "status": "run",
+      "seconds": "8.36078",
+      "failed": false,
+      "skipped": false
+    },
+    {
+      "name": "thumbnailProviderTests",
+      "status": "run",
+      "seconds": "0.191702",
+      "failed": false,
+      "skipped": false
+    }
+  ],
+  "python_suite": {
+    "tests": 355,
+    "result": "OK",
+    "seconds": 23.072,
+    "runner": "scripts/ci.py --action test; unittest discover test_*.py; real generator/render-server integration fixtures enabled"
+  },
+  "documentation": {
+    "errors": 0,
+    "link_warnings": 1,
+    "warning": "Existing link to analyse-restauration-neuronale.md absent from this branch; research is on patch_neural_restoration"
+  },
+  "environment": {
+    "os": "Windows",
+    "compiler": "MSVC 2022",
+    "qt": "6.11.2",
+    "configuration": "Release",
+    "onnx_runtime": "enabled; existing pinned model retained"
+  },
+  "log_sha256": {
+    "build-patch_masks/build-delivery.log": "e63b182eaffe6758ecf96a4cff6aac828ff942805f1930e263275a317a8ab875",
+    "build-patch_masks/tests-delivery.log": "9b6d6ebaa60e3e4c137acfeaf5da932de36028413cf72d55425914b807f5b076",
+    "build-patch_masks/documents-delivery.log": "d9b212147d14fed80047abe9a7eb5e6bcaa3ddca62f1672184cc9901199b16f0"
+  },
+  "visual_acceptance": {
+    "cone": "accepted by user on 2026-11-13",
+    "reordering": "no explicit user visual acceptance; automated tests passed"
+  },
+  "limits": [
+    "No new RAW corpus comparison",
+    "GitHub cross-platform CI pending at local qualification",
+    "No tag before validation of the delivery CI"
+  ]
+}
