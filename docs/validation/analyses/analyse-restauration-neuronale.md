@@ -11021,3 +11021,59 @@ des ISO moyens ; à bas ISO, il faut le borner avant le portage en C++. Pistes,
 rejet des blocs dont le gradient dépasse le bruit attendu, ou plafond relatif
 à b (à bas ISO, le bruit de lecture domine les ombres). Mesurer ensuite l'effet
 sur le U-Net, comme le 12 novembre.
+
+## 13 novembre 2026 — débruitage du 60D : loi estimée contre loi qualifiée
+
+Le U-Net de la bêta-1 (pas global 150 000, reprise `final-beta1-training-v002`,
+empreinte `8ac237ca…`) appliqué aux CR2 du 60D, avec la loi qualifiée
+(§474 du rapport bruit) puis avec la loi estimée sur chaque RAW. Outil :
+`tests/neural/denoise_estimated_against_qualified.py` ;
+[preuve](../raw/denoise-estimated-against-qualified-eos60d-v001-20261113T141007Z.json).
+Entrée comme en production : diviseur fixe 12303, plans R/G1/G2/B (la mosaïque
+du 60D commence par G2 B : une ligne est sautée pour la phase RGGB), noir des
+colonnes masquées. Trois découpes de 512 × 512 par plan et par photo.
+
+Faute de rafales de référence pour ce boîtier, trois mesures :
+
+**A. Bruit simulé sur photos réelles.** Les 16 photos à 100 ISO servent de
+référence ; le bruit qui manque pour atteindre 800 à 6400 ISO selon la loi
+qualifiée est ajouté pixel par pixel (gaussien, colonnes masquées comprises),
+puis l'estimateur lit le RAW bruité. Gain de PSNR sur l'entrée bruitée :
+
+| ISO simulé | Gain, loi qualifiée | Estimée − qualifiée (médiane / pire) | Estimée ×1,2 − qualifiée (médiane / pire) |
+| ---: | ---: | --- | --- |
+| 800 | 5,07 dB | −0,02 / −0,23 dB | −0,11 / −0,48 dB |
+| 1600 | 7,46 dB | −0,01 / −0,15 dB | −0,05 / −0,31 dB |
+| 3200 | 9,61 dB | 0,00 / −0,41 dB | −0,04 / −0,25 dB |
+| 6400 | 11,81 dB | 0,00 / −1,29 dB | −0,07 / −0,29 dB |
+
+**B. Vraies photos à 100 ISO**, là où l'estimateur surestime : l'énergie que
+le réseau retire de l'entrée avec la loi estimée vaut **×1,33 en médiane** celle
+retirée avec la loi qualifiée (×1,03 à ×1,82 sur les 16 photos). Sans référence,
+cet excédent n'est pas chiffré en dB, mais il retire de l'image ce que la loi
+qualifiée laisse.
+
+**C. Vraies photos aux autres ISO** (160 à 6400, 27 photos) : les deux sorties
+diffèrent de **3 % de l'écart-type du bruit** en médiane (25 % au plus, IMG_3135
+à 160 ISO).
+
+**Lecture.**
+
+- **Aux ISO moyens et hauts, la loi estimée vaut la loi qualifiée** en médiane
+  (au centième de dB), comme sur le R6 III.
+- **Les pires cas viennent d'une sous-estimation** : IMG_7953 et IMG_7958
+  (ciel, aplats) donnent une pente ×0,71 à ×0,83 sur le bruit simulé, et jusqu'à
+  −1,29 dB à 6400 ISO. Sur les vraies photos du 60D, l'estimateur ne descendait
+  pas sous ×0,89 : le bruit simulé (gaussien blanc ajouté à une photo qui a déjà
+  le sien) est un cas plus dur, à confirmer sur de vraies rafales.
+- **La marge de +20 % borne ces pires cas** (−0,25 à −0,48 dB au lieu de −1,29)
+  mais coûte 0,04 à 0,11 dB en médiane : moins favorable que sur le bruit réel
+  du R6 III, où elle ne coûtait rien.
+- **À 100 ISO, la surestimation se traduit en lissage** : le réseau retire un
+  tiers de plus que nécessaire en médiane, jusqu'à 80 % de plus.
+
+**Conséquence.** Pour un boîtier inconnu, l'estimateur suffit à partir de 800 ISO.
+Deux corrections sont à mesurer avant le portage en C++ : une borne à bas ISO
+(surestimation) et une marge adaptée (la marge fixe de +20 % paie en médiane ce
+qu'elle protège dans les pires cas). Une validation sur de vraies rafales du
+60D (ou des 2000D et 6D Mark II annoncés) remplacerait la simulation.
