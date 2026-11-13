@@ -448,8 +448,37 @@ void cones()
     spot.diffusion = 1;
     spot.feather = .5f;
     const auto beam = coverage(maskOf(spot), canvas);
-    check(at(beam,.5f,.3f) > .95f && at(beam,.5f,.5f) > .45f && at(beam,.5f,.5f) < .55f &&
-          at(beam,.5f,.7f) < .05f, "spot fades from bright tip to base despite side feather");
+    check(std::abs(at(beam,.5f,.3f) - .9f) < .01f && std::abs(at(beam,.5f,.5f) - .5f) < .01f &&
+          std::abs(at(beam,.5f,.7f) - .1f) < .01f, "spot follows a linear axial falloff despite side feather");
+    // An intermediate contour must widen along straight sides, rather than
+    // closing into a rounded lobe as the axial strength falls.
+    Shape widening = spot;
+    widening.diffusion = .7f;
+    const auto wedge = coverage(maskOf(widening), canvas);
+    for (const int y : {105, 135, 165}) {
+        const float along = (float(y) - 74.5f) / 150.0f;
+        const float expectedHalfWidth = 80.0f * along * .75f;
+        int count = 0;
+        for (int x = 0; x < canvas.width; ++x)
+            count += imagetest::at<float>(wedge, y, x) >= .5f;
+        std::cout << "cone-contour triangle y=" << y << " halfWidth=" << float(count) * .5f
+                  << " expected=" << expectedHalfWidth << '\n';
+        check(std::abs(float(count) * .5f - expectedHalfWidth) <= 1,
+              "half-coverage width grows linearly towards the base");
+    }
+    widening.kind = Kind::Trapezoid;
+    const auto broad = coverage(maskOf(widening), canvas);
+    for (const int y : {135, 165}) {
+        const float along = (float(y) - 74.5f) / 150.0f;
+        const float expectedHalfWidth = (24.0f + 56.0f * along) * .75f;
+        int count = 0;
+        for (int x = 0; x < canvas.width; ++x)
+            count += imagetest::at<float>(broad, y, x) >= .5f;
+        std::cout << "cone-contour trapezoid y=" << y << " halfWidth=" << float(count) * .5f
+                  << " expected=" << expectedHalfWidth << '\n';
+        check(std::abs(float(count) * .5f - expectedHalfWidth) <= 1,
+              "trapezoid keeps straight widening intensity contours");
+    }
     float previous = 1;
     for (int y = 90; y < 225; ++y) {
         const float value = imagetest::at<float>(beam, y, 200);

@@ -206,3 +206,42 @@ choisir un nouveau cône ou régler la diffusion d’un cône existant à 70–1
 puis augmenter son exposition. Validation visuelle en attente, suivie dans
 l’[issue #24](https://github.com/KimntexX/IPR/issues/24). Aucune publication,
 fusion ou création de tag.
+
+## 13 novembre 2026 — Faisceau à élargissement rectiligne
+
+Retour utilisateur : la diffusion du cône paraît encore circulaire plutôt que
+dirigée de la pointe vers une base de plus en plus large. Le calcul ne passe pas
+par le masque radial, mais la multiplication des trois rampes (côtés, atténuation
+axiale, contour de la base) arrondit les courbes de couverture constante. Une
+illustration analytique des équations confirme ce comportement ; ce n’est pas
+une capture du rendu d’une photo.
+
+La loi courante est remplacée : l’atténuation sur l’axe devient linéaire,
+`1 - diffusion * t`. Les rampes latérales, axiales et des extrémités sont combinées
+par leur minimum, au lieu de leur produit. À couverture donnée, les côtés restent
+ainsi droits et la fin du faisceau est transversale, sans fermeture en lobe.
+La largeur géométrique reste interpolée de la pointe à la base. Le triangle et
+le trapèze utilisent la même règle ; la rotation suit leur axe, pas l’écran.
+Le contour latéral reste doux et relatif à la largeur locale. Aucun nouveau
+paramètre ou format de recette : le format 12 est conservé et la loi précédente
+n’est pas maintenue comme moteur parallèle.
+
+Les nouveaux contrôles mesurent les demi-largeurs du contour à couverture 0,5
+avec diffusion 0,7 et contour 0,5 sur un canevas de 400 × 300 pixels. Triangle :
+12, 24 et 36 pixels contre 12,2, 24,2 et 36,2 attendus ; trapèze : 35 et 43 pixels
+contre 34,94 et 43,34 attendus. Tous respectent la tolérance de 1 pixel fixée
+dans le test. Les points sur l’axe suivent maintenant une décroissance linéaire.
+Les sept suites ciblées passent, ainsi que le build et le lancement de contrôle.
+
+Preuve canonique : [mask-linear-cone-validation-v001-20261113T125944Z.json](../raw/mask-linear-cone-validation-v001-20261113T125944Z.json).
+L’illustration locale `build-patch_masks/cone-linear-comparison.png` compare les
+équations avant/après ; son empreinte est dans la preuve. Pas de nouvelle
+comparaison du corpus RAW ni de reconstruction du PDF du guide.
+
+### Conclusion actuelle
+
+Correction prête dans `build-patch_masks/Release/appIPR.exe`. Le contrôle visuel
+utilisateur doit confirmer un faisceau qui s’élargit vers la base, à diffusion
+70 puis 100 %, avec exposition locale positive et contour 50 %. Validation
+partielle suivie par l’[issue #24](https://github.com/KimntexX/IPR/issues/24).
+Aucune publication, fusion ou création de tag.

@@ -95,16 +95,16 @@ void paintCone(const Shape &shape, ipr::Image &out)
                     row[x] = 0;
                     continue;
                 }
-                // Soften the sides relative to the local beam width: the tip stays
-                // bright, rather than fading in like the near cap of a rectangle.
+                // Independent axial and transverse limits keep equal-coverage sides
+                // straight. Multiplying these ramps rounds the beam into a bulb.
                 float edge = 1.0f;
                 if (shape.feather > 0) {
                     edge = ImageMath::smoothStep(0.0f, shape.feather, 1.0f - across / halfWidth);
-                    edge *= ImageMath::smoothStep(0.0f, shape.feather * 0.5f, 1.0f - along);
+                    edge = std::min(edge, std::clamp((1.0f - along) / (shape.feather * 0.5f), 0.0f, 1.0f));
                     if (nearHalf > 0)
-                        edge *= ImageMath::smoothStep(0.0f, shape.feather * 0.5f, along);
+                        edge = std::min(edge, std::clamp(along / (shape.feather * 0.5f), 0.0f, 1.0f));
                 }
-                row[x] = edge * (1.0f - shape.diffusion * ImageMath::smoothStep(0.0f, 1.0f, along));
+                row[x] = std::min(edge, 1.0f - shape.diffusion * along);
             }
         }
     });
