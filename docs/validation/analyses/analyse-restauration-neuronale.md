@@ -10976,3 +10976,48 @@ Rapports estimé/calibré : *a* médiane 0,95 (p10 0,87, p90 1,02), *b* médiane
 
 Preuves : [sensibilité](../raw/neural-law-sensitivity-v001-20261112T183100Z.json),
 [marges](../raw/neural-law-sensitivity-margin-v001-20261112T184200Z.json).
+
+## 13 novembre 2026 — l'estimateur face à la loi qualifiée de l'EOS 60D
+
+Le 60D est qualifié le même jour ([rapport bruit, §474](analyse-bruit.md) ;
+[loi](../raw/camera-noise-qualification-eos60d-v001-20261113T134737Z.json)) :
+on peut enfin comparer l'estimateur sur une seule photo à une vraie loi
+d'un second boîtier. Outil : `tests/neural/estimator_against_qualified_law.py`,
+appliqué aux 43 CR2 du 60D du dépôt (`tests/image/base` et
+`base-hors-protocole`, photos ordinaires) ;
+[preuve](../raw/estimator-against-qualified-eos60d-v001-20261113T135043Z.json).
+Aux ISO intermédiaires, la loi qualifiée est interpolée en log ISO entre ses
+voisins mesurés (le 60D les obtient numériquement : comparaison indicative).
+
+Rapport pente estimée / pente qualifiée (quatre positions CFA par photo) :
+
+| ISO | Photos | Médiane | Min | Max | Photos au-dessus de ×1,3 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 100 | 16 | 1,71 | 1,22 | 3,48 | 15 |
+| 160 à 640 | 16 | 1,12 | 0,89 | 2,11 | 2 |
+| 800 à 1250 | 7 | 1,02 | 0,90 | 3,07 | 1 |
+| 2000 à 6400 | 4 | 1,04 | 1,00 | 1,08 | 0 |
+
+**Lecture.**
+
+- **À partir de 800 ISO, l'estimateur retrouve la loi** (×1,00 à ×1,08, une
+  exception), comme sur le R6 III : la marge de +20 % décidée le 12 novembre
+  couvre ces écarts.
+- **Il ne sous-estime presque jamais** (minimum ×0,89, aucune photo sous ×0,95
+  en médiane) : le sens dangereux pour le U-Net reste évité.
+- **À 100 ISO, il surestime fortement** (×1,7 en médiane, jusqu'à ×3,5). La
+  pente y est faible (0,43 DN) : la texture résiduelle des blocs les plus lisses
+  d'une photo de jour pèse alors plus que le bruit. Le U-Net recevrait un bruit
+  1,3 à 1,9 fois trop fort en écart-type et lisserait trop. La campagne du
+  12 novembre ne couvrait que 1600 à 25600 ISO.
+- b (lecture) estimé vaut 0,70 à 0,73 fois celui des noirs jusqu'à 640 ISO,
+  puis 0,9 à 1,2 : les pixels masqués, motif de colonnes retiré, ne voient pas
+  tout le bruit de ligne que la différence de deux noirs garde. Sans effet
+  pratique (b ±20 % : ±0,01 dB).
+
+**Conséquence.** L'estimateur est utilisable pour un boîtier inconnu à partir
+des ISO moyens ; à bas ISO, il faut le borner avant le portage en C++. Pistes,
+à mesurer sur ces 16 photos à 100 ISO : quantile plus bas, blocs plus petits,
+rejet des blocs dont le gradient dépasse le bruit attendu, ou plafond relatif
+à b (à bas ISO, le bruit de lecture domine les ombres). Mesurer ensuite l'effet
+sur le U-Net, comme le 12 novembre.
