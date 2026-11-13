@@ -72,7 +72,7 @@ les retouches de la photo cible, recette avec un genre inconnu refusée, fichier
 - **Pas de reconstruction intelligente** : Effacer recopie l'image et ne sait pas ce qu'elle montre.
   Un objet sur une ligne ou une structure ne sera pas prolongé proprement, et de petits objets peuvent
   être recopiés. Le U-Net génératif reste un besoin futur ([issue #27](https://github.com/KimntexX/IPR/issues/27)).
-- **La zone suit le canevas, pas la photo** : comme un masque, elle ne suit pas l'image si le
+- **La zone suit le canevas, pas la photo** : elle ne suit pas l'image si le
   redressement change ensuite. Faire la géométrie d'abord.
 - **Pas de clic sur objet** : c'est le lot B6, après la détection B5.
 - La portée de l'échantillonnage est la composition courante, une fois les tons posés ; un masque ou
@@ -80,3 +80,29 @@ les retouches de la photo cible, recette avec un genre inconnu refusée, fichier
 - Pas encore essayé sur la grille de validation de la feuille de route : poussières, objets sur
   lignes, contours fins, bord de photo, grandes zones.
 - Le rendu n'a été regardé à l'œil que par l'agent, sur une photo.
+
+## 13 novembre 2026 — Suivi géométrique refusé par l’utilisateur
+
+Après la validation du suivi géométrique des masques, l’utilisateur essaye la
+suppression d’objet et confirme : « bon, la suppression ne suit pas la géométrie ».
+Ce parcours de retouche est donc en défaut, indépendamment de la validation
+antérieure de la qualité de suppression. Aucune photo précise, valeur de
+transformation ou durée n’est attribuée à ce retour.
+
+Le contrat actuel le confirme : `Retouch::Operation` conserve les traits et le
+décalage source du tampon/correcteur dans le canevas courant, sans cadre de
+création. La projection ajoutée aux masques n’est pas appliquée aux retouches.
+La fonction de suppression est déjà intégrée dans `dev` ; les mentions
+historiques « non fusionnée » décrivent son état avant livraison.
+
+Correctif à préparer sur le groupe Retouche : attacher cible et source à la
+photo, projeter aussi les poignées et les gestes, reprendre les recettes
+existantes sans déplacer leur placement initial et garder une seule étape
+d’annulation pour une transformation. Le cas Effacer ne suffit pas à qualifier
+Tampon et Correcteur : leur source doit suivre la même transformation que la
+cible. Préserver les pixels hors de la zone corrigée et comparer aperçu/export.
+
+Inutile de poursuivre la recette complète sur le comportement actuel ; reprendre
+rotation, miroir/quart de tour, recadrage, historique, réouverture et export après
+le correctif. Aucun code photographique n’est modifié par cette consignation.
+La validation reste partielle, suivie par l’[issue #28](https://github.com/KimntexX/IPR/issues/28).
