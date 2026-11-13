@@ -129,4 +129,7 @@ définition sont conservés. Cela ne modifie pas l’ancrage des zones de retouc
 Build/lancement, 80 tests natifs et 355 Python passent. Les mesures synthétiques
 du [rapport des masques](analyse-masques.md) isolent `workingImage` et ne sont pas
 comparables aux latences IHM du tableau historique ci-dessus. [Preuve](../raw/mask-geometry-following-v001-20261113T151522Z.json).
-Contrôle visuel et latence ressentie sur photo réelle à confirmer avant livraison.
+Le 13 novembre 2026, l’utilisateur confirme après `4d2ab6e` que les masques suivent
+la géométrie et que celle-ci est plus rapide. Ce retour valide le suivi et le
+gain de réactivité à l’usage, sans chronométrage ni détail par transformation.
+Le correctif reste local, non publié.

@@ -207,5 +207,7 @@ le rendu normal, même si l’angle final revient à sa valeur initiale. L’exp
 reste sur la source pleine définition. L’éditeur cadence les modules ; la
 construction des proxies est transférée dans `RenderChain::editProxy`.
 
-État : correctif local sur `patch_masks`, à contrôler visuellement avant
-livraison. Les détails et preuves sont dans le rapport évolutif des masques.
+État : correctif local `4d2ab6e` sur `patch_masks`. Le 13 novembre 2026,
+l’utilisateur accepte le suivi des masques et constate la géométrie plus rapide.
+La livraison n’est pas effectuée. Les détails et la portée de la validation
+sont dans le rapport évolutif des masques.

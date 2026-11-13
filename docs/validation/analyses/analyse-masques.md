@@ -373,9 +373,13 @@ Le guide français et l’ADR-0021 décrivent le contrat révisé ; PDF non reco
 ### Conclusion actuelle
 
 Correctif disponible localement dans `build-patch_masks/Release/appIPR.exe`.
-À recontrôler : cône et autre masque sur un objet, rotation puis miroir/quart de
-tour/perspective, déplacement des poignées, relâchement du curseur, annulation,
-réouverture et export. Le confort réel reste à confirmer par l’utilisateur.
+Le 13 novembre 2026, après le correctif `4d2ab6e`, l’utilisateur confirme :
+« ok, les masques suivent la géométrie et la géométrie est plus rapide ».
+Le suivi géométrique et l’amélioration de réactivité sont donc acceptés à
+l’usage. Aucune durée ni scène précise n’est attribuée à ce retour.
+Cette confirmation ne décrit pas séparément miroirs, quarts de tour, perspective,
+poignées, annulation, réouverture ou export après le correctif : leurs tests
+automatisés passent, sans nouvelle validation visuelle détaillée de ces cas.
 Les zones de retouche B3 restent ancrées au canevas : ce lot corrige les masques,
 pas la suppression d’objet. Les changements d’optique ne sont pas qualifiés ici.
 Aucune publication, fusion ou création de tag de ce correctif.
