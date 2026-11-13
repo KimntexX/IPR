@@ -275,3 +275,42 @@ un worktree d’intégration isolé, sans modifier les espaces des autres agents
 Le tag de validation reste à poser après la CI de livraison verte. L’issue #24
 reste ouverte : cet ajout ne clôt ni les limites du groupe ni la validation
 visuelle propre au réordonnancement.
+
+## 13 novembre 2026 — Retour de validation des parcours
+
+Après la livraison et les CI vertes, l’utilisateur confirme que le reste de la
+recette de validation convient : clic droit/glissement, annulation/rétablissement,
+réouverture et export. La combinaison cône et autre masque révèle en revanche
+deux défauts : rotation très lente, au point de faire croire à une absence
+d’action, et masques qui ne suivent pas le changement géométrique de la photo.
+Aucune scène, valeur, position de zoom ou durée chronométrée n’est fournie ;
+ces éléments ne sont pas déduits du retour.
+
+L’inspection du code confirme l’ancrage au **canevas transformé**, explicitement
+décrit dans `LocalAdjustments.h` et l’ADR-0021. `commitGeometry` change la
+géométrie sans rattacher les formes à la source. Les tests antérieurs vérifient
+qu’un masque agit dans la zone du canevas après transformation, pas qu’il reste
+attaché au même objet quand la géométrie est modifiée après sa création. Ils ne
+couvrent donc pas le comportement attendu dans cette validation utilisateur.
+
+Pour la lenteur, la géométrie fait varier les clés de `maskValues` et de
+`stageKeys`, ce qui oblige à recalculer les cartes et les tons. Avec une exposition
+locale RAW, `renderTones` peut repasser par le profil caméra ; au zoom détaillé,
+un rendu pleine résolution peut ensuite être demandé. Ce sont des pistes issues
+du code, pas un partage de coût mesuré ni une preuve de la cause dominante.
+
+Prochain correctif à qualifier : ancrage des masques au contenu de la photo,
+transformations cohérentes des poignées/gestes et de l’export, conservation des
+recettes existantes. Ne pas simplement déplacer deux extrémités : pinceau,
+ellipse, perspective et largeurs doivent suivre la même transformation. Une
+modification géométrique et ses effets sur les masques doivent rester cohérents
+dans une seule étape d’historique. Mesurer séparément cartes, profil, filtres,
+affichage et détail, sans/après masques, avant de choisir cache ou aperçu
+provisoire pendant le geste. Ne pas modifier le rendu export pour accélérer
+un aperçu.
+
+Retour conservé dans [mask-user-validation-v001-20261113T144707Z.json](../raw/mask-user-validation-v001-20261113T144707Z.json).
+Cette passe n’ajoute aucun changement de calcul photographique. Le cône reste
+accepté ; les parcours hors géométrie sont acceptés ; le groupe reste partiel,
+avec défauts de suivi et de réactivité liés aux issues #24 et #22. Ces défauts
+ne sont pas annoncés corrigés.
