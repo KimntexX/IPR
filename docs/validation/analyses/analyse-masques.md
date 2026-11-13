@@ -372,14 +372,21 @@ Le guide français et l’ADR-0021 décrivent le contrat révisé ; PDF non reco
 
 ### Conclusion actuelle
 
-Correctif disponible localement dans `build-patch_masks/Release/appIPR.exe`.
+Correctif publié et fusionné dans `dev` au commit `97841ff` ; le build de contrôle
+reste disponible dans `build-patch_masks/Release/appIPR.exe`.
 Le 13 novembre 2026, après le correctif `4d2ab6e`, l’utilisateur confirme :
 « ok, les masques suivent la géométrie et la géométrie est plus rapide ».
 Le suivi géométrique et l’amélioration de réactivité sont donc acceptés à
 l’usage. Aucune durée ni scène précise n’est attribuée à ce retour.
-Cette confirmation ne décrit pas séparément miroirs, quarts de tour, perspective,
-poignées, annulation, réouverture ou export après le correctif : leurs tests
-automatisés passent, sans nouvelle validation visuelle détaillée de ces cas.
+Puis, en réponse à la passe proposée (rotation puis miroir ou quart de tour,
+déplacement d’une poignée, annulation/rétablissement, fermeture/réouverture,
+export TIFF comparé à l’aperçu), l’utilisateur confirme : « ok, tout est bon ».
+Ce parcours après correction est donc accepté visuellement. Les scènes, valeurs
+et transformations exactes ne sont pas détaillées ; aucune nouvelle campagne
+chiffrée ni validation universelle de toutes les transformations n’est déduite.
 Les zones de retouche B3 restent ancrées au canevas : ce lot corrige les masques,
 pas la suppression d’objet. Les changements d’optique ne sont pas qualifiés ici.
-Aucune publication, fusion ou création de tag de ce correctif.
+À la consignation de cet accord, la CI `dev` de `97841ff` est encore en cours,
+et celle de la branche `4ef3017` est en file d’attente. La validation manuelle
+ne vaut pas réussite de ces pipelines ; le tag reste à poser après leur succès.
+Le groupe Masques reste partiellement validé pour ses autres limites (#24).
