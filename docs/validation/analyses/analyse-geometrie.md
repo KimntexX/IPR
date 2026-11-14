@@ -112,3 +112,24 @@ est réelle (par exemple un aperçu approché pendant le geste).
 - Masque après transformation : non vérifiable tant que les masques n'existent pas (B2).
 - Non implémentés : redressement guidé par lignes, suggestions automatiques (B5),
   vignettage après recadrage.
+
+## 13 novembre 2026 — Geste géométrique avec masques, correctif local
+
+Le retour utilisateur signale une rotation très lente et des masques restés au
+canevas au lieu de suivre la photo. Le correctif `patch_masks` fixe un repère de
+création par masque et projette rendu, poignées et gestes avec la géométrie.
+La reprise des recettes antérieures utilise leur géométrie enregistrée comme
+repère, dans le format 13.
+
+Une entrée de cache caméra avant géométrie évite de recalculer le profil pendant
+la rotation. Un proxy de geste à 1024 pixels maximum, signalé sur l’image, est
+remplacé par l’aperçu normal au relâchement ; taille affichée et export pleine
+définition sont conservés. Cela ne modifie pas l’ancrage des zones de retouche.
+
+Build/lancement, 80 tests natifs et 355 Python passent. Les mesures synthétiques
+du [rapport des masques](analyse-masques.md) isolent `workingImage` et ne sont pas
+comparables aux latences IHM du tableau historique ci-dessus. [Preuve](../raw/mask-geometry-following-v001-20261113T151522Z.json).
+Le 13 novembre 2026, l’utilisateur confirme après `4d2ab6e` que les masques suivent
+la géométrie et que celle-ci est plus rapide. Ce retour valide le suivi et le
+gain de réactivité à l’usage, sans chronométrage ni détail par transformation.
+Le correctif reste local, non publié.

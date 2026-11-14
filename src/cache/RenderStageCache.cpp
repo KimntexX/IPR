@@ -22,6 +22,7 @@ RenderStageCache::Start RenderStageCache::begin(const ipr::Image &source, double
     std::lock_guard lock(m_mutex);
     if (!sameSource(source, m_source) || pixelScale != m_pixelScale) {
         m_entries = {};
+        m_camera.reset();
         m_previous.reset();
         m_source = source.share();
         m_pixelScale = pixelScale;
@@ -90,6 +91,24 @@ void RenderStageCache::storeMaskMaps(const ipr::Image &source, double pixelScale
     m_maskMaps = LocalValues::sharedCopy(maps);
 }
 
+ipr::Image RenderStageCache::cameraOutput(const ipr::Image &source, double pixelScale, const QByteArray &key) const
+{
+    std::lock_guard lock(m_mutex);
+    if (!sameSource(source, m_source) || pixelScale != m_pixelScale || !m_camera || m_camera->key != key)
+        return {};
+    return m_camera->rgb.clone();
+}
+
+void RenderStageCache::storeCameraOutput(const ipr::Image &source, double pixelScale,
+                                        const QByteArray &key, const ipr::Image &rgb)
+{
+    if (rgb.empty()) return;
+    auto copy = rgb.clone();
+    std::lock_guard lock(m_mutex);
+    if (!sameSource(source, m_source) || pixelScale != m_pixelScale) return;
+    m_camera = Entry{key, std::move(copy)};
+}
+
 void RenderStageCache::clear()
 {
     {
@@ -100,6 +119,7 @@ void RenderStageCache::clear()
     }
     std::lock_guard lock(m_mutex);
     m_entries = {};
+    m_camera.reset();
     m_previous.reset();
     m_source = {};
     m_pixelScale = 0.0;

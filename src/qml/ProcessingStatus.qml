@@ -7,11 +7,13 @@ Basic.Pane {
     id: root
     property bool busy: false
     property bool embeddedPreview: false
+    property bool geometryPreview: false
     property string detail: ""
     property bool delayed: false
     readonly property string caption: embeddedPreview
-        ? qsTr("Aperçu boîtier — développement en cours…") : qsTr("Traitement en cours…")
-    visible: embeddedPreview || (busy && delayed)
+        ? qsTr("Aperçu boîtier — développement en cours…")
+        : geometryPreview ? qsTr("Aperçu géométrique rapide…") : qsTr("Traitement en cours…")
+    visible: geometryPreview || embeddedPreview || (busy && delayed)
     implicitWidth: Math.min(360, statusRow.implicitWidth + 20)
     implicitHeight: statusRow.implicitHeight + 12
     padding: 0

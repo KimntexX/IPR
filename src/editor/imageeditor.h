@@ -110,6 +110,7 @@ class ImageEditor final : public QObject
     Q_PROPERTY(QString statusMessage READ statusMessage NOTIFY statusMessageChanged)
     Q_PROPERTY(bool hasImage READ hasImage NOTIFY hasImageChanged)
     Q_PROPERTY(bool busy READ busy NOTIFY busyChanged)
+    Q_PROPERTY(bool geometryPreviewActive READ geometryPreviewActive NOTIFY geometryPreviewChanged)
     Q_PROPERTY(QString imageInfo READ imageInfo NOTIFY imageInfoChanged)
     Q_PROPERTY(QVariantMap imageDetails READ imageDetails NOTIFY imageInfoChanged)
     Q_PROPERTY(int imageRating READ imageRating NOTIFY imageInfoChanged)
@@ -230,6 +231,7 @@ public:
     QString statusMessage() const;
     bool hasImage() const;
     bool busy() const;
+    bool geometryPreviewActive() const { return m_geometryGesture; }
     QString imageInfo() const;
     QVariantMap imageDetails() const;
     int imageRating() const;
@@ -396,6 +398,7 @@ public:
     Q_INVOKABLE int addLocalMask(const QString &kind);
     Q_INVOKABLE void removeLocalMask(int mask);
     Q_INVOKABLE int duplicateLocalMask(int mask);
+    Q_INVOKABLE bool moveLocalMask(int from, int to);
     Q_INVOKABLE void setLocalMaskName(int mask, const QString &name);
     Q_INVOKABLE void setLocalMaskVisible(int mask, bool visible);
     Q_INVOKABLE void setLocalMaskOpacity(int mask, double opacity);
@@ -419,6 +422,7 @@ signals:
     void errorReported(const QString &message);
     void hasImageChanged();
     void busyChanged();
+    void geometryPreviewChanged();
     void imageInfoChanged();
     void histogramChanged();
     void decodedImageCacheChanged();
@@ -461,8 +465,6 @@ private:
     // The preview's source (edit proxy, or the image) and its pixel scale.
     const ColorPipeline::WorkingImage &previewSource() const;
     double previewPixelScale() const;
-    static ColorPipeline::WorkingImage buildEditProxy(
-        const ColorPipeline::WorkingImage &source);
     static QString cacheKeyForFile(const QString &fileName,
                                    bool automaticWhiteBalance,
                                    const QString &profile = {}, const QString &manifest = {},
@@ -531,6 +533,7 @@ private:
     QUrl m_queuedFile;
     ColorPipeline::WorkingImage m_original;
     ColorPipeline::WorkingImage m_editProxy;
+    ColorPipeline::WorkingImage m_geometryProxy;
     ImageMetadata m_sourceMetadata;
     ImageImport::Provenance m_importProvenance;
     ImageImport::Capabilities m_importCapabilities;
@@ -556,6 +559,7 @@ private:
     bool m_sidecarReadOnly = false;        // the open image's .ipr comes from a newer IPR
     EditHistory m_history;                 // of the open image, saved in its .ipr
     bool m_inAdjustmentGesture = false;
+    bool m_geometryGesture = false;
     bool m_restoringHistory = false;
     QString m_rawDevelopmentWarning;
     QString m_profileSha256;

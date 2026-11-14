@@ -305,56 +305,6 @@ void maps()
     check(valueMaps(masks, ipr::Size())[Exposure].empty(), "an empty canvas gives nothing");
 }
 
-void source()
-{
-    const ipr::Size size(300, 200);
-    // A map whose value is its normalized u, to read where each pixel came from.
-    Geometry::Settings straight;
-    ipr::Image map = ipr::Image::create(size, ipr::Depth::F32, 1);
-    for (int y = 0; y < map.height(); ++y)
-        for (int x = 0; x < map.width(); ++x)
-            imagetest::at<float>(map, y, x) = (float(x) + 0.5f) / float(map.width());
-    check(LocalAdjustments::toSource(map, straight, size).block() == map.block(), "without a transform it is the same map");
-    check(LocalAdjustments::toSource(ipr::Image(), straight, size).empty(), "an empty map stays empty");
-
-    // A mirror: the canvas's left is the source's right.
-    Geometry::Settings mirrored;
-    mirrored.flipHorizontal = true;
-    const ipr::Image flipped = LocalAdjustments::toSource(map, mirrored, size);
-    check(flipped.size() == size && std::abs(imagetest::at<float>(flipped, 100, 30) - (1.0f - (30.5f / 300.0f))) < 0.005f, "a mirror reads the other side");
-
-    // A quarter turn swaps the sides, and the map comes back to the source's.
-    Geometry::Settings turned;
-    turned.quarterTurns = 1;
-    const ipr::Size canvasOfTurn = Geometry::canvasSize(turned, size);
-    ipr::Image turnedMap = ipr::Image::create(canvasOfTurn, ipr::Depth::F32, 1);
-    for (int y = 0; y < turnedMap.height(); ++y)
-        for (int x = 0; x < turnedMap.width(); ++x)
-            imagetest::at<float>(turnedMap, y, x) = (float(y) + 0.5f) / float(turnedMap.height());
-    const ipr::Image back = LocalAdjustments::toSource(turnedMap, turned, size);
-    check(back.size() == size, "a turned map comes back at the source's size");
-    // A clockwise turn sends the source's left to the canvas's top.
-    check(std::abs(imagetest::at<float>(back, 100, 30) - 30.5f / 300.0f) < 0.01f, "with each pixel where it belongs");
-
-    // A landmark: a rotated canvas's value is read at the mapped source position.
-    Geometry::Settings rotated;
-    rotated.rotation = 8.0f;
-    const ipr::Point2d sourcePoint(0.3, 0.4);
-    const auto canvasPoint = Geometry::toCanvas(rotated, size, sourcePoint);
-    check(canvasPoint.has_value(), "the point has its place on the canvas");
-    if (canvasPoint) {
-        ipr::Image ramp = ipr::Image::create(size, ipr::Depth::F32, 1);
-        for (int y = 0; y < ramp.height(); ++y)
-            for (int x = 0; x < ramp.width(); ++x)
-                imagetest::at<float>(ramp, y, x) = (float(x) + 0.5f) / float(ramp.width());
-        const ipr::Image read = LocalAdjustments::toSource(ramp, rotated, size);
-        const float found = imagetest::at<float>(read, int(0.4 * 200), int(0.3 * 300));
-        if (std::abs(double(found) - canvasPoint->x) > 0.01)
-            std::cerr << "landmark " << found << " vs " << canvasPoint->x << '\n';
-        check(std::abs(double(found) - canvasPoint->x) <= 0.01, "the same place as the geometry says");
-    }
-}
-
 void bounds()
 {
     Masks masks{valued(whole(), LocalValues::Exposure, 50.0f)};
@@ -402,14 +352,159 @@ void bounds()
 
 } // namespace
 
+void cones()
+{
+    Shape shape;
+    shape.kind = Kind::Triangle;
+    shape.feather = 0;
+    const auto triangle = coverage(maskOf(shape), canvas);
+    check(at(triangle, .5f, .5f) == 1, "triangle interior");
+    check(at(triangle, .65f, .5f) == 0 && at(triangle, .5f, .8f) == 0, "cone sides and end are bounded");
+    check(at(triangle, .54f, .3f) == 0, "triangle begins at a point");
+    shape.kind = Kind::Trapezoid;
+    const auto trapezoid = coverage(maskOf(shape), canvas);
+    check(at(trapezoid, .54f, .3f) == 1, "trapezoid has a finite near width");
+    shape.startWidth = 0;
+    check(worstDifference(triangle, coverage(maskOf(shape), canvas)) == 0, "zero near width becomes a triangle");
+    shape.kind = Kind::Triangle;
+    shape.feather = .5f;
+    const auto soft = coverage(maskOf(shape), canvas);
+    check(at(soft, .58f, .5f) > 0 && at(soft, .58f, .5f) < 1, "cone feather is progressive");
+    const auto large = coverage(maskOf(shape), {800, 600});
+    check(std::abs(at(soft,.58f,.5f)-at(large,.58f,.5f)) < .03, "cone feather follows resolution");
+    shape.inverted = true;
+    const auto inverse = coverage(maskOf(shape), canvas);
+    check(std::abs(at(soft,.58f,.5f)+at(inverse,.58f,.5f)-1) < 1e-6f, "cone inversion");
+    shape.inverted = false;
+    shape.start = {.25f,.5f}; shape.end = {.75f,.5f}; shape.feather = 0;
+    check(at(coverage(maskOf(shape),canvas),.5f,.6f) == 1, "rotated cone");
+    shape.end = shape.start;
+    const auto empty = coverage(maskOf(shape),canvas);
+    check(ipr::extremesOf(empty).largest == 0, "coincident endpoints produce an empty mask");
+    Masks masks{maskOf(shape)};
+    masks[0].shapes[0].endWidth = std::numeric_limits<float>::quiet_NaN();
+    check(!bound(masks), "invalid cone width rejected");
+    masks = {valued(Shape{}, LocalValues::Exposure, 1)};
+    masks[0].shapes[0].kind = Kind::Trapezoid;
+    QByteArray before, after;
+    QDataStream first(&before, QIODevice::WriteOnly);
+    appendKey(first, masks);
+    masks[0].shapes[0].endWidth += .1f;
+    QDataStream second(&after, QIODevice::WriteOnly);
+    appendKey(second, masks);
+    check(before != after, "cone width invalidates mask cache");
+    Shape spot;
+    spot.kind = Kind::Triangle;
+    spot.diffusion = 1;
+    spot.feather = .5f;
+    const auto beam = coverage(maskOf(spot), canvas);
+    check(std::abs(at(beam,.5f,.3f) - .9f) < .01f && std::abs(at(beam,.5f,.5f) - .5f) < .01f &&
+          std::abs(at(beam,.5f,.7f) - .1f) < .01f, "spot follows a linear axial falloff despite side feather");
+    // An intermediate contour must widen along straight sides, rather than
+    // closing into a rounded lobe as the axial strength falls.
+    Shape widening = spot;
+    widening.diffusion = .7f;
+    const auto wedge = coverage(maskOf(widening), canvas);
+    for (const int y : {105, 135, 165}) {
+        const float along = (float(y) - 74.5f) / 150.0f;
+        const float expectedHalfWidth = 80.0f * along * .75f;
+        int count = 0;
+        for (int x = 0; x < canvas.width; ++x)
+            count += imagetest::at<float>(wedge, y, x) >= .5f;
+        std::cout << "cone-contour triangle y=" << y << " halfWidth=" << float(count) * .5f
+                  << " expected=" << expectedHalfWidth << '\n';
+        check(std::abs(float(count) * .5f - expectedHalfWidth) <= 1,
+              "half-coverage width grows linearly towards the base");
+    }
+    widening.kind = Kind::Trapezoid;
+    const auto broad = coverage(maskOf(widening), canvas);
+    for (const int y : {135, 165}) {
+        const float along = (float(y) - 74.5f) / 150.0f;
+        const float expectedHalfWidth = (24.0f + 56.0f * along) * .75f;
+        int count = 0;
+        for (int x = 0; x < canvas.width; ++x)
+            count += imagetest::at<float>(broad, y, x) >= .5f;
+        std::cout << "cone-contour trapezoid y=" << y << " halfWidth=" << float(count) * .5f
+                  << " expected=" << expectedHalfWidth << '\n';
+        check(std::abs(float(count) * .5f - expectedHalfWidth) <= 1,
+              "trapezoid keeps straight widening intensity contours");
+    }
+    float previous = 1;
+    for (int y = 90; y < 225; ++y) {
+        const float value = imagetest::at<float>(beam, y, 200);
+        check(std::isfinite(value) && value >= 0 && value <= previous + 1e-6f, "axial falloff is finite bounded and monotone");
+        previous = value;
+    }
+    const auto bigBeam = coverage(maskOf(spot), {800, 600});
+    check(std::abs(at(beam,.5f,.4f)-at(bigBeam,.5f,.4f)) < .03f, "spot follows resolution");
+    spot.start = {.25f,.5f}; spot.end = {.75f,.5f};
+    const auto horizontal = coverage(maskOf(spot), canvas);
+    check(at(horizontal,.3f,.5f) > at(horizontal,.7f,.5f), "falloff follows rotated beam axis");
+    spot.inverted = true;
+    check(std::abs(at(horizontal,.4f,.5f)+at(coverage(maskOf(spot),canvas),.4f,.5f)-1) < 1e-6f,
+          "inversion applies to the full diffused beam");
+    masks = {valued(spot, LocalValues::Exposure, 1)};
+    before.clear(); after.clear();
+    QDataStream third(&before, QIODevice::WriteOnly);
+    appendKey(third, masks);
+    masks[0].shapes[0].diffusion = .5f;
+    QDataStream fourth(&after, QIODevice::WriteOnly);
+    appendKey(fourth, masks);
+    check(before != after, "diffusion invalidates cache");
+    masks[0].shapes[0].diffusion = 2;
+    check(bound(masks) && masks[0].shapes[0].diffusion == 1, "diffusion bounded");
+    masks[0].shapes[0].diffusion = std::numeric_limits<float>::quiet_NaN();
+    check(!bound(masks), "nonfinite diffusion refused");
+}
+
+void anchoredMasks()
+{
+    const ipr::Point2d target(.3, .5);
+    for (const Kind kind : {Kind::Radial, Kind::Triangle, Kind::Trapezoid, Kind::Brush}) {
+        Shape shape;
+        shape.kind = kind; shape.center = {.3f,.5f}; shape.radiusX = .08f; shape.radiusY = .08f;
+        shape.start = {.3f,.2f}; shape.end = {.3f,.8f}; shape.feather = 0;
+        if (kind == Kind::Brush) {
+            BrushStroke stroke; stroke.points.push_back({.3f,.5f}); stroke.size = .07f;
+            shape.strokes.push_back(stroke);
+        }
+        const auto mask = maskOf(shape);
+        for (const int mode : {0,1,2,3,4}) {
+            Geometry::Settings geometry;
+            if (mode == 0) geometry.rotation = 23;
+            if (mode == 1) geometry.quarterTurns = 1;
+            if (mode == 2) geometry.flipHorizontal = true;
+            if (mode == 3) geometry.vertical = 25;
+            if (mode == 4) { geometry.horizontal = 15; geometry.aspect = 20; geometry.offsetX = 7; }
+            const auto position = Geometry::toCanvas(geometry, canvas, target);
+            const auto map = canvasCoverage(mask, geometry, canvas);
+            check(position && !map.empty() && at(map,float(position->x),float(position->y)) > .95f,
+                  "a mask stays attached to its source landmark through geometry");
+        }
+    }
+    Mask created;
+    created.frame.rotation = 17;
+    Shape shape; shape.kind = Kind::Radial; shape.radiusX = .07f; shape.radiusY = .07f;
+    const auto born = Geometry::toCanvas(created.frame, canvas, target);
+    shape.center = {float(born->x),float(born->y)}; created.shapes.push_back(shape);
+    const auto atSource = canvasCoverage(created, {}, canvas);
+    check(at(atSource,.3f,.5f) > .95f, "a mask created after rotation follows the object when rotation resets");
+    const auto description = describeOnCanvas({created}, {}, canvas)[0].toMap();
+    check(description.value("frameToCanvas").toList().size() == 9 &&
+          description.value("canvasToFrame").toList().size() == 9, "UI receives both frame transforms");
+    Masks bad{created}; bad[0].frame.rotation = std::numeric_limits<float>::quiet_NaN();
+    check(!bound(bad), "invalid frame geometry refused");
+}
+
 int main()
 {
+    anchoredMasks();
+    cones();
     shapes();
     ranges();
     resolutions();
     combinations();
     maps();
-    source();
     bounds();
     if (passed)
         std::cout << "local adjustments: ok\n";
