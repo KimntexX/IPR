@@ -249,8 +249,16 @@ bool readBlackLevel(LibRaw &raw, const QString &fileName, std::array<double, 4> 
         for (int column = 0; column < 2; ++column)
             input.cfaChannels[row * 2 + column] = raw.COLOR(row, column);
 
-    if (readVariance)
-        *readVariance = RawBlackLevelEstimator::readNoise(input);
+    if (readVariance) {
+        // The read noise needs a declared optical black: Canon's makernote areas, else the masked
+        // areas the format declares (CR2 of the EOS 60D). The black itself keeps its own reading.
+        RawBlackLevelEstimator::Input noise = input;
+        if (noise.maskedAreas.empty())
+            for (const auto &m : data.sizes.mask)
+                if (m[2] > m[0] && m[3] > m[1])
+                    noise.maskedAreas.push_back({m[1], m[0], m[3] - m[1], m[2] - m[0]});
+        *readVariance = RawBlackLevelEstimator::readNoise(noise);
+    }
     const auto measured = RawBlackLevelEstimator::measure(input);
     std::array<unsigned int, 4> decoder{};
     for (int channel = 0; channel < 4; ++channel)
