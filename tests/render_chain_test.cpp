@@ -347,6 +347,12 @@ void aRegionIsThatPartOfTheWholeRender()
         {"texture and clarity", [](Settings &s) { s.texture = -30; s.clarity = 50; s.brightness = 0.2f; }},
         {"clarity, sharpening, grain, rotation", [](Settings &s) {
              s.clarity = 35; s.texture = 20; s.sharpeningAmount = 60; s.grain = 20; s.blur = 2; s.geometry.rotation = -4.0f; }},
+        {"curve after clarity", [](Settings &s) { s.clarity = 40; s.toneCurves[0] = {{0.0f, 0.1f}, {1.0f, 0.9f}}; }},
+        {"dehaze", [](Settings &s) { s.dehaze = 40; }},
+        {"adding haze", [](Settings &s) { s.dehaze = -50; s.contrast = 10; }},
+        {"dehaze with everything after", [](Settings &s) {
+             s.dehaze = 30; s.clarity = 25; s.texture = 10; s.toneCurves[0] = {{0.0f, 0.05f}, {0.5f, 0.55f}, {1.0f, 0.95f}};
+             s.sharpeningAmount = 50; s.grain = 15; s.geometry.rotation = 2.0f; }},
         {"together", [](Settings &s) {
              s.brightness = -0.4f; s.contrast = -15; s.temperature = 4300; s.shadows = 40; s.saturation = 20;
              s.toneCurves[0] = {{0.0f, 0.05f}, {0.5f, 0.55f}, {1.0f, 0.95f}};
@@ -374,7 +380,7 @@ void aRegionIsThatPartOfTheWholeRender()
     }
 
     for (const auto &[name, edit] : std::vector<std::pair<const char *, std::function<void(Settings &)>>>{
-             {"denoise", [](Settings &s) { s.denoiseLuminance = 60; }}, {"dehaze", [](Settings &s) { s.dehaze = 40; }},
+             {"denoise", [](Settings &s) { s.denoiseLuminance = 60; }}, {"colour noise", [](Settings &s) { s.denoiseChrominance = 40; }},
              {"mask", [](Settings &s) { s = withMask(); }}, {"retouch", [](Settings &s) { s = withRemoval(); }}}) {
         Settings settings = neutral();
         edit(settings);
@@ -390,7 +396,11 @@ void aRegionIsThatPartOfTheWholeRender()
              {"sharpening after a blur, rotated", [](Settings &s) {
                   s.sharpeningAmount = 50; s.blur = 2; s.geometry.rotation = -2.0f; }},
              {"clarity and texture on a larger canvas", [](Settings &s) {
-                  s.clarity = 45; s.texture = 25; s.sharpeningAmount = 40; }}}) {
+                  s.clarity = 45; s.texture = 25; s.sharpeningAmount = 40; }},
+             {"dehaze and a curve on a larger canvas", [](Settings &s) {
+                  s.dehaze = 35; s.sharpeningAmount = 30; s.toneCurves[0] = {{0.0f, 0.08f}, {1.0f, 0.92f}}; }},
+             {"a curve before the sharpening's bands", [](Settings &s) {
+                  s.sharpeningAmount = 60; s.toneCurves[0] = {{0.0f, 0.2f}, {1.0f, 0.8f}}; }}}) {
         Settings settings = neutral();
         edit(settings);
         const WorkingImage whole = RenderChain::workingImage(large, settings);
@@ -420,6 +430,21 @@ void aRegionIsThatPartOfTheWholeRender()
         const ipr::Recti region(30, 20, 90, 70);
         const WorkingImage part = RenderChain::workingRegion(source, second, region, measures);
         check(!part.isNull() && same(part.linearRgba, whole.linearRgba.view(region)), "rendered at another");
+    }
+    // Nor do the dehaze's: measures taken at one dehaze value serve another.
+    {
+        Settings first = neutral(), second = neutral();
+        first.dehaze = 20; first.saturation = 10;
+        second = first; second.dehaze = -60;
+        check(RenderChain::wholeMeasuresKey(first) == RenderChain::wholeMeasuresKey(second), "the dehaze's value keeps the key");
+        RenderChain::WholeMeasures measures;
+        check(RenderChain::measureWhole(source, first, measures), "measured at one dehaze value");
+        for (const Settings &settings : {first, second}) {
+            const WorkingImage whole = RenderChain::workingImage(source, settings);
+            const ipr::Recti region(10, 40, 120, 60);
+            const WorkingImage part = RenderChain::workingRegion(source, settings, region, measures);
+            check(!part.isNull() && same(part.linearRgba, whole.linearRgba.view(region)), "rendered at both values");
+        }
     }
 
     Settings rotated = neutral();

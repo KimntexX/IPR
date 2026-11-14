@@ -2,6 +2,7 @@
 #define IPR_EDITOR_RENDERCHAIN_H
 
 #include "ColorPipeline.h"
+#include "Dehaze.h"
 #include "EditRecipe.h"
 #include "LocalContrast.h"
 #include "PerceptualColour.h"
@@ -54,6 +55,7 @@ struct WholeMeasures
     std::optional<float> sharpenNoiseSigma;  // the sharpening's input, when it sharpens
     // Texture and clarity's coarse bands, when active; shared, as every copy of the measures reads them.
     std::shared_ptr<const LocalContrast::Layers> contrastLayers;
+    Dehaze::Layers dehazeLayers;             // the dehaze's reduced maps, when active
     ToneRecovery::Statistics toneStatistics;  // the source's
 };
 // Whether this recipe renders a region by itself; otherwise a caller renders the whole image and

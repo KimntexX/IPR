@@ -40,7 +40,7 @@ class IprTestImageGenerator
 public:
     static ColorPipeline::WorkingImage proxy(const ColorPipeline::WorkingImage &image)
     {
-        return ImageEditor::buildEditProxy(image);
+        return RenderChain::editProxy(image);
     }
 };
 
@@ -153,6 +153,10 @@ std::vector<std::pair<QString, std::function<void(Settings &)>>> regionStates()
         {"tones_colour_grain_blur", [base](Settings &s) { base(s); s.grain = 25; s.blur = 2; }},
         {"tones_colour_texture_clarity", [base](Settings &s) { base(s); s.texture = 20; s.clarity = 30; }},
         {"tones_colour_clarity_sharpening", [base](Settings &s) { base(s); s.clarity = 30; s.sharpeningAmount = 40; }},
+        {"tones_colour_dehaze", [base](Settings &s) { base(s); s.dehaze = 25; }},
+        {"tones_colour_curve_clarity_dehaze_sharpening", [base](Settings &s) {
+             base(s); s.toneCurves[0] = {{0.0f, 0.04f}, {0.5f, 0.56f}, {1.0f, 0.97f}}; s.clarity = 30; s.dehaze = 25;
+             s.sharpeningAmount = 40; }},
     };
 }
 

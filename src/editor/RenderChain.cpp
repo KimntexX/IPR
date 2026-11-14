@@ -487,7 +487,7 @@ ipr::Recti grownWithin(const ipr::Recti &area, int by, const ipr::Size &canvas)
            ipr::Recti(0, 0, canvas.width, canvas.height);
 }
 
-// The pixel-by-pixel stages, camera signal to curves, on one area of the canvas, from the window
+// The pixel-by-pixel stages, camera signal to perceptual colour, on one area of the canvas, from the window
 // of the source it reads. camera: the camera stage of the whole source already rendered
 // (renderCamera), read instead of rendering the window's. Empty on a failed stage.
 ipr::Image regionBeforeLocal(const ColorPipeline::WorkingImage &source, const Settings &settings,
@@ -504,7 +504,6 @@ ipr::Image regionBeforeLocal(const ColorPipeline::WorkingImage &source, const Se
             !renderCanvasTones(source, settings, referenceTemperature, measures.toneStatistics, adjusted, {}))
             return {};
         PerceptualColour::apply(adjusted, perceptualParameters(settings), {});
-        ToneCurve::apply(adjusted, settings.toneCurves);
         return adjusted;
     }
     ColorPipeline::WorkingImage windowSource = ColorPipeline::sharedCopy(source);
@@ -529,7 +528,6 @@ ipr::Image regionBeforeLocal(const ColorPipeline::WorkingImage &source, const Se
         !renderCanvasTones(source, settings, referenceTemperature, measures.toneStatistics, adjusted, {}))
         return {};
     PerceptualColour::apply(adjusted, perceptualParameters(settings), {});
-    ToneCurve::apply(adjusted, settings.toneCurves);
     return adjusted;
 }
 
@@ -550,6 +548,7 @@ bool measureSharpenNoise(const ColorPipeline::WorkingImage &source, const Settin
         ipr::Image rgb = regionBeforeLocal(source, settings, read, measures, &camera);
         if (rgb.empty())
             return false;
+        ToneCurve::apply(rgb, settings.toneCurves);
         if (settings.blur > 0)
             rgb = ipr::gaussianBlurred(rgb, sigma);
         DetailProcessing::appendSharpenNoiseSamples(rgb.view(rows - read.tl()), rows.y, canvas.height, step, samples);
@@ -574,6 +573,12 @@ bool contrastActive(const Settings &settings)
     return settings.texture != 0 || settings.clarity != 0;
 }
 
+// Stages whose measures need the whole canvas rendered up to them.
+bool wholePassNeeded(const Settings &settings)
+{
+    return contrastActive(settings) || settings.dehaze != 0;
+}
+
 } // namespace
 
 bool rendersByRegion(const Settings &settings)
@@ -581,7 +586,7 @@ bool rendersByRegion(const Settings &settings)
     // The stages that read far around a pixel or measure the whole image come one by one; until
     // then, their recipes render whole.
     return !LocalAdjustments::active(settings.localMasks) && !Retouch::active(settings.retouches) &&
-           classicalLuminance(settings) == 0 && settings.denoiseChrominance == 0 && settings.dehaze == 0;
+           classicalLuminance(settings) == 0 && settings.denoiseChrominance == 0;
 }
 
 QByteArray wholeMeasuresKey(const Settings &s)
@@ -599,6 +604,9 @@ QByteArray wholeMeasuresKey(const Settings &s)
     // texture's output; not their own slider values.
     if (contrastActive(s))
         stream << stageKeys(s)[2] << (s.texture != 0) << (s.clarity != 0) << qint32(s.clarity != 0 ? s.texture : 0);
+    // The dehaze's reduced maps read every setting before it, not its own slider.
+    if (s.dehaze != 0)
+        stream << stageKeys(s)[3] << true;
     if (s.sharpeningAmount > 0) {
         stream << stageKeys(s)[4] << qint32(s.blur);
         for (const auto &curve : s.toneCurves) {
@@ -617,7 +625,7 @@ bool measureWhole(const ColorPipeline::WorkingImage &source, const Settings &set
         return false;
     const bool neutral = isNeutral(settings, referenceTemperatureOf(source));
     const bool sharpens = settings.sharpeningAmount > 0 && !neutral;
-    const bool contrast = contrastActive(settings) && !neutral;
+    const bool contrast = wholePassNeeded(settings) && !neutral;
     // The camera stage of the whole source, when a measure reads it: once for all of them.
     ipr::Image camera;
     if (Geometry::resamples(settings.geometry) || sharpens || contrast) {
@@ -642,7 +650,9 @@ bool measureWhole(const ColorPipeline::WorkingImage &source, const Settings &set
         auto layers = std::make_shared<LocalContrast::Layers>();
         LocalContrast::apply(whole, settings.texture, settings.clarity, 1.0, {}, layers.get());
         measures.contrastLayers = std::move(layers);
+        Dehaze::apply(whole, settings.dehaze, 1.0, {}, &measures.dehazeLayers);
         if (sharpens) {
+            ToneCurve::apply(whole, settings.toneCurves);
             if (settings.blur > 0)
                 whole = ipr::gaussianBlurred(whole, blurSigma(settings, 1.0));
             std::vector<float> samples;
@@ -670,7 +680,8 @@ ColorPipeline::WorkingImage workingRegion(const ColorPipeline::WorkingImage &sou
     if ((region & ipr::Recti(0, 0, canvas.width, canvas.height)) != region ||
         (Geometry::resamples(settings.geometry) && measures.warpFloor.size() != 3) ||
         (settings.sharpeningAmount > 0 && !measures.sharpenNoiseSigma) ||
-        (contrastActive(settings) && (!measures.contrastLayers || measures.contrastLayers->canvas != canvas)))
+        (contrastActive(settings) && (!measures.contrastLayers || measures.contrastLayers->canvas != canvas)) ||
+        (settings.dehaze != 0 && (!measures.dehazeLayers.state || measures.dehazeLayers.canvas != canvas)))
         return {};
     if (isNeutral(settings, referenceTemperatureOf(source))) {
         ColorPipeline::WorkingImage part = ColorPipeline::sharedCopy(source);
@@ -687,6 +698,9 @@ ColorPipeline::WorkingImage workingRegion(const ColorPipeline::WorkingImage &sou
     if (contrastActive(settings) &&
         !LocalContrast::applyRegion(adjusted, settings.texture, settings.clarity, area.tl(), *measures.contrastLayers))
         return {};
+    if (settings.dehaze != 0 && !Dehaze::applyRegion(adjusted, settings.dehaze, area.tl(), measures.dehazeLayers))
+        return {};
+    ToneCurve::apply(adjusted, settings.toneCurves);
     if (settings.blur > 0)
         adjusted = ipr::gaussianBlurred(adjusted, blurSigma(settings, 1.0));
     if (settings.sharpeningAmount > 0)

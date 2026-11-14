@@ -2,6 +2,9 @@
 #define IPR_CORE_DEHAZE_H
 
 #include "Image.h"
+#include "Types.h"
+
+#include <memory>
 
 // Dehaze following Lightroom's response, fitted on its neutral -> state pairs.
 // Tone (tests/study_dehaze_law.py, etude-loi-voile-v009): the luminance Y gains
@@ -23,7 +26,23 @@ namespace Dehaze {
 // [-100, 100]; empty for none. The smooth tone change is computed at a few values
 // of the map (at most 8, one 64-pixel blur each) and mixed per pixel; a pixel at
 // zero stays untouched.
-void apply(ipr::Image &linearRgb, int amount, double pixelScale = 1.0, const ipr::Image &local = {});
+// The reduced maps of a whole canvas at full resolution (without local values), kept so that a
+// part of it renders alone: they do not depend on the slider; the tone change of each slider value
+// is made from them once, when a part first asks for it. Shared by every copy.
+struct Layers
+{
+    struct State;
+    ipr::Size canvas;
+    std::shared_ptr<State> state;
+};
+
+// record: when given, receives the layers of this render, only at pixelScale 1 without local values.
+void apply(ipr::Image &linearRgb, int amount, double pixelScale = 1.0, const ipr::Image &local = {},
+           Layers *record = nullptr);
+// A part of apply on the whole canvas, the same pixels: linearRgb holds the part at origin of the
+// canvas (every stage before it at full resolution); layers recorded by apply on the whole canvas
+// with the same input, at any slider value. Reads no pixel around the part. False without layers.
+bool applyRegion(ipr::Image &linearRgb, int amount, ipr::Point2i origin, const Layers &layers);
 
 } // namespace Dehaze
 

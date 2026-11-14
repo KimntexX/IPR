@@ -271,6 +271,35 @@ entière ; ensuite, déplacements et curseurs de texture et de clarté ne coûte
 que des tuiles. Restent rendus en image entière : bruit, voile, masques,
 retouches.
 
+### Voile par zone, et ordre de la courbe — 14 novembre 2026
+
+Le voile travaille sur l'image réduite au quart : canal sombre érodé et lissé,
+lumière du ciel (99ᵉ centile, mesure globale), ton local et base ; seule son
+étape finale agit pixel par pixel en pleine résolution, en lisant ces cartes
+agrandies. La mesure globale garde ces cartes réduites (`Dehaze::Layers`), qui
+ne dépendent pas du curseur ; la carte de décalage de ton d'une valeur du
+curseur est faite une fois, à la première zone qui la demande, puis gardée. Une
+zone agrandit ces cartes sur ses pixels et applique l'étape finale : aucune
+marge. Bouger le curseur du voile ne refait pas la mesure.
+
+**Correction.** Le rendu entier applique la courbe de tonalité après la
+texture, la clarté et le voile ; le rendu par zone du 13 novembre l'appliquait
+avant la texture et la clarté. Aucun test ne combinait courbe et clarté :
+`renderChainTests` les combine désormais (courbe après clarté, voile avec tout
+ce qui suit, courbe avant les bandes de la netteté).
+
+Preuve sur RAW réels
+([v004](../validation/raw/adaptive-preview-region-render-v004-20261114T122310Z.json)) :
+104 zones identiques à l'octet près.
+
+| Recette (R6 III 32 Mpx) | Image entière | Mesures globales | Tuile 512 |
+| --- | --- | --- | --- |
+| Tons et couleur + voile 25 | 3,0 s | 3,0 s | 41–44 ms |
+| + courbe, clarté 30, voile 25, netteté 40 | 4,3 s | 3,8 s | 53 ms |
+
+Restent rendus en image entière : bruit (luminance et couleur), masques,
+retouches.
+
 ## Étapes
 
 1. ✅ Banc de mesure (ci-dessus). Reste : profilage de « tons et couleur »
@@ -280,8 +309,8 @@ retouches.
    d'égalité stricte avec la version actuelle).
 3. ✅ Rendu de région pour les étapes « direct » et la géométrie, repli pour les
    autres ; invariant testé (ci-dessus).
-4. Voile, débruitage par zone ; puis masques et retouches. Netteté, flou,
-   grain, texture et clarté ✅ (13 novembre 2026).
+4. Débruitage par zone ; puis masques et retouches. Netteté, flou, grain,
+   texture et clarté ✅ (13 novembre 2026) ; voile ✅ (14 novembre 2026).
 5. ✅ Vue et ordonnanceur : tuiles en spirale, couronne de 512 px, libération et
    abandon du côté opposé au déplacement, masquage au changement de réglage
    (pour les recettes rendues par zone ; les autres gardent l'image entière).
