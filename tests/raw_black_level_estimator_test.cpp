@@ -4,6 +4,8 @@
 #include <cstdint>
 #include <iostream>
 #include <vector>
+#include <random>
+#include <cmath>
 
 namespace {
 
@@ -48,8 +50,39 @@ RawBlackLevelEstimator::Input fixture(std::vector<std::uint16_t> &mosaic)
 
 }
 
+// The read noise of the optical black: a column pattern removed, Gaussian noise of variance 100.
+bool readNoiseOfTheOpticalBlack()
+{
+    using namespace RawBlackLevelEstimator;
+    const int width = 300, height = 400;
+    std::vector<std::uint16_t> mosaic(size_t(width) * height, 2048);
+    std::mt19937 random(3);
+    std::normal_distribution<double> noise(0.0, 10.0);
+    for (int y = 0; y < height; ++y)
+        for (int x = 0; x < 64; ++x)
+            mosaic[size_t(y) * width + x] = std::uint16_t(std::lround(2048 + (x % 7) * 3 + noise(random)));
+    Input input;
+    input.mosaic = mosaic.data();
+    input.rawWidth = width;
+    input.rawHeight = height;
+    input.maximum = 16383;
+    input.hasCfa = true;
+    input.cfaChannels = {{0, 1, 3, 2}};
+    input.maskedAreas.push_back({0, 0, 64, height});
+    const auto variance = readNoise(input);
+    for (double v : variance)
+        if (!check(v > 85.0 && v < 115.0, "the read variance of the optical black, its column pattern removed"))
+            return false;
+    input.maskedAreas.clear();
+    input.marginsAreMasked = true;
+    const auto none = readNoise(input);
+    return check(none == std::array<double, 4>{}, "no declared masked area: no read noise");
+}
+
 int main()
 {
+    if (!readNoiseOfTheOpticalBlack())
+        return 1;
     using namespace RawBlackLevelEstimator;
     std::vector<std::uint16_t> mosaic;
     const auto validInput = fixture(mosaic);
