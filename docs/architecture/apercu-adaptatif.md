@@ -300,6 +300,34 @@ Preuve sur RAW réels
 Restent rendus en image entière : bruit (luminance et couleur), masques,
 retouches.
 
+### Débruitage classique par zone — 14 novembre 2026
+
+Le débruitage de la luminance et de la couleur (`DetailProcessing::reduceNoise`)
+a cinq mesures de l'image entière : le bruit de la luminance, l'équilibre entre
+éclaircissements et assombrissements (deux facteurs), le bruit du guide de
+couleur et la table des médianes de gradient par niveau de luminosité.
+`DetailProcessing::NoiseMeasures` les enregistre pendant le passage complet ;
+une zone les reçoit au lieu de mesurer, et applique ses filtres sur elle-même
+agrandie de leur portée (`reduceNoiseReach`, majorée : somme des chaînes de
+la luminance et de la couleur, jusqu'à 68 pixels au maximum de la couleur).
+
+Contrairement à la texture, la clarté et le voile, ces mesures dépendent des
+valeurs du débruitage : changer ses curseurs refait le passage complet. Le
+débruitage de la luminance sur le signal caméra (expérimental) garde le rendu
+de l'image entière : il mesure son propre modèle sur toute la source.
+
+Preuve sur RAW réels
+([v005](../validation/raw/adaptive-preview-region-render-v005-20261114T123508Z.json)) :
+120 zones identiques à l'octet près.
+
+| Recette (R6 III 32 Mpx) | Image entière | Mesures globales | Tuile 512 |
+| --- | --- | --- | --- |
+| Tons et couleur + bruit 40 / couleur 30 | 4,5 s | 4,6 s | 69–82 ms |
+| + netteté 40 | 4,9 s | 4,5 s | 71–88 ms |
+
+Restent rendus en image entière : masques, retouches, débruitage du signal
+caméra.
+
 ## Étapes
 
 1. ✅ Banc de mesure (ci-dessus). Reste : profilage de « tons et couleur »
@@ -309,8 +337,8 @@ retouches.
    d'égalité stricte avec la version actuelle).
 3. ✅ Rendu de région pour les étapes « direct » et la géométrie, repli pour les
    autres ; invariant testé (ci-dessus).
-4. Débruitage par zone ; puis masques et retouches. Netteté, flou, grain,
-   texture et clarté ✅ (13 novembre 2026) ; voile ✅ (14 novembre 2026).
+4. Masques et retouches. Netteté, flou, grain, texture et clarté ✅
+   (13 novembre 2026) ; voile et débruitage classique ✅ (14 novembre 2026).
 5. ✅ Vue et ordonnanceur : tuiles en spirale, couronne de 512 px, libération et
    abandon du côté opposé au déplacement, masquage au changement de réglage
    (pour les recettes rendues par zone ; les autres gardent l'image entière).

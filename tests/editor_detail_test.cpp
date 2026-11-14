@@ -135,8 +135,10 @@ int main(int argc, char **argv)
     if (!check(tilesMatch(editor, provider) && provider.detailTile(QStringLiteral("tile-0-0")) != firstTile,
                "the new tiles show the new settings")) return 1;
 
-    // The luminance noise reduction measures the noise of the whole image and renders whole: no tile.
+    // The camera-signal noise reduction measures its model on the whole source and renders whole:
+    // no tile.
     const QString previewBefore = editor.imageSource();
+    editor.setDenoiseBeforeProfile(true);
     editor.setAdjustment(QStringLiteral("denoiseLuminance"), 30);
     if (!check(waitFor([&] { return editor.imageSource() != previewBefore; }), "the noise reduction preview is published")) return 1;
     if (!check(waitFor([&] { return !editor.detailImageSource().isEmpty() && settled(editor); }),

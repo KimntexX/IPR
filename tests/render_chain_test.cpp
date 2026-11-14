@@ -353,6 +353,12 @@ void aRegionIsThatPartOfTheWholeRender()
         {"dehaze with everything after", [](Settings &s) {
              s.dehaze = 30; s.clarity = 25; s.texture = 10; s.toneCurves[0] = {{0.0f, 0.05f}, {0.5f, 0.55f}, {1.0f, 0.95f}};
              s.sharpeningAmount = 50; s.grain = 15; s.geometry.rotation = 2.0f; }},
+        {"luminance noise", [](Settings &s) { s.denoiseLuminance = 60; }},
+        {"colour noise", [](Settings &s) { s.denoiseChrominance = 40; }},
+        {"strongest noise reduction", [](Settings &s) { s.denoiseLuminance = 100; s.denoiseChrominance = 100; s.contrast = 15; }},
+        {"noise reduction and everything after", [](Settings &s) {
+             s.denoiseLuminance = 40; s.denoiseChrominance = 25; s.clarity = 20; s.dehaze = 15; s.sharpeningAmount = 40;
+             s.geometry.rotation = 3.0f; }},
         {"together", [](Settings &s) {
              s.brightness = -0.4f; s.contrast = -15; s.temperature = 4300; s.shadows = 40; s.saturation = 20;
              s.toneCurves[0] = {{0.0f, 0.05f}, {0.5f, 0.55f}, {1.0f, 0.95f}};
@@ -380,7 +386,7 @@ void aRegionIsThatPartOfTheWholeRender()
     }
 
     for (const auto &[name, edit] : std::vector<std::pair<const char *, std::function<void(Settings &)>>>{
-             {"denoise", [](Settings &s) { s.denoiseLuminance = 60; }}, {"colour noise", [](Settings &s) { s.denoiseChrominance = 40; }},
+             {"camera-signal denoise", [](Settings &s) { s.denoiseLuminance = 60; s.denoiseBeforeProfile = true; }},
              {"mask", [](Settings &s) { s = withMask(); }}, {"retouch", [](Settings &s) { s = withRemoval(); }}}) {
         Settings settings = neutral();
         edit(settings);
@@ -400,7 +406,9 @@ void aRegionIsThatPartOfTheWholeRender()
              {"dehaze and a curve on a larger canvas", [](Settings &s) {
                   s.dehaze = 35; s.sharpeningAmount = 30; s.toneCurves[0] = {{0.0f, 0.08f}, {1.0f, 0.92f}}; }},
              {"a curve before the sharpening's bands", [](Settings &s) {
-                  s.sharpeningAmount = 60; s.toneCurves[0] = {{0.0f, 0.2f}, {1.0f, 0.8f}}; }}}) {
+                  s.sharpeningAmount = 60; s.toneCurves[0] = {{0.0f, 0.2f}, {1.0f, 0.8f}}; }},
+             {"noise reduction on a larger canvas", [](Settings &s) {
+                  s.denoiseLuminance = 50; s.denoiseChrominance = 60; s.sharpeningAmount = 30; }}}) {
         Settings settings = neutral();
         edit(settings);
         const WorkingImage whole = RenderChain::workingImage(large, settings);

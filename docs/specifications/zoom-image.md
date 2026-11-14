@@ -117,7 +117,8 @@ attendant.
 
 Quand toutes les étapes actives savent se rendre par zone
 (`RenderChain::rendersByRegion` : signal caméra et DCP, tons, couleur,
-courbes, géométrie complète, texture, clarté, voile, flou, netteté et grain), le zoom ne rend plus l'image entière mais des
+courbes, géométrie complète, débruitage, texture, clarté, voile, flou,
+netteté et grain), le zoom ne rend plus l'image entière mais des
 **tuiles de 512 × 512 pixels du fichier**, posées sur l'aperçu agrandi dès
 qu'elles sont prêtes ([conception](../architecture/apercu-adaptatif.md)) :
 
@@ -141,13 +142,14 @@ qu'elles sont prêtes ([conception](../architecture/apercu-adaptatif.md)) :
   elle mesure aussi le bruit de toute son entrée, par bandes de lignes
   (environ 1,1 s sur 32 Mpx) ; avec la texture ou la clarté, elle rend une
   fois l'image entière jusqu'à ces effets pour garder leurs bandes réduites
-  (environ 3,4 s sur 32 Mpx), de même pour les cartes réduites du voile. Ces
+  (environ 3,4 s sur 32 Mpx), de même pour les cartes réduites du voile et
+  les mesures du débruitage (celles-ci refaites quand ses curseurs bougent). Ces
   mesures sont gardées tant que les réglages en amont ne changent pas :
   changer la netteté, la clarté, le voile ou la texture seule ne les refait
   pas.
 
-Les autres réglages (masques, retouches, bruit) gardent le rendu de
-l'image entière décrit ci-dessus ;
+Les autres réglages (masques, retouches, débruitage expérimental du signal
+caméra) gardent le rendu de l'image entière décrit ci-dessus ;
 ils passeront aux tuiles étape par étape. L'outil de recadrage et les
 surimpressions masquent les tuiles et les libèrent.
 

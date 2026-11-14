@@ -3,6 +3,7 @@
 
 #include "ColorPipeline.h"
 #include "Dehaze.h"
+#include "DetailProcessing.h"
 #include "EditRecipe.h"
 #include "LocalContrast.h"
 #include "PerceptualColour.h"
@@ -56,6 +57,7 @@ struct WholeMeasures
     // Texture and clarity's coarse bands, when active; shared, as every copy of the measures reads them.
     std::shared_ptr<const LocalContrast::Layers> contrastLayers;
     Dehaze::Layers dehazeLayers;             // the dehaze's reduced maps, when active
+    DetailProcessing::NoiseMeasures noise;   // the classical noise reduction's, when active
     ToneRecovery::Statistics toneStatistics;  // the source's
 };
 // Whether this recipe renders a region by itself; otherwise a caller renders the whole image and

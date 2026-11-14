@@ -287,6 +287,14 @@ ipr::Image withCoverage(const ipr::Image &rgb, ipr::Image coverage, const Geomet
     return rgbaOutput;
 }
 
+// The noise reduction after the tones: its luminance part moves before the profile when the
+// camera-signal denoise is asked for and the source has a camera signal.
+DetailProcessing::DenoiseSettings denoiseSettingsOf(const ColorPipeline::WorkingImage &source, const Settings &settings)
+{
+    const bool cameraLuminance = settings.denoiseBeforeProfile && source.dcpContext;
+    return {cameraLuminance ? 0 : classicalLuminance(settings), settings.denoiseChrominance};
+}
+
 double blurSigma(const Settings &settings, double pixelScale)
 {
     return static_cast<double>(settings.blur) / 2.0 * pixelScale;
@@ -431,9 +439,7 @@ ColorPipeline::WorkingImage workingImage(const ColorPipeline::WorkingImage &sour
     // With the camera-signal denoise, luminance was denoised before the profile;
     // colour noise is removed here on both paths.
     if (runs(2)) {
-        const bool cameraLuminance = settings.denoiseBeforeProfile && source.dcpContext;
-        DetailProcessing::reduceNoise(adjusted, {cameraLuminance ? 0 : classicalLuminance(settings),
-                                                 settings.denoiseChrominance}, pixelScale, local);
+        DetailProcessing::reduceNoise(adjusted, denoiseSettingsOf(source, settings), pixelScale, local);
         reached(2, adjusted);
     }
     if (runs(3)) {
@@ -474,9 +480,10 @@ int blurReach(const Settings &settings)
 
 // How far the stages after the curves read around a pixel, at full resolution: a region renders
 // what comes before them on itself grown by this much.
-int localReach(const Settings &settings)
+int localReach(const ColorPipeline::WorkingImage &source, const Settings &settings)
 {
-    return LocalContrast::regionReach(settings.texture, settings.clarity) + blurReach(settings) +
+    return DetailProcessing::reduceNoiseReach(denoiseSettingsOf(source, settings), 1.0) +
+           LocalContrast::regionReach(settings.texture, settings.clarity) + blurReach(settings) +
            (settings.sharpeningAmount > 0 ? DetailProcessing::sharpenReach(sharpenSettings(settings), 1.0) : 0) +
            Grain::reach(settings.grain, 1.0);
 }
@@ -573,10 +580,16 @@ bool contrastActive(const Settings &settings)
     return settings.texture != 0 || settings.clarity != 0;
 }
 
-// Stages whose measures need the whole canvas rendered up to them.
-bool wholePassNeeded(const Settings &settings)
+bool denoiseActive(const ColorPipeline::WorkingImage &source, const Settings &settings)
 {
-    return contrastActive(settings) || settings.dehaze != 0;
+    const DetailProcessing::DenoiseSettings denoise = denoiseSettingsOf(source, settings);
+    return denoise.luminance > 0 || denoise.chrominance > 0;
+}
+
+// Stages whose measures need the whole canvas rendered up to them.
+bool wholePassNeeded(const ColorPipeline::WorkingImage &source, const Settings &settings)
+{
+    return denoiseActive(source, settings) || contrastActive(settings) || settings.dehaze != 0;
 }
 
 } // namespace
@@ -585,8 +598,9 @@ bool rendersByRegion(const Settings &settings)
 {
     // The stages that read far around a pixel or measure the whole image come one by one; until
     // then, their recipes render whole.
+    // The camera-signal luminance denoise measures its own model on the whole source: whole.
     return !LocalAdjustments::active(settings.localMasks) && !Retouch::active(settings.retouches) &&
-           classicalLuminance(settings) == 0 && settings.denoiseChrominance == 0;
+           !(settings.denoiseBeforeProfile && classicalLuminance(settings) != 0);
 }
 
 QByteArray wholeMeasuresKey(const Settings &s)
@@ -600,6 +614,9 @@ QByteArray wholeMeasuresKey(const Settings &s)
     const Geometry::Settings &g = s.geometry;
     stream << qint32(g.quarterTurns) << g.flipHorizontal << g.flipVertical << g.rotation << qint32(g.vertical)
            << qint32(g.horizontal) << qint32(g.aspect) << qint32(g.scale) << qint32(g.offsetX) << qint32(g.offsetY);
+    // The noise reduction's measures read every setting before it and its own amounts.
+    if (classicalLuminance(s) != 0 || s.denoiseChrominance != 0)
+        stream << stageKeys(s)[2] << s.denoiseBeforeProfile;
     // Texture and clarity: their layers read every setting before them, and the clarity's the
     // texture's output; not their own slider values.
     if (contrastActive(s))
@@ -625,7 +642,7 @@ bool measureWhole(const ColorPipeline::WorkingImage &source, const Settings &set
         return false;
     const bool neutral = isNeutral(settings, referenceTemperatureOf(source));
     const bool sharpens = settings.sharpeningAmount > 0 && !neutral;
-    const bool contrast = wholePassNeeded(settings) && !neutral;
+    const bool contrast = wholePassNeeded(source, settings) && !neutral;
     // The camera stage of the whole source, when a measure reads it: once for all of them.
     ipr::Image camera;
     if (Geometry::resamples(settings.geometry) || sharpens || contrast) {
@@ -647,6 +664,7 @@ bool measureWhole(const ColorPipeline::WorkingImage &source, const Settings &set
             measures = {};
             return false;
         }
+        DetailProcessing::reduceNoise(whole, denoiseSettingsOf(source, settings), 1.0, {}, &measures.noise);
         auto layers = std::make_shared<LocalContrast::Layers>();
         LocalContrast::apply(whole, settings.texture, settings.clarity, 1.0, {}, layers.get());
         measures.contrastLayers = std::move(layers);
@@ -681,7 +699,8 @@ ColorPipeline::WorkingImage workingRegion(const ColorPipeline::WorkingImage &sou
         (Geometry::resamples(settings.geometry) && measures.warpFloor.size() != 3) ||
         (settings.sharpeningAmount > 0 && !measures.sharpenNoiseSigma) ||
         (contrastActive(settings) && (!measures.contrastLayers || measures.contrastLayers->canvas != canvas)) ||
-        (settings.dehaze != 0 && (!measures.dehazeLayers.state || measures.dehazeLayers.canvas != canvas)))
+        (settings.dehaze != 0 && (!measures.dehazeLayers.state || measures.dehazeLayers.canvas != canvas)) ||
+        (denoiseActive(source, settings) && !measures.noise.valid))
         return {};
     if (isNeutral(settings, referenceTemperatureOf(source))) {
         ColorPipeline::WorkingImage part = ColorPipeline::sharedCopy(source);
@@ -691,10 +710,12 @@ ColorPipeline::WorkingImage workingRegion(const ColorPipeline::WorkingImage &sou
 
     // The pixel-by-pixel stages on the region grown by what the local stages read, those stages,
     // then the region: a pixel near the edge of the grown area is wrong only within the margin.
-    const ipr::Recti area = grownWithin(region, localReach(settings), canvas);
+    const ipr::Recti area = grownWithin(region, localReach(source, settings), canvas);
     ipr::Image adjusted = regionBeforeLocal(source, settings, area, measures);
     if (adjusted.empty())
         return {};
+    if (denoiseActive(source, settings))
+        DetailProcessing::reduceNoise(adjusted, denoiseSettingsOf(source, settings), 1.0, {}, nullptr, &measures.noise);
     if (contrastActive(settings) &&
         !LocalContrast::applyRegion(adjusted, settings.texture, settings.clarity, area.tl(), *measures.contrastLayers))
         return {};

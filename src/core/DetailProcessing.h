@@ -36,8 +36,24 @@ struct SharpenSettings
 // look at the whole image: each runs at the few values the map needs (at most 5,
 // so up to 60 bytes a pixel while it renders), then the results mix per pixel; a
 // pixel at zero stays untouched.
+// What the noise reduction measures on the whole image: kept so that a part of it renders alone,
+// the same pixels. Valid after a render without local values that recorded them.
+struct NoiseMeasures
+{
+    bool valid = false;
+    float lumaSigma = 0.0f;
+    float positiveScale = 1.0f, negativeScale = 1.0f;   // the balance of the luminance changes
+    float guideSigma = 0.0f;                            // the colour guide's noise
+    std::vector<float> levelCenters, levelMedians;      // the colour edges' typical gradient per level
+};
+
+// record: receives the measures of this render (whole image, no local value). given: the whole
+// image's measures, used instead of measuring this image, a part of it grown by reduceNoiseReach.
 void reduceNoise(ipr::Image &linearRgb, const DenoiseSettings &settings, double pixelScale = 1.0,
-                 const LocalValues::Maps &local = {});
+                 const LocalValues::Maps &local = {}, NoiseMeasures *record = nullptr,
+                 const NoiseMeasures *given = nullptr);
+// How far around a pixel the noise reduction reads, in pixels of this image.
+int reduceNoiseReach(const DenoiseSettings &settings, double pixelScale = 1.0);
 // The sharpening radius is in pixels of the full image. local: per-pixel Sharpening
 // added to the amount (LocalValues), the sum within [0, 200]. noiseSigma: the noise the
 // sharpening measures on its whole input (sharpenNoiseSigma), given when this image is a part

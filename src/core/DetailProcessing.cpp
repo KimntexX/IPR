@@ -166,7 +166,8 @@ float softThreshold(float value, float threshold)
 }
 
 ipr::Image denoiseLuminance(const ipr::Image &plane, const ipr::Image &protectionMap,
-                            float noiseSigma, int amount)
+                            float noiseSigma, int amount, NoiseMeasures *record = nullptr,
+                            const NoiseMeasures *given = nullptr)
 {
     if (amount <= 0 || noiseSigma <= kDenoiseSigmaEpsilon)
         return plane.share();
@@ -210,8 +211,15 @@ ipr::Image denoiseLuminance(const ipr::Image &plane, const ipr::Image &protectio
             negative += std::max(0.0, -change);
         }
     }
-    const float positiveScale = positive > 0.0 ? static_cast<float>(std::min(1.0, negative / positive)) : 1.0f;
-    const float negativeScale = negative > 0.0 ? static_cast<float>(std::min(1.0, positive / negative)) : 1.0f;
+    // A part of the image takes the balance of the whole one (given).
+    const float positiveScale = given ? given->positiveScale
+        : positive > 0.0 ? static_cast<float>(std::min(1.0, negative / positive)) : 1.0f;
+    const float negativeScale = given ? given->negativeScale
+        : negative > 0.0 ? static_cast<float>(std::min(1.0, positive / negative)) : 1.0f;
+    if (record) {
+        record->positiveScale = positiveScale;
+        record->negativeScale = negativeScale;
+    }
     for (int y = 0; y < plane.height(); ++y) {
         const float *original = plane.row<float>(y);
         float *target = result.mutableRow<float>(y);
@@ -245,10 +253,15 @@ ipr::Image guidedFilter(const ipr::Image &guide, const ipr::Image &plane, int ra
     return ipr::mapped(boxMean(slope, radius), guide, boxMean(b, radius), [](float s, float g, float q) { return s * g + q; });
 }
 
+ipr::Image levelMap(const ipr::Image &level, const std::vector<float> &centers, const std::vector<float> &medians);
+
 // Median of value per 1 EV bin of level, interpolated back to each pixel: the
 // typical value at that brightness, sampled on a sparse grid.
-ipr::Image levelMedian(const ipr::Image &value, const ipr::Image &level)
+ipr::Image levelMedian(const ipr::Image &value, const ipr::Image &level, NoiseMeasures *record = nullptr,
+                       const NoiseMeasures *given = nullptr)
 {
+    if (given)
+        return levelMap(level, given->levelCenters, given->levelMedians);
     const ipr::Extremes range = ipr::extremesOf(level);
     const double low = range.smallest, high = range.largest;
     const int first = static_cast<int>(std::floor(low));
@@ -273,13 +286,23 @@ ipr::Image levelMedian(const ipr::Image &value, const ipr::Image &level)
         centers.push_back(static_cast<float>(first + i) + 0.5f);
         medians.push_back(*middle);
     }
-    ipr::Image result = ipr::filled(value.size(), ipr::Depth::F32, 1, 0.0);
+    if (record) {
+        record->levelCenters = centers;
+        record->levelMedians = medians;
+    }
+    return levelMap(level, centers, medians);
+}
+
+// The typical value at each pixel's level, from the medians per level (empty: zero everywhere).
+ipr::Image levelMap(const ipr::Image &level, const std::vector<float> &centers, const std::vector<float> &medians)
+{
+    ipr::Image result = ipr::filled(level.size(), ipr::Depth::F32, 1, 0.0);
     if (centers.empty())
         return result;
-    for (int y = 0; y < value.height(); ++y) {
+    for (int y = 0; y < level.height(); ++y) {
         const float *l = level.row<float>(y);
         float *target = result.mutableRow<float>(y);
-        for (int x = 0; x < value.width(); ++x) {
+        for (int x = 0; x < level.width(); ++x) {
             const auto upper = std::upper_bound(centers.begin(), centers.end(), l[x]);
             if (upper == centers.begin()) {
                 target[x] = medians.front();
@@ -299,7 +322,8 @@ ipr::Image levelMedian(const ipr::Image &value, const ipr::Image &level)
 // gradient stands well above its typical value at that brightness, dilated over
 // the filter window so the window does not reach across the edge either.
 ipr::Image colourEdgeProtection(const ipr::Image &chromaOrange, const ipr::Image &chromaGreen,
-                                const ipr::Image &level, double edgeSigma, int radius)
+                                const ipr::Image &level, double edgeSigma, int radius, NoiseMeasures *record,
+                                const NoiseMeasures *given)
 {
     ipr::Image gradient = ipr::Image::zeros(chromaOrange.size(), ipr::Depth::F32, 1);
     for (const ipr::Image *plane : {&chromaOrange, &chromaGreen}) {
@@ -308,7 +332,7 @@ ipr::Image colourEdgeProtection(const ipr::Image &chromaOrange, const ipr::Image
         gradient = ipr::mapped(gradient, gx, gy, [](float sum, float x, float y) { return sum + (x * x + y * y); });
     }
     gradient = ipr::squareRoot(gradient);
-    const ipr::Image typical = levelMedian(gradient, level);
+    const ipr::Image typical = levelMedian(gradient, level, record, given);
     ipr::Image protection = ipr::Image::create(gradient.size(), ipr::Depth::F32, 1);
     for (int y = 0; y < gradient.height(); ++y) {
         const float *edge = gradient.row<float>(y);
@@ -327,7 +351,7 @@ ipr::Image colourEdgeProtection(const ipr::Image &chromaOrange, const ipr::Image
 // 25, as in Lightroom; the radius follows the weight. Colour edges that
 // luminance does not show are kept (colourEdgeProtection).
 void denoiseChrominance(const ipr::Image &luma, ipr::Image *chromaOrange, ipr::Image *chromaGreen, int amount,
-                        double pixelScale)
+                        double pixelScale, NoiseMeasures *record = nullptr, const NoiseMeasures *given = nullptr)
 {
     const float strength = static_cast<float>(std::clamp(amount, 0, 100)) / 100.0f;
     const float weight = 1.0f - std::pow(1.0f - strength, 8.0f);
@@ -351,10 +375,13 @@ void denoiseChrominance(const ipr::Image &luma, ipr::Image *chromaOrange, ipr::I
     const double guideSigma = scaled(kChromaGuideSigma);
     const ipr::Image guide = ipr::gaussianBlurred(logLuma, guideSigma, ipr::BlurBorder::LastPixel);
     const ipr::Image level = ipr::gaussianBlurred(guide, kChromaLevelSigma, ipr::BlurBorder::LastPixel);
-    const float guideNoise = kChromaGuideNoise * estimateDenoiseSigma(fineGuide);
+    const float guideSigma0 = given ? given->guideSigma : estimateDenoiseSigma(fineGuide);
+    if (record)
+        record->guideSigma = guideSigma0;
+    const float guideNoise = kChromaGuideNoise * guideSigma0;
     const float eps = guideNoise * guideNoise + 1e-12f;
     const ipr::Image colourEdge = colourEdgeProtection(*chromaOrange, *chromaGreen, level,
-                                                       scaled(kChromaEdgeSigma), radius);
+                                                       scaled(kChromaEdgeSigma), radius, record, given);
 
     for (ipr::Image *plane : {chromaOrange, chromaGreen}) {
         const ipr::Image smoothed = guidedFilter(guide, *plane, radius, eps);
@@ -514,6 +541,30 @@ void reduceNoiseLocally(ipr::Image &linearRgb, const DenoiseSettings &settings, 
 
 }
 
+int reduceNoiseReach(const DenoiseSettings &settings, double pixelScale)
+{
+    // How far each filter reads, added along the chain: what a part needs around it.
+    const auto reach = [](double sigma) { return int(ipr::gaussianHalfKernel(sigma).size()) - 1; };
+    int total = 0;
+    if (settings.chrominance > 0) {
+        const float strength = static_cast<float>(std::clamp(settings.chrominance, 0, 100)) / 100.0f;
+        const float weight = 1.0f - std::pow(1.0f - strength, 8.0f);
+        const int radius = std::max(1, static_cast<int>(std::lround(
+            (kChromaRadiusAtZero + (kChromaRadiusAtMaximum - kChromaRadiusAtZero) * weight) * pixelScale)));
+        const auto scaled = [pixelScale](double sigma) { return std::max(0.8, sigma * pixelScale); };
+        const int median = (pixelScale >= 0.6 ? 5 : 3) / 2;
+        // The guide (blurred log luminance) and its level, the colour edges (blur, Sobel, maximum),
+        // the guided filter (two box means): the largest chain from the input to the output.
+        const int guide = reach(scaled(kChromaGuideSigma));
+        const int edge = median + reach(scaled(kChromaEdgeSigma)) + 1 + radius;
+        const int filter = std::max(median, guide) + 2 * radius;
+        total += std::max({guide + reach(kChromaLevelSigma) + 1 + radius, edge, filter}) + 1;
+    }
+    if (settings.luminance > 0)
+        total += reach(kFineSigma) + std::max(reach(kCoarseSigma), 1) + 1;
+    return total;
+}
+
 int sharpenNoiseStep(const ipr::Size &plane)
 {
     const double total = double(plane.width) * double(plane.height);
@@ -556,8 +607,10 @@ bool denoiseFromAmount(int amount, DenoiseSettings &settings)
 }
 
 void reduceNoise(ipr::Image &linearRgb, const DenoiseSettings &settings, double pixelScale,
-                 const LocalValues::Maps &local)
+                 const LocalValues::Maps &local, NoiseMeasures *record, const NoiseMeasures *given)
 {
+    if (record)
+        *record = {};
     if (linearRgb.empty() || linearRgb.depth() != ipr::Depth::F32 || linearRgb.channels() != 3) return;
     const ipr::Image none;
     const auto usable = [&](LocalValues::Parameter parameter) -> const ipr::Image & {
@@ -584,14 +637,18 @@ void reduceNoise(ipr::Image &linearRgb, const DenoiseSettings &settings, double 
         const ipr::Image divisor = clampedLuma(luma);
         chromaOrange = ipr::divided(chromaOrange, divisor);
         chromaGreen = ipr::divided(chromaGreen, divisor);
-        denoiseChrominance(luma, &chromaOrange, &chromaGreen, settings.chrominance, pixelScale);
+        denoiseChrominance(luma, &chromaOrange, &chromaGreen, settings.chrominance, pixelScale, record, given);
     }
     if (settings.luminance > 0) {
-        const float lumaSigma = estimateDenoiseSigma(luma);
+        const float lumaSigma = given ? given->lumaSigma : estimateDenoiseSigma(luma);
+        if (record)
+            record->lumaSigma = lumaSigma;
         const ipr::Image lumaGuide = ipr::gaussianBlurred(luma, kFineSigma, ipr::BlurBorder::LastPixel);
         luma = denoiseLuminance(luma, structureProtection(lumaGuide, lumaSigma),
-                                lumaSigma, settings.luminance);
+                                lumaSigma, settings.luminance, record, given);
     }
+    if (record)
+        record->valid = true;
     if (settings.chrominance > 0) {
         const ipr::Image factor = clampedLuma(luma);
         chromaOrange = ipr::multiplied(chromaOrange, factor);
