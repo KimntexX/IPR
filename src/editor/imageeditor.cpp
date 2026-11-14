@@ -1538,6 +1538,14 @@ QString ImageEditor::neuralDenoiseUnavailableReason() const
     return m_neuralReason;
 }
 
+bool ImageEditor::neuralNoiseLawEstimated() const
+{
+    if (!rawImage() || !m_neuralAllowed)
+        return false;
+    const auto service = neuralService();
+    return service && service->estimated(m_sourceMetadata.cameraMake, m_sourceMetadata.cameraModel, m_sourceMetadata.iso);
+}
+
 void ImageEditor::setNeuralDenoisePreferences(bool enabled, const QString &modelPath)
 {
     if (enabled == m_neuralAllowed && modelPath == m_neuralModelPath) return;

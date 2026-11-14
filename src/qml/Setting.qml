@@ -649,6 +649,15 @@ Item {
                     onToggled: editor.setNeuralDenoiseEnabled(checked)
                 }
                 Label {
+                    objectName: "photoNeuralNoiseLawEstimated"
+                    Layout.fillWidth: true
+                    visible: editor.rawImage && editor.neuralDenoiseAllowed && editor.neuralNoiseLawEstimated
+                        && editor.neuralDenoiseUnavailableReason.length === 0
+                    text: qsTr("Boîtier non qualifié : le bruit est estimé sur la photo. Pour un débruitage IA le plus performant et fiable, une qualification du bruit du boîtier est recommandée.")
+                    color: root.secondaryTextColor
+                    wrapMode: Text.WordWrap
+                }
+                Label {
                     objectName: "photoNeuralDenoiseReason"
                     Layout.fillWidth: true
                     visible: editor.rawImage && editor.neuralDenoiseAllowed && editor.neuralDenoiseUnavailableReason.length > 0
