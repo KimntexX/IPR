@@ -11160,3 +11160,32 @@ s'appuyer sur le bruit de lecture seul quand le signal manque.
 **Conséquence.** Pas de borne à bas ISO pour la qualité : l'estimateur peut être
 porté tel quel, avec la garde des images sans signal. Retirer aussi le bruit
 fixe à bas ISO est un choix de rendu, à confirmer par l'utilisateur.
+
+## 14 novembre 2026 — débruitage IA ouvert aux boîtiers non qualifiés, loi estimée
+
+Décision de l'utilisateur du 13 novembre : l'estimateur est le chemin par
+défaut ; une qualification du bruit du boîtier reste recommandée. Sur cette
+branche, avec l'estimateur porté en C++ (`patch_noise`, rapport bruit §475) :
+
+- `NeuralCfa::Service` accepte un boîtier ou un ISO absent du catalogue ; sa
+  loi est estimée sur la photo au décodage (`estimated()` le dit avant tout
+  décodage). Un RAW sans noir optique déclaré, d'où lire le bruit de lecture,
+  reste ouvert sans le réseau, avec sa raison.
+- L'éditeur expose `neuralNoiseLawEstimated` ; le panneau Bruit affiche alors :
+  « Boîtier non qualifié : le bruit est estimé sur la photo. Pour un débruitage
+  IA le plus performant et fiable, une qualification du bruit du boîtier est
+  recommandée. »
+- Le CR2 de l'EOS 60D ne renseigne pas les zones de noir optique propres à
+  Canon : le bruit de lecture se lit alors sur les zones masquées que le format
+  déclare (le noir garde sa propre lecture, aucun rendu ne change).
+
+Décodage de bout en bout avec le modèle de la bêta-1 (sonde manuelle
+`neuralEstimatedDecodeProbe`) : IMG_3089 (60D, 3200 ISO), IMG_4002 (60D,
+100 ISO) et IMG_6302 (60D, 6400 ISO) passent par le réseau avec une loi
+estimée, en 4,0 à 4,3 s ; 6V1A9819 (R6 III, 4000 ISO) avec sa loi qualifiée.
+Tests : `neuralCfaTests` avec le vrai modèle (60D et ISO hors catalogue
+acceptés et dits estimés ; refusés quand l'estimation est coupée),
+`editorNeuralIntegration` (pas de mention sur un boîtier qualifié).
+
+Reste avant la livraison : la revue visuelle de l'utilisateur sur des RAW
+d'autres boîtiers (60D, R7, puis 2000D et 6D Mark II annoncés).

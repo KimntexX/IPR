@@ -114,7 +114,7 @@ Service::~Service() = default;
 bool Service::available(const QString &make, const QString &model, double iso, QString *reason) const
 {
     QString why;
-    if (NoiseLaw::resolve(m_catalog, make, model, int(std::lround(iso)), &why))
+    if (NoiseLaw::resolve(m_catalog, make, model, int(std::lround(iso)), &why) || m_estimateUnqualified)
         return true;
     // A camera of the catalogue answers for some ISO: the photo's ISO is outside its laws.
     const bool knownCamera = NoiseLaw::resolve(m_catalog, make, model, 6400, nullptr).has_value()
@@ -122,6 +122,11 @@ bool Service::available(const QString &make, const QString &model, double iso, Q
     fail(reason, knownCamera ? QStringLiteral("Débruitage IA indisponible à ISO %1 pour ce boîtier.").arg(int(std::lround(iso)))
                              : QStringLiteral("Débruitage IA indisponible pour ce boîtier."));
     return false;
+}
+
+bool Service::estimated(const QString &make, const QString &model, double iso) const
+{
+    return m_estimateUnqualified && !NoiseLaw::resolve(m_catalog, make, model, int(std::lround(iso)), nullptr);
 }
 
 RawDevelopment::CfaStage Service::stageFor(const RawInput::Input &input, float strength,
@@ -136,6 +141,7 @@ RawDevelopment::CfaStage Service::stageFor(const RawInput::Input &input, float s
     settings.catalog = &m_catalog;
     settings.measuredPattern = m_manifest.measuredPattern;
     settings.networkDivisor = m_manifest.inputDivisor;
+    settings.estimateUnqualified = m_estimateUnqualified;
     settings.report = std::move(report);
     const std::shared_ptr<ipr::neural::NeuralRawDenoiser> denoiser = m_denoiser;
     settings.denoiser = [denoiser, strength, cancelled](const CfaNoiseStage::Planes &planes,

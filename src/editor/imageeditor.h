@@ -87,6 +87,8 @@ class ImageEditor final : public QObject
     Q_PROPERTY(bool neuralDenoiseActive READ neuralDenoiseActive NOTIFY rawDevelopmentChanged)
     Q_PROPERTY(int neuralDenoiseStrength READ neuralDenoiseStrength NOTIFY rawDevelopmentChanged)
     Q_PROPERTY(QString neuralDenoiseUnavailableReason READ neuralDenoiseUnavailableReason NOTIFY rawDevelopmentChanged)
+    // The photo's camera or ISO has no qualified noise law: the network's is estimated from the photo.
+    Q_PROPERTY(bool neuralNoiseLawEstimated READ neuralNoiseLawEstimated NOTIFY rawDevelopmentChanged)
     Q_PROPERTY(QObject *stacking READ stacking CONSTANT)
     Q_PROPERTY(QUrl folder READ folder NOTIFY folderChanged)
     Q_PROPERTY(QString imageSource READ imageSource NOTIFY previewChanged)
@@ -333,6 +335,7 @@ public:
     bool neuralDenoiseActive() const { return m_neuralApplied && m_neuralStrength > 0; }
     int neuralDenoiseStrength() const { return m_neuralStrength > 0 ? m_neuralStrength : 50; }
     QString neuralDenoiseUnavailableReason() const;
+    bool neuralNoiseLawEstimated() const;
     QString neuralDenoiseEngine() const;
     Q_INVOKABLE void setColorMixer(int band, int hue, int saturation,
                                    int luminance);
