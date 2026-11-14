@@ -47,6 +47,7 @@ struct NormalizedLaw
 
 // The catalogue gives the law per raster site of the measured camera's own 2x2 cell;
 // `measuredPattern` is that cell, so each site's law lands on its colour's plane.
+// A positive slope is required, except for an estimated law (zero: no signal to measure it).
 std::optional<NormalizedLaw> normalize(const NoiseLaw::Law &law, const Pattern &measuredPattern, double divisor);
 
 // The network on canonical planes: denoised planes of the same shape, or nullopt and a reason.
@@ -58,6 +59,9 @@ struct Settings
     Pattern measuredPattern{};   // the 2x2 cell of the catalogue's camera
     double networkDivisor = 0.0; // counts per network unit, from the model's training normalization
     PlaneDenoiser denoiser;
+    // A camera or ISO the catalogue lacks: estimate the law from the photo itself
+    // (NoiseLaw::estimate) instead of refusing. Off until the editor says so to the user.
+    bool estimateUnqualified = false;
     // Called once per run of the stage: true when the network's planes replaced the mosaic,
     // false with the reason when the photo was left as decoded. Optional.
     std::function<void(bool applied, const QString &reason)> report;

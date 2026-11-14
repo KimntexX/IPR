@@ -1,6 +1,8 @@
 #include "RawBlackLevelEstimator.h"
 
 #include <algorithm>
+#include <cmath>
+#include <cstddef>
 #include <vector>
 
 namespace RawBlackLevelEstimator {
@@ -93,6 +95,63 @@ Result measure(const Input &input)
     }
     result.status = Status::Measured;
     return result;
+}
+
+namespace {
+
+double medianOf(std::vector<double> values)
+{
+    if (values.empty())
+        return 0.0;
+    const size_t middle = values.size() / 2;
+    std::nth_element(values.begin(), values.begin() + std::ptrdiff_t(middle), values.end());
+    const double upper = values[middle];
+    if (values.size() % 2)
+        return upper;
+    const double lower = *std::max_element(values.begin(), values.begin() + std::ptrdiff_t(middle));
+    return (lower + upper) / 2.0;
+}
+
+}
+
+std::array<double, 4> readNoise(const Input &input)
+{
+    std::array<double, 4> variance{};
+    const int stride = input.rowStrideSamples ? input.rowStrideSamples : input.rawWidth;
+    if (!input.mosaic || !input.hasCfa || input.maskedAreas.empty() || input.rawWidth <= 0 || input.rawHeight <= 0 ||
+        stride < input.rawWidth)
+        return variance;
+    for (int channel : input.cfaChannels)
+        if (channel < 0 || channel >= 4)
+            return variance;
+    std::array<std::vector<double>, 4> residuals;
+    for (const auto &area : input.maskedAreas) {
+        if (area.left < 0 || area.top < 0 || area.width <= 0 || area.height <= 0 ||
+            area.width > input.rawWidth - area.left || area.height > input.rawHeight - area.top)
+            return variance;
+        for (int x = area.left; x < area.left + area.width; ++x) {
+            for (int parity = 0; parity < 2; ++parity) {
+                const int channel = input.cfaChannels[size_t(parity * 2 + (x % 2))];
+                std::vector<double> column;
+                for (int y = area.top + ((area.top % 2) != parity ? 1 : 0); y < area.top + area.height; y += 2)
+                    column.push_back(double(input.mosaic[static_cast<std::size_t>(y) * stride + x]));
+                const double middle = medianOf(column);
+                for (double value : column)
+                    residuals[size_t(channel)].push_back(value - middle);
+            }
+        }
+    }
+    for (int channel = 0; channel < 4; ++channel) {
+        std::vector<double> &values = residuals[size_t(channel)];
+        if (values.size() < 1024)
+            continue;
+        const double centre = medianOf(values);
+        for (double &value : values)
+            value = std::abs(value - centre);
+        const double spread = medianOf(values) / 0.6745;
+        variance[size_t(channel)] = spread * spread;
+    }
+    return variance;
 }
 
 unsigned int tolerance(int maximum)

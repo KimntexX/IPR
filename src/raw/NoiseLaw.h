@@ -1,6 +1,8 @@
 #ifndef IPR_RAW_NOISELAW_H
 #define IPR_RAW_NOISELAW_H
 
+#include "Image.h"
+
 #include <QByteArray>
 #include <QString>
 #include <array>
@@ -40,7 +42,7 @@ struct Catalog
     std::vector<CatalogCamera> cameras;
 };
 
-enum class Source { Measured, Interpolated };
+enum class Source { Measured, Interpolated, Estimated };
 
 struct Law
 {
@@ -60,6 +62,19 @@ std::optional<Catalog> loadCatalog(const QString &path, QString *reason);
 // gives nullopt and a reason.
 std::optional<Law> resolve(const Catalog &catalog, const QString &make, const QString &model,
                            int iso, QString *reason);
+
+// The law of one photo from its own pixels, for a camera the catalogue does not hold. Per site of
+// the 2x2 cell in raster order: the read variance as measured on the optical black
+// (readVariance, counts^2), the shot slope from the flattest 16-pixel blocks of the site's plane
+// (residual to its four neighbours, robust variance, its tenth percentile per signal class
+// corrected for pure noise, read variance removed, over the signal; the lower half of the
+// classes, texture only adding). mosaic: U16, the visible area in counts; black per site; white
+// in counts. A slope the photo cannot show (no unsaturated signal, near-black frame) is zero:
+// the read noise alone. nullopt with a reason on an unusable input or an unknown read variance.
+// The single-RAW study: docs/validation/analyses/analyse-restauration-neuronale.md (12 and
+// 13 November 2026).
+std::optional<Law> estimate(const ipr::Image &mosaic, const std::array<double, 4> &black,
+                            const std::array<double, 4> &readVariance, double white, QString *reason);
 
 }
 

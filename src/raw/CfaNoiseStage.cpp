@@ -99,7 +99,10 @@ std::optional<NormalizedLaw> normalize(const NoiseLaw::Law &law, const Pattern &
     NormalizedLaw normalized;
     for (int site = 0; site < 4; ++site) {
         const NoiseLaw::PositionLaw &position = law.positions[size_t(site)];
-        if (!(position.shotSlope > 0.0) || !(position.readVariance > 0.0))
+        // An estimated law may have no slope (a photo without signal): its read noise alone.
+        const bool slopeUsable = law.source == NoiseLaw::Source::Estimated ? position.shotSlope >= 0.0
+                                                                           : position.shotSlope > 0.0;
+        if (!slopeUsable || !(position.readVariance > 0.0))
             return std::nullopt;
         const int plane = (*planeAt)[size_t(site / 2)][size_t(site % 2)];
         normalized.a[size_t(plane)] = float(position.shotSlope / divisor);
@@ -118,10 +121,28 @@ RawDevelopment::CfaStage makeStage(const RawInput::Input &input, const Settings 
     if (!settings.catalog || !settings.denoiser || !usableDivisor(settings.networkDivisor))
         return refuse(QStringLiteral("neural CFA stage not configured"));
     QString why;
-    const auto law = NoiseLaw::resolve(*settings.catalog, input.make, input.model, int(std::lround(input.iso)), &why);
+    auto law = NoiseLaw::resolve(*settings.catalog, input.make, input.model, int(std::lround(input.iso)), &why);
+    Pattern lawPattern = settings.measuredPattern;
+    if (!law && settings.estimateUnqualified) {
+        // The photo's own law, per site of its own cell.
+        std::array<double, 4> black{}, readVariance{};
+        for (int y = 0; y < 2; ++y)
+            for (int x = 0; x < 2; ++x) {
+                const int colour = input.pattern[size_t(y)][size_t(x)];
+                if (colour < 0 || colour > 3)
+                    return refuse(QStringLiteral("CFA pattern unusable for the noise estimate"));
+                black[size_t(y * 2 + x)] = input.black[size_t(colour)];
+                readVariance[size_t(y * 2 + x)] = input.readVariance[size_t(colour)];
+            }
+        QString estimateWhy;
+        law = NoiseLaw::estimate(input.mosaic, black, readVariance, input.white, &estimateWhy);
+        if (!law)
+            return refuse(why + QStringLiteral("; ") + estimateWhy);
+        lawPattern = input.pattern;
+    }
     if (!law)
         return refuse(why);
-    const auto normalized = normalize(*law, settings.measuredPattern, settings.networkDivisor);
+    const auto normalized = normalize(*law, lawPattern, settings.networkDivisor);
     if (!normalized || !planeOfSite(input.pattern))
         return refuse(QStringLiteral("noise law or CFA pattern unusable for the neural stage"));
     const double divisor = settings.networkDivisor;
