@@ -21930,7 +21930,48 @@ le chemin du débruitage neuronal au 60D, décision réservée à l'utilisateur
 d'abord de référence à l'estimateur sur une seule photo (rapport de
 restauration neuronale, même date).
 
-## Conclusion actuelle — 13 novembre 2026
+## 475. Estimateur de bruit sur une photo, porté en C++ — 14 novembre 2026
+
+Décision de l'utilisateur du 13 novembre : l'estimateur de la loi de bruit
+sur une seule photo est porté tel quel (pas de borne à bas ISO, garde pour les
+images sans signal), pour les boîtiers que le catalogue ne qualifie pas
+([issue #34](https://github.com/KimntexX/IPR/issues/34)).
+
+- **Bruit de lecture** : `RawBlackLevelEstimator::readNoise`, sur la zone
+  de noir optique déclarée (Canon : zone gauche), médiane de chaque colonne
+  retirée, puis variance robuste (MAD / 0,6745)² par canal CFA ; zéro sans
+  zone déclarée. Le décodeur la mesure avec le noir et la transmet dans
+  `RawInput::Input::readVariance`.
+- **Pente** : `NoiseLaw::estimate`, même algorithme que
+  `tests/neural/estimate_single_raw_law.py` (blocs de 16, résidu aux quatre
+  voisins, dixième centile par classe de signal corrigé par sa valeur pour un
+  bruit pur, moitié basse des classes). Une photo sans signal mesurable
+  donne une pente nulle, jamais négative : le bruit de lecture seul.
+- **Étape CFA** : `CfaNoiseStage::Settings::estimateUnqualified` estime la
+  loi d'un boîtier ou d'un ISO absent du catalogue au lieu de refuser. Le
+  réglage reste désactivé : l'ouverture du débruitage IA aux boîtiers non
+  qualifiés attend l'indication « qualifié / estimé » dans l'éditeur et la
+  validation de l'utilisateur.
+
+Comparaison avec la version Python (sonde manuelle `noiseLawEstimateProbe`),
+pente par site en ordre raster :
+
+| Fichier | C++ | Python |
+| --- | --- | --- |
+| IMG_3089 (60D, 3200 ISO) | 13,48 / 13,46 / 13,21 / 13,52 | 13,48 / 13,50 / 13,26 / 13,57 |
+| IMG_4002 (60D, 100 ISO) | 0,800 / 0,725 / 0,718 / 0,813 | 0,800 / 0,727 / 0,720 / 0,813 |
+| 6V1A9819 (R6 III, 4000 ISO) | 7,71 / 7,88 / 7,31 / 9,23 | 7,71 / 7,28 / 7,31 / 9,23 |
+
+Les écarts viennent du bruit de lecture : la zone de noir optique déclarée
+diffère des colonnes lues par la version Python, et l'écart absolu médian de
+valeurs entières avance par marches (sur le R6 III, 219,8 au lieu de 266 pour
+un site, d'où 7,88 au lieu de 7,28). Tests : `noiseLawTests` (pente d'une
+mosaïque synthétique de loi connue à ±12 %, image noire et image saturée sans
+pente négative, refus), `rawBlackLevelEstimatorTests` (variance d'un noir à
+motif de colonnes), `cfaNoiseStageTests` (repli sur l'estimation, refus sans
+bruit de lecture, photo sombre).
+
+## Conclusion actuelle — 14 novembre 2026
 
 Les campagnes de recherche classique sont closes et conservées comme
 historique ; elles ne valident pas le moteur courant. Prochaines actions :
@@ -21938,4 +21979,5 @@ porter le petit banc retenu (référence des rafales, noirs, bruit résiduel,
 validité des zones), puis l'utiliser pour affiner le U-Net sur bruit réel
 (voir le [rapport de restauration neuronale](analyse-restauration-neuronale.md)).
 Le 60D est qualifié sur six ISO (§474) ; reste à décider son entrée au
-catalogue et à valider l'estimateur hors des ISO moyens et hauts.
+catalogue. L'estimateur sur une photo est porté en C++ (§475), désactivé tant
+que l'éditeur n'indique pas « qualifié / estimé » à l'utilisateur.

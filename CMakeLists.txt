@@ -695,6 +695,12 @@ if(BUILD_TESTING)
     set_tests_properties(cameraProfileEngineTests PROPERTIES LABELS "unit;profiles")
 endif()
 
+if(BUILD_TESTING AND IPR_ENABLE_LIBRAW)
+    # Manual check of the single-RAW noise law against its Python reference.
+    add_executable(noiseLawEstimateProbe EXCLUDE_FROM_ALL tests/noise_law_estimate_probe.cpp)
+    target_link_libraries(noiseLawEstimateProbe PRIVATE iprEngine)
+endif()
+
 if(BUILD_TESTING AND UNIX AND IPR_ENABLE_LIBRAW AND
    LIBRAW_INCLUDE_DIR AND LIBRAW_LIBRARY)
     add_executable(rawProfileIntegrationProbe tests/raw_profile_integration_probe.cpp)

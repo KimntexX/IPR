@@ -209,7 +209,7 @@ int openRaw(LibRaw &raw, const QString &fileName)
 // Black level read by IPR on every RAW after unpacking: measured on the
 // optical black pixels and compared with LibRaw's value, which is kept when it
 // agrees (RawBlackLevelEstimator). Returns true when the measurement replaced it.
-bool readBlackLevel(LibRaw &raw, const QString &fileName)
+bool readBlackLevel(LibRaw &raw, const QString &fileName, std::array<double, 4> *readVariance = nullptr)
 {
     auto &data = raw.imgdata;
     RawBlackLevelEstimator::Input input;
@@ -249,6 +249,8 @@ bool readBlackLevel(LibRaw &raw, const QString &fileName)
         for (int column = 0; column < 2; ++column)
             input.cfaChannels[row * 2 + column] = raw.COLOR(row, column);
 
+    if (readVariance)
+        *readVariance = RawBlackLevelEstimator::readNoise(input);
     const auto measured = RawBlackLevelEstimator::measure(input);
     std::array<unsigned int, 4> decoder{};
     for (int channel = 0; channel < 4; ++channel)
@@ -623,7 +625,8 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
     }
     if ((result = raw.unpack()) == LIBRAW_SUCCESS) {
         timer.mark("unpack");
-        const bool estimatedOpticalBlackLevel = readBlackLevel(raw, fileName);
+        std::array<double, 4> opticalBlackNoise{};
+        const bool estimatedOpticalBlackLevel = readBlackLevel(raw, fileName, &opticalBlackNoise);
         sourceWhiteBalanceKelvin = estimateWhiteBalanceKelvin(raw);
         if (metadata)
             metadata->opticalBlackLevelEstimated = estimatedOpticalBlackLevel;
@@ -682,7 +685,8 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
         }
         timer.mark("black_wb_calibration");
         if (developedByIpr(raw, options)) {
-            const RawInput::Input input = LibRawInput::read(raw);
+            RawInput::Input input = LibRawInput::read(raw);
+            input.readVariance = opticalBlackNoise;
             if (RawInput::valid(input)) {
                 RawDevelopment::Options development;
                 development.adjustWhiteThreshold = calibration ? 0.0 : double(raw.imgdata.params.adjust_maximum_thr);

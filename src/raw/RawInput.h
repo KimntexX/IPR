@@ -27,6 +27,9 @@ struct Input
     std::array<double, 4> black{};                 // per Colour, counts (IPR's optical black reading applied)
     bool spatialBlack = false;                     // the decoder declares a black varying across the cell grid
     double white = 0.0;                            // counts (IPR's calibration applied when it applies)
+    // Read noise of the optical black per Colour (variance, counts^2); zero when the RAW has no
+    // declared masked area to read it from (RawBlackLevelEstimator::readNoise).
+    std::array<double, 4> readVariance{};
     std::array<double, 4> asShotMultipliers{};     // camera white balance, per Colour
     std::array<double, 4> daylightMultipliers{};   // decoder's daylight balance, per Colour
     ipr::Matrix33d cameraToSrgb = ipr::Matrix33d::identity(); // linear camera RGB to linear sRGB, for files without profile

@@ -3,6 +3,8 @@
 #include "image_testing.h"
 
 #include <cmath>
+#include <cstdint>
+#include <random>
 #include <iostream>
 
 namespace {
@@ -197,6 +199,45 @@ void stageFactory()
     input.iso = 3200.0;
     input.model = QStringLiteral("EOS 60D");
     check(!CfaNoiseStage::makeStage(input, settings, &reason), "a camera without laws gives no stage");
+    // Asked to, the stage estimates the law of a camera without laws from the photo itself.
+    {
+        RawInput::Input unknown = sample();
+        unknown.make = input.make;
+        unknown.model = input.model;
+        unknown.iso = input.iso;
+        unknown.mosaic = ipr::Image::create({1200, 900}, ipr::Depth::U16, 1);
+        std::mt19937 random(4);
+        std::normal_distribution<double> unit(0.0, 1.0);
+        for (int y = 0; y < 900; ++y)
+            for (int x = 0; x < 1200; ++x) {
+                const double signal = 500.0 + 3.0 * x + 2.0 * y;
+                at<std::uint16_t>(unknown.mosaic, y, x) =
+                    std::uint16_t(std::lround(2048.0 + signal + std::sqrt(7.0 * signal + 300.0) * unit(random)));
+            }
+        CfaNoiseStage::Settings estimating = settings;
+        estimating.estimateUnqualified = true;
+        unknown.readVariance = {};
+        check(!CfaNoiseStage::makeStage(unknown, estimating, &reason), "no optical black noise: still no stage");
+        unknown.readVariance = {300.0, 300.0, 300.0, 300.0};
+        received = {};
+        const RawDevelopment::CfaStage estimated = CfaNoiseStage::makeStage(unknown, estimating, &reason);
+        check(bool(estimated), "an estimated law gives a stage");
+        if (estimated) {
+            ipr::Image planes = ipr::Image::create({8, 6}, ipr::Depth::F32, 1);
+            for (int y = 0; y < 6; ++y)
+                for (int x = 0; x < 8; ++x)
+                    at<float>(planes, y, x) = 100.f;
+            check(estimated(planes, unknown.pattern, &reason), "the estimated stage runs");
+            const double slope = double(received.a[0]) * estimating.networkDivisor;
+            check(slope > 5.6 && slope < 8.4 && std::abs(received.b[0] - 0.0003f) < 1e-7f,
+                  "the denoiser receives the photo's own law");
+        }
+        // A photo without signal: no slope to measure, the read noise alone still gives a stage.
+        for (int y = 0; y < 900; ++y)
+            for (int x = 0; x < 1200; ++x)
+                at<std::uint16_t>(unknown.mosaic, y, x) = std::uint16_t(std::lround(2048.0 + 17.0 * unit(random)));
+        check(bool(CfaNoiseStage::makeStage(unknown, estimating, &reason)), "a dark photo: the read noise alone");
+    }
     input.model = QStringLiteral("EOS R6 Mark III");
     settings.denoiser = [](const CfaNoiseStage::Planes &, const CfaNoiseStage::NormalizedLaw &, QString *error) {
         *error = QStringLiteral("no GPU");
