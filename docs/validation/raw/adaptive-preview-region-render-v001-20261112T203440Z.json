@@ -1,0 +1,504 @@
+{
+    "images": [
+        {
+            "camera": "EOS R6 Mark III",
+            "file": "6V1A9819.CR3",
+            "height": 6959,
+            "states": [
+                {
+                    "measured": true,
+                    "measures_ms": 12.4436,
+                    "parts": [
+                        {
+                            "bit_identical": true,
+                            "ms": 0.0188,
+                            "region": "screen_2560x1440",
+                            "where": "centre",
+                            "x": 1039,
+                            "y": 2759
+                        },
+                        {
+                            "bit_identical": true,
+                            "ms": 0.003,
+                            "region": "screen_2560x1440",
+                            "where": "corner",
+                            "x": 2079,
+                            "y": 0
+                        },
+                        {
+                            "bit_identical": true,
+                            "ms": 0.0012,
+                            "region": "tile_512",
+                            "where": "centre",
+                            "x": 2063,
+                            "y": 3223
+                        },
+                        {
+                            "bit_identical": true,
+                            "ms": 8e-04,
+                            "region": "tile_512",
+                            "where": "corner",
+                            "x": 4127,
+                            "y": 0
+                        }
+                    ],
+                    "state": "neutral",
+                    "whole_ms": 12.9574
+                },
+                {
+                    "measured": true,
+                    "measures_ms": 25.2305,
+                    "parts": [
+                        {
+                            "bit_identical": true,
+                            "ms": 323.4482,
+                            "region": "screen_2560x1440",
+                            "where": "centre",
+                            "x": 1039,
+                            "y": 2759
+                        },
+                        {
+                            "bit_identical": true,
+                            "ms": 338.6398,
+                            "region": "screen_2560x1440",
+                            "where": "corner",
+                            "x": 2079,
+                            "y": 0
+                        },
+                        {
+                            "bit_identical": true,
+                            "ms": 36.0247,
+                            "region": "tile_512",
+                            "where": "centre",
+                            "x": 2063,
+                            "y": 3223
+                        },
+                        {
+                            "bit_identical": true,
+                            "ms": 34.9247,
+                            "region": "tile_512",
+                            "where": "corner",
+                            "x": 4127,
+                            "y": 0
+                        }
+                    ],
+                    "state": "tones_colour",
+                    "whole_ms": 2225.1276
+                },
+                {
+                    "measured": true,
+                    "measures_ms": 13.6704,
+                    "parts": [
+                        {
+                            "bit_identical": true,
+                            "ms": 310.1867,
+                            "region": "screen_2560x1440",
+                            "where": "centre",
+                            "x": 1039,
+                            "y": 2759
+                        },
+                        {
+                            "bit_identical": true,
+                            "ms": 321.9792,
+                            "region": "screen_2560x1440",
+                            "where": "corner",
+                            "x": 2079,
+                            "y": 0
+                        },
+                        {
+                            "bit_identical": true,
+                            "ms": 29.2813,
+                            "region": "tile_512",
+                            "where": "centre",
+                            "x": 2063,
+                            "y": 3223
+                        },
+                        {
+                            "bit_identical": true,
+                            "ms": 30.3372,
+                            "region": "tile_512",
+                            "where": "corner",
+                            "x": 4127,
+                            "y": 0
+                        }
+                    ],
+                    "state": "tones_colour_white_balance",
+                    "whole_ms": 2524.7351
+                },
+                {
+                    "measured": true,
+                    "measures_ms": 25.5965,
+                    "parts": [
+                        {
+                            "bit_identical": true,
+                            "ms": 348.7161,
+                            "region": "screen_2560x1440",
+                            "where": "centre",
+                            "x": 1039,
+                            "y": 2759
+                        },
+                        {
+                            "bit_identical": true,
+                            "ms": 370.8082,
+                            "region": "screen_2560x1440",
+                            "where": "corner",
+                            "x": 2079,
+                            "y": 0
+                        },
+                        {
+                            "bit_identical": true,
+                            "ms": 35.7177,
+                            "region": "tile_512",
+                            "where": "centre",
+                            "x": 2063,
+                            "y": 3223
+                        },
+                        {
+                            "bit_identical": true,
+                            "ms": 33.8357,
+                            "region": "tile_512",
+                            "where": "corner",
+                            "x": 4127,
+                            "y": 0
+                        }
+                    ],
+                    "state": "tones_colour_curve",
+                    "whole_ms": 2775.7794
+                },
+                {
+                    "measured": true,
+                    "measures_ms": 998.8094,
+                    "parts": [
+                        {
+                            "bit_identical": true,
+                            "ms": 369.4757,
+                            "region": "screen_2560x1440",
+                            "where": "centre",
+                            "x": 1039,
+                            "y": 2759
+                        },
+                        {
+                            "bit_identical": true,
+                            "ms": 361.0437,
+                            "region": "screen_2560x1440",
+                            "where": "corner",
+                            "x": 2079,
+                            "y": 0
+                        },
+                        {
+                            "bit_identical": true,
+                            "ms": 36.1535,
+                            "region": "tile_512",
+                            "where": "centre",
+                            "x": 2063,
+                            "y": 3223
+                        },
+                        {
+                            "bit_identical": true,
+                            "ms": 33.8601,
+                            "region": "tile_512",
+                            "where": "corner",
+                            "x": 4127,
+                            "y": 0
+                        }
+                    ],
+                    "state": "tones_colour_rotation",
+                    "whole_ms": 3046.7517
+                },
+                {
+                    "measured": true,
+                    "measures_ms": 950.0294,
+                    "parts": [
+                        {
+                            "bit_identical": true,
+                            "ms": 372.7669,
+                            "region": "screen_2560x1440",
+                            "where": "centre",
+                            "x": 1039,
+                            "y": 2759
+                        },
+                        {
+                            "bit_identical": true,
+                            "ms": 370.5633,
+                            "region": "screen_2560x1440",
+                            "where": "corner",
+                            "x": 2079,
+                            "y": 0
+                        },
+                        {
+                            "bit_identical": true,
+                            "ms": 40.8725,
+                            "region": "tile_512",
+                            "where": "centre",
+                            "x": 2063,
+                            "y": 3223
+                        },
+                        {
+                            "bit_identical": true,
+                            "ms": 36.1317,
+                            "region": "tile_512",
+                            "where": "corner",
+                            "x": 4127,
+                            "y": 0
+                        }
+                    ],
+                    "state": "tones_colour_perspective",
+                    "whole_ms": 3514.3939
+                }
+            ],
+            "width": 4639
+        },
+        {
+            "camera": "EOS 60D",
+            "file": "IMG_3135.CR2",
+            "height": 3464,
+            "states": [
+                {
+                    "measured": true,
+                    "measures_ms": 7.7152,
+                    "parts": [
+                        {
+                            "bit_identical": true,
+                            "ms": 0.0051,
+                            "region": "screen_2560x1440",
+                            "where": "centre",
+                            "x": 1321,
+                            "y": 1012
+                        },
+                        {
+                            "bit_identical": true,
+                            "ms": 0.0011,
+                            "region": "screen_2560x1440",
+                            "where": "corner",
+                            "x": 2642,
+                            "y": 0
+                        },
+                        {
+                            "bit_identical": true,
+                            "ms": 0.001,
+                            "region": "tile_512",
+                            "where": "centre",
+                            "x": 2345,
+                            "y": 1476
+                        },
+                        {
+                            "bit_identical": true,
+                            "ms": 6e-04,
+                            "region": "tile_512",
+                            "where": "corner",
+                            "x": 4690,
+                            "y": 0
+                        }
+                    ],
+                    "state": "neutral",
+                    "whole_ms": 6.8978
+                },
+                {
+                    "measured": true,
+                    "measures_ms": 13.2822,
+                    "parts": [
+                        {
+                            "bit_identical": true,
+                            "ms": 275.8326,
+                            "region": "screen_2560x1440",
+                            "where": "centre",
+                            "x": 1321,
+                            "y": 1012
+                        },
+                        {
+                            "bit_identical": true,
+                            "ms": 277.7342,
+                            "region": "screen_2560x1440",
+                            "where": "corner",
+                            "x": 2642,
+                            "y": 0
+                        },
+                        {
+                            "bit_identical": true,
+                            "ms": 27.8548,
+                            "region": "tile_512",
+                            "where": "centre",
+                            "x": 2345,
+                            "y": 1476
+                        },
+                        {
+                            "bit_identical": true,
+                            "ms": 28.8774,
+                            "region": "tile_512",
+                            "where": "corner",
+                            "x": 4690,
+                            "y": 0
+                        }
+                    ],
+                    "state": "tones_colour",
+                    "whole_ms": 1207.2615
+                },
+                {
+                    "measured": true,
+                    "measures_ms": 8.7294,
+                    "parts": [
+                        {
+                            "bit_identical": true,
+                            "ms": 271.0281,
+                            "region": "screen_2560x1440",
+                            "where": "centre",
+                            "x": 1321,
+                            "y": 1012
+                        },
+                        {
+                            "bit_identical": true,
+                            "ms": 268.0911,
+                            "region": "screen_2560x1440",
+                            "where": "corner",
+                            "x": 2642,
+                            "y": 0
+                        },
+                        {
+                            "bit_identical": true,
+                            "ms": 27.1725,
+                            "region": "tile_512",
+                            "where": "centre",
+                            "x": 2345,
+                            "y": 1476
+                        },
+                        {
+                            "bit_identical": true,
+                            "ms": 28.2513,
+                            "region": "tile_512",
+                            "where": "corner",
+                            "x": 4690,
+                            "y": 0
+                        }
+                    ],
+                    "state": "tones_colour_white_balance",
+                    "whole_ms": 1203.8093
+                },
+                {
+                    "measured": true,
+                    "measures_ms": 10.7802,
+                    "parts": [
+                        {
+                            "bit_identical": true,
+                            "ms": 339.1394,
+                            "region": "screen_2560x1440",
+                            "where": "centre",
+                            "x": 1321,
+                            "y": 1012
+                        },
+                        {
+                            "bit_identical": true,
+                            "ms": 355.3009,
+                            "region": "screen_2560x1440",
+                            "where": "corner",
+                            "x": 2642,
+                            "y": 0
+                        },
+                        {
+                            "bit_identical": true,
+                            "ms": 33.2665,
+                            "region": "tile_512",
+                            "where": "centre",
+                            "x": 2345,
+                            "y": 1476
+                        },
+                        {
+                            "bit_identical": true,
+                            "ms": 31.4537,
+                            "region": "tile_512",
+                            "where": "corner",
+                            "x": 4690,
+                            "y": 0
+                        }
+                    ],
+                    "state": "tones_colour_curve",
+                    "whole_ms": 1602.7061
+                },
+                {
+                    "measured": true,
+                    "measures_ms": 469.0257,
+                    "parts": [
+                        {
+                            "bit_identical": true,
+                            "ms": 326.5725,
+                            "region": "screen_2560x1440",
+                            "where": "centre",
+                            "x": 1321,
+                            "y": 1012
+                        },
+                        {
+                            "bit_identical": true,
+                            "ms": 320.4574,
+                            "region": "screen_2560x1440",
+                            "where": "corner",
+                            "x": 2642,
+                            "y": 0
+                        },
+                        {
+                            "bit_identical": true,
+                            "ms": 32.4292,
+                            "region": "tile_512",
+                            "where": "centre",
+                            "x": 2345,
+                            "y": 1476
+                        },
+                        {
+                            "bit_identical": true,
+                            "ms": 32.03,
+                            "region": "tile_512",
+                            "where": "corner",
+                            "x": 4690,
+                            "y": 0
+                        }
+                    ],
+                    "state": "tones_colour_rotation",
+                    "whole_ms": 1698.0878
+                },
+                {
+                    "measured": true,
+                    "measures_ms": 448.6638,
+                    "parts": [
+                        {
+                            "bit_identical": true,
+                            "ms": 365.5191,
+                            "region": "screen_2560x1440",
+                            "where": "centre",
+                            "x": 1321,
+                            "y": 1012
+                        },
+                        {
+                            "bit_identical": true,
+                            "ms": 351.0389,
+                            "region": "screen_2560x1440",
+                            "where": "corner",
+                            "x": 2642,
+                            "y": 0
+                        },
+                        {
+                            "bit_identical": true,
+                            "ms": 36.119,
+                            "region": "tile_512",
+                            "where": "centre",
+                            "x": 2345,
+                            "y": 1476
+                        },
+                        {
+                            "bit_identical": true,
+                            "ms": 38.3637,
+                            "region": "tile_512",
+                            "where": "corner",
+                            "x": 4690,
+                            "y": 0
+                        }
+                    ],
+                    "state": "tones_colour_perspective",
+                    "whole_ms": 1835.6804
+                }
+            ],
+            "width": 5202
+        }
+    ],
+    "method": "RenderChain::workingImage at full resolution, then measureWhole and workingRegion on a 2560x1440 screen and a 512-pixel tile at the centre and at the top right corner, compared with the same part of the whole render byte for byte; one run each, no stage cache",
+    "schema_version": 1,
+    "status": "adaptive_preview_step3_region_render",
+    "threads": 20
+}

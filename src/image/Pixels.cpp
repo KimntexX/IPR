@@ -2,6 +2,8 @@
 
 #include "Parallel.h"
 
+#include <atomic>
+
 #include <algorithm>
 #include <cmath>
 #include <cstdint>
@@ -61,20 +63,21 @@ bool allFinite(const Image &image)
     if (image.empty() || (image.depth() != Depth::F32 && image.depth() != Depth::F64))
         return true;
     const size_t values = size_t(image.width()) * size_t(image.channels());
-    for (int y = 0; y < image.height(); ++y) {
-        if (image.depth() == Depth::F32) {
-            const float *row = image.row<float>(y);
-            for (size_t v = 0; v < values; ++v)
-                if (!std::isfinite(row[v]))
-                    return false;
-        } else {
-            const double *row = image.row<double>(y);
-            for (size_t v = 0; v < values; ++v)
-                if (!std::isfinite(row[v]))
-                    return false;
+    std::atomic_bool finite{true};
+    parallelRows(image.height(), [&](int first, int last) {
+        for (int y = first; y < last && finite.load(std::memory_order_relaxed); ++y) {
+            bool rowFinite = true;
+            if (image.depth() == Depth::F32) {
+                const float *row = image.row<float>(y);
+                for (size_t v = 0; v < values; ++v) rowFinite &= std::isfinite(row[v]);
+            } else {
+                const double *row = image.row<double>(y);
+                for (size_t v = 0; v < values; ++v) rowFinite &= std::isfinite(row[v]);
+            }
+            if (!rowFinite) finite.store(false, std::memory_order_relaxed);
         }
-    }
-    return true;
+    });
+    return finite.load();
 }
 
 std::vector<Image> splitChannels(const Image &image)

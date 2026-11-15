@@ -10,6 +10,7 @@
 #include "ToneCurve.h"
 #include "DecodedImageCache.h"
 #include "ImageCacheController.h"
+#include "DetailTiles.h"
 #include "RenderChain.h"
 #include "RenderStageCache.h"
 #include "RawDecoder.h"
@@ -29,10 +30,12 @@
 #include <QVariantMap>
 #include <QVector>
 #include <QSet>
+#include <QSize>
 #include <QStringList>
 
 #include <array>
 #include <atomic>
+#include <optional>
 
 class ImageProvider;
 class ThumbnailProvider;
@@ -99,6 +102,11 @@ class ImageEditor final : public QObject
     Q_PROPERTY(bool detailRendering READ detailRendering NOTIFY detailChanged)
     // Full-resolution pixels per preview pixel; 1 when no full resolution can be shown.
     Q_PROPERTY(double detailRatio READ detailRatio NOTIFY previewChanged)
+    // When the recipe renders by region (RenderChain::rendersByRegion), the full resolution comes
+    // as tiles of the visible part (setDetailView) instead of the whole image: each one
+    // {x, y, width, height, source}, in pixels of detailSize, the displayed image at full resolution.
+    Q_PROPERTY(QVariantList detailTiles READ detailTiles NOTIFY detailTilesChanged)
+    Q_PROPERTY(QSize detailSize READ detailSize NOTIFY previewChanged)
     Q_PROPERTY(QString statusMessage READ statusMessage NOTIFY statusMessageChanged)
     Q_PROPERTY(bool hasImage READ hasImage NOTIFY hasImageChanged)
     Q_PROPERTY(bool busy READ busy NOTIFY busyChanged)
@@ -213,8 +221,13 @@ public:
     bool detailWanted() const { return m_detailWanted; }
     void setDetailWanted(bool wanted);
     QString detailImageSource() const { return m_detailSource; }
-    bool detailRendering() const { return m_detailWatcher.isRunning(); }
+    bool detailRendering() const { return m_detailWatcher.isRunning() || m_tileWatcher.isRunning(); }
     double detailRatio() const;
+    QVariantList detailTiles() const;
+    QSize detailSize() const;
+    // The visible part of the displayed image, in pixels of detailSize, and the point the tiles
+    // spread from (the pointer after a zoom, else the view's centre).
+    Q_INVOKABLE void setDetailView(double x, double y, double width, double height, double focusX, double focusY);
     QString statusMessage() const;
     bool hasImage() const;
     bool busy() const;
@@ -403,6 +416,7 @@ signals:
     void folderChanged();
     void previewChanged();
     void detailChanged();
+    void detailTilesChanged();
     void statusMessageChanged();
     // A command failed or was refused: the interface shows it where the user just acted.
     void errorReported(const QString &message);
@@ -485,6 +499,18 @@ private:
     void refreshDetail();
     void startDetailRender();
     void dropDetail();
+    // The tiles of the full-resolution view, for a recipe that renders by region.
+    struct TileRender
+    {
+        QImage image;
+        std::optional<RenderChain::WholeMeasures> measures;   // measured for this tile, to keep
+        QString error;
+    };
+    bool tiledDetail() const;
+    ipr::Recti detailViewRect() const;
+    void scheduleTile();
+    void dropTiles();
+    void releaseFarTiles();
     void restoreBeforeEmbeddedPreview();
     void schedulePrefetch();
     void startPrefetch();
@@ -596,6 +622,19 @@ private:
     int m_detailRevision = 0;
     QTimer m_detailDelay;                  // the settings rest before a full-resolution render
     QFutureWatcher<RenderChain::Preview> m_detailWatcher;
+    // Tiles: those ready for m_tileKey's settings, the one rendering, the view they serve.
+    std::vector<DetailTiles::Tile> m_tiles;
+    int m_tileRevision = 0;
+    QByteArray m_tileKey;
+    QByteArray m_tileFailedKey;
+    DetailTiles::Tile m_tileRendering;
+    QByteArray m_tileRenderingKey;
+    QFutureWatcher<TileRender> m_tileWatcher;
+    ipr::Recti m_tileView;                 // visible part, pixels of detailSize; empty: not told yet
+    ipr::Point2d m_tileFocus;
+    ipr::Point2d m_tileMotion;
+    RenderChain::WholeMeasures m_wholeMeasures;
+    QByteArray m_wholeMeasuresKey;
     bool m_embeddedPreview = false;
     QImage m_restorePreview, m_restoreOriginal;
     QString m_restoreImageSource, m_restoreOriginalSource;

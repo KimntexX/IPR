@@ -6,6 +6,7 @@
 #include "Image.h"
 
 #include <optional>
+#include <vector>
 
 // The manual geometry of an image (ADR-0021, B1): quarter turns and mirrors, then
 // perspective, aspect, fine rotation, scale and offsets, all in one matrix applied
@@ -47,6 +48,8 @@ bool isIdentity(const Settings &settings);
 // Whether the pixels move at all; false leaves the buffers shared and untouched.
 bool transformsPixels(const Settings &settings);
 bool hasCrop(const Settings &settings);
+// Whether the pixels are resampled, beyond quarter turns and mirrors.
+bool resamples(const Settings &settings);
 
 // Clamps every field to its range and orders the crop; false on a non-finite value.
 bool bound(Settings &settings);
@@ -70,6 +73,20 @@ ipr::Point2d viewToCanvas(const Settings &settings, const ipr::Point2d &point);
 ipr::Image warpRgb(ipr::Image rgb, const Settings &settings, Quality quality);
 // F32, one channel, in [0, 1]; zero beyond the source.
 ipr::Image warpCoverage(ipr::Image alpha, const Settings &settings, Quality quality);
+
+// A part of the warp, for a region of the canvas in pixels of the canvas of this source. The
+// rectangle of the source it reads, within the source: what a caller renders before the warp.
+ipr::Recti sourceWindow(const Settings &settings, const ipr::Size &source, const ipr::Recti &region, Quality quality);
+// What warpRgb keeps every pixel above, per channel: the smallest value of the whole image before
+// the warp, or zero. A region takes the whole image's (a global measure).
+std::vector<float> warpFloor(const ipr::Image &rgb);
+// The region of warpRgb and warpCoverage, the same pixels, from window, the part of the source at
+// origin (holding sourceWindow), with the floor of the whole source.
+ipr::Image warpRgbRegion(const ipr::Image &window, const ipr::Point2i &origin, const ipr::Size &source,
+                         const Settings &settings, Quality quality, const ipr::Recti &region,
+                         const std::vector<float> &floor);
+ipr::Image warpCoverageRegion(const ipr::Image &window, const ipr::Point2i &origin, const ipr::Size &source,
+                              const Settings &settings, Quality quality, const ipr::Recti &region);
 // F32, four channels: straight alpha; a pixel of no coverage is transparent black.
 ipr::Image warpRgba(ipr::Image rgba, const Settings &settings, Quality quality);
 // Blackens the fully transparent pixels of an RGBA image of floats in place.

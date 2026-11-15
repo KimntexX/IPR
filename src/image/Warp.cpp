@@ -141,13 +141,24 @@ bool sumInside(int channels, const float *first, std::ptrdiff_t stepBytes, const
     }
 }
 
-// One output pixel from the taps x taps pixels from (sx, sy), with these weights, rows first.
-void readTaps(const Image &image, int taps, int sx, int sy, const float *w, Outside outside, float *out)
+// What a warp reads: a window of an image, placed at (x, y) in the whole image of this size.
+// Positions, borders and the outside are those of the whole image; the window only holds pixels.
+struct Window
 {
-    const int channels = image.channels(), width = image.width(), height = image.height();
-    if (sx >= 0 && sy >= 0 && sx + taps <= width && sy + taps <= height) {
-        const float *first = image.row<float>(sy) + sx * channels;
-        const std::ptrdiff_t step = image.stepBytes();
+    const Image &pixels;
+    int x = 0, y = 0, width = 0, height = 0;
+};
+
+// One output pixel from the taps x taps pixels from (sx, sy) of the whole image, with these weights,
+// rows first. A tap the window lacks reads its nearest pixel in it: a caller's error, never memory.
+void readTaps(const Window &image, int taps, int sx, int sy, const float *w, Outside outside, float *out)
+{
+    const int channels = image.pixels.channels(), width = image.width, height = image.height;
+    const int wx = sx - image.x, wy = sy - image.y;
+    if (sx >= 0 && sy >= 0 && sx + taps <= width && sy + taps <= height && wx >= 0 && wy >= 0 &&
+        wx + taps <= image.pixels.width() && wy + taps <= image.pixels.height()) {
+        const float *first = image.pixels.row<float>(wy) + wx * channels;
+        const std::ptrdiff_t step = image.pixels.stepBytes();
         const bool done = taps == 2   ? sumInside<2>(channels, first, step, w, out)
                           : taps == 4 ? sumInside<4>(channels, first, step, w, out)
                                       : sumInside<8>(channels, first, step, w, out);
@@ -162,6 +173,7 @@ void readTaps(const Image &image, int taps, int sx, int sy, const float *w, Outs
     bool anyRow = false;
     for (int k = 0; k < taps && !anyRow; ++k)
         anyRow = (unsigned(sy + k) < unsigned(height));
+    const int lastColumn = image.pixels.width() - 1, lastRow = image.pixels.height() - 1;
     for (int c = 0; c < channels; ++c) {
         if (zero && (!any || !anyRow)) {
             out[c] = 0.0f;
@@ -175,7 +187,7 @@ void readTaps(const Image &image, int taps, int sx, int sy, const float *w, Outs
                     continue;
                 y = std::clamp(y, 0, height - 1);
             }
-            const float *row = image.row<float>(y);
+            const float *row = image.pixels.row<float>(std::clamp(y - image.y, 0, lastRow));
             for (int kx = 0; kx < taps; ++kx) {
                 int x = sx + kx;
                 if (x < 0 || x >= width) {
@@ -183,7 +195,7 @@ void readTaps(const Image &image, int taps, int sx, int sy, const float *w, Outs
                         continue;
                     x = std::clamp(x, 0, width - 1);
                 }
-                sum += row[x * channels + c] * w[ky * taps + kx];
+                sum += row[std::clamp(x - image.x, 0, lastColumn) * channels + c] * w[ky * taps + kx];
             }
         }
         out[c] = sum;
@@ -191,7 +203,7 @@ void readTaps(const Image &image, int taps, int sx, int sy, const float *w, Outs
 }
 
 // From a position in 1/32 of a pixel, the weights read in the table.
-void readAt(const Image &image, const Table &table, int positionX, int positionY, Outside outside, float *out)
+void readAt(const Window &image, const Table &table, int positionX, int positionY, Outside outside, float *out)
 {
     int sx = 0, sy = 0, fx = 0, fy = 0;
     split(positionX, sx, fx);
@@ -201,7 +213,7 @@ void readAt(const Image &image, const Table &table, int positionX, int positionY
 }
 
 // From an exact position, the weights computed for its own fraction.
-void readExact(const Image &image, Resampling resampling, double x, double y, Outside outside, float *out)
+void readExact(const Window &image, Resampling resampling, double x, double y, Outside outside, float *out)
 {
     const int taps = tapsOf(resampling);
     if (!(x == x) || !(y == y)) {
@@ -240,6 +252,7 @@ void remapInto(const Image &image, Image &out, const Image &mapX, const Image &m
         throw std::invalid_argument("A remap needs two maps of single floats, of the output's size");
     const Table table(resampling);
     const int channels = out.channels();
+    const Window whole{image, 0, 0, image.width(), image.height()};
     Image &target = out;
     parallelRows(out.height(), [&](int first, int last) {
         for (int y = first; y < last; ++y) {
@@ -247,13 +260,13 @@ void remapInto(const Image &image, Image &out, const Image &mapX, const Image &m
             float *row = target.mutableRow<float>(y);
             for (int x = 0; x < target.width(); ++x) {
                 if (resampling != Resampling::Lanczos4) {
-                    readExact(image, resampling, xs[x], ys[x], outside, row + x * channels);
+                    readExact(whole, resampling, xs[x], ys[x], outside, row + x * channels);
                     continue;
                 }
                 const float px = xs[x] * float(fractions), py = ys[x] * float(fractions);
                 const int positionX = px == px ? int(std::lrint(std::max(-2.1e9f, std::min(2.1e9f, px)))) : INT_MIN;
                 const int positionY = py == py ? int(std::lrint(std::max(-2.1e9f, std::min(2.1e9f, py)))) : INT_MIN;
-                readAt(image, table, positionX, positionY, outside, row + x * channels);
+                readAt(whole, table, positionX, positionY, outside, row + x * channels);
             }
         }
     }, threads);
@@ -263,22 +276,37 @@ void warpPerspectiveInto(const Image &image, Image &out, const Matrix33d &outToI
                          Outside outside, int threads)
 {
     checkPair(image, out);
+    warpPerspectiveRegionInto(image, {0, 0}, image.size(), out, {0, 0}, out.size(), outToImage, resampling, outside,
+                              threads);
+}
+
+void warpPerspectiveRegionInto(const Image &window, Point2i windowOrigin, Size imageSize, Image &out,
+                               Point2i outOrigin, Size outSize, const Matrix33d &outToImage, Resampling resampling,
+                               Outside outside, int threads)
+{
+    checkPair(window, out);
+    if (imageSize.empty() || outSize.empty())
+        throw std::invalid_argument("A warp needs the sizes of the whole image and of the whole output");
     const Table table(resampling);
-    const int channels = out.channels(), width = out.width(), height = out.height();
-    // OpenCV computes positions from the start of blocks of this width, and its rounding follows.
+    const Window image{window, windowOrigin.x, windowOrigin.y, imageSize.width, imageSize.height};
+    const int channels = out.channels(), width = outSize.width, height = outSize.height;
+    // OpenCV computes positions from the start of blocks of this width, and its rounding follows:
+    // the blocks of the whole output, whatever part of it this one is.
     constexpr int block = 32;
     const int blockWidth = std::min(block * block / std::min(block / 2, height), width);
     const double *m = outToImage.values.data();
+    const int firstX = outOrigin.x, endX = outOrigin.x + out.width();
     Image &target = out;
-    parallelRows(height, [&](int first, int last) {
-        for (int y = first; y < last; ++y) {
-            float *row = target.mutableRow<float>(y);
-            for (int start = 0; start < width; start += blockWidth) {
+    parallelRows(out.height(), [&](int first, int last) {
+        for (int row = first; row < last; ++row) {
+            const int y = outOrigin.y + row;
+            float *pixels = target.mutableRow<float>(row);
+            for (int start = firstX / blockWidth * blockWidth; start < endX; start += blockWidth) {
                 const double x0 = m[0] * start + m[1] * y + m[2];
                 const double y0 = m[3] * start + m[4] * y + m[5];
                 const double w0 = m[6] * start + m[7] * y + m[8];
-                const int end = std::min(width, start + blockWidth);
-                for (int x = start; x < end; ++x) {
+                const int end = std::min(endX, start + blockWidth);
+                for (int x = std::max(start, firstX); x < end; ++x) {
                     const int offset = x - start;
                     if (resampling != Resampling::Lanczos4) {
                         // Exact positions, in double: OpenCV 5 computes them in floats, OpenCV 4 rounds
@@ -286,14 +314,14 @@ void warpPerspectiveInto(const Image &image, Image &out, const Matrix33d &outToI
                         const double exactW = m[6] * x + m[7] * y + m[8];
                         const double px = exactW != 0.0 ? (m[0] * x + m[1] * y + m[2]) / exactW : 0.0;
                         const double py = exactW != 0.0 ? (m[3] * x + m[4] * y + m[5]) / exactW : 0.0;
-                        readExact(image, resampling, px, py, outside, row + x * channels);
+                        readExact(image, resampling, px, py, outside, pixels + (x - firstX) * channels);
                         continue;
                     }
                     double w = w0 + m[6] * offset;
                     w = w != 0.0 ? fractions / w : 0.0;
                     const int positionX = roundedToInt((x0 + m[0] * offset) * w);
                     const int positionY = roundedToInt((y0 + m[3] * offset) * w);
-                    readAt(image, table, positionX, positionY, outside, row + x * channels);
+                    readAt(image, table, positionX, positionY, outside, pixels + (x - firstX) * channels);
                 }
             }
         }

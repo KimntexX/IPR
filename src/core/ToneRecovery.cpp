@@ -283,10 +283,12 @@ void apply(ipr::Image &image, const Amounts &amounts, const Statistics &statisti
     }
     if (identity(amounts)) return;
     const Curve toneCurve(amounts, adapt(statistics));
-    for (int y = 0; y < image.height(); ++y) {
-        ipr::Vec3f *row = image.mutableRow<ipr::Vec3f>(y);
-        for (int x = 0; x < image.width(); ++x)
-            applyToPixel(row[x], toneCurve);
-    }
+    ipr::parallelRows(image.height(), [&](int first, int last) {
+        for (int y = first; y < last; ++y) {
+            ipr::Vec3f *row = image.mutableRow<ipr::Vec3f>(y);
+            for (int x = 0; x < image.width(); ++x)
+                applyToPixel(row[x], toneCurve);
+        }
+    });
 }
 }

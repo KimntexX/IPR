@@ -464,6 +464,62 @@ void histogramOfEmptyZones()
     check(none.size() == 4 && total(none, 0) == 0, "a null image gives empty channels");
 }
 
+// Values with no smoothness and a few below zero: any pixel read from the wrong place shows.
+ipr::Image noise(int width, int height, int channels, unsigned seed)
+{
+    ipr::Image image = ipr::Image::create({width, height}, ipr::Depth::F32, channels);
+    unsigned state = seed;
+    for (int y = 0; y < height; ++y) {
+        float *row = image.mutableRow<float>(y);
+        for (int v = 0; v < width * channels; ++v) {
+            state = state * 1664525u + 1013904223u;
+            row[v] = float(state >> 8) / float(1u << 24) * 1.2f - 0.1f;
+        }
+    }
+    return image;
+}
+
+// A region of the canvas renders as the same region of the whole warp, bit for bit, from
+// the part of the source sourceWindow names.
+void regions()
+{
+    const ipr::Size size(157, 101);
+    const ipr::Image rgb = noise(size.width, size.height, 3, 7);
+    ipr::Image alpha = ipr::filled(size, ipr::Depth::F32, 1, 1.0);
+    for (int y = 40; y < 60; ++y)
+        for (int x = 0; x < 30; ++x)
+            imagetest::at<float>(alpha, y, x) = 0.25f;
+    std::vector<Geometry::Settings> cases(9);
+    cases[1].quarterTurns = 1;
+    cases[2].quarterTurns = 3; cases[2].flipHorizontal = true;
+    cases[3].quarterTurns = 2; cases[3].flipVertical = true;
+    cases[4].rotation = 7.3f;
+    cases[5].vertical = 40; cases[5].horizontal = -25;
+    cases[6].scale = 70; cases[6].aspect = 30;                    // reduced: blurred before the warp
+    cases[7].quarterTurns = 1; cases[7].rotation = -12.f; cases[7].offsetX = 20; cases[7].scale = 120;
+    cases[8].flipHorizontal = true; cases[8].scale = 60; cases[8].vertical = -30; cases[8].rotation = 3.f;
+    for (const Geometry::Quality quality : {Geometry::Quality::Preview, Geometry::Quality::Export}) {
+        for (const Geometry::Settings &settings : cases) {
+            const ipr::Image whole = Geometry::warpRgb(rgb.share(), settings, quality);
+            const ipr::Image wholeCoverage = Geometry::warpCoverage(alpha.share(), settings, quality);
+            const ipr::Size canvas = whole.size();
+            const std::vector<float> floor = Geometry::warpFloor(rgb);
+            for (const ipr::Recti &region : {ipr::Recti(0, 0, 32, 32), ipr::Recti(canvas.width - 40, canvas.height - 33, 40, 33),
+                                             ipr::Recti(canvas.width / 2 - 17, canvas.height / 2 - 9, 35, 19),
+                                             ipr::Recti(canvas.width / 3, 0, 1, canvas.height), ipr::Recti(5, 7, 1, 1),
+                                             ipr::Recti(0, 0, canvas.width, canvas.height)}) {
+                const ipr::Recti read = Geometry::sourceWindow(settings, size, region, quality);
+                check(!read.empty() && (read & ipr::Recti(0, 0, size.width, size.height)) == read,
+                      "a region reads a part of the source");
+                const ipr::Image part = Geometry::warpRgbRegion(rgb.view(read), read.tl(), size, settings, quality, region, floor);
+                check(same(part, whole.view(region)), "a region of the warp is that part of the whole warp");
+                const ipr::Image coverage = Geometry::warpCoverageRegion(alpha.view(read), read.tl(), size, settings, quality, region);
+                check(same(coverage, wholeCoverage.view(region)), "a region of the coverage is that part of the whole coverage");
+            }
+        }
+    }
+}
+
 int main()
 {
     identity();
@@ -477,6 +533,7 @@ int main()
     constraint();
     commands();
     histogramOfEmptyZones();
+    regions();
     if (passed)
         std::cout << "geometry: ok\n";
     return passed ? 0 : 1;

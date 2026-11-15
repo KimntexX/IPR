@@ -402,6 +402,31 @@ ImageEditor::ImageEditor(ImageProvider *provider,
         emit detailChanged();
         refreshDetail();
     });
+    connect(&m_tileWatcher, &QFutureWatcher<TileRender>::finished, this, [this] {
+        TileRender rendered;
+        try { rendered = Tasks::takeResult(m_tileWatcher.future()); }
+        catch (...) { rendered.error = tr("ressources insuffisantes ou traitement interrompu"); }
+        const QByteArray key = std::exchange(m_tileRenderingKey, QByteArray());
+        const bool current = detailShowable() && tiledDetail() && key == detailKey();
+        if (current && rendered.measures) {
+            m_wholeMeasures = std::move(*rendered.measures);
+            m_wholeMeasuresKey = key.isEmpty() ? QByteArray() : RenderChain::wholeMeasuresKey(m_settings)
+                + '|' + QByteArray::number(m_sourceGeneration);
+        }
+        // A tile no longer near the view, of former settings or of a former photo, is dropped.
+        if (current && !rendered.image.isNull() && m_tileKey == key &&
+            DetailTiles::kept(m_tileRendering, ipr::Size(detailSize().width(), detailSize().height()), m_tileView)) {
+            m_provider->setDetailTile(QStringLiteral("tile-%1-%2").arg(m_tileRendering.column).arg(m_tileRendering.row),
+                                      rendered.image);
+            m_tiles.push_back(m_tileRendering);
+            emit detailTilesChanged();
+        } else if (current && rendered.image.isNull()) {
+            m_tileFailedKey = key;
+            setStatusMessage(tr("Vue pleine résolution indisponible : %1").arg(rendered.error));
+        }
+        emit detailChanged();
+        scheduleTile();
+    });
 
     connect(&m_renderWatcher, &QFutureWatcher<RenderChain::Preview>::finished,
             this, [this] {
@@ -2419,18 +2444,35 @@ void ImageEditor::setDetailWanted(bool wanted)
 void ImageEditor::refreshDetail()
 {
     const bool showable = detailShowable();
+    const bool tiled = showable && tiledDetail();
     const QByteArray key = showable ? detailKey() : QByteArray();
-    if (showable && !m_detailImageKey.isEmpty() && m_detailImageKey != key) {
-        // Other settings: the former pixels are never shown again, free them now.
+    if (showable && !m_detailImageKey.isEmpty() && (m_detailImageKey != key || tiled)) {
+        // Other settings, or tiles now: the former pixels are never shown again, free them now.
+        // Hidden only (the crop tool, an overlay), the whole image waits to come back as it was;
+        // tiles, quick to render again, are freed.
         m_provider->setDetailImage({});
         m_detailImageKey.clear();
     }
-    const QString source = showable && !m_detailImageKey.isEmpty()
+    if (!m_tileKey.isEmpty() && (m_tileKey != key || !tiled))
+        dropTiles();
+    const QString source = showable && !tiled && !m_detailImageKey.isEmpty()
         ? QStringLiteral("image://editor/detail?revision=%1").arg(m_detailRevision) : QString();
     if (source != m_detailSource) {
         m_detailSource = source;
         emit detailChanged();
     }
+    if (tiled) {
+        // Each tile renders in a few tens of milliseconds: a short rest after a change, none after.
+        if (m_tileKey != key) {
+            m_tileKey = key;
+            m_detailDelay.setInterval(150);
+            m_detailDelay.start();
+        } else if (!m_detailDelay.isActive()) {
+            scheduleTile();
+        }
+        return;
+    }
+    m_detailDelay.setInterval(350);
     if (showable && source.isEmpty() && key != m_detailRenderKey && key != m_detailFailedKey)
         m_detailDelay.start();
     else
@@ -2439,6 +2481,10 @@ void ImageEditor::refreshDetail()
 
 void ImageEditor::startDetailRender()
 {
+    if (tiledDetail()) {
+        scheduleTile();
+        return;
+    }
     // A running render ends in refreshDetail, which asks again when needed.
     if (!detailShowable() || m_detailWatcher.isRunning() || m_renderWatcher.isRunning()) return;
     const QByteArray key = detailKey();
@@ -2465,10 +2511,153 @@ void ImageEditor::dropDetail()
     m_provider->setDetailImage({});
     m_detailImageKey.clear();
     m_detailFailedKey.clear();
+    dropTiles();
+    m_tileFailedKey.clear();
+    m_wholeMeasures = {};
+    m_wholeMeasuresKey.clear();
     if (!m_detailSource.isEmpty()) {
         m_detailSource.clear();
         emit detailChanged();
     }
+}
+
+bool ImageEditor::tiledDetail() const
+{
+    return !m_original.isNull() && !m_masterIsProxy && RenderChain::rendersByRegion(m_settings);
+}
+
+QSize ImageEditor::detailSize() const
+{
+    if (m_masterIsProxy || m_original.isNull())
+        return {};
+    const ipr::Size canvas = Geometry::canvasSize(m_settings.geometry, m_original.linearRgba.size());
+    const ipr::Recti crop = Geometry::hasCrop(m_settings.geometry) ? Geometry::cropRect(m_settings.geometry, canvas)
+                                                                   : ipr::Recti(0, 0, canvas.width, canvas.height);
+    return {crop.width, crop.height};
+}
+
+QVariantList ImageEditor::detailTiles() const
+{
+    QVariantList tiles;
+    const ipr::Size view(detailSize().width(), detailSize().height());
+    for (const DetailTiles::Tile &tile : m_tiles) {
+        const ipr::Recti rect = DetailTiles::rectOf(tile, view);
+        tiles.append(QVariantMap{{QStringLiteral("x"), rect.x}, {QStringLiteral("y"), rect.y},
+                                 {QStringLiteral("width"), rect.width}, {QStringLiteral("height"), rect.height},
+                                 {QStringLiteral("source"), QStringLiteral("image://editor/tile-%1-%2?revision=%3")
+                                      .arg(tile.column).arg(tile.row).arg(m_tileRevision)}});
+    }
+    return tiles;
+}
+
+ipr::Recti ImageEditor::detailViewRect() const
+{
+    const QSize size = detailSize();
+    return m_tileView & ipr::Recti(0, 0, size.width(), size.height());
+}
+
+void ImageEditor::setDetailView(double x, double y, double width, double height, double focusX, double focusY)
+{
+    if (!std::isfinite(x) || !std::isfinite(y) || !std::isfinite(width) || !std::isfinite(height) ||
+        !std::isfinite(focusX) || !std::isfinite(focusY))
+        return;
+    const double limit = 1e7;
+    const auto whole = [&](double v) { return int(std::floor(std::clamp(v, -limit, limit))); };
+    const ipr::Recti view(whole(x), whole(y), std::max(0, whole(x + width) - whole(x) + 1),
+                          std::max(0, whole(y + height) - whole(y) + 1));
+    if (!m_tileView.empty() && !view.empty())
+        m_tileMotion = {(view.x + view.width / 2.0) - (m_tileView.x + m_tileView.width / 2.0),
+                        (view.y + view.height / 2.0) - (m_tileView.y + m_tileView.height / 2.0)};
+    m_tileView = view;
+    m_tileFocus = {focusX, focusY};
+    releaseFarTiles();
+    if (detailShowable() && tiledDetail() && m_tileKey == detailKey() && !m_detailDelay.isActive())
+        scheduleTile();
+}
+
+// Behind a move: the tiles beyond the visible part and its ring are freed.
+void ImageEditor::releaseFarTiles()
+{
+    const ipr::Size view(detailSize().width(), detailSize().height());
+    const auto far = [&](const DetailTiles::Tile &tile) { return !DetailTiles::kept(tile, view, m_tileView); };
+    bool changed = false;
+    for (const DetailTiles::Tile &tile : m_tiles)
+        if (far(tile)) {
+            m_provider->setDetailTile(QStringLiteral("tile-%1-%2").arg(tile.column).arg(tile.row), {});
+            changed = true;
+        }
+    if (!changed)
+        return;
+    m_tiles.erase(std::remove_if(m_tiles.begin(), m_tiles.end(), far), m_tiles.end());
+    emit detailTilesChanged();
+}
+
+void ImageEditor::dropTiles()
+{
+    m_tileKey.clear();
+    ++m_tileRevision;   // the next settings' tiles never reuse an address the view loaded
+    m_provider->clearDetailTiles();
+    if (!m_tiles.empty()) {
+        m_tiles.clear();
+        emit detailTilesChanged();
+    }
+}
+
+// The next tile of the view, in the order of DetailTiles: one at a time, each short, so a
+// move or a change waits at most one tile; the first after a change also measures the whole.
+void ImageEditor::scheduleTile()
+{
+    if (!detailShowable() || !tiledDetail() || m_tileWatcher.isRunning() || m_renderWatcher.isRunning() ||
+        m_detailDelay.isActive())
+        return;
+    const QByteArray key = detailKey();
+    const QSize size = detailSize();
+    const ipr::Recti visible = detailViewRect();
+    if (key != m_tileKey || key == m_tileFailedKey || visible.empty())
+        return;
+    const ipr::Size view(size.width(), size.height());
+    std::optional<DetailTiles::Tile> next;
+    for (const DetailTiles::Tile &tile : DetailTiles::order(view, visible, m_tileFocus, m_tileMotion))
+        if (std::find(m_tiles.cbegin(), m_tiles.cend(), tile) == m_tiles.cend()) {
+            next = tile;
+            break;
+        }
+    if (!next)
+        return;
+    // The tile in the canvas: the view is the crop.
+    const ipr::Size canvas = Geometry::canvasSize(m_settings.geometry, m_original.linearRgba.size());
+    const ipr::Recti crop = Geometry::hasCrop(m_settings.geometry) ? Geometry::cropRect(m_settings.geometry, canvas)
+                                                                   : ipr::Recti(0, 0, canvas.width, canvas.height);
+    const ipr::Recti region = DetailTiles::rectOf(*next, view) + crop.tl();
+    const QByteArray measuresKey = RenderChain::wholeMeasuresKey(m_settings) + '|' + QByteArray::number(m_sourceGeneration);
+    std::optional<RenderChain::WholeMeasures> measures;
+    if (m_wholeMeasuresKey == measuresKey && m_wholeMeasures.valid)
+        measures = m_wholeMeasures;
+    m_tileRendering = *next;
+    m_tileRenderingKey = key;
+    const auto source = std::make_shared<const ColorPipeline::WorkingImage>(ColorPipeline::sharedCopy(m_original));
+    m_tileWatcher.setFuture(m_tasks.submit<TileRender>(
+        QStringLiteral("detail-tile"), Tasks::Priority::Foreground,
+        [source, settings = m_settings, region, measures](Tasks::Context &) {
+            TileRender result;
+            RenderChain::WholeMeasures used;
+            if (measures) {
+                used = *measures;
+            } else if (RenderChain::measureWhole(*source, settings, used)) {
+                result.measures = used;
+            } else {
+                result.error = QObject::tr("mesure de l'image entière impossible");
+                return result;
+            }
+            const ColorPipeline::WorkingImage part = RenderChain::workingRegion(*source, settings, region, used);
+            QString error;
+            if (!part.isNull())
+                result.image = ColorPipeline::toSrgb(part, ColorPipeline::OutputFormat::Preview8Bit, &error);
+            if (result.image.isNull())
+                result.error = error.isEmpty() ? QObject::tr("rendu de la tuile impossible") : error;
+            return result;
+        }).future);
+    emit detailChanged();
 }
 
 const ColorPipeline::WorkingImage &ImageEditor::previewSource() const

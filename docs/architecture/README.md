@@ -31,6 +31,7 @@ Cette zone contient les documents de référence qui décrivent les composants, 
 - [Préparation B5 : détection](detection-objets.md) : clic sur un objet, lignes, modèles à évaluer, contrats et validation ; aucun code.
 - [Préparation B9 : fusion HDR](fusion-hdr.md) : fusion radiométrique, DNG flottant, paliers et prises à faire ; aucun code.
 - [`ImageEditor` en orchestrateur](plan-imageeditor-orchestrateur.md) : état mesuré, cible et paliers de la refonte ; aucun code.
+- [Aperçu adaptatif](apercu-adaptatif.md) : zone visible en pleine résolution au zoom ; audit des étapes du rendu, conception et étapes (12 novembre 2026).
 - [Empilement et panorama](empilement-et-panorama.md) : plan multi-images, ancre utilisateur, alignement ciel/sol, recadrage automatique et dossier tampon disque ; non implémenté.
 - [Arborescence des sources](../../src/README.md) : domaines C++/QML et bibliothèque interne `iprEngine`.
 - [Préférences de l’interface](ui-preferences.md) : INI utilisateur, géométrie, sections, couleurs et schéma extensible.
