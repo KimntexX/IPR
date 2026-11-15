@@ -1,3 +1,4 @@
+#include "RenderChain.h"
 #include "imageeditor.h"
 #include "image_testing.h"
 #include "imageprovider.h"
@@ -35,7 +36,7 @@ class IprTestImageGenerator
 public:
     static ColorPipeline::WorkingImage proxy(const ColorPipeline::WorkingImage &image)
     {
-        return ImageEditor::buildEditProxy(image);
+        return RenderChain::editProxy(image);
     }
 };
 

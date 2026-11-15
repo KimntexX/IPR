@@ -25,6 +25,15 @@ struct CaptureSettings
     double aperture = 0.0;
 };
 
+// The black a DCP whose DefaultBlackRender is Auto (0, or the tag absent: Adobe Standard
+// and older Camera Matching profiles) subtracts in linear ProPhoto, at the scene level
+// before the exposure gain, ahead of the look table and the tone curve, with a quadratic
+// toe over black +/- black/2 down to zero. The DNG
+// specification leaves the amount to the converter; 0.005 is the DNG SDK's default
+// shadows (5/1000) and fits Lightroom's Camera Neutral exports of five EOS 60D CR2
+// (0.003 to 0.0075 each, 15 November 2026). None (1) subtracts nothing.
+constexpr double AutoBlackRenderLevel = 0.005;
+
 struct DcpRenderOptions
 {
     // Negative metadata, distinct from the profile's BaselineExposureOffset.

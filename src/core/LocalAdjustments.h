@@ -17,14 +17,14 @@
 // The masks of an image (ADR-0021, B2). A mask is not an image laid over another: it is a
 // zone, made of shapes, that carries its own values of the existing settings. They act in
 // the processing chain: at each stage, a pixel takes the global value plus the masks' values
-// weighted by their coverage. Masks have neither order nor blend mode: they add up.
+// weighted by their coverage. List order is organizational: masks add up, without blend modes.
 //
-// Shapes are vectors, in the normalized canvas of Geometry: the image as straightened, before
+// Shapes are vectors, in a fixed creation canvas of Geometry, anchored to the source before
 // the crop, u and v in [0, 1] across the pixels' outer edges. They render the same at every
-// resolution.
+// resolution. Mask::frame maps this canvas to the source and the current geometry.
 namespace LocalAdjustments {
 
-enum class Kind { Linear, Radial, Brush, LuminanceRange };
+enum class Kind { Linear, Radial, Brush, LuminanceRange, Triangle, Trapezoid };
 enum class Combine { Add, Subtract, Intersect };
 
 struct BrushStroke
@@ -49,6 +49,11 @@ struct Shape
     float radiusY = 0.25f;
     float angle = 0.0f;      // degrees, clockwise
     float feather = 0.5f;    // share of the radius that fades, in [0, 1]
+    // Full widths perpendicular to start -> end, in shares of the canvas's
+    // long side. A triangle always has zero width at its start.
+    float startWidth = 0.12f;
+    float endWidth = 0.4f;
+    float diffusion = 0.0f;  // cone: axial attenuation towards end, in [0, 1]
     std::vector<BrushStroke> strokes;
     // Luminance range: what the image shows before any edit, encoded as the eye reads it,
     // whole between low and high, fading over feather on each side. Alone it selects tones;
@@ -63,6 +68,7 @@ using Values = std::array<float, LocalValues::ParameterCount>;
 
 struct Mask
 {
+    Geometry::Settings frame; // creation canvas, fixed relative to the oriented source
     QString name;
     bool visible = true;
     float opacity = 1.0f;    // in [0, 1]
@@ -91,14 +97,17 @@ ipr::Image rangeLuminance(const ipr::Image &linearRgb);
 // Coverage in [0, 1] of a mask's shapes, F32 of one channel of this size; opacity and visibility apart.
 // luminance: from rangeLuminance, of this size. Without it, a range covers nothing.
 ipr::Image coverage(const Mask &mask, const ipr::Size &canvas, const ipr::Image &luminance = {});
+// Reproject the fixed creation frame onto the current canvas; zero outside it.
+ipr::Image canvasCoverage(const Mask &mask, const Geometry::Settings &geometry,
+                         const ipr::Size &source, const ipr::Image &luminance = {});
 
 // What the masks add per setting, for an image of this size. A setting no mask touches stays
 // an empty map, so that its module keeps its global path.
 LocalValues::Maps valueMaps(const Masks &masks, const ipr::Size &canvas, const ipr::Image &luminance = {});
-
-// The maps of the settings that act on the camera signal, before the geometry's resampling:
-// a canvas map brought to the source's pixels. Without a transform, returns it as is.
-ipr::Image toSource(const ipr::Image &canvasMap, const Geometry::Settings &geometry, const ipr::Size &source);
+LocalValues::Maps canvasValueMaps(const Masks &masks, const Geometry::Settings &geometry,
+                                const ipr::Size &source, const ipr::Image &luminance = {});
+// Add bidirectional frame/canvas maps to the UI description, without changing recipe data.
+QVariantList describeOnCanvas(const Masks &masks, const Geometry::Settings &geometry, const ipr::Size &source);
 
 // What a render's result depends on, for the cache keys.
 void appendKey(QDataStream &stream, const Masks &masks);

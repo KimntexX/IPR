@@ -71,6 +71,45 @@ void paintLinear(const Shape &shape, ipr::Image &out)
     });
 }
 
+void paintCone(const Shape &shape, ipr::Image &out)
+{
+    const auto start = pixelOf(shape.start, out.size());
+    const auto end = pixelOf(shape.end, out.size());
+    const auto axis = end - start;
+    const float length = std::sqrt(axis.dot(axis));
+    const float scale = float(std::max(out.width(), out.height()));
+    const float nearHalf = shape.kind == Kind::Triangle ? 0.0f : shape.startWidth * scale * 0.5f;
+    const float farHalf = shape.endWidth * scale * 0.5f;
+    if (length < 1e-4f || nearHalf + farHalf < 1e-4f) return;
+    const ipr::Point2f normal{-axis.y / length, axis.x / length};
+    const float inverseLength = 1.0f / length;
+    ipr::parallelRows(out.height(), [&](int first, int last) {
+        for (int y = first; y < last; ++y) {
+            float *row = out.mutableRow<float>(y);
+            for (int x = 0; x < out.width(); ++x) {
+                const ipr::Point2f offset{float(x) - start.x, float(y) - start.y};
+                const float along = offset.dot(axis) * inverseLength * inverseLength;
+                const float halfWidth = nearHalf + along * (farHalf - nearHalf);
+                const float across = std::abs(offset.dot(normal));
+                if (along < 0 || along > 1 || halfWidth <= 0 || across > halfWidth) {
+                    row[x] = 0;
+                    continue;
+                }
+                // Independent axial and transverse limits keep equal-coverage sides
+                // straight. Multiplying these ramps rounds the beam into a bulb.
+                float edge = 1.0f;
+                if (shape.feather > 0) {
+                    edge = ImageMath::smoothStep(0.0f, shape.feather, 1.0f - across / halfWidth);
+                    edge = std::min(edge, std::clamp((1.0f - along) / (shape.feather * 0.5f), 0.0f, 1.0f));
+                    if (nearHalf > 0)
+                        edge = std::min(edge, std::clamp(along / (shape.feather * 0.5f), 0.0f, 1.0f));
+                }
+                row[x] = std::min(edge, 1.0f - shape.diffusion * along);
+            }
+        }
+    });
+}
+
 void paintRadial(const Shape &shape, ipr::Image &out)
 {
     const ipr::Point2f centre = pixelOf(shape.center, out.size());
@@ -221,6 +260,10 @@ ipr::Image shapeCoverage(const Shape &shape, const ipr::Size &canvas, const ipr:
     case Kind::Radial:
         paintRadial(shape, out);
         break;
+    case Kind::Triangle:
+    case Kind::Trapezoid:
+        paintCone(shape, out);
+        break;
     case Kind::Brush:
         for (const BrushStroke &stroke : shape.strokes)
             paintStroke(stroke, out);
@@ -285,12 +328,13 @@ bool operator==(const Shape &a, const Shape &b)
     return a.kind == b.kind && a.combine == b.combine && a.inverted == b.inverted && a.start == b.start && a.end == b.end &&
            a.center == b.center && a.radiusX == b.radiusX && a.radiusY == b.radiusY && a.angle == b.angle &&
            a.feather == b.feather && a.strokes == b.strokes && a.rangeLow == b.rangeLow &&
-           a.rangeHigh == b.rangeHigh && a.rangeFeather == b.rangeFeather;
+            a.rangeHigh == b.rangeHigh && a.rangeFeather == b.rangeFeather &&
+            a.startWidth == b.startWidth && a.endWidth == b.endWidth && a.diffusion == b.diffusion;
 }
 
 bool operator==(const Mask &a, const Mask &b)
 {
-    return a.name == b.name && a.visible == b.visible && a.opacity == b.opacity && a.shapes == b.shapes && a.values == b.values;
+    return a.frame == b.frame && a.name == b.name && a.visible == b.visible && a.opacity == b.opacity && a.shapes == b.shapes && a.values == b.values;
 }
 
 bool bound(Masks &masks)
@@ -305,7 +349,7 @@ bool bound(Masks &masks)
         return true;
     };
     for (Mask &mask : masks) {
-        if (!std::isfinite(mask.opacity) || int(mask.shapes.size()) > largestShapeCount)
+        if (!Geometry::bound(mask.frame) || !std::isfinite(mask.opacity) || int(mask.shapes.size()) > largestShapeCount)
             return false;
         mask.opacity = std::clamp(mask.opacity, 0.0f, 1.0f);
         for (size_t i = 0; i < mask.values.size(); ++i) {
@@ -317,6 +361,7 @@ bool bound(Masks &masks)
             if (!place(shape.start) || !place(shape.end) || !place(shape.center) || !std::isfinite(shape.radiusX) ||
                 !std::isfinite(shape.radiusY) || !std::isfinite(shape.angle) || !std::isfinite(shape.feather) ||
                 !std::isfinite(shape.rangeLow) || !std::isfinite(shape.rangeHigh) || !std::isfinite(shape.rangeFeather) ||
+                !std::isfinite(shape.startWidth) || !std::isfinite(shape.endWidth) || !std::isfinite(shape.diffusion) ||
                 int(shape.strokes.size()) > largestStrokeCount)
                 return false;
             shape.rangeLow = std::clamp(shape.rangeLow, 0.0f, 1.0f);
@@ -324,6 +369,9 @@ bool bound(Masks &masks)
             shape.rangeFeather = std::clamp(shape.rangeFeather, 0.0f, 1.0f);
             shape.radiusX = std::clamp(shape.radiusX, 0.0f, 8.0f);
             shape.radiusY = std::clamp(shape.radiusY, 0.0f, 8.0f);
+            shape.startWidth = std::clamp(shape.startWidth, 0.0f, 8.0f);
+            shape.endWidth = std::clamp(shape.endWidth, 0.0f, 8.0f);
+            shape.diffusion = std::clamp(shape.diffusion, 0.0f, 1.0f);
             shape.angle = std::clamp(shape.angle, -360.0f, 360.0f);
             shape.feather = std::clamp(shape.feather, 0.0f, 1.0f);
             for (BrushStroke &stroke : shape.strokes) {
@@ -393,7 +441,39 @@ ipr::Image coverage(const Mask &mask, const ipr::Size &canvas, const ipr::Image 
     return combined;
 }
 
-LocalValues::Maps valueMaps(const Masks &masks, const ipr::Size &canvas, const ipr::Image &luminance)
+namespace {
+ipr::Image reframe(const ipr::Image &image, const Geometry::Settings &from,
+                   const Geometry::Settings &to, const ipr::Size &source)
+{
+    if (image.empty() || source.empty()) return {};
+    const auto output = Geometry::canvasSize(to, source);
+    const auto input = image.size();
+    const auto a = Geometry::homography(from, source);
+    const auto b = Geometry::homography(to, source);
+    if (a == b && output == input) return image.share();
+    bool invertible = false;
+    const auto inverse = b.inv(&invertible);
+    if (!invertible) return {};
+    const ipr::Matrix33d pixelToNormal(1.0/output.width, 0, .5/output.width,
+                                     0, 1.0/output.height, .5/output.height, 0, 0, 1);
+    const ipr::Matrix33d normalToPixel(input.width, 0, -.5, 0, input.height, -.5, 0, 0, 1);
+    return ipr::warpedPerspective(image, normalToPixel * a * inverse * pixelToNormal,
+                                 output, ipr::Resampling::Linear, ipr::Outside::Zero);
+}
+}
+
+ipr::Image canvasCoverage(const Mask &mask, const Geometry::Settings &geometry,
+                         const ipr::Size &source, const ipr::Image &luminance)
+{
+    if (source.empty()) return {};
+    const auto inFrame = reframe(luminance, geometry, mask.frame, source);
+    return reframe(coverage(mask, Geometry::canvasSize(mask.frame, source), inFrame),
+                   mask.frame, geometry, source);
+}
+
+static LocalValues::Maps calculateValueMaps(const Masks &masks, const ipr::Size &canvas,
+                                          const ipr::Image &luminance,
+                                          const Geometry::Settings *geometry, const ipr::Size &source)
 {
     LocalValues::Maps maps;
     if (!active(masks) || canvas.empty())
@@ -403,7 +483,10 @@ LocalValues::Maps valueMaps(const Masks &masks, const ipr::Size &canvas, const i
             std::all_of(mask.values.cbegin(), mask.values.cend(), [](float value) { return value == 0.0f; }))
             continue;
         // As OpenCV scaled a Mat: the product plus a zero shift.
-        const ipr::Image weight = ipr::mapped(coverage(mask, canvas, luminance),
+        const auto covered = geometry ? canvasCoverage(mask, *geometry, source, luminance)
+                                      : coverage(mask, canvas, luminance);
+        if (covered.empty()) continue;
+        const ipr::Image weight = ipr::mapped(covered,
                                               [opacity = mask.opacity](float v) { return v * opacity + 0.0f; });
         for (size_t i = 0; i < mask.values.size(); ++i) {
             if (mask.values[i] == 0.0f)
@@ -417,17 +500,15 @@ LocalValues::Maps valueMaps(const Masks &masks, const ipr::Size &canvas, const i
     return maps;
 }
 
-ipr::Image toSource(const ipr::Image &canvasMap, const Geometry::Settings &geometry, const ipr::Size &source)
+LocalValues::Maps valueMaps(const Masks &masks, const ipr::Size &canvas, const ipr::Image &luminance)
 {
-    if (canvasMap.empty() || !Geometry::transformsPixels(geometry))
-        return canvasMap.share();
-    const ipr::Size canvas = canvasMap.size();
-    // From a source pixel's index to a canvas pixel's: normalized at their outer edges in between.
-    const ipr::Matrix33d sourceToNormal(1.0 / source.width, 0, 0.5 / source.width, 0, 1.0 / source.height, 0.5 / source.height, 0, 0, 1);
-    const ipr::Matrix33d normalToCanvas(canvas.width, 0, -0.5, 0, canvas.height, -0.5, 0, 0, 1);
-    const ipr::Matrix33d sourceToCanvas = normalToCanvas * Geometry::homography(geometry, source) * sourceToNormal;
-    ipr::Image out = ipr::warpedPerspective(canvasMap, sourceToCanvas, source, ipr::Resampling::Linear, ipr::Outside::LastPixel);
-    return out;
+    return calculateValueMaps(masks, canvas, luminance, nullptr, {});
+}
+
+LocalValues::Maps canvasValueMaps(const Masks &masks, const Geometry::Settings &geometry,
+                                const ipr::Size &source, const ipr::Image &luminance)
+{
+    return calculateValueMaps(masks, Geometry::canvasSize(geometry, source), luminance, &geometry, source);
 }
 
 void appendKey(QDataStream &stream, const Masks &masks)
@@ -436,6 +517,10 @@ void appendKey(QDataStream &stream, const Masks &masks)
         return;
     stream << qint32(masks.size());
     for (const Mask &mask : masks) {
+        const auto &g = mask.frame;
+        stream << qint32(g.quarterTurns) << g.flipHorizontal << g.flipVertical << g.rotation
+               << qint32(g.vertical) << qint32(g.horizontal) << qint32(g.aspect) << qint32(g.scale)
+               << qint32(g.offsetX) << qint32(g.offsetY);
         stream << mask.visible << mask.opacity << qint32(mask.shapes.size());
         writeFloats(stream, mask.values);
         for (const Shape &shape : mask.shapes) {
@@ -443,6 +528,8 @@ void appendKey(QDataStream &stream, const Masks &masks)
                    << shape.end.x << shape.end.y << shape.center.x << shape.center.y << shape.radiusX << shape.radiusY
                    << shape.angle << shape.feather << shape.rangeLow << shape.rangeHigh << shape.rangeFeather
                    << qint32(shape.strokes.size());
+            if (shape.kind == Kind::Triangle || shape.kind == Kind::Trapezoid)
+                stream << shape.startWidth << shape.endWidth << shape.diffusion;
             for (const BrushStroke &stroke : shape.strokes) {
                 stream << stroke.size << stroke.feather << stroke.flow << qint32(stroke.points.size());
                 for (const ipr::Point2f &point : stroke.points)
@@ -472,6 +559,8 @@ QString kindName(Kind kind)
     case Kind::Radial: return QStringLiteral("radial");
     case Kind::Brush: return QStringLiteral("brush");
     case Kind::LuminanceRange: return QStringLiteral("luminanceRange");
+    case Kind::Triangle: return QStringLiteral("triangle");
+    case Kind::Trapezoid: return QStringLiteral("trapezoid");
     }
     return {};
 }
@@ -488,7 +577,7 @@ QString combineName(Combine combine)
 
 bool kindNamed(const QString &name, Kind &kind)
 {
-    for (const Kind candidate : {Kind::Linear, Kind::Radial, Kind::Brush, Kind::LuminanceRange})
+    for (const Kind candidate : {Kind::Linear, Kind::Radial, Kind::Brush, Kind::LuminanceRange, Kind::Triangle, Kind::Trapezoid})
         if (name == kindName(candidate)) {
             kind = candidate;
             return true;
@@ -520,6 +609,8 @@ QVariantList describe(const Masks &masks)
                 {QStringLiteral("inverted"), shape.inverted}, {QStringLiteral("start"), pointValue(shape.start)},
                 {QStringLiteral("end"), pointValue(shape.end)}, {QStringLiteral("center"), pointValue(shape.center)},
                 {QStringLiteral("radiusX"), double(shape.radiusX)}, {QStringLiteral("radiusY"), double(shape.radiusY)},
+                {QStringLiteral("startWidth"), double(shape.startWidth)}, {QStringLiteral("endWidth"), double(shape.endWidth)},
+                {QStringLiteral("diffusion"), double(shape.diffusion)},
                 {QStringLiteral("angle"), double(shape.angle)}, {QStringLiteral("feather"), double(shape.feather)},
                 {QStringLiteral("strokes"), int(shape.strokes.size())},
                 {QStringLiteral("rangeLow"), double(shape.rangeLow)}, {QStringLiteral("rangeHigh"), double(shape.rangeHigh)},
@@ -527,6 +618,31 @@ QVariantList describe(const Masks &masks)
         list.append(QVariantMap{{QStringLiteral("name"), mask.name}, {QStringLiteral("visible"), mask.visible},
                                 {QStringLiteral("opacity"), double(mask.opacity)}, {QStringLiteral("values"), values},
                                 {QStringLiteral("shapes"), shapes}});
+    }
+    return list;
+}
+
+QVariantList describeOnCanvas(const Masks &masks, const Geometry::Settings &geometry, const ipr::Size &source)
+{
+    QVariantList list = describe(masks);
+    if (source.empty()) return list;
+    const auto current = Geometry::homography(geometry, source);
+    for (size_t i = 0; i < masks.size(); ++i) {
+        const auto frame = Geometry::homography(masks[i].frame, source);
+        bool valid = false;
+        const auto toCanvas = current * frame.inv(&valid);
+        if (!valid) continue;
+        const auto toFrame = toCanvas.inv(&valid);
+        if (!valid) continue;
+        QVariantList forward, inverse;
+        for (int y = 0; y < 3; ++y)
+            for (int x = 0; x < 3; ++x) { forward.append(toCanvas(y,x)); inverse.append(toFrame(y,x)); }
+        QVariantMap item = list[qsizetype(i)].toMap();
+        item.insert(QStringLiteral("frameToCanvas"), forward);
+        item.insert(QStringLiteral("canvasToFrame"), inverse);
+        const auto size = Geometry::canvasSize(masks[i].frame, source);
+        item.insert(QStringLiteral("frameAspect"), double(size.width) / size.height);
+        list[qsizetype(i)] = item;
     }
     return list;
 }
@@ -542,6 +658,9 @@ bool setShapeFields(Shape &shape, const QVariantMap &values)
         else if (key == QStringLiteral("center")) ok = readPoint(value, shape.center);
         else if (key == QStringLiteral("radiusX")) ok = readFloat(value, shape.radiusX);
         else if (key == QStringLiteral("radiusY")) ok = readFloat(value, shape.radiusY);
+        else if (key == QStringLiteral("startWidth")) ok = readFloat(value, shape.startWidth);
+        else if (key == QStringLiteral("endWidth")) ok = readFloat(value, shape.endWidth);
+        else if (key == QStringLiteral("diffusion")) ok = readFloat(value, shape.diffusion);
         else if (key == QStringLiteral("angle")) ok = readFloat(value, shape.angle);
         else if (key == QStringLiteral("feather")) ok = readFloat(value, shape.feather);
         else if (key == QStringLiteral("rangeLow")) ok = readFloat(value, shape.rangeLow);

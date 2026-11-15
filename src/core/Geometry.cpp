@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <array>
 #include <cmath>
+#include <utility>
 #include <vector>
 
 namespace Geometry {
@@ -78,7 +79,7 @@ ipr::Image turnedAndMirrored(ipr::Image image, const Settings &s)
 // blurred before the warp, by what the reduction needs, along each axis of the source.
 // The scale and the aspect only: perspective reduces less, and varies across the image.
 // Empty when nothing is reduced.
-ipr::Image antialiased(const ipr::Image &image, const Settings &s)
+std::pair<double, double> antialiasSigmas(const Settings &s)
 {
     const auto spread = [](double zoom) {
         return zoom < 1 ? 0.7 * std::sqrt(1 / (zoom * zoom) - 1) : 0.0;
@@ -87,20 +88,69 @@ ipr::Image antialiased(const ipr::Image &image, const Settings &s)
     double sigmaX = spread(zoom * widen), sigmaY = spread(zoom / widen);
     if (s.quarterTurns % 2)
         std::swap(sigmaX, sigmaY);
+    return {sigmaX, sigmaY};
+}
+
+ipr::Image antialiased(const ipr::Image &image, const Settings &s)
+{
+    const auto [sigmaX, sigmaY] = antialiasSigmas(s);
     if (sigmaX <= 0 && sigmaY <= 0)
         return {};
     return ipr::gaussianBlurred(image, sigmaX, sigmaY, ipr::BlurBorder::LastPixel);
 }
 
+// From the canvas's pixels to the source's, for a source of this size: what the warp reads.
+Matrix canvasToSourcePixels(const Settings &s, const ipr::Size &source)
+{
+    const ipr::Size canvas = canvasSize(s, source);
+    // Pixel x is centred on (x + 0.5) / width: the same geometry at every resolution.
+    const Matrix fromPixels(1.0 / source.width, 0, 0.5 / source.width, 0, 1.0 / source.height, 0.5 / source.height, 0, 0, 1);
+    const Matrix toPixels(canvas.width, 0, -0.5, 0, canvas.height, -0.5, 0, 0, 1);
+    const Matrix forward = toPixels * homography(s, source) * fromPixels;
+    return forward.inv();
+}
+
+ipr::Resampling resamplingOf(Quality quality)
+{
+    return quality == Quality::Export ? ipr::Resampling::Lanczos4 : ipr::Resampling::Cubic;
+}
+
+// The source pixel a canvas pixel copies, for turns and mirrors alone.
+ipr::Point2i turnedSource(const Settings &s, const ipr::Size &source, int x, int y)
+{
+    const ipr::Size canvas = canvasSize(s, source);
+    if (s.flipHorizontal) x = canvas.width - 1 - x;
+    if (s.flipVertical) y = canvas.height - 1 - y;
+    const int turns = ((s.quarterTurns % 4) + 4) % 4, width = source.width, height = source.height;
+    if (turns == 1) return {y, height - 1 - x};
+    if (turns == 2) return {width - 1 - x, height - 1 - y};
+    if (turns == 3) return {width - 1 - y, x};
+    return {x, y};
+}
+
+ipr::Recti boundsOf(const std::array<ipr::Point2i, 4> &corners)
+{
+    int left = corners[0].x, right = corners[0].x, top = corners[0].y, bottom = corners[0].y;
+    for (const ipr::Point2i &corner : corners) {
+        left = std::min(left, corner.x); right = std::max(right, corner.x);
+        top = std::min(top, corner.y); bottom = std::max(bottom, corner.y);
+    }
+    return {left, top, right - left + 1, bottom - top + 1};
+}
+
 ipr::Image resampled(const ipr::Image &image, const Settings &s, Quality quality, ipr::Outside outside)
 {
-    const ipr::Size canvas = canvasSize(s, image.size());
-    // Pixel x is centred on (x + 0.5) / width: the same geometry at every resolution.
-    const Matrix fromPixels(1.0 / image.width(), 0, 0.5 / image.width(), 0, 1.0 / image.height(), 0.5 / image.height(), 0, 0, 1);
-    const Matrix toPixels(canvas.width, 0, -0.5, 0, canvas.height, -0.5, 0, 0, 1);
-    const Matrix forward = toPixels * homography(s, image.size()) * fromPixels;
-    return ipr::warpedPerspective(image, forward.inv(), canvas, quality == Quality::Export ? ipr::Resampling::Lanczos4 : ipr::Resampling::Cubic,
-                                  outside);
+    return ipr::warpedPerspective(image, canvasToSourcePixels(s, image.size()), canvasSize(s, image.size()),
+                                  resamplingOf(quality), outside);
+}
+
+ipr::Image resampledRegion(const ipr::Image &window, const ipr::Point2i &origin, const ipr::Size &source,
+                           const Settings &s, Quality quality, const ipr::Recti &region, ipr::Outside outside)
+{
+    ipr::Image out = ipr::Image::create(region.size(), ipr::Depth::F32, window.channels());
+    ipr::warpPerspectiveRegionInto(window, origin, source, out, region.tl(), canvasSize(s, source),
+                                   canvasToSourcePixels(s, source), resamplingOf(quality), outside);
+    return out;
 }
 
 std::optional<ipr::Point2d> mapped(const Matrix &matrix, const ipr::Point2d &point)
@@ -216,6 +266,20 @@ ipr::Point2d viewToCanvas(const Settings &s, const ipr::Point2d &point)
     return {s.cropX + point.x * s.cropWidth, s.cropY + point.y * s.cropHeight};
 }
 
+std::vector<float> warpFloor(const ipr::Image &rgb)
+{
+    std::vector<ipr::Image> channels = ipr::splitChannels(rgb);
+    std::vector<float> floor(size_t(rgb.channels()));
+    for (int channel = 0; channel < rgb.channels(); ++channel)
+        floor[size_t(channel)] = float(std::min(0.0, ipr::extremesOf(channels[size_t(channel)]).smallest));
+    return floor;
+}
+
+bool resamples(const Settings &s)
+{
+    return needsResampling(s);
+}
+
 ipr::Image warpRgb(ipr::Image rgb, const Settings &s, Quality quality)
 {
     if (rgb.empty() || !transformsPixels(s))
@@ -223,14 +287,74 @@ ipr::Image warpRgb(ipr::Image rgb, const Settings &s, Quality quality)
     if (!needsResampling(s))
         return turnedAndMirrored(std::move(rgb), s);
     const ipr::Image blurred = antialiased(rgb, s);
-    ipr::Image result = resampled(blurred.empty() ? rgb : blurred, s, quality, ipr::Outside::LastPixel);
+    const ipr::Image result = resampled(blurred.empty() ? rgb : blurred, s, quality, ipr::Outside::LastPixel);
     // The filter's lobes must not push a pixel below what the source holds.
-    std::vector<ipr::Image> channels;
-    channels = ipr::splitChannels(rgb);
-    std::vector<float> floor(size_t(rgb.channels()));
-    for (int channel = 0; channel < rgb.channels(); ++channel)
-        floor[size_t(channel)] = float(std::min(0.0, ipr::extremesOf(channels[size_t(channel)]).smallest));
-    return ipr::atLeast(result, floor);
+    return ipr::atLeast(result, warpFloor(rgb));
+}
+
+ipr::Recti sourceWindow(const Settings &s, const ipr::Size &source, const ipr::Recti &region, Quality quality)
+{
+    const ipr::Recti whole(0, 0, source.width, source.height);
+    if (!transformsPixels(s))
+        return region & whole;
+    const int right = region.x + region.width - 1, bottom = region.y + region.height - 1;
+    if (!needsResampling(s))
+        return boundsOf({turnedSource(s, source, region.x, region.y), turnedSource(s, source, right, region.y),
+                         turnedSource(s, source, region.x, bottom), turnedSource(s, source, right, bottom)}) & whole;
+    // A straight edge stays straight: the corners bound what the region reads.
+    const Matrix toSource = canvasToSourcePixels(s, source);
+    double left = 0, top = 0, last = 0, lowest = 0;
+    bool first = true;
+    for (const ipr::Point2i &corner : {region.tl(), ipr::Point2i(right, region.y), ipr::Point2i(region.x, bottom),
+                                       ipr::Point2i(right, bottom)}) {
+        const ipr::Vec3d p = toSource * ipr::Vec3d(corner.x, corner.y, 1);
+        if (!(p[2] > 1e-9))
+            return whole;
+        const double x = p[0] / p[2], y = p[1] / p[2];
+        left = first ? x : std::min(left, x); last = first ? x : std::max(last, x);
+        top = first ? y : std::min(top, y); lowest = first ? y : std::max(lowest, y);
+        first = false;
+    }
+    // The taps around each position and a pixel for the rounding, read at the last pixel beyond the
+    // source; then what the antialiasing blur reads around them.
+    const int taps = quality == Quality::Export ? 4 : 2;
+    const double limit = 1e6;
+    const auto pixel = [&](double v, int extra, int length) {
+        return std::clamp(int(std::floor(std::clamp(v, -limit, limit))) + extra, 0, length - 1);
+    };
+    const auto [sigmaX, sigmaY] = antialiasSigmas(s);
+    const int blurX = int(ipr::gaussianHalfKernel(sigmaX).size()), blurY = int(ipr::gaussianHalfKernel(sigmaY).size());
+    const int x0 = pixel(left, -taps - 1, source.width) - blurX, x1 = pixel(last, taps + 1, source.width) + blurX;
+    const int y0 = pixel(top, -taps - 1, source.height) - blurY, y1 = pixel(lowest, taps + 1, source.height) + blurY;
+    return ipr::Recti(x0, y0, x1 - x0 + 1, y1 - y0 + 1) & whole;
+}
+
+ipr::Image warpRgbRegion(const ipr::Image &window, const ipr::Point2i &origin, const ipr::Size &source,
+                         const Settings &s, Quality quality, const ipr::Recti &region, const std::vector<float> &floor)
+{
+    if (window.empty() || region.empty())
+        return {};
+    if (!transformsPixels(s))
+        return window.copy(region - origin);
+    if (!needsResampling(s)) {
+        const ipr::Recti read = sourceWindow(s, source, region, quality);
+        return turnedAndMirrored(window.copy(read - origin), s);
+    }
+    const ipr::Image blurred = antialiased(window, s);
+    ipr::Image result = resampledRegion(blurred.empty() ? window : blurred, origin, source, s, quality, region,
+                                        ipr::Outside::LastPixel);
+    if (floor.size() == size_t(result.channels()))
+        result = ipr::atLeast(result, floor);
+    return result;
+}
+
+namespace {
+void settleCoverage(ipr::Image &coverage)
+{
+    // The filter's rounding must not make the image's inside faintly transparent,
+    // nor leave a haze beyond it.
+    ipr::mapInPlace(coverage, [](float v) { return v >= 0.999f ? 1.0f : v <= 0.001f ? 0.0f : v; });
+}
 }
 
 ipr::Image warpCoverage(ipr::Image alpha, const Settings &s, Quality quality)
@@ -240,9 +364,21 @@ ipr::Image warpCoverage(ipr::Image alpha, const Settings &s, Quality quality)
     if (!needsResampling(s))
         return turnedAndMirrored(std::move(alpha), s);
     ipr::Image result = resampled(alpha, s, quality, ipr::Outside::Zero);
-    // The filter's rounding must not make the image's inside faintly transparent,
-    // nor leave a haze beyond it.
-    ipr::mapInPlace(result, [](float v) { return v >= 0.999f ? 1.0f : v <= 0.001f ? 0.0f : v; });
+    settleCoverage(result);
+    return result;
+}
+
+ipr::Image warpCoverageRegion(const ipr::Image &window, const ipr::Point2i &origin, const ipr::Size &source,
+                              const Settings &s, Quality quality, const ipr::Recti &region)
+{
+    if (window.empty() || region.empty())
+        return {};
+    if (!transformsPixels(s))
+        return window.copy(region - origin);
+    if (!needsResampling(s))
+        return turnedAndMirrored(window.copy(sourceWindow(s, source, region, quality) - origin), s);
+    ipr::Image result = resampledRegion(window, origin, source, s, quality, region, ipr::Outside::Zero);
+    settleCoverage(result);
     return result;
 }
 

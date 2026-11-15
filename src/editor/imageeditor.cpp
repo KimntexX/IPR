@@ -402,6 +402,31 @@ ImageEditor::ImageEditor(ImageProvider *provider,
         emit detailChanged();
         refreshDetail();
     });
+    connect(&m_tileWatcher, &QFutureWatcher<TileRender>::finished, this, [this] {
+        TileRender rendered;
+        try { rendered = Tasks::takeResult(m_tileWatcher.future()); }
+        catch (...) { rendered.error = tr("ressources insuffisantes ou traitement interrompu"); }
+        const QByteArray key = std::exchange(m_tileRenderingKey, QByteArray());
+        const bool current = detailShowable() && tiledDetail() && key == detailKey();
+        if (current && rendered.measures) {
+            m_wholeMeasures = std::move(*rendered.measures);
+            m_wholeMeasuresKey = key.isEmpty() ? QByteArray() : RenderChain::wholeMeasuresKey(m_settings)
+                + '|' + QByteArray::number(m_sourceGeneration);
+        }
+        // A tile no longer near the view, of former settings or of a former photo, is dropped.
+        if (current && !rendered.image.isNull() && m_tileKey == key &&
+            DetailTiles::kept(m_tileRendering, ipr::Size(detailSize().width(), detailSize().height()), m_tileView)) {
+            m_provider->setDetailTile(QStringLiteral("tile-%1-%2").arg(m_tileRendering.column).arg(m_tileRendering.row),
+                                      rendered.image);
+            m_tiles.push_back(m_tileRendering);
+            emit detailTilesChanged();
+        } else if (current && rendered.image.isNull()) {
+            m_tileFailedKey = key;
+            setStatusMessage(tr("Vue pleine résolution indisponible : %1").arg(rendered.error));
+        }
+        emit detailChanged();
+        scheduleTile();
+    });
 
     connect(&m_renderWatcher, &QFutureWatcher<RenderChain::Preview>::finished,
             this, [this] {
@@ -1744,9 +1769,13 @@ void ImageEditor::beginAdjustmentGesture()
 
 void ImageEditor::endAdjustmentGesture()
 {
+    const bool hadFastGeometry = m_geometryGesture;
+    m_geometryGesture = false;
+    m_geometryProxy = {};
     m_inAdjustmentGesture = false;
+    if (hadFastGeometry) emit geometryPreviewChanged();
     recordHistory();
-    if (!m_original.isNull() && originalFramingStale()) {
+    if (!m_original.isNull() && (hadFastGeometry || originalFramingStale())) {
         ++m_requestedRevision;
         setBusy(true);
         m_renderDebounce.start();
@@ -1909,8 +1938,13 @@ void ImageEditor::commitGeometry(Geometry::Settings next)
     Geometry::applyConstraint(next, m_original.linearRgba.size());
     if (next == m_settings.geometry)
         return;
+    if (m_inAdjustmentGesture && !m_geometryGesture) {
+        m_geometryGesture = true;
+        emit geometryPreviewChanged();
+    }
     m_settings.geometry = next;
     emit geometryChanged();
+    emit localMasksChanged(); // frame-to-canvas handles move with the photo
     scheduleRender();
 }
 
@@ -1926,7 +1960,8 @@ void ImageEditor::setLocalMaskOverlay(int mask)
 
 QVariantList ImageEditor::localMasks() const
 {
-    return LocalAdjustments::describe(m_settings.localMasks);
+    return LocalAdjustments::describeOnCanvas(m_settings.localMasks, m_settings.geometry,
+        m_original.isNull() ? ipr::Size() : m_original.linearRgba.size());
 }
 
 bool ImageEditor::commitLocalMasks(LocalAdjustments::Masks next)
@@ -1946,8 +1981,11 @@ int ImageEditor::addLocalMask(const QString &kind)
     LocalAdjustments::Shape shape;
     if (!LocalAdjustments::kindNamed(kind, shape.kind))
         return -1;
+    if (shape.kind == LocalAdjustments::Kind::Triangle || shape.kind == LocalAdjustments::Kind::Trapezoid)
+        shape.diffusion = 0.7f;
     LocalAdjustments::Masks next = m_settings.localMasks;
     LocalAdjustments::Mask mask;
+    mask.frame = m_settings.geometry;
     mask.name = tr("Masque %1").arg(next.size() + 1);
     mask.shapes.push_back(shape);
     next.push_back(std::move(mask));
@@ -1962,6 +2000,21 @@ void ImageEditor::removeLocalMask(int mask)
     LocalAdjustments::Masks next = m_settings.localMasks;
     next.erase(next.begin() + mask);
     commitLocalMasks(std::move(next));
+}
+
+bool ImageEditor::moveLocalMask(int from, int to)
+{
+    const int count = int(m_settings.localMasks.size());
+    if (from < 0 || to < 0 || from >= count || to >= count)
+        return false;
+    if (from == to)
+        return true;
+    LocalAdjustments::Masks next = m_settings.localMasks;
+    if (from < to)
+        std::rotate(next.begin() + from, next.begin() + from + 1, next.begin() + to + 1);
+    else
+        std::rotate(next.begin() + to, next.begin() + from, next.begin() + from + 1);
+    return commitLocalMasks(std::move(next));
 }
 
 int ImageEditor::duplicateLocalMask(int mask)
@@ -2016,6 +2069,8 @@ int ImageEditor::addLocalMaskShape(int mask, const QString &kind, const QString 
     if (mask < 0 || mask >= int(m_settings.localMasks.size()) || !LocalAdjustments::kindNamed(kind, shape.kind) ||
         !LocalAdjustments::combineNamed(combine, shape.combine))
         return -1;
+    if (shape.kind == LocalAdjustments::Kind::Triangle || shape.kind == LocalAdjustments::Kind::Trapezoid)
+        shape.diffusion = 0.7f;
     LocalAdjustments::Masks next = m_settings.localMasks;
     next[size_t(mask)].shapes.push_back(shape);
     const int index = int(next[size_t(mask)].shapes.size()) - 1;
@@ -2372,7 +2427,7 @@ QByteArray ImageEditor::detailKey() const
 // The overlays and the crop tool draw on the preview: the detail hides while they show.
 bool ImageEditor::detailShowable() const
 {
-    return m_detailWanted && detailRatio() > 1.0 && !m_cropEditing && m_pointColorOverlay < 0 &&
+    return m_detailWanted && !m_geometryGesture && detailRatio() > 1.0 && !m_cropEditing && m_pointColorOverlay < 0 &&
         m_localMaskOverlay < 0 && m_retouchOverlay < 0 && !m_embeddedPreview && !m_loadWatcher.isRunning();
 }
 
@@ -2389,18 +2444,35 @@ void ImageEditor::setDetailWanted(bool wanted)
 void ImageEditor::refreshDetail()
 {
     const bool showable = detailShowable();
+    const bool tiled = showable && tiledDetail();
     const QByteArray key = showable ? detailKey() : QByteArray();
-    if (showable && !m_detailImageKey.isEmpty() && m_detailImageKey != key) {
-        // Other settings: the former pixels are never shown again, free them now.
+    if (showable && !m_detailImageKey.isEmpty() && (m_detailImageKey != key || tiled)) {
+        // Other settings, or tiles now: the former pixels are never shown again, free them now.
+        // Hidden only (the crop tool, an overlay), the whole image waits to come back as it was;
+        // tiles, quick to render again, are freed.
         m_provider->setDetailImage({});
         m_detailImageKey.clear();
     }
-    const QString source = showable && !m_detailImageKey.isEmpty()
+    if (!m_tileKey.isEmpty() && (m_tileKey != key || !tiled))
+        dropTiles();
+    const QString source = showable && !tiled && !m_detailImageKey.isEmpty()
         ? QStringLiteral("image://editor/detail?revision=%1").arg(m_detailRevision) : QString();
     if (source != m_detailSource) {
         m_detailSource = source;
         emit detailChanged();
     }
+    if (tiled) {
+        // Each tile renders in a few tens of milliseconds: a short rest after a change, none after.
+        if (m_tileKey != key) {
+            m_tileKey = key;
+            m_detailDelay.setInterval(150);
+            m_detailDelay.start();
+        } else if (!m_detailDelay.isActive()) {
+            scheduleTile();
+        }
+        return;
+    }
+    m_detailDelay.setInterval(350);
     if (showable && source.isEmpty() && key != m_detailRenderKey && key != m_detailFailedKey)
         m_detailDelay.start();
     else
@@ -2409,6 +2481,10 @@ void ImageEditor::refreshDetail()
 
 void ImageEditor::startDetailRender()
 {
+    if (tiledDetail()) {
+        scheduleTile();
+        return;
+    }
     // A running render ends in refreshDetail, which asks again when needed.
     if (!detailShowable() || m_detailWatcher.isRunning() || m_renderWatcher.isRunning()) return;
     const QByteArray key = detailKey();
@@ -2435,10 +2511,153 @@ void ImageEditor::dropDetail()
     m_provider->setDetailImage({});
     m_detailImageKey.clear();
     m_detailFailedKey.clear();
+    dropTiles();
+    m_tileFailedKey.clear();
+    m_wholeMeasures = {};
+    m_wholeMeasuresKey.clear();
     if (!m_detailSource.isEmpty()) {
         m_detailSource.clear();
         emit detailChanged();
     }
+}
+
+bool ImageEditor::tiledDetail() const
+{
+    return !m_original.isNull() && !m_masterIsProxy && RenderChain::rendersByRegion(m_settings);
+}
+
+QSize ImageEditor::detailSize() const
+{
+    if (m_masterIsProxy || m_original.isNull())
+        return {};
+    const ipr::Size canvas = Geometry::canvasSize(m_settings.geometry, m_original.linearRgba.size());
+    const ipr::Recti crop = Geometry::hasCrop(m_settings.geometry) ? Geometry::cropRect(m_settings.geometry, canvas)
+                                                                   : ipr::Recti(0, 0, canvas.width, canvas.height);
+    return {crop.width, crop.height};
+}
+
+QVariantList ImageEditor::detailTiles() const
+{
+    QVariantList tiles;
+    const ipr::Size view(detailSize().width(), detailSize().height());
+    for (const DetailTiles::Tile &tile : m_tiles) {
+        const ipr::Recti rect = DetailTiles::rectOf(tile, view);
+        tiles.append(QVariantMap{{QStringLiteral("x"), rect.x}, {QStringLiteral("y"), rect.y},
+                                 {QStringLiteral("width"), rect.width}, {QStringLiteral("height"), rect.height},
+                                 {QStringLiteral("source"), QStringLiteral("image://editor/tile-%1-%2?revision=%3")
+                                      .arg(tile.column).arg(tile.row).arg(m_tileRevision)}});
+    }
+    return tiles;
+}
+
+ipr::Recti ImageEditor::detailViewRect() const
+{
+    const QSize size = detailSize();
+    return m_tileView & ipr::Recti(0, 0, size.width(), size.height());
+}
+
+void ImageEditor::setDetailView(double x, double y, double width, double height, double focusX, double focusY)
+{
+    if (!std::isfinite(x) || !std::isfinite(y) || !std::isfinite(width) || !std::isfinite(height) ||
+        !std::isfinite(focusX) || !std::isfinite(focusY))
+        return;
+    const double limit = 1e7;
+    const auto whole = [&](double v) { return int(std::floor(std::clamp(v, -limit, limit))); };
+    const ipr::Recti view(whole(x), whole(y), std::max(0, whole(x + width) - whole(x) + 1),
+                          std::max(0, whole(y + height) - whole(y) + 1));
+    if (!m_tileView.empty() && !view.empty())
+        m_tileMotion = {(view.x + view.width / 2.0) - (m_tileView.x + m_tileView.width / 2.0),
+                        (view.y + view.height / 2.0) - (m_tileView.y + m_tileView.height / 2.0)};
+    m_tileView = view;
+    m_tileFocus = {focusX, focusY};
+    releaseFarTiles();
+    if (detailShowable() && tiledDetail() && m_tileKey == detailKey() && !m_detailDelay.isActive())
+        scheduleTile();
+}
+
+// Behind a move: the tiles beyond the visible part and its ring are freed.
+void ImageEditor::releaseFarTiles()
+{
+    const ipr::Size view(detailSize().width(), detailSize().height());
+    const auto far = [&](const DetailTiles::Tile &tile) { return !DetailTiles::kept(tile, view, m_tileView); };
+    bool changed = false;
+    for (const DetailTiles::Tile &tile : m_tiles)
+        if (far(tile)) {
+            m_provider->setDetailTile(QStringLiteral("tile-%1-%2").arg(tile.column).arg(tile.row), {});
+            changed = true;
+        }
+    if (!changed)
+        return;
+    m_tiles.erase(std::remove_if(m_tiles.begin(), m_tiles.end(), far), m_tiles.end());
+    emit detailTilesChanged();
+}
+
+void ImageEditor::dropTiles()
+{
+    m_tileKey.clear();
+    ++m_tileRevision;   // the next settings' tiles never reuse an address the view loaded
+    m_provider->clearDetailTiles();
+    if (!m_tiles.empty()) {
+        m_tiles.clear();
+        emit detailTilesChanged();
+    }
+}
+
+// The next tile of the view, in the order of DetailTiles: one at a time, each short, so a
+// move or a change waits at most one tile; the first after a change also measures the whole.
+void ImageEditor::scheduleTile()
+{
+    if (!detailShowable() || !tiledDetail() || m_tileWatcher.isRunning() || m_renderWatcher.isRunning() ||
+        m_detailDelay.isActive())
+        return;
+    const QByteArray key = detailKey();
+    const QSize size = detailSize();
+    const ipr::Recti visible = detailViewRect();
+    if (key != m_tileKey || key == m_tileFailedKey || visible.empty())
+        return;
+    const ipr::Size view(size.width(), size.height());
+    std::optional<DetailTiles::Tile> next;
+    for (const DetailTiles::Tile &tile : DetailTiles::order(view, visible, m_tileFocus, m_tileMotion))
+        if (std::find(m_tiles.cbegin(), m_tiles.cend(), tile) == m_tiles.cend()) {
+            next = tile;
+            break;
+        }
+    if (!next)
+        return;
+    // The tile in the canvas: the view is the crop.
+    const ipr::Size canvas = Geometry::canvasSize(m_settings.geometry, m_original.linearRgba.size());
+    const ipr::Recti crop = Geometry::hasCrop(m_settings.geometry) ? Geometry::cropRect(m_settings.geometry, canvas)
+                                                                   : ipr::Recti(0, 0, canvas.width, canvas.height);
+    const ipr::Recti region = DetailTiles::rectOf(*next, view) + crop.tl();
+    const QByteArray measuresKey = RenderChain::wholeMeasuresKey(m_settings) + '|' + QByteArray::number(m_sourceGeneration);
+    std::optional<RenderChain::WholeMeasures> measures;
+    if (m_wholeMeasuresKey == measuresKey && m_wholeMeasures.valid)
+        measures = m_wholeMeasures;
+    m_tileRendering = *next;
+    m_tileRenderingKey = key;
+    const auto source = std::make_shared<const ColorPipeline::WorkingImage>(ColorPipeline::sharedCopy(m_original));
+    m_tileWatcher.setFuture(m_tasks.submit<TileRender>(
+        QStringLiteral("detail-tile"), Tasks::Priority::Foreground,
+        [source, settings = m_settings, region, measures](Tasks::Context &) {
+            TileRender result;
+            RenderChain::WholeMeasures used;
+            if (measures) {
+                used = *measures;
+            } else if (RenderChain::measureWhole(*source, settings, used)) {
+                result.measures = used;
+            } else {
+                result.error = QObject::tr("mesure de l'image entière impossible");
+                return result;
+            }
+            const ColorPipeline::WorkingImage part = RenderChain::workingRegion(*source, settings, region, used);
+            QString error;
+            if (!part.isNull())
+                result.image = ColorPipeline::toSrgb(part, ColorPipeline::OutputFormat::Preview8Bit, &error);
+            if (result.image.isNull())
+                result.error = error.isEmpty() ? QObject::tr("rendu de la tuile impossible") : error;
+            return result;
+        }).future);
+    emit detailChanged();
 }
 
 const ColorPipeline::WorkingImage &ImageEditor::previewSource() const
@@ -2501,7 +2720,7 @@ ImageEditor::LoadResult ImageEditor::loadFromDisk(const QString &fileName,
             result.neuralReason = tr("Le débruitage IA ne s’est pas appliqué à ce développement.");
     }
     if (!result.image.isNull()) {
-        result.editProxy = buildEditProxy(result.image);
+        result.editProxy = RenderChain::editProxy(result.image);
         attachToneStatistics(result.image, result.editProxy);
     }
     return result;
@@ -2585,53 +2804,6 @@ DecodedImageCache::Entry ImageEditor::retainedCurrentEntry() const
     return retainedEntry(m_original, m_editProxy, m_sourceMetadata, m_dcpSource, m_fullSize, m_masterIsProxy);
 }
 
-ColorPipeline::WorkingImage ImageEditor::buildEditProxy(
-    const ColorPipeline::WorkingImage &source)
-{
-    // Interactive preview rendering (every slider drag) re-applies the
-    // pipeline from the last cached stage before the edited one
-    // (RenderStageCache), so its cost scales directly with pixel count. Camera RAW files routinely
-    // exceed 24-50 Mpx while the on-screen preview (Main.qml's "canvas"
-    // Image, fitted inside the editor pane) is at most a few Mpx, so editing
-    // on a capped-resolution proxy removes most of that redundant work
-    // without any visible quality loss, while export keeps using the full
-    // resolution m_original untouched.
-    if (source.isNull())
-        return {};
-
-    constexpr int kEditProxyMaxDimension = 2048;
-    const int longestSide =
-        std::max(source.linearRgba.width(), source.linearRgba.height());
-    if (longestSide <= kEditProxyMaxDimension)
-        return ColorPipeline::sharedCopy(source); // The same pixels, shared: nothing is allocated.
-
-    const double scale =
-        static_cast<double>(kEditProxyMaxDimension) / static_cast<double>(longestSide);
-    const ipr::Size proxySize(
-        std::max(1, static_cast<int>(std::lround(source.linearRgba.width() * scale))),
-        std::max(1, static_cast<int>(std::lround(source.linearRgba.height() * scale))));
-
-    ColorPipeline::WorkingImage proxy;
-    proxy.linearRgba = ipr::resized(source.linearRgba, proxySize, ipr::Interpolation::Area);
-    // Area averaging rounds alpha slightly above 1; a proxy restored from the
-    // cache is revalidated as a master, which requires alpha within [0, 1].
-    for (int y = 0; y < proxy.linearRgba.height(); ++y) {
-        auto *row = proxy.linearRgba.mutableRow<ipr::Vec4f>(y);
-        for (int x = 0; x < proxy.linearRgba.width(); ++x)
-            row[x][3] = std::clamp(row[x][3], 0.f, 1.f);
-    }
-    proxy.colorSpace = source.colorSpace;
-    proxy.sourceProfile = source.sourceProfile;
-    proxy.referenceWhiteBalanceKelvin = source.referenceWhiteBalanceKelvin;
-    if (source.dcpContext) {
-        auto context = std::make_shared<CameraProfileEngine::DcpWorkingContext>(CameraProfileEngine::sharedCopy(*source.dcpContext));
-        context->cameraRgb = ipr::resized(source.dcpContext->cameraRgb, proxySize, ipr::Interpolation::Area);
-        if (!source.dcpContext->preLensCameraRgb.empty())
-            context->preLensCameraRgb = ipr::resized(source.dcpContext->preLensCameraRgb, proxySize, ipr::Interpolation::Area);
-        proxy.dcpContext = context;
-    }
-    return proxy;
-}
 
 QString ImageEditor::cacheKeyForFile(const QString &fileName,
                                      bool automaticWhiteBalance,
@@ -2853,7 +3025,7 @@ void ImageEditor::beginLoad(const QString &fileName, const QString &extension,
                 loaded.image = RawDecoder::applyProfile(*source, options.dcpProfileOverride, &loaded.metadata, &loaded.error);
                 ImageImport::complete(loaded);
                 if (!loaded.image.isNull()) {
-                    loaded.editProxy = buildEditProxy(loaded.image);
+                    loaded.editProxy = RenderChain::editProxy(loaded.image);
                     attachToneStatistics(loaded.image, loaded.editProxy);
                 }
             } else {
@@ -2947,6 +3119,7 @@ void ImageEditor::applyLoadedImage(LoadResult loaded)
         : QSize(loaded.image.linearRgba.width(), loaded.image.linearRgba.height());
     m_original = std::move(loaded.image);
     m_editProxy = std::move(loaded.editProxy);
+    m_geometryProxy = {};
     m_renderStageCache.clear();
     m_displayedFile = m_currentFile;
     // Refresh comparison without blanking the displayed pair while rendering.
@@ -2961,6 +3134,7 @@ void ImageEditor::applyLoadedImage(LoadResult loaded)
         m_sidecarReadOnly = false;
         m_history = {};
         m_inAdjustmentGesture = false;
+        if (m_geometryGesture) { m_geometryGesture = false; emit geometryPreviewChanged(); }
         if (std::optional<Sidecar::Document> saved = Sidecar::read(m_currentFile.toLocalFile())) {
             m_settings = std::move(saved->settings);
             m_userImageMetadata.insert(currentFileKey(), std::move(saved->metadata));
@@ -3019,6 +3193,8 @@ void ImageEditor::releaseCurrentImage()
     // pixels and is safe while background workers retain their own ipr::Image.
     m_original = {};
     m_editProxy = {};
+    m_geometryProxy = {};
+    if (m_geometryGesture) { m_geometryGesture = false; emit geometryPreviewChanged(); }
     dropBeforeDevelopment();
     ++m_sourceGeneration;
     dropDetail();
@@ -3097,10 +3273,17 @@ void ImageEditor::startRender()
     }
 
     // Use the capped-resolution edit proxy for the interactive preview (see
-    // buildEditProxy()); m_original is reserved for exportImage()/writeImage()
+    // RenderChain::editProxy()); m_original is reserved for exportImage()/writeImage()
     // so exports are never affected by this optimization.
-    const auto sourceCopy = std::make_shared<const ColorPipeline::WorkingImage>(ColorPipeline::sharedCopy(previewSource()));
-    const double pixelScale = previewPixelScale();
+    const bool fastGeometry = m_geometryGesture && m_inAdjustmentGesture;
+    const auto &normal = previewSource();
+    if (fastGeometry && m_geometryProxy.isNull()) m_geometryProxy = RenderChain::editProxy(normal, 1024);
+    const auto &input = fastGeometry ? m_geometryProxy : normal;
+    const auto sourceCopy = std::make_shared<const ColorPipeline::WorkingImage>(ColorPipeline::sharedCopy(input));
+    const double pixelScale = previewPixelScale() * double(input.linearRgba.width()) / normal.linearRgba.width();
+    const auto canvas = Geometry::canvasSize(m_settings.geometry, normal.linearRgba.size());
+    const auto rectangle = Geometry::cropRect(m_settings.geometry, canvas);
+    const ipr::Size displaySize = m_cropEditing ? canvas : ipr::Size(rectangle.width, rectangle.height);
     const Settings settings = m_settings;
     // A point removed or replaced since the overlay was asked shows nothing.
     const int overlay = m_pointColorOverlay < int(std::min(settings.pointColor.count, PointColor::MaxPoints))
@@ -3119,14 +3302,15 @@ void ImageEditor::startRender()
     m_renderWatcher.setFuture(m_tasks.submit<RenderChain::Preview>(
         QStringLiteral("render"), Tasks::Priority::Interactive,
         [sourceCopy, originalCopy, settings, includeOriginal, pixelScale, resources = m_taskResources, overlay,
-         maskOverlay = m_localMaskOverlay, retouchOverlay = m_retouchOverlay, wholeCanvas](Tasks::Context &) {
+         maskOverlay = m_localMaskOverlay, retouchOverlay = m_retouchOverlay, wholeCanvas, fastGeometry, displaySize](Tasks::Context &) {
             ImageCacheController *controller = &resources->cache;
             const auto admission = controller->acquire({}, SystemMemory::estimateProcessingPeak(
                 quint64(sourceCopy->linearRgba.width()) * quint64(sourceCopy->linearRgba.height())), false).takeResult();
             if (!admission.reservation) { RenderChain::Preview result; result.error = admission.error; return result; }
             const auto release = qScopeGuard([&] { controller->release(admission.reservation); });
-            return RenderChain::preview(*sourceCopy, settings, includeOriginal, pixelScale, &resources->stages, overlay,
-                                        maskOverlay, wholeCanvas, retouchOverlay, originalCopy.get());
+            auto result = RenderChain::preview(*sourceCopy, settings, includeOriginal, pixelScale, &resources->stages, overlay,
+                                               maskOverlay, wholeCanvas, retouchOverlay, originalCopy.get());
+            return fastGeometry ? RenderChain::displaySized(std::move(result), displaySize) : result;
         }).future);
 }
 

@@ -497,6 +497,9 @@ public:
                     "Le DCP ne contient aucune matrice 3×3 exploitable.");
             return false;
         }
+        // DefaultBlackRender: 0 (Auto, also when absent) or 1 (None); other values are reserved.
+        const double blackRender = numericValues(bytes, 51110).value(0, 0.0);
+        autoBlackRender = blackRender == 0.0;
         baselineExposure = numericValues(bytes, 51109).value(0, 0.0);
         if (!std::isfinite(baselineExposure) ||
             std::abs(baselineExposure) > 16.0) {
@@ -598,6 +601,19 @@ public:
         const ipr::Matrix33d proPhotoToWorking = xyzToWorking * proPhotoToXyz;
         const double exposureScale = std::exp2(
             baselineExposure + options.cameraBaselineExposureEv + options.profileExposureCompensationEv);
+        // Auto black render: (x - black) / (white - black) on the scene values, written after the
+        // gain, joined to zero by a quadratic toe over black +/- black/2 (same value and slope at
+        // both ends), so the noise of the deep shadows is not cut flat.
+        const double black = autoBlackRender ? AutoBlackRenderLevel * exposureScale : 0.0;
+        const double slope = 1.0 / (1.0 - black), toe = black / 2.0;
+        const auto subtractBlack = [black, slope, toe](ipr::Vec3f &proPhoto) {
+            for (int c = 0; c < 3; ++c) {
+                const double x = proPhoto[c];
+                const double fromFoot = x - (black - toe);
+                proPhoto[c] = float(x >= black + toe ? (x - black) * slope
+                                    : fromFoot <= 0.0 ? 0.0 : slope / (4.0 * toe) * fromFoot * fromFoot);
+            }
+        };
         // Extrema interpolation preserves HSV hue, not Lab hue or saturation.
         // Bounded curves may contain small descending segments (Camera Neutral
         // does). Guard inverted mapped extrema per pixel, not by rejecting the
@@ -628,12 +644,20 @@ public:
                     const ipr::Vec3d xyz(x2, y2, z2);
                     // Preserve the matrix-only path, including extended range.
                     if (hueMap.isEmpty() && lookTable.isEmpty() && toneCurve.isEmpty()) {
-                        row[x] = ipr::Vec3f(xyzToWorking * (xyz * exposureScale));
+                        if (black == 0.0) {
+                            row[x] = ipr::Vec3f(xyzToWorking * (xyz * exposureScale));
+                        } else {
+                            ipr::Vec3f linear(xyzToProPhoto * (xyz * exposureScale));
+                            subtractBlack(linear);
+                            row[x] = ipr::Vec3f(proPhotoToWorking * ipr::Vec3d(linear));
+                        }
                         continue;
                     }
                     ipr::Vec3f out(xyzToProPhoto * (xyz * exposureScale));
                     if (!hueMap.isEmpty())
                         out = applyHueSatMap(out, hueMap, hueSatEncoding);
+                    if (black != 0.0)
+                        subtractBlack(out);
                     if (!lookTable.isEmpty())
                         out = applyHueSatMap(out, lookTable, lookTableEncoding);
                     if (toneCurve.size() >= 4 && toneCurve.size() % 2 == 0) {
@@ -1157,6 +1181,7 @@ private:
     int hueSatEncoding = 0;
     int lookTableEncoding = 0;
     double baselineExposure = 0.0;
+    bool autoBlackRender = true;
     QHash<quint16, TiffEntry> tags;
     QHash<quint16, quint64> entryOffsets;
 };
@@ -1685,7 +1710,7 @@ LcpData::Model selectLcpModel(const LcpData &profile,
 namespace {
 std::shared_ptr<const DcpProfile> preparedDcp(const QString &path, QString *error)
 {
-    return std::static_pointer_cast<const DcpProfile>(PreparedProfileCache::acquire(path, "dcp-parser-v1",
+    return std::static_pointer_cast<const DcpProfile>(PreparedProfileCache::acquire(path, "dcp-parser-v2",
         [](const QByteArray &bytes, QString *failure) -> PreparedProfileCache::Loaded {
             auto profile = std::make_shared<DcpProfile>();
             if (!profile->load(bytes, failure)) return {};

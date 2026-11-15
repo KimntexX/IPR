@@ -398,13 +398,14 @@ bool applyTemperatureTint(ipr::Image &linearRgb, int temperature,
     const std::optional<ipr::Matrix33f> adaptationF = temperatureTintMatrix(temperature, referenceTemperature, tint);
     if (!adaptationF)
         return true;
-    for (int y = 0; y < linearRgb.height(); ++y) {
-        ipr::Vec3f *row = linearRgb.mutableRow<ipr::Vec3f>(y);
-        for (int x = 0; x < linearRgb.width(); ++x) {
-            const ipr::Vec3f adapted = *adaptationF * row[x];
-            row[x] = adapted;
+    const ipr::Matrix33f adaptation = *adaptationF;
+    ipr::parallelRows(linearRgb.height(), [&](int first, int last) {
+        for (int y = first; y < last; ++y) {
+            ipr::Vec3f *row = linearRgb.mutableRow<ipr::Vec3f>(y);
+            for (int x = 0; x < linearRgb.width(); ++x)
+                row[x] = adaptation * row[x];
         }
-    }
+    });
     return true;
 }
 

@@ -33,12 +33,14 @@ void apply(ipr::Image &linearRgb, int contrast, const ipr::Image &local)
     if (local.empty() || !LocalValues::fits(local, linearRgb.size())) {
         if (contrast == 0) return;
         const float amount = static_cast<float>(contrast) / 100.0f;
-        for (int y = 0; y < linearRgb.height(); ++y) {
-            ipr::Vec3f *row = linearRgb.mutableRow<ipr::Vec3f>(y);
-            for (int x = 0; x < linearRgb.width(); ++x)
-                for (int c = 0; c < 3; ++c)
-                    row[x][c] = curve(row[x][c], amount);
-        }
+        ipr::parallelRows(linearRgb.height(), [&](int first, int last) {
+            for (int y = first; y < last; ++y) {
+                ipr::Vec3f *row = linearRgb.mutableRow<ipr::Vec3f>(y);
+                for (int x = 0; x < linearRgb.width(); ++x)
+                    for (int c = 0; c < 3; ++c)
+                        row[x][c] = curve(row[x][c], amount);
+            }
+        });
         return;
     }
     ipr::parallelRows(linearRgb.height(), [&](int first, int last) {

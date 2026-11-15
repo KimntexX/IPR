@@ -13,6 +13,9 @@
 #include <array>
 #include <cmath>
 #include <utility>
+#include <mutex>
+#include <memory>
+#include <map>
 #include <vector>
 
 namespace Dehaze {
@@ -278,91 +281,105 @@ PixelLaw pixelLawAt(float value)
 
 } // namespace
 
-void apply(ipr::Image &linearRgb, int amount, double pixelScale, const ipr::Image &localValues)
+namespace {
+
+// The reduced maps of an image, which do not depend on the slider: the reduced linear sRGB, the
+// haze (eroded dark channel, smoothed), the local tone and the base before the law, and the airlight.
+struct Reduced
 {
-    if (linearRgb.empty() || !(linearRgb.depth() == ipr::Depth::F32 && linearRgb.channels() == 3)) return;
-    const bool hasLocal = !localValues.empty() && LocalValues::fits(localValues, linearRgb.size());
-    if (amount == 0 && !hasLocal) return;
-    const ipr::Matrix33f toSrgb(WorkingColor::toSrgb()), fromSrgb(WorkingColor::fromSrgb());
+    ipr::Image small, dark, tone, before;
+    Airlight airlight{0.03f, ipr::Vec3f(1.f, 1.f, 1.f)};
+    ipr::Vec2f centre;
+    double baseSigma = 0.0;
+};
+
+Reduced reduce(const ipr::Image &linearRgb, double pixelScale)
+{
+    Reduced r;
+    const ipr::Matrix33f toSrgb(WorkingColor::toSrgb());
     // Haze measured in linear sRGB at 1/4 of the full resolution, as fitted, then enlarged.
     const int reduction = std::max(1, int(std::lround(FittedReduction * pixelScale)));
     const double scale = pixelScale / reduction;   // pixels of the reduced image per full-image pixel
-    ipr::Image small;
-    small = ipr::resized(linearRgb, ipr::Size(std::max(1, linearRgb.width() / reduction), std::max(1, linearRgb.height() / reduction)),
-                         ipr::Interpolation::Area);
-    ipr::Image dark = ipr::Image::create(small.size(), ipr::Depth::F32, 1);
-    for (int y = 0; y < small.height(); ++y) {
-        auto *row = small.mutableRow<ipr::Vec3f>(y);
+    r.small = ipr::resized(linearRgb, ipr::Size(std::max(1, linearRgb.width() / reduction), std::max(1, linearRgb.height() / reduction)),
+                           ipr::Interpolation::Area);
+    ipr::Image dark = ipr::Image::create(r.small.size(), ipr::Depth::F32, 1);
+    for (int y = 0; y < r.small.height(); ++y) {
+        auto *row = r.small.mutableRow<ipr::Vec3f>(y);
         float *d = dark.mutableRow<float>(y);
-        for (int x = 0; x < small.width(); ++x) {
+        for (int x = 0; x < r.small.width(); ++x) {
             row[x] = toSrgb * row[x];
             d[x] = std::max(0.f, std::min({row[x][0], row[x][1], row[x][2]}));
         }
     }
     const int window = int(DarkWindow * scale) + 1;
     dark = ipr::minimum(dark, ipr::Size(window, window), ipr::Beyond::Nothing);
-    const Airlight airlight = airlightOf(small, dark);
-    const ipr::Vec2f centre(std::log2(std::max(airlight.colour[0], 1e-6f) / std::max(airlight.colour[1], 1e-6f)),
-                           std::log2(std::max(airlight.colour[2], 1e-6f) / std::max(airlight.colour[1], 1e-6f)));
-    dark = ipr::gaussianBlurred(dark, HazeSigma * scale, ipr::BlurBorder::MirrorEdge);
+    r.airlight = airlightOf(r.small, dark);
+    r.centre = ipr::Vec2f(std::log2(std::max(r.airlight.colour[0], 1e-6f) / std::max(r.airlight.colour[1], 1e-6f)),
+                          std::log2(std::max(r.airlight.colour[2], 1e-6f) / std::max(r.airlight.colour[1], 1e-6f)));
+    r.dark = ipr::gaussianBlurred(dark, HazeSigma * scale, ipr::BlurBorder::MirrorEdge);
     // Tone change of the law, smoothed into a base: Lightroom's change is a smooth
     // local map, not a per-pixel curve. On the reduced image: log2 luminance before
     // and after the law, both blurred at BaseSigma.
-    ipr::Image before = ipr::Image::create(small.size(), ipr::Depth::F32, 1);
-    for (int y = 0; y < small.height(); ++y) {
-        const auto *row = small.row<ipr::Vec3f>(y);
+    ipr::Image before = ipr::Image::create(r.small.size(), ipr::Depth::F32, 1);
+    for (int y = 0; y < r.small.height(); ++y) {
+        const auto *row = r.small.row<ipr::Vec3f>(y);
         float *b = before.mutableRow<float>(y);
-        for (int x = 0; x < small.width(); ++x)
+        for (int x = 0; x < r.small.width(); ++x)
             b[x] = std::log2(std::max(0.f, srgbLuminance(row[x])) + LogFloor);
     }
-    const double baseSigma = BaseSigma * scale, meanSigma = DetailMeanSigma * scale;
-    const float airlightLevel = std::log2(airlight.level + LogFloor);
-    const ipr::Image tone = ipr::mapped(ipr::gaussianBlurred(before, meanSigma, ipr::BlurBorder::MirrorEdge),
-                                        [airlightLevel](float v) { return v - airlightLevel; });
-    before = ipr::gaussianBlurred(before, baseSigma, ipr::BlurBorder::MirrorEdge);
-    const auto shiftAt = [&](const Law &law) {
-        ipr::Image after = ipr::Image::create(small.size(), ipr::Depth::F32, 1);
-        for (int y = 0; y < small.height(); ++y) {
-            const auto *row = small.row<ipr::Vec3f>(y);
-            const float *d = dark.row<float>(y);
-            float *a = after.mutableRow<float>(y);
-            for (int x = 0; x < small.width(); ++x) {
-                const float luminance = std::max(0.f, srgbLuminance(row[x]));
-                const float h = std::clamp(d[x] / airlight.level, 0.f, 1.f);
-                const float target = luminance > 1e-6f
-                    ? luminance * std::exp2(gainAt(law, std::log2(luminance / airlight.level), h)) : luminance;
-                a[x] = std::log2(target + LogFloor);
-            }
+    r.baseSigma = BaseSigma * scale;
+    const double meanSigma = DetailMeanSigma * scale;
+    const float airlightLevel = std::log2(r.airlight.level + LogFloor);
+    r.tone = ipr::mapped(ipr::gaussianBlurred(before, meanSigma, ipr::BlurBorder::MirrorEdge),
+                         [airlightLevel](float v) { return v - airlightLevel; });
+    r.before = ipr::gaussianBlurred(before, r.baseSigma, ipr::BlurBorder::MirrorEdge);
+    return r;
+}
+
+// The smoothed tone change of a law, on the reduced image.
+ipr::Image shiftAt(const Reduced &r, const Law &law)
+{
+    ipr::Image after = ipr::Image::create(r.small.size(), ipr::Depth::F32, 1);
+    for (int y = 0; y < r.small.height(); ++y) {
+        const auto *row = r.small.row<ipr::Vec3f>(y);
+        const float *d = r.dark.row<float>(y);
+        float *a = after.mutableRow<float>(y);
+        for (int x = 0; x < r.small.width(); ++x) {
+            const float luminance = std::max(0.f, srgbLuminance(row[x]));
+            const float h = std::clamp(d[x] / r.airlight.level, 0.f, 1.f);
+            const float target = luminance > 1e-6f
+                ? luminance * std::exp2(gainAt(law, std::log2(luminance / r.airlight.level), h)) : luminance;
+            a[x] = std::log2(target + LogFloor);
         }
-        after = ipr::gaussianBlurred(after, baseSigma, ipr::BlurBorder::MirrorEdge);
-        return ipr::mapped(after, before, [](float a, float b) { return a - b; });
-    };
-    ipr::Image shift;
-    if (hasLocal) {
-        // The tone change at the values the map needs, mixed per reduced pixel.
-        const ipr::Image reducedValues = ipr::resized(localValues, small.size(), ipr::Interpolation::Area);
-        const std::vector<float> lattice = LocalValues::latticeOf(float(amount), reducedValues, -100.f, 100.f, 5.f, 8);
-        std::vector<ipr::Image> shifts;
-        for (float value : lattice)
-            shifts.push_back(value == 0.f ? ipr::filled(small.size(), ipr::Depth::F32, 1, 0.0) : shiftAt(lawAt(value)));
-        shift = ipr::Image::create(small.size(), ipr::Depth::F32, 1);
-        for (int y = 0; y < small.height(); ++y) {
-            const float *values = reducedValues.row<float>(y);
-            float *out = shift.mutableRow<float>(y);
-            for (int x = 0; x < small.width(); ++x) {
-                const float value = std::isfinite(values[x]) ? float(amount) + values[x] : float(amount);
-                const LocalValues::Bracket at = LocalValues::bracketOf(lattice, std::clamp(value, -100.f, 100.f));
-                const float low = shifts[at.low].row<float>(y)[x];
-                out[x] = at.t == 0.f ? low : low + at.t * (shifts[at.high].row<float>(y)[x] - low);
-            }
-        }
-    } else {
-        shift = shiftAt(lawAt(float(amount)));
     }
-    const ipr::Image haze = ipr::resized(dark, linearRgb.size(), ipr::Interpolation::Linear);
-    const ipr::Image localTone = ipr::resized(tone, linearRgb.size(), ipr::Interpolation::Linear);
-    const ipr::Image base = ipr::resized(before, linearRgb.size(), ipr::Interpolation::Linear);
-    const ipr::Image toneShift = ipr::resized(shift, linearRgb.size(), ipr::Interpolation::Linear);
+    after = ipr::gaussianBlurred(after, r.baseSigma, ipr::BlurBorder::MirrorEdge);
+    return ipr::mapped(after, r.before, [](float a, float b) { return a - b; });
+}
+
+// The enlarged maps the pixel stage reads, for the pixels of linearRgb: the whole image, or the
+// part at origin of a canvas.
+struct Maps
+{
+    ipr::Image haze, localTone, base, toneShift;
+};
+
+ipr::Image enlarged(const ipr::Image &map, const ipr::Image &linearRgb, const ipr::Point2i *origin, const ipr::Size &canvas)
+{
+    if (!origin)
+        return ipr::resized(map, linearRgb.size(), ipr::Interpolation::Linear);
+    ipr::Image out = ipr::Image::create(linearRgb.size(), ipr::Depth::F32, 1);
+    ipr::resizeRegionInto(map, {0, 0}, map.size(), out, *origin, canvas, ipr::Interpolation::Linear);
+    return out;
+}
+
+// Per pixel, at full resolution: the tone change, the detail gain and the colour.
+void pixelStage(ipr::Image &linearRgb, const Maps &maps, const Reduced &r, int amount, bool hasLocal,
+                const ipr::Image &localValues)
+{
+    const ipr::Matrix33f toSrgb(WorkingColor::toSrgb()), fromSrgb(WorkingColor::fromSrgb());
+    const Airlight &airlight = r.airlight;
+    const ipr::Vec2f centre = r.centre;
+    const ipr::Image &haze = maps.haze, &localTone = maps.localTone, &base = maps.base, &toneShift = maps.toneShift;
     // Per half slider unit when local: whole values read the global law exactly.
     const PixelLaw globalLaw = hasLocal ? PixelLaw{} : pixelLawAt(float(amount));
     std::vector<PixelLaw> pixelLaws;
@@ -412,6 +429,82 @@ void apply(ipr::Image &linearRgb, int amount, double pixelScale, const ipr::Imag
             }
         }
     });
+}
+
+} // namespace
+
+struct Layers::State
+{
+    Reduced reduced;
+    std::mutex lock;
+    std::map<int, std::shared_ptr<const ipr::Image>> shifts;   // per slider value, made once
+
+    std::shared_ptr<const ipr::Image> shift(int amount)
+    {
+        std::lock_guard<std::mutex> guard(lock);
+        auto &kept = shifts[amount];
+        if (!kept)
+            kept = std::make_shared<const ipr::Image>(shiftAt(reduced, lawAt(float(amount))));
+        return kept;
+    }
+};
+
+void apply(ipr::Image &linearRgb, int amount, double pixelScale, const ipr::Image &localValues, Layers *record)
+{
+    if (record)
+        *record = {};
+    if (linearRgb.empty() || !(linearRgb.depth() == ipr::Depth::F32 && linearRgb.channels() == 3)) return;
+    const bool hasLocal = !localValues.empty() && LocalValues::fits(localValues, linearRgb.size());
+    if (amount == 0 && !hasLocal) return;
+    Reduced r = reduce(linearRgb, pixelScale);
+    ipr::Image shift;
+    if (hasLocal) {
+        // The tone change at the values the map needs, mixed per reduced pixel.
+        const ipr::Image reducedValues = ipr::resized(localValues, r.small.size(), ipr::Interpolation::Area);
+        const std::vector<float> lattice = LocalValues::latticeOf(float(amount), reducedValues, -100.f, 100.f, 5.f, 8);
+        std::vector<ipr::Image> shifts;
+        for (float value : lattice)
+            shifts.push_back(value == 0.f ? ipr::filled(r.small.size(), ipr::Depth::F32, 1, 0.0) : shiftAt(r, lawAt(value)));
+        shift = ipr::Image::create(r.small.size(), ipr::Depth::F32, 1);
+        for (int y = 0; y < r.small.height(); ++y) {
+            const float *values = reducedValues.row<float>(y);
+            float *out = shift.mutableRow<float>(y);
+            for (int x = 0; x < r.small.width(); ++x) {
+                const float value = std::isfinite(values[x]) ? float(amount) + values[x] : float(amount);
+                const LocalValues::Bracket at = LocalValues::bracketOf(lattice, std::clamp(value, -100.f, 100.f));
+                const float low = shifts[at.low].row<float>(y)[x];
+                out[x] = at.t == 0.f ? low : low + at.t * (shifts[at.high].row<float>(y)[x] - low);
+            }
+        }
+    } else {
+        shift = shiftAt(r, lawAt(float(amount)));
+    }
+    const Maps maps{enlarged(r.dark, linearRgb, nullptr, {}), enlarged(r.tone, linearRgb, nullptr, {}),
+                    enlarged(r.before, linearRgb, nullptr, {}), enlarged(shift, linearRgb, nullptr, {})};
+    if (record && !hasLocal && pixelScale == 1.0) {
+        auto state = std::make_shared<Layers::State>();
+        state->shifts[amount] = std::make_shared<const ipr::Image>(std::move(shift));
+        state->reduced = std::move(r);
+        record->canvas = linearRgb.size();
+        record->state = std::move(state);
+        pixelStage(linearRgb, maps, record->state->reduced, amount, false, localValues);
+        return;
+    }
+    pixelStage(linearRgb, maps, r, amount, hasLocal, localValues);
+}
+
+bool applyRegion(ipr::Image &linearRgb, int amount, ipr::Point2i origin, const Layers &layers)
+{
+    if (linearRgb.empty() || !(linearRgb.depth() == ipr::Depth::F32 && linearRgb.channels() == 3) || !layers.state)
+        return false;
+    if (amount == 0)
+        return true;
+    const Reduced &r = layers.state->reduced;
+    const std::shared_ptr<const ipr::Image> shift = layers.state->shift(amount);
+    const Maps maps{enlarged(r.dark, linearRgb, &origin, layers.canvas), enlarged(r.tone, linearRgb, &origin, layers.canvas),
+                    enlarged(r.before, linearRgb, &origin, layers.canvas), enlarged(*shift, linearRgb, &origin, layers.canvas)};
+    pixelStage(linearRgb, maps, r, amount, false, {});
+    return true;
 }
 
 } // namespace Dehaze
