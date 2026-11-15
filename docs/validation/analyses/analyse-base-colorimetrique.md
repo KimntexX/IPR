@@ -5887,9 +5887,32 @@ l'utilisateur :
 Preuve :
 [lens-vignetting-lcp-eos60d-v001-20261115T203924Z.json](../raw/lens-vignetting-lcp-eos60d-v001-20261115T203924Z.json).
 Limites : le vignetage de cette prise de vue est faible des deux côtés, et une
-seule photo est mesurée. La distance de mise au point n'est pas encore lue
-dans les makernotes Canon : IPR suppose l'infini. La distorsion reste à
-comparer à d'autres focales ([issue #26](https://github.com/KimntexX/IPR/issues/26)).
+seule photo est mesurée. La distorsion reste à comparer à d'autres focales
+([issue #26](https://github.com/KimntexX/IPR/issues/26)).
+
+### Distance de mise au point des Canon — 15 novembre 2026 (`patch_color`)
+
+LibRaw ne donne pas de distance de mise au point pour Canon : toutes les
+photos prenaient l'entrée la plus lointaine du profil. Les makernotes Canon
+la portent dans l'enregistrement FileInfo (tag 0x0093, tableau d'entiers
+16 bits) : l'indice 20 est la borne lointaine de la plage de netteté, l'indice
+21 la borne proche, en centimètres, 65535 signifiant l'infini. Disposition
+prise dans les tables publiques des tags Canon, et vérifiée sur le corpus :
+
+| Boîtier | Photos | Valeurs lues |
+| --- | ---: | --- |
+| EOS 60D (CR2) | 25 | 20 jusqu'à l'infini (de 25,2 ou 81,9 m), 5 finies (de 3,1 à 25,2 m) |
+| R6 Mark III et R7 (CR3) | 15 | 2 jusqu'à l'infini, 13 finies (de 0,41 à 20,6 m) |
+
+Le rappel des makernotes de LibRaw recueille cet enregistrement (module
+`CanonMakernotes`) ; il n'est utilisé que pour un fichier Canon. Une plage
+finie est prise par son milieu ; une plage qui atteint l'infini garde l'entrée
+la plus lointaine. Contrôle en mémoire, avec et sans la distance :
+`_MG_7597`, mise au point à l'infini, a un rendu identique ; `6V1A0043`
+(0,43 m), `IMG_6954` (3,2 m) et `_MG_7840` (7,4 m) prennent leur entrée,
+la distorsion déplaçant surtout les bords (rapport coin/centre modifié
+jusqu'à 1 %). Aucun export Lightroom de ces photos avec la correction
+d'objectif n'est encore comparé. Rendu `profile-render=6`.
 
 ### Retrait d'Adobe Standard
 
