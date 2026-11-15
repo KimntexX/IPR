@@ -75,7 +75,7 @@ ipr::Image encodedLuminance(const ipr::Image &linearRgb)
 // radius, a gain of 1.9 (amount / 50)^1.5, and an overshoot past the 5 x 5 local range (for
 // radius 1) compressed softly within 30 % of that range.
 // Radius and masking, calibrated on the Lightroom factors of the 31 October study (28 scenes,
-// radius 0.5 to 3 and masking 25 to 75 at amount 75, detail 25; 16 November 2026): the Gaussian
+// radius 0.5 to 3 and masking 25 to 75 at amount 75, detail 25; 15 November 2026): the Gaussian
 // grows as the square root of the radius, the gain falls as radius^-0.8 and the grain threshold
 // follows the radius; the masking raises that threshold from 0.35-1.05 noise sigma at 0 to
 // 4.35-7.45 at 100, keeping texture as Lightroom's does while sparing the grain.

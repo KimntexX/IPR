@@ -611,7 +611,7 @@ public:
         // Auto black render: (x - black) / (white - black) on the scene values, written after the
         // gain, joined to zero by a quadratic toe from 0 to twice the black (same value and slope
         // at both ends): the deep shadows keep part of their noise and its colour. A toe over
-        // black +/- black/2 cut them flat (night scenes of the 60D, 16 November 2026).
+        // black +/- black/2 cut them flat (night scenes of the 60D, 15 November 2026).
         const double black = autoBlackRender ? AutoBlackRenderLevel * exposureScale : 0.0;
         const double slope = 1.0 / (1.0 - black), toe = black;
         const auto subtractBlack = [black, slope, toe](ipr::Vec3f &proPhoto) {
