@@ -122,6 +122,8 @@ set(IPR_ENGINE_SOURCES
     src/stack/StackSession.cpp
     src/raw/CameraDng.h
     src/raw/CameraDng.cpp
+    src/raw/CanonMakernotes.h
+    src/raw/CanonMakernotes.cpp
     src/core/PerceptualColour.h
     src/core/PerceptualColour.cpp
     src/core/Contrast.h
@@ -682,6 +684,8 @@ if(BUILD_TESTING)
     endif()
     set_tests_properties(editorRawDevelopmentTests PROPERTIES LABELS "unit;raw;settings" TIMEOUT 60)
     ipr_add_test(rawBlackLevelEstimatorTests tests/raw_black_level_estimator_test.cpp)
+    ipr_add_test(canonMakernotesTests tests/canon_makernotes_test.cpp)
+    set_tests_properties(canonMakernotesTests PROPERTIES LABELS "unit;raw;profiles" TIMEOUT 20)
     ipr_add_test(cameraProfileEngineTests tests/camera_profile_engine_test.cpp)
     ipr_add_test(preparedProfileCacheTests tests/prepared_profile_cache_test.cpp)
     ipr_add_test(imageCacheControllerTests tests/image_cache_controller_test.cpp)

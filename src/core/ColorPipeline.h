@@ -25,7 +25,7 @@ inline QColorSpace workingColorSpace()
 }
 inline QString engineIdentity()
 {
-    return QStringLiteral("ipr-render-rec2020-linear-d65-v1|profile-render=5");
+    return QStringLiteral("ipr-render-rec2020-linear-d65-v1|profile-render=6");
 }
 
 // Move only: a copy shares the master read only, through sharedCopy.

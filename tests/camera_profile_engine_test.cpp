@@ -1018,18 +1018,21 @@ int main(int argc, char **argv)
         const QString fullPath = QDir(lcpDirectory).filePath("vignette-grid.lcp");
         const QString farEight = QDir(lcpDirectory).filePath("vignette-f8-far.lcp");
         const QString farFiveSix = QDir(lcpDirectory).filePath("vignette-f56-far.lcp");
+        const QString nearEight = QDir(lcpDirectory).filePath("vignette-f8-near.lcp");
         // In file order the near entries come first, as in Adobe's profiles.
         if (!check(writeFile(fullPath, profile(entry("4.970854", "1.2", "-0.9") + entry("4.970854", "10000", "-0.5") +
                                                entry("6", "1.2", "-0.7") + entry("6", "10000", "-0.2"))) &&
                        writeFile(farEight, profile(entry("6", "10000", "-0.2"))) &&
-                       writeFile(farFiveSix, profile(entry("4.970854", "10000", "-0.5"))),
+                       writeFile(farFiveSix, profile(entry("4.970854", "10000", "-0.5"))) &&
+                       writeFile(nearEight, profile(entry("6", "1.2", "-0.7"))),
                    "the vignetting profiles should be written"))
             return 1;
-        const auto corner = [&](const QString &path, double fNumber) {
+        const auto corner = [&](const QString &path, double fNumber, double focusDistanceM = 0.0) {
             CameraProfileEngine::CaptureSettings settings;
             settings.focalLengthMm = 70.0;
             settings.sensorWidthMm = 36.0;
             settings.aperture = fNumber;
+            settings.focusDistanceM = focusDistanceM;
             ipr::Image flat = ipr::Image::create({300, 200}, ipr::Depth::F32, 3);
             ipr::fill(flat, std::vector<double>{.25, .25, .25});
             QString failure;
@@ -1044,6 +1047,10 @@ int main(int argc, char **argv)
         const double between = corner(fullPath, 7.1);
         if (!check(between > eight && between < fiveSix && between - eight < fiveSix - between,
                    "f/7.1 lies between f/8 and f/5.6, nearer f/8")) return 1;
+        // A known focus distance (Canon makernotes) takes the entry at that distance.
+        const double nearEntry = corner(nearEight, 8.0);
+        if (!check(nearEntry > eight && std::abs(corner(fullPath, 8.0, 1.2) - nearEntry) < 1e-6,
+                   "a focus distance of 1.2 m takes the 1.2 m entry, not infinity")) return 1;
     }
     if (!check(CameraProfileEngine::lcpMatchesLens(lcpPath, "Canon", "EOS R6 Mark III", "Canon", "RF 24-70mm F2.8 L IS USM") &&
                     !CameraProfileEngine::lcpMatchesLens(lcpPath, "Other", "Other camera", "Other", "Unknown lens"),
