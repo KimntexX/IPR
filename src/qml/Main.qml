@@ -192,8 +192,10 @@ ApplicationWindow {
                 detailRatio: imageEditor.hasImage ? imageEditor.detailRatio : 1
                 detailRendering: imageEditor.detailRendering
                 detailTiles: imageEditor.hasImage ? imageEditor.detailTiles : []
+                originalDetailTiles: imageEditor.hasImage ? imageEditor.originalDetailTiles : []
                 detailSize: imageEditor.detailSize
                 onWantsDetailChanged: imageEditor.detailWanted = wantsDetail
+                onWantsOriginalDetailChanged: imageEditor.detailOriginalWanted = wantsOriginalDetail
                 onDetailViewReported: (x, y, width, height, focusX, focusY) =>
                     imageEditor.setDetailView(x, y, width, height, focusX, focusY)
                 imageKey: (imageEditor.imageDetails.storage || "") + "/"

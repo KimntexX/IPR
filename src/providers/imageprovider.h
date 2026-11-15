@@ -22,7 +22,8 @@ public:
     // The zoom's full-resolution tiles, by name ("tile-<column>-<row>"); a null image removes one.
     void setDetailTile(const QString &name, const QImage &image);
     QImage detailTile(const QString &name) const;
-    void clearDetailTiles();
+    // The tiles whose name starts with prefix ("tile-": the current image, "otile-": the original).
+    void clearDetailTiles(const QString &prefix);
     int detailTileCount() const;
     Q_INVOKABLE void setUrl(const QUrl &url);
     QUrl url() const;

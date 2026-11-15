@@ -108,6 +108,11 @@ class ImageEditor final : public QObject
     // as tiles of the visible part (setDetailView) instead of the whole image: each one
     // {x, y, width, height, source}, in pixels of detailSize, the displayed image at full resolution.
     Q_PROPERTY(QVariantList detailTiles READ detailTiles NOTIFY detailTilesChanged)
+    // The before/after comparison or the held original is shown: the original comes as tiles too,
+    // same places, rendered after the current ones (it does not depend on the sliders). None while
+    // the AI denoising is applied: its original, the development without it, exists only as a proxy.
+    Q_PROPERTY(bool detailOriginalWanted READ detailOriginalWanted WRITE setDetailOriginalWanted NOTIFY detailChanged)
+    Q_PROPERTY(QVariantList originalDetailTiles READ originalDetailTiles NOTIFY detailTilesChanged)
     Q_PROPERTY(QSize detailSize READ detailSize NOTIFY previewChanged)
     Q_PROPERTY(QString statusMessage READ statusMessage NOTIFY statusMessageChanged)
     Q_PROPERTY(bool hasImage READ hasImage NOTIFY hasImageChanged)
@@ -226,6 +231,9 @@ public:
     bool detailRendering() const { return m_detailWatcher.isRunning() || m_tileWatcher.isRunning(); }
     double detailRatio() const;
     QVariantList detailTiles() const;
+    QVariantList originalDetailTiles() const;
+    bool detailOriginalWanted() const { return m_detailOriginalWanted; }
+    void setDetailOriginalWanted(bool wanted);
     QSize detailSize() const;
     // The visible part of the displayed image, in pixels of detailSize, and the point the tiles
     // spread from (the pointer after a zoom, else the view's centre).
@@ -507,8 +515,13 @@ private:
     {
         QImage image;
         std::optional<RenderChain::WholeMeasures> measures;   // measured for this tile, to keep
+        std::optional<std::vector<float>> originalFloor;      // measured for an original tile, to keep
         QString error;
     };
+    QByteArray originalTileKey() const;
+    bool originalTiled() const;
+    void startOriginalTile(const DetailTiles::Tile &tile, const QByteArray &key);
+    void dropOriginalTiles();
     bool tiledDetail() const;
     ipr::Recti detailViewRect() const;
     void scheduleTile();
@@ -633,6 +646,12 @@ private:
     DetailTiles::Tile m_tileRendering;
     QByteArray m_tileRenderingKey;
     QFutureWatcher<TileRender> m_tileWatcher;
+    bool m_tileRenderingOriginal = false;
+    bool m_detailOriginalWanted = false;
+    std::vector<DetailTiles::Tile> m_originalTiles;   // ready for m_originalTileKey's framing
+    QByteArray m_originalTileKey;
+    std::vector<float> m_originalFloor;               // the whole source's warp floor, for its key
+    QByteArray m_originalFloorKey;
     ipr::Recti m_tileView;                 // visible part, pixels of detailSize; empty: not told yet
     ipr::Point2d m_tileFocus;
     ipr::Point2d m_tileMotion;

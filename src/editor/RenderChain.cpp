@@ -686,6 +686,31 @@ bool measureWhole(const ColorPipeline::WorkingImage &source, const Settings &set
     return true;
 }
 
+ColorPipeline::WorkingImage originalRegion(const ColorPipeline::WorkingImage &source, const Geometry::Settings &geometry,
+                                           const ipr::Recti &region, const std::vector<float> &floor)
+{
+    if (!validFormat(source) || region.empty())
+        return {};
+    const ipr::Size sourceSize = source.linearRgba.size();
+    const ipr::Size canvas = Geometry::canvasSize(geometry, sourceSize);
+    if ((region & ipr::Recti(0, 0, canvas.width, canvas.height)) != region ||
+        (Geometry::resamples(geometry) && floor.size() != 3))
+        return {};
+    ColorPipeline::WorkingImage part = ColorPipeline::sharedCopy(source);
+    if (!Geometry::transformsPixels(geometry)) {
+        part.linearRgba = source.linearRgba.view(region);
+        return part;
+    }
+    const Geometry::Quality quality = geometryQuality(1.0);
+    const ipr::Recti window = Geometry::sourceWindow(geometry, sourceSize, region, quality);
+    const ipr::Image view = source.linearRgba.view(window);
+    part.linearRgba = withCoverage(
+        Geometry::warpRgbRegion(ipr::withoutAlpha(view), window.tl(), sourceSize, geometry, quality, region, floor),
+        Geometry::warpCoverageRegion(ipr::channel(view, 3), window.tl(), sourceSize, geometry, quality, region),
+        geometry);
+    return part;
+}
+
 ColorPipeline::WorkingImage workingRegion(const ColorPipeline::WorkingImage &source, const Settings &settings,
                                           const ipr::Recti &region, const WholeMeasures &measures)
 {

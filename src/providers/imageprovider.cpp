@@ -63,10 +63,11 @@ QImage ImageProvider::detailTile(const QString &name) const
     return m_detailTiles.value(name);
 }
 
-void ImageProvider::clearDetailTiles()
+void ImageProvider::clearDetailTiles(const QString &prefix)
 {
     QWriteLocker locker(&m_lock);
-    m_detailTiles.clear();
+    for (auto it = m_detailTiles.begin(); it != m_detailTiles.end();)
+        it = it.key().startsWith(prefix) ? m_detailTiles.erase(it) : std::next(it);
 }
 
 int ImageProvider::detailTileCount() const
@@ -100,7 +101,8 @@ QImage ImageProvider::requestImage(const QString &id, QSize *size,
     const QString kind = id.section(QLatin1Char('?'), 0, 0);
     QImage result = kind == QStringLiteral("original") ? originalImage()
                   : kind == QStringLiteral("detail") ? detailImage()
-                  : kind.startsWith(QStringLiteral("tile-")) ? detailTile(kind) : image();
+                  : kind.startsWith(QStringLiteral("tile-")) || kind.startsWith(QStringLiteral("otile-"))
+                        ? detailTile(kind) : image();
     if (result.isNull()) {
         result = QImage(1, 1, QImage::Format_RGBA8888);
         result.fill(Qt::transparent);
