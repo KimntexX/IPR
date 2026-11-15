@@ -603,9 +603,17 @@ int main(int argc, char **argv)
         QByteArrayLiteral("crs:CameraModelRestriction=\"Canon EOS R6 Mark III\"");
     adobeDcp.replace(restriction, QByteArray(restriction.size(), ' '));
     const QString adobeDcpPath =
+        QDir(adobeDcpDirectory).filePath("Canon EOS R6 Mark III Camera Neutral.dcp");
+    const QString adobeStandardPath =
         QDir(adobeDcpDirectory).filePath("Canon EOS R6 Mark III Adobe Standard.dcp");
-    if (!check(writeFile(adobeDcpPath, adobeDcp),
+    if (!check(writeFile(adobeDcpPath, adobeDcp) && writeFile(adobeStandardPath, adobeDcp),
                "Adobe-style unrestricted DCP should be written"))
+        return 1;
+    // Adobe Standard is never offered, selected nor accepted (15 November 2026).
+    if (!check(!CameraProfileEngine::dcpMatchesCamera(adobeStandardPath, QStringLiteral("Canon"), QStringLiteral("EOS R6 Mark III")) &&
+               !CameraProfileEngine::availableDcpProfiles(QStringLiteral("Canon"), QStringLiteral("EOS R6 Mark III"),
+                                                          {adobeDcpDirectory}).contains(adobeStandardPath),
+               "Adobe Standard is neither listed nor accepted"))
         return 1;
     const CameraProfileEngine::Selection adobeDcpSelection =
         CameraProfileEngine::findProfiles(

@@ -151,7 +151,7 @@ QString persistentSelectionCacheFile()
     QDir cacheDirectory(cacheRoot);
     if (!cacheDirectory.exists() && !QDir().mkpath(cacheRoot))
         return {};
-    return cacheDirectory.filePath(QStringLiteral("IPR-profile-selection-v1.ini"));
+    return cacheDirectory.filePath(QStringLiteral("IPR-profile-selection-v2.ini"));
 }
 
 QString persistentSelectionKey(const QString &cameraMake,
@@ -524,6 +524,13 @@ public:
     bool matches(const QString &make, const QString &model,
                  const QString &fileName) const
     {
+        // Adobe Standard is not offered, selected nor restored (user's decision of 15 November
+        // 2026): IPR renders it without the default curve Lightroom gives it, and the stable
+        // version is to bring IPR's own profiles. Camera Matching profiles stay.
+        const QString adobeStandard = QStringLiteral("adobe standard");
+        if (profileName.trimmed().toCaseFolded() == adobeStandard ||
+            QFileInfo(fileName).completeBaseName().toCaseFolded().endsWith(adobeStandard))
+            return false;
         const QString restriction = normalized(cameraRestriction);
         const QString camera = normalized(make + QLatin1Char(' ') + model);
         const QString modelKey = normalized(model);

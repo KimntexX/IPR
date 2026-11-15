@@ -31,9 +31,12 @@ struct Decode {
     // The editor's experimental camera-signal denoise: signed development, signal kept
     // before the lens corrections.
     bool signedCameraSignal = false;
+    // A DCP chosen instead of the default Camera Neutral (its path), as the editor's profile choice.
+    QString dcpProfile;
     bool isDefault() const
     {
-        return !automaticWhiteBalance && !lensCorrection && !chromaticAberration && !signedCameraSignal;
+        return !automaticWhiteBalance && !lensCorrection && !chromaticAberration && !signedCameraSignal &&
+               dcpProfile.isEmpty();
     }
 };
 
