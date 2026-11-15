@@ -74,9 +74,16 @@ ipr::Image encodedLuminance(const ipr::Image &linearRgb)
 // RAWs at 0, 25, 50, 75, 100 and 150, on their edges (15 November 2026): a Gaussian of 0.7
 // radius, a gain of 1.9 (amount / 50)^1.5, and an overshoot past the 5 x 5 local range (for
 // radius 1) compressed softly within 30 % of that range.
-constexpr double kSharpenSigmaPerRadius = 0.7;
-constexpr double kSharpenGainAt50 = 1.9, kSharpenGainExponent = 1.5;
+// Radius and masking, calibrated on the Lightroom factors of the 31 October study (28 scenes,
+// radius 0.5 to 3 and masking 25 to 75 at amount 75, detail 25; 16 November 2026): the Gaussian
+// grows as the square root of the radius, the gain falls as radius^-0.8 and the grain threshold
+// follows the radius; the masking raises that threshold from 0.35-1.05 noise sigma at 0 to
+// 4.35-7.45 at 100, keeping texture as Lightroom's does while sparing the grain.
+constexpr double kSharpenSigmaPerRadius = 0.7, kSharpenSigmaRadiusPower = 0.5;
+constexpr double kSharpenGainAt50 = 1.9, kSharpenGainExponent = 1.5, kSharpenGainRadiusPower = -0.8;
 constexpr float kSharpenOvershootRoom = 0.3f;
+constexpr float kSharpenThresholdLow = 0.35f, kSharpenThresholdHigh = 1.05f;
+constexpr float kSharpenMaskingLow = 4.0f, kSharpenMaskingHigh = 6.4f;
 
 float sharpenGain(float amount)
 {
@@ -84,15 +91,19 @@ float sharpenGain(float amount)
         : float(kSharpenGainAt50 * std::pow(double(amount) / 50.0, kSharpenGainExponent));
 }
 
+double sharpenRadius(const DetailProcessing::SharpenSettings &settings)
+{
+    return std::clamp(static_cast<double>(settings.radius), 0.3, 3.0);
+}
+
 double sharpenSigma(const DetailProcessing::SharpenSettings &settings, double pixelScale)
 {
-    return std::clamp(static_cast<double>(settings.radius), 0.3, 3.0) * pixelScale * kSharpenSigmaPerRadius;
+    return kSharpenSigmaPerRadius * std::pow(sharpenRadius(settings), kSharpenSigmaRadiusPower) * pixelScale;
 }
 
 int sharpenWindowReach(const DetailProcessing::SharpenSettings &settings, double pixelScale)
 {
-    const double radius = std::clamp(static_cast<double>(settings.radius), 0.3, 3.0) * pixelScale;
-    return std::max(1, static_cast<int>(std::lround(2.0 * radius)));
+    return std::max(1, static_cast<int>(std::lround(2.0 * sharpenSigma(settings, pixelScale) / kSharpenSigmaPerRadius)));
 }
 
 // Past the local extremes the overshoot is compressed: within room, never beyond it.
@@ -723,9 +734,12 @@ void sharpen(ipr::Image &linearRgb, const SharpenSettings &settings, double pixe
 
     // Grain protection, kept at masking 0 (user's choice of 15 November 2026, unlike
     // Lightroom): a detail at the level of the noise is not sharpened.
-    const float threshold = (noiseSigma ? *noiseSigma : estimateNoiseSigma(encoded)) *
-        (0.35f + 5.5f * static_cast<float>(std::clamp(settings.masking, 0, 100)) / 100.0f);
-    const float gain = sharpenGain(float(std::clamp(settings.amount, 0, 200)));
+    const float masking = static_cast<float>(std::clamp(settings.masking, 0, 100)) / 100.0f;
+    const float noise = (noiseSigma ? *noiseSigma : estimateNoiseSigma(encoded)) * float(sharpenRadius(settings));
+    const float thresholdLow = noise * (kSharpenThresholdLow + kSharpenMaskingLow * masking);
+    const float thresholdHigh = noise * (kSharpenThresholdHigh + kSharpenMaskingHigh * masking);
+    const float radiusGain = float(std::pow(sharpenRadius(settings), kSharpenGainRadiusPower));
+    const float gain = radiusGain * sharpenGain(float(std::clamp(settings.amount, 0, 200)));
     ipr::parallelRows(linearRgb.height(), [&](int first, int last) {
         for (int y = first; y < last; ++y) {
             ipr::Vec3f *pixels = linearRgb.mutableRow<ipr::Vec3f>(y);
@@ -737,12 +751,12 @@ void sharpen(ipr::Image &linearRgb, const SharpenSettings &settings, double pixe
             for (int x = 0; x < linearRgb.width(); ++x) {
                 float pixelGain = gain;
                 if (localAmount && std::isfinite(localAmount[x]))
-                    pixelGain = sharpenGain(std::clamp(float(std::clamp(settings.amount, 0, 200)) + localAmount[x],
-                                                       0.0f, 200.0f));
+                    pixelGain = radiusGain * sharpenGain(std::clamp(float(std::clamp(settings.amount, 0, 200)) +
+                                                                        localAmount[x], 0.0f, 200.0f));
                 if (pixelGain <= 0.0f)
                     continue;
                 const float detail = source[x] - base[x];
-                const float edgeMask = smoothStep(threshold, threshold * 3.0f, std::abs(detail));
+                const float edgeMask = smoothStep(thresholdLow, thresholdHigh, std::abs(detail));
                 const float linear = decodeLuminance(source[x]);
                 if (edgeMask <= 0.0f || linear <= 1e-6f)
                     continue;

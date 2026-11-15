@@ -318,6 +318,42 @@ int main()
             passed &= check(maximum > high && minimum < low, "the sharpening overshoots on both sides of an edge");
             previous = across;
         }
+        // Radius and masking calibrated on Lightroom (16 November 2026), on a fine texture a few times
+        // the grain, in a lightly grained flat field the noise measure sees: a radius of 0.5 still
+        // sharpens it (it did not before), a radius of 3 no more than 1 (it did twice as much), and
+        // masking 25 keeps part of it (it kept almost nothing).
+        ipr::Image texture = ipr::Image::create({256, 64}, ipr::Depth::F32, 3);
+        std::mt19937 textureRng(17);
+        std::normal_distribution<float> flatGrain(0.f, .002f);
+        for (int y = 0; y < texture.height(); ++y)
+            for (int x = 0; x < texture.width(); ++x) {
+                const float v = .2f + flatGrain(textureRng) + (x >= 112 && x < 144 ? .008f * float(std::sin(x * 0.9)) : 0.f);
+                texture.mutableRow<ipr::Vec3f>(y)[x] = ipr::Vec3f(v, v, v);
+            }
+        // RMS of the encoded luminance step across the texture, against the unsharpened one, minus 1.
+        const auto sharpened = [&](int masking, float radius) {
+            auto image = texture.clone();
+            if (masking >= 0)
+                DetailProcessing::sharpen(image, {75, radius, masking});
+            const ipr::Image luma = component(image);
+            double sum = 0.0;
+            int count = 0;
+            for (int y = 8; y < 56; ++y)
+                for (int x = 116; x < 140; ++x) {
+                    const double d = encoded(luma.row<float>(y)[x]) - encoded(luma.row<float>(y)[x - 1]);
+                    sum += d * d;
+                    ++count;
+                }
+            return std::sqrt(sum / count);
+        };
+        const double unsharpened = sharpened(-1, 1.f);
+        const auto effect = [&](int masking, float radius) { return sharpened(masking, radius) / unsharpened - 1.0; };
+        const double atRadiusOne = effect(0, 1.f);
+        passed &= check(atRadiusOne > .5, "the texture is sharpened at radius 1");
+        passed &= check(effect(0, .5f) > .5 * atRadiusOne, "a radius of 0.5 still sharpens a fine texture");
+        passed &= check(effect(0, 3.f) <= atRadiusOne, "a radius of 3 sharpens a fine texture no more than 1");
+        passed &= check(effect(25, 1.f) > .2 * atRadiusOne && effect(75, 1.f) < .05 * atRadiusOne,
+                        "masking 25 keeps part of a texture, 75 spares it with the grain");
         // Masking 100 spares a flat grain that masking 0 sharpens.
         const ipr::Image grain = noisy(.1f, .004f, false);
         auto unmasked = grain.clone(), masked = grain.clone();
