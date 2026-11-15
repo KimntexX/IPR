@@ -2,7 +2,10 @@
 
 # Plan d'action bêta — panneaux de retouche et traitements neuronaux
 
-Date de cadrage : 31 octobre 2026. Statut : **plan proposé, non implémenté**.
+Date de cadrage : 31 octobre 2026. Statut au 15 novembre 2026 : **en cours
+d'exécution**, B0 à B4, B7 et B8 livrés en bêta avec des validations partielles ;
+état et prochaines étapes au [§13](#13-état-et-prochaines-étapes--15-novembre-2026).
+Les sections 1 à 12 restent le cadrage d'origine.
 Périmètre demandé par l'utilisateur : géométrie, suppression d'objets,
 calques/filtres, réseaux neuronaux pour bruit/netteté et pour formes/objets,
 empilement, panoramas horizontaux/verticaux et fusion HDR.
@@ -371,3 +374,56 @@ qualifiés séparément → panorama HDR. Les numéros B7/B8/B9 ne signifient pa
 qu'il faut attendre la fin de tous les réseaux : ces lots dépendent du socle B0,
 pas de l'entraînement neuronal. Branches proposées, à vérifier au lancement :
 `patch_stacking`, `patch_panorama`, `patch_hdr`. Rien n'est implémenté par ce plan.
+
+## 13. État et prochaines étapes — 15 novembre 2026
+
+Dernier tag : `v0.8.143-beta` sur `dev` (`919186f`). La release publique de
+`main` reste `release-v0.1.92-alpha`. Ce tableau résume l'avancement ; la
+[matrice](../validation/matrice-validation.md) et les issues portent les validations.
+
+| Lot | État | Livré dans | Reste et suivi |
+| --- | --- | --- | --- |
+| B0 | Socle livré, validé en partie | `v0.2.97-beta` | Actifs associés `.ipr-data`, contrats des panneaux ([#21](https://github.com/KimntexX/IPR/issues/21)) |
+| B1 | Panneau Géométrie livré ; redressement d'après les lignes (palier D1 de B5) raccordé | `v0.3.100-beta`, `v0.3.103-beta`, `v0.7.122-beta` | [#22](https://github.com/KimntexX/IPR/issues/22), [#30](https://github.com/KimntexX/IPR/issues/30) : avis sur les propositions de perspective |
+| B2 | Masques livrés, validés à l'usage | `v0.5.110-beta` | Design du panneau ([#24](https://github.com/KimntexX/IPR/issues/24)) |
+| B3 | Retouche livrée ; suivi de la géométrie par les cibles et les sources accepté par l'utilisateur, en attente de livraison sur `patch_object_removal` | `v0.7.118-beta` | Ergonomie ([#28](https://github.com/KimntexX/IPR/issues/28)) |
+| B4 | Débruitage neuronal CFA livré (bêta-1), ouvert aux boîtiers non qualifiés par une loi de bruit estimée ; netteté neuronale non commencée, netteté classique recalibrée sur Lightroom | `v0.8.128-beta`, `v0.8.134-beta`, `v0.8.139-beta`, `v0.8.143-beta` | Qualité hors R6 III, coût CPU, CUDA et Core ML ([#32](https://github.com/KimntexX/IPR/issues/32)) ; netteté ([#13](https://github.com/KimntexX/IPR/issues/13)) |
+| B5 | D0 (licences) et D1 (lignes) faits ; D2, la segmentation au clic, est la prochaine étape | `v0.7.122-beta` (D1) | [#30](https://github.com/KimntexX/IPR/issues/30) ; [plan de la détection](detection-objets.md) |
+| B6 | Non commencé | — | Dépend du masque issu d'un modèle (B5 D4) |
+| B7 | Empilement livré, validé par l'utilisateur le 3 novembre | `v0.4.107-beta` | DNG dans Lightroom ([#23](https://github.com/KimntexX/IPR/issues/23)) |
+| B8 | Panorama livré : assemblage validé, remplissage en premier jet | `v0.6.115-beta` | [#25](https://github.com/KimntexX/IPR/issues/25), [#26](https://github.com/KimntexX/IPR/issues/26), [#27](https://github.com/KimntexX/IPR/issues/27) |
+| B9 | Préparation seulement, aucun code | — | [Plan du HDR](fusion-hdr.md) |
+
+Travaux transverses livrés :
+
+- chaîne de rendu et couche image sans OpenCV : `v0.7.122-beta` et
+  `v0.7.128-beta` ([#29](https://github.com/KimntexX/IPR/issues/29),
+  [#31](https://github.com/KimntexX/IPR/issues/31)) ;
+- zoom en pleine résolution, aperçu adaptatif par tuiles et comparaison
+  Avant/Après en pleine résolution : de `v0.8.128-beta` à `v0.8.139-beta` ;
+- profils : noir automatique des DCP (`v0.8.134-beta`, noirs de nuit en
+  `v0.8.143-beta`, [#38](https://github.com/KimntexX/IPR/issues/38)), lecture
+  corrigée des profils d'objectif LCP et retrait d'Adobe Standard
+  (`v0.8.143-beta`, [#39](https://github.com/KimntexX/IPR/issues/39)).
+
+### Prochaines étapes et partage du travail
+
+| Qui | Travail | Ce qu'il faut de l'utilisateur |
+| --- | --- | --- |
+| Codex | Livrer les derniers correctifs de la Retouche (`patch_object_removal`) | Accord de fusion après CI verte |
+| Codex | B5 D2 : banc Python de segmentation au clic avec des modèles existants, hors IPR, sur une branche `patch_detection` créée depuis `dev` ; puis D3, le moteur C++ sur l'exécution ONNX déjà utilisée par B4 | Accord avant tout téléchargement de poids ; annotation d'une centaine d'objets plus tard |
+| Claude | Lire la distance de mise au point dans les makernotes Canon (CR2, CR3) pour choisir l'entrée LCP ([#26](https://github.com/KimntexX/IPR/issues/26)) | Rien |
+| Claude | Noirs des scènes de nuit : étudier un noir adapté à la scène sur les 13 exports existants, présenté avant toute intégration ([#38](https://github.com/KimntexX/IPR/issues/38)) | Avis visuel à la fin |
+| Utilisateur | Photos de bâtiments en contre-plongée et avis sur les propositions de perspective (B5 D1) | Photos et avis |
+
+B6 attend le masque issu d'un modèle (D4). B9 n'est pas lancé : il attend la
+disponibilité de Codex ou de Claude après ces chantiers.
+
+Pour la stable `v1`, déjà suivis : installeur ([#33](https://github.com/KimntexX/IPR/issues/33)),
+qualification du bruit des boîtiers et son envoi au projet
+([#34](https://github.com/KimntexX/IPR/issues/34), [#35](https://github.com/KimntexX/IPR/issues/35)),
+site et vérification des mises à jour ([#36](https://github.com/KimntexX/IPR/issues/36)),
+interface en français et en anglais ([#37](https://github.com/KimntexX/IPR/issues/37)),
+profils propres à IPR et module de création ([#39](https://github.com/KimntexX/IPR/issues/39)),
+paquets macOS ([#20](https://github.com/KimntexX/IPR/issues/20)) et DNG dans
+Photoshop et DxO ([#9](https://github.com/KimntexX/IPR/issues/9)).

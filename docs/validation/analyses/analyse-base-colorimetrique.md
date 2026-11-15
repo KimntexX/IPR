@@ -1,6 +1,6 @@
 # Base colorimétrique — Rapport d'analyse évolutif
 
-**Date initiale :** 6 octobre 2026. **Dernière mise à jour :** 16 novembre 2026 (§56).
+**Date initiale :** 6 octobre 2026. **Dernière mise à jour :** 15 novembre 2026 (§56–57).
 **État de référence courant (§51–55) :** master Rec.2020, calibration demandée
 par défaut et règles R6/R7 par mode sans liste de RAW/ISO, configuration vivante.
 Le premier lot d'architecture extensible conserve le rendu des 19 témoins
@@ -5819,7 +5819,7 @@ mesurée par `tests/compare_lightroom_exports.py`.
   vient surtout de la netteté, environ 2,5 fois plus faible que celle de
   Lightroom à valeur égale : sujet distinct (issue #13).
 
-### Scènes de nuit et raccord du noir — 16 novembre 2026
+### Scènes de nuit et raccord du noir — 15 novembre 2026 (soir)
 
 Neuf photos de nuit du 60D (poses longues ou ISO élevé), exportées par
 l'utilisateur avec Camera Neutral, netteté et bruit à 0, sans correction
@@ -5842,6 +5842,66 @@ Lightroom semble adapter son noir à la scène, ce qui n'est pas reproduit
 ([issue #38](https://github.com/KimntexX/IPR/issues/38)). Adobe Standard est
 retiré d'IPR le même jour (#39). Preuve :
 [dark-black-render-variants-v001-20261115T181709Z.json](../raw/dark-black-render-variants-v001-20261115T181709Z.json).
+
+Le raccord élargi est validé visuellement par l'utilisateur et livré dans
+`v0.8.143-beta` (rendu `profile-render=5`).
+
+## 57. Profils d'objectif LCP et retrait d'Adobe Standard — 15 novembre 2026
+
+### Lecture des profils LCP d'Adobe
+
+En comparant le vignetage de `_MG_7597` (60D) à Lightroom, la correction
+d'IPR ne changeait pas avec l'objectif. Toutes les entrées des profils LCP
+installés étaient lues avec une focale, une ouverture et une distance nulles.
+Les fichiers d'Adobe placent ces trois valeurs en attributs de l'élément
+`rdf:Description` qui englobe chaque modèle, et non dans le modèle lui-même.
+IPR ne choisissait donc pas l'entrée de la prise de vue.
+
+Corrections livrées dans `v0.8.143-beta` :
+
+- les attributs de l'élément englobant sont reportés dans chaque modèle ;
+- l'ouverture du profil est en APEX (Av = 2 log2 N) : la prise de vue est
+  convertie avant la comparaison ;
+- quand la distance de mise au point est inconnue, l'entrée la plus lointaine
+  est retenue ;
+- les poids d'interpolation en distance inverse sont corrigés ;
+- le cache des profils LCP préparés passe en v2, pour ne pas réutiliser les
+  anciennes lectures.
+
+Test : une grille de profil construite comme celles d'Adobe donne, à f/8,
+l'entrée f/8 la plus lointaine, et à f/7,1 une interpolation plus proche de
+f/8 (`cameraProfileEngineTests`).
+
+Mesure : gain de la correction (activée contre désactivée), médiane par
+couronne, rendu en mémoire pour IPR et exports Lightroom Camera Neutral de
+l'utilisateur :
+
+| Rayon normalisé | IPR (EV) | Lightroom (EV) | Écart (EV) |
+| --- | ---: | ---: | ---: |
+| 0 à 0,2 | +0,000 | −0,002 | +0,003 |
+| 0,2 à 0,4 | +0,004 | +0,002 | +0,002 |
+| 0,4 à 0,6 | +0,005 | +0,004 | +0,001 |
+| 0,6 à 0,8 | +0,005 | +0,002 | +0,003 |
+| 0,8 à 1 | +0,008 | +0,005 | +0,003 |
+
+Preuve :
+[lens-vignetting-lcp-eos60d-v001-20261115T203924Z.json](../raw/lens-vignetting-lcp-eos60d-v001-20261115T203924Z.json).
+Limites : le vignetage de cette prise de vue est faible des deux côtés, et une
+seule photo est mesurée. La distance de mise au point n'est pas encore lue
+dans les makernotes Canon : IPR suppose l'infini. La distorsion reste à
+comparer à d'autres focales ([issue #26](https://github.com/KimntexX/IPR/issues/26)).
+
+### Retrait d'Adobe Standard
+
+Rendu avec Adobe Standard, les exports de référence de l'utilisateur étaient
+bien plus sombres chez IPR que chez Lightroom (−6 à −28 L* selon les photos).
+Les tables de ces profils sont la propriété d'Adobe, et IPR ne doit pas
+dépendre de leurs droits d'usage. Sur décision de l'utilisateur, Adobe
+Standard n'est plus proposé ni accepté, qu'il soit reconnu par son nom de
+profil ou par son nom de fichier. Les autres profils installés, dont Camera
+Neutral, restent utilisables. Le cache de la sélection des profils passe en
+v2. Pour la version stable, IPR aura ses propres profils et un module de
+création ([issue #39](https://github.com/KimntexX/IPR/issues/39)).
 
 ## Bibliographie et preuves
 

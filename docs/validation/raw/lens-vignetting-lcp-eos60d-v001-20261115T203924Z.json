@@ -1,0 +1,70 @@
+{
+  "schema": "ipr-lens-vignetting-comparison",
+  "version": 1,
+  "created_utc": "2026-11-15T20:39:33Z",
+  "purpose": "Check the LCP vignetting correction after the parser fix (attributes of the enclosing rdf:Description, APEX aperture, farthest distance when unknown).",
+  "ipr": {
+    "commit": "101bca3710b081aaeaa1dede0395294f2962a0aa",
+    "render_server": "iprRenderServer.exe",
+    "state": "lens-correction 1 versus 0, all other settings 0, in memory"
+  },
+  "lightroom": {
+    "profile": "Camera Neutral",
+    "lens_correction_on": "_MG_7597-2.tif",
+    "lens_correction_off": "_MG_7597-7.tif",
+    "note": "exported by the user, identical settings apart from the lens profile correction"
+  },
+  "inputs": {
+    "_MG_7597.CR2": "9a566271402efa3c393c5fff4e893d7c69f219d96d6f5a15546b8460e9b89a35",
+    "_MG_7597-2.tif": "b4da3f6a29fddf966b14738c61f43275404fd008ba72411e15dc1fb3a2984c6e",
+    "_MG_7597-7.tif": "5c71723f9127760273fd21a2a663607fed9fb0d9e284224e6e4485f5aaa2f842"
+  },
+  "method": "log2 of the median on/off ratio of the Y channel (XYZ D50) by normalised radius (0 centre, 1 corner), 1/8 grid, pixels > 0.02 on both sides; Lightroom crop aligned on IPR's by crop_to",
+  "bands": [
+    {
+      "radius_from": 0,
+      "radius_to": 0.2,
+      "ipr_gain_ev": 0.00032329114037565887,
+      "lightroom_gain_ev": -0.002303309505805373,
+      "difference_ev": 0.002626600646181032,
+      "ipr_pixels": 17686,
+      "lightroom_pixels": 17589
+    },
+    {
+      "radius_from": 0.2,
+      "radius_to": 0.4,
+      "ipr_gain_ev": 0.003742643166333437,
+      "lightroom_gain_ev": 0.0016411565011367202,
+      "difference_ev": 0.002101486665196717,
+      "ipr_pixels": 53070,
+      "lightroom_pixels": 52786
+    },
+    {
+      "radius_from": 0.4,
+      "radius_to": 0.6,
+      "ipr_gain_ev": 0.004576758481562138,
+      "lightroom_gain_ev": 0.0037906726356595755,
+      "difference_ev": 0.0007860858459025621,
+      "ipr_pixels": 88464,
+      "lightroom_pixels": 87932
+    },
+    {
+      "radius_from": 0.6,
+      "radius_to": 0.8,
+      "ipr_gain_ev": 0.0054333508014678955,
+      "lightroom_gain_ev": 0.002141829114407301,
+      "difference_ev": 0.0032915216870605946,
+      "ipr_pixels": 97602,
+      "lightroom_pixels": 96834
+    },
+    {
+      "radius_from": 0.8,
+      "radius_to": 1.0,
+      "ipr_gain_ev": 0.007517861668020487,
+      "lightroom_gain_ev": 0.004559957422316074,
+      "difference_ev": 0.0029579042457044125,
+      "ipr_pixels": 25061,
+      "lightroom_pixels": 24795
+    }
+  ]
+}
