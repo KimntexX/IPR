@@ -8,6 +8,7 @@
 #include <QQuickWindow>
 #include <QScopedPointer>
 #include <QTemporaryDir>
+#include <QPointer>
 #include <QTimer>
 #include <QEventLoop>
 #include <QWheelEvent>
@@ -259,7 +260,8 @@ int main(int argc, char **argv)
         viewport->setProperty("detailTiles", QVariantList{QVariantMap{{"x", 1536}, {"y", 512}, {"width", 512},
                                                                       {"height", 512}, {"source", tileUrl.toString()}}});
         auto *clip = viewport->findChild<QQuickItem *>("currentClip");
-        QQuickItem *shown = nullptr;
+        // Guarded: back at fit the view destroys the tile, as it should.
+        QPointer<QQuickItem> shown;
         for (int i = 0; i < 50 && !shown; ++i) {
             settle();
             for (QQuickItem *child : clip ? clip->childItems() : QList<QQuickItem *>())
@@ -276,12 +278,12 @@ int main(int argc, char **argv)
                    "at 100 %, smoothed")) return 1;
         key(window, Qt::Key_Plus, Qt::ControlModifier, "+");
         for (int i = 0; i < 3; ++i) settle();
-        if (!check(viewport->property("crispPixels").toBool() && !shown->property("smooth").toBool() &&
+        if (!check(shown && viewport->property("crispPixels").toBool() && !shown->property("smooth").toBool() &&
                    canvas->property("smooth").toBool() && viewport->property("imageReady").toBool(),
                    "beyond 100 %, the file's pixels are sharp squares, the preview stays smoothed")) return 1;
         key(window, Qt::Key_0, Qt::ControlModifier, "0");
         for (int i = 0; i < 3; ++i) settle();
-        if (!check(!shown->isVisible() || shown->parentItem() == nullptr, "back at fit, no tile shows")) return 1;
+        if (!check(!shown || !shown->isVisible() || shown->parentItem() == nullptr, "back at fit, no tile shows")) return 1;
         viewport->setProperty("detailTiles", QVariantList());
         viewport->setProperty("detailSize", QSizeF(0, 0));
         viewport->setProperty("detailRatio", 1.0);
