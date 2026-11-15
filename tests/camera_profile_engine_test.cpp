@@ -18,6 +18,7 @@
 #include <cstring>
 #include <iostream>
 #include <limits>
+#include <optional>
 #include <future>
 
 // Exercise the exact renderer/proxy used by preview and export through the
@@ -674,6 +675,59 @@ int main(int argc, char **argv)
         if (!check(CameraProfileEngine::applyDcp(curveDcp,gray,5500.,&error,stable) &&
                    ipr::length(at<ipr::Vec3f>(gray, 0,0) - xyzToWorking*(proPhotoToXyz*ipr::Vec3f(expected,expected,expected))) < 1e-5,
                    "equal channels, black and white are finite and correct")) return 1;
+    }
+    // DefaultBlackRender: Auto (tag absent or 0) subtracts a black at the scene level before
+    // the look table and curve; None (1) subtracts nothing. Identity tables isolate it.
+    const auto blackRenderDcp = [&](const char *name, int tag) {
+        const QString path = QDir(dcpDirectory).filePath(QString::fromLatin1(name));
+        return writeFile(path, SyntheticDcp::make(false, false, false, false, 0, 0, 0.f, 0.f, 1, 1.f,
+                                                  false, .8f, 1.f, tag)) ? path : QString();
+    };
+    const QString autoAbsent = blackRenderDcp("black-auto-absent.dcp", -1);
+    const QString autoExplicit = blackRenderDcp("black-auto-explicit.dcp", 0);
+    const QString blackNone = blackRenderDcp("black-none.dcp", 1);
+    if (!check(!autoAbsent.isEmpty() && !autoExplicit.isEmpty() && !blackNone.isEmpty(),
+               "black render profiles written")) return 1;
+    const double autoBlack = CameraProfileEngine::AutoBlackRenderLevel;
+    for (const float value : {.02f, .25f, .9f}) {
+        const auto rendered = [&](const QString &path, double exposureEv) {
+            ipr::Image gray = ipr::Image::create({1, 1}, ipr::Depth::F32, 3);
+            at<ipr::Vec3f>(gray, 0, 0) = proPhotoToXyz * ipr::Vec3f(value, value, value);
+            const bool ok = CameraProfileEngine::applyDcp(path, gray, 5500., &error, {exposureEv, true});
+            return ok ? std::optional<ipr::Vec3f>(at<ipr::Vec3f>(gray, 0, 0)) : std::nullopt;
+        };
+        const auto inWorking = [&](double v) {
+            return xyzToWorking * (proPhotoToXyz * ipr::Vec3f(float(v), float(v), float(v)));
+        };
+        const auto none = rendered(blackNone, 0.0);
+        const auto absent = rendered(autoAbsent, 0.0);
+        const auto explicitAuto = rendered(autoExplicit, 0.0);
+        const auto brighter = rendered(autoAbsent, 1.0);
+        if (!check(none && ipr::length(*none - inWorking(value)) < 1e-6, "DefaultBlackRender None keeps the signal") ||
+            !check(absent && ipr::length(*absent - inWorking((value - autoBlack) / (1 - autoBlack))) < 1e-6,
+                   "an absent DefaultBlackRender is Auto: the black is subtracted, white stays white") ||
+            !check(explicitAuto && ipr::length(*explicitAuto - *absent) < 1e-7, "DefaultBlackRender 0 is Auto") ||
+            !check(value > .5f || (brighter && ipr::length(*brighter - inWorking((2 * value - 2 * autoBlack) / (1 - 2 * autoBlack))) < 1e-6),
+                   "the Auto black is a scene level: it follows the exposure gain (below white)"))
+            return 1;
+    }
+    {
+        // The toe: zero below black/2, a quadratic up to 1.5 black, continuous with the ramp.
+        const auto rendered = [&](double value) {
+            ipr::Image gray = ipr::Image::create({1, 1}, ipr::Depth::F32, 3);
+            at<ipr::Vec3f>(gray, 0, 0) = proPhotoToXyz * ipr::Vec3f(float(value), float(value), float(value));
+            const bool ok = CameraProfileEngine::applyDcp(autoAbsent, gray, 5500., &error, {0.0, true});
+            const ipr::Vec3f proPhoto = proPhotoToXyz.inv() * (xyzToWorking.inv() * at<ipr::Vec3f>(gray, 0, 0));
+            return ok ? double(proPhoto[1]) : -1.0;
+        };
+        const double slope = 1 / (1 - autoBlack);
+        if (!check(std::abs(rendered(-.01)) < 1e-7 && std::abs(rendered(autoBlack / 2)) < 1e-7,
+                   "below the toe the black render gives zero, negative values included") ||
+            !check(std::abs(rendered(autoBlack) - slope * autoBlack / 8) < 1e-6,
+                   "at the black the toe gives a quarter of its half-width") ||
+            !check(std::abs(rendered(1.5 * autoBlack) - slope * autoBlack / 2) < 1e-6,
+                   "the toe meets the ramp at 1.5 black"))
+            return 1;
     }
     const QString descendingDcp = QDir(dcpDirectory).filePath("descending-curve.dcp");
     if (!check(writeFile(descendingDcp, SyntheticDcp::make(false,false,false,false,

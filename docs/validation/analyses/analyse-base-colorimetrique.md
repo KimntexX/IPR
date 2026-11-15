@@ -1,6 +1,6 @@
 # Base colorimétrique — Rapport d'analyse évolutif
 
-**Date initiale :** 6 octobre 2026. **Dernière mise à jour :** 17 octobre 2026.
+**Date initiale :** 6 octobre 2026. **Dernière mise à jour :** 15 novembre 2026 (§56).
 **État de référence courant (§51–55) :** master Rec.2020, calibration demandée
 par défaut et règles R6/R7 par mode sans liste de RAW/ISO, configuration vivante.
 Le premier lot d'architecture extensible conserve le rendu des 19 témoins
@@ -5748,6 +5748,76 @@ les budgets. La caractérisation physique indépendante du DCP et la qualificati
 R5/6D Mark II restent ouvertes ; aucune constante acceptée R6/R7 n'est modifiée.
 Les caches de sélection, le catalogue de caractérisations, le LRU des images
 et le tampon caméra actif restent des mécanismes distincts.
+
+## 56. Noir automatique des DCP (`DefaultBlackRender`) — 15 novembre 2026
+
+### Constat
+
+Des CR2 du 60D ouverts avec Camera Neutral paraissent voilés et pâles à côté
+de Lightroom réglé sur le même profil. Mesure sur `_MG_7597` exporté par
+l'utilisateur, avec netteté 40 et bruit de couleur 25 des deux côtés : les
+ombres d'IPR sont relevées d'environ 5 L* (1er centile 33,3 contre 28,0), et
+l'écart en Y linéaire est presque constant, environ 0,027 du blanc, sur toute
+la plage. C'est un décalage additif, pas un écart d'exposition.
+
+### Les noirs du capteur ne sont pas en cause
+
+Contrairement au CR3 du R6 Mark III, dont LibRaw donnait le noir à 0, les niveaux de
+noir de LibRaw et notre mesure sur le cache optique concordent à 4 unités près
+sur environ 10 000, à 100, 1600 et 2000 ISO, sur les cinq CR2.
+
+### Cause
+
+Le §18 (inventaire des tags des profils) notait que `DefaultBlackRender` n'était
+pas exploité. Ce tag DNG vaut 0 (« Auto ») ou 1 (« None ») ; absent, il vaut
+Auto, et le logiciel de développement peut alors retirer un noir avant le rendu.
+Les profils Camera Neutral récents (R6 Mark III, R7, 6D Mark II) portent 1 :
+l'omission était sans effet pour eux. Le Camera Neutral du 60D et les Adobe
+Standard de tous ces boîtiers ne le portent pas.
+
+### Changement (`patch_color`, rendu `profile-render=3`)
+
+Pour un profil Auto, IPR retire 0,005 du blanc au niveau de la scène, avant le
+gain d'exposition, en ProPhoto linéaire, après la table HueSat et avant la
+LookTable et la courbe : (x − noir) / (1 − noir), raccordé à zéro par un pied
+quadratique sur noir ± noir/2. La valeur vient de la boîte noire : un
+ajustement exposition + noir, fait avant la courbe du profil sur les exports
+Lightroom de cinq CR2, donne 0,003 à 0,0075 par photo. Elle coïncide avec les
+ombres par défaut du SDK DNG public (5/1000). Les profils None ne changent pas.
+
+### Mesures
+
+Lightroom : Camera Neutral, As Shot, netteté et bruit à 0. IPR : rendu en
+mémoire, réglages à 0. Écart d'IPR à Lightroom en L* :
+
+| Photo | ISO | 1 % avant | 1 % après | médiane avant | médiane après | 99 % après |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `_MG_7597` | 100 | +4,2 | +2,2 | +2,5 | +1,8 | +2,8 |
+| `_MG_7577` | 100 | +2,6 | −1,2 | +1,3 | +0,1 | +0,3 |
+| `_MG_7587` | 100 | +4,1 | +1,1 | +3,5 | +0,9 | +0,1 |
+| `IMG_7217` | 1600 | +0,3 | 0,0 | +1,1 | −1,4 | +2,2 |
+| `IMG_7222` | 2000 | +4,3 | +0,6 | +3,1 | −0,2 | −0,6 |
+
+La chroma moyenne rejoint Lightroom sur quatre photos (`_MG_7597` 11,47
+contre 11,45). Preuve :
+[default-black-render-eos60d-v001-20261115T140116Z.json](../raw/default-black-render-eos60d-v001-20261115T140116Z.json),
+mesurée par `tests/compare_lightroom_exports.py`.
+
+### Limites et suite
+
+- `IMG_7217`, une photo de nuit dont 85 % des pixels sont sous L* 5, devient
+  trop sombre : 83 % de ses pixels sous L* 2 contre 61 % chez Lightroom. Le
+  noir de Lightroom dépend peut-être de la scène ; il faut d'autres exports de
+  scènes très sombres avant d'affiner le pied ou la valeur.
+- `_MG_7597` garde +1,5 à +2,8 L* : un écart d'exposition (environ −0,12 EV
+  chez Lightroom), propre aux règles de normalisation du 60D, dont la
+  validation visuelle est toujours en attente.
+- Les rendus avec Adobe Standard changent pour tous les boîtiers ; aucune
+  référence Lightroom Adobe Standard n'a encore été remesurée.
+- Sans netteté de part et d'autre, IPR n'est qu'environ 10 % moins piqué
+  (L* RMS à 3 px : 1,03 contre 1,14 sur `_MG_7597`). Le manque de piqué perçu
+  vient surtout de la netteté, environ 2,5 fois plus faible que celle de
+  Lightroom à valeur égale : sujet distinct (issue #13).
 
 ## Bibliographie et preuves
 

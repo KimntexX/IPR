@@ -7,6 +7,8 @@
 #include <cstring>
 
 // A small valid DCP for the Canon EOS R6 Mark III, to test without Adobe's profiles.
+// DefaultBlackRender is None (1) by default, as on recent Camera Matching profiles;
+// a negative value omits the tag (Auto, as on Adobe Standard and older profiles).
 namespace SyntheticDcp {
 
 inline void appendU16(QByteArray &bytes, quint16 value)
@@ -38,7 +40,7 @@ inline QByteArray make(bool colorMatrixOnly = false, bool dualIlluminant = false
                    float secondHueShift = 0.0f,
                    int valueDivisions = 1, float lookValueScale = 0.8f,
                    bool withToneCurve = false, float curveMiddle = .8f,
-                   float curveEnd = 1.f)
+                   float curveEnd = 1.f, int defaultBlackRender = 1)
 {
     const QByteArray xmp =
         QByteArrayLiteral("<x:xmpmeta xmlns:x=\"adobe:ns:meta/\" "
@@ -48,7 +50,8 @@ inline QByteArray make(bool colorMatrixOnly = false, bool dualIlluminant = false
                           "crs:CameraModelRestriction=\"Canon EOS R6 Mark III\"/>"
                           "</rdf:RDF></x:xmpmeta>");
 
-    const quint16 entryCount = (dualIlluminant ? 10 : 6) + 2 + (withToneCurve ? 1 : 0);
+    const quint16 entryCount = (dualIlluminant ? 10 : 6) + 2 + (withToneCurve ? 1 : 0) +
+                               (defaultBlackRender >= 0 ? 1 : 0);
     constexpr quint32 ifdOffset = 8;
     const quint32 xmpOffset = ifdOffset + 2 + entryCount * 12 + 4;
     const quint32 dimensionsOffset = xmpOffset + quint32(xmp.size());
@@ -131,6 +134,12 @@ inline QByteArray make(bool colorMatrixOnly = false, bool dualIlluminant = false
         appendU16(bytes, 11);
         appendU32(bytes, 6);
         appendU32(bytes, curveOffset);
+    }
+    if (defaultBlackRender >= 0) {
+        appendU16(bytes, 51110);
+        appendU16(bytes, 4);
+        appendU32(bytes, 1);
+        appendU32(bytes, quint32(defaultBlackRender));
     }
     appendU32(bytes, 0);
     bytes.append(xmp);
