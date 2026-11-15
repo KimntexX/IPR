@@ -5990,6 +5990,18 @@ sous L* 10. Sur `IMG_7217`, la part des pixels sous L* 2 passe de 0,83 à
 - La loi ne copie aucune table d'Adobe : c'est un ajustement en boîte noire
   sur des exports, comme la valeur de 0,005 elle-même.
 
+### Intégration — 15 novembre 2026 (`patch_color`, non livrée)
+
+Intégration acceptée par l'utilisateur. `CameraSignal::render` lit la médiane
+une fois, sur le signal complet, et la range dans le contexte de travail DCP
+(`DcpRenderOptions::autoBlackSceneLuminance`). Les rendus suivants (balance des
+blancs, exposition, proxy, régions du zoom) reprennent ce contexte, donc le même
+noir. Sans médiane connue, le noir reste de 0,005. Le moteur intégré redonne
+exactement les mesures de l'étude sur les treize photos (écart L* nul).
+Rendu `profile-render=7`. Tests : loi, statistique, rendu et conservation dans
+le contexte (`cameraProfileEngineTests`). Reste à valider visuellement par
+l'utilisateur.
+
 ## Bibliographie et preuves
 
 Les mesures de latence du 17 octobre sont maintenues dans le

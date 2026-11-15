@@ -564,6 +564,35 @@ public:
         return true;
     }
 
+    // Median Y of the camera signal under this profile's matrix, on a 1/8 grid; only for an
+    // Auto black render, the one statistic its black adapts to.
+    std::optional<double> sceneLuminance(const ipr::Image &cameraRgb, double whiteBalanceKelvin) const
+    {
+        if (!autoBlackRender || cameraRgb.empty() || cameraRgb.depth() != ipr::Depth::F32 ||
+            cameraRgb.channels() != 3)
+            return std::nullopt;
+        std::array<double, 9> cameraToXyz{};
+        if (!cameraToXyzMatrix(illuminantWeight(whiteBalanceKelvin), cameraToXyz))
+            return std::nullopt;
+        constexpr int step = 8;
+        std::vector<float> luminance;
+        luminance.reserve(size_t((cameraRgb.width() + step - 1) / step) * size_t((cameraRgb.height() + step - 1) / step));
+        for (int y = 0; y < cameraRgb.height(); y += step) {
+            const ipr::Vec3f *row = cameraRgb.row<ipr::Vec3f>(y);
+            for (int x = 0; x < cameraRgb.width(); x += step) {
+                const double value = cameraToXyz[3] * row[x][0] + cameraToXyz[4] * row[x][1] +
+                                     cameraToXyz[5] * row[x][2];
+                if (std::isfinite(value))
+                    luminance.push_back(float(value));
+            }
+        }
+        if (luminance.empty())
+            return std::nullopt;
+        const auto middle = luminance.begin() + std::ptrdiff_t(luminance.size() / 2);
+        std::nth_element(luminance.begin(), middle, luminance.end());
+        return double(*middle);
+    }
+
     bool apply(ipr::Image &rgb, double whiteBalanceKelvin, QString *error,
                const DcpRenderOptions &options) const
     {
@@ -611,8 +640,10 @@ public:
         // Auto black render: (x - black) / (white - black) on the scene values, written after the
         // gain, joined to zero by a quadratic toe from 0 to twice the black (same value and slope
         // at both ends): the deep shadows keep part of their noise and its colour. A toe over
-        // black +/- black/2 cut them flat (night scenes of the 60D, 15 November 2026).
-        const double black = autoBlackRender ? AutoBlackRenderLevel * exposureScale : 0.0;
+        // black +/- black/2 cut them flat (night scenes of the 60D, 15 November 2026). The
+        // black itself is the scene's, read once on the whole signal (autoBlackSceneLuminance).
+        const double black = autoBlackRender
+            ? autoBlackLevel(options.autoBlackSceneLuminance) * exposureScale : 0.0;
         const double slope = 1.0 / (1.0 - black), toe = black;
         const auto subtractBlack = [black, slope, toe](ipr::Vec3f &proPhoto) {
             for (int c = 0; c < 3; ++c) {
@@ -1940,6 +1971,20 @@ DcpWorkingContext sharedCopy(const DcpWorkingContext &context)
     copy.capture = context.capture;
     copy.lensOptions = context.lensOptions;
     return copy;
+}
+
+double autoBlackLevel(std::optional<double> sceneLuminance)
+{
+    if (!sceneLuminance || !std::isfinite(*sceneLuminance) || *sceneLuminance < 0.0)
+        return AutoBlackRenderLevel;
+    return AutoBlackRenderLevel * std::min(1.0, std::sqrt(*sceneLuminance / AutoBlackSceneReference));
+}
+
+std::optional<double> autoBlackSceneLuminance(const QString &profilePath, const ipr::Image &cameraRgb,
+                                              double whiteBalanceKelvin)
+{
+    const auto profile = preparedDcp(profilePath, nullptr);
+    return profile ? profile->sceneLuminance(cameraRgb, whiteBalanceKelvin) : std::nullopt;
 }
 
 bool applyDcp(const QString &fileName, ipr::Image &cameraRgb,
