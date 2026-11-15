@@ -4,7 +4,9 @@
 #include "image_testing.h"
 
 #include <QCoreApplication>
+#include <QDir>
 #include <QFile>
+#include <QStringList>
 #include <QTemporaryDir>
 
 #include <cmath>
@@ -57,7 +59,7 @@ void modelCheck()
     check(manifest && catalog, "manifest and catalogue load");
     if (!manifest || !catalog)
         return;
-    check(!NeuralCfa::Service::create(path, *manifest, *catalog, &reason) && reason.contains(QStringLiteral("does not match")),
+    check(!NeuralCfa::Service::create(path, *manifest, *catalog, &reason) && reason.contains(QStringLiteral("ne correspond pas")),
           "a model whose digest differs from the manifest is refused");
     check(!NeuralCfa::Service::create(folder.filePath(QStringLiteral("missing.onnx")), *manifest, *catalog, &reason),
           "a missing model is refused");
@@ -76,8 +78,15 @@ RawInput::Input r6Input(double iso)
     return input;
 }
 
-void realModel(const QString &modelPath, const QString &manifestPath)
+void realModel(const QString &shippedModel, const QString &manifestPath)
 {
+    // Installed in a folder whose name the local 8-bit code page cannot hold, accents and
+    // non-Latin letters (beta-1 failed to load the model from an accented folder).
+    QTemporaryDir installation;
+    const QString folder = installation.filePath(QStringLiteral("Logiciels testés Ωμέγα 写真"));
+    const QString modelPath = QDir(folder).filePath(QStringLiteral("modèle.onnx"));
+    check(installation.isValid() && QDir().mkpath(folder) && QFile::copy(shippedModel, modelPath),
+          "the model is copied into an accented, non-Latin folder");
     QString reason;
     QFile manifestFile(manifestPath);
     check(manifestFile.open(QIODevice::ReadOnly), "model manifest readable");
@@ -90,15 +99,29 @@ void realModel(const QString &modelPath, const QString &manifestPath)
     check(service != nullptr, "the real model matches its manifest");
     if (!service)
         return;
-    check(!service->stageFor(r6Input(80000), 1.f, {}, &reason), "an ISO above the measured laws gives no stage");
-    check(service->available(QStringLiteral("Canon"), QStringLiteral("Canon EOS R6 Mark III"), 6400, &reason),
-          "an R6 III at ISO 6400 can get the network");
+    check(!service->stageFor(r6Input(80000), 1.f, {}, &reason),
+          "an ISO above the measured laws, without optical black to estimate from, gives no stage");
+    check(service->available(QStringLiteral("Canon"), QStringLiteral("Canon EOS R6 Mark III"), 6400, &reason) &&
+              !service->estimated(QStringLiteral("Canon"), QStringLiteral("Canon EOS R6 Mark III"), 6400),
+          "an R6 III at ISO 6400 can get the network, with its qualified law");
+    // Unqualified: the law is estimated from the photo (decision of 13 November 2026).
+    check(service->available(QStringLiteral("Canon"), QStringLiteral("Canon EOS 60D"), 1600, &reason) &&
+              service->estimated(QStringLiteral("Canon"), QStringLiteral("Canon EOS 60D"), 1600),
+          "a 60D can get the network, its law estimated");
+    check(service->available(QStringLiteral("Canon"), QStringLiteral("EOS R6 Mark III"), 102400, &reason) &&
+              service->estimated(QStringLiteral("Canon"), QStringLiteral("EOS R6 Mark III"), 102400),
+          "an ISO outside the laws can get the network, its law estimated");
+    service->setEstimateUnqualified(false);
     check(!service->available(QStringLiteral("Canon"), QStringLiteral("Canon EOS 60D"), 1600, &reason)
-              && reason.contains(QStringLiteral("boîtier")), "a 60D is refused with a camera reason");
+              && reason.contains(QStringLiteral("boîtier")), "without the estimate, a 60D is refused with a camera reason");
     check(!service->available(QStringLiteral("Canon"), QStringLiteral("EOS R6 Mark III"), 102400, &reason)
-              && reason.contains(QStringLiteral("ISO 102400")), "an ISO outside the laws is refused with an ISO reason");
+              && reason.contains(QStringLiteral("ISO 102400")),
+          "without the estimate, an ISO outside the laws is refused with an ISO reason");
+    service->setEstimateUnqualified(true);
     check(!service->stageFor(r6Input(6400), 0.f, {}, &reason), "a zero strength gives no stage");
-    const RawDevelopment::CfaStage stage = service->stageFor(r6Input(6400), 1.f, {}, &reason);
+    bool reported = false, applied = false;
+    const RawDevelopment::CfaStage stage = service->stageFor(r6Input(6400), 1.f, {}, &reason,
+        [&](bool wasApplied, const QString &) { reported = true; applied = wasApplied; });
     check(bool(stage), "an R6 III at ISO 6400 gets a stage");
     if (!stage)
         return;
@@ -114,6 +137,7 @@ void realModel(const QString &modelPath, const QString &manifestPath)
         for (int x = 0; x < 256; ++x)
             before += std::pow(imagetest::at<float>(mosaic, y, x) - 2000.0, 2);
     check(stage(mosaic, r6Input(6400).pattern, &reason), "the stage runs");
+    check(reported && applied, "the network loads from the accented folder and is applied");
     double mean = 0.0;
     for (int y = 0; y < 192; ++y)
         for (int x = 0; x < 256; ++x) {
@@ -134,8 +158,9 @@ int main(int argc, char **argv)
     QCoreApplication application(argc, argv);
     manifests();
     modelCheck();
-    if (argc == 3)
-        realModel(QString::fromLocal8Bit(argv[1]), QString::fromLocal8Bit(argv[2]));
+    const QStringList arguments = application.arguments();   // Unicode paths, whatever the code page
+    if (arguments.size() == 3)
+        realModel(arguments.at(1), arguments.at(2));
     if (!passed)
         return 1;
     std::cout << "neural CFA service tests passed\n";

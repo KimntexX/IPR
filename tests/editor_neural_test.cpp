@@ -64,9 +64,12 @@ int main(int argc, char **argv)
     if (!panel) { std::cerr << component.errorString().toStdString(); return 14; }
     auto *check = panel->findChild<QObject *>("photoNeuralDenoiseCheckBox");
     auto *intensity = panel->findChild<QObject *>("photoNeuralDenoiseIntensity");
-    if (!check || !intensity) return 15;
+    auto *estimatedNote = panel->findChild<QObject *>("photoNeuralNoiseLawEstimated");
+    if (!check || !intensity || !estimatedNote) return 15;
     editor.setNeuralDenoisePreferences(true, QString::fromLocal8Bit(argv[2]));
     if (editor.busy() || editor.neuralDenoiseActive() || provider.image() != plainAfter) return 11;
+    // The test RAW's camera is qualified: its law is not estimated, and the panel says nothing of it.
+    if (editor.neuralNoiseLawEstimated() || estimatedNote->property("visible").toBool()) return 36;
     editor.setNeuralDenoiseEnabled(true);
     if (!editor.statusMessage().contains(QStringLiteral("Débruitage IA en cours"))) return 12;
     if (!settle(editor)) return 5;

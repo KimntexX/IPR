@@ -516,6 +516,9 @@ if(BUILD_TESTING)
     ipr_add_test(cfaNoiseStageTests tests/cfa_noise_stage_test.cpp)
     ipr_add_test(neuralCfaTests tests/neural_cfa_test.cpp)
     set_tests_properties(neuralCfaTests PROPERTIES LABELS "unit;raw;noise" TIMEOUT 60)
+    # Manual check: RAW files decoded with the network, their noise law qualified or estimated.
+    add_executable(neuralEstimatedDecodeProbe EXCLUDE_FROM_ALL tests/neural_estimated_decode_probe.cpp)
+    target_link_libraries(neuralEstimatedDecodeProbe PRIVATE iprEngine)
     if(IPR_ENABLE_ONNX_RUNTIME AND IPR_NEURAL_MODEL)
         add_test(NAME neuralCfaModelTests COMMAND neuralCfaTests "${IPR_NEURAL_MODEL}" "${CMAKE_SOURCE_DIR}/packaging/neural-model.json")
         set_tests_properties(neuralCfaModelTests PROPERTIES LABELS "integration;raw;noise" TIMEOUT 300)
@@ -700,6 +703,12 @@ if(BUILD_TESTING)
     set_tests_properties(rawDecoderTests demosaicTests rawBlackLevelEstimatorTests rawNormalizationTests
         PROPERTIES LABELS "unit;raw")
     set_tests_properties(cameraProfileEngineTests PROPERTIES LABELS "unit;profiles")
+endif()
+
+if(BUILD_TESTING AND IPR_ENABLE_LIBRAW)
+    # Manual check of the single-RAW noise law against its Python reference.
+    add_executable(noiseLawEstimateProbe EXCLUDE_FROM_ALL tests/noise_law_estimate_probe.cpp)
+    target_link_libraries(noiseLawEstimateProbe PRIVATE iprEngine)
 endif()
 
 if(BUILD_TESTING AND UNIX AND IPR_ENABLE_LIBRAW AND

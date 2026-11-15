@@ -55,6 +55,12 @@ struct Result
 
 Result measure(const Input &input);
 
+// Read noise of the optical black, per CFA channel (variance, counts^2): within each column of
+// a declared masked area, the column's median is removed (Canon's column pattern), then the
+// robust variance (MAD / 0.6745)^2 of what is left. Zero for a channel without enough samples,
+// and for every channel without a declared masked area (crop margins are not all masked).
+std::array<double, 4> readNoise(const Input &input);
+
 enum class Source { Decoder, Measured };
 struct Decision
 {
