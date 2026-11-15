@@ -1,0 +1,628 @@
+{
+ "schema": "ipr-adaptive-auto-black-study",
+ "version": 1,
+ "created_utc": "2026-11-15T21:39:34Z",
+ "purpose": "Issue #38: a scene-adapted automatic black for DCP profiles whose DefaultBlackRender is Auto (EOS 60D Camera Neutral).",
+ "law": "black (scene level, before the exposure gain) = 0.005 x min(1, sqrt(median Y / 0.035)), median of the camera signal's XYZ Y on a 1/8 grid",
+ "ipr": {
+  "base_commit": "616d69c (patch_color)",
+  "build": "study build: law and median computed in DcpProfile::apply under environment variables, not committed",
+  "render": "in memory, Camera Neutral, every setting 0, lens correction off"
+ },
+ "lightroom": "user's exports, Camera Neutral, As Shot, sharpening and noise 0, lens correction off",
+ "measures": "L* percentiles 1/5/10/25/50, share below L* 2, mean chroma below L* 10, on a 1/2 grid inside a 32 px margin; shadow_distance = mean |dL*| over the five percentiles",
+ "per_level_study": "black levels 0 to 0.008 per scene in the scratch study black_per_scene.json (best levels: night 0.0006 to 0.0014, day 0.002 to 0.0066, day ones confounded by exposure gaps)",
+ "scenes": {
+  "IMG_4428": {
+   "kind": "night",
+   "raw": "c:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/IMG_4428.CR2",
+   "lightroom_export": "c:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/neutre/IMG_4428-2.tif",
+   "fixed": {
+    "L": [
+     0.0,
+     0.006261946417790654,
+     0.016963141748689736,
+     0.056278929348788864,
+     0.13634409742533293
+    ],
+    "below2": 0.9979069447942664,
+    "chroma_dark": 0.3525799531663585,
+    "shadow_distance": 0.1469346264514506
+   },
+   "adaptive": {
+    "L": [
+     0.00047474809319680844,
+     0.03057246156203064,
+     0.08204973382628467,
+     0.2719407877130253,
+     0.654042552274877
+    ],
+    "below2": 0.935242369427335,
+    "chroma_dark": 1.390023250820667,
+    "shadow_distance": 0.02021658582142809
+   },
+   "scene_median_y": 0.0014855482,
+   "exposure_scale": 1.0,
+   "adaptive_level": 0.0010300999,
+   "lightroom": {
+    "L": [
+     0.0,
+     0.0,
+     0.023708372863673333,
+     0.26692345910878146,
+     0.6473655223898191
+    ],
+    "below2": 0.9668033239976415,
+    "chroma_dark": 1.6221294003779192
+   },
+   "sha256": {
+    "raw": "0352611ee57d7a03db0e22c4ed4883646e99f9b320da07465813b58a8b0175fd",
+    "lightroom_export": "e9fa2a0fcca54c75c29468683cd40034632d337a1f65aa15c6d5efe299632487"
+   }
+  },
+  "IMG_4429": {
+   "kind": "night",
+   "raw": "c:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/IMG_4429.CR2",
+   "lightroom_export": "c:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/neutre/IMG_4429-2.tif",
+   "fixed": {
+    "L": [
+     0.0,
+     0.00023737404659840422,
+     0.0017142823514859629,
+     0.009612293636191538,
+     0.03261434145126785
+    ],
+    "below2": 0.9994364939436265,
+    "chroma_dark": 0.12240698523886422,
+    "shadow_distance": 0.06703992013123639
+   },
+   "adaptive": {
+    "L": [
+     0.0,
+     0.0022943585979717795,
+     0.01175910677318015,
+     0.06522636286454997,
+     0.2230886482866481
+    ],
+    "below2": 0.9961094955693449,
+    "chroma_dark": 0.6873106671862785,
+    "shadow_distance": 0.020242606713102164
+   },
+   "scene_median_y": 0.00074255589,
+   "exposure_scale": 0.82359102,
+   "adaptive_level": 0.00072828364,
+   "lightroom": {
+    "L": [
+     0.0,
+     0.0,
+     0.0,
+     0.0831354655965697,
+     0.29233911374898724
+    ],
+    "below2": 0.9980496388561321,
+    "chroma_dark": 0.9661679701955215
+   },
+   "sha256": {
+    "raw": "113af9943592ce7f90dc069b07e04d91e1603f6f207ef33e6501c4fb8a09826f",
+    "lightroom_export": "e0f2466411bae5f9693566b3277bd0eba1d4e83dfe25fa9f896e6307e1fcceb6"
+   }
+  },
+  "IMG_4430": {
+   "kind": "night",
+   "raw": "c:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/IMG_4430.CR2",
+   "lightroom_export": "c:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/neutre/IMG_4430-2.tif",
+   "fixed": {
+    "L": [
+     0.001078831834373517,
+     0.012935531161456737,
+     0.026827139789155297,
+     0.07084900449532228,
+     0.14359118627530876
+    ],
+    "below2": 0.998104091772949,
+    "chroma_dark": 0.31183687576431846,
+    "shadow_distance": 0.1467272120570115
+   },
+   "adaptive": {
+    "L": [
+     0.005367824399332477,
+     0.056023396553225524,
+     0.1169103814032404,
+     0.3087021510550052,
+     0.6218395312122702
+    ],
+    "below2": 0.9746816110640442,
+    "chroma_dark": 1.1521226880517637,
+    "shadow_distance": 0.029590851354812032
+   },
+   "scene_median_y": 0.0018315114,
+   "exposure_scale": 0.82359102,
+   "adaptive_level": 0.0011437755,
+   "lightroom": {
+    "L": [
+     0.0,
+     0.0,
+     0.07299427066647013,
+     0.2963891771117524,
+     0.5915055800707911
+    ],
+    "below2": 0.9903817806603774,
+    "chroma_dark": 1.4003979613230868
+   },
+   "sha256": {
+    "raw": "7140a372c50e7346c18594c01b02c998cc693c2ab274fdd8e035b027d6592230",
+    "lightroom_export": "0807f1c7cabf239ba2905b4da1e679fa4498e215819a0579eb2bf2f493066bb4"
+   }
+  },
+  "IMG_7189": {
+   "kind": "night",
+   "raw": "c:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/IMG_7189.CR2",
+   "lightroom_export": "c:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/neutre/IMG_7189-2.tif",
+   "fixed": {
+    "L": [
+     0.0,
+     0.0,
+     0.00047474809319680844,
+     0.006116350889577404,
+     0.028007426251996037
+    ],
+    "below2": 0.9880832551004053,
+    "chroma_dark": 0.2254794145006203,
+    "shadow_distance": 0.07106718534684262
+   },
+   "adaptive": {
+    "L": [
+     0.0,
+     6.466784324388186e-05,
+     0.005222228871119228,
+     0.0542726518554737,
+     0.24622774758070065
+    ],
+    "below2": 0.9428663018340852,
+    "chroma_dark": 1.037704976858284,
+    "shadow_distance": 0.019880657880599274
+   },
+   "scene_median_y": 0.00044385443,
+   "exposure_scale": 1.0,
+   "adaptive_level": 0.00056306205,
+   "lightroom": {
+    "L": [
+     0.0,
+     0.0,
+     0.0,
+     0.051456733684364764,
+     0.337528222098225
+    ],
+    "below2": 0.9545695754716981,
+    "chroma_dark": 1.329290576987045
+   },
+   "sha256": {
+    "raw": "bbf40470ebd40d50e35b0267deb0cab0ecf774d68691ebd42b28f55eafc88cd7",
+    "lightroom_export": "522e489a6c19d4d4f54a85247c487d53f1d485b435d4b083258b5175ff5bc117"
+   }
+  },
+  "IMG_7204": {
+   "kind": "night",
+   "raw": "c:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/IMG_7204.CR2",
+   "lightroom_export": "c:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/neutre/IMG_7204-2.tif",
+   "fixed": {
+    "L": [
+     0.0,
+     0.0,
+     0.00023737404659840422,
+     0.002848488456486109,
+     0.013371163477906123
+    ],
+    "below2": 0.9858974652531313,
+    "chroma_dark": 0.12541332647830694,
+    "shadow_distance": 0.046872250645029825
+   },
+   "adaptive": {
+    "L": [
+     0.0,
+     0.00023737404659840422,
+     0.004152690949535298,
+     0.03127410874367342,
+     0.1467482781908629
+    ],
+    "below2": 0.970928033338676,
+    "chroma_dark": 0.6327390225684815,
+    "shadow_distance": 0.015342241834908066
+   },
+   "scene_median_y": 0.00028566262,
+   "exposure_scale": 1.0,
+   "adaptive_level": 0.00045171311,
+   "lightroom": {
+    "L": [
+     0.0,
+     0.0,
+     0.0,
+     0.041303087445594855,
+     0.20904044366734809
+    ],
+    "below2": 0.9738799473024764,
+    "chroma_dark": 0.8513069072833963
+   },
+   "sha256": {
+    "raw": "2b6f32e62b0d932e3def4d8373a0654dab1f4832c80903e06eceabe4650c918d",
+    "lightroom_export": "6788a5c2b14f5293bbf066e190b8e962197f983a685aa148017ce55f2d88e12a"
+   }
+  },
+  "IMG_7213": {
+   "kind": "night",
+   "raw": "c:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/IMG_7213.CR2",
+   "lightroom_export": "c:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/neutre/IMG_7213-2.tif",
+   "fixed": {
+    "L": [
+     0.0,
+     0.0,
+     0.00025867137297552745,
+     0.003697688287619627,
+     0.01715327970588021
+    ],
+    "below2": 0.9953476976621711,
+    "chroma_dark": 0.1184759833853756,
+    "shadow_distance": 0.05736593464966333
+   },
+   "adaptive": {
+    "L": [
+     0.0,
+     0.00012933568648776372,
+     0.004584068493773685,
+     0.040230835556066324,
+     0.18377010358758383
+    ],
+    "below2": 0.9841128385959288,
+    "chroma_dark": 0.7790955031555209,
+    "shadow_distance": 0.01762688698109045
+   },
+   "scene_median_y": 0.00030203097,
+   "exposure_scale": 1.0,
+   "adaptive_level": 0.00046447433,
+   "lightroom": {
+    "L": [
+     0.0,
+     0.0,
+     0.0,
+     0.05115391286246407,
+     0.2562680570063769
+    ],
+    "below2": 0.9882957602446933,
+    "chroma_dark": 1.0286881713514087
+   },
+   "sha256": {
+    "raw": "d46fbb807fdecfe6c8d5fc020c9f5fe5b31fc59b9c57e3aedcd10f9f85f90f8c",
+    "lightroom_export": "29ac783fb0e7b2e18bea5cc05d41b96c0cb6e8ac83d4771210d1b2f6c9f1562b"
+   }
+  },
+  "IMG_7217": {
+   "kind": "night",
+   "raw": "c:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/IMG_7217.CR2",
+   "lightroom_export": "c:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/neutre/IMG_7217-2.tif",
+   "fixed": {
+    "L": [
+     0.0,
+     0.00612932408356639,
+     0.023851985843849385,
+     0.11150887291134737,
+     0.37248489821622854
+    ],
+    "below2": 0.8319797128660729,
+    "chroma_dark": 1.845354946685235,
+    "shadow_distance": 0.32891153463521794
+   },
+   "adaptive": {
+    "L": [
+     0.0,
+     0.02388492249641061,
+     0.09073343225922059,
+     0.42748915400443366,
+     1.3415439168241363
+    ],
+    "below2": 0.6190850182034666,
+    "chroma_dark": 3.225853589001461,
+    "shadow_distance": 0.07556539722637368
+   },
+   "scene_median_y": 0.0023615612,
+   "exposure_scale": 1.0,
+   "adaptive_level": 0.00129878,
+   "lightroom": {
+    "L": [
+     0.0,
+     0.0,
+     0.0570162019295708,
+     0.5865509253538512,
+     1.5027069787805267
+    ],
+    "below2": 0.6064727207399764,
+    "chroma_dark": 3.702384433670675
+   },
+   "sha256": {
+    "raw": "6efa0f9ea9fd4d3fe2e6a1760d790c33260c5c10efc033737ce8e5e6c1e4d0ee",
+    "lightroom_export": "44b9e010320c83545cc13cb606f2257cbe84a37af19654ba3ea646f876ac4b8d"
+   }
+  },
+  "IMG_8268": {
+   "kind": "night",
+   "raw": "c:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/IMG_8268.CR2",
+   "lightroom_export": "c:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/neutre/IMG_8268-2.tif",
+   "fixed": {
+    "L": [
+     0.0,
+     0.0009494961863900642,
+     0.0033879046817482106,
+     0.014658708155735667,
+     0.045274177504055046
+    ],
+    "below2": 0.9993627641792412,
+    "chroma_dark": 0.24961564266200154,
+    "shadow_distance": 0.06461692230231578
+   },
+   "adaptive": {
+    "L": [
+     0.0,
+     0.006757991734673396,
+     0.02217880073887457,
+     0.09330391604372323,
+     0.28529650371422477
+    ],
+    "below2": 0.9912621070226456,
+    "chroma_dark": 1.11315701928828,
+    "shadow_distance": 0.0217907951710238
+   },
+   "scene_median_y": 0.00085892424,
+   "exposure_scale": 0.70710678,
+   "adaptive_level": 0.00078327346,
+   "lightroom": {
+    "L": [
+     0.0,
+     0.0,
+     0.0,
+     0.05333516262557936,
+     0.32534493367765194
+    ],
+    "below2": 0.9886909916715801,
+    "chroma_dark": 1.489337251914507
+   },
+   "sha256": {
+    "raw": "f943056f2fb865dd7e5acb77f14da1415a35e0140ca506afd735d6a5448dedb9",
+    "lightroom_export": "34577c977dd442298e6569bf845632a25bc18a6572a159745dabce64472a6ac7"
+   }
+  },
+  "_MG_7940": {
+   "kind": "night",
+   "raw": "c:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/_MG_7940.CR2",
+   "lightroom_export": "c:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/neutre/_MG_7940-2.tif",
+   "fixed": {
+    "L": [
+     0.0,
+     0.00023737404659840422,
+     0.0008294540404278905,
+     0.0035338927022223743,
+     0.009788480146838197
+    ],
+    "below2": 0.9985270075332585,
+    "chroma_dark": 0.047468267965218254,
+    "shadow_distance": 0.028202512861916773
+   },
+   "adaptive": {
+    "L": [
+     0.0001940035361478465,
+     0.0040523944915840104,
+     0.010333709611757058,
+     0.037637897352933436,
+     0.10356400470509186
+    ],
+    "below2": 0.9982284248849403,
+    "chroma_dark": 0.4527331373999509,
+    "shadow_distance": 0.01009036798577725
+   },
+   "scene_median_y": 0.00030772868,
+   "exposure_scale": 1.0,
+   "adaptive_level": 0.00046883494,
+   "lightroom": {
+    "L": [
+     0.0,
+     0.0,
+     0.0,
+     0.025735134715031194,
+     0.12753297435658695
+    ],
+    "below2": 0.9983158903301886,
+    "chroma_dark": 0.6101110289288777
+   },
+   "sha256": {
+    "raw": "0ef74f0905efff3b849bdc45410a5f1b47d9909f706c1f96aaf1e39550565b64",
+    "lightroom_export": "ca25def804724e841fff8666c616111520a4541c4c1855094f97f1d90279e261"
+   }
+  },
+  "_MG_7597": {
+   "kind": "day",
+   "raw": "C:/Users/victo/Pictures/RAW/Oliana/_MG_7597.CR2",
+   "lightroom_export": "C:/Users/victo/Pictures/RAW/Oliana/_MG_7597-7.tif",
+   "fixed": {
+    "L": [
+     29.8772142907253,
+     34.82344669600032,
+     37.19124312982928,
+     43.25016384641643,
+     58.808596547740834
+    ],
+    "below2": 0.0,
+    "chroma_dark": null,
+    "shadow_distance": 0.47844138345211745
+   },
+   "adaptive": {
+    "L": [
+     29.8772142907253,
+     34.82344669600032,
+     37.19124312982928,
+     43.25016384641643,
+     58.808596547740834
+    ],
+    "below2": 0.0,
+    "chroma_dark": null,
+    "shadow_distance": 0.47844138345211745
+   },
+   "scene_median_y": 0.15930299,
+   "exposure_scale": 0.79004131,
+   "adaptive_level": 0.005,
+   "lightroom": {
+    "L": [
+     29.21763911085671,
+     34.27465500517949,
+     36.71384114683993,
+     42.81459038738903,
+     58.53773194318641
+    ],
+    "below2": 0.0,
+    "chroma_dark": null
+   },
+   "sha256": {
+    "raw": "9a566271402efa3c393c5fff4e893d7c69f219d96d6f5a15546b8460e9b89a35",
+    "lightroom_export": "5c71723f9127760273fd21a2a663607fed9fb0d9e284224e6e4485f5aaa2f842"
+   }
+  },
+  "_MG_7587": {
+   "kind": "day",
+   "raw": "C:/Users/victo/Pictures/RAW/Oliana/_MG_7587.CR2",
+   "lightroom_export": "C:/Users/victo/Pictures/RAW/Oliana/_MG_7587.tif",
+   "fixed": {
+    "L": [
+     12.571493273854818,
+     14.32910595248277,
+     15.419883120198365,
+     17.601070280886255,
+     21.476067391673936
+    ],
+    "below2": 0.0,
+    "chroma_dark": 4.476791746842427,
+    "shadow_distance": 0.9900880869130788
+   },
+   "adaptive": {
+    "L": [
+     12.571493273854818,
+     14.32910595248277,
+     15.419883120198365,
+     17.601070280886255,
+     21.476067391673936
+    ],
+    "below2": 0.0,
+    "chroma_dark": 4.476791746842427,
+    "shadow_distance": 0.9900880869130788
+   },
+   "scene_median_y": 0.036987875,
+   "exposure_scale": 0.79004131,
+   "adaptive_level": 0.005,
+   "lightroom": {
+    "L": [
+     11.54018904139552,
+     13.240857936645858,
+     14.36211635722406,
+     16.73406119276494,
+     20.569955056500373
+    ],
+    "below2": 0.0,
+    "chroma_dark": 4.525458340143022
+   },
+   "sha256": {
+    "raw": "a516f17d1749b0909a45ea3c1465ad43e91844fb446720be563d9a7e8c364fdf",
+    "lightroom_export": "4801377ab61256dd270791e8abdab1266456cdfd0f0bd238f10350cf11fe8ba0"
+   }
+  },
+  "_MG_7577": {
+   "kind": "day",
+   "raw": "C:/Users/victo/Pictures/RAW/Oliana/_MG_7577.CR2",
+   "lightroom_export": "C:/Users/victo/Pictures/RAW/Oliana/_MG_7577.tif",
+   "fixed": {
+    "L": [
+     3.075448636347772,
+     6.365228915132617,
+     9.48322978853813,
+     16.33244958794471,
+     47.00278566298377
+    ],
+    "below2": 0.0031060380555491952,
+    "chroma_dark": 5.5635744137263226,
+    "shadow_distance": 0.9406009055796993
+   },
+   "adaptive": {
+    "L": [
+     3.075448636347772,
+     6.365228915132617,
+     9.48322978853813,
+     16.33244958794471,
+     47.00278566298377
+    ],
+    "below2": 0.0031060380555491952,
+    "chroma_dark": 5.5635744137263226,
+    "shadow_distance": 0.9406009055796993
+   },
+   "scene_median_y": 0.10299526,
+   "exposure_scale": 0.79004131,
+   "adaptive_level": 0.005,
+   "lightroom": {
+    "L": [
+     4.392614257575736,
+     7.630327304331928,
+     10.667754083049687,
+     17.0502859085747,
+     47.22116556531344
+    ],
+    "below2": 0.0006050541715801887,
+    "chroma_dark": 5.229295208420245
+   },
+   "sha256": {
+    "raw": "bec45ba12ed9941f50529102c993c9c2b3b25f2644451e8acd9056616f413765",
+    "lightroom_export": "09d58466ef78852e6db2b46b46444cd24544cbf322b7df66854a15a7924611eb"
+   }
+  },
+  "IMG_7222": {
+   "kind": "day",
+   "raw": "C:/Users/victo/Pictures/RAW/Oliana/IMG_7222.CR2",
+   "lightroom_export": "C:/Users/victo/Pictures/RAW/Oliana/IMG_7222.tif",
+   "fixed": {
+    "L": [
+     9.089129343622114,
+     11.966829384478087,
+     13.333731775186335,
+     15.494192802023752,
+     17.981676174570726
+    ],
+    "below2": 0.00011929567467313901,
+    "chroma_dark": 13.896958498913511,
+    "shadow_distance": 2.2487100388864176
+   },
+   "adaptive": {
+    "L": [
+     9.803547062703661,
+     12.586586112217017,
+     13.908008755277395,
+     16.036132943443775,
+     18.550195907958695
+    ],
+    "below2": 9.342156481121059e-05,
+    "chroma_dark": 13.914637461570026,
+    "shadow_distance": 1.644927778542512
+   },
+   "scene_median_y": 0.0252767,
+   "exposure_scale": 1.0,
+   "adaptive_level": 0.0042490923,
+   "lightroom": {
+    "L": [
+     12.235988620223878,
+     14.390332262398372,
+     15.513235010325461,
+     17.40640600521366,
+     19.56314777615173
+    ],
+    "below2": 3.224498820754717e-06,
+    "chroma_dark": 12.025387626273794
+   },
+   "sha256": {
+    "raw": "02d959a241881b1dcb5a38192b5c25ff3df6ab2e899d7ba5e4da3a75daf8d24f",
+    "lightroom_export": "9a54d6bdc2f7805175eef680edee9e8d81b984d2084584d719c57848380da260"
+   }
+  }
+ }
+}

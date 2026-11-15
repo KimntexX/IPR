@@ -1,6 +1,6 @@
 # Base colorimétrique — Rapport d'analyse évolutif
 
-**Date initiale :** 6 octobre 2026. **Dernière mise à jour :** 15 novembre 2026 (§56–57).
+**Date initiale :** 6 octobre 2026. **Dernière mise à jour :** 15 novembre 2026 (§56–58).
 **État de référence courant (§51–55) :** master Rec.2020, calibration demandée
 par défaut et règles R6/R7 par mode sans liste de RAW/ISO, configuration vivante.
 Le premier lot d'architecture extensible conserve le rendu des 19 témoins
@@ -5925,6 +5925,70 @@ profil ou par son nom de fichier. Les autres profils installés, dont Camera
 Neutral, restent utilisables. Le cache de la sélection des profils passe en
 v2. Pour la version stable, IPR aura ses propres profils et un module de
 création ([issue #39](https://github.com/KimntexX/IPR/issues/39)).
+
+## 58. Noir automatique adapté à la scène — étude, 15 novembre 2026 (nuit)
+
+État : **étude, non intégrée**, à présenter à l'utilisateur
+([issue #38](https://github.com/KimntexX/IPR/issues/38)).
+
+### Le noir de Lightroom dépend de la scène
+
+Même protocole qu'au §56 (Camera Neutral, réglages à 0, sans correction
+d'objectif), sur les neuf nuits et les quatre scènes de jour du 60D. Un
+serveur d'étude remplace le noir de 0,005 par dix valeurs, de 0 à 0,008 ; pour
+chaque photo, la meilleure valeur est celle qui rapproche le plus les
+percentiles 1, 5, 10, 25 et 50 de L* de ceux de Lightroom :
+
+- nuits : 0,0006 à 0,0014 ;
+- jour : 0,002 à 0,0066, avec des écarts d'exposition qui faussent la valeur.
+
+L'ISO n'explique rien : `IMG_4429`, à ISO 125, demande le même noir que des
+nuits à ISO 1000. La luminosité de la scène, elle, sépare nettement les deux
+groupes.
+
+### Loi essayée
+
+Sur le signal de la caméra, au niveau de la scène, on prend la médiane de Y
+(XYZ) sur une grille d'un pixel sur 8 :
+
+noir = 0,005 × min(1, √(médiane / 0,035))
+
+La puissance 0,5 donne la plus petite distance aux nuits ; les puissances 0,75
+et 1 font moins bien. Les scènes dont la médiane dépasse 0,035 gardent le noir
+validé de 0,005.
+
+| Photo | Médiane Y | Noir | Distance fixe | Distance adaptée | Chroma LR / fixe / adaptée |
+| --- | ---: | ---: | ---: | ---: | --- |
+| `IMG_4428` | 0,0015 | 0,0010 | 0,15 | 0,02 | 1,62 / 0,35 / 1,39 |
+| `IMG_4429` | 0,0007 | 0,0007 | 0,07 | 0,02 | 0,97 / 0,12 / 0,69 |
+| `IMG_4430` | 0,0018 | 0,0011 | 0,15 | 0,03 | 1,40 / 0,31 / 1,15 |
+| `IMG_7189` | 0,0004 | 0,0006 | 0,07 | 0,02 | 1,33 / 0,23 / 1,04 |
+| `IMG_7204` | 0,0003 | 0,0005 | 0,05 | 0,02 | 0,85 / 0,13 / 0,63 |
+| `IMG_7213` | 0,0003 | 0,0005 | 0,06 | 0,02 | 1,03 / 0,12 / 0,78 |
+| `IMG_7217` | 0,0024 | 0,0013 | 0,33 | 0,08 | 3,70 / 1,85 / 3,23 |
+| `IMG_8268` | 0,0009 | 0,0008 | 0,06 | 0,02 | 1,49 / 0,25 / 1,11 |
+| `_MG_7940` | 0,0003 | 0,0005 | 0,03 | 0,01 | 0,61 / 0,05 / 0,45 |
+| `_MG_7597` | 0,159 | 0,0050 | 0,48 | 0,48 | — |
+| `_MG_7587` | 0,037 | 0,0050 | 0,99 | 0,99 | 4,53 / 4,48 / 4,48 |
+| `_MG_7577` | 0,103 | 0,0050 | 0,94 | 0,94 | 5,23 / 5,56 / 5,56 |
+| `IMG_7222` | 0,025 | 0,0042 | 2,25 | 1,64 | 12,03 / 13,90 / 13,91 |
+
+Distance : moyenne de |ΔL*| sur les cinq percentiles. Chroma : moyenne
+sous L* 10. Sur `IMG_7217`, la part des pixels sous L* 2 passe de 0,83 à
+0,62, pour 0,61 chez Lightroom. Trois scènes de jour sont inchangées ;
+`IMG_7222`, une pose de 20 s assez claire, se rapproche de Lightroom. Preuve :
+[adaptive-auto-black-eos60d-v001-20261115T213746Z.json](../raw/adaptive-auto-black-eos60d-v001-20261115T213746Z.json).
+
+### Limites et conditions d'une intégration
+
+- Treize photos d'un seul boîtier : la constante 0,035 est ajustée sur elles.
+  Seuls les profils dont `DefaultBlackRender` vaut Auto sont concernés,
+  c'est-à-dire, pour les boîtiers de l'utilisateur, le Camera Neutral du 60D.
+- La médiane doit être calculée une fois par photo, sur le signal caméra
+  complet, et non à chaque rendu. Sinon, le noir varierait avec l'exposition,
+  la balance des blancs ou la tuile rendue.
+- La loi ne copie aucune table d'Adobe : c'est un ajustement en boîte noire
+  sur des exports, comme la valeur de 0,005 elle-même.
 
 ## Bibliographie et preuves
 
