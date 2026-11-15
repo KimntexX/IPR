@@ -461,6 +461,37 @@ void aRegionIsThatPartOfTheWholeRender()
           "a region needs the measures of the whole image");
 }
 
+// The original's tiles: a region of the source warped by the framing alone, the same pixels as the
+// whole original (Geometry::warpRgba), whatever the geometry.
+void anOriginalRegionIsThatPartOfTheWholeOriginal()
+{
+    const WorkingImage source = scene();
+    const std::vector<float> floor = Geometry::warpFloor(ipr::withoutAlpha(source.linearRgba));
+    const std::vector<std::pair<const char *, std::function<void(Geometry::Settings &)>>> framings = {
+        {"none", [](Geometry::Settings &) {}},
+        {"quarter turn and mirror", [](Geometry::Settings &g) { g.quarterTurns = 1; g.flipHorizontal = true; }},
+        {"rotation", [](Geometry::Settings &g) { g.rotation = 5.0f; }},
+        {"perspective", [](Geometry::Settings &g) { g.rotation = -3.0f; g.vertical = 15; }},
+    };
+    for (const auto &[name, frame] : framings) {
+        Geometry::Settings geometry;
+        frame(geometry);
+        const ipr::Image whole = Geometry::warpRgba(source.linearRgba.clone(), geometry, RenderChain::geometryQuality(1.0));
+        const ipr::Size canvas = Geometry::canvasSize(geometry, source.linearRgba.size());
+        for (const ipr::Recti &region : {ipr::Recti(0, 0, 64, 48), ipr::Recti(canvas.width - 70, canvas.height - 50, 70, 50),
+                                         ipr::Recti(canvas.width / 3, canvas.height / 4, 50, 60)}) {
+            const WorkingImage part = RenderChain::originalRegion(source, geometry, region, floor);
+            check(!part.isNull() && same(part.linearRgba, whole.view(region)), name);
+        }
+        check(RenderChain::originalRegion(source, geometry, ipr::Recti(canvas.width - 5, 0, 10, 10), floor).isNull(),
+              "a region off the canvas renders nothing");
+    }
+    Geometry::Settings rotated;
+    rotated.rotation = 4.0f;
+    check(RenderChain::originalRegion(source, rotated, ipr::Recti(0, 0, 10, 10), {}).isNull(),
+          "a resampling framing needs the whole source's floor");
+}
+
 int main(int argc, char **argv)
 {
     QCoreApplication application(argc, argv);
@@ -480,6 +511,7 @@ int main(int argc, char **argv)
         overlaysShowCoverageWithoutTouchingTheSource();
         anOverlayOnANeutralRecipeNeverWritesInTheSource();
         aRegionIsThatPartOfTheWholeRender();
+        anOriginalRegionIsThatPartOfTheWholeOriginal();
     } catch (const std::exception &error) {
         std::cerr << "FAILED: " << error.what() << '\n';
         return 1;

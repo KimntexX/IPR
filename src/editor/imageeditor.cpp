@@ -407,6 +407,23 @@ ImageEditor::ImageEditor(ImageProvider *provider,
         try { rendered = Tasks::takeResult(m_tileWatcher.future()); }
         catch (...) { rendered.error = tr("ressources insuffisantes ou traitement interrompu"); }
         const QByteArray key = std::exchange(m_tileRenderingKey, QByteArray());
+        if (std::exchange(m_tileRenderingOriginal, false)) {
+            const bool wanted = detailShowable() && originalTiled() && key == originalTileKey();
+            if (wanted && rendered.originalFloor) {
+                m_originalFloor = std::move(*rendered.originalFloor);
+                m_originalFloorKey = key;
+            }
+            if (wanted && !rendered.image.isNull() && m_originalTileKey == key &&
+                DetailTiles::kept(m_tileRendering, ipr::Size(detailSize().width(), detailSize().height()), m_tileView)) {
+                m_provider->setDetailTile(QStringLiteral("otile-%1-%2").arg(m_tileRendering.column).arg(m_tileRendering.row),
+                                          rendered.image);
+                m_originalTiles.push_back(m_tileRendering);
+                emit detailTilesChanged();
+            }
+            emit detailChanged();
+            scheduleTile();
+            return;
+        }
         const bool current = detailShowable() && tiledDetail() && key == detailKey();
         if (current && rendered.measures) {
             m_wholeMeasures = std::move(*rendered.measures);
@@ -2485,6 +2502,8 @@ void ImageEditor::refreshDetail()
         m_detailDelay.start();
     else
         m_detailDelay.stop();
+    if (!m_detailDelay.isActive())
+        scheduleTile();   // the original's tiles, when the comparison shows
 }
 
 void ImageEditor::startDetailRender()
@@ -2520,6 +2539,7 @@ void ImageEditor::dropDetail()
     m_detailImageKey.clear();
     m_detailFailedKey.clear();
     dropTiles();
+    dropOriginalTiles();
     m_tileFailedKey.clear();
     m_wholeMeasures = {};
     m_wholeMeasuresKey.clear();
@@ -2558,6 +2578,94 @@ QVariantList ImageEditor::detailTiles() const
     return tiles;
 }
 
+QVariantList ImageEditor::originalDetailTiles() const
+{
+    QVariantList tiles;
+    const ipr::Size view(detailSize().width(), detailSize().height());
+    for (const DetailTiles::Tile &tile : m_originalTiles) {
+        const ipr::Recti rect = DetailTiles::rectOf(tile, view);
+        tiles.append(QVariantMap{{QStringLiteral("x"), rect.x}, {QStringLiteral("y"), rect.y},
+                                 {QStringLiteral("width"), rect.width}, {QStringLiteral("height"), rect.height},
+                                 {QStringLiteral("source"), QStringLiteral("image://editor/otile-%1-%2?key=%3")
+                                      .arg(tile.column).arg(tile.row)
+                                      .arg(QString::fromLatin1(m_originalTileKey.toHex().left(16)))}});
+    }
+    return tiles;
+}
+
+void ImageEditor::setDetailOriginalWanted(bool wanted)
+{
+    if (wanted == m_detailOriginalWanted)
+        return;
+    m_detailOriginalWanted = wanted;
+    if (wanted)
+        scheduleTile();
+    else
+        dropOriginalTiles();
+    emit detailChanged();
+}
+
+// The original's tiles change with the photo and its framing only, never with a slider.
+QByteArray ImageEditor::originalTileKey() const
+{
+    Settings framing;
+    framing.geometry = m_settings.geometry;
+    return QCryptographicHash::hash(m_currentCacheKey.toUtf8() + '|' + QByteArray::number(m_sourceGeneration) + '|'
+                                        + QCborValue(RecipeCodec::encodeRecipe(framing, {})).toCbor(),
+                                    QCryptographicHash::Sha256);
+}
+
+bool ImageEditor::originalTiled() const
+{
+    return m_detailOriginalWanted && !m_neuralApplied && !m_original.isNull() && !m_masterIsProxy;
+}
+
+void ImageEditor::dropOriginalTiles()
+{
+    m_provider->clearDetailTiles(QStringLiteral("otile-"));
+    if (!m_originalTiles.empty()) {
+        m_originalTiles.clear();
+        emit detailTilesChanged();
+    }
+}
+
+void ImageEditor::startOriginalTile(const DetailTiles::Tile &tile, const QByteArray &key)
+{
+    const QSize size = detailSize();
+    const ipr::Size view(size.width(), size.height());
+    const ipr::Size canvas = Geometry::canvasSize(m_settings.geometry, m_original.linearRgba.size());
+    const ipr::Recti crop = Geometry::hasCrop(m_settings.geometry) ? Geometry::cropRect(m_settings.geometry, canvas)
+                                                                   : ipr::Recti(0, 0, canvas.width, canvas.height);
+    const ipr::Recti region = DetailTiles::rectOf(tile, view) + crop.tl();
+    std::optional<std::vector<float>> floor;
+    if (m_originalFloorKey == key)
+        floor = m_originalFloor;
+    m_tileRendering = tile;
+    m_tileRenderingKey = key;
+    m_tileRenderingOriginal = true;
+    const auto source = std::make_shared<const ColorPipeline::WorkingImage>(ColorPipeline::sharedCopy(m_original));
+    m_tileWatcher.setFuture(m_tasks.submit<TileRender>(
+        QStringLiteral("detail-original-tile"), Tasks::Priority::Foreground,
+        [source, geometry = m_settings.geometry, region, floor](Tasks::Context &) {
+            TileRender result;
+            std::vector<float> used;
+            if (floor) {
+                used = *floor;
+            } else if (Geometry::resamples(geometry)) {
+                used = Geometry::warpFloor(ipr::withoutAlpha(source->linearRgba));
+                result.originalFloor = used;
+            }
+            const ColorPipeline::WorkingImage part = RenderChain::originalRegion(*source, geometry, region, used);
+            QString error;
+            if (!part.isNull())
+                result.image = ColorPipeline::toSrgb(part, ColorPipeline::OutputFormat::Preview8Bit, &error);
+            if (result.image.isNull())
+                result.error = error.isEmpty() ? QObject::tr("rendu de la tuile impossible") : error;
+            return result;
+        }).future);
+    emit detailChanged();
+}
+
 ipr::Recti ImageEditor::detailViewRect() const
 {
     const QSize size = detailSize();
@@ -2589,6 +2697,12 @@ void ImageEditor::releaseFarTiles()
     const ipr::Size view(detailSize().width(), detailSize().height());
     const auto far = [&](const DetailTiles::Tile &tile) { return !DetailTiles::kept(tile, view, m_tileView); };
     bool changed = false;
+    for (const DetailTiles::Tile &tile : m_originalTiles)
+        if (far(tile)) {
+            m_provider->setDetailTile(QStringLiteral("otile-%1-%2").arg(tile.column).arg(tile.row), {});
+            changed = true;
+        }
+    m_originalTiles.erase(std::remove_if(m_originalTiles.begin(), m_originalTiles.end(), far), m_originalTiles.end());
     for (const DetailTiles::Tile &tile : m_tiles)
         if (far(tile)) {
             m_provider->setDetailTile(QStringLiteral("tile-%1-%2").arg(tile.column).arg(tile.row), {});
@@ -2604,7 +2718,7 @@ void ImageEditor::dropTiles()
 {
     m_tileKey.clear();
     ++m_tileRevision;   // the next settings' tiles never reuse an address the view loaded
-    m_provider->clearDetailTiles();
+    m_provider->clearDetailTiles(QStringLiteral("tile-"));
     if (!m_tiles.empty()) {
         m_tiles.clear();
         emit detailTilesChanged();
@@ -2615,23 +2729,36 @@ void ImageEditor::dropTiles()
 // move or a change waits at most one tile; the first after a change also measures the whole.
 void ImageEditor::scheduleTile()
 {
-    if (!detailShowable() || !tiledDetail() || m_tileWatcher.isRunning() || m_renderWatcher.isRunning() ||
-        m_detailDelay.isActive())
+    if (!detailShowable() || m_tileWatcher.isRunning() || m_renderWatcher.isRunning() ||
+        m_detailWatcher.isRunning() || m_detailDelay.isActive())
         return;
-    const QByteArray key = detailKey();
     const QSize size = detailSize();
     const ipr::Recti visible = detailViewRect();
-    if (key != m_tileKey || key == m_tileFailedKey || visible.empty())
+    if (visible.empty())
         return;
     const ipr::Size view(size.width(), size.height());
+    const auto missing = [&](const std::vector<DetailTiles::Tile> &ready) -> std::optional<DetailTiles::Tile> {
+        for (const DetailTiles::Tile &tile : DetailTiles::order(view, visible, m_tileFocus, m_tileMotion))
+            if (std::find(ready.cbegin(), ready.cend(), tile) == ready.cend())
+                return tile;
+        return std::nullopt;
+    };
+    const QByteArray key = detailKey();
     std::optional<DetailTiles::Tile> next;
-    for (const DetailTiles::Tile &tile : DetailTiles::order(view, visible, m_tileFocus, m_tileMotion))
-        if (std::find(m_tiles.cbegin(), m_tiles.cend(), tile) == m_tiles.cend()) {
-            next = tile;
-            break;
+    if (tiledDetail() && key == m_tileKey && key != m_tileFailedKey)
+        next = missing(m_tiles);
+    if (!next) {
+        if (!originalTiled())
+            return;
+        const QByteArray originalKey = originalTileKey();
+        if (m_originalTileKey != originalKey) {
+            dropOriginalTiles();
+            m_originalTileKey = originalKey;
         }
-    if (!next)
+        if (const auto original = missing(m_originalTiles))
+            startOriginalTile(*original, originalKey);
         return;
+    }
     // The tile in the canvas: the view is the crop.
     const ipr::Size canvas = Geometry::canvasSize(m_settings.geometry, m_original.linearRgba.size());
     const ipr::Recti crop = Geometry::hasCrop(m_settings.geometry) ? Geometry::cropRect(m_settings.geometry, canvas)

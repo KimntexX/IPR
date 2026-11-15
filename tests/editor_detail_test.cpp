@@ -135,6 +135,32 @@ int main(int argc, char **argv)
     if (!check(tilesMatch(editor, provider) && provider.detailTile(QStringLiteral("tile-0-0")) != firstTile,
                "the new tiles show the new settings")) return 1;
 
+    // The comparison: the original's tiles come after the current ones, the photo's own pixels at
+    // full resolution, and stay through a slider change (they do not depend on the settings).
+    editor.setDetailOriginalWanted(true);
+    if (!check(waitFor([&] { return editor.originalDetailTiles().size() == 6 && settled(editor); }),
+               "the original's tiles come")) return 1;
+    const QImage originalTile = provider.detailTile(QStringLiteral("otile-0-0"));
+    const QImage photo = QImage(large).convertToFormat(QImage::Format_RGBA8888).copy(0, 0, 512, 512);
+    bool samePixels = originalTile.size() == photo.size();
+    for (int y = 0; samePixels && y < photo.height(); y += 7)
+        for (int x = 0; samePixels && x < photo.width(); x += 7) {
+            const QColor a = originalTile.pixelColor(x, y), b = photo.pixelColor(x, y);
+            samePixels = std::abs(a.red() - b.red()) <= 1 && std::abs(a.green() - b.green()) <= 1 &&
+                         std::abs(a.blue() - b.blue()) <= 1;
+        }
+    if (!check(samePixels, "an original tile shows the photo's own pixels")) return 1;
+    const QString previewOfComparison = editor.imageSource();
+    editor.setAdjustment(QStringLiteral("contrast"), 30);
+    if (!check(waitFor([&] { return editor.imageSource() != previewOfComparison; }), "the preview is published")) return 1;
+    if (!check(waitFor([&] { return editor.detailTiles().size() == 6 && settled(editor); }),
+               "the current tiles come again")) return 1;
+    if (!check(editor.originalDetailTiles().size() == 6 && provider.detailTile(QStringLiteral("otile-0-0")) == originalTile,
+               "a slider leaves the original's tiles")) return 1;
+    editor.setDetailOriginalWanted(false);
+    if (!check(editor.originalDetailTiles().isEmpty() &&
+               provider.detailTileCount() == int(editor.detailTiles().size()), "the comparison closed frees them")) return 1;
+
     // The camera-signal noise reduction measures its model on the whole source and renders whole:
     // no tile.
     const QString previewBefore = editor.imageSource();

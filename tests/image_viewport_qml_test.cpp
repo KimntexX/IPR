@@ -281,6 +281,29 @@ int main(int argc, char **argv)
         if (!check(shown && viewport->property("crispPixels").toBool() && !shown->property("smooth").toBool() &&
                    canvas->property("smooth").toBool() && viewport->property("imageReady").toBool(),
                    "beyond 100 %, the file's pixels are sharp squares, the preview stays smoothed")) return 1;
+        // The comparison keeps the full resolution: the original's tiles sit on its side, same places.
+        viewport->setProperty("comparisonEnabled", true);
+        viewport->setProperty("originalDetailTiles", QVariantList{QVariantMap{{"x", 1536}, {"y", 512}, {"width", 512},
+                                                                              {"height", 512}, {"source", tileUrl.toString()}}});
+        auto *originalClip = viewport->findChild<QQuickItem *>("originalClip");
+        auto *originalCanvas = viewport->findChild<QQuickItem *>("originalViewportImage");
+        QPointer<QQuickItem> original;
+        for (int i = 0; i < 50 && !original; ++i) {
+            settle();
+            for (QQuickItem *child : originalClip ? originalClip->childItems() : QList<QQuickItem *>())
+                if (child->property("tileSource").toString() == tileUrl.toString() && child->isVisible())
+                    original = child;
+        }
+        if (!check(viewport->property("wantsOriginalDetail").toBool() && viewport->property("wantsDetail").toBool() &&
+                   original && originalCanvas &&
+                   near(original->x(), originalCanvas->x() + 1536 * originalCanvas->width() / 3200) &&
+                   near(original->width(), 512 * originalCanvas->width() / 3200),
+                   "in the comparison, an original tile sits on its part of the original")) return 1;
+        viewport->setProperty("comparisonEnabled", false);
+        for (int i = 0; i < 3; ++i) settle();
+        if (!check(!viewport->property("wantsOriginalDetail").toBool() && (!original || !original->isVisible()),
+                   "the comparison closed, no original tile shows")) return 1;
+        viewport->setProperty("originalDetailTiles", QVariantList());
         key(window, Qt::Key_0, Qt::ControlModifier, "0");
         for (int i = 0; i < 3; ++i) settle();
         if (!check(!shown || !shown->isVisible() || shown->parentItem() == nullptr, "back at fit, no tile shows")) return 1;

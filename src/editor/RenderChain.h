@@ -72,6 +72,11 @@ QByteArray wholeMeasuresKey(const Settings &settings);
 // settings): the same pixels, bit for bit. Null when the recipe does not render by region, when
 // the region leaves the canvas, on measures of another source's size or recipe's shape, or on a
 // failed stage. The measures must be this source's and recipe's: the region trusts them.
+// The original of a region of the canvas at full resolution: the decoded source with no setting
+// but the framing, as preview()'s originalPreview. floor: Geometry::warpFloor of the whole
+// source's RGB, needed only when the geometry resamples. Empty on a region off the canvas.
+ColorPipeline::WorkingImage originalRegion(const ColorPipeline::WorkingImage &source, const Geometry::Settings &geometry,
+                                           const ipr::Recti &region, const std::vector<float> &floor);
 ColorPipeline::WorkingImage workingRegion(const ColorPipeline::WorkingImage &source, const Settings &settings,
                                           const ipr::Recti &region, const WholeMeasures &measures);
 
