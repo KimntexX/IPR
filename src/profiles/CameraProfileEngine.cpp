@@ -151,7 +151,7 @@ QString persistentSelectionCacheFile()
     QDir cacheDirectory(cacheRoot);
     if (!cacheDirectory.exists() && !QDir().mkpath(cacheRoot))
         return {};
-    return cacheDirectory.filePath(QStringLiteral("IPR-profile-selection-v1.ini"));
+    return cacheDirectory.filePath(QStringLiteral("IPR-profile-selection-v2.ini"));
 }
 
 QString persistentSelectionKey(const QString &cameraMake,
@@ -524,6 +524,13 @@ public:
     bool matches(const QString &make, const QString &model,
                  const QString &fileName) const
     {
+        // Adobe Standard is not offered, selected nor restored (user's decision of 15 November
+        // 2026): IPR renders it without the default curve Lightroom gives it, and the stable
+        // version is to bring IPR's own profiles. Camera Matching profiles stay.
+        const QString adobeStandard = QStringLiteral("adobe standard");
+        if (profileName.trimmed().toCaseFolded() == adobeStandard ||
+            QFileInfo(fileName).completeBaseName().toCaseFolded().endsWith(adobeStandard))
+            return false;
         const QString restriction = normalized(cameraRestriction);
         const QString camera = normalized(make + QLatin1Char(' ') + model);
         const QString modelKey = normalized(model);
@@ -602,10 +609,11 @@ public:
         const double exposureScale = std::exp2(
             baselineExposure + options.cameraBaselineExposureEv + options.profileExposureCompensationEv);
         // Auto black render: (x - black) / (white - black) on the scene values, written after the
-        // gain, joined to zero by a quadratic toe over black +/- black/2 (same value and slope at
-        // both ends), so the noise of the deep shadows is not cut flat.
+        // gain, joined to zero by a quadratic toe from 0 to twice the black (same value and slope
+        // at both ends): the deep shadows keep part of their noise and its colour. A toe over
+        // black +/- black/2 cut them flat (night scenes of the 60D, 16 November 2026).
         const double black = autoBlackRender ? AutoBlackRenderLevel * exposureScale : 0.0;
-        const double slope = 1.0 / (1.0 - black), toe = black / 2.0;
+        const double slope = 1.0 / (1.0 - black), toe = black;
         const auto subtractBlack = [black, slope, toe](ipr::Vec3f &proPhoto) {
             for (int c = 0; c < 3; ++c) {
                 const double x = proPhoto[c];
@@ -1231,6 +1239,9 @@ bool parseLcp(const QByteArray &bytes, LcpData *profile, QString *error)
     ModelSection section = ModelSection::None;
     bool insideModel = false;
     LcpData::Model current;
+    // Adobe's profiles give an entry's focal length, focus distance and aperture on the
+    // rdf:Description around its PerspectiveModel, not on the model: they carry into it.
+    LcpData::Model entry;
     auto assignParameters = [](LcpData::Model &model, ModelSection section,
                                const QXmlStreamAttributes &attributes) {
         bool hasRadial1 = false;
@@ -1341,6 +1352,9 @@ bool parseLcp(const QByteArray &bytes, LcpData *profile, QString *error)
                                     current.hasBlueGreen))
                     parsed.models.append(current);
                 current = {};
+                current.focalLength = entry.focalLength;
+                current.focusDistance = entry.focusDistance;
+                current.aperture = entry.aperture;
                 insideModel = true;
                 section = ModelSection::Geometry;
                 assignParameters(current, section, attributes);
@@ -1373,6 +1387,14 @@ bool parseLcp(const QByteArray &bytes, LcpData *profile, QString *error)
                 for (const QXmlStreamAttribute &attribute : attributes) {
                     const QString key =
                         attribute.name().toString().toCaseFolded();
+                    bool number = false;
+                    const double value = attribute.value().toDouble(&number);
+                    if (number && key == QStringLiteral("focallength"))
+                        entry.focalLength = value;
+                    else if (number && key == QStringLiteral("focusdistance"))
+                        entry.focusDistance = value;
+                    else if (number && key == QStringLiteral("aperturevalue"))
+                        entry.aperture = value;
                     if (key == QStringLiteral("cameramodelrestriction") ||
                         key == QStringLiteral("cameramodel")) {
                         parsed.camera = attribute.value().toString();
@@ -1604,7 +1626,16 @@ LcpData::Model selectLcpModel(const LcpData &profile,
 {
     if (profile.models.size() == 1)
         return profile.models.first();
-    const auto distance = [&capture](const LcpData::Model &model) {
+    // The profile's ApertureValue is in APEX (Av = 2 log2 N: f/8 is 6), the photo's an f-number.
+    const double requestedAperture = capture.aperture > 0.0 ? 2.0 * std::log2(capture.aperture) : 0.0;
+    // A focus distance the decoder does not give (LibRaw has none for Canon) is taken as the
+    // farthest the profile describes: infinity in practice. Ignoring it made every distance of
+    // a focal length and aperture tie, the file's order then blending infinity with 1.2 m.
+    double requestedDistance = capture.focusDistanceM;
+    if (requestedDistance <= 0.0)
+        for (const LcpData::Model &model : profile.models)
+            requestedDistance = std::max(requestedDistance, model.focusDistance);
+    const auto distance = [&capture, requestedAperture, requestedDistance](const LcpData::Model &model) {
         double result = 0.0;
         int dimensions = 0;
         const auto add = [&result, &dimensions](double actual, double requested,
@@ -1617,9 +1648,8 @@ LcpData::Model selectLcpModel(const LcpData &profile,
         };
         add(model.focalLength, capture.focalLengthMm,
             qMax(1.0, capture.focalLengthMm));
-        add(model.focusDistance, capture.focusDistanceM,
-            qMax(1.0, capture.focusDistanceM));
-        add(model.aperture, capture.aperture, qMax(1.0, capture.aperture));
+        add(model.focusDistance, requestedDistance, qMax(1.0, requestedDistance));
+        add(model.aperture, requestedAperture, qMax(1.0, requestedAperture));
         return dimensions == 0 ? 0.0 : std::sqrt(result / dimensions);
     };
 
@@ -1643,8 +1673,9 @@ LcpData::Model selectLcpModel(const LcpData &profile,
     if (firstDistance == 0.0 || second < 0)
         return selected;
     const LcpData::Model &other = profile.models[second];
+    // Inverse distance: the nearer model weighs more; other's share is the first's distance.
     const double denom = firstDistance + secondDistance;
-    const double weight = denom > 0.0 ? secondDistance / denom : 0.0;
+    const double weight = denom > 0.0 ? firstDistance / denom : 0.0;
     const auto blend = [weight](auto &destination, const auto &source) {
         for (size_t i = 0; i < destination.size(); ++i)
             destination[i] = destination[i] * (1.0 - weight) +
@@ -1719,7 +1750,7 @@ std::shared_ptr<const DcpProfile> preparedDcp(const QString &path, QString *erro
 }
 std::shared_ptr<const LcpData> preparedLcp(const QString &path, QString *error)
 {
-    return std::static_pointer_cast<const LcpData>(PreparedProfileCache::acquire(path, "lcp-parser-v1",
+    return std::static_pointer_cast<const LcpData>(PreparedProfileCache::acquire(path, "lcp-parser-v2",
         [](const QByteArray &bytes, QString *failure) -> PreparedProfileCache::Loaded {
             auto profile = std::make_shared<LcpData>();
             if (!parseLcp(bytes, profile.get(), failure)) return {};

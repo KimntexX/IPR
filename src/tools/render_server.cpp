@@ -33,6 +33,7 @@
 //     optional "cameraDenoise":{"luminance":L,"chrominance":C} in [0, 100]: the
 //     editor's experimental denoise (signed development, before the profiles);
 //     {"luminance":0,"chrominance":0} renders the signed development alone
+//     optional "profile":PATH, a DCP of the photo's camera instead of Camera Neutral
 //     optional "denoise":{"luminance":L,"chrominance":C} in [0, 100]: the editor's
 //     current denoise (after the tones and colours), both sliders at once
 //     optional "sharpening":{"amount":A in [0, 200],"radius":R in [0.5, 3],"masking":M
@@ -116,6 +117,10 @@ void render(Masters &masters, const QJsonObject &request)
     Decode decode = feature == "neutral" ? Decode{} : decodeFor(feature, value);
     const bool cameraDenoise = request.contains("cameraDenoise");
     decode.signedCameraSignal = cameraDenoise;
+    if (request.contains("profile")) {
+        decode.dcpProfile = request.value("profile").toString();
+        require(QFileInfo(decode.dcpProfile).isFile(), "Missing profile: " + decode.dcpProfile);
+    }
     const LoadResult &master = masters.get(source, decode);
     Settings settings = settingsFor(master, feature, value);
     if (cameraDenoise) {

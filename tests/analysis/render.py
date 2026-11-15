@@ -151,7 +151,7 @@ class RenderServer:
         return self._request({"op": "list", "base": str(base), "group": group})["states"]
 
     def render(self, source, feature, value, mixer=None, grading=None, point_color=None, tone_curves=None,
-               camera_denoise=None, denoise=None, sharpening=None):
+               camera_denoise=None, denoise=None, sharpening=None, profile=None):
         """Pixels (height, width, 3) uint16 and metadata shaped like native.inspect().
         mixer: optional {"hue": [8], "saturation": [8], "luminance": [8]} on top of the state.
         grading: optional {"hue": [3 or 4], "saturation": [3 or 4]} (shadows, midtones, highlights, global),
@@ -163,7 +163,8 @@ class RenderServer:
         camera_denoise: optional {"luminance": L, "chrominance": C} in [0, 100], the editor's experimental
         denoise on the signed camera signal before the profiles (0, 0: the signed development alone).
         denoise: optional {"luminance": L, "chrominance": C}, the editor's current denoise, both sliders.
-        sharpening: optional {"amount": A, "radius": R, "masking": M} on top of the state."""
+        sharpening: optional {"amount": A, "radius": R, "masking": M} on top of the state.
+        profile: optional path of a DCP of the photo's camera, instead of Camera Neutral."""
         request = {"op": "render", "source": str(source), "feature": feature, "value": value}
         if mixer is not None:
             request["mixer"] = mixer
@@ -179,6 +180,8 @@ class RenderServer:
             request["denoise"] = denoise
         if sharpening is not None:
             request["sharpening"] = sharpening
+        if profile is not None:
+            request["profile"] = str(profile)
         header = self._request(request)
         width, height = header["width"], header["height"]
         if header["channels"] != 3 or header["dtype"] != "<u2" or header["bytes"] != width * height * 6:

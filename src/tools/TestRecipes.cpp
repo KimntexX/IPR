@@ -144,6 +144,7 @@ LoadResult load(const QString &path, const Decode &decode)
     options.chromaticAberrationEnabled = decode.chromaticAberration;
     options.signedDevelopment = decode.signedCameraSignal;
     options.retainPreLensSignal = decode.signedCameraSignal;
+    options.dcpProfileOverride = decode.dcpProfile;
     LoadResult result = ImageEditor::loadFromDisk(path, decode.automaticWhiteBalance, options);
     require(!result.image.isNull(), "Decode failed for " + path + ": " + result.error);
     result.editProxy = {};
