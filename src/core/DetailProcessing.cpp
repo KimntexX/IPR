@@ -44,16 +44,65 @@ float luminanceOf(const ipr::Vec3f &rgb)
     return std::max(0.0f, WorkingColor::luminance(rgb));
 }
 
-ipr::Image extractLuminance(const ipr::Image &linearRgb)
+// The sharpening works on the luminance encoded with the sRGB curve, close to how the eye
+// grades contrast: an unsharp mask of linear light barely shows in the shadows.
+float encodeLuminance(float linear)
+{
+    return linear <= 0.0031308f ? 12.92f * linear : 1.055f * std::pow(linear, 1.0f / 2.4f) - 0.055f;
+}
+
+float decodeLuminance(float encoded)
+{
+    return encoded <= 0.04045f ? encoded / 12.92f : std::pow((encoded + 0.055f) / 1.055f, 2.4f);
+}
+
+ipr::Image encodedLuminance(const ipr::Image &linearRgb)
 {
     ipr::Image result = ipr::Image::create(linearRgb.size(), ipr::Depth::F32, 1);
-    for (int y = 0; y < linearRgb.height(); ++y) {
-        const ipr::Vec3f *source = linearRgb.row<ipr::Vec3f>(y);
-        float *target = result.mutableRow<float>(y);
-        for (int x = 0; x < linearRgb.width(); ++x)
-            target[x] = luminanceOf(source[x]);
-    }
+    ipr::parallelRows(linearRgb.height(), [&](int first, int last) {
+        for (int y = first; y < last; ++y) {
+            const ipr::Vec3f *source = linearRgb.row<ipr::Vec3f>(y);
+            float *target = result.mutableRow<float>(y);
+            for (int x = 0; x < linearRgb.width(); ++x)
+                target[x] = encodeLuminance(luminanceOf(source[x]));
+        }
+    });
     return result;
+}
+
+// Calibrated on Lightroom's exports (Camera Neutral, radius 1, detail 25, masking 0) of four
+// RAWs at 0, 25, 50, 75, 100 and 150, on their edges (15 November 2026): a Gaussian of 0.7
+// radius, a gain of 1.9 (amount / 50)^1.5, and an overshoot past the 5 x 5 local range (for
+// radius 1) compressed softly within 30 % of that range.
+constexpr double kSharpenSigmaPerRadius = 0.7;
+constexpr double kSharpenGainAt50 = 1.9, kSharpenGainExponent = 1.5;
+constexpr float kSharpenOvershootRoom = 0.3f;
+
+float sharpenGain(float amount)
+{
+    return amount <= 0.0f ? 0.0f
+        : float(kSharpenGainAt50 * std::pow(double(amount) / 50.0, kSharpenGainExponent));
+}
+
+double sharpenSigma(const DetailProcessing::SharpenSettings &settings, double pixelScale)
+{
+    return std::clamp(static_cast<double>(settings.radius), 0.3, 3.0) * pixelScale * kSharpenSigmaPerRadius;
+}
+
+int sharpenWindowReach(const DetailProcessing::SharpenSettings &settings, double pixelScale)
+{
+    const double radius = std::clamp(static_cast<double>(settings.radius), 0.3, 3.0) * pixelScale;
+    return std::max(1, static_cast<int>(std::lround(2.0 * radius)));
+}
+
+// Past the local extremes the overshoot is compressed: within room, never beyond it.
+float softOvershoot(float value, float minimum, float maximum, float room)
+{
+    if (value > maximum)
+        return maximum + room * std::tanh((value - maximum) / room);
+    if (value < minimum)
+        return minimum - room * std::tanh((minimum - value) / room);
+    return value;
 }
 
 constexpr double kSharpenNoiseBlur = 0.8;
@@ -581,7 +630,7 @@ void appendSharpenNoiseSamples(const ipr::Image &linearRgbBand, int bandTop, int
 {
     if (linearRgbBand.empty() || linearRgbBand.depth() != ipr::Depth::F32 || linearRgbBand.channels() != 3)
         return;
-    appendLumaNoiseSamples(extractLuminance(linearRgbBand), bandTop, planeHeight, step, samples);
+    appendLumaNoiseSamples(encodedLuminance(linearRgbBand), bandTop, planeHeight, step, samples);
 }
 
 float sharpenNoiseSigma(std::vector<float> samples)
@@ -591,9 +640,8 @@ float sharpenNoiseSigma(std::vector<float> samples)
 
 int sharpenReach(const SharpenSettings &settings, double pixelScale)
 {
-    const double radius = std::clamp(static_cast<double>(settings.radius), 0.3, 3.0) * pixelScale;
-    const int kernelSize = std::max(3, static_cast<int>(std::ceil(radius * 2.0)) * 2 + 1);
-    return std::max(int(ipr::gaussianHalfKernel(radius).size()) - 1, kernelSize / 2);
+    return std::max(int(ipr::gaussianHalfKernel(sharpenSigma(settings, pixelScale)).size()) - 1,
+                    sharpenWindowReach(settings, pixelScale));
 }
 
 bool denoiseFromAmount(int amount, DenoiseSettings &settings)
@@ -666,43 +714,45 @@ void sharpen(ipr::Image &linearRgb, const SharpenSettings &settings, double pixe
     if (settings.amount <= 0 && !hasLocal)
         return;
 
-    const ipr::Image luma = extractLuminance(linearRgb);
-    const double radius = std::clamp(static_cast<double>(settings.radius), 0.3, 3.0) * pixelScale;
-    const ipr::Image localBase = ipr::gaussianBlurred(luma, radius, ipr::BlurBorder::LastPixel);
-    const int kernelSize = std::max(3, static_cast<int>(std::ceil(radius * 2.0)) * 2 + 1);
-    const ipr::Image localMinimum = ipr::minimum(luma, ipr::Size(kernelSize, kernelSize), ipr::Beyond::Nothing);
-    const ipr::Image localMaximum = ipr::maximum(luma, ipr::Size(kernelSize, kernelSize), ipr::Beyond::Nothing);
+    const ipr::Image encoded = encodedLuminance(linearRgb);
+    const ipr::Image localBase = ipr::gaussianBlurred(encoded, sharpenSigma(settings, pixelScale),
+                                                      ipr::BlurBorder::LastPixel);
+    const int window = 2 * sharpenWindowReach(settings, pixelScale) + 1;
+    const ipr::Image localMinimum = ipr::minimum(encoded, ipr::Size(window, window), ipr::Beyond::Nothing);
+    const ipr::Image localMaximum = ipr::maximum(encoded, ipr::Size(window, window), ipr::Beyond::Nothing);
 
-    const float threshold = (noiseSigma ? *noiseSigma : estimateNoiseSigma(luma)) *
+    // Grain protection, kept at masking 0 (user's choice of 15 November 2026, unlike
+    // Lightroom): a detail at the level of the noise is not sharpened.
+    const float threshold = (noiseSigma ? *noiseSigma : estimateNoiseSigma(encoded)) *
         (0.35f + 5.5f * static_cast<float>(std::clamp(settings.masking, 0, 100)) / 100.0f);
-    const float amount = static_cast<float>(std::clamp(settings.amount, 0, 200)) / 100.0f;
-    for (int y = 0; y < linearRgb.height(); ++y) {
-        ipr::Vec3f *pixels = linearRgb.mutableRow<ipr::Vec3f>(y);
-        const float *sourceLuma = luma.row<float>(y);
-        const float *base = localBase.row<float>(y);
-        const float *minimum = localMinimum.row<float>(y);
-        const float *maximum = localMaximum.row<float>(y);
-        const float *localAmount = hasLocal ? map.row<float>(y) : nullptr;
-        for (int x = 0; x < linearRgb.width(); ++x) {
-            float pixelAmount = amount;
-            if (localAmount && std::isfinite(localAmount[x]))
-                pixelAmount = std::clamp(float(std::clamp(settings.amount, 0, 200)) + localAmount[x], 0.0f, 200.0f) / 100.0f;
-            if (pixelAmount <= 0.0f)
-                continue;
-            const float detail = sourceLuma[x] - base[x];
-            const float edgeMask = smoothStep(threshold, threshold * 3.0f,
-                                              std::abs(detail));
-            if (edgeMask <= 0.0f || sourceLuma[x] <= 1e-6f)
-                continue;
-            const float localRange = std::max(0.0f, maximum[x] - minimum[x]);
-            // Restrict overshoot to a small fraction of the local range. This
-            // retains acutance while preventing the bright/dark halos of USM.
-            const float targetLuma = std::clamp(
-                sourceLuma[x] + detail * pixelAmount * edgeMask,
-                minimum[x] - 0.15f * localRange, maximum[x] + 0.15f * localRange);
-            pixels[x] *= std::max(0.0f, targetLuma) / sourceLuma[x];
+    const float gain = sharpenGain(float(std::clamp(settings.amount, 0, 200)));
+    ipr::parallelRows(linearRgb.height(), [&](int first, int last) {
+        for (int y = first; y < last; ++y) {
+            ipr::Vec3f *pixels = linearRgb.mutableRow<ipr::Vec3f>(y);
+            const float *source = encoded.row<float>(y);
+            const float *base = localBase.row<float>(y);
+            const float *minimum = localMinimum.row<float>(y);
+            const float *maximum = localMaximum.row<float>(y);
+            const float *localAmount = hasLocal ? map.row<float>(y) : nullptr;
+            for (int x = 0; x < linearRgb.width(); ++x) {
+                float pixelGain = gain;
+                if (localAmount && std::isfinite(localAmount[x]))
+                    pixelGain = sharpenGain(std::clamp(float(std::clamp(settings.amount, 0, 200)) + localAmount[x],
+                                                       0.0f, 200.0f));
+                if (pixelGain <= 0.0f)
+                    continue;
+                const float detail = source[x] - base[x];
+                const float edgeMask = smoothStep(threshold, threshold * 3.0f, std::abs(detail));
+                const float linear = decodeLuminance(source[x]);
+                if (edgeMask <= 0.0f || linear <= 1e-6f)
+                    continue;
+                const float room = std::max(kSharpenOvershootRoom * (maximum[x] - minimum[x]), 1e-4f);
+                const float target = softOvershoot(source[x] + detail * pixelGain * edgeMask,
+                                                   minimum[x], maximum[x], room);
+                pixels[x] *= decodeLuminance(std::max(0.0f, target)) / linear;
+            }
         }
-    }
+    });
 }
 
 }

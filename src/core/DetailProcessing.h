@@ -54,6 +54,8 @@ void reduceNoise(ipr::Image &linearRgb, const DenoiseSettings &settings, double 
                  const NoiseMeasures *given = nullptr);
 // How far around a pixel the noise reduction reads, in pixels of this image.
 int reduceNoiseReach(const DenoiseSettings &settings, double pixelScale = 1.0);
+// Unsharp mask of the sRGB-encoded luminance, calibrated on Lightroom's sharpening (same amount,
+// radius and masking give the same edges; at masking 0 IPR still spares the grain).
 // The sharpening radius is in pixels of the full image. local: per-pixel Sharpening
 // added to the amount (LocalValues), the sum within [0, 200]. noiseSigma: the noise the
 // sharpening measures on its whole input (sharpenNoiseSigma), given when this image is a part
