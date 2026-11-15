@@ -1,6 +1,7 @@
 // Manual check only: the noise law IPR estimates from one RAW (NoiseLaw::estimate, read noise
 // from RawBlackLevelEstimator::readNoise), printed per site of the 2x2 cell in raster order, to
-// compare with tests/neural/estimate_single_raw_law.py on the same files. One line per file.
+// compare with tests/neural/estimate_single_raw_law.py (research branch patch_noise_neural) on
+// the same files. One line per file.
 #include "LibRawInput.h"
 #include "NoiseLaw.h"
 #include "RawBlackLevelEstimator.h"

@@ -71,8 +71,8 @@ std::optional<Law> resolve(const Catalog &catalog, const QString &make, const QS
 // classes, texture only adding). mosaic: U16, the visible area in counts; black per site; white
 // in counts. A slope the photo cannot show (no unsaturated signal, near-black frame) is zero:
 // the read noise alone. nullopt with a reason on an unusable input or an unknown read variance.
-// The single-RAW study: docs/validation/analyses/analyse-restauration-neuronale.md (12 and
-// 13 November 2026).
+// The single-RAW study: docs/validation/analyses/analyse-restauration-neuronale.md on the
+// research branch patch_noise_neural (12 and 13 November 2026).
 std::optional<Law> estimate(const ipr::Image &mosaic, const std::array<double, 4> &black,
                             const std::array<double, 4> &readVariance, double white, QString *reason);
 

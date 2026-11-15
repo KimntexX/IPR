@@ -180,7 +180,8 @@ namespace {
 constexpr int EstimateBlock = 16;
 constexpr double EstimateQuantile = 0.1;
 // Tenth percentile of the block variance below for unit Gaussian noise (4000 simulated blocks,
-// tests/neural/estimate_single_raw_law.py, quantile_bias(0.1)).
+// tests/neural/estimate_single_raw_law.py on the research branch patch_noise_neural,
+// quantile_bias(0.1)).
 constexpr double EstimateQuantileBias = 0.8057036930236089;
 
 double medianOf(std::vector<double> &values)
