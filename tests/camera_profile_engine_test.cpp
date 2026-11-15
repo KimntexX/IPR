@@ -720,7 +720,7 @@ int main(int argc, char **argv)
             return 1;
     }
     {
-        // The toe: zero below black/2, a quadratic up to 1.5 black, continuous with the ramp.
+        // The toe: zero at and below zero, a quadratic up to twice the black, continuous with the ramp.
         const auto rendered = [&](double value) {
             ipr::Image gray = ipr::Image::create({1, 1}, ipr::Depth::F32, 3);
             at<ipr::Vec3f>(gray, 0, 0) = proPhotoToXyz * ipr::Vec3f(float(value), float(value), float(value));
@@ -729,12 +729,13 @@ int main(int argc, char **argv)
             return ok ? double(proPhoto[1]) : -1.0;
         };
         const double slope = 1 / (1 - autoBlack);
-        if (!check(std::abs(rendered(-.01)) < 1e-7 && std::abs(rendered(autoBlack / 2)) < 1e-7,
-                   "below the toe the black render gives zero, negative values included") ||
-            !check(std::abs(rendered(autoBlack) - slope * autoBlack / 8) < 1e-6,
-                   "at the black the toe gives a quarter of its half-width") ||
-            !check(std::abs(rendered(1.5 * autoBlack) - slope * autoBlack / 2) < 1e-6,
-                   "the toe meets the ramp at 1.5 black"))
+        if (!check(std::abs(rendered(-.01)) < 1e-7 && std::abs(rendered(0.0)) < 1e-7,
+                   "at and below zero the black render gives zero, negative values included") ||
+            !check(rendered(autoBlack / 2) > 0.0, "a value below the black keeps part of itself") ||
+            !check(std::abs(rendered(autoBlack) - slope * autoBlack / 4) < 1e-6,
+                   "at the black the toe gives a quarter of the black") ||
+            !check(std::abs(rendered(2 * autoBlack) - slope * autoBlack) < 1e-6,
+                   "the toe meets the ramp at twice the black"))
             return 1;
     }
     const QString descendingDcp = QDir(dcpDirectory).filePath("descending-curve.dcp");

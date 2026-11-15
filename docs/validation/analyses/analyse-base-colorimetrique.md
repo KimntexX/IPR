@@ -1,6 +1,6 @@
 # Base colorimétrique — Rapport d'analyse évolutif
 
-**Date initiale :** 6 octobre 2026. **Dernière mise à jour :** 15 novembre 2026 (§56).
+**Date initiale :** 6 octobre 2026. **Dernière mise à jour :** 16 novembre 2026 (§56).
 **État de référence courant (§51–55) :** master Rec.2020, calibration demandée
 par défaut et règles R6/R7 par mode sans liste de RAW/ISO, configuration vivante.
 Le premier lot d'architecture extensible conserve le rendu des 19 témoins
@@ -5818,6 +5818,30 @@ mesurée par `tests/compare_lightroom_exports.py`.
   (L* RMS à 3 px : 1,03 contre 1,14 sur `_MG_7597`). Le manque de piqué perçu
   vient surtout de la netteté, environ 2,5 fois plus faible que celle de
   Lightroom à valeur égale : sujet distinct (issue #13).
+
+### Scènes de nuit et raccord du noir — 16 novembre 2026
+
+Neuf photos de nuit du 60D (poses longues ou ISO élevé), exportées par
+l'utilisateur avec Camera Neutral, netteté et bruit à 0, sans correction
+d'objectif, et quatre scènes de jour déjà mesurées. Variantes du noir
+automatique essayées en mémoire :
+
+| Variante | Scènes de jour | Pixels sous L* 2 (nuit) | Chroma (nuit) |
+| --- | --- | ---: | ---: |
+| Lightroom | — | 0,61 à 1,00 | 0,64 à 5,07 |
+| Noir 0,005, raccord ± noir/2 (avant) | référence | 0,85 à 1,00 | 0,01 à 3,02 |
+| Noir sur la luminance seule | inchangées | 0,86 à 1,00 | 0,00 à 1,90 |
+| Noir 0,0025 | ombres +0,6 à +2,2 L* | 0,74 à 1,00 | 0,04 à 4,01 |
+| Sans noir automatique | ombres relevées (+4 L*, §56) | 0,42 à 1,00 | 0,81 à 5,22 |
+| **Noir 0,005, raccord de 0 à 2 × noir (retenu)** | inchangées (±0,01 L*) | 0,83 à 1,00 | 0,08 à 3,21 |
+
+Le raccord plus large garde une partie du bruit des noirs profonds et sa
+couleur, sans toucher aux scènes de jour. Il ne rejoint pas Lightroom sur ces
+scènes de nuit, qu'il garde plus claires et plus colorées qu'aucun noir fixe :
+Lightroom semble adapter son noir à la scène, ce qui n'est pas reproduit
+([issue #38](https://github.com/KimntexX/IPR/issues/38)). Adobe Standard est
+retiré d'IPR le même jour (#39). Preuve :
+[dark-black-render-variants-v001-20261115T181709Z.json](../raw/dark-black-render-variants-v001-20261115T181709Z.json).
 
 ## Bibliographie et preuves
 
