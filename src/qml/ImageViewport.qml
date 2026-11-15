@@ -14,6 +14,16 @@ Item {
     property url detailSource
     property real detailRatio: 1
     property bool detailRendering: false
+    // Tiles of the full resolution, {x, y, width, height, source} in pixels of detailSize (the
+    // displayed image at full resolution); the visible part goes back by detailViewReported.
+    property var detailTiles: []
+    // The original's tiles, same form, shown on its side of the comparison or while held.
+    property var originalDetailTiles: []
+    property size detailSize: Qt.size(0, 0)
+    // Where the tiles spread from: the pointer after a zoom, the view's centre after a move (-1).
+    property real detailFocusX: -1
+    property real detailFocusY: -1
+    signal detailViewReported(real x, real y, real width, real height, real focusX, real focusY)
     property bool comparisonEnabled: false
     property bool originalHeld: false
     property real comparisonPosition: 0.5
@@ -73,9 +83,17 @@ Item {
     readonly property real toolbarHeight: zoomToolbar.visible ? zoomToolbar.height + 12 : 0
     // The preview is enlarged on screen: its full-resolution render is asked for.
     readonly property bool wantsDetail: imageReady && !fitMode && detailRatio > 1
-        && zoomScale * devicePixelRatio > 1.001 && !showingComparison && !showingOriginal
+        && zoomScale * devicePixelRatio > 1.001
         && !cropEditing && maskShape === null
+    // The comparison and the held original show the full resolution too, both sides.
+    readonly property bool wantsOriginalDetail: wantsDetail && (showingComparison || showingOriginal)
     readonly property bool showingDetail: wantsDetail && detailCanvas.shown
+    // Beyond 100 %, each pixel of the file shows as a sharp square: nothing finer exists, and
+    // smoothing would hide the grain and the edges being judged. The preview standing in for
+    // a finer image keeps its smoothing; it is not the file's pixels. Only smooth changes:
+    // changing mipmap reloads the image, and the view would blink.
+    readonly property bool crispPixels: !fitMode && zoomScale > actualScale * 1.0001
+    readonly property bool previewIsFile: detailRatio <= 1
 
     function clampPan() {
         offsetX = Math.max(-maxOffsetX, Math.min(maxOffsetX, offsetX))
@@ -96,6 +114,8 @@ Item {
         const imageX = (x - imageLeft) / zoomScale
         const imageY = (y - imageTop) / zoomScale
         const next = Math.max(minimumScale, Math.min(maximumScale, scale))
+        detailFocusX = x
+        detailFocusY = y
         manualScale = next
         fitMode = false
         // Keep the image pixel below the mouse in place, subject to pan bounds.
@@ -137,11 +157,73 @@ Item {
             dx = dy
             dy = 0
         }
+        detailFocusX = -1
+        detailFocusY = -1
         offsetX += dx
         offsetY += dy
         clampPan()
         return dx !== 0 || dy !== 0
     }
+
+    // The visible part of the image in pixels of detailSize, and the focus, for the tiles.
+    function reportDetailView() {
+        if (!wantsDetail || detailSize.width <= 0 || detailSize.height <= 0 || canvas.width <= 0 || canvas.height <= 0)
+            return
+        const kx = detailSize.width / canvas.width, ky = detailSize.height / canvas.height
+        const x0 = Math.max(0, imageLeft), x1 = Math.min(width, imageLeft + canvas.width)
+        const y0 = Math.max(0, imageTop), y1 = Math.min(height, imageTop + canvas.height)
+        if (x1 <= x0 || y1 <= y0)
+            return
+        const fx = detailFocusX >= 0 ? detailFocusX : width / 2
+        const fy = detailFocusY >= 0 ? detailFocusY : height / 2
+        detailViewReported((x0 - imageLeft) * kx, (y0 - imageTop) * ky, (x1 - x0) * kx, (y1 - y0) * ky,
+                           (fx - imageLeft) * kx, (fy - imageTop) * ky)
+    }
+
+    // The tiles shown follow detailTiles by source: a tile already loaded stays as it is.
+    function syncTiles() {
+        const wanted = wantsDetail && detailSize.width > 0 && detailTiles ? detailTiles : []
+        const bySource = {}
+        for (let i = 0; i < wanted.length; ++i)
+            bySource[wanted[i].source] = wanted[i]
+        for (let i = tileModel.count - 1; i >= 0; --i)
+            if (!bySource[tileModel.get(i).tileSource])
+                tileModel.remove(i)
+        const present = {}
+        for (let i = 0; i < tileModel.count; ++i)
+            present[tileModel.get(i).tileSource] = true
+        for (let i = 0; i < wanted.length; ++i)
+            if (!present[wanted[i].source])
+                tileModel.append({tileX: wanted[i].x, tileY: wanted[i].y, tileWidth: wanted[i].width,
+                                  tileHeight: wanted[i].height, tileSource: wanted[i].source})
+    }
+    onDetailTilesChanged: syncTiles()
+    // The original's tiles, kept by source as the current ones.
+    function syncOriginalTiles() {
+        const wanted = wantsOriginalDetail && detailSize.width > 0 && originalDetailTiles ? originalDetailTiles : []
+        const bySource = {}
+        for (let i = 0; i < wanted.length; ++i)
+            bySource[wanted[i].source] = wanted[i]
+        for (let i = originalTileModel.count - 1; i >= 0; --i)
+            if (!bySource[originalTileModel.get(i).tileSource])
+                originalTileModel.remove(i)
+        const present = {}
+        for (let i = 0; i < originalTileModel.count; ++i)
+            present[originalTileModel.get(i).tileSource] = true
+        for (let i = 0; i < wanted.length; ++i)
+            if (!present[wanted[i].source])
+                originalTileModel.append({tileX: wanted[i].x, tileY: wanted[i].y, tileWidth: wanted[i].width,
+                                          tileHeight: wanted[i].height, tileSource: wanted[i].source})
+    }
+    onOriginalDetailTilesChanged: syncOriginalTiles()
+    onWantsOriginalDetailChanged: syncOriginalTiles()
+    ListModel { id: originalTileModel }
+    onWantsDetailChanged: { syncTiles(); Qt.callLater(reportDetailView) }
+    onDetailSizeChanged: { syncTiles(); syncOriginalTiles(); Qt.callLater(reportDetailView) }
+    onImageLeftChanged: Qt.callLater(reportDetailView)
+    onImageTopChanged: Qt.callLater(reportDetailView)
+    onZoomScaleChanged: Qt.callLater(reportDetailView)
+    ListModel { id: tileModel }
 
     function resetView() {
         originalHeld = false
@@ -218,7 +300,7 @@ Item {
             asynchronous: true
             retainWhileLoading: true
             cache: false
-            smooth: true
+            smooth: !(root.crispPixels && root.previewIsFile)
             // Mipmapped minification out of fit: a plain bilinear reduction beyond 2x
             // aliases the grain and showed more noise than the image holds.
             mipmap: true
@@ -244,9 +326,33 @@ Item {
             source: root.wantsDetail ? root.detailSource : ""
             asynchronous: true
             cache: false
-            smooth: true
+            smooth: !root.crispPixels
             mipmap: true
             visible: root.showingDetail
+        }
+        // Tiles of the full resolution over the enlarged preview, where they are ready.
+        Repeater {
+            objectName: "detailTiles"
+            model: tileModel
+            delegate: Image {
+                required property real tileX
+                required property real tileY
+                required property real tileWidth
+                required property real tileHeight
+                required property string tileSource
+                readonly property real scaleX: root.detailSize.width > 0 ? canvas.width / root.detailSize.width : 0
+                readonly property real scaleY: root.detailSize.height > 0 ? canvas.height / root.detailSize.height : 0
+                x: canvas.x + tileX * scaleX
+                y: canvas.y + tileY * scaleY
+                width: tileWidth * scaleX
+                height: tileHeight * scaleY
+                source: tileSource
+                asynchronous: true
+                cache: false
+                smooth: !root.crispPixels
+                mipmap: true
+                visible: root.wantsDetail && status === Image.Ready && !fitCanvas.shown
+            }
         }
         Image {
             id: fitCanvas
@@ -285,10 +391,34 @@ Item {
             asynchronous: true
             retainWhileLoading: true
             cache: false
-            smooth: true
+            smooth: !(root.crispPixels && root.previewIsFile)
             mipmap: true
             visible: !fitOriginal.shown
             fillMode: Image.PreserveAspectFit
+        }
+        // The original's tiles of the full resolution over its enlarged preview.
+        Repeater {
+            objectName: "originalDetailTiles"
+            model: originalTileModel
+            delegate: Image {
+                required property real tileX
+                required property real tileY
+                required property real tileWidth
+                required property real tileHeight
+                required property string tileSource
+                readonly property real scaleX: root.detailSize.width > 0 ? originalCanvas.width / root.detailSize.width : 0
+                readonly property real scaleY: root.detailSize.height > 0 ? originalCanvas.height / root.detailSize.height : 0
+                x: originalCanvas.x + tileX * scaleX
+                y: originalCanvas.y + tileY * scaleY
+                width: tileWidth * scaleX
+                height: tileHeight * scaleY
+                source: tileSource
+                asynchronous: true
+                cache: false
+                smooth: !root.crispPixels
+                mipmap: true
+                visible: root.wantsOriginalDetail && status === Image.Ready && !fitOriginal.shown
+            }
         }
         Image {
             id: fitOriginal
@@ -340,6 +470,8 @@ Item {
             if (Math.hypot(dx, dy) > Qt.styleHints.startDragDistance)
                 dragged = true
             if (dragged) {
+                root.detailFocusX = -1
+                root.detailFocusY = -1
                 root.offsetX = startOffsetX + dx
                 root.offsetY = startOffsetY + dy
                 root.clampPan()

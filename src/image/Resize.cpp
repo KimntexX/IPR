@@ -7,6 +7,7 @@
 #include <cstdint>
 #include <cstring>
 #include <stdexcept>
+#include <utility>
 #include <vector>
 
 namespace ipr {
@@ -146,6 +147,87 @@ void resample(const Image &image, Image &out, double inverseScaleX, double inver
     }, threads);
 }
 
+// The part at outOrigin of resizing a whole image of imageSize to outSize, read from window (the
+// part of that image at windowOrigin): the taps of the whole resize, the same sums in the same order.
+void resampleRegion(const Image &window, Point2i windowOrigin, Size imageSize, Image &out, Point2i outOrigin,
+                    Size outSize, Interpolation interpolation, int threads)
+{
+    if (window.empty() || out.empty() || imageSize.empty() || outSize.empty())
+        throw std::invalid_argument("Resizing a part needs an image, a buffer and both whole sizes");
+    if (window.depth() != Depth::F32 || out.depth() != Depth::F32 || out.channels() != window.channels())
+        throw std::invalid_argument("Resizing reads and writes 32-bit floats of the same channels");
+    const int channels = window.channels();
+    const int lastColumn = window.width() - 1, lastRow = window.height() - 1;
+    // A tap the window lacks reads its nearest pixel there: a caller's error, never memory.
+    const auto column = [&](int x) { return std::clamp(x - windowOrigin.x, 0, lastColumn); };
+    const auto rowOf = [&](int y) { return std::clamp(y - windowOrigin.y, 0, lastRow); };
+    if (outSize == imageSize) {
+        for (int y = 0; y < out.height(); ++y)
+            for (int x = 0; x < out.width(); ++x)
+                for (int c = 0; c < channels; ++c)
+                    out.mutableRow<float>(y)[x * channels + c] =
+                        window.row<float>(rowOf(outOrigin.y + y))[column(outOrigin.x + x) * channels + c];
+        return;
+    }
+    const double inverseScaleX = double(outSize.width) / imageSize.width;
+    const double inverseScaleY = double(outSize.height) / imageSize.height;
+    const double scaleX = 1.0 / inverseScaleX, scaleY = 1.0 / inverseScaleY;
+    const bool area = interpolation == Interpolation::Area && scaleX >= 1 && scaleY >= 1;
+    const bool areaMode = interpolation == Interpolation::Area && !area;
+    const Taps across = area ? areaTaps(imageSize.width, outSize.width, scaleX)
+                             : linearTaps(imageSize.width, outSize.width, scaleX, inverseScaleX, areaMode);
+    const Taps down = area ? areaTaps(imageSize.height, outSize.height, scaleY)
+                           : linearTaps(imageSize.height, outSize.height, scaleY, inverseScaleY, areaMode);
+    // The source rows the part's rows read, each resized along its row once.
+    const int firstRow = down.source[size_t(down.start[size_t(outOrigin.y)])];
+    const int lastSource = down.source[size_t(down.start[size_t(outOrigin.y + out.height())] - 1)];
+    int lowest = firstRow, highest = lastSource;
+    for (int y = outOrigin.y; y < outOrigin.y + out.height(); ++y)
+        for (int t = down.start[size_t(y)]; t < down.start[size_t(y) + 1]; ++t) {
+            lowest = std::min(lowest, down.source[size_t(t)]);
+            highest = std::max(highest, down.source[size_t(t)]);
+        }
+    const int width = out.width();
+    Image wide = Image::create({width, highest - lowest + 1}, Depth::F32, channels);
+    Image &wideRef = wide;
+    if (std::int64_t(width) * wide.height() * channels < aloneValues)
+        threads = 1;
+    parallelRows(wide.height(), [&](int first, int last) {
+        for (int r = first; r < last; ++r) {
+            const float *in = window.row<float>(rowOf(lowest + r));
+            float *row = wideRef.mutableRow<float>(r);
+            for (int x = 0; x < width; ++x) {
+                const int d = outOrigin.x + x;
+                for (int c = 0; c < channels; ++c) {
+                    float sum = 0.0f;
+                    for (int t = across.start[size_t(d)]; t < across.start[size_t(d) + 1]; ++t)
+                        sum += in[column(across.source[size_t(t)]) * channels + c] * across.weight[size_t(t)];
+                    row[x * channels + c] = sum;
+                }
+            }
+        }
+    }, threads);
+    Image &outRef = out;
+    const int values = width * channels;
+    parallelRows(out.height(), [&](int first, int last) {
+        for (int y = first; y < last; ++y) {
+            const int d = outOrigin.y + y;
+            float *target = outRef.mutableRow<float>(y);
+            const int begin = down.start[size_t(d)], end = down.start[size_t(d) + 1];
+            const float *row = wide.row<float>(down.source[size_t(begin)] - lowest);
+            const float weight = down.weight[size_t(begin)];
+            for (int v = 0; v < values; ++v)
+                target[v] = row[v] * weight;
+            for (int t = begin + 1; t < end; ++t) {
+                const float *next = wide.row<float>(down.source[size_t(t)] - lowest);
+                const float w = down.weight[size_t(t)];
+                for (int v = 0; v < values; ++v)
+                    target[v] += next[v] * w;
+            }
+        }
+    }, threads);
+}
+
 bool validScales(double scaleX, double scaleY)
 {
     return scaleX > 0 && scaleY > 0 && std::isfinite(scaleX) && std::isfinite(scaleY);
@@ -189,6 +271,41 @@ void resizeInto(const Image &image, Image &out, Interpolation interpolation, int
         throw std::invalid_argument("Resizing needs an image and a size");
     resample(image, out, double(out.width()) / image.width(), double(out.height()) / image.height(), interpolation,
              threads);
+}
+
+void resizeRegionInto(const Image &window, Point2i windowOrigin, Size imageSize, Image &out, Point2i outOrigin,
+                      Size outSize, Interpolation interpolation, int threads)
+{
+    if (outOrigin.x < 0 || outOrigin.y < 0 || outOrigin.x + out.width() > outSize.width ||
+        outOrigin.y + out.height() > outSize.height)
+        throw std::invalid_argument("The part lies outside the resized image");
+    resampleRegion(window, windowOrigin, imageSize, out, outOrigin, outSize, interpolation, threads);
+}
+
+Recti resizeRegionSource(Size imageSize, Size outSize, const Recti &part, Interpolation interpolation)
+{
+    const double inverseScaleX = double(outSize.width) / imageSize.width;
+    const double inverseScaleY = double(outSize.height) / imageSize.height;
+    const double scaleX = 1.0 / inverseScaleX, scaleY = 1.0 / inverseScaleY;
+    const bool area = interpolation == Interpolation::Area && scaleX >= 1 && scaleY >= 1;
+    const bool areaMode = interpolation == Interpolation::Area && !area;
+    if (outSize == imageSize)
+        return part;
+    const Taps across = area ? areaTaps(imageSize.width, outSize.width, scaleX)
+                             : linearTaps(imageSize.width, outSize.width, scaleX, inverseScaleX, areaMode);
+    const Taps down = area ? areaTaps(imageSize.height, outSize.height, scaleY)
+                           : linearTaps(imageSize.height, outSize.height, scaleY, inverseScaleY, areaMode);
+    const auto span = [](const Taps &taps, int first, int end) {
+        int low = taps.source[size_t(taps.start[size_t(first)])], high = low;
+        for (int t = taps.start[size_t(first)]; t < taps.start[size_t(end)]; ++t) {
+            low = std::min(low, taps.source[size_t(t)]);
+            high = std::max(high, taps.source[size_t(t)]);
+        }
+        return std::pair<int, int>(low, high);
+    };
+    const auto [x0, x1] = span(across, part.x, part.x + part.width);
+    const auto [y0, y1] = span(down, part.y, part.y + part.height);
+    return {x0, y0, x1 - x0 + 1, y1 - y0 + 1};
 }
 
 void resizeInto(const Image &image, Image &out, double scaleX, double scaleY, Interpolation interpolation, int threads)

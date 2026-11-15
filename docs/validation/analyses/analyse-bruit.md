@@ -4,6 +4,31 @@ Consolidation du 8 octobre 2026. Les campagnes restent séparées : un résultat
 
 État actuel : [matrice de validation](../matrice-validation.md). Méthodes communes : [protocoles](../protocols/README.md).
 
+## Estimateur de la loi de bruit sur une photo — 14 et 15 novembre 2026
+
+Porté en C++ pour les boîtiers que le catalogue ne qualifie pas (décision de
+l'utilisateur du 13 novembre, [issue #34](https://github.com/KimntexX/IPR/issues/34)).
+L'étude complète, la qualification du 60D et les comparaisons au U-Net sont
+sur la branche de recherche `patch_noise_neural` (rapport de bruit §474–475,
+rapport de restauration neuronale du 13 au 15 novembre) ; seule la partie
+produit est livrée ici.
+
+- **Bruit de lecture** : `RawBlackLevelEstimator::readNoise` sur le noir
+  optique déclaré (zone gauche Canon, sinon zones masquées du format, comme
+  pour les CR2 du 60D), médiane de colonne retirée, variance robuste par canal.
+- **Pente** : `NoiseLaw::estimate`, blocs de 16, résidu aux quatre voisins,
+  dixième centile par classe de signal corrigé, moitié basse des classes ;
+  pente nulle, jamais négative, sans signal. Même résultat que la version
+  Python sur 60D (100 et 3200 ISO) et R6 III, au bruit de lecture près.
+- **Débruitage IA** : un boîtier ou un ISO absent du catalogue passe par le
+  réseau avec la loi estimée ; le panneau Bruit l'indique et recommande une
+  qualification. Trois CR2 du 60D (100, 3200, 6400 ISO) passent en 4 s
+  environ ; le R6 III garde sa loi qualifiée. Validé dans son principe par
+  l'utilisateur le 15 novembre ; qualité sur CR2 à juger.
+- **Chemin du modèle** (15 novembre) : le modèle se charge depuis un dossier
+  accentué ou non latin ; un échec affiche une phrase en français, le détail
+  reste dans le journal.
+
 <a id="campagne-1"></a>
 
 ## Campagne : analyse-bruit-v2-2026-10-05.md

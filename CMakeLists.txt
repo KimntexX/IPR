@@ -147,6 +147,8 @@ set(IPR_ENGINE_SOURCES
     src/editor/AdjustmentTable.cpp
     src/editor/RenderChain.h
     src/editor/RenderChain.cpp
+    src/editor/DetailTiles.h
+    src/editor/DetailTiles.cpp
     src/profiles/CameraProfileEngine.h
     src/profiles/CameraProfileEngine.cpp
     src/profiles/PreparedProfileCache.h
@@ -421,6 +423,9 @@ if(BUILD_TESTING AND IPR_ENABLE_LIBRAW AND LIBRAW_INCLUDE_DIR AND LIBRAW_LIBRARY
     target_link_libraries(demosaicProbe PRIVATE iprEngine)
     add_executable(openingLatencyProbe EXCLUDE_FROM_ALL tests/opening_latency_probe.cpp)
     target_link_libraries(openingLatencyProbe PRIVATE iprEngine)
+    # Adaptive preview, step 1: cost of the zoom's full-resolution render (manual, not in CTest).
+    add_executable(detailRenderProbe EXCLUDE_FROM_ALL tests/detail_render_probe.cpp)
+    target_link_libraries(detailRenderProbe PRIVATE iprEngine)
     add_executable(wbCameraProbe EXCLUDE_FROM_ALL tests/wb_camera_probe.cpp)
     target_link_libraries(wbCameraProbe PRIVATE iprEngine)
     add_executable(rawOpeningProbe EXCLUDE_FROM_ALL tests/raw_opening_probe.cpp)
@@ -511,6 +516,9 @@ if(BUILD_TESTING)
     ipr_add_test(cfaNoiseStageTests tests/cfa_noise_stage_test.cpp)
     ipr_add_test(neuralCfaTests tests/neural_cfa_test.cpp)
     set_tests_properties(neuralCfaTests PROPERTIES LABELS "unit;raw;noise" TIMEOUT 60)
+    # Manual check: RAW files decoded with the network, their noise law qualified or estimated.
+    add_executable(neuralEstimatedDecodeProbe EXCLUDE_FROM_ALL tests/neural_estimated_decode_probe.cpp)
+    target_link_libraries(neuralEstimatedDecodeProbe PRIVATE iprEngine)
     if(IPR_ENABLE_ONNX_RUNTIME AND IPR_NEURAL_MODEL)
         add_test(NAME neuralCfaModelTests COMMAND neuralCfaTests "${IPR_NEURAL_MODEL}" "${CMAKE_SOURCE_DIR}/packaging/neural-model.json")
         set_tests_properties(neuralCfaModelTests PROPERTIES LABELS "integration;raw;noise" TIMEOUT 300)
@@ -559,6 +567,8 @@ if(BUILD_TESTING)
     set_tests_properties(editorHistoryTests PROPERTIES LABELS "unit;history" TIMEOUT 120)
     ipr_add_test(editorDetailTests tests/editor_detail_test.cpp)
     set_tests_properties(editorDetailTests PROPERTIES LABELS "unit;zoom" TIMEOUT 180)
+    ipr_add_test(detailTilesTests tests/detail_tiles_test.cpp)
+    set_tests_properties(detailTilesTests PROPERTIES LABELS "unit;zoom" TIMEOUT 30)
     ipr_add_test(folderRefreshTests tests/folder_refresh_test.cpp)
     set_tests_properties(folderRefreshTests PROPERTIES LABELS "unit;batch" TIMEOUT 120)
     ipr_add_test(toneRecoveryTests tests/tone_recovery_test.cpp)
@@ -693,6 +703,12 @@ if(BUILD_TESTING)
     set_tests_properties(rawDecoderTests demosaicTests rawBlackLevelEstimatorTests rawNormalizationTests
         PROPERTIES LABELS "unit;raw")
     set_tests_properties(cameraProfileEngineTests PROPERTIES LABELS "unit;profiles")
+endif()
+
+if(BUILD_TESTING AND IPR_ENABLE_LIBRAW)
+    # Manual check of the single-RAW noise law against its Python reference.
+    add_executable(noiseLawEstimateProbe EXCLUDE_FROM_ALL tests/noise_law_estimate_probe.cpp)
+    target_link_libraries(noiseLawEstimateProbe PRIVATE iprEngine)
 endif()
 
 if(BUILD_TESTING AND UNIX AND IPR_ENABLE_LIBRAW AND

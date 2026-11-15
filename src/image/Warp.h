@@ -23,6 +23,14 @@ void remapInto(const Image &image, Image &out, const Image &mapX, const Image &m
 void warpPerspectiveInto(const Image &image, Image &out, const Matrix33d &outToImage, Resampling resampling,
                          Outside outside, int threads = 0);
 
+// A part of that warp: out is the part at outOrigin of a whole output of outSize, and the image is
+// read from window, the part at windowOrigin of a whole image of imageSize. Every pixel is the one
+// the whole warp gives, provided the window holds every pixel the part reads (the taps around each
+// position, clamped to the whole image when beyond); a missing one reads the window's nearest.
+void warpPerspectiveRegionInto(const Image &window, Point2i windowOrigin, Size imageSize, Image &out,
+                               Point2i outOrigin, Size outSize, const Matrix33d &outToImage, Resampling resampling,
+                               Outside outside, int threads = 0);
+
 // The same into new images, of the maps' size or of this size. Empty for an empty image or map.
 Image remapped(const Image &image, const Image &mapX, const Image &mapY, Resampling resampling, Outside outside);
 Image warpedPerspective(const Image &image, const Matrix33d &outToImage, Size size, Resampling resampling,

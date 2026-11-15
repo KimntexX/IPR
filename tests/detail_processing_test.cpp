@@ -289,6 +289,45 @@ int main()
         passed &= check(ipr::largestDifference(identity, full) == 0., "full resolution is unchanged");
     }
 
+    // Sharpening calibrated on Lightroom (15 November 2026): on a hard edge, the contrast across
+    // it grows with the amount, and past the two levels the overshoot stays within 30 % of the
+    // step, in the sRGB-encoded luminance the sharpening works on.
+    {
+        const auto encoded = [](float linear) {
+            return linear <= 0.0031308f ? 12.92f * linear : 1.055f * std::pow(linear, 1.0f / 2.4f) - 0.055f;
+        };
+        const float dark = .05f, light = .4f;
+        ipr::Image edge = imagetest::filledWith({64, 32}, {dark, dark, dark});
+        imagetest::addTo(edge, {32, 0, 32, 32}, {light - dark, light - dark, light - dark});
+        const float low = encoded(dark), high = encoded(light), step = high - low;
+        double previous = 0.0;
+        for (const int amount : {25, 50, 100, 150, 200}) {
+            auto sharpened = edge.clone();
+            DetailProcessing::sharpen(sharpened, {amount, 1.0f, 0});
+            const ipr::Image luma = component(sharpened);
+            float minimum = 10.f, maximum = -10.f;
+            for (int x = 0; x < luma.width(); ++x) {
+                const float value = encoded(luma.row<float>(16)[x]);
+                minimum = std::min(minimum, value);
+                maximum = std::max(maximum, value);
+            }
+            const double across = encoded(luma.row<float>(16)[32]) - encoded(luma.row<float>(16)[31]);
+            passed &= check(across > previous, "the contrast across an edge grows with the amount");
+            passed &= check(maximum <= high + .3f * step + 1e-4f && minimum >= low - .3f * step - 1e-4f,
+                            "the overshoot stays within 30 % of the step");
+            passed &= check(maximum > high && minimum < low, "the sharpening overshoots on both sides of an edge");
+            previous = across;
+        }
+        // Masking 100 spares a flat grain that masking 0 sharpens.
+        const ipr::Image grain = noisy(.1f, .004f, false);
+        auto unmasked = grain.clone(), masked = grain.clone();
+        DetailProcessing::sharpen(unmasked, {100, 1.0f, 0});
+        DetailProcessing::sharpen(masked, {100, 1.0f, 100});
+        const double before = sigma(component(grain));
+        passed &= check(sigma(component(unmasked)) > 1.1 * before, "masking 0 sharpens a strong grain");
+        passed &= check(sigma(component(masked)) < 1.02 * before, "masking 100 spares a flat grain");
+    }
+
     // Coloured HDR noise must not be clipped to SDR by reconstruction.
     auto hdr = noisy(2.f, .02f, true);
     DetailProcessing::reduceNoise(hdr, {100, 100});

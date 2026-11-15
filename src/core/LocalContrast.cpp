@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <array>
 #include <cmath>
+#include <vector>
 
 namespace LocalContrast {
 namespace {
@@ -76,18 +77,50 @@ Bands detailGainAt(const std::array<Row, 6> &table, int value)
 // resolution (area reduction by a power of 2 leaving a sigma of 2 to 4, then
 // bilinear enlargement). A sigma far below a pixel leaves the plane: that band
 // is finer than this image can show.
-ipr::Image blurSigma(const ipr::Image &plane, double sigma)
+int reductionOf(double sigma)
 {
-    if (sigma < 0.25) return plane.clone();
     int factor = 1;
     while (sigma / (2 * factor) >= 2.0) factor *= 2;
+    return factor;
+}
+
+// reduced: when given, receives the blurred reduced plane a large sigma goes through.
+ipr::Image blurSigma(const ipr::Image &plane, double sigma, ipr::Image *reduced = nullptr)
+{
+    if (sigma < 0.25) return plane.clone();
+    const int factor = reductionOf(sigma);
     if (factor == 1)
         return ipr::gaussianBlurred(plane, sigma, ipr::BlurBorder::MirrorEdge);
     ipr::Image result, small;
     small = ipr::resized(plane, ipr::Size(std::max(1, plane.width() / factor), std::max(1, plane.height() / factor)), ipr::Interpolation::Area);
-    result = ipr::resized(ipr::gaussianBlurred(small, sigma / factor, ipr::BlurBorder::MirrorEdge), plane.size(), ipr::Interpolation::Linear);
+    small = ipr::gaussianBlurred(small, sigma / factor, ipr::BlurBorder::MirrorEdge);
+    result = ipr::resized(small, plane.size(), ipr::Interpolation::Linear);
+    if (reduced)
+        *reduced = std::move(small);
     return result;
 }
+
+// The same blur on a part of the canvas, at full resolution: a fine sigma blurred on the part
+// (exact within its reach of the part's inner edges), a large one enlarged from the whole
+// canvas's blurred reduced plane over the part's pixels.
+ipr::Image blurSigmaRegion(const ipr::Image &part, double sigma, ipr::Point2i origin, ipr::Size canvas,
+                           const ipr::Image &reduced)
+{
+    if (sigma < 0.25) return part.clone();
+    if (reductionOf(sigma) == 1)
+        return ipr::gaussianBlurred(part, sigma, ipr::BlurBorder::MirrorEdge);
+    ipr::Image result = ipr::Image::create(part.size(), ipr::Depth::F32, 1);
+    ipr::resizeRegionInto(reduced, {0, 0}, reduced.size(), result, origin, canvas, ipr::Interpolation::Linear);
+    return result;
+}
+
+// Where a part takes its coarse bands from: the layers recorded on the whole canvas.
+struct Region
+{
+    ipr::Point2i origin;
+    ipr::Size canvas;
+    const std::vector<ipr::Image> *reduced = nullptr;
+};
 
 enum class Domain { Log2, CubeRoot };
 
@@ -123,7 +156,8 @@ float localGain(const LocalGains &local, float value, size_t band)
 // 2, 4, ... 256 pixels of the full image; each band d gains k d / (1 + (|d| / A)^2); colours keep their
 // channel ratios. With local gains, each pixel reads its own and a pixel at zero stays untouched.
 void applyBands(ipr::Image &linearRgb, Domain domain, const Bands &k, const Bands &a, double pixelScale,
-                const LocalGains *local = nullptr)
+                const LocalGains *local = nullptr, std::vector<ipr::Image> *record = nullptr,
+                const Region *region = nullptr)
 {
     ipr::Image luminance = ipr::Image::create(linearRgb.size(), ipr::Depth::F32, 1);
     ipr::Image value = ipr::Image::create(linearRgb.size(), ipr::Depth::F32, 1);
@@ -140,7 +174,9 @@ void applyBands(ipr::Image &linearRgb, Domain domain, const Bands &k, const Band
     ipr::Image delta = ipr::Image::zeros(linearRgb.size(), ipr::Depth::F32, 1);
     ipr::Image previous = value.share(), current;
     for (int b = 0; b < BandCount; ++b) {
-        current = blurSigma(value, pixelScale * double(b == 0 ? 1 : 2 << (b - 1)));   // sigma 1, 2, 4, ... 256
+        const double sigma = pixelScale * double(b == 0 ? 1 : 2 << (b - 1));   // sigma 1, 2, 4, ... 256
+        current = region ? blurSigmaRegion(value, sigma, region->origin, region->canvas, (*region->reduced)[size_t(b)])
+                         : blurSigma(value, sigma, record ? &(*record)[size_t(b)] : nullptr);
         const float gain = k[size_t(b)], inverseA2 = 1.f / (a[size_t(b)] * a[size_t(b)]);
         if (local) {
             const float reduceA = local->reduce[size_t(b)], enhanceA = local->enhance[size_t(b)];
@@ -187,11 +223,13 @@ void applyBands(ipr::Image &linearRgb, Domain domain, const Bands &k, const Band
 
 // One effect, with its values per pixel when its map is usable.
 void applyEffect(ipr::Image &linearRgb, Domain domain, const std::array<Row, 6> &table, const Bands &reduce,
-                 const Bands &enhance, int slider, const ipr::Image &map, double pixelScale)
+                 const Bands &enhance, int slider, const ipr::Image &map, double pixelScale,
+                 std::vector<ipr::Image> *record = nullptr)
 {
     if (map.empty() || !LocalValues::fits(map, linearRgb.size())) {
         if (slider != 0)
-            applyBands(linearRgb, domain, detailGainAt(table, slider), slider < 0 ? reduce : enhance, pixelScale);
+            applyBands(linearRgb, domain, detailGainAt(table, slider), slider < 0 ? reduce : enhance, pixelScale,
+                       nullptr, record);
         return;
     }
     ipr::Image values = ipr::Image::create(map.size(), ipr::Depth::F32, 1);
@@ -209,13 +247,65 @@ void applyEffect(ipr::Image &linearRgb, Domain domain, const std::array<Row, 6> 
 
 } // namespace
 
-void apply(ipr::Image &linearRgb, int texture, int clarity, double pixelScale, const LocalValues::Maps &local)
+void apply(ipr::Image &linearRgb, int texture, int clarity, double pixelScale, const LocalValues::Maps &local,
+           Layers *record)
 {
+    if (record) {
+        record->valid = false;
+        record->canvas = {};
+        record->texture.clear();
+        record->clarity.clear();
+    }
     if (linearRgb.empty() || !(linearRgb.depth() == ipr::Depth::F32 && linearRgb.channels() == 3)) return;
+    const bool recording = record && pixelScale == 1.0 && local[LocalValues::Texture].empty() &&
+                           local[LocalValues::Clarity].empty();
+    if (recording) {
+        record->canvas = linearRgb.size();
+        record->texture.clear();
+        record->texture.resize(BandCount);
+        record->clarity.clear();
+        record->clarity.resize(BandCount);
+        record->valid = true;
+    }
     applyEffect(linearRgb, Domain::CubeRoot, TextureTable, TextureReduce, TextureEnhance, texture,
-                local[LocalValues::Texture], pixelScale);
+                local[LocalValues::Texture], pixelScale, recording ? &record->texture : nullptr);
     applyEffect(linearRgb, Domain::Log2, ClarityTable, ClarityReduce, ClarityEnhance, clarity,
-                local[LocalValues::Clarity], pixelScale);
+                local[LocalValues::Clarity], pixelScale, recording ? &record->clarity : nullptr);
+}
+
+int regionReach(int texture, int clarity)
+{
+    // The bands blurred at full resolution, the reduced ones coming from the layers.
+    int reach = 0;
+    for (int b = 0; b < BandCount; ++b) {
+        const double sigma = double(b == 0 ? 1 : 2 << (b - 1));
+        if (reductionOf(sigma) == 1)
+            reach = std::max(reach, int(ipr::gaussianHalfKernel(sigma).size()) - 1);
+    }
+    return (texture != 0 ? reach : 0) + (clarity != 0 ? reach : 0);
+}
+
+bool applyRegion(ipr::Image &linearRgb, int texture, int clarity, ipr::Point2i origin, const Layers &layers)
+{
+    if (linearRgb.empty() || !(linearRgb.depth() == ipr::Depth::F32 && linearRgb.channels() == 3))
+        return false;
+    if (!layers.valid || int(layers.texture.size()) != BandCount || int(layers.clarity.size()) != BandCount)
+        return false;
+    for (int b = 0; b < BandCount; ++b) {
+        const double sigma = double(b == 0 ? 1 : 2 << (b - 1));
+        if (reductionOf(sigma) > 1 && ((texture != 0 && layers.texture[size_t(b)].empty()) ||
+                                       (clarity != 0 && layers.clarity[size_t(b)].empty())))
+            return false;
+    }
+    const Region textureRegion{origin, layers.canvas, &layers.texture};
+    const Region clarityRegion{origin, layers.canvas, &layers.clarity};
+    if (texture != 0)
+        applyBands(linearRgb, Domain::CubeRoot, detailGainAt(TextureTable, texture),
+                   texture < 0 ? TextureReduce : TextureEnhance, 1.0, nullptr, nullptr, &textureRegion);
+    if (clarity != 0)
+        applyBands(linearRgb, Domain::Log2, detailGainAt(ClarityTable, clarity),
+                   clarity < 0 ? ClarityReduce : ClarityEnhance, 1.0, nullptr, nullptr, &clarityRegion);
+    return true;
 }
 
 } // namespace LocalContrast

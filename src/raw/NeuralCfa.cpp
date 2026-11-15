@@ -2,7 +2,9 @@
 
 #include "NeuralRawDenoiser.h"
 
+#include <QCoreApplication>
 #include <QCryptographicHash>
+#include <QDebug>
 #include <QFile>
 #include <QJsonArray>
 #include <QJsonDocument>
@@ -91,15 +93,20 @@ std::unique_ptr<Service> Service::create(const QString &modelPath, const ModelMa
 {
     const QString digest = fileSha256(modelPath);
     if (digest.isEmpty()) {
-        fail(reason, QStringLiteral("neural model unreadable: %1").arg(modelPath));
+        fail(reason, QCoreApplication::translate("NeuralCfa", "Modèle de débruitage IA illisible : %1").arg(modelPath));
         return nullptr;
     }
     if (digest != manifest.sha256) {
-        fail(reason, QStringLiteral("neural model %1 does not match its manifest").arg(modelPath));
+        fail(reason, QCoreApplication::translate("NeuralCfa",
+            "Le modèle de débruitage IA %1 ne correspond pas à son manifeste : fichier abîmé ou d’une autre version.")
+                         .arg(modelPath));
         return nullptr;
     }
     ipr::neural::SessionOptions options;
-    options.modelPath = QFile::encodeName(modelPath).toStdString();
+    // UTF-8, as NeuralRawDenoiser reads it (std::filesystem::u8path): the local 8-bit code
+    // page cannot hold every folder name and gave "No mapping for the Unicode character"
+    // on an accented installation folder (beta-1, 15 November 2026).
+    options.modelPath = modelPath.toStdString();
     auto denoiser = std::make_shared<ipr::neural::NeuralRawDenoiser>(options);
     return std::unique_ptr<Service>(new Service(std::move(denoiser), manifest, std::move(catalog)));
 }
@@ -114,7 +121,7 @@ Service::~Service() = default;
 bool Service::available(const QString &make, const QString &model, double iso, QString *reason) const
 {
     QString why;
-    if (NoiseLaw::resolve(m_catalog, make, model, int(std::lround(iso)), &why))
+    if (NoiseLaw::resolve(m_catalog, make, model, int(std::lround(iso)), &why) || m_estimateUnqualified)
         return true;
     // A camera of the catalogue answers for some ISO: the photo's ISO is outside its laws.
     const bool knownCamera = NoiseLaw::resolve(m_catalog, make, model, 6400, nullptr).has_value()
@@ -122,6 +129,11 @@ bool Service::available(const QString &make, const QString &model, double iso, Q
     fail(reason, knownCamera ? QStringLiteral("Débruitage IA indisponible à ISO %1 pour ce boîtier.").arg(int(std::lround(iso)))
                              : QStringLiteral("Débruitage IA indisponible pour ce boîtier."));
     return false;
+}
+
+bool Service::estimated(const QString &make, const QString &model, double iso) const
+{
+    return m_estimateUnqualified && !NoiseLaw::resolve(m_catalog, make, model, int(std::lround(iso)), nullptr);
 }
 
 RawDevelopment::CfaStage Service::stageFor(const RawInput::Input &input, float strength,
@@ -136,6 +148,7 @@ RawDevelopment::CfaStage Service::stageFor(const RawInput::Input &input, float s
     settings.catalog = &m_catalog;
     settings.measuredPattern = m_manifest.measuredPattern;
     settings.networkDivisor = m_manifest.inputDivisor;
+    settings.estimateUnqualified = m_estimateUnqualified;
     settings.report = std::move(report);
     const std::shared_ptr<ipr::neural::NeuralRawDenoiser> denoiser = m_denoiser;
     settings.denoiser = [denoiser, strength, cancelled](const CfaNoiseStage::Planes &planes,

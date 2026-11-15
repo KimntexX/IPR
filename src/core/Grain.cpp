@@ -56,14 +56,19 @@ float decode(float e)
 
 } // namespace
 
-void apply(ipr::Image &linearRgb, int amount, double pixelScale)
+int reach(int amount, double pixelScale)
+{
+    return amount > 0 && pixelScale >= 1.0 ? int(ipr::gaussianHalfKernel(Sigma).size()) - 1 : 0;
+}
+
+void apply(ipr::Image &linearRgb, int amount, double pixelScale, ipr::Point2i origin)
 {
     if (amount <= 0 || linearRgb.empty() || !(linearRgb.depth() == ipr::Depth::F32 && linearRgb.channels() == 3)) return;
     ipr::Image noise = ipr::Image::create(linearRgb.size(), ipr::Depth::F32, 1);
     ipr::parallelRows(noise.height(), [&](int first, int last) {
         for (int y = first; y < last; ++y) {
             float *row = noise.mutableRow<float>(y);
-            for (int x = 0; x < noise.width(); ++x) row[x] = gaussian(x, y);
+            for (int x = 0; x < noise.width(); ++x) row[x] = gaussian(origin.x + x, origin.y + y);
         }
     });
     float deviation = StandardDeviation * float(std::min(amount, 100)) / 100.0f;

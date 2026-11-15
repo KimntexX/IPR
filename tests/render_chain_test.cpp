@@ -318,6 +318,180 @@ void anOverlayOnANeutralRecipeNeverWritesInTheSource()
 
 } // namespace
 
+// A region renders alone as the same region of the full-resolution render, bit for bit, for each
+// stage that renders by region and for them together; the others say so and render nothing.
+void aRegionIsThatPartOfTheWholeRender()
+{
+    const std::vector<std::pair<const char *, std::function<void(Settings &)>>> recipes = {
+        {"neutral", [](Settings &) {}},
+        {"grayscale", [](Settings &s) { s.grayscale = true; }},
+        {"exposure", [](Settings &s) { s.brightness = 0.5f; }},
+        {"contrast", [](Settings &s) { s.contrast = 30; }},
+        {"temperature", [](Settings &s) { s.temperature = 7000; s.tint = 12; }},
+        {"tones", [](Settings &s) { s.shadows = 50; s.blacks = -20; s.highlights = -60; s.whites = 15; }},
+        {"colour", [](Settings &s) { s.saturation = 40; s.vibrance = -25; s.mixerHue[2] = 30; s.gradingSaturation[0] = 40; }},
+        {"curve", [](Settings &s) { s.toneCurves[0] = {{0.0f, 0.1f}, {1.0f, 0.9f}}; }},
+        {"turn", [](Settings &s) { s.geometry.quarterTurns = 1; s.geometry.flipVertical = true; s.contrast = 20; }},
+        {"rotation", [](Settings &s) { s.geometry.rotation = 5.0f; s.brightness = 0.3f; }},
+        {"perspective", [](Settings &s) { s.geometry.vertical = 35; s.geometry.scale = 70; s.geometry.aspect = 20; }},
+        {"crop", [](Settings &s) { s = withCrop(); s.contrast = 25; }},
+        {"sharpening", [](Settings &s) { s.sharpeningAmount = 60; s.sharpeningRadius = 1.5f; s.sharpeningMasking = 20; }},
+        {"blur", [](Settings &s) { s.blur = 6; }},
+        {"grain", [](Settings &s) { s.grain = 40; }},
+        {"local stages", [](Settings &s) {
+             s.contrast = 20; s.blur = 3; s.sharpeningAmount = 120; s.sharpeningRadius = 3.0f; s.grain = 30;
+             s.geometry.rotation = 3.0f; }},
+        {"texture", [](Settings &s) { s.texture = 50; }},
+        {"clarity", [](Settings &s) { s.clarity = 40; }},
+        {"negative clarity", [](Settings &s) { s.clarity = -60; s.contrast = 10; }},
+        {"texture and clarity", [](Settings &s) { s.texture = -30; s.clarity = 50; s.brightness = 0.2f; }},
+        {"clarity, sharpening, grain, rotation", [](Settings &s) {
+             s.clarity = 35; s.texture = 20; s.sharpeningAmount = 60; s.grain = 20; s.blur = 2; s.geometry.rotation = -4.0f; }},
+        {"curve after clarity", [](Settings &s) { s.clarity = 40; s.toneCurves[0] = {{0.0f, 0.1f}, {1.0f, 0.9f}}; }},
+        {"dehaze", [](Settings &s) { s.dehaze = 40; }},
+        {"adding haze", [](Settings &s) { s.dehaze = -50; s.contrast = 10; }},
+        {"dehaze with everything after", [](Settings &s) {
+             s.dehaze = 30; s.clarity = 25; s.texture = 10; s.toneCurves[0] = {{0.0f, 0.05f}, {0.5f, 0.55f}, {1.0f, 0.95f}};
+             s.sharpeningAmount = 50; s.grain = 15; s.geometry.rotation = 2.0f; }},
+        {"luminance noise", [](Settings &s) { s.denoiseLuminance = 60; }},
+        {"colour noise", [](Settings &s) { s.denoiseChrominance = 40; }},
+        {"strongest noise reduction", [](Settings &s) { s.denoiseLuminance = 100; s.denoiseChrominance = 100; s.contrast = 15; }},
+        {"noise reduction and everything after", [](Settings &s) {
+             s.denoiseLuminance = 40; s.denoiseChrominance = 25; s.clarity = 20; s.dehaze = 15; s.sharpeningAmount = 40;
+             s.geometry.rotation = 3.0f; }},
+        {"together", [](Settings &s) {
+             s.brightness = -0.4f; s.contrast = -15; s.temperature = 4300; s.shadows = 40; s.saturation = 20;
+             s.toneCurves[0] = {{0.0f, 0.05f}, {0.5f, 0.55f}, {1.0f, 0.95f}};
+             s.geometry.rotation = -8.0f; s.geometry.horizontal = 20; s.geometry.quarterTurns = 3; }},
+    };
+    const WorkingImage source = scene(211, 143);
+    for (const auto &[name, edit] : recipes) {
+        Settings settings = neutral();
+        edit(settings);
+        check(RenderChain::rendersByRegion(settings), name);
+        const WorkingImage whole = RenderChain::workingImage(source, settings);
+        check(!whole.isNull(), name);
+        RenderChain::WholeMeasures measures;
+        check(RenderChain::measureWhole(source, settings, measures), name);
+        const ipr::Size canvas = whole.linearRgba.size();
+        for (const ipr::Recti &region : {ipr::Recti(0, 0, 40, 40), ipr::Recti(canvas.width - 33, canvas.height - 21, 33, 21),
+                                         ipr::Recti(canvas.width / 2 - 25, canvas.height / 2 - 10, 50, 20),
+                                         ipr::Recti(17, 0, 1, canvas.height), ipr::Recti(0, 0, canvas.width, canvas.height)}) {
+            const WorkingImage part = RenderChain::workingRegion(source, settings, region, measures);
+            check(!part.isNull(), name);
+            check(same(part.linearRgba, whole.linearRgba.view(region)), name);
+        }
+        check(RenderChain::workingRegion(source, settings, ipr::Recti(canvas.width - 5, 0, 10, 10), measures).isNull(),
+              "a region beyond the canvas renders nothing");
+    }
+
+    for (const auto &[name, edit] : std::vector<std::pair<const char *, std::function<void(Settings &)>>>{
+             {"camera-signal denoise", [](Settings &s) { s.denoiseLuminance = 60; s.denoiseBeforeProfile = true; }},
+             {"mask", [](Settings &s) { s = withMask(); }}, {"retouch", [](Settings &s) { s = withRemoval(); }}}) {
+        Settings settings = neutral();
+        edit(settings);
+        RenderChain::WholeMeasures measures;
+        check(!RenderChain::rendersByRegion(settings) && !RenderChain::measureWhole(source, settings, measures) &&
+                  RenderChain::workingRegion(source, settings, ipr::Recti(0, 0, 10, 10), measures).isNull(), name);
+    }
+    // Large enough for the sharpening's noise measure to sample one row in eight: it reads
+    // bands of rows instead of the whole canvas, and gives the same pixels.
+    const WorkingImage large = scene(1100, 960);
+    for (const auto &[name, edit] : std::vector<std::pair<const char *, std::function<void(Settings &)>>>{
+             {"sharpening by bands", [](Settings &s) { s.sharpeningAmount = 80; s.contrast = 15; }},
+             {"sharpening after a blur, rotated", [](Settings &s) {
+                  s.sharpeningAmount = 50; s.blur = 2; s.geometry.rotation = -2.0f; }},
+             {"clarity and texture on a larger canvas", [](Settings &s) {
+                  s.clarity = 45; s.texture = 25; s.sharpeningAmount = 40; }},
+             {"dehaze and a curve on a larger canvas", [](Settings &s) {
+                  s.dehaze = 35; s.sharpeningAmount = 30; s.toneCurves[0] = {{0.0f, 0.08f}, {1.0f, 0.92f}}; }},
+             {"a curve before the sharpening's bands", [](Settings &s) {
+                  s.sharpeningAmount = 60; s.toneCurves[0] = {{0.0f, 0.2f}, {1.0f, 0.8f}}; }},
+             {"noise reduction on a larger canvas", [](Settings &s) {
+                  s.denoiseLuminance = 50; s.denoiseChrominance = 60; s.sharpeningAmount = 30; }}}) {
+        Settings settings = neutral();
+        edit(settings);
+        const WorkingImage whole = RenderChain::workingImage(large, settings);
+        RenderChain::WholeMeasures measures;
+        check(RenderChain::measureWhole(large, settings, measures) && measures.sharpenNoiseSigma.has_value(), name);
+        const ipr::Size canvas = whole.linearRgba.size();
+        for (const ipr::Recti &region : {ipr::Recti(0, 0, 64, 64), ipr::Recti(canvas.width / 2 - 40, canvas.height / 2 - 40, 80, 80),
+                                         ipr::Recti(canvas.width - 50, canvas.height - 70, 50, 70)}) {
+            const WorkingImage part = RenderChain::workingRegion(large, settings, region, measures);
+            check(!part.isNull() && same(part.linearRgba, whole.linearRgba.view(region)), name);
+        }
+    }
+
+    // The coarse layers do not depend on the sliders: measures taken at one clarity serve another.
+    {
+        Settings first = neutral(), second = neutral();
+        first.clarity = 30; first.texture = 15; first.contrast = 10;
+        second = first; second.clarity = 70;
+        check(RenderChain::wholeMeasuresKey(first) == RenderChain::wholeMeasuresKey(second), "the clarity's value keeps the key");
+        second.texture = 40;
+        check(RenderChain::wholeMeasuresKey(first) != RenderChain::wholeMeasuresKey(second),
+              "the texture under a clarity changes the key");
+        second.texture = first.texture;
+        RenderChain::WholeMeasures measures;
+        check(RenderChain::measureWhole(source, first, measures), "measured at one clarity");
+        const WorkingImage whole = RenderChain::workingImage(source, second);
+        const ipr::Recti region(30, 20, 90, 70);
+        const WorkingImage part = RenderChain::workingRegion(source, second, region, measures);
+        check(!part.isNull() && same(part.linearRgba, whole.linearRgba.view(region)), "rendered at another");
+    }
+    // Nor do the dehaze's: measures taken at one dehaze value serve another.
+    {
+        Settings first = neutral(), second = neutral();
+        first.dehaze = 20; first.saturation = 10;
+        second = first; second.dehaze = -60;
+        check(RenderChain::wholeMeasuresKey(first) == RenderChain::wholeMeasuresKey(second), "the dehaze's value keeps the key");
+        RenderChain::WholeMeasures measures;
+        check(RenderChain::measureWhole(source, first, measures), "measured at one dehaze value");
+        for (const Settings &settings : {first, second}) {
+            const WorkingImage whole = RenderChain::workingImage(source, settings);
+            const ipr::Recti region(10, 40, 120, 60);
+            const WorkingImage part = RenderChain::workingRegion(source, settings, region, measures);
+            check(!part.isNull() && same(part.linearRgba, whole.linearRgba.view(region)), "rendered at both values");
+        }
+    }
+
+    Settings rotated = neutral();
+    rotated.geometry.rotation = 4.0f;
+    check(RenderChain::workingRegion(source, rotated, ipr::Recti(0, 0, 10, 10), RenderChain::WholeMeasures{}).isNull(),
+          "a region needs the measures of the whole image");
+}
+
+// The original's tiles: a region of the source warped by the framing alone, the same pixels as the
+// whole original (Geometry::warpRgba), whatever the geometry.
+void anOriginalRegionIsThatPartOfTheWholeOriginal()
+{
+    const WorkingImage source = scene();
+    const std::vector<float> floor = Geometry::warpFloor(ipr::withoutAlpha(source.linearRgba));
+    const std::vector<std::pair<const char *, std::function<void(Geometry::Settings &)>>> framings = {
+        {"none", [](Geometry::Settings &) {}},
+        {"quarter turn and mirror", [](Geometry::Settings &g) { g.quarterTurns = 1; g.flipHorizontal = true; }},
+        {"rotation", [](Geometry::Settings &g) { g.rotation = 5.0f; }},
+        {"perspective", [](Geometry::Settings &g) { g.rotation = -3.0f; g.vertical = 15; }},
+    };
+    for (const auto &[name, frame] : framings) {
+        Geometry::Settings geometry;
+        frame(geometry);
+        const ipr::Image whole = Geometry::warpRgba(source.linearRgba.clone(), geometry, RenderChain::geometryQuality(1.0));
+        const ipr::Size canvas = Geometry::canvasSize(geometry, source.linearRgba.size());
+        for (const ipr::Recti &region : {ipr::Recti(0, 0, 64, 48), ipr::Recti(canvas.width - 70, canvas.height - 50, 70, 50),
+                                         ipr::Recti(canvas.width / 3, canvas.height / 4, 50, 60)}) {
+            const WorkingImage part = RenderChain::originalRegion(source, geometry, region, floor);
+            check(!part.isNull() && same(part.linearRgba, whole.view(region)), name);
+        }
+        check(RenderChain::originalRegion(source, geometry, ipr::Recti(canvas.width - 5, 0, 10, 10), floor).isNull(),
+              "a region off the canvas renders nothing");
+    }
+    Geometry::Settings rotated;
+    rotated.rotation = 4.0f;
+    check(RenderChain::originalRegion(source, rotated, ipr::Recti(0, 0, 10, 10), {}).isNull(),
+          "a resampling framing needs the whole source's floor");
+}
+
 int main(int argc, char **argv)
 {
     QCoreApplication application(argc, argv);
@@ -336,6 +510,8 @@ int main(int argc, char **argv)
         theWholeCanvasIgnoresTheCrop();
         overlaysShowCoverageWithoutTouchingTheSource();
         anOverlayOnANeutralRecipeNeverWritesInTheSource();
+        aRegionIsThatPartOfTheWholeRender();
+        anOriginalRegionIsThatPartOfTheWholeOriginal();
     } catch (const std::exception &error) {
         std::cerr << "FAILED: " << error.what() << '\n';
         return 1;

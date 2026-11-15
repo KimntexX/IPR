@@ -3,6 +3,7 @@
 #include <cmath>
 #include <functional>
 #include <iostream>
+#include <tuple>
 #include <random>
 #include <stdexcept>
 #include <vector>
@@ -112,6 +113,42 @@ void refusals()
     check(refused([&] { resizedBy(image, std::nan(""), 1.0, Interpolation::Linear); }), "not a number");
 }
 
+// A part of a resize, from the part of the image it reads, is that part of the whole resize, bit
+// for bit: area reductions by uneven ratios and the linear enlargement back.
+void aPartIsThatPartOfTheWholeResize()
+{
+    const Size full{157, 101};
+    Image image = Image::create(full, Depth::F32, 1);
+    unsigned state = 11;
+    for (int y = 0; y < full.height; ++y)
+        for (int x = 0; x < full.width; ++x) {
+            state = state * 1664525u + 1013904223u;
+            image.mutableRow<float>(y)[x] = float(state >> 8) / float(1u << 24);
+        }
+    const auto same = [](const Image &a, const Image &b) {
+        if (a.size() != b.size()) return false;
+        for (int y = 0; y < a.height(); ++y)
+            for (int x = 0; x < a.width(); ++x)
+                if (a.row<float>(y)[x] != b.row<float>(y)[x]) return false;
+        return true;
+    };
+    for (const auto &[from, to, interpolation] : std::vector<std::tuple<Size, Size, Interpolation>>{
+             {full, {78, 50}, Interpolation::Area}, {full, {39, 25}, Interpolation::Area}, {full, {5, 3}, Interpolation::Area},
+             {{78, 50}, full, Interpolation::Linear}, {{5, 3}, full, Interpolation::Linear}, {full, full, Interpolation::Linear}}) {
+        const Image source = from == full ? image.share() : resized(image, from, Interpolation::Area);
+        const Image whole = resized(source, to, interpolation);
+        for (const Recti &part : {Recti(0, 0, to.width, to.height), Recti(0, 0, 3, 2), Recti(to.width / 2, to.height / 3, 4, 5),
+                                  Recti(to.width - 2, to.height - 3, 2, 3), Recti(1, to.height - 1, to.width - 1, 1)}) {
+            if ((part & Recti(0, 0, to.width, to.height)) != part) continue;
+            const Recti read = resizeRegionSource(from, to, part, interpolation);
+            check((read & Recti(0, 0, from.width, from.height)) == read, "a part reads inside the image");
+            Image out = Image::create(part.size(), Depth::F32, 1);
+            resizeRegionInto(source.view(read), read.tl(), from, out, part.tl(), to, interpolation);
+            check(same(out, whole.view(part)), "a part of the resize is that part of the whole resize");
+        }
+    }
+}
+
 } // namespace
 
 int main()
@@ -123,6 +160,7 @@ int main()
         aScaleGivesItsRoundedSize();
         threadsDoNotChangeTheResult();
         refusals();
+        aPartIsThatPartOfTheWholeResize();
     } catch (const std::exception &error) {
         std::cerr << "FAILED: " << error.what() << '\n';
         return 1;

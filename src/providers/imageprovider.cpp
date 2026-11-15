@@ -48,6 +48,34 @@ QImage ImageProvider::detailImage() const
     return m_detailImage;
 }
 
+void ImageProvider::setDetailTile(const QString &name, const QImage &image)
+{
+    QWriteLocker locker(&m_lock);
+    if (image.isNull())
+        m_detailTiles.remove(name);
+    else
+        m_detailTiles.insert(name, image);
+}
+
+QImage ImageProvider::detailTile(const QString &name) const
+{
+    QReadLocker locker(&m_lock);
+    return m_detailTiles.value(name);
+}
+
+void ImageProvider::clearDetailTiles(const QString &prefix)
+{
+    QWriteLocker locker(&m_lock);
+    for (auto it = m_detailTiles.begin(); it != m_detailTiles.end();)
+        it = it.key().startsWith(prefix) ? m_detailTiles.erase(it) : std::next(it);
+}
+
+int ImageProvider::detailTileCount() const
+{
+    QReadLocker locker(&m_lock);
+    return int(m_detailTiles.size());
+}
+
 void ImageProvider::setUrl(const QUrl &url)
 {
     QWriteLocker locker(&m_lock);
@@ -72,7 +100,9 @@ QImage ImageProvider::requestImage(const QString &id, QSize *size,
     // first render completes.
     const QString kind = id.section(QLatin1Char('?'), 0, 0);
     QImage result = kind == QStringLiteral("original") ? originalImage()
-                  : kind == QStringLiteral("detail") ? detailImage() : image();
+                  : kind == QStringLiteral("detail") ? detailImage()
+                  : kind.startsWith(QStringLiteral("tile-")) || kind.startsWith(QStringLiteral("otile-"))
+                        ? detailTile(kind) : image();
     if (result.isNull()) {
         result = QImage(1, 1, QImage::Format_RGBA8888);
         result.fill(Qt::transparent);

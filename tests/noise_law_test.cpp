@@ -3,7 +3,11 @@
 #include <QCoreApplication>
 #include <QFile>
 
+#include <algorithm>
+#include <array>
 #include <cmath>
+#include <cstdint>
+#include <random>
 #include <iostream>
 
 namespace {
@@ -103,12 +107,65 @@ void shippedCatalogue()
 
 } // namespace
 
+// A mosaic of known Poisson-Gauss noise on smooth gradients: per site, variance = a * signal + b.
+ipr::Image noisyMosaic(int width, int height, const std::array<double, 4> &slope, double readVariance, double black,
+                       double white, double brightest, unsigned seed)
+{
+    ipr::Image mosaic = ipr::Image::create({width, height}, ipr::Depth::U16, 1);
+    std::mt19937 random(seed);
+    std::normal_distribution<double> unit(0.0, 1.0);
+    for (int y = 0; y < height; ++y) {
+        auto *row = mosaic.mutableRow<std::uint16_t>(y);
+        for (int x = 0; x < width; ++x) {
+            const int site = (y % 2) * 2 + (x % 2);
+            const double signal = brightest * (0.05 + 0.95 * (0.5 * double(x) / width + 0.5 * double(y) / height));
+            const double value = black + signal + std::sqrt(slope[size_t(site)] * signal + readVariance) * unit(random);
+            row[x] = std::uint16_t(std::clamp(std::lround(value), 0L, std::lround(white)));
+        }
+    }
+    return mosaic;
+}
+
+void estimatedFromOnePhoto()
+{
+    const std::array<double, 4> slope{6.8, 6.8, 6.7, 7.0}, black{2048, 2048, 2048, 2048};
+    const std::array<double, 4> read{341, 341, 341, 341};
+    const ipr::Image mosaic = noisyMosaic(1600, 1100, slope, 341, 2048, 12279, 6000, 5);
+    QString reason;
+    const auto law = NoiseLaw::estimate(mosaic, black, read, 12279, &reason);
+    check(law.has_value(), "a law from one photo");
+    if (law) {
+        check(law->source == NoiseLaw::Source::Estimated, "marked as estimated");
+        for (int p = 0; p < 4; ++p) {
+            const double ratio = law->positions[size_t(p)].shotSlope / slope[size_t(p)];
+            check(ratio > 0.9 && ratio < 1.12, "the slope of a flat noisy photo, within its estimate's spread");
+            check(law->positions[size_t(p)].readVariance == read[size_t(p)], "the read variance of the optical black");
+        }
+    }
+    // A near-black frame shows no slope: zero, the read noise alone.
+    const ipr::Image dark = noisyMosaic(800, 600, {0, 0, 0, 0}, 341, 2048, 12279, 0.0, 9);
+    const auto darkLaw = NoiseLaw::estimate(dark, black, read, 12279, &reason);
+    check(darkLaw && darkLaw->positions[0].shotSlope == 0.0 && darkLaw->positions[3].shotSlope >= 0.0,
+          "no signal: no slope, never a negative one");
+    // A saturated frame has no class to measure: zero as well.
+    const ipr::Image white = noisyMosaic(800, 600, slope, 341, 2048, 12279, 20000, 11);
+    const auto whiteLaw = NoiseLaw::estimate(white, black, read, 12279, &reason);
+    check(whiteLaw && whiteLaw->positions[1].shotSlope >= 0.0, "a saturated frame never gives a negative slope");
+    // Refusals: no read noise, no mosaic, a wrong type.
+    check(!NoiseLaw::estimate(mosaic, black, {0, 341, 341, 341}, 12279, &reason), "no read noise: refused");
+    check(!NoiseLaw::estimate(ipr::Image(), black, read, 12279, &reason), "no mosaic: refused");
+    check(!NoiseLaw::estimate(ipr::Image::create({100, 100}, ipr::Depth::F32, 1), black, read, 12279, &reason),
+          "not a U16 mosaic: refused");
+    check(!NoiseLaw::estimate(mosaic, black, read, 1000, &reason), "a white below the black: refused");
+}
+
 int main(int argc, char **argv)
 {
     QCoreApplication application(argc, argv);
     measuredInterpolatedAndRefused();
     invalidCatalogues();
     shippedCatalogue();
+    estimatedFromOnePhoto();
     if (!passed)
         return 1;
     std::cout << "noise law tests passed\n";

@@ -8,9 +8,11 @@
 #include <QQuickWindow>
 #include <QScopedPointer>
 #include <QTemporaryDir>
+#include <QPointer>
 #include <QTimer>
 #include <QEventLoop>
 #include <QWheelEvent>
+#include <array>
 #include <cmath>
 #include <iostream>
 
@@ -24,8 +26,15 @@ public:
 public slots:
     void picked(double px, double py) { x = px; y = py; ++count; }
     void cancelled() { ++cancellations; }
+    void viewed(double vx, double vy, double vw, double vh, double fx, double fy)
+    {
+        view = {vx, vy, vw, vh, fx, fy};
+        ++views;
+    }
 public:
     int cancellations = 0;
+    std::array<double, 6> view{};
+    int views = 0;
 };
 
 namespace {
@@ -224,6 +233,82 @@ int main(int argc, char **argv)
         if (!check(!viewport->property("wantsDetail").toBool() && !detail->isVisible(),
                    "back at fit, the detail is no longer asked")) return 1;
         viewport->setProperty("detailSource", QUrl());
+        viewport->setProperty("detailRatio", 1.0);
+    }
+    // Tiles: zoomed in, the view reports its visible part in pixels of the full resolution, and
+    // each tile sits where that part of the preview is.
+    {
+        QImage tile(512, 512, QImage::Format_RGBA8888);
+        tile.fill(QColor("#c03020"));
+        const QString tilePath = directory.filePath("tile.png");
+        if (!tile.save(tilePath)) return 1;
+        QObject::connect(viewport, SIGNAL(detailViewReported(double,double,double,double,double,double)),
+                         &receiver, SLOT(viewed(double,double,double,double,double,double)));
+        viewport->setProperty("detailRatio", 2.0);
+        viewport->setProperty("detailSize", QSizeF(3200, 2000));
+        key(window, Qt::Key_1, Qt::ControlModifier, "1");
+        for (int i = 0; i < 5; ++i) settle();
+        // One file pixel per screen pixel: the visible part is the viewport's size, around the centre.
+        const double visibleWidth = std::min(viewport->width(), canvas->width());
+        const double visibleHeight = std::min(viewport->height(), canvas->height());
+        if (!check(receiver.views > 0 && near(receiver.view[2], visibleWidth) && near(receiver.view[3], visibleHeight),
+                   "the visible part in pixels of the full resolution")) return 1;
+        if (!check(std::abs(receiver.view[0] + receiver.view[2] / 2 - 1600) < 1 &&
+                   std::abs(receiver.view[1] + receiver.view[3] / 2 - 1000) < 1,
+                   "centred on the image's centre")) return 1;
+        const QUrl tileUrl = QUrl::fromLocalFile(tilePath);
+        viewport->setProperty("detailTiles", QVariantList{QVariantMap{{"x", 1536}, {"y", 512}, {"width", 512},
+                                                                      {"height", 512}, {"source", tileUrl.toString()}}});
+        auto *clip = viewport->findChild<QQuickItem *>("currentClip");
+        // Guarded: back at fit the view destroys the tile, as it should.
+        QPointer<QQuickItem> shown;
+        for (int i = 0; i < 50 && !shown; ++i) {
+            settle();
+            for (QQuickItem *child : clip ? clip->childItems() : QList<QQuickItem *>())
+                if (child->property("tileSource").toString() == tileUrl.toString() && child->isVisible())
+                    shown = child;
+        }
+        if (!check(shown && near(shown->x(), canvas->x() + 1536 * canvas->width() / 3200) &&
+                   near(shown->y(), canvas->y() + 512 * canvas->height() / 2000) &&
+                   near(shown->width(), 512 * canvas->width() / 3200),
+                   "a tile sits on its part of the preview")) return 1;
+        // At 100 % the tile is smoothed as before; beyond, each file pixel is a sharp square, while the
+        // preview standing in for finer pixels stays smoothed.
+        if (!check(shown->property("smooth").toBool() && !viewport->property("crispPixels").toBool(),
+                   "at 100 %, smoothed")) return 1;
+        key(window, Qt::Key_Plus, Qt::ControlModifier, "+");
+        for (int i = 0; i < 3; ++i) settle();
+        if (!check(shown && viewport->property("crispPixels").toBool() && !shown->property("smooth").toBool() &&
+                   canvas->property("smooth").toBool() && viewport->property("imageReady").toBool(),
+                   "beyond 100 %, the file's pixels are sharp squares, the preview stays smoothed")) return 1;
+        // The comparison keeps the full resolution: the original's tiles sit on its side, same places.
+        viewport->setProperty("comparisonEnabled", true);
+        viewport->setProperty("originalDetailTiles", QVariantList{QVariantMap{{"x", 1536}, {"y", 512}, {"width", 512},
+                                                                              {"height", 512}, {"source", tileUrl.toString()}}});
+        auto *originalClip = viewport->findChild<QQuickItem *>("originalClip");
+        auto *originalCanvas = viewport->findChild<QQuickItem *>("originalViewportImage");
+        QPointer<QQuickItem> original;
+        for (int i = 0; i < 50 && !original; ++i) {
+            settle();
+            for (QQuickItem *child : originalClip ? originalClip->childItems() : QList<QQuickItem *>())
+                if (child->property("tileSource").toString() == tileUrl.toString() && child->isVisible())
+                    original = child;
+        }
+        if (!check(viewport->property("wantsOriginalDetail").toBool() && viewport->property("wantsDetail").toBool() &&
+                   original && originalCanvas &&
+                   near(original->x(), originalCanvas->x() + 1536 * originalCanvas->width() / 3200) &&
+                   near(original->width(), 512 * originalCanvas->width() / 3200),
+                   "in the comparison, an original tile sits on its part of the original")) return 1;
+        viewport->setProperty("comparisonEnabled", false);
+        for (int i = 0; i < 3; ++i) settle();
+        if (!check(!viewport->property("wantsOriginalDetail").toBool() && (!original || !original->isVisible()),
+                   "the comparison closed, no original tile shows")) return 1;
+        viewport->setProperty("originalDetailTiles", QVariantList());
+        key(window, Qt::Key_0, Qt::ControlModifier, "0");
+        for (int i = 0; i < 3; ++i) settle();
+        if (!check(!shown || !shown->isVisible() || shown->parentItem() == nullptr, "back at fit, no tile shows")) return 1;
+        viewport->setProperty("detailTiles", QVariantList());
+        viewport->setProperty("detailSize", QSizeF(0, 0));
         viewport->setProperty("detailRatio", 1.0);
     }
     QObject *plus = visualItem(viewport, "zoomInButton");

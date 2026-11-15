@@ -87,6 +87,13 @@ attendant.
   mise à l'échelle Windows reste un rapport supplémentaire). Le zoom maximal
   est 400 % du fichier (au moins 8× l'aperçu). Une image plus petite que
   l'aperçu garde l'ancien comportement.
+- Au-delà de 100 %, il n'existe pas de détail plus fin : les pixels du fichier
+  sont agrandis **sans lissage**, chacun en carré net (décision de
+  l'utilisateur du 12 novembre 2026), pour juger le grain, les bords et le
+  débruitage pixel par pixel ; les paliers entiers (200, 300, 400 %) donnent
+  des carrés réguliers. L'aperçu qui tient lieu de pleine résolution en
+  attendant reste lissé, et seul le lissage change (changer le mipmap
+  rechargerait l'image et la ferait clignoter).
 - Un changement de réglage masque l'image détaillée dès le nouvel aperçu
   publié : des pixels d'autres réglages ne sont jamais montrés. L'outil de
   recadrage, les surimpressions (masques, retouches, couleur de point) et la
@@ -98,11 +105,53 @@ attendant.
   de l'export ; un refus l'annonce dans la barre d'état et n'est pas retenté
   pour les mêmes réglages.
 - Limites de cette version : rendu de toute l'image et non de la zone visible
-  (latence de quelques secondes sur un RAW de 24 Mpx chargé d'effets) ;
+  (latence de quelques secondes sur un RAW de 24 Mpx chargé d'effets ; les
+  tuiles ci-dessous lèvent cette limite pour les recettes sans effet de
+  voisinage) ;
   comparaison avant/après en résolution d'aperçu ; pas de pleine résolution
   quand le cache n'a gardé que l'aperçu d'une photo. Le rendu de la seule
   zone visible et l'aperçu adapté aux ressources restent le chantier
   « aperçu adaptatif ».
+
+## Tuiles de la zone visible — 12 novembre 2026 (aperçu adaptatif)
+
+Quand toutes les étapes actives savent se rendre par zone
+(`RenderChain::rendersByRegion` : signal caméra et DCP, tons, couleur,
+courbes, géométrie complète, débruitage, texture, clarté, voile, flou,
+netteté et grain), le zoom ne rend plus l'image entière mais des
+**tuiles de 512 × 512 pixels du fichier**, posées sur l'aperçu agrandi dès
+qu'elles sont prêtes ([conception](../architecture/apercu-adaptatif.md)) :
+
+- la vue annonce au moteur sa partie visible en pixels du fichier
+  (`setDetailView`) et le point d'où partir : le pointeur après un zoom à la
+  molette ou au clic, le centre de la vue après un déplacement ;
+- les tuiles visibles se rendent une à une **en spirale depuis ce point**, puis
+  la **couronne de 512 pixels** autour, d'abord dans le sens du déplacement ;
+- un déplacement **libère** les tuiles sorties de la zone visible et de sa
+  couronne ; une tuile en cours qui n'est plus voulue est abandonnée à son
+  retour (une tuile coûte 30 à 50 ms sur un RAW de 32 Mpx, au lieu de 2 à
+  3,5 s pour l'image entière) ;
+- un changement de réglage masque toutes les tuiles au nouvel aperçu publié,
+  puis, 150 ms après, les tuiles des nouveaux réglages arrivent ; une tuile
+  d'autres réglages n'est jamais montrée ;
+- chaque tuile est **identique à l'octet près** à la même partie du rendu
+  entier (et donc de l'export) ;
+- la première tuile après un changement de signal caméra ou de géométrie
+  mesure aussi le plancher de la déformation sur toute l'image (environ 1 s
+  sur 32 Mpx, seulement si la géométrie rééchantillonne) ; avec la netteté,
+  elle mesure aussi le bruit de toute son entrée, par bandes de lignes
+  (environ 1,1 s sur 32 Mpx) ; avec la texture ou la clarté, elle rend une
+  fois l'image entière jusqu'à ces effets pour garder leurs bandes réduites
+  (environ 3,4 s sur 32 Mpx), de même pour les cartes réduites du voile et
+  les mesures du débruitage (celles-ci refaites quand ses curseurs bougent). Ces
+  mesures sont gardées tant que les réglages en amont ne changent pas :
+  changer la netteté, la clarté, le voile ou la texture seule ne les refait
+  pas.
+
+Les autres réglages (masques, retouches, débruitage expérimental du signal
+caméra) gardent le rendu de l'image entière décrit ci-dessus ;
+ils passeront aux tuiles étape par étape. L'outil de recadrage et les
+surimpressions masquent les tuiles et les libèrent.
 
 ## Implantation et modèle géométrique
 
@@ -144,6 +193,11 @@ rafraîchissement et le retour ajusté sur changement de photo.
 La comparaison est vérifiée par capture de rendu (origine à gauche,
 actuel à droite), avec sources opaques et translucides, déplacement réel
 de la séparation, raccourci, zoom sur la séparation et alignement géométrique.
+Elle vérifie aussi la partie visible annoncée en pixels du fichier et la place
+d'une tuile sur l'aperçu. `editorDetailTests` vérifie les tuiles (toutes
+égales au rendu entier, libération au déplacement, masquage au changement
+de réglage) et le repli sur l'image entière ; `detailTilesTests` vérifie
+la grille, la spirale, la couronne et son ordre selon le déplacement.
 `uiPreferencesQmlTests` vérifie que la fenêtre complète charge le composant.
 `imageExportTests` vérifie la référence neutre, sa stabilité après réglage,
 la restauration d'un sidecar édité, le reset, la libération au changement de

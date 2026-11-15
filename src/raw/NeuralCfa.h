@@ -49,9 +49,14 @@ public:
     RawDevelopment::CfaStage stageFor(const RawInput::Input &input, float strength,
                                       std::function<bool()> cancelled, QString *reason,
                                       std::function<void(bool applied, const QString &why)> report = {}) const;
-    // Whether a photo can get the network, from its metadata alone (before any decoding):
-    // false with a user-facing reason for an unsupported camera or an ISO outside the laws.
+    // Whether a photo can get the network, from its metadata alone (before any decoding). A
+    // camera or ISO the catalogue lacks can, its law estimated from the photo when it is
+    // decoded (decision of 13 November 2026); with the estimate off, false with a user-facing
+    // reason. A RAW without optical black to read its read noise from is refused at decoding.
     bool available(const QString &make, const QString &model, double iso, QString *reason) const;
+    // Whether this photo's noise law would be estimated from the photo, not a qualified one.
+    bool estimated(const QString &make, const QString &model, double iso) const;
+    void setEstimateUnqualified(bool estimate) { m_estimateUnqualified = estimate; }
     // DirectML, CPU or Unavailable, after the first denoising.
     QString engine() const;
 
@@ -61,6 +66,7 @@ private:
     std::shared_ptr<ipr::neural::NeuralRawDenoiser> m_denoiser;
     ModelManifest m_manifest;
     NoiseLaw::Catalog m_catalog;
+    bool m_estimateUnqualified = true;
 };
 
 }
