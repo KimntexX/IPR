@@ -2,7 +2,9 @@
 
 #include "NeuralRawDenoiser.h"
 
+#include <QCoreApplication>
 #include <QCryptographicHash>
+#include <QDebug>
 #include <QFile>
 #include <QJsonArray>
 #include <QJsonDocument>
@@ -91,15 +93,20 @@ std::unique_ptr<Service> Service::create(const QString &modelPath, const ModelMa
 {
     const QString digest = fileSha256(modelPath);
     if (digest.isEmpty()) {
-        fail(reason, QStringLiteral("neural model unreadable: %1").arg(modelPath));
+        fail(reason, QCoreApplication::translate("NeuralCfa", "Modèle de débruitage IA illisible : %1").arg(modelPath));
         return nullptr;
     }
     if (digest != manifest.sha256) {
-        fail(reason, QStringLiteral("neural model %1 does not match its manifest").arg(modelPath));
+        fail(reason, QCoreApplication::translate("NeuralCfa",
+            "Le modèle de débruitage IA %1 ne correspond pas à son manifeste : fichier abîmé ou d’une autre version.")
+                         .arg(modelPath));
         return nullptr;
     }
     ipr::neural::SessionOptions options;
-    options.modelPath = QFile::encodeName(modelPath).toStdString();
+    // UTF-8, as NeuralRawDenoiser reads it (std::filesystem::u8path): the local 8-bit code
+    // page cannot hold every folder name and gave "No mapping for the Unicode character"
+    // on an accented installation folder (beta-1, 15 November 2026).
+    options.modelPath = modelPath.toStdString();
     auto denoiser = std::make_shared<ipr::neural::NeuralRawDenoiser>(options);
     return std::unique_ptr<Service>(new Service(std::move(denoiser), manifest, std::move(catalog)));
 }

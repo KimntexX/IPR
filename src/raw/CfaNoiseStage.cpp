@@ -2,6 +2,7 @@
 
 #include "RawInput.h"
 
+#include <QCoreApplication>
 #include <QDebug>
 
 #include <cmath>
@@ -151,10 +152,12 @@ RawDevelopment::CfaStage makeStage(const RawInput::Input &input, const Settings 
     const QString provenance = law->provenance;
     const auto report = settings.report;
     return [denoiser, networkLaw, divisor, provenance, report](ipr::Image &mosaic, const Pattern &pattern, QString *) {
+        // The technical cause goes to the log; the user reads a sentence in the interface's language.
         const auto leftAsDecoded = [&report](const QString &why) {
             qWarning().noquote() << "IPR neural CFA | left undenoised:" << why;
             if (report)
-                report(false, why);
+                report(false, QCoreApplication::translate("CfaNoiseStage",
+                    "Le débruitage IA a échoué sur cette photo, développée sans lui. Le détail est dans le journal."));
             return true;
         };
         const auto planes = pack(mosaic, pattern, divisor);
