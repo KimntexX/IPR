@@ -1,0 +1,2028 @@
+{
+ "schema": "ipr-dcp-table-input-v001",
+ "created_utc": "20261030T122416Z",
+ "author": "Claude",
+ "engine": {
+  "branch": "patch_raw_decoder",
+  "commit": "e01fc59039945e96c7aeaa16819bc91adafd8808",
+  "probe": "temporary counters in the DCP per-pixel loop (IPR_DCP_PROBE), applied locally, never committed, reverted after the run; diff below",
+  "executable_sha256": "d41e0577186f16b1219e943dc48e21fe5e453f6e981f0975696c5d6b12a338fe"
+ },
+ "measure": "share of pixels whose ProPhoto linear input to the DCP tables (after matrix and baseline exposure) has min < 0 (neg), min < -0.01 (deep_neg), max > 1 (over1); full definition, neutral render, Camera Neutral, optics off. With camera denoise the profile runs twice (development, then the denoised signal): the second pass is kept",
+ "states": {
+  "A": "application development, no camera denoise",
+  "B0": "signed development, strengths 0/0",
+  "M50": "single slider 50 (50/98)",
+  "M100": "single slider 100 (100/100)"
+ },
+ "corpus": "28 RAW of tests/image/base and the 9 R7 RAW (7Y6A*) of tests/image/base-hors-protocole",
+ "reading": "denoise removes most table-input negatives: deep negatives at M100 are below 0.1 % everywhere except the four R7 files at the highest ISO (7Y6A7317/7331/7547/7579: 1.3-5.1 %, 8-13 % at M50, 20-29 % at B0); shallow negatives that remain are near-black pixels around zero. The earlier D1+D2 trial (essais-bornes-dcp-v001-20261029T133401Z.json) found no visible change on 7Y6A7599 with 6.5 % deep negatives at B0.",
+ "decision": "D0 kept (current bounds unchanged); a signed table/curve extension (D1/D2) would only concern the frozen extreme-ISO R7 corpus at low denoise strengths",
+ "scripts_sha256": {
+  "dcp_probe.py": "98da2791d0aaab9e8a23ea4b2b4c3db6f07f2070ee12c7bc8d01e2a9e47d3eb2"
+ },
+ "scripts_source": {
+  "dcp_probe.py": "\"\"\"Share of pixels whose ProPhoto input to the DCP tables leaves [0, 1], with a temporary\nengine probe (IPR_DCP_PROBE, never committed). States: A (application development),\nB0 (signed, no denoise), master 50 and 100 (CameraDenoise::settingsFromAmount).\"\"\"\nimport json, os, sys, time\nfrom pathlib import Path\nsys.path.insert(0, str(Path(__file__).parent))\nprobe = Path(__file__).parent / \"dcp_probe.log\"\nos.environ[\"IPR_DCP_PROBE\"] = str(probe)\nfrom strength_law import RenderServer, ROOT  # noqa: E402\n\ndef law(m):\n    return m, round(100 * (1 - (1 - m / 100) ** 6))\n\nSTATES = {\"A\": None, \"B0\": (0, 0), \"M50\": law(50), \"M100\": law(100)}\nexe = Path(sys.argv[1]); out = Path(sys.argv[2])\nraws = [p for p in sorted((ROOT / \"tests/image/base\").iterdir()) if p.suffix.upper() in (\".CR3\", \".CR2\")]\nraws += [p for p in sorted((ROOT / \"tests/image/base-hors-protocole\").iterdir()) if p.suffix.upper() == \".CR3\" and p.stem.startswith(\"7Y6A\")]\nreport = json.loads(out.read_text()) if out.exists() else {}\nwith RenderServer(exe, timeout=900) as server:\n    for raw in raws:\n        key = f\"{raw.parent.name}/{raw.stem}\"\n        if key in report: continue\n        t0 = time.time(); entry = {}\n        for name, st in STATES.items():\n            before = probe.read_text().splitlines() if probe.exists() else []\n            kw = {} if st is None else {\"camera_denoise\": {\"luminance\": st[0], \"chrominance\": st[1]}}\n            server.render(raw, \"neutral\", 0, **kw)\n            lines = (probe.read_text().splitlines() if probe.exists() else [])[len(before):]\n            rows = [list(map(int, l.split())) for l in lines]\n            if not rows: entry[name] = None; continue\n            w, h, neg, deep, over = max(rows, key=lambda r: r[0] * r[1])\n            n = w * h\n            entry[name] = {\"size\": [w, h], \"calls\": len(rows), \"neg\": neg / n, \"deep_neg\": deep / n, \"over1\": over / n,\n                           \"denoise\": None if st is None else list(st)}\n        report[key] = entry\n        out.write_text(json.dumps(report, indent=1))\n        print(key, f\"{time.time() - t0:.0f}s\", {k: (round(v['neg'] * 100, 3), round(v['deep_neg'] * 100, 3)) if v else None for k, v in entry.items()}, flush=True)\n",
+  "probe.diff": "diff --git a/src/profiles/CameraProfileEngine.cpp b/src/profiles/CameraProfileEngine.cpp\nindex c03aa08..87be373 100644\n--- a/src/profiles/CameraProfileEngine.cpp\n+++ b/src/profiles/CameraProfileEngine.cpp\n@@ -1,3 +1,6 @@\n+#include <atomic>\n+#include <cstdio>\n+#include <cstdlib>\n #include \"CameraProfileEngine.h\"\n #include \"WorkingColorSpace.h\"\n \n@@ -560,11 +563,14 @@ public:\n                          toneCurve[toneCurve.size() - 2] == 1.0;\n         for (qsizetype i = 1; hueStable && i < toneCurve.size(); i += 2)\n             hueStable = toneCurve[i] >= 0.0 && toneCurve[i] <= 1.0;\n+        std::atomic<long long> probeNeg{0}, probeDeep{0}, probeOver{0};\n         cv::parallel_for_(cv::Range(0, rgb.rows), [&](const cv::Range &rows) {\n+            long long localNeg = 0, localDeep = 0, localOver = 0;\n             for (int y = rows.start; y < rows.end; ++y) {\n                 cv::Vec3f *row = rgb.ptr<cv::Vec3f>(y);\n                 for (int x = 0; x < rgb.cols; ++x) {\n                     const cv::Vec3f in = row[x];\n+                    if (x == 0 && y == rows.end - 1) { probeNeg += localNeg; probeDeep += localDeep; probeOver += localOver; localNeg = localDeep = localOver = 0; }\n                     const double x2 =\n                         cameraToXyz[0] * in[0] + cameraToXyz[1] * in[1] +\n                         cameraToXyz[2] * in[2];\n@@ -581,6 +587,9 @@ public:\n                         continue;\n                     }\n                     cv::Vec3f out(xyzToProPhoto * (xyz * exposureScale));\n+                    { const float lo = std::min({out[0], out[1], out[2]});\n+                      const float hi = std::max({out[0], out[1], out[2]});\n+                      localNeg += lo < 0.f; localDeep += lo < -0.01f; localOver += hi > 1.f; }\n                     if (!hueMap.isEmpty())\n                         out = applyHueSatMap(out, hueMap, hueSatEncoding);\n                     if (!lookTable.isEmpty())\n@@ -606,7 +615,15 @@ public:\n                     row[x] = cv::Vec3f(proPhotoToWorking * cv::Vec3d(out));\n                 }\n             }\n+            probeNeg += localNeg; probeDeep += localDeep; probeOver += localOver;\n         });\n+        if (const char *probePath = std::getenv(\"IPR_DCP_PROBE\")) {\n+            if (FILE *f = std::fopen(probePath, \"a\")) {\n+                std::fprintf(f, \"%d %d %lld %lld %lld\\n\", rgb.cols, rgb.rows,\n+                             probeNeg.load(), probeDeep.load(), probeOver.load());\n+                std::fclose(f);\n+            }\n+        }\n         return true;\n     }\n \n"
+ },
+ "scenes": {
+  "base/6V1A0007": {
+   "raw_sha256": "35f6dc7b66b20dfffa95a3e9ac7dc2600905d72877e0428d0712dd2d202fdfcc",
+   "states": {
+    "A": {
+     "size": [
+      4639,
+      6959
+     ],
+     "neg": 6.195249290791093e-08,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": null
+    },
+    "B0": {
+     "size": [
+      4639,
+      6959
+     ],
+     "neg": 6.195249290791093e-08,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": [
+      0,
+      0
+     ]
+    },
+    "M50": {
+     "size": [
+      4639,
+      6959
+     ],
+     "neg": 3.097624645395547e-08,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": [
+      50,
+      98
+     ]
+    },
+    "M100": {
+     "size": [
+      4639,
+      6959
+     ],
+     "neg": 3.097624645395547e-08,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": [
+      100,
+      100
+     ]
+    }
+   }
+  },
+  "base/6V1A0032": {
+   "raw_sha256": "f32a27f60fff34a35215b18be688c2300e371ce27c5e4977cb70567a9e6e702d",
+   "states": {
+    "A": {
+     "size": [
+      4639,
+      6959
+     ],
+     "neg": 0.00017984808691166545,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": null
+    },
+    "B0": {
+     "size": [
+      4639,
+      6959
+     ],
+     "neg": 0.00025530622327350094,
+     "deep_neg": 2.0258465180886874e-05,
+     "over1": 4.3366745035537654e-07,
+     "denoise": [
+      0,
+      0
+     ]
+    },
+    "M50": {
+     "size": [
+      4639,
+      6959
+     ],
+     "neg": 0.00017743193968825692,
+     "deep_neg": 2.0258465180886874e-05,
+     "over1": 4.3366745035537654e-07,
+     "denoise": [
+      50,
+      98
+     ]
+    },
+    "M100": {
+     "size": [
+      4639,
+      6959
+     ],
+     "neg": 0.00015918693052687714,
+     "deep_neg": 2.0258465180886874e-05,
+     "over1": 4.3366745035537654e-07,
+     "denoise": [
+      100,
+      100
+     ]
+    }
+   }
+  },
+  "base/6V1A0043": {
+   "raw_sha256": "403fc63b37987862c8fc30735bdb9c5c1f793758ed6c46fe13f02f5d4b5a4bfe",
+   "states": {
+    "A": {
+     "size": [
+      6959,
+      4639
+     ],
+     "neg": 5.575724361711984e-07,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": null
+    },
+    "B0": {
+     "size": [
+      6959,
+      4639
+     ],
+     "neg": 0.0001119171784381411,
+     "deep_neg": 0.0,
+     "over1": 2.1683372517768827e-07,
+     "denoise": [
+      0,
+      0
+     ]
+    },
+    "M50": {
+     "size": [
+      6959,
+      4639
+     ],
+     "neg": 2.317023234755869e-05,
+     "deep_neg": 0.0,
+     "over1": 2.1683372517768827e-07,
+     "denoise": [
+      50,
+      98
+     ]
+    },
+    "M100": {
+     "size": [
+      6959,
+      4639
+     ],
+     "neg": 6.443059262422737e-06,
+     "deep_neg": 0.0,
+     "over1": 2.1683372517768827e-07,
+     "denoise": [
+      100,
+      100
+     ]
+    }
+   }
+  },
+  "base/6V1A0064": {
+   "raw_sha256": "af350c1ad03079873dc5ebcbe5ef4b23d14c921e6aeb151d5eced2ad9a7928ed",
+   "states": {
+    "A": {
+     "size": [
+      6959,
+      4639
+     ],
+     "neg": 0.0,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": null
+    },
+    "B0": {
+     "size": [
+      6959,
+      4639
+     ],
+     "neg": 3.097624645395547e-08,
+     "deep_neg": 3.097624645395547e-08,
+     "over1": 0.0,
+     "denoise": [
+      0,
+      0
+     ]
+    },
+    "M50": {
+     "size": [
+      6959,
+      4639
+     ],
+     "neg": 3.097624645395547e-08,
+     "deep_neg": 3.097624645395547e-08,
+     "over1": 0.0,
+     "denoise": [
+      50,
+      98
+     ]
+    },
+    "M100": {
+     "size": [
+      6959,
+      4639
+     ],
+     "neg": 3.097624645395547e-08,
+     "deep_neg": 3.097624645395547e-08,
+     "over1": 0.0,
+     "denoise": [
+      100,
+      100
+     ]
+    }
+   }
+  },
+  "base/6V1A0327": {
+   "raw_sha256": "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed",
+   "states": {
+    "A": {
+     "size": [
+      4639,
+      6959
+     ],
+     "neg": 1.2390498581582187e-07,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": null
+    },
+    "B0": {
+     "size": [
+      4639,
+      6959
+     ],
+     "neg": 1.920527280145239e-06,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": [
+      0,
+      0
+     ]
+    },
+    "M50": {
+     "size": [
+      4639,
+      6959
+     ],
+     "neg": 1.1461211187963523e-06,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": [
+      50,
+      98
+     ]
+    },
+    "M100": {
+     "size": [
+      4639,
+      6959
+     ],
+     "neg": 8.673349007107531e-07,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": [
+      100,
+      100
+     ]
+    }
+   }
+  },
+  "base/6V1A0524": {
+   "raw_sha256": "149898806eb49f1e66a9527c2ec7f784eb8192532710f36fca8578642cd3c97b",
+   "states": {
+    "A": {
+     "size": [
+      4639,
+      6959
+     ],
+     "neg": 1.920527280145239e-06,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": null
+    },
+    "B0": {
+     "size": [
+      4639,
+      6959
+     ],
+     "neg": 8.518467774837754e-06,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": [
+      0,
+      0
+     ]
+    },
+    "M50": {
+     "size": [
+      4639,
+      6959
+     ],
+     "neg": 3.097624645395547e-08,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": [
+      50,
+      98
+     ]
+    },
+    "M100": {
+     "size": [
+      4639,
+      6959
+     ],
+     "neg": 0.0,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": [
+      100,
+      100
+     ]
+    }
+   }
+  },
+  "base/6V1A0544": {
+   "raw_sha256": "cac52efb3491f413403db11fd4cdbc299b1c257c8a0f13420ec83140df30c33a",
+   "states": {
+    "A": {
+     "size": [
+      4639,
+      6959
+     ],
+     "neg": 0.0014289342489209656,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": null
+    },
+    "B0": {
+     "size": [
+      4639,
+      6959
+     ],
+     "neg": 0.004775453034574045,
+     "deep_neg": 2.787862180855992e-07,
+     "over1": 0.0,
+     "denoise": [
+      0,
+      0
+     ]
+    },
+    "M50": {
+     "size": [
+      4639,
+      6959
+     ],
+     "neg": 0.0019520301227889116,
+     "deep_neg": 2.787862180855992e-07,
+     "over1": 0.0,
+     "denoise": [
+      50,
+      98
+     ]
+    },
+    "M100": {
+     "size": [
+      4639,
+      6959
+     ],
+     "neg": 0.0011914083911120353,
+     "deep_neg": 2.787862180855992e-07,
+     "over1": 0.0,
+     "denoise": [
+      100,
+      100
+     ]
+    }
+   }
+  },
+  "base/6V1A9112": {
+   "raw_sha256": "80094389b8281933fd9ee0f16d9aa6245b77f9e6652578d78a1fed2575e6007b",
+   "states": {
+    "A": {
+     "size": [
+      4639,
+      6959
+     ],
+     "neg": 3.717149574474656e-07,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": null
+    },
+    "B0": {
+     "size": [
+      4639,
+      6959
+     ],
+     "neg": 2.137361005322927e-06,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": [
+      0,
+      0
+     ]
+    },
+    "M50": {
+     "size": [
+      4639,
+      6959
+     ],
+     "neg": 3.717149574474656e-07,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": [
+      50,
+      98
+     ]
+    },
+    "M100": {
+     "size": [
+      4639,
+      6959
+     ],
+     "neg": 2.787862180855992e-07,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": [
+      100,
+      100
+     ]
+    }
+   }
+  },
+  "base/6V1A9141": {
+   "raw_sha256": "5e4046a021c570ffbfecfb174cf4dba685fb8b105787f3f904394cd3505effcf",
+   "states": {
+    "A": {
+     "size": [
+      4639,
+      6959
+     ],
+     "neg": 0.0,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": null
+    },
+    "B0": {
+     "size": [
+      4639,
+      6959
+     ],
+     "neg": 0.0,
+     "deep_neg": 0.0,
+     "over1": 3.097624645395547e-08,
+     "denoise": [
+      0,
+      0
+     ]
+    },
+    "M50": {
+     "size": [
+      4639,
+      6959
+     ],
+     "neg": 0.0,
+     "deep_neg": 0.0,
+     "over1": 3.097624645395547e-08,
+     "denoise": [
+      50,
+      98
+     ]
+    },
+    "M100": {
+     "size": [
+      4639,
+      6959
+     ],
+     "neg": 0.0,
+     "deep_neg": 0.0,
+     "over1": 3.097624645395547e-08,
+     "denoise": [
+      100,
+      100
+     ]
+    }
+   }
+  },
+  "base/6V1A9153": {
+   "raw_sha256": "7f5e0baf7f9722401cc269a1b01deee35db9eba0d122ea88e98f638266f32b30",
+   "states": {
+    "A": {
+     "size": [
+      6959,
+      4639
+     ],
+     "neg": 1.0841686258884414e-06,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": null
+    },
+    "B0": {
+     "size": [
+      6959,
+      4639
+     ],
+     "neg": 2.6949334414941255e-06,
+     "deep_neg": 4.026912039014211e-07,
+     "over1": 5.575724361711984e-07,
+     "denoise": [
+      0,
+      0
+     ]
+    },
+    "M50": {
+     "size": [
+      6959,
+      4639
+     ],
+     "neg": 2.5400522092243483e-06,
+     "deep_neg": 4.026912039014211e-07,
+     "over1": 5.575724361711984e-07,
+     "denoise": [
+      50,
+      98
+     ]
+    },
+    "M100": {
+     "size": [
+      6959,
+      4639
+     ],
+     "neg": 2.261265991138749e-06,
+     "deep_neg": 4.026912039014211e-07,
+     "over1": 5.575724361711984e-07,
+     "denoise": [
+      100,
+      100
+     ]
+    }
+   }
+  },
+  "base/6V1A9539": {
+   "raw_sha256": "8f97ae28841779db992572f31e4de7482c9bd123eaa4bee79967a6be74d631bf",
+   "states": {
+    "A": {
+     "size": [
+      4639,
+      6959
+     ],
+     "neg": 0.0036150828424088726,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": null
+    },
+    "B0": {
+     "size": [
+      4639,
+      6959
+     ],
+     "neg": 0.01596580792354418,
+     "deep_neg": 2.4780997163164374e-07,
+     "over1": 0.0,
+     "denoise": [
+      0,
+      0
+     ]
+    },
+    "M50": {
+     "size": [
+      4639,
+      6959
+     ],
+     "neg": 0.0032315659350624503,
+     "deep_neg": 9.29287393618664e-08,
+     "over1": 0.0,
+     "denoise": [
+      50,
+      98
+     ]
+    },
+    "M100": {
+     "size": [
+      4639,
+      6959
+     ],
+     "neg": 0.0001889241271226744,
+     "deep_neg": 3.097624645395547e-08,
+     "over1": 0.0,
+     "denoise": [
+      100,
+      100
+     ]
+    }
+   }
+  },
+  "base/6V1A9940": {
+   "raw_sha256": "01661293b080108e90915d38b0501d0aa489958a666331e5eab2fe5e5527f5be",
+   "states": {
+    "A": {
+     "size": [
+      6959,
+      4639
+     ],
+     "neg": 0.00012316155590092693,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": null
+    },
+    "B0": {
+     "size": [
+      6959,
+      4639
+     ],
+     "neg": 0.00020388565415993488,
+     "deep_neg": 4.0578882854681664e-06,
+     "over1": 1.5488123226977734e-07,
+     "denoise": [
+      0,
+      0
+     ]
+    },
+    "M50": {
+     "size": [
+      6959,
+      4639
+     ],
+     "neg": 9.797786753386114e-05,
+     "deep_neg": 4.0578882854681664e-06,
+     "over1": 1.5488123226977734e-07,
+     "denoise": [
+      50,
+      98
+     ]
+    },
+    "M100": {
+     "size": [
+      6959,
+      4639
+     ],
+     "neg": 6.458547385649715e-05,
+     "deep_neg": 4.0578882854681664e-06,
+     "over1": 1.5488123226977734e-07,
+     "denoise": [
+      100,
+      100
+     ]
+    }
+   }
+  },
+  "base/6V1A9947": {
+   "raw_sha256": "ee34e67577716b937e726df6f8f07362bcc34ee4dfd5653e06b1dddb68ff9df4",
+   "states": {
+    "A": {
+     "size": [
+      4639,
+      6959
+     ],
+     "neg": 6.195249290791093e-08,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": null
+    },
+    "B0": {
+     "size": [
+      4639,
+      6959
+     ],
+     "neg": 6.195249290791093e-08,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": [
+      0,
+      0
+     ]
+    },
+    "M50": {
+     "size": [
+      4639,
+      6959
+     ],
+     "neg": 0.0,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": [
+      50,
+      98
+     ]
+    },
+    "M100": {
+     "size": [
+      4639,
+      6959
+     ],
+     "neg": 0.0,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": [
+      100,
+      100
+     ]
+    }
+   }
+  },
+  "base/7Y6A7599": {
+   "raw_sha256": "9c1426494accc3fb6efa2c5b0f8c7c4faac70d65fa9a26721f1de86d011f078e",
+   "states": {
+    "A": {
+     "size": [
+      6984,
+      4660
+     ],
+     "neg": 0.027504068158242752,
+     "deep_neg": 0.0,
+     "over1": 0.0046633875590558925,
+     "denoise": null
+    },
+    "B0": {
+     "size": [
+      6984,
+      4660
+     ],
+     "neg": 0.1134295311416899,
+     "deep_neg": 0.06523823306736673,
+     "over1": 0.004662803759912295,
+     "denoise": [
+      0,
+      0
+     ]
+    },
+    "M50": {
+     "size": [
+      6984,
+      4660
+     ],
+     "neg": 0.04383087154452359,
+     "deep_neg": 0.006536030854092002,
+     "over1": 0.004456538304598125,
+     "denoise": [
+      50,
+      98
+     ]
+    },
+    "M100": {
+     "size": [
+      6984,
+      4660
+     ],
+     "neg": 0.00471583730316751,
+     "deep_neg": 0.00015799448401988112,
+     "over1": 0.004409742194298187,
+     "denoise": [
+      100,
+      100
+     ]
+    }
+   }
+  },
+  "base/_MG_7580": {
+   "raw_sha256": "020b83b4beff9137bd9f6d409991d7b1006f0422183c31656e5a185f31dde417",
+   "states": {
+    "A": {
+     "size": [
+      3464,
+      5202
+     ],
+     "neg": 0.0,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": null
+    },
+    "B0": {
+     "size": [
+      3464,
+      5202
+     ],
+     "neg": 0.0,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": [
+      0,
+      0
+     ]
+    },
+    "M50": {
+     "size": [
+      3464,
+      5202
+     ],
+     "neg": 0.0,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": [
+      50,
+      98
+     ]
+    },
+    "M100": {
+     "size": [
+      3464,
+      5202
+     ],
+     "neg": 0.0,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": [
+      100,
+      100
+     ]
+    }
+   }
+  },
+  "base/_MG_7840": {
+   "raw_sha256": "b37c4176e160c9c1bdd0518b4a3115bde53b44e7012f0574d138f935f472935b",
+   "states": {
+    "A": {
+     "size": [
+      5202,
+      3464
+     ],
+     "neg": 1.270829393207267e-05,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": null
+    },
+    "B0": {
+     "size": [
+      5202,
+      3464
+     ],
+     "neg": 3.912378699611892e-05,
+     "deep_neg": 1.109894666556565e-07,
+     "over1": 0.0,
+     "denoise": [
+      0,
+      0
+     ]
+    },
+    "M50": {
+     "size": [
+      5202,
+      3464
+     ],
+     "neg": 4.994525999504543e-06,
+     "deep_neg": 5.549473332782825e-08,
+     "over1": 0.0,
+     "denoise": [
+      50,
+      98
+     ]
+    },
+    "M100": {
+     "size": [
+      5202,
+      3464
+     ],
+     "neg": 1.7203367331626759e-06,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": [
+      100,
+      100
+     ]
+    }
+   }
+  },
+  "base/IMG_3135": {
+   "raw_sha256": "7bf4440bcdafc359762d0db40e92dcbf1948886b6aa3ca250cecb96496309165",
+   "states": {
+    "A": {
+     "size": [
+      5202,
+      3464
+     ],
+     "neg": 0.0,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": null
+    },
+    "B0": {
+     "size": [
+      5202,
+      3464
+     ],
+     "neg": 0.0,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": [
+      0,
+      0
+     ]
+    },
+    "M50": {
+     "size": [
+      5202,
+      3464
+     ],
+     "neg": 0.0,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": [
+      50,
+      98
+     ]
+    },
+    "M100": {
+     "size": [
+      5202,
+      3464
+     ],
+     "neg": 0.0,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": [
+      100,
+      100
+     ]
+    }
+   }
+  },
+  "base/IMG_4002": {
+   "raw_sha256": "4ead8c801223ce4d134fa912a9505793acedade7955e94c49846aa970450e447",
+   "states": {
+    "A": {
+     "size": [
+      5202,
+      3464
+     ],
+     "neg": 0.0076614918937733135,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": null
+    },
+    "B0": {
+     "size": [
+      5202,
+      3464
+     ],
+     "neg": 0.02245350207283928,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": [
+      0,
+      0
+     ]
+    },
+    "M50": {
+     "size": [
+      5202,
+      3464
+     ],
+     "neg": 0.003137894201288721,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": [
+      50,
+      98
+     ]
+    },
+    "M100": {
+     "size": [
+      5202,
+      3464
+     ],
+     "neg": 0.0006496213483355575,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": [
+      100,
+      100
+     ]
+    }
+   }
+  },
+  "base/IMG_4173": {
+   "raw_sha256": "6e5e0f451b39abab76d45a4d17131af5b69af3890bb4b70fa1cd4983aea4d390",
+   "states": {
+    "A": {
+     "size": [
+      5202,
+      3464
+     ],
+     "neg": 2.8135829797208926e-05,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": null
+    },
+    "B0": {
+     "size": [
+      5202,
+      3464
+     ],
+     "neg": 5.044471259499588e-05,
+     "deep_neg": 4.43957866622626e-07,
+     "over1": 0.0,
+     "denoise": [
+      0,
+      0
+     ]
+    },
+    "M50": {
+     "size": [
+      5202,
+      3464
+     ],
+     "neg": 1.148740979886045e-05,
+     "deep_neg": 1.109894666556565e-07,
+     "over1": 0.0,
+     "denoise": [
+      50,
+      98
+     ]
+    },
+    "M100": {
+     "size": [
+      5202,
+      3464
+     ],
+     "neg": 5.271999666143685e-06,
+     "deep_neg": 5.549473332782825e-08,
+     "over1": 0.0,
+     "denoise": [
+      100,
+      100
+     ]
+    }
+   }
+  },
+  "base/IMG_4345": {
+   "raw_sha256": "47c4d5a394e2e98335f686e14e0e26e1f1a00cb1e21e935caf7f438854a1cb5e",
+   "states": {
+    "A": {
+     "size": [
+      5202,
+      3464
+     ],
+     "neg": 0.0,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": null
+    },
+    "B0": {
+     "size": [
+      5202,
+      3464
+     ],
+     "neg": 0.0,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": [
+      0,
+      0
+     ]
+    },
+    "M50": {
+     "size": [
+      5202,
+      3464
+     ],
+     "neg": 0.0,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": [
+      50,
+      98
+     ]
+    },
+    "M100": {
+     "size": [
+      5202,
+      3464
+     ],
+     "neg": 0.0,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": [
+      100,
+      100
+     ]
+    }
+   }
+  },
+  "base/IMG_6248": {
+   "raw_sha256": "9434f32e572b6d2a50379a159ab547789d6ecc1656eb2f93bab55ba6933adcd8",
+   "states": {
+    "A": {
+     "size": [
+      3464,
+      5202
+     ],
+     "neg": 0.0,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": null
+    },
+    "B0": {
+     "size": [
+      3464,
+      5202
+     ],
+     "neg": 0.0,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": [
+      0,
+      0
+     ]
+    },
+    "M50": {
+     "size": [
+      3464,
+      5202
+     ],
+     "neg": 0.0,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": [
+      50,
+      98
+     ]
+    },
+    "M100": {
+     "size": [
+      3464,
+      5202
+     ],
+     "neg": 0.0,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": [
+      100,
+      100
+     ]
+    }
+   }
+  },
+  "base/IMG_6954": {
+   "raw_sha256": "3d80e31cad494d129c7f110e5e62ee2c8372d627d8a2bbbad5ab9034e4650577",
+   "states": {
+    "A": {
+     "size": [
+      3464,
+      5202
+     ],
+     "neg": 0.0,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": null
+    },
+    "B0": {
+     "size": [
+      3464,
+      5202
+     ],
+     "neg": 0.0,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": [
+      0,
+      0
+     ]
+    },
+    "M50": {
+     "size": [
+      3464,
+      5202
+     ],
+     "neg": 0.0,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": [
+      50,
+      98
+     ]
+    },
+    "M100": {
+     "size": [
+      3464,
+      5202
+     ],
+     "neg": 0.0,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": [
+      100,
+      100
+     ]
+    }
+   }
+  },
+  "base/IMG_6979": {
+   "raw_sha256": "1eba7c273b609d1f9cebe68cdbf1c03a065f835094789b30dbbc6302a442a7fb",
+   "states": {
+    "A": {
+     "size": [
+      5202,
+      3464
+     ],
+     "neg": 0.0,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": null
+    },
+    "B0": {
+     "size": [
+      5202,
+      3464
+     ],
+     "neg": 0.0,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": [
+      0,
+      0
+     ]
+    },
+    "M50": {
+     "size": [
+      5202,
+      3464
+     ],
+     "neg": 0.0,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": [
+      50,
+      98
+     ]
+    },
+    "M100": {
+     "size": [
+      5202,
+      3464
+     ],
+     "neg": 0.0,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": [
+      100,
+      100
+     ]
+    }
+   }
+  },
+  "base/IMG_7423": {
+   "raw_sha256": "8eea727fdd9cd4b2766292cbccf172a841d5e22aa595e1378e2503c59dd5226c",
+   "states": {
+    "A": {
+     "size": [
+      3464,
+      5202
+     ],
+     "neg": 5.549473332782825e-08,
+     "deep_neg": 0.0,
+     "over1": 0.20875897793795778,
+     "denoise": null
+    },
+    "B0": {
+     "size": [
+      3464,
+      5202
+     ],
+     "neg": 1.6648419998348477e-07,
+     "deep_neg": 0.0,
+     "over1": 0.23287721102116524,
+     "denoise": [
+      0,
+      0
+     ]
+    },
+    "M50": {
+     "size": [
+      3464,
+      5202
+     ],
+     "neg": 1.6648419998348477e-07,
+     "deep_neg": 0.0,
+     "over1": 0.24202296505252466,
+     "denoise": [
+      50,
+      98
+     ]
+    },
+    "M100": {
+     "size": [
+      3464,
+      5202
+     ],
+     "neg": 1.6648419998348477e-07,
+     "deep_neg": 0.0,
+     "over1": 0.23907791504955014,
+     "denoise": [
+      100,
+      100
+     ]
+    }
+   }
+  },
+  "base/IMG_7953": {
+   "raw_sha256": "966d5bc82bbbebc89b5364002539300b853828574ad1ff968620661a75a21a16",
+   "states": {
+    "A": {
+     "size": [
+      5202,
+      3464
+     ],
+     "neg": 1.2541809732089186e-05,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": null
+    },
+    "B0": {
+     "size": [
+      5202,
+      3464
+     ],
+     "neg": 0.0012179984070791745,
+     "deep_neg": 5.549473332782825e-08,
+     "over1": 5.549473332782825e-08,
+     "denoise": [
+      0,
+      0
+     ]
+    },
+    "M50": {
+     "size": [
+      5202,
+      3464
+     ],
+     "neg": 7.785911085894304e-05,
+     "deep_neg": 5.549473332782825e-08,
+     "over1": 5.549473332782825e-08,
+     "denoise": [
+      50,
+      98
+     ]
+    },
+    "M100": {
+     "size": [
+      5202,
+      3464
+     ],
+     "neg": 9.933557265681257e-06,
+     "deep_neg": 5.549473332782825e-08,
+     "over1": 5.549473332782825e-08,
+     "denoise": [
+      100,
+      100
+     ]
+    }
+   }
+  },
+  "base/IMG_7958": {
+   "raw_sha256": "68a2cf76de50acf6aaf291e99c4c9feaa1056bf09efb8290289d886b4b844dd1",
+   "states": {
+    "A": {
+     "size": [
+      5202,
+      3464
+     ],
+     "neg": 0.06378831023420553,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": null
+    },
+    "B0": {
+     "size": [
+      5202,
+      3464
+     ],
+     "neg": 0.199442189138482,
+     "deep_neg": 5.4329343927943865e-05,
+     "over1": 1.6648419998348477e-07,
+     "denoise": [
+      0,
+      0
+     ]
+    },
+    "M50": {
+     "size": [
+      5202,
+      3464
+     ],
+     "neg": 0.09552480481392393,
+     "deep_neg": 5.4329343927943865e-05,
+     "over1": 1.6648419998348477e-07,
+     "denoise": [
+      50,
+      98
+     ]
+    },
+    "M100": {
+     "size": [
+      5202,
+      3464
+     ],
+     "neg": 0.041821274993717995,
+     "deep_neg": 5.4329343927943865e-05,
+     "over1": 1.6648419998348477e-07,
+     "denoise": [
+      100,
+      100
+     ]
+    }
+   }
+  },
+  "base/IMG_7961": {
+   "raw_sha256": "a949888b39903a441da32f88118be50ce1300cfe5cdd4dcabbc3b2d365fe7aa9",
+   "states": {
+    "A": {
+     "size": [
+      5202,
+      3464
+     ],
+     "neg": 0.00017952546231552442,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": null
+    },
+    "B0": {
+     "size": [
+      5202,
+      3464
+     ],
+     "neg": 0.0005046136101499423,
+     "deep_neg": 5.549473332782825e-08,
+     "over1": 0.0,
+     "denoise": [
+      0,
+      0
+     ]
+    },
+    "M50": {
+     "size": [
+      5202,
+      3464
+     ],
+     "neg": 8.873607859119738e-05,
+     "deep_neg": 5.549473332782825e-08,
+     "over1": 0.0,
+     "denoise": [
+      50,
+      98
+     ]
+    },
+    "M100": {
+     "size": [
+      5202,
+      3464
+     ],
+     "neg": 7.336403745938895e-05,
+     "deep_neg": 5.549473332782825e-08,
+     "over1": 0.0,
+     "denoise": [
+      100,
+      100
+     ]
+    }
+   }
+  },
+  "base/IMG_8473": {
+   "raw_sha256": "d1acde3f2969bf6fd3b5d77f6b3c82d60371e08f9b2feabbccce7b7b5cd8840e",
+   "states": {
+    "A": {
+     "size": [
+      5202,
+      3464
+     ],
+     "neg": 0.013315683788345752,
+     "deep_neg": 0.0,
+     "over1": 0.0,
+     "denoise": null
+    },
+    "B0": {
+     "size": [
+      5202,
+      3464
+     ],
+     "neg": 0.044903175009078936,
+     "deep_neg": 6.326399599372421e-06,
+     "over1": 0.0,
+     "denoise": [
+      0,
+      0
+     ]
+    },
+    "M50": {
+     "size": [
+      5202,
+      3464
+     ],
+     "neg": 0.007996680083073396,
+     "deep_neg": 3.6071576663088366e-06,
+     "over1": 0.0,
+     "denoise": [
+      50,
+      98
+     ]
+    },
+    "M100": {
+     "size": [
+      5202,
+      3464
+     ],
+     "neg": 0.0016775502937669204,
+     "deep_neg": 3.274189266341867e-06,
+     "over1": 0.0,
+     "denoise": [
+      100,
+      100
+     ]
+    }
+   }
+  },
+  "base-hors-protocole/7Y6A6988": {
+   "raw_sha256": "b1db8e3c4a4eeb6125342f6f2726154ee1ca121a447999b9cf9c270c0fb2a507",
+   "states": {
+    "A": {
+     "size": [
+      4660,
+      6984
+     ],
+     "neg": 0.0044487031055656335,
+     "deep_neg": 0.0,
+     "over1": 0.00033482417198845674,
+     "denoise": null
+    },
+    "B0": {
+     "size": [
+      4660,
+      6984
+     ],
+     "neg": 0.015122179942873718,
+     "deep_neg": 0.002212352944068355,
+     "over1": 0.00033482417198845674,
+     "denoise": [
+      0,
+      0
+     ]
+    },
+    "M50": {
+     "size": [
+      4660,
+      6984
+     ],
+     "neg": 0.0006712153837834117,
+     "deep_neg": 5.3770973752390505e-06,
+     "over1": 0.00032228785353647087,
+     "denoise": [
+      50,
+      98
+     ]
+    },
+    "M100": {
+     "size": [
+      4660,
+      6984
+     ],
+     "neg": 3.6564262151625543e-06,
+     "deep_neg": 9.217881214695515e-08,
+     "over1": 0.00031764818665840745,
+     "denoise": [
+      100,
+      100
+     ]
+    }
+   }
+  },
+  "base-hors-protocole/7Y6A7003": {
+   "raw_sha256": "59fb28d2d31050a9166896bd4036d6a15a91e634478db3d687d5435e048dd400",
+   "states": {
+    "A": {
+     "size": [
+      4660,
+      6984
+     ],
+     "neg": 0.002751291732420886,
+     "deep_neg": 0.0,
+     "over1": 0.004193091259482127,
+     "denoise": null
+    },
+    "B0": {
+     "size": [
+      4660,
+      6984
+     ],
+     "neg": 0.00882234193177293,
+     "deep_neg": 0.0026489732509377656,
+     "over1": 0.004193060533211412,
+     "denoise": [
+      0,
+      0
+     ]
+    },
+    "M50": {
+     "size": [
+      4660,
+      6984
+     ],
+     "neg": 0.0004451007575869308,
+     "deep_neg": 1.594693450142324e-05,
+     "over1": 0.004132529779901578,
+     "denoise": [
+      50,
+      98
+     ]
+    },
+    "M100": {
+     "size": [
+      4660,
+      6984
+     ],
+     "neg": 1.0416205772605931e-05,
+     "deep_neg": 1.0446932043321583e-06,
+     "over1": 0.004115292342030097,
+     "denoise": [
+      100,
+      100
+     ]
+    }
+   }
+  },
+  "base-hors-protocole/7Y6A7126": {
+   "raw_sha256": "b1c9c1d8bd0bfaa33e34fa3458563f87f688a28349b43e9acd3d9f30d22e7fdf",
+   "states": {
+    "A": {
+     "size": [
+      4660,
+      6984
+     ],
+     "neg": 0.0022969116410778284,
+     "deep_neg": 0.0,
+     "over1": 0.05535967557974328,
+     "denoise": null
+    },
+    "B0": {
+     "size": [
+      4660,
+      6984
+     ],
+     "neg": 0.009986007256316091,
+     "deep_neg": 0.0014296933763992743,
+     "over1": 0.055360013568721146,
+     "denoise": [
+      0,
+      0
+     ]
+    },
+    "M50": {
+     "size": [
+      4660,
+      6984
+     ],
+     "neg": 0.0006016818331538919,
+     "deep_neg": 2.110894798165273e-05,
+     "over1": 0.055344988422341194,
+     "denoise": [
+      50,
+      98
+     ]
+    },
+    "M100": {
+     "size": [
+      4660,
+      6984
+     ],
+     "neg": 4.7195551819241036e-05,
+     "deep_neg": 4.824024502357319e-06,
+     "over1": 0.05533785992753516,
+     "denoise": [
+      100,
+      100
+     ]
+    }
+   }
+  },
+  "base-hors-protocole/7Y6A7232": {
+   "raw_sha256": "b1bfd1cdd392b3cfe6a521f5483d3a4ec5ff9c4916198077a530d42cdda62412",
+   "states": {
+    "A": {
+     "size": [
+      4660,
+      6984
+     ],
+     "neg": 0.048991471616300165,
+     "deep_neg": 0.0,
+     "over1": 3.072627071565172e-08,
+     "denoise": null
+    },
+    "B0": {
+     "size": [
+      4660,
+      6984
+     ],
+     "neg": 0.15269069952656963,
+     "deep_neg": 0.07314315000811174,
+     "over1": 3.072627071565172e-08,
+     "denoise": [
+      0,
+      0
+     ]
+    },
+    "M50": {
+     "size": [
+      4660,
+      6984
+     ],
+     "neg": 0.07457465623448323,
+     "deep_neg": 0.006922382982070607,
+     "over1": 3.072627071565172e-08,
+     "denoise": [
+      50,
+      98
+     ]
+    },
+    "M100": {
+     "size": [
+      4660,
+      6984
+     ],
+     "neg": 0.036822792993427035,
+     "deep_neg": 0.0005066762041010968,
+     "over1": 3.072627071565172e-08,
+     "denoise": [
+      100,
+      100
+     ]
+    }
+   }
+  },
+  "base-hors-protocole/7Y6A7298": {
+   "raw_sha256": "9147913687cfd5801acf9d706ab4b032a3c5f549242fe69344c04d396546be33",
+   "states": {
+    "A": {
+     "size": [
+      4660,
+      6984
+     ],
+     "neg": 0.025075371542065492,
+     "deep_neg": 0.0,
+     "over1": 0.00034668451248469833,
+     "denoise": null
+    },
+    "B0": {
+     "size": [
+      4660,
+      6984
+     ],
+     "neg": 0.08339767414421191,
+     "deep_neg": 0.046571132545757565,
+     "over1": 0.0003465616074018357,
+     "denoise": [
+      0,
+      0
+     ]
+    },
+    "M50": {
+     "size": [
+      4660,
+      6984
+     ],
+     "neg": 0.03391909895825652,
+     "deep_neg": 0.006533542026164034,
+     "over1": 0.00014717883672797172,
+     "denoise": [
+      50,
+      98
+     ]
+    },
+    "M100": {
+     "size": [
+      4660,
+      6984
+     ],
+     "neg": 0.019988360888652912,
+     "deep_neg": 0.0006084108864406197,
+     "over1": 0.00010923189239414186,
+     "denoise": [
+      100,
+      100
+     ]
+    }
+   }
+  },
+  "base-hors-protocole/7Y6A7317": {
+   "raw_sha256": "07e7455e0590c81134cd19c6d5928b759d9ee9f74d2a206b27e10996af392ee6",
+   "states": {
+    "A": {
+     "size": [
+      4660,
+      6984
+     ],
+     "neg": 0.10246142009448943,
+     "deep_neg": 0.0,
+     "over1": 0.0009413914821861372,
+     "denoise": null
+    },
+    "B0": {
+     "size": [
+      4660,
+      6984
+     ],
+     "neg": 0.34420567059471313,
+     "deep_neg": 0.21247554188851034,
+     "over1": 0.0009410842194789808,
+     "denoise": [
+      0,
+      0
+     ]
+    },
+    "M50": {
+     "size": [
+      4660,
+      6984
+     ],
+     "neg": 0.2679101588425291,
+     "deep_neg": 0.08185048350859599,
+     "over1": 0.0009276261129055253,
+     "denoise": [
+      50,
+      98
+     ]
+    },
+    "M100": {
+     "size": [
+      4660,
+      6984
+     ],
+     "neg": 0.2409578423275273,
+     "deep_neg": 0.024793120019271517,
+     "over1": 0.0009231708036517558,
+     "denoise": [
+      100,
+      100
+     ]
+    }
+   }
+  },
+  "base-hors-protocole/7Y6A7331": {
+   "raw_sha256": "2ba369992d288031b7774c4d78169e54ed98ddafd39553490181c70afd4c63aa",
+   "states": {
+    "A": {
+     "size": [
+      4660,
+      6984
+     ],
+     "neg": 0.10435170026891633,
+     "deep_neg": 0.0,
+     "over1": 0.00014874587653446997,
+     "denoise": null
+    },
+    "B0": {
+     "size": [
+      4660,
+      6984
+     ],
+     "neg": 0.33848081328751434,
+     "deep_neg": 0.20011679055499018,
+     "over1": 0.00014862297145160736,
+     "denoise": [
+      0,
+      0
+     ]
+    },
+    "M50": {
+     "size": [
+      4660,
+      6984
+     ],
+     "neg": 0.1977751414637504,
+     "deep_neg": 0.05171944210924787,
+     "over1": 0.00013547212758530843,
+     "denoise": [
+      50,
+      98
+     ]
+    },
+    "M100": {
+     "size": [
+      4660,
+      6984
+     ],
+     "neg": 0.12378809443043326,
+     "deep_neg": 0.012735793401471912,
+     "over1": 0.00012948050479575634,
+     "denoise": [
+      100,
+      100
+     ]
+    }
+   }
+  },
+  "base-hors-protocole/7Y6A7547": {
+   "raw_sha256": "4373b1efaebf748f159468f439f2386403236cdc2bfd3cc873d95273b5f264f9",
+   "states": {
+    "A": {
+     "size": [
+      4660,
+      6984
+     ],
+     "neg": 0.13023658613925637,
+     "deep_neg": 0.0,
+     "over1": 0.029476694738187592,
+     "denoise": null
+    },
+    "B0": {
+     "size": [
+      4660,
+      6984
+     ],
+     "neg": 0.41144682634495033,
+     "deep_neg": 0.2597798954323555,
+     "over1": 0.029469258980674404,
+     "denoise": [
+      0,
+      0
+     ]
+    },
+    "M50": {
+     "size": [
+      4660,
+      6984
+     ],
+     "neg": 0.3165277224704905,
+     "deep_neg": 0.10006750561676228,
+     "over1": 0.029235647144423303,
+     "denoise": [
+      50,
+      98
+     ]
+    },
+    "M100": {
+     "size": [
+      4660,
+      6984
+     ],
+     "neg": 0.27829794281472303,
+     "deep_neg": 0.03652265878107655,
+     "over1": 0.029179387342742946,
+     "denoise": [
+      100,
+      100
+     ]
+    }
+   }
+  },
+  "base-hors-protocole/7Y6A7579": {
+   "raw_sha256": "87b4aae7546bd8a9ee9793160af61162649f636212872a3074830571967e900a",
+   "states": {
+    "A": {
+     "size": [
+      4660,
+      6984
+     ],
+     "neg": 0.144325195787797,
+     "deep_neg": 0.0,
+     "over1": 0.00024387441067012767,
+     "denoise": null
+    },
+    "B0": {
+     "size": [
+      4660,
+      6984
+     ],
+     "neg": 0.44339004173856617,
+     "deep_neg": 0.2919118623069776,
+     "over1": 0.00024362860050440246,
+     "denoise": [
+      0,
+      0
+     ]
+    },
+    "M50": {
+     "size": [
+      4660,
+      6984
+     ],
+     "neg": 0.3780908784763703,
+     "deep_neg": 0.12728443677516726,
+     "over1": 0.00023769843025628167,
+     "denoise": [
+      50,
+      98
+     ]
+    },
+    "M100": {
+     "size": [
+      4660,
+      6984
+     ],
+     "neg": 0.4163624765865817,
+     "deep_neg": 0.05128865979381443,
+     "over1": 0.0002352710548697452,
+     "denoise": [
+      100,
+      100
+     ]
+    }
+   }
+  }
+ }
+}

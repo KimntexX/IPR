@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "data_version": "v001",
+  "campaign": "cone-spot-axial-diffusion",
+  "created_utc": "2026-11-12T21:37:30.439232+00:00",
+  "branch": "patch_masks",
+  "base_commit": "966f3a25b66158788c0462121d6b27fe43702269",
+  "verdict": "automated_checks_passed_visual_validation_pending",
+  "source_sha256": {
+    "src/core/LocalAdjustments.h": "8c7666662c059b8c96661a5576f183df64df338516bcbffbb74bd7179e9725bb",
+    "src/core/LocalAdjustments.cpp": "40ea1dea77cae05de0d389edb1bb47514f17597636f60e10c12aecf5fa8f65a6",
+    "src/core/RecipeCodec.cpp": "dd96a52009824f7640e0a7be567f7bc7f9e7e8661d7837f0a71d93abbb0785cb",
+    "src/core/Sidecar.h": "6183da0e5dbafbbce5b4f83dfc13a47281b092514eb6258909cdb779c8e7e4b4",
+    "src/editor/imageeditor.cpp": "d3d4cc06ae70aaf4d2693d470a06183b42efcf37e979567565ad69c5d523d30c",
+    "src/qml/MasksPanel.qml": "7833baa84295ef34570cf7664e4c606f25c6b1d1dbc5351f88306d9f4148cede",
+    "tests/local_adjustments_test.cpp": "26d4ffaedea29bcd3a343853b5ed65794419c7ec41213dcf069c6c75033c9371",
+    "tests/masks_qml_test.cpp": "0e0aed01aa92a3e0aa76b441eaab95a7d239dbecbb47087e3c06de4c47993bfd",
+    "tests/sidecar_test.cpp": "cb43bcd41e03a915d3b5da0b3fc1572fd831102a3b55017ce2ab5acf93f184e2"
+  },
+  "model": {
+    "axis": "start (light source) to end (base)",
+    "attenuation": "1 - diffusion * smoothstep(0, 1, axial_fraction)",
+    "diffusion_range": [
+      0,
+      1
+    ],
+    "new_cone_diffusion": 0.7,
+    "missing_recipe_field": 0,
+    "contour": "relative to local beam width; soft far cap; soft near cap only for nonzero start width",
+    "claim": "artistic coverage mask; no physical light transport simulation"
+  },
+  "persistence": {
+    "sidecar_version": 12,
+    "migration": "older sidecars remain readable; missing diffusion means zero axial attenuation",
+    "edge_change": "local-width contour replaces polygon-center-normalized contour for all cones"
+  },
+  "checks": {
+    "ctest_passed": [
+      "renderChainTests",
+      "sidecarTests",
+      "sidecarJsonTests",
+      "localAdjustmentsTests",
+      "editorMasksTests",
+      "editorHistoryTests",
+      "masksQmlTests"
+    ],
+    "added_assertions": [
+      "bright triangle tip with soft sides",
+      "monotone finite bounded axial falloff",
+      "resolution invariance tolerance 0.03",
+      "rotated beam axis",
+      "inversion",
+      "cache key invalidation",
+      "bounds and nonfinite rejection",
+      "recipe roundtrip and absent-field migration",
+      "default control at 70 and recipe update to 95"
+    ],
+    "build": "MSVC Release with pinned neural model and ONNX Runtime preserved",
+    "smoke_test": "passed"
+  },
+  "test_log_sha256": "661c044e98a9cbe425cc4a71c5954947e902225ef971e5b6031edfb65091a07b",
+  "limitations": [
+    "Visual acceptance pending",
+    "No new RAW corpus comparison",
+    "French manual source updated; PDF not rebuilt"
+  ],
+  "tracking_issue": "https://github.com/KimntexX/IPR/issues/24"
+}

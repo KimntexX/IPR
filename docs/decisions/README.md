@@ -6,17 +6,17 @@ Un ADR consigne un choix qui influe sur la compatibilité, le rendu, les donnée
 
 | ADR | Décision | Statut |
 | --- | --- | --- |
-| [ADR-0001](ADR-0001-sidecar-ipr.md) | Persistance non destructive `.ipr` | Accepté |
+| [ADR-0001](ADR-0001-sidecar-ipr.md) | Persistance non destructive `.ipr` | Remplacé par ADR-0021 (format CBOR) |
 | [ADR-0002](ADR-0002-pipeline-lineaire-et-calibration.md) | Pipeline linéaire et calibration de rendu | Accepté, à revalider sur changement de pipeline |
 | [ADR-0003](ADR-0003-profils-dcp-lcp-locaux.md) | Bibliothèque locale DCP/LCP | Accepté sous contrainte de licence |
 | [ADR-0004](ADR-0004-preferences-ihm-ini.md) | Préférences globales d’IHM dans un INI utilisateur | Accepté |
 | [ADR-0006](ADR-0006-restauration-raw-et-retouche-profil.md) | Sidecar v5 et changement DCP sans réouverture visuelle | Accepté ; recette visuelle à compléter |
-| [ADR-0007](ADR-0007-calibration-raw-par-defaut.md) | Calibration RAW active par défaut ; désactivation dans les futurs paramètres avancés | Défaut actif implémenté ; panneau avancé restant |
+| [ADR-0007](ADR-0007-calibration-raw-par-defaut.md) | Calibration RAW active par défaut ; désactivation dans les paramètres avancés | Défaut et panneau par image intégrés dans dev ; relecture du 22 octobre |
 | [ADR-0008](ADR-0008-separation-travail-affichage-export.md) | Travail indépendant de l'écran, affichage ICC et export séparés | Directive acceptée ; implémentation à venir |
-| [ADR-0009](ADR-0009-espace-travail-rec2020-lineaire.md) | Master Rec.2020 linéaire D65 flottant | Port local implémenté ; qualification visuelle et multi-OS à compléter |
+| [ADR-0009](ADR-0009-espace-travail-rec2020-lineaire.md) | Master Rec.2020 linéaire D65 flottant | Intégré dans dev ; qualification photographique et multi-OS par campagne |
 | [ADR-0010](ADR-0010-compensation-rendu-par-profil-dcp.md) | Compensation de rendu séparée de la baseline source, liée au boîtier/DCP | Intégré ; portée étendue par ADR-0011 |
-| [ADR-0011](ADR-0011-regles-raw-par-mode-et-configuration-vivante.md) | Règles par modèle/mode capteur, sans liste de photos ; configuration suivie automatiquement | Accepté, intégré localement ; ouverture des nouveaux ISO à l'essai |
-| [ADR-0012](ADR-0012-formats-extensibles-et-caracterisations.md) | Adaptateurs de formats/vignettes et catalogue JSON de caractérisations distinct du rôle DCP | Premier lot local ; contrats caméra et caractérisation physique restants |
+| [ADR-0011](ADR-0011-regles-raw-par-mode-et-configuration-vivante.md) | Règles par modèle/mode capteur, sans liste de photos ; configuration suivie automatiquement | Accepté, intégré dans dev ; nouveaux ISO à l'essai, pas validation universelle |
+| [ADR-0012](ADR-0012-formats-extensibles-et-caracterisations.md) | Adaptateurs de formats/vignettes et catalogue JSON de caractérisations distinct du rôle DCP | Adaptateurs, contrat CameraSignal et import commun intégrés ; caractérisation physique indépendante restante |
 
 Utiliser [le modèle](../templates/adr-template.md) pour toute nouvelle décision.
 
@@ -39,8 +39,9 @@ remplacé seulement s'il manque ou dévie (20 octobre 2026).
 pour les analyses, TIFF IPR réservés à la revue visuelle (20 octobre 2026).
 
 [ADR-0018](ADR-0018-independance-decodage-raw-et-couche-image.md) : décodeurs RAW
-puis couche image propres à IPR, après les fonctions de base ; révise le rapport
-de dépendances du 1er octobre (20 octobre 2026).
+puis couche image propres à IPR ; direction initiale du20octobre révisée
+le31octobre : développement flottant intégré, décompression Canon à qualifier,
+LibRaw conservé pour les autres marques.
 
 [ADR-0013](ADR-0013-contrat-import-commun.md) : frontière d'import commune aux
 RAW et aux images développées, métadonnées indépendantes et contrôles partagés.
@@ -48,3 +49,5 @@ RAW et aux images développées, métadonnées indépendantes et contrôles part
 [ADR-0005](ADR-0005-melangeur-huit-bandes-luminance-bornee.md) complète les ADR
 0001/0002/0004 : huit bandes, protection des neutres, luminance bornée, sidecar
 v4 et INI schéma 2 (4 octobre 2026).
+
+[ADR-0021](ADR-0021-socle-edition-beta.md) : socle d'édition bêta — retouches décrites dans le `.ipr`, résultats lourds dans `<photo>.ipr-data/`, historique de 100 étapes conservé, géométrie après l'optique et calques après les réglages, format à en-tête et sections, évolution sans rupture à partir de la stable (1er novembre 2026).

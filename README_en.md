@@ -105,12 +105,11 @@ and the [Light report](docs/validation/analyses/analyse-validation-lumieres-base
 | Dependency | Usage |
 | --- | --- |
 | Qt ≥ 6.8 | Quick/QML interface, Core, Gui and Concurrent |
-| OpenCV | Image computation: `core`, `imgproc`, `imgcodecs` |
 | LibTIFF | Writing the linear DNG |
 | LibRaw ≥ 0.21, optional | CR2/CR3/DNG decoding; `IPR_ENABLE_LIBRAW` option |
 | CMake ≥ 3.21 and a C++17 compiler | Configuration and build |
 
-Qt and OpenCV do not replace a RAW decoder. Without LibRaw, rendered formats
+Qt does not replace a RAW decoder. Without LibRaw, rendered formats
 remain usable, but the current RAW backend is unavailable.
 
 ### Windows
@@ -130,7 +129,6 @@ bash scripts/build-windows.sh --full-tests
 ```
 
 - [Prerequisites, options and targeted tests](docs/architecture/tests-cibles-et-build-windows.md).
-- [OpenCV installation: MSVC/vcpkg or MinGW](docs/installation-opencv-windows.md).
 - [Standalone Windows packaging](docs/architecture/build-windows-standalone.md).
 
 Do not mix MSVC and MinGW libraries. Choose dependencies compatible

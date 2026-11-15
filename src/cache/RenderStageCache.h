@@ -1,9 +1,11 @@
 #ifndef IPR_CACHE_RENDERSTAGECACHE_H
 #define IPR_CACHE_RENDERSTAGECACHE_H
 
+#include "LocalValues.h"
+
 #include <QByteArray>
 
-#include <opencv2/core.hpp>
+#include "Image.h"
 
 #include <array>
 #include <cstdint>
@@ -16,6 +18,8 @@
 // stage and of every stage before it; the entries belong to one source and one
 // pixel scale. At most two outputs are kept (about 34 MB each on the 2048-pixel
 // proxy): the one just before the stage being edited and the tones' one.
+// One additional RGB entry retains the camera render before geometry; it shares
+// the same source/scale identity and is released on clear or a source change.
 class RenderStageCache final
 {
 public:
@@ -25,26 +29,41 @@ public:
     struct Start
     {
         int stage = -1;   // deepest stage resumed from, -1 to render from the source
-        cv::Mat rgb;      // private copy of that stage's output
+        ipr::Image rgb;      // private copy of that stage's output
         std::array<bool, StageCount> keep{};   // outputs to hand to store()
         Keys keys;
         std::uint64_t generation = 0;
     };
 
-    Start begin(const cv::Mat &source, double pixelScale, const Keys &keys);
+    Start begin(const ipr::Image &source, double pixelScale, const Keys &keys);
     // Ignored when the cache was cleared or rebound since begin().
-    void store(const Start &start, int stage, const cv::Mat &rgb);
+    void store(const Start &start, int stage, const ipr::Image &rgb);
+    // Copy of a kept stage output for this source, scale and key; empty otherwise.
+    // Reads only: the keep policy of the renders is left as it is.
+    ipr::Image peek(const ipr::Image &source, double pixelScale, int stage, const QByteArray &key) const;
+    // What the masks add, for this source and scale, read-only for those who get them: a render
+    // that moves another slider does not draw the masks again. One entry, under its own key.
+    bool maskMaps(const ipr::Image &source, double pixelScale, const QByteArray &key, LocalValues::Maps &maps) const;
+    void storeMaskMaps(const ipr::Image &source, double pixelScale, const QByteArray &key, const LocalValues::Maps &maps);
+    // One bounded pre-geometry camera result: moving geometry does not rerun DCP.
+    ipr::Image cameraOutput(const ipr::Image &source, double pixelScale, const QByteArray &key) const;
+    void storeCameraOutput(const ipr::Image &source, double pixelScale, const QByteArray &key, const ipr::Image &rgb);
     void clear();
-    int count() const;
+    int count() const; // kept pipeline stages, excluding the camera and mask entries
 
 private:
-    struct Entry { QByteArray key; cv::Mat rgb; };
+    struct Entry { QByteArray key; ipr::Image rgb; };
 
     mutable std::mutex m_mutex;
-    cv::Mat m_source;   // shallow: its buffer stays alive, so its address identifies it
+    ipr::Image m_source;   // shared: its pixels stay alive, so their address identifies them
     double m_pixelScale = 0.0;
     std::optional<Keys> m_previous;
     std::array<std::optional<Entry>, StageCount> m_entries;
+    std::optional<Entry> m_camera;
+    QByteArray m_maskKey;
+    const void *m_maskSource = nullptr;
+    double m_maskScale = 0.0;
+    LocalValues::Maps m_maskMaps;
     std::uint64_t m_generation = 0;
 };
 

@@ -20,8 +20,10 @@ de franges longitudinales non implémentée.
 | D | Activée | Activée |
 
 Même RAW/DCP/WB/réglages ; modifier seulement ces options. Relever statut de
-profil, export et crop natif à 100 %. Le générateur ne propose pas cette
-matrice : IHM ou test moteur dédié, jamais un identifiant CLI inventé.
+profil, export et crop natif à 100 %. Le groupe `optique` du générateur
+produit A/B pour l'objectif et A/C pour la CA, mais pas D (deux options actives).
+Compléter D dans l'IHM ou un test moteur dédié ; aucun argument CLI combiné
+n'est proposé.
 
 Mesurer courbure/déplacement des lignes, ratio centre/coins d'un aplat,
 séparation des contours R/G/B, bords exposés/remplis et dimensions. Éclairage

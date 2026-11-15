@@ -1,11 +1,22 @@
 #include "ImageImporter.h"
 
+#include "Pixels.h"
+
 #include <QFileInfo>
 #include <QImageReader>
 #include <QRegularExpression>
 #include <cmath>
 
 namespace {
+// The field name of a metadata key, without its namespace ("Exif.Image.Model",
+// "exif:Model" -> "model"), so "LensModel" never answers for "Model".
+QString normalizedMetadataKey(QString key)
+{
+    key = key.mid(key.lastIndexOf(QRegularExpression(QStringLiteral("[.:/]"))) + 1).toCaseFolded();
+    key.remove(QRegularExpression(QStringLiteral("[^a-z0-9]")));
+    return key;
+}
+
 std::optional<double> readWhiteBalanceKelvin(const QImage &image)
 {
     static const QRegularExpression kelvinPattern(
@@ -13,8 +24,7 @@ std::optional<double> readWhiteBalanceKelvin(const QImage &image)
         QRegularExpression::CaseInsensitiveOption);
 
     for (const QString &key : image.textKeys()) {
-        QString normalizedKey = key.toCaseFolded();
-        normalizedKey.remove(QRegularExpression(QStringLiteral("[^a-z0-9]")));
+        const QString normalizedKey = normalizedMetadataKey(key);
         if (normalizedKey != QStringLiteral("whitebalancetemperature") &&
             normalizedKey != QStringLiteral("colortemperature") &&
             normalizedKey != QStringLiteral("temperaturekelvin"))
@@ -31,27 +41,18 @@ std::optional<double> readWhiteBalanceKelvin(const QImage &image)
     return std::nullopt;
 }
 
-QString normalizedMetadataKey(QString key)
-{
-    key = key.toCaseFolded();
-    key.remove(QRegularExpression(QStringLiteral("[^a-z0-9]")));
-    return key;
-}
-
+// The first non-empty value among the names, in their order of preference.
 QString readMetadataText(const QImage &image, const QStringList &names)
 {
-    QStringList normalizedNames;
-    for (const QString &name : names)
-        normalizedNames.append(normalizedMetadataKey(name));
-
-    for (const QString &key : image.textKeys()) {
-        const QString normalizedKey = normalizedMetadataKey(key);
-        for (const QString &name : normalizedNames) {
-            if (normalizedKey == name || normalizedKey.endsWith(name)) {
-                const QString value = image.text(key).trimmed();
-                if (!value.isEmpty())
-                    return value;
-            }
+    const QStringList keys = image.textKeys();
+    for (const QString &name : names) {
+        const QString wanted = normalizedMetadataKey(name);
+        for (const QString &key : keys) {
+            if (normalizedMetadataKey(key) != wanted)
+                continue;
+            const QString value = image.text(key).trimmed();
+            if (!value.isEmpty())
+                return value;
         }
     }
     return {};
@@ -105,6 +106,17 @@ std::optional<double> readMetadataNumber(const QImage &image,
 }
 
 namespace ImageImport {
+std::optional<double> referenceWhiteBalanceKelvin(const QString &fileName)
+{
+    if (RawDecoder::supportedExtensions().contains(QFileInfo(fileName).suffix().toLower()))
+        return RawDecoder::asShotWhiteBalanceKelvin(fileName);
+    QImageReader reader(fileName);
+    QImage keys(1, 1, QImage::Format_RGB32);   // carries the text keys only (a null image keeps none)
+    for (const QString &key : reader.textKeys())
+        keys.setText(key, reader.text(key));
+    return readWhiteBalanceKelvin(keys);
+}
+
 Result load(const QString &fileName, const RawDecoder::Options &rawOptions)
 {
     Result result;
@@ -174,12 +186,12 @@ bool complete(Result &result)
     result.warnings.clear();
     const auto &image = result.image;
     bool valid = !image.isNull() && image.colorSpace == ColorPipeline::workingColorSpace() &&
-        image.linearRgba.dims == 2 && image.linearRgba.type() == CV_32FC4 &&
-        cv::checkRange(image.linearRgba, true);
+        image.linearRgba.depth() == ipr::Depth::F32 && image.linearRgba.channels() == 4 &&
+        ipr::allFinite(image.linearRgba);
     if (valid) {
-        for (int y=0; y<image.linearRgba.rows && valid; ++y) {
-            const auto *row = image.linearRgba.ptr<cv::Vec4f>(y);
-            for (int x=0; x<image.linearRgba.cols; ++x)
+        for (int y=0; y<image.linearRgba.height() && valid; ++y) {
+            const auto *row = image.linearRgba.row<ipr::Vec4f>(y);
+            for (int x=0; x<image.linearRgba.width(); ++x)
                 if (row[x][3] < 0.f || row[x][3] > 1.f) { valid=false; break; }
         }
     }

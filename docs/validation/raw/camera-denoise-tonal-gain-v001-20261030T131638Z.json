@@ -1,0 +1,3387 @@
+{
+  "schema_version": 1,
+  "created_utc": "20261030T131638Z",
+  "study": "tonal_noise_gain_and_residual_reuse",
+  "revision": "3d62624e71a59e46143e78dd3d34590dbb9a5859",
+  "delivered_reference": "b19b4c3 / v0.1.63-alpha",
+  "tool_sha256": "ee255f6219e60ca66edaf8c875b099e2dbafab6bd13e76086701ac9963642910",
+  "sources": {
+    "tests/raw_bench/tonal_gain_probe.cpp": {
+      "sha256": "ad4e3f561e5fca95f62fb13bf98573db89d134ece458370688a9a7357ee82766",
+      "text": "#include \"CameraDenoise.h\"\n#include \"Contrast.h\"\n#include \"ToneRecovery.h\"\n#include \"WorkingColorSpace.h\"\n#include <QCoreApplication>\n#include <QJsonArray>\n#include <QJsonDocument>\n#include <QJsonObject>\n#include <opencv2/core.hpp>\n#include <algorithm>\n#include <array>\n#include <cmath>\n#include <iostream>\n#include <stdexcept>\n\nnamespace {\nvoid require(bool ok,const char *why){if(!ok)throw std::runtime_error(why);}\nstruct Recipe {const char *name;double ev;int contrast;float shadows;};\ncv::Mat transform(const cv::Mat &source,const Recipe &r)\n{\n    cv::Mat result=source*float(std::exp2(r.ev));\n    Contrast::apply(result,r.contrast);\n    if(r.shadows!=0)ToneRecovery::apply(result,{r.shadows,0,0,0},ToneRecovery::typicalStatistics());\n    require(cv::checkRange(result),\"Nonfinite tone output\");return result;\n}\ndouble display(const cv::Vec3f &rgb)\n{\n    const auto s=WorkingColor::toSrgb()*cv::Vec3d(rgb);\n    return .2126*std::clamp(WorkingColor::srgbEncode(s[0]),0.,1.)+\n           .7152*std::clamp(WorkingColor::srgbEncode(s[1]),0.,1.)+\n           .0722*std::clamp(WorkingColor::srgbEncode(s[2]),0.,1.);\n}\ncv::Vec3f sample(double y,const Recipe &r)\n{\n    cv::Mat source(1,1,CV_32FC3,cv::Scalar(y,y,y));return transform(source,r).at<cv::Vec3f>(0,0);\n}\nQJsonObject residualTest()\n{\n    cv::Mat source(128,128,CV_32FC3);cv::RNG rng(20261030);\n    for(int y=0;y<128;++y)for(int x=0;x<128;++x){auto &v=source.at<cv::Vec3f>(y,x);\n        for(int c=0;c<3;++c)v[c]=float(.01*(c+1)+rng.gaussian(.003));}\n    auto maximum=source;require(CameraDenoise::apply(maximum,{100,100},{}),\"Maximum denoise failed\");\n    QJsonArray results;\n    for(int amount:{1,25,50,85,100}){\n        CameraDenoise::Settings settings;require(CameraDenoise::settingsFromAmount(amount,settings),\"Invalid master mapping\");\n        auto actual=source;require(CameraDenoise::apply(actual,settings,{}),\"Mapped denoise failed\");\n        auto expected=source.clone();\n        for(int y=0;y<128;++y)for(int x=0;x<128;++x){\n            const auto d=maximum.at<cv::Vec3f>(y,x)-source.at<cv::Vec3f>(y,x);\n            const float i=(.25f*d[0]+.5f*d[1]+.25f*d[2])*settings.luminance/100.f;\n            const float co=.5f*(d[0]-d[2])*settings.chrominance/100.f;\n            const float cg=(d[1]-.5f*(d[0]+d[2]))*settings.chrominance/100.f;\n            expected.at<cv::Vec3f>(y,x)+=cv::Vec3f(i+co-.5f*cg,i+.5f*cg,i-co-.5f*cg);\n        }\n        const double error=cv::norm(expected,actual,cv::NORM_INF);\n        require(error<1e-6,\"Residual rescaling is not sufficiently close in this witness\");\n        results.append(QJsonObject{{\"master\",amount},{\"luminance\",settings.luminance},\n            {\"chrominance\",settings.chrominance},{\"max_abs_error\",error}});\n    }\n    return {{\"witness\",\"128px Gaussian camera RGB, same active five scales, global strengths only\"},\n        {\"cases\",results},{\"limits\",\"Not bit-exact, not real image qualification, no guarantee for advanced colour=0 or spatial weights; no cache implemented\"}};\n}\n}\nint main(int argc,char **argv)\n{\n    QCoreApplication app(argc,argv);cv::setNumThreads(1);\n    try{\n        const Recipe neutral{\"neutral\",0,0,0};\n        const std::array<Recipe,6> recipes{{neutral,{\"exposure2\",2,0,0},{\"exposure3\",3,0,0},\n            {\"contrast50\",0,50,0},{\"shadows100\",0,0,1},{\"exposure2_shadows100\",2,0,1}}};\n        QJsonArray all;\n        for(const auto &r:recipes){QJsonArray points,monteCarlo;\n            for(int k=0;k<64;++k){\n                const double y=std::exp2(-16.+15.9*k/63.);\n                const double eps=std::max(1e-8,y*1e-3);\n                const auto value=sample(y,r),plus=sample(y+eps,r),minus=sample(y-eps,r);\n                const double linear=(WorkingColor::luminance(plus)-WorkingColor::luminance(minus))/(2*eps);\n                const double encoded=(display(plus)-display(minus))/(2*eps);\n                const double reference=(display(sample(y+eps,neutral))-display(sample(y-eps,neutral)))/(2*eps);\n                points.append(QJsonObject{{\"input_y\",y},{\"output_y\",WorkingColor::luminance(value)},\n                    {\"brightness_ratio\",WorkingColor::luminance(value)/y},{\"linear_derivative\",linear},\n                    {\"display_derivative\",encoded},{\"display_noise_gain_to_neutral\",reference>1e-8?QJsonValue(std::abs(encoded/reference)):QJsonValue(QJsonValue::Null)}});\n            }\n            for(double y:{.001,.01,.1,.3}){\n                const double sigma=y*.005,eps=std::max(1e-8,y*1e-3);\n                cv::Mat source(1,2048,CV_32FC3);cv::RNG rng(43821);\n                for(int k=0;k<1024;++k){const double n=rng.gaussian(sigma);\n                    source.at<cv::Vec3f>(0,2*k)=cv::Vec3f::all(float(y+n));\n                    source.at<cv::Vec3f>(0,2*k+1)=cv::Vec3f::all(float(y-n));}\n                const auto out=transform(source,r);double sum=0,squared=0;\n                for(int k=0;k<2048;++k){const double v=display(out.at<cv::Vec3f>(0,k));sum+=v;squared+=v*v;}\n                const double actual=std::sqrt(std::max(0.,(squared-sum*sum/2048)/2047));\n                const double derivative=(display(sample(y+eps,r))-display(sample(y-eps,r)))/(2*eps);\n                const double predicted=std::abs(derivative)*sigma;\n                monteCarlo.append(QJsonObject{{\"input_y\",y},{\"input_sigma\",sigma},{\"predicted_display_sigma\",predicted},\n                    {\"measured_display_sigma\",actual},{\"ratio_measured_to_predicted\",predicted>1e-9?QJsonValue(actual/predicted):QJsonValue(QJsonValue::Null)}});\n            }\n            all.append(QJsonObject{{\"recipe\",r.name},{\"ev\",r.ev},{\"contrast\",r.contrast},{\"shadows\",r.shadows},\n                {\"points\",points},{\"small_noise_checks\",monteCarlo}});\n        }\n        const QJsonObject result{{\"tonal_transfer\",all},{\"residual_scaling\",residualTest()},\n            {\"scope\",\"Neutral grey Rec2020, exposure AFTER profile (raster-like), contrast and shadows actual modules with typical statistics; NOT full RAW DCP chain or chroma/correlated-noise model\"}};\n        std::cout<<QJsonDocument(result).toJson(QJsonDocument::Compact).constData()<<'\\n';\n    }catch(const std::exception &e){std::cerr<<e.what()<<'\\n';return 1;}return 0;\n}\n"
+    },
+    "tests/raw_bench/study_tonal_noise_gain.py": {
+      "sha256": "e301dde4369f3b0fa4ccdad80ff23d3c4b25c34db77148b4eeb9774a4fc0a521",
+      "text": "\"\"\"Bench-only tonal derivative and residual reuse feasibility; no RAW rendering or local denoise policy.\"\"\"\nimport argparse\nfrom datetime import datetime, timezone\nimport json\nimport os\nfrom pathlib import Path\nimport subprocess\nfrom audit_dark_mean import sha256\n\n\ndef main():\n    p=argparse.ArgumentParser(description=__doc__)\n    p.add_argument('--tool',type=Path,required=True)\n    p.add_argument('--runtime-dir',type=Path,action='append',required=True)\n    args=p.parse_args();root=Path(__file__).resolve().parents[2]\n    env=os.environ.copy();env['PATH']=os.pathsep.join(str(v.resolve()) for v in args.runtime_dir)+os.pathsep+env.get('PATH','')\n    stamp=datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')\n    sources=['tests/raw_bench/tonal_gain_probe.cpp','tests/raw_bench/study_tonal_noise_gain.py',\n        'src/core/Contrast.cpp','src/core/ToneRecovery.cpp','src/core/ToneStatistics.cpp','src/raw/CameraDenoise.cpp']\n    proof=dict(schema_version=1,created_utc=stamp,study='tonal_noise_gain_and_residual_reuse',\n        revision=subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip(),\n        delivered_reference='b19b4c3 / v0.1.63-alpha',tool_sha256=sha256(args.tool),\n        sources={name:dict(sha256=sha256(root/name),text=(root/name).read_text(encoding='utf-8')) for name in sources},\n        limits=['Neutral-grey transfer only, typical scene statistics, no DCP, no spatial/correlated chroma model.',\n            'RAW exposure precedes the profile curve: these raster-like transfer factors are not full RAW factors.',\n            'First-order noise propagation needs local Jacobian and covariance in real RGB pipeline.',\n            'Residual reuse checked on one small synthetic image, not bit-exact or a production cache qualification.',\n            'No tone-aware weights applied; no benefit, halos, preview latency, full image budget or cache RAM validated.'])\n    try:\n        result=subprocess.run([str(args.tool.resolve())],cwd=root,env=env,capture_output=True,text=True,\n            encoding='utf-8',errors='replace',timeout=120)\n        proof['command']=dict(returncode=result.returncode,stderr=result.stderr)\n        if result.returncode:\n            proof['command']['stdout']=result.stdout\n            raise RuntimeError('Native tonal study failed')\n        proof['measurements']=json.loads(result.stdout)\n        proof['verdict']='measured_feasibility_not_production_or_quality_validation'\n    except Exception as exc:\n        proof['error']=f'{type(exc).__name__}: {exc}'\n        proof['verdict']='fail'\n    output=root/'docs/validation/raw'/f'camera-denoise-tonal-gain-v001-{stamp}.json'\n    with output.open('x',encoding='utf-8') as handle:\n        json.dump(proof,handle,ensure_ascii=False,indent=2,allow_nan=False)\n    print(output,proof['verdict'],proof.get('error',''))\n    return int(proof['verdict']=='fail')\n\n\nif __name__=='__main__':\n    raise SystemExit(main())\n"
+    },
+    "src/core/Contrast.cpp": {
+      "sha256": "8438dda1beeec6ca2f0fe9fcab397579c9b466a993a6d15e774c9c3b7f65cc92",
+      "text": "#include \"Contrast.h\"\n\n#include <cmath>\n\nnamespace Contrast {\nnamespace {\nconstexpr float floorEv = -16.0f;\n\n// Position in the 16 EV log domain below white, 0 at the floor, 1 at white.\nfloat encode(float value) { return (std::log2(value) - floorEv) / -floorEv; }\n\nfloat curve(float norm, float amount)\n{\n    constexpr float pivot = 0.32f;\n    constexpr float positiveStrength = 0.60f, negativeStrength = 0.45f * 1.08f;\n    const float floorValue = std::exp2(floorEv);\n    if (norm <= floorValue || norm >= 1.0f) return norm;\n    const float v0 = encode(pivot), v = encode(norm);\n    const float g = std::exp((amount > 0.0f ? positiveStrength : negativeStrength) * amount);\n    const float out = v <= v0\n        ? v0 * std::pow(v / v0, g)\n        : 1.0f - (1.0f - v0) * std::pow((1.0f - v) / (1.0f - v0), g);\n    return std::exp2(floorEv + out * -floorEv);\n}\n}\n\nvoid apply(cv::Mat &linearRgb, int contrast)\n{\n    if (contrast == 0) return;\n    const float amount = static_cast<float>(contrast) / 100.0f;\n    for (int y = 0; y < linearRgb.rows; ++y) {\n        cv::Vec3f *row = linearRgb.ptr<cv::Vec3f>(y);\n        for (int x = 0; x < linearRgb.cols; ++x)\n            for (int c = 0; c < 3; ++c)\n                row[x][c] = curve(row[x][c], amount);\n    }\n}\n}\n"
+    },
+    "src/core/ToneRecovery.cpp": {
+      "sha256": "a62de198fc39b77ec12219761700368bbb31bad746bd2380187df93e076507cf",
+      "text": "#include \"ToneRecovery.h\"\n\n#include \"ToneRecoveryHighlights.h\"\n#include \"ToneRecoveryModel.h\"\n#include \"WorkingColorSpace.h\"\n\n#include <algorithm>\n#include <cmath>\n#include <numeric>\n\nnamespace ToneRecovery {\nstatic_assert(Highlights::BinCount == HighlightBins, \"Highlights tables match Adaptation\");\nstatic_assert(Highlights::StatisticCount == Model::StatisticCount, \"Highlights use the measured statistics\");\n\nnamespace {\n// Model::Controls index of Shadows (0), Blacks (1) or Whites (3), by sign.\nint modelIndex(int control, bool lifting)\n{\n    return (control == 3 ? 4 : 2 * control) + (lifting ? 1 : 0);\n}\n\n// Interpolation between the four slider levels (linear from 0 below the first),\n// of a lift read at one input by `at(level)`.\ntemplate <typename Read>\nfloat levelled(float amount, Read at)\n{\n    const float level = std::min(std::abs(amount), 1.0f);\n    if (level <= Model::Levels[0]) return at(0) * level / Model::Levels[0];\n    int l = 0;\n    while (l < 2 && level > Model::Levels[l + 1]) ++l;\n    const float u = (level - Model::Levels[l]) / (Model::Levels[l + 1] - Model::Levels[l]);\n    const float low = at(l);\n    return low + (at(l + 1) - low) * u;\n}\n\n// Highlights: linear between bin centres; below the first bin the lift fades\n// to 0 over 2 EV, as the other controls do, so the noise floor stays dark. The\n// sign follows the slider: measurement noise of the reference medians never\n// makes a positive Highlights darken a tone, or a negative one brighten it.\nfloat highlightsLift(float amount, float x, const Adaptation &adaptation)\n{\n    const bool lifting = amount > 0.0f;\n    const auto &tables = adaptation.highlights[lifting ? 1 : 0];\n    const float position = (x - Highlights::FirstBinEv) / Highlights::BinEv - 0.5f;\n    const float fade = std::clamp((x - Highlights::FirstBinEv + 2.0f) / 2.0f, 0.0f, 1.0f);\n    const float p = std::clamp(position, 0.0f, float(HighlightBins - 1));\n    const int i = std::min(int(p), HighlightBins - 2);\n    const float t = p - float(i);\n    const float value = fade * levelled(amount, [&](int level) {\n        const auto &table = tables[size_t(level)];\n        return table[size_t(i)] + (table[size_t(i) + 1] - table[size_t(i)]) * t;\n    });\n    return lifting ? std::max(value, 0.0f) : std::min(value, 0.0f);\n}\n}\n\nStatistics typicalStatistics()\n{\n    Statistics s;\n    for (int i = 0; i < Model::StatisticCount; ++i) s.log2Luminance[size_t(i)] = Model::TypicalStatistics[i];\n    return s;\n}\n\nAdaptation adapt(const Statistics &statistics)\n{\n    Adaptation a;\n    for (int i = 0; i < 6; ++i) {\n        const auto &c = Model::Controls[i];\n        if (c.gainStatisticCount == 0) continue;\n        float logGain = c.gainCoefficients[0];\n        for (int k = 0; k < c.gainStatisticCount; ++k)\n            logGain += c.gainCoefficients[k + 1] * statistics.log2Luminance[size_t(c.gainStatistics[k])];\n        a.gain[size_t(i)] = std::exp(std::clamp(logGain, c.logGainMin, c.logGainMax));\n    }\n    // Highlights: mean curves of the nearest reference scenes, distance on the\n    // standardised statistics.\n    float distance[Highlights::SceneCount];\n    for (int s = 0; s < Highlights::SceneCount; ++s) {\n        float d = 0.0f;\n        for (int k = 0; k < Highlights::StatisticCount; ++k) {\n            const float z = (statistics.log2Luminance[size_t(k)] - Highlights::StatisticMean[k])\n                / Highlights::StatisticScale[k] - Highlights::Scenes[s].position[k];\n            d += z * z;\n        }\n        distance[s] = d;\n    }\n    int order[Highlights::SceneCount];\n    std::iota(order, order + Highlights::SceneCount, 0);\n    std::partial_sort(order, order + Highlights::Neighbours, order + Highlights::SceneCount,\n                      [&](int l, int r) { return distance[l] < distance[r] || (distance[l] == distance[r] && l < r); });\n    for (int n = 0; n < Highlights::Neighbours; ++n)\n        for (int sign = 0; sign < 2; ++sign)\n            for (int level = 0; level < 4; ++level)\n                for (int b = 0; b < HighlightBins; ++b)\n                    a.highlights[size_t(sign)][size_t(level)][size_t(b)] +=\n                        Highlights::Scenes[order[n]].lift[sign][level][b] / float(Highlights::Neighbours);\n    return a;\n}\n\nfloat lift(int control, float amount, float x, const Adaptation &adaptation)\n{\n    if (amount == 0.0f) return 0.0f;\n    if (control == 2) return highlightsLift(amount, x, adaptation);\n    const int index = modelIndex(control, amount > 0.0f);\n    const auto &c = Model::Controls[index];\n    const float knot = std::clamp(x - Model::FirstKnotEv, 0.0f, float(Model::KnotCount - 1));\n    const int k = std::min(int(knot), Model::KnotCount - 2);\n    const float t = knot - float(k);\n    return levelled(amount, [&](int level) {\n        return c.lift[level][k] + (c.lift[level][k + 1] - c.lift[level][k]) * t;\n    }) * adaptation.gain[size_t(index)];\n}\n\nfloat shoulder(float y, float out, float knee)\n{\n    if (out <= y || out <= knee) return out;\n    const float base = std::max(y, knee);\n    return base + (1.0f - base) * std::tanh((out - base) / (1.0f - base));\n}\n\n// Channels roll off near white through the shoulder, as Lightroom does: a hard\n// cap at 1 clipped about ten times more channels than Lightroom with Whites\n// +25. The luminance lift is capped at white; apply() then fits the colour.\nfloat transfer(float y, const Amounts &a, const Adaptation &g, bool perChannel)\n{\n    if (y <= 0.0f || y >= 1.0f) return y;\n    const float x = std::log2(std::max(y, std::exp2(Model::FirstKnotEv)));\n    // Whites act per channel when lifting and on luminance when lowering: in\n    // Lightroom's renders, negative Whites keep colour ratios (saturation gap\n    // -0.026 vs -0.040 per channel at -100), positive Whites do not.\n    const float whitesChannel = a.whites > 0 ? a.whites : 0.0f;\n    const float whitesLuminance = a.whites < 0 ? a.whites : 0.0f;\n    const float shift = perChannel ? lift(1, a.blacks, x, g) + lift(3, whitesChannel, x, g)\n                                   : lift(0, a.shadows, x, g) + lift(2, a.highlights, x, g)\n                                         + lift(3, whitesLuminance, x, g);\n    const float out = y * std::exp2(shift);\n    // Luminance lifts roll off from 0.80 and stay just below white; the colour\n    // is then fitted by brightenTowardWhite().\n    return perChannel ? std::min(1.0f, shoulder(y, out)) : std::min(0.9999f, shoulder(y, out, 0.80f));\n}\n\n// The luminance is reached in full, and a colour that would leave the gamut is\n// pulled toward white of that luminance just enough for its largest channel to\n// stay in the soft shoulder. Lightroom whitens bright colours this way\n// (Highlights +100, top quarter saturation 0.20 vs 0.42 when the colour was\n// preserved and the lift held back, on 6V1A9950). Colours with a channel\n// already at or above 1 (headroom) are left untouched.\nvoid brightenTowardWhite(float rgb[3], float y, float target)\n{\n    const float peak = std::max({rgb[0], rgb[1], rgb[2]});\n    if (peak >= 1.0f || y <= 0.0f || target <= y) return;\n    const float scale = target / y;\n    float m = 0.0f;\n    for (int c = 0; c < 3; ++c) { rgb[c] *= scale; m = std::max(m, rgb[c]); }\n    // 0.995 linear is sRGB code 254: a lifted colour nears white but does not\n    // clip on an 8-bit display (tanh would also round to 1 in float).\n    const float fit = std::min(shoulder(peak, m), 0.995f);\n    if (m <= fit) return;\n    const float t = std::clamp((fit - target) / std::max(m - target, 1e-9f), 0.0f, 1.0f);\n    for (int c = 0; c < 3; ++c) rgb[c] = target + t * (rgb[c] - target);\n}\n\n// Any linear RGB with the same white and luminance weights. Dark tones keep\n// their channel ratios; from y = 0.3 to 0.8 and above, the colour's absolute\n// chroma is kept and then amplified in proportion to the darkening (factor 2.5\n// at full), as Lightroom recovers bright skies: with ratios only, Highlights\n// -100 left bright tones 0.20 less saturated than Lightroom (0.12 now; Whites\n// -100 0.08 -> 0.01). Falls back to ratios if a channel would go negative.\nvoid darkenKeepingColour(float rgb[3], float y, float target)\n{\n    if (y <= 0.0f || target >= y) return;\n    constexpr float start = 0.3f, full = 0.8f, amplitude = 2.5f;\n    const float ratio = target / y;\n    const float alpha = amplitude * std::clamp((y - start) / (full - start), 0.0f, 1.0f);\n    const float factor = (1.0f - alpha) * ratio + alpha;\n    float out[3];\n    for (int c = 0; c < 3; ++c) {\n        out[c] = target + factor * (rgb[c] - y);\n        if (out[c] < 0.0f) { for (int k = 0; k < 3; ++k) rgb[k] *= ratio; return; }\n    }\n    // The amplified colour never crosses white unless the channel already did.\n    for (int c = 0; c < 3; ++c) rgb[c] = std::min(out[c], std::max(rgb[c], 0.9999f));\n}\n\nCurve::Curve(const Amounts &amounts, const Adaptation &adaptation)\n    : amounts_(amounts), adaptation_(adaptation),\n      luminanceIdentity_(amounts.shadows == 0 && amounts.highlights == 0 && amounts.whites >= 0),\n      channelIdentity_(amounts.blacks == 0 && amounts.whites <= 0)\n{\n    sample(luminance_, false);\n    sample(channel_, true);\n}\n\nfloat Curve::luminance(float y) const { return luminanceIdentity_ ? y : read(luminance_, y, false); }\nfloat Curve::channel(float v) const { return channelIdentity_ ? v : read(channel_, v, true); }\n\nvoid Curve::sample(Table &table, bool perChannel) const\n{\n    float previous = 0.0f;\n    for (int i = 0; i <= Samples; ++i) {\n        // The last sample sits just below white: 1 itself is headroom.\n        const float y = i == Samples ? std::nextafter(1.0f, 0.0f)\n                                     : std::exp2(-SpanEv * (1.0f - float(i) / Samples));\n        previous = std::max(previous, transfer(y, amounts_, adaptation_, perChannel));\n        table[size_t(i)] = previous;\n    }\n}\n\nfloat Curve::read(const Table &table, float y, bool perChannel) const\n{\n    if (y <= 0.0f || y >= 1.0f) return y;\n    const float position = (std::log2(y) + SpanEv) / SpanEv * Samples;\n    if (position <= 0.0f) return std::min(transfer(y, amounts_, adaptation_, perChannel), table[0]);\n    const int i = std::min(int(position), Samples - 1);\n    const float f = position - float(i);\n    return table[size_t(i)] + (table[size_t(i) + 1] - table[size_t(i)]) * f;\n}\n\n// Shadows, Highlights and negative Whites scale RGB by a luminance ratio: a\n// brightening reaches its luminance and pulls a colour that would leave the\n// sRGB delivery gamut toward white; a darkening keeps, then amplifies, the\n// colour of bright tones. Blacks and positive Whites then act on each linear\n// sRGB channel, where Lightroom's curves were measured: in the wider Rec.2020,\n// Blacks -100 oversaturated colours (0.99 vs 0.92 on 6V1A0037).\nvoid apply(cv::Mat &image, const Amounts &amounts, const Statistics &statistics)\n{\n    if (identity(amounts)) return;\n    const Curve toneCurve(amounts, adapt(statistics));\n    for (int y = 0; y < image.rows; ++y) {\n        cv::Vec3f *row = image.ptr<cv::Vec3f>(y);\n        for (int x = 0; x < image.cols; ++x) {\n            cv::Vec3f &pixel = row[x];\n            if (!toneCurve.luminanceIdentity()) {\n                const float luminance = WorkingColor::nonNegativeLuminance(pixel);\n                const float target = toneCurve.luminance(luminance);\n                if (target > luminance && luminance > 0.0f) {\n                    const cv::Vec3d delivery = WorkingColor::toSrgb() * cv::Vec3d(pixel);\n                    float rgb[3] = {float(delivery[0]), float(delivery[1]), float(delivery[2])};\n                    brightenTowardWhite(rgb, luminance, target);\n                    pixel = cv::Vec3f(WorkingColor::fromSrgb() * cv::Vec3d(rgb[0], rgb[1], rgb[2]));\n                } else if (target < luminance) {\n                    float rgb[3] = {pixel[0], pixel[1], pixel[2]};\n                    darkenKeepingColour(rgb, luminance, target);\n                    pixel = cv::Vec3f(rgb[0], rgb[1], rgb[2]);\n                }\n            }\n            if (!toneCurve.channelIdentity()) {\n                cv::Vec3d srgb = WorkingColor::toSrgb() * cv::Vec3d(pixel);\n                for (int c = 0; c < 3; ++c) srgb[c] = toneCurve.channel(float(srgb[c]));\n                pixel = cv::Vec3f(WorkingColor::fromSrgb() * srgb);\n            }\n        }\n    }\n}\n}\n"
+    },
+    "src/core/ToneStatistics.cpp": {
+      "sha256": "4ce59e5eea5330c2273de3736f1cb4602d294ee4169fd6e0287bb8eb3f5a3533",
+      "text": "#include \"ToneStatistics.h\"\n\n#include \"WorkingColorSpace.h\"\n\n#include <algorithm>\n#include <cmath>\n\nnamespace ToneRecovery {\nStatistics measure(std::vector<float> log2Luminance)\n{\n    Statistics s;\n    if (log2Luminance.empty()) return s;\n    double sum = 0.0;\n    for (float v : log2Luminance) sum += v;\n    s.log2Luminance[0] = float(sum / double(log2Luminance.size()));\n    const float quantiles[6] = {0.01f, 0.05f, 0.10f, 0.90f, 0.95f, 0.999f};\n    for (int i = 0; i < 6; ++i) {\n        const auto k = std::min(log2Luminance.size() - 1,\n                                size_t(quantiles[i] * float(log2Luminance.size() - 1) + 0.5f));\n        std::nth_element(log2Luminance.begin(), log2Luminance.begin() + std::ptrdiff_t(k), log2Luminance.end());\n        s.log2Luminance[size_t(i) + 1] = log2Luminance[k];\n    }\n    return s;\n}\n\nStatistics measure(const cv::Mat &linearRgba)\n{\n    const int stride = std::max(1, int(std::sqrt(double(linearRgba.total()) / 1.0e6)));\n    std::vector<float> values;\n    values.reserve(linearRgba.total() / size_t(stride * stride) + linearRgba.rows);\n    for (int y = 0; y < linearRgba.rows; y += stride) {\n        const auto *row = linearRgba.ptr<cv::Vec4f>(y);\n        for (int x = 0; x < linearRgba.cols; x += stride) {\n            const cv::Vec3f rgb(row[x][0], row[x][1], row[x][2]);\n            values.push_back(std::log2(std::max(WorkingColor::luminance(rgb), 0x1p-20f)));\n        }\n    }\n    return measure(std::move(values));\n}\n}\n"
+    },
+    "src/raw/CameraDenoise.cpp": {
+      "sha256": "1a8603e8da20f3a87da4861301ee38568278bed0e68da03f8e618ad6becdab47",
+      "text": "#include \"CameraDenoise.h\"\n\n#include <algorithm>\n#include <array>\n#include <atomic>\n#include <cmath>\n#include <cstddef>\n#include <set>\n#include <thread>\n#include <vector>\n\nnamespace CameraDenoise {\nnamespace {\nconstexpr int Levels = 5;\n// Camera colour fluctuations may span wider regions than fine intensity noise.\n// These extra scales do not turn into extra luminance smoothing.\nconstexpr int LuminanceLevels = 3;\nconstexpr int TileSize = 256;\nconstexpr float MadNormal = 0.67448975f;\nconstexpr float Kernel[5] = {.0625f, .25f, .375f, .25f, .0625f};\n\nstruct Noise\n{\n    cv::Vec3f sigma{};\n    cv::Matx33f inverseCorrelation = cv::Matx33f::eye();\n    float expectedJointEnergy = 0;\n};\n\nconstexpr int CurveSamples = 128;\nstruct NoiseCurve\n{\n    std::array<Noise, CurveSamples> values;\n    Noise pooled;\n    float low = 0, high = 0;\n    float transition = 0;\n    bool valid = false;\n    bool pooledValid = false;\n    bool constant = true;\n};\nusing Energy = cv::Vec<float, 8>; // Three energies, joint, three expectations, joint expectation.\n\nstruct Pyramid\n{\n    std::array<cv::Mat, Levels> detail;\n    cv::Mat signal; // Smoothed intensity guide; never the noisy detail itself.\n};\n\nint reflect(int x, int length)\n{\n    if (length == 1) return 0;\n    while (x < 0 || x >= length) x = x < 0 ? -x : 2 * length - 2 - x;\n    return x;\n}\n\nbool validContext(const Context &c)\n{\n    if (!std::isfinite(c.iso) || c.iso < 0 ||\n        !std::isfinite(c.pixelScale) || c.pixelScale <= 0 || c.pixelScale > 1)\n        return false;\n    return true;\n}\n\ncv::Vec3f opponent(const cv::Vec3f &x)\n{\n    return {.25f * x[0] + .5f * x[1] + .25f * x[2],\n            .5f * x[0] - .5f * x[2], x[1] - .5f * x[0] - .5f * x[2]};\n}\n\n// All filtering loops are local to this translation unit; no nested OpenCV pool.\nbool blur(const cv::Mat &source, cv::Mat &output, int step,\n          const std::function<bool()> &stop)\n{\n    cv::Mat horizontal(source.size(), CV_32FC3);\n    output.create(source.size(), CV_32FC3);\n    for (int y = 0; y < source.rows; ++y) {\n        if ((y & 15) == 0 && stop()) return false;\n        const auto *in = source.ptr<cv::Vec3f>(y);\n        auto *out = horizontal.ptr<cv::Vec3f>(y);\n        for (int x = 0; x < source.cols; ++x) {\n            cv::Vec3f value{};\n            for (int k = -2; k <= 2; ++k) value += in[reflect(x + k * step, source.cols)] * Kernel[k + 2];\n            out[x] = value;\n        }\n    }\n    for (int y = 0; y < source.rows; ++y) {\n        if ((y & 15) == 0 && stop()) return false;\n        auto *out = output.ptr<cv::Vec3f>(y);\n        for (int x = 0; x < source.cols; ++x) {\n            cv::Vec3f value{};\n            for (int k = -2; k <= 2; ++k) value += horizontal.ptr<cv::Vec3f>(reflect(y + k * step, source.rows))[x] * Kernel[k + 2];\n            out[x] = value;\n        }\n    }\n    return true;\n}\n\nbool pyramid(cv::Mat current, Pyramid &out, const std::array<int, Levels> &steps,\n             const std::function<bool()> &stop)\n{\n    for (int level = 0; level < Levels; ++level) {\n        if (steps[std::size_t(level)] == 0) break;\n        cv::Mat base;\n        if (!blur(current, base, steps[std::size_t(level)], stop)) return false;\n        if (level == 0) out.signal.create(base.size(), CV_32F);\n        auto &detail = out.detail[std::size_t(level)]; detail.create(current.size(), CV_32FC3);\n        for (int y = 0; y < current.rows; ++y) {\n            if ((y & 15) == 0 && stop()) return false;\n            const auto *a = current.ptr<cv::Vec3f>(y), *b = base.ptr<cv::Vec3f>(y);\n            auto *d = detail.ptr<cv::Vec3f>(y);\n            for (int x = 0; x < current.cols; ++x) {\n                d[x] = a[x] - b[x];\n                if (level == 0) out.signal.at<float>(y,x) = b[x][0];\n            }\n        }\n        current = std::move(base);\n    }\n    return true;\n}\n\ncv::Mat patch(const cv::Mat &source, const cv::Rect &core, int margin)\n{\n    cv::Mat out(core.height + 2 * margin, core.width + 2 * margin, CV_32FC3);\n    for (int y = 0; y < out.rows; ++y) {\n        const auto *in = source.ptr<cv::Vec3f>(reflect(core.y + y - margin, source.rows));\n        auto *row = out.ptr<cv::Vec3f>(y);\n        for (int x = 0; x < out.cols; ++x)\n            row[x] = opponent(in[reflect(core.x + x - margin, source.cols)]);\n    }\n    return out;\n}\n\nfloat median(std::vector<float> values)\n{\n    if (values.empty()) return 0;\n    const auto middle = values.begin() + std::ptrdiff_t(values.size() / 2);\n    std::nth_element(values.begin(), middle, values.end());\n    const float upper = *middle;\n    return values.size() % 2 ? upper : .5f * upper + .5f * *std::max_element(values.begin(), middle);\n}\n\nstruct PatchNoise\n{\n    cv::Vec3f center{}, sigma{};\n    std::vector<cv::Vec3f> samples;\n    double score = 0;\n    float signal = 0;\n    float signalUncertainty = 0;\n};\n\nbool coherent(const PatchNoise &item, int channel, int width, int height, int lag)\n{\n    if (lag >= width || lag >= height || item.sigma[channel] <= 0) return false;\n    const auto correlation = [&](bool horizontal) {\n        double ab = 0, aa = 0, bb = 0;\n        for (int y = 0; y < height - (horizontal ? 0 : lag); ++y)\n            for (int x = 0; x < width - (horizontal ? lag : 0); ++x) {\n                const double a = item.samples[std::size_t(y * width + x)][channel] - item.center[channel];\n                const double b = item.samples[std::size_t((y + (horizontal ? 0 : lag)) * width + x + (horizontal ? lag : 0))][channel] - item.center[channel];\n                ab += a * b; aa += a * a; bb += b * b;\n            }\n        return aa > 0 && bb > 0 ? std::abs(ab / std::sqrt(aa * bb)) : 0.;\n    };\n    // A highly repeating pattern is not a safe noise witness. Lag follows the\n    // wavelet scale; no claim of separating every weak texture from sensor noise.\n    return correlation(true) > .9 && correlation(false) > .9;\n}\n\nbool fromCovariance(const cv::Matx33f &covariance, Noise &model)\n{\n    cv::Matx33f correlation = cv::Matx33f::zeros(), regularized = cv::Matx33f::eye();\n    for (int c = 0; c < 3; ++c) {\n        model.sigma[c] = std::sqrt(std::max(0.f, covariance(c,c)));\n        if (!std::isfinite(model.sigma[c])) return false;\n        correlation(c,c) = model.sigma[c] > 0 ? 1.f : 0.f;\n        for (int k = 0; k < c; ++k) {\n            const double denominator = double(model.sigma[c]) * model.sigma[k];\n            const float rho = denominator > 0 ? float(std::clamp(double(covariance(c,k))/denominator,-.95,.95)) : 0.f;\n            correlation(c,k) = correlation(k,c) = rho;\n            regularized(c,k) = regularized(k,c) = .25f*rho;\n        }\n    }\n    bool invertible = false;\n    model.inverseCorrelation = regularized.inv(cv::DECOMP_CHOLESKY, &invertible);\n    if (!invertible) return false;\n    model.expectedJointEnergy = 0;\n    for (int c=0;c<3;++c) for (int k=0;k<3;++k)\n        model.expectedJointEnergy += model.inverseCorrelation(c,k)*correlation(k,c);\n    return std::isfinite(model.expectedJointEnergy);\n}\n\nstruct Knot { float signal = 0; cv::Matx33f covariance = cv::Matx33f::zeros(); };\n\nKnot fit(std::vector<const PatchNoise *> items)\n{\n    std::sort(items.begin(),items.end(),[](const auto *a,const auto *b){return a->score<b->score;});\n    const std::size_t retained=std::max(std::size_t(1),(items.size()+3)/4);\n    cv::Vec3f sigma; std::vector<float> signals;\n    for(std::size_t i=0;i<retained;++i)signals.push_back(items[i]->signal);\n    Knot result; result.signal=median(signals);\n    for(int c=0;c<3;++c) {\n        std::vector<float> values;\n        for(std::size_t i=0;i<retained;++i)values.push_back(items[i]->sigma[c]);\n        sigma[c]=median(values);\n    }\n    cv::Matx33d sums=cv::Matx33d::zeros();\n    for(std::size_t i=0;i<retained;++i)for(auto v:items[i]->samples) {\n        cv::Vec3d z{};\n        for(int c=0;c<3;++c)if(sigma[c]>0)z[c]=std::clamp((double(v[c])-items[i]->center[c])/sigma[c],-3.,3.);\n        for(int c=0;c<3;++c)for(int k=0;k<3;++k)sums(c,k)+=z[c]*z[k];\n    }\n    for(int c=0;c<3;++c) {\n        result.covariance(c,c)=sigma[c]*sigma[c];\n        for(int k=0;k<c;++k) {\n            const double denominator=std::sqrt(sums(c,c)*sums(k,k));\n            const float rho=denominator>0?float(std::clamp(sums(c,k)/denominator,-.95,.95)):0.f;\n            result.covariance(c,k)=result.covariance(k,c)=rho*sigma[c]*sigma[k];\n        }\n    }\n    return result;\n}\n\nbool floorDarkCovariance(Knot &dark, const Knot &pooled)\n{\n    cv::Vec3d scale(1,1,1); bool changed=false;\n    for(int c=0;c<3;++c) {\n        const double original=dark.covariance(c,c);\n        const double floor=std::max(original,double(pooled.covariance(c,c)));\n        if(original>0)scale[c]=std::sqrt(floor/original);\n        changed=changed||floor>original;\n    }\n    // Keep the dark witnesses' correlation, not a mixture of different signal\n    // populations' correlations. Zero-variance axes have zero cross terms.\n    for(int c=0;c<3;++c) {\n        for(int k=0;k<c;++k)\n            dark.covariance(c,k)=dark.covariance(k,c)=float(double(dark.covariance(c,k))*scale[c]*scale[k]);\n        dark.covariance(c,c)=std::max(dark.covariance(c,c),pooled.covariance(c,c));\n    }\n    return changed;\n}\n\nbool estimate(const cv::Mat &source,\n              const std::array<int, Levels> &steps, int margin,\n              std::array<NoiseCurve, Levels> &models, const std::function<bool()> &stop,\n              const std::function<void(const NoiseModelSummary &)> &observer)\n{\n    std::array<std::vector<PatchNoise>, Levels> patches;\n    std::array<std::vector<PatchNoise>, Levels> allPatches;\n    const int width = std::min(64, source.cols), height = std::min(64, source.rows);\n    std::set<std::pair<int, int>> origins;\n    for (int y = 0; y < 5; ++y) for (int x = 0; x < 5; ++x)\n        origins.emplace((source.cols - width) * x / 4, (source.rows - height) * y / 4);\n    for (auto origin : origins) {\n        if (stop()) return false;\n        const auto input=patch(source,{origin.first,origin.second,width,height},margin);\n        std::vector<float> signals; std::array<std::vector<float>,4> quarters;\n        for(int y=0;y<height;++y)for(int x=0;x<width;++x) {\n            const float v=input.at<cv::Vec3f>(margin+y,margin+x)[0]; signals.push_back(v);\n            const int quadrant=(x>=width/2)+2*(y>=height/2);\n            quarters[std::size_t(quadrant)].push_back(v);\n        }\n        const float signal=median(signals);\n        float low=signal,high=signal;\n        for(const auto &q:quarters)if(!q.empty()){const float v=median(q);low=std::min(low,v);high=std::max(high,v);}\n        Pyramid p;\n        if (!pyramid(input, p, steps, stop)) return false;\n        bool flat=true; float signalUncertainty=0;\n        for (int level = 0; level < Levels; ++level) {\n            if (steps[std::size_t(level)] == 0) break;\n            const auto &d = p.detail[std::size_t(level)];\n            if (!cv::checkRange(d)) return false;\n            PatchNoise item; item.signal=signal;\n            std::array<std::vector<float>, 3> samples;\n            for (int y = margin; y < margin + height; ++y) for (int x = margin; x < margin + width; ++x) {\n                const auto v = d.at<cv::Vec3f>(y, x); item.samples.push_back(v);\n                for (int c = 0; c < 3; ++c) samples[std::size_t(c)].push_back(v[c]);\n            }\n            for (int c = 0; c < 3; ++c) {\n                auto &v = samples[std::size_t(c)];\n                item.center[c] = median(v);\n                for (float &value : v) value = std::abs(value - item.center[c]);\n                item.sigma[c] = median(v) / MadNormal;\n                item.score += double(item.sigma[c]) * item.sigma[c];\n            }\n            if (!std::isfinite(item.score)) return false;\n            if(level==0) {\n                signalUncertainty=3*item.sigma[0]+1e-7f*std::max(1.f,std::abs(signal));\n                flat=high-low<=signalUncertainty;\n            }\n            item.signalUncertainty=signalUncertainty;\n            bool structured = false;\n            for (int c = 0; c < 3; ++c) structured = structured || coherent(item, c, width, height, 2 * steps[std::size_t(level)]);\n            if (!structured) allPatches[std::size_t(level)].push_back(item);\n            if (flat && !structured) patches[std::size_t(level)].push_back(std::move(item));\n        }\n    }\n    for (int level = 0; level < Levels; ++level) {\n        if (steps[std::size_t(level)] == 0) break;\n        auto &items = patches[std::size_t(level)];\n        NoiseModelSummary summary; summary.level = level;\n        summary.flatCandidates = int(items.size());\n        const auto &all = allPatches[std::size_t(level)];\n        summary.candidates = int(all.size());\n        std::vector<const PatchNoise *> globalGroup;\n        for (const auto &item : all) globalGroup.push_back(&item);\n        Knot global;\n        if (!globalGroup.empty()) {\n            global = fit(std::move(globalGroup));\n            summary.globalSignal=global.signal;\n            for (int c=0;c<3;++c) summary.globalSigma[c]=std::sqrt(global.covariance(c,c));\n        }\n        auto &curve=models[std::size_t(level)];\n        curve.pooledValid=!all.empty()&&fromCovariance(global.covariance,curve.pooled);\n        summary.globalFallbackAvailable=curve.pooledValid;\n        if(items.size()<3) {\n            if (observer) observer(summary);\n            continue; // No conditional support: use the pooled model if available.\n        }\n        std::sort(items.begin(),items.end(),[](const auto &a,const auto &b){return a.signal<b.signal;});\n        std::vector<float> uncertainties;\n        for(const auto &item:items)uncertainties.push_back(item.signalUncertainty);\n        const float uncertainty=median(uncertainties);\n        const int bands=items.size()>=9 && items.back().signal-items.front().signal>uncertainty?3:1;\n        std::vector<Knot> knots;\n        for(int band=0;band<bands;++band) {\n            std::vector<const PatchNoise *> group;\n            for(std::size_t i=items.size()*std::size_t(band)/std::size_t(bands);\n                i<items.size()*std::size_t(band+1)/std::size_t(bands);++i)group.push_back(&items[i]);\n            const auto knot=fit(std::move(group));\n            if(!knots.empty() && knot.signal-knots.back().signal<=1e-7f*std::max(1.f,std::abs(knot.signal)))\n                knots.back().covariance=(knots.back().covariance+knot.covariance)*.5f;\n            else knots.push_back(knot);\n        }\n        if(knots.size()>1 && !all.empty())\n            summary.darkFloorApplied=floorDarkCovariance(knots.front(),global);\n        curve.low=items.front().signal-uncertainty;curve.high=items.back().signal+uncertainty;\n        curve.transition=uncertainty;\n        if(!std::isfinite(curve.low)||!std::isfinite(curve.high)||!(curve.high>curve.low))return false;\n        for(int i=0;i<CurveSamples;++i) {\n            const float signal=curve.low+(curve.high-curve.low)*(float(i)/(CurveSamples-1));\n            cv::Matx33f covariance=knots.front().covariance;\n            if(signal>=knots.back().signal)covariance=knots.back().covariance;\n            else for(std::size_t k=1;k<knots.size();++k)if(signal>=knots[k-1].signal&&signal<knots[k].signal) {\n                const float t=(signal-knots[k-1].signal)/(knots[k].signal-knots[k-1].signal);\n                covariance=knots[k-1].covariance*(1-t)+knots[k].covariance*t;break;\n            }\n            if(!fromCovariance(covariance,curve.values[std::size_t(i)]))return false;\n        }\n        curve.valid=true;\n        curve.constant=knots.size()==1;\n        if (observer) {\n            summary.supported=true; summary.low=curve.low; summary.high=curve.high;\n            for (const auto &knot : knots) {\n                cv::Vec3f sigma;\n                for(int c=0;c<3;++c)sigma[c]=std::sqrt(knot.covariance(c,c));\n                summary.nodes.emplace_back(knot.signal,sigma);\n            }\n            observer(summary);\n        }\n    }\n    return true;\n}\n\nvoid accumulateEnergy(Energy &result,const Noise &model,const cv::Vec3f &detail,float weight)\n{\n    if(weight<=0)return;\n    cv::Vec3f z{};\n    for(int c=0;c<3;++c)if(model.sigma[c]>0) {\n        z[c]=float(std::clamp(double(detail[c])/model.sigma[c],-1e6,1e6));\n        result[c]+=weight*z[c]*z[c];result[c+4]+=weight;\n    }\n    result[3]+=weight*std::max(0.f,z.dot(model.inverseCorrelation*z));\n    result[7]+=weight*model.expectedJointEnergy;\n}\n\nEnergy energyAt(const NoiseCurve &curve,float signal,const cv::Vec3f &detail)\n{\n    Energy result{};\n    if(!std::isfinite(signal))return result;\n    if(!curve.valid) {\n        if(curve.pooledValid)accumulateEnergy(result,curve.pooled,detail,1);\n        return result;\n    }\n    if(signal<curve.low || signal>curve.high) {\n        if(!curve.pooledValid)return result;\n        // Transition only OUTSIDE the conditional range, in its already\n        // measured intensity-uncertainty units; no hard jump at the boundary.\n        const double distance=signal<curve.low?double(curve.low)-signal:double(signal)-curve.high;\n        const float t=curve.transition>0?float(std::clamp(distance/double(curve.transition),0.,1.)):1.f;\n        accumulateEnergy(result,curve.values[signal<curve.low?0:CurveSamples-1],detail,1-t);\n        accumulateEnergy(result,curve.pooled,detail,t);\n        return result;\n    }\n    const float position=curve.constant?0.f:std::clamp((signal-curve.low)/(curve.high-curve.low)*(CurveSamples-1),0.f,float(CurveSamples-1));\n    const int lower=int(position),upper=std::min(lower+1,CurveSamples-1);\n    const float t=curve.constant?0.f:position-lower;\n    for(int side=0;side<2;++side) {\n        const float weight=side?t:1-t;\n        if(weight<=0)continue;\n        accumulateEnergy(result,curve.values[std::size_t(side?upper:lower)],detail,weight);\n    }\n    return result;\n}\n\nbool boxMean(const cv::Mat &source, cv::Mat &out, int radius, const std::function<bool()> &stop)\n{\n    cv::Mat horizontal(source.size(), source.type()); out.create(source.size(), source.type());\n    const float scale = 1.f / float(2 * radius + 1);\n    for (int y = 0; y < source.rows; ++y) {\n        if ((y & 15) == 0 && stop()) return false;\n        for (int x = 0; x < source.cols; ++x) {\n            Energy sum{};\n            for (int k = -radius; k <= radius; ++k) sum += source.at<Energy>(y, reflect(x + k, source.cols));\n            horizontal.at<Energy>(y, x) = sum * scale;\n        }\n    }\n    for (int y = 0; y < source.rows; ++y) {\n        if ((y & 15) == 0 && stop()) return false;\n        for (int x = 0; x < source.cols; ++x) {\n            Energy sum{};\n            for (int k = -radius; k <= radius; ++k) sum += horizontal.at<Energy>(reflect(y + k, source.rows), x);\n            out.at<Energy>(y, x) = sum * scale;\n        }\n    }\n    return true;\n}\n\nbool tile(const cv::Mat &source, cv::Mat &delta, const cv::Rect &core, int margin,\n          const std::array<int, Levels> &steps,\n          const std::array<NoiseCurve, Levels> &models, const cv::Vec3f &strength,\n          int radius, const std::function<bool()> &stop)\n{\n    Pyramid p;\n    if (!pyramid(patch(source, core, margin), p, steps, stop)) return false;\n    for (int y = 0; y < core.height; ++y)\n        std::fill_n(delta.ptr<cv::Vec3f>(core.y + y) + core.x, core.width, cv::Vec3f{});\n    for (int level = 0; level < Levels; ++level) {\n        const auto &model = models[std::size_t(level)];\n        if (!model.valid && !model.pooledValid) continue;\n        const auto &detail = p.detail[std::size_t(level)];\n        cv::Mat energy(detail.size(), CV_32FC(8)),fallbackEnergy;\n        for (int y = 0; y < detail.rows; ++y) {\n            if ((y & 15) == 0 && stop()) return false;\n            const auto *d = detail.ptr<cv::Vec3f>(y); auto *e = energy.ptr<Energy>(y);\n            for (int x = 0; x < detail.cols; ++x) {\n                const float signal=p.signal.at<float>(y,x);\n                const bool fallback=model.valid&&model.pooledValid&&(signal<model.low||signal>model.high);\n                const auto sample=energyAt(model,signal,d[x]);\n                if(fallback) {\n                    // Do not let normalized pooled energies alter the local\n                    // decisions of already-supported conditional pixels.\n                    if(fallbackEnergy.empty())fallbackEnergy=cv::Mat::zeros(detail.size(),CV_32FC(8));\n                    fallbackEnergy.at<Energy>(y,x)=sample;\n                    e[x]=Energy{};\n                } else e[x]=sample;\n            }\n        }\n        cv::Mat local,fallbackLocal;\n        if (!boxMean(energy, local, radius, stop)) return false;\n        if(!fallbackEnergy.empty()&&!boxMean(fallbackEnergy,fallbackLocal,radius,stop))return false;\n        for (int y = 0; y < core.height; ++y) {\n            if ((y & 15) == 0 && stop()) return false;\n            auto *out = delta.ptr<cv::Vec3f>(core.y + y) + core.x;\n            const auto *d = detail.ptr<cv::Vec3f>(margin + y) + margin;\n            const auto *e = local.ptr<Energy>(margin + y) + margin;\n            const auto *current=energy.ptr<Energy>(margin+y)+margin;\n            const auto *pooled=fallbackLocal.empty()?nullptr:fallbackLocal.ptr<Energy>(margin+y)+margin;\n            const auto *pooledCurrent=fallbackEnergy.empty()?nullptr:fallbackEnergy.ptr<Energy>(margin+y)+margin;\n            for (int x = 0; x < core.width; ++x) {\n                const float signal=p.signal.at<float>(margin+y,margin+x);\n                const bool usePooled=pooled&&pooledCurrent&&(signal<model.low||signal>model.high);\n                const auto &stats=usePooled?pooled[x]:e[x];\n                const auto &pixel=usePooled?pooledCurrent[x]:current[x];\n                const float shared = stats[7]>0?std::clamp(1.f-stats[7]/std::max(stats[3],stats[7]),0.f,1.f):0.f;\n                // A real achromatic texture is not evidence of a real colour\n                // feature. Chroma protection uses only its two normalized\n                // energies; their expected sum is valid even when correlated.\n                // This is a second-moment gate, not a chi-square probability.\n                const float chromaExpected=stats[5]+stats[6];\n                const float chromaObserved=stats[1]+stats[2];\n                const float chromaShared=chromaExpected>0?\n                    std::clamp(1.f-chromaExpected/std::max(chromaObserved,chromaExpected),0.f,1.f):0.f;\n                for (int c = 0; c < 3; ++c) if ((c != 0 || level < LuminanceLevels) && strength[c] > 0 && pixel[c+4] > 0 && stats[c+4]>0) {\n                    const float individual = std::clamp(1.f-stats[c+4]/std::max(stats[c],stats[c+4]),0.f,1.f);\n                    out[x][c] -= strength[c] * (1.f - std::max(individual, c==0?shared:chromaShared)) * d[x][c];\n                }\n            }\n        }\n    }\n    return true;\n}\n\nstruct JoinAll\n{\n    std::vector<std::thread> &threads;\n    ~JoinAll() { for (auto &thread : threads) if (thread.joinable()) thread.join(); }\n};\n} // namespace\n\nint workerThreads()\n{\n    const unsigned host = std::thread::hardware_concurrency();\n    return int(std::max(1u, std::min(8u, host > 1 ? host - 1 : 1)));\n}\n\nbool identity(const Settings &settings)\n{\n    return settings.luminance == 0 && settings.chrominance == 0;\n}\n\nbool settingsFromAmount(int amount, Settings &settings)\n{\n    if(amount<0 || amount>100)return false;\n    const double remaining=1.-double(amount)/100.;\n    const double squared=remaining*remaining;\n    settings={amount,int(std::lround(100.*(1.-squared*squared*squared)))};\n    return true;\n}\n\nbool apply(cv::Mat &cameraRgb, const Settings &settings, const Context &context,\n           const std::function<bool()> &cancelled)\n{\n    if (cameraRgb.empty() || cameraRgb.dims != 2 || cameraRgb.type() != CV_32FC3 ||\n        settings.luminance < 0 || settings.luminance > 100 || settings.chrominance < 0 || settings.chrominance > 100) return false;\n    if (identity(settings)) return true;\n    try {\n        const auto stop = [&] { return cancelled && cancelled(); };\n        if (stop() || !validContext(context) || !cv::checkRange(cameraRgb)) return false;\n        std::array<int, Levels> steps{};\n        const int activeLevels = settings.chrominance > 0 ? Levels : LuminanceLevels;\n        for (int i = 0; i < activeLevels; ++i) steps[std::size_t(i)] = std::max(1, int(std::lround((1 << i) * context.pixelScale)));\n        const int radius = std::max(1, int(std::lround(3 * context.pixelScale)));\n        int margin = radius;\n        for (int step : steps) margin += 2 * step;\n        std::array<NoiseCurve, Levels> models;\n        if (!estimate(cameraRgb, steps, margin, models, stop, context.noiseModelObserver)) return false;\n        bool measured = false;\n        for (const auto &curve : models) {\n            if(curve.valid)for(const auto &m:curve.values)for(int c=0;c<3;++c)if(m.sigma[c]>0)measured=true;\n            if(curve.pooledValid)for(int c=0;c<3;++c)if(curve.pooled.sigma[c]>0)measured=true;\n        }\n        if (!measured) {\n            // Nonzero requests must detach even on abstention: the caller may\n            // apply optical corrections in place to the returned camera buffer.\n            if(stop())return false;\n            auto unchanged=cameraRgb.clone();\n            if(stop())return false;\n            cameraRgb=std::move(unchanged);\n            return true;\n        }\n        cv::Mat delta(cameraRgb.size(), CV_32FC3);\n        std::vector<cv::Rect> tiles;\n        for (int y = 0; y < cameraRgb.rows; y += TileSize) for (int x = 0; x < cameraRgb.cols; x += TileSize)\n            tiles.emplace_back(x, y, std::min(TileSize, cameraRgb.cols - x), std::min(TileSize, cameraRgb.rows - y));\n        std::atomic<std::size_t> next{0}; std::atomic<bool> stopped{false};\n        const cv::Vec3f strength(settings.luminance / 100.f, settings.chrominance / 100.f, settings.chrominance / 100.f);\n        const auto work = [&](bool caller) {\n            try {\n                const auto halt = [&] {\n                    if (stopped.load()) return true;\n                    if (caller && stop()) { stopped.store(true); return true; }\n                    return false;\n                };\n                for (std::size_t i; (i = next.fetch_add(1)) < tiles.size();) {\n                    if (halt() || !tile(cameraRgb, delta, tiles[i], margin, steps, models, strength, radius, halt)) {\n                        stopped.store(true); return;\n                    }\n                }\n            } catch (...) { stopped.store(true); }\n        };\n        std::vector<std::thread> pool; JoinAll join{pool};\n        const int workers = std::min(workerThreads(), int(tiles.size()));\n        pool.reserve(std::size_t(workers));\n        try { for (int i = 1; i < workers; ++i) pool.emplace_back(work, false); }\n        catch (...) { stopped.store(true); throw; }\n        work(true);\n        for (auto &thread : pool) if (thread.joinable()) thread.join();\n        if (stopped.load() || stop() || !cv::checkRange(delta)) return false;\n        // Balance signed corrections per opponent axis, moving corrections toward\n        // zero, not adding an offset to unchanged areas. Preserve DC without clamps.\n        cv::Vec3d positive{}, negative{};\n        for (int y = 0; y < delta.rows; ++y) {\n            if ((y & 15) == 0 && stop()) return false;\n            const auto *d = delta.ptr<cv::Vec3f>(y);\n            for (int x = 0; x < delta.cols; ++x) for (int c = 0; c < 3; ++c) {\n                positive[c] += std::max(0., double(d[x][c])); negative[c] += std::max(0., -double(d[x][c]));\n            }\n        }\n        cv::Vec3f plus, minus;\n        for (int c = 0; c < 3; ++c) {\n            plus[c] = positive[c] > 0 ? float(std::min(1., negative[c] / positive[c])) : 1.f;\n            minus[c] = negative[c] > 0 ? float(std::min(1., positive[c] / negative[c])) : 1.f;\n        }\n        for (int y = 0; y < delta.rows; ++y) {\n            if ((y & 15) == 0 && stop()) return false;\n            const auto *in = cameraRgb.ptr<cv::Vec3f>(y); auto *out = delta.ptr<cv::Vec3f>(y);\n            for (int x = 0; x < delta.cols; ++x) {\n                cv::Vec3f d = out[x];\n                for (int c = 0; c < 3; ++c) d[c] *= d[c] > 0 ? plus[c] : minus[c];\n                out[x] = in[x] + cv::Vec3f(d[0] + d[1] - .5f * d[2], d[0] + .5f * d[2], d[0] - d[1] - .5f * d[2]);\n            }\n        }\n        if (stop() || !cv::checkRange(delta)) return false;\n        cameraRgb = std::move(delta);\n        return true;\n    } catch (...) { return false; }\n}\n} // namespace CameraDenoise\n"
+    }
+  },
+  "limits": [
+    "Neutral-grey transfer only, typical scene statistics, no DCP, no spatial/correlated chroma model.",
+    "RAW exposure precedes the profile curve: these raster-like transfer factors are not full RAW factors.",
+    "First-order noise propagation needs local Jacobian and covariance in real RGB pipeline.",
+    "Residual reuse checked on one small synthetic image, not bit-exact or a production cache qualification.",
+    "No tone-aware weights applied; no benefit, halos, preview latency, full image budget or cache RAM validated."
+  ],
+  "command": {
+    "returncode": 0,
+    "stderr": ""
+  },
+  "measurements": {
+    "residual_scaling": {
+      "cases": [
+        {
+          "chrominance": 6,
+          "luminance": 1,
+          "master": 1,
+          "max_abs_error": 3.725290298461914e-09
+        },
+        {
+          "chrominance": 82,
+          "luminance": 25,
+          "master": 25,
+          "max_abs_error": 3.725290298461914e-09
+        },
+        {
+          "chrominance": 98,
+          "luminance": 50,
+          "master": 50,
+          "max_abs_error": 3.725290298461914e-09
+        },
+        {
+          "chrominance": 100,
+          "luminance": 85,
+          "master": 85,
+          "max_abs_error": 3.725290298461914e-09
+        },
+        {
+          "chrominance": 100,
+          "luminance": 100,
+          "master": 100,
+          "max_abs_error": 1.862645149230957e-09
+        }
+      ],
+      "limits": "Not bit-exact, not real image qualification, no guarantee for advanced colour=0 or spatial weights; no cache implemented",
+      "witness": "128px Gaussian camera RGB, same active five scales, global strengths only"
+    },
+    "scope": "Neutral grey Rec2020, exposure AFTER profile (raster-like), contrast and shadows actual modules with typical statistics; NOT full RAW DCP chain or chroma/correlated-noise model",
+    "tonal_transfer": [
+      {
+        "contrast": 0,
+        "ev": 0,
+        "points": [
+          {
+            "brightness_ratio": 1,
+            "display_derivative": 12.920218706130804,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 1.52587890625e-05,
+            "linear_derivative": 0.9999573230743408,
+            "output_y": 1.52587890625e-05
+          },
+          {
+            "brightness_ratio": 0.9999999535137698,
+            "display_derivative": 12.920298082295183,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 1.8175832273305674e-05,
+            "linear_derivative": 1.0000230713851224,
+            "output_y": 1.8175831428379752e-05
+          },
+          {
+            "brightness_ratio": 0.9999999961120137,
+            "display_derivative": 12.919994522336804,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 2.165053055482854e-05,
+            "linear_derivative": 0.9999995760323767,
+            "output_y": 2.1650530470651574e-05
+          },
+          {
+            "brightness_ratio": 0.9999999343123852,
+            "display_derivative": 12.920070230839459,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 2.5789491576349864e-05,
+            "linear_derivative": 1.0000054358234582,
+            "output_y": 2.5789489882299677e-05
+          },
+          {
+            "brightness_ratio": 1.0000000289380584,
+            "display_derivative": 12.919743325458697,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 3.071970333855345e-05,
+            "linear_derivative": 0.9999209210828698,
+            "output_y": 3.0719704227522016e-05
+          },
+          {
+            "brightness_ratio": 1.0000000344689313,
+            "display_derivative": 12.92006338544956,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 3.6592430308868485e-05,
+            "linear_derivative": 1.0000049059945457,
+            "output_y": 3.659243157017045e-05
+          },
+          {
+            "brightness_ratio": 0.9999999848205746,
+            "display_derivative": 12.920174495554189,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 4.3587854386241194e-05,
+            "linear_derivative": 1.0000135058478206,
+            "output_y": 4.358785372460261e-05
+          },
+          {
+            "brightness_ratio": 1.0000000207836561,
+            "display_derivative": 12.920156881973213,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 5.192060308537934e-05,
+            "linear_derivative": 0.9999771085099299,
+            "output_y": 5.19206041644793e-05
+          },
+          {
+            "brightness_ratio": 0.9999999415506994,
+            "display_derivative": 12.920614837918125,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 6.184633455140747e-05,
+            "linear_derivative": 0.9999887652056765,
+            "output_y": 6.184633093653247e-05
+          },
+          {
+            "brightness_ratio": 0.9999999826253547,
+            "display_derivative": 12.91991045268115,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 7.366958144062303e-05,
+            "linear_derivative": 0.9999436867192427,
+            "output_y": 7.366958016064018e-05
+          },
+          {
+            "brightness_ratio": 0.9999999628412034,
+            "display_derivative": 12.919792768945031,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 8.775309432647813e-05,
+            "linear_derivative": 0.9999839604445891,
+            "output_y": 8.775309106567875e-05
+          },
+          {
+            "brightness_ratio": 0.9999999009790561,
+            "display_derivative": 12.920132719868588,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.00010452897129703908,
+            "linear_derivative": 1.0000450759810962,
+            "output_y": 0.00010452896094648167
+          },
+          {
+            "brightness_ratio": 1.0000000396424555,
+            "display_derivative": 12.9201605702679,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.0001245119152125487,
+            "linear_derivative": 1.0000124280392733,
+            "output_y": 0.00012451192014850676
+          },
+          {
+            "brightness_ratio": 1.000000006322201,
+            "display_derivative": 12.919834020237722,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.00014831502537073247,
+            "linear_derivative": 1.0000362107236487,
+            "output_y": 0.00014831502630840987
+          },
+          {
+            "brightness_ratio": 0.9999999750138464,
+            "display_derivative": 12.919920926373072,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.00017666860808598364,
+            "linear_derivative": 0.9999938797502986,
+            "output_y": 0.00017666860367171466
+          },
+          {
+            "brightness_ratio": 0.9999999856038541,
+            "display_derivative": 12.919996240377216,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.00021044258331225028,
+            "linear_derivative": 1.000034283557432,
+            "output_y": 0.00021044258028268814
+          },
+          {
+            "brightness_ratio": 1.0000000347173035,
+            "display_derivative": 12.919902945505012,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.0002506731747701304,
+            "linear_derivative": 0.9999924880423093,
+            "output_y": 0.0002506731834728271
+          },
+          {
+            "brightness_ratio": 1.0000000141675995,
+            "display_derivative": 12.919828917708548,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.00029859470246143137,
+            "linear_derivative": 0.9999380236633544,
+            "output_y": 0.00029859470669180155
+          },
+          {
+            "brightness_ratio": 0.9999998994739814,
+            "display_derivative": 12.920016673571576,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.0003556774530014631,
+            "linear_derivative": 1.0000012905239724,
+            "output_y": 0.00035567741724662483
+          },
+          {
+            "brightness_ratio": 0.9999999857921794,
+            "display_derivative": 12.919745983410381,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.00042367278967365014,
+            "linear_derivative": 0.9999459922120001,
+            "output_y": 0.00042367278365418315
+          },
+          {
+            "brightness_ratio": 0.9999999899661013,
+            "display_derivative": 12.919834460715652,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.0005046668862339003,
+            "linear_derivative": 1.0000448567499403,
+            "output_y": 0.0005046668811701238
+          },
+          {
+            "brightness_ratio": 1.0000000121092674,
+            "display_derivative": 12.91989006685392,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.0006011447330785727,
+            "linear_derivative": 0.99999149124253,
+            "output_y": 0.000601144740357995
+          },
+          {
+            "brightness_ratio": 0.999999940833676,
+            "display_derivative": 12.92007695347739,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.0007160663795575838,
+            "linear_derivative": 1.000005956151572,
+            "output_y": 0.0007160663371905684
+          },
+          {
+            "brightness_ratio": 1.0000000278063979,
+            "display_derivative": 12.91982137650774,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.0008529577516329774,
+            "linear_derivative": 0.9999861746523082,
+            "output_y": 0.0008529577753506601
+          },
+          {
+            "brightness_ratio": 0.9999999650690659,
+            "display_derivative": 12.919947735666701,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.0010160188312713244,
+            "linear_derivative": 0.999995954773057,
+            "output_y": 0.0010160187957808375
+          },
+          {
+            "brightness_ratio": 1.0000000040682844,
+            "display_derivative": 12.920012480431135,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.0012102525166359447,
+            "linear_derivative": 1.0000009659776399,
+            "output_y": 0.001210252521559596
+          },
+          {
+            "brightness_ratio": 0.9999999734555368,
+            "display_derivative": 12.920098773561572,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.0014416181166552527,
+            "linear_derivative": 1.0000076450125504,
+            "output_y": 0.0014416180783882737
+          },
+          {
+            "brightness_ratio": 0.9999999615609462,
+            "display_derivative": 12.919774400353116,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.0017172141893540003,
+            "linear_derivative": 1.0000164352911187,
+            "output_y": 0.0017172141233459115
+          },
+          {
+            "brightness_ratio": 1.0000000162718703,
+            "display_derivative": 12.919500195427387,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.002045496333634036,
+            "linear_derivative": 0.99996131543553,
+            "output_y": 0.002045496366918087
+          },
+          {
+            "brightness_ratio": 0.9999999919909051,
+            "display_derivative": 12.92019126103825,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.0024365366166024323,
+            "linear_derivative": 1.0000148034858445,
+            "output_y": 0.0024365365970879793
+          },
+          {
+            "brightness_ratio": 0.9999999533262137,
+            "display_derivative": 12.920079204931783,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.002902332595970602,
+            "linear_derivative": 1.000006130412736,
+            "output_y": 0.0029023324605077505
+          },
+          {
+            "brightness_ratio": 0.9999999757706193,
+            "display_derivative": 11.9891509564174,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.0034571754186807383,
+            "linear_derivative": 1.0000030063888827,
+            "output_y": 0.0034571753349155188
+          },
+          {
+            "brightness_ratio": 0.9999998572294222,
+            "display_derivative": 10.825986337057683,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.004118088289441307,
+            "linear_derivative": 0.9999969172260471,
+            "output_y": 0.004118087701499462
+          },
+          {
+            "brightness_ratio": 0.9999999758995272,
+            "display_derivative": 9.775614783918048,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.00490534876188177,
+            "linear_derivative": 0.999985166929901,
+            "output_y": 0.004905348643660545
+          },
+          {
+            "brightness_ratio": 0.9999999951068923,
+            "display_derivative": 8.827398420933303,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.005843110876809173,
+            "linear_derivative": 1.0000011905179425,
+            "output_y": 0.005843110848218203
+          },
+          {
+            "brightness_ratio": 0.9999999178176212,
+            "display_derivative": 7.971126731220355,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.006960146235471404,
+            "linear_derivative": 1.0000468174877373,
+            "output_y": 0.00696014566347003
+          },
+          {
+            "brightness_ratio": 0.9999999935702233,
+            "display_derivative": 7.197649941416976,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.008290726744791973,
+            "linear_derivative": 0.9999887602657942,
+            "output_y": 0.008290726691484451
+          },
+          {
+            "brightness_ratio": 0.9999999539428245,
+            "display_derivative": 6.4991988938346985,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.00987567611819776,
+            "linear_derivative": 1.0000069324898826,
+            "output_y": 0.009875675663352013
+          },
+          {
+            "brightness_ratio": 1.0000000502410888,
+            "display_derivative": 5.868887544155006,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.011763622393272924,
+            "linear_derivative": 0.9999926082883395,
+            "output_y": 0.011763622984290123
+          },
+          {
+            "brightness_ratio": 0.9999999695245634,
+            "display_derivative": 5.299466215704919,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.014012489894896016,
+            "linear_derivative": 1.0000135281288263,
+            "output_y": 0.014012489467859268
+          },
+          {
+            "brightness_ratio": 0.999999911450303,
+            "display_derivative": 4.785413040907347,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.01669127641897503,
+            "linear_derivative": 0.9999932158144421,
+            "output_y": 0.01669127494096756
+          },
+          {
+            "brightness_ratio": 1.0000000161292593,
+            "display_derivative": 4.321132762130999,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.019882170162785286,
+            "linear_derivative": 0.9999851203419129,
+            "output_y": 0.019882170483469963
+          },
+          {
+            "brightness_ratio": 0.9999999909112133,
+            "display_derivative": 3.9020626705395745,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.023683071351724993,
+            "linear_derivative": 0.9999801714135377,
+            "output_y": 0.02368307113647461
+          },
+          {
+            "brightness_ratio": 0.9999999099146455,
+            "display_derivative": 3.5234567469308793,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.028210595928846085,
+            "linear_derivative": 0.9999703960970783,
+            "output_y": 0.02821059338748455
+          },
+          {
+            "brightness_ratio": 0.999999995476076,
+            "display_derivative": 3.18148092681654,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.03360365346374981,
+            "linear_derivative": 0.9999543212875648,
+            "output_y": 0.03360365331172943
+          },
+          {
+            "brightness_ratio": 0.9999998759545909,
+            "display_derivative": 2.873006913300965,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.04002770905513353,
+            "linear_derivative": 1.000013370783699,
+            "output_y": 0.04002770408987999
+          },
+          {
+            "brightness_ratio": 1.0000000814425405,
+            "display_derivative": 2.594261434822043,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.047679859986974965,
+            "linear_derivative": 1.0000027379073493,
+            "output_y": 0.04767986387014389
+          },
+          {
+            "brightness_ratio": 0.9999999810683096,
+            "display_derivative": 2.342538990781654,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.05679488289590185,
+            "linear_derivative": 0.9999829271467551,
+            "output_y": 0.05679488182067871
+          },
+          {
+            "brightness_ratio": 0.9999999575324665,
+            "display_derivative": 2.1153993805194387,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.06765243698367361,
+            "linear_derivative": 1.0000378423425285,
+            "output_y": 0.06765243411064148
+          },
+          {
+            "brightness_ratio": 0.9999999922024267,
+            "display_derivative": 1.9101028471000956,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.08058564427747372,
+            "linear_derivative": 0.9999979581829112,
+            "output_y": 0.08058564364910126
+          },
+          {
+            "brightness_ratio": 1.0000000340384563,
+            "display_derivative": 1.7247708054671043,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.09599131019009301,
+            "linear_derivative": 1.0000205249899152,
+            "output_y": 0.09599131345748901
+          },
+          {
+            "brightness_ratio": 1.0000000258868365,
+            "display_derivative": 1.5574507884451376,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.1143420979583378,
+            "linear_derivative": 0.999984582864249,
+            "output_y": 0.114342100918293
+          },
+          {
+            "brightness_ratio": 0.9999998433868713,
+            "display_derivative": 1.4064114464035367,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.13620103048518928,
+            "linear_derivative": 1.0000769743645461,
+            "output_y": 0.13620100915431976
+          },
+          {
+            "brightness_ratio": 0.9999999831361442,
+            "display_derivative": 1.2699249622930413,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.1622387645186173,
+            "linear_derivative": 0.9999853794461023,
+            "output_y": 0.16223876178264618
+          },
+          {
+            "brightness_ratio": 1.0000000292029874,
+            "display_derivative": 1.146737039156813,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.19325416715837243,
+            "linear_derivative": 0.9999947859579071,
+            "output_y": 0.19325417280197144
+          },
+          {
+            "brightness_ratio": 1.0000000189614415,
+            "display_derivative": 1.0355024627071132,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.23019882600123306,
+            "linear_derivative": 1.000007657301964,
+            "output_y": 0.23019883036613464
+          },
+          {
+            "brightness_ratio": 1.0000000218169145,
+            "display_derivative": 0.9350552961970947,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.2742062449236564,
+            "linear_derivative": 1.0000179549722856,
+            "output_y": 0.2742062509059906
+          },
+          {
+            "brightness_ratio": 1.0000000225819812,
+            "display_derivative": 0.8443456606730353,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.32662662126143766,
+            "linear_derivative": 1.000066538571819,
+            "output_y": 0.32662662863731384
+          },
+          {
+            "brightness_ratio": 1.0000000110534408,
+            "display_derivative": 0.7624196110900158,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.38906827138953565,
+            "linear_derivative": 1.0000026920258054,
+            "output_y": 0.38906827569007874
+          },
+          {
+            "brightness_ratio": 0.9999999979904198,
+            "display_derivative": 0.6884667418264702,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.46344697568566734,
+            "linear_derivative": 0.9999871368330701,
+            "output_y": 0.4634469747543335
+          },
+          {
+            "brightness_ratio": 0.999999986274741,
+            "display_derivative": 0.6216799734133389,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.552044756836906,
+            "linear_derivative": 1.0000243876471884,
+            "output_y": 0.5520447492599487
+          },
+          {
+            "brightness_ratio": 1.0000000060222174,
+            "display_derivative": 0.5613371779619879,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.6575798948741395,
+            "linear_derivative": 0.9999673747445789,
+            "output_y": 0.6575798988342285
+          },
+          {
+            "brightness_ratio": 0.9999999993879028,
+            "display_derivative": 0.5068803189529326,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.7832903270747562,
+            "linear_derivative": 0.9999672023508269,
+            "output_y": 0.7832903265953064
+          },
+          {
+            "brightness_ratio": 0.999999997819097,
+            "display_derivative": 0.4577304470367436,
+            "display_noise_gain_to_neutral": 1,
+            "input_y": 0.9330329915368076,
+            "linear_derivative": 0.9999874768145002,
+            "output_y": 0.9330329895019531
+          }
+        ],
+        "recipe": "neutral",
+        "shadows": 0,
+        "small_noise_checks": [
+          {
+            "input_sigma": 5e-06,
+            "input_y": 0.001,
+            "measured_display_sigma": 6.64730759169256e-05,
+            "predicted_display_sigma": 6.460049189626565e-05,
+            "ratio_measured_to_predicted": 1.0289871480184225
+          },
+          {
+            "input_sigma": 5e-05,
+            "input_y": 0.01,
+            "measured_display_sigma": 0.0003319685647293155,
+            "predicted_display_sigma": 0.0003226125489801112,
+            "ratio_measured_to_predicted": 1.0290007805920192
+          },
+          {
+            "input_sigma": 0.0005,
+            "input_y": 0.1,
+            "measured_display_sigma": 0.0008664901123471503,
+            "predicted_display_sigma": 0.000842077319490736,
+            "ratio_measured_to_predicted": 1.0289911535334764
+          },
+          {
+            "input_sigma": 0.0015,
+            "input_y": 0.3,
+            "measured_display_sigma": 0.0013695065415663794,
+            "predicted_display_sigma": 0.0013309216793039316,
+            "ratio_measured_to_predicted": 1.028991084045327
+          }
+        ]
+      },
+      {
+        "contrast": 0,
+        "ev": 2,
+        "points": [
+          {
+            "brightness_ratio": 4,
+            "display_derivative": 51.680874824523215,
+            "display_noise_gain_to_neutral": 4,
+            "input_y": 1.52587890625e-05,
+            "linear_derivative": 3.9998292922973633,
+            "output_y": 6.103515625e-05
+          },
+          {
+            "brightness_ratio": 3.999999814055079,
+            "display_derivative": 51.68119232918073,
+            "display_noise_gain_to_neutral": 4,
+            "input_y": 1.8175832273305674e-05,
+            "linear_derivative": 4.0000922855404895,
+            "output_y": 7.270332571351901e-05
+          },
+          {
+            "brightness_ratio": 3.999999984448055,
+            "display_derivative": 51.679978089347216,
+            "display_noise_gain_to_neutral": 4,
+            "input_y": 2.165053055482854e-05,
+            "linear_derivative": 3.9999983041295066,
+            "output_y": 8.66021218826063e-05
+          },
+          {
+            "brightness_ratio": 3.999999737249541,
+            "display_derivative": 51.680280923357834,
+            "display_noise_gain_to_neutral": 4,
+            "input_y": 2.5789491576349864e-05,
+            "linear_derivative": 4.000021743293833,
+            "output_y": 0.0001031579595291987
+          },
+          {
+            "brightness_ratio": 4.000000115752234,
+            "display_derivative": 51.67897330183479,
+            "display_noise_gain_to_neutral": 4,
+            "input_y": 3.071970333855345e-05,
+            "linear_derivative": 3.999683684331479,
+            "output_y": 0.00012287881691008806
+          },
+          {
+            "brightness_ratio": 4.000000137875725,
+            "display_derivative": 51.68025354179824,
+            "display_noise_gain_to_neutral": 4,
+            "input_y": 3.6592430308868485e-05,
+            "linear_derivative": 4.000019623978183,
+            "output_y": 0.0001463697262806818
+          },
+          {
+            "brightness_ratio": 3.9999999392822985,
+            "display_derivative": 51.680697982216756,
+            "display_noise_gain_to_neutral": 4,
+            "input_y": 4.3587854386241194e-05,
+            "linear_derivative": 4.000054023391282,
+            "output_y": 0.00017435141489841044
+          },
+          {
+            "brightness_ratio": 4.0000000831346245,
+            "display_derivative": 51.68062752789285,
+            "display_noise_gain_to_neutral": 4,
+            "input_y": 5.192060308537934e-05,
+            "linear_derivative": 3.9999084340397197,
+            "output_y": 0.0002076824166579172
+          },
+          {
+            "brightness_ratio": 3.9999997662027975,
+            "display_derivative": 51.6824593516725,
+            "display_noise_gain_to_neutral": 4,
+            "input_y": 6.184633455140747e-05,
+            "linear_derivative": 3.999955060822706,
+            "output_y": 0.00024738532374612987
+          },
+          {
+            "brightness_ratio": 3.999999930501419,
+            "display_derivative": 51.6796418107246,
+            "display_noise_gain_to_neutral": 4,
+            "input_y": 7.366958144062303e-05,
+            "linear_derivative": 3.999774746876971,
+            "output_y": 0.0002946783206425607
+          },
+          {
+            "brightness_ratio": 3.9999998513648136,
+            "display_derivative": 51.679171075780125,
+            "display_noise_gain_to_neutral": 4,
+            "input_y": 8.775309432647813e-05,
+            "linear_derivative": 3.9999358417783566,
+            "output_y": 0.000351012364262715
+          },
+          {
+            "brightness_ratio": 3.9999996039162244,
+            "display_derivative": 51.680530879474354,
+            "display_noise_gain_to_neutral": 4,
+            "input_y": 0.00010452897129703908,
+            "linear_derivative": 4.000180303924385,
+            "output_y": 0.0004181158437859267
+          },
+          {
+            "brightness_ratio": 4.000000158569822,
+            "display_derivative": 51.6806422810716,
+            "display_noise_gain_to_neutral": 4,
+            "input_y": 0.0001245119152125487,
+            "linear_derivative": 4.000049712157093,
+            "output_y": 0.000498047680594027
+          },
+          {
+            "brightness_ratio": 4.000000025288804,
+            "display_derivative": 51.67933608095089,
+            "display_noise_gain_to_neutral": 4,
+            "input_y": 0.00014831502537073247,
+            "linear_derivative": 4.000144842894595,
+            "output_y": 0.0005932601052336395
+          },
+          {
+            "brightness_ratio": 3.9999999000553856,
+            "display_derivative": 51.67968370549229,
+            "display_noise_gain_to_neutral": 4,
+            "input_y": 0.00017666860808598364,
+            "linear_derivative": 3.9999755190011945,
+            "output_y": 0.0007066744146868587
+          },
+          {
+            "brightness_ratio": 3.9999999424154162,
+            "display_derivative": 51.679984961508865,
+            "display_noise_gain_to_neutral": 4,
+            "input_y": 0.00021044258331225028,
+            "linear_derivative": 4.000137134229728,
+            "output_y": 0.0008417703211307526
+          },
+          {
+            "brightness_ratio": 4.000000138869214,
+            "display_derivative": 51.67961178202005,
+            "display_noise_gain_to_neutral": 4,
+            "input_y": 0.0002506731747701304,
+            "linear_derivative": 3.9999699521692373,
+            "output_y": 0.0010026927338913083
+          },
+          {
+            "brightness_ratio": 4.000000056670398,
+            "display_derivative": 51.67931567083419,
+            "display_noise_gain_to_neutral": 4,
+            "input_y": 0.00029859470246143137,
+            "linear_derivative": 3.9997520946534175,
+            "output_y": 0.0011943788267672062
+          },
+          {
+            "brightness_ratio": 3.9999995978959255,
+            "display_derivative": 51.6800666942863,
+            "display_noise_gain_to_neutral": 4,
+            "input_y": 0.0003556774530014631,
+            "linear_derivative": 4.000005162095889,
+            "output_y": 0.0014227096689864993
+          },
+          {
+            "brightness_ratio": 3.9999999431687177,
+            "display_derivative": 51.678983933641526,
+            "display_noise_gain_to_neutral": 4,
+            "input_y": 0.00042367278967365014,
+            "linear_derivative": 3.9997839688480004,
+            "output_y": 0.0016946911346167326
+          },
+          {
+            "brightness_ratio": 3.999999959864405,
+            "display_derivative": 51.67933784286261,
+            "display_noise_gain_to_neutral": 4,
+            "input_y": 0.0005046668862339003,
+            "linear_derivative": 4.000179426999761,
+            "output_y": 0.0020186675246804953
+          },
+          {
+            "brightness_ratio": 4.0000000484370695,
+            "display_derivative": 51.67956026741568,
+            "display_noise_gain_to_neutral": 4,
+            "input_y": 0.0006011447330785727,
+            "linear_derivative": 3.99996596497012,
+            "output_y": 0.00240457896143198
+          },
+          {
+            "brightness_ratio": 3.999999763334704,
+            "display_derivative": 51.68030781390956,
+            "display_noise_gain_to_neutral": 4,
+            "input_y": 0.0007160663795575838,
+            "linear_derivative": 4.000023824606288,
+            "output_y": 0.002864265348762274
+          },
+          {
+            "brightness_ratio": 4.000000111225591,
+            "display_derivative": 48.32656104905381,
+            "display_noise_gain_to_neutral": 3.7404976153096476,
+            "input_y": 0.0008529577516329774,
+            "linear_derivative": 3.999944698609233,
+            "output_y": 0.0034118311014026403
+          },
+          {
+            "brightness_ratio": 3.9999998602762634,
+            "display_derivative": 43.638702252089125,
+            "display_noise_gain_to_neutral": 3.3776221966920565,
+            "input_y": 0.0010160188312713244,
+            "linear_derivative": 3.999983819092228,
+            "output_y": 0.00406407518312335
+          },
+          {
+            "brightness_ratio": 4.0000000162731375,
+            "display_derivative": 39.40539660438091,
+            "display_noise_gain_to_neutral": 3.0499503513688535,
+            "input_y": 0.0012102525166359447,
+            "linear_derivative": 4.0000038639105595,
+            "output_y": 0.004841010086238384
+          },
+          {
+            "brightness_ratio": 3.9999998938221473,
+            "display_derivative": 35.58281446812729,
+            "display_noise_gain_to_neutral": 2.754066752255833,
+            "input_y": 0.0014416181166552527,
+            "linear_derivative": 4.000030580050201,
+            "output_y": 0.005766472313553095
+          },
+          {
+            "brightness_ratio": 3.9999998462437847,
+            "display_derivative": 32.130027135964795,
+            "display_noise_gain_to_neutral": 2.4868876297938014,
+            "input_y": 0.0017172141893540003,
+            "linear_derivative": 4.000065741164475,
+            "output_y": 0.006868856493383646
+          },
+          {
+            "brightness_ratio": 4.000000065087481,
+            "display_derivative": 29.01239386696127,
+            "display_noise_gain_to_neutral": 2.245628192120749,
+            "input_y": 0.002045496333634036,
+            "linear_derivative": 3.99984526174212,
+            "output_y": 0.008181985467672348
+          },
+          {
+            "brightness_ratio": 3.9999999679636202,
+            "display_derivative": 26.199228087686528,
+            "display_noise_gain_to_neutral": 2.0277740134306024,
+            "input_y": 0.0024365366166024323,
+            "linear_derivative": 4.000059213943378,
+            "output_y": 0.009746146388351917
+          },
+          {
+            "brightness_ratio": 3.999999813304855,
+            "display_derivative": 23.657367909971292,
+            "display_noise_gain_to_neutral": 1.831054402587635,
+            "input_y": 0.002902332595970602,
+            "linear_derivative": 4.000024521650944,
+            "output_y": 0.011609329842031002
+          },
+          {
+            "brightness_ratio": 3.999999903082477,
+            "display_derivative": 21.362238437326575,
+            "display_noise_gain_to_neutral": 1.781797436280679,
+            "input_y": 0.0034571754186807383,
+            "linear_derivative": 4.000012025555531,
+            "output_y": 0.013828701339662075
+          },
+          {
+            "brightness_ratio": 3.999999428917689,
+            "display_derivative": 19.28971470058209,
+            "display_noise_gain_to_neutral": 1.7817974362809608,
+            "input_y": 0.004118088289441307,
+            "linear_derivative": 3.9999876689041884,
+            "output_y": 0.01647235080599785
+          },
+          {
+            "brightness_ratio": 3.9999999035981086,
+            "display_derivative": 17.418165360053024,
+            "display_noise_gain_to_neutral": 1.781797436280714,
+            "input_y": 0.00490534876188177,
+            "linear_derivative": 3.999940667719604,
+            "output_y": 0.01962139457464218
+          },
+          {
+            "brightness_ratio": 3.999999980427569,
+            "display_derivative": 15.728635875445992,
+            "display_noise_gain_to_neutral": 1.7817974362805564,
+            "input_y": 0.005843110876809173,
+            "linear_derivative": 4.00000476207177,
+            "output_y": 0.02337244339287281
+          },
+          {
+            "brightness_ratio": 3.999999671270485,
+            "display_derivative": 14.202933173958446,
+            "display_noise_gain_to_neutral": 1.7817974362808833,
+            "input_y": 0.006960146235471404,
+            "linear_derivative": 4.000187269950949,
+            "output_y": 0.02784058265388012
+          },
+          {
+            "brightness_ratio": 3.999999974280893,
+            "display_derivative": 12.824754212865606,
+            "display_noise_gain_to_neutral": 1.7817974362811042,
+            "input_y": 0.008290726744791973,
+            "linear_derivative": 3.999955041063177,
+            "output_y": 0.033162906765937805
+          },
+          {
+            "brightness_ratio": 3.999999815771298,
+            "display_derivative": 11.58025592690849,
+            "display_noise_gain_to_neutral": 1.781797436280002,
+            "input_y": 0.00987567611819776,
+            "linear_derivative": 4.00002772995953,
+            "output_y": 0.03950270265340805
+          },
+          {
+            "brightness_ratio": 4.000000200964355,
+            "display_derivative": 10.457168779996378,
+            "display_noise_gain_to_neutral": 1.7817974362809137,
+            "input_y": 0.011763622393272924,
+            "linear_derivative": 3.999970433153358,
+            "output_y": 0.04705449193716049
+          },
+          {
+            "brightness_ratio": 3.9999998780982535,
+            "display_derivative": 9.442575316799223,
+            "display_noise_gain_to_neutral": 1.781797436280703,
+            "input_y": 0.014012489894896016,
+            "linear_derivative": 4.000054112515305,
+            "output_y": 0.05604995787143707
+          },
+          {
+            "brightness_ratio": 3.999999645801212,
+            "display_derivative": 8.526636687831715,
+            "display_noise_gain_to_neutral": 1.781797436280444,
+            "input_y": 0.01669127641897503,
+            "linear_derivative": 3.9999728632577685,
+            "output_y": 0.06676509976387024
+          },
+          {
+            "brightness_ratio": 4.000000064517037,
+            "display_derivative": 7.699383277392564,
+            "display_noise_gain_to_neutral": 1.7817974362804712,
+            "input_y": 0.019882170162785286,
+            "linear_derivative": 3.9999404813676516,
+            "output_y": 0.07952868193387985
+          },
+          {
+            "brightness_ratio": 3.999999963644853,
+            "display_derivative": 6.952685262574274,
+            "display_noise_gain_to_neutral": 1.7817974362807611,
+            "input_y": 0.023683071351724993,
+            "linear_derivative": 3.9999206856541507,
+            "output_y": 0.09473228454589844
+          },
+          {
+            "brightness_ratio": 3.999999639658582,
+            "display_derivative": 6.278086198528916,
+            "display_noise_gain_to_neutral": 1.781797436281137,
+            "input_y": 0.028210595928846085,
+            "linear_derivative": 3.999881584388313,
+            "output_y": 0.1128423735499382
+          },
+          {
+            "brightness_ratio": 3.999999981904304,
+            "display_derivative": 5.668754558977485,
+            "display_noise_gain_to_neutral": 1.781797436280646,
+            "input_y": 0.03360365346374981,
+            "linear_derivative": 3.999817285150259,
+            "output_y": 0.13441461324691772
+          },
+          {
+            "brightness_ratio": 3.9999995038183638,
+            "display_derivative": 5.119116352537059,
+            "display_noise_gain_to_neutral": 1.7817974362809341,
+            "input_y": 0.04002770905513353,
+            "linear_derivative": 4.000053483134796,
+            "output_y": 0.16011081635951996
+          },
+          {
+            "brightness_ratio": 4.000000325770162,
+            "display_derivative": 4.62244837360745,
+            "display_noise_gain_to_neutral": 1.7817974362805624,
+            "input_y": 0.047679859986974965,
+            "linear_derivative": 4.000010951629397,
+            "output_y": 0.19071945548057556
+          },
+          {
+            "brightness_ratio": 3.9999999242732382,
+            "display_derivative": 4.173929968161706,
+            "display_noise_gain_to_neutral": 1.7817974362804339,
+            "input_y": 0.05679488289590185,
+            "linear_derivative": 3.9999317085870203,
+            "output_y": 0.22717952728271484
+          },
+          {
+            "brightness_ratio": 3.999999830129866,
+            "display_derivative": 3.769213192918781,
+            "display_noise_gain_to_neutral": 1.7817974362804467,
+            "input_y": 0.06765243698367361,
+            "linear_derivative": 4.000151369370114,
+            "output_y": 0.2706097364425659
+          },
+          {
+            "brightness_ratio": 3.999999968809707,
+            "display_derivative": 3.4034163559962867,
+            "display_noise_gain_to_neutral": 1.7817974362811557,
+            "input_y": 0.08058564427747372,
+            "linear_derivative": 3.9999918327316446,
+            "output_y": 0.32234257459640503
+          },
+          {
+            "brightness_ratio": 4.000000136153825,
+            "display_derivative": 3.0731921993535742,
+            "display_noise_gain_to_neutral": 1.781797436280984,
+            "input_y": 0.09599131019009301,
+            "linear_derivative": 4.000082099959661,
+            "output_y": 0.38396525382995605
+          },
+          {
+            "brightness_ratio": 4.000000103547346,
+            "display_derivative": 2.775061821984814,
+            "display_noise_gain_to_neutral": 1.7817974362806441,
+            "input_y": 0.1143420979583378,
+            "linear_derivative": 3.999938331456996,
+            "output_y": 0.457368403673172
+          },
+          {
+            "brightness_ratio": 3.9999993735474852,
+            "display_derivative": 2.5059403095576305,
+            "display_noise_gain_to_neutral": 1.781797436280684,
+            "input_y": 0.13620103048518928,
+            "linear_derivative": 4.0003078974581845,
+            "output_y": 0.544804036617279
+          },
+          {
+            "brightness_ratio": 3.999999932544577,
+            "display_derivative": 2.262749042082564,
+            "display_noise_gain_to_neutral": 1.7817974362806672,
+            "input_y": 0.1622387645186173,
+            "linear_derivative": 3.9999415177844093,
+            "output_y": 0.6489550471305847
+          },
+          {
+            "brightness_ratio": 4.0000001168119494,
+            "display_derivative": 2.043253116457252,
+            "display_noise_gain_to_neutral": 1.7817974362802829,
+            "input_y": 0.19325416715837243,
+            "linear_derivative": 3.9999791438316286,
+            "output_y": 0.7730166912078857
+          },
+          {
+            "brightness_ratio": 4.000000075845766,
+            "display_derivative": 1.8450556333137498,
+            "display_noise_gain_to_neutral": 1.7817974362805689,
+            "input_y": 0.23019882600123306,
+            "linear_derivative": 4.000030629207856,
+            "output_y": 0.9207953214645386
+          },
+          {
+            "brightness_ratio": 4.000000087267658,
+            "display_derivative": 0,
+            "display_noise_gain_to_neutral": 0,
+            "input_y": 0.2742062449236564,
+            "linear_derivative": 4.0000718198891425,
+            "output_y": 1.0968250036239624
+          },
+          {
+            "brightness_ratio": 4.000000090327925,
+            "display_derivative": 0,
+            "display_noise_gain_to_neutral": 0,
+            "input_y": 0.32662662126143766,
+            "linear_derivative": 4.000266154287276,
+            "output_y": 1.3065065145492554
+          },
+          {
+            "brightness_ratio": 4.000000044213763,
+            "display_derivative": 0,
+            "display_noise_gain_to_neutral": 0,
+            "input_y": 0.38906827138953565,
+            "linear_derivative": 4.0000107681032215,
+            "output_y": 1.556273102760315
+          },
+          {
+            "brightness_ratio": 3.9999999919616793,
+            "display_derivative": 0,
+            "display_noise_gain_to_neutral": 0,
+            "input_y": 0.46344697568566734,
+            "linear_derivative": 3.9999485473322802,
+            "output_y": 1.853787899017334
+          },
+          {
+            "brightness_ratio": 3.999999945098964,
+            "display_derivative": 0,
+            "display_noise_gain_to_neutral": 0,
+            "input_y": 0.552044756836906,
+            "linear_derivative": 4.0000975505887535,
+            "output_y": 2.208178997039795
+          },
+          {
+            "brightness_ratio": 4.00000002408887,
+            "display_derivative": 0,
+            "display_noise_gain_to_neutral": 0,
+            "input_y": 0.6575798948741395,
+            "linear_derivative": 3.9998694989783155,
+            "output_y": 2.630319595336914
+          },
+          {
+            "brightness_ratio": 3.9999999975516114,
+            "display_derivative": 0,
+            "display_noise_gain_to_neutral": 0,
+            "input_y": 0.7832903270747562,
+            "linear_derivative": 3.9998688094033077,
+            "output_y": 3.1331613063812256
+          },
+          {
+            "brightness_ratio": 3.999999991276388,
+            "display_derivative": 0,
+            "display_noise_gain_to_neutral": 0,
+            "input_y": 0.9330329915368076,
+            "linear_derivative": 3.9999499072580007,
+            "output_y": 3.7321319580078125
+          }
+        ],
+        "recipe": "exposure2",
+        "shadows": 0,
+        "small_noise_checks": [
+          {
+            "input_sigma": 5e-06,
+            "input_y": 0.001,
+            "measured_display_sigma": 0.00022661495731280282,
+            "predicted_display_sigma": 0.00022022819216547046,
+            "ratio_measured_to_predicted": 1.0290006700982843
+          },
+          {
+            "input_sigma": 5e-05,
+            "input_y": 0.01,
+            "measured_display_sigma": 0.0005915007374460153,
+            "predicted_display_sigma": 0.0005748302126847016,
+            "ratio_measured_to_predicted": 1.0290007803929708
+          },
+          {
+            "input_sigma": 0.0005,
+            "input_y": 0.1,
+            "measured_display_sigma": 0.0015439098610183935,
+            "predicted_display_sigma": 0.001500411209018615,
+            "ratio_measured_to_predicted": 1.0289911537172733
+          },
+          {
+            "input_sigma": 0.0015,
+            "input_y": 0.3,
+            "measured_display_sigma": 0,
+            "predicted_display_sigma": 0,
+            "ratio_measured_to_predicted": null
+          }
+        ]
+      },
+      {
+        "contrast": 0,
+        "ev": 3,
+        "points": [
+          {
+            "brightness_ratio": 8,
+            "display_derivative": 103.36174964904643,
+            "display_noise_gain_to_neutral": 8,
+            "input_y": 1.52587890625e-05,
+            "linear_derivative": 7.999658584594727,
+            "output_y": 0.0001220703125
+          },
+          {
+            "brightness_ratio": 7.999999628110158,
+            "display_derivative": 103.36238465836146,
+            "display_noise_gain_to_neutral": 8,
+            "input_y": 1.8175832273305674e-05,
+            "linear_derivative": 8.000184571080979,
+            "output_y": 0.00014540665142703801
+          },
+          {
+            "brightness_ratio": 7.99999996889611,
+            "display_derivative": 103.35995617869443,
+            "display_noise_gain_to_neutral": 8,
+            "input_y": 2.165053055482854e-05,
+            "linear_derivative": 7.999996608259013,
+            "output_y": 0.0001732042437652126
+          },
+          {
+            "brightness_ratio": 7.999999474499082,
+            "display_derivative": 103.36056184671567,
+            "display_noise_gain_to_neutral": 8,
+            "input_y": 2.5789491576349864e-05,
+            "linear_derivative": 8.000043486587666,
+            "output_y": 0.0002063159190583974
+          },
+          {
+            "brightness_ratio": 8.000000231504467,
+            "display_derivative": 103.35794660366957,
+            "display_noise_gain_to_neutral": 8,
+            "input_y": 3.071970333855345e-05,
+            "linear_derivative": 7.999367368662958,
+            "output_y": 0.0002457576338201761
+          },
+          {
+            "brightness_ratio": 8.00000027575145,
+            "display_derivative": 103.36050708359647,
+            "display_noise_gain_to_neutral": 8,
+            "input_y": 3.6592430308868485e-05,
+            "linear_derivative": 8.000039247956366,
+            "output_y": 0.0002927394525613636
+          },
+          {
+            "brightness_ratio": 7.999999878564597,
+            "display_derivative": 103.36139596443351,
+            "display_noise_gain_to_neutral": 8,
+            "input_y": 4.3587854386241194e-05,
+            "linear_derivative": 8.000108046782564,
+            "output_y": 0.0003487028297968209
+          },
+          {
+            "brightness_ratio": 8.000000166269249,
+            "display_derivative": 103.3612550557857,
+            "display_noise_gain_to_neutral": 8,
+            "input_y": 5.192060308537934e-05,
+            "linear_derivative": 7.9998168680794395,
+            "output_y": 0.0004153648333158344
+          },
+          {
+            "brightness_ratio": 7.999999532405595,
+            "display_derivative": 103.364918703345,
+            "display_noise_gain_to_neutral": 8,
+            "input_y": 6.184633455140747e-05,
+            "linear_derivative": 7.999910121645412,
+            "output_y": 0.0004947706474922597
+          },
+          {
+            "brightness_ratio": 7.999999861002838,
+            "display_derivative": 103.3592836214492,
+            "display_noise_gain_to_neutral": 8,
+            "input_y": 7.366958144062303e-05,
+            "linear_derivative": 7.999549493753942,
+            "output_y": 0.0005893566412851214
+          },
+          {
+            "brightness_ratio": 7.999999702729627,
+            "display_derivative": 103.35834215156025,
+            "display_noise_gain_to_neutral": 8,
+            "input_y": 8.775309432647813e-05,
+            "linear_derivative": 7.999871683556713,
+            "output_y": 0.00070202472852543
+          },
+          {
+            "brightness_ratio": 7.999999207832449,
+            "display_derivative": 103.36106175894871,
+            "display_noise_gain_to_neutral": 8,
+            "input_y": 0.00010452897129703908,
+            "linear_derivative": 8.00036060784877,
+            "output_y": 0.0008362316875718534
+          },
+          {
+            "brightness_ratio": 8.000000317139644,
+            "display_derivative": 103.3612845621432,
+            "display_noise_gain_to_neutral": 8,
+            "input_y": 0.0001245119152125487,
+            "linear_derivative": 8.000099424314186,
+            "output_y": 0.000996095361188054
+          },
+          {
+            "brightness_ratio": 8.000000050577608,
+            "display_derivative": 103.35867216190178,
+            "display_noise_gain_to_neutral": 8,
+            "input_y": 0.00014831502537073247,
+            "linear_derivative": 8.00028968578919,
+            "output_y": 0.001186520210467279
+          },
+          {
+            "brightness_ratio": 7.999999800110771,
+            "display_derivative": 103.35936741098458,
+            "display_noise_gain_to_neutral": 8,
+            "input_y": 0.00017666860808598364,
+            "linear_derivative": 7.999951038002389,
+            "output_y": 0.0014133488293737173
+          },
+          {
+            "brightness_ratio": 7.9999998848308325,
+            "display_derivative": 103.35996992301773,
+            "display_noise_gain_to_neutral": 8,
+            "input_y": 0.00021044258331225028,
+            "linear_derivative": 8.000274268459457,
+            "output_y": 0.0016835406422615051
+          },
+          {
+            "brightness_ratio": 8.000000277738428,
+            "display_derivative": 103.3592235640401,
+            "display_noise_gain_to_neutral": 8,
+            "input_y": 0.0002506731747701304,
+            "linear_derivative": 7.999939904338475,
+            "output_y": 0.0020053854677826166
+          },
+          {
+            "brightness_ratio": 8.000000113340796,
+            "display_derivative": 103.35863134166839,
+            "display_noise_gain_to_neutral": 8,
+            "input_y": 0.00029859470246143137,
+            "linear_derivative": 7.999504189306835,
+            "output_y": 0.0023887576535344124
+          },
+          {
+            "brightness_ratio": 7.999999195791851,
+            "display_derivative": 103.3601333885726,
+            "display_noise_gain_to_neutral": 8,
+            "input_y": 0.0003556774530014631,
+            "linear_derivative": 8.000010324191779,
+            "output_y": 0.0028454193379729986
+          },
+          {
+            "brightness_ratio": 7.999999886337435,
+            "display_derivative": 97.02546744907993,
+            "display_noise_gain_to_neutral": 7.5098587521508255,
+            "input_y": 0.00042367278967365014,
+            "linear_derivative": 7.999567937696001,
+            "output_y": 0.003389382269233465
+          },
+          {
+            "brightness_ratio": 7.99999991972881,
+            "display_derivative": 87.61337531948251,
+            "display_noise_gain_to_neutral": 6.78130788640379,
+            "input_y": 0.0005046668862339003,
+            "linear_derivative": 8.000358853999522,
+            "output_y": 0.0040373350493609905
+          },
+          {
+            "brightness_ratio": 8.000000096874139,
+            "display_derivative": 79.11411656054179,
+            "display_noise_gain_to_neutral": 6.123435737546226,
+            "input_y": 0.0006011447330785727,
+            "linear_derivative": 7.99993192994024,
+            "output_y": 0.00480915792286396
+          },
+          {
+            "brightness_ratio": 7.999999526669408,
+            "display_derivative": 71.4400821287814,
+            "display_noise_gain_to_neutral": 5.529385187566826,
+            "input_y": 0.0007160663795575838,
+            "linear_derivative": 8.000047649212576,
+            "output_y": 0.005728530697524548
+          },
+          {
+            "brightness_ratio": 8.000000222451183,
+            "display_derivative": 64.50821970324084,
+            "display_noise_gain_to_neutral": 4.992965291341944,
+            "input_y": 0.0008529577516329774,
+            "linear_derivative": 7.999889397218466,
+            "output_y": 0.006823662202805281
+          },
+          {
+            "brightness_ratio": 7.999999720552527,
+            "display_derivative": 58.250678950334006,
+            "display_noise_gain_to_neutral": 4.508584720472797,
+            "input_y": 0.0010160188312713244,
+            "linear_derivative": 7.999967638184456,
+            "output_y": 0.0081281503662467
+          },
+          {
+            "brightness_ratio": 8.000000032546275,
+            "display_derivative": 52.59989385691129,
+            "display_noise_gain_to_neutral": 4.071195282247595,
+            "input_y": 0.0012102525166359447,
+            "linear_derivative": 8.000007727821119,
+            "output_y": 0.009682020172476768
+          },
+          {
+            "brightness_ratio": 7.9999997876442945,
+            "display_derivative": 47.49735887559645,
+            "display_noise_gain_to_neutral": 3.6762380619558734,
+            "input_y": 0.0014416181166552527,
+            "linear_derivative": 8.000061160100403,
+            "output_y": 0.01153294462710619
+          },
+          {
+            "brightness_ratio": 7.999999692487569,
+            "display_derivative": 42.8884407366541,
+            "display_noise_gain_to_neutral": 3.319596721091499,
+            "input_y": 0.0017172141893540003,
+            "linear_derivative": 8.00013148232895,
+            "output_y": 0.013737712986767292
+          },
+          {
+            "brightness_ratio": 8.000000130174962,
+            "display_derivative": 38.72689959848969,
+            "display_noise_gain_to_neutral": 2.9975540084899213,
+            "input_y": 0.002045496333634036,
+            "linear_derivative": 7.99969052348424,
+            "output_y": 0.016363970935344696
+          },
+          {
+            "brightness_ratio": 7.9999999359272405,
+            "display_derivative": 34.971773799938546,
+            "display_noise_gain_to_neutral": 2.706753568377769,
+            "input_y": 0.0024365366166024323,
+            "linear_derivative": 8.000118427886756,
+            "output_y": 0.019492292776703835
+          },
+          {
+            "brightness_ratio": 7.99999962660971,
+            "display_derivative": 31.578797530981596,
+            "display_noise_gain_to_neutral": 2.4441643917266007,
+            "input_y": 0.002902332595970602,
+            "linear_derivative": 8.000049043301887,
+            "output_y": 0.023218659684062004
+          },
+          {
+            "brightness_ratio": 7.999999806164954,
+            "display_derivative": 28.51516724042713,
+            "display_noise_gain_to_neutral": 2.3784142300054945,
+            "input_y": 0.0034571754186807383,
+            "linear_derivative": 8.000024051111062,
+            "output_y": 0.02765740267932415
+          },
+          {
+            "brightness_ratio": 7.999998857835378,
+            "display_derivative": 25.748679957898297,
+            "display_noise_gain_to_neutral": 2.3784142300050553,
+            "input_y": 0.004118088289441307,
+            "linear_derivative": 7.999975337808377,
+            "output_y": 0.0329447016119957
+          },
+          {
+            "brightness_ratio": 7.999999807196217,
+            "display_derivative": 23.250461309120837,
+            "display_noise_gain_to_neutral": 2.3784142300052964,
+            "input_y": 0.00490534876188177,
+            "linear_derivative": 7.999881335439208,
+            "output_y": 0.03924278914928436
+          },
+          {
+            "brightness_ratio": 7.999999960855138,
+            "display_derivative": 20.99521001827126,
+            "display_noise_gain_to_neutral": 2.37841423000498,
+            "input_y": 0.005843110876809173,
+            "linear_derivative": 8.00000952414354,
+            "output_y": 0.04674488678574562
+          },
+          {
+            "brightness_ratio": 7.99999934254097,
+            "display_derivative": 18.958641246709917,
+            "display_noise_gain_to_neutral": 2.3784142300052737,
+            "input_y": 0.006960146235471404,
+            "linear_derivative": 8.000374539901898,
+            "output_y": 0.05568116530776024
+          },
+          {
+            "brightness_ratio": 7.999999948561786,
+            "display_derivative": 17.118993043268013,
+            "display_noise_gain_to_neutral": 2.3784142300060034,
+            "input_y": 0.008290726744791973,
+            "linear_derivative": 7.999910082126354,
+            "output_y": 0.06632581353187561
+          },
+          {
+            "brightness_ratio": 7.999999631542596,
+            "display_derivative": 15.45778713272913,
+            "display_noise_gain_to_neutral": 2.378414230004989,
+            "input_y": 0.00987567611819776,
+            "linear_derivative": 8.00005545991906,
+            "output_y": 0.0790054053068161
+          },
+          {
+            "brightness_ratio": 8.00000040192871,
+            "display_derivative": 13.95864564932166,
+            "display_noise_gain_to_neutral": 2.378414230005732,
+            "input_y": 0.011763622393272924,
+            "linear_derivative": 7.999940866306716,
+            "output_y": 0.09410898387432098
+          },
+          {
+            "brightness_ratio": 7.999999756196507,
+            "display_derivative": 12.604325858864165,
+            "display_noise_gain_to_neutral": 2.3784142300051583,
+            "input_y": 0.014012489894896016,
+            "linear_derivative": 8.00010822503061,
+            "output_y": 0.11209991574287415
+          },
+          {
+            "brightness_ratio": 7.999999291602424,
+            "display_derivative": 11.381694472946437,
+            "display_noise_gain_to_neutral": 2.378414230005189,
+            "input_y": 0.01669127641897503,
+            "linear_derivative": 7.999945726515537,
+            "output_y": 0.13353019952774048
+          },
+          {
+            "brightness_ratio": 8.000000129034074,
+            "display_derivative": 10.277443651194435,
+            "display_noise_gain_to_neutral": 2.378414230005291,
+            "input_y": 0.019882170162785286,
+            "linear_derivative": 7.999880962735303,
+            "output_y": 0.1590573638677597
+          },
+          {
+            "brightness_ratio": 7.999999927289706,
+            "display_derivative": 9.280721381983977,
+            "display_noise_gain_to_neutral": 2.3784142300053435,
+            "input_y": 0.023683071351724993,
+            "linear_derivative": 7.999841371308301,
+            "output_y": 0.18946456909179688
+          },
+          {
+            "brightness_ratio": 7.999999279317164,
+            "display_derivative": 8.3802396657091,
+            "display_noise_gain_to_neutral": 2.3784142300054456,
+            "input_y": 0.028210595928846085,
+            "linear_derivative": 7.999763168776626,
+            "output_y": 0.2256847470998764
+          },
+          {
+            "brightness_ratio": 7.999999963808608,
+            "display_derivative": 7.566879508831482,
+            "display_noise_gain_to_neutral": 2.37841423000548,
+            "input_y": 0.03360365346374981,
+            "linear_derivative": 7.999634570300518,
+            "output_y": 0.26882922649383545
+          },
+          {
+            "brightness_ratio": 7.9999990076367276,
+            "display_derivative": 6.83320052550006,
+            "display_noise_gain_to_neutral": 2.3784142300058018,
+            "input_y": 0.04002770905513353,
+            "linear_derivative": 8.000106966269591,
+            "output_y": 0.3202216327190399
+          },
+          {
+            "brightness_ratio": 8.000000651540324,
+            "display_derivative": 6.170228312936171,
+            "display_noise_gain_to_neutral": 2.3784142300058613,
+            "input_y": 0.047679859986974965,
+            "linear_derivative": 8.000021903258794,
+            "output_y": 0.3814389109611511
+          },
+          {
+            "brightness_ratio": 7.9999998485464765,
+            "display_derivative": 5.5715280700170355,
+            "display_noise_gain_to_neutral": 2.3784142300051703,
+            "input_y": 0.05679488289590185,
+            "linear_derivative": 7.999863417174041,
+            "output_y": 0.4543590545654297
+          },
+          {
+            "brightness_ratio": 7.999999660259732,
+            "display_derivative": 5.031295988769736,
+            "display_noise_gain_to_neutral": 2.3784142300043105,
+            "input_y": 0.06765243698367361,
+            "linear_derivative": 8.000302738740228,
+            "output_y": 0.5412194728851318
+          },
+          {
+            "brightness_ratio": 7.999999937619414,
+            "display_derivative": 4.543015792317348,
+            "display_noise_gain_to_neutral": 2.3784142300057414,
+            "input_y": 0.08058564427747372,
+            "linear_derivative": 7.999983665463289,
+            "output_y": 0.6446851491928101
+          },
+          {
+            "brightness_ratio": 8.00000027230765,
+            "display_derivative": 4.10221942722083,
+            "display_noise_gain_to_neutral": 2.3784142300053963,
+            "input_y": 0.09599131019009301,
+            "linear_derivative": 8.000164199919322,
+            "output_y": 0.7679305076599121
+          },
+          {
+            "brightness_ratio": 8.000000207094692,
+            "display_derivative": 3.704263117771485,
+            "display_noise_gain_to_neutral": 2.3784142300056823,
+            "input_y": 0.1143420979583378,
+            "linear_derivative": 7.999876662913992,
+            "output_y": 0.914736807346344
+          },
+          {
+            "brightness_ratio": 7.9999987470949705,
+            "display_derivative": 0,
+            "display_noise_gain_to_neutral": 0,
+            "input_y": 0.13620103048518928,
+            "linear_derivative": 8.000615794916369,
+            "output_y": 1.089608073234558
+          },
+          {
+            "brightness_ratio": 7.999999865089154,
+            "display_derivative": 0,
+            "display_noise_gain_to_neutral": 0,
+            "input_y": 0.1622387645186173,
+            "linear_derivative": 7.999883035568819,
+            "output_y": 1.2979100942611694
+          },
+          {
+            "brightness_ratio": 8.000000233623899,
+            "display_derivative": 0,
+            "display_noise_gain_to_neutral": 0,
+            "input_y": 0.19325416715837243,
+            "linear_derivative": 7.999958287663257,
+            "output_y": 1.5460333824157715
+          },
+          {
+            "brightness_ratio": 8.000000151691532,
+            "display_derivative": 0,
+            "display_noise_gain_to_neutral": 0,
+            "input_y": 0.23019882600123306,
+            "linear_derivative": 8.000061258415712,
+            "output_y": 1.8415906429290771
+          },
+          {
+            "brightness_ratio": 8.000000174535316,
+            "display_derivative": 0,
+            "display_noise_gain_to_neutral": 0,
+            "input_y": 0.2742062449236564,
+            "linear_derivative": 8.000143639778285,
+            "output_y": 2.193650007247925
+          },
+          {
+            "brightness_ratio": 8.00000018065585,
+            "display_derivative": 0,
+            "display_noise_gain_to_neutral": 0,
+            "input_y": 0.32662662126143766,
+            "linear_derivative": 8.000532308574552,
+            "output_y": 2.6130130290985107
+          },
+          {
+            "brightness_ratio": 8.000000088427527,
+            "display_derivative": 0,
+            "display_noise_gain_to_neutral": 0,
+            "input_y": 0.38906827138953565,
+            "linear_derivative": 8.000021536206443,
+            "output_y": 3.11254620552063
+          },
+          {
+            "brightness_ratio": 7.999999983923359,
+            "display_derivative": 0,
+            "display_noise_gain_to_neutral": 0,
+            "input_y": 0.46344697568566734,
+            "linear_derivative": 7.9998970946645604,
+            "output_y": 3.707575798034668
+          },
+          {
+            "brightness_ratio": 7.999999890197928,
+            "display_derivative": 0,
+            "display_noise_gain_to_neutral": 0,
+            "input_y": 0.552044756836906,
+            "linear_derivative": 8.000195101177507,
+            "output_y": 4.41635799407959
+          },
+          {
+            "brightness_ratio": 8.00000004817774,
+            "display_derivative": 0,
+            "display_noise_gain_to_neutral": 0,
+            "input_y": 0.6575798948741395,
+            "linear_derivative": 7.999738997956631,
+            "output_y": 5.260639190673828
+          },
+          {
+            "brightness_ratio": 7.999999995103223,
+            "display_derivative": 0,
+            "display_noise_gain_to_neutral": 0,
+            "input_y": 0.7832903270747562,
+            "linear_derivative": 7.999737618806615,
+            "output_y": 6.266322612762451
+          },
+          {
+            "brightness_ratio": 7.999999982552776,
+            "display_derivative": 0,
+            "display_noise_gain_to_neutral": 0,
+            "input_y": 0.9330329915368076,
+            "linear_derivative": 7.999899814516001,
+            "output_y": 7.464263916015625
+          }
+        ],
+        "recipe": "exposure3",
+        "shadows": 0,
+        "small_noise_checks": [
+          {
+            "input_sigma": 5e-06,
+            "input_y": 0.001,
+            "measured_display_sigma": 0.00030249467657021407,
+            "predicted_display_sigma": 0.00029396936791430134,
+            "ratio_measured_to_predicted": 1.0290006700915793
+          },
+          {
+            "input_sigma": 5e-05,
+            "input_y": 0.01,
+            "measured_display_sigma": 0.0007895587580288232,
+            "predicted_display_sigma": 0.0007673062772727002,
+            "ratio_measured_to_predicted": 1.0290007802819192
+          },
+          {
+            "input_sigma": 0.0005,
+            "input_y": 0.1,
+            "measured_display_sigma": 0.0020608724135428723,
+            "predicted_display_sigma": 0.002002808679441026,
+            "ratio_measured_to_predicted": 1.0289911536223477
+          },
+          {
+            "input_sigma": 0.0015,
+            "input_y": 0.3,
+            "measured_display_sigma": 0,
+            "predicted_display_sigma": 0,
+            "ratio_measured_to_predicted": null
+          }
+        ]
+      },
+      {
+        "contrast": 50,
+        "ev": 0,
+        "points": [
+          {
+            "brightness_ratio": 1,
+            "display_derivative": 6.716357469558787,
+            "display_noise_gain_to_neutral": 0.5198331098197116,
+            "input_y": 1.52587890625e-05,
+            "linear_derivative": 0.5198419094085693,
+            "output_y": 1.52587890625e-05
+          },
+          {
+            "brightness_ratio": 0.8760008956018909,
+            "display_derivative": 3.7186667285140858,
+            "display_noise_gain_to_neutral": 0.28781586189639174,
+            "input_y": 1.8175832273305674e-05,
+            "linear_derivative": 0.28782250220701644,
+            "output_y": 1.5922045349725522e-05
+          },
+          {
+            "brightness_ratio": 0.7855090137453565,
+            "display_derivative": 4.246420379869898,
+            "display_noise_gain_to_neutral": 0.32867044738513246,
+            "input_y": 2.165053055482854e-05,
+            "linear_derivative": 0.32867030803937475,
+            "output_y": 1.7006686903187074e-05
+          },
+          {
+            "brightness_ratio": 0.7136656087791476,
+            "display_derivative": 4.446570933233696,
+            "display_noise_gain_to_neutral": 0.34415996614476513,
+            "input_y": 2.5789491576349864e-05,
+            "linear_derivative": 0.3441265708409263,
+            "output_y": 1.8405073205940425e-05
+          },
+          {
+            "brightness_ratio": 0.6548688586042255,
+            "display_derivative": 4.510970305456263,
+            "display_noise_gain_to_neutral": 0.34915324490752664,
+            "input_y": 3.071970333855345e-05,
+            "linear_derivative": 0.34917591470513903,
+            "output_y": 2.0117377061978914e-05
+          },
+          {
+            "brightness_ratio": 0.6058673159571636,
+            "display_derivative": 4.512099483743556,
+            "display_noise_gain_to_neutral": 0.349231992841849,
+            "input_y": 3.6592430308868485e-05,
+            "linear_derivative": 0.3492337061721271,
+            "output_y": 2.2170157535583712e-05
+          },
+          {
+            "brightness_ratio": 0.5645170762506972,
+            "display_derivative": 4.481596227812874,
+            "display_noise_gain_to_neutral": 0.3468680883029083,
+            "input_y": 4.3587854386241194e-05,
+            "linear_derivative": 0.3468727730504146,
+            "output_y": 2.4606088118162006e-05
+          },
+          {
+            "brightness_ratio": 0.5293042829767084,
+            "display_derivative": 4.43474064781125,
+            "display_noise_gain_to_neutral": 0.3432420123318162,
+            "input_y": 5.192060308537934e-05,
+            "linear_derivative": 0.3432286631423391,
+            "output_y": 2.7481797587824985e-05
+          },
+          {
+            "brightness_ratio": 0.49911568659256517,
+            "display_derivative": 4.382110767333199,
+            "display_noise_gain_to_neutral": 0.33915652020467474,
+            "input_y": 6.184633455140747e-05,
+            "linear_derivative": 0.33917266001034885,
+            "output_y": 3.0868475732859224e-05
+          },
+          {
+            "brightness_ratio": 0.473105609815191,
+            "display_derivative": 4.327372476311404,
+            "display_noise_gain_to_neutral": 0.3349382716049231,
+            "input_y": 7.366958144062303e-05,
+            "linear_derivative": 0.33496064136582665,
+            "output_y": 3.485349225229584e-05
+          },
+          {
+            "brightness_ratio": 0.4506184510334895,
+            "display_derivative": 4.277495338203523,
+            "display_noise_gain_to_neutral": 0.3310808009618565,
+            "input_y": 8.775309432647813e-05,
+            "linear_derivative": 0.331075490572965,
+            "output_y": 3.954316343879327e-05
+          },
+          {
+            "brightness_ratio": 0.43113633285713837,
+            "display_derivative": 4.232666595625649,
+            "display_noise_gain_to_neutral": 0.32760240838057736,
+            "input_y": 0.00010452897129703908,
+            "linear_derivative": 0.3276057736552537,
+            "output_y": 4.5066237362334505e-05
+          },
+          {
+            "brightness_ratio": 0.4142447613457672,
+            "display_derivative": 4.192276141328438,
+            "display_noise_gain_to_neutral": 0.3244755449073735,
+            "input_y": 0.0001245119152125487,
+            "linear_derivative": 0.3244795775021957,
+            "output_y": 5.157840860192664e-05
+          },
+          {
+            "brightness_ratio": 0.3996093923586255,
+            "display_derivative": 4.158666648611093,
+            "display_noise_gain_to_neutral": 0.32188235871273013,
+            "input_y": 0.00014831502537073247,
+            "linear_derivative": 0.3218904879403101,
+            "output_y": 5.9268077166052535e-05
+          },
+          {
+            "brightness_ratio": 0.38695587067122084,
+            "display_derivative": 4.132820964339974,
+            "display_noise_gain_to_neutral": 0.31987974136155606,
+            "input_y": 0.00017666860808598364,
+            "linear_derivative": 0.3198777836176669,
+            "output_y": 6.836295506218448e-05
+          },
+          {
+            "brightness_ratio": 0.376060292325614,
+            "display_derivative": 4.112796230859257,
+            "display_noise_gain_to_neutral": 0.3183279742764986,
+            "input_y": 0.00021044258331225028,
+            "linear_derivative": 0.3183278816454597,
+            "output_y": 7.913909939816222e-05
+          },
+          {
+            "brightness_ratio": 0.36673720210664046,
+            "display_derivative": 4.104690516952348,
+            "display_noise_gain_to_neutral": 0.3177028909787917,
+            "input_y": 0.0002506731747701304,
+            "linear_derivative": 0.31770050440807784,
+            "output_y": 9.193117875838652e-05
+          },
+          {
+            "brightness_ratio": 0.35883188761841045,
+            "display_derivative": 4.10045108774001,
+            "display_noise_gain_to_neutral": 0.3173765778058974,
+            "input_y": 0.00029859470246143137,
+            "linear_derivative": 0.31737237521209083,
+            "output_y": 0.00010714530071709305
+          },
+          {
+            "brightness_ratio": 0.3522179081086054,
+            "display_derivative": 4.107478502657944,
+            "display_noise_gain_to_neutral": 0.31791588249726954,
+            "input_y": 0.0003556774530014631,
+            "linear_derivative": 0.3178958361578948,
+            "output_y": 0.00012527596845757216
+          },
+          {
+            "brightness_ratio": 0.34678857228432913,
+            "display_derivative": 4.121458433087466,
+            "display_noise_gain_to_neutral": 0.31900460259664787,
+            "input_y": 0.00042367278967365014,
+            "linear_derivative": 0.3189811572037525,
+            "output_y": 0.00014692488184664398
+          },
+          {
+            "brightness_ratio": 0.3424560504713296,
+            "display_derivative": 4.141388113683658,
+            "display_noise_gain_to_neutral": 0.32054498269897025,
+            "input_y": 0.0005046668862339003,
+            "linear_derivative": 0.320540875672127,
+            "output_y": 0.0001728262286633253
+          },
+          {
+            "brightness_ratio": 0.339148312501789,
+            "display_derivative": 4.1738657198549385,
+            "display_noise_gain_to_neutral": 0.32305737109660276,
+            "input_y": 0.0006011447330785727,
+            "linear_derivative": 0.3230667257836554,
+            "output_y": 0.00020387722179293633
+          },
+          {
+            "brightness_ratio": 0.33680659067954305,
+            "display_derivative": 4.21120781695728,
+            "display_noise_gain_to_neutral": 0.32594293610796565,
+            "input_y": 0.0007160663795575838,
+            "linear_derivative": 0.3259448774734812,
+            "output_y": 0.00024117587599903345
+          },
+          {
+            "brightness_ratio": 0.33538346154945187,
+            "display_derivative": 4.262302282006659,
+            "display_noise_gain_to_neutral": 0.32990411847000084,
+            "input_y": 0.0008529577516329774,
+            "linear_derivative": 0.329882496896254,
+            "output_y": 0.0002860679232981056
+          },
+          {
+            "brightness_ratio": 0.3348414698903995,
+            "display_derivative": 4.318245493548848,
+            "display_noise_gain_to_neutral": 0.3342308794042514,
+            "input_y": 0.0010160188312713244,
+            "linear_derivative": 0.33422952736442363,
+            "output_y": 0.00034020523889921606
+          },
+          {
+            "brightness_ratio": 0.3351522571852105,
+            "display_derivative": 4.382377261361937,
+            "display_noise_gain_to_neutral": 0.33919295883030753,
+            "input_y": 0.0012102525166359447,
+            "linear_derivative": 0.3391812626161894,
+            "output_y": 0.00040561886271461844
+          },
+          {
+            "brightness_ratio": 0.33629590483844213,
+            "display_derivative": 4.460373664095227,
+            "display_noise_gain_to_neutral": 0.3452275204909811,
+            "input_y": 0.0014416181166552527,
+            "linear_derivative": 0.3452402539136678,
+            "output_y": 0.000484810268972069
+          },
+          {
+            "brightness_ratio": 0.3382602200147903,
+            "display_derivative": 4.54300802488236,
+            "display_noise_gain_to_neutral": 0.35163214806275506,
+            "input_y": 0.0017172141893540003,
+            "linear_derivative": 0.35162600811783673,
+            "output_y": 0.0005808652495034039
+          },
+          {
+            "brightness_ratio": 0.34103896932308303,
+            "display_derivative": 4.640027097790881,
+            "display_noise_gain_to_neutral": 0.3591491178144129,
+            "input_y": 0.002045496333634036,
+            "linear_derivative": 0.35913522428725403,
+            "output_y": 0.0006975939613766968
+          },
+          {
+            "brightness_ratio": 0.3446335536852103,
+            "display_derivative": 4.7506240753526,
+            "display_noise_gain_to_neutral": 0.3676899187768561,
+            "input_y": 0.0024365366166024323,
+            "linear_derivative": 0.36769536186938306,
+            "output_y": 0.0008397122728638351
+          },
+          {
+            "brightness_ratio": 0.34905007210101857,
+            "display_derivative": 4.865176028876004,
+            "display_noise_gain_to_neutral": 0.37655930367817675,
+            "input_y": 0.002902332595970602,
+            "linear_derivative": 0.37656161214210276,
+            "output_y": 0.001013059401884675
+          },
+          {
+            "brightness_ratio": 0.35430325057608464,
+            "display_derivative": 4.996035493429167,
+            "display_noise_gain_to_neutral": 0.41671303594312925,
+            "input_y": 0.0034571754186807383,
+            "linear_derivative": 0.3866732169028367,
+            "output_y": 0.001224888488650322
+          },
+          {
+            "brightness_ratio": 0.3604113104825272,
+            "display_derivative": 5.138911053310132,
+            "display_noise_gain_to_neutral": 0.47468294281136136,
+            "input_y": 0.004118088289441307,
+            "linear_derivative": 0.39774853353792283,
+            "output_y": 0.0014842055970802903
+          },
+          {
+            "brightness_ratio": 0.36739902624618587,
+            "display_derivative": 5.2982681910996865,
+            "display_noise_gain_to_neutral": 0.5419882338056032,
+            "input_y": 0.00490534876188177,
+            "linear_derivative": 0.41008267732972337,
+            "output_y": 0.0018022203585132957
+          },
+          {
+            "brightness_ratio": 0.3752982233368305,
+            "display_derivative": 5.465110905412189,
+            "display_noise_gain_to_neutral": 0.6191077648032991,
+            "input_y": 0.005843110876809173,
+            "linear_derivative": 0.42297627659180587,
+            "output_y": 0.0021929091308265924
+          },
+          {
+            "brightness_ratio": 0.38414656731038804,
+            "display_derivative": 5.6544664214894125,
+            "display_noise_gain_to_neutral": 0.7093685262012803,
+            "input_y": 0.006960146235471404,
+            "linear_derivative": 0.43765219980572223,
+            "output_y": 0.0026737162843346596
+          },
+          {
+            "brightness_ratio": 0.3939873993157509,
+            "display_derivative": 5.617490011544958,
+            "display_noise_gain_to_neutral": 0.7804616864208129,
+            "input_y": 0.008290726744791973,
+            "linear_derivative": 0.45329191696950644,
+            "output_y": 0.0032664418686181307
+          },
+          {
+            "brightness_ratio": 0.4048709697018181,
+            "display_derivative": 5.177488989685055,
+            "display_noise_gain_to_neutral": 0.7966349505931493,
+            "input_y": 0.00987567611819776,
+            "linear_derivative": 0.4700853033505227,
+            "output_y": 0.003998374566435814
+          },
+          {
+            "brightness_ratio": 0.4168557580631271,
+            "display_derivative": 4.778475534809598,
+            "display_noise_gain_to_neutral": 0.8142046510277094,
+            "input_y": 0.011763622393272924,
+            "linear_derivative": 0.4887146204547478,
+            "output_y": 0.004903733730316162
+          },
+          {
+            "brightness_ratio": 0.4300060829503808,
+            "display_derivative": 4.411551793875909,
+            "display_noise_gain_to_neutral": 0.8324521025914491,
+            "input_y": 0.014012489894896016,
+            "linear_derivative": 0.5087965945240062,
+            "output_y": 0.006025455892086029
+          },
+          {
+            "brightness_ratio": 0.4443950712720212,
+            "display_derivative": 4.072503735447719,
+            "display_noise_gain_to_neutral": 0.8510244989585151,
+            "input_y": 0.01669127641897503,
+            "linear_derivative": 0.5302246139705775,
+            "output_y": 0.007417520973831415
+          },
+          {
+            "brightness_ratio": 0.4601057169201515,
+            "display_derivative": 3.76307231045299,
+            "display_noise_gain_to_neutral": 0.8708532039171143,
+            "input_y": 0.019882170162785286,
+            "linear_derivative": 0.5536970261851968,
+            "output_y": 0.00914790015667677
+          },
+          {
+            "brightness_ratio": 0.47722849370956494,
+            "display_derivative": 3.4813835053526123,
+            "display_noise_gain_to_neutral": 0.8921905667064053,
+            "input_y": 0.023683071351724993,
+            "linear_derivative": 0.5795040228100042,
+            "output_y": 0.011302236467599869
+          },
+          {
+            "brightness_ratio": 0.4958648182156941,
+            "display_derivative": 3.220375846297067,
+            "display_noise_gain_to_neutral": 0.9139819437551455,
+            "input_y": 0.028210595928846085,
+            "linear_derivative": 0.6070470664718745,
+            "output_y": 0.013988642022013664
+          },
+          {
+            "brightness_ratio": 0.5161268109414596,
+            "display_derivative": 2.9792111297483004,
+            "display_noise_gain_to_neutral": 0.9364227535160378,
+            "input_y": 0.03360365346374981,
+            "linear_derivative": 0.6366394322144304,
+            "output_y": 0.01734374649822712
+          },
+          {
+            "brightness_ratio": 0.5381405130864366,
+            "display_derivative": 2.7602119499774878,
+            "display_noise_gain_to_neutral": 0.9607397522082951,
+            "input_y": 0.04002770905513353,
+            "linear_derivative": 0.6693435237483818,
+            "output_y": 0.021540531888604164
+          },
+          {
+            "brightness_ratio": 0.5620423232518784,
+            "display_derivative": 2.557453839457349,
+            "display_noise_gain_to_neutral": 0.9858119174611178,
+            "input_y": 0.047679859986974965,
+            "linear_derivative": 0.7044124294310637,
+            "output_y": 0.026798099279403687
+          },
+          {
+            "brightness_ratio": 0.5879855664978915,
+            "display_derivative": 2.3699320682639122,
+            "display_noise_gain_to_neutral": 1.0116937551904388,
+            "input_y": 0.05679488289590185,
+            "linear_derivative": 0.7421735476478656,
+            "output_y": 0.033394571393728256
+          },
+          {
+            "brightness_ratio": 0.6161384520717171,
+            "display_derivative": 2.199289505241346,
+            "display_noise_gain_to_neutral": 1.0396568730682467,
+            "input_y": 0.06765243698367361,
+            "linear_derivative": 0.7838246058490568,
+            "output_y": 0.041683267802000046
+          },
+          {
+            "brightness_ratio": 0.6466874739584667,
+            "display_derivative": 2.0411344937387828,
+            "display_noise_gain_to_neutral": 1.0685992625149052,
+            "input_y": 0.08058564427747372,
+            "linear_derivative": 0.828654927857238,
+            "output_y": 0.05211372673511505
+          },
+          {
+            "brightness_ratio": 0.679838309178174,
+            "display_derivative": 1.894527209960588,
+            "display_noise_gain_to_neutral": 1.0984225869056905,
+            "input_y": 0.09599131019009301,
+            "linear_derivative": 0.8770360076159226,
+            "output_y": 0.06525857001543045
+          },
+          {
+            "brightness_ratio": 0.7158190229219071,
+            "display_derivative": 1.759996755606627,
+            "display_noise_gain_to_neutral": 1.1300496739057153,
+            "input_y": 0.1143420979583378,
+            "linear_derivative": 0.9297742164591254,
+            "output_y": 0.08184824883937836
+          },
+          {
+            "brightness_ratio": 0.7548797297458012,
+            "display_derivative": 1.6363942217850116,
+            "display_noise_gain_to_neutral": 1.1635245332861766,
+            "input_y": 0.13620103048518928,
+            "linear_derivative": 0.9874953255239464,
+            "output_y": 0.10281539708375931
+          },
+          {
+            "brightness_ratio": 0.797297367010658,
+            "display_derivative": 1.521676226883371,
+            "display_noise_gain_to_neutral": 1.1982410552319207,
+            "input_y": 0.1622387645186173,
+            "linear_derivative": 1.049858358646032,
+            "output_y": 0.12935253977775574
+          },
+          {
+            "brightness_ratio": 0.8433815228217276,
+            "display_derivative": 1.4154135091799382,
+            "display_noise_gain_to_neutral": 1.2342964959261113,
+            "input_y": 0.19325416715837243,
+            "linear_derivative": 1.1175437142633144,
+            "output_y": 0.16298699378967285
+          },
+          {
+            "brightness_ratio": 0.8934701551087021,
+            "display_derivative": 1.3179963289639867,
+            "display_noise_gain_to_neutral": 1.272808492911113,
+            "input_y": 0.23019882600123306,
+            "linear_derivative": 1.1919047800045999,
+            "output_y": 0.20567578077316284
+          },
+          {
+            "brightness_ratio": 0.9479394196595751,
+            "display_derivative": 1.2276803080425613,
+            "display_noise_gain_to_neutral": 1.3129494191793616,
+            "input_y": 0.2742062449236564,
+            "linear_derivative": 1.2727106024046804,
+            "output_y": 0.25993090867996216
+          },
+          {
+            "brightness_ratio": 1.0071090216440446,
+            "display_derivative": 1.135780360809322,
+            "display_noise_gain_to_neutral": 1.345160416770522,
+            "input_y": 0.32662662126143766,
+            "linear_derivative": 1.3507581804677897,
+            "output_y": 0.32894861698150635
+          },
+          {
+            "brightness_ratio": 1.0619868496964278,
+            "display_derivative": 0.987820101640057,
+            "display_noise_gain_to_neutral": 1.295638369306622,
+            "input_y": 0.38906827138953565,
+            "linear_derivative": 1.3419032677329814,
+            "output_y": 0.41318538784980774
+          },
+          {
+            "brightness_ratio": 1.103868762531827,
+            "display_derivative": 0.8441076991791956,
+            "display_noise_gain_to_neutral": 1.2260689556910436,
+            "input_y": 0.46344697568566734,
+            "linear_derivative": 1.2988482807468795,
+            "output_y": 0.5115846395492554
+          },
+          {
+            "brightness_ratio": 1.128676736932075,
+            "display_derivative": 0.7029810197208882,
+            "display_noise_gain_to_neutral": 1.1307763636990995,
+            "input_y": 0.552044756836906,
+            "linear_derivative": 1.2134824112250866,
+            "output_y": 0.6230800747871399
+          },
+          {
+            "brightness_ratio": 1.1317283042967416,
+            "display_derivative": 0.5622228199790456,
+            "display_noise_gain_to_neutral": 1.0015777362551916,
+            "input_y": 0.6575798948741395,
+            "linear_derivative": 1.0765149135382515,
+            "output_y": 0.7442017793655396
+          },
+          {
+            "brightness_ratio": 1.1071017297198957,
+            "display_derivative": 0.41653145693980537,
+            "display_noise_gain_to_neutral": 0.8217550403224143,
+            "input_y": 0.7832903270747562,
+            "linear_derivative": 0.8719750530201755,
+            "output_y": 0.8671820759773254
+          },
+          {
+            "brightness_ratio": 1.0442369625902146,
+            "display_derivative": 0.23614575455179773,
+            "display_noise_gain_to_neutral": 0.5159057171760337,
+            "input_y": 0.9330329915368076,
+            "linear_derivative": 0.5291402095668384,
+            "output_y": 0.9743075370788574
+          }
+        ],
+        "recipe": "contrast50",
+        "shadows": 0,
+        "small_noise_checks": [
+          {
+            "input_sigma": 5e-06,
+            "input_y": 0.001,
+            "measured_display_sigma": 2.2186943754219146e-05,
+            "predicted_display_sigma": 2.1570472745228653e-05,
+            "ratio_measured_to_predicted": 1.0285793925924436
+          },
+          {
+            "input_sigma": 5e-05,
+            "input_y": 0.01,
+            "measured_display_sigma": 0.00026489764390494325,
+            "predicted_display_sigma": 0.00025743904074292806,
+            "ratio_measured_to_predicted": 1.028972307931582
+          },
+          {
+            "input_sigma": 0.0005,
+            "input_y": 0.1,
+            "measured_display_sigma": 0.0009582689127372083,
+            "predicted_display_sigma": 0.000931167390978288,
+            "ratio_measured_to_predicted": 1.0291048870713215
+          },
+          {
+            "input_sigma": 0.0015,
+            "input_y": 0.3,
+            "measured_display_sigma": 0.0018272285421551716,
+            "predicted_display_sigma": 0.0017762849149255413,
+            "ratio_measured_to_predicted": 1.0286798738206735
+          }
+        ]
+      },
+      {
+        "contrast": 0,
+        "ev": 0,
+        "points": [
+          {
+            "brightness_ratio": 1,
+            "display_derivative": 25.344883203504587,
+            "display_noise_gain_to_neutral": 1.9616450603485625,
+            "input_y": 1.52587890625e-05,
+            "linear_derivative": 1.9616782665252686,
+            "output_y": 1.52587890625e-05
+          },
+          {
+            "brightness_ratio": 1.397539773082437,
+            "display_derivative": 52.56495752700479,
+            "display_noise_gain_to_neutral": 4.068401300975795,
+            "input_y": 1.8175832273305674e-05,
+            "linear_derivative": 4.06854520331156,
+            "output_y": 2.5401448510820046e-05
+          },
+          {
+            "brightness_ratio": 1.9530957482997928,
+            "display_derivative": 73.54600368548765,
+            "display_noise_gain_to_neutral": 5.692417559336982,
+            "input_y": 2.165053055482854e-05,
+            "linear_derivative": 5.692415145935531,
+            "output_y": 4.2285559175070375e-05
+          },
+          {
+            "brightness_ratio": 2.7295067258779064,
+            "display_derivative": 102.702620620402,
+            "display_noise_gain_to_neutral": 7.9490760332909645,
+            "input_y": 2.5789491576349864e-05,
+            "linear_derivative": 7.949119243064987,
+            "output_y": 7.039259071461856e-05
+          },
+          {
+            "brightness_ratio": 3.814574382238851,
+            "display_derivative": 143.63345626211583,
+            "display_noise_gain_to_neutral": 11.11736144007461,
+            "input_y": 3.071970333855345e-05,
+            "linear_derivative": 11.117140577563143,
+            "output_y": 0.0001171825933852233
+          },
+          {
+            "brightness_ratio": 5.3310508594511115,
+            "display_derivative": 200.72500523114078,
+            "display_noise_gain_to_neutral": 15.535914897847576,
+            "input_y": 3.6592430308868485e-05,
+            "linear_derivative": 15.535991116961343,
+            "output_y": 0.00019507610704749823
+          },
+          {
+            "brightness_ratio": 7.450489306368018,
+            "display_derivative": 280.21406866557777,
+            "display_noise_gain_to_neutral": 21.68810249134011,
+            "input_y": 4.3587854386241194e-05,
+            "linear_derivative": 21.688729260077174,
+            "output_y": 0.00032475084299221635
+          },
+          {
+            "brightness_ratio": 10.412454907738866,
+            "display_derivative": 392.167317914148,
+            "display_noise_gain_to_neutral": 30.353139013452502,
+            "input_y": 5.192060308537934e-05,
+            "linear_derivative": 30.35350757849572,
+            "output_y": 0.0005406209384091198
+          },
+          {
+            "brightness_ratio": 14.002791385633719,
+            "display_derivative": 0.012159863386583963,
+            "display_noise_gain_to_neutral": 0.0009411211106532186,
+            "input_y": 6.184633455140747e-05,
+            "linear_derivative": 0.0009411658966641661,
+            "output_y": 0.0008660213206894696
+          },
+          {
+            "brightness_ratio": 11.755480399837406,
+            "display_derivative": 0.0102083243097047,
+            "display_noise_gain_to_neutral": 0.0007901234568995222,
+            "input_y": 7.366958144062303e-05,
+            "linear_derivative": 0.0007901179805179458,
+            "output_y": 0.0008660213206894696
+          },
+          {
+            "brightness_ratio": 9.868840835030943,
+            "display_derivative": 0,
+            "display_noise_gain_to_neutral": 0,
+            "input_y": 8.775309432647813e-05,
+            "linear_derivative": 0,
+            "output_y": 0.0008660213206894696
+          },
+          {
+            "brightness_ratio": 8.28498901453995,
+            "display_derivative": -0.003597294457732902,
+            "display_noise_gain_to_neutral": 0.00027842550349355,
+            "input_y": 0.00010452897129703908,
+            "linear_derivative": -0.0002784283638842058,
+            "output_y": 0.0008660213788971305
+          },
+          {
+            "brightness_ratio": 6.955328887288606,
+            "display_derivative": 0,
+            "display_noise_gain_to_neutral": 0,
+            "input_y": 0.0001245119152125487,
+            "linear_derivative": 0,
+            "output_y": 0.0008660213206894696
+          },
+          {
+            "brightness_ratio": 6.2643971514550865,
+            "display_derivative": 79.92752890934187,
+            "display_noise_gain_to_neutral": 6.186420722134883,
+            "input_y": 0.00014831502537073247,
+            "linear_derivative": 6.186537476670979,
+            "output_y": 0.0009291042224504054
+          },
+          {
+            "brightness_ratio": 6.25075536822697,
+            "display_derivative": 79.76392350180032,
+            "display_noise_gain_to_neutral": 6.173716074297364,
+            "input_y": 0.00017666860808598364,
+            "linear_derivative": 6.173678289612815,
+            "output_y": 0.0011043122503906488
+          },
+          {
+            "brightness_ratio": 6.23714260297475,
+            "display_derivative": 79.57034506468007,
+            "display_noise_gain_to_neutral": 6.158697230577283,
+            "input_y": 0.00021044258331225028,
+            "linear_derivative": 6.158418842042933,
+            "output_y": 0.0013125604018568993
+          },
+          {
+            "brightness_ratio": 6.254011768178864,
+            "display_derivative": 94.71595399804549,
+            "display_noise_gain_to_neutral": 7.331011262046539,
+            "input_y": 0.0002506731747701304,
+            "linear_derivative": 7.331188397183744,
+            "output_y": 0.0015677129849791527
+          },
+          {
+            "brightness_ratio": 6.445450202801993,
+            "display_derivative": 97.65650303722566,
+            "display_noise_gain_to_neutral": 7.55865295579672,
+            "input_y": 0.00029859470246143137,
+            "linear_derivative": 7.558357927965541,
+            "output_y": 0.0019245772855356336
+          },
+          {
+            "brightness_ratio": 6.642747464684807,
+            "display_derivative": 100.62833377441707,
+            "display_noise_gain_to_neutral": 7.7885606742487,
+            "input_y": 0.0003556774530014631,
+            "linear_derivative": 7.788570725573503,
+            "output_y": 0.0023626754991710186
+          },
+          {
+            "brightness_ratio": 6.846095802750623,
+            "display_derivative": 103.65262718351785,
+            "display_noise_gain_to_neutral": 8.022806897025156,
+            "input_y": 0.00042367278967365014,
+            "linear_derivative": 8.022374386321315,
+            "output_y": 0.002900504507124424
+          },
+          {
+            "brightness_ratio": 6.923401487904662,
+            "display_derivative": 49.4303550248892,
+            "display_noise_gain_to_neutral": 3.8259278921249558,
+            "input_y": 0.0005046668862339003,
+            "linear_derivative": 4.148274415301119,
+            "output_y": 0.0034940114710479975
+          },
+          {
+            "brightness_ratio": 6.454476379885965,
+            "display_derivative": 43.34279521431149,
+            "display_noise_gain_to_neutral": 3.354734056561965,
+            "input_y": 0.0006011447330785727,
+            "linear_derivative": 3.86711790629331,
+            "output_y": 0.003880074480548501
+          },
+          {
+            "brightness_ratio": 6.017310429297147,
+            "display_derivative": 38.00344880359861,
+            "display_noise_gain_to_neutral": 2.9414258862730787,
+            "input_y": 0.0007160663795575838,
+            "linear_derivative": 3.604313452752455,
+            "output_y": 0.004308793693780899
+          },
+          {
+            "brightness_ratio": 5.609754905349742,
+            "display_derivative": 33.34238099851005,
+            "display_noise_gain_to_neutral": 2.5807153231341795,
+            "input_y": 0.0008529577516329774,
+            "linear_derivative": 3.3616077362659227,
+            "output_y": 0.0047848839312791824
+          },
+          {
+            "brightness_ratio": 5.319796526533748,
+            "display_derivative": 50.60409206424749,
+            "display_noise_gain_to_neutral": 3.916741236077159,
+            "input_y": 0.0010160188312713244,
+            "linear_derivative": 5.477835188288778,
+            "output_y": 0.00540501344949007
+          },
+          {
+            "brightness_ratio": 5.347617708960023,
+            "display_derivative": 45.79958341874232,
+            "display_noise_gain_to_neutral": 3.5448559734838594,
+            "input_y": 0.0012102525166359447,
+            "linear_derivative": 5.5071234421077175,
+            "output_y": 0.006471967790275812
+          },
+          {
+            "brightness_ratio": 5.3755888814898345,
+            "display_derivative": 41.44665462111051,
+            "display_noise_gain_to_neutral": 3.20792087951548,
+            "input_y": 0.0014416181166552527,
+            "linear_derivative": 5.535957047376781,
+            "output_y": 0.007749546319246292
+          },
+          {
+            "brightness_ratio": 5.403704564862101,
+            "display_derivative": 37.50421170437861,
+            "display_noise_gain_to_neutral": 2.9028534510133217,
+            "input_y": 0.0017172141893540003,
+            "linear_derivative": 5.564459969405127,
+            "output_y": 0.009279318153858185
+          },
+          {
+            "brightness_ratio": 5.404384209669501,
+            "display_derivative": 30.24209462109054,
+            "display_noise_gain_to_neutral": 2.3408099511306295,
+            "input_y": 0.002045496333634036,
+            "linear_derivative": 4.96918738607325,
+            "output_y": 0.011054648086428642
+          },
+          {
+            "brightness_ratio": 5.32896603374043,
+            "display_derivative": 27.149634744089763,
+            "display_noise_gain_to_neutral": 2.1013338112076876,
+            "input_y": 0.0024365366166024323,
+            "linear_derivative": 4.900406990192171,
+            "output_y": 0.012984220869839191
+          },
+          {
+            "brightness_ratio": 5.254595928500087,
+            "display_derivative": 24.37716566939372,
+            "display_noise_gain_to_neutral": 1.8867659619368742,
+            "input_y": 0.002902332595970602,
+            "linear_derivative": 4.83288831740282,
+            "output_y": 0.015250585041940212
+          },
+          {
+            "brightness_ratio": 5.181262975571723,
+            "display_derivative": 21.883404979871603,
+            "display_noise_gain_to_neutral": 1.8252672820136717,
+            "input_y": 0.0034571754186807383,
+            "linear_derivative": 4.765209463585668,
+            "output_y": 0.01791253499686718
+          },
+          {
+            "brightness_ratio": 5.047604046951166,
+            "display_derivative": 14.686190778811625,
+            "display_noise_gain_to_neutral": 1.3565683829232578,
+            "input_y": 0.004118088289441307,
+            "linear_derivative": 3.4879747734216826,
+            "output_y": 0.020786479115486145
+          },
+          {
+            "brightness_ratio": 4.781902108339724,
+            "display_derivative": 12.96719281300078,
+            "display_noise_gain_to_neutral": 1.3264836125021238,
+            "input_y": 0.00490534876188177,
+            "linear_derivative": 3.3044886710489703,
+            "output_y": 0.02345689758658409
+          },
+          {
+            "brightness_ratio": 4.530189964512429,
+            "display_derivative": 11.441261738539543,
+            "display_noise_gain_to_neutral": 1.2961080029431686,
+            "input_y": 0.005843110876809173,
+            "linear_derivative": 3.1289485768341936,
+            "output_y": 0.026470402255654335
+          },
+          {
+            "brightness_ratio": 4.291729000182335,
+            "display_derivative": 10.10849838665311,
+            "display_noise_gain_to_neutral": 1.2681392138781777,
+            "input_y": 0.006960146235471404,
+            "linear_derivative": 2.9661197930424046,
+            "output_y": 0.029871061444282532
+          },
+          {
+            "brightness_ratio": 4.053553180483328,
+            "display_derivative": 8.255514462893943,
+            "display_noise_gain_to_neutral": 1.146973599728679,
+            "input_y": 0.008290726744791973,
+            "linear_derivative": 2.594893323089176,
+            "output_y": 0.03360690176486969
+          },
+          {
+            "brightness_ratio": 3.806171237060294,
+            "display_derivative": 7.2574206986628225,
+            "display_noise_gain_to_neutral": 1.1166638869211083,
+            "input_y": 0.00987567611819776,
+            "linear_derivative": 2.434947095142283,
+            "output_y": 0.037588514387607574
+          },
+          {
+            "brightness_ratio": 3.5738853869654723,
+            "display_derivative": 6.386018982896178,
+            "display_noise_gain_to_neutral": 1.0881140479947,
+            "input_y": 0.011763622393272924,
+            "linear_derivative": 2.287529603664261,
+            "output_y": 0.0420418381690979
+          },
+          {
+            "brightness_ratio": 3.3557776844298965,
+            "display_derivative": 5.61698838056251,
+            "display_noise_gain_to_neutral": 1.059915876794651,
+            "input_y": 0.014012489894896016,
+            "linear_derivative": 2.1478424282208657,
+            "output_y": 0.047022800892591476
+          },
+          {
+            "brightness_ratio": 3.143720218976378,
+            "display_derivative": 4.666699854018386,
+            "display_noise_gain_to_neutral": 0.9751926979188296,
+            "input_y": 0.01669127641897503,
+            "linear_derivative": 1.9023417419918307,
+            "output_y": 0.05247270315885544
+          },
+          {
+            "brightness_ratio": 2.9338757746736266,
+            "display_derivative": 4.094108491229466,
+            "display_noise_gain_to_neutral": 0.9474618616463027,
+            "input_y": 0.019882170162785286,
+            "linear_derivative": 1.7752218517293337,
+            "output_y": 0.058331817388534546
+          },
+          {
+            "brightness_ratio": 2.7380406384322282,
+            "display_derivative": 3.592417248340626,
+            "display_noise_gain_to_neutral": 0.9206457075800552,
+            "input_y": 0.023683071351724993,
+            "linear_derivative": 1.656815627118454,
+            "output_y": 0.06484521180391312
+          },
+          {
+            "brightness_ratio": 2.5552754245962785,
+            "display_derivative": 3.152909400098398,
+            "display_noise_gain_to_neutral": 0.8948341434430129,
+            "input_y": 0.028210595928846085,
+            "linear_derivative": 1.5468673779968538,
+            "output_y": 0.07208584249019623
+          },
+          {
+            "brightness_ratio": 2.374405282497748,
+            "display_derivative": 2.4876651303589994,
+            "display_noise_gain_to_neutral": 0.781920491614643,
+            "input_y": 0.03360365346374981,
+            "linear_derivative": 1.2948410723546293,
+            "output_y": 0.0797886922955513
+          },
+          {
+            "brightness_ratio": 2.1929140111406196,
+            "display_derivative": 2.174236657265795,
+            "display_noise_gain_to_neutral": 0.756780865092903,
+            "input_y": 0.04002770905513353,
+            "linear_derivative": 1.196572536823268,
+            "output_y": 0.08777732402086258
+          },
+          {
+            "brightness_ratio": 2.0252948645325963,
+            "display_derivative": 1.8991690716666767,
+            "display_noise_gain_to_neutral": 0.7320654141385533,
+            "input_y": 0.047679859986974965,
+            "linear_derivative": 1.104854966540185,
+            "output_y": 0.09656577557325363
+          },
+          {
+            "brightness_ratio": 1.8704886775158842,
+            "display_derivative": 1.6580863920484799,
+            "display_noise_gain_to_neutral": 0.7078159204919842,
+            "input_y": 0.05679488289590185,
+            "linear_derivative": 1.0198901009612604,
+            "output_y": 0.10623418539762497
+          },
+          {
+            "brightness_ratio": 1.7442546501838454,
+            "display_derivative": 1.7794043148301373,
+            "display_noise_gain_to_neutral": 0.8411670775819187,
+            "input_y": 0.06765243698367361,
+            "linear_derivative": 1.163636346257492,
+            "output_y": 0.11800307780504227
+          },
+          {
+            "brightness_ratio": 1.6456027790265182,
+            "display_derivative": 1.5685819550120506,
+            "display_noise_gain_to_neutral": 0.8212028778416096,
+            "input_y": 0.08058564427747372,
+            "linear_derivative": 1.0980931720912015,
+            "output_y": 0.1326119601726532
+          },
+          {
+            "brightness_ratio": 1.5525303127020358,
+            "display_derivative": 1.3820093781158114,
+            "display_noise_gain_to_neutral": 0.8012713189109982,
+            "input_y": 0.09599131019009301,
+            "linear_derivative": 1.0356468383219837,
+            "output_y": 0.1490294188261032
+          },
+          {
+            "brightness_ratio": 1.4647215614565057,
+            "display_derivative": 1.218200582380889,
+            "display_noise_gain_to_neutral": 0.7821759707714843,
+            "input_y": 0.1143420979583378,
+            "linear_derivative": 0.9772761720130327,
+            "output_y": 0.16747933626174927
+          },
+          {
+            "brightness_ratio": 1.389144005905024,
+            "display_derivative": 1.1743666297771564,
+            "display_noise_gain_to_neutral": 0.8350092945988435,
+            "input_y": 0.13620103048518928,
+            "linear_derivative": 1.0115645667842244,
+            "output_y": 0.18920284509658813
+          },
+          {
+            "brightness_ratio": 1.3246561778599646,
+            "display_derivative": 1.0397678918774684,
+            "display_noise_gain_to_neutral": 0.8187632519641243,
+            "input_y": 0.1622387645186173,
+            "linear_derivative": 0.96467016673455,
+            "output_y": 0.2149105817079544
+          },
+          {
+            "brightness_ratio": 1.2631626635317639,
+            "display_derivative": 0.9203230164307021,
+            "display_noise_gain_to_neutral": 0.8025580276951799,
+            "input_y": 0.19325416715837243,
+            "linear_derivative": 0.9197268723036407,
+            "output_y": 0.24411144852638245
+          },
+          {
+            "brightness_ratio": 1.204524742645133,
+            "display_derivative": 0.8150004310955029,
+            "display_noise_gain_to_neutral": 0.7870579360717771,
+            "input_y": 0.23019882600123306,
+            "linear_derivative": 0.8772439894977645,
+            "output_y": 0.27728018164634705
+          },
+          {
+            "brightness_ratio": 1.1580363339258952,
+            "display_derivative": 0.8117084541098619,
+            "display_noise_gain_to_neutral": 0.8680860451901732,
+            "input_y": 0.2742062449236564,
+            "linear_derivative": 0.9456750599080379,
+            "output_y": 0.3175407946109772
+          },
+          {
+            "brightness_ratio": 1.1214996442502028,
+            "display_derivative": 0.7232095483653389,
+            "display_noise_gain_to_neutral": 0.8565325577546786,
+            "input_y": 0.32662662126143766,
+            "linear_derivative": 0.9158038271653071,
+            "output_y": 0.366311639547348
+          },
+          {
+            "brightness_ratio": 1.0861152179824995,
+            "display_derivative": 0.6446302263520899,
+            "display_noise_gain_to_neutral": 0.8455058303530194,
+            "input_y": 0.38906827138953565,
+            "linear_derivative": 0.887248654288388,
+            "output_y": 0.4225729703903198
+          },
+          {
+            "brightness_ratio": 1.0518471816142925,
+            "display_derivative": 0.5743466230908542,
+            "display_noise_gain_to_neutral": 0.8342401864861901,
+            "input_y": 0.46344697568566734,
+            "linear_derivative": 0.859189616747156,
+            "output_y": 0.4874753952026367
+          },
+          {
+            "brightness_ratio": 1.0305826798399609,
+            "display_derivative": 0.5880974980636865,
+            "display_noise_gain_to_neutral": 0.9459810886857629,
+            "input_y": 0.552044756836906,
+            "linear_derivative": 0.962828490266012,
+            "output_y": 0.5689277648925781
+          },
+          {
+            "brightness_ratio": 1.0187942623054311,
+            "display_derivative": 0.5284959442895012,
+            "display_noise_gain_to_neutral": 0.9414946400099111,
+            "input_y": 0.6575798948741395,
+            "linear_derivative": 0.9517909190088334,
+            "output_y": 0.6699386239051819
+          },
+          {
+            "brightness_ratio": 1.0071415351873567,
+            "display_derivative": 0.47495317672478704,
+            "display_noise_gain_to_neutral": 0.9370124642162123,
+            "input_y": 0.7832903270747562,
+            "linear_derivative": 0.9408412213580112,
+            "output_y": 0.7888842225074768
+          },
+          {
+            "brightness_ratio": 0.995621606936169,
+            "display_derivative": 0.4268912030996177,
+            "display_noise_gain_to_neutral": 0.9326257535700911,
+            "input_y": 0.9330329915368076,
+            "linear_derivative": 0.9302595353992879,
+            "output_y": 0.9289478063583374
+          }
+        ],
+        "recipe": "shadows100",
+        "shadows": 1,
+        "small_noise_checks": [
+          {
+            "input_sigma": 5e-06,
+            "input_y": 0.001,
+            "measured_display_sigma": 0.00026275821395344213,
+            "predicted_display_sigma": 0.0002553267387584227,
+            "ratio_measured_to_predicted": 1.0291057459596924
+          },
+          {
+            "input_sigma": 5e-05,
+            "input_y": 0.01,
+            "measured_display_sigma": 0.000370140139017564,
+            "predicted_display_sigma": 0.0003598115673127122,
+            "ratio_measured_to_predicted": 1.028705502110429
+          },
+          {
+            "input_sigma": 0.0005,
+            "input_y": 0.1,
+            "measured_display_sigma": 0.0006904821090640138,
+            "predicted_display_sigma": 0.0006709780273136956,
+            "ratio_measured_to_predicted": 1.0290681377874682
+          },
+          {
+            "input_sigma": 0.0015,
+            "input_y": 0.3,
+            "measured_display_sigma": 0.0011809123066842716,
+            "predicted_display_sigma": 0.001148012597408932,
+            "ratio_measured_to_predicted": 1.0286579688668873
+          }
+        ]
+      },
+      {
+        "contrast": 0,
+        "ev": 2,
+        "points": [
+          {
+            "brightness_ratio": 56.75557327270508,
+            "display_derivative": 1064.8709106445153,
+            "display_noise_gain_to_neutral": 82.41895395619123,
+            "input_y": 1.52587890625e-05,
+            "linear_derivative": 82.42225646972656,
+            "output_y": 0.0008660213206894696
+          },
+          {
+            "brightness_ratio": 47.64685917361651,
+            "display_derivative": 0,
+            "display_noise_gain_to_neutral": 0,
+            "input_y": 1.8175832273305674e-05,
+            "linear_derivative": 0,
+            "output_y": 0.0008660213206894696
+          },
+          {
+            "brightness_ratio": 40.000004549372484,
+            "display_derivative": 0.017367772497173254,
+            "display_noise_gain_to_neutral": 0.0013442554071634383,
+            "input_y": 2.165053055482854e-05,
+            "linear_derivative": 0.0013442548386068496,
+            "output_y": 0.0008660213206894696
+          },
+          {
+            "brightness_ratio": 33.58039977410692,
+            "display_derivative": 0,
+            "display_noise_gain_to_neutral": 0,
+            "input_y": 2.5789491576349864e-05,
+            "linear_derivative": 0,
+            "output_y": 0.0008660214371047914
+          },
+          {
+            "brightness_ratio": 28.19107043923196,
+            "display_derivative": 0.024480802135945855,
+            "display_noise_gain_to_neutral": 0.0018948365706078529,
+            "input_y": 3.071970333855345e-05,
+            "linear_derivative": 0.0018947989266685518,
+            "output_y": 0.0008660213206894696
+          },
+          {
+            "brightness_ratio": 25.06170788016917,
+            "display_derivative": 319.83852293847934,
+            "display_noise_gain_to_neutral": 24.75518218422041,
+            "input_y": 3.6592430308868485e-05,
+            "linear_derivative": 24.756098984131814,
+            "output_y": 0.0009170687990263104
+          },
+          {
+            "brightness_ratio": 25.0071512423699,
+            "display_derivative": 319.03444022504027,
+            "display_noise_gain_to_neutral": 24.692734632556203,
+            "input_y": 4.3587854386241194e-05,
+            "linear_derivative": 24.69306812887475,
+            "output_y": 0.0010900080669671297
+          },
+          {
+            "brightness_ratio": 24.952681909715057,
+            "display_derivative": 318.41234163277994,
+            "display_noise_gain_to_neutral": 24.644618834082674,
+            "input_y": 5.192060308537934e-05,
+            "linear_derivative": 24.64491808303126,
+            "output_y": 0.001295558293350041
+          },
+          {
+            "brightness_ratio": 24.95916993865003,
+            "display_derivative": 378.050152636528,
+            "display_noise_gain_to_neutral": 29.25945532615556,
+            "input_y": 6.184633455140747e-05,
+            "linear_derivative": 29.26178889318559,
+            "output_y": 0.0015436331741511822
+          },
+          {
+            "brightness_ratio": 25.723201071675284,
+            "display_derivative": 389.60069722596825,
+            "display_noise_gain_to_neutral": 30.15506172839751,
+            "input_y": 7.366958144062303e-05,
+            "linear_derivative": 30.1548527264674,
+            "output_y": 0.0018950174562633038
+          },
+          {
+            "brightness_ratio": 26.510597701059787,
+            "display_derivative": 401.50394509346785,
+            "display_noise_gain_to_neutral": 31.076655196711236,
+            "input_y": 8.775309432647813e-05,
+            "linear_derivative": 31.076156740983542,
+            "output_y": 0.002326386980712414
+          },
+          {
+            "brightness_ratio": 27.32213302684581,
+            "display_derivative": 413.76080894840726,
+            "display_noise_gain_to_neutral": 32.024501444333126,
+            "input_y": 0.00010452897129703908,
+            "linear_derivative": 32.024830413961354,
+            "output_y": 0.002855954458937049
+          },
+          {
+            "brightness_ratio": 27.840579739949558,
+            "display_derivative": 199.66410512878895,
+            "display_noise_gain_to_neutral": 15.453686046925725,
+            "input_y": 0.0001245119152125487,
+            "linear_derivative": 16.679924470258293,
+            "output_y": 0.0034664839040488005
+          },
+          {
+            "brightness_ratio": 25.95491773726704,
+            "display_derivative": 175.10012527405254,
+            "display_noise_gain_to_neutral": 13.55281538445265,
+            "input_y": 0.00014831502537073247,
+            "linear_derivative": 15.550035709116473,
+            "output_y": 0.0038495042826980352
+          },
+          {
+            "brightness_ratio": 24.196978549773444,
+            "display_derivative": 153.5598589135049,
+            "display_noise_gain_to_neutral": 11.885510738695581,
+            "input_y": 0.00017666860808598364,
+            "linear_derivative": 14.496843032498871,
+            "output_y": 0.0042748465202748775
+          },
+          {
+            "brightness_ratio": 22.558104834990182,
+            "display_derivative": 134.6425326899629,
+            "display_noise_gain_to_neutral": 10.421251692719675,
+            "input_y": 0.00021044258331225028,
+            "linear_derivative": 13.511180938518446,
+            "output_y": 0.004747185856103897
+          },
+          {
+            "brightness_ratio": 21.270804569621454,
+            "display_derivative": 203.94620829143497,
+            "display_noise_gain_to_neutral": 15.785428818750553,
+            "input_y": 0.0002506731747701304,
+            "linear_derivative": 21.90254068085517,
+            "output_y": 0.005332020111382008
+          },
+          {
+            "brightness_ratio": 21.382056352484263,
+            "display_derivative": 184.6209196527889,
+            "display_noise_gain_to_neutral": 14.289734084616125,
+            "input_y": 0.00029859470246143137,
+            "linear_derivative": 22.024173489323672,
+            "output_y": 0.006384568754583597
+          },
+          {
+            "brightness_ratio": 21.49387603224678,
+            "display_derivative": 167.0602197901583,
+            "display_noise_gain_to_neutral": 12.930340881980968,
+            "input_y": 0.0003556774530014631,
+            "linear_derivative": 22.138315125917828,
+            "output_y": 0.0076448870822787285
+          },
+          {
+            "brightness_ratio": 21.606319442458098,
+            "display_derivative": 151.1154042062981,
+            "display_noise_gain_to_neutral": 11.69646867673235,
+            "input_y": 0.00042367278967365014,
+            "linear_derivative": 22.244805480854513,
+            "output_y": 0.009154009632766247
+          },
+          {
+            "brightness_ratio": 21.64048304772405,
+            "display_derivative": 122.01097230258382,
+            "display_noise_gain_to_neutral": 9.443694706272995,
+            "input_y": 0.0005046668862339003,
+            "linear_derivative": 19.907472726490937,
+            "output_y": 0.0109212351962924
+          },
+          {
+            "brightness_ratio": 21.338482777254523,
+            "display_derivative": 109.49706743471438,
+            "display_noise_gain_to_neutral": 8.47507733178241,
+            "input_y": 0.0006011447330785727,
+            "linear_derivative": 19.623556095974447,
+            "output_y": 0.012827516533434391
+          },
+          {
+            "brightness_ratio": 21.040687180635782,
+            "display_derivative": 98.3110177902523,
+            "display_noise_gain_to_neutral": 7.609166581921345,
+            "input_y": 0.0007160663795575838,
+            "linear_derivative": 19.35306600882509,
+            "output_y": 0.01506652869284153
+          },
+          {
+            "brightness_ratio": 20.747040420686005,
+            "display_derivative": 88.25686721042928,
+            "display_noise_gain_to_neutral": 6.831121316499604,
+            "input_y": 0.0008529577516329774,
+            "linear_derivative": 19.082685637586533,
+            "output_y": 0.017696348950266838
+          },
+          {
+            "brightness_ratio": 20.272967546914867,
+            "display_derivative": 59.26884088382025,
+            "display_noise_gain_to_neutral": 4.587390142469631,
+            "input_y": 0.0010160188312713244,
+            "linear_derivative": 14.001662065112296,
+            "output_y": 0.02059771679341793
+          },
+          {
+            "brightness_ratio": 19.205831557387842,
+            "display_derivative": 52.358891196705024,
+            "display_noise_gain_to_neutral": 4.0525418435940885,
+            "input_y": 0.0012102525166359447,
+            "linear_derivative": 13.272810050929074,
+            "output_y": 0.02324390597641468
+          },
+          {
+            "brightness_ratio": 18.194867245248766,
+            "display_derivative": 46.21456143798508,
+            "display_noise_gain_to_neutral": 3.576951093636687,
+            "input_y": 0.0014416181166552527,
+            "linear_derivative": 12.57101708841553,
+            "output_y": 0.02623005025088787
+          },
+          {
+            "brightness_ratio": 17.23711767650062,
+            "display_derivative": 40.79234306699607,
+            "display_noise_gain_to_neutral": 3.157357226445158,
+            "input_y": 0.0017172141893540003,
+            "linear_derivative": 11.906100361437694,
+            "output_y": 0.02959982305765152
+          },
+          {
+            "brightness_ratio": 16.29145125048395,
+            "display_derivative": 33.329319807297345,
+            "display_noise_gain_to_neutral": 2.579768512956378,
+            "input_y": 0.002045496333634036,
+            "linear_derivative": 10.42555000607525,
+            "output_y": 0.03332410380244255
+          },
+          {
+            "brightness_ratio": 15.297214121936852,
+            "display_derivative": 29.32273724094709,
+            "display_noise_gain_to_neutral": 2.2695281090282213,
+            "input_y": 0.0024365366166024323,
+            "linear_derivative": 9.79049371294273,
+            "output_y": 0.037272222340106964
+          },
+          {
+            "brightness_ratio": 14.363646997226475,
+            "display_derivative": 25.802604880240096,
+            "display_noise_gain_to_neutral": 1.9970933978787735,
+            "input_y": 0.002902332595970602,
+            "linear_derivative": 9.19728072195735,
+            "output_y": 0.04168808087706566
+          },
+          {
+            "brightness_ratio": 13.487052972701743,
+            "display_derivative": 22.682229312981086,
+            "display_noise_gain_to_neutral": 1.8918962147890905,
+            "input_y": 0.0034571754186807383,
+            "linear_derivative": 8.630123261655857,
+            "output_y": 0.04662710800766945
+          },
+          {
+            "brightness_ratio": 12.640618689876838,
+            "display_derivative": 18.85719869808606,
+            "display_noise_gain_to_neutral": 1.741845787624661,
+            "input_y": 0.004118088289441307,
+            "linear_derivative": 7.651245706697942,
+            "output_y": 0.05205518379807472
+          },
+          {
+            "brightness_ratio": 11.796850265463842,
+            "display_derivative": 16.54401909648179,
+            "display_noise_gain_to_neutral": 1.692376332555422,
+            "input_y": 0.00490534876188177,
+            "linear_derivative": 7.1398219456172125,
+            "output_y": 0.057867664843797684
+          },
+          {
+            "brightness_ratio": 11.009406795117892,
+            "display_derivative": 14.506445194251196,
+            "display_noise_gain_to_neutral": 1.6433432028909667,
+            "input_y": 0.005843110876809173,
+            "linear_derivative": 6.659236490251775,
+            "output_y": 0.06432918459177017
+          },
+          {
+            "brightness_ratio": 10.274528705386548,
+            "display_derivative": 12.734810654834329,
+            "display_noise_gain_to_neutral": 1.5976173863797882,
+            "input_y": 0.006960146235471404,
+            "linear_derivative": 6.21832088339724,
+            "output_y": 0.07151222229003906
+          },
+          {
+            "brightness_ratio": 9.554788134608476,
+            "display_derivative": 10.056871316743633,
+            "display_noise_gain_to_neutral": 1.397243739081283,
+            "input_y": 0.008290726744791973,
+            "linear_derivative": 5.212702587213426,
+            "output_y": 0.0792161375284195
+          },
+          {
+            "brightness_ratio": 8.824453479801019,
+            "display_derivative": 8.780794974802456,
+            "display_noise_gain_to_neutral": 1.3510580485745922,
+            "input_y": 0.00987567611819776,
+            "linear_derivative": 4.811802501260257,
+            "output_y": 0.08714744448661804
+          },
+          {
+            "brightness_ratio": 8.149943399356632,
+            "display_derivative": 7.672104046882947,
+            "display_noise_gain_to_neutral": 1.3072501371275747,
+            "input_y": 0.011763622393272924,
+            "linear_derivative": 4.444587525081734,
+            "output_y": 0.09587285667657852
+          },
+          {
+            "brightness_ratio": 7.526992161044137,
+            "display_derivative": 6.702774761027195,
+            "display_noise_gain_to_neutral": 1.2648018664905505,
+            "input_y": 0.014012489894896016,
+            "linear_derivative": 4.105864396762353,
+            "output_y": 0.1054719015955925
+          },
+          {
+            "brightness_ratio": 7.007743998964477,
+            "display_derivative": 7.186250219797137,
+            "display_noise_gain_to_neutral": 1.5016990505033971,
+            "input_y": 0.01669127641897503,
+            "linear_derivative": 4.67600889733922,
+            "output_y": 0.11696819216012955
+          },
+          {
+            "brightness_ratio": 6.61139497156256,
+            "display_derivative": 6.332358485655178,
+            "display_noise_gain_to_neutral": 1.4654394655840957,
+            "input_y": 0.019882170162785286,
+            "linear_derivative": 4.410277264869392,
+            "output_y": 0.1314488798379898
+          },
+          {
+            "brightness_ratio": 6.237470874712102,
+            "display_derivative": 5.581837196625837,
+            "display_noise_gain_to_neutral": 1.4304837384515878,
+            "input_y": 0.023683071351724993,
+            "linear_derivative": 4.161465321470219,
+            "output_y": 0.14772246778011322
+          },
+          {
+            "brightness_ratio": 5.884688644120597,
+            "display_derivative": 4.919978976090806,
+            "display_noise_gain_to_neutral": 1.3963500418662362,
+            "input_y": 0.028210595928846085,
+            "linear_derivative": 3.9261960801265543,
+            "output_y": 0.16601057350635529
+          },
+          {
+            "brightness_ratio": 5.576544372079045,
+            "display_derivative": 4.741886630092807,
+            "display_noise_gain_to_neutral": 1.4904652076093519,
+            "input_y": 0.03360365346374981,
+            "linear_derivative": 4.061898706427535,
+            "output_y": 0.18739226460456848
+          },
+          {
+            "brightness_ratio": 5.31766886685251,
+            "display_derivative": 4.199112565852459,
+            "display_noise_gain_to_neutral": 1.4615741251481549,
+            "input_y": 0.04002770905513353,
+            "linear_derivative": 3.8738535640298446,
+            "output_y": 0.21285410225391388
+          },
+          {
+            "brightness_ratio": 5.070809414269203,
+            "display_derivative": 3.716920417356043,
+            "display_noise_gain_to_neutral": 1.4327470498789612,
+            "input_y": 0.047679859986974965,
+            "linear_derivative": 3.693736185429162,
+            "output_y": 0.2417754828929901
+          },
+          {
+            "brightness_ratio": 4.835411721315613,
+            "display_derivative": 3.289554841039603,
+            "display_noise_gain_to_neutral": 1.4042689807873596,
+            "input_y": 0.05679488289590185,
+            "linear_derivative": 3.521241248955193,
+            "output_y": 0.27462664246559143
+          },
+          {
+            "brightness_ratio": 4.643367163456511,
+            "display_derivative": 3.275739324704849,
+            "display_noise_gain_to_neutral": 1.5485205086429057,
+            "input_y": 0.06765243698367361,
+            "linear_derivative": 3.792445695601267,
+            "output_y": 0.3141351044178009
+          },
+          {
+            "brightness_ratio": 4.496865078560319,
+            "display_derivative": 2.918775900628601,
+            "display_noise_gain_to_neutral": 1.5280726402035711,
+            "input_y": 0.08058564427747372,
+            "linear_derivative": 3.673069423325693,
+            "output_y": 0.36238276958465576
+          },
+          {
+            "brightness_ratio": 4.354984758291055,
+            "display_derivative": 2.6009026194481266,
+            "display_noise_gain_to_neutral": 1.5079699930007497,
+            "input_y": 0.09599131019009301,
+            "linear_derivative": 3.557353360861362,
+            "output_y": 0.4180406928062439
+          },
+          {
+            "brightness_ratio": 4.2175806932479505,
+            "display_derivative": 2.316835811349546,
+            "display_noise_gain_to_neutral": 1.487582033755642,
+            "input_y": 0.1143420979583378,
+            "linear_derivative": 3.4442501600389974,
+            "output_y": 0.4822470247745514
+          },
+          {
+            "brightness_ratio": 4.125909513183114,
+            "display_derivative": 2.370980163454889,
+            "display_noise_gain_to_neutral": 1.6858367937191774,
+            "input_y": 0.13620103048518928,
+            "linear_derivative": 3.85348552577049,
+            "output_y": 0.5619531273841858
+          },
+          {
+            "brightness_ratio": 4.078717312060859,
+            "display_derivative": 2.131451782744198,
+            "display_noise_gain_to_neutral": 1.6784076587450805,
+            "input_y": 0.1622387645186173,
+            "linear_derivative": 3.810736476989096,
+            "output_y": 0.6617260575294495
+          },
+          {
+            "brightness_ratio": 4.0320637941821085,
+            "display_derivative": 1.9153619904426868,
+            "display_noise_gain_to_neutral": 1.670271322055698,
+            "input_y": 0.19325416715837243,
+            "linear_derivative": 3.767271590125023,
+            "output_y": 0.7792131304740906
+          },
+          {
+            "brightness_ratio": 3.9859478596255675,
+            "display_derivative": 1.7213307183092885,
+            "display_noise_gain_to_neutral": 1.6623144611449934,
+            "input_y": 0.23019882600123306,
+            "linear_derivative": 3.724144126607541,
+            "output_y": 0.9175605177879333
+          },
+          {
+            "brightness_ratio": 4.000000087267658,
+            "display_derivative": 0,
+            "display_noise_gain_to_neutral": 0,
+            "input_y": 0.2742062449236564,
+            "linear_derivative": 4.0000718198891425,
+            "output_y": 1.0968250036239624
+          },
+          {
+            "brightness_ratio": 4.000000090327925,
+            "display_derivative": 0,
+            "display_noise_gain_to_neutral": 0,
+            "input_y": 0.32662662126143766,
+            "linear_derivative": 4.000266154287276,
+            "output_y": 1.3065065145492554
+          },
+          {
+            "brightness_ratio": 4.000000044213763,
+            "display_derivative": 0,
+            "display_noise_gain_to_neutral": 0,
+            "input_y": 0.38906827138953565,
+            "linear_derivative": 4.0000107681032215,
+            "output_y": 1.556273102760315
+          },
+          {
+            "brightness_ratio": 3.9999999919616793,
+            "display_derivative": 0,
+            "display_noise_gain_to_neutral": 0,
+            "input_y": 0.46344697568566734,
+            "linear_derivative": 3.9999485473322802,
+            "output_y": 1.853787899017334
+          },
+          {
+            "brightness_ratio": 3.999999945098964,
+            "display_derivative": 0,
+            "display_noise_gain_to_neutral": 0,
+            "input_y": 0.552044756836906,
+            "linear_derivative": 4.0000975505887535,
+            "output_y": 2.208178997039795
+          },
+          {
+            "brightness_ratio": 4.00000002408887,
+            "display_derivative": 0,
+            "display_noise_gain_to_neutral": 0,
+            "input_y": 0.6575798948741395,
+            "linear_derivative": 3.9998694989783155,
+            "output_y": 2.630319595336914
+          },
+          {
+            "brightness_ratio": 3.9999999975516114,
+            "display_derivative": 0,
+            "display_noise_gain_to_neutral": 0,
+            "input_y": 0.7832903270747562,
+            "linear_derivative": 3.9998688094033077,
+            "output_y": 3.1331613063812256
+          },
+          {
+            "brightness_ratio": 3.999999991276388,
+            "display_derivative": 0,
+            "display_noise_gain_to_neutral": 0,
+            "input_y": 0.9330329915368076,
+            "linear_derivative": 3.9999499072580007,
+            "output_y": 3.7321319580078125
+          }
+        ],
+        "recipe": "exposure2_shadows100",
+        "shadows": 1,
+        "small_noise_checks": [
+          {
+            "input_sigma": 5e-06,
+            "input_y": 0.001,
+            "measured_display_sigma": 0.000308513241006501,
+            "predicted_display_sigma": 0.0002998120800062898,
+            "ratio_measured_to_predicted": 1.0290220494118472
+          },
+          {
+            "input_sigma": 5e-05,
+            "input_y": 0.01,
+            "measured_display_sigma": 0.0004475820016508169,
+            "predicted_display_sigma": 0.00043507518149757396,
+            "ratio_measured_to_predicted": 1.0287463424371694
+          },
+          {
+            "input_sigma": 0.0005,
+            "input_y": 0.1,
+            "measured_display_sigma": 0.0013023720724846023,
+            "predicted_display_sigma": 0.0012655191119559372,
+            "ratio_measured_to_predicted": 1.029120824948828
+          },
+          {
+            "input_sigma": 0.0015,
+            "input_y": 0.3,
+            "measured_display_sigma": 0,
+            "predicted_display_sigma": 0,
+            "ratio_measured_to_predicted": null
+          }
+        ]
+      }
+    ]
+  },
+  "verdict": "measured_feasibility_not_production_or_quality_validation"
+}

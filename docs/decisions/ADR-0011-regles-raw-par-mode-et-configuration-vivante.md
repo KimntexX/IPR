@@ -1,3 +1,5 @@
+*[Français](ADR-0011-regles-raw-par-mode-et-configuration-vivante.md) | [English](ADR-0011-regles-raw-par-mode-et-configuration-vivante_en.md)*
+
 # ADR-0011 — Règles RAW par mode capteur et configuration vivante
 
 **Date :** 16 octobre 2026. **Statut :** accepté par l'utilisateur, implémenté localement.

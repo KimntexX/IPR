@@ -6,6 +6,7 @@ from pathlib import Path
 import subprocess
 
 from build_windows import ROOT, RULES_PATH, matching, select_tests
+from delivery_policy import PACKAGE_MATRIX, matrix_value
 
 DOC_PATTERNS = ['docs/**', 'README*', 'AGENTS.md', 'licenses/**', 'LICENSE*']
 STANDARD_OS = ['windows-2022', 'ubuntu-24.04', 'macos-15']
@@ -58,7 +59,8 @@ def main(argv=None):
             for key, value in {'native': str(plan['native']).lower(),
                                'python': str(plan['full'] or bool(plan['python'])).lower(),
                                'documents': str(plan['documents']).lower(),
-                               'matrix': json.dumps(plan['matrix'])}.items():
+                               'matrix': json.dumps(plan['matrix']),
+                               'package_matrix': matrix_value(PACKAGE_MATRIX)}.items():
                 output.write(f'{key}={value}\n')
     return 0
 

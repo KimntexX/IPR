@@ -10,11 +10,11 @@ d'une image.
 
 | Commande | Effet |
 | --- | --- |
-| Clic gauche sur l'image | Alterner vue ajustée / 100 % de l'aperçu ; si l'aperçu tient déjà à 100 %, agrandir à 200 %. Les marges vides ne déclenchent pas de zoom. |
+| Clic gauche sur l'image | Alterner vue ajustée / 100 % des pixels de l'image ; si l'aperçu tient déjà à 100 %, agrandir à 200 %. Les marges vides ne déclenchent pas de zoom. |
 | Glisser avec le bouton gauche | Déplacer l'image agrandie. Le relâchement après un déplacement ne déclenche pas un nouveau zoom. |
 | Boutons − / + ou Ctrl − / Ctrl + | Réduire / agrandir par un facteur 1,25 autour du centre de la vue. Ctrl = et Ctrl Maj + sont également reconnus. |
 | Ctrl + molette au-dessus de l'image | Agrandir / réduire autour du pointeur. Un cran de 120 unités correspond au facteur 1,25. |
-| Bouton 100 % ou Ctrl 1 | Afficher à 100 % de l'aperçu. |
+| Bouton 100 % ou Ctrl 1 | Afficher à 100 % des pixels de l'image (pleine résolution, voir plus bas). |
 | Bouton Ajuster ou Ctrl 0 | Recentrer et adapter à la surface disponible. |
 | Molette sans Ctrl | Déplacer verticalement une image agrandie, sans changer le zoom. Le défilement horizontal et Maj + molette permettent un déplacement horizontal. |
 | Bouton Avant/après ou Ctrl Maj C | Activer / désactiver la comparaison origine à gauche, actuel à droite. |
@@ -72,21 +72,37 @@ Le stockage CPU supplémentaire du provider est borné par un aperçu de
 le LRU d'images décodées. Aucun fichier supplémentaire n'est écrit pour la
 comparaison et les réglages, histogramme courant et exports restent inchangés.
 
-## Limite de résolution à connaître
+## Pleine résolution au zoom — 12 novembre 2026 (bêta-1)
 
-Le composant agrandit **l'aperçu existant**, dont le moteur plafonne le plus
-grand côté à **2048 pixels**, et non le RAW pleine résolution. Ici, 100 %
-signifie un pixel d'aperçu par unité logique de l'interface Qt, pas un pixel
-du fichier original par pixel physique d'écran. La mise à l'échelle Windows
-peut encore changer ce rapport physique.
+L'aperçu interactif reste plafonné à **2048 pixels** de plus grand côté. Dès
+que le zoom agrandit cet aperçu à l'écran, le moteur rend en tâche de fond
+**toute l'image en pleine résolution**, par le rendu de l'export (même source,
+débruitage IA compris, mêmes réglages, sans cache d'étapes), 350 ms après que
+les réglages se sont posés. L'image détaillée remplace l'aperçu agrandi au
+même endroit et à la même taille ; « Rendu pleine résolution… » s'affiche en
+attendant.
 
-Le zoom ne relance ni décodage RAW, ni traitement pleine résolution. Il ne
-change pas le cache du moteur, ses paramètres de rendu ou l'export. Il ne
-doit donc pas être utilisé seul pour valider le bruit ou la netteté à 100 %
-du fichier source : pour cette recette, examiner les exports pleine
-résolution. Un aperçu détaillé à la demande, éventuellement par tuiles,
-reste une évolution distincte avec un budget mémoire et une invalidation
-sur changement de réglage à définir.
+- Les pourcentages, le bouton **100 %** et Ctrl 1 comptent désormais les
+  **pixels du fichier** : 100 % = un pixel de l'image par unité logique Qt (la
+  mise à l'échelle Windows reste un rapport supplémentaire). Le zoom maximal
+  est 400 % du fichier (au moins 8× l'aperçu). Une image plus petite que
+  l'aperçu garde l'ancien comportement.
+- Un changement de réglage masque l'image détaillée dès le nouvel aperçu
+  publié : des pixels d'autres réglages ne sont jamais montrés. L'outil de
+  recadrage, les surimpressions (masques, retouches, couleur de point) et la
+  comparaison avant/après utilisent l'aperçu ; l'image détaillée revient
+  ensuite sans nouveau rendu si les réglages n'ont pas changé.
+- Mémoire : l'image détaillée (8 bits, environ 96 Mio pour 24 Mpx) n'existe
+  que pendant le zoom ; elle est libérée en revenant à la vue ajustée, en
+  changeant de photo ou de réglages. Le rendu passe par l'admission mémoire
+  de l'export ; un refus l'annonce dans la barre d'état et n'est pas retenté
+  pour les mêmes réglages.
+- Limites de cette version : rendu de toute l'image et non de la zone visible
+  (latence de quelques secondes sur un RAW de 24 Mpx chargé d'effets) ;
+  comparaison avant/après en résolution d'aperçu ; pas de pleine résolution
+  quand le cache n'a gardé que l'aperçu d'une photo. Le rendu de la seule
+  zone visible et l'aperçu adapté aux ressources restent le chantier
+  « aperçu adaptatif ».
 
 ## Implantation et modèle géométrique
 

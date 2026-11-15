@@ -1,0 +1,393 @@
+{
+ "schema": "ipr-camera-denoise-vs-lightroom-v001",
+ "created_utc": "20261029T170922Z",
+ "author": "Claude",
+ "engine_commit": "aee2e4b (patch_raw_decoder)",
+ "references": {
+  "6V1A9608": [
+   "tests/image/base/neutre/6V1A9608.tif (LR neutral)",
+   "tests/image/base/bruit/proto/6V1A9608.tif (LR luminance 100, colour 100, sharpening 0, no crop)"
+  ],
+  "6V1A9890": [
+   "tests/image/base/neutre/6V1A9890.tif",
+   "tests/image/base/bruit/proto/6V1A9890.tif (same settings)"
+  ]
+ },
+ "raw": "tests/image/base-hors-protocole/<stem>.CR3",
+ "alignment": "phase correlation on the neutrals; LR is one pixel larger per side; both cropped to the common area",
+ "states": {
+  "A100": "IPR current denoise 100/100",
+  "B100": "IPR camera-signal denoise 100/100 (signed development)",
+  "B0": "signed development, no denoise"
+ },
+ "masks": "FIXED per scene from LR neutral (8-bit sRGB): dark luma<25 and gradient<p90; mid_flat 25<=luma<120 and gradient<p50; bright_flat luma>=120 and gradient<p50; edges gradient>=p90",
+ "metrics": "luma Rec.709 8-bit; noise = std of (x - Gaussian sigma 2) in the mask; chroma = R-G, B-G",
+ "results": {
+  "6V1A9608": {
+   "LR0": {
+    "dark": {
+     "n": 1257907,
+     "luma": 14.31,
+     "luma_noise": 9.6,
+     "chroma_noise": 12.17,
+     "chroma_blotch": 11.34
+    },
+    "mid_flat": {
+     "n": 7507019,
+     "luma": 85.02,
+     "luma_noise": 12.22,
+     "chroma_noise": 18.86,
+     "chroma_blotch": 43.86
+    },
+    "bright_flat": {
+     "n": 7765795,
+     "luma": 135.69,
+     "luma_noise": 8.24,
+     "chroma_noise": 14.91,
+     "chroma_blotch": 16.54
+    },
+    "edges": {
+     "n": 3227123,
+     "luma": 95.23,
+     "luma_noise": 15.73,
+     "chroma_noise": 20.16,
+     "chroma_blotch": 41.15
+    }
+   },
+   "LR100": {
+    "dark": {
+     "n": 1257907,
+     "luma": 26.86,
+     "luma_noise": 1.27,
+     "chroma_noise": 1.92,
+     "chroma_blotch": 13.24
+    },
+    "mid_flat": {
+     "n": 7507019,
+     "luma": 91.98,
+     "luma_noise": 1.64,
+     "chroma_noise": 1.85,
+     "chroma_blotch": 45.73
+    },
+    "bright_flat": {
+     "n": 7765795,
+     "luma": 138.14,
+     "luma_noise": 1.09,
+     "chroma_noise": 1.51,
+     "chroma_blotch": 18.56
+    },
+    "edges": {
+     "n": 3227123,
+     "luma": 98.67,
+     "luma_noise": 5.04,
+     "chroma_noise": 2.52,
+     "chroma_blotch": 42.0
+    }
+   },
+   "A0": {
+    "dark": {
+     "n": 1257907,
+     "luma": 14.4,
+     "luma_noise": 10.69,
+     "chroma_noise": 9.18,
+     "chroma_blotch": 10.79
+    },
+    "mid_flat": {
+     "n": 7507019,
+     "luma": 85.83,
+     "luma_noise": 13.03,
+     "chroma_noise": 12.56,
+     "chroma_blotch": 43.16
+    },
+    "bright_flat": {
+     "n": 7765795,
+     "luma": 135.68,
+     "luma_noise": 8.3,
+     "chroma_noise": 11.05,
+     "chroma_blotch": 16.12
+    },
+    "edges": {
+     "n": 3227123,
+     "luma": 95.61,
+     "luma_noise": 17.51,
+     "chroma_noise": 19.88,
+     "chroma_blotch": 40.09
+    }
+   },
+   "A100": {
+    "dark": {
+     "n": 1257907,
+     "luma": 25.57,
+     "luma_noise": 2.03,
+     "chroma_noise": 3.02,
+     "chroma_blotch": 10.16
+    },
+    "mid_flat": {
+     "n": 7507019,
+     "luma": 89.37,
+     "luma_noise": 2.83,
+     "chroma_noise": 9.33,
+     "chroma_blotch": 42.22
+    },
+    "bright_flat": {
+     "n": 7765795,
+     "luma": 133.48,
+     "luma_noise": 2.53,
+     "chroma_noise": 8.05,
+     "chroma_blotch": 15.8
+    },
+    "edges": {
+     "n": 3227123,
+     "luma": 98.47,
+     "luma_noise": 12.52,
+     "chroma_noise": 14.76,
+     "chroma_blotch": 38.91
+    }
+   },
+   "B0": {
+    "dark": {
+     "n": 1257907,
+     "luma": 14.22,
+     "luma_noise": 10.79,
+     "chroma_noise": 9.43,
+     "chroma_blotch": 10.96
+    },
+    "mid_flat": {
+     "n": 7507019,
+     "luma": 85.84,
+     "luma_noise": 13.05,
+     "chroma_noise": 12.66,
+     "chroma_blotch": 43.2
+    },
+    "bright_flat": {
+     "n": 7765795,
+     "luma": 135.7,
+     "luma_noise": 8.3,
+     "chroma_noise": 11.05,
+     "chroma_blotch": 16.13
+    },
+    "edges": {
+     "n": 3227123,
+     "luma": 95.61,
+     "luma_noise": 17.52,
+     "chroma_noise": 19.89,
+     "chroma_blotch": 40.12
+    }
+   },
+   "B100": {
+    "dark": {
+     "n": 1257907,
+     "luma": 20.68,
+     "luma_noise": 4.49,
+     "chroma_noise": 2.49,
+     "chroma_blotch": 9.17
+    },
+    "mid_flat": {
+     "n": 7507019,
+     "luma": 87.29,
+     "luma_noise": 5.86,
+     "chroma_noise": 5.99,
+     "chroma_blotch": 43.47
+    },
+    "bright_flat": {
+     "n": 7765795,
+     "luma": 134.43,
+     "luma_noise": 5.21,
+     "chroma_noise": 6.93,
+     "chroma_blotch": 15.28
+    },
+    "edges": {
+     "n": 3227123,
+     "luma": 96.59,
+     "luma_noise": 13.76,
+     "chroma_noise": 15.55,
+     "chroma_blotch": 40.02
+    }
+   }
+  },
+  "6V1A9890": {
+   "LR0": {
+    "dark": {
+     "n": 9110011,
+     "luma": 8.67,
+     "luma_noise": 8.28,
+     "chroma_noise": 13.05,
+     "chroma_blotch": 10.95
+    },
+    "mid_flat": {
+     "n": 4469139,
+     "luma": 69.18,
+     "luma_noise": 15.35,
+     "chroma_noise": 25.73,
+     "chroma_blotch": 32.49
+    },
+    "bright_flat": {
+     "n": 5314146,
+     "luma": 148.69,
+     "luma_noise": 9.73,
+     "chroma_noise": 20.42,
+     "chroma_blotch": 15.46
+    },
+    "edges": {
+     "n": 3226658,
+     "luma": 70.16,
+     "luma_noise": 15.76,
+     "chroma_noise": 24.21,
+     "chroma_blotch": 26.66
+    }
+   },
+   "LR100": {
+    "dark": {
+     "n": 9110011,
+     "luma": 11.85,
+     "luma_noise": 1.0,
+     "chroma_noise": 1.63,
+     "chroma_blotch": 10.06
+    },
+    "mid_flat": {
+     "n": 4469139,
+     "luma": 70.93,
+     "luma_noise": 1.11,
+     "chroma_noise": 2.89,
+     "chroma_blotch": 31.57
+    },
+    "bright_flat": {
+     "n": 5314146,
+     "luma": 150.72,
+     "luma_noise": 1.68,
+     "chroma_noise": 2.33,
+     "chroma_blotch": 9.67
+    },
+    "edges": {
+     "n": 3226658,
+     "luma": 74.11,
+     "luma_noise": 2.13,
+     "chroma_noise": 2.97,
+     "chroma_blotch": 25.67
+    }
+   },
+   "A0": {
+    "dark": {
+     "n": 9110011,
+     "luma": 9.52,
+     "luma_noise": 9.13,
+     "chroma_noise": 8.58,
+     "chroma_blotch": 10.06
+    },
+    "mid_flat": {
+     "n": 4469139,
+     "luma": 69.73,
+     "luma_noise": 17.17,
+     "chroma_noise": 15.91,
+     "chroma_blotch": 31.52
+    },
+    "bright_flat": {
+     "n": 5314146,
+     "luma": 149.0,
+     "luma_noise": 10.87,
+     "chroma_noise": 14.16,
+     "chroma_blotch": 14.61
+    },
+    "edges": {
+     "n": 3226658,
+     "luma": 70.92,
+     "luma_noise": 17.51,
+     "chroma_noise": 19.4,
+     "chroma_blotch": 25.66
+    }
+   },
+   "A100": {
+    "dark": {
+     "n": 9110011,
+     "luma": 16.49,
+     "luma_noise": 1.55,
+     "chroma_noise": 3.4,
+     "chroma_blotch": 9.95
+    },
+    "mid_flat": {
+     "n": 4469139,
+     "luma": 69.41,
+     "luma_noise": 5.73,
+     "chroma_noise": 12.09,
+     "chroma_blotch": 30.33
+    },
+    "bright_flat": {
+     "n": 5314146,
+     "luma": 148.6,
+     "luma_noise": 6.37,
+     "chroma_noise": 11.28,
+     "chroma_blotch": 13.89
+    },
+    "edges": {
+     "n": 3226658,
+     "luma": 74.62,
+     "luma_noise": 10.81,
+     "chroma_noise": 15.19,
+     "chroma_blotch": 24.67
+    }
+   },
+   "B0": {
+    "dark": {
+     "n": 9110011,
+     "luma": 8.97,
+     "luma_noise": 9.54,
+     "chroma_noise": 9.79,
+     "chroma_blotch": 10.58
+    },
+    "mid_flat": {
+     "n": 4469139,
+     "luma": 69.78,
+     "luma_noise": 17.36,
+     "chroma_noise": 16.6,
+     "chroma_blotch": 31.63
+    },
+    "bright_flat": {
+     "n": 5314146,
+     "luma": 149.0,
+     "luma_noise": 10.87,
+     "chroma_noise": 14.03,
+     "chroma_blotch": 14.62
+    },
+    "edges": {
+     "n": 3226658,
+     "luma": 70.81,
+     "luma_noise": 17.67,
+     "chroma_noise": 19.39,
+     "chroma_blotch": 25.76
+    }
+   },
+   "B100": {
+    "dark": {
+     "n": 9110011,
+     "luma": 8.21,
+     "luma_noise": 4.8,
+     "chroma_noise": 4.0,
+     "chroma_blotch": 9.22
+    },
+    "mid_flat": {
+     "n": 4469139,
+     "luma": 66.9,
+     "luma_noise": 10.96,
+     "chroma_noise": 10.95,
+     "chroma_blotch": 31.0
+    },
+    "bright_flat": {
+     "n": 5314146,
+     "luma": 148.96,
+     "luma_noise": 9.26,
+     "chroma_noise": 11.88,
+     "chroma_blotch": 13.48
+    },
+    "edges": {
+     "n": 3226658,
+     "luma": 70.86,
+     "luma_noise": 13.4,
+     "chroma_noise": 15.11,
+     "chroma_blotch": 25.1
+    }
+   }
+  }
+ },
+ "visual": "100 % crop 6V1A9890 x 2100 y 3300: LR 100/100 is almost totally smooth (texture removed); IPR A100 keeps blotchy grain; IPR B100 keeps grain with denser blacks",
+ "script_sha256": "aa8afc5039ae6804e4096ab2df4fc0d4ca211d69547f0895e351291c9b3d63b8"
+}

@@ -1,0 +1,1760 @@
+{
+  "schema_version": 1,
+  "measured_at_utc": "2026-10-28T16:41:23.091283+00:00",
+  "freeze": {
+    "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\gel-banc-raw-flottant-signe-v001-20261028T163906Z.json",
+    "sha256": "4fda4ac4e1715dfc949153674927601528f2d31318a2738d1cb637f67865e781"
+  },
+  "records": [
+    {
+      "iso": 1600,
+      "role": "black",
+      "source": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0003.CR3",
+        "sha256": "172231741d16ea44e6bc0f509d39a9d6482aa52dbab2eea0246e06d125668b6e",
+        "black": [
+          2048,
+          2048,
+          2048,
+          2048
+        ],
+        "white": 14351
+      },
+      "capture": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\float-signed\\20261028T163906Z\\00-0-6V1A0003.json",
+        "sha256": "8693610f12b84067c0b5bdf3f5072ce190ec67d257b7593fb30542f715f1dca6"
+      },
+      "inlet": {
+        "verdict": "pass_scoped_float_inlet",
+        "source": {
+          "path": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/colorimétrie/protocole/blacks/6V1A0003.CR3",
+          "sha256": "172231741d16ea44e6bc0f509d39a9d6482aa52dbab2eea0246e06d125668b6e"
+        },
+        "engine_revision": "7474aadfec53afebc12022ba2f529814e695f15f",
+        "full_camera": {
+          "dtype": "f32",
+          "finite": true,
+          "maximum": [
+            0.1783006638288498,
+            0.18198813498020172,
+            0.1787782907485962
+          ],
+          "mean": [
+            6.4043920904527975e-06,
+            1.0249632539085043e-05,
+            -1.2862867075432647e-06
+          ],
+          "minimum": [
+            -0.014306247234344482,
+            -0.007234008051455021,
+            -0.0130680613219738
+          ],
+          "negative_fraction": [
+            0.5061518360813859,
+            0.5064817331061205,
+            0.5116533103803478
+          ],
+          "orientation": "display",
+          "scope": "Actual retained CameraSignal input after optics/WB, before DCP; not inferred from working output",
+          "sha256": "ebca698a0c26a25c70bccb354d4231655fd5d9dfefd25f0f6b829daca08800e9",
+          "shape": [
+            4639,
+            6959,
+            3
+          ],
+          "unit": "linear_camera_white_1",
+          "zero_fraction": [
+            0.003629672654488686,
+            0.042391705725906496,
+            0.0034140779791691557
+          ]
+        },
+        "rois": [
+          {
+            "origin_yx": [
+              2190,
+              1262
+            ],
+            "minimum": [
+              -0.004768749233335257,
+              -0.005120702087879181,
+              -0.0045713502913713455
+            ],
+            "negative_fraction": [
+              0.501861572265625,
+              0.5009765625,
+              0.5093841552734375
+            ]
+          },
+          {
+            "origin_yx": [
+              2190,
+              3350
+            ],
+            "minimum": [
+              -0.005184982903301716,
+              -0.005852231290191412,
+              -0.005407913587987423
+            ],
+            "negative_fraction": [
+              0.525848388671875,
+              0.502685546875,
+              0.5098114013671875
+            ]
+          },
+          {
+            "origin_yx": [
+              2190,
+              5438
+            ],
+            "minimum": [
+              -0.0042431247420609,
+              -0.005039421375840902,
+              -0.004770459607243538
+            ],
+            "negative_fraction": [
+              0.51397705078125,
+              0.501220703125,
+              0.5083770751953125
+            ]
+          }
+        ],
+        "negative_witness_required": true,
+        "limitations": "Observed DCP inlet only; no proof of fully signed DCP tables/curves, CFA/no-profile inlet or absence of intermediate quantization from negative presence alone."
+      },
+      "module_to_inlet": {
+        "verdict": "pass_exact_module_to_decoder_inlet",
+        "orientation_flip": 0,
+        "rois": [
+          {
+            "origin_yx": [
+              2190,
+              1262
+            ],
+            "bitwise_equal": true,
+            "values": 196608
+          },
+          {
+            "origin_yx": [
+              2190,
+              3350
+            ],
+            "bitwise_equal": true,
+            "values": 196608
+          },
+          {
+            "origin_yx": [
+              2190,
+              5438
+            ],
+            "bitwise_equal": true,
+            "values": 196608
+          }
+        ]
+      },
+      "metadata": {
+        "baseline_ev": 0.28,
+        "black_estimated": true,
+        "development_warning": "",
+        "format": "cr3",
+        "iso": 1600,
+        "model": "EOS R6 Mark III",
+        "normalization_applied": true,
+        "profile": "Canon EOS R6 Mark III Camera Neutral",
+        "profile_compensation_ev": 0,
+        "white": 14351,
+        "white_balance_kelvin": 4924.211272770631
+      },
+      "decode_ms": 4385.8805,
+      "peak_bytes": 1897885696,
+      "resource_budget_pass": true
+    },
+    {
+      "iso": 1600,
+      "role": "black",
+      "source": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0004.CR3",
+        "sha256": "6df877e9085f8d939cfd99fdc4dbc10f5b8e7bb1f97d9ad6a06835432ae34742",
+        "black": [
+          2048,
+          2048,
+          2048,
+          2048
+        ],
+        "white": 14351
+      },
+      "capture": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\float-signed\\20261028T163906Z\\00-1-6V1A0004.json",
+        "sha256": "7ac181b41a57428d21523e2928125076ac3cfd11c561737d13a234191c676dd9"
+      },
+      "inlet": {
+        "verdict": "pass_scoped_float_inlet",
+        "source": {
+          "path": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/colorimétrie/protocole/blacks/6V1A0004.CR3",
+          "sha256": "6df877e9085f8d939cfd99fdc4dbc10f5b8e7bb1f97d9ad6a06835432ae34742"
+        },
+        "engine_revision": "7474aadfec53afebc12022ba2f529814e695f15f",
+        "full_camera": {
+          "dtype": "f32",
+          "finite": true,
+          "maximum": [
+            0.18585267663002014,
+            0.18962854146957397,
+            0.30323326587677
+          ],
+          "mean": [
+            -1.94341342320035e-06,
+            1.1329920307081122e-05,
+            -3.6797721760938184e-06
+          ],
+          "minimum": [
+            -0.011075804941356182,
+            -0.0060147931799292564,
+            -0.009794962592422962
+          ],
+          "negative_fraction": [
+            0.5120920579351216,
+            0.505353826020239,
+            0.5134852765718811
+          ],
+          "orientation": "display",
+          "scope": "Actual retained CameraSignal input after optics/WB, before DCP; not inferred from working output",
+          "sha256": "a83b9bea3efe6c4725b250c89f8183cfbb6e0e0fb9af543643c457af23d640c9",
+          "shape": [
+            4639,
+            6959,
+            3
+          ],
+          "unit": "linear_camera_white_1",
+          "zero_fraction": [
+            0.003618521205765262,
+            0.04248983847467263,
+            0.0033920228916939394
+          ]
+        },
+        "rois": [
+          {
+            "origin_yx": [
+              2190,
+              1262
+            ],
+            "minimum": [
+              -0.006052081938832998,
+              -0.003332520602270961,
+              -0.003061765804886818
+            ],
+            "negative_fraction": [
+              0.5067291259765625,
+              0.511749267578125,
+              0.5240325927734375
+            ]
+          },
+          {
+            "origin_yx": [
+              2190,
+              3350
+            ],
+            "minimum": [
+              -0.004535041283816099,
+              -0.003332520602270961,
+              -0.00396048603579402
+            ],
+            "negative_fraction": [
+              0.5191497802734375,
+              0.510101318359375,
+              0.511962890625
+            ]
+          },
+          {
+            "origin_yx": [
+              2190,
+              5438
+            ],
+            "minimum": [
+              -0.004277540370821953,
+              -0.0034950824920088053,
+              -0.004126756452023983
+            ],
+            "negative_fraction": [
+              0.5293121337890625,
+              0.5086669921875,
+              0.52740478515625
+            ]
+          }
+        ],
+        "negative_witness_required": true,
+        "limitations": "Observed DCP inlet only; no proof of fully signed DCP tables/curves, CFA/no-profile inlet or absence of intermediate quantization from negative presence alone."
+      },
+      "module_to_inlet": {
+        "verdict": "pass_exact_module_to_decoder_inlet",
+        "orientation_flip": 0,
+        "rois": [
+          {
+            "origin_yx": [
+              2190,
+              1262
+            ],
+            "bitwise_equal": true,
+            "values": 196608
+          },
+          {
+            "origin_yx": [
+              2190,
+              3350
+            ],
+            "bitwise_equal": true,
+            "values": 196608
+          },
+          {
+            "origin_yx": [
+              2190,
+              5438
+            ],
+            "bitwise_equal": true,
+            "values": 196608
+          }
+        ]
+      },
+      "metadata": {
+        "baseline_ev": 0.28,
+        "black_estimated": true,
+        "development_warning": "",
+        "format": "cr3",
+        "iso": 1600,
+        "model": "EOS R6 Mark III",
+        "normalization_applied": true,
+        "profile": "Canon EOS R6 Mark III Camera Neutral",
+        "profile_compensation_ev": 0,
+        "white": 14351,
+        "white_balance_kelvin": 4924.211272770631
+      },
+      "decode_ms": 4344.1974,
+      "peak_bytes": 1897873408,
+      "resource_budget_pass": true
+    },
+    {
+      "iso": 1600,
+      "role": "near_black_scene",
+      "source": {
+        "path": "D:\\DCIM\\100EOSR6\\6V1A9916.CR3",
+        "sha256": "696352225700fc4505c3c415ca004da113071083583ec2dd83b018e6c4503aee",
+        "black": [
+          2048,
+          2048,
+          2048,
+          2048
+        ],
+        "white": 14351
+      },
+      "capture": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\float-signed\\20261028T163906Z\\01-0-6V1A9916.json",
+        "sha256": "79bb75e0abdef8b2be9574b70eaad50e82a9e8b57e33946d491c8772919e96e6"
+      },
+      "inlet": {
+        "verdict": "pass_scoped_float_inlet",
+        "source": {
+          "path": "D:/DCIM/100EOSR6/6V1A9916.CR3",
+          "sha256": "696352225700fc4505c3c415ca004da113071083583ec2dd83b018e6c4503aee"
+        },
+        "engine_revision": "7474aadfec53afebc12022ba2f529814e695f15f",
+        "full_camera": {
+          "dtype": "f32",
+          "finite": true,
+          "maximum": [
+            0.1539696604013443,
+            0.15784767270088196,
+            0.15412409603595734
+          ],
+          "mean": [
+            0.00033464399814834043,
+            0.0002906442721182913,
+            0.00025979158236847256
+          ],
+          "minimum": [
+            -0.012152619659900665,
+            -0.006096074357628822,
+            -0.010179332457482815
+          ],
+          "negative_fraction": [
+            0.3380453883168316,
+            0.30943941326528634,
+            0.3585738114855647
+          ],
+          "orientation": "display",
+          "scope": "Actual retained CameraSignal input after optics/WB, before DCP; not inferred from working output",
+          "sha256": "a86ee57ad34fc4b4c859d7d036f739b3b92acc5b8ea2a73eeeab06386374c17e",
+          "shape": [
+            6959,
+            4639,
+            3
+          ],
+          "unit": "linear_camera_white_1",
+          "zero_fraction": [
+            0.002684897137643044,
+            0.03156749007002212,
+            0.0026777106484657262
+          ]
+        },
+        "rois": [
+          {
+            "origin_yx": [
+              3350,
+              798
+            ],
+            "minimum": [
+              -0.003295272123068571,
+              -0.0032512396574020386,
+              -0.005875859409570694
+            ],
+            "negative_fraction": [
+              0.4515838623046875,
+              0.4106597900390625,
+              0.44036865234375
+            ]
+          },
+          {
+            "origin_yx": [
+              3350,
+              2190
+            ],
+            "minimum": [
+              -0.004677555989474058,
+              -0.003332520602270961,
+              -0.0029712682589888573
+            ],
+            "negative_fraction": [
+              0.40557861328125,
+              0.3681182861328125,
+              0.400146484375
+            ]
+          },
+          {
+            "origin_yx": [
+              3350,
+              3582
+            ],
+            "minimum": [
+              -0.0038137866649776697,
+              -0.0035763634368777275,
+              -0.003236452816054225
+            ],
+            "negative_fraction": [
+              0.3820037841796875,
+              0.33599853515625,
+              0.384521484375
+            ]
+          }
+        ],
+        "negative_witness_required": false,
+        "limitations": "Observed DCP inlet only; no proof of fully signed DCP tables/curves, CFA/no-profile inlet or absence of intermediate quantization from negative presence alone."
+      },
+      "module_to_inlet": {
+        "verdict": "not_compared_rotated_sparse_ROIs",
+        "reason": "Sensor/display ROIs are different locations after rotation; no fabricated comparison"
+      },
+      "metadata": {
+        "baseline_ev": 0.28,
+        "black_estimated": true,
+        "development_warning": "",
+        "format": "cr3",
+        "iso": 1600,
+        "model": "EOS R6 Mark III",
+        "normalization_applied": true,
+        "profile": "Canon EOS R6 Mark III Camera Neutral",
+        "profile_compensation_ev": 0,
+        "white": 14351,
+        "white_balance_kelvin": 4924.211272770631
+      },
+      "decode_ms": 5288.9907,
+      "peak_bytes": 1898131456,
+      "resource_budget_pass": true
+    },
+    {
+      "iso": 1600,
+      "role": "near_black_scene",
+      "source": {
+        "path": "D:\\DCIM\\100EOSR6\\6V1A9917.CR3",
+        "sha256": "f033e4fefed8fcc94c9711d36b7f7a3b76ababcf504a8817ea00735310cdcac1",
+        "black": [
+          2048,
+          2048,
+          2048,
+          2048
+        ],
+        "white": 14351
+      },
+      "capture": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\float-signed\\20261028T163906Z\\01-1-6V1A9917.json",
+        "sha256": "b7619b349095156b9485244db98fcb093b12855380f0fa110e381edea2f90098"
+      },
+      "inlet": {
+        "verdict": "pass_scoped_float_inlet",
+        "source": {
+          "path": "D:/DCIM/100EOSR6/6V1A9917.CR3",
+          "sha256": "f033e4fefed8fcc94c9711d36b7f7a3b76ababcf504a8817ea00735310cdcac1"
+        },
+        "engine_revision": "7474aadfec53afebc12022ba2f529814e695f15f",
+        "full_camera": {
+          "dtype": "f32",
+          "finite": true,
+          "maximum": [
+            0.15650571882724762,
+            0.159148171544075,
+            0.15655440092086792
+          ],
+          "mean": [
+            0.000337286131963909,
+            0.00028770022417924114,
+            0.00025640087898068094
+          ],
+          "minimum": [
+            -0.011844958178699017,
+            -0.007396569941192865,
+            -0.009852759540081024
+          ],
+          "negative_fraction": [
+            0.3363830480508801,
+            0.3110754856742449,
+            0.3603406346308054
+          ],
+          "orientation": "display",
+          "scope": "Actual retained CameraSignal input after optics/WB, before DCP; not inferred from working output",
+          "sha256": "806c253dae3aa9a40bc4128ae7992a1edec792297127ed07e2de9948df927bb2",
+          "shape": [
+            6959,
+            4639,
+            3
+          ],
+          "unit": "linear_camera_white_1",
+          "zero_fraction": [
+            0.0026718871141323828,
+            0.03167324297541592,
+            0.0026914641018912825
+          ]
+        },
+        "rois": [
+          {
+            "origin_yx": [
+              3350,
+              798
+            ],
+            "minimum": [
+              -0.0038634920492768288,
+              -0.0034950824920088053,
+              -0.0032121494878083467
+            ],
+            "negative_fraction": [
+              0.427703857421875,
+              0.398406982421875,
+              0.4471893310546875
+            ]
+          },
+          {
+            "origin_yx": [
+              3350,
+              2190
+            ],
+            "minimum": [
+              -0.006153224967420101,
+              -0.004064049571752548,
+              -0.0029075504280626774
+            ],
+            "negative_fraction": [
+              0.418212890625,
+              0.37359619140625,
+              0.4337158203125
+            ]
+          },
+          {
+            "origin_yx": [
+              3350,
+              3582
+            ],
+            "minimum": [
+              -0.0041534267365932465,
+              -0.0036576443817466497,
+              -0.0040391115471720695
+            ],
+            "negative_fraction": [
+              0.373016357421875,
+              0.33160400390625,
+              0.379058837890625
+            ]
+          }
+        ],
+        "negative_witness_required": false,
+        "limitations": "Observed DCP inlet only; no proof of fully signed DCP tables/curves, CFA/no-profile inlet or absence of intermediate quantization from negative presence alone."
+      },
+      "module_to_inlet": {
+        "verdict": "not_compared_rotated_sparse_ROIs",
+        "reason": "Sensor/display ROIs are different locations after rotation; no fabricated comparison"
+      },
+      "metadata": {
+        "baseline_ev": 0.28,
+        "black_estimated": true,
+        "development_warning": "",
+        "format": "cr3",
+        "iso": 1600,
+        "model": "EOS R6 Mark III",
+        "normalization_applied": true,
+        "profile": "Canon EOS R6 Mark III Camera Neutral",
+        "profile_compensation_ev": 0,
+        "white": 14351,
+        "white_balance_kelvin": 4924.211272770631
+      },
+      "decode_ms": 4808.3846,
+      "peak_bytes": 1898110976,
+      "resource_budget_pass": true
+    },
+    {
+      "iso": 1600,
+      "role": "illuminated_scene",
+      "source": {
+        "path": "D:\\DCIM\\100EOSR6\\6V1A9861.CR3",
+        "sha256": "2cb1c583cffd0dc7719a341376b3d20cc3eb47a2faa510bdd70da21214f66b28",
+        "black": [
+          2048,
+          2048,
+          2048,
+          2048
+        ],
+        "white": 14351
+      },
+      "capture": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\float-signed\\20261028T163906Z\\02-0-6V1A9861.json",
+        "sha256": "089cc2732e1f95eec53aead7c720cb73193f2abdd7a40802a1f8032e1d0aa6f9"
+      },
+      "inlet": {
+        "verdict": "pass_scoped_float_inlet",
+        "source": {
+          "path": "D:/DCIM/100EOSR6/6V1A9861.CR3",
+          "sha256": "2cb1c583cffd0dc7719a341376b3d20cc3eb47a2faa510bdd70da21214f66b28"
+        },
+        "engine_revision": "7474aadfec53afebc12022ba2f529814e695f15f",
+        "full_camera": {
+          "dtype": "f32",
+          "finite": true,
+          "maximum": [
+            0.08025018125772476,
+            0.0823376402258873,
+            0.07970228046178818
+          ],
+          "mean": [
+            0.0037489436098041037,
+            0.0040367165497283124,
+            0.004331723331748428
+          ],
+          "minimum": [
+            -0.00892217643558979,
+            -0.003982768394052982,
+            -0.007290603127330542
+          ],
+          "negative_fraction": [
+            0.000621910100056064,
+            6.254104159053609e-05,
+            0.00020884185359256775
+          ],
+          "orientation": "display",
+          "scope": "Actual retained CameraSignal input after optics/WB, before DCP; not inferred from working output",
+          "sha256": "3f6625c47eabe152065a7ec413736c6296e6f9cb6317b50d530ffd73aaaaeaa8",
+          "shape": [
+            6959,
+            4639,
+            3
+          ],
+          "unit": "linear_camera_white_1",
+          "zero_fraction": [
+            6.443059262422737e-06,
+            1.8337937900741637e-05,
+            2.5710284556783036e-06
+          ]
+        },
+        "rois": [
+          {
+            "origin_yx": [
+              3350,
+              798
+            ],
+            "minimum": [
+              -0.0014863710384815931,
+              -0.00024384296557400376,
+              -0.0003546656807884574
+            ],
+            "negative_fraction": [
+              0.0003662109375,
+              3.0517578125e-05,
+              6.103515625e-05
+            ]
+          },
+          {
+            "origin_yx": [
+              3350,
+              2190
+            ],
+            "minimum": [
+              -0.0010768142528831959,
+              0.00016256197704933584,
+              -0.0013942413497716188
+            ],
+            "negative_fraction": [
+              0.0001983642578125,
+              0.0,
+              4.57763671875e-05
+            ]
+          },
+          {
+            "origin_yx": [
+              3350,
+              3582
+            ],
+            "minimum": [
+              -0.0005233491538092494,
+              0.0,
+              -0.0004755461122840643
+            ],
+            "negative_fraction": [
+              0.000244140625,
+              0.0,
+              6.103515625e-05
+            ]
+          }
+        ],
+        "negative_witness_required": false,
+        "limitations": "Observed DCP inlet only; no proof of fully signed DCP tables/curves, CFA/no-profile inlet or absence of intermediate quantization from negative presence alone."
+      },
+      "module_to_inlet": {
+        "verdict": "not_compared_rotated_sparse_ROIs",
+        "reason": "Sensor/display ROIs are different locations after rotation; no fabricated comparison"
+      },
+      "metadata": {
+        "baseline_ev": 0.28,
+        "black_estimated": true,
+        "development_warning": "",
+        "format": "cr3",
+        "iso": 1600,
+        "model": "EOS R6 Mark III",
+        "normalization_applied": true,
+        "profile": "Canon EOS R6 Mark III Camera Neutral",
+        "profile_compensation_ev": 0,
+        "white": 14351,
+        "white_balance_kelvin": 4924.211272770631
+      },
+      "decode_ms": 5646.7469,
+      "peak_bytes": 1897877504,
+      "resource_budget_pass": true
+    },
+    {
+      "iso": 1600,
+      "role": "illuminated_scene",
+      "source": {
+        "path": "D:\\DCIM\\100EOSR6\\6V1A9862.CR3",
+        "sha256": "68a9f256c213cf2c4845e89ab1718d5b8d163dc38008218d8eb43768a2cb0406",
+        "black": [
+          2048,
+          2048,
+          2048,
+          2048
+        ],
+        "white": 14351
+      },
+      "capture": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\float-signed\\20261028T163906Z\\02-1-6V1A9862.json",
+        "sha256": "a8ba438055779b1a04f1bf678cc8935fbf8b422b6859de1751bc436a2317028b"
+      },
+      "inlet": {
+        "verdict": "pass_scoped_float_inlet",
+        "source": {
+          "path": "D:/DCIM/100EOSR6/6V1A9862.CR3",
+          "sha256": "68a9f256c213cf2c4845e89ab1718d5b8d163dc38008218d8eb43768a2cb0406"
+        },
+        "engine_revision": "7474aadfec53afebc12022ba2f529814e695f15f",
+        "full_camera": {
+          "dtype": "f32",
+          "finite": true,
+          "maximum": [
+            0.070130355656147,
+            0.07290904968976974,
+            0.07139819115400314
+          ],
+          "mean": [
+            0.0037346103473464296,
+            0.0040253298976810304,
+            0.004316966491465024
+          ],
+          "minimum": [
+            -0.007195247337222099,
+            -0.003820206504315138,
+            -0.008115953765809536
+          ],
+          "negative_fraction": [
+            0.000639907299245812,
+            6.774505099480061e-05,
+            0.00022423704808018362
+          ],
+          "orientation": "display",
+          "scope": "Actual retained CameraSignal input after optics/WB, before DCP; not inferred from working output",
+          "sha256": "7a87cbf7cb6fc49318accc0b3609b725324c1d273bc7bff62aeefb38247834b5",
+          "shape": [
+            6959,
+            4639,
+            3
+          ],
+          "unit": "linear_camera_white_1",
+          "zero_fraction": [
+            6.00939181206736e-06,
+            1.886453409045888e-05,
+            2.6949334414941255e-06
+          ]
+        },
+        "rois": [
+          {
+            "origin_yx": [
+              3350,
+              798
+            ],
+            "minimum": [
+              -0.0015383062418550253,
+              -0.0008128099143505096,
+              -0.0021844978909939528
+            ],
+            "negative_fraction": [
+              0.0003662109375,
+              4.57763671875e-05,
+              6.103515625e-05
+            ]
+          },
+          {
+            "origin_yx": [
+              3350,
+              2190
+            ],
+            "minimum": [
+              -0.0006576966843567789,
+              -0.00016256197704933584,
+              -0.0007722845766693354
+            ],
+            "negative_fraction": [
+              9.1552734375e-05,
+              1.52587890625e-05,
+              6.103515625e-05
+            ]
+          },
+          {
+            "origin_yx": [
+              3350,
+              3582
+            ],
+            "minimum": [
+              -0.0019483217038214207,
+              -0.0006502479081973433,
+              -0.0009276982164010406
+            ],
+            "negative_fraction": [
+              0.0002593994140625,
+              1.52587890625e-05,
+              4.57763671875e-05
+            ]
+          }
+        ],
+        "negative_witness_required": false,
+        "limitations": "Observed DCP inlet only; no proof of fully signed DCP tables/curves, CFA/no-profile inlet or absence of intermediate quantization from negative presence alone."
+      },
+      "module_to_inlet": {
+        "verdict": "not_compared_rotated_sparse_ROIs",
+        "reason": "Sensor/display ROIs are different locations after rotation; no fabricated comparison"
+      },
+      "metadata": {
+        "baseline_ev": 0.28,
+        "black_estimated": true,
+        "development_warning": "",
+        "format": "cr3",
+        "iso": 1600,
+        "model": "EOS R6 Mark III",
+        "normalization_applied": true,
+        "profile": "Canon EOS R6 Mark III Camera Neutral",
+        "profile_compensation_ev": 0,
+        "white": 14351,
+        "white_balance_kelvin": 4924.211272770631
+      },
+      "decode_ms": 5706.2485,
+      "peak_bytes": 1898012672,
+      "resource_budget_pass": true
+    },
+    {
+      "iso": 51200,
+      "role": "black",
+      "source": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9950.CR3",
+        "sha256": "8f7eba49f50e1cc2e1c4b892053a238ec82063408337670810eeb0cd4f9b9b16",
+        "black": [
+          2042,
+          2043,
+          2041,
+          2043
+        ],
+        "white": 14351
+      },
+      "capture": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\float-signed\\20261028T163906Z\\03-0-6V1A9950.json",
+        "sha256": "303d1f5099fb613abf82b23c4a77feffe17f2abd678cd19d2762996177f09c4f"
+      },
+      "inlet": {
+        "verdict": "pass_scoped_float_inlet",
+        "source": {
+          "path": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/colorimétrie/protocole/blacks/6V1A9950.CR3",
+          "sha256": "8f7eba49f50e1cc2e1c4b892053a238ec82063408337670810eeb0cd4f9b9b16"
+        },
+        "engine_revision": "7474aadfec53afebc12022ba2f529814e695f15f",
+        "full_camera": {
+          "dtype": "f32",
+          "finite": true,
+          "maximum": [
+            0.1328340768814087,
+            0.09669570624828339,
+            0.16373872756958008
+          ],
+          "mean": [
+            0.00024235254447076964,
+            0.00026184356167934956,
+            0.00011681652474923411
+          ],
+          "minimum": [
+            -0.11207875609397888,
+            -0.08139724284410477,
+            -0.09648439288139343
+          ],
+          "negative_fraction": [
+            0.5011473137042848,
+            0.5170688565716464,
+            0.5040867736352865
+          ],
+          "orientation": "display",
+          "scope": "Actual retained CameraSignal input after optics/WB, before DCP; not inferred from working output",
+          "sha256": "c9216536dea88655acf5a365f011b7fdd15c9d2c1ddb59aaa7adc2ce6cb3185d",
+          "shape": [
+            4639,
+            6959,
+            3
+          ],
+          "unit": "linear_camera_white_1",
+          "zero_fraction": [
+            9.422974171293254e-05,
+            0.0011591311423070135,
+            1.0779733765976502e-05
+          ]
+        },
+        "rois": [
+          {
+            "origin_yx": [
+              2190,
+              1262
+            ],
+            "minimum": [
+              -0.07537040114402771,
+              -0.06677497923374176,
+              -0.07514806091785431
+            ],
+            "negative_fraction": [
+              0.490875244140625,
+              0.51544189453125,
+              0.50140380859375
+            ]
+          },
+          {
+            "origin_yx": [
+              2190,
+              3350
+            ],
+            "minimum": [
+              -0.08086889982223511,
+              -0.07270511984825134,
+              -0.08379126340150833
+            ],
+            "negative_fraction": [
+              0.4897003173828125,
+              0.5114898681640625,
+              0.4993133544921875
+            ]
+          },
+          {
+            "origin_yx": [
+              2190,
+              5438
+            ],
+            "minimum": [
+              -0.07594911754131317,
+              -0.0695369616150856,
+              -0.0902620479464531
+            ],
+            "negative_fraction": [
+              0.49798583984375,
+              0.519378662109375,
+              0.511138916015625
+            ]
+          }
+        ],
+        "negative_witness_required": true,
+        "limitations": "Observed DCP inlet only; no proof of fully signed DCP tables/curves, CFA/no-profile inlet or absence of intermediate quantization from negative presence alone."
+      },
+      "module_to_inlet": {
+        "verdict": "pass_exact_module_to_decoder_inlet",
+        "orientation_flip": 0,
+        "rois": [
+          {
+            "origin_yx": [
+              2190,
+              1262
+            ],
+            "bitwise_equal": true,
+            "values": 196608
+          },
+          {
+            "origin_yx": [
+              2190,
+              3350
+            ],
+            "bitwise_equal": true,
+            "values": 196608
+          },
+          {
+            "origin_yx": [
+              2190,
+              5438
+            ],
+            "bitwise_equal": true,
+            "values": 196608
+          }
+        ]
+      },
+      "metadata": {
+        "baseline_ev": 0.28,
+        "black_estimated": true,
+        "development_warning": "",
+        "format": "cr3",
+        "iso": 51200,
+        "model": "EOS R6 Mark III",
+        "normalization_applied": true,
+        "profile": "Canon EOS R6 Mark III Camera Neutral",
+        "profile_compensation_ev": 0,
+        "white": 14351,
+        "white_balance_kelvin": 4924.211272770631
+      },
+      "decode_ms": 5309.4297,
+      "peak_bytes": 1898000384,
+      "resource_budget_pass": true
+    },
+    {
+      "iso": 51200,
+      "role": "black",
+      "source": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9951.CR3",
+        "sha256": "05043c4ec89b26b4b7fbfbf11f6903e540d10918e45819bc68e261394183f47c",
+        "black": [
+          2043,
+          2042,
+          2041,
+          2043
+        ],
+        "white": 14351
+      },
+      "capture": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\float-signed\\20261028T163906Z\\03-1-6V1A9951.json",
+        "sha256": "05aa0255837ba97293d519664f8650ad2e42134db56bcbaf8478fd43371cfe96"
+      },
+      "inlet": {
+        "verdict": "pass_scoped_float_inlet",
+        "source": {
+          "path": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/colorimétrie/protocole/blacks/6V1A9951.CR3",
+          "sha256": "05043c4ec89b26b4b7fbfbf11f6903e540d10918e45819bc68e261394183f47c"
+        },
+        "engine_revision": "7474aadfec53afebc12022ba2f529814e695f15f",
+        "full_camera": {
+          "dtype": "f32",
+          "finite": true,
+          "maximum": [
+            0.15082202851772308,
+            0.08602762222290039,
+            0.13418079912662506
+          ],
+          "mean": [
+            9.883337144650457e-05,
+            0.00028850663558723606,
+            0.00029650292051200736
+          ],
+          "minimum": [
+            -0.1039048582315445,
+            -0.07993501424789429,
+            -0.10627228766679764
+          ],
+          "negative_fraction": [
+            0.504130140380322,
+            0.5161766787212795,
+            0.49996030394016927
+          ],
+          "orientation": "display",
+          "scope": "Actual retained CameraSignal input after optics/WB, before DCP; not inferred from working output",
+          "sha256": "d03c41ddbf6cff83cf3a3615abb420f117f780c2954836d6a566aedda5e9d93a",
+          "shape": [
+            4639,
+            6959,
+            3
+          ],
+          "unit": "linear_camera_white_1",
+          "zero_fraction": [
+            7.9299190922126e-05,
+            0.0011197603330640362,
+            7.753354487425053e-05
+          ]
+        },
+        "rois": [
+          {
+            "origin_yx": [
+              2190,
+              1262
+            ],
+            "minimum": [
+              -0.08137566596269608,
+              -0.06498781591653824,
+              -0.07968060672283173
+            ],
+            "negative_fraction": [
+              0.4946746826171875,
+              0.51544189453125,
+              0.5155792236328125
+            ]
+          },
+          {
+            "origin_yx": [
+              2190,
+              3350
+            ],
+            "minimum": [
+              -0.08575858175754547,
+              -0.061332251876592636,
+              -0.0757516622543335
+            ],
+            "negative_fraction": [
+              0.4915313720703125,
+              0.5169219970703125,
+              0.5018310546875
+            ]
+          },
+          {
+            "origin_yx": [
+              2190,
+              5438
+            ],
+            "minimum": [
+              -0.07296831905841827,
+              -0.06458164006471634,
+              -0.0734417736530304
+            ],
+            "negative_fraction": [
+              0.487518310546875,
+              0.5179901123046875,
+              0.5084381103515625
+            ]
+          }
+        ],
+        "negative_witness_required": true,
+        "limitations": "Observed DCP inlet only; no proof of fully signed DCP tables/curves, CFA/no-profile inlet or absence of intermediate quantization from negative presence alone."
+      },
+      "module_to_inlet": {
+        "verdict": "pass_exact_module_to_decoder_inlet",
+        "orientation_flip": 0,
+        "rois": [
+          {
+            "origin_yx": [
+              2190,
+              1262
+            ],
+            "bitwise_equal": true,
+            "values": 196608
+          },
+          {
+            "origin_yx": [
+              2190,
+              3350
+            ],
+            "bitwise_equal": true,
+            "values": 196608
+          },
+          {
+            "origin_yx": [
+              2190,
+              5438
+            ],
+            "bitwise_equal": true,
+            "values": 196608
+          }
+        ]
+      },
+      "metadata": {
+        "baseline_ev": 0.28,
+        "black_estimated": true,
+        "development_warning": "",
+        "format": "cr3",
+        "iso": 51200,
+        "model": "EOS R6 Mark III",
+        "normalization_applied": true,
+        "profile": "Canon EOS R6 Mark III Camera Neutral",
+        "profile_compensation_ev": 0,
+        "white": 14351,
+        "white_balance_kelvin": 4924.211272770631
+      },
+      "decode_ms": 5703.2891,
+      "peak_bytes": 1897775104,
+      "resource_budget_pass": true
+    },
+    {
+      "iso": 51200,
+      "role": "near_black_scene",
+      "source": {
+        "path": "D:\\DCIM\\100EOSR6\\6V1A9905.CR3",
+        "sha256": "f1a14c6075d8be503b818fdfda981e976b07c6065cce717b8166e8d0fd6987c3",
+        "black": [
+          2044,
+          2044,
+          2043,
+          2044
+        ],
+        "white": 14351
+      },
+      "capture": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\float-signed\\20261028T163906Z\\04-0-6V1A9905.json",
+        "sha256": "b5f9bb50966955b557eb4e4e9862856f32ca1edf131583b0188eb842da48e109"
+      },
+      "inlet": {
+        "verdict": "pass_scoped_float_inlet",
+        "source": {
+          "path": "D:/DCIM/100EOSR6/6V1A9905.CR3",
+          "sha256": "f1a14c6075d8be503b818fdfda981e976b07c6065cce717b8166e8d0fd6987c3"
+        },
+        "engine_revision": "7474aadfec53afebc12022ba2f529814e695f15f",
+        "full_camera": {
+          "dtype": "f32",
+          "finite": true,
+          "maximum": [
+            0.187443345785141,
+            0.1290217787027359,
+            0.162166029214859
+          ],
+          "mean": [
+            0.008740309813492156,
+            0.007648625204826301,
+            0.006775339789117076
+          ],
+          "minimum": [
+            -0.11822736263275146,
+            -0.0760480985045433,
+            -0.1041860282421112
+          ],
+          "negative_fraction": [
+            0.36034472349533736,
+            0.3482645449507309,
+            0.3806301070343927
+          ],
+          "orientation": "display",
+          "scope": "Actual retained CameraSignal input after optics/WB, before DCP; not inferred from working output",
+          "sha256": "2e85aab0a640c55fc3f8e31770dd511437b45b3f69fe30524c57f319daf2f379",
+          "shape": [
+            6959,
+            4639,
+            3
+          ],
+          "unit": "linear_camera_white_1",
+          "zero_fraction": [
+            7.05329131756566e-05,
+            0.0009416159397073382,
+            6.154980170400951e-05
+          ]
+        },
+        "rois": [
+          {
+            "origin_yx": [
+              3350,
+              798
+            ],
+            "minimum": [
+              -0.07423084229230881,
+              -0.055898603051900864,
+              -0.0758732482790947
+            ],
+            "negative_fraction": [
+              0.439727783203125,
+              0.43206787109375,
+              0.443756103515625
+            ]
+          },
+          {
+            "origin_yx": [
+              3350,
+              2190
+            ],
+            "minimum": [
+              -0.09810405969619751,
+              -0.05898602679371834,
+              -0.08175905048847198
+            ],
+            "negative_fraction": [
+              0.409210205078125,
+              0.396575927734375,
+              0.4011993408203125
+            ]
+          },
+          {
+            "origin_yx": [
+              3350,
+              3582
+            ],
+            "minimum": [
+              -0.07189568877220154,
+              -0.06044849008321762,
+              -0.07083510607481003
+            ],
+            "negative_fraction": [
+              0.4209442138671875,
+              0.3839874267578125,
+              0.3997344970703125
+            ]
+          }
+        ],
+        "negative_witness_required": false,
+        "limitations": "Observed DCP inlet only; no proof of fully signed DCP tables/curves, CFA/no-profile inlet or absence of intermediate quantization from negative presence alone."
+      },
+      "module_to_inlet": {
+        "verdict": "not_compared_rotated_sparse_ROIs",
+        "reason": "Sensor/display ROIs are different locations after rotation; no fabricated comparison"
+      },
+      "metadata": {
+        "baseline_ev": 0.28,
+        "black_estimated": true,
+        "development_warning": "",
+        "format": "cr3",
+        "iso": 51200,
+        "model": "EOS R6 Mark III",
+        "normalization_applied": true,
+        "profile": "Canon EOS R6 Mark III Camera Neutral",
+        "profile_compensation_ev": 0,
+        "white": 14351,
+        "white_balance_kelvin": 4924.211272770631
+      },
+      "decode_ms": 6116.2151,
+      "peak_bytes": 1897791488,
+      "resource_budget_pass": true
+    },
+    {
+      "iso": 51200,
+      "role": "near_black_scene",
+      "source": {
+        "path": "D:\\DCIM\\100EOSR6\\6V1A9906.CR3",
+        "sha256": "c8744f5f903619f9d9cfbf1d30bc4865683039c50d1c3db73792f247a8a0b9ae",
+        "black": [
+          2044,
+          2043,
+          2042,
+          2044
+        ],
+        "white": 14351
+      },
+      "capture": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\float-signed\\20261028T163906Z\\04-1-6V1A9906.json",
+        "sha256": "a70022d703491cb20442948ebcb7dfba7d8b54c4b316a2e118ce38af3f9873c5"
+      },
+      "inlet": {
+        "verdict": "pass_scoped_float_inlet",
+        "source": {
+          "path": "D:/DCIM/100EOSR6/6V1A9906.CR3",
+          "sha256": "c8744f5f903619f9d9cfbf1d30bc4865683039c50d1c3db73792f247a8a0b9ae"
+        },
+        "engine_revision": "7474aadfec53afebc12022ba2f529814e695f15f",
+        "full_camera": {
+          "dtype": "f32",
+          "finite": true,
+          "maximum": [
+            0.19554512202739716,
+            0.11974978446960449,
+            0.16801461577415466
+          ],
+          "mean": [
+            0.008821512432708992,
+            0.007682799120396909,
+            0.006948379413430883
+          ],
+          "minimum": [
+            -0.11178034543991089,
+            -0.07457958161830902,
+            -0.10545597970485687
+          ],
+          "negative_fraction": [
+            0.3591401811757288,
+            0.34758542172347434,
+            0.37750342666982334
+          ],
+          "orientation": "display",
+          "scope": "Actual retained CameraSignal input after optics/WB, before DCP; not inferred from working output",
+          "sha256": "bbd057ef06437c05e6181ab81fe3edfe929cb3d72224c42a6d1d9dcad6896297",
+          "shape": [
+            6959,
+            4639,
+            3
+          ],
+          "unit": "linear_camera_white_1",
+          "zero_fraction": [
+            7.140024807636735e-05,
+            0.0009344604267764745,
+            7.985676335829719e-05
+          ]
+        },
+        "rois": [
+          {
+            "origin_yx": [
+              3350,
+              798
+            ],
+            "minimum": [
+              -0.07230490446090698,
+              -0.06393695622682571,
+              -0.07520785182714462
+            ],
+            "negative_fraction": [
+              0.4222869873046875,
+              0.42724609375,
+              0.4365997314453125
+            ]
+          },
+          {
+            "origin_yx": [
+              3350,
+              2190
+            ],
+            "minimum": [
+              -0.07692933082580566,
+              -0.05735640972852707,
+              -0.07307359576225281
+            ],
+            "negative_fraction": [
+              0.421722412109375,
+              0.4037017822265625,
+              0.4213104248046875
+            ]
+          },
+          {
+            "origin_yx": [
+              3350,
+              3582
+            ],
+            "minimum": [
+              -0.06719007343053818,
+              -0.061743441969156265,
+              -0.08428879082202911
+            ],
+            "negative_fraction": [
+              0.4013824462890625,
+              0.392425537109375,
+              0.396087646484375
+            ]
+          }
+        ],
+        "negative_witness_required": false,
+        "limitations": "Observed DCP inlet only; no proof of fully signed DCP tables/curves, CFA/no-profile inlet or absence of intermediate quantization from negative presence alone."
+      },
+      "module_to_inlet": {
+        "verdict": "not_compared_rotated_sparse_ROIs",
+        "reason": "Sensor/display ROIs are different locations after rotation; no fabricated comparison"
+      },
+      "metadata": {
+        "baseline_ev": 0.28,
+        "black_estimated": true,
+        "development_warning": "",
+        "format": "cr3",
+        "iso": 51200,
+        "model": "EOS R6 Mark III",
+        "normalization_applied": true,
+        "profile": "Canon EOS R6 Mark III Camera Neutral",
+        "profile_compensation_ev": 0,
+        "white": 14351,
+        "white_balance_kelvin": 4924.211272770631
+      },
+      "decode_ms": 6141.9472,
+      "peak_bytes": 1897824256,
+      "resource_budget_pass": true
+    },
+    {
+      "iso": 51200,
+      "role": "illuminated_scene",
+      "source": {
+        "path": "D:\\DCIM\\100EOSR6\\6V1A9876.CR3",
+        "sha256": "7267e862f05bf82802acd65da32bba2361a189db695890ae809d69447cd2964c",
+        "black": [
+          2045,
+          2047,
+          2044,
+          2045
+        ],
+        "white": 14351
+      },
+      "capture": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\float-signed\\20261028T163906Z\\05-0-6V1A9876.json",
+        "sha256": "5155a0ddabaa12033a3c37f01c128603342cbc582c970b80fbf0a9967aba590b"
+      },
+      "inlet": {
+        "verdict": "pass_scoped_float_inlet",
+        "source": {
+          "path": "D:/DCIM/100EOSR6/6V1A9876.CR3",
+          "sha256": "7267e862f05bf82802acd65da32bba2361a189db695890ae809d69447cd2964c"
+        },
+        "engine_revision": "7474aadfec53afebc12022ba2f529814e695f15f",
+        "full_camera": {
+          "dtype": "f32",
+          "finite": true,
+          "maximum": [
+            0.4951462149620056,
+            0.5463557243347168,
+            0.5268409848213196
+          ],
+          "mean": [
+            0.12238930176320509,
+            0.1343068065962622,
+            0.14641073098943497
+          ],
+          "minimum": [
+            -0.10194700211286545,
+            -0.04509628564119339,
+            -0.07070596516132355
+          ],
+          "negative_fraction": [
+            0.00048347725465333694,
+            3.62422083511279e-05,
+            0.00011805047523602429
+          ],
+          "orientation": "display",
+          "scope": "Actual retained CameraSignal input after optics/WB, before DCP; not inferred from working output",
+          "sha256": "eee8903a4507eb5a6b18e66f9c58c5833d0ba3a38b53a53850bc4b1c2d440213",
+          "shape": [
+            6959,
+            4639,
+            3
+          ],
+          "unit": "linear_camera_white_1",
+          "zero_fraction": [
+            9.29287393618664e-08,
+            3.717149574474656e-07,
+            3.097624645395547e-08
+          ]
+        },
+        "rois": [
+          {
+            "origin_yx": [
+              3350,
+              798
+            ],
+            "minimum": [
+              -0.033735353499650955,
+              0.005606565158814192,
+              -0.019126538187265396
+            ],
+            "negative_fraction": [
+              0.00030517578125,
+              0.0,
+              3.0517578125e-05
+            ]
+          },
+          {
+            "origin_yx": [
+              3350,
+              2190
+            ],
+            "minimum": [
+              -0.01606106385588646,
+              0.006581620313227177,
+              -0.003193473443388939
+            ],
+            "negative_fraction": [
+              6.103515625e-05,
+              0.0,
+              1.52587890625e-05
+            ]
+          },
+          {
+            "origin_yx": [
+              3350,
+              3582
+            ],
+            "minimum": [
+              -0.014206387102603912,
+              0.008856748230755329,
+              0.0030143987387418747
+            ],
+            "negative_fraction": [
+              9.1552734375e-05,
+              0.0,
+              0.0
+            ]
+          }
+        ],
+        "negative_witness_required": false,
+        "limitations": "Observed DCP inlet only; no proof of fully signed DCP tables/curves, CFA/no-profile inlet or absence of intermediate quantization from negative presence alone."
+      },
+      "module_to_inlet": {
+        "verdict": "not_compared_rotated_sparse_ROIs",
+        "reason": "Sensor/display ROIs are different locations after rotation; no fabricated comparison"
+      },
+      "metadata": {
+        "baseline_ev": 0.28,
+        "black_estimated": true,
+        "development_warning": "",
+        "format": "cr3",
+        "iso": 51200,
+        "model": "EOS R6 Mark III",
+        "normalization_applied": true,
+        "profile": "Canon EOS R6 Mark III Camera Neutral",
+        "profile_compensation_ev": 0,
+        "white": 14351,
+        "white_balance_kelvin": 4924.211272770631
+      },
+      "decode_ms": 6993.6866,
+      "peak_bytes": 1897914368,
+      "resource_budget_pass": true
+    },
+    {
+      "iso": 51200,
+      "role": "illuminated_scene",
+      "source": {
+        "path": "D:\\DCIM\\100EOSR6\\6V1A9877.CR3",
+        "sha256": "1b7613917913ac71fd02c7d023083ec1597dcb7e49cdd6a271415a7a741de61f",
+        "black": [
+          2046,
+          2045,
+          2044,
+          2046
+        ],
+        "white": 14351
+      },
+      "capture": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\float-signed\\20261028T163906Z\\05-1-6V1A9877.json",
+        "sha256": "c14b56d251b6dfc11d24b41a7a0fbe6a06f6dcd766d8802ddbc246d3c3a43c79"
+      },
+      "inlet": {
+        "verdict": "pass_scoped_float_inlet",
+        "source": {
+          "path": "D:/DCIM/100EOSR6/6V1A9877.CR3",
+          "sha256": "1b7613917913ac71fd02c7d023083ec1597dcb7e49cdd6a271415a7a741de61f"
+        },
+        "engine_revision": "7474aadfec53afebc12022ba2f529814e695f15f",
+        "full_camera": {
+          "dtype": "f32",
+          "finite": true,
+          "maximum": [
+            0.46126410365104675,
+            0.5292109847068787,
+            0.4977600872516632
+          ],
+          "mean": [
+            0.12242042026240087,
+            0.13458009747818303,
+            0.14667330365214262
+          ],
+          "minimum": [
+            -0.07665474712848663,
+            -0.04257739335298538,
+            -0.0832630842924118
+          ],
+          "negative_fraction": [
+            0.00048310553969588944,
+            3.599439837949625e-05,
+            0.00012000197876262349
+          ],
+          "orientation": "display",
+          "scope": "Actual retained CameraSignal input after optics/WB, before DCP; not inferred from working output",
+          "sha256": "d573b5548a15874e3a42599ff9bb1b1897493ad73fb56d0deaa0839f3afdaf53",
+          "shape": [
+            6959,
+            4639,
+            3
+          ],
+          "unit": "linear_camera_white_1",
+          "zero_fraction": [
+            9.29287393618664e-08,
+            4.956199432632875e-07,
+            0
+          ]
+        },
+        "rois": [
+          {
+            "origin_yx": [
+              3350,
+              798
+            ],
+            "minimum": [
+              -0.03087639808654785,
+              0.006337856408208609,
+              -0.0008351877331733704
+            ],
+            "negative_fraction": [
+              0.000274658203125,
+              0.0,
+              1.52587890625e-05
+            ]
+          },
+          {
+            "origin_yx": [
+              3350,
+              2190
+            ],
+            "minimum": [
+              -0.013627849519252777,
+              -0.013813276775181293,
+              -0.0041839927434921265
+            ],
+            "negative_fraction": [
+              9.1552734375e-05,
+              1.52587890625e-05,
+              1.52587890625e-05
+            ]
+          },
+          {
+            "origin_yx": [
+              3350,
+              3582
+            ],
+            "minimum": [
+              -0.027328375726938248,
+              0.006337856408208609,
+              0.0033046789467334747
+            ],
+            "negative_fraction": [
+              0.000213623046875,
+              0.0,
+              0.0
+            ]
+          }
+        ],
+        "negative_witness_required": false,
+        "limitations": "Observed DCP inlet only; no proof of fully signed DCP tables/curves, CFA/no-profile inlet or absence of intermediate quantization from negative presence alone."
+      },
+      "module_to_inlet": {
+        "verdict": "not_compared_rotated_sparse_ROIs",
+        "reason": "Sensor/display ROIs are different locations after rotation; no fabricated comparison"
+      },
+      "metadata": {
+        "baseline_ev": 0.28,
+        "black_estimated": true,
+        "development_warning": "",
+        "format": "cr3",
+        "iso": 51200,
+        "model": "EOS R6 Mark III",
+        "normalization_applied": true,
+        "profile": "Canon EOS R6 Mark III Camera Neutral",
+        "profile_compensation_ev": 0,
+        "white": 14351,
+        "white_balance_kelvin": 4924.211272770631
+      },
+      "decode_ms": 7189.9348,
+      "peak_bytes": 1897914368,
+      "resource_budget_pass": true
+    }
+  ],
+  "verdict": "pass_scoped_F1_signed_inlet",
+  "limitations": "F1 signed inlet only, not A invariance, clean noise truth, visual quality or fully signed DCP processing. Peak memory is measured, not a system80% ceiling proof."
+}

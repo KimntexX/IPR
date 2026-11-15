@@ -10,12 +10,11 @@ bash scripts/build-windows.sh
 
 The Bash launcher uses Python 3.9+ to select tests, then PowerShell and **Windows** CMake/MSVC tools to compile. A launch from WSL produces `appIPR.exe` and `iprGenerateTests.exe` for Windows, not Linux binaries. By default: `build-windows-msvc`, `Release`, two jobs. Close the executable in this folder before linking it; the script refuses to stop it automatically.
 
-Prerequisites: MSVC/Visual Studio Build Tools 2022 x64, CMake and CTest for Windows, Qt MSVC, OpenCV/LibTIFF/LibRaw of the same ABI. The existing CMake cache is reused. On a new machine, provide dependency paths, for example:
+Prerequisites: MSVC/Visual Studio Build Tools 2022 x64, CMake and CTest for Windows, Qt MSVC, LibTIFF/LibRaw of the same ABI. The existing CMake cache is reused. On a new machine, provide dependency paths, for example:
 
 ```bash
 bash scripts/build-windows.sh \
-  --cmake-arg=-DCMAKE_PREFIX_PATH=C:/Qt/VERSION/msvc2022_64 \
-  --cmake-arg=-DOpenCV_DIR=C:/opencv/build/x64/vc16/lib
+  --cmake-arg=-DCMAKE_PREFIX_PATH=C:/Qt/VERSION/msvc2022_64
 ```
 
 Similarly add vcpkg toolchain or required LibRaw/LibTIFF paths. These examples do not constitute automatic dependency installation. Python tests of the comparator require NumPy and Pillow in the launcher's Python; the selector itself only uses the standard library.

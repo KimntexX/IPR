@@ -28,7 +28,13 @@ struct Decode {
     bool automaticWhiteBalance = false;
     bool lensCorrection = false;
     bool chromaticAberration = false;
-    bool isDefault() const { return !automaticWhiteBalance && !lensCorrection && !chromaticAberration; }
+    // The editor's experimental camera-signal denoise: signed development, signal kept
+    // before the lens corrections.
+    bool signedCameraSignal = false;
+    bool isDefault() const
+    {
+        return !automaticWhiteBalance && !lensCorrection && !chromaticAberration && !signedCameraSignal;
+    }
 };
 
 // The state a variant is measured against: the neutral ("neutral", 0) or a

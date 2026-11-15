@@ -1,0 +1,29 @@
+{
+ "kernel": "resize",
+ "revision": "4a1855a",
+ "threads": 8,
+ "opencv": "5.0.0",
+ "oracle": "OpenCV's own code, IPP off; ipp_from_opencv is how far IPP, which IPR used, lies from it",
+ "tolerance_fixed_before_measuring": 1e-05,
+ "within_tolerance": true,
+ "timing": "median of three, on a machine busy with other work",
+ "cases": [
+  {"from": [1, 1], "channels": 3, "to": [5, 3], "interpolation": "linear", "scale_given": 0, "opencv_ms": 0.0056, "ipr_ms": 0.0018, "same_size": true, "largest_difference": 0, "ipp_from_opencv": 0},
+  {"from": [3, 2], "channels": 1, "to": [1, 1], "interpolation": "area", "scale_given": 0, "opencv_ms": 0.0003, "ipr_ms": 0.0008, "same_size": true, "largest_difference": 5.96046e-08, "ipp_from_opencv": 0},
+  {"from": [17, 5], "channels": 3, "to": [6, 2], "interpolation": "area", "scale_given": 0, "opencv_ms": 0.0008, "ipr_ms": 0.0021, "same_size": true, "largest_difference": 0, "ipp_from_opencv": 0},
+  {"from": [17, 5], "channels": 3, "to": [40, 13], "interpolation": "linear", "scale_given": 0, "opencv_ms": 0.0019, "ipr_ms": 0.0073, "same_size": true, "largest_difference": 5.96046e-08, "ipp_from_opencv": 1.78814e-07},
+  {"from": [17, 5], "channels": 4, "to": [40, 13], "interpolation": "area", "scale_given": 0, "opencv_ms": 0.0016, "ipr_ms": 0.0068, "same_size": true, "largest_difference": 0, "ipp_from_opencv": 0},
+  {"from": [64, 64], "channels": 1, "to": [23, 91], "interpolation": "area", "scale_given": 0, "opencv_ms": 0.0032, "ipr_ms": 0.0095, "same_size": true, "largest_difference": 0, "ipp_from_opencv": 0},
+  {"from": [64, 64], "channels": 2, "to": [23, 91], "interpolation": "linear", "scale_given": 0, "opencv_ms": 0.0069, "ipr_ms": 0.0131, "same_size": true, "largest_difference": 2.98023e-08, "ipp_from_opencv": 0},
+  {"from": [6960, 4640], "channels": 4, "to": [2048, 1365], "interpolation": "area", "scale_given": 0, "opencv_ms": 26.5625, "ipr_ms": 42.4877, "same_size": true, "largest_difference": 0, "ipp_from_opencv": 0},
+  {"from": [6959, 4639], "channels": 3, "to": [2048, 1365], "interpolation": "area", "scale_given": 0, "opencv_ms": 16.8127, "ipr_ms": 30.0187, "same_size": true, "largest_difference": 0, "ipp_from_opencv": 0},
+  {"from": [6960, 4640], "channels": 1, "to": [3480, 2320], "interpolation": "area", "scale_given": 0, "opencv_ms": 4.3861, "ipr_ms": 16.8369, "same_size": true, "largest_difference": 0, "ipp_from_opencv": 0},
+  {"from": [6959, 4639], "channels": 1, "to": [1739, 1159], "interpolation": "area", "scale_given": 0, "opencv_ms": 6.7953, "ipr_ms": 9.1077, "same_size": true, "largest_difference": 0, "ipp_from_opencv": 0},
+  {"from": [1739, 1159], "channels": 1, "to": [6959, 4639], "interpolation": "linear", "scale_given": 0, "opencv_ms": 6.9399, "ipr_ms": 17.3499, "same_size": true, "largest_difference": 5.96046e-08, "ipp_from_opencv": 6.05881e-05},
+  {"from": [580, 386], "channels": 3, "to": [6960, 4640], "interpolation": "linear", "scale_given": 0, "opencv_ms": 22.3734, "ipr_ms": 36.1944, "same_size": true, "largest_difference": 5.96046e-08, "ipp_from_opencv": 2.33799e-05},
+  {"from": [2048, 1365], "channels": 2, "to": [6960, 4640], "interpolation": "linear", "scale_given": 0, "opencv_ms": 12.4729, "ipr_ms": 35.8537, "same_size": true, "largest_difference": 5.96046e-08, "ipp_from_opencv": 0},
+  {"from": [5202, 3464], "channels": 3, "to": [1300, 866], "interpolation": "area", "scale_given": 0.25, "opencv_ms": 10.0981, "ipr_ms": 15.1326, "same_size": true, "largest_difference": 0, "ipp_from_opencv": 0},
+  {"from": [5202, 3464], "channels": 3, "to": [1734, 1155], "interpolation": "area", "scale_given": 0.3333, "opencv_ms": 10.5343, "ipr_ms": 19.1962, "same_size": true, "largest_difference": 0, "ipp_from_opencv": 0},
+  {"from": [1301, 866], "channels": 3, "to": [2212, 1472], "interpolation": "linear", "scale_given": 1.7, "opencv_ms": 1.8102, "ipr_ms": 8.659, "same_size": true, "largest_difference": 5.96046e-08, "ipp_from_opencv": 4.86374e-05}
+ ]
+}

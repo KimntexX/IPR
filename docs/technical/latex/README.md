@@ -29,6 +29,13 @@ Les fichiers de construction peuvent être supprimés avec `./build.ps1 -Clean`.
 
 ## Règle de maintenance
 
+Relecture du 22 octobre 2026 sur `dev` (`a15f703`) : master Rec.2020,
+sidecar v6, contrôleur mémoire, ordre des traitements et diagrammes actualisés.
+Les chapitres réservés restent vides. Les campagnes historiques décrites dans
+le chapitre Qualité ne sont pas de nouveaux résultats de cette relecture.
+Voir [le bilan documentaire](../../reports/documentation-audit-2026-10-22.md).
+
+
 Actualisation du 8 octobre 2026 : version documentaire 0.3, recette RAW v5,
 changement DCP sans réouverture visuelle, diagrammes actualisés et mise en
 forme 12 pt / interligne 1,5. Le PDF historique était nommé

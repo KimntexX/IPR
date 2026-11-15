@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "data_version": "v002",
+  "campaign": "neural-per-photo-controls",
+  "created_utc": "2026-11-11T14:44:24.600966+00:00",
+  "branch": "patch_noise_cfa",
+  "base_commit": "528997728b8be2b2aab08df64c456d34e9e1b1b1",
+  "verdict": "local_ui_recipe_integration_verified_partial_model_qualification",
+  "sources_sha256": {
+    "CMakeLists.txt": "bf3b0cddd081ef7ca11230b47f8c40678c85889faf6e344971e84cdfbc4d1195",
+    "config/ipr-ui.ini": "0dfda8938b93b1cfbe4569a109aed81288b0ea88c212cc53451c49e5e5a519f4",
+    "docs/validation/matrice-validation.md": "40b1184eeb65a273a34c2c697e4ff0a4c4216726b92ce12da3fe73fb2631ea2f",
+    "src/app/UiPreferences.cpp": "27f403953db279dcb4cf8103a8ac19b5aec7f3b49fb5d7299f6d04c53490a877",
+    "src/app/main.cpp": "2ea4c4c01bdfceb0ba0c37d2ec7cd74e58e95ef7083af0897d237118904420ff",
+    "src/core/EditRecipe.h": "5e13d5ebd9ed2dd190674e7c690217294ff58bf0568babd845a65e5cd8657f84",
+    "src/core/RecipeCodec.cpp": "74c6d8b1a44871ac437bfb8da8b66c316d281987260ffe550fcdb37c03df25fa",
+    "src/editor/NeuralDevelopment.cpp": "6e4d34497e7e8fd271033eb6e63c03298d38fd4825162326c0d3b30ee497550c",
+    "src/editor/NeuralDevelopment.h": "e82efc753cb2cd1eea8433f606272db511af3beb51c77064f8f00e0aaf70825a",
+    "src/editor/RenderChain.cpp": "5259e44beff3d34db22006e3bc10ab0b2d1a90175be970801cd3bf5a00bb5875",
+    "src/editor/imageeditor.cpp": "81637bcea35840505218fd497f3f85580377fdc5522ca408f5b48065b9ea243b",
+    "src/editor/imageeditor.h": "2f688f30dd68bcb07b2b3a255f9e81a677a6526d0e0f12d1a7818ec213e60ce1",
+    "src/neural/README.md": "4d5980ef99c244c0b7d09a4a870bdd5e0de6b53549b85bcf2301de2966488dab",
+    "src/qml/AdvancedRawPreferencesPane.qml": "7cd4a2a9d9a9e04972535a48e50865136e376d7c751e2599715616ef913df508",
+    "src/qml/Setting.qml": "2b42829253133f0ebac87eac40aa6452e76f7e2fa258b2220b0e0b171fe59db4",
+    "tests/editor_neural_test.cpp": "f38da1abb9cbb96a51837bf2ce478a425e45bcf062a6b6ed5b34179f4a0c17ea",
+    "tests/render_chain_test.cpp": "693e8e36e5d0a57fbf7554bdeaf9c2417c41b55532a9f8f07a3262a6dda19546",
+    "tests/sidecar_test.cpp": "4222db39264ec99389fc5a0f78dc509123d70a6cedd0b757ba76fb72a56726b4",
+    "tests/ui_preferences_qml_test.cpp": "75af5ba5f2399e9d3ed912cb3be1e8351a9459cfdf1270f7f8215446d52e24f3",
+    "tests/ui_preferences_test.cpp": "d0fed868a7c644b6d4d2763a2661283ac387f5e737facf1f752e97d02b5c3297"
+  },
+  "native_tests": {
+    "renderChainTests": "passed",
+    "sidecarTests": "passed",
+    "uiPreferencesTests": "passed",
+    "uiPreferencesQmlTests": "passed",
+    "settingsQmlTests": "passed",
+    "editorHistoryTests": "passed",
+    "editorBatchTests": "passed",
+    "neuralCfaTests": "passed"
+  },
+  "real_integration": {
+    "camera": "Canon EOS R6 Mark III",
+    "iso": 4000,
+    "source": "tests/image/colorimétrie/rafale/6V1A9819.CR3",
+    "engine": "DirectML",
+    "authorization_changes_neither_pixels_nor_activity": true,
+    "default_photo_activation_strength": 50,
+    "message_while_processing": "Débruitage IA en cours…",
+    "qml_photo_checkbox_and_intensity_present": true,
+    "qml_classical_luminance_and_master_disabled_colour_enabled": true,
+    "strength100_differs_from50": true,
+    "disable_restores_original_display_exactly": true,
+    "copy_paste_restores_ia_strength50": true,
+    "sidecar_has_confirmed_force_and_model": true,
+    "undo_and_redo_restore_ia": true,
+    "revoke_and_restore_authorization_do_not_alter_current_pixels": true,
+    "reset_all_restores_original_display_exactly": true,
+    "comparison_domain": "ImageProvider originalImage QImage, not a direct F32 master comparison",
+    "missing_model_refuses_even_when_target_strength_is_cached": true,
+    "missing_model_preserves_previous_pixels_and_confirmed_force50": true
+  },
+  "unsupported_camera": {
+    "source": "tests/image/base/IMG_3135.CR2",
+    "camera": "Canon EOS 60D",
+    "claimed_recipe_strength": 50,
+    "applied": false,
+    "qml_checkbox_disabled_with_reason": true,
+    "pasted_ia_not_applied": true,
+    "saved_recipe_has_no_neural_strength_key": true
+  },
+  "model_sha256": "1807f724a4d33fc5185e15b1d662886ee4f1a5bd817d316433ac9575ef43241c",
+  "classic_luminance_unit_test": "Confirmed neural flag makes luminance100/chroma25 exactly equal to luminance0/chroma25; saved strength100 remains unchanged",
+  "application_smoke": "passed offscreen/software --smoke-test",
+  "compiler": "MSVC 19.44.35228, Visual Studio 2022; Qt6.11.2",
+  "limitations": [
+    "Not a new model quality or all-ISO qualification",
+    "No direct full-float-master identity assertion",
+    "Neural + automatic white balance remains explicitly refused",
+    "Known local corpus used for integration only",
+    "No src/raw files modified; no commit, push, dev merge or tag"
+  ],
+  "supersedes": "neural-per-photo-controls-v001-20261111T143949Z.json",
+  "test_log_sha256": {
+    "build-codex/neural-per-photo-guard.log": "937362b23577128243686130a933f6d4a0722bb7f84bd78d2249d9848c768cd9",
+    "build-codex/smoke-per-photo-final.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "binary_sha256": {
+    "build-codex/Release/editorNeuralTests.exe": "7f227548c52970abf9c101635b87f8a86d445c7f67683a3b47940618ba5c7b19",
+    "build-codex/Release/appIPR.exe": "93985f393957e012f25bd9b76ecda114b1d708ad90d881d05ffdf1e15032aed8"
+  },
+  "final_review": "After the guarded real-image test, availability reason now prioritizes the service user-facing metadata reason; final app and service test rebuilt and smoke-tested. No neural weights or pixel algorithm changes in that text-selection adjustment."
+}

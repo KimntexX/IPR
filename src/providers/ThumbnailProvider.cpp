@@ -40,8 +40,14 @@ public:
     void run() override
     {
         // A delegate scrolled out of view: skip the decode, still finish.
-        if (!m_canceled.load())
-            m_image = m_provider->produce(m_fileName, m_size);
+        try {
+            if (!m_canceled.load() && !m_provider->m_stopping.load())
+                m_image = m_provider->produce(m_fileName, m_size);
+        } catch (...) {
+            // No exception may escape a Qt worker. Keep completion as the
+            // final action, including when decoding or allocation fails.
+            m_error = QStringLiteral("Impossible de charger la vignette.");
+        }
         emit finished();
     }
     void finishWith(QImage image)
@@ -50,6 +56,7 @@ public:
         emit finished();
     }
     void cancel() override { m_canceled.store(true); }
+    QString errorString() const override { return m_error; }
     QQuickTextureFactory *textureFactory() const override
     {
         return QQuickTextureFactory::textureFactoryForImage(m_image);
@@ -60,6 +67,7 @@ private:
     QString m_fileName;
     QSize m_size;
     QImage m_image;
+    QString m_error;
     std::atomic_bool m_canceled{false};
 };
 
@@ -76,7 +84,10 @@ ThumbnailProvider::ThumbnailProvider(Loader loader, int maxThreads)
 
 ThumbnailProvider::~ThumbnailProvider()
 {
-    m_pool.clear();
+    // Do not clear(): responses are owned by QML and must all emit finished().
+    // Drain queued responses without decoding; the provider remains alive
+    // until the active workers and these cancellation completions return.
+    m_stopping.store(true);
     m_pool.waitForDone();
 }
 
@@ -139,6 +150,9 @@ QImage ThumbnailProvider::loadThumbnail(const QString &fileName, const QSize &si
     QImage thumbnail;
     if (RawDecoder::supportedExtensions().contains(extension)) {
         thumbnail = RawDecoder::decodeEmbeddedThumbnail(fileName, size);
+        // Many DNG carry no preview: the ribbon must still show them.
+        if (thumbnail.isNull())
+            thumbnail = RawDecoder::developThumbnail(fileName, size);
     } else {
         QImageReader reader(fileName);
         reader.setAutoTransform(true);

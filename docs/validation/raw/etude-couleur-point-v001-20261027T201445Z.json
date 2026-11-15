@@ -1,0 +1,29 @@
+{
+ "campaign_id": "etude-couleur-point-v001-20261027T201445Z",
+ "runner": "tests/study_point_color.py",
+ "commit": "8e71625d38f20b3d3fec168e9e1d229cdfca25e8",
+ "local_changes": [
+  "M tests/study_point_color.py"
+ ],
+ "model": "w = 1 - C/C0 under saturation -100; responses as change at w = 1 (least squares through 0)",
+ "units": {
+  "hue": "degrees",
+  "chroma": "natural log of the chroma ratio",
+  "lightness": "Oklab L",
+  "hue_response": "degrees",
+  "saturation_response": "log chroma gain",
+  "luminance_response": "log lightness gain"
+ },
+ "sample_stride": 12,
+ "near_tolerances": {
+  "hue": 12.0,
+  "chroma": 0.25,
+  "lightness": 0.08
+ },
+ "grey_chroma": 0.02,
+ "clip": 0.98,
+ "skipped": [],
+ "duration_seconds": 437.2,
+ "python": "3.14.3",
+ "sources": {}
+}

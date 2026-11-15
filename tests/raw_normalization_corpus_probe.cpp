@@ -3,6 +3,8 @@
 #include "ImageImporter.h"
 #include "raw_opening_trial_helpers.h"
 #include "dcp_headroom_experiment.h"
+#include "Parallel.h"
+#include "Resize.h"
 #include <QCoreApplication>
 #include <QDir>
 #include <QFile>
@@ -14,7 +16,18 @@
 #include <QElapsedTimer>
 #include <QSysInfo>
 #include <cstring>
-#include <opencv2/imgproc.hpp>
+
+namespace {
+// The pixels of an image, rows one after another, into a file.
+bool writePixels(QFile &file, const ipr::Image &image)
+{
+    const qint64 rowBytes = qint64(image.width()) * qint64(image.pixelBytes());
+    for (int y = 0; y < image.height(); ++y)
+        if (file.write(reinterpret_cast<const char *>(image.row<std::uint8_t>(y)), rowBytes) != rowBytes)
+            return false;
+    return true;
+}
+}
 
 int main(int argc, char **argv)
 {
@@ -59,49 +72,43 @@ int main(int argc, char **argv)
         const auto full=ColorPipeline::toSrgb(image,ColorPipeline::OutputFormat::HighBitDepth,&error)
                             .convertToFormat(QImage::Format_RGBA64);
         if(full.isNull())return 5;
-        cv::Mat packed(full.height(),full.width(),CV_16UC4,
-                       const_cast<uchar *>(full.constBits()),full.bytesPerLine());
-        cv::Mat linear;
-        packed.convertTo(linear,CV_32FC4,1.0/65535.0);
-        cv::parallel_for_(cv::Range(0,linear.rows),[&](const cv::Range &range) {
-            for(int y=range.start;y<range.end;++y) {
-                auto *row=linear.ptr<cv::Vec4f>(y);
-                for(int x=0;x<linear.cols;++x)for(int c=0;c<3;++c) {
+        const ipr::Image packed=ipr::Image::wrapReadOnly(full.constBits(),{full.width(),full.height()},ipr::Depth::U16,4,full.bytesPerLine());
+        ipr::Image linear=ipr::Image::create(packed.size(),ipr::Depth::F32,4);
+        ipr::convertInto(packed,linear,1.0/65535.0);
+        ipr::parallelRows(linear.height(),[&](int first,int last) {
+            for(int y=first;y<last;++y) {
+                auto *row=linear.mutableRow<ipr::Vec4f>(y);
+                for(int x=0;x<linear.width();++x)for(int c=0;c<3;++c) {
                     const float v=row[x][c];
                     row[x][c]=v<=.04045f?v/12.92f:std::pow((v+.055f)/1.055f,2.4f);
                 }
             }
         });
-        cv::Mat area;
-        cv::resize(linear,area,cv::Size((full.width()+3)/4,(full.height()+3)/4),0,0,cv::INTER_AREA);
-        std::vector<cv::Mat> components;cv::split(area,components);components.resize(3);
-        cv::Mat rgb;cv::merge(components,rgb);
+        const ipr::Image rgb=ipr::withoutAlpha(ipr::resized(linear,{(full.width()+3)/4,(full.height()+3)/4},ipr::Interpolation::Area));
         QFile data(out.filePath("output-area-linear-rgb.f32"));
-        const qint64 bytes=qint64(rgb.total()*rgb.elemSize());
-        if(!data.open(QIODevice::WriteOnly|QIODevice::NewOnly)||
-           data.write(reinterpret_cast<const char *>(rgb.data),bytes)!=bytes)return 6;
+        if(!data.open(QIODevice::WriteOnly|QIODevice::NewOnly)||!writePixels(data,rgb))return 6;
         data.close();
-        areaProof={{"rows",rgb.rows},{"cols",rgb.cols},{"source_width",full.width()},
+        areaProof={{"rows",rgb.height()},{"cols",rgb.width()},{"source_width",full.width()},
                    {"source_height",full.height()},{"sha256",digest(data.fileName())},
                    {"domain","linear sRGB decoded from full production 16bit output, then INTER_AREA"}};
     }
-    const int rows=(image.linearRgba.rows+7)/8, cols=(image.linearRgba.cols+7)/8;
-    cv::Mat grid(rows,cols,CV_32FC4);
+    const int rows=(image.linearRgba.height()+7)/8, cols=(image.linearRgba.width()+7)/8;
+    ipr::Image grid=ipr::Image::create({cols,rows},ipr::Depth::F32,4);
     for (int y=0;y<rows;++y)
         for (int x=0;x<cols;++x)
-            grid.at<cv::Vec4f>(y,x)=image.linearRgba.at<cv::Vec4f>(8*y,8*x);
-    image.linearRgba=grid;
-    std::vector<cv::Mat> channels;cv::split(grid,channels);channels.resize(3);
-    cv::Mat stageRgb;cv::merge(channels,stageRgb);
-    WorkingColor::transform(stageRgb, WorkingColor::toSrgb()); // Explicit diagnostic domain.
+            grid.mutableRow<ipr::Vec4f>(y)[x]=image.linearRgba.row<ipr::Vec4f>(8*y)[8*x];
+    ipr::Image stageImage=ipr::withoutAlpha(grid);
+    image.linearRgba=std::move(grid);
+    WorkingColor::transform(stageImage, WorkingColor::toSrgb()); // Explicit diagnostic domain.
+    const ipr::Image &stageRgb=stageImage;
     if(!image.dcpContext)return 8;
     if(sourceOnly) {
         auto replay=sample3(image.dcpContext->cameraRgb);
         if(!applyDcpForSrgbAnalysis(image.dcpContext->profilePath,replay,image.dcpContext->sourceKelvin,&error,image.dcpContext->options))return 8;
-        const double replayError=cv::norm(replay,stageRgb,cv::NORM_INF);
+        const double replayError=ipr::largestDifference(replay,stageRgb);
         if(replayError>1e-6)return 9;
-        QFile pixels(out.filePath("post-dcp-srgb-linear.f32"));const qint64 bytes=qint64(stageRgb.total()*stageRgb.elemSize());
-        if(!pixels.open(QIODevice::WriteOnly|QIODevice::NewOnly)||pixels.write(reinterpret_cast<const char*>(stageRgb.data),bytes)!=bytes)return 6;
+        QFile pixels(out.filePath("post-dcp-srgb-linear.f32"));
+        if(!pixels.open(QIODevice::WriteOnly|QIODevice::NewOnly)||!writePixels(pixels,stageRgb))return 6;
         pixels.close();
         const auto witness=ColorPipeline::toSrgb(image,ColorPipeline::OutputFormat::HighBitDepth,&error);
         if(witness.isNull()||!witness.save(out.filePath("native-current.png"),"PNG"))return 5;
@@ -152,14 +159,14 @@ int main(int argc, char **argv)
         auto stats=linearStageStats(rgb);
         // Reconstruct linear ProPhoto using the exact production matrices;
         // these are pre-curve coordinates only for the plus_look ablation.
-        const cv::Matx33d proPhotoToXyz(.7976749,.1351917,.0313534,.2880402,.7118741,.0000857,0.,0.,.8252100);
+        const ipr::Matrix33d proPhotoToXyz(.7976749,.1351917,.0313534,.2880402,.7118741,.0000857,0.,0.,.8252100);
         const auto srgbToProPhoto=(WorkingColor::toSrgb()*WorkingColor::fromXyzD50()*proPhotoToXyz).inv();
-        cv::Mat proPhoto;cv::transform(rgb,proPhoto,srgbToProPhoto);
+        ipr::Image proPhoto=rgb.clone();WorkingColor::transform(proPhoto,srgbToProPhoto);
         auto bounds=linearStageStats(proPhoto);
         for(const auto &key:{"mean_Y_unbounded","Y_p05_p50_p95_p99","Y_at_or_above_one_percent"})bounds.remove(key);
         stats.insert("prophoto_bounds",bounds);
         stats.insert("profile_copy_sha256",digest(path));dcpStages.insert(variant.first,stats);
-        if(variant.first=="full")replayError=cv::norm(rgb,stageRgb,cv::NORM_INF);
+        if(variant.first=="full")replayError=ipr::largestDifference(rgb,stageRgb);
     }
     if(replayError>1e-6)return 9;
     const auto headroomStudy=runHeadroomExperiment(cameraGrid,*image.dcpContext,profileBytes,out,profiles);
@@ -169,15 +176,15 @@ int main(int argc, char **argv)
     double beforeY=0,currentY=0,candidateY=0;int negative=0,above=0,overY=0,cameraHigh=0;
     auto mapped=ColorPipeline::mapToSrgbGamut(image,&error);
     for(int y=0;y<rows;++y)for(int x=0;x<cols;++x) {
-        const auto v=stageRgb.at<cv::Vec3f>(y,x);const auto m=mapped.linearRgba.at<cv::Vec4f>(y,x);const auto c=candidate.at<cv::Vec3f>(y,x);
+        const auto v=imagetest::at<ipr::Vec3f>(stageRgb, y,x);const auto m=mapped.linearRgba.row<ipr::Vec4f>(y)[x];const auto c=imagetest::at<ipr::Vec3f>(candidate, y,x);
         const double Y=.2126*v[0]+.7152*v[1]+.0722*v[2];beforeY+=Y;currentY+=.2126*m[0]+.7152*m[1]+.0722*m[2];candidateY+=.2126*c[0]+.7152*c[1]+.0722*c[2];
         negative+=std::min({v[0],v[1],v[2]})<0;above+=std::max({v[0],v[1],v[2]})>1;overY+=Y>=1;
         if(image.dcpContext) {
-            const auto p=image.dcpContext->cameraRgb.at<cv::Vec3f>(y*8,x*8);
+            const auto p=image.dcpContext->cameraRgb.row<ipr::Vec3f>(y*8)[x*8];
             cameraHigh+=std::max({p[0],p[1],p[2]})>=65534.f/65535;
         }
     }
-    const double count=double(grid.total());
+    const double count=double(rows)*double(cols);
     const QJsonObject stageAudit{{"pre_gamut_mean_Y",beforeY/count},{"current_map_mean_Y",currentY/count},
         {"candidate_map_mean_Y",candidateY/count},{"negative_srgb_percent",100*negative/count},
         {"above_one_srgb_percent",100*above/count},{"luminance_above_one_percent",100*overY/count},
@@ -185,16 +192,14 @@ int main(int argc, char **argv)
     image=ColorPipeline::mapToSrgbGamut(image,&error);
     const auto encoded=ColorPipeline::toSrgb(image,ColorPipeline::OutputFormat::HighBitDepth,&error);
     if (encoded.isNull()) return 5;
-    cv::Mat rgb(rows,cols,CV_32FC3);
+    ipr::Image rgb=ipr::Image::create({cols,rows},ipr::Depth::F32,3);
     for(int y=0;y<rows;++y) {
         const auto *line=reinterpret_cast<const QRgba64 *>(encoded.constScanLine(y));
         for(int x=0;x<cols;++x)
-            rgb.at<cv::Vec3f>(y,x)=cv::Vec3f(line[x].red(),line[x].green(),line[x].blue())/65535.f;
+            imagetest::at<ipr::Vec3f>(rgb, y,x)=ipr::Vec3f(line[x].red(),line[x].green(),line[x].blue())/65535.f;
     }
     QFile pixels(out.filePath("encoded.f32"));
-    const qint64 bytes=qint64(rgb.total()*rgb.elemSize());
-    if (!pixels.open(QIODevice::WriteOnly|QIODevice::NewOnly) ||
-        pixels.write(reinterpret_cast<const char *>(rgb.data),bytes)!=bytes) return 6;
+    if (!pixels.open(QIODevice::WriteOnly|QIODevice::NewOnly) || !writePixels(pixels,rgb)) return 6;
     pixels.close();
     const QJsonObject proof{{"raw",args[1]}, {"profile",args[2]}, {"rows",rows},{"cols",cols},
         {"white_level",int(metadata.normalizationWhiteLevel)},

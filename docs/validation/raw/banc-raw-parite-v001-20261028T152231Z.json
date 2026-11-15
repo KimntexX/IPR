@@ -1,0 +1,1772 @@
+{
+  "schema_version": 1,
+  "campaign_id": "raw-parity-20261028T152028Z",
+  "measured_at_utc": "2026-10-28T15:22:31.866089+00:00",
+  "started_at_utc": "2026-10-28T15:20:28.362398+00:00",
+  "completed_at_utc": "2026-10-28T15:22:31.866089+00:00",
+  "freeze": {
+    "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\gel-banc-raw-parite-v001-20261028T152028Z.json",
+    "sha256": "b7fe344f0a2931a0d503cb40879bf214a99ea744d70dbaad6e42295914b43459"
+  },
+  "records": [
+    {
+      "source": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\_MG_7580.CR2",
+        "sha256": "020b83b4beff9137bd9f6d409991d7b1006f0422183c31656e5a185f31dde417"
+      },
+      "captures": {
+        "reference": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\000-_MG_7580-reference.json",
+          "sha256": "6bf446062c3ed66286b3bc2993f9fdc8d2a4eda1960a6fc6fd100d09ae40c61b"
+        },
+        "candidate": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\000-_MG_7580-candidate.json",
+          "sha256": "40ccbef8c20b35407a8cb1ec6389d1cf8eb584991e039d049d4a31325e672419"
+        }
+      },
+      "comparison": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\000-comparison.json",
+        "sha256": "b288781c7b7f78d5891668a39992a2fc8ccecfeb3a69c13b174dcc39dbee039a"
+      },
+      "verdict": "pass",
+      "explicit_levels": null,
+      "max_abs": 0.0,
+      "observed_candidate_stages": [
+        "black_subtracted_cfa",
+        "normalized_cfa",
+        "post_demosaic_camera_rgb",
+        "post_median_camera_rgb",
+        "pre_dcp_camera_rgb",
+        "pre_demosaic_cfa",
+        "unpacked_cfa"
+      ],
+      "iso": 100,
+      "model": "EOS 60D",
+      "negative_before_clipping": [
+        {
+          "origin_yx": [
+            1604,
+            912
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            1604,
+            2472
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            1604,
+            4032
+          ],
+          "fraction": 0.0
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\_MG_7840.CR2",
+        "sha256": "b37c4176e160c9c1bdd0518b4a3115bde53b44e7012f0574d138f935f472935b"
+      },
+      "captures": {
+        "reference": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\001-_MG_7840-reference.json",
+          "sha256": "7e94b9fe5cf74e8841d6ac5d307ebc8dfe69486427f7420d5913d30cb7befd28"
+        },
+        "candidate": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\001-_MG_7840-candidate.json",
+          "sha256": "13ea418267413c2278baf5936612e4cdb31e6036be1886fac5441c1b51ee17f2"
+        }
+      },
+      "comparison": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\001-comparison.json",
+        "sha256": "391f48e1e07ab296708b2c667797534254e8c07dd00b7d04761a67479844da7c"
+      },
+      "verdict": "pass",
+      "explicit_levels": null,
+      "max_abs": 0.0,
+      "observed_candidate_stages": [
+        "black_subtracted_cfa",
+        "normalized_cfa",
+        "post_demosaic_camera_rgb",
+        "post_median_camera_rgb",
+        "pre_dcp_camera_rgb",
+        "pre_demosaic_cfa",
+        "unpacked_cfa"
+      ],
+      "iso": 400,
+      "model": "EOS 60D",
+      "negative_before_clipping": [
+        {
+          "origin_yx": [
+            1604,
+            912
+          ],
+          "fraction": 0.0001983642578125
+        },
+        {
+          "origin_yx": [
+            1604,
+            2472
+          ],
+          "fraction": 0.001708984375
+        },
+        {
+          "origin_yx": [
+            1604,
+            4032
+          ],
+          "fraction": 0.000152587890625
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0007.CR3",
+        "sha256": "35f6dc7b66b20dfffa95a3e9ac7dc2600905d72877e0428d0712dd2d202fdfcc"
+      },
+      "captures": {
+        "reference": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\002-6V1A0007-reference.json",
+          "sha256": "968510aced3b8053f8be10d2868361b383d4ca4afc0ea127c19980b566d16e84"
+        },
+        "candidate": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\002-6V1A0007-candidate.json",
+          "sha256": "c1b3573272b1ea5cea10b8475e50fa23928ecdd122a66e32b3f903015942230e"
+        }
+      },
+      "comparison": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\002-comparison.json",
+        "sha256": "9f84d8bf1240b0ff05791e192d5ea247f88f33fd8c875d0f23fee4d6cd7ac06f"
+      },
+      "verdict": "pass",
+      "explicit_levels": null,
+      "max_abs": 0.0,
+      "observed_candidate_stages": [
+        "black_subtracted_cfa",
+        "normalized_cfa",
+        "post_demosaic_camera_rgb",
+        "post_median_camera_rgb",
+        "pre_dcp_camera_rgb",
+        "pre_demosaic_cfa",
+        "unpacked_cfa"
+      ],
+      "iso": 100,
+      "model": "EOS R6 Mark III",
+      "negative_before_clipping": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "fraction": 0.0
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0032.CR3",
+        "sha256": "f32a27f60fff34a35215b18be688c2300e371ce27c5e4977cb70567a9e6e702d"
+      },
+      "captures": {
+        "reference": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\003-6V1A0032-reference.json",
+          "sha256": "0a4ecb7fa8eb726aaa9ea8e4edf21fb43c7be71aac324c008cdf52f96074d7a1"
+        },
+        "candidate": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\003-6V1A0032-candidate.json",
+          "sha256": "345b96aa48c111c51f3c5855ee91f2632bf066e438f47e577adeb38c9514aadc"
+        }
+      },
+      "comparison": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\003-comparison.json",
+        "sha256": "8bb75163d6be655f52d9b246ec91b6f224994e110af20a6b62a11ed9a34e8b86"
+      },
+      "verdict": "pass",
+      "explicit_levels": null,
+      "max_abs": 0.0,
+      "observed_candidate_stages": [
+        "black_subtracted_cfa",
+        "normalized_cfa",
+        "post_demosaic_camera_rgb",
+        "post_median_camera_rgb",
+        "pre_dcp_camera_rgb",
+        "pre_demosaic_cfa",
+        "unpacked_cfa"
+      ],
+      "iso": 100,
+      "model": "EOS R6 Mark III",
+      "negative_before_clipping": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "fraction": 0.0
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0043.CR3",
+        "sha256": "403fc63b37987862c8fc30735bdb9c5c1f793758ed6c46fe13f02f5d4b5a4bfe"
+      },
+      "captures": {
+        "reference": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\004-6V1A0043-reference.json",
+          "sha256": "a573d4362ecff261990c9fbd9c74e48438717243a2648d690a9751a355d2930e"
+        },
+        "candidate": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\004-6V1A0043-candidate.json",
+          "sha256": "bad45d0dbdfe1f05f0e21ec6af4327bd7ba07674e870c825d91b0e32ad106731"
+        }
+      },
+      "comparison": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\004-comparison.json",
+        "sha256": "501985df8d895ae48da8d00a0e0e9e56119b147b8e4f860b251e7c5ee7129069"
+      },
+      "verdict": "pass",
+      "explicit_levels": null,
+      "max_abs": 0.0,
+      "observed_candidate_stages": [
+        "black_subtracted_cfa",
+        "normalized_cfa",
+        "post_demosaic_camera_rgb",
+        "post_median_camera_rgb",
+        "pre_dcp_camera_rgb",
+        "pre_demosaic_cfa",
+        "unpacked_cfa"
+      ],
+      "iso": 100,
+      "model": "EOS R6 Mark III",
+      "negative_before_clipping": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "fraction": 0.0
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0064.CR3",
+        "sha256": "af350c1ad03079873dc5ebcbe5ef4b23d14c921e6aeb151d5eced2ad9a7928ed"
+      },
+      "captures": {
+        "reference": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\005-6V1A0064-reference.json",
+          "sha256": "85730148167454430a9009934f753b3d8ab3e48969702a6c0f23d2cb72b550ca"
+        },
+        "candidate": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\005-6V1A0064-candidate.json",
+          "sha256": "19ef2c6ab6de37d10574d59bdeeb7af3c2341ffa3d5b09ffcf479dc92a901a86"
+        }
+      },
+      "comparison": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\005-comparison.json",
+        "sha256": "2eb9d75acd03ac095fdff1721b9d7e9da56923de45c3d7d1191e52719bf2d75c"
+      },
+      "verdict": "pass",
+      "explicit_levels": null,
+      "max_abs": 0.0,
+      "observed_candidate_stages": [
+        "black_subtracted_cfa",
+        "normalized_cfa",
+        "post_demosaic_camera_rgb",
+        "post_median_camera_rgb",
+        "pre_dcp_camera_rgb",
+        "pre_demosaic_cfa",
+        "unpacked_cfa"
+      ],
+      "iso": 100,
+      "model": "EOS R6 Mark III",
+      "negative_before_clipping": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "fraction": 0.0
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0327.CR3",
+        "sha256": "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed"
+      },
+      "captures": {
+        "reference": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\006-6V1A0327-reference.json",
+          "sha256": "6a79f1f23a6a82a1cff2b8fe341ac84ead6de8cad6b3e12a4d3ebda1a70b2093"
+        },
+        "candidate": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\006-6V1A0327-candidate.json",
+          "sha256": "a37867ad620d7425889dbb7b65130fd050a22436a20434e342a66962abd0935b"
+        }
+      },
+      "comparison": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\006-comparison.json",
+        "sha256": "f69f8c56011ebd50acc4e8d86441afcafab743177a7d16f92bec0e2d829f0e27"
+      },
+      "verdict": "pass",
+      "explicit_levels": null,
+      "max_abs": 0.0,
+      "observed_candidate_stages": [
+        "black_subtracted_cfa",
+        "normalized_cfa",
+        "post_demosaic_camera_rgb",
+        "post_median_camera_rgb",
+        "pre_dcp_camera_rgb",
+        "pre_demosaic_cfa",
+        "unpacked_cfa"
+      ],
+      "iso": 100,
+      "model": "EOS R6 Mark III",
+      "negative_before_clipping": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "fraction": 0.0
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0524.CR3",
+        "sha256": "149898806eb49f1e66a9527c2ec7f784eb8192532710f36fca8578642cd3c97b"
+      },
+      "captures": {
+        "reference": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\007-6V1A0524-reference.json",
+          "sha256": "b1bbb8c80378e8144bfdb1a0ddb8c15991000a372543a6531a4b7d74661ad055"
+        },
+        "candidate": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\007-6V1A0524-candidate.json",
+          "sha256": "578a09aa47e95426455cf5dc438cf2454f429ff54bdb7337e46fe8dbcbd9c73f"
+        }
+      },
+      "comparison": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\007-comparison.json",
+        "sha256": "ddf0ff17c1971d1f41e5e42e4a1cd641ee815851f085884077b5e32ec4bf4975"
+      },
+      "verdict": "pass",
+      "explicit_levels": null,
+      "max_abs": 0.0,
+      "observed_candidate_stages": [
+        "black_subtracted_cfa",
+        "normalized_cfa",
+        "post_demosaic_camera_rgb",
+        "post_median_camera_rgb",
+        "pre_dcp_camera_rgb",
+        "pre_demosaic_cfa",
+        "unpacked_cfa"
+      ],
+      "iso": 400,
+      "model": "EOS R6 Mark III",
+      "negative_before_clipping": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "fraction": 0.0
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0544.CR3",
+        "sha256": "cac52efb3491f413403db11fd4cdbc299b1c257c8a0f13420ec83140df30c33a"
+      },
+      "captures": {
+        "reference": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\008-6V1A0544-reference.json",
+          "sha256": "e2b6ce4143429c25e787bc53be39a266f701b196b3482a6f651d52950d211ae8"
+        },
+        "candidate": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\008-6V1A0544-candidate.json",
+          "sha256": "abf2697d7e1889a6a76c3789ed9ea13bb0dc8997768d66af93ba629220eed4de"
+        }
+      },
+      "comparison": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\008-comparison.json",
+        "sha256": "c8e4d2088a651cfae813ce67c55bf67363f11fd2c6b5c7b1410b712adfdc1830"
+      },
+      "verdict": "pass",
+      "explicit_levels": null,
+      "max_abs": 0.0,
+      "observed_candidate_stages": [
+        "black_subtracted_cfa",
+        "normalized_cfa",
+        "post_demosaic_camera_rgb",
+        "post_median_camera_rgb",
+        "pre_dcp_camera_rgb",
+        "pre_demosaic_cfa",
+        "unpacked_cfa"
+      ],
+      "iso": 400,
+      "model": "EOS R6 Mark III",
+      "negative_before_clipping": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "fraction": 0.0
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9112.CR3",
+        "sha256": "80094389b8281933fd9ee0f16d9aa6245b77f9e6652578d78a1fed2575e6007b"
+      },
+      "captures": {
+        "reference": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\009-6V1A9112-reference.json",
+          "sha256": "e3bdee30a702c0d881a3385fd6997e1ced82805913898380f71350a7aff50e91"
+        },
+        "candidate": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\009-6V1A9112-candidate.json",
+          "sha256": "674f8bd098eb5aa694426a8110d92e88682edc63123b027e7d1cf9b9821814ec"
+        }
+      },
+      "comparison": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\009-comparison.json",
+        "sha256": "29ddaeea7575d0da6e5a79a0c030ce4304bdffa1726c5b7081ae257268b73801"
+      },
+      "verdict": "pass",
+      "explicit_levels": null,
+      "max_abs": 0.0,
+      "observed_candidate_stages": [
+        "black_subtracted_cfa",
+        "normalized_cfa",
+        "post_demosaic_camera_rgb",
+        "post_median_camera_rgb",
+        "pre_dcp_camera_rgb",
+        "pre_demosaic_cfa",
+        "unpacked_cfa"
+      ],
+      "iso": 100,
+      "model": "EOS R6 Mark III",
+      "negative_before_clipping": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "fraction": 0.0
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9141.CR3",
+        "sha256": "5e4046a021c570ffbfecfb174cf4dba685fb8b105787f3f904394cd3505effcf"
+      },
+      "captures": {
+        "reference": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\010-6V1A9141-reference.json",
+          "sha256": "da9e1e635a471ae6644599e454e10f35391da38595e5a0544153d5adb112abbe"
+        },
+        "candidate": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\010-6V1A9141-candidate.json",
+          "sha256": "18a7c223c329fe27e599e030e1fd852768148d60e55a40013094a71cbd395f5d"
+        }
+      },
+      "comparison": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\010-comparison.json",
+        "sha256": "8a69502a50dc0b8f2d4a16e0a62b17f256470fa4e3f0b425d9b6235c56f9816b"
+      },
+      "verdict": "pass",
+      "explicit_levels": null,
+      "max_abs": 0.0,
+      "observed_candidate_stages": [
+        "black_subtracted_cfa",
+        "normalized_cfa",
+        "post_demosaic_camera_rgb",
+        "post_median_camera_rgb",
+        "pre_dcp_camera_rgb",
+        "pre_demosaic_cfa",
+        "unpacked_cfa"
+      ],
+      "iso": 100,
+      "model": "EOS R6 Mark III",
+      "negative_before_clipping": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "fraction": 0.0
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9153.CR3",
+        "sha256": "7f5e0baf7f9722401cc269a1b01deee35db9eba0d122ea88e98f638266f32b30"
+      },
+      "captures": {
+        "reference": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\011-6V1A9153-reference.json",
+          "sha256": "1b59c1a2c54b184a576a633461dbe4186e81f0345e66c4e259fdda9632529806"
+        },
+        "candidate": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\011-6V1A9153-candidate.json",
+          "sha256": "2ce9ba7d46c3698edeb034a00dc890e2967bd46181037d1b3735db5287610444"
+        }
+      },
+      "comparison": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\011-comparison.json",
+        "sha256": "70323d54b357718dac8dbd65ebda068ea51bc881bb014effbbfaa6877335b11d"
+      },
+      "verdict": "pass",
+      "explicit_levels": null,
+      "max_abs": 0.0,
+      "observed_candidate_stages": [
+        "black_subtracted_cfa",
+        "normalized_cfa",
+        "post_demosaic_camera_rgb",
+        "post_median_camera_rgb",
+        "pre_dcp_camera_rgb",
+        "pre_demosaic_cfa",
+        "unpacked_cfa"
+      ],
+      "iso": 100,
+      "model": "EOS R6 Mark III",
+      "negative_before_clipping": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "fraction": 0.0
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9539.CR3",
+        "sha256": "8f97ae28841779db992572f31e4de7482c9bd123eaa4bee79967a6be74d631bf"
+      },
+      "captures": {
+        "reference": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\012-6V1A9539-reference.json",
+          "sha256": "3cd82c3d8e50469b4f880cbd3f7d02e00d89597ac1fd9fb126133bd3eb12956c"
+        },
+        "candidate": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\012-6V1A9539-candidate.json",
+          "sha256": "1061a019e78f600309600d8ee3528ee697733b3723cae838836e455e849b814e"
+        }
+      },
+      "comparison": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\012-comparison.json",
+        "sha256": "626996a994d262db783e5ee20631179497048ac55a24faa7f1b41a4021466bf6"
+      },
+      "verdict": "pass",
+      "explicit_levels": null,
+      "max_abs": 0.0,
+      "observed_candidate_stages": [
+        "black_subtracted_cfa",
+        "normalized_cfa",
+        "post_demosaic_camera_rgb",
+        "post_median_camera_rgb",
+        "pre_dcp_camera_rgb",
+        "pre_demosaic_cfa",
+        "unpacked_cfa"
+      ],
+      "iso": 3200,
+      "model": "EOS R6 Mark III",
+      "negative_before_clipping": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "fraction": 0.0
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9940.CR3",
+        "sha256": "01661293b080108e90915d38b0501d0aa489958a666331e5eab2fe5e5527f5be"
+      },
+      "captures": {
+        "reference": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\013-6V1A9940-reference.json",
+          "sha256": "80c3be7a1e2fc72782879b2c8b560b7cb53db0a1dc0ed33cc36360eaa382a5ed"
+        },
+        "candidate": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\013-6V1A9940-candidate.json",
+          "sha256": "56aea13794c7c343148f3384bdf3d90aa4698494e1c30ab9fc016af740d2068f"
+        }
+      },
+      "comparison": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\013-comparison.json",
+        "sha256": "8c93761922418ee8180791d61e39173edc9d409e1a678d80239ec4abe709977e"
+      },
+      "verdict": "pass",
+      "explicit_levels": null,
+      "max_abs": 0.0,
+      "observed_candidate_stages": [
+        "black_subtracted_cfa",
+        "normalized_cfa",
+        "post_demosaic_camera_rgb",
+        "post_median_camera_rgb",
+        "pre_dcp_camera_rgb",
+        "pre_demosaic_cfa",
+        "unpacked_cfa"
+      ],
+      "iso": 100,
+      "model": "EOS R6 Mark III",
+      "negative_before_clipping": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "fraction": 0.0
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9947.CR3",
+        "sha256": "ee34e67577716b937e726df6f8f07362bcc34ee4dfd5653e06b1dddb68ff9df4"
+      },
+      "captures": {
+        "reference": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\014-6V1A9947-reference.json",
+          "sha256": "7ec76805b5e6c290b0deee5f72555290aceca8c1b02002c4a45c822ec14bb7aa"
+        },
+        "candidate": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\014-6V1A9947-candidate.json",
+          "sha256": "56fa2cf84e8e070e30652119865c3d9d2459a732c7e63eb2650f23cbf3a2e2d6"
+        }
+      },
+      "comparison": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\014-comparison.json",
+        "sha256": "575efbe4e11da7c28190f72e7fef8f9586cbcb5fde92efb832d33d21000a3840"
+      },
+      "verdict": "pass",
+      "explicit_levels": null,
+      "max_abs": 0.0,
+      "observed_candidate_stages": [
+        "black_subtracted_cfa",
+        "normalized_cfa",
+        "post_demosaic_camera_rgb",
+        "post_median_camera_rgb",
+        "pre_dcp_camera_rgb",
+        "pre_demosaic_cfa",
+        "unpacked_cfa"
+      ],
+      "iso": 100,
+      "model": "EOS R6 Mark III",
+      "negative_before_clipping": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "fraction": 0.0
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\7Y6A7599.CR3",
+        "sha256": "9c1426494accc3fb6efa2c5b0f8c7c4faac70d65fa9a26721f1de86d011f078e"
+      },
+      "captures": {
+        "reference": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\015-7Y6A7599-reference.json",
+          "sha256": "9e5710fbfe99ce3e1be5b4f17d4fb0967c16461938ca8869564314a80c1fc816"
+        },
+        "candidate": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\015-7Y6A7599-candidate.json",
+          "sha256": "e9622a83dec1855e682d39aa5a3a714bc54749f37fdfe870d2febe8ea9dd3a65"
+        }
+      },
+      "comparison": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\015-comparison.json",
+        "sha256": "8d9397b0cd6f58b05534f4775e2bba411d1e412a475f5a53604700a3127552df"
+      },
+      "verdict": "pass",
+      "explicit_levels": null,
+      "max_abs": 0.0,
+      "observed_candidate_stages": [
+        "black_subtracted_cfa",
+        "normalized_cfa",
+        "post_demosaic_camera_rgb",
+        "post_median_camera_rgb",
+        "pre_dcp_camera_rgb",
+        "pre_demosaic_cfa",
+        "unpacked_cfa"
+      ],
+      "iso": 32000,
+      "model": "EOS R7",
+      "negative_before_clipping": [
+        {
+          "origin_yx": [
+            2202,
+            1268
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            2202,
+            3364
+          ],
+          "fraction": 0.0092926025390625
+        },
+        {
+          "origin_yx": [
+            2202,
+            5458
+          ],
+          "fraction": 0.001312255859375
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_3135.CR2",
+        "sha256": "7bf4440bcdafc359762d0db40e92dcbf1948886b6aa3ca250cecb96496309165"
+      },
+      "captures": {
+        "reference": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\016-IMG_3135-reference.json",
+          "sha256": "b017447c80acdd713a81ee434a5d9af7d22e40261018547bde416bea502d4ce3"
+        },
+        "candidate": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\016-IMG_3135-candidate.json",
+          "sha256": "afc8f8ccd1d167147fdce8b070fbc0229143cb9205a571b7ee3838609412227a"
+        }
+      },
+      "comparison": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\016-comparison.json",
+        "sha256": "4a000c3eed7e3ecdb573e4ff7c54ba6fb3059272c4ad0d3395012aed9a164450"
+      },
+      "verdict": "pass",
+      "explicit_levels": null,
+      "max_abs": 0.0,
+      "observed_candidate_stages": [
+        "black_subtracted_cfa",
+        "normalized_cfa",
+        "post_demosaic_camera_rgb",
+        "post_median_camera_rgb",
+        "pre_dcp_camera_rgb",
+        "pre_demosaic_cfa",
+        "unpacked_cfa"
+      ],
+      "iso": 160,
+      "model": "EOS 60D",
+      "negative_before_clipping": [
+        {
+          "origin_yx": [
+            1604,
+            912
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            1604,
+            2472
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            1604,
+            4032
+          ],
+          "fraction": 0.0
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_4002.CR2",
+        "sha256": "4ead8c801223ce4d134fa912a9505793acedade7955e94c49846aa970450e447"
+      },
+      "captures": {
+        "reference": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\017-IMG_4002-reference.json",
+          "sha256": "133efc50198b20a89995fc2ba95c8f9d0459a6d8f218090ea582877b33d3275e"
+        },
+        "candidate": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\017-IMG_4002-candidate.json",
+          "sha256": "0a0d9333c3ac4a0145a3f7ab41088913d0d32688252b5c2b95987b79e687eab6"
+        }
+      },
+      "comparison": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\017-comparison.json",
+        "sha256": "a3eb40f524fa7cf6440f0e4cee19af010ec9957936d346fb4d266a21f9c1abf3"
+      },
+      "verdict": "pass",
+      "explicit_levels": null,
+      "max_abs": 0.0,
+      "observed_candidate_stages": [
+        "black_subtracted_cfa",
+        "normalized_cfa",
+        "post_demosaic_camera_rgb",
+        "post_median_camera_rgb",
+        "pre_dcp_camera_rgb",
+        "pre_demosaic_cfa",
+        "unpacked_cfa"
+      ],
+      "iso": 100,
+      "model": "EOS 60D",
+      "negative_before_clipping": [
+        {
+          "origin_yx": [
+            1604,
+            912
+          ],
+          "fraction": 0.003204345703125
+        },
+        {
+          "origin_yx": [
+            1604,
+            2472
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            1604,
+            4032
+          ],
+          "fraction": 0.0001220703125
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_4173.CR2",
+        "sha256": "6e5e0f451b39abab76d45a4d17131af5b69af3890bb4b70fa1cd4983aea4d390"
+      },
+      "captures": {
+        "reference": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\018-IMG_4173-reference.json",
+          "sha256": "f73e6e370d642939dedc2f35c5101b08936e77c949aab8ede2f63ea4a3497523"
+        },
+        "candidate": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\018-IMG_4173-candidate.json",
+          "sha256": "18f85ad3c1cdf6db365c3c0cebc859a5ee0ca6da65c213def7ba461d213b7b07"
+        }
+      },
+      "comparison": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\018-comparison.json",
+        "sha256": "1b4f14498057b37ea81d9b22d62097b08160c5dd8ecbab00497370025e341b6a"
+      },
+      "verdict": "pass",
+      "explicit_levels": null,
+      "max_abs": 0.0,
+      "observed_candidate_stages": [
+        "black_subtracted_cfa",
+        "normalized_cfa",
+        "post_demosaic_camera_rgb",
+        "post_median_camera_rgb",
+        "pre_dcp_camera_rgb",
+        "pre_demosaic_cfa",
+        "unpacked_cfa"
+      ],
+      "iso": 640,
+      "model": "EOS 60D",
+      "negative_before_clipping": [
+        {
+          "origin_yx": [
+            1604,
+            912
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            1604,
+            2472
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            1604,
+            4032
+          ],
+          "fraction": 0.0
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_4345.CR2",
+        "sha256": "47c4d5a394e2e98335f686e14e0e26e1f1a00cb1e21e935caf7f438854a1cb5e"
+      },
+      "captures": {
+        "reference": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\019-IMG_4345-reference.json",
+          "sha256": "1e98b68181442a9e13f5053f1d1b10738c19dedb7d7dccd0c08c41a627a3d30e"
+        },
+        "candidate": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\019-IMG_4345-candidate.json",
+          "sha256": "a7aeb3cef07448cf0f1cd46b69d1e84c03790ef76683b3dac20d1363cf85dc08"
+        }
+      },
+      "comparison": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\019-comparison.json",
+        "sha256": "8741a428c62f93ddca92267778810e80b56a4f7a0dfdcd9b3e406edcb8e907a2"
+      },
+      "verdict": "pass",
+      "explicit_levels": null,
+      "max_abs": 0.0,
+      "observed_candidate_stages": [
+        "black_subtracted_cfa",
+        "normalized_cfa",
+        "post_demosaic_camera_rgb",
+        "post_median_camera_rgb",
+        "pre_dcp_camera_rgb",
+        "pre_demosaic_cfa",
+        "unpacked_cfa"
+      ],
+      "iso": 100,
+      "model": "EOS 60D",
+      "negative_before_clipping": [
+        {
+          "origin_yx": [
+            1604,
+            912
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            1604,
+            2472
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            1604,
+            4032
+          ],
+          "fraction": 0.0
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_6248.CR2",
+        "sha256": "9434f32e572b6d2a50379a159ab547789d6ecc1656eb2f93bab55ba6933adcd8"
+      },
+      "captures": {
+        "reference": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\020-IMG_6248-reference.json",
+          "sha256": "49f4d36daa293c58cb1eee9dd37d457c9ae0aa8b1255472b8b1fc821ef7905b0"
+        },
+        "candidate": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\020-IMG_6248-candidate.json",
+          "sha256": "8adda8692c8984f61cf7e7db64d3a4c448b59103edf1ea319162b9060a2e1878"
+        }
+      },
+      "comparison": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\020-comparison.json",
+        "sha256": "91fadf481e2c9c21b9e39dbf78ac0d3e671052bba11e6f50ef44a92c02126a47"
+      },
+      "verdict": "pass",
+      "explicit_levels": null,
+      "max_abs": 0.0,
+      "observed_candidate_stages": [
+        "black_subtracted_cfa",
+        "normalized_cfa",
+        "post_demosaic_camera_rgb",
+        "post_median_camera_rgb",
+        "pre_dcp_camera_rgb",
+        "pre_demosaic_cfa",
+        "unpacked_cfa"
+      ],
+      "iso": 100,
+      "model": "EOS 60D",
+      "negative_before_clipping": [
+        {
+          "origin_yx": [
+            1604,
+            912
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            1604,
+            2472
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            1604,
+            4032
+          ],
+          "fraction": 0.0
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_6954.CR2",
+        "sha256": "3d80e31cad494d129c7f110e5e62ee2c8372d627d8a2bbbad5ab9034e4650577"
+      },
+      "captures": {
+        "reference": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\021-IMG_6954-reference.json",
+          "sha256": "1b90293366fd10faa0654b24fde8d65de87396128998d151cd1105ee70ceced7"
+        },
+        "candidate": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\021-IMG_6954-candidate.json",
+          "sha256": "7f030613781abc23eaae3db94a5e304d38c5f5ac0d76a16f5b65bff564e45bcc"
+        }
+      },
+      "comparison": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\021-comparison.json",
+        "sha256": "431369020c1c9d453f3f406a29399ba7f5b73da8692f29826409a20f69da9ce0"
+      },
+      "verdict": "pass",
+      "explicit_levels": null,
+      "max_abs": 0.0,
+      "observed_candidate_stages": [
+        "black_subtracted_cfa",
+        "normalized_cfa",
+        "post_demosaic_camera_rgb",
+        "post_median_camera_rgb",
+        "pre_dcp_camera_rgb",
+        "pre_demosaic_cfa",
+        "unpacked_cfa"
+      ],
+      "iso": 100,
+      "model": "EOS 60D",
+      "negative_before_clipping": [
+        {
+          "origin_yx": [
+            1604,
+            912
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            1604,
+            2472
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            1604,
+            4032
+          ],
+          "fraction": 0.0
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_6979.CR2",
+        "sha256": "1eba7c273b609d1f9cebe68cdbf1c03a065f835094789b30dbbc6302a442a7fb"
+      },
+      "captures": {
+        "reference": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\022-IMG_6979-reference.json",
+          "sha256": "72754f6158a27e6a046a4adb71fbdaa6c8d0fc4e529cf0e9e9642b5b81c1f8c0"
+        },
+        "candidate": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\022-IMG_6979-candidate.json",
+          "sha256": "630675d462adc274c31ce73803deccfddf9a4c1be92e41f4c8a94bf5f3633ec7"
+        }
+      },
+      "comparison": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\022-comparison.json",
+        "sha256": "f48d08dbcbc2d47fea755a06d7f52d90552ff196f742832b016c1d6bd2fcfd77"
+      },
+      "verdict": "pass",
+      "explicit_levels": null,
+      "max_abs": 0.0,
+      "observed_candidate_stages": [
+        "black_subtracted_cfa",
+        "normalized_cfa",
+        "post_demosaic_camera_rgb",
+        "post_median_camera_rgb",
+        "pre_dcp_camera_rgb",
+        "pre_demosaic_cfa",
+        "unpacked_cfa"
+      ],
+      "iso": 250,
+      "model": "EOS 60D",
+      "negative_before_clipping": [
+        {
+          "origin_yx": [
+            1604,
+            912
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            1604,
+            2472
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            1604,
+            4032
+          ],
+          "fraction": 0.0
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_7423.CR2",
+        "sha256": "8eea727fdd9cd4b2766292cbccf172a841d5e22aa595e1378e2503c59dd5226c"
+      },
+      "captures": {
+        "reference": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\023-IMG_7423-reference.json",
+          "sha256": "263448658697e1d9a6badc8bc6e0e3400dafcd1fe5019f12b7d25f14a5fb225f"
+        },
+        "candidate": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\023-IMG_7423-candidate.json",
+          "sha256": "704443f9f8bf6e39273c5ab3af3add2a71ee2ec30cc2710ebff2cb0a0b17f7c0"
+        }
+      },
+      "comparison": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\023-comparison.json",
+        "sha256": "4197759033c4f4c09f95335549652ed0a18eebd50dcdcca89a6c97e34f879e22"
+      },
+      "verdict": "pass",
+      "explicit_levels": null,
+      "max_abs": 0.0,
+      "observed_candidate_stages": [
+        "black_subtracted_cfa",
+        "normalized_cfa",
+        "post_demosaic_camera_rgb",
+        "post_median_camera_rgb",
+        "pre_dcp_camera_rgb",
+        "pre_demosaic_cfa",
+        "unpacked_cfa"
+      ],
+      "iso": 500,
+      "model": "EOS 60D",
+      "negative_before_clipping": [
+        {
+          "origin_yx": [
+            1604,
+            912
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            1604,
+            2472
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            1604,
+            4032
+          ],
+          "fraction": 0.0
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_7953.CR2",
+        "sha256": "966d5bc82bbbebc89b5364002539300b853828574ad1ff968620661a75a21a16"
+      },
+      "captures": {
+        "reference": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\024-IMG_7953-reference.json",
+          "sha256": "2c34efdc815782893cd537401d21fbf85b540c90b010c0cf480a0ef34d7b34ad"
+        },
+        "candidate": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\024-IMG_7953-candidate.json",
+          "sha256": "b35e4094a20f91f17ac7bdba9e9fdd1cb1f6e1acd75340f96bf2e553e20765ce"
+        }
+      },
+      "comparison": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\024-comparison.json",
+        "sha256": "b0a952e1cd1dc2da101dac084ebdb21846fa05a624555b9ae0d49fa90ab69b5a"
+      },
+      "verdict": "pass",
+      "explicit_levels": null,
+      "max_abs": 0.0,
+      "observed_candidate_stages": [
+        "black_subtracted_cfa",
+        "normalized_cfa",
+        "post_demosaic_camera_rgb",
+        "post_median_camera_rgb",
+        "pre_dcp_camera_rgb",
+        "pre_demosaic_cfa",
+        "unpacked_cfa"
+      ],
+      "iso": 100,
+      "model": "EOS 60D",
+      "negative_before_clipping": [
+        {
+          "origin_yx": [
+            1604,
+            912
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            1604,
+            2472
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            1604,
+            4032
+          ],
+          "fraction": 0.0
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_7958.CR2",
+        "sha256": "68a2cf76de50acf6aaf291e99c4c9feaa1056bf09efb8290289d886b4b844dd1"
+      },
+      "captures": {
+        "reference": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\025-IMG_7958-reference.json",
+          "sha256": "ab46c26026588424eec0d4f656648bb10226ee47231290dda534cfdfbf9a1890"
+        },
+        "candidate": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\025-IMG_7958-candidate.json",
+          "sha256": "6047987ef8543389194e4a1098d2603614a2eedccbc4a806a465a5a58c3e4415"
+        }
+      },
+      "comparison": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\025-comparison.json",
+        "sha256": "588756ea0807c6c6e96595b24a5054b910fe6fa9b369cdd4d1d2b6c2ce69e38b"
+      },
+      "verdict": "pass",
+      "explicit_levels": null,
+      "max_abs": 0.0,
+      "observed_candidate_stages": [
+        "black_subtracted_cfa",
+        "normalized_cfa",
+        "post_demosaic_camera_rgb",
+        "post_median_camera_rgb",
+        "pre_dcp_camera_rgb",
+        "pre_demosaic_cfa",
+        "unpacked_cfa"
+      ],
+      "iso": 100,
+      "model": "EOS 60D",
+      "negative_before_clipping": [
+        {
+          "origin_yx": [
+            1604,
+            912
+          ],
+          "fraction": 0.1930694580078125
+        },
+        {
+          "origin_yx": [
+            1604,
+            2472
+          ],
+          "fraction": 0.025421142578125
+        },
+        {
+          "origin_yx": [
+            1604,
+            4032
+          ],
+          "fraction": 0.1356964111328125
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_7961.CR2",
+        "sha256": "a949888b39903a441da32f88118be50ce1300cfe5cdd4dcabbc3b2d365fe7aa9"
+      },
+      "captures": {
+        "reference": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\026-IMG_7961-reference.json",
+          "sha256": "22bc0bafb3b8761eb9e25b7239606d1b06cf6d80fdf7d6d3bd61f47bda3c5fe8"
+        },
+        "candidate": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\026-IMG_7961-candidate.json",
+          "sha256": "a246718c0df26bbed669a4b78ea0987c002ee94b3bc3f2c0240dfcd8ed2692e4"
+        }
+      },
+      "comparison": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\026-comparison.json",
+        "sha256": "d63386c675b3be1324461f4591d24961a87d41ae61f04cc8d302c55398eb1ee9"
+      },
+      "verdict": "pass",
+      "explicit_levels": null,
+      "max_abs": 0.0,
+      "observed_candidate_stages": [
+        "black_subtracted_cfa",
+        "normalized_cfa",
+        "post_demosaic_camera_rgb",
+        "post_median_camera_rgb",
+        "pre_dcp_camera_rgb",
+        "pre_demosaic_cfa",
+        "unpacked_cfa"
+      ],
+      "iso": 250,
+      "model": "EOS 60D",
+      "negative_before_clipping": [
+        {
+          "origin_yx": [
+            1604,
+            912
+          ],
+          "fraction": 0.0006256103515625
+        },
+        {
+          "origin_yx": [
+            1604,
+            2472
+          ],
+          "fraction": 0.0008697509765625
+        },
+        {
+          "origin_yx": [
+            1604,
+            4032
+          ],
+          "fraction": 0.001953125
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_8473.CR2",
+        "sha256": "d1acde3f2969bf6fd3b5d77f6b3c82d60371e08f9b2feabbccce7b7b5cd8840e"
+      },
+      "captures": {
+        "reference": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\027-IMG_8473-reference.json",
+          "sha256": "69302d16535008aa706510acd666c8705c243ce8c6385f11dd40daee0fb3ab43"
+        },
+        "candidate": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\027-IMG_8473-candidate.json",
+          "sha256": "f2668e9bf2e9619a6a3baee72f6aac885508a76632be3a84356294a779a7aa9f"
+        }
+      },
+      "comparison": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\027-comparison.json",
+        "sha256": "92e49a587bbcdd30200ed9d887a971bae1112b8f42023a5b24381db2ec9baf5e"
+      },
+      "verdict": "pass",
+      "explicit_levels": null,
+      "max_abs": 0.0,
+      "observed_candidate_stages": [
+        "black_subtracted_cfa",
+        "normalized_cfa",
+        "post_demosaic_camera_rgb",
+        "post_median_camera_rgb",
+        "pre_dcp_camera_rgb",
+        "pre_demosaic_cfa",
+        "unpacked_cfa"
+      ],
+      "iso": 640,
+      "model": "EOS 60D",
+      "negative_before_clipping": [
+        {
+          "origin_yx": [
+            1604,
+            912
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            1604,
+            2472
+          ],
+          "fraction": 0.0
+        },
+        {
+          "origin_yx": [
+            1604,
+            4032
+          ],
+          "fraction": 0.000335693359375
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0003.CR3",
+        "sha256": "172231741d16ea44e6bc0f509d39a9d6482aa52dbab2eea0246e06d125668b6e"
+      },
+      "captures": {
+        "reference": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\028-6V1A0003-reference.json",
+          "sha256": "b6d4b4032a3335eb595b5ce970db40a16c7b166fa3f165bc72660e0f1625b8bc"
+        },
+        "candidate": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\028-6V1A0003-candidate.json",
+          "sha256": "5547da2e3c276bc638d22408cd3e16f1a6bb97d299291ad2b79a4e50c7acc4c4"
+        }
+      },
+      "comparison": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\028-comparison.json",
+        "sha256": "6d3b3373600b0c29a1b1c59b3e69ea571e83d27f9b6f65194a291f32cc78501e"
+      },
+      "verdict": "pass",
+      "explicit_levels": {
+        "black": [
+          2048,
+          2048,
+          2048,
+          2048
+        ],
+        "white": 14351
+      },
+      "max_abs": 0.0,
+      "observed_candidate_stages": [
+        "black_subtracted_cfa",
+        "normalized_cfa",
+        "post_demosaic_camera_rgb",
+        "post_median_camera_rgb",
+        "pre_dcp_camera_rgb",
+        "pre_demosaic_cfa",
+        "unpacked_cfa"
+      ],
+      "iso": 1600,
+      "model": "EOS R6 Mark III",
+      "negative_before_clipping": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "fraction": 0.46942138671875
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "fraction": 0.471954345703125
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "fraction": 0.4700927734375
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9950.CR3",
+        "sha256": "8f7eba49f50e1cc2e1c4b892053a238ec82063408337670810eeb0cd4f9b9b16"
+      },
+      "captures": {
+        "reference": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\029-6V1A9950-reference.json",
+          "sha256": "883090340388b457d146c97ae8dcd4d24227e76326df1bff59a4a87e2614b231"
+        },
+        "candidate": {
+          "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\029-6V1A9950-candidate.json",
+          "sha256": "aa0598e26682298a046ee54745f3de65b9679a04484512d4a4776fd84d51d17e"
+        }
+      },
+      "comparison": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\parity\\20261028T152028Z\\029-comparison.json",
+        "sha256": "43e1087750a843e793d62c635dbff4547f6472ecce4ca25ed0495e6cc15d1698"
+      },
+      "verdict": "pass",
+      "explicit_levels": {
+        "black": [
+          2042,
+          2043,
+          2041,
+          2043
+        ],
+        "white": 14351
+      },
+      "max_abs": 0.0,
+      "observed_candidate_stages": [
+        "black_subtracted_cfa",
+        "normalized_cfa",
+        "post_demosaic_camera_rgb",
+        "post_median_camera_rgb",
+        "pre_dcp_camera_rgb",
+        "pre_demosaic_cfa",
+        "unpacked_cfa"
+      ],
+      "iso": 51200,
+      "model": "EOS R6 Mark III",
+      "negative_before_clipping": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "fraction": 0.4940643310546875
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "fraction": 0.4894256591796875
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "fraction": 0.4986114501953125
+        }
+      ]
+    }
+  ],
+  "verdict": "pass_scoped_C2",
+  "revision": "3cd4e013f7f4c23f46fa7299f363ef20ae0c6799",
+  "sources": {
+    "tests/raw_bench/parity.py": {
+      "sha256": "8a45d38c402a11fd62473bb0b20e626f09358e7ac7721c2dab64489bf06dd7f6",
+      "source": "\"\"\"C2 parity on explicitly observable boundaries; never certifies missing DCP.\"\"\"\nfrom datetime import datetime,timezone\nimport argparse\nimport json\nimport os\nfrom pathlib import Path\nimport subprocess\nimport sys\n\nimport numpy as np\n\nfrom capture import compare_captures,load_capture,sha256\n\nCOMMON=('unpacked_cfa','pre_demosaic_cfa','post_demosaic_camera_rgb','post_median_camera_rgb','pre_dcp_camera_rgb')\nCANDIDATE=COMMON+('black_subtracted_cfa','normalized_cfa')\n\n\ndef main():\n    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--input',action='append',type=Path,required=True)\n    p.add_argument('--runtime-dir',type=Path,action='append',required=True)\n    p.add_argument('--calibration-captures',type=Path,help='Immutable production captures providing explicit black/white for matching sources only')\n    args=p.parse_args()\n    root=Path(__file__).resolve().parents[2];start=datetime.now(timezone.utc);stamp=start.strftime('%Y%m%dT%H%M%SZ')\n    tool=root/'build-patch_raw_bench/Release/iprRawDevelopmentCapture.exe';tool_hash=sha256(tool)\n    work=root/'build-patch_raw_bench/parity'/stamp;work.mkdir(parents=True,exist_ok=False)\n    env=dict(os.environ);env['PATH']=os.pathsep.join([str(d) for d in args.runtime_dir]+[env.get('PATH','')])\n    freeze=root/'docs/validation/raw'/f'gel-banc-raw-parite-v001-{stamp}.json'\n    identities=[dict(path=str(s.resolve()),sha256=sha256(s)) for s in args.input]\n    calibration=None;calibration_reference=None\n    if args.calibration_captures:\n        calibration=json.loads(args.calibration_captures.read_text(encoding='utf-8'))['native']\n        calibration_reference=dict(path=str(args.calibration_captures.resolve()),sha256=sha256(args.calibration_captures))\n    if len({i['path'] for i in identities})!=len(identities):raise ValueError('Duplicate inputs')\n    policy=dict(schema_version=1,campaign_id='raw-parity-freeze-'+stamp,measured_at_utc=start.isoformat(),inputs=identities,required_stages=list(COMMON),\n        candidate_required_stages=list(CANDIDATE),tolerances='Exactly zero, no floating tolerance approved',\n        mode='parity',calibration_reference=calibration_reference,scope='C2 module with native LibRaw levels unless explicit previous production captures match source; WB as-shot, sensor orientation, no automatic IPR calibration selection or DCP; no visual or signed-mode validation',\n        tool_sha256=tool_hash,source=Path(__file__).read_text(encoding='utf-8'),source_sha256=sha256(Path(__file__)))\n    with freeze.open('x',encoding='utf-8') as f:json.dump(policy,f,ensure_ascii=False,indent=2,allow_nan=False)\n    print('FROZEN',freeze,flush=True);records=[]\n    for index,item in enumerate(identities):\n        source=Path(item['path']);captures={}\n        if sha256(source)!=item['sha256']:raise ValueError('Source changed before capture')\n        level_args=[];levels=None\n        if calibration and str(source) in calibration:\n            old=calibration[str(source)]['record']\n            if old['source_sha256']!=item['sha256']:raise ValueError('Calibration source identity mismatch')\n            levels=dict(black=old['applied_black_dn'],white=old['white_before_process'])\n            level_args=['--black',','.join(str(v) for v in levels['black']),'--white',str(levels['white'])]\n        for kind in ('reference','candidate'):\n            out=work/f'{index:03}-{source.stem}-{kind}.json'\n            subprocess.run([str(tool),'--input',str(source),'--output',str(out),'--path',kind,'--mode','parity']+level_args,env=env,check=True,timeout=240)\n            captures[kind]=out\n        result=compare_captures(captures['reference'],captures['candidate'],COMMON)\n        manifest,stages=load_capture(captures['candidate']);present={key[0] for key in stages}\n        if set(CANDIDATE)-present:raise ValueError('Candidate observer did not emit all expected stages')\n        if any(not np.isfinite(values).all() for _,values in stages.values()):raise ValueError('Nonfinite candidate observer capture')\n        out=work/f'{index:03}-comparison.json'\n        with out.open('x',encoding='utf-8') as f:json.dump(result,f,ensure_ascii=False,indent=2,allow_nan=False)\n        records.append(dict(source=item,captures={k:dict(path=str(v),sha256=sha256(v)) for k,v in captures.items()},comparison=dict(path=str(out),sha256=sha256(out)),\n            verdict=result['verdict'],explicit_levels=levels,max_abs=max(r.get('max_abs',float('inf')) for r in result['stages']),\n            observed_candidate_stages=sorted(present),iso=manifest['metadata']['iso'],model=manifest['metadata']['model'],\n            negative_before_clipping=[dict(origin_yx=list(key[1]),fraction=float(np.mean(values<0))) for key,(_,values) in stages.items() if key[0]=='black_subtracted_cfa']))\n        print(index+1,'/',len(identities),source.name,result['verdict'],'max',records[-1]['max_abs'],flush=True)\n        if result['verdict']!='pass':break\n    if sha256(tool)!=tool_hash:raise ValueError('Tool changed during parity campaign')\n    now=datetime.now(timezone.utc);out=root/'docs/validation/raw'/f'banc-raw-parite-v001-{now.strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n    result=dict(schema_version=1,campaign_id='raw-parity-'+stamp,measured_at_utc=now.isoformat(),started_at_utc=start.isoformat(),completed_at_utc=now.isoformat(),freeze=dict(path=str(freeze),sha256=sha256(freeze)),records=records,\n        verdict='pass_scoped_C2' if len(records)==len(identities) and all(r['verdict']=='pass' for r in records) else 'fail',\n        revision=subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip(),\n        sources={n:dict(sha256=sha256(root/n),source=(root/n).read_text(encoding='utf-8')) for n in ('tests/raw_bench/parity.py','tests/raw_bench/development_capture.cpp','tests/raw_bench/capture.py','src/raw/RawDevelopment.cpp','src/raw/Demosaic.cpp','src/raw/LibRawInput.cpp')},\n        calibration_reference=calibration_reference,\n        limitations='Only fixed3 ROIs256 per stage, not full frame parity. Reference/candidate share current IPR RCD and input adapter. LibRaw native black/white, not IPR calibrated production levels. Candidate signed and normalized stages observed but no independent LibRaw boundary for them; not falsely reconstructed. No DCP, orientation, optics, automatic WB/fallbacks, private-corpus CI or performance qualification. Original production code unchanged in this bench.')\n    with out.open('x',encoding='utf-8') as f:json.dump(result,f,ensure_ascii=False,indent=2,allow_nan=False)\n    print('RESULT',out,flush=True)\n    return 0 if result['verdict']=='pass_scoped_C2' else 1\n\n\nif __name__=='__main__':raise SystemExit(main())\n"
+    },
+    "tests/raw_bench/development_capture.cpp": {
+      "sha256": "5de1fece394acc807963b21b012db89e4849b5dbe866bc7c1664b7410455c30a",
+      "source": "#include \"RawInput.h\"\n#include \"LibRawInput.h\"\n#include \"RawDevelopment.h\"\n#include \"Demosaic.h\"\n#include <libraw/libraw.h>\n#include <QCoreApplication>\n#include <QCommandLineParser>\n#include <QCommandLineOption>\n#include <QCryptographicHash>\n#include <QDateTime>\n#include <QFile>\n#include <QFileInfo>\n#include <QJsonArray>\n#include <QJsonDocument>\n#include <QJsonObject>\n#include <QtEndian>\n#include <opencv2/core.hpp>\n#include <algorithm>\n#include <cmath>\n#include <iostream>\n#include <memory>\n#include <stdexcept>\n\nnamespace {\nvoid require(bool ok,const char *message){if(!ok)throw std::runtime_error(message);}\nQString hash(const QString &path){QFile f(path);require(f.open(QIODevice::ReadOnly),\"Cannot hash file\");QCryptographicHash h(QCryptographicHash::Sha256);require(h.addData(&f),\"Hash failed\");return QString::fromLatin1(h.result().toHex());}\nQJsonArray four(const std::array<double,4> &v){QJsonArray a;for(auto x:v)a.append(x);return a;}\nconst char *name(RawDevelopment::Stage s){\n    switch(s){\n    case RawDevelopment::Stage::UnpackedCfa:return \"unpacked_cfa\";\n    case RawDevelopment::Stage::BlackSubtractedCfa:return \"black_subtracted_cfa\";\n    case RawDevelopment::Stage::NormalizedCfa:return \"normalized_cfa\";\n    case RawDevelopment::Stage::PreDemosaicCfa:return \"pre_demosaic_cfa\";\n    case RawDevelopment::Stage::PostDemosaicCameraRgb:return \"post_demosaic_camera_rgb\";\n    case RawDevelopment::Stage::PostMedianCameraRgb:return \"post_median_camera_rgb\";\n    }throw std::runtime_error(\"Unknown capture stage\");\n}\nconst char *unit(RawDevelopment::Stage s){\n    if(s==RawDevelopment::Stage::UnpackedCfa||s==RawDevelopment::Stage::BlackSubtractedCfa)return \"DN\";\n    if(s==RawDevelopment::Stage::PreDemosaicCfa||s==RawDevelopment::Stage::PostMedianCameraRgb)return \"linear_camera_grid_1_65535\";\n    return \"linear_camera_white_1\";\n}\n\nclass Writer {\npublic:\n    explicit Writer(const QString &output):pixels(output+\".bin\"){\n        require(!QFile::exists(output),\"Manifest exists\");require(pixels.open(QIODevice::WriteOnly|QIODevice::NewOnly),\"Binary exists or inaccessible\");\n    }\n    void save(const char *stage,const cv::Mat &image,const char *units,const RawInput::Input &input){\n        require(!image.empty()&&(image.depth()==CV_16U||image.depth()==CV_32F)&&cv::checkRange(image),\"Invalid capture image\");\n        QJsonArray pattern;for(auto row:input.pattern){QJsonArray r;for(auto c:row)r.append(c);pattern.append(r);}\n        for(double fraction:{.2,.5,.8}){\n            const int x=(int(image.cols*fraction)-128)/2*2,y=(image.rows/2-128)/2*2;\n            require(x>=0&&y>=0&&x+256<=image.cols&&y+256<=image.rows,\"Image too small for bench ROIs\");\n            cv::Mat crop=image(cv::Rect(x,y,256,256)).clone();const auto offset=pixels.pos();\n            QByteArray bytes(int(crop.total()*crop.elemSize()),Qt::Uninitialized);\n            if(crop.depth()==CV_16U){for(size_t i=0;i<crop.total()*crop.channels();++i)qToLittleEndian<quint16>(crop.ptr<quint16>()[i],bytes.data()+i*2);}\n            else {const quint16 endian=1;require(*reinterpret_cast<const unsigned char *>(&endian)==1,\"Float capture currently requires little-endian host\");std::copy(crop.datastart,crop.dataend,reinterpret_cast<unsigned char *>(bytes.data()));}\n            require(pixels.write(bytes)==bytes.size(),\"Incomplete stage capture\");\n            QJsonObject context{{\"cfa\",pattern},{\"visible_size\",QJsonArray{image.rows,image.cols}},\n                {\"sensor_origin_xy\",QJsonArray{input.origin.x,input.origin.y}},{\"input_black\",four(input.black)},\n                {\"input_white\",input.white},{\"input_as_shot_multipliers\",four(input.asShotMultipliers)}};\n            stages.append(QJsonObject{{\"stage\",stage},{\"shape\",QJsonArray{256,256,image.channels()}},{\"dtype\",image.depth()==CV_16U?\"u16\":\"f32\"},\n                {\"offset_bytes\",double(offset)},{\"stride_bytes\",int(crop.step)},{\"origin_yx\",QJsonArray{y,x}},{\"layout\",image.channels()==1?\"cfa\":\"rgb\"},\n                {\"unit\",units},{\"orientation\",\"sensor\"},{\"context\",context}});\n        }\n    }\n    QFile pixels;\n    QJsonArray stages;\n};\n\n// A test-only adapter around LibRaw's public callback mechanism. It invokes IPR's\n// current RCD, not any demosaic implementation copied from LibRaw.\nclass Reference : public LibRaw {\npublic:\n    Writer *writer=nullptr;\n    const RawInput::Input *input=nullptr;\n    bool failed=false;\n    void instrument(){imgdata.params.user_qual=0;callbacks.interpolate_bayer_cb=&interpolate;}\nprivate:\n    static void interpolate(void *p) noexcept{\n        auto *self=static_cast<Reference *>(static_cast<LibRaw *>(p));\n        try{\n            require(self->writer&&self->input&&self->imgdata.image,\"Missing reference capture state\");\n            auto &d=self->imgdata;Demosaic::Pattern pattern{};\n            for(int y=0;y<2;++y)for(int x=0;x<2;++x){int c=self->FC(y,x);pattern[size_t(y)][size_t(x)]=c==3?1:c;}\n            cv::Mat mosaic(d.sizes.iheight,d.sizes.iwidth,CV_32FC1);\n            for(int y=0;y<mosaic.rows;++y)for(int x=0;x<mosaic.cols;++x)mosaic.at<float>(y,x)=d.image[size_t(y)*mosaic.cols+x][pattern[size_t(y&1)][size_t(x&1)]]/65535.f;\n            self->writer->save(\"pre_demosaic_cfa\",mosaic,\"linear_camera_grid_1_65535\",*self->input);\n            cv::Mat rgb,before;\n            require(Demosaic::interpolate(mosaic,pattern,Demosaic::OpeningMedian,rgb,&before,{}),\"Reference RCD failed\");\n            self->writer->save(\"post_demosaic_camera_rgb\",before,\"linear_camera_white_1\",*self->input);\n            rgb.forEach<cv::Vec3f>([](cv::Vec3f &v,const int *){for(int c=0;c<3;++c)v[c]=float(std::clamp(std::lround(v[c]*65535.f),0L,65535L))/65535.f;});\n            self->writer->save(\"post_median_camera_rgb\",rgb,\"linear_camera_grid_1_65535\",*self->input);\n            for(int y=0;y<rgb.rows;++y)for(int x=0;x<rgb.cols;++x)for(int c=0;c<3;++c)d.image[size_t(y)*rgb.cols+x][c]=std::uint16_t(std::lround(rgb.at<cv::Vec3f>(y,x)[c]*65535.f));\n        }catch(...){self->failed=true;}\n    }\n};\n}\n\nint main(int argc,char **argv){\n    QCoreApplication app(argc,argv);QCommandLineParser parser;parser.addHelpOption();\n    for(auto key:{\"input\",\"output\",\"path\"})parser.addOption(QCommandLineOption(key,key,\"value\"));\n    parser.addOption(QCommandLineOption(\"mode\",\"Only parity mode is implemented\",\"mode\",\"parity\"));\n    parser.addOption(QCommandLineOption(\"black\",\"Explicit DN levels R,G,B,G2 for both paths\",\"levels\"));\n    parser.addOption(QCommandLineOption(\"white\",\"Explicit white DN for both paths, disables automatic adjustment\",\"DN\"));\n    parser.process(app);\n    try{\n        const auto source=QFileInfo(parser.value(\"input\")).absoluteFilePath(),output=QFileInfo(parser.value(\"output\")).absoluteFilePath(),path=parser.value(\"path\");\n        require(parser.isSet(\"input\")&&parser.isSet(\"output\")&&(path==\"reference\"||path==\"candidate\")&&parser.value(\"mode\")==\"parity\",\"Need input/output/path and parity mode\");\n        const auto sourceHash=hash(source);auto raw=std::make_unique<Reference>();\n#ifdef _WIN32\n        require(raw->open_file(source.toStdWString().c_str())==LIBRAW_SUCCESS,\"RAW open failed\");\n#else\n        require(raw->open_file(source.toUtf8().constData())==LIBRAW_SUCCESS,\"RAW open failed\");\n#endif\n        raw->imgdata.params.use_camera_wb=1;raw->imgdata.params.use_auto_wb=0;raw->imgdata.params.use_camera_matrix=0;\n        raw->imgdata.params.no_auto_bright=1;raw->imgdata.params.output_bps=16;raw->imgdata.params.output_color=0;\n        raw->imgdata.params.gamm[0]=raw->imgdata.params.gamm[1]=1.;raw->imgdata.params.user_flip=0;\n        require(raw->unpack()==LIBRAW_SUCCESS,\"RAW unpack failed\");\n        if(parser.isSet(\"black\")){\n            auto levels=parser.value(\"black\").split(',');require(levels.size()==4,\"Need four black levels\");\n            raw->imgdata.color.black=raw->imgdata.rawdata.color.black=0;\n            for(int c=0;c<4;++c){bool ok=false;auto level=levels[c].toUInt(&ok);require(ok&&level<65535,\"Invalid black DN\");raw->imgdata.color.cblack[c]=raw->imgdata.rawdata.color.cblack[c]=level;}\n        }\n        if(parser.isSet(\"white\")){\n            bool ok=false;auto white=parser.value(\"white\").toUInt(&ok);require(ok&&white>0&&white<=65535,\"Invalid white DN\");\n            raw->imgdata.color.maximum=raw->imgdata.rawdata.color.maximum=white;raw->imgdata.params.adjust_maximum_thr=0.f;\n        }\n        auto input=LibRawInput::read(*raw);\n        require(RawInput::valid(input),\"Input outside C2 coverage; no silent fallback in parity bench\");\n        Writer writer(output);QJsonObject applied;\n        if(path==\"candidate\"){\n            RawDevelopment::Options options;options.adjustWhiteThreshold=raw->imgdata.params.adjust_maximum_thr;\n            options.observer=[&](const RawDevelopment::Capture &c){writer.save(name(c.stage),c.pixels,unit(c.stage),input);\n                applied=QJsonObject{{\"black\",four(c.context.black)},{\"white\",c.context.white},{\"divisor\",c.context.divisor},{\"gains\",four(c.context.gains)},{\"policy\",c.context.policy}};};\n            auto result=RawDevelopment::develop(input,options);require(!result.cameraRgb.empty(),\"Candidate development failed\");\n            writer.save(\"pre_dcp_camera_rgb\",result.cameraRgb,\"linear_camera_grid_1_65535\",input);\n        }else{\n            writer.save(\"unpacked_cfa\",input.mosaic,\"DN\",input);raw->writer=&writer;raw->input=&input;raw->instrument();\n            require(raw->dcraw_process()==LIBRAW_SUCCESS&&!raw->failed,\"Reference processing failed\");\n            int error=0;std::unique_ptr<libraw_processed_image_t,void(*)(libraw_processed_image_t *)> memory(raw->dcraw_make_mem_image(&error),LibRaw::dcraw_clear_mem);\n            require(memory&&error==LIBRAW_SUCCESS&&memory->bits==16&&memory->colors==3,\"Invalid reference output\");\n            // Canonical I2 representation: divide each integer in float. OpenCV's\n            // convertTo reciprocal multiplication can differ by one float ulp.\n            cv::Mat integers(memory->height,memory->width,CV_16UC3,memory->data),rgb(memory->height,memory->width,CV_32FC3);\n            for(int y=0;y<rgb.rows;++y)for(int x=0;x<rgb.cols;++x)for(int c=0;c<3;++c)rgb.at<cv::Vec3f>(y,x)[c]=float(integers.at<cv::Vec<std::uint16_t,3>>(y,x)[c])/65535.f;\n            writer.save(\"pre_dcp_camera_rgb\",rgb,\"linear_camera_grid_1_65535\",input);\n        }\n        writer.pixels.close();require(hash(source)==sourceHash,\"Source changed during capture\");\n        QJsonObject manifest{{\"schema_version\",1},{\"mode\",\"parity\"},{\"path\",path},{\"measured_at_utc\",QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs)},\n            {\"source\",QJsonObject{{\"path\",source},{\"sha256\",sourceHash}}},{\"engine_revision\",IPR_BENCH_REVISION},{\"tool_revision\",IPR_BENCH_REVISION},\n            {\"scope\",parser.isSet(\"black\")||parser.isSet(\"white\")?\"C2_module_explicit_levels_not_calibration_selection_or_DCP\":\"C2_module_native_decoder_levels_not_IPR_calibration_or_DCP\"},{\"libraw_version\",LibRaw::version()},\n            {\"applied\",applied},{\"metadata\",QJsonObject{{\"model\",input.model},{\"iso\",input.iso},{\"orientation_flip\",input.orientation}}},\n            {\"pixels\",QJsonObject{{\"path\",QFileInfo(writer.pixels.fileName()).fileName()},{\"sha256\",hash(writer.pixels.fileName())}}},{\"stages\",writer.stages}};\n        QFile out(output);require(out.open(QIODevice::WriteOnly|QIODevice::NewOnly),\"Manifest exists\");auto bytes=QJsonDocument(manifest).toJson();require(out.write(bytes)==bytes.size(),\"Incomplete manifest\");\n        std::cout<<path.toStdString()<<\" captured\\n\";\n    }catch(const std::exception &e){std::cerr<<e.what()<<'\\n';return 1;}return 0;\n}\n"
+    },
+    "tests/raw_bench/capture.py": {
+      "sha256": "e14d237a4ac86f7ac6a938cf6efc4efe98d200e6538d15e399d7f25c91c08425",
+      "source": "\"\"\"Versioned RAW bench captures and fail-closed stage comparisons (I3).\"\"\"\nimport argparse\nfrom datetime import datetime, timezone\nimport hashlib\nimport json\nfrom pathlib import Path\n\nimport numpy as np\n\nDTYPES={'u16':np.dtype('<u2'),'f32':np.dtype('<f4'),'f64':np.dtype('<f8')}\nREQUIRED=('unpacked_cfa','pre_demosaic_cfa','post_median_camera_rgb','working_rec2020')\n\n\ndef sha256(path):\n    h=hashlib.sha256()\n    with Path(path).open('rb') as f:\n        for block in iter(lambda:f.read(1024*1024),b''):h.update(block)\n    return h.hexdigest()\n\n\ndef load_capture(path):\n    path=Path(path);manifest=json.loads(path.read_text(encoding='utf-8'))\n    if manifest.get('schema_version')!=1 or not manifest.get('stages') or not manifest.get('source',{}).get('sha256'):\n        raise ValueError('Missing capture contract or unsupported schema')\n    pixels=Path(manifest['pixels']['path'])\n    if not pixels.is_absolute():pixels=path.parent/pixels\n    if sha256(pixels)!=manifest['pixels']['sha256']:raise ValueError('Capture pixel hash mismatch')\n    size=pixels.stat().st_size;stages={};extents=[]\n    with pixels.open('rb') as handle:\n        for stage in manifest['stages']:\n            shape=stage['shape'];dtype=DTYPES[stage['dtype']]\n            if len(shape)!=3 or any(type(n)!=int or n<=0 for n in shape):raise ValueError('Invalid stage shape')\n            offset=stage['offset_bytes'];count=int(np.prod(shape,dtype=object));nbytes=count*dtype.itemsize\n            if type(offset)!=int or offset<0 or offset%dtype.itemsize or offset+nbytes>size:raise ValueError('Invalid stage extent')\n            if stage['stride_bytes']!=shape[1]*shape[2]*dtype.itemsize:raise ValueError('Capture must be packed')\n            if any(offset<end and offset+nbytes>start for start,end in extents):raise ValueError('Overlapping stage extents')\n            extents.append((offset,offset+nbytes))\n            key=(stage['stage'],tuple(stage['origin_yx']))\n            if key in stages:raise ValueError('Duplicate stage/ROI')\n            for required in ('unit','layout','orientation','context'):\n                if required not in stage:raise ValueError('Incomplete stage descriptor')\n            handle.seek(offset);array=np.frombuffer(handle.read(nbytes),dtype=dtype).reshape(shape)\n            stages[key]=(stage,array)\n    return manifest,stages\n\n\ndef compare_captures(reference,candidate,required=REQUIRED,tolerances=None,purpose='parity'):\n    if purpose not in ('parity','measurement'):raise ValueError('Unknown comparison purpose')\n    tolerances=tolerances or {}\n    a,aa=load_capture(reference);b,bb=load_capture(candidate)\n    if a['source']['sha256']!=b['source']['sha256']:raise ValueError('Different RAW sources')\n    if purpose=='parity' and (a['mode']!='parity' or b['mode']!='parity'):raise ValueError('Signed mode cannot certify parity')\n    rows=[];missing=[];contract=[]\n    for name in required:\n        left={k for k in aa if k[0]==name};right={k for k in bb if k[0]==name}\n        if not left or not right or left!=right:missing.append(name)\n    for key in sorted(set(aa)|set(bb)):\n        if key[0] not in required:continue\n        if key not in aa or key not in bb:\n            missing.append(str(key));continue\n        sa,x=aa[key];sb,y=bb[key]\n        fields=('shape','dtype','origin_yx','layout','orientation','unit','context')\n        mismatch=[f for f in fields if sa[f]!=sb[f]]\n        if mismatch:\n            contract.append(dict(stage=key[0],origin_yx=list(key[1]),fields=mismatch));continue\n        finite=bool(np.isfinite(x).all() and np.isfinite(y).all())\n        row=dict(stage=key[0],origin_yx=list(key[1]),finite=finite,bitwise_equal=x.tobytes()==y.tobytes())\n        if finite:\n            tol=tolerances.get(key[0],{'atol':0.,'rtol':0.});atol=float(tol['atol']);rtol=float(tol['rtol'])\n            if not np.isfinite([atol,rtol]).all() or min(atol,rtol)<0:raise ValueError('Invalid tolerances')\n            if sa['dtype']=='u16' and (atol or rtol):raise ValueError('Integer boundaries require exact equality')\n            delta=x.astype(float)-y.astype(float);absolute=abs(delta)\n            row.update(max_abs=float(absolute.max()),mae=float(absolute.mean()),rmse=float(np.sqrt(np.mean(delta**2))),\n                unequal_values=int(np.count_nonzero(x!=y)),outside_tolerance=int(np.count_nonzero(absolute>atol+rtol*abs(x.astype(float)))),tolerance=tol,\n                reference_negative_fraction=float(np.mean(x<0)),candidate_negative_fraction=float(np.mean(y<0)),\n                reference_zero_fraction=float(np.mean(x==0)),candidate_zero_fraction=float(np.mean(y==0)),\n                reference_mean=x.mean(axis=(0,1),dtype=float).tolist(),candidate_mean=y.mean(axis=(0,1),dtype=float).tolist(),\n                reference_variance=x.var(axis=(0,1),dtype=float).tolist(),candidate_variance=y.var(axis=(0,1),dtype=float).tolist(),\n                reference_covariance=np.atleast_2d(np.cov(x.astype(float).reshape(-1,x.shape[-1]),rowvar=False)).tolist(),\n                candidate_covariance=np.atleast_2d(np.cov(y.astype(float).reshape(-1,y.shape[-1]),rowvar=False)).tolist())\n        rows.append(row)\n    valid=not missing and not contract and all(r['finite'] for r in rows)\n    passed=valid and all(r['outside_tolerance']==0 for r in rows)\n    return dict(schema_version=1,measured_at_utc=datetime.now(timezone.utc).isoformat(),purpose=purpose,\n        reference=dict(path=str(reference),sha256=sha256(reference)),candidate=dict(path=str(candidate),sha256=sha256(candidate)),\n        required_stages=list(required),uncompared_reference_stages=sorted({k[0] for k in aa if k[0] not in required}),\n        uncompared_candidate_stages=sorted({k[0] for k in bb if k[0] not in required}),\n        missing=missing,contract_mismatches=contract,stages=rows,\n        verdict=('pass' if passed else 'fail') if purpose=='parity' else ('measured_not_parity' if valid else 'invalid_measurement'))\n\n\ndef main():\n    p=argparse.ArgumentParser(description=__doc__);p.add_argument('reference',type=Path);p.add_argument('candidate',type=Path)\n    p.add_argument('--output',type=Path,required=True);p.add_argument('--require-stage',action='append');p.add_argument('--tolerances',type=Path)\n    p.add_argument('--purpose',choices=('parity','measurement'),default='parity');args=p.parse_args()\n    result=compare_captures(args.reference,args.candidate,args.require_stage or REQUIRED,\n        json.loads(args.tolerances.read_text(encoding='utf-8')) if args.tolerances else None,args.purpose)\n    with args.output.open('x',encoding='utf-8') as f:json.dump(result,f,ensure_ascii=False,indent=2,allow_nan=False)\n    print(result['verdict'])\n    return 0 if result['verdict'] in ('pass','measured_not_parity') else 1\n\n\nif __name__=='__main__':raise SystemExit(main())\n"
+    },
+    "src/raw/RawDevelopment.cpp": {
+      "sha256": "d35fd3c99e0644ad1dd41367f2666a40e0cc284e6006bda1e4c550e497b5c50e",
+      "source": "#include \"RawDevelopment.h\"\n\n#include <algorithm>\n#include <cmath>\n#include <cstdint>\n\nnamespace RawDevelopment {\nnamespace {\n// The colour read by RCD at a site: the second green of the cell is a green.\nint demosaicColour(int colour) { return colour == RawInput::Green2 ? RawInput::Green : colour; }\n} // namespace\n\nResult develop(const RawInput::Input &input, const Options &options)\n{\n    Result result;\n    if (!RawInput::valid(input)) {\n        result.error = QStringLiteral(\"Entrée RAW non prise en charge par le développement IPR.\");\n        return result;\n    }\n    const int width = input.mosaic.cols, height = input.mosaic.rows;\n    const auto &pattern = input.pattern;\n    const auto colourAt = [&](int y, int x) { return pattern[size_t(y & 1)][size_t(x & 1)]; };\n    Context context;\n    context.origin = input.origin;\n    context.black = input.black;\n    context.white = input.white;\n    const auto observe = [&](Stage stage, const cv::Mat &pixels, bool mosaic) {\n        if (options.observer) options.observer(Capture{stage, pixels, mosaic, pattern, context});\n    };\n    observe(Stage::UnpackedCfa, input.mosaic, true);\n\n    // Black per colour, then the lower bound at 0; the data maximum for the white.\n    cv::Mat signedCounts(height, width, CV_32FC1);\n    float dataMaximum = 0.f;\n    for (int y = 0; y < height; ++y) {\n        const auto *in = input.mosaic.ptr<std::uint16_t>(y);\n        float *out = signedCounts.ptr<float>(y);\n        for (int x = 0; x < width; ++x) {\n            out[x] = float(in[x]) - float(input.black[size_t(colourAt(y, x))]);\n            dataMaximum = std::max(dataMaximum, out[x]);\n        }\n    }\n    observe(Stage::BlackSubtractedCfa, signedCounts, true);\n    // The common part of the black (its smallest value) comes off the white; the white\n    // drops to the data maximum when that lies just below it (LibRaw's adjustment).\n    const double commonBlack = *std::min_element(input.black.cbegin(), input.black.cend());\n    double divisor = input.white - commonBlack;\n    if (options.adjustWhiteThreshold > 0.0 && dataMaximum > 0.f && dataMaximum < divisor &&\n        dataMaximum > divisor * options.adjustWhiteThreshold)\n        divisor = dataMaximum;\n    context.divisor = divisor;\n    context.white = divisor + commonBlack;\n    cv::Mat clipped = cv::max(signedCounts, 0.f);\n    if (options.observer) {\n        const cv::Mat normalized = clipped / divisor;\n        observe(Stage::NormalizedCfa, normalized, true);\n    }\n\n    // As-shot gains, the smallest 1; values truncated to the 16-bit grid, as LibRaw scales\n    // them: gains, scales and products all in single precision (a scale computed in double\n    // and rounded once is one ulp lower on some gains, one count lower on some values).\n    const double smallest = *std::min_element(input.asShotMultipliers.cbegin(), input.asShotMultipliers.cend());\n    std::array<float, 4> scale{};\n    for (int c = 0; c < 4; ++c) {\n        const float gain = float(input.asShotMultipliers[size_t(c)] / smallest);\n        context.gains[size_t(c)] = gain;\n        scale[size_t(c)] = gain * 65535.f / float(divisor);\n    }\n    result.gains = context.gains;\n    cv::Mat mosaic(height, width, CV_32FC1);\n    for (int y = 0; y < height; ++y) {\n        const float *in = clipped.ptr<float>(y);\n        float *out = mosaic.ptr<float>(y);\n        for (int x = 0; x < width; ++x) {\n            const float scaled = std::trunc(in[x] * scale[size_t(colourAt(y, x))]);\n            out[x] = std::min(scaled, 65535.f) / 65535.f;\n        }\n    }\n    clipped.release();\n    signedCounts.release();\n    observe(Stage::PreDemosaicCfa, mosaic, true);\n\n    Demosaic::Pattern bayer{};\n    for (int y = 0; y < 2; ++y)\n        for (int x = 0; x < 2; ++x) bayer[size_t(y)][size_t(x)] = demosaicColour(pattern[size_t(y)][size_t(x)]);\n    cv::Mat beforeMedian;\n    if (!Demosaic::interpolate(mosaic, bayer, options.median, result.cameraRgb,\n                               options.observer ? &beforeMedian : nullptr, options.cancelled)) {\n        result.cameraRgb.release();\n        result.error = QStringLiteral(\"Dématriçage annulé ou impossible.\");\n        return result;\n    }\n    mosaic.release();\n    if (options.observer) observe(Stage::PostDemosaicCameraRgb, beforeMedian, false);\n    // On the 16-bit grid, as LibRaw's image after the interpolation.\n    result.cameraRgb.forEach<cv::Vec3f>([](cv::Vec3f &pixel, const int *) {\n        for (int c = 0; c < 3; ++c)\n            pixel[c] = float(std::clamp(std::lround(pixel[c] * 65535.f), 0L, 65535L)) / 65535.f;\n    });\n    observe(Stage::PostMedianCameraRgb, result.cameraRgb, false);\n    return result;\n}\n\ncv::Mat orient(const cv::Mat &image, int orientation)\n{\n    // LibRaw's flip bits: 2 the rows, 1 the columns, then 4 transposes.\n    cv::Mat out = image.clone();\n    if (orientation & 2) cv::flip(out, out, 0);\n    if (orientation & 1) cv::flip(out, out, 1);\n    if (orientation & 4) cv::transpose(out, out);\n    return out;\n}\n\n} // namespace RawDevelopment\n"
+    },
+    "src/raw/Demosaic.cpp": {
+      "sha256": "2d880da8db75d3a3eaf770fd65226f8e4411f5ba611b2acede890f12d4bd2fb3",
+      "source": "#include \"Demosaic.h\"\n\n#include <opencv2/core.hpp>\n#include <opencv2/imgproc.hpp>\n\n#include <algorithm>\n#include <atomic>\n#include <cmath>\n#include <thread>\n#include <vector>\n\nnamespace Demosaic {\nnamespace {\n\nconstexpr int MaximumThreads = 8;\nconstexpr int TileSize = 512;\nconstexpr int TileMargin = 12;   // even: keeps the pattern; covers the 9-pixel stencils and the medians\nconstexpr float Eps = 1e-5f;\nconstexpr float FlatGradient = 0.5f, DetailGradient = 1.0f;   // in luminance noise sigmas\nconstexpr float LaplacianWeight = 0.5f;   // green: share of the colour-difference estimate\n\n// Direction weight of a pixel (0 vertical, 1 horizontal), pulled toward the mean\n// of its diagonal neighbours when they are more decided.\nfloat direction(const cv::Mat &vh, int y, int x)\n{\n    const float own = vh.at<float>(y, x);\n    const float n = 0.25f * (vh.at<float>(y - 1, x - 1) + vh.at<float>(y - 1, x + 1) +\n                             vh.at<float>(y + 1, x - 1) + vh.at<float>(y + 1, x + 1));\n    return std::abs(0.5f - own) < std::abs(0.5f - n) ? n : own;\n}\n\n// Green at red and blue pixels: gradient-weighted directional estimates, each the\n// even blend of the neighbour green scaled by the low-pass ratio (RCD) and of the\n// neighbour green corrected by half the same-colour difference toward the centre\n// (Laplacian). The ratio alone was softer than Lightroom at ISO 800 to 3200\n// (0.89 to 0.92 of its fine-band energy), the Laplacian alone less accurate.\nvoid interpolateGreen(const cv::Mat &cfa, const cv::Mat &vh, const cv::Mat &lpf, const Pattern &p, cv::Mat &G)\n{\n    const int H = cfa.rows, W = cfa.cols;\n    const auto T = [&](int y, int x) { return cfa.at<float>(y, x); };\n    for (int y = 5; y < H - 5; ++y)\n        for (int x = 5; x < W - 5; ++x) {\n            if (p[size_t(y & 1)][size_t(x & 1)] == 1) continue;\n            const float L = lpf.at<float>(y, x);\n            const auto ratio = [&](int yy, int xx) {\n                const float l = lpf.at<float>(yy, xx);\n                return 1.f + (L - l) / (Eps + L + l);\n            };\n            const auto estimate = [&](int dy, int dx) {\n                const float neighbour = T(y + dy, x + dx);\n                const float byRatio = neighbour * ratio(y + 2 * dy, x + 2 * dx);\n                const float byLaplacian = neighbour + 0.5f * (T(y, x) - T(y + 2 * dy, x + 2 * dx));\n                return LaplacianWeight * byLaplacian + (1.f - LaplacianWeight) * byRatio;\n            };\n            const float nEst = estimate(-1, 0), sEst = estimate(1, 0), wEst = estimate(0, -1), eEst = estimate(0, 1);\n            const float nG = Eps + std::abs(T(y - 1, x) - T(y + 1, x)) + std::abs(T(y, x) - T(y - 2, x)) +\n                             std::abs(T(y - 1, x) - T(y - 3, x)) + std::abs(T(y - 2, x) - T(y - 4, x));\n            const float sG = Eps + std::abs(T(y + 1, x) - T(y - 1, x)) + std::abs(T(y, x) - T(y + 2, x)) +\n                             std::abs(T(y + 1, x) - T(y + 3, x)) + std::abs(T(y + 2, x) - T(y + 4, x));\n            const float wG = Eps + std::abs(T(y, x - 1) - T(y, x + 1)) + std::abs(T(y, x) - T(y, x - 2)) +\n                             std::abs(T(y, x - 1) - T(y, x - 3)) + std::abs(T(y, x - 2) - T(y, x - 4));\n            const float eG = Eps + std::abs(T(y, x + 1) - T(y, x - 1)) + std::abs(T(y, x) - T(y, x + 2)) +\n                             std::abs(T(y, x + 1) - T(y, x + 3)) + std::abs(T(y, x + 2) - T(y, x + 4));\n            const float vEst = (sG * nEst + nG * sEst) / (nG + sG);\n            const float hEst = (eG * wEst + wG * eEst) / (wG + eG);\n            const float d = direction(vh, y, x);\n            G.at<float>(y, x) = std::max(0.f, d * hEst + (1.f - d) * vEst);\n        }\n}\n\n// RCD on a padded tile, values ~[0, 1]: green from ratio-corrected directional\n// estimates, the direction decided per pixel and pulled toward the most decided\n// diagonal neighbour; red and blue from gradient-weighted colour differences.\ncv::Mat rcd(const cv::Mat &cfa, const Pattern &p)\n{\n    const int H = cfa.rows, W = cfa.cols;\n    const auto colour = [&](int y, int x) { return p[size_t(y & 1)][size_t(x & 1)]; };\n    const auto T = [&](int y, int x) { return cfa.at<float>(y, x); };\n    cv::Mat vh(H, W, CV_32F, cv::Scalar(0.5f)), lpf(H, W, CV_32F, cv::Scalar(0.f));\n    cv::Mat G = cfa.clone();\n    // 1. Vertical/horizontal discrimination: directional high-pass energy.\n    for (int y = 4; y < H - 4; ++y)\n        for (int x = 4; x < W - 4; ++x) {\n            float v = Eps, h = Eps;\n            for (int k = -1; k <= 1; ++k) {\n                const float dv = T(y - 1, x + k) - T(y + 1, x + k);\n                const float sv = T(y - 2, x + k) - 2 * T(y, x + k) + T(y + 2, x + k);\n                const float dh = T(y + k, x - 1) - T(y + k, x + 1);\n                const float sh = T(y + k, x - 2) - 2 * T(y + k, x) + T(y + k, x + 2);\n                v += dv * dv + 0.5f * sv * sv;\n                h += dh * dh + 0.5f * sh * sh;\n            }\n            vh.at<float>(y, x) = v / (v + h);\n        }\n    // 2. Low-pass of the mosaic (all colours mixed 1:2:1).\n    for (int y = 1; y < H - 1; ++y)\n        for (int x = 1; x < W - 1; ++x)\n            lpf.at<float>(y, x) = T(y, x) + 0.5f * (T(y - 1, x) + T(y + 1, x) + T(y, x - 1) + T(y, x + 1)) +\n                                  0.25f * (T(y - 1, x - 1) + T(y - 1, x + 1) + T(y + 1, x - 1) + T(y + 1, x + 1));\n    // 3. Green at red and blue pixels.\n    interpolateGreen(cfa, vh, lpf, p, G);\n    const auto decided = [&](int y, int x) { return direction(vh, y, x); };\n    // 4. Red at blue pixels and blue at red pixels: diagonal colour differences.\n    cv::Mat R(H, W, CV_32F, cv::Scalar(0.f)), B(H, W, CV_32F, cv::Scalar(0.f));\n    for (int y = 0; y < H; ++y)\n        for (int x = 0; x < W; ++x) {\n            const int c = colour(y, x);\n            if (c == 0) R.at<float>(y, x) = T(y, x);\n            if (c == 2) B.at<float>(y, x) = T(y, x);\n        }\n    for (int y = 6; y < H - 6; ++y)\n        for (int x = 6; x < W - 6; ++x) {\n            const int c = colour(y, x);\n            if (c == 1) continue;\n            cv::Mat &target = c == 0 ? B : R;   // the colour on the diagonals\n            const auto diff = [&](int yy, int xx) { return T(yy, xx) - G.at<float>(yy, xx); };\n            const float dP = T(y - 1, x - 1) - T(y + 1, x + 1), dQ = T(y - 1, x + 1) - T(y + 1, x - 1);\n            const float gP = G.at<float>(y - 1, x - 1) - 2 * G.at<float>(y, x) + G.at<float>(y + 1, x + 1);\n            const float gQ = G.at<float>(y - 1, x + 1) - 2 * G.at<float>(y, x) + G.at<float>(y + 1, x - 1);\n            const float pS = Eps + dP * dP + gP * gP, qS = Eps + dQ * dQ + gQ * gQ;\n            const float nw = Eps + std::abs(dP) + std::abs(diff(y - 1, x - 1) - diff(y - 3, x - 3));\n            const float se = Eps + std::abs(dP) + std::abs(diff(y + 1, x + 1) - diff(y + 3, x + 3));\n            const float ne = Eps + std::abs(dQ) + std::abs(diff(y - 1, x + 1) - diff(y - 3, x + 3));\n            const float sw = Eps + std::abs(dQ) + std::abs(diff(y + 1, x - 1) - diff(y + 3, x - 3));\n            const float estP = (se * diff(y - 1, x - 1) + nw * diff(y + 1, x + 1)) / (nw + se);\n            const float estQ = (sw * diff(y - 1, x + 1) + ne * diff(y + 1, x - 1)) / (ne + sw);\n            const float pq = pS / (pS + qS);\n            target.at<float>(y, x) = std::max(0.f, G.at<float>(y, x) + pq * estQ + (1.f - pq) * estP);\n        }\n    // 5. Red and blue at green pixels: cardinal colour differences, direction of step 1.\n    for (int y = 8; y < H - 8; ++y)\n        for (int x = 8; x < W - 8; ++x) {\n            if (colour(y, x) != 1) continue;\n            const auto g = [&](int yy, int xx) { return G.at<float>(yy, xx); };\n            const float d = decided(y, x);\n            const float gn = Eps + std::abs(g(y - 1, x) - g(y + 1, x)) + std::abs(g(y, x) - g(y - 2, x));\n            const float gs = Eps + std::abs(g(y + 1, x) - g(y - 1, x)) + std::abs(g(y, x) - g(y + 2, x));\n            const float gw = Eps + std::abs(g(y, x - 1) - g(y, x + 1)) + std::abs(g(y, x) - g(y, x - 2));\n            const float ge = Eps + std::abs(g(y, x + 1) - g(y, x - 1)) + std::abs(g(y, x) - g(y, x + 2));\n            for (cv::Mat *plane : {&R, &B}) {\n                const auto diff = [&](int yy, int xx) { return plane->at<float>(yy, xx) - g(yy, xx); };\n                const float v = (gs * diff(y - 1, x) + gn * diff(y + 1, x)) / (gn + gs);\n                const float h = (ge * diff(y, x - 1) + gw * diff(y, x + 1)) / (gw + ge);\n                plane->at<float>(y, x) = std::max(0.f, g(y, x) + d * h + (1.f - d) * v);\n            }\n        }\n    cv::Mat rgb;\n    cv::merge(std::vector<cv::Mat>{R, G, B}, rgb);\n    return rgb;\n}\n\n// Robust sigma of the diagonal Haar coefficient: the finest noise band, little\n// affected by sparse edges; constant 2x2 cells (clipped) are skipped.\nfloat haarSigma(const cv::Mat &plane)\n{\n    std::vector<float> values;\n    for (int y = 0; y + 1 < plane.rows; y += 2) {\n        const float *a = plane.ptr<float>(y), *b = plane.ptr<float>(y + 1);\n        for (int x = 0; x + 1 < plane.cols; x += 2) {\n            if (a[x] == a[x + 1] && a[x] == b[x] && a[x] == b[x + 1]) continue;\n            values.push_back(0.5f * (a[x] - a[x + 1] - b[x] + b[x + 1]));\n        }\n    }\n    if (values.empty()) return 0.f;\n    const auto mid = values.begin() + std::ptrdiff_t(values.size() / 2);\n    std::nth_element(values.begin(), mid, values.end());\n    const float centre = *mid;\n    for (float &v : values) v = std::abs(v - centre);\n    std::nth_element(values.begin(), mid, values.end());\n    return *mid / 0.6745f;\n}\n\n// Weight of the median: 1 where the luminance gradient (after a 1-pixel blur) is\n// below FlatGradient noise sigmas, 0 above DetailGradient, linear between.\ncv::Mat flatWeight(const cv::Mat &luma)\n{\n    const float sigma = haarSigma(luma);\n    if (!(sigma > 0.f)) return cv::Mat(luma.size(), CV_32F, cv::Scalar(1.f));\n    cv::Mat smooth, gx, gy, gradient;\n    cv::GaussianBlur(luma, smooth, cv::Size(0, 0), 1.0, 1.0, cv::BORDER_REFLECT);\n    const cv::Mat dx = (cv::Mat_<float>(1, 3) << -0.5f, 0.f, 0.5f), dy = dx.t();\n    cv::filter2D(smooth, gx, CV_32F, dx, cv::Point(-1, -1), 0, cv::BORDER_REFLECT);\n    cv::filter2D(smooth, gy, CV_32F, dy, cv::Point(-1, -1), 0, cv::BORDER_REFLECT);\n    cv::magnitude(gx, gy, gradient);\n    cv::Mat weight = (DetailGradient * sigma - gradient) / ((DetailGradient - FlatGradient) * sigma);\n    return cv::min(cv::max(weight, 0.f), 1.f);\n}\n\n// One 3x3 median on R - G and B - G where the luminance is flat, green unchanged.\nvoid flatChromaMedian(cv::Mat &rgb)\n{\n    std::vector<cv::Mat> c;\n    cv::split(rgb, c);\n    const cv::Mat weight = flatWeight(0.25f * (c[0] + 2.f * c[1] + c[2]));\n    for (int k : {0, 2}) {\n        const cv::Mat diff = c[size_t(k)] - c[1];\n        cv::Mat median;\n        cv::medianBlur(diff, median, 3);   // not in place\n        c[size_t(k)] = cv::max(median.mul(weight) + diff.mul(1.f - weight) + c[1], 0.f);\n    }\n    cv::merge(c, rgb);\n}\n\n} // namespace\n\nint workerThreads()\n{\n    const int host = int(std::thread::hardware_concurrency());\n    return std::clamp(host - 1, 1, MaximumThreads);\n}\n\nbool interpolate(const cv::Mat &mosaic, const Pattern &pattern, ChromaMedian median, cv::Mat &rgb,\n                 cv::Mat *beforeMedian, const std::function<bool()> &cancelled)\n{\n    if (mosaic.type() != CV_32FC1 || mosaic.cols < 2 || mosaic.rows < 2) return false;\n    const int width = mosaic.cols, height = mosaic.rows;\n    rgb.create(height, width, CV_32FC3);\n    if (beforeMedian) beforeMedian->create(height, width, CV_32FC3);\n    std::vector<cv::Rect> tiles;\n    for (int y = 0; y < height; y += TileSize)\n        for (int x = 0; x < width; x += TileSize)\n            tiles.emplace_back(x, y, std::min(TileSize, width - x), std::min(TileSize, height - y));\n    const auto processTile = [&](const cv::Rect &core) {\n        cv::Mat padded;\n        // real neighbours where they exist, mirrored with the same parity at the border\n        cv::copyMakeBorder(mosaic(core), padded, TileMargin, TileMargin, TileMargin, TileMargin, cv::BORDER_REFLECT_101);\n        cv::Mat tile = rcd(padded, pattern);\n        const cv::Rect inner(TileMargin, TileMargin, core.width, core.height);\n        if (beforeMedian) tile(inner).copyTo((*beforeMedian)(core));\n        if (median == ChromaMedian::FlatOnly) flatChromaMedian(tile);\n        tile(inner).copyTo(rgb(core));\n    };\n    // Tile by tile from a shared counter on a bounded pool, the calling thread\n    // included; every thread is joined on every path, exceptions included. Only\n    // the calling thread asks for cancellation (the callback need not be\n    // thread-safe); the others read the shared flag.\n    std::atomic<std::size_t> next{0};\n    std::atomic<bool> stopped{false};\n    const auto work = [&](bool caller) {\n        try {\n            for (std::size_t i; (i = next.fetch_add(1)) < tiles.size();) {\n                if (stopped.load() || (caller && cancelled && cancelled())) {\n                    stopped.store(true);\n                    return;\n                }\n                processTile(tiles[i]);\n            }\n        } catch (...) {\n            stopped.store(true);\n        }\n    };\n    std::vector<std::thread> pool;\n    struct JoinAll {\n        std::vector<std::thread> &threads;\n        ~JoinAll()\n        {\n            for (auto &t : threads)\n                if (t.joinable()) t.join();\n        }\n    } joinAll{pool};\n    const int threads = std::min(workerThreads(), int(tiles.size()));\n    pool.reserve(std::size_t(threads));\n    for (int k = 1; k < threads; ++k) pool.emplace_back(work, false);\n    work(true);\n    for (auto &t : pool) t.join();\n    return !stopped.load();\n}\n\n} // namespace Demosaic\n"
+    },
+    "src/raw/LibRawInput.cpp": {
+      "sha256": "84d4bbffc6346177d710bccb515284d570593d9c83164aa000731cb3fd489c6f",
+      "source": "#include \"LibRawInput.h\"\n\n#ifdef IPR_WITH_LIBRAW\n#include <libraw/libraw.h>\n#endif\n\nnamespace LibRawInput {\n\nRawInput::Input read(const LibRaw &raw)\n{\n    RawInput::Input input;\n#ifdef IPR_WITH_LIBRAW\n    const auto &d = raw.imgdata;\n    if (!d.rawdata.raw_image || d.idata.filters < 1000)   // no Bayer mosaic (X-Trans, sRAW, linear DNG)\n        return input;\n    const auto &s = d.sizes;\n    const cv::Mat sensor(int(s.raw_height), int(s.raw_width), CV_16UC1, d.rawdata.raw_image, size_t(s.raw_pitch));\n    input.origin = cv::Point(int(s.left_margin), int(s.top_margin));\n    input.mosaic = sensor(cv::Rect(input.origin, cv::Size(int(s.width), int(s.height)))).clone();\n    // Colour of each site of the visible 2x2 cell, as LibRaw's FC(): 3 is the cell's second green.\n    for (int y = 0; y < 2; ++y)\n        for (int x = 0; x < 2; ++x)\n            input.pattern[size_t(y)][size_t(x)] = int(d.idata.filters >> ((((y << 1) & 14) | (x & 1)) << 1) & 3);\n    const auto &c = d.color;\n    for (int colour = 0; colour < 4; ++colour) {\n        input.black[size_t(colour)] = double(c.black) + double(c.cblack[colour]);\n        input.asShotMultipliers[size_t(colour)] = double(c.cam_mul[colour]);\n        input.daylightMultipliers[size_t(colour)] = double(c.pre_mul[colour]);\n    }\n    // A second-green multiplier left at 0 means \"same as the first green\".\n    for (auto *multipliers : {&input.asShotMultipliers, &input.daylightMultipliers})\n        if (!((*multipliers)[RawInput::Green2] > 0.0)) (*multipliers)[RawInput::Green2] = (*multipliers)[RawInput::Green];\n    input.spatialBlack = c.cblack[4] > 0 && c.cblack[5] > 0;\n    input.white = double(c.maximum);\n    for (int r = 0; r < 3; ++r)\n        for (int k = 0; k < 3; ++k)\n            input.cameraToSrgb(r, k) = double(c.rgb_cam[r][k]);\n    input.orientation = s.flip;\n    input.make = QString::fromLocal8Bit(d.idata.make).trimmed();\n    input.model = QString::fromLocal8Bit(d.idata.model).trimmed();\n    input.iso = double(d.other.iso_speed);\n#else\n    Q_UNUSED(raw);\n#endif\n    return input;\n}\n\n} // namespace LibRawInput\n"
+    }
+  },
+  "calibration_reference": {
+    "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\sonde-etapes-ouverture-bruit-v001-20261028T104746Z.json",
+    "sha256": "0a330fcc140d2dbed2991600d4cd9d2e77da5066906bcf579acecd3ce85f1524"
+  },
+  "limitations": "Only fixed3 ROIs256 per stage, not full frame parity. Reference/candidate share current IPR RCD and input adapter. LibRaw native black/white, not IPR calibrated production levels. Candidate signed and normalized stages observed but no independent LibRaw boundary for them; not falsely reconstructed. No DCP, orientation, optics, automatic WB/fallbacks, private-corpus CI or performance qualification. Original production code unchanged in this bench."
+}

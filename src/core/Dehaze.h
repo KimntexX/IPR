@@ -1,11 +1,11 @@
 #ifndef IPR_CORE_DEHAZE_H
 #define IPR_CORE_DEHAZE_H
 
-#include <opencv2/core.hpp>
+#include "Image.h"
 
 // Dehaze following Lightroom's response, fitted on its neutral -> state pairs.
 // Tone (tests/study_dehaze_law.py, etude-loi-voile-v009): the luminance Y gains
-// f(log2(Y / A), h) EV, A the airlight (99th percentile of max RGB), h the dark
+// f(log2(Y / A), h) EV, A the airlight (99th percentile of the luminance), h the dark
 // channel smoothed at about 128 pixels over A; that change is smoothed into a base
 // at 64 pixels, Lightroom's change being a smooth local map. Detail
 // (tests/study_dehaze_detail.py, etude-detail-voile-v003): around the base, the
@@ -16,10 +16,14 @@
 // Study: docs/validation/analyses/analyse-effets.md.
 namespace Dehaze {
 
-// Linear RGB image (CV_32FC3), in place; slider value in [-100, 100]. RGB stays nonnegative.
+// Linear RGB image (F32 of three channels), in place; slider value in [-100, 100]. RGB stays nonnegative.
 // pixelScale: pixels of this image per pixel of the full image (1 for the master,
 // below 1 for the preview proxy); radii are defined on the full image.
-void apply(cv::Mat &linearRgb, int amount, double pixelScale = 1.0);
+// local: per-pixel value added to the slider (LocalValues), the sum within
+// [-100, 100]; empty for none. The smooth tone change is computed at a few values
+// of the map (at most 8, one 64-pixel blur each) and mixed per pixel; a pixel at
+// zero stays untouched.
+void apply(ipr::Image &linearRgb, int amount, double pixelScale = 1.0, const ipr::Image &local = {});
 
 } // namespace Dehaze
 

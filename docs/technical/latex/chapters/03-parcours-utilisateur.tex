@@ -5,24 +5,18 @@
 
 \begin{figure}[htbp]
 \centering
-\begin{tikzpicture}[node distance=8mm and 17mm]
-  \node[actor] (user) {Photographe};
-  \node[component, right=of user] (open) {Ouvrir une image\\et son dossier};
-  \node[component, below=of open] (browse) {Parcourir et choisir\\une vignette};
-  \node[component, below=of browse] (adjust) {Choisir le DCP\\et régler l'image};
-  \node[component, below=of adjust] (meta) {Noter, libeller\\et marquer};
-  \node[component, right=of adjust] (batch) {Sélectionner et\\appliquer en lot};
-  \node[component, below=of batch] (export) {Exporter l'image active};
-  \draw[flow] (user) -- (open);
-  \draw[flow] (user) -- (browse);
-  \draw[flow] (user) -- (adjust);
-  \draw[flow] (user) -- (meta);
-  \draw[flow] (user) -- (batch);
-  \draw[flow] (user) -- (export);
-  \draw[flow] (open) -- (browse);
-  \draw[flow] (browse) -- (adjust);
-  \draw[flow] (adjust) -- (batch);
-  \draw[flow] (adjust) -- (export);
+\begin{tikzpicture}[x=1mm,y=1mm]
+  \node[actor] (user) at (0,-36) {Photographe};
+  \node[component,text width=52mm] (open) at (75,0) {Ouvrir une image et son dossier};
+  \node[component,text width=52mm] (browse) at (75,-18) {Parcourir et choisir une vignette};
+  \node[component,text width=52mm] (adjust) at (75,-36) {Choisir le DCP et régler l'image};
+  \node[component,text width=52mm] (meta) at (75,-54) {Noter, libeller et marquer};
+  \node[component,text width=52mm] (batch) at (75,-72) {Sélectionner et appliquer en lot};
+  \node[component,text width=52mm] (export) at (75,-90) {Exporter l'image active};
+  \draw[thick,iprgray] (user.east) -- (30,-36);
+  \draw[thick,iprgray] (30,0) -- (30,-90);
+  \foreach \target in {open,browse,adjust,meta,batch,export}
+    \draw[flow] (30,0 |- \target.west) -- (\target.west);
 \end{tikzpicture}
 \caption{Actions existantes. L'application de réglages en lot n'est pas un export par lot.}
 \end{figure}

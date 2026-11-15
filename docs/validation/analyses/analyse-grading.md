@@ -9,7 +9,8 @@ le rendu réel, la part de l'effet de Lightroom laissée inexpliquée vaut, en m
 0,075 dans les ombres, 0,071 dans les tons moyens et 0,129 dans les hautes lumières.
 L'ancienne implémentation, jamais calée sur Lightroom, était à 14,7, 0,76 et 0,99.
 Fusion, balance, luminance des zones et roue Global suivent aussi Lightroom (médiane 0,076 et
-0,017). Validation visuelle de l'utilisateur à venir ([conclusion](#conclusion-actuelle)).
+0,017). **Validé par l'utilisateur le 26 octobre 2026**, fusionné dans `dev` (1cf17df)
+([conclusion](#conclusion-actuelle)).
 
 Protocole : [protocole Grading](../protocols/protocole-grading.md), section 2. Branche :
 `patch_color`.
@@ -193,7 +194,10 @@ la clarté après décalage fait un peu mieux (0,009 à 0,065, meilleure sur cin
 
 ## Conclusion actuelle et prochaines actions — 25 octobre 2026
 
-- Grading recalé sur Lightroom ; validation visuelle de l'utilisateur à faire.
+- Grading recalé sur Lightroom ; validé par l'utilisateur le 26 octobre 2026. Essai
+  d'un ajout de la couleur en CIELAB écarté le 25 octobre : meilleur dans les tons clairs
+  (part inexpliquée 0,035 contre 0,048), trois fois pire dans les ombres (0,153 contre
+  0,049) ; un espace par zone n'a pas été jugé utile après revue visuelle.
 - Fusion et balance intégrées (§5 à §7) ; luminance et roue Global intégrées (§8 à §10).
 - Pistes : écart des neutres dans les hautes lumières, dépendance à la saturation du pixel
   sur les scènes saturées, tempérament de deux zones opposées qui se chevauchent.

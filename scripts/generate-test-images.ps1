@@ -31,7 +31,6 @@ try {
         $runtimeDirectories += Join-Path $qtRoot 'bin'
         $env:QT_PLUGIN_PATH = Join-Path $qtRoot 'plugins'
     }
-    if ($cache['OpenCV_DIR']) { $runtimeDirectories += Join-Path (Split-Path $cache['OpenCV_DIR']) 'bin' }
     foreach ($key in @('TIFF_LIBRARY_RELEASE', 'LIBRAW_LIBRARY')) {
         if ($cache[$key]) {
             $libraryDirectory = Split-Path $cache[$key]

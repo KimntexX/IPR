@@ -1,0 +1,5706 @@
+{
+ "campaign_id": "etude-validation-bruit-v002-20261031T190543Z",
+ "runner": "tests/study_validation_noise.py",
+ "commit": "7bba034c3a5268f238d54e1e3e0ecb303d5ba41d",
+ "local_changes": [
+  "M src/core/DetailProcessing.cpp",
+  " M tests/study_validation_noise.py"
+ ],
+ "render_server": {
+  "path": "build-windows-msvc\\Release\\iprRenderServer.exe",
+  "sha256": "6bcacf85e97905347f797f3c90152748e5b1fb0c09154d0f4b6a07b6095f9a08"
+ },
+ "method": {
+  "tile": 64,
+  "flat_fraction": 0.15,
+  "textured_fraction": 0.2,
+  "max_tiles": 400,
+  "space": "linear sRGB from 16-bit sRGB encoding, full definition",
+  "noise": "Haar HH and mid band (G1 - G4) MAD sigma; chroma = hypot(Co, Cg)/sqrt 2",
+  "detail": "RMS of Y - G1 (fine) and G1 - G4 (mid) on the most structured tiles",
+  "chroma_edges": "RMS gradient of the G1-smoothed chroma on the most structured tiles",
+  "factor": "median per-tile ratio state / own neutral, tiles chosen on each engine's neutral",
+  "paths": {
+   "current": "denoise after the tones",
+   "camera": "camera-signal denoise before the profiles"
+  },
+  "unmatched": "Lightroom's luminance detail/contrast and colour detail/smoothness stay at their defaults; IPR has no sharpening detail control (Lightroom 25)"
+ },
+ "duration_seconds": 1563.0,
+ "python": "3.14.3",
+ "skipped": [],
+ "summary": {
+  "L0 C100 S0": {
+   "exports": 28,
+   "lr": {
+    "luma": 0.9966343732939962,
+    "chroma": 0.35442894669595154,
+    "luma_mid": 0.9733697999405952,
+    "chroma_mid": 0.16269734049005438,
+    "fine": 0.987904634436813,
+    "mid": 0.9960000523531752,
+    "chroma_edges": 0.6660803973983733
+   },
+   "current": {
+    "luma": {
+     "median_factor": 0.9999653909325226,
+     "median_log2_gap": 0.004836366489777115,
+     "p90_abs_log2_gap": 0.08411422775369247
+    },
+    "chroma": {
+     "median_factor": 0.10319648371958068,
+     "median_log2_gap": -1.7626450271118261,
+     "p90_abs_log2_gap": 3.9573241916270376
+    },
+    "luma_mid": {
+     "median_factor": 0.9999930872412169,
+     "median_log2_gap": 0.03891869257276187,
+     "p90_abs_log2_gap": 0.08946836061145956
+    },
+    "chroma_mid": {
+     "median_factor": 0.1365438680748874,
+     "median_log2_gap": 0.06537641882474804,
+     "p90_abs_log2_gap": 1.6373931731101405
+    },
+    "fine": {
+     "median_factor": 1.0000006247168347,
+     "median_log2_gap": 0.017294930793030197,
+     "p90_abs_log2_gap": 0.04231754950970954
+    },
+    "mid": {
+     "median_factor": 0.999998415680378,
+     "median_log2_gap": 0.005782329650426015,
+     "p90_abs_log2_gap": 0.0655141307876297
+    },
+    "chroma_edges": {
+     "median_factor": 0.5635281395943901,
+     "median_log2_gap": -0.04328375966031715,
+     "p90_abs_log2_gap": 0.9086730675326787
+    }
+   }
+  },
+  "L0 C25 S0": {
+   "exports": 28,
+   "lr": {
+    "luma": 0.9969808759252067,
+    "chroma": 0.37000517701372715,
+    "luma_mid": 0.9796874746847863,
+    "chroma_mid": 0.25111451134778506,
+    "fine": 0.9878698122862617,
+    "mid": 0.9964151070704244,
+    "chroma_edges": 0.8270977787791944
+   },
+   "current": {
+    "luma": {
+     "median_factor": 0.9999891458740187,
+     "median_log2_gap": 0.004502728685340737,
+     "p90_abs_log2_gap": 0.08358221477139312
+    },
+    "chroma": {
+     "median_factor": 0.3541170423485347,
+     "median_log2_gap": -0.04805861668572693,
+     "p90_abs_log2_gap": 1.6334079662633032
+    },
+    "luma_mid": {
+     "median_factor": 0.9999998069946472,
+     "median_log2_gap": 0.02956728329627236,
+     "p90_abs_log2_gap": 0.0918675228068588
+    },
+    "chroma_mid": {
+     "median_factor": 0.4542654884323931,
+     "median_log2_gap": 0.8378205321562572,
+     "p90_abs_log2_gap": 2.0543890115082517
+    },
+    "fine": {
+     "median_factor": 1.0000007057585762,
+     "median_log2_gap": 0.017607777447352882,
+     "p90_abs_log2_gap": 0.040044694747264534
+    },
+    "mid": {
+     "median_factor": 0.99999951117534,
+     "median_log2_gap": 0.005181348736907494,
+     "p90_abs_log2_gap": 0.03805315193558031
+    },
+    "chroma_edges": {
+     "median_factor": 0.7370471556499292,
+     "median_log2_gap": -0.02001034714326629,
+     "p90_abs_log2_gap": 0.7663502729310653
+    }
+   }
+  },
+  "L0 C25 S40": {
+   "exports": 28,
+   "lr": {
+    "luma": 2.297297565088093,
+    "chroma": 0.6081902441780658,
+    "luma_mid": 1.3628918853438619,
+    "chroma_mid": 0.27630277293993666,
+    "fine": 1.67325287070513,
+    "mid": 1.1254302815504267,
+    "chroma_edges": 0.8655826739725554
+   },
+   "current": {
+    "luma": {
+     "median_factor": 1.342884021652762,
+     "median_log2_gap": -0.7733414478629169,
+     "p90_abs_log2_gap": 0.8276857728659384
+    },
+    "chroma": {
+     "median_factor": 0.3472783996717844,
+     "median_log2_gap": -0.861129791960587,
+     "p90_abs_log2_gap": 1.378118104745824
+    },
+    "luma_mid": {
+     "median_factor": 1.1255420944950245,
+     "median_log2_gap": -0.2722154244307687,
+     "p90_abs_log2_gap": 0.33883106616955955
+    },
+    "chroma_mid": {
+     "median_factor": 0.4561761205455438,
+     "median_log2_gap": 0.7520481564850006,
+     "p90_abs_log2_gap": 1.7409605531603467
+    },
+    "fine": {
+     "median_factor": 1.2455204696221154,
+     "median_log2_gap": -0.42658675167209403,
+     "p90_abs_log2_gap": 0.6475203373844901
+    },
+    "mid": {
+     "median_factor": 1.0517171260032394,
+     "median_log2_gap": -0.0947506174212418,
+     "p90_abs_log2_gap": 0.1614714667600304
+    },
+    "chroma_edges": {
+     "median_factor": 0.7483350812100162,
+     "median_log2_gap": -0.09755768491611028,
+     "p90_abs_log2_gap": 0.766015574906427
+    }
+   }
+  },
+  "L0 C50 S0": {
+   "exports": 28,
+   "lr": {
+    "luma": 0.9968949533353406,
+    "chroma": 0.368731039159733,
+    "luma_mid": 0.9756481864794766,
+    "chroma_mid": 0.17648448165972402,
+    "fine": 0.9879363833394177,
+    "mid": 0.9967536075137491,
+    "chroma_edges": 0.7737584278655791
+   },
+   "current": {
+    "luma": {
+     "median_factor": 1.0000099060430836,
+     "median_log2_gap": 0.004656246447686483,
+     "p90_abs_log2_gap": 0.08338996137570381
+    },
+    "chroma": {
+     "median_factor": 0.13733151595574483,
+     "median_log2_gap": -1.0911162236210687,
+     "p90_abs_log2_gap": 2.6956101886158907
+    },
+    "luma_mid": {
+     "median_factor": 0.9999914680736354,
+     "median_log2_gap": 0.03555744427090066,
+     "p90_abs_log2_gap": 0.09008012990885139
+    },
+    "chroma_mid": {
+     "median_factor": 0.22510249814123617,
+     "median_log2_gap": 0.415672992944493,
+     "p90_abs_log2_gap": 1.7273427580570209
+    },
+    "fine": {
+     "median_factor": 0.9999998243183923,
+     "median_log2_gap": 0.017511456154897576,
+     "p90_abs_log2_gap": 0.04148391112409751
+    },
+    "mid": {
+     "median_factor": 0.9999990351482598,
+     "median_log2_gap": 0.004690190916698079,
+     "p90_abs_log2_gap": 0.04792652525979614
+    },
+    "chroma_edges": {
+     "median_factor": 0.6455560857479036,
+     "median_log2_gap": -0.05198204022524665,
+     "p90_abs_log2_gap": 0.8338875275690643
+    }
+   }
+  },
+  "L100 C100 S0": {
+   "exports": 28,
+   "lr": {
+    "luma": 0.01061883016758391,
+    "chroma": 0.05701354341999418,
+    "luma_mid": 0.05000438177206759,
+    "chroma_mid": 0.05467651009177051,
+    "fine": 0.6603267181343175,
+    "mid": 0.9063960113995042,
+    "chroma_edges": 0.6504500207729034
+   },
+   "current": {
+    "luma": {
+     "median_factor": 0.4472878877447706,
+     "median_log2_gap": 4.221319608104328,
+     "p90_abs_log2_gap": 6.455918241022202
+    },
+    "chroma": {
+     "median_factor": 0.10318781481410413,
+     "median_log2_gap": 0.6819005278887202,
+     "p90_abs_log2_gap": 2.353557265360221
+    },
+    "luma_mid": {
+     "median_factor": 0.6219227512020943,
+     "median_log2_gap": 3.23703552107254,
+     "p90_abs_log2_gap": 5.7404788749319025
+    },
+    "chroma_mid": {
+     "median_factor": 0.13647976124333583,
+     "median_log2_gap": 1.0668433248877323,
+     "p90_abs_log2_gap": 2.188429618260249
+    },
+    "fine": {
+     "median_factor": 0.8731801507926178,
+     "median_log2_gap": 0.40695405546807334,
+     "p90_abs_log2_gap": 2.702107312988927
+    },
+    "mid": {
+     "median_factor": 0.9513967851312924,
+     "median_log2_gap": 0.08435669867249118,
+     "p90_abs_log2_gap": 0.678971067069899
+    },
+    "chroma_edges": {
+     "median_factor": 0.5636233219948175,
+     "median_log2_gap": -0.003747404381911538,
+     "p90_abs_log2_gap": 1.1280073958485348
+    }
+   }
+  },
+  "L50 C25 S0": {
+   "exports": 28,
+   "lr": {
+    "luma": 0.33954172983214387,
+    "chroma": 0.17872501350705672,
+    "luma_mid": 0.4177730915729203,
+    "chroma_mid": 0.18260319308701906,
+    "fine": 0.7306591919517038,
+    "mid": 0.9367701039931728,
+    "chroma_edges": 0.8146467982905188
+   },
+   "current": {
+    "luma": {
+     "median_factor": 0.8453491121354989,
+     "median_log2_gap": 1.2122822825747461,
+     "p90_abs_log2_gap": 1.4490667219105522
+    },
+    "chroma": {
+     "median_factor": 0.3541574403441319,
+     "median_log2_gap": 1.059956093539306,
+     "p90_abs_log2_gap": 2.338627030462291
+    },
+    "luma_mid": {
+     "median_factor": 0.8761522572542859,
+     "median_log2_gap": 0.902644051966993,
+     "p90_abs_log2_gap": 1.1635002790168882
+    },
+    "chroma_mid": {
+     "median_factor": 0.45422453352577435,
+     "median_log2_gap": 1.2729921529155883,
+     "p90_abs_log2_gap": 2.1459819990708966
+    },
+    "fine": {
+     "median_factor": 0.9559184243849487,
+     "median_log2_gap": 0.39063787361232005,
+     "p90_abs_log2_gap": 1.2314243977925836
+    },
+    "mid": {
+     "median_factor": 0.9854963617529763,
+     "median_log2_gap": 0.0791373791765808,
+     "p90_abs_log2_gap": 0.5535591726940726
+    },
+    "chroma_edges": {
+     "median_factor": 0.737043479416264,
+     "median_log2_gap": 0.022278501546043952,
+     "p90_abs_log2_gap": 0.9359869797622399
+    }
+   }
+  }
+ },
+ "rows": [
+  {
+   "scene": "6V1A0007",
+   "lr_file": "6V1A0007.tif",
+   "lr_sha256": "476bb7eec8cb3b01b4861720a3fcb6a441fc420bc0909c9736f875c5f4771dc3",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.9967481845623731,
+    "chroma": 0.13981519758213895,
+    "luma_mid": 0.9858286723543267,
+    "chroma_mid": 0.17748132459695032,
+    "fine": 0.9964161659458699,
+    "mid": 1.0000006688044503,
+    "chroma_edges": 0.8460506707354316
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9999933415324711,
+     "chroma": 0.3390921062919914,
+     "luma_mid": 1.0000401912251027,
+     "chroma_mid": 0.4242035967276009,
+     "fine": 0.9999990142655075,
+     "mid": 0.9999987912533284,
+     "chroma_edges": 0.710162912598538
+    }
+   }
+  },
+  {
+   "scene": "6V1A0007",
+   "lr_file": "6V1A0007-4.tif",
+   "lr_sha256": "def3fbfa219602663cc620eedbefa403c1f1ed4792ea0857ec8aa2c0acde9455",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 40,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 2.3303039944867687,
+    "chroma": 0.4750995687793603,
+    "luma_mid": 1.4413172468293638,
+    "chroma_mid": 0.1799847628729718,
+    "fine": 1.7593973196103818,
+    "mid": 1.1521049794484948,
+    "chroma_edges": 0.9119735232727207
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.325305833027823,
+     "chroma": 0.2861952780700414,
+     "luma_mid": 1.1261421433576633,
+     "chroma_mid": 0.4221883211894867,
+     "fine": 1.221922751417967,
+     "mid": 1.0494860880403127,
+     "chroma_edges": 0.7273317961570369
+    }
+   }
+  },
+  {
+   "scene": "6V1A0007",
+   "lr_file": "6V1A0007-2.tif",
+   "lr_sha256": "283fe6e784d30bed96dfc25d183fc3cc7aa46a605fc7f1bd25d750b619ba9040",
+   "luminance": 0,
+   "colour": 50,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.9964633951043254,
+    "chroma": 0.13196025681755807,
+    "luma_mid": 0.9882027376807256,
+    "chroma_mid": 0.07798219528106967,
+    "fine": 0.9958874051711553,
+    "mid": 0.9998180048868708,
+    "chroma_edges": 0.8145011256260707
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.0001495404043903,
+     "chroma": 0.10094342396937775,
+     "luma_mid": 1.0000129048754496,
+     "chroma_mid": 0.18107160814880474,
+     "fine": 0.9999972395021939,
+     "mid": 0.9999981811602363,
+     "chroma_edges": 0.590999325032753
+    }
+   }
+  },
+  {
+   "scene": "6V1A0007",
+   "lr_file": "6V1A0007-3.tif",
+   "lr_sha256": "aef498ed9e6e89b155481d5bd8930d5abcdfa36e163312be690eda7c8d882331",
+   "luminance": 0,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.9965549897193063,
+    "chroma": 0.13232116175261777,
+    "luma_mid": 0.9867711739522227,
+    "chroma_mid": 0.06296357191518404,
+    "fine": 0.9957612228256714,
+    "mid": 0.9998103916110743,
+    "chroma_edges": 0.7303766564799341
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9999672707934691,
+     "chroma": 0.05814325547841293,
+     "luma_mid": 0.9999490438869802,
+     "chroma_mid": 0.0719091193213713,
+     "fine": 0.9999964649525515,
+     "mid": 0.9999969878526616,
+     "chroma_edges": 0.5175040152062916
+    }
+   }
+  },
+  {
+   "scene": "6V1A0007",
+   "lr_file": "6V1A0007-7.tif",
+   "lr_sha256": "1ebb6d30dc1671fb8ff579c9b4c8555afd1bbe6ceea61eee97d6ddc867df8c48",
+   "luminance": 50,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.33626659572819073,
+    "chroma": 0.09788581829282217,
+    "luma_mid": 0.41699772658711864,
+    "chroma_mid": 0.17084465332243198,
+    "fine": 0.8675868365651784,
+    "mid": 0.9606729995099687,
+    "chroma_edges": 0.8397463741113866
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.5989426949896991,
+     "chroma": 0.3388663977229168,
+     "luma_mid": 0.7117376432991991,
+     "chroma_mid": 0.4242728951643723,
+     "fine": 0.9622322417810077,
+     "mid": 0.9858898864566572,
+     "chroma_edges": 0.7101666986614279
+    }
+   }
+  },
+  {
+   "scene": "6V1A0007",
+   "lr_file": "6V1A0007-10.tif",
+   "lr_sha256": "edeffb08da6f8d8c956b693bcab027e6f46248cd92e755ae650b4f54cf1679f5",
+   "luminance": 100,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.009548347996784076,
+    "chroma": 0.07747026124953696,
+    "luma_mid": 0.03757975554591429,
+    "chroma_mid": 0.05357199311114652,
+    "fine": 0.8277601668666299,
+    "mid": 0.9394412930015652,
+    "chroma_edges": 0.7177218965420022
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.0321791145889182,
+     "chroma": 0.05795932935299963,
+     "luma_mid": 0.3851908655905839,
+     "chroma_mid": 0.07198022556383339,
+     "fine": 0.891057849038267,
+     "mid": 0.949626696976505,
+     "chroma_edges": 0.5175042431656467
+    }
+   }
+  },
+  {
+   "scene": "6V1A0032",
+   "lr_file": "6V1A0032.tif",
+   "lr_sha256": "a5485c81b0c727e81db6f672f32016e19b421ffedca82541e5aa407d52b127a2",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 1.0190525392484369,
+    "chroma": 0.42696660796456354,
+    "luma_mid": 0.9916882900853445,
+    "chroma_mid": 0.22522717297479897,
+    "fine": 0.9997369345660889,
+    "mid": 1.0003674861242928,
+    "chroma_edges": 0.9193180411680911
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.999920327911645,
+     "chroma": 0.3199904055692531,
+     "luma_mid": 1.000025038243848,
+     "chroma_mid": 0.40888369167797234,
+     "fine": 1.0000007265405535,
+     "mid": 0.9999581831323909,
+     "chroma_edges": 0.9039149225659319
+    }
+   }
+  },
+  {
+   "scene": "6V1A0032",
+   "lr_file": "6V1A0032-4.tif",
+   "lr_sha256": "399a0d88af914ae6722f9dbe72922981c8ee4342d54113367ca6120dada22c08",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 40,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 2.3942174185959217,
+    "chroma": 0.8506019386753372,
+    "luma_mid": 1.4389447750217996,
+    "chroma_mid": 0.24117755297971818,
+    "fine": 1.6827666078583898,
+    "mid": 1.2307643699373556,
+    "chroma_edges": 1.0979962441376099
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.349635956213116,
+     "chroma": 0.23405965243580484,
+     "luma_mid": 1.138339076440407,
+     "chroma_mid": 0.4018655870079685,
+     "fine": 1.2465622071638474,
+     "mid": 1.0703863855512603,
+     "chroma_edges": 0.9380288139329804
+    }
+   }
+  },
+  {
+   "scene": "6V1A0032",
+   "lr_file": "6V1A0032-2.tif",
+   "lr_sha256": "327b4c264d78cf66ce8332dd5ee1395abd03192f5169a7b0d7c42d43e4838d57",
+   "luminance": 0,
+   "colour": 50,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 1.018226397334555,
+    "chroma": 0.42536484558867615,
+    "luma_mid": 0.9922633549797515,
+    "chroma_mid": 0.16459762245595502,
+    "fine": 0.9998090793036338,
+    "mid": 1.0003546189055696,
+    "chroma_edges": 0.918395931211337
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.999976780785619,
+     "chroma": 0.06629400662443481,
+     "luma_mid": 0.9999729440315486,
+     "chroma_mid": 0.16282792250593825,
+     "fine": 0.9999962512641543,
+     "mid": 0.9999350682639292,
+     "chroma_edges": 0.8585989120179549
+    }
+   }
+  },
+  {
+   "scene": "6V1A0032",
+   "lr_file": "6V1A0032-3.tif",
+   "lr_sha256": "75ec5cae29faee5a7ef89b7b5ef8f45bff3b3a2a42027646fc08fbcaeed595d7",
+   "luminance": 0,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 1.0183493009756173,
+    "chroma": 0.42567475246362885,
+    "luma_mid": 0.9918534600160036,
+    "chroma_mid": 0.15700823609864795,
+    "fine": 0.9998347389686961,
+    "mid": 1.000116430301048,
+    "chroma_edges": 0.911472382182412
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9999582032313292,
+     "chroma": 0.006940030654767214,
+     "luma_mid": 0.9999898590424446,
+     "chroma_mid": 0.05111283742780654,
+     "fine": 0.9999865118541931,
+     "mid": 0.9998971694747592,
+     "chroma_edges": 0.8299193609669945
+    }
+   }
+  },
+  {
+   "scene": "6V1A0032",
+   "lr_file": "6V1A0032-7.tif",
+   "lr_sha256": "43f4c711bab6f6cb7f799b489c8475dec511dd5469f8bc9908e6f3cf425d4759",
+   "luminance": 50,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.3460825960237164,
+    "chroma": 0.17256434270049148,
+    "luma_mid": 0.41901407095655996,
+    "chroma_mid": 0.1817449947776152,
+    "fine": 0.930078232907652,
+    "mid": 0.9684572300499048,
+    "chroma_edges": 0.9176306598885904
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9800142103690803,
+     "chroma": 0.3197958611629844,
+     "luma_mid": 0.9817553958588302,
+     "chroma_mid": 0.4091353062931266,
+     "fine": 0.9992414961979166,
+     "mid": 0.9994209638223741,
+     "chroma_edges": 0.9039476844575478
+    }
+   }
+  },
+  {
+   "scene": "6V1A0032",
+   "lr_file": "6V1A0032-10.tif",
+   "lr_sha256": "41cdd5a2668d20ac100339b65729f2c35675430495a26b3d4fd37422dfec0e1a",
+   "luminance": 100,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.010933928605105486,
+    "chroma": 0.0756462749042408,
+    "luma_mid": 0.03152340412176564,
+    "chroma_mid": 0.05443664172205654,
+    "fine": 0.8955862133041352,
+    "mid": 0.9516697710335371,
+    "chroma_edges": 0.9123480704860056
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9252102076022,
+     "chroma": 0.006959745050440805,
+     "luma_mid": 0.93090413297821,
+     "chroma_mid": 0.05095311023420394,
+     "fine": 0.9970684603025242,
+     "mid": 0.9978854247745768,
+     "chroma_edges": 0.8301633408270053
+    }
+   }
+  },
+  {
+   "scene": "6V1A0043",
+   "lr_file": "6V1A0043.tif",
+   "lr_sha256": "7b2eb9098ed1fdc968e83f236f271c0268d6190458147a5e890ed9707f7354e9",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.9090517145101946,
+    "chroma": 0.5791461209749035,
+    "luma_mid": 0.8948205840960752,
+    "chroma_mid": 0.4068799627327886,
+    "fine": 0.992533225332578,
+    "mid": 0.9993406708550043,
+    "chroma_edges": 0.9479286246733435
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9977648654158057,
+     "chroma": 0.4941085335066129,
+     "luma_mid": 0.999173317070611,
+     "chroma_mid": 0.5972370933756554,
+     "fine": 1.0000006470254768,
+     "mid": 0.9999994064855057,
+     "chroma_edges": 0.9530040480788902
+    }
+   }
+  },
+  {
+   "scene": "6V1A0043",
+   "lr_file": "6V1A0043-4.tif",
+   "lr_sha256": "54813c35b2076924697d86c84a5fb4966afd12dd2fd8c1127a54bf723a1bfb93",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 40,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 1.9044192026329676,
+    "chroma": 1.0338734977799025,
+    "luma_mid": 1.1462626650314012,
+    "chroma_mid": 0.4979421382584718,
+    "fine": 1.6656824133066643,
+    "mid": 1.044264358033395,
+    "chroma_edges": 0.9659078700723966
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.3322276012369885,
+     "chroma": 0.8300502000658962,
+     "luma_mid": 1.1155820656636706,
+     "chroma_mid": 0.6448245099868406,
+     "fine": 1.2691583833120361,
+     "mid": 1.0220916538362843,
+     "chroma_edges": 0.9574284037538787
+    }
+   }
+  },
+  {
+   "scene": "6V1A0043",
+   "lr_file": "6V1A0043-2.tif",
+   "lr_sha256": "7177b1cd2be82245b2ad7f15eaeb24506d92e1400bc890547c896a17f1fbdd57",
+   "luminance": 0,
+   "colour": 50,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.9096434351089961,
+    "chroma": 0.5798729373770142,
+    "luma_mid": 0.8902241480116653,
+    "chroma_mid": 0.3860505629744461,
+    "fine": 0.992242023554806,
+    "mid": 0.999400405042933,
+    "chroma_edges": 0.9440542119030477
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9978394851711596,
+     "chroma": 0.3396646739936692,
+     "luma_mid": 0.9990572365932617,
+     "chroma_mid": 0.4696539249696022,
+     "fine": 1.0000000560436666,
+     "mid": 0.9999993860044454,
+     "chroma_edges": 0.9274712744931091
+    }
+   }
+  },
+  {
+   "scene": "6V1A0043",
+   "lr_file": "6V1A0043-3.tif",
+   "lr_sha256": "d4a3dae57faa9ff0006711025edaed8db7512eaa1dfd32f876d2b30d506179b8",
+   "luminance": 0,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.9087534238719064,
+    "chroma": 0.5786577851035251,
+    "luma_mid": 0.8861194381687328,
+    "chroma_mid": 0.38112340220097907,
+    "fine": 0.9924743754107482,
+    "mid": 0.9996502228684641,
+    "chroma_edges": 0.9288744281104986
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9974673793204507,
+     "chroma": 0.31216934943527896,
+     "luma_mid": 0.9990898706741711,
+     "chroma_mid": 0.4391050502982708,
+     "fine": 1.0000008254651336,
+     "mid": 1.0000012367379065,
+     "chroma_edges": 0.8920759787127073
+    }
+   }
+  },
+  {
+   "scene": "6V1A0043",
+   "lr_file": "6V1A0043-7.tif",
+   "lr_sha256": "a75d53af885fa389c71467408e029847dfbc15c0e4df8bd91011869907111e85",
+   "luminance": 50,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.30824558127193946,
+    "chroma": 0.2122663340075407,
+    "luma_mid": 0.38928392124200095,
+    "chroma_mid": 0.20689863774970052,
+    "fine": 0.70478637564077,
+    "mid": 0.9733942217876359,
+    "chroma_edges": 0.9381355504104262
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.975119641947844,
+     "chroma": 0.4938658429911752,
+     "luma_mid": 0.9815320886609806,
+     "chroma_mid": 0.5976603473039329,
+     "fine": 0.9974684143542034,
+     "mid": 0.9997571370450657,
+     "chroma_edges": 0.9530080822337519
+    }
+   }
+  },
+  {
+   "scene": "6V1A0043",
+   "lr_file": "6V1A0043-10.tif",
+   "lr_sha256": "2a987927f3ca4fa28ab36aaebda01034f2c9ae728b7e4bee5ff80c729b597b3b",
+   "luminance": 100,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.020611389078106026,
+    "chroma": 0.05605573287651558,
+    "luma_mid": 0.05342952918691886,
+    "chroma_mid": 0.05533064446420523,
+    "fine": 0.6371370747985922,
+    "mid": 0.9608467376468175,
+    "chroma_edges": 0.9182893186786945
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9552631520797228,
+     "chroma": 0.3120950884259542,
+     "luma_mid": 0.9692820647718734,
+     "chroma_mid": 0.4377343657552635,
+     "fine": 0.990848617058725,
+     "mid": 0.9990465337763114,
+     "chroma_edges": 0.8920788378946725
+    }
+   }
+  },
+  {
+   "scene": "6V1A0064",
+   "lr_file": "6V1A0064.tif",
+   "lr_sha256": "cf2447b6b2a9ac4c392b0f4838d2b5207a541c4085053b18243a2210d0827e38",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.9875301827238359,
+    "chroma": 0.15409047065944964,
+    "luma_mid": 0.9357253268917768,
+    "chroma_mid": 0.26802300836371606,
+    "fine": 0.9424481553643761,
+    "mid": 0.9301295961276647,
+    "chroma_edges": 0.399331740809947
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9999373415170797,
+     "chroma": 0.3309097308400733,
+     "luma_mid": 1.000045772655855,
+     "chroma_mid": 0.461899957866295,
+     "fine": 0.9999959182975852,
+     "mid": 0.9999948809327739,
+     "chroma_edges": 0.6743376960853158
+    }
+   }
+  },
+  {
+   "scene": "6V1A0064",
+   "lr_file": "6V1A0064-4.tif",
+   "lr_sha256": "38053a2091f11f5518e4c25b1455997cf4ce78dd6fbdce0db2e65c973c8c1c64",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 40,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 2.3112539525883045,
+    "chroma": 0.14629352406441445,
+    "luma_mid": 1.3020548804573742,
+    "chroma_mid": 0.29163118885290806,
+    "fine": 1.630474546933036,
+    "mid": 1.0878702129785554,
+    "chroma_edges": 0.4534655563654104
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.3502536853086355,
+     "chroma": 0.32301746813057985,
+     "luma_mid": 1.1206430549530584,
+     "chroma_mid": 0.4612319106251732,
+     "fine": 1.295245023945327,
+     "mid": 1.0687133816625258,
+     "chroma_edges": 0.7063333873523263
+    }
+   }
+  },
+  {
+   "scene": "6V1A0064",
+   "lr_file": "6V1A0064-2.tif",
+   "lr_sha256": "25f4da3a548a6f97a14a4b5ef97bde298245b5c66c82dd561aedd0439326244a",
+   "luminance": 0,
+   "colour": 50,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.9865894258923373,
+    "chroma": 0.13429472713474608,
+    "luma_mid": 0.9327798484208891,
+    "chroma_mid": 0.1471431480838168,
+    "fine": 0.9414431630434221,
+    "mid": 0.927186848155864,
+    "chroma_edges": 0.37430770981048556
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9999194515815206,
+     "chroma": 0.08709682889941689,
+     "luma_mid": 1.0000295107757036,
+     "chroma_mid": 0.23092521054058002,
+     "fine": 0.9999985855861415,
+     "mid": 0.9999947683852786,
+     "chroma_edges": 0.5726678208043476
+    }
+   }
+  },
+  {
+   "scene": "6V1A0064",
+   "lr_file": "6V1A0064-3.tif",
+   "lr_sha256": "36cec41fa955d1b84a4068d2e5502407abce59e20d930fca48a99b11044fe382",
+   "luminance": 0,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.9849964270795809,
+    "chroma": 0.13117849264825265,
+    "luma_mid": 0.9341957920001669,
+    "chroma_mid": 0.09578314981334453,
+    "fine": 0.9414652750492749,
+    "mid": 0.9233363393802861,
+    "chroma_edges": 0.36852040486619525
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.0000049470591765,
+     "chroma": 0.04010611908881723,
+     "luma_mid": 0.9999926400062549,
+     "chroma_mid": 0.10937681412023025,
+     "fine": 0.9999980542676081,
+     "mid": 0.9999928409337493,
+     "chroma_edges": 0.5095529369453047
+    }
+   }
+  },
+  {
+   "scene": "6V1A0064",
+   "lr_file": "6V1A0064-7.tif",
+   "lr_sha256": "8708980e548915189b94b8422876815cd0bafb1bc8bddae17f779921b93fd789",
+   "luminance": 50,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.3355487953493092,
+    "chroma": 0.11496218330308387,
+    "luma_mid": 0.4708067730311982,
+    "chroma_mid": 0.2484610517826362,
+    "fine": 0.329310788432911,
+    "mid": 0.41024307000954463,
+    "chroma_edges": 0.29850054398444514
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.8674980946470021,
+     "chroma": 0.3308383644712472,
+     "luma_mid": 0.9086325877676964,
+     "chroma_mid": 0.46138864536374324,
+     "fine": 0.6363630067623182,
+     "mid": 0.7397345315609143,
+     "chroma_edges": 0.6743496451661174
+    }
+   }
+  },
+  {
+   "scene": "6V1A0064",
+   "lr_file": "6V1A0064-10.tif",
+   "lr_sha256": "ef079f6d754250f3f099b7f98185616b5bde759950cc591105ee873ddca1ebb4",
+   "luminance": 100,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.02018700363966961,
+    "chroma": 0.07229663824534022,
+    "luma_mid": 0.19425777250795317,
+    "chroma_mid": 0.06284998614879247,
+    "fine": 0.033841830757747715,
+    "mid": 0.10800343196562098,
+    "chroma_edges": 0.23508939713548005
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.5566009772201529,
+     "chroma": 0.04033374510427373,
+     "luma_mid": 0.7157490036195049,
+     "chroma_mid": 0.10933169589387977,
+     "fine": 0.1117009452091518,
+     "mid": 0.39594925519581686,
+     "chroma_edges": 0.5095491543053744
+    }
+   }
+  },
+  {
+   "scene": "6V1A0327",
+   "lr_file": "6V1A0327.tif",
+   "lr_sha256": "122ee9521fa0f14a3fdccefc794796142eb4aa2e0c77bdbd92197b91cac658b3",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.9335343560954594,
+    "chroma": 0.48001407557069053,
+    "luma_mid": 0.9693399654225299,
+    "chroma_mid": 0.4306263544374286,
+    "fine": 0.9819111223503971,
+    "mid": 0.996727058518825,
+    "chroma_edges": 0.9078829829640037
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9996857405407699,
+     "chroma": 0.3819536454015925,
+     "luma_mid": 0.9998573043393999,
+     "chroma_mid": 0.49405870288191417,
+     "fine": 1.0000008948824157,
+     "mid": 1.0000001391119953,
+     "chroma_edges": 0.9079452207917985
+    }
+   }
+  },
+  {
+   "scene": "6V1A0327",
+   "lr_file": "6V1A0327-4.tif",
+   "lr_sha256": "be8c67b2537bbbf32cf6cd9bd9b30d5580505bc800f44b78556588ae15c1c2be",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 40,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 2.2036144469353904,
+    "chroma": 1.6417330810701922,
+    "luma_mid": 1.2528727979700933,
+    "chroma_mid": 0.5600201226782491,
+    "fine": 1.6742772031358837,
+    "mid": 1.0630641839824588,
+    "chroma_edges": 0.9543127334172345
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.350858361000733,
+     "chroma": 0.8958583933764349,
+     "luma_mid": 1.0881892239311264,
+     "chroma_mid": 0.5177880742560506,
+     "fine": 1.2450919405302425,
+     "mid": 1.0265401350500325,
+     "chroma_edges": 0.9311466926858096
+    }
+   }
+  },
+  {
+   "scene": "6V1A0327",
+   "lr_file": "6V1A0327-2.tif",
+   "lr_sha256": "b0e9f3dd11a1104e99eb06e73096d2605a03e3bd273f533ca4deb4e724d64ce1",
+   "luminance": 0,
+   "colour": 50,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.9332878756412475,
+    "chroma": 0.48046157904647663,
+    "luma_mid": 0.9613664581330656,
+    "chroma_mid": 0.32557721529345474,
+    "fine": 0.9812681609715583,
+    "mid": 0.9966772607420686,
+    "chroma_edges": 0.8971084636810267
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9997803810556788,
+     "chroma": 0.15740835668227482,
+     "luma_mid": 0.9998779257360407,
+     "chroma_mid": 0.29183032755005456,
+     "fine": 1.00000001970191,
+     "mid": 0.9999996006479295,
+     "chroma_edges": 0.8768547611010633
+    }
+   }
+  },
+  {
+   "scene": "6V1A0327",
+   "lr_file": "6V1A0327-3.tif",
+   "lr_sha256": "4f4cb3522b487a1b604fbaf39c3d9fca2c49c1bb2265eb7b714027c353d9cbb7",
+   "luminance": 0,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.9331139002391186,
+    "chroma": 0.48020225968103086,
+    "luma_mid": 0.9566042404014983,
+    "chroma_mid": 0.29126617102282193,
+    "fine": 0.9806528840171288,
+    "mid": 0.9962954935268702,
+    "chroma_edges": 0.8751475082690987
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9997806588331776,
+     "chroma": 0.13641374967902709,
+     "luma_mid": 0.9998618960055479,
+     "chroma_mid": 0.20440183181752652,
+     "fine": 1.0000015989433344,
+     "mid": 0.9999999095236723,
+     "chroma_edges": 0.8581772600969475
+    }
+   }
+  },
+  {
+   "scene": "6V1A0327",
+   "lr_file": "6V1A0327-7.tif",
+   "lr_sha256": "3f4b4ecdfd065ec0b22683c5d72cef2abd4ea26d70290c44cc0a4f39212c7d4c",
+   "luminance": 50,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.33869542450096535,
+    "chroma": 0.21866912253853385,
+    "luma_mid": 0.6656612054317801,
+    "chroma_mid": 0.35462961653235103,
+    "fine": 0.7289995853671086,
+    "mid": 0.9598834694025205,
+    "chroma_edges": 0.8865859523749442
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9428528194867907,
+     "chroma": 0.3767757962671269,
+     "luma_mid": 0.9679001412688895,
+     "chroma_mid": 0.49428837369967926,
+     "fine": 0.9679346730202486,
+     "mid": 0.9960169122789421,
+     "chroma_edges": 0.9079473141877928
+    }
+   }
+  },
+  {
+   "scene": "6V1A0327",
+   "lr_file": "6V1A0327-10.tif",
+   "lr_sha256": "932e21d7fa5a160052cba425de1e533657d2cb93aababb5b06ae138c3d9c53b9",
+   "luminance": 100,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.05204594015912509,
+    "chroma": 0.0839317237584366,
+    "luma_mid": 0.46967429041266334,
+    "chroma_mid": 0.1505867518252273,
+    "fine": 0.6626919801888496,
+    "mid": 0.941471742750226,
+    "chroma_edges": 0.8436519551976668
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.7942403498328214,
+     "chroma": 0.12546814067310064,
+     "luma_mid": 0.8865873251286287,
+     "chroma_mid": 0.2022148504057854,
+     "fine": 0.8963825377977599,
+     "mid": 0.985109176733937,
+     "chroma_edges": 0.8581864050066274
+    }
+   }
+  },
+  {
+   "scene": "6V1A0524",
+   "lr_file": "6V1A0524.tif",
+   "lr_sha256": "b55248377d28ae3e6c6b74d03f6cd0ac5966ed1bdb7ada26a0d50ee156adf01d",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 1.0045519828116856,
+    "chroma": 0.7691636318247678,
+    "luma_mid": 0.9854428623763242,
+    "chroma_mid": 0.3388889900853142,
+    "fine": 0.9868649030817388,
+    "mid": 0.9943992798801224,
+    "chroma_edges": 0.7518728570011454
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9999927471036799,
+     "chroma": 0.46508875246588,
+     "luma_mid": 1.0000049037291816,
+     "chroma_mid": 0.5671646174128592,
+     "fine": 1.000001755048797,
+     "mid": 0.999999812234921,
+     "chroma_edges": 0.7618186825927743
+    }
+   }
+  },
+  {
+   "scene": "6V1A0524",
+   "lr_file": "6V1A0524-4.tif",
+   "lr_sha256": "348bd87d2935603ff1588b93423fb76c3fc69c1bf371c4d43ed5923e0e701390",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 40,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 2.1842079503596397,
+    "chroma": 0.59923640096385,
+    "luma_mid": 1.3239875478785774,
+    "chroma_mid": 0.3276291508327722,
+    "fine": 1.587180002538851,
+    "mid": 1.15690556145183,
+    "chroma_edges": 0.8548717682345301
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.344010035564975,
+     "chroma": 0.4343147640862163,
+     "luma_mid": 1.1105718812860066,
+     "chroma_mid": 0.5684809339616395,
+     "fine": 1.2459489987139885,
+     "mid": 1.066448311633708,
+     "chroma_edges": 0.7974235201593405
+    }
+   }
+  },
+  {
+   "scene": "6V1A0524",
+   "lr_file": "6V1A0524-2.tif",
+   "lr_sha256": "b227c23fe9624f17622f70a5f5974ac23b0d3e65f7686eac0c015bbc296109c3",
+   "luminance": 0,
+   "colour": 50,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 1.0046376903843373,
+    "chroma": 0.7672493431598599,
+    "luma_mid": 0.9858045961152002,
+    "chroma_mid": 0.2708043242959508,
+    "fine": 0.9862379213307936,
+    "mid": 0.9931485347216069,
+    "chroma_edges": 0.6843148076378716
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.0000602315338312,
+     "chroma": 0.27659972522985177,
+     "luma_mid": 0.9999876869086144,
+     "chroma_mid": 0.3960790827045242,
+     "fine": 1.0000018104783561,
+     "mid": 0.999999038492016,
+     "chroma_edges": 0.6867582186587715
+    }
+   }
+  },
+  {
+   "scene": "6V1A0524",
+   "lr_file": "6V1A0524-3.tif",
+   "lr_sha256": "17d81ab8b5a5468c85f107c868888b998d0e4f368f2bbb7b04a712ec63206476",
+   "luminance": 0,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 1.0052574307982558,
+    "chroma": 0.7675028731086597,
+    "luma_mid": 0.9853949858909425,
+    "chroma_mid": 0.26204418070641483,
+    "fine": 0.9851469125742893,
+    "mid": 0.9909885922330243,
+    "chroma_edges": 0.6305342390240476
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.0000585860316424,
+     "chroma": 0.24374441163995592,
+     "luma_mid": 1.0000114265219193,
+     "chroma_mid": 0.33934436481973507,
+     "fine": 1.0000009318284127,
+     "mid": 0.999998055103102,
+     "chroma_edges": 0.6434795973038925
+    }
+   }
+  },
+  {
+   "scene": "6V1A0524",
+   "lr_file": "6V1A0524-7.tif",
+   "lr_sha256": "21f893de610b344aed1bed60dde6b6879ab7c68c6d4ef6ffb6778e0537daf9fa",
+   "luminance": 50,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.3446058246538353,
+    "chroma": 0.2753845166689529,
+    "luma_mid": 0.46889524099797064,
+    "chroma_mid": 0.24775329103156718,
+    "fine": 0.7603175614142362,
+    "mid": 0.8950044591927965,
+    "chroma_edges": 0.6977879454359074
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.8465156131751104,
+     "chroma": 0.464384609768167,
+     "luma_mid": 0.8793510289464597,
+     "chroma_mid": 0.5671059200331933,
+     "fine": 0.954189146013498,
+     "mid": 0.9748499466348414,
+     "chroma_edges": 0.7618157267152029
+    }
+   }
+  },
+  {
+   "scene": "6V1A0524",
+   "lr_file": "6V1A0524-10.tif",
+   "lr_sha256": "72a9af8e0dd7366d21af7665d4af5c9d156ffd6c5a09b6bc3f8a6c98c4493b1c",
+   "luminance": 100,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.01255251407163585,
+    "chroma": 0.061290025181152785,
+    "luma_mid": 0.17259709497831136,
+    "chroma_mid": 0.07387428688012365,
+    "fine": 0.6842201002253229,
+    "mid": 0.8452747977950257,
+    "chroma_edges": 0.5381327519928403
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.4495458775738459,
+     "chroma": 0.24523271328842222,
+     "luma_mid": 0.6384223195494807,
+     "chroma_mid": 0.339089076287202,
+     "fine": 0.8710785646834335,
+     "mid": 0.9202235175883614,
+     "chroma_edges": 0.6450881651278043
+    }
+   }
+  },
+  {
+   "scene": "6V1A0544",
+   "lr_file": "6V1A0544.tif",
+   "lr_sha256": "d4a22aacb883f2ddf726a73fecfb219bf408d1c567b7cdbcb7f1213bf3a9589d",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 1.001448541633292,
+    "chroma": 0.6296253260009395,
+    "luma_mid": 0.9858284405513044,
+    "chroma_mid": 0.30287407418208945,
+    "fine": 0.98518936429995,
+    "mid": 0.994840693821866,
+    "chroma_edges": 0.7735234017508018
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9999462792907332,
+     "chroma": 0.328626346559491,
+     "luma_mid": 1.000090445289899,
+     "chroma_mid": 0.41763644893599416,
+     "fine": 1.0000021682399858,
+     "mid": 0.9999995712486704,
+     "chroma_edges": 0.7571899287261973
+    }
+   }
+  },
+  {
+   "scene": "6V1A0544",
+   "lr_file": "6V1A0544-4.tif",
+   "lr_sha256": "ffe6e34edc735a45b40c2893840b0cd6e382a60095f3d36ddf6e341bbd8fe390",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 40,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 2.2751691578137554,
+    "chroma": 0.3802499171015453,
+    "luma_mid": 1.3721055218631686,
+    "chroma_mid": 0.2839694097222636,
+    "fine": 1.668145994388686,
+    "mid": 1.1467124933588213,
+    "chroma_edges": 0.8622305482160155
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.3507919988047843,
+     "chroma": 0.2559185173228995,
+     "luma_mid": 1.132687853306395,
+     "chroma_mid": 0.4144186894612257,
+     "fine": 1.2659673176109774,
+     "mid": 1.0650858520649664,
+     "chroma_edges": 0.79654602674831
+    }
+   }
+  },
+  {
+   "scene": "6V1A0544",
+   "lr_file": "6V1A0544-2.tif",
+   "lr_sha256": "ae2f3c7c9da2a19be60785122108231782ac43c804ffbd306d1982fe84ce80bd",
+   "luminance": 0,
+   "colour": 50,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 1.0015127783422173,
+    "chroma": 0.6256529719026757,
+    "luma_mid": 0.9856336960388008,
+    "chroma_mid": 0.23767510652931956,
+    "fine": 0.9843692969849824,
+    "mid": 0.9941061672157061,
+    "chroma_edges": 0.7107793611123777
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.000116137549392,
+     "chroma": 0.07766563961474421,
+     "luma_mid": 1.0,
+     "chroma_mid": 0.1753368440094552,
+     "fine": 1.0000009784525776,
+     "mid": 0.9999982688235791,
+     "chroma_edges": 0.6882522649211258
+    }
+   }
+  },
+  {
+   "scene": "6V1A0544",
+   "lr_file": "6V1A0544-3.tif",
+   "lr_sha256": "56701dc527ab93f4f521d9ad7c71fed810e8be1133404e2185e75c2358a9cc72",
+   "luminance": 0,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 1.0009151502505595,
+    "chroma": 0.6259876888977869,
+    "luma_mid": 0.9857528494508767,
+    "chroma_mid": 0.22985421259338362,
+    "fine": 0.9833508108236539,
+    "mid": 0.9927612010046646,
+    "chroma_edges": 0.6505280594203566
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9999621007707868,
+     "chroma": 0.018502212229025115,
+     "luma_mid": 1.0,
+     "chroma_mid": 0.06199883672551564,
+     "fine": 1.000001178416222,
+     "mid": 0.999998035684877,
+     "chroma_edges": 0.6423866131401119
+    }
+   }
+  },
+  {
+   "scene": "6V1A0544",
+   "lr_file": "6V1A0544-7.tif",
+   "lr_sha256": "b0a64c273acf3eceefd60881fd79c0bab0edb1baa966d1da390b2e16f2607fac",
+   "luminance": 50,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.33888102542293397,
+    "chroma": 0.22783816418429795,
+    "luma_mid": 0.4529122892473022,
+    "chroma_mid": 0.23092784738522426,
+    "fine": 0.7101639132395008,
+    "mid": 0.9040526012643266,
+    "chroma_edges": 0.7308561142909495
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.8964627966705914,
+     "chroma": 0.3285668642811803,
+     "luma_mid": 0.915607433028981,
+     "chroma_mid": 0.41759234970701375,
+     "fine": 0.9569013123102825,
+     "mid": 0.9847429812935562,
+     "chroma_edges": 0.7571946551767232
+    }
+   }
+  },
+  {
+   "scene": "6V1A0544",
+   "lr_file": "6V1A0544-10.tif",
+   "lr_sha256": "dcdd5eac3b4eb6e2dfb33203ecccac7b658c82a003dd2ad135cd3353018489f3",
+   "luminance": 100,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.010303731730062334,
+    "chroma": 0.05773007426201898,
+    "luma_mid": 0.12465640572902913,
+    "chroma_mid": 0.06499435513600335,
+    "fine": 0.6196391294661323,
+    "mid": 0.859141535195566,
+    "chroma_edges": 0.5751138565606659
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.6281495293637429,
+     "chroma": 0.018424984420594436,
+     "luma_mid": 0.7160868098360609,
+     "chroma_mid": 0.062010650582926916,
+     "fine": 0.8752817369018022,
+     "mid": 0.9478437673508933,
+     "chroma_edges": 0.6426013238953427
+    }
+   }
+  },
+  {
+   "scene": "6V1A9112",
+   "lr_file": "6V1A9112.tif",
+   "lr_sha256": "78d47381931c4e692f07eae6c6495219ef94eede0992c553b02b346ca33c9a61",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.9604653355603593,
+    "chroma": 0.8745299384681431,
+    "luma_mid": 0.9390513060076588,
+    "chroma_mid": 0.4289234905102617,
+    "fine": 0.9925714388711591,
+    "mid": 0.9969948596931333,
+    "chroma_edges": 0.8908257178435744
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.000013092444936,
+     "chroma": 0.36999767556167507,
+     "luma_mid": 1.000003371716184,
+     "chroma_mid": 0.48567819532086676,
+     "fine": 1.0000024456567624,
+     "mid": 0.9999995937455854,
+     "chroma_edges": 0.8238770691905397
+    }
+   }
+  },
+  {
+   "scene": "6V1A9112",
+   "lr_file": "6V1A9112-4.tif",
+   "lr_sha256": "a13f8c4c50fca808cee126bca57d07fc2c7cdf6b80fa15f10b4b4c61577bf5b9",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 40,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 1.3604238123611498,
+    "chroma": 1.301954662470384,
+    "luma_mid": 1.049139998070558,
+    "chroma_mid": 0.4906380406690618,
+    "fine": 1.5576961138715788,
+    "mid": 1.1233886274938643,
+    "chroma_edges": 0.9836291323636936
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.2782775979958116,
+     "chroma": 0.650711726110512,
+     "luma_mid": 1.0716488034377147,
+     "chroma_mid": 0.5101971191416195,
+     "fine": 1.2296958750318638,
+     "mid": 1.0567822639779565,
+     "chroma_edges": 0.8334147482045198
+    }
+   }
+  },
+  {
+   "scene": "6V1A9112",
+   "lr_file": "6V1A9112-2.tif",
+   "lr_sha256": "b289f56da404b1e122a94693d6454f1e143d41a27e3dc5b3e14667f5ca173145",
+   "luminance": 0,
+   "colour": 50,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.9608435809136547,
+    "chroma": 0.8816148031015344,
+    "luma_mid": 0.9412792646184089,
+    "chroma_mid": 0.40810753341302086,
+    "fine": 0.9928858044450226,
+    "mid": 0.9971240569348563,
+    "chroma_edges": 0.8652047017098059
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9999532195401112,
+     "chroma": 0.15067343676487213,
+     "luma_mid": 0.9999926152707309,
+     "chroma_mid": 0.26858382381261753,
+     "fine": 1.0000045412349563,
+     "mid": 0.9999995214613354,
+     "chroma_edges": 0.754216987824784
+    }
+   }
+  },
+  {
+   "scene": "6V1A9112",
+   "lr_file": "6V1A9112-3.tif",
+   "lr_sha256": "133170b06dce5c5274164df9ff54e2da780372500b04fd0e76fe5f7c1985f226",
+   "luminance": 0,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.961478326311225,
+    "chroma": 0.8792967736868473,
+    "luma_mid": 0.942204739476963,
+    "chroma_mid": 0.3956113846746959,
+    "fine": 0.9931947776303149,
+    "mid": 0.9969258925124731,
+    "chroma_edges": 0.8129359352001195
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.0000282059185306,
+     "chroma": 0.11138296117800217,
+     "luma_mid": 0.9999822144374029,
+     "chroma_mid": 0.18806691479827808,
+     "fine": 1.0000055836753636,
+     "mid": 0.9999984330662878,
+     "chroma_edges": 0.704126269110956
+    }
+   }
+  },
+  {
+   "scene": "6V1A9112",
+   "lr_file": "6V1A9112-7.tif",
+   "lr_sha256": "000d52aedee1ee28a841423ceb46ab42afc5d0e5104d80fd85b1f2d4b69a4ad7",
+   "luminance": 50,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.33166480029765283,
+    "chroma": 0.3281527160073542,
+    "luma_mid": 0.39574068964749,
+    "chroma_mid": 0.20658173506777078,
+    "fine": 0.8332024496853749,
+    "mid": 0.9417629746184932,
+    "chroma_edges": 0.8658585188287722
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.6062784761365821,
+     "chroma": 0.3698032291003246,
+     "luma_mid": 0.7375137561391572,
+     "chroma_mid": 0.48580912678873134,
+     "fine": 0.9866434959471848,
+     "mid": 0.9940714182546058,
+     "chroma_edges": 0.8238816114482101
+    }
+   }
+  },
+  {
+   "scene": "6V1A9112",
+   "lr_file": "6V1A9112-10.tif",
+   "lr_sha256": "f18588362d44a2314b11a7f090d1249e4e527de0b5c25780915a1ecd289304f2",
+   "luminance": 100,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.019118121553982195,
+    "chroma": 0.06105092714165297,
+    "luma_mid": 0.030434323594090616,
+    "chroma_mid": 0.0485949606875294,
+    "fine": 0.7874354773571832,
+    "mid": 0.9137340127933213,
+    "chroma_edges": 0.7703641242344248
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.17263229861628226,
+     "chroma": 0.11127420011985013,
+     "luma_mid": 0.4894593369019622,
+     "chroma_mid": 0.1881645673265243,
+     "fine": 0.9545252709074712,
+     "mid": 0.9783017103105227,
+     "chroma_edges": 0.7041291150190696
+    }
+   }
+  },
+  {
+   "scene": "6V1A9141",
+   "lr_file": "6V1A9141.tif",
+   "lr_sha256": "d1d3c1bcc6684c881916efb35dc7ab710079aebbe4e4379cad221b32228139d5",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.9723290591194709,
+    "chroma": 0.22467944048083843,
+    "luma_mid": 0.9560764580955449,
+    "chroma_mid": 0.16536588053591056,
+    "fine": 0.9946935162718153,
+    "mid": 0.9994033520681835,
+    "chroma_edges": 0.8247616455879376
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9999122188212618,
+     "chroma": 0.3674416782454314,
+     "luma_mid": 0.999984393486498,
+     "chroma_mid": 0.44216900395743614,
+     "fine": 0.9999993046286131,
+     "mid": 0.9999994865969222,
+     "chroma_edges": 0.6366532942159022
+    }
+   }
+  },
+  {
+   "scene": "6V1A9141",
+   "lr_file": "6V1A9141-4.tif",
+   "lr_sha256": "b50c9cedeb731e3f3edbf6627a0708da6c3002b3ab399bbe697406457b91d889",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 40,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 2.2833411775878822,
+    "chroma": 2.029948633098058,
+    "luma_mid": 1.4134897573485397,
+    "chroma_mid": 0.3594940872860905,
+    "fine": 1.808799656495396,
+    "mid": 1.1949820288531154,
+    "chroma_edges": 0.8508288836374293
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.3440484045313146,
+     "chroma": 0.7596547212663615,
+     "luma_mid": 1.1404325044529595,
+     "chroma_mid": 0.43991515362459166,
+     "fine": 1.2437544132235288,
+     "mid": 1.0713645156062306,
+     "chroma_edges": 0.6334484539911166
+    }
+   }
+  },
+  {
+   "scene": "6V1A9141",
+   "lr_file": "6V1A9141-2.tif",
+   "lr_sha256": "54e8b15f53361aec152af17c979d960f7dd9d23b991bb6c340705e7e2013165f",
+   "luminance": 0,
+   "colour": 50,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.9720345501504867,
+    "chroma": 0.22249443203756697,
+    "luma_mid": 0.9584328893632161,
+    "chroma_mid": 0.09840089267276217,
+    "fine": 0.9944356005672149,
+    "mid": 0.9992914938698187,
+    "chroma_edges": 0.7752931077532486
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9999173786551642,
+     "chroma": 0.15690589185137613,
+     "luma_mid": 0.9999574933684118,
+     "chroma_mid": 0.20923277991223072,
+     "fine": 0.9999987094240388,
+     "mid": 0.999999099710791,
+     "chroma_edges": 0.49979787027409905
+    }
+   }
+  },
+  {
+   "scene": "6V1A9141",
+   "lr_file": "6V1A9141-3.tif",
+   "lr_sha256": "66607cf908ebbaa2042d3d3cc260492b135eb680aeeab0b334a5f9453644eded",
+   "luminance": 0,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.9715313914736097,
+    "chroma": 0.22333197823859408,
+    "luma_mid": 0.9590897648703347,
+    "chroma_mid": 0.09097644870792047,
+    "fine": 0.9943675237721213,
+    "mid": 0.9990783872007005,
+    "chroma_edges": 0.6599176421575009
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.0000518273591203,
+     "chroma": 0.1323012941073147,
+     "luma_mid": 0.9999064110670812,
+     "chroma_mid": 0.1221331902421995,
+     "fine": 0.9999985007892335,
+     "mid": 0.999998303767317,
+     "chroma_edges": 0.4237078764023344
+    }
+   }
+  },
+  {
+   "scene": "6V1A9141",
+   "lr_file": "6V1A9141-7.tif",
+   "lr_sha256": "03c36b4b9f38cac7fe8ebd55f5a4bdd823bcfcb126918447e64f29dce3e75d86",
+   "luminance": 50,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.32839580749147146,
+    "chroma": 0.10748764331649868,
+    "luma_mid": 0.39344218399687314,
+    "chroma_mid": 0.14628607936565516,
+    "fine": 0.8709168403815546,
+    "mid": 0.9509568873253387,
+    "chroma_edges": 0.8258416219797895
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.5900918355340089,
+     "chroma": 0.367484248976389,
+     "luma_mid": 0.6968571423472592,
+     "chroma_mid": 0.4424709640035419,
+     "fine": 0.9871335856579904,
+     "mid": 0.9946480917246171,
+     "chroma_edges": 0.6366553778037891
+    }
+   }
+  },
+  {
+   "scene": "6V1A9141",
+   "lr_file": "6V1A9141-10.tif",
+   "lr_sha256": "8b2368b602b2cc3686175354cb8c23a666dea26a664249b5f5230e84078aa6ef",
+   "luminance": 100,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.010069169520634988,
+    "chroma": 0.06198198741164111,
+    "luma_mid": 0.013359399867853915,
+    "chroma_mid": 0.04872615700599581,
+    "fine": 0.823056207516273,
+    "mid": 0.9262864682400236,
+    "chroma_edges": 0.6490499122880133
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.028242178692399766,
+     "chroma": 0.13269340059102241,
+     "luma_mid": 0.35688965251244587,
+     "chroma_mid": 0.12212969638114843,
+     "fine": 0.9528770692244763,
+     "mid": 0.9792416826811523,
+     "chroma_edges": 0.4237092831058016
+    }
+   }
+  },
+  {
+   "scene": "6V1A9153",
+   "lr_file": "6V1A9153.tif",
+   "lr_sha256": "8a20a154812070fa395cb23a4adca8a48775e6a66a20d095669dab8656eb1b8b",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.9888322281707423,
+    "chroma": 0.4345256118422468,
+    "luma_mid": 0.9972555661949724,
+    "chroma_mid": 0.7525884902934747,
+    "fine": 0.9927516111673458,
+    "mid": 0.9987433881096526,
+    "chroma_edges": 0.8926712963803631
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.000053673807412,
+     "chroma": 0.34259098068697735,
+     "luma_mid": 0.9999985259995894,
+     "chroma_mid": 0.5276779984965576,
+     "fine": 0.9999998352994993,
+     "mid": 0.9999996639746629,
+     "chroma_edges": 0.7651173622743623
+    }
+   }
+  },
+  {
+   "scene": "6V1A9153",
+   "lr_file": "6V1A9153-4.tif",
+   "lr_sha256": "f1bb33cc51b000de4a400e128e9e7e01f6f97212f1b4a81f02d66f6a96ce7625",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 40,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 2.1921030118099027,
+    "chroma": 0.5803390182179061,
+    "luma_mid": 1.1937879365144313,
+    "chroma_mid": 0.7667485258985359,
+    "fine": 1.7088038378738104,
+    "mid": 1.1300777875417065,
+    "chroma_edges": 0.9455278157157834
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.288460274169836,
+     "chroma": 0.3601642758212901,
+     "luma_mid": 1.0569323317342596,
+     "chroma_mid": 0.5278129192232734,
+     "fine": 1.190492783827531,
+     "mid": 1.0440297856293475,
+     "chroma_edges": 0.7702100504802801
+    }
+   }
+  },
+  {
+   "scene": "6V1A9153",
+   "lr_file": "6V1A9153-2.tif",
+   "lr_sha256": "43cc5f293f1964befeb6d6ec3eb5a92ed9eca5071d93dc5896a12f035290f3fe",
+   "luminance": 0,
+   "colour": 50,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.9882211122918967,
+    "chroma": 0.3964366411061338,
+    "luma_mid": 0.9968276699811918,
+    "chroma_mid": 0.6102952750142574,
+    "fine": 0.9925355342938506,
+    "mid": 0.9986869640296947,
+    "chroma_edges": 0.8761617455892967
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9999308173763499,
+     "chroma": 0.11748205694417373,
+     "luma_mid": 1.0,
+     "chroma_mid": 0.3242488076706333,
+     "fine": 0.9999994856788699,
+     "mid": 0.9999990473868606,
+     "chroma_edges": 0.6586931711595025
+    }
+   }
+  },
+  {
+   "scene": "6V1A9153",
+   "lr_file": "6V1A9153-3.tif",
+   "lr_sha256": "2c89ed48dff0bbca3c76c0fa261c4c33e199c7a3defd21deabbdb2ac1b4c07b2",
+   "luminance": 0,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.9873511570679396,
+    "chroma": 0.3533021259465686,
+    "luma_mid": 0.9944939129919341,
+    "chroma_mid": 0.41587480077326533,
+    "fine": 0.9922532214666681,
+    "mid": 0.9985585194290536,
+    "chroma_edges": 0.8256364108548704
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.0000569979864111,
+     "chroma": 0.07766504500308871,
+     "luma_mid": 0.9999972148511362,
+     "chroma_mid": 0.21334298838434418,
+     "fine": 1.0000000785996832,
+     "mid": 0.9999985731316,
+     "chroma_edges": 0.5625323824673475
+    }
+   }
+  },
+  {
+   "scene": "6V1A9153",
+   "lr_file": "6V1A9153-7.tif",
+   "lr_sha256": "875f84113dcb1b24ffb2952f0b1cc6125b89f370615bd924cfaf63a94af74093",
+   "luminance": 50,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.689487218766205,
+    "chroma": 0.3981200290616825,
+    "luma_mid": 0.9147097089681857,
+    "chroma_mid": 0.7506548155053098,
+    "fine": 0.8960422687520442,
+    "mid": 0.968536670682201,
+    "chroma_edges": 0.8902709967880076
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9023450010613008,
+     "chroma": 0.3422874480255368,
+     "luma_mid": 0.9683538989468219,
+     "chroma_mid": 0.5275776321555573,
+     "fine": 0.968484576293194,
+     "mid": 0.9896843639280222,
+     "chroma_edges": 0.7651174261335155
+    }
+   }
+  },
+  {
+   "scene": "6V1A9153",
+   "lr_file": "6V1A9153-10.tif",
+   "lr_sha256": "5f10a7baa489b629b81f65234c351225ee0446818f784222e7fa16b546ec2e03",
+   "luminance": 100,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.6029096907226867,
+    "chroma": 0.2932552267072972,
+    "luma_mid": 0.8716379455932901,
+    "chroma_mid": 0.4123614316806391,
+    "fine": 0.8646254832634024,
+    "mid": 0.9524474360139092,
+    "chroma_edges": 0.8187168205136988
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.7309536888136515,
+     "chroma": 0.07774909975052177,
+     "luma_mid": 0.8914950453883421,
+     "chroma_mid": 0.21328334902020468,
+     "fine": 0.9104366912498632,
+     "mid": 0.9639613572254055,
+     "chroma_edges": 0.5625338159643751
+    }
+   }
+  },
+  {
+   "scene": "6V1A9539",
+   "lr_file": "6V1A9539.tif",
+   "lr_sha256": "e56e5c047c4c99cd40b5e55ec669e183ee24f8cb8bff5bb5600c290e25a225e9",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.9628741357585553,
+    "chroma": 0.7066309386659165,
+    "luma_mid": 0.9425397974880549,
+    "chroma_mid": 0.21660756148759042,
+    "fine": 0.9689176241751911,
+    "mid": 0.9570406138871388,
+    "chroma_edges": 0.4497639022589133
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9999918672597355,
+     "chroma": 0.38012469731905696,
+     "luma_mid": 1.0000050577479889,
+     "chroma_mid": 0.45332664077033813,
+     "fine": 0.9999563900323494,
+     "mid": 0.9999963425470593,
+     "chroma_edges": 0.6246838396505672
+    }
+   }
+  },
+  {
+   "scene": "6V1A9539",
+   "lr_file": "6V1A9539-4.tif",
+   "lr_sha256": "ba8d9fdb2cf6dbd0de21aedffc2161b150f53570a07f7a79e8368a704116fe06",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 40,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 2.0721462854313533,
+    "chroma": 1.7064566350634671,
+    "luma_mid": 1.286580128741439,
+    "chroma_mid": 0.29998020206632237,
+    "fine": 1.6722285382743762,
+    "mid": 1.1294921900455672,
+    "chroma_edges": 0.536015095816689
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.3521181273206841,
+     "chroma": 0.7311804472956487,
+     "luma_mid": 1.137990175960319,
+     "chroma_mid": 0.46686171556961886,
+     "fine": 1.3058746369776368,
+     "mid": 1.0808449937057287,
+     "chroma_edges": 0.6557909283963346
+    }
+   }
+  },
+  {
+   "scene": "6V1A9539",
+   "lr_file": "6V1A9539-2.tif",
+   "lr_sha256": "25994c2a762cd177ccc51b22d58bdfaa841c801cdc70fa4b87e94999bfddf1e7",
+   "luminance": 0,
+   "colour": 50,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.9631924726873575,
+    "chroma": 0.7050904807140733,
+    "luma_mid": 0.9419496933398839,
+    "chroma_mid": 0.19885122601813804,
+    "fine": 0.9674168373601435,
+    "mid": 0.9550511432547,
+    "chroma_edges": 0.4272186645445877
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9999781235253087,
+     "chroma": 0.1729304784445311,
+     "luma_mid": 1.000007132250527,
+     "chroma_mid": 0.22389698376239148,
+     "fine": 0.9998631569597212,
+     "mid": 0.9999868098582738,
+     "chroma_edges": 0.5175816848260397
+    }
+   }
+  },
+  {
+   "scene": "6V1A9539",
+   "lr_file": "6V1A9539-3.tif",
+   "lr_sha256": "985df24aef61940c5a74af960a421478aa7e352adc471719e19d4d54f9494f26",
+   "luminance": 0,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.9631773368894814,
+    "chroma": 0.703675062885043,
+    "luma_mid": 0.9426770833560558,
+    "chroma_mid": 0.19616884991487937,
+    "fine": 0.9660967495980696,
+    "mid": 0.9474260552424507,
+    "chroma_edges": 0.4020616998164557
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9999961993666575,
+     "chroma": 0.1509137880457669,
+     "luma_mid": 0.9999961371147388,
+     "chroma_mid": 0.1479364780205299,
+     "fine": 0.9998136429280324,
+     "mid": 0.999974091968358,
+     "chroma_edges": 0.4752499548451793
+    }
+   }
+  },
+  {
+   "scene": "6V1A9539",
+   "lr_file": "6V1A9539-7.tif",
+   "lr_sha256": "d4eb787a6e7b77082d2208b3490c97be672866450fa2742e56145f3c00e2ce39",
+   "luminance": 50,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.3228244347637475,
+    "chroma": 0.23967329579101426,
+    "luma_mid": 0.39102435154854964,
+    "chroma_mid": 0.12681718121733576,
+    "fine": 0.33507361514741096,
+    "mid": 0.6194866261160497,
+    "chroma_edges": 0.3506004214844982
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.849274380934429,
+     "chroma": 0.3798177896839955,
+     "luma_mid": 0.8729534855621122,
+     "chroma_mid": 0.4532899928020345,
+     "fine": 0.7862551635963266,
+     "mid": 0.8790090611785168,
+     "chroma_edges": 0.62465233668605
+    }
+   }
+  },
+  {
+   "scene": "6V1A9539",
+   "lr_file": "6V1A9539-10.tif",
+   "lr_sha256": "dc4ec2659aea5934a0b59aa58da0e9dc48d62a7920bcf4b0641304ed73b20f7f",
+   "luminance": 100,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.004652883148377277,
+    "chroma": 0.030232020158926873,
+    "luma_mid": 0.016326416874240492,
+    "chroma_mid": 0.03256423609991466,
+    "fine": 0.04873563483879668,
+    "mid": 0.4791728612350797,
+    "chroma_edges": 0.25971811625528307
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.4450298979156952,
+     "chroma": 0.1507650414310798,
+     "luma_mid": 0.6054231828547079,
+     "chroma_mid": 0.14798648362586414,
+     "fine": 0.43029920856880893,
+     "mid": 0.6916915433531905,
+     "chroma_edges": 0.4749097660524437
+    }
+   }
+  },
+  {
+   "scene": "6V1A9940",
+   "lr_file": "6V1A9940.tif",
+   "lr_sha256": "d7d2b8716c7e5e3b01eadda909bb2cb74355e55d651449f574075565c24b169e",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 1.0596140705613455,
+    "chroma": 1.0848803282478474,
+    "luma_mid": 0.9640396499174724,
+    "chroma_mid": 0.5523596260137178,
+    "fine": 0.9928454330875723,
+    "mid": 0.9991104699383583,
+    "chroma_edges": 0.8908809837419972
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9999864244883019,
+     "chroma": 0.38158163933102773,
+     "luma_mid": 1.0000098031496591,
+     "chroma_mid": 0.5229817478087412,
+     "fine": 0.9999986606306448,
+     "mid": 0.9999992357981342,
+     "chroma_edges": 0.879197465019392
+    }
+   }
+  },
+  {
+   "scene": "6V1A9940",
+   "lr_file": "6V1A9940-4.tif",
+   "lr_sha256": "5b3776dde5606c6aeed29f8d121fc66ba6088cf99f6457e258e92bd4b49775b1",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 40,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 2.462658199991604,
+    "chroma": 0.5549400192027124,
+    "luma_mid": 1.3880375267934304,
+    "chroma_mid": 0.47977514282671174,
+    "fine": 1.6411775428323794,
+    "mid": 1.146869653140672,
+    "chroma_edges": 0.9557621165106649
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.343249828650934,
+     "chroma": 0.2512125186140075,
+     "luma_mid": 1.1331703082375113,
+     "chroma_mid": 0.4936363356301491,
+     "fine": 1.221660948903155,
+     "mid": 1.0544870094017018,
+     "chroma_edges": 0.8714331246332627
+    }
+   }
+  },
+  {
+   "scene": "6V1A9940",
+   "lr_file": "6V1A9940-2.tif",
+   "lr_sha256": "660fcdd42e7b234fd9ace637d99903baec5f2a115f2a5efd7bcb0882e508fcb4",
+   "luminance": 0,
+   "colour": 50,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 1.0590279435101935,
+    "chroma": 1.0827497377385753,
+    "luma_mid": 0.9642252497356145,
+    "chroma_mid": 0.5276707576561324,
+    "fine": 0.9928729868310826,
+    "mid": 0.9989980045366829,
+    "chroma_edges": 0.8819616022833308
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.0000576586826924,
+     "chroma": 0.16343062425566013,
+     "luma_mid": 1.0000543081539568,
+     "chroma_mid": 0.3425197745337186,
+     "fine": 0.9999984284751984,
+     "mid": 0.9999984983646346,
+     "chroma_edges": 0.821866025971949
+    }
+   }
+  },
+  {
+   "scene": "6V1A9940",
+   "lr_file": "6V1A9940-3.tif",
+   "lr_sha256": "05734f449e9123c6c9536e9a8b7083aab4aa83265f1f73026c1a74315ad93483",
+   "luminance": 0,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 1.0600768644549383,
+    "chroma": 1.085062440385172,
+    "luma_mid": 0.9673546242815965,
+    "chroma_mid": 0.527015433025203,
+    "fine": 0.9928471500859412,
+    "mid": 0.9987556531372621,
+    "chroma_edges": 0.8600047312350926
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9998091871520864,
+     "chroma": 0.12158689412683751,
+     "luma_mid": 1.0000435774933694,
+     "chroma_mid": 0.2966942318966219,
+     "fine": 0.9999980288438628,
+     "mid": 0.9999977680269347,
+     "chroma_edges": 0.7786932093504675
+    }
+   }
+  },
+  {
+   "scene": "6V1A9940",
+   "lr_file": "6V1A9940-7.tif",
+   "lr_sha256": "cb3e412e026e304a1ec76db7d03c0d17240f9823d24c05fc8c7c3aee9bf1a4a7",
+   "luminance": 50,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.35774011441228226,
+    "chroma": 0.36898534156978835,
+    "luma_mid": 0.41837427450153025,
+    "chroma_mid": 0.2832364218543863,
+    "fine": 0.9167832601119719,
+    "mid": 0.9711276213771423,
+    "chroma_edges": 0.880151975209859
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.6711176824538403,
+     "chroma": 0.3818278296881183,
+     "luma_mid": 0.7634402685272248,
+     "chroma_mid": 0.5226448068038863,
+     "fine": 0.9901946775610978,
+     "mid": 0.9956293410455306,
+     "chroma_edges": 0.8791998540904682
+    }
+   }
+  },
+  {
+   "scene": "6V1A9940",
+   "lr_file": "6V1A9940-10.tif",
+   "lr_sha256": "c95c1c03fbb582020e1a4fdd4bdfd9d4073dcefefb9181693ccec0db8af0b2e4",
+   "luminance": 100,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.01302421848709667,
+    "chroma": 0.0499478762562685,
+    "luma_mid": 0.06417032376403319,
+    "chroma_mid": 0.06256065638149996,
+    "fine": 0.8857190693132438,
+    "mid": 0.9557160385668937,
+    "chroma_edges": 0.8495038222049092
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.05079643989065818,
+     "chroma": 0.12163945457323184,
+     "luma_mid": 0.4233115684637021,
+     "chroma_mid": 0.29679441794492223,
+     "fine": 0.9670162520036845,
+     "mid": 0.9841577698124827,
+     "chroma_edges": 0.7786968018706235
+    }
+   }
+  },
+  {
+   "scene": "6V1A9947",
+   "lr_file": "6V1A9947.tif",
+   "lr_sha256": "3527f378ff177ff588eb2ab6c821da7b9813fe4ae56c96ec6301f6526a7d9685",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 1.0097874886744864,
+    "chroma": 0.562586540246774,
+    "luma_mid": 0.9879888163968932,
+    "chroma_mid": 0.23929805518292963,
+    "fine": 0.9876030429304173,
+    "mid": 0.9976695300744065,
+    "chroma_edges": 0.841874278421463
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9998568129258174,
+     "chroma": 0.3362260214091155,
+     "luma_mid": 1.0000187795624338,
+     "chroma_mid": 0.42109335479818744,
+     "fine": 1.0000000869712462,
+     "mid": 0.9999992929772011,
+     "chroma_edges": 0.8297228931274694
+    }
+   }
+  },
+  {
+   "scene": "6V1A9947",
+   "lr_file": "6V1A9947-4.tif",
+   "lr_sha256": "efb4587a9f230d31f9af3621bebf0a06e7868a31ee3706be65dd97e941c3ce30",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 40,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 2.3792779007344382,
+    "chroma": 0.35089669885435504,
+    "luma_mid": 1.4427323958599545,
+    "chroma_mid": 0.20834544036750177,
+    "fine": 1.604719446272251,
+    "mid": 1.0848760242774684,
+    "chroma_edges": 0.8848885481331801
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.3495243382485964,
+     "chroma": 0.19883398983618383,
+     "luma_mid": 1.1421801018531403,
+     "chroma_mid": 0.41297753976928947,
+     "fine": 1.2464237026742677,
+     "mid": 1.0390863455121147,
+     "chroma_edges": 0.8494597471849812
+    }
+   }
+  },
+  {
+   "scene": "6V1A9947",
+   "lr_file": "6V1A9947-2.tif",
+   "lr_sha256": "f7e9ecd68775171f3e3fd626036e74e3dc9a8b90d3dade5ec28a803cf408641a",
+   "luminance": 0,
+   "colour": 50,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 1.0106463155100618,
+    "chroma": 0.5594029679504319,
+    "luma_mid": 0.9889364333081898,
+    "chroma_mid": 0.17383529824625252,
+    "fine": 0.9872906974835027,
+    "mid": 0.9974377481384988,
+    "chroma_edges": 0.7961278684791984
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.0000464604076327,
+     "chroma": 0.09385275040478366,
+     "luma_mid": 1.0,
+     "chroma_mid": 0.17852804494648603,
+     "fine": 1.000001004689586,
+     "mid": 0.9999993453253417,
+     "chroma_edges": 0.7650215683528871
+    }
+   }
+  },
+  {
+   "scene": "6V1A9947",
+   "lr_file": "6V1A9947-3.tif",
+   "lr_sha256": "3b58f529563298b403df98ec69c0b3fd2aed80b033222c0d5bb591aabf12bcb4",
+   "luminance": 0,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 1.0102360419487024,
+    "chroma": 0.5596638933901585,
+    "luma_mid": 0.9896506169323207,
+    "chroma_mid": 0.16838644488146082,
+    "fine": 0.9869931784960022,
+    "mid": 0.9973489317810245,
+    "chroma_edges": 0.7266474466495113
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9998409832300958,
+     "chroma": 0.042778831064623754,
+     "luma_mid": 0.9999824277516602,
+     "chroma_mid": 0.07490771722043507,
+     "fine": 1.0000008334035502,
+     "mid": 0.9999990598081633,
+     "chroma_edges": 0.7205898496125163
+    }
+   }
+  },
+  {
+   "scene": "6V1A9947",
+   "lr_file": "6V1A9947-7.tif",
+   "lr_sha256": "f5915e1a325def4b7b1e0faebe6c299fbda7c85b37bfb8f5db34df8b80eb5c8c",
+   "luminance": 50,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.3412109569933903,
+    "chroma": 0.21214703926813405,
+    "luma_mid": 0.4163517614378036,
+    "chroma_mid": 0.192936298422636,
+    "fine": 0.7323187985362991,
+    "mid": 0.9317772333678526,
+    "chroma_edges": 0.8172419024973627
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.8826174508118951,
+     "chroma": 0.3368870017920503,
+     "luma_mid": 0.8998197936293306,
+     "chroma_mid": 0.4211838806492224,
+     "fine": 0.9479138119857888,
+     "mid": 0.9851028370492954,
+     "chroma_edges": 0.8297220478010061
+    }
+   }
+  },
+  {
+   "scene": "6V1A9947",
+   "lr_file": "6V1A9947-10.tif",
+   "lr_sha256": "601a96a5daf3dcb92f38141e61ad0788cd7f058aa40e6c24af0562be02eaeb96",
+   "luminance": 100,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.009435797542607344,
+    "chroma": 0.08167187762756506,
+    "luma_mid": 0.029661930144828007,
+    "chroma_mid": 0.054916378461484484,
+    "fine": 0.6579614560797855,
+    "mid": 0.8993511323933332,
+    "chroma_edges": 0.6959834307122655
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.5840903658926899,
+     "chroma": 0.04269003149275358,
+     "luma_mid": 0.6709236106215499,
+     "chroma_mid": 0.07499090618671561,
+     "fine": 0.8551248660897558,
+     "mid": 0.9531668732860799,
+     "chroma_edges": 0.7206443679859302
+    }
+   }
+  },
+  {
+   "scene": "7Y6A7599",
+   "lr_file": "7Y6A7599.tif",
+   "lr_sha256": "e0acfde78ae30b9e16bf64c657d77244405d07b914f986e7c346824dfe1172b0",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.9941374289030842,
+    "chroma": 0.8810296997031523,
+    "luma_mid": 0.9365741776420481,
+    "chroma_mid": 0.26293096751264045,
+    "fine": 0.7651044113392562,
+    "mid": 0.7683972301218063,
+    "chroma_edges": 0.16481155796335878
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9999995557299177,
+     "chroma": 0.3339574361988201,
+     "luma_mid": 0.9999925825145436,
+     "chroma_mid": 0.4345256449061966,
+     "fine": 0.9988018878469239,
+     "mid": 0.9984920572420984,
+     "chroma_edges": 0.6056984423319449
+    }
+   }
+  },
+  {
+   "scene": "7Y6A7599",
+   "lr_file": "7Y6A7599-4.tif",
+   "lr_sha256": "42f4cd301654704c661cd80b476dc9b6a9ba2249df4bd8b1a81c57652b86cd53",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 40,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 2.1011837351944314,
+    "chroma": 0.5271850110258218,
+    "luma_mid": 1.2865868349005765,
+    "chroma_mid": 0.22976258595565122,
+    "fine": 1.3974394596573068,
+    "mid": 1.1032563401157496,
+    "chroma_edges": 0.2283841097108109
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.3403948360952382,
+     "chroma": 0.2574327667150809,
+     "luma_mid": 1.1283125384920707,
+     "chroma_mid": 0.42976076898990956,
+     "fine": 1.2319564718684881,
+     "mid": 1.0803815934325933,
+     "chroma_edges": 0.6304530779665751
+    }
+   }
+  },
+  {
+   "scene": "7Y6A7599",
+   "lr_file": "7Y6A7599-2.tif",
+   "lr_sha256": "bf7f5b670f78f7fe6e886df474dd9fb897ef89a6307bb72e44bec2e807d020a9",
+   "luminance": 0,
+   "colour": 50,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.9939832162763784,
+    "chroma": 0.8822152224124822,
+    "luma_mid": 0.9352380803405194,
+    "chroma_mid": 0.2607591926523599,
+    "fine": 0.7628855070656118,
+    "mid": 0.7551136704359469,
+    "chroma_edges": 0.14377876284914642
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9999812242604678,
+     "chroma": 0.088791457242312,
+     "luma_mid": 0.9999897527064217,
+     "chroma_mid": 0.19190987107078883,
+     "fine": 0.9986950966051895,
+     "mid": 0.9980882587535775,
+     "chroma_edges": 0.46487984501860036
+    }
+   }
+  },
+  {
+   "scene": "7Y6A7599",
+   "lr_file": "7Y6A7599-3.tif",
+   "lr_sha256": "1751a888beadfdf19abd01214dd9dbec139872aaef39e91ba081cbf326d36c3d",
+   "luminance": 0,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.9942569469788541,
+    "chroma": 0.8805803365495728,
+    "luma_mid": 0.9343953080275684,
+    "chroma_mid": 0.26071602147640394,
+    "fine": 0.767972815904183,
+    "mid": 0.7614704886540234,
+    "chroma_edges": 0.14267327009958203
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.999963511071576,
+     "chroma": 0.037974107910445275,
+     "luma_mid": 0.9999920255971649,
+     "chroma_mid": 0.08392054202580185,
+     "fine": 0.9988618338890669,
+     "mid": 0.9977377326370613,
+     "chroma_edges": 0.3916996368430633
+    }
+   }
+  },
+  {
+   "scene": "7Y6A7599",
+   "lr_file": "7Y6A7599-7.tif",
+   "lr_sha256": "066f8a8790a1c92f475726d12e68b81248859de7bbd2be8faf0620405a749689",
+   "luminance": 50,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.33387702249352713,
+    "chroma": 0.29978853399081407,
+    "luma_mid": 0.3894533207811164,
+    "chroma_mid": 0.12325570523213719,
+    "fine": 0.21774687067714363,
+    "mid": 0.3039795170933525,
+    "chroma_edges": 0.09510964753198983
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.7166452586178008,
+     "chroma": 0.33385379046482605,
+     "luma_mid": 0.7858575984472874,
+     "chroma_mid": 0.4345409213761149,
+     "fine": 0.6148712255928955,
+     "mid": 0.7671698348318092,
+     "chroma_edges": 0.6185996927331057
+    }
+   }
+  },
+  {
+   "scene": "7Y6A7599",
+   "lr_file": "7Y6A7599-10.tif",
+   "lr_sha256": "e019f1dca8abc8165c9131b2ecf8403d6f71eb9911ab59a90f20c09ccbc7a408",
+   "luminance": 100,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.0024157030158166496,
+    "chroma": 0.02896725516278296,
+    "luma_mid": 0.0072586276191838415,
+    "chroma_mid": 0.02384610044039899,
+    "fine": 0.010256233537276033,
+    "mid": 0.0421080469669845,
+    "chroma_edges": 0.03287574169019952
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.11011587900385328,
+     "chroma": 0.03793893931669792,
+     "luma_mid": 0.45628232087300336,
+     "chroma_mid": 0.08394377904124647,
+     "fine": 0.11962403777597559,
+     "mid": 0.4923762693763242,
+     "chroma_edges": 0.4358805797660371
+    }
+   }
+  },
+  {
+   "scene": "IMG_3135",
+   "lr_file": "IMG_3135.tif",
+   "lr_sha256": "b3be7e6ecf6a746624f8385cace3d91dc30aedeaab3111a0b1dc80feb62b59a8",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.980936178021003,
+    "chroma": 0.3394731694473608,
+    "luma_mid": 0.9943043753770153,
+    "chroma_mid": 0.7237532307434176,
+    "fine": 0.9881365816421059,
+    "mid": 0.9970219484957019,
+    "chroma_edges": 0.8743485951539195
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.0000090371364472,
+     "chroma": 0.3515101322327195,
+     "luma_mid": 1.000001087989705,
+     "chroma_mid": 0.6615464642964549,
+     "fine": 1.000000684976599,
+     "mid": 0.99999943292918,
+     "chroma_edges": 0.8359817591982788
+    }
+   }
+  },
+  {
+   "scene": "IMG_3135",
+   "lr_file": "IMG_3135-4.tif",
+   "lr_sha256": "7d02aa15cae1a490ab7bc157ea95837ad45c8529c4729042ddc5d12c7af67f0a",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 40,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 2.355604549048372,
+    "chroma": 1.1145084661659332,
+    "luma_mid": 1.1460412065365753,
+    "chroma_mid": 0.780805412507432,
+    "fine": 1.7931076583172902,
+    "mid": 1.1102678203256544,
+    "chroma_edges": 0.9452272547023863
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.3230544458061688,
+     "chroma": 0.4338876688905626,
+     "luma_mid": 1.044333688808759,
+     "chroma_mid": 0.673806865585483,
+     "fine": 1.2139462184610141,
+     "mid": 1.0349674796535195,
+     "chroma_edges": 0.8586737249169814
+    }
+   }
+  },
+  {
+   "scene": "IMG_3135",
+   "lr_file": "IMG_3135-2.tif",
+   "lr_sha256": "e071f8317bb6a3c83a1fc7efacbaf0480452dfe2db37d14303cde225f93a886c",
+   "luminance": 0,
+   "colour": 50,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.9807570327117779,
+    "chroma": 0.30272402950525157,
+    "luma_mid": 0.9937513474044051,
+    "chroma_mid": 0.5606939964244113,
+    "fine": 0.9885820691953328,
+    "mid": 0.9972441081413024,
+    "chroma_edges": 0.8397504141595132
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9998939341779971,
+     "chroma": 0.15229389533174717,
+     "luma_mid": 0.999998661636321,
+     "chroma_mid": 0.5024948858824753,
+     "fine": 1.0000006557996193,
+     "mid": 0.9999990659879343,
+     "chroma_edges": 0.7760480737295186
+    }
+   }
+  },
+  {
+   "scene": "IMG_3135",
+   "lr_file": "IMG_3135-3.tif",
+   "lr_sha256": "3b31005b34a721ec47930851008e918f38a3785de2b73a1ec3d879b9bd93e4f9",
+   "luminance": 0,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.9816523654824114,
+    "chroma": 0.28224467131363096,
+    "luma_mid": 0.9897196140188322,
+    "chroma_mid": 0.417079266373669,
+    "fine": 0.9888160903776237,
+    "mid": 0.9968687809607062,
+    "chroma_edges": 0.7719143399805759
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9998929622532697,
+     "chroma": 0.13345290998432607,
+     "luma_mid": 0.999993534476179,
+     "chroma_mid": 0.43090213366950497,
+     "fine": 0.9999990332685724,
+     "mid": 0.9999986281597159,
+     "chroma_edges": 0.7355726217032517
+    }
+   }
+  },
+  {
+   "scene": "IMG_3135",
+   "lr_file": "IMG_3135-7.tif",
+   "lr_sha256": "e32010dab8d8bc2fa4a651deb801d6419ecfec9f4249e86ce9018bd09f1723d8",
+   "luminance": 50,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.5220025242952215,
+    "chroma": 0.26510166058751916,
+    "luma_mid": 0.868912344006942,
+    "chroma_mid": 0.7073581138175189,
+    "fine": 0.7983143895185261,
+    "mid": 0.9421211562633998,
+    "chroma_edges": 0.8616376375792583
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.8669721531148351,
+     "chroma": 0.3514166695308747,
+     "luma_mid": 0.962275233330143,
+     "chroma_mid": 0.6615073383713359,
+     "fine": 0.9549355364596148,
+     "mid": 0.9878164867620769,
+     "chroma_edges": 0.8359820462741079
+    }
+   }
+  },
+  {
+   "scene": "IMG_3135",
+   "lr_file": "IMG_3135-10.tif",
+   "lr_sha256": "ce4d4226f07e8616e8e41da3f92eb1fc16cad6a63b54c34aa3bb40890293df8d",
+   "luminance": 100,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.37152149758811953,
+    "chroma": 0.16798284049560006,
+    "luma_mid": 0.7974194276610208,
+    "chroma_mid": 0.38423881369514645,
+    "fine": 0.756038808774128,
+    "mid": 0.9134408904056752,
+    "chroma_edges": 0.752142796250975
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.6125339014899036,
+     "chroma": 0.1333369363817617,
+     "luma_mid": 0.8732319801001698,
+     "chroma_mid": 0.43107607208997234,
+     "fine": 0.866140690946469,
+     "mid": 0.9568605781909212,
+     "chroma_edges": 0.7355730770214243
+    }
+   }
+  },
+  {
+   "scene": "IMG_4002",
+   "lr_file": "IMG_4002.tif",
+   "lr_sha256": "52060974c2d76ca5744c9425f110a7988942767438730a7566d086bdf701859d",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.9922840761130117,
+    "chroma": 0.10998339033284635,
+    "luma_mid": 0.9807037038681404,
+    "chroma_mid": 0.18518907472875185,
+    "fine": 0.9931116943242129,
+    "mid": 0.9975052746620635,
+    "chroma_edges": 0.8295365118940983
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.000057107508677,
+     "chroma": 0.32482519901445694,
+     "luma_mid": 0.9999865089186036,
+     "chroma_mid": 0.4295464579381756,
+     "fine": 1.0000022676995937,
+     "mid": 1.0000002733570705,
+     "chroma_edges": 0.7562193703091287
+    }
+   }
+  },
+  {
+   "scene": "IMG_4002",
+   "lr_file": "IMG_4002-4.tif",
+   "lr_sha256": "cfed874afe8293b758f8795870759d16575ff1ad747d61343edba6a2c403dea7",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 40,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 2.3270493086843693,
+    "chroma": 0.31106608865291496,
+    "luma_mid": 1.3786719338212508,
+    "chroma_mid": 0.19719998650802695,
+    "fine": 1.7215896573516183,
+    "mid": 1.071935826118056,
+    "chroma_edges": 0.876847966353379
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.3492966765003596,
+     "chroma": 0.34266664501349564,
+     "luma_mid": 1.124942045632386,
+     "chroma_mid": 0.4314759238757664,
+     "fine": 1.2159664672291393,
+     "mid": 1.0269383165007695,
+     "chroma_edges": 0.7636944296273693
+    }
+   }
+  },
+  {
+   "scene": "IMG_4002",
+   "lr_file": "IMG_4002-2.tif",
+   "lr_sha256": "62dea27cbedba5bc4e00076db021e2278fdce766000f73eda6ebc6f491df6a2d",
+   "luminance": 0,
+   "colour": 50,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.9922390637663836,
+    "chroma": 0.10050090473248013,
+    "luma_mid": 0.9780132443026084,
+    "chroma_mid": 0.09479282787893983,
+    "fine": 0.9923137766883392,
+    "mid": 0.9969522774349387,
+    "chroma_edges": 0.7722237479779097
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.000013178779714,
+     "chroma": 0.07895986739438829,
+     "luma_mid": 0.9999841845857209,
+     "chroma_mid": 0.18556409427889964,
+     "fine": 0.9999970881029838,
+     "mid": 1.0000002445888263,
+     "chroma_edges": 0.6544451598003325
+    }
+   }
+  },
+  {
+   "scene": "IMG_4002",
+   "lr_file": "IMG_4002-3.tif",
+   "lr_sha256": "189550b4d83499a5422d1313db630994d7a6ce273051120225b353e7c4d52333",
+   "luminance": 0,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.9925212276452724,
+    "chroma": 0.09627608502397594,
+    "luma_mid": 0.9759842926952722,
+    "chroma_mid": 0.06682533468726576,
+    "fine": 0.9911764062020054,
+    "mid": 0.9957046111794803,
+    "chroma_edges": 0.6722431526392458
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.0000289186013807,
+     "chroma": 0.03559211060765951,
+     "luma_mid": 0.999982012989828,
+     "chroma_mid": 0.07081766858756681,
+     "fine": 0.999987700085804,
+     "mid": 1.0000000758086562,
+     "chroma_edges": 0.5645238967214325
+    }
+   }
+  },
+  {
+   "scene": "IMG_4002",
+   "lr_file": "IMG_4002-7.tif",
+   "lr_sha256": "2823513669874be5bcd52fb5fd2d3f95df90c1cc72ed847abda2c429ac3ec952",
+   "luminance": 50,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.3441865280161616,
+    "chroma": 0.08263270350491758,
+    "luma_mid": 0.45088117849843357,
+    "chroma_mid": 0.1834613913964229,
+    "fine": 0.7912069596654243,
+    "mid": 0.9522728038768221,
+    "chroma_edges": 0.812051694083675
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.881932363915223,
+     "chroma": 0.32498710066190123,
+     "luma_mid": 0.9031200863718152,
+     "chroma_mid": 0.42956672372753935,
+     "fine": 0.9705261198869735,
+     "mid": 0.99432441755379,
+     "chroma_edges": 0.7562175611946074
+    }
+   }
+  },
+  {
+   "scene": "IMG_4002",
+   "lr_file": "IMG_4002-10.tif",
+   "lr_sha256": "4ab171e4d172b45621c4d5467b999e9b958e0847e2ed7b6d70ab49da64b31fb1",
+   "luminance": 100,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.012417252253402053,
+    "chroma": 0.06004540824098335,
+    "luma_mid": 0.09537299817512704,
+    "chroma_mid": 0.05868204161103142,
+    "fine": 0.7474565394731301,
+    "mid": 0.9280343215802931,
+    "chroma_edges": 0.6518501292577934
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.5693450585531428,
+     "chroma": 0.035702344280458057,
+     "luma_mid": 0.6835863229685014,
+     "chroma_mid": 0.07096784150332898,
+     "fine": 0.9113375018220451,
+     "mid": 0.9789465032268978,
+     "chroma_edges": 0.5647128280252598
+    }
+   }
+  },
+  {
+   "scene": "IMG_4173",
+   "lr_file": "IMG_4173.tif",
+   "lr_sha256": "971845b0f329c0523c9fd84d2de13a84c5cca8617a5dd5851bebd50f4ac4f2dd",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 1.0140946457309747,
+    "chroma": 0.09103626221663416,
+    "luma_mid": 0.9811950917266073,
+    "chroma_mid": 0.08006150968319614,
+    "fine": 1.0068718303651423,
+    "mid": 0.99442180651599,
+    "chroma_edges": 0.22495137926347472
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9999128026598006,
+     "chroma": 0.3671390980727305,
+     "luma_mid": 0.9999839319528783,
+     "chroma_mid": 0.43801911772049246,
+     "fine": 1.000001809356454,
+     "mid": 0.9999986038570265,
+     "chroma_edges": 0.508274904947589
+    }
+   }
+  },
+  {
+   "scene": "IMG_4173",
+   "lr_file": "IMG_4173-4.tif",
+   "lr_sha256": "f30939e882e5cc0eb3a69545b3394b5878e070b566911e1855305815eba3834a",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 40,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 2.33957205827843,
+    "chroma": 0.7839040397877847,
+    "luma_mid": 1.4412809938048348,
+    "chroma_mid": 0.10937575228625124,
+    "fine": 1.49847837676135,
+    "mid": 1.1125531647132907,
+    "chroma_edges": 0.231253288097717
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.3489022117680387,
+     "chroma": 0.34281690550490596,
+     "luma_mid": 1.145496167039306,
+     "chroma_mid": 0.4350765805522494,
+     "fine": 1.2574955967254113,
+     "mid": 1.0539481639661663,
+     "chroma_edges": 0.5104632013321064
+    }
+   }
+  },
+  {
+   "scene": "IMG_4173",
+   "lr_file": "IMG_4173-2.tif",
+   "lr_sha256": "4106b06f0fb47653e666fcda3c77b30a650c980c257a669431b61286adb8a246",
+   "luminance": 0,
+   "colour": 50,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 1.0138709309319816,
+    "chroma": 0.08875199721432953,
+    "luma_mid": 0.9804153630674204,
+    "chroma_mid": 0.03997984560064382,
+    "fine": 1.0067196773719824,
+    "mid": 0.993875026214526,
+    "chroma_edges": 0.17530812622048622
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.999903565020035,
+     "chroma": 0.15367557723850672,
+     "luma_mid": 0.9999560995494177,
+     "chroma_mid": 0.20013312311936376,
+     "fine": 1.000002529856849,
+     "mid": 0.9999977938283959,
+     "chroma_edges": 0.34657369242727243
+    }
+   }
+  },
+  {
+   "scene": "IMG_4173",
+   "lr_file": "IMG_4173-3.tif",
+   "lr_sha256": "20f842d8305842363a5341d58ec3818d1fcc815d573365b606b2fb26d98c7dd2",
+   "luminance": 0,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 1.0146669284576384,
+    "chroma": 0.08876766994370633,
+    "luma_mid": 0.9801349150336138,
+    "chroma_mid": 0.03355659872586006,
+    "fine": 1.006933864902705,
+    "mid": 0.9936137233438289,
+    "chroma_edges": 0.1576973632056722
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9998911344323844,
+     "chroma": 0.1269292223317776,
+     "luma_mid": 1.0,
+     "chroma_mid": 0.10473554751082038,
+     "fine": 1.000002424006735,
+     "mid": 0.9999973330729547,
+     "chroma_edges": 0.2863163302532884
+    }
+   }
+  },
+  {
+   "scene": "IMG_4173",
+   "lr_file": "IMG_4173-7.tif",
+   "lr_sha256": "e097c686f49c9098006f3707138a8edc2f3bf438fd154571ba3317b6154e734d",
+   "luminance": 50,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.34080835841450824,
+    "chroma": 0.05420663071389606,
+    "luma_mid": 0.40318730637420086,
+    "chroma_mid": 0.07834780042549935,
+    "fine": 0.3509400795480015,
+    "mid": 0.5973318211849097,
+    "chroma_edges": 0.20173756595793785
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.8395384786603075,
+     "chroma": 0.3668433667164869,
+     "luma_mid": 0.8542952918531646,
+     "chroma_mid": 0.4379561088469973,
+     "fine": 0.899934625556577,
+     "mid": 0.9486340944239307,
+     "chroma_edges": 0.508273575910976
+    }
+   }
+  },
+  {
+   "scene": "IMG_4173",
+   "lr_file": "IMG_4173-10.tif",
+   "lr_sha256": "38ef84fae1bbd4d5203e096fb4443150526153e81c3c1907bd887a4b2d169bd2",
+   "luminance": 100,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.003122042816652533,
+    "chroma": 0.036818944850157395,
+    "luma_mid": 0.008314535962726154,
+    "chroma_mid": 0.028980838711467352,
+    "fine": 0.04316913066396519,
+    "mid": 0.407826442215415,
+    "chroma_edges": 0.1187931394979648
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.4288387054241928,
+     "chroma": 0.12693895860280272,
+     "luma_mid": 0.5601638824996926,
+     "chroma_mid": 0.1048216970761611,
+     "fine": 0.6924963581065753,
+     "mid": 0.8313750400225589,
+     "chroma_edges": 0.2863195023790967
+    }
+   }
+  },
+  {
+   "scene": "IMG_4345",
+   "lr_file": "IMG_4345.tif",
+   "lr_sha256": "e08c7380a38d3681ad36e3235c739ea707d3a538689cba0ea308372bf8fcd900",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.9982353575232272,
+    "chroma": 0.12979660961937356,
+    "luma_mid": 0.9749560702997473,
+    "chroma_mid": 0.13873744176203567,
+    "fine": 1.0010391528989753,
+    "mid": 0.9899837937145358,
+    "chroma_edges": 0.3651764513398782
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.0000677593390923,
+     "chroma": 0.358670519055226,
+     "luma_mid": 1.0000203070697533,
+     "chroma_mid": 0.4389133014147374,
+     "fine": 1.0000016370238884,
+     "mid": 1.000000192440389,
+     "chroma_edges": 0.5452714562250809
+    }
+   }
+  },
+  {
+   "scene": "IMG_4345",
+   "lr_file": "IMG_4345-4.tif",
+   "lr_sha256": "8e3b75d299324cee00997f2c8d303e22500c2d0272de0bfc44aba3cf297d8b6d",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 40,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 2.3289817517718125,
+    "chroma": 0.09479341969353892,
+    "luma_mid": 1.4359778269330281,
+    "chroma_mid": 0.1356652215399778,
+    "fine": 2.1534001293978036,
+    "mid": 1.203795267492576,
+    "chroma_edges": 0.4284651969292559
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.3365241718949217,
+     "chroma": 0.33997395346577197,
+     "luma_mid": 1.1340246054878258,
+     "chroma_mid": 0.4376123151932866,
+     "fine": 1.294167880305344,
+     "mid": 1.0684162232702454,
+     "chroma_edges": 0.5340921347104517
+    }
+   }
+  },
+  {
+   "scene": "IMG_4345",
+   "lr_file": "IMG_4345-2.tif",
+   "lr_sha256": "3b1c54801d9ca98b0e2c76da82794ea026c2df3942e9e8c33f88277214e24d69",
+   "luminance": 0,
+   "colour": 50,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.9977195238816842,
+    "chroma": 0.12409575082849938,
+    "luma_mid": 0.973387449677986,
+    "chroma_mid": 0.06698680947704838,
+    "fine": 0.9999767647765344,
+    "mid": 0.987716669075463,
+    "chroma_edges": 0.22859586704315882
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9999850152095886,
+     "chroma": 0.14660752639001642,
+     "luma_mid": 0.9999781999945223,
+     "chroma_mid": 0.19978109670849262,
+     "fine": 0.9999996289348744,
+     "mid": 1.0000001691865616,
+     "chroma_edges": 0.38993112501315097
+    }
+   }
+  },
+  {
+   "scene": "IMG_4345",
+   "lr_file": "IMG_4345-3.tif",
+   "lr_sha256": "6649e0b91f1313446d6f5f253dfa69972533518a2cda7a2dff0fe11cdb750bd6",
+   "luminance": 0,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.9974322767654022,
+    "chroma": 0.12282891431502502,
+    "luma_mid": 0.9707553071859183,
+    "chroma_mid": 0.05279391836360193,
+    "fine": 0.9997574094104982,
+    "mid": 0.9859802704585793,
+    "chroma_edges": 0.1857822241444283
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9999155645461162,
+     "chroma": 0.130220735437156,
+     "luma_mid": 0.9999811218706856,
+     "chroma_mid": 0.10610829460064686,
+     "fine": 1.0000009666959673,
+     "mid": 0.999999859104151,
+     "chroma_edges": 0.2982165009242233
+    }
+   }
+  },
+  {
+   "scene": "IMG_4345",
+   "lr_file": "IMG_4345-7.tif",
+   "lr_sha256": "91a2a0ee0bd90f02e732230212ee3c71d394c6465c47b6ac87dc5e3e5bc90d85",
+   "luminance": 50,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.33655651815804544,
+    "chroma": 0.07632774919242372,
+    "luma_mid": 0.407284191214205,
+    "chroma_mid": 0.13452751936024943,
+    "fine": 0.5090950298093991,
+    "mid": 0.8067928164025276,
+    "chroma_edges": 0.3686599074635639
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.6331392769804611,
+     "chroma": 0.35852909873441174,
+     "luma_mid": 0.7263609648993503,
+     "chroma_mid": 0.4388727942459662,
+     "fine": 0.836514978708653,
+     "mid": 0.9386778782808901,
+     "chroma_edges": 0.5452774089107169
+    }
+   }
+  },
+  {
+   "scene": "IMG_4345",
+   "lr_file": "IMG_4345-10.tif",
+   "lr_sha256": "e1338e7b5c1951bc828d7dbbbc05217d8ec2d985cb18f78d83d351469e3d574d",
+   "luminance": 100,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.006551882026951492,
+    "chroma": 0.05100993400834822,
+    "luma_mid": 0.024038953036370474,
+    "chroma_mid": 0.04009330001123817,
+    "fine": 0.3480699777106782,
+    "mid": 0.7042652633540083,
+    "chroma_edges": 0.14859868112709537
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.03160033713642042,
+     "chroma": 0.13043054623809333,
+     "luma_mid": 0.37812741232419367,
+     "chroma_mid": 0.10599324459870699,
+     "fine": 0.5690148020772088,
+     "mid": 0.8055099871388061,
+     "chroma_edges": 0.29821382608857233
+    }
+   }
+  },
+  {
+   "scene": "IMG_6248",
+   "lr_file": "IMG_6248.tif",
+   "lr_sha256": "6765b38ef2e3fa53b21134a9f4b5267f962cfe9a86e7bb755201f64ff68e0120",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 1.0117122035296462,
+    "chroma": 0.5365175727046512,
+    "luma_mid": 0.9872065780431032,
+    "chroma_mid": 0.2842699906776458,
+    "fine": 0.9965695617968796,
+    "mid": 0.9988735869933586,
+    "chroma_edges": 0.8294339119704512
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.0001198419405175,
+     "chroma": 0.35672395246434996,
+     "luma_mid": 1.0000766642295913,
+     "chroma_mid": 0.447313320573543,
+     "fine": 1.0000002101758836,
+     "mid": 1.0000001404293604,
+     "chroma_edges": 0.7851846993536491
+    }
+   }
+  },
+  {
+   "scene": "IMG_6248",
+   "lr_file": "IMG_6248-4.tif",
+   "lr_sha256": "fd214305cc41bc4fad6b6e25d1a7f8f37b2b324803583bab4838fe4abe5259cd",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 40,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 2.2454219832349196,
+    "chroma": 0.3305226069829719,
+    "luma_mid": 1.3846085586364958,
+    "chroma_mid": 0.26863613615760973,
+    "fine": 1.7007301969992596,
+    "mid": 1.136442325366295,
+    "chroma_edges": 0.8689347997290953
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.3149300530796735,
+     "chroma": 0.3052724396570026,
+     "luma_mid": 1.115884692056163,
+     "chroma_mid": 0.4441247003541463,
+     "fine": 1.2058193898458973,
+     "mid": 1.047063494786221,
+     "chroma_edges": 0.7875631877842266
+    }
+   }
+  },
+  {
+   "scene": "IMG_6248",
+   "lr_file": "IMG_6248-2.tif",
+   "lr_sha256": "b2858fdfacec5f2c46cd9640f1144452a49149ec0257de52dc3849673c192ccd",
+   "luminance": 0,
+   "colour": 50,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 1.0122711782545604,
+    "chroma": 0.5340015761164503,
+    "luma_mid": 0.9851104084943476,
+    "chroma_mid": 0.20931360359952897,
+    "fine": 0.9962468035939376,
+    "mid": 0.9985009185645881,
+    "chroma_edges": 0.8087957782481927
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.0003417952536116,
+     "chroma": 0.12869686089434645,
+     "luma_mid": 1.0000294591396153,
+     "chroma_mid": 0.21874821163517427,
+     "fine": 1.0000008296149283,
+     "mid": 1.0000002858561534,
+     "chroma_edges": 0.6829305066478082
+    }
+   }
+  },
+  {
+   "scene": "IMG_6248",
+   "lr_file": "IMG_6248-3.tif",
+   "lr_sha256": "2997e133658ee6a5fe4bfb17445856d2238189f0392b3c78fffdf614879e40ff",
+   "luminance": 0,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 1.011299957824349,
+    "chroma": 0.5331998762158439,
+    "luma_mid": 0.9833785528327004,
+    "chroma_mid": 0.18940970379941166,
+    "fine": 0.9954968948131115,
+    "mid": 0.9975209750961029,
+    "chroma_edges": 0.7480144398614295
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.0002886410326761,
+     "chroma": 0.09501000626115919,
+     "luma_mid": 1.0000342131312412,
+     "chroma_mid": 0.13721820006685181,
+     "fine": 1.0000007809267937,
+     "mid": 1.0000003078020545,
+     "chroma_edges": 0.582759452499523
+    }
+   }
+  },
+  {
+   "scene": "IMG_6248",
+   "lr_file": "IMG_6248-7.tif",
+   "lr_sha256": "b73729ccad265140a22e1cc2564bc7e0966b4802c619518be756d8c72ea06a09",
+   "luminance": 50,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.34117243142749215,
+    "chroma": 0.20099608643601505,
+    "luma_mid": 0.445178417568173,
+    "chroma_mid": 0.22712492690375008,
+    "fine": 0.8833719336601968,
+    "mid": 0.9741181591338869,
+    "chroma_edges": 0.8260942243135183
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.6043482901922785,
+     "chroma": 0.3568982111573891,
+     "luma_mid": 0.7252276406559948,
+     "chroma_mid": 0.4471576954689207,
+     "fine": 0.9689706862735992,
+     "mid": 0.9905453504775926,
+     "chroma_edges": 0.7851903545837484
+    }
+   }
+  },
+  {
+   "scene": "IMG_6248",
+   "lr_file": "IMG_6248-10.tif",
+   "lr_sha256": "e5142d81e2f2148c9c6a801049dce78bb61ca1e11fab2eae735cc470952c188f",
+   "luminance": 100,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.008209199958573471,
+    "chroma": 0.056297012577969374,
+    "luma_mid": 0.11685023618120416,
+    "chroma_mid": 0.06578336898365196,
+    "fine": 0.8454231558316172,
+    "mid": 0.9593769099898564,
+    "chroma_edges": 0.7441131159119789
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.028277393297903408,
+     "chroma": 0.09510142950835815,
+     "luma_mid": 0.4077293905697843,
+     "chroma_mid": 0.13729983801818002,
+     "fine": 0.9222412076729912,
+     "mid": 0.9662238475604402,
+     "chroma_edges": 0.5827605495492271
+    }
+   }
+  },
+  {
+   "scene": "IMG_6954",
+   "lr_file": "IMG_6954.tif",
+   "lr_sha256": "14d3ae2efd8ab6a8070889a000205e6bb292b538c76bef84b9131d6ed9d7c1c0",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 1.0064898643400684,
+    "chroma": 0.20748996526461055,
+    "luma_mid": 0.9786712455014324,
+    "chroma_mid": 0.16205684935968076,
+    "fine": 0.9825802539282643,
+    "mid": 0.9949503107133424,
+    "chroma_edges": 0.5805440498914078
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9999260156937516,
+     "chroma": 0.38346495644346656,
+     "luma_mid": 0.999958051047239,
+     "chroma_mid": 0.45953235823928423,
+     "fine": 1.0000022925464176,
+     "mid": 0.999999913335618,
+     "chroma_edges": 0.6915687765741122
+    }
+   }
+  },
+  {
+   "scene": "IMG_6954",
+   "lr_file": "IMG_6954-4.tif",
+   "lr_sha256": "8a96cac015eba32a7498e7e94f05fa33e584fdaf7d6b3c2ab27ea33fcb1366ed",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 40,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 2.2118386705940147,
+    "chroma": 0.2819184842636054,
+    "luma_mid": 1.394649328860034,
+    "chroma_mid": 0.16676129889402583,
+    "fine": 2.1865331532122063,
+    "mid": 1.1274719356069893,
+    "chroma_edges": 0.6233510009235598
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.3425182146545898,
+     "chroma": 0.3517398938386629,
+     "luma_mid": 1.137741218495837,
+     "chroma_mid": 0.4591399980771241,
+     "fine": 1.3164408185172594,
+     "mid": 1.0408171044053738,
+     "chroma_edges": 0.6958914700643553
+    }
+   }
+  },
+  {
+   "scene": "IMG_6954",
+   "lr_file": "IMG_6954-2.tif",
+   "lr_sha256": "07cfd9fc109c820668049cae2497ef1e7d53be08623d6d260b1a259ba6d592eb",
+   "luminance": 0,
+   "colour": 50,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 1.0067958727607575,
+    "chroma": 0.20620507715497458,
+    "luma_mid": 0.9771571943953314,
+    "chroma_mid": 0.08695410666131853,
+    "fine": 0.9822065569348373,
+    "mid": 0.9947066325455828,
+    "chroma_edges": 0.518585019364511
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9996318675959596,
+     "chroma": 0.18478213479746844,
+     "luma_mid": 1.0,
+     "chroma_mid": 0.22939882626345276,
+     "fine": 1.0000020465603394,
+     "mid": 1.0000002036545426,
+     "chroma_edges": 0.6013511103190983
+    }
+   }
+  },
+  {
+   "scene": "IMG_6954",
+   "lr_file": "IMG_6954-3.tif",
+   "lr_sha256": "53b756c8ca45a2c851d3a3f13a30bc509875c19caeb35b2825282af499ba36c9",
+   "luminance": 0,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 1.0057732814313127,
+    "chroma": 0.20625526336793348,
+    "luma_mid": 0.9767155346334903,
+    "chroma_mid": 0.07464912667042876,
+    "fine": 0.9815833056411409,
+    "mid": 0.9930989016566021,
+    "chroma_edges": 0.470897042764321
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9997877590164328,
+     "chroma": 0.1630535268435763,
+     "luma_mid": 0.9999391937137705,
+     "chroma_mid": 0.13586953608292296,
+     "fine": 1.0000020842061286,
+     "mid": 0.9999995335218235,
+     "chroma_edges": 0.5573995288538786
+    }
+   }
+  },
+  {
+   "scene": "IMG_6954",
+   "lr_file": "IMG_6954-7.tif",
+   "lr_sha256": "869a3025707725a2508df5233d461bd4f7bf531392facb74fa3ec9d969e77b74",
+   "luminance": 50,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.3387693727572882,
+    "chroma": 0.09804806369015677,
+    "luma_mid": 0.4108087656284103,
+    "chroma_mid": 0.15287885561255327,
+    "fine": 0.4281306064427114,
+    "mid": 0.9147892927646816,
+    "chroma_edges": 0.567574191446995
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.6910797033245276,
+     "chroma": 0.38448069944460356,
+     "luma_mid": 0.7631527922793166,
+     "chroma_mid": 0.459674390969636,
+     "fine": 0.8678154087932143,
+     "mid": 0.9765928927306838,
+     "chroma_edges": 0.6915593464490674
+    }
+   }
+  },
+  {
+   "scene": "IMG_6954",
+   "lr_file": "IMG_6954-10.tif",
+   "lr_sha256": "759185f99111bb747373032b23fd59143194fed5b0f16d585008fb062480abdb",
+   "luminance": 100,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.00691500602363457,
+    "chroma": 0.05315784962878168,
+    "luma_mid": 0.03637992533933546,
+    "chroma_mid": 0.04558740773812029,
+    "fine": 0.24622528824729079,
+    "mid": 0.8744565897426495,
+    "chroma_edges": 0.445142370716912
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.05121992430990014,
+     "chroma": 0.16342709861960006,
+     "luma_mid": 0.41100328916254447,
+     "chroma_mid": 0.1356596844684916,
+     "fine": 0.6482952839094516,
+     "mid": 0.9274412189415907,
+     "chroma_edges": 0.5573889392069598
+    }
+   }
+  },
+  {
+   "scene": "IMG_6979",
+   "lr_file": "IMG_6979.tif",
+   "lr_sha256": "266ad84380efd21e2750c8c05799e0149d7055d07329ab1e4aa71a93f1199170",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 1.0139107190996448,
+    "chroma": 0.10285328595452274,
+    "luma_mid": 0.9811474888621625,
+    "chroma_mid": 0.10920204717851437,
+    "fine": 1.0011889197615829,
+    "mid": 0.9916053133046793,
+    "chroma_edges": 0.3270573610483351
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.0000417826525798,
+     "chroma": 0.3579437008747136,
+     "luma_mid": 0.9999697133021652,
+     "chroma_mid": 0.4552043360944481,
+     "fine": 1.0000001893730661,
+     "mid": 0.9999997620298431,
+     "chroma_edges": 0.5658095121208954
+    }
+   }
+  },
+  {
+   "scene": "IMG_6979",
+   "lr_file": "IMG_6979-4.tif",
+   "lr_sha256": "2e2285890fb05f02d1bf14727c85e19b1847e97c2784e8b7bb52bc9eebf074f1",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 40,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 2.3649554439186224,
+    "chroma": 0.6257734948056028,
+    "luma_mid": 1.3549405175912552,
+    "chroma_mid": 0.124780337801043,
+    "fine": 2.2178724368106737,
+    "mid": 1.1758540011325682,
+    "chroma_edges": 0.33530664069697963
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.3392680597606395,
+     "chroma": 0.3342090782206608,
+     "luma_mid": 1.1114647260086032,
+     "chroma_mid": 0.45321224301396346,
+     "fine": 1.3035046930476875,
+     "mid": 1.056058183072568,
+     "chroma_edges": 0.563872092971278
+    }
+   }
+  },
+  {
+   "scene": "IMG_6979",
+   "lr_file": "IMG_6979-2.tif",
+   "lr_sha256": "7ec2bb3adab00c25dfb94cc1909dc0e0dfbace5816ae01a9c3e0d5a0ea519af0",
+   "luminance": 0,
+   "colour": 50,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 1.0141141818880999,
+    "chroma": 0.09994480520885625,
+    "luma_mid": 0.9741391785636216,
+    "chroma_mid": 0.053548242305972694,
+    "fine": 1.0008147054220473,
+    "mid": 0.9888290803183317,
+    "chroma_edges": 0.2708558878856687
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.0000298717660199,
+     "chroma": 0.14596617101714318,
+     "luma_mid": 0.9999842479654913,
+     "chroma_mid": 0.2263080125200809,
+     "fine": 0.9999995339649737,
+     "mid": 0.9999986792345487,
+     "chroma_edges": 0.4289791294060974
+    }
+   }
+  },
+  {
+   "scene": "IMG_6979",
+   "lr_file": "IMG_6979-3.tif",
+   "lr_sha256": "dddd4cec9adcbf2337d2847413a1b01a915185708f192eb30deec6eee5645acc",
+   "luminance": 0,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 1.0130970036356235,
+    "chroma": 0.09918113983904044,
+    "luma_mid": 0.9703334440314758,
+    "chroma_mid": 0.04266475028578112,
+    "fine": 1.0004039472101438,
+    "mid": 0.9836476442262476,
+    "chroma_edges": 0.21215189361228975
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.0000482181817398,
+     "chroma": 0.137422571176857,
+     "luma_mid": 1.00001342148665,
+     "chroma_mid": 0.14289321358046675,
+     "fine": 1.0000004685068757,
+     "mid": 0.9999996940060516,
+     "chroma_edges": 0.37151724788765206
+    }
+   }
+  },
+  {
+   "scene": "IMG_6979",
+   "lr_file": "IMG_6979-7.tif",
+   "lr_sha256": "be3b7c5957d115e43a11d6e5495f8f73fdfdf5856de172fea5d6bd6c450e2e53",
+   "luminance": 50,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.34130727374857295,
+    "chroma": 0.05962385772464118,
+    "luma_mid": 0.4653653886243211,
+    "chroma_mid": 0.10550476812800541,
+    "fine": 0.39195920409840734,
+    "mid": 0.821985662522032,
+    "chroma_edges": 0.3269486684870764
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.6683534250503034,
+     "chroma": 0.3584636557715146,
+     "luma_mid": 0.7883695819005486,
+     "chroma_mid": 0.4551590742495142,
+     "fine": 0.7812077634969906,
+     "mid": 0.9413732160748074,
+     "chroma_edges": 0.5658081222796384
+    }
+   }
+  },
+  {
+   "scene": "IMG_6979",
+   "lr_file": "IMG_6979-10.tif",
+   "lr_sha256": "a8092764fdc08e972131c12019ecc90106c9c0ca6fe793c4510cd013ef33d772",
+   "luminance": 100,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.005980901827776083,
+    "chroma": 0.04032072644516274,
+    "luma_mid": 0.12037210629966046,
+    "chroma_mid": 0.03348821884498021,
+    "fine": 0.1716529871621143,
+    "mid": 0.729399607796267,
+    "chroma_edges": 0.21378141997996108
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.0409277657264154,
+     "chroma": 0.1375160508255242,
+     "luma_mid": 0.5024021697423159,
+     "chroma_mid": 0.14302385858906064,
+     "fine": 0.4656850993799461,
+     "mid": 0.8320902046826053,
+     "chroma_edges": 0.37150856337749016
+    }
+   }
+  },
+  {
+   "scene": "IMG_7423",
+   "lr_file": "IMG_7423.tif",
+   "lr_sha256": "f3e228a0b34e41118f896a5104524a12092d0baba0466b1b691b2b42f9935b78",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.987641480410592,
+    "chroma": 0.19805517745215195,
+    "luma_mid": 0.9889669000271069,
+    "chroma_mid": 0.2808796880133999,
+    "fine": 0.979073044560752,
+    "mid": 0.9906432042578291,
+    "chroma_edges": 0.532826313052774
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9999844347800133,
+     "chroma": 0.34224118402833764,
+     "luma_mid": 0.9999968725483037,
+     "chroma_mid": 0.5299702242208013,
+     "fine": 1.0000034725028368,
+     "mid": 1.0000002652272577,
+     "chroma_edges": 0.6379422970592938
+    }
+   }
+  },
+  {
+   "scene": "IMG_7423",
+   "lr_file": "IMG_7423-4.tif",
+   "lr_sha256": "38993061372f45cd3fbd7380aeea27400f90e759afe67f2b49d5cb6627694fdc",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 40,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 2.329218597635838,
+    "chroma": 0.7434517299920875,
+    "luma_mid": 1.1380720503434771,
+    "chroma_mid": 0.3145395042474242,
+    "fine": 1.9822269872633043,
+    "mid": 1.1066355424097254,
+    "chroma_edges": 0.6021101865375891
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.3552993758229381,
+     "chroma": 0.40745737803884785,
+     "luma_mid": 1.0538095036365358,
+     "chroma_mid": 0.535438223592317,
+     "fine": 1.297566524311462,
+     "mid": 1.0443214863393355,
+     "chroma_edges": 0.6553412941417758
+    }
+   }
+  },
+  {
+   "scene": "IMG_7423",
+   "lr_file": "IMG_7423-2.tif",
+   "lr_sha256": "793116dfaecc34cebfd0c6b8ebe88fdabffa868c0a2bdfb1af0b2aea74ae1418",
+   "luminance": 0,
+   "colour": 50,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.9871410380596632,
+    "chroma": 0.18812324716638765,
+    "luma_mid": 0.9855839105392182,
+    "chroma_mid": 0.1791336650731955,
+    "fine": 0.9773777317846732,
+    "mid": 0.9874610047853556,
+    "chroma_edges": 0.44342381778546414
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.0000188488667527,
+     "chroma": 0.11277912219939117,
+     "luma_mid": 0.9999903208765398,
+     "chroma_mid": 0.32344667410187544,
+     "fine": 1.000005296671838,
+     "mid": 1.000000172634112,
+     "chroma_edges": 0.5186886706770537
+    }
+   }
+  },
+  {
+   "scene": "IMG_7423",
+   "lr_file": "IMG_7423-3.tif",
+   "lr_sha256": "353790f6abe0092733a14a60ee311a43332a39cf9e64264b57769cccd7aacf18",
+   "luminance": 0,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.9868569686674105,
+    "chroma": 0.187789196306308,
+    "luma_mid": 0.9840770859812048,
+    "chroma_mid": 0.14348961616648803,
+    "fine": 0.976344770248919,
+    "mid": 0.9843745692310053,
+    "chroma_edges": 0.39688111460434333
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9999436394119688,
+     "chroma": 0.06551740608740823,
+     "luma_mid": 1.0000022894383345,
+     "chroma_mid": 0.2069689979818528,
+     "fine": 1.0000063618820594,
+     "mid": 1.0000004322441356,
+     "chroma_edges": 0.45222700137457905
+    }
+   }
+  },
+  {
+   "scene": "IMG_7423",
+   "lr_file": "IMG_7423-7.tif",
+   "lr_sha256": "a967ae78c6af2cb724dff700cab6f6150db770bf90dac3c7b069c380af920cef",
+   "luminance": 50,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.34818865884790895,
+    "chroma": 0.10506424686820129,
+    "luma_mid": 0.7702821337457229,
+    "chroma_mid": 0.2598779274216742,
+    "fine": 0.4968057708305561,
+    "mid": 0.8626705078917969,
+    "chroma_edges": 0.4974532832823858
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.8441826110958874,
+     "chroma": 0.34197353029511923,
+     "luma_mid": 0.9575103250570347,
+     "chroma_mid": 0.529922157435162,
+     "fine": 0.9082218254460828,
+     "mid": 0.9777604567010942,
+     "chroma_edges": 0.6379414264590416
+    }
+   }
+  },
+  {
+   "scene": "IMG_7423",
+   "lr_file": "IMG_7423-10.tif",
+   "lr_sha256": "cc8a7bd8e0420bed1742c8e7b111bc5b1d4d4a245947b2e6bca76970edae11ae",
+   "luminance": 100,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.06036143799580154,
+    "chroma": 0.04294794145815521,
+    "luma_mid": 0.622420284974166,
+    "chroma_mid": 0.10517183283846236,
+    "fine": 0.3560168346723278,
+    "mid": 0.7894033357531609,
+    "chroma_edges": 0.3319774436170505
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.5023370289153242,
+     "chroma": 0.06543132015301034,
+     "luma_mid": 0.8669384824094675,
+     "chroma_mid": 0.2067642080253988,
+     "fine": 0.7520886075560304,
+     "mid": 0.9238713918951127,
+     "chroma_edges": 0.4522351557273888
+    }
+   }
+  },
+  {
+   "scene": "IMG_7953",
+   "lr_file": "IMG_7953.tif",
+   "lr_sha256": "c5f05f665296bce36a9933a8885f2b75200df7c488ba5ff214bf6d8fe06ac0b8",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.994385452184328,
+    "chroma": 0.356547967410041,
+    "luma_mid": 0.9637179104367367,
+    "chroma_mid": 0.18023161275198013,
+    "fine": 0.9847169816357852,
+    "mid": 0.9971869879748221,
+    "chroma_edges": 0.9832121215565378
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9999422314081415,
+     "chroma": 0.38882289932062936,
+     "luma_mid": 0.9999745425385089,
+     "chroma_mid": 0.4648712570032071,
+     "fine": 0.9997904269520523,
+     "mid": 0.9999884387425328,
+     "chroma_edges": 0.9445375159929588
+    }
+   }
+  },
+  {
+   "scene": "IMG_7953",
+   "lr_file": "IMG_7953-4.tif",
+   "lr_sha256": "c342c323ee281174815360e18305d7585c67e2622b3ac35593d5a2c1f7b66ee0",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 40,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 1.178928252180611,
+    "chroma": 0.48605812351206223,
+    "luma_mid": 1.031840377759207,
+    "chroma_mid": 0.1928322068797965,
+    "fine": 1.4283108424289552,
+    "mid": 1.0887525753361738,
+    "chroma_edges": 1.0868662205054473
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.249061051991862,
+     "chroma": 0.7198018042379957,
+     "luma_mid": 1.089152516151091,
+     "chroma_mid": 0.47257742623495297,
+     "fine": 1.1509440581164978,
+     "mid": 1.036763472084386,
+     "chroma_edges": 0.979850360164055
+    }
+   }
+  },
+  {
+   "scene": "IMG_7953",
+   "lr_file": "IMG_7953-2.tif",
+   "lr_sha256": "4a4a8208ef547ad28ef38bf8a48955210e5f2daf2caf6d731a4d866a9200d587",
+   "luminance": 0,
+   "colour": 50,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.9939567015791055,
+    "chroma": 0.3527407631595107,
+    "luma_mid": 0.9624433083236851,
+    "chroma_mid": 0.1268952839788741,
+    "fine": 0.9847520356494863,
+    "mid": 0.9972833327985948,
+    "chroma_edges": 0.9832834339369331
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.0000140002644495,
+     "chroma": 0.21244814018445887,
+     "luma_mid": 1.0000379487965143,
+     "chroma_mid": 0.23921120273181098,
+     "fine": 0.9988620108552785,
+     "mid": 0.9998251249545524,
+     "chroma_edges": 0.9195237912473129
+    }
+   }
+  },
+  {
+   "scene": "IMG_7953",
+   "lr_file": "IMG_7953-3.tif",
+   "lr_sha256": "0120ef391ff293712457104acdda8d612fc50a41bdee1f7c8398a5fd4dc166a0",
+   "luminance": 0,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.9944475512432089,
+    "chroma": 0.35555576744533446,
+    "luma_mid": 0.9612018132937864,
+    "chroma_mid": 0.12027965987501073,
+    "fine": 0.9854074021787026,
+    "mid": 0.9975227969777578,
+    "chroma_edges": 0.9820655818950363
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.0000272083269297,
+     "chroma": 0.21456916738177625,
+     "luma_mid": 0.9999986993492737,
+     "chroma_mid": 0.15800767088537085,
+     "fine": 0.9980317345174596,
+     "mid": 0.9995225284101243,
+     "chroma_edges": 0.901472916120466
+    }
+   }
+  },
+  {
+   "scene": "IMG_7953",
+   "lr_file": "IMG_7953-7.tif",
+   "lr_sha256": "ca88f65f1c5fb283506e70ad5ca9533ad910e4b542cae24e94e3fc4f073a0c2f",
+   "luminance": 50,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.3372182453338689,
+    "chroma": 0.14139802189882175,
+    "luma_mid": 0.4171719086443104,
+    "chroma_mid": 0.14381386251395337,
+    "fine": 0.948660392949102,
+    "mid": 0.9834726901196444,
+    "chroma_edges": 0.9817399171829267
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.5222696343398799,
+     "chroma": 0.389053532584379,
+     "luma_mid": 0.6728559577442222,
+     "chroma_mid": 0.46518430509759023,
+     "fine": 0.9966661578676332,
+     "mid": 0.9992663172218705,
+     "chroma_edges": 0.9445255743358618
+    }
+   }
+  },
+  {
+   "scene": "IMG_7953",
+   "lr_file": "IMG_7953-10.tif",
+   "lr_sha256": "feb587f41ad81be8962cfe2232f8c2109d856b1b6df909bbc7f0071fb8c6ff53",
+   "luminance": 100,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.014381941182162334,
+    "chroma": 0.061709743648378425,
+    "luma_mid": 0.04657923435721632,
+    "chroma_mid": 0.043097779135139236,
+    "fine": 0.9371877820576029,
+    "mid": 0.9761608382209627,
+    "chroma_edges": 0.9793877045194493
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.0432180113798453,
+     "chroma": 0.2141999159533575,
+     "luma_mid": 0.4039800274016495,
+     "chroma_mid": 0.15803740459606666,
+     "fine": 0.9888525463499647,
+     "mid": 0.9969099178537686,
+     "chroma_edges": 0.9011360907370448
+    }
+   }
+  },
+  {
+   "scene": "IMG_7958",
+   "lr_file": "IMG_7958.tif",
+   "lr_sha256": "f114a9bacc2d19815eccf21a19c1b06da8227527cb8adf17c4ff64264ee553b1",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.9436063485779217,
+    "chroma": 0.3834623866174132,
+    "luma_mid": 0.9748347370213664,
+    "chroma_mid": 0.5486798381928467,
+    "fine": 0.9753849943708512,
+    "mid": 0.9943011596993406,
+    "chroma_edges": 0.95491354960294
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9999269438164892,
+     "chroma": 0.34646247835504906,
+     "luma_mid": 0.9999208209184642,
+     "chroma_mid": 0.5900734030217331,
+     "fine": 0.9991976761733515,
+     "mid": 0.9997977972436725,
+     "chroma_edges": 0.8538850255957764
+    }
+   }
+  },
+  {
+   "scene": "IMG_7958",
+   "lr_file": "IMG_7958-4.tif",
+   "lr_sha256": "4c4d10ec4aec06b4a673a3dcf57fc07f34e801cb66dd573f87d9bc4ab83ab021",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 40,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 2.113937360437383,
+    "chroma": 1.4476053338086061,
+    "luma_mid": 1.1173253250533097,
+    "chroma_mid": 0.561690751225042,
+    "fine": 1.590150799511279,
+    "mid": 1.1652114956137911,
+    "chroma_edges": 1.1242436846850443
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.3351670980775845,
+     "chroma": 0.6764426576456491,
+     "luma_mid": 1.0655770008743977,
+     "chroma_mid": 0.6117873037031079,
+     "fine": 1.2076083516056317,
+     "mid": 1.0594275840384881,
+     "chroma_edges": 0.9008327510051665
+    }
+   }
+  },
+  {
+   "scene": "IMG_7958",
+   "lr_file": "IMG_7958-2.tif",
+   "lr_sha256": "2f163fc9db47695b209a1e5bba86844f635441c0486ebd96e5de11fcde37cc47",
+   "luminance": 0,
+   "colour": 50,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.9427545473301183,
+    "chroma": 0.3847213151599553,
+    "luma_mid": 0.9702851430078125,
+    "chroma_mid": 0.4921676849080808,
+    "fine": 0.9755816975884716,
+    "mid": 0.9946391714777646,
+    "chroma_edges": 0.9527857142653295
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.0000368794737016,
+     "chroma": 0.08772886016455278,
+     "luma_mid": 0.9998789545814382,
+     "chroma_mid": 0.40066650696218187,
+     "fine": 0.9984132581751672,
+     "mid": 0.9994874888205639,
+     "chroma_edges": 0.7966698826483023
+    }
+   }
+  },
+  {
+   "scene": "IMG_7958",
+   "lr_file": "IMG_7958-3.tif",
+   "lr_sha256": "e5550ed1240d13e5ae1a6ae9888192866cbb98baf94db8a9fa299b5decfdfabd",
+   "luminance": 0,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.9433256349067437,
+    "chroma": 0.37507042409472513,
+    "luma_mid": 0.9604967311595446,
+    "chroma_mid": 0.4371774336921307,
+    "fine": 0.9764896844976997,
+    "mid": 0.9942714301885448,
+    "chroma_edges": 0.937074364331964
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9998617927096174,
+     "chroma": 0.047856607515443524,
+     "luma_mid": 0.9998345614872814,
+     "chroma_mid": 0.2939696093388138,
+     "fine": 0.9980156225282447,
+     "mid": 0.9994061831484656,
+     "chroma_edges": 0.7499740550453566
+    }
+   }
+  },
+  {
+   "scene": "IMG_7958",
+   "lr_file": "IMG_7958-7.tif",
+   "lr_sha256": "91403e57fb1600913b5ddc642ca4f9332e994062acfbcf51ba3775d1f816c58c",
+   "luminance": 50,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.36618421615191876,
+    "chroma": 0.18488568431362196,
+    "luma_mid": 0.8161129284910066,
+    "chroma_mid": 0.5155467368732611,
+    "fine": 0.9010616564947411,
+    "mid": 0.9595475418323693,
+    "chroma_edges": 0.9400518098402781
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9887821665266048,
+     "chroma": 0.34540814204587383,
+     "luma_mid": 0.996521465241228,
+     "chroma_mid": 0.5901038786393282,
+     "fine": 0.9968007581082602,
+     "mid": 0.9988591443206781,
+     "chroma_edges": 0.8538580456998052
+    }
+   }
+  },
+  {
+   "scene": "IMG_7958",
+   "lr_file": "IMG_7958-10.tif",
+   "lr_sha256": "70af7fa3e8622c0f1ed853581769e12db030ceea1a31cccd18281b0ccd1c4a09",
+   "luminance": 100,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.04198882258608202,
+    "chroma": 0.08093432783400885,
+    "luma_mid": 0.7564793908469492,
+    "chroma_mid": 0.4041603730690818,
+    "fine": 0.8736266500503543,
+    "mid": 0.9405125597745333,
+    "chroma_edges": 0.9126115196210457
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9573180656907628,
+     "chroma": 0.04688636277189688,
+     "luma_mid": 0.9865597959800585,
+     "chroma_mid": 0.29387508638094795,
+     "fine": 0.9905402701299671,
+     "mid": 0.9957866009227041,
+     "chroma_edges": 0.7527095792140992
+    }
+   }
+  },
+  {
+   "scene": "IMG_7961",
+   "lr_file": "IMG_7961.tif",
+   "lr_sha256": "aa476e26ff6a2ad80b38d1753712c5df429990a1fa0dff1462ea42834d03d15d",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 1.011554856231574,
+    "chroma": 0.06011845229868382,
+    "luma_mid": 0.9825094931158487,
+    "chroma_mid": 0.0725595880850568,
+    "fine": 1.0026505570051485,
+    "mid": 0.9992363988788694,
+    "chroma_edges": 0.8378923379157422
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9998664437982241,
+     "chroma": 0.320226760197548,
+     "luma_mid": 1.0000360193979598,
+     "chroma_mid": 0.40788168446265294,
+     "fine": 1.0000009739358813,
+     "mid": 0.9999976351144018,
+     "chroma_edges": 0.5770896769855123
+    }
+   }
+  },
+  {
+   "scene": "IMG_7961",
+   "lr_file": "IMG_7961-4.tif",
+   "lr_sha256": "f67295f0c875b25f827df89d111593cfe034dba58ef415a5de21f488f13cdc12",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 40,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 2.353723866371076,
+    "chroma": 0.6171440873922817,
+    "luma_mid": 1.4487452024392375,
+    "chroma_mid": 0.09817567602876737,
+    "fine": 1.6245433832755976,
+    "mid": 1.1997364143521523,
+    "chroma_edges": 0.9839319021248131
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.3320779080283964,
+     "chroma": 0.3412757011987488,
+     "luma_mid": 1.1364483520530202,
+     "chroma_mid": 0.4066974336093238,
+     "fine": 1.2214681512465742,
+     "mid": 1.0658995072707862,
+     "chroma_edges": 0.5636928589762054
+    }
+   }
+  },
+  {
+   "scene": "IMG_7961",
+   "lr_file": "IMG_7961-2.tif",
+   "lr_sha256": "b49e0d690a0eef9c5bb92c133c76a96d49ae19b3efd74567d2faf8eea995ac4a",
+   "luminance": 0,
+   "colour": 50,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 1.011379008627383,
+    "chroma": 0.05778865114957338,
+    "luma_mid": 0.981882475872413,
+    "chroma_mid": 0.036056223774011034,
+    "fine": 1.0030686441094798,
+    "mid": 0.9992956593288169,
+    "chroma_edges": 0.8158545487737281
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.000015016741553,
+     "chroma": 0.06715439265422471,
+     "luma_mid": 1.0000636158068807,
+     "chroma_mid": 0.1596525320787623,
+     "fine": 0.9999990050948804,
+     "mid": 0.9999963323254901,
+     "chroma_edges": 0.41305489814724416
+    }
+   }
+  },
+  {
+   "scene": "IMG_7961",
+   "lr_file": "IMG_7961-3.tif",
+   "lr_sha256": "fb28b7bff80f96be66ebd1d49f38b23626dcc1e631b5b4ddbec5d6813514dc8b",
+   "luminance": 0,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 1.0113596137934429,
+    "chroma": 0.0575252503054449,
+    "luma_mid": 0.9806515846511958,
+    "chroma_mid": 0.031238168721444557,
+    "fine": 1.0041676072217045,
+    "mid": 0.9990935923147914,
+    "chroma_edges": 0.7133084736467405
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9998508786695028,
+     "chroma": 0.007366956804844879,
+     "luma_mid": 1.0000083014069228,
+     "chroma_mid": 0.048066176397545554,
+     "fine": 0.9999980182322744,
+     "mid": 0.9999960260031018,
+     "chroma_edges": 0.319559764614333
+    }
+   }
+  },
+  {
+   "scene": "IMG_7961",
+   "lr_file": "IMG_7961-7.tif",
+   "lr_sha256": "fce6ad0dcae9bf0e046457f75d0269e102ca96554e239fda7a530628629f1916",
+   "luminance": 50,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.34020243424135377,
+    "chroma": 0.04642400701296214,
+    "luma_mid": 0.4048707553488712,
+    "chroma_mid": 0.07226239977674012,
+    "fine": 0.9395917566591507,
+    "mid": 0.9662066911667255,
+    "chroma_edges": 0.8333269224683392
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.7533248546414065,
+     "chroma": 0.3203121281991418,
+     "luma_mid": 0.8022663677553207,
+     "chroma_mid": 0.4080147285693906,
+     "fine": 0.9958654910087006,
+     "mid": 0.9967347552230017,
+     "chroma_edges": 0.577095425811134
+    }
+   }
+  },
+  {
+   "scene": "IMG_7961",
+   "lr_file": "IMG_7961-10.tif",
+   "lr_sha256": "7e378623ff17f982b3426d35a5bade3d23cda0397765315822c68361c2a431f5",
+   "luminance": 100,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.0052816495037413015,
+    "chroma": 0.03973757459232968,
+    "luma_mid": 0.00956734997248192,
+    "chroma_mid": 0.02953759646286954,
+    "fine": 0.9140769692161494,
+    "mid": 0.9477035439888948,
+    "chroma_edges": 0.7054861670367667
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.22890733768240346,
+     "chroma": 0.007342461955614026,
+     "luma_mid": 0.4772101267533895,
+     "chroma_mid": 0.04805367488138495,
+     "fine": 0.9847833533464541,
+     "mid": 0.9878213952045849,
+     "chroma_edges": 0.3197459667872844
+    }
+   }
+  },
+  {
+   "scene": "IMG_8473",
+   "lr_file": "IMG_8473.tif",
+   "lr_sha256": "fe452fe6e3daee3734f04d970e299ffd09f35a60fa00e9fcfbf02e6c9efac234",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 1.00404889595231,
+    "chroma": 0.2151006600743055,
+    "luma_mid": 0.9872935523529873,
+    "chroma_mid": 0.10205026455491227,
+    "fine": 0.9855936306046804,
+    "mid": 0.9961031556220237,
+    "chroma_edges": 0.6205540589544111
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.0000478502798766,
+     "chroma": 0.3302341849363486,
+     "luma_mid": 1.000002892394388,
+     "chroma_mid": 0.42323893159562764,
+     "fine": 1.0000088567566028,
+     "mid": 0.9999999692964352,
+     "chroma_edges": 0.5960356195484808
+    }
+   }
+  },
+  {
+   "scene": "IMG_8473",
+   "lr_file": "IMG_8473-4.tif",
+   "lr_sha256": "b867769c5635b2337efc37b78291a9cb0b6d572d008d9c39ba6ffdcc4f227cf0",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 40,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 2.313354539246276,
+    "chroma": 0.8545698678458151,
+    "luma_mid": 1.4518964544918718,
+    "chroma_mid": 0.14556217073520555,
+    "fine": 1.8325992047979534,
+    "mid": 1.0935538739935753,
+    "chroma_edges": 0.6398751692996889
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.3521957612099946,
+     "chroma": 0.45025978447453896,
+     "luma_mid": 1.1488312269720433,
+     "chroma_mid": 0.42252367540181957,
+     "fine": 1.214764259251548,
+     "mid": 1.0452582585318968,
+     "chroma_edges": 0.5991997346240672
+    }
+   }
+  },
+  {
+   "scene": "IMG_8473",
+   "lr_file": "IMG_8473-2.tif",
+   "lr_sha256": "1121c9e372edcb748bc034358ed81fdc51cc1e0fd9041ebfc0bf630d1e5e83b4",
+   "luminance": 0,
+   "colour": 50,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 1.0031758685332095,
+    "chroma": 0.21316287616588483,
+    "luma_mid": 0.9877518656647188,
+    "chroma_mid": 0.06781558937908333,
+    "fine": 0.9856593934941327,
+    "mid": 0.9968299542854295,
+    "chroma_edges": 0.5547764764240619
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.000006633306453,
+     "chroma": 0.09335950660043724,
+     "luma_mid": 0.9999887037802135,
+     "chroma_mid": 0.17673592896068996,
+     "fine": 1.0000046045644932,
+     "mid": 0.9999990318045037,
+     "chroma_edges": 0.48473532551124215
+    }
+   }
+  },
+  {
+   "scene": "IMG_8473",
+   "lr_file": "IMG_8473-3.tif",
+   "lr_sha256": "5320dfc4aebdf891926297b873c70cfce95a141bedadb817ddbba349931093ef",
+   "luminance": 0,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 1.003264030811307,
+    "chroma": 0.21367764703190692,
+    "luma_mid": 0.987120655291418,
+    "chroma_mid": 0.06413813642830982,
+    "fine": 0.9852240807000006,
+    "mid": 0.9966277002454711,
+    "chroma_edges": 0.4791569923522895
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9999903786986877,
+     "chroma": 0.03924996889453168,
+     "luma_mid": 1.000025136508421,
+     "chroma_mid": 0.060066993537015445,
+     "fine": 1.0000018956529035,
+     "mid": 0.9999996039094682,
+     "chroma_edges": 0.4581945655994124
+    }
+   }
+  },
+  {
+   "scene": "IMG_8473",
+   "lr_file": "IMG_8473-7.tif",
+   "lr_sha256": "c3867e2bbf8f06dec13137c86413b6eb843fe928e941ea35c63177be3e824f74",
+   "luminance": 50,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.3376100458594988,
+    "chroma": 0.08645462616282784,
+    "luma_mid": 0.4059730507975672,
+    "chroma_mid": 0.09011676847653291,
+    "fine": 0.3691993342940795,
+    "mid": 0.8421625036094746,
+    "chroma_edges": 0.6170280582416807
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.9141521194279455,
+     "chroma": 0.3304330685625996,
+     "luma_mid": 0.9165478036692616,
+     "chroma_mid": 0.4233921879717655,
+     "fine": 0.8681448528755797,
+     "mid": 0.9804415607202976,
+     "chroma_edges": 0.5961395768141837
+    }
+   }
+  },
+  {
+   "scene": "IMG_8473",
+   "lr_file": "IMG_8473-10.tif",
+   "lr_sha256": "b23a76682773d331c632617e42cbd236c4d16e399e288e893d4e90353db4a696",
+   "luminance": 100,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.0033266968488304,
+    "chroma": 0.03442113208876785,
+    "luma_mid": 0.0069605845805140575,
+    "chroma_mid": 0.030599796810395888,
+    "fine": 0.1318697733209723,
+    "mid": 0.768797428859994,
+    "chroma_edges": 0.4754034266100565
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.6969705798830399,
+     "chroma": 0.03934835893207937,
+     "luma_mid": 0.718026968368337,
+     "chroma_mid": 0.06004671923661915,
+     "fine": 0.7529588228348516,
+     "mid": 0.9330857230372848,
+     "chroma_edges": 0.4581893347740926
+    }
+   }
+  },
+  {
+   "scene": "_MG_7580",
+   "lr_file": "_MG_7580.tif",
+   "lr_sha256": "dfe41f92a995f57632d4c218290a1475fb8b8a6e5ba092569753322b77fd5877",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.9972135672880402,
+    "chroma": 0.2238330546724882,
+    "luma_mid": 0.9695662110956009,
+    "chroma_mid": 0.1587361974789999,
+    "fine": 0.9848577689734124,
+    "mid": 0.9813126760891249,
+    "chroma_edges": 0.47108980354706786
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.0002013500224902,
+     "chroma": 0.34816468021597735,
+     "luma_mid": 0.9999535097735809,
+     "chroma_mid": 0.42981267988329375,
+     "fine": 1.0000009919426036,
+     "mid": 0.99999971509696,
+     "chroma_edges": 0.6865498851146623
+    }
+   }
+  },
+  {
+   "scene": "_MG_7580",
+   "lr_file": "_MG_7580-4.tif",
+   "lr_sha256": "541337c358c7b4e3085063af5f745596b365947638cee925f07c0087b40e6eac",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 40,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 2.163344943001703,
+    "chroma": 0.1638747985472772,
+    "luma_mid": 1.3708432530964685,
+    "chroma_mid": 0.15496902986125455,
+    "fine": 1.579457093127286,
+    "mid": 1.0819244456383479,
+    "chroma_edges": 0.4843629149460247
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.3409780719210342,
+     "chroma": 0.32517271806877635,
+     "luma_mid": 1.138610151902041,
+     "chroma_mid": 0.42903394605895445,
+     "fine": 1.246990115772287,
+     "mid": 1.046001683951506,
+     "chroma_edges": 0.690849128641692
+    }
+   }
+  },
+  {
+   "scene": "_MG_7580",
+   "lr_file": "_MG_7580-2.tif",
+   "lr_sha256": "f3fd39afe8e89c85038ecdeea5c515da5f7575e3a7ae97b7a38f7840f87bb557",
+   "luminance": 0,
+   "colour": 50,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.9973265115663559,
+    "chroma": 0.2206175172718114,
+    "luma_mid": 0.9678980024833732,
+    "chroma_mid": 0.08968248567543056,
+    "fine": 0.9833395413623608,
+    "mid": 0.9726276778024108,
+    "chroma_edges": 0.3572227870598899
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.00008546056858,
+     "chroma": 0.1215507071883643,
+     "luma_mid": 1.0,
+     "chroma_mid": 0.18957040696156735,
+     "fine": 1.000000952623247,
+     "mid": 0.9999989002504593,
+     "chroma_edges": 0.5886247942301278
+    }
+   }
+  },
+  {
+   "scene": "_MG_7580",
+   "lr_file": "_MG_7580-3.tif",
+   "lr_sha256": "7ee70d42fb4413ad72194ce9a6e83fd838f85a81d93c4dc715a3158ad569ebe5",
+   "luminance": 0,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.9967137568686861,
+    "chroma": 0.22033296558799176,
+    "luma_mid": 0.9681668729533542,
+    "chroma_mid": 0.07878937706606184,
+    "fine": 0.9805139512556929,
+    "mid": 0.9591192388291414,
+    "chroma_edges": 0.2678313067582753
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.99999474466923,
+     "chroma": 0.08611022024511322,
+     "luma_mid": 1.0000253098838172,
+     "chroma_mid": 0.08905082608536785,
+     "fine": 1.0000009048035534,
+     "mid": 0.9999983982944681,
+     "chroma_edges": 0.5435884684810249
+    }
+   }
+  },
+  {
+   "scene": "_MG_7580",
+   "lr_file": "_MG_7580-7.tif",
+   "lr_sha256": "e19a067319a9ec722d7eea236bbad30ad101e8493e11f22bd9b0b296565ae78e",
+   "luminance": 50,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.3358692522467963,
+    "chroma": 0.10173608959679131,
+    "luma_mid": 0.4032357700343908,
+    "chroma_mid": 0.14320068168338182,
+    "fine": 0.434205407703647,
+    "mid": 0.7618173979558689,
+    "chroma_edges": 0.4569341230589651
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.7195130338848984,
+     "chroma": 0.3497166584210183,
+     "luma_mid": 0.7807148835631222,
+     "chroma_mid": 0.4298828984291261,
+     "fine": 0.6819573536534704,
+     "mid": 0.8918782132503658,
+     "chroma_edges": 0.6865491167499638
+    }
+   }
+  },
+  {
+   "scene": "_MG_7580",
+   "lr_file": "_MG_7580-10.tif",
+   "lr_sha256": "b9141a1f6715af82121896c42a9b5e9aba24426092ac1d7f7158ca66fb505eb3",
+   "luminance": 100,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.007117181629607304,
+    "chroma": 0.049257712095910816,
+    "luma_mid": 0.019006814738812133,
+    "chroma_mid": 0.042344175329675104,
+    "fine": 0.24292188615484694,
+    "mid": 0.6240853515316296,
+    "chroma_edges": 0.24973061783406855
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.07367200314338114,
+     "chroma": 0.08615054741630673,
+     "luma_mid": 0.43527237236321525,
+     "chroma_mid": 0.08903145043718463,
+     "fine": 0.33161169658181555,
+     "mid": 0.732624423840913,
+     "chroma_edges": 0.5435886879168157
+    }
+   }
+  },
+  {
+   "scene": "_MG_7840",
+   "lr_file": "_MG_7840.tif",
+   "lr_sha256": "12b51b27b0b16397a806ef3978da369e9286f64f4a6e8424a36d2f0b75908d26",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 1.0209648017433972,
+    "chroma": 0.6033131025190197,
+    "luma_mid": 0.9482720120549533,
+    "chroma_mid": 0.28171994230900743,
+    "fine": 0.9742036737311969,
+    "mid": 0.9933983944946512,
+    "chroma_edges": 0.5997529843057277
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.0003852518445902,
+     "chroma": 0.36849957245042403,
+     "luma_mid": 0.9998682035712334,
+     "chroma_mid": 0.4799329397724206,
+     "fine": 1.000004036233784,
+     "mid": 0.9999995357537579,
+     "chroma_edges": 0.7178749409907296
+    }
+   }
+  },
+  {
+   "scene": "_MG_7840",
+   "lr_file": "_MG_7840-4.tif",
+   "lr_sha256": "a188352743ccd52f57f3db13a22514c2be5bd538dac3be14fed3d24f677b62ab",
+   "luminance": 0,
+   "colour": 25,
+   "sharpening": {
+    "amount": 40,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 2.3979497734253794,
+    "chroma": 2.1304706108509635,
+    "luma_mid": 1.2381430803292672,
+    "chroma_mid": 0.45735201069335674,
+    "fine": 1.8188915962224477,
+    "mid": 1.0776950034116037,
+    "chroma_edges": 0.6569396825807496
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.3495494665868804,
+     "chroma": 0.8606563998948873,
+     "luma_mid": 1.097368424637549,
+     "chroma_mid": 0.5025689578548758,
+     "fine": 1.2893763855130749,
+     "mid": 1.0345195608202622,
+     "chroma_edges": 0.7329757327926631
+    }
+   }
+  },
+  {
+   "scene": "_MG_7840",
+   "lr_file": "_MG_7840-2.tif",
+   "lr_sha256": "eed0e781ed718d87ca8ae24b424f31b794b7466526301a1b45eada67269a72d3",
+   "luminance": 0,
+   "colour": 50,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 1.0207456909473636,
+    "chroma": 0.6024805907338722,
+    "luma_mid": 0.9481432947891059,
+    "chroma_mid": 0.2751903586766433,
+    "fine": 0.9734249104406031,
+    "mid": 0.9915066735105668,
+    "chroma_edges": 0.5432654448583529
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.000449352942645,
+     "chroma": 0.1646255785171608,
+     "luma_mid": 0.9998760220352073,
+     "chroma_mid": 0.2637914870312984,
+     "fine": 1.000005077209186,
+     "mid": 0.9999994546958351,
+     "chroma_edges": 0.6366670116954747
+    }
+   }
+  },
+  {
+   "scene": "_MG_7840",
+   "lr_file": "_MG_7840-3.tif",
+   "lr_sha256": "af29af04fba715ae6eb99389538cfdf385f8ccfb8c457b4d87b24a15bc043dde",
+   "luminance": 0,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 1.02026829321776,
+    "chroma": 0.6049066957014091,
+    "luma_mid": 0.9486673697473121,
+    "chroma_mid": 0.276765542979426,
+    "fine": 0.9731705406206359,
+    "mid": 0.9889579322140605,
+    "chroma_edges": 0.49964628559418856
+   },
+   "ipr": {
+    "current": {
+     "luma": 1.000400852084943,
+     "chroma": 0.1423468773297162,
+     "luma_mid": 0.9999264487966862,
+     "chroma_mid": 0.1796586642818001,
+     "fine": 1.0000052236875925,
+     "mid": 0.9999988616267076,
+     "chroma_edges": 0.6077834987521672
+    }
+   }
+  },
+  {
+   "scene": "_MG_7840",
+   "lr_file": "_MG_7840-7.tif",
+   "lr_sha256": "1f196ebba44af7b15394fcc935d6f5e136acd966f2a1887cd744cd368439a8eb",
+   "luminance": 50,
+   "colour": 25,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.34627516388346485,
+    "chroma": 0.2081550077020955,
+    "luma_mid": 0.4624175986309685,
+    "chroma_mid": 0.15608017880156103,
+    "fine": 0.4156948625793333,
+    "mid": 0.8598057029353057,
+    "chroma_edges": 0.5580372412812744
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.8468391218971836,
+     "chroma": 0.3667512010931373,
+     "luma_mid": 0.895479087372145,
+     "chroma_mid": 0.4795689289202255,
+     "fine": 0.9046101061987377,
+     "mid": 0.9791306640665198,
+     "chroma_edges": 0.7178693976379207
+    }
+   }
+  },
+  {
+   "scene": "_MG_7840",
+   "lr_file": "_MG_7840-10.tif",
+   "lr_sha256": "2de8116384af7374922d5ceb1277f3b4d66769f9483713695b9ba7f2acc115e6",
+   "luminance": 100,
+   "colour": 100,
+   "sharpening": {
+    "amount": 0,
+    "masking": 0,
+    "radius": 1.0
+   },
+   "lr": {
+    "luma": 0.013350362269001055,
+    "chroma": 0.031179353821466395,
+    "luma_mid": 0.14505069668900358,
+    "chroma_mid": 0.05566929789760271,
+    "fine": 0.2425190914204608,
+    "mid": 0.785967106201378,
+    "chroma_edges": 0.4334326293997788
+   },
+   "ipr": {
+    "current": {
+     "luma": 0.46219262296097474,
+     "chroma": 0.1412362211062464,
+     "luma_mid": 0.688953202398555,
+     "chroma_mid": 0.17763759071455099,
+     "fine": 0.745225932044121,
+     "mid": 0.9365726145369431,
+     "chroma_edges": 0.607778638982793
+    }
+   }
+  }
+ ]
+}

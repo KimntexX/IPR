@@ -9,7 +9,7 @@ crops stay a derived folder.
 
 Usage: python tests/study_demosaic.py --data-version N [--scene STEM ...]
            [--base tests/image/base ...] [--crops build-windows-msvc/dematricage-vNNN] [--jobs N]
-           [--variants AHD,RCD,...] [--threads 8[,12,16]]
+           [--variants AHD,RCD,...]
 """
 import argparse
 import json
@@ -50,8 +50,6 @@ def main(argv=None):
     parser.add_argument("--jobs", type=int, default=0, help="parallel probe processes (default: from free memory)")
     parser.add_argument("--timeout", type=int, default=7200, help="seconds per probe process")
     parser.add_argument("--variants", help="comma-separated variants (AHD, the reference, always runs first)")
-    parser.add_argument("--threads", default="8",
-                        help="OpenCV threads of our interpolations; a list (8,12,16) adds scaling timings")
     args = parser.parse_args(argv)
     if not args.probe.is_file():
         raise SystemExit("Probe not built: " + str(args.probe))
@@ -69,7 +67,7 @@ def main(argv=None):
     with tempfile.TemporaryDirectory() as tmp:
         def work(index):
             out = Path(tmp) / f"part-{index}.json"
-            options = ["--threads", args.threads] + (["--variants", args.variants] if args.variants else [])
+            options = ["--variants", args.variants] if args.variants else []
             r = subprocess.run([str(args.probe), *options, str(out), str(crops), *map(str, chunks[index])],
                                env=runtime_env(args.probe), capture_output=True, text=True, timeout=args.timeout)
             if r.returncode != 0:
@@ -85,7 +83,6 @@ def main(argv=None):
         "local_changes": git("status", "--short").splitlines(),
         "probe": {"sha256": sha256(args.probe)},
         "jobs": jobs,
-        "threads": args.threads,
         "timing_note": "dcraw_process wall time with the other probe processes running",
         "duration_seconds": round(time.monotonic() - start, 1),
         "python": platform.python_version(),

@@ -16,6 +16,31 @@ pas les pixels et ne correspondent pas aux bandes du mélangeur.
 Aucun raccourci numérique de notation ou de drapeau n’est déclaré pour
 l’instant. Les commandes se trouvent dans le panneau Informations.
 
+\section{Historique et instantanés}
+Sous les libellés, le panneau gauche liste les étapes de la photo ouverte, la
+plus récente en haut. Un glissement de curseur ou de roue, un point de courbe
+déplacé, une valeur saisie ou un choix de profil comptent chacun pour une étape.
+Les cent dernières étapes restent enregistrées dans le compagnon de la photo et
+reviennent à sa réouverture.
+
+\emph{Annuler} et \emph{Rétablir} se trouvent dans cette partie et dans le menu
+\emph{Édition}. Cliquer sur une étape y revient ; les étapes plus récentes
+s’affichent atténuées et restent accessibles jusqu’à la prochaine retouche.
+Annuler un changement de profil développe de nouveau la photo.
+
+Pour retirer une retouche du milieu de l’historique, faire un clic droit sur son
+étape et choisir \emph{Supprimer cette étape}, ou appuyer sur \touche{Suppr}
+quand la liste a le focus : l’étape courante est alors retirée. Les étapes
+suivantes sont rejouées sans cette retouche et gardent ce qu’elles ont
+elles-mêmes changé. L’ouverture ne se supprime pas.
+
+Un instantané garde l’état courant sous un nom. Saisir ce nom puis choisir
+\emph{Créer} ; un clic sur l’instantané le restaure en créant une nouvelle étape.
+
+\attention{Une fois enregistré par cette version, un compagnon n’est plus relu
+par une ancienne version d’IPR. Un compagnon écrit par une version plus récente
+s’ouvre en lecture seule.}
+
 \section{Copier et coller les paramètres}
 Sur une image prête, choisir \emph{Édition > Copier les paramètres} ou
 \touche{Ctrl + Maj + C}. Ouvrir la photo destinataire, attendre la fin du
@@ -26,9 +51,12 @@ Il reste disponible pendant la session, même après un changement de dossier.
 
 Le collage remplace toutes les retouches, courbes, mélangeur et grading inclus.
 Il conserve le profil, la calibration, l’optique, la balance automatique et le
-classement du destinataire. Température et nuance manuelles sont copiées en
-valeur absolue ; deux boîtiers ne produiront pas nécessairement la même couleur.
-Il n’existe pas encore de sélection des seules familles à coller ni d’annulation.
+classement du destinataire. Si la source est en balance telle quelle,
+le destinataire reprend sa propre balance telle quelle ; une température et
+une nuance personnalisées sont copiées en valeur absolue. Deux boîtiers ne
+produiront pas nécessairement la même couleur.
+Il n’existe pas encore de sélection des seules familles à coller ; un collage
+s’annule comme une autre étape de l’historique.
 \touche{Ctrl + C} et \touche{Ctrl + V} restent disponibles pour les champs texte.
 
 \section{Copier les retouches à plusieurs photos}
@@ -37,7 +65,8 @@ Il n’existe pas encore de sélection des seules familles à coller ni d’annu
 \item Cocher les cases des vignettes destinataires ou utiliser
 \touche{Ctrl + clic}, sans confondre case cochée
 et image ouverte. Le compteur indique le nombre de fichiers sélectionnés.
-\item Cliquer sur \emph{Appliquer à N}. Vérifier le message de résultat.
+\item Faire un clic droit et choisir \emph{Appliquer les réglages de l’image ouverte
+à la sélection}, aussi présent dans le menu \emph{Édition}. Vérifier le message de résultat.
 \item Décocher les fichiers, ou utiliser le bouton de désélection générale.
 \end{enumerate}
 Cette action écrit les retouches dans les compagnons des destinataires.

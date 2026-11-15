@@ -9,7 +9,9 @@ Item {
     required property var editor
     property var preferences: null
     property var resetAction: null
-    readonly property bool exportDialogVisible: exportDialog.visible || exportReview.visible
+    // The preview picks a point colour while true (Main connects the viewport).
+    property bool pointColorPicking: false
+    readonly property bool exportDialogVisible: exportDialog.visible || exportReview.visible || batchExportDialog.visible
     property bool preferencesReady: false
     property bool restoringPreferences: false
     property int activeCurve: 0
@@ -30,56 +32,32 @@ Item {
     implicitHeight: 720
 
     function curveName(channel) {
-        return [qsTr("Luminance"), qsTr("Rouge"), qsTr("Vert"), qsTr("Bleu")][channel]
+        return [qsTr("RVB"), qsTr("Rouge"), qsTr("Vert"), qsTr("Bleu")][channel]
     }
 
     function curveColor(channel) {
         return ["#edf2f8", "#f07178", "#98c379", "#61afef"][channel]
     }
 
+    // Drawn as the engine evaluates it (natural spline, as Lightroom).
     function evaluateCurve(points, sample) {
-        if (points.length === 0)
-            return sample
-
-        const weights = []
-        for (let index = 0; index < points.length; ++index) {
-            let weight = 1
-            for (let other = 0; other < points.length; ++other) {
-                if (index !== other)
-                    weight /= points[index].x - points[other].x
-            }
-            weights.push(weight)
-        }
-
-        if (sample <= 1) {
-            let numerator = 0
-            let denominator = 0
-            for (let index = 0; index < points.length; ++index) {
-                const distance = sample - points[index].x
-                if (Math.abs(distance) < 0.000000001)
-                    return points[index].y
-                const term = weights[index] / distance
-                numerator += term * points[index].y
-                denominator += term
-            }
-            return numerator / denominator
-        }
-
-        const endpoint = points.length - 1
-        let derivative = 0
-        for (let index = 0; index < endpoint; ++index) {
-            derivative += weights[index] / weights[endpoint] *
-                    (points[index].y - points[endpoint].y) /
-                    (points[endpoint].x - points[index].x)
-        }
-        return points[endpoint].y +
-                (sample - points[endpoint].x) * derivative
+        return editor.toneCurveValue(points, sample)
     }
 
     function reloadCurve() {
         curvePoints = editor.toneCurve(activeCurve)
         if (toneCurveModuleInstance)
             toneCurveModuleInstance.requestPaint()
+    }
+
+    // A custom pair keeps the slider on its luminance, labelled as custom.
+    // Showing it must not send the amount back: that would replace the pair.
+    function reloadDenoiseAmount() {
+        const amount = editor.adjustmentValue("denoiseAmount")
+        denoiseAmountSlider.custom = amount < 0
+        denoiseAmountSlider.syncing = true
+        denoiseAmountSlider.value = amount < 0 ? editor.adjustmentValue("denoiseLuminance") : amount
+        denoiseAmountSlider.syncing = false
     }
 
     function commitCurve() {
@@ -97,6 +75,11 @@ Item {
     function openExportDialog() {
         prepareExportDialog()
         exportDialog.open()
+    }
+
+    // Format and quality are those of the Export section.
+    function openBatchExportDialog() {
+        batchExportDialog.open()
     }
 
     function restorePreferences() {
@@ -174,6 +157,8 @@ Item {
             grainSlider.value = editor.adjustmentValue("grain")
             denoiseLuminanceSlider.value = editor.adjustmentValue("denoiseLuminance")
             denoiseChrominanceSlider.value = editor.adjustmentValue("denoiseChrominance")
+            root.reloadDenoiseAmount()
+            denoiseBeforeProfileCheck.checked = editor.adjustmentValue("denoiseBeforeProfile") > 0
             sharpeningAmountSlider.value = editor.adjustmentValue("sharpeningAmount")
             sharpeningRadiusSlider.value = editor.adjustmentValue("sharpeningRadius")
             sharpeningMaskingSlider.value = editor.adjustmentValue("sharpeningMasking")
@@ -304,7 +289,7 @@ Item {
                     Layout.minimumWidth: 0
                     text: qsTr("Niveaux de gris")
                     enabled: editor.hasImage
-                    onToggled: editor.setGrayscale(checked)
+                    onToggled: editor.setAdjustment("grayscale", checked)
                 }
 
                 AdjustmentControl {
@@ -319,7 +304,7 @@ Item {
                     adjustmentEnabled: editor.hasImage
                     onValueEdited: function(value) {
                         if (editor)
-                            editor.setBrightness(value)
+                            editor.setAdjustment("brightness", value)
                     }
                 }
 
@@ -334,7 +319,7 @@ Item {
                     adjustmentEnabled: editor.hasImage
                     onValueEdited: function(value) {
                         if (editor)
-                            editor.setContrast(Math.round(value))
+                            editor.setAdjustment("contrast", Math.round(value))
                     }
                 }
 
@@ -349,7 +334,7 @@ Item {
                     adjustmentEnabled: editor.hasImage
                     onValueEdited: function(value) {
                         if (editor)
-                            editor.setHighlights(Math.round(value))
+                            editor.setAdjustment("highlights", Math.round(value))
                     }
                 }
 
@@ -364,7 +349,7 @@ Item {
                     adjustmentEnabled: editor.hasImage
                     onValueEdited: function(value) {
                         if (editor)
-                            editor.setWhites(Math.round(value))
+                            editor.setAdjustment("whites", Math.round(value))
                     }
                 }
 
@@ -379,7 +364,7 @@ Item {
                     adjustmentEnabled: editor.hasImage
                     onValueEdited: function(value) {
                         if (editor)
-                            editor.setShadows(Math.round(value))
+                            editor.setAdjustment("shadows", Math.round(value))
                     }
                 }
 
@@ -394,7 +379,7 @@ Item {
                     adjustmentEnabled: editor.hasImage
                     onValueEdited: function(value) {
                         if (editor)
-                            editor.setBlacks(Math.round(value))
+                            editor.setAdjustment("blacks", Math.round(value))
                     }
                 }
             }
@@ -463,7 +448,7 @@ Item {
                     adjustmentEnabled: editor.hasImage
                     onValueEdited: function(value) {
                         if (editor)
-                            editor.setTemperature(Math.round(value))
+                            editor.setAdjustment("temperature", Math.round(value))
                     }
                 }
 
@@ -479,7 +464,7 @@ Item {
                     adjustmentEnabled: editor.hasImage
                     onValueEdited: function(value) {
                         if (editor)
-                            editor.setTint(Math.round(value))
+                            editor.setAdjustment("tint", Math.round(value))
                     }
                 }
 
@@ -495,7 +480,7 @@ Item {
                     adjustmentEnabled: editor.hasImage
                     onValueEdited: function(value) {
                         if (editor)
-                            editor.setVibrance(Math.round(value))
+                            editor.setAdjustment("vibrance", Math.round(value))
                     }
                 }
 
@@ -511,7 +496,7 @@ Item {
                     adjustmentEnabled: editor.hasImage
                     onValueEdited: function(value) {
                         if (editor)
-                            editor.setSaturation(Math.round(value))
+                            editor.setAdjustment("saturation", Math.round(value))
                     }
                 }
             }
@@ -528,6 +513,25 @@ Item {
                     showTitle: false
                     Layout.fillWidth: true
                     editor: root.editor
+                }
+            }
+
+            SettingsSection {
+                objectName: "pointColorSection"
+                stateKey: "pointColor"
+                preferences: root.preferences
+                textColor: root.textColor
+                title: qsTr("Couleur du point")
+
+                PointColorModule {
+                    id: pointColorModule
+                    objectName: "pointColorModule"
+                    Layout.fillWidth: true
+                    editor: root.editor
+                    picking: root.pointColorPicking
+                    onPickingToggled: root.pointColorPicking = !root.pointColorPicking
+                    textColor: root.textColor
+                    secondaryTextColor: root.secondaryTextColor
                 }
             }
 
@@ -564,7 +568,7 @@ Item {
                     adjustmentEnabled: editor.hasImage
                     onValueEdited: function(value) {
                         if (editor)
-                            editor.setTexture(Math.round(value))
+                            editor.setAdjustment("texture", Math.round(value))
                     }
                 }
 
@@ -579,7 +583,7 @@ Item {
                     adjustmentEnabled: editor.hasImage
                     onValueEdited: function(value) {
                         if (editor)
-                            editor.setClarity(Math.round(value))
+                            editor.setAdjustment("clarity", Math.round(value))
                     }
                 }
 
@@ -594,7 +598,7 @@ Item {
                     adjustmentEnabled: editor.hasImage
                     onValueEdited: function(value) {
                         if (editor)
-                            editor.setDehaze(Math.round(value))
+                            editor.setAdjustment("dehaze", Math.round(value))
                     }
                 }
 
@@ -609,7 +613,7 @@ Item {
                     adjustmentEnabled: editor.hasImage
                     onValueEdited: function(value) {
                         if (editor)
-                            editor.setGrain(Math.round(value))
+                            editor.setAdjustment("grain", Math.round(value))
                     }
                 }
 
@@ -623,7 +627,7 @@ Item {
                     adjustmentEnabled: editor.hasImage
                     onValueEdited: function(value) {
                         if (editor)
-                            editor.setBlur(Math.round(value))
+                            editor.setAdjustment("blur", Math.round(value))
                     }
                 }
             }
@@ -635,33 +639,116 @@ Item {
                 textColor: root.textColor
                 title: qsTr("Réduction du bruit")
 
+                PreferenceCheckBox {
+                    objectName: "photoNeuralDenoiseCheckBox"
+                    Layout.fillWidth: true
+                    text: qsTr("Débruitage IA")
+                    visible: editor.rawImage && (editor.neuralDenoiseAllowed || editor.neuralDenoiseActive)
+                    checked: editor.neuralDenoiseActive
+                    enabled: !editor.busy && (editor.neuralDenoiseActive || editor.neuralDenoiseUnavailableReason.length === 0)
+                    onToggled: editor.setNeuralDenoiseEnabled(checked)
+                }
+                Label {
+                    objectName: "photoNeuralDenoiseReason"
+                    Layout.fillWidth: true
+                    visible: editor.rawImage && editor.neuralDenoiseAllowed && editor.neuralDenoiseUnavailableReason.length > 0
+                    text: editor.neuralDenoiseUnavailableReason
+                    color: root.secondaryTextColor
+                    wrapMode: Text.WordWrap
+                }
                 AdjustmentControl {
+                    id: neuralIntensitySlider
+                    objectName: "photoNeuralDenoiseIntensity"
+                    label: qsTr("Intensité")
                     textColor: root.textColor
                     secondaryTextColor: root.secondaryTextColor
-                    id: denoiseLuminanceSlider
-                    label: qsTr("Bruit de luminance")
-                    valueText: Math.round(value)
                     minimumValue: 0
                     maximumValue: 100
-                    adjustmentEnabled: editor.hasImage
-                    onValueEdited: function(value) {
-                        if (editor)
-                            editor.setDenoiseLuminance(Math.round(value))
+                    value: editor.neuralDenoiseStrength
+                    valueText: Math.round(value)
+                    visible: editor.neuralDenoiseActive
+                    adjustmentEnabled: !editor.busy && editor.neuralDenoiseAllowed && editor.neuralDenoiseActive
+                    onValueEdited: { if (!pressed) neuralIntensityCommit.restart() }
+                    onPressedChanged: { if (!pressed) neuralIntensityCommit.restart() }
+                    Timer {
+                        id: neuralIntensityCommit
+                        interval: 500
+                        onTriggered: editor.setNeuralDenoiseStrength(Math.round(neuralIntensitySlider.value))
                     }
                 }
 
+                PreferenceCheckBox {
+                    id: denoiseBeforeProfileCheck
+                    objectName: "denoiseBeforeProfileCheck"
+                    Layout.fillWidth: true
+                    Layout.minimumWidth: 0
+                    text: qsTr("Signal RAW signé, avant les profils (expérimental)")
+                    enabled: editor.hasImage
+                    onToggled: editor.setDenoiseBeforeProfile(checked)
+                }
+
+                // One amount drives both strengths through the engine's law;
+                // the advanced controls set them apart, shown as a custom pair.
                 AdjustmentControl {
                     textColor: root.textColor
                     secondaryTextColor: root.secondaryTextColor
-                    id: denoiseChrominanceSlider
-                    label: qsTr("Bruit de couleur")
-                    valueText: Math.round(value)
+                    id: denoiseAmountSlider
+                    property bool custom: false
+                    property bool syncing: false
+                    label: qsTr("Réduction du bruit")
+                    valueText: custom ? qsTr("Perso.") : Math.round(value)
                     minimumValue: 0
                     maximumValue: 100
-                    adjustmentEnabled: editor.hasImage
+                    adjustmentEnabled: editor.hasImage && !editor.neuralDenoiseActive
                     onValueEdited: function(value) {
-                        if (editor)
-                            editor.setDenoiseChrominance(Math.round(value))
+                        if (editor && !syncing) {
+                            editor.setDenoiseAmount(Math.round(value))
+                            denoiseLuminanceSlider.value = editor.adjustmentValue("denoiseLuminance")
+                            denoiseChrominanceSlider.value = editor.adjustmentValue("denoiseChrominance")
+                            root.reloadDenoiseAmount()
+                        }
+                    }
+                }
+
+                SettingsSection {
+                    objectName: "denoiseAdvancedSection"
+                    stateKey: "denoiseAdvanced"
+                    preferences: root.preferences
+                    textColor: root.textColor
+                    title: qsTr("Avancé")
+
+                    AdjustmentControl {
+                        textColor: root.textColor
+                        secondaryTextColor: root.secondaryTextColor
+                        id: denoiseLuminanceSlider
+                        label: qsTr("Bruit de luminance")
+                        valueText: Math.round(value)
+                        minimumValue: 0
+                        maximumValue: 100
+                        adjustmentEnabled: editor.hasImage && !editor.neuralDenoiseActive
+                        onValueEdited: function(value) {
+                            if (editor) {
+                                editor.setAdjustment("denoiseLuminance", Math.round(value))
+                                root.reloadDenoiseAmount()
+                            }
+                        }
+                    }
+
+                    AdjustmentControl {
+                        textColor: root.textColor
+                        secondaryTextColor: root.secondaryTextColor
+                        id: denoiseChrominanceSlider
+                        label: qsTr("Bruit de couleur")
+                        valueText: Math.round(value)
+                        minimumValue: 0
+                        maximumValue: 100
+                        adjustmentEnabled: editor.hasImage
+                        onValueEdited: function(value) {
+                            if (editor) {
+                                editor.setAdjustment("denoiseChrominance", Math.round(value))
+                                root.reloadDenoiseAmount()
+                            }
+                        }
                     }
                 }
             }
@@ -684,7 +771,7 @@ Item {
                     adjustmentEnabled: editor.hasImage
                     onValueEdited: function(value) {
                         if (editor)
-                            editor.setSharpeningAmount(Math.round(value))
+                            editor.setAdjustment("sharpeningAmount", Math.round(value))
                     }
                 }
 
@@ -702,7 +789,7 @@ Item {
                     adjustmentEnabled: editor.hasImage
                     onValueEdited: function(value) {
                         if (editor)
-                            editor.setSharpeningRadius(value)
+                            editor.setAdjustment("sharpeningRadius", value)
                     }
                 }
 
@@ -718,7 +805,7 @@ Item {
                     adjustmentEnabled: editor.hasImage
                     onValueEdited: function(value) {
                         if (editor)
-                            editor.setSharpeningMasking(Math.round(value))
+                            editor.setAdjustment("sharpeningMasking", Math.round(value))
                     }
                 }
             }
@@ -839,6 +926,58 @@ Item {
                         border.color: exportButton.palette.mid
                     }
                 }
+
+                // Each selected image with its own recipe, into one folder.
+                PreferenceButton {
+                    id: batchExportButton
+                    objectName: "batchExportButton"
+
+                    visible: editor.selectedImageCount > 0 && !editor.batchExporting
+                    text: qsTr("Exporter la sélection (%1)…").arg(editor.selectedImageCount)
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 28
+                    enabled: !editor.batchApplying
+                    onClicked: batchExportDialog.open()
+
+                    contentItem: Text {
+                        text: batchExportButton.text
+                        color: root.textColor
+                        opacity: batchExportButton.enabled ? 1 : 0.45
+                        font.pixelSize: 12
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                    }
+
+                    background: Rectangle {
+                        radius: 3
+                        color: batchExportButton.down || batchExportButton.hovered ? batchExportButton.palette.mid : batchExportButton.palette.button
+                        border.width: 1
+                        border.color: batchExportButton.palette.mid
+                    }
+                }
+
+                RowLayout {
+                    objectName: "batchExportProgress"
+                    Layout.fillWidth: true
+                    visible: editor.batchExporting
+
+                    ProgressBar {
+                        Layout.fillWidth: true
+                        from: 0
+                        to: Math.max(1, editor.batchExportTotal)
+                        value: editor.batchExportDone
+                    }
+                    Label {
+                        text: qsTr("%1 / %2").arg(editor.batchExportDone).arg(editor.batchExportTotal)
+                        color: root.secondaryTextColor
+                        font.pixelSize: 11
+                    }
+                    PreferenceButton {
+                        objectName: "batchExportCancel"
+                        text: qsTr("Annuler")
+                        onClicked: editor.cancelBatchExport()
+                    }
+                }
             }
 
         }
@@ -870,6 +1009,13 @@ Item {
             exportReview.dimensions = editor.imageDetails.dimensions || ""
             exportReview.open()
         }
+    }
+
+    FolderDialog {
+        id: batchExportDialog
+        objectName: "batchExportDialog"
+        title: qsTr("Exporter la sélection dans…")
+        onAccepted: editor.exportSelection(selectedFolder, formatBox.currentText, Math.round(qualitySlider.value))
     }
 
     ExportReviewDialog {

@@ -3,6 +3,8 @@
 
 #include "ColorPipeline.h"
 #include "ImageMetadata.h"
+#include "RawDevelopment.h"
+#include "RawInput.h"
 
 #include <QImage>
 #include <QSize>
@@ -11,6 +13,7 @@
 #include <QStringList>
 #include <functional>
 #include <memory>
+#include <optional>
 
 namespace RawDecoder {
 
@@ -20,7 +23,7 @@ namespace RawDecoder {
 // manual temperature/tint edits reuse the camera-space working context.
 struct DcpSource
 {
-    cv::Mat cameraRgb;
+    ipr::Image cameraRgb;   // the working context's signal, shared read only
     std::shared_ptr<const CameraProfileEngine::DcpWorkingContext> workingContext;
     ImageMetadata metadata;
     std::optional<double> whiteBalanceKelvin;
@@ -28,6 +31,8 @@ struct DcpSource
     bool automaticWhiteBalance = false;
     bool lensCorrectionEnabled = true;
     bool chromaticAberrationEnabled = true;
+    bool preLensSignal = false;       // decoded with Options::retainPreLensSignal
+    bool signedDevelopment = false;   // decoded with Options::signedDevelopment
 };
 
 struct Options
@@ -44,8 +49,18 @@ struct Options
     bool useNormalizationEnvironment = true;
     bool listDcpProfiles = false;
     bool preferCameraNeutral = false;
+    // Development policy B (values below the black kept, RawDevelopment::Policy::Signed)
+    // for the comparison bench; the application keeps policy A, LibRaw's.
+    bool signedDevelopment = false;
+    // Keep the camera signal before the lens corrections in the DCP context (the
+    // editor's experimental camera-signal denoise): one more camera buffer.
+    bool retainPreLensSignal = false;
     std::shared_ptr<DcpSource> retainedDcpSource;
     std::function<bool()> cancellationRequested;
+    // The neural CFA denoiser (empty in the default opening): builds the stage for the
+    // file's sensor data (camera, ISO, levels), or an empty stage when it does not apply.
+    // Used only when IPR develops the RAW itself.
+    std::function<RawDevelopment::CfaStage(const RawInput::Input &input)> cfaStageFactory;
 };
 
 ColorPipeline::WorkingImage applyProfile(const DcpSource &source, const QString &profile,
@@ -66,6 +81,10 @@ struct FormatOptions
     QString decoderId;
     QString decoderVersion;
     std::function<QSize(const QString &)> dimensions;
+    // The camera's as-shot white balance in kelvins, read without decoding the pixels.
+    std::function<std::optional<double>(const QString &)> asShotWhiteBalanceKelvin;
+    // For a file without an embedded preview: a quick development of its sensor data.
+    ThumbnailFunction developedThumbnail;
 };
 
 bool registerFormatHandler(const QStringList &extensions,
@@ -74,6 +93,8 @@ bool registerFormatHandler(const QStringList &extensions,
 QStringList supportedExtensions();
 QString backendVersion();
 QSize sourceDimensions(const QString &fileName);
+// Same value as the decoded image's referenceWhiteBalanceKelvin, from the metadata only.
+std::optional<double> asShotWhiteBalanceKelvin(const QString &fileName);
 ColorPipeline::WorkingImage decode(const QString &fileName,
                                    const Options &options = {},
                                    ImageMetadata *metadata = nullptr,
@@ -81,6 +102,11 @@ ColorPipeline::WorkingImage decode(const QString &fileName,
 QImage decodeEmbeddedThumbnail(const QString &fileName,
                                const QSize &maximumSize,
                                QString *error = nullptr);
+// A thumbnail developed from the sensor data, for the files without an embedded
+// preview (many DNG): slower than the embedded one, and not the profile's rendering.
+QImage developThumbnail(const QString &fileName,
+                        const QSize &maximumSize,
+                        QString *error = nullptr);
 
 }
 

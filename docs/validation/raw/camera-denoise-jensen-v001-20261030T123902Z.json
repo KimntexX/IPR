@@ -1,0 +1,713 @@
+{
+  "schema_version": 1,
+  "created_utc": "20261030T123902Z",
+  "study": "fixed_DCP_Jensen_gap_audit",
+  "revision": "d293f24deee9328a8608cb83c4848e0f731614db",
+  "tool_sha256": "aa179b9e0d82679abee3fc0715c8785447642a4ba32e6a0340dc3cb68dfa544a",
+  "parents": {
+    "docs\\validation\\raw\\camera-denoise-fixed-dark-mean-v001-20261030T120856Z.json": "26e877a2f6a0a621b188b2fe16f861e32e5ba900bde95d4471f2f34be1e5ab68",
+    "docs\\validation\\raw\\camera-denoise-coarse-dark-cells-v001-20261030T121723Z.json": "0d1bfb515c6ec8728ff716d2433d85a9a0aa28e8ca80519d2cf6c6316b87390f"
+  },
+  "source": {
+    "sha256": "484b94c13d819261f725de0a2ea2cb8b7a8b8d5a91ab85936f5b339a797b69db",
+    "text": "\"\"\"Evaluate the actual fixed DCP at stored camera means; no repeated denoising campaign.\"\"\"\nimport argparse\nfrom datetime import datetime, timezone\nimport json\nimport math\nimport os\nfrom pathlib import Path\nimport subprocess\nfrom audit_dark_mean import sha256\n\n\ndef decomposition(states, metric):\n    a,b=states['B0'],states['B100']\n    before=a['mean_of_F'][metric];after=b['mean_of_F'][metric]\n    f0=a['F_of_mean'][metric];f1=b['F_of_mean'][metric]\n    if not all(math.isfinite(v) for v in (before,after,f0,f1)):\n        raise ValueError('Nonfinite Jensen input')\n    observed=after-before\n    shift=f1-f0\n    gap=(after-f1)-(before-f0)\n    if abs(observed-shift-gap)>1e-9:\n        raise ValueError('Mean decomposition does not close')\n    return dict(observed_delta=observed,mean_shift_component=shift,\n                distribution_gap_component=gap,gap_before=before-f0,gap_after=after-f1)\n\n\ndef main():\n    p=argparse.ArgumentParser(description=__doc__)\n    p.add_argument('--tool',type=Path,required=True)\n    p.add_argument('--project-root',type=Path,required=True)\n    p.add_argument('--profile-root',type=Path,required=True)\n    p.add_argument('--parent',type=Path,action='append',required=True)\n    p.add_argument('--runtime-dir',type=Path,action='append',required=True)\n    args=p.parse_args()\n    root=Path(__file__).resolve().parents[2]\n    stamp=datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')\n    env=os.environ.copy();env['PATH']=os.pathsep.join(str(p.resolve()) for p in args.runtime_dir)+os.pathsep+env.get('PATH','')\n    proof=dict(schema_version=1,created_utc=stamp,study='fixed_DCP_Jensen_gap_audit',\n        revision=subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip(),\n        tool_sha256=sha256(args.tool),parents={str(p):sha256(p) for p in args.parent},\n        source=dict(sha256=sha256(__file__),text=Path(__file__).read_text(encoding='utf-8')),\n        native_source=dict(sha256=sha256(root/'tests/raw_bench/camera_denoise_leakage.cpp'),\n                           text=(root/'tests/raw_bench/camera_denoise_leakage.cpp').read_text(encoding='utf-8')),\n        scenes=[],limits=['Existing camera and output means reused, no new denoising or mask selection.',\n                         'Complete pointwise DCP/render chain F, not an isolated scalar tone curve.',\n                         'Jensen gaps describe distribution effects, not a clean truth or causal component ablation.',\n                         'Mean vector rendered in float32; extremely small gaps are not meaningful.',\n                         'Unchanged pre-D0 worktree; no claim about a different engine head.'])\n    failed=False\n    try:\n        for filename in ('7Y6A7599.CR3','6V1A9153.CR3','IMG_3135.CR2'):\n            command=[str(args.tool.resolve()),'--input',str(args.project_root/'tests/image/base'/filename),\n                     '--manifest',str(root/'config/raw-normalization.json'),\n                     '--profile-root',str(args.profile_root.resolve()),'--label','jensen-gap']\n            for parent in args.parent:\n                command.extend(['--jensen-proof',str(parent.resolve())])\n            run=subprocess.run(command,cwd=root,env=env,capture_output=True,text=True,\n                               encoding='utf-8',errors='replace',timeout=180)\n            record=dict(scene=filename,argv=command,returncode=run.returncode,stderr=run.stderr)\n            proof['scenes'].append(record)\n            if run.returncode:\n                record['stdout']=run.stdout\n                raise RuntimeError('Native Jensen audit failed')\n            measured=json.loads(run.stdout);record['measurements']=measured\n            for population in measured['populations']:\n                population['decomposition']={metric:decomposition(population['states'],metric) for metric in\n                    ('linear_rec2020_y_mean','signed_encoded_y_mean_255','clipped_encoded_y_mean_255')}\n                print(filename,population['parent_study'],population['decomposition']['clipped_encoded_y_mean_255'],flush=True)\n    except Exception as exc:\n        failed=True;proof['error']=f'{type(exc).__name__}: {exc}'\n    proof['verdict']='fail' if failed else 'measured_not_causal_or_quality_validation'\n    output=root/'docs/validation/raw'/f'camera-denoise-jensen-v001-{stamp}.json'\n    with output.open('x',encoding='utf-8') as handle:\n        json.dump(proof,handle,ensure_ascii=False,indent=2,allow_nan=False)\n    print(output,proof['verdict'],proof.get('error',''))\n    return int(failed)\n\n\nif __name__=='__main__':\n    raise SystemExit(main())\n"
+  },
+  "native_source": {
+    "sha256": "bca403f37d1f390bde68170c9cd81ac4fd25fbcc87459338af7ae345e2f6e0ab",
+    "text": "#include \"CameraDenoise.h\"\n#include \"CameraProfileEngine.h\"\n#include \"RawDecoder.h\"\n#include \"WorkingColorSpace.h\"\n#include <QCoreApplication>\n#include <QCommandLineParser>\n#include <QCryptographicHash>\n#include <QDateTime>\n#include <QFile>\n#include <QJsonArray>\n#include <QJsonDocument>\n#include <QJsonObject>\n#include <opencv2/imgproc.hpp>\n#include <algorithm>\n#include <array>\n#include <cmath>\n#include <cstddef>\n#include <iostream>\n#include <limits>\n#include <stdexcept>\n#include <vector>\n\nnamespace {\nvoid require(bool ok, const char *message) { if (!ok) throw std::runtime_error(message); }\nQString hash(const QString &path)\n{\n    QFile f(path); require(f.open(QIODevice::ReadOnly), \"Cannot hash source\");\n    QCryptographicHash h(QCryptographicHash::Sha256); require(h.addData(&f), \"Hash read failed\");\n    return QString::fromLatin1(h.result().toHex());\n}\nfloat median(std::vector<float> values)\n{\n    require(!values.empty(),\"Empty median\");\n    const auto mid=values.begin()+std::ptrdiff_t(values.size()/2);\n    std::nth_element(values.begin(),mid,values.end());\n    return values.size()%2 ? *mid : .5f*(*mid+*std::max_element(values.begin(),mid));\n}\nint reflected(int x,int size)\n{\n    if(size==1)return 0;\n    while(x<0||x>=size)x=x<0?-x:2*size-2-x;\n    return x;\n}\nQJsonArray signalSurvey(const cv::Mat &camera,const std::vector<CameraDenoise::NoiseModelSummary> &models)\n{\n    // Independent coefficient survey, not a second production denoiser.\n    constexpr int width=64,halo=65;\n    require(camera.cols>=width&&camera.rows>=width,\"Survey needs 64px images\");\n    QJsonArray records;\n    for(int gy=0;gy<9;++gy)for(int gx=0;gx<9;++gx) {\n        const int ox=(camera.cols-width)*gx/8,oy=(camera.rows-width)*gy/8;\n        cv::Mat current(width+2*halo,width+2*halo,CV_32FC3);\n        std::vector<float> intensities;\n        std::array<std::vector<float>,4> quarters;\n        for(int y=0;y<current.rows;++y)for(int x=0;x<current.cols;++x) {\n            auto rgb=camera.at<cv::Vec3f>(reflected(oy+y-halo,camera.rows),reflected(ox+x-halo,camera.cols));\n            const cv::Vec3f v(.25f*rgb[0]+.5f*rgb[1]+.25f*rgb[2],.5f*(rgb[0]-rgb[2]),rgb[1]-.5f*(rgb[0]+rgb[2]));\n            current.at<cv::Vec3f>(y,x)=v;\n            if(x>=halo&&x<halo+width&&y>=halo&&y<halo+width) {\n                intensities.push_back(v[0]);\n                quarters[size_t((x-halo>=width/2)+2*(y-halo>=width/2))].push_back(v[0]);\n            }\n        }\n        float low=median(quarters[0]),high=low;\n        for(const auto &q:quarters){const float m=median(q);low=std::min(low,m);high=std::max(high,m);}\n        QJsonArray levels; std::vector<float> guide;\n        for(int level=0;level<5;++level) {\n            const int step=1<<level;\n            cv::Mat kernel=cv::Mat::zeros(1,4*step+1,CV_32F);\n            for(int k=0;k<5;++k)kernel.at<float>(0,k*step)=std::array<float,5>{1.f/16,4.f/16,6.f/16,4.f/16,1.f/16}[size_t(k)];\n            cv::Mat base;cv::sepFilter2D(current,base,-1,kernel,kernel,{-1,-1},0,cv::BORDER_REFLECT_101);\n            const cv::Mat detail=current-base;\n            if(level==0)for(int y=halo;y<halo+width;++y)for(int x=halo;x<halo+width;++x)\n                guide.push_back(base.at<cv::Vec3f>(y,x)[0]);\n            QJsonArray sigma,correlationX,correlationY;bool rejected=false;\n            for(int c=0;c<3;++c) {\n                std::vector<float> values;\n                for(int y=halo;y<halo+width;++y)for(int x=halo;x<halo+width;++x)values.push_back(detail.at<cv::Vec3f>(y,x)[c]);\n                const float center=median(values);\n                for(auto &v:values)v=std::abs(v-center);\n                const float s=median(values)/.67448975f;sigma.append(s);\n                const auto corr=[&](bool horizontal) {\n                    double ab=0,aa=0,bb=0;const int lag=2*step;\n                    for(int y=0;y<width-(horizontal?0:lag);++y)for(int x=0;x<width-(horizontal?lag:0);++x) {\n                        const double a=detail.at<cv::Vec3f>(halo+y,halo+x)[c]-center;\n                        const double b=detail.at<cv::Vec3f>(halo+y+(horizontal?0:lag),halo+x+(horizontal?lag:0))[c]-center;\n                        ab+=a*b;aa+=a*a;bb+=b*b;\n                    }\n                    return aa>0&&bb>0?std::abs(ab/std::sqrt(aa*bb)):0.;\n                };\n                const double cx=corr(true),cy=corr(false);correlationX.append(cx);correlationY.append(cy);\n                rejected=rejected||(s>0&&cx>.9&&cy>.9);\n            }\n            levels.append(QJsonObject{{\"sigma_I_Co_Cg\",sigma},{\"correlation_x\",correlationX},\n                {\"correlation_y\",correlationY},{\"coherent_rejected\",rejected}});\n            current=std::move(base);\n        }\n        QJsonArray coverage;\n        for(const auto &model:models) {\n            int below=0,above=0;\n            if(model.supported)for(float v:guide){below+=v<model.low;above+=v>model.high;}\n            coverage.append(QJsonObject{{\"level\",model.level},{\"supported\",model.supported},\n                {\"below\",below},{\"above\",above},{\"pixels\",int(guide.size())},\n                {\"global_fallback_pixels\",model.globalFallbackAvailable?\n                    (model.supported?below+above:int(guide.size())):0}});\n        }\n        records.append(QJsonObject{{\"roi\",QJsonArray{ox,oy,width,width}},\n            {\"training_original_5x5\",gx%2==0&&gy%2==0},{\"signal_I_median\",median(intensities)},\n            {\"quadrant_signal_drift\",double(high-low)},{\"levels\",levels},{\"model_coverage\",coverage}});\n    }\n    return records;\n}\ncv::Mat render(CameraProfileEngine::DcpWorkingContext context, const cv::Mat &camera)\n{\n    context.cameraRgb = camera;\n    cv::Mat out; QString error;\n    if (!CameraProfileEngine::renderFromCameraSignal(context, int(std::lround(context.sourceKelvin)), 0, 0, out, &error))\n        throw std::runtime_error(error.toStdString());\n    require(out.type() == CV_32FC3 && cv::checkRange(out), \"Invalid profile output\");\n    return out;\n}\ncv::Mat intensity(const cv::Mat &camera)\n{\n    cv::Mat out(camera.size(), CV_32F);\n    for (int y=0; y<out.rows; ++y) for (int x=0; x<out.cols; ++x) {\n        const auto v=camera.at<cv::Vec3f>(y,x);\n        out.at<float>(y,x)=.25f*v[0]+.5f*v[1]+.25f*v[2];\n    }\n    return out;\n}\ncv::Mat luminance(const cv::Mat &working)\n{\n    cv::Mat out(working.size(),CV_32F);\n    for(int y=0;y<out.rows;++y)for(int x=0;x<out.cols;++x)\n        out.at<float>(y,x)=WorkingColor::luminance(working.at<cv::Vec3f>(y,x));\n    return out;\n}\ndouble stddev(const cv::Mat &m)\n{\n    cv::Scalar mean,sigma; cv::meanStdDev(m,mean,sigma); return sigma[0];\n}\ndouble rms(const cv::Mat &m) { return cv::norm(m,cv::NORM_L2)/std::sqrt(double(m.total())); }\nQJsonObject cameraMoments(const cv::Mat &camera)\n{\n    require(!camera.empty()&&camera.type()==CV_32FC3,\"Invalid camera moments input\");\n    const auto mean=cv::mean(camera);\n    cv::Vec3d negative{},positivePart{};\n    for(int y=0;y<camera.rows;++y)for(int x=0;x<camera.cols;++x) {\n        const auto v=camera.at<cv::Vec3f>(y,x);\n        for(int c=0;c<3;++c) {\n            negative[c]+=v[c]<0;\n            positivePart[c]+=std::max(0.,double(v[c]));\n        }\n    }\n    QJsonArray means,negatives,positive;\n    for(int c=0;c<3;++c) {\n        means.append(mean[c]);negatives.append(negative[c]/double(camera.total()));\n        positive.append(positivePart[c]/double(camera.total()));\n    }\n    return {{\"mean_rgb\",means},{\"negative_fraction_rgb\",negatives},\n            {\"positive_part_mean_rgb\",positive}};\n}\ncv::Mat selectPixels(const cv::Mat &camera,const cv::Mat &mask)\n{\n    require(mask.size()==camera.size()&&mask.type()==CV_8UC1,\"Mask shape mismatch\");\n    const int count=cv::countNonZero(mask);require(count>0,\"Empty dark mask\");\n    cv::Mat selected(1,count,CV_32FC3);int at=0;\n    for(int y=0;y<mask.rows;++y)for(int x=0;x<mask.cols;++x)\n        if(mask.at<unsigned char>(y,x))selected.at<cv::Vec3f>(0,at++)=camera.at<cv::Vec3f>(y,x);\n    return selected;\n}\nQJsonObject renderedMoments(const cv::Mat &working)\n{\n    double linear=0,signedEncoded=0,clippedEncoded=0,roundedEncoded=0;\n    cv::Vec3d below{},above{};const cv::Vec3d weights(.2126,.7152,.0722);\n    for(int y=0;y<working.rows;++y)for(int x=0;x<working.cols;++x) {\n        const auto value=working.at<cv::Vec3f>(y,x);\n        linear+=WorkingColor::luminance(value);\n        const auto srgb=WorkingColor::toSrgb()*cv::Vec3d(value);\n        for(int c=0;c<3;++c) {\n            const double encoded=WorkingColor::srgbEncode(srgb[c])*255;\n            const double clipped=std::clamp(encoded,0.,255.);\n            signedEncoded+=weights[c]*encoded;clippedEncoded+=weights[c]*clipped;\n            roundedEncoded+=weights[c]*std::lround(clipped);\n            below[c]+=srgb[c]<0;above[c]+=srgb[c]>1;\n        }\n    }\n    const double n=double(working.total());\n    return {{\"linear_rec2020_y_mean\",linear/n},{\"signed_encoded_y_mean_255\",signedEncoded/n},\n        {\"clipped_encoded_y_mean_255\",clippedEncoded/n},{\"rounded_encoded_y_mean_255\",roundedEncoded/n},\n        {\"srgb_below_zero_fraction\",QJsonArray{below[0]/n,below[1]/n,below[2]/n}},\n        {\"srgb_above_one_fraction\",QJsonArray{above[0]/n,above[1]/n,above[2]/n}}};\n}\nQJsonObject measures(const cv::Mat &working,const cv::Rect &roi)\n{\n    cv::Mat display(working.size(),CV_32FC3);\n    for(int y=0;y<working.rows;++y)for(int x=0;x<working.cols;++x) {\n        auto v=WorkingColor::toSrgb()*cv::Vec3d(working.at<cv::Vec3f>(y,x));\n        auto &out=display.at<cv::Vec3f>(y,x);\n        for(int c=0;c<3;++c) out[c]=float(std::lround(255*std::clamp(WorkingColor::srgbEncode(v[c]),0.,1.)));\n    }\n    cv::Mat y(display.size(),CV_32F),co(y.size(),CV_32F),cg(y.size(),CV_32F);\n    for(int row=0;row<y.rows;++row)for(int x=0;x<y.cols;++x) {\n        const auto v=display.at<cv::Vec3f>(row,x);\n        y.at<float>(row,x)=.2126f*v[0]+.7152f*v[1]+.0722f*v[2];\n        co.at<float>(row,x)=.5f*(v[0]-v[2]); cg.at<float>(row,x)=v[1]-.5f*(v[0]+v[2]);\n    }\n    cv::Mat by,bco,bcg; cv::GaussianBlur(y,by,{},2); cv::GaussianBlur(co,bco,{},2); cv::GaussianBlur(cg,bcg,{},2);\n    const auto yy=luminance(working);cv::Mat sy;cv::GaussianBlur(yy,sy,{},2);\n    const cv::Mat hpY=y-by,hpCo=co-bco,hpCg=cg-bcg,hpLinear=yy-sy;\n    return {{\"display_y_mean\",cv::mean(y(roi))[0]}, {\"display_y_highpass_sigma2_std\",stddev(hpY(roi))},\n            {\"display_chroma_highpass_sigma2_rms_std\",std::hypot(stddev(hpCo(roi)),stddev(hpCg(roi)))},\n            {\"display_chroma_lowpass_sigma2_rms_std\",std::hypot(stddev(bco(roi)),stddev(bcg(roi)))},\n            {\"linear_rec2020_y_mean\",cv::mean(yy(roi))[0]}, {\"linear_rec2020_y_highpass_sigma2_std\",stddev(hpLinear(roi))}};\n}\n// STUDY ONLY: finite differences of the actual profile, not a production DCP hook.\n// Project chroma correction onto the tangent plane of rendered linear Y, along\n// the balanced opponent-intensity direction (1,1,1), not a characterized scene gray.\n// Clipped/ill-conditioned derivatives abstain.\ncv::Mat projected(const CameraProfileEngine::DcpWorkingContext &context,const cv::Mat &source,\n                  const cv::Mat &filtered,const cv::Vec3f &gains,QJsonObject &diagnostic)\n{\n    constexpr float epsilon=.0002f;\n    cv::Mat gradient(source.size(),CV_32FC3);\n    for(int c=0;c<3;++c) {\n        auto plus=source.clone(),minus=source.clone();\n        for(int y=0;y<source.rows;++y)for(int x=0;x<source.cols;++x) {\n            plus.at<cv::Vec3f>(y,x)[c]+=epsilon*gains[c];\n            minus.at<cv::Vec3f>(y,x)[c]-=epsilon*gains[c];\n        }\n        const auto yp=luminance(render(context,plus)),ym=luminance(render(context,minus));\n        for(int y=0;y<source.rows;++y)for(int x=0;x<source.cols;++x)\n            gradient.at<cv::Vec3f>(y,x)[c]=(yp.at<float>(y,x)-ym.at<float>(y,x))/(2*epsilon*gains[c]);\n    }\n    auto out=filtered.clone(); double abstained=0,limited=0;\n    for(int y=0;y<source.rows;++y)for(int x=0;x<source.cols;++x) {\n        const auto g=gradient.at<cv::Vec3f>(y,x),d=filtered.at<cv::Vec3f>(y,x)-source.at<cv::Vec3f>(y,x);\n        const double denominator=g.dot(gains);\n        if(!std::isfinite(denominator)||denominator<=1e-6) {out.at<cv::Vec3f>(y,x)=source.at<cv::Vec3f>(y,x);++abstained;continue;}\n        const double shift=g.dot(d)/denominator;\n        const double bound=std::max({std::abs(d[0]/gains[0]),std::abs(d[1]/gains[1]),std::abs(d[2]/gains[2])});\n        const double bounded=std::clamp(shift,-bound,bound); limited+=bounded!=shift;\n        out.at<cv::Vec3f>(y,x)-=gains*float(bounded);\n    }\n    diagnostic={{\"abstained_fraction\",abstained/source.total()},{\"limited_fraction\",limited/source.total()},\n                {\"finite_difference_epsilon_balanced_camera\",epsilon}};\n    return out;\n}\n}\n\nint main(int argc,char **argv)\n{\n    QCoreApplication app(argc,argv);QCommandLineParser p;p.addHelpOption();\n    for(const auto *key:{\"input\",\"manifest\",\"profile-root\",\"label\"})p.addOption(QCommandLineOption(key,key,\"value\"));\n    p.addOption(QCommandLineOption(\"signal-survey\",\"Survey balanced coefficient MAD and actual full-frame models; no image export\"));\n    p.addOption(QCommandLineOption(\"mean-audit\",\"Audit full-frame 100/100 filtering, local/global camera means and rendered patch means\"));\n    p.addOption(QCommandLineOption(\"dark-mask\",\"Bench-only full camera-size uint8 mask, bytes 0/1\",\"path\"));\n    p.addOption(QCommandLineOption(\"cell-rects\",\"Bench-only JSON array of camera rectangles\",\"path\"));\n    p.addOption(QCommandLineOption(\"jensen-proof\",\"Existing mean proof; evaluate F(mean) without filtering again; repeatable\",\"path\"));\n    p.process(app);\n    try {\n        for(const auto *key:{\"input\",\"manifest\",\"profile-root\",\"label\"})require(p.isSet(key),\"Missing argument\");\n        cv::setNumThreads(1);\n        RawDecoder::Options options;options.automaticWhiteBalance=false;options.signedDevelopment=true;\n        options.retainPreLensSignal=true;options.preferCameraNeutral=true;\n        options.automaticLcpSelection=false;options.lensCorrectionEnabled=false;options.chromaticAberrationEnabled=false;\n        options.useNormalizationEnvironment=false;options.normalizationManifest=p.value(\"manifest\");\n        options.profileDirectories={p.value(\"profile-root\")};\n        ImageMetadata meta;QString error;\n        auto loaded=RawDecoder::decode(p.value(\"input\"),options,&meta,&error);\n        if(loaded.isNull()||!loaded.dcpContext)throw std::runtime_error(error.toStdString());\n        auto full=*loaded.dcpContext;loaded={};\n        CameraDenoise::Context context;\n        // V1: source is already white-balanced; never compensate these axes.\n        const cv::Vec3f gains(1,1,1); // Neutral direction for the projection study only.\n        if(p.isSet(\"jensen-proof\")) {\n            QJsonArray populations;\n            const auto sourceHash=hash(p.value(\"input\")),profileHash=hash(full.profilePath),manifestHash=hash(p.value(\"manifest\"));\n            for(const auto &path:p.values(\"jensen-proof\")) {\n                QFile proofFile(path);require(proofFile.open(QIODevice::ReadOnly),\"Cannot open Jensen parent\");\n                const auto document=QJsonDocument::fromJson(proofFile.readAll());require(document.isObject(),\"Invalid Jensen parent\");\n                const auto parent=document.object();\n                const auto sources=parent.value(\"sources\").toObject();\n                require(sources.value(\"src/profiles/CameraProfileEngine.cpp\").toObject().value(\"sha256\").toString()==\n                    hash(QStringLiteral(IPR_SOURCE_ROOT_PATH \"/src/profiles/CameraProfileEngine.cpp\")),\"DCP implementation changed since parent\");\n                for(const auto &entry:parent.value(\"scenes\").toArray()) {\n                    const auto measured=entry.toObject().value(\"measurements\").toObject();\n                    if(measured.isEmpty()||measured.value(\"source_sha256\").toString()!=sourceHash)continue;\n                    require(measured.value(\"profile_sha256\").toString()==profileHash&&\n                        measured.value(\"manifest_sha256\").toString()==manifestHash,\"Parent profile/calibration differs\");\n                    QJsonObject states;\n                    for(const auto *state:{\"B0\",\"B100\"}) {\n                        const auto camera=measured.value(QString(state)+\"_camera_dark\").toObject();\n                        const auto mean=camera.value(\"mean_rgb\").toArray();require(mean.size()==3,\"Missing camera mean\");\n                        cv::Mat constant(1,1,CV_32FC3);\n                        for(int c=0;c<3;++c) {\n                            const double value=mean[c].toDouble(std::numeric_limits<double>::quiet_NaN());\n                            require(std::isfinite(value),\"Nonfinite mean\");constant.at<cv::Vec3f>(0,0)[c]=float(value);\n                        }\n                        const auto fMean=renderedMoments(render(full,constant));\n                        const auto meanF=measured.value(QString(state)+\"_rendered_dark\").toObject();\n                        require(!meanF.isEmpty(),\"Missing rendered mean\");\n                        QJsonObject gap;\n                        for(const auto *metric:{\"linear_rec2020_y_mean\",\"signed_encoded_y_mean_255\",\n                                               \"clipped_encoded_y_mean_255\",\"rounded_encoded_y_mean_255\"}) {\n                            require(meanF.contains(metric)&&fMean.contains(metric),\"Missing Jensen metric\");\n                            gap.insert(metric,meanF.value(metric).toDouble()-fMean.value(metric).toDouble());\n                        }\n                        states.insert(state,QJsonObject{{\"camera_mean_rgb\",mean},{\"F_of_mean\",fMean},{\"mean_of_F\",meanF},{\"gap_mean_F_minus_F_mean\",gap}});\n                    }\n                    populations.append(QJsonObject{{\"parent\",path},{\"parent_sha256\",hash(path)},\n                        {\"parent_study\",parent.value(\"study\")},{\"states\",states}});\n                }\n            }\n            require(!populations.isEmpty(),\"No matching populations in parents\");\n            const QJsonObject result{{\"source_sha256\",sourceHash},{\"profile_sha256\",profileHash},\n                {\"manifest_sha256\",manifestHash},{\"populations\",populations},\n                {\"limits\",\"F is the complete fixed DCP/render chain, not a globally concave scalar curve; no new denoising; camera means quantized to float for actual renderer; gaps are descriptive, not causal ablations\"}};\n            std::cout<<QJsonDocument(result).toJson(QJsonDocument::Compact).constData()<<'\\n';return 0;\n        }\n        require(!(p.isSet(\"signal-survey\")&&p.isSet(\"mean-audit\")),\"Choose a single study mode\");\n        if(p.isSet(\"mean-audit\")) {\n            auto filtered=full.cameraRgb;\n            require(CameraDenoise::apply(filtered,{100,100},context),\"Full-frame mean audit failed\");\n            if(p.isSet(\"dark-mask\")) {\n                QFile file(p.value(\"dark-mask\"));require(file.open(QIODevice::ReadOnly),\"Cannot open dark mask\");\n                auto bytes=file.readAll();require(std::size_t(bytes.size())==full.cameraRgb.total(),\"Invalid mask byte count\");\n                require(std::all_of(bytes.begin(),bytes.end(),[](char v){return v==0||v==1;}),\"Mask must contain only 0/1\");\n                cv::Mat mask(full.cameraRgb.size(),CV_8UC1,bytes.data());\n                const auto source=selectPixels(full.cameraRgb,mask),candidate=selectPixels(filtered,mask);\n                const cv::Scalar shift=cv::mean(source)-cv::mean(candidate);\n                auto matched=candidate.clone();\n                for(int x=0;x<matched.cols;++x)for(int c=0;c<3;++c)matched.at<cv::Vec3f>(0,x)[c]+=float(shift[c]);\n                // DCP rendering is pointwise here (no LCP/spatial operation).\n                // Check that changing row layout does not change a real patch.\n                const auto check=full.cameraRgb(cv::Rect(0,0,16,16)).clone();\n                const auto direct=render(full,check),packed=render(full,check.reshape(3,1));\n                const double layoutError=cv::norm(direct.reshape(3,1),packed,cv::NORM_INF);\n                require(layoutError<=1e-6,\"DCP packing changes rendering\");\n                QJsonArray cells;\n                if(p.isSet(\"cell-rects\")) {\n                    QFile rectangles(p.value(\"cell-rects\"));require(rectangles.open(QIODevice::ReadOnly),\"Cannot open cell rectangles\");\n                    const auto document=QJsonDocument::fromJson(rectangles.readAll());\n                    require(document.isArray()&&document.array().size()<=4096,\"Invalid cell array\");\n                    for(const auto &item:document.array()) {\n                        require(item.isArray()&&item.toArray().size()==4,\"Invalid cell rectangle\");\n                        const auto a=item.toArray();const int x=a[0].toInt(-1),y=a[1].toInt(-1),w=a[2].toInt(-1),h=a[3].toInt(-1);\n                        require(x>=0&&y>=0&&w>0&&h>0&&x<full.cameraRgb.cols&&y<full.cameraRgb.rows&&\n                            w<=full.cameraRgb.cols-x&&h<=full.cameraRgb.rows-y,\"Cell outside camera image\");\n                        const cv::Rect cell(x,y,w,h);\n                        cells.append(QJsonObject{{\"camera_roi\",a},\n                            {\"B0_camera\",cameraMoments(full.cameraRgb(cell))},\n                            {\"B100_camera\",cameraMoments(filtered(cell))},\n                            {\"B0_rendered\",renderedMoments(render(full,full.cameraRgb(cell)))},\n                            {\"B100_rendered\",renderedMoments(render(full,filtered(cell)))}});\n                    }\n                }\n                const QJsonObject result{{\"created_utc\",QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs)},\n                    {\"label\",p.value(\"label\")},{\"source\",p.value(\"input\")},{\"source_sha256\",hash(p.value(\"input\"))},\n                    {\"manifest_sha256\",hash(p.value(\"manifest\"))},{\"profile_sha256\",hash(full.profilePath)},\n                    {\"engine_base_revision\",IPR_ENGINE_REVISION},{\"mask_sha256\",hash(p.value(\"dark-mask\"))},\n                    {\"mask_pixels\",source.cols},{\"camera_size\",QJsonArray{full.cameraRgb.cols,full.cameraRgb.rows}},\n                    {\"layout_check_max_abs\",layoutError},\n                    {\"B0_camera_global\",cameraMoments(full.cameraRgb)},\n                    {\"B100_camera_global\",cameraMoments(filtered)},\n                    {\"B0_camera_dark\",cameraMoments(source)},{\"B100_camera_dark\",cameraMoments(candidate)},\n                    {\"B100_mean_matched_camera_dark\",cameraMoments(matched)},\n                    {\"B0_rendered_dark\",renderedMoments(render(full,source))},\n                    {\"B100_rendered_dark\",renderedMoments(render(full,candidate))},\n                    {\"B100_mean_matched_rendered_dark\",renderedMoments(render(full,matched))},\n                    {\"mean_matching_shift_rgb\",QJsonArray{shift[0],shift[1],shift[2]}},\n                    {\"cells\",cells},\n                    {\"limits\",\"Full-frame filter; fixed external dark mask; pointwise DCP; mean-matching is a diagnostic counterfactual, not a proposed correction; unchanged DCP; optics off\"}};\n                std::cout<<QJsonDocument(result).toJson(QJsonDocument::Compact).constData()<<'\\n';return 0;\n            }\n            QJsonArray records;\n            std::vector<cv::Rect> areas;\n            for(double position:{.25,.5,.75}) {\n                const int side=std::min({420,full.cameraRgb.cols,full.cameraRgb.rows});\n                areas.emplace_back(int((full.cameraRgb.cols-side)*position),\n                    int((full.cameraRgb.rows-side)*position),side,side);\n            }\n            // Declared independent witness, not Claude's frozen full dark mask.\n            if(full.cameraRgb.cols>=3360&&full.cameraRgb.rows>=3360&&\n               p.value(\"input\").contains(\"7Y6A7599\"))areas.emplace_back(2940,2940,420,420);\n            for(const auto &area:areas) {\n                const auto sourcePatch=full.cameraRgb(area),filteredPatch=filtered(area);\n                const auto baseline=render(full,sourcePatch),candidate=render(full,filteredPatch);\n                const cv::Rect local(0,0,area.width,area.height);\n                records.append(QJsonObject{{\"camera_roi\",QJsonArray{area.x,area.y,area.width,area.height}},\n                    {\"B0_camera\",cameraMoments(sourcePatch)},{\"B100_camera\",cameraMoments(filteredPatch)},\n                    {\"B0_rendered\",measures(baseline,local)},{\"B100_rendered\",measures(candidate,local)}});\n            }\n            const QJsonObject result{{\"created_utc\",QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs)},\n                {\"label\",p.value(\"label\")},{\"source\",p.value(\"input\")},\n                {\"source_sha256\",hash(p.value(\"input\"))},{\"manifest_sha256\",hash(p.value(\"manifest\"))},\n                {\"profile_sha256\",hash(full.profilePath)},{\"engine_base_revision\",IPR_ENGINE_REVISION},\n                {\"camera_size\",QJsonArray{full.cameraRgb.cols,full.cameraRgb.rows}},\n                {\"B0_camera_global\",cameraMoments(full.cameraRgb)},\n                {\"B100_camera_global\",cameraMoments(filtered)},\n                {\"patches\",records},{\"settings\",QJsonArray{100,100}},\n                {\"limits\",\"Full-frame noise model; independent rectangular witnesses, not frozen dark masks; optics off; unchanged DCP; no CFA oracle\"}};\n            std::cout<<QJsonDocument(result).toJson(QJsonDocument::Compact).constData()<<'\\n';return 0;\n        }\n        if(p.isSet(\"signal-survey\")) {\n            QJsonArray modelJson; std::vector<CameraDenoise::NoiseModelSummary> models;\n            context.noiseModelObserver=[&](const CameraDenoise::NoiseModelSummary &m) {\n                models.push_back(m); QJsonArray sigma,nodes;\n                for(int c=0;c<3;++c)sigma.append(m.globalSigma[c]);\n                for(const auto &node:m.nodes)nodes.append(QJsonObject{{\"signal\",node.first},\n                    {\"sigma\",QJsonArray{node.second[0],node.second[1],node.second[2]}}});\n                modelJson.append(QJsonObject{{\"level\",m.level},{\"candidates\",m.candidates},\n                    {\"flat_candidates\",m.flatCandidates},{\"supported\",m.supported},\n                    {\"dark_floor_applied\",m.darkFloorApplied},\n                    {\"global_fallback_available\",m.globalFallbackAvailable},\n                    {\"low\",m.low},{\"high\",m.high},{\"global_signal\",m.globalSignal},\n                    {\"global_sigma\",sigma},{\"nodes\",nodes}});\n            };\n            auto filtered=full.cameraRgb;\n            require(CameraDenoise::apply(filtered,{100,100},context),\"Model observation failed\");\n            filtered.release();\n            const QJsonObject result{{\"created_utc\",QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs)},\n                {\"label\",p.value(\"label\")},{\"source\",p.value(\"input\")},{\"source_sha256\",hash(p.value(\"input\"))},\n                {\"manifest_sha256\",hash(p.value(\"manifest\"))},{\"profile_sha256\",hash(full.profilePath)},\n                {\"engine_base_revision\",IPR_ENGINE_REVISION},{\"camera_axes\",\"already_white_balanced\"},\n                {\"production_models\",modelJson},{\"patches\",signalSurvey(full.cameraRgb,models)}};\n            std::cout<<QJsonDocument(result).toJson(QJsonDocument::Compact).constData()<<'\\n';return 0;\n        }\n        QJsonArray patches;\n        for(double position:{.25,.5,.75}) {\n            const int side=std::min({768,full.cameraRgb.cols,full.cameraRgb.rows});\n            require(side>=420,\"Image too small for the declared witness geometry\");\n            const cv::Rect area(int((full.cameraRgb.cols-side)*position),int((full.cameraRgb.rows-side)*position),side,side);\n            const int margin=(side-420)/2; const cv::Rect roi(margin,margin,std::min(420,side),std::min(420,side));\n            auto source=full.cameraRgb(area).clone();auto filtered=source;\n            require(CameraDenoise::apply(filtered,{0,50},context),\"Filter failed\");\n            const auto baseline=render(full,source),rendered=render(full,filtered);\n            QJsonObject projection;const auto candidate=projected(full,source,filtered,gains,projection);\n            const auto constrained=render(full,candidate);\n            const auto inputI=intensity(source),outputI=intensity(filtered);\n            const auto baselineY=luminance(baseline),filteredY=luminance(rendered),constrainedY=luminance(constrained);\n            const cv::Mat deltaI=outputI-inputI,deltaY=filteredY-baselineY,deltaProjected=constrainedY-baselineY;\n            patches.append(QJsonObject{{\"camera_roi\",QJsonArray{area.x,area.y,area.width,area.height}},\n                {\"measurement_roi_within_camera_roi\",QJsonArray{roi.x,roi.y,roi.width,roi.height}},\n                {\"B0\",measures(baseline,roi)},{\"chroma50\",measures(rendered,roi)},{\"projected_chroma50\",measures(constrained,roi)},\n                {\"camera_intensity_delta_rms\",rms(deltaI(roi))},{\"rendered_linear_y_delta_rms\",rms(deltaY(roi))},\n                {\"projected_linear_y_delta_rms\",rms(deltaProjected(roi))},{\"projection\",projection}});\n        }\n        const QJsonObject result{{\"created_utc\",QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs)},\n            {\"engine_revision\",IPR_ENGINE_REVISION},{\"label\",p.value(\"label\")},{\"source\",p.value(\"input\")},\n            {\"source_sha256\",hash(p.value(\"input\"))},{\"manifest_sha256\",hash(p.value(\"manifest\"))},\n            {\"profile\",full.profilePath},{\"profile_sha256\",hash(full.profilePath)},\n            {\"camera_denoise_source_sha256\",hash(QStringLiteral(IPR_SOURCE_ROOT_PATH \"/src/raw/CameraDenoise.cpp\"))},\n            {\"patches\",patches}};\n        std::cout<<QJsonDocument(result).toJson(QJsonDocument::Compact).constData()<<'\\n';return 0;\n    } catch(const std::exception &e) {std::cerr<<e.what()<<'\\n';return 1;}\n}\n"
+  },
+  "scenes": [
+    {
+      "scene": "7Y6A7599.CR3",
+      "argv": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\denoise-study\\Release\\cameraDenoiseLeakageProbe.exe",
+        "--input",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\7Y6A7599.CR3",
+        "--manifest",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\config\\raw-normalization.json",
+        "--profile-root",
+        "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera",
+        "--label",
+        "jensen-gap",
+        "--jensen-proof",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\camera-denoise-fixed-dark-mean-v001-20261030T120856Z.json",
+        "--jensen-proof",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\camera-denoise-coarse-dark-cells-v001-20261030T121723Z.json"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "measurements": {
+        "limits": "F is the complete fixed DCP/render chain, not a globally concave scalar curve; no new denoising; camera means quantized to float for actual renderer; gaps are descriptive, not causal ablations",
+        "manifest_sha256": "c01cd196f9d35141281e8d7852de4e19e9cbacddb4c7ed29bf8196b3676fc30c",
+        "populations": [
+          {
+            "parent": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\camera-denoise-fixed-dark-mean-v001-20261030T120856Z.json",
+            "parent_sha256": "26e877a2f6a0a621b188b2fe16f861e32e5ba900bde95d4471f2f34be1e5ab68",
+            "parent_study": "fixed_dark_mask_mean_audit",
+            "states": {
+              "B0": {
+                "F_of_mean": {
+                  "clipped_encoded_y_mean_255": 2.5430674772003568,
+                  "linear_rec2020_y_mean": 0.000771916180383414,
+                  "rounded_encoded_y_mean_255": 2.2808,
+                  "signed_encoded_y_mean_255": 2.5430674772003568,
+                  "srgb_above_one_fraction": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "srgb_below_zero_fraction": [
+                    0,
+                    0,
+                    0
+                  ]
+                },
+                "camera_mean_rgb": [
+                  0.004703005933998844,
+                  0.0024991368419009555,
+                  6.992912126981482e-05
+                ],
+                "gap_mean_F_minus_F_mean": {
+                  "clipped_encoded_y_mean_255": 6.937932126431113,
+                  "linear_rec2020_y_mean": 0.003763322640638231,
+                  "rounded_encoded_y_mean_255": 7.184626002166113,
+                  "signed_encoded_y_mean_255": 6.751149834342975
+                },
+                "mean_of_F": {
+                  "clipped_encoded_y_mean_255": 9.480999603631469,
+                  "linear_rec2020_y_mean": 0.004535238821021645,
+                  "rounded_encoded_y_mean_255": 9.465426002166113,
+                  "signed_encoded_y_mean_255": 9.294217311543331,
+                  "srgb_above_one_fraction": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "srgb_below_zero_fraction": [
+                    0.17237065661379058,
+                    0.02794523152414664,
+                    0.170507540262568
+                  ]
+                }
+              },
+              "B100": {
+                "F_of_mean": {
+                  "clipped_encoded_y_mean_255": 11.864110712965141,
+                  "linear_rec2020_y_mean": 0.0036898187827318907,
+                  "rounded_encoded_y_mean_255": 11.6298,
+                  "signed_encoded_y_mean_255": 11.864110712965141,
+                  "srgb_above_one_fraction": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "srgb_below_zero_fraction": [
+                    0,
+                    0,
+                    0
+                  ]
+                },
+                "camera_mean_rgb": [
+                  0.012845313794219276,
+                  0.009783689234256912,
+                  0.0058714784949741895
+                ],
+                "gap_mean_F_minus_F_mean": {
+                  "clipped_encoded_y_mean_255": 1.0709990966442646,
+                  "linear_rec2020_y_mean": 0.001660054462868349,
+                  "rounded_encoded_y_mean_255": 1.305307945889119,
+                  "signed_encoded_y_mean_255": 1.0696990899564316
+                },
+                "mean_of_F": {
+                  "clipped_encoded_y_mean_255": 12.935109809609406,
+                  "linear_rec2020_y_mean": 0.00534987324560024,
+                  "rounded_encoded_y_mean_255": 12.935107945889118,
+                  "signed_encoded_y_mean_255": 12.933809802921573,
+                  "srgb_above_one_fraction": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "srgb_below_zero_fraction": [
+                    0.002449843599950107,
+                    2.6036400098332824e-05,
+                    0.032302695554557156
+                  ]
+                }
+              }
+            },
+            "decomposition": {
+              "linear_rec2020_y_mean": {
+                "observed_delta": 0.0008146344245785943,
+                "mean_shift_component": 0.0029179026023484766,
+                "distribution_gap_component": -0.0021032681777698823,
+                "gap_before": 0.003763322640638231,
+                "gap_after": 0.001660054462868349
+              },
+              "signed_encoded_y_mean_255": {
+                "observed_delta": 3.6395924913782416,
+                "mean_shift_component": 9.321043235764785,
+                "distribution_gap_component": -5.681450744386543,
+                "gap_before": 6.751149834342975,
+                "gap_after": 1.0696990899564316
+              },
+              "clipped_encoded_y_mean_255": {
+                "observed_delta": 3.454110205977937,
+                "mean_shift_component": 9.321043235764785,
+                "distribution_gap_component": -5.866933029786848,
+                "gap_before": 6.937932126431113,
+                "gap_after": 1.0709990966442646
+              }
+            }
+          },
+          {
+            "parent": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\camera-denoise-coarse-dark-cells-v001-20261030T121723Z.json",
+            "parent_sha256": "0d1bfb515c6ec8728ff716d2433d85a9a0aa28e8ca80519d2cf6c6316b87390f",
+            "parent_study": "coarse_dark_cells_mean_audit",
+            "states": {
+              "B0": {
+                "F_of_mean": {
+                  "clipped_encoded_y_mean_255": 10.620142179326114,
+                  "linear_rec2020_y_mean": 0.0032428246922791004,
+                  "rounded_encoded_y_mean_255": 10.2768,
+                  "signed_encoded_y_mean_255": 10.620142179326114,
+                  "srgb_above_one_fraction": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "srgb_below_zero_fraction": [
+                    0,
+                    0,
+                    0
+                  ]
+                },
+                "camera_mean_rgb": [
+                  0.011701322412909321,
+                  0.009496764624587942,
+                  0.005985441684942696
+                ],
+                "gap_mean_F_minus_F_mean": {
+                  "clipped_encoded_y_mean_255": 9.402527715403204,
+                  "linear_rec2020_y_mean": 0.009930699427079907,
+                  "rounded_encoded_y_mean_255": 9.734903042437248,
+                  "signed_encoded_y_mean_255": 8.981717031123841
+                },
+                "mean_of_F": {
+                  "clipped_encoded_y_mean_255": 20.02266989472932,
+                  "linear_rec2020_y_mean": 0.013173524119359008,
+                  "rounded_encoded_y_mean_255": 20.011703042437247,
+                  "signed_encoded_y_mean_255": 19.601859210449955,
+                  "srgb_above_one_fraction": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "srgb_below_zero_fraction": [
+                    0.17729070689111548,
+                    0.017739334448570628,
+                    0.16027476220922085
+                  ]
+                }
+              },
+              "B100": {
+                "F_of_mean": {
+                  "clipped_encoded_y_mean_255": 10.705839911850948,
+                  "linear_rec2020_y_mean": 0.0032721918541938066,
+                  "rounded_encoded_y_mean_255": 10.2768,
+                  "signed_encoded_y_mean_255": 10.705839911850948,
+                  "srgb_above_one_fraction": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "srgb_below_zero_fraction": [
+                    0,
+                    0,
+                    0
+                  ]
+                },
+                "camera_mean_rgb": [
+                  0.01178772562230482,
+                  0.009506386325611424,
+                  0.0059274523667389506
+                ],
+                "gap_mean_F_minus_F_mean": {
+                  "clipped_encoded_y_mean_255": 0.9276177840863369,
+                  "linear_rec2020_y_mean": 0.0012977362521613463,
+                  "rounded_encoded_y_mean_255": 1.3566524510804232,
+                  "signed_encoded_y_mean_255": 0.9257367965392884
+                },
+                "mean_of_F": {
+                  "clipped_encoded_y_mean_255": 11.633457695937285,
+                  "linear_rec2020_y_mean": 0.004569928106355153,
+                  "rounded_encoded_y_mean_255": 11.633452451080423,
+                  "signed_encoded_y_mean_255": 11.631576708390236,
+                  "srgb_above_one_fraction": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "srgb_below_zero_fraction": [
+                    0.0027928373738789238,
+                    3.311773052130045e-05,
+                    0.019969170403587443
+                  ]
+                }
+              }
+            },
+            "decomposition": {
+              "linear_rec2020_y_mean": {
+                "observed_delta": -0.008603596013003855,
+                "mean_shift_component": 2.936716191470623e-05,
+                "distribution_gap_component": -0.008632963174918561,
+                "gap_before": 0.009930699427079907,
+                "gap_after": 0.0012977362521613463
+              },
+              "signed_encoded_y_mean_255": {
+                "observed_delta": -7.970282502059719,
+                "mean_shift_component": 0.08569773252483337,
+                "distribution_gap_component": -8.055980234584553,
+                "gap_before": 8.981717031123841,
+                "gap_after": 0.9257367965392884
+              },
+              "clipped_encoded_y_mean_255": {
+                "observed_delta": -8.389212198792034,
+                "mean_shift_component": 0.08569773252483337,
+                "distribution_gap_component": -8.474909931316867,
+                "gap_before": 9.402527715403204,
+                "gap_after": 0.9276177840863369
+              }
+            }
+          }
+        ],
+        "profile_sha256": "49241c296a1128ced2e1df8c1e391c0253bb90fa6ec93c48a2bcfa2f26467a39",
+        "source_sha256": "9c1426494accc3fb6efa2c5b0f8c7c4faac70d65fa9a26721f1de86d011f078e"
+      }
+    },
+    {
+      "scene": "6V1A9153.CR3",
+      "argv": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\denoise-study\\Release\\cameraDenoiseLeakageProbe.exe",
+        "--input",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9153.CR3",
+        "--manifest",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\config\\raw-normalization.json",
+        "--profile-root",
+        "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera",
+        "--label",
+        "jensen-gap",
+        "--jensen-proof",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\camera-denoise-fixed-dark-mean-v001-20261030T120856Z.json",
+        "--jensen-proof",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\camera-denoise-coarse-dark-cells-v001-20261030T121723Z.json"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "measurements": {
+        "limits": "F is the complete fixed DCP/render chain, not a globally concave scalar curve; no new denoising; camera means quantized to float for actual renderer; gaps are descriptive, not causal ablations",
+        "manifest_sha256": "c01cd196f9d35141281e8d7852de4e19e9cbacddb4c7ed29bf8196b3676fc30c",
+        "populations": [
+          {
+            "parent": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\camera-denoise-fixed-dark-mean-v001-20261030T120856Z.json",
+            "parent_sha256": "26e877a2f6a0a621b188b2fe16f861e32e5ba900bde95d4471f2f34be1e5ab68",
+            "parent_study": "fixed_dark_mask_mean_audit",
+            "states": {
+              "B0": {
+                "F_of_mean": {
+                  "clipped_encoded_y_mean_255": 15.495142639177795,
+                  "linear_rec2020_y_mean": 0.005094083957374096,
+                  "rounded_encoded_y_mean_255": 15.628599999999997,
+                  "signed_encoded_y_mean_255": 15.495142639177795,
+                  "srgb_above_one_fraction": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "srgb_below_zero_fraction": [
+                    0,
+                    0,
+                    0
+                  ]
+                },
+                "camera_mean_rgb": [
+                  0.015362654439130829,
+                  0.012354086587443037,
+                  0.012111207649828782
+                ],
+                "gap_mean_F_minus_F_mean": {
+                  "clipped_encoded_y_mean_255": 0.7236895223967235,
+                  "linear_rec2020_y_mean": 0.0008313340880477822,
+                  "rounded_encoded_y_mean_255": 0.5910467972169631,
+                  "signed_encoded_y_mean_255": 0.7236730473810109
+                },
+                "mean_of_F": {
+                  "clipped_encoded_y_mean_255": 16.218832161574518,
+                  "linear_rec2020_y_mean": 0.005925418045421878,
+                  "rounded_encoded_y_mean_255": 16.21964679721696,
+                  "signed_encoded_y_mean_255": 16.218815686558806,
+                  "srgb_above_one_fraction": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "srgb_below_zero_fraction": [
+                    8.795913925273493e-05,
+                    0,
+                    0
+                  ]
+                }
+              },
+              "B100": {
+                "F_of_mean": {
+                  "clipped_encoded_y_mean_255": 19.31140544089666,
+                  "linear_rec2020_y_mean": 0.006807432975620031,
+                  "rounded_encoded_y_mean_255": 19.125999999999998,
+                  "signed_encoded_y_mean_255": 19.31140544089666,
+                  "srgb_above_one_fraction": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "srgb_below_zero_fraction": [
+                    0,
+                    0,
+                    0
+                  ]
+                },
+                "camera_mean_rgb": [
+                  0.0174457312253735,
+                  0.01411249550243648,
+                  0.013737327538953679
+                ],
+                "gap_mean_F_minus_F_mean": {
+                  "clipped_encoded_y_mean_255": 0.3646184566662143,
+                  "linear_rec2020_y_mean": 0.0009344890137936001,
+                  "rounded_encoded_y_mean_255": 0.5504047936021195,
+                  "signed_encoded_y_mean_255": 0.3646107515044896
+                },
+                "mean_of_F": {
+                  "clipped_encoded_y_mean_255": 19.676023897562875,
+                  "linear_rec2020_y_mean": 0.0077419219894136315,
+                  "rounded_encoded_y_mean_255": 19.676404793602117,
+                  "signed_encoded_y_mean_255": 19.67601619240115,
+                  "srgb_above_one_fraction": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "srgb_below_zero_fraction": [
+                    2.0871660161665917e-05,
+                    0,
+                    0
+                  ]
+                }
+              }
+            },
+            "decomposition": {
+              "linear_rec2020_y_mean": {
+                "observed_delta": 0.0018165039439917534,
+                "mean_shift_component": 0.0017133490182459354,
+                "distribution_gap_component": 0.00010315492574581794,
+                "gap_before": 0.0008313340880477822,
+                "gap_after": 0.0009344890137936001
+              },
+              "signed_encoded_y_mean_255": {
+                "observed_delta": 3.4572005058423443,
+                "mean_shift_component": 3.8162628017188656,
+                "distribution_gap_component": -0.3590622958765213,
+                "gap_before": 0.7236730473810109,
+                "gap_after": 0.3646107515044896
+              },
+              "clipped_encoded_y_mean_255": {
+                "observed_delta": 3.4571917359883564,
+                "mean_shift_component": 3.8162628017188656,
+                "distribution_gap_component": -0.3590710657305092,
+                "gap_before": 0.7236895223967235,
+                "gap_after": 0.3646184566662143
+              }
+            }
+          },
+          {
+            "parent": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\camera-denoise-coarse-dark-cells-v001-20261030T121723Z.json",
+            "parent_sha256": "0d1bfb515c6ec8728ff716d2433d85a9a0aa28e8ca80519d2cf6c6316b87390f",
+            "parent_study": "coarse_dark_cells_mean_audit",
+            "states": {
+              "B0": {
+                "F_of_mean": {
+                  "clipped_encoded_y_mean_255": 24.12278595425276,
+                  "linear_rec2020_y_mean": 0.00926395133137703,
+                  "rounded_encoded_y_mean_255": 24.2756,
+                  "signed_encoded_y_mean_255": 24.12278595425276,
+                  "srgb_above_one_fraction": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "srgb_below_zero_fraction": [
+                    0,
+                    0,
+                    0
+                  ]
+                },
+                "camera_mean_rgb": [
+                  0.018958197882284367,
+                  0.01690508066565144,
+                  0.016640206899126042
+                ],
+                "gap_mean_F_minus_F_mean": {
+                  "clipped_encoded_y_mean_255": -0.25020239227566066,
+                  "linear_rec2020_y_mean": 0.0019810189363766995,
+                  "rounded_encoded_y_mean_255": -0.4004249755853806,
+                  "signed_encoded_y_mean_255": -0.25020239227566066
+                },
+                "mean_of_F": {
+                  "clipped_encoded_y_mean_255": 23.8725835619771,
+                  "linear_rec2020_y_mean": 0.011244970267753729,
+                  "rounded_encoded_y_mean_255": 23.87517502441462,
+                  "signed_encoded_y_mean_255": 23.8725835619771,
+                  "srgb_above_one_fraction": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "srgb_below_zero_fraction": [
+                    0,
+                    0,
+                    0
+                  ]
+                }
+              },
+              "B100": {
+                "F_of_mean": {
+                  "clipped_encoded_y_mean_255": 24.357915506007952,
+                  "linear_rec2020_y_mean": 0.009403864853084087,
+                  "rounded_encoded_y_mean_255": 24.2756,
+                  "signed_encoded_y_mean_255": 24.357915506007952,
+                  "srgb_above_one_fraction": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "srgb_below_zero_fraction": [
+                    0,
+                    0,
+                    0
+                  ]
+                },
+                "camera_mean_rgb": [
+                  0.01912086781447897,
+                  0.01701125169546458,
+                  0.01672890200143229
+                ],
+                "gap_mean_F_minus_F_mean": {
+                  "clipped_encoded_y_mean_255": -0.26633338865148914,
+                  "linear_rec2020_y_mean": 0.001690513897500523,
+                  "rounded_encoded_y_mean_255": -0.1828210937492507,
+                  "signed_encoded_y_mean_255": -0.26633338865148914
+                },
+                "mean_of_F": {
+                  "clipped_encoded_y_mean_255": 24.091582117356463,
+                  "linear_rec2020_y_mean": 0.01109437875058461,
+                  "rounded_encoded_y_mean_255": 24.09277890625075,
+                  "signed_encoded_y_mean_255": 24.091582117356463,
+                  "srgb_above_one_fraction": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "srgb_below_zero_fraction": [
+                    0,
+                    0,
+                    0
+                  ]
+                }
+              }
+            },
+            "decomposition": {
+              "linear_rec2020_y_mean": {
+                "observed_delta": -0.00015059151716911856,
+                "mean_shift_component": 0.00013991352170705795,
+                "distribution_gap_component": -0.0002905050388761765,
+                "gap_before": 0.0019810189363766995,
+                "gap_after": 0.001690513897500523
+              },
+              "signed_encoded_y_mean_255": {
+                "observed_delta": 0.21899855537936475,
+                "mean_shift_component": 0.23512955175519323,
+                "distribution_gap_component": -0.016130996375828488,
+                "gap_before": -0.25020239227566066,
+                "gap_after": -0.26633338865148914
+              },
+              "clipped_encoded_y_mean_255": {
+                "observed_delta": 0.21899855537936475,
+                "mean_shift_component": 0.23512955175519323,
+                "distribution_gap_component": -0.016130996375828488,
+                "gap_before": -0.25020239227566066,
+                "gap_after": -0.26633338865148914
+              }
+            }
+          }
+        ],
+        "profile_sha256": "10a5fe31a61b3489bb933839846ad260ad9556bde4b57d19ae042b1f95378701",
+        "source_sha256": "7f5e0baf7f9722401cc269a1b01deee35db9eba0d122ea88e98f638266f32b30"
+      }
+    },
+    {
+      "scene": "IMG_3135.CR2",
+      "argv": [
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\denoise-study\\Release\\cameraDenoiseLeakageProbe.exe",
+        "--input",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_3135.CR2",
+        "--manifest",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\config\\raw-normalization.json",
+        "--profile-root",
+        "C:\\ProgramData\\Adobe\\CameraRaw\\CameraProfiles\\Camera",
+        "--label",
+        "jensen-gap",
+        "--jensen-proof",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\camera-denoise-fixed-dark-mean-v001-20261030T120856Z.json",
+        "--jensen-proof",
+        "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\camera-denoise-coarse-dark-cells-v001-20261030T121723Z.json"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "measurements": {
+        "limits": "F is the complete fixed DCP/render chain, not a globally concave scalar curve; no new denoising; camera means quantized to float for actual renderer; gaps are descriptive, not causal ablations",
+        "manifest_sha256": "c01cd196f9d35141281e8d7852de4e19e9cbacddb4c7ed29bf8196b3676fc30c",
+        "populations": [
+          {
+            "parent": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\camera-denoise-fixed-dark-mean-v001-20261030T120856Z.json",
+            "parent_sha256": "26e877a2f6a0a621b188b2fe16f861e32e5ba900bde95d4471f2f34be1e5ab68",
+            "parent_study": "fixed_dark_mask_mean_audit",
+            "states": {
+              "B0": {
+                "F_of_mean": {
+                  "clipped_encoded_y_mean_255": 29.983887720309358,
+                  "linear_rec2020_y_mean": 0.013061280362308025,
+                  "rounded_encoded_y_mean_255": 29.6326,
+                  "signed_encoded_y_mean_255": 29.983887720309358,
+                  "srgb_above_one_fraction": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "srgb_below_zero_fraction": [
+                    0,
+                    0,
+                    0
+                  ]
+                },
+                "camera_mean_rgb": [
+                  0.019141758094758696,
+                  0.01613825734964052,
+                  0.016481898100498615
+                ],
+                "gap_mean_F_minus_F_mean": {
+                  "clipped_encoded_y_mean_255": -0.023118280806496472,
+                  "linear_rec2020_y_mean": 0.00013490027993977305,
+                  "rounded_encoded_y_mean_255": 0.3280898520464248,
+                  "signed_encoded_y_mean_255": -0.023118280806496472
+                },
+                "mean_of_F": {
+                  "clipped_encoded_y_mean_255": 29.96076943950286,
+                  "linear_rec2020_y_mean": 0.013196180642247798,
+                  "rounded_encoded_y_mean_255": 29.960689852046425,
+                  "signed_encoded_y_mean_255": 29.96076943950286,
+                  "srgb_above_one_fraction": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "srgb_below_zero_fraction": [
+                    0,
+                    0,
+                    0
+                  ]
+                }
+              },
+              "B100": {
+                "F_of_mean": {
+                  "clipped_encoded_y_mean_255": 32.84361294285972,
+                  "linear_rec2020_y_mean": 0.015199539251625538,
+                  "rounded_encoded_y_mean_255": 32.7008,
+                  "signed_encoded_y_mean_255": 32.84361294285972,
+                  "srgb_above_one_fraction": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "srgb_below_zero_fraction": [
+                    0,
+                    0,
+                    0
+                  ]
+                },
+                "camera_mean_rgb": [
+                  0.02203675626918722,
+                  0.018180794749174785,
+                  0.017765321731062912
+                ],
+                "gap_mean_F_minus_F_mean": {
+                  "clipped_encoded_y_mean_255": -0.15407614905240052,
+                  "linear_rec2020_y_mean": 6.630380468930844e-05,
+                  "rounded_encoded_y_mean_255": -0.012473117109273346,
+                  "signed_encoded_y_mean_255": -0.15407614905240052
+                },
+                "mean_of_F": {
+                  "clipped_encoded_y_mean_255": 32.68953679380732,
+                  "linear_rec2020_y_mean": 0.015265843056314846,
+                  "rounded_encoded_y_mean_255": 32.68832688289073,
+                  "signed_encoded_y_mean_255": 32.68953679380732,
+                  "srgb_above_one_fraction": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "srgb_below_zero_fraction": [
+                    0,
+                    0,
+                    0
+                  ]
+                }
+              }
+            },
+            "decomposition": {
+              "linear_rec2020_y_mean": {
+                "observed_delta": 0.002069662414067048,
+                "mean_shift_component": 0.0021382588893175125,
+                "distribution_gap_component": -6.859647525046461e-05,
+                "gap_before": 0.00013490027993977305,
+                "gap_after": 6.630380468930844e-05
+              },
+              "signed_encoded_y_mean_255": {
+                "observed_delta": 2.728767354304459,
+                "mean_shift_component": 2.859725222550363,
+                "distribution_gap_component": -0.13095786824590405,
+                "gap_before": -0.023118280806496472,
+                "gap_after": -0.15407614905240052
+              },
+              "clipped_encoded_y_mean_255": {
+                "observed_delta": 2.728767354304459,
+                "mean_shift_component": 2.859725222550363,
+                "distribution_gap_component": -0.13095786824590405,
+                "gap_before": -0.023118280806496472,
+                "gap_after": -0.15407614905240052
+              }
+            }
+          }
+        ],
+        "profile_sha256": "9e60085ae947ce8658e7682fe1a62797e8c4d9176f624f96a22829123875fe9d",
+        "source_sha256": "7bf4440bcdafc359762d0db40e92dcbf1948886b6aa3ca250cecb96496309165"
+      }
+    }
+  ],
+  "limits": [
+    "Existing camera and output means reused, no new denoising or mask selection.",
+    "Complete pointwise DCP/render chain F, not an isolated scalar tone curve.",
+    "Jensen gaps describe distribution effects, not a clean truth or causal component ablation.",
+    "Mean vector rendered in float32; extremely small gaps are not meaningful.",
+    "Unchanged pre-D0 worktree; no claim about a different engine head."
+  ],
+  "verdict": "measured_not_causal_or_quality_validation"
+}

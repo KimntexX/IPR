@@ -6,11 +6,28 @@
 #include <QTemporaryDir>
 #include <atomic>
 #include <chrono>
+#include <cstdlib>
 #include <future>
 #include <iostream>
+#include <new>
 #include <stdexcept>
 #include <thread>
 #include <vector>
+
+// Fail the next C++ allocation only on the parsing thread. Qt's file I/O and
+// concurrent waiters are unaffected; std::list's retention node is the target.
+namespace { thread_local bool failNextAllocation = false; }
+void *operator new(std::size_t size)
+{
+    if (failNextAllocation) {
+        failNextAllocation = false;
+        throw std::bad_alloc();
+    }
+    if (void *memory = std::malloc(size ? size : 1)) return memory;
+    throw std::bad_alloc();
+}
+void operator delete(void *memory) noexcept { std::free(memory); }
+void operator delete(void *memory, std::size_t) noexcept { std::free(memory); }
 
 int main(int argc,char **argv)
 {
@@ -57,6 +74,24 @@ int main(int argc,char **argv)
     QString error;
     if(!check(!PreparedProfileCache::acquire(c,"broken-parser",broken,&error)&&!error.isEmpty(),"parser failure wakes callers"))return 1;
     if(!check(get(c)!=nullptr,"failure does not poison another parser"))return 1;
+    PreparedProfileCache::clear();
+    const PreparedProfileCache::Loader retentionFailure=[](const QByteArray &bytes,QString *) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(40));
+        auto parsed = std::make_shared<const QByteArray>(bytes);
+        failNextAllocation = true;
+        return PreparedProfileCache::Loaded{parsed,256};
+    };
+    requests.clear();
+    for (int i=0;i<8;++i)
+        requests.push_back(std::async(std::launch::async,[&] {
+            return PreparedProfileCache::acquire(b,"retention-failure",retentionFailure,nullptr);
+        }));
+    for (auto &request:requests)
+        if (!check(request.get()!=nullptr,"allocation failure during retention still delivers parsed data")) return 1;
+    if (!check(PreparedProfileCache::statistics().entries==0 &&
+               PreparedProfileCache::statistics().retainedBytes==0,
+               "failed retention leaves no orphan node or accounting")) return 1;
+    if (!check(get(b)!=nullptr,"cache remains usable after retention failure")) return 1;
     PreparedProfileCache::clear();
     std::promise<void> entered,release;const auto gate=release.get_future().share();
     auto active=std::async(std::launch::async,[&]{return PreparedProfileCache::acquire(b,"blocked-parser",[&](const QByteArray &bytes,QString *){

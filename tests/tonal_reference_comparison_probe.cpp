@@ -99,12 +99,12 @@ bool render(const QString &rawPath, bool automaticWhiteBalance,
     editor.setAutomaticWhiteBalance(automaticWhiteBalance);
     awaitImageInfo(editor);
     if (qEnvironmentVariableIntValue("IPR_PROBE_DEFAULT_SETTINGS") == 0) {
-        editor.setBrightness(ReferenceSettings::ExposureEv);
-        editor.setContrast(ReferenceSettings::Contrast);
-        editor.setHighlights(ReferenceSettings::Highlights);
-        editor.setShadows(ReferenceSettings::Shadows);
-        editor.setWhites(ReferenceSettings::Whites);
-        editor.setBlacks(ReferenceSettings::Blacks);
+        editor.setAdjustment(QStringLiteral("brightness"), ReferenceSettings::ExposureEv);
+        editor.setAdjustment(QStringLiteral("contrast"), ReferenceSettings::Contrast);
+        editor.setAdjustment(QStringLiteral("highlights"), ReferenceSettings::Highlights);
+        editor.setAdjustment(QStringLiteral("shadows"), ReferenceSettings::Shadows);
+        editor.setAdjustment(QStringLiteral("whites"), ReferenceSettings::Whites);
+        editor.setAdjustment(QStringLiteral("blacks"), ReferenceSettings::Blacks);
     }
 
     const QString status = awaitExport(editor, QUrl::fromLocalFile(outputPath));

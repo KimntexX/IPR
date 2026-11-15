@@ -1,9 +1,12 @@
 # Roadmap — décodeurs RAW propres à IPR
 
 **Décision :** [ADR-0018](../decisions/ADR-0018-independance-decodage-raw-et-couche-image.md),
-20 octobre 2026. **État :** analyse ; aucun code. Le chantier ne commence
-qu'après l'intégration et la validation des fonctions de base. Il se fera
-sur une branche durable dédiée, créée depuis `dev` à jour à son démarrage.
+20 octobre 2026, révisée le31octobre. **État courant :** développement flottant
+IPR intégré dans `dev` (`b19b4c3`), décompression/métadonnées encore LibRaw.
+La qualification de décodeurs Canon propres reste à faire : CR3/R6 Mark III
+en premier, CR2/60D, puis R5 et 6D Mark II ; modes complets/compressés à couvrir.
+LibRaw reste prévu pour les autres marques. L'utilisateur attend le retour de
+Canon Developer. Le plan initial ci-dessous n'est pas une liste de codecs livrés.
 La séparation d'OpenCV est un chantier distinct :
 [roadmap de la couche image](roadmap-couche-image-sans-opencv.md).
 
@@ -22,7 +25,14 @@ peut ouvrir, et de la justesse de leurs niveaux. Constats du 20 octobre 2026 :
 - **Nikon :** HE/HE\* (JPEG XS, technologie TicoRAW brevetée) n'a aucune voie
   libre ; les autres NEF sont à réévaluer plus tard.
 
-## 2. Ce que LibRaw fait aujourd'hui
+## 2. Répartition initiale du20octobre, avant séparation du développement
+
+Dans le code courant, les Bayer Canon éligibles passent par `RawDevelopment`
+et RCD/médiane en flottants ; les autres chemins gardent le repli LibRaw.
+La ligne AHD/sortie16bits du tableau est historique, pas la sortie actuelle
+du décodeur. Les paliers futurs doivent repartir du
+[bilan RAW](../validation/analyses/analyse-developpement-raw.md), sans redéfaire
+la séparation déjà intégrée.
 
 | Étape | Réalisée par | Remplacement |
 | --- | --- | --- |

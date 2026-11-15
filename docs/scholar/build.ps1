@@ -36,11 +36,17 @@ if ($Clean) {
 foreach ($document in $documents) {
     & $pdflatex -interaction=nonstopmode -halt-on-error "-output-directory=$outputDirectory" $document.FullName
     if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-    Push-Location $outputDirectory
-    & $bibtex $document.BaseName
-    $status = $LASTEXITCODE
-    Pop-Location
-    if ($status -ne 0) { exit $status }
+    $auxiliary = Join-Path $outputDirectory "$($document.BaseName).aux"
+    if (Select-String -LiteralPath $auxiliary -Pattern '\\bibdata\{' -Quiet) {
+        Push-Location $outputDirectory
+        try {
+            & $bibtex $document.BaseName
+            $status = $LASTEXITCODE
+        } finally {
+            Pop-Location
+        }
+        if ($status -ne 0) { exit $status }
+    }
     foreach ($pass in 1..2) {
         & $pdflatex -interaction=nonstopmode -halt-on-error "-output-directory=$outputDirectory" $document.FullName
         if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

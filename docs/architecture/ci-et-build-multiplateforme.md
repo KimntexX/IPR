@@ -9,9 +9,70 @@ Le paquet « système » utilise les bibliothèques installées, sans les embarq
 
 | Workflow | Déclenchement | Contenu |
 | --- | --- | --- |
-| `ci.yml` | Push dev/main/patch_*, PR vers dev/main, manuel | Tests ciblés sur les branches de groupe ; validation complète aux portes d'intégration |
-| `delivery.yml` | CI réussie sur dev/main, ou manuel limité à dev/main | Commit testé exact, validation complète, puis archives standalone/système, SHA-256 et mémoire JSON |
-| `linux-distributions.yml` | Manuel sur dev/main après CI réussie du commit exact | Debian 13 `.deb`, Fedora 43 `.rpm`, Arch `.pkg.tar.zst`, bibliothèques système et tests complets |
+| `ci.yml` | Push dev/patch_*, PR vers dev, manuel hors main | Tests ciblés sur les branches de groupe ; validation complète de dev |
+| `main.yml` | Push main, PR vers main, manuel sur main | Vérification de la promotion et de la CI dev source, compilation production et smoke selon la liste versionnée, sans tests ni outils d'analyse |
+| `delivery.yml` | CI réussie sur dev/main, ou manuel limité à dev/main | Archives production depuis le SHA dev testé exact ; sur main, deux barrières CI et manifeste de promotion obligatoires |
+| `linux-distributions.yml` | Manuel sur dev/main après les mêmes barrières | Debian 13 `.deb`, Fedora 43 `.rpm`, Arch `.pkg.tar.zst`, bibliothèques système ; profil production sans relancer les tests |
+| `release.yml` | Manuel sur main uniquement | Construction depuis le dev figé, empreintes et provenance, publication facultative des mêmes octets après approbation |
+
+### Promotion et release — raccordement du 1er novembre 2026
+
+La production de `main` est un instantané filtré, sans parent `dev`. Le
+`release-manifest.json` lie cet instantané au commit source `dev`, à sa liste
+blanche et à son run de CI complet. `delivery_policy.py` recalcule cette
+projection avec `promote_main.verify()` puis exige deux réussites distinctes :
+le run complet du SHA dev figé et la CI production du SHA main exact.
+Un contrôle PR ne remplace pas le contrôle du commit final sur main.
+
+Les archives sont construites depuis ce SHA dev, en profil `production`
+(`BUILD_TESTING=OFF`, `IPR_BUILD_TOOLS=OFF`), même lorsque la livraison est
+déclenchée depuis main. Les tests restent exécutés dans la CI dev ; les
+artefacts production passent un smoke de démarrage. Ce lien prouve l'identité
+des sources retenues, pas la reproductibilité bit à bit entre compilateurs.
+
+Pour une GitHub Release, lancer `release.yml` sur main avec un **tag existant
+sur le SHA main promu**. Ne pas déplacer un tag de validation dev : les
+archives source automatiques GitHub doivent elles aussi pointer vers main,
+sans y réintroduire les tests et analyses. La nomenclature retenue pour main
+est `release-v0.Y.X-beta`, distincte du tag de validation dev `v0.Y.X-beta`.
+Le script accepte le préfixe facultatif `release-` : il conserve le tag complet
+pour GitHub et ne le retire que pour calculer la version des paquets.
+Le workflow ne crée aucun tag. Une licence `LICENSE` doit exister dans le
+commit dev testé.
+
+Par défaut, `publish=false` produit uniquement les artefacts vérifiés du run.
+Avec `publish=true`, le job de publication est placé dans l'environnement
+GitHub **`release`**, à configurer par le propriétaire avec approbateurs et
+déploiements limités à main. Lui seul reçoit `contents: write`. Il vérifie de
+nouveau les deux CI, le tag, la matrice complète et chaque empreinte téléchargée,
+crée une release brouillon puis la publie sans reconstruction. Une release
+existante n'est jamais remplacée ; un échec après création laisse un brouillon
+à examiner, sans remplacement automatique des fichiers.
+
+Les configurations de CI production et celles publiées sont définies dans
+`packaging/delivery-targets.json`, respectivement `production_ci` et
+`published`. Une configuration publiée doit appartenir à la CI production.
+Les workflows main, release, archives automatiques et contrôle de packaging
+consomment cette politique, sans matrice parallèle codée en dur. Les tests
+natifs complets de dev restent sur les quatre plateformes.
+
+Préparation **conditionnelle** du report macOS pour cette release, suivie
+par [l'issue #20](https://github.com/KimntexX/IPR/issues/20), confirmée par
+l'utilisateur : aucun paquet macOS publié si le run macOS n'est pas vert.
+`published` contient alors trois configurations : Windows système, Windows
+standalone (ZIP et installateur), Ubuntu standalone. `production_ci` conserve
+en plus macOS arm64/Intel système (cinq configurations) ; les tests natifs dev
+gardent les quatre OS. À intégrer uniquement après confirmation de la
+condition d'échec et du report, sans annoncer macOS comme livré.
+
+Pour rétablir les paquets macOS après qualification, ajouter les entrées
+souhaitées à `published` et, si absentes, à `production_ci`, tester le nouveau dev puis refaire une
+promotion. Aucun drapeau legacy, aucune tolérance aux artefacts manquants :
+la release exige exactement tous les paquets déclarés, ni plus ni moins, et
+le plan de release enregistre cette sélection. Les inventaires et le fichier de
+provenance joint conservent SHA dev/main, runs CI, options production,
+dépendances observées et SHA-256 des livrables. Les tests hors ligne du
+raccordement ne remplacent pas l'exécution réelle des workflows sur GitHub.
 
 Windows x64 : MSVC 2022, Qt 6.8.3, vcpkg épinglé au commit du manifeste.
 Linux standalone : Ubuntu 24.04 x64, Qt 6.8.3 ; pas un binaire universel glibc.
@@ -20,6 +81,13 @@ Qt 6.8.3 dans les deux modes, et aucune archive système Ubuntu 24.04 n'est prod
 Les paquets Debian 13, Fedora et Arch utilisent leurs dépôts natifs (Qt ≥ 6.8).
 macOS : runners `macos-15` arm64 et `macos-15-intel` x64 ; Homebrew pour les
 dépendances tierces et Qt système, SDK Qt officiel 6.8.3 pour le standalone.
+`github_build.py` fixe `Qt6_DIR` sur le SDK choisi et les chemins LibRaw/TIFF
+sur leurs préfixes de formule Homebrew (`opt/libraw`, `opt/libtiff`). Le
+`CMAKE_PREFIX_PATH` n'ajoute pas le préfixe global Homebrew : ses en-têtes Qt
+peuvent sinon masquer ceux du SDK standalone. Les bibliothèques Homebrew ne
+sont ni désinstallées ni déliées ; le mode système garde son Qt Homebrew.
+Ce raccordement est testé hors ligne ; la compilation et le smoke sur les
+deux architectures macOS restent à qualifier dans la CI production.
 Le minimum macOS effectif dépend des bouteilles Homebrew : ne pas annoncer
 macOS 12 sur la seule base du support de Qt. Les versions installées figurent
 dans les journaux ; Homebrew et Arch sont évolutifs, pas hermétiques.
@@ -43,8 +111,10 @@ depuis `patch_light` :
 - Plus aucun chemin propre à Qt < 6.8 : le contournement de conversion RGBA64
   vers flottant, propre à Qt 6.4.2, est supprimé. Qt 6.8.3 convertit exactement.
 
-La version de flux `QDataStream::Qt_6_4` des sidecars `.ipr` (ADR-0001) est un
-**format de fichier**, pas un minimum de compilation : elle reste inchangée.
+La version de flux `QDataStream::Qt_6_4` des anciens sidecars `.ipr` binaires
+(ADR-0001) est un **format de fichier**, pas un minimum de compilation : elle
+reste celle de leur lecture. Les sidecars courants sont des documents CBOR
+(ADR-0021).
 
 ## Orientation de compatibilité Qt ≥ 6.8 — 15 octobre 2026
 
@@ -163,7 +233,7 @@ photographique privés ne sont pas remplacés par ces tests synthétiques.
 | Événement / modification | Validation |
 | --- | --- |
 | Push `patch_*`, documentation seule | Lecture UTF-8, JSON valides, liens locaux signalés ; aucune compilation native |
-| Push `patch_*`, tests/analyse Python seulement | Suites Python concernées, sans installer Qt/OpenCV/LibRaw |
+| Push `patch_*`, tests/analyse Python seulement | Suites Python concernées, sans installer Qt/LibRaw |
 | Push `patch_*`, code photographique cartographié | Compilation des cibles et tests sélectionnés, Windows, Ubuntu et macOS ARM |
 | Modification transversale, inconnue ou ≥20 fichiers de code | Tous les tests, quatre plateformes, Intel compris |
 | Push `dev`/`main`, PR vers `dev`/`main`, lancement manuel | Tous les tests, quatre plateformes |
@@ -221,7 +291,7 @@ Pas de `pull_request_target`, de permission d'écriture ou de publication de
 release automatique. Le token GitHub est utilisé en lecture seule, sans
 être enregistré dans les artefacts.
 
-Les tags suivent `v0.1.X-alpha`, puis `v0.Y.X-beta` (Y >= 2), puis `v1.Y.X`.
+Les tags ont suivi `v0.1.X-alpha`, suivent `v0.Y.X-beta` (Y >= 2), puis suivront `v1.Y.X`.
 Le script ne crée ni tag ni fusion et ne calcule pas le nombre de patchs livrés.
 Les labels manuels identifient des constructions, pas une validation stable.
 
@@ -295,7 +365,7 @@ Standalone : bibliothèques dynamiques Qt et tierces ; sous Linux restent glibc,
 chargeur et pilotes du système. Système : DLL/bibliothèques et modules QML
 doivent être installés dans les versions ABI compatibles. Les paquets natifs
 déclarent les dépendances ; les archives génériques ne les installent pas.
-Windows système nécessite le runtime Visual C++ et Qt/OpenCV/LibRaw/TIFF dans
+Windows système nécessite le runtime Visual C++ et Qt/LibRaw/TIFF dans
 PATH. macOS système utilise Homebrew de la même architecture.
 
 Pas de signature Authenticode, certificat Apple Developer ID ou notarisation
@@ -340,6 +410,39 @@ Les corrections de portabilité concernent les chemins canoniques des profils
 fenêtre dans le test de zoom/comparatif. Les compilations et tests natifs
 ne certifient pas les paquets de livraison, les conteneurs Fedora/Arch,
 ni l'ergonomie sur une machine utilisateur ; ces validations restent distinctes.
+
+## Ajout du 21 octobre 2026 — installateur Windows
+
+`--windows-installer` complète le packaging Windows standalone. Le constructeur
+`scripts/windows_installer.py` compile `packaging/windows/ipr.iss` depuis le
+staging déjà vérifié, sans redéployer Qt ou les DLL. Le ZIP reste disponible ;
+les autres OS et le mode system sont inchangés.
+
+La vérification de `patch_ci_cd` compile et teste le setup temporairement,
+sans publier de binaire. Les livraisons `dev`/`main` ajoutent le setup et son
+SHA-256 aux archives du commit validé. Inno Setup 6.7.3 est installé pour
+Windows standalone seulement. Le test d’installation est réservé aux runners
+GitHub hébergés jetables ; il refuse une installation IPR préexistante.
+Il couvre installation, réinstallation, démarrage et désinstallation, pas
+la mise à niveau depuis chaque version historique ni une validation photographique.
+
+Le désinstalleur peut relancer une copie temporaire puis quitter avant elle.
+Le test attend donc tout l'arbre de processus dans un
+[Job Object Windows](https://learn.microsoft.com/en-us/windows/win32/procthread/job-objects),
+et vérifie que `uninstall.log` peut être ouvert exclusivement avant le
+nettoyage. Une barrière de démarrage empêche le lanceur de créer ses enfants
+avant son rattachement au job. L'attente normale est limitée à 120 secondes ;
+en cas d'échec ou d'interruption, le job arrête ses descendants avec une
+attente de terminaison/libération bornée à 15 secondes. Les erreurs restent
+fatales : pas d'ignorance des fichiers verrouillés ni de suppression différée
+annoncée comme un succès. Le test Inno complet reste à confirmer sur le
+runner ; les tests locaux utilisent des processus Python jetables, sans
+installation ni modification du registre utilisateur.
+
+Les préférences installées passent par `QStandardPaths::AppConfigLocation`,
+et les profils personnels par `AppDataLocation/profiles`, hors du désinstalleur.
+La signature de distribution reste à organiser.
+[Procédure, commandes et limites](build-windows-standalone.md).
 
 ## Références de déploiement
 

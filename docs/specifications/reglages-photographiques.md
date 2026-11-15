@@ -1,7 +1,10 @@
 # Spécification — Réglages photographiques
 
-**Statut :** partiellement validé, consolidation au 8 octobre 2026.
-**Implémentation :** `ImageEditor::renderWorkingImage()` et `ColorPipeline`.
+**Statut :** partiellement validé ; contrat relu sur `dev` le 22 octobre 2026.
+**Implémentation :** `ImageEditor` cadence `ColorPipeline`, `ToneRecovery`,
+`ColorAdjustments`, `DetailProcessing` et `ToneCurve`. Le master est Rec.2020
+linéaire D65. Les validations sRGB historiques ne qualifient pas automatiquement
+le pipeline actuel ; consulter la matrice et les campagnes de chaque groupe.
 
 ## Contrat commun
 
@@ -14,19 +17,19 @@
 
 | Groupe | Commandes | Statut de référence |
 | --- | --- | --- |
-| Tonalité | EV, contraste, ombres, noirs, hautes lumières, blancs | Validé sur le corpus de base ; détails dans la matrice de validation. |
-| Balance des blancs | température, nuance, balance automatique | Validé sur corpus ; référence par image et repli 5200 K. |
-| Couleur globale | vibrance, saturation | Validé. |
-| Détail et atmosphère | texture, clarté, voile, grain, flou, réduction de bruit, netteté | Texture, clarté et voile validés ; bruit, netteté, grain et flou nécessitent une recette dédiée. |
+| Tonalité | EV, contraste, ombres, noirs, hautes lumières, blancs | Campagnes historiques et corrections intégrées ; qualification du pipeline courant à lire dans la matrice et le rapport Lumières. |
+| Balance des blancs | température, nuance, balance automatique | Historique disponible ; référence par image et repli 5200 K. Qualifier profil et pipeline de la campagne courante. |
+| Couleur globale | vibrance, saturation | Présent dans dev ; les essais en cours sur patch_color ne sont pas une validation du dev courant. |
+| Détail et atmosphère | texture, clarté, voile, grain, flou, réduction de bruit, netteté | Validations historiques de texture, clarté et voile ; requalification du master courant et recette dédiée du bruit, de la netteté, du grain et du flou. |
 | Couleur sélective | mélangeur 8 bandes (rouge, orange, jaune, vert, cyan, bleu, violet, magenta), color grading 3 zones | Mélangeur : extrêmes et progressivité mesurés ; calibration/recette visuelle ouvertes. Grading : recette photographique à faire. |
 | Courbes | luminance, rouge, vert, bleu | Implémenté ; recette de stabilité et de compatibilité HDR à compléter. |
 
 ## Organisation du panneau de réglages
 
 L'histogramme et les informations de prise de vue restent en haut, suivis du
-bouton de réinitialisation globale. Les commandes sont réparties en dix sections
+bouton de réinitialisation globale. Les commandes sont réparties en onze sections
 repliables indépendantes : Développement RAW / Profil, Lumière, Courbe de tonalité, Couleur, Mélangeur de
-couleurs, Color grading, Effets, Réduction du bruit, Netteté et Export.
+couleurs, Color grading, Effets, Réduction du bruit, Netteté, Corrections optiques et Export.
 
 - Au premier lancement, Développement RAW / Profil et Lumière sont dépliées ; les autres sections sont repliées.
   Aux lancements suivants, le dépliage est restauré depuis l’INI utilisateur.
@@ -51,10 +54,14 @@ Les protocoles et preuves sont référencés depuis [la matrice de validation](.
 
 ## Développement RAW et base colorimétrique
 
-Le choix DCP et la normalisation expérimentale sont accessibles sous
-l'histogramme. Camera Neutral est accepté visuellement par l'utilisateur,
-sans validation de fidélité physique ni parité Lightroom. Le manifeste est
-limité à cinq RAW exacts et à LibRaw 0.22.2-Release ; il reste désactivé par défaut.
+Le choix DCP se trouve dans Développement RAW / Profil ; la calibration est
+une option avancée des préférences. Camera Neutral est accepté visuellement
+sur le corpus caractérisé, sans preuve de fidélité physique ni parité Lightroom.
+La calibration est active par défaut et suit le catalogue courant, par modèle,
+profil et mode, sans liste obligatoire de cinq fichiers ou d’ISO. Son activation
+ne garantit pas son application à un boîtier inconnu. Voir
+[ADR-0011](../decisions/ADR-0011-regles-raw-par-mode-et-configuration-vivante.md)
+et [ADR-0012](../decisions/ADR-0012-formats-extensibles-et-caracterisations.md).
 Le sidecar v6 enregistre les profils DCP/LCP, le manifeste, leurs SHA-256 et les activations.
 Ces choix et la WB automatique sont restaurés avant décodage. Camera Neutral
 est privilégié à la première ouverture lorsqu'il est disponible. Les ressources
@@ -75,7 +82,7 @@ Voir le [contrat des profils](../camera-profile-engine.md) et le
 ### Réduction de bruit : correctif et revalidation
 
 Les deux bruits sont compris entre 0 et 100. À 0/0, le traitement est bypassé
-sans modification des pixels. La couleur seule préserve Y Rec.709 linéaire
+sans modification des pixels. La couleur seule préserve la luminance Rec.2020 linéaire
 par pixel à la précision flottante. Le correctif CPU conserve les moyennes
 des plans, pas nécessairement celles de chaque région locale, et protège
 les frontières de couleur sans imposer un bord de luminance.

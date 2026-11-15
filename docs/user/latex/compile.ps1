@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param()
+param([ValidateSet('fr', 'en', 'all')][string]$Language = 'all')
 $ErrorActionPreference = 'Stop'
 $taskSourceDirectory = Split-Path -Parent $PSCommandPath
 $taskOutputDirectory = Join-Path $taskSourceDirectory 'build'
@@ -15,11 +15,16 @@ if ($taskTeX) {
 New-Item -ItemType Directory -Force -Path $taskOutputDirectory | Out-Null
 Push-Location -LiteralPath $taskSourceDirectory
 try {
-    foreach ($taskPass in 1..3) {
-        & $taskExecutable -interaction=nonstopmode -halt-on-error "-output-directory=$taskOutputDirectory" ipr-livre-utilisateur.tex
-        if ($LASTEXITCODE -ne 0) { throw "Échec LaTeX à la passe $taskPass (code $LASTEXITCODE)." }
+    $taskDocuments = @()
+    if ($Language -in @('fr', 'all')) { $taskDocuments += 'ipr-livre-utilisateur' }
+    if ($Language -in @('en', 'all')) { $taskDocuments += 'ipr-livre-utilisateur_en' }
+    foreach ($taskDocument in $taskDocuments) {
+        foreach ($taskPass in 1..3) {
+            & $taskExecutable -interaction=nonstopmode -halt-on-error "-output-directory=$taskOutputDirectory" "$taskDocument.tex"
+            if ($LASTEXITCODE -ne 0) { throw "Échec LaTeX $taskDocument à la passe $taskPass (code $LASTEXITCODE)." }
+        }
+        Write-Output "PDF : $taskOutputDirectory/$taskDocument.pdf"
     }
-    Write-Output "PDF : $taskOutputDirectory/ipr-livre-utilisateur.pdf"
 } finally {
     Pop-Location
 }

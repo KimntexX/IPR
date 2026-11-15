@@ -6,20 +6,20 @@
 \begin{figure}[htbp]
 \centering
 \resizebox{\textwidth}{!}{%
-\begin{tikzpicture}[node distance=7mm and 9mm, every node/.style={font=\small}]
+\begin{tikzpicture}[node distance=7mm and 9mm, every node/.style={font=\footnotesize}]
   \node[component, text width=40mm] (editor) {\textbf{ImageEditor}\\+ openImage() / loadImage()\\+ setBrightness()\\+ setCameraProfile()\\+ exportImage()\\- Settings};
-  \node[service, right=of editor, text width=40mm] (pipeline) {\textit{namespace}\\\textbf{ColorPipeline}\\+ applyTemperatureTint()\\+ mapToSrgbGamut()\\+ toSrgb()};
-  \node[service, below=of editor, text width=40mm] (cache) {\textbf{DecodedImageCache}\\+ find() / insert()\\+ setBudgetBytes()\\- entrées LRU};
-  \node[component, below=of pipeline, text width=40mm] (working) {\textit{struct}\\\textbf{WorkingImage}\\+ linearRgba : cv::Mat\\+ colorSpace\\+ referenceWhiteBalanceKelvin};
-  \node[component, left=of cache, text width=40mm] (provider) {\textbf{ImageProvider}\\\textbf{ThumbnailProvider}\\+ requestImage()};
+  \node[service, right=of editor, text width=40mm] (pipeline) {\textit{namespace}\\\textbf{ColorPipeline}\\{\scriptsize\texttt{+ applyTemperatureTint()}}\\{\scriptsize\texttt{+ mapToSrgbGamut()}}\\+ toSrgb()};
+  \node[service, below=of editor, text width=40mm] (cache) {\textbf{ImageCache}\\\textbf{Controller}\\+ acquire() / release()\\+ insert() / statistics()\\thread et réservations};
+  \node[component, below=of pipeline, text width=40mm] (working) {\textit{struct}\\\textbf{WorkingImage}\\+ linearRgba : cv::Mat\\+ colorSpace\\{\scriptsize\texttt{+ reference}}\\{\scriptsize\texttt{WhiteBalanceKelvin}}};
+  \node[component, left=of cache, text width=40mm] (provider) {\textbf{ImageProvider}\\+ requestImage()\\\textbf{ThumbnailProvider}\\{\scriptsize\texttt{+ requestImageResponse()}}};
   \draw[flow] (editor) -- node[above, font=\scriptsize]{compose} (pipeline);
   \draw[flow] (pipeline) -- node[right, font=\scriptsize]{transforme} (working);
   \draw[flow] (editor) -- node[left, font=\scriptsize]{consulte} (cache);
-  \draw[flow] (cache) -- node[below, font=\scriptsize]{retient} (working);
+  \draw[flow] (cache) -- (working);
   \draw[flow] (editor) -- (provider);
 \end{tikzpicture}
 }
-\caption{Noyau de rendu et fournisseurs Qt Quick.}
+\caption{Relations de responsabilité du noyau et des fournisseurs Qt Quick. Les méthodes longues ne constituent pas des signatures C++ complètes.}
 \end{figure}
 
 \section{Classes de réglage et persistance}
@@ -57,7 +57,11 @@ et de comparaison ; il ne modifie pas \texttt{Settings}.
 assurent conversions, adaptation et gamut ; \texttt{ColorMixer} et
 \texttt{DetailProcessing} portent leurs traitements spécialisés.
 
-\texttt{DecodedImageCache} retient source, proxy et métadonnées, sans l'état QML.
+\texttt{ImageCacheController} possède le LRU \texttt{DecodedImageCache} sur son
+thread dédié et contrôle les réservations. L'éditeur ne consulte pas directement
+un cache partagé depuis le thread QML. Une entrée peut retenir proxy, signal
+caméra et métadonnées ; son master pleine résolution peut être reconstruit
+à l'export. Les buffers actifs sont distincts de la rétention des images inactives.
 Les méthodes indiquées correspondent aux en-têtes C++ actuels ; les namespaces
 ne sont pas présentés comme des classes instanciables.
 
@@ -67,8 +71,8 @@ ne sont pas présentés comme des classes instanciables.
 \centering
 \resizebox{\textwidth}{!}{%
 \begin{tikzpicture}[node distance=10mm and 12mm]
-  \node[component,text width=45mm,font=\small] (ui) {RawDevelopmentModule\\Setting.qml};
-  \node[component, right=of ui] (editor) {ImageEditor\\recette RAW\\sidecar v5};
+  \node[component,text width=45mm,font=\small] (ui) {Modules RAW / optique\\Préférences avancées};
+  \node[component, right=of ui] (editor) {ImageEditor\\recette RAW / optique\\sidecar v6};
   \node[service, right=of editor] (raw) {RawDecoder\\DcpSource\\applyProfile()};
   \node[service, below=of raw] (normal) {RawNormalization\\resolve()\\cacheToken()};
   \node[service, below=of editor,text width=41mm] (profiles) {CameraProfileEngine\\findProfiles()\\applyLcp() / applyDcp()};
@@ -79,5 +83,5 @@ ne sont pas présentés comme des classes instanciables.
   \draw[flow] (raw) -- (profiles);
   \draw[flow] (ui) -- (prefs);
 \end{tikzpicture}}
-\caption{Contrats RAW et présentation. L'INI conserve l'IHM ; le sidecar v5 conserve les choix DCP et calibration par image.}
+\caption{Contrats RAW et présentation. L'INI conserve l'IHM ; le sidecar v6 conserve les choix DCP, calibration et optique par image.}
 \end{figure}

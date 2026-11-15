@@ -21,7 +21,8 @@ automatiquement une vérité sans bruit.
 ## Séries
 
 Neutre : luminance 0, couleur 0, gain de netteté 0, IA inactive.
-Luminance seule puis chrominance seule : **0/25/50/75/100**. Sur 0043/9890,
+Luminance seule puis chrominance seule : **0/25/50/100** dans le générateur
+courant ; 75 en complément manuel. Sur 0043/9890,
 ajouter 1/5/10 pour l'activation. Paramètres LR secondaires fixes et enregistrés.
 Tester ensuite séparément composantes combinées et couplage bruit/netteté.
 Une série LR IA ou un DNG déjà amélioré est une autre approche, pas un témoin
@@ -34,10 +35,13 @@ exports pleine résolution, restauration et toutes les valeurs de support.
 ## Mesure native
 
 Pixels adjacents 16 bits, pas décimation spatiale ni image redimensionnée.
-L'analyseur sélectionne 80 candidats de 256×256, puis six régions peu
-structurées et quatre structurées distinctes, coordonnées fixes par série et
-moteur. Exclure Y moyen hors `]0,001;0,8[` ou clipping excessif. Les aplats
-automatiques restent à confirmer visuellement.
+L'analyseur unifié travaille sur des ROI natives adjacentes, jusqu'à 256×256.
+Sans ROI déclarées, il prépare une grille 4×4 de candidats puis retient jusqu'à
+six faibles gradients et trois détails distincts selon le neutre. Les coordonnées
+sont fixes par référence, pas nécessairement homologues entre moteurs. Ces
+choix ne sont pas ceux de l'ancien analyseur (80 candidats, six aplats/quatre
+détails) : ne pas comparer leurs agrégats comme s'il s'agissait d'une même méthode.
+Les aplats automatiques restent à confirmer visuellement.
 
 Convertir sRGB linéaire ; Y Rec.709, `Co=R−B`, `Cg=G−(R+B)/2`.
 Proxy haute fréquence :

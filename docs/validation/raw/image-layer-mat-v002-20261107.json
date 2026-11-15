@@ -1,0 +1,360 @@
+{
+ "question": "Whether the modules write the same once the last cv::Mat users leave, then OpenCV itself",
+ "decision": "User, 2026-11-06: explicit sharing (see image-layer-mat-v001-20261106.json); user, 2026-11-07: carry on to the removal of OpenCV.",
+ "revisions": {
+  "stacking": "01033e2",
+  "panorama": "bf1549f",
+  "probes_and_raw_bench": "1e379c0",
+  "bridge_oracles_and_build": "the commit that adds this file"
+ },
+ "settings": "As image-layer-mat-v001-20261106.json: dehaze 30, texture 40, clarity 20, colour denoise 30, sharpening 40, rotation 2; 16-bit TIFF; fresh copies. Stacking on D:/DCIM/101EOSR6 6V1A0016 to 6V1A0023; panorama on Oliana _MG_7596 to _MG_7601 with filled edges; from the repository root; every measured program rebuilt and checked newer than the engine.",
+ "stacking_against_core_editor_caches": {
+  "exports": {
+   "6V1A0007.CR3": {
+    "neutral": {
+     "largest": 0,
+     "share_differing": 0.0
+    },
+    "effect": {
+     "largest": 0,
+     "share_differing": 0.0
+    },
+    "effect_ms": [
+     6390.1224,
+     6409.2694
+    ],
+    "preview_ms": [
+     975.5068,
+     950.5171
+    ]
+   },
+   "IMG_6858.CR2": {
+    "neutral": {
+     "largest": 0,
+     "share_differing": 0.0
+    },
+    "effect": {
+     "largest": 0,
+     "share_differing": 0.0
+    },
+    "effect_ms": [
+     3550.0141,
+     3443.7454
+    ],
+    "preview_ms": [
+     785.9039,
+     762.3829
+    ]
+   }
+  },
+  "stack": {
+   "dng": {
+    "largest": 0,
+    "share_differing": 0.0
+   },
+   "noise": [
+    [
+     0.35267831706277014,
+     0.3503921505824428,
+     0.3530538879891962
+    ],
+    [
+     0.3526783168693477,
+     0.35039215076133007,
+     0.35305388822338823
+    ]
+   ],
+   "residuals_px": [
+    [
+     0.4563074045103632,
+     0.42983518419097233,
+     0.428567015958631,
+     0.36063215893525724,
+     0,
+     0.35384734807901885,
+     0.4166197953683561,
+     0.40349265783931854
+    ],
+    [
+     0.4563074045103632,
+     0.42983518419097233,
+     0.428567015958631,
+     0.36063215893525724,
+     0,
+     0.35384734807901885,
+     0.4166197953683561,
+     0.40349265783931854
+    ]
+   ],
+   "seconds_stack_from_decoded": [
+    17.716,
+    16.098
+   ]
+  },
+  "panorama": {
+   "canvas_width": [
+    18448,
+    18448
+   ],
+   "canvas_height": [
+    4224,
+    4224
+   ],
+   "residual_pixels": [
+    1.8458881319839247,
+    1.8458881319839247
+   ],
+   "worst_pair_pixels": [
+    3.779481872853713,
+    3.779481872853713
+   ],
+   "filled_share": [
+    0.15178814704804988,
+    0.15178814704804988
+   ],
+   "job_seconds": [
+    27.178,
+    12.049
+   ],
+   "image": {
+    "largest": 0,
+    "share_differing": 0.0,
+    "inner_rows_600_3300_largest": 0
+   }
+  }
+ },
+ "panorama_against_stacking": {
+  "exports": {
+   "6V1A0007.CR3": {
+    "neutral": {
+     "largest": 0,
+     "share_differing": 0.0
+    },
+    "effect": {
+     "largest": 0,
+     "share_differing": 0.0
+    },
+    "effect_ms": [
+     6409.2694,
+     6543.5061
+    ],
+    "preview_ms": [
+     950.5171,
+     1016.4823
+    ]
+   },
+   "IMG_6858.CR2": {
+    "neutral": {
+     "largest": 0,
+     "share_differing": 0.0
+    },
+    "effect": {
+     "largest": 0,
+     "share_differing": 0.0
+    },
+    "effect_ms": [
+     3443.7454,
+     3624.4924
+    ],
+    "preview_ms": [
+     762.3829,
+     835.6033
+    ]
+   }
+  },
+  "stack": {
+   "dng": {
+    "largest": 0,
+    "share_differing": 0.0
+   },
+   "noise": [
+    [
+     0.3526783168693477,
+     0.35039215076133007,
+     0.35305388822338823
+    ],
+    [
+     0.3526783168693477,
+     0.35039215076133007,
+     0.35305388822338823
+    ]
+   ],
+   "residuals_px": [
+    [
+     0.4563074045103632,
+     0.42983518419097233,
+     0.428567015958631,
+     0.36063215893525724,
+     0,
+     0.35384734807901885,
+     0.4166197953683561,
+     0.40349265783931854
+    ],
+    [
+     0.4563074045103632,
+     0.42983518419097233,
+     0.428567015958631,
+     0.36063215893525724,
+     0,
+     0.35384734807901885,
+     0.4166197953683561,
+     0.40349265783931854
+    ]
+   ],
+   "seconds_stack_from_decoded": [
+    16.098,
+    16.404
+   ]
+  },
+  "panorama": {
+   "canvas_width": [
+    18448,
+    18448
+   ],
+   "canvas_height": [
+    4224,
+    4224
+   ],
+   "residual_pixels": [
+    1.8458881319839247,
+    1.8458881319839247
+   ],
+   "worst_pair_pixels": [
+    3.779481872853713,
+    3.779481872853713
+   ],
+   "filled_share": [
+    0.15178814704804988,
+    0.15178814704804988
+   ],
+   "job_seconds": [
+    12.049,
+    12.737
+   ],
+   "image": {
+    "largest": 0,
+    "share_differing": 0.0,
+    "inner_rows_600_3300_largest": 0
+   }
+  }
+ },
+ "without_opencv_against_panorama": {
+  "exports": {
+   "6V1A0007.CR3": {
+    "neutral": {
+     "largest": 0,
+     "share_differing": 0.0
+    },
+    "effect": {
+     "largest": 0,
+     "share_differing": 0.0
+    },
+    "effect_ms": [
+     6543.5061,
+     6569.3219
+    ],
+    "preview_ms": [
+     1016.4823,
+     985.4737
+    ]
+   },
+   "IMG_6858.CR2": {
+    "neutral": {
+     "largest": 0,
+     "share_differing": 0.0
+    },
+    "effect": {
+     "largest": 0,
+     "share_differing": 0.0
+    },
+    "effect_ms": [
+     3624.4924,
+     3639.0246
+    ],
+    "preview_ms": [
+     835.6033,
+     800.9614
+    ]
+   }
+  },
+  "stack": {
+   "dng": {
+    "largest": 0,
+    "share_differing": 0.0
+   },
+   "noise": [
+    [
+     0.3526783168693477,
+     0.35039215076133007,
+     0.35305388822338823
+    ],
+    [
+     0.3526783168693477,
+     0.35039215076133007,
+     0.35305388822338823
+    ]
+   ],
+   "residuals_px": [
+    [
+     0.4563074045103632,
+     0.42983518419097233,
+     0.428567015958631,
+     0.36063215893525724,
+     0,
+     0.35384734807901885,
+     0.4166197953683561,
+     0.40349265783931854
+    ],
+    [
+     0.4563074045103632,
+     0.42983518419097233,
+     0.428567015958631,
+     0.36063215893525724,
+     0,
+     0.35384734807901885,
+     0.4166197953683561,
+     0.40349265783931854
+    ]
+   ],
+   "seconds_stack_from_decoded": [
+    16.404,
+    16.245
+   ]
+  },
+  "panorama": {
+   "canvas_width": [
+    18448,
+    18448
+   ],
+   "canvas_height": [
+    4224,
+    4224
+   ],
+   "residual_pixels": [
+    1.8458881319839247,
+    1.8458881319839247
+   ],
+   "worst_pair_pixels": [
+    3.779481872853713,
+    3.779481872853713
+   ],
+   "filled_share": [
+    0.15178814704804988,
+    0.15178814704804988
+   ],
+   "job_seconds": [
+    12.737,
+    13.011
+   ],
+   "image": {
+    "largest": 0,
+    "share_differing": 0.0,
+    "inner_rows_600_3300_largest": 0
+   }
+  }
+ },
+ "without_opencv_conditions": "Built with no find_package(OpenCV) and run with no OpenCV folder on PATH; no measured program names an OpenCV DLL.",
+ "stack_noise_note": "The stack audit measures its noise ratio with the image layer since the stacking lot (double precision): the ratio moves by about 1e-9 while the stacked pixels stay identical.",
+ "tests": "76 of 76 until the bridge test left with the bridge, then 75 of 75; raw bench 7 of 7.",
+ "timing": "one run per side on a machine training a network for another agent; not a speed measurement"
+}

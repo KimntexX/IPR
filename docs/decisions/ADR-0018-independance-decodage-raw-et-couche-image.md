@@ -1,3 +1,5 @@
+*[Français](ADR-0018-independance-decodage-raw-et-couche-image.md) | [English](ADR-0018-independance-decodage-raw-et-couche-image_en.md)*
+
 # ADR-0018 — Indépendance du décodage RAW et de la couche image
 
 - **Date :** 2026-10-20
@@ -7,6 +9,23 @@
 - **Décideurs :** utilisateur
 
 ## Contexte
+
+**Mise à jour du31octobre2026, prioritaire sur le calendrier initial :**
+la séparation a démarré et le développement flottant IPR est intégré dans
+`dev` (`b19b4c3`). LibRaw conserve la lecture/décompression (`unpack`) et
+les métadonnées. `RawDevelopment` réalise le développement des Bayer Canon
+éligibles ; les chemins non éligibles conservent le repli LibRaw. Le signal
+caméra sort en float32 ; le mode signé reste expérimental et désactivé par défaut.
+
+La direction utilisateur est désormais de qualifier les processus propres
+Canon CR3 en priorité (R6 Mark III), puis CR2 (60D), modes complets et compressés
+avec corpus dédié, puis R5 et 6D Mark II. **LibRaw reste prévu pour les autres
+marques** : le retrait total évoqué dans la décision initiale n'est plus la cible
+actuelle. L'utilisateur a sollicité Canon Developer et attend un retour ; aucune
+information constructeur reçue ni nouveau codec qualifié n'est affirmé ici.
+La séparation OpenCV demeure un chantier distinct, non lancé par ce constat.
+Voir le [rapport de séparation RAW](../validation/analyses/analyse-developpement-raw.md).
+Les estimations et restrictions de lancement ci-dessous sont historiques.
 
 Le rapport du 1er octobre recommandait de conserver LibRaw et OpenCV : leur
 retrait ne réduisait pas le temps d'ouverture. Ce critère de performance

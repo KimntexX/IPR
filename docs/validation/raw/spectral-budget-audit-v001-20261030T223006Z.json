@@ -1,0 +1,342 @@
+{
+  "schema_version": 1,
+  "data_version": 1,
+  "created_utc": "20261030T223006Z",
+  "parent_path": "docs\\validation\\raw\\spectral-budget-v001-20261030T222031Z.json",
+  "parent_sha256": "cc3aa02259075f9315a0a1642d78c2fa594673ffd79cbc58ee4fa35d50919ac8",
+  "tool_sha256": "804e5adab3f3567a250b8e7053d382cbae1ad2997942547724a252a16ed45e22",
+  "gates": {
+    "spectral_internal": {
+      "checks": {
+        "flat_median_covariance_le_015": true,
+        "every_sigma_ratio_in_08_125": true,
+        "transition_median_improves_flat": true
+      },
+      "passed": true,
+      "flat": {
+        "comparisons": 60,
+        "covariance_error_percentiles_50_95_100": [
+          0.036671301600730496,
+          0.14993648155351766,
+          0.20041408558585166
+        ],
+        "sigma_ratio_min": 0.8704977023021303,
+        "sigma_ratio_max": 1.059784662690198,
+        "relative_MC_SE_median": 0.037900508051620624
+      },
+      "spatial_transition": {
+        "comparisons": 180,
+        "covariance_error_percentiles_50_95_100": [
+          0.0379527362633164,
+          0.12846120203940362,
+          0.267505619381694
+        ],
+        "sigma_ratio_min": 0.8636110702380214,
+        "sigma_ratio_max": 1.111014037022731,
+        "relative_MC_SE_median": 0.03811508972314428
+      },
+      "flat_transition": {
+        "comparisons": 180,
+        "covariance_error_percentiles_50_95_100": [
+          0.04066328086597961,
+          0.13258642847404187,
+          0.21150441385634683
+        ],
+        "sigma_ratio_min": 0.8599695115091167,
+        "sigma_ratio_max": 1.1217539595355728,
+        "relative_MC_SE_median": 0.037601196037434066
+      },
+      "sigma_min": 0.8636110702380214,
+      "sigma_max": 1.111014037022731
+    },
+    "real_read_replay": {
+      "checks": {
+        "flat_median_covariance_le_015": true,
+        "every_sigma_ratio_in_08_125": true,
+        "transition_median_improves_flat": true
+      },
+      "passed": true,
+      "flat": {
+        "comparisons": 60,
+        "covariance_error_percentiles_50_95_100": [
+          0.05275847595878892,
+          0.1870058260419474,
+          0.2764901620578375
+        ],
+        "sigma_ratio_min": 0.8642756251115502,
+        "sigma_ratio_max": 1.1513121406329303,
+        "relative_MC_SE_median": 0.03816407495284536
+      },
+      "spatial_transition": {
+        "comparisons": 180,
+        "covariance_error_percentiles_50_95_100": [
+          0.057050550325796145,
+          0.27558602579629854,
+          0.33470994122593606
+        ],
+        "sigma_ratio_min": 0.8233944101443481,
+        "sigma_ratio_max": 1.2053998441865166,
+        "relative_MC_SE_median": 0.036984954941785816
+      },
+      "flat_transition": {
+        "comparisons": 180,
+        "covariance_error_percentiles_50_95_100": [
+          0.061667966289314244,
+          0.2459058479817301,
+          0.31560946857547667
+        ],
+        "sigma_ratio_min": 0.8394659559663362,
+        "sigma_ratio_max": 1.1472746099983475,
+        "relative_MC_SE_median": 0.03690933371486147
+      },
+      "sigma_min": 0.8233944101443481,
+      "sigma_max": 1.2053998441865166
+    }
+  },
+  "groups": [
+    {
+      "domain": "spectral_internal",
+      "model": "flat",
+      "levels": [
+        0,
+        1,
+        2
+      ],
+      "summary": {
+        "comparisons": 144,
+        "covariance_error_percentiles_50_95_100": [
+          0.02606713106553747,
+          0.052040163176088554,
+          0.06770544807917052
+        ],
+        "sigma_ratio_min": 0.8599695115091167,
+        "sigma_ratio_max": 1.08294112720357,
+        "relative_MC_SE_median": 0.021358943298946012
+      }
+    },
+    {
+      "domain": "spectral_internal",
+      "model": "flat",
+      "levels": [
+        3,
+        4
+      ],
+      "summary": {
+        "comparisons": 96,
+        "covariance_error_percentiles_50_95_100": [
+          0.07805036301188348,
+          0.17653398594218186,
+          0.21150441385634683
+        ],
+        "sigma_ratio_min": 0.8637912094327888,
+        "sigma_ratio_max": 1.1217539595355728,
+        "relative_MC_SE_median": 0.09318786426148118
+      }
+    },
+    {
+      "domain": "spectral_internal",
+      "model": "spatial",
+      "levels": [
+        0,
+        1,
+        2
+      ],
+      "summary": {
+        "comparisons": 144,
+        "covariance_error_percentiles_50_95_100": [
+          0.02159651815000521,
+          0.052404953002386644,
+          0.07523978143149848
+        ],
+        "sigma_ratio_min": 0.9208126249537191,
+        "sigma_ratio_max": 1.03500394933104,
+        "relative_MC_SE_median": 0.021333231733161588
+      }
+    },
+    {
+      "domain": "spectral_internal",
+      "model": "spatial",
+      "levels": [
+        3,
+        4
+      ],
+      "summary": {
+        "comparisons": 96,
+        "covariance_error_percentiles_50_95_100": [
+          0.08830039064982724,
+          0.17703879070915257,
+          0.267505619381694
+        ],
+        "sigma_ratio_min": 0.8636110702380214,
+        "sigma_ratio_max": 1.111014037022731,
+        "relative_MC_SE_median": 0.09262573844290145
+      }
+    },
+    {
+      "domain": "spectral_internal",
+      "model": "clean_diagnostic",
+      "levels": [
+        0,
+        1,
+        2
+      ],
+      "summary": {
+        "comparisons": 144,
+        "covariance_error_percentiles_50_95_100": [
+          0.020376828536495604,
+          0.051751144255128015,
+          0.07410491810025704
+        ],
+        "sigma_ratio_min": 0.9626633817951412,
+        "sigma_ratio_max": 1.0420093253815568,
+        "relative_MC_SE_median": 0.021457583298519958
+      }
+    },
+    {
+      "domain": "spectral_internal",
+      "model": "clean_diagnostic",
+      "levels": [
+        3,
+        4
+      ],
+      "summary": {
+        "comparisons": 96,
+        "covariance_error_percentiles_50_95_100": [
+          0.08711573520283733,
+          0.19490374693307566,
+          0.2072457983973908
+        ],
+        "sigma_ratio_min": 0.8664017787599394,
+        "sigma_ratio_max": 1.1050388624960878,
+        "relative_MC_SE_median": 0.09304320212970096
+      }
+    },
+    {
+      "domain": "real_read_replay",
+      "model": "flat",
+      "levels": [
+        0,
+        1,
+        2
+      ],
+      "summary": {
+        "comparisons": 144,
+        "covariance_error_percentiles_50_95_100": [
+          0.04372493009704164,
+          0.07422492237688133,
+          0.09722064674861514
+        ],
+        "sigma_ratio_min": 0.8394659559663362,
+        "sigma_ratio_max": 1.050086433031536,
+        "relative_MC_SE_median": 0.020880208375781723
+      }
+    },
+    {
+      "domain": "real_read_replay",
+      "model": "flat",
+      "levels": [
+        3,
+        4
+      ],
+      "summary": {
+        "comparisons": 96,
+        "covariance_error_percentiles_50_95_100": [
+          0.09030241300888757,
+          0.276723173431613,
+          0.31560946857547667
+        ],
+        "sigma_ratio_min": 0.845628015760068,
+        "sigma_ratio_max": 1.1568643498751194,
+        "relative_MC_SE_median": 0.08756014182070126
+      }
+    },
+    {
+      "domain": "real_read_replay",
+      "model": "spatial",
+      "levels": [
+        0,
+        1,
+        2
+      ],
+      "summary": {
+        "comparisons": 144,
+        "covariance_error_percentiles_50_95_100": [
+          0.0414130828917161,
+          0.07366120377535461,
+          0.09615832795882596
+        ],
+        "sigma_ratio_min": 0.9047623577002962,
+        "sigma_ratio_max": 1.0391981543144644,
+        "relative_MC_SE_median": 0.021060941926052512
+      }
+    },
+    {
+      "domain": "real_read_replay",
+      "model": "spatial",
+      "levels": [
+        3,
+        4
+      ],
+      "summary": {
+        "comparisons": 96,
+        "covariance_error_percentiles_50_95_100": [
+          0.09263681164404647,
+          0.28993420398390857,
+          0.33470994122593606
+        ],
+        "sigma_ratio_min": 0.8233944101443481,
+        "sigma_ratio_max": 1.2053998441865166,
+        "relative_MC_SE_median": 0.08801320274378627
+      }
+    },
+    {
+      "domain": "real_read_replay",
+      "model": "clean_diagnostic",
+      "levels": [
+        0,
+        1,
+        2
+      ],
+      "summary": {
+        "comparisons": 144,
+        "covariance_error_percentiles_50_95_100": [
+          0.03602089233425367,
+          0.0734222520225346,
+          0.09669103889296868
+        ],
+        "sigma_ratio_min": 0.9460660101257429,
+        "sigma_ratio_max": 1.0352703933199978,
+        "relative_MC_SE_median": 0.02099585168754672
+      }
+    },
+    {
+      "domain": "real_read_replay",
+      "model": "clean_diagnostic",
+      "levels": [
+        3,
+        4
+      ],
+      "summary": {
+        "comparisons": 96,
+        "covariance_error_percentiles_50_95_100": [
+          0.08875735158137343,
+          0.2915770689574438,
+          0.3676315383474523
+        ],
+        "sigma_ratio_min": 0.8199079865664504,
+        "sigma_ratio_max": 1.2193301253464954,
+        "relative_MC_SE_median": 0.08844799927239505
+      }
+    }
+  ],
+  "bias_register": [
+    "Adaptive continuation after gate failure; previous controls now consumed. No fresh physical holdout is claimed.",
+    "Internal spectral simulation shares read-model and signal law with predictor; can verify implementation/stability, NOT sensor truth.",
+    "Stationary Gaussian shape, three same-session darks, constant drift removed; no physical fixed-pattern or hot-pixel model.",
+    "Shape uses spatial dark structure, amplitude uses temporal variance; transfer to physical correlated read noise remains to validate.",
+    "Real replay contains only TWO physical control reads per ISO, reused and previously inspected; distinct random photons do not multiply acquisitions.",
+    "No denoising/renders/DCP/LCP or production integration/resource qualification. Reserved final data remain sealed."
+  ],
+  "note": "No comparison to old single-read target is claimed causal: read policy, seeds and conditioning changed. New criteria remain unchanged.",
+  "decision": "Population covariance research candidate passes both frozen gates; real-photo validation, uncertainty and performance remain unqualified."
+}

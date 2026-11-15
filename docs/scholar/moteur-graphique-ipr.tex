@@ -1,117 +1,154 @@
 \input{preamble}
 \title{Moteur de rendu \IPR{} -- architecture, calcul et constantes}
 \begin{document}
-\coursmeta{4 octobre 2026}{Référence d'implémentation : \texttt{ImageEditor}, \texttt{ColorPipeline}, \texttt{ColorMixer}, \texttt{RawDecoder} et \texttt{CameraProfileEngine}.}
+\coursmeta{22 octobre 2026}{Relecture sur \texttt{dev}, référence \texttt{a15f703}. Les campagnes citées gardent leur date et ne deviennent pas des tests de cette relecture.}
 
-\section{Nature du moteur}
-Le terme ``moteur graphique'' désigne ici un moteur de traitement d'image sur CPU, pas un moteur 3D ni un shader GPU. Il manipule des tampons OpenCV de pixels flottants, est orchestré par C++/Qt et est affiché par QML. Cette distinction est importante : les constantes documentées ci-dessous règlent des algorithmes de signal et de colorimétrie, non une pipeline de rasterisation GPU.
+\section{Nature du moteur et frontière d'import}
+Le moteur est un traitement d'image sur CPU, pas un moteur 3D. C++/Qt
+orchestre des tampons OpenCV ; QML affiche les aperçus. LibRaw reste le
+backend RAW courant, mais les adaptateurs enregistrés rejoignent la même
+frontière que les lecteurs raster Qt : \texttt{ImageImport::Result}.
+Un nouveau format exige un véritable lecteur, pas seulement une extension.
 
-\section{Contrat de données}
 \begin{center}
-\begin{tikzpicture}[node distance=7mm and 8mm, every node/.style={draw=iprblue,rounded corners,fill=blue!4,align=center,minimum height=8mm,font=\small}]
-\node (raw) {RAW / JPEG / TIFF};
-\node[right=of raw] (decode) {LibRaw ou Qt\\RGB linéaire 16 bits};
-\node[right=of decode] (work) {\texttt{WorkingImage}\\RGBA \texttt{CV\_32FC4}};
-\node[below=of work] (render) {\texttt{renderWorkingImage}\\réglages non destructifs};
-\node[left=of render] (preview) {proxy d'édition\\aperçu asynchrone};
-\node[right=of render] (export) {gamut mapping\\sRGB 8/16 bits};
-\draw[-{Stealth}] (raw)--(decode); \draw[-{Stealth}] (decode)--(work);
-\draw[-{Stealth}] (work)--(render); \draw[-{Stealth}] (render)--(preview); \draw[-{Stealth}] (render)--(export);
+\begin{tikzpicture}[node distance=8mm and 8mm,every node/.style={draw=iprblue,rounded corners,fill=blue!4,align=center,minimum height=8mm,font=\small}]
+\node (raw) {RAW\\LibRaw / adaptateur};
+\node[right=of raw] (import) {Import commun\\RGBA float Rec.2020};
+\node[right=of import] (raster) {JPEG / PNG / TIFF\\Qt, orientation, ICC};
+\node[below=of import] (render) {Proxy et retouches\\modules CPU};
+\node[below=of render] (out) {Aperçu / export\\conversion sRGB};
+\draw[-{Stealth}] (raw)--(import);
+\draw[-{Stealth}] (raster)--(import);
+\draw[-{Stealth}] (import)--(render);
+\draw[-{Stealth}] (render)--(out);
 \end{tikzpicture}
 \end{center}
 
-Le contrat central est : RGB linéaire, valeurs finies, alpha séparé et espace sRGB linéaire. Les formats sources standards sont convertis avec leur profil ICC; les RAW sont traités par LibRaw~\cite{libraw} puis, lorsqu'ils existent, par LCP/DCP. Cette normalisation respecte la séparation entre espace de travail et profil de sortie~\cite{icc2022} et évite de dupliquer une variante de calcul par format.
+Le master est du RGBA float32 fini, Rec.2020 linéaire D65, alpha droit.
+Les RGB négatifs et supérieurs à un sont permis à la frontière ; cela
+n'assure pas que tous les opérateurs internes les préservent. Les poids
+de luminance sont $Y=0{,}2627R+0{,}6780G+0{,}0593B$.
+Les sorties sRGB utilisent leurs propres primaires et poids Rec.709.
+Une étiquette ICC ne remplace jamais une conversion de valeurs~\cite{icc2022}.
 
-\section{Ordre de rendu}
+\section{Développement caméra et profils}
+Un RAW mosaïqué exige lecture, niveaux noir/blanc, WB et dématriçage~\cite{libraw}.
+Le signal caméra pré-DCP, quand il existe, est immuable et distinct du master.
+Le DCP applique matrices, gain de profil, tables et courbe dans leurs domaines
+attendus, dont ProPhoto, puis rejoint Rec.2020. Sans DCP, le repli matriciel
+du décodeur est converti vers le même master.
+
+La calibration est demandée par défaut pour une nouvelle recette ; le
+catalogue JSON schéma 4 doit reconnaître format, décodeur, boîtier, profil
+et mode. Un appareil inconnu n'hérite pas des coefficients Canon. La case
+avancée est un état demandé, pas une preuve d'application. DCP et LCP sont
+des ressources distinctes ; leurs droits ne découlent pas de leur présence
+dans un répertoire local.
+
+\section{Ordre effectif des retouches}
 \begin{enumerate}
-\item séparation RGB/alpha; conversion en niveaux de gris si demandée;
-\item exposition ($2^{EV}$) et contraste autour de $0{,}18$;
-\item adaptation température/teinte depuis le blanc de référence de l'image;
-\item ombres, noirs, hautes lumières et blancs par masques doux;
-\item saturation, vibrance, mélangeur HSV et color grading;
-\item texture, clarté et voile;
-\item courbes de luminance/RGB; flou et grain;
-\item réassemblage de l'alpha, compression de gamut et encodage export.
+\item Séparer RGB et alpha, sans modifier la source.
+\item Avec contexte caméra DCP, rejouer WB manuelle et exposition avant le profil.
+\item Appliquer les niveaux de gris, l'exposition sans contexte caméra, puis le contraste.
+\item Sans contexte caméra, appliquer le repli température/nuance ; traiter les tons.
+\item Appliquer saturation/vibrance, mélangeur huit bandes et grading.
+\item Réduire le bruit, puis appliquer texture, clarté et voile.
+\item Appliquer courbes luminance/RGB, flou, netteté et grain.
+\item Réassembler l'alpha ; convertir et mapper la sortie dérivée vers sRGB.
 \end{enumerate}
-L'ordre est fonctionnel : modifier l'exposition avant les masques change la plage tonale qui sera détectée; appliquer les courbes à la fin les garde comme finition créative.
+Cette liste suit \texttt{renderWorkingImage()}, pas une hiérarchie théorique
+universelle. Le gamut mapping de sortie n'efface pas rétroactivement un
+bornage intervenu dans une table ou une protection de traitement.
 
-\section{Pourquoi des valeurs sont écrites en dur}
-Une constante n'a pas toutes la même nature. Les traiter indistinctement comme des ``magic numbers'' serait une erreur.
-\begin{longtable}{p{0.20\linewidth}p{0.21\linewidth}p{0.27\linewidth}p{0.22\linewidth}}
-\toprule
-Catégorie & Exemples & Justification & Politique \\
-\midrule
-Norme / modèle & $0{,}2126,0{,}7152,0{,}0722$; matrices sRGB/Bradford; $65535$ & Rec.~709/sRGB, ICC, précision 16 bits & Ne pas modifier sans changer de standard. \\
-Sémantique photo & pivot $0{,}18$; $2000$--$50000$ K & gris moyen et plage d'interface cohérente avec les outils RAW & Documenter dans l'UI et les tests. \\
-Numérique / sûreté & $10^{-6}$, transmission min. $0{,}12$, 64 points & évite division instable, bruit explosif ou sidecar malveillant & Tester aux bornes. \\
-Performance & rendu 80 ms, sidecar 450 ms, 8192 échantillons & compromis réactivité/E/S/coût par image & Mesurer sur matériel cible. \\
-Calibration empirique & amplitudes tonales, sigmas, compensation froide & rapprocher IPR de références et du ressenti attendu & Versionner le corpus et revalider. \\
+\section{Tons et domaines intermédiaires}
+L'exposition applique $2^{EV}$ au signal linéaire approprié. Avec DCP, la
+courbe appliquée ensuite peut modifier le rapport du TIFF : ne pas exiger
+un doublement de ses codes à $+1$ EV. Le contraste courant est une S par
+canal dans un domaine logarithmique, avec pivot de modèle $0{,}32$,
+pas l'ancien pivot de travail $0{,}18$.
+
+\texttt{ToneRecovery} emploie des courbes EV et les statistiques du neutre.
+Les HL sont prédites à partir de scènes de référence voisines ; les courbes
+sont échantillonnées puis rendues non décroissantes. Ombres, HL et blancs
+négatifs agissent sur Y ; noirs et blancs positifs passent par les canaux
+sRGB linéaires et reviennent au master. Ces intermédiaires ne constituent
+pas un deuxième master. Les protections peuvent désaturer vers le blanc
+ou renforcer la couleur lors d'un assombrissement. La réserve visuelle HL
+du 21 octobre demeure ouverte ; le module local futur n'est pas livré.
+
+\section{WB, couleur et détail}
+Le repli RGB température/nuance construit une adaptation Bradford avec des
+axes empiriques calibrés en sRGB, puis conjugue la matrice vers Rec.2020.
+La normalisation Rec.709 de ces axes ne doit pas être remplacée arbitrairement
+par les poids du master. La voie RAW avec contexte caméra adapte au contraire
+le signal avant DCP. Les mêmes Kelvin ne garantissent pas les mêmes gains.
+
+Le modèle global livré dans \texttt{dev} protège les faibles/fortes chromas
+via un gain de vibrance dépendant de $(\max-\min)/\max$. Les variantes en
+étude sur \texttt{patch\_color} ne sont pas présumées intégrées. Le mélangeur
+HSV a huit bandes et une luminance sélective bornée à $\pm0{,}5$ EV.
+Le grading colore trois zones tonales, sans détection d'objets.
+
+Le débruitage sépare Y Rec.2020 et Co/Cg. Un MAD de détails Haar estime un
+proxy par plan ; deux résidus gaussiens subissent un seuillage doux et une
+protection de structure. Un estimateur de bruit n'est pas un détecteur
+certain de pixels faux. Les blocs parfaitement constants sont ignorés
+dans l'estimateur courant : c'est une limite à garder visible dans les études.
+Les travaux statistiques non fusionnés de \texttt{patch\_noise} ne remplacent
+pas ce modèle. La netteté est un masque flou adaptatif, pas un réseau IA.
+
+\section{Registre des constantes vérifiables}
+\begin{longtable}{p{0.20\linewidth}p{0.28\linewidth}p{0.41\linewidth}}
+\toprule Valeur & Emplacement & Nature et effet \\\midrule\endhead
+$0{,}2627$ ; $0{,}6780$ ; $0{,}0593$ & \texttt{WorkingColorSpace} & Poids de Y issus des primaires Rec.2020, pas gains de boîtier. \\
+$65535$ & conversion entière 16 bits & Nombre maximal de codes ; ne borne pas tout tampon flottant à un. \\
+$2000$--$50000$ K & WB / interface & Domaine accepté ; pas preuve de fidélité à tous les illuminants. \\
+$4096$, $16$ EV & \texttt{ToneRecovery::Curve} & Résolution et étendue de la table ; coût et continuité à vérifier. \\
+$0{,}80$, $0{,}995$ & épaule tonale & Protections empiriques de l'éclaircissement, pas limites physiques du capteur. \\
+$0{,}05$, $0{,}5$ EV & mélangeur & Protection des gris et amplitude de luminance sélective. \\
+$0{,}8/1{,}8$, $2{,}55/3{,}15$ & débruitage & Échelles gaussiennes et seuils Y/chroma empiriques. \\
+$0{,}67448975$ & MAD Haar & Quantile d'une normale centrée réduite ; hypothèses de bruit à expliciter. \\
+80 ms / 450 ms & rendu / sidecar & Temporisations d'événements, pas durées garanties des opérations. \\
+80/75\,\% & contrôleur mémoire & Admission et hystérésis, pas plafond absolu imposé à l'OS. \\
+64 Mio / 16 entrées & profils préparés & Budget partagé DCP/LCP, distinct du cache de pixels. \\
 \bottomrule
 \end{longtable}
+Les constantes normatives, numériques, ergonomiques et empiriques n'ont pas
+la même justification. Une valeur empirique doit garder son unité, son
+domaine et la preuve qui motive son évolution.
 
-\section{Registre des constantes principales}
-\begin{longtable}{p{0.20\linewidth}p{0.17\linewidth}p{0.51\linewidth}}
-\toprule
-Valeur & Emplacement logique & Raison et conséquence \\
-\midrule
-\endhead
-$1/65535$ & conversion RAW/RGBA16 & normalise exactement l'intervalle entier 16 bits vers $[0,1]$. \\
-$0{,}18$ & contraste & pivot de gris moyen; fixe le point qui ne doit pas dériver lors d'un contraste raisonnable. \\
-$[0{,}01;0{,}09]$ & toe contraste & restreint l'effet maximal aux noirs très bas; calibré pour éviter l'écrasement à $+100$. \\
-$[0{,}10;0{,}56]$, $[0;0{,}18]$ & masques ombres/noirs & sépare une récupération large d'ombres d'une action stricte sur le pied de courbe. Empirique. \\
-$0{,}45$, $0{,}57$, $0{,}065$ & ombres & plage, amplitude de foncement et amplitude de relèvement; ajustées sur le corpus de validation. \\
-$0{,}70$, $0{,}52$, $0{,}95$, $0{,}22$ & hautes lumières/blancs & dissocie relèvement et récupération afin que les deux contrôles restent visibles et composables. Empirique. \\
-$2000$--$50000$ K & température & domaine de validité du modèle choisi et bornes de l'interface. \\
-$(0{,}35;1{,}19;0{,}84)$ à 2000 K & température froide & calibration Lightroom/IPR à huit scènes; pas une constante physique. \\
-$[-150,150]$ et puissances $-1$, $+0{,}5$ & nuance & échelle ergonomique vert/magenta, normalisée ensuite en luminance; calibration UI. \\
-$0{,}18^\circ$ par unité & mixer teinte & limite un curseur extrême à environ $18^\circ$, choix de finesse éditoriale. \\
-$0{,}0035$ & grading & réduit une couleur de grading en ajout chromatique discret; empirique et à valider. \\
-$\sigma=1{,}2$ / $8$ & texture / clarté & sépare micro-détail et contraste de volume. Dépend de l'échelle pixel. \\
-$8192$, percentile 99, noyau max. 15 & voile & borne le coût, stabilise l'estimation de $A$ et limite le rayon d'érosion. \\
-$0{,}85$, $[0{,}12;2]$ & voile & force du DCP et garde-fou de transmission pour éviter une division instable. \\
-$0{,}06$, $0{,}45+0{,}55(1-Y)$ & grain & plafond esthétique et prédominance dans les ombres; effet créatif, non mesure capteur. \\
-80 ms / 450 ms & débogage rendu / sidecar & regroupe les événements d'un curseur et évite une écriture disque par tick. \\
-\bottomrule
-\end{longtable}
+\section{Asynchronisme et propriété mémoire}
+Les travailleurs ne manipulent pas directement QML. Les révisions et jetons
+d'annulation empêchent la publication d'un résultat périmé. Un proxy réduit
+sert à l'interaction ; le zoom ne recrée pas des pixels pleine résolution.
 
-\section{Asynchronisme, mémoire et persistance}
+\texttt{ImageCacheController} possède le LRU sur son thread, réserve la
+mémoire des tâches et évince les entrées inactives les plus anciennes.
+Le préchargement est de basse priorité et peut être refusé. L'ouverture
+prioritaire peut attendre ; si IPR n'a plus rien à libérer, une admission sous
+pression reste possible si le commit disponible le permet. Le seuil de
+80\,\% n'est donc pas une garantie absolue. Les références actives peuvent
+survivre à une éviction de l'entrée de cache.
 
-Le mélangeur est isolé dans \texttt{ColorMixer::apply}, sur huit bandes du RGB
-linéaire. La protection smoothstep de chroma (0 à 0,05) évite de traiter les gris
-comme des rouges. La teinte garde 0,18 degré par unité ; teinte et saturation
-sont normalisées à $Y$ source. La luminance sélective applique un gain borné
-$2^{0{,}5A_L}$, soit $\pm0{,}5$ EV, au lieu d'une interpolation de $V$ vers le
-blanc. Les constantes 0,05 et 0,5 sont provisoires, à calibrer sur le corpus,
-pas des normes. Les canaux négatifs sont préservés ; le gamut mapping reste en
-sortie. Le cours 4 détaille les équations et exemples.
+Une entrée peut ne garder que proxy, signal caméra réduit et métadonnées.
+L'export reconstruit alors la pleine résolution. Les profils préparés utilisent
+un autre cache partagé borné, avec identité de contenu. Ni cache ne garantit
+à lui seul une latence donnée.
 
-Le sidecar courant v4 sépare violet (6) et magenta (7). Les lectures v1/v2/v3
-migrent l'ancien dernier triplet vers magenta et initialisent violet à zéro.
-Les valeurs sont conservées, pas le rendu exact des anciennes commandes non
-nulles. L'INI schéma 2 migre aussi l'ancienne sélection magenta 6 vers 7.
-\texttt{ImageEditor} garde l'original pour l'export et construit un proxy borné en résolution pour l'aperçu. Les rendus s'exécutent via \texttt{QtConcurrent}; un compteur de révision écarte les résultats devenus obsolètes. Le cache décodé LRU limite la mémoire de navigation. Le délai de 80~ms est un \emph{debounce}: plusieurs valeurs de curseur consécutives ne déclenchent qu'un rendu après une courte pause.
+\section{Persistance et limites}
+Le sidecar courant v6 commence par \texttt{IPR1}, version, taille et date du
+source. Il contient retouches, annotations et choix RAW/optique. Ces contrôles
+d'identité ne sont pas une empreinte cryptographique des pixels source.
+L'écriture différée passe par \texttt{QSaveFile}. L'INI schéma 2 conserve
+uniquement la présentation et les préférences raccordées, indépendamment
+des recettes photo.
 
-Chaque modification programme aussi la sauvegarde d'un sidecar après 450~ms. Le format \texttt{IPR1} contient la taille et la date de modification de l'original : un sidecar ne s'applique pas si son fichier source a changé. \texttt{QSaveFile} valide l'écriture de façon atomique. Les contraintes 64 points par courbe et données finies sont des protections de désérialisation.
+Les JSON immuables des analyses font autorité sur les mesures ; les CSV,
+courbes et textes sont dérivés. Un test de non-régression réussi ne démontre
+ni une fidélité physique ni une parité Lightroom. Aucun export par lot,
+affichage ICC par écran, masquage local ou traitement IA n'est déclaré
+fonctionnel ici. Les chapitres réservés des manuels restent vides.
 
-\section{Méthode de modification sûre}
-Avant de modifier une constante : (1) identifier sa catégorie; (2) nommer la constante et l'unité; (3) expliquer son impact; (4) créer un jeu d'images ciblé; (5) mesurer MAE et inspection visuelle; (6) comparer l'aperçu et l'export; (7) conserver le résultat dans un rapport. Une constante empirique doit idéalement devenir un paramètre de calibration versionné, jamais une valeur changée pour une seule photo.
-
-\section{Limites connues}
-Le correctif de débruitage consolidé le 5 octobre 2026 remplace le seuil
-d'activation non nul par $\lambda=\widehat\sigma ms$ et un mélange avec
-l'original de poids $s$. Y devient la luminance Rec.709 ; Co/Cg restent
-les axes chromatiques. Le MAD Haar ignore les blocs parfaitement constants,
-le guide Sobel est préfiltré et normalisé par 1/8, puis les changements
-signés sont équilibrés avant une compression du gamut préservant Y.
-Les coefficients 2,55/3,15, 0,52 et les sigmas 0,8/1,8 sont des choix
-empiriques traçables, pas des constantes physiques ; $10^{-7}$ est un
-garde-fou numérique. La netteté garde son ancien estimateur. Le zéro
-reste bit-exact, le rendu non nul change sans changer le sidecar v4.
-Les régressions synthétiques passent, mais les TIFF du moteur précédent
-ne valident pas la correction : la recette photographique doit être refaite.
-
-Le moteur n'emploie pas encore de GPU, de modèle perceptuel uniforme pour tous les outils, de masques locaux, de recadrage géométrique ni de gestion de profondeur. Le débruitage et la netteté CPU sont implémentés dans \texttt{DetailProcessing}, leur recette photographique dédiée reste à compléter. Les améliorations IA devront être ajoutées comme modules optionnels, avec modèles versionnés, jeu de validation et solution de repli CPU déterministe.
-
-\resultat{Les valeurs en dur sont justifiées lorsqu'elles sont normatives, protectrices ou calibrées et traçables. La dette n'est pas la constante elle-même : c'est une constante sans nom, sans unité, sans test et sans provenance.}
+\resultat{Le master commun évite les moteurs parallèles par format. Des espaces intermédiaires spécialisés restent légitimes si leurs conversions, domaines et limites sont explicites.}
 \bibliographystyle{plain}\bibliography{references}
 \end{document}

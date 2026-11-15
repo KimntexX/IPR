@@ -245,6 +245,29 @@ Rectangle {
                     }
                     Item { Layout.fillWidth: true }
                 }
+
+                Rectangle {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 1
+                    visible: panel.editor.hasImage
+                    color: "#3d4654"
+                }
+
+                Label {
+                    visible: panel.editor.hasImage
+                    text: qsTr("Historique")
+                    color: panel.secondaryTextColor
+                    font.pixelSize: panel.informationFontSize - 1
+                }
+
+                HistoryModule {
+                    objectName: "historySection"
+                    visible: panel.editor.hasImage
+                    editor: panel.editor
+                    textColor: panel.textColor
+                    secondaryTextColor: panel.secondaryTextColor
+                    fontSize: panel.informationFontSize
+                }
             }
         }
     }

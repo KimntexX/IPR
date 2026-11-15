@@ -239,6 +239,7 @@ ColumnLayout {
 
             MouseArea {
                 id: wheelPointerArea
+                objectName: "gradingWheelArea"
                 anchors.fill: parent
                 enabled: root.editor.hasImage
                 // The enclosing settings pane is a ScrollView.  Without this,
@@ -277,8 +278,12 @@ ColumnLayout {
                               Math.hypot(mouse.x - cursor.x, mouse.y - cursor.y) < 12
                     last = Qt.point(mouse.x, mouse.y)
                     virtualPoint = last
+                    root.editor.beginAdjustmentGesture()
                     apply(virtualPoint)
                 }
+                // One history step per drag, also when the press is taken away.
+                onReleased: root.editor.endAdjustmentGesture()
+                onCanceled: root.editor.endAdjustmentGesture()
                 onPositionChanged: function(mouse) {
                     if (!pressed)
                         return
@@ -330,7 +335,6 @@ ColumnLayout {
     AdjustmentControl {
         id: hueControl
         trackColors: root.hueTrack
-        trackThickness: 6
         Layout.fillWidth: true
         label: qsTr("Teinte")
         valueText: Math.round(value) + "°"
@@ -349,7 +353,6 @@ ColumnLayout {
         id: intensityControl
         trackColors: [root.editor.colorGradingDisplayColor(root.zone, root.hue, 0),
                       root.editor.colorGradingDisplayColor(root.zone, root.hue, 100)]
-        trackThickness: 6
         Layout.fillWidth: true
         label: qsTr("Intensité")
         valueText: Math.round(value)
@@ -364,7 +367,6 @@ ColumnLayout {
     AdjustmentControl {
         id: luminanceControl
         trackColors: ["#15181d", "#8b8e94", "#f2f4f7"]
-        trackThickness: 6
         Layout.fillWidth: true
         label: qsTr("Luminance")
         valueText: Math.round(value)

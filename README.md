@@ -41,7 +41,8 @@ Voir le [contrat de navigation et de comparaison](docs/specifications/zoom-image
 - Profils optiques **LCP** : commandes indépendantes de correction objectif
   (distorsion/vignettage) et d'aberration chromatique latérale.
 - Mémorisation des profils, de leurs empreintes et des options de développement dans les sidecars.
-- Normalisation RAW expérimentale, désactivée par défaut et limitée aux cas audités.
+- Calibration RAW expérimentale active par défaut, appliquée seulement aux
+  boîtiers/profils/modes caractérisés ; diagnostic de l’application effective.
 
 Les profils ICC des images rendues servent à interpréter leurs couleurs ;
 les DCP interviennent dans le développement RAW et les LCP dans les corrections optiques.
@@ -105,13 +106,22 @@ et le [rapport Lumières](docs/validation/analyses/analyse-validation-lumieres-b
 | Dépendance | Usage |
 | --- | --- |
 | Qt ≥ 6.8 | Interface Quick/QML, Core, Gui et Concurrent |
-| OpenCV | Calculs image : `core`, `imgproc`, `imgcodecs` |
 | LibTIFF | Écriture du DNG linéaire |
 | LibRaw ≥ 0.21, facultatif | Décodage CR2/CR3/DNG ; option `IPR_ENABLE_LIBRAW` |
 | CMake ≥ 3.21 et compilateur C++17 | Configuration et compilation |
 
-Qt et OpenCV ne remplacent pas un décodeur RAW. Sans LibRaw, les formats rendus
+Qt ne remplace pas un décodeur RAW. Sans LibRaw, les formats rendus
 restent utilisables, mais le backend RAW actuel n'est pas disponible.
+
+**LibRaw est un décodeur de secours, appelé à être remplacé petit à petit.** IPR
+mesure déjà lui-même ce qui dépend du boîtier (niveaux de noir et de blanc,
+dématriçage RCD, profils couleur). Il remplacera aussi le décodage, format par
+format et pour tous les formats possibles, par ses propres décodeurs : écrits à
+partir de documentation publique, sans reprise du code de LibRaw, et validés
+automatiquement contre sa sortie brute (`unpack()`), valeur pour valeur, sur un
+corpus de fichiers. Les procédures et automatisations de cette validation sont
+publiées pour que chacun puisse les rejouer et ajouter un format ou un boîtier.
+LibRaw reste en secours pour les formats non encore couverts.
 
 ### Windows
 
@@ -130,7 +140,6 @@ bash scripts/build-windows.sh --full-tests
 ```
 
 - [Prérequis, options et tests ciblés](docs/architecture/tests-cibles-et-build-windows.md).
-- [Installation OpenCV : MSVC/vcpkg ou MinGW](docs/installation-opencv-windows.md).
 - [Packaging Windows autonome](docs/architecture/build-windows-standalone.md).
 
 Ne pas mélanger bibliothèques MSVC et MinGW. Choisir les dépendances compatibles
@@ -218,7 +227,9 @@ Les CI vérifient les branches de travail ; les archives téléchargeables sont
 réservées à `dev` et `main`, sur un commit validé, en modes standalone et
 bibliothèques système. Voir le [contrat CI/CD](docs/architecture/ci-et-build-multiplateforme.md).
 
-L'inventaire et les textes des licences des dépendances sont dans
-[licenses/](licenses/README.md). Aucune licence du code IPR n'a encore été
-choisie à la racine ; les licences des dépendances ne déterminent pas
-automatiquement celle du projet.
+IPR est distribué sous la **GNU Affero General Public License, version 3 ou
+ultérieure** (AGPL-3.0-or-later), texte dans [LICENSE](LICENSE) : chacun peut
+l'utiliser, l'étudier, le modifier et le redistribuer, et toute version modifiée
+distribuée ou proposée comme service en ligne doit publier son code source sous
+la même licence. L'inventaire et les textes des licences des dépendances sont
+dans [licenses/](licenses/README.md).

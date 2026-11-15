@@ -48,12 +48,6 @@ Rectangle {
                 font.pixelSize: 11
             }
             PreferenceButton {
-                visible: ribbon.editor.selectedImageCount > 0
-                text: qsTr("Appliquer à %1").arg(ribbon.editor.selectedImageCount)
-                enabled: ribbon.editor.hasImage && !ribbon.editor.busy && !ribbon.editor.embeddedPreview
-                onClicked: ribbon.editor.applyAdjustmentsToSelection()
-            }
-            PreferenceButton {
                 implicitWidth: 26
                 visible: ribbon.editor.selectedImageCount > 0
                 text: "×"

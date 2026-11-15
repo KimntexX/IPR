@@ -1,0 +1,73 @@
+{
+ "question": "What the Gaussian blur slider of the Effects panel costs and writes on the image layer instead of cv::GaussianBlur",
+ "revision_opencv": "da3b96e",
+ "revision_image_layer": "ea84fb5",
+ "tool": "tests/export_module_probe.cpp, then a comparison of the TIFF files with OpenCV and NumPy",
+ "settings": "blur 20, the slider at its maximum, a sigma of 10 pixels of the full image, against neutral; 16-bit TIFF at full resolution",
+ "timing": "median of three, through the real editor, on a machine busy with other work; the preview time runs from the change to the new preview, whatever else that render does",
+ "photos": [
+  {
+   "photo": "6V1A0007.CR3",
+   "opencv_neutral_ms": 894.6859,
+   "image_layer_neutral_ms": 814.417,
+   "opencv_effect_ms": 1364.7439,
+   "image_layer_effect_ms": 1554.2032,
+   "neutral_identical": true,
+   "effect_identical": false,
+   "size": [
+    4639,
+    6959
+   ],
+   "largest_difference_16bit_levels": 1,
+   "mean_difference_16bit_levels": 0.0010420022104029945,
+   "share_of_values_that_differ": 0.0010420022104029945,
+   "share_of_values_differing_by_more_than_one_level": 0.0,
+   "share_of_values_differing_by_more_than_256_levels": 0.0,
+   "mean_change_made_by_the_effect_16bit_levels": 1267.890356547748,
+   "opencv_preview_ms": 191.033,
+   "image_layer_preview_ms": 200.2263
+  },
+  {
+   "photo": "6V1A0032.CR3",
+   "opencv_neutral_ms": 809.2907,
+   "image_layer_neutral_ms": 789.316,
+   "opencv_effect_ms": 1196.0119,
+   "image_layer_effect_ms": 1393.4741,
+   "neutral_identical": true,
+   "effect_identical": false,
+   "size": [
+    4639,
+    6959
+   ],
+   "largest_difference_16bit_levels": 1,
+   "mean_difference_16bit_levels": 0.0005245982218209628,
+   "share_of_values_that_differ": 0.0005245982218209628,
+   "share_of_values_differing_by_more_than_one_level": 0.0,
+   "share_of_values_differing_by_more_than_256_levels": 0.0,
+   "mean_change_made_by_the_effect_16bit_levels": 2817.018094634973,
+   "opencv_preview_ms": 190.3357,
+   "image_layer_preview_ms": 191.009
+  },
+  {
+   "photo": "IMG_6858.CR2",
+   "opencv_neutral_ms": 461.8176,
+   "image_layer_neutral_ms": 457.3087,
+   "opencv_effect_ms": 707.8615,
+   "image_layer_effect_ms": 872.5061,
+   "neutral_identical": true,
+   "effect_identical": false,
+   "size": [
+    5202,
+    3464
+   ],
+   "largest_difference_16bit_levels": 1,
+   "mean_difference_16bit_levels": 0.0002453144686756648,
+   "share_of_values_that_differ": 0.0002453144686756648,
+   "share_of_values_differing_by_more_than_one_level": 0.0,
+   "share_of_values_differing_by_more_than_256_levels": 0.0,
+   "mean_change_made_by_the_effect_16bit_levels": 417.4593336813963,
+   "opencv_preview_ms": 185.0506,
+   "image_layer_preview_ms": 190.2098
+  }
+ ]
+}

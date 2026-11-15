@@ -9,6 +9,11 @@ Item {
 
     property url source
     property url originalSource
+    // The whole image at full resolution, once rendered: shown when the zoom enlarges the
+    // preview. detailRatio: full-resolution pixels per preview pixel (1: none to show).
+    property url detailSource
+    property real detailRatio: 1
+    property bool detailRendering: false
     property bool comparisonEnabled: false
     property bool originalHeld: false
     property real comparisonPosition: 0.5
@@ -18,13 +23,29 @@ Item {
     property color textColor: "#edf2f8"
     property color panelColor: "#2a3039"
     signal contextMenuRequested(real x, real y)
+    // Point colour eyedropper: a click reports its place in [0, 1] of the image.
+    property bool picking: false
+    signal pointPicked(real x, real y)
+    signal pickingCancelled()
+    // The crop frame, over the whole canvas, while the Geometry tab is open.
+    property bool cropEditing: false
+    property var geometry: ({})
+    property bool showGeometryGrid: false
+    signal cropEdited(real x, real y, real width, real height)
+    // The shape in hand on the Masks tab, null otherwise.
+    property var maskShape: null
+    property real maskBrushSize: 0.05
+    signal maskShapeEdited(var values)
+    signal maskStrokeDrawn(var points)
     property real previewWidth: 0
     property real previewHeight: 0
     property bool fitMode: true
     property real manualScale: 1
     property real offsetX: 0
     property real offsetY: 0
-    readonly property real maximumScale: 8
+    // Percentages and 100 % count the file's pixels; scales stay in preview pixels.
+    readonly property real actualScale: Math.max(1, detailRatio)
+    readonly property real maximumScale: 4 * Math.max(2, detailRatio)
     readonly property real fitScale: previewWidth > 0 && previewHeight > 0
         ? Math.min(1, width / previewWidth, height / previewHeight) : 1
     readonly property real minimumScale: Math.min(fitScale, 0.05)
@@ -50,6 +71,11 @@ Item {
     readonly property real maxOffsetX: Math.max(0, (canvas.width - width) / 2)
     readonly property real maxOffsetY: Math.max(0, (canvas.height - height) / 2)
     readonly property real toolbarHeight: zoomToolbar.visible ? zoomToolbar.height + 12 : 0
+    // The preview is enlarged on screen: its full-resolution render is asked for.
+    readonly property bool wantsDetail: imageReady && !fitMode && detailRatio > 1
+        && zoomScale * devicePixelRatio > 1.001 && !showingComparison && !showingOriginal
+        && !cropEditing && maskShape === null
+    readonly property bool showingDetail: wantsDetail && detailCanvas.shown
 
     function clampPan() {
         offsetX = Math.max(-maxOffsetX, Math.min(maxOffsetX, offsetX))
@@ -80,14 +106,14 @@ Item {
 
     function zoomIn() { setZoom(zoomScale * 1.25) }
     function zoomOut() { setZoom(zoomScale / 1.25) }
-    function actualSize() { setZoom(1) }
+    function actualSize() { setZoom(actualScale) }
 
     function toggleZoom(x, y) {
         if (!imageReady || x < imageLeft || x > imageLeft + canvas.width
                 || y < imageTop || y > imageTop + canvas.height)
             return
         if (fitMode)
-            setZoom(Math.max(1, fitScale * 2), x, y)
+            setZoom(Math.max(actualScale, fitScale * 2), x, y)
         else
             fitImage()
     }
@@ -134,13 +160,21 @@ Item {
             comparisonPosition = Math.max(0, Math.min(1, x / width))
     }
 
-    onImageKeyChanged: resetView()
+    onImageKeyChanged: {
+        resetView()
+        if (picking) pickingCancelled()
+    }
     onHasImageChanged: if (!hasImage) resetView()
     onWidthChanged: clampPan()
     onHeightChanged: clampPan()
     onActiveFocusChanged: if (!activeFocus) originalHeld = false
     onVisibleChanged: if (!visible) originalHeld = false
     Keys.onPressed: (event) => {
+        if (picking && event.key === Qt.Key_Escape) {
+            pickingCancelled()
+            event.accepted = true
+            return
+        }
         if (hasImage && (event.key === Qt.Key_Menu ||
                 (event.key === Qt.Key_F10 && event.modifiers === Qt.ShiftModifier))) {
             contextMenuRequested(width / 2, height / 2)
@@ -195,6 +229,24 @@ Item {
                 root.previewHeight = sourceSize.height
                 root.clampPan()
             }
+        }
+        // Same place and size as the preview: only the pixels are finer.
+        Image {
+            id: detailCanvas
+            objectName: "detailViewportImage"
+            readonly property bool shown: status === Image.Ready
+                && Math.abs(sourceSize.width - root.previewWidth * root.detailRatio) <= root.detailRatio + 1
+                && Math.abs(sourceSize.height - root.previewHeight * root.detailRatio) <= root.detailRatio + 1
+            x: canvas.x
+            y: canvas.y
+            width: canvas.width
+            height: canvas.height
+            source: root.wantsDetail ? root.detailSource : ""
+            asynchronous: true
+            cache: false
+            smooth: true
+            mipmap: true
+            visible: root.showingDetail
         }
         Image {
             id: fitCanvas
@@ -265,7 +317,7 @@ Item {
         acceptedButtons: Qt.LeftButton
         hoverEnabled: true
         preventStealing: true
-        cursorShape: root.canPan
+        cursorShape: root.picking ? Qt.CrossCursor : root.canPan
             ? (pressed ? Qt.ClosedHandCursor : Qt.OpenHandCursor) : Qt.PointingHandCursor
         property real pressX: 0
         property real pressY: 0
@@ -294,8 +346,16 @@ Item {
             }
         }
         onClicked: (mouse) => {
-            if (!dragged)
-                root.toggleZoom(mouse.x, mouse.y)
+            if (dragged)
+                return
+            if (root.picking) {
+                const x = (mouse.x - root.imageLeft) / (root.previewWidth * root.zoomScale)
+                const y = (mouse.y - root.imageTop) / (root.previewHeight * root.zoomScale)
+                if (x >= 0 && x <= 1 && y >= 0 && y <= 1)
+                    root.pointPicked(x, y)
+                return
+            }
+            root.toggleZoom(mouse.x, mouse.y)
         }
         onWheel: (wheel) => {
             wheel.accepted = root.handleWheel(wheel.angleDelta.x, wheel.angleDelta.y,
@@ -309,6 +369,63 @@ Item {
         acceptedButtons: Qt.RightButton
         enabled: root.hasImage
         onClicked: (mouse) => root.contextMenuRequested(mouse.x, mouse.y)
+    }
+
+    // Eyedropper beside the pointer while picking, whatever the system cursor shows.
+    CropOverlay {
+        anchors.fill: parent
+        visible: root.cropEditing && root.imageReady && !root.showingComparison && !root.showingOriginal
+        imageX: root.imageLeft
+        imageY: root.imageTop
+        imageWidth: root.previewWidth * root.zoomScale
+        imageHeight: root.previewHeight * root.zoomScale
+        cropX: root.geometry.cropX || 0
+        cropY: root.geometry.cropY || 0
+        cropWidth: root.geometry.cropWidth || 1
+        cropHeight: root.geometry.cropHeight || 1
+        normalizedRatio: (root.geometry.cropRatio || 0) * (root.geometry.canvasHeight || 1)
+                         / Math.max(1, root.geometry.canvasWidth || 1)
+        showGrid: root.showGeometryGrid
+        onCropEdited: (x, y, width, height) => root.cropEdited(x, y, width, height)
+    }
+
+    MaskOverlay {
+        anchors.fill: parent
+        visible: root.maskShape !== null && root.imageReady && !root.showingComparison && !root.showingOriginal
+        enabled: visible
+        imageX: root.imageLeft
+        imageY: root.imageTop
+        imageWidth: root.previewWidth * root.zoomScale
+        imageHeight: root.previewHeight * root.zoomScale
+        cropX: root.geometry.cropX || 0
+        cropY: root.geometry.cropY || 0
+        cropWidth: root.geometry.cropWidth || 1
+        cropHeight: root.geometry.cropHeight || 1
+        shape: root.maskShape
+        brushSize: root.maskBrushSize
+        onShapeEdited: (values) => root.maskShapeEdited(values)
+        onStrokeDrawn: (points) => root.maskStrokeDrawn(points)
+    }
+
+    Canvas {
+        objectName: "pickingIndicator"
+        x: interaction.mouseX + 4
+        y: interaction.mouseY - height - 4
+        width: 20
+        height: 20
+        visible: root.picking && interaction.containsMouse
+        onPaint: {
+            const c = getContext("2d")
+            c.reset()
+            c.lineCap = "round"
+            for (const pass of [{ colour: "#000000", width: 4 }, { colour: "#ffffff", width: 2 }]) {
+                c.strokeStyle = pass.colour
+                c.lineWidth = pass.width
+                c.beginPath(); c.moveTo(2, 18); c.lineTo(12, 8); c.stroke()
+                c.beginPath(); c.moveTo(11, 5); c.lineTo(15, 9); c.stroke()
+                c.beginPath(); c.arc(15.5, 4.5, 2.5, 0, 2 * Math.PI); c.stroke()
+            }
+        }
     }
 
     Item {
@@ -390,6 +507,26 @@ Item {
         }
     }
 
+    // The enlarged preview stays on screen until the full-resolution render replaces it.
+    Rectangle {
+        objectName: "detailPendingIndicator"
+        anchors.left: parent.left
+        anchors.bottom: parent.bottom
+        anchors.margins: 6
+        width: detailCaption.implicitWidth + 14
+        height: detailCaption.implicitHeight + 8
+        radius: 3
+        color: Qt.rgba(root.panelColor.r, root.panelColor.g, root.panelColor.b, 0.92)
+        visible: root.wantsDetail && !root.showingDetail && root.detailRendering
+        Text {
+            id: detailCaption
+            anchors.centerIn: parent
+            text: qsTr("Rendu pleine résolution…")
+            color: root.textColor
+            font.pixelSize: 12
+        }
+    }
+
     Rectangle {
         id: zoomToolbar
         objectName: "viewportToolbar"
@@ -415,7 +552,7 @@ Item {
                 Layout.minimumWidth: 46
                 horizontalAlignment: Text.AlignHCenter
                 color: root.textColor
-                text: Math.round(root.zoomScale * 100) + " %"
+                text: Math.round(root.zoomScale / root.actualScale * 100) + " %"
                 font.pixelSize: 12
             }
             PreferenceButton {
@@ -435,7 +572,7 @@ Item {
                 model: [
                     {name: "zoomOutButton", label: "−", tip: qsTr("Réduire — Ctrl −")},
                     {name: "zoomInButton", label: "+", tip: qsTr("Agrandir — Ctrl +")},
-                    {name: "actualSizeButton", label: "100 %", tip: qsTr("100 % de l'aperçu — Ctrl 1")},
+                    {name: "actualSizeButton", label: "100 %", tip: qsTr("100 % des pixels de l'image — Ctrl 1")},
                     {name: "fitImageButton", label: qsTr("Ajuster"), tip: qsTr("Adapter à la fenêtre — Ctrl 0")},
                     {name: "compareImageButton", label: qsTr("Avant/après"), tip: qsTr("Origine à gauche / actuel à droite — Ctrl Maj Y")}
                 ]

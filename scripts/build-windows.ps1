@@ -38,7 +38,6 @@ try {
         $env:QML_IMPORT_PATH = Join-Path $qtRoot 'qml'
         $env:QML2_IMPORT_PATH = $env:QML_IMPORT_PATH
     }
-    if ($cache['OpenCV_DIR']) { $runtimeDirectories += Join-Path (Split-Path $cache['OpenCV_DIR']) 'bin' }
     foreach ($key in @('TIFF_LIBRARY_RELEASE', 'LIBRAW_LIBRARY')) {
         if ($cache[$key]) {
             $libraryDirectory = Split-Path $cache[$key]

@@ -35,9 +35,9 @@ déplacements internes puis la comparaison de rendus à valeurs affichées donn�
 
 Depuis PowerShell à la racine :
 
-Contrat cible du générateur, livré séparément du correctif WB ; pour les
-mesures de cette livraison, utiliser la sonde détaillée plus bas et les
-exports Lightroom déjà préparés.
+Le groupe est disponible dans le générateur courant de `dev`. Pour les mesures,
+utiliser l'analyseur de groupe en mémoire ; la sonde WB détaillée plus bas est
+un diagnostic spécialisé avec des conditions propres, pas le défaut de production.
 
 ```powershell
 ./scripts/generate-test-images.ps1 couleur
@@ -57,8 +57,9 @@ nouvelle recette. Réexporter Lightroom avec les supports courants.
 
 Les neutres LR et IPR partagés sont stockés dans `tests/image/base/neutre`.
 Leur balance As Shot n'est pas un zéro manuel : sur le corpus actuel,
-Lightroom rapporte 5200 K et nuance +5 en As Shot, ce qui n'est pas une
-erreur de l'utilisateur. Auditer le XMP et les corrections optiques de ces
+plusieurs scènes Canon étudiées ont été déclarées par Lightroom à 5200 K et
+nuance +5 en As Shot, sans erreur de l'utilisateur. Ces valeurs ne sont pas
+universelles : auditer chaque RAW, notamment les autres boîtiers. Auditer le XMP et les corrections optiques de ces
 neutres avant comparaison. Ne pas remplacer une nuance 0 manquante par
 le neutre As Shot à +5, ni confondre les deux rôles de référence.
 La [recette d'audit des neutres](../tools/analyseurs-groupes.md#recette-spécialisée-de-comparaison-wb)
@@ -136,3 +137,11 @@ Les anciennes analyses température/nuance/
 vibrance/saturation restent des preuves historiques, sans maintenance parallèle.
 Suivre le socle pour IHM, mémoire et nettoyage ; ne pas conclure « validé »
 si l'analyseur, les neutres ou la couverture nécessaires manquent.
+
+## Campagne de validation bêta — balance des blancs (28 octobre 2026)
+
+Revalidation courte après le passage de la base en Rec.2020. Préréglages `IPR Balance blancs`
+(`scripts/make_lr_presets.py --controls white-balance`, 15 états), balance personnalisée :
+température 2800, 3500, 4300, 5200, 6000, 7500, 10000 K à nuance 0, nuance ±10, ±25, ±50, ±100
+à 5200 K ; l'état 5200 K / 0 est l'ancre manuelle commune, distincte du As Shot de Lightroom.
+Les 28 RAW de `base` ; exports TIFF 16 bits sRGB de 2048 pixels dans `balance-blancs`.

@@ -43,6 +43,16 @@ la suppression conditionnelle historique du 10 octobre. Les JSON versionnés et 
 mesures restent la source de vérité. Décrire le générateur courant seulement,
 sans maintenir les anciens modes ou leurs tests de compatibilité.
 
+## Ordre temporel des rapports — règle du 22 octobre 2026
+
+- Présenter les campagnes d'un rapport évolutif dans l'ordre chronologique,
+  de la plus ancienne à la plus récente.
+- Un bref état courant daté peut ouvrir le rapport ; placer la conclusion
+  actuelle et les prochaines actions à la fin, sans laisser une ancienne
+  recommandation se présenter comme l'action courante.
+- Conserver les mesures et verdicts historiques avec leurs conditions.
+  Une relecture documentaire ne constitue pas une nouvelle validation.
+
 ## Protocoles fonctionnels — consolidation du 10 octobre 2026
 
 - Maintenir un protocole évolutif par groupe sous `validation/protocols/`,

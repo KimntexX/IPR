@@ -1,0 +1,511 @@
+{
+    "binary_versions": {
+        "0": 1,
+        "4": 8,
+        "5": 1,
+        "6": 30,
+        "9": 29
+    },
+    "campaign_id": "b0-sidecar-conversion-v001-20261102T131357Z",
+    "data_version": 1,
+    "format_version": 10,
+    "group": "b0-foundation",
+    "limitations": [
+        "Checks the recipe's fields, not the rendering of the converted recipe",
+        "Only the versions present in the audited folder are exercised"
+    ],
+    "measured_at_utc": "2026-11-02T13:13:58Z",
+    "method": "Each sidecar is read beside its real photo, then a copy is converted beside a stand-in of the same size and date, and read again; nothing under the audited folder is written",
+    "outcomes": {
+        "converted": 50,
+        "no_photo": 19
+    },
+    "records": [
+        {
+            "binary_version": 9,
+            "bytes": 1355,
+            "outcome": "converted",
+            "sha256": "f44f8241c63577209521eda80f9fef8f9556819dce50441bdc7944931e46d37f",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0007.CR3.ipr"
+        },
+        {
+            "binary_version": 9,
+            "bytes": 1355,
+            "outcome": "converted",
+            "sha256": "651b533b6e2f0a67f55ae12f22109f3531bcd88890037f2e727160a1a8595279",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0032.CR3.ipr"
+        },
+        {
+            "binary_version": 9,
+            "bytes": 327,
+            "outcome": "converted",
+            "sha256": "3ab8b184e84a6a67aeb4b723dbac93f5ed2f3e1af473a040424619fcb1324c92",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0037.CR3.ipr"
+        },
+        {
+            "binary_version": 9,
+            "bytes": 1355,
+            "outcome": "converted",
+            "sha256": "1287026bf69ff0eee5730332b57c2d95f50ee9ceb8bd6b204d6af122f05d08ab",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0043.CR3.ipr"
+        },
+        {
+            "binary_version": 9,
+            "bytes": 1355,
+            "outcome": "converted",
+            "sha256": "9c0ba722bdac46ff19787f8247ce48eb0044eab7f41cf8eb2eaca51c63c90466",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0064.CR3.ipr"
+        },
+        {
+            "binary_version": 9,
+            "bytes": 1355,
+            "outcome": "converted",
+            "sha256": "8bf91a9432b5669785939f58228212b3bd4019ea752eceed0c070454f92228c1",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0327.CR3.ipr"
+        },
+        {
+            "binary_version": 4,
+            "bytes": 259,
+            "outcome": "no_photo",
+            "sha256": "53bfc318517c2d1f5ab47f2163e3f372bcfbc663ea7e6f5f783217b47eb7a6df",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0327.tif.ipr"
+        },
+        {
+            "binary_version": 9,
+            "bytes": 1355,
+            "outcome": "converted",
+            "sha256": "0194639f751b9fd685e6f6f0fe3decefe05fd95fffd60d1188689dd7c2b0ad19",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A0524.CR3.ipr"
+        },
+        {
+            "binary_version": 9,
+            "bytes": 1355,
+            "outcome": "converted",
+            "sha256": "4b60ae08ff09e99050c3e2454cd8f365c6f2b543814f0ee794d2852d03b0d9d3",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A9141.CR3.ipr"
+        },
+        {
+            "binary_version": 9,
+            "bytes": 1355,
+            "outcome": "converted",
+            "sha256": "a774138b4073f3cc73086a82fdea9f6e7eff6c4f04a7b18814910f066f175cd5",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A9153.CR3.ipr"
+        },
+        {
+            "binary_version": 9,
+            "bytes": 1355,
+            "outcome": "converted",
+            "sha256": "a1fbe3b8192236d6a49861af382c8c272ca7a46b9b5cec9283174fd118ea8b0f",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A9539.CR3.ipr"
+        },
+        {
+            "binary_version": 9,
+            "bytes": 1355,
+            "outcome": "converted",
+            "sha256": "55177c42240eed2dc548e6163bee154b183407f0e9b61e8208f5abeecdad5454",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A9940.CR3.ipr"
+        },
+        {
+            "binary_version": 9,
+            "bytes": 1333,
+            "outcome": "converted",
+            "sha256": "13d3e18ae9e2d8ef093ea684157089ded63785cfa6aeb1b85f6c7d811b8216ef",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/7Y6A7599.CR3.ipr"
+        },
+        {
+            "binary_version": 9,
+            "bytes": 1337,
+            "outcome": "converted",
+            "sha256": "88ed92772e9fe9e7081b9472c3e40bd7263e84f2de0d604f85f9f95dd19e3fd9",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/IMG_3135.CR2.ipr"
+        },
+        {
+            "binary_version": 6,
+            "bytes": 1301,
+            "outcome": "converted",
+            "sha256": "c532dc23235cc0383fa389928788f0f301b8d8642b4b5984efd11c6482a3fab3",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/IMG_4345.CR2.ipr"
+        },
+        {
+            "binary_version": 6,
+            "bytes": 1301,
+            "outcome": "converted",
+            "sha256": "a79599506a7dae18feaba80f5a1a35d2d51fe8224d0c63536ced40f24ee3c1b6",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/IMG_7953.CR2.ipr"
+        },
+        {
+            "binary_version": 9,
+            "bytes": 1337,
+            "outcome": "converted",
+            "sha256": "edb47e1d15bd69c37278c149b8f3079e117ac9db9566604f60ef5a742eb34af2",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/IMG_7958.CR2.ipr"
+        },
+        {
+            "binary_version": 9,
+            "bytes": 1337,
+            "outcome": "converted",
+            "sha256": "108800925ff2f1c660d01137d9e2aef07f74c9b635f61f7351bb9f3f1ad4eaae",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/IMG_7961.CR2.ipr"
+        },
+        {
+            "binary_version": 9,
+            "bytes": 1337,
+            "outcome": "converted",
+            "sha256": "9d37ceab24888b83095c1f431a15df62466f19a151d6e2190e4553cd04b1fe66",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/IMG_8473.CR2.ipr"
+        },
+        {
+            "binary_version": 6,
+            "bytes": 433,
+            "outcome": "no_photo",
+            "sha256": "1a52a640cb37dc067e93b71f5159310cf30decf0e5d9a18effba550fdfdd9ce3",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/neutre/6V1A0081-IPR_RAW_Audit-2.tiff.ipr"
+        },
+        {
+            "binary_version": 9,
+            "bytes": 1337,
+            "outcome": "converted",
+            "sha256": "65b647c59a70f62000b584ae90b7e04abf0514c606a9971720bff5a527786c6f",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/_MG_7580.CR2.ipr"
+        },
+        {
+            "binary_version": 9,
+            "bytes": 1663,
+            "outcome": "no_photo",
+            "sha256": "f3a0bcafdb725adca09c3090f3144042d07a0c22abff0fcc1a1605de6841d8d5",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/6V1A0007.CR3.ipr"
+        },
+        {
+            "binary_version": 6,
+            "bytes": 1319,
+            "outcome": "no_photo",
+            "sha256": "678a092eb1db43be7c0065316975a9420a85eac3dbd5b843088972acf3249909",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/6V1A0037.CR3.ipr"
+        },
+        {
+            "binary_version": 9,
+            "bytes": 1355,
+            "outcome": "converted",
+            "sha256": "51f50ec82f3e4aca49427a2b4cdd202f8a4570e9f13abe195f00a8683d096af7",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/6V1A0054.CR3.ipr"
+        },
+        {
+            "binary_version": 9,
+            "bytes": 1451,
+            "outcome": "converted",
+            "sha256": "e34d0268d759fd42e880984526a92672036ccfc81e23531200b3f2de24e3efa6",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/6V1A0081.CR3.ipr"
+        },
+        {
+            "binary_version": 4,
+            "bytes": 259,
+            "outcome": "no_photo",
+            "sha256": "ce96f8a04f5da9c267d776ebf622118b9d2f0d678984f2015de2f04342803ac6",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/6V1A0106.CR3.ipr"
+        },
+        {
+            "binary_version": 6,
+            "bytes": 1093,
+            "outcome": "no_photo",
+            "sha256": "c057a367efa76e30417dec3d470b1e9895588fd5cd03246eaeb6d817d07d65db",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/6V1A0112.CR3.ipr"
+        },
+        {
+            "binary_version": 6,
+            "bytes": 1319,
+            "outcome": "converted",
+            "sha256": "2e288ee0db09f984e2b3c2f6e5ec1a71e67d6e7b34c7d5855dbc5ffc0f7ef035",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/6V1A0145.CR3.ipr"
+        },
+        {
+            "binary_version": 6,
+            "bytes": 1319,
+            "outcome": "converted",
+            "sha256": "011c4940df49a914a97f8806b89984f72150699a94fa94d6fef1e58a93841743",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/6V1A0182.CR3.ipr"
+        },
+        {
+            "binary_version": 6,
+            "bytes": 1101,
+            "outcome": "no_photo",
+            "sha256": "609890560327de984da0a2176d8c7124812b8ea688017b4954226d3ea1d9ac97",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/6V1A0286.CR3.ipr"
+        },
+        {
+            "binary_version": 6,
+            "bytes": 1319,
+            "outcome": "converted",
+            "sha256": "05248791436e8b6942f36949f250a74decd8cbc73fef10c5346bb520fd449588",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/6V1A0318.CR3.ipr"
+        },
+        {
+            "binary_version": 4,
+            "bytes": 259,
+            "outcome": "no_photo",
+            "sha256": "77f3d6e9d4e646f23c65c6bc9fe4e0f5e6ab7aeae2224bf017fa6447c8f353bc",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/6V1A0321.CR3.ipr"
+        },
+        {
+            "binary_version": 6,
+            "bytes": 1319,
+            "outcome": "no_photo",
+            "sha256": "d37981c2b26108d91cd7c386b3046d9c76995d01b4ba119ab68af86ece293ca0",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/6V1A0524.CR3.ipr"
+        },
+        {
+            "binary_version": 5,
+            "bytes": 730,
+            "outcome": "no_photo",
+            "sha256": "fab96c52e00d04417027151c9258aefa30d09119615a032c0c9bf27eeba8ee7d",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/6V1A0624.CR3.ipr"
+        },
+        {
+            "binary_version": 6,
+            "bytes": 1079,
+            "outcome": "no_photo",
+            "sha256": "730ba3b7d1e59376272afb401fb3e3a22b64b6ab6fd8c72542700fd7e76e1203",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/6V1A0767.CR3.ipr"
+        },
+        {
+            "binary_version": 6,
+            "bytes": 1319,
+            "outcome": "converted",
+            "sha256": "10f7d3e80d41e07561c9f659de1badd0aeed76caa968103e7968ec497ca0a702",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/6V1A0783.CR3.ipr"
+        },
+        {
+            "binary_version": 6,
+            "bytes": 1319,
+            "outcome": "converted",
+            "sha256": "5eba0e3235dd4b7662413be29a1b22951c5bfe99e1c87715bb770ecd34aae84e",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/6V1A0830.CR3.ipr"
+        },
+        {
+            "binary_version": 4,
+            "bytes": 259,
+            "outcome": "no_photo",
+            "sha256": "03f70609bdf3806528082f265117d66e722d04e09b0f4eb6c0865c01da457e0b",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/6V1A1020.CR3.ipr"
+        },
+        {
+            "binary_version": 4,
+            "bytes": 259,
+            "outcome": "no_photo",
+            "sha256": "5bfb62debefe0f105f5071cccedc5bf496ca826d4748c301c68aff1d17ef0042",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/6V1A8988.CR3.ipr"
+        },
+        {
+            "binary_version": 4,
+            "bytes": 259,
+            "outcome": "no_photo",
+            "sha256": "09dfa67cbb5449d7676e859578d30312dd9360637f45acbc658428f2b3377a6d",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/6V1A9073.CR3.ipr"
+        },
+        {
+            "binary_version": 6,
+            "bytes": 1319,
+            "outcome": "no_photo",
+            "sha256": "ee213434101118426180257d9f63ae39cb3145620e7216181cd87c8f751507b4",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/6V1A9141.CR3.ipr"
+        },
+        {
+            "binary_version": 4,
+            "bytes": 259,
+            "outcome": "converted",
+            "sha256": "dfe82a0b50ee3d7214235f806070e3b8277040d0385398a6c2c023d75f694a1d",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/6V1A9377.CR3.ipr"
+        },
+        {
+            "binary_version": 9,
+            "bytes": 1355,
+            "outcome": "converted",
+            "sha256": "55ecd084666cad71577fa2d3faa9994ca6ce12836d3f52a9a37498939b936990",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/6V1A9421.CR3.ipr"
+        },
+        {
+            "binary_version": 9,
+            "bytes": 1355,
+            "outcome": "converted",
+            "sha256": "35f53b9dae0633d1d09fd79186b426a009bd384219778ac4609d2be62e5e09df",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/6V1A9564.CR3.ipr"
+        },
+        {
+            "binary_version": 6,
+            "bytes": 1319,
+            "outcome": "converted",
+            "sha256": "f2ed9ed9a894976431f35637b2d6e447198266041027b77f93f69d8b5e17b5f8",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/6V1A9589.CR3.ipr"
+        },
+        {
+            "binary_version": 9,
+            "bytes": 1355,
+            "outcome": "converted",
+            "sha256": "5b5136ff0c65a36fa115dd65a300df81d3a76fde8daf7e8fef3c9a66cf6644ae",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/6V1A9602.CR3.ipr"
+        },
+        {
+            "binary_version": 9,
+            "bytes": 1355,
+            "outcome": "converted",
+            "sha256": "c40ac7a50d95edf4ec943ba913d6595d52489ee6c9206810fc11b4c1f404c262",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/6V1A9603.CR3.ipr"
+        },
+        {
+            "binary_version": 6,
+            "bytes": 1319,
+            "outcome": "converted",
+            "sha256": "d9e35c3bc75808a4cbbbce3147a3b26e3b1ea9f6e7c199f1cb9382cbae6fad7b",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/6V1A9606.CR3.ipr"
+        },
+        {
+            "binary_version": 6,
+            "bytes": 1319,
+            "outcome": "converted",
+            "sha256": "ad8dba0b5e3b07bead4b8015be92f87b83baa997c44028567956550480ac6e1c",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/6V1A9607.CR3.ipr"
+        },
+        {
+            "binary_version": 6,
+            "bytes": 1347,
+            "outcome": "converted",
+            "sha256": "45374d916969d5905090e8be92d6b7d55699653a71d0f81c352ab90f27016595",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/6V1A9608.CR3.ipr"
+        },
+        {
+            "binary_version": 9,
+            "bytes": 1355,
+            "outcome": "converted",
+            "sha256": "63f9f8695042b3f631c01fb99664cb11571f2964c387e7e141eeb76faa768798",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/6V1A9609.CR3.ipr"
+        },
+        {
+            "binary_version": 9,
+            "bytes": 1355,
+            "outcome": "converted",
+            "sha256": "67683c23780c7c0c3c6ce99c612dbf20a789ab67679fc0670109c957f6009fa4",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/6V1A9610.CR3.ipr"
+        },
+        {
+            "binary_version": 9,
+            "bytes": 1355,
+            "outcome": "converted",
+            "sha256": "9f150a20ec54e9a31f69bbe81217fd7f8fa0058697b151f7f1ecf2023e1ea959",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/6V1A9611.CR3.ipr"
+        },
+        {
+            "binary_version": 9,
+            "bytes": 1355,
+            "outcome": "converted",
+            "sha256": "893794c41ca8c487b78b12f85a5a9a9daaf7c66c11c187afdccbe59d3dcd2d46",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/6V1A9612.CR3.ipr"
+        },
+        {
+            "binary_version": 9,
+            "bytes": 1355,
+            "outcome": "converted",
+            "sha256": "1d010159b2c5f55416ab3402452f2efb8ec219ae3513b69fb031770403934bf1",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/6V1A9613.CR3.ipr"
+        },
+        {
+            "binary_version": 6,
+            "bytes": 1319,
+            "outcome": "converted",
+            "sha256": "d4029eee118a7e290dd79b3bf0dde20b3ab65814bf4c3c20da08aeb4af8a5b7d",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/6V1A9616.CR3.ipr"
+        },
+        {
+            "binary_version": 4,
+            "bytes": 259,
+            "outcome": "no_photo",
+            "sha256": "a696f07ab952ae69f93c2b04cf5ce66f9e56d4deda417c7116d433a2623b8796",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/6V1A9734.CR3.ipr"
+        },
+        {
+            "binary_version": 6,
+            "bytes": 1319,
+            "outcome": "converted",
+            "sha256": "f8540644770d45f09b9e629d29ea89e21ea548d98362f7903fac65675c76598b",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/6V1A9890.CR3.ipr"
+        },
+        {
+            "binary_version": 6,
+            "bytes": 1319,
+            "outcome": "no_photo",
+            "sha256": "f3b58fcb5277a989194faa77fd608d08fffd91d8f04177cfbce74e83b7dee624",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/6V1A9940.CR3.ipr"
+        },
+        {
+            "binary_version": 6,
+            "bytes": 1319,
+            "outcome": "converted",
+            "sha256": "0941d1dea4fb67f8c6d9327bf9943b3313ed524cbf30c05c5e9caf8dbe7c4683",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/6V1A9950.CR3.ipr"
+        },
+        {
+            "binary_version": 6,
+            "bytes": 1297,
+            "outcome": "converted",
+            "sha256": "16ddb4dcf3b011afa8acbf3eb05596e192e45b3646d98e1204dc936a5d104a2e",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/7Y6A7003.CR3.ipr"
+        },
+        {
+            "binary_version": 6,
+            "bytes": 1297,
+            "outcome": "converted",
+            "sha256": "e4a5c4705cedab297c2a894c4c460a107e857cdd6133edb466804802f431f594",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/7Y6A7298.CR3.ipr"
+        },
+        {
+            "binary_version": 6,
+            "bytes": 1297,
+            "outcome": "no_photo",
+            "sha256": "340b249c1190bcd62016595a216a619cc2977ef366bb019cbb77897975244057",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/7Y6A7599.CR3.ipr"
+        },
+        {
+            "binary_version": 6,
+            "bytes": 1301,
+            "outcome": "converted",
+            "sha256": "84e07620d47b1d0f7ba6cd2da66488a3529830c95f5243e22dad3128c0fe9c4b",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/IMG_3064.CR2.ipr"
+        },
+        {
+            "binary_version": 6,
+            "bytes": 1301,
+            "outcome": "converted",
+            "sha256": "607648ac3d268fda2ad44d42e0e021caf447b4ac99f2cad64c4138ffce273bb5",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/IMG_5949.CR2.ipr"
+        },
+        {
+            "binary_version": 6,
+            "bytes": 1301,
+            "outcome": "no_photo",
+            "sha256": "2f5b8145d4b360eb920f95e2361aa65863789a7aaa0b2e7f0f0b7b9038222c0f",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/IMG_7423.CR2.ipr"
+        },
+        {
+            "binary_version": 6,
+            "bytes": 1301,
+            "outcome": "converted",
+            "sha256": "a81244c1e1580b24b449b0b9c54d28414c78bc6fd7bd7e4fd733b423ee0aadf1",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/IMG_8055.CR2.ipr"
+        },
+        {
+            "binary_version": 6,
+            "bytes": 1483,
+            "outcome": "converted",
+            "sha256": "bf581f995be1c209dc506fae371c939777d2f6dd25aaa6e0c2c31f4312b04c2c",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base-hors-protocole/_MG_7906.CR2.ipr"
+        },
+        {
+            "binary_version": 0,
+            "bytes": 1945,
+            "outcome": "converted",
+            "sha256": "abb7e8298b2dee0ae5855f417e49fcd430f84ce1dc42f0f73e4ebff528b7af1e",
+            "sidecar": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/test/6V1A0064.CR3.ipr"
+        }
+    ],
+    "schema_version": 1,
+    "sources_untouched": true,
+    "status": "passed"
+}

@@ -19,7 +19,7 @@ const QMap<QString, QPair<int, int>> integerRanges{
     {"layout/settingsWidth", {260, 360}}, {"layout/imageInfoWidth", {210, 300}},
     {"layout/imageInfoFontSize", {10, 20}},
     {"layout/filmstripHeight", {100, 260}}, {"selection/toneCurveChannel", {0, 3}},
-    {"selection/mixerBand", {0, 7}}, {"selection/gradingZone", {0, 2}},
+    {"selection/mixerBand", {0, 7}}, {"selection/gradingZone", {0, 3}},
     {"export/quality", {1, 100}}, {"meta/schemaVersion", {2, 2}}
 };
 }
@@ -118,7 +118,8 @@ QVariant UiPreferences::normalized(const QString &key, const QVariant &input, bo
         return *ok ? QVariant(static_cast<int>(number)) : QVariant{};
     }
     if (key.startsWith(QStringLiteral("sections/")) ||
-        key.startsWith(QStringLiteral("layout/show")) || key == QStringLiteral("window/positionSaved")) {
+        key.startsWith(QStringLiteral("layout/show")) || key == QStringLiteral("window/positionSaved") ||
+        key == QStringLiteral("neural/enabled")) {
         const QString text = input.toString().trimmed().toLower();
         *ok = text == QStringLiteral("true") || text == QStringLiteral("false") ||
               text == QStringLiteral("1") || text == QStringLiteral("0");
@@ -176,6 +177,7 @@ bool UiPreferences::sync()
     m_saveTimer.stop();
     if (!m_writable)
         return false;
+    m_settings.remove(QStringLiteral("neural/strength")); // Per-photo only; remove the replaced preference.
     if (!m_pending.isEmpty()) {
         const QString directory = QFileInfo(m_settings.fileName()).absolutePath();
         if (!QDir().mkpath(directory)) {

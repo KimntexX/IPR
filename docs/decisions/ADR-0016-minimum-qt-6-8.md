@@ -1,3 +1,5 @@
+*[Français](ADR-0016-minimum-qt-6-8.md) | [English](ADR-0016-minimum-qt-6-8_en.md)*
+
 # ADR-0016 — Minimum Qt 6.8 pour tous les modes
 
 - **Date :** 2026-10-17

@@ -1,3 +1,5 @@
+*[Français](ADR-0002-pipeline-lineaire-et-calibration.md) | [English](ADR-0002-pipeline-lineaire-et-calibration_en.md)*
+
 # ADR-0002 — Pipeline linéaire et calibration de rendu
 
 - **Date :** 3 octobre 2026
@@ -5,6 +7,11 @@
 - **Décideurs :** Projet IPR
 
 ## Contexte
+
+**Portée historique :** la décision sRGB ci-dessous date du3octobre. Le master
+courant est Rec.2020 linéaire depuis l'[ADR-0009](ADR-0009-espace-travail-rec2020-lineaire.md).
+Ne pas lire les constantes Rec.709 de cette décision initiale comme celles
+du master actuel ; les domaines intermédiaires restent explicites par module.
 
 Les réglages photométriques, filtres et gains doivent être appliqués dans un espace où les valeurs sont proportionnelles à l'énergie. Les comparaisons de validation ont aussi montré qu'une adaptation chromatique purement théorique ne reproduit pas parfaitement les références aux températures froides.
 

@@ -1,0 +1,6572 @@
+{
+ "campaign_id": "etude-validation-ipr-v002-20261030T214413Z",
+ "runner": "tests/study_validation_ipr.py",
+ "commit": "07775391045775bb9901172dc19c541684cc2d0d",
+ "local_changes": [
+  "M src/core/Contrast.cpp",
+  " M src/core/Contrast.h",
+  " M tests/image_export_test.cpp"
+ ],
+ "render_server": {
+  "path": "build-windows-msvc\\Release\\iprRenderServer.exe",
+  "sha256": "4594a89e59eef0091a0953137ee896b861793373ec443aa0f979e1f47a044534"
+ },
+ "scenes": [
+  "6V1A0007",
+  "6V1A0032",
+  "6V1A0043",
+  "6V1A0064",
+  "6V1A0327",
+  "6V1A0524",
+  "6V1A0544",
+  "6V1A9112",
+  "6V1A9141",
+  "6V1A9153",
+  "6V1A9539",
+  "6V1A9940",
+  "6V1A9947",
+  "7Y6A7599",
+  "IMG_3135",
+  "IMG_4002",
+  "IMG_4173",
+  "IMG_4345",
+  "IMG_6248",
+  "IMG_6954",
+  "IMG_6979",
+  "IMG_7423",
+  "IMG_7953",
+  "IMG_7958",
+  "IMG_7961",
+  "IMG_8473",
+  "_MG_7580",
+  "_MG_7840"
+ ],
+ "controls": [
+  "contrast"
+ ],
+ "metric": "share of Lightroom's Oklab change against its neutral left unexplained by IPR's",
+ "duration_seconds": 2765.4,
+ "python": "3.14.3",
+ "skipped": [],
+ "summary": {
+  "contrast": {
+   "pooled": 0.12415174366893486,
+   "median": 0.10780242702035622,
+   "p90": 0.30553148263586355,
+   "exports": 280,
+   "ipr_over_lr_rms": 0.8767988583548864
+  },
+  "contrast -10": {
+   "pooled": 0.15863157254380233,
+   "median": 0.12383897538133645,
+   "p90": 0.30300976176051986,
+   "exports": 28,
+   "ipr_over_lr_rms": 0.8195830629621578
+  },
+  "contrast -100": {
+   "pooled": 0.1281959245009398,
+   "median": 0.11073478520109545,
+   "p90": 0.26995733379912606,
+   "exports": 28,
+   "ipr_over_lr_rms": 0.8829014972315682
+  },
+  "contrast -25": {
+   "pooled": 0.1530124701726058,
+   "median": 0.1224743730981168,
+   "p90": 0.2972139505436953,
+   "exports": 28,
+   "ipr_over_lr_rms": 0.8352360629152866
+  },
+  "contrast -50": {
+   "pooled": 0.14420439908217342,
+   "median": 0.12012949603107234,
+   "p90": 0.2878017691284447,
+   "exports": 28,
+   "ipr_over_lr_rms": 0.8563128937447942
+  },
+  "contrast -75": {
+   "pooled": 0.13590850280661237,
+   "median": 0.11745966827527005,
+   "p90": 0.2786832461867216,
+   "exports": 28,
+   "ipr_over_lr_rms": 0.8728380807039873
+  },
+  "contrast 10": {
+   "pooled": 0.1652330851853996,
+   "median": 0.12876538055931525,
+   "p90": 0.30956740828314094,
+   "exports": 28,
+   "ipr_over_lr_rms": 0.7956255350455335
+  },
+  "contrast 100": {
+   "pooled": 0.11106694608098884,
+   "median": 0.06795878720181675,
+   "p90": 0.30623278541571025,
+   "exports": 28,
+   "ipr_over_lr_rms": 0.9794738162168725
+  },
+  "contrast 25": {
+   "pooled": 0.14955610910409253,
+   "median": 0.10921547730822989,
+   "p90": 0.2913453939727021,
+   "exports": 28,
+   "ipr_over_lr_rms": 0.8451110601534111
+  },
+  "contrast 50": {
+   "pooled": 0.1300303215262876,
+   "median": 0.08273091172090233,
+   "p90": 0.27506965433448544,
+   "exports": 28,
+   "ipr_over_lr_rms": 0.9231192586847957
+  },
+  "contrast 75": {
+   "pooled": 0.11737422491822551,
+   "median": 0.06309620156912592,
+   "p90": 0.28981562986135434,
+   "exports": 28,
+   "ipr_over_lr_rms": 0.9578315130024968
+  }
+ },
+ "rows": [
+  {
+   "scene": "6V1A0007",
+   "control": "contrast",
+   "value": -100.0,
+   "lr_file": "lumiere\\contrast\\6V1A0007-9.tif",
+   "lr_neutral": "neutre\\6V1A0007.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.1834993239700359,
+   "lr_change_sq": 1955.801621817467,
+   "error_sq": 358.88827542300504,
+   "lr_change_rms": 0.05288129364093949,
+   "ipr_change_rms": 0.039155785691201386,
+   "lr_mean_change": [
+    0.010006631255500581,
+    0.00267898963462349,
+    0.008041612089381225
+   ],
+   "ipr_mean_change": [
+    -0.007205999438655556,
+    0.0019898750996908865,
+    0.006359189228241233
+   ]
+  },
+  {
+   "scene": "6V1A0007",
+   "control": "contrast",
+   "value": -75.0,
+   "lr_file": "lumiere\\contrast\\6V1A0007-8.tif",
+   "lr_neutral": "neutre\\6V1A0007.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.19098926003043928,
+   "lr_change_sq": 1168.9731671376453,
+   "error_sq": 223.2613201870579,
+   "lr_change_rms": 0.04088292319871609,
+   "ipr_change_rms": 0.029742794122063966,
+   "lr_mean_change": [
+    0.007714203717377392,
+    0.002066107410362141,
+    0.006079300624313487
+   ],
+   "ipr_mean_change": [
+    -0.005508026666441526,
+    0.0015159101433048106,
+    0.004769295670636398
+   ]
+  },
+  {
+   "scene": "6V1A0007",
+   "control": "contrast",
+   "value": -50.0,
+   "lr_file": "lumiere\\contrast\\6V1A0007-7.tif",
+   "lr_neutral": "neutre\\6V1A0007.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.19903243929965783,
+   "lr_change_sq": 549.8059681914154,
+   "error_sq": 109.4292229906475,
+   "lr_change_rms": 0.028037829778707016,
+   "ipr_change_rms": 0.020044759065314527,
+   "lr_mean_change": [
+    0.0052864530607197105,
+    0.0014136528408755656,
+    0.00406755088638485
+   ],
+   "ipr_mean_change": [
+    -0.0037319634207592023,
+    0.0010244845369931268,
+    0.0031698844312585224
+   ]
+  },
+  {
+   "scene": "6V1A0007",
+   "control": "contrast",
+   "value": -25.0,
+   "lr_file": "lumiere\\contrast\\6V1A0007-6.tif",
+   "lr_neutral": "neutre\\6V1A0007.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.2076054923804519,
+   "lr_change_sq": 144.81611228273624,
+   "error_sq": 30.064620295080264,
+   "lr_change_rms": 0.014389579799626663,
+   "ipr_change_rms": 0.010112122158597981,
+   "lr_mean_change": [
+    0.0027177020367232236,
+    0.0007242923142025262,
+    0.002032387115992984
+   ],
+   "ipr_mean_change": [
+    -0.0018908127888428653,
+    0.0005181694626276176,
+    0.0015752918087456082
+   ]
+  },
+  {
+   "scene": "6V1A0007",
+   "control": "contrast",
+   "value": -10.0,
+   "lr_file": "lumiere\\contrast\\6V1A0007-5.tif",
+   "lr_neutral": "neutre\\6V1A0007.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.21296825872901629,
+   "lr_change_sq": 23.852617810633205,
+   "error_sq": 5.079850481259275,
+   "lr_change_rms": 0.00583993071429152,
+   "ipr_change_rms": 0.004062693295743878,
+   "lr_mean_change": [
+    0.0011052976239610563,
+    0.00029379598408347233,
+    0.0008109730816296929
+   ],
+   "ipr_mean_change": [
+    -0.000761207705463557,
+    0.00020847357863094666,
+    0.0006268830317967451
+   ]
+  },
+  {
+   "scene": "6V1A0007",
+   "control": "contrast",
+   "value": 10.0,
+   "lr_file": "lumiere\\contrast\\6V1A0007.tif",
+   "lr_neutral": "neutre\\6V1A0007.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.22278695620153255,
+   "lr_change_sq": 29.441819371184557,
+   "error_sq": 6.559253322741527,
+   "lr_change_rms": 0.006488166582874846,
+   "ipr_change_rms": 0.004403955202811042,
+   "lr_mean_change": [
+    -0.0012532950825672486,
+    -0.0003296417351648223,
+    -0.0008913766565173021
+   ],
+   "ipr_mean_change": [
+    0.0008268593250430346,
+    -0.0002263774555599341,
+    -0.0006701794926983848
+   ]
+  },
+  {
+   "scene": "6V1A0007",
+   "control": "contrast",
+   "value": 25.0,
+   "lr_file": "lumiere\\contrast\\6V1A0007-2.tif",
+   "lr_neutral": "neutre\\6V1A0007.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.20364259778183533,
+   "lr_change_sq": 186.2876033232556,
+   "error_sq": 37.93609147529983,
+   "lr_change_rms": 0.016320431895264744,
+   "ipr_change_rms": 0.011851613852846969,
+   "lr_mean_change": [
+    -0.0032332820585834706,
+    -0.0008424939313378441,
+    -0.0022451297956458246
+   ],
+   "ipr_mean_change": [
+    0.0022275175804189564,
+    -0.0006100241285437337,
+    -0.0017808068892117383
+   ]
+  },
+  {
+   "scene": "6V1A0007",
+   "control": "contrast",
+   "value": 50.0,
+   "lr_file": "lumiere\\contrast\\6V1A0007-3.tif",
+   "lr_neutral": "neutre\\6V1A0007.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.1816115719670934,
+   "lr_change_sq": 762.3063698389274,
+   "error_sq": 138.44365814697608,
+   "lr_change_rms": 0.03301447870616564,
+   "ipr_change_rms": 0.02663682716072344,
+   "lr_mean_change": [
+    -0.0068219950528898825,
+    -0.0017535823367055673,
+    -0.004551031181391643
+   ],
+   "ipr_mean_change": [
+    0.005005477572338668,
+    -0.001373991952756885,
+    -0.003897783252801814
+   ]
+  },
+  {
+   "scene": "6V1A0007",
+   "control": "contrast",
+   "value": 75.0,
+   "lr_file": "lumiere\\contrast\\6V1A0007-4.tif",
+   "lr_neutral": "neutre\\6V1A0007.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.17291443172032686,
+   "lr_change_sq": 1760.118925419355,
+   "error_sq": 304.34996374908013,
+   "lr_change_rms": 0.05016613888507526,
+   "ipr_change_rms": 0.04455425514613194,
+   "lr_mean_change": [
+    -0.01080872741855828,
+    -0.0027437513859068616,
+    -0.006927880528688894
+   ],
+   "ipr_mean_change": [
+    0.008334729048069789,
+    -0.0023011162705957404,
+    -0.006299573851428476
+   ]
+  },
+  {
+   "scene": "6V1A0007",
+   "control": "contrast",
+   "value": 100.0,
+   "lr_file": "lumiere\\contrast\\6V1A0007-10.tif",
+   "lr_neutral": "neutre\\6V1A0007.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.17780033787132885,
+   "lr_change_sq": 3223.1349855793333,
+   "error_sq": 573.0744894409061,
+   "lr_change_rms": 0.06788579634985441,
+   "ipr_change_rms": 0.0656708470492565,
+   "lr_mean_change": [
+    -0.015248601874892659,
+    -0.0038220606699677527,
+    -0.009386938465357786
+   ],
+   "ipr_mean_change": [
+    0.012136971502444848,
+    -0.0033897890307839455,
+    -0.008891308271225968
+   ]
+  },
+  {
+   "scene": "6V1A0032",
+   "control": "contrast",
+   "value": -100.0,
+   "lr_file": "lumiere\\contrast\\6V1A0032-9.tif",
+   "lr_neutral": "neutre\\6V1A0032.tif",
+   "kept_share": 0.9967099995424598,
+   "unexplained": 0.031789728995544116,
+   "lr_change_sq": 3122.008011129038,
+   "error_sq": 99.2477885957098,
+   "lr_change_rms": 0.06692251731215303,
+   "ipr_change_rms": 0.06013953720589194,
+   "lr_mean_change": [
+    0.041523787654245865,
+    0.00015047621880698685,
+    0.002087562842991101
+   ],
+   "ipr_mean_change": [
+    0.040669293539418706,
+    0.0007809923432185382,
+    0.0026858728894000716
+   ]
+  },
+  {
+   "scene": "6V1A0032",
+   "control": "contrast",
+   "value": -75.0,
+   "lr_file": "lumiere\\contrast\\6V1A0032-8.tif",
+   "lr_neutral": "neutre\\6V1A0032.tif",
+   "kept_share": 0.9967099995424598,
+   "unexplained": 0.035338522184967254,
+   "lr_change_sq": 1699.271457406106,
+   "error_sq": 60.04974209582732,
+   "lr_change_rms": 0.04937267336859118,
+   "ipr_change_rms": 0.04406314095744762,
+   "lr_mean_change": [
+    0.03005902886622532,
+    8.530450795041676e-05,
+    0.0014173191002032177
+   ],
+   "ipr_mean_change": [
+    0.029477956939384965,
+    0.0005848239998791669,
+    0.0019398911178929253
+   ]
+  },
+  {
+   "scene": "6V1A0032",
+   "control": "contrast",
+   "value": -50.0,
+   "lr_file": "lumiere\\contrast\\6V1A0032-7.tif",
+   "lr_neutral": "neutre\\6V1A0032.tif",
+   "kept_share": 0.9967099995424598,
+   "unexplained": 0.03913605903371609,
+   "lr_change_sq": 728.0633873973853,
+   "error_sq": 28.493531709471384,
+   "lr_change_rms": 0.03231765631783121,
+   "ipr_change_rms": 0.02863612429279998,
+   "lr_mean_change": [
+    0.01928198480518556,
+    3.994124707368084e-05,
+    0.000839728772136449
+   ],
+   "ipr_mean_change": [
+    0.018939207300126798,
+    0.00038865044270216577,
+    0.0012369687450260508
+   ]
+  },
+  {
+   "scene": "6V1A0032",
+   "control": "contrast",
+   "value": -25.0,
+   "lr_file": "lumiere\\contrast\\6V1A0032-6.tif",
+   "lr_neutral": "neutre\\6V1A0032.tif",
+   "kept_share": 0.9967099995424598,
+   "unexplained": 0.043192460973725026,
+   "lr_change_sq": 174.83992840347202,
+   "error_sq": 7.551766784215843,
+   "lr_change_rms": 0.01583709683310904,
+   "ipr_change_rms": 0.01393072732298475,
+   "lr_mean_change": [
+    0.009248345003037332,
+    1.2235984438965202e-05,
+    0.00036519235922374024
+   ],
+   "ipr_mean_change": [
+    0.009102836591994073,
+    0.00019334448794574191,
+    0.0005874368330630623
+   ]
+  },
+  {
+   "scene": "6V1A0032",
+   "control": "contrast",
+   "value": -10.0,
+   "lr_file": "lumiere\\contrast\\6V1A0032-5.tif",
+   "lr_neutral": "neutre\\6V1A0032.tif",
+   "kept_share": 0.9967099995424598,
+   "unexplained": 0.045785470835028604,
+   "lr_change_sq": 27.243910416481434,
+   "error_sq": 1.2473752658059427,
+   "lr_change_rms": 0.006251582746896152,
+   "ipr_change_rms": 0.005476719938216239,
+   "lr_mean_change": [
+    0.0036006403276743625,
+    3.3774897303865503e-06,
+    0.00013268478058650105
+   ],
+   "ipr_mean_change": [
+    0.0035518696068571297,
+    7.702838364709206e-05,
+    0.00022705496345383177
+   ]
+  },
+  {
+   "scene": "6V1A0032",
+   "control": "contrast",
+   "value": 10.0,
+   "lr_file": "lumiere\\contrast\\6V1A0032.tif",
+   "lr_neutral": "neutre\\6V1A0032.tif",
+   "kept_share": 0.9966170616764275,
+   "unexplained": 0.05199698121588125,
+   "lr_change_sq": 32.57233757213274,
+   "error_sq": 1.693663224895529,
+   "lr_change_rms": 0.006835967266270915,
+   "ipr_change_rms": 0.005762473710014577,
+   "lr_mean_change": [
+    -0.003916813664999558,
+    -4.724000866003174e-06,
+    -0.00013720954584216366
+   ],
+   "ipr_mean_change": [
+    -0.0036977199253211725,
+    -8.248370207821713e-05,
+    -0.00023272150783495003
+   ]
+  },
+  {
+   "scene": "6V1A0032",
+   "control": "contrast",
+   "value": 25.0,
+   "lr_file": "lumiere\\contrast\\6V1A0032-2.tif",
+   "lr_neutral": "neutre\\6V1A0032.tif",
+   "kept_share": 0.9963897213579795,
+   "unexplained": 0.03904895075357889,
+   "lr_change_sq": 206.30732753780848,
+   "error_sq": 8.056084673126353,
+   "lr_change_rms": 0.017206097404419873,
+   "ipr_change_rms": 0.015115075153140152,
+   "lr_mean_change": [
+    -0.009893932428130914,
+    -2.071300042659259e-05,
+    -0.00034797997636747363
+   ],
+   "ipr_mean_change": [
+    -0.009608763382433093,
+    -0.00021963827394171613,
+    -0.0005948880638212558
+   ]
+  },
+  {
+   "scene": "6V1A0032",
+   "control": "contrast",
+   "value": 50.0,
+   "lr_file": "lumiere\\contrast\\6V1A0032-3.tif",
+   "lr_neutral": "neutre\\6V1A0032.tif",
+   "kept_share": 0.9959178829612005,
+   "unexplained": 0.02367435241060948,
+   "lr_change_sq": 846.909880046732,
+   "error_sq": 20.050042960253336,
+   "lr_change_rms": 0.03486956296015947,
+   "ipr_change_rms": 0.03233163997668281,
+   "lr_mean_change": [
+    -0.02019609195270986,
+    -6.794902489980598e-05,
+    -0.0007137356856265877
+   ],
+   "ipr_mean_change": [
+    -0.02016519763009015,
+    -0.0004834876455892148,
+    -0.0011977059978163734
+   ]
+  },
+  {
+   "scene": "6V1A0032",
+   "control": "contrast",
+   "value": 75.0,
+   "lr_file": "lumiere\\contrast\\6V1A0032-4.tif",
+   "lr_neutral": "neutre\\6V1A0032.tif",
+   "kept_share": 0.9949999428074671,
+   "unexplained": 0.014213740705004585,
+   "lr_change_sq": 1962.725722359877,
+   "error_sq": 27.89767449266611,
+   "lr_change_rms": 0.053107755725953505,
+   "ipr_change_rms": 0.0510637518281054,
+   "lr_mean_change": [
+    -0.031038906250799518,
+    -0.00012874702384634812,
+    -0.0010931047670379363
+   ],
+   "ipr_mean_change": [
+    -0.031110008116741836,
+    -0.0007884310466766074,
+    -0.0017266449360948395
+   ]
+  },
+  {
+   "scene": "6V1A0032",
+   "control": "contrast",
+   "value": 100.0,
+   "lr_file": "lumiere\\contrast\\6V1A0032-10.tif",
+   "lr_neutral": "neutre\\6V1A0032.tif",
+   "kept_share": 0.9704772144948756,
+   "unexplained": 0.010106897297288994,
+   "lr_change_sq": 3558.579429301115,
+   "error_sq": 35.96619681619165,
+   "lr_change_rms": 0.07240779631654266,
+   "ipr_change_rms": 0.07070267211865902,
+   "lr_mean_change": [
+    -0.04503891527725119,
+    -0.0002891828494087183,
+    -0.0018305560043395187
+   ],
+   "ipr_mean_change": [
+    -0.04431825930896092,
+    -0.0011937174635387872,
+    -0.002475504344867023
+   ]
+  },
+  {
+   "scene": "6V1A0043",
+   "control": "contrast",
+   "value": -100.0,
+   "lr_file": "lumiere\\contrast\\6V1A0043-9.tif",
+   "lr_neutral": "neutre\\6V1A0043.tif",
+   "kept_share": 0.9999942807467057,
+   "unexplained": 0.035005431405787386,
+   "lr_change_sq": 3237.2423733061314,
+   "error_sq": 113.32106584267615,
+   "lr_change_rms": 0.06803439387231043,
+   "ipr_change_rms": 0.06260287985307582,
+   "lr_mean_change": [
+    0.061315412160472677,
+    -0.0018085397050804388,
+    0.002194505894146976
+   ],
+   "ipr_mean_change": [
+    0.059905828201993964,
+    -0.0009254853062817335,
+    0.0026675028564272997
+   ]
+  },
+  {
+   "scene": "6V1A0043",
+   "control": "contrast",
+   "value": -75.0,
+   "lr_file": "lumiere\\contrast\\6V1A0043-8.tif",
+   "lr_neutral": "neutre\\6V1A0043.tif",
+   "kept_share": 0.9999942807467057,
+   "unexplained": 0.03952230215910237,
+   "lr_change_sq": 1745.6298307375205,
+   "error_sq": 68.99130962835102,
+   "lr_change_rms": 0.04995937414461664,
+   "ipr_change_rms": 0.04546851627591062,
+   "lr_mean_change": [
+    0.04478804148403481,
+    -0.0012118813235348325,
+    0.0018405437941751428
+   ],
+   "ipr_mean_change": [
+    0.04343985101243543,
+    -0.0007453282477316905,
+    0.0021503047991808374
+   ]
+  },
+  {
+   "scene": "6V1A0043",
+   "control": "contrast",
+   "value": -50.0,
+   "lr_file": "lumiere\\contrast\\6V1A0043-7.tif",
+   "lr_neutral": "neutre\\6V1A0043.tif",
+   "kept_share": 0.9999942807467057,
+   "unexplained": 0.044659413429863154,
+   "lr_change_sq": 738.9927467034547,
+   "error_sq": 33.002982596699724,
+   "lr_change_rms": 0.032505810532604436,
+   "ipr_change_rms": 0.02929305165372115,
+   "lr_mean_change": [
+    0.028962406074492252,
+    -0.0007566720956578058,
+    0.0013393084956502968
+   ],
+   "ipr_mean_change": [
+    0.02793203334375422,
+    -0.0005295559880653291,
+    0.0015292147412424254
+   ]
+  },
+  {
+   "scene": "6V1A0043",
+   "control": "contrast",
+   "value": -25.0,
+   "lr_file": "lumiere\\contrast\\6V1A0043-6.tif",
+   "lr_neutral": "neutre\\6V1A0043.tif",
+   "kept_share": 0.9999942807467057,
+   "unexplained": 0.05044351923335882,
+   "lr_change_sq": 174.9770376954524,
+   "error_sq": 8.826457566386704,
+   "lr_change_rms": 0.015817266852807068,
+   "ipr_change_rms": 0.0141265818707918,
+   "lr_mean_change": [
+    0.013998173765351188,
+    -0.0003910832054464781,
+    0.0007410918557810546
+   ],
+   "ipr_mean_change": [
+    0.013439678599798438,
+    -0.00028640867316646174,
+    0.0008242997165802511
+   ]
+  },
+  {
+   "scene": "6V1A0043",
+   "control": "contrast",
+   "value": -10.0,
+   "lr_file": "lumiere\\contrast\\6V1A0043-5.tif",
+   "lr_neutral": "neutre\\6V1A0043.tif",
+   "kept_share": 0.9999942807467057,
+   "unexplained": 0.05244122169287932,
+   "lr_change_sq": 26.946873068179006,
+   "error_sq": 1.4131269444982544,
+   "lr_change_rms": 0.00620719087026156,
+   "ipr_change_rms": 0.005525477930576918,
+   "lr_mean_change": [
+    0.005472255918350115,
+    -0.00017013929222773992,
+    0.000338267319064971
+   ],
+   "ipr_mean_change": [
+    0.005248085835074124,
+    -0.0001213160775781683,
+    0.0003474975455299324
+   ]
+  },
+  {
+   "scene": "6V1A0043",
+   "control": "contrast",
+   "value": 10.0,
+   "lr_file": "lumiere\\contrast\\6V1A0043.tif",
+   "lr_neutral": "neutre\\6V1A0043.tif",
+   "kept_share": 0.9999942807467057,
+   "unexplained": 0.05967914442311608,
+   "lr_change_sq": 31.6606299293555,
+   "error_sq": 1.8894793060808384,
+   "lr_change_rms": 0.006728227806105402,
+   "ipr_change_rms": 0.005774760755896634,
+   "lr_mean_change": [
+    -0.005918746710068798,
+    0.0002053180505289075,
+    -0.0004260855167762607
+   ],
+   "ipr_mean_change": [
+    -0.005470583415482647,
+    0.00013787155218288676,
+    -0.00039406090526059663
+   ]
+  },
+  {
+   "scene": "6V1A0043",
+   "control": "contrast",
+   "value": 25.0,
+   "lr_file": "lumiere\\contrast\\6V1A0043-2.tif",
+   "lr_neutral": "neutre\\6V1A0043.tif",
+   "kept_share": 0.9999914211200586,
+   "unexplained": 0.052506025473435115,
+   "lr_change_sq": 197.04924525072744,
+   "error_sq": 10.346272690655859,
+   "lr_change_rms": 0.01678529276852077,
+   "ipr_change_rms": 0.015062340546962375,
+   "lr_mean_change": [
+    -0.014766322182885526,
+    0.000526072270779342,
+    -0.0011087385138508516
+   ],
+   "ipr_mean_change": [
+    -0.01423395767917817,
+    0.0003767950015108014,
+    -0.0010795426515314503
+   ]
+  },
+  {
+   "scene": "6V1A0043",
+   "control": "contrast",
+   "value": 50.0,
+   "lr_file": "lumiere\\contrast\\6V1A0043-3.tif",
+   "lr_neutral": "neutre\\6V1A0043.tif",
+   "kept_share": 0.999932798773792,
+   "unexplained": 0.04986428170151481,
+   "lr_change_sq": 784.5659804555717,
+   "error_sq": 39.12181906286179,
+   "lr_change_rms": 0.03349415295733394,
+   "ipr_change_rms": 0.03188695650768508,
+   "lr_mean_change": [
+    -0.029463970963505726,
+    0.0010658430284869959,
+    -0.0023194744222055507
+   ],
+   "ipr_mean_change": [
+    -0.029973076930702554,
+    0.0008502970197494633,
+    -0.002459420559245629
+   ]
+  },
+  {
+   "scene": "6V1A0043",
+   "control": "contrast",
+   "value": 75.0,
+   "lr_file": "lumiere\\contrast\\6V1A0043-4.tif",
+   "lr_neutral": "neutre\\6V1A0043.tif",
+   "kept_share": 0.9989590959004392,
+   "unexplained": 0.05642160828843994,
+   "lr_change_sq": 1753.828214805556,
+   "error_sq": 98.95380854097297,
+   "lr_change_rms": 0.05010249383608877,
+   "ipr_change_rms": 0.0497902456843921,
+   "lr_mean_change": [
+    -0.04415974707309286,
+    0.0015739537536543127,
+    -0.0035809602566696038
+   ],
+   "ipr_mean_change": [
+    -0.046532900750877765,
+    0.0013695418857518358,
+    -0.004082271113280135
+   ]
+  },
+  {
+   "scene": "6V1A0043",
+   "control": "contrast",
+   "value": 100.0,
+   "lr_file": "lumiere\\contrast\\6V1A0043-10.tif",
+   "lr_neutral": "neutre\\6V1A0043.tif",
+   "kept_share": 0.9973848714311859,
+   "unexplained": 0.07107172748986378,
+   "lr_change_sq": 3093.58087205454,
+   "error_sq": 219.8661367065154,
+   "lr_change_rms": 0.06659460058712195,
+   "ipr_change_rms": 0.0680117256647507,
+   "lr_mean_change": [
+    -0.05887641212273711,
+    0.0021006170828798466,
+    -0.0048467383653854074
+   ],
+   "ipr_mean_change": [
+    -0.06311335998903092,
+    0.0018845345312743398,
+    -0.005861531494602507
+   ]
+  },
+  {
+   "scene": "6V1A0064",
+   "control": "contrast",
+   "value": -100.0,
+   "lr_file": "lumiere\\contrast\\6V1A0064-9.tif",
+   "lr_neutral": "neutre\\6V1A0064.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.05118468292459611,
+   "lr_change_sq": 3966.783998140527,
+   "error_sq": 203.0385811751845,
+   "lr_change_rms": 0.07531109222601552,
+   "ipr_change_rms": 0.06012512316589089,
+   "lr_mean_change": [
+    0.035265447889378534,
+    0.0022115628999546744,
+    -0.0033133858718615
+   ],
+   "ipr_mean_change": [
+    0.026010667482648915,
+    0.0029575666881485126,
+    -0.003327508483200351
+   ]
+  },
+  {
+   "scene": "6V1A0064",
+   "control": "contrast",
+   "value": -75.0,
+   "lr_file": "lumiere\\contrast\\6V1A0064-8.tif",
+   "lr_neutral": "neutre\\6V1A0064.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.056066337170682656,
+   "lr_change_sq": 2266.515916495692,
+   "error_sq": 127.0752455769663,
+   "lr_change_rms": 0.0569270994825366,
+   "ipr_change_rms": 0.0450136095315484,
+   "lr_mean_change": [
+    0.027070455061993733,
+    0.001428834219321265,
+    -0.0021642668412276246
+   ],
+   "ipr_mean_change": [
+    0.019584769511518097,
+    0.0021262280087722754,
+    -0.0023100428583179814
+   ]
+  },
+  {
+   "scene": "6V1A0064",
+   "control": "contrast",
+   "value": -50.0,
+   "lr_file": "lumiere\\contrast\\6V1A0064-7.tif",
+   "lr_neutral": "neutre\\6V1A0064.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.06102772877323529,
+   "lr_change_sq": 1017.8680203656338,
+   "error_sq": 62.11817347382384,
+   "lr_change_rms": 0.03814919733306485,
+   "ipr_change_rms": 0.02988982793065303,
+   "lr_mean_change": [
+    0.018428978532533547,
+    0.0007817392604571777,
+    -0.001204228962677694
+   ],
+   "ipr_mean_change": [
+    0.013090466013680852,
+    0.0013464119076680653,
+    -0.0014008169139846471
+   ]
+  },
+  {
+   "scene": "6V1A0064",
+   "control": "contrast",
+   "value": -25.0,
+   "lr_file": "lumiere\\contrast\\6V1A0064-6.tif",
+   "lr_neutral": "neutre\\6V1A0064.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.06586020433142653,
+   "lr_change_sq": 255.72910839663055,
+   "error_sq": 16.842371332495613,
+   "lr_change_rms": 0.019121843175039687,
+   "ipr_change_rms": 0.014854333136521668,
+   "lr_mean_change": [
+    0.009384661301900134,
+    0.0002935182968051579,
+    -0.000460074781392115
+   ],
+   "ipr_mean_change": [
+    0.006554229702618795,
+    0.0006345124243846873,
+    -0.0006271789496072978
+   ]
+  },
+  {
+   "scene": "6V1A0064",
+   "control": "contrast",
+   "value": -10.0,
+   "lr_file": "lumiere\\contrast\\6V1A0064-5.tif",
+   "lr_neutral": "neutre\\6V1A0064.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.06872170290117571,
+   "lr_change_sq": 40.92983844555532,
+   "error_sq": 2.8127681974485723,
+   "lr_change_rms": 0.007649969172560363,
+   "ipr_change_rms": 0.005914333521458009,
+   "lr_mean_change": [
+    0.003789612350083081,
+    9.267876366004153e-05,
+    -0.0001481273595096514
+   ],
+   "ipr_mean_change": [
+    0.0026224457842680482,
+    0.0002443126359975828,
+    -0.0002335423870567742
+   ]
+  },
+  {
+   "scene": "6V1A0064",
+   "control": "contrast",
+   "value": 10.0,
+   "lr_file": "lumiere\\contrast\\6V1A0064.tif",
+   "lr_neutral": "neutre\\6V1A0064.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.07756296561268908,
+   "lr_change_sq": 49.607284394528975,
+   "error_sq": 3.8476880936317386,
+   "lr_change_rms": 0.008421944916321075,
+   "ipr_change_rms": 0.0063315913984975025,
+   "lr_mean_change": [
+    -0.0042203129729422835,
+    -8.352154712371344e-05,
+    0.0001329329214138433
+   ],
+   "ipr_mean_change": [
+    -0.0028281000144457203,
+    -0.0002491807737396983,
+    0.0002265485965798414
+   ]
+  },
+  {
+   "scene": "6V1A0064",
+   "control": "contrast",
+   "value": 25.0,
+   "lr_file": "lumiere\\contrast\\6V1A0064-2.tif",
+   "lr_neutral": "neutre\\6V1A0064.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.05607769301546694,
+   "lr_change_sq": 313.9011846075315,
+   "error_sq": 17.602854267612567,
+   "lr_change_rms": 0.02118537457863399,
+   "ipr_change_rms": 0.01685531123468106,
+   "lr_mean_change": [
+    -0.010690490380993503,
+    -0.00020744017180392537,
+    0.00031553239889106687
+   ],
+   "ipr_mean_change": [
+    -0.007580498869365631,
+    -0.0006342728735707681,
+    0.0005491761440577428
+   ]
+  },
+  {
+   "scene": "6V1A0064",
+   "control": "contrast",
+   "value": 50.0,
+   "lr_file": "lumiere\\contrast\\6V1A0064-3.tif",
+   "lr_neutral": "neutre\\6V1A0064.tif",
+   "kept_share": 0.9999928509333821,
+   "unexplained": 0.02891376308484943,
+   "lr_change_sq": 1285.1354341038116,
+   "error_sq": 37.158101473622736,
+   "lr_change_rms": 0.042866267656602376,
+   "ipr_change_rms": 0.03709071643481395,
+   "lr_mean_change": [
+    -0.021897522289729167,
+    -0.00042512811043045144,
+    0.0005891594799359002
+   ],
+   "ipr_mean_change": [
+    -0.016928443701331237,
+    -0.0012672759217051592,
+    0.0009774581496376793
+   ]
+  },
+  {
+   "scene": "6V1A0064",
+   "control": "contrast",
+   "value": 75.0,
+   "lr_file": "lumiere\\contrast\\6V1A0064-4.tif",
+   "lr_neutral": "neutre\\6V1A0064.tif",
+   "kept_share": 0.9988618685944363,
+   "unexplained": 0.012014767976181668,
+   "lr_change_sq": 2967.4280369016255,
+   "error_sq": 35.652959349389285,
+   "lr_change_rms": 0.06517440132153822,
+   "ipr_change_rms": 0.06052610217900267,
+   "lr_mean_change": [
+    -0.03381525501262981,
+    -0.0006667662884145022,
+    0.0008258653835618012
+   ],
+   "ipr_mean_change": [
+    -0.028256784440380794,
+    -0.001801082925714929,
+    0.0011337237741332192
+   ]
+  },
+  {
+   "scene": "6V1A0064",
+   "control": "contrast",
+   "value": 100.0,
+   "lr_file": "lumiere\\contrast\\6V1A0064-10.tif",
+   "lr_neutral": "neutre\\6V1A0064.tif",
+   "kept_share": 0.9911594642203514,
+   "unexplained": 0.0044437615177636705,
+   "lr_change_sq": 5412.667934380081,
+   "error_sq": 24.052605475231577,
+   "lr_change_rms": 0.08836363961548138,
+   "ipr_change_rms": 0.08681696981223343,
+   "lr_mean_change": [
+    -0.0473301643246732,
+    -0.000910329696088925,
+    0.0008945971345962403
+   ],
+   "ipr_mean_change": [
+    -0.042413422778484214,
+    -0.0020576238990670397,
+    0.0007253284702503334
+   ]
+  },
+  {
+   "scene": "6V1A0327",
+   "control": "contrast",
+   "value": -100.0,
+   "lr_file": "lumiere\\contrast\\6V1A0327-9.tif",
+   "lr_neutral": "neutre\\6V1A0327.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.1089741706001957,
+   "lr_change_sq": 3755.1600663199006,
+   "error_sq": 409.21545369818705,
+   "lr_change_rms": 0.07327467430819117,
+   "ipr_change_rms": 0.057225471815630306,
+   "lr_mean_change": [
+    0.06126894212610846,
+    0.0018070511747834681,
+    -0.0012184538231421657
+   ],
+   "ipr_mean_change": [
+    0.044749898201956746,
+    -0.0009047499332233789,
+    -0.0019345489164150818
+   ]
+  },
+  {
+   "scene": "6V1A0327",
+   "control": "contrast",
+   "value": -75.0,
+   "lr_file": "lumiere\\contrast\\6V1A0327-8.tif",
+   "lr_neutral": "neutre\\6V1A0327.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.11439182311022396,
+   "lr_change_sq": 2131.6102231565387,
+   "error_sq": 243.8387795872678,
+   "lr_change_rms": 0.055206926175367835,
+   "ipr_change_rms": 0.042660440966304926,
+   "lr_mean_change": [
+    0.0459216317497862,
+    0.0015329931735208072,
+    -0.0008706722685294898
+   ],
+   "ipr_mean_change": [
+    0.03325555709383651,
+    -0.0006490945760264367,
+    -0.0013503498641587674
+   ]
+  },
+  {
+   "scene": "6V1A0327",
+   "control": "contrast",
+   "value": -50.0,
+   "lr_file": "lumiere\\contrast\\6V1A0327-7.tif",
+   "lr_neutral": "neutre\\6V1A0327.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.11990369848993357,
+   "lr_change_sq": 952.6229566107442,
+   "error_sq": 114.22301576404374,
+   "lr_change_rms": 0.036906273121287185,
+   "ipr_change_rms": 0.02822477125596631,
+   "lr_mean_change": [
+    0.030523991131438798,
+    0.001141019417321118,
+    -0.0005632372777638162
+   ],
+   "ipr_mean_change": [
+    0.02192288024245418,
+    -0.0004138415439067346,
+    -0.0008319609838841669
+   ]
+  },
+  {
+   "scene": "6V1A0327",
+   "control": "contrast",
+   "value": -25.0,
+   "lr_file": "lumiere\\contrast\\6V1A0327-6.tif",
+   "lr_neutral": "neutre\\6V1A0327.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.12556380740845524,
+   "lr_change_sq": 238.50936095380143,
+   "error_sq": 29.948143463916857,
+   "lr_change_rms": 0.018466831403586858,
+   "ipr_change_rms": 0.013983020881719668,
+   "lr_mean_change": [
+    0.015179186909839553,
+    0.0006271918391895922,
+    -0.00027992983968953903
+   ],
+   "ipr_mean_change": [
+    0.010816378808616552,
+    -0.00020085283920715568,
+    -0.00038234245942470307
+   ]
+  },
+  {
+   "scene": "6V1A0327",
+   "control": "contrast",
+   "value": -10.0,
+   "lr_file": "lumiere\\contrast\\6V1A0327-5.tif",
+   "lr_neutral": "neutre\\6V1A0327.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.1290022393908411,
+   "lr_change_sq": 38.07308506742112,
+   "error_sq": 4.911513234215317,
+   "lr_change_rms": 0.007378170796268336,
+   "ipr_change_rms": 0.005556952457037947,
+   "lr_mean_change": [
+    0.006040920652163189,
+    0.0002594356477768023,
+    -0.0001139989985039178
+   ],
+   "ipr_mean_change": [
+    0.0042863512190468725,
+    -8.262514151219404e-05,
+    -0.00014576238192516117
+   ]
+  },
+  {
+   "scene": "6V1A0327",
+   "control": "contrast",
+   "value": 10.0,
+   "lr_file": "lumiere\\contrast\\6V1A0327.tif",
+   "lr_neutral": "neutre\\6V1A0327.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.13369173355885092,
+   "lr_change_sq": 45.93890646464513,
+   "error_sq": 6.14165204305631,
+   "lr_change_rms": 0.008104570348482347,
+   "ipr_change_rms": 0.005929423286478553,
+   "lr_mean_change": [
+    -0.006632765627391089,
+    -0.0002158951280420372,
+    0.0001437554586256238
+   ],
+   "ipr_mean_change": [
+    -0.004551692029826767,
+    0.00010735615022121732,
+    0.00015011548127044432
+   ]
+  },
+  {
+   "scene": "6V1A0327",
+   "control": "contrast",
+   "value": 25.0,
+   "lr_file": "lumiere\\contrast\\6V1A0327-2.tif",
+   "lr_neutral": "neutre\\6V1A0327.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.11180027117594303,
+   "lr_change_sq": 292.58535387481515,
+   "error_sq": 32.71112190531359,
+   "lr_change_rms": 0.020453421162543395,
+   "ipr_change_rms": 0.015740702337771067,
+   "lr_mean_change": [
+    -0.016770077145100152,
+    -0.00040706075126866,
+    0.0003861417434188008
+   ],
+   "ipr_mean_change": [
+    -0.012027217334127673,
+    0.00034158579459898854,
+    0.0003888735826293608
+   ]
+  },
+  {
+   "scene": "6V1A0327",
+   "control": "contrast",
+   "value": 50.0,
+   "lr_file": "lumiere\\contrast\\6V1A0327-3.tif",
+   "lr_neutral": "neutre\\6V1A0327.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.08371180754928038,
+   "lr_change_sq": 1227.6602707538152,
+   "error_sq": 102.76966032124082,
+   "lr_change_rms": 0.04189659904985602,
+   "ipr_change_rms": 0.034536593611264654,
+   "lr_mean_change": [
+    -0.03445912154424281,
+    -0.0006957738996439769,
+    0.0007863588750348632
+   ],
+   "ipr_mean_change": [
+    -0.02615493621186288,
+    0.0008691386623059146,
+    0.0007808465339266779
+   ]
+  },
+  {
+   "scene": "6V1A0327",
+   "control": "contrast",
+   "value": 75.0,
+   "lr_file": "lumiere\\contrast\\6V1A0327-4.tif",
+   "lr_neutral": "neutre\\6V1A0327.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.06305413755262536,
+   "lr_change_sq": 2929.2705422889294,
+   "error_sq": 184.7026277023396,
+   "lr_change_rms": 0.06471715421519304,
+   "ipr_change_rms": 0.05630340211780975,
+   "lr_mean_change": [
+    -0.05343043238202601,
+    -0.0010629735614438136,
+    0.0011711708266258839
+   ],
+   "ipr_mean_change": [
+    -0.04218843486670754,
+    0.0014689988231830998,
+    0.001089210103161421
+   ]
+  },
+  {
+   "scene": "6V1A0327",
+   "control": "contrast",
+   "value": 100.0,
+   "lr_file": "lumiere\\contrast\\6V1A0327-10.tif",
+   "lr_neutral": "neutre\\6V1A0327.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.049865975256555076,
+   "lr_change_sq": 5589.215303321122,
+   "error_sq": 278.71167201897003,
+   "lr_change_rms": 0.08939538304075725,
+   "ipr_change_rms": 0.08075532379793965,
+   "lr_mean_change": [
+    -0.07415349520828869,
+    -0.001613770679021444,
+    0.0015601241524605329
+   ],
+   "ipr_mean_change": [
+    -0.059718304841958815,
+    0.0020507772926943745,
+    0.001242521948483875
+   ]
+  },
+  {
+   "scene": "6V1A0524",
+   "control": "contrast",
+   "value": -100.0,
+   "lr_file": "lumiere\\contrast\\6V1A0524-9.tif",
+   "lr_neutral": "neutre\\6V1A0524.tif",
+   "kept_share": 0.8763039897510981,
+   "unexplained": 0.06870709648254833,
+   "lr_change_sq": 1957.2126451265653,
+   "error_sq": 134.47439804557456,
+   "lr_change_rms": 0.05651077740519798,
+   "ipr_change_rms": 0.05591100170244111,
+   "lr_mean_change": [
+    0.013184966449768038,
+    -0.00014649386298696456,
+    -0.0020273664414950307
+   ],
+   "ipr_mean_change": [
+    0.003365978214333304,
+    -0.0002248231812003109,
+    -0.00277903461112246
+   ]
+  },
+  {
+   "scene": "6V1A0524",
+   "control": "contrast",
+   "value": -75.0,
+   "lr_file": "lumiere\\contrast\\6V1A0524-8.tif",
+   "lr_neutral": "neutre\\6V1A0524.tif",
+   "kept_share": 0.8763039897510981,
+   "unexplained": 0.06929046725375627,
+   "lr_change_sq": 1057.6153169802922,
+   "error_sq": 73.282659488294,
+   "lr_change_rms": 0.04154092293855329,
+   "ipr_change_rms": 0.04073657986571745,
+   "lr_mean_change": [
+    0.010252106572154536,
+    -8.987486814526973e-05,
+    -0.001456826326601808
+   ],
+   "ipr_mean_change": [
+    0.0032715980432447465,
+    -0.00016953188591415952,
+    -0.0021118851321237845
+   ]
+  },
+  {
+   "scene": "6V1A0524",
+   "control": "contrast",
+   "value": -50.0,
+   "lr_file": "lumiere\\contrast\\6V1A0524-7.tif",
+   "lr_neutral": "neutre\\6V1A0524.tif",
+   "kept_share": 0.8763039897510981,
+   "unexplained": 0.06968688063568124,
+   "lr_change_sq": 450.27238338239255,
+   "error_sq": 31.37807783431249,
+   "lr_change_rms": 0.027105032409476978,
+   "ipr_change_rms": 0.02632122777405202,
+   "lr_mean_change": [
+    0.007050699553192692,
+    -4.614521589484879e-05,
+    -0.0009223475259890671
+   ],
+   "ipr_mean_change": [
+    0.00267217535255424,
+    -0.00011370296055731306,
+    -0.0014092533234685966
+   ]
+  },
+  {
+   "scene": "6V1A0524",
+   "control": "contrast",
+   "value": -25.0,
+   "lr_file": "lumiere\\contrast\\6V1A0524-6.tif",
+   "lr_neutral": "neutre\\6V1A0524.tif",
+   "kept_share": 0.8763039897510981,
+   "unexplained": 0.07000895184118923,
+   "lr_change_sq": 107.54889417264212,
+   "error_sq": 7.52938535270566,
+   "lr_change_rms": 0.013246930261659398,
+   "ipr_change_rms": 0.012730150366225783,
+   "lr_mean_change": [
+    0.0036179974915701665,
+    -1.6138637482202887e-05,
+    -0.00043440762846352036
+   ],
+   "ipr_mean_change": [
+    0.0015731573095787677,
+    -5.714457649093056e-05,
+    -0.0006969474921206002
+   ]
+  },
+  {
+   "scene": "6V1A0524",
+   "control": "contrast",
+   "value": -10.0,
+   "lr_file": "lumiere\\contrast\\6V1A0524-5.tif",
+   "lr_neutral": "neutre\\6V1A0524.tif",
+   "kept_share": 0.8763039897510981,
+   "unexplained": 0.07025025767659145,
+   "lr_change_sq": 16.717943151242814,
+   "error_sq": 1.1744398141974148,
+   "lr_change_rms": 0.005222803631124818,
+   "ipr_change_rms": 0.004987525140517407,
+   "lr_mean_change": [
+    0.001465332405990424,
+    -4.780017996283751e-06,
+    -0.0001669823575780534
+   ],
+   "ipr_mean_change": [
+    0.0006837504495093236,
+    -2.2904142436502215e-05,
+    -0.0002754272502204974
+   ]
+  },
+  {
+   "scene": "6V1A0524",
+   "control": "contrast",
+   "value": 10.0,
+   "lr_file": "lumiere\\contrast\\6V1A0524.tif",
+   "lr_neutral": "neutre\\6V1A0524.tif",
+   "kept_share": 0.8616455435578331,
+   "unexplained": 0.06914543819661664,
+   "lr_change_sq": 20.11059497634217,
+   "error_sq": 1.3905559020338567,
+   "lr_change_rms": 0.005776806311675283,
+   "ipr_change_rms": 0.005256655250612669,
+   "lr_mean_change": [
+    -0.0017334608424439163,
+    2.4557119290846317e-06,
+    0.0001735697407522364
+   ],
+   "ipr_mean_change": [
+    -0.0008716773803582163,
+    2.5199548407126433e-05,
+    0.0002842878991829732
+   ]
+  },
+  {
+   "scene": "6V1A0524",
+   "control": "contrast",
+   "value": 25.0,
+   "lr_file": "lumiere\\contrast\\6V1A0524-2.tif",
+   "lr_neutral": "neutre\\6V1A0524.tif",
+   "kept_share": 0.8304598851573939,
+   "unexplained": 0.06054178305007059,
+   "lr_change_sq": 129.17913524053574,
+   "error_sq": 7.820735180328243,
+   "lr_change_rms": 0.014913395205158294,
+   "ipr_change_rms": 0.01392986126319856,
+   "lr_mean_change": [
+    -0.0048906831213059365,
+    -1.221322319354953e-06,
+    0.00041025365449704127
+   ],
+   "ipr_mean_change": [
+    -0.0028450908084913244,
+    6.961323277196646e-05,
+    0.0007120968634051123
+   ]
+  },
+  {
+   "scene": "6V1A0524",
+   "control": "contrast",
+   "value": 50.0,
+   "lr_file": "lumiere\\contrast\\6V1A0524-3.tif",
+   "lr_neutral": "neutre\\6V1A0524.tif",
+   "kept_share": 0.7363581510797951,
+   "unexplained": 0.04712489858504179,
+   "lr_change_sq": 540.1495138531258,
+   "error_sq": 25.454491061088177,
+   "lr_change_rms": 0.03238561251242167,
+   "ipr_change_rms": 0.031008537253689548,
+   "lr_mean_change": [
+    -0.013396344314631162,
+    -4.413552377494911e-05,
+    0.0006637913367693866
+   ],
+   "ipr_mean_change": [
+    -0.009700337119774707,
+    0.00016237301828429384,
+    0.0013019958761105873
+   ]
+  },
+  {
+   "scene": "6V1A0524",
+   "control": "contrast",
+   "value": 75.0,
+   "lr_file": "lumiere\\contrast\\6V1A0524-4.tif",
+   "lr_neutral": "neutre\\6V1A0524.tif",
+   "kept_share": 0.5689927823023426,
+   "unexplained": 0.034090538688074074,
+   "lr_change_sq": 1256.7372185154763,
+   "error_sq": 42.84284876854445,
+   "lr_change_rms": 0.05619640446896028,
+   "ipr_change_rms": 0.05378285437422928,
+   "lr_mean_change": [
+    -0.03421427274319967,
+    -0.00023311019662769432,
+    0.00032216171376388324
+   ],
+   "ipr_mean_change": [
+    -0.02914492292203279,
+    0.00026248883510745965,
+    0.0012738330889605603
+   ]
+  },
+  {
+   "scene": "6V1A0524",
+   "control": "contrast",
+   "value": 100.0,
+   "lr_file": "lumiere\\contrast\\6V1A0524-10.tif",
+   "lr_neutral": "neutre\\6V1A0524.tif",
+   "kept_share": 0.42781015510614934,
+   "unexplained": 0.023125411124340422,
+   "lr_change_sq": 2340.9851085188957,
+   "error_sq": 54.13624307045814,
+   "lr_change_rms": 0.08845317994656315,
+   "ipr_change_rms": 0.08277252727466708,
+   "lr_mean_change": [
+    -0.07672298975882307,
+    -0.000704103997622128,
+    -0.0010839744850246937
+   ],
+   "ipr_mean_change": [
+    -0.06942414654950017,
+    0.00028811541515437873,
+    -0.00011192188399590306
+   ]
+  },
+  {
+   "scene": "6V1A0544",
+   "control": "contrast",
+   "value": -100.0,
+   "lr_file": "lumiere\\contrast\\6V1A0544-9.tif",
+   "lr_neutral": "neutre\\6V1A0544.tif",
+   "kept_share": 0.9829995195827232,
+   "unexplained": 0.0672246577919579,
+   "lr_change_sq": 2645.498523656961,
+   "error_sq": 177.84273294196902,
+   "lr_change_rms": 0.062032142139772484,
+   "ipr_change_rms": 0.05975322516923488,
+   "lr_mean_change": [
+    0.025025662984501092,
+    0.00024361444037602884,
+    -0.0006694792864324131
+   ],
+   "ipr_mean_change": [
+    0.018761748815591537,
+    -0.00014345211995728618,
+    -0.0010531992831416279
+   ]
+  },
+  {
+   "scene": "6V1A0544",
+   "control": "contrast",
+   "value": -75.0,
+   "lr_file": "lumiere\\contrast\\6V1A0544-8.tif",
+   "lr_neutral": "neutre\\6V1A0544.tif",
+   "kept_share": 0.9829995195827232,
+   "unexplained": 0.06885154632885906,
+   "lr_change_sq": 1445.3186570864405,
+   "error_sq": 99.51242447835142,
+   "lr_change_rms": 0.045850578702172136,
+   "ipr_change_rms": 0.04382907236988336,
+   "lr_mean_change": [
+    0.018633549072944938,
+    0.00020144593033597278,
+    -0.0005156477051097088
+   ],
+   "ipr_mean_change": [
+    0.014018424894611347,
+    -9.683665860208272e-05,
+    -0.0008371608967091609
+   ]
+  },
+  {
+   "scene": "6V1A0544",
+   "control": "contrast",
+   "value": -50.0,
+   "lr_file": "lumiere\\contrast\\6V1A0544-7.tif",
+   "lr_neutral": "neutre\\6V1A0544.tif",
+   "kept_share": 0.9829995195827232,
+   "unexplained": 0.07036552497948126,
+   "lr_change_sq": 621.8216230724857,
+   "error_sq": 43.75480495108857,
+   "lr_change_rms": 0.03007432766009435,
+   "ipr_change_rms": 0.028512156982849122,
+   "lr_mean_change": [
+    0.012322863041400386,
+    0.00014667724751522796,
+    -0.0003482389926763237
+   ],
+   "ipr_mean_change": [
+    0.009305903726528186,
+    -5.7822083622790844e-05,
+    -0.0005837381242131993
+   ]
+  },
+  {
+   "scene": "6V1A0544",
+   "control": "contrast",
+   "value": -25.0,
+   "lr_file": "lumiere\\contrast\\6V1A0544-6.tif",
+   "lr_neutral": "neutre\\6V1A0544.tif",
+   "kept_share": 0.9829995195827232,
+   "unexplained": 0.07182494382082184,
+   "lr_change_sq": 149.9909365257447,
+   "error_sq": 10.773090589594068,
+   "lr_change_rms": 0.01477051117179062,
+   "ipr_change_rms": 0.013882586526233661,
+   "lr_mean_change": [
+    0.006105569163539869,
+    7.944001316676562e-05,
+    -0.00017414779145402684
+   ],
+   "ipr_mean_change": [
+    0.004630406242808106,
+    -2.5801697778127328e-05,
+    -0.00030138672511048457
+   ]
+  },
+  {
+   "scene": "6V1A0544",
+   "control": "contrast",
+   "value": -10.0,
+   "lr_file": "lumiere\\contrast\\6V1A0544-5.tif",
+   "lr_neutral": "neutre\\6V1A0544.tif",
+   "kept_share": 0.9829995195827232,
+   "unexplained": 0.07278338210740566,
+   "lr_change_sq": 23.443146221998433,
+   "error_sq": 1.7062714692754954,
+   "lr_change_rms": 0.005839436837597926,
+   "ipr_change_rms": 0.005460430951216777,
+   "lr_mean_change": [
+    0.0024259482722106657,
+    3.3251556071649567e-05,
+    -6.918646575829773e-05
+   ],
+   "ipr_mean_change": [
+    0.001846137607455242,
+    -9.624352489255913e-06,
+    -0.00012216749582654213
+   ]
+  },
+  {
+   "scene": "6V1A0544",
+   "control": "contrast",
+   "value": 10.0,
+   "lr_file": "lumiere\\contrast\\6V1A0544.tif",
+   "lr_neutral": "neutre\\6V1A0544.tif",
+   "kept_share": 0.97951220488653,
+   "unexplained": 0.07291475578330495,
+   "lr_change_sq": 28.321853087539402,
+   "error_sq": 2.0650810012085765,
+   "lr_change_rms": 0.0064297720547979755,
+   "ipr_change_rms": 0.00575685329866637,
+   "lr_mean_change": [
+    -0.002730389787521153,
+    -3.922308393577298e-05,
+    7.335027062330075e-05
+   ],
+   "ipr_mean_change": [
+    -0.0019975087345394755,
+    9.416399181322003e-06,
+    0.00013145546234427955
+   ]
+  },
+  {
+   "scene": "6V1A0544",
+   "control": "contrast",
+   "value": 25.0,
+   "lr_file": "lumiere\\contrast\\6V1A0544-2.tif",
+   "lr_neutral": "neutre\\6V1A0544.tif",
+   "kept_share": 0.9723359718155198,
+   "unexplained": 0.06360934319765335,
+   "lr_change_sq": 182.2852673098979,
+   "error_sq": 11.595046128191278,
+   "lr_change_rms": 0.016372208928905955,
+   "ipr_change_rms": 0.015151713335567122,
+   "lr_mean_change": [
+    -0.0071424441861795114,
+    -0.00010691058290762471,
+    0.00017286019770707033
+   ],
+   "ipr_mean_change": [
+    -0.005418942397187776,
+    2.313294925811717e-05,
+    0.0003450656724220027
+   ]
+  },
+  {
+   "scene": "6V1A0544",
+   "control": "contrast",
+   "value": 50.0,
+   "lr_file": "lumiere\\contrast\\6V1A0544-3.tif",
+   "lr_neutral": "neutre\\6V1A0544.tif",
+   "kept_share": 0.9513205755856515,
+   "unexplained": 0.050463563787759395,
+   "lr_change_sq": 770.5042958723473,
+   "error_sq": 38.88239268349683,
+   "lr_change_rms": 0.03403014166782278,
+   "ipr_change_rms": 0.03272628025925038,
+   "lr_mean_change": [
+    -0.015764577049558966,
+    -0.00024673809466910527,
+    0.00029413851110191377
+   ],
+   "ipr_mean_change": [
+    -0.012564533297514864,
+    4.192374929913309e-05,
+    0.0007198056415391547
+   ]
+  },
+  {
+   "scene": "6V1A0544",
+   "control": "contrast",
+   "value": 75.0,
+   "lr_file": "lumiere\\contrast\\6V1A0544-4.tif",
+   "lr_neutral": "neutre\\6V1A0544.tif",
+   "kept_share": 0.8984403596266471,
+   "unexplained": 0.038609825071476984,
+   "lr_change_sq": 1841.8220888350993,
+   "error_sq": 71.11242866270553,
+   "lr_change_rms": 0.054140078594527866,
+   "ipr_change_rms": 0.05290985136161664,
+   "lr_mean_change": [
+    -0.028040273178852607,
+    -0.00045458600749400643,
+    0.0002540056193300045
+   ],
+   "ipr_mean_change": [
+    -0.023260910963091335,
+    4.110765430849774e-05,
+    0.0009906704301750006
+   ]
+  },
+  {
+   "scene": "6V1A0544",
+   "control": "contrast",
+   "value": 100.0,
+   "lr_file": "lumiere\\contrast\\6V1A0544-10.tif",
+   "lr_neutral": "neutre\\6V1A0544.tif",
+   "kept_share": 0.7897831259150805,
+   "unexplained": 0.02833024194616021,
+   "lr_change_sq": 3476.887930146082,
+   "error_sq": 98.50107628072267,
+   "lr_change_rms": 0.07933797121133085,
+   "ipr_change_rms": 0.0766569358317228,
+   "lr_mean_change": [
+    -0.050936125004887464,
+    -0.0008543471028329821,
+    -0.0003367885855578501
+   ],
+   "ipr_mean_change": [
+    -0.043522033529955435,
+    -4.6304986759604395e-05,
+    0.0006601992533358724
+   ]
+  },
+  {
+   "scene": "6V1A9112",
+   "control": "contrast",
+   "value": -100.0,
+   "lr_file": "lumiere\\contrast\\6V1A9112-9.tif",
+   "lr_neutral": "neutre\\6V1A9112.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.06622263066925545,
+   "lr_change_sq": 4527.061898627682,
+   "error_sq": 299.79394812967934,
+   "lr_change_rms": 0.08045404538800496,
+   "ipr_change_rms": 0.06561949968188181,
+   "lr_mean_change": [
+    0.07886625832329763,
+    0.0008735697105798698,
+    -0.00020916751725473366
+   ],
+   "ipr_mean_change": [
+    0.06461808065618065,
+    -0.0006755384208739151,
+    -0.0005565722084068664
+   ]
+  },
+  {
+   "scene": "6V1A9112",
+   "control": "contrast",
+   "value": -75.0,
+   "lr_file": "lumiere\\contrast\\6V1A9112-8.tif",
+   "lr_neutral": "neutre\\6V1A9112.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.06893963475976225,
+   "lr_change_sq": 2527.534038645301,
+   "error_sq": 174.24727346707385,
+   "lr_change_rms": 0.060115737076392874,
+   "ipr_change_rms": 0.04873100406813227,
+   "lr_mean_change": [
+    0.05881311045117715,
+    0.0007365342947611044,
+    -0.00010620492154433821
+   ],
+   "ipr_mean_change": [
+    0.04801212687731217,
+    -0.0004503616254628864,
+    -0.0003926205286372789
+   ]
+  },
+  {
+   "scene": "6V1A9112",
+   "control": "contrast",
+   "value": -50.0,
+   "lr_file": "lumiere\\contrast\\6V1A9112-7.tif",
+   "lr_neutral": "neutre\\6V1A9112.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.0714296784297787,
+   "lr_change_sq": 1110.0577826206377,
+   "error_sq": 79.29107045106534,
+   "lr_change_rms": 0.039839370069396245,
+   "ipr_change_rms": 0.03210962857866669,
+   "lr_mean_change": [
+    0.03889069630392676,
+    0.0005395195645463078,
+    -3.547732585636969e-05
+   ],
+   "ipr_mean_change": [
+    0.03164446135318373,
+    -0.00026303236684170774,
+    -0.00024547584130212003
+   ]
+  },
+  {
+   "scene": "6V1A9112",
+   "control": "contrast",
+   "value": -25.0,
+   "lr_file": "lumiere\\contrast\\6V1A9112-6.tif",
+   "lr_neutral": "neutre\\6V1A9112.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.07366533882903853,
+   "lr_change_sq": 272.9966806579239,
+   "error_sq": 20.11039297986879,
+   "lr_change_rms": 0.019756879594099865,
+   "ipr_change_rms": 0.0158408713006035,
+   "lr_mean_change": [
+    0.01924019759437927,
+    0.00029101079873582425,
+    3.0731979918265004e-07
+   ],
+   "ipr_mean_change": [
+    0.015611690260901914,
+    -0.00011311185435909371,
+    -0.00011474637581649731
+   ]
+  },
+  {
+   "scene": "6V1A9112",
+   "control": "contrast",
+   "value": -10.0,
+   "lr_file": "lumiere\\contrast\\6V1A9112-5.tif",
+   "lr_neutral": "neutre\\6V1A9112.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.07490054686756216,
+   "lr_change_sq": 43.145401008419114,
+   "error_sq": 3.2316141303508594,
+   "lr_change_rms": 0.00785428986049757,
+   "ipr_change_rms": 0.006280651313639854,
+   "lr_mean_change": [
+    0.00763688922510929,
+    0.00012121684362801418,
+    4.553106670633348e-06
+   ],
+   "ipr_mean_change": [
+    0.006189123662888248,
+    -4.0829123643082506e-05,
+    -4.399813581326237e-05
+   ]
+  },
+  {
+   "scene": "6V1A9112",
+   "control": "contrast",
+   "value": 10.0,
+   "lr_file": "lumiere\\contrast\\6V1A9112.tif",
+   "lr_neutral": "neutre\\6V1A9112.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.08270510879458193,
+   "lr_change_sq": 52.504500344012484,
+   "error_sq": 4.342390413156717,
+   "lr_change_rms": 0.008664388849733409,
+   "ipr_change_rms": 0.006686385453906294,
+   "lr_mean_change": [
+    -0.008419909269143062,
+    -0.00013858785442568468,
+    -6.93142345006598e-06
+   ],
+   "ipr_mean_change": [
+    -0.006587041026200972,
+    3.738966971508251e-05,
+    4.461836682184194e-05
+   ]
+  },
+  {
+   "scene": "6V1A9112",
+   "control": "contrast",
+   "value": 25.0,
+   "lr_file": "lumiere\\contrast\\6V1A9112-2.tif",
+   "lr_neutral": "neutre\\6V1A9112.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.0649834474232476,
+   "lr_change_sq": 338.19657725440885,
+   "error_sq": 21.977179496734173,
+   "lr_change_rms": 0.021989951617613017,
+   "ipr_change_rms": 0.01771793741446885,
+   "lr_mean_change": [
+    -0.021377577327294166,
+    -0.0003564789784172016,
+    -1.3739036758337861e-05
+   ],
+   "ipr_mean_change": [
+    -0.0174480090954366,
+    8.475245883725295e-05,
+    0.0001130608657176086
+   ]
+  },
+  {
+   "scene": "6V1A9112",
+   "control": "contrast",
+   "value": 50.0,
+   "lr_file": "lumiere\\contrast\\6V1A9112-3.tif",
+   "lr_neutral": "neutre\\6V1A9112.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.04128731412382934,
+   "lr_change_sq": 1430.5253264015737,
+   "error_sq": 59.06254851323527,
+   "lr_change_rms": 0.045225923665491156,
+   "ipr_change_rms": 0.038661820854291734,
+   "lr_mean_change": [
+    -0.04400394704830271,
+    -0.0007580527598478576,
+    -1.3159451283856659e-05
+   ],
+   "ipr_mean_change": [
+    -0.03803115072956546,
+    0.00012282352017641855,
+    0.0002243927464783536
+   ]
+  },
+  {
+   "scene": "6V1A9112",
+   "control": "contrast",
+   "value": 75.0,
+   "lr_file": "lumiere\\contrast\\6V1A9112-4.tif",
+   "lr_neutral": "neutre\\6V1A9112.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.023985865842526922,
+   "lr_change_sq": 3430.426518033276,
+   "error_sq": 82.28175024419292,
+   "lr_change_rms": 0.07003477379859457,
+   "ipr_change_rms": 0.06250337452932053,
+   "lr_mean_change": [
+    -0.06821996781663445,
+    -0.0012251405764364864,
+    1.470464281414081e-05
+   ],
+   "ipr_mean_change": [
+    -0.06136665835054362,
+    6.571745148225753e-05,
+    0.00032120669111417846
+   ]
+  },
+  {
+   "scene": "6V1A9112",
+   "control": "contrast",
+   "value": 100.0,
+   "lr_file": "lumiere\\contrast\\6V1A9112-10.tif",
+   "lr_neutral": "neutre\\6V1A9112.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.012393837321119034,
+   "lr_change_sq": 6550.172640459023,
+   "error_sq": 81.18177413109385,
+   "lr_change_rms": 0.09677563801405913,
+   "ipr_change_rms": 0.08870316371864001,
+   "lr_mean_change": [
+    -0.09442681447025136,
+    -0.001490255597268699,
+    0.000165172953101002
+   ],
+   "ipr_mean_change": [
+    -0.08683004061045567,
+    -9.958964789416528e-05,
+    0.0003928759344417697
+   ]
+  },
+  {
+   "scene": "6V1A9141",
+   "control": "contrast",
+   "value": -100.0,
+   "lr_file": "lumiere\\contrast\\6V1A9141-9.tif",
+   "lr_neutral": "neutre\\6V1A9141.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.2258465193041114,
+   "lr_change_sq": 2088.4242854491195,
+   "error_sq": 471.6633556988596,
+   "lr_change_rms": 0.05464482471934076,
+   "ipr_change_rms": 0.03237820579204345,
+   "lr_mean_change": [
+    0.03065504728005828,
+    0.01186643157142459,
+    0.03531296326927545
+   ],
+   "ipr_mean_change": [
+    0.010264951289624867,
+    0.006456954556286685,
+    0.02298953840942665
+   ]
+  },
+  {
+   "scene": "6V1A9141",
+   "control": "contrast",
+   "value": -75.0,
+   "lr_file": "lumiere\\contrast\\6V1A9141-8.tif",
+   "lr_neutral": "neutre\\6V1A9141.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.24440875538842607,
+   "lr_change_sq": 1309.391308003082,
+   "error_sq": 320.02669990545655,
+   "lr_change_rms": 0.04326875475389598,
+   "ipr_change_rms": 0.024687970316168872,
+   "lr_mean_change": [
+    0.02423087208156971,
+    0.009937365603904834,
+    0.027982279040994696
+   ],
+   "ipr_mean_change": [
+    0.0077575601258739755,
+    0.005053255021592732,
+    0.017621461972405703
+   ]
+  },
+  {
+   "scene": "6V1A9141",
+   "control": "contrast",
+   "value": -50.0,
+   "lr_file": "lumiere\\contrast\\6V1A9141-7.tif",
+   "lr_neutral": "neutre\\6V1A9141.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.26400472009962683,
+   "lr_change_sq": 649.2334475607174,
+   "error_sq": 171.40069460258297,
+   "lr_change_rms": 0.030467731018754992,
+   "ipr_change_rms": 0.01671069718788756,
+   "lr_mean_change": [
+    0.01702066708940139,
+    0.007441441145702166,
+    0.019685116281558983
+   ],
+   "ipr_mean_change": [
+    0.005202113215852276,
+    0.0035134441894552064,
+    0.011985167877795416
+   ]
+  },
+  {
+   "scene": "6V1A9141",
+   "control": "contrast",
+   "value": -25.0,
+   "lr_file": "lumiere\\contrast\\6V1A9141-6.tif",
+   "lr_neutral": "neutre\\6V1A9141.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.28461274127754915,
+   "lr_change_sq": 181.18151314536604,
+   "error_sq": 51.56656712511694,
+   "lr_change_rms": 0.01609520864978972,
+   "ipr_change_rms": 0.008471633449081556,
+   "lr_mean_change": [
+    0.008961755615594076,
+    0.0042046845472526705,
+    0.010368502219033533
+   ],
+   "ipr_mean_change": [
+    0.0026118112427409123,
+    0.0018308545767745997,
+    0.006102419679744768
+   ]
+  },
+  {
+   "scene": "6V1A9141",
+   "control": "contrast",
+   "value": -10.0,
+   "lr_file": "lumiere\\contrast\\6V1A9141-5.tif",
+   "lr_neutral": "neutre\\6V1A9141.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.29746328908588876,
+   "lr_change_sq": 30.97167801009625,
+   "error_sq": 9.212937209392326,
+   "lr_change_rms": 0.006654601255690099,
+   "ipr_change_rms": 0.0034145235224333336,
+   "lr_mean_change": [
+    0.0036957368013891515,
+    0.0018151545070580694,
+    0.00427463695471202
+   ],
+   "ipr_mean_change": [
+    0.0010464530689423396,
+    0.0007504226989403827,
+    0.0024654117241086015
+   ]
+  },
+  {
+   "scene": "6V1A9141",
+   "control": "contrast",
+   "value": 10.0,
+   "lr_file": "lumiere\\contrast\\6V1A9141.tif",
+   "lr_neutral": "neutre\\6V1A9141.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.3133734757509222,
+   "lr_change_sq": 39.365168350700735,
+   "error_sq": 12.335999629579288,
+   "lr_change_rms": 0.007502322453247754,
+   "ipr_change_rms": 0.003718951922804074,
+   "lr_mean_change": [
+    -0.004145315341387761,
+    -0.00217724861178403,
+    -0.004786568011397026
+   ],
+   "ipr_mean_change": [
+    -0.0011302553309838702,
+    -0.0008367919507729935,
+    -0.0026931469734254687
+   ]
+  },
+  {
+   "scene": "6V1A9141",
+   "control": "contrast",
+   "value": 25.0,
+   "lr_file": "lumiere\\contrast\\6V1A9141-2.tif",
+   "lr_neutral": "neutre\\6V1A9141.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.2824250239572172,
+   "lr_change_sq": 250.364975194691,
+   "error_sq": 70.70933411740869,
+   "lr_change_rms": 0.018920231956539572,
+   "ipr_change_rms": 0.010052521425077962,
+   "lr_mean_change": [
+    -0.010396203834287871,
+    -0.005761379540802876,
+    -0.01198863466963759
+   ],
+   "ipr_mean_change": [
+    -0.0030326989420462252,
+    -0.0023093238894328376,
+    -0.007296188414502678
+   ]
+  },
+  {
+   "scene": "6V1A9141",
+   "control": "contrast",
+   "value": 50.0,
+   "lr_file": "lumiere\\contrast\\6V1A9141-3.tif",
+   "lr_neutral": "neutre\\6V1A9141.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.2349897138504601,
+   "lr_change_sq": 1034.0409109141283,
+   "error_sq": 242.98897776538013,
+   "lr_change_rms": 0.03845107893862068,
+   "ipr_change_rms": 0.022807118915443143,
+   "lr_mean_change": [
+    -0.02091106583227657,
+    -0.01267457865939876,
+    -0.02404248692124287
+   ],
+   "ipr_mean_change": [
+    -0.006780848257163698,
+    -0.00546046666268218,
+    -0.016613072742579487
+   ]
+  },
+  {
+   "scene": "6V1A9141",
+   "control": "contrast",
+   "value": 75.0,
+   "lr_file": "lumiere\\contrast\\6V1A9141-4.tif",
+   "lr_neutral": "neutre\\6V1A9141.tif",
+   "kept_share": 0.9999985701866764,
+   "unexplained": 0.18082184116929745,
+   "lr_change_sq": 2299.980176622859,
+   "error_sq": 415.88665018983124,
+   "lr_change_rms": 0.057345854274709826,
+   "ipr_change_rms": 0.03862844766448884,
+   "lr_mean_change": [
+    -0.030886821532554263,
+    -0.019546396701017314,
+    -0.03580699148678929
+   ],
+   "ipr_mean_change": [
+    -0.011286303381809184,
+    -0.009725200144721067,
+    -0.02821634024775974
+   ]
+  },
+  {
+   "scene": "6V1A9141",
+   "control": "contrast",
+   "value": 100.0,
+   "lr_file": "lumiere\\contrast\\6V1A9141-10.tif",
+   "lr_neutral": "neutre\\6V1A9141.tif",
+   "kept_share": 0.99997998261347,
+   "unexplained": 0.09678293740108473,
+   "lr_change_sq": 3407.441644175071,
+   "error_sq": 329.78221134604513,
+   "lr_change_rms": 0.06980045120846969,
+   "ipr_change_rms": 0.05781939907745301,
+   "lr_mean_change": [
+    -0.0369275372523581,
+    -0.01933731782990982,
+    -0.04555568320270498
+   ],
+   "ipr_mean_change": [
+    -0.016552943054156104,
+    -0.015409791143864805,
+    -0.04230370352544876
+   ]
+  },
+  {
+   "scene": "6V1A9153",
+   "control": "contrast",
+   "value": -100.0,
+   "lr_file": "lumiere\\contrast\\6V1A9153-9.tif",
+   "lr_neutral": "neutre\\6V1A9153.tif",
+   "kept_share": 0.9955861662701317,
+   "unexplained": 0.07522428106438903,
+   "lr_change_sq": 1595.4818747851896,
+   "error_sq": 120.01897698197945,
+   "lr_change_rms": 0.047868098997539105,
+   "ipr_change_rms": 0.03616982973902345,
+   "lr_mean_change": [
+    -0.0026641267906165225,
+    -0.005530383622630659,
+    -0.00442712412275505
+   ],
+   "ipr_mean_change": [
+    -0.004653684299399576,
+    -0.004140962711861375,
+    -0.0032917655210411025
+   ]
+  },
+  {
+   "scene": "6V1A9153",
+   "control": "contrast",
+   "value": -75.0,
+   "lr_file": "lumiere\\contrast\\6V1A9153-8.tif",
+   "lr_neutral": "neutre\\6V1A9153.tif",
+   "kept_share": 0.9955861662701317,
+   "unexplained": 0.08253644029958196,
+   "lr_change_sq": 943.4600612455109,
+   "error_sq": 77.86983502003005,
+   "lr_change_rms": 0.03680967671674663,
+   "ipr_change_rms": 0.027361953267035503,
+   "lr_mean_change": [
+    -0.002326804362465981,
+    -0.004226587089098357,
+    -0.0033986370690131684
+   ],
+   "ipr_mean_change": [
+    -0.0036987668827985556,
+    -0.0031150731470762994,
+    -0.002488383930908533
+   ]
+  },
+  {
+   "scene": "6V1A9153",
+   "control": "contrast",
+   "value": -50.0,
+   "lr_file": "lumiere\\contrast\\6V1A9153-7.tif",
+   "lr_neutral": "neutre\\6V1A9153.tif",
+   "kept_share": 0.9955861662701317,
+   "unexplained": 0.09011496057384796,
+   "lr_change_sq": 439.2319672627848,
+   "error_sq": 39.58137141265953,
+   "lr_change_rms": 0.025115811410894497,
+   "ipr_change_rms": 0.018369000403176038,
+   "lr_mean_change": [
+    -0.0017803629538583295,
+    -0.002862213803272186,
+    -0.002311966218186282
+   ],
+   "ipr_mean_change": [
+    -0.0026051717145308684,
+    -0.00207780460591379,
+    -0.0016684211639229059
+   ]
+  },
+  {
+   "scene": "6V1A9153",
+   "control": "contrast",
+   "value": -25.0,
+   "lr_file": "lumiere\\contrast\\6V1A9153-6.tif",
+   "lr_neutral": "neutre\\6V1A9153.tif",
+   "kept_share": 0.9955861662701317,
+   "unexplained": 0.09785369800798807,
+   "lr_change_sq": 114.57401603627918,
+   "error_sq": 11.211491164776445,
+   "lr_change_rms": 0.012827538039960014,
+   "ipr_change_rms": 0.009233717898978288,
+   "lr_mean_change": [
+    -0.001008702362144566,
+    -0.0014493238842502962,
+    -0.0011756924149497528
+   ],
+   "ipr_mean_change": [
+    -0.0013717421040898552,
+    -0.0010370128577406957,
+    -0.0008371792225209866
+   ]
+  },
+  {
+   "scene": "6V1A9153",
+   "control": "contrast",
+   "value": -10.0,
+   "lr_file": "lumiere\\contrast\\6V1A9153-5.tif",
+   "lr_neutral": "neutre\\6V1A9153.tif",
+   "kept_share": 0.9955861662701317,
+   "unexplained": 0.10250577920675272,
+   "lr_change_sq": 18.765855139922643,
+   "error_sq": 1.923608603598816,
+   "lr_change_rms": 0.005191399164601173,
+   "ipr_change_rms": 0.0037024566885532255,
+   "lr_mean_change": [
+    -0.0004328784877911327,
+    -0.0005835307862801514,
+    -0.00047433541981288003
+   ],
+   "ipr_mean_change": [
+    -0.0005650754542026134,
+    -0.0004139074893686846,
+    -0.00033523786749694884
+   ]
+  },
+  {
+   "scene": "6V1A9153",
+   "control": "contrast",
+   "value": 10.0,
+   "lr_file": "lumiere\\contrast\\6V1A9153.tif",
+   "lr_neutral": "neutre\\6V1A9153.tif",
+   "kept_share": 0.9951414943265008,
+   "unexplained": 0.11127362944690579,
+   "lr_change_sq": 22.96325698971033,
+   "error_sq": 2.5552049491670967,
+   "lr_change_rms": 0.005743994233676336,
+   "ipr_change_rms": 0.004003484315083786,
+   "lr_mean_change": [
+    0.0004836160477889148,
+    0.0006399663437520238,
+    0.0005217353869728416
+   ],
+   "ipr_mean_change": [
+    0.0006325384599424071,
+    0.00044439004164883707,
+    0.0003616699139301419
+   ]
+  },
+  {
+   "scene": "6V1A9153",
+   "control": "contrast",
+   "value": 25.0,
+   "lr_file": "lumiere\\contrast\\6V1A9153-2.tif",
+   "lr_neutral": "neutre\\6V1A9153.tif",
+   "kept_share": 0.9944151491581259,
+   "unexplained": 0.08330757373395868,
+   "lr_change_sq": 144.1322934986444,
+   "error_sq": 12.007311668082892,
+   "lr_change_rms": 0.014395821486875043,
+   "ipr_change_rms": 0.010753340073059644,
+   "lr_mean_change": [
+    0.0011694769553408076,
+    0.0015898865340652556,
+    0.0012999764653560996
+   ],
+   "ipr_mean_change": [
+    0.0017478242317309606,
+    0.0011852914270962314,
+    0.0009691071067871165
+   ]
+  },
+  {
+   "scene": "6V1A9153",
+   "control": "contrast",
+   "value": 50.0,
+   "lr_file": "lumiere\\contrast\\6V1A9153-3.tif",
+   "lr_neutral": "neutre\\6V1A9153.tif",
+   "kept_share": 0.9932898860724744,
+   "unexplained": 0.04710575468455547,
+   "lr_change_sq": 581.2319782795887,
+   "error_sq": 27.37937098365718,
+   "lr_change_rms": 0.02892520285037168,
+   "ipr_change_rms": 0.024087712876422758,
+   "lr_mean_change": [
+    0.002205574468553889,
+    0.0031394101538620286,
+    0.0025879431834159527
+   ],
+   "ipr_mean_change": [
+    0.0041445959573884646,
+    0.0026095262856577206,
+    0.0021628269320609268
+   ]
+  },
+  {
+   "scene": "6V1A9153",
+   "control": "contrast",
+   "value": 75.0,
+   "lr_file": "lumiere\\contrast\\6V1A9153-4.tif",
+   "lr_neutral": "neutre\\6V1A9153.tif",
+   "kept_share": 0.9920759745607614,
+   "unexplained": 0.026267340592794283,
+   "lr_change_sq": 1319.4628105807537,
+   "error_sq": 34.65877904505027,
+   "lr_change_rms": 0.04360796100811935,
+   "ipr_change_rms": 0.040175737134167555,
+   "lr_mean_change": [
+    0.0031116210576307623,
+    0.004625534243807364,
+    0.0038699262009410573
+   ],
+   "ipr_mean_change": [
+    0.00738597410630384,
+    0.004242845818607545,
+    0.003590447893246402
+   ]
+  },
+  {
+   "scene": "6V1A9153",
+   "control": "contrast",
+   "value": 100.0,
+   "lr_file": "lumiere\\contrast\\6V1A9153-10.tif",
+   "lr_neutral": "neutre\\6V1A9153.tif",
+   "kept_share": 0.9901986296669106,
+   "unexplained": 0.0237143080781522,
+   "lr_change_sq": 2371.4298448421637,
+   "error_sq": 56.236817926311744,
+   "lr_change_rms": 0.05851721517881749,
+   "ipr_change_rms": 0.059156603418935035,
+   "lr_mean_change": [
+    0.00381977500129047,
+    0.006063871521178483,
+    0.005142977012795907
+   ],
+   "ipr_mean_change": [
+    0.01162798733047761,
+    0.0060673601077873,
+    0.005242148632200086
+   ]
+  },
+  {
+   "scene": "6V1A9539",
+   "control": "contrast",
+   "value": -100.0,
+   "lr_file": "lumiere\\contrast\\6V1A9539-9.tif",
+   "lr_neutral": "neutre\\6V1A9539.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.12112024822464733,
+   "lr_change_sq": 4492.45705358102,
+   "error_sq": 544.1275134683009,
+   "lr_change_rms": 0.08014596028988163,
+   "ipr_change_rms": 0.06343175923327006,
+   "lr_mean_change": [
+    0.0778502662713834,
+    0.000670582798258706,
+    0.003041764942251777
+   ],
+   "ipr_mean_change": [
+    0.06230363904978943,
+    -0.0017260878092944193,
+    -0.0022636716736419934
+   ]
+  },
+  {
+   "scene": "6V1A9539",
+   "control": "contrast",
+   "value": -75.0,
+   "lr_file": "lumiere\\contrast\\6V1A9539-8.tif",
+   "lr_neutral": "neutre\\6V1A9539.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.12095120914316836,
+   "lr_change_sq": 2503.889019491919,
+   "error_sq": 302.84840446784983,
+   "lr_change_rms": 0.05983388572386358,
+   "ipr_change_rms": 0.047299095108921725,
+   "lr_mean_change": [
+    0.05797534473355632,
+    0.0005750476702975796,
+    0.0025851540566073027
+   ],
+   "ipr_mean_change": [
+    0.04649424188344381,
+    -0.0012899306432773046,
+    -0.0014713894832587653
+   ]
+  },
+  {
+   "scene": "6V1A9539",
+   "control": "contrast",
+   "value": -50.0,
+   "lr_file": "lumiere\\contrast\\6V1A9539-7.tif",
+   "lr_neutral": "neutre\\6V1A9539.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.1203552935722111,
+   "lr_change_sq": 1097.9140787010997,
+   "error_sq": 132.13977125913453,
+   "lr_change_rms": 0.03962085533989178,
+   "ipr_change_rms": 0.031299803336001054,
+   "lr_mean_change": [
+    0.038293223489846415,
+    0.00042903007737674363,
+    0.0019074271093252753
+   ],
+   "ipr_mean_change": [
+    0.030782751087188184,
+    -0.0008539268849293265,
+    -0.0008258317044552653
+   ]
+  },
+  {
+   "scene": "6V1A9539",
+   "control": "contrast",
+   "value": -25.0,
+   "lr_file": "lumiere\\contrast\\6V1A9539-6.tif",
+   "lr_neutral": "neutre\\6V1A9539.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.11938493878777837,
+   "lr_change_sq": 269.6354371439627,
+   "error_sq": 32.19041015844785,
+   "lr_change_rms": 0.019634875618035532,
+   "ipr_change_rms": 0.01551006654093997,
+   "lr_mean_change": [
+    0.018928480115425222,
+    0.00023586343243391962,
+    0.0010357329385000432
+   ],
+   "ipr_mean_change": [
+    0.015257316635116371,
+    -0.00042250885291129827,
+    -0.0003340696150177772
+   ]
+  },
+  {
+   "scene": "6V1A9539",
+   "control": "contrast",
+   "value": -10.0,
+   "lr_file": "lumiere\\contrast\\6V1A9539-5.tif",
+   "lr_neutral": "neutre\\6V1A9539.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.11867571137183179,
+   "lr_change_sq": 42.58814605426201,
+   "error_sq": 5.054178528997015,
+   "lr_change_rms": 0.007803403017570881,
+   "ipr_change_rms": 0.006166251995275303,
+   "lr_mean_change": [
+    0.007510836875784923,
+    9.918089435294039e-05,
+    0.0004322135690152515
+   ],
+   "ipr_mean_change": [
+    0.0060657780811902914,
+    -0.00016770661247014952,
+    -0.0001144744890116498
+   ]
+  },
+  {
+   "scene": "6V1A9539",
+   "control": "contrast",
+   "value": 10.0,
+   "lr_file": "lumiere\\contrast\\6V1A9539.tif",
+   "lr_neutral": "neutre\\6V1A9539.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.1238390275597796,
+   "lr_change_sq": 52.35102833613427,
+   "error_sq": 6.483100440901334,
+   "lr_change_rms": 0.008651716466558814,
+   "ipr_change_rms": 0.006589768587951124,
+   "lr_mean_change": [
+    -0.008324199756549688,
+    -0.0001133175696320801,
+    -0.0004876136876461241
+   ],
+   "ipr_mean_change": [
+    -0.006481228651807695,
+    0.00017897016876497582,
+    9.397417876305055e-05
+   ]
+  },
+  {
+   "scene": "6V1A9539",
+   "control": "contrast",
+   "value": 25.0,
+   "lr_file": "lumiere\\contrast\\6V1A9539-2.tif",
+   "lr_neutral": "neutre\\6V1A9539.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.10663068344051677,
+   "lr_change_sq": 343.2590015787035,
+   "error_sq": 36.601941935446575,
+   "lr_change_rms": 0.022153922765357274,
+   "ipr_change_rms": 0.017521235685545724,
+   "lr_mean_change": [
+    -0.02132684724670051,
+    -0.00028785772263311175,
+    -0.0012323644237214595
+   ],
+   "ipr_mean_change": [
+    -0.017226739290346876,
+    0.00047588713879266105,
+    0.00018028287111767198
+   ]
+  },
+  {
+   "scene": "6V1A9539",
+   "control": "contrast",
+   "value": 50.0,
+   "lr_file": "lumiere\\contrast\\6V1A9539-3.tif",
+   "lr_neutral": "neutre\\6V1A9539.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.08175001589252427,
+   "lr_change_sq": 1501.576922053992,
+   "error_sq": 122.75393724176152,
+   "lr_change_rms": 0.04633545823148558,
+   "ipr_change_rms": 0.03849012821503259,
+   "lr_mean_change": [
+    -0.044660564215921655,
+    -0.0005873767032646511,
+    -0.002518269531758903
+   ],
+   "ipr_mean_change": [
+    -0.03780290811550955,
+    0.00103909858134686,
+    9.425931318207167e-05
+   ]
+  },
+  {
+   "scene": "6V1A9539",
+   "control": "contrast",
+   "value": 75.0,
+   "lr_file": "lumiere\\contrast\\6V1A9539-4.tif",
+   "lr_neutral": "neutre\\6V1A9539.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.06102936247446036,
+   "lr_change_sq": 3752.5718509263997,
+   "error_sq": 229.01706770164387,
+   "lr_change_rms": 0.07324941795070858,
+   "ipr_change_rms": 0.06270593684962614,
+   "lr_mean_change": [
+    -0.07072443065794645,
+    -0.00090703153223519,
+    -0.003843275494725524
+   ],
+   "ipr_mean_change": [
+    -0.061474518252694926,
+    0.0016109752122304972,
+    -0.0003950797988710278
+   ]
+  },
+  {
+   "scene": "6V1A9539",
+   "control": "contrast",
+   "value": 100.0,
+   "lr_file": "lumiere\\contrast\\6V1A9539-10.tif",
+   "lr_neutral": "neutre\\6V1A9539.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.04528448491535443,
+   "lr_change_sq": 7587.603330429186,
+   "error_sq": 343.6007085605135,
+   "lr_change_rms": 0.1041578433716373,
+   "ipr_change_rms": 0.08976811425286149,
+   "lr_mean_change": [
+    -0.10084331486784694,
+    -0.00129732673032356,
+    -0.0051268389151743555
+   ],
+   "ipr_mean_change": [
+    -0.08774232013077474,
+    0.0020427309947350565,
+    -0.0014247796750742289
+   ]
+  },
+  {
+   "scene": "6V1A9940",
+   "control": "contrast",
+   "value": -100.0,
+   "lr_file": "lumiere\\contrast\\6V1A9940-9.tif",
+   "lr_neutral": "neutre\\6V1A9940.tif",
+   "kept_share": 0.8904319752013177,
+   "unexplained": 0.37291202699217074,
+   "lr_change_sq": 1737.9580049597425,
+   "error_sq": 648.1054424568067,
+   "lr_change_rms": 0.05282736336629718,
+   "ipr_change_rms": 0.0500506293573447,
+   "lr_mean_change": [
+    0.010868677845496175,
+    0.0007186020165606111,
+    0.0025921933079537276
+   ],
+   "ipr_mean_change": [
+    -0.014524168874513922,
+    0.001388363904696868,
+    0.0005840863591291721
+   ]
+  },
+  {
+   "scene": "6V1A9940",
+   "control": "contrast",
+   "value": -75.0,
+   "lr_file": "lumiere\\contrast\\6V1A9940-8.tif",
+   "lr_neutral": "neutre\\6V1A9940.tif",
+   "kept_share": 0.8904319752013177,
+   "unexplained": 0.3790158078746149,
+   "lr_change_sq": 990.5619864681962,
+   "error_sq": 375.4386515511268,
+   "lr_change_rms": 0.03988229349271795,
+   "ipr_change_rms": 0.037189902276821604,
+   "lr_mean_change": [
+    0.008286477638825873,
+    0.0005229460746615175,
+    0.001805802829120979
+   ],
+   "ipr_mean_change": [
+    -0.01063063894935374,
+    0.0010123716132828793,
+    0.00017859680612621816
+   ]
+  },
+  {
+   "scene": "6V1A9940",
+   "control": "contrast",
+   "value": -50.0,
+   "lr_file": "lumiere\\contrast\\6V1A9940-7.tif",
+   "lr_neutral": "neutre\\6V1A9940.tif",
+   "kept_share": 0.8904319752013177,
+   "unexplained": 0.3859202180791039,
+   "lr_change_sq": 444.91520198437604,
+   "error_sq": 171.70177177651897,
+   "lr_change_rms": 0.026728705066776017,
+   "ipr_change_rms": 0.024511729186453023,
+   "lr_mean_change": [
+    0.005618477527689177,
+    0.00034346278907971265,
+    0.001113403375126544
+   ],
+   "ipr_mean_change": [
+    -0.006885258001057904,
+    0.0006523903816070837,
+    -4.8895398770007526e-05
+   ]
+  },
+  {
+   "scene": "6V1A9940",
+   "control": "contrast",
+   "value": -25.0,
+   "lr_file": "lumiere\\contrast\\6V1A9940-6.tif",
+   "lr_neutral": "neutre\\6V1A9940.tif",
+   "kept_share": 0.8904319752013177,
+   "unexplained": 0.39366982247491855,
+   "lr_change_sq": 112.11618926497636,
+   "error_sq": 44.13676032450761,
+   "lr_change_rms": 0.013417557353119523,
+   "ipr_change_rms": 0.01209286256330388,
+   "lr_mean_change": [
+    0.0028579494308268462,
+    0.00017217105585110482,
+    0.0005131135255939427
+   ],
+   "ipr_mean_change": [
+    -0.003329889978179203,
+    0.00031349516595561964,
+    -0.00010440914639763338
+   ]
+  },
+  {
+   "scene": "6V1A9940",
+   "control": "contrast",
+   "value": -10.0,
+   "lr_file": "lumiere\\contrast\\6V1A9940-5.tif",
+   "lr_neutral": "neutre\\6V1A9940.tif",
+   "kept_share": 0.8904319752013177,
+   "unexplained": 0.39879779402986326,
+   "lr_change_sq": 18.000190061087757,
+   "error_sq": 7.178436088480067,
+   "lr_change_rms": 0.005376230021798163,
+   "ipr_change_rms": 0.004794200216238952,
+   "lr_mean_change": [
+    0.0011544518701881931,
+    6.982670773947208e-05,
+    0.00019523663595692964
+   ],
+   "ipr_mean_change": [
+    -0.0013029392807602088,
+    0.00012210939678854562,
+    -5.995744135690439e-05
+   ]
+  },
+  {
+   "scene": "6V1A9940",
+   "control": "contrast",
+   "value": 10.0,
+   "lr_file": "lumiere\\contrast\\6V1A9940.tif",
+   "lr_neutral": "neutre\\6V1A9940.tif",
+   "kept_share": 0.8857393278733529,
+   "unexplained": 0.39839439035967167,
+   "lr_change_sq": 22.135643809571093,
+   "error_sq": 8.818716320732916,
+   "lr_change_rms": 0.005977681681236237,
+   "ipr_change_rms": 0.005110227537490485,
+   "lr_mean_change": [
+    -0.0013488255061402123,
+    -8.429673813799226e-05,
+    -0.00021472504485730502
+   ],
+   "ipr_mean_change": [
+    0.0013499013743578498,
+    -0.0001276292504411659,
+    8.565727379446455e-05
+   ]
+  },
+  {
+   "scene": "6V1A9940",
+   "control": "contrast",
+   "value": 25.0,
+   "lr_file": "lumiere\\contrast\\6V1A9940-2.tif",
+   "lr_neutral": "neutre\\6V1A9940.tif",
+   "kept_share": 0.875354593704246,
+   "unexplained": 0.4074808406860202,
+   "lr_change_sq": 142.8352484349183,
+   "error_sq": 58.202627111857055,
+   "lr_change_rms": 0.01527444220287253,
+   "ipr_change_rms": 0.013584221226935776,
+   "lr_mean_change": [
+    -0.003699453292797143,
+    -0.0002390236003047916,
+    -0.0005754332365336015
+   ],
+   "ipr_mean_change": [
+    0.0034524836772843208,
+    -0.00033669783923302276,
+    0.0002607415391540997
+   ]
+  },
+  {
+   "scene": "6V1A9940",
+   "control": "contrast",
+   "value": 50.0,
+   "lr_file": "lumiere\\contrast\\6V1A9940-3.tif",
+   "lr_neutral": "neutre\\6V1A9940.tif",
+   "kept_share": 0.8457460193997072,
+   "unexplained": 0.42614087033032927,
+   "lr_change_sq": 605.6524889937771,
+   "error_sq": 258.09327877753833,
+   "lr_change_rms": 0.031998634208307036,
+   "ipr_change_rms": 0.02992628146907123,
+   "lr_mean_change": [
+    -0.008990212099645624,
+    -0.0006154986096702078,
+    -0.0013571393142749908
+   ],
+   "ipr_mean_change": [
+    0.006840867882002125,
+    -0.000746848746953509,
+    0.0006658428918986006
+   ]
+  },
+  {
+   "scene": "6V1A9940",
+   "control": "contrast",
+   "value": 75.0,
+   "lr_file": "lumiere\\contrast\\6V1A9940-4.tif",
+   "lr_neutral": "neutre\\6V1A9940.tif",
+   "kept_share": 0.7683359260614934,
+   "unexplained": 0.4496422777936764,
+   "lr_change_sq": 1430.8603430488047,
+   "error_sq": 643.3753038531057,
+   "lr_change_rms": 0.051601547156273526,
+   "ipr_change_rms": 0.04946583677778461,
+   "lr_mean_change": [
+    -0.01910758964357882,
+    -0.001313996995108732,
+    -0.0028853555240639086
+   ],
+   "ipr_mean_change": [
+    0.00806778597802274,
+    -0.0014128826524379503,
+    0.0008079216335063496
+   ]
+  },
+  {
+   "scene": "6V1A9940",
+   "control": "contrast",
+   "value": 100.0,
+   "lr_file": "lumiere\\contrast\\6V1A9940-10.tif",
+   "lr_neutral": "neutre\\6V1A9940.tif",
+   "kept_share": 0.6440880078696926,
+   "unexplained": 0.46790645838596556,
+   "lr_change_sq": 2642.896884581467,
+   "error_sq": 1236.6285211438162,
+   "lr_change_rms": 0.07659619087782775,
+   "ipr_change_rms": 0.07187677766639756,
+   "lr_mean_change": [
+    -0.041604360905637607,
+    -0.0025071598984192315,
+    -0.006070949272258024
+   ],
+   "ipr_mean_change": [
+    0.001243213885421792,
+    -0.0025751340647772215,
+    -0.0005364485918762141
+   ]
+  },
+  {
+   "scene": "6V1A9947",
+   "control": "contrast",
+   "value": -100.0,
+   "lr_file": "lumiere\\contrast\\6V1A9947-9.tif",
+   "lr_neutral": "neutre\\6V1A9947.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.04654736642919391,
+   "lr_change_sq": 2728.645870977015,
+   "error_sq": 127.01127921187408,
+   "lr_change_rms": 0.06246162199009849,
+   "ipr_change_rms": 0.05611340525113207,
+   "lr_mean_change": [
+    0.018338650318446427,
+    0.0010178233600763671,
+    0.002632744750947289
+   ],
+   "ipr_mean_change": [
+    0.015420913269814714,
+    0.0016375136606949952,
+    0.0027890491573977273
+   ]
+  },
+  {
+   "scene": "6V1A9947",
+   "control": "contrast",
+   "value": -75.0,
+   "lr_file": "lumiere\\contrast\\6V1A9947-8.tif",
+   "lr_neutral": "neutre\\6V1A9947.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.05114243512969758,
+   "lr_change_sq": 1526.8281314043509,
+   "error_sq": 78.08570866454438,
+   "lr_change_rms": 0.04672343314748185,
+   "ipr_change_rms": 0.04157701529593508,
+   "lr_mean_change": [
+    0.013154043917875717,
+    0.0006989076972264165,
+    0.0017866867694963436
+   ],
+   "ipr_mean_change": [
+    0.011017992853184763,
+    0.0012406600040160507,
+    0.0019665798691824144
+   ]
+  },
+  {
+   "scene": "6V1A9947",
+   "control": "contrast",
+   "value": -50.0,
+   "lr_file": "lumiere\\contrast\\6V1A9947-7.tif",
+   "lr_neutral": "neutre\\6V1A9947.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.056166796310667406,
+   "lr_change_sq": 673.5891284935908,
+   "error_sq": 37.83334337717949,
+   "lr_change_rms": 0.031033960600182948,
+   "ipr_change_rms": 0.027332851402069962,
+   "lr_mean_change": [
+    0.00837710781147766,
+    0.000418205929560514,
+    0.0010575801412647098
+   ],
+   "ipr_mean_change": [
+    0.006972719160189373,
+    0.000832582712635386,
+    0.0012184705078156191
+   ]
+  },
+  {
+   "scene": "6V1A9947",
+   "control": "contrast",
+   "value": -25.0,
+   "lr_file": "lumiere\\contrast\\6V1A9947-6.tif",
+   "lr_neutral": "neutre\\6V1A9947.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.061685872545892674,
+   "lr_change_sq": 166.77846586319862,
+   "error_sq": 10.287875188636782,
+   "lr_change_rms": 0.015442217216973036,
+   "ipr_change_rms": 0.01345312240415875,
+   "lr_mean_change": [
+    0.003997338668132078,
+    0.0001853443955411399,
+    0.00045838414627801124
+   ],
+   "ipr_mean_change": [
+    0.003298930743315492,
+    0.00041750144875073056,
+    0.0005589487126125462
+   ]
+  },
+  {
+   "scene": "6V1A9947",
+   "control": "contrast",
+   "value": -10.0,
+   "lr_file": "lumiere\\contrast\\6V1A9947-5.tif",
+   "lr_neutral": "neutre\\6V1A9947.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.06530047210345832,
+   "lr_change_sq": 26.491362610859547,
+   "error_sq": 1.7298984851530326,
+   "lr_change_rms": 0.006154486430287801,
+   "ipr_change_rms": 0.005326511059670646,
+   "lr_mean_change": [
+    0.001552866400549327,
+    6.900978562072836e-05,
+    0.00016588508680480453
+   ],
+   "ipr_mean_change": [
+    0.0012747903380375056,
+    0.00016698616378105736,
+    0.00021086103512135844
+   ]
+  },
+  {
+   "scene": "6V1A9947",
+   "control": "contrast",
+   "value": 10.0,
+   "lr_file": "lumiere\\contrast\\6V1A9947.tif",
+   "lr_neutral": "neutre\\6V1A9947.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.07044966177199333,
+   "lr_change_sq": 32.110120746939685,
+   "error_sq": 2.2621471460797666,
+   "lr_change_rms": 0.006775800946419198,
+   "ipr_change_rms": 0.005659621348665981,
+   "lr_mean_change": [
+    -0.001720703337082262,
+    -7.461263811975224e-05,
+    -0.00016903019562750717
+   ],
+   "ipr_mean_change": [
+    -0.0013089095548051944,
+    -0.0001796929333498805,
+    -0.00020772271222754875
+   ]
+  },
+  {
+   "scene": "6V1A9947",
+   "control": "contrast",
+   "value": 25.0,
+   "lr_file": "lumiere\\contrast\\6V1A9947-2.tif",
+   "lr_neutral": "neutre\\6V1A9947.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.05549859079227165,
+   "lr_change_sq": 204.30155261840218,
+   "error_sq": 11.338448266994458,
+   "lr_change_rms": 0.01709131598093998,
+   "ipr_change_rms": 0.014971867055252157,
+   "lr_mean_change": [
+    -0.004466025721520593,
+    -0.00019605936070644516,
+    -0.00042246627476257595
+   ],
+   "ipr_mean_change": [
+    -0.00335920991488983,
+    -0.0004799784253846551,
+    -0.0005096275715687734
+   ]
+  },
+  {
+   "scene": "6V1A9947",
+   "control": "contrast",
+   "value": 50.0,
+   "lr_file": "lumiere\\contrast\\6V1A9947-3.tif",
+   "lr_neutral": "neutre\\6V1A9947.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.03817646869799989,
+   "lr_change_sq": 846.2104475055244,
+   "error_sq": 32.30532666111513,
+   "lr_change_rms": 0.034783947050178544,
+   "ipr_change_rms": 0.03256248365700563,
+   "lr_mean_change": [
+    -0.009561034154050973,
+    -0.0004266009312722578,
+    -0.0008439832802219168
+   ],
+   "ipr_mean_change": [
+    -0.006877402931472471,
+    -0.0010598772351986053,
+    -0.0009256732431109436
+   ]
+  },
+  {
+   "scene": "6V1A9947",
+   "control": "contrast",
+   "value": 75.0,
+   "lr_file": "lumiere\\contrast\\6V1A9947-4.tif",
+   "lr_neutral": "neutre\\6V1A9947.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.02941384518846695,
+   "lr_change_sq": 1986.693192934515,
+   "error_sq": 58.43628601395693,
+   "lr_change_rms": 0.053297283205699236,
+   "ipr_change_rms": 0.05244843845212724,
+   "lr_mean_change": [
+    -0.015469110166550662,
+    -0.0006954248394071021,
+    -0.0012645440203764183
+   ],
+   "ipr_mean_change": [
+    -0.010295186955992255,
+    -0.0017261328285638872,
+    -0.0011080264116899781
+   ]
+  },
+  {
+   "scene": "6V1A9947",
+   "control": "contrast",
+   "value": 100.0,
+   "lr_file": "lumiere\\contrast\\6V1A9947-10.tif",
+   "lr_neutral": "neutre\\6V1A9947.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.028507378018636412,
+   "lr_change_sq": 3726.0957270428435,
+   "error_sq": 106.22121942443621,
+   "lr_change_rms": 0.07299055634417594,
+   "ipr_change_rms": 0.07414704635985768,
+   "lr_mean_change": [
+    -0.02250478452114871,
+    -0.0009864617591993708,
+    -0.001674239749727687
+   ],
+   "ipr_mean_change": [
+    -0.013367370143031099,
+    -0.0024458078669546074,
+    -0.0008871978064523176
+   ]
+  },
+  {
+   "scene": "7Y6A7599",
+   "control": "contrast",
+   "value": -100.0,
+   "lr_file": "lumiere\\contrast\\7Y6A7599-9.tif",
+   "lr_neutral": "neutre\\7Y6A7599.tif",
+   "kept_share": 0.9941163181734992,
+   "unexplained": 0.06832382657576808,
+   "lr_change_sq": 2405.6699366750404,
+   "error_sq": 164.36457555192442,
+   "lr_change_rms": 0.05882190547877232,
+   "ipr_change_rms": 0.05120796459072289,
+   "lr_mean_change": [
+    -0.01805496582279646,
+    -0.0012922227078803728,
+    -0.015603122424674348
+   ],
+   "ipr_mean_change": [
+    -0.020629876736280865,
+    -0.0002085868431300874,
+    -0.01169395085544444
+   ]
+  },
+  {
+   "scene": "7Y6A7599",
+   "control": "contrast",
+   "value": -75.0,
+   "lr_file": "lumiere\\contrast\\7Y6A7599-8.tif",
+   "lr_neutral": "neutre\\7Y6A7599.tif",
+   "kept_share": 0.9941163181734992,
+   "unexplained": 0.072054744813566,
+   "lr_change_sq": 1352.9355044107506,
+   "error_sq": 97.48542251952983,
+   "lr_change_rms": 0.04411229117461269,
+   "ipr_change_rms": 0.038024747623886114,
+   "lr_mean_change": [
+    -0.013817472190153196,
+    -0.001013268496663755,
+    -0.011272105037353606
+   ],
+   "ipr_mean_change": [
+    -0.015549940427648345,
+    -0.00014049892573355892,
+    -0.008339950541738248
+   ]
+  },
+  {
+   "scene": "7Y6A7599",
+   "control": "contrast",
+   "value": -50.0,
+   "lr_file": "lumiere\\contrast\\7Y6A7599-7.tif",
+   "lr_neutral": "neutre\\7Y6A7599.tif",
+   "kept_share": 0.9941163181734992,
+   "unexplained": 0.07557695703014997,
+   "lr_change_sq": 594.5794827846615,
+   "error_sq": 44.936508021425155,
+   "lr_change_rms": 0.029243276320335427,
+   "ipr_change_rms": 0.025010331948136167,
+   "lr_mean_change": [
+    -0.009372704613771874,
+    -0.0007723624881129101,
+    -0.007032915984287009
+   ],
+   "ipr_mean_change": [
+    -0.010389925993045487,
+    -0.0001174551170910582,
+    -0.005162519252890257
+   ]
+  },
+  {
+   "scene": "7Y6A7599",
+   "control": "contrast",
+   "value": -25.0,
+   "lr_file": "lumiere\\contrast\\7Y6A7599-6.tif",
+   "lr_neutral": "neutre\\7Y6A7599.tif",
+   "kept_share": 0.9941163181734992,
+   "unexplained": 0.07527772548291263,
+   "lr_change_sq": 144.78267894853062,
+   "error_sq": 10.89891076056816,
+   "lr_change_rms": 0.014430433327677634,
+   "ipr_change_rms": 0.012321864764275048,
+   "lr_mean_change": [
+    -0.004766271684532895,
+    -0.0005109209692910196,
+    -0.0030752930670656466
+   ],
+   "ipr_mean_change": [
+    -0.005183307291349788,
+    -5.66426509406801e-05,
+    -0.0024049052584744
+   ]
+  },
+  {
+   "scene": "7Y6A7599",
+   "control": "contrast",
+   "value": -10.0,
+   "lr_file": "lumiere\\contrast\\7Y6A7599-5.tif",
+   "lr_neutral": "neutre\\7Y6A7599.tif",
+   "kept_share": 0.9941163181734992,
+   "unexplained": 0.07619237084979798,
+   "lr_change_sq": 22.843404355548152,
+   "error_sq": 1.740493136129815,
+   "lr_change_rms": 0.0057319379736869795,
+   "ipr_change_rms": 0.0048817821630581,
+   "lr_mean_change": [
+    -0.0019187409293961175,
+    -0.00022365494719871987,
+    -0.0011476789779750584
+   ],
+   "ipr_mean_change": [
+    -0.002066310390110849,
+    -1.8833861438198803e-05,
+    -0.0009248682869830532
+   ]
+  },
+  {
+   "scene": "7Y6A7599",
+   "control": "contrast",
+   "value": 10.0,
+   "lr_file": "lumiere\\contrast\\7Y6A7599.tif",
+   "lr_neutral": "neutre\\7Y6A7599.tif",
+   "kept_share": 0.9910665263543191,
+   "unexplained": 0.08127046603529012,
+   "lr_change_sq": 26.993283319667285,
+   "error_sq": 2.1937567152119835,
+   "lr_change_rms": 0.006240453082650231,
+   "ipr_change_rms": 0.0051906282184431725,
+   "lr_mean_change": [
+    0.0020902138886032626,
+    0.0002708244772278093,
+    0.0011628852764245517
+   ],
+   "ipr_mean_change": [
+    0.0022097841125088683,
+    1.2797683271900091e-05,
+    0.0009496615176859706
+   ]
+  },
+  {
+   "scene": "7Y6A7599",
+   "control": "contrast",
+   "value": 25.0,
+   "lr_file": "lumiere\\contrast\\7Y6A7599-2.tif",
+   "lr_neutral": "neutre\\7Y6A7599.tif",
+   "kept_share": 0.9857719276171303,
+   "unexplained": 0.06921744531026466,
+   "lr_change_sq": 166.49349284351473,
+   "error_sq": 11.524254235410922,
+   "lr_change_rms": 0.015539966522369157,
+   "ipr_change_rms": 0.013741724005394881,
+   "lr_mean_change": [
+    0.005144658001809277,
+    0.0007197766765946992,
+    0.002755138786626521
+   ],
+   "ipr_mean_change": [
+    0.005849557079620236,
+    2.5395869276551636e-05,
+    0.0024401991614974804
+   ]
+  },
+  {
+   "scene": "7Y6A7599",
+   "control": "contrast",
+   "value": 50.0,
+   "lr_file": "lumiere\\contrast\\7Y6A7599-3.tif",
+   "lr_neutral": "neutre\\7Y6A7599.tif",
+   "kept_share": 0.9712793397693997,
+   "unexplained": 0.06247552572505023,
+   "lr_change_sq": 646.4199295030612,
+   "error_sq": 40.38542493485366,
+   "lr_change_rms": 0.030847854454887986,
+   "ipr_change_rms": 0.02988474820850916,
+   "lr_mean_change": [
+    0.009847143790348695,
+    0.0014776630701883577,
+    0.005020706265512877
+   ],
+   "ipr_mean_change": [
+    0.012605067662434702,
+    3.6735192703387054e-05,
+    0.0049578964198891485
+   ]
+  },
+  {
+   "scene": "7Y6A7599",
+   "control": "contrast",
+   "value": 75.0,
+   "lr_file": "lumiere\\contrast\\7Y6A7599-4.tif",
+   "lr_neutral": "neutre\\7Y6A7599.tif",
+   "kept_share": 0.946201843887262,
+   "unexplained": 0.07169139170545034,
+   "lr_change_sq": 1393.4187679754552,
+   "error_sq": 99.8961307046544,
+   "lr_change_rms": 0.04588688772501405,
+   "ipr_change_rms": 0.0480216307297861,
+   "lr_mean_change": [
+    0.013713390317151915,
+    0.0020870454548749737,
+    0.006750556129011443
+   ],
+   "ipr_mean_change": [
+    0.019728096069453804,
+    6.56119778177599e-05,
+    0.00716447317383086
+   ]
+  },
+  {
+   "scene": "7Y6A7599",
+   "control": "contrast",
+   "value": 100.0,
+   "lr_file": "lumiere\\contrast\\7Y6A7599-10.tif",
+   "lr_neutral": "neutre\\7Y6A7599.tif",
+   "kept_share": 0.8630095854685212,
+   "unexplained": 0.09938040581766343,
+   "lr_change_sq": 2238.557555675768,
+   "error_sq": 222.4687583292545,
+   "lr_change_rms": 0.06089981770346779,
+   "ipr_change_rms": 0.0679038180973627,
+   "lr_mean_change": [
+    0.014164223899107455,
+    0.002644380051100427,
+    0.008481483515837673
+   ],
+   "ipr_mean_change": [
+    0.02463231709186203,
+    0.0005245471418798261,
+    0.009217420523053082
+   ]
+  },
+  {
+   "scene": "IMG_3135",
+   "control": "contrast",
+   "value": -100.0,
+   "lr_file": "lumiere\\contrast\\IMG_3135-9.tif",
+   "lr_neutral": "neutre\\IMG_3135.tif",
+   "kept_share": 0.9999571056002928,
+   "unexplained": 0.2677036129424001,
+   "lr_change_sq": 1221.6859494923708,
+   "error_sq": 327.04974256007415,
+   "lr_change_rms": 0.04179542771908491,
+   "ipr_change_rms": 0.028277853042456814,
+   "lr_mean_change": [
+    0.004297054809218566,
+    0.0002493865045555072,
+    -0.017346528679023983
+   ],
+   "ipr_mean_change": [
+    0.00783846168131045,
+    -0.00016696954680659514,
+    -0.011154179543656812
+   ]
+  },
+  {
+   "scene": "IMG_3135",
+   "control": "contrast",
+   "value": -75.0,
+   "lr_file": "lumiere\\contrast\\IMG_3135-8.tif",
+   "lr_neutral": "neutre\\IMG_3135.tif",
+   "kept_share": 0.9999571056002928,
+   "unexplained": 0.27586029196983336,
+   "lr_change_sq": 748.8569677593322,
+   "error_sq": 206.57990176973345,
+   "lr_change_rms": 0.032722646593107106,
+   "ipr_change_rms": 0.02158430040541006,
+   "lr_mean_change": [
+    0.0032826206930020576,
+    0.0002661759651375847,
+    -0.013559985702754402
+   ],
+   "ipr_mean_change": [
+    0.0059494430675150105,
+    -0.00012063402449907632,
+    -0.008498225353448137
+   ]
+  },
+  {
+   "scene": "IMG_3135",
+   "control": "contrast",
+   "value": -50.0,
+   "lr_file": "lumiere\\contrast\\IMG_3135-7.tif",
+   "lr_neutral": "neutre\\IMG_3135.tif",
+   "kept_share": 0.9999571056002928,
+   "unexplained": 0.28454995263147853,
+   "lr_change_sq": 361.6534087036655,
+   "error_sq": 102.90846031564077,
+   "lr_change_rms": 0.02274025162109828,
+   "ipr_change_rms": 0.014623700428814744,
+   "lr_mean_change": [
+    0.0022181726375177097,
+    0.0002372852536995461,
+    -0.009399631543042207
+   ],
+   "ipr_mean_change": [
+    0.004006534846880071,
+    -7.726983784749433e-05,
+    -0.005745126342487599
+   ]
+  },
+  {
+   "scene": "IMG_3135",
+   "control": "contrast",
+   "value": -25.0,
+   "lr_file": "lumiere\\contrast\\IMG_3135-6.tif",
+   "lr_neutral": "neutre\\IMG_3135.tif",
+   "kept_share": 0.9999571056002928,
+   "unexplained": 0.2936786029665599,
+   "lr_change_sq": 97.91294058152977,
+   "error_sq": 28.75493560233145,
+   "lr_change_rms": 0.011832296157054214,
+   "ipr_change_rms": 0.007419946244146121,
+   "lr_mean_change": [
+    0.0011180431966950535,
+    0.0001518991229644064,
+    -0.004872916117839693
+   ],
+   "ipr_mean_change": [
+    0.002019785883987075,
+    -3.7060728597290926e-05,
+    -0.0029076045357896573
+   ]
+  },
+  {
+   "scene": "IMG_3135",
+   "control": "contrast",
+   "value": -10.0,
+   "lr_file": "lumiere\\contrast\\IMG_3135-5.tif",
+   "lr_neutral": "neutre\\IMG_3135.tif",
+   "kept_share": 0.9999571056002928,
+   "unexplained": 0.29932848823172836,
+   "lr_change_sq": 16.402375529510003,
+   "error_sq": 4.909698270657325,
+   "lr_change_rms": 0.004842864966868227,
+   "ipr_change_rms": 0.002992077718220883,
+   "lr_mean_change": [
+    0.00044785105156025496,
+    6.931937135784957e-05,
+    -0.0019888104847704488
+   ],
+   "ipr_mean_change": [
+    0.000811161563367288,
+    -1.4455299574036238e-05,
+    -0.0011704730777891683
+   ]
+  },
+  {
+   "scene": "IMG_3135",
+   "control": "contrast",
+   "value": 10.0,
+   "lr_file": "lumiere\\contrast\\IMG_3135.tif",
+   "lr_neutral": "neutre\\IMG_3135.tif",
+   "kept_share": 0.9999528161603221,
+   "unexplained": 0.3061469723455344,
+   "lr_change_sq": 20.309871839864922,
+   "error_sq": 6.217805772500474,
+   "lr_change_rms": 0.005388941974841998,
+   "ipr_change_rms": 0.0032609447846247063,
+   "lr_mean_change": [
+    -0.000493159770541861,
+    -8.679690413657537e-05,
+    0.002201662181320788
+   ],
+   "ipr_mean_change": [
+    -0.0008788767786080731,
+    1.506229549993069e-05,
+    0.0012723102554949323
+   ]
+  },
+  {
+   "scene": "IMG_3135",
+   "control": "contrast",
+   "value": 25.0,
+   "lr_file": "lumiere\\contrast\\IMG_3135-2.tif",
+   "lr_neutral": "neutre\\IMG_3135.tif",
+   "kept_share": 0.9999513863469985,
+   "unexplained": 0.2808688906244337,
+   "lr_change_sq": 126.8331283806978,
+   "error_sq": 35.62348006271297,
+   "lr_change_rms": 0.013466867238957384,
+   "ipr_change_rms": 0.008819406455172396,
+   "lr_mean_change": [
+    -0.0012338049623608605,
+    -0.00023249549242520927,
+    0.005476652906555613
+   ],
+   "ipr_mean_change": [
+    -0.0023642687942682025,
+    3.92552533660213e-05,
+    0.0034323278948722316
+   ]
+  },
+  {
+   "scene": "IMG_3135",
+   "control": "contrast",
+   "value": 50.0,
+   "lr_file": "lumiere\\contrast\\IMG_3135-3.tif",
+   "lr_neutral": "neutre\\IMG_3135.tif",
+   "kept_share": 0.9999356584004392,
+   "unexplained": 0.24771160728709388,
+   "lr_change_sq": 506.65096875590746,
+   "error_sq": 125.50332580408902,
+   "lr_change_rms": 0.026915848837276247,
+   "ipr_change_rms": 0.02003247536687374,
+   "lr_mean_change": [
+    -0.0024734790554273678,
+    -0.0005128986113533127,
+    0.010856908669630513
+   ],
+   "ipr_mean_change": [
+    -0.005310738300252051,
+    8.357175739450373e-05,
+    0.0077519760182766595
+   ]
+  },
+  {
+   "scene": "IMG_3135",
+   "control": "contrast",
+   "value": 75.0,
+   "lr_file": "lumiere\\contrast\\IMG_3135-4.tif",
+   "lr_neutral": "neutre\\IMG_3135.tif",
+   "kept_share": 0.9997040286420205,
+   "unexplained": 0.2296880660555893,
+   "lr_change_sq": 1138.269160646803,
+   "error_sq": 261.44684215968306,
+   "lr_change_rms": 0.04034841076639597,
+   "ipr_change_rms": 0.03398655722405601,
+   "lr_mean_change": [
+    -0.003724650124419371,
+    -0.0008340019822977104,
+    0.016133782779426613
+   ],
+   "ipr_mean_change": [
+    -0.008886244504965533,
+    0.0001343024174905219,
+    0.013046623070832026
+   ]
+  },
+  {
+   "scene": "IMG_3135",
+   "control": "contrast",
+   "value": 100.0,
+   "lr_file": "lumiere\\contrast\\IMG_3135-10.tif",
+   "lr_neutral": "neutre\\IMG_3135.tif",
+   "kept_share": 0.9987632114751098,
+   "unexplained": 0.23254142002322623,
+   "lr_change_sq": 2018.9581823221988,
+   "error_sq": 469.4914026847158,
+   "lr_change_rms": 0.053761584878037005,
+   "ipr_change_rms": 0.05104700607754211,
+   "lr_mean_change": [
+    -0.0050243696262337175,
+    -0.0011873714800429147,
+    0.021311031673909096
+   ],
+   "ipr_mean_change": [
+    -0.013149688143664988,
+    0.00020131189195948376,
+    0.019385903682549797
+   ]
+  },
+  {
+   "scene": "IMG_4002",
+   "control": "contrast",
+   "value": -100.0,
+   "lr_file": "lumiere\\contrast\\IMG_4002-9.tif",
+   "lr_neutral": "neutre\\IMG_4002.tif",
+   "kept_share": 0.9966713945827232,
+   "unexplained": 0.14092539870302648,
+   "lr_change_sq": 2196.720775187067,
+   "error_sq": 309.5737510824588,
+   "lr_change_rms": 0.056137245813990586,
+   "ipr_change_rms": 0.050528229642301456,
+   "lr_mean_change": [
+    0.02791155699588164,
+    -0.0006751394243050942,
+    -0.003910729042173205
+   ],
+   "ipr_mean_change": [
+    0.033581940702929705,
+    -0.0005621631454791649,
+    -0.002955576601744259
+   ]
+  },
+  {
+   "scene": "IMG_4002",
+   "control": "contrast",
+   "value": -75.0,
+   "lr_file": "lumiere\\contrast\\IMG_4002-8.tif",
+   "lr_neutral": "neutre\\IMG_4002.tif",
+   "kept_share": 0.9966713945827232,
+   "unexplained": 0.14920360347216807,
+   "lr_change_sq": 1243.6034655776461,
+   "error_sq": 185.55011835466112,
+   "lr_change_rms": 0.04223812535557621,
+   "ipr_change_rms": 0.03732486983539901,
+   "lr_mean_change": [
+    0.020582715906663145,
+    -0.0004916433624479491,
+    -0.0030049006661828797
+   ],
+   "ipr_mean_change": [
+    0.024722806581472464,
+    -0.00040312483349242025,
+    -0.002240278605995388
+   ]
+  },
+  {
+   "scene": "IMG_4002",
+   "control": "contrast",
+   "value": -50.0,
+   "lr_file": "lumiere\\contrast\\IMG_4002-7.tif",
+   "lr_neutral": "neutre\\IMG_4002.tif",
+   "kept_share": 0.9966713945827232,
+   "unexplained": 0.1578047874847473,
+   "lr_change_sq": 556.04415286051,
+   "error_sq": 87.74642937428914,
+   "lr_change_rms": 0.02824348683591488,
+   "ipr_change_rms": 0.02447889931282745,
+   "lr_mean_change": [
+    0.013477748338946709,
+    -0.0003165051412847577,
+    -0.0020448740959949857
+   ],
+   "ipr_mean_change": [
+    0.01614905846951399,
+    -0.0002563376837376885,
+    -0.001506161937294097
+   ]
+  },
+  {
+   "scene": "IMG_4002",
+   "control": "contrast",
+   "value": -25.0,
+   "lr_file": "lumiere\\contrast\\IMG_4002-6.tif",
+   "lr_neutral": "neutre\\IMG_4002.tif",
+   "kept_share": 0.9966713945827232,
+   "unexplained": 0.16675146868743307,
+   "lr_change_sq": 139.74472508047344,
+   "error_sq": 23.30263814849051,
+   "lr_change_rms": 0.014158960975445303,
+   "ipr_change_rms": 0.0120285212978741,
+   "lr_mean_change": [
+    0.006611586568767861,
+    -0.0001521404403357424,
+    -0.0010401778709955183
+   ],
+   "ipr_mean_change": [
+    0.007898579695393319,
+    -0.000122018403890689,
+    -0.0007577880088110358
+   ]
+  },
+  {
+   "scene": "IMG_4002",
+   "control": "contrast",
+   "value": -10.0,
+   "lr_file": "lumiere\\contrast\\IMG_4002-5.tif",
+   "lr_neutral": "neutre\\IMG_4002.tif",
+   "kept_share": 0.9966713945827232,
+   "unexplained": 0.1725266233814768,
+   "lr_change_sq": 22.404936924412784,
+   "error_sq": 3.8654481146439075,
+   "lr_change_rms": 0.00566937958810313,
+   "ipr_change_rms": 0.004759558378427457,
+   "lr_mean_change": [
+    0.0026107465253991055,
+    -5.927476825342782e-05,
+    -0.00041987545300156535
+   ],
+   "ipr_mean_change": [
+    0.0031157485067091163,
+    -4.735714249306414e-05,
+    -0.0003039225462032259
+   ]
+  },
+  {
+   "scene": "IMG_4002",
+   "control": "contrast",
+   "value": 10.0,
+   "lr_file": "lumiere\\contrast\\IMG_4002.tif",
+   "lr_neutral": "neutre\\IMG_4002.tif",
+   "kept_share": 0.9965226939970717,
+   "unexplained": 0.17572600621611356,
+   "lr_change_sq": 27.143932859618985,
+   "error_sq": 4.769894914419175,
+   "lr_change_rms": 0.006240687835370732,
+   "ipr_change_rms": 0.0050557609136506485,
+   "lr_mean_change": [
+    -0.002861760006691615,
+    6.379475296112285e-05,
+    0.00046242655678753393
+   ],
+   "ipr_mean_change": [
+    -0.0032948834175428247,
+    4.887365499668865e-05,
+    0.000328801869717061
+   ]
+  },
+  {
+   "scene": "IMG_4002",
+   "control": "contrast",
+   "value": 25.0,
+   "lr_file": "lumiere\\contrast\\IMG_4002-2.tif",
+   "lr_neutral": "neutre\\IMG_4002.tif",
+   "kept_share": 0.995729147602489,
+   "unexplained": 0.16266579864585728,
+   "lr_change_sq": 170.49149525847315,
+   "error_sq": 27.733135238545927,
+   "lr_change_rms": 0.015646615831668795,
+   "ipr_change_rms": 0.01338143001367087,
+   "lr_mean_change": [
+    -0.007205430979447934,
+    0.00015530225861267038,
+    0.001156521239405993
+   ],
+   "ipr_mean_change": [
+    -0.008690166422580565,
+    0.00012529301804768908,
+    0.0008853703399033715
+   ]
+  },
+  {
+   "scene": "IMG_4002",
+   "control": "contrast",
+   "value": 50.0,
+   "lr_file": "lumiere\\contrast\\IMG_4002-3.tif",
+   "lr_neutral": "neutre\\IMG_4002.tif",
+   "kept_share": 0.9915798293374817,
+   "unexplained": 0.14905475005943117,
+   "lr_change_sq": 688.2468517599805,
+   "error_sq": 102.58646246827426,
+   "lr_change_rms": 0.03150271213184138,
+   "ipr_change_rms": 0.029197729500293614,
+   "lr_mean_change": [
+    -0.014698314377775643,
+    0.0003000915288612644,
+    0.002343285868950922
+   ],
+   "ipr_mean_change": [
+    -0.018888799612500024,
+    0.00025812629216836607,
+    0.00201490333578384
+   ]
+  },
+  {
+   "scene": "IMG_4002",
+   "control": "contrast",
+   "value": 75.0,
+   "lr_file": "lumiere\\contrast\\IMG_4002-4.tif",
+   "lr_neutral": "neutre\\IMG_4002.tif",
+   "kept_share": 0.9888889206625183,
+   "unexplained": 0.1459625086722069,
+   "lr_change_sq": 1564.9258442422247,
+   "error_sq": 228.4205021115664,
+   "lr_change_rms": 0.04756777040720076,
+   "ipr_change_rms": 0.047280033078299304,
+   "lr_mean_change": [
+    -0.02248664411833528,
+    0.0004355608885079707,
+    0.003546698834834181
+   ],
+   "ipr_mean_change": [
+    -0.030326798598856824,
+    0.0003987547823399629,
+    0.0033824220416595416
+   ]
+  },
+  {
+   "scene": "IMG_4002",
+   "control": "contrast",
+   "value": 100.0,
+   "lr_file": "lumiere\\contrast\\IMG_4002-10.tif",
+   "lr_neutral": "neutre\\IMG_4002.tif",
+   "kept_share": 0.9863381336932651,
+   "unexplained": 0.15460481701635048,
+   "lr_change_sq": 2815.5685427700446,
+   "error_sq": 435.3004593519553,
+   "lr_change_rms": 0.06388660501223846,
+   "ipr_change_rms": 0.06746436625727595,
+   "lr_mean_change": [
+    -0.030659013667005415,
+    0.0005716316072106783,
+    0.004764665000869091
+   ],
+   "ipr_mean_change": [
+    -0.042753863777733006,
+    0.0005413519925326635,
+    0.0049826510027217875
+   ]
+  },
+  {
+   "scene": "IMG_4173",
+   "control": "contrast",
+   "value": -100.0,
+   "lr_file": "lumiere\\contrast\\IMG_4173-9.tif",
+   "lr_neutral": "neutre\\IMG_4173.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.03284111247829813,
+   "lr_change_sq": 2431.4269180300307,
+   "error_sq": 79.85076489778601,
+   "lr_change_rms": 0.058961738463957254,
+   "ipr_change_rms": 0.05411241063001668,
+   "lr_mean_change": [
+    -0.006748017470062806,
+    0.00021373461623905884,
+    0.0019836030831644905
+   ],
+   "ipr_mean_change": [
+    -0.004288655126145311,
+    0.0004236850757814504,
+    0.0026336699140608096
+   ]
+  },
+  {
+   "scene": "IMG_4173",
+   "control": "contrast",
+   "value": -75.0,
+   "lr_file": "lumiere\\contrast\\IMG_4173-8.tif",
+   "lr_neutral": "neutre\\IMG_4173.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.036070075231325875,
+   "lr_change_sq": 1348.1564193087704,
+   "error_sq": 48.62810346806226,
+   "lr_change_rms": 0.04390457846953367,
+   "ipr_change_rms": 0.040169440838719914,
+   "lr_mean_change": [
+    -0.005789260651092424,
+    0.00014342125996986345,
+    0.0013915443633936717
+   ],
+   "ipr_mean_change": [
+    -0.0033034747076319437,
+    0.00030584120528980593,
+    0.0019218879150541027
+   ]
+  },
+  {
+   "scene": "IMG_4173",
+   "control": "contrast",
+   "value": -50.0,
+   "lr_file": "lumiere\\contrast\\IMG_4173-7.tif",
+   "lr_neutral": "neutre\\IMG_4173.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.03977318908714762,
+   "lr_change_sq": 589.2050501598749,
+   "error_sq": 23.434563871111003,
+   "lr_change_rms": 0.029025044892898567,
+   "ipr_change_rms": 0.026451238028990038,
+   "lr_mean_change": [
+    -0.00435258130548653,
+    8.443257010498776e-05,
+    0.0008556760061587936
+   ],
+   "ipr_mean_change": [
+    -0.002263189188577152,
+    0.0001969280651020138,
+    0.0012415421714112918
+   ]
+  },
+  {
+   "scene": "IMG_4173",
+   "control": "contrast",
+   "value": -25.0,
+   "lr_file": "lumiere\\contrast\\IMG_4173-6.tif",
+   "lr_neutral": "neutre\\IMG_4173.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.043985718008806296,
+   "lr_change_sq": 144.51206950398551,
+   "error_sq": 6.356467138071323,
+   "lr_change_rms": 0.014374466334227157,
+   "ipr_change_rms": 0.013038296454694776,
+   "lr_mean_change": [
+    -0.002423635359512311,
+    3.707413195501187e-05,
+    0.00038674197164451676
+   ],
+   "ipr_mean_change": [
+    -0.0011638067919660564,
+    9.555162060342503e-05,
+    0.0005989744131098759
+   ]
+  },
+  {
+   "scene": "IMG_4173",
+   "control": "contrast",
+   "value": -10.0,
+   "lr_file": "lumiere\\contrast\\IMG_4173-5.tif",
+   "lr_neutral": "neutre\\IMG_4173.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.046819276547178205,
+   "lr_change_sq": 22.8244314491291,
+   "error_sq": 1.0686233680488868,
+   "lr_change_rms": 0.005712676797170604,
+   "ipr_change_rms": 0.00516639708531736,
+   "lr_mean_change": [
+    -0.0010295913743858171,
+    1.360117696778947e-05,
+    0.00014342435044884254
+   ],
+   "ipr_mean_change": [
+    -0.0004736313524521355,
+    3.763791273131067e-05,
+    0.00023401026552007087
+   ]
+  },
+  {
+   "scene": "IMG_4173",
+   "control": "contrast",
+   "value": 10.0,
+   "lr_file": "lumiere\\contrast\\IMG_4173.tif",
+   "lr_neutral": "neutre\\IMG_4173.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.04907808748963037,
+   "lr_change_sq": 27.42423712434679,
+   "error_sq": 1.345929108925061,
+   "lr_change_rms": 0.006261911819021561,
+   "ipr_change_rms": 0.005495105511735717,
+   "lr_mean_change": [
+    0.0011401137132194842,
+    -1.4692851204580326e-05,
+    -0.00014752939755784488
+   ],
+   "ipr_mean_change": [
+    0.0005235449402882922,
+    -3.9889938170776665e-05,
+    -0.00024364810177574954
+   ]
+  },
+  {
+   "scene": "IMG_4173",
+   "control": "contrast",
+   "value": 25.0,
+   "lr_file": "lumiere\\contrast\\IMG_4173-2.tif",
+   "lr_neutral": "neutre\\IMG_4173.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.03575861889923787,
+   "lr_change_sq": 173.08557962632105,
+   "error_sq": 6.189301278811305,
+   "lr_change_rms": 0.015731499225057295,
+   "ipr_change_rms": 0.01454855798188635,
+   "lr_mean_change": [
+    0.0027558670360923925,
+    -3.775658689439352e-05,
+    -0.0003587927849272623
+   ],
+   "ipr_mean_change": [
+    0.0014354135082365494,
+    -0.00010573930900239083,
+    -0.0006320359035870866
+   ]
+  },
+  {
+   "scene": "IMG_4173",
+   "control": "contrast",
+   "value": 50.0,
+   "lr_file": "lumiere\\contrast\\IMG_4173-3.tif",
+   "lr_neutral": "neutre\\IMG_4173.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.022274473596745586,
+   "lr_change_sq": 706.5600461893197,
+   "error_sq": 15.738253093359344,
+   "lr_change_rms": 0.03178441391539998,
+   "ipr_change_rms": 0.031687471760728114,
+   "lr_mean_change": [
+    0.005146256657383707,
+    -7.28876253206809e-05,
+    -0.0006886413437285737
+   ],
+   "ipr_mean_change": [
+    0.0033601929403336518,
+    -0.00023351469600270096,
+    -0.0013147599432515634
+   ]
+  },
+  {
+   "scene": "IMG_4173",
+   "control": "contrast",
+   "value": 75.0,
+   "lr_file": "lumiere\\contrast\\IMG_4173-4.tif",
+   "lr_neutral": "neutre\\IMG_4173.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.018171714393658143,
+   "lr_change_sq": 1632.461109865494,
+   "error_sq": 29.664617047229946,
+   "lr_change_rms": 0.04831267582218555,
+   "ipr_change_rms": 0.051114801707589884,
+   "lr_mean_change": [
+    0.007058754419572046,
+    -9.523822950703581e-05,
+    -0.0010070577716524403
+   ],
+   "ipr_mean_change": [
+    0.00593934926547532,
+    -0.00038976072546976766,
+    -0.0019816117954038616
+   ]
+  },
+  {
+   "scene": "IMG_4173",
+   "control": "contrast",
+   "value": 100.0,
+   "lr_file": "lumiere\\contrast\\IMG_4173-10.tif",
+   "lr_neutral": "neutre\\IMG_4173.tif",
+   "kept_share": 0.8831842514641288,
+   "unexplained": 0.022301215182530688,
+   "lr_change_sq": 2937.843169912948,
+   "error_sq": 65.51747270475671,
+   "lr_change_rms": 0.06896493255258117,
+   "ipr_change_rms": 0.07622319577309765,
+   "lr_mean_change": [
+    0.0056842817764529395,
+    -0.0003057282802842312,
+    -0.001685002643463896
+   ],
+   "ipr_mean_change": [
+    0.006703033265591211,
+    -0.0009443701124384593,
+    -0.0030833158372013717
+   ]
+  },
+  {
+   "scene": "IMG_4345",
+   "control": "contrast",
+   "value": -100.0,
+   "lr_file": "lumiere\\contrast\\IMG_4345-9.tif",
+   "lr_neutral": "neutre\\IMG_4345.tif",
+   "kept_share": 0.939255810761347,
+   "unexplained": 0.23633894206591424,
+   "lr_change_sq": 3320.954928482561,
+   "error_sq": 784.8709744461524,
+   "lr_change_rms": 0.07110157405552875,
+   "ipr_change_rms": 0.0434130135819075,
+   "lr_mean_change": [
+    -0.06784482112464368,
+    0.0031148362113855746,
+    0.004891123068434559
+   ],
+   "ipr_mean_change": [
+    -0.035430544016476204,
+    0.002242568403091113,
+    0.003950505970647528
+   ]
+  },
+  {
+   "scene": "IMG_4345",
+   "control": "contrast",
+   "value": -75.0,
+   "lr_file": "lumiere\\contrast\\IMG_4345-8.tif",
+   "lr_neutral": "neutre\\IMG_4345.tif",
+   "kept_share": 0.939255810761347,
+   "unexplained": 0.24425041208274217,
+   "lr_change_sq": 1875.632004011958,
+   "error_sq": 458.12388989550027,
+   "lr_change_rms": 0.05343447439472057,
+   "ipr_change_rms": 0.032643106907239844,
+   "lr_mean_change": [
+    -0.05115591541959532,
+    0.0024273242739959017,
+    0.003680035589622703
+   ],
+   "ipr_mean_change": [
+    -0.026643903933887908,
+    0.0017854607579944623,
+    0.0030636936846425047
+   ]
+  },
+  {
+   "scene": "IMG_4345",
+   "control": "contrast",
+   "value": -50.0,
+   "lr_file": "lumiere\\contrast\\IMG_4345-7.tif",
+   "lr_neutral": "neutre\\IMG_4345.tif",
+   "kept_share": 0.939255810761347,
+   "unexplained": 0.2531273576100057,
+   "lr_change_sq": 832.0550674205107,
+   "error_sq": 210.61590060216903,
+   "lr_change_rms": 0.03558965348204284,
+   "ipr_change_rms": 0.02176591824615871,
+   "lr_mean_change": [
+    -0.03418281970852387,
+    0.0016648406369791442,
+    0.0024391703220257173
+   ],
+   "ipr_mean_change": [
+    -0.017763869424536866,
+    0.0012587960587101322,
+    0.002106721536580127
+   ]
+  },
+  {
+   "scene": "IMG_4345",
+   "control": "contrast",
+   "value": -25.0,
+   "lr_file": "lumiere\\contrast\\IMG_4345-6.tif",
+   "lr_neutral": "neutre\\IMG_4345.tif",
+   "kept_share": 0.939255810761347,
+   "unexplained": 0.26319868580874367,
+   "lr_change_sq": 206.47225363471284,
+   "error_sq": 54.34322581262602,
+   "lr_change_rms": 0.017728768685216865,
+   "ipr_change_rms": 0.010858743473690025,
+   "lr_mean_change": [
+    -0.017080776757028578,
+    0.0008474182585762755,
+    0.001200847851419661
+   ],
+   "ipr_mean_change": [
+    -0.00885924146200589,
+    0.000662977822044491,
+    0.001083574868797337
+   ]
+  },
+  {
+   "scene": "IMG_4345",
+   "control": "contrast",
+   "value": -10.0,
+   "lr_file": "lumiere\\contrast\\IMG_4345-5.tif",
+   "lr_neutral": "neutre\\IMG_4345.tif",
+   "kept_share": 0.939255810761347,
+   "unexplained": 0.26991822465848997,
+   "lr_change_sq": 32.808584920878666,
+   "error_sq": 8.855634995400875,
+   "lr_change_rms": 0.007067103863977011,
+   "ipr_change_rms": 0.004332676948369138,
+   "lr_mean_change": [
+    -0.0068207056320781214,
+    0.0003407905094733194,
+    0.0004735487429935067
+   ],
+   "ipr_mean_change": [
+    -0.003533779496467362,
+    0.0002730626504596289,
+    0.0004402519783023879
+   ]
+  },
+  {
+   "scene": "IMG_4345",
+   "control": "contrast",
+   "value": 10.0,
+   "lr_file": "lumiere\\contrast\\IMG_4345.tif",
+   "lr_neutral": "neutre\\IMG_4345.tif",
+   "kept_share": 0.9323169267020498,
+   "unexplained": 0.28067275211417747,
+   "lr_change_sq": 39.11720906948926,
+   "error_sq": 10.979134724559215,
+   "lr_change_rms": 0.007745363701597073,
+   "ipr_change_rms": 0.0046539674849471,
+   "lr_mean_change": [
+    0.007490308373119455,
+    -0.00037408873519998104,
+    -0.0005059750528617061
+   ],
+   "ipr_mean_change": [
+    0.0037893901564918448,
+    -0.0003033042231512238,
+    -0.0004817800940119952
+   ]
+  },
+  {
+   "scene": "IMG_4345",
+   "control": "contrast",
+   "value": 25.0,
+   "lr_file": "lumiere\\contrast\\IMG_4345-2.tif",
+   "lr_neutral": "neutre\\IMG_4345.tif",
+   "kept_share": 0.9165689627562226,
+   "unexplained": 0.2573321922053119,
+   "lr_change_sq": 243.24038255266365,
+   "error_sq": 62.59358087513563,
+   "lr_change_rms": 0.019479371274716887,
+   "ipr_change_rms": 0.012447202699607526,
+   "lr_mean_change": [
+    0.018879951553468884,
+    -0.0009355119336832159,
+    -0.0012253003593722042
+   ],
+   "ipr_mean_change": [
+    0.01010668306060153,
+    -0.0008276499536856271,
+    -0.0012936173058919693
+   ]
+  },
+  {
+   "scene": "IMG_4345",
+   "control": "contrast",
+   "value": 50.0,
+   "lr_file": "lumiere\\contrast\\IMG_4345-3.tif",
+   "lr_neutral": "neutre\\IMG_4345.tif",
+   "kept_share": 0.9029542802891655,
+   "unexplained": 0.2241360974001987,
+   "lr_change_sq": 967.0084693156787,
+   "error_sq": 216.74150446535603,
+   "lr_change_rms": 0.03913108845250259,
+   "ipr_change_rms": 0.027553924454326424,
+   "lr_mean_change": [
+    0.03797587395146183,
+    -0.0018669131398479973,
+    -0.0023899437108897245
+   ],
+   "ipr_mean_change": [
+    0.02230410735228298,
+    -0.001939657313768855,
+    -0.002946570044688141
+   ]
+  },
+  {
+   "scene": "IMG_4345",
+   "control": "contrast",
+   "value": 75.0,
+   "lr_file": "lumiere\\contrast\\IMG_4345-4.tif",
+   "lr_neutral": "neutre\\IMG_4345.tif",
+   "kept_share": 0.8853346907027818,
+   "unexplained": 0.20037805813169515,
+   "lr_change_sq": 2152.9848358961594,
+   "error_sq": 431.41092060385876,
+   "lr_change_rms": 0.05896664442964309,
+   "ipr_change_rms": 0.04519521613125413,
+   "lr_mean_change": [
+    0.05726878120358159,
+    -0.0027743306236830472,
+    -0.0034900897440487437
+   ],
+   "ipr_mean_change": [
+    0.03640445504843768,
+    -0.003398805296607429,
+    -0.005024791626133639
+   ]
+  },
+  {
+   "scene": "IMG_4345",
+   "control": "contrast",
+   "value": 100.0,
+   "lr_file": "lumiere\\contrast\\IMG_4345-10.tif",
+   "lr_neutral": "neutre\\IMG_4345.tif",
+   "kept_share": 0.8681326066068814,
+   "unexplained": 0.1856932841447344,
+   "lr_change_sq": 3779.154417381821,
+   "error_sq": 701.7635950537107,
+   "lr_change_rms": 0.07889399613474765,
+   "ipr_change_rms": 0.06502326397642993,
+   "lr_mean_change": [
+    0.07664022836270538,
+    -0.0036607794192615615,
+    -0.004564788193392158
+   ],
+   "ipr_mean_change": [
+    0.052072686053955944,
+    -0.005329907279209594,
+    -0.007589328375660606
+   ]
+  },
+  {
+   "scene": "IMG_6248",
+   "control": "contrast",
+   "value": -100.0,
+   "lr_file": "lumiere\\contrast\\IMG_6248-9.tif",
+   "lr_neutral": "neutre\\IMG_6248.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.18483265279993946,
+   "lr_change_sq": 1993.5113005428236,
+   "error_sq": 368.4659820659875,
+   "lr_change_rms": 0.05338866001510452,
+   "ipr_change_rms": 0.04483485060752257,
+   "lr_mean_change": [
+    0.0011582342321606635,
+    -0.0011108916215870602,
+    -0.001407348161888593
+   ],
+   "ipr_mean_change": [
+    -0.015091732594526073,
+    -0.0006469486354936322,
+    -0.0009641227103904381
+   ]
+  },
+  {
+   "scene": "IMG_6248",
+   "control": "contrast",
+   "value": -75.0,
+   "lr_file": "lumiere\\contrast\\IMG_6248-8.tif",
+   "lr_neutral": "neutre\\IMG_6248.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.19480907518833013,
+   "lr_change_sq": 1129.8956814196883,
+   "error_sq": 220.11393275665756,
+   "lr_change_rms": 0.04019377936373824,
+   "ipr_change_rms": 0.03312024888571529,
+   "lr_mean_change": [
+    0.0017056081702407574,
+    -0.0008492262322256939,
+    -0.001085841569063387
+   ],
+   "ipr_mean_change": [
+    -0.010685984780253815,
+    -0.0005205138512398743,
+    -0.0007986807980423903
+   ]
+  },
+  {
+   "scene": "IMG_6248",
+   "control": "contrast",
+   "value": -50.0,
+   "lr_file": "lumiere\\contrast\\IMG_6248-7.tif",
+   "lr_neutral": "neutre\\IMG_6248.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.20517670506791227,
+   "lr_change_sq": 504.8059953321565,
+   "error_sq": 103.57443082077977,
+   "lr_change_rms": 0.026865932664718373,
+   "ipr_change_rms": 0.02170264640708241,
+   "lr_mean_change": [
+    0.001695558257127184,
+    -0.000572307350398573,
+    -0.0007358518114148386
+   ],
+   "ipr_mean_change": [
+    -0.006675249921537657,
+    -0.0003691902994337036,
+    -0.0005779421134635139
+   ]
+  },
+  {
+   "scene": "IMG_6248",
+   "control": "contrast",
+   "value": -25.0,
+   "lr_file": "lumiere\\contrast\\IMG_6248-6.tif",
+   "lr_neutral": "neutre\\IMG_6248.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.21592200094105382,
+   "lr_change_sq": 126.5877639077117,
+   "error_sq": 27.333083277606825,
+   "lr_change_rms": 0.013453507774424223,
+   "ipr_change_rms": 0.010646802753229271,
+   "lr_mean_change": [
+    0.0011231669891441606,
+    -0.00028708652610320585,
+    -0.0003699921675446686
+   ],
+   "ipr_mean_change": [
+    -0.003103605283403852,
+    -0.00019477254465158933,
+    -0.00030874260908922673
+   ]
+  },
+  {
+   "scene": "IMG_6248",
+   "control": "contrast",
+   "value": -10.0,
+   "lr_file": "lumiere\\contrast\\IMG_6248-5.tif",
+   "lr_neutral": "neutre\\IMG_6248.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.2225241075559824,
+   "lr_change_sq": 20.270366943572224,
+   "error_sq": 4.510645313950696,
+   "lr_change_rms": 0.00538357137313351,
+   "ipr_change_rms": 0.0042073431863425305,
+   "lr_mean_change": [
+    0.000513727275023199,
+    -0.00011466616330379546,
+    -0.00014780165547648903
+   ],
+   "ipr_mean_change": [
+    -0.0011840814794952493,
+    -8.014108158356802e-05,
+    -0.00012760110862145919
+   ]
+  },
+  {
+   "scene": "IMG_6248",
+   "control": "contrast",
+   "value": 10.0,
+   "lr_file": "lumiere\\contrast\\IMG_6248.tif",
+   "lr_neutral": "neutre\\IMG_6248.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.2301445010340546,
+   "lr_change_sq": 24.610546445559454,
+   "error_sq": 5.663981931888706,
+   "lr_change_rms": 0.005931988470003976,
+   "ipr_change_rms": 0.00445943807643823,
+   "lr_mean_change": [
+    -0.0006330621279330598,
+    0.00012482834778489895,
+    0.00016154175498514714
+   ],
+   "ipr_mean_change": [
+    0.0011907658646335521,
+    8.945720661144474e-05,
+    0.00014286936514625018
+   ]
+  },
+  {
+   "scene": "IMG_6248",
+   "control": "contrast",
+   "value": 25.0,
+   "lr_file": "lumiere\\contrast\\IMG_6248-2.tif",
+   "lr_neutral": "neutre\\IMG_6248.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.21696389480691933,
+   "lr_change_sq": 156.10857993892415,
+   "error_sq": 33.8699255163263,
+   "lr_change_rms": 0.014940084588805127,
+   "ipr_change_rms": 0.011774499143266115,
+   "lr_mean_change": [
+    -0.0016668222418634384,
+    0.0003098392773527796,
+    0.0004037169945828189
+   ],
+   "ipr_mean_change": [
+    0.0029917349142550174,
+    0.00024617399210561584,
+    0.00039309206872820856
+   ]
+  },
+  {
+   "scene": "IMG_6248",
+   "control": "contrast",
+   "value": 50.0,
+   "lr_file": "lumiere\\contrast\\IMG_6248-3.tif",
+   "lr_neutral": "neutre\\IMG_6248.tif",
+   "kept_share": 0.9949985129941434,
+   "unexplained": 0.2000523999736949,
+   "lr_change_sq": 641.5019879708634,
+   "error_sq": 128.33401228146758,
+   "lr_change_rms": 0.03036179595389866,
+   "ipr_change_rms": 0.025593197591532887,
+   "lr_mean_change": [
+    -0.003701679501006907,
+    0.0006132580273881053,
+    0.0008099893462242932
+   ],
+   "ipr_mean_change": [
+    0.0058034491461895635,
+    0.0005741188672082105,
+    0.0009130460442796444
+   ]
+  },
+  {
+   "scene": "IMG_6248",
+   "control": "contrast",
+   "value": 75.0,
+   "lr_file": "lumiere\\contrast\\IMG_6248-4.tif",
+   "lr_neutral": "neutre\\IMG_6248.tif",
+   "kept_share": 0.9864024752928258,
+   "unexplained": 0.1889416256779351,
+   "lr_change_sq": 1487.6991750169059,
+   "error_sq": 281.0883006474171,
+   "lr_change_rms": 0.0464376414762246,
+   "ipr_change_rms": 0.04132116493651694,
+   "lr_mean_change": [
+    -0.0062723930216697634,
+    0.0009098339970677072,
+    0.0012198140661177266
+   ],
+   "ipr_mean_change": [
+    0.007928008989361504,
+    0.0009905192199030851,
+    0.0015488532492980319
+   ]
+  },
+  {
+   "scene": "IMG_6248",
+   "control": "contrast",
+   "value": 100.0,
+   "lr_file": "lumiere\\contrast\\IMG_6248-10.tif",
+   "lr_neutral": "neutre\\IMG_6248.tif",
+   "kept_share": 0.8681054401537335,
+   "unexplained": 0.1900602130168167,
+   "lr_change_sq": 2646.1718809532335,
+   "error_sq": 502.9319913730821,
+   "lr_change_rms": 0.06601801408769398,
+   "ipr_change_rms": 0.060889672369459205,
+   "lr_mean_change": [
+    -0.015053782831609191,
+    0.0011851236718116726,
+    0.0014861075092847905
+   ],
+   "ipr_mean_change": [
+    0.0052717923541328125,
+    0.0014887551528774922,
+    0.002081939777664704
+   ]
+  },
+  {
+   "scene": "IMG_6954",
+   "control": "contrast",
+   "value": -100.0,
+   "lr_file": "lumiere\\contrast\\IMG_6954-9.tif",
+   "lr_neutral": "neutre\\IMG_6954.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.14354209866296797,
+   "lr_change_sq": 1132.0083572289277,
+   "error_sq": 162.49085530065904,
+   "lr_change_rms": 0.040231338923298464,
+   "ipr_change_rms": 0.03719410699898515,
+   "lr_mean_change": [
+    -0.012434685131214865,
+    0.0002290895598933933,
+    -0.0033370912004699604
+   ],
+   "ipr_mean_change": [
+    -0.023279848979335382,
+    8.653137116404762e-05,
+    -0.002263629770369454
+   ]
+  },
+  {
+   "scene": "IMG_6954",
+   "control": "contrast",
+   "value": -75.0,
+   "lr_file": "lumiere\\contrast\\IMG_6954-8.tif",
+   "lr_neutral": "neutre\\IMG_6954.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.1600584520949543,
+   "lr_change_sq": 640.6377348943149,
+   "error_sq": 102.53948420080174,
+   "lr_change_rms": 0.030265365831841223,
+   "ipr_change_rms": 0.02700254757206258,
+   "lr_mean_change": [
+    -0.008302553628560357,
+    0.00019334478802580636,
+    -0.0026029736901364894
+   ],
+   "ipr_mean_change": [
+    -0.01660472627893567,
+    4.3303805927365265e-05,
+    -0.0017549166809986065
+   ]
+  },
+  {
+   "scene": "IMG_6954",
+   "control": "contrast",
+   "value": -50.0,
+   "lr_file": "lumiere\\contrast\\IMG_6954-7.tif",
+   "lr_neutral": "neutre\\IMG_6954.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.17796806835978282,
+   "lr_change_sq": 287.8273930145381,
+   "error_sq": 51.224085155829385,
+   "lr_change_rms": 0.020286434911568802,
+   "ipr_change_rms": 0.017393084320003367,
+   "lr_mean_change": [
+    -0.004833944273381083,
+    0.0001453307859805413,
+    -0.0017983359710611567
+   ],
+   "ipr_mean_change": [
+    -0.010475791559300514,
+    1.6985403716994277e-05,
+    -0.0012062766799471212
+   ]
+  },
+  {
+   "scene": "IMG_6954",
+   "control": "contrast",
+   "value": -25.0,
+   "lr_file": "lumiere\\contrast\\IMG_6954-6.tif",
+   "lr_neutral": "neutre\\IMG_6954.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.1971524998564773,
+   "lr_change_sq": 73.09344350734132,
+   "error_sq": 14.41055511059054,
+   "lr_change_rms": 0.010223012246524436,
+   "ipr_change_rms": 0.008392458676788773,
+   "lr_mean_change": [
+    -0.0020600907057835094,
+    8.146918684348428e-05,
+    -0.0009282461005814615
+   ],
+   "ipr_mean_change": [
+    -0.004934190671076481,
+    3.9393022305284736e-06,
+    -0.000620176710336782
+   ]
+  },
+  {
+   "scene": "IMG_6954",
+   "control": "contrast",
+   "value": -10.0,
+   "lr_file": "lumiere\\contrast\\IMG_6954-5.tif",
+   "lr_neutral": "neutre\\IMG_6954.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.20916866213401172,
+   "lr_change_sq": 11.831728417067222,
+   "error_sq": 2.474826803730919,
+   "lr_change_rms": 0.00411304788832002,
+   "ipr_change_rms": 0.0032851016063215614,
+   "lr_mean_change": [
+    -0.0007378219251966649,
+    3.473214143399361e-05,
+    -0.00037770502505894476
+   ],
+   "ipr_mean_change": [
+    -0.0019003616453821016,
+    7.602038679275634e-07,
+    -0.0002519091408399533
+   ]
+  },
+  {
+   "scene": "IMG_6954",
+   "control": "contrast",
+   "value": 10.0,
+   "lr_file": "lumiere\\contrast\\IMG_6954.tif",
+   "lr_neutral": "neutre\\IMG_6954.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.21783805157061456,
+   "lr_change_sq": 14.372452294303944,
+   "error_sq": 3.13086700408278,
+   "lr_change_rms": 0.0045332023761139924,
+   "ipr_change_rms": 0.0034387809662227084,
+   "lr_mean_change": [
+    0.0007369531913866156,
+    -4.1117153232869555e-05,
+    0.0004193874601691221
+   ],
+   "ipr_mean_change": [
+    0.0019407524890986305,
+    3.091404383785424e-08,
+    0.0002770990147467358
+   ]
+  },
+  {
+   "scene": "IMG_6954",
+   "control": "contrast",
+   "value": 25.0,
+   "lr_file": "lumiere\\contrast\\IMG_6954-2.tif",
+   "lr_neutral": "neutre\\IMG_6954.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.20012061001628845,
+   "lr_change_sq": 90.07329431386022,
+   "error_sq": 18.025522604266392,
+   "lr_change_rms": 0.011348479911777707,
+   "ipr_change_rms": 0.00898847372637669,
+   "lr_mean_change": [
+    0.0018146292279067765,
+    -0.00010831497924324456,
+    0.001051540818801008
+   ],
+   "ipr_mean_change": [
+    0.004953976444946365,
+    1.155852003459494e-06,
+    0.0007549290700570011
+   ]
+  },
+  {
+   "scene": "IMG_6954",
+   "control": "contrast",
+   "value": 50.0,
+   "lr_file": "lumiere\\contrast\\IMG_6954-3.tif",
+   "lr_neutral": "neutre\\IMG_6954.tif",
+   "kept_share": 0.9888617542093704,
+   "unexplained": 0.17441977547995322,
+   "lr_change_sq": 361.3431297451757,
+   "error_sq": 63.02538756137715,
+   "lr_change_rms": 0.02285766064335052,
+   "ipr_change_rms": 0.019244332869732074,
+   "lr_mean_change": [
+    0.003461026015977511,
+    -0.0002400871296860638,
+    0.0021396663844465277
+   ],
+   "ipr_mean_change": [
+    0.010029889511428039,
+    -2.7490015334212437e-06,
+    0.0017612591868082304
+   ]
+  },
+  {
+   "scene": "IMG_6954",
+   "control": "contrast",
+   "value": 75.0,
+   "lr_file": "lumiere\\contrast\\IMG_6954-4.tif",
+   "lr_neutral": "neutre\\IMG_6954.tif",
+   "kept_share": 0.9338954406112738,
+   "unexplained": 0.1560239006611627,
+   "lr_change_sq": 806.0988356153703,
+   "error_sq": 125.77068465113146,
+   "lr_change_rms": 0.03513052897455377,
+   "ipr_change_rms": 0.03112436986158292,
+   "lr_mean_change": [
+    0.004320134907231549,
+    -0.00044620130050290573,
+    0.0034355439111270498
+   ],
+   "ipr_mean_change": [
+    0.014680914971860831,
+    -7.45728810272698e-05,
+    0.00323471164020148
+   ]
+  },
+  {
+   "scene": "IMG_6954",
+   "control": "contrast",
+   "value": 100.0,
+   "lr_file": "lumiere\\contrast\\IMG_6954-10.tif",
+   "lr_neutral": "neutre\\IMG_6954.tif",
+   "kept_share": 0.7738507160505125,
+   "unexplained": 0.15535830365596195,
+   "lr_change_sq": 1339.051796073405,
+   "error_sq": 208.03281554543332,
+   "lr_change_rms": 0.04974045614164035,
+   "ipr_change_rms": 0.04612129154814746,
+   "lr_mean_change": [
+    0.00043365081016867287,
+    -0.0010523174508203692,
+    0.005483857296318698
+   ],
+   "ipr_mean_change": [
+    0.01645512797676427,
+    -0.0005358502758321078,
+    0.005834506691386926
+   ]
+  },
+  {
+   "scene": "IMG_6979",
+   "control": "contrast",
+   "value": -100.0,
+   "lr_file": "lumiere\\contrast\\IMG_6979-9.tif",
+   "lr_neutral": "neutre\\IMG_6979.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.5694572296780347,
+   "lr_change_sq": 2347.9367011880827,
+   "error_sq": 1337.049529317949,
+   "lr_change_rms": 0.05794058317158643,
+   "ipr_change_rms": 0.030762439566888747,
+   "lr_mean_change": [
+    -0.04149712028152294,
+    0.0034562586425999184,
+    0.0071636174583577725
+   ],
+   "ipr_mean_change": [
+    -0.00023866773976790738,
+    0.0026340635745420813,
+    0.0060726649269655045
+   ]
+  },
+  {
+   "scene": "IMG_6979",
+   "control": "contrast",
+   "value": -75.0,
+   "lr_file": "lumiere\\contrast\\IMG_6979-8.tif",
+   "lr_neutral": "neutre\\IMG_6979.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.57546444273745,
+   "lr_change_sq": 1404.871295638324,
+   "error_sq": 808.4534772623475,
+   "lr_change_rms": 0.04481856419396097,
+   "ipr_change_rms": 0.023483819371391795,
+   "lr_mean_change": [
+    -0.03204879711578659,
+    0.002676686151454649,
+    0.005415289925504025
+   ],
+   "ipr_mean_change": [
+    -0.00013674848094137867,
+    0.0020175938612811447,
+    0.00462704572974656
+   ]
+  },
+  {
+   "scene": "IMG_6979",
+   "control": "contrast",
+   "value": -50.0,
+   "lr_file": "lumiere\\contrast\\IMG_6979-7.tif",
+   "lr_neutral": "neutre\\IMG_6979.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.5814385499592832,
+   "lr_change_sq": 661.0891444491627,
+   "error_sq": 384.38271354234433,
+   "lr_change_rms": 0.030744659158991192,
+   "ipr_change_rms": 0.01591659096178139,
+   "lr_mean_change": [
+    -0.02193621863223915,
+    0.0018421916169514604,
+    0.003625449112221927
+   ],
+   "ipr_mean_change": [
+    -6.173948234055476e-05,
+    0.0013717708395177845,
+    0.0031273507032863047
+   ]
+  },
+  {
+   "scene": "IMG_6979",
+   "control": "contrast",
+   "value": -25.0,
+   "lr_file": "lumiere\\contrast\\IMG_6979-6.tif",
+   "lr_neutral": "neutre\\IMG_6979.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.5873733729247289,
+   "lr_change_sq": 174.10313020204066,
+   "error_sq": 102.26354282352585,
+   "lr_change_rms": 0.015777673315116873,
+   "ipr_change_rms": 0.00808083426407141,
+   "lr_mean_change": [
+    -0.011223909230944053,
+    0.0009514449383668702,
+    0.001814428685775714
+   ],
+   "ipr_mean_change": [
+    -1.5698047319903266e-05,
+    0.0006984773930980501,
+    0.0015818526708386135
+   ]
+  },
+  {
+   "scene": "IMG_6979",
+   "control": "contrast",
+   "value": -10.0,
+   "lr_file": "lumiere\\contrast\\IMG_6979-5.tif",
+   "lr_neutral": "neutre\\IMG_6979.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.5909390114192054,
+   "lr_change_sq": 28.66752230600177,
+   "error_sq": 16.940757291346706,
+   "lr_change_rms": 0.006402281261154686,
+   "ipr_change_rms": 0.003260098108082289,
+   "lr_mean_change": [
+    -0.004544596403225497,
+    0.00038832239652428837,
+    0.0007251964577647509
+   ],
+   "ipr_mean_change": [
+    -2.577319352468257e-06,
+    0.00028224888171716567,
+    0.0006364544238087898
+   ]
+  },
+  {
+   "scene": "IMG_6979",
+   "control": "contrast",
+   "value": 10.0,
+   "lr_file": "lumiere\\contrast\\IMG_6979.tif",
+   "lr_neutral": "neutre\\IMG_6979.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.5945987907056377,
+   "lr_change_sq": 35.10731684589218,
+   "error_sq": 20.874768141487152,
+   "lr_change_rms": 0.007084977726227304,
+   "ipr_change_rms": 0.003555745771559519,
+   "lr_mean_change": [
+    0.005021118603161659,
+    -0.0004343565538822216,
+    -0.0007950706256436865
+   ],
+   "ipr_mean_change": [
+    -2.8000962217504626e-06,
+    -0.00030849458081162154,
+    -0.0006911727754033078
+   ]
+  },
+  {
+   "scene": "IMG_6979",
+   "control": "contrast",
+   "value": 25.0,
+   "lr_file": "lumiere\\contrast\\IMG_6979-2.tif",
+   "lr_neutral": "neutre\\IMG_6979.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.583362430178262,
+   "lr_change_sq": 219.666341105773,
+   "error_sq": 128.14509057583078,
+   "lr_change_rms": 0.017722354845038233,
+   "ipr_change_rms": 0.00962400627036643,
+   "lr_mean_change": [
+    0.012564570075676539,
+    -0.0010957962981594366,
+    -0.0019900271805388323
+   ],
+   "ipr_mean_change": [
+    -2.0632704429899142e-05,
+    -0.0008363843133121116,
+    -0.0018626132588729122
+   ]
+  },
+  {
+   "scene": "IMG_6979",
+   "control": "contrast",
+   "value": 50.0,
+   "lr_file": "lumiere\\contrast\\IMG_6979-3.tif",
+   "lr_neutral": "neutre\\IMG_6979.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.5716345503136067,
+   "lr_change_sq": 880.2199393989305,
+   "error_sq": 503.1641292353777,
+   "lr_change_rms": 0.03547605103484246,
+   "ipr_change_rms": 0.02189731433258027,
+   "lr_mean_change": [
+    0.025165678336505057,
+    -0.002225974001473523,
+    -0.003987577654220525
+   ],
+   "ipr_mean_change": [
+    -0.00010412814680013791,
+    -0.0019086096534720576,
+    -0.0041951310472947995
+   ]
+  },
+  {
+   "scene": "IMG_6979",
+   "control": "contrast",
+   "value": 75.0,
+   "lr_file": "lumiere\\contrast\\IMG_6979-4.tif",
+   "lr_neutral": "neutre\\IMG_6979.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.5716885386798538,
+   "lr_change_sq": 1983.9175176103313,
+   "error_sq": 1134.1829065040133,
+   "lr_change_rms": 0.05326003848616785,
+   "ipr_change_rms": 0.037234583955839645,
+   "lr_mean_change": [
+    0.03780236385823326,
+    -0.0033929728730339136,
+    -0.005991879397597221
+   ],
+   "ipr_mean_change": [
+    -0.00029041019596468345,
+    -0.0032547586153816063,
+    -0.007026263874503284
+   ]
+  },
+  {
+   "scene": "IMG_6979",
+   "control": "contrast",
+   "value": 100.0,
+   "lr_file": "lumiere\\contrast\\IMG_6979-10.tif",
+   "lr_neutral": "neutre\\IMG_6979.tif",
+   "kept_share": 0.9883713282393851,
+   "unexplained": 0.5890773487269694,
+   "lr_change_sq": 3525.426226847011,
+   "error_sq": 2076.7487348435607,
+   "lr_change_rms": 0.07141433823825198,
+   "ipr_change_rms": 0.05631619885328064,
+   "lr_mean_change": [
+    0.05071548325661117,
+    -0.004659062078528534,
+    -0.008066382809967486
+   ],
+   "ipr_mean_change": [
+    -0.0009962784773400967,
+    -0.00498096069347879,
+    -0.010438528161908225
+   ]
+  },
+  {
+   "scene": "IMG_7423",
+   "control": "contrast",
+   "value": -100.0,
+   "lr_file": "lumiere\\contrast\\IMG_7423-9.tif",
+   "lr_neutral": "neutre\\IMG_7423.tif",
+   "kept_share": 0.7088385340409956,
+   "unexplained": 0.11249539980199519,
+   "lr_change_sq": 1326.580353375357,
+   "error_sq": 149.23418722243284,
+   "lr_change_rms": 0.0517288461228225,
+   "ipr_change_rms": 0.03808522957863048,
+   "lr_mean_change": [
+    0.04080048749448814,
+    -0.003490943957326843,
+    -0.007000271758329924
+   ],
+   "ipr_mean_change": [
+    0.03162966779312878,
+    -0.0026367588352619953,
+    -0.004685528728512344
+   ]
+  },
+  {
+   "scene": "IMG_7423",
+   "control": "contrast",
+   "value": -75.0,
+   "lr_file": "lumiere\\contrast\\IMG_7423-8.tif",
+   "lr_neutral": "neutre\\IMG_7423.tif",
+   "kept_share": 0.7088385340409956,
+   "unexplained": 0.12052751344031613,
+   "lr_change_sq": 801.0897213542803,
+   "error_sq": 96.55335215742713,
+   "lr_change_rms": 0.04019819847746559,
+   "ipr_change_rms": 0.0289815648110145,
+   "lr_mean_change": [
+    0.03183082433995538,
+    -0.002660168732085451,
+    -0.005352777785203564
+   ],
+   "ipr_mean_change": [
+    0.02412557877280709,
+    -0.002005626777356527,
+    -0.003532836173193818
+   ]
+  },
+  {
+   "scene": "IMG_7423",
+   "control": "contrast",
+   "value": -50.0,
+   "lr_file": "lumiere\\contrast\\IMG_7423-7.tif",
+   "lr_neutral": "neutre\\IMG_7423.tif",
+   "kept_share": 0.7088385340409956,
+   "unexplained": 0.1288881168725523,
+   "lr_change_sq": 380.83519508421375,
+   "error_sq": 49.0851311331954,
+   "lr_change_rms": 0.027716255043290283,
+   "ipr_change_rms": 0.019573275982077615,
+   "lr_mean_change": [
+    0.022031113107935946,
+    -0.001794459749500389,
+    -0.0036236861736253932
+   ],
+   "ipr_mean_change": [
+    0.016332148679714147,
+    -0.0013537715491130507,
+    -0.0023623745972741897
+   ]
+  },
+  {
+   "scene": "IMG_7423",
+   "control": "contrast",
+   "value": -25.0,
+   "lr_file": "lumiere\\contrast\\IMG_7423-6.tif",
+   "lr_neutral": "neutre\\IMG_7423.tif",
+   "kept_share": 0.7088385340409956,
+   "unexplained": 0.13748613551132224,
+   "lr_change_sq": 101.42587540225244,
+   "error_sq": 13.944651649908565,
+   "lr_change_rms": 0.0143034365193539,
+   "ipr_change_rms": 0.009898817735869116,
+   "lr_mean_change": [
+    0.011411036871276118,
+    -0.0009038864572230714,
+    -0.0018319292933723407
+   ],
+   "ipr_mean_change": [
+    0.008279168833485274,
+    -0.0006841492723891138,
+    -0.0011820347551471137
+   ]
+  },
+  {
+   "scene": "IMG_7423",
+   "control": "contrast",
+   "value": -10.0,
+   "lr_file": "lumiere\\contrast\\IMG_7423-5.tif",
+   "lr_neutral": "neutre\\IMG_7423.tif",
+   "kept_share": 0.7088385340409956,
+   "unexplained": 0.14270566509747404,
+   "lr_change_sq": 16.8183059185291,
+   "error_sq": 2.4000675319164793,
+   "lr_change_rms": 0.0058244796791061555,
+   "ipr_change_rms": 0.003983655691845255,
+   "lr_mean_change": [
+    0.004656235579905683,
+    -0.00036235416228340477,
+    -0.0007360032704858935
+   ],
+   "ipr_mean_change": [
+    0.003336540763938994,
+    -0.0002751869981165112,
+    -0.00047248617714787486
+   ]
+  },
+  {
+   "scene": "IMG_7423",
+   "control": "contrast",
+   "value": 10.0,
+   "lr_file": "lumiere\\contrast\\IMG_7423.tif",
+   "lr_neutral": "neutre\\IMG_7423.tif",
+   "kept_share": 0.7088228060944363,
+   "unexplained": 0.15171675212837374,
+   "lr_change_sq": 20.790991635838225,
+   "error_sq": 3.15434172451756,
+   "lr_change_rms": 0.006476023715786663,
+   "ipr_change_rms": 0.004329375570156345,
+   "lr_mean_change": [
+    -0.005182622162706242,
+    0.00039706966983130983,
+    0.0008097175012792467
+   ],
+   "ipr_mean_change": [
+    -0.0036331955189755397,
+    0.0002988259050085525,
+    0.0005084717775238038
+   ]
+  },
+  {
+   "scene": "IMG_7423",
+   "control": "contrast",
+   "value": 25.0,
+   "lr_file": "lumiere\\contrast\\IMG_7423-2.tif",
+   "lr_neutral": "neutre\\IMG_7423.tif",
+   "kept_share": 0.708797069454612,
+   "unexplained": 0.12323298352934985,
+   "lr_change_sq": 130.77671660935613,
+   "error_sq": 16.116004963943237,
+   "lr_change_rms": 0.01624216536790545,
+   "ipr_change_rms": 0.011679831023855265,
+   "lr_mean_change": [
+    -0.012990972409966533,
+    0.00099061234964794,
+    0.0020276557520503362
+   ],
+   "ipr_mean_change": [
+    -0.009818315774455572,
+    0.0008055364328063174,
+    0.0013594747684545717
+   ]
+  },
+  {
+   "scene": "IMG_7423",
+   "control": "contrast",
+   "value": 50.0,
+   "lr_file": "lumiere\\contrast\\IMG_7423-3.tif",
+   "lr_neutral": "neutre\\IMG_7423.tif",
+   "kept_share": 0.7087656135614934,
+   "unexplained": 0.08556410710689878,
+   "lr_change_sq": 529.0486329761563,
+   "error_sq": 45.26757389673023,
+   "lr_change_rms": 0.03266902314010584,
+   "ipr_change_rms": 0.026396446311581088,
+   "lr_mean_change": [
+    -0.02610446110082846,
+    0.001974253266302972,
+    0.004065661562185597
+   ],
+   "ipr_mean_change": [
+    -0.022261777788177766,
+    0.0018171398515699326,
+    0.0030147425908392395
+   ]
+  },
+  {
+   "scene": "IMG_7423",
+   "control": "contrast",
+   "value": 75.0,
+   "lr_file": "lumiere\\contrast\\IMG_7423-4.tif",
+   "lr_neutral": "neutre\\IMG_7423.tif",
+   "kept_share": 0.7087169999084919,
+   "unexplained": 0.06313826558562648,
+   "lr_change_sq": 1204.5060784330517,
+   "error_sq": 76.05042467960746,
+   "lr_change_rms": 0.04929555297515682,
+   "ipr_change_rms": 0.04450395493097521,
+   "lr_mean_change": [
+    -0.039350275919754395,
+    0.0029480314587233295,
+    0.006112161060299626
+   ],
+   "ipr_mean_change": [
+    -0.03767561428695296,
+    0.0030552392941987374,
+    0.0049567496356901445
+   ]
+  },
+  {
+   "scene": "IMG_7423",
+   "control": "contrast",
+   "value": 100.0,
+   "lr_file": "lumiere\\contrast\\IMG_7423-10.tif",
+   "lr_neutral": "neutre\\IMG_7423.tif",
+   "kept_share": 0.7086783949487555,
+   "unexplained": 0.06000153417150641,
+   "lr_change_sq": 2167.6125188678548,
+   "error_sq": 130.06007662143466,
+   "lr_change_rms": 0.06613112314975313,
+   "ipr_change_rms": 0.06633697440127796,
+   "lr_mean_change": [
+    -0.05273057071104038,
+    0.003900253129877139,
+    0.008165533242770882
+   ],
+   "ipr_mean_change": [
+    -0.056396623207404,
+    0.00453428486637864,
+    0.007147914762315781
+   ]
+  },
+  {
+   "scene": "IMG_7953",
+   "control": "contrast",
+   "value": -100.0,
+   "lr_file": "lumiere\\contrast\\IMG_7953-9.tif",
+   "lr_neutral": "neutre\\IMG_7953.tif",
+   "kept_share": 0.7308447909040996,
+   "unexplained": 0.139374293259287,
+   "lr_change_sq": 2560.806888989454,
+   "error_sq": 356.91065032641853,
+   "lr_change_rms": 0.07078080646848933,
+   "ipr_change_rms": 0.06493447982119938,
+   "lr_mean_change": [
+    0.03788420078658309,
+    0.0019324083918596461,
+    -0.002531678120859345
+   ],
+   "ipr_mean_change": [
+    0.038808039731017804,
+    -0.0006058466776108545,
+    -0.00463568063646317
+   ]
+  },
+  {
+   "scene": "IMG_7953",
+   "control": "contrast",
+   "value": -75.0,
+   "lr_file": "lumiere\\contrast\\IMG_7953-8.tif",
+   "lr_neutral": "neutre\\IMG_7953.tif",
+   "kept_share": 0.7308447909040996,
+   "unexplained": 0.14625635620507108,
+   "lr_change_sq": 1392.3677238431112,
+   "error_sq": 203.64262978684212,
+   "lr_change_rms": 0.05219201517412351,
+   "ipr_change_rms": 0.047906218205289425,
+   "lr_mean_change": [
+    0.027708016502640407,
+    0.0016137444418968913,
+    -0.0015859682264121842
+   ],
+   "ipr_mean_change": [
+    0.02856331146023245,
+    -0.0002981986596617768,
+    -0.0032096205508085874
+   ]
+  },
+  {
+   "scene": "IMG_7953",
+   "control": "contrast",
+   "value": -50.0,
+   "lr_file": "lumiere\\contrast\\IMG_7953-7.tif",
+   "lr_neutral": "neutre\\IMG_7953.tif",
+   "kept_share": 0.7308447909040996,
+   "unexplained": 0.15339089032373307,
+   "lr_change_sq": 594.8130740959238,
+   "error_sq": 91.23890701177035,
+   "lr_change_rms": 0.03411279817609739,
+   "ipr_change_rms": 0.03133542895687705,
+   "lr_mean_change": [
+    0.01795782531652749,
+    0.0011651559867914057,
+    -0.0008477668297365271
+   ],
+   "ipr_mean_change": [
+    0.018638834516308392,
+    -9.496559772235823e-05,
+    -0.0019572311411399047
+   ]
+  },
+  {
+   "scene": "IMG_7953",
+   "control": "contrast",
+   "value": -25.0,
+   "lr_file": "lumiere\\contrast\\IMG_7953-6.tif",
+   "lr_neutral": "neutre\\IMG_7953.tif",
+   "kept_share": 0.7308447909040996,
+   "unexplained": 0.16075698036423683,
+   "lr_change_sq": 142.16714449026784,
+   "error_sq": 22.854360855261607,
+   "lr_change_rms": 0.01667733728659816,
+   "ipr_change_rms": 0.015334267119084354,
+   "lr_mean_change": [
+    0.00870373207073637,
+    0.0006144247983529633,
+    -0.000317454794923332
+   ],
+   "ipr_mean_change": [
+    0.009099486098043607,
+    3.0136488378175916e-06,
+    -0.0008834700198280847
+   ]
+  },
+  {
+   "scene": "IMG_7953",
+   "control": "contrast",
+   "value": -10.0,
+   "lr_file": "lumiere\\contrast\\IMG_7953-5.tif",
+   "lr_neutral": "neutre\\IMG_7953.tif",
+   "kept_share": 0.7308447909040996,
+   "unexplained": 0.16536480127797243,
+   "lr_change_sq": 22.07697904063111,
+   "error_sq": 3.6507552518719257,
+   "lr_change_rms": 0.0065719903122262065,
+   "ipr_change_rms": 0.006048014499456577,
+   "lr_mean_change": [
+    0.0034111631389641553,
+    0.0002502637668594822,
+    -0.00010060682912407665
+   ],
+   "ipr_mean_change": [
+    0.0035839512997191086,
+    1.2616640605280083e-05,
+    -0.0003278345690912885
+   ]
+  },
+  {
+   "scene": "IMG_7953",
+   "control": "contrast",
+   "value": 10.0,
+   "lr_file": "lumiere\\contrast\\IMG_7953.tif",
+   "lr_neutral": "neutre\\IMG_7953.tif",
+   "kept_share": 0.7090387079062958,
+   "unexplained": 0.16571902082634685,
+   "lr_change_sq": 25.831798639820878,
+   "error_sq": 4.280820376774474,
+   "lr_change_rms": 0.007217420698110149,
+   "ipr_change_rms": 0.006432776767423559,
+   "lr_mean_change": [
+    -0.003994756801597428,
+    -0.0002918465048230334,
+    9.721190924119544e-05
+   ],
+   "ipr_mean_change": [
+    -0.004031584753390974,
+    -9.918222481541913e-07,
+    0.0003018975420810578
+   ]
+  },
+  {
+   "scene": "IMG_7953",
+   "control": "contrast",
+   "value": 25.0,
+   "lr_file": "lumiere\\contrast\\IMG_7953-2.tif",
+   "lr_neutral": "neutre\\IMG_7953.tif",
+   "kept_share": 0.674597364568082,
+   "unexplained": 0.16059222889223818,
+   "lr_change_sq": 158.28025628626324,
+   "error_sq": 25.418579146645705,
+   "lr_change_rms": 0.01831600368093575,
+   "ipr_change_rms": 0.017091389591779027,
+   "lr_mean_change": [
+    -0.011293078372679797,
+    -0.0007995064279721772,
+    0.00019558164848566817
+   ],
+   "ipr_mean_change": [
+    -0.011739583071571748,
+    9.543039902019908e-05,
+    0.000608700569458332
+   ]
+  },
+  {
+   "scene": "IMG_7953",
+   "control": "contrast",
+   "value": 50.0,
+   "lr_file": "lumiere\\contrast\\IMG_7953-3.tif",
+   "lr_neutral": "neutre\\IMG_7953.tif",
+   "kept_share": 0.6271675969985359,
+   "unexplained": 0.15580114365215258,
+   "lr_change_sq": 613.4582071517536,
+   "error_sq": 95.57749025704234,
+   "lr_change_rms": 0.03739730912960968,
+   "ipr_change_rms": 0.03720223191082546,
+   "lr_mean_change": [
+    -0.027033876808496938,
+    -0.0018513202927782175,
+    -0.00013013064393795315
+   ],
+   "ipr_mean_change": [
+    -0.029023589044513798,
+    0.0004947358427566227,
+    0.00039177472371229897
+   ]
+  },
+  {
+   "scene": "IMG_7953",
+   "control": "contrast",
+   "value": 75.0,
+   "lr_file": "lumiere\\contrast\\IMG_7953-4.tif",
+   "lr_neutral": "neutre\\IMG_7953.tif",
+   "kept_share": 0.6058061859443631,
+   "unexplained": 0.15154868129564436,
+   "lr_change_sq": 1377.3388508693436,
+   "error_sq": 208.7338865465072,
+   "lr_change_rms": 0.0570155367228181,
+   "ipr_change_rms": 0.059352337064578514,
+   "lr_mean_change": [
+    -0.04446343020841527,
+    -0.0030111252331595706,
+    -0.0012182767759418617
+   ],
+   "ipr_mean_change": [
+    -0.04879125109401105,
+    0.0008588527572968896,
+    -0.0005872562726243886
+   ]
+  },
+  {
+   "scene": "IMG_7953",
+   "control": "contrast",
+   "value": 100.0,
+   "lr_file": "lumiere\\contrast\\IMG_7953-10.tif",
+   "lr_neutral": "neutre\\IMG_7953.tif",
+   "kept_share": 0.5939315862920937,
+   "unexplained": 0.14817256425319147,
+   "lr_change_sq": 2492.696674296691,
+   "error_sq": 369.34925813594316,
+   "lr_change_rms": 0.07746511603892252,
+   "ipr_change_rms": 0.08253902799434107,
+   "lr_mean_change": [
+    -0.06302441112516564,
+    -0.004154224605116598,
+    -0.0030481337832715567
+   ],
+   "ipr_mean_change": [
+    -0.06955568823475336,
+    0.001123525243638622,
+    -0.0023465994963856826
+   ]
+  },
+  {
+   "scene": "IMG_7958",
+   "control": "contrast",
+   "value": -100.0,
+   "lr_file": "lumiere\\contrast\\IMG_7958-9.tif",
+   "lr_neutral": "neutre\\IMG_7958.tif",
+   "kept_share": 0.9913196033125915,
+   "unexplained": 0.1844987214625972,
+   "lr_change_sq": 2034.1075869074207,
+   "error_sq": 375.29024910178794,
+   "lr_change_rms": 0.05416512908186665,
+   "ipr_change_rms": 0.05329695084845429,
+   "lr_mean_change": [
+    0.03015552751928619,
+    -0.0007997923006811361,
+    -0.006523091862975279
+   ],
+   "ipr_mean_change": [
+    0.04126696458640607,
+    -0.000848121313254061,
+    -0.004467838405720612
+   ]
+  },
+  {
+   "scene": "IMG_7958",
+   "control": "contrast",
+   "value": -75.0,
+   "lr_file": "lumiere\\contrast\\IMG_7958-8.tif",
+   "lr_neutral": "neutre\\IMG_7958.tif",
+   "kept_share": 0.9913196033125915,
+   "unexplained": 0.19911435673659497,
+   "lr_change_sq": 1095.0614963603189,
+   "error_sq": 218.04246543479803,
+   "lr_change_rms": 0.03974221578654426,
+   "ipr_change_rms": 0.038586256185983776,
+   "lr_mean_change": [
+    0.02125834102572456,
+    -0.0006390466545616156,
+    -0.004991680303600096
+   ],
+   "ipr_mean_change": [
+    0.029617498456979377,
+    -0.0005993024318811271,
+    -0.003334148737260087
+   ]
+  },
+  {
+   "scene": "IMG_7958",
+   "control": "contrast",
+   "value": -50.0,
+   "lr_file": "lumiere\\contrast\\IMG_7958-7.tif",
+   "lr_neutral": "neutre\\IMG_7958.tif",
+   "kept_share": 0.9913196033125915,
+   "unexplained": 0.21513021034113664,
+   "lr_change_sq": 464.79527772048436,
+   "error_sq": 99.99150586157482,
+   "lr_change_rms": 0.025891885400767277,
+   "ipr_change_rms": 0.02478786626903886,
+   "lr_mean_change": [
+    0.013248520859991834,
+    -0.00045615068624614856,
+    -0.0033928981147430637
+   ],
+   "ipr_mean_change": [
+    0.018845372946337608,
+    -0.0003797927854101126,
+    -0.0022068185887722204
+   ]
+  },
+  {
+   "scene": "IMG_7958",
+   "control": "contrast",
+   "value": -25.0,
+   "lr_file": "lumiere\\contrast\\IMG_7958-6.tif",
+   "lr_neutral": "neutre\\IMG_7958.tif",
+   "kept_share": 0.9913196033125915,
+   "unexplained": 0.23250955034900264,
+   "lr_change_sq": 110.780992597898,
+   "error_sq": 25.757638776153456,
+   "lr_change_rms": 0.012640534802029379,
+   "ipr_change_rms": 0.01192526021105338,
+   "lr_mean_change": [
+    0.006159385034650848,
+    -0.00025107369927737904,
+    -0.0017248204559666708
+   ],
+   "ipr_mean_change": [
+    0.008972565933663182,
+    -0.00018258961330361258,
+    -0.0010921980878314096
+   ]
+  },
+  {
+   "scene": "IMG_7958",
+   "control": "contrast",
+   "value": -10.0,
+   "lr_file": "lumiere\\contrast\\IMG_7958-5.tif",
+   "lr_neutral": "neutre\\IMG_7958.tif",
+   "kept_share": 0.9913196033125915,
+   "unexplained": 0.2441719147543233,
+   "lr_change_sq": 17.196145811497452,
+   "error_sq": 4.198815849187869,
+   "lr_change_rms": 0.004980218326701298,
+   "ipr_change_rms": 0.004658463330950559,
+   "lr_mean_change": [
+    0.0023488099950515935,
+    -0.00010191345011689987,
+    -0.0006975182046706187
+   ],
+   "ipr_mean_change": [
+    0.0034818244561591162,
+    -7.191551634236232e-05,
+    -0.0004330821242856196
+   ]
+  },
+  {
+   "scene": "IMG_7958",
+   "control": "contrast",
+   "value": 10.0,
+   "lr_file": "lumiere\\contrast\\IMG_7958.tif",
+   "lr_neutral": "neutre\\IMG_7958.tif",
+   "kept_share": 0.9900327713213762,
+   "unexplained": 0.24482872598598948,
+   "lr_change_sq": 20.33916792833905,
+   "error_sq": 4.979612571510347,
+   "lr_change_rms": 0.005419777723817441,
+   "ipr_change_rms": 0.004859198763017865,
+   "lr_mean_change": [
+    -0.002523117690063174,
+    0.00012524303832161005,
+    0.0007577809288444287
+   ],
+   "ipr_mean_change": [
+    -0.003608059632445913,
+    7.805745784102188e-05,
+    0.0004597999781781405
+   ]
+  },
+  {
+   "scene": "IMG_7958",
+   "control": "contrast",
+   "value": 25.0,
+   "lr_file": "lumiere\\contrast\\IMG_7958-2.tif",
+   "lr_neutral": "neutre\\IMG_7958.tif",
+   "kept_share": 0.9867985335834554,
+   "unexplained": 0.24612342551061667,
+   "lr_change_sq": 126.12616913678389,
+   "error_sq": 31.042604794476667,
+   "lr_change_rms": 0.013518485035190294,
+   "ipr_change_rms": 0.012648500623861485,
+   "lr_mean_change": [
+    -0.006359055079627616,
+    0.0002929108983464648,
+    0.001874908193069771
+   ],
+   "ipr_mean_change": [
+    -0.009387589830095803,
+    0.00021996008450298976,
+    0.0012083668182541734
+   ]
+  },
+  {
+   "scene": "IMG_7958",
+   "control": "contrast",
+   "value": 50.0,
+   "lr_file": "lumiere\\contrast\\IMG_7958-3.tif",
+   "lr_neutral": "neutre\\IMG_7958.tif",
+   "kept_share": 0.977057215409956,
+   "unexplained": 0.2537528909174194,
+   "lr_change_sq": 492.6157729919528,
+   "error_sq": 125.00267650822724,
+   "lr_change_rms": 0.02684935322144795,
+   "ipr_change_rms": 0.026626539845407804,
+   "lr_mean_change": [
+    -0.01317096964552733,
+    0.0005588385031695619,
+    0.0036090156797331965
+   ],
+   "ipr_mean_change": [
+    -0.019947394468676376,
+    0.0005652612140734126,
+    0.0025280253435831326
+   ]
+  },
+  {
+   "scene": "IMG_7958",
+   "control": "contrast",
+   "value": 75.0,
+   "lr_file": "lumiere\\contrast\\IMG_7958-4.tif",
+   "lr_neutral": "neutre\\IMG_7958.tif",
+   "kept_share": 0.9620127196193266,
+   "unexplained": 0.2674597151145193,
+   "lr_change_sq": 1062.1200648022036,
+   "error_sq": 284.0743299494122,
+   "lr_change_rms": 0.03973160135525017,
+   "ipr_change_rms": 0.04121790493706118,
+   "lr_mean_change": [
+    -0.020961562286182296,
+    0.0007280498198471605,
+    0.005025963356141051
+   ],
+   "ipr_mean_change": [
+    -0.03156628876609356,
+    0.001107745908505488,
+    0.0037427045455871743
+   ]
+  },
+  {
+   "scene": "IMG_7958",
+   "control": "contrast",
+   "value": 100.0,
+   "lr_file": "lumiere\\contrast\\IMG_7958-10.tif",
+   "lr_neutral": "neutre\\IMG_7958.tif",
+   "kept_share": 0.949376029465593,
+   "unexplained": 0.2826984732650545,
+   "lr_change_sq": 1814.6158399683582,
+   "error_sq": 512.9891275216393,
+   "lr_change_rms": 0.05227726850487417,
+   "ipr_change_rms": 0.055807481012086116,
+   "lr_mean_change": [
+    -0.029419549504118493,
+    0.0008369229867022884,
+    0.006098733929287516
+   ],
+   "ipr_mean_change": [
+    -0.04325632708396172,
+    0.0018806921006699296,
+    0.004796191577735196
+   ]
+  },
+  {
+   "scene": "IMG_7961",
+   "control": "contrast",
+   "value": -100.0,
+   "lr_file": "lumiere\\contrast\\IMG_7961-9.tif",
+   "lr_neutral": "neutre\\IMG_7961.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.27521601579815336,
+   "lr_change_sq": 1761.270123322584,
+   "error_sq": 484.7297460851638,
+   "lr_change_rms": 0.050182541672744774,
+   "ipr_change_rms": 0.04776150832467605,
+   "lr_mean_change": [
+    0.020695516848912254,
+    0.0008258978115231796,
+    0.0027344897527679353
+   ],
+   "ipr_mean_change": [
+    0.021116569154744594,
+    0.000441818317253512,
+    0.0014474304738187214
+   ]
+  },
+  {
+   "scene": "IMG_7961",
+   "control": "contrast",
+   "value": -75.0,
+   "lr_file": "lumiere\\contrast\\IMG_7961-8.tif",
+   "lr_neutral": "neutre\\IMG_7961.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.2852701393594607,
+   "lr_change_sq": 967.1658860458924,
+   "error_sq": 275.90354709602803,
+   "lr_change_rms": 0.037186915305967426,
+   "ipr_change_rms": 0.03527259915247592,
+   "lr_mean_change": [
+    0.014385712250900322,
+    0.000671121670984145,
+    0.0021381941783854405
+   ],
+   "ipr_mean_change": [
+    0.01511881921421351,
+    0.0003788900124308959,
+    0.0011206643596439407
+   ]
+  },
+  {
+   "scene": "IMG_7961",
+   "control": "contrast",
+   "value": -50.0,
+   "lr_file": "lumiere\\contrast\\IMG_7961-7.tif",
+   "lr_neutral": "neutre\\IMG_7961.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.2953893409546991,
+   "lr_change_sq": 419.4250994898497,
+   "error_sq": 123.8937037181658,
+   "lr_change_rms": 0.024488764678752127,
+   "ipr_change_rms": 0.023105740999217236,
+   "lr_mean_change": [
+    0.008798631594198072,
+    0.00047914374854877203,
+    0.0014812171240005832
+   ],
+   "ipr_mean_change": [
+    0.009568918547103605,
+    0.00028399812921051196,
+    0.0007689892175981672
+   ]
+  },
+  {
+   "scene": "IMG_7961",
+   "control": "contrast",
+   "value": -25.0,
+   "lr_file": "lumiere\\contrast\\IMG_7961-6.tif",
+   "lr_neutral": "neutre\\IMG_7961.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.30546309489034457,
+   "lr_change_sq": 102.30045501690324,
+   "error_sq": 31.24901359815374,
+   "lr_change_rms": 0.012094236378982132,
+   "ipr_change_rms": 0.011329761661940822,
+   "lr_mean_change": [
+    0.00398966952683586,
+    0.0002536937725531232,
+    0.0007665787277653883
+   ],
+   "ipr_mean_change": [
+    0.004516877037809765,
+    0.00015735599560392523,
+    0.00039454462150078056
+   ]
+  },
+  {
+   "scene": "IMG_7961",
+   "control": "contrast",
+   "value": -10.0,
+   "lr_file": "lumiere\\contrast\\IMG_7961-5.tif",
+   "lr_neutral": "neutre\\IMG_7961.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.3115993999943666,
+   "lr_change_sq": 16.120458016311268,
+   "error_sq": 5.023125045516968,
+   "lr_change_rms": 0.004800962992339407,
+   "ipr_change_rms": 0.004475402457333703,
+   "lr_mean_change": [
+    0.0014944048045034853,
+    0.00010441409954647188,
+    0.0003123399385610701
+   ],
+   "ipr_mean_change": [
+    0.0017406994118010512,
+    6.652955446310691e-05,
+    0.00016004071060031616
+   ]
+  },
+  {
+   "scene": "IMG_7961",
+   "control": "contrast",
+   "value": 10.0,
+   "lr_file": "lumiere\\contrast\\IMG_7961.tif",
+   "lr_neutral": "neutre\\IMG_7961.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.3079362365112347,
+   "lr_change_sq": 19.397131331648712,
+   "error_sq": 5.973079621382059,
+   "lr_change_rms": 0.005266334286491546,
+   "ipr_change_rms": 0.0047398801579180356,
+   "lr_mean_change": [
+    -0.001580612038968185,
+    -0.00011703192688725033,
+    -0.00034700949250086654
+   ],
+   "ipr_mean_change": [
+    -0.0017771842078587812,
+    -7.696470517116056e-05,
+    -0.00017567100301712498
+   ]
+  },
+  {
+   "scene": "IMG_7961",
+   "control": "contrast",
+   "value": 25.0,
+   "lr_file": "lumiere\\contrast\\IMG_7961-2.tif",
+   "lr_neutral": "neutre\\IMG_7961.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.31215959067550014,
+   "lr_change_sq": 122.6659693900035,
+   "error_sq": 38.291358794596924,
+   "lr_change_rms": 0.013243467724986547,
+   "ipr_change_rms": 0.012503526653561376,
+   "lr_mean_change": [
+    -0.00398424907462188,
+    -0.0002938407031803161,
+    -0.0008701714979238621
+   ],
+   "ipr_mean_change": [
+    -0.00452933982243537,
+    -0.0002181424119640793,
+    -0.0004776339700160868
+   ]
+  },
+  {
+   "scene": "IMG_7961",
+   "control": "contrast",
+   "value": 50.0,
+   "lr_file": "lumiere\\contrast\\IMG_7961-3.tif",
+   "lr_neutral": "neutre\\IMG_7961.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.324808768974306,
+   "lr_change_sq": 502.3402603163961,
+   "error_sq": 163.16452155960104,
+   "lr_change_rms": 0.026800238752056824,
+   "ipr_change_rms": 0.027048569204641285,
+   "lr_mean_change": [
+    -0.008113631168535317,
+    -0.0005886926556066794,
+    -0.0017488188446427159
+   ],
+   "ipr_mean_change": [
+    -0.009088031625265844,
+    -0.000536882240923664,
+    -0.0010933863328041504
+   ]
+  },
+  {
+   "scene": "IMG_7961",
+   "control": "contrast",
+   "value": 75.0,
+   "lr_file": "lumiere\\contrast\\IMG_7961-4.tif",
+   "lr_neutral": "neutre\\IMG_7961.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.3419794309373025,
+   "lr_change_sq": 1163.1442576513318,
+   "error_sq": 397.7714113295936,
+   "lr_change_rms": 0.04078086753401268,
+   "ipr_change_rms": 0.043314564967836894,
+   "lr_mean_change": [
+    -0.012456123795053098,
+    -0.0008774836013988486,
+    -0.0026354224372315536
+   ],
+   "ipr_mean_change": [
+    -0.013094945160804568,
+    -0.0009857871404809582,
+    -0.001863687123341971
+   ]
+  },
+  {
+   "scene": "IMG_7961",
+   "control": "contrast",
+   "value": 100.0,
+   "lr_file": "lumiere\\contrast\\IMG_7961-10.tif",
+   "lr_neutral": "neutre\\IMG_7961.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.36114618043390684,
+   "lr_change_sq": 2144.833668642523,
+   "error_sq": 774.598487096291,
+   "lr_change_rms": 0.05537789952925183,
+   "ipr_change_rms": 0.06090562001485503,
+   "lr_mean_change": [
+    -0.017133950260247884,
+    -0.0011549231526693168,
+    -0.003529911453973245
+   ],
+   "ipr_mean_change": [
+    -0.01584134226667793,
+    -0.0015940793607888408,
+    -0.0027954351077407857
+   ]
+  },
+  {
+   "scene": "IMG_8473",
+   "control": "contrast",
+   "value": -100.0,
+   "lr_file": "lumiere\\contrast\\IMG_8473-9.tif",
+   "lr_neutral": "neutre\\IMG_8473.tif",
+   "kept_share": 0.9997469230417276,
+   "unexplained": 0.04898992696667727,
+   "lr_change_sq": 1990.9367864943013,
+   "error_sq": 97.53584776562695,
+   "lr_change_rms": 0.05336092720478081,
+   "ipr_change_rms": 0.050733531746823865,
+   "lr_mean_change": [
+    0.03571151016288492,
+    -0.007850254354378998,
+    0.003585626167422856
+   ],
+   "ipr_mean_change": [
+    0.03734238083306917,
+    -0.005084326922760777,
+    0.0019843090899406184
+   ]
+  },
+  {
+   "scene": "IMG_8473",
+   "control": "contrast",
+   "value": -75.0,
+   "lr_file": "lumiere\\contrast\\IMG_8473-8.tif",
+   "lr_neutral": "neutre\\IMG_8473.tif",
+   "kept_share": 0.9997469230417276,
+   "unexplained": 0.05667581966963084,
+   "lr_change_sq": 1107.047758403407,
+   "error_sq": 62.742839120940545,
+   "lr_change_rms": 0.039790354667183406,
+   "ipr_change_rms": 0.037300148621974755,
+   "lr_mean_change": [
+    0.026518976070858388,
+    -0.006132942689160898,
+    0.00284812201900767
+   ],
+   "ipr_mean_change": [
+    0.02751012782937582,
+    -0.003865180080172745,
+    0.0015174457052806155
+   ]
+  },
+  {
+   "scene": "IMG_8473",
+   "control": "contrast",
+   "value": -50.0,
+   "lr_file": "lumiere\\contrast\\IMG_8473-7.tif",
+   "lr_neutral": "neutre\\IMG_8473.tif",
+   "kept_share": 0.9997469230417276,
+   "unexplained": 0.06553607619710888,
+   "lr_change_sq": 487.7522999783315,
+   "error_sq": 31.965371896695046,
+   "lr_change_rms": 0.026411574665834072,
+   "ipr_change_rms": 0.02434019462329473,
+   "lr_mean_change": [
+    0.0175098966842419,
+    -0.004250240998775231,
+    0.0020097155757449053
+   ],
+   "ipr_mean_change": [
+    0.017984184590464008,
+    -0.00260657600131813,
+    0.0010301602014872744
+   ]
+  },
+  {
+   "scene": "IMG_8473",
+   "control": "contrast",
+   "value": -25.0,
+   "lr_file": "lumiere\\contrast\\IMG_8473-6.tif",
+   "lr_neutral": "neutre\\IMG_8473.tif",
+   "kept_share": 0.9997469230417276,
+   "unexplained": 0.07563582451022877,
+   "lr_change_sq": 121.28638548871555,
+   "error_sq": 9.173595768304446,
+   "lr_change_rms": 0.013170451354017412,
+   "ipr_change_rms": 0.011897674185739969,
+   "lr_mean_change": [
+    0.008675010376584897,
+    -0.00220384394867259,
+    0.0010619071180407087
+   ],
+   "ipr_mean_change": [
+    0.008804335361113164,
+    -0.0013157486760332687,
+    0.0005237731213422859
+   ]
+  },
+  {
+   "scene": "IMG_8473",
+   "control": "contrast",
+   "value": -10.0,
+   "lr_file": "lumiere\\contrast\\IMG_8473-5.tif",
+   "lr_neutral": "neutre\\IMG_8473.tif",
+   "kept_share": 0.9997469230417276,
+   "unexplained": 0.08248827055717815,
+   "lr_change_sq": 19.36200122441071,
+   "error_sq": 1.5971379955276055,
+   "lr_change_rms": 0.005262229117943561,
+   "ipr_change_rms": 0.004692601380597833,
+   "lr_mean_change": [
+    0.0034495534706096374,
+    -0.000899472425248248,
+    0.0004381300887692606
+   ],
+   "ipr_mean_change": [
+    0.003475217113925397,
+    -0.0005288025436871958,
+    0.00021146372692010408
+   ]
+  },
+  {
+   "scene": "IMG_8473",
+   "control": "contrast",
+   "value": 10.0,
+   "lr_file": "lumiere\\contrast\\IMG_8473.tif",
+   "lr_neutral": "neutre\\IMG_8473.tif",
+   "kept_share": 0.9996768621888726,
+   "unexplained": 0.08582091383288461,
+   "lr_change_sq": 23.517318795182913,
+   "error_sq": 2.0182777899018705,
+   "lr_change_rms": 0.0057996762746383,
+   "ipr_change_rms": 0.004961834036235708,
+   "lr_mean_change": [
+    -0.00380035924973574,
+    0.0010008527054530712,
+    -0.00049324095601932
+   ],
+   "ipr_mean_change": [
+    -0.0036783520941300087,
+    0.0005736070308294648,
+    -0.00023087663292828444
+   ]
+  },
+  {
+   "scene": "IMG_8473",
+   "control": "contrast",
+   "value": 25.0,
+   "lr_file": "lumiere\\contrast\\IMG_8473-2.tif",
+   "lr_neutral": "neutre\\IMG_8473.tif",
+   "kept_share": 0.9995281616032211,
+   "unexplained": 0.07014419711988704,
+   "lr_change_sq": 148.4231797683251,
+   "error_sq": 10.411024778829825,
+   "lr_change_rms": 0.01457112279699019,
+   "ipr_change_rms": 0.013076534242947004,
+   "lr_mean_change": [
+    -0.00957202988541249,
+    0.0024975646588271893,
+    -0.001239389800641707
+   ],
+   "ipr_mean_change": [
+    -0.009702531122409357,
+    0.001544863670675971,
+    -0.0006253612002783837
+   ]
+  },
+  {
+   "scene": "IMG_8473",
+   "control": "contrast",
+   "value": 50.0,
+   "lr_file": "lumiere\\contrast\\IMG_8473-3.tif",
+   "lr_neutral": "neutre\\IMG_8473.tif",
+   "kept_share": 0.9982213122254758,
+   "unexplained": 0.05015800367638468,
+   "lr_change_sq": 604.8702076151219,
+   "error_sq": 30.33908209729485,
+   "lr_change_rms": 0.029434546432210246,
+   "ipr_change_rms": 0.028271778958654604,
+   "lr_mean_change": [
+    -0.019479258838428392,
+    0.004988768708264324,
+    -0.0024995811806991686
+   ],
+   "ipr_mean_change": [
+    -0.02104894597384002,
+    0.0034845582091921927,
+    -0.0014242435978693891
+   ]
+  },
+  {
+   "scene": "IMG_8473",
+   "control": "contrast",
+   "value": 75.0,
+   "lr_file": "lumiere\\contrast\\IMG_8473-4.tif",
+   "lr_neutral": "neutre\\IMG_8473.tif",
+   "kept_share": 0.9877936836566618,
+   "unexplained": 0.038110302620807085,
+   "lr_change_sq": 1384.301072583713,
+   "error_sq": 52.75613279447313,
+   "lr_change_rms": 0.044763272112987466,
+   "ipr_change_rms": 0.04541260952859244,
+   "lr_mean_change": [
+    -0.030381103442094694,
+    0.007555846618771774,
+    -0.0037466917817516633
+   ],
+   "ipr_mean_change": [
+    -0.03448305682860466,
+    0.005936718848875294,
+    -0.002382477790206174
+   ]
+  },
+  {
+   "scene": "IMG_8473",
+   "control": "contrast",
+   "value": 100.0,
+   "lr_file": "lumiere\\contrast\\IMG_8473-10.tif",
+   "lr_neutral": "neutre\\IMG_8473.tif",
+   "kept_share": 0.9765296142935578,
+   "unexplained": 0.03623471297262575,
+   "lr_change_sq": 2498.5639355455983,
+   "error_sq": 90.53474704824895,
+   "lr_change_rms": 0.06048423529742378,
+   "ipr_change_rms": 0.06414928115122667,
+   "lr_mean_change": [
+    -0.04255929989870061,
+    0.010159187417555815,
+    -0.005095491843183605
+   ],
+   "ipr_mean_change": [
+    -0.049906242466884826,
+    0.008920711886985722,
+    -0.0036565701298248788
+   ]
+  },
+  {
+   "scene": "_MG_7580",
+   "control": "contrast",
+   "value": -100.0,
+   "lr_file": "lumiere\\contrast\\_MG_7580-9.tif",
+   "lr_neutral": "neutre\\_MG_7580.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.05299883453140829,
+   "lr_change_sq": 3024.1133604184306,
+   "error_sq": 160.27448359303747,
+   "lr_change_rms": 0.06575650214784695,
+   "ipr_change_rms": 0.058868085273764845,
+   "lr_mean_change": [
+    -0.0031167701903199196,
+    -0.0004960073657940207,
+    0.0007418508358797225
+   ],
+   "ipr_mean_change": [
+    -0.013071295961381858,
+    2.7610822280439727e-05,
+    0.00031035907220854103
+   ]
+  },
+  {
+   "scene": "_MG_7580",
+   "control": "contrast",
+   "value": -75.0,
+   "lr_file": "lumiere\\contrast\\_MG_7580-8.tif",
+   "lr_neutral": "neutre\\_MG_7580.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.05342362525947776,
+   "lr_change_sq": 1665.7614462309791,
+   "error_sq": 88.99101527512954,
+   "lr_change_rms": 0.04880294980546163,
+   "ipr_change_rms": 0.04360103404910366,
+   "lr_mean_change": [
+    -0.001902202680424911,
+    -0.00041920378437170636,
+    0.000620601059196622
+   ],
+   "ipr_mean_change": [
+    -0.009091184295690353,
+    -2.4107690642988665e-05,
+    0.000303701593639631
+   ]
+  },
+  {
+   "scene": "_MG_7580",
+   "control": "contrast",
+   "value": -50.0,
+   "lr_file": "lumiere\\contrast\\_MG_7580-7.tif",
+   "lr_neutral": "neutre\\_MG_7580.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.053789717074445347,
+   "lr_change_sq": 720.7109664220093,
+   "error_sq": 38.76683897628996,
+   "lr_change_rms": 0.03210112369115734,
+   "ipr_change_rms": 0.028626534169767074,
+   "lr_mean_change": [
+    -0.0009678014994906245,
+    -0.00030637254390027634,
+    0.00045223376006571357
+   ],
+   "ipr_mean_change": [
+    -0.005551009062987334,
+    -4.5703558605275486e-05,
+    0.000248585735504436
+   ]
+  },
+  {
+   "scene": "_MG_7580",
+   "control": "contrast",
+   "value": -25.0,
+   "lr_file": "lumiere\\contrast\\_MG_7580-6.tif",
+   "lr_neutral": "neutre\\_MG_7580.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.05409773458219136,
+   "lr_change_sq": 174.42668876903363,
+   "error_sq": 9.43608871307768,
+   "lr_change_rms": 0.0157923273645335,
+   "ipr_change_rms": 0.01405973099393747,
+   "lr_mean_change": [
+    -0.0003317694096768186,
+    -0.00016417166163686437,
+    0.00024298872006692712
+   ],
+   "ipr_mean_change": [
+    -0.0025071070402673417,
+    -3.7222503319528556e-05,
+    0.00014631266734679488
+   ]
+  },
+  {
+   "scene": "_MG_7580",
+   "control": "contrast",
+   "value": -10.0,
+   "lr_file": "lumiere\\contrast\\_MG_7580-5.tif",
+   "lr_neutral": "neutre\\_MG_7580.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.05424792341777934,
+   "lr_change_sq": 27.29804067231541,
+   "error_sq": 1.480862019847192,
+   "lr_change_rms": 0.006247487675914205,
+   "ipr_change_rms": 0.005557422254360889,
+   "lr_mean_change": [
+    -9.677070804182204e-05,
+    -6.78571023303378e-05,
+    0.00010079605389513372
+   ],
+   "ipr_mean_change": [
+    -0.0009365561011689325,
+    -1.8202914037845547e-05,
+    6.354225351548802e-05
+   ]
+  },
+  {
+   "scene": "_MG_7580",
+   "control": "contrast",
+   "value": 10.0,
+   "lr_file": "lumiere\\contrast\\_MG_7580.tif",
+   "lr_neutral": "neutre\\_MG_7580.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.058737908119620263,
+   "lr_change_sq": 32.74532232462892,
+   "error_sq": 1.923391734051404,
+   "lr_change_rms": 0.006842492100428733,
+   "ipr_change_rms": 0.005888844603817843,
+   "lr_mean_change": [
+    3.577165511792519e-05,
+    7.526627300269362e-05,
+    -0.00011278668648658684
+   ],
+   "ipr_mean_change": [
+    0.0009096174228291306,
+    2.4345394270099877e-05,
+    -7.560215368509175e-05
+   ]
+  },
+  {
+   "scene": "_MG_7580",
+   "control": "contrast",
+   "value": 25.0,
+   "lr_file": "lumiere\\contrast\\_MG_7580-2.tif",
+   "lr_neutral": "neutre\\_MG_7580.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.04876216164403595,
+   "lr_change_sq": 208.89965524172737,
+   "error_sq": 10.186398756280491,
+   "lr_change_rms": 0.01728257823226379,
+   "ipr_change_rms": 0.015535412249681285,
+   "lr_mean_change": [
+    -7.214790010997394e-05,
+    0.000186772513725195,
+    -0.0002822075649711622
+   ],
+   "ipr_mean_change": [
+    0.0022027149771393457,
+    7.560935842556648e-05,
+    -0.00021808791497404968
+   ]
+  },
+  {
+   "scene": "_MG_7580",
+   "control": "contrast",
+   "value": 50.0,
+   "lr_file": "lumiere\\contrast\\_MG_7580-3.tif",
+   "lr_neutral": "neutre\\_MG_7580.tif",
+   "kept_share": 0.99991993045388,
+   "unexplained": 0.037808061280502105,
+   "lr_change_sq": 869.11049189972,
+   "error_sq": 32.85938273727194,
+   "lr_change_rms": 0.035252876033393915,
+   "ipr_change_rms": 0.03357823230877228,
+   "lr_mean_change": [
+    -0.0007493774712719555,
+    0.00036829563749303366,
+    -0.0005652366526610542
+   ],
+   "ipr_mean_change": [
+    0.0038900484861386178,
+    0.00020964048577412061,
+    -0.0005474302742556679
+   ]
+  },
+  {
+   "scene": "_MG_7580",
+   "control": "contrast",
+   "value": 75.0,
+   "lr_file": "lumiere\\contrast\\_MG_7580-4.tif",
+   "lr_neutral": "neutre\\_MG_7580.tif",
+   "kept_share": 0.9854902543923866,
+   "unexplained": 0.030977675043061665,
+   "lr_change_sq": 2046.9177128983413,
+   "error_sq": 63.408751750051806,
+   "lr_change_rms": 0.054495883140153516,
+   "ipr_change_rms": 0.05396208782666635,
+   "lr_mean_change": [
+    -0.0024897122377313726,
+    0.0005552494028647403,
+    -0.0008305463780279445
+   ],
+   "ipr_mean_change": [
+    0.004276872065280169,
+    0.0004233052286384691,
+    -0.0009702279508941485
+   ]
+  },
+  {
+   "scene": "_MG_7580",
+   "control": "contrast",
+   "value": 100.0,
+   "lr_file": "lumiere\\contrast\\_MG_7580-10.tif",
+   "lr_neutral": "neutre\\_MG_7580.tif",
+   "kept_share": 0.951456407851391,
+   "unexplained": 0.025632491557618348,
+   "lr_change_sq": 3834.5400228558337,
+   "error_sq": 98.28881476320183,
+   "lr_change_rms": 0.07591050134488629,
+   "ipr_change_rms": 0.07651827485350399,
+   "lr_mean_change": [
+    -0.006452191805677913,
+    0.0007557786929605426,
+    -0.0010268884458398712
+   ],
+   "ipr_mean_change": [
+    0.0019753994777147606,
+    0.0007428117972569524,
+    -0.0014178925112064828
+   ]
+  },
+  {
+   "scene": "_MG_7840",
+   "control": "contrast",
+   "value": -100.0,
+   "lr_file": "lumiere\\contrast\\_MG_7840-9.tif",
+   "lr_neutral": "neutre\\_MG_7840.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.06468307033057938,
+   "lr_change_sq": 3209.559985017204,
+   "error_sq": 207.60419424108107,
+   "lr_change_rms": 0.06774268690702097,
+   "ipr_change_rms": 0.05597007778792266,
+   "lr_mean_change": [
+    0.04442906909773216,
+    0.003142306755103988,
+    -0.0006132050426605845
+   ],
+   "ipr_mean_change": [
+    0.04182011162507779,
+    0.0011096921775666031,
+    -0.001030349267397603
+   ]
+  },
+  {
+   "scene": "_MG_7840",
+   "control": "contrast",
+   "value": -75.0,
+   "lr_file": "lumiere\\contrast\\_MG_7840-8.tif",
+   "lr_neutral": "neutre\\_MG_7840.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.07033509461393975,
+   "lr_change_sq": 1847.8001025413487,
+   "error_sq": 129.96519503989333,
+   "lr_change_rms": 0.05140047865450481,
+   "ipr_change_rms": 0.0419506124094704,
+   "lr_mean_change": [
+    0.03373633181682885,
+    0.0024951901957516198,
+    -0.0003154493066938885
+   ],
+   "ipr_mean_change": [
+    0.03139869037146992,
+    0.0008049900907386432,
+    -0.0007124686943009332
+   ]
+  },
+  {
+   "scene": "_MG_7840",
+   "control": "contrast",
+   "value": -50.0,
+   "lr_file": "lumiere\\contrast\\_MG_7840-7.tif",
+   "lr_neutral": "neutre\\_MG_7840.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.07630258867198648,
+   "lr_change_sq": 835.5410046220941,
+   "error_sq": 63.753941594258,
+   "lr_change_rms": 0.03456396477257492,
+   "ipr_change_rms": 0.02788800077747469,
+   "lr_mean_change": [
+    0.022687131543443057,
+    0.0017301042695567256,
+    -0.00011361071437607509
+   ],
+   "ipr_mean_change": [
+    0.02090823935223751,
+    0.0005074983827846546,
+    -0.00043388511462912304
+   ]
+  },
+  {
+   "scene": "_MG_7840",
+   "control": "contrast",
+   "value": -25.0,
+   "lr_file": "lumiere\\contrast\\_MG_7840-6.tif",
+   "lr_neutral": "neutre\\_MG_7840.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.08233318112177122,
+   "lr_change_sq": 210.83927934730673,
+   "error_sq": 17.359068574085523,
+   "lr_change_rms": 0.017362626838793662,
+   "ipr_change_rms": 0.013872578086881596,
+   "lr_mean_change": [
+    0.011383514402980386,
+    0.0008540012590045496,
+    -1.6091454767648695e-05
+   ],
+   "ipr_mean_change": [
+    0.010416677997197199,
+    0.00022905486694370315,
+    -0.0001972378490703104
+   ]
+  },
+  {
+   "scene": "_MG_7840",
+   "control": "contrast",
+   "value": -10.0,
+   "lr_file": "lumiere\\contrast\\_MG_7840-5.tif",
+   "lr_neutral": "neutre\\_MG_7840.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.08565733193401356,
+   "lr_change_sq": 33.71199755258713,
+   "error_sq": 2.8876797645206085,
+   "lr_change_rms": 0.006942756172078329,
+   "ipr_change_rms": 0.005525412004656962,
+   "lr_mean_change": [
+    0.004543392511740068,
+    0.0003160991451112517,
+    -1.4454528075337512e-06
+   ],
+   "ipr_mean_change": [
+    0.004152274212199873,
+    8.249388662993466e-05,
+    -7.465692299125395e-05
+   ]
+  },
+  {
+   "scene": "_MG_7840",
+   "control": "contrast",
+   "value": 10.0,
+   "lr_file": "lumiere\\contrast\\_MG_7840.tif",
+   "lr_neutral": "neutre\\_MG_7840.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.0921604470248062,
+   "lr_change_sq": 40.10939273396733,
+   "error_sq": 3.6964995642559435,
+   "lr_change_rms": 0.00757290856484003,
+   "ipr_change_rms": 0.005915367570123945,
+   "lr_mean_change": [
+    -0.004933867552984729,
+    -0.00022538584235807195,
+    2.1107643054439e-05
+   ],
+   "ipr_mean_change": [
+    -0.0044490663977152884,
+    -6.841371296269554e-05,
+    7.551139316334074e-05
+   ]
+  },
+  {
+   "scene": "_MG_7840",
+   "control": "contrast",
+   "value": 25.0,
+   "lr_file": "lumiere\\contrast\\_MG_7840-2.tif",
+   "lr_neutral": "neutre\\_MG_7840.tif",
+   "kept_share": 1.0,
+   "unexplained": 0.07472903822470506,
+   "lr_change_sq": 248.4888969011143,
+   "error_sq": 18.569336274938163,
+   "lr_change_rms": 0.018849210475482523,
+   "ipr_change_rms": 0.01573897263210465,
+   "lr_mean_change": [
+    -0.012223129156692594,
+    -0.0002718847650651761,
+    0.0001155899269089017
+   ],
+   "ipr_mean_change": [
+    -0.011841834938415697,
+    -0.00011290727110553956,
+    0.0001953506523286447
+   ]
+  },
+  {
+   "scene": "_MG_7840",
+   "control": "contrast",
+   "value": 50.0,
+   "lr_file": "lumiere\\contrast\\_MG_7840-3.tif",
+   "lr_neutral": "neutre\\_MG_7840.tif",
+   "kept_share": 0.9999556757869692,
+   "unexplained": 0.05712470502598079,
+   "lr_change_sq": 989.5920574396614,
+   "error_sq": 56.530154377294096,
+   "lr_change_rms": 0.03761641433140613,
+   "ipr_change_rms": 0.03458476717103077,
+   "lr_mean_change": [
+    -0.024273094384382122,
+    0.0001178023265038488,
+    0.0003517188201899312
+   ],
+   "ipr_mean_change": [
+    -0.026018822019766023,
+    0.00012865661024459286,
+    0.0004182071726913362
+   ]
+  },
+  {
+   "scene": "_MG_7840",
+   "control": "contrast",
+   "value": 75.0,
+   "lr_file": "lumiere\\contrast\\_MG_7840-4.tif",
+   "lr_neutral": "neutre\\_MG_7840.tif",
+   "kept_share": 0.999525301976574,
+   "unexplained": 0.053842936819840176,
+   "lr_change_sq": 2234.173077731528,
+   "error_sq": 120.29443986888653,
+   "lr_change_rms": 0.05653288912825783,
+   "ipr_change_rms": 0.056423433008713636,
+   "lr_mean_change": [
+    -0.0364243424378733,
+    0.0007787854922499596,
+    0.0005795044924760853
+   ],
+   "ipr_mean_change": [
+    -0.042483098158105664,
+    0.0008472074261854602,
+    0.0006138409413979158
+   ]
+  },
+  {
+   "scene": "_MG_7840",
+   "control": "contrast",
+   "value": 100.0,
+   "lr_file": "lumiere\\contrast\\_MG_7840-10.tif",
+   "lr_neutral": "neutre\\_MG_7840.tif",
+   "kept_share": 0.9978166750549048,
+   "unexplained": 0.06484584691376974,
+   "lr_change_sq": 4003.7077779590936,
+   "error_sq": 259.6238216570046,
+   "lr_change_rms": 0.07574351877145001,
+   "ipr_change_rms": 0.08103023015242052,
+   "lr_mean_change": [
+    -0.0489253304403403,
+    0.0015193712273984608,
+    0.0007801986452284089
+   ],
+   "ipr_mean_change": [
+    -0.061248726948290304,
+    0.002033191978128757,
+    0.0006490989964379045
+   ]
+  }
+ ]
+}

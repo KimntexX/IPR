@@ -7,6 +7,10 @@ cases de sélection multiple. Si le ruban est replié, les boutons précédent
 et suivant apparaissent en bas à droite de la zone image. Leur survol indique
 le nom de la cible ; ils ne dépassent pas les extrémités du dossier.
 
+Une vignette vient de l’aperçu embarqué dans le fichier. Sans aperçu, comme dans
+beaucoup de DNG, IPR la développe à partir des données du capteur : elle apparaît
+un peu plus tard et peut différer légèrement de l’image ouverte.
+
 Le bouton centré au-dessus du ruban le replie. Lorsqu’il est masqué, ce bouton
 revient en bas de la vue et permet de le rouvrir. Son état est mémorisé.
 Les flèches du clavier ne sont pas des raccourcis globaux de changement de photo.
@@ -50,6 +54,7 @@ Un clic droit dans la vue ouvre les actions de la photo : export et
 réinitialisation des retouches, ainsi que les commandes de fichier.
 Le clic droit ne déclenche pas le zoom. Avec le focus dans la vue,
 \touche{Maj + F10} ou la touche Menu ouvre aussi ce contexte.
-La réinitialisation demande confirmation ; elle n’a pas d’annulation générale.
-Les actions Enregistrer et Dupliquer restent désactivées tant que leur
-raccordement moteur manque.
+La réinitialisation demande confirmation ; elle s’annule ensuite comme une autre
+étape de l’historique.
+Enregistrer est raccordé ; Dupliquer reste désactivé tant que son
+raccordement moteur manque dans cette référence.

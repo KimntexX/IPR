@@ -1,0 +1,4991 @@
+{
+  "schema_version": 1,
+  "created_utc": "20261031T194552Z",
+  "study": "moon_static_metadata_and_preview_audit",
+  "revision": "1aec51cc97002b6d4d6ddd64bc7d19d4d99ea098",
+  "source_sha256": "faa80d4aa481cc42f8bc11fc0eaaa8836b579e57dc5b5bfc8b8bd6670900ce64",
+  "records": [
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0016.CR3",
+      "bytes": 25282260,
+      "mtime_ns": 1793396680000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "eddc707e58ed411ebd9fdc66f609f2cf8e609e0f01bad317888f27bbe45cb8a2",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:44:40"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "873fc2df3d8c9cadd7c392fee8a304397a6249c2e4fe2f2d02c9b0dfa01d7dc0",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 5.6,
+            "iso": 1600,
+            "datetime_original": "2026:10:30 22:44:40",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:44:40",
+        "exposure_s": 0.005,
+        "aperture": 5.6,
+        "iso": 1600,
+        "datetime_original": "2026:10:30 22:44:40",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0017.CR3",
+      "bytes": 25277652,
+      "mtime_ns": 1793396680000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "eddc707e58ed411ebd9fdc66f609f2cf8e609e0f01bad317888f27bbe45cb8a2",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:44:40"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "3841cdff3a186034fb827cef59898323cb2bebc23b415edf8c5c8567871c6586",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 5.6,
+            "iso": 1600,
+            "datetime_original": "2026:10:30 22:44:40",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:44:40",
+        "exposure_s": 0.005,
+        "aperture": 5.6,
+        "iso": 1600,
+        "datetime_original": "2026:10:30 22:44:40",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0018.CR3",
+      "bytes": 25279700,
+      "mtime_ns": 1793396680000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "eddc707e58ed411ebd9fdc66f609f2cf8e609e0f01bad317888f27bbe45cb8a2",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:44:40"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "af8ae5acf0063ddd42c0506e723ed88fc96eaeb3b34715d7d410b25a0f369dd8",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 5.6,
+            "iso": 1600,
+            "datetime_original": "2026:10:30 22:44:40",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:44:40",
+        "exposure_s": 0.005,
+        "aperture": 5.6,
+        "iso": 1600,
+        "datetime_original": "2026:10:30 22:44:40",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0019.CR3",
+      "bytes": 25278164,
+      "mtime_ns": 1793396680000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "eddc707e58ed411ebd9fdc66f609f2cf8e609e0f01bad317888f27bbe45cb8a2",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:44:40"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "13b9a5091553722dcd53bf2b55c81f470b96e3759971937ef82e8b71c6ae1699",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 5.6,
+            "iso": 1600,
+            "datetime_original": "2026:10:30 22:44:40",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:44:40",
+        "exposure_s": 0.005,
+        "aperture": 5.6,
+        "iso": 1600,
+        "datetime_original": "2026:10:30 22:44:40",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0020.CR3",
+      "bytes": 25282260,
+      "mtime_ns": 1793396681000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "eddc707e58ed411ebd9fdc66f609f2cf8e609e0f01bad317888f27bbe45cb8a2",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:44:40"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "4829aab2f04e8ae25472bfb565df0d09bc360b524c3b9b5e65980dfafe3ff4e7",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 5.6,
+            "iso": 1600,
+            "datetime_original": "2026:10:30 22:44:40",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:44:40",
+        "exposure_s": 0.005,
+        "aperture": 5.6,
+        "iso": 1600,
+        "datetime_original": "2026:10:30 22:44:40",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0021.CR3",
+      "bytes": 25277652,
+      "mtime_ns": 1793396681000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "eddc707e58ed411ebd9fdc66f609f2cf8e609e0f01bad317888f27bbe45cb8a2",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:44:40"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "4a1d21c6cd180fdded8777f82a8c24564c9b0cfeb299c2521b1b15478aab2274",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 5.6,
+            "iso": 1600,
+            "datetime_original": "2026:10:30 22:44:40",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:44:40",
+        "exposure_s": 0.005,
+        "aperture": 5.6,
+        "iso": 1600,
+        "datetime_original": "2026:10:30 22:44:40",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0022.CR3",
+      "bytes": 25282772,
+      "mtime_ns": 1793396681000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "eddc707e58ed411ebd9fdc66f609f2cf8e609e0f01bad317888f27bbe45cb8a2",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:44:40"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "d89a4f4087ae816ae51124791bff29731f6aabf2605333cd2f23be0b47015a57",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 5.6,
+            "iso": 1600,
+            "datetime_original": "2026:10:30 22:44:40",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:44:40",
+        "exposure_s": 0.005,
+        "aperture": 5.6,
+        "iso": 1600,
+        "datetime_original": "2026:10:30 22:44:40",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0023.CR3",
+      "bytes": 25283284,
+      "mtime_ns": 1793396681000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "eddc707e58ed411ebd9fdc66f609f2cf8e609e0f01bad317888f27bbe45cb8a2",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:44:40"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "10586abec05794049a42cb536494b78b2d267debc0fd1562ccc5813dd67099e4",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 5.6,
+            "iso": 1600,
+            "datetime_original": "2026:10:30 22:44:40",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:44:40",
+        "exposure_s": 0.005,
+        "aperture": 5.6,
+        "iso": 1600,
+        "datetime_original": "2026:10:30 22:44:40",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0024.CR3",
+      "bytes": 25284308,
+      "mtime_ns": 1793396681000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "eddc707e58ed411ebd9fdc66f609f2cf8e609e0f01bad317888f27bbe45cb8a2",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:44:40"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "84f63806186c53a93eb21a6b64ebc8fb6fae7053d17f2eb88bf4e859e4f21784",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 5.6,
+            "iso": 1600,
+            "datetime_original": "2026:10:30 22:44:40",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:44:40",
+        "exposure_s": 0.005,
+        "aperture": 5.6,
+        "iso": 1600,
+        "datetime_original": "2026:10:30 22:44:40",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0025.CR3",
+      "bytes": 25283284,
+      "mtime_ns": 1793396681000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "1c1b92146bcf02261e5c2e191621107a9a5c28d33189eb330550e6f03b8671d0",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:44:41"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "f18c4299eaf8e850b48ecf18e8a960df69976069561fbc7ca31afa0c65ec4475",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 5.6,
+            "iso": 1600,
+            "datetime_original": "2026:10:30 22:44:41",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:44:41",
+        "exposure_s": 0.005,
+        "aperture": 5.6,
+        "iso": 1600,
+        "datetime_original": "2026:10:30 22:44:41",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0026.CR3",
+      "bytes": 25283796,
+      "mtime_ns": 1793396681000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "1c1b92146bcf02261e5c2e191621107a9a5c28d33189eb330550e6f03b8671d0",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:44:41"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "32b94a087ee8dbddf31e05c09a012eecf4791d59efe72d307e78376f63d3e0f5",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 5.6,
+            "iso": 1600,
+            "datetime_original": "2026:10:30 22:44:41",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:44:41",
+        "exposure_s": 0.005,
+        "aperture": 5.6,
+        "iso": 1600,
+        "datetime_original": "2026:10:30 22:44:41",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0027.CR3",
+      "bytes": 25287892,
+      "mtime_ns": 1793396681000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "1c1b92146bcf02261e5c2e191621107a9a5c28d33189eb330550e6f03b8671d0",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:44:41"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "a44984fab2a71bc297a3773384a044e5eff930f80d49457b053b70b5fbfdfd4b",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 5.6,
+            "iso": 1600,
+            "datetime_original": "2026:10:30 22:44:41",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:44:41",
+        "exposure_s": 0.005,
+        "aperture": 5.6,
+        "iso": 1600,
+        "datetime_original": "2026:10:30 22:44:41",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0028.CR3",
+      "bytes": 25287892,
+      "mtime_ns": 1793396681000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "1c1b92146bcf02261e5c2e191621107a9a5c28d33189eb330550e6f03b8671d0",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:44:41"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "ca052123cd33e1da880888e7f05d96cd7052ed3bb23c3cf7e0948a57735cd720",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 5.6,
+            "iso": 1600,
+            "datetime_original": "2026:10:30 22:44:41",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:44:41",
+        "exposure_s": 0.005,
+        "aperture": 5.6,
+        "iso": 1600,
+        "datetime_original": "2026:10:30 22:44:41",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0029.CR3",
+      "bytes": 25286868,
+      "mtime_ns": 1793396681000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "1c1b92146bcf02261e5c2e191621107a9a5c28d33189eb330550e6f03b8671d0",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:44:41"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "9d30ff0c086cd72abf43cfd89c374c6466d3b91f3670a4ccad66f71e171acd62",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 5.6,
+            "iso": 1600,
+            "datetime_original": "2026:10:30 22:44:41",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:44:41",
+        "exposure_s": 0.005,
+        "aperture": 5.6,
+        "iso": 1600,
+        "datetime_original": "2026:10:30 22:44:41",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0030.CR3",
+      "bytes": 25286356,
+      "mtime_ns": 1793396681000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "1c1b92146bcf02261e5c2e191621107a9a5c28d33189eb330550e6f03b8671d0",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:44:41"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "f26c04feb01f59f409be1e6050e7ac200ce173f382f5042bb9e8d8715a8053f4",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 5.6,
+            "iso": 1600,
+            "datetime_original": "2026:10:30 22:44:41",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:44:41",
+        "exposure_s": 0.005,
+        "aperture": 5.6,
+        "iso": 1600,
+        "datetime_original": "2026:10:30 22:44:41",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0031.CR3",
+      "bytes": 25288916,
+      "mtime_ns": 1793396681000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "1c1b92146bcf02261e5c2e191621107a9a5c28d33189eb330550e6f03b8671d0",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:44:41"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "88b91dcb5c098f0f1694b6e571e8de477940701e3a7fb8ebd26e1d89b0103c6f",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 5.6,
+            "iso": 1600,
+            "datetime_original": "2026:10:30 22:44:41",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:44:41",
+        "exposure_s": 0.005,
+        "aperture": 5.6,
+        "iso": 1600,
+        "datetime_original": "2026:10:30 22:44:41",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0032.CR3",
+      "bytes": 25290452,
+      "mtime_ns": 1793396682000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "1c1b92146bcf02261e5c2e191621107a9a5c28d33189eb330550e6f03b8671d0",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:44:41"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "4cd37b571cad77f504ddcc3faa434a2e52feb7cafd29b9fc6ddb77b4db0b45a1",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 5.6,
+            "iso": 1600,
+            "datetime_original": "2026:10:30 22:44:41",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:44:41",
+        "exposure_s": 0.005,
+        "aperture": 5.6,
+        "iso": 1600,
+        "datetime_original": "2026:10:30 22:44:41",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0033.CR3",
+      "bytes": 25288916,
+      "mtime_ns": 1793396682000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "1c1b92146bcf02261e5c2e191621107a9a5c28d33189eb330550e6f03b8671d0",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:44:41"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "e2f418205e0844a6eebedfa67d30505a31034d38fea453ebaeb03ea18d41aec0",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 5.6,
+            "iso": 1600,
+            "datetime_original": "2026:10:30 22:44:41",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:44:41",
+        "exposure_s": 0.005,
+        "aperture": 5.6,
+        "iso": 1600,
+        "datetime_original": "2026:10:30 22:44:41",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0034.CR3",
+      "bytes": 25291988,
+      "mtime_ns": 1793396682000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "1c1b92146bcf02261e5c2e191621107a9a5c28d33189eb330550e6f03b8671d0",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:44:41"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "8fa615cbdf4d2c1c90b8f63995b1baf65190cefc8b505bf24c2d0e48f3c8250e",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 5.6,
+            "iso": 1600,
+            "datetime_original": "2026:10:30 22:44:41",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:44:41",
+        "exposure_s": 0.005,
+        "aperture": 5.6,
+        "iso": 1600,
+        "datetime_original": "2026:10:30 22:44:41",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0035.CR3",
+      "bytes": 25289940,
+      "mtime_ns": 1793396682000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "1c1b92146bcf02261e5c2e191621107a9a5c28d33189eb330550e6f03b8671d0",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:44:41"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "cec36fb8d5f9d099a12be73edf51d83b01603569bd65d30f608a2200b91e7184",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 5.6,
+            "iso": 1600,
+            "datetime_original": "2026:10:30 22:44:41",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:44:41",
+        "exposure_s": 0.005,
+        "aperture": 5.6,
+        "iso": 1600,
+        "datetime_original": "2026:10:30 22:44:41",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0036.CR3",
+      "bytes": 25287380,
+      "mtime_ns": 1793396682000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "8d1a153d3da08433197f2bf201bc6dd103f0504b9a8d59aba30f7d215ca85411",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:44:42"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "39f3e5ff18becf6a6e986aa6c76dedfe1de80cc0591e8d8480373b034e7d99e7",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 5.6,
+            "iso": 1600,
+            "datetime_original": "2026:10:30 22:44:42",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:44:42",
+        "exposure_s": 0.005,
+        "aperture": 5.6,
+        "iso": 1600,
+        "datetime_original": "2026:10:30 22:44:42",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0037.CR3",
+      "bytes": 25292500,
+      "mtime_ns": 1793396682000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "8d1a153d3da08433197f2bf201bc6dd103f0504b9a8d59aba30f7d215ca85411",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:44:42"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "57514273ae1b76dbb90df2dbd1b5d20015846a975087749a74ce6f36e649b0a6",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 5.6,
+            "iso": 1600,
+            "datetime_original": "2026:10:30 22:44:42",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:44:42",
+        "exposure_s": 0.005,
+        "aperture": 5.6,
+        "iso": 1600,
+        "datetime_original": "2026:10:30 22:44:42",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0038.CR3",
+      "bytes": 25291988,
+      "mtime_ns": 1793396682000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "8d1a153d3da08433197f2bf201bc6dd103f0504b9a8d59aba30f7d215ca85411",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:44:42"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "d42463e8af391497cab3c3251b14af2e5fdbd48c3abc39a7be499c7bb83e9a76",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 5.6,
+            "iso": 1600,
+            "datetime_original": "2026:10:30 22:44:42",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:44:42",
+        "exposure_s": 0.005,
+        "aperture": 5.6,
+        "iso": 1600,
+        "datetime_original": "2026:10:30 22:44:42",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0039.CR3",
+      "bytes": 25290452,
+      "mtime_ns": 1793396682000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "8d1a153d3da08433197f2bf201bc6dd103f0504b9a8d59aba30f7d215ca85411",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:44:42"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "557d7f309debe6c7a30f6c037f90bdf63fddee8fa4d2638552cc2dd104d51031",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 5.6,
+            "iso": 1600,
+            "datetime_original": "2026:10:30 22:44:42",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:44:42",
+        "exposure_s": 0.005,
+        "aperture": 5.6,
+        "iso": 1600,
+        "datetime_original": "2026:10:30 22:44:42",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0040.CR3",
+      "bytes": 25291988,
+      "mtime_ns": 1793396682000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "8d1a153d3da08433197f2bf201bc6dd103f0504b9a8d59aba30f7d215ca85411",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:44:42"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "1de644117db5832c4ef7e7a5d5a47041a21ffe8532f86bef9a03b9321ba4ad52",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 5.6,
+            "iso": 1600,
+            "datetime_original": "2026:10:30 22:44:42",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:44:42",
+        "exposure_s": 0.005,
+        "aperture": 5.6,
+        "iso": 1600,
+        "datetime_original": "2026:10:30 22:44:42",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0041.CR3",
+      "bytes": 25291476,
+      "mtime_ns": 1793396682000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "8d1a153d3da08433197f2bf201bc6dd103f0504b9a8d59aba30f7d215ca85411",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:44:42"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "49073b93006995dc3c1d993e0bc4a26285b2cddae2a54adf1e866ccd69083c07",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 5.6,
+            "iso": 1600,
+            "datetime_original": "2026:10:30 22:44:42",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:44:42",
+        "exposure_s": 0.005,
+        "aperture": 5.6,
+        "iso": 1600,
+        "datetime_original": "2026:10:30 22:44:42",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0042.CR3",
+      "bytes": 25293012,
+      "mtime_ns": 1793396682000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "8d1a153d3da08433197f2bf201bc6dd103f0504b9a8d59aba30f7d215ca85411",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:44:42"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "5faa779a2666e4d4086a99af1af31f3a51b7fd3354266d4c9a34270ad5853e51",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 5.6,
+            "iso": 1600,
+            "datetime_original": "2026:10:30 22:44:42",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:44:42",
+        "exposure_s": 0.005,
+        "aperture": 5.6,
+        "iso": 1600,
+        "datetime_original": "2026:10:30 22:44:42",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0043.CR3",
+      "bytes": 25290452,
+      "mtime_ns": 1793396683000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "8d1a153d3da08433197f2bf201bc6dd103f0504b9a8d59aba30f7d215ca85411",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:44:42"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "eddb8d66c824a4bd906cf0071e5e1862110aa2ed6875680b22e1a67f2a812f16",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 5.6,
+            "iso": 1600,
+            "datetime_original": "2026:10:30 22:44:42",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:44:42",
+        "exposure_s": 0.005,
+        "aperture": 5.6,
+        "iso": 1600,
+        "datetime_original": "2026:10:30 22:44:42",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0044.CR3",
+      "bytes": 25296084,
+      "mtime_ns": 1793396683000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "8d1a153d3da08433197f2bf201bc6dd103f0504b9a8d59aba30f7d215ca85411",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:44:42"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "4f6f0945d21b17f00caaa6635f2059ef374643179f0ea307fdc3e513ddc72d9d",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 5.6,
+            "iso": 1600,
+            "datetime_original": "2026:10:30 22:44:42",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:44:42",
+        "exposure_s": 0.005,
+        "aperture": 5.6,
+        "iso": 1600,
+        "datetime_original": "2026:10:30 22:44:42",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0045.CR3",
+      "bytes": 25296596,
+      "mtime_ns": 1793396683000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "8d1a153d3da08433197f2bf201bc6dd103f0504b9a8d59aba30f7d215ca85411",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:44:42"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "e19abc7f256f43fc8b4a7ec551887fd231f5e9df30beee206eae0efbdd82d30f",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 5.6,
+            "iso": 1600,
+            "datetime_original": "2026:10:30 22:44:42",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:44:42",
+        "exposure_s": 0.005,
+        "aperture": 5.6,
+        "iso": 1600,
+        "datetime_original": "2026:10:30 22:44:42",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0046.CR3",
+      "bytes": 25296596,
+      "mtime_ns": 1793396683000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "8d1a153d3da08433197f2bf201bc6dd103f0504b9a8d59aba30f7d215ca85411",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:44:42"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "67412b58fe02bd19efcb98efd5b73f89fc3f5c3f1106092c6dff2f66f064e6c3",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 5.6,
+            "iso": 1600,
+            "datetime_original": "2026:10:30 22:44:42",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:44:42",
+        "exposure_s": 0.005,
+        "aperture": 5.6,
+        "iso": 1600,
+        "datetime_original": "2026:10:30 22:44:42",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0047.CR3",
+      "bytes": 25300180,
+      "mtime_ns": 1793396683000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "8d1a153d3da08433197f2bf201bc6dd103f0504b9a8d59aba30f7d215ca85411",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:44:42"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "a5b5c4ecf6a396ed8297c8d5e70f982062ccadd5764bac01331bf7cc449e8698",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 5.6,
+            "iso": 1600,
+            "datetime_original": "2026:10:30 22:44:42",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:44:42",
+        "exposure_s": 0.005,
+        "aperture": 5.6,
+        "iso": 1600,
+        "datetime_original": "2026:10:30 22:44:42",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0048.CR3",
+      "bytes": 25297620,
+      "mtime_ns": 1793396683000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "b18e217a656f2ce4222cd080df3d2e20e4847cf26e1165da5048902434794990",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:44:43"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "a5b90d83e065d6a2aa9a625115b48ee521e5a002f2f489387876136b640f1fe0",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 5.6,
+            "iso": 1600,
+            "datetime_original": "2026:10:30 22:44:43",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:44:43",
+        "exposure_s": 0.005,
+        "aperture": 5.6,
+        "iso": 1600,
+        "datetime_original": "2026:10:30 22:44:43",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0049.CR3",
+      "bytes": 25299156,
+      "mtime_ns": 1793396683000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "b18e217a656f2ce4222cd080df3d2e20e4847cf26e1165da5048902434794990",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:44:43"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "4a8a6daaee032be9d62124151109a902c3be5444584118c48b32304e8a611700",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 5.6,
+            "iso": 1600,
+            "datetime_original": "2026:10:30 22:44:43",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:44:43",
+        "exposure_s": 0.005,
+        "aperture": 5.6,
+        "iso": 1600,
+        "datetime_original": "2026:10:30 22:44:43",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0050.CR3",
+      "bytes": 21663444,
+      "mtime_ns": 1793396784000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "c78b7ee4ebeaf253ab82048af7f06b8aede7924c825e22f3849a8cd19593c6c8",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:46:24"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "8279e3107940686bc7e39c14cfc4e2f7306ae403e3b13d1a7c5e0f5a67637dcf",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:46:24",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:46:24",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:46:24",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0051.CR3",
+      "bytes": 21664468,
+      "mtime_ns": 1793396784000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "c78b7ee4ebeaf253ab82048af7f06b8aede7924c825e22f3849a8cd19593c6c8",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:46:24"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "064a5504e1890bff2313c84f76da523f30dcb381ed45d6e003b0f8181afcd4f9",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:46:24",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:46:24",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:46:24",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0052.CR3",
+      "bytes": 21662932,
+      "mtime_ns": 1793396784000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "c78b7ee4ebeaf253ab82048af7f06b8aede7924c825e22f3849a8cd19593c6c8",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:46:24"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "05d8fe602c60c82cbc915d9421402a205542bce14dcbc71156c97dfa6d6f9818",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:46:24",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:46:24",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:46:24",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0053.CR3",
+      "bytes": 21664468,
+      "mtime_ns": 1793396784000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "c78b7ee4ebeaf253ab82048af7f06b8aede7924c825e22f3849a8cd19593c6c8",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:46:24"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "62c440951b5dc6395ca9f8dbc7388b98b40011ed7500e65e3b9e8762299310ad",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:46:24",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:46:24",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:46:24",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0054.CR3",
+      "bytes": 21663444,
+      "mtime_ns": 1793396785000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "c78b7ee4ebeaf253ab82048af7f06b8aede7924c825e22f3849a8cd19593c6c8",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:46:24"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "67371efd48db8e61bf20a778a7372427793723ccdc3330cd34996adddc241405",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:46:24",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:46:24",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:46:24",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0055.CR3",
+      "bytes": 21662420,
+      "mtime_ns": 1793396785000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "c78b7ee4ebeaf253ab82048af7f06b8aede7924c825e22f3849a8cd19593c6c8",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:46:24"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "ef6d541aec90e025985399058d58fefe0883899bf7767c7f7b150ad4192c4e0a",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:46:24",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:46:24",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:46:24",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0056.CR3",
+      "bytes": 21666516,
+      "mtime_ns": 1793396785000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "c78b7ee4ebeaf253ab82048af7f06b8aede7924c825e22f3849a8cd19593c6c8",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:46:24"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "3e76494103533cb90248f7e9f4afeb82ce790872bc037fe898ab2ae56bfa8015",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:46:24",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:46:24",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:46:24",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0057.CR3",
+      "bytes": 21668564,
+      "mtime_ns": 1793396785000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "c78b7ee4ebeaf253ab82048af7f06b8aede7924c825e22f3849a8cd19593c6c8",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:46:24"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "998fec2a4877402d05702fe9b42972e5c0dbe457c7d9ef1dce60cdaf2254e7c4",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:46:24",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:46:24",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:46:24",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0058.CR3",
+      "bytes": 21670612,
+      "mtime_ns": 1793396785000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "c78b7ee4ebeaf253ab82048af7f06b8aede7924c825e22f3849a8cd19593c6c8",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:46:24"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "2abd5c8901232fea14c088863f9faca417a4adfe61822d94052adf53bbf269cc",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:46:24",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:46:24",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:46:24",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0059.CR3",
+      "bytes": 21670612,
+      "mtime_ns": 1793396785000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "081809a88e2e6e5ffe394bc388dd77c8e52771c313ea46bc53098a581236fef8",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:46:25"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "f89cb1e296a072a176968762bceaf56dc235998582f27f1c70839f7ce62c2b55",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:46:25",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:46:25",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:46:25",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0060.CR3",
+      "bytes": 21671636,
+      "mtime_ns": 1793396785000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "081809a88e2e6e5ffe394bc388dd77c8e52771c313ea46bc53098a581236fef8",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:46:25"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "2dcb1f9594765f590f0c754b70591686164981cc31f05ee87eddf179eed08dcd",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:46:25",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:46:25",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:46:25",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0061.CR3",
+      "bytes": 21672148,
+      "mtime_ns": 1793396785000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "081809a88e2e6e5ffe394bc388dd77c8e52771c313ea46bc53098a581236fef8",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:46:25"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "5a43365dbf7fb1db44000fcc57dc14c18c36bd91ab47cb42ae9a7dea12fd105e",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:46:25",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:46:25",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:46:25",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0062.CR3",
+      "bytes": 21674196,
+      "mtime_ns": 1793396785000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "081809a88e2e6e5ffe394bc388dd77c8e52771c313ea46bc53098a581236fef8",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:46:25"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "45b71c2b74d4dc9d9503237cd7c78e74a29db661706542ed712f2e8c0a153035",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:46:25",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:46:25",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:46:25",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0063.CR3",
+      "bytes": 21675220,
+      "mtime_ns": 1793396785000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "081809a88e2e6e5ffe394bc388dd77c8e52771c313ea46bc53098a581236fef8",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:46:25"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "fecec52cff65d547fa932a5853458af895e1498092a52a97c9993b8a854f3a23",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:46:25",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:46:25",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:46:25",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0064.CR3",
+      "bytes": 21675732,
+      "mtime_ns": 1793396785000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "081809a88e2e6e5ffe394bc388dd77c8e52771c313ea46bc53098a581236fef8",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:46:25"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "ed8acf4157df0e8fa1c14d4af5979bc8c8904c97c911fb49bf9708aa356d03a8",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:46:25",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:46:25",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:46:25",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0065.CR3",
+      "bytes": 21673684,
+      "mtime_ns": 1793396785000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "081809a88e2e6e5ffe394bc388dd77c8e52771c313ea46bc53098a581236fef8",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:46:25"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "68ec3e03812f53b3aa5806fb0eb36b1da5f81184697d94b4947016e7873c378c",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:46:25",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:46:25",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:46:25",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0066.CR3",
+      "bytes": 21678292,
+      "mtime_ns": 1793396786000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "081809a88e2e6e5ffe394bc388dd77c8e52771c313ea46bc53098a581236fef8",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:46:25"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "85814570f21f423448bee23d544612eaed68b8c962ffd40bb974cad6569c767f",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:46:25",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:46:25",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:46:25",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0067.CR3",
+      "bytes": 21674196,
+      "mtime_ns": 1793396786000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "081809a88e2e6e5ffe394bc388dd77c8e52771c313ea46bc53098a581236fef8",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:46:25"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "7565eded413762c00c200b30415b93852129de9c69caa57330a2be428930345d",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:46:25",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:46:25",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:46:25",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0068.CR3",
+      "bytes": 21678292,
+      "mtime_ns": 1793396786000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "081809a88e2e6e5ffe394bc388dd77c8e52771c313ea46bc53098a581236fef8",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:46:25"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "43437297fc039680dcf25f83c26998cd6b1e7ac6ac1e9e18897d5d4c964cee90",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:46:25",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:46:25",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:46:25",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0069.CR3",
+      "bytes": 21676244,
+      "mtime_ns": 1793396786000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "081809a88e2e6e5ffe394bc388dd77c8e52771c313ea46bc53098a581236fef8",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:46:25"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "6267944f30627c80e472a5299aaf6edeec9d5fe40f806967a67195288ed4645b",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:46:25",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:46:25",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:46:25",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0070.CR3",
+      "bytes": 21677780,
+      "mtime_ns": 1793396786000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "d10b46e3eac1f43508a443ac2d1625c62e520c7461ad9cf5186a783bab7bf71d",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:46:26"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "e1405561b056a7629eba013b21ede1d522eaade88db3df60132166754f5d4607",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:46:26",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:46:26",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:46:26",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0071.CR3",
+      "bytes": 21683924,
+      "mtime_ns": 1793396786000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "d10b46e3eac1f43508a443ac2d1625c62e520c7461ad9cf5186a783bab7bf71d",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:46:26"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "23a24fb5a4c3ebf3c6636423888c771878105a68255f4bb1504ed6b15dc13ad2",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:46:26",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:46:26",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:46:26",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0072.CR3",
+      "bytes": 21680340,
+      "mtime_ns": 1793396786000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "d10b46e3eac1f43508a443ac2d1625c62e520c7461ad9cf5186a783bab7bf71d",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:46:26"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "227ff356f05bf767016fddf7145a0121f8a91c313d9bbf17dbfb69d4cc8802e4",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:46:26",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:46:26",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:46:26",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0073.CR3",
+      "bytes": 21682388,
+      "mtime_ns": 1793396786000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "d10b46e3eac1f43508a443ac2d1625c62e520c7461ad9cf5186a783bab7bf71d",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:46:26"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "b5302f647d3a349b4e0c25a61e6a9b96c43db5f07cf18593cef33d2356db2261",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:46:26",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:46:26",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:46:26",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0074.CR3",
+      "bytes": 21679316,
+      "mtime_ns": 1793396786000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "d10b46e3eac1f43508a443ac2d1625c62e520c7461ad9cf5186a783bab7bf71d",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:46:26"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "992d8f1072ce8f8aa2f5696b17116c1a22dc69cdf0525c4c5fa50f877bb58cd6",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:46:26",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:46:26",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:46:26",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0075.CR3",
+      "bytes": 21683924,
+      "mtime_ns": 1793396786000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "d10b46e3eac1f43508a443ac2d1625c62e520c7461ad9cf5186a783bab7bf71d",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:46:26"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "e7cf49cab9753c08831a1fc17390c9ce8a63e6068c5fa621be0145bbd47576a3",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:46:26",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:46:26",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:46:26",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0076.CR3",
+      "bytes": 21685460,
+      "mtime_ns": 1793396786000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "d10b46e3eac1f43508a443ac2d1625c62e520c7461ad9cf5186a783bab7bf71d",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:46:26"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "f675b09cbe3a37419feddc6509f69eef5caa799442ae8f2a3e150ea8c9f003df",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:46:26",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:46:26",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:46:26",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0077.CR3",
+      "bytes": 21684948,
+      "mtime_ns": 1793396787000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "d10b46e3eac1f43508a443ac2d1625c62e520c7461ad9cf5186a783bab7bf71d",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:46:26"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "1fd7ac29cf493200420dd7be66e982a205a91970ca19f3fcd54ce9056f38567d",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:46:26",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:46:26",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:46:26",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0078.CR3",
+      "bytes": 21682900,
+      "mtime_ns": 1793396787000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "d10b46e3eac1f43508a443ac2d1625c62e520c7461ad9cf5186a783bab7bf71d",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:46:26"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "f897b26fe9eb12ec985eb89c7a910eb83f79d2aa62c5b2e5c766f682bdb556ff",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:46:26",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:46:26",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:46:26",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0079.CR3",
+      "bytes": 21686996,
+      "mtime_ns": 1793396787000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "d10b46e3eac1f43508a443ac2d1625c62e520c7461ad9cf5186a783bab7bf71d",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:46:26"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "1b60204ffe2cb837e5d29c55b2072f887095d927597ceb6df2147a572b0f0aa5",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:46:26",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:46:26",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:46:26",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0080.CR3",
+      "bytes": 21686996,
+      "mtime_ns": 1793396787000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "d10b46e3eac1f43508a443ac2d1625c62e520c7461ad9cf5186a783bab7bf71d",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:46:26"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "ca9c42f64bb5744f4322891fe45064bddce2c62ef9b331e876184127a68f82b9",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:46:26",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:46:26",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:46:26",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0081.CR3",
+      "bytes": 21687508,
+      "mtime_ns": 1793396787000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "d10b46e3eac1f43508a443ac2d1625c62e520c7461ad9cf5186a783bab7bf71d",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:46:26"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "7e6fe8f2780079b6d00e72cc0b6b61bc8d67c3e96739dec7d4a8e7309166809a",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:46:26",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:46:26",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:46:26",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0082.CR3",
+      "bytes": 21691604,
+      "mtime_ns": 1793396787000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "08727a252969654b9e5b81b4fe9740c78f28707e5418958485379b01aae58b95",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:46:27"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "ef271d8cbef1fbf4689c4d935d152a0f8df0215a1c38d785852a5dd2e2e76153",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:46:27",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:46:27",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:46:27",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0083.CR3",
+      "bytes": 21688020,
+      "mtime_ns": 1793396787000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "08727a252969654b9e5b81b4fe9740c78f28707e5418958485379b01aae58b95",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:46:27"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "362fc5ed811b40879e0d34bd68c6a48067ab247fef19e8283c1f3f7e6319c79e",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:46:27",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:46:27",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:46:27",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0084.CR3",
+      "bytes": 21691604,
+      "mtime_ns": 1793396787000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "08727a252969654b9e5b81b4fe9740c78f28707e5418958485379b01aae58b95",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:46:27"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "94d4e644e01664d02968947dccdb20a37f33d183e82535bf1d4fc599dde3e668",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:46:27",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:46:27",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:46:27",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0085.CR3",
+      "bytes": 21693140,
+      "mtime_ns": 1793396787000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "08727a252969654b9e5b81b4fe9740c78f28707e5418958485379b01aae58b95",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:46:27"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "48477e6bccc43d850add841beba0cebce6b7ce7833605a8f93562078bc70f660",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:46:27",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:46:27",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:46:27",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0086.CR3",
+      "bytes": 21690580,
+      "mtime_ns": 1793396787000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "08727a252969654b9e5b81b4fe9740c78f28707e5418958485379b01aae58b95",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:46:27"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "f6aa6ac6b1dd196ef262b83150bbcbe2313bf7ce42bea5ccdd9807cb240dd9a6",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:46:27",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:46:27",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:46:27",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0087.CR3",
+      "bytes": 21692116,
+      "mtime_ns": 1793396787000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "08727a252969654b9e5b81b4fe9740c78f28707e5418958485379b01aae58b95",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:46:27"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "2693e054a687a2ad609ba4dd06ba92e3ad0a1514dca093548a442e38fcb837e3",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:46:27",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:46:27",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:46:27",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0088.CR3",
+      "bytes": 21702356,
+      "mtime_ns": 1793396836000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "3c4ec5662328417333c4e7a6588f927d7872fd4851dcb9e7bfb8a5c6d0983fc9",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:47:16"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "b2465195d5d74636af34693fbd7122b331f7b784acea46b8a4c5d5de8dd94cd6",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:47:16",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:47:16",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:47:16",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0089.CR3",
+      "bytes": 21697236,
+      "mtime_ns": 1793396836000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "3c4ec5662328417333c4e7a6588f927d7872fd4851dcb9e7bfb8a5c6d0983fc9",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:47:16"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "9e2a54cca0bf2cd4f0ace37db896121c85a4810b15a9cf9a3561336cd496e6c7",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:47:16",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:47:16",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:47:16",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0090.CR3",
+      "bytes": 21702868,
+      "mtime_ns": 1793396836000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "3c4ec5662328417333c4e7a6588f927d7872fd4851dcb9e7bfb8a5c6d0983fc9",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:47:16"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "7b111ff8919bae6ca6091350185ef92bfe2dbe98ec23180e2fc7b87e99ad003d",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:47:16",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:47:16",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:47:16",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0091.CR3",
+      "bytes": 21703380,
+      "mtime_ns": 1793396836000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "3c4ec5662328417333c4e7a6588f927d7872fd4851dcb9e7bfb8a5c6d0983fc9",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:47:16"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "649d1d7776621606811fec0287727470c1d4e166ca42630eb6423caaa76a16d3",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:47:16",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:47:16",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:47:16",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0092.CR3",
+      "bytes": 21699284,
+      "mtime_ns": 1793396836000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "3c4ec5662328417333c4e7a6588f927d7872fd4851dcb9e7bfb8a5c6d0983fc9",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:47:16"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "8135d607b6018df3992340f4f30587171e64f1588ae6541bd20fb4b23c3f3402",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:47:16",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:47:16",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:47:16",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0093.CR3",
+      "bytes": 21703380,
+      "mtime_ns": 1793396836000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "3c4ec5662328417333c4e7a6588f927d7872fd4851dcb9e7bfb8a5c6d0983fc9",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:47:16"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "058d36c4c6298797764b412b5d1975df1d4f4f31df87793ed0a89a2c9d201561",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:47:16",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:47:16",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:47:16",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0094.CR3",
+      "bytes": 21704916,
+      "mtime_ns": 1793396837000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "3c4ec5662328417333c4e7a6588f927d7872fd4851dcb9e7bfb8a5c6d0983fc9",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:47:16"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "9cc73b72ec2309863a3dcfa6e2338a615e00e86a8c246a216f73b81b26726eca",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:47:16",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:47:16",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:47:16",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0095.CR3",
+      "bytes": 21703380,
+      "mtime_ns": 1793396837000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "3c4ec5662328417333c4e7a6588f927d7872fd4851dcb9e7bfb8a5c6d0983fc9",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:47:16"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "435348316e3725e2c4530d0269ad9818d0eda780f5d143e5ce52d02fdbaccf06",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:47:16",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:47:16",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:47:16",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0096.CR3",
+      "bytes": 21705428,
+      "mtime_ns": 1793396837000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "3c4ec5662328417333c4e7a6588f927d7872fd4851dcb9e7bfb8a5c6d0983fc9",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:47:16"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "c2dcd12eebbf0b8d72d823faae600df3da85807ddbd719825b0d0a4fac3fc67c",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:47:16",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:47:16",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:47:16",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0097.CR3",
+      "bytes": 21706964,
+      "mtime_ns": 1793396837000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "3c4ec5662328417333c4e7a6588f927d7872fd4851dcb9e7bfb8a5c6d0983fc9",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:47:16"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "2d5e53786688cc63e53bf3b1e42b1648c8ea1502958620de06b6f1c4bf915d15",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:47:16",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:47:16",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:47:16",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0098.CR3",
+      "bytes": 21708500,
+      "mtime_ns": 1793396837000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "015c6ab3166e94a5df215b212a83dadcfba1e3edadbafb73d00a503cbe404ab4",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:47:17"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "3037b266f5b74de39838bb53a1a3fef860819bcfd9cbd0d398aabb7f0a51228c",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:47:17",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:47:17",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:47:17",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0099.CR3",
+      "bytes": 21710036,
+      "mtime_ns": 1793396837000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "015c6ab3166e94a5df215b212a83dadcfba1e3edadbafb73d00a503cbe404ab4",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:47:17"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "335510c4b788d1d833a43c9b249cd1479e7ee6be4de8acc8845f240e2b24d91e",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:47:17",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:47:17",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:47:17",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0100.CR3",
+      "bytes": 21712084,
+      "mtime_ns": 1793396837000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "015c6ab3166e94a5df215b212a83dadcfba1e3edadbafb73d00a503cbe404ab4",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:47:17"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "0bf52b33b2ab4aadea9a2ebfc8c47091c2322a25208fb4d3cdc41a0cff07e46a",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:47:17",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:47:17",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:47:17",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0101.CR3",
+      "bytes": 21711060,
+      "mtime_ns": 1793396837000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "015c6ab3166e94a5df215b212a83dadcfba1e3edadbafb73d00a503cbe404ab4",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:47:17"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "a96411c6cefa50eaf89b433af619a3eda4fc369b9dba1649a255c68145caa360",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:47:17",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:47:17",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:47:17",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0102.CR3",
+      "bytes": 21710036,
+      "mtime_ns": 1793396837000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "015c6ab3166e94a5df215b212a83dadcfba1e3edadbafb73d00a503cbe404ab4",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:47:17"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "26421d691a2c966da721503529ad85e57f6ab45efedbf18b422f4fe8b9dd4edc",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:47:17",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:47:17",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:47:17",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0103.CR3",
+      "bytes": 21712084,
+      "mtime_ns": 1793396837000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "015c6ab3166e94a5df215b212a83dadcfba1e3edadbafb73d00a503cbe404ab4",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:47:17"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "9bef1b84153d056d9277adda6eb6941557dd1ba1eaf2b0e80289792f4c1f1346",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:47:17",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:47:17",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:47:17",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0104.CR3",
+      "bytes": 21713620,
+      "mtime_ns": 1793396837000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "015c6ab3166e94a5df215b212a83dadcfba1e3edadbafb73d00a503cbe404ab4",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:47:17"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "7ae6bcd2a6ec89912ed0f3a0d9ffd32de48a407c049d7b6155e11342cda3882a",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:47:17",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:47:17",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:47:17",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0105.CR3",
+      "bytes": 21715668,
+      "mtime_ns": 1793396838000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "015c6ab3166e94a5df215b212a83dadcfba1e3edadbafb73d00a503cbe404ab4",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:47:17"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "9509f168e65a7d6508acbf22f40ee7798e269c2cea9dc737750453dd1dc1f0d0",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:47:17",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:47:17",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:47:17",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0106.CR3",
+      "bytes": 21715156,
+      "mtime_ns": 1793396838000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "015c6ab3166e94a5df215b212a83dadcfba1e3edadbafb73d00a503cbe404ab4",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:47:17"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "044fc74e415e94187b6cb61010bca95c876ad17e145ae0b688357ef64edb0588",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:47:17",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:47:17",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:47:17",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0107.CR3",
+      "bytes": 21713620,
+      "mtime_ns": 1793396838000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "015c6ab3166e94a5df215b212a83dadcfba1e3edadbafb73d00a503cbe404ab4",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:47:17"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "cd074a22a58de47b8da999b8a86a27f923830b562dda08d39b566acb807296de",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:47:17",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:47:17",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:47:17",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0108.CR3",
+      "bytes": 21717204,
+      "mtime_ns": 1793396838000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "015c6ab3166e94a5df215b212a83dadcfba1e3edadbafb73d00a503cbe404ab4",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:47:17"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "83db9fcd0d81bdbe2cfd85ec1d484bcd67b1cdb72a3c0640bac4c7d3638ae90e",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:47:17",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:47:17",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:47:17",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0109.CR3",
+      "bytes": 21717204,
+      "mtime_ns": 1793396838000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "015c6ab3166e94a5df215b212a83dadcfba1e3edadbafb73d00a503cbe404ab4",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:47:17"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "faf4fa6edcaab8d3380044143466a8681bfc920aea57d1c25f2eb4606608358d",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:47:17",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:47:17",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:47:17",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0110.CR3",
+      "bytes": 21717716,
+      "mtime_ns": 1793396838000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "1e43db6341b49b74f98cfe818d7ee19837f87121acc402034b5662835c766b66",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:47:18"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "1a0c45338a27df1368062fbe5ed0f819ca0a32cfb3b722cc2d4f78316b565bac",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:47:18",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:47:18",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:47:18",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0111.CR3",
+      "bytes": 21718740,
+      "mtime_ns": 1793396838000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "1e43db6341b49b74f98cfe818d7ee19837f87121acc402034b5662835c766b66",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:47:18"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "9b9ddc7e6583364307c94112fae54cd8df26df70bb0819e32319405f7f4f4e47",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:47:18",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:47:18",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:47:18",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0112.CR3",
+      "bytes": 21719764,
+      "mtime_ns": 1793396838000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "1e43db6341b49b74f98cfe818d7ee19837f87121acc402034b5662835c766b66",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:47:18"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "250e025d35cf97b55eeccdfc2cb93b9c566443ea392bad9414b5fdc50837c80b",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:47:18",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:47:18",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:47:18",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0113.CR3",
+      "bytes": 21719252,
+      "mtime_ns": 1793396838000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "1e43db6341b49b74f98cfe818d7ee19837f87121acc402034b5662835c766b66",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:47:18"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "849906e2066b22a90f222f3dd2a5fa4fee4e3efd1564481b3296fed7b6fccc83",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:47:18",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:47:18",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:47:18",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0114.CR3",
+      "bytes": 21718740,
+      "mtime_ns": 1793396838000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "1e43db6341b49b74f98cfe818d7ee19837f87121acc402034b5662835c766b66",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:47:18"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "c4dd4c6c897f33b56f7e7dc3abbd30273db83ba7bede0afb7d17ebb565272597",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:47:18",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:47:18",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:47:18",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0115.CR3",
+      "bytes": 21720276,
+      "mtime_ns": 1793396838000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "1e43db6341b49b74f98cfe818d7ee19837f87121acc402034b5662835c766b66",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:47:18"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "5347774d35d5de14f536a1adbfe94cb8153b7b8e36c32872f695ac13e320585e",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:47:18",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:47:18",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:47:18",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0116.CR3",
+      "bytes": 21721812,
+      "mtime_ns": 1793396838000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "1e43db6341b49b74f98cfe818d7ee19837f87121acc402034b5662835c766b66",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:47:18"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "667ba80ffc2d7ebb64276b824127463a1e9a5abb82bd7cc4ccea59fd005303b5",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:47:18",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:47:18",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:47:18",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0117.CR3",
+      "bytes": 21720788,
+      "mtime_ns": 1793396839000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "1e43db6341b49b74f98cfe818d7ee19837f87121acc402034b5662835c766b66",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:47:18"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "524c49bc2729452a947d54122a703028b62740cea22321b7a545ea8d45d8dc28",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:47:18",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:47:18",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:47:18",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0118.CR3",
+      "bytes": 21719764,
+      "mtime_ns": 1793396839000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "1e43db6341b49b74f98cfe818d7ee19837f87121acc402034b5662835c766b66",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:47:18"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "1dc9f6156e5e630862530a599a36b1cf0eb71b07ef19050f1cb1f63ab5c2e7cd",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:47:18",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:47:18",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:47:18",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0119.CR3",
+      "bytes": 21726420,
+      "mtime_ns": 1793396839000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "1e43db6341b49b74f98cfe818d7ee19837f87121acc402034b5662835c766b66",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:47:18"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "45a6e44d84b78ec7812d29e37dfcca567b9b9101d1c90785152d99227fc57d47",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:47:18",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:47:18",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:47:18",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0120.CR3",
+      "bytes": 21722836,
+      "mtime_ns": 1793396839000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "1e43db6341b49b74f98cfe818d7ee19837f87121acc402034b5662835c766b66",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:47:18"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "be9348908686031d4271d178cef5ab0b329c145ae364206525ed21825cc2ac53",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:47:18",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:47:18",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:47:18",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0121.CR3",
+      "bytes": 21722324,
+      "mtime_ns": 1793396839000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "89bec0516f3242692b92eca434f312403f754e94c2354f71d8a16a9368f9bd18",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:47:19"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "48738f79d626e3e0a49b5e113e27e49de15d20e53e5fcb7f8f06227c1e5190ce",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:47:19",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:47:19",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:47:19",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0122.CR3",
+      "bytes": 21725396,
+      "mtime_ns": 1793396839000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "89bec0516f3242692b92eca434f312403f754e94c2354f71d8a16a9368f9bd18",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:47:19"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "a4e28c52dcef91bbe32ce9dd3b7c42bb34003b1e90d82960b35bc98fc473c623",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:47:19",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:47:19",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:47:19",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0123.CR3",
+      "bytes": 21727444,
+      "mtime_ns": 1793396839000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "89bec0516f3242692b92eca434f312403f754e94c2354f71d8a16a9368f9bd18",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:47:19"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "1577346c03607647ef19651d8562097cfeec8dfc4aab1e97de86bb1c5792f6e4",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:47:19",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:47:19",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:47:19",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0124.CR3",
+      "bytes": 21727956,
+      "mtime_ns": 1793396839000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "89bec0516f3242692b92eca434f312403f754e94c2354f71d8a16a9368f9bd18",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:47:19"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "30dc0741542dbab4055c139bb121f28e2b0a5aa2087c31b23880c969ed84fb00",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:47:19",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:47:19",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:47:19",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0125.CR3",
+      "bytes": 21725908,
+      "mtime_ns": 1793396839000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "89bec0516f3242692b92eca434f312403f754e94c2354f71d8a16a9368f9bd18",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:47:19"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "2b4899f5c27ec9d271e6ec605c22c2b7dc222688546755379113f9587761aef9",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:47:19",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:47:19",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:47:19",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0126.CR3",
+      "bytes": 21727444,
+      "mtime_ns": 1793396839000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "89bec0516f3242692b92eca434f312403f754e94c2354f71d8a16a9368f9bd18",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:47:19"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "b7d4663b63affbd70ca6aee33ce0ca48e9c50626136acf61ba283b658e077ddd",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:47:19",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:47:19",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:47:19",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0127.CR3",
+      "bytes": 21728980,
+      "mtime_ns": 1793396839000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "89bec0516f3242692b92eca434f312403f754e94c2354f71d8a16a9368f9bd18",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:47:19"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "c11a20b01cf0321ee11ddd7c466222f3c517153318649da0807bd979b3c70a53",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:47:19",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:47:19",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:47:19",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0128.CR3",
+      "bytes": 21727956,
+      "mtime_ns": 1793396840000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "89bec0516f3242692b92eca434f312403f754e94c2354f71d8a16a9368f9bd18",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:47:19"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "b68ef82c892dd8a9262d515b34f543f8a827f1b22ec8243554980eba520d119e",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:47:19",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:47:19",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:47:19",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0129.CR3",
+      "bytes": 21733076,
+      "mtime_ns": 1793396840000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "89bec0516f3242692b92eca434f312403f754e94c2354f71d8a16a9368f9bd18",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:47:19"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "5beee5ad8085721f31c1083a9759a60b560d29947c7db3f56d43c86802a4d503",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:47:19",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:47:19",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:47:19",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0130.CR3",
+      "bytes": 21732564,
+      "mtime_ns": 1793396840000000000,
+      "static_blocks": [
+        {
+          "box": "CMT1",
+          "sha256": "89bec0516f3242692b92eca434f312403f754e94c2354f71d8a16a9368f9bd18",
+          "fields": {
+            "make": "Canon",
+            "model": "Canon EOS R6 Mark III",
+            "orientation": 1,
+            "datetime": "2026:10:30 22:47:19"
+          }
+        },
+        {
+          "box": "CMT2",
+          "sha256": "4f8c5ec095ad9f446a2b0d8d87c6da5a2cab7e1da5641108e1597ff029f27cd7",
+          "fields": {
+            "exposure_s": 0.005,
+            "aperture": 9.0,
+            "iso": 1000,
+            "datetime_original": "2026:10:30 22:47:19",
+            "focal_mm": 200.0,
+            "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+          }
+        }
+      ],
+      "metadata": {
+        "make": "Canon",
+        "model": "Canon EOS R6 Mark III",
+        "orientation": 1,
+        "datetime": "2026:10:30 22:47:19",
+        "exposure_s": 0.005,
+        "aperture": 9.0,
+        "iso": 1000,
+        "datetime_original": "2026:10:30 22:47:19",
+        "focal_mm": 200.0,
+        "lens": "70-200mm F2.8 DG OS HSM | Sports 018"
+      },
+      "complete_basic": true
+    }
+  ],
+  "selected_previews": [
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0016.CR3",
+      "status": "embedded_preview_only",
+      "preview_shape": [
+        4640,
+        6960,
+        3
+      ],
+      "embedded_jpeg_sha256": "03fac476f1c4470b5debcfdcdd1ee6ed07eea141935e864a0bb98e3eba99831f",
+      "bright_component_threshold_encoded": 32,
+      "component_box_xywh": [
+        2599,
+        2711,
+        309,
+        313
+      ],
+      "component_area_pixels": 68061,
+      "median_encoded_gray": 159.0,
+      "p99_encoded_gray": 213.0,
+      "encoded_channel_255_fraction": 0.01170028846671858,
+      "laplacian_std_encoded": 6.45644474029541,
+      "source_sha256": "ae4d5ca347a62ac0b041ace701b5dd23e53ff3b4cf2f8d99bc09bb652121a452",
+      "warning": "JPEG processing affects every metric. Neither RAW clipping nor raw detail/noise measured; bbox uses preview coordinates only."
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0073.CR3",
+      "status": "embedded_preview_only",
+      "preview_shape": [
+        4640,
+        6960,
+        3
+      ],
+      "embedded_jpeg_sha256": "ee51ad993437d209f4dbd18da6005af0a853f95bc1346731c9436b8f9ed96e7a",
+      "bright_component_threshold_encoded": 32,
+      "component_box_xywh": [
+        2989,
+        2038,
+        303,
+        301
+      ],
+      "component_area_pixels": 60463,
+      "median_encoded_gray": 75.0,
+      "p99_encoded_gray": 124.0,
+      "encoded_channel_255_fraction": 0.0,
+      "laplacian_std_encoded": 3.9795145988464355,
+      "source_sha256": "91c336bfc06a3d571638c526ceb152705f2f4a32c7445d88570940a28a8aaaad",
+      "warning": "JPEG processing affects every metric. Neither RAW clipping nor raw detail/noise measured; bbox uses preview coordinates only."
+    },
+    {
+      "path": "D:\\DCIM\\101EOSR6\\6V1A0130.CR3",
+      "status": "embedded_preview_only",
+      "preview_shape": [
+        4640,
+        6960,
+        3
+      ],
+      "embedded_jpeg_sha256": "a956858534fd3cd0593b18d17e328ebef4201db564268a587d8fce49e0a04397",
+      "bright_component_threshold_encoded": 32,
+      "component_box_xywh": [
+        3012,
+        1913,
+        303,
+        302
+      ],
+      "component_area_pixels": 60797,
+      "median_encoded_gray": 78.0,
+      "p99_encoded_gray": 128.0,
+      "encoded_channel_255_fraction": 0.0,
+      "laplacian_std_encoded": 4.719053745269775,
+      "source_sha256": "e376eefcb908fba253ebfa022e5f05f1f341d6467d1dd71167199846bc6872bb",
+      "warning": "JPEG processing affects every metric. Neither RAW clipping nor raw detail/noise measured; bbox uses preview coordinates only."
+    }
+  ],
+  "capture_groups": [
+    {
+      "iso": 1600,
+      "exposure_s": 0.005,
+      "aperture": 5.6,
+      "count": 34
+    },
+    {
+      "iso": 1000,
+      "exposure_s": 0.005,
+      "aperture": 9.0,
+      "count": 81
+    }
+  ],
+  "versions": {
+    "numpy": "2.4.2",
+    "opencv": "5.0.0",
+    "rawpy": "0.27.1",
+    "libraw": [
+      0,
+      22,
+      1
+    ]
+  },
+  "reused_historical_evidence": [
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\partition-rafale-bruit-v001-20261027T225326Z.json",
+      "sha256": "0c83f67ece4dc89d0d6036772ae0f80eb645a1ee9fe58fe273f9b62cc55e3518",
+      "rules": "14dev/14validation/14sealed chronologicalsplit BEFOREpixelanalysis;sealedlast14 METADATAandhashONLY.",
+      "verdict": null,
+      "keys": [
+        "schema_version",
+        "data_version",
+        "created_at_utc",
+        "identities",
+        "rules"
+      ],
+      "summary": {}
+    },
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\mouvement-rafale-bruit-v001-20261027T225632Z.json",
+      "sha256": "aeaaf9197f3cda6f6dfbffd6ed9f5e768164fca0a77566bd2b2b85d16f601616",
+      "rules": "First14ONLY,no validation/sealed decode. CFA2x2meanthen800widepreview,own1/99percentilerange.500ShiTomasi,LK21x21pyramid3,RANSACpartialaffine1.5previewpx. Estimateglobalgeometryonly,no RAWresampling/registrationbasednoisecalibration.",
+      "verdict": "development_global_motion_only",
+      "keys": [
+        "schema_version",
+        "data_version",
+        "started_at_utc",
+        "completed_at_utc",
+        "records",
+        "parent",
+        "runner_sha256",
+        "runner_source",
+        "commit",
+        "opencv_version",
+        "verdict",
+        "rules",
+        "limitations"
+      ],
+      "summary": {
+        "limitations": "Singleaffinecannotmodelparallax/nonrigidmotion/rollingreadout. Previewquantization/noiseaffectsfeaturepositions. MotionfitnotguaranteealignedcleantruthorvalidphysicalPTC. Inlierselectionnotnoisepixelselection. No production.",
+        "measured_development_frames": 14,
+        "max_abs_rotation_degrees": 0.42702978705587685,
+        "min_scale": 1.0,
+        "max_scale": 1.0045754664612476,
+        "max_translation_norm_at_800px_preview": 5.193451751959172,
+        "note": "Reused global affine diagnostics, not fresh pixel reads or proof of local alignment."
+      }
+    }
+  ],
+  "limits": [
+    "User confirms tripod; no RAW demosaic, alignment, mean reference or training.",
+    "Three selected embedded JPEGs only; not a survey of full-resolution RAW detail or saturation.",
+    "ISO/exposure/aperture are static CMT TIFF fields; no complete MakerNotes/CTMD or WB/bit-depth audit.",
+    "Only selected preview sources fully hashed; metadata-block hashes are not whole-file hashes.",
+    "Existing 42-frame burst history reused; no development/validation/sealed pixels read.",
+    "No Canon source copied, renamed, removed or overwritten."
+  ]
+}

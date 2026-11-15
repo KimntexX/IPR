@@ -1,7 +1,7 @@
 #ifndef IPR_CORE_GRAIN_H
 #define IPR_CORE_GRAIN_H
 
-#include <opencv2/core.hpp>
+#include "Image.h"
 
 // Film grain following Lightroom's (size 25, roughness 50), measured on its
 // neutral -> state pairs: monochrome, added to the display-encoded values with a
@@ -12,10 +12,10 @@
 // Study: docs/validation/analyses/analyse-effets.md.
 namespace Grain {
 
-// Linear RGB image (CV_32FC3), in place; slider value in [0, 100].
+// Linear RGB image (F32 of three channels), in place; slider value in [0, 100].
 // pixelScale: pixels of this image per pixel of the full image (1 for the master,
 // below 1 for the preview proxy); radii are defined on the full image.
-void apply(cv::Mat &linearRgb, int amount, double pixelScale = 1.0);
+void apply(ipr::Image &linearRgb, int amount, double pixelScale = 1.0);
 
 } // namespace Grain
 

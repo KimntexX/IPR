@@ -1,0 +1,139 @@
+{
+    "band_rows": 3430,
+    "canvas_height": 3897,
+    "canvas_width": 14237,
+    "commit": "685d5c21cdb2485e28639948a168b9fac3d71fec",
+    "covered_share": 0.9145293143186402,
+    "created_utc": "2026-11-04T08:17:11Z",
+    "decode_seconds": 2.179,
+    "distortion": -0.007420094913387916,
+    "error": "",
+    "focal_mm": 70,
+    "focal_pixels": 16024.006748937898,
+    "frame_height": 3464,
+    "frame_width": 5202,
+    "frames": [
+        {
+            "exclusion": "",
+            "features": 4367,
+            "gain_b": 1.0013633325517635,
+            "gain_g": 1.0035632389717768,
+            "gain_r": 1.0158069455689192,
+            "height": 3784,
+            "name": "_MG_7603.CR2",
+            "used": true,
+            "width": 5662,
+            "x": 8575,
+            "y": 99
+        },
+        {
+            "exclusion": "",
+            "features": 4649,
+            "gain_b": 1.0009472601602616,
+            "gain_g": 1.002404581882345,
+            "gain_r": 1.0058149130736516,
+            "height": 3565,
+            "name": "_MG_7604.CR2",
+            "used": true,
+            "width": 5313,
+            "x": 6178,
+            "y": 202
+        },
+        {
+            "exclusion": "",
+            "features": 4416,
+            "gain_b": 0.9967702201984198,
+            "gain_g": 0.9961534177560519,
+            "gain_r": 0.9928488926267759,
+            "height": 3600,
+            "name": "_MG_7605.CR2",
+            "used": true,
+            "width": 5324,
+            "x": 3709,
+            "y": 290
+        },
+        {
+            "exclusion": "",
+            "features": 4424,
+            "gain_b": 1.0009262196245914,
+            "gain_g": 0.9978976113119972,
+            "gain_r": 0.9857972350208396,
+            "height": 3897,
+            "name": "_MG_7606.CR2",
+            "used": true,
+            "width": 5791,
+            "x": 0,
+            "y": 0
+        }
+    ],
+    "free_lens": true,
+    "job_seconds": 7.605,
+    "kept_height": 3430,
+    "kept_width": 12960,
+    "kept_x": 1190,
+    "kept_y": 370,
+    "label": "lcp-none",
+    "layout": "horizontal",
+    "lens_geometry_applied": false,
+    "lens_profile": "Canon (SIGMA 70-200mm F2.8 DG OS HSM S018) - RAW",
+    "no_lens_profile": true,
+    "pairs": [
+        {
+            "a": "_MG_7603.CR2",
+            "b": "_MG_7604.CR2",
+            "points": 1536,
+            "residual_pixels": 3.0624696946718792
+        },
+        {
+            "a": "_MG_7603.CR2",
+            "b": "_MG_7605.CR2",
+            "points": 80,
+            "residual_pixels": 2.1791336357523186
+        },
+        {
+            "a": "_MG_7604.CR2",
+            "b": "_MG_7605.CR2",
+            "points": 1973,
+            "residual_pixels": 1.2427554237621974
+        },
+        {
+            "a": "_MG_7605.CR2",
+            "b": "_MG_7606.CR2",
+            "points": 652,
+            "residual_pixels": 0.9619703585558173
+        }
+    ],
+    "peak_memory_gb": 2.747539456,
+    "projection": "rectilinear",
+    "render_seconds": 1.822,
+    "requested_projection": "automatic",
+    "residual_pixels": 2.084975007973806,
+    "rows": 1,
+    "schema": "ipr-panorama-audit-v001",
+    "scratch_gb": 1.932244084,
+    "seam_cell_pixels": 10,
+    "sensor_width_mm": 22.3,
+    "sources": [
+        {
+            "name": "_MG_7603.CR2",
+            "sha256": "f651f84ee72cae37817b2f321c243330206d34cb50ef9cd3daeeb7a9505cf617"
+        },
+        {
+            "name": "_MG_7604.CR2",
+            "sha256": "c092775b932b98f14badb21393e7b61339b703e26d7ecd778586d0c69b94d5d8"
+        },
+        {
+            "name": "_MG_7605.CR2",
+            "sha256": "29c5a956692e6c1ed3613860e8b46b77715966c3b8d82bbf5c2cdc824e45a60b"
+        },
+        {
+            "name": "_MG_7606.CR2",
+            "sha256": "feee6a59c70106523005a9c8fa10e6ec7ba7d12a729629f183ca8d8bf743de5c"
+        }
+    ],
+    "span_across_degrees": 12.676645043283715,
+    "span_along_degrees": 47.41605210764025,
+    "success": true,
+    "used_frames": 4,
+    "worst_pair_pixels": 3.0624696946718792
+}

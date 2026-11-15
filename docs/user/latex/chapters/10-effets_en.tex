@@ -1,0 +1,26 @@
+% translation-source: docs/user/latex/chapters/10-effets.tex; sha256: 631ea3a63b0b3d80150e1fbea4a21e8e3cbb4900e4f11c5a37a7ef55d7ce884c
+\chapter{Effects}
+\section{Choose an effect}
+\begin{longtable}{@{}L{3.6cm}L{2.8cm}L{7.2cm}@{}}
+\toprule Control & Range & Intention\\\midrule\endhead
+Texture & $-100$ to $+100$ & Soften or enhance small details.\\
+Clarity & $-100$ to $+100$ & Change structural presence and local contrast.\\
+Dehaze & $-100$ to $+100$ & Change apparent haze and tonal separation.\\
+Grain & 0 to 100 & Add grain; this is not noise reduction.\\
+Gaussian blur & 0 to 20 & Soften globally; not a complete depth-of-field simulation.\\
+\bottomrule
+\end{longtable}
+All these controls have zero as reference. Negative texture or clarity is
+not equivalent to the dedicated noise-reduction module.
+
+\section{Check artifacts}
+Inspect edges, sky transitions and fine textures after a strong correction.
+Increased clarity can make noise more visible; excessive smoothing can make
+surfaces look artificial. Also check delivery size: detail that looks pleasant
+at high magnification may be excessive in fit-to-view.
+
+\paragraph{Example.}
+On a hazy landscape, start with a small dehaze correction, then rebalance
+light if needed. Compare using \touche{Ctrl + Shift + Y} and inspect sky/building
+boundaries at \touche{Ctrl + 1}.
+\gestesreglages

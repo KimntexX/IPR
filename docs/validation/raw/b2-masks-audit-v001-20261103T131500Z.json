@@ -1,0 +1,153 @@
+{
+    "campaign_id": "b2-masks-audit-v001-20261103T131500Z",
+    "candidate_dirty": false,
+    "candidate_revision": "c6fc8f8933ff4db396cffb38901c5a8bb6f9a847",
+    "costs": [
+        {
+            "masks": 1,
+            "milliseconds": 16.7715,
+            "name": "linear",
+            "width": 2048
+        },
+        {
+            "masks": 1,
+            "milliseconds": 154.0335,
+            "name": "linear",
+            "width": 6000
+        },
+        {
+            "masks": 1,
+            "milliseconds": 21.0006,
+            "name": "radial",
+            "width": 2048
+        },
+        {
+            "masks": 1,
+            "milliseconds": 144.497,
+            "name": "radial",
+            "width": 6000
+        },
+        {
+            "masks": 1,
+            "milliseconds": 21.1298,
+            "name": "brush, 200 points",
+            "width": 2048
+        },
+        {
+            "masks": 1,
+            "milliseconds": 178.2383,
+            "name": "brush, 200 points",
+            "width": 6000
+        },
+        {
+            "masks": 1,
+            "milliseconds": 26.218,
+            "name": "brush, 2000 points",
+            "width": 2048
+        },
+        {
+            "masks": 1,
+            "milliseconds": 258.5196,
+            "name": "brush, 2000 points",
+            "width": 6000
+        },
+        {
+            "masks": 4,
+            "milliseconds": 66.8115,
+            "name": "four radial masks",
+            "width": 2048
+        },
+        {
+            "masks": 4,
+            "milliseconds": 681.1823,
+            "name": "four radial masks",
+            "width": 6000
+        },
+        {
+            "masks": 16,
+            "milliseconds": 250.4988,
+            "name": "sixteen radial masks",
+            "width": 2048
+        },
+        {
+            "masks": 16,
+            "milliseconds": 2682.0973,
+            "name": "sixteen radial masks",
+            "width": 6000
+        }
+    ],
+    "data_version": 1,
+    "group": "b2-masks",
+    "limitations": "No photo: the effect of the values is checked by editorMasksTests; a render adds the modules' own cost per map",
+    "maps_bytes_sixteen_masks_proxy": 22364160,
+    "measured_at_utc": "2026-11-03T13:15:00Z",
+    "method": "Coverage of each kind of shape on charts in memory; timings are the best of three runs of the rasterizer alone",
+    "records": [
+        {
+            "measured": 3.178793883673592e-08,
+            "name": "linear middle at 2048 px",
+            "passed": true,
+            "tolerance": 0.002
+        },
+        {
+            "measured": 0,
+            "name": "radial edge across at 2048 px",
+            "passed": true,
+            "tolerance": 0.002
+        },
+        {
+            "measured": 2.7755575615628914e-17,
+            "name": "radial edge down at 2048 px",
+            "passed": true,
+            "tolerance": 0.002
+        },
+        {
+            "measured": 0,
+            "name": "linear middle at 6000 px",
+            "passed": true,
+            "tolerance": 0.002
+        },
+        {
+            "measured": 0,
+            "name": "radial edge across at 6000 px",
+            "passed": true,
+            "tolerance": 0.002
+        },
+        {
+            "measured": 0,
+            "name": "radial edge down at 6000 px",
+            "passed": true,
+            "tolerance": 0.002
+        },
+        {
+            "measured": 0.00022867321968078613,
+            "name": "linear across resolutions",
+            "passed": true,
+            "tolerance": 0.02
+        },
+        {
+            "measured": 2.4199485778808594e-05,
+            "name": "radial across resolutions",
+            "passed": true,
+            "tolerance": 0.02
+        },
+        {
+            "measured": 0.0058937668800354,
+            "name": "brush across resolutions",
+            "passed": true,
+            "tolerance": 0.02
+        },
+        {
+            "measured": 21.5127,
+            "name": "one mask per render on the proxy, ms",
+            "passed": true,
+            "tolerance": 40
+        }
+    ],
+    "schema_version": 1,
+    "status": "passed",
+    "units": {
+        "cost": "milliseconds",
+        "place": "share of the canvas's side"
+    }
+}

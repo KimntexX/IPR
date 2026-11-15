@@ -1,9 +1,14 @@
+#include "RenderChain.h"
 #include "imageeditor.h"
+#include <random>
+#include "image_testing.h"
 #include "DecodedImageCache.h"
 #include "controlled_memory.h"
 #include "imageprovider.h"
 #include "RawDecoder.h"
 #include "CameraProfileEngine.h"
+#include "Sidecar.h"
+#include "Image.h"
 #include <tiffio.h>
 
 #include <QCoreApplication>
@@ -106,27 +111,27 @@ bool awaitLoad(ImageEditor &editor, const QUrl &fileUrl)
 bool verifyDecodedImageCache()
 {
     ColorPipeline::WorkingImage image;
-    image.linearRgba = cv::Mat::zeros(10, 10, CV_32FC4);
-    DecodedImageCache::Entry sharedProxy{image, image, {}};
+    image.linearRgba = ipr::Image::zeros({10, 10}, ipr::Depth::F32, 4);
+    DecodedImageCache::Entry sharedProxy{ColorPipeline::sharedCopy(image), ColorPipeline::sharedCopy(image), {}};
     const quint64 imageBytes = DecodedImageCache::entrySizeBytes(sharedProxy);
     if (!check(imageBytes == 10U * 10U * 4U * sizeof(float),
                "a shallow edit proxy must not be counted twice"))
         return false;
 
     auto context = std::make_shared<CameraProfileEngine::DcpWorkingContext>();
-    context->cameraRgb = cv::Mat::zeros(10, 10, CV_32FC3);
-    auto withContext = sharedProxy;
+    context->cameraRgb = ipr::Image::zeros({10, 10}, ipr::Depth::F32, 3);
+    auto withContext = DecodedImageCache::sharedCopy(sharedProxy);
     withContext.image.dcpContext = context;
     withContext.editProxy.dcpContext = context;
     if (!check(DecodedImageCache::entrySizeBytes(withContext) == imageBytes + 1200,
                "shared camera source counted exactly once in LRU budget")) return false;
     DecodedImageCache limited(imageBytes);
-    limited.insert("oversized-context", withContext);
+    limited.insert("oversized-context", DecodedImageCache::sharedCopy(withContext));
     if (!check(limited.count() == 0, "pre-DCP storage cannot bypass the LRU budget")) return false;
 
     DecodedImageCache cache(imageBytes * 2);
-    cache.insert(QStringLiteral("first"), sharedProxy);
-    cache.insert(QStringLiteral("second"), sharedProxy);
+    cache.insert(QStringLiteral("first"), DecodedImageCache::sharedCopy(sharedProxy));
+    cache.insert(QStringLiteral("second"), DecodedImageCache::sharedCopy(sharedProxy));
     if (!check(cache.count() == 2 && cache.sizeBytes() == imageBytes * 2,
                "cache should retain entries within its explicit budget"))
         return false;
@@ -134,7 +139,7 @@ bool verifyDecodedImageCache()
     if (!check(cache.find(QStringLiteral("first")).has_value(),
                "a cache lookup should return the stored image"))
         return false;
-    cache.insert(QStringLiteral("third"), sharedProxy);
+    cache.insert(QStringLiteral("third"), DecodedImageCache::sharedCopy(sharedProxy));
     if (!check(cache.find(QStringLiteral("first")).has_value() &&
                    !cache.find(QStringLiteral("second")).has_value() &&
                    cache.find(QStringLiteral("third")).has_value(),
@@ -189,22 +194,32 @@ bool verifyToneCurvesAndHistogram(ImageEditor &editor, const QString &directory)
             if (!check(pixel.red() > original.red() &&
                            pixel.green() > original.green() &&
                            pixel.blue() > original.blue(),
-                       "luminance curve should brighten all RGB channels"))
+                       "the RGB curve should brighten all RGB channels"))
                 return false;
         } else {
             const int changed = channel - ImageEditor::RedCurve;
             QImage sample(1,1,QImage::Format_RGBA8888);
             sample.setPixelColor(0,0,original); sample.setColorSpace(QColorSpace(QColorSpace::SRgb));
             auto expectedMaster = ColorPipeline::fromSourceImage(sample);
-            auto &v = expectedMaster.linearRgba.at<cv::Vec4f>(0,0)[changed];
-            // Interpolating (0,0), (.6,.9), (1,1) gives this quadratic.
-            v += 1.25f * v * (1.f - v);
+            ipr::Vec4f &master = imagetest::at<ipr::Vec4f>(expectedMaster.linearRgba, 0,0);
+            // The channel of linear ProPhoto, sRGB-encoded, through the natural spline of
+            // (0,0), (.6,.9), (1,1): second derivative -3.75 at the middle point, 0 at the ends.
+            const auto spline = [](double x) {
+                const double m = -3.75;
+                if (x <= 0.6) { const double h = 0.6; return m * x * x * x / (6 * h) + (0.9 / h - m * h / 6) * x; }
+                const double h = 0.4, t = x - 0.6;
+                return m * (1.0 - x) * (1.0 - x) * (1.0 - x) / (6 * h) + (0.9 / h - m * h / 6) * (1.0 - x) + (1.0 / h) * t;
+            };
+            ipr::Vec3d proPhoto = WorkingColor::toProPhoto() * ipr::Vec3d(master[0], master[1], master[2]);
+            proPhoto[changed] = WorkingColor::srgbDecode(spline(WorkingColor::srgbEncode(proPhoto[changed])));
+            const ipr::Vec3d rgb = WorkingColor::toProPhoto().inv() * proPhoto;
+            master = ipr::Vec4f(float(rgb[0]), float(rgb[1]), float(rgb[2]), master[3]);
             const auto expected = ColorPipeline::toSrgb(expectedMaster,
                 ColorPipeline::OutputFormat::Preview8Bit).pixelColor(0,0);
             if (!check(std::abs(pixel.red()-expected.red()) <= 2 &&
                        std::abs(pixel.green()-expected.green()) <= 2 &&
                        std::abs(pixel.blue()-expected.blue()) <= 2,
-                       "RGB curve must edit a Rec.2020 channel before the sRGB output matrix"))
+                       "a channel curve must edit encoded ProPhoto, as Lightroom, with a natural spline"))
                 return false;
         }
         editor.resetToneCurve(channel);
@@ -231,7 +246,25 @@ bool verifyToneCurvesAndHistogram(ImageEditor &editor, const QString &directory)
     if (!check(quadraticStatus.startsWith(QStringLiteral("Image exportée")) &&
                    !quadraticImage.isNull() &&
                    quadraticImage.pixelColor(0, 0).red() > 118,
-               "one internal point should produce a quadratic tone curve"))
+               "one raised internal point should brighten the image"))
+        return false;
+
+    // End points move as in Lightroom: a raised black and clipped whites are kept.
+    const QVariantList clipped{
+        QVariantMap{{QStringLiteral("x"), 0.0}, {QStringLiteral("y"), 0.25}},
+        QVariantMap{{QStringLiteral("x"), 0.8}, {QStringLiteral("y"), 1.0}},
+    };
+    editor.setToneCurve(ImageEditor::LuminanceCurve, clipped);
+    const QVariantList kept = editor.toneCurve(ImageEditor::LuminanceCurve);
+    const QString clippedPath = directory + QStringLiteral("/clipped-tone.png");
+    const QString clippedStatus = awaitExport(editor, QUrl::fromLocalFile(clippedPath), QStringLiteral("PNG"));
+    const QColor clippedPixel = QImage(clippedPath).pixelColor(0, 0);
+    editor.resetToneCurve(ImageEditor::LuminanceCurve);
+    if (!check(kept.size() == 2 && std::abs(kept.at(0).toMap().value("y").toDouble() - 0.25) < 1e-6 &&
+                   std::abs(kept.at(1).toMap().value("x").toDouble() - 0.8) < 1e-6 &&
+                   clippedStatus.startsWith(QStringLiteral("Image exportée")) &&
+                   clippedPixel.red() > original.red() && clippedPixel.blue() > original.blue(),
+               "moved end points should be kept and brighten the image"))
         return false;
     return true;
 }
@@ -397,14 +430,14 @@ bool verifyColorMixer(ImageEditor &editor, const QString &directory)
     // Rec.2020 HSV centres with low enough chroma to fit the sRGB fixture file.
     // Otherwise gamut mapping changes the centre before it can be reimported.
     ColorPipeline::WorkingImage patches;
-    patches.linearRgba = cv::Mat(1, 8, CV_32FC4);
-    const std::array<cv::Vec4f, 8> colors{{
+    patches.linearRgba = ipr::Image::create({8, 1}, ipr::Depth::F32, 4);
+    const std::array<ipr::Vec4f, 8> colors{{
         {0.35f, 0.25f, 0.25f, 1.0f}, {0.35f, 0.30f, 0.25f, 1.0f},
         {0.35f, 0.35f, 0.25f, 1.0f}, {0.25f, 0.35f, 0.25f, 1.0f},
         {0.25f, 0.35f, 0.35f, 1.0f}, {0.25f, 0.25f, 0.35f, 1.0f},
         {0.30f, 0.25f, 0.35f, 1.0f}, {0.35f, 0.25f, 0.35f, 1.0f}}};
     for (int band = 0; band < 8; ++band)
-        patches.linearRgba.at<cv::Vec4f>(0, band) = colors[band];
+        imagetest::at<ipr::Vec4f>(patches.linearRgba, 0, band) = colors[band];
     const QString sourcePath = directory + QStringLiteral("/mixer-source.png");
     if (!ColorPipeline::toSrgb(patches, ColorPipeline::OutputFormat::HighBitDepth)
              .save(sourcePath, "PNG") ||
@@ -475,14 +508,9 @@ bool verifyColorMixer(ImageEditor &editor, const QString &directory)
                editor.colorGradingValue(0, 2) == 25 && editor.colorGradingValue(3, 2) == -35 &&
                editor.colorGradingValue(1, 2) == 0,
                "the global wheel and the luminances must roundtrip")) return false;
-    QFile currentSidecar(sourcePath + QStringLiteral(".ipr"));
-    if (!currentSidecar.open(QIODevice::ReadOnly)) return false;
-    QDataStream currentStream(&currentSidecar);
-    currentStream.setVersion(QDataStream::Qt_6_4);
-    quint32 magic; quint16 savedVersion;
-    currentStream >> magic >> savedVersion;
-    if (!check(magic == 0x49505231u && savedVersion == 8, "new sidecars must declare version 8")) return false;
-    currentSidecar.close();
+    const auto current = Sidecar::read(sourcePath);
+    if (!check(current && current->format == Sidecar::Format::Current, "new sidecars are at the current format"))
+        return false;
     editor.resetAdjustments();
     for (int band = 0; band < 8; ++band)
         for (int component = 0; component < 3; ++component)
@@ -490,7 +518,8 @@ bool verifyColorMixer(ImageEditor &editor, const QString &directory)
                        "reset should neutralize all eight mixer bands"))
                 return false;
 
-    for (quint16 version : {quint16(1), quint16(2), quint16(3), quint16(4), quint16(5), quint16(6), quint16(7)}) {
+    for (quint16 version : {quint16(1), quint16(2), quint16(3), quint16(4), quint16(5), quint16(6), quint16(7),
+                            quint16(8), quint16(9)}) {
         const QString legacyPath = directory + QStringLiteral("/legacy-%1.png").arg(version);
         if (!QImage(sourcePath).save(legacyPath, "PNG"))
             return false;
@@ -521,6 +550,10 @@ bool verifyColorMixer(ImageEditor &editor, const QString &directory)
             stream << QString() << QString() << false << false << false;
         if (version >= 7)
             stream << qint32(80) << qint32(-30);
+        if (version >= 8)
+            stream << qint32(0) << qint32(0) << qint32(0) << qint32(0) << qint32(0) << qint32(0);
+        if (version >= 9)
+            stream << qint32(0);
         if (stream.status() != QDataStream::Ok)
             return false;
         sidecar.close();
@@ -554,7 +587,8 @@ bool verifyColorMixer(ImageEditor &editor, const QString &directory)
 bool verifyEffects(ImageEditor &editor, const QString &directory)
 {
     QImage source(96, 64, QImage::Format_RGBA8888);
-    cv::RNG noise(812);
+    std::mt19937 noise(812);
+    std::normal_distribution<double> grainOf(0.0, 5.0), channelOf(0.0, 3.0);
     for (int y = 0; y < source.height(); ++y) {
         for (int x = 0; x < source.width(); ++x) {
             const int gradient = 70 + x * 95 / (source.width() - 1);
@@ -563,11 +597,14 @@ bool verifyEffects(ImageEditor &editor, const QString &directory)
             // estimator must not be required to mistake that texture for noise.
             // Add deterministic luminance/chroma noise and keep the pattern so
             // this test still exercises all effects through the actual export.
-            const int grain = static_cast<int>(std::lround(noise.gaussian(5.0)));
+            const int grain = static_cast<int>(std::lround(grainOf(noise)));
+            const int red = static_cast<int>(std::lround(channelOf(noise)));
+            const int green = static_cast<int>(std::lround(channelOf(noise)));
+            const int blue = static_cast<int>(std::lround(channelOf(noise)));
             source.setPixelColor(x, y, QColor(
-                qBound(0, gradient + detail + y / 5 + grain + static_cast<int>(std::lround(noise.gaussian(3.0))), 255),
-                qBound(0, gradient + detail + 25 + grain + static_cast<int>(std::lround(noise.gaussian(3.0))), 255),
-                qBound(0, gradient + detail + 50 + grain + static_cast<int>(std::lround(noise.gaussian(3.0))), 255)));
+                qBound(0, gradient + detail + y / 5 + grain + red, 255),
+                qBound(0, gradient + detail + 25 + grain + green, 255),
+                qBound(0, gradient + detail + 50 + grain + blue, 255)));
         }
     }
     source.setColorSpace(QColorSpace(QColorSpace::SRgb));
@@ -586,9 +623,8 @@ bool verifyEffects(ImageEditor &editor, const QString &directory)
                "effects baseline export should succeed"))
         return false;
 
-    const auto verifyEffect = [&](const QString &name,
-                                  void (ImageEditor::*setter)(int)) {
-        (editor.*setter)(100);
+    const auto verifyEffect = [&](const QString &name) {
+        editor.setAdjustment(name, 100);
         const QString path = directory + QStringLiteral("/effects-%1.png").arg(name);
         const QString status = awaitExport(
             editor, QUrl::fromLocalFile(path), QStringLiteral("PNG"));
@@ -600,16 +636,10 @@ bool verifyEffects(ImageEditor &editor, const QString &directory)
                          " should change the rendered export")));
     };
 
-    return verifyEffect(QStringLiteral("texture"), &ImageEditor::setTexture) &&
-           verifyEffect(QStringLiteral("clarity"), &ImageEditor::setClarity) &&
-           verifyEffect(QStringLiteral("dehaze"), &ImageEditor::setDehaze) &&
-           verifyEffect(QStringLiteral("grain"), &ImageEditor::setGrain) &&
-           verifyEffect(QStringLiteral("denoise-luminance"),
-                        &ImageEditor::setDenoiseLuminance) &&
-           verifyEffect(QStringLiteral("denoise-chrominance"),
-                        &ImageEditor::setDenoiseChrominance) &&
-           verifyEffect(QStringLiteral("sharpening"),
-                        &ImageEditor::setSharpeningAmount);
+    return verifyEffect(QStringLiteral("texture")) && verifyEffect(QStringLiteral("clarity")) &&
+           verifyEffect(QStringLiteral("dehaze")) && verifyEffect(QStringLiteral("grain")) &&
+           verifyEffect(QStringLiteral("denoiseLuminance")) && verifyEffect(QStringLiteral("denoiseChrominance")) &&
+           verifyEffect(QStringLiteral("sharpeningAmount"));
 }
 
 bool verifyDngOutput(ImageEditor &editor, const QString &directory)
@@ -639,17 +669,19 @@ bool verifyDngOutput(ImageEditor &editor, const QString &directory)
     TIFF *tiff = TIFFOpen(expectedPath.toUtf8().constData(), "r");
 #endif
     if (!check(tiff != nullptr, "DNG IFD should open")) return false;
-    uint32_t count = 0, profileBytes = 0;
+    uint32_t count = 0, profileBytes = 0, subfileType = 1;
     float *matrix = nullptr;
     void *profile = nullptr;
+    const bool mainImage = TIFFGetField(tiff, TIFFTAG_SUBFILETYPE, &subfileType) == 1 && subfileType == 0;
     const bool hasMatrix = TIFFGetField(tiff, TIFFTAG_COLORMATRIX1, &count, &matrix) == 1 && count == 9;
     const bool hasIcc = TIFFGetField(tiff, TIFFTAG_ICCPROFILE, &profileBytes, &profile) == 1;
     const QColorSpace embedded = hasIcc ? QColorSpace::fromIccProfile(
         QByteArray(static_cast<const char *>(profile), int(profileBytes))) : QColorSpace{};
-    const cv::Matx33d expectedMatrix = WorkingColor::srgbToXyz().inv();
+    const ipr::Matrix33d expectedMatrix = WorkingColor::srgbToXyz().inv();
     bool consistent = hasMatrix && embedded == QColorSpace(QColorSpace::SRgbLinear);
-    if (hasMatrix) for (int i=0; i<9; ++i) consistent &= std::abs(matrix[i]-expectedMatrix.val[i]) < 1e-6;
+    if (hasMatrix) for (int i=0; i<9; ++i) consistent &= std::abs(matrix[i]-expectedMatrix.values[i]) < 1e-6;
     TIFFClose(tiff);
+    if (!check(mainImage, "DNG main IFD needs NewSubfileType 0 for Adobe readers")) return false;
     if (!check(consistent, "DNG linear samples need linear ICC and XYZ-to-stored-RGB matrix")) return false;
 
 #ifdef IPR_WITH_LIBRAW
@@ -657,6 +689,18 @@ bool verifyDngOutput(ImageEditor &editor, const QString &directory)
     if (!firstDng.open(QIODevice::ReadOnly)) return false;
     const QByteArray firstDngBytes = firstDng.readAll();
     firstDng.close();
+    // An exported DNG carries no preview: the ribbon develops its thumbnail instead.
+    QString thumbnailError;
+    if (!check(RawDecoder::decodeEmbeddedThumbnail(expectedPath, QSize(64, 64), &thumbnailError).isNull(),
+               "the exported DNG has no embedded preview")) return false;
+    const QImage developedThumbnail = RawDecoder::developThumbnail(expectedPath, QSize(64, 64), &thumbnailError);
+    if (!check(!developedThumbnail.isNull() && thumbnailError.isEmpty() &&
+               std::max(developedThumbnail.width(), developedThumbnail.height()) == 64 &&
+               developedThumbnail.pixelColor(developedThumbnail.width() / 2, developedThumbnail.height() / 2).lightness() > 0,
+               "a DNG without preview gets a developed thumbnail")) return false;
+    if (!check(RawDecoder::developThumbnail(directory + QStringLiteral("/absent.dng"), QSize(64, 64), &thumbnailError).isNull() &&
+               !thumbnailError.isEmpty(), "a developed thumbnail reports a missing file")) return false;
+
     const QString repeatedStatus = awaitExport(editor, QUrl::fromLocalFile(requestedPath), QStringLiteral("DNG"));
     if (!firstDng.open(QIODevice::ReadOnly)) return false;
     if (!check(repeatedStatus.endsWith(QStringLiteral("/linear-2.dng")) &&
@@ -671,7 +715,7 @@ bool verifyDngOutput(ImageEditor &editor, const QString &directory)
         std::cerr << "DNG decode error: " << imported.error.toStdString() << '\n';
     return check(!imported.image.isNull() && imported.capabilities.cameraDevelopment &&
                      imported.image.colorSpace == ColorPipeline::workingColorSpace() &&
-                     imported.image.linearRgba.size() == cv::Size(64, 64),
+                     imported.image.linearRgba.size() == ipr::Size(64, 64),
                  "exported linear DNG should use the common import contract through LibRaw");
 #else
     return true;
@@ -690,9 +734,9 @@ bool verifyHighlightRecovery(ImageEditor &editor, const QString &directory)
 
     if (!awaitLoad(editor, QUrl::fromLocalFile(inputPath)))
         return false;
-    editor.setBrightness(-0.49f);
-    editor.setContrast(41);
-    editor.setHighlights(-100);
+    editor.setAdjustment(QStringLiteral("brightness"), -0.49f);
+    editor.setAdjustment(QStringLiteral("contrast"), 41);
+    editor.setAdjustment(QStringLiteral("highlights"), -100);
     const QString exportPath = directory + QStringLiteral("/tonal.jpg");
     const QString status = awaitExport(
         editor, QUrl::fromLocalFile(exportPath), QStringLiteral("JPEG"));
@@ -717,7 +761,7 @@ bool verifyHighlightRecovery(ImageEditor &editor, const QString &directory)
         return false;
 
     editor.resetAdjustments();
-    editor.setWhites(-100);
+    editor.setAdjustment(QStringLiteral("whites"), -100);
     const QString whitesPath = directory + QStringLiteral("/whites.jpg");
     const QString whitesStatus = awaitExport(
         editor, QUrl::fromLocalFile(whitesPath), QStringLiteral("JPEG"));
@@ -729,7 +773,7 @@ bool verifyHighlightRecovery(ImageEditor &editor, const QString &directory)
         return false;
 
     editor.resetAdjustments();
-    editor.setShadows(-100);
+    editor.setAdjustment(QStringLiteral("shadows"), -100);
     const QString shadowsPath = directory + QStringLiteral("/shadows.jpg");
     const QString shadowsStatus = awaitExport(
         editor, QUrl::fromLocalFile(shadowsPath), QStringLiteral("JPEG"));
@@ -741,7 +785,7 @@ bool verifyHighlightRecovery(ImageEditor &editor, const QString &directory)
         return false;
 
     editor.resetAdjustments();
-    editor.setBlacks(-100);
+    editor.setAdjustment(QStringLiteral("blacks"), -100);
     const QString blacksPath = directory + QStringLiteral("/blacks.png");
     const QString blacksStatus = awaitExport(
         editor, QUrl::fromLocalFile(blacksPath), QStringLiteral("PNG"));
@@ -751,7 +795,7 @@ bool verifyHighlightRecovery(ImageEditor &editor, const QString &directory)
                "black point export should succeed"))
         return false;
     editor.resetAdjustments();
-    editor.setBlacks(-50);
+    editor.setAdjustment(QStringLiteral("blacks"), -50);
     const QString halfBlacksPath = directory + QStringLiteral("/blacks-half.png");
     const QString halfBlacksStatus = awaitExport(
         editor, QUrl::fromLocalFile(halfBlacksPath), QStringLiteral("PNG"));
@@ -763,8 +807,8 @@ bool verifyHighlightRecovery(ImageEditor &editor, const QString &directory)
         return false;
 
     editor.resetAdjustments();
-    editor.setShadows(-100);
-    editor.setBlacks(-100);
+    editor.setAdjustment(QStringLiteral("shadows"), -100);
+    editor.setAdjustment(QStringLiteral("blacks"), -100);
     const QString darkTonesPath = directory + QStringLiteral("/dark-tones.png");
     const QString darkTonesStatus = awaitExport(
         editor, QUrl::fromLocalFile(darkTonesPath), QStringLiteral("PNG"));
@@ -833,7 +877,7 @@ bool verifyBlackShadowSeparation(ImageEditor &editor, const QString &directory)
         return false;
 
     editor.resetAdjustments();
-    editor.setBlacks(100);
+    editor.setAdjustment(QStringLiteral("blacks"), 100);
     const auto [blackStatus, blackLift] =
         exportVariant(QStringLiteral("black-lift"));
     if (!check(!blackStatus.isEmpty() &&
@@ -846,7 +890,7 @@ bool verifyBlackShadowSeparation(ImageEditor &editor, const QString &directory)
         return false;
 
     editor.resetAdjustments();
-    editor.setBlacks(-100);
+    editor.setAdjustment(QStringLiteral("blacks"), -100);
     const auto [blackDarkStatus, blackDark] =
         exportVariant(QStringLiteral("black-darkening"));
     if (!check(!blackDarkStatus.isEmpty() && !blackDark.isNull() &&
@@ -857,7 +901,7 @@ bool verifyBlackShadowSeparation(ImageEditor &editor, const QString &directory)
         return false;
 
     editor.resetAdjustments();
-    editor.setShadows(-100);
+    editor.setAdjustment(QStringLiteral("shadows"), -100);
     const auto [shadowDarkStatus, shadowDark] =
         exportVariant(QStringLiteral("shadow-darkening"));
     if (!check(!shadowDarkStatus.isEmpty() &&
@@ -871,7 +915,7 @@ bool verifyBlackShadowSeparation(ImageEditor &editor, const QString &directory)
         return false;
 
     editor.resetAdjustments();
-    editor.setShadows(100);
+    editor.setAdjustment(QStringLiteral("shadows"), 100);
     const auto [shadowStatus, shadowLift] =
         exportVariant(QStringLiteral("shadow-lift"));
     return check(!shadowStatus.isEmpty() &&
@@ -891,7 +935,7 @@ bool verifyPositiveShadowRamp(ImageEditor &editor, const QString &directory)
     const QString path=directory+QStringLiteral("/shadow-ramp.png");
     if (!input.save(path) || !awaitLoad(editor,QUrl::fromLocalFile(path))) return false;
     editor.resetAdjustments();
-    editor.setShadows(100);
+    editor.setAdjustment(QStringLiteral("shadows"), 100);
     const QString target=directory+QStringLiteral("/shadow-ramp.tiff");
     if (!awaitExport(editor,QUrl::fromLocalFile(target),QStringLiteral("TIFF"))
             .startsWith(QStringLiteral("Image exportée"))) return false;
@@ -917,7 +961,7 @@ bool verifyPositiveHighlightColour(ImageEditor &editor, const QString &directory
     input.setPixelColor(2,0,QColor(120,30,220));
     const QString path=directory+QStringLiteral("/highlight-colour.png");
     if (!input.save(path) || !awaitLoad(editor,QUrl::fromLocalFile(path))) return false;
-    editor.resetAdjustments(); editor.setHighlights(100);
+    editor.resetAdjustments(); editor.setAdjustment(QStringLiteral("highlights"), 100);
     const QString target=directory+QStringLiteral("/highlight-colour.tiff");
     if (!awaitExport(editor,QUrl::fromLocalFile(target),QStringLiteral("TIFF"))
             .startsWith(QStringLiteral("Image exportée"))) return false;
@@ -960,7 +1004,7 @@ bool verifyHighlightWhiteSeparation(ImageEditor &editor, const QString &director
         return false;
 
     editor.resetAdjustments();
-    editor.setHighlights(100);
+    editor.setAdjustment(QStringLiteral("highlights"), 100);
     const auto [highlightLiftStatus, highlightLift] =
         exportVariant(QStringLiteral("highlight-lift"));
     if (!check(!highlightLiftStatus.isEmpty() && !highlightLift.isNull() &&
@@ -971,7 +1015,7 @@ bool verifyHighlightWhiteSeparation(ImageEditor &editor, const QString &director
         return false;
 
     editor.resetAdjustments();
-    editor.setHighlights(-100);
+    editor.setAdjustment(QStringLiteral("highlights"), -100);
     const auto [highlightDarkStatus, highlightDark] =
         exportVariant(QStringLiteral("highlight-darkening"));
     if (!check(!highlightDarkStatus.isEmpty() && !highlightDark.isNull() &&
@@ -982,7 +1026,7 @@ bool verifyHighlightWhiteSeparation(ImageEditor &editor, const QString &director
         return false;
 
     editor.resetAdjustments();
-    editor.setWhites(100);
+    editor.setAdjustment(QStringLiteral("whites"), 100);
     const auto [whiteLiftStatus, whiteLift] =
         exportVariant(QStringLiteral("white-lift"));
     if (!check(!whiteLiftStatus.isEmpty() && !whiteLift.isNull() &&
@@ -995,7 +1039,7 @@ bool verifyHighlightWhiteSeparation(ImageEditor &editor, const QString &director
         return false;
 
     editor.resetAdjustments();
-    editor.setWhites(-100);
+    editor.setAdjustment(QStringLiteral("whites"), -100);
     const auto [whiteDarkStatus, whiteDark] =
         exportVariant(QStringLiteral("white-darkening"));
     return check(!whiteDarkStatus.isEmpty() && !whiteDark.isNull() &&
@@ -1041,10 +1085,10 @@ bool verifyHistogramValues(ImageEditor &editor, const QString &directory)
 
 bool verifyContrastResponse(ImageEditor &editor, const QString &directory)
 {
-    // Black, deep shadow, shadow, pivot (0.32 linear ~ sRGB 153), highlight,
+    // Black, deep shadow, shadow, pivot (0.225 linear ~ sRGB 130), highlight,
     // white and an orange: per-channel perceptual S curve with fixed endpoints.
-    const QList<QColor> colors{QColor(0, 0, 0), QColor(30, 30, 30), QColor(105, 105, 105),
-        QColor(153, 153, 153), QColor(210, 210, 210), QColor(255, 255, 255), QColor(200, 150, 50)};
+    const QList<QColor> colors{QColor(0, 0, 0), QColor(30, 30, 30), QColor(95, 95, 95),
+        QColor(130, 130, 130), QColor(210, 210, 210), QColor(255, 255, 255), QColor(200, 150, 50)};
     QImage input(int(colors.size()), 1, QImage::Format_RGBA8888);
     for (int x = 0; x < colors.size(); ++x) input.setPixelColor(x, 0, colors[x]);
     input.setColorSpace(QColorSpace(QColorSpace::SRgb));
@@ -1072,7 +1116,7 @@ bool verifyContrastResponse(ImageEditor &editor, const QString &directory)
         return false;
 
     editor.resetAdjustments();
-    editor.setContrast(100);
+    editor.setAdjustment(QStringLiteral("contrast"), 100);
     const auto [strongStatus, strong] = exportVariant(QStringLiteral("contrast-strong"));
     if (!check(!strongStatus.isEmpty() && !strong.isNull() &&
                    red(strong, 0) <= red(base, 0) + 1 && red(strong, 5) >= red(base, 5) - 1 &&
@@ -1087,7 +1131,7 @@ bool verifyContrastResponse(ImageEditor &editor, const QString &directory)
             return false;
 
     editor.resetAdjustments();
-    editor.setContrast(-100);
+    editor.setAdjustment(QStringLiteral("contrast"), -100);
     const auto [flatStatus, flat] = exportVariant(QStringLiteral("contrast-flat"));
     return check(!flatStatus.isEmpty() && !flat.isNull() &&
                      red(flat, 0) <= red(base, 0) + 1 && red(flat, 5) >= red(base, 5) - 1 &&
@@ -1135,7 +1179,7 @@ bool verifyOriginalPreview(ImageEditor &editor, ImageProvider &provider,
     const QImage originRequest = provider.requestImage(originalUrl.section(QLatin1Char('/'), 3), &requested, {});
     if (!check(originRequest == baseline && requested == baseline.size(),
                "origin provider URL should return the baseline, not the current image")) return false;
-    editor.setBrightness(1);
+    editor.setAdjustment(QStringLiteral("brightness"), 1);
     if (!check(awaitPreview(editor) && provider.image() != baseline && provider.originalImage() == baseline
             && editor.originalImageSource() == originalUrl,
                "adjustments must not alter or reissue the origin preview")) return false;
@@ -1161,7 +1205,7 @@ bool verifyEditProxyDownscaling(ImageEditor &editor, ImageProvider &provider,
                                 const QString &directory)
 {
     // Larger than the 2048 px edit-proxy cap on its long side, so loading it
-    // exercises ImageEditor::buildEditProxy()'s cv::resize() path.
+    // exercises RenderChain::editProxy()'s reduction.
     constexpr int width = 2200;
     constexpr int height = 1600;
     QImage input(width, height, QImage::Format_RGBA8888);
@@ -1258,7 +1302,7 @@ int main(int argc, char **argv)
                "absolute paths without a file URL scheme should export"))
         return 1;
 
-    editor.setTemperature(50000);
+    editor.setAdjustment(QStringLiteral("temperature"), 50000);
     const QString warmPath = directory.filePath(QStringLiteral("warm.png"));
     const QString warmStatus = awaitExport(
         editor, QUrl::fromLocalFile(warmPath), QStringLiteral("PNG"));
@@ -1271,7 +1315,7 @@ int main(int argc, char **argv)
         return 1;
 
     editor.resetAdjustments();
-    editor.setTint(150);
+    editor.setAdjustment(QStringLiteral("tint"), 150);
     const QString tintPath = directory.filePath(QStringLiteral("tint.png"));
     const QString tintStatus = awaitExport(
         editor, QUrl::fromLocalFile(tintPath), QStringLiteral("PNG"));
@@ -1285,7 +1329,7 @@ int main(int argc, char **argv)
         return 1;
 
     editor.resetAdjustments();
-    editor.setSaturation(-100);
+    editor.setAdjustment(QStringLiteral("saturation"), -100);
     const QString desaturatedPath =
         directory.filePath(QStringLiteral("desaturated.png"));
     const QString desaturatedStatus = awaitExport(
@@ -1301,7 +1345,7 @@ int main(int argc, char **argv)
         return 1;
 
     editor.resetAdjustments();
-    editor.setVibrance(100);
+    editor.setAdjustment(QStringLiteral("vibrance"), 100);
     const QString vibrantPath = directory.filePath(QStringLiteral("vibrant.png"));
     const QString vibrantStatus = awaitExport(
         editor, QUrl::fromLocalFile(vibrantPath), QStringLiteral("PNG"));
@@ -1314,7 +1358,7 @@ int main(int argc, char **argv)
         return 1;
 
     editor.resetAdjustments();
-    editor.setVibrance(-100);
+    editor.setAdjustment(QStringLiteral("vibrance"), -100);
     const QString reducedVibrancePath = directory.filePath(QStringLiteral("reduced-vibrance.png"));
     const QString reducedVibranceStatus = awaitExport(
         editor, QUrl::fromLocalFile(reducedVibrancePath), QStringLiteral("PNG"));

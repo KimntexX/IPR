@@ -1,0 +1,153 @@
+{
+  "schema_version": 1,
+  "campaign_id": "raw-parity-freeze-20261028T152028Z",
+  "measured_at_utc": "2026-10-28T15:20:28.362398+00:00",
+  "inputs": [
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\_MG_7580.CR2",
+      "sha256": "020b83b4beff9137bd9f6d409991d7b1006f0422183c31656e5a185f31dde417"
+    },
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\_MG_7840.CR2",
+      "sha256": "b37c4176e160c9c1bdd0518b4a3115bde53b44e7012f0574d138f935f472935b"
+    },
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0007.CR3",
+      "sha256": "35f6dc7b66b20dfffa95a3e9ac7dc2600905d72877e0428d0712dd2d202fdfcc"
+    },
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0032.CR3",
+      "sha256": "f32a27f60fff34a35215b18be688c2300e371ce27c5e4977cb70567a9e6e702d"
+    },
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0043.CR3",
+      "sha256": "403fc63b37987862c8fc30735bdb9c5c1f793758ed6c46fe13f02f5d4b5a4bfe"
+    },
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0064.CR3",
+      "sha256": "af350c1ad03079873dc5ebcbe5ef4b23d14c921e6aeb151d5eced2ad9a7928ed"
+    },
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0327.CR3",
+      "sha256": "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed"
+    },
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0524.CR3",
+      "sha256": "149898806eb49f1e66a9527c2ec7f784eb8192532710f36fca8578642cd3c97b"
+    },
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0544.CR3",
+      "sha256": "cac52efb3491f413403db11fd4cdbc299b1c257c8a0f13420ec83140df30c33a"
+    },
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9112.CR3",
+      "sha256": "80094389b8281933fd9ee0f16d9aa6245b77f9e6652578d78a1fed2575e6007b"
+    },
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9141.CR3",
+      "sha256": "5e4046a021c570ffbfecfb174cf4dba685fb8b105787f3f904394cd3505effcf"
+    },
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9153.CR3",
+      "sha256": "7f5e0baf7f9722401cc269a1b01deee35db9eba0d122ea88e98f638266f32b30"
+    },
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9539.CR3",
+      "sha256": "8f97ae28841779db992572f31e4de7482c9bd123eaa4bee79967a6be74d631bf"
+    },
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9940.CR3",
+      "sha256": "01661293b080108e90915d38b0501d0aa489958a666331e5eab2fe5e5527f5be"
+    },
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9947.CR3",
+      "sha256": "ee34e67577716b937e726df6f8f07362bcc34ee4dfd5653e06b1dddb68ff9df4"
+    },
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\7Y6A7599.CR3",
+      "sha256": "9c1426494accc3fb6efa2c5b0f8c7c4faac70d65fa9a26721f1de86d011f078e"
+    },
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_3135.CR2",
+      "sha256": "7bf4440bcdafc359762d0db40e92dcbf1948886b6aa3ca250cecb96496309165"
+    },
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_4002.CR2",
+      "sha256": "4ead8c801223ce4d134fa912a9505793acedade7955e94c49846aa970450e447"
+    },
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_4173.CR2",
+      "sha256": "6e5e0f451b39abab76d45a4d17131af5b69af3890bb4b70fa1cd4983aea4d390"
+    },
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_4345.CR2",
+      "sha256": "47c4d5a394e2e98335f686e14e0e26e1f1a00cb1e21e935caf7f438854a1cb5e"
+    },
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_6248.CR2",
+      "sha256": "9434f32e572b6d2a50379a159ab547789d6ecc1656eb2f93bab55ba6933adcd8"
+    },
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_6954.CR2",
+      "sha256": "3d80e31cad494d129c7f110e5e62ee2c8372d627d8a2bbbad5ab9034e4650577"
+    },
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_6979.CR2",
+      "sha256": "1eba7c273b609d1f9cebe68cdbf1c03a065f835094789b30dbbc6302a442a7fb"
+    },
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_7423.CR2",
+      "sha256": "8eea727fdd9cd4b2766292cbccf172a841d5e22aa595e1378e2503c59dd5226c"
+    },
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_7953.CR2",
+      "sha256": "966d5bc82bbbebc89b5364002539300b853828574ad1ff968620661a75a21a16"
+    },
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_7958.CR2",
+      "sha256": "68a2cf76de50acf6aaf291e99c4c9feaa1056bf09efb8290289d886b4b844dd1"
+    },
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_7961.CR2",
+      "sha256": "a949888b39903a441da32f88118be50ce1300cfe5cdd4dcabbc3b2d365fe7aa9"
+    },
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_8473.CR2",
+      "sha256": "d1acde3f2969bf6fd3b5d77f6b3c82d60371e08f9b2feabbccce7b7b5cd8840e"
+    },
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0003.CR3",
+      "sha256": "172231741d16ea44e6bc0f509d39a9d6482aa52dbab2eea0246e06d125668b6e"
+    },
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9950.CR3",
+      "sha256": "8f7eba49f50e1cc2e1c4b892053a238ec82063408337670810eeb0cd4f9b9b16"
+    }
+  ],
+  "required_stages": [
+    "unpacked_cfa",
+    "pre_demosaic_cfa",
+    "post_demosaic_camera_rgb",
+    "post_median_camera_rgb",
+    "pre_dcp_camera_rgb"
+  ],
+  "candidate_required_stages": [
+    "unpacked_cfa",
+    "pre_demosaic_cfa",
+    "post_demosaic_camera_rgb",
+    "post_median_camera_rgb",
+    "pre_dcp_camera_rgb",
+    "black_subtracted_cfa",
+    "normalized_cfa"
+  ],
+  "tolerances": "Exactly zero, no floating tolerance approved",
+  "mode": "parity",
+  "calibration_reference": {
+    "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\sonde-etapes-ouverture-bruit-v001-20261028T104746Z.json",
+    "sha256": "0a330fcc140d2dbed2991600d4cd9d2e77da5066906bcf579acecd3ce85f1524"
+  },
+  "scope": "C2 module with native LibRaw levels unless explicit previous production captures match source; WB as-shot, sensor orientation, no automatic IPR calibration selection or DCP; no visual or signed-mode validation",
+  "tool_sha256": "0cd114e8bc40e7d904d47d30cbc18a853816ca3cbc6c3bbeaee53b63acc11370",
+  "source": "\"\"\"C2 parity on explicitly observable boundaries; never certifies missing DCP.\"\"\"\nfrom datetime import datetime,timezone\nimport argparse\nimport json\nimport os\nfrom pathlib import Path\nimport subprocess\nimport sys\n\nimport numpy as np\n\nfrom capture import compare_captures,load_capture,sha256\n\nCOMMON=('unpacked_cfa','pre_demosaic_cfa','post_demosaic_camera_rgb','post_median_camera_rgb','pre_dcp_camera_rgb')\nCANDIDATE=COMMON+('black_subtracted_cfa','normalized_cfa')\n\n\ndef main():\n    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--input',action='append',type=Path,required=True)\n    p.add_argument('--runtime-dir',type=Path,action='append',required=True)\n    p.add_argument('--calibration-captures',type=Path,help='Immutable production captures providing explicit black/white for matching sources only')\n    args=p.parse_args()\n    root=Path(__file__).resolve().parents[2];start=datetime.now(timezone.utc);stamp=start.strftime('%Y%m%dT%H%M%SZ')\n    tool=root/'build-patch_raw_bench/Release/iprRawDevelopmentCapture.exe';tool_hash=sha256(tool)\n    work=root/'build-patch_raw_bench/parity'/stamp;work.mkdir(parents=True,exist_ok=False)\n    env=dict(os.environ);env['PATH']=os.pathsep.join([str(d) for d in args.runtime_dir]+[env.get('PATH','')])\n    freeze=root/'docs/validation/raw'/f'gel-banc-raw-parite-v001-{stamp}.json'\n    identities=[dict(path=str(s.resolve()),sha256=sha256(s)) for s in args.input]\n    calibration=None;calibration_reference=None\n    if args.calibration_captures:\n        calibration=json.loads(args.calibration_captures.read_text(encoding='utf-8'))['native']\n        calibration_reference=dict(path=str(args.calibration_captures.resolve()),sha256=sha256(args.calibration_captures))\n    if len({i['path'] for i in identities})!=len(identities):raise ValueError('Duplicate inputs')\n    policy=dict(schema_version=1,campaign_id='raw-parity-freeze-'+stamp,measured_at_utc=start.isoformat(),inputs=identities,required_stages=list(COMMON),\n        candidate_required_stages=list(CANDIDATE),tolerances='Exactly zero, no floating tolerance approved',\n        mode='parity',calibration_reference=calibration_reference,scope='C2 module with native LibRaw levels unless explicit previous production captures match source; WB as-shot, sensor orientation, no automatic IPR calibration selection or DCP; no visual or signed-mode validation',\n        tool_sha256=tool_hash,source=Path(__file__).read_text(encoding='utf-8'),source_sha256=sha256(Path(__file__)))\n    with freeze.open('x',encoding='utf-8') as f:json.dump(policy,f,ensure_ascii=False,indent=2,allow_nan=False)\n    print('FROZEN',freeze,flush=True);records=[]\n    for index,item in enumerate(identities):\n        source=Path(item['path']);captures={}\n        if sha256(source)!=item['sha256']:raise ValueError('Source changed before capture')\n        level_args=[];levels=None\n        if calibration and str(source) in calibration:\n            old=calibration[str(source)]['record']\n            if old['source_sha256']!=item['sha256']:raise ValueError('Calibration source identity mismatch')\n            levels=dict(black=old['applied_black_dn'],white=old['white_before_process'])\n            level_args=['--black',','.join(str(v) for v in levels['black']),'--white',str(levels['white'])]\n        for kind in ('reference','candidate'):\n            out=work/f'{index:03}-{source.stem}-{kind}.json'\n            subprocess.run([str(tool),'--input',str(source),'--output',str(out),'--path',kind,'--mode','parity']+level_args,env=env,check=True,timeout=240)\n            captures[kind]=out\n        result=compare_captures(captures['reference'],captures['candidate'],COMMON)\n        manifest,stages=load_capture(captures['candidate']);present={key[0] for key in stages}\n        if set(CANDIDATE)-present:raise ValueError('Candidate observer did not emit all expected stages')\n        if any(not np.isfinite(values).all() for _,values in stages.values()):raise ValueError('Nonfinite candidate observer capture')\n        out=work/f'{index:03}-comparison.json'\n        with out.open('x',encoding='utf-8') as f:json.dump(result,f,ensure_ascii=False,indent=2,allow_nan=False)\n        records.append(dict(source=item,captures={k:dict(path=str(v),sha256=sha256(v)) for k,v in captures.items()},comparison=dict(path=str(out),sha256=sha256(out)),\n            verdict=result['verdict'],explicit_levels=levels,max_abs=max(r.get('max_abs',float('inf')) for r in result['stages']),\n            observed_candidate_stages=sorted(present),iso=manifest['metadata']['iso'],model=manifest['metadata']['model'],\n            negative_before_clipping=[dict(origin_yx=list(key[1]),fraction=float(np.mean(values<0))) for key,(_,values) in stages.items() if key[0]=='black_subtracted_cfa']))\n        print(index+1,'/',len(identities),source.name,result['verdict'],'max',records[-1]['max_abs'],flush=True)\n        if result['verdict']!='pass':break\n    if sha256(tool)!=tool_hash:raise ValueError('Tool changed during parity campaign')\n    now=datetime.now(timezone.utc);out=root/'docs/validation/raw'/f'banc-raw-parite-v001-{now.strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n    result=dict(schema_version=1,campaign_id='raw-parity-'+stamp,measured_at_utc=now.isoformat(),started_at_utc=start.isoformat(),completed_at_utc=now.isoformat(),freeze=dict(path=str(freeze),sha256=sha256(freeze)),records=records,\n        verdict='pass_scoped_C2' if len(records)==len(identities) and all(r['verdict']=='pass' for r in records) else 'fail',\n        revision=subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip(),\n        sources={n:dict(sha256=sha256(root/n),source=(root/n).read_text(encoding='utf-8')) for n in ('tests/raw_bench/parity.py','tests/raw_bench/development_capture.cpp','tests/raw_bench/capture.py','src/raw/RawDevelopment.cpp','src/raw/Demosaic.cpp','src/raw/LibRawInput.cpp')},\n        calibration_reference=calibration_reference,\n        limitations='Only fixed3 ROIs256 per stage, not full frame parity. Reference/candidate share current IPR RCD and input adapter. LibRaw native black/white, not IPR calibrated production levels. Candidate signed and normalized stages observed but no independent LibRaw boundary for them; not falsely reconstructed. No DCP, orientation, optics, automatic WB/fallbacks, private-corpus CI or performance qualification. Original production code unchanged in this bench.')\n    with out.open('x',encoding='utf-8') as f:json.dump(result,f,ensure_ascii=False,indent=2,allow_nan=False)\n    print('RESULT',out,flush=True)\n    return 0 if result['verdict']=='pass_scoped_C2' else 1\n\n\nif __name__=='__main__':raise SystemExit(main())\n",
+  "source_sha256": "8a45d38c402a11fd62473bb0b20e626f09358e7ac7721c2dab64489bf06dd7f6"
+}

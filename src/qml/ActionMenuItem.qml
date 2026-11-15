@@ -7,9 +7,19 @@ Basic.MenuItem {
     id: control
     implicitHeight: 32
     padding: 8
+    // An Action shown under a guard of the menu's own: an item bound to `action`
+    // takes the action's enabled state each time it changes, over any guard, so a
+    // guarded item names its action here and sets `enabled` itself.
+    property Action command: null
+    readonly property Action source: action || command
+    Binding on text {
+        when: control.command !== null
+        value: control.command ? control.command.text : ""
+    }
+    onTriggered: if (command) command.trigger()
     readonly property string shortcutHint: {
-        if (!action) return ""
-        const key = action.shortcut
+        if (!source) return ""
+        const key = source.shortcut
         const command = Qt.platform.os === "osx" ? "Cmd" : "Ctrl"
         if (key === StandardKey.Open) return command + "+O"
         if (key === StandardKey.Save) return command + "+S"

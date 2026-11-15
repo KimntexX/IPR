@@ -1,8 +1,12 @@
 # Effets — rapport consolidé
 
-## Bilan actuel — 24 octobre 2026
+## Bilan actuel — 25 octobre 2026
 
-**Dernier résultat :** la [texture](#effets-20261024-texture) reproduit Lightroom à
+**État validé par l'utilisateur le 25 octobre 2026**, fusionné dans `dev` (969c7e1)
+et livré en `v0.1.45-alpha` : texture, clarté (réserve du §6), voile après ses
+reprises des §10 bis à 10 quinquies (réserves de ces sections) et grain.
+
+**Résultat du 24 octobre :** la [texture](#effets-20261024-texture) reproduit Lightroom à
 ±0,02 de 1 à 16 pixels à toutes les valeurs ; la [clarté](#effets-20261024-clarte)
 est **validée dans un premier état, avec réserve** : son contraste local suit
 Lightroom échelle par échelle, mais sa composante tonale adaptée à chaque image
@@ -567,14 +571,17 @@ le rendu de la zone visible en pleine résolution est un futur chantier.
 
 <a id="conclusion-actuelle"></a>
 
-## Conclusion actuelle et prochaines actions — 24 octobre 2026
+## Conclusion actuelle et prochaines actions — 25 octobre 2026
 
-- Texture : conforme à Lightroom, validation visuelle de l'utilisateur en cours.
+- Validé par l'utilisateur le 25 octobre 2026 et livré en `v0.1.45-alpha` ; les
+  points ci-dessous restent les réserves de cet état.
+- Texture : conforme à Lightroom.
 - Clarté : premier état validé avec la réserve du §6 ; étude de l'adaptation
   close (§6 ter et 6 quater), sans piste transposable.
 - Voile : loi en IL sur la luminance et loi de couleur (§10 bis), après le
-  retour de l'utilisateur sur 6V1A9539 ; réserves des §10 et 10 bis ; validation
-  visuelle à refaire.
+  retour de l'utilisateur sur 6V1A9539, air ambiant de luminance (§10 quater) et
+  protection des tons clairs à +100 (§10 quinquies) ; réserves de ces sections,
+  dont l'adaptation de Lightroom à chaque scène.
 - Grain : conforme à Lightroom (§12).
 - Aperçu : effets à l'échelle de l'image entière sur le proxy.
 - Prochaines actions : flou (IPR seul) ; export Lightroom de 6V1A9539 au voile

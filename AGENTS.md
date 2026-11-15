@@ -7,24 +7,32 @@
 - Cette règle ne demande pas de traduire la documentation ni de réécrire
   l’historique Git publié. Les noms des branches restent en anglais.
 
-## Prototypage, versionnage et absence de legacy — règle du 11 octobre 2026
+## Prototypage, versionnage et absence de legacy — règles du 11 octobre et du 2 novembre 2026
 
-- Le projet est actuellement en prototypage **alpha**. Chaque fusion validée
-  d'une branche de groupe dans `dev` porte un tag `v0.1.X-alpha`, où `X` est le
-  compteur cumulatif de patchs intégrés : `X_nouveau = X_précédent + nombre de
-  patchs livrés`. Ne pas confondre ce compteur avec le nombre de commits.
+- Le projet est en **bêta** depuis le 2 novembre 2026, sur décision de
+  l'utilisateur ; les limites connues restent suivies par la matrice de
+  validation et les issues. Chaque fusion validée d'une branche de groupe dans
+  `dev` porte un tag `v0.Y.X-beta`. `Y` part de 2 et monte à chaque intégration
+  d'un autre panneau de fonctionnalités (`0.3`, `0.4`, etc.), pas pour un lot
+  technique interne.
+- `X` est le compteur cumulatif de patchs intégrés : `X_nouveau = X_précédent +
+  nombre de patchs livrés`. Il continue depuis l'alpha et ne revient pas à zéro
+  quand la mineure monte : `v0.1.92-alpha` puis `v0.2.97-beta`. Ne pas confondre
+  ce compteur avec le nombre de commits.
 - Poser le tag sur le commit de fusion validé dans `dev`, jamais sur un état
   non validé ; les tags existants restent immuables. Leur publication nécessite
   l'autorisation de livraison habituelle.
-- Pendant le prototypage, ne pas conserver de legacy, y compris dans les tests :
+- Pendant le prototypage (alpha et bêta), ne pas conserver de legacy, y compris
+  dans les tests :
   supprimer les chemins remplacés et leurs tests spécifiques lors de leur
   remplacement ; maintenir les tests de la seule implémentation courante.
   Ne pas ajouter d'option de compatibilité `--legacy` ni de double implémentation.
   Cela n'autorise pas à effacer l'historique Git ou les preuves JSON des analyses.
-- Le passage en **beta** intervient après validation de toutes les fonctionnalités
-  de réglages implémentées. La première série beta est `v0.2.X-beta` ; `X` suit
-  le compteur de patchs de cette série. La version mineure évolue à chaque
-  intégration d'un autre panneau de fonctionnalités (`0.3`, `0.4`, etc.).
+- Exception ciblée décidée par l'utilisateur le 1er novembre 2026 (audit C-13) :
+  conserver la lecture et la conversion des anciennes versions des sidecars
+  `.ipr` vers la recette courante, ainsi que leurs tests de migration. Écrire
+  un seul format courant ; cette protection des fichiers utilisateur n'autorise
+  pas à maintenir d'anciens moteurs photographiques en parallèle.
 - Le passage en version **stable `v1.Y.X`** intervient après validation de tous
   les panneaux de fonctionnalités sur les boîtiers que l'utilisateur possède
   actuellement. Consigner les modèles couverts et les preuves de validation ;
@@ -82,8 +90,51 @@
   fonctions, paramètres, variables, includes, fichiers, tests et documentation
   qui ne servent plus.
 
+## Structure et testabilité du code — règle du 31 octobre 2026
+
+- Appliquer ces principes à tous les langages du projet et à tous les agents :
+  concevoir des fonctions à responsabilité claire, avec des dépendances et des
+  contrats explicites ; séparer calculs, entrées/sorties et orchestration.
+- Prévoir les tests dès la conception, y compris les cas limites pertinents :
+  données absentes ou invalides, erreurs, annulation et libération des ressources.
+  Avant une refactorisation, protéger le comportement attendu par des tests.
+- Relire en priorité les fonctions ajoutées ou modifiées : complexité des
+  branchements, lisibilité, couverture des comportements et qualité des assertions.
+  Suivre le cycle conception, code et tests, mesures disponibles, puis revue.
+- Si des mesures de complexité, de couverture ou de CRAP sont disponibles,
+  les utiliser comme indicateurs de risque, pas comme objectifs de conception ni
+  comme preuve de correction. Ne pas inventer de score ou assimiler une couverture
+  non mesurée à une couverture nulle. Aucune installation d'outil, campagne
+  exhaustive ou barrière CI chiffrée n'est imposée par cette règle.
+- Ne pas découper artificiellement les fonctions pour améliorer un score et ne
+  pas ajouter d'abstractions sans bénéfice concret. Préserver la cohérence et les
+  performances des boucles de traitement d'image ; vérifier toute modification
+  photographique avec les preuves numériques et visuelles adaptées.
+- Une ligne exécutée n'est pas nécessairement un comportement vérifié : ces
+  indicateurs ne remplacent ni la revue du code, ni les contrôles de ressources
+  et de concurrence, ni la validation visuelle de l'application par l'utilisateur.
+
+## Validations partielles et issues GitHub — règle du 31 octobre 2026
+
+- Toute fonctionnalité ou donnée validée seulement en partie (par exemple le
+  bruit, ou l'export DNG lu par Lightroom mais non vérifié dans Photoshop et
+  DxO) reçoit une issue GitHub pour la traçabilité. L'issue décrit ce qui est
+  validé, ce qui ne l'est pas et les vérifications restantes ; la matrice de
+  validation renvoie vers elle.
+- L'issue est close par la PR qui achève la validation. Si une PR ne la valide
+  qu'en partie, mettre l'issue à jour : cocher ce qui est fait et garder ce qui
+  reste ouvert.
+- Ouvrir une issue est autorisé sans accord préalable dans ce cadre ; les
+  fusions, publications et tags restent soumis à l'autorisation habituelle.
+
 ## Branches Git — règle du 10 octobre 2026
 
+- Précision du 12 octobre 2026 : les noms de branches sont en **anglais par
+  défaut**. `patch_color` est le nom retenu pour le groupe Couleur ; ne pas
+  créer ou reprendre `patch_couleur` comme seconde branche de ce groupe.
+  Vérifier les branches existantes avant toute création. Cette convention
+  n'autorise pas le renommage ni la suppression automatique des branches
+  historiques, ni une modification de l'historique publié.
 - `dev` est la branche d'intégration maintenue à jour après chaque validation.
 - Chaque groupe de fonctionnalités dispose d'une branche durable, créée depuis
   `dev` à jour. `patch_light` est la branche du groupe Lumières.
@@ -103,6 +154,31 @@
 La procédure détaillée est dans
 [Gestion des branches Git](docs/architecture/gestion-branches-git.md).
 Les travaux sous `docs/` suivent également les règles de [docs/AGENTS.md](docs/AGENTS.md).
+
+## Branche main et releases — règle du 1er novembre 2026
+
+- `main` porte seulement le code de production et la documentation. Les tests,
+  bancs, outils d'analyse (`src/tools`), mesures JSON, analyses, protocoles et
+  rapports restent sur `dev`. La frontière est la liste blanche versionnée
+  [packaging/main-allowlist.txt](packaging/main-allowlist.txt) : tout nouveau
+  fichier y est classé sur `dev` avant de pouvoir être promu.
+- `dev` n'est pas fusionnée dans `main`. Un commit de `dev` testé (CI complète
+  verte) est promu par instantané : `scripts/promote_main.py` construit, sur la
+  branche durable `main_promotion` issue de `main`, un commit contenant ses
+  chemins `[main]` et `release-manifest.json` (commit source, empreintes
+  SHA-256), sans `dev` comme parent ; une PR `main_promotion` → `main` le
+  publie. Exception approuvée à la fusion directe : l'historique de `main` reste
+  léger, celui de `dev` intact. Ne jamais corriger à la main un fichier promu :
+  corriger sur `dev`, requalifier, promouvoir de nouveau.
+- La release est construite depuis le commit de `dev` testé, en profil
+  production (`scripts/ci.py --profile production` : tests et outils OFF), et
+  ce même artefact est publié. Deux barrières : CI de production verte sur le
+  commit exact de `main`, et CI complète verte du commit de `dev` lié.
+- Les liens de la documentation vers des chemins restés sur `dev` sont dirigés
+  vers le commit source ; `docs/release/validation-summary.md` résume la
+  validation pour `main`.
+- Promotion, PR, fusion, tag et release restent soumis à l'autorisation de
+  l'utilisateur.
 
 ## Chantier IHM isolé — règle du 18 octobre 2026
 

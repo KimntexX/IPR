@@ -1,3 +1,5 @@
+*[Français](ADR-0014-cache-profils-prepares.md) | [English](ADR-0014-cache-profils-prepares_en.md)*
+
 # ADR-0014 — Cache partagé borné des profils préparés
 
 Date : 17 octobre 2026. Statut : implémentation locale sur demande utilisateur,

@@ -1,0 +1,1243 @@
+{
+  "schema_version": 1,
+  "measured_at_utc": "2026-10-28T16:49:12.820129+00:00",
+  "freeze": {
+    "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\gel-banc-raw-flottant-temoins-v001-20261028T164745Z.json",
+    "sha256": "72fca976c48935f9c198ad430ca858b73de88709f5d401bafe84b09c418e2d0c"
+  },
+  "records": [
+    {
+      "source": {
+        "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9153.CR3",
+        "source_sha256": "7f5e0baf7f9722401cc269a1b01deee35db9eba0d122ea88e98f638266f32b30",
+        "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\11-6V1A9153.json",
+        "capture_sha256": "17e3b4dfa0204331a6664d6c1c122bcc897427877eaa79a7197969143c36f714",
+        "model": "EOS R6 Mark III",
+        "libraw_version": "0.22.2-Release",
+        "rois": [
+          {
+            "origin_yx": [
+              2190,
+              1262
+            ],
+            "equal": true,
+            "differing_values": 0
+          },
+          {
+            "origin_yx": [
+              2190,
+              3350
+            ],
+            "equal": true,
+            "differing_values": 0
+          },
+          {
+            "origin_yx": [
+              2190,
+              5438
+            ],
+            "equal": true,
+            "differing_values": 0
+          }
+        ]
+      },
+      "mode": "dcp",
+      "policy": "parity",
+      "capture": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\float-witnesses\\20261028T164745Z\\6V1A9153-dcp-parity.json",
+        "sha256": "c57b3fcc99add9188b3b023c0f8da4fc3216f5b354a2943fa36983d2e9bdfe20"
+      },
+      "full_image": {
+        "dtype": "f32",
+        "sha256": "69e2b6e9b636fa1ceab07d639719e9485f83744d4554ab344c920cc057d21e1e",
+        "shape": [
+          4639,
+          6959,
+          4
+        ]
+      },
+      "decode_ms": 6504.9801,
+      "peak_bytes": 1898946560,
+      "A_unchanged": true,
+      "inlet": {
+        "verdict": "pass_scoped_float_inlet",
+        "source": {
+          "path": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A9153.CR3",
+          "sha256": "7f5e0baf7f9722401cc269a1b01deee35db9eba0d122ea88e98f638266f32b30"
+        },
+        "engine_revision": "0adefe76e109e0cdb5e76a39d269d30d6b5f627b",
+        "full_camera": {
+          "dtype": "f32",
+          "finite": true,
+          "maximum": [
+            1,
+            1,
+            1
+          ],
+          "mean": [
+            0.14131089979857062,
+            0.1199537134189756,
+            0.1123148087965469
+          ],
+          "minimum": [
+            0,
+            0,
+            0
+          ],
+          "negative_fraction": [
+            0,
+            0,
+            0
+          ],
+          "orientation": "display",
+          "scope": "Actual retained CameraSignal input after optics/WB, before DCP; not inferred from working output",
+          "sha256": "112d26615fa8f2be150cb80ac790fa75dc9262c6616878675d1cc56755a73df9",
+          "shape": [
+            4639,
+            6959,
+            3
+          ],
+          "unit": "linear_camera_white_1",
+          "zero_fraction": [
+            5.575724361711984e-07,
+            5.265961897172429e-07,
+            1.920527280145239e-06
+          ]
+        },
+        "rois": [
+          {
+            "origin_yx": [
+              2190,
+              1262
+            ],
+            "minimum": [
+              0.01431296207010746,
+              0.013687342405319214,
+              0.015304799191653728
+            ],
+            "negative_fraction": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "origin_yx": [
+              2190,
+              3350
+            ],
+            "minimum": [
+              0.014602883718907833,
+              0.013138017617166042,
+              0.011841000989079475
+            ],
+            "negative_fraction": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "origin_yx": [
+              2190,
+              5438
+            ],
+            "minimum": [
+              0.01518272701650858,
+              0.013122758828103542,
+              0.013290608301758766
+            ],
+            "negative_fraction": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        ],
+        "negative_witness_required": false,
+        "limitations": "Observed DCP inlet only; no proof of fully signed DCP tables/curves, CFA/no-profile inlet or absence of intermediate quantization from negative presence alone."
+      }
+    },
+    {
+      "source": {
+        "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9153.CR3",
+        "source_sha256": "7f5e0baf7f9722401cc269a1b01deee35db9eba0d122ea88e98f638266f32b30",
+        "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\11-6V1A9153.json",
+        "capture_sha256": "17e3b4dfa0204331a6664d6c1c122bcc897427877eaa79a7197969143c36f714",
+        "model": "EOS R6 Mark III",
+        "libraw_version": "0.22.2-Release",
+        "rois": [
+          {
+            "origin_yx": [
+              2190,
+              1262
+            ],
+            "equal": true,
+            "differing_values": 0
+          },
+          {
+            "origin_yx": [
+              2190,
+              3350
+            ],
+            "equal": true,
+            "differing_values": 0
+          },
+          {
+            "origin_yx": [
+              2190,
+              5438
+            ],
+            "equal": true,
+            "differing_values": 0
+          }
+        ]
+      },
+      "mode": "dcp",
+      "policy": "signed",
+      "capture": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\float-witnesses\\20261028T164745Z\\6V1A9153-dcp-signed.json",
+        "sha256": "702efb14538e39813a8e589f12475915fef26a6f38f781c91c99e1aa5a03e108"
+      },
+      "full_image": {
+        "dtype": "f32",
+        "sha256": "aa45bf0b13b8cb81904fdcd81c52594976327a8f6c79aa1f2ac200164f531cbb",
+        "shape": [
+          4639,
+          6959,
+          4
+        ]
+      },
+      "decode_ms": 6233.3679,
+      "peak_bytes": 1897803776,
+      "inlet": {
+        "verdict": "pass_scoped_float_inlet",
+        "source": {
+          "path": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/6V1A9153.CR3",
+          "sha256": "7f5e0baf7f9722401cc269a1b01deee35db9eba0d122ea88e98f638266f32b30"
+        },
+        "engine_revision": "0adefe76e109e0cdb5e76a39d269d30d6b5f627b",
+        "full_camera": {
+          "dtype": "f32",
+          "finite": true,
+          "maximum": [
+            1.3272693157196045,
+            1.2642030715942383,
+            1.3010460138320923
+          ],
+          "mean": [
+            0.1413210322541419,
+            0.11996137156320391,
+            0.11232269902766412
+          ],
+          "minimum": [
+            -0.08180199563503265,
+            -0.015036540105938911,
+            -0.021715287119150162
+          ],
+          "negative_fraction": [
+            7.124536684409758e-07,
+            5.265961897172429e-07,
+            1.9515035265991942e-06
+          ],
+          "orientation": "display",
+          "scope": "Actual retained CameraSignal input after optics/WB, before DCP; not inferred from working output",
+          "sha256": "3c6cb5fddb7a9e6798384c8a3017237fa4277bac5fda31855eda151d215bf947",
+          "shape": [
+            4639,
+            6959,
+            3
+          ],
+          "unit": "linear_camera_white_1",
+          "zero_fraction": [
+            0,
+            0,
+            0
+          ]
+        },
+        "rois": [
+          {
+            "origin_yx": [
+              2190,
+              1262
+            ],
+            "minimum": [
+              0.014329947531223297,
+              0.013698257505893707,
+              0.015315767377614975
+            ],
+            "negative_fraction": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "origin_yx": [
+              2190,
+              3350
+            ],
+            "minimum": [
+              0.014619055204093456,
+              0.013149993494153023,
+              0.011858236975967884
+            ],
+            "negative_fraction": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "origin_yx": [
+              2190,
+              5438
+            ],
+            "minimum": [
+              0.01519361138343811,
+              0.013127641752362251,
+              0.013292810879647732
+            ],
+            "negative_fraction": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        ],
+        "negative_witness_required": false,
+        "limitations": "Observed DCP inlet only; no proof of fully signed DCP tables/curves, CFA/no-profile inlet or absence of intermediate quantization from negative presence alone."
+      },
+      "above_one_preserved": true
+    },
+    {
+      "source": {
+        "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9153.CR3",
+        "source_sha256": "7f5e0baf7f9722401cc269a1b01deee35db9eba0d122ea88e98f638266f32b30",
+        "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\11-6V1A9153.json",
+        "capture_sha256": "17e3b4dfa0204331a6664d6c1c122bcc897427877eaa79a7197969143c36f714",
+        "model": "EOS R6 Mark III",
+        "libraw_version": "0.22.2-Release",
+        "rois": [
+          {
+            "origin_yx": [
+              2190,
+              1262
+            ],
+            "equal": true,
+            "differing_values": 0
+          },
+          {
+            "origin_yx": [
+              2190,
+              3350
+            ],
+            "equal": true,
+            "differing_values": 0
+          },
+          {
+            "origin_yx": [
+              2190,
+              5438
+            ],
+            "equal": true,
+            "differing_values": 0
+          }
+        ]
+      },
+      "mode": "matrix",
+      "policy": "parity",
+      "capture": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\float-witnesses\\20261028T164745Z\\6V1A9153-matrix-parity.json",
+        "sha256": "f8ff30e1e3594c9725624b850ed5086dd2a6ae1340c211f7ae084ae22d8a2b41"
+      },
+      "full_image": {
+        "dtype": "f32",
+        "sha256": "1e55a58636f6bff5d4475d77cad45e2d15a1212d9df0271119f09497e88ad2eb",
+        "shape": [
+          4639,
+          6959,
+          4
+        ]
+      },
+      "decode_ms": 1910.5892,
+      "peak_bytes": 1509662720,
+      "A_unchanged": true
+    },
+    {
+      "source": {
+        "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9153.CR3",
+        "source_sha256": "7f5e0baf7f9722401cc269a1b01deee35db9eba0d122ea88e98f638266f32b30",
+        "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\11-6V1A9153.json",
+        "capture_sha256": "17e3b4dfa0204331a6664d6c1c122bcc897427877eaa79a7197969143c36f714",
+        "model": "EOS R6 Mark III",
+        "libraw_version": "0.22.2-Release",
+        "rois": [
+          {
+            "origin_yx": [
+              2190,
+              1262
+            ],
+            "equal": true,
+            "differing_values": 0
+          },
+          {
+            "origin_yx": [
+              2190,
+              3350
+            ],
+            "equal": true,
+            "differing_values": 0
+          },
+          {
+            "origin_yx": [
+              2190,
+              5438
+            ],
+            "equal": true,
+            "differing_values": 0
+          }
+        ]
+      },
+      "mode": "matrix",
+      "policy": "signed",
+      "capture": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\float-witnesses\\20261028T164745Z\\6V1A9153-matrix-signed.json",
+        "sha256": "a78cc5f2327e7fa892da01a87f25b74bfa49f8ca45521db494cbd20a7bbbfcf1"
+      },
+      "full_image": {
+        "dtype": "f32",
+        "sha256": "8952ac01631311912df51a4ac46a177e877330f9f71fae54a038976aa6dc8667",
+        "shape": [
+          4639,
+          6959,
+          4
+        ]
+      },
+      "decode_ms": 1356.2341,
+      "peak_bytes": 1509539840
+    },
+    {
+      "source": {
+        "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\7Y6A7599.CR3",
+        "source_sha256": "9c1426494accc3fb6efa2c5b0f8c7c4faac70d65fa9a26721f1de86d011f078e",
+        "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\15-7Y6A7599.json",
+        "capture_sha256": "850c81a44d06b358897738df1a18c917af22c8238f0a92e349b192989c8e3bd8",
+        "model": "EOS R7",
+        "libraw_version": "0.22.2-Release",
+        "rois": [
+          {
+            "origin_yx": [
+              2202,
+              1268
+            ],
+            "equal": true,
+            "differing_values": 0
+          },
+          {
+            "origin_yx": [
+              2202,
+              3364
+            ],
+            "equal": true,
+            "differing_values": 0
+          },
+          {
+            "origin_yx": [
+              2202,
+              5458
+            ],
+            "equal": true,
+            "differing_values": 0
+          }
+        ]
+      },
+      "mode": "dcp",
+      "policy": "parity",
+      "capture": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\float-witnesses\\20261028T164745Z\\7Y6A7599-dcp-parity.json",
+        "sha256": "548a88bc96cbeaaaa38fa4d4250d22e7043df37d4e935d3977b70c65fa76bb3e"
+      },
+      "full_image": {
+        "dtype": "f32",
+        "sha256": "dffd1c25c58dda3bb0ad602dbf1a3939495cb873a48ec5440d2546f3565dbd5a",
+        "shape": [
+          4660,
+          6984,
+          4
+        ]
+      },
+      "decode_ms": 6797.9662,
+      "peak_bytes": 1912008704,
+      "A_unchanged": true,
+      "inlet": {
+        "verdict": "pass_scoped_float_inlet",
+        "source": {
+          "path": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/7Y6A7599.CR3",
+          "sha256": "9c1426494accc3fb6efa2c5b0f8c7c4faac70d65fa9a26721f1de86d011f078e"
+        },
+        "engine_revision": "0adefe76e109e0cdb5e76a39d269d30d6b5f627b",
+        "full_camera": {
+          "dtype": "f32",
+          "finite": true,
+          "maximum": [
+            1,
+            1,
+            1
+          ],
+          "mean": [
+            0.2553362821537017,
+            0.17584132248806708,
+            0.10604481757790424
+          ],
+          "minimum": [
+            0,
+            0,
+            0
+          ],
+          "negative_fraction": [
+            0,
+            0,
+            0
+          ],
+          "orientation": "display",
+          "scope": "Actual retained CameraSignal input after optics/WB, before DCP; not inferred from working output",
+          "sha256": "c72ac0a0f55e8b4999de1a7b7d5c0687c3a5a425e40b9b8dafbc9132e483ff3e",
+          "shape": [
+            4660,
+            6984,
+            3
+          ],
+          "unit": "linear_camera_white_1",
+          "zero_fraction": [
+            0.014857196584221938,
+            0.030134390562856116,
+            0.04764437045558456
+          ]
+        },
+        "rois": [
+          {
+            "origin_yx": [
+              2202,
+              1268
+            ],
+            "minimum": [
+              0.21878385543823242,
+              0.11815060675144196,
+              0.0
+            ],
+            "negative_fraction": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "origin_yx": [
+              2202,
+              3364
+            ],
+            "minimum": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "negative_fraction": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "origin_yx": [
+              2202,
+              5458
+            ],
+            "minimum": [
+              0.05239948257803917,
+              0.0,
+              0.0
+            ],
+            "negative_fraction": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        ],
+        "negative_witness_required": false,
+        "limitations": "Observed DCP inlet only; no proof of fully signed DCP tables/curves, CFA/no-profile inlet or absence of intermediate quantization from negative presence alone."
+      }
+    },
+    {
+      "source": {
+        "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\7Y6A7599.CR3",
+        "source_sha256": "9c1426494accc3fb6efa2c5b0f8c7c4faac70d65fa9a26721f1de86d011f078e",
+        "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\15-7Y6A7599.json",
+        "capture_sha256": "850c81a44d06b358897738df1a18c917af22c8238f0a92e349b192989c8e3bd8",
+        "model": "EOS R7",
+        "libraw_version": "0.22.2-Release",
+        "rois": [
+          {
+            "origin_yx": [
+              2202,
+              1268
+            ],
+            "equal": true,
+            "differing_values": 0
+          },
+          {
+            "origin_yx": [
+              2202,
+              3364
+            ],
+            "equal": true,
+            "differing_values": 0
+          },
+          {
+            "origin_yx": [
+              2202,
+              5458
+            ],
+            "equal": true,
+            "differing_values": 0
+          }
+        ]
+      },
+      "mode": "dcp",
+      "policy": "signed",
+      "capture": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\float-witnesses\\20261028T164745Z\\7Y6A7599-dcp-signed.json",
+        "sha256": "959b876d45a3effeb3d52da8e36d70f3be8bbed0c5dd904376d28b1a931b4f85"
+      },
+      "full_image": {
+        "dtype": "f32",
+        "sha256": "c9798479305877db2862f3cd0c1e3ab2dd4fc6af63b1c3ff161e9f32a96d033f",
+        "shape": [
+          4660,
+          6984,
+          4
+        ]
+      },
+      "decode_ms": 6514.6816,
+      "peak_bytes": 1912127488,
+      "inlet": {
+        "verdict": "pass_scoped_float_inlet",
+        "source": {
+          "path": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/7Y6A7599.CR3",
+          "sha256": "9c1426494accc3fb6efa2c5b0f8c7c4faac70d65fa9a26721f1de86d011f078e"
+        },
+        "engine_revision": "0adefe76e109e0cdb5e76a39d269d30d6b5f627b",
+        "full_camera": {
+          "dtype": "f32",
+          "finite": true,
+          "maximum": [
+            1.3816375732421875,
+            1.240685224533081,
+            1.0585737228393555
+          ],
+          "mean": [
+            0.2545326372612969,
+            0.17534373238394033,
+            0.10437204481408119
+          ],
+          "minimum": [
+            -0.12290874868631363,
+            -0.13244110345840454,
+            -0.1958138793706894
+          ],
+          "negative_fraction": [
+            0.04554813208855065,
+            0.0453303135554474,
+            0.09050791754543801
+          ],
+          "orientation": "display",
+          "scope": "Actual retained CameraSignal input after optics/WB, before DCP; not inferred from working output",
+          "sha256": "fe1afb117a7635032840e2f40dde901e00afcd10f4a5af42c53ec41ff10a5b46",
+          "shape": [
+            4660,
+            6984,
+            3
+          ],
+          "unit": "linear_camera_white_1",
+          "zero_fraction": [
+            9.279333756126818e-06,
+            0.00013052519800008848,
+            1.579330314784498e-05
+          ]
+        },
+        "rois": [
+          {
+            "origin_yx": [
+              2202,
+              1268
+            ],
+            "minimum": [
+              0.2187960147857666,
+              0.11815140396356583,
+              -0.016637317836284637
+            ],
+            "negative_fraction": [
+              0.0,
+              0.0,
+              1.52587890625e-05
+            ]
+          },
+          {
+            "origin_yx": [
+              2202,
+              3364
+            ],
+            "minimum": [
+              -0.02994108758866787,
+              -0.034155864268541336,
+              -0.06371209025382996
+            ],
+            "negative_fraction": [
+              0.001983642578125,
+              0.004974365234375,
+              0.0234527587890625
+            ]
+          },
+          {
+            "origin_yx": [
+              2202,
+              5458
+            ],
+            "minimum": [
+              0.04085862264037132,
+              -0.020772341638803482,
+              -0.06327269226312637
+            ],
+            "negative_fraction": [
+              0.0,
+              0.000396728515625,
+              0.006866455078125
+            ]
+          }
+        ],
+        "negative_witness_required": false,
+        "limitations": "Observed DCP inlet only; no proof of fully signed DCP tables/curves, CFA/no-profile inlet or absence of intermediate quantization from negative presence alone."
+      }
+    },
+    {
+      "source": {
+        "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\7Y6A7599.CR3",
+        "source_sha256": "9c1426494accc3fb6efa2c5b0f8c7c4faac70d65fa9a26721f1de86d011f078e",
+        "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\15-7Y6A7599.json",
+        "capture_sha256": "850c81a44d06b358897738df1a18c917af22c8238f0a92e349b192989c8e3bd8",
+        "model": "EOS R7",
+        "libraw_version": "0.22.2-Release",
+        "rois": [
+          {
+            "origin_yx": [
+              2202,
+              1268
+            ],
+            "equal": true,
+            "differing_values": 0
+          },
+          {
+            "origin_yx": [
+              2202,
+              3364
+            ],
+            "equal": true,
+            "differing_values": 0
+          },
+          {
+            "origin_yx": [
+              2202,
+              5458
+            ],
+            "equal": true,
+            "differing_values": 0
+          }
+        ]
+      },
+      "mode": "matrix",
+      "policy": "parity",
+      "capture": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\float-witnesses\\20261028T164745Z\\7Y6A7599-matrix-parity.json",
+        "sha256": "5133912c68e74950450537a6728e4331571e9040e7ebbcf9c3a5fd1d0e08a47c"
+      },
+      "full_image": {
+        "dtype": "f32",
+        "sha256": "82bc9c8e04e5f57caaaf97386471add3f73a8dee9129908fef520263f168d9f3",
+        "shape": [
+          4660,
+          6984,
+          4
+        ]
+      },
+      "decode_ms": 1903.9018,
+      "peak_bytes": 1520541696,
+      "A_unchanged": true
+    },
+    {
+      "source": {
+        "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\7Y6A7599.CR3",
+        "source_sha256": "9c1426494accc3fb6efa2c5b0f8c7c4faac70d65fa9a26721f1de86d011f078e",
+        "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\15-7Y6A7599.json",
+        "capture_sha256": "850c81a44d06b358897738df1a18c917af22c8238f0a92e349b192989c8e3bd8",
+        "model": "EOS R7",
+        "libraw_version": "0.22.2-Release",
+        "rois": [
+          {
+            "origin_yx": [
+              2202,
+              1268
+            ],
+            "equal": true,
+            "differing_values": 0
+          },
+          {
+            "origin_yx": [
+              2202,
+              3364
+            ],
+            "equal": true,
+            "differing_values": 0
+          },
+          {
+            "origin_yx": [
+              2202,
+              5458
+            ],
+            "equal": true,
+            "differing_values": 0
+          }
+        ]
+      },
+      "mode": "matrix",
+      "policy": "signed",
+      "capture": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\float-witnesses\\20261028T164745Z\\7Y6A7599-matrix-signed.json",
+        "sha256": "17882ead5bb0ac9f6401c16ba23da5044b878610fff183d2ba366ab6a787c28f"
+      },
+      "full_image": {
+        "dtype": "f32",
+        "sha256": "b7720094549d8b001291406e296357c0b4de41991fe5ad7edc74e1773773224f",
+        "shape": [
+          4660,
+          6984,
+          4
+        ]
+      },
+      "decode_ms": 1384.0007,
+      "peak_bytes": 1520472064
+    },
+    {
+      "source": {
+        "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_3135.CR2",
+        "source_sha256": "7bf4440bcdafc359762d0db40e92dcbf1948886b6aa3ca250cecb96496309165",
+        "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\16-IMG_3135.json",
+        "capture_sha256": "905196419bd72fd7804e49ee706fa13b87cc7c78d5d8b771901c52ed51a61130",
+        "model": "EOS 60D",
+        "libraw_version": "0.22.2-Release",
+        "rois": [
+          {
+            "origin_yx": [
+              1604,
+              912
+            ],
+            "equal": true,
+            "differing_values": 0
+          },
+          {
+            "origin_yx": [
+              1604,
+              2472
+            ],
+            "equal": true,
+            "differing_values": 0
+          },
+          {
+            "origin_yx": [
+              1604,
+              4032
+            ],
+            "equal": true,
+            "differing_values": 0
+          }
+        ]
+      },
+      "mode": "dcp",
+      "policy": "parity",
+      "capture": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\float-witnesses\\20261028T164745Z\\IMG_3135-dcp-parity.json",
+        "sha256": "1a372e336e7a049a73197e57758c52770bff0960b6826a4a78b09ea886129b12"
+      },
+      "full_image": {
+        "dtype": "f32",
+        "sha256": "a21fa4328790cf7c0b96555e78a7ad7f9071f850ce63a77c1905d8553797be82",
+        "shape": [
+          3464,
+          5202,
+          4
+        ]
+      },
+      "decode_ms": 2965.4755,
+      "peak_bytes": 1068482560,
+      "A_unchanged": true,
+      "inlet": {
+        "verdict": "pass_scoped_float_inlet",
+        "source": {
+          "path": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/IMG_3135.CR2",
+          "sha256": "7bf4440bcdafc359762d0db40e92dcbf1948886b6aa3ca250cecb96496309165"
+        },
+        "engine_revision": "0adefe76e109e0cdb5e76a39d269d30d6b5f627b",
+        "full_camera": {
+          "dtype": "f32",
+          "finite": true,
+          "maximum": [
+            1,
+            1,
+            1
+          ],
+          "mean": [
+            0.1549031924884491,
+            0.13328217621451013,
+            0.1009853690997738
+          ],
+          "minimum": [
+            0.00862134713679552,
+            0.007080186158418655,
+            0.007049668114632368
+          ],
+          "negative_fraction": [
+            0,
+            0,
+            0
+          ],
+          "orientation": "display",
+          "scope": "Actual retained CameraSignal input after optics/WB, before DCP; not inferred from working output",
+          "sha256": "b37f132a82ea025b08a073c7cb6b083bec1694f1647383b8ce0954432b3f41b1",
+          "shape": [
+            3464,
+            5202,
+            3
+          ],
+          "unit": "linear_camera_white_1",
+          "zero_fraction": [
+            0,
+            0,
+            0
+          ]
+        },
+        "rois": [
+          {
+            "origin_yx": [
+              1604,
+              912
+            ],
+            "minimum": [
+              0.00862134713679552,
+              0.00860608834773302,
+              0.010894941166043282
+            ],
+            "negative_fraction": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "origin_yx": [
+              1604,
+              2472
+            ],
+            "minimum": [
+              0.010605020448565483,
+              0.007080186158418655,
+              0.007049668114632368
+            ],
+            "negative_fraction": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "origin_yx": [
+              1604,
+              4032
+            ],
+            "minimum": [
+              0.04074158892035484,
+              0.03041123040020466,
+              0.023361561819911003
+            ],
+            "negative_fraction": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        ],
+        "negative_witness_required": false,
+        "limitations": "Observed DCP inlet only; no proof of fully signed DCP tables/curves, CFA/no-profile inlet or absence of intermediate quantization from negative presence alone."
+      }
+    },
+    {
+      "source": {
+        "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_3135.CR2",
+        "source_sha256": "7bf4440bcdafc359762d0db40e92dcbf1948886b6aa3ca250cecb96496309165",
+        "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\16-IMG_3135.json",
+        "capture_sha256": "905196419bd72fd7804e49ee706fa13b87cc7c78d5d8b771901c52ed51a61130",
+        "model": "EOS 60D",
+        "libraw_version": "0.22.2-Release",
+        "rois": [
+          {
+            "origin_yx": [
+              1604,
+              912
+            ],
+            "equal": true,
+            "differing_values": 0
+          },
+          {
+            "origin_yx": [
+              1604,
+              2472
+            ],
+            "equal": true,
+            "differing_values": 0
+          },
+          {
+            "origin_yx": [
+              1604,
+              4032
+            ],
+            "equal": true,
+            "differing_values": 0
+          }
+        ]
+      },
+      "mode": "dcp",
+      "policy": "signed",
+      "capture": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\float-witnesses\\20261028T164745Z\\IMG_3135-dcp-signed.json",
+        "sha256": "2801051c3823fb75e639c9b679e037c0d89040e984467379f186805365091d3e"
+      },
+      "full_image": {
+        "dtype": "f32",
+        "sha256": "030c5448898362f6d8075b8a8f58e22b4d3254bfc3579c9a39f00e5edb0ef6f8",
+        "shape": [
+          3464,
+          5202,
+          4
+        ]
+      },
+      "decode_ms": 2820.8183,
+      "peak_bytes": 1068548096,
+      "inlet": {
+        "verdict": "pass_scoped_float_inlet",
+        "source": {
+          "path": "C:/Users/victo/Documents/Projet/Programmation/IPR/tests/image/base/IMG_3135.CR2",
+          "sha256": "7bf4440bcdafc359762d0db40e92dcbf1948886b6aa3ca250cecb96496309165"
+        },
+        "engine_revision": "0adefe76e109e0cdb5e76a39d269d30d6b5f627b",
+        "full_camera": {
+          "dtype": "f32",
+          "finite": true,
+          "maximum": [
+            1.0754928588867188,
+            1.0290772914886475,
+            1.017731785774231
+          ],
+          "mean": [
+            0.15491166489430788,
+            0.13328981624005734,
+            0.1009930137939332
+          ],
+          "minimum": [
+            0.008632251992821693,
+            0.007085240911692381,
+            0.007058728951960802
+          ],
+          "negative_fraction": [
+            0,
+            0,
+            0
+          ],
+          "orientation": "display",
+          "scope": "Actual retained CameraSignal input after optics/WB, before DCP; not inferred from working output",
+          "sha256": "3657ecd6c669d75dc7a753c93d57cdc2e5fed3c00efa9822f1a177f8b6ac3cd9",
+          "shape": [
+            3464,
+            5202,
+            3
+          ],
+          "unit": "linear_camera_white_1",
+          "zero_fraction": [
+            0,
+            0,
+            0
+          ]
+        },
+        "rois": [
+          {
+            "origin_yx": [
+              1604,
+              912
+            ],
+            "minimum": [
+              0.008632251992821693,
+              0.008611292578279972,
+              0.010902407579123974
+            ],
+            "negative_fraction": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "origin_yx": [
+              1604,
+              2472
+            ],
+            "minimum": [
+              0.010606955736875534,
+              0.007085240911692381,
+              0.007058728951960802
+            ],
+            "negative_fraction": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "origin_yx": [
+              1604,
+              4032
+            ],
+            "minimum": [
+              0.040743350982666016,
+              0.030412033200263977,
+              0.023368440568447113
+            ],
+            "negative_fraction": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        ],
+        "negative_witness_required": false,
+        "limitations": "Observed DCP inlet only; no proof of fully signed DCP tables/curves, CFA/no-profile inlet or absence of intermediate quantization from negative presence alone."
+      }
+    },
+    {
+      "source": {
+        "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_3135.CR2",
+        "source_sha256": "7bf4440bcdafc359762d0db40e92dcbf1948886b6aa3ca250cecb96496309165",
+        "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\16-IMG_3135.json",
+        "capture_sha256": "905196419bd72fd7804e49ee706fa13b87cc7c78d5d8b771901c52ed51a61130",
+        "model": "EOS 60D",
+        "libraw_version": "0.22.2-Release",
+        "rois": [
+          {
+            "origin_yx": [
+              1604,
+              912
+            ],
+            "equal": true,
+            "differing_values": 0
+          },
+          {
+            "origin_yx": [
+              1604,
+              2472
+            ],
+            "equal": true,
+            "differing_values": 0
+          },
+          {
+            "origin_yx": [
+              1604,
+              4032
+            ],
+            "equal": true,
+            "differing_values": 0
+          }
+        ]
+      },
+      "mode": "matrix",
+      "policy": "parity",
+      "capture": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\float-witnesses\\20261028T164745Z\\IMG_3135-matrix-parity.json",
+        "sha256": "dfac1e69f33e05e8cd2dbe61ccc2cf6b6a77022fe6adb73b4347ffac3bbb2331"
+      },
+      "full_image": {
+        "dtype": "f32",
+        "sha256": "1c4ba4078ede3d049318ab5122b0c943ed32f777aaa527f6c10db3c60771c03c",
+        "shape": [
+          3464,
+          5202,
+          4
+        ]
+      },
+      "decode_ms": 1238.0101,
+      "peak_bytes": 851439616,
+      "A_unchanged": true
+    },
+    {
+      "source": {
+        "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_3135.CR2",
+        "source_sha256": "7bf4440bcdafc359762d0db40e92dcbf1948886b6aa3ca250cecb96496309165",
+        "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\16-IMG_3135.json",
+        "capture_sha256": "905196419bd72fd7804e49ee706fa13b87cc7c78d5d8b771901c52ed51a61130",
+        "model": "EOS 60D",
+        "libraw_version": "0.22.2-Release",
+        "rois": [
+          {
+            "origin_yx": [
+              1604,
+              912
+            ],
+            "equal": true,
+            "differing_values": 0
+          },
+          {
+            "origin_yx": [
+              1604,
+              2472
+            ],
+            "equal": true,
+            "differing_values": 0
+          },
+          {
+            "origin_yx": [
+              1604,
+              4032
+            ],
+            "equal": true,
+            "differing_values": 0
+          }
+        ]
+      },
+      "mode": "matrix",
+      "policy": "signed",
+      "capture": {
+        "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\float-witnesses\\20261028T164745Z\\IMG_3135-matrix-signed.json",
+        "sha256": "a0ef374721c559089729bed519b7ea6295cd0a0b4082dd43e45b55d6c58c2b3f"
+      },
+      "full_image": {
+        "dtype": "f32",
+        "sha256": "ffdbda9c610c887037bef963db990d624befbb8742072c0c322336521de9be5e",
+        "shape": [
+          3464,
+          5202,
+          4
+        ]
+      },
+      "decode_ms": 964.5429,
+      "peak_bytes": 851271680
+    }
+  ],
+  "verdict": "pass_scoped_guard_witnesses",
+  "limitations": "Three models only, optics off, no malformed RAW corpus or denoising/visual-quality validation; resources exploratory."
+}

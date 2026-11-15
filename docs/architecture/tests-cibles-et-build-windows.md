@@ -20,13 +20,12 @@ générateur, sonde ou test). Sinon, il s'arrête avec le nom du programme à fe
 Windows verrouille un exécutable lancé, et l'ancien binaire resterait en place.
 
 Prérequis : MSVC/Visual Studio Build Tools 2022 x64, CMake et CTest Windows,
-Qt MSVC, OpenCV/LibTIFF/LibRaw de la même ABI. Le cache CMake existant est réutilisé.
+Qt MSVC, LibTIFF/LibRaw de la même ABI. Le cache CMake existant est réutilisé.
 Sur une machine neuve, fournir les chemins de dépendances, par exemple :
 
 ```bash
 bash scripts/build-windows.sh \
-  --cmake-arg=-DCMAKE_PREFIX_PATH=C:/Qt/VERSION/msvc2022_64 \
-  --cmake-arg=-DOpenCV_DIR=C:/opencv/build/x64/vc16/lib
+  --cmake-arg=-DCMAKE_PREFIX_PATH=C:/Qt/VERSION/msvc2022_64
 ```
 
 Ajouter de la même façon la toolchain vcpkg ou les chemins LibRaw/LibTIFF requis.
@@ -41,8 +40,10 @@ Il ne réalise pas le déploiement/packaging des DLL pour une distribution auton
 ## Politique des tests
 
 Les règles versionnées sont dans [scripts/test-rules.json](../../scripts/test-rules.json).
-Les dix-huit tests synthétiques CTest sont désormais enregistrés sous Windows
-comme sous Linux/WSL. Les sondes photographiques privées restent séparées.
+Les tests synthétiques CTest sont enregistrés sous Windows comme sous
+Linux/WSL. Le nombre évolue : consulter `ctest --test-dir BUILD -C Release -N`
+pour l'inventaire du build étudié, pas un compteur documentaire historique.
+Les sondes photographiques privées restent séparées.
 
 Le sélecteur compare les SHA-256 des fichiers de code/configuration à la dernière
 validation réussie, conservée dans `build-windows-msvc/.ipr-tested-snapshot.json`.

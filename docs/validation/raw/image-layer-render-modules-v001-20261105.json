@@ -1,0 +1,53 @@
+{
+ "question": "What dehaze, grain, sharpening and denoise cost and write on the image layer instead of cv::GaussianBlur",
+ "revision_opencv": "7bc89a3",
+ "revision_image_layer": "3bbb85f",
+ "tool": "tests/export_module_probe.cpp, then a comparison of the TIFF files with OpenCV and NumPy",
+ "settings": "dehaze 40, grain 30, sharpening 60, luminance denoise 40, colour denoise 40, against neutral; 16-bit TIFF at full resolution",
+ "timing": "median of three, through the real editor, on a machine busy with other work",
+ "not_covered": "Retouch is held to its own tests, not to this export.",
+ "photos": [
+  {
+   "photo": "6V1A0007.CR3",
+   "opencv_neutral_ms": 905.7792,
+   "image_layer_neutral_ms": 874.7055,
+   "opencv_effect_ms": 5349.0424,
+   "image_layer_effect_ms": 5738.2029,
+   "neutral_identical": true,
+   "effect_identical": false,
+   "size": [
+    4639,
+    6959
+   ],
+   "largest_difference_16bit_levels": 1,
+   "mean_difference_16bit_levels": 0.002659914794877929,
+   "share_of_values_that_differ": 0.002659914794877929,
+   "share_of_values_differing_by_more_than_one_level": 0.0,
+   "share_of_values_differing_by_more_than_256_levels": 0.0,
+   "mean_change_made_by_the_effect_16bit_levels": 2108.8126195896075,
+   "opencv_preview_ms": 785.1476,
+   "image_layer_preview_ms": 824.7454
+  },
+  {
+   "photo": "IMG_6858.CR2",
+   "opencv_neutral_ms": 482.9495,
+   "image_layer_neutral_ms": 483.3148,
+   "opencv_effect_ms": 3098.6483,
+   "image_layer_effect_ms": 3148.7809,
+   "neutral_identical": true,
+   "effect_identical": false,
+   "size": [
+    5202,
+    3464
+   ],
+   "largest_difference_16bit_levels": 1,
+   "mean_difference_16bit_levels": 0.0018457548304835678,
+   "share_of_values_that_differ": 0.0018457548304835678,
+   "share_of_values_differing_by_more_than_one_level": 0.0,
+   "share_of_values_differing_by_more_than_256_levels": 0.0,
+   "mean_change_made_by_the_effect_16bit_levels": 964.9154042863466,
+   "opencv_preview_ms": 610.0282,
+   "image_layer_preview_ms": 610.9519
+  }
+ ]
+}

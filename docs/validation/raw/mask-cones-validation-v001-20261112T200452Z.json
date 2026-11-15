@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "data_version": "v001",
+  "campaign": "triangle-trapezoid-local-masks",
+  "created_utc": "2026-11-12T20:04:52.427862+00:00",
+  "branch": "patch_masks",
+  "base_commit": "b7a4b14d8cc89fe24f5846007f6b510721356635",
+  "verdict": "automated_checks_passed_visual_validation_pending",
+  "source_sha256": {
+    "docs/user/latex/chapters/18-masques-retouche.tex": "a63e0710ecfb30c32a3be3e726d671b54630a2d43b2cc397f6e7119fa9a909be",
+    "src/core/LocalAdjustments.cpp": "b914f6504f5d23e58627f8d294b2794bb02592b8ea6ba55f94832f615f10fbbf",
+    "src/core/LocalAdjustments.h": "a589278a51e1b12337a91e9bf883160092e1335f79781e5411129ea63286b392",
+    "src/core/RecipeCodec.cpp": "ffe004a9c5a884b90d752c5fe8082613256d2cc7c47b4ff33c7caf5713c4b8c0",
+    "src/core/Sidecar.h": "2f5fb30ed2032ec5413f76413bef60cf9f5b1ae81faa0698bfd584f94bf1f7c4",
+    "src/qml/MaskOverlay.qml": "dc75144fbb8f76e5793be889f83b151058c71ed51b5a94ff9c01dc5b3eeefc99",
+    "src/qml/MasksPanel.qml": "7c2cb072e23c9167737c8d5df4586938429e282b0f20747cab04df710ee66fca",
+    "tests/local_adjustments_test.cpp": "c745c887be9c2ce1529f44eb8fdc1e5bc73510e67e14000cfeca28e22e2d993d",
+    "tests/masks_qml_test.cpp": "3014250d8ce13e5d68b065b91a3d4263af1102e98af289272ef2d6500ab5cf68",
+    "tests/sidecar_test.cpp": "7c0b07a8ea1d0433f1201de681ebe17317b17daff7f5855c267c799f07e190e9"
+  },
+  "model": {
+    "kinds": [
+      "triangle",
+      "trapezoid"
+    ],
+    "coordinate_domain": "normalized uncropped canvas; full widths relative to canvas long side",
+    "start_width_default": 0.12,
+    "end_width_default": 0.4,
+    "triangle_start_width_effective": 0,
+    "feather_domain": [
+      0,
+      1
+    ],
+    "coverage_domain": [
+      0,
+      1
+    ]
+  },
+  "checks": {
+    "native_ctest_passed": [
+      "localAdjustmentsTests",
+      "sidecarTests",
+      "sidecarJsonTests",
+      "masksQmlTests",
+      "editorMasksTests",
+      "editorHistoryTests",
+      "renderChainTests"
+    ],
+    "coverage": [
+      "interior",
+      "outside sides and cap",
+      "trapezoid near width",
+      "zero near width equals triangle",
+      "progressive feather",
+      "resolution scaling",
+      "inversion",
+      "rotated axis",
+      "coincident endpoints empty",
+      "NaN width refused",
+      "cache key changes with width"
+    ],
+    "qml": [
+      "both new menu entries",
+      "triangle width fields",
+      "trapezoid width fields",
+      "appropriate handles",
+      "one normalized width edit on mouse release"
+    ],
+    "persistence": [
+      "kind and widths codec round trip",
+      "sidecar format 11",
+      "version 10 migration retains existing settings"
+    ],
+    "application_smoke": "passed offscreen/software"
+  },
+  "limitations": [
+    "No full RAW corpus pixel comparison rerun",
+    "No visual acceptance yet",
+    "No performance benchmark at full resolution",
+    "New shape kinds require this version; old sidecar versions still readable"
+  ],
+  "tracking_issue": "https://github.com/KimntexX/IPR/issues/24",
+  "publication": "none"
+}

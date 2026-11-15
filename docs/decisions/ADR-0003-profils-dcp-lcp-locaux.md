@@ -1,3 +1,5 @@
+*[Français](ADR-0003-profils-dcp-lcp-locaux.md) | [English](ADR-0003-profils-dcp-lcp-locaux_en.md)*
+
 # ADR-0003 — Bibliothèque locale de profils DCP/LCP
 
 - **Date :** 3 octobre 2026

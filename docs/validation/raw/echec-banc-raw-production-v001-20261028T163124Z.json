@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-10-28T16:50:18.778681+00:00",
+  "verdict": "failed_harness_configuration_not_engine",
+  "freeze": {
+    "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\gel-banc-raw-production-v001-20261028T163124Z.json",
+    "sha256": "541af5f08e740778c6e76c9a29491f33f71f562c1f65fe1095283dcb8f2869c2"
+  },
+  "status": {
+    "started_at_utc": "2026-10-28T16:31:24.235761+00:00",
+    "updated_at_utc": "2026-10-28T16:31:26.512363+00:00",
+    "status": "failed",
+    "phase": "error",
+    "error": "Command '['C:\\\\Program Files\\\\CMake\\\\bin\\\\cmake.exe', '-S', 'C:\\\\Users\\\\victo\\\\Documents\\\\Projet\\\\Programmation\\\\IPR\\\\.worktrees\\\\patch_raw_bench\\\\tests\\\\raw_bench\\\\production', '-B', 'C:\\\\Users\\\\victo\\\\Documents\\\\Projet\\\\Programmation\\\\IPR\\\\.worktrees\\\\patch_raw_bench\\\\build-patch_raw_bench\\\\production\\\\20261028T163124Z\\\\reference', '-DIPR_ENGINE_SOURCE=build-patch_raw_bench\\\\c4-corrected-snapshot\\\\source', '-DIPR_ENGINE_REVISION=ee8f26d4af6e2b3c4edaf71ca62951c13f0187c2', '-DQt6_DIR=C:\\\\Qt\\\\6.11.2\\\\msvc2022_64\\\\lib\\\\cmake\\\\Qt6', '-DIPR_BENCH_SIGNED_DEVELOPMENT=OFF', '-DOpenCV_DIR=C:\\\\opencv\\\\build\\\\x64\\\\vc16\\\\lib', '-DCMAKE_PREFIX_PATH=C:\\\\dev\\\\vcpkg\\\\installed\\\\x64-windows', '-DLIBRAW_INCLUDE_DIR=C:\\\\dev\\\\vcpkg\\\\installed\\\\x64-windows\\\\include', '-DLIBRAW_LIBRARY=C:\\\\dev\\\\vcpkg\\\\installed\\\\x64-windows\\\\lib\\\\manual-link\\\\raw.lib']' returned non-zero exit status 1.",
+    "completed": 0
+  },
+  "partial": {
+    "error": "Command '['C:\\\\Program Files\\\\CMake\\\\bin\\\\cmake.exe', '-S', 'C:\\\\Users\\\\victo\\\\Documents\\\\Projet\\\\Programmation\\\\IPR\\\\.worktrees\\\\patch_raw_bench\\\\tests\\\\raw_bench\\\\production', '-B', 'C:\\\\Users\\\\victo\\\\Documents\\\\Projet\\\\Programmation\\\\IPR\\\\.worktrees\\\\patch_raw_bench\\\\build-patch_raw_bench\\\\production\\\\20261028T163124Z\\\\reference', '-DIPR_ENGINE_SOURCE=build-patch_raw_bench\\\\c4-corrected-snapshot\\\\source', '-DIPR_ENGINE_REVISION=ee8f26d4af6e2b3c4edaf71ca62951c13f0187c2', '-DQt6_DIR=C:\\\\Qt\\\\6.11.2\\\\msvc2022_64\\\\lib\\\\cmake\\\\Qt6', '-DIPR_BENCH_SIGNED_DEVELOPMENT=OFF', '-DOpenCV_DIR=C:\\\\opencv\\\\build\\\\x64\\\\vc16\\\\lib', '-DCMAKE_PREFIX_PATH=C:\\\\dev\\\\vcpkg\\\\installed\\\\x64-windows', '-DLIBRAW_INCLUDE_DIR=C:\\\\dev\\\\vcpkg\\\\installed\\\\x64-windows\\\\include', '-DLIBRAW_LIBRARY=C:\\\\dev\\\\vcpkg\\\\installed\\\\x64-windows\\\\lib\\\\manual-link\\\\raw.lib']' returned non-zero exit status 1.",
+    "records": []
+  },
+  "configure_log": "-- Building for: Visual Studio 17 2022\n-- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.26300.\n-- The CXX compiler identification is MSVC 19.44.35228.0\n-- Detecting CXX compiler ABI info\n-- Detecting CXX compiler ABI info - done\n-- Check for working CXX compiler: C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe - skipped\n-- Detecting CXX compile features\n-- Detecting CXX compile features - done\nCMake Error at CMakeLists.txt:11 (add_subdirectory):\n  add_subdirectory given source\n  \"build-patch_raw_bench\\c4-corrected-snapshot\\source\" which is not an\n  existing directory.\n\n\n-- Configuring incomplete, errors occurred!\n",
+  "cause": "Relative engine source passed to add_subdirectory instead of resolved absolute path. Fixed argument normalization and added regression test; no RAW decode ran in this attempt."
+}

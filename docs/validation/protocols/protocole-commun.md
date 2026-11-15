@@ -1,6 +1,6 @@
 # Socle commun des protocoles photographiques
 
-Version 1 — 10 octobre 2026. Statut : prêt pour les prochaines campagnes.
+Version 2 — relecture du 22 octobre 2026 sur `dev` ; version initiale du 10 octobre. Statut : prêt pour les prochaines campagnes.
 Ce document fixe la procédure, pas un verdict sur les images.
 
 ## 1. Préparer une comparaison interprétable
@@ -23,7 +23,9 @@ Ce document fixe la procédure, pas un verdict sur les images.
    garantissent pas les mêmes gains ; zéro réglage ne signifie pas 0 K.
 6. Garder constants normalisation RAW, LCP, options objectif/CA, cadrage et
    orientation. Déclarer toute correction intégrée obligatoire. La normalisation
-   expérimentale est désactivée sauf campagne expressément dédiée.
+   suit le défaut courant : calibration active, appliquée seulement si une règle
+   compatible existe. Tracer demandé/appliqué et l'identité du catalogue ; un témoin
+   sans calibration est une campagne distincte, pas une référence interchangeable.
 7. Annuler EV, réglages tonals, couleur, mélangeur, grading, effets, bruit,
    quantité de netteté, masques, automatisme/IA et netteté de sortie hors
    paramètre testé. Courbes utilisateur identités. Vérifier les valeurs : un
@@ -34,9 +36,10 @@ Ce document fixe la procédure, pas un verdict sur les images.
 
 ## 2. Générer et associer les états
 
-Le contrat ci-dessous correspond à l'alignement de `patch_validation` du
-12 octobre 2026. Recompiler cette branche avant de l'utiliser ; un ancien
-exécutable ne possède pas les déclarations de provenance TIFF attendues.
+Le contrat courant est celui des outils intégrés dans `dev`. Recompiler la
+référence étudiée ; un ancien exécutable peut ne pas posséder les déclarations
+de provenance attendues. L'alignement du 12 octobre sur `patch_validation` est
+historique, pas une obligation de changer de branche pour analyser.
 
 Depuis PowerShell à la racine :
 
@@ -78,7 +81,9 @@ une identité de profil commerciale seule n'est pas une empreinte.
 
 Décoder la fonction de transfert sRGB avant les calculs en lumière linéaire :
 `c_lin=c/12,92` pour `c≤0,04045`, sinon `((c+0,055)/1,055)^2,4`.
-La luminance relative est `Y=0,2126R+0,7152G+0,0722B`.
+La luminance relative de ces sorties sRGB est `Y=0,2126R+0,7152G+0,0722B`.
+Ces poids Rec.709 concernent les pixels sRGB analysés, pas les composantes du
+master Rec.2020, qui utilise `0,2627/0,6780/0,0593`.
 
 Comparer la variante au neutre **du même moteur**, puis comparer les réponses
 IPR/LR. Conserver métriques par scène/état/ROI, unités, dénominateurs, nombres

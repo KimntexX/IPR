@@ -1,0 +1,1055 @@
+{
+  "schema_version": 1,
+  "campaign_id": "raw-unpack-smoke-20261028T143840Z",
+  "measured_at_utc": "2026-10-28T14:39:05.773700+00:00",
+  "records": [
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\_MG_7580.CR2",
+      "source_sha256": "020b83b4beff9137bd9f6d409991d7b1006f0422183c31656e5a185f31dde417",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\0-_MG_7580.json",
+      "capture_sha256": "0bd4c4fc2ab8ac87dc03bf70c935e61046ac2d4129f4ee92491033b35affdf35",
+      "model": "EOS 60D",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            1604,
+            912
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            2472
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            4032
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\_MG_7840.CR2",
+      "source_sha256": "b37c4176e160c9c1bdd0518b4a3115bde53b44e7012f0574d138f935f472935b",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\1-_MG_7840.json",
+      "capture_sha256": "52b599095b8927f8545d890bc78c8e99b57f5b4ce3b203ed7648cd354973a1e9",
+      "model": "EOS 60D",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            1604,
+            912
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            2472
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            4032
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0007.CR3",
+      "source_sha256": "35f6dc7b66b20dfffa95a3e9ac7dc2600905d72877e0428d0712dd2d202fdfcc",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\2-6V1A0007.json",
+      "capture_sha256": "6024d7f757859af6a30bb03055fe8ecd6bc54c7fcb0a7b02be18791545e89289",
+      "model": "EOS R6 Mark III",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0032.CR3",
+      "source_sha256": "f32a27f60fff34a35215b18be688c2300e371ce27c5e4977cb70567a9e6e702d",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\3-6V1A0032.json",
+      "capture_sha256": "1922862d02361d6b32c7c4499b64dd78b63891ab98c49987eb1d7f144eadb29f",
+      "model": "EOS R6 Mark III",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0043.CR3",
+      "source_sha256": "403fc63b37987862c8fc30735bdb9c5c1f793758ed6c46fe13f02f5d4b5a4bfe",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\4-6V1A0043.json",
+      "capture_sha256": "a6daeb4c6680904f1fe8b34dad5cae9f929f5532e0e5c7e5c8f62dff8dc610bd",
+      "model": "EOS R6 Mark III",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0064.CR3",
+      "source_sha256": "af350c1ad03079873dc5ebcbe5ef4b23d14c921e6aeb151d5eced2ad9a7928ed",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\5-6V1A0064.json",
+      "capture_sha256": "383c1bd409fcd370da606118f4d81b38a1131637cba435a6f80eac68990399d8",
+      "model": "EOS R6 Mark III",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0327.CR3",
+      "source_sha256": "79e5051f012621cf9faf337a91fab586c187cef48fea55f4f15401e9fad376ed",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\6-6V1A0327.json",
+      "capture_sha256": "2a8a7e5064b49cd21d516f132d1be0eb2deb96476e40f3e094a31ec036e6ccea",
+      "model": "EOS R6 Mark III",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0524.CR3",
+      "source_sha256": "149898806eb49f1e66a9527c2ec7f784eb8192532710f36fca8578642cd3c97b",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\7-6V1A0524.json",
+      "capture_sha256": "67eb70587873524a0cb5c0e0425094867df2ce8b558a3d27d540f720e438ee0f",
+      "model": "EOS R6 Mark III",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A0544.CR3",
+      "source_sha256": "cac52efb3491f413403db11fd4cdbc299b1c257c8a0f13420ec83140df30c33a",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\8-6V1A0544.json",
+      "capture_sha256": "1a7d5777cb49f79a052d53044aae65a06684a2b0611f4abe8667b8c9104097bc",
+      "model": "EOS R6 Mark III",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9112.CR3",
+      "source_sha256": "80094389b8281933fd9ee0f16d9aa6245b77f9e6652578d78a1fed2575e6007b",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\9-6V1A9112.json",
+      "capture_sha256": "e34167dd91739214785c30a2aaed8b3c7b2783ca5c6a5dceedbc408e374a6f7c",
+      "model": "EOS R6 Mark III",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9141.CR3",
+      "source_sha256": "5e4046a021c570ffbfecfb174cf4dba685fb8b105787f3f904394cd3505effcf",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\10-6V1A9141.json",
+      "capture_sha256": "cbe9a57ca090272a34b8135ab881c17dc71a18edd3b8814d7a912b8e4e14ecd0",
+      "model": "EOS R6 Mark III",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9153.CR3",
+      "source_sha256": "7f5e0baf7f9722401cc269a1b01deee35db9eba0d122ea88e98f638266f32b30",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\11-6V1A9153.json",
+      "capture_sha256": "17e3b4dfa0204331a6664d6c1c122bcc897427877eaa79a7197969143c36f714",
+      "model": "EOS R6 Mark III",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9539.CR3",
+      "source_sha256": "8f97ae28841779db992572f31e4de7482c9bd123eaa4bee79967a6be74d631bf",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\12-6V1A9539.json",
+      "capture_sha256": "244186c1ca990a22807d3d231287b32568d2f8f1fb66253e464937b01520313b",
+      "model": "EOS R6 Mark III",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9940.CR3",
+      "source_sha256": "01661293b080108e90915d38b0501d0aa489958a666331e5eab2fe5e5527f5be",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\13-6V1A9940.json",
+      "capture_sha256": "5b6ad87659d3d09442e89b67b31866d3f7fc9865474f670d2f5c827de1fa0e9f",
+      "model": "EOS R6 Mark III",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\6V1A9947.CR3",
+      "source_sha256": "ee34e67577716b937e726df6f8f07362bcc34ee4dfd5653e06b1dddb68ff9df4",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\14-6V1A9947.json",
+      "capture_sha256": "4050e97f8fe2a943eadf4dbf6dd4bbd15252f1f9ce8ff6675959d9147453d9c8",
+      "model": "EOS R6 Mark III",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\7Y6A7599.CR3",
+      "source_sha256": "9c1426494accc3fb6efa2c5b0f8c7c4faac70d65fa9a26721f1de86d011f078e",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\15-7Y6A7599.json",
+      "capture_sha256": "850c81a44d06b358897738df1a18c917af22c8238f0a92e349b192989c8e3bd8",
+      "model": "EOS R7",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            2202,
+            1268
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2202,
+            3364
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2202,
+            5458
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_3135.CR2",
+      "source_sha256": "7bf4440bcdafc359762d0db40e92dcbf1948886b6aa3ca250cecb96496309165",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\16-IMG_3135.json",
+      "capture_sha256": "905196419bd72fd7804e49ee706fa13b87cc7c78d5d8b771901c52ed51a61130",
+      "model": "EOS 60D",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            1604,
+            912
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            2472
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            4032
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_4002.CR2",
+      "source_sha256": "4ead8c801223ce4d134fa912a9505793acedade7955e94c49846aa970450e447",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\17-IMG_4002.json",
+      "capture_sha256": "8ca5ceb32def09c3b59fbcecaaaa485f27c64b0afbaf3c7c13dd9962ba83e8c8",
+      "model": "EOS 60D",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            1604,
+            912
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            2472
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            4032
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_4173.CR2",
+      "source_sha256": "6e5e0f451b39abab76d45a4d17131af5b69af3890bb4b70fa1cd4983aea4d390",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\18-IMG_4173.json",
+      "capture_sha256": "1fcd91996f083625f9af16d6826f14ab8ebb9ef4c9681ae349275695f16957d6",
+      "model": "EOS 60D",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            1604,
+            912
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            2472
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            4032
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_4345.CR2",
+      "source_sha256": "47c4d5a394e2e98335f686e14e0e26e1f1a00cb1e21e935caf7f438854a1cb5e",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\19-IMG_4345.json",
+      "capture_sha256": "6ea799a32c7279483bd461b506cc9d071e82921c0764fc7a81a9365fdd459d9c",
+      "model": "EOS 60D",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            1604,
+            912
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            2472
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            4032
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_6248.CR2",
+      "source_sha256": "9434f32e572b6d2a50379a159ab547789d6ecc1656eb2f93bab55ba6933adcd8",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\20-IMG_6248.json",
+      "capture_sha256": "2ed301d280f398ed00c27ad9daf512b328eea18c691234644233e7b0cb14a3a7",
+      "model": "EOS 60D",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            1604,
+            912
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            2472
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            4032
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_6954.CR2",
+      "source_sha256": "3d80e31cad494d129c7f110e5e62ee2c8372d627d8a2bbbad5ab9034e4650577",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\21-IMG_6954.json",
+      "capture_sha256": "524c7a1e89377fda129a9f6c801f82a99870000ffa324968a4d6cf912b9de3ff",
+      "model": "EOS 60D",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            1604,
+            912
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            2472
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            4032
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_6979.CR2",
+      "source_sha256": "1eba7c273b609d1f9cebe68cdbf1c03a065f835094789b30dbbc6302a442a7fb",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\22-IMG_6979.json",
+      "capture_sha256": "48f744a9844e786e1c2acb916f1f23f5dd058436c628fc467519bd8b4f068632",
+      "model": "EOS 60D",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            1604,
+            912
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            2472
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            4032
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_7423.CR2",
+      "source_sha256": "8eea727fdd9cd4b2766292cbccf172a841d5e22aa595e1378e2503c59dd5226c",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\23-IMG_7423.json",
+      "capture_sha256": "e68fc528503012c71f2f7bd53aca11d35b2dc41f74d6c122b25d97a760e1cb79",
+      "model": "EOS 60D",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            1604,
+            912
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            2472
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            4032
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_7953.CR2",
+      "source_sha256": "966d5bc82bbbebc89b5364002539300b853828574ad1ff968620661a75a21a16",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\24-IMG_7953.json",
+      "capture_sha256": "345f834381e89877f7cdeebc7e5340035c27601c017cc382d8f8b4c6eb64c0d8",
+      "model": "EOS 60D",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            1604,
+            912
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            2472
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            4032
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_7958.CR2",
+      "source_sha256": "68a2cf76de50acf6aaf291e99c4c9feaa1056bf09efb8290289d886b4b844dd1",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\25-IMG_7958.json",
+      "capture_sha256": "f915a727458a19e4f4e1c8602bbe0ebdea3ff336d7c38163f4776fef5d4d259a",
+      "model": "EOS 60D",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            1604,
+            912
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            2472
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            4032
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_7961.CR2",
+      "source_sha256": "a949888b39903a441da32f88118be50ce1300cfe5cdd4dcabbc3b2d365fe7aa9",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\26-IMG_7961.json",
+      "capture_sha256": "c8709d77c13deeb32947cf51ffec63262c8ee8276deef89aaabd0751fdc1f72a",
+      "model": "EOS 60D",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            1604,
+            912
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            2472
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            4032
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\base\\IMG_8473.CR2",
+      "source_sha256": "d1acde3f2969bf6fd3b5d77f6b3c82d60371e08f9b2feabbccce7b7b5cd8840e",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\27-IMG_8473.json",
+      "capture_sha256": "14882b904baf392478e72c65591927a53261110828e15743f402335e530126bb",
+      "model": "EOS 60D",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            1604,
+            912
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            2472
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            1604,
+            4032
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0003.CR3",
+      "source_sha256": "172231741d16ea44e6bc0f509d39a9d6482aa52dbab2eea0246e06d125668b6e",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\28-6V1A0003.json",
+      "capture_sha256": "7fca26b97a151b47d85fb2468020dee6c592c3f7b26e5b3f07eb42ed2a742346",
+      "model": "EOS R6 Mark III",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9950.CR3",
+      "source_sha256": "8f7eba49f50e1cc2e1c4b892053a238ec82063408337670810eeb0cd4f9b9b16",
+      "capture": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\build-patch_raw_bench\\smoke\\20261028T143840Z\\29-6V1A9950.json",
+      "capture_sha256": "39ffef11c3907c4061d3efe64c044a336b8dad929f4ef5d60f6027e7b88ba528",
+      "model": "EOS R6 Mark III",
+      "libraw_version": "0.22.2-Release",
+      "rois": [
+        {
+          "origin_yx": [
+            2190,
+            1262
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            3350
+          ],
+          "equal": true,
+          "differing_values": 0
+        },
+        {
+          "origin_yx": [
+            2190,
+            5438
+          ],
+          "equal": true,
+          "differing_values": 0
+        }
+      ]
+    }
+  ],
+  "rawpy_version": "0.27.1",
+  "rawpy_libraw_version": [
+    0,
+    22,
+    1
+  ],
+  "tool_sha256": "468030059c6fd47d70a689ec19b8d9817c7bb854970565d29725e67ff1ee0adb",
+  "revision": "6e614cadccd3509c7ed338e35e7a156f56185175",
+  "sources": {
+    "tests/raw_bench/smoke.py": {
+      "sha256": "1923f94c5edc9f170503beebb68800e33b71f3bec8352344775ba6b6a35d0f8f",
+      "source": "\"\"\"Small real-RAW unpack capture/readback check; not candidate-development parity.\"\"\"\nfrom datetime import datetime,timezone\nimport argparse\nimport json\nimport os\nfrom pathlib import Path\nimport subprocess\n\nimport numpy as np\nimport rawpy\n\nfrom capture import load_capture,sha256\n\n\ndef main():\n    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--input',action='append',type=Path,required=True)\n    p.add_argument('--qt-bin',type=Path,required=True);p.add_argument('--libraw-bin',type=Path,required=True);args=p.parse_args()\n    root=Path(__file__).resolve().parents[2];stamp=datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')\n    work=root/'build-patch_raw_bench'/'smoke'/stamp;work.mkdir(parents=True,exist_ok=False)\n    tool=root/'build-patch_raw_bench/Release/iprRawUnpackCapture.exe'\n    env=dict(os.environ);env['PATH']=os.pathsep.join((str(args.qt_bin),str(args.libraw_bin),env.get('PATH','')))\n    records=[]\n    for index,source in enumerate(args.input):\n        out=work/f'{index}-{source.stem}.json'\n        subprocess.run([str(tool),'--input',str(source),'--output',str(out)],check=True,env=env,timeout=120)\n        manifest,stages=load_capture(out);matches=[]\n        with rawpy.imread(str(source)) as raw:\n            for (_,origin),(stage,values) in stages.items():\n                y,x=origin;h,w,_=stage['shape'];reference=raw.raw_image_visible[y:y+h,x:x+w]\n                if reference.shape!=(h,w):raise ValueError('RAW reader geometry differs')\n                matches.append(dict(origin_yx=list(origin),equal=bool(np.array_equal(values[:,:,0],reference)),\n                    differing_values=int(np.count_nonzero(values[:,:,0]!=reference))))\n        records.append(dict(source=str(source),source_sha256=manifest['source']['sha256'],capture=str(out),capture_sha256=sha256(out),\n            model=manifest['metadata']['model'],libraw_version=manifest['libraw_version'],rois=matches))\n        print(source.name,manifest['metadata']['model'],matches,flush=True)\n    now=datetime.now(timezone.utc);output=root/'docs/validation/raw'/f'banc-raw-unpack-smoke-v001-{now.strftime(\"%Y%m%dT%H%M%SZ\")}.json'\n    result=dict(schema_version=1,campaign_id='raw-unpack-smoke-'+stamp,measured_at_utc=now.isoformat(),records=records,\n        rawpy_version=rawpy.__version__,rawpy_libraw_version=list(rawpy.libraw_version),tool_sha256=sha256(tool),\n        revision=subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip(),\n        sources={n:dict(sha256=sha256(root/n),source=(root/n).read_text(encoding='utf-8')) for n in ('tests/raw_bench/smoke.py','tests/raw_bench/capture.py','tests/raw_bench/unpack_capture.cpp','tests/raw_bench/CMakeLists.txt')},\n        verdict='pass' if all(r['equal'] for s in records for r in s['rois']) else 'fail',\n        limitations='Native LibRaw unpack vs rawpy LibRaw unpack readback on explicit ROIs only. Shared decoder family, not independent ground truth. No candidate-development comparison, signed-mode validation, performance qualification or complete format coverage.')\n    with output.open('x',encoding='utf-8') as f:json.dump(result,f,ensure_ascii=False,indent=2,allow_nan=False)\n    print('RESULT',output,flush=True)\n    return 0 if result['verdict']=='pass' else 1\n\n\nif __name__=='__main__':raise SystemExit(main())\n"
+    },
+    "tests/raw_bench/capture.py": {
+      "sha256": "5157be531aaa9e36f7756467a551e2e31131c9571323869b34a2e90c26518ab3",
+      "source": "\"\"\"Versioned RAW bench captures and fail-closed stage comparisons (I3).\"\"\"\nimport argparse\nfrom datetime import datetime, timezone\nimport hashlib\nimport json\nfrom pathlib import Path\n\nimport numpy as np\n\nDTYPES={'u16':np.dtype('<u2'),'f32':np.dtype('<f4'),'f64':np.dtype('<f8')}\nREQUIRED=('unpacked_cfa','pre_demosaic_cfa','post_median_camera_rgb','working_rec2020')\n\n\ndef sha256(path):\n    h=hashlib.sha256()\n    with Path(path).open('rb') as f:\n        for block in iter(lambda:f.read(1024*1024),b''):h.update(block)\n    return h.hexdigest()\n\n\ndef load_capture(path):\n    path=Path(path);manifest=json.loads(path.read_text(encoding='utf-8'))\n    if manifest.get('schema_version')!=1 or not manifest.get('stages') or not manifest.get('source',{}).get('sha256'):\n        raise ValueError('Missing capture contract or unsupported schema')\n    pixels=Path(manifest['pixels']['path'])\n    if not pixels.is_absolute():pixels=path.parent/pixels\n    if sha256(pixels)!=manifest['pixels']['sha256']:raise ValueError('Capture pixel hash mismatch')\n    size=pixels.stat().st_size;stages={};extents=[]\n    with pixels.open('rb') as handle:\n        for stage in manifest['stages']:\n            shape=stage['shape'];dtype=DTYPES[stage['dtype']]\n            if len(shape)!=3 or any(type(n)!=int or n<=0 for n in shape):raise ValueError('Invalid stage shape')\n            offset=stage['offset_bytes'];count=int(np.prod(shape,dtype=object));nbytes=count*dtype.itemsize\n            if type(offset)!=int or offset<0 or offset%dtype.itemsize or offset+nbytes>size:raise ValueError('Invalid stage extent')\n            if stage['stride_bytes']!=shape[1]*shape[2]*dtype.itemsize:raise ValueError('Capture must be packed')\n            if any(offset<end and offset+nbytes>start for start,end in extents):raise ValueError('Overlapping stage extents')\n            extents.append((offset,offset+nbytes))\n            key=(stage['stage'],tuple(stage['origin_yx']))\n            if key in stages:raise ValueError('Duplicate stage/ROI')\n            for required in ('unit','layout','orientation','context'):\n                if required not in stage:raise ValueError('Incomplete stage descriptor')\n            handle.seek(offset);array=np.frombuffer(handle.read(nbytes),dtype=dtype).reshape(shape)\n            stages[key]=(stage,array)\n    return manifest,stages\n\n\ndef compare_captures(reference,candidate,required=REQUIRED,tolerances=None,purpose='parity'):\n    if purpose not in ('parity','measurement'):raise ValueError('Unknown comparison purpose')\n    tolerances=tolerances or {}\n    a,aa=load_capture(reference);b,bb=load_capture(candidate)\n    if a['source']['sha256']!=b['source']['sha256']:raise ValueError('Different RAW sources')\n    if purpose=='parity' and (a['mode']!='parity' or b['mode']!='parity'):raise ValueError('Signed mode cannot certify parity')\n    rows=[];missing=[];contract=[]\n    for name in required:\n        left={k for k in aa if k[0]==name};right={k for k in bb if k[0]==name}\n        if not left or not right or left!=right:missing.append(name)\n    for key in sorted(set(aa)|set(bb)):\n        if key not in aa or key not in bb:\n            missing.append(str(key));continue\n        sa,x=aa[key];sb,y=bb[key]\n        fields=('shape','dtype','origin_yx','layout','orientation','unit','context')\n        mismatch=[f for f in fields if sa[f]!=sb[f]]\n        if mismatch:\n            contract.append(dict(stage=key[0],origin_yx=list(key[1]),fields=mismatch));continue\n        finite=bool(np.isfinite(x).all() and np.isfinite(y).all())\n        row=dict(stage=key[0],origin_yx=list(key[1]),finite=finite,bitwise_equal=x.tobytes()==y.tobytes())\n        if finite:\n            tol=tolerances.get(key[0],{'atol':0.,'rtol':0.});atol=float(tol['atol']);rtol=float(tol['rtol'])\n            if not np.isfinite([atol,rtol]).all() or min(atol,rtol)<0:raise ValueError('Invalid tolerances')\n            if sa['dtype']=='u16' and (atol or rtol):raise ValueError('Integer boundaries require exact equality')\n            delta=x.astype(float)-y.astype(float);absolute=abs(delta)\n            row.update(max_abs=float(absolute.max()),mae=float(absolute.mean()),rmse=float(np.sqrt(np.mean(delta**2))),\n                unequal_values=int(np.count_nonzero(x!=y)),outside_tolerance=int(np.count_nonzero(absolute>atol+rtol*abs(x.astype(float)))),tolerance=tol,\n                reference_negative_fraction=float(np.mean(x<0)),candidate_negative_fraction=float(np.mean(y<0)),\n                reference_zero_fraction=float(np.mean(x==0)),candidate_zero_fraction=float(np.mean(y==0)),\n                reference_mean=x.mean(axis=(0,1),dtype=float).tolist(),candidate_mean=y.mean(axis=(0,1),dtype=float).tolist(),\n                reference_variance=x.var(axis=(0,1),dtype=float).tolist(),candidate_variance=y.var(axis=(0,1),dtype=float).tolist())\n        rows.append(row)\n    valid=not missing and not contract and all(r['finite'] for r in rows)\n    passed=valid and all(r['outside_tolerance']==0 for r in rows)\n    return dict(schema_version=1,measured_at_utc=datetime.now(timezone.utc).isoformat(),purpose=purpose,\n        reference=dict(path=str(reference),sha256=sha256(reference)),candidate=dict(path=str(candidate),sha256=sha256(candidate)),\n        missing=missing,contract_mismatches=contract,stages=rows,\n        verdict=('pass' if passed else 'fail') if purpose=='parity' else ('measured_not_parity' if valid else 'invalid_measurement'))\n\n\ndef main():\n    p=argparse.ArgumentParser(description=__doc__);p.add_argument('reference',type=Path);p.add_argument('candidate',type=Path)\n    p.add_argument('--output',type=Path,required=True);p.add_argument('--require-stage',action='append');p.add_argument('--tolerances',type=Path)\n    p.add_argument('--purpose',choices=('parity','measurement'),default='parity');args=p.parse_args()\n    result=compare_captures(args.reference,args.candidate,args.require_stage or REQUIRED,\n        json.loads(args.tolerances.read_text(encoding='utf-8')) if args.tolerances else None,args.purpose)\n    with args.output.open('x',encoding='utf-8') as f:json.dump(result,f,ensure_ascii=False,indent=2,allow_nan=False)\n    print(result['verdict'])\n    return 0 if result['verdict'] in ('pass','measured_not_parity') else 1\n\n\nif __name__=='__main__':raise SystemExit(main())\n"
+    },
+    "tests/raw_bench/unpack_capture.cpp": {
+      "sha256": "68e262626ab982e38e57bfb9aae967ff46d26eaf6b58cc74fb133b5424f5da29",
+      "source": "#include <libraw/libraw.h>\n#include <QCoreApplication>\n#include <QCommandLineParser>\n#include <QCommandLineOption>\n#include <QCryptographicHash>\n#include <QDateTime>\n#include <QFile>\n#include <QFileInfo>\n#include <QJsonArray>\n#include <QJsonDocument>\n#include <QJsonObject>\n#include <QtEndian>\n#include <array>\n#include <iostream>\n#include <memory>\n#include <stdexcept>\n\nnamespace {\nvoid require(bool ok,const char *message){if(!ok)throw std::runtime_error(message);}\nQString digest(const QString &path){QFile f(path);require(f.open(QIODevice::ReadOnly),\"Cannot hash input\");QCryptographicHash h(QCryptographicHash::Sha256);require(h.addData(&f),\"Hash read failed\");return QString::fromLatin1(h.result().toHex());}\n}\n\nint main(int argc,char **argv){\n    QCoreApplication app(argc,argv);QCommandLineParser parser;parser.addHelpOption();\n    parser.addOption(QCommandLineOption(\"input\",\"Source Bayer RAW\",\"path\"));\n    parser.addOption(QCommandLineOption(\"output\",\"New capture JSON\",\"path\"));\n    parser.addOption(QCommandLineOption(\"mode\",\"parity only at unpack boundary\",\"mode\",\"parity\"));\n    parser.addOption(QCommandLineOption(\"roi\",\"Visible x,y,width,height; repeatable\",\"rect\"));\n    parser.addOption(QCommandLineOption(\"full\",\"Capture entire visible mosaic\"));\n    parser.process(app);\n    try{\n        require(parser.isSet(\"input\")&&parser.isSet(\"output\")&&parser.value(\"mode\")==\"parity\",\"Need --input --output --mode parity\");\n        require(!(parser.isSet(\"full\")&&parser.isSet(\"roi\")),\"Choose full or ROIs\");\n        const auto input=QFileInfo(parser.value(\"input\")).absoluteFilePath(),output=QFileInfo(parser.value(\"output\")).absoluteFilePath();\n        require(!QFile::exists(output)&&!QFile::exists(output+\".bin\"),\"Output exists\");const auto sourceHash=digest(input);\n        auto storage=std::make_unique<LibRaw>();auto &raw=*storage;\n#ifdef _WIN32\n        require(raw.open_file(input.toStdWString().c_str())==LIBRAW_SUCCESS,\"RAW open failed\");\n#else\n        require(raw.open_file(input.toUtf8().constData())==LIBRAW_SUCCESS,\"RAW open failed\");\n#endif\n        require(raw.unpack()==LIBRAW_SUCCESS&&raw.imgdata.rawdata.raw_image,\"RAW unpack failed or non-mosaic input\");\n        const auto &s=raw.imgdata.sizes;require(raw.imgdata.idata.filters!=0&&raw.imgdata.idata.filters!=9,\"Only Bayer mosaic supported\");\n        require(s.width>0&&s.height>0&&s.raw_width>=s.left_margin+s.width&&s.raw_height>=s.top_margin+s.height,\"Invalid visible extent\");\n        const size_t pitch=s.raw_pitch?s.raw_pitch:size_t(s.raw_width)*sizeof(ushort);\n        require(pitch>=size_t(s.raw_width)*sizeof(ushort)&&pitch%sizeof(ushort)==0,\"Invalid RAW stride\");\n        QJsonArray pattern;for(int y=0;y<2;++y){QJsonArray row;for(int x=0;x<2;++x)row.append(raw.COLOR(y+s.top_margin,x+s.left_margin));pattern.append(row);}\n        QList<std::array<int,4>> regions;\n        if(parser.isSet(\"full\"))regions.append({0,0,int(s.width),int(s.height)});\n        else if(parser.isSet(\"roi\"))for(auto text:parser.values(\"roi\")){\n            const auto parts=text.split(',');require(parts.size()==4,\"ROI needs four integers\");std::array<int,4> r{};\n            for(int i=0;i<4;++i){bool ok=false;r[size_t(i)]=parts[i].toInt(&ok);require(ok,\"Invalid ROI integer\");}regions.append(r);\n        }else{\n            require(s.width>=256&&s.height>=256,\"Default ROIs require at least256 pixels\");\n            for(double f:{.2,.5,.8})regions.append({(int(s.width*f)-128)/2*2,(int(s.height)/2-128)/2*2,256,256});\n        }\n        QFile pixels(output+\".bin\");require(pixels.open(QIODevice::WriteOnly|QIODevice::NewOnly),\"Cannot create binary capture\");QJsonArray stages;\n        for(auto r:regions){\n            const int x=r[0],y=r[1],w=r[2],h=r[3];require(x>=0&&y>=0&&w>0&&h>0&&qint64(x)+w<=s.width&&qint64(y)+h<=s.height,\"ROI outside visible mosaic\");\n            const auto offset=pixels.pos();QByteArray row(w*2,Qt::Uninitialized);\n            for(int yy=0;yy<h;++yy){\n                const auto *sourceRow=reinterpret_cast<const ushort *>(reinterpret_cast<const unsigned char *>(raw.imgdata.rawdata.raw_image)+size_t(y+yy+s.top_margin)*pitch);\n                for(int xx=0;xx<w;++xx){const auto value=sourceRow[x+xx+s.left_margin];qToLittleEndian<quint16>(value,row.data()+xx*2);}\n                require(pixels.write(row)==row.size(),\"Incomplete binary capture\");\n            }\n            stages.append(QJsonObject{{\"stage\",\"unpacked_cfa\"},{\"shape\",QJsonArray{h,w,1}},{\"dtype\",\"u16\"},{\"offset_bytes\",double(offset)},{\"stride_bytes\",w*2},{\"origin_yx\",QJsonArray{y,x}},{\"unit\",\"DN\"},{\"layout\",\"cfa\"},{\"orientation\",\"sensor\"},{\"context\",QJsonObject{{\"cfa\",pattern},{\"visible_size\",QJsonArray{int(s.height),int(s.width)}}}}});\n        }\n        pixels.close();require(digest(input)==sourceHash,\"Source changed during capture\");\n        QJsonObject manifest{{\"schema_version\",1},{\"mode\",\"parity\"},{\"capture_id\",QDateTime::currentDateTimeUtc().toString(\"yyyyMMddTHHmmsszzzZ\")},{\"measured_at_utc\",QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs)},\n            {\"source\",QJsonObject{{\"path\",input},{\"sha256\",sourceHash}}},{\"engine_revision\",IPR_BENCH_REVISION},{\"tool_revision\",IPR_BENCH_REVISION},\n            {\"scope\",\"unpack_reference_only_not_full_production_opening\"},{\"libraw_version\",LibRaw::version()},\n            {\"metadata\",QJsonObject{{\"make\",raw.imgdata.idata.make},{\"model\",raw.imgdata.idata.model},{\"iso\",double(raw.imgdata.other.iso_speed)},{\"orientation_flip\",int(s.flip)},{\"raw_size\",QJsonArray{int(s.raw_height),int(s.raw_width)}},{\"visible_origin_yx\",QJsonArray{int(s.top_margin),int(s.left_margin)}}}},\n            {\"pixels\",QJsonObject{{\"path\",QFileInfo(pixels.fileName()).fileName()},{\"sha256\",digest(pixels.fileName())}}},{\"stages\",stages}};\n        QFile json(output);require(json.open(QIODevice::WriteOnly|QIODevice::NewOnly),\"Cannot create manifest\");auto bytes=QJsonDocument(manifest).toJson();require(json.write(bytes)==bytes.size(),\"Incomplete manifest\");\n        std::cout<<\"Captured unpacked CFA; downstream stages unavailable\\n\";\n    }catch(const std::exception &e){std::cerr<<e.what()<<'\\n';return 1;}return 0;\n}\n"
+    },
+    "tests/raw_bench/CMakeLists.txt": {
+      "sha256": "86eb13b6f59bc4935ea1e2d9dd8838ae9965820aaf2f26d7446e3386eb694b86",
+      "source": "cmake_minimum_required(VERSION 3.21)\nproject(IPRRawBench LANGUAGES CXX)\nset(CMAKE_CXX_STANDARD 17)\nset(CMAKE_CXX_STANDARD_REQUIRED ON)\nset(CMAKE_CXX_EXTENSIONS OFF)\nfind_package(Qt6 6.8 REQUIRED COMPONENTS Core)\nfind_path(LIBRAW_INCLUDE_DIR libraw/libraw.h REQUIRED)\nfind_library(LIBRAW_LIBRARY NAMES raw libraw PATH_SUFFIXES manual-link REQUIRED)\nexecute_process(COMMAND git rev-parse HEAD WORKING_DIRECTORY \"${CMAKE_CURRENT_SOURCE_DIR}\"\n    OUTPUT_VARIABLE IPR_BENCH_REVISION OUTPUT_STRIP_TRAILING_WHITESPACE COMMAND_ERROR_IS_FATAL ANY)\nadd_executable(iprRawUnpackCapture unpack_capture.cpp)\ntarget_include_directories(iprRawUnpackCapture PRIVATE \"${LIBRAW_INCLUDE_DIR}\")\ntarget_link_libraries(iprRawUnpackCapture PRIVATE Qt6::Core \"${LIBRAW_LIBRARY}\")\ntarget_compile_definitions(iprRawUnpackCapture PRIVATE IPR_BENCH_REVISION=\"${IPR_BENCH_REVISION}\")\ninclude(CTest)\nfind_package(Python3 REQUIRED COMPONENTS Interpreter)\nadd_test(NAME rawBenchCaptureContract COMMAND \"${Python3_EXECUTABLE}\" -m unittest discover\n    -s \"${CMAKE_CURRENT_SOURCE_DIR}\" -p test_capture.py)\n"
+    }
+  },
+  "verdict": "pass",
+  "limitations": "Native LibRaw unpack vs rawpy LibRaw unpack readback on explicit ROIs only. Shared decoder family, not independent ground truth. No candidate-development comparison, signed-mode validation, performance qualification or complete format coverage."
+}

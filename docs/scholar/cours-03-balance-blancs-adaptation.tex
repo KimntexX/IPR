@@ -15,15 +15,17 @@ M=M_{XYZ\to RGB}B^{-1}\operatorname{diag}(\mathbf{l}_r/\mathbf{l}_c)B M_{RGB\to 
 \end{equation}
 
 \section{Application dans \IPR{}}
-La référence est la balance de prise de vue : pour un RAW, elle est estimée avec \texttt{cam\_mul} et l'inverse de \texttt{cam\_xyz}; un JPEG/TIFF utilise ses métadonnées si disponibles; $6500$~K n'est qu'un repli. La matrice $M$ est préparée une fois et appliquée à chaque pixel. Le canal LMS moyen reste à gain~1 afin de séparer conceptuellement température (axe rouge--bleu) et nuance (axe vert--magenta).
+La référence est la balance de prise de vue : pour un RAW, elle est estimée avec \texttt{cam\_mul} et l'inverse de \texttt{cam\_xyz}; le repli de l'éditeur est $5200$~K lorsqu'aucune référence n'est disponible, sans que cela mesure l'illuminant réel d'un JPEG/TIFF. La matrice $M$ est préparée une fois et appliquée à chaque pixel. Le canal LMS moyen reste à gain~1 afin de séparer conceptuellement température (axe rouge--bleu) et nuance (axe vert--magenta).
 
-La nuance $t\in[-150,150]$ produit des gains exponentiels, puis une normalisation de luminance Rec.~709. Cette normalisation empêche un déplacement vert/magenta de se comporter comme une correction d'exposition.
+La nuance $t\in[-150,150]$ produit des gains exponentiels. Dans le repli RGB, leurs axes empiriques sont normalisés sur un gris sRGB avec les poids Rec.~709 ; la matrice complète est ensuite conjuguée vers Rec.~2020, pas appliquée directement à ces nouvelles composantes. Ce modèle ne garantit pas Y constant sur toute couleur.
+
+Sur un RAW avec contexte caméra DCP, \texttt{renderFromCameraSignal} adapte la WB avant le profil. Cette voie n'est pas identique au repli RGB Bradford ; comparer les mêmes Kelvin entre logiciels ne suffit pas à identifier leurs gains.
 
 \section{Exemple}
 Une photo réglée à 5200~K est ouverte : cette valeur devient le zéro du curseur. Régler 2600~K demande une cible plus froide; $M$ renforce le bleu et réduit le rouge. À 5200~K avec nuance zéro, le code court-circuite le calcul afin que l'image reste bit à bit identique.
 
 \section{Calibration empirique}
-Bradford donne la direction colorimétrique, mais \IPR{} ajoute sous la température de référence une compensation progressive en log-kelvins. À 2000~K, son diagonal $(0{,}35,1{,}19,0{,}84)$ provient d'un corpus de huit scènes comparé à Lightroom. Ce n'est ni une norme ni une loi physique : il doit être revalidé si le dématriçage, le profil DCP ou le gamut mapping changent.
+Bradford donne la direction colorimétrique, mais \IPR{} ajoute sous la température de référence une compensation progressive en log-kelvins. À 2000~K, son diagonal $(0{,}35,1{,}19,0{,}84)$ provient d'un corpus de huit scènes comparé à Lightroom. Ce n'est ni une norme ni une loi physique : cette compensation décrit le repli RGB, pas un gain à appliquer en plus au chemin caméra. La qualification doit préciser le chemin utilisé et le profil.
 
 \resultat{La matrice Bradford est le modèle; les gains froids complémentaires sont une calibration de produit, explicitement révisable.}
 \bibliographystyle{plain}\bibliography{references}

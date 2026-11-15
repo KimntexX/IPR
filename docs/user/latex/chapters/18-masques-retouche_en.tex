@@ -1,0 +1,63 @@
+% translation-source: docs/user/latex/chapters/18-masques-retouche.tex; sha256: 94c74566b3ea60c1e1e6e9fad529e94e3df9b3ce6a5a7c66e4b39b7181387bdc
+\chapter{Masks and local editing}
+The \emph{Masks} tab, at the top of the right panel, applies settings to one part of the image
+only. A mask is a zone that carries its own values: they add to the global settings in that zone.
+An exposure of +1 in a mask acts as a global exposure of +1, but only there. Nothing is written in
+the photo: masks are saved in its sidecar and can be undone like the other steps.
+
+Masks have neither order nor blend mode: where several overlap, their values add up.
+
+\section{Creating a mask}
+\begin{itemize}
+\item \emph{Brush}: paint on the image. \emph{Size}, \emph{Feather} and \emph{Flow} set the next
+stroke; each stroke is one history step.
+\item \emph{Linear gradient}: the effect is whole before the first handle and none after the second.
+\item \emph{Radial gradient}: move the centre and both edges on the image. \emph{Feather} sets the
+transition, \emph{Angle} turns the ellipse.
+\item \emph{Range}: selects tones of the image, between \emph{Dark tones} and \emph{Light tones},
+as they are before any edit. A new range covers the whole image: narrow these sliders to isolate
+some tones.
+\end{itemize}
+\emph{Show the zone} shows where the mask acts: in colour inside, in grey outside. This display is
+neither saved nor exported. The zone also shows while you hold a range slider.
+\emph{Invert} turns a shape over.
+
+\section{Composing a zone}
+\emph{Add to the zone} combines another shape with the first: \emph{Add}, \emph{Subtract} or
+\emph{Intersect}. A range intersected with a gradient gives, for example, the shadows of the lower
+part of the image alone.
+
+\section{Adjusting a mask}
+Each mask offers the light, colour, effects and detail settings, and an \emph{Opacity} that weighs
+them all. The box in the list turns it off without losing it, and the two buttons beside it
+duplicate or remove it. A mask follows the image's geometry: it stays on the same object after a
+rotation or a crop.
+
+Masks belong to their photo: pasting settings or applying them to a selection does not pass them
+on. \emph{Reset settings} removes them too.
+
+\section{Removing an object}
+The \emph{Retouch} tab removes what should not be in the photo. What replaces the zone is
+reconstructed, not recovered. The original photo does not change: each retouch is saved in its
+companion file, can be hidden, changed or removed, and is undone like other steps.
+
+Choose an action, set the brush size, then paint on the image:
+\begin{itemize}
+\item \emph{Erase} invents the zone from what surrounds it. It convinces on a sky or a regular
+texture; look at the result at 100~\% elsewhere.
+\item \emph{Heal} takes the texture of another place, in the light of the zone's surroundings. It
+is the tool for a speck of dust or a small flaw.
+\item \emph{Clone} copies another place as it is.
+\end{itemize}
+For \emph{Heal} and \emph{Clone}, a source is suggested at the first stroke; \emph{Move the source}
+shows a handle to choose another. If a zone is too large to reconstruct, or its source falls outside
+the image, the image stays as it is and the message says so.
+
+Straighten first: like a mask's, the zone does not follow the image if the geometry changes later.
+
+\section{Limits}
+\begin{itemize}
+\item A mask's luminance noise is processed after the profile, even in signed development.
+\item Changing a mask is slower when there are many: beyond about fifteen, the gesture exceeds a
+quarter of a second. Moving another slider does not draw them again.
+\end{itemize}

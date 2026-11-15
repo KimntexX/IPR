@@ -1,7 +1,9 @@
+*[Français](ADR-0001-sidecar-ipr.md) | [English](ADR-0001-sidecar-ipr_en.md)*
+
 # ADR-0001 — Sidecar non destructif `.ipr`
 
 - **Date :** 2 octobre 2026
-- **Statut :** Accepté
+- **Statut :** Remplacé par [ADR-0021](ADR-0021-socle-edition-beta.md) (format CBOR, 1er novembre 2026) ; les fichiers de ce format restent lus et convertis
 - **Décideurs :** Projet IPR
 
 ## Contexte

@@ -1,0 +1,855 @@
+{
+ "schema": "ipr-noise-probe-v001",
+ "created_utc": "20261029T201816Z",
+ "author": "Claude",
+ "question": "The user sees a much better camera denoise when 'automatic white balance' is checked. That option skips IPR's signed development (developedByIpr) and LibRaw's dcraw_process develops instead. Is the gain due to the signed negatives, or to something else?",
+ "base": {
+  "commit": "75d87010cb4366036623d37b6a6fa21194b93093",
+  "camera_denoise": "V1 (dec3c6f)",
+  "reference": "docs/validation/raw/loi-force-bruit-v001-20261029T185322Z.json",
+  "masks_and_alignment": "those of the reference; windows = 320x320 with most mask pixels (crops kept locally, not committed)"
+ },
+ "variants": {
+  "signed": "engine of 75d8701 unchanged: camera WB, signed development, camera denoise",
+  "unsigned": {
+   "change": "RawDecoder: the Signed policy never selected (if (false && options.signedDevelopment)), development of LibRaw parity, clamped at 0; camera WB; same denoise",
+   "executable_sha256": "6dfaf4d748259a4303855a192d6f00a0e8870edaca880c84a1a762cc913c5e30"
+  },
+  "autowb": {
+   "change": "decodeCr3: options.automaticWhiteBalance forced when IPR_PROBE_AUTOWB is set: LibRaw grey-world WB, dcraw_process, and no normalization manifest (RawNormalization requires the camera WB); same denoise",
+   "executable_sha256": "not recorded"
+  }
+ },
+ "metrics": "as the reference, plus dots = share of mask pixels whose 8-bit R-G or B-G departs by more than 12 from its 9x9 median",
+ "reading": [
+  "signed vs unsigned (camera WB): small difference; unsigned has fewer coloured dots in 7599 shadows at 100/100 (dark dots rg 0.9% -> 0.2%, chroma 1.5 -> 1.0) but lifts the blacks (dark luma 12.6 -> 18.5); 6V1A9539 identical. The negatives are not the main cause.",
+  "autowb: the image is darker (7599 mid_flat luma 61.7 -> 46.0, bright 202 -> 181: no normalization manifest) and cooler (grey world on a yellow wall). Its noise is lower from the start (0/0/0 dark luma noise 11.0 -> 8.2) and the denoise acts in the same proportions: the camera denoise still runs (bright_flat luma 7.8 at 100/100, the current denoise A would give 3.5).",
+  "the visible gain with automatic WB is therefore mostly a darker, cooler rendering where the same residual noise shows less; it is not a better denoise.",
+  "on every path, 100/100 leaves low-frequency colour blotches (teal/magenta, about 10-20 px) in the mid flats of 7599: the next visible target."
+ ],
+ "scripts_sha256": {
+  "signed_probe.py": "a0d68312e4265d1af37a66816d2a3b506fa8376c4e4d56e5d4574de31ddc7be0",
+  "strength_law.py": "6a2908cc02c68eef0648855ecacaa702935c61c275c363b4a7303b671a03f914"
+ },
+ "scripts_source": {
+  "signed_probe.py": "\"\"\"Camera denoise on two developments, same masks as the reference. Usage:\npython signed_probe.py EXE REFERENCE.json LABEL OUT_DIR scene...\"\"\"\nimport json, sys\nfrom pathlib import Path\nimport numpy as np, cv2\nsys.path.insert(0, str(Path(__file__).parent))\nfrom strength_law import BASE, RenderServer, masks, metrics, read8  # noqa: E402\n\nSTATES = (\"0/0/0\", \"70/25/0\", \"100/0/0\", \"0/100/0\", \"100/100/0\")\n\n\ndef window(mask, size=320):\n    \"\"\"Top-left corner of the size x size window with most mask pixels.\"\"\"\n    integral = cv2.integral(mask.astype(np.uint8))\n    sums = integral[size:, size:] - integral[:-size, size:] - integral[size:, :-size] + integral[:-size, :-size]\n    y, x = np.unravel_index(np.argmax(sums), sums.shape)\n    return int(x), int(y)\n\n\ndef dots(im, mask):\n    \"\"\"Share of mask pixels whose 8-bit R-G or B-G departs by more than 12 from a 9x9 median.\"\"\"\n    out = {}\n    for name, c in ((\"rg\", im[..., 0] - im[..., 1]), (\"bg\", im[..., 2] - im[..., 1])):\n        med = cv2.medianBlur(np.clip(c + 128, 0, 255).astype(np.uint8), 9).astype(np.float32) - 128\n        out[name] = round(float((np.abs(c - med)[mask] > 12).mean()), 5)\n    return out\n\n\nexe, ref, label, outdir = Path(sys.argv[1]), json.loads(Path(sys.argv[2]).read_text(encoding=\"utf-8\")), sys.argv[3], Path(sys.argv[4])\noutdir.mkdir(exist_ok=True)\nreport = {}\nwith RenderServer(exe, timeout=900) as server:\n    for scene in sys.argv[5:]:\n        s = ref[\"scenes\"][scene]\n        ca = s[\"masks\"][\"common_area\"]\n        (lx, ly), (ix, iy), (w, h) = ca[\"lr_origin_xy\"], ca[\"ipr_origin_xy\"], ca[\"size_wh\"]\n        lr = read8(BASE / \"neutre\" / f\"{scene}.tif\")[ly:ly + h, lx:lx + w]\n        m = masks(lr)\n        wins = {z: window(m[z]) for z in (\"dark\", \"mid_flat\")}\n        raw = next(p for p in BASE.iterdir() if p.stem == scene and p.suffix.upper() in (\".CR3\", \".CR2\"))\n        report[scene] = {\"windows_xy\": wins}\n        for key in STATES:\n            lum, col, _ = map(int, key.split(\"/\"))\n            im = server.render(raw, \"neutral\", 0, camera_denoise={\"luminance\": lum, \"chrominance\": col})[0]\n            im = im[iy:iy + h, ix:ix + w]\n            f = im.astype(np.float32) / 257.0\n            report[scene][key] = {\"metrics\": metrics(f, m), \"dots_dark\": dots(f, m[\"dark\"]) if m[\"dark\"].sum() > 2000 else None,\n                                  \"dots_mid_flat\": dots(f, m[\"mid_flat\"])}\n            for z, (x, y) in wins.items():\n                crop = cv2.cvtColor((im[y:y + 320, x:x + 320] // 257).astype(np.uint8), cv2.COLOR_RGB2BGR)\n                cv2.imwrite(str(outdir / f\"{scene}_{z}_{label}_{key.replace('/', '-')}.png\"), crop)\n            print(scene, key, report[scene][key], flush=True)\n(outdir / f\"{label}.json\").write_text(json.dumps(report, indent=1))\n"
+ },
+ "measures": {
+  "signed": {
+   "7Y6A7599": {
+    "windows_xy": {
+     "dark": [
+      5173,
+      4018
+     ],
+     "mid_flat": [
+      235,
+      82
+     ]
+    },
+    "0/0/0": {
+     "metrics": {
+      "dark": {
+       "luma": 9.481,
+       "luma_noise": 11.016,
+       "chroma_noise": 14.199
+      },
+      "mid_flat": {
+       "luma": 61.737,
+       "luma_noise": 24.604,
+       "chroma_noise": 25.013
+      },
+      "bright_flat": {
+       "luma": 201.984,
+       "luma_noise": 9.883,
+       "chroma_noise": 16.425
+      },
+      "edges": {
+       "luma": 91.476,
+       "luma_noise": 21.568,
+       "chroma_noise": 24.398
+      }
+     },
+     "dots_dark": {
+      "rg": 0.39524,
+      "bg": 0.29734
+     },
+     "dots_mid_flat": {
+      "rg": 0.73011,
+      "bg": 0.64913
+     }
+    },
+    "70/25/0": {
+     "metrics": {
+      "dark": {
+       "luma": 11.706,
+       "luma_noise": 5.046,
+       "chroma_noise": 11.098
+      },
+      "mid_flat": {
+       "luma": 55.051,
+       "luma_noise": 10.943,
+       "chroma_noise": 17.622
+      },
+      "bright_flat": {
+       "luma": 202.229,
+       "luma_noise": 7.511,
+       "chroma_noise": 14.073
+      },
+      "edges": {
+       "luma": 91.807,
+       "luma_noise": 11.451,
+       "chroma_noise": 20.034
+      }
+     },
+     "dots_dark": {
+      "rg": 0.3786,
+      "bg": 0.24945
+     },
+     "dots_mid_flat": {
+      "rg": 0.62404,
+      "bg": 0.49748
+     }
+    },
+    "100/0/0": {
+     "metrics": {
+      "dark": {
+       "luma": 15.84,
+       "luma_noise": 3.388,
+       "chroma_noise": 15.352
+      },
+      "mid_flat": {
+       "luma": 52.922,
+       "luma_noise": 6.871,
+       "chroma_noise": 19.407
+      },
+      "bright_flat": {
+       "luma": 202.276,
+       "luma_noise": 6.699,
+       "chroma_noise": 14.164
+      },
+      "edges": {
+       "luma": 92.287,
+       "luma_noise": 8.514,
+       "chroma_noise": 22.931
+      }
+     },
+     "dots_dark": {
+      "rg": 0.50727,
+      "bg": 0.39157
+     },
+     "dots_mid_flat": {
+      "rg": 0.62984,
+      "bg": 0.50296
+     }
+    },
+    "0/100/0": {
+     "metrics": {
+      "dark": {
+       "luma": 7.47,
+       "luma_noise": 10.71,
+       "chroma_noise": 4.224
+      },
+      "mid_flat": {
+       "luma": 60.817,
+       "luma_noise": 24.727,
+       "chroma_noise": 11.92
+      },
+      "bright_flat": {
+       "luma": 202.034,
+       "luma_noise": 9.703,
+       "chroma_noise": 14.421
+      },
+      "edges": {
+       "luma": 91.095,
+       "luma_noise": 21.406,
+       "chroma_noise": 14.633
+      }
+     },
+     "dots_dark": {
+      "rg": 0.02245,
+      "bg": 0.05018
+     },
+     "dots_mid_flat": {
+      "rg": 0.19554,
+      "bg": 0.13958
+     }
+    },
+    "100/100/0": {
+     "metrics": {
+      "dark": {
+       "luma": 12.631,
+       "luma_noise": 1.237,
+       "chroma_noise": 1.524
+      },
+      "mid_flat": {
+       "luma": 50.82,
+       "luma_noise": 5.691,
+       "chroma_noise": 6.684
+      },
+      "bright_flat": {
+       "luma": 202.292,
+       "luma_noise": 6.534,
+       "chroma_noise": 11.661
+      },
+      "edges": {
+       "luma": 91.573,
+       "luma_noise": 7.697,
+       "chroma_noise": 11.46
+      }
+     },
+     "dots_dark": {
+      "rg": 0.00899,
+      "bg": 0.00453
+     },
+     "dots_mid_flat": {
+      "rg": 0.10051,
+      "bg": 0.09476
+     }
+    }
+   },
+   "6V1A9539": {
+    "windows_xy": {
+     "dark": [
+      272,
+      634
+     ],
+     "mid_flat": [
+      2844,
+      153
+     ]
+    },
+    "0/0/0": {
+     "metrics": {
+      "dark": {
+       "luma": 9.262,
+       "luma_noise": 3.201,
+       "chroma_noise": 2.362
+      },
+      "mid_flat": {
+       "luma": 56.89,
+       "luma_noise": 5.512,
+       "chroma_noise": 4.479
+      },
+      "edges": {
+       "luma": 47.307,
+       "luma_noise": 6.315,
+       "chroma_noise": 6.04
+      }
+     },
+     "dots_dark": {
+      "rg": 0.00982,
+      "bg": 0.00224
+     },
+     "dots_mid_flat": {
+      "rg": 0.07439,
+      "bg": 0.02633
+     }
+    },
+    "70/25/0": {
+     "metrics": {
+      "dark": {
+       "luma": 9.36,
+       "luma_noise": 1.908,
+       "chroma_noise": 1.934
+      },
+      "mid_flat": {
+       "luma": 56.828,
+       "luma_noise": 4.37,
+       "chroma_noise": 4.159
+      },
+      "edges": {
+       "luma": 47.327,
+       "luma_noise": 5.501,
+       "chroma_noise": 5.76
+      }
+     },
+     "dots_dark": {
+      "rg": 0.00554,
+      "bg": 0.00112
+     },
+     "dots_mid_flat": {
+      "rg": 0.05887,
+      "bg": 0.01976
+     }
+    },
+    "100/0/0": {
+     "metrics": {
+      "dark": {
+       "luma": 9.478,
+       "luma_noise": 1.483,
+       "chroma_noise": 2.242
+      },
+      "mid_flat": {
+       "luma": 56.798,
+       "luma_noise": 3.916,
+       "chroma_noise": 4.462
+      },
+      "edges": {
+       "luma": 47.342,
+       "luma_noise": 5.187,
+       "chroma_noise": 6.035
+      }
+     },
+     "dots_dark": {
+      "rg": 0.00945,
+      "bg": 0.00221
+     },
+     "dots_mid_flat": {
+      "rg": 0.07441,
+      "bg": 0.02621
+     }
+    },
+    "0/100/0": {
+     "metrics": {
+      "dark": {
+       "luma": 9.204,
+       "luma_noise": 3.166,
+       "chroma_noise": 1.255
+      },
+      "mid_flat": {
+       "luma": 56.892,
+       "luma_noise": 5.484,
+       "chroma_noise": 3.31
+      },
+      "edges": {
+       "luma": 47.296,
+       "luma_noise": 6.289,
+       "chroma_noise": 4.992
+      }
+     },
+     "dots_dark": {
+      "rg": 0.00107,
+      "bg": 0.00018
+     },
+     "dots_mid_flat": {
+      "rg": 0.02775,
+      "bg": 0.0084
+     }
+    },
+    "100/100/0": {
+     "metrics": {
+      "dark": {
+       "luma": 9.42,
+       "luma_noise": 1.428,
+       "chroma_noise": 1.056
+      },
+      "mid_flat": {
+       "luma": 56.798,
+       "luma_noise": 3.882,
+       "chroma_noise": 3.282
+      },
+      "edges": {
+       "luma": 47.33,
+       "luma_noise": 5.155,
+       "chroma_noise": 4.977
+      }
+     },
+     "dots_dark": {
+      "rg": 0.00106,
+      "bg": 0.00017
+     },
+     "dots_mid_flat": {
+      "rg": 0.02768,
+      "bg": 0.00829
+     }
+    }
+   }
+  },
+  "unsigned": {
+   "7Y6A7599": {
+    "windows_xy": {
+     "dark": [
+      5173,
+      4018
+     ],
+     "mid_flat": [
+      235,
+      82
+     ]
+    },
+    "0/0/0": {
+     "metrics": {
+      "dark": {
+       "luma": 11.223,
+       "luma_noise": 10.761,
+       "chroma_noise": 12.435
+      },
+      "mid_flat": {
+       "luma": 61.613,
+       "luma_noise": 24.069,
+       "chroma_noise": 21.753
+      },
+      "bright_flat": {
+       "luma": 201.97,
+       "luma_noise": 9.885,
+       "chroma_noise": 16.488
+      },
+      "edges": {
+       "luma": 91.822,
+       "luma_noise": 21.236,
+       "chroma_noise": 23.685
+      }
+     },
+     "dots_dark": {
+      "rg": 0.3765,
+      "bg": 0.26076
+     },
+     "dots_mid_flat": {
+      "rg": 0.67514,
+      "bg": 0.55583
+     }
+    },
+    "70/25/0": {
+     "metrics": {
+      "dark": {
+       "luma": 15.693,
+       "luma_noise": 4.522,
+       "chroma_noise": 10.289
+      },
+      "mid_flat": {
+       "luma": 56.888,
+       "luma_noise": 11.116,
+       "chroma_noise": 16.731
+      },
+      "bright_flat": {
+       "luma": 202.191,
+       "luma_noise": 7.602,
+       "chroma_noise": 14.272
+      },
+      "edges": {
+       "luma": 92.803,
+       "luma_noise": 11.359,
+       "chroma_noise": 19.969
+      }
+     },
+     "dots_dark": {
+      "rg": 0.34846,
+      "bg": 0.22246
+     },
+     "dots_mid_flat": {
+      "rg": 0.57748,
+      "bg": 0.43864
+     }
+    },
+    "100/0/0": {
+     "metrics": {
+      "dark": {
+       "luma": 19.114,
+       "luma_noise": 2.211,
+       "chroma_noise": 13.511
+      },
+      "mid_flat": {
+       "luma": 54.925,
+       "luma_noise": 7.117,
+       "chroma_noise": 20.025
+      },
+      "bright_flat": {
+       "luma": 202.236,
+       "luma_noise": 6.815,
+       "chroma_noise": 14.385
+      },
+      "edges": {
+       "luma": 93.227,
+       "luma_noise": 8.519,
+       "chroma_noise": 23.021
+      }
+     },
+     "dots_dark": {
+      "rg": 0.45978,
+      "bg": 0.32701
+     },
+     "dots_mid_flat": {
+      "rg": 0.64557,
+      "bg": 0.52144
+     }
+    },
+    "0/100/0": {
+     "metrics": {
+      "dark": {
+       "luma": 10.254,
+       "luma_noise": 10.369,
+       "chroma_noise": 2.91
+      },
+      "mid_flat": {
+       "luma": 61.3,
+       "luma_noise": 23.678,
+       "chroma_noise": 10.877
+      },
+      "bright_flat": {
+       "luma": 202.015,
+       "luma_noise": 9.663,
+       "chroma_noise": 14.496
+      },
+      "edges": {
+       "luma": 91.688,
+       "luma_noise": 20.751,
+       "chroma_noise": 14.24
+      }
+     },
+     "dots_dark": {
+      "rg": 0.00764,
+      "bg": 0.01127
+     },
+     "dots_mid_flat": {
+      "rg": 0.18136,
+      "bg": 0.11863
+     }
+    },
+    "100/100/0": {
+     "metrics": {
+      "dark": {
+       "luma": 18.485,
+       "luma_noise": 1.051,
+       "chroma_noise": 0.973
+      },
+      "mid_flat": {
+       "luma": 54.025,
+       "luma_noise": 5.942,
+       "chroma_noise": 6.891
+      },
+      "bright_flat": {
+       "luma": 202.253,
+       "luma_noise": 6.611,
+       "chroma_noise": 11.885
+      },
+      "edges": {
+       "luma": 93.082,
+       "luma_noise": 7.72,
+       "chroma_noise": 11.666
+      }
+     },
+     "dots_dark": {
+      "rg": 0.00226,
+      "bg": 0.00156
+     },
+     "dots_mid_flat": {
+      "rg": 0.09865,
+      "bg": 0.08528
+     }
+    }
+   },
+   "6V1A9539": {
+    "windows_xy": {
+     "dark": [
+      272,
+      634
+     ],
+     "mid_flat": [
+      2844,
+      153
+     ]
+    },
+    "0/0/0": {
+     "metrics": {
+      "dark": {
+       "luma": 9.261,
+       "luma_noise": 3.196,
+       "chroma_noise": 2.359
+      },
+      "mid_flat": {
+       "luma": 56.878,
+       "luma_noise": 5.513,
+       "chroma_noise": 4.485
+      },
+      "edges": {
+       "luma": 47.294,
+       "luma_noise": 6.316,
+       "chroma_noise": 6.047
+      }
+     },
+     "dots_dark": {
+      "rg": 0.0099,
+      "bg": 0.00226
+     },
+     "dots_mid_flat": {
+      "rg": 0.07459,
+      "bg": 0.02647
+     }
+    },
+    "70/25/0": {
+     "metrics": {
+      "dark": {
+       "luma": 9.356,
+       "luma_noise": 1.962,
+       "chroma_noise": 1.959
+      },
+      "mid_flat": {
+       "luma": 56.819,
+       "luma_noise": 4.436,
+       "chroma_noise": 4.193
+      },
+      "edges": {
+       "luma": 47.313,
+       "luma_noise": 5.55,
+       "chroma_noise": 5.791
+      }
+     },
+     "dots_dark": {
+      "rg": 0.0059,
+      "bg": 0.00121
+     },
+     "dots_mid_flat": {
+      "rg": 0.06039,
+      "bg": 0.02049
+     }
+    },
+    "100/0/0": {
+     "metrics": {
+      "dark": {
+       "luma": 9.464,
+       "luma_noise": 1.552,
+       "chroma_noise": 2.242
+      },
+      "mid_flat": {
+       "luma": 56.791,
+       "luma_noise": 4.005,
+       "chroma_noise": 4.469
+      },
+      "edges": {
+       "luma": 47.327,
+       "luma_noise": 5.252,
+       "chroma_noise": 6.042
+      }
+     },
+     "dots_dark": {
+      "rg": 0.00956,
+      "bg": 0.00224
+     },
+     "dots_mid_flat": {
+      "rg": 0.07459,
+      "bg": 0.02634
+     }
+    },
+    "0/100/0": {
+     "metrics": {
+      "dark": {
+       "luma": 9.206,
+       "luma_noise": 3.161,
+       "chroma_noise": 1.318
+      },
+      "mid_flat": {
+       "luma": 56.879,
+       "luma_noise": 5.487,
+       "chroma_noise": 3.416
+      },
+      "edges": {
+       "luma": 47.283,
+       "luma_noise": 6.291,
+       "chroma_noise": 5.082
+      }
+     },
+     "dots_dark": {
+      "rg": 0.00132,
+      "bg": 0.00022
+     },
+     "dots_mid_flat": {
+      "rg": 0.0307,
+      "bg": 0.00951
+     }
+    },
+    "100/100/0": {
+     "metrics": {
+      "dark": {
+       "luma": 9.409,
+       "luma_noise": 1.501,
+       "chroma_noise": 1.138
+      },
+      "mid_flat": {
+       "luma": 56.79,
+       "luma_noise": 3.974,
+       "chroma_noise": 3.391
+      },
+      "edges": {
+       "luma": 47.315,
+       "luma_noise": 5.222,
+       "chroma_noise": 5.07
+      }
+     },
+     "dots_dark": {
+      "rg": 0.0013,
+      "bg": 0.00021
+     },
+     "dots_mid_flat": {
+      "rg": 0.03062,
+      "bg": 0.00939
+     }
+    }
+   }
+  },
+  "autowb": {
+   "7Y6A7599": {
+    "windows_xy": {
+     "dark": [
+      5173,
+      4018
+     ],
+     "mid_flat": [
+      235,
+      82
+     ]
+    },
+    "0/0/0": {
+     "metrics": {
+      "dark": {
+       "luma": 7.753,
+       "luma_noise": 8.202,
+       "chroma_noise": 11.018
+      },
+      "mid_flat": {
+       "luma": 46.023,
+       "luma_noise": 22.313,
+       "chroma_noise": 19.851
+      },
+      "bright_flat": {
+       "luma": 180.626,
+       "luma_noise": 11.711,
+       "chroma_noise": 14.649
+      },
+      "edges": {
+       "luma": 73.801,
+       "luma_noise": 19.833,
+       "chroma_noise": 22.528
+      }
+     },
+     "dots_dark": {
+      "rg": 0.16166,
+      "bg": 0.34282
+     },
+     "dots_mid_flat": {
+      "rg": 0.55034,
+      "bg": 0.59935
+     }
+    },
+    "70/25/0": {
+     "metrics": {
+      "dark": {
+       "luma": 10.564,
+       "luma_noise": 3.384,
+       "chroma_noise": 9.0
+      },
+      "mid_flat": {
+       "luma": 42.676,
+       "luma_noise": 10.527,
+       "chroma_noise": 15.361
+      },
+      "bright_flat": {
+       "luma": 180.941,
+       "luma_noise": 8.904,
+       "chroma_noise": 12.818
+      },
+      "edges": {
+       "luma": 74.406,
+       "luma_noise": 10.827,
+       "chroma_noise": 19.071
+      }
+     },
+     "dots_dark": {
+      "rg": 0.13185,
+      "bg": 0.3047
+     },
+     "dots_mid_flat": {
+      "rg": 0.41412,
+      "bg": 0.50368
+     }
+    },
+    "100/0/0": {
+     "metrics": {
+      "dark": {
+       "luma": 13.088,
+       "luma_noise": 1.788,
+       "chroma_noise": 11.775
+      },
+      "mid_flat": {
+       "luma": 41.617,
+       "luma_noise": 6.97,
+       "chroma_noise": 18.112
+      },
+      "bright_flat": {
+       "luma": 181.025,
+       "luma_noise": 7.896,
+       "chroma_noise": 13.529
+      },
+      "edges": {
+       "luma": 74.842,
+       "luma_noise": 8.193,
+       "chroma_noise": 22.149
+      }
+     },
+     "dots_dark": {
+      "rg": 0.232,
+      "bg": 0.39725
+     },
+     "dots_mid_flat": {
+      "rg": 0.47497,
+      "bg": 0.57496
+     }
+    },
+    "0/100/0": {
+     "metrics": {
+      "dark": {
+       "luma": 7.06,
+       "luma_noise": 8.246,
+       "chroma_noise": 2.384
+      },
+      "mid_flat": {
+       "luma": 45.707,
+       "luma_noise": 22.115,
+       "chroma_noise": 8.203
+      },
+      "bright_flat": {
+       "luma": 180.613,
+       "luma_noise": 11.61,
+       "chroma_noise": 11.262
+      },
+      "edges": {
+       "luma": 73.444,
+       "luma_noise": 19.833,
+       "chroma_noise": 11.983
+      }
+     },
+     "dots_dark": {
+      "rg": 0.00326,
+      "bg": 0.00455
+     },
+     "dots_mid_flat": {
+      "rg": 0.12303,
+      "bg": 0.12481
+     }
+    },
+    "100/100/0": {
+     "metrics": {
+      "dark": {
+       "luma": 12.319,
+       "luma_noise": 0.913,
+       "chroma_noise": 0.981
+      },
+      "mid_flat": {
+       "luma": 40.741,
+       "luma_noise": 6.18,
+       "chroma_noise": 6.26
+      },
+      "bright_flat": {
+       "luma": 181.013,
+       "luma_noise": 7.798,
+       "chroma_noise": 9.757
+      },
+      "edges": {
+       "luma": 74.46,
+       "luma_noise": 7.68,
+       "chroma_noise": 10.744
+      }
+     },
+     "dots_dark": {
+      "rg": 0.00141,
+      "bg": 0.00321
+     },
+     "dots_mid_flat": {
+      "rg": 0.08164,
+      "bg": 0.09376
+     }
+    }
+   }
+  }
+ }
+}

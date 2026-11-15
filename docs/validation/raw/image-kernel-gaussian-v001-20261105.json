@@ -1,0 +1,27 @@
+{
+ "kernel": "gaussianBlur",
+ "revision": "b026746743a092e0ee08bc1e98cf57edc0404d07",
+ "threads": 8,
+ "opencv": "5.0.0",
+ "tolerance_fixed_before_measuring": 1e-05,
+ "within_tolerance": true,
+ "timing": "median of three, on a machine busy with other calculations",
+ "cases": [
+  {"width": 1, "height": 1, "channels": 3, "sigma": 2, "opencv_ms": 0.0003, "ipr_ms": 0.0008, "ipr_one_thread_ms": 0, "largest_difference": 8.9407e-08},
+  {"width": 3, "height": 2, "channels": 1, "sigma": 5, "opencv_ms": 0.0087, "ipr_ms": 0.0013, "ipr_one_thread_ms": 0, "largest_difference": 1.78814e-07},
+  {"width": 17, "height": 5, "channels": 3, "sigma": 3, "opencv_ms": 0.0058, "ipr_ms": 0.0094, "ipr_one_thread_ms": 0, "largest_difference": 2.38419e-07},
+  {"width": 64, "height": 64, "channels": 1, "sigma": 0.5, "opencv_ms": 0.0053, "ipr_ms": 0.0099, "ipr_one_thread_ms": 0, "largest_difference": 1.19209e-07},
+  {"width": 64, "height": 64, "channels": 4, "sigma": 8, "opencv_ms": 0.119, "ipr_ms": 1.4662, "ipr_one_thread_ms": 0, "largest_difference": 2.38419e-07},
+  {"width": 640, "height": 480, "channels": 3, "sigma": 1, "opencv_ms": 0.7768, "ipr_ms": 1.9656, "ipr_one_thread_ms": 2.2458, "largest_difference": 2.38419e-07},
+  {"width": 640, "height": 480, "channels": 3, "sigma": 40, "opencv_ms": 53.5683, "ipr_ms": 36.6065, "ipr_one_thread_ms": 217.304, "largest_difference": 2.98023e-07},
+  {"width": 2048, "height": 1365, "channels": 3, "sigma": 1, "opencv_ms": 3.0522, "ipr_ms": 7.7492, "ipr_one_thread_ms": 18.9694, "largest_difference": 2.38419e-07},
+  {"width": 2048, "height": 1365, "channels": 3, "sigma": 3, "opencv_ms": 3.9698, "ipr_ms": 8.8447, "ipr_one_thread_ms": 31.8237, "largest_difference": 2.98023e-07},
+  {"width": 2048, "height": 1365, "channels": 3, "sigma": 10, "opencv_ms": 13.8083, "ipr_ms": 19.8795, "ipr_one_thread_ms": 113.526, "largest_difference": 2.98023e-07},
+  {"width": 2048, "height": 1365, "channels": 3, "sigma": 30, "opencv_ms": 79.3571, "ipr_ms": 87.5123, "ipr_one_thread_ms": 529.206, "largest_difference": 2.98023e-07},
+  {"width": 2048, "height": 1365, "channels": 4, "sigma": 3, "opencv_ms": 5.0489, "ipr_ms": 13.3401, "ipr_one_thread_ms": 42.6193, "largest_difference": 2.98023e-07},
+  {"width": 6960, "height": 4640, "channels": 3, "sigma": 1, "opencv_ms": 32.1973, "ipr_ms": 75.1476, "ipr_one_thread_ms": 224.996, "largest_difference": 2.98023e-07},
+  {"width": 6960, "height": 4640, "channels": 3, "sigma": 3, "opencv_ms": 46.7699, "ipr_ms": 101.829, "ipr_one_thread_ms": 385.606, "largest_difference": 2.98023e-07},
+  {"width": 6960, "height": 4640, "channels": 3, "sigma": 10, "opencv_ms": 136.647, "ipr_ms": 435.42, "ipr_one_thread_ms": 1070.56, "largest_difference": 3.57628e-07},
+  {"width": 6960, "height": 4640, "channels": 3, "sigma": 30, "opencv_ms": 796.183, "ipr_ms": 1929.49, "ipr_one_thread_ms": 4431.46, "largest_difference": 3.57628e-07}
+ ]
+}

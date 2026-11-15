@@ -1,3 +1,5 @@
+*[Français](ADR-0019-analyses-ipr-en-memoire.md) | [English](ADR-0019-analyses-ipr-en-memoire_en.md)*
+
 # ADR-0019 — États IPR rendus en mémoire pour les analyses
 
 - **Date :** 2026-10-20
@@ -6,6 +8,12 @@
 - **Décideurs :** utilisateur
 
 ## Contexte
+
+**Constat documentaire du31octobre2026 :** le serveur, les recettes communes
+et l'analyse en mémoire sont présents dans `dev` (`b19b4c3`). Le statut de
+branche ci-dessus décrit la décision initiale du20octobre, pas une fusion
+encore à exécuter. Les preuves ci-dessous restent datées et ne deviennent
+pas une qualification multiplateforme par cette seule relecture.
 
 Chaque campagne écrivait un TIFF 16 bits pleine résolution par état IPR
 (environ 258 Mo pour 32 Mpx), que les analyseurs relisaient puis que

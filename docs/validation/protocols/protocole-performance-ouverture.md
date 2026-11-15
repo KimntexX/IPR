@@ -54,8 +54,6 @@ le cache utilisateur. La navigation contrôlée restaure ici une recette à
 estimée par l’importeur. Ne pas comparer leurs temps de rendu comme des pixels
 strictement identiques.
 
-## Interprétation et limites
-
 ## Contrôleur mémoire et préchargement — intégration
 
 Après compilation Release complète, lancer :

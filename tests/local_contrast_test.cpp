@@ -1,7 +1,11 @@
 #include "LocalContrast.h"
+#include <random>
+#include "image_testing.h"
 #include "WorkingColorSpace.h"
+#include "Filters.h"
+#include "Resize.h"
+#include "Pixels.h"
 
-#include <opencv2/imgproc.hpp>
 
 #include <algorithm>
 #include <cmath>
@@ -19,85 +23,93 @@ bool check(bool condition, const char *message)
 }
 
 // Grey image whose log luminance carries random detail at every scale.
-cv::Mat texturedGrey(int size)
+ipr::Image texturedGrey(int size)
 {
-    cv::Mat detail(size, size, CV_32F);
-    cv::randn(detail, 0.0, 1.0);
-    cv::Mat log2Luminance = cv::Mat::zeros(size, size, CV_32F) - 3.0f;   // around 0.125
+    ipr::Image detail = ipr::Image::create({size, size}, ipr::Depth::F32, 1);
+    std::mt19937 random(5);
+    std::normal_distribution<float> normal(0.f, 1.f);
+    ipr::mapInPlace(detail, [&](float) { return normal(random); });
+    ipr::Image log2Luminance = ipr::filled({size, size}, ipr::Depth::F32, 1, -3.0);   // around 0.125
     for (double sigma : {0.7, 3.0, 24.0}) {
-        cv::Mat band;
-        cv::GaussianBlur(detail, band, cv::Size(0, 0), sigma);
-        cv::Scalar mean, deviation;
-        cv::meanStdDev(band, mean, deviation);
-        log2Luminance += band * (0.25 / deviation[0]);
+        const ipr::Image band = ipr::gaussianBlurred(detail, sigma);
+        std::vector<double> mean, deviation;
+        ipr::meanAndDeviationOf(band, mean, deviation);
+        const float weight = float(0.25 / deviation[0]);
+        log2Luminance = ipr::mapped(log2Luminance, band, [weight](float l, float b) { return l + b * weight; });
     }
-    cv::Mat rgb(size, size, CV_32FC3);
+    ipr::Image rgb = ipr::Image::create({size, size}, ipr::Depth::F32, 3);
     for (int y = 0; y < size; ++y)
         for (int x = 0; x < size; ++x) {
-            const float v = std::exp2(log2Luminance.at<float>(y, x));
-            rgb.at<cv::Vec3f>(y, x) = cv::Vec3f(v, v, v);
+            const float v = std::exp2(imagetest::at<float>(log2Luminance, y, x));
+            imagetest::at<ipr::Vec3f>(rgb, y, x) = ipr::Vec3f(v, v, v);
         }
     return rgb;
 }
 
 // Least-squares gain of the variant's band (G_a - G_b of the log luminance) on the original's.
-double bandGain(const cv::Mat &original, const cv::Mat &variant, double a, double b)
+double bandGain(const ipr::Image &original, const ipr::Image &variant, double a, double b)
 {
-    const auto band = [&](const cv::Mat &rgb) {
-        cv::Mat l(rgb.size(), CV_32F);
-        for (int y = 0; y < rgb.rows; ++y)
-            for (int x = 0; x < rgb.cols; ++x)
-                l.at<float>(y, x) = std::log2(WorkingColor::nonNegativeLuminance(rgb.at<cv::Vec3f>(y, x)) + 1e-3f);
-        cv::Mat ga, gb;
-        if (a > 0) cv::GaussianBlur(l, ga, cv::Size(0, 0), a, a, cv::BORDER_REFLECT); else ga = l;
-        cv::GaussianBlur(l, gb, cv::Size(0, 0), b, b, cv::BORDER_REFLECT);
-        return cv::Mat(ga - gb);
+    const auto band = [&](const ipr::Image &rgb) {
+        ipr::Image l = ipr::Image::create(rgb.size(), ipr::Depth::F32, 1);
+        for (int y = 0; y < rgb.height(); ++y)
+            for (int x = 0; x < rgb.width(); ++x)
+                imagetest::at<float>(l, y, x) = std::log2(WorkingColor::nonNegativeLuminance(imagetest::at<ipr::Vec3f>(rgb, y, x)) + 1e-3f);
+        const ipr::Image ga = a > 0 ? ipr::gaussianBlurred(l, a, ipr::BlurBorder::MirrorEdge) : l.clone();
+        const ipr::Image gb = ipr::gaussianBlurred(l, b, ipr::BlurBorder::MirrorEdge);
+        return ipr::mapped(ga, gb, [](float x, float y) { return x - y; });
     };
-    const cv::Mat o = band(original), v = band(variant);
-    return o.dot(v) / o.dot(o);
+    const ipr::Image o = band(original), v = band(variant);
+    const auto dot = [](const ipr::Image &p, const ipr::Image &q) {
+        double sum = 0;
+        for (int y = 0; y < p.height(); ++y)
+            for (int x = 0; x < p.width(); ++x)
+                sum += double(p.row<float>(y)[x]) * double(q.row<float>(y)[x]);
+        return sum;
+    };
+    return dot(o, v) / dot(o, o);
 }
 
 } // namespace
 
 int main()
 {
-    const cv::Mat original = texturedGrey(512);
+    const ipr::Image original = texturedGrey(512);
 
-    cv::Mat same = original.clone();
+    ipr::Image same = original.clone();
     LocalContrast::apply(same, 0, 0);
-    if (!check(cv::norm(same, original, cv::NORM_INF) == 0, "zero texture and clarity leave the image unchanged")) return 1;
+    if (!check(ipr::largestDifference(same, original) == 0, "zero texture and clarity leave the image unchanged")) return 1;
 
     // Lightroom's fitted response (etude-amplitude-effets-v001): small variations of
     // the fine bands are strongly amplified by texture, which fades by 16-32 pixels.
-    cv::Mat texture = original.clone();
+    ipr::Image texture = original.clone();
     LocalContrast::apply(texture, 100, 0);
     const double fine = bandGain(original, texture, 0, 1), wide = bandGain(original, texture, 16, 32);
     if (!(fine > 1.3 && fine < 1.65 && wide > 1.0 && wide - 1.0 < 0.5 * (fine - 1.0)))
         std::cerr << "texture +100: fine " << fine << ", 16-32 px " << wide << "\n";
     if (!check(fine > 1.3 && fine < 1.65 && wide > 1.0 && wide - 1.0 < 0.5 * (fine - 1.0),
                "texture +100 amplifies fine detail and fades at wide scales")) return 1;
-    cv::Mat smoother = original.clone();
+    ipr::Image smoother = original.clone();
     LocalContrast::apply(smoother, -100, 0);
     const double reduced = bandGain(original, smoother, 0, 1);
     if (!check(reduced > 0.4 && reduced < 0.7, "texture -100 reduces the fine band")) return 1;
 
     // A 4 EV step with faint detail: clarity +100 amplifies the detail but
     // preserves the edge (no strong halo, flat sides kept).
-    cv::Mat step(256, 512, CV_32FC3);
-    for (int y = 0; y < step.rows; ++y)
-        for (int x = 0; x < step.cols; ++x) {
+    ipr::Image step = ipr::Image::create({512, 256}, ipr::Depth::F32, 3);
+    for (int y = 0; y < step.height(); ++y)
+        for (int x = 0; x < step.width(); ++x) {
             const float base = x < 256 ? 0.05f : 0.8f;
             const float v = base * std::exp2(0.04f * std::sin(0.4f * float(y)));
-            step.at<cv::Vec3f>(y, x) = cv::Vec3f(v, v, v);
+            imagetest::at<ipr::Vec3f>(step, y, x) = ipr::Vec3f(v, v, v);
         }
-    cv::GaussianBlur(step, step, cv::Size(0, 0), 1.5, 0.0, cv::BORDER_REFLECT);   // edge softened as by optics
-    cv::Mat clear = step.clone();
+    step = ipr::gaussianBlurred(step, 1.5, ipr::BlurBorder::MirrorEdge);   // edge softened as by optics
+    ipr::Image clear = step.clone();
     LocalContrast::apply(clear, 0, 100);
-    const auto stripe = [](const cv::Mat &m, int x0, int x1) {
+    const auto stripe = [](const ipr::Image &m, int x0, int x1) {
         double lo = 1e9, hi = -1e9;
         for (int y = 64; y < 192; ++y)
             for (int x = x0; x < x1; ++x) {
-                const double l = std::log2(WorkingColor::nonNegativeLuminance(m.at<cv::Vec3f>(y, x)));
+                const double l = std::log2(WorkingColor::nonNegativeLuminance(imagetest::at<ipr::Vec3f>(m, y, x)));
                 lo = std::min(lo, l);
                 hi = std::max(hi, l);
             }
@@ -110,8 +122,8 @@ int main()
     double halo = 0;
     for (int x = 200; x < 312; ++x) {
         if (std::abs(x - 256) < 8) continue;
-        const double before = std::log2(WorkingColor::nonNegativeLuminance(step.at<cv::Vec3f>(128, x)));
-        const double after = std::log2(WorkingColor::nonNegativeLuminance(clear.at<cv::Vec3f>(128, x)));
+        const double before = std::log2(WorkingColor::nonNegativeLuminance(imagetest::at<ipr::Vec3f>(step, 128, x)));
+        const double after = std::log2(WorkingColor::nonNegativeLuminance(imagetest::at<ipr::Vec3f>(clear, 128, x)));
         halo = std::max(halo, std::abs(after - before));
     }
     if (!(halo < 1.2)) std::cerr << "clarity +100: largest change 8-56 px off the edge " << halo << " EV\n";
@@ -120,18 +132,18 @@ int main()
     if (!check(halo < 1.2, "clarity +100 keeps a 4 EV edge without a strong halo")) return 1;
 
     // Colours keep their channel ratios and stay finite and nonnegative.
-    cv::Mat colour = original.clone();
-    for (int y = 0; y < colour.rows; ++y)
-        for (int x = 0; x < colour.cols; ++x) {
-            auto &p = colour.at<cv::Vec3f>(y, x);
-            p = cv::Vec3f(p[0] * 1.4f, p[1], p[2] * 0.5f);
+    ipr::Image colour = original.clone();
+    for (int y = 0; y < colour.height(); ++y)
+        for (int x = 0; x < colour.width(); ++x) {
+            auto &p = imagetest::at<ipr::Vec3f>(colour, y, x);
+            p = ipr::Vec3f(p[0] * 1.4f, p[1], p[2] * 0.5f);
         }
-    const cv::Mat before = colour.clone();
+    const ipr::Image before = colour.clone();
     LocalContrast::apply(colour, 60, 60);
     bool ratios = true, finite = true;
-    for (int y = 0; y < colour.rows; ++y)
-        for (int x = 0; x < colour.cols; ++x) {
-            const auto &a = before.at<cv::Vec3f>(y, x), &b = colour.at<cv::Vec3f>(y, x);
+    for (int y = 0; y < colour.height(); ++y)
+        for (int x = 0; x < colour.width(); ++x) {
+            const auto &a = imagetest::at<ipr::Vec3f>(before, y, x), &b = imagetest::at<ipr::Vec3f>(colour, y, x);
             finite = finite && std::isfinite(b[0]) && std::isfinite(b[1]) && std::isfinite(b[2]) && b[0] >= 0 && b[2] >= 0;
             ratios = ratios && std::abs(b[0] / b[1] - a[0] / a[1]) < 1e-3f && std::abs(b[2] / b[1] - a[2] / a[1]) < 1e-3f;
         }
@@ -139,27 +151,27 @@ int main()
 
     // On the preview proxy, the effect is what the reduction leaves of the full image's.
     {
-        const cv::Mat full = texturedGrey(768);
-        cv::Mat reduced;
-        cv::resize(full, reduced, cv::Size(256, 256), 0, 0, cv::INTER_AREA);
-        const auto logChange = [&](const cv::Mat &rgb) {
-            cv::Mat change(reduced.size(), CV_32F);
-            for (int y = 0; y < reduced.rows; ++y)
-                for (int x = 0; x < reduced.cols; ++x)
-                    change.at<float>(y, x) = std::log2(WorkingColor::nonNegativeLuminance(rgb.at<cv::Vec3f>(y, x)) + 1e-3f)
-                        - std::log2(WorkingColor::nonNegativeLuminance(reduced.at<cv::Vec3f>(y, x)) + 1e-3f);
+        const ipr::Image full = texturedGrey(768);
+        const ipr::Image reduced = ipr::resized(full, ipr::Size(256, 256), ipr::Interpolation::Area);
+        const auto logChange = [&](const ipr::Image &rgb) {
+            ipr::Image change = ipr::Image::create(reduced.size(), ipr::Depth::F32, 1);
+            for (int y = 0; y < reduced.height(); ++y)
+                for (int x = 0; x < reduced.width(); ++x)
+                    imagetest::at<float>(change, y, x) = std::log2(WorkingColor::nonNegativeLuminance(imagetest::at<ipr::Vec3f>(rgb, y, x)) + 1e-3f)
+                        - std::log2(WorkingColor::nonNegativeLuminance(imagetest::at<ipr::Vec3f>(reduced, y, x)) + 1e-3f);
             return change;
         };
         for (const auto &[texture, clarity] : {std::pair{100, 0}, std::pair{0, 100}}) {
-            cv::Mat master = full.clone(), expected;
+            ipr::Image master = full.clone();
             LocalContrast::apply(master, texture, clarity);
-            cv::resize(master, expected, reduced.size(), 0, 0, cv::INTER_AREA);
-            cv::Mat scaled = reduced.clone(), unscaled = reduced.clone();
+            const ipr::Image expected = ipr::resized(master, reduced.size(), ipr::Interpolation::Area);
+            ipr::Image scaled = reduced.clone(), unscaled = reduced.clone();
             LocalContrast::apply(scaled, texture, clarity, 1.0 / 3.0);
             LocalContrast::apply(unscaled, texture, clarity);
-            const cv::Mat target = logChange(expected);
-            const double scaledError = cv::norm(logChange(scaled) - target) / cv::norm(target);
-            const double unscaledError = cv::norm(logChange(unscaled) - target) / cv::norm(target);
+            const ipr::Image target = logChange(expected);
+            const ipr::Image nothing = ipr::filled(target.size(), ipr::Depth::F32, 1, 0.0);
+            const double scaledError = imagetest::distance(logChange(scaled), target) / imagetest::distance(target, nothing);
+            const double unscaledError = imagetest::distance(logChange(unscaled), target) / imagetest::distance(target, nothing);
             // Texture lives at scales the proxy cannot show unscaled (error 0.49 -> 0.11);
             // clarity's large bands survive the reduction better (0.18 -> 0.13).
             if (!check(scaledError < 0.35 && scaledError < unscaledError,
@@ -167,7 +179,7 @@ int main()
         }
     }
 
-    cv::Mat empty;
+    ipr::Image empty;
     LocalContrast::apply(empty, 50, 50);
     if (!check(empty.empty(), "an empty image is left alone")) return 1;
     return 0;

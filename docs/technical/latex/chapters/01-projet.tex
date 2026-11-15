@@ -3,7 +3,7 @@
 
 \section{Objectif}
 
-\IPR{} est un logiciel de développement photographique non destructif. Il ouvre un dossier ou une image, décode les fichiers RAW et les formats image pris en charge, affiche une image de travail et permet de construire un rendu exportable au moyen de réglages photographiques. L'application vise une exécution locale sous Windows~10 et Windows~11, avec une interface Qt Quick/QML et un moteur C++.
+\IPR{} est un logiciel de développement photographique non destructif. Il ouvre un dossier ou une image, décode les fichiers RAW et les formats image pris en charge, affiche une image de travail et permet de construire un rendu exportable au moyen de réglages photographiques. L'application utilise une interface Qt Quick/QML et un moteur C++. Les builds CI ciblent Windows, Linux et macOS ; les versions et limites de support sont définies par l'ADR-0016 et le contrat de build multiplateforme.
 
 Le principe directeur est de préserver le fichier source : les pixels du fichier original ne sont jamais réécrits. Les réglages, les courbes et les métadonnées d'annotation sont mémorisés dans un fichier compagnon \texttt{.ipr}. Le rendu est recalculé à partir de l'image décodée et des paramètres courants.
 
@@ -30,7 +30,7 @@ Export & Image de rendu exportable et tests automatisés d'export. \\
   \item \textbf{Réactivité :} le décodage coûteux ne doit pas bloquer l'interface ; les chargements sont asynchrones et les rendus intermédiaires sont différés.
   \item \textbf{Mémoire bornée :} le cache d'images décodées suit une politique LRU afin de limiter la mémoire consommée lors d'une navigation longue.
   \item \textbf{Fidélité :} les opérations photométriques sont effectuées dans une image de travail flottante linéaire lorsque le pipeline le permet.
-  \item \textbf{Portabilité :} la cible distribuée est Windows, tandis que le projet peut être construit et testé dans un environnement WSL de développement.
+  \item \textbf{Portabilité :} les cibles Windows, Linux et macOS sont décrites séparément ; un build CI réussi ne remplace pas une recette sur chaque système utilisateur.
   \item \textbf{Traçabilité :} les rapports de validation et les mesures sont organisés dans \texttt{docs/validation}, tandis que les journaux datés résident dans \texttt{docs/reports}. Le point d'entrée documentaire est \texttt{docs/INDEX.md}.
 \end{itemize}
 

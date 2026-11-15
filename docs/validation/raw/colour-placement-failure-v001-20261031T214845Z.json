@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "created_utc": "20261031T215020Z",
+  "error": "[Errno 22] Invalid argument: ':\\\\config\\\\raw-normalization.json'",
+  "scenes": [],
+  "campaign": "20261031T214845Z",
+  "verdict": "incomplete_not_a_quality_result"
+}

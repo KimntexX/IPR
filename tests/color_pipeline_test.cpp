@@ -1,4 +1,7 @@
 #include "ColorPipeline.h"
+#include "image_testing.h"
+#include "Pixels.h"
+#include "WorkingColorSpace.h"
 
 #include <QColor>
 #include <QBuffer>
@@ -32,10 +35,10 @@ int main(int argc, char **argv)
 
     QString error;
     ColorPipeline::WorkingImage ramp;
-    ramp.linearRgba = cv::Mat(1, 65536, CV_32FC4);
+    ramp.linearRgba = ipr::Image::create({65536, 1}, ipr::Depth::F32, 4);
     for (int code = 0; code <= 65535; ++code) {
         const float value = float(code) / 65535.f;
-        ramp.linearRgba.at<cv::Vec4f>(0, code) = {value, value, value, .37f};
+        imagetest::at<ipr::Vec4f>(ramp.linearRgba, 0, code) = {value, value, value, .37f};
     }
     ramp.colorSpace = ColorPipeline::workingColorSpace();
     const QImage encodedRamp = ColorPipeline::toSrgb(ramp, ColorPipeline::OutputFormat::HighBitDepth, &error);
@@ -59,7 +62,7 @@ int main(int argc, char **argv)
         ColorPipeline::fromSourceImage(srgb, &error);
     if (!check(!linear.isNull(), "sRGB input should convert to working space"))
         return 1;
-    if (!check(linear.linearRgba.type() == CV_32FC4,
+    if (!check((linear.linearRgba.depth() == ipr::Depth::F32 && linear.linearRgba.channels() == 4),
                "working image should be float RGBA"))
         return 1;
     if (!check(linear.sourceProfile.contains(QStringLiteral("sRGB"),
@@ -67,7 +70,7 @@ int main(int argc, char **argv)
                "working image should retain input profile provenance"))
         return 1;
 
-    const cv::Vec4f gray = linear.linearRgba.at<cv::Vec4f>(0, 0);
+    const ipr::Vec4f gray = imagetest::at<ipr::Vec4f>(linear.linearRgba, 0, 0);
     if (!check(std::abs(gray[0] - 0.21586f) < 0.002f,
                "sRGB gray should be linearized"))
         return 1;
@@ -103,36 +106,46 @@ int main(int argc, char **argv)
                "profile conversion should preserve neutral gray"))
         return 1;
 
-    const quint16 rawPixel[] = {32768, 16384, 8192};
-    const ColorPipeline::WorkingImage raw =
-        ColorPipeline::fromLinearRgb16(rawPixel, 1, 1, &error);
-    if (!check(!raw.isNull(), "16-bit RAW RGB should convert to working space"))
+    // A negative sample (below the black, signed development) keeps its extended range.
+    ipr::Image rawPixel = imagetest::filledWith({1, 1}, {0.5f, 0.25f, -0.01f});
+    const ColorPipeline::WorkingImage raw = ColorPipeline::fromLinearSrgb(rawPixel, &error);
+    if (!check(!raw.isNull(), "RAW linear RGB should convert to working space"))
         return 1;
-    const cv::Vec4f rawLinear = raw.linearRgba.at<cv::Vec4f>(0, 0);
-    const cv::Vec3f expectedRaw(WorkingColor::fromSrgb() *
-        cv::Vec3d(32768./65535., 16384./65535., 8192./65535.));
-    if (!check(cv::norm(cv::Vec3f(rawLinear[0], rawLinear[1], rawLinear[2]) - expectedRaw) < 1e-6 &&
+    const ipr::Vec4f rawLinear = imagetest::at<ipr::Vec4f>(raw.linearRgba, 0, 0);
+    const ipr::Vec3f expectedRaw(WorkingColor::fromSrgb() * ipr::Vec3d(0.5, 0.25, -0.01));
+    if (!check(ipr::length(ipr::Vec3f(rawLinear[0], rawLinear[1], rawLinear[2]) - expectedRaw) < 1e-6 &&
                    raw.colorSpace == ColorPipeline::workingColorSpace(),
-               "LibRaw linear sRGB samples must be converted, not relabelled Rec.2020"))
+               "RAW linear sRGB samples must be converted, not relabelled Rec.2020"))
         return 1;
-    if (!check(raw.sourceProfile.contains(QStringLiteral("LibRaw")),
-               "RAW input should retain its decoder provenance"))
+    if (!check(raw.sourceProfile.contains(QStringLiteral("RAW")) &&
+                   ColorPipeline::fromLinearSrgb(ipr::Image::zeros({1, 1}, ipr::Depth::U16, 3), &error).isNull(),
+               "RAW input keeps its provenance; integer input is refused"))
+        return 1;
+    for (const float bad : {std::numeric_limits<float>::quiet_NaN(), std::numeric_limits<float>::infinity(),
+                            -std::numeric_limits<float>::infinity()}) {
+        ipr::Image malformed = imagetest::filledWith({2, 1}, {0.5f, bad, 0.25f});
+        if (!check(ColorPipeline::fromLinearSrgb(malformed, &error).isNull(),
+                   "NaN and infinite RAW samples are refused"))
+            return 1;
+    }
+    if (!check(!ColorPipeline::fromLinearSrgb(imagetest::filledWith({1, 1}, {1.3f, -0.2f, 0.f}), &error).isNull(),
+               "values above 1 and below 0 stay accepted"))
         return 1;
 
-    cv::Mat neutralRgb(1, 1, CV_32FC3, cv::Scalar(0.25f, 0.5f, 0.75f));
+    ipr::Image neutralRgb = imagetest::filledWith({1, 1}, {0.25f, 0.5f, 0.75f});
     WorkingColor::transform(neutralRgb, WorkingColor::fromSrgb());
-    const cv::Mat originalNeutral = neutralRgb.clone();
-    const auto control = [](const cv::Mat &pixels) {
-        return cv::Vec3f(WorkingColor::toSrgb() * cv::Vec3d(pixels.at<cv::Vec3f>(0,0)));
+    const ipr::Image originalNeutral = neutralRgb.clone();
+    const auto control = [](const ipr::Image &pixels) {
+        return ipr::Vec3f(WorkingColor::toSrgb() * ipr::Vec3d(imagetest::at<ipr::Vec3f>(pixels, 0,0)));
     };
     if (!check(ColorPipeline::applyTemperatureTint(neutralRgb, 6500, 6500.0, 0, &error),
                "neutral temperature and tint adjustments should succeed"))
         return 1;
-    if (!check(cv::norm(neutralRgb, originalNeutral, cv::NORM_INF) == 0.0,
+    if (!check(ipr::largestDifference(neutralRgb, originalNeutral) == 0.0,
                "zero temperature and tint should leave pixels unchanged"))
         return 1;
 
-    cv::Mat warmRgb = originalNeutral.clone();
+    ipr::Image warmRgb = originalNeutral.clone();
     if (!check(ColorPipeline::applyTemperatureTint(warmRgb, 50000, 6500.0, 0, &error),
                "warm adjustment should succeed"))
         return 1;
@@ -141,7 +154,7 @@ int main(int argc, char **argv)
                "positive temperature should warm the image"))
         return 1;
 
-    cv::Mat coolRgb = originalNeutral.clone();
+    ipr::Image coolRgb = originalNeutral.clone();
     if (!check(ColorPipeline::applyTemperatureTint(coolRgb, 2000, 6500.0, 0, &error),
                "cool adjustment should succeed"))
         return 1;
@@ -150,7 +163,7 @@ int main(int argc, char **argv)
                "low color temperature should cool the image"))
         return 1;
 
-    cv::Mat mediumCoolRgb = originalNeutral.clone();
+    ipr::Image mediumCoolRgb = originalNeutral.clone();
     if (!check(ColorPipeline::applyTemperatureTint(mediumCoolRgb, 4000, 6500.0, 0, &error),
                "intermediate cool adjustment should succeed"))
         return 1;
@@ -159,7 +172,7 @@ int main(int argc, char **argv)
                "cold calibration should strengthen progressively toward 2000 K"))
         return 1;
 
-    cv::Mat magentaRgb = originalNeutral.clone();
+    ipr::Image magentaRgb = originalNeutral.clone();
     if (!check(ColorPipeline::applyTemperatureTint(magentaRgb, 6500, 6500.0, 150, &error),
                "magenta tint adjustment should succeed"))
         return 1;
@@ -169,11 +182,11 @@ int main(int argc, char **argv)
                "positive tint should shift green toward magenta"))
         return 1;
 
-    cv::Mat neutralGrey(1, 1, CV_32FC3, cv::Scalar(0.5f, 0.5f, 0.5f));
+    ipr::Image neutralGrey = imagetest::filledWith({1, 1}, {0.5f, 0.5f, 0.5f});
     if (!check(ColorPipeline::applyTemperatureTint(neutralGrey, 6500, 6500.0, -150, &error),
                "green tint adjustment should succeed"))
         return 1;
-    const cv::Vec3f tintedGrey = neutralGrey.at<cv::Vec3f>(0, 0);
+    const ipr::Vec3f tintedGrey = imagetest::at<ipr::Vec3f>(neutralGrey, 0, 0);
     const float tintedGreyLuminance = WorkingColor::luminance(tintedGrey);
     if (!check(std::abs(tintedGreyLuminance - 0.5f) < 0.0001f,
                "tint should preserve the luminance of a neutral grey"))
@@ -283,19 +296,19 @@ int main(int argc, char **argv)
                    assumedSrgb.sourceProfile.contains(QStringLiteral("supposé")),
                "an untagged image should use and report the documented sRGB fallback"))
         return 1;
-    if (!check(std::abs(assumedSrgb.linearRgba.at<cv::Vec4f>(0, 0)[0] -
+    if (!check(std::abs(imagetest::at<ipr::Vec4f>(assumedSrgb.linearRgba, 0, 0)[0] -
                         gray[0]) < 0.002f,
                "untagged input should be interpreted as sRGB"))
         return 1;
 
     ColorPipeline::WorkingImage outOfGamut;
-    outOfGamut.linearRgba = cv::Mat(1, 1, CV_32FC4);
-    outOfGamut.linearRgba.at<cv::Vec4f>(0, 0) =
-        cv::Vec4f(1.20f, 0.70f, 0.40f, 1.0f);
+    outOfGamut.linearRgba = ipr::Image::create({1, 1}, ipr::Depth::F32, 4);
+    imagetest::at<ipr::Vec4f>(outOfGamut.linearRgba, 0, 0) =
+        ipr::Vec4f(1.20f, 0.70f, 0.40f, 1.0f);
     WorkingColor::transform(outOfGamut.linearRgba, WorkingColor::fromSrgb());
     const ColorPipeline::WorkingImage gamutMapped =
         ColorPipeline::mapToSrgbGamut(outOfGamut, &error);
-    const cv::Vec4f mapped = gamutMapped.linearRgba.at<cv::Vec4f>(0, 0);
+    const ipr::Vec4f mapped = imagetest::at<ipr::Vec4f>(gamutMapped.linearRgba, 0, 0);
     const float mappedLuminance =
         0.2126f * mapped[0] + 0.7152f * mapped[1] + 0.0722f * mapped[2];
     if (!check(!gamutMapped.isNull() &&
@@ -320,16 +333,17 @@ int main(int argc, char **argv)
                "straight alpha should be preserved by input and output conversion"))
         return 1;
 
-    ColorPipeline::WorkingImage invalidType = linear;
-    invalidType.linearRgba = cv::Mat(1, 1, CV_32FC3, cv::Scalar(0.5f));
+    ColorPipeline::WorkingImage invalidType = ColorPipeline::sharedCopy(linear);
+    invalidType.linearRgba = ipr::filled({1, 1}, ipr::Depth::F32, 3, 0.5);
     if (!check(ColorPipeline::toSrgb(
                    invalidType, ColorPipeline::OutputFormat::Preview8Bit,
                    &error).isNull(),
                "invalid working pixel layout should be rejected"))
         return 1;
 
-    ColorPipeline::WorkingImage invalidValues = linear;
-    invalidValues.linearRgba.at<cv::Vec4f>(0, 0)[0] =
+    ColorPipeline::WorkingImage invalidValues = ColorPipeline::sharedCopy(linear);
+    invalidValues.linearRgba = linear.linearRgba.clone();
+    imagetest::at<ipr::Vec4f>(invalidValues.linearRgba, 0, 0)[0] =
         std::numeric_limits<float>::quiet_NaN();
     if (!check(ColorPipeline::toSrgb(
                    invalidValues, ColorPipeline::OutputFormat::Preview8Bit,

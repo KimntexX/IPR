@@ -1,0 +1,23 @@
+% translation-source: docs/user/latex/chapters/13-optique.tex; sha256: 84aac22621b44c67d2987f3626ac197ff72abbc0a7f619306cc4845b444eaf15
+\chapter{Optical corrections}
+\section{Enable available corrections}
+\emph{Optical corrections} is near the end of the list, before Export.
+Its checkboxes control lens correction and chromatic aberration reduction.
+Capabilities depend on the RAW, metadata and available lens profile.
+Read diagnostics to see corrections actually applied and whether an LCP
+profile is missing.
+
+A camera DCP and lens LCP have different roles. An enabled checkbox is not
+proof that every geometric, vignetting or chromatic correction could actually
+be calculated.
+
+\section{Compare correctly}
+Inspect straight lines near image edges, corner brightness and fringes along
+high-contrast edges. Vignetting correction may brighten borders and change
+the overall impression of brightness. For color-development comparisons,
+keep optical settings identical or disable them consistently on both sides.
+
+\paragraph{Keyboard.}
+Use \touche{Tab} to focus a checkbox and \touche{Space} to toggle it.
+Space displays the temporary original only in the image view. There is no
+global optical-correction shortcut.

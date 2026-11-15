@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "data_version": "v001",
+  "campaign": "neural-runtime-bootstrap",
+  "created_utc": "2026-11-11T12:35:53.610176+00:00",
+  "branch": "patch_noise",
+  "base_commit": "2a40c5c6cff78d40294393a68827f4a24555c724",
+  "status": "standalone_runtime_verified_application_integration_pending",
+  "sources": {
+    "src/neural/NeuralRawDenoiser.h": "d460b619cc73c11b55f6359725bf4f1cc1bf04d2e69de24cdab497c36f05c55e",
+    "src/neural/NeuralRawDenoiser.cpp": "c4aaae736cfe1743e61ca1ea351d926207d35f4bc76d3198b1919cf12584cff4",
+    "src/neural/CMakeLists.txt": "bc8bbf1eb7effe81c10187f4f309b45ce8f89bb54edab5a4eeff8db0e14796b5",
+    "cmake/OnnxRuntime.cmake": "ba72ed8b09796fc0398de74386a353a627e20db13455dd8df33bd6e9988b4f48",
+    "packaging/neural-runtime.json": "b17c4bec2298489220051b3c68ba7efce6ce26ac115d40f7e25670f8a6dae85f",
+    "packaging/neural-model.json": "ae4b63e10e76655538d26c12c50d395cdfa865350e76f14150e0f279c840b59f",
+    "scripts/neural_assets.py": "c7389aa56638242b3535cb58d3f12d0f99478cf9f6602f1e71730e804fed93ff",
+    "tests/neural_raw_test.cpp": "97781c3c5fc710a019a20ca53892103c8f91bb7b127fa5ba94422c8fcce42dd7",
+    "tests/make_neural_identity.py": "4023289973b718564de449128e61868e235ca31e4be638ead5b7ce1f42e95088",
+    "tests/test_neural_assets.py": "e9f7b1915d285bba9bac793b87cf91b869d77f5007dacb4710eebf2866ca4a38"
+  },
+  "runtime_manifest": {
+    "schema_version": 1,
+    "platform": "windows-x64",
+    "packages": [
+      {
+        "id": "Microsoft.ML.OnnxRuntime.DirectML",
+        "version": "1.23.0",
+        "url": "https://api.nuget.org/v3-flatcontainer/microsoft.ml.onnxruntime.directml/1.23.0/microsoft.ml.onnxruntime.directml.1.23.0.nupkg",
+        "sha256": "a33ec2382b3c440bab74042a135733bb6e5085f293b908d3997688a58fe307e7",
+        "directory": "onnxruntime-directml-1.23.0"
+      },
+      {
+        "id": "Microsoft.AI.DirectML",
+        "version": "1.15.4",
+        "url": "https://api.nuget.org/v3-flatcontainer/microsoft.ai.directml/1.15.4/microsoft.ai.directml.1.15.4.nupkg",
+        "sha256": "4e7cb7ddce8cf837a7a75dc029209b520ca0101470fcdf275c1f49736a3615b9",
+        "directory": "directml-1.15.4"
+      }
+    ]
+  },
+  "compiler": "GCC 13.1 MinGW C++17",
+  "local_sdk_compatibility_flag": "-D_Maybenull_= (DirectML SDK SAL annotation only, not imposed on production)",
+  "checks": {
+    "runtime_disabled_ctest": {
+      "passed": 1,
+      "failed": 0
+    },
+    "runtime_enabled_ctest": {
+      "passed": 2,
+      "failed": 0
+    },
+    "asset_unittests": {
+      "passed": 5,
+      "failed": 0
+    },
+    "providers_executed": [
+      "CPU",
+      "DirectML"
+    ],
+    "spatial_graph": "AveragePool3x3(planes)-sigma",
+    "spatial_core_sizes": [
+      8,
+      32
+    ],
+    "image_planes_shape": [
+      4,
+      19,
+      17
+    ],
+    "maximum_tiled_vs_whole_difference": {
+      "CPU": 0.0,
+      "DirectML": 0.0
+    },
+    "install_dlls": [
+      "onnxruntime.dll",
+      "onnxruntime_providers_shared.dll",
+      "DirectML.dll"
+    ],
+    "asset_acquisition": "pinned official NuGet packages downloaded, SHA-256 verified and extracted"
+  },
+  "limitations": [
+    "Not the trained U-Net",
+    "No PyTorch concordance yet",
+    "No production MSVC or full application CI yet",
+    "No performance or memory benchmark",
+    "Git metadata writes refused; no commits or dev merge",
+    "Root CMake, CI scripts, preferences and recipes await dev alignment",
+    "Cancellation checked between tile inference calls, not during one inference"
+  ]
+}

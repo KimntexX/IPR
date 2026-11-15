@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "data_version": "v001",
+  "campaign": "neural-editor-beta1-integration",
+  "created_utc": "2026-11-11T13:10:14.147656+00:00",
+  "base_commit": "8b7dc3931a8a6aea1ffc35e4f6a5deb1a87bef2e",
+  "branch": "patch_noise_cfa",
+  "verdict": "local_integration_verified_partial_model_qualification",
+  "changes_sha256": {
+    "CMakeLists.txt": "a3bb24519ffe695db07b73f5e40fc02b88509b6076c2722bc9931d9b44909920",
+    "config/ipr-ui.ini": "5ca4621856684e0a57a33b86bb8b658dcad2748a8a59affe8ae6d77a3268bd64",
+    "packaging/main-allowlist.txt": "473760bdfa5f366adf58a25594c18a49e1e194c33ee2f7b8f0b4fba2fe781e69",
+    "scripts/ci.py": "93fea931b43f33e663937566ccbaabbceb788b370031167856fe40f3fa8b29f7",
+    "scripts/test-rules.json": "b50f5e02ef326f0cdd2bcc789d4f5143f0669c68888e558e73f537bb2e8b6dfc",
+    "src/app/UiPreferences.cpp": "5d7132db32ec3e93e5c6fa54622638fd2a8320aae3e83ab9113818fb0357df64",
+    "src/app/main.cpp": "aac1bac493101d58e4bb1ee28aaf5d96fabfe3779bcc8f40c872f61dab8ad11b",
+    "src/core/EditRecipe.h": "f2471546c7e31ca9ad93fb347939b85017f8aaedb49185c462f17a1547c74b3a",
+    "src/core/RecipeCodec.cpp": "fa375ed9eb9a776ce678e9057c2f5277a8cfdf19b341c2d0927b3453169db407",
+    "src/editor/imageeditor.cpp": "9476b1eb44e60020ac5f4fc3d63a71c9d729b774baf0112419c6b49d0d6f4421",
+    "src/editor/imageeditor.h": "7d4ae08b73e4f7d13406387dd5efd6b41cbc7205fd9a1bee736f768b52e62430",
+    "src/neural/CMakeLists.txt": "b0acbd575cc7d028c6f504ca2dfd49d18567dc5caa0067c401a337a57d2fc49c",
+    "src/neural/README.md": "0a835959f9ebfa7bd4bd58f46ab401834f63a9269c12ead4d7e636db2a41181d",
+    "src/qml/AdvancedRawPreferencesPane.qml": "866e7a3b48f3af6d5968ddd59441da310d384c79dbcf089f87e23e9669c1a757",
+    "tests/sidecar_test.cpp": "bbddcf35979c1180fcc65ab4074379d2adf2267a6f24a27b4ea2bb51bcee5f25",
+    "tests/test_ci.py": "cb1bd5b63b1d4671ff9540bd09425b351e86fa1b8849227b620c5f512d93dd61",
+    "tests/ui_preferences_qml_test.cpp": "10146310a4e0f7aa58282f81aec6f68249c447b6ab61fb45d451b7b45a5b1ec6",
+    "tests/ui_preferences_test.cpp": "816bd5c198be44966ca1eb6c7c6c13243989c4d3837655c2583bbe5727261f6c",
+    "src/editor/NeuralDevelopment.cpp": "a07f8b5a2b9d66063c4f83586b1f275e06e6bf27c80f01c75c25148d915a22a3",
+    "src/editor/NeuralDevelopment.h": "073aa1b814c7b43d1376036172a8ece83371c20c5d674203ffb1b4540dac5e04",
+    "tests/editor_neural_test.cpp": "f123f4914e6932a5e1d75ff3769daf5bb1492afbf05cc84d04d67562ee8f602f"
+  },
+  "native_tests": {
+    "sidecarTests": "passed",
+    "uiPreferencesTests": "passed",
+    "uiPreferencesQmlTests": "passed",
+    "editHistoryTests": "passed",
+    "editorHistoryTests": "passed",
+    "editorRawDevelopmentTests": "passed",
+    "editorBatchTests": "passed"
+  },
+  "python_tests": {
+    "test_ci.py": {
+      "passed": 11,
+      "failed": 0
+    }
+  },
+  "real_editor_test": {
+    "source": "tests/image/colorimétrie/rafale/6V1A9819.CR3",
+    "camera": "Canon EOS R6 Mark III",
+    "iso": 4000,
+    "source_sha256": "19aacd334fdb432572cb2c3425686098c7375c2ec540ecc45a39ae54eb2f8165",
+    "model_sha256": "1807f724a4d33fc5185e15b1d662886ee4f1a5bd817d316433ac9575ef43241c",
+    "engine": "DirectML",
+    "strength100_changes_original_display": true,
+    "strength50_differs_from100": true,
+    "disable_restores_original_display_pixels_exactly": true,
+    "comparison_domain": "ImageProvider originalImage QImage, not a direct float master comparison",
+    "source_handling": "Temporary RAW copy; sidecar written only next to that copy"
+  },
+  "packaging": {
+    "model_install_component": "NeuralModel",
+    "installed_model_sha256": "1807f724a4d33fc5185e15b1d662886ee4f1a5bd817d316433ac9575ef43241c",
+    "installed_relative_path": "bin/models/ipr-neural-denoise-sigma-input-color-training-v001-step75000.onnx"
+  },
+  "compiler": "MSVC 19.44.35228, Visual Studio 2022",
+  "qt": "6.11.2",
+  "negative_trial": {
+    "source": "7Y6A7599.CR3",
+    "camera": "Canon EOS R7",
+    "outcome": "No inference: outside R6 III catalog; not a quality regression conclusion"
+  },
+  "limitations": [
+    "No independent unseen-scene or all-ISO model qualification",
+    "Full float master is not compared by the editor display test",
+    "Neural + automatic white balance explicitly refused until RAW path supports the stage",
+    "Speculative prefetch suspended while neuronal preference is enabled",
+    "No Git commit, dev merge, push or tag; pending Claude commit",
+    "CI tested locally; no GitHub workflow run launched"
+  ]
+}

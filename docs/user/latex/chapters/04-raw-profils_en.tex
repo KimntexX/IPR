@@ -1,0 +1,39 @@
+% translation-source: docs/user/latex/chapters/04-raw-profils.tex; sha256: a0c0905dd992d79083ed2f7d606aa1c18b4a5e64831463414261424d5e8d6b39
+\chapter{RAW development and profiles}
+\section{Choose the starting rendition}
+The \emph{RAW Development / Profile} group selects a DCP profile compatible
+with the photo. Choices depend on the camera, installed profiles and build.
+Check the description of the profile actually used, not just the requested
+name in a list.
+
+A camera profile defines a starting rendition: it may change colors, contrast
+and apparent brightness before edits. Two applications need not produce
+identical pixels from similarly named profiles. This group does not treat
+a JPEG as a RAW and apply a camera DCP to it.
+
+\section{Change profiles}
+Select a list entry, wait for processing, then compare. The engine can avoid
+a complete re-decode when a compatible buffer is available; the interface
+indicates this capability. It does not guarantee that every development
+change is instantaneous. Commands that could change development are disabled
+during some operations.
+
+\section{Automatic white balance and calibration}
+The \emph{Automatic white balance} checkbox appears here once. Manual
+temperature and tint remain under \emph{Color}. Do not confuse automatic
+balance, shooting temperature and the DCP profile.
+
+RAW calibration is an advanced preference, accessed using
+\touche{Ctrl + comma}, \emph{Advanced · RAW} tab. Compatible cameras and modes
+have default calibration. Check its applied status in the description:
+an enabled checkbox does not guarantee that an unknown file has an available
+characterization.
+
+\attention{The advanced choice concerns the open image and its sidecar, not
+a new global preference for every subsequent photo. Change the calibration
+manifest only under a controlled protocol.}
+
+\paragraph{Example.}
+To compare profiles, keep edits identical, disable corrections unnecessary
+for the test, change only the profile, then inspect skin tones, vivid colors
+and highlights. Record white balance for reproducibility.

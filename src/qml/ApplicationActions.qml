@@ -15,10 +15,14 @@ Item {
     property alias openFolderAction: openFolder
     property alias saveAction: save
     property alias exportAction: exportPhoto
+    property alias exportSelectionAction: exportSelection
     property alias duplicateAction: duplicate
     property alias resetAction: reset
+    property alias undoAction: undo
+    property alias redoAction: redo
     property alias copyAction: copyEdits
     property alias pasteAction: pasteEdits
+    property alias applySelectionAction: applySelection
     property alias preferencesAction: preferences
     property alias quitAction: quit
     signal openImageRequested()
@@ -59,12 +63,41 @@ Item {
         onTriggered: root.settings.openExportDialog()
     }
     Action {
+        id: exportSelection
+        objectName: "exportSelectionAction"
+        text: qsTr("Exporter la sélection (%1)…").arg(root.editor.selectedImageCount)
+        enabled: root.editor.selectedImageCount > 0 && !root.editor.batchExporting
+                 && !root.editor.batchApplying && !root.blocked
+        onTriggered: root.settings.openBatchExportDialog()
+    }
+    Action {
         id: duplicate
         objectName: "duplicateImageAction"
         text: qsTr("Dupliquer le fichier et ses réglages")
         shortcut: root.commandModifier + "+D"
         enabled: root.photoReady && root.duplicationAvailable
         onTriggered: root.editor.duplicateCurrentImage()
+    }
+    Action {
+        id: undo
+        objectName: "undoAction"
+        text: qsTr("Annuler")
+        shortcut: StandardKey.Undo
+        enabled: root.editor.canUndo && !root.blocked
+        onTriggered: root.editor.undo()
+    }
+    Action {
+        id: redo
+        objectName: "redoAction"
+        text: qsTr("Rétablir")
+        shortcut: root.commandModifier + "+Shift+Z"
+        enabled: root.editor.canRedo && !root.blocked
+        onTriggered: root.editor.redo()
+    }
+    Shortcut {
+        sequence: root.commandModifier + "+Y"
+        enabled: redo.enabled
+        onActivated: redo.trigger()
     }
     Action {
         id: copyEdits
@@ -81,6 +114,14 @@ Item {
         shortcut: root.commandModifier + "+Shift+V"
         enabled: root.photoReady && root.editor.hasCopiedAdjustments
         onTriggered: root.editor.pasteAdjustments()
+    }
+    Action {
+        id: applySelection
+        objectName: "applySelectionAction"
+        text: qsTr("Appliquer les réglages de l'image ouverte à la sélection (%1)").arg(root.editor.selectedImageCount)
+        enabled: root.photoReady && root.editor.selectedImageCount > 0
+                 && !root.editor.batchApplying && !root.editor.batchExporting
+        onTriggered: root.editor.applyAdjustmentsToSelection()
     }
     Action {
         id: reset

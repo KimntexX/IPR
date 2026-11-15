@@ -1,3 +1,5 @@
+*[Français](ADR-0017-imageeditor-cadenceur-modules.md) | [English](ADR-0017-imageeditor-cadenceur-modules_en.md)*
+
 # ADR-0017 — `ImageEditor` cadenceur de modules de traitement
 
 - **Date :** 2026-10-19

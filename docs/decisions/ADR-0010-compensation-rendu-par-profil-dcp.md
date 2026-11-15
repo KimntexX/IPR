@@ -1,3 +1,5 @@
+*[Français](ADR-0010-compensation-rendu-par-profil-dcp.md) | [English](ADR-0010-compensation-rendu-par-profil-dcp_en.md)*
+
 # ADR-0010 — Compensation de rendu liée au couple boîtier/DCP
 
 **Statut :** accepté et intégré localement ; build Windows et vérifications réussis.

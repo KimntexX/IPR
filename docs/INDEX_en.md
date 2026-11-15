@@ -1,3 +1,4 @@
+<!-- translation-source: docs/INDEX.md; sha256: 48270444927d63bd9b65c5c9614317c879da92ffe3939dc4af08b95522e203b0 -->
 *[Français](INDEX.md) | [English](INDEX_en.md)*
 
 # IPR Documentation Index
@@ -11,6 +12,7 @@ This file is the single entry point for versioned documentation. It distinguishe
 | Decisions | Stable architectural choices and their consequences | [decisions/README.md](decisions/README.md) |
 | Validation | Protocols, status matrix, and reproducible measurements | [validation/README.md](validation/README.md) |
 | Reports | Session logs and dated histories | [reports/README.md](reports/README.md) |
+| User | Getting started, adjustment families and shortcuts | [user/README_en.md](user/README_en.md) |
 | Technical | LaTeX reference manual and compilable sources | [technical/latex/README.md](technical/latex/README.md) |
 | Scholar | Courses on models used by IPR | [scholar/README.md](scholar/README.md) |
 

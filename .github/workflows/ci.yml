@@ -1,9 +1,9 @@
 name: CI scoped validation
 on:
   push:
-    branches: [main, dev, 'patch_*']
+    branches: [dev, 'patch_*']
   pull_request:
-    branches: [main, dev]
+    branches: [dev]
   workflow_dispatch:
 permissions:
   contents: read
@@ -12,12 +12,14 @@ concurrency:
   cancel-in-progress: true
 jobs:
   scope:
+    if: github.ref != 'refs/heads/main'
     runs-on: ubuntu-24.04
     outputs:
       native: ${{ steps.scope.outputs.native }}
       python: ${{ steps.scope.outputs.python }}
       documents: ${{ steps.scope.outputs.documents }}
       matrix: ${{ steps.scope.outputs.matrix }}
+      package_matrix: ${{ steps.scope.outputs.package_matrix }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
@@ -88,7 +90,7 @@ jobs:
   validation:
     name: CI validation
     needs: [scope, documents, python, native]
-    if: always()
+    if: always() && github.ref != 'refs/heads/main'
     runs-on: ubuntu-24.04
     steps:
       - name: Reject failed, canceled or unexpectedly skipped checks
@@ -112,17 +114,11 @@ jobs:
           PY
   packaging-check:
     name: Packaging verification (${{ matrix.os }}, ${{ matrix.mode }})
-    needs: validation
+    needs: [scope, validation]
     if: github.ref == 'refs/heads/patch_ci_cd' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
     strategy:
       fail-fast: false
-      matrix:
-        os: [windows-2022, ubuntu-24.04, macos-15, macos-15-intel]
-        mode: [system, standalone]
-        # No Qt >= 6.8 system package on Ubuntu 24.04: standalone only there.
-        exclude:
-          - os: ubuntu-24.04
-            mode: system
+      matrix: ${{ fromJSON(needs.scope.outputs.package_matrix) }}
     runs-on: ${{ matrix.os }}
     timeout-minutes: 120
     steps:
@@ -135,7 +131,12 @@ jobs:
       - shell: bash
         env:
           IPR_MODE: ${{ matrix.mode }}
-        run: python scripts/github_build.py --action all --mode "$IPR_MODE" --verify-package-only
+        run: |
+          installer=()
+          if [[ "$RUNNER_OS" == Windows && "$IPR_MODE" == standalone ]]; then
+            installer+=(--windows-installer)
+          fi
+          python scripts/github_build.py --action all --mode "$IPR_MODE" --verify-package-only "${installer[@]}"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:

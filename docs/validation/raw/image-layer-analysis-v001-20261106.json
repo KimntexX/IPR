@@ -1,0 +1,137 @@
+{
+ "question": "What the modules write and cost with the image layer analysis (template matching, phase correlation, eigenvectors, Cholesky, singular values) instead of OpenCV",
+ "revisions": {
+  "before": "93e5ace",
+  "image_layer": "6bfeaa2"
+ },
+ "settings": "dehaze 30, texture 40, clarity 20, colour denoise 30, sharpening 40, rotation 2; 16-bit TIFF; fresh copies. Stacking on D:/DCIM/101EOSR6 6V1A0016 to 6V1A0023; panorama on Oliana _MG_7596 to _MG_7601 with filled edges. Audits run from the repository root, where config/raw-normalization.json is read.",
+ "results": {
+  "exports": {
+   "6V1A0007.CR3": {
+    "neutral": {
+     "largest": 0,
+     "share_differing": 0.0
+    },
+    "effect": {
+     "largest": 0,
+     "share_differing": 0.0
+    },
+    "effect_ms": [
+     6814.7808,
+     7430.629
+    ],
+    "preview_ms": [
+     1050.3956,
+     1100.4103
+    ]
+   },
+   "IMG_6858.CR2": {
+    "neutral": {
+     "largest": 0,
+     "share_differing": 0.0
+    },
+    "effect": {
+     "largest": 0,
+     "share_differing": 0.0
+    },
+    "effect_ms": [
+     3933.5972,
+     3886.3268
+    ],
+    "preview_ms": [
+     865.4092,
+     868.6318
+    ]
+   }
+  },
+  "stack": {
+   "dng": {
+    "largest": 38,
+    "share_differing": 0.0040176
+   },
+   "noise": [
+    [
+     0.3526625364427288,
+     0.3503927879808801,
+     0.3530380028068512
+    ],
+    [
+     0.35267831706277014,
+     0.3503921505824428,
+     0.3530538879891962
+    ]
+   ],
+   "residuals_px": [
+    [
+     0.45630799696379426,
+     0.42983669185037043,
+     0.4285705090590493,
+     0.3606273103925938,
+     0,
+     0.35384915544404355,
+     0.41661448238300525,
+     0.4034908102557895
+    ],
+    [
+     0.4563074045103632,
+     0.42983518419097233,
+     0.428567015958631,
+     0.36063215893525724,
+     0,
+     0.35384734807901885,
+     0.4166197953683561,
+     0.40349265783931854
+    ]
+   ],
+   "seconds_stack_from_decoded": [
+    11.835,
+    18.204
+   ]
+  },
+  "panorama": {
+   "canvas_width": [
+    18448,
+    18448
+   ],
+   "canvas_height": [
+    4224,
+    4224
+   ],
+   "residual_pixels": [
+    1.8458880001596962,
+    1.8458881319839247
+   ],
+   "worst_pair_pixels": [
+    3.779485577096896,
+    3.779481872853713
+   ],
+   "filled_share": [
+    0.15178814704804988,
+    0.15178814704804988
+   ],
+   "job_seconds": [
+    12.019,
+    14.826
+   ],
+   "image": {
+    "largest": 80,
+    "share_differing": 0.024958,
+    "inner_rows_600_3300_largest": 11
+   }
+  }
+ },
+ "panorama_note": "Differences above 11/255 lie only in the filled edges, rows 3549 to 4223 and the top rows; the fill invents that content.",
+ "stack_timing_interleaved_s": {
+  "opencv_analysis": [
+   9.997,
+   10.463
+  ],
+  "image_layer": [
+   13.993,
+   14.533
+  ],
+  "note": "stack of 8 from decoded frames, runs alternated old/new on a machine training a network at the same time"
+ },
+ "template_matching_calls_per_stack": 135157,
+ "measurement_error_avoided": "A first run from build/ci, without config/raw-normalization.json, showed the moon 13 % darker; not a code difference."
+}

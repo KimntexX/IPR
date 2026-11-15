@@ -2,6 +2,7 @@
 
 #include "VibranceModel.h"
 #include "WorkingColorSpace.h"
+#include "Types.h"
 
 #include <algorithm>
 #include <cmath>
@@ -106,7 +107,7 @@ Response response(double value, const Position &p, double pixelChroma)
 }
 }
 
-void adjust(cv::Vec3d &lab, double proPhotoSaturation, double vibrance, double saturation)
+void adjust(ipr::Vec3d &lab, double proPhotoSaturation, double vibrance, double saturation)
 {
     vibrance = std::clamp(vibrance, -1.0, 1.0);
     saturation = std::clamp(saturation, -1.0, 1.0);
@@ -131,13 +132,13 @@ void adjust(cv::Vec3d &lab, double proPhotoSaturation, double vibrance, double s
     lab[2] = a * sine + b * cosine;
 }
 
-cv::Vec3f applyPixel(const cv::Vec3f &rgb, double vibrance, double saturation)
+ipr::Vec3f applyPixel(const ipr::Vec3f &rgb, double vibrance, double saturation)
 {
     if ((vibrance == 0.0 && saturation == 0.0) || (rgb[0] == rgb[1] && rgb[1] == rgb[2]))
         return rgb; // exact zero / grey identity, without matrix round trip
-    cv::Vec3d lab = WorkingColor::workingToOklab(cv::Vec3d(rgb));
+    ipr::Vec3d lab = WorkingColor::workingToOklab(ipr::Vec3d(rgb));
     if (std::hypot(lab[1], lab[2]) < 1e-12) return rgb;
-    adjust(lab, WorkingColor::proPhotoSaturation(cv::Vec3d(rgb)), vibrance, saturation);
-    return cv::Vec3f(WorkingColor::oklabToWorking(lab));
+    adjust(lab, WorkingColor::proPhotoSaturation(ipr::Vec3d(rgb)), vibrance, saturation);
+    return ipr::Vec3f(WorkingColor::oklabToWorking(lab));
 }
 }

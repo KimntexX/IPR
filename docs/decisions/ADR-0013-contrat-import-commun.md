@@ -1,3 +1,5 @@
+*[Français](ADR-0013-contrat-import-commun.md) | [English](ADR-0013-contrat-import-commun_en.md)*
+
 # ADR-0013 — Une frontière d'import commune aux formats
 
 Date : 16 octobre 2026. Statut : direction acceptée par l'utilisateur,

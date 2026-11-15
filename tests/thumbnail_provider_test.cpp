@@ -8,6 +8,9 @@
 #include <atomic>
 #include <functional>
 #include <iostream>
+#include <memory>
+#include <stdexcept>
+#include <thread>
 #include <vector>
 
 namespace {
@@ -35,10 +38,12 @@ struct Request {
         return factory ? factory->image() : QImage();
     }
 };
-Request request(ThumbnailProvider &provider, const QString &file)
+Request request(ThumbnailProvider &provider, const QString &file,
+                std::vector<QQuickImageResponse *> &responses)
 {
     Request r;
     r.response = provider.requestImageResponse(id(file), QSize(116, 49));
+    responses.push_back(r.response);
     QObject::connect(r.response, &QQuickImageResponse::finished, [done = r.done] { done->store(true); });
     return r;
 }
@@ -51,7 +56,7 @@ int main(int argc, char **argv)
     QGuiApplication app(argc, argv);
     std::atomic_int running{0}, peak{0}, calls{0};
     std::atomic_bool release{false};
-    ThumbnailProvider provider([&](const QString &, const QSize &size) {
+    auto ownedProvider = std::make_unique<ThumbnailProvider>([&](const QString &, const QSize &size) {
         ++calls;
         // Atomic maximum: a plain load-then-store lets a slower thread
         // overwrite the true peak with its own lower count.
@@ -64,13 +69,19 @@ int main(int argc, char **argv)
         image.fill(Qt::red);
         return image;
     }, 3);
-    // On any early return, free the blocked decodes before the pool waits for them.
-    const auto releaseOnExit = qScopeGuard([&] { release.store(true); });
+    auto &provider = *ownedProvider;
+    std::vector<QQuickImageResponse *> responses;
+    // On every exit, unblock and join the workers BEFORE deleting responses.
+    const auto cleanup = qScopeGuard([&] {
+        release.store(true);
+        ownedProvider.reset();
+        for (auto *response : responses) delete response;
+    });
     if (!check(provider.maxThreadCount() == 3, "dedicated bounded pool")) return 1;
     const QStringList files{"C:/ipr/A.CR3", "C:/ipr/B.CR3", "C:/ipr/C.CR3", "C:/ipr/D.CR3"};
     provider.setActiveFiles(files);
     std::vector<Request> requests;
-    for (const auto &file : files) requests.push_back(request(provider, file));
+    for (const auto &file : files) requests.push_back(request(provider, file, responses));
     // Never on the caller's (QML reader) thread: the request returns at once.
     if (!check(waitFor([&] { return running.load() == 3; }) && peak.load() == 3,
         "thumbnails decode in parallel, bounded by the pool")) return 2;
@@ -78,37 +89,59 @@ int main(int argc, char **argv)
     if (!check(waitFor([&] { for (auto &r : requests) if (!r.done->load()) return false; return true; }),
         "every response finishes")) return 2;
     if (!check(requests[0].image().pixelColor(0, 0) == Qt::red, "decoded image is delivered")) return 2;
-    for (auto &r : requests) delete r.response;
     const int beforeHit = calls.load();
-    auto hit = request(provider, files[0]);
+    auto hit = request(provider, files[0], responses);
     if (!check(waitFor([&] { return hit.done->load(); }) && calls.load() == beforeHit &&
         hit.image().pixelColor(0, 0) == Qt::red, "active cache hit avoids a second decode")) return 3;
-    delete hit.response;
     // Left the ribbon window: decoded once, never cached again.
     provider.setActiveFiles({files[1]});
-    auto stale = request(provider, files[0]);
+    auto stale = request(provider, files[0], responses);
     if (!check(waitFor([&] { return stale.done->load(); }) && calls.load() == beforeHit + 1,
         "evicted file is decoded again")) return 4;
-    delete stale.response;
-    auto again = request(provider, files[0]);
+    auto again = request(provider, files[0], responses);
     if (!check(waitFor([&] { return again.done->load(); }) && calls.load() == beforeHit + 2,
         "inactive file is not repopulated in the cache")) return 4;
-    delete again.response;
     // A delegate scrolled away before its turn: skip the decode, still finish.
     release.store(false);
     provider.setActiveFiles(files);
     std::vector<Request> busy;
-    for (int i = 0; i < 3; ++i) busy.push_back(request(provider, QStringLiteral("C:/ipr/busy%1.CR3").arg(i)));
+    for (int i = 0; i < 3; ++i) busy.push_back(request(provider, QStringLiteral("C:/ipr/busy%1.CR3").arg(i), responses));
     if (!waitFor([&] { return running.load() == 3; })) return 5;
     const int beforeCancel = calls.load();
-    auto canceled = request(provider, "C:/ipr/E.CR3");
+    auto canceled = request(provider, "C:/ipr/E.CR3", responses);
     canceled.response->cancel();
     release.store(true);
     if (!check(waitFor([&] { return canceled.done->load(); }) && calls.load() == beforeCancel,
         "canceled request finishes without decoding")) return 5;
-    waitFor([&] { for (auto &r : busy) if (!r.done->load()) return false; return true; });
-    for (auto &r : busy) delete r.response;
-    delete canceled.response;
+    if (!check(waitFor([&] { for (auto &r : busy) if (!r.done->load()) return false; return true; }),
+               "active responses finish before cleanup")) return 5;
+    {
+        ThumbnailProvider throwing([](const QString &, const QSize &) -> QImage {
+            throw std::runtime_error("synthetic decode failure");
+        }, 1);
+        auto failed = request(throwing, "C:/ipr/failure.CR3", responses);
+        if (!check(waitFor([&] { return failed.done->load(); }) &&
+                   !failed.response->errorString().isEmpty(), "loader exception finishes with an error")) return 6;
+    }
+    // Destruction with one active decode and queued responses: all must finish,
+    // even though no QML event loop is running during the destructor's join.
+    release.store(false);
+    std::atomic_bool shutdownEntered{false};
+    auto shutdown = std::make_unique<ThumbnailProvider>([&](const QString &, const QSize &) {
+        shutdownEntered.store(true);
+        while (!release.load()) QThread::msleep(1);
+        return QImage{};
+    }, 1);
+    const auto shutdownCleanup = qScopeGuard([&] { release.store(true); shutdown.reset(); });
+    std::vector<Request> queued;
+    for (int i = 0; i < 12; ++i)
+        queued.push_back(request(*shutdown, QStringLiteral("C:/ipr/close%1.CR3").arg(i), responses));
+    if (!check(waitFor([&] { return shutdownEntered.load(); }), "shutdown test has an active decode")) return 7;
+    std::thread unblock([&] { QThread::msleep(20); release.store(true); });
+    const auto joinUnblock = qScopeGuard([&] { release.store(true); unblock.join(); });
+    shutdown.reset();
+    for (const auto &r : queued)
+        if (!check(r.done->load(), "destruction completes every queued response")) return 7;
     std::cout << "Thumbnails: dedicated parallel pool, cache hit, window eviction, cancellation passed\n";
     return 0;
 }

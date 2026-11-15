@@ -1,0 +1,548 @@
+{
+ "question": "What demosaic, geometry, stacking and panorama measure and write with the image layer blur instead of cv::GaussianBlur",
+ "revision_opencv": "85e10ac",
+ "revision_image_layer": "151ca4a",
+ "tools": [
+  "tests/export_module_probe.cpp (geometry scale 70, aspect -40; the neutral export holds demosaic)",
+  "iprStackAudit on D:/DCIM/101EOSR6, 6V1A0016 to 6V1A0023, read only",
+  "iprPanoramaAudit on Oliana _MG_7596 to _MG_7601, crop edges"
+ ],
+ "image_gaps": "In the units of each file: 16-bit for TIFF and PNG, 8-bit for the panorama JPEG. The stack crops at ev2 are brightened four times.",
+ "timing": "one run each for stacking and panorama, median of three for exports, on a machine busy with other work",
+ "results": {
+  "stack": {
+   "used_frames": [
+    8,
+    8
+   ],
+   "rejected_share": [
+    0.020905196427878373,
+    0.020904957771042176
+   ],
+   "area_kept": [
+    0.9868223640197763,
+    0.9868223640197763
+   ],
+   "noise_whole": [
+    {
+     "ratio_rgb": [
+      0.3526650048336923,
+      0.3503936791428119,
+      0.3530378078816491
+     ],
+     "reference_sigma_rgb": [
+      0.000460952851901958,
+      0.0003475011012838908,
+      0.0004536014477338165
+     ],
+     "tiles": 189
+    },
+    {
+     "ratio_rgb": [
+      0.3526679308052066,
+      0.350391527048259,
+      0.3530366249395693
+     ],
+     "reference_sigma_rgb": [
+      0.0004609528512392423,
+      0.0003475011012838908,
+      0.00045360144689187624
+     ],
+     "tiles": 189
+    }
+   ],
+   "ideal_ratio_whole": [
+    0.35355339059327373,
+    0.35355339059327373
+   ],
+   "seconds_stack_from_decoded": [
+    16.247,
+    16.875
+   ],
+   "seconds_decode_each": [
+    [
+     30.686,
+     1.857,
+     1.872,
+     1.826,
+     1.836,
+     1.858,
+     1.836,
+     1.902
+    ],
+    [
+     1.931,
+     1.905,
+     1.883,
+     1.904,
+     1.894,
+     1.852,
+     1.916,
+     1.95
+    ]
+   ],
+   "peak_memory_gb_after_stack": [
+    2.293825536,
+    2.296819712
+   ],
+   "frames": [
+    {
+     "inliers": [
+      175,
+      175
+     ],
+     "residual_px": [
+      0.4563046824766501,
+      0.4563073859396086
+     ],
+     "local_largest_px": [
+      0.0036103741175170932,
+      0.0036494784904011067
+     ]
+    },
+    {
+     "inliers": [
+      173,
+      173
+     ],
+     "residual_px": [
+      0.42983378829139546,
+      0.4298338130657576
+     ],
+     "local_largest_px": [
+      0.04632310597285363,
+      0.046320340085920106
+     ]
+    },
+    {
+     "inliers": [
+      177,
+      177
+     ],
+     "residual_px": [
+      0.42857047468129567,
+      0.42857105667585604
+     ],
+     "local_largest_px": [
+      0.035171358055700805,
+      0.03512625829361612
+     ]
+    },
+    {
+     "inliers": [
+      177,
+      177
+     ],
+     "residual_px": [
+      0.36062644401234945,
+      0.36062657270383147
+     ],
+     "local_largest_px": [
+      0.004536217560750696,
+      0.004536217231478442
+     ]
+    },
+    {
+     "inliers": [
+      0,
+      0
+     ],
+     "residual_px": [
+      0,
+      0
+     ],
+     "local_largest_px": [
+      0,
+      0
+     ]
+    },
+    {
+     "inliers": [
+      178,
+      178
+     ],
+     "residual_px": [
+      0.35384361608878506,
+      0.35384359178527675
+     ],
+     "local_largest_px": [
+      0.03588963781891362,
+      0.03589076261293325
+     ]
+    },
+    {
+     "inliers": [
+      176,
+      176
+     ],
+     "residual_px": [
+      0.41661017156891283,
+      0.4166095041626643
+     ],
+     "local_largest_px": [
+      0.030118857076487593,
+      0.030117845552123334
+     ]
+    },
+    {
+     "inliers": [
+      177,
+      177
+     ],
+     "residual_px": [
+      0.4034909202875052,
+      0.4034892571958747
+     ],
+     "local_largest_px": [
+      0.007002612610754498,
+      0.00702595011102839
+     ]
+    }
+   ],
+   "images": {
+    "overview.png": {
+     "depth": "uint16",
+     "largest": 11,
+     "mean": 0.0012459635501674844,
+     "share_differing": 0.001200890906625553,
+     "share_beyond_two_levels": 9.290739894437106e-06
+    },
+    "reference-flat-ev0.png": {
+     "depth": "uint16",
+     "largest": 0,
+     "mean": 0.0,
+     "share_differing": 0.0,
+     "share_beyond_two_levels": 0.0
+    },
+    "reference-flat-ev2.png": {
+     "depth": "uint16",
+     "largest": 1,
+     "mean": 3.6458333333333333e-06,
+     "share_differing": 3.6458333333333333e-06,
+     "share_beyond_two_levels": 0.0
+    },
+    "reference-textured-ev0.png": {
+     "depth": "uint16",
+     "largest": 1,
+     "mean": 8.333333333333334e-06,
+     "share_differing": 8.333333333333334e-06,
+     "share_beyond_two_levels": 0.0
+    },
+    "reference-textured-ev2.png": {
+     "depth": "uint16",
+     "largest": 1,
+     "mean": 7.8125e-06,
+     "share_differing": 7.8125e-06,
+     "share_beyond_two_levels": 0.0
+    },
+    "reference-textured2-ev0.png": {
+     "depth": "uint16",
+     "largest": 0,
+     "mean": 0.0,
+     "share_differing": 0.0,
+     "share_beyond_two_levels": 0.0
+    },
+    "reference-textured2-ev2.png": {
+     "depth": "uint16",
+     "largest": 1,
+     "mean": 2.6041666666666666e-06,
+     "share_differing": 2.6041666666666666e-06,
+     "share_beyond_two_levels": 0.0
+    },
+    "reference-textured3-ev0.png": {
+     "shape_before": [
+      600,
+      598,
+      4
+     ],
+     "shape_after": [
+      492,
+      800,
+      4
+     ]
+    },
+    "reference-textured3-ev2.png": {
+     "shape_before": [
+      600,
+      598,
+      4
+     ],
+     "shape_after": [
+      492,
+      800,
+      4
+     ]
+    },
+    "stack-flat-ev0.png": {
+     "depth": "uint16",
+     "largest": 32,
+     "mean": 0.0007203125,
+     "share_differing": 0.0005895833333333333,
+     "share_beyond_two_levels": 2.604166666666667e-05
+    },
+    "stack-flat-ev2.png": {
+     "depth": "uint16",
+     "largest": 127,
+     "mean": 0.0028473958333333333,
+     "share_differing": 0.0011546875,
+     "share_beyond_two_levels": 0.0003369791666666667
+    },
+    "stack-textured-ev0.png": {
+     "depth": "uint16",
+     "largest": 97,
+     "mean": 0.008052604166666666,
+     "share_differing": 0.000953125,
+     "share_beyond_two_levels": 0.0005604166666666666
+    },
+    "stack-textured-ev2.png": {
+     "depth": "uint16",
+     "largest": 213,
+     "mean": 0.008196875,
+     "share_differing": 0.0009890625,
+     "share_beyond_two_levels": 0.000503125
+    },
+    "stack-textured2-ev0.png": {
+     "depth": "uint16",
+     "largest": 13,
+     "mean": 0.0010546875,
+     "share_differing": 0.0009067708333333333,
+     "share_beyond_two_levels": 3.0729166666666664e-05
+    },
+    "stack-textured2-ev2.png": {
+     "depth": "uint16",
+     "largest": 55,
+     "mean": 0.004354166666666667,
+     "share_differing": 0.0019479166666666666,
+     "share_beyond_two_levels": 0.0005140625
+    },
+    "stack-textured3-ev0.png": {
+     "shape_before": [
+      600,
+      598,
+      4
+     ],
+     "shape_after": [
+      492,
+      800,
+      4
+     ]
+    },
+    "stack-textured3-ev2.png": {
+     "shape_before": [
+      600,
+      598,
+      4
+     ],
+     "shape_after": [
+      492,
+      800,
+      4
+     ]
+    }
+   }
+  },
+  "panorama": {
+   "success": [
+    true,
+    true
+   ],
+   "used_frames": [
+    6,
+    6
+   ],
+   "canvas_width": [
+    18448,
+    18448
+   ],
+   "canvas_height": [
+    4224,
+    4224
+   ],
+   "kept_width": [
+    17719,
+    17719
+   ],
+   "kept_height": [
+    3042,
+    3042
+   ],
+   "residual_pixels": [
+    1.845888050089557,
+    1.8458880617104712
+   ],
+   "worst_pair_pixels": [
+    3.779484277123859,
+    3.7794846113198832
+   ],
+   "covered_share": [
+    0.843703141928494,
+    0.843703141928494
+   ],
+   "job_seconds": [
+    8.128,
+    7.355
+   ],
+   "render_seconds": [
+    2.18,
+    2.088
+   ],
+   "decode_seconds": [
+    2.509,
+    9.687
+   ],
+   "peak_memory_gb": [
+    3.276177408,
+    3.276423168
+   ],
+   "pairs": [
+    {
+     "points": [
+      1823,
+      1823
+     ],
+     "residual_pixels": [
+      2.4573901614475093,
+      2.457390190823953
+     ]
+    },
+    {
+     "points": [
+      696,
+      696
+     ],
+     "residual_pixels": [
+      1.5574256040307362,
+      1.5574256556603079
+     ]
+    },
+    {
+     "points": [
+      2281,
+      2281
+     ],
+     "residual_pixels": [
+      1.7111658947193564,
+      1.7111659213078034
+     ]
+    },
+    {
+     "points": [
+      1243,
+      1243
+     ],
+     "residual_pixels": [
+      1.1916997777768927,
+      1.1916997891221757
+     ]
+    },
+    {
+     "points": [
+      2499,
+      2499
+     ],
+     "residual_pixels": [
+      1.2281672238974282,
+      1.2281671614442495
+     ]
+    },
+    {
+     "points": [
+      40,
+      40
+     ],
+     "residual_pixels": [
+      3.779484277123859,
+      3.7794846113198832
+     ]
+    },
+    {
+     "points": [
+      547,
+      547
+     ],
+     "residual_pixels": [
+      3.466197454988534,
+      3.466197448993757
+     ]
+    },
+    {
+     "points": [
+      559,
+      559
+     ],
+     "residual_pixels": [
+      1.3077853749289774,
+      1.3077854463176113
+     ]
+    }
+   ],
+   "image": {
+    "depth": "uint8",
+    "largest": 8,
+    "mean": 0.002045508029957578,
+    "share_differing": 0.0016536428992419304,
+    "share_beyond_two_levels": 2.925723469077626e-05
+   }
+  },
+  "geometry_and_demosaic": {
+   "6V1A0007.CR3": {
+    "neutral_ms": [
+     948.8846,
+     874.1402
+    ],
+    "effect_ms": [
+     1863.9489,
+     1651.3996
+    ],
+    "preview_ms": [
+     310.2354,
+     315.9013
+    ],
+    "neutral_identical": false,
+    "neutral_gap_16bit": {
+     "depth": "uint16",
+     "largest": 14,
+     "mean": 7.95779771402116e-05,
+     "share_differing": 6.243262472794725e-05,
+     "share_beyond_two_levels": 3.6706852047937228e-06
+    },
+    "effect_gap_16bit": {
+     "depth": "uint16",
+     "largest": 4,
+     "mean": 0.0006387611781270157,
+     "share_differing": 0.0006377312179324217,
+     "share_beyond_two_levels": 6.195249290791093e-08
+    }
+   },
+   "IMG_6858.CR2": {
+    "neutral_ms": [
+     509.3474,
+     463.9091
+    ],
+    "effect_ms": [
+     983.6668,
+     923.8469
+    ],
+    "preview_ms": [
+     320.6319,
+     300.7529
+    ],
+    "neutral_identical": false,
+    "neutral_gap_16bit": {
+     "depth": "uint16",
+     "largest": 20,
+     "mean": 3.159037694686623e-05,
+     "share_differing": 1.2305957115445916e-05,
+     "share_beyond_two_levels": 3.940126066275806e-06
+    },
+    "effect_gap_16bit": {
+     "depth": "uint16",
+     "largest": 6,
+     "mean": 0.0001573275689843931,
+     "share_differing": 0.000153484558701441,
+     "share_beyond_two_levels": 7.630525832576385e-07
+    }
+   }
+  }
+ }
+}

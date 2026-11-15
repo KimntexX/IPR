@@ -1,0 +1,234 @@
+{
+  "schema_version": 1,
+  "measured_at_utc": "2026-10-28T15:24:03.220345+00:00",
+  "parents": [
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_raw_bench\\docs\\validation\\raw\\banc-raw-parite-v001-20261028T152231Z.json",
+      "sha256": "bfe020d683892e1ca8d60c3b0fa1a936cd967c2a91eacc8cf3a9809847a9570b"
+    },
+    {
+      "path": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\.worktrees\\patch_noise\\docs\\validation\\raw\\sonde-etapes-ouverture-bruit-v001-20261028T104746Z.json",
+      "sha256": "0a330fcc140d2dbed2991600d4cd9d2e77da5066906bcf579acecd3ce85f1524"
+    }
+  ],
+  "records": [
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0003.CR3",
+      "current_stage": "pre_demosaic_cfa",
+      "previous_stage": "pre_rcd_scaled_cfa",
+      "origin_yx": [
+        2190,
+        1262
+      ],
+      "max_abs": 0.0,
+      "unequal_values": 0,
+      "recovered_u16_unequal": 0
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0003.CR3",
+      "current_stage": "pre_demosaic_cfa",
+      "previous_stage": "pre_rcd_scaled_cfa",
+      "origin_yx": [
+        2190,
+        3350
+      ],
+      "max_abs": 0.0,
+      "unequal_values": 0,
+      "recovered_u16_unequal": 0
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0003.CR3",
+      "current_stage": "pre_demosaic_cfa",
+      "previous_stage": "pre_rcd_scaled_cfa",
+      "origin_yx": [
+        2190,
+        5438
+      ],
+      "max_abs": 0.0,
+      "unequal_values": 0,
+      "recovered_u16_unequal": 0
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0003.CR3",
+      "current_stage": "post_median_camera_rgb",
+      "previous_stage": "post_rcd_median_camera_rgb",
+      "origin_yx": [
+        2190,
+        1262
+      ],
+      "max_abs": 0.0,
+      "unequal_values": 0,
+      "recovered_u16_unequal": 0
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0003.CR3",
+      "current_stage": "post_median_camera_rgb",
+      "previous_stage": "post_rcd_median_camera_rgb",
+      "origin_yx": [
+        2190,
+        3350
+      ],
+      "max_abs": 0.0,
+      "unequal_values": 0,
+      "recovered_u16_unequal": 0
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0003.CR3",
+      "current_stage": "post_median_camera_rgb",
+      "previous_stage": "post_rcd_median_camera_rgb",
+      "origin_yx": [
+        2190,
+        5438
+      ],
+      "max_abs": 0.0,
+      "unequal_values": 0,
+      "recovered_u16_unequal": 0
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0003.CR3",
+      "current_stage": "pre_dcp_camera_rgb",
+      "previous_stage": "pre_dcp_camera_rgb",
+      "origin_yx": [
+        2190,
+        1262
+      ],
+      "max_abs": 4.656612873077393e-10,
+      "unequal_values": 10,
+      "recovered_u16_unequal": 0
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0003.CR3",
+      "current_stage": "pre_dcp_camera_rgb",
+      "previous_stage": "pre_dcp_camera_rgb",
+      "origin_yx": [
+        2190,
+        3350
+      ],
+      "max_abs": 4.656612873077393e-10,
+      "unequal_values": 13,
+      "recovered_u16_unequal": 0
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A0003.CR3",
+      "current_stage": "pre_dcp_camera_rgb",
+      "previous_stage": "pre_dcp_camera_rgb",
+      "origin_yx": [
+        2190,
+        5438
+      ],
+      "max_abs": 4.656612873077393e-10,
+      "unequal_values": 12,
+      "recovered_u16_unequal": 0
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9950.CR3",
+      "current_stage": "pre_demosaic_cfa",
+      "previous_stage": "pre_rcd_scaled_cfa",
+      "origin_yx": [
+        2190,
+        1262
+      ],
+      "max_abs": 0.0,
+      "unequal_values": 0,
+      "recovered_u16_unequal": 0
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9950.CR3",
+      "current_stage": "pre_demosaic_cfa",
+      "previous_stage": "pre_rcd_scaled_cfa",
+      "origin_yx": [
+        2190,
+        3350
+      ],
+      "max_abs": 0.0,
+      "unequal_values": 0,
+      "recovered_u16_unequal": 0
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9950.CR3",
+      "current_stage": "pre_demosaic_cfa",
+      "previous_stage": "pre_rcd_scaled_cfa",
+      "origin_yx": [
+        2190,
+        5438
+      ],
+      "max_abs": 0.0,
+      "unequal_values": 0,
+      "recovered_u16_unequal": 0
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9950.CR3",
+      "current_stage": "post_median_camera_rgb",
+      "previous_stage": "post_rcd_median_camera_rgb",
+      "origin_yx": [
+        2190,
+        1262
+      ],
+      "max_abs": 0.0,
+      "unequal_values": 0,
+      "recovered_u16_unequal": 0
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9950.CR3",
+      "current_stage": "post_median_camera_rgb",
+      "previous_stage": "post_rcd_median_camera_rgb",
+      "origin_yx": [
+        2190,
+        3350
+      ],
+      "max_abs": 0.0,
+      "unequal_values": 0,
+      "recovered_u16_unequal": 0
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9950.CR3",
+      "current_stage": "post_median_camera_rgb",
+      "previous_stage": "post_rcd_median_camera_rgb",
+      "origin_yx": [
+        2190,
+        5438
+      ],
+      "max_abs": 0.0,
+      "unequal_values": 0,
+      "recovered_u16_unequal": 0
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9950.CR3",
+      "current_stage": "pre_dcp_camera_rgb",
+      "previous_stage": "pre_dcp_camera_rgb",
+      "origin_yx": [
+        2190,
+        1262
+      ],
+      "max_abs": 3.725290298461914e-09,
+      "unequal_values": 14737,
+      "recovered_u16_unequal": 0
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9950.CR3",
+      "current_stage": "pre_dcp_camera_rgb",
+      "previous_stage": "pre_dcp_camera_rgb",
+      "origin_yx": [
+        2190,
+        3350
+      ],
+      "max_abs": 7.450580596923828e-09,
+      "unequal_values": 14651,
+      "recovered_u16_unequal": 0
+    },
+    {
+      "source": "C:\\Users\\victo\\Documents\\Projet\\Programmation\\IPR\\tests\\image\\colorimétrie\\protocole\\blacks\\6V1A9950.CR3",
+      "current_stage": "pre_dcp_camera_rgb",
+      "previous_stage": "pre_dcp_camera_rgb",
+      "origin_yx": [
+        2190,
+        5438
+      ],
+      "max_abs": 7.450580596923828e-09,
+      "unequal_values": 14395,
+      "recovered_u16_unequal": 0
+    }
+  ],
+  "verdict": "pass_integer_boundaries",
+  "limitations": "Two calibrated black RAWs only. Historical pre-DCP may use different floating representation; deviations recorded and recovered integer values must remain equal. No claim of exact f32 DCP-input parity, signed-mode correctness, full-frame parity or quality improvement."
+}
