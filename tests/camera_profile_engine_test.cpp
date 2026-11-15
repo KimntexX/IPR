@@ -986,6 +986,56 @@ int main(int argc, char **argv)
         if (!check(std::abs(movedTo(givenPath, 70.0, 22.3) - expected(1.5 * 1000.0)) < 0.02,
                    "a focal length given by the profile comes first")) return 1;
     }
+    {
+        // The model of a photo between a profile's entries: aperture in APEX (f/8 is 6, f/5.6 is
+        // 4.97), an unknown focus distance taken as the farthest entry, the nearer entry weighing
+        // more. Vignetting alone, on a flat field: the corner's gain tells the model used.
+        // As Adobe writes them: the entry's focal length, distance and aperture on the
+        // rdf:Description around the model, the model's parameters on its own description.
+        const auto entry = [](const char *aperture, const char *distance, const char *vignette) {
+            return QByteArrayLiteral("<rdf:li><rdf:Description crs:FocalLength=\"70\" crs:FocusDistance=\"") + distance +
+                   QByteArrayLiteral("\" crs:ApertureValue=\"") + aperture +
+                   QByteArrayLiteral("\"><crs:PerspectiveModel><rdf:Description crs:RadialDistortParam1=\"0\">"
+                                     "<crs:VignetteModel><rdf:Description crs:VignetteModelParam1=\"") + vignette +
+                   QByteArrayLiteral("\"/></crs:VignetteModel></rdf:Description></crs:PerspectiveModel>"
+                                     "</rdf:Description></rdf:li>");
+        };
+        const auto profile = [](const QByteArray &entries) {
+            return QByteArrayLiteral("<rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" "
+                                     "xmlns:crs=\"http://ns.adobe.com/camera-raw-settings/1.0/\">"
+                                     "<rdf:Description crs:Lens=\"Vignette\"><crs:CameraProfiles><rdf:Seq>") + entries +
+                   QByteArrayLiteral("</rdf:Seq></crs:CameraProfiles></rdf:Description></rdf:RDF>");
+        };
+        const QString fullPath = QDir(lcpDirectory).filePath("vignette-grid.lcp");
+        const QString farEight = QDir(lcpDirectory).filePath("vignette-f8-far.lcp");
+        const QString farFiveSix = QDir(lcpDirectory).filePath("vignette-f56-far.lcp");
+        // In file order the near entries come first, as in Adobe's profiles.
+        if (!check(writeFile(fullPath, profile(entry("4.970854", "1.2", "-0.9") + entry("4.970854", "10000", "-0.5") +
+                                               entry("6", "1.2", "-0.7") + entry("6", "10000", "-0.2"))) &&
+                       writeFile(farEight, profile(entry("6", "10000", "-0.2"))) &&
+                       writeFile(farFiveSix, profile(entry("4.970854", "10000", "-0.5"))),
+                   "the vignetting profiles should be written"))
+            return 1;
+        const auto corner = [&](const QString &path, double fNumber) {
+            CameraProfileEngine::CaptureSettings settings;
+            settings.focalLengthMm = 70.0;
+            settings.sensorWidthMm = 36.0;
+            settings.aperture = fNumber;
+            ipr::Image flat = ipr::Image::create({300, 200}, ipr::Depth::F32, 3);
+            ipr::fill(flat, std::vector<double>{.25, .25, .25});
+            QString failure;
+            if (!CameraProfileEngine::applyLcp(path, flat, settings, &failure, {true, false}))
+                return -1.0;
+            return double(at<ipr::Vec3f>(flat, 0, 0)[1]);
+        };
+        const double eight = corner(farEight, 8.0), fiveSix = corner(farFiveSix, 5.6);
+        if (!check(eight > .25 && fiveSix > eight, "the vignetting brightens the corner, more at f/5.6")) return 1;
+        if (!check(std::abs(corner(fullPath, 8.0) - eight) < 1e-6 && std::abs(corner(fullPath, 5.6) - fiveSix) < 1e-5,
+                   "an entry's own aperture, its distance unknown, is that entry at infinity")) return 1;
+        const double between = corner(fullPath, 7.1);
+        if (!check(between > eight && between < fiveSix && between - eight < fiveSix - between,
+                   "f/7.1 lies between f/8 and f/5.6, nearer f/8")) return 1;
+    }
     if (!check(CameraProfileEngine::lcpMatchesLens(lcpPath, "Canon", "EOS R6 Mark III", "Canon", "RF 24-70mm F2.8 L IS USM") &&
                     !CameraProfileEngine::lcpMatchesLens(lcpPath, "Other", "Other camera", "Other", "Unknown lens"),
                "saved LCP must remain compatible with camera and lens")) return 1;
