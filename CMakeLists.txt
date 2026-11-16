@@ -33,6 +33,7 @@ set(IPR_INCLUDE_DIRECTORIES
     "${IPR_SOURCE_ROOT}/providers"
     "${IPR_SOURCE_ROOT}/raw"
     "${IPR_SOURCE_ROOT}/stack"
+    "${IPR_SOURCE_ROOT}/hdr"
     "${IPR_SOURCE_ROOT}/detect"
     "${IPR_SOURCE_ROOT}/panorama"
     "${IPR_SOURCE_ROOT}/tasks"
@@ -118,6 +119,8 @@ set(IPR_ENGINE_SOURCES
     src/stack/StackTurbulence.cpp
     src/stack/StackJob.h
     src/stack/StackJob.cpp
+    src/hdr/HdrMerge.h
+    src/hdr/HdrMerge.cpp
     src/stack/StackSession.h
     src/stack/StackSession.cpp
     src/raw/CameraDng.h
@@ -545,6 +548,8 @@ if(BUILD_TESTING)
     set_tests_properties(stackSessionTests PROPERTIES LABELS "unit;stack" TIMEOUT 180)
     ipr_add_test(stackTests tests/stack_test.cpp)
     set_tests_properties(stackTests PROPERTIES LABELS "unit;stack" TIMEOUT 180)
+    ipr_add_test(hdrMergeTests tests/hdr_merge_test.cpp)
+    set_tests_properties(hdrMergeTests PROPERTIES LABELS "unit;hdr" TIMEOUT 60)
     ipr_add_test(geometryTests tests/geometry_test.cpp)
     set_tests_properties(geometryTests PROPERTIES LABELS "unit;geometry" TIMEOUT 60)
     ipr_add_test(localContrastTests tests/local_contrast_test.cpp)

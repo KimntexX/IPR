@@ -53,7 +53,8 @@
     "rawBlackLevelEstimatorTests": "rawBlackLevelEstimatorTests",
     "cameraProfileEngineTests": "cameraProfileEngineTests",
     "canonMakernotesTests": "canonMakernotesTests",
-    "halfFloatTests": "halfFloatTests"
+    "halfFloatTests": "halfFloatTests",
+    "hdrMergeTests": "hdrMergeTests"
   },
   "python_suites": {
     "github_build": "test_github_build.py",
@@ -202,6 +203,7 @@
     {"patterns": ["tests/camera_profile_engine_test.cpp"], "tests": ["cameraProfileEngineTests"]},
     {"patterns": ["tests/canon_makernotes_test.cpp"], "tests": ["canonMakernotesTests"]},
     {"patterns": ["src/image/HalfFloat.*", "tests/half_float_test.cpp"], "tests": ["halfFloatTests"]},
+    {"patterns": ["src/hdr/HdrMerge.*", "tests/hdr_merge_test.cpp"], "tests": ["hdrMergeTests"]},
     {"patterns": ["tests/analyse_color_mixer.py"], "tests": [], "python": ["color_mixer_analysis", "noise_analysis", "base_colorimetry_analysis"]},
     {"patterns": ["tests/test_analyse_color_mixer.py"], "tests": [], "python": ["color_mixer_analysis"]},
     {"patterns": ["tests/analyse_noise.py", "tests/test_analyse_noise.py"], "tests": [], "python": ["noise_analysis"]},
