@@ -297,6 +297,32 @@ void decoding(const QDir &folder)
     // Other software's route to the same file: LibRaw opens it as an ordinary linear DNG.
     check(RawDecoder::sourceDimensions(path) == QSize(180, 120), "LibRaw reads its size");
 
+    // A merge of exposures: highlights up to 64 times white open and render, nothing lost.
+    CameraDng::Content bright = sample();
+    bright.colorMatrix = camera.colorMatrix;
+    for (int y = 0; y < 120; ++y)
+        for (int x = 120; x < 180; ++x)
+            bright.cameraRgb.mutableRow<ipr::Vec3f>(y)[x] *= float(std::exp2(6.0 * (x - 120) / 60.0) * 1.05);
+    const QString brightPath = folder.filePath(QStringLiteral("hdr.dng"));
+    check(CameraDng::write(bright, brightPath, &error), "a merge of exposures is written");
+    const ColorPipeline::WorkingImage hdr = RawDecoder::decode(brightPath, options, &metadata, &error);
+    check(!hdr.isNull() && ipr::allFinite(hdr.linearRgba), "it opens, its render finite");
+    // The profile's tone curve ends at white: the first render clips there. The exposure acts
+    // on the camera signal before the profile, so that six stops less bring the highlights back.
+    if (!hdr.isNull() && hdr.dcpContext) {
+        ipr::Image lowered;
+        check(CameraProfileEngine::renderFromCameraSignal(*hdr.dcpContext, int(hdr.dcpContext->sourceKelvin), 0, -6.0, lowered, &error),
+              "the merge renders six stops lower");
+        const auto columnMean = [&](int x) {
+            double sum = 0.0;
+            for (int y = 0; y < lowered.height(); ++y)
+                sum += lowered.row<ipr::Vec3f>(y)[x][1];
+            return sum / lowered.height();
+        };
+        check(!lowered.empty() && columnMean(150) < columnMean(165) && columnMean(165) < columnMean(178) && columnMean(178) < 0.99,
+              "with its highlights apart again, up to 64 times white");
+    }
+
     // A camera without a profile cannot be rendered: said, not guessed.
     CameraDng::Content unknown = sample();
     unknown.colorMatrix = written.colorMatrix;
