@@ -519,7 +519,11 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
         const auto *options = static_cast<const Options *>(context);
         return options->cancellationRequested && options->cancellationRequested() ? 1 : 0;
     }, const_cast<Options *>(&options));
+#if LIBRAW_COMPILE_CHECK_VERSION_NOTLESS(0, 22)
+    // The makernotes callback came with LibRaw 0.22; older ones (Ubuntu 24.04's 0.21) give
+    // no Canon focus distance, and the lens profile keeps its farthest entry.
     raw.set_makernotes_handler(&CanonMakernotes::readFileInfo, &canonFileInfo);
+#endif
     int result = openRaw(raw, fileName);
     if (result != LIBRAW_SUCCESS) {
         if (error)
