@@ -26,7 +26,8 @@ whose exposure differs too much is left out, and the message says so.
 \section{Choosing the format}
 \begin{itemize}
 \item \emph{DNG}: the camera's signal, already corrected for the lens, with no profile
-applied. The file reopens like a RAW: profile, balance and settings stay free.
+applied, in floating-point numbers. The file reopens like a RAW: profile, balance and
+settings stay free.
 \item \emph{TIFF}: the image rendered in 16 bits with the reference's profile, readable
 everywhere.
 \end{itemize}
@@ -58,6 +59,32 @@ may be out of place. The final message tells the share of invented pixels.
 Hand-held, a close foreground moves from one photo to the next: the seams run where it shows
 least as far as they can, but turn around the camera rather than around yourself.
 
+\section{Merging exposures (HDR)}
+Choose \emph{HDR merge} at the top of the tab. A series of the same scene taken at different
+exposures, for example at $-2$, $0$ and $+2$~EV (bracketing), gives one image that keeps the
+detail of both shadows and highlights: the shadows come from the bright frames, the highlights
+from the dark ones.
+
+\begin{enumerate}
+\item Tick the photos of the series in the filmstrip.
+\item Choose the \emph{Reference}: its framing is kept, and it decides wherever something
+moved.
+\item Choose \emph{Motion}: \emph{Remove ghosts} by default; \emph{Keep every frame} for a
+still scene on a tripod, with the least noise.
+\item Click \emph{Assemble}, then export as DNG to edit the result.
+\end{enumerate}
+
+The frames are registered automatically and their exposures measured on the image, not only
+taken from the capture settings. The result keeps the levels of the middle exposure of the
+series; its highlights go above white. When it opens they look white: \textbf{lower the
+exposure} to bring them back. The \emph{Highlights} slider is not enough, as it acts after the
+profile.
+
+The final message gives the range of the series in EV, the share of the image clipped in every
+frame, which stays white, and the frames left out with their reason. It also reports a frame
+whose measured exposure departs from its settings: the light may have changed during the
+series.
+
 \section{Photographing the Moon}
 A small subject on an empty background, like the Moon, gets one more treatment. The
 deformations of the atmosphere are corrected on the subject, and only the sharpest half
@@ -67,11 +94,13 @@ views brings most of the gain: the longer the series, the more good views to cho
 
 \section{Limits}
 \begin{itemize}
-\item The capture settings must stay the same: stacking is not HDR.
+\item The capture settings must stay the same for a stack: for different exposures, choose
+the HDR merge.
+\item Wherever something moves, the HDR merge keeps the reference alone, hence its noise.
 \item A near object shot hand-held may keep a slightly soft edge: it does not move like
 the background.
-\item The work needs about 400~MB of temporary disk per 32~Mpx photo for a stack, and twice
-that for a panorama.
+\item The work needs about 400~MB of temporary disk per 32~Mpx photo for a stack or an HDR
+merge, and twice that for a panorama.
 \item A panorama does not warp its edges to fill the frame.
 \item A colour profile for the camera is required.
 \end{itemize}

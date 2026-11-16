@@ -382,7 +382,7 @@ is still `release-v0.1.92-alpha`. This table summarises progress; the
 | B6 | Not started | — | Depends on the model-generated mask (B5 D4) |
 | B7 | Stacking delivered, validated by the user on 3 November | `v0.4.107-beta` | DNG in Lightroom ([#23](https://github.com/KimntexX/IPR/issues/23)) |
 | B8 | Panorama delivered: stitching validated, filling as a first draft | `v0.6.115-beta` | [#25](https://github.com/KimntexX/IPR/issues/25), [#26](https://github.com/KimntexX/IPR/issues/26), [#27](https://github.com/KimntexX/IPR/issues/27) |
-| B9 | Preparation only, no code | — | [HDR plan](fusion-hdr.md) |
+| B9 | In progress on `patch_hdr` (16 November): floating-point DNG, merge, registration across exposures and the Assemble tab mode, qualified on synthetic data | — | Real series ([HDR plan, §7 and §8](fusion-hdr.md)) |
 
 Cross-cutting work delivered:
 
@@ -406,8 +406,9 @@ Cross-cutting work delivered:
 | Claude | Night-scene blacks: study a scene-adapted black on the 13 existing exports, presented before any integration ([#38](https://github.com/KimntexX/IPR/issues/38)) | Visual opinion at the end |
 | User | Photos of buildings shot from below and an opinion on the perspective proposals (B5 D1) | Photos and opinion |
 
-B6 waits for the model-generated mask (D4). B9 is not started: it waits for
-Codex or Claude to become available after this work.
+B6 waits for the model-generated mask (D4). Claude started B9 on 16 November on
+`patch_hdr`: everything that does not depend on real photos is coded and tested on
+synthetic data; the rest waits for the user's bracketed series.
 
 Already tracked for the stable `v1`: installer ([#33](https://github.com/KimntexX/IPR/issues/33)),
 camera noise qualification and sending it to the project

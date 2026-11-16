@@ -27,7 +27,8 @@ signale.
 \section{Choisir le format}
 \begin{itemize}
 \item \emph{DNG} : le signal de l’appareil, déjà corrigé de l’objectif, sans profil
-appliqué. Le fichier se rouvre comme un RAW : profil, balance et réglages restent libres.
+appliqué, en nombres à virgule flottante. Le fichier se rouvre comme un RAW : profil,
+balance et réglages restent libres.
 \item \emph{TIFF} : l’image rendue en 16 bits avec le profil de la référence, lisible
 partout.
 \end{itemize}
@@ -61,6 +62,32 @@ inventés.
 autant que possible là où cela ne se voit pas, mais tournez plutôt autour de l’appareil que
 de vous-même.
 
+\section{Fusionner des expositions (HDR)}
+Choisissez \emph{Fusion HDR} en haut de l’onglet. Une série de la même scène prise à des
+expositions différentes, par exemple à $-2$, $0$ et $+2$~IL (bracketing), donne une seule
+image qui garde le détail des ombres et des hautes lumières : les ombres viennent des vues
+claires, les hautes lumières des vues sombres.
+
+\begin{enumerate}
+\item Cochez les photos de la série dans le ruban.
+\item Choisissez la \emph{Référence} : son cadrage est gardé, et c’est elle qui compte là où
+quelque chose a bougé.
+\item Choisissez \emph{Mouvement} : \emph{Supprimer les fantômes} par défaut ; \emph{Garder
+toutes les vues} pour une scène immobile prise au trépied, avec le moins de bruit possible.
+\item Cliquez sur \emph{Assembler}, puis exportez en DNG pour retoucher le résultat.
+\end{enumerate}
+
+Les vues sont recalées automatiquement et leurs expositions mesurées sur l’image, sans se fier
+seulement aux réglages de prise. Le résultat garde les niveaux de l’exposition du milieu de la
+série ; ses hautes lumières vont au-delà du blanc. À l’ouverture, elles paraissent blanches :
+\textbf{baissez l’exposition} pour les faire réapparaître. Le curseur \emph{Hautes lumières}
+ne suffit pas, car il agit après le profil.
+
+Le message de fin indique l’étendue de la série en IL, la part de l’image écrêtée sur toutes
+les vues, qui reste blanche, et les vues écartées avec leur raison. Il signale aussi une vue
+dont l’exposition mesurée s’écarte de ses réglages : la lumière a peut-être changé pendant la
+série.
+
 \section{Photographier la Lune}
 Un petit sujet sur un fond vide, comme la Lune, reçoit un traitement de plus. Les
 déformations de l’atmosphère sont corrigées sur le sujet, et seule la moitié la plus
@@ -71,11 +98,13 @@ vues parmi lesquelles choisir.
 
 \section{Limites}
 \begin{itemize}
-\item Les réglages de prise doivent rester les mêmes : l’empilement ne fait pas de HDR.
+\item Les réglages de prise doivent rester les mêmes pour un empilement : pour des
+expositions différentes, choisissez la fusion HDR.
+\item Là où quelque chose bouge, la fusion HDR garde la référence seule, donc son bruit.
 \item Un objet proche, photographié à main levée, peut garder un bord un peu mou : il
 ne se déplace pas comme le fond.
 \item Le calcul demande environ 400~Mo de disque temporaire par photo de 32~Mpx pour un
-empilement, et le double pour un panorama.
+empilement ou une fusion HDR, et le double pour un panorama.
 \item Un panorama ne déforme pas ses bords pour remplir le cadre.
 \item Un profil de couleur pour le boîtier est nécessaire.
 \end{itemize}

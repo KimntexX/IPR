@@ -392,7 +392,7 @@ Dernier tag : `v0.8.143-beta` sur `dev` (`919186f`). La release publique de
 | B6 | Non commencé | — | Dépend du masque issu d'un modèle (B5 D4) |
 | B7 | Empilement livré, validé par l'utilisateur le 3 novembre | `v0.4.107-beta` | DNG dans Lightroom ([#23](https://github.com/KimntexX/IPR/issues/23)) |
 | B8 | Panorama livré : assemblage validé, remplissage en premier jet | `v0.6.115-beta` | [#25](https://github.com/KimntexX/IPR/issues/25), [#26](https://github.com/KimntexX/IPR/issues/26), [#27](https://github.com/KimntexX/IPR/issues/27) |
-| B9 | Préparation seulement, aucun code | — | [Plan du HDR](fusion-hdr.md) |
+| B9 | En cours sur `patch_hdr` (16 novembre) : DNG flottant, fusion, recalage entre expositions et mode de l'onglet Assembler, qualifiés sur synthèse | — | Séries réelles ([plan du HDR, §7 et §8](fusion-hdr.md)) |
 
 Travaux transverses livrés :
 
@@ -416,8 +416,9 @@ Travaux transverses livrés :
 | Claude | Noirs des scènes de nuit : étudier un noir adapté à la scène sur les 13 exports existants, présenté avant toute intégration ([#38](https://github.com/KimntexX/IPR/issues/38)) | Avis visuel à la fin |
 | Utilisateur | Photos de bâtiments en contre-plongée et avis sur les propositions de perspective (B5 D1) | Photos et avis |
 
-B6 attend le masque issu d'un modèle (D4). B9 n'est pas lancé : il attend la
-disponibilité de Codex ou de Claude après ces chantiers.
+B6 attend le masque issu d'un modèle (D4). B9 a été lancé par Claude le 16 novembre
+sur `patch_hdr` : tout ce qui ne dépend pas de photos réelles est codé et testé sur
+synthèse ; la suite attend les séries bracketées de l'utilisateur.
 
 Pour la stable `v1`, déjà suivis : installeur ([#33](https://github.com/KimntexX/IPR/issues/33)),
 qualification du bruit des boîtiers et son envoi au projet
