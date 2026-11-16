@@ -249,20 +249,21 @@ void ratios()
         check(std::abs(ratio->exposure[1] / 0.25 - 1.0) < 0.01, "the green ratio within 1 %");
         check(std::abs(ratio->exposure[0] / (0.25 * 1.08) - 1.0) < 0.01 && std::abs(ratio->exposure[2] / (0.25 * 0.93) - 1.0) < 0.01,
               "and the other channels with their balance");
-        check(ratio->samples > 200, "from many blocks");
+        check(ratio->samples > 200, "from many samples");
     }
     // Twenty stops apart nothing is seen well by both: no ratio, rather than a wrong one.
     const ipr::Image black = capture(scene, 1e-6, true, 23);
     const HdrMerge::Proxy proxy = HdrMerge::proxyOf(reference, 4);
-    check(proxy.mean.size() == ipr::Size(40, 24) && proxy.peak.size() == proxy.mean.size(), "a proxy of blocks of 4");
+    check(proxy.mean.size() == ipr::Size(40, 24) && proxy.peak.size() == proxy.mean.size(), "a sample every 4 pixels");
     check(!HdrMerge::measureRatio(proxy, HdrMerge::proxyOf(black, 4)).has_value(), "too far apart, no ratio");
     check(!HdrMerge::measureRatio(proxy, HdrMerge::proxyOf(reference, 8)).has_value(), "proxies of different sizes, no ratio");
+    check(HdrMerge::proxyOf(reference, 3).mean.empty(), "a step below the sample's reach is refused");
     check(HdrMerge::proxyOf(ipr::Image(), 4).mean.empty() && !HdrMerge::measureRatio(proxy, HdrMerge::Proxy{}).has_value(),
           "an empty frame, no proxy and no ratio");
-    check(HdrMerge::proxyOf(reference, 200).mean.empty(), "no block in a smaller frame");
+    check(HdrMerge::proxyOf(reference.view(ipr::Recti(0, 0, 3, 3)).clone(), 4).mean.empty(), "no sample in a smaller frame");
 
-    // Fine texture clipped inside blocks whose average stays below white: the peak leaves them
-    // out, which an average alone would not (it would read 0.6 / 0.275, about 2.2).
+    // Every other column clipped, every average below white: the peak leaves those samples out,
+    // which an average alone would not (it would read 0.6 / 0.275, about 2.2).
     ipr::Image fine = ipr::Image::create(size, ipr::Depth::F32, 3);
     for (int y = 0; y < size.height; ++y)
         for (int x = 0; x < size.width; ++x) {

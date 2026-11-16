@@ -27,6 +27,7 @@ struct ImageMetadata
     double focalLengthMm = 0.0;
     double sensorWidthMm = 0.0;     // long side, 0 when unknown; the format's, not a measure of this body
     double exposureSeconds = 0.0;
+    double aperture = 0.0;          // f-number, 0 when unknown
     int rating = 0;
     QString colorLabel;
     bool opticalBlackLevelEstimated = false;

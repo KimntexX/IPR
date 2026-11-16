@@ -207,6 +207,24 @@ int main(int argc, char **argv)
     settle();
     if (!check(session.hasResult() && session.status().contains(QStringLiteral("Panorama de")), "with a result")) return 1;
 
+    // The HDR merge: a reference, the motion choice, and the session's third work.
+    auto *ghosts = named(panel, QStringLiteral("assembleGhostSelector"));
+    auto *ghostsNote = named(panel, QStringLiteral("assembleGhostNote"));
+    if (!check(ghosts && ghostsNote && !ghosts->isVisible(), "the motion choice belongs to the HDR merge")) return 1;
+    mode->setProperty("currentIndex", 2);
+    settle();
+    if (!check(panel->property("mode").toString() == QStringLiteral("hdr"), "the HDR merge can be chosen")) return 1;
+    if (!check(note->property("text").toString().contains(QStringLiteral("exposition")), "and explains itself")) return 1;
+    if (!check(reference->isVisible() && ghosts->isVisible() && !projection->isVisible(), "with a reference and the motion choice")) return 1;
+    if (!check(ghosts->property("count").toInt() == 2 && ghosts->property("currentIndex").toInt() == 0,
+               "removing ghosts first, keeping every frame second")) return 1;
+    click(start);
+    settle();
+    if (!check(waitFor([&] { return !session.running(); }), "the HDR merge ends")) return 1;
+    settle();
+    if (!check(session.hasResult() && session.status().contains(QStringLiteral("expositions fusionnées")), "and says what it made")) return 1;
+    if (!check(session.suggestedExport(QStringLiteral("DNG")).toLocalFile().contains(QStringLiteral("-hdr.")), "as an HDR merge")) return 1;
+
     std::cout << "assemble panel: ok\n";
     return 0;
 }

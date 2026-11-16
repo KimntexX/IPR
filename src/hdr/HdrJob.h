@@ -2,6 +2,7 @@
 #define IPR_HDR_HDRJOB_H
 
 #include "HdrMerge.h"
+#include "NoiseLaw.h"
 #include "StackAlignment.h"
 #include "Types.h"
 
@@ -18,6 +19,10 @@
 // the job, then the exposures are measured on the registered frames and the common area is
 // merged by bands, so that the memory does not grow with the frame count. The scratch
 // folder is removed on every path. The sources are only read, through the provider.
+//
+// The reference decides the registration and, where something moved, what is kept. The
+// result takes the exposure of the middle frame of the series, whatever the reference: it
+// opens as that photo did, its highlights above white.
 namespace HdrJob {
 
 struct Frame
@@ -72,7 +77,9 @@ struct Result
     bool success = false;
     bool cancelled = false;
     QString error;
-    ipr::Image cameraRgb;                  // merged common area, F32, three channels, the reference's units
+    ipr::Image cameraRgb;                  // merged common area, F32, three channels, the units of unitsFrame
+    int unitsFrame = -1;                   // the frame of median exposure, whose levels the result keeps
+    double rangeEv = 0.0;                  // stops between the shortest and the longest frame used
     ipr::Recti commonArea;                 // of the reference's frame
     ipr::Size frameSize;
     std::vector<FrameReport> frames;
@@ -83,6 +90,13 @@ struct Result
 };
 
 Result run(const Request &request);
+
+// The noise of a frame for the weights, in its signal of white 1: the camera's measured law
+// at this ISO when the catalogue holds it (its four sites averaged, over whiteCounts, the
+// counts of white), otherwise the order of a full-frame sensor's, scaled by the ISO. Only the
+// weights depend on it: a wrong law costs some noise, never a bias.
+HdrMerge::NoiseModel noiseModel(const NoiseLaw::Catalog *catalog, const QString &make, const QString &model, int iso,
+                                double whiteCounts);
 
 } // namespace HdrJob
 

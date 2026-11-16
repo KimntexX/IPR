@@ -544,6 +544,7 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
         metadata->focalLengthMm = raw.imgdata.other.focal_len;
         metadata->sensorWidthMm = sensorWidthOf(raw);
         metadata->exposureSeconds = raw.imgdata.other.shutter;
+        metadata->aperture = raw.imgdata.other.aperture;
         if (raw.imgdata.other.timestamp > 0)
             metadata->captureDate = QDateTime::fromSecsSinceEpoch(
                 static_cast<qint64>(raw.imgdata.other.timestamp));

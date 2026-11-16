@@ -17,7 +17,7 @@
 namespace HdrJob {
 namespace {
 
-constexpr int proxyDivisor = 8;           // pixels of a block, to measure the exposures: small enough to avoid clipped highlights
+constexpr int proxyStep = 8;               // pixels between two samples that measure the exposures
 constexpr int minimumBandRows = 16;
 // The range two exposures are compared on for the registration, in the reference's units:
 // below the darker frame's noise and above the knee of the brighter one's clip, the two
@@ -29,6 +29,12 @@ double meanOf(const ipr::Vec3d &exposure)
 {
     return 0.25 * exposure[0] + 0.5 * exposure[1] + 0.25 * exposure[2];
 }
+
+// A full-frame sensor at ISO 100, of white 1: the Canon EOS R6 Mark III's green sites in the
+// catalogue (0.2 count of variance per count, 1.2 counts squared) over about 16000 counts.
+constexpr double genericShot = 1.25e-5;
+constexpr double genericRead = 5e-9;
+constexpr double defaultWhiteCounts = 16000.0;
 
 // The range a frame of this exposure relative to the reference and the reference both see.
 StackAlignment::Bounds sharedRange(double ratio, double clip)
@@ -155,7 +161,7 @@ Result run(const Request &request)
     referenceReport.alignment.valid = true;
     referenceReport.nominalExposure = reference.nominalExposure;
     const ipr::Image referenceLuminance = StackAlignment::luminanceOf(reference.cameraRgb);
-    const HdrMerge::Proxy referenceProxy = HdrMerge::proxyOf(reference.cameraRgb, proxyDivisor);
+    const HdrMerge::Proxy referenceProxy = HdrMerge::proxyOf(reference.cameraRgb, proxyStep);
     {
         Kept entry;
         entry.index = request.referenceIndex;
@@ -195,7 +201,7 @@ Result run(const Request &request)
         double guess = 0.0;
         if (frame.nominalExposure > 0.0 && reference.nominalExposure > 0.0)
             guess = frame.nominalExposure / reference.nominalExposure;
-        else if (const std::optional<HdrMerge::Ratio> rough = HdrMerge::measureRatio(referenceProxy, HdrMerge::proxyOf(frame.cameraRgb, proxyDivisor), request.merge))
+        else if (const std::optional<HdrMerge::Ratio> rough = HdrMerge::measureRatio(referenceProxy, HdrMerge::proxyOf(frame.cameraRgb, proxyStep), request.merge))
             guess = meanOf(rough->exposure);
         if (!(guess > 0.0 && std::isfinite(guess))) {
             report.exclusion = QStringLiteral("Exposition inconnue et impossible à mesurer face à la référence.");
@@ -228,7 +234,7 @@ Result run(const Request &request)
 
         Kept entry;
         entry.index = index;
-        entry.proxy = HdrMerge::proxyOf(resampled.pixels, proxyDivisor);
+        entry.proxy = HdrMerge::proxyOf(resampled.pixels, proxyStep);
         entry.guess = guess;
         entry.noise = frame.noise;
         entry.spans.assign(size_t(size.height), ipr::Vec2i(0, size.width));
@@ -296,6 +302,19 @@ Result run(const Request &request)
         return result;
     }
 
+    // The result keeps the levels of the frame of median exposure: the merge's exposures are
+    // brought relative to it. The reports keep them relative to the reference.
+    std::vector<size_t> order(merging.size());
+    for (size_t i = 0; i < order.size(); ++i)
+        order[i] = i;
+    std::sort(order.begin(), order.end(), [&](size_t a, size_t b) { return meanOf(merging[a].exposure) < meanOf(merging[b].exposure); });
+    const size_t middle = order[order.size() / 2];
+    const ipr::Vec3d units = merging[middle].exposure;
+    result.unitsFrame = indices[middle];
+    result.rangeEv = std::log2(meanOf(merging[order.back()].exposure) / meanOf(merging[order.front()].exposure));
+    for (HdrMerge::Frame &part : merging)
+        part.exposure = ipr::Vec3d(part.exposure[0] / units[0], part.exposure[1] / units[1], part.exposure[2] / units[2]);
+
     HdrMerge::Options options = request.merge;
     options.referenceIndex = 0;   // the reference is the first kept
     const quint64 rowBytes = quint64(size.width) * quint64(3 * sizeof(float));
@@ -351,6 +370,25 @@ Result run(const Request &request)
         result.merge.share[size_t(indices[i])] = share[i] / double(std::max<quint64>(1, result.merge.pixels));
     result.success = true;
     return result;
+}
+
+HdrMerge::NoiseModel noiseModel(const NoiseLaw::Catalog *catalog, const QString &make, const QString &model, int iso,
+                                double whiteCounts)
+{
+    const double white = whiteCounts > 1.0 ? whiteCounts : defaultWhiteCounts;
+    if (catalog) {
+        if (const std::optional<NoiseLaw::Law> law = NoiseLaw::resolve(*catalog, make, model, iso, nullptr)) {
+            double shot = 0.0, read = 0.0;
+            for (const NoiseLaw::PositionLaw &site : law->positions) {
+                shot += site.shotSlope / 4.0;
+                read += site.readVariance / 4.0;
+            }
+            if (shot > 0.0 && read > 0.0)
+                return {shot / white, read / (white * white)};
+        }
+    }
+    const double gain = iso > 0 ? double(iso) / 100.0 : 1.0;   // an unknown ISO counts as the base one
+    return {genericShot * gain, genericRead * gain * gain};
 }
 
 } // namespace HdrJob

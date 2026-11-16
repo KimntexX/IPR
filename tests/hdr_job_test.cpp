@@ -4,6 +4,7 @@
 #include "Pixels.h"
 #include "image_testing.h"
 
+#include <QCoreApplication>
 #include <QDir>
 #include <QTemporaryDir>
 
@@ -159,6 +160,7 @@ void bracketedSeries()
         check(report.warning.isEmpty(), "and as the metadata said");
     }
     check(result.frames[0].measuredThrough == 3, "six stops away, through the frame at three");
+    check(result.unitsFrame == 1 && std::abs(result.rangeEv - 8.0) < 0.05, "the levels of the middle exposure, over 8 stops");
     check(result.frames[3].measuredThrough == 1 && result.frames[2].measuredThrough == 1, "the others against the reference");
 
     // The common area: what every shifted frame covers, kept inside its kernel's support.
@@ -208,6 +210,65 @@ void unknownExposures()
     if (result.success)
         check(std::abs(result.frames[1].exposure[1] / 4.0 - 1.0) < 0.015 && std::abs(result.frames[2].exposure[1] / 0.125 - 1.0) < 0.015,
               "its exposures measured");
+}
+
+void middleExposureLevels()
+{
+    // The reference is the +2 frame: it decides the registration, the result keeps the levels of
+    // the middle exposure, and the reports stay relative to the reference.
+    const ipr::Image scene = sceneRadiance();
+    QTemporaryDir scratch;
+    const std::vector<Shot> shots{{1.0, 1.0, {0, 0}}, {4.0, 4.0, {-4, 1}}, {1.0 / 8.0, 1.0 / 8.0, {2, 3}}};
+    HdrJob::Request r = request(scene, shots, scratch.path());
+    r.referenceIndex = 1;
+    const HdrJob::Result result = HdrJob::run(r);
+    check(result.success && result.unitsFrame == 0, "the middle exposure gives the levels");
+    if (!result.success)
+        return;
+    check(std::abs(result.frames[0].exposure[1] / 0.25 - 1.0) < 0.015, "an exposure is reported relative to the reference");
+    std::vector<double> ratios;
+    const ipr::Recti area = result.commonArea;
+    for (int y = 0; y < area.height; y += 3)
+        for (int x = 0; x < area.width; x += 3) {
+            // The reference's frame: the scene moved as the +2 frame saw it.
+            const int sx = area.x + x + 4, sy = area.y + y - 1;
+            const double truth = scene.row<ipr::Vec3f>(sy)[sx][1];
+            if (sx < size.width && sy >= 0 && truth > 0.01 && truth < 3.0)
+                ratios.push_back(result.cameraRgb.row<ipr::Vec3f>(y)[x][1] / truth);
+        }
+    std::nth_element(ratios.begin(), ratios.begin() + std::ptrdiff_t(ratios.size() / 2), ratios.end());
+    check(!ratios.empty() && std::abs(ratios[ratios.size() / 2] - 1.0) < 0.01, "at the scene's level as the middle frame saw it");
+}
+
+void noiseModels()
+{
+    QString reason;
+    const auto catalog = NoiseLaw::loadCatalog(QStringLiteral(":/config/noise-laws.json"), &reason);
+    check(catalog.has_value(), "the bundled noise catalogue");
+    if (!catalog)
+        return;
+    const HdrMerge::NoiseModel r6 = HdrJob::noiseModel(&*catalog, QStringLiteral("Canon"), QStringLiteral("EOS R6 Mark III"), 100, 16000.0);
+    const auto law = NoiseLaw::resolve(*catalog, QStringLiteral("Canon"), QStringLiteral("EOS R6 Mark III"), 100, nullptr);
+    check(law.has_value(), "the R6 III at ISO 100 is measured");
+    if (law) {
+        double shot = 0.0, read = 0.0;
+        for (const auto &site : law->positions) {
+            shot += site.shotSlope / 4.0;
+            read += site.readVariance / 4.0;
+        }
+        check(std::abs(r6.shot - shot / 16000.0) < 1e-12 && std::abs(r6.read - read / (16000.0 * 16000.0)) < 1e-15,
+              "a measured camera: its law over its white");
+    }
+    const HdrMerge::NoiseModel high = HdrJob::noiseModel(&*catalog, QStringLiteral("Canon"), QStringLiteral("EOS R6 Mark III"), 1600, 16000.0);
+    check(high.shot > 10.0 * r6.shot && high.read > 10.0 * r6.read, "more noise at a higher ISO");
+    const HdrMerge::NoiseModel unknown = HdrJob::noiseModel(&*catalog, QStringLiteral("Nobody"), QStringLiteral("Camera"), 400, 0.0);
+    const HdrMerge::NoiseModel none = HdrJob::noiseModel(nullptr, QStringLiteral("Canon"), QStringLiteral("EOS R6 Mark III"), 400, 16000.0);
+    check(unknown.shot > 0.0 && unknown.read > 0.0 && unknown.shot == none.shot && unknown.read == none.read,
+          "an unknown camera or no catalogue: the generic sensor");
+    const HdrMerge::NoiseModel base = HdrJob::noiseModel(nullptr, QString(), QString(), 100, 0.0);
+    check(std::abs(unknown.shot / base.shot - 4.0) < 1e-9 && std::abs(unknown.read / base.read - 16.0) < 1e-9,
+          "scaled by the ISO, its read variance by its square");
+    check(HdrJob::noiseModel(nullptr, QString(), QString(), 0, 0.0).shot == base.shot, "an unknown ISO counts as 100");
 }
 
 void changedLight()
@@ -279,10 +340,13 @@ void refusals()
 
 } // namespace
 
-int main()
+int main(int argc, char **argv)
 {
+    QCoreApplication application(argc, argv);
     bracketedSeries();
     unknownExposures();
+    middleExposureLevels();
+    noiseModels();
     changedLight();
     refusals();
     if (passed)

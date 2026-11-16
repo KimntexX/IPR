@@ -310,6 +310,73 @@ void reserving(const QDir &folder, const std::shared_ptr<CameraProfileEngine::Dc
 
 } // namespace
 
+void hdr(const QDir &folder, const std::shared_ptr<CameraProfileEngine::DcpWorkingContext> &context)
+{
+    // A bracketed series at -2, 0 and +2 stops, shifted by a few pixels, of a scene of about one
+    // stop of deviation around 0.3 of white: the reference clips its brightest part.
+    // Neutral: the fixture's channels are independent textures, of a chroma no scene has.
+    const ipr::Image texture = StackFixture::scene(ipr::Size(500, 340));
+    ipr::Image neutral = ipr::Image::create(texture.size(), ipr::Depth::F32, 3);
+    for (int y = 0; y < texture.height(); ++y)
+        for (int x = 0; x < texture.width(); ++x) {
+            const float level = 0.3f * std::exp2((texture.row<ipr::Vec3f>(y)[x][1] - 0.3f) / 0.087f);
+            neutral.mutableRow<ipr::Vec3f>(y)[x] = ipr::Vec3f(level, level, level);
+        }
+    const auto base = std::make_shared<const ipr::Image>(std::move(neutral));
+    const auto calls = std::make_shared<std::atomic_int>(0);
+    StackSession::Decoder decoder = [base, context, calls](const QString &file, const std::function<bool()> &) {
+        ++*calls;
+        const int index = QFileInfo(file).baseName().remove(QStringLiteral("frame")).toInt();
+        const double exposure = index == 0 ? 0.25 : index == 1 ? 1.0 : 4.0;
+        const ipr::Matrix33d shift(1, 0, (index - 1) * 3.0, 0, 1, (index - 1) * -2.0, 0, 0, 1);
+        const ipr::Image moved = imagetest::moved(*base, shift, base->size());
+        const ipr::Image noise = imagetest::normalNoise(base->size(), 3, 0.0, 0.003, unsigned(200 + index));
+        StackSession::Decoded decoded;
+        decoded.cameraRgb = ipr::mapped(moved, noise, [exposure](float a, float b) { return std::min(1.f, float(exposure) * a + b); });
+        decoded.context = context;
+        decoded.metadata.cameraMake = QStringLiteral("Canon");
+        decoded.metadata.cameraModel = QStringLiteral("EOS R6 Mark III");
+        decoded.metadata.iso = 100;
+        decoded.metadata.aperture = 8.0;
+        decoded.metadata.exposureSeconds = exposure / 125.0;
+        return decoded;
+    };
+    StackSession merging(decoder);
+    const QStringList urls = frames(folder, 3);
+    merging.startHdr(urls);
+    check(merging.running(), "an HDR merge starts");
+    check(waitFor([&] { return !merging.running(); }), "and ends");
+    check(merging.hasResult() && *calls == 3, "with a result, each frame decoded once");
+    if (!merging.hasResult()) {
+        std::cerr << merging.status().toStdString() << '\n';
+        return;
+    }
+    if (!merging.status().contains(QStringLiteral("3 expositions fusionnées sur 4.0 IL")))
+        std::cerr << merging.status().toStdString() << '\n';
+    check(merging.status().contains(QStringLiteral("3 expositions fusionnées sur 4.0 IL")), "the status tells the exposures and their range");
+    check(merging.suggestedExport(QStringLiteral("DNG")).toLocalFile().contains(QStringLiteral("frame1-hdr.dng")),
+          "named after the middle reference, as an HDR merge");
+
+    const QString dng = folder.filePath(QStringLiteral("merged-hdr.dng"));
+    merging.exportResult(QUrl::fromLocalFile(dng), QStringLiteral("DNG"));
+    check(waitFor([&] { return !merging.exporting(); }), "its export ends");
+    CameraDng::Content read;
+    QString error;
+    check(CameraDng::read(dng, read, &error), "the merge is a camera signal");
+    check(read.provenance.contains(QStringLiteral("HDR merge of 3 exposures")), "that tells where it comes from");
+    check(imagetest::rangeOf(read.cameraRgb).high > 1.3f, "with the highlights the reference clipped, above white");
+    check(std::abs(read.exposureSeconds - 1.0 / 125.0) < 1e-9, "and the capture of the middle exposure");
+
+    // A still series: the motion test can be left out.
+    merging.startHdr(urls, urls.at(0), false);
+    check(waitFor([&] { return !merging.running(); }) && merging.hasResult(), "a merge keeping every frame");
+    check(merging.suggestedExport(QStringLiteral("DNG")).toLocalFile().contains(QStringLiteral("frame0-hdr.dng")), "from the chosen reference");
+
+    // Too few frames: said at once.
+    merging.startHdr(frames(folder, 1));
+    check(!merging.running() && merging.status().contains(QStringLiteral("deux photos")), "one frame is not a series");
+}
+
 int main(int argc, char **argv)
 {
     QCoreApplication app(argc, argv);
@@ -330,6 +397,7 @@ int main(int argc, char **argv)
     failing(folder);
     reserving(folder, context);
     panoramas(folder, context);
+    hdr(folder, context);
     if (passed)
         std::cout << "stack session: ok\n";
     return passed ? 0 : 1;

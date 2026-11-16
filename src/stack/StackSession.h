@@ -62,6 +62,11 @@ public:
     // "spherical" or "rectilinear". edges: "crop" to a rectangle full of real pixels, "keep"
     // the whole canvas with its empty corners, or "fill" them with invented pixels.
     Q_INVOKABLE void startPanorama(const QStringList &urls, const QString &projection = {}, const QString &edges = {});
+    // urls: the exposures of a bracketed series, at least two. reference: the frame that
+    // decides the registration and what is kept where something moved, the middle one when
+    // empty; the result keeps the levels of the middle exposure. removeGhosts false keeps
+    // every frame everywhere: a tripod and a still scene.
+    Q_INVOKABLE void startHdr(const QStringList &urls, const QString &reference = {}, bool removeGhosts = true);
     Q_INVOKABLE void cancel();
     // format: "DNG" (the camera signal, editable) or "TIFF" (rendered by the profile).
     Q_INVOKABLE void exportResult(const QUrl &target, const QString &format);
@@ -89,6 +94,10 @@ private:
         int rows = 0;            // of a panorama
         QString projection;      // of a panorama, as shown to the user
         double filledShare = 0.0; // of a panorama, the invented part
+        bool hdr = false;
+        double rangeEv = 0.0;     // of an HDR merge, between its shortest and longest frames
+        double clippedShare = 0.0; // of an HDR merge, what no frame saw below its clip
+        QStringList warnings;     // of an HDR merge, per frame, what the user should know
     };
     struct Outcome
     {
@@ -108,6 +117,8 @@ private:
                            const std::shared_ptr<ImageCacheController> &cache, int patienceMs);
     static Outcome computePanorama(Tasks::Context &context, const QStringList &files, PanoramaGeometry::Projection projection, const QString &edges,
                                    const Decoder &decoder, const std::shared_ptr<ImageCacheController> &cache, int patienceMs);
+    static Outcome computeHdr(Tasks::Context &context, const QStringList &files, int referenceIndex, bool removeGhosts,
+                              const Decoder &decoder, const std::shared_ptr<ImageCacheController> &cache, int patienceMs);
     static Export writeResult(const Result &result, const QString &target, const QString &format);
     void finished();
     void exportFinished();

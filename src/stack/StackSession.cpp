@@ -3,6 +3,7 @@
 #include "CameraDng.h"
 #include "CameraSignal.h"
 #include "ColorPipeline.h"
+#include "HdrJob.h"
 #include "ImageCacheController.h"
 #include "ImageExporter.h"
 #include "PanoramaJob.h"
@@ -161,6 +162,116 @@ void StackSession::startPanorama(const QStringList &urls, const QString &project
         [files, chosen, edges, decoder = m_decoder, cache = m_cache, patience = m_reservationPatienceMs](Tasks::Context &context) {
             return computePanorama(context, files, chosen, edges, decoder, cache, patience);
         }).future);
+}
+
+void StackSession::startHdr(const QStringList &urls, const QString &reference, bool removeGhosts)
+{
+    if (m_running || m_exporting)
+        return;
+    const QStringList files = localFiles(urls);
+    if (files.size() < 2 || !m_decoder) {
+        setStatus(tr("Sélectionnez au moins deux photos dans le ruban."));
+        return;
+    }
+    const QString referenceFile = reference.isEmpty() ? QString() : ImageExporter::localPath(QUrl(reference));
+    const int found = int(files.indexOf(referenceFile));
+    const int referenceIndex = found >= 0 ? found : int(files.size()) / 2;
+
+    m_running = true;
+    m_progress = 0.0;
+    m_exportedFile = QUrl();
+    emit progressChanged();
+    setStatus(tr("Fusion HDR de %1 expositions…").arg(files.size()));
+    m_watcher.setFuture(m_tasks.submit<Outcome>(
+        QStringLiteral("stack"), Tasks::Priority::Foreground,
+        [files, referenceIndex, removeGhosts, decoder = m_decoder, cache = m_cache, patience = m_reservationPatienceMs](Tasks::Context &context) {
+            return computeHdr(context, files, referenceIndex, removeGhosts, decoder, cache, patience);
+        }).future);
+}
+
+StackSession::Outcome StackSession::computeHdr(Tasks::Context &context, const QStringList &files, int referenceIndex, bool removeGhosts,
+                                               const Decoder &decoder, const std::shared_ptr<ImageCacheController> &cache, int patienceMs)
+{
+    Outcome outcome;
+    const auto stopped = [&context] { return context.cancelled(); };
+    quint64 reservation = 0;
+    const auto release = qScopeGuard([&] {
+        if (cache && reservation)
+            cache->release(reservation);
+    });
+    HdrJob::Request request;
+    if (cache) {
+        QString refusal;
+        reservation = reserve(*cache, SystemMemory::estimateDecodePeak(files.first()) + request.memoryBudgetBytes, context, patienceMs, &refusal);
+        if (!reservation) {
+            outcome.cancelled = context.cancelled();
+            outcome.error = refusal.isEmpty() ? tr("Mémoire insuffisante pour la fusion HDR.") : refusal;
+            return outcome;
+        }
+    }
+
+    auto result = std::make_shared<Result>();
+    result->hdr = true;
+    result->referenceFile = files[referenceIndex];
+    // The measured noise laws weigh the frames; without them, a generic sensor's.
+    const std::optional<NoiseLaw::Catalog> catalog = NoiseLaw::loadCatalog(QStringLiteral(":/config/noise-laws.json"), nullptr);
+    std::vector<ImageMetadata> metadata(size_t(files.size()));
+    request.frameCount = int(files.size());
+    request.referenceIndex = referenceIndex;
+    request.merge.motionSigma = removeGhosts ? HdrMerge::Options{}.motionSigma : 0.0;
+    request.cancelled = stopped;
+    request.progress = [&context](int done, int total) { context.progress(done, total); };
+    request.frame = [&](int index) {
+        HdrJob::Frame frame;
+        Decoded decoded = decoder(files[index], stopped);
+        if (index == referenceIndex) {
+            result->context = decoded.context;
+            result->metadata = decoded.metadata;
+            if (!decoded.context) {
+                frame.error = decoded.error.isEmpty()
+                    ? tr("Aucun profil de couleur pour ce boîtier : la fusion HDR a besoin de son signal.") : decoded.error;
+                return frame;
+            }
+        }
+        const ImageMetadata &shot = decoded.metadata;
+        metadata[size_t(index)] = shot;
+        if (shot.exposureSeconds > 0.0 && shot.iso > 0)
+            frame.nominalExposure = shot.exposureSeconds * shot.iso / (shot.aperture > 0.0 ? shot.aperture * shot.aperture : 1.0);
+        frame.noise = HdrJob::noiseModel(catalog ? &*catalog : nullptr, shot.cameraMake, shot.cameraModel, shot.iso,
+                                         double(shot.normalizationWhiteLevel));
+        frame.cameraRgb = std::move(decoded.cameraRgb);
+        frame.error = decoded.error;
+        return frame;
+    };
+    HdrJob::Result job = HdrJob::run(request);
+    outcome.cancelled = job.cancelled;
+    if (!job.success) {
+        outcome.error = job.error;
+        return outcome;
+    }
+    // The result has the levels of the middle exposure: its capture speaks for it.
+    if (job.unitsFrame >= 0) {
+        const ImageMetadata &units = metadata[size_t(job.unitsFrame)];
+        result->metadata.exposureSeconds = units.exposureSeconds;
+        result->metadata.iso = units.iso;
+        result->metadata.aperture = units.aperture;
+    }
+    result->usedFrames = job.usedFrames;
+    result->leftOut = int(files.size()) - job.usedFrames;
+    result->areaKept = job.frameSize.area() > 0 ? double(job.commonArea.area()) / double(job.frameSize.area()) : 0.0;
+    result->rangeEv = job.rangeEv;
+    result->clippedShare = job.merge.pixels > 0 ? double(job.merge.clippedEverywhere) / double(job.merge.pixels) : 0.0;
+    for (const HdrJob::FrameReport &frame : job.frames) {
+        const QString name = QFileInfo(files[frame.index]).fileName();
+        if (!frame.exclusion.isEmpty())
+            result->warnings.append(tr("%1 écartée : %2").arg(name, frame.exclusion));
+        else if (!frame.warning.isEmpty())
+            result->warnings.append(tr("%1 : %2").arg(name, frame.warning));
+    }
+    result->cameraRgb = std::move(job.cameraRgb);
+    outcome.preview = previewOf(result->cameraRgb, *result->context, result->metadata);
+    outcome.result = std::move(result);
+    return outcome;
 }
 
 StackSession::Outcome StackSession::computePanorama(Tasks::Context &context, const QStringList &files, PanoramaGeometry::Projection projection, const QString &edges,
@@ -341,6 +452,18 @@ void StackSession::finished()
         }
         return;
     }
+    if (m_result->hdr) {
+        QString status = tr("%1 expositions fusionnées sur %2 IL, %3 % de la surface conservée%4. Choisissez un format pour exporter.")
+                             .arg(m_result->usedFrames).arg(m_result->rangeEv, 0, 'f', 1).arg(qRound(m_result->areaKept * 100.0))
+                             .arg(m_result->leftOut > 0 ? tr(", %1 écartée(s)").arg(m_result->leftOut) : QString());
+        if (m_result->clippedShare >= 0.001)
+            status += QLatin1Char('\n') + tr("%1 % des pixels sont écrêtés sur toutes les vues : ils restent blancs, rien n'est inventé.")
+                                              .arg(m_result->clippedShare * 100.0, 0, 'f', 1);
+        for (const QString &warning : m_result->warnings)
+            status += QLatin1Char('\n') + warning;
+        setStatus(status);
+        return;
+    }
     setStatus(tr("%1 photos empilées, %2 % de la surface conservée%3. Choisissez un format pour exporter.")
                   .arg(m_result->usedFrames).arg(qRound(m_result->areaKept * 100.0))
                   .arg((m_result->leftOut > 0 ? tr(", %1 écartée(s)").arg(m_result->leftOut) : QString())
@@ -363,7 +486,8 @@ QUrl StackSession::suggestedExport(const QString &format) const
         return {};
     const QFileInfo info(m_result->referenceFile);
     const QString normalized = ImageExporter::normalizedFormat(format);
-    const QString name = info.completeBaseName() + (m_result->panorama ? QStringLiteral("-panorama.") : QStringLiteral("-empilement."))
+    const QString name = info.completeBaseName()
+        + (m_result->panorama ? QStringLiteral("-panorama.") : m_result->hdr ? QStringLiteral("-hdr.") : QStringLiteral("-empilement."))
         + ImageExporter::suffix(normalized);
     return QUrl::fromLocalFile(ImageExporter::availablePath(info.dir().filePath(name)));
 }
@@ -408,6 +532,7 @@ StackSession::Export StackSession::writeResult(const Result &result, const QStri
         content.colorMatrix = camera.colorMatrix;
         content.illuminant = camera.illuminant;
         content.provenance = (result.panorama ? QStringLiteral("IPR panorama of %1 frames, middle %2")
+                              : result.hdr    ? QStringLiteral("IPR HDR merge of %1 exposures, reference %2")
                                               : QStringLiteral("IPR stack of %1 frames, reference %2"))
                                  .arg(result.usedFrames).arg(QFileInfo(result.referenceFile).fileName());
         if (result.filledShare > 0.0)

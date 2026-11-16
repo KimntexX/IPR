@@ -32,7 +32,9 @@ Item {
         { label: qsTr("Empilement"), value: "stack",
           note: qsTr("Réduit le bruit d'une série de la même scène, à la même exposition (lune, ciel nocturne, intérieur sombre).") },
         { label: qsTr("Panorama"), value: "panorama",
-          note: qsTr("Assemble des photos prises du même endroit en une seule vue large : une rangée, horizontale ou verticale, ou plusieurs. Le bas de la vue reste de niveau.") }
+          note: qsTr("Assemble des photos prises du même endroit en une seule vue large : une rangée, horizontale ou verticale, ou plusieurs. Le bas de la vue reste de niveau.") },
+        { label: qsTr("Fusion HDR"), value: "hdr",
+          note: qsTr("Fusionne une série de la même scène à des expositions différentes (bracketing) : les ombres viennent des vues claires, les hautes lumières des vues sombres. Le résultat garde les niveaux de l'exposition médiane, ses hautes lumières au-delà du blanc, à retoucher ensuite.") }
     ]
     readonly property string mode: modes[modeSelector.currentIndex].value
     readonly property var projections: [
@@ -40,6 +42,12 @@ Item {
         { label: qsTr("Cylindrique"), value: "cylindrical" },
         { label: qsTr("Sphérique"), value: "spherical" },
         { label: qsTr("Plane"), value: "rectilinear" }
+    ]
+    readonly property var ghostChoices: [
+        { label: qsTr("Supprimer les fantômes"), value: true,
+          note: qsTr("Là où quelque chose a bougé entre les vues (feuillage, passants), seule la référence compte : pas de dédoublement, mais le bruit de la référence à cet endroit.") },
+        { label: qsTr("Garder toutes les vues"), value: false,
+          note: qsTr("Pour une scène immobile prise au trépied : toutes les vues comptent partout, le moins de bruit possible.") }
     ]
     readonly property var edgeChoices: [
         { label: qsTr("Recadrer"), value: "crop",
@@ -57,6 +65,8 @@ Item {
     function assemble() {
         if (mode === "panorama")
             session.startPanorama(photos, projections[projectionSelector.currentIndex].value, edgeChoices[edgesSelector.currentIndex].value)
+        else if (mode === "hdr")
+            session.startHdr(photos, photos[referenceSelector.currentIndex] || "", ghostChoices[ghostSelector.currentIndex].value)
         else
             session.start(photos, photos[referenceSelector.currentIndex] || "")
     }
@@ -142,7 +152,7 @@ Item {
             }
             RowLayout {
                 Layout.fillWidth: true
-                visible: root.mode === "stack" && root.photos.length >= 2
+                visible: root.mode !== "panorama" && root.photos.length >= 2
                 Label {
                     text: qsTr("Référence")
                     color: root.secondaryTextColor
@@ -154,6 +164,27 @@ Item {
                     enabled: !root.busy
                     model: root.photos.map(root.fileName)
                 }
+            }
+            RowLayout {
+                Layout.fillWidth: true
+                visible: root.mode === "hdr"
+                Label {
+                    text: qsTr("Mouvement")
+                    color: root.secondaryTextColor
+                }
+                PreferenceComboBox {
+                    id: ghostSelector
+                    objectName: "assembleGhostSelector"
+                    Layout.fillWidth: true
+                    enabled: !root.busy
+                    model: root.ghostChoices
+                    textRole: "label"
+                }
+            }
+            SectionNote {
+                objectName: "assembleGhostNote"
+                visible: root.mode === "hdr"
+                text: root.ghostChoices[ghostSelector.currentIndex].note
             }
             RowLayout {
                 Layout.fillWidth: true
