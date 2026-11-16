@@ -242,20 +242,36 @@ void ratios()
     const ipr::Image reference = capture(scene, 1.0, true, 21);
     // Two stops below, with another balance: a frame of the camera's automatic white balance.
     const ipr::Image dark = capture(scene, 0.25, true, 22, ipr::Vec3d(1.08, 1.0, 0.93));
-    const std::optional<HdrMerge::Ratio> ratio = HdrMerge::measureRatio(reference, dark);
+    const std::optional<HdrMerge::Ratio> ratio = HdrMerge::measureRatio(HdrMerge::proxyOf(reference, 4), HdrMerge::proxyOf(dark, 4));
     check(ratio.has_value(), "two stops apart, the exposure is measured");
     if (ratio) {
         std::cerr << "ratio " << ratio->exposure[0] << ' ' << ratio->exposure[1] << ' ' << ratio->exposure[2] << '\n';
         check(std::abs(ratio->exposure[1] / 0.25 - 1.0) < 0.01, "the green ratio within 1 %");
         check(std::abs(ratio->exposure[0] / (0.25 * 1.08) - 1.0) < 0.01 && std::abs(ratio->exposure[2] / (0.25 * 0.93) - 1.0) < 0.01,
               "and the other channels with their balance");
-        check(ratio->samples > 1000, "from many pixels");
+        check(ratio->samples > 200, "from many blocks");
     }
     // Twenty stops apart nothing is seen well by both: no ratio, rather than a wrong one.
     const ipr::Image black = capture(scene, 1e-6, true, 23);
-    check(!HdrMerge::measureRatio(reference, black).has_value(), "too far apart, no ratio");
-    check(!HdrMerge::measureRatio(reference, reference.view(ipr::Recti(0, 0, 80, 40)).clone()).has_value(), "different sizes, no ratio");
-    check(!HdrMerge::measureRatio(reference, ipr::Image()).has_value(), "an empty frame, no ratio");
+    const HdrMerge::Proxy proxy = HdrMerge::proxyOf(reference, 4);
+    check(proxy.mean.size() == ipr::Size(40, 24) && proxy.peak.size() == proxy.mean.size(), "a proxy of blocks of 4");
+    check(!HdrMerge::measureRatio(proxy, HdrMerge::proxyOf(black, 4)).has_value(), "too far apart, no ratio");
+    check(!HdrMerge::measureRatio(proxy, HdrMerge::proxyOf(reference, 8)).has_value(), "proxies of different sizes, no ratio");
+    check(HdrMerge::proxyOf(ipr::Image(), 4).mean.empty() && !HdrMerge::measureRatio(proxy, HdrMerge::Proxy{}).has_value(),
+          "an empty frame, no proxy and no ratio");
+    check(HdrMerge::proxyOf(reference, 200).mean.empty(), "no block in a smaller frame");
+
+    // Fine texture clipped inside blocks whose average stays below white: the peak leaves them
+    // out, which an average alone would not (it would read 0.6 / 0.275, about 2.2).
+    ipr::Image fine = ipr::Image::create(size, ipr::Depth::F32, 3);
+    for (int y = 0; y < size.height; ++y)
+        for (int x = 0; x < size.width; ++x) {
+            const float level = x < size.width / 2 ? (x % 2 ? 0.08f : 0.02f) : (x % 2 ? 0.5f : 0.05f);
+            fine.mutableRow<ipr::Vec3f>(y)[x] = ipr::Vec3f(level, level, level);
+        }
+    const ipr::Image brighter = ipr::mapped(fine, [](float v) { return std::min(1.f, 4.f * v); });
+    const std::optional<HdrMerge::Ratio> clipped = HdrMerge::measureRatio(HdrMerge::proxyOf(fine, 4), HdrMerge::proxyOf(brighter, 4));
+    check(clipped && std::abs(clipped->exposure[1] - 4.0) < 1e-4, "blocks with a clipped pixel are left out of the ratio");
 }
 
 void refusals()

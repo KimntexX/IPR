@@ -66,11 +66,24 @@ struct Ratio
     int samples = 0;                      // pixels both showed well
 };
 
+// A frame reduced by blocks for the measure of its exposure: the mean of each block, and its
+// brightest channel. An average below the clip may hide clipped pixels, which would pull a
+// ratio towards 1: the peak tells them.
+struct Proxy
+{
+    ipr::Image mean;   // F32, three channels
+    ipr::Image peak;   // F32, one channel
+};
+
+// Blocks of divisor x divisor pixels, the last ones of the edges left out. Empty for another
+// type or a frame smaller than one block.
+Proxy proxyOf(const ipr::Image &frame, int divisor);
+
 // The exposure of frame relative to base, measured as the median ratio where both show the
-// scene well: above the noise, below the knee of the clip. Both of the same size, small
-// proxies are enough. nullopt when too few pixels qualify (exposures too far apart, flat
-// frames): the caller then chains through a frame in between, or says why.
-std::optional<Ratio> measureRatio(const ipr::Image &base, const ipr::Image &frame, const Options &options = {});
+// scene well: above the noise, no pixel of the block beyond the knee of the clip. Proxies of
+// the same size. nullopt when too few blocks qualify (exposures too far apart, flat frames):
+// the caller then chains through a frame in between, or says why.
+std::optional<Ratio> measureRatio(const Proxy &base, const Proxy &frame, const Options &options = {});
 
 } // namespace HdrMerge
 

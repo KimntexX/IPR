@@ -121,6 +121,8 @@ set(IPR_ENGINE_SOURCES
     src/stack/StackJob.cpp
     src/hdr/HdrMerge.h
     src/hdr/HdrMerge.cpp
+    src/hdr/HdrJob.h
+    src/hdr/HdrJob.cpp
     src/stack/StackSession.h
     src/stack/StackSession.cpp
     src/raw/CameraDng.h
@@ -550,6 +552,8 @@ if(BUILD_TESTING)
     set_tests_properties(stackTests PROPERTIES LABELS "unit;stack" TIMEOUT 180)
     ipr_add_test(hdrMergeTests tests/hdr_merge_test.cpp)
     set_tests_properties(hdrMergeTests PROPERTIES LABELS "unit;hdr" TIMEOUT 60)
+    ipr_add_test(hdrJobTests tests/hdr_job_test.cpp)
+    set_tests_properties(hdrJobTests PROPERTIES LABELS "unit;hdr" TIMEOUT 180)
     ipr_add_test(geometryTests tests/geometry_test.cpp)
     set_tests_properties(geometryTests PROPERTIES LABELS "unit;geometry" TIMEOUT 60)
     ipr_add_test(localContrastTests tests/local_contrast_test.cpp)

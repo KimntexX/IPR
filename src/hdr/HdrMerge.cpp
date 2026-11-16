@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <array>
 #include <cmath>
+#include <limits>
 #include <mutex>
 
 namespace HdrMerge {
@@ -18,8 +19,6 @@ constexpr float fadeEnd = 1.5f;
 constexpr float smoothedVariance = 1.f / float(decisionWindow * decisionWindow);
 // Below this share of the clip a channel is mostly noise: no ratio is read from it.
 constexpr float ratioFloor = 0.01f;
-// Above this share of the clip a proxy pixel may hide clipped ones: no ratio either.
-constexpr float ratioCeiling = 0.8f;
 constexpr int minimumRatioSamples = 50;
 
 float luminance(const ipr::Vec3f &v)
@@ -205,17 +204,54 @@ bool merge(const std::vector<Frame> &frames, const Options &options, ipr::Image 
     return true;
 }
 
-std::optional<Ratio> measureRatio(const ipr::Image &base, const ipr::Image &frame, const Options &options)
+Proxy proxyOf(const ipr::Image &frame, int divisor)
 {
-    if (base.empty() || frame.empty() || base.size() != frame.size() || base.depth() != ipr::Depth::F32 ||
-        frame.depth() != ipr::Depth::F32 || base.channels() != 3 || frame.channels() != 3 || !(options.clipLevel > 0.0))
+    Proxy proxy;
+    if (frame.empty() || frame.depth() != ipr::Depth::F32 || frame.channels() != 3 || divisor < 1 ||
+        frame.width() < divisor || frame.height() < divisor)
+        return proxy;
+    const ipr::Size size(frame.width() / divisor, frame.height() / divisor);
+    proxy.mean = ipr::Image::create(size, ipr::Depth::F32, 3);
+    proxy.peak = ipr::Image::create(size, ipr::Depth::F32, 1);
+    const float area = 1.f / float(divisor * divisor);
+    ipr::parallelRows(size.height, [&](int first, int last) {
+        for (int by = first; by < last; ++by) {
+            ipr::Vec3f *mean = proxy.mean.mutableRow<ipr::Vec3f>(by);
+            float *peak = proxy.peak.mutableRow<float>(by);
+            for (int bx = 0; bx < size.width; ++bx) {
+                ipr::Vec3f sum(0.f, 0.f, 0.f);
+                float brightest = -std::numeric_limits<float>::infinity();
+                for (int y = by * divisor; y < (by + 1) * divisor; ++y) {
+                    const ipr::Vec3f *in = frame.row<ipr::Vec3f>(y);
+                    for (int x = bx * divisor; x < (bx + 1) * divisor; ++x) {
+                        sum += in[x];
+                        brightest = std::max({brightest, in[x][0], in[x][1], in[x][2]});
+                    }
+                }
+                mean[bx] = sum * area;
+                peak[bx] = brightest;
+            }
+        }
+    });
+    return proxy;
+}
+
+std::optional<Ratio> measureRatio(const Proxy &base, const Proxy &frame, const Options &options)
+{
+    const auto valid = [](const Proxy &p) {
+        return !p.mean.empty() && p.mean.depth() == ipr::Depth::F32 && p.mean.channels() == 3 && !p.peak.empty() &&
+               p.peak.depth() == ipr::Depth::F32 && p.peak.channels() == 1 && p.peak.size() == p.mean.size();
+    };
+    if (!valid(base) || !valid(frame) || base.mean.size() != frame.mean.size() || !(options.clipLevel > 0.0) ||
+        !(options.knee > 0.0 && options.knee < 1.0))
         return std::nullopt;
-    const float floor = ratioFloor * float(options.clipLevel), ceiling = ratioCeiling * float(options.clipLevel);
+    const float floor = ratioFloor * float(options.clipLevel), ceiling = float(options.knee * options.clipLevel);
     std::array<std::vector<float>, 3> ratios;
-    for (int y = 0; y < base.height(); ++y) {
-        const ipr::Vec3f *a = base.row<ipr::Vec3f>(y), *b = frame.row<ipr::Vec3f>(y);
-        for (int x = 0; x < base.width(); ++x) {
-            if (std::max({a[x][0], a[x][1], a[x][2]}) >= ceiling || std::max({b[x][0], b[x][1], b[x][2]}) >= ceiling)
+    for (int y = 0; y < base.mean.height(); ++y) {
+        const ipr::Vec3f *a = base.mean.row<ipr::Vec3f>(y), *b = frame.mean.row<ipr::Vec3f>(y);
+        const float *peakA = base.peak.row<float>(y), *peakB = frame.peak.row<float>(y);
+        for (int x = 0; x < base.mean.width(); ++x) {
+            if (peakA[x] >= ceiling || peakB[x] >= ceiling)
                 continue;
             for (int c = 0; c < 3; ++c)
                 if (a[x][c] > floor && b[x][c] > floor)
