@@ -2,6 +2,7 @@
 
 #include "CameraDng.h"
 #include "CameraProfileEngine.h"
+#include "CanonMakernotes.h"
 #include "Demosaic.h"
 #include "LibRawInput.h"
 #include "RawBlackLevelEstimator.h"
@@ -512,11 +513,13 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
                                              QString *error)
 {
     RawDecodeTimer timer(fileName);
+    CanonMakernotes::FileInfoCapture canonFileInfo;   // outlives `raw`, which calls back into it
     RawProcessor raw;
     raw.set_progress_handler([](void *context, enum LibRaw_progress, int, int) {
         const auto *options = static_cast<const Options *>(context);
         return options->cancellationRequested && options->cancellationRequested() ? 1 : 0;
     }, const_cast<Options *>(&options));
+    raw.set_makernotes_handler(&CanonMakernotes::readFileInfo, &canonFileInfo);
     int result = openRaw(raw, fileName);
     if (result != LIBRAW_SUCCESS) {
         if (error)
@@ -597,6 +600,9 @@ ColorPipeline::WorkingImage decodeWithLibRaw(const QString &fileName,
     capture.focalLengthMm = raw.imgdata.other.focal_len;
     capture.sensorWidthMm = sensorWidthOf(raw);
     capture.aperture = raw.imgdata.other.aperture;
+    if (raw.imgdata.idata.maker_index == LIBRAW_CAMERAMAKER_Canon)
+        capture.focusDistanceM = CanonMakernotes::profileFocusDistanceM(
+            CanonMakernotes::focusRangeFromFileInfo(canonFileInfo.values));
     if (metadata) {
         metadata->dcpProfile = profiles.dcpPath.isEmpty()
                                    ? QString()

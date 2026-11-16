@@ -318,7 +318,7 @@ int main()
             passed &= check(maximum > high && minimum < low, "the sharpening overshoots on both sides of an edge");
             previous = across;
         }
-        // Radius and masking calibrated on Lightroom (16 November 2026), on a fine texture a few times
+        // Radius and masking calibrated on Lightroom (15 November 2026), on a fine texture a few times
         // the grain, in a lightly grained flat field the noise measure sees: a radius of 0.5 still
         // sharpens it (it did not before), a radius of 3 no more than 1 (it did twice as much), and
         // masking 25 keeps part of it (it kept almost nothing).

@@ -8,6 +8,8 @@
 #include "PreparedProfileCache.h"
 #include "Types.h"
 
+#include <optional>
+
 namespace CameraProfileEngine {
 
 struct Selection
@@ -33,6 +35,11 @@ struct CaptureSettings
 // shadows (5/1000) and fits Lightroom's Camera Neutral exports of five EOS 60D CR2
 // (0.003 to 0.0075 each, 15 November 2026). None (1) subtracts nothing.
 constexpr double AutoBlackRenderLevel = 0.005;
+// Dark scenes take a smaller black: AutoBlackRenderLevel x min(1, sqrt(median Y / reference)),
+// the scene's median luminance read once on the camera signal. Fitted on Lightroom's Camera
+// Neutral exports of nine night scenes and four day ones of the EOS 60D (15 November 2026):
+// nights 0.0005 to 0.0013, day scenes above the reference unchanged.
+constexpr double AutoBlackSceneReference = 0.035;
 
 struct DcpRenderOptions
 {
@@ -42,7 +49,21 @@ struct DcpRenderOptions
     bool preserveToneCurveHue = false;
     // Audited camera/profile rendering adjustment, composed before DCP LUTs/curve.
     double profileExposureCompensationEv = 0.0;
+    // Median Y (XYZ D50, scene level) of the whole camera signal, set by CameraSignal::render
+    // for a profile whose DefaultBlackRender is Auto and kept in the working context, so the
+    // black stays the same whatever the exposure, white balance or region rendered. Absent:
+    // the fixed AutoBlackRenderLevel.
+    std::optional<double> autoBlackSceneLuminance;
 };
+
+// The automatic black at the scene level for a scene luminance; AutoBlackRenderLevel when
+// it is absent or not a finite non-negative number.
+double autoBlackLevel(std::optional<double> sceneLuminance);
+// The scene luminance the automatic black adapts to: median Y of the camera signal on a
+// 1/8 grid, under the profile's matrix at the white balance. Absent for a profile whose
+// DefaultBlackRender is None, an unreadable profile or an empty signal.
+std::optional<double> autoBlackSceneLuminance(const QString &profilePath, const ipr::Image &cameraRgb,
+                                              double whiteBalanceKelvin);
 
 struct LcpRenderOptions
 {

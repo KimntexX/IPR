@@ -738,6 +738,87 @@ int main(int argc, char **argv)
                    "the toe meets the ramp at twice the black"))
             return 1;
     }
+    {
+        // The black adapted to the scene: a dark scene takes a smaller one, a bright one keeps 0.005.
+        const double reference = CameraProfileEngine::AutoBlackSceneReference;
+        using CameraProfileEngine::autoBlackLevel;
+        if (!check(autoBlackLevel(std::nullopt) == autoBlack &&
+                       autoBlackLevel(std::numeric_limits<double>::quiet_NaN()) == autoBlack &&
+                       autoBlackLevel(-1.0) == autoBlack,
+                   "an unknown scene luminance keeps the fixed black") ||
+            !check(autoBlackLevel(reference) == autoBlack && autoBlackLevel(4 * reference) == autoBlack,
+                   "a scene at or above the reference keeps the fixed black") ||
+            !check(std::abs(autoBlackLevel(reference / 4) - autoBlack / 2) < 1e-12 && autoBlackLevel(0.0) == 0.0,
+                   "a darker scene takes the square root of its share of the reference"))
+            return 1;
+
+        // The statistic: median Y of the signal under the profile's matrix (identity here, so Y
+        // is ProPhoto's luminance row), for an Auto profile only.
+        const auto signalOf = [&](float value) {
+            ipr::Image signal = ipr::Image::create({16, 16}, ipr::Depth::F32, 3);
+            ipr::fill(signal, std::vector<double>{0.0, 0.0, 0.0});
+            const ipr::Vec3f camera = proPhotoToXyz * ipr::Vec3f(value, value, value);
+            for (int y = 0; y < 16; ++y)
+                for (int x = 0; x < 16; ++x)
+                    at<ipr::Vec3f>(signal, y, x) = x < 8 ? camera : ipr::Vec3f(0.f, 0.f, 0.f);
+            return signal;
+        };
+        const float dark = float(reference / 4);
+        const auto luminance = CameraProfileEngine::autoBlackSceneLuminance(autoAbsent, signalOf(dark), 5500.);
+        const double luminanceRow = proPhotoToXyz(1, 0) + proPhotoToXyz(1, 1) + proPhotoToXyz(1, 2);
+        if (!check(luminance && std::abs(*luminance - dark * luminanceRow) < 1e-7,
+                   "the scene luminance is the median Y of the signal's grid") ||
+            !check(!CameraProfileEngine::autoBlackSceneLuminance(blackNone, signalOf(dark), 5500.),
+                   "a None profile has no scene luminance") ||
+            !check(!CameraProfileEngine::autoBlackSceneLuminance(autoAbsent, ipr::Image{}, 5500.),
+                   "an empty signal has no scene luminance"))
+            return 1;
+
+        // Rendered: the adapted black replaces the fixed one, None is untouched.
+        const auto renderedWith = [&](const QString &path, float value, std::optional<double> scene) {
+            ipr::Image gray = ipr::Image::create({1, 1}, ipr::Depth::F32, 3);
+            at<ipr::Vec3f>(gray, 0, 0) = proPhotoToXyz * ipr::Vec3f(value, value, value);
+            CameraProfileEngine::DcpRenderOptions options{0.0, true};
+            options.autoBlackSceneLuminance = scene;
+            return CameraProfileEngine::applyDcp(path, gray, 5500., &error, options)
+                ? std::optional<ipr::Vec3f>(at<ipr::Vec3f>(gray, 0, 0)) : std::nullopt;
+        };
+        const auto inWorking = [&](double v) {
+            return xyzToWorking * (proPhotoToXyz * ipr::Vec3f(float(v), float(v), float(v)));
+        };
+        const double adapted = autoBlack / 2;
+        const auto darkScene = renderedWith(autoAbsent, .25f, reference / 4);
+        const auto brightScene = renderedWith(autoAbsent, .25f, 2 * reference);
+        const auto noneProfile = renderedWith(blackNone, .25f, reference / 4);
+        if (!check(darkScene && ipr::length(*darkScene - inWorking((.25 - adapted) / (1 - adapted))) < 1e-6,
+                   "a dark scene renders with its adapted black") ||
+            !check(brightScene && ipr::length(*brightScene - inWorking((.25 - autoBlack) / (1 - autoBlack))) < 1e-6,
+                   "a bright scene renders with the fixed black") ||
+            !check(noneProfile && ipr::length(*noneProfile - inWorking(.25)) < 1e-6,
+                   "a None profile ignores the scene luminance"))
+            return 1;
+
+        // CameraSignal reads it once on the whole signal and keeps it in the working context.
+        CameraSignal::Source source;
+        source.rgb = signalOf(dark);
+        source.cameraMake = "Canon";
+        source.cameraModel = "EOS R6 Mark III";
+        source.whiteBalanceKelvin = 5500.;
+        source.cameraNeutral = {1, 1, 1};
+        source.whiteBalanceApplied = true;
+        ipr::Image expected = source.rgb.clone();
+        CameraProfileEngine::DcpRenderOptions expectedOptions;
+        expectedOptions.autoBlackSceneLuminance = luminance;
+        if (!CameraProfileEngine::applyDcp(autoAbsent, expected, 5500., &error, expectedOptions)) return 1;
+        const auto signalResult = CameraSignal::render(std::move(source), autoAbsent, {}, &error);
+        if (!check(!signalResult.isNull() && signalResult.dcpContext &&
+                       signalResult.dcpContext->options.autoBlackSceneLuminance == luminance,
+                   "the working context keeps the scene luminance for every later render") ||
+            !check(!signalResult.isNull() &&
+                       ipr::largestDifference(signalResult.linearRgba, ipr::opaque(expected)) == 0,
+                   "the first render uses the adapted black"))
+            return 1;
+    }
     const QString descendingDcp = QDir(dcpDirectory).filePath("descending-curve.dcp");
     if (!check(writeFile(descendingDcp, SyntheticDcp::make(false,false,false,false,
                         0,0,0.f,0.f,1,1.f,true,1.f,.1f)), "descending profile written")) return 1;
@@ -1018,18 +1099,21 @@ int main(int argc, char **argv)
         const QString fullPath = QDir(lcpDirectory).filePath("vignette-grid.lcp");
         const QString farEight = QDir(lcpDirectory).filePath("vignette-f8-far.lcp");
         const QString farFiveSix = QDir(lcpDirectory).filePath("vignette-f56-far.lcp");
+        const QString nearEight = QDir(lcpDirectory).filePath("vignette-f8-near.lcp");
         // In file order the near entries come first, as in Adobe's profiles.
         if (!check(writeFile(fullPath, profile(entry("4.970854", "1.2", "-0.9") + entry("4.970854", "10000", "-0.5") +
                                                entry("6", "1.2", "-0.7") + entry("6", "10000", "-0.2"))) &&
                        writeFile(farEight, profile(entry("6", "10000", "-0.2"))) &&
-                       writeFile(farFiveSix, profile(entry("4.970854", "10000", "-0.5"))),
+                       writeFile(farFiveSix, profile(entry("4.970854", "10000", "-0.5"))) &&
+                       writeFile(nearEight, profile(entry("6", "1.2", "-0.7"))),
                    "the vignetting profiles should be written"))
             return 1;
-        const auto corner = [&](const QString &path, double fNumber) {
+        const auto corner = [&](const QString &path, double fNumber, double focusDistanceM = 0.0) {
             CameraProfileEngine::CaptureSettings settings;
             settings.focalLengthMm = 70.0;
             settings.sensorWidthMm = 36.0;
             settings.aperture = fNumber;
+            settings.focusDistanceM = focusDistanceM;
             ipr::Image flat = ipr::Image::create({300, 200}, ipr::Depth::F32, 3);
             ipr::fill(flat, std::vector<double>{.25, .25, .25});
             QString failure;
@@ -1044,6 +1128,10 @@ int main(int argc, char **argv)
         const double between = corner(fullPath, 7.1);
         if (!check(between > eight && between < fiveSix && between - eight < fiveSix - between,
                    "f/7.1 lies between f/8 and f/5.6, nearer f/8")) return 1;
+        // A known focus distance (Canon makernotes) takes the entry at that distance.
+        const double nearEntry = corner(nearEight, 8.0);
+        if (!check(nearEntry > eight && std::abs(corner(fullPath, 8.0, 1.2) - nearEntry) < 1e-6,
+                   "a focus distance of 1.2 m takes the 1.2 m entry, not infinity")) return 1;
     }
     if (!check(CameraProfileEngine::lcpMatchesLens(lcpPath, "Canon", "EOS R6 Mark III", "Canon", "RF 24-70mm F2.8 L IS USM") &&
                     !CameraProfileEngine::lcpMatchesLens(lcpPath, "Other", "Other camera", "Other", "Unknown lens"),

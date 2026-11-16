@@ -49,9 +49,13 @@ ColorPipeline::WorkingImage render(Source &&source, const QString &profile,
     context->sourceKelvin = source.whiteBalanceKelvin.value_or(5500.0);
     context->cameraNeutral = source.cameraNeutral;
     context->options = options;
+    // The scene luminance of this profile on the whole signal, once: every later render of the
+    // context (white balance, exposure, proxy, region) keeps the same automatic black.
+    context->options.autoBlackSceneLuminance = CameraProfileEngine::autoBlackSceneLuminance(
+        profile, context->cameraRgb, context->sourceKelvin);
     // One working copy: preserve the immutable camera buffer before nonlinear DCP.
     ipr::Image rendered = context->cameraRgb.clone();
-    if (!CameraProfileEngine::applyDcp(profile, rendered, context->sourceKelvin, error, options))
+    if (!CameraProfileEngine::applyDcp(profile, rendered, context->sourceKelvin, error, context->options))
         return {};
     ColorPipeline::WorkingImage result;
     result.linearRgba = ipr::opaque(rendered);

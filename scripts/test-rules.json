@@ -51,7 +51,8 @@
     "rawNormalizationTests": "rawNormalizationTests",
     "editorRawDevelopmentTests": "editorRawDevelopmentTests",
     "rawBlackLevelEstimatorTests": "rawBlackLevelEstimatorTests",
-    "cameraProfileEngineTests": "cameraProfileEngineTests"
+    "cameraProfileEngineTests": "cameraProfileEngineTests",
+    "canonMakernotesTests": "canonMakernotesTests"
   },
   "python_suites": {
     "github_build": "test_github_build.py",
@@ -170,6 +171,7 @@
     {"patterns": ["src/raw/Demosaic.*", "tests/demosaic_test.cpp"], "tests": ["demosaicTests", "rawDecoderTests", "editorRawDevelopmentTests", "imageExportTests", "imageImportTests"]},
     {"patterns": ["src/raw/RawDecoder.*"], "tests": ["demosaicTests", "rawDecoderTests", "rawNormalizationTests", "rawBlackLevelEstimatorTests", "cameraProfileEngineTests", "imageExportTests", "editorRawDevelopmentTests"]},
     {"patterns": ["src/raw/RawBlackLevelEstimator.*"], "tests": ["rawBlackLevelEstimatorTests", "rawDecoderTests"]},
+    {"patterns": ["src/raw/CanonMakernotes.*"], "tests": ["canonMakernotesTests", "rawDecoderTests", "cameraProfileEngineTests"]},
     {"patterns": ["src/profiles/**", "profiles/index.json"], "tests": ["cameraProfileEngineTests", "rawDecoderTests", "imageExportTests"]},
     {"patterns": ["src/cache/**", "src/providers/**", "tests/thumbnail_provider_test.cpp", "src/app/main.cpp", "src/qml/Main.qml", "src/qml/ThumbnailRibbon.qml", "src/qml/ImageInfoPanel.qml"], "tests": ["imageExportTests", "settingsQmlTests", "uiPreferencesQmlTests", "imageViewportQmlTests", "thumbnailProviderTests"]},
     {"patterns": ["src/qml/ImageViewport.qml"], "tests": ["imageViewportQmlTests", "uiPreferencesQmlTests"]},
@@ -197,6 +199,7 @@
     {"patterns": ["tests/editor_raw_development_test.cpp"], "tests": ["editorRawDevelopmentTests"]},
     {"patterns": ["tests/raw_black_level_estimator_test.cpp"], "tests": ["rawBlackLevelEstimatorTests"]},
     {"patterns": ["tests/camera_profile_engine_test.cpp"], "tests": ["cameraProfileEngineTests"]},
+    {"patterns": ["tests/canon_makernotes_test.cpp"], "tests": ["canonMakernotesTests"]},
     {"patterns": ["tests/analyse_color_mixer.py"], "tests": [], "python": ["color_mixer_analysis", "noise_analysis", "base_colorimetry_analysis"]},
     {"patterns": ["tests/test_analyse_color_mixer.py"], "tests": [], "python": ["color_mixer_analysis"]},
     {"patterns": ["tests/analyse_noise.py", "tests/test_analyse_noise.py"], "tests": [], "python": ["noise_analysis"]},
