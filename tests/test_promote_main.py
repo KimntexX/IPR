@@ -50,6 +50,17 @@ class Patterns(unittest.TestCase):
         self.assertEqual(groups['main'], ['src/a.cpp'])
 
 
+class RepositoryAllowlist(unittest.TestCase):
+    def test_every_tracked_file_has_one_side(self):
+        # A folder missing from the list blocks the next promotion: say it on dev, at once.
+        root = Path(__file__).resolve().parents[1]
+        listed = subprocess.run(['git', 'ls-files'], cwd=root, capture_output=True, text=True, check=True)
+        sections = promote.parse_allowlist((root / 'packaging' / 'main-allowlist.txt').read_text(encoding='utf-8'))
+        groups = promote.classify(listed.stdout.splitlines(), sections)
+        self.assertEqual(groups['unclassified'], [])
+        self.assertEqual(groups['ambiguous'], [])
+
+
 class Links(unittest.TestCase):
     def test_dev_links_point_at_the_commit(self):
         dev = {'docs/validation/raw/a.json', 'docs/validation/matrix.md'}

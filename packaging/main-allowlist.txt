@@ -29,12 +29,17 @@ src/README.md
 src/app/
 src/cache/
 src/core/
+src/detect/
 src/editor/
+src/hdr/
+src/image/
+src/panorama/
 src/profiles/
 src/providers/
 src/qml/
 src/raw/
 src/neural/
+src/stack/
 src/tasks/
 # Build, packaging, delivery and promotion scripts
 scripts/build-windows.ps1
