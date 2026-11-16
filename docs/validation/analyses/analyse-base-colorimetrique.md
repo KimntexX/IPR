@@ -5914,6 +5914,11 @@ la distorsion déplaçant surtout les bords (rapport coin/centre modifié
 jusqu'à 1 %). Aucun export Lightroom de ces photos avec la correction
 d'objectif n'est encore comparé. Rendu `profile-render=6`.
 
+Ce rappel n'existe qu'à partir de LibRaw 0.22. Avec une LibRaw plus ancienne,
+comme le paquet 0.21 d'Ubuntu 24.04 utilisé par les constructions Linux
+système, la distance n'est pas lue et l'entrée la plus lointaine reste choisie
+(16 novembre 2026, CI Ubuntu).
+
 ### Retrait d'Adobe Standard
 
 Rendu avec Adobe Standard, les exports de référence de l'utilisateur étaient
