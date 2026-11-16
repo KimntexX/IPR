@@ -3,9 +3,7 @@
 #include "FrameSpool.h"
 
 #include "Resize.h"
-#include "Warp.h"
 #include "Pixels.h"
-#include "Parallel.h"
 
 #include <QDir>
 #include <QStorageInfo>
@@ -19,7 +17,6 @@ namespace StackJob {
 namespace {
 
 constexpr int proxyDivisor = 16;          // of the reference's side, to compare the levels of a frame
-constexpr int interpolationMargin = 4;    // half the support of the resampling kernel, pixels
 constexpr float darkestForGain = 0.005f;  // of white: below it, the noise decides the ratio
 constexpr float brightestForGain = 0.9f;  // of white: above it, clipping does
 constexpr double largestGainGap = 0.25;   // a frame further from the reference is another exposure
@@ -85,53 +82,6 @@ bool levelGains(const ipr::Image &referenceProxy, const ipr::Image &frameProxy, 
         gains[c] = *middle;
     }
     return true;
-}
-
-// The source coordinates of each reference pixel: the local field, then the transform.
-void sourceMaps(const ipr::Matrix33d &referenceToFrame, const ipr::Image &displacements, ipr::Image &mapX, ipr::Image &mapY)
-{
-    mapX = ipr::Image::create(displacements.size(), ipr::Depth::F32, 1);
-    mapY = ipr::Image::create(displacements.size(), ipr::Depth::F32, 1);
-    ipr::parallelRows(displacements.height(), [&](int first, int last) {
-        for (int y = first; y < last; ++y) {
-            const ipr::Vec2f *field = displacements.row<ipr::Vec2f>(y);
-            float *outX = mapX.mutableRow<float>(y), *outY = mapY.mutableRow<float>(y);
-            for (int x = 0; x < displacements.width(); ++x) {
-                const double px = x + double(field[x][0]), py = y + double(field[x][1]);
-                const double w = referenceToFrame(2, 0) * px + referenceToFrame(2, 1) * py + referenceToFrame(2, 2);
-                outX[x] = float((referenceToFrame(0, 0) * px + referenceToFrame(0, 1) * py + referenceToFrame(0, 2)) / w);
-                outY[x] = float((referenceToFrame(1, 0) * px + referenceToFrame(1, 1) * py + referenceToFrame(1, 2)) / w);
-            }
-        }
-    });
-}
-
-// Where the frame's pixels, with the kernel's whole support, fall inside it. The preimage
-// of a rectangle under a transform is convex: one span per row. A local field moves pixels
-// by at most its longest displacement, which the margin covers.
-void narrowSpans(const ipr::Matrix33d &referenceToFrame, const ipr::Size &size, double fieldReach, std::vector<ipr::Vec2i> &spans)
-{
-    const double margin = interpolationMargin + std::ceil(fieldReach);
-    const double right = size.width - 1 - margin, bottom = size.height - 1 - margin;
-    ipr::parallelRows(size.height, [&](int from, int to) {
-        for (int y = from; y < to; ++y) {
-            int first = size.width, last = -1;
-            for (int x = 0; x < size.width; ++x) {
-                const double w = referenceToFrame(2, 0) * x + referenceToFrame(2, 1) * y + referenceToFrame(2, 2);
-                if (w <= 0.0)
-                    continue;
-                const double u = (referenceToFrame(0, 0) * x + referenceToFrame(0, 1) * y + referenceToFrame(0, 2)) / w;
-                const double v = (referenceToFrame(1, 0) * x + referenceToFrame(1, 1) * y + referenceToFrame(1, 2)) / w;
-                if (u >= margin && u <= right && v >= margin && v <= bottom) {
-                    first = std::min(first, x);
-                    last = x;
-                }
-            }
-            ipr::Vec2i &span = spans[size_t(y)];
-            span[0] = std::max(span[0], first);
-            span[1] = std::min(span[1], last + 1);
-        }
-    });
 }
 
 } // namespace
@@ -284,7 +234,7 @@ Result run(const Request &request)
             if (subject.empty())
                 subject = subjectArea(report.alignment.inlierArea, size);
             const quint64 viewBytes = quint64(subject.area()) * quint64(3 * sizeof(float));
-            const int reach = request.turbulence.local.radius + request.turbulence.local.blockHalf + interpolationMargin;
+            const int reach = request.turbulence.local.radius + request.turbulence.local.blockHalf + StackAlignment::interpolationMargin;
             if (viewBytes * quint64(request.frameCount) <= request.memoryBudgetBytes) {
                 if (!referencePixels.empty())
                     views.push_back(subjectView(referencePixels, subject, ipr::Matrix33d::identity(), reach));
@@ -295,21 +245,11 @@ Result run(const Request &request)
             }
         }
         referencePixels = {};
-        ipr::Image registered;
-        double fieldReach = 0.0;
-        if (request.localRefinement) {
-            // Measured on a cheap resampling, so that the pixels are resampled only once.
-            const ipr::Image roughly = ipr::warpedPerspective(framePyramid[0], report.alignment.referenceToFrame, size, ipr::Resampling::Linear, ipr::Outside::LastPixel);
-            const StackAlignment::LocalField field = StackAlignment::localField(referencePyramid[0], roughly, request.local);
-            report.localBlocks = field.measured;
-            report.localLargest = field.largest;
-            fieldReach = field.largest;
-            ipr::Image mapX, mapY;
-            sourceMaps(report.alignment.referenceToFrame, field.displacements, mapX, mapY);
-            registered = ipr::remapped(frame.cameraRgb, mapX, mapY, ipr::Resampling::Lanczos4, ipr::Outside::LastPixel);
-        } else {
-            registered = ipr::warpedPerspective(frame.cameraRgb, report.alignment.referenceToFrame, size, ipr::Resampling::Lanczos4, ipr::Outside::LastPixel);
-        }
+        StackAlignment::Resampled resampled = StackAlignment::resample(
+            frame.cameraRgb, framePyramid[0], referencePyramid[0], report.alignment.referenceToFrame, request.localRefinement, request.local);
+        report.localBlocks = resampled.localBlocks;
+        report.localLargest = resampled.localLargest;
+        ipr::Image registered = std::move(resampled.pixels);
         frame.cameraRgb = {};
         if (!levelGains(referenceProxy, proxyOf(registered), report.gains)) {
             report.exclusion = QStringLiteral("Aucune zone bien exposée à comparer à la référence.");
@@ -332,7 +272,7 @@ Result run(const Request &request)
             views.push_back(std::move(pendingView));
             hasPendingView = false;
         }
-        narrowSpans(report.alignment.referenceToFrame, size, fieldReach, spans);
+        StackAlignment::narrowSpans(report.alignment.referenceToFrame, size, report.localLargest, spans);
         report.used = true;
         advance();
     }

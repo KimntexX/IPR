@@ -7,6 +7,7 @@
 #include "Image.h"
 
 #include <functional>
+#include <limits>
 #include <vector>
 
 // Registration of a frame on the reference of a stack, from the pixels alone: a global
@@ -52,6 +53,21 @@ using Pyramid = std::vector<ipr::Image>; // F32, one channel; [0] is the whole r
 // so that a block weighs the same in shadows and in highlights.
 Pyramid buildPyramid(const ipr::Image &cameraRgb, const Options &options = {});
 
+// The linear luminance of a camera image, F32 of one channel: what a pyramid is built from.
+// Empty for another type.
+ipr::Image luminanceOf(const ipr::Image &cameraRgb);
+
+// What a pyramid keeps of a linear luminance before its square root: scale * value bounded
+// to [low, high], low at least 0. Two exposures of a scene compare on the range both see.
+struct Bounds
+{
+    double scale = 1.0;
+    double low = 0.0;
+    double high = std::numeric_limits<double>::infinity();
+};
+
+Pyramid luminancePyramid(const ipr::Image &luminance, const Options &options = {}, const Bounds &bounds = {});
+
 Result estimate(const Pyramid &reference, const Pyramid &frame, const Options &options = {},
                 const std::function<bool()> &cancelled = {});
 
@@ -78,6 +94,26 @@ struct LocalField
 // luminance of the same size. Where nothing can be measured, the field falls to zero and
 // the global transform decides.
 LocalField localField(const ipr::Image &reference, const ipr::Image &registered, const LocalOptions &options = {});
+
+// Half the support of the resampling kernel, pixels: what a resampled pixel reads around it.
+constexpr int interpolationMargin = 4;
+
+struct Resampled
+{
+    ipr::Image pixels;          // the frame on the reference's grid, of the reference's size
+    int localBlocks = 0;        // blocks that measured the local field
+    double localLargest = 0.0;  // longest local displacement, pixels
+};
+
+// A frame on the reference's grid: the transform, then, with localRefinement, the local field
+// measured between the two levels 0 of their pyramids (square-root luminance, the reference's
+// of its size). The pixels are resampled once, by a Lanczos kernel.
+Resampled resample(const ipr::Image &frameRgb, const ipr::Image &frameLuminance, const ipr::Image &referenceLuminance,
+                   const ipr::Matrix33d &referenceToFrame, bool localRefinement, const LocalOptions &local = {});
+
+// Narrows spans, one [left, right) per reference row, to where a frame resampled by this
+// transform and a local field of this reach has its pixels, with the kernel's whole support.
+void narrowSpans(const ipr::Matrix33d &referenceToFrame, const ipr::Size &size, double fieldReach, std::vector<ipr::Vec2i> &spans);
 
 } // namespace StackAlignment
 

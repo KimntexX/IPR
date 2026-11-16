@@ -8,6 +8,7 @@
 #include "Analysis.h"
 #include "Parallel.h"
 #include "Random.h"
+#include "Warp.h"
 
 
 #include <algorithm>
@@ -329,6 +330,25 @@ ipr::Matrix33d rescaled(const ipr::Matrix33d &h, double factor)
     return up * h * down;
 }
 
+// The source coordinates of each reference pixel: the local field, then the transform.
+void sourceMaps(const ipr::Matrix33d &referenceToFrame, const ipr::Image &displacements, ipr::Image &mapX, ipr::Image &mapY)
+{
+    mapX = ipr::Image::create(displacements.size(), ipr::Depth::F32, 1);
+    mapY = ipr::Image::create(displacements.size(), ipr::Depth::F32, 1);
+    ipr::parallelRows(displacements.height(), [&](int first, int last) {
+        for (int y = first; y < last; ++y) {
+            const ipr::Vec2f *field = displacements.row<ipr::Vec2f>(y);
+            float *outX = mapX.mutableRow<float>(y), *outY = mapY.mutableRow<float>(y);
+            for (int x = 0; x < displacements.width(); ++x) {
+                const double px = x + double(field[x][0]), py = y + double(field[x][1]);
+                const double w = referenceToFrame(2, 0) * px + referenceToFrame(2, 1) * py + referenceToFrame(2, 2);
+                outX[x] = float((referenceToFrame(0, 0) * px + referenceToFrame(0, 1) * py + referenceToFrame(0, 2)) / w);
+                outY[x] = float((referenceToFrame(1, 0) * px + referenceToFrame(1, 1) * py + referenceToFrame(1, 2)) / w);
+            }
+        }
+    });
+}
+
 } // namespace
 
 LocalField localField(const ipr::Image &reference, const ipr::Image &registered, const LocalOptions &options)
@@ -401,25 +421,47 @@ LocalField localField(const ipr::Image &reference, const ipr::Image &registered,
     return field;
 }
 
-Pyramid buildPyramid(const ipr::Image &cameraRgb, const Options &options)
+ipr::Image luminanceOf(const ipr::Image &cameraRgb)
 {
-    Pyramid pyramid;
     if (cameraRgb.empty() || !(cameraRgb.depth() == ipr::Depth::F32 && cameraRgb.channels() == 3))
-        return pyramid;
+        return {};
     ipr::Image luminance = ipr::Image::create(cameraRgb.size(), ipr::Depth::F32, 1);
     ipr::parallelRows(cameraRgb.height(), [&](int first, int last) {
         for (int y = first; y < last; ++y) {
             const ipr::Vec3f *in = cameraRgb.row<ipr::Vec3f>(y);
             float *out = luminance.mutableRow<float>(y);
             for (int x = 0; x < cameraRgb.width(); ++x)
-                out[x] = std::sqrt(std::max(0.f, 0.25f * in[x][0] + 0.5f * in[x][1] + 0.25f * in[x][2]));
+                out[x] = 0.25f * in[x][0] + 0.5f * in[x][1] + 0.25f * in[x][2];
         }
     });
-    pyramid.push_back(std::move(luminance));
+    return luminance;
+}
+
+Pyramid luminancePyramid(const ipr::Image &luminance, const Options &options, const Bounds &bounds)
+{
+    Pyramid pyramid;
+    if (luminance.empty() || !(luminance.depth() == ipr::Depth::F32 && luminance.channels() == 1))
+        return pyramid;
+    const float scale = float(bounds.scale), low = float(std::max(0.0, bounds.low)), high = float(bounds.high);
+    ipr::Image root = ipr::Image::create(luminance.size(), ipr::Depth::F32, 1);
+    ipr::parallelRows(luminance.height(), [&](int first, int last) {
+        for (int y = first; y < last; ++y) {
+            const float *in = luminance.row<float>(y);
+            float *out = root.mutableRow<float>(y);
+            for (int x = 0; x < luminance.width(); ++x)
+                out[x] = std::sqrt(std::min(high, std::max(low, scale * in[x])));
+        }
+    });
+    pyramid.push_back(std::move(root));
     while (std::max(pyramid.back().width(), pyramid.back().height()) > options.coarsestSide) {
         pyramid.push_back(ipr::pyramidDown(pyramid.back()));
     }
     return pyramid;
+}
+
+Pyramid buildPyramid(const ipr::Image &cameraRgb, const Options &options)
+{
+    return luminancePyramid(luminanceOf(cameraRgb), options);
 }
 
 Result estimate(const Pyramid &reference, const Pyramid &frame, const Options &options,
@@ -517,6 +559,54 @@ Result estimate(const Pyramid &reference, const Pyramid &frame, const Options &o
     result.inlierArea = ipr::Rectd(lowest, highest);
     result.referenceToFrame = guess;
     result.valid = true;
+    return result;
+}
+
+// Where the frame's pixels, with the kernel's whole support, fall inside it. The preimage
+// of a rectangle under a transform is convex: one span per row. A local field moves pixels
+// by at most its longest displacement, which the margin covers.
+void narrowSpans(const ipr::Matrix33d &referenceToFrame, const ipr::Size &size, double fieldReach, std::vector<ipr::Vec2i> &spans)
+{
+    const double margin = interpolationMargin + std::ceil(fieldReach);
+    const double right = size.width - 1 - margin, bottom = size.height - 1 - margin;
+    ipr::parallelRows(size.height, [&](int from, int to) {
+        for (int y = from; y < to; ++y) {
+            int first = size.width, last = -1;
+            for (int x = 0; x < size.width; ++x) {
+                const double w = referenceToFrame(2, 0) * x + referenceToFrame(2, 1) * y + referenceToFrame(2, 2);
+                if (w <= 0.0)
+                    continue;
+                const double u = (referenceToFrame(0, 0) * x + referenceToFrame(0, 1) * y + referenceToFrame(0, 2)) / w;
+                const double v = (referenceToFrame(1, 0) * x + referenceToFrame(1, 1) * y + referenceToFrame(1, 2)) / w;
+                if (u >= margin && u <= right && v >= margin && v <= bottom) {
+                    first = std::min(first, x);
+                    last = x;
+                }
+            }
+            ipr::Vec2i &span = spans[size_t(y)];
+            span[0] = std::max(span[0], first);
+            span[1] = std::min(span[1], last + 1);
+        }
+    });
+}
+
+Resampled resample(const ipr::Image &frameRgb, const ipr::Image &frameLuminance, const ipr::Image &referenceLuminance,
+                   const ipr::Matrix33d &referenceToFrame, bool localRefinement, const LocalOptions &local)
+{
+    Resampled result;
+    const ipr::Size size = referenceLuminance.size();
+    if (!localRefinement) {
+        result.pixels = ipr::warpedPerspective(frameRgb, referenceToFrame, size, ipr::Resampling::Lanczos4, ipr::Outside::LastPixel);
+        return result;
+    }
+    // Measured on a cheap resampling, so that the pixels are resampled only once.
+    const ipr::Image roughly = ipr::warpedPerspective(frameLuminance, referenceToFrame, size, ipr::Resampling::Linear, ipr::Outside::LastPixel);
+    const LocalField field = localField(referenceLuminance, roughly, local);
+    result.localBlocks = field.measured;
+    result.localLargest = field.largest;
+    ipr::Image mapX, mapY;
+    sourceMaps(referenceToFrame, field.displacements, mapX, mapY);
+    result.pixels = ipr::remapped(frameRgb, mapX, mapY, ipr::Resampling::Lanczos4, ipr::Outside::LastPixel);
     return result;
 }
 
