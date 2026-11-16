@@ -13,7 +13,8 @@
 // A camera signal as a linear DNG: three channels per pixel, already demosaicked and
 // corrected for the lens, in the camera's own colours. Other software reads an ordinary
 // LinearRaw file with the camera's model, matrix and baseline exposure, and applies its own
-// profile. IPR reads back the same signal, with its values below the black and its
+// profile. The samples are 16-bit floats (DNG 1.4), white 1: a merge of exposures keeps its
+// whole range above white, and the shadows their relative precision. IPR reads back the same signal, with its values below the black and its
 // calibration, which LibRaw would clip and lose. An existing target is overwritten: staging
 // and publishing belong to ImageExporter.
 namespace CameraDng {

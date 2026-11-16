@@ -255,7 +255,7 @@ add_library(iprImage STATIC src/image/Types.h src/image/Image.h src/image/Image.
     src/image/Parallel.h src/image/Parallel.cpp src/image/Filters.h src/image/Filters.cpp
     src/image/Resize.h src/image/Resize.cpp src/image/Warp.h src/image/Warp.cpp src/image/Arrange.h src/image/Arrange.cpp
     src/image/Neighbourhood.h src/image/Neighbourhood.cpp src/image/Pixels.h src/image/Pixels.cpp
-    src/image/Analysis.h src/image/Analysis.cpp src/image/Random.h)
+    src/image/Analysis.h src/image/Analysis.cpp src/image/Random.h src/image/HalfFloat.h src/image/HalfFloat.cpp)
 target_include_directories(iprImage PUBLIC src/image)
 target_link_libraries(iprImage PUBLIC Threads::Threads)
 set_target_properties(iprImage PROPERTIES AUTOMOC OFF AUTOUIC OFF AUTORCC OFF)
@@ -514,6 +514,8 @@ if(BUILD_TESTING)
         target_link_libraries(iprStackAudit PRIVATE psapi)
     endif()
     ipr_add_test(cameraDngTests tests/camera_dng_test.cpp)
+    ipr_add_test(halfFloatTests tests/half_float_test.cpp)
+    set_tests_properties(halfFloatTests PROPERTIES LABELS "unit;export" TIMEOUT 30)
     ipr_add_test(noiseLawTests tests/noise_law_test.cpp)
     ipr_add_test(cfaNoiseStageTests tests/cfa_noise_stage_test.cpp)
     ipr_add_test(neuralCfaTests tests/neural_cfa_test.cpp)
