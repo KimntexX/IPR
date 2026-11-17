@@ -1,0 +1,579 @@
+{
+    "band_rows": 1433,
+    "campaign_id": "b9-hdr-audit-v001-60d-iso100-a-20261117T172531Z",
+    "candidate_dirty": true,
+    "candidate_revision": "860998534d294de2eb55282839465b35dfa6c234",
+    "clipped_everywhere_share": 0,
+    "common_area": [
+        37,
+        18,
+        5146,
+        3415
+    ],
+    "data_version": 1,
+    "exposure_levels": 3,
+    "folder": "101EOSR6",
+    "frame_size": [
+        5202,
+        3464
+    ],
+    "frames": [
+        {
+            "aperture": 5.599999904632568,
+            "exclusion": "",
+            "exif_ev_vs_units": 1,
+            "exposure_s": 0.02500000037252903,
+            "inliers": 33,
+            "iso": 100,
+            "linearity": {
+                "blocks": 37684,
+                "by_frame_level": [
+                    {
+                        "blocks": 8988,
+                        "frame_level": [
+                            0.01,
+                            0.02
+                        ],
+                        "median_ratio_green": 1.0078311238073427,
+                        "p10_ratio_green": 0.9905012193612843,
+                        "p90_ratio_green": 1.0239653159185178
+                    },
+                    {
+                        "blocks": 7216,
+                        "frame_level": [
+                            0.02,
+                            0.04
+                        ],
+                        "median_ratio_green": 1.0092191599393017,
+                        "p10_ratio_green": 0.998784107520728,
+                        "p90_ratio_green": 1.022576731466668
+                    },
+                    {
+                        "blocks": 10209,
+                        "frame_level": [
+                            0.04,
+                            0.08
+                        ],
+                        "median_ratio_green": 1.006314568679573,
+                        "p10_ratio_green": 0.9991586485849143,
+                        "p90_ratio_green": 1.0139646023322555
+                    },
+                    {
+                        "blocks": 11271,
+                        "frame_level": [
+                            0.08,
+                            0.16
+                        ],
+                        "median_ratio_green": 0.9943033636437529,
+                        "p10_ratio_green": 0.9911684981372519,
+                        "p90_ratio_green": 0.9978748222596252
+                    }
+                ],
+                "measured_over_exif_ev": -0.009588368355144032,
+                "median_ratio_rgb": [
+                    1.0004278210618667,
+                    1.003718130179078,
+                    1.0013258735212156
+                ]
+            },
+            "local_largest_px": 15.228303742579142,
+            "measured_exposure_rgb": [
+                2.0647008419036865,
+                2.0276355743408203,
+                1.9559714794158936
+            ],
+            "measured_through": 2,
+            "merge_share": 0.27455631583273366,
+            "nominal_gap_ev": 0.013630812126253977,
+            "reference": false,
+            "residual_px": 0.850125720532348,
+            "shift_px": [
+                -16.383764994502243,
+                8.11145648144356
+            ],
+            "source": "IMG_9365.CR2",
+            "used": true,
+            "warning": ""
+        },
+        {
+            "aperture": 5.599999904632568,
+            "exclusion": "",
+            "exif_ev_vs_units": 1,
+            "exposure_s": 0.02500000037252903,
+            "inliers": 107,
+            "iso": 100,
+            "linearity": {
+                "blocks": 37870,
+                "by_frame_level": [
+                    {
+                        "blocks": 9113,
+                        "frame_level": [
+                            0.01,
+                            0.02
+                        ],
+                        "median_ratio_green": 1.0045289841823923,
+                        "p10_ratio_green": 0.9940124746723141,
+                        "p90_ratio_green": 1.0145839926351463
+                    },
+                    {
+                        "blocks": 7145,
+                        "frame_level": [
+                            0.02,
+                            0.04
+                        ],
+                        "median_ratio_green": 1.0063771921959468,
+                        "p10_ratio_green": 1.0000411825847353,
+                        "p90_ratio_green": 1.0122064262804444
+                    },
+                    {
+                        "blocks": 10283,
+                        "frame_level": [
+                            0.04,
+                            0.08
+                        ],
+                        "median_ratio_green": 1.0054546066816754,
+                        "p10_ratio_green": 0.9993066684096394,
+                        "p90_ratio_green": 1.0109592457019536
+                    },
+                    {
+                        "blocks": 11329,
+                        "frame_level": [
+                            0.08,
+                            0.16
+                        ],
+                        "median_ratio_green": 0.9946895312900844,
+                        "p10_ratio_green": 0.992109394900446,
+                        "p90_ratio_green": 0.9975731956117904
+                    }
+                ],
+                "measured_over_exif_ev": -0.02005372458629508,
+                "median_ratio_rgb": [
+                    0.9997014845471079,
+                    1.0024381370177093,
+                    1.0009548738434242
+                ]
+            },
+            "local_largest_px": 5.707465533883415,
+            "measured_exposure_rgb": [
+                2.0762553215026855,
+                2.039793014526367,
+                1.9671274423599243
+            ],
+            "measured_through": 2,
+            "merge_share": 0.287600374257707,
+            "nominal_gap_ev": 0.022007101798556666,
+            "reference": false,
+            "residual_px": 0.6769182870000593,
+            "shift_px": [
+                -3.2628069591268725,
+                4.235274126688316
+            ],
+            "source": "IMG_9366.CR2",
+            "used": true,
+            "warning": ""
+        },
+        {
+            "aperture": 5.599999904632568,
+            "exclusion": "",
+            "exif_ev_vs_units": 0,
+            "exposure_s": 0.012500000186264515,
+            "inliers": 0,
+            "iso": 100,
+            "linearity": {
+                "blocks": 28699,
+                "by_frame_level": [
+                    {
+                        "blocks": 7209,
+                        "frame_level": [
+                            0.01,
+                            0.02
+                        ],
+                        "median_ratio_green": 0.9941959169492344,
+                        "p10_ratio_green": 0.9863079438360758,
+                        "p90_ratio_green": 1.0022714638653545
+                    },
+                    {
+                        "blocks": 10425,
+                        "frame_level": [
+                            0.02,
+                            0.04
+                        ],
+                        "median_ratio_green": 0.9963518882221872,
+                        "p10_ratio_green": 0.9897750440145806,
+                        "p90_ratio_green": 1.003344422473068
+                    },
+                    {
+                        "blocks": 11065,
+                        "frame_level": [
+                            0.04,
+                            0.08
+                        ],
+                        "median_ratio_green": 1.0050753355287734,
+                        "p10_ratio_green": 1.001026615378194,
+                        "p90_ratio_green": 1.008886058341379
+                    }
+                ],
+                "measured_over_exif_ev": 0.004776211119883368,
+                "median_ratio_rgb": [
+                    1.001512386334846,
+                    0.9999448123541815,
+                    1.0005828072030498
+                ]
+            },
+            "local_largest_px": 0,
+            "measured_exposure_rgb": [
+                1,
+                1,
+                1
+            ],
+            "measured_through": -1,
+            "merge_share": 0.17985718629032,
+            "nominal_gap_ev": 0,
+            "reference": true,
+            "residual_px": 0,
+            "shift_px": [
+                0,
+                0
+            ],
+            "source": "IMG_9367.CR2",
+            "used": true,
+            "warning": ""
+        },
+        {
+            "aperture": 5.599999904632568,
+            "exclusion": "",
+            "exif_ev_vs_units": 0,
+            "exposure_s": 0.012500000186264515,
+            "inliers": 80,
+            "iso": 100,
+            "linearity": {
+                "blocks": 28718,
+                "by_frame_level": [
+                    {
+                        "blocks": 7157,
+                        "frame_level": [
+                            0.01,
+                            0.02
+                        ],
+                        "median_ratio_green": 0.9946242064435207,
+                        "p10_ratio_green": 0.9855656287077065,
+                        "p90_ratio_green": 1.0054438565780892
+                    },
+                    {
+                        "blocks": 10463,
+                        "frame_level": [
+                            0.02,
+                            0.04
+                        ],
+                        "median_ratio_green": 0.9955859556964762,
+                        "p10_ratio_green": 0.9884715458372237,
+                        "p90_ratio_green": 1.0034138116878848
+                    },
+                    {
+                        "blocks": 11098,
+                        "frame_level": [
+                            0.04,
+                            0.08
+                        ],
+                        "median_ratio_green": 1.0059810802693008,
+                        "p10_ratio_green": 1.0017209387828596,
+                        "p90_ratio_green": 1.0099547719534474
+                    }
+                ],
+                "measured_over_exif_ev": 0.0005896614286935253,
+                "median_ratio_rgb": [
+                    1.002241115470332,
+                    1.0004088056950655,
+                    1.0008755393593685
+                ]
+            },
+            "local_largest_px": 8.326300089907598,
+            "measured_exposure_rgb": [
+                1.0043680667877197,
+                1.0033714771270752,
+                1.002384066581726
+            ],
+            "measured_through": 2,
+            "merge_share": 0.13794936885009956,
+            "nominal_gap_ev": 0.004859131797822382,
+            "reference": false,
+            "residual_px": 0.6598039090430468,
+            "shift_px": [
+                -1.341783738261862,
+                -4.325543578540738
+            ],
+            "source": "IMG_9368.CR2",
+            "used": true,
+            "warning": ""
+        },
+        {
+            "aperture": 5.599999904632568,
+            "exclusion": "",
+            "exif_ev_vs_units": -1,
+            "exposure_s": 0.0062500000931322575,
+            "inliers": 51,
+            "iso": 100,
+            "linearity": {
+                "blocks": 21615,
+                "by_frame_level": [
+                    {
+                        "blocks": 10721,
+                        "frame_level": [
+                            0.01,
+                            0.02
+                        ],
+                        "median_ratio_green": 0.986084651864991,
+                        "p10_ratio_green": 0.974037085987303,
+                        "p90_ratio_green": 0.9999243656793548
+                    },
+                    {
+                        "blocks": 10894,
+                        "frame_level": [
+                            0.02,
+                            0.04
+                        ],
+                        "median_ratio_green": 1.0112236655904132,
+                        "p10_ratio_green": 1.003558518680948,
+                        "p90_ratio_green": 1.0179185614870445
+                    }
+                ],
+                "measured_over_exif_ev": 0.015843918390732428,
+                "median_ratio_rgb": [
+                    1.0053804873463248,
+                    1.002520549700917,
+                    0.9991752354437359
+                ]
+            },
+            "local_largest_px": 12.34722205422611,
+            "measured_exposure_rgb": [
+                0.5614392161369324,
+                0.49745699763298035,
+                0.43692150712013245
+            ],
+            "measured_through": 2,
+            "merge_share": 0.059965015104203385,
+            "nominal_gap_ev": -0.004859439979793171,
+            "reference": false,
+            "residual_px": 0.7008330288536712,
+            "shift_px": [
+                1.498806273543188,
+                4.719524936094144
+            ],
+            "source": "IMG_9369.CR2",
+            "used": true,
+            "warning": ""
+        },
+        {
+            "aperture": 5.599999904632568,
+            "exclusion": "",
+            "exif_ev_vs_units": -1,
+            "exposure_s": 0.0062500000931322575,
+            "inliers": 54,
+            "iso": 100,
+            "linearity": {
+                "blocks": 21613,
+                "by_frame_level": [
+                    {
+                        "blocks": 10753,
+                        "frame_level": [
+                            0.01,
+                            0.02
+                        ],
+                        "median_ratio_green": 0.9856508400221463,
+                        "p10_ratio_green": 0.9734675592357995,
+                        "p90_ratio_green": 1.0002990500423952
+                    },
+                    {
+                        "blocks": 10860,
+                        "frame_level": [
+                            0.02,
+                            0.04
+                        ],
+                        "median_ratio_green": 1.0118529278823518,
+                        "p10_ratio_green": 1.0037461656784732,
+                        "p90_ratio_green": 1.0187306649516563
+                    }
+                ],
+                "measured_over_exif_ev": 0.017103699022323678,
+                "median_ratio_rgb": [
+                    1.0053539625550634,
+                    1.0027716540017548,
+                    0.9995671935427931
+                ]
+            },
+            "local_largest_px": 9.766619073073553,
+            "measured_exposure_rgb": [
+                0.5592791438102722,
+                0.4971472918987274,
+                0.43735164403915405
+            ],
+            "measured_through": 2,
+            "merge_share": 0.06007173966924478,
+            "nominal_gap_ev": -0.006560856275998366,
+            "reference": false,
+            "residual_px": 0.6417723625940737,
+            "shift_px": [
+                0.2565296005581993,
+                -0.06331261369786273
+            ],
+            "source": "IMG_9370.CR2",
+            "used": true,
+            "warning": ""
+        }
+    ],
+    "group": "b9-hdr",
+    "keep_all": false,
+    "limitations": "A still life on a tripod, indoor light; twins differ by the shutter's repeatability and a registration rounded to the pixel; the ideal ratio ignores the demosaicing's correlation, alike for both terms",
+    "measured_at_utc": "2026-11-17T17:25:31Z",
+    "method": "Frames decoded as the application decodes them (signed camera RGB after lens corrections), merged by HdrJob with the middle exposure as reference. Linearity: 16 px block means of the merge against each frame where that frame lies in [0.01, 0.8) of its white and the block is no edge, the frame scaled by the measured exposures; the median against the EXIF exposures gives the measure's gap. Noise: two merges of distinct frames (first and second of each exposure) differ by their noise only, as the reference and its twin do; their deviations over the flatter half of 32 px tiles, per stop of the reference's level, against two ideals: the inverse-variance ratio of the noise laws, and the same weights applied to the variance the twins measure (read, shot and a part proportional to the signal, fitted by least squares)",
+    "motion_rejected_sample_share": 0.1925017711236008,
+    "noise": {
+        "by_level": [
+            {
+                "ideal_ratio": 0.5242056417527853,
+                "ideal_ratio_measured_noise": 0.4801984974190033,
+                "level_stop": -10,
+                "median_level": 0.0018266925378327414,
+                "ratio_rgb": [
+                    0.6666675218759294,
+                    0.6690502360539752,
+                    0.6546016273724782
+                ],
+                "sigma_merge_green": 0.00029965027768468974,
+                "sigma_single_green": 0.0004510902133326649,
+                "tiles": 71
+            },
+            {
+                "ideal_ratio": 0.5280045261585957,
+                "ideal_ratio_measured_noise": 0.4907905214794237,
+                "level_stop": -9,
+                "median_level": 0.0030832107863716374,
+                "ratio_rgb": [
+                    0.5984628200961913,
+                    0.5786547581611585,
+                    0.5696212199728835
+                ],
+                "sigma_merge_green": 0.00029253055722125275,
+                "sigma_single_green": 0.0005017239472683025,
+                "tiles": 605
+            },
+            {
+                "ideal_ratio": 0.5301649569316896,
+                "ideal_ratio_measured_noise": 0.5000851097501277,
+                "level_stop": -8,
+                "median_level": 0.005062212668462962,
+                "ratio_rgb": [
+                    0.5498775051423581,
+                    0.5359945701961726,
+                    0.5255843179476845
+                ],
+                "sigma_merge_green": 0.000285159016118615,
+                "sigma_single_green": 0.0005293534768030134,
+                "tiles": 1573
+            },
+            {
+                "ideal_ratio": 0.532055404128621,
+                "ideal_ratio_measured_noise": 0.5147688305257323,
+                "level_stop": -7,
+                "median_level": 0.01188732429909578,
+                "ratio_rgb": [
+                    0.5274958104389736,
+                    0.5325229545447671,
+                    0.53325935623219
+                ],
+                "sigma_merge_green": 0.000342053980099229,
+                "sigma_single_green": 0.0006499924850061918,
+                "tiles": 587
+            },
+            {
+                "ideal_ratio": 0.5326838040727457,
+                "ideal_ratio_measured_noise": 0.5249165608742395,
+                "level_stop": -6,
+                "median_level": 0.022042646907721064,
+                "ratio_rgb": [
+                    0.52115329926231,
+                    0.5278520179210674,
+                    0.5317941969285079
+                ],
+                "sigma_merge_green": 0.0004008696250557796,
+                "sigma_single_green": 0.0007605018542753572,
+                "tiles": 2436
+            },
+            {
+                "ideal_ratio": 0.5330767485237539,
+                "ideal_ratio_measured_noise": 0.5385694750837865,
+                "level_stop": -5,
+                "median_level": 0.048237585189781385,
+                "ratio_rgb": [
+                    0.5394438570380049,
+                    0.5445628662148078,
+                    0.5517789256560746
+                ],
+                "sigma_merge_green": 0.000578821835941299,
+                "sigma_single_green": 0.0010630248926935216,
+                "tiles": 3209
+            }
+        ],
+        "flat_score_limit": 4.210788821530376,
+        "seconds_merge_a": 3.05,
+        "set_a": [
+            "IMG_9369.CR2",
+            "IMG_9367.CR2",
+            "IMG_9365.CR2"
+        ],
+        "set_b": [
+            "IMG_9370.CR2",
+            "IMG_9368.CR2",
+            "IMG_9366.CR2"
+        ],
+        "single_variance_fit": {
+            "proportional": 4.195816388854494e-05,
+            "read": 1.8888004212045383e-07,
+            "shot": 1.7445891349155062e-05
+        },
+        "tiles": 16960,
+        "twin_shift_px": [
+            -1.341783738261862,
+            -4.325543578540738
+        ]
+    },
+    "peak_memory_gb_after_merge": 1.467224064,
+    "range_ev": 2.028567958074555,
+    "reference": "IMG_9367.CR2",
+    "renders": [
+        "60d-iso100-a-merge-overview-ev0.png",
+        "60d-iso100-a-merge-overview-ev-2.png",
+        {
+            "ev": 6,
+            "shadows_window": [
+                2800,
+                1050,
+                800,
+                600
+            ]
+        }
+    ],
+    "schema_version": 1,
+    "scratch_gb": 1.297420416,
+    "seconds_decode_each": [
+        1.424,
+        1.256,
+        1.238,
+        1.241,
+        1.236,
+        1.22
+    ],
+    "seconds_merge_from_decoded": 6.557,
+    "series": "60d-iso100-a",
+    "sources_intact": true,
+    "sources_sha256": [
+        "481513b77963930a651906230caacd40ef271dab247a3210f9dbc96e2208695a",
+        "7e9226976b653801344f0e366211cc639036dfe926c80c43346472c54520bd56",
+        "b68a099d5594310dbbdb5dc6a9e839bd730df5ecb8006aa2db66ea15ab308f01",
+        "6cbd6654f07e2d2c7556c9d20c48a4121215943a2a71d6ae10073729ae3dbf9e",
+        "50eebcdf0c802bc33388854266a03efe0d306a29b2ebf454f679e35e2fb098e1",
+        "3bca978aed8db8e2ab2b9a18387bf4bea2b85b77913fddaeb7d725d6cb4b06df"
+    ],
+    "units_frame": "IMG_9368.CR2",
+    "used_frames": 6
+}

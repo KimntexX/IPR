@@ -1,7 +1,8 @@
 # B9 — préparation de la fusion HDR
 
 État : préparé le 5 novembre 2026 ; **H1, H2, H3 et H5 codés sur `patch_hdr` le 16 novembre 2026,
-qualifiés sur synthèse seulement**, en attente des séries réelles (§8). Précise la
+qualifiés sur synthèse** (§8), **puis mesurés le 17 novembre sur sept séries réelles du 60D** (§9) ;
+il manque une scène à fort contraste en lumière qui ne scintille pas. Précise la
 [section B9 de la feuille de route](roadmap-beta.md#12-b7b8b9--empilement-panorama-et-hdr) et le
 [plan multi-images](empilement-et-panorama.md). Branche proposée : `patch_hdr`, moteur d'abord, panneau
 sur une branche enfant. Le panorama HDR vient après, une fois chacun qualifié.
@@ -158,12 +159,123 @@ s'arrête au blanc : **le premier rendu écrête au blanc**. L'exposition agit s
 profil, si bien que −6 IL font réapparaître des hautes lumières jusqu'à 64 fois le blanc (test). Le curseur
 « Hautes lumières », appliqué après le profil, ne les voit pas : c'est l'exposition qui les ramène.
 
+## 9. Premières séries réelles, le 17 novembre 2026
+
+**Corpus.** Une lecture des EXIF des RAW des cartes `D:` et `E:` et de `Pictures\RAW` (1789 fichiers, sans
+écriture) trouve sept séries du 60D prises le 13 novembre 2026 entre 17 h 44 et 17 h 48 dans
+`E:\DCIM\101EOSR6` : une nature morte d'intérieur (peluche noire et blanche, sweat orange, mur blanc,
+parquet), 70 mm, f/5,6, le temps divisé par deux à chaque pas, deux vues ou plus par pas. Les CR3 du R6 III
+n'en contiennent aucune. La scène est peu contrastée : aucune zone n'est écrêtée dans toutes les vues, la
+série la plus longue couvre 5 IL. Le trépied a bougé entre les vues, jusqu'à 24 pixels.
+
+| Série | Vues | ISO | Temps | Étendue |
+| --- | --- | --- | --- | --- |
+| `60d-iso100-a` | `IMG_9365`–`9370` | 100 | 1/40 à 1/160 s | 2 IL |
+| `60d-iso400-a` | `IMG_9371`–`9381` | 400 | 1/20 à 1/320 s | 4 IL |
+| `60d-iso800` | `IMG_9382`–`9395` | 800 | 1/40 à 1/320 s, aller et retour | 3 IL |
+| `60d-iso400-b` | `IMG_9396`–`9405` | 400 | 1/20 à 1/320 s | 4 IL |
+| `60d-iso100-b` | `IMG_9406`–`9410` | 100 | 1/10 à 1/20 s | 1 IL |
+| `60d-iso100-c` | `IMG_9411`–`9417` | 100 | 1/40 à 1/160 s | 2 IL |
+| `60d-iso1600` | `IMG_9429`–`9460` | 1600 | 1/100 à 1/3200 s | 5 IL |
+
+**Le DNG HDR de Lightroom.** Fusion de `IMG_9371`, `9375` et `9379` par l'utilisateur (Lightroom Classic,
+Camera Raw 18.7). Lecture des étiquettes, sans décompilation : **DNG 1.7, LinearRaw, flottants 16 bits,
+tuiles de 400 × 432, compression JPEG XL (52546) avec perte** (distance 0,5), masque de transparence,
+`BaselineExposure` +2, blanc déclaré à 32768. Les données sont aux niveaux de la vue la plus sombre ; +2 IL
+les ramènent à ceux de la vue médiane, le choix d'IPR. IPR ne lit pas le JPEG XL : le fichier ne s'ouvre pas.
+Son XMP porte `AutoTone="True"` (réglages automatiques du dialogue de fusion), `HDREditMode="1"` (affichage
+HDR jusqu'à +2,3 IL) et le profil Adobe Standard.
+
+**Comparaison des signaux, hors rendu** (décodage du JPEG XL par `imagecodecs` dans un dossier temporaire,
+hors dépôt). Fusions recalées au pixel, rapport Lightroom / IPR par canal :
+
+| Mesure | Résultat |
+| --- | --- |
+| Niveau médian, à la même échelle | 0,0216 contre 0,0210 (0,04 IL) |
+| Rapport par canal (80 % des tons) | R 0,999, V 1,004, B 0,999 |
+| Rapport sur le décile le plus clair | 0,947 : Lightroom 5 % plus bas |
+| Balance inscrite (neutre caméra) | IPR (0,511 ; 1 ; 0,608), celle de `IMG_9375` ; Lightroom (0,553 ; 1 ; 0,561), celle de `IMG_9379` |
+
+Les deux fusions sont donc le même signal à 0,5 % près sur l'essentiel des tons. **L'écart visible vient du
+rendu** : réglages automatiques et affichage HDR de Lightroom, profil, et balance automatique du boîtier qui a
+changé d'une vue à l'autre (chaque logiciel reprend celle d'une vue différente). L'écart de 5 % dans les plus
+hautes lumières rejoint la cause suivante.
+
+**Scintillement de l'éclairage.** Les rapports entre vues, mesurés directement sur les sites verts du RAW
+(noir soustrait, sans passer par IPR), varient selon la rangée et la zone :
+
+| Paire | Temps | Rapport selon la rangée |
+| --- | --- | --- |
+| `IMG_9375` / `9376` | 1/80 et 1/80 s | plat à ± 0,3 % |
+| `IMG_9371` / `9372` | 1/20 et 1/20 s | plat à ± 0,5 % |
+| `IMG_9379` / `9380` | 1/320 et 1/320 s | ± 2 % |
+| `IMG_9382` / `9386` | 1/40 et 1/160 s | onde de ± 2,5 % |
+| `IMG_9371` / `9379` | 1/20 et 1/320 s | de 1,07 en haut à 0,95 |
+
+Une source artificielle scintille (100 Hz), et l'obturateur à fente des poses courtes en saisit des phases
+différentes selon la rangée ; à rangée égale, l'écart dépend encore de la zone, signe de plusieurs sources.
+**Les vues courtes ne sont pas cohérentes avec les longues à quelques pourcents près.** Ce n'est pas une
+non-linéarité d'IPR ; aucune fusion ne peut la corriger sans modèle du scintillement. Pour les séries de
+validation : lumière du jour seule, ou poses de 1/50 s et plus longues.
+
+**Audit des sept séries** ([`tests/hdr_audit.cpp`](../../tests/hdr_audit.cpp), outil manuel `iprHdrAudit`).
+Chaque série est décodée comme dans l'application puis fusionnée par `HdrJob`, la vue du pas médian en
+référence, une fois avec le rejet des fantômes et une fois en gardant toutes les vues. Les 14 preuves sont
+`docs/validation/raw/b9-hdr-audit-v001-60d-*-20261117T*.json`. Elles ont été mesurées avec l'outil avant son
+commit, d'où `candidate_dirty` ; il est versionné avec elles. Les sources sont restées intactes (empreintes
+SHA-256 relues).
+
+- **Linéarité :** moyennes de la fusion contre chaque vue ramenée par les expositions mesurées, sur des blocs
+  de 16 pixels que cette vue expose entre 1 % et 80 % de son blanc.
+- **Bruit :** deux fusions de vues distinctes (la première, puis la seconde de chaque pas) ne diffèrent que
+  par leur bruit, comme la référence et sa jumelle. Leur écart sur les tuiles de 32 pixels les plus planes
+  donne le rapport entre le bruit de la fusion et celui d'une vue seule, sans image vraie. On le compare à deux
+  cibles :
+  - celle des lois de bruit (photons et lecture) ;
+  - celle qui prend aussi en compte la part proportionnelle au signal mesurée sur les jumelles : 0,65 à 1,9 %
+    selon la série, ce sont les écarts de réponse des photosites, que la moyenne réduit moins bien.
+
+| Série | Expositions mesurées vs EXIF | Linéarité (rapport par niveau) | Bruit ombres : mesuré / lois / mesuré-cible | Bruit tons moyens : idem | Fantômes faux (part des échantillons) |
+| --- | --- | --- | --- | --- | --- |
+| `60d-iso100-a` | ≤ 0,022 IL | 0,986 à 1,012 | 0,50 / 0,53 / 0,49 | 0,53 / 0,53 / 0,53 | 19 % |
+| `60d-iso100-b` | ≤ 0,004 IL | 0,991 à 1,006 | 0,89 / 0,83 / 0,94 | 0,87 / 0,82 / 0,89 | 4,4 % |
+| `60d-iso100-c` | ≤ 0,017 IL | 0,995 à 1,005 | 0,51 / 0,53 / 0,49 | 0,58 / 0,53 / 0,58 | 16 % |
+| `60d-iso400-a` | ≤ 0,027 IL | 0,975 à 1,050 | 0,29 / 0,31 / 0,28 | 0,42 / 0,35 / 0,37 | 2,6 % |
+| `60d-iso400-b` | ≤ 0,028 IL | 0,987 à 1,013 | 0,29 / 0,31 / 0,28 | 0,40 / 0,35 / 0,37 | 1,9 % |
+| `60d-iso800` | ≤ 0,041 IL | 0,977 à 1,015 | 0,49 / 0,49 / 0,48 | 0,54 / 0,51 / 0,52 | 0,9 % |
+| `60d-iso1600` | ≤ 0,226 IL (1/3200 s) | 0,961 à 1,037 | 0,31 / 0,29 / 0,30 | 0,38 / 0,34 / 0,35 | 0,8 % |
+
+Les colonnes de bruit sont lues en gardant toutes les vues. Les ombres sont les niveaux inférieurs à 2⁻⁸ du
+blanc de la référence, les tons moyens les niveaux de 2⁻⁷ à 2⁻². Il n'y a eu aucune vue écartée.
+
+**Lecture.**
+
+1. **Les expositions mesurées suivent les EXIF à 0,04 IL près** jusqu'à 1/320 s. À 1/3200 s, l'écart atteint
+   0,23 IL : c'est l'obturateur, qui est imprécis à ces vitesses. Il reste sous le seuil d'alerte d'un tiers
+   d'IL, et il justifie de mesurer les expositions.
+2. **La linéarité est à ± 1,5 %** sur les séries aux poses longues ou au scintillement faible. Elle descend à
+   ± 5 % sur `iso400-a` et `iso1600`, là où le scintillement est le plus fort. L'écart suit la rangée, pas le
+   niveau (voir plus haut).
+3. **Le bruit atteint la cible mesurée dans les ombres** : un rapport de 0,29 à 0,31 sur 4 à 5 IL, soit 1,7 IL
+   gagnés sur la vue de référence. Dans les tons moyens, il reste à 10–15 % au-dessus de cette cible. La cause
+   probable, non démontrée, est l'incohérence entre vues due au scintillement.
+   À 2⁻¹¹ du blanc de la référence (+6 IL), la vue seule n'est plus que du bruit coloré, alors que la fusion
+   rend la fourrure.
+4. **Le rejet des fantômes se trompe sur une scène immobile éclairée qui scintille** : jusqu'à 19 % des
+   échantillons à ISO 100, où le bruit faible laisse la seule tolérance de 3 % ; le bruit des ombres monte
+   alors de 0,50 à 0,59. À ISO 400 et au-delà, il reste sous 3 %. L'option « Garder toutes les vues » existe
+   pour ce cas. Un réglage plus robuste (tolérance qui suit l'écart mesuré entre vues de même exposition) reste
+   à décider sur une scène qui bouge vraiment (H4).
+5. **Ressources :** 5 à 56 s de fusion après décodage (32 vues de 18 Mpx pour la plus longue), 1,5 Go de
+   mémoire au plus, tampon vidé.
+
 ### Reste à faire
 
 | Palier | Ce qui manque | Qui |
 | --- | --- | --- |
-| H0 | Séries réelles du §7 et un DNG HDR de Lightroom avec son export TIFF | Utilisateur |
-| H1 | Ouverture du nouveau DNG flottant dans Lightroom, Photoshop et DxO | Utilisateur |
-| H2–H4 | Mesures du §6 sur les séries réelles : linéarité, bruit sur aplats, dynamique, fantômes sur sujet mobile | Claude, avec les séries |
+| H0 | Séries à fort contraste du §7, en lumière qui ne scintille pas (jour, ou poses ≥ 1/50 s), R6 III et 60D | Utilisateur |
+| H1 | Ouverture du DNG flottant dans Photoshop et DxO (Lightroom : fait, #23) ; lecture du DNG 1.7 JPEG XL de Lightroom par IPR (dépendance libjxl à décider) | Utilisateur |
+| H2 | Fait sur le 60D en lumière scintillante (§9) ; à refaire sur une scène à fort contraste, où des zones sont écrêtées | Claude, avec les séries |
+| H3–H4 | Main levée, sujet mobile, robustesse du rejet des fantômes au scintillement | Claude, avec les séries |
 | H5 | Décider d'une compensation initiale à l'ouverture (premier rendu écrêté au blanc) ; validation visuelle | Utilisateur |
 | H6 | Panorama HDR | Après qualification de B8 et B9 |
