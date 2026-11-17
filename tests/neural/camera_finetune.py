@@ -225,6 +225,41 @@ def extract(output):
 
 # ---------------------------------------------------------------- training
 
+class ArrayFile:
+    """Rows of a .npy file read by offset, without a memory map.
+
+    Pages of a memory map stay in the process working set and count against the memory
+    guard (a first campaign stopped at 5.4 GB of working set for 4.4 GB of private memory);
+    plain reads go through the system file cache instead. `limit` keeps the first rows only.
+    """
+
+    def __init__(self, path, limit=None):
+        import numpy as np
+        self.path = Path(path)
+        with self.path.open('rb') as stream:
+            version = np.lib.format.read_magic(stream)
+            reader = np.lib.format.read_array_header_1_0 if version == (1, 0) else np.lib.format.read_array_header_2_0
+            shape, fortran, dtype = reader(stream)
+            self.offset = stream.tell()
+        if fortran or not shape:
+            raise ValueError('C-ordered array with rows required: '+str(path))
+        self.dtype, self.row_shape = dtype, shape[1:]
+        self.row_bytes = dtype.itemsize*int(np.prod(self.row_shape))
+        self.rows = shape[0] if limit is None else min(limit, shape[0])
+
+    def __len__(self):
+        return self.rows
+
+    def __getitem__(self, index):
+        import numpy as np
+        if not 0 <= index < self.rows:
+            raise IndexError(index)
+        with self.path.open('rb') as stream:
+            stream.seek(self.offset+index*self.row_bytes)
+            values = np.fromfile(stream, dtype=self.dtype, count=self.row_bytes//self.dtype.itemsize)
+        return values.reshape(self.row_shape)
+
+
 class D60Noise:
     """60D noise in network units: Poisson at the qualified slope, real dark deviations, clip."""
 
@@ -238,7 +273,7 @@ class D60Noise:
         self.read = torch.tensor([[b for _, b in law] for law in laws], device=device, dtype=torch.float32)
         self.clip = torch.tensor([data['d60_darks'][str(iso)]['clip_dn'] for iso in self.isos], device=device,
                                  dtype=torch.float32)
-        self.crops = [np.load(output/f'd60-dark-{iso}.npy', mmap_mode='r') for iso in self.isos]
+        self.crops = [ArrayFile(output/f'd60-dark-{iso}.npy') for iso in self.isos]
         self.pools = [{role: [i for i, c in enumerate(data['d60_darks'][str(iso)]['crops']) if c['role'] == role]
                        for role in ('calibration', 'control')} for iso in self.isos]
         self.device = device
@@ -326,14 +361,15 @@ def train(output, arm, steps_limit):
     optimizer = torch.optim.Adam(model.parameters(), lr=plan['learning_rate'])
     optimizer.load_state_dict(state['optimizer_state'])
     del state
-    r6_training = np.load(PARENT/'training.npy', mmap_mode='r')[:read(PARENT/'data.json')['training_tiles']]
+    r6_training = ArrayFile(PARENT/'training.npy', read(PARENT/'data.json')['training_tiles'])
     r6_development = torch.from_numpy(np.load(PARENT/'development.npy')).cuda()
     r6_noise = NoiseModel(PARENT, parent_plan, 'cuda')
-    d60_training = np.load(output/'d60-training.npy', mmap_mode='r')
+    r6_noise.crops = [ArrayFile(PARENT/f'dark-{iso}.npy') for iso in r6_noise.isos]
+    d60_training = ArrayFile(output/'d60-training.npy')
     d60_development = torch.from_numpy(np.load(output/'d60-development.npy')).cuda()
     d60_noise = D60Noise(output, plan, data, 'cuda')
-    burst_input = np.load(output/'burst-input.npy', mmap_mode='r')
-    burst_reference = np.load(output/'burst-reference.npy', mmap_mode='r')
+    burst_input = ArrayFile(output/'burst-input.npy')
+    burst_reference = ArrayFile(output/'burst-reference.npy')
     qual = read(Path(plan['d60']['qualification']))
     burst_laws = {iso: law_dn(qual, iso) for iso in {r['iso'] for r in data['bursts']}}
     rng = torch.Generator(device='cuda').manual_seed(plan['data_seed']+(0 if arm == 'mixed' else 1))
@@ -402,7 +438,6 @@ def train(output, arm, steps_limit):
             burst = real(guard)
         model.train()
         torch.cuda.empty_cache()
-        trim_working_set()
         by = dict(r6_synthetic=median_by_iso(r6, parent_plan['training_iso']),
                   d60_synthetic=median_by_iso(d60, plan['d60']['training_iso']),
                   d60_real=median_by_iso(burst, sorted({r['iso'] for r in burst})))
@@ -464,8 +499,6 @@ def train(output, arm, steps_limit):
                 optimizer.step()
                 torch.cuda.synchronize()
                 result['update_seconds'].append(time.perf_counter()-started)
-                if step % 200 == 0:
-                    trim_working_set()
                 if step % 100 == 0:
                     result['losses'].append(dict(step=step, objective_loss=float(loss.detach()), gradient_norm=float(norm)))
                 result['completed_steps'] = step
@@ -492,16 +525,6 @@ def train(output, arm, steps_limit):
 
 
 # ---------------------------------------------------------------- campaign
-
-def trim_working_set():
-    """Hand the pages of the memory-mapped tiles back to the standby cache (Windows).
-
-    Pages read through np.load(mmap_mode='r') stay in the working set and count as used
-    memory; without this, the campaign's own reads would trigger its host-pressure pause.
-    """
-    if sys.platform == 'win32':
-        ctypes.windll.psapi.EmptyWorkingSet(ctypes.windll.kernel32.GetCurrentProcess())
-
 
 def keep_awake(on):
     """Keep Windows from sleeping while the campaign runs (ES_CONTINUOUS | ES_SYSTEM_REQUIRED)."""
@@ -563,7 +586,8 @@ def run(output, sleep):
         evidence.write_text(json.dumps(result, allow_nan=False, separators=(',', ':')), encoding='utf-8')
         (output/'curves.md').write_text(f"Campaign {output.name}: {result['status']}\n\n"+markdown(result), encoding='utf-8')
         keep_awake(False)
-        if sleep:
+        # Sleep only once both arms are done: a failure leaves the machine as it is, for a look.
+        if sleep and result['status'] == 'completed':
             subprocess.run(['powershell', '-NoProfile', '-Command',
                             'Add-Type -AssemblyName System.Windows.Forms; '
                             '[System.Windows.Forms.Application]::SetSuspendState("Suspend", $false, $false)'],

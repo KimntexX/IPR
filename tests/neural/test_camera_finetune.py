@@ -1,8 +1,10 @@
+import tempfile
 import unittest
+from pathlib import Path
 
 import numpy as np
 
-from camera_finetune import bursts, plateau_reached, row_matched
+from camera_finetune import ArrayFile, bursts, plateau_reached, row_matched
 
 PLAN = dict(min_steps=15000, plateau=dict(window_controls=4, gain_db=.02, metrics=['d60_synthetic', 'd60_real']))
 
@@ -55,6 +57,20 @@ class BurstTests(unittest.TestCase):
         frames += [dict(iso=400, exposure_s=.1, path=str(i)) for i in range(4)]
         groups = bursts(frames)
         self.assertEqual([(g['key'], len(g['frames'])) for g in groups], [((100, .1), 3), ((400, .1), 4)])
+
+
+class ArrayFileTests(unittest.TestCase):
+    def test_rows_match_the_saved_array_and_the_limit_is_kept(self):
+        values = np.arange(5*2*3*4, dtype='<f4').reshape(5, 2, 3, 4)
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder)/'rows.npy'
+            np.save(path, values)
+            rows = ArrayFile(path, limit=3)
+            self.assertEqual(len(rows), 3)
+            for i in range(3):
+                np.testing.assert_array_equal(rows[i], values[i])
+            with self.assertRaises(IndexError):
+                rows[3]
 
 
 if __name__ == '__main__':
