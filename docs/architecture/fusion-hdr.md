@@ -277,5 +277,5 @@ blanc de la référence, les tons moyens les niveaux de 2⁻⁷ à 2⁻². Il n'
 | H1 | Ouverture du DNG flottant dans Photoshop et DxO (Lightroom : fait, #23) ; lecture du DNG 1.7 JPEG XL de Lightroom par IPR (dépendance libjxl à décider) | Utilisateur |
 | H2 | Fait sur le 60D en lumière scintillante (§9) ; à refaire sur une scène à fort contraste, où des zones sont écrêtées | Claude, avec les séries |
 | H3–H4 | Main levée, sujet mobile, robustesse du rejet des fantômes au scintillement | Claude, avec les séries |
-| H5 | Décider d'une compensation initiale à l'ouverture (premier rendu écrêté au blanc) ; validation visuelle | Utilisateur |
+| H5 | Compensation initiale à l'ouverture (premier rendu écrêté au blanc) : reportée le 17 novembre faute de recul, suivie par [#40](https://github.com/KimntexX/IPR/issues/40) ; validation visuelle | Utilisateur |
 | H6 | Panorama HDR | Après qualification de B8 et B9 |
