@@ -11254,7 +11254,9 @@ bande ISO. Ce qui reste à gagner sur le vrai 60D ne vient donc pas des scènes
 du 60D. Il faudrait regarder la mesure (scintillement, référence par
 moyenne) et le bruit non modélisé : bruit fixe, rangées, corrélations.
 
-Décision proposée : garder le modèle livré, sans affinage par boîtier. Le
+Décision de l'utilisateur du 18 novembre : le modèle livré est gardé, sans
+affinage par boîtier. Un apprentissage plus poussé ne sera envisagé que si
+le retour d'expérience le demande. Le
 point de contrôle mixte (`3444a276…`) reste dans le dossier de build, sans
 suite. Preuve :
 `docs/validation/raw/neural-camera-finetune-60d-v003-20261118T003953Z.json`.
