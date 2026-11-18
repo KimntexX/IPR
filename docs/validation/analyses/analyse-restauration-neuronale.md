@@ -11189,3 +11189,72 @@ acceptés et dits estimés ; refusés quand l'estimation est coupée),
 
 Reste avant la livraison : la revue visuelle de l'utilisateur sur des RAW
 d'autres boîtiers (60D, R7, puis 2000D et 6D Mark II annoncés).
+
+## 18 novembre 2026 — affinage du modèle de la bêta-1 avec l'EOS 60D
+
+Question : un apprentissage sur un seul boîtier (R6 III) limite-t-il le
+résultat sur un autre ? L'outil `tests/neural/camera_finetune.py` reprend le
+modèle de la bêta-1 (pas 150 000, moments Adam compris) au taux constant 2e-5.
+Deux bras sont comparés :
+
+- **mixte** : la moitié de chaque lot vient du R6 III, l'autre du 60D. Le 60D
+  fournit 720 tuiles de 60 sources à 100 ISO, prises sur 10 jours. On leur
+  ajoute le bruit qualifié du 60D, de 800 à 6400 ISO : Poisson à la pente de la
+  loi, plus de vrais écarts de noir pris sur des images bouchon.
+- **témoin R6 seul** : le même nombre de pas, sur le seul R6 III. Il sépare
+  l'effet des données 60D de celui du simple prolongement de l'apprentissage.
+
+Le plan est figé avant le lancement (`plan.json`, sha256 `24bf385c…`). Un
+contrôle a lieu tous les 2 500 pas, sur trois mesures :
+
+- R6 III synthétique, 72 tuiles, pour détecter l'oubli ;
+- 60D synthétique sur deux jours tenus à l'écart (13/12/2025 et 02/05/2026),
+  96 tuiles ;
+- vraies rafales du 60D, 260 recadrages de 130 vues. Chaque vue est jugée
+  contre la moyenne des autres vues de sa rafale, ajustée par rangée contre le
+  scintillement à 100 Hz.
+
+Arrêt sur plateau : moins de 0,02 dB de progrès sur 4 contrôles, pour le 60D
+synthétique et pour le réel, à partir de 15 000 pas.
+
+Le premier lancement (v002) a échoué sur une fausse alerte mémoire : les pages
+projetées étaient comptées dans la mémoire du processus. La preuve est gardée,
+la correction est dans `a5f084a`. La campagne v003 a tourné du 17/11 à 22 h 29
+au 18/11 à 1 h 39, sans pause, avec 1,35 Go réservés sur le GPU. Le bras mixte
+s'est arrêté sur plateau au minimum de 15 000 pas.
+
+Le gain moyen est la moyenne des médianes par ISO ; le réel couvre 800 à
+6400 ISO.
+
+| Bras | Pas | 60D synthétique | 60D réel | R6 III synthétique |
+| --- | ---: | ---: | ---: | ---: |
+| départ (bêta-1) | 0 | 9,388 dB | 7,899 dB | 15,894 dB |
+| mixte | 2 500 | 9,470 dB | 7,893 dB | 15,883 dB |
+| mixte | 15 000 | 9,479 dB | 7,879 dB | 15,896 dB |
+| témoin R6 seul | 15 000 | 9,383 dB | 7,887 dB | 15,898 dB |
+
+Écarts appariés tuile par tuile entre le mixte à 15 000 pas et le témoin
+(médiane, intervalle bootstrap à 95 %) :
+
+- 60D synthétique : +0,09 dB [+0,07 ; +0,12], 98 % des tuiles améliorées. Le
+  gain est acquis dès 2 500 pas. Il est le plus fort à 800 ISO (+0,16 dB) et
+  le plus faible à 6400 ISO (+0,05 dB).
+- 60D réel : 0,00 dB [−0,003 ; +0,001], 48 % des recadrages améliorés.
+- R6 III synthétique : −0,02 dB [−0,023 ; −0,014]. L'oubli est réel mais
+  minime, très loin du seuil d'arrêt de 0,5 dB.
+
+Le témoin reste plat sur les trois mesures : prolonger l'apprentissage du
+R6 III n'apporte rien.
+
+Conclusion : le modèle de la bêta-1 se transpose déjà au 60D. Un réseau guidé
+par la carte σ ne dépend pas d'un apprentissage propre au boîtier. Les données
+60D ne gagnent que 0,09 dB, et seulement sur le bruit simulé ; sur les vraies
+rafales, rien ne bouge. Ce gain est très en dessous du critère de 0,5 dB par
+bande ISO. Ce qui reste à gagner sur le vrai 60D ne vient donc pas des scènes
+du 60D. Il faudrait regarder la mesure (scintillement, référence par
+moyenne) et le bruit non modélisé : bruit fixe, rangées, corrélations.
+
+Décision proposée : garder le modèle livré, sans affinage par boîtier. Le
+point de contrôle mixte (`3444a276…`) reste dans le dossier de build, sans
+suite. Preuve :
+`docs/validation/raw/neural-camera-finetune-60d-v003-20261118T003953Z.json`.
